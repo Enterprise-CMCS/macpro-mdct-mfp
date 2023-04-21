@@ -160,7 +160,7 @@ const sx = {
     maxWidth: "25rem",
   },
 
-  mcrLogo: {
+  mfpLogo: {
     maxHeight: "4.875rem",
     margin: "0 auto",
     ".desktop &": {
