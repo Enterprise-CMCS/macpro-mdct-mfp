@@ -5,7 +5,6 @@ import { Box, Container, Flex, Image, Link, Text } from "@chakra-ui/react";
 import { useBreakpoint } from "utils";
 // assets
 import hhsLogo from "assets/logos/logo_hhs.png";
-import mcrLogo from "assets/logos/logo_mcr_footer.png";
 import medicaidLogo from "assets/logos/logo_medicaid.svg";
 
 export const Footer = () => {
@@ -16,11 +15,7 @@ export const Footer = () => {
         <Container sx={sx.footerTopContainer}>
           <Flex sx={sx.footerTopFlex}>
             <Box sx={sx.footerTopLeftContainer}>
-              <Image
-                src={mcrLogo}
-                alt="Managed Care Reporting logo"
-                sx={sx.mcrLogo}
-              />
+              {/* Placeholder for MFP logo */}
             </Box>
             <Box sx={sx.footerTopRightContainer}>
               <Flex sx={sx.footerTopRightTopFlex}>

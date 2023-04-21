@@ -1,31 +1,20 @@
-import { useContext } from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 // components
 import { UsaBanner } from "@cmsgov/design-system";
 import {
   Box,
-  Button,
   Container,
   Flex,
-  Image,
   Link,
-  Text,
 } from "@chakra-ui/react";
-import { Menu, MenuOption, ReportContext } from "components";
+import { Menu, MenuOption } from "components";
 // utils
 import { useBreakpoint } from "utils";
 // assets
-import appLogo from "assets/logos/logo_mcr.png";
 import getHelpIcon from "assets/icons/icon_help.png";
-import checkIcon from "assets/icons/icon_check_gray.png";
-import closeIcon from "assets/icons/icon_cancel_x_circle.png";
 
 export const Header = ({ handleLogout }: Props) => {
   const { isMobile } = useBreakpoint();
-  const { pathname } = useLocation();
-  const { lastSavedTime, report } = useContext(ReportContext);
-
-  const saveStatusText = "Last saved " + lastSavedTime;
 
   return (
     <Box sx={sx.root} id="header">
@@ -36,7 +25,7 @@ export const Header = ({ handleLogout }: Props) => {
         <Container sx={sx.headerContainer}>
           <Flex sx={sx.headerFlex}>
             <Link as={RouterLink} to="/" variant="unstyled">
-              <Image src={appLogo} alt="MFP logo" sx={sx.appLogo} />
+              {/* Placeholder for MFP logo */}
             </Link>
             <Flex sx={sx.menuFlex}>
               <Link
