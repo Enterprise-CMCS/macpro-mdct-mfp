@@ -1,0 +1,64 @@
+service: database
+
+frameworkVersion: "3"
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dynamodb-local
+  - serverless-stack-termination-protection
+  - serverless-s3-bucket-helper
+  - serverless-plugin-scripts
+  - serverless-offline
+
+s3BucketHelper:
+  loggingConfiguration:
+    destinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
+    logFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  region: ${opt:region, self:provider.region}
+  serverlessTerminationProtection:
+    stages:
+      - main
+      - val
+      - production
+  dotenv:
+    path: ../../.env
+  dynamodb:
+    stages:
+      - local
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+  iam:
+    role:
+      path: ${env:IAM_PATH, ssm:/configuration/${self:custom.stage}/iam/path, ssm:/configuration/default/iam/path, "/"}
+      permissionsBoundary: ${env:IAM_PERMISSIONS_BOUNDARY, ssm:/configuration/${self:custom.stage}/iam/permissionsBoundaryPolicy, ssm:/configuration/default/iam/permissionsBoundaryPolicy, ""}
+      statements:
+        - Effect: "Allow"
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "*"
+        - Effect: "Allow"
+          Action:
+            - "s3:GetObject"
+            - "s3:ListBucket"
+            - "s3:PutObject"
+resources:
+  Resources:
+  Outputs:
+    Region:
+      Value: !Sub ${AWS::Region}
