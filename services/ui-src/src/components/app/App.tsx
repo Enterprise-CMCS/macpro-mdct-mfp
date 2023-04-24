@@ -6,21 +6,15 @@ import { Container, Divider, Flex, Heading, Stack } from "@chakra-ui/react";
 import {
   AppRoutes,
   Error,
-  ExportedReportBanner,
   Footer,
   Header,
   LoginCognito,
   LoginIDM,
-  ReportProvider,
   SkipNav,
   Timeout,
 } from "components";
 // utils
-import {
-  fireTealiumPageView,
-  makeMediaQueryClasses,
-  useUser,
-} from "utils";
+import { fireTealiumPageView, makeMediaQueryClasses, useUser } from "utils";
 
 export const App = () => {
   const mqClasses = makeMediaQueryClasses();
@@ -43,15 +37,14 @@ export const App = () => {
             text={`Skip to ${"main content"}`}
             sxOverride={sx.skipnav}
           />
-          <ReportProvider>
-            <Header handleLogout={logout} />
-            <Container sx={sx.appContainer} data-testid="app-container">
-              <ErrorBoundary FallbackComponent={Error}>
-                <AppRoutes />
-              </ErrorBoundary>
-            </Container>
-            <Footer />
-          </ReportProvider>
+
+          <Header handleLogout={logout} />
+          <Container sx={sx.appContainer} data-testid="app-container">
+            <ErrorBoundary FallbackComponent={Error}>
+              <AppRoutes />
+            </ErrorBoundary>
+          </Container>
+          <Footer />
         </Flex>
       )}
       {!user && showLocalLogins && (

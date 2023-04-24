@@ -12,13 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { CloseIcon } from "@cmsgov/design-system";
 // utils
-import { AnyObject, CustomHtmlElement, EntityType } from "types";
+import { AnyObject, CustomHtmlElement } from "types";
 import { makeMediaQueryClasses, parseCustomHtml } from "utils";
 
-import { drawerReminderText } from "../../constants";
-
 export const Drawer = ({
-  entityType,
   verbiage,
   drawerDisclosure,
   children,
@@ -48,7 +45,6 @@ export const Drawer = ({
               {parseCustomHtml(verbiage.drawerInfo)}
             </Box>
           )}
-          <Text sx={sx.drawerReminderText}>{drawerReminderText}</Text>
           <Button
             sx={sx.drawerCloseButton}
             leftIcon={<CloseIcon />}
@@ -75,7 +71,6 @@ interface Props {
     isOpen: boolean;
     onClose: Function;
   };
-  entityType?: EntityType;
   [key: string]: any;
 }
 
@@ -101,12 +96,6 @@ const sx = {
     paddingRight: "4rem",
     fontSize: "2xl",
     fontWeight: "bold",
-  },
-  drawerReminderText: {
-    marginTop: "1rem",
-    paddingRight: "4rem",
-    fontSize: "md",
-    fontWeight: "normal",
   },
   drawerCloseButton: {
     position: "absolute",
