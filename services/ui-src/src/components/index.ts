@@ -16,6 +16,7 @@ export { Drawer } from "./drawers/Drawer";
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";
+export { ChoiceListField } from "./fields/ChoiceListField";
 export { RadioField } from "./fields/RadioField";
 export { TextField } from "./fields/TextField";
 export { TextAreaField } from "./fields/TextAreaField";

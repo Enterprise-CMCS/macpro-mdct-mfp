@@ -1,6 +1,11 @@
-
 // HOST DOMAIN
 export const PRODUCTION_HOST_DOMAIN = "mdctmfp.cms.gov";
+
+// FIELDS
+export const dropdownDefaultOptionText = "- Select an option -";
+
+export const closeText = "Close";
+export const saveAndCloseText = "Save & close";
 
 // STATES
 export enum States {

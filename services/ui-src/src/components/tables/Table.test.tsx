@@ -4,9 +4,13 @@ import { axe } from "jest-axe";
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 //components
 import { Table } from "components";
-import verbiage from "verbiage/pages/home";
 
-const tableContent = verbiage.cards.MCPAR.accordion.table;
+const tableContent = {
+  caption: "mock caption",
+  headRow: ["mock header 1", "mock header 2", "mock header 3"],
+  bodyRows: [],
+};
+
 const tableComponent = (
   <RouterWrappedComponent>
     <Table content={tableContent} variant="striped" />

@@ -5,15 +5,11 @@ import { RouterWrappedComponent } from "utils/testing/setupJest";
 // components
 import { Accordion } from "@chakra-ui/react";
 import { AccordionItem } from "components";
-import verbiage from "verbiage/pages/home";
 
 const accordionItemComponent = (
   <RouterWrappedComponent>
     <Accordion>
-      <AccordionItem
-        label={verbiage.cards.MCPAR.accordion.buttonLabel}
-        data-testid="accordion-item"
-      />
+      <AccordionItem data-testid="accordion-item" />
     </Accordion>
   </RouterWrappedComponent>
 );

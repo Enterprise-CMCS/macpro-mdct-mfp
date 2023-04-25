@@ -1,13 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 // utils
-import {
-  RouterWrappedComponent,
-  mockMcparReportContext,
-} from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupJest";
 //components
 import { Header } from "components";
-import { ReportContext, ReportPageWrapper } from "../";
 
 const headerComponent = (
   <RouterWrappedComponent>
@@ -17,10 +13,7 @@ const headerComponent = (
 
 const reportComponent = (
   <RouterWrappedComponent>
-    <ReportContext.Provider value={mockMcparReportContext}>
-      <Header handleLogout={() => {}} />
-      <ReportPageWrapper />
-    </ReportContext.Provider>
+    <Header handleLogout={() => {}} />
   </RouterWrappedComponent>
 );
 
@@ -37,10 +30,6 @@ describe("Test Header", () => {
     const header = screen.getByRole("navigation");
     expect(header).toBeVisible();
   });
-
-  // test("Logo is visible", () => {
-  //   expect(screen.getByAltText("MFP logo")).toBeVisible();
-  // });
 
   test("Help button is visible", () => {
     expect(screen.getByTestId("header-help-button")).toBeVisible();

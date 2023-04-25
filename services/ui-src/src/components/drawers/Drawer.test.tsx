@@ -20,9 +20,7 @@ const mockVerbiage = {
 };
 
 const drawerComponent = (
-  <Drawer
-    drawerDisclosure={mockDrawerDisclosure}
-  />
+  <Drawer verbiage={mockVerbiage} drawerDisclosure={mockDrawerDisclosure} />
 );
 
 describe("Test Drawer fill form and close", () => {
