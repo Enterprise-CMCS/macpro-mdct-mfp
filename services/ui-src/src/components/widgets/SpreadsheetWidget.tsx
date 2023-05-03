@@ -21,9 +21,7 @@ export const SpreadsheetWidget = ({
           />
         </Flex>
         <Box>
-          <Text sx={sx.title}>
-            Find in the Excel Workbook
-          </Text>
+          <Text sx={sx.title}>Find in the Excel Workbook</Text>
           <Box>
             <Text sx={sx.description}>{description}</Text>
           </Box>

@@ -1,12 +1,7 @@
 import { Link as RouterLink } from "react-router-dom";
 // components
 import { UsaBanner } from "@cmsgov/design-system";
-import {
-  Box,
-  Container,
-  Flex,
-  Link,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Link } from "@chakra-ui/react";
 import { Menu, MenuOption } from "components";
 // utils
 import { useBreakpoint } from "utils";

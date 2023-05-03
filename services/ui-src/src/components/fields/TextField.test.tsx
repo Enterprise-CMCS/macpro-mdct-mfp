@@ -39,12 +39,12 @@ jest.mock("utils/auth/useUser");
 const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
 
 const textFieldComponent = (
-    <TextField
-      name="testTextField"
-      label="test-label"
-      placeholder="test-placeholder"
-      data-testid="test-text-field"
-    />
+  <TextField
+    name="testTextField"
+    label="test-label"
+    placeholder="test-placeholder"
+    data-testid="test-text-field"
+  />
 );
 
 describe("Test TextField component", () => {
