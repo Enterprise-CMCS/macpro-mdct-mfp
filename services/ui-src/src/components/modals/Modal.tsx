@@ -16,11 +16,7 @@ import {
 // assets
 import closeIcon from "assets/icons/icon_close.png";
 
-export const Modal = ({
-  modalDisclosure,
-  content,
-  children,
-}: Props) => {
+export const Modal = ({ modalDisclosure, content, children }: Props) => {
   return (
     <ChakraModal
       isOpen={modalDisclosure.isOpen}
@@ -49,13 +45,13 @@ export const Modal = ({
         </Flex>
         <ModalBody sx={sx.modalBody}>{children}</ModalBody>
         <ModalFooter sx={sx.modalFooter}>
-        <Button
-              sx={sx.close}
-              variant="link"
-              onClick={modalDisclosure.onClose}
-            >
-              {content.closeButtonText}
-            </Button>
+          <Button
+            sx={sx.close}
+            variant="link"
+            onClick={modalDisclosure.onClose}
+          >
+            {content.closeButtonText}
+          </Button>
         </ModalFooter>
       </ModalContent>
     </ChakraModal>
