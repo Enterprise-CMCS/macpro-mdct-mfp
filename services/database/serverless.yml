@@ -3,7 +3,6 @@ service: database
 frameworkVersion: "3"
 
 plugins:
-  - serverless-plugin-typescript
   - serverless-dynamodb-local
   - serverless-stack-termination-protection
   - serverless-s3-bucket-helper
@@ -18,6 +17,7 @@ s3BucketHelper:
 custom:
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
+  bannerTableName: ${self:custom.stage}-banners
   serverlessTerminationProtection:
     stages:
       - main
@@ -59,6 +59,21 @@ provider:
             - "s3:PutObject"
 resources:
   Resources:
+    BannerTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.bannerTableName}
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+        AttributeDefinitions:
+          - AttributeName: key
+            AttributeType: S
+        KeySchema:
+          - AttributeName: key
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST # Set the capacity to auto-scale
   Outputs:
     Region:
       Value: !Sub ${AWS::Region}

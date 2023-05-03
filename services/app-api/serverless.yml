@@ -117,6 +117,14 @@ provider:
     STAGE: ${self:custom.stage}
 
 functions:
+  create:
+    handler: handlers/temp/create.createBanner
+    events:
+      - http:
+          path: create
+          method: post
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
 resources:
   Resources:
     GatewayResponseDefault4XX:

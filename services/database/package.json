@@ -12,6 +12,7 @@
     "@types/aws-lambda": "^8.10.108",
     "aws-lambda": "^1.0.7",
     "dotenv": "^16.0.3",
+    "dynamodb-localhost": "https://github.com/99x/dynamodb-localhost#db30898f8c40932c7177be7b2f1a81360d12876d",
     "serverless": "^3.27.0",
     "serverless-dynamodb-local": "^0.2.40",
     "serverless-offline": "^12.0.4",
@@ -22,5 +23,10 @@
     "serverless-stack-termination-protection": "^2.0.2",
     "typescript": "^4.9.3"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "overrides": {
+    "serverless-dynamodb-local": {
+      "dynamodb-localhost": "https://github.com/99x/dynamodb-localhost#db30898f8c40932c7177be7b2f1a81360d12876d"
+    }
+  }
 }
