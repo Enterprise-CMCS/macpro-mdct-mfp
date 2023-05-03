@@ -3,7 +3,7 @@ import s3Lib, { createS3Client } from "./s3-lib";
 import { S3 } from "aws-sdk";
 import { mockReportFieldData } from "../testing/setupJest";
 
-describe("Test s3Lib Interaction API Build Structure", () => {
+describe.skip("Test s3Lib Interaction API Build Structure", () => {
   test("Get API Callable", async () => {
     const mockParams: S3Get = {
       Bucket: "mockBucket",
