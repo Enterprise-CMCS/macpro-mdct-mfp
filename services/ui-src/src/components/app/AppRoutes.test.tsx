@@ -4,7 +4,7 @@ import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { AppRoutes } from "components";
 import { useUser, UserProvider } from "utils";
-import { mockAdminUser, mockStateUser } from "utils/testing/setupJest";
+import { mockStateUser } from "utils/testing/setupJest";
 
 jest.mock("utils/auth/useUser");
 const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
@@ -18,7 +18,6 @@ const appRoutesComponent = (history: any) => (
 );
 
 let history: any;
-const tempScroll = window.HTMLElement.prototype.scrollIntoView;
 
 describe("Test AppRoutes 404 handling", () => {
   beforeEach(async () => {

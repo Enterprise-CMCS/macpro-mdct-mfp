@@ -1,6 +1,6 @@
 import { Credentials, S3, Endpoint } from "aws-sdk";
 import { ServiceConfigurationOptions } from "aws-sdk/lib/service";
-import { S3Copy, S3Get, S3Put, State } from "../types/types";
+import { S3Copy, S3Get, S3Put } from "../types/types";
 
 export const createS3Client = () => {
   const s3Config: S3.ClientConfiguration &

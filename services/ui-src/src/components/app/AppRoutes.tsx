@@ -1,9 +1,8 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import { useFlags } from "launchdarkly-react-client-sdk";
+import { Route, Routes } from "react-router-dom";
 // components
 import { HomePage, NotFoundPage } from "components";
 // utils
-import { ScrollToTopComponent, useUser } from "utils";
+import { ScrollToTopComponent } from "utils";
 
 export const AppRoutes = () => {
   return (

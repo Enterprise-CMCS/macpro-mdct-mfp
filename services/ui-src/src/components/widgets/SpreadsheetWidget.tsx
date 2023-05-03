@@ -4,12 +4,7 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 // assets
 import greenSpreadsheetIcon from "../../assets/icons/icon_spreadsheet_green.png";
 
-export const SpreadsheetWidget = ({
-  description,
-  alt,
-  reportType,
-  ...props
-}: Props) => {
+export const SpreadsheetWidget = ({ description, ...props }: Props) => {
   return (
     <Box {...props}>
       <Flex sx={sx.container}>

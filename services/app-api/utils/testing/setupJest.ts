@@ -1,5 +1,3 @@
-import sign from "jwt-encode";
-
 export const mockDocumentClient = {
   get: { promise: jest.fn() },
   query: { promise: jest.fn() },

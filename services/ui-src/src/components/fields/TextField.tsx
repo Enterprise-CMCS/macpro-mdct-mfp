@@ -2,7 +2,7 @@
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
 // utils
-import { labelTextWithOptional, parseCustomHtml, useUser } from "utils";
+import { labelTextWithOptional, parseCustomHtml } from "utils";
 import { AnyObject, CustomHtmlElement } from "types";
 
 export const TextField = ({
