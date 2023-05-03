@@ -40,3 +40,8 @@ jest.mock("aws-sdk", () => {
     Endpoint: jest.fn().mockImplementation(() => "endPoint"),
   };
 });
+
+export const mockReportFieldData = {
+  text: "text-input",
+  number: 0,
+};

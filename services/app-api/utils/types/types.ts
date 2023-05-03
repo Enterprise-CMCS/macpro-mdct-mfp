@@ -190,3 +190,8 @@ export type State =
   | "WV"
   | "WI"
   | "WY";
+
+export interface Choice {
+  key: string; // choice.name
+  value: string; // choice.value
+}
