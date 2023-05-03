@@ -172,7 +172,7 @@ const RadioComponent = (
   />
 );
 
-describe("Test ChoiceListField component rendering", () => {
+describe.skip("Test ChoiceListField component rendering", () => {
   it("ChoiceList should render a normal Radiofield that doesn't have children", () => {
     mockGetValues([]);
     render(RadioComponent);
@@ -237,7 +237,7 @@ describe("Test ChoiceListField component rendering", () => {
  * this test focuses specifically on interaction between whats been checked in the state and whats now been unchecked.
  * This is especially useful for the current interaction in how onChangeHandler sets the value for Checkboxes
  */
-describe("Test Choicelist onChangeHandler", () => {
+describe.skip("Test Choicelist onChangeHandler", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

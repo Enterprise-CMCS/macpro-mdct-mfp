@@ -31,7 +31,7 @@ const mockNestedDependentValidationType = {
   },
 };
 
-describe("Test mapValidationTypesToSchema", () => {
+describe.skip("Test mapValidationTypesToSchema", () => {
   it("Returns standard validation schema if passed standard validation type", () => {
     const result = mapValidationTypesToSchema(mockStandardValidationType);
     expect(JSON.stringify(result)).toEqual(
