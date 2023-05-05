@@ -1,0 +1,81 @@
+{
+  "name": "app-api",
+  "description": "",
+  "version": "1.0.0",
+  "main": "handler.js",
+  "scripts": {
+    "coverage": "jest --coverage",
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "test-serverless": "serverless-bundle test"
+  },
+  "author": "",
+  "license": "CC0-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AnomalyInnovations/serverless-nodejs-starter.git"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.88",
+    "@types/dompurify": "^2.3.4",
+    "@types/jest": "^27.4.0",
+    "@types/jsdom": "^20.0.0",
+    "@types/jwt-encode": "^1.0.0",
+    "aws-lambda": "^1.0.7",
+    "jest": "^27.4.7",
+    "serverless-associate-waf": "^1.2.1",
+    "serverless-plugin-typescript": "^2.1.4",
+    "ts-jest": "^27.1.3",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "aws-jwt-verify": "^3.1.0",
+    "aws-sdk": "^2.1310.0",
+    "aws4": "^1.11.0",
+    "axios": "^1.2.1",
+    "date-fns": "^2.26.0",
+    "date-fns-tz": "^1.2.2",
+    "dompurify": "^2.4.0",
+    "dotenv": "^16.0.3",
+    "jsdom": "^20.0.0",
+    "jwt-decode": "^3.1.2",
+    "jwt-encode": "^1.0.1",
+    "kafkajs": "^2.2.3",
+    "ksuid": "^3.0.0",
+    "serverless-plugin-warmup": "^8.2.1",
+    "yup": "^0.32.11"
+  },
+  "jest": {
+    "verbose": true,
+    "transform": {
+      "^.+\\.ts?$": "ts-jest"
+    },
+    "globals": {
+      "isolatedModules": true
+    },
+    "coverageReporters": [
+      "json",
+      [
+        "lcov",
+        {
+          "projectRoot": "../../"
+        }
+      ],
+      "text",
+      "text-summary"
+    ],
+    "collectCoverageFrom": [
+      "handlers/**/*.{ts,tsx}",
+      "utils/**/*.{ts,tsx}",
+      "!utils/constants/*",
+      "!utils/testing/*",
+      "!utils/types/*"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/utils/testing/setupJest.ts"
+    ]
+  }
+}

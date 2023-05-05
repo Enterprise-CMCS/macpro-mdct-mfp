@@ -1,0 +1,64 @@
+import { render, screen } from "@testing-library/react";
+import { axe } from "jest-axe";
+// utils
+import { RouterWrappedComponent } from "utils/testing/setupJest";
+//components
+import { Header } from "components";
+
+const headerComponent = (
+  <RouterWrappedComponent>
+    <Header handleLogout={() => {}} />
+  </RouterWrappedComponent>
+);
+
+const reportComponent = (
+  <RouterWrappedComponent>
+    <Header handleLogout={() => {}} />
+  </RouterWrappedComponent>
+);
+
+/*
+ * jest.mock("utils/reports/routing", () => ({
+ * isReportFormPage: jest.fn(() => true),
+ * }));
+ */
+
+describe.skip("Test Header", () => {
+  beforeEach(() => {
+    render(headerComponent);
+  });
+
+  test("Header is visible", () => {
+    const header = screen.getByRole("navigation");
+    expect(header).toBeVisible();
+  });
+
+  test("Help button is visible", () => {
+    expect(screen.getByTestId("header-help-button")).toBeVisible();
+  });
+
+  test("Menu button is visible", () => {
+    expect(screen.getByTestId("header-menu-dropdown-button")).toBeVisible();
+  });
+
+  test("Subnav is visible on report screens; navigates to dashboard", async () => {
+    const leaveFormButton = screen.getByTestId("leave-form-button");
+    expect(leaveFormButton).toBeVisible();
+  });
+});
+
+describe.skip("Report Context", () => {
+  test("Report Data is visible", () => {
+    render(reportComponent);
+    expect(screen.getByText("Program: testProgram")).toBeVisible();
+    expect(screen.getByText("Last saved 1:58 PM")).toBeVisible();
+  });
+});
+
+describe.skip("Test Header accessibility", () => {
+  it("Should not have basic accessibility issues", async () => {
+    const { container } = render(headerComponent);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+});

@@ -1,0 +1,155 @@
+# Refer to the README.md file in within this service directory to configure all ssm parameters required for this service.
+service: app-api
+
+frameworkVersion: "3"
+
+package:
+  individually: true
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dotenv-plugin
+  - serverless-plugin-warmup
+  - serverless-associate-waf
+  - serverless-stack-termination-protection
+  - serverless-idempotency-helper
+  - serverless-iam-helper
+  - serverless-s3-bucket-helper
+  - serverless-api-client-certificate
+  - serverless-offline
+
+s3BucketHelper:
+  loggingConfiguration:
+    destinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
+    logFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
+
+custom:
+  project: "mfp"
+  serverlessPluginTypescript:
+    tsConfigFileLocation: "./tsconfig.json"
+  stage: ${opt:stage, self:provider.stage}
+  region: ${opt:region, self:provider.region}
+  serverlessTerminationProtection:
+    stages:
+      - main
+      - val
+      - production
+  dotenv:
+    path: ../../.env
+  webAclName: ${self:service}-${self:custom.stage}-webacl
+  associateWaf:
+    name: ${self:custom.webAclName}
+    version: V2
+  serverlessApiClientCertificate:
+    rotateCerts: true
+    daysLeft: 30
+  warmup:
+    default:
+      enabled: true
+      prewarm: true
+      events:
+        - schedule: rate(60 minutes)
+      concurrency: 5
+      package:
+        individually: true
+  authValue:
+    main: aws_iam
+    val: aws_iam
+    production: aws_iam
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  tracing:
+    apiGateway: true
+  logs:
+    restApi: true
+  iam:
+    role:
+      path: ${env:IAM_PATH, ssm:/configuration/${self:custom.stage}/iam/path, ssm:/configuration/default/iam/path, "/"}
+      permissionsBoundary: ${env:IAM_PERMISSIONS_BOUNDARY, ssm:/configuration/${self:custom.stage}/iam/permissionsBoundaryPolicy, ssm:/configuration/default/iam/permissionsBoundaryPolicy, ""}
+      statements:
+        - Effect: "Allow"
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "*"
+        - Effect: "Allow"
+          Action:
+            - ssm:GetParameter
+          Resource: "*"
+        - Effect: "Allow"
+          Action:
+            - execute-api:Invoke
+          Resource: "*"
+  environment:
+    STAGE: ${self:custom.stage}
+
+functions:
+  create:
+    handler: handlers/temp/create.createBanner
+    events:
+      - http:
+          path: create
+          method: post
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: "AWS::ApiGateway::GatewayResponse"
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId: !Ref ApiGatewayRestApi
+    GatewayResponseDefault5XX:
+      Type: "AWS::ApiGateway::GatewayResponse"
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_5XX
+        RestApiId: !Ref ApiGatewayRestApi
+    ApiGwWebAcl:
+      Type: AWS::WAFv2::WebACL
+      Properties:
+        Name: ${self:custom.webAclName}
+        DefaultAction:
+          Block: {}
+        Rules:
+          - Action:
+              Allow: {}
+            Name: ${self:custom.webAclName}-allow-usa-plus-territories
+            Priority: 0
+            Statement:
+              GeoMatchStatement:
+                CountryCodes:
+                  - GU # Guam
+                  - PR # Puerto Rico
+                  - US # USA
+                  - UM # US Minor Outlying Islands
+                  - VI # US Virgin Islands
+                  - MP # Northern Mariana Islands
+            VisibilityConfig:
+              SampledRequestsEnabled: true
+              CloudWatchMetricsEnabled: true
+              MetricName: WafWebAcl
+        Scope: REGIONAL
+        VisibilityConfig:
+          CloudWatchMetricsEnabled: true
+          SampledRequestsEnabled: true
+          MetricName: ${self:custom.stage}-webacl
+  Outputs:
+    ApiGatewayRestApiName:
+      Value: !Ref ApiGatewayRestApi
+    ApiGatewayRestApiUrl:
+      Value: !Sub https://${ApiGatewayRestApi}.execute-api.${self:provider.region}.amazonaws.com/${self:custom.stage}
+    Region:
+      Value: !Sub ${AWS::Region}
