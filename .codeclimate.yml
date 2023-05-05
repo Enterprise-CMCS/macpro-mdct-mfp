@@ -26,7 +26,6 @@ exclude_patterns:
   - "cypress/"
   - "plugins/"
   - "src/"
-  - "services/.sechub/"
   - "services/database/"
   - "services/ui/"
   - "services/ui-src/public/"
