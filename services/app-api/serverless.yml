@@ -37,11 +37,6 @@ custom:
   dotenv:
     path: ../../.env
   webAclName: ${self:service}-${self:custom.stage}-webacl
-  vpcId: ${env:VPC_ID, ssm:/configuration/${self:custom.stage}/vpc/id, ssm:/configuration/default/vpc/id}
-  privateSubnets:
-    - ${env:VPC_SUBNET_A, ssm:/configuration/${self:custom.stage}/vpc/subnets/private/a/id, ssm:/configuration/default/vpc/subnets/private/a/id}
-    - ${env:VPC_SUBNET_B, ssm:/configuration/${self:custom.stage}/vpc/subnets/private/b/id, ssm:/configuration/default/vpc/subnets/private/b/id}
-    - ${env:VPC_SUBNET_C, ssm:/configuration/${self:custom.stage}/vpc/subnets/private/c/id, ssm:/configuration/default/vpc/subnets/private/c/id}
   associateWaf:
     name: ${self:custom.webAclName}
     version: V2
