@@ -56,15 +56,6 @@ custom:
     main: aws_iam
     val: aws_iam
     production: aws_iam
-params:
-  main:
-    topicNamespace: ""
-  val:
-    topicNamespace: ""
-  production:
-    topicNamespace: ""
-  default:
-    topicNamespace: --${self:custom.project}--${sls:stage}--
 provider:
   name: aws
   runtime: nodejs18.x
@@ -96,18 +87,6 @@ provider:
           Action:
             - execute-api:Invoke
           Resource: "*"
-        - Effect: "Allow"
-          Action:
-            - "s3:GetObject"
-            - "s3:ListBucket"
-            - "s3:PutObject"
-        - Effect: "Allow"
-          Action:
-            - dynamodb:DescribeStream
-            - dynamodb:GetRecords
-            - dynamodb:GetShardIterator
-            - dynamodb:ListShards
-            - dynamodb:ListStreams
   environment:
     STAGE: ${self:custom.stage}
 
