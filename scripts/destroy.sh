@@ -1,19 +1,6 @@
 #!/bin/bash
 set -e
 
-install_deps() {
-  if [ "$CI" == "true" ]; then # If we're in a CI system
-    if [ ! -d "node_modules" ]; then # If we don't have any node_modules (CircleCI cache miss scenario), run yarn install --frozen-lockfile.  Otherwise, we're all set, do nothing.
-      yarn install --frozen-lockfile
-    fi
-  else # We're not in a CI system, let's yarn install
-    yarn install
-  fi
-}
-
-install_deps
-export PATH=$(pwd)/node_modules/.bin/:$PATH
-
 if [[ $1 == "" ]] ; then
     echo 'ERROR:  You must pass a stage to destroy.  Ex. sh scripts/destroy.sh my-stage-name'
     exit 1
@@ -91,72 +78,98 @@ fi
 
 for i in "${bucketList[@]}"
 do
-  echo $i
   set -e
 
   # Suspend bucket versioning.
   aws s3api put-bucket-versioning --bucket $i --versioning-configuration Status=Suspended
 
   # Remove all bucket versions.
-  versions=`aws s3api list-object-versions \
+  versions=$(aws s3api list-object-versions \
     --max-items 200 \
     --bucket "$i" \
     --output=json \
-    --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}'`
+    --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}')
 
-  while ! echo $versions | grep -q '"Objects": null' ;
-  do
+  while ! echo $versions | grep -q '"Objects": null'; do
     aws s3api delete-objects \
       --bucket $i \
-      --delete "$versions" > /dev/null 2>&1
-    versions=`aws s3api list-object-versions \
-    --max-items 200 \
-    --bucket "$i" \
-    --output=json \
-    --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}'`
+      --delete "$versions" >/dev/null 2>&1
+    versions=$(aws s3api list-object-versions \
+      --max-items 200 \
+      --bucket "$i" \
+      --output=json \
+      --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}')
   done
 
   # Remove all bucket delete markers.
-  markers=`aws s3api list-object-versions \
+  markers=$(aws s3api list-object-versions \
     --bucket "$i" \
     --output=json \
-    --query='{Objects: DeleteMarkers[].{Key:Key,VersionId:VersionId} }'`
+    --query='{Objects: DeleteMarkers[].{Key:Key,VersionId:VersionId} }')
   if ! echo $markers | grep -q '"Objects": null'; then
     aws s3api delete-objects \
       --bucket $i \
-      --delete "$markers" > /dev/null 2>&1
+      --delete "$markers" >/dev/null 2>&1
   fi
 
   # Empty the bucket
+  echo "emptying bucket: $i"
   aws s3 rm s3://$i/ --recursive
 done
+
+restApiName=$stage-app-api
+
+restApiId=$(aws apigateway get-rest-apis | jq -r ".[] | .[] |  select(.name==\"$restApiName\") | .id|tostring")
+
+if [ "$restApiId" != "" ]; then
+  echo "Removing certificate from stage"
+
+  aws apigateway update-stage \
+    --rest-api-id $restApiId \
+    --stage-name $stage \
+    --patch-operations op=replace,path=/clientCertificateId,value="" \
+    &>/dev/null
+
+  restApiArn="arn:aws:apigateway:us-east-1::/restapis/$restApiId/stages/$stage"
+
+  echo "Disassociating web acl from api gateway"
+
+  aws wafv2 disassociate-web-acl \
+    --resource-arn $restApiArn &>/dev/null
+
+  echo "Removed certificate from stage and disassociated web acl"
+fi
 
 # Trigger a delete for each cloudformation stack
 for i in "${stackList[@]}"
 do
-  echo $i
+  echo "triggering stack deletion for $i"
   aws cloudformation delete-stack --stack-name $i
 done
-# Delete Client Certificates associated with a branch
-certToDestroy=$(aws apigateway get-client-certificates\
-    | grep \"app-api-${stage}\" -B 2 \
-    | grep -o '"clientCertificateId": "[^"]*' \
-    | grep -o '[^"]*$')
 
-until [ -z $certToDestroy ];
-do 
+# Delete Client Certificates associated with a branch
+certToDestroy=$(aws apigateway get-client-certificates | grep \"app-api-${stage}\" -B 2 |
+  grep -o '"clientCertificateId": "[^"]*' |
+  grep -o '[^"]*$')
+
+until [ -z $certToDestroy ]; do
   aws apigateway delete-client-certificate --client-certificate-id $certToDestroy || true
   sleep 10
-  certToDestroy=$(aws apigateway get-client-certificates\
-    | grep \"app-api-${stage}\" -B 2 \
-    | grep -o '"clientCertificateId": "[^"]*' \
-    | grep -o '[^"]*$' || true) 
-done 
+  certToDestroy=$(aws apigateway get-client-certificates | grep \"app-api-${stage}\" -B 2 |
+    grep -o '"clientCertificateId": "[^"]*' |
+    grep -o '[^"]*$' || true)
+done
 
 # Find hanging api-gateway log group
 apiGatewayLogGroupName="/aws/api-gateway/app-api-$stage"
-apiGatewayLogGroupExists=(`aws logs describe-log-groups --log-group-name-prefix $apiGatewayLogGroupName | jq -r ".logGroups[] | length"`)
-if [[ -n $apiGatewayLogGroupExists ]] ; then
-    aws logs delete-log-group --log-group-name $apiGatewayLogGroupName
+apiGatewayLogGroupExists=($(aws logs describe-log-groups --log-group-name-prefix $apiGatewayLogGroupName | jq -r ".logGroups[] | length"))
+if [[ -n $apiGatewayLogGroupExists ]]; then
+  aws logs delete-log-group --log-group-name $apiGatewayLogGroupName
 fi
 
+# Find hanging api-gateway execution logs
+apiGatewayExecutionLogRegex="^API-Gateway-Execution-Logs[^/]+\/$stage$"
+apiGatewayExecutionLogs=($(aws logs describe-log-groups --query "logGroups[*].logGroupName" --output json | jq -r --arg pattern "$apiGatewayExecutionLogRegex" '.[] | select(test($pattern))'))
+if [[ -n $apiGatewayExecutionLogs ]]; then
+  aws logs delete-log-group --log-group-name $apiGatewayExecutionLogs
+fi
