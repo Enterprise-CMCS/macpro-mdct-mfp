@@ -42,3 +42,5 @@ export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { Table } from "./tables/Table";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
+// Redirects
+export { PostLogoutRedirect } from './PostLogoutRedirect/index'

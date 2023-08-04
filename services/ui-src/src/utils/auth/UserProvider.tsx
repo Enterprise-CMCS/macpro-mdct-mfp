@@ -23,6 +23,16 @@ export const UserContext = createContext<UserContextShape>({
 });
 
 const authenticateWithIDM = async () => {
+  const authConfig = Auth.configure();
+  if (authConfig?.oauth) {
+    const oAuthOpts = authConfig.oauth;
+    const domain = oAuthOpts.domain;
+    const responseType = oAuthOpts.responseType;
+    const redirectSignIn = (oAuthOpts as any).redirectSignIn;
+    const clientId = authConfig.userPoolWebClientId;
+    const url = `https://${domain}/oauth2/authorize?identity_provider=Okta&redirect_uri=${redirectSignIn}&response_type=${responseType}&client_id=${clientId}`;
+    window.location.assign(url);
+  }
   // await Auth.federatedSignIn({ customProvider: config.COGNITO_IDP });
   const cognitoHostedUrl = new URL(
     `https://${config.cognito.APP_CLIENT_DOMAIN}/oauth2/authorize?identity_provider=${config.cognito.COGNITO_IDP_NAME}&redirect_uri=${config.APPLICATION_ENDPOINT}&response_type=CODE&client_id=${config.cognito.APP_CLIENT_ID}&scope=email openid profile`
@@ -52,6 +62,12 @@ export const UserProvider = ({ children }: Props) => {
   }, []);
 
   const checkAuthState = useCallback(async () => {
+    // Allow Post Logout flow alongside user login flow
+    if (location?.pathname.toLowerCase() === "/postlogout") {
+      window.location.href = config.POST_SIGNOUT_REDIRECT;
+      return;
+    }
+
     try {
       const session = await Auth.currentSession();
       const payload = session.getIdToken().payload;
@@ -85,7 +101,7 @@ export const UserProvider = ({ children }: Props) => {
         setShowLocalLogins(true);
       }
     }
-  }, [isProduction]);
+  }, [isProduction, location]);
 
   // single run configuration
   useEffect(() => {
