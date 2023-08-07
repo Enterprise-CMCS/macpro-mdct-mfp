@@ -29,7 +29,7 @@ export const App = () => {
 
   const authenticatedRoutes = (
     <>
-    {user && (
+      {user && (
         <Flex sx={sx.appLayout}>
           <Timeout />
           <SkipNav
@@ -65,14 +65,14 @@ export const App = () => {
         </main>
       )}
     </>
-  )
+  );
 
   return (
     <div id="app-wrapper" className={mqClasses}>
-        <Routes>
-          <Route path="*" element={authenticatedRoutes} />
-          <Route path="postLogout" element={<PostLogoutRedirect/>} />
-        </Routes>
+      <Routes>
+        <Route path="*" element={authenticatedRoutes} />
+        <Route path="postLogout" element={<PostLogoutRedirect />} />
+      </Routes>
     </div>
   );
 };
