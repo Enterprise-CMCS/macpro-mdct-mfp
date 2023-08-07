@@ -119,7 +119,7 @@ export const UserProvider = ({ children }: Props) => {
     });
   }, []);
 
-  // rerender on auth state change, checking router location
+  // re-render on auth state change, checking router location
   useEffect(() => {
     checkAuthState();
   }, [location, checkAuthState]);
