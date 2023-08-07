@@ -9,10 +9,9 @@ import {
 import { useLocation } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import config from "config";
-// utils
 import { initAuthManager, updateTimeout, getExpiration } from "utils";
 import { PRODUCTION_HOST_DOMAIN } from "../../constants";
-// types
+
 import { MFPUser, UserContextShape, UserRoles } from "types/users";
 
 export const UserContext = createContext<UserContextShape>({
