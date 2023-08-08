@@ -175,3 +175,6 @@ export const RouterWrappedComponent: React.FC = ({ children }) => (
 export const mockLDClient = {
   variation: jest.fn(() => true),
 };
+
+// FORM
+export * from "./mockForm";
