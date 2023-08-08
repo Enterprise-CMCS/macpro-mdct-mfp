@@ -1,11 +1,11 @@
 // components
-import { Box, Heading, Text } from "@chakra-ui/react";
-import { PageTemplate } from "components";
+import { Box, Heading, Link, Text } from "@chakra-ui/react";
+import { PageTemplate, TemplateCard } from "components";
 // utils
 import verbiage from "verbiage/pages/home";
 
 export const HomePage = () => {
-  const { intro } = verbiage;
+  const { intro, cards } = verbiage;
 
   return (
     <PageTemplate sx={sx.layout} data-testid="home-view">
@@ -13,8 +13,27 @@ export const HomePage = () => {
         <Heading as="h1" sx={sx.headerText}>
           {intro.header}
         </Heading>
+        <Text>
+          {intro.body.preLinkText}
+          <Link href={intro.body.linkLocation} isExternal>
+            {intro.body.linkText}
+          </Link>
+          {intro.body.postLinkText}
+        </Text>
         <Text></Text>
       </Box>
+      <TemplateCard
+        templateName="MP"
+        verbiage={cards.MP}
+        cardprops={sx.card}
+        // isDisabled={!userReports?.includes("MCPAR")}
+      />
+      <TemplateCard
+        templateName="SAR"
+        verbiage={cards.SAR}
+        cardprops={sx.card}
+        // isDisabled={!userReports?.includes("SAR")}
+      />
     </PageTemplate>
   );
 };

@@ -1,5 +1,6 @@
 // accordions
 export { AccordionItem } from "./accordions/AccordionItem";
+export { TemplateCardAccordion } from "./accordions/TemplateCardAccordion";
 // alerts
 export { Alert } from "./alerts/Alert";
 export { ErrorAlert } from "./alerts/ErrorAlert";
@@ -11,6 +12,7 @@ export { SkipNav } from "./app/SkipNav";
 // cards
 export { Card } from "./cards/Card";
 export { EmailCard } from "./cards/EmailCard";
+export { TemplateCard } from "./cards/TemplateCard";
 // drawers
 export { Drawer } from "./drawers/Drawer";
 // fields
