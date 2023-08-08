@@ -3,12 +3,10 @@ import { axe } from "jest-axe";
 // components
 import { StandardReportPage } from "components";
 // utils
-import { mockForm, mockStandardReportPageJson } from "utils/testing/setupJest";
+import { mockStandardReportPageJson } from "utils/testing/setupJest";
 
 const standardPageSectionComponent = (
-  <StandardReportPage
-    route={{ ...mockStandardReportPageJson, form: mockForm }}
-  />
+  <StandardReportPage route={mockStandardReportPageJson} />
 );
 
 describe("Test StandardReportPage", () => {
