@@ -47,3 +47,5 @@ export { ReportPageFooter } from "./reports/ReportPageFooter";
 export { Table } from "./tables/Table";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
+// Redirects
+export { PostLogoutRedirect } from "./PostLogoutRedirect/index";
