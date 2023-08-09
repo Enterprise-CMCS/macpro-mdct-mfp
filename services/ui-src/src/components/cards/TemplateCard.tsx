@@ -1,4 +1,3 @@
-import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import { Button, Flex, Heading, Image, Text, Link } from "@chakra-ui/react";
 import { Card, TemplateCardAccordion } from "components";
@@ -12,7 +11,6 @@ import nextIcon from "assets/icons/icon_next_white.png";
 import spreadsheetIcon from "assets/icons/icon_spreadsheet.png";
 
 export const TemplateCard = ({
-  templateName,
   verbiage,
   cardprops,
   isDisabled,
@@ -20,19 +18,6 @@ export const TemplateCard = ({
 }: Props) => {
   const { isDesktop } = useBreakpoint();
   const navigate = useNavigate();
-
-  const mlrReport = useFlags()?.mlrReport;
-
-  const enabledReports = {
-    MCPAR: true,
-    MLR: mlrReport,
-  };
-
-  const reportIndex = templateName as keyof typeof enabledReports;
-
-  const cardText = verbiage.link
-    ? verbiage.body?.available
-    : verbiage.body?.unavailable;
 
   return (
     <Card {...cardprops}>
@@ -46,21 +31,21 @@ export const TemplateCard = ({
         )}
         <Flex sx={sx.cardContentFlex}>
           <Heading sx={sx.cardTitleText}>{verbiage.title}</Heading>
-          {enabledReports[reportIndex] ? (
+          {/* {enabledReports[reportIndex] ? (
             <Text>{cardText}</Text>
-          ) : (
-            <Text>
-              {verbiage.body.available}
-              <Link href={verbiage.linkLocation} isExternal>
-                {verbiage.linkText}
-              </Link>
-              {verbiage.midText}
-              <Link href={verbiage.linkLocation2} isExternal>
-                {verbiage.linkText2}{" "}
-              </Link>
-              {verbiage.postLinkText}
-            </Text>
-          )}
+          ) : ( */}
+          <Text>
+            {verbiage.body.available}
+            <Link href={verbiage.linkLocation} isExternal>
+              {verbiage.linkText}
+            </Link>
+            {verbiage.midText}
+            <Link href={verbiage.linkLocation2} isExternal>
+              {verbiage.linkText2}{" "}
+            </Link>
+            {verbiage.postLinkText}
+          </Text>
+          {/* )} */}
           <Flex sx={sx.actionsFlex}>
             {verbiage.downloadText && (
               <Button
@@ -78,7 +63,7 @@ export const TemplateCard = ({
               </Button>
             )}
 
-            {/* {enabledReports[reportIndex] && ( */}
+            {/* {T[reportIndex] && ( */}
             <Button
               sx={sx.formLink}
               isDisabled={isDisabled}
