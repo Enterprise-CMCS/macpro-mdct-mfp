@@ -4,6 +4,15 @@ import { AnyObject } from "types";
 /**
  * General type for all form JSON.
  */
+export interface FormJson {
+  id: string;
+  fields: (FormField | FormLayoutElement)[];
+  heading?: AnyObject;
+  options?: AnyObject;
+  validation?: AnyObject;
+  adminDisabled?: boolean;
+}
+
 export interface FormField {
   id: string;
   type: string;
