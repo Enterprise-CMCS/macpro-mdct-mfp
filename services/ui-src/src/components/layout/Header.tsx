@@ -1,11 +1,12 @@
 import { Link as RouterLink } from "react-router-dom";
 // components
 import { UsaBanner } from "@cmsgov/design-system";
-import { Box, Container, Flex, Link } from "@chakra-ui/react";
+import { Box, Container, Flex, Image, Link } from "@chakra-ui/react";
 import { Menu, MenuOption } from "components";
 // utils
 import { useBreakpoint } from "utils";
 // assets
+import appLogo from "assets/logos/logo_mdct_mfp.png";
 import getHelpIcon from "assets/icons/icon_help.png";
 
 export const Header = ({ handleLogout }: Props) => {
@@ -20,7 +21,7 @@ export const Header = ({ handleLogout }: Props) => {
         <Container sx={sx.headerContainer}>
           <Flex sx={sx.headerFlex}>
             <Link as={RouterLink} to="/" variant="unstyled">
-              {/* Placeholder for MFP logo */}
+              <Image src={appLogo} alt="MCR logo" sx={sx.appLogo} />
             </Link>
             <Flex sx={sx.menuFlex}>
               <Link
