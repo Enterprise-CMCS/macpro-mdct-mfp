@@ -4,7 +4,6 @@ export interface ReportPageVerbiage {
   intro: {
     section: string;
     subsection?: string;
-    spreadsheet?: string;
     info?: string | CustomHtmlElement[];
     exportSectionHeader?: string;
   };
