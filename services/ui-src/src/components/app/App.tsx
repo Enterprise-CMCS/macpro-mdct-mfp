@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Routes, Route } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 // components
 import { Container, Divider, Flex, Heading, Stack } from "@chakra-ui/react";
@@ -12,6 +12,7 @@ import {
   LoginIDM,
   SkipNav,
   Timeout,
+  PostLogoutRedirect,
 } from "components";
 // utils
 import { fireTealiumPageView, makeMediaQueryClasses, useUser } from "utils";
@@ -26,8 +27,8 @@ export const App = () => {
     fireTealiumPageView(user, window.location.href, pathname);
   }, [key]);
 
-  return (
-    <div id="app-wrapper" className={mqClasses}>
+  const authenticatedRoutes = (
+    <>
       {user && (
         <Flex sx={sx.appLayout}>
           <Timeout />
@@ -63,6 +64,15 @@ export const App = () => {
           </Container>
         </main>
       )}
+    </>
+  );
+
+  return (
+    <div id="app-wrapper" className={mqClasses}>
+      <Routes>
+        <Route path="*" element={authenticatedRoutes} />
+        <Route path="postLogout" element={<PostLogoutRedirect />} />
+      </Routes>
     </div>
   );
 };
