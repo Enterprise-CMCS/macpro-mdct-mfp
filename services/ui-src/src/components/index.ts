@@ -1,6 +1,7 @@
 // accordions
 export { AccordionItem } from "./accordions/AccordionItem";
 export { TemplateCardAccordion } from "./accordions/TemplateCardAccordion";
+export { InstructionsAccordion } from "./accordions/InstructionsAccordion";
 // alerts
 export { Alert } from "./alerts/Alert";
 export { ErrorAlert } from "./alerts/ErrorAlert";
@@ -40,7 +41,13 @@ export { Modal } from "./modals/Modal";
 export { HomePage } from "./pages/Home/HomePage";
 export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 export { ProfilePage } from "./pages/Profile/ProfilePage";
+// reports
+export { ReportPageIntro } from "./reports/ReportPageIntro";
+export { StandardReportPage } from "./reports/StandardReportPage";
+export { ReportPageFooter } from "./reports/ReportPageFooter";
 // tables
 export { Table } from "./tables/Table";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
+// Redirects
+export { PostLogoutRedirect } from "./PostLogoutRedirect/index";

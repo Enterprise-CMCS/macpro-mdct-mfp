@@ -22,17 +22,11 @@ export const HomePage = () => {
         </Text>
         <Text></Text>
       </Box>
-      <TemplateCard
-        templateName="MP"
-        verbiage={cards.MP}
-        cardprops={sx.card}
-        // isDisabled={!userReports?.includes("MCPAR")}
-      />
+      <TemplateCard templateName="MP" verbiage={cards.MP} cardprops={sx.card} />
       <TemplateCard
         templateName="SAR"
         verbiage={cards.SAR}
         cardprops={sx.card}
-        // isDisabled={!userReports?.includes("SAR")}
       />
     </PageTemplate>
   );

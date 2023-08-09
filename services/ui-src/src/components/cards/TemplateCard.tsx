@@ -31,9 +31,6 @@ export const TemplateCard = ({
         )}
         <Flex sx={sx.cardContentFlex}>
           <Heading sx={sx.cardTitleText}>{verbiage.title}</Heading>
-          {/* {enabledReports[reportIndex] ? (
-            <Text>{cardText}</Text>
-          ) : ( */}
           <Text>
             {verbiage.body.available}
             <Link href={verbiage.linkLocation} isExternal>
@@ -41,11 +38,10 @@ export const TemplateCard = ({
             </Link>
             {verbiage.midText}
             <Link href={verbiage.linkLocation2} isExternal>
-              {verbiage.linkText2}{" "}
+              {verbiage.linkText2}
             </Link>
             {verbiage.postLinkText}
           </Text>
-          {/* )} */}
           <Flex sx={sx.actionsFlex}>
             {verbiage.downloadText && (
               <Button
@@ -63,7 +59,6 @@ export const TemplateCard = ({
               </Button>
             )}
 
-            {/* {T[reportIndex] && ( */}
             <Button
               sx={sx.formLink}
               isDisabled={isDisabled}
@@ -72,7 +67,6 @@ export const TemplateCard = ({
             >
               {verbiage.link.text}
             </Button>
-            {/* )} */}
           </Flex>
           <TemplateCardAccordion verbiage={verbiage.accordion} />
         </Flex>

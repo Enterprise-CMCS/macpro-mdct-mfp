@@ -5,8 +5,7 @@ export default {
       preLinkText:
         "Get started by completing a MFP Work Plan for your state or territory. After your Work Plan is submitted and approved, you will be able to complete a Semi-Annual Progress Report. Learn more about this ",
       linkText: "new data collection tool",
-      linkLocation:
-        "https://www.medicaid.gov/medicaid/managed-care/guidance/medicaid-and-chip-managed-care-reporting/index.html",
+      linkLocation: "",
       postLinkText: " from CMS.",
     },
   },
@@ -36,10 +35,8 @@ export default {
       linkText: "User Guide",
       linkText2: "Help File",
       midText: " and ",
-      linkLocation:
-        "https://www.medicaid.gov/medicaid/managed-care/guidance/medicaid-and-chip-managed-care-reporting/index.html",
-      linkLocation2:
-        "https://www.medicaid.gov/medicaid/managed-care/guidance/medicaid-and-chip-managed-care-reporting/index.html",
+      linkLocation: "",
+      linkLocation2: "",
       postLinkText: ".",
       downloadText: "",
       link: {
