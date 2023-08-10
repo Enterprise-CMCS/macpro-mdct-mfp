@@ -2,7 +2,6 @@
 export * from "./api/providers/ApiProvider";
 export * from "./api/requestMethods/getRequestHeaders";
 // auth
-export * from "./auth/useUser";
 export * from "./auth/UserProvider";
 export * from "./auth/authLifecycle";
 // state management
