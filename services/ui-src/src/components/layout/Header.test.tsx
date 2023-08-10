@@ -33,6 +33,10 @@ describe.skip("Test Header", () => {
     expect(header).toBeVisible();
   });
 
+  test("Logo is visible", () => {
+    expect(screen.getByAltText("MFP logo")).toBeVisible();
+  });
+
   test("Help button is visible", () => {
     expect(screen.getByTestId("header-help-button")).toBeVisible();
   });

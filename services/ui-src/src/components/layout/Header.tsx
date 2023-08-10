@@ -21,7 +21,7 @@ export const Header = ({ handleLogout }: Props) => {
         <Container sx={sx.headerContainer}>
           <Flex sx={sx.headerFlex}>
             <Link as={RouterLink} to="/" variant="unstyled">
-              <Image src={appLogo} alt="MCR logo" sx={sx.appLogo} />
+              <Image src={appLogo} alt="MFP logo" sx={sx.appLogo} />
             </Link>
             <Flex sx={sx.menuFlex}>
               <Link

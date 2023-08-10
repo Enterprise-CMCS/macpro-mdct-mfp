@@ -16,11 +16,7 @@ export const Footer = () => {
         <Container sx={sx.footerTopContainer}>
           <Flex sx={sx.footerTopFlex}>
             <Box sx={sx.footerTopLeftContainer}>
-              <Image
-                src={mfpLogo}
-                alt="Money follows people logo"
-                sx={sx.mfpLogo}
-              />
+              <Image src={mfpLogo} alt="MFP logo" sx={sx.mfpLogo} />
             </Box>
             <Box sx={sx.footerTopRightContainer}>
               <Flex sx={sx.footerTopRightTopFlex}>
