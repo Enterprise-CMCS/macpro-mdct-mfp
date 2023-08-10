@@ -33,6 +33,7 @@ export { LoginIDM } from "./logins/LoginIDM";
 // menus
 export { Menu } from "./menus/Menu";
 export { MenuOption } from "./menus/MenuOption";
+export { Sidebar } from "./menus/Sidebar";
 // modals
 export { Modal } from "./modals/Modal";
 // pages
@@ -43,6 +44,7 @@ export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
+export { ReportPageWrapper } from "./reports/ReportPageWrapper";
 // tables
 export { Table } from "./tables/Table";
 // widgets
