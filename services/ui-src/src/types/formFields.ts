@@ -13,14 +13,51 @@ export interface FormJson {
   adminDisabled?: boolean;
 }
 
+export interface DependentFieldValidation {
+  type: string;
+  dependentFieldName: string;
+  parentOptionId?: never;
+}
+
+export interface NestedFieldValidation {
+  type: string;
+  nested: true;
+  parentFieldName: string;
+  parentOptionId: string;
+}
+
+export interface NestedDependentFieldValidation {
+  type: string;
+  dependentFieldName: string;
+  nested: true;
+  parentFieldName: string;
+  parentOptionId: string;
+}
+
+export type FieldValidationObject =
+  | DependentFieldValidation
+  | NestedFieldValidation
+  | NestedDependentFieldValidation;
+
 export interface FormField {
   id: string;
   type: string;
-  validation: string;
+  validation: string | FieldValidationObject;
   hydrate?: string;
   props?: AnyObject;
   choices?: FieldChoice[];
   repeat?: string;
+}
+
+export function isFieldElement(
+  field: FormField | FormLayoutElement
+): field is FormField {
+  /*
+   * This function is duplicated in app-api/utils/formTemplates/formTemplates.ts
+   * If you change it here, change it there!
+   */
+  const formLayoutElementTypes = ["sectionHeader", "sectionContent"];
+  return !formLayoutElementTypes.includes(field.type);
 }
 
 export interface FormLayoutElement {

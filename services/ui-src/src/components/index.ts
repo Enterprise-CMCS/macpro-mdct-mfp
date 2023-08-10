@@ -21,6 +21,8 @@ export { ChoiceListField } from "./fields/ChoiceListField";
 export { RadioField } from "./fields/RadioField";
 export { TextField } from "./fields/TextField";
 export { TextAreaField } from "./fields/TextAreaField";
+// forms
+export { Form } from "./forms/Form";
 // layout
 export { Footer } from "./layout/Footer";
 export { Header } from "./layout/Header";
