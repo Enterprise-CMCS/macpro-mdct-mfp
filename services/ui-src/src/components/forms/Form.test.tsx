@@ -46,6 +46,12 @@ describe("Test Form component", () => {
     const form = screen.getByText(mockForm.fields[0].props.label);
     expect(form).toBeVisible();
   });
+
+  test("Non form field elements should not have autocomplete prop", async () => {
+    const result = render(formComponentJustHeader);
+    const testField = result.container.querySelector("[name='testfield']")!;
+    expect(testField.hasAttribute("autocomplete")).toBeFalsy();
+  });
 });
 
 describe("Test Form accessibility", () => {

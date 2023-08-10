@@ -1,8 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 // components
-import { HomePage, NotFoundPage } from "components";
+import { HomePage, NotFoundPage, StandardReportPage } from "components";
 // utils
 import { ScrollToTopComponent } from "utils";
+import { mockStandardReportPageJson } from "utils/testing/mockForm";
 
 export const AppRoutes = () => {
   return (
@@ -10,6 +11,10 @@ export const AppRoutes = () => {
       <ScrollToTopComponent />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route
+          path="/standard"
+          element={<StandardReportPage route={mockStandardReportPageJson} />}
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </main>
