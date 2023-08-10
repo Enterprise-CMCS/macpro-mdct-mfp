@@ -5,7 +5,7 @@ export default {
       preLinkText:
         "Get started by completing a MFP Work Plan for your state or territory. After your Work Plan is submitted and approved, you will be able to complete a Semi-Annual Progress Report. Learn more about this ",
       linkText: "new data collection tool",
-      linkLocation: "",
+      linkLocation: "https://www.google.com",
       postLinkText: " from CMS.",
     },
   },
@@ -35,8 +35,8 @@ export default {
       linkText: "User Guide",
       linkText2: "Help File",
       midText: " and ",
-      linkLocation: "",
-      linkLocation2: "",
+      linkLocation: "https://www.google.com",
+      linkLocation2: "https://www.google.com",
       postLinkText: ".",
       downloadText: "",
       link: {
