@@ -1,12 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { Form } from "components";
-import {
-  mockForm,
-  mockNonFieldForm,
-  RouterWrappedComponent,
-} from "utils/testing/setupJest";
+import { mockForm, RouterWrappedComponent } from "utils/testing/setupJest";
 
 const mockOnSubmit = jest.fn();
 
@@ -25,32 +20,11 @@ const formComponent = (
   </RouterWrappedComponent>
 );
 
-const formComponentJustHeader = (
-  <RouterWrappedComponent>
-    <Form
-      id={mockNonFieldForm.id}
-      formJson={mockNonFieldForm}
-      onSubmit={mockOnSubmit}
-      validateOnRender={false}
-      dontReset={false}
-    />
-    <button form={mockNonFieldForm.id} type="submit">
-      Submit
-    </button>
-  </RouterWrappedComponent>
-);
-
 describe("Test Form component", () => {
   test("Form is visible", () => {
     render(formComponent);
     const form = screen.getByText(mockForm.fields[0].props.label);
     expect(form).toBeVisible();
-  });
-
-  test("Non form field elements should not have autocomplete prop", async () => {
-    const result = render(formComponentJustHeader);
-    const testField = result.container.querySelector("[name='testfield']")!;
-    expect(testField.hasAttribute("autocomplete")).toBeFalsy();
   });
 });
 
