@@ -1,4 +1,4 @@
-import { CustomHtmlElement, FormJson } from "types";
+import { AnyObject, CustomHtmlElement, FormJson } from "types";
 
 // REPORT TYPES
 export enum ReportType {
@@ -32,4 +32,29 @@ export interface StandardReportPageShape extends ReportPageShapeBase {
   modalForm?: never;
   drawerForm?: never;
   entityType?: never;
+}
+
+export interface ReportJson {
+  id?: string;
+  type?: string;
+  name: string;
+  basePath: string;
+  routes: ReportRoute[];
+  flatRoutes?: ReportRoute[];
+  validationSchema?: AnyObject;
+  validationJson?: AnyObject;
+}
+
+export type ReportRoute = ReportRouteWithForm | ReportRouteWithoutForm;
+
+export type ReportRouteWithForm = StandardReportPageShape;
+
+export interface ReportRouteWithoutForm extends ReportRouteBase {
+  children?: ReportRoute[];
+  pageType?: string;
+  entityType?: never;
+  verbiage?: never;
+  modalForm?: never;
+  drawerForm?: never;
+  form?: never;
 }
