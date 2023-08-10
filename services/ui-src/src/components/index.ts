@@ -38,6 +38,10 @@ export { MenuOption } from "./menus/MenuOption";
 export { Sidebar } from "./menus/Sidebar";
 // modals
 export { Modal } from "./modals/Modal";
+export { AddEditEntityModal } from "./modals/AddEditEntityModal";
+export { AddEditReportModal } from "./modals/AddEditReportModal";
+export { DeleteDynamicFieldRecordModal } from "./modals/DeleteDynamicFieldRecordModal";
+export { DeleteEntityModal } from "./modals/DeleteEntityModal";
 // pages
 export { HomePage } from "./pages/Home/HomePage";
 export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
