@@ -6,6 +6,7 @@ import { useBreakpoint } from "utils";
 // assets
 import hhsLogo from "assets/logos/logo_hhs.png";
 import medicaidLogo from "assets/logos/logo_medicaid.svg";
+import mfpLogo from "assets/logos/logo_mdct_mfp_footer.png";
 
 export const Footer = () => {
   const { isDesktop } = useBreakpoint();
@@ -15,7 +16,11 @@ export const Footer = () => {
         <Container sx={sx.footerTopContainer}>
           <Flex sx={sx.footerTopFlex}>
             <Box sx={sx.footerTopLeftContainer}>
-              {/* Placeholder for MFP logo */}
+              <Image
+                src={mfpLogo}
+                alt="Money follows people logo"
+                sx={sx.mfpLogo}
+              />
             </Box>
             <Box sx={sx.footerTopRightContainer}>
               <Flex sx={sx.footerTopRightTopFlex}>
