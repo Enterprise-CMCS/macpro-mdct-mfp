@@ -2,13 +2,11 @@
 import { Flex } from "@chakra-ui/react";
 import { PageTemplate, Sidebar, StandardReportPage } from "components";
 // utils
-
-import React from "react";
 import { mockStandardReportPageJson } from "utils/testing/mockForm";
 
 export const ReportPageWrapper = () => {
   return (
-    <PageTemplate type="standard">
+    <PageTemplate type="report">
       <Flex sx={sx.pageContainer}>
         <>
           <Sidebar isHidden={false} />
