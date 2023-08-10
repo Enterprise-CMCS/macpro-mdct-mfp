@@ -4,10 +4,7 @@ import { axe } from "jest-axe";
 // components
 import { DeleteEntityModal } from "components";
 // utils
-import {
-  mockModalDrawerReportPageVerbiage,
-  mockAccessMeasuresEntity,
-} from "utils/testing/setupJest";
+import { mockModalDrawerReportPageVerbiage } from "utils/testing/setupJest";
 
 const mockCloseHandler = jest.fn();
 
