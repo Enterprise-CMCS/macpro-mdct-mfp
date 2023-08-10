@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { TextField } from "components";
 // utils
 import { mockStateUser } from "utils/testing/setupJest";
-import { useUser } from "utils";
+import { useStore } from "utils";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -26,8 +26,8 @@ const mockGetValues = (returnValue: any) =>
     getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/auth/useUser");
-const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
+jest.mock("utils/state/useStore");
+const mockedUseUser = useStore as jest.MockedFunction<typeof useStore>;
 
 const textFieldComponent = (
   <TextField

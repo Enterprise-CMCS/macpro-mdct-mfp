@@ -8,7 +8,7 @@ import {
   mockStateUser,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { useUser } from "utils";
+import { useStore } from "utils";
 
 const ProfilePageComponent = (
   <RouterWrappedComponent>
@@ -18,8 +18,8 @@ const ProfilePageComponent = (
 
 // MOCKS
 
-jest.mock("utils/auth/useUser");
-const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
+jest.mock("utils/state/useStore");
+const mockedUseUser = useStore as jest.MockedFunction<typeof useStore>;
 
 // TESTS
 

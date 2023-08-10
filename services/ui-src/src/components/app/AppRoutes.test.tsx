@@ -3,11 +3,11 @@ import { act } from "react-dom/test-utils";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { AppRoutes } from "components";
-import { useUser, UserProvider } from "utils";
+import { useStore, UserProvider } from "utils";
 import { mockStateUser } from "utils/testing/setupJest";
 
-jest.mock("utils/auth/useUser");
-const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
+jest.mock("utils/state/useStore");
+const mockedUseUser = useStore as jest.MockedFunction<typeof useStore>;
 
 const appRoutesComponent = (history: any) => (
   <Router location={history.location} navigator={history}>

@@ -5,6 +5,8 @@ export * from "./api/requestMethods/getRequestHeaders";
 export * from "./auth/useUser";
 export * from "./auth/UserProvider";
 export * from "./auth/authLifecycle";
+// state management
+export * from "./state/useStore";
 // tracking
 export * from "./tracking/tealium";
 // validation
