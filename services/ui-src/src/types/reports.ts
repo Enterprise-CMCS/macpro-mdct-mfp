@@ -1,5 +1,11 @@
 import { CustomHtmlElement, FormJson } from "types";
 
+// REPORT TYPES
+export enum ReportType {
+  MFP = "MFP",
+}
+
+// REPORT STRUCTURE
 export interface ReportPageVerbiage {
   intro: {
     section: string;
