@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import { HomePage, NotFoundPage, ReportPageWrapper } from "components";
 // utils
 import { ScrollToTopComponent } from "utils";
-import { mockStandardReportPageJson } from "utils/testing/mockForm";
 
 export const AppRoutes = () => {
   return (
