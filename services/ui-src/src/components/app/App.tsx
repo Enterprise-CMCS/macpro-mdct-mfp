@@ -15,11 +15,11 @@ import {
   PostLogoutRedirect,
 } from "components";
 // utils
-import { fireTealiumPageView, makeMediaQueryClasses, useStore } from "utils";
+import { fireTealiumPageView, makeMediaQueryClasses, useUser } from "utils";
 
 export const App = () => {
   const mqClasses = makeMediaQueryClasses();
-  const { user, showLocalLogins, logout } = useStore();
+  const { user, showLocalLogins, logout } = useUser();
   const { pathname, key } = useLocation();
 
   // fire tealium page view on route change

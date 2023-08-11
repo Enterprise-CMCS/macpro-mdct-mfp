@@ -2,8 +2,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { axe } from "jest-axe";
 // utils
-import { mockStateUser, RouterWrappedComponent } from "utils/testing/setupJest";
-import { initAuthManager, useStore } from "utils";
+import {
+  mockStateUserStore,
+  RouterWrappedComponent,
+} from "utils/testing/setupJest";
+import { initAuthManager, useUser } from "utils";
 //components
 import { Timeout } from "components";
 import { IDLE_WINDOW, PROMPT_AT } from "../../constants";
@@ -17,12 +20,12 @@ const timeoutComponent = (
 const mockLogout = jest.fn();
 
 const mockUser = {
-  ...mockStateUser,
+  ...mockStateUserStore,
   logout: mockLogout,
 };
 
-jest.mock("utils/state/useStore");
-const mockedUseUser = useStore as jest.MockedFunction<typeof useStore>;
+jest.mock("utils/state/useUser");
+const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
 
 const spy = jest.spyOn(global, "setTimeout");
 

@@ -2,12 +2,14 @@ import { render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
+// components
 import { AppRoutes } from "components";
-import { useStore, UserProvider } from "utils";
-import { mockStateUser } from "utils/testing/setupJest";
+// utils
+import { useUser, UserProvider } from "utils";
+import { mockStateUserStore } from "utils/testing/setupJest";
 
-jest.mock("utils/state/useStore");
-const mockedUseUser = useStore as jest.MockedFunction<typeof useStore>;
+jest.mock("utils/state/useUser");
+const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
 
 const appRoutesComponent = (history: any) => (
   <Router location={history.location} navigator={history}>
@@ -21,7 +23,7 @@ let history: any;
 
 describe("Test AppRoutes 404 handling", () => {
   beforeEach(async () => {
-    mockedUseUser.mockReturnValue(mockStateUser);
+    mockedUseUser.mockReturnValue(mockStateUserStore);
     history = createMemoryHistory();
     history.push("/obviously-fake-route");
     await act(async () => {

@@ -4,8 +4,8 @@ import { axe } from "jest-axe";
 import { useFormContext } from "react-hook-form";
 import { TextField } from "components";
 // utils
-import { mockStateUser } from "utils/testing/setupJest";
-import { useStore } from "utils";
+import { mockStateUserStore } from "utils/testing/setupJest";
+import { useUser } from "utils";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -26,8 +26,8 @@ const mockGetValues = (returnValue: any) =>
     getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useStore");
-const mockedUseUser = useStore as jest.MockedFunction<typeof useStore>;
+jest.mock("utils/state/useUser");
+const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
 
 const textFieldComponent = (
   <TextField
@@ -40,7 +40,7 @@ const textFieldComponent = (
 
 describe("Test TextField component", () => {
   test("TextField is visible", () => {
-    mockedUseUser.mockReturnValue(mockStateUser);
+    mockedUseUser.mockReturnValue(mockStateUserStore);
     mockGetValues("");
     render(textFieldComponent);
     const textField = screen.getByTestId("test-text-field");
@@ -51,7 +51,7 @@ describe("Test TextField component", () => {
 
 describe("Test TextField accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
-    mockedUseUser.mockReturnValue(mockStateUser);
+    mockedUseUser.mockReturnValue(mockStateUserStore);
     mockGetValues(undefined);
     const { container } = render(textFieldComponent);
     const results = await axe(container);

@@ -4,8 +4,8 @@ import "@testing-library/jest-dom";
 import "jest-axe/extend-expect";
 import { mockFlags, resetLDMocks } from "jest-launchdarkly-mock";
 
-// utils
-import { UserContextShape, UserRoles } from "types/users";
+// types
+import { UserRoles, MfpUserState } from "types";
 
 // GLOBALS
 
@@ -40,102 +40,6 @@ export const mockLDFlags = {
   setDefault: (baseline: any) => mockFlags(baseline),
   clear: resetLDMocks,
   set: mockFlags,
-};
-
-// USERS
-
-export const mockNoUser: UserContextShape = {
-  user: undefined,
-  showLocalLogins: true,
-  logout: async () => {},
-  loginWithIDM: () => {},
-  updateTimeout: async () => {},
-  getExpiration: () => {},
-};
-
-export const mockStateUser: UserContextShape = {
-  user: {
-    userRole: UserRoles.STATE_USER,
-    email: "stateuser@test.com",
-    given_name: "Thelonious",
-    family_name: "States",
-    full_name: "Thelonious States",
-    state: "MN",
-    userIsStateUser: true,
-  },
-  showLocalLogins: true,
-  logout: async () => {},
-  loginWithIDM: () => {},
-  updateTimeout: async () => {},
-  getExpiration: () => {},
-};
-
-export const mockStateRep: UserContextShape = {
-  user: {
-    userRole: UserRoles.STATE_REP,
-    email: "staterep@test.com",
-    given_name: "Robert",
-    family_name: "States",
-    full_name: "Robert States",
-    state: "MA",
-    userIsStateRep: true,
-  },
-  showLocalLogins: true,
-  logout: async () => {},
-  loginWithIDM: () => {},
-  updateTimeout: async () => {},
-  getExpiration: () => {},
-};
-
-export const mockStateApprover: UserContextShape = {
-  user: {
-    userRole: UserRoles.APPROVER,
-    email: "stateapprover@test.com",
-    given_name: "Zara",
-    family_name: "Zustimmer",
-    full_name: "Zara Zustimmer",
-    state: "MN",
-    userIsApprover: true,
-  },
-  showLocalLogins: true,
-  logout: async () => {},
-  loginWithIDM: () => {},
-  updateTimeout: async () => {},
-  getExpiration: () => {},
-};
-
-export const mockHelpDeskUser: UserContextShape = {
-  user: {
-    userRole: UserRoles.HELP_DESK,
-    email: "helpdeskuser@test.com",
-    given_name: "Clippy",
-    family_name: "Helperson",
-    full_name: "Clippy Helperson",
-    state: undefined,
-    userIsHelpDeskUser: true,
-  },
-  showLocalLogins: false,
-  logout: async () => {},
-  loginWithIDM: () => {},
-  updateTimeout: async () => {},
-  getExpiration: () => {},
-};
-
-export const mockAdminUser: UserContextShape = {
-  user: {
-    userRole: UserRoles.ADMIN,
-    email: "adminuser@test.com",
-    given_name: "Adam",
-    family_name: "Admin",
-    full_name: "Adam Admin",
-    state: undefined,
-    userIsAdmin: true,
-  },
-  showLocalLogins: false,
-  logout: async () => {},
-  loginWithIDM: () => {},
-  updateTimeout: async () => {},
-  getExpiration: () => {},
 };
 
 // AUTH
@@ -178,3 +82,99 @@ export const mockLDClient = {
 
 // FORM
 export * from "./mockForm";
+
+// USER STATES
+
+export const mockNoUserStore: MfpUserState = {
+  user: null,
+  showLocalLogins: true,
+  setUser: () => {},
+  setShowLocalLogins: () => {},
+  loginWithIDM: () => {},
+  logout: async () => {},
+};
+
+export const mockStateUserStore: MfpUserState = {
+  user: {
+    userRole: UserRoles.STATE_USER,
+    email: "stateuser@test.com",
+    given_name: "Thelonious",
+    family_name: "States",
+    full_name: "Thelonious States",
+    state: "MN",
+    userIsStateUser: true,
+  },
+  showLocalLogins: true,
+  setUser: () => {},
+  setShowLocalLogins: () => {},
+  loginWithIDM: () => {},
+  logout: async () => {},
+};
+
+export const mockStateApproverStore: MfpUserState = {
+  user: {
+    userRole: UserRoles.APPROVER,
+    email: "stateapprover@test.com",
+    given_name: "Zara",
+    family_name: "Zustimmer",
+    full_name: "Zara Zustimmer",
+    state: "MN",
+    userIsApprover: true,
+  },
+  showLocalLogins: true,
+  setUser: () => {},
+  setShowLocalLogins: () => {},
+  loginWithIDM: () => {},
+  logout: async () => {},
+};
+
+export const mockStateRepStore: MfpUserState = {
+  user: {
+    userRole: UserRoles.STATE_REP,
+    email: "staterep@test.com",
+    given_name: "Robert",
+    family_name: "States",
+    full_name: "Robert States",
+    state: "MA",
+    userIsStateRep: true,
+  },
+  showLocalLogins: true,
+  setUser: () => {},
+  setShowLocalLogins: () => {},
+  loginWithIDM: () => {},
+  logout: async () => {},
+};
+
+export const mockHelpDeskUserStore: MfpUserState = {
+  user: {
+    userRole: UserRoles.HELP_DESK,
+    email: "helpdeskuser@test.com",
+    given_name: "Clippy",
+    family_name: "Helperson",
+    full_name: "Clippy Helperson",
+    state: undefined,
+    userIsHelpDeskUser: true,
+  },
+  showLocalLogins: false,
+  setUser: () => {},
+  setShowLocalLogins: () => {},
+  loginWithIDM: () => {},
+  logout: async () => {},
+};
+
+export const mockAdminUserStore: MfpUserState = {
+  user: {
+    userRole: UserRoles.ADMIN,
+    email: "adminuser@test.com",
+    given_name: "Adam",
+    family_name: "Admin",
+    full_name: "Adam Admin",
+    state: undefined,
+    userIsAdmin: true,
+  },
+  showLocalLogins: false,
+  setUser: () => {},
+  setShowLocalLogins: () => {},
+  loginWithIDM: () => {},
+  logout: async () => {},
+};
