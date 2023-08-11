@@ -67,7 +67,12 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
         <Box sx={sx.navSectionsBox} className="nav-sections-box">
           <NavSection
             key={"section name"}
-            section={{ name: "placeholder", path: "/standard" }}
+            section={{ name: "standard report", path: "/standard" }}
+            level={1}
+          />
+          <NavSection
+            key={"section name"}
+            section={{ name: "review and submit", path: "/reviewSubmit" }}
             level={1}
           />
         </Box>
