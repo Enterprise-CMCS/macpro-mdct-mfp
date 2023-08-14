@@ -16,6 +16,7 @@ export interface MFPUser {
   state?: string;
   userRole?: string;
   userIsAdmin?: boolean;
+  userIsReadOnly?: boolean;
   userIsHelpDeskUser?: boolean;
   userIsApprover?: boolean;
   userIsStateRep?: boolean;

@@ -178,3 +178,5 @@ export const mockLDClient = {
 
 // FORM
 export * from "./mockForm";
+// ENTITIES
+export * from "./mockEntities";
