@@ -1,0 +1,20 @@
+{
+  "id": "aep",
+  "options": {
+    "mode": "onChange"
+  },
+  "heading": {
+    "add": "Add a Program",
+    "edit": "Edit Program"
+  },
+  "fields": [
+    {
+      "id": "programName",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "label": "Program name"
+      }
+    }
+  ]
+}
