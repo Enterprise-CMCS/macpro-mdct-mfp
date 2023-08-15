@@ -1,6 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 // components
-import { HomePage, NotFoundPage, ReportPageWrapper } from "components";
+import {
+  HomePage,
+  NotFoundPage,
+  ReportPageWrapper,
+  ReviewSubmitPage,
+} from "components";
 // utils
 import { ScrollToTopComponent } from "utils";
 
@@ -11,6 +16,7 @@ export const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/standard" element={<ReportPageWrapper />} />
+        <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </main>

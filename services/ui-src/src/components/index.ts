@@ -16,6 +16,7 @@ export { EmailCard } from "./cards/EmailCard";
 export { TemplateCard } from "./cards/TemplateCard";
 // drawers
 export { Drawer } from "./drawers/Drawer";
+export { ReportDrawer } from "./drawers/ReportDrawer";
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";
@@ -48,11 +49,15 @@ export { DeleteEntityModal } from "./modals/DeleteEntityModal";
 export { HomePage } from "./pages/Home/HomePage";
 export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 export { ProfilePage } from "./pages/Profile/ProfilePage";
+export { ReviewSubmitPage } from "./pages/ReviewSubmit/ReviewSubmitPage";
 // reports
+export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
 export { ReportPageWrapper } from "./reports/ReportPageWrapper";
+// statusing
+export { StatusTable } from "./statusing/StatusTable";
 // tables
 export { Table } from "./tables/Table";
 // widgets
