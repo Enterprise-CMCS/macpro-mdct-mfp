@@ -8,6 +8,4 @@ export interface MfpUserState {
   // ACTIONS
   setUser: (newUser: MFPUser | null) => void;
   setShowLocalLogins: (showLocalLogins: boolean) => void;
-  loginWithIDM: () => void;
-  logout: () => Promise<void>;
 }

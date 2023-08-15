@@ -1,15 +1,17 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { axe } from "jest-axe";
+// components
+import { Timeout } from "components";
+// constants
+import { IDLE_WINDOW, PROMPT_AT } from "../../constants";
 // utils
 import {
   mockStateUserStore,
+  mockUserContext,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { initAuthManager, useUser } from "utils";
-//components
-import { Timeout } from "components";
-import { IDLE_WINDOW, PROMPT_AT } from "../../constants";
 
 const timeoutComponent = (
   <RouterWrappedComponent>
@@ -17,17 +19,17 @@ const timeoutComponent = (
   </RouterWrappedComponent>
 );
 
-const mockLogout = jest.fn();
+const mockLogout = { logout: jest.fn() };
 
 const mockUser = {
   ...mockStateUserStore,
-  logout: mockLogout,
 };
 
 jest.mock("utils/state/useUser");
 const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
 
-const spy = jest.spyOn(global, "setTimeout");
+const timeoutSpy = jest.spyOn(global, "setTimeout");
+const logoutSpy = jest.spyOn(mockLogout, "logout");
 
 describe("Test Timeout Modal", () => {
   beforeEach(async () => {
@@ -40,7 +42,8 @@ describe("Test Timeout Modal", () => {
   afterEach(() => {
     jest.useRealTimers();
     jest.restoreAllMocks();
-    spy.mockClear();
+    logoutSpy.mockClear();
+    timeoutSpy.mockClear();
   });
 
   test("Timeout modal is visible", async () => {
@@ -76,7 +79,7 @@ describe("Test Timeout Modal", () => {
     await act(async () => {
       await fireEvent.click(logoutButton);
     });
-    expect(mockLogout).toHaveBeenCalledTimes(1);
+    expect(mockUserContext.logout()).toHaveBeenCalledTimes(1);
   });
   test("Timeout modal executes logout on timeout", async () => {
     mockLogout.mockReset();
@@ -84,7 +87,7 @@ describe("Test Timeout Modal", () => {
     await act(async () => {
       jest.advanceTimersByTime(10 * IDLE_WINDOW);
     });
-    expect(mockLogout).toHaveBeenCalledTimes(1);
+    expect(mockUserContext.logout()).toHaveBeenCalledTimes(1);
   });
 });
 

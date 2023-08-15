@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useLocation, Routes, Route } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 // components
@@ -15,11 +15,18 @@ import {
   PostLogoutRedirect,
 } from "components";
 // utils
-import { fireTealiumPageView, makeMediaQueryClasses, useUser } from "utils";
+import {
+  fireTealiumPageView,
+  makeMediaQueryClasses,
+  UserContext,
+  useUser,
+} from "utils";
 
 export const App = () => {
   const mqClasses = makeMediaQueryClasses();
-  const { user, showLocalLogins, logout } = useUser();
+  const context = useContext(UserContext);
+  const { logout } = context;
+  const { user, showLocalLogins } = useUser();
   const { pathname, key } = useLocation();
 
   // fire tealium page view on route change

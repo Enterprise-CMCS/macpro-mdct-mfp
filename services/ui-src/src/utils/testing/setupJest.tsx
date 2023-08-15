@@ -3,9 +3,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "@testing-library/jest-dom";
 import "jest-axe/extend-expect";
 import { mockFlags, resetLDMocks } from "jest-launchdarkly-mock";
-
 // types
-import { UserRoles, MfpUserState } from "types";
+import { UserRoles, MfpUserState, UserContextShape } from "types";
 
 // GLOBALS
 
@@ -68,20 +67,14 @@ jest.mock("aws-amplify", () => ({
   },
 }));
 
-// ROUTER
+// USER CONTEXT
 
-export const RouterWrappedComponent: React.FC = ({ children }) => (
-  <Router>{children}</Router>
-);
-
-// LAUNCHDARKLY
-
-export const mockLDClient = {
-  variation: jest.fn(() => true),
+export const mockUserContext: UserContextShape = {
+  logout: async () => {},
+  loginWithIDM: () => {},
+  updateTimeout: async () => {},
+  getExpiration: () => {},
 };
-
-// FORM
-export * from "./mockForm";
 
 // USER STATES
 
@@ -90,8 +83,6 @@ export const mockNoUserStore: MfpUserState = {
   showLocalLogins: true,
   setUser: () => {},
   setShowLocalLogins: () => {},
-  loginWithIDM: () => {},
-  logout: async () => {},
 };
 
 export const mockStateUserStore: MfpUserState = {
@@ -107,8 +98,6 @@ export const mockStateUserStore: MfpUserState = {
   showLocalLogins: true,
   setUser: () => {},
   setShowLocalLogins: () => {},
-  loginWithIDM: () => {},
-  logout: async () => {},
 };
 
 export const mockStateApproverStore: MfpUserState = {
@@ -124,8 +113,6 @@ export const mockStateApproverStore: MfpUserState = {
   showLocalLogins: true,
   setUser: () => {},
   setShowLocalLogins: () => {},
-  loginWithIDM: () => {},
-  logout: async () => {},
 };
 
 export const mockStateRepStore: MfpUserState = {
@@ -141,8 +128,6 @@ export const mockStateRepStore: MfpUserState = {
   showLocalLogins: true,
   setUser: () => {},
   setShowLocalLogins: () => {},
-  loginWithIDM: () => {},
-  logout: async () => {},
 };
 
 export const mockHelpDeskUserStore: MfpUserState = {
@@ -158,8 +143,6 @@ export const mockHelpDeskUserStore: MfpUserState = {
   showLocalLogins: false,
   setUser: () => {},
   setShowLocalLogins: () => {},
-  loginWithIDM: () => {},
-  logout: async () => {},
 };
 
 export const mockAdminUserStore: MfpUserState = {
@@ -175,6 +158,19 @@ export const mockAdminUserStore: MfpUserState = {
   showLocalLogins: false,
   setUser: () => {},
   setShowLocalLogins: () => {},
-  loginWithIDM: () => {},
-  logout: async () => {},
 };
+
+// ROUTER
+
+export const RouterWrappedComponent: React.FC = ({ children }) => (
+  <Router>{children}</Router>
+);
+
+// LAUNCHDARKLY
+
+export const mockLDClient = {
+  variation: jest.fn(() => true),
+};
+
+// FORM
+export * from "./mockForm";
