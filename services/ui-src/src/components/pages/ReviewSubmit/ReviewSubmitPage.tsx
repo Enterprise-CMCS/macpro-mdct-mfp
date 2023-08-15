@@ -24,12 +24,8 @@ import { utcDateToReadableDate } from "utils";
 export const ReviewSubmitPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  //const [submitting, setSubmitting] = useState<boolean>(false);
-
-  //   const [hasError, setHasError] = useState<boolean>(false);
+  // mock values
   const hasError = false;
-
-  //   const [isPermittedToSubmit, setIsPermittedToSubmit] = useState<boolean>(false);
   const { alertBox } = verbiage;
 
   return (
@@ -68,8 +64,6 @@ export const ReviewSubmitPage = () => {
     </>
   );
 };
-
-// these aren't used at the moment, commenting out for future reference
 
 const PrintButton = ({ reviewVerbiage }: { reviewVerbiage: AnyObject }) => {
   const { print } = reviewVerbiage;
@@ -235,6 +229,7 @@ const sx = {
     flexDirection: "column",
     width: "100%",
     maxWidth: "reportPageWidth",
+    marginTop: "2rem",
   },
   leadTextBox: {
     width: "100%",
