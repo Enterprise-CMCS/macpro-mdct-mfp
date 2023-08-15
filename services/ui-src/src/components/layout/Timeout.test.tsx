@@ -19,7 +19,7 @@ const timeoutComponent = (
   </RouterWrappedComponent>
 );
 
-const mockLogout = { logout: jest.fn() };
+const mockLogout = jest.fn();
 
 const mockUser = {
   ...mockStateUserStore,
@@ -28,8 +28,7 @@ const mockUser = {
 jest.mock("utils/state/useUser");
 const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
 
-const timeoutSpy = jest.spyOn(global, "setTimeout");
-const logoutSpy = jest.spyOn(mockLogout, "logout");
+const spy = jest.spyOn(global, "setTimeout");
 
 describe("Test Timeout Modal", () => {
   beforeEach(async () => {
@@ -42,8 +41,7 @@ describe("Test Timeout Modal", () => {
   afterEach(() => {
     jest.useRealTimers();
     jest.restoreAllMocks();
-    logoutSpy.mockClear();
-    timeoutSpy.mockClear();
+    spy.mockClear();
   });
 
   test("Timeout modal is visible", async () => {
