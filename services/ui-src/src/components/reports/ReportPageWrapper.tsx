@@ -5,9 +5,11 @@ import { PageTypes } from "types";
 // utils
 import {
   mockDrawerReportPageJson,
+  mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
 import { DrawerReportPage } from "./DrawerReportPage";
+import { ModalDrawerReportPage } from "./ModalDrawerReportPage";
 
 export const ReportPageWrapper = () => {
   // these should be built off the form template, which comes from the report.
@@ -15,6 +17,8 @@ export const ReportPageWrapper = () => {
     switch (route) {
       case PageTypes.DRAWER:
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
+      case PageTypes.MODAL_DRAWER:
+        return <ModalDrawerReportPage route={mockModalDrawerReportPageJson} />;
       default:
         return <StandardReportPage route={mockStandardReportPageJson} />;
     }
@@ -26,7 +30,7 @@ export const ReportPageWrapper = () => {
         <>
           <Sidebar isHidden={false} />
           <Flex id="report-content" sx={sx.reportContainer}>
-            {renderPageSection(PageTypes.DRAWER)}
+            {renderPageSection(PageTypes.MODAL_DRAWER)}
           </Flex>
         </>
       </Flex>
