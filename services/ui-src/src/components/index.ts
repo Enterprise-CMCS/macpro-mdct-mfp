@@ -23,6 +23,8 @@ export { ChoiceListField } from "./fields/ChoiceListField";
 export { RadioField } from "./fields/RadioField";
 export { TextField } from "./fields/TextField";
 export { TextAreaField } from "./fields/TextAreaField";
+// forms
+export { Form } from "./forms/Form";
 // layout
 export { Footer } from "./layout/Footer";
 export { Header } from "./layout/Header";
@@ -35,6 +37,7 @@ export { LoginIDM } from "./logins/LoginIDM";
 // menus
 export { Menu } from "./menus/Menu";
 export { MenuOption } from "./menus/MenuOption";
+export { Sidebar } from "./menus/Sidebar";
 // modals
 export { Modal } from "./modals/Modal";
 // pages
@@ -45,6 +48,7 @@ export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
+export { ReportPageWrapper } from "./reports/ReportPageWrapper";
 // tables
 export { Table } from "./tables/Table";
 // widgets
