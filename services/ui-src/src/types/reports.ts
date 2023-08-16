@@ -34,6 +34,22 @@ export interface StandardReportPageShape extends ReportPageShapeBase {
   entityType?: never;
 }
 
+export interface DrawerReportPageShape extends ReportPageShapeBase {
+  entityType: string;
+  verbiage: DrawerReportPageVerbiage;
+  drawerForm: FormJson;
+  modalForm?: never;
+  form?: never;
+}
+
+export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
+  entityType: string;
+  verbiage: ModalDrawerReportPageVerbiage;
+  modalForm: FormJson;
+  drawerForm: FormJson;
+  form?: never;
+}
+
 export interface ReportJson {
   id?: string;
   type?: string;
@@ -57,4 +73,28 @@ export interface ReportRouteWithoutForm extends ReportRouteBase {
   modalForm?: never;
   drawerForm?: never;
   form?: never;
+}
+
+export interface DrawerReportPageVerbiage extends ReportPageVerbiage {
+  dashboardTitle: string;
+  countEntitiesInTitle?: boolean;
+  drawerTitle: string;
+  drawerInfo?: CustomHtmlElement[];
+  missingEntityMessage?: CustomHtmlElement[];
+}
+
+export interface ModalDrawerReportPageVerbiage
+  extends DrawerReportPageVerbiage {
+  addEntityButtonText: string;
+  editEntityButtonText: string;
+  addEditModalAddTitle: string;
+  addEditModalEditTitle: string;
+  addEditModalMessage: string;
+  deleteEntityButtonAltText: string;
+  deleteModalTitle: string;
+  deleteModalConfirmButtonText: string;
+  deleteModalWarning: string;
+  entityUnfinishedMessage: string;
+  enterEntityDetailsButtonText: string;
+  editEntityDetailsButtonText: string;
 }
