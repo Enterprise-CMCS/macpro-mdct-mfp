@@ -4,12 +4,16 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useState,
 } from "react";
 import { useLocation } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import config from "config";
-import { initAuthManager, updateTimeout, getExpiration } from "utils";
+import {
+  initAuthManager,
+  updateTimeout,
+  getExpiration,
+  useUserStore,
+} from "utils";
 import { PRODUCTION_HOST_DOMAIN } from "../../constants";
 
 import { MFPUser, UserContextShape, UserRoles } from "types/users";
@@ -21,34 +25,33 @@ export const UserContext = createContext<UserContextShape>({
   getExpiration: () => {},
 });
 
-const authenticateWithIDM = async () => {
-  const authConfig = Auth.configure();
-  if (authConfig?.oauth) {
-    const oAuthOpts = authConfig.oauth;
-    const domain = oAuthOpts.domain;
-    const responseType = oAuthOpts.responseType;
-    const redirectSignIn = (oAuthOpts as any).redirectSignIn;
-    const clientId = authConfig.userPoolWebClientId;
-    const url = `https://${domain}/oauth2/authorize?identity_provider=Okta&redirect_uri=${redirectSignIn}&response_type=${responseType}&client_id=${clientId}`;
-    window.location.assign(url);
-  }
-  const cognitoHostedUrl = new URL(
-    `https://${config.cognito.APP_CLIENT_DOMAIN}/oauth2/authorize?identity_provider=${config.cognito.COGNITO_IDP_NAME}&redirect_uri=${config.APPLICATION_ENDPOINT}&response_type=CODE&client_id=${config.cognito.APP_CLIENT_ID}&scope=email openid profile`
-  );
-  window.location.replace(cognitoHostedUrl);
-};
-
 export const UserProvider = ({ children }: Props) => {
+  const authenticateWithIDM = async () => {
+    const authConfig = Auth.configure();
+    if (authConfig?.oauth) {
+      const oAuthOpts = authConfig.oauth;
+      const domain = oAuthOpts.domain;
+      const responseType = oAuthOpts.responseType;
+      const redirectSignIn = (oAuthOpts as any).redirectSignIn;
+      const clientId = authConfig.userPoolWebClientId;
+      const url = `https://${domain}/oauth2/authorize?identity_provider=Okta&redirect_uri=${redirectSignIn}&response_type=${responseType}&client_id=${clientId}`;
+      window.location.assign(url);
+    }
+    const cognitoHostedUrl = new URL(
+      `https://${config.cognito.APP_CLIENT_DOMAIN}/oauth2/authorize?identity_provider=${config.cognito.COGNITO_IDP_NAME}&redirect_uri=${config.APPLICATION_ENDPOINT}&response_type=CODE&client_id=${config.cognito.APP_CLIENT_ID}&scope=email openid profile`
+    );
+    window.location.replace(cognitoHostedUrl);
+  };
   const location = useLocation();
   const isProduction = window.location.origin.includes(PRODUCTION_HOST_DOMAIN);
 
-  const [user, setUser] = useState<any>(null);
-  const [showLocalLogins, setShowLocalLogins] = useState(false);
+  // state management
+  const { user, showLocalLogins, setUser, setShowLocalLogins } = useUserStore();
 
   // initialize the authentication manager that oversees timeouts
   initAuthManager();
 
-  const logout = useCallback(async () => {
+  const logout = async () => {
     try {
       setUser(null);
       await Auth.signOut();
@@ -57,7 +60,7 @@ export const UserProvider = ({ children }: Props) => {
       console.log(error); // eslint-disable-line no-console
     }
     window.location.href = config.POST_SIGNOUT_REDIRECT;
-  }, []);
+  };
 
   const checkAuthState = useCallback(async () => {
     // Allow Post Logout flow alongside user login flow
