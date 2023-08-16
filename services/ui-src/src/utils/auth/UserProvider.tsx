@@ -8,7 +8,12 @@ import {
 import { useLocation } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import config from "config";
-import { initAuthManager, updateTimeout, getExpiration, useUser } from "utils";
+import {
+  initAuthManager,
+  updateTimeout,
+  getExpiration,
+  useUserStore,
+} from "utils";
 import { PRODUCTION_HOST_DOMAIN } from "../../constants";
 
 import { MFPUser, UserContextShape, UserRoles } from "types/users";
@@ -41,7 +46,7 @@ export const UserProvider = ({ children }: Props) => {
   const isProduction = window.location.origin.includes(PRODUCTION_HOST_DOMAIN);
 
   // state management
-  const { user, setUser, showLocalLogins, setShowLocalLogins } = useUser();
+  const { user, showLocalLogins, setUser, setShowLocalLogins } = useUserStore();
 
   // initialize the authentication manager that oversees timeouts
   initAuthManager();

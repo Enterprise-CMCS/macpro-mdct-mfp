@@ -5,7 +5,7 @@ export * from "./api/requestMethods/getRequestHeaders";
 export * from "./auth/UserProvider";
 export * from "./auth/authLifecycle";
 // state management
-export * from "./state/useUser";
+export * from "./state/useUserStore";
 // forms
 export * from "./forms/forms";
 // reports
