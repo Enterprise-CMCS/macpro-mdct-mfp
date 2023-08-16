@@ -8,18 +8,29 @@ import { IDLE_WINDOW, PROMPT_AT } from "../../constants";
 // utils
 import {
   mockStateUserStore,
-  mockUserContext,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { initAuthManager, useUser } from "utils";
+import { initAuthManager, UserContext, useUser } from "utils";
+
+const mockLogout = jest.fn();
+const mockLoginWithIDM = jest.fn();
+const mockUpdateTimeout = jest.fn();
+const mockGetExpiration = jest.fn();
+
+const mockUserContext = {
+  logout: mockLogout,
+  loginWithIDM: mockLoginWithIDM,
+  updateTimeout: mockUpdateTimeout,
+  getExpiration: mockGetExpiration,
+};
 
 const timeoutComponent = (
   <RouterWrappedComponent>
-    <Timeout />
+    <UserContext.Provider value={mockUserContext}>
+      <Timeout />
+    </UserContext.Provider>
   </RouterWrappedComponent>
 );
-
-const mockLogout = jest.fn();
 
 const mockUser = {
   ...mockStateUserStore,
@@ -77,15 +88,14 @@ describe("Test Timeout Modal", () => {
     await act(async () => {
       await fireEvent.click(logoutButton);
     });
-    expect(mockUserContext.logout()).toHaveBeenCalledTimes(1);
+    expect(mockLogout).toHaveBeenCalledTimes(1);
   });
   test("Timeout modal executes logout on timeout", async () => {
     mockLogout.mockReset();
-
     await act(async () => {
       jest.advanceTimersByTime(10 * IDLE_WINDOW);
     });
-    expect(mockUserContext.logout()).toHaveBeenCalledTimes(1);
+    expect(mockLogout).toHaveBeenCalledTimes(1);
   });
 });
 
