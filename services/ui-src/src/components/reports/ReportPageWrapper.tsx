@@ -4,6 +4,7 @@ import {
   DrawerReportPage,
   ModalDrawerReportPage,
   PageTemplate,
+  ReviewSubmitPage,
   Sidebar,
   StandardReportPage,
 } from "components";
@@ -23,6 +24,8 @@ export const ReportPageWrapper = () => {
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
       case PageTypes.MODAL_DRAWER:
         return <ModalDrawerReportPage route={mockModalDrawerReportPageJson} />;
+      case PageTypes.REVIEW_SUBMIT:
+        return <ReviewSubmitPage />;
       default:
         return <StandardReportPage route={mockStandardReportPageJson} />;
     }
