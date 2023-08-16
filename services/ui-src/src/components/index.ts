@@ -51,11 +51,13 @@ export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { ReviewSubmitPage } from "./pages/ReviewSubmit/ReviewSubmitPage";
 // reports
-export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
 export { ReportPageWrapper } from "./reports/ReportPageWrapper";
+export { DrawerReportPage } from "./reports/DrawerReportPage";
+export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
+
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables

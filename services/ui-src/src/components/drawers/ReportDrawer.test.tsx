@@ -3,9 +3,9 @@ import { axe } from "jest-axe";
 //components
 import {
   mockAdminUser,
-  mockCompletedQualityMeasuresEntity,
   mockDrawerForm,
   mockEmptyDrawerForm,
+  mockGenericEntity,
   mockModalDrawerReportPageVerbiage,
   mockStateUser,
   RouterWrappedComponent,
@@ -31,7 +31,7 @@ const drawerComponent = (
   <RouterWrappedComponent>
     <ReportDrawer
       verbiage={mockModalDrawerReportPageVerbiage}
-      selectedEntity={mockCompletedQualityMeasuresEntity}
+      selectedEntity={mockGenericEntity}
       form={mockDrawerForm}
       onSubmit={mockOnSubmit}
       drawerDisclosure={mockDrawerDisclosure}
@@ -59,7 +59,7 @@ describe("Test ReportDrawer rendering", () => {
 const drawerComponentWithoutFormFields = (
   <ReportDrawer
     verbiage={mockModalDrawerReportPageVerbiage}
-    selectedEntity={mockCompletedQualityMeasuresEntity}
+    selectedEntity={mockGenericEntity}
     form={mockEmptyDrawerForm}
     onSubmit={mockOnSubmit}
     drawerDisclosure={mockDrawerDisclosure}

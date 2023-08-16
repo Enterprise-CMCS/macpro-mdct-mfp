@@ -146,6 +146,16 @@ export const mockModalDrawerReportPageVerbiage = {
   drawerNoFormMessage: "Mock no form fields here",
 };
 
+export const mockModalDrawerReportPageJson = {
+  name: "mock-route-2b",
+  path: "/mock/mock-route-2b",
+  pageType: "modalDrawer",
+  entityType: "entityType",
+  verbiage: mockModalDrawerReportPageVerbiage,
+  modalForm: mockModalForm,
+  drawerForm: mockDrawerForm,
+};
+
 export const mockReviewSubmitPageJson = {
   name: "mock-route-3",
   path: "/mock/mock-review-and-submit",

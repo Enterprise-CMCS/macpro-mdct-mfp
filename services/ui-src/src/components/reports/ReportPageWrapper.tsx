@@ -2,6 +2,7 @@
 import { Flex } from "@chakra-ui/react";
 import {
   DrawerReportPage,
+  ModalDrawerReportPage,
   PageTemplate,
   ReviewSubmitPage,
   Sidebar,
@@ -11,6 +12,7 @@ import { PageTypes } from "types";
 // utils
 import {
   mockDrawerReportPageJson,
+  mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
 
@@ -20,6 +22,8 @@ export const ReportPageWrapper = () => {
     switch (route) {
       case PageTypes.DRAWER:
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
+      case PageTypes.MODAL_DRAWER:
+        return <ModalDrawerReportPage route={mockModalDrawerReportPageJson} />;
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
@@ -33,7 +37,7 @@ export const ReportPageWrapper = () => {
         <>
           <Sidebar isHidden={false} />
           <Flex id="report-content" sx={sx.reportContainer}>
-            {renderPageSection(PageTypes.DRAWER)}
+            {renderPageSection(PageTypes.MODAL_DRAWER)}
           </Flex>
         </>
       </Flex>
