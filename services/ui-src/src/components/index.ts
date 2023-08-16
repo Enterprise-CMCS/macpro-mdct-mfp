@@ -53,6 +53,9 @@ export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
 export { ReportPageWrapper } from "./reports/ReportPageWrapper";
+export { DrawerReportPage } from "./reports/DrawerReportPage";
+export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
+
 // tables
 export { Table } from "./tables/Table";
 // widgets

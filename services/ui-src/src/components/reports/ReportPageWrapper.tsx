@@ -1,6 +1,12 @@
 // components
 import { Flex } from "@chakra-ui/react";
-import { PageTemplate, Sidebar, StandardReportPage } from "components";
+import {
+  DrawerReportPage,
+  ModalDrawerReportPage,
+  PageTemplate,
+  Sidebar,
+  StandardReportPage,
+} from "components";
 import { PageTypes } from "types";
 // utils
 import {
@@ -8,8 +14,6 @@ import {
   mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
-import { DrawerReportPage } from "./DrawerReportPage";
-import { ModalDrawerReportPage } from "./ModalDrawerReportPage";
 
 export const ReportPageWrapper = () => {
   // these should be built off the form template, which comes from the report.
