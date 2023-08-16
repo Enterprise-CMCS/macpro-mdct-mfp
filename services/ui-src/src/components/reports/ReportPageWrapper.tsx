@@ -1,6 +1,12 @@
 // components
 import { Flex } from "@chakra-ui/react";
-import { PageTemplate, Sidebar, StandardReportPage } from "components";
+import {
+  DrawerReportPage,
+  PageTemplate,
+  ReviewSubmitPage,
+  Sidebar,
+  StandardReportPage,
+} from "components";
 import { PageTypes } from "types";
 // utils
 import {
@@ -19,6 +25,8 @@ export const ReportPageWrapper = () => {
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
       case PageTypes.MODAL_DRAWER:
         return <ModalDrawerReportPage route={mockModalDrawerReportPageJson} />;
+      case PageTypes.REVIEW_SUBMIT:
+        return <ReviewSubmitPage />;
       default:
         return <StandardReportPage route={mockStandardReportPageJson} />;
     }
