@@ -2,9 +2,10 @@
 export * from "./api/providers/ApiProvider";
 export * from "./api/requestMethods/getRequestHeaders";
 // auth
-export * from "./auth/useUser";
 export * from "./auth/UserProvider";
 export * from "./auth/authLifecycle";
+// state management
+export * from "./state/useUserStore";
 // forms
 export * from "./forms/forms";
 // reports
