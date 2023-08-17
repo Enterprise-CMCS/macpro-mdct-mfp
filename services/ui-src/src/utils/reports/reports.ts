@@ -1,4 +1,34 @@
-import { AnyObject, FieldChoice, FormField } from "types";
+import {
+  AnyObject,
+  FieldChoice,
+  FormField,
+  ReportShape,
+  ReportRoute,
+} from "types";
+
+export const sortReportsOldestToNewest = (
+  reportsArray: ReportShape[]
+): ReportShape[] =>
+  reportsArray.sort((stateA, stateB) => stateA.createdAt - stateB.createdAt);
+
+// returns flattened array of valid routes for given reportJson
+export const flattenReportRoutesArray = (
+  reportJson: ReportRoute[]
+): ReportRoute[] => {
+  const routesArray: ReportRoute[] = [];
+  const mapRoutesToArray = (reportRoutes: ReportRoute[]) => {
+    reportRoutes.map((route: ReportRoute) => {
+      // if children, recurse; if none, push to routes array
+      if (route?.children) {
+        mapRoutesToArray(route.children);
+      } else {
+        routesArray.push(route);
+      }
+    });
+  };
+  mapRoutesToArray(reportJson);
+  return routesArray;
+};
 
 // returns validation schema object for array of fields
 export const compileValidationJsonFromFields = (

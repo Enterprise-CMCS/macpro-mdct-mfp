@@ -1,6 +1,6 @@
 export default {
   print: {
-    printPageUrl: "/mcpar/export",
+    printPageUrl: "/sar/export",
     printButtonText: "Review PDF",
     downloadButtonText: "Download PDF",
   },
@@ -8,21 +8,21 @@ export default {
     intro: {
       header: "Review & Submit",
       infoHeader: "Ready to Submit?",
-      info: "Double check that everything in your MCPAR Report is accurate. You will be able to make edits after submitting, and resubmit. Once you’ve reviewed your report, certify that it’s in compliance with 42 CFR § 438.66(e).",
+      info: "Double check that everything in your SAR Report is accurate. You will be able to make edits after submitting, and resubmit. Once you’ve reviewed your report, certify that it’s in compliance with 42 CFR § 438.66(e).",
     },
     table: {
       headRow: ["Section", "Status", ""],
     },
     modal: {
       structure: {
-        heading: "Are you sure you want to submit MCPAR?",
-        actionButtonText: "Submit MCPAR",
+        heading: "Are you sure you want to submit SAR?",
+        actionButtonText: "Submit SAR",
         closeButtonText: "Cancel",
       },
-      body: "You will be able to make edits to this MCPAR after submitting, and resubmit.",
+      body: "You will be able to make edits to this SAR after submitting, and resubmit.",
     },
     pageLink: {
-      text: "Submit MCPAR",
+      text: "Submit SAR",
     },
   },
   submitted: {
@@ -37,6 +37,6 @@ export default {
   alertBox: {
     title: "Your form is not ready for submission",
     description:
-      "Some sections of the MCPAR report have errors or are missing responses. Please ensure all fields are completed with valid responses before submitting.",
+      "Some sections of the SAR report have errors or are missing responses. Please ensure all fields are completed with valid responses before submitting.",
   },
 };

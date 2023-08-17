@@ -1,13 +1,13 @@
 export default {
   intro: {
-    header: "Before you begin the MCPAR online form",
+    header: "Before you begin the SAR online form",
   },
   body: {
     sections: [
       {
         sectionNumber: 1,
         header: "Start by adding all Medicaid managed care programs",
-        body: "You will need to submit one MCPAR for every managed care program in your state. For this MCPAR report, a managed care program is defined by distinct benefits and eligibility criteria articulated in a contract between states and the state’s managed care plans.",
+        body: "You will need to submit one SAR for every managed care program in your state. For this SAR report, a managed care program is defined by distinct benefits and eligibility criteria articulated in a contract between states and the state’s managed care plans.",
         widget: {
           title: "Examples of managed care programs:",
           descriptionList: [
@@ -19,10 +19,10 @@ export default {
       {
         sectionNumber: 2,
         header: "Enter data for each program into the online form",
-        body: "The online form sections are organized by state-level, program-level, plan-level indicators. In general, the MCPAR online form matches the organization of the MCPAR Excel workbook. There are some exceptions.",
+        body: "The online form sections are organized by state-level, program-level, plan-level indicators. In general, the SAR online form matches the organization of the SAR Excel workbook. There are some exceptions.",
         img: {
           alt: "Image of side navigation in the application ",
-          description: "Preview of the online MCPAR form navigation.",
+          description: "Preview of the online SAR form navigation.",
         },
         spreadsheet: "A_Program_Info",
         additionalInfo:
@@ -30,7 +30,7 @@ export default {
         tableHeading:
           "Excel workbook tabs are located in these sections in the online form:",
         table: {
-          headRow: ["Excel Workbook Tab", "Location in MCPAR online form"],
+          headRow: ["Excel Workbook Tab", "Location in SAR online form"],
           bodyRows: [
             ["A_Program_Info", "A: Program Information"],
             ["B_State", "B: State-Level Indicators"],
@@ -48,8 +48,8 @@ export default {
       },
       {
         sectionNumber: 3,
-        header: "Submit the MCPAR report to CMS",
-        body: "Double check that everything in your MCPAR Report is accurate. You will be able to make edits if necessary and resubmit. Once you are ready, hit Review & Submit.",
+        header: "Submit the SAR report to CMS",
+        body: "Double check that everything in your SAR Report is accurate. You will be able to make edits if necessary and resubmit. Once you are ready, hit Review & Submit.",
         img: {
           alt: "Image of the side navigation with review and submit selected",
         },
@@ -57,7 +57,7 @@ export default {
     ],
   },
   pageLink: {
-    text: "Enter MCPAR online",
-    route: "/mcpar",
+    text: "Enter SAR online",
+    route: "/wp",
   },
 };

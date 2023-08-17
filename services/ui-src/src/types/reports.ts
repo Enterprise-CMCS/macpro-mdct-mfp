@@ -3,6 +3,8 @@ import { AnyObject, CustomHtmlElement, FormJson } from "types";
 // REPORT TYPES
 export enum ReportType {
   MFP = "MFP",
+  WP = "WP",
+  SAR = "SAR",
 }
 
 // REPORT STRUCTURE

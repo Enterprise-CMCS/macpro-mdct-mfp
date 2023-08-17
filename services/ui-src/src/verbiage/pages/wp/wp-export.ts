@@ -4,7 +4,7 @@ export default {
     notApplicable: "Not applicable",
   },
   reportBanner: {
-    intro: "Click below to export or print MCPAR shown here",
+    intro: "Click below to export or print WP shown here",
     pdfButton: "Download PDF",
   },
   metadata: {
@@ -13,7 +13,7 @@ export default {
     language: "English",
   },
   reportPage: {
-    heading: "Managed Care Program Annual Report (MCPAR) for ",
+    heading: "Managed Care Program Annual Report (WP) for ",
     metadataTableHeaders: {
       dueDate: "Due date",
       lastEdited: "Last edited",
@@ -21,9 +21,9 @@ export default {
       status: "Status",
     },
     combinedDataTable: {
-      title: "Exclusion of CHIP from MCPAR",
+      title: "Exclusion of CHIP from WP",
       subtitle:
-        "Enrollees in separate CHIP programs funded under Title XXI should not be reported in the MCPAR. Please check this box if the state is unable to remove information about Separate CHIP enrollees from its reporting on this program.",
+        "Enrollees in separate CHIP programs funded under Title XXI should not be reported in the WP. Please check this box if the state is unable to remove information about Separate CHIP enrollees from its reporting on this program.",
     },
   },
   tableHeaders: {

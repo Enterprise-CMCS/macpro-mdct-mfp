@@ -38,6 +38,7 @@ export { MenuOption } from "./menus/MenuOption";
 export { Sidebar } from "./menus/Sidebar";
 // modals
 export { Modal } from "./modals/Modal";
+export { AddEditReportModal } from "./modals/AddEditReportModal";
 // pages
 export { HomePage } from "./pages/Home/HomePage";
 export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
@@ -47,6 +48,7 @@ export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
 export { ReportPageWrapper } from "./reports/ReportPageWrapper";
+export { ReportContext } from "./reports/ReportProvider";
 // tables
 export { Table } from "./tables/Table";
 // widgets
@@ -55,3 +57,5 @@ export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
 export { PostLogoutRedirect } from "./PostLogoutRedirect/index";
 // dashboard
 export { DashboardPage } from "./pages/Dashboard/DashboardPage";
+export { DashboardTable } from "./pages/Dashboard/DashboardTable";
+export { MobileDashboardTable } from "./pages/Dashboard/MobileDashboardTable";
