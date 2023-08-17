@@ -94,7 +94,6 @@ export const UserProvider = ({ children }: Props) => {
         state,
         ...userCheck,
       };
-      console.log("current user", currentUser);
       setUser(currentUser);
     } catch (error) {
       if (isProduction) {
