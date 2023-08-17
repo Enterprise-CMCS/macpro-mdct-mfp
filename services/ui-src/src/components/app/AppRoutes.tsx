@@ -1,9 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 // components
 import {
+  AdminBannerProvider,
   AdminPage,
   HomePage,
   NotFoundPage,
+  ProfilePage,
   ReportPageWrapper,
   ReviewSubmitPage,
 } from "components";
@@ -16,16 +18,21 @@ export const AppRoutes = () => {
   return (
     <main id="main-content" tabIndex={-1}>
       <ScrollToTopComponent />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/admin"
-          element={!userIsAdmin ? <Navigate to="/profile" /> : <AdminPage />}
-        />
-        <Route path="/standard" element={<ReportPageWrapper />} />
-        <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <AdminBannerProvider>
+        <Routes>
+          {/* General Routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/admin"
+            element={!userIsAdmin ? <Navigate to="/profile" /> : <AdminPage />}
+          />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="*" element={<NotFoundPage />} />
+          {/* Report Routes */}
+          <Route path="/standard" element={<ReportPageWrapper />} />
+          <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
+        </Routes>
+      </AdminBannerProvider>
     </main>
   );
 };

@@ -5,7 +5,7 @@ import { act } from "react-dom/test-utils";
 // components
 import { AdminBannerContext, AdminBannerProvider } from "./AdminBannerProvider";
 // utils
-import { mockBannerData } from "utils/testing/setupJest";
+import { mockBannerData } from "utils/testing/mockBanner";
 import { bannerErrors } from "verbiage/errors";
 
 jest.mock("utils/api/requestMethods/banner", () => ({

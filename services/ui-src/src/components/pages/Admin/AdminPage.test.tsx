@@ -5,10 +5,8 @@ import { axe } from "jest-axe";
 // components
 import { AdminPage, AdminBannerContext } from "components";
 // utils
-import {
-  RouterWrappedComponent,
-  mockBannerData,
-} from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { mockBannerData } from "utils/testing/mockBanner";
 
 const mockBannerMethods = {
   fetchAdminBanner: jest.fn(() => {}),

@@ -2,6 +2,7 @@ import { useState, createContext, ReactNode, useMemo, useEffect } from "react";
 // utils
 import { AdminBannerData, AdminBannerShape } from "types/banners";
 import { bannerErrors } from "verbiage/errors";
+import { mockBannerData } from "utils/testing/mockBanner";
 
 export const AdminBannerContext = createContext<AdminBannerShape>({
   bannerData: undefined as AdminBannerData | undefined,
@@ -18,15 +19,6 @@ export const AdminBannerProvider = ({ children }: Props) => {
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>();
-
-  const mockBannerData = {
-    key: "mock-key",
-    title: "mock-title",
-    description: "mock-description",
-    startDate: 0,
-    endDate: 0,
-    isActive: false,
-  };
 
   const fetchAdminBanner = async () => {
     setIsLoading(true);
