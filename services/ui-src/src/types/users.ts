@@ -16,16 +16,16 @@ export interface MFPUser {
   state?: string;
   userRole?: string;
   userIsAdmin?: boolean;
+  userIsReadOnly?: boolean;
   userIsHelpDeskUser?: boolean;
   userIsApprover?: boolean;
   userIsStateRep?: boolean;
   userIsStateUser?: boolean;
-  userIsReadOnly?: boolean;
   userIsEndUser?: boolean;
 }
 
 export interface UserContextShape {
-  user?: MFPUser;
+  user?: MFPUser | null;
   showLocalLogins?: boolean;
   logout: () => Promise<void>;
   loginWithIDM: () => void;

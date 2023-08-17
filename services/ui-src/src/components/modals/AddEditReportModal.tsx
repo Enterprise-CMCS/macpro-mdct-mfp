@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 // components
 import { Modal, ReportContext } from "components";
-import { Spinner, Text, Button } from "@chakra-ui/react";
+import { Text, Button } from "@chakra-ui/react";
 // form
 import wpFormJson from "forms/addEditWpReport/addEditWpReport.json";
 import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
@@ -148,7 +148,7 @@ export const AddEditReportModal = ({
       modalDisclosure={modalDisclosure}
       content={{
         heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
-        actionButtonText: submitting ? <Spinner size="md" /> : "Save",
+        actionButtonText: submitting ? "" : "",
         closeButtonText: "",
       }}
     >
@@ -175,7 +175,7 @@ export const AddEditReportModal = ({
 };
 
 interface Props {
-  activeState: string;
+  activeState?: string;
   reportType: string;
   selectedReport?: AnyObject;
   modalDisclosure: {
