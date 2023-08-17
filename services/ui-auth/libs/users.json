@@ -20,7 +20,7 @@
       },
       {
         "Name": "custom:cms_roles",
-        "Value": "mdctfp-bor"
+        "Value": "mdctmfp-bor"
       }
     ]
   },
@@ -45,7 +45,7 @@
       },
       {
         "Name": "custom:cms_roles",
-        "Value": "mdctmcr-bor"
+        "Value": "mdctmfp-bor"
       }
     ]
   },
