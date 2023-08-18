@@ -19,7 +19,7 @@ export default {
       downloadText: "",
       link: {
         text: "Enter Work Plan online",
-        route: "mp/get-started",
+        route: "wp",
       },
       accordion: {
         buttonLabel: "When is the Work Plan due?",
