@@ -10,6 +10,8 @@ import {
 } from "components";
 // utils
 import { ScrollToTopComponent } from "utils";
+// types
+import { ReportType } from "types";
 
 export const AppRoutes = () => {
   return (
@@ -22,7 +24,10 @@ export const AppRoutes = () => {
         <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
         <Route path="*" element={<NotFoundPage />} />
         {/* MFP ROUTES */}
-        <Route path="/wp" element={<DashboardPage reportType="WP" />} />
+        <Route
+          path="/wp"
+          element={<DashboardPage reportType={ReportType.WP} />}
+        />
       </Routes>
     </main>
   );
