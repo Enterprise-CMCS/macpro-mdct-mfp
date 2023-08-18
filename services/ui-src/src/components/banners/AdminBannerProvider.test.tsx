@@ -8,6 +8,7 @@ import { AdminBannerContext, AdminBannerProvider } from "./AdminBannerProvider";
 import { mockBannerData } from "utils/testing/mockBanner";
 import { bannerErrors } from "verbiage/errors";
 
+// eslint-disable-next-line multiline-comment-style
 // jest.mock("utils/api/requestMethods/banner", () => ({
 //   deleteBanner: jest.fn(() => {}),
 //   getBanner: jest.fn(() => {}),
