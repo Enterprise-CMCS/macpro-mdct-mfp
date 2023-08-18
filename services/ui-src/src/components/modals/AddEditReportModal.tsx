@@ -12,7 +12,7 @@ import {
   calculateDueDate,
   convertDateEtToUtc,
   convertDateUtcToEt,
-  useUser,
+  useUserStore,
 } from "utils";
 
 export const AddEditReportModal = ({
@@ -23,7 +23,7 @@ export const AddEditReportModal = ({
 }: Props) => {
   const { createReport, fetchReportsByState, updateReport } =
     useContext(ReportContext);
-  const { full_name } = useUser().user ?? {};
+  const { full_name } = useUserStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
   const modalFormJsonMap: any = {
     WP: wpFormJson,

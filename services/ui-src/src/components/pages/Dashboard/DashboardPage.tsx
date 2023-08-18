@@ -27,7 +27,7 @@ import {
   convertDateUtcToEt,
   parseCustomHtml,
   useBreakpoint,
-  useUser,
+  useUserStore,
 } from "utils";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
@@ -47,7 +47,11 @@ export const DashboardPage = ({ reportType }: Props) => {
     releaseReport,
   } = useContext(ReportContext);
   const navigate = useNavigate();
-  const { state: userState, userIsEndUser, userIsAdmin } = useUser().user ?? {};
+  const {
+    state: userState,
+    userIsEndUser,
+    userIsAdmin,
+  } = useUserStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
   const [reportsToDisplay, setReportsToDisplay] = useState<
     ReportMetadataShape[] | undefined

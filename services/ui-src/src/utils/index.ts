@@ -4,7 +4,6 @@ export * from "./api/requestMethods/getRequestHeaders";
 // auth
 export * from "./auth/UserProvider";
 export * from "./auth/authLifecycle";
-export * from "./auth/useUser";
 // state management
 export * from "./state/useUserStore";
 // forms
