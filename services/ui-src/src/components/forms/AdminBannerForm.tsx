@@ -48,7 +48,7 @@ export const AdminBannerForm = ({ writeAdminBanner, ...props }: Props) => {
       <Form
         id={form.id}
         formJson={formJson}
-        onSubmit={() => {}}
+        onSubmit={onSubmit}
         validateOnRender={false}
         dontReset={false}
         {...props}
