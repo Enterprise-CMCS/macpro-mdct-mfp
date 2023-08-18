@@ -7,6 +7,53 @@ export const mockFormField = {
   },
 };
 
+export const mockNumberField = {
+  id: "mock-number-field",
+  type: "number",
+  validation: "number",
+  props: {
+    label: "mock number field",
+  },
+};
+
+export const mockPlanField = {
+  id: "plans",
+  type: "dynamic",
+  validation: "dynamic",
+  props: {
+    label: "Plan name",
+  },
+};
+
+export const mockDynamicForm = {
+  id: "mock-dynamic-form-id",
+  type: "dynamic",
+  validation: "dynamic",
+  props: {
+    label: "mock dynamic field",
+  },
+  fields: [mockPlanField],
+};
+
+export const mockDateField = {
+  id: "mock-date-field",
+  type: "date",
+  validation: "date",
+  props: {
+    label: "mock date field",
+  },
+};
+
+export const mockDropdownField = {
+  id: "mock-dropdown-field",
+  type: "dropdown",
+  validation: "dropdown",
+  props: {
+    label: "mock dropdown field",
+    options: "mock plans",
+  },
+};
+
 export const mockModalFormField = {
   id: "mock-modal-text-field",
   type: "text",
@@ -54,7 +101,13 @@ export const mockSectionHeaderField = {
 
 export const mockForm = {
   id: "mock-form-id",
-  fields: [mockFormField],
+  fields: [
+    mockFormField,
+    mockDateField,
+    mockDynamicForm,
+    mockDropdownField,
+    mockNumberField,
+  ],
 };
 
 export const mockModalForm = {
