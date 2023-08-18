@@ -15,6 +15,10 @@ import {
   FormLayoutElement,
   isFieldElement,
 } from "types";
+import { DateField } from "components/fields/DateField";
+import { DropdownField } from "components/fields/DropdownField";
+import { DynamicField } from "components/fields/DynamicField";
+import { NumberField } from "components/fields/NumberField";
 
 // return created elements from provided fields
 export const formFieldFactory = (
@@ -33,6 +37,10 @@ export const formFieldFactory = (
     radio: RadioField,
     text: TextField,
     textarea: TextAreaField,
+    date: DateField,
+    dropdown: DropdownField,
+    dynamic: DynamicField,
+    number: NumberField,
   };
   fields = initializeChoiceListFields(fields);
   return fields.map((field) => {
