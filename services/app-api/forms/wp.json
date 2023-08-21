@@ -1,8 +1,8 @@
 {
-  "type": "MFP",
-  "name": "MFP Work Plan",
+  "type": "WP",
+  "name": "MFP Work Plan (WP)",
   "basePath": "/wp",
-  "version": "MFP_2023-08-21",
+  "version": "WP_2023-08-21",
   "entities": {
     "": { "required": true }
   },
