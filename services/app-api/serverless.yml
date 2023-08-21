@@ -27,8 +27,8 @@ custom:
   project: "mfp"
   serverlessPluginTypescript:
     tsConfigFileLocation: "./tsconfig.json"
-  stage: ${opt:stage, self:provider.stage}
-  region: ${opt:region, self:provider.region}
+  stage: ${sls:stage}
+  region: ${aws:region}
   serverlessTerminationProtection:
     stages:
       - main
@@ -36,6 +36,11 @@ custom:
       - production
   dotenv:
     path: ../../.env
+  bannerTableName: ${env:BANNER_TABLE_NAME, cf:database-${self:custom.stage}.BannerTableName}
+  mfpFormBucket: ${env:MFP_FORM_BUCKET, cf:database-${self:custom.stage}.MfpFormBucketName}
+  mfpReportTableName: ${env:MFP_REPORT_TABLE_NAME, cf:database-${self:custom.stage}.MfpReportTableName}
+  mfpReportTableStreamArn: ${env:MFP_REPORT_TABLE_STREAM_ARN, cf:database-${self:custom.stage}.MfpReportTableStreamArn, cf:database-main.MfpReportTableStreamArn}
+  formTemplateTableName: ${env:FORM_TEMPLATE_TABLE_NAME, cf:database-${self:custom.stage}.FormTemplateTableName}
   webAclName: ${self:service}-${self:custom.stage}-webacl
   associateWaf:
     name: ${self:custom.webAclName}
@@ -87,18 +92,61 @@ provider:
           Action:
             - execute-api:Invoke
           Resource: "*"
+        - Effect: "Allow"
+          Action:
+            - "s3:GetObject"
+            - "s3:ListBucket"
+            - "s3:PutObject"
+          Resource:
+            - "arn:aws:s3:::${self:custom.mfpFormBucket}"
+            - "arn:aws:s3:::${self:custom.mfpFormBucket}/formTemplates/*"
+            - "arn:aws:s3:::${self:custom.mfpFormBucket}/fieldData/*"
   environment:
+    BANNER_TABLE_NAME: ${self:custom.bannerTableName}
+    MFP_REPORT_TABLE_NAME: ${self:custom.mfpReportTableName}
+    MFP_FORM_BUCKET: ${self:custom.mfpFormBucket}
+    FORM_TEMPLATE_TABLE_NAME: ${self:custom.formTemplateTableName}
     STAGE: ${self:custom.stage}
 
 functions:
-  create:
-    handler: handlers/temp/create.createBanner
+  createBanner:
+    handler: handlers/banners/create.createBanner
     events:
       - http:
-          path: create
+          path: banners/{bannerId}
           method: post
           cors: true
           authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                bannerId: true
+  createReport:
+    handler: handlers/reports/create.createReport
+    events:
+      - http:
+          path: reports/{reportType}/{state}
+          method: post
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
+  fetchReportsByState:
+    handler: handlers/reports/fetch.fetchReportsByState
+    events:
+      - http:
+          path: reports/{reportType}/{state}
+          method: get
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
 resources:
   Resources:
     GatewayResponseDefault4XX:
