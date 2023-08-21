@@ -69,6 +69,7 @@ export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
 export { ReportPageWrapper } from "./reports/ReportPageWrapper";
+export { ReportContext } from "./reports/ReportProvider";
 export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
 
@@ -80,3 +81,7 @@ export { Table } from "./tables/Table";
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
 // Redirects
 export { PostLogoutRedirect } from "./PostLogoutRedirect/index";
+// dashboard
+export { DashboardPage } from "./pages/Dashboard/DashboardPage";
+export { DashboardTable } from "./pages/Dashboard/DashboardTable";
+export { MobileDashboardTable } from "./pages/Dashboard/MobileDashboardTable";

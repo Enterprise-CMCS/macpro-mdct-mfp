@@ -21,6 +21,7 @@ export interface MFPUser {
   userIsApprover?: boolean;
   userIsStateRep?: boolean;
   userIsStateUser?: boolean;
+  userIsEndUser?: boolean;
 }
 
 export interface UserContextShape {

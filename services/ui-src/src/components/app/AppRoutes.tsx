@@ -5,12 +5,15 @@ import {
   AdminPage,
   HomePage,
   NotFoundPage,
+  DashboardPage,
   ProfilePage,
   ReportPageWrapper,
   ReviewSubmitPage,
 } from "components";
 // utils
 import { ScrollToTopComponent, useUserStore } from "utils";
+// types
+import { ReportType } from "types";
 
 export const AppRoutes = () => {
   const { userIsAdmin } = useUserStore().user ?? {};
@@ -28,6 +31,11 @@ export const AppRoutes = () => {
           />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
+          {/* MFP ROUTES */}
+          <Route
+            path="/wp"
+            element={<DashboardPage reportType={ReportType.WP} />}
+          />
           {/* Report Routes */}
           <Route path="/standard" element={<ReportPageWrapper />} />
           <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />

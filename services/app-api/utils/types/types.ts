@@ -94,6 +94,7 @@ export interface MFPUser {
   userIsApprover?: boolean;
   userIsStateRep?: boolean;
   userIsStateUser?: boolean;
+  userIsReadOnly?: boolean;
 }
 
 export interface UserContextShape {

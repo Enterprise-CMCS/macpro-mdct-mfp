@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import {
   FieldValues,
   FormProvider,
@@ -17,6 +17,7 @@ import {
   hydrateFormFields,
   mapValidationTypesToSchema,
   sortFormErrors,
+  useUserStore,
 } from "utils";
 import {
   AnyObject,
@@ -24,7 +25,10 @@ import {
   FormField,
   isFieldElement,
   FormLayoutElement,
+  ReportStatus,
+  ReportType,
 } from "types";
+import { ReportContext } from "components/reports/ReportProvider";
 
 export const Form = ({
   id,
@@ -40,8 +44,14 @@ export const Form = ({
 }: Props) => {
   const { fields, options } = formJson;
 
+  // determine if fields should be disabled (based on admin roles )
+  const { userIsAdmin, userIsReadOnly } = useUserStore().user ?? {};
+  const { report } = useContext(ReportContext);
   let location = useLocation();
-  const fieldInputDisabled = false;
+  const fieldInputDisabled =
+    ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
+    (report?.status === ReportStatus.SUBMITTED &&
+      report?.reportType === ReportType.WP);
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
@@ -68,7 +78,6 @@ export const Form = ({
     const fieldToFocus = document.querySelector(
       `[name='${sortedErrors[0]}']`
     )! as HTMLElement;
-
     fieldToFocus?.scrollIntoView({ behavior: "smooth", block: "center" });
     fieldToFocus?.focus({ preventScroll: true });
   };
