@@ -1,15 +1,63 @@
 // components
-import { Box } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { Form, ReportPageFooter, ReportPageIntro } from "components";
-import { StandardReportPageShape } from "types";
-import { mockStandardReportPageJson } from "utils/testing/mockForm";
+// types
+import { AnyObject, ReportStatus, StandardReportPageShape } from "types";
 // utils
+import { getReportsByState, postReport } from "utils/api/requestMethods/report";
+import { mockStandardReportPageJson } from "utils/testing/mockForm";
 
 export const StandardReportPage = ({ route, validateOnRender }: Props) => {
   const submitting = false;
+
+  const reportMetaData = {
+    metadata: {
+      programName: "testProgram",
+      reportType: "MFP",
+      status: ReportStatus.NOT_STARTED,
+      isComplete: false,
+      createdAt: 162515200000,
+      lastAlteredBy: "Thelonious States",
+    },
+    fieldData: {
+      programName: "testProgram",
+    },
+  };
+
+  const createReport = async (
+    reportType: string,
+    state: string,
+    report: AnyObject
+  ) => {
+    try {
+      await postReport(reportType, state, report);
+      console.log("Post succeeded");
+    } catch (e: any) {
+      console.error("Unable to create report");
+    }
+  };
+
+  const fetchReportsByState = async (
+    reportType: string,
+    selectedState: string
+  ) => {
+    try {
+      const result = await getReportsByState(reportType, selectedState);
+      console.log(result);
+    } catch (e: any) {
+      console.error("Unable to fetch reports");
+    }
+  };
+
   return (
     <Box>
       {route.verbiage.intro && <ReportPageIntro text={route.verbiage.intro} />}
+      <Button onClick={() => createReport("MFP", "NJ", reportMetaData)}>
+        Create Report
+      </Button>
+      <button onClick={() => fetchReportsByState("MFP", "NJ")}>
+        Fetch Reports By State
+      </button>
       <Form
         id={route.form.id}
         formJson={route.form}
