@@ -53,7 +53,7 @@ export const Modal = ({
         </Flex>
         <ModalBody sx={sx.modalBody}>{children}</ModalBody>
         <ModalFooter sx={sx.modalFooter}>
-          {formId && (
+          {formId && content.actionButtonText !== "" && (
             <Button
               sx={sx.action}
               form={formId}

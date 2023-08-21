@@ -1,0 +1,21 @@
+{
+  "id": "aes",
+  "options": {
+    "mode": "onChange"
+  },
+  "heading": {
+    "add": "Add new SAR submission",
+    "edit": "Edit SAR submission"
+  },
+  "fields": [
+    {
+      "id": "programName",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "label": "SAR submission name",
+        "hint": "Name this SAR submission so you can easily refer to it. Consider using timeframe(s) and managed care program names (if relevant)."
+      }
+    }
+  ]
+}
