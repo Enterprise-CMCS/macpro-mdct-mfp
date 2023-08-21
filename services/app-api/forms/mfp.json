@@ -1,0 +1,95 @@
+{
+  "type": "MFP",
+  "name": "MFP Work Plan",
+  "basePath": "/wp",
+  "version": "MFP_2023-08-21",
+  "entities": {
+    "": { "required": true }
+  },
+  "routes": [
+    {
+      "name": "General Information",
+      "path": "/wp/general-information",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": "",
+          "hint": "",
+          "exportSection": ""
+        }
+      }
+    },
+    {
+      "name": "Transition Benchmarks",
+      "path": "/wp/transition-benchmarks",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "exportSectionHeader": "",
+          "section": "",
+          "subsection": "",
+          "info": [
+            {
+              "type": "html",
+              "content": ""
+            }
+          ]
+        },
+        "exportSectionHeader": ""
+      }
+    },
+    {
+      "name": "Transition Benchmark Strategy",
+      "path": "/wp/transition-benchmark-strategy",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "exportSectionHeader": "",
+          "section": "",
+          "subsection": "",
+          "info": [
+            {
+              "type": "html",
+              "content": ""
+            }
+          ]
+        },
+        "exportSectionHeader": ""
+      }
+    },
+    {
+      "name": "State & Territory Specific Initiatives",
+      "path": "/wp/state-and-territory-specific-initiatives",
+      "children": [
+        {
+          "name": "State & Territory Specific Initiatives Instructions",
+          "path": "/wp/state-and-territory-specific-initiatives/instructions",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        },
+        {
+          "name": "State & Territory Specific Initiatives",
+          "path": "/wp/state-and-territory-specific-initiatives/initiatives",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Review & Submit",
+      "path": "/wp/review-and-submit",
+      "pageType": "reviewSubmit"
+    }
+  ]
+}
