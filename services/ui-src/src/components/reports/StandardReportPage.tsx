@@ -3,6 +3,7 @@ import { Box } from "@chakra-ui/react";
 import { Form, ReportPageFooter, ReportPageIntro } from "components";
 import { StandardReportPageShape } from "types";
 import { mockStandardReportPageJson } from "utils/testing/mockForm";
+
 // utils
 
 export const StandardReportPage = ({ route, validateOnRender }: Props) => {

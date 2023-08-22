@@ -38,6 +38,10 @@ export const AppRoutes = () => {
           />
           {/* Report Routes */}
           <Route path="/standard" element={<ReportPageWrapper />} />
+          <Route
+            path="/wp/transition-benchmark-strategy"
+            element={<ReportPageWrapper />}
+          />
           <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
         </Routes>
       </AdminBannerProvider>
