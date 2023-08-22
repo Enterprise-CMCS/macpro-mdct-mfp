@@ -196,6 +196,7 @@ export const mockModalDrawerReportPageVerbiage = {
   enterEntityDetailsButtonText: "Mock enter entity details button text",
   editEntityDetailsButtonText: "Mock edit entity details button text",
   drawerTitle: "Mock drawer title",
+  reviewPdfHint: "Mock review PDF hint",
   drawerNoFormMessage: "Mock no form fields here",
 };
 

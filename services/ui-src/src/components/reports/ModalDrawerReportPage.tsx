@@ -1,21 +1,34 @@
 import { useState } from "react";
 // components
-import { Box, Button, Heading, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Image,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import {
   AddEditEntityModal,
   DeleteEntityModal,
+  EntityRow,
+  ReportDrawer,
   ReportPageFooter,
   ReportPageIntro,
+  Table,
 } from "components";
-
+// assets
+import addIcon from "assets/icons/icon_add.png";
 // types
 import { EntityShape, EntityType, ModalDrawerReportPageShape } from "types";
-import { EntityCard } from "components/cards/EntityCard";
-import { ReportDrawer } from "components/drawers/ReportDrawer";
+// utils
+import { parseCustomHtml } from "utils";
 import { getFormattedEntityData } from "utils/reports/entities";
 
 export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const { entityType, verbiage, modalForm, drawerForm: drawerFormJson } = route;
+
+  // const reportFieldDataEntities = report?.fieldData[entityType] || [];
 
   const submitting = false;
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
@@ -24,8 +37,24 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
 
   const entities = [
     {
-      id: "123",
-      name: "mock-entity",
+      id: "0",
+      name: "Older adults",
+      isOtherEntity: false,
+    },
+    {
+      id: "1",
+      name: "Individuals with physical disabilities (PD)",
+      isOtherEntity: false,
+    },
+    {
+      id: "2",
+      name: "Individuals with intellectual and developmental disabilities (I/DD)",
+      isOtherEntity: false,
+    },
+    {
+      id: "3",
+      name: "Individuals with mental health and substance abuse disorders (MH/SUD)",
+      isOtherEntity: false,
     },
   ];
 
@@ -86,38 +115,48 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
     drawerOnCloseHandler();
   };
 
-  const dashTitle = `${verbiage.dashboardTitle}${
-    verbiage.countEntitiesInTitle ? ` ${entities.length}` : ""
-  }`;
+  const tableHeaders = {
+    headRow: ["", "", ""],
+  };
 
   return (
     <Box>
       {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
       <Box>
-        <Button
-          sx={sx.topAddEntityButton}
-          onClick={addEditEntityModalOnOpenHandler}
-        >
-          {verbiage.addEntityButtonText}
-        </Button>
-        {entities.length !== 0 && (
-          <Heading as="h3" sx={sx.dashboardTitle}>
-            {dashTitle}
-          </Heading>
-        )}
-        {entities.map((entity: EntityShape, entityIndex: number) => (
-          <EntityCard
-            key={entity.id}
-            entity={entity}
-            entityIndex={entityIndex}
-            entityType={entityType}
-            verbiage={verbiage}
-            formattedEntityData={getFormattedEntityData()}
-            openAddEditEntityModal={openAddEditEntityModal}
-            openDeleteEntityModal={openDeleteEntityModal}
-            openDrawer={openDrawer}
-          />
-        ))}
+        <Heading as="h3" sx={sx.dashboardTitle}>
+          {verbiage.dashboardTitle}
+        </Heading>
+        <Box>
+          <Table sx={sx.table} content={tableHeaders}>
+            {/* TODO: real entities */}
+            {entities.map((entity: EntityShape) => (
+              <EntityRow
+                key={entity.id}
+                entity={entity}
+                verbiage={verbiage}
+                openAddEditEntityModal={openAddEditEntityModal}
+                openDeleteEntityModal={openDeleteEntityModal}
+                openDrawer={openDrawer}
+              />
+            ))}
+          </Table>
+          <Button
+            sx={sx.addEntityButton}
+            variant="outline"
+            onClick={addEditEntityModalOnOpenHandler}
+            leftIcon={<Image sx={sx.addIcon} src={addIcon} alt="Add" />}
+          >
+            {verbiage.addEntityButtonText}
+          </Button>
+        </Box>
+        <Box>
+          <Text>{parseCustomHtml(verbiage.reviewPdfHint)}</Text>
+          <Button sx={sx.reviewPdfButton} variant="outline">
+            Review PDF
+          </Button>
+        </Box>
+        <hr />
+        {/* MODALS */}
         <AddEditEntityModal
           selectedEntity={selectedEntity}
           verbiage={verbiage}
@@ -135,6 +174,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
             onClose: closeDeleteEntityModal,
           }}
         />
+        {/* DRAWER */}
         <ReportDrawer
           entityType={entityType as EntityType}
           selectedEntity={selectedEntity!}
@@ -152,14 +192,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           validateOnRender={validateOnRender}
           data-testid="report-drawer"
         />
-        {entities.length > 1 && (
-          <Button
-            sx={sx.bottomAddEntityButton}
-            onClick={addEditEntityModalOnOpenHandler}
-          >
-            {verbiage.addEntityButtonText}
-          </Button>
-        )}
       </Box>
       <ReportPageFooter />
     </Box>
@@ -172,18 +204,18 @@ interface Props {
 }
 
 const sx = {
+  addIcon: {
+    height: "1rem",
+  },
   dashboardTitle: {
-    marginBottom: "1.25rem",
-    fontSize: "md",
+    paddingBottom: "0",
     fontWeight: "bold",
     color: "palette.gray_medium",
   },
-  topAddEntityButton: {
+  addEntityButton: {
     marginTop: "1.5rem",
     marginBottom: "2rem",
   },
-  bottomAddEntityButton: {
-    marginTop: "2rem",
-    marginBottom: "0",
-  },
+  table: {},
+  reviewPdfButton: { marginTop: "1.5rem", marginBottom: "2rem" },
 };

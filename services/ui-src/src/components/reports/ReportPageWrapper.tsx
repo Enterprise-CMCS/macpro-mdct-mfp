@@ -8,13 +8,14 @@ import {
   Sidebar,
   StandardReportPage,
 } from "components";
-import { PageTypes } from "types";
+import { ModalDrawerReportPageShape, PageTypes } from "types";
 // utils
 import {
   mockDrawerReportPageJson,
   mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
+import { wpTemp } from "utils/tempForms/wpTemp";
 
 export const ReportPageWrapper = () => {
   // these should be built off the form template, which comes from the report.
@@ -23,7 +24,11 @@ export const ReportPageWrapper = () => {
       case PageTypes.DRAWER:
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
       case PageTypes.MODAL_DRAWER:
-        return <ModalDrawerReportPage route={mockModalDrawerReportPageJson} />;
+        return (
+          <ModalDrawerReportPage
+            route={wpTemp.routes[1] as unknown as ModalDrawerReportPageShape}
+          />
+        );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
@@ -37,7 +42,7 @@ export const ReportPageWrapper = () => {
         <>
           <Sidebar isHidden={false} />
           <Flex id="report-content" sx={sx.reportContainer}>
-            {renderPageSection(PageTypes.STANDARD)}
+            {renderPageSection(PageTypes.MODAL_DRAWER)}
           </Flex>
         </>
       </Flex>

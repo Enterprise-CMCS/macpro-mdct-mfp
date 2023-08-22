@@ -27,7 +27,7 @@
       "entityType": "targetPopulation",
       "verbiage": {
         "intro": {
-          "section": "Transition Benchmark Projections",
+          "subsection": "Transition Benchmark Projections",
           "info": [
             {
               "type": "span",
@@ -40,13 +40,13 @@
         "editEntityButtonText": "Edit name",
         "addEditModalAddTitle": "Add other target population",
         "addEditModalEditTitle": "Edit other target population",
-        "addEditModalMessage": "Specify an \"other\" target population applicable to your MFP demonstration project. Individuals reported under this population must align throughout MFP. (e.g., HIV/AIDS, brain injury)",
         "deleteEntityButtonAltText": "Delete other target population",
         "deleteModalTitle": "Are you sure you want to delete this target population?",
         "deleteModalConfirmButtonText": "Yes, delete population",
         "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this population in the Work Plan. The population will remain in previously submitted Semi-Annual Reports if applicable.",
         "entityUnfinishedMessage": "Complete the remaining indicators for this access measure by entering details.",
         "enterEntityDetailsButtonText": "Edit",
+        "reviewPdfHint": "To view Transition Benchmark Totals by target population and by quarter, click <i>Review PDF</i> and it will open a summary in a new tab.",
         "drawerTitle": "Report transition benchmarks for "
       },
       "modalForm": {
