@@ -23,7 +23,7 @@ export const ReportPageWrapper = () => {
   const location = useLocation();
 
   // temporary for mocking correct json per page
-  const routePath = (path: string) => {
+  const getRoutePath = (path: string) => {
     if (path === "/standard") {
       return mockStandardReportPageJson;
     } else if (path === "/wp/transition-benchmark-strategy") {
@@ -43,7 +43,7 @@ export const ReportPageWrapper = () => {
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
-        return <StandardReportPage route={routePath(location.pathname)} />;
+        return <StandardReportPage route={getRoutePath(location.pathname)} />;
     }
   };
 
