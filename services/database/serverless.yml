@@ -26,8 +26,8 @@ custom:
     path: ../../.env
   bannerTableName: ${self:custom.stage}-banners
   formTemplateTableName: ${self:custom.stage}-form-template-versions
-  mfpReportTableName: ${self:custom.stage}-mfp-reports
-  mfpFormBucket: ${env:MFP_FORM_BUCKET, "${self:service}-${self:custom.stage}-mfp"}
+  wpReportTableName: ${self:custom.stage}-wp-reports
+  wpFormBucket: ${env:WP_FORM_BUCKET, "${self:service}-${self:custom.stage}-wp"}
   dynamodb:
     stages:
       - local
@@ -127,10 +127,10 @@ resources:
             AttributeType: S
           - AttributeName: md5Hash
             AttributeType: S
-    MfpReportTable:
+    WpReportTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.mfpReportTableName}
+        TableName: ${self:custom.wpReportTableName}
         PointInTimeRecoverySpecification:
           PointInTimeRecoveryEnabled: true
         StreamSpecification:
@@ -146,10 +146,10 @@ resources:
           - AttributeName: id
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST # Set the capacity to auto-scale
-    MfpFormBucket:
+    WpFormBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: !Sub ${self:service}-${self:custom.stage}-mfp
+        BucketName: !Sub ${self:service}-${self:custom.stage}-wp
         BucketEncryption:
           ServerSideEncryptionConfiguration:
             - ServerSideEncryptionByDefault:
@@ -163,15 +163,15 @@ resources:
       Value: !GetAtt BannerTable.StreamArn
     FormTemplateTableName:
       Value: !Ref FormTemplateVersionsTable
-    MfpReportTableName:
-      Value: !Ref MfpReportTable
-    MfpReportTableArn:
-      Value: !GetAtt MfpReportTable.Arn
-    MfpReportTableStreamArn:
-      Value: !GetAtt MfpReportTable.StreamArn
-    MfpFormBucketName:
-      Value: !Ref MfpFormBucket
-    MfpFormBucketArn:
-      Value: !GetAtt MfpFormBucket.Arn
+    WpReportTableName:
+      Value: !Ref WpReportTable
+    WpReportTableArn:
+      Value: !GetAtt WpReportTable.Arn
+    WpReportTableStreamArn:
+      Value: !GetAtt WpReportTable.StreamArn
+    WpFormBucketName:
+      Value: !Ref WpFormBucket
+    WpFormBucketArn:
+      Value: !GetAtt WpFormBucket.Arn
     Region:
       Value: !Sub ${AWS::Region}
