@@ -21,6 +21,8 @@ export interface ReportMetadataShape extends ReportKeys {
   submitterEmail?: string;
   submittedOnDate?: number;
   archived?: boolean;
+  locked?: boolean;
+  dueDate: number;
 }
 
 export interface ReportShape extends ReportMetadataShape {
