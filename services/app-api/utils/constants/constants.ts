@@ -32,17 +32,21 @@ export const buckets = {
 // REPORTS
 
 export const reportTables = {
+  SAR: process.env.SAR_REPORT_TABLE_NAME!,
   WP: process.env.WP_REPORT_TABLE_NAME!,
 };
 
 export const reportBuckets = {
+  SAR: process.env.SAR_FORM_BUCKET!,
   WP: process.env.WP_FORM_BUCKET!,
 };
 
 export const tableTopics = {
+  SAR: "sar-reports",
   WP: "wp-reports",
 };
 export const bucketTopics = {
+  SAR: "sar-reports",
   WP: "wp-form",
 };
 
