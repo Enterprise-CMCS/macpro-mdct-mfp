@@ -37,7 +37,7 @@ export const ReportPageWrapper = () => {
         <>
           <Sidebar isHidden={false} />
           <Flex id="report-content" sx={sx.reportContainer}>
-            {renderPageSection(PageTypes.MODAL_DRAWER)}
+            {renderPageSection(PageTypes.STANDARD)}
           </Flex>
         </>
       </Flex>
