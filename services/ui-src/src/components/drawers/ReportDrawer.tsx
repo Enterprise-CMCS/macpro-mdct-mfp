@@ -36,6 +36,7 @@ export const ReportDrawer = ({
       verbiage={verbiage}
       drawerDisclosure={drawerDisclosure}
       entityType={entityType}
+      selectedEntity={selectedEntity?.name}
       {...props}
     >
       {formFieldsExist ? (
