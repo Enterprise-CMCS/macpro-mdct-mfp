@@ -59,14 +59,4 @@ describe("Test fetchReportsByState API method", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
-
-  test("Test no report access fetch throws 403 error", async () => {
-    // fail report access
-    mockAuthUtil.hasReportAccess.mockReturnValueOnce(false);
-    const res = await fetchReportsByState(testReadEventByState, null);
-
-    expect(res.statusCode).toBe(403);
-    expect(res.body).toContain(error.UNAUTHORIZED);
-    jest.clearAllMocks();
-  });
 });

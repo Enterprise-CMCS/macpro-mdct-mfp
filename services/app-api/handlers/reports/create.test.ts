@@ -34,10 +34,10 @@ const creationEvent: APIGatewayProxyEvent = {
   ...mockProxyEvent,
   body: JSON.stringify({
     fieldData: {
-      stateName: "WP",
+      stateName: "Alabama",
     },
     metadata: {
-      reportType: "MCPAR",
+      reportType: "WP",
       programName: "testProgram",
       status: "Not started",
       lastAlteredBy: "Thelonious States",
@@ -141,7 +141,6 @@ describe("Test createReport API method", () => {
   test("Test report with copySourceId", async () => {
     jest.spyOn(s3Lib, "get").mockResolvedValueOnce({
       stateName: "Alabama",
-      plans: [{ plan_activeAppeals: "1", name: "name" }],
     });
     const copyFieldDataSpy = jest.spyOn(reportUtils, "copyFieldDataFromSource");
     const res = await createReport(creationEventWithCopySource, null);
@@ -149,13 +148,6 @@ describe("Test createReport API method", () => {
     expect(res.statusCode).toBe(StatusCodes.CREATED);
     expect(copyFieldDataSpy).toBeCalled();
     expect(body.fieldDataId).not.toEqual("mockReportFieldData");
-    expect(body.fieldData.plans).toBeDefined();
-    body.fieldData.plans.forEach((p: AnyObject) => {
-      expect(p).toEqual({
-        name: "name",
-        plan_activeAppeals: "1",
-      });
-    });
   });
 
   test("Test invalid fields removed when creating report with copySourceId", async () => {

@@ -262,14 +262,14 @@ describe("Test compileValidationJsonFromRoutes", () => {
       flattenReportRoutesArray(mockReportJson.routes)
     );
     expect(result).toEqual({
-      program: "objectArray",
-      "mock-text-field": "text",
+      entityType: "objectArray",
+      "mock-date-field": "date",
       "mock-drawer-text-field": "text",
+      "mock-dropdown-field": "dropdown",
+      "mock-dynamic-form-id": "dynamic",
       "mock-modal-text-field": "text",
-      "mock-modal-overlay-text-field": "text",
-      "mock-optional-text-field": "textOptional",
-      "with-label": "text",
-      "mock-nested-field": "radio",
+      "mock-number-field": "number",
+      "mock-text-field": "text",
     });
   });
 });
