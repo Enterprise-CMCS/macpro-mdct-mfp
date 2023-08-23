@@ -8,15 +8,31 @@ import {
   Sidebar,
   StandardReportPage,
 } from "components";
+import { useLocation } from "react-router-dom";
 import { PageTypes } from "types";
 // utils
 import {
   mockDrawerReportPageJson,
   mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
+  mockStateAndTerritorySpecificInitiativesInstructionsPageJson,
 } from "utils/testing/mockForm";
 
 export const ReportPageWrapper = () => {
+  const location = useLocation();
+
+  // temporary for mocking correct json per page
+  const getRoutePath = (path: string) => {
+    if (path === "/standard") {
+      return mockStandardReportPageJson;
+    } else if (
+      path === "/wp/state-and-territory-specific-initiatives-instructions"
+    ) {
+      return mockStateAndTerritorySpecificInitiativesInstructionsPageJson;
+    } else {
+      return mockStandardReportPageJson;
+    }
+  };
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: PageTypes) => {
     switch (route) {
@@ -27,7 +43,7 @@ export const ReportPageWrapper = () => {
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
-        return <StandardReportPage route={mockStandardReportPageJson} />;
+        return <StandardReportPage route={getRoutePath(location.pathname)} />;
     }
   };
 

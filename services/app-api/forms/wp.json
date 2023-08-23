@@ -68,9 +68,79 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
+              "subsection": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports. These initiatives can be funded using one or more of these funding sources:",
+              "info": [
+                {
+                  "type": "span",
+                  "content": "MFP cooperative agreement funds for:"
+                },
+                {
+                  "type": "html",
+                  "content": "Qualified HCBS and demonstration services"
+                },
+                {
+                  "type": "html",
+                  "content": "Supplemental services"
+                },
+                {
+                  "type": "html",
+                  "content": "Administrative activities"
+                },
+                {
+                  "type": "html",
+                  "content": "Capacity building initiatives"
+                },
+                {
+                  "type": "html",
+                  "content": "State or territory equivalent funds attributable to the MFP-enhanced match"
+                },
+                {
+                  "type": "span",
+                  "content": "Recipients must identify and describe the required initiatives below and have the option to identify additional initiatives on other topics."
+                }
+              ]
             }
+          },
+          "form": {
+            "id": "state_territory_initiatives_instructions",
+            "fields": [
+              {
+                "id": "firstquestion",
+                "type": "radio",
+                "validation": "radio",
+                "props": {
+                  "label": "Are self-directed initiatives applicable to your state or territory?",
+                  "choices": [
+                    {
+                      "id": "UG7uunqq5UCtUq1is3iyiw",
+                      "label": "Yes"
+                    },
+                    {
+                      "id": "3DGAqqnOBE2kwKVFMxUt3A",
+                      "label": "No"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "secondquestion",
+                "type": "radio",
+                "validation": "radio",
+                "props": {
+                  "label": "Are Tribal initiatives applicable to your state or territory?",
+                  "choices": [
+                    {
+                      "id": "UG7uunqq5UCtUq1is3iyiw",
+                      "label": "Yes"
+                    },
+                    {
+                      "id": "3DGAqqnOBE2kwKVFMxUt3A",
+                      "label": "No"
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
