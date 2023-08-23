@@ -8,16 +8,33 @@ import {
   Sidebar,
   StandardReportPage,
 } from "components";
-import { ModalDrawerReportPageShape, PageTypes } from "types";
+import {
+  ModalDrawerReportPageShape,
+  PageTypes,
+  StandardReportPageShape,
+} from "types";
 // utils
 import {
   mockDrawerReportPageJson,
-  mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
-import { wpTemp } from "utils/tempForms/wpTemp";
+import { mockTransitionsBenchmarkForm } from "utils/testing/tempMockForms/mockTransitionsBenchmarkForm";
+import { useLocation } from "react-router-dom";
 
 export const ReportPageWrapper = () => {
+  const location = useLocation();
+
+  // temporary for mocking correct json per page
+  const getRoutePath = (path: string) => {
+    if (path === "/standard") {
+      return mockStandardReportPageJson;
+    } else if (path === "/wp/transition-benchmarks") {
+      return mockTransitionsBenchmarkForm;
+    } else {
+      return mockStandardReportPageJson;
+    }
+  };
+
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: PageTypes) => {
     switch (route) {
@@ -26,13 +43,19 @@ export const ReportPageWrapper = () => {
       case PageTypes.MODAL_DRAWER:
         return (
           <ModalDrawerReportPage
-            route={wpTemp.routes[1] as unknown as ModalDrawerReportPageShape}
+            route={
+              getRoutePath(location.pathname) as ModalDrawerReportPageShape
+            }
           />
         );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
-        return <StandardReportPage route={mockStandardReportPageJson} />;
+        return (
+          <StandardReportPage
+            route={getRoutePath(location.pathname) as StandardReportPageShape}
+          />
+        );
     }
   };
 

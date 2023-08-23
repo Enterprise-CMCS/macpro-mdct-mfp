@@ -19,6 +19,7 @@ import {
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
+import searchIcon from "assets/icons/icon_search_blue.png";
 // types
 import { EntityShape, EntityType, ModalDrawerReportPageShape } from "types";
 // utils
@@ -144,14 +145,20 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
             sx={sx.addEntityButton}
             variant="outline"
             onClick={addEditEntityModalOnOpenHandler}
-            leftIcon={<Image sx={sx.addIcon} src={addIcon} alt="Add" />}
+            leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
           >
             {verbiage.addEntityButtonText}
           </Button>
         </Box>
         <Box>
           <Text>{parseCustomHtml(verbiage.reviewPdfHint)}</Text>
-          <Button sx={sx.reviewPdfButton} variant="outline">
+          <Button
+            sx={sx.reviewPdfButton}
+            variant="outline"
+            leftIcon={
+              <Image sx={sx.buttonIcons} src={searchIcon} alt="Review" />
+            }
+          >
             Review PDF
           </Button>
         </Box>
@@ -204,7 +211,7 @@ interface Props {
 }
 
 const sx = {
-  addIcon: {
+  buttonIcons: {
     height: "1rem",
   },
   dashboardTitle: {

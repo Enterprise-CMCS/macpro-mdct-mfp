@@ -36,9 +36,14 @@ export const AppRoutes = () => {
             path="/wp"
             element={<DashboardPage reportType={ReportType.WP} />}
           />
-          {/* Report Routes */}
+          {/* General Report Routes */}
           <Route path="/standard" element={<ReportPageWrapper />} />
           <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
+          {/* Temporary Page Routes */}
+          <Route
+            path="/wp/transition-benchmarks"
+            element={<ReportPageWrapper />}
+          />
         </Routes>
       </AdminBannerProvider>
     </main>

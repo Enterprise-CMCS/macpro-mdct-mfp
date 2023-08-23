@@ -96,15 +96,14 @@ export interface ModalDrawerReportPageVerbiage
   editEntityButtonText: string;
   addEditModalAddTitle: string;
   addEditModalEditTitle: string;
-  addEditModalMessage: string;
   deleteEntityButtonAltText: string;
   deleteModalTitle: string;
   deleteModalConfirmButtonText: string;
   deleteModalWarning: string;
   entityUnfinishedMessage: string;
   enterEntityDetailsButtonText: string;
-  editEntityDetailsButtonText: string;
   reviewPdfHint: string;
+  drawerTitle: string;
 }
 
 /**
