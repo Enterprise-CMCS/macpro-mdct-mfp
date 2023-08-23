@@ -57,6 +57,11 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
       name: "Individuals with mental health and substance abuse disorders (MH/SUD)",
       isOtherEntity: false,
     },
+    {
+      id: "4",
+      name: "Other: {entity}",
+      isOtherEntity: true,
+    },
   ];
 
   // create drawerForm from json
