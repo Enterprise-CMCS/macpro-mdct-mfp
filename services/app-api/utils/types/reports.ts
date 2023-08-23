@@ -135,9 +135,9 @@ export interface ReportMetadata {
   completionStatus?: CompletionData;
 }
 
-export interface MFPReportMetadata extends ReportMetadata {
+export interface WPReportMetadata extends ReportMetadata {
   programName: string;
-  reportType: "MFP";
+  reportType: "WP";
   reportingPeriodStartDate: number;
   reportingPeriodEndDate: number;
   dueDate: number;
@@ -145,7 +145,8 @@ export interface MFPReportMetadata extends ReportMetadata {
 }
 
 export enum ReportType {
-  MFP = "MFP",
+  WP = "WP",
+  SAR = "SAR",
 }
 /**
  * Check if unknown value is a report type

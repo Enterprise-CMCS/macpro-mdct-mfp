@@ -32,18 +32,18 @@ export const buckets = {
 // REPORTS
 
 export const reportTables = {
-  MFP: process.env.MFP_REPORT_TABLE_NAME!,
+  WP: process.env.WP_REPORT_TABLE_NAME!,
 };
 
 export const reportBuckets = {
-  MFP: process.env.MFP_FORM_BUCKET!,
+  WP: process.env.WP_FORM_BUCKET!,
 };
 
 export const tableTopics = {
-  MFP: "mfp-reports",
+  WP: "wp-reports",
 };
 export const bucketTopics = {
-  MFP: "mfp-form",
+  WP: "wp-form",
 };
 
 export const formTemplateTableName = process.env.FORM_TEMPLATE_TABLE_NAME!;

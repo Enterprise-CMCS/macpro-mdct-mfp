@@ -1,6 +1,7 @@
 import { AttributeValue, QueryInput } from "aws-sdk/clients/dynamodb";
 import dynamodbLib from "../dynamo/dynamodb-lib";
-import mfpForm from "../../forms/mfp.json";
+import wpForm from "../../forms/wp.json";
+import sarForm from "../../forms/sar.json";
 import s3Lib, { getFormTemplateKey } from "../s3/s3-lib";
 import KSUID from "ksuid";
 import { logger } from "../logging";
@@ -35,8 +36,10 @@ export async function getNewestTemplateVersion(reportType: ReportType) {
 
 export const formTemplateForReportType = (reportType: ReportType) => {
   switch (reportType) {
-    case ReportType.MFP:
-      return mfpForm as ReportJson;
+    case ReportType.WP:
+      return wpForm as ReportJson;
+    case ReportType.SAR:
+      return sarForm as ReportJson;
     default:
       assertExhaustive(reportType);
       throw new Error(

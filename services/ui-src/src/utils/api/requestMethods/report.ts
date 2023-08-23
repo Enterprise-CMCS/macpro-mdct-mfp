@@ -11,7 +11,7 @@ async function getReportsByState(reportType: string, state: string) {
 
   updateTimeout();
   const response = await API.get(
-    "mfp",
+    reportType,
     `/reports/${reportType}/${state}`,
     request
   );
@@ -34,7 +34,7 @@ async function postReport(
 
   updateTimeout();
   const response = await API.post(
-    "mfp",
+    reportType,
     `/reports/${reportType}/${state}`,
     request
   );

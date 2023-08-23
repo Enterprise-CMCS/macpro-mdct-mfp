@@ -13,7 +13,7 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
   const reportMetaData = {
     metadata: {
       programName: "testProgram",
-      reportType: "MFP",
+      reportType: "WP",
       status: ReportStatus.NOT_STARTED,
       isComplete: false,
       createdAt: 162515200000,
@@ -52,10 +52,10 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
   return (
     <Box>
       {route.verbiage.intro && <ReportPageIntro text={route.verbiage.intro} />}
-      <Button onClick={() => createReport("MFP", "NJ", reportMetaData)}>
+      <Button onClick={() => createReport("WP", "NJ", reportMetaData)}>
         Create Report
       </Button>
-      <button onClick={() => fetchReportsByState("MFP", "NJ")}>
+      <button onClick={() => fetchReportsByState("WP", "NJ")}>
         Fetch Reports By State
       </button>
       <Form
