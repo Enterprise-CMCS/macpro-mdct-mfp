@@ -47,35 +47,37 @@ describe("Test getOrCreateFormTemplate WP", () => {
     expect(result.formTemplateVersion?.md5Hash).toEqual(currentWPFormHash);
   });
 
-  // Not implemented yet
-  // it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
-  //   mockDocumentClient.query.promise.mockReturnValueOnce({
-  //     Items: [
-  //       {
-  //         formTemplateId: "foo",
-  //         id: "mockReportJson",
-  //         md5Hash: currentWPFormHash,
-  //         versionNumber: 3,
-  //       },
-  //       {
-  //         formTemplateId: "foo",
-  //         id: "mockReportJson",
-  //         md5Hash: currentWPFormHash + "111",
-  //         versionNumber: 2,
-  //       },
-  //     ],
-  //   });
-  //   const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
-  //   const s3PutSpy = jest.spyOn(s3Lib, "put");
-  //   const result = await getOrCreateFormTemplate(
-  //     "local-wp-reports",
-  //     ReportType.WP
-  //   );
-  //   expect(dynamoPutSpy).not.toHaveBeenCalled();
-  //   expect(s3PutSpy).not.toHaveBeenCalled();
-  //   expect(result.formTemplateVersion?.versionNumber).toEqual(3);
-  //   expect(result.formTemplateVersion?.md5Hash).toEqual(currentWPFormHash);
-  // });
+  /*
+   * Not implemented yet
+   * it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
+   * mockDocumentClient.query.promise.mockReturnValueOnce({
+   *   Items: [
+   *     {
+   *       formTemplateId: "foo",
+   *       id: "mockReportJson",
+   *       md5Hash: currentWPFormHash,
+   *       versionNumber: 3,
+   *     },
+   *     {
+   *       formTemplateId: "foo",
+   *       id: "mockReportJson",
+   *       md5Hash: currentWPFormHash + "111",
+   *       versionNumber: 2,
+   *     },
+   *   ],
+   * });
+   * const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
+   * const s3PutSpy = jest.spyOn(s3Lib, "put");
+   * const result = await getOrCreateFormTemplate(
+   *   "local-wp-reports",
+   *   ReportType.WP
+   * );
+   * expect(dynamoPutSpy).not.toHaveBeenCalled();
+   * expect(s3PutSpy).not.toHaveBeenCalled();
+   * expect(result.formTemplateVersion?.versionNumber).toEqual(3);
+   * expect(result.formTemplateVersion?.md5Hash).toEqual(currentWPFormHash);
+   * });
+   */
 
   it("should create a new form if it doesn't match the most recent form", async () => {
     mockDocumentClient.query.promise.mockReturnValueOnce({
@@ -130,35 +132,37 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     expect(result.formTemplateVersion?.md5Hash).toEqual(currentSARFormHash);
   });
 
-  // Not implemented Yet
-  // it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
-  //   mockDocumentClient.query.promise.mockReturnValueOnce({
-  //     Items: [
-  //       {
-  //         formTemplateId: "foo",
-  //         id: "mockReportJson",
-  //         md5Hash: currentSARFormHash,
-  //         versionNumber: 3,
-  //       },
-  //       {
-  //         formTemplateId: "foo",
-  //         id: "mockReportJson",
-  //         md5Hash: currentSARFormHash + "111",
-  //         versionNumber: 2,
-  //       },
-  //     ],
-  //   });
-  //   const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
-  //   const s3PutSpy = jest.spyOn(s3Lib, "put");
-  //   const result = await getOrCreateFormTemplate(
-  //     "local-sar-reports",
-  //     ReportType.SAR
-  //   );
-  //   expect(dynamoPutSpy).not.toHaveBeenCalled();
-  //   expect(s3PutSpy).not.toHaveBeenCalled();
-  //   expect(result.formTemplateVersion?.versionNumber).toEqual(3);
-  //   expect(result.formTemplateVersion?.md5Hash).toEqual(currentSARFormHash);
-  // });
+  /*
+   * Not implemented Yet
+   * it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
+   * mockDocumentClient.query.promise.mockReturnValueOnce({
+   *   Items: [
+   *     {
+   *       formTemplateId: "foo",
+   *       id: "mockReportJson",
+   *       md5Hash: currentSARFormHash,
+   *       versionNumber: 3,
+   *     },
+   *     {
+   *       formTemplateId: "foo",
+   *       id: "mockReportJson",
+   *       md5Hash: currentSARFormHash + "111",
+   *       versionNumber: 2,
+   *     },
+   *   ],
+   * });
+   * const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
+   * const s3PutSpy = jest.spyOn(s3Lib, "put");
+   * const result = await getOrCreateFormTemplate(
+   *   "local-sar-reports",
+   *   ReportType.SAR
+   * );
+   * expect(dynamoPutSpy).not.toHaveBeenCalled();
+   * expect(s3PutSpy).not.toHaveBeenCalled();
+   * expect(result.formTemplateVersion?.versionNumber).toEqual(3);
+   * expect(result.formTemplateVersion?.md5Hash).toEqual(currentSARFormHash);
+   * });
+   */
 
   it("should create a new form if it doesn't match the most recent form", async () => {
     mockDocumentClient.query.promise.mockReturnValueOnce({
