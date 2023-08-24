@@ -6,7 +6,7 @@ import {
   object,
   string,
 } from "yup";
-import { Choice } from "../types/types";
+import { Choice } from "../types";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
