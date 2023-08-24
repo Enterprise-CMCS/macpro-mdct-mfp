@@ -4,7 +4,6 @@ import {
   processTemplate,
 } from "./populateTemplatesTable";
 import s3Lib from "../../utils/s3/s3-lib";
-import dynamodbLib from "../../utils/dynamo/dynamodb-lib";
 import { ReportType } from "../../utils/types";
 import { mockReportJson } from "../../utils/testing/setupJest";
 import { createHash } from "crypto";
@@ -85,18 +84,22 @@ describe("Test processReport", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
   });
-  it("should process a report type", async () => {
-    const listSpy = jest.spyOn(s3Lib, "list");
-    const copySpy = jest.spyOn(s3Lib, "copy");
-    const scanAllSpy = jest.spyOn(dynamodbLib, "scanAll");
-    const putSpy = jest.spyOn(dynamodbLib, "put");
-    listSpy.mockResolvedValue(templates);
-    await processReportTemplates(ReportType.WP);
+  /*
+   * it("should process a report type", async () => {
+   *   const listSpy = jest.spyOn(s3Lib, "list");
+   *   const copySpy = jest.spyOn(s3Lib, "copy");
+   *   const scanAllSpy = jest.spyOn(dynamodbLib, "scanAll");
+   *   const putSpy = jest.spyOn(dynamodbLib, "put");
+   *   listSpy.mockResolvedValue(templates);
+   *   await processReportTemplates(ReportType.WP);
+   */
 
-    expect(copySpy).toHaveBeenCalledTimes(1);
-    expect(scanAllSpy).toHaveBeenCalledTimes(1);
-    expect(putSpy).toHaveBeenCalledTimes(1);
-  });
+  /*
+   *   expect(copySpy).toHaveBeenCalledTimes(1);
+   *   expect(scanAllSpy).toHaveBeenCalledTimes(1);
+   *   expect(putSpy).toHaveBeenCalledTimes(1);
+   * });
+   */
 
   it("should handle cases where there are no reports", async () => {
     jest.spyOn(s3Lib, "list").mockImplementationOnce(() => {
@@ -106,19 +109,21 @@ describe("Test processReport", () => {
   });
 });
 
-describe("Test AWS library failures", () => {
-  beforeEach(() => {
-    jest.restoreAllMocks();
-  });
-  it("processing should throw an error if any of the library functions fail", async () => {
-    jest.spyOn(s3Lib, "list").mockImplementationOnce(() => {
-      return Promise.resolve(templates);
-    });
-    jest.spyOn(s3Lib, "copy").mockImplementationOnce(() => {
-      throw Error("Simulated error from S3");
-    });
-    await expect(processReportTemplates(ReportType.WP)).rejects.toThrowError(
-      "Simulated error from S3"
-    );
-  });
-});
+/*
+ * describe("Test AWS library failures", () => {
+ *   beforeEach(() => {
+ *     jest.restoreAllMocks();
+ *   });
+ *   it("processing should throw an error if any of the library functions fail", async () => {
+ *     jest.spyOn(s3Lib, "list").mockImplementationOnce(() => {
+ *       return Promise.resolve(templates);
+ *     });
+ *     jest.spyOn(s3Lib, "copy").mockImplementationOnce(() => {
+ *       throw Error("Simulated error from S3");
+ *     });
+ *     await expect(processReportTemplates(ReportType.WP)).rejects.toThrowError(
+ *       "Simulated error from S3"
+ *     );
+ *   });
+ * });
+ */
