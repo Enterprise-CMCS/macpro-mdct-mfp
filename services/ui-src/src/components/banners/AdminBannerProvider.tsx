@@ -1,11 +1,13 @@
 import { useState, createContext, ReactNode, useMemo, useEffect } from "react";
-// utils
+// types
 import { AdminBannerData, AdminBannerShape } from "types/banners";
-import { bannerErrors } from "verbiage/errors";
+// utils
+import { useStore } from "utils";
 import { mockBannerData } from "utils/testing/mockBanner";
+// verbiage
+import { bannerErrors } from "verbiage/errors";
 
 export const AdminBannerContext = createContext<AdminBannerShape>({
-  bannerData: undefined as AdminBannerData | undefined,
   fetchAdminBanner: Function,
   writeAdminBanner: Function,
   deleteAdminBanner: Function,
@@ -14,16 +16,16 @@ export const AdminBannerContext = createContext<AdminBannerShape>({
 });
 
 export const AdminBannerProvider = ({ children }: Props) => {
-  const [bannerData, setBannerData] = useState<AdminBannerData | undefined>(
-    undefined
-  );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>();
+
+  // state management
+  const { bannerData, setAdminBanner, clearAdminBanner } = useStore();
 
   const fetchAdminBanner = async () => {
     setIsLoading(true);
     try {
-      setBannerData(mockBannerData);
+      setAdminBanner(mockBannerData);
     } catch (e: any) {
       setIsLoading(false);
       // 404 expected when no current banner exists
@@ -35,11 +37,11 @@ export const AdminBannerProvider = ({ children }: Props) => {
   };
 
   const deleteAdminBanner = async () => {
-    setBannerData(undefined);
+    clearAdminBanner();
   };
 
   const writeAdminBanner = async (newBannerData: AdminBannerData) => {
-    setBannerData(newBannerData);
+    setAdminBanner(newBannerData);
   };
 
   useEffect(() => {

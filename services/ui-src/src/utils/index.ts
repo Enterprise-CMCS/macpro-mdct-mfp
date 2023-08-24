@@ -6,7 +6,6 @@ export * from "./api/requestMethods/report";
 export * from "./auth/UserProvider";
 export * from "./auth/authLifecycle";
 // state management
-export * from "./state/useUserStore";
 export * from "./state/useStore";
 // forms
 export * from "./forms/forms";
