@@ -7,7 +7,6 @@ import { UserRoles } from "../types";
 
 interface DecodedToken {
   "custom:cms_roles": UserRoles;
-  "custom:reports": string;
 }
 
 const loadCognitoValues = async () => {
