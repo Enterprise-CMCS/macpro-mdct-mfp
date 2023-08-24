@@ -58,15 +58,17 @@ export const TemplateCard = ({
                 {verbiage.downloadText}
               </Button>
             )}
-
-            <Button
-              sx={sx.formLink}
-              isDisabled={isDisabled}
-              onClick={() => navigate(verbiage.link.route)}
-              rightIcon={<Image src={nextIcon} alt="Link Icon" height="1rem" />}
-            >
-              {verbiage.link.text}
-            </Button>
+            {!isDisabled && (
+              <Button
+                sx={sx.formLink}
+                onClick={() => navigate(verbiage.link.route)}
+                rightIcon={
+                  <Image src={nextIcon} alt="Link Icon" height="1rem" />
+                }
+              >
+                {verbiage.link.text}
+              </Button>
+            )}
           </Flex>
           <TemplateCardAccordion verbiage={verbiage.accordion} />
         </Flex>

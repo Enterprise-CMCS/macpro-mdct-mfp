@@ -1,3 +1,4 @@
+import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import { Box, Heading, Link, Text } from "@chakra-ui/react";
 import { PageTemplate, TemplateCard } from "components";
@@ -6,6 +7,10 @@ import verbiage from "verbiage/pages/home";
 
 export const HomePage = () => {
   const { intro, cards } = verbiage;
+
+  // LaunchDarkly
+  const wpReport = useFlags()?.wpReport;
+  const sarReport = useFlags().sarReport;
 
   return (
     <PageTemplate sx={sx.layout} data-testid="home-view">
@@ -22,11 +27,17 @@ export const HomePage = () => {
         </Text>
         <Text></Text>
       </Box>
-      <TemplateCard templateName="MP" verbiage={cards.MP} cardprops={sx.card} />
+      <TemplateCard
+        templateName="WP"
+        verbiage={cards.WP}
+        cardprops={sx.card}
+        isDisabled={!wpReport}
+      />
       <TemplateCard
         templateName="SAR"
         verbiage={cards.SAR}
         cardprops={sx.card}
+        isDisabled={!sarReport}
       />
     </PageTemplate>
   );
