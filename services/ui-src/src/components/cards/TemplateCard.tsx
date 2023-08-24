@@ -13,7 +13,7 @@ import spreadsheetIcon from "assets/icons/icon_spreadsheet.png";
 export const TemplateCard = ({
   verbiage,
   cardprops,
-  isDisabled,
+  isHidden,
   ...props
 }: Props) => {
   const { isDesktop } = useBreakpoint();
@@ -58,7 +58,7 @@ export const TemplateCard = ({
                 {verbiage.downloadText}
               </Button>
             )}
-            {!isDisabled && (
+            {!isHidden && (
               <Button
                 sx={sx.formLink}
                 onClick={() => navigate(verbiage.link.route)}
@@ -80,7 +80,7 @@ export const TemplateCard = ({
 interface Props {
   templateName: string;
   verbiage: AnyObject;
-  isDisabled?: boolean;
+  isHidden?: boolean;
   [key: string]: any;
 }
 

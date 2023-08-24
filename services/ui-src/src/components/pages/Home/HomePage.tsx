@@ -31,13 +31,13 @@ export const HomePage = () => {
         templateName="WP"
         verbiage={cards.WP}
         cardprops={sx.card}
-        isDisabled={!wpReport}
+        isHidden={!wpReport}
       />
       <TemplateCard
         templateName="SAR"
         verbiage={cards.SAR}
         cardprops={sx.card}
-        isDisabled={!sarReport}
+        isHidden={!sarReport}
       />
     </PageTemplate>
   );
