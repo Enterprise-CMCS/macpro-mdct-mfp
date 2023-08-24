@@ -9,7 +9,7 @@ import {
 } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
 // types
-import { AnyObject, StatusCodes } from "../../utils/types";
+import { StatusCodes } from "../../utils/types";
 import * as authFunctions from "../../utils/auth/authorization";
 import s3Lib from "../../utils/s3/s3-lib";
 
@@ -52,10 +52,12 @@ const creationEventWithNoFieldData: APIGatewayProxyEvent = {
   body: JSON.stringify({ fieldData: undefined }),
 };
 
-const creationEventWithInvalidData: APIGatewayProxyEvent = {
-  ...mockProxyEvent,
-  body: JSON.stringify({ fieldData: { number: "NAN" } }),
-};
+/*
+ * const creationEventWithInvalidData: APIGatewayProxyEvent = {
+ *   ...mockProxyEvent,
+ *   body: JSON.stringify({ fieldData: { number: "NAN" } }),
+ * };
+ */
 
 const creationEventWithCopySource: APIGatewayProxyEvent = {
   ...mockProxyEvent,

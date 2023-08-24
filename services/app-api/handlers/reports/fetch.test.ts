@@ -15,7 +15,6 @@ jest.mock("../../utils/auth/authorization", () => ({
   hasPermissions: jest.fn().mockReturnValue(true),
   hasReportAccess: jest.fn().mockReturnValue(true),
 }));
-const mockAuthUtil = require("../../utils/auth/authorization");
 
 jest.mock("../../utils/debugging/debug-lib", () => ({
   init: jest.fn(),
