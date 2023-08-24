@@ -42,7 +42,7 @@ export const ReviewSubmitPage = () => {
       <Flex sx={sx.pageContainer} data-testid="review-submit-page">
         {ReportStatus.SUBMITTED ? (
           <SuccessMessage
-            reportType={ReportType.MFP}
+            reportType={ReportType.WP}
             name="placeholder"
             date={Date.now()} // this is a placeholder date
             submittedBy={"placeholder"}
@@ -67,7 +67,7 @@ export const ReviewSubmitPage = () => {
 
 const PrintButton = ({ reviewVerbiage }: { reviewVerbiage: AnyObject }) => {
   const { print } = reviewVerbiage;
-  const reportType = ReportType.MFP;
+  const reportType = ReportType.WP;
   const isSubmitted = false;
   return (
     <Button
