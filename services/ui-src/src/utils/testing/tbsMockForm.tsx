@@ -40,15 +40,6 @@ export const mockVerbiageIntro = {
 export const mockVerbaigeIntro = {
   section: "",
   subsection: "Transition Benchmark Strategy",
-  spreadsheet: "",
-  info: [
-    {
-      type: "html",
-      content: "",
-    },
-  ],
-  editEntityButtonText: "Edit",
-  enterReportText: "Enter Details",
 };
 
 export const mockStandardTBSReportPageJson = {
