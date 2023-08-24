@@ -9,19 +9,15 @@ import {
   sortReportsOldestToNewest,
   useStore,
 } from "utils";
-import { ReportContextShape, ReportShape, ReportMetadataShape } from "types";
+import { ReportContextShape, ReportShape } from "types";
 import { reportErrors } from "verbiage/errors";
 
 // CONTEXT DECLARATION
 
 export const ReportContext = createContext<ReportContextShape>({
-  // report
-  report: undefined as ReportShape | undefined,
+  // context
   contextIsLoaded: false as boolean,
   createReport: Function,
-  // reports by state
-  reportsByState: undefined as ReportMetadataShape[] | undefined,
-  fetchReportsByState: Function,
   // selected report
   clearReportSelection: Function,
   clearReportsByState: Function,
@@ -33,22 +29,22 @@ export const ReportContext = createContext<ReportContextShape>({
 
 export const ReportProvider = ({ children }: Props) => {
   const { pathname } = useLocation();
-  const { state: userState } = useStore().user ?? {};
   const [lastSavedTime, setLastSavedTime] = useState<string>();
   const [error, setError] = useState<string>();
   const [contextIsLoaded, setContextIsLoaded] = useState<boolean>(false);
   const [isReportPage, setIsReportPage] = useState<boolean>(false);
 
-  // REPORT
-
-  const [report, setReport] = useState<ReportShape | undefined>();
-  const [reportsByState, setReportsByState] = useState<
-    ReportShape[] | undefined
-  >();
-
-  const [submittedReportsByState, setSubmittedReportsByState] = useState<
-    ReportShape[] | undefined
-  >();
+  // state management
+  const {
+    report,
+    reportsByState,
+    submittedReportsByState,
+    setReport,
+    setReportsByState,
+    clearReportsByState,
+    setSubmittedReportsByState,
+  } = useStore();
+  const { state: userState } = useStore().user ?? {};
 
   const hydrateAndSetReport = (report: ReportShape | undefined) => {
     if (report) {
@@ -95,10 +91,6 @@ export const ReportProvider = ({ children }: Props) => {
     hydrateAndSetReport(undefined);
     setLastSavedTime(undefined);
     localStorage.setItem("selectedReport", "");
-  };
-
-  const clearReportsByState = () => {
-    setReportsByState(undefined);
   };
 
   const setReportSelection = async (report: ReportShape) => {

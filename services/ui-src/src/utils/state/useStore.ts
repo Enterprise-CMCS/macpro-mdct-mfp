@@ -6,6 +6,9 @@ import {
   MFPUser,
   AdminBannerData,
   AdminBannerState,
+  ReportShape,
+  MfpReportState,
+  ReportMetadataShape,
 } from "types";
 
 // USER STORE
@@ -31,12 +34,26 @@ const bannerStore = (set: Function) => ({
 });
 
 // REPORT STORE
-const reportStore = (set: Function) => ({});
+const reportStore = (set: Function) => ({
+  // initial state
+  report: undefined,
+  reportsByState: undefined,
+  submittedReportsByState: undefined,
+  // actions
+  setReport: (newReport: ReportShape | undefined) =>
+    set(() => ({ report: newReport })),
+  setReportsByState: (newReportsByState: ReportMetadataShape[] | undefined) =>
+    set(() => ({ reportsByState: newReportsByState })),
+  clearReportsByState: () => set(() => ({ reportsByState: undefined })),
+  setSubmittedReportsByState: (
+    newSubmittedReportsByState: ReportMetadataShape[] | undefined
+  ) => set(() => ({ submittedReportsByState: newSubmittedReportsByState })),
+});
 
 export const useStore = create(
   // persist and devtools are being used for debugging state
   persist(
-    devtools<MfpUserState & AdminBannerState>((set) => ({
+    devtools<MfpUserState & AdminBannerState & MfpReportState>((set) => ({
       ...userStore(set),
       ...bannerStore(set),
       ...reportStore(set),
