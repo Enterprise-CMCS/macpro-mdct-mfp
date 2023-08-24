@@ -37,13 +37,8 @@ export interface CompletionData {
 }
 
 export interface ReportContextMethods {
-  fetchReport: Function;
   fetchReportsByState: Function;
-  archiveReport: Function;
-  releaseReport?: Function;
-  submitReport: Function;
   createReport: Function;
-  updateReport: Function;
   clearReportSelection: Function;
   clearReportsByState: Function;
   setReportSelection: Function;

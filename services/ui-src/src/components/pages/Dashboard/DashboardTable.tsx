@@ -115,7 +115,7 @@ interface DashboardTableProps {
   reportId: string | undefined;
   openAddEditReportModal: Function;
   enterSelectedReport: Function;
-  archiveReport: Function;
+  archiveReport?: Function;
   archiving: boolean;
   entering: boolean;
   isAdmin: boolean;

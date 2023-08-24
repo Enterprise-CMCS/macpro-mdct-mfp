@@ -12,12 +12,12 @@ import {
   ReviewSubmitPage,
 } from "components";
 // utils
-import { ScrollToTopComponent, useUserStore } from "utils";
+import { ScrollToTopComponent, useStore } from "utils";
 // types
 import { ReportType } from "types";
 
 export const AppRoutes = () => {
-  const { userIsAdmin } = useUserStore().user ?? {};
+  const { userIsAdmin } = useStore().user ?? {};
 
   // LaunchDarkly
   const wpReport = useFlags()?.wpReport;

@@ -121,7 +121,7 @@ interface MobileDashboardTableProps {
   reportType: string;
   openAddEditReportModal: Function;
   enterSelectedReport: Function;
-  archiveReport: Function;
+  archiveReport?: Function;
   archiving: boolean;
   entering: boolean;
   releaseReport?: Function | undefined;

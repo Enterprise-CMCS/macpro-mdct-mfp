@@ -17,7 +17,7 @@ import {
   hydrateFormFields,
   mapValidationTypesToSchema,
   sortFormErrors,
-  useUserStore,
+  useStore,
 } from "utils";
 import {
   AnyObject,
@@ -45,7 +45,7 @@ export const Form = ({
   const { fields, options } = formJson;
 
   // determine if fields should be disabled (based on admin roles )
-  const { userIsAdmin, userIsReadOnly } = useUserStore().user ?? {};
+  const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
   const { report } = useContext(ReportContext);
   let location = useLocation();
   const fieldInputDisabled =
