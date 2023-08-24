@@ -1,165 +1,167 @@
 {
-  "type": "WP",
-  "name": "MFP Work Plan (WP)",
-  "basePath": "/wp",
-  "version": "WP_2023-08-21",
-  "entities": {
-    "": { "required": true }
+  "programName": "testProgram",
+  "reportType": "WP",
+  "status": "Not started",
+  "isComplete": false,
+  "createdAt": 1692893431988,
+  "lastAlteredBy": "Thelonious States",
+  "state": "NJ",
+  "id": "2URDJzK0Gxjlgb9nt26892BlMQL",
+  "fieldDataId": "2URDK4nVVgiTVJpPjJKUTvRakps",
+  "formTemplateId": "2URDK4saxEMiKEmbIoQwD0Yua5i",
+  "lastAltered": 1692893431988,
+  "versionNumber": 1,
+  "fieldData": {
+    "programName": "testProgram"
   },
-  "routes": [
-    {
-      "name": "General Information",
-      "path": "/wp/general-information",
-      "pageType": "standard",
-      "verbiage": {
-        "intro": {
-          "section": "",
-          "subsection": "",
-          "hint": "",
-          "exportSection": ""
+  "formTemplate": {
+    "type": "WP",
+    "name": "MFP Work Plan (WP)",
+    "basePath": "/wp",
+    "version": "WP_2023-08-21",
+    "entities": {
+      "": {
+        "required": true
+      }
+    },
+    "routes": [
+      {
+        "name": "General Information",
+        "path": "/wp/general-information",
+        "pageType": "standard",
+        "verbiage": {
+          "intro": {
+            "section": "",
+            "subsection": "",
+            "hint": "",
+            "exportSection": ""
+          }
         }
-      }
-    },
-    {
-      "name": "Transition Benchmarks",
-      "path": "/wp/transition-benchmarks",
-      "pageType": "standard",
-      "verbiage": {
-        "intro": {
-          "exportSectionHeader": "",
-          "section": "",
-          "subsection": "",
-          "info": [
-            {
-              "type": "html",
-              "content": ""
-            }
-          ]
-        },
-        "exportSectionHeader": ""
-      }
-    },
-    {
-      "name": "Transition Benchmark Strategy",
-      "path": "/wp/transition-benchmark-strategy",
-      "pageType": "standard",
-      "verbiage": {
-        "intro": {
-          "exportSectionHeader": "",
-          "section": "",
-          "subsection": "",
-          "info": [
-            {
-              "type": "html",
-              "content": ""
-            }
-          ]
-        },
-        "exportSectionHeader": ""
-      }
-    },
-    {
-      "name": "State & Territory Specific Initiatives",
-      "path": "/wp/state-and-territory-specific-initiatives",
-      "children": [
-        {
-          "name": "State & Territory Specific Initiatives Instructions",
-          "path": "/wp/state-and-territory-specific-initiatives/instructions",
-          "pageType": "standard",
-          "verbiage": {
-            "intro": {
-              "subsection": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports. These initiatives can be funded using one or more of these funding sources:",
-              "info": [
-                {
-                  "type": "span",
-                  "content": "MFP cooperative agreement funds for:"
-                },
-                {
-                  "type": "html",
-                  "content": "Qualified HCBS and demonstration services"
-                },
-                {
-                  "type": "html",
-                  "content": "Supplemental services"
-                },
-                {
-                  "type": "html",
-                  "content": "Administrative activities"
-                },
-                {
-                  "type": "html",
-                  "content": "Capacity building initiatives"
-                },
-                {
-                  "type": "html",
-                  "content": "State or territory equivalent funds attributable to the MFP-enhanced match"
-                },
-                {
-                  "type": "span",
-                  "content": "Recipients must identify and describe the required initiatives below and have the option to identify additional initiatives on other topics."
-                }
-              ]
-            }
-          },
-          "form": {
-            "id": "state_territory_initiatives_instructions",
-            "fields": [
+      },
+      {
+        "name": "Transition Benchmarks",
+        "path": "/wp/transition-benchmarks",
+        "pageType": "standard",
+        "verbiage": {
+          "intro": {
+            "exportSectionHeader": "",
+            "section": "",
+            "subsection": "",
+            "info": [
               {
-                "id": "firstquestion",
-                "type": "radio",
-                "validation": "radio",
-                "props": {
-                  "label": "Are self-directed initiatives applicable to your state or territory?",
-                  "choices": [
-                    {
-                      "id": "UG7uunqq5UCtUq1is3iyiw",
-                      "label": "Yes"
-                    },
-                    {
-                      "id": "3DGAqqnOBE2kwKVFMxUt3A",
-                      "label": "No"
-                    }
-                  ]
-                }
-              },
-              {
-                "id": "secondquestion",
-                "type": "radio",
-                "validation": "radio",
-                "props": {
-                  "label": "Are Tribal initiatives applicable to your state or territory?",
-                  "choices": [
-                    {
-                      "id": "UG7uunqq5UCtUq1is3iyiw",
-                      "label": "Yes"
-                    },
-                    {
-                      "id": "3DGAqqnOBE2kwKVFMxUt3A",
-                      "label": "No"
-                    }
-                  ]
-                }
+                "type": "html",
+                "content": ""
               }
             ]
-          }
-        },
-        {
-          "name": "State & Territory Specific Initiatives",
-          "path": "/wp/state-and-territory-specific-initiatives/initiatives",
-          "pageType": "standard",
-          "verbiage": {
-            "intro": {
-              "section": "",
-              "subsection": ""
+          },
+          "exportSectionHeader": ""
+        }
+      },
+      {
+        "name": "Transition Benchmark Strategy",
+        "path": "/wp/transition-benchmark-strategy",
+        "pageType": "standard",
+        "verbiage": {
+          "intro": {
+            "exportSectionHeader": "",
+            "section": "",
+            "subsection": "",
+            "info": [
+              {
+                "type": "html",
+                "content": ""
+              }
+            ]
+          },
+          "exportSectionHeader": ""
+        }
+      },
+      {
+        "name": "State & Territory Specific Initiatives",
+        "path": "/wp/state-and-territory-specific-initiatives",
+        "children": [
+          {
+            "name": "State & Territory Specific Initiatives Instructions",
+            "path": "/wp/state-and-territory-specific-initiatives/instructions",
+            "pageType": "standard",
+            "verbiage": {
+              "intro": {
+                "subsection": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports. These initiatives can be funded using one or more of these funding sources:",
+                "info": [
+                  {
+                    "type": "span",
+                    "content": "MFP cooperative agreement funds for:"
+                  }
+                ]
+              }
+            },
+            "form": {
+              "id": "id",
+              "fields": []
+            }
+          },
+          {
+            "name": "State & Territory Specific Initiatives",
+            "path": "/wp/state-and-territory-specific-initiatives/initiatives",
+            "pageType": "standard",
+            "verbiage": {
+              "intro": {
+                "section": "",
+                "subsection": ""
+              }
             }
           }
-        }
-      ]
-    },
-    {
-      "name": "Review & Submit",
-      "path": "/wp/review-and-submit",
-      "pageType": "reviewSubmit"
-    }
-  ]
+        ]
+      },
+      {
+        "name": "Review & Submit",
+        "path": "/wp/review-and-submit",
+        "pageType": "reviewSubmit"
+      }
+    ],
+    "validationJson": {},
+    "flatRoutes": [
+      {
+        "name": "General Information",
+        "path": "/wp/general-information",
+        "pageType": "standard",
+        "verbiage": { "intro": [] },
+        "form": { "id": "123", "fields": [] }
+      },
+      {
+        "name": "Transition Benchmarks",
+        "path": "/wp/transition-benchmarks",
+        "pageType": "standard",
+        "verbiage": { "intro": [] },
+        "form": { "id": "123", "fields": [] }
+      },
+      {
+        "name": "Transition Benchmark Strategy",
+        "path": "/wp/transition-benchmark-strategy",
+        "pageType": "standard",
+        "verbiage": { "intro": [] },
+        "form": { "id": "123", "fields": [] }
+      },
+      {
+        "name": "State & Territory Specific Initiatives Instructions",
+        "path": "/wp/state-and-territory-specific-initiatives/instructions",
+        "pageType": "standard",
+        "verbiage": { "intro": [] },
+        "form": { "id": "123", "fields": [] }
+      },
+      {
+        "name": "State & Territory Specific Initiatives",
+        "path": "/wp/state-and-territory-specific-initiatives/initiatives",
+        "pageType": "standard",
+        "verbiage": { "intro": [] },
+        "form": { "id": "123", "fields": [] }
+      },
+      {
+        "name": "Review & Submit",
+        "path": "/wp/review-and-submit",
+        "pageType": "standard"
+      }
+    ]
+  },
+  "formTemplateVersion": 1
 }

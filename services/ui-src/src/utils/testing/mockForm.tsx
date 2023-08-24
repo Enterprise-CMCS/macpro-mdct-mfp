@@ -214,27 +214,3 @@ export const mockReviewSubmitPageJson = {
   path: "/mock/mock-review-and-submit",
   pageType: "reviewSubmit",
 };
-
-export const mockSTSInitiativesInstructionsVerbaigeIntro = {
-  section: "",
-  subsection: "Transition Benchmark Strategy",
-  spreadsheet: "",
-  info: [
-    {
-      type: "html",
-      content: "",
-    },
-  ],
-  editEntityButtonText: "Edit",
-  enterReportText: "Enter Details",
-};
-
-export const mockStateAndTerritorySpecificInitiativesInstructionsPageJson = {
-  name: "state-and-territory-specific-initiatives-instructions",
-  path: "/wp/state-and-territory-specific-initiatives-instructions",
-  pageType: "standard",
-  verbiage: {
-    intro: mockSTSInitiativesInstructionsVerbaigeIntro,
-  },
-  form: mockForm,
-};

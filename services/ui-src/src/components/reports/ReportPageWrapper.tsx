@@ -15,8 +15,8 @@ import {
   mockDrawerReportPageJson,
   mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
-  mockStateAndTerritorySpecificInitiativesInstructionsPageJson,
 } from "utils/testing/mockForm";
+import { mockStateAndTerritoryInitiativesInstructionsPageJson } from "utils/testing/stsiMockForm";
 
 export const ReportPageWrapper = () => {
   const location = useLocation();
@@ -26,9 +26,9 @@ export const ReportPageWrapper = () => {
     if (path === "/standard") {
       return mockStandardReportPageJson;
     } else if (
-      path === "/wp/state-and-territory-specific-initiatives-instructions"
+      path === "/wp/state-and-territory-specific-initiatives/instructions"
     ) {
-      return mockStateAndTerritorySpecificInitiativesInstructionsPageJson;
+      return mockStateAndTerritoryInitiativesInstructionsPageJson;
     } else {
       return mockStandardReportPageJson;
     }
