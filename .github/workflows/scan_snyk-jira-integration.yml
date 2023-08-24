@@ -42,6 +42,7 @@ jobs:
 
       - name: use the custom github  action to parse Snyk output
         uses: Enterprise-CMCS/macfc-security-scan-report@v2.6.0
+        with:
           jira-username: ${{ secrets.JIRA_SERVICE_USERNAME }}
           jira-token: ${{ secrets.JIRA_SERVICE_USER_TOKEN }}
           jira-host: "qmacbis.atlassian.net"
@@ -52,4 +53,4 @@ jobs:
           jira-title-prefix: "[MFP] - Snyk :"
           assign-jira-ticket-to: ${{ secrets.ACCOUNT_ID_REHMAN }}
           scan-output-path: "snyk_output.txt"
-          scan-type: "snyk" 
+          scan-type: "snyk"
