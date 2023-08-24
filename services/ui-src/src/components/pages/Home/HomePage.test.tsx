@@ -3,13 +3,15 @@ import { axe } from "jest-axe";
 // components
 import { HomePage } from "components";
 // utils
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { mockLDFlags, RouterWrappedComponent } from "utils/testing/setupJest";
 
 const homeView = (
   <RouterWrappedComponent>
     <HomePage />
   </RouterWrappedComponent>
 );
+
+mockLDFlags.setDefault({ wpReport: true, sarReport: true });
 
 describe("Test HomePage", () => {
   beforeEach(() => {

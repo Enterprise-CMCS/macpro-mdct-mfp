@@ -6,12 +6,14 @@ import { createMemoryHistory } from "history";
 import { AppRoutes } from "components";
 // utils
 import { useUserStore, UserProvider } from "utils";
-import { mockStateUserStore } from "utils/testing/setupJest";
+import { mockStateUserStore, mockLDFlags } from "utils/testing/setupJest";
 
 jest.mock("utils/state/useUserStore");
 const mockedUseUserStore = useUserStore as jest.MockedFunction<
   typeof useUserStore
 >;
+
+mockLDFlags.setDefault({ wpReport: true, sarReport: true });
 
 const appRoutesComponent = (history: any) => (
   <Router location={history.location} navigator={history}>

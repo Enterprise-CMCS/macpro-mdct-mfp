@@ -8,7 +8,6 @@ import {
 
 // REPORT TYPES
 export enum ReportType {
-  MFP = "MFP",
   WP = "WP",
   SAR = "SAR",
 }

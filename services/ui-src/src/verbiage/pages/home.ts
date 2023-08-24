@@ -10,7 +10,7 @@ export default {
     },
   },
   cards: {
-    MP: {
+    WP: {
       title: "MFP Work Plan (WP)",
       body: {
         available:
