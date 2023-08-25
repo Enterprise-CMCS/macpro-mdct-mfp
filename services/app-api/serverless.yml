@@ -134,6 +134,20 @@ functions:
               paths:
                 reportType: true
                 state: true
+  fetchReport:
+    handler: handlers/reports/fetch.fetchReport
+    events:
+      - http:
+          path: reports/{reportType}/{state}/{id}
+          method: get
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
+                id: true
   fetchReportsByState:
     handler: handlers/reports/fetch.fetchReportsByState
     events:
