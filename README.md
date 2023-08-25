@@ -2,8 +2,8 @@
 
 <!--
 [![CodeQL](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/codeql-analysis.yml) -->
-<!-- [![Maintainability](https://api.codeclimate.com/v1/badges/eccb27f030053ade69a0/maintainability)](https://codeclimate.com/repos/644971a20bd7db00dfeaf21a/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/eccb27f030053ade69a0/test_coverage)](https://codeclimate.com/repos/644971a20bd7db00dfeaf21a/test_coverage) -->
+<!-- [![Maintainability](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/maintainability)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/maintainability)
+[![![Test Coverage](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/test_coverage)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/test_coverage) -->
 
 MDCT is doing work for Money Follows the Person MFP
 
