@@ -92,6 +92,9 @@ export const DashboardPage = ({ reportType }: Props) => {
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     setReportId(report.id);
     setEntering(true);
+
+    // TODO: once API handling is in, we can remove these comments
+
     // const reportKeys: ReportKeys = {
     //   reportType: report.reportType,
     //   state: report.state,
