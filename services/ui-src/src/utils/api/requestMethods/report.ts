@@ -1,5 +1,5 @@
 import { API } from "aws-amplify";
-import { AnyObject, ReportKeys, ReportShape } from "types";
+import { AnyObject, ReportKeys } from "types";
 import { getRequestHeaders } from "./getRequestHeaders";
 import { updateTimeout } from "utils";
 
