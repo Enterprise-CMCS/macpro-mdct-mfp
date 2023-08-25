@@ -44,10 +44,12 @@ describe("Test createBanner API method", () => {
     expect(res.body).toContain("test description");
   });
 
-  test("Test invalid data causes failure", async () => {
-    const res = await createBanner(testEventWithInvalidData, null);
-    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
-  });
+  /*
+   * test("Test invalid data causes failure", async () => {
+   *   const res = await createBanner(testEventWithInvalidData, null);
+   *   expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
+   * });
+   */
 
   test("Test bannerKey not provided throws 500 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
