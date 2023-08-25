@@ -16,7 +16,13 @@
           "section": "",
           "subsection": "",
           "hint": "",
-          "exportSection": ""
+          "exportSection": "",
+          "info": [
+            {
+              "type": "text",
+              "content": ""
+            }
+          ]
         }
       }
     },
