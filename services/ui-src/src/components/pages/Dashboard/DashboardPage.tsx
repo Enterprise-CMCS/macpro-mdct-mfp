@@ -1,3 +1,4 @@
+/* eslint-disable multiline-comment-style */
 import { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 // components
@@ -22,7 +23,7 @@ import {
   ReportContext,
 } from "components";
 // utils
-import { AnyObject, ReportMetadataShape, ReportKeys, ReportShape } from "types";
+import { AnyObject, ReportMetadataShape, ReportShape } from "types";
 import {
   convertDateUtcToEt,
   parseCustomHtml,
@@ -37,12 +38,7 @@ import accordion from "verbiage/pages/accordion";
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 
 export const DashboardPage = ({ reportType }: Props) => {
-  const {
-    errorMessage,
-    fetchReportsByState,
-    clearReportSelection,
-    setReportSelection,
-  } = useContext(ReportContext);
+  const { errorMessage, clearReportSelection } = useContext(ReportContext);
   const navigate = useNavigate();
   const {
     state: userState,
@@ -79,7 +75,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     if (!activeState) {
       navigate("/");
     }
-    fetchReportsByState(reportType, activeState);
+    // fetchReportsByState(reportType, activeState);
     clearReportSelection();
   }, []);
 
@@ -96,18 +92,18 @@ export const DashboardPage = ({ reportType }: Props) => {
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     setReportId(report.id);
     setEntering(true);
-    const reportKeys: ReportKeys = {
-      reportType: report.reportType,
-      state: report.state,
-      id: report.id,
-    };
-    const selectedReport: ReportShape = await fetchReportsByState(reportKeys);
-    // set active report to selected report
-    setReportSelection(selectedReport);
-    setReportId(undefined);
-    setEntering(false);
-    const firstReportPagePath = selectedReport.formTemplate.flatRoutes![0].path;
-    navigate(firstReportPagePath);
+    // const reportKeys: ReportKeys = {
+    //   reportType: report.reportType,
+    //   state: report.state,
+    //   id: report.id,
+    // };
+    // const selectedReport: ReportShape = await fetchReportsByState(reportKeys);
+    // // set active report to selected report
+    // setReportSelection(selectedReport);
+    // setReportId(undefined);
+    // setEntering(false);
+    // const firstReportPagePath = selectedReport.formTemplate.flatRoutes![0].path;
+    // navigate(firstReportPagePath);
   };
 
   const openAddEditReportModal = (report?: ReportShape) => {
