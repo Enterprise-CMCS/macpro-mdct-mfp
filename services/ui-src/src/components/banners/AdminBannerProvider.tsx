@@ -1,8 +1,12 @@
 import { useState, createContext, ReactNode, useMemo, useEffect } from "react";
 // utils
 import { AdminBannerData, AdminBannerShape } from "types/banners";
+import { bannerId } from "../../constants";
 import { bannerErrors } from "verbiage/errors";
-import { mockBannerData } from "utils/testing/mockBanner";
+// api
+import { deleteBanner, getBanner, writeBanner } from "utils";
+
+const ADMIN_BANNER_ID = bannerId;
 
 export const AdminBannerContext = createContext<AdminBannerShape>({
   bannerData: undefined as AdminBannerData | undefined,
@@ -23,7 +27,9 @@ export const AdminBannerProvider = ({ children }: Props) => {
   const fetchAdminBanner = async () => {
     setIsLoading(true);
     try {
-      setBannerData(mockBannerData);
+      const currentBanner = await getBanner(ADMIN_BANNER_ID);
+      const newBannerData = currentBanner?.Item || {};
+      setBannerData(newBannerData);
     } catch (e: any) {
       setIsLoading(false);
       // 404 expected when no current banner exists
@@ -35,10 +41,12 @@ export const AdminBannerProvider = ({ children }: Props) => {
   };
 
   const deleteAdminBanner = async () => {
+    await deleteBanner(ADMIN_BANNER_ID);
     setBannerData(undefined);
   };
 
   const writeAdminBanner = async (newBannerData: AdminBannerData) => {
+    await writeBanner(newBannerData);
     setBannerData(newBannerData);
   };
 

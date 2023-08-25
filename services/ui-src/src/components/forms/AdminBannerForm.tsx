@@ -21,17 +21,11 @@ export const AdminBannerForm = ({ writeAdminBanner, ...props }: Props) => {
     setSubmitting(true);
     const newBannerData = {
       key: bannerId,
-      title: formData["bannerTitle"],
-      description: formData["bannerDescription"],
-      link: formData["bannerLink"] || undefined,
-      startDate: convertDatetimeStringToNumber(
-        formData["bannerStartDate"],
-        "startDate"
-      ),
-      endDate: convertDatetimeStringToNumber(
-        formData["bannerEndDate"],
-        "endDate"
-      ),
+      title: "TEST NEW BANNER",
+      description: "BANNER DESCRIPTION",
+      link: "EXAMPLE LINK" || undefined,
+      startDate: convertDatetimeStringToNumber("11/11/2011", "startDate"),
+      endDate: convertDatetimeStringToNumber("11/11/2024", "endDate"),
     };
     try {
       await writeAdminBanner(newBannerData);
@@ -50,6 +44,7 @@ export const AdminBannerForm = ({ writeAdminBanner, ...props }: Props) => {
         formJson={formJson}
         onSubmit={onSubmit}
         validateOnRender={false}
+        onError={onSubmit}
         dontReset={false}
         {...props}
       >
