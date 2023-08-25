@@ -5,6 +5,7 @@ import { axe } from "jest-axe";
 // components
 import { AdminPage, AdminBannerContext } from "components";
 // utils
+import { useStore } from "utils";
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { mockBannerData } from "utils/testing/mockBanner";
 
@@ -16,17 +17,18 @@ const mockBannerMethods = {
 
 const mockContextWithoutBanner = {
   ...mockBannerMethods,
-  bannerData: undefined,
   isLoading: false,
   errorData: null,
 };
 
 const mockContextWithBanner = {
   ...mockBannerMethods,
-  bannerData: mockBannerData,
   isLoading: false,
   errorData: null,
 };
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const adminView = (context: any) => (
   <RouterWrappedComponent>
@@ -52,6 +54,7 @@ describe("Test AdminPage banner manipulation functionality", () => {
 describe("Test AdminPage without banner", () => {
   beforeEach(async () => {
     await act(async () => {
+      mockedUseStore.mockReturnValue({ bannerData: undefined });
       await render(adminView(mockContextWithoutBanner));
     });
   });
@@ -73,6 +76,7 @@ describe("Test AdminPage without banner", () => {
 describe("Test AdminPage with banner", () => {
   beforeEach(async () => {
     await act(async () => {
+      mockedUseStore.mockReturnValue({ bannerData: mockBannerData });
       await render(adminView(mockContextWithBanner));
     });
   });
@@ -100,10 +104,11 @@ describe("Test AdminPage with active/inactive banner", () => {
   const currentTime = Date.now(); // 'current' time in ms since unix epoch
   const oneDay = 1000 * 60 * 60 * 24; // 1000ms * 60s * 60m * 24h = 86,400,000ms
   const context = mockContextWithBanner;
+  mockedUseStore.mockReturnValue({ bannerData: mockBannerData });
 
   test("Active banner shows 'active' status", async () => {
-    context.bannerData.startDate = currentTime - oneDay;
-    context.bannerData.endDate = currentTime + oneDay;
+    mockedUseStore().bannerData!.startDate = currentTime - oneDay;
+    mockedUseStore().bannerData!.endDate = currentTime + oneDay;
     await act(async () => {
       await render(adminView(context));
     });
@@ -112,8 +117,8 @@ describe("Test AdminPage with active/inactive banner", () => {
   });
 
   test("Inactive banner shows 'inactive' status", async () => {
-    context.bannerData.startDate = currentTime + oneDay;
-    context.bannerData.endDate = currentTime + oneDay + oneDay;
+    mockedUseStore().bannerData!.startDate = currentTime + oneDay;
+    mockedUseStore().bannerData!.endDate = currentTime + oneDay + oneDay;
     await act(async () => {
       await render(adminView(context));
     });
