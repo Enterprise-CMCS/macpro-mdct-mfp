@@ -23,12 +23,14 @@ const testEvent: APIGatewayProxyEvent = {
   pathParameters: { bannerId: "testKey" },
 };
 
-const testEventWithInvalidData: APIGatewayProxyEvent = {
-  ...proxyEvent,
-  body: `{"description":"test description","link":"test link","startDate":"1000","endDate":2000}`,
-  headers: { "cognito-identity-id": "test" },
-  pathParameters: { bannerId: "testKey" },
-};
+/*
+ * const testEventWithInvalidData: APIGatewayProxyEvent = {
+ *   ...proxyEvent,
+ *   body: `{"description":"test description","link":"test link","startDate":"1000","endDate":2000}`,
+ *   headers: { "cognito-identity-id": "test" },
+ *   pathParameters: { bannerId: "testKey" },
+ * };
+ */
 
 describe("Test createBanner API method", () => {
   test("Test unauthorized banner creation throws 403 error", async () => {
