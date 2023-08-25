@@ -1,5 +1,5 @@
 import { API } from "aws-amplify";
-import { AnyObject, ReportKeys } from "types";
+import { AnyObject, ReportKeys, ReportShape } from "types";
 import { getRequestHeaders } from "./getRequestHeaders";
 import { updateTimeout } from "utils";
 
@@ -57,4 +57,21 @@ async function postReport(
   return response;
 }
 
-export { getReport, getReportsByState, postReport };
+async function putReport(reportKeys: ReportKeys, report: AnyObject) {
+  const requestHeaders = await getRequestHeaders();
+  const request = {
+    headers: { ...requestHeaders },
+    body: { ...report },
+  };
+  const { reportType, state, id } = reportKeys;
+
+  updateTimeout();
+  const response = await API.put(
+    "mfp",
+    `/reports/${reportType}/${state}/${id}`,
+    request
+  );
+  return response;
+}
+
+export { getReport, getReportsByState, postReport, putReport };
