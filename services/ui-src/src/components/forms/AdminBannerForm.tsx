@@ -17,7 +17,7 @@ export const AdminBannerForm = ({ writeAdminBanner, ...props }: Props) => {
   // add validation to formJson
   const form: FormJson = formJson;
 
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async () => {
     setSubmitting(true);
     const newBannerData = {
       key: bannerId,
