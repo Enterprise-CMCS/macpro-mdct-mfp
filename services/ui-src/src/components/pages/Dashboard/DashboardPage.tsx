@@ -38,7 +38,8 @@ import accordion from "verbiage/pages/accordion";
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 
 export const DashboardPage = ({ reportType }: Props) => {
-  const { errorMessage, clearReportSelection } = useContext(ReportContext);
+  const { errorMessage, clearReportSelection, fetchReportsByState } =
+    useContext(ReportContext);
   const navigate = useNavigate();
   const {
     state: userState,
@@ -75,7 +76,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     if (!activeState) {
       navigate("/");
     }
-    // fetchReportsByState(reportType, activeState);
+    fetchReportsByState(reportType, activeState);
     clearReportSelection();
   }, []);
 

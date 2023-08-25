@@ -18,6 +18,8 @@ export const ReportContext = createContext<ReportContextShape>({
   // context
   contextIsLoaded: false as boolean,
   createReport: Function,
+  // report
+  fetchReportsByState: Function,
   // selected report
   clearReportSelection: Function,
   clearReportsByState: Function,
