@@ -66,14 +66,177 @@ export const mockSTSInitiativesInstructionsVerbaigeIntro = {
         "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports. These initiatives can be funded using one or more of these funding sources:<br>",
     },
     {
-      type: "html",
-      content:
-        "<br><li>MFP cooperative agreement funds for:</li><br><li>Qualified HCBS and demonstration services</li><br><li>Supplemental services</li><br><li>Administrative activities</li><br><li>Capacity building initiatives</li><br><li>State or territory equivalent funds attributable to the MFP-enhanced match</li><br>",
+      type: "ul",
+      content: "",
+      props: {
+        style: {
+          marginLeft: "1.5rem",
+          padding: "1rem",
+        },
+      },
+      children: [
+        {
+          type: "li",
+          content: "MFP cooperative agreement funds for:",
+        },
+        {
+          type: "ul",
+          props: {
+            style: {
+              marginLeft: "1rem",
+              paddingTop: "1rem",
+            },
+          },
+          children: [
+            {
+              type: "li",
+              props: {
+                style: {
+                  paddingBottom: "1rem",
+                },
+              },
+              content: "Qualified HCBS and demonstration services",
+            },
+            {
+              type: "li",
+              props: {
+                style: {
+                  paddingBottom: "1rem",
+                },
+              },
+              content: "Supplemental services",
+            },
+            {
+              type: "li",
+              props: {
+                style: {
+                  paddingBottom: "1rem",
+                },
+              },
+              content: "Administrative activities",
+            },
+            {
+              type: "li",
+              props: {
+                style: {
+                  paddingBottom: "1rem",
+                },
+              },
+              content: "Capacity building initiatives",
+            },
+          ],
+        },
+        {
+          type: "li",
+          content:
+            "State or territory equivalent funds attributable to the MFP-enhanced match",
+        },
+      ],
     },
     {
-      type: "html",
-      content:
-        "<table><tr><td><p>Required* Initiatives</p><li>Transitions and transition coordination services</li><li>Housing-related supports</li><li>Quality measurement and improvement</li><li>Self-direction (if applicable)</li><li>Tribal initiative (if applicable)</li></td><td><p>Optional initiatives</p><li>Recruitment and enrollment</li><li>Person-centered planning and services</li><li>No Wrong Door systems</li><li>Community transition support</li><li>Direct service workforce and caregivers</li><li>Employment support</li><li>Convenient and accessible transportation options</li><li>Data-based decision-making</li><li>Financing approaches</li><li>Stakeholder engagement</li><li>Equity and social determinants of health (SODH)</li><li>Other</li></td></tr></table>",
+      type: "table",
+      content: "",
+      children: [
+        {
+          type: "thead",
+          content: "",
+          children: [
+            {
+              type: "tr",
+              content: "",
+              children: [
+                {
+                  type: "th",
+                  props: {
+                    style: {
+                      textTransform: "capitalize",
+                      color: "#71767a",
+                      fontFamily: "Open Sans",
+                      fontSize: "14px",
+                      lineHeight: "18px",
+                      letterSpacing: "0px",
+                      textAlign: "left",
+                    },
+                  },
+                  content: "Required* Initiatives",
+                },
+                {
+                  type: "th",
+                  props: {
+                    style: {
+                      textTransform: "capitalize",
+                      color: "#71767a",
+                      fontFamily: "Open Sans",
+                      fontSize: "14px",
+                      lineHeight: "18px",
+                      letterSpacing: "0px",
+                      textAlign: "left",
+                    },
+                  },
+                  content: "Optional Initiatives",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: "tbody",
+          content: "",
+          children: [
+            {
+              type: "tr",
+              content: "",
+              children: [
+                {
+                  type: "td",
+                  content: "",
+                  children: [
+                    {
+                      type: "ul",
+                      content: "",
+                      children: [
+                        {
+                          type: "li",
+                          content:
+                            "Transitions and transition coordination services",
+                        },
+                        {
+                          type: "li",
+                          content: "Housing-related supports",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: "td",
+                  content: "",
+                  children: [
+                    {
+                      type: "ul",
+                      content: "",
+                      children: [
+                        {
+                          type: "li",
+                          content: "Recruitment and enrollment",
+                        },
+                        {
+                          type: "li",
+                          content: "Person-centered planning and services",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: "tfoot",
+          content: "",
+        },
+      ],
     },
     {
       type: "html",
@@ -85,24 +248,35 @@ export const mockSTSInitiativesInstructionsVerbaigeIntro = {
         "<br>For each initiative, recipients will be asked to provide:<br>",
     },
     {
-      type: "html",
-      content:
-        "<br>I. Initiative description, including target populations and timeframe<br>",
-    },
-    {
-      type: "html",
-      content:
-        "<br>II. An evaluation plan, including measurable objectives<br>",
-    },
-    {
-      type: "html",
-      content:
-        "<br>III. Funding sources, with projected quarterly expenditures<br>",
-    },
-    {
-      type: "html",
-      content:
-        "<br>IV. Close-out information, to be completed as appropriate during WP revisions<br>",
+      type: "ol",
+      content: "",
+      props: {
+        styleType: "upper-roman",
+        style: {
+          marginLeft: "1.5rem",
+          padding: "1rem",
+        },
+      },
+      children: [
+        {
+          type: "li",
+          content:
+            "Initiative description, including target populations and timeframe",
+        },
+        {
+          type: "li",
+          content: "An evaluation plan, including measurable objectives",
+        },
+        {
+          type: "li",
+          content: "Funding sources, with projected quarterly expenditures",
+        },
+        {
+          type: "li",
+          content:
+            "Close-out information, to be completed as appropriate during WP revisions",
+        },
+      ],
     },
     {
       type: "html",
