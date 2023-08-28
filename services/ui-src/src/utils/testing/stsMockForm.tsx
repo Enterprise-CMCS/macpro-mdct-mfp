@@ -10,11 +10,12 @@ export const mockStandardSTSReportPageJson = {
       info: "See previous page for detailed instructions.",
       exportSectionHeader: "exportSectionHeader",
     },
-    addEntityButtonText: "Add Initialive",
+    addEntityButtonText: "Add Initiatives",
     dashboardTitle: "Initative Total Count",
     countEntitiesInTitle: false,
     tableHeader: "tableHeader",
-    addEditModalHint: "addEditModalHint"
+    addEditModalHint: "addEditModalHint",
+    emptyDashboardText: "Empty"
   },
   modalForm: {
     id: "mock-modal-form-id",

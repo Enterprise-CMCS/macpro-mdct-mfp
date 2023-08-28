@@ -10,11 +10,11 @@ import {
   StandardReportPage,
 } from "components";
 import { useLocation } from "react-router-dom";
-import { PageTypes } from "types";
+import { ModalOverlayReportPageShape, PageTypes } from "types";
 // utils
 import {
   mockDrawerReportPageJson,
-  mockModalDrawerReportPageJson,
+  mockModalOverlayReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
 // import { mockGeneralInfoReportPageJson } from "utils/testing/generalInfoMockForm";
@@ -30,7 +30,7 @@ export const ReportPageWrapper = () => {
     if (path === "/wp/state-and-territory-specific-initiatives/initiatives")
       return mockStandardSTSReportPageJson;
 
-    return mockModalDrawerReportPageJson;
+    return mockModalOverlayReportPageJson;
   };
 
   // these should be built off the form template, which comes from the report.
@@ -40,7 +40,7 @@ export const ReportPageWrapper = () => {
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
       case PageTypes.MODAL_OVERLAY:
         return (
-          <ModalOverlayReportPage route={getRoutePath(location.pathname)} />
+          <ModalOverlayReportPage route={getRoutePath(location.pathname)} setSidebarHidden={()=>{return false;}} />
         );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
