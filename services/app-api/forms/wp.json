@@ -47,7 +47,17 @@
         "entityUnfinishedMessage": "Complete the remaining indicators for this access measure by entering details.",
         "enterEntityDetailsButtonText": "Edit",
         "reviewPdfHint": "To view Transition Benchmark Totals by target population and by quarter, click <i>Review PDF</i> and it will open a summary in a new tab.",
-        "drawerTitle": "Report transition benchmarks for "
+        "drawerTitle": "Report transition benchmarks for ",
+        "drawerInfo": [
+          {
+            "type": "span",
+            "content": "Please provide the projected number of transitions for <i>[entity_name]</i> during each quarter. This number includes institutional residents who are discharged from an institution to a qualified residence during the reporting period, enroll in MFP, and begin using Medicaid HCBS."
+          },
+          {
+            "type": "p",
+            "content": "Complete all fields and select the Save & close button to save this section."
+          }
+        ]
       },
       "modalForm": {
         "id": "tb-modal",
@@ -65,7 +75,39 @@
       },
       "drawerForm": {
         "id": "tb-drawer",
-        "fields": []
+        "fields": [
+          {
+            "id": "transitionBenchmarks_applicableToMfpDemonstration",
+            "type": "radio",
+            "validation": "radio",
+            "props": {
+              "label": "Is this target population applicable to your MFP demonstration?",
+              "hint": "Enter 0 for quarters with no projected transitions. Enter N/A for quarters you do not expect to report.",
+              "choices": [
+                {
+                  "id": "2UObIwERkSKEGVUU1g8E1v",
+                  "label": "No"
+                },
+                {
+                  "id": "2UObIuHjl15upf6tLcgcWd",
+                  "label": "Yes",
+                  "children": [
+                    {
+                      "id": "quarterlyProjections_1",
+                      "type": "number",
+                      "nested": true,
+                      "parentFieldName": "transitionBenchmarks_applicableToMfpDemonstration",
+                      "parentOptionId": "2UObIuHjl15upf6tLcgcWd",
+                      "props": {
+                        "label": "2023 Q4"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
       }
     },
     {
