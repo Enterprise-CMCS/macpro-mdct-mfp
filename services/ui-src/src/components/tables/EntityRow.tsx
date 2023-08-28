@@ -1,5 +1,5 @@
 // components
-import { Button, Flex, Image, Td, Tr } from "@chakra-ui/react";
+import { Box, Button, Image, Td, Tr } from "@chakra-ui/react";
 import { EntityStatusIcon } from "components";
 // types
 import { AnyObject, EntityShape } from "types";
@@ -25,7 +25,7 @@ export const EntityRow = ({
       </Td>
       <Td sx={sx.entityName}>{name}</Td>
       <Td>
-        <Flex sx={sx.actionContainer}>
+        <Box sx={sx.actionContainer}>
           {isOtherEntity && (
             <Button
               sx={sx.editNameButton}
@@ -36,7 +36,7 @@ export const EntityRow = ({
             </Button>
           )}
           <Button
-            sx={sx.editEntityButton}
+            sx={isOtherEntity ? sx.editOtherEntityButton : sx.editEntityButton}
             onClick={() => openDrawer(entity)}
             variant="outline"
           >
@@ -52,7 +52,7 @@ export const EntityRow = ({
               <Image src={deleteIcon} alt="delete icon" boxSize="3xl" />
             </Button>
           )}
-        </Flex>
+        </Box>
       </Td>
     </Tr>
   );
@@ -90,16 +90,22 @@ const sx = {
     fontWeight: "bold",
   },
   actionContainer: {
-    justifyContent: "space-evenly",
     alignItems: "center",
+    display: "flex",
   },
   editNameButton: {
-    padding: 0,
+    paddingRight: "2.5rem",
     fontWeight: "normal",
     textDecoration: "underline",
     color: "palette.primary",
   },
   editEntityButton: {
+    padding: 0,
+    fontWeight: "bold",
+    width: "6.5rem",
+    marginLeft: "8.25rem",
+  },
+  editOtherEntityButton: {
     padding: 0,
     fontWeight: "bold",
     width: "6.5rem",
@@ -109,6 +115,7 @@ const sx = {
     width: "1.875rem",
     minWidth: "1.875rem",
     padding: 0,
+    marginLeft: "1rem",
     background: "white",
     "&:hover, &:hover:disabled": {
       background: "white",
