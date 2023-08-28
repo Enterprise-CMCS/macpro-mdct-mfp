@@ -190,6 +190,11 @@ export const mockSTSInitiativesInstructionsVerbaigeIntro = {
                 {
                   type: "td",
                   content: "",
+                  props: {
+                    style: {
+                      verticalAlign: "top",
+                    },
+                  },
                   children: [
                     {
                       type: "ul",
@@ -199,10 +204,47 @@ export const mockSTSInitiativesInstructionsVerbaigeIntro = {
                           type: "li",
                           content:
                             "Transitions and transition coordination services",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
                         },
                         {
                           type: "li",
                           content: "Housing-related supports",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Quality measurement and improvement",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Self-direction (if applicable)",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Tribal initiative (if applicable)",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
                         },
                       ],
                     },
@@ -219,10 +261,107 @@ export const mockSTSInitiativesInstructionsVerbaigeIntro = {
                         {
                           type: "li",
                           content: "Recruitment and enrollment",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
                         },
                         {
                           type: "li",
                           content: "Person-centered planning and services",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "No Wrong Door systems",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Community transition support",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Direct service workforce and caregivers",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Employment support",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content:
+                            "Convenient and accessible transportation options",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Data-based decision-making",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Financing approaches",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Stakeholder engagement",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content:
+                            "Equity and social determinants of health (SODH)",
+                          props: {
+                            style: {
+                              paddingBottom: ".5rem",
+                            },
+                          },
+                        },
+                        {
+                          type: "li",
+                          content: "Other",
                         },
                       ],
                     },
@@ -239,8 +378,13 @@ export const mockSTSInitiativesInstructionsVerbaigeIntro = {
       ],
     },
     {
-      type: "html",
+      type: "text",
       content: "<sup>*Required by Program Terms and Conditions</sup>",
+      props: {
+        style: {
+          paddingTop: ".25rem",
+        },
+      },
     },
     {
       type: "html",
@@ -262,19 +406,39 @@ export const mockSTSInitiativesInstructionsVerbaigeIntro = {
           type: "li",
           content:
             "Initiative description, including target populations and timeframe",
+          props: {
+            style: {
+              padding: ".5rem",
+            },
+          },
         },
         {
           type: "li",
           content: "An evaluation plan, including measurable objectives",
+          props: {
+            style: {
+              padding: ".5rem",
+            },
+          },
         },
         {
           type: "li",
           content: "Funding sources, with projected quarterly expenditures",
+          props: {
+            style: {
+              padding: ".5rem",
+            },
+          },
         },
         {
           type: "li",
           content:
             "Close-out information, to be completed as appropriate during WP revisions",
+          props: {
+            style: {
+              paddingTop: ".5rem",
+            },
+          },
         },
       ],
     },
@@ -294,9 +458,14 @@ export const mockSTSInitiativesInstructionsVerbaigeIntro = {
         "<br>If a recipient updates the WP to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br>",
     },
     {
-      type: "html",
+      type: "text",
       content:
         "<p>Answer the following questions regarding required initiative topics. This is necessary in order to track completion of required data.</p>",
+      props: {
+        style: {
+          color: "#5B616B",
+        },
+      },
     },
   ],
   editEntityButtonText: "Edit",
