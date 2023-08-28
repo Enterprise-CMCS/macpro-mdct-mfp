@@ -3,6 +3,7 @@ import { Flex } from "@chakra-ui/react";
 import {
   DrawerReportPage,
   ModalDrawerReportPage,
+  ModalOverlayReportPage,
   PageTemplate,
   ReviewSubmitPage,
   Sidebar,
@@ -16,24 +17,20 @@ import {
   mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
-import { mockGeneralInfoReportPageJson } from "utils/testing/generalInfoMockForm";
+// import { mockGeneralInfoReportPageJson } from "utils/testing/generalInfoMockForm";
 
-import { mockStandardTBSReportPageJson } from "utils/testing/tbsMockForm";
+// import { mockStandardTBSReportPageJson } from "utils/testing/tbsMockForm";
+import { mockStandardSTSReportPageJson } from "utils/testing/stsMockForm"; //REMOVE when ready
 
 export const ReportPageWrapper = () => {
   const location = useLocation();
 
   // TO-DO: remove once db work is complete, temporary for mocking correct json per page
   const getRoutePath = (path: string) => {
-    if (path === "/standard") {
-      return mockStandardReportPageJson;
-    } else if (path === "/wp/general-information") {
-      return mockGeneralInfoReportPageJson;
-    } else if (path === "/wp/transition-benchmark-strategy") {
-      return mockStandardTBSReportPageJson;
-    } else {
-      return mockStandardReportPageJson;
-    }
+    if (path === "/wp/state-and-territory-specific-initiatives/initiatives")
+      return mockStandardSTSReportPageJson;
+
+    return mockModalDrawerReportPageJson;
   };
 
   // these should be built off the form template, which comes from the report.
@@ -41,12 +38,14 @@ export const ReportPageWrapper = () => {
     switch (route) {
       case PageTypes.DRAWER:
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
-      case PageTypes.MODAL_DRAWER:
-        return <ModalDrawerReportPage route={mockModalDrawerReportPageJson} />;
+      case PageTypes.MODAL_OVERLAY:
+        return (
+          <ModalOverlayReportPage route={getRoutePath(location.pathname)} />
+        );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
-        return <StandardReportPage route={getRoutePath(location.pathname)} />;
+        return <StandardReportPage route={mockStandardReportPageJson} />;
     }
   };
 
@@ -56,7 +55,7 @@ export const ReportPageWrapper = () => {
         <>
           <Sidebar isHidden={false} />
           <Flex id="report-content" sx={sx.reportContainer}>
-            {renderPageSection(PageTypes.STANDARD)}
+            {renderPageSection(PageTypes.MODAL_OVERLAY)}
           </Flex>
         </>
       </Flex>

@@ -71,7 +71,7 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
             level={1}
           />
           <NavSection
-            key={"section name"}
+            key={"general"}
             section={{
               name: "General Information",
               path: "/wp/general-information",
@@ -79,12 +79,20 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
             level={1}
           />
           <NavSection
-            key={"section name"}
+            key={"transition"}
             section={{
               name: "Transition Benchmark Strategy",
               path: "/wp/transition-benchmark-strategy",
             }}
             level={1}
+          />
+          <NavSection
+            key={"state & territory"}
+            section={{
+              name: "State & Territory Specific Initiatives",
+              path: "/wp/state-and-territory-specific-initiatives/initiatives",
+            }}
+            level={2}
           />
         </Box>
       </Box>
