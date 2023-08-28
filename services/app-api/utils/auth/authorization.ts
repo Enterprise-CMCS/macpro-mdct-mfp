@@ -3,8 +3,7 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import jwt_decode from "jwt-decode";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { UserRoles } from "../types/types";
+import { UserRoles } from "../types";
 
 interface DecodedToken {
   "custom:cms_roles": UserRoles;
@@ -51,6 +50,7 @@ const loadCognitoValues = async () => {
 
 export const isAuthorized = async (event: APIGatewayProxyEvent) => {
   const cognitoValues = await loadCognitoValues();
+
   // Verifier that expects valid access tokens:
   const verifier = CognitoJwtVerifier.create({
     userPoolId: cognitoValues.userPoolId,
@@ -59,7 +59,6 @@ export const isAuthorized = async (event: APIGatewayProxyEvent) => {
   });
 
   let isAuthorized;
-
   if (event?.headers?.["x-api-key"]) {
     try {
       isAuthorized = await verifier.verify(event.headers["x-api-key"]);

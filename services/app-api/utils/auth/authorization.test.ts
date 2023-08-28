@@ -1,6 +1,6 @@
 import { proxyEvent } from "../testing/proxyEvent";
 import { hasPermissions, isAuthorized } from "./authorization";
-import { UserRoles } from "../types/types";
+import { UserRoles } from "../types";
 
 const mockVerifier = jest.fn();
 

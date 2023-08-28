@@ -9,7 +9,7 @@ import verbiage from "verbiage/pages/home";
 
 const accordionComponent = (
   <RouterWrappedComponent>
-    <TemplateCardAccordion verbiage={verbiage.cards.MP.accordion} />
+    <TemplateCardAccordion verbiage={verbiage.cards.WP.accordion} />
   </RouterWrappedComponent>
 );
 
@@ -20,30 +20,30 @@ describe("Test TemplateCardAccordion", () => {
 
   test("Accordion is visible", () => {
     expect(
-      screen.getByText(verbiage.cards.MP.accordion.buttonLabel)
+      screen.getByText(verbiage.cards.WP.accordion.buttonLabel)
     ).toBeVisible();
   });
 
   test("Accordion default closed state only shows the question", () => {
     expect(
-      screen.getByText(verbiage.cards.MP.accordion.buttonLabel)
+      screen.getByText(verbiage.cards.WP.accordion.buttonLabel)
     ).toBeVisible();
     expect(
-      screen.getByText(verbiage.cards.MP.accordion.text)
+      screen.getByText(verbiage.cards.WP.accordion.text)
     ).not.toBeVisible();
   });
 
   test("Accordion should show answer on click", async () => {
     const accordionQuestion = screen.getByText(
-      verbiage.cards.MP.accordion.buttonLabel
+      verbiage.cards.WP.accordion.buttonLabel
     );
     expect(accordionQuestion).toBeVisible();
     expect(
-      screen.getByText(verbiage.cards.MP.accordion.text)
+      screen.getByText(verbiage.cards.WP.accordion.text)
     ).not.toBeVisible();
     await userEvent.click(accordionQuestion);
     expect(accordionQuestion).toBeVisible();
-    expect(screen.getByText(verbiage.cards.MP.accordion.text)).toBeVisible();
+    expect(screen.getByText(verbiage.cards.WP.accordion.text)).toBeVisible();
   });
 });
 
