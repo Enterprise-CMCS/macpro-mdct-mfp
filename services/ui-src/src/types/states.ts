@@ -19,9 +19,11 @@ export interface MfpUserState {
 export interface AdminBannerState {
   // INITIAL STATE
   bannerData: AdminBannerData | undefined;
+  isBannerActive: boolean;
   // ACTIONS
   setAdminBanner: (newBannerData: AdminBannerData | undefined) => void;
   clearAdminBanner: () => void;
+  setIsBannerActive: (bannerStatus: boolean) => void;
 }
 
 // initial report state

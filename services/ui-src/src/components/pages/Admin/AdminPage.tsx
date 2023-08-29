@@ -26,10 +26,9 @@ export const AdminPage = () => {
     useContext(AdminBannerContext);
   const [error, setError] = useState<string | undefined>(errorMessage);
   const [deleting, setDeleting] = useState<boolean>(false);
-  const [isBannerActive, setIsBannerActive] = useState<boolean>(false);
 
   // state management
-  const { bannerData } = useStore();
+  const { bannerData, isBannerActive, setIsBannerActive } = useStore();
 
   useEffect(() => {
     let bannerActivity = false;

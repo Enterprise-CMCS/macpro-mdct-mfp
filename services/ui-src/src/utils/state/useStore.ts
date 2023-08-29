@@ -27,10 +27,13 @@ const userStore = (set: Function) => ({
 const bannerStore = (set: Function) => ({
   // initial state
   bannerData: undefined,
+  isBannerActive: false,
   // actions
   setAdminBanner: (newBanner: AdminBannerData | undefined) =>
     set(() => ({ bannerData: newBanner })),
   clearAdminBanner: () => set(() => ({ bannerData: undefined })),
+  setIsBannerActive: (bannerStatus: boolean) =>
+    set(() => ({ isBannerActive: bannerStatus })),
 });
 
 // REPORT STORE

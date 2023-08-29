@@ -2,9 +2,10 @@ import { useContext } from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { act } from "react-dom/test-utils";
-import { UserContext, UserProvider } from "utils";
 // utils
+import { UserContext, UserProvider, useStore } from "utils";
 import { RouterWrappedComponent } from "utils/testing/setupJest";
+// types
 import { UserRoles } from "types/users";
 
 const mockAuthPayload = {
@@ -31,6 +32,9 @@ jest.mock("aws-amplify", () => ({
   },
 }));
 
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
 // COMPONENTS
 
 const TestComponent = () => {
@@ -48,7 +52,7 @@ const TestComponent = () => {
       </button>
       User Test
       <p data-testid="show-local-logins">
-        {context.showLocalLogins
+        {mockedUseStore().showLocalLogins
           ? "showLocalLogins is true"
           : "showLocalLogins is false"}
       </p>
