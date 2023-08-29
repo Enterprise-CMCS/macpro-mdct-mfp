@@ -138,10 +138,6 @@ export interface ReportMetadata {
 export interface WPReportMetadata extends ReportMetadata {
   programName: string;
   reportType: "WP";
-  reportingPeriodStartDate: number;
-  reportingPeriodEndDate: number;
-  dueDate: number;
-  combinedData: boolean;
 }
 
 export enum ReportType {
