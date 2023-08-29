@@ -58,6 +58,8 @@ export const mockReportFieldData = {
   number: 0,
 };
 
+// BANNER
+export * from "./mocks/mockBanner";
 // DYNAMO
 export * from "./mocks/mockDynamo";
 // FORM
