@@ -145,6 +145,20 @@ functions:
             parameters:
               paths:
                 bannerId: true
+  archiveReport:
+    handler: handlers/reports/archive.archiveReport
+    events:
+      - http:
+          path: reports/archive/{reportType}/{state}/{id}
+          method: put
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
+                id: true
   createReport:
     handler: handlers/reports/create.createReport
     events:
@@ -185,6 +199,35 @@ functions:
               paths:
                 reportType: true
                 state: true
+  releaseReport:
+    handler: handlers/reports/release.releaseReport
+    events:
+      - http:
+          path: reports/release/{reportType}/{state}/{id}
+          method: put
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                state: true
+                id: true
+  submitReport:
+    handler: handlers/reports/submit.submitReport
+    timeout: 30
+    memorySize: 2048
+    events:
+      - http:
+          path: reports/submit/{reportType}/{state}/{id}
+          method: post
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
+                id: true
   updateReport:
     handler: handlers/reports/update.updateReport
     timeout: 30

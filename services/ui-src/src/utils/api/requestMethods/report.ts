@@ -3,6 +3,22 @@ import { AnyObject, ReportKeys } from "types";
 import { getRequestHeaders } from "./getRequestHeaders";
 import { updateTimeout } from "utils";
 
+async function archiveReport(reportKeys: ReportKeys) {
+  const requestHeaders = await getRequestHeaders();
+  const request = {
+    headers: { ...requestHeaders },
+  };
+  const { reportType, state, id } = reportKeys;
+
+  updateTimeout();
+  const response = await API.put(
+    "mfp",
+    `/reports/archive/${reportType}/${state}/${id}`,
+    request
+  );
+  return response;
+}
+
 async function getReportsByState(reportType: string, state: string) {
   const requestHeaders = await getRequestHeaders();
   const request = {
@@ -74,4 +90,44 @@ async function putReport(reportKeys: ReportKeys, report: AnyObject) {
   return response;
 }
 
-export { getReport, getReportsByState, postReport, putReport };
+async function releaseReport(reportKeys: ReportKeys) {
+  const requestHeaders = await getRequestHeaders();
+  const request = {
+    headers: { ...requestHeaders },
+  };
+  const { reportType, state, id } = reportKeys;
+
+  updateTimeout();
+  const response = await API.put(
+    "mfp",
+    `/reports/release/${reportType}/${state}/${id}`,
+    request
+  );
+  return response;
+}
+
+async function submitReport(reportKeys: ReportKeys) {
+  const requestHeaders = await getRequestHeaders();
+  const request = {
+    headers: { ...requestHeaders },
+  };
+  const { reportType, state, id } = reportKeys;
+
+  updateTimeout();
+  const response = await API.post(
+    "mfp",
+    `/reports/submit/${reportType}/${state}/${id}`,
+    request
+  );
+  return response;
+}
+
+export {
+  archiveReport,
+  getReportsByState,
+  getReport,
+  postReport,
+  putReport,
+  releaseReport,
+  submitReport,
+};

@@ -137,7 +137,10 @@ export interface ReportMetadata {
 
 export interface WPReportMetadata extends ReportMetadata {
   programName: string;
-  reportType: "WP";
+  locked: boolean;
+  submissionName: string;
+  submissionCount: number;
+  previousRevisions: string[];
 }
 
 export enum ReportType {
