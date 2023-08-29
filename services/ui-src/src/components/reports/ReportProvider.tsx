@@ -4,12 +4,13 @@ import { useLocation } from "react-router-dom";
 import {
   flattenReportRoutesArray,
   getLocalHourMinuteTime,
+  getReport,
   getReportsByState,
   postReport,
   sortReportsOldestToNewest,
   useStore,
 } from "utils";
-import { ReportContextShape, ReportShape } from "types";
+import { ReportContextShape, ReportKeys, ReportShape } from "types";
 import { reportErrors } from "verbiage/errors";
 
 // CONTEXT DECLARATION
@@ -19,6 +20,7 @@ export const ReportContext = createContext<ReportContextShape>({
   contextIsLoaded: false as boolean,
   createReport: Function,
   // report
+  fetchReport: Function,
   fetchReportsByState: Function,
   // selected report
   clearReportSelection: Function,
@@ -46,6 +48,7 @@ export const ReportProvider = ({ children }: Props) => {
     clearReportsByState,
     setSubmittedReportsByState,
   } = useStore();
+
   const { state: userState } = useStore().user ?? {};
 
   const hydrateAndSetReport = (report: ReportShape | undefined) => {
@@ -54,9 +57,18 @@ export const ReportProvider = ({ children }: Props) => {
         report.formTemplate.routes
       );
     }
-
     setReport(report);
     setContextIsLoaded(true);
+  };
+
+  const fetchReport = async (reportKeys: ReportKeys) => {
+    try {
+      const result = await getReport(reportKeys);
+      hydrateAndSetReport(result);
+      return result;
+    } catch (e: any) {
+      setError(reportErrors.GET_REPORT_FAILED);
+    }
   };
 
   const fetchReportsByState = async (
@@ -139,6 +151,7 @@ export const ReportProvider = ({ children }: Props) => {
       report,
       contextIsLoaded,
       createReport,
+      fetchReport,
       // reports by state
       reportsByState,
       fetchReportsByState,
