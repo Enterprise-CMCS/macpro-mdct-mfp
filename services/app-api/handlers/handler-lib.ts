@@ -6,7 +6,7 @@ import {
   buildResponse,
 } from "../utils/responses/response-lib";
 import { error } from "../utils/constants/constants";
-import { StatusCodes } from "../utils/types/types";
+import { StatusCodes } from "../utils/types";
 import { sanitizeObject } from "../utils/sanitize/sanitize";
 
 type LambdaFunction = (
@@ -18,7 +18,6 @@ export default function handler(lambda: LambdaFunction) {
   return async function (event: APIGatewayProxyEvent, context: any) {
     // Start debugger
     debug.init(event, context);
-
     if (await isAuthorized(event)) {
       try {
         if (event.body) {

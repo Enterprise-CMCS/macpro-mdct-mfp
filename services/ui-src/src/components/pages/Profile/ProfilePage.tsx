@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Button, Heading, Link, Text } from "@chakra-ui/react";
 import { PageTemplate, Table } from "components";
 //utils
-import { createEmailLink, useUser } from "utils";
+import { createEmailLink, useUserStore } from "utils";
 import verbiage from "verbiage/pages/profile";
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
 
   const { email, given_name, family_name, userRole, state, userIsAdmin } =
-    useUser().user ?? {};
+    useUserStore().user ?? {};
 
   const { intro } = verbiage;
 

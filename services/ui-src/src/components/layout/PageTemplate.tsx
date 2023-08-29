@@ -22,7 +22,7 @@ export const PageTemplate = ({
 };
 
 interface Props {
-  type?: "standard";
+  type?: "standard" | "report";
   children: React.ReactNode;
   sxOverride?: AnyObject;
   [key: string]: any;

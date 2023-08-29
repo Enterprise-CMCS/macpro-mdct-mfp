@@ -27,7 +27,7 @@ const modalComponent = (
   </Modal>
 );
 
-describe.skip("Test Modal", () => {
+describe("Test Modal", () => {
   beforeEach(() => {
     render(modalComponent);
   });
