@@ -28,11 +28,14 @@ export const mockReportJson = {
   basePath: "/mock",
   routes: mockReportRoutes,
   validationSchema: {},
+  validationJson: {
+    "mock-number-field": "number",
+  },
 };
 
 export const mockReportKeys = {
   reportType: "WP",
-  state: "AK" as const,
+  state: "NJ" as const,
   id: "mock-report-id",
 };
 
