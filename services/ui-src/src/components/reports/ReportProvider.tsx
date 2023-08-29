@@ -2,11 +2,15 @@ import { createContext, ReactNode, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 // utils
 import {
+  archiveReport as archiveReportRequest,
+  releaseReport as releaseReportRequest,
+  submitReport as submitReportRequest,
   flattenReportRoutesArray,
   getLocalHourMinuteTime,
   getReport,
   getReportsByState,
   postReport,
+  putReport,
   sortReportsOldestToNewest,
   useStore,
 } from "utils";
@@ -18,14 +22,18 @@ import { reportErrors } from "verbiage/errors";
 export const ReportContext = createContext<ReportContextShape>({
   // context
   contextIsLoaded: false as boolean,
-  createReport: Function,
   // report
+  createReport: Function,
   fetchReport: Function,
+  archiveReport: Function,
+  updateReport: Function,
+  // reports by state
   fetchReportsByState: Function,
   // selected report
   clearReportSelection: Function,
-  clearReportsByState: Function,
   setReportSelection: Function,
+  // selected reports by state
+  clearReportsByState: Function,
   isReportPage: false as boolean,
   errorMessage: undefined as string | undefined,
   lastSavedTime: undefined as string | undefined,
@@ -99,6 +107,44 @@ export const ReportProvider = ({ children }: Props) => {
     }
   };
 
+  const updateReport = async (reportKeys: ReportKeys, report: ReportShape) => {
+    try {
+      const result = await putReport(reportKeys, report);
+      hydrateAndSetReport(result);
+      setLastSavedTime(getLocalHourMinuteTime());
+    } catch (e: any) {
+      setError(reportErrors.SET_REPORT_FAILED);
+    }
+  };
+
+  const submitReport = async (reportKeys: ReportKeys) => {
+    try {
+      const result = await submitReportRequest(reportKeys);
+      setLastSavedTime(getLocalHourMinuteTime());
+      hydrateAndSetReport(result);
+    } catch (e: any) {
+      setError(reportErrors.SET_REPORT_FAILED);
+    }
+  };
+
+  const archiveReport = async (reportKeys: ReportKeys) => {
+    try {
+      await archiveReportRequest(reportKeys);
+      setLastSavedTime(getLocalHourMinuteTime());
+    } catch (e: any) {
+      setError(reportErrors.SET_REPORT_FAILED);
+    }
+  };
+
+  const releaseReport = async (reportKeys: ReportKeys) => {
+    try {
+      const result = await releaseReportRequest(reportKeys);
+      hydrateAndSetReport(result);
+    } catch (e: any) {
+      setError(reportErrors.SET_REPORT_FAILED);
+    }
+  };
+
   // SELECTED REPORT
 
   const clearReportSelection = () => {
@@ -116,6 +162,8 @@ export const ReportProvider = ({ children }: Props) => {
       report.formTemplate.basePath
     );
   };
+
+  // USE EFFECT HOOKS
 
   useEffect(() => {
     const submittedReports = reportsByState?.filter(
@@ -147,18 +195,24 @@ export const ReportProvider = ({ children }: Props) => {
 
   const providerValue = useMemo(
     () => ({
+      // context
+      contextIsLoaded,
       // report
       report,
-      contextIsLoaded,
       createReport,
       fetchReport,
+      archiveReport,
+      releaseReport,
+      updateReport,
+      submitReport,
       // reports by state
       reportsByState,
       fetchReportsByState,
       // selected report
       clearReportSelection,
-      clearReportsByState,
       setReportSelection,
+      // selected reports by state
+      clearReportsByState,
       isReportPage,
       errorMessage: error,
       lastSavedTime,

@@ -40,9 +40,11 @@ export interface ReportContextMethods {
   createReport: Function;
   fetchReport: Function;
   fetchReportsByState: Function;
+  archiveReport: Function;
+  updateReport: Function;
+  setReportSelection: Function;
   clearReportSelection: Function;
   clearReportsByState: Function;
-  setReportSelection: Function;
 }
 
 export interface ReportContextShape extends ReportContextMethods {
