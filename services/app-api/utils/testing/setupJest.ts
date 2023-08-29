@@ -1,12 +1,5 @@
 import { mockReportJson } from "./mocks/mockReport";
 
-// DYNAMO
-export * from "./mocks/mockDynamo";
-// FORM
-export * from "./mocks/mockForm";
-// Report
-export * from "./mocks/mockReport";
-
 export const mockDocumentClient = {
   get: { promise: jest.fn() },
   query: { promise: jest.fn() },
@@ -64,3 +57,10 @@ export const mockReportFieldData = {
   text: "text-input",
   number: 0,
 };
+
+// DYNAMO
+export * from "./mocks/mockDynamo";
+// FORM
+export * from "./mocks/mockForm";
+// Report
+export * from "./mocks/mockReport";
