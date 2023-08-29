@@ -28,6 +28,14 @@ export interface AnyObject {
   [key: string]: any;
 }
 
+export enum PageTypes {
+  STANDARD = "standard",
+  DRAWER = "drawer",
+  MODAL_DRAWER = "modalDrawer",
+  MODAL_OVERLAY = "modalOverlay",
+  REVIEW_SUBMIT = "reviewSubmit",
+}
+
 export interface InputChangeEvent extends React.ChangeEvent<HTMLInputElement> {}
 
 export type { IconType } from "react-icons";

@@ -21,6 +21,10 @@ describe("Test Footer", () => {
     expect(footer).toBeVisible();
   });
 
+  test("Logo is visible", () => {
+    expect(screen.getByAltText("MFP logo")).toBeVisible();
+  });
+
   test("Help link is visible", () => {
     expect(screen.getByText("Contact Us")).toBeVisible();
   });
