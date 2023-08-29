@@ -41,7 +41,9 @@ describe("Test getOrCreateFormTemplate WP", () => {
     expect(s3PutSpy).toHaveBeenCalled();
     expect(result.formTemplate).toEqual({
       ...wp,
-      validationJson: getValidationFromFormTemplate(wp as ReportJson),
+      validationJson: getValidationFromFormTemplate(
+        wp as unknown as ReportJson
+      ),
     });
     expect(result.formTemplateVersion?.versionNumber).toEqual(1);
     expect(result.formTemplateVersion?.md5Hash).toEqual(currentWPFormHash);
