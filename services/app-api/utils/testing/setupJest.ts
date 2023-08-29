@@ -46,6 +46,8 @@ export const mockReportFieldData = {
   number: 0,
 };
 
+// BANNER
+export * from "./mocks/mockBanner";
 // FORM
 export * from "./mocks/mockForm";
 // Report
