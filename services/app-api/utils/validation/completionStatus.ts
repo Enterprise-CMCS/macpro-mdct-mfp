@@ -1,4 +1,4 @@
-import { CompletionData, AnyObject } from "../types/types";
+import { CompletionData, AnyObject } from "../types";
 import { validateFieldData } from "./completionValidation";
 
 export const isComplete = (completionStatus: CompletionData): Boolean => {

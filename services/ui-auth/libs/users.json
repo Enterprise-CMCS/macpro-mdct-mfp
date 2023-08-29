@@ -20,7 +20,32 @@
       },
       {
         "Name": "custom:cms_roles",
-        "Value": "mdctmfp-admin"
+        "Value": "mdctmfp-bor"
+      }
+    ]
+  },
+  {
+    "username": "borep@test.com",
+    "attributes": [
+      {
+        "Name": "email",
+        "Value": "borep@test.com"
+      },
+      {
+        "Name": "given_name",
+        "Value": "Bobby"
+      },
+      {
+        "Name": "family_name",
+        "Value": "Business"
+      },
+      {
+        "Name": "email_verified",
+        "Value": "true"
+      },
+      {
+        "Name": "custom:cms_roles",
+        "Value": "mdctmfp-bor"
       }
     ]
   },
@@ -46,6 +71,89 @@
       {
         "Name": "custom:cms_roles",
         "Value": "mdctmfp-help-desk"
+      }
+    ]
+  },
+  {
+    "username": "internaluser@test.com",
+    "attributes": [
+      {
+        "Name": "email",
+        "Value": "internaluser@test.com"
+      },
+      {
+        "Name": "given_name",
+        "Value": "Inside"
+      },
+      {
+        "Name": "family_name",
+        "Value": "Cat"
+      },
+      {
+        "Name": "email_verified",
+        "Value": "true"
+      },
+      {
+        "Name": "custom:cms_roles",
+        "Value": "mdctmfp-internal-user"
+      }
+    ]
+  },
+  {
+    "username": "staterep@test.com",
+    "attributes": [
+      {
+        "Name": "email",
+        "Value": "staterep@test.com"
+      },
+      {
+        "Name": "given_name",
+        "Value": "Robert"
+      },
+      {
+        "Name": "family_name",
+        "Value": "States"
+      },
+      {
+        "Name": "email_verified",
+        "Value": "true"
+      },
+      {
+        "Name": "custom:cms_roles",
+        "Value": "mdctmfp-state-rep"
+      },
+      {
+        "Name": "custom:cms_state",
+        "Value": "MA"
+      }
+    ]
+  },
+  {
+    "username": "stateapprover@test.com",
+    "attributes": [
+      {
+        "Name": "email",
+        "Value": "stateapprover@test.com"
+      },
+      {
+        "Name": "given_name",
+        "Value": "Zara"
+      },
+      {
+        "Name": "family_name",
+        "Value": "Zustimmer"
+      },
+      {
+        "Name": "email_verified",
+        "Value": "true"
+      },
+      {
+        "Name": "custom:cms_roles",
+        "Value": "mdctmfp-approver"
+      },
+      {
+        "Name": "custom:cms_state",
+        "Value": "MN"
       }
     ]
   },
@@ -191,6 +299,60 @@
       {
         "Name": "custom:cms_state",
         "Value": "WI"
+      }
+    ]
+  },
+  {
+    "username": "cypressadminuser@test.com",
+    "attributes": [
+      {
+        "Name": "email",
+        "Value": "cypressadminuser@test.com"
+      },
+      {
+        "Name": "given_name",
+        "Value": "CypressAutomatedIntegrationTests"
+      },
+      {
+        "Name": "family_name",
+        "Value": "Admin"
+      },
+      {
+        "Name": "email_verified",
+        "Value": "true"
+      },
+      {
+        "Name": "custom:cms_roles",
+        "Value": "mdctmfp-bor"
+      }
+    ]
+  },
+  {
+    "username": "cypressstateuser@test.com",
+    "attributes": [
+      {
+        "Name": "email",
+        "Value": "cypressstateuser@test.com"
+      },
+      {
+        "Name": "given_name",
+        "Value": "CypressAutomatedIntegrationTests"
+      },
+      {
+        "Name": "family_name",
+        "Value": "State"
+      },
+      {
+        "Name": "email_verified",
+        "Value": "true"
+      },
+      {
+        "Name": "custom:cms_roles",
+        "Value": "mdctmfp-state-user"
+      },
+      {
+        "Name": "custom:cms_state",
+        "Value": "DC"
       }
     ]
   }

@@ -1,0 +1,173 @@
+{
+  "type": "SAR",
+  "name": "MFP Semi-Annual Progress Report (SAR)",
+  "basePath": "/sar",
+  "version": "SAR_2023-08-21",
+  "entities": {
+    "": { "required": true }
+  },
+  "routes": [
+    {
+      "name": "General Information",
+      "path": "/sar/general-information",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": "",
+          "hint": "",
+          "exportSection": ""
+        }
+      }
+    },
+    {
+      "name": "Recruitment, Enrollment, and Transitions",
+      "path": "/sar/recruitment-enrollment-transitions",
+      "children": [
+        {
+          "name": "Number of people who signed an MFP informed consent form in the reporting period",
+          "path": "/sar/recruitment-enrollment-transitions/number-of-people-signed-informed-consent-form",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        },
+        {
+          "name": "Number of MFP transitions in the reporting period",
+          "path": "/sar/recruitment-enrollment-transitions/number-of-mfp-transitions",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        },
+        {
+          "name": "Number of MFP transitions from qualified institutions",
+          "path": "/sar/recruitment-enrollment-transitions/number-of-mfp-transitions-from-qualified-institutions",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        },
+        {
+          "name": "Number of MFP transitions to qualified residences",
+          "path": "/sar/recruitment-enrollment-transitions/number-of-mfp-transitions-to-qualified-residences",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        },
+        {
+          "name": "Total number of current MFP participants in the reporting period",
+          "path": "/sar/recruitment-enrollment-transitions/total-number-of-current-mfp-participants",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        },
+        {
+          "name": "Number of MFP participants completing the program in the reporting period",
+          "path": "/sar/recruitment-enrollment-transitions/number-of-mfp-participants-completing-program",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        },
+        {
+          "name": "Number of people re-enrolled in MFP during the reporting period",
+          "path": "/sar/recruitment-enrollment-transitions/number-of-people-reenrolled-in-mfp",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        },
+        {
+          "name": "Number of MFP participants disenrolled from the program during the reporting period",
+          "path": "/sar/recruitment-enrollment-transitions/number-of-people-disenrolled-from-program",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        },
+        {
+          "name": "Number of HCBS participants admitted to a facility from the community, by length of stay and age group",
+          "path": "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "State- or Territory-Specific Initiatives",
+      "path": "/sar/state-or-territory-specific-initiatives",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": "",
+          "hint": "",
+          "exportSection": ""
+        }
+      }
+    },
+    {
+      "name": "Organization & Administration",
+      "path": "/sar/organization-and-administration",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": "",
+          "hint": "",
+          "exportSection": ""
+        }
+      }
+    },
+    {
+      "name": "Additional Achievements",
+      "path": "/sar/additional-achievements",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": "",
+          "hint": "",
+          "exportSection": ""
+        }
+      }
+    },
+    {
+      "name": "Review & Submit",
+      "path": "/sar/review-and-submit",
+      "pageType": "reviewSubmit"
+    }
+  ]
+}
