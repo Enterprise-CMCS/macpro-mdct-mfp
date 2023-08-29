@@ -27,8 +27,8 @@ custom:
   project: "mfp"
   serverlessPluginTypescript:
     tsConfigFileLocation: "./tsconfig.json"
-  stage: ${opt:stage, self:provider.stage}
-  region: ${opt:region, self:provider.region}
+  stage: ${sls:stage}
+  region: ${aws:region}
   serverlessTerminationProtection:
     stages:
       - main
@@ -36,6 +36,11 @@ custom:
       - production
   dotenv:
     path: ../../.env
+  bannerTableName: ${env:BANNER_TABLE_NAME, cf:database-${self:custom.stage}.BannerTableName}
+  wpFormBucket: ${env:WP_FORM_BUCKET, cf:database-${self:custom.stage}.WpFormBucketName}
+  wpReportTableName: ${env:WP_REPORT_TABLE_NAME, cf:database-${self:custom.stage}.WpReportTableName}
+  wpReportTableStreamArn: ${env:WP_REPORT_TABLE_STREAM_ARN, cf:database-${self:custom.stage}.WpReportTableStreamArn, cf:database-main.WpReportTableStreamArn}
+  formTemplateTableName: ${env:FORM_TEMPLATE_TABLE_NAME, cf:database-${self:custom.stage}.FormTemplateTableName}
   webAclName: ${self:service}-${self:custom.stage}-webacl
   associateWaf:
     name: ${self:custom.webAclName}
@@ -87,18 +92,115 @@ provider:
           Action:
             - execute-api:Invoke
           Resource: "*"
+        - Effect: "Allow"
+          Action:
+            - "s3:GetObject"
+            - "s3:ListBucket"
+            - "s3:PutObject"
+          Resource:
+            - "arn:aws:s3:::${self:custom.wpFormBucket}"
+            - "arn:aws:s3:::${self:custom.wpFormBucket}/formTemplates/*"
+            - "arn:aws:s3:::${self:custom.wpFormBucket}/fieldData/*"
   environment:
+    BANNER_TABLE_NAME: ${self:custom.bannerTableName}
+    WP_REPORT_TABLE_NAME: ${self:custom.wpReportTableName}
+    WP_FORM_BUCKET: ${self:custom.wpFormBucket}
+    FORM_TEMPLATE_TABLE_NAME: ${self:custom.formTemplateTableName}
     STAGE: ${self:custom.stage}
 
 functions:
-  create:
-    handler: handlers/temp/create.createBanner
+  createBanner:
+    handler: handlers/banners/create.createBanner
     events:
       - http:
-          path: create
+          path: banners/{bannerId}
           method: post
           cors: true
           authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                bannerId: true
+  deleteBanner:
+    handler: handlers/banners/delete.deleteBanner
+    events:
+      - http:
+          path: banners/{bannerId}
+          method: delete
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                bannerId: true
+  fetchBanner:
+    handler: handlers/banners/fetch.fetchBanner
+    events:
+      - http:
+          path: banners/{bannerId}
+          method: get
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                bannerId: true
+  createReport:
+    handler: handlers/reports/create.createReport
+    events:
+      - http:
+          path: reports/{reportType}/{state}
+          method: post
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
+  fetchReport:
+    handler: handlers/reports/fetch.fetchReport
+    events:
+      - http:
+          path: reports/{reportType}/{state}/{id}
+          method: get
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
+                id: true
+  fetchReportsByState:
+    handler: handlers/reports/fetch.fetchReportsByState
+    events:
+      - http:
+          path: reports/{reportType}/{state}
+          method: get
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
+  updateReport:
+    handler: handlers/reports/update.updateReport
+    timeout: 30
+    memorySize: 2048
+    events:
+      - http:
+          path: reports/{reportType}/{state}/{id}
+          method: put
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
+                id: true
 resources:
   Resources:
     GatewayResponseDefault4XX:

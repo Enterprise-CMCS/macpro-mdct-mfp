@@ -126,13 +126,6 @@ export const DashboardPage = ({ reportType }: Props) => {
       formData = {
         fieldData: {
           programName: report.programName,
-          reportingPeriodEndDate: convertDateUtcToEt(
-            report.reportingPeriodEndDate
-          ),
-          reportingPeriodStartDate: convertDateUtcToEt(
-            report.reportingPeriodStartDate
-          ),
-          combinedData: report.combinedData,
         },
         state: report.state,
         id: report.id,

@@ -8,7 +8,6 @@ import {
   Sidebar,
   StandardReportPage,
 } from "components";
-import { useLocation } from "react-router-dom";
 import { PageTypes } from "types";
 // utils
 import {
@@ -17,22 +16,7 @@ import {
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
 
-import { mockStandardTBSReportPageJson } from "utils/testing/tbsMockForm";
-
 export const ReportPageWrapper = () => {
-  const location = useLocation();
-
-  // temporary for mocking correct json per page
-  const getRoutePath = (path: string) => {
-    if (path === "/standard") {
-      return mockStandardReportPageJson;
-    } else if (path === "/wp/transition-benchmark-strategy") {
-      return mockStandardTBSReportPageJson;
-    } else {
-      return mockStandardReportPageJson;
-    }
-  };
-
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: PageTypes) => {
     switch (route) {
@@ -43,7 +27,7 @@ export const ReportPageWrapper = () => {
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
-        return <StandardReportPage route={getRoutePath(location.pathname)} />;
+        return <StandardReportPage route={mockStandardReportPageJson} />;
     }
   };
 

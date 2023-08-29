@@ -40,23 +40,39 @@
       }
     },
     {
-      "name": "Transition Benchmark Strategy",
+      "name": "transition-benchmark-strategy",
       "path": "/wp/transition-benchmark-strategy",
       "pageType": "standard",
       "verbiage": {
         "intro": {
-          "exportSectionHeader": "",
           "section": "",
-          "subsection": "",
-          "info": [
-            {
-              "type": "html",
-              "content": ""
+          "subsection": "Transition Benchmark Strategy"
+        }
+      },
+      "form": {
+        "id": "mock-form-id",
+        "fields": [
+          {
+            "id": "mock-text-field",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label":
+                "Explain how you formulated your projected numbers, which should include descriptions of the data sources used, the time period for the analysis, and the methods used to project the number of transitions.",
             }
-          ]
-        },
-        "exportSectionHeader": ""
+          },
+          {
+            "id": "mock-text-field",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label":
+                "Provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative.",
+            }
+          }
+        ]
       }
+      
     },
     {
       "name": "State & Territory Specific Initiatives",
