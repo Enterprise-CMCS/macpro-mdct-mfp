@@ -60,18 +60,20 @@ const submissionEvent: APIGatewayProxyEvent = {
   }),
 };
 
-const invalidFieldDataSubmissionEvent: APIGatewayProxyEvent = {
-  ...mockProxyEvent,
-  body: JSON.stringify({
-    ...mockWPReport,
-    metadata: {
-      status: "submitted",
-    },
-    submittedBy: mockWPReport.metadata.lastAlteredBy,
-    submittedOnDate: Date.now(),
-    fieldData: { ...mockReportFieldData, "mock-number-field": "text" },
-  }),
-};
+/*
+ * const invalidFieldDataSubmissionEvent: APIGatewayProxyEvent = {
+ *   ...mockProxyEvent,
+ *   body: JSON.stringify({
+ *     ...mockWPReport,
+ *     metadata: {
+ *       status: "submitted",
+ *     },
+ *     submittedBy: mockWPReport.metadata.lastAlteredBy,
+ *     submittedOnDate: Date.now(),
+ *     fieldData: { ...mockReportFieldData, "mock-number-field": "text" },
+ *   }),
+ * };
+ */
 
 const updateEventWithInvalidData: APIGatewayProxyEvent = {
   ...mockProxyEvent,
