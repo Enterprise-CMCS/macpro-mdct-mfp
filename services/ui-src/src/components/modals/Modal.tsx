@@ -12,11 +12,19 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
 } from "@chakra-ui/react";
 // assets
 import closeIcon from "assets/icons/icon_close.png";
 
-export const Modal = ({ modalDisclosure, content, children }: Props) => {
+export const Modal = ({
+  modalDisclosure,
+  content,
+  onConfirmHandler,
+  submitting,
+  formId,
+  children,
+}: Props) => {
   return (
     <ChakraModal
       isOpen={modalDisclosure.isOpen}
@@ -45,6 +53,25 @@ export const Modal = ({ modalDisclosure, content, children }: Props) => {
         </Flex>
         <ModalBody sx={sx.modalBody}>{children}</ModalBody>
         <ModalFooter sx={sx.modalFooter}>
+          {formId && content.actionButtonText !== "" && (
+            <Button
+              sx={sx.action}
+              form={formId}
+              type="submit"
+              data-testid="modal-submit-button"
+            >
+              {submitting ? <Spinner size="md" /> : content.actionButtonText}
+            </Button>
+          )}
+          {onConfirmHandler && (
+            <Button
+              sx={sx.action}
+              onClick={() => onConfirmHandler()}
+              data-testid="modal-submit-button"
+            >
+              {submitting ? <Spinner size="md" /> : content.actionButtonText}
+            </Button>
+          )}
           <Button
             sx={sx.close}
             variant="link"
@@ -69,6 +96,9 @@ interface Props {
     actionButtonText: string | ReactNode;
     closeButtonText?: string;
   };
+  submitting?: boolean;
+  onConfirmHandler?: Function;
+  formId?: string;
   children?: ReactNode;
   [key: string]: any;
 }

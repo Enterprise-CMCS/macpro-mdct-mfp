@@ -3,7 +3,7 @@ service: database
 frameworkVersion: "3"
 
 plugins:
-  - serverless-dynamodb-local
+  - serverless-dynamodb
   - serverless-stack-termination-protection
   - serverless-s3-bucket-helper
   - serverless-plugin-scripts
@@ -17,7 +17,6 @@ s3BucketHelper:
 custom:
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
-  bannerTableName: ${self:custom.stage}-banners
   serverlessTerminationProtection:
     stages:
       - main
@@ -25,6 +24,10 @@ custom:
       - production
   dotenv:
     path: ../../.env
+  bannerTableName: ${self:custom.stage}-banners
+  formTemplateTableName: ${self:custom.stage}-form-template-versions
+  wpReportTableName: ${self:custom.stage}-wp-reports
+  wpFormBucket: ${env:WP_FORM_BUCKET, "${self:service}-${self:custom.stage}-wp"}
   dynamodb:
     stages:
       - local
@@ -74,6 +77,101 @@ resources:
           - AttributeName: key
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST # Set the capacity to auto-scale
+    FormTemplateVersionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.formTemplateTableName}
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+        BillingMode: PAY_PER_REQUEST # Set the capacity to auto-scale
+        LocalSecondaryIndexes:
+          - IndexName: LastAlteredIndex
+            KeySchema:
+              - AttributeName: reportType
+                KeyType: HASH
+              - AttributeName: lastAltered
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IdIndex
+            KeySchema:
+              - AttributeName: reportType
+                KeyType: HASH
+              - AttributeName: id
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: HashIndex
+            KeySchema:
+              - AttributeName: reportType
+                KeyType: HASH
+              - AttributeName: md5Hash
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+        KeySchema:
+          - AttributeName: reportType
+            KeyType: HASH
+          - AttributeName: versionNumber
+            KeyType: RANGE
+        AttributeDefinitions:
+          - AttributeName: reportType
+            AttributeType: S
+          - AttributeName: versionNumber
+            AttributeType: N
+          - AttributeName: lastAltered
+            AttributeType: S
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: md5Hash
+            AttributeType: S
+    WpReportTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.wpReportTableName}
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+        AttributeDefinitions:
+          - AttributeName: state
+            AttributeType: S
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: state
+            KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST # Set the capacity to auto-scale
+    WpFormBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: !Sub ${self:service}-${self:custom.stage}-wp
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
   Outputs:
+    BannerTableName:
+      Value: !Ref BannerTable
+    BannerTableArn:
+      Value: !GetAtt BannerTable.Arn
+    BannerTableStreamArn:
+      Value: !GetAtt BannerTable.StreamArn
+    FormTemplateTableName:
+      Value: !Ref FormTemplateVersionsTable
+    WpReportTableName:
+      Value: !Ref WpReportTable
+    WpReportTableArn:
+      Value: !GetAtt WpReportTable.Arn
+    WpReportTableStreamArn:
+      Value: !GetAtt WpReportTable.StreamArn
+    WpFormBucketName:
+      Value: !Ref WpFormBucket
+    WpFormBucketArn:
+      Value: !GetAtt WpFormBucket.Arn
     Region:
       Value: !Sub ${AWS::Region}

@@ -6,7 +6,7 @@ import {
   DynamoUpdate,
   DynamoGet,
   DynamoScan,
-} from "../types/types";
+} from "../types/other";
 
 export function createDbClient() {
   const dynamoConfig: DynamoDB.DocumentClient.DocumentClientOptions &
@@ -17,8 +17,8 @@ export function createDbClient() {
   if (endpoint) {
     dynamoConfig.endpoint = endpoint;
     dynamoConfig.credentials = new Credentials({
-      accessKeyId: "LOCAL_FAKE_KEY", // pragma: allowlist secret
-      secretAccessKey: "LOCAL_FAKE_SECRET", // pragma: allowlist secret
+      accessKeyId: "LOCALFAKEKEY", // pragma: allowlist secret
+      secretAccessKey: "LOCALFAKESECRET", // pragma: allowlist secret
     });
   } else {
     dynamoConfig["region"] = "us-east-1";
@@ -36,6 +36,20 @@ export default {
   scan: async <Result>(params: DynamoScan) => {
     const result = await createDbClient().scan(params).promise();
     return { ...result, Items: result?.Items as Result[] | undefined };
+  },
+  /**
+   * Scan operation that continues for all results. More expensive but avoids stopping early when a index is not known.
+   */
+  scanAll: async <Result = any>(params: DynamoScan) => {
+    const items = [];
+    let complete = false;
+    while (!complete) {
+      const result = await createDbClient().scan(params).promise();
+      items.push(...((result?.Items as Result[]) ?? []));
+      params.ExclusiveStartKey = result.LastEvaluatedKey;
+      complete = result.LastEvaluatedKey === undefined;
+    }
+    return { Items: items, Count: items.length };
   },
   put: (params: DynamoWrite) => createDbClient().put(params).promise(),
   update: (params: DynamoUpdate) => createDbClient().update(params).promise(),

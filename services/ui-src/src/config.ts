@@ -28,6 +28,7 @@ const config = {
   REACT_APP_LD_SDK_CLIENT: window._env_.REACT_APP_LD_SDK_CLIENT,
   COGNITO_IDP: window._env_.COGNITO_IDP,
   APPLICATION_ENDPOINT: window._env_.APPLICATION_ENDPOINT,
+  POST_SIGNOUT_REDIRECT: window._env_.POST_SIGNOUT_REDIRECT,
 };
 
 export default config;
