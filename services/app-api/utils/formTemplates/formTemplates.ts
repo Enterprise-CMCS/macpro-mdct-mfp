@@ -37,7 +37,7 @@ export async function getNewestTemplateVersion(reportType: ReportType) {
 export const formTemplateForReportType = (reportType: ReportType) => {
   switch (reportType) {
     case ReportType.WP:
-      return wpForm as unknown as ReportJson;
+      return wpForm as ReportJson;
     case ReportType.SAR:
       return sarForm as ReportJson;
     default:
