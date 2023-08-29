@@ -121,6 +121,30 @@ functions:
             parameters:
               paths:
                 bannerId: true
+  deleteBanner:
+    handler: handlers/banners/delete.deleteBanner
+    events:
+      - http:
+          path: banners/{bannerId}
+          method: delete
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                bannerId: true
+  fetchBanner:
+    handler: handlers/banners/fetch.fetchBanner
+    events:
+      - http:
+          path: banners/{bannerId}
+          method: get
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                bannerId: true
   createReport:
     handler: handlers/reports/create.createReport
     events:
