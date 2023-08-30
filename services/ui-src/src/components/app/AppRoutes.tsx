@@ -9,6 +9,7 @@ import {
   DashboardPage,
   ProfilePage,
   ReportPageWrapper,
+  ReviewSubmitPage,
 } from "components";
 // utils
 import { ScrollToTopComponent, useUserStore } from "utils";
