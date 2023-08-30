@@ -1,10 +1,10 @@
 // components
 import { Button, Flex, Image, Td, Text, Tr } from "@chakra-ui/react";
-// import { EntityStatusIcon } from "components";
+import { EntityStatusIcon } from "components";
 // types
 import { AnyObject, EntityShape } from "types";
 // utils
-// import { eligibilityGroup, renderHtml, useUser } from "utils";
+import { eligibilityGroup, renderHtml } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import { useContext, useMemo } from "react";
@@ -24,6 +24,9 @@ export const EntityRow = ({
   // const { userIsEndUser } = useUser().user ?? {};
   const reportingPeriod = `${entity.report_reportingPeriodStartDate} to ${entity.report_reportingPeriodEndDate}`;
 
+  //temporary, remove later
+  const entityComplete = false;
+  const userIsEndUser = false;
   // const entityComplete = useMemo(() => {
   //   return report ? getMlrEntityStatus(report, entity) : false;
   // }, [report]);
@@ -37,7 +40,7 @@ export const EntityRow = ({
 
   return (
     <Tr sx={sx.content}>
-      {/* <Td sx={sx.statusIcon}>
+      <Td sx={sx.statusIcon}>
         <EntityStatusIcon entity={entity as EntityShape} />
       </Td>
       <Td sx={sx.programInfo}>
@@ -78,7 +81,7 @@ export const EntityRow = ({
             <Image src={deleteIcon} alt="delete icon" boxSize="3xl" />
           </Button>
         </Flex>
-      </Td> */}
+      </Td>
     </Tr>
   );
 };

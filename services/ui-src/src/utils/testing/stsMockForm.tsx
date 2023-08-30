@@ -11,6 +11,8 @@ export const mockStandardSTSReportPageJson = {
       exportSectionHeader: "exportSectionHeader",
     },
     addEntityButtonText: "Add Initiatives",
+    editEntityButtonText: "Edit name",
+    enterReportText: "Edit",
     dashboardTitle: "Initative Total Count",
     countEntitiesInTitle: false,
     tableHeader: "tableHeader",
