@@ -43,12 +43,6 @@ export const App = () => {
           <ReportProvider>
             <Timeout />
             <MainSkipNav />
-            {/* id="skip-nav-main"
-              href={"#main-content"}
-              text={`Skip to ${"main content"}`}
-              sxOverride={sx.skipnav}
-            /> */}
-
             <Header handleLogout={logout} />
             <Container sx={sx.appContainer} data-testid="app-container">
               <ErrorBoundary FallbackComponent={Error}>

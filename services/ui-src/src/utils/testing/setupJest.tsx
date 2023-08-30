@@ -9,9 +9,13 @@ import {
   MfpUserState,
   UserContextShape,
   AdminBannerState,
+  MfpReportState,
+  ReportStatus,
+  ReportShape,
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
+import { mockWPReport } from "./mockReport";
 
 // GLOBALS
 
@@ -175,6 +179,26 @@ export const mockBannerStore: AdminBannerState = {
   setAdminBanner: () => {},
   clearAdminBanner: () => {},
   setIsBannerActive: () => {},
+};
+
+// REPORT STATES / STORE
+
+const mockReportShape = {
+  ...mockWPReport,
+  programName: "testProgram",
+  status: ReportStatus.NOT_STARTED,
+  lastAlteredBy: "Thelonius States",
+  dueDate: 162515200000,
+};
+
+export const mockReportStore: MfpReportState = {
+  report: mockReportShape as ReportShape,
+  reportsByState: [mockReportShape],
+  submittedReportsByState: [mockReportShape],
+  setReport: () => {},
+  setReportsByState: () => {},
+  clearReportsByState: () => {},
+  setSubmittedReportsByState: () => {},
 };
 
 // ROUTER

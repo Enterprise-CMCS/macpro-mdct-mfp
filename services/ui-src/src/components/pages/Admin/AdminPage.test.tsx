@@ -6,7 +6,10 @@ import { axe } from "jest-axe";
 import { AdminPage, AdminBannerContext } from "components";
 // utils
 import { useStore } from "utils";
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import {
+  mockBannerStore,
+  RouterWrappedComponent,
+} from "utils/testing/setupJest";
 import { mockBannerData } from "utils/testing/mockBanner";
 
 const mockBannerMethods = {
@@ -41,6 +44,7 @@ const adminView = (context: any) => (
 describe("Test AdminPage banner manipulation functionality", () => {
   it("Deletes current banner on delete button click", async () => {
     await act(async () => {
+      mockedUseStore.mockReturnValue(mockBannerStore);
       await render(adminView(mockContextWithBanner));
     });
     const deleteButton = screen.getByText("Delete Current Banner");
@@ -54,7 +58,10 @@ describe("Test AdminPage banner manipulation functionality", () => {
 describe("Test AdminPage without banner", () => {
   beforeEach(async () => {
     await act(async () => {
-      mockedUseStore.mockReturnValue({ bannerData: undefined });
+      mockedUseStore.mockReturnValue({
+        ...mockBannerStore,
+        bannerData: undefined,
+      });
       await render(adminView(mockContextWithoutBanner));
     });
   });
@@ -76,7 +83,7 @@ describe("Test AdminPage without banner", () => {
 describe("Test AdminPage with banner", () => {
   beforeEach(async () => {
     await act(async () => {
-      mockedUseStore.mockReturnValue({ bannerData: mockBannerData });
+      mockedUseStore.mockReturnValue(mockBannerStore);
       await render(adminView(mockContextWithBanner));
     });
   });
@@ -104,12 +111,22 @@ describe("Test AdminPage with active/inactive banner", () => {
   const currentTime = Date.now(); // 'current' time in ms since unix epoch
   const oneDay = 1000 * 60 * 60 * 24; // 1000ms * 60s * 60m * 24h = 86,400,000ms
   const context = mockContextWithBanner;
-  mockedUseStore.mockReturnValue({ bannerData: mockBannerData });
+  mockedUseStore.mockReturnValue(mockBannerStore);
 
   test("Active banner shows 'active' status", async () => {
-    mockedUseStore().bannerData!.startDate = currentTime - oneDay;
-    mockedUseStore().bannerData!.endDate = currentTime + oneDay;
+    // TODO: actually toggle active status
+    const activeBannerData = {
+      ...mockBannerData,
+      startDate: currentTime - oneDay,
+      endDate: currentTime + oneDay,
+    };
     await act(async () => {
+      mockedUseStore.mockReturnValue({
+        ...mockBannerStore,
+        bannerData: activeBannerData,
+        // TODO: remove this next line
+        isBannerActive: true,
+      });
       await render(adminView(context));
     });
     const currentBannerStatus = screen.getByText("Status:");
@@ -117,9 +134,16 @@ describe("Test AdminPage with active/inactive banner", () => {
   });
 
   test("Inactive banner shows 'inactive' status", async () => {
-    mockedUseStore().bannerData!.startDate = currentTime + oneDay;
-    mockedUseStore().bannerData!.endDate = currentTime + oneDay + oneDay;
+    const inactiveBannerData = {
+      ...mockBannerData,
+      startDate: currentTime + oneDay,
+      endDate: currentTime + oneDay + oneDay,
+    };
     await act(async () => {
+      mockedUseStore.mockReturnValue({
+        ...mockBannerStore,
+        bannerData: inactiveBannerData,
+      });
       await render(adminView(context));
     });
     const currentBannerStatus = screen.getByText("Status:");
