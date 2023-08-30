@@ -4,8 +4,8 @@ import { axe } from "jest-axe";
 // utils
 import {
   RouterWrappedComponent,
-  mockStateUserStore,
   mockNoUserStore,
+  mockUseStore,
 } from "utils/testing/setupJest";
 import { useStore, UserProvider } from "utils";
 //components
@@ -13,6 +13,7 @@ import { App } from "components";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue(mockUseStore);
 
 const appComponent = (
   <RouterWrappedComponent>
@@ -24,7 +25,7 @@ const appComponent = (
 
 describe("Test App", () => {
   test("App is visible", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
+    // mockedUseStore.mockReturnValue(mockUseStore);
     await act(async () => {
       await render(appComponent);
     });

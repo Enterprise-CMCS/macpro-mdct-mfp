@@ -201,6 +201,12 @@ export const mockReportStore: MfpReportState = {
   setSubmittedReportsByState: () => {},
 };
 
+export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
+  ...mockReportStore,
+  ...mockStateUserStore,
+  ...mockBannerStore,
+};
+
 // ROUTER
 
 export const RouterWrappedComponent: React.FC = ({ children }) => (
