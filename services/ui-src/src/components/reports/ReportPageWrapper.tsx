@@ -28,11 +28,16 @@ export const ReportPageWrapper = () => {
       return mockStandardReportPageJson;
     } else if (path === "/wp/transition-benchmark-strategy") {
       return mockStandardTBSReportPageJson;
+    } else if (
+      // add the path
+      path === ""
+    ) {
+      // add the mock page json
+      return mockStandardReportPageJson;
     } else {
       return mockStandardReportPageJson;
     }
   };
-
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: PageTypes) => {
     switch (route) {

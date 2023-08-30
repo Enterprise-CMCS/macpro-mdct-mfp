@@ -14,18 +14,15 @@ export interface ReportMetadataShape extends ReportKeys {
   programName: string;
   submissionName?: string;
   status: ReportStatus;
-  reportingPeriodStartDate: number;
-  reportingPeriodEndDate: number;
-  dueDate: number;
   createdAt: number;
   lastAltered: number;
   lastAlteredBy: string;
-  combinedData: boolean;
   submittedBy?: string;
   submitterEmail?: string;
   submittedOnDate?: number;
   archived?: boolean;
   locked?: boolean;
+  dueDate: number;
 }
 
 export interface ReportShape extends ReportMetadataShape {

@@ -8,7 +8,14 @@ import {
   Link,
   ListItem,
   OrderedList,
+  Table,
+  Tbody,
+  Td,
   Text,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
   UnorderedList,
 } from "@chakra-ui/react";
 // types
@@ -24,6 +31,13 @@ const customElementMap: any = {
   ol: OrderedList,
   ul: UnorderedList,
   li: ListItem,
+  table: Table,
+  tHead: Thead,
+  th: Th,
+  tr: Tr,
+  tFoot: Tfoot,
+  td: Td,
+  tbody: Tbody,
 };
 
 // return created elements from custom html array
