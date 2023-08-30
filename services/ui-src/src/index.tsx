@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import config from "config";
 // utils
 import { ApiProvider, UserProvider } from "utils";
