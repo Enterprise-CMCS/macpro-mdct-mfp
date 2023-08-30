@@ -18,9 +18,11 @@ const userStore = (set: Function) => ({
   // show local logins
   showLocalLogins: undefined,
   // actions
-  setUser: (newUser: MFPUser | null) => set(() => ({ user: newUser })),
+  setUser: (newUser: MFPUser | null) =>
+    set(() => ({ user: newUser }), false, { type: "setUser" }),
   // toggle show local logins (dev only)
-  setShowLocalLogins: () => set(() => ({ showLocalLogins: true })),
+  setShowLocalLogins: () =>
+    set(() => ({ showLocalLogins: true }), false, { type: "showLocalLogins" }),
 });
 
 // BANNER STORE
@@ -30,10 +32,13 @@ const bannerStore = (set: Function) => ({
   isBannerActive: false,
   // actions
   setAdminBanner: (newBanner: AdminBannerData | undefined) =>
-    set(() => ({ bannerData: newBanner })),
-  clearAdminBanner: () => set(() => ({ bannerData: undefined })),
+    set(() => ({ bannerData: newBanner }), false, { type: "setAdminBanner" }),
+  clearAdminBanner: () =>
+    set(() => ({ bannerData: undefined }), false, { type: "clearAdminBanner" }),
   setIsBannerActive: (bannerStatus: boolean) =>
-    set(() => ({ isBannerActive: bannerStatus })),
+    set(() => ({ isBannerActive: bannerStatus }), false, {
+      type: "setIsBannerActive",
+    }),
 });
 
 // REPORT STORE
@@ -44,13 +49,23 @@ const reportStore = (set: Function) => ({
   submittedReportsByState: undefined,
   // actions
   setReport: (newReport: ReportShape | undefined) =>
-    set(() => ({ report: newReport })),
+    set(() => ({ report: newReport }), false, { type: "setReport" }),
   setReportsByState: (newReportsByState: ReportMetadataShape[] | undefined) =>
-    set(() => ({ reportsByState: newReportsByState })),
-  clearReportsByState: () => set(() => ({ reportsByState: undefined })),
+    set(() => ({ reportsByState: newReportsByState }), false, {
+      type: "setReportsByState",
+    }),
+  clearReportsByState: () =>
+    set(() => ({ reportsByState: undefined }), false, {
+      type: "clearReportsByState",
+    }),
   setSubmittedReportsByState: (
     newSubmittedReportsByState: ReportMetadataShape[] | undefined
-  ) => set(() => ({ submittedReportsByState: newSubmittedReportsByState })),
+  ) =>
+    set(
+      () => ({ submittedReportsByState: newSubmittedReportsByState }),
+      false,
+      { type: "setSubmittedReportsByState" }
+    ),
 });
 
 export const useStore = create(

@@ -4,7 +4,11 @@ import userEvent from "@testing-library/user-event";
 import { act } from "react-dom/test-utils";
 // utils
 import { UserContext, UserProvider, useStore } from "utils";
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import {
+  mockBannerStore,
+  mockStateUserStore,
+  RouterWrappedComponent,
+} from "utils/testing/setupJest";
 // types
 import { UserRoles } from "types/users";
 
@@ -92,6 +96,9 @@ const breakCheckAuthState = async () => {
 describe("Test UserProvider", () => {
   beforeEach(async () => {
     await act(async () => {
+      mockedUseStore
+        .mockReturnValue(mockBannerStore)
+        .mockReturnValue(mockStateUserStore);
       render(testComponent);
     });
   });
@@ -141,6 +148,7 @@ describe("Test UserProvider with production path", () => {
     await setWindowOrigin("mdctmfp.cms.gov");
     await breakCheckAuthState();
     await act(async () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
       await render(testComponent);
     });
     expect(window.location.origin).toContain("mdctmfp.cms.gov");
@@ -163,6 +171,7 @@ describe("Test UserProvider with non-production path", () => {
     await setWindowOrigin("wherever");
     await breakCheckAuthState();
     await act(async () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
       await render(testComponent);
     });
     expect(window.location.origin).toContain("wherever");
@@ -182,6 +191,7 @@ describe("Test UserProvider error handling", () => {
     });
 
     await act(async () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
       render(testComponent);
     });
     await act(async () => {

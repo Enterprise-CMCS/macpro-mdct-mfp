@@ -4,7 +4,14 @@ import "@testing-library/jest-dom";
 import "jest-axe/extend-expect";
 import { mockFlags, resetLDMocks } from "jest-launchdarkly-mock";
 // types
-import { UserRoles, MfpUserState, UserContextShape } from "types";
+import {
+  UserRoles,
+  MfpUserState,
+  UserContextShape,
+  AdminBannerState,
+} from "types";
+// utils
+import { mockBannerData } from "./mockBanner";
 
 // GLOBALS
 
@@ -76,7 +83,7 @@ export const mockUserContext: UserContextShape = {
   getExpiration: () => {},
 };
 
-// USER STATES
+// USER STATES / STORE
 
 export const mockNoUserStore: MfpUserState = {
   user: null,
@@ -158,6 +165,16 @@ export const mockAdminUserStore: MfpUserState = {
   showLocalLogins: false,
   setUser: () => {},
   setShowLocalLogins: () => {},
+};
+
+//  BANNER STATES / STORE
+
+export const mockBannerStore: AdminBannerState = {
+  bannerData: mockBannerData,
+  isBannerActive: false,
+  setAdminBanner: () => {},
+  clearAdminBanner: () => {},
+  setIsBannerActive: () => {},
 };
 
 // ROUTER
