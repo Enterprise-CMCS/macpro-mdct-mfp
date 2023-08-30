@@ -8,7 +8,7 @@ import {
   mockDynamoData,
   mockReportJson,
   mockReportFieldData,
-  mockDynamoDataCompleted,
+  mockDynamoDataWPCompleted,
 } from "../../utils/testing/setupJest";
 // types
 import { StatusCodes } from "../../utils/types";
@@ -82,7 +82,7 @@ describe("Test fetchReport API method", () => {
 
   test("Test Successful Report Fetch w/ Complete Report", async () => {
     mockDocumentClient.get.promise.mockReturnValueOnce({
-      Item: mockDynamoDataCompleted,
+      Item: mockDynamoDataWPCompleted,
     });
     const res = await fetchReport(testReadEvent, null);
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
