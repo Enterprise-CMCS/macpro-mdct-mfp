@@ -13,10 +13,6 @@ export interface MfpUserState {
   // ACTIONS
   setUser: (newUser: MFPUser | null) => void;
   setShowLocalLogins: (showLocalLogins: boolean) => void;
-  logout: () => Promise<void>;
-  loginWithIDM: () => void;
-  updateTimeout: () => void;
-  getExpiration: () => void;
 }
 
 // initial admin banner state
