@@ -70,14 +70,6 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
             section={{ name: "placeholder", path: "/standard" }}
             level={1}
           />
-          <NavSection
-            key={"section name"}
-            section={{
-              name: "Transition Benchmark Strategy",
-              path: "/wp/transition-benchmark-strategy",
-            }}
-            level={1}
-          />
         </Box>
       </Box>
     </>
