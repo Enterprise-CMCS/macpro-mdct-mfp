@@ -8,6 +8,7 @@ import {
   Sidebar,
   StandardReportPage,
 } from "components";
+import { useLocation } from "react-router-dom";
 import {
   ModalDrawerReportPageShape,
   PageTypes,
@@ -19,7 +20,6 @@ import {
   mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
-import { useLocation } from "react-router-dom";
 
 export const ReportPageWrapper = () => {
   const location = useLocation();

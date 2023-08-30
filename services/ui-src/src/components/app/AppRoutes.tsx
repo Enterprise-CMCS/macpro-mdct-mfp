@@ -90,11 +90,7 @@ export const AppRoutes = () => {
               element={<ReportPageWrapper />}
             />
           ))}
-          {/* Temporary Page Routes */}
-          <Route
-            path="/wp/transition-benchmarks"
-            element={<ReportPageWrapper />}
-          />
+          <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
         </Routes>
       </AdminBannerProvider>
     </main>
