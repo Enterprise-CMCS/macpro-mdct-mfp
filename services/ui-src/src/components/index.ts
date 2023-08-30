@@ -70,13 +70,18 @@ export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
 export { ReportPageWrapper } from "./reports/ReportPageWrapper";
 export { ReportContext } from "./reports/ReportProvider";
+export { EntityProvider } from "./reports/EntityProvider";
 export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
+export { ModalOverlayReportPage } from "./reports/ModalOverlayReportPage";
 
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables
 export { Table } from "./tables/Table";
+export { EntityRow } from "./tables/EntityRow";
+export { MobileEntityRow } from "./tables/MobileEntityRow";
+export { EntityStatusIcon } from "./tables/EntityStatusIcon";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
 // Redirects
@@ -85,3 +90,5 @@ export { PostLogoutRedirect } from "./PostLogoutRedirect/index";
 export { DashboardPage } from "./pages/Dashboard/DashboardPage";
 export { DashboardTable } from "./pages/Dashboard/DashboardTable";
 export { MobileDashboardTable } from "./pages/Dashboard/MobileDashboardTable";
+//overlay
+export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
