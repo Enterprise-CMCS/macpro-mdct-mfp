@@ -201,6 +201,8 @@ export const mockReportStore: MfpReportState = {
   setSubmittedReportsByState: () => {},
 };
 
+// BOUND STORE
+
 export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
   ...mockReportStore,
   ...mockStateUserStore,
