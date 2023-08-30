@@ -16,9 +16,9 @@ import {
 // utils
 import {
   mockDrawerReportPageJson,
+  mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
-import { mockTransitionsBenchmarkForm } from "utils/testing/tempMockForms/mockTransitionsBenchmarkForm";
 import { useLocation } from "react-router-dom";
 
 export const ReportPageWrapper = () => {
@@ -28,8 +28,12 @@ export const ReportPageWrapper = () => {
   const getRoutePath = (path: string) => {
     if (path === "/standard") {
       return mockStandardReportPageJson;
-    } else if (path === "/wp/transition-benchmarks") {
-      return mockTransitionsBenchmarkForm;
+    } else if (
+      // add the path
+      path === ""
+    ) {
+      // add the mock page json
+      return mockStandardReportPageJson;
     } else {
       return mockStandardReportPageJson;
     }
@@ -43,9 +47,7 @@ export const ReportPageWrapper = () => {
       case PageTypes.MODAL_DRAWER:
         return (
           <ModalDrawerReportPage
-            route={
-              getRoutePath(location.pathname) as ModalDrawerReportPageShape
-            }
+            route={mockModalDrawerReportPageJson as ModalDrawerReportPageShape}
           />
         );
       case PageTypes.REVIEW_SUBMIT:

@@ -9,15 +9,47 @@ import {
   DashboardPage,
   ProfilePage,
   ReportPageWrapper,
-  ReviewSubmitPage,
 } from "components";
 // utils
 import { ScrollToTopComponent, useUserStore } from "utils";
 // types
-import { ReportType } from "types";
+import { ReportRoute, ReportType } from "types";
 
 export const AppRoutes = () => {
   const { userIsAdmin } = useUserStore().user ?? {};
+
+  const hardCodedFlatRoutes = [
+    {
+      name: "General Information",
+      path: "/wp/general-information",
+      pageType: "standard",
+    },
+    {
+      name: "Transition Benchmarks",
+      path: "/wp/transition-benchmarks",
+      pageType: "standard",
+    },
+    {
+      name: "Transition Benchmark Strategy",
+      path: "/wp/transition-benchmark-strategy",
+      pageType: "standard",
+    },
+    {
+      name: "State & Territory Specific Initiatives Instructions",
+      path: "/wp/state-and-territory-specific-initiatives/instructions",
+      pageType: "standard",
+    },
+    {
+      name: "State & Territory Specific Initiatives",
+      path: "/wp/state-and-territory-specific-initiatives/initiatives",
+      pageType: "standard",
+    },
+    {
+      name: "Review & Submit",
+      path: "/wp/review-and-submit",
+      pageType: "standard",
+    },
+  ];
 
   // LaunchDarkly
   const wpReport = useFlags()?.wpReport;
@@ -51,7 +83,13 @@ export const AppRoutes = () => {
           )}
           {/* General Report Routes */}
           <Route path="/standard" element={<ReportPageWrapper />} />
-          <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
+          {(hardCodedFlatRoutes ?? []).map((route: ReportRoute) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={<ReportPageWrapper />}
+            />
+          ))}
           {/* Temporary Page Routes */}
           <Route
             path="/wp/transition-benchmarks"
