@@ -83,10 +83,6 @@ export const AppRoutes = () => {
           )}
           {/* General Report Routes */}
           <Route path="/standard" element={<ReportPageWrapper />} />
-          <Route
-            path="/wp/transition-benchmark-strategy"
-            element={<ReportPageWrapper />}
-          />
           {(hardCodedFlatRoutes ?? []).map((route: ReportRoute) => (
             <Route
               key={route.path}
