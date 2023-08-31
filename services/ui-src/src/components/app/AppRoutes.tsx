@@ -14,7 +14,7 @@ import {
 // utils
 import { ScrollToTopComponent, useUserStore } from "utils";
 // types
-import { ReportType, ReportRoute } from "types";
+import { ReportRoute, ReportType } from "types";
 
 export const AppRoutes = () => {
   const { userIsAdmin } = useUserStore().user ?? {};
@@ -51,6 +51,7 @@ export const AppRoutes = () => {
       pageType: "standard",
     },
   ];
+
   // LaunchDarkly
   const wpReport = useFlags()?.wpReport;
   const sarReport = useFlags().sarReport;

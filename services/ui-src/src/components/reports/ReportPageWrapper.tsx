@@ -9,7 +9,11 @@ import {
   StandardReportPage,
 } from "components";
 import { useLocation } from "react-router-dom";
-import { PageTypes } from "types";
+import {
+  ModalDrawerReportPageShape,
+  PageTypes,
+  StandardReportPageShape,
+} from "types";
 // utils
 import {
   mockDrawerReportPageJson,
@@ -34,17 +38,26 @@ export const ReportPageWrapper = () => {
       return mockStandardReportPageJson;
     }
   };
+
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: PageTypes) => {
     switch (route) {
       case PageTypes.DRAWER:
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
       case PageTypes.MODAL_DRAWER:
-        return <ModalDrawerReportPage route={mockModalDrawerReportPageJson} />;
+        return (
+          <ModalDrawerReportPage
+            route={mockModalDrawerReportPageJson as ModalDrawerReportPageShape}
+          />
+        );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
-        return <StandardReportPage route={getRoutePath(location.pathname)} />;
+        return (
+          <StandardReportPage
+            route={getRoutePath(location.pathname) as StandardReportPageShape}
+          />
+        );
     }
   };
 
@@ -54,7 +67,7 @@ export const ReportPageWrapper = () => {
         <>
           <Sidebar isHidden={false} />
           <Flex id="report-content" sx={sx.reportContainer}>
-            {renderPageSection(PageTypes.STANDARD)}
+            {renderPageSection(PageTypes.MODAL_DRAWER)}
           </Flex>
         </>
       </Flex>

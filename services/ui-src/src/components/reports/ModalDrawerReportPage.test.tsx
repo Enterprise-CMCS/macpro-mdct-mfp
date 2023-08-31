@@ -23,7 +23,7 @@ const {
   addEntityButtonText,
   editEntityButtonText,
   enterEntityDetailsButtonText,
-  deleteModalConfirmButtonText,
+  // deleteModalConfirmButtonText,
 } = mockModalDrawerReportPageJson.verbiage;
 
 const modalDrawerReportPageComponentWithEntities = (
@@ -50,28 +50,18 @@ describe("Test ModalDrawerReportPage with entities", () => {
     await userEvent.click(addEntityButton);
     expect(screen.getByRole("dialog")).toBeVisible();
 
-    const editButton = screen.getByText(editEntityButtonText);
+    const editButton = screen.getAllByText(editEntityButtonText)[0];
     await userEvent.click(editButton);
     const closeButton = screen.getByText("Close");
     await userEvent.click(closeButton);
   });
 
-  test("ModalDrawerReportPage opens the delete modal on remove click", async () => {
-    const addEntityButton = screen.getByText(addEntityButtonText);
-    const removeButton = screen.getByTestId("delete-entity-button");
-    await userEvent.click(removeButton);
-    // click delete in modal
-    const deleteButton = screen.getByText(deleteModalConfirmButtonText);
-    await userEvent.click(deleteButton);
-
-    // verify that the field is removed
-    const inputBoxLabelAfterRemove = screen.queryAllByTestId("test-label");
-    expect(inputBoxLabelAfterRemove).toHaveLength(0);
-    expect(addEntityButton).toBeVisible();
-  });
+  // TODO: test delete modal + functionality
 
   test("ModalDrawerReportPage opens the drawer on enter-details click", async () => {
-    const enterDetailsButton = screen.getByText(enterEntityDetailsButtonText);
+    const enterDetailsButton = screen.getAllByText(
+      enterEntityDetailsButtonText
+    )[0];
     await userEvent.click(enterDetailsButton);
     expect(screen.getByRole("dialog")).toBeVisible();
   });

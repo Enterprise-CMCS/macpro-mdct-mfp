@@ -18,11 +18,13 @@ import { makeMediaQueryClasses, parseCustomHtml } from "utils";
 export const Drawer = ({
   verbiage,
   drawerDisclosure,
+  selectedEntity,
   children,
   ...props
 }: Props) => {
   const mqClasses = makeMediaQueryClasses();
   const { isOpen, onClose } = drawerDisclosure;
+
   return (
     <ChakraDrawer
       isOpen={isOpen}
@@ -39,7 +41,9 @@ export const Drawer = ({
               {verbiage.drawerEyebrowTitle}
             </Text>
           )}
-          <Text sx={sx.drawerHeaderText}>{verbiage.drawerTitle}</Text>
+          <Text sx={sx.drawerHeaderText}>
+            {verbiage.drawerTitle + selectedEntity}
+          </Text>
           {verbiage.drawerInfo && (
             <Box sx={sx.infoTextBox}>
               {parseCustomHtml(verbiage.drawerInfo)}
@@ -71,6 +75,7 @@ interface Props {
     isOpen: boolean;
     onClose: Function;
   };
+  selectedEntity?: string;
   [key: string]: any;
 }
 
@@ -127,9 +132,12 @@ const sx = {
   },
   infoTextBox: {
     marginTop: "2rem",
-    "p, span": {
-      color: "palette.gray",
-      fontSize: "16px",
+    fontSize: "md",
+    fontWeight: "light",
+    color: "palette.gray",
+    paddingBottom: "0",
+    p: {
+      marginTop: "1rem",
     },
     a: {
       color: "palette.primary",

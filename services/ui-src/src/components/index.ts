@@ -72,10 +72,11 @@ export { ReportPageWrapper } from "./reports/ReportPageWrapper";
 export { ReportContext } from "./reports/ReportProvider";
 export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
-
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables
+export { EntityRow } from "./tables/EntityRow";
+export { EntityStatusIcon } from "./tables/EntityStatusIcon";
 export { Table } from "./tables/Table";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
