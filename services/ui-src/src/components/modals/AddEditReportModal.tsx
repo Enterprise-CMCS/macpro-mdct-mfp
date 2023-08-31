@@ -12,7 +12,7 @@ import {
   calculateDueDate,
   convertDateEtToUtc,
   convertDateUtcToEt,
-  useUserStore,
+  useStore,
 } from "utils";
 
 export const AddEditReportModal = ({
@@ -21,9 +21,8 @@ export const AddEditReportModal = ({
   reportType,
   modalDisclosure,
 }: Props) => {
-  const { createReport, fetchReportsByState, updateReport } =
-    useContext(ReportContext);
-  const { full_name } = useUserStore().user ?? {};
+  const { createReport, fetchReportsByState } = useContext(ReportContext);
+  const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
   const modalFormJsonMap: any = {
     WP: wpFormJson,
@@ -91,51 +90,32 @@ export const AddEditReportModal = ({
         ? prepareWpPayload(formData)
         : prepareSarPayload(formData);
 
-    // if an existing program was selected, use that report id
-    if (selectedReport?.id) {
-      const reportKeys = {
-        reportType: reportType,
-        state: activeState,
-        id: selectedReport.id,
-      };
-      // edit existing report
-      await updateReport(reportKeys, {
-        ...dataToWrite,
-        metadata: {
-          ...dataToWrite.metadata,
-          locked: undefined,
-          status: reportType !== "WP" ? ReportStatus.IN_PROGRESS : undefined,
-          submissionCount: undefined,
-          previousRevisions: undefined,
-        },
-      });
-    } else {
-      await createReport(reportType, activeState, {
-        ...dataToWrite,
-        metadata: {
-          ...dataToWrite.metadata,
-          reportType,
-          status: ReportStatus.NOT_STARTED,
-          isComplete: false,
-        },
-        fieldData: {
-          ...dataToWrite.fieldData,
-          stateName: States[activeState as keyof typeof States],
-          submissionCount: reportType === "WP" ? 0 : undefined,
-          // All new WP reports are NOT resubmissions by definition.
-          versionControl:
-            reportType === "WP"
-              ? [
-                  {
-                    // pragma: allowlist nextline secret
-                    key: "versionControl-KFCd3rfEu3eT4UFskUhDtx",
-                    value: "No, this is an initial submission",
-                  },
-                ]
-              : undefined,
-        },
-      });
-    }
+    await createReport(reportType, activeState, {
+      ...dataToWrite,
+      metadata: {
+        ...dataToWrite.metadata,
+        reportType,
+        status: ReportStatus.NOT_STARTED,
+        isComplete: false,
+      },
+      fieldData: {
+        ...dataToWrite.fieldData,
+        stateName: States[activeState as keyof typeof States],
+        submissionCount: reportType === "WP" ? 0 : undefined,
+        // All new WP reports are NOT resubmissions by definition.
+        versionControl:
+          reportType === "WP"
+            ? [
+                {
+                  // pragma: allowlist nextline secret
+                  key: "versionControl-KFCd3rfEu3eT4UFskUhDtx",
+                  value: "No, this is an initial submission",
+                },
+              ]
+            : undefined,
+      },
+    });
+
     await fetchReportsByState(reportType, activeState);
     setSubmitting(false);
     modalDisclosure.onClose();

@@ -8,7 +8,12 @@ import {
   Sidebar,
   StandardReportPage,
 } from "components";
-import { PageTypes } from "types";
+import { useLocation } from "react-router-dom";
+import {
+  ModalDrawerReportPageShape,
+  PageTypes,
+  StandardReportPageShape,
+} from "types";
 // utils
 import {
   mockDrawerReportPageJson,
@@ -17,17 +22,42 @@ import {
 } from "utils/testing/mockForm";
 
 export const ReportPageWrapper = () => {
+  const location = useLocation();
+
+  // temporary for mocking correct json per page
+  const getRoutePath = (path: string) => {
+    if (path === "/standard") {
+      return mockStandardReportPageJson;
+    } else if (
+      // add the path
+      path === ""
+    ) {
+      // add the mock page json
+      return mockStandardReportPageJson;
+    } else {
+      return mockStandardReportPageJson;
+    }
+  };
+
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: PageTypes) => {
     switch (route) {
       case PageTypes.DRAWER:
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
       case PageTypes.MODAL_DRAWER:
-        return <ModalDrawerReportPage route={mockModalDrawerReportPageJson} />;
+        return (
+          <ModalDrawerReportPage
+            route={mockModalDrawerReportPageJson as ModalDrawerReportPageShape}
+          />
+        );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
-        return <StandardReportPage route={mockStandardReportPageJson} />;
+        return (
+          <StandardReportPage
+            route={getRoutePath(location.pathname) as StandardReportPageShape}
+          />
+        );
     }
   };
 
@@ -37,7 +67,7 @@ export const ReportPageWrapper = () => {
         <>
           <Sidebar isHidden={false} />
           <Flex id="report-content" sx={sx.reportContainer}>
-            {renderPageSection(PageTypes.STANDARD)}
+            {renderPageSection(PageTypes.MODAL_DRAWER)}
           </Flex>
         </>
       </Flex>
