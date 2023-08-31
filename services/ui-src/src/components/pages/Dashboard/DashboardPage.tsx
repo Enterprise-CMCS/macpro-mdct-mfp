@@ -1,3 +1,4 @@
+/* eslint-disable multiline-comment-style */
 import { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 // components
@@ -22,12 +23,12 @@ import {
   ReportContext,
 } from "components";
 // utils
-import { AnyObject, ReportMetadataShape, ReportKeys, ReportShape } from "types";
+import { AnyObject, ReportMetadataShape, ReportShape } from "types";
 import {
   convertDateUtcToEt,
   parseCustomHtml,
   useBreakpoint,
-  useUserStore,
+  useStore,
 } from "utils";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
@@ -37,29 +38,20 @@ import accordion from "verbiage/pages/accordion";
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 
 export const DashboardPage = ({ reportType }: Props) => {
-  const {
-    errorMessage,
-    fetchReportsByState,
-    fetchReport,
-    clearReportSelection,
-    setReportSelection,
-    archiveReport,
-    releaseReport,
-  } = useContext(ReportContext);
+  const { errorMessage, clearReportSelection, fetchReportsByState } =
+    useContext(ReportContext);
   const navigate = useNavigate();
   const {
     state: userState,
     userIsEndUser,
     userIsAdmin,
-  } = useUserStore().user ?? {};
+  } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
   const [reportsToDisplay, setReportsToDisplay] = useState<
     ReportMetadataShape[] | undefined
   >(undefined);
   const [reportId, setReportId] = useState<string | undefined>(undefined);
-  const [archiving, setArchiving] = useState<boolean>(false);
   const [entering, setEntering] = useState<boolean>(false);
-  const [releasing, setReleasing] = useState<boolean>(false);
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
     undefined
   );
@@ -101,18 +93,21 @@ export const DashboardPage = ({ reportType }: Props) => {
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     setReportId(report.id);
     setEntering(true);
-    const reportKeys: ReportKeys = {
-      reportType: report.reportType,
-      state: report.state,
-      id: report.id,
-    };
-    const selectedReport: ReportShape = await fetchReport(reportKeys);
-    // set active report to selected report
-    setReportSelection(selectedReport);
-    setReportId(undefined);
-    setEntering(false);
-    const firstReportPagePath = selectedReport.formTemplate.flatRoutes![0].path;
-    navigate(firstReportPagePath);
+
+    // TODO: once API handling is in, we can remove these comments
+
+    // const reportKeys: ReportKeys = {
+    //   reportType: report.reportType,
+    //   state: report.state,
+    //   id: report.id,
+    // };
+    // const selectedReport: ReportShape = await fetchReportsByState(reportKeys);
+    // // set active report to selected report
+    // setReportSelection(selectedReport);
+    // setReportId(undefined);
+    // setEntering(false);
+    // const firstReportPagePath = selectedReport.formTemplate.flatRoutes![0].path;
+    // navigate(firstReportPagePath);
   };
 
   const openAddEditReportModal = (report?: ReportShape) => {
@@ -147,38 +142,6 @@ export const DashboardPage = ({ reportType }: Props) => {
     onClose: addEditReportModalOnCloseHandler,
   } = useDisclosure();
 
-  const toggleReportArchiveStatus = async (report: ReportShape) => {
-    if (userIsAdmin) {
-      setReportId(report.id);
-      setArchiving(true);
-      const reportKeys = {
-        reportType: reportType,
-        state: adminSelectedState,
-        id: report.id,
-      };
-      await archiveReport(reportKeys);
-      await fetchReportsByState(reportType, activeState);
-      setReportId(undefined);
-      setArchiving(false);
-    }
-  };
-
-  const toggleReportLockStatus = async (report: ReportShape) => {
-    if (userIsAdmin) {
-      setReportId(report.id);
-      setReleasing(true);
-      const reportKeys = {
-        reportType: reportType,
-        state: adminSelectedState,
-        id: report.id,
-      };
-      await releaseReport!(reportKeys);
-      await fetchReportsByState(reportType, activeState);
-      setReportId(undefined);
-      setReleasing(false);
-    }
-  };
-
   return (
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
@@ -210,11 +173,11 @@ export const DashboardPage = ({ reportType }: Props) => {
               reportId={reportId}
               openAddEditReportModal={openAddEditReportModal}
               enterSelectedReport={enterSelectedReport}
-              archiveReport={toggleReportArchiveStatus}
-              archiving={archiving}
+              // archiveReport={toggleReportArchiveStatus}
+              // archiving={archiving}
               entering={entering}
-              releaseReport={toggleReportLockStatus}
-              releasing={releasing}
+              // releaseReport={toggleReportLockStatus}
+              // releasing={releasing}
               isStateLevelUser={userIsEndUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
@@ -227,11 +190,11 @@ export const DashboardPage = ({ reportType }: Props) => {
               body={body}
               openAddEditReportModal={openAddEditReportModal}
               enterSelectedReport={enterSelectedReport}
-              archiveReport={toggleReportArchiveStatus}
-              archiving={archiving}
+              // archiveReport={toggleReportArchiveStatus}
+              // archiving={archiving}
               entering={entering}
-              releaseReport={toggleReportLockStatus}
-              releasing={releasing}
+              // releaseReport={toggleReportLockStatus}
+              // releasing={releasing}
               isStateLevelUser={userIsEndUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
