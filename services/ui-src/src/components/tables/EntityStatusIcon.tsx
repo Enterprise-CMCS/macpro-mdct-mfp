@@ -9,16 +9,14 @@ import successIcon from "assets/icons/icon_check_circle.png";
 import successIconDark from "assets/icons/icon_check_circle_dark.png";
 import { useContext, useMemo } from "react";
 import { ReportContext } from "components/reports/ReportProvider";
-// import { getMlrEntityStatus } from "utils/tables/getMlrEntityStatus";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const EntityStatusIcon = ({ entity, isPdf }: Props) => {
   const { report } = useContext(ReportContext);
 
-  const entityComplete = false;
-
-  // const entityComplete = useMemo(() => {
-  //   return report ? getMlrEntityStatus(report, entity) : false;
-  // }, [report]);
+  const entityComplete = useMemo(() => {
+    return false;
+  }, [report]);
 
   return (
     <Box sx={isPdf ? sx.containerPdf : sx.container}>

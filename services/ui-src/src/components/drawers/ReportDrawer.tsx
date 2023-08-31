@@ -3,7 +3,7 @@ import { MouseEventHandler } from "react";
 import { Box, Button, Flex, Text, Spinner } from "@chakra-ui/react";
 import { Drawer, Form } from "components";
 // utils
-import { useUserStore } from "utils";
+import { useStore } from "utils";
 // types
 import {
   AnyObject,
@@ -27,7 +27,7 @@ export const ReportDrawer = ({
   ...props
 }: Props) => {
   // determine if fields should be disabled (based on admin and read-only roles)
-  const { userIsAdmin, userIsReadOnly } = useUserStore().user ?? {};
+  const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
   const buttonText =
     userIsAdmin || userIsReadOnly ? closeText : saveAndCloseText;
   const formFieldsExist = form.fields.length;
@@ -36,6 +36,7 @@ export const ReportDrawer = ({
       verbiage={verbiage}
       drawerDisclosure={drawerDisclosure}
       entityType={entityType}
+      selectedEntity={selectedEntity?.name}
       {...props}
     >
       {formFieldsExist ? (

@@ -2,26 +2,24 @@
 import { Flex } from "@chakra-ui/react";
 import {
   DrawerReportPage,
-  //ModalDrawerReportPage,
-  ModalOverlayReportPage,
+  ModalDrawerReportPage,
   PageTemplate,
   ReviewSubmitPage,
   Sidebar,
   StandardReportPage,
 } from "components";
 import { useLocation } from "react-router-dom";
-//import { ModalOverlayReportPageShape} from "types";
-import { PageTypes } from "types";
+import {
+  ModalDrawerReportPageShape,
+  PageTypes,
+  StandardReportPageShape,
+} from "types";
 // utils
 import {
   mockDrawerReportPageJson,
-  //mockModalOverlayReportPageJson,
+  mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
-// import { mockGeneralInfoReportPageJson } from "utils/testing/generalInfoMockForm";
-
-// import { mockStandardTBSReportPageJson } from "utils/testing/tbsMockForm";
-import { mockStandardSTSReportPageJson } from "utils/testing/stsMockForm"; //REMOVE when ready
 
 export const ReportPageWrapper = () => {
   const location = useLocation();
@@ -40,24 +38,26 @@ export const ReportPageWrapper = () => {
       return mockStandardReportPageJson;
     }
   };
+
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: PageTypes) => {
     switch (route) {
       case PageTypes.DRAWER:
         return <DrawerReportPage route={mockDrawerReportPageJson} />;
-      case PageTypes.MODAL_OVERLAY:
+      case PageTypes.MODAL_DRAWER:
         return (
-          <ModalOverlayReportPage
-            route={mockStandardSTSReportPageJson}
-            setSidebarHidden={() => {
-              return false;
-            }}
+          <ModalDrawerReportPage
+            route={mockModalDrawerReportPageJson as ModalDrawerReportPageShape}
           />
         );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
-        return <StandardReportPage route={getRoutePath(location.pathname)} />;
+        return (
+          <StandardReportPage
+            route={getRoutePath(location.pathname) as StandardReportPageShape}
+          />
+        );
     }
   };
 
@@ -67,7 +67,7 @@ export const ReportPageWrapper = () => {
         <>
           <Sidebar isHidden={false} />
           <Flex id="report-content" sx={sx.reportContainer}>
-            {renderPageSection(PageTypes.MODAL_OVERLAY)}
+            {renderPageSection(PageTypes.MODAL_DRAWER)}
           </Flex>
         </>
       </Flex>
