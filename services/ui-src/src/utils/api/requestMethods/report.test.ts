@@ -1,6 +1,6 @@
-import { getReportsByState, postReport } from "./report";
+import { getReport, getReportsByState, postReport, putReport } from "./report";
 // utils
-import { mockWPReport } from "utils/testing/setupJest";
+import { mockReportKeys, mockWPReport } from "utils/testing/setupJest";
 import { initAuthManager } from "utils/auth/authLifecycle";
 
 describe("Test report status methods", () => {
@@ -9,11 +9,20 @@ describe("Test report status methods", () => {
     initAuthManager();
     jest.runAllTimers();
   });
+
+  test("getReport", () => {
+    expect(getReport(mockReportKeys)).toBeTruthy();
+  });
+
   test("getReportsByState", () => {
     expect(getReportsByState("WP", "NJ")).toBeTruthy();
   });
 
   test("postReport", () => {
     expect(postReport("WP", "NJ", mockWPReport)).toBeTruthy();
+  });
+
+  test("putReport", () => {
+    expect(putReport(mockReportKeys, mockWPReport)).toBeTruthy();
   });
 });
