@@ -121,9 +121,9 @@ interface MobileDashboardTableProps {
   reportType: string;
   openAddEditReportModal: Function;
   enterSelectedReport: Function;
-  archiveReport: Function;
-  archiving: boolean;
-  entering: boolean;
+  archiveReport?: Function;
+  archiving?: boolean;
+  entering?: boolean;
   releaseReport?: Function | undefined;
   releasing?: boolean | undefined;
   isAdmin: boolean;
