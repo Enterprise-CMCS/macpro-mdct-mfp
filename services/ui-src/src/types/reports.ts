@@ -84,7 +84,6 @@ export interface ReportRouteWithoutForm extends ReportRouteBase {
 
 export interface DrawerReportPageVerbiage extends ReportPageVerbiage {
   dashboardTitle: string;
-  countEntitiesInTitle?: boolean;
   drawerTitle: string;
   drawerInfo?: CustomHtmlElement[];
   missingEntityMessage?: CustomHtmlElement[];
@@ -96,14 +95,14 @@ export interface ModalDrawerReportPageVerbiage
   editEntityButtonText: string;
   addEditModalAddTitle: string;
   addEditModalEditTitle: string;
-  addEditModalMessage: string;
   deleteEntityButtonAltText: string;
   deleteModalTitle: string;
   deleteModalConfirmButtonText: string;
   deleteModalWarning: string;
   entityUnfinishedMessage: string;
   enterEntityDetailsButtonText: string;
-  editEntityDetailsButtonText: string;
+  reviewPdfHint: string;
+  drawerTitle: string;
 }
 
 /**
