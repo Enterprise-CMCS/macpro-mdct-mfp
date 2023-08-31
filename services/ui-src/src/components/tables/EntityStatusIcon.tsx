@@ -1,18 +1,18 @@
+import { useMemo } from "react";
 // components
 import { Box, Image, Text } from "@chakra-ui/react";
 // utils
 import { EntityShape } from "types";
+import { useStore } from "utils";
 // assets
 import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
 import unfinishedIconDark from "assets/icons/icon_error_circle.png";
 import successIcon from "assets/icons/icon_check_circle.png";
 import successIconDark from "assets/icons/icon_check_circle_dark.png";
-import { useContext, useMemo } from "react";
-import { ReportContext } from "components/reports/ReportProvider";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const EntityStatusIcon = ({ entity, isPdf }: Props) => {
-  const { report } = useContext(ReportContext);
+  const { report } = useStore();
 
   const entityComplete = useMemo(() => {
     return false;
