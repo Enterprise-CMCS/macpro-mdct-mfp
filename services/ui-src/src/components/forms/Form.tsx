@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import {
   FieldValues,
   FormProvider,
@@ -17,7 +17,7 @@ import {
   hydrateFormFields,
   mapValidationTypesToSchema,
   sortFormErrors,
-  useUserStore,
+  useStore,
 } from "utils";
 import {
   AnyObject,
@@ -28,7 +28,6 @@ import {
   ReportStatus,
   ReportType,
 } from "types";
-import { ReportContext } from "components/reports/ReportProvider";
 
 export const Form = ({
   id,
@@ -45,8 +44,8 @@ export const Form = ({
   const { fields, options } = formJson;
 
   // determine if fields should be disabled (based on admin roles )
-  const { userIsAdmin, userIsReadOnly } = useUserStore().user ?? {};
-  const { report } = useContext(ReportContext);
+  const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
+  const { report } = useStore();
   let location = useLocation();
   const fieldInputDisabled =
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||

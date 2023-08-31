@@ -9,6 +9,7 @@ export { ErrorAlert } from "./alerts/ErrorAlert";
 export { App } from "./app/App";
 export { AppRoutes } from "./app/AppRoutes";
 export { Error } from "./app/Error";
+export { MainSkipNav } from "./app/MainSkipNav";
 export { SkipNav } from "./app/SkipNav";
 // banners
 export {
@@ -69,13 +70,14 @@ export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
 export { ReportPageWrapper } from "./reports/ReportPageWrapper";
-export { ReportContext } from "./reports/ReportProvider";
+export { ReportContext, ReportProvider } from "./reports/ReportProvider";
 export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
-
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables
+export { EntityRow } from "./tables/EntityRow";
+export { EntityStatusIcon } from "./tables/EntityStatusIcon";
 export { Table } from "./tables/Table";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";

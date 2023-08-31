@@ -8,20 +8,13 @@ import { AdminBannerContext, AdminBannerProvider } from "./AdminBannerProvider";
 import { mockBannerData } from "utils/testing/mockBanner";
 import { bannerErrors } from "verbiage/errors";
 
-// eslint-disable-next-line multiline-comment-style
-// jest.mock("utils/api/requestMethods/banner", () => ({
-//   deleteBanner: jest.fn(() => {}),
-//   getBanner: jest.fn(() => {}),
-//   writeBanner: jest.fn(() => {}),
-// }));
-
-const mockAPI = {
+jest.mock("utils/api/requestMethods/banner", () => ({
   deleteBanner: jest.fn(() => {}),
   getBanner: jest.fn(() => {}),
   writeBanner: jest.fn(() => {}),
-};
+}));
 
-// const mockAPI = require("utils/api/requestMethods/banner");
+const mockAPI = require("utils/api/requestMethods/banner");
 
 const TestComponent = () => {
   const { ...context } = useContext(AdminBannerContext);
@@ -56,11 +49,11 @@ describe("Test AdminBannerProvider fetchAdminBanner method", () => {
     jest.clearAllMocks();
   });
 
-  test.skip("fetchAdminBanner method is called on load", async () => {
+  test("fetchAdminBanner method is called on load", async () => {
     expect(mockAPI.getBanner).toHaveBeenCalledTimes(1);
   });
 
-  test.skip("fetchAdminBanner method calls API getBanner method", async () => {
+  test("fetchAdminBanner method calls API getBanner method", async () => {
     expect(mockAPI.getBanner).toHaveBeenCalledTimes(1);
     await act(async () => {
       const fetchButton = screen.getByText("Fetch");
@@ -70,7 +63,7 @@ describe("Test AdminBannerProvider fetchAdminBanner method", () => {
     await waitFor(() => expect(mockAPI.getBanner).toHaveBeenCalledTimes(2));
   });
 
-  test.skip("Shows error if fetchBanner throws error", async () => {
+  test("Shows error if fetchBanner throws error", async () => {
     mockAPI.getBanner.mockImplementation(() => {
       throw new Error();
     });
@@ -86,7 +79,7 @@ describe("Test AdminBannerProvider deleteAdminBanner method", () => {
     jest.clearAllMocks();
   });
 
-  test.skip("deleteAdminBanner method calls API deleteBanner method", async () => {
+  test("deleteAdminBanner method calls API deleteBanner method", async () => {
     await act(async () => {
       await render(testComponent);
     });
@@ -105,7 +98,7 @@ describe("Test AdminBannerProvider writeAdminBanner method", () => {
     jest.clearAllMocks();
   });
 
-  test.skip("writeAdminBanner method calls API writeBanner method", async () => {
+  test("writeAdminBanner method calls API writeBanner method", async () => {
     await act(async () => {
       await render(testComponent);
     });
