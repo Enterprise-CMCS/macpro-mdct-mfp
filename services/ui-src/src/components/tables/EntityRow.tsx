@@ -4,7 +4,7 @@ import { EntityStatusIcon } from "components";
 // types
 import { AnyObject, EntityShape } from "types";
 // utils
-import { useUserStore } from "utils";
+import { useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 
@@ -16,7 +16,7 @@ export const EntityRow = ({
   openDrawer,
 }: Props) => {
   const { name, isOtherEntity } = entity;
-  const { userIsEndUser } = useUserStore().user ?? {};
+  const { userIsEndUser } = useStore().user ?? {};
 
   return (
     <Tr sx={sx.content}>
