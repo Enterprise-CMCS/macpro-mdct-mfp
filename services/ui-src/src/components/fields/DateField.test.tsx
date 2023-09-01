@@ -4,7 +4,7 @@ import { axe } from "jest-axe";
 //components
 import { useFormContext } from "react-hook-form";
 import { DateField } from "components";
-import { useUserStore } from "utils";
+import { useStore } from "utils";
 import { mockStateUserStore } from "utils/testing/setupJest";
 
 const mockTrigger = jest.fn();
@@ -27,8 +27,8 @@ const mockGetValues = (returnValue: any) =>
     getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useUserStore");
-const mockedUseUser = useUserStore as jest.MockedFunction<typeof useUserStore>;
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const dateFieldComponent = (
   <DateField name="testDateField" label="test-date-field" />
@@ -36,7 +36,7 @@ const dateFieldComponent = (
 
 describe("Test DateField basic functionality", () => {
   test("DateField is visible", () => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues(undefined);
     const result = render(dateFieldComponent);
     const dateFieldInput: HTMLInputElement = result.container.querySelector(
@@ -46,7 +46,7 @@ describe("Test DateField basic functionality", () => {
   });
 
   test("onChange event fires handler when typing and stays even after blurred", async () => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues(undefined);
     const result = render(dateFieldComponent);
     const dateFieldInput: HTMLInputElement = result.container.querySelector(
@@ -60,7 +60,7 @@ describe("Test DateField basic functionality", () => {
 
 describe("Test DateField accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues(undefined);
     const { container } = render(dateFieldComponent);
     const results = await axe(container);

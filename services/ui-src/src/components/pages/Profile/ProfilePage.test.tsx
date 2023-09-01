@@ -8,7 +8,7 @@ import {
   mockStateUserStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { useUserStore } from "utils";
+import { useStore } from "utils";
 
 const ProfilePageComponent = (
   <RouterWrappedComponent>
@@ -18,16 +18,14 @@ const ProfilePageComponent = (
 
 // MOCKS
 
-jest.mock("utils/state/useUserStore");
-const mockedUseUserStore = useUserStore as jest.MockedFunction<
-  typeof useUserStore
->;
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 // TESTS
 
 describe("Test ProfilePage for admin users", () => {
   beforeEach(() => {
-    mockedUseUserStore.mockReturnValue(mockAdminUserStore);
+    mockedUseStore.mockReturnValue(mockAdminUserStore);
     render(ProfilePageComponent);
   });
   test("Check that Profile page renders properly", () => {
@@ -53,7 +51,7 @@ describe("Test ProfilePage for admin users", () => {
 
 describe("Test ProfilePage for state users", () => {
   beforeEach(() => {
-    mockedUseUserStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     render(ProfilePageComponent);
   });
   test("Check that Profile page renders properly", () => {
@@ -72,7 +70,7 @@ describe("Test ProfilePage for state users", () => {
 
 describe("Test ProfilePage accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
-    mockedUseUserStore.mockReturnValue(mockAdminUserStore);
+    mockedUseStore.mockReturnValue(mockAdminUserStore);
     const { container } = render(ProfilePageComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();

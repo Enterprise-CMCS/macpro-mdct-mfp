@@ -5,7 +5,7 @@ import { axe } from "jest-axe";
 import { useFormContext } from "react-hook-form";
 import { NumberField } from "components";
 // utils
-import { useUserStore } from "utils";
+import { useStore } from "utils";
 import { mockStateUserStore } from "utils/testing/setupJest";
 
 const mockTrigger = jest.fn();
@@ -27,8 +27,8 @@ const mockGetValues = (returnValue: any) =>
     getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useUserStore");
-const mockedUseUser = useUserStore as jest.MockedFunction<typeof useUserStore>;
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const numberFieldComponent = (
   <NumberField
@@ -60,7 +60,7 @@ const ratioMaskedNumberFieldComponent = (
 
 describe("Test Maskless NumberField", () => {
   beforeEach(() => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -93,7 +93,7 @@ describe("Test Masked NumberField", () => {
     mockGetValues(undefined);
   });
   test("onChangeHandler updates comma masked field value", async () => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     const result = render(commaMaskedNumberFieldComponent);
     const numberFieldInput: HTMLInputElement = result.container.querySelector(
       "[name='testNumberField']"
@@ -121,7 +121,7 @@ describe("Test Masked NumberField", () => {
   });
 
   test("onChangeHandler updates Currency masked field value", async () => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     const result = render(currencyMaskedNumberFieldComponent);
     const numberFieldInput: HTMLInputElement = result.container.querySelector(
       "[name='testNumberField']"
@@ -140,7 +140,7 @@ describe("Test Masked NumberField", () => {
   });
 
   test("onChangeHandler updates Percentage masked field value", async () => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     const result = render(percentageMaskedNumberFieldComponent);
     const numberFieldInput: HTMLInputElement = result.container.querySelector(
       "[name='testNumberField']"
@@ -160,7 +160,7 @@ describe("Test Masked NumberField", () => {
   });
 
   test("onChangeHandler updates ratio field value", async () => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     const result = render(ratioMaskedNumberFieldComponent);
     const numberFieldInput: HTMLInputElement = result.container.querySelector(
       "[name='testNumberField']"
@@ -226,7 +226,7 @@ describe("Test NumberField hydration functionality", () => {
   );
 
   beforeEach(() => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
   });
   afterEach(() => {
     jest.clearAllMocks();

@@ -5,13 +5,11 @@ import { createMemoryHistory } from "history";
 // components
 import { AppRoutes } from "components";
 // utils
-import { useUserStore, UserProvider } from "utils";
+import { useStore, UserProvider } from "utils";
 import { mockStateUserStore, mockLDFlags } from "utils/testing/setupJest";
 
-jest.mock("utils/state/useUserStore");
-const mockedUseUserStore = useUserStore as jest.MockedFunction<
-  typeof useUserStore
->;
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 mockLDFlags.setDefault({ wpReport: true, sarReport: true });
 
@@ -27,7 +25,7 @@ let history: any;
 
 describe("Test AppRoutes 404 handling", () => {
   beforeEach(async () => {
-    mockedUseUserStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     history = createMemoryHistory();
     history.push("/obviously-fake-route");
     await act(async () => {

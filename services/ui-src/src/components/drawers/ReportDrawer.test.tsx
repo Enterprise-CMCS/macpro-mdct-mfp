@@ -11,7 +11,7 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 // utils
-import { useUserStore } from "utils";
+import { useStore } from "utils";
 // constants
 import { saveAndCloseText } from "../../constants";
 import { ReportDrawer } from "./ReportDrawer";
@@ -24,10 +24,8 @@ const mockDrawerDisclosure = {
   onClose: mockOnClose,
 };
 
-jest.mock("utils/state/useUserStore");
-const mockedUseUserStore = useUserStore as jest.MockedFunction<
-  typeof useUserStore
->;
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const drawerComponent = (
   <RouterWrappedComponent>
@@ -46,13 +44,13 @@ describe("Test ReportDrawer rendering", () => {
     jest.clearAllMocks();
   });
   it("Should render save text for state user", async () => {
-    mockedUseUserStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     render(drawerComponent);
     expect(screen.getByText(saveAndCloseText)).toBeVisible();
   });
 
   it("Should not render save text for admin user", async () => {
-    mockedUseUserStore.mockReturnValue(mockAdminUserStore);
+    mockedUseStore.mockReturnValue(mockAdminUserStore);
     render(drawerComponent);
     expect(screen.queryByText(saveAndCloseText)).not.toBeInTheDocument();
   });
@@ -73,7 +71,7 @@ describe("Test ReportDrawerWithoutFormFields rendering", () => {
     jest.clearAllMocks();
   });
   it("Should render save text for state user", async () => {
-    mockedUseUserStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     render(drawerComponentWithoutFormFields);
     expect(
       screen.getByText(mockModalDrawerReportPageVerbiage.drawerNoFormMessage)
@@ -83,7 +81,7 @@ describe("Test ReportDrawerWithoutFormFields rendering", () => {
 
 describe("Test ReportDrawer accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
-    mockedUseUserStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     const { container } = render(drawerComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();

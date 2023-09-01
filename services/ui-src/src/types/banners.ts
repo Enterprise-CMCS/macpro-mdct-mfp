@@ -21,7 +21,6 @@ export interface AdminBannerMethods {
 }
 
 export interface AdminBannerShape extends AdminBannerMethods {
-  bannerData?: AdminBannerData;
   isLoading: boolean;
   errorMessage?: string;
 }

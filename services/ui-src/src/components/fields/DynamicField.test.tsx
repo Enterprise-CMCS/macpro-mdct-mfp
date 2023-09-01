@@ -4,13 +4,13 @@ import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { FormProvider, useForm } from "react-hook-form";
 // utils
-import { useUserStore } from "utils";
+import { useStore } from "utils";
 //components
 import { DynamicField } from "./DynamicField";
 import { mockStateUserStore } from "utils/testing/setupJest";
 
-jest.mock("utils/state/useUserStore");
-const mockedUseUser = useUserStore as jest.MockedFunction<typeof useUserStore>;
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const mockUseNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -40,7 +40,7 @@ const dynamicFieldComponent = (hydrationValue?: any) => (
 
 describe("Test DynamicField component", () => {
   beforeEach(async () => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     await act(async () => {
       await render(dynamicFieldComponent());
     });

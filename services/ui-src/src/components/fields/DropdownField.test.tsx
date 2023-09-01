@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { DropdownField } from "components";
 // utils
 import { mockStateUserStore } from "utils/testing/setupJest";
-import { useUserStore } from "utils";
+import { useStore } from "utils";
 import { mockDropdownOptions } from "utils/testing/fields/mockDropdownChoices";
 
 const mockTrigger = jest.fn();
@@ -27,8 +27,8 @@ const mockGetValues = (returnValue: any) =>
     getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useUserStore");
-const mockedUseUser = useUserStore as jest.MockedFunction<typeof useUserStore>;
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const dropdownComponentWithOptions = (
   <DropdownField
@@ -40,7 +40,7 @@ const dropdownComponentWithOptions = (
 
 describe("Test DropdownField basic functionality", () => {
   beforeEach(() => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
   });
 
   test("Dropdown renders", () => {
@@ -64,7 +64,7 @@ describe("Test DropdownField hydration functionality", () => {
   );
 
   beforeEach(() => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
   });
 
   test("If only formFieldValue exists, displayValue is set to it", () => {
@@ -100,7 +100,7 @@ describe("Test DropdownField hydration functionality", () => {
 
 describe("Test DropdownField accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
-    mockedUseUser.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues(undefined);
     const { container } = render(dropdownComponentWithOptions);
     const results = await axe(container);
