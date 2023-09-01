@@ -17,21 +17,18 @@ import {
   PageTemplate,
 } from "components";
 // utils
-import { checkDateRangeStatus, convertDateUtcToEt } from "utils";
+import { checkDateRangeStatus, convertDateUtcToEt, useStore } from "utils";
 import { bannerErrors } from "verbiage/errors";
 import verbiage from "verbiage/pages/admin";
 
 export const AdminPage = () => {
-  const {
-    bannerData,
-    deleteAdminBanner,
-    writeAdminBanner,
-    isLoading,
-    errorMessage,
-  } = useContext(AdminBannerContext);
+  const { deleteAdminBanner, writeAdminBanner, isLoading, errorMessage } =
+    useContext(AdminBannerContext);
   const [error, setError] = useState<string | undefined>(errorMessage);
   const [deleting, setDeleting] = useState<boolean>(false);
-  const [isBannerActive, setIsBannerActive] = useState<boolean>(false);
+
+  // state management
+  const { bannerData, isBannerActive, setIsBannerActive } = useStore();
 
   useEffect(() => {
     let bannerActivity = false;

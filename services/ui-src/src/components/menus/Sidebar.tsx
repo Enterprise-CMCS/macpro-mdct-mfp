@@ -70,6 +70,15 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
             section={{ name: "placeholder", path: "/standard" }}
             level={1}
           />
+          {/* Temporary Page Navigation */}
+          <NavSection
+            key={"tb-section"}
+            section={{
+              name: "Transition Benchmarks",
+              path: "/wp/transition-benchmarks",
+            }}
+            level={1}
+          />
         </Box>
       </Box>
     </>
