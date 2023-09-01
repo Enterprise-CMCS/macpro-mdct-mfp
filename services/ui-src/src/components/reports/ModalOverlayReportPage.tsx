@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { Box, Button, Heading, useDisclosure } from "@chakra-ui/react";
 import {
   AddEditEntityModal,
+  Alert,
   DeleteEntityModal,
   EntityDetailsOverlay,
   EntityProvider,
@@ -14,6 +15,7 @@ import {
 } from "components";
 // types
 import {
+  AlertTypes,
   AnyObject,
   EntityShape,
   EntityType,
@@ -49,21 +51,53 @@ export const ModalOverlayReportPage = ({
     undefined
   );
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
+    undefined
+  );
 
   let report = fetchReport();
-
-  console.log(report);
 
   // Determine whether form is locked or unlocked based on user and route
   const isLocked = report?.locked;
 
   // Display Variables
-  let reportFieldDataEntities = fetchReport;//?.fieldData[entityType] || [];
+  let reportFieldDataEntities = []; //fetchReport?.fieldData[entityType] || [];
   const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
     return { headRow: ["", verbiage.tableHeader, ""] };
   };
+
+  ///TEMPORARY ENTITY
+  let tempEntity: EntityShape = {
+    id: "6ea0d-bf22-e3fb-8486-ef3d43f4a5e4",
+    report_planName: "mco",
+    report_programName: "program",
+    report_programType: [
+      {
+        key: "report_programType-6krUQZyhpmHHoagQWgUzxx",
+        value: "PIHP",
+      },
+    ],
+    report_eligibilityGroup: [
+      {
+        key: "report_eligibilityGroup-UgSDECcYDJ4S39QEMmMRcq",
+        value: "Standalone CHIP",
+      },
+    ],
+    report_reportingPeriodStartDate: "02/02/2022",
+    report_reportingPeriodEndDate: "02/02/2022",
+    report_reportingPeriodDiscrepancy: [
+      {
+        key: "report_reportingPeriodDiscrepancy-2NI2UTNqhvrJLvEv8SORD7vIPRI",
+        value: "No",
+      },
+    ],
+    "report_eligibilityGroup-otherText": "",
+    report_reportingPeriodDiscrepancyExplanation: "",
+    isOtherEntity: true,
+  };
+  reportFieldDataEntities = [tempEntity];
 
   // Add/edit entity modal disclosure and methods
   const {
@@ -106,8 +140,16 @@ export const ModalOverlayReportPage = ({
     setSidebarHidden(true);
   };
 
-  const openDrawerDetails = (entity: EntityShape) => {
+  // report drawer disclosure and methods
+  const {
+    isOpen: drawerIsOpen,
+    onOpen: drawerOnOpenHandler,
+    onClose: drawerOnCloseHandler,
+  } = useDisclosure();
 
+  const openDrawerDetails = (entity: EntityShape) => {
+    setSelectedEntity(entity);
+    drawerOnOpenHandler();
   };
 
   const closeEntityDetailsOverlay = () => {
@@ -189,36 +231,36 @@ export const ModalOverlayReportPage = ({
         <Box sx={sx.content}>
           <ReportPageIntro
             text={verbiage.intro}
-            accordion={accordionVerbiage.WP.formIntro}
             reportType={report?.reportType}
           />
-
+          <Box>
+            <Alert title="test" status={AlertTypes.ERROR} description="test" />
+          </Box>
           <Box sx={sx.dashboardBox}>
             <Heading as="h3" sx={sx.dashboardTitle}>
               {dashTitle}
             </Heading>
-            {/* {reportFieldDataEntities.length === 0 ? (
+            {reportFieldDataEntities.length === 0 ? (
               <>
                 <Box sx={sx.tableSeparator} />
                 <Box sx={sx.emptyDashboard}>{verbiage.emptyDashboardText}</Box>
               </>
             ) : (
               <Table sx={sx.table} content={tableHeaders()}>
-                {reportFieldDataEntities.map((entity: EntityShape) =>(
-                    <EntityRow
-                      key={entity.id}
-                      entity={entity}
-                      verbiage={verbiage}
-                      locked={isLocked}
-                      openDrawer = {openDrawerDetails}
-                      openAddEditEntityModal={openAddEditEntityModal}
-                      openDeleteEntityModal={openDeleteEntityModal}
-                      openEntityDetailsOverlay={openEntityDetailsOverlay}
-                    />
-                  )
-                )}
+                {reportFieldDataEntities.map((entity: EntityShape) => (
+                  <EntityRow
+                    key={entity.id}
+                    entity={entity}
+                    verbiage={verbiage}
+                    locked={isLocked}
+                    openDrawer={openDrawerDetails}
+                    openAddEditEntityModal={openAddEditEntityModal}
+                    openDeleteEntityModal={openDeleteEntityModal}
+                    openEntityDetailsOverlay={openEntityDetailsOverlay}
+                  />
+                ))}
               </Table>
-            )} */}
+            )}
             <Button
               sx={sx.addEntityButton}
               disabled={isLocked}

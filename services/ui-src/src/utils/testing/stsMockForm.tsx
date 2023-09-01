@@ -29,7 +29,7 @@ export const mockStandardSTSReportPageJson = {
     addEntityButtonText: "Add Initiative",
     editEntityButtonText: "Edit name",
     addEditModalAddTitle: "Add initiative",
-    enterReportText: "Edit",
+    enterEntityDetailsButtonText: "Edit",
     dashboardTitle: "Initative Total Count",
     countEntitiesInTitle: true,
     tableHeader: "tableHeader",

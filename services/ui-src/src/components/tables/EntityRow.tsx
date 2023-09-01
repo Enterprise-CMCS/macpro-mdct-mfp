@@ -18,6 +18,8 @@ export const EntityRow = ({
   const { name, isOtherEntity } = entity;
   const { userIsEndUser } = useStore().user ?? {};
 
+  console.log(verbiage);
+
   return (
     <Tr sx={sx.content}>
       <Td sx={sx.statusIcon}>
