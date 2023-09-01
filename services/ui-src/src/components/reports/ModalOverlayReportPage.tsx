@@ -33,7 +33,11 @@ import {
   // useUser,
 } from "utils";
 // verbiage
-import accordionVerbiage from "../../verbiage/pages/accordion";
+import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
+
+interface AlertVerbiage {
+  [key: string]: { title: string; description: string };
+}
 
 export const ModalOverlayReportPage = ({
   route,
@@ -234,7 +238,13 @@ export const ModalOverlayReportPage = ({
             reportType={report?.reportType}
           />
           <Box>
-            <Alert title="test" status={AlertTypes.ERROR} description="test" />
+            <Alert
+              title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
+              status={AlertTypes.ERROR}
+              description={
+                (alertVerbiage as AlertVerbiage)[route.entityType].description
+              }
+            />
           </Box>
           <Box sx={sx.dashboardBox}>
             <Heading as="h3" sx={sx.dashboardTitle}>
