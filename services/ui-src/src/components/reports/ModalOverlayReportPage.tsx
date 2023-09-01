@@ -7,7 +7,6 @@ import {
   EntityDetailsOverlay,
   EntityProvider,
   EntityRow,
-  MobileEntityRow,
   ReportContext,
   ReportPageFooter,
   ReportPageIntro,
@@ -44,53 +43,27 @@ export const ModalOverlayReportPage = ({
 
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
-  const { report, updateReport } = useContext(ReportContext);
+  const { fetchReport, updateReport } = useContext(ReportContext);
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
   const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
     undefined
   );
   const [submitting, setSubmitting] = useState<boolean>(false);
 
+  let report = fetchReport();
+
+  console.log(report);
+
   // Determine whether form is locked or unlocked based on user and route
   const isLocked = report?.locked;
 
   // Display Variables
-  let reportFieldDataEntities = report?.fieldData[entityType] || [];
+  let reportFieldDataEntities = fetchReport;//?.fieldData[entityType] || [];
   const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
     return { headRow: ["", verbiage.tableHeader, ""] };
   };
-
-  ///TEMPORARY ENTITY
-  let tempEntity: EntityShape = {
-    id: "6ea0d-bf22-e3fb-8486-ef3d43f4a5e4",
-    report_planName: "mco",
-    report_programName: "program",
-    report_programType: [
-      {
-        key: "report_programType-6krUQZyhpmHHoagQWgUzxx",
-        value: "PIHP",
-      },
-    ],
-    report_eligibilityGroup: [
-      {
-        key: "report_eligibilityGroup-UgSDECcYDJ4S39QEMmMRcq",
-        value: "Standalone CHIP",
-      },
-    ],
-    report_reportingPeriodStartDate: "02/02/2022",
-    report_reportingPeriodEndDate: "02/02/2022",
-    report_reportingPeriodDiscrepancy: [
-      {
-        key: "report_reportingPeriodDiscrepancy-2NI2UTNqhvrJLvEv8SORD7vIPRI",
-        value: "No",
-      },
-    ],
-    "report_eligibilityGroup-otherText": "",
-    report_reportingPeriodDiscrepancyExplanation: "",
-  };
-  reportFieldDataEntities = [tempEntity];
 
   // Add/edit entity modal disclosure and methods
   const {
@@ -131,6 +104,10 @@ export const ModalOverlayReportPage = ({
     setCurrentEntity(entity);
     setIsEntityDetailsOpen(true);
     setSidebarHidden(true);
+  };
+
+  const openDrawerDetails = (entity: EntityShape) => {
+
   };
 
   const closeEntityDetailsOverlay = () => {
@@ -220,30 +197,20 @@ export const ModalOverlayReportPage = ({
             <Heading as="h3" sx={sx.dashboardTitle}>
               {dashTitle}
             </Heading>
-            {reportFieldDataEntities.length === 0 ? (
+            {/* {reportFieldDataEntities.length === 0 ? (
               <>
                 <Box sx={sx.tableSeparator} />
                 <Box sx={sx.emptyDashboard}>{verbiage.emptyDashboardText}</Box>
               </>
             ) : (
               <Table sx={sx.table} content={tableHeaders()}>
-                {reportFieldDataEntities.map((entity: EntityShape) =>
-                  isMobile || isTablet ? (
-                    <MobileEntityRow
-                      key={entity.id}
-                      entity={entity}
-                      verbiage={verbiage}
-                      locked={isLocked}
-                      openAddEditEntityModal={openAddEditEntityModal}
-                      openDeleteEntityModal={openDeleteEntityModal}
-                      openEntityDetailsOverlay={openEntityDetailsOverlay}
-                    />
-                  ) : (
+                {reportFieldDataEntities.map((entity: EntityShape) =>(
                     <EntityRow
                       key={entity.id}
                       entity={entity}
                       verbiage={verbiage}
                       locked={isLocked}
+                      openDrawer = {openDrawerDetails}
                       openAddEditEntityModal={openAddEditEntityModal}
                       openDeleteEntityModal={openDeleteEntityModal}
                       openEntityDetailsOverlay={openEntityDetailsOverlay}
@@ -251,7 +218,7 @@ export const ModalOverlayReportPage = ({
                   )
                 )}
               </Table>
-            )}
+            )} */}
             <Button
               sx={sx.addEntityButton}
               disabled={isLocked}

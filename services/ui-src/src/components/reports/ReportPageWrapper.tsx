@@ -1,5 +1,5 @@
 // components
-import { Flex } from "@chakra-ui/react";
+import { Flex, ModalOverlay } from "@chakra-ui/react";
 import {
   DrawerReportPage,
   ModalDrawerReportPage,
@@ -18,14 +18,20 @@ import {
 import {
   mockDrawerReportPageJson,
   mockModalDrawerReportPageJson,
+  mockModalOverlayReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
+import { ModalOverlayReportPage } from "./ModalOverlayReportPage";
+import { useState } from "react";
+import { mockStandardSTSReportPageJson } from "utils/testing/stsMockForm";
 
 export const ReportPageWrapper = () => {
   const location = useLocation();
-
+  const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
+  
   // temporary for mocking correct json per page
   const getRoutePath = (path: string) => {
+    console.log(path);
     if (path === "/standard") {
       return mockStandardReportPageJson;
     } else if (
@@ -50,6 +56,10 @@ export const ReportPageWrapper = () => {
             route={mockModalDrawerReportPageJson as ModalDrawerReportPageShape}
           />
         );
+      case PageTypes.MODAL_OVERLAY:
+        return (
+          <ModalOverlayReportPage route={mockStandardSTSReportPageJson} setSidebarHidden={setSidebarHidden}/>
+        );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
@@ -65,9 +75,9 @@ export const ReportPageWrapper = () => {
     <PageTemplate type="report">
       <Flex sx={sx.pageContainer}>
         <>
-          <Sidebar isHidden={false} />
+          <Sidebar isHidden={sidebarHidden} />
           <Flex id="report-content" sx={sx.reportContainer}>
-            {renderPageSection(PageTypes.MODAL_DRAWER)}
+            {renderPageSection(PageTypes.MODAL_OVERLAY)}
           </Flex>
         </>
       </Flex>
