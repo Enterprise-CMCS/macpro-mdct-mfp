@@ -4,7 +4,9 @@
   "basePath": "/wp",
   "version": "WP_2023-08-21",
   "entities": {
-    "targetPopulation": { "required": true }
+    "targetPopulation": {
+      "required": true
+    }
   },
   "routes": [
     {
@@ -37,6 +39,38 @@
             }
           ]
         }
+      }
+    },
+    {
+      "name": "transition-benchmark-strategy",
+      "path": "/wp/transition-benchmark-strategy",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": "Transition Benchmark Strategy"
+        }
+      },
+      "form": {
+        "id": "2UkwX7CMrbfrcSF2YjiyfetUyIF",
+        "fields": [
+          {
+            "id": "2Ukwki4yJ8wNNqz7KnvgNoTATkO",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label": "Explain how you formulated your projected numbers, which should include descriptions of the data sources used, the time period for the analysis, and the methods used to project the number of transitions."
+            }
+          },
+          {
+            "id": "2Ukwj6bhkkok19JzSocDWLo1idj",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label": "Provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative."
+            }
+          }
+        ]
       }
     },
     {
@@ -127,25 +161,6 @@
             }
           }
         ]
-      }
-    },
-    {
-      "name": "Transition Benchmark Strategy",
-      "path": "/wp/transition-benchmark-strategy",
-      "pageType": "standard",
-      "verbiage": {
-        "intro": {
-          "exportSectionHeader": "",
-          "section": "",
-          "subsection": "",
-          "info": [
-            {
-              "type": "html",
-              "content": ""
-            }
-          ]
-        },
-        "exportSectionHeader": ""
       }
     },
     {
