@@ -30,9 +30,9 @@ export const mockStandardSTSReportPageJson = {
     editEntityButtonText: "Edit name",
     addEditModalAddTitle: "Add initiative",
     enterEntityDetailsButtonText: "Edit",
-    dashboardTitle: "Initative Total Count",
+    dashboardTitle: "Initative total count",
     countEntitiesInTitle: true,
-    tableHeader: "tableHeader",
+    tableHeader: "Initaitve name <br/> Work Plan topic",
     addEditModalHint:
       "Provide the name of one initiative. You will be then be asked to complete details for this initiative including description, evaluation plan and funding sources.",
     emptyDashboardText: "Empty",

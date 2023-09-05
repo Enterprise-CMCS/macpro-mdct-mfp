@@ -66,7 +66,9 @@ interface Props {
 
 const sx = {
   footerBox: {
-    marginTop: "3.5rem",
+    marginTop: "1.0rem",
+    borderTop: "1px solid",
+    borderColor: "palette.gray_light",
   },
   buttonFlex: {
     justifyContent: "space-between",

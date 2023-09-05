@@ -1,12 +1,14 @@
 // components
-import { Box, Button, Image, Td, Tr } from "@chakra-ui/react";
-import { EntityStatusIcon } from "components";
+import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
+import { EntityStatusIcon, ReportContext } from "components";
 // types
 import { AnyObject, EntityShape } from "types";
 // utils
-import { useStore } from "utils";
+import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
+import { useMemo, useState } from "react";
+import { getEntityStatus } from "./getEntityStatus";
 
 export const EntityRow = ({
   entity,
@@ -15,9 +17,15 @@ export const EntityRow = ({
   openDeleteEntityModal,
   openDrawer,
 }: Props) => {
-  const { name, isOtherEntity } = entity;
+  const { name, report_initiative, isOtherEntity } = entity;
+  const { report } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
 
+  const entityComplete = useMemo(() => {
+    return report ? getEntityStatus(report, entity) : false;
+  }, [report]);
+
+  const programInfo = [name, report_initiative];
   console.log(verbiage);
 
   return (
@@ -25,7 +33,18 @@ export const EntityRow = ({
       <Td sx={sx.statusIcon}>
         <EntityStatusIcon entity={entity as EntityShape} />
       </Td>
-      <Td sx={sx.entityName}>{name}</Td>
+      <Td sx={sx.entityName}>
+        <ul>
+          {programInfo.map((field, index) => (
+            <li key={index}>{renderHtml(field)}</li>
+          ))}
+        </ul>
+        {!entityComplete && (
+          <Text sx={sx.errorText}>
+            Select "{verbiage.enterEntityDetailsButtonText}” to complete this report.
+          </Text>
+        )}
+      </Td>
       <Td>
         <Box sx={sx.actionContainer}>
           {isOtherEntity && (
@@ -49,7 +68,7 @@ export const EntityRow = ({
               sx={sx.deleteButton}
               data-testid="delete-entity"
               onClick={() => openDeleteEntityModal(entity)}
-              disabled={!userIsEndUser}
+              // disabled={!userIsEndUser}
             >
               <Image src={deleteIcon} alt="delete icon" boxSize="3xl" />
             </Button>
@@ -88,8 +107,20 @@ const sx = {
   },
   entityName: {
     maxWidth: "18.75rem",
-    fontSize: "md",
-    fontWeight: "bold",
+    ul: {
+      margin: "0.5rem auto",
+      listStyleType: "none",
+      li: {
+        wordWrap: "break-word",
+        paddingTop: "0.125rem",
+        paddingBottom: "0.125rem",
+        whiteSpace: "break-spaces",
+        "&:first-of-type": {
+          fontWeight: "bold",
+          fontSize: "md",
+        },
+      },
+    },
   },
   actionContainer: {
     alignItems: "center",
