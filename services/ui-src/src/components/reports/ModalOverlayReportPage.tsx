@@ -237,7 +237,7 @@ export const ModalOverlayReportPage = ({
             text={verbiage.intro}
             reportType={report?.reportType}
           />
-          <Box>
+          {(alertVerbiage as AlertVerbiage)[route.entityType] && (
             <Alert
               title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
               status={AlertTypes.ERROR}
@@ -245,7 +245,7 @@ export const ModalOverlayReportPage = ({
                 (alertVerbiage as AlertVerbiage)[route.entityType].description
               }
             />
-          </Box>
+          )}
           <Box sx={sx.dashboardBox}>
             <Heading as="h3" sx={sx.dashboardTitle}>
               {dashTitle}
