@@ -38,47 +38,20 @@ export const EntityDetailsOverlay = ({
     };
   }, [entityType, selectedEntity]);
 
-  // Display Variables
-  const {
-    report_programName: reportProgramName,
-    report_planName: reportPlanName,
-  } = selectedEntity;
-  const eligibilityGroup = `${
-    selectedEntity["report_eligibilityGroup-otherText"] ||
-    selectedEntity.report_eligibilityGroup[0].value
-  }`;
-  const reportingPeriod = `${selectedEntity.report_reportingPeriodStartDate} to ${selectedEntity.report_reportingPeriodEndDate}`;
-
-  const programInfo = [
-    reportPlanName,
-    reportProgramName,
-    eligibilityGroup,
-    reportingPeriod,
-  ];
-
   return (
     <Box>
       <Button
         sx={sx.backButton}
         variant="none"
         onClick={closeEntityDetailsOverlay as MouseEventHandler}
-        aria-label="Return to MLR reporting"
+        aria-label="Return to all initiatives"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
-        Return to MLR Reporting
+        Return to all initiatives
       </Button>
       <ReportPageIntro
         text={overlayVerbiage.WP.intro}
-        accordion={accordionVerbiage.WP.detailIntro}
       />
-      <Box sx={sx.programInfo}>
-        <Text sx={sx.textHeading}>MLR report for:</Text>
-        <ul>
-          {programInfo.map((field, index) => (
-            <li key={index}>{field}</li>
-          ))}
-        </ul>
-      </Box>
       <Form
         id={form.id}
         formJson={form}

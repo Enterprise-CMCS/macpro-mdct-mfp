@@ -77,7 +77,7 @@ export const ModalOverlayReportPage = ({
     report_initiative: "Transitions and transition coordination services",
     isOtherEntity: true,
   };
-  reportFieldDataEntities = [tempEntity];
+  reportFieldDataEntities = [tempEntity, tempEntity];
   //////////////////////
 
   const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
@@ -125,18 +125,6 @@ export const ModalOverlayReportPage = ({
     setCurrentEntity(entity);
     setIsEntityDetailsOpen(true);
     setSidebarHidden(true);
-  };
-
-  // report drawer disclosure and methods
-  const {
-    isOpen: drawerIsOpen,
-    onOpen: drawerOnOpenHandler,
-    onClose: drawerOnCloseHandler,
-  } = useDisclosure();
-
-  const openDrawerDetails = (entity: EntityShape) => {
-    setSelectedEntity(entity);
-    drawerOnOpenHandler();
   };
 
   const closeEntityDetailsOverlay = () => {
@@ -246,10 +234,9 @@ export const ModalOverlayReportPage = ({
                     entity={entity}
                     verbiage={verbiage}
                     locked={isLocked}
-                    openDrawer={openDrawerDetails}
+                    openDrawer={openEntityDetailsOverlay}
                     openAddEditEntityModal={openAddEditEntityModal}
                     openDeleteEntityModal={openDeleteEntityModal}
-                    openEntityDetailsOverlay={openEntityDetailsOverlay}
                   />
                 ))}
               </Table>

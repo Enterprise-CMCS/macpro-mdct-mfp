@@ -19,14 +19,14 @@ export const EntityRow = ({
 }: Props) => {
   const { name, report_initiative, isOtherEntity } = entity;
   const { report } = useStore();
-  const { userIsEndUser } = useStore().user ?? {};
+  //const { userIsEndUser } = useStore().user ?? {};  //turn back on when routes are avaliable
+  let userIsEndUser = true; //temporary, remove once routes are added
 
   const entityComplete = useMemo(() => {
     return report ? getEntityStatus(report, entity) : false;
   }, [report]);
 
   const programInfo = [name, report_initiative];
-  console.log(verbiage);
 
   return (
     <Tr sx={sx.content}>
