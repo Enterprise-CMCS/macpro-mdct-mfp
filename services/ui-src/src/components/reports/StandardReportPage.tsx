@@ -14,8 +14,8 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
   const navigate = useNavigate();
   const report = useStore().report;
   const { nextRoute } = useFindRoute(
-    report!.formTemplate.flatRoutes!,
-    report!.formTemplate.basePath
+    report?.formTemplate.flatRoutes!,
+    report?.formTemplate.basePath
   );
 
   const onError = () => {
