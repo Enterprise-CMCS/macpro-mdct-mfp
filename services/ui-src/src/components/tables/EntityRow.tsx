@@ -1,6 +1,7 @@
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
 import { EntityStatusIcon, ReportContext } from "components";
+import { getEntityStatus } from "./getEntityStatus";
 // types
 import { AnyObject, EntityShape } from "types";
 // utils
@@ -8,7 +9,6 @@ import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import { useMemo, useState } from "react";
-import { getEntityStatus } from "./getEntityStatus";
 
 export const EntityRow = ({
   entity,
@@ -68,7 +68,7 @@ export const EntityRow = ({
               sx={sx.deleteButton}
               data-testid="delete-entity"
               onClick={() => openDeleteEntityModal(entity)}
-              // disabled={!userIsEndUser}
+              disabled={!userIsEndUser}
             >
               <Image src={deleteIcon} alt="delete icon" boxSize="3xl" />
             </Button>

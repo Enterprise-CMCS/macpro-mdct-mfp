@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 // components
-import { Box, Button, Heading, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
 import {
   AddEditEntityModal,
   Alert,
@@ -29,11 +29,13 @@ import {
   // filterFormData,
   // getEntriesToClear,
   // setClearedEntriesToDefaultValue,
-  useBreakpoint,
+  useBreakpoint, useStore,
   // useUser,
 } from "utils";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
+// assets
+import addIcon from "assets/icons/icon_add_white.png";
 
 interface AlertVerbiage {
   [key: string]: { title: string; description: string };
@@ -49,23 +51,24 @@ export const ModalOverlayReportPage = ({
 
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
-  const { fetchReport, updateReport } = useContext(ReportContext);
+  const { report } = useStore();
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
   const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
     undefined
   );
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const { userIsAdmin, userIsReadOnly, userIsEndUser, full_name, state } =
+  useStore().user ?? {};
+  
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-
-  let report = fetchReport();
 
   // Determine whether form is locked or unlocked based on user and route
   const isLocked = report?.locked;
 
   // Display Variables
-  let reportFieldDataEntities = []; //fetchReport?.fieldData[entityType] || [];
+  let reportFieldDataEntities = report?.fieldData[entityType] || [];
   
   ///TEMPORARY ENTITY//
   let tempEntity: EntityShape = {
@@ -144,8 +147,8 @@ export const ModalOverlayReportPage = ({
 
   // Form submit methods
   const onSubmit = async (enteredData: AnyObject) => {
-    // if (userIsEndUser) {
-    //   setSubmitting(true);
+    if (userIsEndUser) {
+      setSubmitting(true);
     //   const reportKeys = {
     //     reportType: report?.reportType,
     //     state: state,
@@ -189,10 +192,10 @@ export const ModalOverlayReportPage = ({
     //     };
     //     await updateReport(reportKeys, dataToWrite);
     //   }
-    //   setSubmitting(false);
-    // }
-    // closeEntityDetailsOverlay();
-    // setSidebarHidden(false);
+      setSubmitting(false);
+    }
+    closeEntityDetailsOverlay();
+    setSidebarHidden(false);
   };
 
   return (
@@ -255,6 +258,9 @@ export const ModalOverlayReportPage = ({
               sx={sx.addEntityButton}
               disabled={isLocked}
               onClick={() => openAddEditEntityModal()}
+              rightIcon={
+                <Image src={addIcon} alt="Previous" sx={sx.addIcon} />
+              }
             >
               {verbiage.addEntityButtonText}
             </Button>
@@ -346,5 +352,8 @@ const sx = {
       wordBreak: "break-word",
       whiteSpace: "break-spaces",
     },
+  },
+  addIcon: {
+    width: "1rem",
   },
 };
