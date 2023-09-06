@@ -1,19 +1,17 @@
 import { useContext, useState } from "react";
 // components
 import { Modal, ReportContext } from "components";
-import { Text, Button } from "@chakra-ui/react";
+import { Text, Button, Image } from "@chakra-ui/react";
 // form
 import wpFormJson from "forms/addEditWpReport/addEditWpReport.json";
 import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 // utils
 import { AnyObject, FormJson, ReportStatus } from "types";
 import { States } from "../../constants";
-import {
-  calculateDueDate,
-  convertDateEtToUtc,
-  convertDateUtcToEt,
-  useStore,
-} from "utils";
+import { useStore } from "utils";
+// assets
+import muteCopyIcon from "assets/icons/icon_copy_white.png";
+import activeCopyIcon from "assets/icons/icon_copy_blue.png";
 
 export const AddEditReportModal = ({
   activeState,
@@ -32,31 +30,17 @@ export const AddEditReportModal = ({
   const modalFormJson = modalFormJsonMap[reportType]!;
   const form: FormJson = modalFormJson;
 
+  const previousWPReport = false;
+
   // WP report payload
-  const prepareWpPayload = (formData: any) => {
-    const programName = formData["fields"][0]["programName"];
-
-    const dueDate = calculateDueDate(formData["reportingPeriodEndDate"]);
-    const combinedData = formData["combinedData"] || false;
-    const reportingPeriodStartDate = convertDateEtToUtc(
-      formData["reportingPeriodStartDate"]
-    );
-    const reportingPeriodEndDate = convertDateEtToUtc(
-      formData["reportingPeriodEndDate"]
-    );
-
+  const prepareWpPayload = () => {
+    const programName = "programName";
     return {
       metadata: {
         programName,
-        reportingPeriodStartDate,
-        reportingPeriodEndDate,
-        dueDate,
-        combinedData,
         lastAlteredBy: full_name,
       },
       fieldData: {
-        reportingPeriodStartDate: convertDateUtcToEt(reportingPeriodStartDate),
-        reportingPeriodEndDate: convertDateUtcToEt(reportingPeriodEndDate),
         programName,
       },
     };
@@ -86,9 +70,7 @@ export const AddEditReportModal = ({
     submitButton?.setAttribute("disabled", "true");
 
     const dataToWrite =
-      reportType === "WP"
-        ? prepareWpPayload(formData)
-        : prepareSarPayload(formData);
+      reportType === "WP" ? prepareWpPayload() : prepareSarPayload(formData);
 
     await createReport(reportType, activeState, {
       ...dataToWrite,
@@ -140,6 +122,12 @@ export const AddEditReportModal = ({
       </Text>
       <Button sx={sx.stayActive} type="submit">
         Copy from previous
+        <Image
+          sx={sx.muteCopyIcon}
+          src={previousWPReport ? activeCopyIcon : muteCopyIcon}
+          alt="Copy Icon"
+          className="copyIcon"
+        />
       </Button>
       <Button
         sx={sx.close}
@@ -171,6 +159,10 @@ const sx = {
     maxWidth: "30rem",
     marginX: "4rem",
     padding: "0",
+  },
+  muteCopyIcon: {
+    width: "20px",
+    marginLeft: "10px",
   },
   modalHeader: {
     padding: "2rem 2rem 0 2rem",
