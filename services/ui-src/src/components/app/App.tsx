@@ -18,6 +18,7 @@ import {
 // utils
 import {
   fireTealiumPageView,
+  isApparentReportPage,
   makeMediaQueryClasses,
   UserContext,
   useStore,
@@ -33,7 +34,12 @@ export const App = () => {
 
   // fire tealium page view on route change
   useEffect(() => {
-    fireTealiumPageView(user, window.location.href, pathname);
+    fireTealiumPageView(
+      user,
+      window.location.href,
+      pathname,
+      isApparentReportPage(pathname)
+    );
   }, [key]);
 
   const authenticatedRoutes = (
