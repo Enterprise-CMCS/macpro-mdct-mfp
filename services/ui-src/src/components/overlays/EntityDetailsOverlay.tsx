@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, useContext, useEffect } from "react";
 // components
-import { Box, Button, Flex, Image, Spinner, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 import { Form, ReportPageIntro } from "components";
 // types
 import { EntityShape, EntityType, FormJson } from "types";
@@ -9,7 +9,6 @@ import { EntityShape, EntityType, FormJson } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // verbiage
-import accordionVerbiage from "../../verbiage/pages/accordion";
 import overlayVerbiage from "../../verbiage/pages/overlays";
 import { EntityContext } from "components/reports/EntityProvider";
 

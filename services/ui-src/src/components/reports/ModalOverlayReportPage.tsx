@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 // components
 import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
 import {
@@ -8,7 +8,6 @@ import {
   EntityDetailsOverlay,
   EntityProvider,
   EntityRow,
-  ReportContext,
   ReportPageFooter,
   ReportPageIntro,
   Table,
@@ -19,9 +18,7 @@ import {
   AnyObject,
   EntityShape,
   EntityType,
-  isFieldElement,
   ModalOverlayReportPageShape,
-  ReportStatus,
 } from "types";
 // utils
 import {
@@ -58,12 +55,7 @@ export const ModalOverlayReportPage = ({
     undefined
   );
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const { userIsAdmin, userIsReadOnly, userIsEndUser, full_name, state } =
-    useStore().user ?? {};
-
-  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
-    undefined
-  );
+  const { userIsEndUser } = useStore().user ?? {};
 
   // Determine whether form is locked or unlocked based on user and route
   const isLocked = report?.locked;

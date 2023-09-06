@@ -1,5 +1,5 @@
 // components
-import { Flex, ModalOverlay } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import {
   DrawerReportPage,
   ModalDrawerReportPage,
@@ -18,7 +18,6 @@ import {
 import {
   mockDrawerReportPageJson,
   mockModalDrawerReportPageJson,
-  mockModalOverlayReportPageJson,
   mockStandardReportPageJson,
 } from "utils/testing/mockForm";
 import { ModalOverlayReportPage } from "./ModalOverlayReportPage";
