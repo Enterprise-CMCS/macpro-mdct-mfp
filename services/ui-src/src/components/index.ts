@@ -66,7 +66,7 @@ export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { ReviewSubmitPage } from "./pages/ReviewSubmit/ReviewSubmitPage";
 // overlays
-export {EntityDetailsOverlay} from "./overlays/EntityDetailsOverlay";
+export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
 // reports
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";

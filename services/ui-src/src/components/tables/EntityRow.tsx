@@ -41,7 +41,8 @@ export const EntityRow = ({
         </ul>
         {!entityComplete && (
           <Text sx={sx.errorText}>
-            Select "{verbiage.enterEntityDetailsButtonText}” to complete this report.
+            Select "{verbiage.enterEntityDetailsButtonText}” to complete this
+            report.
           </Text>
         )}
       </Td>

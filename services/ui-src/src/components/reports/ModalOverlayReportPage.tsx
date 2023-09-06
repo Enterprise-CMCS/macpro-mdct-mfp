@@ -29,7 +29,8 @@ import {
   // filterFormData,
   // getEntriesToClear,
   // setClearedEntriesToDefaultValue,
-  useBreakpoint, useStore,
+  useBreakpoint,
+  useStore,
   // useUser,
 } from "utils";
 // verbiage
@@ -58,8 +59,8 @@ export const ModalOverlayReportPage = ({
   );
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { userIsAdmin, userIsReadOnly, userIsEndUser, full_name, state } =
-  useStore().user ?? {};
-  
+    useStore().user ?? {};
+
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
@@ -69,10 +70,10 @@ export const ModalOverlayReportPage = ({
 
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
-  
+
   ///TEMPORARY ENTITY//
   let tempEntity: EntityShape = {
-    name: 'Your initiative one',
+    name: "Your initiative one",
     id: "test-id",
     report_initiative: "Transitions and transition coordination services",
     isOtherEntity: true,
@@ -137,49 +138,49 @@ export const ModalOverlayReportPage = ({
   const onSubmit = async (enteredData: AnyObject) => {
     if (userIsEndUser) {
       setSubmitting(true);
-    //   const reportKeys = {
-    //     reportType: report?.reportType,
-    //     state: state,
-    //     id: report?.id,
-    //   };
-    //   const currentEntities = [...(report?.fieldData[entityType] || [])];
-    //   const selectedEntityIndex = report?.fieldData[entityType].findIndex(
-    //     (entity: EntityShape) => entity.id === currentEntity?.id
-    //   );
-    //   const filteredFormData = filterFormData(
-    //     enteredData,
-    //     overlayForm!.fields.filter(isFieldElement)
-    //   );
-    //   const entriesToClear = getEntriesToClear(
-    //     enteredData,
-    //     overlayForm!.fields.filter(isFieldElement)
-    //   );
-    //   const newEntity = {
-    //     ...currentEntity,
-    //     ...filteredFormData,
-    //   };
-    //   let newEntities = currentEntities;
-    //   newEntities[selectedEntityIndex] = newEntity;
-    //   newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
-    //     newEntities[selectedEntityIndex],
-    //     entriesToClear
-    //   );
-    //   const shouldSave = entityWasUpdated(
-    //     reportFieldDataEntities[selectedEntityIndex],
-    //     newEntity
-    //   );
-    //   if (shouldSave) {
-    //     const dataToWrite = {
-    //       metadata: {
-    //         status: ReportStatus.IN_PROGRESS,
-    //         lastAlteredBy: full_name,
-    //       },
-    //       fieldData: {
-    //         [entityType]: newEntities,
-    //       },
-    //     };
-    //     await updateReport(reportKeys, dataToWrite);
-    //   }
+      //   const reportKeys = {
+      //     reportType: report?.reportType,
+      //     state: state,
+      //     id: report?.id,
+      //   };
+      //   const currentEntities = [...(report?.fieldData[entityType] || [])];
+      //   const selectedEntityIndex = report?.fieldData[entityType].findIndex(
+      //     (entity: EntityShape) => entity.id === currentEntity?.id
+      //   );
+      //   const filteredFormData = filterFormData(
+      //     enteredData,
+      //     overlayForm!.fields.filter(isFieldElement)
+      //   );
+      //   const entriesToClear = getEntriesToClear(
+      //     enteredData,
+      //     overlayForm!.fields.filter(isFieldElement)
+      //   );
+      //   const newEntity = {
+      //     ...currentEntity,
+      //     ...filteredFormData,
+      //   };
+      //   let newEntities = currentEntities;
+      //   newEntities[selectedEntityIndex] = newEntity;
+      //   newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
+      //     newEntities[selectedEntityIndex],
+      //     entriesToClear
+      //   );
+      //   const shouldSave = entityWasUpdated(
+      //     reportFieldDataEntities[selectedEntityIndex],
+      //     newEntity
+      //   );
+      //   if (shouldSave) {
+      //     const dataToWrite = {
+      //       metadata: {
+      //         status: ReportStatus.IN_PROGRESS,
+      //         lastAlteredBy: full_name,
+      //       },
+      //       fieldData: {
+      //         [entityType]: newEntities,
+      //       },
+      //     };
+      //     await updateReport(reportKeys, dataToWrite);
+      //   }
       setSubmitting(false);
     }
     closeEntityDetailsOverlay();
@@ -245,9 +246,7 @@ export const ModalOverlayReportPage = ({
               sx={sx.addEntityButton}
               disabled={isLocked}
               onClick={() => openAddEditEntityModal()}
-              rightIcon={
-                <Image src={addIcon} alt="Previous" sx={sx.addIcon} />
-              }
+              rightIcon={<Image src={addIcon} alt="Previous" sx={sx.addIcon} />}
             >
               {verbiage.addEntityButtonText}
             </Button>

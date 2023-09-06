@@ -49,9 +49,7 @@ export const EntityDetailsOverlay = ({
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
         Return to all initiatives
       </Button>
-      <ReportPageIntro
-        text={overlayVerbiage.WP.intro}
-      />
+      <ReportPageIntro text={overlayVerbiage.WP.intro} />
       <Form
         id={form.id}
         formJson={form}

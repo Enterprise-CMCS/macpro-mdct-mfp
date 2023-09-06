@@ -37,7 +37,9 @@ export const Alert = ({
           {title && <AlertTitle>{title}</AlertTitle>}
           {description && (
             <AlertDescription>
-              <Text sx={sx.descriptionText}>{parseCustomHtml(description)}</Text>
+              <Text sx={sx.descriptionText}>
+                {parseCustomHtml(description)}
+              </Text>
               {link && (
                 <Text sx={sx.linkText}>
                   <Link href={link} isExternal>

@@ -28,10 +28,9 @@ import { mockStandardSTSReportPageJson } from "utils/testing/stsMockForm";
 export const ReportPageWrapper = () => {
   const location = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
-  
+
   // temporary for mocking correct json per page
   const getRoutePath = (path: string) => {
-    console.log(path);
     if (path === "/standard") {
       return mockStandardReportPageJson;
     } else if (
@@ -58,7 +57,10 @@ export const ReportPageWrapper = () => {
         );
       case PageTypes.MODAL_OVERLAY:
         return (
-          <ModalOverlayReportPage route={mockStandardSTSReportPageJson} setSidebarHidden={setSidebarHidden}/>
+          <ModalOverlayReportPage
+            route={mockStandardSTSReportPageJson}
+            setSidebarHidden={setSidebarHidden}
+          />
         );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
