@@ -15,7 +15,6 @@ import {
 // types
 import {
   AlertTypes,
-  AnyObject,
   EntityShape,
   EntityType,
   ModalOverlayReportPageShape,
