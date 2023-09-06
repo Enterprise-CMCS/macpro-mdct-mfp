@@ -56,6 +56,7 @@ export const mockStandardSTSReportPageJson = {
       {
         id: "initiative_wpTopic",
         type: "radio",
+        validation: "radio",
         props: {
           label: "Work Plan topic:",
           hint: "Note: Initiative topics with * are required and must be selected at least once across all initiatives.",
