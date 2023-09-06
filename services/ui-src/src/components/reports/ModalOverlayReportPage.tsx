@@ -22,13 +22,8 @@ import {
 } from "types";
 // utils
 import {
-  // entityWasUpdated,
-  // filterFormData,
-  // getEntriesToClear,
-  // setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
-  // useUser,
 } from "utils";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
@@ -127,52 +122,10 @@ export const ModalOverlayReportPage = ({
   };
 
   // Form submit methods
-  const onSubmit = async (enteredData: AnyObject) => {
+  const onSubmit = async () => {
     if (userIsEndUser) {
       setSubmitting(true);
-      //   const reportKeys = {
-      //     reportType: report?.reportType,
-      //     state: state,
-      //     id: report?.id,
-      //   };
-      //   const currentEntities = [...(report?.fieldData[entityType] || [])];
-      //   const selectedEntityIndex = report?.fieldData[entityType].findIndex(
-      //     (entity: EntityShape) => entity.id === currentEntity?.id
-      //   );
-      //   const filteredFormData = filterFormData(
-      //     enteredData,
-      //     overlayForm!.fields.filter(isFieldElement)
-      //   );
-      //   const entriesToClear = getEntriesToClear(
-      //     enteredData,
-      //     overlayForm!.fields.filter(isFieldElement)
-      //   );
-      //   const newEntity = {
-      //     ...currentEntity,
-      //     ...filteredFormData,
-      //   };
-      //   let newEntities = currentEntities;
-      //   newEntities[selectedEntityIndex] = newEntity;
-      //   newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
-      //     newEntities[selectedEntityIndex],
-      //     entriesToClear
-      //   );
-      //   const shouldSave = entityWasUpdated(
-      //     reportFieldDataEntities[selectedEntityIndex],
-      //     newEntity
-      //   );
-      //   if (shouldSave) {
-      //     const dataToWrite = {
-      //       metadata: {
-      //         status: ReportStatus.IN_PROGRESS,
-      //         lastAlteredBy: full_name,
-      //       },
-      //       fieldData: {
-      //         [entityType]: newEntities,
-      //       },
-      //     };
-      //     await updateReport(reportKeys, dataToWrite);
-      //   }
+      //submit code chunk here
       setSubmitting(false);
     }
     closeEntityDetailsOverlay();
