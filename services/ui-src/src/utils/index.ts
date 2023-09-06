@@ -12,6 +12,7 @@ export * from "./state/useStore";
 export * from "./forms/forms";
 // reports
 export * from "./reports/reports";
+export * from "./reports/routing";
 // tracking
 export * from "./tracking/tealium";
 // validation
