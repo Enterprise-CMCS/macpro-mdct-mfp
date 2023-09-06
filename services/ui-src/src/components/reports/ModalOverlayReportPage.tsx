@@ -21,10 +21,7 @@ import {
   ModalOverlayReportPageShape,
 } from "types";
 // utils
-import {
-  useBreakpoint,
-  useStore,
-} from "utils";
+import { useBreakpoint, useStore } from "utils";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
