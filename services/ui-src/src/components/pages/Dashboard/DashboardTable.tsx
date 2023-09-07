@@ -72,7 +72,7 @@ export const DashboardTable = ({
           >
             {entering && reportId == report.id ? (
               <Spinner size="md" />
-            ) : isStateLevelUser && !report?.locked ? (
+            ) : isStateLevelUser ? (
               "Edit"
             ) : (
               "View"
@@ -177,7 +177,7 @@ interface EditReportProps {
 const DateFields = ({ report, reportType }: DateFieldProps) => {
   return (
     <>
-      {reportType === "WP" && <Td>{convertDateUtcToEt(report.dueDate)}</Td>}
+      {reportType === "WP" && <Td>{convertDateUtcToEt(report.createdAt)}</Td>}
       <Td>{convertDateUtcToEt(report.lastAltered)}</Td>
     </>
   );
