@@ -10,8 +10,7 @@ import { AnyObject, FormJson, ReportStatus } from "types";
 import { States } from "../../constants";
 import { useStore } from "utils";
 // assets
-import muteCopyIcon from "assets/icons/icon_copy_white.png";
-import activeCopyIcon from "assets/icons/icon_copy_blue.png";
+import muteCopyIcon from "assets/icons/icon_copy_gray.png";
 
 export const AddEditReportModal = ({
   activeState,
@@ -29,8 +28,6 @@ export const AddEditReportModal = ({
 
   const modalFormJson = modalFormJsonMap[reportType]!;
   const form: FormJson = modalFormJson;
-
-  const previousWPReport = false;
 
   // WP report payload
   const prepareWpPayload = () => {
@@ -120,11 +117,11 @@ export const AddEditReportModal = ({
         Start new only when you want to completely reset your MFP program
         information and start from a blank form.
       </Text>
-      <Button sx={sx.stayActive} type="submit">
+      <Button sx={sx.copyBtn} disabled={true} type="submit">
         Copy from previous
         <Image
           sx={sx.muteCopyIcon}
-          src={previousWPReport ? activeCopyIcon : muteCopyIcon}
+          src={muteCopyIcon}
           alt="Copy Icon"
           className="copyIcon"
         />
@@ -174,7 +171,7 @@ const sx = {
     justifyContent: "flex-start",
     padding: "0 2rem 2rem 2rem",
   },
-  stayActive: {
+  copyBtn: {
     justifyContent: "center",
     marginTop: "1rem",
     marginRight: "1rem",
