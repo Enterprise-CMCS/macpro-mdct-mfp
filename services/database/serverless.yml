@@ -151,7 +151,7 @@ resources:
     SarFormBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: !Sub ${self:service}-${self:custom.stage}-sarFormBucket
+        BucketName: !Sub ${self:custom.sarFormBucket}
         BucketEncryption:
           ServerSideEncryptionConfiguration:
             - ServerSideEncryptionByDefault:
@@ -178,7 +178,7 @@ resources:
     WpFormBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: !Sub ${self:service}-${self:custom.stage}-wpFormBucket
+        BucketName: !Sub ${self:custom.wpFormBucket}
         BucketEncryption:
           ServerSideEncryptionConfiguration:
             - ServerSideEncryptionByDefault:
