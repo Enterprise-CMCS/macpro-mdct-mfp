@@ -34,6 +34,7 @@ export const ReportContext = createContext<ReportContextShape>({
   setReportSelection: Function,
   // selected reports by state
   clearReportsByState: Function,
+  releaseReport: Function,
   isReportPage: false as boolean,
   errorMessage: undefined as string | undefined,
   lastSavedTime: undefined as string | undefined,
