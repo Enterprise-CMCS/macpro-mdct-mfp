@@ -58,7 +58,7 @@ export const ReportPageWrapper = () => {
     <PageTemplate type="report">
       <Flex sx={sx.pageContainer}>
         <>
-          <Sidebar isHidden={false} />
+          <Sidebar isHidden={sidebarHidden} />
           <Flex id="report-content" sx={sx.reportContainer}>
             {reportTemplate && renderPageSection(reportTemplate)}
           </Flex>
