@@ -754,6 +754,10 @@
                 }
               }
             ]
+          },
+          "overlayForm": {
+            "id": "abc",
+            "fields": []
           }
         }
       ]

@@ -793,6 +793,10 @@ export const mockFullReportJSON: ReportJson = {
               },
             ],
           },
+          overlayForm:{
+            id:"abc",
+            fields: []
+          }
         },
       ],
     },
