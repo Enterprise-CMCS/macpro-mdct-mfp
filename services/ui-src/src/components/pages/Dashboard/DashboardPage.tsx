@@ -23,7 +23,7 @@ import {
   ReportContext,
 } from "components";
 // utils
-import { AnyObject, ReportMetadataShape, ReportShape } from "types";
+import { AnyObject, ReportKeys, ReportMetadataShape, ReportShape } from "types";
 import {
   convertDateUtcToEt,
   parseCustomHtml,
@@ -36,10 +36,16 @@ import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
+import { reportByState } from "utils/testing/mockFullReportJSON";
 
 export const DashboardPage = ({ reportType }: Props) => {
-  const { errorMessage, clearReportSelection, fetchReportsByState } =
-    useContext(ReportContext);
+  const {
+    errorMessage,
+    clearReportSelection,
+    setReportSelection,
+    fetchReportsByState,
+    fetchReport
+  } = useContext(ReportContext);
   const navigate = useNavigate();
   const {
     state: userState,
@@ -62,7 +68,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   };
 
   //mocking reportByState
-  const reportsByState: any = [];
+  const reportsByState: any = [reportByState];
 
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
   const { intro, body } = dashboardVerbiage;
@@ -93,21 +99,18 @@ export const DashboardPage = ({ reportType }: Props) => {
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     setReportId(report.id);
     setEntering(true);
-
-    // TODO: once API handling is in, we can remove these comments
-
-    // const reportKeys: ReportKeys = {
-    //   reportType: report.reportType,
-    //   state: report.state,
-    //   id: report.id,
-    // };
-    // const selectedReport: ReportShape = await fetchReportsByState(reportKeys);
-    // // set active report to selected report
-    // setReportSelection(selectedReport);
-    // setReportId(undefined);
-    // setEntering(false);
-    // const firstReportPagePath = selectedReport.formTemplate.flatRoutes![0].path;
-    // navigate(firstReportPagePath);
+    const reportKeys: ReportKeys = {
+      reportType: report.reportType,
+      state: report.state,
+      id: report.id,
+    };
+    const selectedReport: ReportShape = await fetchReport(reportKeys);
+    // set active report to selected report
+    setReportSelection(selectedReport);
+    setReportId(undefined);
+    setEntering(false);
+    const firstReportPagePath = selectedReport.formTemplate.flatRoutes![0].path;
+    navigate(firstReportPagePath);
   };
 
   const openAddEditReportModal = (report?: ReportShape) => {

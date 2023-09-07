@@ -3,6 +3,8 @@ import { AnyObject, ReportKeys } from "types";
 import { getRequestHeaders } from "./getRequestHeaders";
 import { updateTimeout } from "utils";
 
+import { reportShape } from "utils/testing/mockFullReportJSON"; //mock data, remove
+
 async function archiveReport(reportKeys: ReportKeys) {
   const requestHeaders = await getRequestHeaders();
   const request = {
@@ -35,6 +37,8 @@ async function getReportsByState(reportType: string, state: string) {
 }
 
 async function getReport(reportKeys: ReportKeys) {
+  return reportShape;   //mock return
+
   const requestHeaders = await getRequestHeaders();
   const request = {
     headers: { ...requestHeaders },

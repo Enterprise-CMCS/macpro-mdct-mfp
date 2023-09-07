@@ -73,6 +73,7 @@ export { ReportPageWrapper } from "./reports/ReportPageWrapper";
 export { ReportContext, ReportProvider } from "./reports/ReportProvider";
 export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
+export { ModalOverlayReportPage } from "./reports/ModalOverlayReportPage";
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables

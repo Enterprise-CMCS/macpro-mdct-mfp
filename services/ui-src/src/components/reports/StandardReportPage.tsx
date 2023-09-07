@@ -18,13 +18,15 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
     report?.formTemplate.basePath
   );
 
+  console.log(route);
+
   const onError = () => {
     navigate(nextRoute);
   };
 
   return (
     <Box>
-      {route.verbiage.intro && <ReportPageIntro text={route.verbiage.intro} />}
+      {route.verbiage?.intro && <ReportPageIntro text={route.verbiage.intro} />}
       <Form
         id={route.form.id}
         formJson={route.form}

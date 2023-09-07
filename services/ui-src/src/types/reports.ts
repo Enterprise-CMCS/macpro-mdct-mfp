@@ -18,6 +18,7 @@ export interface ReportPageVerbiage {
     section: string;
     subsection?: string;
     info?: string | CustomHtmlElement[];
+    spreadsheet?: string;   // mock test
     exportSectionHeader?: string;
   };
 }
@@ -70,7 +71,11 @@ export interface ReportJson {
 
 export type ReportRoute = ReportRouteWithForm | ReportRouteWithoutForm;
 
-export type ReportRouteWithForm = StandardReportPageShape;
+export type ReportRouteWithForm =
+  | StandardReportPageShape
+  | DrawerReportPageShape
+  | ModalDrawerReportPageShape
+  | ModalOverlayReportPageShape;
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
   children?: ReportRoute[];
@@ -89,6 +94,15 @@ export interface DrawerReportPageVerbiage extends ReportPageVerbiage {
   missingEntityMessage?: CustomHtmlElement[];
 }
 
+export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
+  entityType: string;
+  verbiage: ModalOverlayReportPageVerbiage;
+  modalForm: FormJson;
+  overlayForm?: FormJson;
+  drawerForm?: never;
+  form?: never;
+}
+
 export interface ModalDrawerReportPageVerbiage
   extends DrawerReportPageVerbiage {
   addEntityButtonText: string;
@@ -103,6 +117,15 @@ export interface ModalDrawerReportPageVerbiage
   enterEntityDetailsButtonText: string;
   reviewPdfHint: string;
   drawerTitle: string;
+}
+
+export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
+  addEntityButtonText: string;
+  dashboardTitle: string;
+  countEntitiesInTitle: boolean;
+  tableHeader: string;
+  addEditModalHint: string;
+  emptyDashboardText: string;
 }
 
 /**
