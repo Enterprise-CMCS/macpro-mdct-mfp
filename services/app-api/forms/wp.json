@@ -620,89 +620,138 @@
           }
         },
         {
-          "name": "State & Territory Specific Initiatives Instructions",
+          "name": "state-and-territory-specific-initiatives",
           "path": "/wp/state-and-territory-specific-initiatives/initiatives",
-          "pageType": "standard",
+          "pageType": "modalOverlay",
+          "entityType": "initiatives",
           "verbiage": {
             "intro": {
-              "section": "State & Territory Specific Initiatives: I. Define Initiative",
-              "subsection": "Person Centered Planning",
+              "section": "",
+              "subsection": "State and Territory-Specific Initiatives",
               "info": [
                 {
                   "type": "html",
-                  "content": "Provide initiative description, including target populations and timeframe."
+                  "content": "See "
+                },
+                {
+                  "type": "internalLink",
+                  "content": "previous page",
+                  "props": {
+                    "to": "/wp/state-and-territory-specific-initiatives/instructions"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": " for detailed instructions."
                 }
               ],
-              "editEntityButtonText": "Edit",
-              "enterReportText": "Enter Details"
-            }
+              "exportSectionHeader": "exportSectionHeader"
+            },
+            "addEntityButtonText": "Add Initiative",
+            "editEntityButtonText": "Edit name",
+            "addEditModalAddTitle": "Add initiative",
+            "addEditModalEditTitle": "Edit initiative",
+            "deleteModalTitle": "Are you sure you want to delete this initiative?",
+            "deleteModalConfirmButtonText": "Yes, delete initiative",
+            "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
+            "enterEntityDetailsButtonText": "Edit",
+            "dashboardTitle": "Initative total count",
+            "countEntitiesInTitle": true,
+            "tableHeader": "Initaitve name <br/> Work Plan topic",
+            "addEditModalHint": "Provide the name of one initiative. You will be then be asked to complete details for this initiative including description, evaluation plan and funding sources.",
+            "emptyDashboardText": "Empty"
           },
-          "form": {
-            "id": "test-mock-form",
+          "modalForm": {
+            "id": "add_initiative",
             "fields": [
               {
-                "id": "target_population",
-                "type": "checkbox",
-                "validation": "checkbox",
+                "id": "initiative_name",
+                "type": "textarea",
+                "validation": "text",
                 "props": {
-                  "label": "Target Population(s):",
-                  "hint": "Select all that apply. Population you've added as 'Other' in the Transition Benchmarks section will appear here.",
+                  "label": "Initiative name"
+                }
+              },
+              {
+                "id": "initiative_wpTopic",
+                "type": "radio",
+                "validation": "radio",
+                "props": {
+                  "label": "Work Plan topic:",
+                  "hint": "Note: Initiative topics with * are required and must be selected at least once across all initiatives.",
                   "choices": [
                     {
-                      "id": "2iuXO7C6nk6cuP9JXbdd2w",
-                      "label": "Older adults"
+                      "id": "VjQ0OFqior9Dxu5RRNiZ5u",
+                      "label": "Transitions and transition coordination services*"
                     },
                     {
-                      "id": "vmlIjQAe9kyz4FbtxBZINA",
-                      "label": "Individuals with physical disabilities (PD)"
+                      "id": "wbUsMMqVP7q1n10szK5h5S",
+                      "label": "Housing-related supports*"
                     },
                     {
-                      "id": "Vg8erh64Tk2nKd5olVwM9w",
-                      "label": "Individuals with intellectual and developmental disabilities(MH/SUD)"
+                      "id": "SdaFlF3DJyzKcHCCu3Zylm",
+                      "label": "Quality measurement and improvement*"
                     },
                     {
-                      "id": "azz5rhd8V0GK27fIXaYSmw",
-                      "label": "Other: {HIV/AIDS}"
+                      "id": "8CpFrev6sMfRijIhafMj7V",
+                      "label": "Self-direction(*if applicable)"
                     },
                     {
-                      "id": "OLmKdPAEI0WnbSV1sVccVw",
-                      "label": "Other third-party vendor"
+                      "id": "tVURShWTPfVKGU94QmIwDn",
+                      "label": "Tribal Initiative (*if applicable)"
                     },
-
                     {
-                      "id": "Gxk89QOgQkmMTaNHH9WznQ",
+                      "id": "1k3EnM5WrizX3hsa6Zn85G",
+                      "label": "Recruitment and enrollment"
+                    },
+                    {
+                      "id": "dtybJ8ZucoIn7a4LnMpWg2",
+                      "label": "Person-centered planning and services"
+                    },
+                    {
+                      "id": "rSTGMVEOaJ4OZ6amTQetaa",
+                      "label": "No Wrong Door systems"
+                    },
+                    {
+                      "id": "8In9QpCC7O3XBkDOyB36vy",
+                      "label": "Community transition support"
+                    },
+                    {
+                      "id": "GCBzQ9GDWMwILW0sBQ2dhN",
+                      "label": "Direct service workforce and caregivers"
+                    },
+                    {
+                      "id": "K8WifjAU3SymG751jAvv6j",
+                      "label": "Data-based decision-making"
+                    },
+                    {
+                      "id": "39oSwSqVoDpLGbD9HnfUhg",
+                      "label": "Financing approaches"
+                    },
+                    {
+                      "id": "I9A6C2SY0Dk3ezfvywqqwB",
+                      "label": "Stakeholder engagement"
+                    },
+                    {
+                      "id": "2qjBuLtpA5pDvUM1HSHMVq",
+                      "label": "Equity and SDOH"
+                    },
+                    {
+                      "id": "18Wb9b2zMIF13pZwWstdJF",
                       "label": "Other, specify",
                       "children": [
                         {
-                          "id": "state_encounterDataValidationEntity-otherText",
+                          "id": "initiative_wp_otherTopic",
                           "type": "textarea",
                           "validation": {
                             "type": "text",
                             "nested": true,
-                            "parentFieldName": "state_encounterDataValidationEntity"
+                            "parentFieldName": "initiative_wpTopic"
                           }
                         }
                       ]
                     }
                   ]
-                }
-              },
-              {
-                "id": "mock-date-field",
-                "type": "date",
-                "validation": "date",
-                "props": {
-                  "label": "Start Date",
-                  "hint": "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in the process."
-                }
-              },
-              {
-                "id": "mock-date-field",
-                "type": "date",
-                "validation": "date",
-                "props": {
-                  "label": "End Date",
-                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
                 }
               }
             ]

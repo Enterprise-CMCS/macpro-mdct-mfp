@@ -209,6 +209,47 @@ export const mockModalDrawerReportPageJson = {
   drawerForm: mockDrawerForm,
 };
 
+export const mockOptionalFormField = {
+  id: "mock-optional-text-field",
+  type: "text",
+  validation: "textOptional",
+  props: {
+    label: "mock optional field",
+    hint: "optional Details",
+    styleAsOptional: true,
+  },
+};
+
+export const mockModalOverlayForm = {
+  id: "mock-modal-overlay-form-id",
+  fields: [mockFormField, mockNumberField, mockOptionalFormField],
+};
+
+export const mockModalOverlayReportPageVerbiage = {
+  intro: mockVerbiageIntro,
+  dashboardTitle: "Mock dashboard title",
+  addEditModalHint: "Mock modal hint",
+  countEntitiesInTitle: true,
+  tableHeader: "Mock table header",
+  addEntityButtonText: "Mock add entity button text",
+  emptyDashboardText: "Mock empty dashboard text",
+  editEntityButtonText: "Mock edit entity button text",
+  deleteModalTitle: "Mock delete modal title",
+  deleteModalConfirmButtonText: "Mock delete modal confirm button text",
+  deleteModalWarning: "Mock delete modal warning",
+  enterReportText: "Mock enter report text",
+};
+
+export const mockModalOverlayReportPageJson = {
+  name: "mock-route-2c",
+  path: "/mock/mock-route-2c",
+  pageType: "modalOverlay",
+  entityType: "program",
+  verbiage: mockModalOverlayReportPageVerbiage,
+  modalForm: mockModalOverlayForm,
+  overlayForm: mockModalOverlayForm,
+};
+
 export const mockReviewSubmitPageJson = {
   name: "mock-route-3",
   path: "/mock/mock-review-and-submit",

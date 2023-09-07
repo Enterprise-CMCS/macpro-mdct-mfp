@@ -5,6 +5,7 @@ import { Modal } from "components";
 
 // types
 import { AnyObject, EntityShape } from "types";
+import { renderHtml } from "utils";
 
 export const DeleteEntityModal = ({
   selectedEntity,
@@ -29,7 +30,7 @@ export const DeleteEntityModal = ({
         closeButtonText: "Cancel",
       }}
     >
-      <Text>{verbiage.deleteModalWarning}</Text>
+      <Text>{renderHtml(verbiage.deleteModalWarning)}</Text>
     </Modal>
   );
 };
