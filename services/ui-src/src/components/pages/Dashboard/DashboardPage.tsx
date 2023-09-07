@@ -1,6 +1,7 @@
 /* eslint-disable multiline-comment-style */
 import { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+
 // components
 import {
   Box,
@@ -45,12 +46,13 @@ export const DashboardPage = ({ reportType }: Props) => {
     setReportSelection,
     archiveReport,
     releaseReport,
+    fetchReport,
   } = useContext(ReportContext);
   const { reportsByState } = useStore();
   const navigate = useNavigate();
   const {
     state: userState,
-    userIsEndUser,
+    userIsStateUser,
     userIsAdmin,
   } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
@@ -100,15 +102,12 @@ export const DashboardPage = ({ reportType }: Props) => {
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     setReportId(report.id);
     setEntering(true);
-
-    // TODO: once API handling is in, we can remove these comments
-
     const reportKeys: ReportKeys = {
       reportType: report.reportType,
       state: report.state,
       id: report.id,
     };
-    const selectedReport: ReportShape = await fetchReportsByState(reportKeys);
+    const selectedReport: ReportShape = await fetchReport(reportKeys);
     // set active report to selected report
     setReportSelection(selectedReport);
     setReportId(undefined);
@@ -195,7 +194,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         {reportType === "WP" && (
           <InstructionsAccordion
             verbiage={
-              userIsEndUser
+              userIsStateUser
                 ? accordion.WP.stateUserDashboard
                 : accordion.WP.adminDashboard
             }
@@ -217,7 +216,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
-              isStateLevelUser={userIsEndUser!}
+              isStateLevelUser={userIsStateUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />
@@ -234,7 +233,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
-              isStateLevelUser={userIsEndUser!}
+              isStateLevelUser={userIsStateUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />

@@ -72,7 +72,7 @@ export const DashboardTable = ({
           >
             {entering && reportId == report.id ? (
               <Spinner size="md" />
-            ) : isStateLevelUser && !report?.locked ? (
+            ) : isStateLevelUser ? (
               "Edit"
             ) : (
               "View"
