@@ -18,8 +18,6 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
     report?.formTemplate.basePath
   );
 
-  console.log(route);
-
   const onError = () => {
     navigate(nextRoute);
   };

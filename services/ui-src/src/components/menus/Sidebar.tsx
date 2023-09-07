@@ -13,7 +13,7 @@ import {
 import { SkipNav } from "components";
 
 // utils
-import { useBreakpoint } from "utils";
+import { useBreakpoint, useStore } from "utils";
 // assets
 import arrowDownIcon from "assets/icons/icon_arrow_down_gray.png";
 import arrowUpIcon from "assets/icons/icon_arrow_up_gray.png";
@@ -31,6 +31,8 @@ interface SidebarProps {
 export const Sidebar = ({ isHidden }: SidebarProps) => {
   const { isDesktop } = useBreakpoint();
   const [isOpen, toggleSidebar] = useState(isDesktop);
+  const { report } = useStore();
+  const reportJson = report?.formTemplate;
 
   return (
     <>
@@ -62,23 +64,12 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
           />
         </Box>
         <Box id="sidebar-title-box" sx={sx.topBox}>
-          <Heading sx={sx.title}>Report Name</Heading>
+          <Heading sx={sx.title}>{reportJson?.name}</Heading>
         </Box>
         <Box sx={sx.navSectionsBox} className="nav-sections-box">
-          <NavSection
-            key={"section name"}
-            section={{ name: "placeholder", path: "/standard" }}
-            level={1}
-          />
-          {/* Temporary Page Navigation */}
-          <NavSection
-            key={"tb-section"}
-            section={{
-              name: "Transition Benchmarks",
-              path: "/wp/transition-benchmarks",
-            }}
-            level={1}
-          />
+          {reportJson?.routes.map((section) => (
+            <NavSection key={section.name} section={section} level={1} />
+          ))}
         </Box>
       </Box>
     </>
