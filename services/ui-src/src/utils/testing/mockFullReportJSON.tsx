@@ -605,7 +605,7 @@ export const mockFullReportJSON: ReportJson = {
                     },
                   },
                 },
-              ]
+              ],
             },
           },
           form: {
@@ -793,10 +793,109 @@ export const mockFullReportJSON: ReportJson = {
               },
             ],
           },
-          overlayForm:{
-            id:"abc",
-            fields: []
-          }
+          overlayForm: {
+            id: "abc",
+            fields: [],
+          },
+        },
+        {
+          name: "State & Territory Specific Initiatives: I. Define initiative",
+          path: "/wp/state-and-territory-specific-initiatives/define-initiative",
+          pageType: "standard",
+          verbiage: {
+            intro: {
+              section:
+                "State and Territory-Specific Initiatives: I. Define initiative",
+              subsection: "{Person-centered Planning}",
+              info: [
+                {
+                  type: "html",
+                  content:
+                    "Provide initiative description, including target populations and timeframe.",
+                },
+              ],
+              exportSectionHeader: "exportSectionHeader",
+            },
+          },
+          form: {
+            id: "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+            fields: [
+              {
+                id: "2Ukwki4yJ8wNPqz7KnvgNoTATkO",
+                type: "textarea",
+                validation: "text",
+                props: {
+                  label: "Describe the initiative, including key activties:",
+                },
+              },
+              {
+                id: "target_population",
+                type: "checkbox",
+                validation: "checkbox",
+                props: {
+                  label: "Target Population(s):",
+                  hint: "Select all that apply. Population you've added as 'Other' in the Transition Benchmarks section will appear here.",
+                  choices: [
+                    {
+                      id: "2iuXO7C6nk6cuP9JXbdd2w",
+                      label: "Older adults",
+                    },
+                    {
+                      id: "vmlIjQAe9kyz4FbtxBZINA",
+                      label: "Individuals with physical disabilities (PD)",
+                    },
+                    {
+                      id: "Vg8erh64Tk2nKd5olVwM9w",
+                      label:
+                        "Individuals with intellectual and developmental disabilities(MH/SUD)",
+                    },
+                    {
+                      id: "azz5rhd8V0GK27fIXaYSmw",
+                      label: "Other: {HIV/AIDS}",
+                    },
+                    {
+                      id: "OLmKdPAEI0WnbSV1sVccVw",
+                      label: "Other third-party vendor",
+                    },
+                    {
+                      id: "Gxk89QOgQkmMTaNHH9WznQ",
+                      label: "Other, specify",
+                      children: [
+                        {
+                          id: "state_encounterDataValidationEntity-otherText",
+                          type: "textarea",
+                          validation: {
+                            type: "text",
+                            nested: true,
+                            parentFieldName:
+                              "state_encounterDataValidationEntity",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+              {
+                id: "2UkpVV0mypx5RnlS9UsflndyQDY",
+                type: "date",
+                validation: "date",
+                props: {
+                  label: "Start Date",
+                  hint: "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in the process.",
+                },
+              },
+              {
+                id: "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+                type: "date",
+                validation: "date",
+                props: {
+                  label: "End Date",
+                  hint: "Enter projected end date or “N/A” if the initiative will be ongoing without a set point.",
+                },
+              },
+            ],
+          },
         },
       ],
     },
@@ -896,6 +995,23 @@ export const mockFullReportJSON: ReportJson = {
     {
       name: "Transition Benchmark Strategy",
       path: "/wp/transition-benchmark-strategy",
+      pageType: "standard",
+      verbiage: {
+        intro: {
+          section: "Section A: Program Information",
+          subsection: "Add plans (A.7)",
+          info: "Enter the name of each plan that participates in the program for which the state is reporting data.",
+          spreadsheet: "A_Program_Info",
+        },
+      },
+      form: {
+        id: "aap",
+        fields: [],
+      },
+    },
+    {
+      name: "State & Territory Specific Initiatives: 1. Define initiative",
+      path: "/wp/state-and-territory-specific-initiatives/define-initiative",
       pageType: "standard",
       verbiage: {
         intro: {
