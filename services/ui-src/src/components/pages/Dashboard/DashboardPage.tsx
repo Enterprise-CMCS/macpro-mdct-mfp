@@ -254,7 +254,8 @@ export const DashboardPage = ({ reportType }: Props) => {
             <Button
               type="submit"
               disabled={
-                reportsToDisplay && reportsToDisplay[0].status === "In progress"
+                reportsToDisplay &&
+                reportsToDisplay[0]?.status === "In progress"
                   ? true
                   : false
               }
