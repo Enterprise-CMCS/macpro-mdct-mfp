@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 // components
 import { Box, Image, Text } from "@chakra-ui/react";
+import { getEntityStatus } from "./getEntityStatus";
 // utils
 import { EntityShape } from "types";
 import { useStore } from "utils";
@@ -15,7 +16,7 @@ export const EntityStatusIcon = ({ entity, isPdf }: Props) => {
   const { report } = useStore();
 
   const entityComplete = useMemo(() => {
-    return false;
+    return report ? getEntityStatus(report, entity) : false;
   }, [report]);
 
   return (
