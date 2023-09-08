@@ -1,46 +1,65 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 // components
 import { Box } from "@chakra-ui/react";
-import { Form, ReportPageFooter, ReportPageIntro } from "components";
+import {
+  AddEditEntityModal,
+  Alert,
+  Form,
+  ReportPageFooter,
+  ReportPageIntro,
+} from "components";
 // types
-import { StandardReportPageShape } from "types";
-// utils
-import { useFindRoute, useStore } from "utils";
-// verbiage
-import { mockStandardReportPageJson } from "utils/testing/mockForm";
+import { AlertTypes, EntityShape, EntityOverlayPageShape } from "types";
+//import { mockStandardReportPageJson } from "utils/testing/mockForm";
+import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
+
+interface AlertVerbiage {
+  [key: string]: { title: string; description: string };
+}
 
 export const EntityOverlayPage = ({ route, validateOnRender }: Props) => {
   const submitting = false;
-  const navigate = useNavigate();
-  const report = useStore().report;
-  const { nextRoute } = useFindRoute(
-    report?.formTemplate.flatRoutes!,
-    report?.formTemplate.basePath
-  );
+  const { entityType, verbiage, modalForm } = route;
 
-  const onError = () => {
-    navigate(nextRoute);
-  };
+  // Context Information
+  const [currentEntity] = useState<EntityShape | undefined>(undefined);
 
   return (
     <Box>
-      {route.verbiage.intro && <ReportPageIntro text={route.verbiage.intro} />}
+      {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
       <Form
         id={route.form.id}
         formJson={route.form}
         onSubmit={() => {}}
-        onError={onError}
-        formData={mockStandardReportPageJson.form}
+        //formData={mockStandardReportPageJson.form}
         autosave
         validateOnRender={validateOnRender || false}
         dontReset={false}
       />
+      <Box>
+        <Alert
+          title={(alertVerbiage as AlertVerbiage)[entityType].title}
+          status={AlertTypes.ERROR}
+          description={(alertVerbiage as AlertVerbiage)[entityType].description}
+        />
+
+        <AddEditEntityModal
+          //entityType={entityType}
+          selectedEntity={currentEntity}
+          verbiage={verbiage}
+          form={modalForm}
+          modalDisclosure={{
+            isOpen: false,
+            onClose: false,
+          }}
+        />
+      </Box>
       <ReportPageFooter submitting={submitting} form={route.form} />
     </Box>
   );
 };
 
 interface Props {
-  route: StandardReportPageShape;
+  route: EntityOverlayPageShape;
   validateOnRender?: boolean;
 }
