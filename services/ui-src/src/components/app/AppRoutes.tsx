@@ -18,42 +18,10 @@ import { ReportRoute, ReportType } from "types";
 
 export const AppRoutes = () => {
   const { userIsAdmin } = useStore().user ?? {};
-
-  const hardCodedFlatRoutes = [
-    {
-      name: "General Information",
-      path: "/wp/general-information",
-      pageType: "standard",
-    },
-    {
-      name: "Transition Benchmarks",
-      path: "/wp/transition-benchmarks",
-      pageType: "standard",
-    },
-    {
-      name: "Transition Benchmark Strategy",
-      path: "/wp/transition-benchmark-strategy",
-      pageType: "standard",
-    },
-    {
-      name: "State & Territory Specific Initiatives Instructions",
-      path: "/wp/state-and-territory-specific-initiatives/instructions",
-      pageType: "standard",
-    },
-    {
-      name: "State & Territory Specific Initiatives",
-      path: "/wp/state-and-territory-specific-initiatives/initiatives",
-      pageType: "standard",
-    },
-    {
-      name: "Review & Submit",
-      path: "/wp/review-and-submit",
-      pageType: "standard",
-    },
-  ];
+  const { report } = useStore();
 
   // LaunchDarkly
-  const wpReport = useFlags()?.wpReport;
+  const wpReport = true; //useFlags()?.wpReport;
   const sarReport = useFlags().sarReport;
 
   return (
@@ -83,14 +51,19 @@ export const AppRoutes = () => {
             />
           )}
           {/* General Report Routes */}
-          <Route path="/standard" element={<ReportPageWrapper />} />
-          {(hardCodedFlatRoutes ?? []).map((route: ReportRoute) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={<ReportPageWrapper />}
-            />
-          ))}
+          {report?.reportType === ReportType.WP && (
+            <>
+              {(report.formTemplate.flatRoutes ?? []).map(
+                (route: ReportRoute) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={<ReportPageWrapper />}
+                  />
+                )
+              )}
+            </>
+          )}
           <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
         </Routes>
       </AdminBannerProvider>

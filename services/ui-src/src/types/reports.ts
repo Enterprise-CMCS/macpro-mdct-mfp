@@ -18,6 +18,7 @@ export interface ReportPageVerbiage {
     section: string;
     subsection?: string;
     info?: string | CustomHtmlElement[];
+    spreadsheet?: string;
     exportSectionHeader?: string;
   };
 }
@@ -79,7 +80,11 @@ export interface ReportJson {
 
 export type ReportRoute = ReportRouteWithForm | ReportRouteWithoutForm;
 
-export type ReportRouteWithForm = StandardReportPageShape;
+export type ReportRouteWithForm =
+  | StandardReportPageShape
+  | DrawerReportPageShape
+  | ModalDrawerReportPageShape
+  | ModalOverlayReportPageShape;
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
   children?: ReportRoute[];
