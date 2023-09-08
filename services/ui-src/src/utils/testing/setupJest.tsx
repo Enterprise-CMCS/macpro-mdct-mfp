@@ -4,7 +4,18 @@ import "@testing-library/jest-dom";
 import "jest-axe/extend-expect";
 import { mockFlags, resetLDMocks } from "jest-launchdarkly-mock";
 // types
-import { UserRoles, MfpUserState, UserContextShape } from "types";
+import {
+  UserRoles,
+  MfpUserState,
+  UserContextShape,
+  AdminBannerState,
+  MfpReportState,
+  ReportStatus,
+  ReportShape,
+} from "types";
+// utils
+import { mockBannerData } from "./mockBanner";
+import { mockWPReport } from "./mockReport";
 
 // GLOBALS
 
@@ -76,7 +87,7 @@ export const mockUserContext: UserContextShape = {
   getExpiration: () => {},
 };
 
-// USER STATES
+// USER STATES / STORE
 
 export const mockNoUserStore: MfpUserState = {
   user: null,
@@ -158,6 +169,44 @@ export const mockAdminUserStore: MfpUserState = {
   showLocalLogins: false,
   setUser: () => {},
   setShowLocalLogins: () => {},
+};
+
+//  BANNER STATES / STORE
+
+export const mockBannerStore: AdminBannerState = {
+  bannerData: mockBannerData,
+  isBannerActive: false,
+  setAdminBanner: () => {},
+  clearAdminBanner: () => {},
+  setIsBannerActive: () => {},
+};
+
+// REPORT STATES / STORE
+
+const mockReportShape = {
+  ...mockWPReport,
+  programName: "testProgram",
+  status: ReportStatus.NOT_STARTED,
+  lastAlteredBy: "Thelonius States",
+  dueDate: 162515200000,
+};
+
+export const mockReportStore: MfpReportState = {
+  report: mockReportShape as ReportShape,
+  reportsByState: [mockReportShape],
+  submittedReportsByState: [mockReportShape],
+  setReport: () => {},
+  setReportsByState: () => {},
+  clearReportsByState: () => {},
+  setSubmittedReportsByState: () => {},
+};
+
+// BOUND STORE
+
+export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
+  ...mockReportStore,
+  ...mockStateUserStore,
+  ...mockBannerStore,
 };
 
 // ROUTER

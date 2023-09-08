@@ -30,7 +30,7 @@ interface Props {
 
 const sx = {
   introBox: {
-    marginBottom: "2rem",
+    marginBottom: "1rem",
   },
   sectionHeading: {
     color: "palette.gray",

@@ -194,8 +194,8 @@ export const mockModalDrawerReportPageVerbiage = {
   deleteModalWarning: "Mock delete modal warning",
   entityUnfinishedMessage: "Mock entity unfinished messsage",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
-  editEntityDetailsButtonText: "Mock edit entity details button text",
   drawerTitle: "Mock drawer title",
+  reviewPdfHint: "Mock review PDF hint",
   drawerNoFormMessage: "Mock no form fields here",
 };
 

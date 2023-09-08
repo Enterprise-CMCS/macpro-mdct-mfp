@@ -70,29 +70,14 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
             section={{ name: "placeholder", path: "/standard" }}
             level={1}
           />
+          {/* Temporary Page Navigation */}
           <NavSection
-            key={"general"}
+            key={"tb-section"}
             section={{
-              name: "General Information",
-              path: "/wp/general-information",
+              name: "Transition Benchmarks",
+              path: "/wp/transition-benchmarks",
             }}
             level={1}
-          />
-          <NavSection
-            key={"transition"}
-            section={{
-              name: "Transition Benchmark Strategy",
-              path: "/wp/transition-benchmark-strategy",
-            }}
-            level={1}
-          />
-          <NavSection
-            key={"state & territory"}
-            section={{
-              name: "State & Territory Specific Initiatives",
-              path: "/wp/state-and-territory-specific-initiatives/initiatives",
-            }}
-            level={2}
           />
         </Box>
       </Box>

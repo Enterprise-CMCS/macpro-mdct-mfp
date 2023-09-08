@@ -9,7 +9,7 @@ import { useFindRoute, useStore } from "utils";
 // verbiage
 import { mockStandardReportPageJson } from "utils/testing/mockForm";
 
-export const StandardReportPage = ({ route, validateOnRender }: Props) => {
+export const EntityOverlayPage = ({ route, validateOnRender }: Props) => {
   const submitting = false;
   const navigate = useNavigate();
   const report = useStore().report;

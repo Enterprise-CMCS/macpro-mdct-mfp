@@ -10,49 +10,53 @@ import {
   Header,
   LoginCognito,
   LoginIDM,
-  SkipNav,
+  MainSkipNav,
+  // SkipNav,
   Timeout,
   PostLogoutRedirect,
 } from "components";
 // utils
 import {
   fireTealiumPageView,
+  isApparentReportPage,
   makeMediaQueryClasses,
   UserContext,
-  useUserStore,
+  useStore,
 } from "utils";
+import { ReportProvider } from "components/reports/ReportProvider";
 
 export const App = () => {
   const mqClasses = makeMediaQueryClasses();
   const context = useContext(UserContext);
   const { logout } = context;
-  const { user, showLocalLogins } = useUserStore();
+  const { user, showLocalLogins } = useStore();
   const { pathname, key } = useLocation();
 
   // fire tealium page view on route change
   useEffect(() => {
-    fireTealiumPageView(user, window.location.href, pathname);
+    fireTealiumPageView(
+      user,
+      window.location.href,
+      pathname,
+      isApparentReportPage(pathname)
+    );
   }, [key]);
 
   const authenticatedRoutes = (
     <>
       {user && (
         <Flex sx={sx.appLayout}>
-          <Timeout />
-          <SkipNav
-            id="skip-nav-main"
-            href={"#main-content"}
-            text={`Skip to ${"main content"}`}
-            sxOverride={sx.skipnav}
-          />
-
-          <Header handleLogout={logout} />
-          <Container sx={sx.appContainer} data-testid="app-container">
-            <ErrorBoundary FallbackComponent={Error}>
-              <AppRoutes />
-            </ErrorBoundary>
-          </Container>
-          <Footer />
+          <ReportProvider>
+            <Timeout />
+            <MainSkipNav />
+            <Header handleLogout={logout} />
+            <Container sx={sx.appContainer} data-testid="app-container">
+              <ErrorBoundary FallbackComponent={Error}>
+                <AppRoutes />
+              </ErrorBoundary>
+            </Container>
+            <Footer />
+          </ReportProvider>
         </Flex>
       )}
       {!user && showLocalLogins && (
