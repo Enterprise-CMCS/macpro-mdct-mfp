@@ -58,7 +58,7 @@ export const AppRoutes = () => {
                   <Route
                     key={route.path}
                     path={route.path}
-                    element={ <ReportPageWrapper /> }
+                    element={<ReportPageWrapper />}
                   />
                 )
               )}
