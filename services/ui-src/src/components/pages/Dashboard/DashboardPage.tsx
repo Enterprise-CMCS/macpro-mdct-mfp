@@ -1,6 +1,7 @@
 /* eslint-disable multiline-comment-style */
 import { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+
 // components
 import {
   Box,
@@ -23,7 +24,7 @@ import {
   ReportContext,
 } from "components";
 // utils
-import { AnyObject, ReportKeys, ReportMetadataShape, ReportShape } from "types";
+import { AnyObject, ReportMetadataShape, ReportKeys, ReportShape } from "types";
 import {
   convertDateUtcToEt,
   parseCustomHtml,
@@ -36,28 +37,33 @@ import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
-import { reportByState } from "utils/testing/mockFullReportJSON";
 
 export const DashboardPage = ({ reportType }: Props) => {
   const {
     errorMessage,
+    fetchReportsByState,
     clearReportSelection,
     setReportSelection,
-    fetchReportsByState,
-    fetchReport
+    archiveReport,
+    releaseReport,
+    fetchReport,
   } = useContext(ReportContext);
+  const { reportsByState } = useStore();
   const navigate = useNavigate();
   const {
     state: userState,
-    userIsEndUser,
+    userIsStateUser,
     userIsAdmin,
   } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
   const [reportsToDisplay, setReportsToDisplay] = useState<
     ReportMetadataShape[] | undefined
   >(undefined);
+
   const [reportId, setReportId] = useState<string | undefined>(undefined);
+  const [archiving, setArchiving] = useState<boolean>(false);
   const [entering, setEntering] = useState<boolean>(false);
+  const [releasing, setReleasing] = useState<boolean>(false);
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
     undefined
   );
@@ -66,9 +72,6 @@ export const DashboardPage = ({ reportType }: Props) => {
     WP: wpVerbiage,
     SAR: sarVerbiage,
   };
-
-  //mocking reportByState
-  const reportsByState: any = [reportByState];
 
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
   const { intro, body } = dashboardVerbiage;
@@ -94,7 +97,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       );
     }
     setReportsToDisplay(newReportsToDisplay);
-  }, []);
+  }, [reportsByState]);
 
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     setReportId(report.id);
@@ -138,6 +141,38 @@ export const DashboardPage = ({ reportType }: Props) => {
     addEditReportModalOnOpenHandler();
   };
 
+  const toggleReportArchiveStatus = async (report: ReportShape) => {
+    if (userIsAdmin) {
+      setReportId(report.id);
+      setArchiving(true);
+      const reportKeys = {
+        reportType: reportType,
+        state: adminSelectedState,
+        id: report.id,
+      };
+      await archiveReport(reportKeys);
+      await fetchReportsByState(reportType, activeState);
+      setReportId(undefined);
+      setArchiving(false);
+    }
+  };
+
+  const toggleReportLockStatus = async (report: ReportShape) => {
+    if (userIsAdmin) {
+      setReportId(report.id);
+      setReleasing(true);
+      const reportKeys = {
+        reportType: reportType,
+        state: adminSelectedState,
+        id: report.id,
+      };
+      await releaseReport!(reportKeys);
+      await fetchReportsByState(reportType, activeState);
+      setReportId(undefined);
+      setReleasing(false);
+    }
+  };
+
   // add/edit program modal disclosure
   const {
     isOpen: addEditReportModalIsOpen,
@@ -159,7 +194,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         {reportType === "WP" && (
           <InstructionsAccordion
             verbiage={
-              userIsEndUser
+              userIsStateUser
                 ? accordion.WP.stateUserDashboard
                 : accordion.WP.adminDashboard
             }
@@ -176,12 +211,12 @@ export const DashboardPage = ({ reportType }: Props) => {
               reportId={reportId}
               openAddEditReportModal={openAddEditReportModal}
               enterSelectedReport={enterSelectedReport}
-              // archiveReport={toggleReportArchiveStatus}
-              // archiving={archiving}
+              archiveReport={toggleReportArchiveStatus}
+              archiving={archiving}
               entering={entering}
-              // releaseReport={toggleReportLockStatus}
-              // releasing={releasing}
-              isStateLevelUser={userIsEndUser!}
+              releaseReport={toggleReportLockStatus}
+              releasing={releasing}
+              isStateLevelUser={userIsStateUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />
@@ -193,12 +228,12 @@ export const DashboardPage = ({ reportType }: Props) => {
               body={body}
               openAddEditReportModal={openAddEditReportModal}
               enterSelectedReport={enterSelectedReport}
-              // archiveReport={toggleReportArchiveStatus}
-              // archiving={archiving}
+              archiveReport={toggleReportArchiveStatus}
+              archiving={archiving}
               entering={entering}
-              // releaseReport={toggleReportLockStatus}
-              // releasing={releasing}
-              isStateLevelUser={userIsEndUser!}
+              releaseReport={toggleReportLockStatus}
+              releasing={releasing}
+              isStateLevelUser={userIsStateUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />
@@ -214,13 +249,22 @@ export const DashboardPage = ({ reportType }: Props) => {
           <Text sx={sx.emptyTableContainer}>{body.empty}</Text>
         )}
         {/* only show add report button to state users */}
-        {/* {userIsEndUser && ( */}
-        <Box sx={sx.callToActionContainer}>
-          <Button type="submit" onClick={() => openAddEditReportModal()}>
-            {body.callToAction}
-          </Button>
-        </Box>
-        {/* )}  */}
+        {userState && (
+          <Box sx={sx.callToActionContainer}>
+            <Button
+              type="submit"
+              disabled={
+                reportsToDisplay &&
+                reportsToDisplay[0]?.status === "In progress"
+                  ? true
+                  : false
+              }
+              onClick={() => openAddEditReportModal()}
+            >
+              {body.callToAction}
+            </Button>
+          </Box>
+        )}
       </Box>
       <AddEditReportModal
         activeState={activeState!}
