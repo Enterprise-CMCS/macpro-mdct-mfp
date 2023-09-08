@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import {
   RouterWrappedComponent,
   mockReportStore,
-  mockStateUserStore,
 } from "utils/testing/setupJest";
 import { axe } from "jest-axe";
 //components
