@@ -1,38 +1,34 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 // components
-import { Box, Button, Heading, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
 import {
   AddEditEntityModal,
+  Alert,
   DeleteEntityModal,
   EntityDetailsOverlay,
   EntityProvider,
   EntityRow,
-  MobileEntityRow,
-  ReportContext,
   ReportPageFooter,
   ReportPageIntro,
   Table,
 } from "components";
 // types
 import {
-  AnyObject,
+  AlertTypes,
   EntityShape,
   EntityType,
-  isFieldElement,
   ModalOverlayReportPageShape,
-  ReportStatus,
 } from "types";
 // utils
-import {
-  // entityWasUpdated,
-  // filterFormData,
-  // getEntriesToClear,
-  // setClearedEntriesToDefaultValue,
-  useBreakpoint,
-  // useUser,
-} from "utils";
+import { useBreakpoint, useStore } from "utils";
 // verbiage
-import accordionVerbiage from "../../verbiage/pages/accordion";
+import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
+// assets
+import addIcon from "assets/icons/icon_add_white.png";
+
+interface AlertVerbiage {
+  [key: string]: { title: string; description: string };
+}
 
 export const ModalOverlayReportPage = ({
   route,
@@ -44,53 +40,35 @@ export const ModalOverlayReportPage = ({
 
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
-  const { report, updateReport } = useContext(ReportContext);
+  const { report } = useStore();
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
   const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
     undefined
   );
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const { userIsEndUser } = useStore().user ?? {};
 
   // Determine whether form is locked or unlocked based on user and route
   const isLocked = report?.locked;
 
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
+
+  ///TEMPORARY ENTITY//
+  let tempEntity: EntityShape = {
+    name: "Your initiative one",
+    id: "test-id",
+    report_initiative: "Transitions and transition coordination services",
+    isOtherEntity: true,
+  };
+  reportFieldDataEntities = [tempEntity, tempEntity];
+  //////////////////////
+
   const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
     return { headRow: ["", verbiage.tableHeader, ""] };
   };
-
-  ///TEMPORARY ENTITY
-  let tempEntity: EntityShape = {
-    id: "6ea0d-bf22-e3fb-8486-ef3d43f4a5e4",
-    report_planName: "mco",
-    report_programName: "program",
-    report_programType: [
-      {
-        key: "report_programType-6krUQZyhpmHHoagQWgUzxx",
-        value: "PIHP",
-      },
-    ],
-    report_eligibilityGroup: [
-      {
-        key: "report_eligibilityGroup-UgSDECcYDJ4S39QEMmMRcq",
-        value: "Standalone CHIP",
-      },
-    ],
-    report_reportingPeriodStartDate: "02/02/2022",
-    report_reportingPeriodEndDate: "02/02/2022",
-    report_reportingPeriodDiscrepancy: [
-      {
-        key: "report_reportingPeriodDiscrepancy-2NI2UTNqhvrJLvEv8SORD7vIPRI",
-        value: "No",
-      },
-    ],
-    "report_eligibilityGroup-otherText": "",
-    report_reportingPeriodDiscrepancyExplanation: "",
-  };
-  reportFieldDataEntities = [tempEntity];
 
   // Add/edit entity modal disclosure and methods
   const {
@@ -140,56 +118,14 @@ export const ModalOverlayReportPage = ({
   };
 
   // Form submit methods
-  const onSubmit = async (enteredData: AnyObject) => {
-    // if (userIsEndUser) {
-    //   setSubmitting(true);
-    //   const reportKeys = {
-    //     reportType: report?.reportType,
-    //     state: state,
-    //     id: report?.id,
-    //   };
-    //   const currentEntities = [...(report?.fieldData[entityType] || [])];
-    //   const selectedEntityIndex = report?.fieldData[entityType].findIndex(
-    //     (entity: EntityShape) => entity.id === currentEntity?.id
-    //   );
-    //   const filteredFormData = filterFormData(
-    //     enteredData,
-    //     overlayForm!.fields.filter(isFieldElement)
-    //   );
-    //   const entriesToClear = getEntriesToClear(
-    //     enteredData,
-    //     overlayForm!.fields.filter(isFieldElement)
-    //   );
-    //   const newEntity = {
-    //     ...currentEntity,
-    //     ...filteredFormData,
-    //   };
-    //   let newEntities = currentEntities;
-    //   newEntities[selectedEntityIndex] = newEntity;
-    //   newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
-    //     newEntities[selectedEntityIndex],
-    //     entriesToClear
-    //   );
-    //   const shouldSave = entityWasUpdated(
-    //     reportFieldDataEntities[selectedEntityIndex],
-    //     newEntity
-    //   );
-    //   if (shouldSave) {
-    //     const dataToWrite = {
-    //       metadata: {
-    //         status: ReportStatus.IN_PROGRESS,
-    //         lastAlteredBy: full_name,
-    //       },
-    //       fieldData: {
-    //         [entityType]: newEntities,
-    //       },
-    //     };
-    //     await updateReport(reportKeys, dataToWrite);
-    //   }
-    //   setSubmitting(false);
-    // }
-    // closeEntityDetailsOverlay();
-    // setSidebarHidden(false);
+  const onSubmit = async () => {
+    if (userIsEndUser) {
+      setSubmitting(true);
+      //submit code chunk here
+      setSubmitting(false);
+    }
+    closeEntityDetailsOverlay();
+    setSidebarHidden(false);
   };
 
   return (
@@ -212,11 +148,18 @@ export const ModalOverlayReportPage = ({
         <Box sx={sx.content}>
           <ReportPageIntro
             text={verbiage.intro}
-            accordion={accordionVerbiage.WP.formIntro}
             reportType={report?.reportType}
           />
-
-          <Box sx={sx.dashboardBox}>
+          {(alertVerbiage as AlertVerbiage)[route.entityType] && (
+            <Alert
+              title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
+              status={AlertTypes.ERROR}
+              description={
+                (alertVerbiage as AlertVerbiage)[route.entityType].description
+              }
+            />
+          )}
+          <Box>
             <Heading as="h3" sx={sx.dashboardTitle}>
               {dashTitle}
             </Heading>
@@ -227,35 +170,24 @@ export const ModalOverlayReportPage = ({
               </>
             ) : (
               <Table sx={sx.table} content={tableHeaders()}>
-                {reportFieldDataEntities.map((entity: EntityShape) =>
-                  isMobile || isTablet ? (
-                    <MobileEntityRow
-                      key={entity.id}
-                      entity={entity}
-                      verbiage={verbiage}
-                      locked={isLocked}
-                      openAddEditEntityModal={openAddEditEntityModal}
-                      openDeleteEntityModal={openDeleteEntityModal}
-                      openEntityDetailsOverlay={openEntityDetailsOverlay}
-                    />
-                  ) : (
-                    <EntityRow
-                      key={entity.id}
-                      entity={entity}
-                      verbiage={verbiage}
-                      locked={isLocked}
-                      openAddEditEntityModal={openAddEditEntityModal}
-                      openDeleteEntityModal={openDeleteEntityModal}
-                      openEntityDetailsOverlay={openEntityDetailsOverlay}
-                    />
-                  )
-                )}
+                {reportFieldDataEntities.map((entity: EntityShape) => (
+                  <EntityRow
+                    key={entity.id}
+                    entity={entity}
+                    verbiage={verbiage}
+                    locked={isLocked}
+                    openDrawer={openEntityDetailsOverlay}
+                    openAddEditEntityModal={openAddEditEntityModal}
+                    openDeleteEntityModal={openDeleteEntityModal}
+                  />
+                ))}
               </Table>
             )}
             <Button
               sx={sx.addEntityButton}
               disabled={isLocked}
               onClick={() => openAddEditEntityModal()}
+              rightIcon={<Image src={addIcon} alt="Previous" sx={sx.addIcon} />}
             >
               {verbiage.addEntityButtonText}
             </Button>
@@ -300,9 +232,6 @@ const sx = {
     ".tablet &, .mobile &": {
       width: "100%",
     },
-  },
-  dashboardBox: {
-    textAlign: "center",
   },
   dashboardTitle: {
     fontSize: "md",
@@ -350,5 +279,8 @@ const sx = {
       wordBreak: "break-word",
       whiteSpace: "break-spaces",
     },
+  },
+  addIcon: {
+    width: "1rem",
   },
 };

@@ -137,7 +137,7 @@ const DateFields = ({ report, reportType }: DateFieldProps) => {
       {reportType === "WP" && (
         <Box sx={sx.editDate}>
           <Text sx={sx.label}>Due date</Text>
-          <Text>{convertDateUtcToEt(report.dueDate)}</Text>
+          <Text>{convertDateUtcToEt(report.createdAt)}</Text>
         </Box>
       )}
       <Box>

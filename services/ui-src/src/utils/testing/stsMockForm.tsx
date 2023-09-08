@@ -29,10 +29,15 @@ export const mockStandardSTSReportPageJson = {
     addEntityButtonText: "Add Initiative",
     editEntityButtonText: "Edit name",
     addEditModalAddTitle: "Add initiative",
-    enterReportText: "Edit",
-    dashboardTitle: "Initative Total Count",
+    addEditModalEditTitle: "Edit initiative",
+    deleteModalTitle: "Are you sure you want to delete this initiative?",
+    deleteModalConfirmButtonText: "Yes, delete initiative",
+    deleteModalWarning:
+      "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
+    enterEntityDetailsButtonText: "Edit",
+    dashboardTitle: "Initative total count",
     countEntitiesInTitle: true,
-    tableHeader: "tableHeader",
+    tableHeader: "Initaitve name <br/> Work Plan topic",
     addEditModalHint:
       "Provide the name of one initiative. You will be then be asked to complete details for this initiative including description, evaluation plan and funding sources.",
     emptyDashboardText: "Empty",
@@ -51,6 +56,7 @@ export const mockStandardSTSReportPageJson = {
       {
         id: "initiative_wpTopic",
         type: "radio",
+        validation: "radio",
         props: {
           label: "Work Plan topic:",
           hint: "Note: Initiative topics with * are required and must be selected at least once across all initiatives.",
