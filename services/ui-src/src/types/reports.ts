@@ -18,7 +18,7 @@ export interface ReportPageVerbiage {
     section: string;
     subsection?: string;
     info?: string | CustomHtmlElement[];
-    spreadsheet?: string; // mock test
+    spreadsheet?: string;
     exportSectionHeader?: string;
   };
 }

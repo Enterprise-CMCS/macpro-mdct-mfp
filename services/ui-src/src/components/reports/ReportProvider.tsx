@@ -78,8 +78,6 @@ export const ReportProvider = ({ children }: Props) => {
     } catch (e: any) {
       setError(reportErrors.GET_REPORT_FAILED);
     }
-
-    return; //mock
   };
 
   const fetchReportsByState = async (
