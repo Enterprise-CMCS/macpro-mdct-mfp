@@ -37,9 +37,6 @@ export const ModalOverlayReportPage = ({
 }: Props) => {
   // Route Information
   const { entityType, verbiage, modalForm, overlayForm } = route;
-
-  console.log("hello overlay")
-
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
   const { report } = useStore();

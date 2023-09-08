@@ -18,7 +18,7 @@ export interface ReportPageVerbiage {
     section: string;
     subsection?: string;
     info?: string | CustomHtmlElement[];
-    spreadsheet?: string;   // mock test
+    spreadsheet?: string; // mock test
     exportSectionHeader?: string;
   };
 }
@@ -101,15 +101,6 @@ export interface DrawerReportPageVerbiage extends ReportPageVerbiage {
   drawerTitle: string;
   drawerInfo?: CustomHtmlElement[];
   missingEntityMessage?: CustomHtmlElement[];
-}
-
-export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
-  entityType: string;
-  verbiage: ModalOverlayReportPageVerbiage;
-  modalForm: FormJson;
-  overlayForm?: FormJson;
-  drawerForm?: never;
-  form?: never;
 }
 
 export interface ModalDrawerReportPageVerbiage
