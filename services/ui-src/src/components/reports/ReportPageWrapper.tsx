@@ -9,10 +9,12 @@ import {
   ReviewSubmitPage,
   Sidebar,
   StandardReportPage,
+  EntityOverlayPage,
 } from "components";
 import { useLocation } from "react-router-dom";
 import {
   DrawerReportPageShape,
+  EntityOverlayPageShape,
   ModalDrawerReportPageShape,
   ModalOverlayReportPageShape,
   PageTypes,
@@ -43,6 +45,8 @@ export const ReportPageWrapper = () => {
             setSidebarHidden={setSidebarHidden}
           />
         );
+      case PageTypes.ENTITY_OVERLAY:
+        return <EntityOverlayPage route={route as EntityOverlayPageShape} />;
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:

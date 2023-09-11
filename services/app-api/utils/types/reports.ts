@@ -29,7 +29,8 @@ export type ReportRouteWithForm =
   | StandardReportPageShape
   | DrawerReportPageShape
   | ModalDrawerReportPageShape
-  | ModalOverlayReportPageShape;
+  | ModalOverlayReportPageShape
+  | EntityOverlayPageShape;
 
 export interface ReportPageShapeBase extends ReportRouteBase {
   children?: never;
@@ -61,6 +62,14 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   drawerForm: FormJson;
   overlayForm?: never;
   form?: never;
+}
+
+export interface EntityOverlayPageShape extends ReportPageShapeBase {
+  entityType: string;
+  form: FormJson;
+  dashboard?: never;
+  modalForm: never;
+  drawerForm?: never;
 }
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {

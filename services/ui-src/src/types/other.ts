@@ -33,6 +33,7 @@ export enum PageTypes {
   DRAWER = "drawer",
   MODAL_DRAWER = "modalDrawer",
   MODAL_OVERLAY = "modalOverlay",
+  ENTITY_OVERLAY = "entityOverlay",
   REVIEW_SUBMIT = "reviewSubmit",
 }
 
