@@ -17,8 +17,6 @@
         "intro": {
           "section": "",
           "subsection": "General Information",
-          "hint": "",
-          "exportSection": "",
           "info": [
             {
               "type": "html",
@@ -39,39 +37,8 @@
             }
           ]
         }
-      }
-    },
-    {
-      "name": "transition-benchmark-strategy",
-      "path": "/wp/transition-benchmark-strategy",
-      "pageType": "standard",
-      "verbiage": {
-        "intro": {
-          "section": "",
-          "subsection": "Transition Benchmark Strategy"
-        }
       },
-      "form": {
-        "id": "2UkwX7CMrbfrcSF2YjiyfetUyIF",
-        "fields": [
-          {
-            "id": "2Ukwki4yJ8wNNqz7KnvgNoTATkO",
-            "type": "textarea",
-            "validation": "text",
-            "props": {
-              "label": "Explain how you formulated your projected numbers, which should include descriptions of the data sources used, the time period for the analysis, and the methods used to project the number of transitions."
-            }
-          },
-          {
-            "id": "2Ukwj6bhkkok19JzSocDWLo1idj",
-            "type": "textarea",
-            "validation": "text",
-            "props": {
-              "label": "Provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative."
-            }
-          }
-        ]
-      }
+      "form": { "id": "", "fields": [] }
     },
     {
       "name": "Transition Benchmarks",
@@ -80,6 +47,7 @@
       "entityType": "targetPopulation",
       "verbiage": {
         "intro": {
+          "section": "",
           "subsection": "Transition Benchmark Projections",
           "info": [
             {
@@ -164,6 +132,38 @@
       }
     },
     {
+      "name": "Transition Benchmark Strategy",
+      "path": "/wp/transition-benchmark-strategy",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": "Transition Benchmark Strategy"
+        }
+      },
+      "form": {
+        "id": "2UkwX7CMrbfrcSF2YjiyfetUyIF",
+        "fields": [
+          {
+            "id": "2Ukwki4yJ8wNNqz7KnvgNoTATkO",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label": "Explain how you formulated your projected numbers, which should include descriptions of the data sources used, the time period for the analysis, and the methods used to project the number of transitions."
+            }
+          },
+          {
+            "id": "2Ukwj6bhkkok19JzSocDWLo1idj",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label": "Provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative."
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "State & Territory Specific Initiatives",
       "path": "/wp/state-and-territory-specific-initiatives",
       "children": [
@@ -196,6 +196,7 @@
                       "content": "MFP cooperative agreement funds for:"
                     },
                     {
+                      "content": "",
                       "type": "ul",
                       "props": {
                         "style": {
@@ -572,9 +573,7 @@
                     }
                   }
                 }
-              ],
-              "editEntityButtonText": "Edit",
-              "enterReportText": "Enter Details"
+              ]
             }
           },
           "form": {
@@ -620,7 +619,7 @@
           }
         },
         {
-          "name": "state-and-territory-specific-initiatives",
+          "name": "State & Territory Specific Initiatives",
           "path": "/wp/state-and-territory-specific-initiatives/initiatives",
           "pageType": "modalOverlay",
           "entityType": "initiatives",
@@ -755,11 +754,110 @@
                 }
               }
             ]
+          },
+          "overlayForm": {
+            "id": "abc",
+            "fields": []
           }
         },
         {
-          "name": "State & Territory Specific Initiatives Instructions",
-          "path": "/wp/state-and-territory-specific-initiatives/initiatives",
+          "name": "State & Territory Specific Initiatives: I. Define initiative",
+          "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
+          "pageType": "standard",
+          "verbiage": {
+            "intro": {
+              "section": "State and Territory-Specific Initiatives: I. Define initiative",
+              "subsection": "{Person-centered Planning}",
+              "info": [
+                {
+                  "type": "html",
+                  "content": "Provide initiative description, including target populations and timeframe."
+                }
+              ],
+              "exportSectionHeader": "exportSectionHeader"
+            }
+          },
+          "form": {
+            "id": "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+            "fields": [
+              {
+                "id": "2Ukwki4yJ8wNPqz7KnvgNoTATkO",
+                "type": "textarea",
+                "validation": "text",
+                "props": {
+                  "label": "Describe the initiative, including key activties:"
+                }
+              },
+              {
+                "id": "target_population",
+                "type": "checkbox",
+                "validation": "checkbox",
+                "props": {
+                  "label": "Target Population(s):",
+                  "hint": "Select all that apply. Population you've added as 'Other' in the Transition Benchmarks section will appear here.",
+                  "choices": [
+                    {
+                      "id": "2iuXO7C6nk6cuP9JXbdd2w",
+                      "label": "Older adults"
+                    },
+                    {
+                      "id": "vmlIjQAe9kyz4FbtxBZINA",
+                      "label": "Individuals with physical disabilities (PD)"
+                    },
+                    {
+                      "id": "Vg8erh64Tk2nKd5olVwM9w",
+                      "label": "Individuals with intellectual and developmental disabilities(MH/SUD)"
+                    },
+                    {
+                      "id": "azz5rhd8V0GK27fIXaYSmw",
+                      "label": "Other: {HIV/AIDS}"
+                    },
+                    {
+                      "id": "OLmKdPAEI0WnbSV1sVccVw",
+                      "label": "Other third-party vendor"
+                    },
+                    {
+                      "id": "Gxk89QOgQkmMTaNHH9WznQ",
+                      "label": "Other, specify",
+                      "children": [
+                        {
+                          "id": "state_encounterDataValidationEntity-otherText",
+                          "type": "textarea",
+                          "validation": {
+                            "type": "text",
+                            "nested": true,
+                            "parentFieldName": "state_encounterDataValidationEntity"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "2UkpVV0mypx5RnlS9UsflndyQDY",
+                "type": "date",
+                "validation": "date",
+                "props": {
+                  "label": "Start Date",
+                  "hint": "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in the process."
+                }
+              },
+              {
+                "id": "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+                "type": "date",
+                "validation": "date",
+                "props": {
+                  "label": "End Date",
+                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "State & Territory Specific Initiatives: IV. Close-out information (if applicable)",
+          "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
           "pageType": "modalOverlay",
           "entityType": "initiatives",
           "verbiage": {
@@ -817,7 +915,7 @@
                           "validation": {
                             "type": "text",
                             "nested": true,
-                            "parentFieldName": "",
+                            "parentFieldName": ""
                           }
                         }
                       ]
