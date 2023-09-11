@@ -763,7 +763,7 @@
         {
           "name": "State & Territory Specific Initiatives: I. Define initiative",
           "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
-          "pageType": "standard",
+          "pageType": "entityOverlay",
           "verbiage": {
             "intro": {
               "section": "State and Territory-Specific Initiatives: I. Define initiative",
@@ -881,6 +881,24 @@
             "id": "sauxM9MnFZhIn5W44WY3BG",
             "fields": [
               {
+                "id": "xqEUNPc8TB6nZwyapjl1om",
+                "type": "date",
+                "validation": "date",
+                "props": {
+                  "label": "Projected end date",
+                  "hint": "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in the process."
+                }
+              },
+              {
+                "id": "n4Xt9usQxPvfEIJkhYjH9d",
+                "type": "date",
+                "validation": "date",
+                "props": {
+                  "label": "Actual end date",
+                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
+                }
+              },
+              {
                 "id": "OydJGL8N885vtXqcU2FQE4",
                 "type": "checkbox",
                 "validation": "checkbox",
@@ -925,23 +943,18 @@
                     }
                   ]
                 }
-              },  
+              }
+            ]
+          },
+          "modalForm": {
+            "id": "modal-form-test",
+            "fields": [
               {
-                "id": "xqEUNPc8TB6nZwyapjl1om",
-                "type": "date",
-                "validation": "date",
+                "id": "modal_name",
+                "type": "text",
+                "validation": "text",
                 "props": {
-                  "label": "Start Date",
-                  "hint": "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in the process.",
-                }
-              },
-              {
-                "id": "n4Xt9usQxPvfEIJkhYjH9d",
-                "type": "date",
-                "validation": "date",
-                "props": {
-                  "label": "End Date",
-                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point.",
+                  "label": "test name"
                 }
               }
             ]

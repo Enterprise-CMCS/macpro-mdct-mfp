@@ -72,7 +72,7 @@ export interface EntityOverlayPageShape extends ReportPageShapeBase {
   verbiage: EntityOverlayPageVerbiage;
   form: FormJson;
   dashboard?: never;
-  modalForm: never;
+  modalForm?: FormJson;
   drawerForm?: never;
 }
 
