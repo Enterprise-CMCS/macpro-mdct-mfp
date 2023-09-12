@@ -1,33 +1,40 @@
 import { useState } from "react";
 // components
-import { Box, Button, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Image, useDisclosure } from "@chakra-ui/react";
 import {
   Alert,
   Form,
   ReportPageFooter,
   ReportPageIntro,
-  AddEditEntityModal,
+  CloseEntityModal,
 } from "components";
 // types
 import { EntityShape, AlertTypes, EntityOverlayPageShape } from "types";
+// assets
+import closeIcon from "assets/icons/icon_close.png";
 
 export const EntityOverlayPage = ({ route, validateOnRender }: Props) => {
   const submitting = false;
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-  const { verbiage, modalForm } = route;
+  const { verbiage } = route;
 
   // add/edit entity modal disclosure and methods
   const {
-    isOpen: addEditEntityModalIsOpen,
-    onOpen: addEditEntityModalOnOpenHandler,
-    onClose: addEditEntityModalOnCloseHandler,
+    isOpen: closeEntityModalIsOpen,
+    onOpen: closeEntityModalOnOpenHandler,
+    onClose: closeEntityModalOnCloseHandler,
   } = useDisclosure();
 
-  const closeAddEditEntityModal = () => {
+  const openCloseEntityModal = (entity?: EntityShape) => {
+    setSelectedEntity(entity);
+    closeEntityModalOnOpenHandler();
+  };
+
+  const closeCloseEntityModal = () => {
     setSelectedEntity(undefined);
-    addEditEntityModalOnCloseHandler();
+    closeEntityModalOnCloseHandler();
   };
 
   return (
@@ -50,27 +57,29 @@ export const EntityOverlayPage = ({ route, validateOnRender }: Props) => {
             description={verbiage.closeOutWarning.description}
           />
         )}
+      </Box>
 
-        <Button
-          //sx={sx.addEntityButton}
-          variant="outline"
-          onClick={addEditEntityModalOnOpenHandler}
-          //leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-        >
-          {"test"}
-        </Button>
-        <hr />
-        {/* MODAL */}
-        {modalForm && (
-          <AddEditEntityModal
-            selectedEntity={selectedEntity}
-            verbiage={verbiage}
-            form={modalForm}
-            modalDisclosure={{
-              isOpen: addEditEntityModalIsOpen,
-              onClose: closeAddEditEntityModal,
-            }}
-          />
+      <Box>
+        {verbiage.closeOutModal && (
+          <Box>
+            <Button
+              rightIcon={
+                <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
+              }
+              onClick={() => openCloseEntityModal()}
+            >
+              {verbiage.closeOutModal.closeOutModalButtonText}
+            </Button>
+
+            <CloseEntityModal
+              selectedEntity={selectedEntity}
+              verbiage={verbiage}
+              modalDisclosure={{
+                isOpen: closeEntityModalIsOpen,
+                onClose: closeCloseEntityModal,
+              }}
+            />
+          </Box>
         )}
       </Box>
       <ReportPageFooter submitting={submitting} form={route.form} />
@@ -82,3 +91,9 @@ interface Props {
   route: EntityOverlayPageShape;
   validateOnRender?: boolean;
 }
+
+const sx = {
+  closeIcon: {
+    width: "0.75rem",
+  },
+};

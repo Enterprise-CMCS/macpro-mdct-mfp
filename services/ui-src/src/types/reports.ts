@@ -72,7 +72,6 @@ export interface EntityOverlayPageShape extends ReportPageShapeBase {
   verbiage: EntityOverlayPageVerbiage;
   form: FormJson;
   dashboard?: never;
-  modalForm?: FormJson;
   drawerForm?: never;
 }
 
@@ -139,9 +138,15 @@ export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
 }
 
 export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
-  closeOutWarning: {
+  closeOutWarning?: {
     title?: string;
     description?: string;
+  };
+  closeOutModal?: {
+    closeOutModalButtonText?: string;
+    closeOutModalTitle?: string;
+    closeOutModalBodyText?: string;
+    closeOutModalConfirmButtonText?: string;
   };
 }
 
