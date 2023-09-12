@@ -12,21 +12,28 @@ import { useMemo } from "react";
 
 export const EntityRow = ({
   entity,
+  entityInfo,
   verbiage,
+  locked,
   openAddEditEntityModal,
   openDeleteEntityModal,
   openDrawer,
 }: Props) => {
-  const { name, report_initiative, isOtherEntity } = entity;
+  const { isOtherEntity } = entity;
   const { report } = useStore();
-  //const { userIsEndUser } = useStore().user ?? {};  //turn back on when routes are avaliable
-  let userIsEndUser = true; //temporary, remove once routes are added
+  const { userIsEndUser } = useStore().user ?? {};
 
   const entityComplete = useMemo(() => {
     return report ? getEntityStatus(report, entity) : false;
   }, [report]);
 
-  const programInfo = [name, report_initiative];
+  const programInfo = (entityInfo as string[]).flatMap((info) => {
+    //if the data is of an array, like a radio button
+    if (typeof entity[info] === "object") {
+       return (entity[info] as any[]).map((arr) =>  arr.value);
+    }
+    return entity[info];
+  });
 
   return (
     <Tr sx={sx.content}>
@@ -69,7 +76,7 @@ export const EntityRow = ({
               sx={sx.deleteButton}
               data-testid="delete-entity"
               onClick={() => openDeleteEntityModal(entity)}
-              disabled={!userIsEndUser}
+              disabled={locked || !userIsEndUser}
             >
               <Image src={deleteIcon} alt="delete icon" boxSize="3xl" />
             </Button>

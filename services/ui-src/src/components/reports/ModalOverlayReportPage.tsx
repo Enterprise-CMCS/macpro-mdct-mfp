@@ -47,7 +47,7 @@ export const ModalOverlayReportPage = ({
   validateOnRender,
 }: Props) => {
   // Route Information
-  const { entityType, verbiage, modalForm, overlayForm } = route;
+  const { entityType, verbiage, modalForm, overlayForm, entityInfo } = route;
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
   const { report } = useStore();
@@ -64,6 +64,7 @@ export const ModalOverlayReportPage = ({
 
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
+  (reportFieldDataEntities as any[]).map((entity) => entity["isOtherEntity"] = true);
 
   const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
   const tableHeaders = () => {
@@ -218,6 +219,7 @@ export const ModalOverlayReportPage = ({
                   <EntityRow
                     key={entity.id}
                     entity={entity}
+                    entityInfo={entityInfo}
                     verbiage={verbiage}
                     locked={isLocked}
                     openDrawer={openEntityDetailsOverlay}
