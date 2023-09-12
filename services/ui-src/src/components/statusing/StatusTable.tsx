@@ -19,7 +19,6 @@ export const StatusTable = () => {
   const report = useStore().report;
   const { review } = verbiage;
   const rowDepth = 1;
-  console.log(report);
   return report ? (
     <Box sx={sx.container}>
       <Table content={review.table} sx={sx.table}>
