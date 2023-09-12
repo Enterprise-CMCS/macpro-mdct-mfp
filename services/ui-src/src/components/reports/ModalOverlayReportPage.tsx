@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 // components
 import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
 import {
@@ -8,6 +8,7 @@ import {
   EntityDetailsOverlay,
   EntityProvider,
   EntityRow,
+  ReportContext,
   ReportPageFooter,
   ReportPageIntro,
   Table,
@@ -15,12 +16,22 @@ import {
 // types
 import {
   AlertTypes,
+  AnyObject,
   EntityShape,
   EntityType,
+  isFieldElement,
   ModalOverlayReportPageShape,
+  ReportStatus,
 } from "types";
 // utils
-import { useBreakpoint, useStore } from "utils";
+import {
+  entityWasUpdated,
+  filterFormData,
+  getEntriesToClear,
+  setClearedEntriesToDefaultValue,
+  useBreakpoint,
+  useStore,
+} from "utils";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
@@ -45,23 +56,14 @@ export const ModalOverlayReportPage = ({
     undefined
   );
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const { userIsEndUser } = useStore().user ?? {};
+  const { userIsEndUser, full_name, state } = useStore().user ?? {};
+  const { updateReport } = useContext(ReportContext);
 
   // Determine whether form is locked or unlocked based on user and route
   const isLocked = report?.locked;
 
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
-
-  ///TEMPORARY ENTITY//
-  let tempEntity: EntityShape = {
-    name: "Your initiative one",
-    id: "test-id",
-    report_initiative: "Transitions and transition coordination services",
-    isOtherEntity: true,
-  };
-  reportFieldDataEntities = [tempEntity, tempEntity];
-  //////////////////////
 
   const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
   const tableHeaders = () => {
@@ -117,10 +119,53 @@ export const ModalOverlayReportPage = ({
   };
 
   // Form submit methods
-  const onSubmit = async () => {
+  const onSubmit = async (enteredData: AnyObject) => {
+    console.log("modal overlay on submit");
     if (userIsEndUser) {
       setSubmitting(true);
-      //submit code chunk here
+      const reportKeys = {
+        reportType: report?.reportType,
+        state: state,
+        id: report?.id,
+      };
+      const currentEntities = [...(report?.fieldData[entityType] || [])];
+      const selectedEntityIndex = report?.fieldData[entityType].findIndex(
+        (entity: EntityShape) => entity.id === currentEntity?.id
+      );
+      const filteredFormData = filterFormData(
+        enteredData,
+        overlayForm!.fields.filter(isFieldElement)
+      );
+      const entriesToClear = getEntriesToClear(
+        enteredData,
+        overlayForm!.fields.filter(isFieldElement)
+      );
+      const newEntity = {
+        ...currentEntity,
+        ...filteredFormData,
+      };
+      let newEntities = currentEntities;
+      newEntities[selectedEntityIndex] = newEntity;
+      newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
+        newEntities[selectedEntityIndex],
+        entriesToClear
+      );
+      const shouldSave = entityWasUpdated(
+        reportFieldDataEntities[selectedEntityIndex],
+        newEntity
+      );
+      if (shouldSave) {
+        const dataToWrite = {
+          metadata: {
+            status: ReportStatus.IN_PROGRESS,
+            lastAlteredBy: full_name,
+          },
+          fieldData: {
+            [entityType]: newEntities,
+          },
+        };
+        await updateReport(reportKeys, dataToWrite);
+      }
       setSubmitting(false);
     }
     closeEntityDetailsOverlay();
@@ -193,7 +238,7 @@ export const ModalOverlayReportPage = ({
           </Box>
 
           <AddEditEntityModal
-            // entityType={entityType}
+            entityType={entityType}
             selectedEntity={currentEntity}
             verbiage={verbiage}
             form={modalForm}

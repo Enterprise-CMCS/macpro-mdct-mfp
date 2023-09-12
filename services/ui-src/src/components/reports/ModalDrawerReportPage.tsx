@@ -170,6 +170,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         <hr />
         {/* MODALS */}
         <AddEditEntityModal
+          entityType={entityType as EntityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           form={modalForm}
@@ -192,7 +193,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           selectedEntity={selectedEntity!}
           verbiage={{
             ...verbiage,
-            drawerDetails: getFormattedEntityData(),
+            drawerDetails: getFormattedEntityData(entityType),
           }}
           form={drawerForm}
           onSubmit={() => {}}
