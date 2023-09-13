@@ -13,6 +13,8 @@ export * from "./forms/forms";
 // reports
 export * from "./reports/reports";
 export * from "./reports/routing";
+// statusing
+export * from "./statusing/getRouteStatus";
 // tracking
 export * from "./tracking/tealium";
 // validation
