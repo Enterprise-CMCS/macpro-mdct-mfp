@@ -858,7 +858,8 @@
         {
           "name": "State and Territory Specific Initiatives: II. Evaluation Plan",
           "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
-          "pageType": "modalDrawer",
+          "pageType": "overlayModal",
+          "entityType": "evaluationPlan",
           "verbiage": {
             "intro": {
               "section": "State and Territory Specific Initiatives: II. Evaluation Plan",
@@ -866,88 +867,69 @@
               "info": [
                 {
                   "type": "html",
-                  "content": "The evaluation plan captures expected results for each state or territory-specific initiative. Recipients should identify one or more objectives per initiative and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. In addition, recipients must articulate how they will achieve targets and meet milestones. For more information on developing objectives and identifying appropriate performance measures, see Using Data to Improve Money Follows the Person Program Performance."
-                },
-                {
-                  "type": "html",
-                  "content": "<p><strong>Please identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:</p>"
-                },
-                {
-                  "type": "ul",
-                  "content": "",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1.5rem",
-                      "padding": "1rem"
-                    }
-                  },
-                  "children": [
-                    {
-                      "type": "li",
-                      "props": {
-                        "style": {
-                          "paddingBottom": "1rem"
-                        }
-                      },
-                      "content": "<bold>Specific:</bold> Specifies the activities, actors, and beneficiaries"
-                    },
-                    {
-                      "type": "li",
-                      "content": "Measurable: Defines how a change will be measured"
-                    },
-                    {
-                      "type": "li",
-                      "content": "Achievable: Confirms the feasibility of implementing the intervention as planned"
-                    },
-                    {
-                      "type": "li",
-                      "content": "Realistic/relevant: Ensures the intervention relates to the goal"
-                    },
-                    {
-                      "type": "li",
-                      "content": "Time-bound: Specifies when the results are expected"
-                    }
-                  ]
+                  "content": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system."
                 }
               ],
               "exportSectionHeader": "exportSectionHeader"
             },
+            "accordion": {
+              "buttonLabel": "Instructions",
+              "intro": [
+                {
+                  "type": "html",
+                  "content": "The evaluation plan captures expected results for each state or territory-specific initiative. Recipients should identify one or more objectives per initiative and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. In addition, recipients must articulate how they will achieve targets and meet milestones. For more information on developing objectives and identifying appropriate performance measures, see "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "“Using Data to Improve Money Follows the Person Program Performance.“",
+                  "props": {
+                    "href": "https://www.medicaid.gov/sites/default/files/2023-01/MFP-Technical-Assistance-Brief.pdf",
+                    "target": "_blank",
+                    "ariaLabel": "Link opens in new tab"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "<br><br><p><strong>Please identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:</p>"
+                }
+              ],
+              "list": [
+                "<strong>Specific:</strong> Specifies the activities, actors, and beneficiaries",
+                "<strong>Measurable:</strong> Defines how a change will be measured",
+                "<strong>Achievable:</strong> Confirms the feasibility of implementing the intervention as planned",
+                "<strong>Realistic/relevant:</strong> Ensures the intervention relates to the goal",
+                "<strong>Time-bound:</strong> Specifies when the results are expected"
+              ],
+              "text": ""
+            },
+            "text": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
             "addEntityButtonText": "Add objective +",
-            "editEntityButtonText": "Edit name",
-            "addEditModalAddTitle": "Add objective",
+            "editEntityButtonText": "Edit objective",
+            "addEditModalAddTitle": "Add objective for {Person-centered Planning}",
+            "addEditModalHint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones.",
             "addEditModalEditTitle": "Edit objective",
-            "deleteModalTitle": "Are you sure you want to delete this objective?",
+            "deleteModalTitle": "Delete objective for this report?",
             "deleteModalConfirmButtonText": "Yes, delete objective",
-            "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this objective in the Work Plan. The objetive will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
+            "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
             "enterEntityDetailsButtonText": "Edit",
-            "dashboardTitle": "Objective total count:",
+            "dashboardTitle": "Objective total count: 2",
             "deleteEntityButtonAltText": "",
             "entityUnfinishedMessage": "",
-            "reviewPdfHint": "",
             "drawerTitle": ""
           },
           "modalForm": {
             "id": "tb-modal",
             "fields": [
               {
-                "id": "transitionBenchmarks_targetPopulationName",
-                "type": "text",
-                "validation": "text",
-                "props": {
-                  "label": "Add objective for {Person-centered Planning}",
-                  "hint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones."
-                }
-              },
-              {
-                "id": "dghdfgdf",
+                "id": "evaluationPlan_objectiveName",
                 "type": "textarea",
                 "validation": "text",
                 "props": {
-                  "label": "Objective name"
+                  "label": "Objective"
                 }
               },
               {
-                "id": "sersres",
+                "id": "evaluationPlan_description",
                 "type": "textarea",
                 "validation": "text",
                 "props": {
@@ -956,16 +938,16 @@
                 }
               },
               {
-                "id": "liolj",
+                "id": "evaluationPlan_targets",
                 "type": "textarea",
                 "validation": "text",
                 "props": {
-                  "label": "Provide targets for the performance measures or indicators listed above. Please include milestones and expected time frames or or key deliverables.",
+                  "label": "Provide targets for the performance measures or indicators listed above. Please include milestones and expected time frames or key deliverables.",
                   "hint": "If a performance measure includes quantitative targets, complete the quarterly fields below."
                 }
               },
               {
-                "id": "quantitative_targets",
+                "id": "evaluationPlan_includesTargets",
                 "type": "radio",
                 "validation": "radio",
                 "props": {
@@ -983,11 +965,14 @@
                         {
                           "id": "gdfgdgdf",
                           "type": "number",
-                          "nested": true,
-                          "parentFieldName": "quantitative_targets",
-                          "parentOptionId": "7FP4jcg4jK7Ssqp3cCW5vQ",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
                           "props": {
-                            "label": "YEAR Q#"
+                            "label": "2024 Q1",
+                            "hint": "this functionality is waiting on BOs."
                           }
                         }
                       ]
@@ -996,7 +981,7 @@
                 }
               },
               {
-                "id": "klilkh",
+                "id": "evaluationPlan_additionalDetails",
                 "type": "textarea",
                 "validation": "text",
                 "props": {
@@ -1005,12 +990,7 @@
                 }
               }
             ]
-          },
-          "drawerForm": {
-            "id": "tb-drawer",
-            "fields": [{}]
-          },
-          "entityType": "objectives"
+          }
         }
       ]
     },
