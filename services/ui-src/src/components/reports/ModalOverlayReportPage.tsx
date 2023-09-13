@@ -68,8 +68,8 @@ export const ModalOverlayReportPage = ({
   (reportFieldDataEntities as any[]).map(
     (entity) => (entity["isOtherEntity"] = true)
   );
-  const showAlert = 
-    report && (alertVerbiage as AlertVerbiage)[route.entityType]
+  const showAlert =
+    report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
       : false;
 
