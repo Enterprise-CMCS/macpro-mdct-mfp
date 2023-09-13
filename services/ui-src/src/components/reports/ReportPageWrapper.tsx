@@ -5,6 +5,7 @@ import {
   DrawerReportPage,
   ModalDrawerReportPage,
   ModalOverlayReportPage,
+  OverlayModalPage,
   PageTemplate,
   ReviewSubmitPage,
   Sidebar,
@@ -15,6 +16,7 @@ import {
   DrawerReportPageShape,
   ModalDrawerReportPageShape,
   ModalOverlayReportPageShape,
+  OverlayModalPageShape,
   PageTypes,
   ReportRoute,
   StandardReportPageShape,
@@ -42,6 +44,12 @@ export const ReportPageWrapper = () => {
             route={route as ModalOverlayReportPageShape}
             setSidebarHidden={setSidebarHidden}
           />
+        );
+      case PageTypes.OVERLAY_MODAL_PAGE:
+        return (
+          <OverlayModalPage
+            route={route as OverlayModalPageShape}
+          ></OverlayModalPage>
         );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;

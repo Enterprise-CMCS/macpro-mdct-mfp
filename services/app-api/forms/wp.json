@@ -854,6 +854,208 @@
               }
             ]
           }
+        },
+        {
+          "name": "State and territory-specific Initiatives: III. Funding Sources",
+          "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
+          "pageType": "modalOverlayPage",
+          "verbiage": {
+            "intro": {
+              "section": "",
+              "subsection": "State and territory-specific Initiatives: III. Funding Sources",
+              "info": [
+                {
+                  "type": "html",
+                  "content": "Add funding sources with projected quarterly expenditures."
+                },
+                {
+                  "type": "html",
+                  "content": "<br>Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).</br>"
+                }
+              ],
+              "exportSectionHeader": "exportSectionHeader"
+            },
+            "addEntityButtonText": "Add funding source",
+            "addEditModalAddTitle": "Add funding source and projected expenditures",
+            "tableHeader": "Initaitve name <br/> Work Plan topic",
+            "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).",
+            "emptyDashboardText": "Empty"
+          },
+          "modalForm": {
+            "id": "add_initiative",
+            "fields": [
+              {
+                "id": "initiative_wpTopic",
+                "type": "radio",
+                "validation": "radio",
+                "props": {
+                  "label": "Funding source:",
+                  "hint": "Enter a dollar amount using a $ or a percentage with %. Enter 0 for quarters with no projected expenditures. Enter N/A for quarters you do not expect to report.",
+                  "choices": [
+                    {
+                      "id": "VjQ0OFqior9Dxu5RRNiZ5u",
+                      "label": "State-equivalent funds"
+                    },
+                    {
+                      "id": "wbUsMMqVP7q1n10szK5h5S",
+                      "label": "Capacity-building funds"
+                    },
+                    {
+                      "id": "SdaFlF3DJyzKcHCCu3Zylm",
+                      "label": "Administrative cooperative agreement funding"
+                    },
+                    {
+                      "id": "8CpFrev6sMfRijIhafMj7V",
+                      "label": "Self-direction(*if applicable)"
+                    },
+                    {
+                      "id": "tVURShWTPfVKGU94QmIwDn",
+                      "label": "MFP funding for qualified HCBS"
+                    },
+                    {
+                      "id": "1k3EnM5WrizX3hsa6Zn85G",
+                      "label": "MFP funding for demonstrated services"
+                    },
+                    {
+                      "id": "dtybJ8ZucoIn7a4LnMpWg2",
+                      "label": "MFP funding for supplemental services"
+                    },
+                    {
+                      "id": "18Wb9b2zMIF13pZwWstdJF",
+                      "label": "Other, specify",
+                      "children": [
+                        {
+                          "id": "initiative_wp_otherTopic",
+                          "type": "textarea",
+                          "validation": {
+                            "type": "text",
+                            "nested": true,
+                            "parentFieldName": "initiative_wpTopic"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2023 Q3"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2023 Q4"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2024 Q1"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2024 Q2"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2024 Q3"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2024 Q4"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2025 Q1"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2025 Q2"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2025 Q3"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2025 Q4"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2026 Q1"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2026 Q2"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2026 Q3"
+                }
+              },
+              {
+                "id": "quarter_name",
+                "type": "text",
+                "validation": "text",
+                "props": {
+                  "label": "2026 Q4"
+                }
+              }
+            ]
+          },
+          "overlayForm": {
+            "id": "abc",
+            "fields": []
+          }
         }
       ]
     },
