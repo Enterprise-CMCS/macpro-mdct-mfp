@@ -10,12 +10,11 @@ import {
   UserContextShape,
   AdminBannerState,
   MfpReportState,
-  ReportStatus,
   ReportShape,
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
-import { mockWPReport } from "./mockReport";
+import { mockWPFullReport } from "./mockReport";
 
 // GLOBALS
 
@@ -105,6 +104,7 @@ export const mockStateUserStore: MfpUserState = {
     full_name: "Thelonious States",
     state: "MN",
     userIsStateUser: true,
+    userIsEndUser: true,
   },
   showLocalLogins: true,
   setUser: () => {},
@@ -135,6 +135,7 @@ export const mockStateRepStore: MfpUserState = {
     full_name: "Robert States",
     state: "MA",
     userIsStateRep: true,
+    userIsEndUser: true,
   },
   showLocalLogins: true,
   setUser: () => {},
@@ -183,18 +184,10 @@ export const mockBannerStore: AdminBannerState = {
 
 // REPORT STATES / STORE
 
-const mockReportShape = {
-  ...mockWPReport,
-  programName: "testProgram",
-  status: ReportStatus.NOT_STARTED,
-  lastAlteredBy: "Thelonius States",
-  dueDate: 162515200000,
-};
-
 export const mockReportStore: MfpReportState = {
-  report: mockReportShape as ReportShape,
-  reportsByState: [mockReportShape],
-  submittedReportsByState: [mockReportShape],
+  report: mockWPFullReport as ReportShape,
+  reportsByState: [mockWPFullReport],
+  submittedReportsByState: [mockWPFullReport],
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},

@@ -1,36 +1,88 @@
+import { MouseEventHandler, useContext, useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+// components
 import {
   Box,
   Button,
   Flex,
-  Heading,
   Image,
+  Heading,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-// components
-import { Alert, Modal, StatusTable } from "components";
+import { Alert, Modal, ReportContext, StatusTable } from "components";
 // types
-import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
+import { AlertTypes, AnyObject, ReportStatus } from "types";
+// utils
+import { parseCustomHtml, useStore, utcDateToReadableDate } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/mfp/mfp-review-and-submit";
 // assets
 import checkIcon from "assets/icons/icon_check_circle.png";
 import iconSearchDefault from "assets/icons/icon_search_blue.png";
 import iconSearchSubmitted from "assets/icons/icon_search_white.png";
-import { MouseEventHandler } from "react";
-import { utcDateToReadableDate } from "utils";
 
 export const ReviewSubmitPage = () => {
+  const { fetchReport, submitReport } = useContext(ReportContext);
+  const report = useStore().report;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // mock values
-  const hasError = false;
-  const { alertBox } = verbiage;
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [isPermittedToSubmit, setIsPermittedToSubmit] =
+    useState<boolean>(false);
+
+  // get user information
+  const { state, userIsEndUser } = useStore().user ?? {};
+
+  // get report type, state, and id from context or storage
+  const reportType =
+    report?.reportType || localStorage.getItem("selectedReportType");
+  const reportId = report?.id || localStorage.getItem("selectedReport");
+  const reportState = state || localStorage.getItem("selectedState");
+
+  const reportKeys = {
+    reportType: reportType,
+    state: reportState,
+    id: reportId,
+  };
+
+  const reviewVerbiage = verbiage;
+
+  const { alertBox } = reviewVerbiage;
+
+  useEffect(() => {
+    if (report?.id) {
+      fetchReport(reportKeys);
+    }
+  }, []);
+
+  useEffect(() => {
+    setHasError(!!document.querySelector("img[alt='Error notification']"));
+  }, [fetchReport]);
+
+  useEffect(() => {
+    setIsPermittedToSubmit(
+      (userIsEndUser &&
+        report?.status === ReportStatus.IN_PROGRESS &&
+        !hasError) ||
+        false
+    );
+  }, [userIsEndUser, report?.status, hasError]);
+
+  const submitForm = async () => {
+    setSubmitting(true);
+    if (isPermittedToSubmit) {
+      await submitReport(reportKeys);
+    }
+    await fetchReport(reportKeys);
+    setSubmitting(false);
+    onClose();
+  };
 
   return (
     <>
-      {hasError && (
+      {(hasError || report?.status === ReportStatus.NOT_STARTED) && (
         <Box sx={sx.alert}>
           <Alert
             title={alertBox.title}
@@ -40,24 +92,24 @@ export const ReviewSubmitPage = () => {
         </Box>
       )}
       <Flex sx={sx.pageContainer} data-testid="review-submit-page">
-        {ReportStatus.SUBMITTED ? (
+        {report?.status == ReportStatus.SUBMITTED ? (
           <SuccessMessage
-            reportType={ReportType.WP}
-            name="placeholder"
-            date={Date.now()} // this is a placeholder date
-            submittedBy={"placeholder"}
-            reviewVerbiage={verbiage}
-            stateName={"Puerto Rico"}
+            reportType={report.reportType}
+            name={report.programName ?? report.submissionName}
+            date={report?.submittedOnDate}
+            submittedBy={report?.submittedBy}
+            reviewVerbiage={reviewVerbiage}
+            stateName={report.fieldData.stateName!}
           />
         ) : (
           <ReadyToSubmit
-            submitForm={() => {}}
+            submitForm={submitForm}
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
-            submitting={false}
-            isPermittedToSubmit={false}
-            reviewVerbiage={{}}
+            submitting={submitting}
+            isPermittedToSubmit={isPermittedToSubmit}
+            reviewVerbiage={reviewVerbiage}
           />
         )}
       </Flex>
@@ -67,8 +119,10 @@ export const ReviewSubmitPage = () => {
 
 const PrintButton = ({ reviewVerbiage }: { reviewVerbiage: AnyObject }) => {
   const { print } = reviewVerbiage;
-  const reportType = ReportType.WP;
-  const isSubmitted = false;
+  const report = useStore().report;
+  const reportType = report?.reportType === "WP" ? "wp" : "sar";
+
+  const isSubmitted = report?.status === "Submitted";
   return (
     <Button
       as={RouterLink}
@@ -100,6 +154,7 @@ const ReadyToSubmit = ({
 }: ReadyToSubmitProps) => {
   const { review } = reviewVerbiage;
   const { intro, modal, pageLink } = review;
+  const pdfExport = true;
 
   return (
     <Flex sx={sx.contentContainer} data-testid="ready-view">
@@ -109,7 +164,7 @@ const ReadyToSubmit = ({
         </Heading>
         <Box sx={sx.infoTextBox}>
           <Text sx={sx.infoHeading}>{intro.infoHeader}</Text>
-          <Text>{intro.info}</Text>
+          <Text>{parseCustomHtml(intro.info)}</Text>
         </Box>
 
         <Box>
@@ -117,7 +172,7 @@ const ReadyToSubmit = ({
         </Box>
       </Box>
       <Flex sx={sx.submitContainer}>
-        <PrintButton reviewVerbiage={reviewVerbiage} />
+        {pdfExport && <PrintButton reviewVerbiage={reviewVerbiage} />}
         <Button
           type="submit"
           onClick={onOpen as MouseEventHandler}
@@ -157,14 +212,18 @@ export const SuccessMessageGenerator = (
   reportType: string,
   name: string,
   submissionDate?: number,
-  submittedBy?: string
+  submittedBy?: string,
+  stateName?: string
 ) => {
   if (submissionDate && submittedBy) {
     const readableDate = utcDateToReadableDate(submissionDate, "full");
     const submittedDate = `was submitted on ${readableDate}`;
     const submittersName = `${submittedBy}`;
 
-    return `${reportType} report for ${name} ${submittedDate} by ${submittersName}.`;
+    const reportTitle = <b>{`${stateName} ${name}`}</b>;
+    const preSubmissionMessage = `${reportType} submission for `;
+    const postSubmissionMessage = ` ${submittedDate} by ${submittersName}.`;
+    return [preSubmissionMessage, reportTitle, postSubmissionMessage];
   }
   return `${reportType} report for ${name} was submitted.`;
 };
@@ -175,6 +234,7 @@ export const SuccessMessage = ({
   date,
   submittedBy,
   reviewVerbiage,
+  stateName,
 }: SuccessMessageProps) => {
   const { submitted } = reviewVerbiage;
   const { intro } = submitted;
@@ -182,7 +242,8 @@ export const SuccessMessage = ({
     reportType,
     name,
     date,
-    submittedBy
+    submittedBy,
+    stateName
   );
 
   return (
@@ -229,7 +290,6 @@ const sx = {
     flexDirection: "column",
     width: "100%",
     maxWidth: "reportPageWidth",
-    marginTop: "2rem",
   },
   leadTextBox: {
     width: "100%",
