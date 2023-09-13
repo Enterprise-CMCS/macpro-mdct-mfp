@@ -36,6 +36,7 @@ import {
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
+import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 
 interface AlertVerbiage {
   [key: string]: { title: string; description: string };
@@ -64,7 +65,13 @@ export const ModalOverlayReportPage = ({
 
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
-  (reportFieldDataEntities as any[]).map((entity) => entity["isOtherEntity"] = true);
+  (reportFieldDataEntities as any[]).map(
+    (entity) => (entity["isOtherEntity"] = true)
+  );
+  const showAlert = 
+    report && (alertVerbiage as AlertVerbiage)[route.entityType]
+      ? getWPAlertStatus(report, entityType)
+      : false;
 
   const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
   const tableHeaders = () => {
@@ -195,7 +202,7 @@ export const ModalOverlayReportPage = ({
             text={verbiage.intro}
             reportType={report?.reportType}
           />
-          {(alertVerbiage as AlertVerbiage)[route.entityType] && (
+          {showAlert && (
             <Alert
               title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
               status={AlertTypes.ERROR}
