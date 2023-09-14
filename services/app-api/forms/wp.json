@@ -859,6 +859,7 @@
           "name": "State and territory-specific Initiatives: III. Funding Sources",
           "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
           "pageType": "modalOverlayPage",
+          "entityType": "fundingSources",
           "verbiage": {
             "intro": {
               "section": "",
@@ -866,7 +867,7 @@
               "info": [
                 {
                   "type": "html",
-                  "content": "Add funding sources with projected quarterly expenditures."
+                  "content": "<br>Add funding sources with projected quarterly expenditures.</br>"
                 },
                 {
                   "type": "html",
@@ -882,7 +883,7 @@
             "emptyDashboardText": "Empty"
           },
           "modalForm": {
-            "id": "add_initiative",
+            "id": "tb-modal",
             "fields": [
               {
                 "id": "initiative_wpTopic",
@@ -893,35 +894,35 @@
                   "hint": "Enter a dollar amount using a $ or a percentage with %. Enter 0 for quarters with no projected expenditures. Enter N/A for quarters you do not expect to report.",
                   "choices": [
                     {
-                      "id": "VjQ0OFqior9Dxu5RRNiZ5u",
+                      "id": "2VLpZ9A92OivbZhKvY8pE4hB65c",
                       "label": "State-equivalent funds"
                     },
                     {
-                      "id": "wbUsMMqVP7q1n10szK5h5S",
+                      "id": "2VLpZ9A92OivbZhKvY8pE4",
                       "label": "Capacity-building funds"
                     },
                     {
-                      "id": "SdaFlF3DJyzKcHCCu3Zylm",
+                      "id": "2VLpZCNtbcjRPq3evd1NI6",
                       "label": "Administrative cooperative agreement funding"
                     },
                     {
-                      "id": "8CpFrev6sMfRijIhafMj7V",
+                      "id": "2VLpZEkkfhqqS95l7LFj0y",
                       "label": "Self-direction(*if applicable)"
                     },
                     {
-                      "id": "tVURShWTPfVKGU94QmIwDn",
+                      "id": "2VLpZDJ9qaKKOk78ztBdiB",
                       "label": "MFP funding for qualified HCBS"
                     },
                     {
-                      "id": "1k3EnM5WrizX3hsa6Zn85G",
+                      "id": "2VLpZCRWieGr1Z49QX5Aqc",
                       "label": "MFP funding for demonstrated services"
                     },
                     {
-                      "id": "dtybJ8ZucoIn7a4LnMpWg2",
+                      "id": "2VLq8ASzZNfxbu520if449",
                       "label": "MFP funding for supplemental services"
                     },
                     {
-                      "id": "18Wb9b2zMIF13pZwWstdJF",
+                      "id": "2VLq8ASzZNfxbu520if449",
                       "label": "Other, specify",
                       "children": [
                         {
@@ -939,113 +940,113 @@
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqDuo2xxhCWuYuQdZTGmEnuYv",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2023 Q3"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqDwTI4NOFvqwCx1wEDziIRfo",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2023 Q4"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqDwKKHtZ8L26tMsKJEr",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2024 Q1"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqDwwngaHbp4JPQgdWL",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2024 Q2"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqDrcjB6oL5utYbFEodI",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2024 Q3"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqDr6ETYFzHYaaBINTZc",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2024 Q4"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqMGSPi3EGY8DoLNvmlf",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2025 Q1"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqMJwh8LTB4jKD79F9PJ",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2025 Q2"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqMIXqkLGt8uNDA6cz5g",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2025 Q3"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLsgN53FvEa4pRcNkh39BviXAY",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2025 Q4"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqMFqSgRnEcVsURzmPey",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2026 Q1"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqRfMwDodksiBxXrWKpL",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2026 Q2"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqRh8QVBYyWknLnNTWP6",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2026 Q3"
                 }
               },
               {
-                "id": "quarter_name",
-                "type": "text",
-                "validation": "text",
+                "id": "2VLqRh8QVBGyWknVnNTWP7",
+                "type": "number",
+                "validation": "number",
                 "props": {
                   "label": "2026 Q4"
                 }

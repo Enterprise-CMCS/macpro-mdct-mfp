@@ -88,7 +88,7 @@ export const EntityCard = ({
         )}
         <EntityCardTopSection
           entityType={entityType}
-          formattedEntityData={formattedEntityData}
+          formattedEntityData={entity}
           printVersion={!!printVersion}
         />
         {openAddEditEntityModal && (
