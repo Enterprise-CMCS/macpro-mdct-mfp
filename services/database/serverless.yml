@@ -28,6 +28,8 @@ custom:
   formTemplateTableName: ${self:custom.stage}-form-template-versions
   wpReportTableName: ${self:custom.stage}-wp-reports
   wpFormBucket: ${env:WP_FORM_BUCKET, "${self:service}-${self:custom.stage}-wp"}
+  sarReportTableName: ${self:custom.stage}-sar-reports
+  sarFormBucket: ${env:SAR_FORM_BUCKET, "${self:service}-${self:custom.stage}-sar"}
   dynamodb:
     stages:
       - local
@@ -127,6 +129,33 @@ resources:
             AttributeType: S
           - AttributeName: md5Hash
             AttributeType: S
+    SarReportTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.sarReportTableName}
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+        AttributeDefinitions:
+          - AttributeName: state
+            AttributeType: S
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: state
+            KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST # Set the capacity to auto-scale
+    SarFormBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: !Sub ${self:custom.sarFormBucket}
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
     WpReportTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -149,7 +178,7 @@ resources:
     WpFormBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: !Sub ${self:service}-${self:custom.stage}-wp
+        BucketName: !Sub ${self:custom.wpFormBucket}
         BucketEncryption:
           ServerSideEncryptionConfiguration:
             - ServerSideEncryptionByDefault:
@@ -163,6 +192,16 @@ resources:
       Value: !GetAtt BannerTable.StreamArn
     FormTemplateTableName:
       Value: !Ref FormTemplateVersionsTable
+    SarReportTableName:
+      Value: !Ref SarReportTable
+    SarReportTableArn:
+      Value: !GetAtt SarReportTable.Arn
+    SarReportTableStreamArn:
+      Value: !GetAtt SarReportTable.StreamArn
+    SarFormBucketName:
+      Value: !Ref SarFormBucket
+    SarFormBucketArn:
+      Value: !GetAtt SarFormBucket.Arn
     WpReportTableName:
       Value: !Ref WpReportTable
     WpReportTableArn:
