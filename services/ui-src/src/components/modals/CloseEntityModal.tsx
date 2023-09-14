@@ -1,8 +1,9 @@
 // components
 import { Modal } from "components";
-
 // types
 import { AnyObject, EntityShape } from "types";
+//utils
+import { renderHtml } from "utils";
 
 export const CloseEntityModal = ({ verbiage, modalDisclosure }: Props) => {
   const closing = false;
@@ -18,11 +19,14 @@ export const CloseEntityModal = ({ verbiage, modalDisclosure }: Props) => {
       submitting={closing}
       content={{
         heading: modalInfo.closeOutModalTitle,
-        subheading: modalInfo.closeOutModalBodyText,
+        //body: renderHtml(modalInfo.closeOutModalBodyText),
         actionButtonText: modalInfo.closeOutModalConfirmButtonText,
         closeButtonText: "Cancel",
       }}
-    ></Modal>
+    >
+      {" "}
+      {renderHtml(modalInfo.closeOutModalBodyText)}
+    </Modal>
   );
 };
 
