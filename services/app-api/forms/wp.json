@@ -957,7 +957,7 @@
                 },
                 "props": {
                   "label": "Does the performance measure include quantitative targets?",
-                  "hint": "This element indicates if a remittance to the state or a payment to a plan is required in an MCO/PIHP/PAHP contract if a minimum MLR is not met.",
+                  "hint": "Note: If 'Yes', fields use calendar year quarters.",
                   "choices": [
                     {
                       "id": "UL4dAeyyvCFAXttxZioacR",
@@ -966,7 +966,6 @@
                     {
                       "id": "7FP4jcg4jK7Ssqp3cCW5vQ",
                       "label": "Yes",
-                      "hint": "Note: If 'Yes', fields use calendar year quarters.",
                       "children": [
                         {
                           "id": "evaluationPlan_includesTargets2024Q1",
