@@ -1,13 +1,8 @@
 // utils
 import { AnyObject, EntityShape } from "types";
 
-export const getFormattedEntityData = (
-  entityType: string
-) => {
-  switch (entityType) {
-    default:
-      return {};
-  };
+export const getFormattedEntityData = () => {
+  return {};
 };
 
 export const entityWasUpdated = (

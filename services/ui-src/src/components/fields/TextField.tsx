@@ -1,20 +1,11 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
-import { ReportContext } from "components";
 // utils
-import {
-  // autosaveFieldData,
-  // getAutosaveFields,
-  labelTextWithOptional,
-  parseCustomHtml,
-  useStore,
-  // useUser,
-} from "utils";
+import { labelTextWithOptional, parseCustomHtml } from "utils";
 import { InputChangeEvent, AnyObject, CustomHtmlElement } from "types";
-import { EntityContext } from "components/reports/EntityProvider";
 
 export const TextField = ({
   name,

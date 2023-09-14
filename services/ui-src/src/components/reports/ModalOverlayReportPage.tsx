@@ -128,7 +128,6 @@ export const ModalOverlayReportPage = ({
 
   // Form submit methods
   const onSubmit = async (enteredData: AnyObject) => {
-    console.log("modal overlay on submit");
     if (userIsEndUser) {
       setSubmitting(true);
       const reportKeys = {

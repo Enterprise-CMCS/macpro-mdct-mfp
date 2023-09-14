@@ -32,7 +32,6 @@ export const AddEditEntityModal = ({
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const writeEntity = async (enteredData: any) => {
-    console.log("on submit")
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");

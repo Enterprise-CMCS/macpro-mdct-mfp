@@ -1,5 +1,4 @@
-import { ReportShape } from "types";
-import { AnyObject } from "types";
+import { ReportShape, AnyObject } from "types";
 
 //setting up function calls using entityType as call
 export const checkInitiativesTopics = (entities: any[]) => {
@@ -17,7 +16,6 @@ export const checkInitiativesTopics = (entities: any[]) => {
       return topic?.value;
     })
   );
-
   //check if the values matches all the topics, if all topics is covered, return false
   return !topics.every((topic) => values?.includes(topic));
 };
@@ -29,7 +27,6 @@ const alertStatusFunctions: AnyObject = {
 
 export const getWPAlertStatus = (report: ReportShape, entityType: string) => {
   const fieldData = report?.fieldData;
-  
   var fn = alertStatusFunctions[entityType];
   if (typeof fn === "function") {
     return fn(fieldData[entityType]);
