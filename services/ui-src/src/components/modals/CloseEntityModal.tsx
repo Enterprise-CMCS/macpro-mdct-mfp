@@ -19,12 +19,10 @@ export const CloseEntityModal = ({ verbiage, modalDisclosure }: Props) => {
       submitting={closing}
       content={{
         heading: modalInfo.closeOutModalTitle,
-        //body: renderHtml(modalInfo.closeOutModalBodyText),
         actionButtonText: modalInfo.closeOutModalConfirmButtonText,
         closeButtonText: "Cancel",
       }}
     >
-      {" "}
       {renderHtml(modalInfo.closeOutModalBodyText)}
     </Modal>
   );

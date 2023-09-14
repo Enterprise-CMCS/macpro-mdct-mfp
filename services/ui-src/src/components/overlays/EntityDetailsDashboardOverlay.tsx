@@ -4,8 +4,6 @@ import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 import { Form, ReportPageIntro } from "components";
 // types
 import { EntityShape, EntityType, FormJson } from "types";
-// utils
-
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // verbiage
