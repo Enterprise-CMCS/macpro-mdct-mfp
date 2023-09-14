@@ -966,6 +966,7 @@
                     {
                       "id": "7FP4jcg4jK7Ssqp3cCW5vQ",
                       "label": "Yes",
+                      "hint": "If 'Yes', fields use calendar year quarters",
                       "children": [
                         {
                           "id": "evaluationPlan_includesTargets2024Q1",
@@ -976,8 +977,7 @@
                             "nested": true
                           },
                           "props": {
-                            "label": "2024 Q1",
-                            "hint": "this functionality is waiting on BOs."
+                            "label": "2024 Q1"
                           }
                         },
                         {
