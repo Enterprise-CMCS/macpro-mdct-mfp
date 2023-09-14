@@ -170,7 +170,7 @@ export const calculatePeriod = (dueDate: string) => {
 };
 
 /*
- * Converts a date string to UTC and calculates the due date based on the "Period".
+ * Converts a date string to UTC + 180 days
  * returns -> UTC datetime in format 'ms since Unix epoch'
  * Ex: 6/30/22 Becomes 1483603200000
  */
