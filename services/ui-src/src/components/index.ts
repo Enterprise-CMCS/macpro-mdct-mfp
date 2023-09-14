@@ -76,6 +76,7 @@ export { ReportContext, ReportProvider } from "./reports/ReportProvider";
 export { EntityProvider } from "./reports/EntityProvider";
 export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
+export { OverlayModalPage } from "./reports/OverlayModalPage";
 export { ModalOverlayReportPage } from "./reports/ModalOverlayReportPage";
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
