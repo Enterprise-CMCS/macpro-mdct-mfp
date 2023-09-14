@@ -77,7 +77,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
             </Button>
 
             <CloseEntityModal
-              //selectedEntity={selectedEntity}
               verbiage={verbiage}
               modalDisclosure={{
                 isOpen: closeEntityModalIsOpen,
