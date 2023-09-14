@@ -27,6 +27,7 @@ export const ReportContext = createContext<ReportContextShape>({
   fetchReport: Function,
   archiveReport: Function,
   updateReport: Function,
+  submitReport: Function,
   // reports by state
   fetchReportsByState: Function,
   // selected report

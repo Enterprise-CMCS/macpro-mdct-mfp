@@ -4,23 +4,31 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, Flex, Image, Td, Text, Tr } from "@chakra-ui/react";
 import { Table } from "components";
 // types
-import { ReportPageProgress } from "types";
+import { ReportPageProgress, ReportType } from "types";
 // utils
-import { useBreakpoint } from "utils";
+import { getRouteStatus, useBreakpoint, useStore } from "utils";
 // verbiage
-
+import verbiage from "verbiage/pages/mfp/mfp-review-and-submit";
 // assets
 import editIcon from "assets/icons/icon_edit.png";
-// import errorIcon from "assets/icons/icon_error_circle_bright.png";
+import errorIcon from "assets/icons/icon_error_circle_bright.png";
 import successIcon from "assets/icons/icon_check_circle.png";
+import { assertExhaustive } from "utils/other/typing";
 
 export const StatusTable = () => {
-  return (
+  const report = useStore().report;
+  const { review } = verbiage;
+  const rowDepth = 1;
+  return report ? (
     <Box sx={sx.container}>
-      <Table content={{}} sx={sx.table}>
-        <ChildRow page={{ name: "placeholder", path: "/" }} depth={1} />
+      <Table content={review.table} sx={sx.table}>
+        {getRouteStatus(report).map((page: ReportPageProgress) => {
+          return <ChildRow key={page.path} page={page} depth={rowDepth} />;
+        })}
       </Table>
     </Box>
+  ) : (
+    <Box />
   );
 };
 
@@ -37,20 +45,47 @@ const ChildRow = ({ page, depth }: RowProps) => {
   );
 };
 
-export const StatusIcon = () => {
-  return (
-    <Flex sx={sx.status}>
-      <Image src={successIcon} alt="Success notification" />
-      <Text>Complete</Text>
-    </Flex>
-  );
+export const StatusIcon = ({
+  reportType,
+  status,
+}: {
+  reportType: ReportType;
+  status?: boolean;
+}) => {
+  switch (reportType) {
+    case ReportType.SAR:
+    case ReportType.WP: {
+      if (status) {
+        return (
+          <Flex sx={sx.status}>
+            <Image src={successIcon} alt="Success notification" />
+            <Text>Complete</Text>
+          </Flex>
+        );
+      } else if (status === undefined) {
+        return <></>;
+      } else {
+        return (
+          <Flex sx={sx.status}>
+            <Image src={errorIcon} alt="Error notification" />
+            <Text>Error</Text>
+          </Flex>
+        );
+      }
+    }
+    default:
+      assertExhaustive(reportType);
+      throw new Error(
+        `Statusing icons for '${reportType}' have not been implemented.`
+      );
+  }
 };
 
 const TableRow = ({ page, depth }: RowProps) => {
   const { isMobile } = useBreakpoint();
-  const { name, path, children } = page;
+  const { name, path, children, status } = page;
   const buttonAriaLabel = `Edit  ${name}`;
-
+  const report = useStore().report;
   return (
     <Tr>
       {depth == 1 ? (
@@ -76,7 +111,10 @@ const TableRow = ({ page, depth }: RowProps) => {
             : "0.5rem"
         }
       >
-        <StatusIcon />
+        <StatusIcon
+          reportType={report?.reportType as ReportType}
+          status={status}
+        />
       </Td>
       {!isMobile && (
         <Td>{!children && EditButton(buttonAriaLabel, path, true)}</Td>
