@@ -82,5 +82,11 @@ export default {
       list: [],
       text: "",
     },
+    formIntro: {
+      buttonLabel: "Instructions",
+      intro: "",
+      list: [],
+      text: "",
+    },
   },
 };
