@@ -209,6 +209,28 @@ export const mockModalDrawerReportPageJson = {
   drawerForm: mockDrawerForm,
 };
 
+export const mockEntityDetailsOverlayVerbiage = {
+  intro: mockVerbiageIntro,
+  closeOutWarning: {
+    title: "Warning",
+    description: "This is a warning",
+  },
+  closeOutModal: {
+    closeOutModalButtonText: "Close out modal",
+    closeOutModalTitle: "Modal title",
+    closeOutModalBodyText: "This is a modal",
+    closeOutModalConfirmButtonText: "Confirm",
+  },
+};
+
+export const mockEntityDetailsOverlayJson = {
+  name: "mock-route-entity-overlay",
+  path: "/mock/mock-route-entity-overlay",
+  pageType: "entityOverlay",
+  verbiage: mockEntityDetailsOverlayVerbiage,
+  form: mockForm,
+};
+
 export const mockOptionalFormField = {
   id: "mock-optional-text-field",
   type: "text",

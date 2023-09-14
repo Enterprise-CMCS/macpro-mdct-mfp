@@ -1,23 +1,15 @@
-import React from "react";
 // components
-import { Text } from "@chakra-ui/react";
 import { Modal } from "components";
 
 // types
 import { AnyObject, EntityShape } from "types";
-import { renderHtml } from "utils";
 
-export const CloseEntityModal = ({
-  selectedEntity,
-  verbiage,
-  modalDisclosure,
-}: Props) => {
+export const CloseEntityModal = ({ verbiage, modalDisclosure }: Props) => {
   const closing = false;
   const closeProgramHandler = async () => {
-    // eslint-disable-next-line no-console
-    console.log("Entity closed", selectedEntity);
     modalDisclosure.onClose();
   };
+  const modalInfo = verbiage.closeOutModal;
 
   return (
     <Modal
@@ -25,14 +17,12 @@ export const CloseEntityModal = ({
       modalDisclosure={modalDisclosure}
       submitting={closing}
       content={{
-        heading: verbiage.closeOutModal.closeOutModalTitle,
-        subheading: verbiage.closeOutModal.closeOutModalBodyText,
-        actionButtonText: verbiage.closeOutModal.closeOutModalConfirmButtonText,
+        heading: modalInfo.closeOutModalTitle,
+        subheading: modalInfo.closeOutModalBodyText,
+        actionButtonText: modalInfo.closeOutModalConfirmButtonText,
         closeButtonText: "Cancel",
       }}
-    >
-      <Text>{renderHtml(verbiage.closeModalWarning)}</Text>
-    </Modal>
+    ></Modal>
   );
 };
 

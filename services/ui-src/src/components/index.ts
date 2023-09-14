@@ -67,7 +67,7 @@ export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { ReviewSubmitPage } from "./pages/ReviewSubmit/ReviewSubmitPage";
 // overlays
-export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
+export { EntityDetailsDashboardOverlay } from "./overlays/EntityDetailsDashboardOverlay";
 // reports
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
@@ -78,7 +78,7 @@ export { EntityProvider } from "./reports/EntityProvider";
 export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
 export { ModalOverlayReportPage } from "./reports/ModalOverlayReportPage";
-export { EntityOverlayPage } from "./reports/EntityOverlayPage";
+export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables
