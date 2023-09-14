@@ -966,7 +966,7 @@
                     {
                       "id": "7FP4jcg4jK7Ssqp3cCW5vQ",
                       "label": "Yes",
-                      "hint": "If 'Yes', fields use calendar year quarters",
+                      "hint": "Note: If 'Yes', fields use calendar year quarters.",
                       "children": [
                         {
                           "id": "evaluationPlan_includesTargets2024Q1",
