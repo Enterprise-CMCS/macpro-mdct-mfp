@@ -6,7 +6,6 @@ import {
   Flex,
   Heading,
   Image,
-  Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -29,7 +28,6 @@ export const OverlayModalPage = ({ route }: Props) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-  const submitting = false;
 
   //display variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
@@ -38,10 +36,10 @@ export const OverlayModalPage = ({ route }: Props) => {
   let tempEntity: EntityShape = {
     id: "mockid",
     evaluationPlan_objectiveName: "{Objective Name}",
-    evaluationPlan_description: "description here",
-    evaluationPlan_targets: "targets here",
+    evaluationPlan_description: "Description here",
+    evaluationPlan_targets: "Targets here",
     evaluationPlan_includesTargets: "No",
-    evaluationPlan_additionalDetails: "additional details",
+    evaluationPlan_additionalDetails: "Additional details",
   };
   reportFieldDataEntities = [tempEntity, tempEntity];
 
@@ -137,7 +135,7 @@ export const OverlayModalPage = ({ route }: Props) => {
       <Box>
         <Flex sx={sx.buttonFlex}>
           <Button type="submit" form={modalForm.id} sx={sx.saveButton}>
-            {submitting ? <Spinner size="md" /> : "Save & return"}
+            Save & return"
           </Button>
         </Flex>
       </Box>

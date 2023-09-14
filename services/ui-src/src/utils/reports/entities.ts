@@ -14,6 +14,7 @@ export const getFormattedEntityData = (
         objectiveName: entity?.evaluationPlan_objectiveName,
         description: entity?.evaluationPlan_description,
         targets: entity?.evaluationPlan_targets,
+        // TODO: add this functionality after guidance from BOs (per Design)
         includesTargets: getRadioValue(
           entity,
           "evaluationPlan_includesTargets"

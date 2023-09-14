@@ -949,7 +949,12 @@
               {
                 "id": "evaluationPlan_includesTargets",
                 "type": "radio",
-                "validation": "radio",
+                "validation": {
+                  "type": "radio",
+                  "nested": true,
+                  "parentFieldName": "evaluationPlan_targets",
+                  "parentOptionId": "745yghr57654rth"
+                },
                 "props": {
                   "label": "Does the performance measure include quantitative targets?",
                   "hint": "This element indicates if a remittance to the state or a payment to a plan is required in an MCO/PIHP/PAHP contract if a minimum MLR is not met.",
@@ -963,7 +968,7 @@
                       "label": "Yes",
                       "children": [
                         {
-                          "id": "gdfgdgdf",
+                          "id": "evaluationPlan_includesTargets2024Q1",
                           "type": "number",
                           "validation": {
                             "type": "number",
@@ -973,6 +978,138 @@
                           "props": {
                             "label": "2024 Q1",
                             "hint": "this functionality is waiting on BOs."
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2024Q2",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2024 Q2"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2024Q3",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2024 Q3"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2024Q4",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2024 Q4"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2025Q1",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2025 Q1"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2025Q2",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2025 Q2"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2025Q3",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2025 Q3"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2025Q4",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2025 Q4"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2026Q1",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2026 Q1"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2026Q2",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2026 Q2"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2026Q3",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2026 Q3"
+                          }
+                        },
+                        {
+                          "id": "evaluationPlan_includesTargets2026Q4",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "parentFieldName": "evaluationPlan_includesTargets",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "2026 Q4"
                           }
                         }
                       ]
