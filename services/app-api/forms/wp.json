@@ -863,7 +863,7 @@
           "verbiage": {
             "intro": {
               "section": "State & Territory Specific Initiatives: IV. Close-out information (if applicable)",
-              "subsection": "Person Centered Planning",
+              "subsection": "{Initiative Name}",
               "info": [
                 {
                   "type": "html",
@@ -891,8 +891,7 @@
                 "type": "date",
                 "validation": "date",
                 "props": {
-                  "label": "Projected end date",
-                  "hint": "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in the process."
+                  "label": "Projected end date"
                 }
               },
               {
@@ -900,8 +899,7 @@
                 "type": "date",
                 "validation": "date",
                 "props": {
-                  "label": "Actual end date",
-                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
+                  "label": "Actual end date"
                 }
               },
               {

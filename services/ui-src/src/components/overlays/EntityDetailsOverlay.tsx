@@ -39,10 +39,10 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
         sx={sx.backButton}
         variant="none"
         //TO-DO: add onClick prop to go back to initiative dashboard
-        aria-label="Return to all initiatives"
+        aria-label="Return to dashboard for this initiative"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
-        Return to all initiatives
+        Return to dashboard for this initiative
       </Button>
 
       {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
