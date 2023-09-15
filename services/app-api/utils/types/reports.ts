@@ -70,6 +70,7 @@ export interface OverlayModalPageShape extends ReportPageShapeBase {
   modalForm: FormJson;
   overlayForm?: FormJson;
   form?: never;
+  drawerForm?: Function;
 }
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
