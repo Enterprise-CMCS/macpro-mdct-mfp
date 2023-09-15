@@ -912,7 +912,7 @@
             "deleteModalConfirmButtonText": "Yes, delete objective",
             "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
             "enterEntityDetailsButtonText": "Edit",
-            "dashboardTitle": "Objective total count: 2",
+            "dashboardTitle": "Objective total count",
             "deleteEntityButtonAltText": "",
             "entityUnfinishedMessage": "",
             "drawerTitle": ""
@@ -1131,7 +1131,7 @@
         {
           "name": "State and territory-specific Initiatives: III. Funding Sources",
           "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
-          "pageType": "modalOverlay",
+          "pageType": "overlayModal",
           "entityType": "fundingSources",
           "verbiage": {
             "intro": {

@@ -46,7 +46,7 @@ export const EntityCardTopSection = ({
               return (
                 <GridItem>
                   <Flex sx={sx.gridItems}>
-                    <Text sx={sx.subtitleGrid}>{quarter.id}:</Text>
+                    <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
                     <Text sx={sx.subtext}>{quarter.value}</Text>
                   </Flex>
                 </GridItem>
@@ -81,10 +81,10 @@ const sx = {
     justifyContent: "center",
     display: "grid",
   },
-  subtitleGrid: {
-    marginTop: ".5rem",
-    gridTemplateColumns: "33% auto",
-    columnGap: "1rem",
+  gridSubtitle: {
+    fontWeight: "bold",
+    fontSize: "sm",
+    marginRight: ".25rem",
   },
   subtitle: {
     marginTop: "1rem",

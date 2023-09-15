@@ -20,7 +20,6 @@ import { EntityShape, OverlayModalPageShape } from "types";
 import { EntityCard } from "components/cards/EntityCard";
 import { getFormattedEntityData } from "utils/reports/entities";
 import { useStore } from "utils";
-// utils
 
 export const OverlayModalPage = ({ route }: Props) => {
   const { entityType, verbiage, modalForm } = route;
@@ -33,13 +32,73 @@ export const OverlayModalPage = ({ route }: Props) => {
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
 
   ///TEMPORARY ENTITY//
-  let tempEntity: EntityShape = {
-    id: "mockid",
-    evaluationPlan_objectiveName: "{Objective Name}",
-    evaluationPlan_description: "Description here",
-    evaluationPlan_targets: "Targets here",
-    evaluationPlan_includesTargets: "No",
-    evaluationPlan_additionalDetails: "Additional details",
+  let tempEntity = {};
+  /*
+   *tempEntity = {
+   * id: "mockid",
+   * evaluationPlan_objectiveName: "{Objective Name}",
+   * evaluationPlan_description: "Description here",
+   * evaluationPlan_targets: "Targets here",
+   * evaluationPlan_includesTargets: "No",
+   * evaluationPlan_additionalDetails: "Additional details",
+   * };
+   */
+
+  tempEntity = {
+    objectiveName: "Funding Sources",
+    id: "test-id",
+    report_initiative: "state and territory specific initiatives",
+    quarters: [
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+    ],
+    isOtherEntity: true,
   };
 
   reportFieldDataEntities = [tempEntity, tempEntity];
@@ -88,7 +147,7 @@ export const OverlayModalPage = ({ route }: Props) => {
       )}
       <Box>
         <Heading as="h3" sx={sx.dashboardTitle}>
-          {verbiage.dashboardTitle}
+          {`${verbiage.dashboardTitle}: ${reportFieldDataEntities.length}`}
         </Heading>
         <Box>
           {reportFieldDataEntities.map(
