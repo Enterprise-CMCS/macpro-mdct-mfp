@@ -41,6 +41,7 @@ export const OverlayModalPage = ({ route }: Props) => {
     evaluationPlan_includesTargets: "No",
     evaluationPlan_additionalDetails: "Additional details",
   };
+
   reportFieldDataEntities = [tempEntity, tempEntity];
 
   // add/edit entity modal disclosure and methods
