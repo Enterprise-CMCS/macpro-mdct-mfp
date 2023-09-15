@@ -47,12 +47,6 @@ export const ReportPageWrapper = () => {
             setSidebarHidden={setSidebarHidden}
           />
         );
-      case PageTypes.OVERLAY_MODAL_PAGE:
-        return (
-          <OverlayModalPage
-            route={route as OverlayModalPageShape}
-          ></OverlayModalPage>
-        );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
