@@ -34,13 +34,13 @@ export const formFieldFactory = (
   const fieldToComponentMap: AnyObject = {
     checkboxSingle: ChoiceField,
     checkbox: CheckboxField,
-    radio: RadioField,
-    text: TextField,
-    textarea: TextAreaField,
     date: DateField,
     dropdown: DropdownField,
     dynamic: DynamicField,
     number: NumberField,
+    radio: RadioField,
+    text: TextField,
+    textarea: TextAreaField,
   };
   fields = initializeChoiceListFields(fields);
   return fields.map((field) => {

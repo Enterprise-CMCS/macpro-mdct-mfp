@@ -19,6 +19,11 @@ export interface EntityShape {
   [key: string]: any;
 }
 
+export enum OverlayModalEntityTypes {
+  EVALUATION_PLAN = "evaluationPlan",
+  FUNDING_SOURCES = "fundingSources",
+}
+
 /**
  * General type for all form JSON.
  */
