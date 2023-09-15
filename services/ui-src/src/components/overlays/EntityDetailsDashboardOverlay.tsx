@@ -1,7 +1,12 @@
-import React, { MouseEventHandler, useContext, useEffect } from "react";
+import React, {
+  MouseEventHandler,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 // components
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
-import { Form, ReportPageIntro } from "components";
+import { ReportPageIntro, Table, EntityRow } from "components";
 // types
 import { EntityShape, EntityType, FormJson } from "types";
 // assets
@@ -15,11 +20,9 @@ export const EntityDetailsDashboardOverlay = ({
   entityType,
   entities,
   form,
-  onSubmit,
   selectedEntity,
   disabled,
   submitting,
-  validateOnRender,
 }: Props) => {
   // Entity Provider Setup
   const { setEntities, setSelectedEntity, setEntityType } =
@@ -35,6 +38,28 @@ export const EntityDetailsDashboardOverlay = ({
     };
   }, [entityType, selectedEntity]);
 
+  const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
+    undefined
+  );
+  const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>(true);
+
+  const tableHeaders = () => {
+    return { headRow: ["", ""] };
+  };
+  const openDeleteEntityModal = (entity: EntityShape) => {
+    setCurrentEntity(entity);
+    // deleteEntityModalOnOpenHandler();
+  };
+  const openEntityDetailsOverlay = (entity: EntityShape) => {
+    setCurrentEntity(entity);
+    setIsEntityDetailsOpen(true);
+    // setSidebarHidden(true);
+  };
+  const openAddEditEntityModal = (entity?: EntityShape) => {
+    if (entity) setCurrentEntity(entity);
+    // addEditEntityModalOnOpenHandler();
+  };
+
   return (
     <Box>
       <Button
@@ -47,16 +72,20 @@ export const EntityDetailsDashboardOverlay = ({
         Return to all initiatives
       </Button>
       <ReportPageIntro text={overlayVerbiage.WP.intro} />
-      <Form
-        id={form.id}
-        formJson={form}
-        onSubmit={onSubmit}
-        formData={selectedEntity}
-        autosave={true}
-        disabled={disabled}
-        validateOnRender={validateOnRender || false}
-        dontReset={true}
-      />
+      {isEntityDetailsOpen && currentEntity && <div>hi</div>}
+      <Table content={tableHeaders()}>
+        {form.fields.map((entity: EntityShape) => (
+          <EntityRow
+            key={entity.id}
+            entity={entity}
+            verbiage={overlayVerbiage}
+            locked={false}
+            openDrawer={openEntityDetailsOverlay}
+            openAddEditEntityModal={openAddEditEntityModal}
+            openDeleteEntityModal={openDeleteEntityModal}
+          />
+        ))}
+      </Table>
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
           {disabled ? (
