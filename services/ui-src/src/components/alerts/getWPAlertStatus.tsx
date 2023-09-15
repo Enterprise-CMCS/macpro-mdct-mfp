@@ -27,7 +27,7 @@ const alertStatusFunctions: AnyObject = {
 
 export const getWPAlertStatus = (report: ReportShape, entityType: string) => {
   const fieldData = report?.fieldData;
-  var fn = alertStatusFunctions[entityType];
+  let fn = alertStatusFunctions[entityType];
   if (typeof fn === "function") {
     return fn(fieldData[entityType]);
   }
