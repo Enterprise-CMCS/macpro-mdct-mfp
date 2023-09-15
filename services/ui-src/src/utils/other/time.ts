@@ -165,8 +165,8 @@ export const calculatePeriod = (dueDate: string) => {
     dueDateAsDate >= beginningPeriodOne(dueDate) &&
     dueDateAsDate <= endPeriodOne(dueDate)
   )
-    return 1;
-  return 2;
+    return "1";
+  return "2";
 };
 
 /*
