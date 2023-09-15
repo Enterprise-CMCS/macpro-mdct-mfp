@@ -9,7 +9,7 @@ import {
   ReportPageIntro,
 } from "components";
 // assets
-import addIcon from "assets/icons/icon_add.png";
+import addIcon from "assets/icons/icon_add_white.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
 import { AnyObject } from "yup/lib/types";
@@ -20,6 +20,7 @@ import { useStore } from "utils";
 
 export const OverlayModalPage = ({ accordion, route }: Props) => {
   const { entityType, verbiage, modalForm } = route;
+
   const { report } = useStore();
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
@@ -30,12 +31,60 @@ export const OverlayModalPage = ({ accordion, route }: Props) => {
 
   ///TEMPORARY ENTITY//
   let tempEntity: EntityShape = {
-    id: "mockid",
-    fundingsources_objectiveName: "{Objective Name}",
-    fundingsources_description: "description here",
-    fundingsources_targets: "targets here",
-    fundingsources_includesTargets: false,
-    fundingsources_additionalDetails: "additional details",
+    objectiveName: "Funding Sources",
+    id: "test-id",
+    report_initiative: "state and territory specific initiatives",
+    quarters: [
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+    ],
+    isOtherEntity: true,
   };
   reportFieldDataEntities = [tempEntity, tempEntity];
 
@@ -81,7 +130,7 @@ export const OverlayModalPage = ({ accordion, route }: Props) => {
       {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
       <Box>
         <Heading as="h3" sx={sx.dashboardTitle}>
-          {verbiage.dashboardTitle}
+          {`${verbiage?.dashboardTitle}: ${reportFieldDataEntities.length}`}
         </Heading>
         {accordion && <InstructionsAccordion verbiage={accordion} />}
         <Box>

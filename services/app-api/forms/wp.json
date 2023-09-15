@@ -862,7 +862,7 @@
           "entityType": "fundingSources",
           "verbiage": {
             "intro": {
-              "section": "",
+              "section": "State and territory-specific Initiatives: III. Funding Sources",
               "subsection": "State and territory-specific Initiatives: III. Funding Sources",
               "info": [
                 {
@@ -877,10 +877,13 @@
               "exportSectionHeader": "exportSectionHeader"
             },
             "addEntityButtonText": "Add funding source",
+            "editEntityButtonText": "Edit funding source",
             "addEditModalAddTitle": "Add funding source and projected expenditures",
+            "addEditModalEditTitle": "Edit funding source and projected expenditures",
             "tableHeader": "Initaitve name <br/> Work Plan topic",
             "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).",
-            "emptyDashboardText": "Empty"
+            "emptyDashboardText": "Empty",
+            "dashboardTitle": "Funding Sources"
           },
           "modalForm": {
             "id": "tb-modal",

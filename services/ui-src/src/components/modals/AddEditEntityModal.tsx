@@ -18,7 +18,6 @@ export const AddEditEntityModal = ({
 
     modalDisclosure.onClose();
   };
-
   return (
     <Modal
       data-testid="add-edit-entity-modal"

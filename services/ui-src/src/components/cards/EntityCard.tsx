@@ -224,6 +224,7 @@ const sx = {
   editButton: {
     marginY: "1rem",
     fontWeight: "normal",
+    borderColor: "palette.gray_light",
   },
   openDrawerButton: {
     marginTop: "1rem",
