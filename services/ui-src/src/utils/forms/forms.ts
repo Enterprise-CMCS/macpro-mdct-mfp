@@ -127,3 +127,79 @@ export const sortFormErrors = (
   }
   return sortedErrorArray;
 };
+
+// returns user-entered data, filtered to only fields in the current form
+export const filterFormData = (
+  enteredData: AnyObject,
+  currentFormFields: FormField[]
+) => {
+  // translate user-entered data to array for filtration
+  const enteredDataEntries = Object.entries(enteredData);
+  // flatten current form fields and create array of the form's field ids
+  const flattenedFormFields = flattenFormFields(currentFormFields);
+  const formFieldArray = flattenedFormFields.map(
+    (field: FormField) => field.id
+  );
+  // filter user-entered data to only fields in the current form
+  const userEnteredEntries = enteredDataEntries.filter((fieldData) => {
+    const [fieldDataKey] = fieldData;
+    return formFieldArray.includes(fieldDataKey);
+  });
+  // translate data array back to a form data object
+  return Object.fromEntries(userEnteredEntries);
+};
+
+export const getEntriesToClear = (
+  enteredData: AnyObject,
+  currentFormFields: FormField[]
+) => {
+  // Get the users entered data
+  const enteredDataEntries = Object.entries(enteredData);
+  // Map over the users entered data and get each of the fields ids
+  const enteredDataFieldIds = enteredDataEntries.map((enteredField) => {
+    return enteredField?.[0];
+  });
+  // Grab all of the possible form fields that a user could have filled out
+  const flattenedFormFields = flattenFormFields(currentFormFields);
+  // Find what fields weren't directly entered by the user to send back to be cleared
+  const entriesToClear = flattenedFormFields.filter((formField) => {
+    return !enteredDataFieldIds.includes(formField.id);
+  });
+  // Return array of field ID's
+  return entriesToClear.map((enteredField) => {
+    return enteredField.id;
+  });
+};
+
+export const setClearedEntriesToDefaultValue = (
+  entity: AnyObject,
+  entriesToClear: string[]
+) => {
+  entriesToClear.forEach((entry) => {
+    if (Array.isArray(entity[entry])) {
+      entity[entry] = [];
+    } else if (typeof entity[entry] == "object") {
+      entity[entry] = {};
+    } else {
+      entity[entry] = "";
+    }
+  });
+  return entity;
+};
+
+// returns all fields in a given form, flattened to a single level array
+export const flattenFormFields = (formFields: FormField[]): FormField[] => {
+  const flattenedFields: any = [];
+  const compileFields = (formFields: FormField[]) => {
+    formFields.forEach((field: FormField) => {
+      // push field to flattened fields array
+      flattenedFields.push(field);
+      // if choice has children, recurse
+      field?.props?.choices?.forEach((choice: FieldChoice) => {
+        if (choice.children) compileFields(choice.children);
+      });
+    });
+  };
+  compileFields(formFields);
+  return flattenedFields;
+};

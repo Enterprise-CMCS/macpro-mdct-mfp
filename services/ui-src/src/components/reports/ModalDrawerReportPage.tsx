@@ -64,6 +64,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
     },
   ];
 
+  const entityInfo = ["name", "isOtherEntity"];
+
   // create drawerForm from json
   const drawerForm = { ...drawerFormJson };
 
@@ -139,6 +141,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
               <EntityRow
                 key={entity.id}
                 entity={entity}
+                entityInfo={entityInfo}
                 verbiage={verbiage}
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
@@ -170,6 +173,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         <hr />
         {/* MODALS */}
         <AddEditEntityModal
+          entityType={entityType as EntityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           form={modalForm}

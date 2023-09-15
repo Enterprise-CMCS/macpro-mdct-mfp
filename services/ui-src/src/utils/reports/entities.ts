@@ -1,4 +1,4 @@
-import { EntityShape, OverlayModalEntityTypes } from "types";
+import { EntityShape, OverlayModalEntityTypes, AnyObject } from "types";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
   return entity?.[label].value;
@@ -27,3 +27,8 @@ export const getFormattedEntityData = (
       return {};
   }
 };
+
+export const entityWasUpdated = (
+  originalEntity: EntityShape,
+  newEntity: AnyObject
+) => JSON.stringify(originalEntity) !== JSON.stringify(newEntity);

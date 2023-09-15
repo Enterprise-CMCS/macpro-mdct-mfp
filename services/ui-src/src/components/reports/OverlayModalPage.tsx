@@ -115,6 +115,7 @@ export const OverlayModalPage = ({ route }: Props) => {
         <hr />
         {/* MODALS */}
         <AddEditEntityModal
+          entityType={entityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           form={modalForm}

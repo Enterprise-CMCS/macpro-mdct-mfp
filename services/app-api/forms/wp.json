@@ -623,6 +623,7 @@
           "path": "/wp/state-and-territory-specific-initiatives/initiatives",
           "pageType": "modalOverlay",
           "entityType": "initiatives",
+          "entityInfo": ["initiative_name", "initiative_wpTopic"],
           "verbiage": {
             "intro": {
               "section": "",
