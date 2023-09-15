@@ -14,24 +14,6 @@ export const noon: TimeShape = {
   second: 0,
 };
 
-/*
- * Defines the beginning and end of Period 1 and Period 2.
- *     Period 1 is from 01/01 to 06/30.
- *     Period 2 is from 07/01 to 12/31.
- */
-export const beginningPeriodOne = (date: string) => {
-  return new Date(new Date(date).getFullYear(), 0, 1);
-};
-export const endPeriodOne = (date: string) => {
-  return new Date(new Date(date).getFullYear(), 5, 30);
-};
-export const beginningPeriodTwo = (date: string) => {
-  return new Date(new Date(date).getFullYear(), 6, 1);
-};
-export const endPeriodTwo = (date: string) => {
-  return new Date(new Date(date).getFullYear(), 11, 31);
-};
-
 export const calculateTimeByType = (timeType?: string): TimeShape => {
   const timeMap: any = {
     startDate: midnight,
@@ -159,14 +141,16 @@ export const checkDateRangeStatus = (
   return currentTime >= startDate && currentTime <= endDate;
 };
 
+/*
+ * Calculates the period given a due date.
+ * The periods are defined as follows:
+ *     Period 1 is from 01/01 to 06/30.
+ *     Period 2 is from 07/01 to 12/31.
+ */
 export const calculatePeriod = (dueDate: string) => {
   const dueDateAsDate = new Date(dueDate);
-  if (
-    dueDateAsDate >= beginningPeriodOne(dueDate) &&
-    dueDateAsDate <= endPeriodOne(dueDate)
-  )
-    return "1";
-  return "2";
+  const period = Math.ceil((dueDateAsDate.getMonth() + 1) / 6);
+  return period.toString();
 };
 
 /*
