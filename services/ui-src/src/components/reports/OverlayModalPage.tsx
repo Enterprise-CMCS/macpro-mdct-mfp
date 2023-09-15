@@ -14,7 +14,7 @@ import {
   ReportPageIntro,
 } from "components";
 // assets
-import addIcon from "assets/icons/icon_add.png";
+import addIcon from "assets/icons/icon_add_white.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
 import { EntityCard } from "components/cards/EntityCard";
