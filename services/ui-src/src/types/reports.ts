@@ -58,20 +58,19 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   form?: never;
 }
 
+export interface OverlayModalPageShape extends ReportPageShapeBase {
+  entityType: string;
+  verbiage: OverlayModalPageVerbiage;
+  modalForm: FormJson;
+  form?: never;
+}
+
 export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   entityType: string;
   verbiage: ModalOverlayReportPageVerbiage;
   modalForm: FormJson;
   overlayForm?: FormJson;
   drawerForm?: never;
-  form?: never;
-}
-
-export interface OverlayModalPageShape extends ReportPageShapeBase {
-  entityType: string;
-  verbiage: ModalOverlayReportPageVerbiage;
-  modalForm: FormJson;
-  overlayForm?: FormJson;
   form?: never;
 }
 
@@ -92,6 +91,7 @@ export type ReportRouteWithForm =
   | StandardReportPageShape
   | DrawerReportPageShape
   | ModalDrawerReportPageShape
+  | OverlayModalPageShape
   | ModalOverlayReportPageShape;
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
@@ -125,6 +125,23 @@ export interface ModalDrawerReportPageVerbiage
   enterEntityDetailsButtonText: string;
   reviewPdfHint: string;
   drawerTitle: string;
+}
+
+export interface OverlayModalPageVerbiage extends ReportPageVerbiage {
+  addEntityButtonText: string;
+  addEditModalHint: string;
+  editEntityButtonText: string;
+  addEditModalAddTitle: string;
+  addEditModalEditTitle: string;
+  deleteEntityButtonAltText: string;
+  deleteModalTitle: string;
+  deleteModalConfirmButtonText: string;
+  deleteModalWarning: string;
+  entityUnfinishedMessage: string;
+  enterEntityDetailsButtonText: string;
+  accordion: object;
+  dashboardTitle: string;
+  missingEntityMessage?: CustomHtmlElement[];
 }
 
 export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {

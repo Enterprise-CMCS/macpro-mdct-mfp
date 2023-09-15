@@ -24,7 +24,7 @@ export const EntityCardTopSection = ({
           <Text sx={sx.subtitle}>
             Does the performance measure include quantitative targets?
           </Text>
-          <Text sx={sx.description}>{formattedEntityData.includesTargets}</Text>{" "}
+          <Text sx={sx.description}>{formattedEntityData.includesTargets}</Text>
           <Text sx={sx.subtitle}>
             Additional detail on strategies/approaches the state or territory
             will use to achieve targets and/ or meet milestones
@@ -46,7 +46,7 @@ export const EntityCardTopSection = ({
               return (
                 <GridItem>
                   <Flex sx={sx.gridItems}>
-                    <Text sx={sx.subtitle}>{quarter.id}:</Text>
+                    <Text sx={sx.subtitleGrid}>{quarter.id}:</Text>
                     <Text sx={sx.subtext}>{quarter.value}</Text>
                   </Flex>
                 </GridItem>
@@ -81,8 +81,13 @@ const sx = {
     justifyContent: "center",
     display: "grid",
   },
-  subtitle: {
+  subtitleGrid: {
     marginTop: ".5rem",
+    gridTemplateColumns: "33% auto",
+    columnGap: "1rem",
+  },
+  subtitle: {
+    marginTop: "1rem",
     fontSize: "xs",
     fontWeight: "bold",
   },
@@ -90,7 +95,6 @@ const sx = {
     marginTop: "0.25rem",
     fontSize: "sm",
   },
-
   gridItems: {
     alignItems: "end",
     flexWrap: "wrap",

@@ -1,3 +1,29 @@
-export const getFormattedEntityData = () => {
-  return {};
+import { EntityShape, OverlayModalEntityTypes } from "types";
+
+const getRadioValue = (entity: EntityShape | undefined, label: string) => {
+  return entity?.[label].value;
+};
+
+export const getFormattedEntityData = (
+  entityType: string,
+  entity?: EntityShape
+) => {
+  switch (entityType) {
+    case OverlayModalEntityTypes.EVALUATION_PLAN:
+      return {
+        objectiveName: entity?.evaluationPlan_objectiveName,
+        description: entity?.evaluationPlan_description,
+        targets: entity?.evaluationPlan_targets,
+        // TODO: add this functionality after guidance from BOs (per Design)
+        includesTargets: getRadioValue(
+          entity,
+          "evaluationPlan_includesTargets"
+        ),
+        additionalDetails: entity?.evaluationPlan_additionalDetails,
+      };
+    case OverlayModalEntityTypes.FUNDING_SOURCES:
+      return {};
+    default:
+      return {};
+  }
 };

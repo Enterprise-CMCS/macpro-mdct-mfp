@@ -38,6 +38,8 @@ export const ReportPageWrapper = () => {
         return (
           <ModalDrawerReportPage route={route as ModalDrawerReportPageShape} />
         );
+      case PageTypes.OVERLAY_MODAL:
+        return <OverlayModalPage route={route as OverlayModalPageShape} />;
       case PageTypes.MODAL_OVERLAY:
         return (
           <ModalOverlayReportPage
