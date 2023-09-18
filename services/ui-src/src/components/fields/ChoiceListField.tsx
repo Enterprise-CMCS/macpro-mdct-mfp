@@ -4,7 +4,12 @@ import { useFormContext } from "react-hook-form";
 import { ChoiceList as CmsdsChoiceList } from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
 // utils
-import { labelTextWithOptional, parseCustomHtml } from "utils";
+import {
+  formFieldFactory,
+  labelTextWithOptional,
+  parseCustomHtml,
+  useStore,
+} from "utils";
 import {
   AnyObject,
   Choice,
@@ -28,6 +33,13 @@ export const ChoiceListField = ({
   const defaultValue: Choice[] = [];
   const [displayValue, setDisplayValue] = useState<Choice[]>(defaultValue);
 
+  const { state: userIsReadOnly, userIsAdmin } = useStore().user ?? {};
+
+  const report = useStore().report;
+
+  const shouldDisableChildFields =
+    ((userIsAdmin || userIsReadOnly) && !!props?.disabled) || report?.locked;
+
   // get form context and register field
   const form = useFormContext();
 
@@ -36,6 +48,15 @@ export const ChoiceListField = ({
     return choices.map((choice: FieldChoice) => {
       setCheckedOrUnchecked(choice);
       const choiceObject: FieldChoice = { ...choice };
+      const choiceChildren = choice?.children;
+      if (choiceChildren) {
+        const isNested = true;
+        const formattedChildren = formFieldFactory(choiceChildren, {
+          disabled: shouldDisableChildFields,
+          nested: isNested,
+        });
+        choiceObject.checkedChildren = formattedChildren;
+      }
       delete choiceObject.children;
       return choiceObject;
     });

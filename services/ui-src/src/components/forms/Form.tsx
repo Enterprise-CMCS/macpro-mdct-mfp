@@ -162,8 +162,10 @@ const sx = {
   ".ds-c-choice__checkedChild.nested": {
     paddingY: "0.25rem",
     paddingTop: 0,
+    // makes the blue line continuous
+    marginBottom: 0,
     ".ds-c-fieldset, label": {
-      marginTop: 0,
+      marginTop: "1rem",
     },
   },
   // optional text
