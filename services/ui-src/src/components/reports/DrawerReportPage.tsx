@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Box,
   Button,
@@ -7,41 +7,95 @@ import {
   Image,
   useDisclosure,
 } from "@chakra-ui/react";
-
+// utils
 import {
+  entityWasUpdated,
+  filterFormData,
+  getEntriesToClear,
+  setClearedEntriesToDefaultValue,
+} from "utils";
+//types
+import {
+  AnyObject,
   DrawerReportPageShape,
   EntityShape,
+  ReportStatus,
   FormField,
   isFieldElement,
 } from "types";
 
-import { ReportDrawer } from "components/drawers/ReportDrawer";
+import { ReportContext, ReportDrawer } from "components";
 import { ReportPageIntro } from "./ReportPageIntro";
-import { parseCustomHtml } from "utils";
+import { parseCustomHtml, useStore } from "utils";
 import completedIcon from "assets/icons/icon_check_circle.png";
 
 export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
-  const submitting = false;
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const { verbiage, drawerForm } = route;
+  const { entityType, verbiage, drawerForm } = route;
+  const { full_name, state, userIsEndUser } = useStore().user ?? {};
+  const { report } = useStore();
+  const { updateReport } = useContext(ReportContext);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
 
-  const entities = [
-    {
-      id: "123",
-      name: "mock-entity",
-    },
-  ];
+  const entities = report?.fieldData?.[entityType];
 
-  // hardcoded state just to give the drawer page an entity so you can see the drawer
-  const openRowDrawer = () => {
-    setSelectedEntity({
-      id: "123",
-      name: "mock entity",
-    });
+  const openRowDrawer = (entity: EntityShape) => {
+    setSelectedEntity(entity);
     onOpen();
+  };
+
+  const onSubmit = async (enteredData: AnyObject) => {
+    if (userIsEndUser) {
+      setSubmitting(true);
+      const reportKeys = {
+        reportType: report?.reportType,
+        state: state,
+        id: report?.id,
+      };
+      const currentEntities = [...(report?.fieldData[entityType] || {})];
+      const selectedEntityIndex = report?.fieldData[entityType].findIndex(
+        (entity: EntityShape) => entity.name === selectedEntity?.name
+      );
+      const filteredFormData = filterFormData(
+        enteredData,
+        drawerForm.fields.filter(isFieldElement)
+      );
+      const entriesToClear = getEntriesToClear(
+        enteredData,
+        drawerForm.fields.filter(isFieldElement)
+      );
+      const newEntity = {
+        ...selectedEntity,
+        ...filteredFormData,
+      };
+      let newEntities = currentEntities;
+      newEntities[selectedEntityIndex] = newEntity;
+      newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
+        newEntities[selectedEntityIndex],
+        entriesToClear
+      );
+      const shouldSave = entityWasUpdated(
+        entities[selectedEntityIndex],
+        newEntity
+      );
+      if (shouldSave) {
+        const dataToWrite = {
+          metadata: {
+            status: ReportStatus.IN_PROGRESS,
+            lastAlteredBy: full_name,
+          },
+          fieldData: {
+            [entityType]: newEntities,
+          },
+        };
+        await updateReport(reportKeys, dataToWrite);
+      }
+      setSubmitting(false);
+    }
+    onClose();
   };
 
   const entityRows = (entities: EntityShape[]) => {
@@ -67,7 +121,7 @@ export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
           </Heading>
           <Button
             sx={sx.enterButton}
-            onClick={() => openRowDrawer()}
+            onClick={() => openRowDrawer(entity)}
             variant="outline"
           >
             {isEntityCompleted ? "Edit" : "Enter"}
@@ -99,7 +153,7 @@ export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
           drawerInfo: verbiage.drawerInfo,
         }}
         form={drawerForm}
-        onSubmit={() => {}}
+        onSubmit={onSubmit}
         submitting={submitting}
         drawerDisclosure={{
           isOpen,

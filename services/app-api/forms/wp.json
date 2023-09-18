@@ -45,6 +45,7 @@
       "path": "/wp/transition-benchmarks",
       "pageType": "modalDrawer",
       "entityType": "targetPopulation",
+      "entityInfo": ["transitionBenchmarks_targetPopulationName"],
       "verbiage": {
         "intro": {
           "section": "",
@@ -913,7 +914,7 @@
             "deleteModalConfirmButtonText": "Yes, delete objective",
             "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
             "enterEntityDetailsButtonText": "Edit",
-            "dashboardTitle": "Objective total count: 2",
+            "dashboardTitle": "Objective total count",
             "deleteEntityButtonAltText": "",
             "entityUnfinishedMessage": "",
             "drawerTitle": ""
@@ -950,12 +951,7 @@
               {
                 "id": "evaluationPlan_includesTargets",
                 "type": "radio",
-                "validation": {
-                  "type": "radio",
-                  "nested": true,
-                  "parentFieldName": "evaluationPlan_targets",
-                  "parentOptionId": "745yghr57654rth"
-                },
+                "validation": "radio",
                 "props": {
                   "label": "Does the performance measure include quantitative targets?",
                   "hint": "Note: If 'Yes', fields use calendar year quarters.",

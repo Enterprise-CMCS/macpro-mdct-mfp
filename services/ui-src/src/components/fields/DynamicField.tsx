@@ -1,15 +1,27 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import uuid from "react-uuid";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Box, Button, Flex, Image, useDisclosure } from "@chakra-ui/react";
 import { svgFilters } from "styles/theme";
 import { EntityShape, EntityType, InputChangeEvent } from "types";
 // components
-import { DeleteDynamicFieldRecordModal, TextField } from "components";
+import {
+  DeleteDynamicFieldRecordModal,
+  ReportContext,
+  TextField,
+} from "components";
+//utils
+import { autosaveFieldData, getAutosaveFields, useStore } from "utils";
 // assets
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
+import { EntityContext } from "components/reports/EntityProvider";
 
 export const DynamicField = ({ name, label, ...props }: Props) => {
+  const { full_name, state, userIsEndUser } = useStore().user ?? {};
+  const { report } = useStore();
+  const { updateReport } = useContext(ReportContext);
+  const { entities, entityType, updateEntities, selectedEntity } =
+    useContext(EntityContext);
   const [displayValues, setDisplayValues] = useState<EntityShape[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<EntityShape | undefined>(
     undefined
@@ -51,36 +63,35 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
   const onBlurHandler = async () => {
     // trigger client-side validation so blank fields get client-side validation warning
     form.trigger(name);
-    /*
-     * prepare args for autosave
-     * const fields = getAutosaveFields({
-     *   name,
-     *   type: "dynamic",
-     *   value: displayValues,
-     *   defaultValue: undefined,
-     *   overrideCheck: true,
-     *   hydrationValue,
-     * });
-     * const reportArgs = {
-     *   id: report?.id,
-     *   reportType: report?.reportType,
-     *   updateReport,
-     * };
-     * const user = { userName: full_name, state };
-     *  no need to check "autosave" prop; dynamic fields should always autosave
-     * await autosaveFieldData({
-     *   form,
-     *   fields,
-     *   report: reportArgs,
-     *   user,
-     *   entityContext: {
-     *     selectedEntity,
-     *     entityType,
-     *     updateEntities,
-     *     entities,
-     *   },
-     * });
-     */
+
+    // prepare args for autosave
+    const fields = getAutosaveFields({
+      name,
+      type: "dynamic",
+      value: displayValues,
+      defaultValue: undefined,
+      overrideCheck: true,
+      hydrationValue,
+    });
+    const reportArgs = {
+      id: report?.id,
+      reportType: report?.reportType,
+      updateReport,
+    };
+    const user = { userName: full_name, state };
+    // no need to check "autosave" prop; dynamic fields should always autosave
+    await autosaveFieldData({
+      form,
+      fields,
+      report: reportArgs,
+      user,
+      entityContext: {
+        selectedEntity,
+        entityType,
+        updateEntities,
+        entities,
+      },
+    });
   };
 
   const appendNewRecord = () => {

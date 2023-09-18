@@ -30,18 +30,8 @@ export const OverlayModalPage = ({ route }: Props) => {
   );
 
   //display variables
-  let reportFieldDataEntities = report?.fieldData[entityType] || [];
-
-  ///TEMPORARY ENTITY//
-  let tempEntity: EntityShape = {
-    id: "mockid",
-    evaluationPlan_objectiveName: "{Objective Name}",
-    evaluationPlan_description: "Description here",
-    evaluationPlan_targets: "Targets here",
-    evaluationPlan_includesTargets: "No",
-    evaluationPlan_additionalDetails: "Additional details",
-  };
-  reportFieldDataEntities = [tempEntity, tempEntity];
+  const reportFieldDataEntities = report?.fieldData[entityType] || [];
+  const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
 
   // add/edit entity modal disclosure and methods
   const {
@@ -67,11 +57,8 @@ export const OverlayModalPage = ({ route }: Props) => {
     onClose: deleteEntityModalOnCloseHandler,
   } = useDisclosure();
 
-  const openDeleteEntityModal = () => {
-    setSelectedEntity({
-      id: "123",
-      name: "mock entity",
-    });
+  const openDeleteEntityModal = (entity?: EntityShape) => {
+    setSelectedEntity(entity);
     deleteEntityModalOnOpenHandler();
   };
 
@@ -87,7 +74,7 @@ export const OverlayModalPage = ({ route }: Props) => {
       )}
       <Box>
         <Heading as="h3" sx={sx.dashboardTitle}>
-          {verbiage.dashboardTitle}
+          {dashTitle}
         </Heading>
         <Box>
           {reportFieldDataEntities.map(
