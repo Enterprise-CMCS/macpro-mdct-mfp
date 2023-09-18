@@ -8,9 +8,12 @@ import {
   ReportType,
   TableContentShape,
 } from "types";
-import { convertDateUtcToEt } from "utils";
+import { convertDateUtcToEt, calculatePeriod } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
+
+// Year will be displayed as part of the report name
+const year = new Date().getFullYear();
 
 export const DashboardTable = ({
   reportsByState,
@@ -42,9 +45,7 @@ export const DashboardTable = ({
           <Td></Td>
         )}
         {/* Report Name */}
-        <Td sx={sxOverride.programNameText}>
-          {report.programName ?? report.submissionName}
-        </Td>
+        <Td sx={sxOverride.programNameText}>{getReportName(report)}</Td>
         {/* Date Fields */}
         <DateFields report={report} reportType={reportType} />
         {/* Last Altered By */}
@@ -124,6 +125,14 @@ interface DashboardTableProps {
   releasing?: boolean | undefined;
   sxOverride: AnyObject;
 }
+
+const getReportName = (report: ReportMetadataShape) => {
+  const reportName = report.submissionName
+    ? report.submissionName
+    : report.programName;
+  const period = calculatePeriod(convertDateUtcToEt(report.createdAt));
+  return `${report.state} ${reportName} {${year} - Period ${period}}`;
+};
 
 export const getStatus = (
   reportType: ReportType,
