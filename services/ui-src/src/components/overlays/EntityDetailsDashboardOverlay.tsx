@@ -78,7 +78,7 @@ export const EntityDetailsDashboardOverlay = ({
           <EntityRow
             key={entity.id}
             entity={entity}
-            verbiage={overlayVerbiage}
+            verbiage={entity.verbiage}
             locked={false}
             openDrawer={openEntityDetailsOverlay}
             openAddEditEntityModal={openAddEditEntityModal}
@@ -86,7 +86,7 @@ export const EntityDetailsDashboardOverlay = ({
           />
         ))}
       </Table>
-      <Box sx={sx.footerBox}>
+      <Box>
         <Flex sx={sx.buttonFlex}>
           {disabled ? (
             <Button
