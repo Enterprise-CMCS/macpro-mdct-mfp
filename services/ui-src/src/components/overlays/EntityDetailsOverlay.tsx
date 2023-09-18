@@ -13,6 +13,7 @@ import { AlertTypes, EntityDetailsOverlayShape } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
+import warningIcon from "assets/icons/icon_warning.png";
 
 export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
   const submitting = false;
@@ -58,8 +59,11 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
         {verbiage.closeOutWarning && (
           <Alert
             title={verbiage.closeOutWarning.title}
+            showIcon={true}
+            icon={warningIcon}
             status={AlertTypes.WARNING}
             description={verbiage.closeOutWarning.description}
+            sx={sx.warningBanner}
           />
         )}
       </Box>
@@ -132,5 +136,14 @@ const sx = {
   },
   saveButton: {
     width: "8.25rem",
+  },
+  warningBanner: {
+    marginTop: "3.5rem",
+    marginBottom: "2rem",
+    bgColor: "palette.warn_lightest",
+    borderInlineStartColor: "palette.warn",
+  },
+  warningIcon: {
+    width: "1.375rem",
   },
 };

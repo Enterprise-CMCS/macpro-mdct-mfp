@@ -41,10 +41,10 @@ export const EntityDetailsDashboardOverlay = ({
         sx={sx.backButton}
         variant="none"
         onClick={closeEntityDetailsOverlay as MouseEventHandler}
-        aria-label="Return to all initiatives"
+        aria-label="Return to dashboard for this initiative"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
-        Return to all initiatives
+        Return to dashboard for this initiatives
       </Button>
       <ReportPageIntro text={overlayVerbiage.WP.intro} />
       <Form
