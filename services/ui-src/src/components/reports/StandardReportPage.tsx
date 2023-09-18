@@ -9,12 +9,14 @@ import {
   ReportPageIntro,
 } from "components";
 // types
-import { StandardReportPageShape } from "types";
+import {
+  StandardReportPageShape,
+  AnyObject,
+  isFieldElement,
+  ReportStatus,
+} from "types";
 // utils
 import { filterFormData, useFindRoute, useStore } from "utils";
-import { AnyObject, isFieldElement, ReportStatus } from "types";
-// verbiage
-import { mockStandardReportPageJson } from "utils/testing/mockForm";
 
 export const StandardReportPage = ({ route, validateOnRender }: Props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);

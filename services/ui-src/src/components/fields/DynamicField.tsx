@@ -17,7 +17,7 @@ import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 import { EntityContext } from "components/reports/EntityProvider";
 
 export const DynamicField = ({ name, label, ...props }: Props) => {
-  const { full_name, state, userIsEndUser } = useStore().user ?? {};
+  const { full_name, state } = useStore().user ?? {};
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { entities, entityType, updateEntities, selectedEntity } =

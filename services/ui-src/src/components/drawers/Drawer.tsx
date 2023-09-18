@@ -16,7 +16,6 @@ import { AnyObject, CustomHtmlElement } from "types";
 import { makeMediaQueryClasses, parseCustomHtml } from "utils";
 
 export const Drawer = ({
-  entityType,
   verbiage,
   drawerDisclosure,
   children,

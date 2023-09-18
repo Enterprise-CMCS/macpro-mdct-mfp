@@ -13,6 +13,8 @@ import {
   filterFormData,
   getEntriesToClear,
   setClearedEntriesToDefaultValue,
+  parseCustomHtml,
+  useStore,
 } from "utils";
 //types
 import {
@@ -26,7 +28,6 @@ import {
 
 import { ReportContext, ReportDrawer } from "components";
 import { ReportPageIntro } from "./ReportPageIntro";
-import { parseCustomHtml, useStore } from "utils";
 import completedIcon from "assets/icons/icon_check_circle.png";
 
 export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
