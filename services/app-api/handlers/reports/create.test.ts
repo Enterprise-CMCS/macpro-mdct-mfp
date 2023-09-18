@@ -37,7 +37,7 @@ const creationEvent: APIGatewayProxyEvent = {
       submissionCount: 0,
       versionControl: [
         {
-          key: "versionControl-KFCd3rfEu3eT4UFskUhDtx",
+          key: "versionControl",
           value: "No, this is an initial submission",
         },
       ],
