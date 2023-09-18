@@ -32,6 +32,7 @@ const creationEvent: APIGatewayProxyEvent = {
   ...mockProxyEvent,
   body: JSON.stringify({
     fieldData: {
+      submissionName: "Work Plan",
       stateName: "New Jersey",
       submissionCount: 0,
       versionControl: [
@@ -86,9 +87,7 @@ describe("Test createReport API method", () => {
 
   test("Test successful run of report creation, not copied", async () => {
     const res = await createReport(creationEvent, null);
-
     const body = JSON.parse(res.body);
-    console.log("🚀 ~ file: create.test.ts:92 ~ test ~ body:", body);
     expect(res.statusCode).toBe(StatusCodes.CREATED);
     expect(body.status).toContain("Not started");
     expect(body.fieldDataId).toBeDefined;
@@ -96,7 +95,7 @@ describe("Test createReport API method", () => {
     expect(body.formTemplateId).not.toEqual(
       mockWPReport.metadata.formTemplateId
     );
-    expect(body.fieldData.stateName).toBe("New Jersey");
+    expect(body.fieldData.submissionName).toBe("Work Plan");
     expect(body.formTemplate.validationJson).toMatchObject({
       transitionBenchmarks_targetPopulationName: "text",
     });

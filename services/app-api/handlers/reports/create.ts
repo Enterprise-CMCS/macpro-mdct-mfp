@@ -100,6 +100,7 @@ export const createReport = handler(async (event, _context) => {
     submissionCount: "number",
     versionControl: "objectArray",
   };
+
   // Validate field data
   const validatedFieldData = await validateFieldData(
     creationValidationJson,
@@ -117,7 +118,7 @@ export const createReport = handler(async (event, _context) => {
   const fieldDataParams: S3Put = {
     Bucket: reportBucket,
     Key: getFieldDataKey(state, fieldDataId),
-    Body: JSON.stringify(validateFieldData),
+    Body: JSON.stringify(validatedFieldData),
     ContentType: "application/json",
   };
 
