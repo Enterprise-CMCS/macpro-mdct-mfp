@@ -34,7 +34,7 @@ export const createReport = handler(async (event, _context) => {
       body: error.UNAUTHORIZED,
     };
   }
-  console.log("1");
+
   const requiredParams = ["reportType", "state"];
 
   // Return error if no state is passed.
@@ -47,7 +47,6 @@ export const createReport = handler(async (event, _context) => {
       body: error.NO_KEY,
     };
   }
-  console.log("2");
 
   const { state, reportType } = event.pathParameters;
   if (!isState(state)) {
@@ -56,7 +55,7 @@ export const createReport = handler(async (event, _context) => {
       body: error.NO_KEY,
     };
   }
-  console.log("3");
+
   const unvalidatedPayload = JSON.parse(event.body!);
   const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
     unvalidatedPayload;
@@ -67,7 +66,7 @@ export const createReport = handler(async (event, _context) => {
       body: error.NO_KEY,
     };
   }
-  console.log("4");
+
   const reportBucket = reportBuckets[reportType];
   const reportTable = reportTables[reportType];
 
@@ -90,19 +89,20 @@ export const createReport = handler(async (event, _context) => {
       body: error.MISSING_DATA,
     };
   }
-  console.log("5");
 
   // Create report and field ids.
   const reportId: string = KSUID.randomSync().string;
   const fieldDataId: string = KSUID.randomSync().string;
   const formTemplateId: string = formTemplateVersion?.id;
-  console.log(
-    "🚀 ~ file: create.ts:103 ~ createReport ~ formTemplate.validationJson:",
-    formTemplate.validationJson
-  );
+  const creationValidationJson = {
+    submissionName: "text",
+    stateName: "text",
+    submissionCount: "number",
+    versionControl: "objectArray",
+  };
   // Validate field data
   const validatedFieldData = await validateFieldData(
-    formTemplate.validationJson,
+    creationValidationJson,
     unvalidatedFieldData
   );
 
@@ -113,7 +113,6 @@ export const createReport = handler(async (event, _context) => {
       body: error.INVALID_DATA,
     };
   }
-  console.log("6");
 
   const fieldDataParams: S3Put = {
     Bucket: reportBucket,
@@ -130,7 +129,6 @@ export const createReport = handler(async (event, _context) => {
       body: error.S3_OBJECT_CREATION_ERROR,
     };
   }
-  console.log("7");
 
   const validatedMetadata = await validateData(metadataValidationSchema, {
     ...unvalidatedMetadata,
