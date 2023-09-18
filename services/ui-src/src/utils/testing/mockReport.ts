@@ -1,3 +1,4 @@
+import { ReportStatus } from "types";
 import {
   mockStandardReportPageJson,
   mockDrawerReportPageJson,
@@ -71,4 +72,42 @@ export const mockWPDynamoData = {
   },
   createdAt: 162515200000,
   lastAltered: 162515200000,
+};
+
+export const mockWPFullReport = {
+  ...mockReportKeys,
+  reportType: "WP",
+  formTemplate: mockReportJson,
+  programName: "2023 - Alabama 1",
+  status: ReportStatus.NOT_STARTED,
+  dueDate: 168515200000,
+  createdAt: 162515200000,
+  lastAltered: 162515200000,
+  lastAlteredBy: "Thelonious States",
+  submittedOnDate: Date.now(),
+  fieldData: mockReportFieldData,
+  completionStatus: {
+    "/mock/mock-route-1": true,
+    "/mock/mock-route-2": {
+      "/mock/mock-route-2a": false,
+      "/mock/mock-route-2b": true,
+      "/mock/mock-route-2c": true,
+    },
+  },
+  isComplete: false,
+};
+
+export const mockReportMethods = {
+  archiveReport: jest.fn(),
+  releaseReport: jest.fn(),
+  fetchReport: jest.fn(),
+  fetchReportsByState: jest.fn(),
+  createReport: jest.fn(),
+  updateReport: jest.fn(),
+  submitReport: jest.fn(),
+  clearReportSelection: jest.fn(),
+  clearReportsByState: jest.fn(),
+  setReportSelection: jest.fn(),
+  isReportPage: true,
+  contextIsLoaded: true,
 };

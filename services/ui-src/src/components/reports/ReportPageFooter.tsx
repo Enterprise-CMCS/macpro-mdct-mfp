@@ -1,14 +1,22 @@
+import { useNavigate } from "react-router-dom";
 // components
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // utils
+import { useFindRoute, useStore } from "utils";
 import { FormJson } from "types";
 // assets
 import nextIcon from "assets/icons/icon_next_white.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
 
 export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
-  const hidePrevious = false;
+  const navigate = useNavigate();
   const formIsDisabled = false;
+  const report = useStore().report;
+  const { previousRoute, nextRoute } = useFindRoute(
+    report?.formTemplate.flatRoutes,
+    report?.formTemplate.basePath
+  );
+  const hidePrevious = previousRoute === "/wp" || previousRoute === "/sar";
 
   return (
     <Box sx={sx.footerBox} {...props}>
@@ -16,7 +24,7 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
         <Flex sx={hidePrevious ? sx.floatButtonRight : sx.buttonFlex}>
           {!hidePrevious && (
             <Button
-              onClick={() => {}}
+              onClick={() => navigate(previousRoute)}
               variant="outline"
               leftIcon={
                 <Image src={previousIcon} alt="Previous" sx={sx.arrowIcon} />
@@ -27,7 +35,7 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
           )}
           {!form?.id || formIsDisabled ? (
             <Button
-              onClick={() => {}}
+              onClick={() => navigate(nextRoute)}
               rightIcon={
                 submitting ? (
                   <></>
@@ -66,7 +74,9 @@ interface Props {
 
 const sx = {
   footerBox: {
-    marginTop: "3.5rem",
+    marginTop: "1.0rem",
+    borderTop: "1px solid",
+    borderColor: "palette.gray_light",
   },
   buttonFlex: {
     justifyContent: "space-between",

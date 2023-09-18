@@ -3,10 +3,28 @@ import { axe } from "jest-axe";
 // components
 import { ReportPageFooter } from "components";
 //utils
-import { mockForm } from "utils/testing/setupJest";
+import { mockForm, RouterWrappedComponent } from "utils/testing/setupJest";
 
-const reportPageComponentWithoutForm = <ReportPageFooter />;
-const reportPageComponentWithForm = <ReportPageFooter form={mockForm} />;
+const mockRoutes = {
+  previousRoute: "/mock-previous-route",
+  nextRoute: "/mock-next-route",
+};
+
+jest.mock("utils", () => ({
+  ...jest.requireActual("utils"),
+  useFindRoute: () => mockRoutes,
+}));
+
+const reportPageComponentWithoutForm = (
+  <RouterWrappedComponent>
+    <ReportPageFooter />
+  </RouterWrappedComponent>
+);
+const reportPageComponentWithForm = (
+  <RouterWrappedComponent>
+    <ReportPageFooter form={mockForm} />
+  </RouterWrappedComponent>
+);
 
 describe("Test ReportPageFooter without form", () => {
   test("Check that ReportPageFooter without form renders", () => {
