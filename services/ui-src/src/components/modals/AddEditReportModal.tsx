@@ -32,6 +32,32 @@ export const AddEditReportModal = ({
   // WP report payload
   const prepareWpPayload = () => {
     const programName = "programName";
+    // static entities
+    const targetPopulation = [
+      {
+        id: "2Vd02CVUtKgBETwqzDXpSIhi",
+        transitionBenchmarks_targetPopulationName: "Older adults",
+        isRequired: true,
+      },
+      {
+        id: "2Vd02HAezQkxNu2ShmlQONHa",
+        transitionBenchmarks_targetPopulationName:
+          "Individuals with physical disabilities (PD)",
+        isRequired: true,
+      },
+      {
+        id: "2Vd02IvLwE59ebYAjfiU7H66",
+        transitionBenchmarks_targetPopulationName:
+          "Individuals with intellectual and developmental disabilities (I/DD)",
+        isRequired: true,
+      },
+      {
+        id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
+        transitionBenchmarks_targetPopulationName:
+          "Individuals with mental health and substance abuse disorders (MH/SUD)",
+        isRequired: true,
+      },
+    ];
     return {
       metadata: {
         programName,
@@ -39,6 +65,7 @@ export const AddEditReportModal = ({
       },
       fieldData: {
         programName,
+        ["targetPopulation"]: targetPopulation,
       },
     };
   };

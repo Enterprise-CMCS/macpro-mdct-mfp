@@ -45,6 +45,7 @@
       "path": "/wp/transition-benchmarks",
       "pageType": "modalDrawer",
       "entityType": "targetPopulation",
+      "entityInfo": ["transitionBenchmarks_targetPopulationName"],
       "verbiage": {
         "intro": {
           "section": "",
