@@ -112,6 +112,7 @@ export const OverlayModalPage = ({ route }: Props) => {
           }}
         />
         <DeleteEntityModal
+          entityType={entityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           modalDisclosure={{

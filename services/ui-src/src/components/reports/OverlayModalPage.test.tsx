@@ -3,10 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 // components
 import { OverlayModalPage } from "./OverlayModalPage";
+import { useStore } from "utils";
 // utils
 import {
   mockOverlayModalPageJson,
   RouterWrappedComponent,
+  mockReportStore,
 } from "utils/testing/setupJest";
 
 const mockUseNavigate = jest.fn();
@@ -16,6 +18,9 @@ jest.mock("react-router-dom", () => ({
     pathname: "/mock-route",
   })),
 }));
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
@@ -33,6 +38,7 @@ const overlayModalPageComponentWithEntities = (
 
 describe("Test overlayModalPage with entities", () => {
   beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockReportStore);
     render(overlayModalPageComponentWithEntities);
   });
 
@@ -49,8 +55,15 @@ describe("Test overlayModalPage with entities", () => {
     await userEvent.click(addEntityButton);
     expect(screen.getByRole("dialog")).toBeVisible();
 
-    const editButton = screen.getAllByText(editEntityButtonText)[0];
-    await userEvent.click(editButton);
+    const closeButton = screen.getByText("Close");
+    await userEvent.click(closeButton);
+  });
+
+  it("overlayModal Modal edits open correctly", async () => {
+    const editEntityButton = screen.getByText(editEntityButtonText);
+    await userEvent.click(editEntityButton);
+    expect(screen.getByRole("dialog")).toBeVisible();
+
     const closeButton = screen.getByText("Close");
     await userEvent.click(closeButton);
   });
@@ -60,6 +73,7 @@ describe("Test overlayModalPage with entities", () => {
 
 describe("Test ModalDrawerReportPage accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
     const { container } = render(overlayModalPageComponentWithEntities);
     const results = await axe(container);
     expect(results).toHaveNoViolations();

@@ -50,8 +50,6 @@ describe("Test ModalDrawerReportPage with entities", () => {
     await userEvent.click(addEntityButton);
     expect(screen.getByRole("dialog")).toBeVisible();
 
-    const editButton = screen.getAllByText(editEntityButtonText)[0];
-    await userEvent.click(editButton);
     const closeButton = screen.getByText("Close");
     await userEvent.click(closeButton);
   });

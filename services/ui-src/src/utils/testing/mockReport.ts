@@ -40,6 +40,7 @@ export const mockReportKeys = {
 export const mockReportFieldData = {
   text: "text-input",
   "mock-number-field": 0,
+  entityType: [{ entityType_one: "hello" }],
 };
 
 export const mockWPReport = {

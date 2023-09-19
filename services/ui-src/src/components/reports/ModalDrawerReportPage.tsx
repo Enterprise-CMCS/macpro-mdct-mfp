@@ -59,6 +59,10 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
+  const entitiesOther = (reportFieldDataEntities as any[]).map((entity) => ({
+    ...entity,
+    isOtherEntity: true,
+  }));
 
   let entities = [
     {
@@ -86,7 +90,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
     },
   ];
 
-  entities = entities.concat(reportFieldDataEntities).map((entity) => ({
+  entities = entities.concat(entitiesOther).map((entity) => ({
     ...entity,
     name: entity && entityInfo ? (entity as any)[entityInfo[0] as string] : "",
   }));
@@ -256,6 +260,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           }}
         />
         <DeleteEntityModal
+          entityType={entityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           modalDisclosure={{
