@@ -54,7 +54,6 @@ describe("Test ModalDrawerReportPage with entities", () => {
     await userEvent.click(closeButton);
   });
 
-
   it("ModalDrawerReportPage Modal opens correctly", async () => {
     const addEntityButton = screen.getByText(addEntityButtonText);
     await userEvent.click(addEntityButton);

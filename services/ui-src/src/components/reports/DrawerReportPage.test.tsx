@@ -54,6 +54,7 @@ describe("Test DrawerReportPage with entities", () => {
 
 describe("Test DrawerReportPage accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
     const { container } = render(drawerReportPageWithEntities);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
