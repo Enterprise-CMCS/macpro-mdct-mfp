@@ -131,7 +131,7 @@ const getReportName = (report: ReportMetadataShape) => {
     ? report.submissionName
     : report.programName;
   const period = calculatePeriod(convertDateUtcToEt(report.createdAt));
-  return `${report.state} ${reportName} {${year} - Period ${period}}`;
+  return `${report.state} ${reportName} ${year} - Period ${period}`;
 };
 
 export const getStatus = (
