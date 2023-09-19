@@ -200,6 +200,15 @@ export const DashboardPage = ({ reportType }: Props) => {
             }
           />
         )}
+        {reportType === "SAR" && (
+          <InstructionsAccordion
+            verbiage={
+              userIsStateUser
+                ? accordion.SAR.stateUserDashboard
+                : accordion.SAR.adminDashboard
+            }
+          />
+        )}
         {parseCustomHtml(intro.body)}
       </Box>
       <Box sx={sx.bodyBox}>

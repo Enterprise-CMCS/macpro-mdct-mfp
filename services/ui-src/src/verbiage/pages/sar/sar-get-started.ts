@@ -58,6 +58,6 @@ export default {
   },
   pageLink: {
     text: "Enter SAR online",
-    route: "/wp",
+    route: "/sar",
   },
 };

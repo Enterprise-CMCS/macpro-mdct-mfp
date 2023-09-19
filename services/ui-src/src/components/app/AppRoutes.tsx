@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useFlags } from "launchdarkly-react-client-sdk";
-// components
+// import { useFlags } from "launchdarkly-react-client-sdk";
 import {
   AdminBannerProvider,
   AdminPage,
@@ -22,7 +21,7 @@ export const AppRoutes = () => {
 
   // LaunchDarkly
   const wpReport = true; //useFlags()?.wpReport;
-  const sarReport = useFlags().sarReport;
+  const sarReport = true; //useFlags().sarReport;
 
   return (
     <main id="main-content" tabIndex={-1}>
