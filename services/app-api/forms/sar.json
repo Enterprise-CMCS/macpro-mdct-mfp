@@ -14,10 +14,54 @@
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "",
-          "hint": "",
-          "exportSection": ""
+          "subsection": "General Information",
+          "hint": ""
         }
+      },
+      "form": {
+        "id": "2VdD2nLaduRlsxJhn7yBNcKi",
+        "fields": [
+          {
+            "id": "2VdD8OKKRCja9nHYbqFF8RBV",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "Name of MFP operating organization"
+            }
+          },
+          {
+            "id": "2VdDGX3Emv0aYJMACqSqdInu",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "State or Territory Medicaid agency"
+            }
+          },
+          {
+            "id": "2VdDGWz7H8xeH2ix02umDuQ8",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "State or Territory Medicaid director"
+            }
+          },
+          {
+            "id": "2VdDGUvWJsX9WRdVwkBhQffV",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "MFP program's public name"
+            }
+          },
+          {
+            "id": "2VdDGX70RXJNsMeDLUprU7D7",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "MFP program's website"
+            }
+          }
+        ]
       }
     },
     {
