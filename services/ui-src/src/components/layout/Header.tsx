@@ -107,7 +107,7 @@ const sx = {
     justifyContent: "space-between",
     alignItems: "center",
   },
-  programNameText: {
+  submissionNameText: {
     fontWeight: "bold",
   },
   subnavFlexRight: {

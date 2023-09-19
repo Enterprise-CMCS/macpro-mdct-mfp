@@ -95,7 +95,7 @@ export const ReviewSubmitPage = () => {
         {report?.status == ReportStatus.SUBMITTED ? (
           <SuccessMessage
             reportType={report.reportType}
-            name={report.programName ?? report.submissionName}
+            name={report.submissionName}
             date={report?.submittedOnDate}
             submittedBy={report?.submittedBy}
             reviewVerbiage={reviewVerbiage}

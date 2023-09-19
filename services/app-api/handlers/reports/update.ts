@@ -9,6 +9,11 @@ import s3Lib, {
   getFormTemplateKey,
 } from "../../utils/s3/s3-lib";
 import {
+  validateData,
+  validateFieldData,
+} from "../../utils/validation/validation";
+import { metadataValidationSchema } from "../../utils/validation/schemas";
+import {
   error,
   reportTables,
   reportBuckets,
@@ -161,27 +166,23 @@ export const updateReport = handler(async (event, context) => {
     };
   }
 
-  /*
-   * Validate passed field data
-   *   const validatedFieldData = await validateFieldData(
-   *     formTemplate.validationJson,
-   *     unvalidatedFieldData
-   *   );
-   */
+  // Validate passed field data
+  const validatedFieldData = await validateFieldData(
+    formTemplate.validationJson,
+    unvalidatedFieldData
+  );
 
-  /*
-   *   if (!validatedFieldData) {
-   *     return {
-   *       status: StatusCodes.SERVER_ERROR,
-   *       body: error.INVALID_DATA,
-   *     };
-   *   }
-   */
+  if (!validatedFieldData) {
+    return {
+      status: StatusCodes.SERVER_ERROR,
+      body: error.INVALID_DATA,
+    };
+  }
 
   // Post validated field data to s3 bucket
   const fieldData = {
     ...existingFieldData,
-    ...unvalidatedFieldData,
+    ...validatedFieldData,
   };
 
   const updateFieldDataParams = {
@@ -205,23 +206,19 @@ export const updateReport = handler(async (event, context) => {
     formTemplate
   );
 
-  /*
-   * validate report metadata
-   *   const validatedMetadata = await validateData(metadataValidationSchema, {
-   *     ...unvalidatedMetadata,
-   *     completionStatus,
-   *   });
-   */
+  // validate report metadata
+  const validatedMetadata = await validateData(metadataValidationSchema, {
+    ...unvalidatedMetadata,
+    completionStatus,
+  });
 
-  /*
-   * If metadata fails validation, return 400
-   *   if (!validatedMetadata) {
-   *     return {
-   *       status: StatusCodes.BAD_REQUEST,
-   *       body: error.INVALID_DATA,
-   *     };
-   *   }
-   */
+  // If metadata fails validation, return 400
+  if (!validatedMetadata) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.INVALID_DATA,
+    };
+  }
 
   /*
    * Data has passed validation
@@ -235,7 +232,7 @@ export const updateReport = handler(async (event, context) => {
     TableName: reportTable,
     Item: {
       ...currentReport,
-      ...unvalidatedMetadata,
+      ...validatedMetadata,
       isComplete: isComplete(completionStatus),
       lastAltered: Date.now(),
     },

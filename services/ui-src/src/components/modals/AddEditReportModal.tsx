@@ -31,32 +31,32 @@ export const AddEditReportModal = ({
 
   // WP report payload
   const prepareWpPayload = () => {
-    const programName = "programName";
+    const submissionName = "Work Plan";
     return {
       metadata: {
-        programName,
+        submissionName,
         lastAlteredBy: full_name,
       },
       fieldData: {
-        programName,
+        submissionName,
       },
     };
   };
 
   // SAR report payload
   const prepareSarPayload = (formData: any) => {
-    const programName = formData["programName"];
+    const submissionName = formData["submissionName"];
 
     return {
       metadata: {
-        programName: programName,
+        submissionName: submissionName,
         lastAlteredBy: full_name,
         locked: false,
         submissionCount: 0,
         previousRevisions: [],
       },
       fieldData: {
-        programName,
+        submissionName,
       },
     };
   };

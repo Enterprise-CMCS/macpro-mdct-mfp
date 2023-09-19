@@ -32,7 +32,7 @@ const mockedFetchReport = fetchReport as jest.MockedFunction<
 const mockProxyEvent: APIGatewayProxyEvent = {
   ...proxyEvent,
   headers: { "cognito-identity-id": "test" },
-  pathParameters: { reportType: "MCPAR", state: "CO", id: "testReportId" },
+  pathParameters: { reportType: "WP", state: "CO", id: "testReportId" },
   body: JSON.stringify(mockWPReport),
 };
 
@@ -60,24 +60,22 @@ const submissionEvent: APIGatewayProxyEvent = {
   }),
 };
 
-/*
- * const invalidFieldDataSubmissionEvent: APIGatewayProxyEvent = {
- *   ...mockProxyEvent,
- *   body: JSON.stringify({
- *     ...mockWPReport,
- *     metadata: {
- *       status: "submitted",
- *     },
- *     submittedBy: mockWPReport.metadata.lastAlteredBy,
- *     submittedOnDate: Date.now(),
- *     fieldData: { ...mockReportFieldData, "mock-number-field": "text" },
- *   }),
- * };
- */
+const invalidFieldDataSubmissionEvent: APIGatewayProxyEvent = {
+  ...mockProxyEvent,
+  body: JSON.stringify({
+    ...mockWPReport,
+    metadata: {
+      status: "submitted",
+    },
+    submittedBy: mockWPReport.metadata.lastAlteredBy,
+    submittedOnDate: Date.now(),
+    fieldData: { ...mockReportFieldData, "mock-number-field": "text" },
+  }),
+};
 
 const updateEventWithInvalidData: APIGatewayProxyEvent = {
   ...mockProxyEvent,
-  body: `{"programName":{}}`,
+  body: `{"submissionName":{}}`,
 };
 
 describe("Test updateReport API method", () => {
@@ -101,26 +99,23 @@ describe("Test updateReport API method", () => {
     const response = await updateReport(submissionEvent, null);
     const body = JSON.parse(response.body);
     expect(body.status).toContain("submitted");
-    expect(body.fieldData["mock-number-field"]).toBe(2);
+    expect(body.fieldData["mock-number-field"]).toBe("2");
     expect(response.statusCode).toBe(StatusCodes.SUCCESS);
   });
 
-  /*
-   * Will update with validation fixes
-   * test("Test report update with invalid fieldData fails", async () => {
-   *   mockedFetchReport.mockResolvedValue({
-   *     statusCode: 200,
-   *     headers: {
-   *       "Access-Control-Allow-Origin": "string",
-   *       "Access-Control-Allow-Credentials": true,
-   *     },
-   *     body: JSON.stringify(mockDynamoData),
-   *   });
-   *   const response = await updateReport(invalidFieldDataSubmissionEvent, null);
-   *   expect(response.statusCode).toBe(StatusCodes.SERVER_ERROR);
-   *   expect(response.body).toContain(error.INVALID_DATA);
-   * });
-   */
+  test("Test report update with invalid fieldData fails", async () => {
+    mockedFetchReport.mockResolvedValue({
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "string",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(mockDynamoData),
+    });
+    const response = await updateReport(invalidFieldDataSubmissionEvent, null);
+    expect(response.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(response.body).toContain(error.INVALID_DATA);
+  });
 
   test("Test attempted report update with invalid data throws 400", async () => {
     mockedFetchReport.mockResolvedValue({

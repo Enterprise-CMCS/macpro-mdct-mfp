@@ -71,7 +71,7 @@ describe("Test fetchReport API method", () => {
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);
     expect(body.lastAlteredBy).toContain("Thelonious States");
-    expect(body.programName).toContain("testProgram");
+    expect(body.submissionName).toContain("testProgram");
     expect(body.completionStatus).toMatchObject(
       mockDynamoData.completionStatus
     );
@@ -88,7 +88,7 @@ describe("Test fetchReport API method", () => {
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);
     expect(body.lastAlteredBy).toContain("Thelonious States");
-    expect(body.programName).toContain("testProgram");
+    expect(body.submissionName).toContain("testProgram");
     expect(body.completionStatus).toMatchObject({
       "step-one": true,
     });
@@ -127,7 +127,7 @@ describe("Test fetchReportsByState API method", () => {
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);
     expect(body[0].lastAlteredBy).toContain("Thelonious States");
-    expect(body[0].programName).toContain("testProgram");
+    expect(body[0].submissionName).toContain("testProgram");
   });
 
   test("Test reportKeys not provided throws 400 error", async () => {
