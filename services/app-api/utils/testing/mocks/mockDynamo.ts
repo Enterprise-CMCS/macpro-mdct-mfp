@@ -19,7 +19,7 @@ export const mockApiKey = sign(
 export const mockDynamoData = {
   ...mockReportKeys,
   reportType: "WP",
-  programName: "testProgram",
+  submissionName: "testProgram",
   status: "Not started",
   lastAlteredBy: "Thelonious States",
   fieldDataId: "mockReportFieldData",
@@ -36,7 +36,6 @@ export const mockDynamoDataWPLocked: WPReportMetadata = {
   ...mockReportKeys,
   archived: false,
   reportType: "MLR",
-  programName: "testProgram",
   submissionName: "testProgram",
   status: "Not started",
   lastAlteredBy: "Thelonious States",
@@ -53,7 +52,7 @@ export const mockDynamoDataWPLocked: WPReportMetadata = {
 export const mockDynamoDataWPCompleted: WPReportMetadata = {
   ...mockReportKeys,
   reportType: "WP",
-  programName: "testProgram",
+  submissionName: "testProgram",
   status: "Not started",
   lastAlteredBy: "Thelonious States",
   fieldDataId: "mockReportFieldData",
@@ -67,7 +66,6 @@ export const mockDynamoDataWPCompleted: WPReportMetadata = {
   archived: false,
   submittedBy: "",
   submittedOnDate: "",
-  submissionName: "testProgram",
   submissionCount: 0,
   locked: false,
   previousRevisions: [],
