@@ -42,7 +42,7 @@ export const EntityRow = ({
 
   return (
     <Tr sx={sx.content}>
-      <Td sx={sx.statusIcon}>
+      <Td>
         <EntityStatusIcon entity={entity as EntityShape} />
       </Td>
       <Td sx={sx.entityName}>
@@ -109,9 +109,6 @@ const sx = {
       borderColor: "palette.gray_light",
       paddingRight: 0,
     },
-  },
-  statusIcon: {
-    maxWidth: "fit-content",
   },
   errorText: {
     color: "palette.error_dark",
