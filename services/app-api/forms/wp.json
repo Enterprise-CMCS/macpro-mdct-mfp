@@ -1130,13 +1130,13 @@
           }
         },
         {
-          "name": "State & Territory Specific Initiatives: IV. Close-out information",
+          "name": "State & Territory-Specific Initiatives: IV. Close-out information",
           "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
           "pageType": "entityOverlay",
           "entityType": "closeOut",
           "verbiage": {
             "intro": {
-              "section": "State & Territory Specific Initiatives: IV. Close-out information",
+              "section": "State & Territory-Specific Initiatives: IV. Close-out information",
               "subsection": "{Initiative name}",
               "hint": "Complete the section below for initiatives with an end date during the upcoming semi-annual reporting period."
             },
