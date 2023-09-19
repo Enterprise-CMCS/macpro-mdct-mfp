@@ -183,7 +183,7 @@ export const mockDrawerReportPageJson = {
   name: "mock-route-2a",
   path: "/mock/mock-route-2a",
   pageType: "drawer",
-  entityType: "plans",
+  entityType: "entityType",
   verbiage: {
     intro: mockVerbiageIntro,
     dashboardTitle: "Mock dashboard title",

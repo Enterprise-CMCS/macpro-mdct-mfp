@@ -4,7 +4,9 @@ import { axe } from "jest-axe";
 import {
   mockDrawerReportPageJson,
   RouterWrappedComponent,
+  mockReportStore,
 } from "utils/testing/setupJest";
+import { useStore } from "utils";
 // constants
 import { DrawerReportPage } from "./DrawerReportPage";
 
@@ -18,6 +20,9 @@ jest.mock("react-router-dom", () => ({
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
 const drawerReportPageWithEntities = (
   <RouterWrappedComponent>
     <DrawerReportPage route={mockDrawerReportPageJson} />
@@ -26,6 +31,7 @@ const drawerReportPageWithEntities = (
 
 describe("Test DrawerReportPage with entities", () => {
   beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockReportStore);
     render(drawerReportPageWithEntities);
   });
 

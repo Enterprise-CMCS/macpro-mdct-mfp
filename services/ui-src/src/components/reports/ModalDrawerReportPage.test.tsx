@@ -21,7 +21,7 @@ window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
 const {
   addEntityButtonText,
-  editEntityButtonText,
+  // editEntityButtonText,
   enterEntityDetailsButtonText,
   // deleteModalConfirmButtonText,
 } = mockModalDrawerReportPageJson.verbiage;
@@ -44,6 +44,16 @@ describe("Test ModalDrawerReportPage with entities", () => {
   it("ModalDrawerReportPage should render the view", () => {
     expect(screen.getByText(addEntityButtonText)).toBeVisible();
   });
+
+  it("ModalDrawerReportPage Modal opens correctly", async () => {
+    const addEntityButton = screen.getByText(addEntityButtonText);
+    await userEvent.click(addEntityButton);
+    expect(screen.getByRole("dialog")).toBeVisible();
+
+    const closeButton = screen.getByText("Close");
+    await userEvent.click(closeButton);
+  });
+
 
   it("ModalDrawerReportPage Modal opens correctly", async () => {
     const addEntityButton = screen.getByText(addEntityButtonText);
