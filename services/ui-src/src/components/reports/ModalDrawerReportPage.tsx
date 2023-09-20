@@ -23,48 +23,25 @@ import searchIcon from "assets/icons/icon_search_blue.png";
 // types
 import { EntityShape, EntityType, ModalDrawerReportPageShape } from "types";
 // utils
-import { parseCustomHtml } from "utils";
+import { parseCustomHtml, useStore } from "utils";
 import { getFormattedEntityData } from "utils/reports/entities";
 
 export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
-  const { entityType, verbiage, modalForm, drawerForm: drawerFormJson } = route;
+  const {
+    entityType,
+    entityInfo,
+    verbiage,
+    modalForm,
+    drawerForm: drawerFormJson,
+  } = route;
+  const { report } = useStore();
 
-  // const reportFieldDataEntities = report?.fieldData[entityType] || [];
+  const reportFieldDataEntities = report?.fieldData[entityType] || [];
 
   const submitting = false;
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-
-  const entities = [
-    {
-      id: "0",
-      name: "Older adults",
-      isOtherEntity: false,
-    },
-    {
-      id: "1",
-      name: "Individuals with physical disabilities (PD)",
-      isOtherEntity: false,
-    },
-    {
-      id: "2",
-      name: "Individuals with intellectual and developmental disabilities (I/DD)",
-      isOtherEntity: false,
-    },
-    {
-      id: "3",
-      name: "Individuals with mental health and substance abuse disorders (MH/SUD)",
-      isOtherEntity: false,
-    },
-    {
-      id: "4",
-      name: "Other: {entity}",
-      isOtherEntity: true,
-    },
-  ];
-
-  const entityInfo = ["name", "isOtherEntity"];
 
   // create drawerForm from json
   const drawerForm = { ...drawerFormJson };
@@ -136,8 +113,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         </Heading>
         <Box>
           <Table sx={sx.table} content={tableHeaders}>
-            {/* TODO: real entities */}
-            {entities.map((entity: EntityShape) => (
+            {reportFieldDataEntities.map((entity: EntityShape) => (
               <EntityRow
                 key={entity.id}
                 entity={entity}

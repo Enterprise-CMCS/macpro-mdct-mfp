@@ -97,6 +97,7 @@ export const createReport = handler(async (event, _context) => {
   const creationValidationJson = {
     submissionName: "text",
     stateName: "text",
+    ["targetPopulation"]: "objectArray",
     submissionCount: "number",
     versionControl: "objectArray",
   };
