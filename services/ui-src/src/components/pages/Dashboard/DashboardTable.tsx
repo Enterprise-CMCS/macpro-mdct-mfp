@@ -46,7 +46,7 @@ export const DashboardTable = ({
           <Td></Td>
         )}
         {/* Report Name */}
-        <Td sx={sxOverride.programNameText}>{getReportName(report)}</Td>
+        <Td sx={sxOverride.submissionNameText}>{getReportName(report)}</Td>
         {/* Date Fields */}
         <DateFields report={report} reportType={reportType} />
         {/* Last Altered By */}
@@ -128,9 +128,7 @@ interface DashboardTableProps {
 }
 
 const getReportName = (report: ReportMetadataShape) => {
-  const reportName = report.submissionName
-    ? report.submissionName
-    : report.programName;
+  const reportName = report.submissionName;
   const period = calculatePeriod(convertDateUtcToEt(report.createdAt));
   const fullStateName = States[report.state as keyof typeof States];
   return `${fullStateName} ${reportName} ${year} - Period ${period}`;

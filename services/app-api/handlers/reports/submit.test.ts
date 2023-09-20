@@ -48,7 +48,7 @@ describe("Test submitReport API method", () => {
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);
     expect(body.lastAlteredBy).toContain("Thelonious States");
-    expect(body.programName).toContain("testProgram");
+    expect(body.submissionName).toContain("testProgram");
     expect(body.isComplete).toStrictEqual(true);
     expect(body.status).toStrictEqual("Submitted");
     expect(body.submittedBy).toStrictEqual("Thelonious States");

@@ -127,7 +127,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       }
       formData = {
         fieldData: {
-          programName: report.programName,
+          submissionName: report.submissionName,
         },
         state: report.state,
         id: report.id,
@@ -396,7 +396,7 @@ const sxChildStyles = {
       },
     },
   },
-  programNameText: {
+  submissionNameText: {
     fontSize: "md",
     fontWeight: "bold",
     width: "13rem",
