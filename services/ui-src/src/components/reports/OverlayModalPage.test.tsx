@@ -41,12 +41,12 @@ describe("Test overlayModalPage with entities", () => {
   });
 
   it("overlayModalPage should render the view", () => {
-    expect(screen.getByText(addEntityButtonText)).toBeVisible();
+    expect(screen.getAllByText(addEntityButtonText)[0]).toBeVisible();
   });
 
   it("overlayModalPage Modal opens correctly", async () => {
-    const addEntityButton = screen.getByText(addEntityButtonText);
-    await userEvent.click(addEntityButton);
+    const addEntityButton = screen.getAllByText(addEntityButtonText);
+    await userEvent.click(addEntityButton[0]);
     expect(screen.getByRole("dialog")).toBeVisible();
 
     const editButton = screen.getAllByText(editEntityButtonText)[0];
