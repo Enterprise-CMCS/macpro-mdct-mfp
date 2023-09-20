@@ -9,6 +9,7 @@ import {
   TableContentShape,
 } from "types";
 import { convertDateUtcToEt, calculatePeriod } from "utils";
+import { States } from "../../../constants";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 
@@ -131,7 +132,8 @@ const getReportName = (report: ReportMetadataShape) => {
     ? report.submissionName
     : report.programName;
   const period = calculatePeriod(convertDateUtcToEt(report.createdAt));
-  return `${report.state} ${reportName} ${year} - Period ${period}`;
+  const fullStateName = States[report.state as keyof typeof States];
+  return `${fullStateName} ${reportName} ${year} - Period ${period}`;
 };
 
 export const getStatus = (
