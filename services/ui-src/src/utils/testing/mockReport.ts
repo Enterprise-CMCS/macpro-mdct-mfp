@@ -46,7 +46,7 @@ export const mockWPReport = {
   ...mockReportKeys,
   metadata: {
     reportType: "WP",
-    programName: "testProgram",
+    submissionName: "testProgram",
     status: "Not started",
     lastAlteredBy: "Thelonious States",
     fieldDataId: "mockReportFieldData",
@@ -61,7 +61,7 @@ export const mockWPReport = {
 export const mockWPDynamoData = {
   ...mockReportKeys,
   reportType: "WP",
-  programName: "testProgram",
+  submissionName: "testProgram",
   status: "Not started",
   lastAlteredBy: "Thelonious States",
   fieldDataId: "mockReportFieldData",
@@ -78,7 +78,7 @@ export const mockWPFullReport = {
   ...mockReportKeys,
   reportType: "WP",
   formTemplate: mockReportJson,
-  programName: "2023 - Alabama 1",
+  submissionName: "2023 - Alabama 1",
   status: ReportStatus.NOT_STARTED,
   dueDate: 168515200000,
   createdAt: 162515200000,

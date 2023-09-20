@@ -9,7 +9,7 @@
   },
   "fields": [
     {
-      "id": "programName",
+      "id": "submissionName",
       "type": "text",
       "validation": "text",
       "props": {
