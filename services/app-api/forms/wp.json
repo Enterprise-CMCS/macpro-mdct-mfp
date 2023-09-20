@@ -45,6 +45,7 @@
       "path": "/wp/transition-benchmarks",
       "pageType": "modalDrawer",
       "entityType": "targetPopulation",
+      "entityInfo": ["transitionBenchmarks_targetPopulationName"],
       "verbiage": {
         "intro": {
           "section": "",
@@ -807,7 +808,7 @@
                     },
                     {
                       "id": "Vg8erh64Tk2nKd5olVwM9w",
-                      "label": "Individuals with intellectual and developmental disabilities(MH/SUD)"
+                      "label": "Individuals with intellectual and developmental disabilities (MH/SUD)"
                     },
                     {
                       "id": "azz5rhd8V0GK27fIXaYSmw",

@@ -52,6 +52,7 @@ export interface DrawerReportPageShape extends ReportPageShapeBase {
 
 export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   entityType: string;
+  entityInfo?: string[];
   verbiage: ModalDrawerReportPageVerbiage;
   modalForm: FormJson;
   drawerForm: FormJson;
