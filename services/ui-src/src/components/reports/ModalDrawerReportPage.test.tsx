@@ -19,7 +19,7 @@ jest.mock("react-router-dom", () => ({
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
-const { addEntityButtonText, editEntityButtonText } =
+const { addEntityButtonText, reviewPdfHint } =
   mockModalDrawerReportPageJson.verbiage;
 
 const modalDrawerReportPageComponentWithEntities = (
@@ -48,7 +48,7 @@ describe("Test ModalDrawerReportPage with entities", () => {
 
     const closeButton = screen.getByText("Close");
     await userEvent.click(closeButton);
-    expect(screen.getByText(editEntityButtonText)).toBeVisible();
+    expect(screen.getByText(reviewPdfHint)).toBeVisible();
   });
 });
 
