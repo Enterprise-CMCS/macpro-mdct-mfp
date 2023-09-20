@@ -33,16 +33,6 @@ export const OverlayModalPage = ({ route }: Props) => {
 
   ///TEMPORARY ENTITY//
   let tempEntity = {};
-  /*
-   *tempEntity = {
-   * id: "mockid",
-   * evaluationPlan_objectiveName: "{Objective Name}",
-   * evaluationPlan_description: "Description here",
-   * evaluationPlan_targets: "Targets here",
-   * evaluationPlan_includesTargets: "No",
-   * evaluationPlan_additionalDetails: "Additional details",
-   * };
-   */
 
   tempEntity = {
     objectiveName: "{Funding Sources}",
