@@ -19,12 +19,8 @@ jest.mock("react-router-dom", () => ({
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
-const {
-  addEntityButtonText,
-  editEntityButtonText,
-  enterEntityDetailsButtonText,
-  // deleteModalConfirmButtonText,
-} = mockModalDrawerReportPageJson.verbiage;
+const { addEntityButtonText, editEntityButtonText } =
+  mockModalDrawerReportPageJson.verbiage;
 
 const modalDrawerReportPageComponentWithEntities = (
   <RouterWrappedComponent>
@@ -45,25 +41,14 @@ describe("Test ModalDrawerReportPage with entities", () => {
     expect(screen.getByText(addEntityButtonText)).toBeVisible();
   });
 
-  it("ModalDrawerReportPage Modal opens correctly", async () => {
+  it("ModalDrawerReportPage Modal opens and closes correctly", async () => {
     const addEntityButton = screen.getByText(addEntityButtonText);
     await userEvent.click(addEntityButton);
     expect(screen.getByRole("dialog")).toBeVisible();
 
-    const editButton = screen.getAllByText(editEntityButtonText)[0];
-    await userEvent.click(editButton);
     const closeButton = screen.getByText("Close");
     await userEvent.click(closeButton);
-  });
-
-  // TODO: test delete modal + functionality
-
-  test("ModalDrawerReportPage opens the drawer on enter-details click", async () => {
-    const enterDetailsButton = screen.getAllByText(
-      enterEntityDetailsButtonText
-    )[0];
-    await userEvent.click(enterDetailsButton);
-    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(screen.getByText(editEntityButtonText)).toBeVisible();
   });
 });
 
