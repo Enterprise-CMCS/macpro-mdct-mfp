@@ -59,41 +59,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
-  const entitiesOther = (reportFieldDataEntities as any[]).map((entity) => ({
-    ...entity,
-    isOtherEntity: true,
-  }));
-
-  let entities = [
-    {
-      id: "0",
-      transitionBenchmarks_targetPopulationName: "Older adults",
-      isOtherEntity: false,
-    },
-    {
-      id: "1",
-      transitionBenchmarks_targetPopulationName:
-        "Individuals with physical disabilities (PD)",
-      isOtherEntity: false,
-    },
-    {
-      id: "2",
-      transitionBenchmarks_targetPopulationName:
-        "Individuals with intellectual and developmental disabilities (I/DD)",
-      isOtherEntity: false,
-    },
-    {
-      id: "3",
-      transitionBenchmarks_targetPopulationName:
-        "Individuals with mental health and substance abuse disorders (MH/SUD)",
-      isOtherEntity: false,
-    },
-  ];
-
-  entities = entities.concat(entitiesOther).map((entity) => ({
-    ...entity,
-    name: entity && entityInfo ? (entity as any)[entityInfo[0] as string] : "",
-  }));
 
   // create drawerForm from json
   const drawerForm = { ...drawerFormJson };
@@ -213,8 +178,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         </Heading>
         <Box>
           <Table sx={sx.table} content={tableHeaders}>
-            {/* TODO: real entities */}
-            {entities.map((entity: EntityShape) => (
+            {reportFieldDataEntities.map((entity: EntityShape) => (
               <EntityRow
                 key={entity.id}
                 entity={entity}

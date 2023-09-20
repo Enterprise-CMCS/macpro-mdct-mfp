@@ -124,7 +124,7 @@ export const OverlayModalPage = ({ route }: Props) => {
       <Box>
         <Flex sx={sx.buttonFlex}>
           <Button type="submit" form={modalForm.id} sx={sx.saveButton}>
-            Save & return"
+            Save & return
           </Button>
         </Flex>
       </Box>
