@@ -1157,6 +1157,7 @@
               {
                 "id": "xqEUNPc8TB6nZwyapjl1om",
                 "type": "date",
+                "validation": "textOptional",
                 "props": {
                   "label": "Projected end date",
                   "disabled": true
