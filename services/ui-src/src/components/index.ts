@@ -56,6 +56,7 @@ export { Sidebar } from "./menus/Sidebar";
 // modals
 export { Modal } from "./modals/Modal";
 export { AddEditEntityModal } from "./modals/AddEditEntityModal";
+export { CloseEntityModal } from "./modals/CloseEntityModal";
 export { AddEditReportModal } from "./modals/AddEditReportModal";
 export { DeleteDynamicFieldRecordModal } from "./modals/DeleteDynamicFieldRecordModal";
 export { DeleteEntityModal } from "./modals/DeleteEntityModal";
@@ -66,7 +67,7 @@ export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { ReviewSubmitPage } from "./pages/ReviewSubmit/ReviewSubmitPage";
 // overlays
-export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
+export { EntityDetailsDashboardOverlay } from "./overlays/EntityDetailsDashboardOverlay";
 // reports
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
@@ -78,12 +79,13 @@ export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
 export { OverlayModalPage } from "./reports/OverlayModalPage";
 export { ModalOverlayReportPage } from "./reports/ModalOverlayReportPage";
+export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables
 export { EntityRow } from "./tables/EntityRow";
-export { EntityStatusIcon } from "./tables/EntityStatusIcon";
 export { Table } from "./tables/Table";
+export { EntityStatusIcon } from "./tables/EntityStatusIcon";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
 // Redirects

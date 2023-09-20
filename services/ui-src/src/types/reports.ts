@@ -76,6 +76,11 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   form?: never;
 }
 
+export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
+  verbiage: EntityOverlayPageVerbiage;
+  form: FormJson;
+}
+
 export interface ReportJson {
   id?: string;
   type?: string;
@@ -93,8 +98,9 @@ export type ReportRouteWithForm =
   | StandardReportPageShape
   | DrawerReportPageShape
   | ModalDrawerReportPageShape
-  | OverlayModalPageShape
-  | ModalOverlayReportPageShape;
+  | ModalOverlayReportPageShape
+  | EntityDetailsOverlayShape
+  | OverlayModalPageShape;
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
   children?: ReportRoute[];
@@ -153,6 +159,19 @@ export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   tableHeader: string;
   addEditModalHint: string;
   emptyDashboardText: string;
+}
+
+export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
+  closeOutWarning?: {
+    title?: string;
+    description?: string;
+  };
+  closeOutModal?: {
+    closeOutModalButtonText?: string;
+    closeOutModalTitle?: string;
+    closeOutModalBodyText?: string;
+    closeOutModalConfirmButtonText?: string;
+  };
 }
 
 /**
