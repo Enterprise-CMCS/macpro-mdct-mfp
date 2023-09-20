@@ -181,7 +181,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     onClose: addEditReportModalOnCloseHandler,
   } = useDisclosure();
 
-  const fullStateName = States[userState as keyof typeof States];
+  const fullStateName = States[activeState as keyof typeof States];
 
   return (
     <PageTemplate type="report" sx={sx.layout}>
