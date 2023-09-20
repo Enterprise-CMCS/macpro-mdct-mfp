@@ -403,6 +403,7 @@ const sxChildStyles = {
     ".tablet &, .mobile &": {
       width: "100%",
     },
+    lineHeight: "1.25rem",
   },
   adminActionCell: {
     width: "2.5rem",
