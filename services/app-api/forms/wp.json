@@ -847,6 +847,7 @@
               {
                 "id": "stateTerritory_projectedEndDate",
                 "type": "date",
+                "validation": "date",
                 "props": {
                   "label": "End Date",
                   "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
