@@ -1129,14 +1129,14 @@
           }
         },
         {
-          "name": "State and territory-specific Initiatives: III. Funding Sources",
+          "name": "State and Territory-Specific Initiatives: III. Funding Sources",
           "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
           "pageType": "overlayModal",
           "entityType": "fundingSources",
           "verbiage": {
             "intro": {
-              "section": "State and territory-specific Initiatives: III. Funding Sources",
-              "subsection": "State and territory-specific Initiatives: III. Funding Sources",
+              "section": "State and Territory-Specific Initiatives: III. Funding Sources",
+              "subsection": "State and Territory-Specific Initiatives: III. Funding Sources",
               "info": [
                 {
                   "type": "html",

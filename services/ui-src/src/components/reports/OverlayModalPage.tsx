@@ -45,7 +45,7 @@ export const OverlayModalPage = ({ route }: Props) => {
    */
 
   tempEntity = {
-    objectiveName: "Funding Sources",
+    objectiveName: "{Funding Sources}",
     id: "test-id",
     report_initiative: "state and territory specific initiatives",
     quarters: [
@@ -54,48 +54,48 @@ export const OverlayModalPage = ({ route }: Props) => {
         value: "$203,090",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2024 Q3",
+        value: "$157,000",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2025 Q3",
+        value: "$35,000",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2023 Q4",
+        value: "$152,230",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2024 Q4",
+        value: "$345,789",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2025 Q4",
+        value: "$250,000",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2024 Q1",
+        value: "$30,010",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2025 Q1",
+        value: "$10,000",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2026 Q1",
+        value: "$30,090",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2024 Q2",
+        value: "$30,010",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2025 Q2",
+        value: "$10,000",
       },
       {
-        id: "2023 Q3",
-        value: "$203,090",
+        id: "2026 Q2",
+        value: "$30,090",
       },
     ],
     isOtherEntity: true,
@@ -150,6 +150,13 @@ export const OverlayModalPage = ({ route }: Props) => {
         />
       )}
       <Box>
+        <Button
+          sx={sx.addEntityButton}
+          onClick={addEditEntityModalOnOpenHandler}
+          leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+        >
+          {verbiage.addEntityButtonText}
+        </Button>
         <Heading as="h3" sx={sx.dashboardTitle}>
           {`${verbiage.dashboardTitle}: ${reportFieldDataEntities.length}`}
         </Heading>
