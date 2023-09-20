@@ -158,7 +158,7 @@
             "type": "textarea",
             "validation": "text",
             "props": {
-              "label": "Provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative."
+              "label": "Please provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative."
             }
           }
         ]
@@ -1123,8 +1123,7 @@
                 "type": "textarea",
                 "validation": "text",
                 "props": {
-                  "label": "Please provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description).",
-                  "hint": "Please list the responsible state or territory agency parties and the key external partners for achieving this objective."
+                  "label": "Provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description)."
                 }
               }
             ]
