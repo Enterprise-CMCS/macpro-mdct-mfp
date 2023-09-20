@@ -4,9 +4,8 @@
   "basePath": "/wp",
   "version": "WP_2023-08-21",
   "entities": {
-    "targetPopulation": {
-      "required": true
-    }
+    "targetPopulation": { "required": true },
+    "evaluationPlan": { "required": true }
   },
   "routes": [
     {
@@ -143,10 +142,10 @@
         }
       },
       "form": {
-        "id": "2UkwX7CMrbfrcSF2YjiyfetUyIF",
+        "id": "tbs",
         "fields": [
           {
-            "id": "2Ukwki4yJ8wNNqz7KnvgNoTATkO",
+            "id": "strategy_explaination",
             "type": "textarea",
             "validation": "text",
             "props": {
@@ -154,7 +153,7 @@
             }
           },
           {
-            "id": "2Ukwj6bhkkok19JzSocDWLo1idj",
+            "id": "strategy_additionalDetails",
             "type": "textarea",
             "validation": "text",
             "props": {
@@ -780,10 +779,10 @@
             }
           },
           "form": {
-            "id": "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+            "id": "stsidi",
             "fields": [
               {
-                "id": "2Ukwki4yJ8wNPqz7KnvgNoTATkO",
+                "id": "stateTerritory_defineInitiative",
                 "type": "textarea",
                 "validation": "text",
                 "props": {
@@ -791,7 +790,7 @@
                 }
               },
               {
-                "id": "target_population",
+                "id": "stateTerritory_targetPopulations",
                 "type": "checkbox",
                 "validation": "checkbox",
                 "props": {
@@ -823,12 +822,12 @@
                       "label": "Other, specify",
                       "children": [
                         {
-                          "id": "state_encounterDataValidationEntity-otherText",
+                          "id": "stateTerritory_targetPopulations-otherText",
                           "type": "textarea",
                           "validation": {
                             "type": "text",
                             "nested": true,
-                            "parentFieldName": "state_encounterDataValidationEntity"
+                            "parentFieldName": "stateTerritory_targetPopulations"
                           }
                         }
                       ]
@@ -837,7 +836,7 @@
                 }
               },
               {
-                "id": "2UkpVV0mypx5RnlS9UsflndyQDY",
+                "id": "stateTerritory_projectedStartDate",
                 "type": "date",
                 "validation": "date",
                 "props": {
@@ -846,12 +845,16 @@
                 }
               },
               {
-                "id": "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+                "id": "stateTerritory_projectedEndDate",
                 "type": "date",
-                "validation": "date",
+                "validation": {
+                  "type": "endDate",
+                  "dependentFieldName": "stateTerritory_projectedStartDate"
+                },
                 "props": {
                   "label": "End Date",
-                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
+                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point.",
+                  "timetype": "endDate"
                 }
               }
             ]
