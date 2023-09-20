@@ -51,7 +51,7 @@ export const AppRoutes = () => {
             />
           )}
           {/* General Report Routes */}
-          {report?.reportType === ReportType.WP && (
+          {report && (
             <>
               {(report.formTemplate.flatRoutes ?? []).map(
                 (route: ReportRoute) => (
@@ -64,6 +64,7 @@ export const AppRoutes = () => {
               )}
             </>
           )}
+          )
           <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
         </Routes>
       </AdminBannerProvider>

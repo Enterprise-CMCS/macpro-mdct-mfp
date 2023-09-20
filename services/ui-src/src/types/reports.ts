@@ -21,6 +21,7 @@ export interface ReportPageVerbiage {
     spreadsheet?: string;
     exportSectionHeader?: string;
   };
+  reviewPdfHint?: string;
 }
 
 export interface ReportRouteBase {
