@@ -5,7 +5,7 @@ import {
   AddEditEntityModal,
   Alert,
   DeleteEntityModal,
-  EntityDetailsOverlay,
+  EntityDetailsDashboardOverlay,
   EntityProvider,
   EntityRow,
   ReportContext,
@@ -183,7 +183,7 @@ export const ModalOverlayReportPage = ({
     <Box>
       {overlayForm && isEntityDetailsOpen && currentEntity ? (
         <EntityProvider>
-          <EntityDetailsOverlay
+          <EntityDetailsDashboardOverlay
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             entityType={entityType as EntityType}
             entities={report?.fieldData[entityType]}
