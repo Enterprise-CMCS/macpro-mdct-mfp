@@ -847,14 +847,9 @@
               {
                 "id": "stateTerritory_projectedEndDate",
                 "type": "date",
-                "validation": {
-                  "type": "endDate",
-                  "dependentFieldName": "stateTerritory_projectedStartDate"
-                },
                 "props": {
                   "label": "End Date",
-                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point.",
-                  "timetype": "endDate"
+                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
                 }
               }
             ]
