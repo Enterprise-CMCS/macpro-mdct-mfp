@@ -1153,6 +1153,10 @@
             "editEntityButtonText": "Edit funding source",
             "addEditModalAddTitle": "Add funding source and projected expenditures",
             "addEditModalEditTitle": "Edit funding source and projected expenditures",
+            "deleteEntityButtonAltText": "Delete other target population",
+            "deleteModalTitle": "Delete funding source for this report? ",
+            "deleteModalConfirmButtonText": "Yes, delete funding source",
+            "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports. <br><br>Are you sure you want to proceed?",
             "tableHeader": "Initiative name <br/> Work Plan topic",
             "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).",
             "emptyDashboardText": "Empty",
@@ -1180,10 +1184,6 @@
                     {
                       "id": "2VLpZCNtbcjRPq3evd1NI6",
                       "label": "Administrative cooperative agreement funding"
-                    },
-                    {
-                      "id": "2VLpZEkkfhqqS95l7LFj0y",
-                      "label": "Self-direction(*if applicable)"
                     },
                     {
                       "id": "2VLpZDJ9qaKKOk78ztBdiB",
@@ -1309,22 +1309,6 @@
                 "validation": "number",
                 "props": {
                   "label": "2026 Q2"
-                }
-              },
-              {
-                "id": "2VLqRh8QVBYyWknLnNTWP6",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2026 Q3"
-                }
-              },
-              {
-                "id": "2VLqRh8QVBGyWknVnNTWP7",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2026 Q4"
                 }
               }
             ]
