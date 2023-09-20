@@ -143,7 +143,11 @@ export const OverlayModalPage = ({ route }: Props) => {
   return (
     <Box>
       {verbiage.intro && (
-        <ReportPageIntro text={verbiage.intro} accordion={verbiage.accordion} />
+        <ReportPageIntro
+          sx={sx.intro}
+          text={verbiage.intro}
+          accordion={verbiage.accordion}
+        />
       )}
       <Box>
         <Heading as="h3" sx={sx.dashboardTitle}>
@@ -209,6 +213,9 @@ interface Props {
 }
 
 const sx = {
+  intro: {
+    color: "palette.gray_medium",
+  },
   buttonIcons: {
     height: "1rem",
   },
