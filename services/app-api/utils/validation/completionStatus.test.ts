@@ -1,6 +1,6 @@
 import { calculateCompletionStatus, isComplete } from "./completionStatus";
 
-describe.skip("Completion Status Tests", () => {
+describe("Completion Status Tests", () => {
   describe("Test Nested Completion Check", () => {
     test("Fails if there are any false", () => {
       expect(
@@ -65,7 +65,6 @@ describe.skip("Completion Status Tests", () => {
             },
             drawerForm: {
               id: "dedr",
-              adminDisabled: true,
               fields: undefined,
             },
           },
@@ -234,6 +233,21 @@ describe.skip("Completion Status Tests", () => {
         description: "Completed MCPAR but not submitted",
         fixture: "mcpar-complete-unsubmitted",
         formTemplate: "mcpar-template",
+      },
+      {
+        description: "Completed MLR with no remittance",
+        fixture: "mlr-complete-no-remittance",
+        formTemplate: "mlr-template",
+      },
+      {
+        description: "Completed MLR with remittance",
+        fixture: "mlr-complete-with-remittance",
+        formTemplate: "mlr-template",
+      },
+      {
+        description: "MLR with no programs",
+        fixture: "mlr-missing-reports",
+        formTemplate: "mlr-template",
       },
     ];
     runs.forEach((run) => {
