@@ -20,10 +20,14 @@ export interface AdminBannerState {
   // INITIAL STATE
   bannerData: AdminBannerData | undefined;
   isBannerActive: boolean;
+  isBannerLoading: boolean;
+  bannerErrorMessage: string;
   // ACTIONS
-  setAdminBanner: (newBannerData: AdminBannerData | undefined) => void;
+  setBannerData: (newBannerData: AdminBannerData | undefined) => void;
   clearAdminBanner: () => void;
   setIsBannerActive: (bannerStatus: boolean) => void;
+  setIsBannerLoading: (isBannerLoading: boolean) => void;
+  setBannerErrorMessage: (bannerErrorMessage: string) => void;
 }
 
 // initial report state

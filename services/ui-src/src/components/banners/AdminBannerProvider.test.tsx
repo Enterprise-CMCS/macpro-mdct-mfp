@@ -27,7 +27,6 @@ const TestComponent = () => {
       <button onClick={() => context.deleteAdminBanner(mockBannerData.key)}>
         Delete
       </button>
-      {context.errorMessage && <p>{context.errorMessage}</p>}
     </div>
   );
 };

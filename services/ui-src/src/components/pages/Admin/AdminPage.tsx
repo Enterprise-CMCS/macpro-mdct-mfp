@@ -22,13 +22,19 @@ import { bannerErrors } from "verbiage/errors";
 import verbiage from "verbiage/pages/admin";
 
 export const AdminPage = () => {
-  const { deleteAdminBanner, writeAdminBanner, isLoading, errorMessage } =
+  const { deleteAdminBanner, writeAdminBanner } =
     useContext(AdminBannerContext);
-  const [error, setError] = useState<string | undefined>(errorMessage);
   const [deleting, setDeleting] = useState<boolean>(false);
 
   // state management
-  const { bannerData, isBannerActive, setIsBannerActive } = useStore();
+  const {
+    bannerData,
+    isBannerActive,
+    setIsBannerActive,
+    isBannerLoading,
+    bannerErrorMessage,
+    setBannerErrorMessage,
+  } = useStore();
 
   useEffect(() => {
     let bannerActivity = false;
@@ -41,23 +47,23 @@ export const AdminPage = () => {
     setIsBannerActive(bannerActivity);
   }, [bannerData]);
 
-  useEffect(() => {
-    setError(errorMessage);
-  }, [errorMessage]);
+  // useEffect(() => {
+  //   setError(errorMessage);
+  // }, [errorMessage]);
 
   const deleteBanner = async () => {
     setDeleting(true);
     try {
       await deleteAdminBanner();
     } catch (error: any) {
-      setError(bannerErrors.DELETE_BANNER_FAILED);
+      setBannerErrorMessage(bannerErrors.DELETE_BANNER_FAILED);
     }
     setDeleting(false);
   };
 
   return (
     <PageTemplate sxOverride={sx.layout} data-testid="admin-view">
-      <ErrorAlert error={error} sxOverride={sx.errorAlert} />
+      <ErrorAlert error={bannerErrorMessage} sxOverride={sx.errorAlert} />
       <Box sx={sx.introTextBox}>
         <Heading as="h1" id="AdminHeader" tabIndex={-1} sx={sx.headerText}>
           {verbiage.intro.header}
@@ -66,7 +72,7 @@ export const AdminPage = () => {
       </Box>
       <Box sx={sx.currentBannerSectionBox}>
         <Text sx={sx.sectionHeader}>Current Banner</Text>
-        {isLoading ? (
+        {isBannerLoading ? (
           <Flex sx={sx.spinnerContainer}>
             <Spinner size="md" />
           </Flex>

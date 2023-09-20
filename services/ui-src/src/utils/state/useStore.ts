@@ -30,14 +30,24 @@ const bannerStore = (set: Function) => ({
   // initial state
   bannerData: undefined,
   isBannerActive: false,
+  isBannerLoading: false,
+  bannerErrorMessage: "",
   // actions
-  setAdminBanner: (newBanner: AdminBannerData | undefined) =>
-    set(() => ({ bannerData: newBanner }), false, { type: "setAdminBanner" }),
+  setBannerData: (newBanner: AdminBannerData | undefined) =>
+    set(() => ({ bannerData: newBanner }), false, { type: "setBannerData" }),
   clearAdminBanner: () =>
     set(() => ({ bannerData: undefined }), false, { type: "clearAdminBanner" }),
   setIsBannerActive: (bannerStatus: boolean) =>
     set(() => ({ isBannerActive: bannerStatus }), false, {
       type: "setIsBannerActive",
+    }),
+  setIsBannerLoading: (loading: boolean) =>
+    set(() => ({ isBannerLoading: loading }), false, {
+      type: "setIsBannerLoading",
+    }),
+  setBannerErrorMessage: (errorMessage: string) =>
+    set(() => ({ bannerErrorMessage: errorMessage }), false, {
+      type: "setBannerErrorMessage",
     }),
 });
 
