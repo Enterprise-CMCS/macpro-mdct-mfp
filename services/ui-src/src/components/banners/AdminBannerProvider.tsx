@@ -4,7 +4,13 @@ import { AdminBannerData, AdminBannerShape } from "types/banners";
 import { bannerId } from "../../constants";
 import { bannerErrors } from "verbiage/errors";
 // api
-import { deleteBanner, getBanner, useStore, writeBanner } from "utils";
+import {
+  checkDateRangeStatus,
+  deleteBanner,
+  getBanner,
+  useStore,
+  writeBanner,
+} from "utils";
 
 const ADMIN_BANNER_ID = bannerId;
 
@@ -64,6 +70,17 @@ export const AdminBannerProvider = ({ children }: Props) => {
     }
     await fetchAdminBanner();
   };
+
+  useEffect(() => {
+    let bannerActivity = false;
+    if (bannerData) {
+      bannerActivity = checkDateRangeStatus(
+        bannerData.startDate,
+        bannerData.endDate
+      );
+    }
+    setIsBannerActive(bannerActivity);
+  }, [bannerData]);
 
   useEffect(() => {
     fetchAdminBanner();

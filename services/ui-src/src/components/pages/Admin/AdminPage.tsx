@@ -17,7 +17,7 @@ import {
   PageTemplate,
 } from "components";
 // utils
-import { checkDateRangeStatus, convertDateUtcToEt, useStore } from "utils";
+import { convertDateUtcToEt, useStore } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/admin";
 
@@ -29,22 +29,15 @@ export const AdminPage = () => {
   const {
     bannerData,
     isBannerActive,
-    setIsBannerActive,
     isBannerLoading,
     bannerErrorMessage,
+    setBannerErrorMessage,
     isBannerDeleting,
   } = useStore();
 
   useEffect(() => {
-    let bannerActivity = false;
-    if (bannerData) {
-      bannerActivity = checkDateRangeStatus(
-        bannerData.startDate,
-        bannerData.endDate
-      );
-    }
-    setIsBannerActive(bannerActivity);
-  }, [bannerData]);
+    setBannerErrorMessage("");
+  }, []);
 
   return (
     <PageTemplate sxOverride={sx.layout} data-testid="admin-view">
