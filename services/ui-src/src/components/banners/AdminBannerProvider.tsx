@@ -25,6 +25,8 @@ export const AdminBannerProvider = ({ children }: Props) => {
     setIsBannerLoading,
     bannerErrorMessage,
     setBannerErrorMessage,
+    isBannerDeleting,
+    setIsBannerDeleting,
   } = useStore();
 
   const fetchAdminBanner = async () => {
@@ -33,8 +35,8 @@ export const AdminBannerProvider = ({ children }: Props) => {
       const currentBanner = await getBanner(ADMIN_BANNER_ID);
       const newBannerData = currentBanner?.Item || {};
       setBannerData(newBannerData);
+      setBannerErrorMessage("");
     } catch (e: any) {
-      setIsBannerLoading(false);
       // 404 expected when no current banner exists
       if (!e.toString().includes("404")) {
         setBannerErrorMessage(bannerErrors.GET_BANNER_FAILED);
@@ -44,12 +46,22 @@ export const AdminBannerProvider = ({ children }: Props) => {
   };
 
   const deleteAdminBanner = async () => {
-    await deleteBanner(ADMIN_BANNER_ID);
-    setBannerData(undefined);
+    setIsBannerDeleting(true);
+    try {
+      await deleteBanner(ADMIN_BANNER_ID);
+      await fetchAdminBanner();
+    } catch (error: any) {
+      setBannerErrorMessage(bannerErrors.DELETE_BANNER_FAILED);
+    }
+    setIsBannerDeleting(false);
   };
 
   const writeAdminBanner = async (newBannerData: AdminBannerData) => {
-    await writeBanner(newBannerData);
+    try {
+      await writeBanner(newBannerData);
+    } catch (e: any) {
+      setBannerErrorMessage(bannerErrors.CREATE_BANNER_FAILED);
+    }
     await fetchAdminBanner();
   };
 
@@ -71,12 +83,21 @@ export const AdminBannerProvider = ({ children }: Props) => {
       // Banner Error State
       bannerErrorMessage,
       setBannerErrorMessage,
+      // Banner Deleting State
+      isBannerDeleting,
+      setIsBannerDeleting,
       // Banner API calls
       fetchAdminBanner,
       writeAdminBanner,
       deleteAdminBanner,
     }),
-    [bannerData, isBannerActive, isBannerLoading, bannerErrorMessage]
+    [
+      bannerData,
+      isBannerActive,
+      isBannerLoading,
+      bannerErrorMessage,
+      isBannerDeleting,
+    ]
   );
 
   return (

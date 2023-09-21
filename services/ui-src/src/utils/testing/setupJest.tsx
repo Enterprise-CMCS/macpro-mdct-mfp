@@ -179,11 +179,13 @@ export const mockBannerStore: AdminBannerState = {
   isBannerActive: false,
   isBannerLoading: false,
   bannerErrorMessage: "",
+  isBannerDeleting: false,
   setBannerData: () => {},
   clearAdminBanner: () => {},
   setIsBannerActive: () => {},
   setIsBannerLoading: () => {},
   setBannerErrorMessage: () => {},
+  setIsBannerDeleting: () => {},
 };
 
 // REPORT STATES / STORE

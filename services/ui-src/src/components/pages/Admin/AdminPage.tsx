@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, MouseEventHandler } from "react";
 // components
 import {
   Box,
@@ -18,13 +18,12 @@ import {
 } from "components";
 // utils
 import { checkDateRangeStatus, convertDateUtcToEt, useStore } from "utils";
-import { bannerErrors } from "verbiage/errors";
+// verbiage
 import verbiage from "verbiage/pages/admin";
 
 export const AdminPage = () => {
   const { deleteAdminBanner, writeAdminBanner } =
     useContext(AdminBannerContext);
-  const [deleting, setDeleting] = useState<boolean>(false);
 
   // state management
   const {
@@ -33,7 +32,7 @@ export const AdminPage = () => {
     setIsBannerActive,
     isBannerLoading,
     bannerErrorMessage,
-    setBannerErrorMessage,
+    isBannerDeleting,
   } = useStore();
 
   useEffect(() => {
@@ -46,20 +45,6 @@ export const AdminPage = () => {
     }
     setIsBannerActive(bannerActivity);
   }, [bannerData]);
-
-  // useEffect(() => {
-  //   setError(errorMessage);
-  // }, [errorMessage]);
-
-  const deleteBanner = async () => {
-    setDeleting(true);
-    try {
-      await deleteAdminBanner();
-    } catch (error: any) {
-      setBannerErrorMessage(bannerErrors.DELETE_BANNER_FAILED);
-    }
-    setDeleting(false);
-  };
 
   return (
     <PageTemplate sxOverride={sx.layout} data-testid="admin-view">
@@ -102,9 +87,9 @@ export const AdminPage = () => {
                     <Button
                       variant="danger"
                       sx={sx.deleteBannerButton}
-                      onClick={deleteBanner}
+                      onClick={deleteAdminBanner as MouseEventHandler}
                     >
-                      {deleting ? (
+                      {isBannerDeleting ? (
                         <Spinner size="md" />
                       ) : (
                         "Delete Current Banner"

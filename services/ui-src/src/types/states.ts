@@ -22,12 +22,14 @@ export interface AdminBannerState {
   isBannerActive: boolean;
   isBannerLoading: boolean;
   bannerErrorMessage: string;
+  isBannerDeleting: boolean;
   // ACTIONS
   setBannerData: (newBannerData: AdminBannerData | undefined) => void;
   clearAdminBanner: () => void;
   setIsBannerActive: (bannerStatus: boolean) => void;
   setIsBannerLoading: (isBannerLoading: boolean) => void;
   setBannerErrorMessage: (bannerErrorMessage: string) => void;
+  setIsBannerDeleting: (isBannerDeleting: boolean) => void;
 }
 
 // initial report state

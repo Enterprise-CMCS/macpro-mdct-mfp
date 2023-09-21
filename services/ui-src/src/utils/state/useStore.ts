@@ -32,6 +32,7 @@ const bannerStore = (set: Function) => ({
   isBannerActive: false,
   isBannerLoading: false,
   bannerErrorMessage: "",
+  isBannerDeleting: false,
   // actions
   setBannerData: (newBanner: AdminBannerData | undefined) =>
     set(() => ({ bannerData: newBanner }), false, { type: "setBannerData" }),
@@ -48,6 +49,10 @@ const bannerStore = (set: Function) => ({
   setBannerErrorMessage: (errorMessage: string) =>
     set(() => ({ bannerErrorMessage: errorMessage }), false, {
       type: "setBannerErrorMessage",
+    }),
+  setIsBannerDeleting: (deleting: boolean) =>
+    set(() => ({ isBannerDeleting: deleting }), false, {
+      type: "setIsBannerDeleting",
     }),
 });
 
