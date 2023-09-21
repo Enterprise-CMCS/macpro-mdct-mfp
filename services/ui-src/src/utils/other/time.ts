@@ -153,6 +153,16 @@ export const calculatePeriod = (dueDate: string) => {
   return period.toString();
 };
 
+export const calculateCurrentQuarter = () => {
+  const quarter = Math.ceil((new Date().getMonth() + 1) / 3);
+  return quarter;
+};
+
+export const calculateCurrentYear = () => {
+  const year = new Date().getFullYear();
+  return year;
+};
+
 /*
  * Converts a date string to UTC + 180 days
  * returns -> UTC datetime in format 'ms since Unix epoch'

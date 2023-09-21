@@ -19,6 +19,10 @@ import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
 import { DynamicField } from "components/fields/DynamicField";
 import { NumberField } from "components/fields/NumberField";
+import {
+  calculateCurrentQuarter,
+  calculateCurrentYear,
+} from "utils/other/time";
 
 // return created elements from provided fields
 export const formFieldFactory = (
@@ -44,6 +48,9 @@ export const formFieldFactory = (
   };
   fields = initializeChoiceListFields(fields);
   return fields.map((field) => {
+    if (field.props?.repeating) {
+      makeRepeatingField(fieldToComponentMap, field, options);
+    }
     const componentFieldType = fieldToComponentMap[field.type];
     const fieldProps = {
       key: field.id,
@@ -202,4 +209,50 @@ export const flattenFormFields = (formFields: FormField[]): FormField[] => {
   };
   compileFields(formFields);
   return flattenedFields;
+};
+
+export const makeRepeatingField = (
+  fieldToComponentMap: any,
+  field: any,
+  options: any
+) => {
+  const repeatingFieldRuleMap: AnyObject = {
+    quartersFromReportStartingQuarter: repeatingFieldsGenerator,
+  };
+  const repeatingFieldRule = repeatingFieldRuleMap[field.props.repeating?.rule];
+  repeatingFieldRule(fieldToComponentMap, options, field);
+};
+
+// still unable to set the label to `Q${quarter}${year}`
+export const repeatingFieldsGenerator = (
+  fieldToComponentMap: any,
+  options: any,
+  field: any
+) => {
+  let quarter = calculateCurrentQuarter();
+  let year = calculateCurrentYear();
+  for (let i = 0; i < 12; i++) {
+    const componentFieldType = fieldToComponentMap[field.type];
+    const fieldProps = {
+      key: field.id,
+      name: field.id,
+      hydrate: field.props?.hydrate,
+      autoComplete: isFieldElement(field) ? "one-time-code" : undefined, // stops browsers from forcing autofill
+      ...options,
+      ...field?.props,
+    };
+    // create an element
+    const incrementQuarterAndYear = (quarter: number, year: number) => {
+      if (quarter >= 4) {
+        quarter = 1;
+        year++;
+      } else {
+        quarter++;
+      }
+      return [quarter, year];
+    };
+    [quarter, year] = incrementQuarterAndYear(quarter, year);
+    // return the correct amount of times
+    return React.createElement(componentFieldType, fieldProps);
+  }
 };

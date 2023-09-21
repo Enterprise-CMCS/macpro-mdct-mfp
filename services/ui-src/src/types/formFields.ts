@@ -71,6 +71,7 @@ export interface FormField {
   props?: AnyObject;
   choices?: FieldChoice[];
   repeat?: string;
+  repeating?: AnyObject;
 }
 
 export function isFieldElement(

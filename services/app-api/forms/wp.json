@@ -978,7 +978,9 @@
                             "nested": true
                           },
                           "props": {
-                            "label": "2024 Q1"
+                            "repeating": {
+                              "rule": "quartersFromReportStartingQuarter"
+                            }
                           }
                         },
                         {
@@ -1176,7 +1178,7 @@
                 "type": "checkbox",
                 "validation": "checkbox",
                 "props": {
-                  "label": "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, please indicate the status below:",  
+                  "label": "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, please indicate the status below:",
                   "hint": "Select all that apply.",
                   "choices": [
                     {
