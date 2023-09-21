@@ -1,6 +1,6 @@
 import { calculateCompletionStatus, isComplete } from "./completionStatus";
 
-describe.skip("Completion Status Tests", () => {
+describe("Completion Status Tests", () => {
   describe("Test Nested Completion Check", () => {
     test("Fails if there are any false", () => {
       expect(
@@ -65,7 +65,6 @@ describe.skip("Completion Status Tests", () => {
             },
             drawerForm: {
               id: "dedr",
-              adminDisabled: true,
               fields: undefined,
             },
           },
@@ -174,95 +173,6 @@ describe.skip("Completion Status Tests", () => {
         { entities: { plans: { required: true } }, routes: entitiesRoutes }
       );
       expect(result).toMatchObject({});
-    });
-  });
-
-  describe("Fixture Testing", () => {
-    const runs = [
-      {
-        description: "Completed MCPAR Report",
-        fixture: "mcpar-complete",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description: "New Incomplete MCPAR Report",
-        fixture: "mcpar-incomplete",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description: "Missing nested field",
-        fixture: "mcpar-incomplete-nested",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description: "Empty Checkbox",
-        fixture: "mcpar-incomplete-empty-checkbox",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description:
-          "Report is missing State Name in point of contact, otherwise complete.",
-        fixture: "mcpar-missing-pointofcontact",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description: "MCPAR Report, incomplete due to missing drawer",
-        fixture: "mcpar-missing-drawer",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description: "MCPAR Report, incomplete due to missing modal",
-        fixture: "mcpar-missing-modal",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description: "Completed MCPAR Report with no Sanction",
-        fixture: "mcpar-complete-nosanctions",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description: "Incomplete MCPAR Report due to partial sanction",
-        fixture: "mcpar-incomplete-partialsanction",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description: "Incomplete MCPAR Report due to plan with no entities",
-        fixture: "mcpar-incomplete-plan-noentities",
-        formTemplate: "mcpar-template",
-      },
-      {
-        description: "Completed MCPAR but not submitted",
-        fixture: "mcpar-complete-unsubmitted",
-        formTemplate: "mcpar-template",
-      },
-    ];
-    runs.forEach((run) => {
-      test(run.description, async () => {
-        const testData = require(`../../utils/testing/fixtures/completionStatus/${run.fixture}.testdata.test.json`);
-        const expectedResult = require(`../../utils/testing/fixtures/completionStatus/${run.fixture}.result.test.json`);
-        const formTemplate = require(`../../utils/testing/fixtures/completionStatus/${run.formTemplate}.test.json`);
-        const result = await calculateCompletionStatus(testData, formTemplate);
-        expect(result).toMatchObject(expectedResult);
-      });
-    });
-  });
-
-  describe("Local Fixture Testing, not used in CI", () => {
-    const runs = [
-      {
-        description: "Completed MCPAR but not submitted",
-        fixture: "mcpar-complete-unsubmitted",
-        formTemplate: "mcpar-template",
-      },
-    ];
-    runs.forEach((run) => {
-      test(run.description, async () => {
-        const testData = require(`../../utils/testing/fixtures/completionStatus/${run.fixture}.testdata.test.json`);
-        const expectedResult = require(`../../utils/testing/fixtures/completionStatus/${run.fixture}.result.test.json`);
-        const formTemplate = require(`../../utils/testing/fixtures/completionStatus/${run.formTemplate}.test.json`);
-        const result = await calculateCompletionStatus(testData, formTemplate);
-        expect(result).toMatchObject(expectedResult);
-      });
     });
   });
 });

@@ -8,6 +8,8 @@ export * from "./auth/UserProvider";
 export * from "./auth/authLifecycle";
 // state management
 export * from "./state/useStore";
+// autosave
+export * from "./autosave/autosave";
 // forms
 export * from "./forms/forms";
 // reports

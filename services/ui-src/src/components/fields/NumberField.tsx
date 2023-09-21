@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Box } from "@chakra-ui/react";
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 // utils
-import { labelTextWithOptional, parseCustomHtml } from "utils";
+import {
+  autosaveFieldData,
+  getAutosaveFields,
+  labelTextWithOptional,
+  parseCustomHtml,
+  useStore,
+} from "utils";
 import { InputChangeEvent, AnyObject } from "types";
 import { applyMask, maskMap } from "utils/other/mask";
 import { makeStringParseableForDatabase } from "utils/other/clean";
+import { ReportContext, EntityContext } from "components";
 
 export const NumberField = ({
   name,
@@ -15,6 +22,7 @@ export const NumberField = ({
   placeholder,
   mask,
   sxOverride,
+  autosave,
   validateOnRender,
   nested,
   styleAsOptional,
@@ -26,6 +34,11 @@ export const NumberField = ({
   // get form context and register field
   const form = useFormContext();
   const fieldIsRegistered = name in form.getValues();
+  const { full_name, state } = useStore().user ?? {};
+  const { report } = useStore();
+  const { updateReport } = useContext(ReportContext);
+  const { entities, entityType, updateEntities, selectedEntity } =
+    useContext(EntityContext);
 
   useEffect(() => {
     if (!fieldIsRegistered && !validateOnRender) {
@@ -98,39 +111,36 @@ export const NumberField = ({
     form.setValue(name, cleanedFieldValue, { shouldValidate: true });
     setDisplayValue(maskedFieldValue);
 
-    /*
-     * submit field data to database (inline validation is run prior to API call)
-     * if (autosave) {
-     *   const fields = getAutosaveFields({
-     *     name,
-     *     type: "number",
-     *     value: cleanedFieldValue,
-     *     defaultValue,
-     *     hydrationValue,
-     *   });
-     *
-     *
-     *   const reportArgs = {
-     *     id: report?.id,
-     *     reportType: report?.reportType,
-     *     updateReport,
-     *   };
-     *   const user = { userName: full_name, state };
-     *
-     *   await autosaveFieldData({
-     *     form,
-     *     fields,
-     *     report: reportArgs,
-     *     user,
-     *     entityContext: {
-     *       selectedEntity,
-     *       entityType,
-     *       updateEntities,
-     *       entities,
-     *     },
-     *   });
-     * }
-     */
+    //submit field data to database (inline validation is run prior to API call)
+    if (autosave) {
+      const fields = getAutosaveFields({
+        name,
+        type: "number",
+        value: cleanedFieldValue,
+        defaultValue,
+        hydrationValue,
+      });
+
+      const reportArgs = {
+        id: report?.id,
+        reportType: report?.reportType,
+        updateReport,
+      };
+      const user = { userName: full_name, state };
+
+      await autosaveFieldData({
+        form,
+        fields,
+        report: reportArgs,
+        user,
+        entityContext: {
+          selectedEntity,
+          entityType,
+          updateEntities,
+          entities,
+        },
+      });
+    }
   };
 
   // prepare error message, hint, and classes
