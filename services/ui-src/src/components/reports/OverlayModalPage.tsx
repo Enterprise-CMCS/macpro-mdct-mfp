@@ -31,7 +31,9 @@ export const OverlayModalPage = ({ route }: Props) => {
 
   //display variables
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
-  const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
+  const dashTitle = `${verbiage.dashboardTitle}${
+    verbiage.countEntitiesInTitle ? ` ${reportFieldDataEntities.length}` : ""
+  }`;
 
   // add/edit entity modal disclosure and methods
   const {

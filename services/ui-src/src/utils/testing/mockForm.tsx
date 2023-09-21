@@ -228,6 +228,7 @@ export const mockOverlayModalPageVerbiage = {
   entityUnfinishedMessage: "Mock entity unfinished messsage",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
   drawerTitle: "Mock drawer title",
+  countEntitiesInTitle: true,
 };
 
 export const mockModalDrawerReportPageJson = {

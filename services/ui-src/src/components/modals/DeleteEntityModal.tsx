@@ -27,7 +27,7 @@ export const DeleteEntityModal = ({
     };
     const currentEntities = report?.fieldData?.[entityType] || [];
     const updatedEntities = currentEntities.filter(
-      (entity: EntityShape) => entity.id != selectedEntity?.id
+      (entity: EntityShape) => entity.id !== selectedEntity?.id
     );
 
     await updateReport(reportKeys, {
