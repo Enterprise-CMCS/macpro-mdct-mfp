@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, MouseEventHandler } from "react";
+import { useContext, useEffect, MouseEventHandler } from "react";
 // components
 import {
   Box,
