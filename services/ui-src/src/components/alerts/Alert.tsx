@@ -21,6 +21,7 @@ export const Alert = ({
   description,
   link,
   showIcon = true,
+  icon,
   ...props
 }: Props) => {
   return (
@@ -32,7 +33,9 @@ export const Alert = ({
       {...props}
     >
       <Flex>
-        {showIcon && <Image src={alertIcon} sx={sx.icon} alt="Alert" />}
+        {showIcon && (
+          <Image src={icon ? icon : alertIcon} sx={sx.icon} alt="Alert" />
+        )}
         <Box sx={sx.contentBox} className={!showIcon ? "no-icon" : ""}>
           {title && <AlertTitle>{title}</AlertTitle>}
           {description && (
@@ -100,7 +103,7 @@ const sx = {
     position: "absolute",
     color: "palette.base",
     marginBottom: "1.75rem",
-    width: "1.25rem",
+    width: "1.375rem",
   },
   contentBox: {
     marginLeft: "2rem",
