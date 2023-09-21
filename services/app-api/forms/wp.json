@@ -755,8 +755,22 @@
               }
             ]
           },
-          "overlayForm": {
-            "id": "abc",
+          "dashboard": {
+            "name": "Intitiative Details Dashboard",
+            "pageType": "entityDetailsDashboardOverlay",
+            "verbiage": {
+              "intro": {
+                "section": "State and Territory-Specific Initiatives Dashboard",
+                "subsection": "{initiative name here}",
+                "info": [
+                  {
+                    "type": "html",
+                    "content": "Complete each of the first 3 steps for this initiative. Step IV is to be completed when this initiative will no longer be sustained with MFP funding and/or state or territory equivalent funding, and will become available once your initiative information is complete.",
+                  }
+                ]
+              },
+              "closeDashboardButtonText": "Close Initiative"
+            },
             "fields": [
               {
                 "name": "State & Territory Specific Initiatives: I. Define initiative",

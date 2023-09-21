@@ -18,6 +18,7 @@ import {
   EntityShape,
   EntityType,
   ModalOverlayReportPageShape,
+  EntityDetailsDashboardOverlayShape,
 } from "types";
 // utils
 import { useBreakpoint, useStore } from "utils";
@@ -30,13 +31,9 @@ interface AlertVerbiage {
   [key: string]: { title: string; description: string };
 }
 
-export const ModalOverlayReportPage = ({
-  route,
-  setSidebarHidden,
-  validateOnRender,
-}: Props) => {
+export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   // Route Information
-  const { entityType, verbiage, modalForm, overlayForm } = route;
+  const { entityType, verbiage, modalForm, dashboard } = route;
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
   const { report } = useStore();
@@ -44,8 +41,9 @@ export const ModalOverlayReportPage = ({
   const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
     undefined
   );
-  const [submitting, setSubmitting] = useState<boolean>(false);
-  const { userIsEndUser } = useStore().user ?? {};
+  // const [submitting, setSubmitting] = useState<boolean>(false);
+
+  // const { userIsEndUser } = useStore().user ?? {};
 
   // Determine whether form is locked or unlocked based on user and route
   const isLocked = report?.locked;
@@ -110,37 +108,15 @@ export const ModalOverlayReportPage = ({
     setSidebarHidden(true);
   };
 
-  const closeEntityDetailsOverlay = () => {
-    setCurrentEntity(undefined);
-    setIsEntityDetailsOpen(false);
-    setSidebarHidden(false);
-  };
-
-  // Form submit methods
-  const onSubmit = async () => {
-    if (userIsEndUser) {
-      setSubmitting(true);
-      //submit code chunk here
-      setSubmitting(false);
-    }
-    closeEntityDetailsOverlay();
-    setSidebarHidden(false);
-  };
-
   return (
     <Box>
-      {overlayForm && isEntityDetailsOpen && currentEntity ? (
+      {dashboard && isEntityDetailsOpen && currentEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
-            closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             entityType={entityType as EntityType}
-            entities={report?.fieldData[entityType]}
-            form={overlayForm}
-            onSubmit={onSubmit}
+            dashboard={dashboard}
             selectedEntity={currentEntity}
-            disabled={false}
-            submitting={submitting}
-            validateOnRender={validateOnRender}
+            route={route as EntityDetailsDashboardOverlayShape}
           />
         </EntityProvider>
       ) : (

@@ -10,11 +10,13 @@ import {
   Sidebar,
   StandardReportPage,
   EntityDetailsOverlay,
+  EntityDetailsDashboardOverlay,
 } from "components";
 import { useLocation } from "react-router-dom";
 import {
   DrawerReportPageShape,
   EntityDetailsOverlayShape,
+  EntityDetailsDashboardOverlayShape,
   ModalDrawerReportPageShape,
   ModalOverlayReportPageShape,
   PageTypes,
@@ -48,6 +50,12 @@ export const ReportPageWrapper = () => {
       case PageTypes.ENTITY_OVERLAY:
         return (
           <EntityDetailsOverlay route={route as EntityDetailsOverlayShape} />
+        );
+      case PageTypes.ENTITY_DETAIL_DASHBOARD:
+        return (
+          <EntityDetailsDashboardOverlay
+            route={route as EntityDetailsDashboardOverlayShape}
+          />
         );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;

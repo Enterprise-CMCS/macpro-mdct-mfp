@@ -1,63 +1,35 @@
-import React, {
-  MouseEventHandler,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { useContext, useEffect } from "react";
 // components
-import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
+import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import { ReportPageIntro, Table, EntityRow } from "components";
 // types
-import { EntityShape, EntityType, FormJson } from "types";
+import {
+  EntityShape,
+  EntityType,
+  FormJson,
+  EntityDetailsDashboardOverlayShape,
+} from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
-// verbiage
-import overlayVerbiage from "../../verbiage/pages/overlays";
 import { EntityContext } from "components/reports/EntityProvider";
 
 export const EntityDetailsDashboardOverlay = ({
-  closeEntityDetailsOverlay,
   entityType,
-  entities,
-  form,
+  dashboard,
   selectedEntity,
-  disabled,
-  submitting,
 }: Props) => {
   // Entity Provider Setup
-  const { setEntities, setSelectedEntity, setEntityType } =
-    useContext(EntityContext);
-
+  const { setSelectedEntity, setEntityType } = useContext(EntityContext);
   useEffect(() => {
     setSelectedEntity(selectedEntity);
     setEntityType(entityType);
-    setEntities(entities);
     return () => {
-      setEntities([]);
       setSelectedEntity(undefined);
     };
   }, [entityType, selectedEntity]);
 
-  const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
-    undefined
-  );
-  const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>(true);
-
   const tableHeaders = () => {
     return { headRow: ["", ""] };
-  };
-  const openDeleteEntityModal = (entity: EntityShape) => {
-    setCurrentEntity(entity);
-    // deleteEntityModalOnOpenHandler();
-  };
-  const openEntityDetailsOverlay = (entity: EntityShape) => {
-    setCurrentEntity(entity);
-    setIsEntityDetailsOpen(true);
-    // setSidebarHidden(true);
-  };
-  const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setCurrentEntity(entity);
-    // addEditEntityModalOnOpenHandler();
   };
 
   return (
@@ -65,41 +37,44 @@ export const EntityDetailsDashboardOverlay = ({
       <Button
         sx={sx.backButton}
         variant="none"
-        onClick={closeEntityDetailsOverlay as MouseEventHandler}
+        onClick={() => {
+          return;
+        }}
         aria-label="Return to all initiatives"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
         Return to all initiatives
       </Button>
-      <ReportPageIntro text={overlayVerbiage.WP.intro} />
-      {isEntityDetailsOpen && currentEntity && <div>hi</div>}
+      <ReportPageIntro text={dashboard?.verbiage?.intro} />
       <Table content={tableHeaders()}>
-        {form.fields.map((entity: EntityShape) => (
+        {dashboard?.fields.map((entity: EntityShape) => (
           <EntityRow
             key={entity.id}
             entity={entity}
             verbiage={entity.verbiage}
             locked={false}
-            openDrawer={openEntityDetailsOverlay}
-            openAddEditEntityModal={openAddEditEntityModal}
-            openDeleteEntityModal={openDeleteEntityModal}
+            openDrawer={() => {
+              return;
+            }}
+            openAddEditEntityModal={() => {
+              return;
+            }}
+            openDeleteEntityModal={() => {
+              return;
+            }}
           />
         ))}
       </Table>
       <Box>
         <Flex sx={sx.buttonFlex}>
-          {disabled ? (
-            <Button
-              variant="outline"
-              onClick={closeEntityDetailsOverlay as MouseEventHandler}
-            >
-              Return
-            </Button>
-          ) : (
-            <Button type="submit" form={form.id} sx={sx.saveButton}>
-              {submitting ? <Spinner size="md" /> : "Save & return"}
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            onClick={() => {
+              return;
+            }}
+          >
+            Return
+          </Button>
         </Flex>
       </Box>
     </Box>
@@ -107,15 +82,10 @@ export const EntityDetailsDashboardOverlay = ({
 };
 
 interface Props {
-  closeEntityDetailsOverlay: Function;
-  entityType: EntityType;
-  entities: any;
-  form: FormJson;
-  onSubmit: Function;
-  selectedEntity: EntityShape;
-  disabled: boolean;
-  submitting?: boolean;
-  validateOnRender?: boolean;
+  entityType?: EntityType;
+  dashboard?: FormJson;
+  selectedEntity?: EntityShape;
+  route?: EntityDetailsDashboardOverlayShape;
 }
 
 const sx = {
