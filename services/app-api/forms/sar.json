@@ -22,11 +22,21 @@
         "id": "ga",
         "fields": [
           {
+            "id": "generalInformation_resubmissionInformation",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label": "Briefly describe the questions you plan to revise and the reason(s) for the revision(s):",
+              "heading": "Resubmission Information"
+            }
+          },
+          {
             "id": "generalInformation_MfpOperatingOrganizationName",
             "type": "text",
             "validation": "text",
             "props": {
-              "label": "Name of MFP operating organization"
+              "label": "Name of MFP operating organization",
+              "heading": "Organization Information"
             }
           },
           {
@@ -66,7 +76,8 @@
             "type": "text",
             "validation": "text",
             "props": {
-              "label": "AOR name"
+              "label": "AOR name",
+              "heading": "Authorized Organizational Representative (AOR)"
             }
           },
           {
@@ -110,7 +121,8 @@
             "type": "text",
             "validation": "text",
             "props": {
-              "label": "Project director name"
+              "label": "Project director name",
+              "heading": "Project Director"
             }
           },
           {
@@ -134,7 +146,8 @@
             "type": "text",
             "validation": "text",
             "props": {
-              "label": "CMS project officer name"
+              "label": "CMS project officer name",
+              "heading": "CMS Project Officer"
             }
           }
         ]
@@ -234,7 +247,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "{First quarter (Jan 1 - Mar 31)}"
                 }
               },
               {
@@ -266,7 +280,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "{Second quarter (Apr 1 - June 30)}"
                 }
               },
               {
@@ -326,7 +341,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Nursing facility"
                 }
               },
               {
@@ -358,7 +374,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Intermediate care facility for individuals with intellectual disabilities (ICF/IID)"
                 }
               },
               {
@@ -390,7 +407,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Institution for mental diseases (IMD)"
                 }
               },
               {
@@ -422,7 +440,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Hospital"
                 }
               },
               {
@@ -454,7 +473,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Other"
                 }
               },
               {
@@ -514,7 +534,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Home (owned or leased by individual or family)"
                 }
               },
               {
@@ -546,7 +567,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Apartment (individual lease, lockable access, etc.)"
                 }
               },
               {
@@ -578,7 +600,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Group home or other residence in which four or fewer unrelated individuals live"
                 }
               },
               {
@@ -610,7 +633,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Apartment in qualified assisted living"
                 }
               },
               {
@@ -670,7 +694,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Current reporting period {(January 1-June 30)}"
                 }
               },
               {
@@ -730,7 +755,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Current reporting period {(January 1-June 30)}"
                 }
               },
               {
@@ -790,7 +816,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Current reporting period {(January 1-June 30)}"
                 }
               },
               {
@@ -850,7 +877,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Re-institutionalization"
                 }
               },
               {
@@ -882,7 +910,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Death"
                 }
               },
               {
@@ -914,7 +943,8 @@
                 "type": "text",
                 "validation": "text",
                 "props": {
-                  "label": "Number of Older Adults"
+                  "label": "Number of Older Adults",
+                  "heading": "Voluntary disenrollment"
                 }
               },
               {
@@ -948,6 +978,7 @@
                 "props": {
                   "label": "Other reasons",
                   "hint": "Check all that apply.",
+                  "heading": "Other",
                   "choices": [
                     {
                       "id": "2VffASWS2XRfAlc3uLzxCVAC",
@@ -1285,7 +1316,8 @@
                 "validation": "text",
                 "props": {
                   "label": "Ages 18–64",
-                  "styleAsOptional": true
+                  "styleAsOptional": true,
+                  "heading": "Short-term stay: 1 to 20 days"
                 }
               },
               {
@@ -1321,7 +1353,8 @@
                 "validation": "text",
                 "props": {
                   "label": "Ages 18–64",
-                  "styleAsOptional": true
+                  "styleAsOptional": true,
+                  "heading": "Medium-term stay: 21-100 days"
                 }
               },
               {
@@ -1357,7 +1390,8 @@
                 "validation": "text",
                 "props": {
                   "label": "Ages 18–64",
-                  "styleAsOptional": true
+                  "styleAsOptional": true,
+                  "heading": "Long-term stay: 101 days or more"
                 }
               },
               {
@@ -1634,7 +1668,102 @@
         "intro": {
           "section": "",
           "subsection": "Additional Achievements",
-          "hint": "Use this section to describe any additional achievements or promising practices that have contributed to the effective operation of the demonstration and successful transitions during the reporting period. Achievements or topics discussed in previous sections do not need to be reiterated here. Use the topics below as a guide, but note other important updates."
+          "hint": "Use this section to describe any additional achievements or promising practices that have contributed to the effective operation of the demonstration and successful transitions during the reporting period. Achievements or topics discussed in previous sections do not need to be reiterated here. Use the topics below as a guide, but note other important updates.",
+          "info": [
+            {
+              "type": "ul",
+              "props": {
+                "style": {
+                  "columns": "2",
+                  "paddingLeft": "1rem",
+                  "color": "#5A5A5A",
+                  "li::before": {
+                    "color": "#5A5A5A"
+                  }
+                }
+              },
+              "children": [
+                {
+                  "type": "li",
+                  "content": "Person-centered planning and services"
+                },
+                {
+                  "type": "li",
+                  "content": "No Wrong Door systems"
+                },
+                {
+                  "type": "li",
+                  "content": "Community transition support"
+                },
+                {
+                  "type": "li",
+                  "content": "Direct service workforce and caregivers"
+                },
+                {
+                  "type": "li",
+                  "content": "Housing to support community-based living options"
+                },
+                {
+                  "type": "li",
+                  "content": "Employment support"
+                },
+                {
+                  "type": "li",
+                  "content": "Convenient and accessible transportation options",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Data-based decision-making",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Financing approaches",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Stakeholder agreement",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Quality measurement and improvement",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Equity and social determinants of health",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       },
       "form": {
