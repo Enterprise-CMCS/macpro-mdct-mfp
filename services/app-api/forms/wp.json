@@ -157,7 +157,7 @@
             "type": "textarea",
             "validation": "text",
             "props": {
-              "label": "Provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative."
+              "label": "Please provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative."
             }
           }
         ]
@@ -764,7 +764,7 @@
         {
           "name": "State & Territory Specific Initiatives: I. Define initiative",
           "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
-          "pageType": "standard",
+          "pageType": "entityOverlay",
           "verbiage": {
             "intro": {
               "section": "State and Territory-Specific Initiatives: I. Define initiative",
@@ -1117,8 +1117,105 @@
                 "type": "textarea",
                 "validation": "text",
                 "props": {
-                  "label": "Please provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description).",
-                  "hint": "Please list the responsible state or territory agency parties and the key external partners for achieving this objective."
+                  "label": "Provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description)."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "State & Territory-Specific Initiatives: IV. Close-out information",
+          "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
+          "pageType": "entityOverlay",
+          "entityType": "closeOut",
+          "verbiage": {
+            "intro": {
+              "section": "State & Territory-Specific Initiatives: IV. Close-out information",
+              "subsection": "{Initiative name}",
+              "hint": "Complete the section below for initiatives with an end date during the upcoming semi-annual reporting period."
+            },
+            "closeOutWarning": {
+              "title": "Warning",
+              "description": "Once you select <i>Close out initiative</i>, this initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, select <i>Return to dashboard</i> and you’ll be able to save your draft data. <br><br> This action cannot be undone."
+            },
+            "closeOutModal": {
+              "closeOutModalButtonText": "Close out initiative",
+              "closeOutModalTitle": "Close out {Initiative name}",
+              "closeOutModalBodyText": "This initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, select <i>Cancel</i> and you’ll be able to save your draft data.<br><br>This action cannot be undone.<br><br>Are you sure you want to proceed?",
+              "closeOutModalConfirmButtonText": "Yes, close out initiative"
+            }
+          },
+          "form": {
+            "id": "sauxM9MnFZhIn5W44WY3BG",
+            "fields": [
+              {
+                "id": "xqEUNPc8TB6nZwyapjl1om",
+                "type": "date",
+                "validation": "textOptional",
+                "props": {
+                  "label": "Projected end date",
+                  "disabled": true
+                }
+              },
+              {
+                "id": "n4Xt9usQxPvfEIJkhYjH9d",
+                "type": "date",
+                "validation": "date",
+                "props": {
+                  "label": "Actual end date"
+                }
+              },
+              {
+                "id": "OydJGL8N885vtXqcU2FQE4",
+                "type": "checkbox",
+                "validation": "checkbox",
+                "props": {
+                  "label": "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, please indicate the status below:",  
+                  "hint": "Select all that apply.",
+                  "choices": [
+                    {
+                      "id": "FhAF0lzeuB4wLalyXv2BeG",
+                      "label": "Completed initiative"
+                    },
+
+                    {
+                      "id": "GUcwKDPBs8K6LY4yT1hPGD",
+                      "label": "Discontinued initiative",
+                      "children": [
+                        {
+                          "id": "gtKe0Mx7QUojplAhV3T8rg",
+                          "props": {
+                            "label": "Indicate reason for termination"
+                          },
+                          "type": "textarea",
+                          "validation": {
+                            "type": "text",
+                            "nested": true,
+                            "parentFieldName": "GUcwKDPBs8K6LY4yT1hPGD"
+                          }
+                        }
+                      ]
+                    },
+
+                    {
+                      "id": "86SG3qhFfsZ0CAu3G4SxM5",
+                      "label": "Sustaining initiative through a Medicaid authority",
+                      "children": [
+                        {
+                          "id": "xgRHcIPIG8b3LNB35tavx3",
+                          "props": {
+                            "label": "Indicate alternative funding source"
+                          },
+                          "type": "textarea",
+                          "validation": {
+                            "type": "text",
+                            "nested": true,
+                            "parentFieldName": "86SG3qhFfsZ0CAu3G4SxM5"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               }
             ]
