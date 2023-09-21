@@ -1,5 +1,5 @@
 // components
-import { Heading, Text } from "@chakra-ui/react";
+import { Flex, GridItem, Heading, Text } from "@chakra-ui/react";
 // utils
 import { AnyObject, OverlayModalEntityTypes } from "types";
 
@@ -25,6 +25,16 @@ export const EntityCardTopSection = ({
             Does the performance measure include quantitative targets?
           </Text>
           <Text sx={sx.description}>{formattedEntityData.includesTargets}</Text>
+          {formattedEntityData.quarters.map((quarter: any) => {
+            return (
+              <GridItem>
+                <Flex sx={sx.gridItems}>
+                  <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
+                  <Text sx={sx.subtext}>{quarter.value}</Text>
+                </Flex>
+              </GridItem>
+            );
+          })}
           <Text sx={sx.subtitle}>
             Additional detail on strategies/approaches the state or territory
             will use to achieve targets and/ or meet milestones
@@ -56,8 +66,23 @@ const sx = {
     fontSize: "sm",
   },
   grid: {
-    gridTemplateColumns: "33% auto",
-    columnGap: "1rem",
+    gridTemplateColumns: "repeat(3,minmax(0px,1fr))",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    display: "grid",
+  },
+  gridSubtitle: {
+    fontWeight: "bold",
+    fontSize: "sm",
+    marginRight: ".25rem",
+  },
+  gridItems: {
+    alignItems: "end",
+    flexWrap: "wrap",
+    ".subtitle": {
+      marginRight: ".5rem",
+    },
   },
   subtitle: {
     marginTop: "1rem",

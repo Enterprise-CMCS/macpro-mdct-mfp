@@ -39,6 +39,56 @@ export const OverlayModalPage = ({ route }: Props) => {
     evaluationPlan_description: "Description here",
     evaluationPlan_targets: "Targets here",
     evaluationPlan_includesTargets: "No",
+    evaluationPlan_quarters: [
+      {
+        id: "2023 Q3",
+        value: "$203,090",
+      },
+      {
+        id: "2024 Q3",
+        value: "$157,000",
+      },
+      {
+        id: "2025 Q3",
+        value: "$35,000",
+      },
+      {
+        id: "2023 Q4",
+        value: "$152,230",
+      },
+      {
+        id: "2024 Q4",
+        value: "$345,789",
+      },
+      {
+        id: "2025 Q4",
+        value: "$250,000",
+      },
+      {
+        id: "2024 Q1",
+        value: "$30,010",
+      },
+      {
+        id: "2025 Q1",
+        value: "$10,000",
+      },
+      {
+        id: "2026 Q1",
+        value: "$30,090",
+      },
+      {
+        id: "2024 Q2",
+        value: "$30,010",
+      },
+      {
+        id: "2025 Q2",
+        value: "$10,000",
+      },
+      {
+        id: "2026 Q2",
+        value: "$30,090",
+      },
+    ],
     evaluationPlan_additionalDetails: "Additional details",
   };
   reportFieldDataEntities = [tempEntity, tempEntity];

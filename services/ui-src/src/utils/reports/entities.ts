@@ -1,8 +1,15 @@
 import { EntityShape, OverlayModalEntityTypes, AnyObject } from "types";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
-  return entity?.[label].value;
+  return entity?.[label]?.[0].value;
 };
+
+// returns an array of { planName: string, response: string } or undefined
+export const getPlanValues = (entity?: EntityShape, plans?: AnyObject[]) =>
+  plans?.map((plan: AnyObject) => ({
+    name: plan.name,
+    response: entity?.[`qualityMeasure_plan_measureResults_${plan.id}`],
+  }));
 
 export const getFormattedEntityData = (
   entityType: string,
@@ -19,6 +26,7 @@ export const getFormattedEntityData = (
           entity,
           "evaluationPlan_includesTargets"
         ),
+        quarters: entity?.evaluationPlan_quarters,
         additionalDetails: entity?.evaluationPlan_additionalDetails,
       };
     case OverlayModalEntityTypes.FUNDING_SOURCES:
