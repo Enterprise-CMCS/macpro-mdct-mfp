@@ -4,9 +4,8 @@
   "basePath": "/wp",
   "version": "WP_2023-08-21",
   "entities": {
-    "targetPopulation": {
-      "required": true
-    }
+    "targetPopulation": { "required": true },
+    "evaluationPlan": { "required": true }
   },
   "routes": [
     {
@@ -143,10 +142,10 @@
         }
       },
       "form": {
-        "id": "2UkwX7CMrbfrcSF2YjiyfetUyIF",
+        "id": "tbs",
         "fields": [
           {
-            "id": "2Ukwki4yJ8wNNqz7KnvgNoTATkO",
+            "id": "strategy_explaination",
             "type": "textarea",
             "validation": "text",
             "props": {
@@ -154,7 +153,7 @@
             }
           },
           {
-            "id": "2Ukwj6bhkkok19JzSocDWLo1idj",
+            "id": "strategy_additionalDetails",
             "type": "textarea",
             "validation": "text",
             "props": {
@@ -780,10 +779,10 @@
             }
           },
           "form": {
-            "id": "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+            "id": "stsidi",
             "fields": [
               {
-                "id": "2Ukwki4yJ8wNPqz7KnvgNoTATkO",
+                "id": "stateTerritory_defineInitiative",
                 "type": "textarea",
                 "validation": "text",
                 "props": {
@@ -791,7 +790,7 @@
                 }
               },
               {
-                "id": "target_population",
+                "id": "stateTerritory_targetPopulations",
                 "type": "checkbox",
                 "validation": "checkbox",
                 "props": {
@@ -823,12 +822,12 @@
                       "label": "Other, specify",
                       "children": [
                         {
-                          "id": "state_encounterDataValidationEntity-otherText",
+                          "id": "stateTerritory_targetPopulations-otherText",
                           "type": "textarea",
                           "validation": {
                             "type": "text",
                             "nested": true,
-                            "parentFieldName": "state_encounterDataValidationEntity"
+                            "parentFieldName": "stateTerritory_targetPopulations"
                           }
                         }
                       ]
@@ -837,7 +836,7 @@
                 }
               },
               {
-                "id": "2UkpVV0mypx5RnlS9UsflndyQDY",
+                "id": "stateTerritory_projectedStartDate",
                 "type": "date",
                 "validation": "date",
                 "props": {
@@ -846,7 +845,7 @@
                 }
               },
               {
-                "id": "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+                "id": "stateTerritory_projectedEndDate",
                 "type": "date",
                 "validation": "date",
                 "props": {
@@ -914,7 +913,8 @@
             "deleteModalConfirmButtonText": "Yes, delete objective",
             "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
             "enterEntityDetailsButtonText": "Edit",
-            "dashboardTitle": "Objective total count: 2",
+            "dashboardTitle": "Objective total count:",
+            "countEntitiesInTitle": true,
             "deleteEntityButtonAltText": "",
             "entityUnfinishedMessage": "",
             "drawerTitle": ""
@@ -951,12 +951,7 @@
               {
                 "id": "evaluationPlan_includesTargets",
                 "type": "radio",
-                "validation": {
-                  "type": "radio",
-                  "nested": true,
-                  "parentFieldName": "evaluationPlan_targets",
-                  "parentOptionId": "745yghr57654rth"
-                },
+                "validation": "radio",
                 "props": {
                   "label": "Does the performance measure include quantitative targets?",
                   "hint": "Note: If 'Yes', fields use calendar year quarters.",
@@ -1176,7 +1171,7 @@
                 "type": "checkbox",
                 "validation": "checkbox",
                 "props": {
-                  "label": "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, please indicate the status below:",  
+                  "label": "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, please indicate the status below:",
                   "hint": "Select all that apply.",
                   "choices": [
                     {

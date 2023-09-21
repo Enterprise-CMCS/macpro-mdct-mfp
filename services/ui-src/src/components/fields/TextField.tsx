@@ -1,11 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
 // utils
-import { labelTextWithOptional, parseCustomHtml } from "utils";
+import {
+  autosaveFieldData,
+  getAutosaveFields,
+  labelTextWithOptional,
+  parseCustomHtml,
+  useStore,
+} from "utils";
 import { InputChangeEvent, AnyObject, CustomHtmlElement } from "types";
+import { ReportContext } from "components";
+import { EntityContext } from "components/reports/EntityProvider";
 
 export const TextField = ({
   name,
@@ -25,6 +33,11 @@ export const TextField = ({
   // get form context and register field
   const form = useFormContext();
   const fieldIsRegistered = name in form.getValues();
+  const { full_name, state } = useStore().user ?? {};
+  const { report } = useStore();
+  const { updateReport } = useContext(ReportContext);
+  const { entities, entityType, selectedEntity, updateEntities } =
+    useContext(EntityContext);
 
   useEffect(() => {
     if (!fieldIsRegistered && !validateOnRender) {
@@ -69,7 +82,31 @@ export const TextField = ({
     if (!value.trim()) form.trigger(name);
     // submit field data to database
     if (autosave) {
-      //add code for autosave
+      const fields = getAutosaveFields({
+        name,
+        type: "text",
+        value,
+        defaultValue,
+        hydrationValue,
+      });
+      const reportArgs = {
+        id: report?.id,
+        reportType: report?.reportType,
+        updateReport,
+      };
+      const user = { userName: full_name, state };
+      await autosaveFieldData({
+        form,
+        fields,
+        report: reportArgs,
+        user,
+        entityContext: {
+          selectedEntity,
+          entityType,
+          updateEntities,
+          entities,
+        },
+      });
     }
   };
 

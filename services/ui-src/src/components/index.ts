@@ -74,7 +74,7 @@ export { StandardReportPage } from "./reports/StandardReportPage";
 export { ReportPageFooter } from "./reports/ReportPageFooter";
 export { ReportPageWrapper } from "./reports/ReportPageWrapper";
 export { ReportContext, ReportProvider } from "./reports/ReportProvider";
-export { EntityProvider } from "./reports/EntityProvider";
+export { EntityContext, EntityProvider } from "./reports/EntityProvider";
 export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
 export { OverlayModalPage } from "./reports/OverlayModalPage";
