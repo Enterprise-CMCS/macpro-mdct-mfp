@@ -22,6 +22,7 @@ import { NumberField } from "components/fields/NumberField";
 import {
   calculateCurrentQuarter,
   calculateCurrentYear,
+  incrementQuarterAndYear,
 } from "utils/other/time";
 
 // return created elements from provided fields
@@ -47,10 +48,9 @@ export const formFieldFactory = (
     textarea: TextAreaField,
   };
   fields = initializeChoiceListFields(fields);
-  return fields.map((field) => {
-    if (field.props?.repeating) {
-      makeRepeatingField(fieldToComponentMap, field, options);
-    }
+  const reactElements = fields.map((field) => {
+    if (field.props?.repeating)
+      return createRepeatingFieldElements(fieldToComponentMap, field, options);
     const componentFieldType = fieldToComponentMap[field.type];
     const fieldProps = {
       key: field.id,
@@ -62,6 +62,7 @@ export const formFieldFactory = (
     };
     return React.createElement(componentFieldType, fieldProps);
   });
+  return reactElements.flat();
 };
 
 // add data to choice fields in preparation for render
@@ -211,48 +212,40 @@ export const flattenFormFields = (formFields: FormField[]): FormField[] => {
   return flattenedFields;
 };
 
-export const makeRepeatingField = (
+export const createRepeatingFieldElements = (
   fieldToComponentMap: any,
   field: any,
   options: any
 ) => {
   const repeatingFieldRuleMap: AnyObject = {
-    quartersFromReportStartingQuarter: repeatingFieldsGenerator,
+    nextTwelveQuarters: nextTwelveQuarters,
   };
   const repeatingFieldRule = repeatingFieldRuleMap[field.props.repeating?.rule];
-  repeatingFieldRule(fieldToComponentMap, options, field);
+  return repeatingFieldRule(fieldToComponentMap, options, field);
 };
 
-// still unable to set the label to `Q${quarter}${year}`
-export const repeatingFieldsGenerator = (
+export const nextTwelveQuarters = (
   fieldToComponentMap: any,
   options: any,
   field: any
 ) => {
   let quarter = calculateCurrentQuarter();
   let year = calculateCurrentYear();
+  let elementsToCreate = [];
   for (let i = 0; i < 12; i++) {
     const componentFieldType = fieldToComponentMap[field.type];
     const fieldProps = {
-      key: field.id,
-      name: field.id,
+      key: `${field.id}${year}Q${quarter}`,
+      name: `${field.id}${year}Q${quarter}`,
       hydrate: field.props?.hydrate,
+      label: `${year} Q${quarter}`,
       autoComplete: isFieldElement(field) ? "one-time-code" : undefined, // stops browsers from forcing autofill
       ...options,
       ...field?.props,
     };
-    // create an element
-    const incrementQuarterAndYear = (quarter: number, year: number) => {
-      if (quarter >= 4) {
-        quarter = 1;
-        year++;
-      } else {
-        quarter++;
-      }
-      return [quarter, year];
-    };
-    [quarter, year] = incrementQuarterAndYear(quarter, year);
     // return the correct amount of times
-    return React.createElement(componentFieldType, fieldProps);
+    elementsToCreate.push(React.createElement(componentFieldType, fieldProps));
+    [quarter, year] = incrementQuarterAndYear(quarter, year);
   }
+  return elementsToCreate;
 };

@@ -28,68 +28,7 @@ export const OverlayModalPage = ({ route }: Props) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-
-  ///TEMPORARY ENTITY//
-  let tempEntity: EntityShape = {
-    id: "mockid",
-    evaluationPlan_objectiveName: "{Objective Name}",
-    evaluationPlan_description: "Description here",
-    evaluationPlan_targets: "Targets here",
-    evaluationPlan_includesTargets: "No",
-    evaluationPlan_quarters: [
-      {
-        id: "2023 Q3",
-        value: "$203,090",
-      },
-      {
-        id: "2024 Q3",
-        value: "$157,000",
-      },
-      {
-        id: "2025 Q3",
-        value: "$35,000",
-      },
-      {
-        id: "2023 Q4",
-        value: "$152,230",
-      },
-      {
-        id: "2024 Q4",
-        value: "$345,789",
-      },
-      {
-        id: "2025 Q4",
-        value: "$250,000",
-      },
-      {
-        id: "2024 Q1",
-        value: "$30,010",
-      },
-      {
-        id: "2025 Q1",
-        value: "$10,000",
-      },
-      {
-        id: "2026 Q1",
-        value: "$30,090",
-      },
-      {
-        id: "2024 Q2",
-        value: "$30,010",
-      },
-      {
-        id: "2025 Q2",
-        value: "$10,000",
-      },
-      {
-        id: "2026 Q2",
-        value: "$30,090",
-      },
-    ],
-    evaluationPlan_additionalDetails: "Additional details",
-  };
-  const reportFieldDataEntities = [tempEntity, tempEntity];
-  // const reportFieldDataEntities = report?.fieldData[entityType] || [];
+  const reportFieldDataEntities = report?.fieldData[entityType] || [];
   const dashTitle = `${verbiage.dashboardTitle}${
     verbiage.countEntitiesInTitle ? ` ${reportFieldDataEntities.length}` : ""
   }`;

@@ -163,6 +163,16 @@ export const calculateCurrentYear = () => {
   return year;
 };
 
+export const incrementQuarterAndYear = (quarter: number, year: number) => {
+  if (quarter >= 4) {
+    quarter = 1;
+    year++;
+  } else {
+    quarter++;
+  }
+  return [quarter, year];
+};
+
 /*
  * Converts a date string to UTC + 180 days
  * returns -> UTC datetime in format 'ms since Unix epoch'
