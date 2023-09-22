@@ -102,6 +102,7 @@ export const hydrateFormFields = (
     // check for children on each choice in field props
     if (fieldProps) {
       const choices = fieldProps.choices;
+      const repeating = fieldProps.repeating;
       if (choices) {
         choices.forEach((choice: FieldChoice) => {
           // if a choice has children, recurse
@@ -109,6 +110,16 @@ export const hydrateFormFields = (
             hydrateFormFields(choice.children, formData);
           }
         });
+      }
+      if (repeating) {
+        const keys = nextTwelveQuartersKeys(field.id);
+        formFields[fieldFormIndex].props!.repeatingHydration = [];
+        for (let key of keys) {
+          const hydrationValue = formData?.[`${key[0]}${key[1]}Q${key[2]}`];
+          formFields[fieldFormIndex].props!.repeatingHydration.push(
+            hydrationValue
+          );
+        }
       }
     } else {
       // if no props on field, initialize props as empty object
@@ -118,7 +129,6 @@ export const hydrateFormFields = (
     const fieldHydrationValue = formData?.[field.id];
     formFields[fieldFormIndex].props!.hydrate = fieldHydrationValue;
   });
-
   return formFields;
 };
 
@@ -200,8 +210,19 @@ export const flattenFormFields = (formFields: FormField[]): FormField[] => {
   const flattenedFields: any = [];
   const compileFields = (formFields: FormField[]) => {
     formFields.forEach((field: FormField) => {
-      // push field to flattened fields array
-      flattenedFields.push(field);
+      if (field.props?.repeating) {
+        const keys = nextTwelveQuartersKeys(field.id);
+        for (let key of keys) {
+          const repeatedField = {
+            ...field,
+            id: `${key[0]}${key[1]}Q${key[2]}`,
+          };
+          flattenedFields.push(repeatedField);
+        }
+      } else {
+        // push field to flattened fields array
+        flattenedFields.push(field);
+      }
       // if choice has children, recurse
       field?.props?.choices?.forEach((choice: FieldChoice) => {
         if (choice.children) compileFields(choice.children);
@@ -229,23 +250,31 @@ export const nextTwelveQuarters = (
   options: any,
   field: any
 ) => {
-  let quarter = calculateCurrentQuarter();
-  let year = calculateCurrentYear();
+  const keys = nextTwelveQuartersKeys(field.id);
   let elementsToCreate = [];
-  for (let i = 0; i < 12; i++) {
+  for (let [index, key] of keys.entries()) {
     const componentFieldType = fieldToComponentMap[field.type];
     const fieldProps = {
-      key: `${field.id}${year}Q${quarter}`,
-      name: `${field.id}${year}Q${quarter}`,
-      hydrate: field.props?.hydrate,
-      label: `${year} Q${quarter}`,
+      key: `${key[0]}${key[1]}Q${key[2]}`,
+      name: `${key[0]}${key[1]}Q${key[2]}`,
+      hydrate: field.props.repeatingHydration[index],
+      label: `${key[1]} Q${key[2]}`,
       autoComplete: isFieldElement(field) ? "one-time-code" : undefined, // stops browsers from forcing autofill
       ...options,
-      ...field?.props,
     };
     // return the correct amount of times
     elementsToCreate.push(React.createElement(componentFieldType, fieldProps));
-    [quarter, year] = incrementQuarterAndYear(quarter, year);
   }
   return elementsToCreate;
+};
+
+export const nextTwelveQuartersKeys = (fieldId: string) => {
+  let quarter = calculateCurrentQuarter();
+  let year = calculateCurrentYear();
+  const keys: (string[] | number[])[][] = [];
+  for (let i = 0; i < 12; i++) {
+    keys.push([[fieldId], [year], [quarter]]);
+    [quarter, year] = incrementQuarterAndYear(quarter, year);
+  }
+  return keys;
 };
