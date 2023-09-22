@@ -183,7 +183,7 @@ export const mockDrawerReportPageJson = {
   name: "mock-route-2a",
   path: "/mock/mock-route-2a",
   pageType: "drawer",
-  entityType: "plans",
+  entityType: "entityType",
   verbiage: {
     intro: mockVerbiageIntro,
     dashboardTitle: "Mock dashboard title",
@@ -228,6 +228,7 @@ export const mockOverlayModalPageVerbiage = {
   entityUnfinishedMessage: "Mock entity unfinished messsage",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
   drawerTitle: "Mock drawer title",
+  countEntitiesInTitle: true,
 };
 
 export const mockModalDrawerReportPageJson = {
@@ -306,7 +307,7 @@ export const mockModalOverlayReportPageJson = {
   name: "mock-route-2c",
   path: "/mock/mock-route-2c",
   pageType: "modalOverlay",
-  entityType: "program",
+  entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalOverlayForm,
   overlayForm: mockModalOverlayForm,
