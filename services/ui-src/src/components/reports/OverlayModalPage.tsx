@@ -31,84 +31,6 @@ export const OverlayModalPage = ({ route }: Props) => {
   //display variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
 
-  ///TEMPORARY ENTITY//
-  let tempEntity1 = {
-    id: "mockid",
-    evaluationPlan_objectiveName: "{Objective Name}",
-    evaluationPlan_description: "Description here",
-    evaluationPlan_targets: "Targets here",
-    evaluationPlan_includesTargets: "No",
-    evaluationPlan_additionalDetails: "Additional details",
-  };
-
-  let tempEntity2 = {
-    objectiveName: "{Funding Sources}",
-    id: "test-id",
-    report_initiative: "state and territory specific initiatives",
-    quarters: [
-      {
-        id: "2023 Q3",
-        value: "$203,090",
-      },
-      {
-        id: "2024 Q3",
-        value: "$157,000",
-      },
-      {
-        id: "2025 Q3",
-        value: "$35,000",
-      },
-      {
-        id: "2023 Q4",
-        value: "$152,230",
-      },
-      {
-        id: "2024 Q4",
-        value: "$345,789",
-      },
-      {
-        id: "2025 Q4",
-        value: "$250,000",
-      },
-      {
-        id: "2024 Q1",
-        value: "$30,010",
-      },
-      {
-        id: "2025 Q1",
-        value: "$10,000",
-      },
-      {
-        id: "2026 Q1",
-        value: "$30,090",
-      },
-      {
-        id: "2024 Q2",
-        value: "$30,010",
-      },
-      {
-        id: "2025 Q2",
-        value: "$10,000",
-      },
-      {
-        id: "2026 Q2",
-        value: "$30,090",
-      },
-    ],
-    isOtherEntity: true,
-  };
-
-  const getTempEntityData = () => {
-    if (entityType === "evaluationPlan") {
-      reportFieldDataEntities = [];
-      return (reportFieldDataEntities = [tempEntity1, tempEntity1]);
-    } else if (entityType === "fundingSources") {
-      reportFieldDataEntities = [];
-      return (reportFieldDataEntities = [tempEntity2, tempEntity2]);
-    }
-    return reportFieldDataEntities;
-  };
-
   const dashTitle = `${verbiage.dashboardTitle}${
     verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
   }`;
@@ -168,7 +90,7 @@ export const OverlayModalPage = ({ route }: Props) => {
           {dashTitle}
         </Heading>
         <Box>
-          {getTempEntityData().map(
+          {reportFieldDataEntities.map(
             (entity: EntityShape, entityIndex: number) => (
               <EntityCard
                 key={entity.id}
