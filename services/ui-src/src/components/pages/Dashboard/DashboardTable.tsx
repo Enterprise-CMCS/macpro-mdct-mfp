@@ -8,12 +8,10 @@ import {
   ReportType,
   TableContentShape,
 } from "types";
-import { convertDateUtcToEt, calculatePeriod } from "utils";
+import { calculatePeriod, convertDateUtcToEt } from "utils";
+import { States } from "../../../constants";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
-
-// Year will be displayed as part of the report name
-const year = new Date().getFullYear();
 
 export const DashboardTable = ({
   reportsByState,
@@ -128,8 +126,12 @@ interface DashboardTableProps {
 
 const getReportName = (report: ReportMetadataShape) => {
   const reportName = report.submissionName;
-  const period = calculatePeriod(convertDateUtcToEt(report.createdAt));
-  return `${report.state} ${reportName} ${year} - Period ${period}`;
+  const etDate = convertDateUtcToEt(report.createdAt);
+  const period = calculatePeriod(etDate);
+  const year = new Date(etDate).getFullYear();
+
+  const fullStateName = States[report.state as keyof typeof States];
+  return `${fullStateName} ${reportName} ${year} - Period ${period}`;
 };
 
 export const getStatus = (
