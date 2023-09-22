@@ -98,17 +98,16 @@ export const OverlayModalPage = ({ route }: Props) => {
     isOtherEntity: true,
   };
 
-  if (
-    window.location.pathname ===
-    "/wp/state-and-territory-specific-initiatives/evaluation-plan"
-  ) {
-    reportFieldDataEntities = [tempEntity1, tempEntity1];
-  } else if (
-    window.location.pathname ===
-    "/wp/state-and-territory-specific-initiatives/funding-sources"
-  ) {
-    reportFieldDataEntities = [tempEntity2, tempEntity2];
-  }
+  const getTempEntityData = () => {
+    if (entityType === "evaluationPlan") {
+      reportFieldDataEntities = [];
+      return (reportFieldDataEntities = [tempEntity1, tempEntity1]);
+    } else if (entityType === "fundingSources") {
+      reportFieldDataEntities = [];
+      return (reportFieldDataEntities = [tempEntity2, tempEntity2]);
+    }
+    return reportFieldDataEntities;
+  };
 
   const dashTitle = `${verbiage.dashboardTitle}${
     verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
@@ -169,7 +168,7 @@ export const OverlayModalPage = ({ route }: Props) => {
           {dashTitle}
         </Heading>
         <Box>
-          {reportFieldDataEntities.map(
+          {getTempEntityData().map(
             (entity: EntityShape, entityIndex: number) => (
               <EntityCard
                 key={entity.id}
