@@ -128,6 +128,7 @@ const sx = {
         "&:first-of-type": {
           fontWeight: "bold",
           fontSize: "md",
+          marginBottom: "0.25rem"
         },
       },
     },

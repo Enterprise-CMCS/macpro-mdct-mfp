@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 // components
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import { ReportPageIntro, Table, EntityRow } from "components";
@@ -29,7 +29,7 @@ export const EntityDetailsDashboardOverlay = ({
   }, [entityType, selectedEntity]);
 
   const tableHeaders = () => {
-    return { headRow: ["", ""] };
+    return { headRow: ["", "", ""] };
   };
 
   return (
@@ -37,9 +37,7 @@ export const EntityDetailsDashboardOverlay = ({
       <Button
         sx={sx.backButton}
         variant="none"
-        onClick={() => {
-          return;
-        }}
+        onClick={() => window.location.reload()}
         aria-label="Return to all initiatives"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
@@ -51,7 +49,7 @@ export const EntityDetailsDashboardOverlay = ({
           <EntityRow
             key={entity.id}
             entity={entity.verbiage}
-            entityInfo={["name"]}
+            entityInfo={["name", "hint"]}
             verbiage={entity.verbiage}
             locked={false}
             openDrawer={() => {
@@ -70,9 +68,8 @@ export const EntityDetailsDashboardOverlay = ({
         <Flex sx={sx.buttonFlex}>
           <Button
             variant="outline"
-            onClick={() => {
-              return;
-            }}
+            // TODO: think of a better solution for this
+            onClick={() => window.location.reload()}
           >
             Return
           </Button>

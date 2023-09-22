@@ -766,8 +766,8 @@
                 "subsection": "{initiative name here}",
                 "info": [
                   {
-                    "type": "html",
-                    "content": "Complete each of the first 3 steps for this initiative. Step IV is to be completed when this initiative will no longer be sustained with MFP funding and/or state or territory equivalent funding, and will become available once your initiative information is complete.",
+                    "type": "span",
+                    "content": "Complete each of the first 3 steps for this initiative. Step IV is to be completed when this initiative will no longer be sustained with MFP funding and/or state or territory equivalent funding, and will become available once your initiative information is complete."
                   }
                 ]
               },
@@ -780,12 +780,13 @@
                 "pageType": "entityOverlay",
                 "verbiage": {
                   "name": "I. Define initiative",
+                  "hint": "Provide initiative description, including target populations and timeframe",
                   "intro": {
                     "section": "State and Territory-Specific Initiatives: I. Define initiative",
                     "subsection": "{Person-centered Planning}",
                     "info": [
                       {
-                        "type": "html",
+                        "type": "span",
                         "content": "Provide initiative description, including target populations and timeframe."
                       }
                     ],
@@ -879,12 +880,13 @@
                 "entityType": "evaluationPlan",
                 "verbiage": {
                   "name": "II. Evaluation Plan",
+                  "hint": "Add evaluation plan, including measurable objectives",
                   "intro": {
                     "section": "State and Territory Specific Initiatives: II. Evaluation Plan",
                     "subsection": "{Person-centered Planning}",
                     "info": [
                       {
-                        "type": "html",
+                        "type": "span",
                         "content": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system."
                       }
                     ],
@@ -894,7 +896,7 @@
                     "buttonLabel": "Instructions",
                     "intro": [
                       {
-                        "type": "html",
+                        "type": "span",
                         "content": "The evaluation plan captures expected results for each state or territory-specific initiative. Recipients should identify one or more objectives per initiative and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. In addition, recipients must articulate how they will achieve targets and meet milestones. For more information on developing objectives and identifying appropriate performance measures, see "
                       },
                       {
@@ -1146,12 +1148,40 @@
                 }
               },
               {
+                "name": "State & Territory-Specific Initiatives: III. Funding sources",
+                "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
+                "pageType": "entityOverlay",
+                "entityType": "",
+                "verbiage": {
+                  "name": "III. Funding sources",
+                  "hint": "Add funding sources with projected quarterly expenditures",
+                  "intro": {
+                    "section": "State & Territory-Specific Initiatives: III. Funding sources",
+                    "subsection": "{Initiative name}",
+                    "hint": "Add funding sources with projected quarterly expenditures.",
+                    "info": [
+                      {
+                        "type": "span",
+                        "content": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient's Semi-Annual Report (SAR)."
+                      }
+                    ]
+                  },
+                  "enterEntityDetailsButtonText": "Edit",
+                  "isRequired": true,
+                  "modalForm": {
+                    "id": "stsi-fs-modal",
+                    "fields": []
+                  }
+                }
+              },
+              {
                 "name": "State & Territory-Specific Initiatives: IV. Close-out information",
                 "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
                 "pageType": "entityOverlay",
                 "entityType": "closeOut",
                 "verbiage": {
-                  "name": "IV. Close-out information",
+                  "name": "IV. Close-out information (if applicable)",
+                  "hint": "To be completed as appropriate during Work Plan revisions",
                   "intro": {
                     "section": "State & Territory-Specific Initiatives: IV. Close-out information",
                     "subsection": "{Initiative name}",
