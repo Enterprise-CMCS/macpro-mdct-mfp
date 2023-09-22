@@ -111,4 +111,6 @@ export const mockReportMethods = {
   setReportSelection: jest.fn(),
   isReportPage: true,
   contextIsLoaded: true,
+  errorMessage: "",
+  lastSavedTime: "1:58 PM",
 };
