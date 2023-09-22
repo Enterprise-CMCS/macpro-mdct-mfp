@@ -970,7 +970,6 @@
                           "validation": {
                             "type": "number",
                             "parentFieldName": "evaluationPlan_includesTargets",
-                            "parentOptionId": "7FP4jcg4jK7Ssqp3cCW5vQ",
                             "nested": true
                           },
                           "props": {
