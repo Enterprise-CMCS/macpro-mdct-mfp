@@ -24,8 +24,10 @@ export const EntityCardTopSection = ({
           <Text sx={sx.subtitle}>
             Does the performance measure include quantitative targets?
           </Text>
-          <Text sx={sx.description}>{formattedEntityData.includesTargets}</Text>
-          {formattedEntityData.quarters.map((quarter: any) => {
+          <Text sx={sx.description}>
+            {formattedEntityData?.includesTargets}
+          </Text>
+          {formattedEntityData.quarters?.map((quarter: any) => {
             return (
               <GridItem>
                 <Flex sx={sx.gridItems}>
