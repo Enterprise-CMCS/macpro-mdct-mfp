@@ -20,7 +20,4 @@ export interface AdminBannerMethods {
   deleteAdminBanner: Function;
 }
 
-export interface AdminBannerShape extends AdminBannerMethods {
-  isLoading: boolean;
-  errorMessage?: string;
-}
+export interface AdminBannerShape extends AdminBannerMethods {}
