@@ -32,9 +32,16 @@ export const OverlayModalPage = ({ route }: Props) => {
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
 
   ///TEMPORARY ENTITY//
-  let tempEntity = {};
+  let tempEntity1 = {
+    id: "mockid",
+    evaluationPlan_objectiveName: "{Objective Name}",
+    evaluationPlan_description: "Description here",
+    evaluationPlan_targets: "Targets here",
+    evaluationPlan_includesTargets: "No",
+    evaluationPlan_additionalDetails: "Additional details",
+  };
 
-  tempEntity = {
+  let tempEntity2 = {
     objectiveName: "{Funding Sources}",
     id: "test-id",
     report_initiative: "state and territory specific initiatives",
@@ -91,7 +98,21 @@ export const OverlayModalPage = ({ route }: Props) => {
     isOtherEntity: true,
   };
 
-  reportFieldDataEntities = [tempEntity, tempEntity];
+  if (
+    window.location.pathname ===
+    "/wp/state-and-territory-specific-initiatives/evaluation-plan"
+  ) {
+    reportFieldDataEntities = [tempEntity1, tempEntity1];
+  } else if (
+    window.location.pathname ===
+    "/wp/state-and-territory-specific-initiatives/funding-sources"
+  ) {
+    reportFieldDataEntities = [tempEntity2, tempEntity2];
+  }
+
+  const dashTitle = `${verbiage.dashboardTitle}${
+    verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
+  }`;
 
   // add/edit entity modal disclosure and methods
   const {
@@ -117,11 +138,8 @@ export const OverlayModalPage = ({ route }: Props) => {
     onClose: deleteEntityModalOnCloseHandler,
   } = useDisclosure();
 
-  const openDeleteEntityModal = () => {
-    setSelectedEntity({
-      id: "123",
-      name: "mock entity",
-    });
+  const openDeleteEntityModal = (entity?: EntityShape) => {
+    setSelectedEntity(entity);
     deleteEntityModalOnOpenHandler();
   };
 
@@ -148,7 +166,7 @@ export const OverlayModalPage = ({ route }: Props) => {
           {verbiage.addEntityButtonText}
         </Button>
         <Heading as="h3" sx={sx.dashboardTitle}>
-          {`${verbiage.dashboardTitle}: ${reportFieldDataEntities.length}`}
+          {dashTitle}
         </Heading>
         <Box>
           {reportFieldDataEntities.map(
@@ -176,6 +194,7 @@ export const OverlayModalPage = ({ route }: Props) => {
         <hr />
         {/* MODALS */}
         <AddEditEntityModal
+          entityType={entityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           form={modalForm}
@@ -185,6 +204,7 @@ export const OverlayModalPage = ({ route }: Props) => {
           }}
         />
         <DeleteEntityModal
+          entityType={entityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           modalDisclosure={{

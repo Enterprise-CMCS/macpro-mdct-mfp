@@ -1,6 +1,7 @@
 /* eslint-disable multiline-comment-style */
 import { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { States } from "../../../constants";
 
 // components
 import {
@@ -126,7 +127,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       }
       formData = {
         fieldData: {
-          programName: report.programName,
+          submissionName: report.submissionName,
         },
         state: report.state,
         id: report.id,
@@ -180,6 +181,8 @@ export const DashboardPage = ({ reportType }: Props) => {
     onClose: addEditReportModalOnCloseHandler,
   } = useDisclosure();
 
+  const fullStateName = States[activeState as keyof typeof States];
+
   return (
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
@@ -189,7 +192,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       {errorMessage && <ErrorAlert error={errorMessage} />}
       <Box sx={sx.leadTextBox}>
         <Heading as="h1" sx={sx.headerText}>
-          {userState} {intro.header}
+          {fullStateName} {intro.header}
         </Heading>
         {reportType === "WP" && (
           <InstructionsAccordion
@@ -393,13 +396,14 @@ const sxChildStyles = {
       },
     },
   },
-  programNameText: {
+  submissionNameText: {
     fontSize: "md",
     fontWeight: "bold",
     width: "13rem",
     ".tablet &, .mobile &": {
       width: "100%",
     },
+    lineHeight: "1.25rem",
   },
   adminActionCell: {
     width: "2.5rem",

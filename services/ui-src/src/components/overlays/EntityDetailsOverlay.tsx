@@ -1,78 +1,101 @@
-import React, { MouseEventHandler, useContext, useEffect } from "react";
 // components
-import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
-import { Form, ReportPageIntro } from "components";
+import {
+  Box,
+  Button,
+  Flex,
+  Image,
+  Spinner,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { Alert, Form, ReportPageIntro, CloseEntityModal } from "components";
 // types
-import { EntityShape, EntityType, FormJson } from "types";
-// utils
-
+import { AlertTypes, EntityDetailsOverlayShape } from "types";
 // assets
+import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
-// verbiage
-import overlayVerbiage from "../../verbiage/pages/overlays";
-import { EntityContext } from "components/reports/EntityProvider";
+import warningIcon from "assets/icons/icon_warning.png";
 
-export const EntityDetailsOverlay = ({
-  closeEntityDetailsOverlay,
-  entityType,
-  entities,
-  form,
-  onSubmit,
-  selectedEntity,
-  disabled,
-  submitting,
-  validateOnRender,
-}: Props) => {
-  // Entity Provider Setup
-  const { setEntities, setSelectedEntity, setEntityType } =
-    useContext(EntityContext);
+export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
+  const submitting = false;
+  const { form, verbiage } = route;
 
-  useEffect(() => {
-    setSelectedEntity(selectedEntity);
-    setEntityType(entityType);
-    setEntities(entities);
-    return () => {
-      setEntities([]);
-      setSelectedEntity(undefined);
-    };
-  }, [entityType, selectedEntity]);
+  // add/edit entity modal disclosure and methods
+  const {
+    isOpen: closeEntityModalIsOpen,
+    onOpen: closeEntityModalOnOpenHandler,
+    onClose: closeEntityModalOnCloseHandler,
+  } = useDisclosure();
+
+  const openCloseEntityModal = () => {
+    closeEntityModalOnOpenHandler();
+  };
+
+  const closeCloseEntityModal = () => {
+    closeEntityModalOnCloseHandler();
+  };
 
   return (
     <Box>
       <Button
         sx={sx.backButton}
         variant="none"
-        onClick={closeEntityDetailsOverlay as MouseEventHandler}
-        aria-label="Return to all initiatives"
+        //TO-DO: add onClick prop to go back to initiative dashboard
+        aria-label="Return to dashboard for this initiative"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
-        Return to all initiatives
+        Return to dashboard for this initiative
       </Button>
-      <ReportPageIntro text={overlayVerbiage.WP.intro} />
+
+      {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
       <Form
         id={form.id}
         formJson={form}
-        onSubmit={onSubmit}
-        formData={selectedEntity}
-        autosave={true}
-        disabled={disabled}
+        onSubmit={() => {}}
+        autosave
         validateOnRender={validateOnRender || false}
-        dontReset={true}
+        dontReset={false}
       />
+      <Box>
+        {verbiage.closeOutWarning && (
+          <Alert
+            title={verbiage.closeOutWarning.title}
+            showIcon={true}
+            icon={warningIcon}
+            status={AlertTypes.WARNING}
+            description={verbiage.closeOutWarning.description}
+            sx={sx.warningBanner}
+          />
+        )}
+      </Box>
+
+      <Box>
+        {verbiage.closeOutModal && (
+          <Box>
+            <Button
+              rightIcon={
+                <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
+              }
+              onClick={() => openCloseEntityModal()}
+            >
+              {verbiage.closeOutModal.closeOutModalButtonText}
+            </Button>
+
+            <CloseEntityModal
+              verbiage={verbiage}
+              modalDisclosure={{
+                isOpen: closeEntityModalIsOpen,
+                onClose: closeCloseEntityModal,
+              }}
+            />
+          </Box>
+        )}
+      </Box>
+
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
-          {disabled ? (
-            <Button
-              variant="outline"
-              onClick={closeEntityDetailsOverlay as MouseEventHandler}
-            >
-              Return
-            </Button>
-          ) : (
-            <Button type="submit" form={form.id} sx={sx.saveButton}>
-              {submitting ? <Spinner size="md" /> : "Save & return"}
-            </Button>
-          )}
+          <Button type="submit" form={form.id} sx={sx.saveButton}>
+            {submitting ? <Spinner size="md" /> : "Save & return"}
+          </Button>
         </Flex>
       </Box>
     </Box>
@@ -80,22 +103,11 @@ export const EntityDetailsOverlay = ({
 };
 
 interface Props {
-  closeEntityDetailsOverlay: Function;
-  entityType: EntityType;
-  entities: any;
-  form: FormJson;
-  onSubmit: Function;
-  selectedEntity: EntityShape;
-  disabled: boolean;
-  submitting?: boolean;
+  route: EntityDetailsOverlayShape;
   validateOnRender?: boolean;
 }
 
 const sx = {
-  overlayContainer: {
-    backgroundColor: "palette.white",
-    width: "100%",
-  },
   backButton: {
     padding: 0,
     fontWeight: "normal",
@@ -111,6 +123,9 @@ const sx = {
     height: "1rem",
     marginRight: "0.5rem",
   },
+  closeIcon: {
+    width: "0.85rem",
+  },
   footerBox: {
     marginTop: "2rem",
     borderTop: "1.5px solid var(--chakra-colors-palette-gray_light)",
@@ -122,23 +137,13 @@ const sx = {
   saveButton: {
     width: "8.25rem",
   },
-  textHeading: {
-    fontWeight: "bold",
-    lineHeight: "1.25rem",
+  warningBanner: {
+    marginTop: "3.5rem",
+    marginBottom: "2rem",
+    bgColor: "palette.warn_lightest",
+    borderInlineStartColor: "palette.warn",
   },
-  programInfo: {
-    ul: {
-      margin: "0.5rem auto 0 auto",
-      listStyleType: "none",
-      li: {
-        wordWrap: "break-word",
-        whiteSpace: "break-spaces",
-        fontSize: "xl",
-        lineHeight: "1.75rem",
-        "&:first-child": {
-          fontWeight: "bold",
-        },
-      },
-    },
+  warningIcon: {
+    width: "1.375rem",
   },
 };

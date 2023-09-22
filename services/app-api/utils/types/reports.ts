@@ -30,7 +30,8 @@ export type ReportRouteWithForm =
   | DrawerReportPageShape
   | ModalDrawerReportPageShape
   | ModalOverlayReportPageShape
-  | OverlayModalPageShape;
+  | OverlayModalPageShape
+  | EntityDetailsOverlayShape;
 
 export interface ReportPageShapeBase extends ReportRouteBase {
   children?: never;
@@ -71,6 +72,13 @@ export interface OverlayModalPageShape extends ReportPageShapeBase {
   overlayForm?: FormJson;
   form?: never;
   drawerForm?: FormJson;
+}
+export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
+  entityType?: never;
+  form: FormJson;
+  dashboard?: never;
+  modalForm: never;
+  drawerForm?: never;
 }
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
@@ -146,9 +154,8 @@ export interface ReportMetadata {
 }
 
 export interface WPReportMetadata extends ReportMetadata {
-  programName: string;
-  locked: boolean;
   submissionName: string;
+  locked: boolean;
   submissionCount: number;
   previousRevisions: string[];
 }

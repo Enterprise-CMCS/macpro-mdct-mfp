@@ -1,23 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { ChoiceList as CmsdsChoiceList } from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
 // utils
 import {
+  autosaveFieldData,
   formFieldFactory,
+  getAutosaveFields,
   labelTextWithOptional,
   parseCustomHtml,
   useStore,
 } from "utils";
 import {
   AnyObject,
+  AutosaveField,
   Choice,
   CustomHtmlElement,
   FieldChoice,
   FormField,
   InputChangeEvent,
 } from "types";
+import { EntityContext, ReportContext } from "components";
 
 export const ChoiceListField = ({
   name,
@@ -26,22 +30,74 @@ export const ChoiceListField = ({
   choices,
   hint,
   nested,
+  autosave,
+  validateOnRender,
   sxOverride,
   styleAsOptional,
+  clear,
   ...props
 }: Props) => {
   const defaultValue: Choice[] = [];
   const [displayValue, setDisplayValue] = useState<Choice[]>(defaultValue);
+  const [lastDatabaseValue, setLastDatabaseValue] =
+    useState<Choice[]>(defaultValue);
 
-  const { state: userIsReadOnly, userIsAdmin } = useStore().user ?? {};
+  const { state, userIsReadOnly, userIsAdmin, full_name } =
+    useStore().user ?? {};
 
   const report = useStore().report;
+  const { updateReport } = useContext(ReportContext);
+  const { entities, entityType, updateEntities, selectedEntity } =
+    useContext(EntityContext);
 
   const shouldDisableChildFields =
     ((userIsAdmin || userIsReadOnly) && !!props?.disabled) || report?.locked;
 
   // get form context and register field
   const form = useFormContext();
+  const fieldIsRegistered = name in form.getValues();
+
+  // set initial display value to form state field value or hydration value
+  const hydrationValue = props?.hydrate;
+
+  useEffect(() => {
+    if (!fieldIsRegistered && !validateOnRender) {
+      form.register(name);
+    } else if (validateOnRender) {
+      form.trigger(name);
+    }
+  }, []);
+
+  useEffect(() => {
+    // if form state has value for field, set as display value
+    const fieldValue = form.getValues(name);
+    if (fieldValue) {
+      setDisplayValue(fieldValue);
+      setLastDatabaseValue(fieldValue);
+    }
+    // else if hydration value exists, set as display value
+    else if (hydrationValue) {
+      /*
+       * Clear is sent down when a choicelist is a child of another choicelist and that parent (Or its
+       * Parents and so forth) had its choice deselected or changed. When that happens the onChangeHandler
+       * calls clearUncheckedNestedFields and will clear the value of any children underneath it.
+       * However, the database won't know things are updated until the user has clicked off that parent
+       * and blurred it so instead we can use this clear value so that the hydration value doesn't overwrite
+       * what a user is actively doing.
+       */
+      if (clear) {
+        clear = false;
+        setDisplayValue(defaultValue);
+        form.setValue(name, defaultValue);
+      } else {
+        setDisplayValue(hydrationValue);
+        setLastDatabaseValue(hydrationValue);
+        if (validateOnRender)
+          form.setValue(name, hydrationValue, { shouldValidate: true });
+        else form.setValue(name, hydrationValue);
+      }
+    }
+  }, [hydrationValue]); // only runs on hydrationValue fetch/update
 
   // format choices with nested child fields to render (if any)
   const formatChoices = (choices: FieldChoice[]) => {
@@ -133,6 +189,68 @@ export const ChoiceListField = ({
     }
   };
 
+  // if should autosave, submit field data to database on component blur
+  const onComponentBlurHandler = () => {
+    if (autosave) {
+      const timeInMs = 200;
+      // Timeout because the CMSDS ChoiceList component relies on timeouts to assert its own focus, and we're stuck behind its update
+      setTimeout(async () => {
+        const parentName = document.activeElement?.id.split("-")[0];
+        if (
+          parentName === name &&
+          !document.activeElement?.id.includes("-otherText")
+        )
+          return; // Short circuit if still clicking on elements in this choice list
+
+        const fields = getAutosaveFields({
+          name,
+          type,
+          value: displayValue,
+          defaultValue,
+          hydrationValue,
+        });
+
+        const choicesWithNestedEnabledFields = choices.map((choice) => {
+          if (choice.children) {
+            return {
+              ...choice,
+              children: choice.children.filter(
+                (child) => !child.props?.disabled
+              ),
+            };
+          }
+          return choice;
+        });
+
+        const combinedFields = [
+          ...fields,
+          ...getNestedChildFields(
+            choicesWithNestedEnabledFields,
+            lastDatabaseValue
+          ),
+        ];
+        const reportArgs = {
+          id: report?.id,
+          reportType: report?.reportType,
+          updateReport,
+        };
+        const user = { userName: full_name, state };
+        await autosaveFieldData({
+          form,
+          fields: combinedFields,
+          report: reportArgs,
+          user,
+          entityContext: {
+            selectedEntity,
+            entityType,
+            updateEntities,
+            entities,
+          },
+        });
+      }, timeInMs);
+    }
+  };
+
   // prepare error message, hint, and classes
   const formErrorState = form?.formState?.errors;
   const errorMessage = formErrorState?.[name]?.message;
@@ -155,6 +273,7 @@ export const ChoiceListField = ({
         hint={parsedHint}
         errorMessage={errorMessage}
         onChange={onChangeHandler}
+        onComponentBlur={onComponentBlurHandler}
         {...props}
       />
     </Box>
@@ -178,4 +297,47 @@ const sx = {
   ".ds-c-choice[type='checkbox']:checked::after": {
     boxSizing: "content-box",
   },
+};
+
+export const getNestedChildFields = (
+  choices: FieldChoice[],
+  lastDatabaseValue: Choice[]
+): AutosaveField[] => {
+  // set up nested field compilation
+  const nestedFields: any = [];
+  const compileNestedFields = (fields: FormField[]) => {
+    fields.forEach((field: FormField) => {
+      // for each child field, get field info
+      const fieldDefaultValue = ["radio", "checkbox"].includes(field.type)
+        ? []
+        : "";
+
+      const fieldInfo = getAutosaveFields({
+        name: field.id,
+        type: field.type,
+        value: fieldDefaultValue,
+        overrideCheck: true,
+        defaultValue: undefined,
+        hydrationValue: undefined,
+      })[0];
+      // add to nested fields to be autosaved
+      nestedFields.push(fieldInfo);
+      // recurse through additional nested children as needed
+      const fieldChoices = field.props?.choices;
+      fieldChoices?.forEach(
+        (choice: FieldChoice) =>
+          choice.children && compileNestedFields(choice.children)
+      );
+    });
+  };
+
+  choices.forEach((choice: FieldChoice) => {
+    // if choice is not selected and there are children
+    const isParentChoiceChecked = (id: string) =>
+      lastDatabaseValue?.some((autosave) => autosave.key === id);
+    if (choice.children && isParentChoiceChecked(choice.id)) {
+      compileNestedFields(choice.children);
+    }
+  });
+  return nestedFields;
 };
