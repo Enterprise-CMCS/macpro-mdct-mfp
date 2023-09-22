@@ -19,6 +19,11 @@ import {
 } from "../types";
 import { getTemplate } from "../../handlers/formTemplates/populateTemplatesTable";
 import { createHash } from "crypto";
+import {
+  calculateCurrentQuarter,
+  calculateCurrentYear,
+  incrementQuarterAndYear,
+} from "../time/time";
 
 export async function getNewestTemplateVersion(reportType: ReportType) {
   const queryParams: QueryInput = {
@@ -138,35 +143,65 @@ export const flattenReportRoutesArray = (
   return routesArray;
 };
 
+export const twelveQuarters = (repeatingField: any, validationSchema: any) => {
+  let quarter = calculateCurrentQuarter();
+  let year = calculateCurrentYear();
+  for (var i = 0; i < 12; i++) {
+    validationSchema[`${repeatingField.id}${year}Q${quarter}`] =
+      repeatingField.validation;
+    [quarter, year] = incrementQuarterAndYear(quarter, year);
+  }
+  return validationSchema;
+};
+
+export const createRepeatingValidationSchema = (
+  repeatingField: any,
+  validationSchema: any
+) => {
+  const repeatingNamingSchema: AnyObject = {
+    nextTwelveQuarters: twelveQuarters,
+  };
+  const repeatingNameRule =
+    repeatingNamingSchema[repeatingField.props.repeating?.rule];
+  return repeatingNameRule(repeatingField, validationSchema);
+};
+
 // returns validation schema object for array of fields
 export const compileValidationJsonFromFields = (
   fieldArray: FormField[],
   parentOption?: any
 ): AnyObject => {
-  const validationSchema: AnyObject = {};
+  let validationSchema: AnyObject = {};
   fieldArray.forEach((field: FormField) => {
-    // if field has a parent option, add option name to validation object
-    if (
-      typeof field.validation === "object" &&
-      !field.validation.parentOptionId
-    ) {
-      field.validation.parentOptionId = parentOption?.name;
-    }
-    // compile field's validation schema
-    validationSchema[field.id] = field.validation;
-    // if field has choices/options (ie could have nested children)
-    const fieldChoices = field.props?.choices;
-    if (fieldChoices) {
-      fieldChoices.forEach((choice: FieldChoice) => {
-        // if given field choice has nested children
-        const nestedChildFields = choice.children;
-        if (nestedChildFields) {
-          Object.assign(
-            validationSchema,
-            compileValidationJsonFromFields(nestedChildFields, choice)
-          );
-        }
-      });
+    if (field.props?.repeating) {
+      validationSchema = createRepeatingValidationSchema(
+        field,
+        validationSchema
+      );
+    } else {
+      // if field has a parent option, add option name to validation object
+      if (
+        typeof field.validation === "object" &&
+        !field.validation.parentOptionId
+      ) {
+        field.validation.parentOptionId = parentOption?.name;
+      }
+      // compile field's validation schema
+      validationSchema[field.id] = field.validation;
+      // if field has choices/options (ie could have nested children)
+      const fieldChoices = field.props?.choices;
+      if (fieldChoices) {
+        fieldChoices.forEach((choice: FieldChoice) => {
+          // if given field choice has nested children
+          const nestedChildFields = choice.children;
+          if (nestedChildFields) {
+            Object.assign(
+              validationSchema,
+              compileValidationJsonFromFields(nestedChildFields, choice)
+            );
+          }
+        });
+      }
     }
   });
   return validationSchema;
