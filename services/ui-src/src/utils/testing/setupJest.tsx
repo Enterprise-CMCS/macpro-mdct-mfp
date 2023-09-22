@@ -188,10 +188,12 @@ export const mockReportStore: MfpReportState = {
   report: mockWPFullReport as ReportShape,
   reportsByState: [mockWPFullReport],
   submittedReportsByState: [mockWPFullReport],
+  lastSavedTime: "10:22 AM",
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
   setSubmittedReportsByState: () => {},
+  setLastSavedTime: () => {},
 };
 
 // BOUND STORE
