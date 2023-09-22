@@ -28,11 +28,11 @@ export const AdminPage = () => {
   // state management
   const {
     bannerData,
-    isBannerActive,
-    isBannerLoading,
+    bannerActive,
+    bannerLoading,
     bannerErrorMessage,
     setBannerErrorMessage,
-    isBannerDeleting,
+    bannerDeleting,
   } = useStore();
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const AdminPage = () => {
       </Box>
       <Box sx={sx.currentBannerSectionBox}>
         <Text sx={sx.sectionHeader}>Current Banner</Text>
-        {isBannerLoading ? (
+        {bannerLoading ? (
           <Flex sx={sx.spinnerContainer}>
             <Spinner size="md" />
           </Flex>
@@ -62,8 +62,8 @@ export const AdminPage = () => {
                   <Flex sx={sx.currentBannerInfo}>
                     <Text sx={sx.currentBannerStatus}>
                       Status:{" "}
-                      <span className={isBannerActive ? "active" : "inactive"}>
-                        {isBannerActive ? "Active" : "Inactive"}
+                      <span className={bannerActive ? "active" : "inactive"}>
+                        {bannerActive ? "Active" : "Inactive"}
                       </span>
                     </Text>
                     <Text sx={sx.currentBannerDate}>
@@ -82,7 +82,7 @@ export const AdminPage = () => {
                       sx={sx.deleteBannerButton}
                       onClick={deleteAdminBanner as MouseEventHandler}
                     >
-                      {isBannerDeleting ? (
+                      {bannerDeleting ? (
                         <Spinner size="md" />
                       ) : (
                         "Delete Current Banner"

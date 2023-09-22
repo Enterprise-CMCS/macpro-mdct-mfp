@@ -113,8 +113,7 @@ describe("Test AdminPage with active/inactive banner", () => {
       mockedUseStore.mockReturnValue({
         ...mockBannerStore,
         bannerData: activeBannerData,
-        // TODO: remove this next line
-        isBannerActive: true,
+        bannerActive: true,
       });
       await render(adminView(context));
     });

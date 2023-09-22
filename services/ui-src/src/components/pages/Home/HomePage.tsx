@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { checkDateRangeStatus, useStore } from "utils";
 
 export const HomePage = () => {
-  const { bannerData, isBannerActive, setIsBannerActive } = useStore();
+  const { bannerData, bannerActive, setBannerActive } = useStore();
 
   useEffect(() => {
     let bannerActivity = false;
@@ -18,10 +18,10 @@ export const HomePage = () => {
         bannerData.endDate
       );
     }
-    setIsBannerActive(bannerActivity);
+    setBannerActive(bannerActivity);
   }, [bannerData]);
 
-  const showBanner = !!bannerData?.key && isBannerActive;
+  const showBanner = !!bannerData?.key && bannerActive;
   const { intro, cards } = verbiage;
 
   // LaunchDarkly

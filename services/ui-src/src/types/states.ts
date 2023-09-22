@@ -19,17 +19,17 @@ export interface MfpUserState {
 export interface AdminBannerState {
   // INITIAL STATE
   bannerData: AdminBannerData | undefined;
-  isBannerActive: boolean;
-  isBannerLoading: boolean;
+  bannerActive: boolean;
+  bannerLoading: boolean;
   bannerErrorMessage: string;
-  isBannerDeleting: boolean;
+  bannerDeleting: boolean;
   // ACTIONS
   setBannerData: (newBannerData: AdminBannerData | undefined) => void;
   clearAdminBanner: () => void;
-  setIsBannerActive: (bannerStatus: boolean) => void;
-  setIsBannerLoading: (isBannerLoading: boolean) => void;
+  setBannerActive: (bannerStatus: boolean) => void;
+  setBannerLoading: (bannerLoading: boolean) => void;
   setBannerErrorMessage: (bannerErrorMessage: string) => void;
-  setIsBannerDeleting: (isBannerDeleting: boolean) => void;
+  setBannerDeleting: (bannerDeleting: boolean) => void;
 }
 
 // initial report state

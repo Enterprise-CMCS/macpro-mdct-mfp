@@ -25,18 +25,18 @@ export const AdminBannerProvider = ({ children }: Props) => {
   const {
     bannerData,
     setBannerData,
-    isBannerActive,
-    setIsBannerActive,
-    isBannerLoading,
-    setIsBannerLoading,
+    bannerActive,
+    setBannerActive,
+    bannerLoading,
+    setBannerLoading,
     bannerErrorMessage,
     setBannerErrorMessage,
-    isBannerDeleting,
-    setIsBannerDeleting,
+    bannerDeleting,
+    setBannerDeleting,
   } = useStore();
 
   const fetchAdminBanner = async () => {
-    setIsBannerLoading(true);
+    setBannerLoading(true);
     try {
       const currentBanner = await getBanner(ADMIN_BANNER_ID);
       const newBannerData = currentBanner?.Item || {};
@@ -48,18 +48,18 @@ export const AdminBannerProvider = ({ children }: Props) => {
         setBannerErrorMessage(bannerErrors.GET_BANNER_FAILED);
       }
     }
-    setIsBannerLoading(false);
+    setBannerLoading(false);
   };
 
   const deleteAdminBanner = async () => {
-    setIsBannerDeleting(true);
+    setBannerDeleting(true);
     try {
       await deleteBanner(ADMIN_BANNER_ID);
       await fetchAdminBanner();
     } catch (error: any) {
       setBannerErrorMessage(bannerErrors.DELETE_BANNER_FAILED);
     }
-    setIsBannerDeleting(false);
+    setBannerDeleting(false);
   };
 
   const writeAdminBanner = async (newBannerData: AdminBannerData) => {
@@ -79,7 +79,7 @@ export const AdminBannerProvider = ({ children }: Props) => {
         bannerData.endDate
       );
     }
-    setIsBannerActive(bannerActivity);
+    setBannerActive(bannerActivity);
   }, [bannerData]);
 
   useEffect(() => {
@@ -92,17 +92,17 @@ export const AdminBannerProvider = ({ children }: Props) => {
       bannerData,
       setBannerData,
       // Banner showing
-      isBannerActive,
-      setIsBannerActive,
+      bannerActive,
+      setBannerActive,
       // Banner Loading
-      isBannerLoading,
-      setIsBannerLoading,
+      bannerLoading,
+      setBannerLoading,
       // Banner Error State
       bannerErrorMessage,
       setBannerErrorMessage,
       // Banner Deleting State
-      isBannerDeleting,
-      setIsBannerDeleting,
+      bannerDeleting,
+      setBannerDeleting,
       // Banner API calls
       fetchAdminBanner,
       writeAdminBanner,
@@ -110,10 +110,10 @@ export const AdminBannerProvider = ({ children }: Props) => {
     }),
     [
       bannerData,
-      isBannerActive,
-      isBannerLoading,
+      bannerActive,
+      bannerLoading,
       bannerErrorMessage,
-      isBannerDeleting,
+      bannerDeleting,
     ]
   );
 

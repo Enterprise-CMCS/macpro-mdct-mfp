@@ -176,16 +176,16 @@ export const mockAdminUserStore: MfpUserState = {
 
 export const mockBannerStore: AdminBannerState = {
   bannerData: mockBannerData,
-  isBannerActive: false,
-  isBannerLoading: false,
+  bannerActive: false,
+  bannerLoading: false,
   bannerErrorMessage: "",
-  isBannerDeleting: false,
+  bannerDeleting: false,
   setBannerData: () => {},
   clearAdminBanner: () => {},
-  setIsBannerActive: () => {},
-  setIsBannerLoading: () => {},
+  setBannerActive: () => {},
+  setBannerLoading: () => {},
   setBannerErrorMessage: () => {},
-  setIsBannerDeleting: () => {},
+  setBannerDeleting: () => {},
 };
 
 // REPORT STATES / STORE
