@@ -5,6 +5,8 @@ import { hasPermissions } from "../../utils/auth/authorization";
 import { error } from "../../utils/constants/constants";
 // types
 import { StatusCodes, UserRoles } from "../../utils/types";
+import { number, object, string } from "yup";
+import { validateData } from "../../utils/validation/validation";
 
 export const createBanner = handler(async (event, _context) => {
   if (!hasPermissions(event, [UserRoles.ADMIN])) {
@@ -17,25 +19,21 @@ export const createBanner = handler(async (event, _context) => {
   } else {
     const unvalidatedPayload = JSON.parse(event!.body!);
 
-    /*
-     * const validationSchema = yup.object().shape({
-     *   key: yup.string().required(),
-     *   title: yup.string().required(),
-     *   description: yup.string().required(),
-     *   link: yup.string().url().notRequired(),
-     *   startDate: yup.number().required(),
-     *   endDate: yup.number().required(),
-     * });
-     */
+    const validationSchema = object().shape({
+      key: string().required(),
+      title: string().required(),
+      description: string().required(),
+      link: string().url().notRequired(),
+      startDate: number().required(),
+      endDate: number().required(),
+    });
 
-    /*
-     * const validatedPayload = await validateData(
-     *   validationSchema,
-     *   unvalidatedPayload
-     * );
-     */
+    const validatedPayload = await validateData(
+      validationSchema,
+      unvalidatedPayload
+    );
 
-    if (unvalidatedPayload) {
+    if (validatedPayload) {
       const params = {
         TableName: process.env.BANNER_TABLE_NAME!,
         Item: {
@@ -43,11 +41,11 @@ export const createBanner = handler(async (event, _context) => {
           createdAt: Date.now(),
           lastAltered: Date.now(),
           lastAlteredBy: event?.headers["cognito-identity-id"],
-          title: unvalidatedPayload.title,
-          description: unvalidatedPayload.description,
-          link: unvalidatedPayload.link,
-          startDate: unvalidatedPayload.startDate,
-          endDate: unvalidatedPayload.endDate,
+          title: validatedPayload.title,
+          description: validatedPayload.description,
+          link: validatedPayload.link,
+          startDate: validatedPayload.startDate,
+          endDate: validatedPayload.endDate,
         },
       };
       await dynamoDb.put(params);

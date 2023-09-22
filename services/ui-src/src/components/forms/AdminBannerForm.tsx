@@ -17,15 +17,21 @@ export const AdminBannerForm = ({ writeAdminBanner, ...props }: Props) => {
   // add validation to formJson
   const form: FormJson = formJson;
 
-  const onSubmit = async () => {
+  const onSubmit = async (formData: any) => {
     setSubmitting(true);
     const newBannerData = {
       key: bannerId,
-      title: "TEST NEW BANNER",
-      description: "BANNER DESCRIPTION",
-      link: "EXAMPLE LINK" || undefined,
-      startDate: convertDatetimeStringToNumber("11/11/2011", "startDate"),
-      endDate: convertDatetimeStringToNumber("11/11/2024", "endDate"),
+      title: formData["bannerTitle"],
+      description: formData["bannerDescription"],
+      link: formData["bannerLink"] || undefined,
+      startDate: convertDatetimeStringToNumber(
+        formData["bannerStartDate"],
+        "startDate"
+      ),
+      endDate: convertDatetimeStringToNumber(
+        formData["bannerEndDate"],
+        "endDate"
+      ),
     };
     try {
       await writeAdminBanner(newBannerData);
@@ -41,10 +47,9 @@ export const AdminBannerForm = ({ writeAdminBanner, ...props }: Props) => {
       <ErrorAlert error={error} sxOverride={sx.errorAlert} />
       <Form
         id={form.id}
-        formJson={formJson}
+        formJson={form}
         onSubmit={onSubmit}
         validateOnRender={false}
-        onError={onSubmit}
         dontReset={false}
         {...props}
       >
