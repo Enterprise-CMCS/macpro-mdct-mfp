@@ -655,9 +655,9 @@
             "deleteModalConfirmButtonText": "Yes, delete initiative",
             "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
             "enterEntityDetailsButtonText": "Edit",
-            "dashboardTitle": "Initative total count",
+            "dashboardTitle": "Initiative total count",
             "countEntitiesInTitle": true,
-            "tableHeader": "Initaitve name <br/> Work Plan topic",
+            "tableHeader": "Initiative name <br/> Work Plan topic",
             "addEditModalHint": "Provide the name of one initiative. You will be then be asked to complete details for this initiative including description, evaluation plan and funding sources.",
             "emptyDashboardText": "Empty"
           },
@@ -913,7 +913,7 @@
             "deleteModalConfirmButtonText": "Yes, delete objective",
             "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
             "enterEntityDetailsButtonText": "Edit",
-            "dashboardTitle": "Objective total count:",
+            "dashboardTitle": "Objective total count",
             "countEntitiesInTitle": true,
             "deleteEntityButtonAltText": "",
             "entityUnfinishedMessage": "",
@@ -1220,6 +1220,197 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "name": "State and Territory-Specific Initiatives: III. Funding Sources",
+          "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
+          "pageType": "overlayModal",
+          "entityType": "fundingSources",
+          "verbiage": {
+            "intro": {
+              "section": "State and Territory-Specific Initiatives: III. Funding Sources",
+              "subsection": "{Person-centered Planning}",
+              "info": [
+                {
+                  "type": "html",
+                  "content": "<br>Add funding sources with projected quarterly expenditures.</br>"
+                },
+                {
+                  "type": "html",
+                  "content": "<br>Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).</br>"
+                }
+              ],
+              "exportSectionHeader": "exportSectionHeader"
+            },
+            "addEntityButtonText": "Add funding source",
+            "editEntityButtonText": "Edit funding source",
+            "addEditModalAddTitle": "Add funding source and projected expenditures",
+            "addEditModalEditTitle": "Edit funding source and projected expenditures",
+            "deleteEntityButtonAltText": "Delete other target population",
+            "deleteModalTitle": "Delete funding source for this report? ",
+            "deleteModalConfirmButtonText": "Yes, delete funding source",
+            "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports. <br><br>Are you sure you want to proceed?",
+            "tableHeader": "Initiative name <br/> Work Plan topic",
+            "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).",
+            "emptyDashboardText": "Empty",
+            "dashboardTitle": "Funding Sources",
+            "countEntitiesInTitle": true
+          },
+          "modalForm": {
+            "id": "tb-modal",
+            "fields": [
+              {
+                "id": "initiative_wpTopic",
+                "type": "radio",
+                "validation": "radio",
+                "props": {
+                  "label": "Funding source:",
+                  "hint": "Enter a dollar amount using a $ or a percentage with %. Enter 0 for quarters with no projected expenditures. Enter N/A for quarters you do not expect to report.",
+                  "choices": [
+                    {
+                      "id": "2VLpZ9A92OivbZhKvY8pE4hB65c",
+                      "label": "State-equivalent funds"
+                    },
+                    {
+                      "id": "2VLpZ9A92OivbZhKvY8pE4",
+                      "label": "Capacity-building funds"
+                    },
+                    {
+                      "id": "2VLpZCNtbcjRPq3evd1NI6",
+                      "label": "Administrative cooperative agreement funding"
+                    },
+                    {
+                      "id": "2VLpZDJ9qaKKOk78ztBdiB",
+                      "label": "MFP funding for qualified HCBS"
+                    },
+                    {
+                      "id": "2VLpZCRWieGr1Z49QX5Aqc",
+                      "label": "MFP funding for demonstrated services"
+                    },
+                    {
+                      "id": "2VLq8ASzZNfxbu520if449",
+                      "label": "MFP funding for supplemental services"
+                    },
+                    {
+                      "id": "2VLq8ASzZNfxbu520if449",
+                      "label": "Other, specify",
+                      "children": [
+                        {
+                          "id": "initiative_wp_otherTopic",
+                          "type": "textarea",
+                          "validation": {
+                            "type": "text",
+                            "nested": true,
+                            "parentFieldName": "initiative_wpTopic"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "2VLqDuo2xxhCWuYuQdZTGmEnuYv",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2023 Q3"
+                }
+              },
+              {
+                "id": "2VLqDwTI4NOFvqwCx1wEDziIRfo",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2023 Q4"
+                }
+              },
+              {
+                "id": "2VLqDwKKHtZ8L26tMsKJEr",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2024 Q1"
+                }
+              },
+              {
+                "id": "2VLqDwwngaHbp4JPQgdWL",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2024 Q2"
+                }
+              },
+              {
+                "id": "2VLqDrcjB6oL5utYbFEodI",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2024 Q3"
+                }
+              },
+              {
+                "id": "2VLqDr6ETYFzHYaaBINTZc",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2024 Q4"
+                }
+              },
+              {
+                "id": "2VLqMGSPi3EGY8DoLNvmlf",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2025 Q1"
+                }
+              },
+              {
+                "id": "2VLqMJwh8LTB4jKD79F9PJ",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2025 Q2"
+                }
+              },
+              {
+                "id": "2VLqMIXqkLGt8uNDA6cz5g",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2025 Q3"
+                }
+              },
+              {
+                "id": "2VLsgN53FvEa4pRcNkh39BviXAY",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2025 Q4"
+                }
+              },
+              {
+                "id": "2VLqMFqSgRnEcVsURzmPey",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2026 Q1"
+                }
+              },
+              {
+                "id": "2VLqRfMwDodksiBxXrWKpL",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "2026 Q2"
+                }
+              }
+            ]
+          },
+          "overlayForm": {
+            "id": "abc",
+            "fields": []
           }
         }
       ]

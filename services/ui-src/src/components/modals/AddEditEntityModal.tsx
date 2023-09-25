@@ -91,7 +91,6 @@ export const AddEditEntityModal = ({
     setSubmitting(false);
     modalDisclosure.onClose();
   };
-
   return (
     <Modal
       data-testid="add-edit-entity-modal"
@@ -104,7 +103,7 @@ export const AddEditEntityModal = ({
         subheading: verbiage.addEditModalHint
           ? verbiage.addEditModalHint
           : undefined,
-        actionButtonText: submitting ? <Spinner size="md" /> : "Save",
+        actionButtonText: submitting ? <Spinner size="md" /> : "Save & close",
         closeButtonText: "Cancel",
       }}
     >
