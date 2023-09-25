@@ -1310,102 +1310,102 @@
                   ]
                 }
               },
-              {
-                "id": "2VLqDuo2xxhCWuYuQdZTGmEnuYv",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2023 Q3"
+                {
+                  "id": "fundingSources_quarters2023Q3",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2023 Q3"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2023Q4",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2023 Q4"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2024Q1",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2024 Q1"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2024Q2",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2024 Q2"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2024Q3",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2024 Q3"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2024Q4",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2024 Q4"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2025Q1",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2025 Q1"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2025Q2",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2025 Q2"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2025Q3",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2025 Q3"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2025Q4",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2025 Q4"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2026Q1",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2026 Q1"
+                  }
+                },
+                {
+                  "id": "fundingSources_quarters2026Q2",
+                  "type": "number",
+                  "validation": "number",
+                  "props": {
+                    "label": "2026 Q2"
+                  }
                 }
-              },
-              {
-                "id": "2VLqDwTI4NOFvqwCx1wEDziIRfo",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2023 Q4"
-                }
-              },
-              {
-                "id": "2VLqDwKKHtZ8L26tMsKJEr",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2024 Q1"
-                }
-              },
-              {
-                "id": "2VLqDwwngaHbp4JPQgdWL",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2024 Q2"
-                }
-              },
-              {
-                "id": "2VLqDrcjB6oL5utYbFEodI",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2024 Q3"
-                }
-              },
-              {
-                "id": "2VLqDr6ETYFzHYaaBINTZc",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2024 Q4"
-                }
-              },
-              {
-                "id": "2VLqMGSPi3EGY8DoLNvmlf",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2025 Q1"
-                }
-              },
-              {
-                "id": "2VLqMJwh8LTB4jKD79F9PJ",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2025 Q2"
-                }
-              },
-              {
-                "id": "2VLqMIXqkLGt8uNDA6cz5g",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2025 Q3"
-                }
-              },
-              {
-                "id": "2VLsgN53FvEa4pRcNkh39BviXAY",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2025 Q4"
-                }
-              },
-              {
-                "id": "2VLqMFqSgRnEcVsURzmPey",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2026 Q1"
-                }
-              },
-              {
-                "id": "2VLqRfMwDodksiBxXrWKpL",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2026 Q2"
-                }
-              }
             ]
           },
           "overlayForm": {
