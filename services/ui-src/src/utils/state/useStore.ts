@@ -29,15 +29,30 @@ const userStore = (set: Function) => ({
 const bannerStore = (set: Function) => ({
   // initial state
   bannerData: undefined,
-  isBannerActive: false,
+  bannerActive: false,
+  bannerLoading: false,
+  bannerErrorMessage: "",
+  bannerDeleting: false,
   // actions
-  setAdminBanner: (newBanner: AdminBannerData | undefined) =>
-    set(() => ({ bannerData: newBanner }), false, { type: "setAdminBanner" }),
+  setBannerData: (newBanner: AdminBannerData | undefined) =>
+    set(() => ({ bannerData: newBanner }), false, { type: "setBannerData" }),
   clearAdminBanner: () =>
     set(() => ({ bannerData: undefined }), false, { type: "clearAdminBanner" }),
-  setIsBannerActive: (bannerStatus: boolean) =>
-    set(() => ({ isBannerActive: bannerStatus }), false, {
-      type: "setIsBannerActive",
+  setBannerActive: (bannerStatus: boolean) =>
+    set(() => ({ bannerActive: bannerStatus }), false, {
+      type: "setBannerActive",
+    }),
+  setBannerLoading: (loading: boolean) =>
+    set(() => ({ bannerLoading: loading }), false, {
+      type: "setBannerLoading",
+    }),
+  setBannerErrorMessage: (errorMessage: string) =>
+    set(() => ({ bannerErrorMessage: errorMessage }), false, {
+      type: "setBannerErrorMessage",
+    }),
+  setBannerDeleting: (deleting: boolean) =>
+    set(() => ({ bannerDeleting: deleting }), false, {
+      type: "setBannerDeleting",
     }),
 });
 
@@ -47,6 +62,7 @@ const reportStore = (set: Function) => ({
   report: undefined,
   reportsByState: undefined,
   submittedReportsByState: undefined,
+  lastSavedTime: undefined,
   // actions
   setReport: (newReport: ReportShape | undefined) =>
     set(() => ({ report: newReport }), false, { type: "setReport" }),
@@ -66,6 +82,10 @@ const reportStore = (set: Function) => ({
       false,
       { type: "setSubmittedReportsByState" }
     ),
+  setLastSavedTime: (savedTime: string | undefined) =>
+    set(() => ({ lastSavedTime: savedTime }), false, {
+      type: "setLastSavedTime",
+    }),
 });
 
 export const useStore = create(

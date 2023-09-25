@@ -19,11 +19,17 @@ export interface MfpUserState {
 export interface AdminBannerState {
   // INITIAL STATE
   bannerData: AdminBannerData | undefined;
-  isBannerActive: boolean;
+  bannerActive: boolean;
+  bannerLoading: boolean;
+  bannerErrorMessage: string;
+  bannerDeleting: boolean;
   // ACTIONS
-  setAdminBanner: (newBannerData: AdminBannerData | undefined) => void;
+  setBannerData: (newBannerData: AdminBannerData | undefined) => void;
   clearAdminBanner: () => void;
-  setIsBannerActive: (bannerStatus: boolean) => void;
+  setBannerActive: (bannerStatus: boolean) => void;
+  setBannerLoading: (bannerLoading: boolean) => void;
+  setBannerErrorMessage: (bannerErrorMessage: string) => void;
+  setBannerDeleting: (bannerDeleting: boolean) => void;
 }
 
 // initial report state
@@ -32,6 +38,7 @@ export interface MfpReportState {
   report: ReportShape | undefined;
   reportsByState: ReportMetadataShape[] | undefined;
   submittedReportsByState: ReportMetadataShape[] | undefined;
+  lastSavedTime: string | undefined;
   // ACTIONS
   setReport: (newReport: ReportShape | undefined) => void;
   setReportsByState: (
@@ -41,4 +48,5 @@ export interface MfpReportState {
   setSubmittedReportsByState: (
     newSubmittedReportsByState: ReportMetadataShape[] | undefined
   ) => void;
+  setLastSavedTime: (lastSavedTime: string | undefined) => void;
 }

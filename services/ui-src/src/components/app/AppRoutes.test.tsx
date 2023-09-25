@@ -6,7 +6,11 @@ import { createMemoryHistory } from "history";
 import { AppRoutes } from "components";
 // utils
 import { useStore, UserProvider } from "utils";
-import { mockStateUserStore, mockLDFlags } from "utils/testing/setupJest";
+import {
+  mockStateUserStore,
+  mockLDFlags,
+  mockBannerStore,
+} from "utils/testing/setupJest";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -25,7 +29,10 @@ let history: any;
 
 describe("Test AppRoutes 404 handling", () => {
   beforeEach(async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue({
+      ...mockStateUserStore,
+      ...mockBannerStore,
+    });
     history = createMemoryHistory();
     history.push("/obviously-fake-route");
     await act(async () => {

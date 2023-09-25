@@ -14,13 +14,12 @@ import {
   ReportPageIntro,
 } from "components";
 // assets
-import addIcon from "assets/icons/icon_add.png";
+import addIcon from "assets/icons/icon_add_white.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
 import { EntityCard } from "components/cards/EntityCard";
 import { getFormattedEntityData } from "utils/reports/entities";
 import { useStore } from "utils";
-// utils
 
 export const OverlayModalPage = ({ route }: Props) => {
   const { entityType, verbiage, modalForm } = route;
@@ -28,20 +27,12 @@ export const OverlayModalPage = ({ route }: Props) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-
   //display variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
 
-  ///TEMPORARY ENTITY//
-  let tempEntity: EntityShape = {
-    id: "mockid",
-    evaluationPlan_objectiveName: "{Objective Name}",
-    evaluationPlan_description: "Description here",
-    evaluationPlan_targets: "Targets here",
-    evaluationPlan_includesTargets: "No",
-    evaluationPlan_additionalDetails: "Additional details",
-  };
-  reportFieldDataEntities = [tempEntity, tempEntity];
+  const dashTitle = `${verbiage.dashboardTitle}${
+    verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
+  }`;
 
   // add/edit entity modal disclosure and methods
   const {
@@ -67,11 +58,8 @@ export const OverlayModalPage = ({ route }: Props) => {
     onClose: deleteEntityModalOnCloseHandler,
   } = useDisclosure();
 
-  const openDeleteEntityModal = () => {
-    setSelectedEntity({
-      id: "123",
-      name: "mock entity",
-    });
+  const openDeleteEntityModal = (entity?: EntityShape) => {
+    setSelectedEntity(entity);
     deleteEntityModalOnOpenHandler();
   };
 
@@ -83,14 +71,25 @@ export const OverlayModalPage = ({ route }: Props) => {
   return (
     <Box>
       {verbiage.intro && (
-        <ReportPageIntro text={verbiage.intro} accordion={verbiage.accordion} />
+        <ReportPageIntro
+          sx={sx.intro}
+          text={verbiage.intro}
+          accordion={verbiage.accordion}
+        />
       )}
       <Box>
+        <Button
+          sx={sx.addEntityButton}
+          onClick={addEditEntityModalOnOpenHandler}
+          leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+        >
+          {verbiage.addEntityButtonText}
+        </Button>
         <Heading as="h3" sx={sx.dashboardTitle}>
-          {verbiage.dashboardTitle}
+          {dashTitle}
         </Heading>
         <Box>
-          {reportFieldDataEntities.map(
+          {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (
               <EntityCard
                 key={entity.id}
@@ -104,13 +103,15 @@ export const OverlayModalPage = ({ route }: Props) => {
               />
             )
           )}
-          <Button
-            sx={sx.addEntityButton}
-            onClick={addEditEntityModalOnOpenHandler}
-            leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-          >
-            {verbiage.addEntityButtonText}
-          </Button>
+          {reportFieldDataEntities.length > 1 && (
+            <Button
+              sx={sx.addEntityButton}
+              onClick={addEditEntityModalOnOpenHandler}
+              leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+            >
+              {verbiage.addEntityButtonText}
+            </Button>
+          )}
         </Box>
         <hr />
         {/* MODALS */}
@@ -125,6 +126,7 @@ export const OverlayModalPage = ({ route }: Props) => {
           }}
         />
         <DeleteEntityModal
+          entityType={entityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           modalDisclosure={{
@@ -150,6 +152,9 @@ interface Props {
 }
 
 const sx = {
+  intro: {
+    color: "palette.gray_medium",
+  },
   buttonIcons: {
     height: "1rem",
   },

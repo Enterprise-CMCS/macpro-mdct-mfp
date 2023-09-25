@@ -40,6 +40,7 @@ export const mockReportKeys = {
 export const mockReportFieldData = {
   text: "text-input",
   "mock-number-field": 0,
+  entityType: [{ name: "entity-name", entityType_one: "hello" }],
 };
 
 export const mockWPReport = {
@@ -110,4 +111,6 @@ export const mockReportMethods = {
   setReportSelection: jest.fn(),
   isReportPage: true,
   contextIsLoaded: true,
+  errorMessage: "",
+  lastSavedTime: "1:58 PM",
 };

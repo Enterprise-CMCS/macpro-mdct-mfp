@@ -264,7 +264,7 @@ export const ModalOverlayReportPage = ({
           />
 
           <DeleteEntityModal
-            // entityType={entityType}
+            entityType={entityType}
             selectedEntity={currentEntity}
             verbiage={verbiage}
             modalDisclosure={{

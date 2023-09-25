@@ -176,10 +176,16 @@ export const mockAdminUserStore: MfpUserState = {
 
 export const mockBannerStore: AdminBannerState = {
   bannerData: mockBannerData,
-  isBannerActive: false,
-  setAdminBanner: () => {},
+  bannerActive: false,
+  bannerLoading: false,
+  bannerErrorMessage: "",
+  bannerDeleting: false,
+  setBannerData: () => {},
   clearAdminBanner: () => {},
-  setIsBannerActive: () => {},
+  setBannerActive: () => {},
+  setBannerLoading: () => {},
+  setBannerErrorMessage: () => {},
+  setBannerDeleting: () => {},
 };
 
 // REPORT STATES / STORE
@@ -188,10 +194,12 @@ export const mockReportStore: MfpReportState = {
   report: mockWPFullReport as ReportShape,
   reportsByState: [mockWPFullReport],
   submittedReportsByState: [mockWPFullReport],
+  lastSavedTime: "1:58 PM",
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
   setSubmittedReportsByState: () => {},
+  setLastSavedTime: () => {},
 };
 
 // BOUND STORE
