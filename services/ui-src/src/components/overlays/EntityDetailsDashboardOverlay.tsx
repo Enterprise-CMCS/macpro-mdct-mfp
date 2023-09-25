@@ -49,8 +49,8 @@ export const EntityDetailsDashboardOverlay = ({
         {dashboard?.fields.map((entity: EntityShape) => (
           <EntityRow
             key={entity.id}
-            entity={entity.verbiage}
-            entityInfo={["name", "hint"]}
+            entity={entity}
+            entityInfo={["entityName", "hint"]}
             verbiage={entity.verbiage}
             locked={false}
             openDrawer={() => {

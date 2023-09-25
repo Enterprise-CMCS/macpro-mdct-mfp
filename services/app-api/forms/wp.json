@@ -771,194 +771,36 @@
                 ]
               },
               "closeDashboardButtonText": "Close Initiative"
-            }
-          }
-        },
-        {
-          "name": "State & Territory Specific Initiatives: I. Define initiative",
-          "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
-          "pageType": "entityOverlay",
-          "verbiage": {
-            "intro": {
-              "section": "State and Territory-Specific Initiatives: I. Define initiative",
-              "subsection": "{Person-centered Planning}",
-              "info": [
-                {
-                  "type": "html",
-                  "content": "Provide initiative description, including target populations and timeframe."
-                }
-              ],
-              "exportSectionHeader": "exportSectionHeader"
-            }
-          },
-          "form": {
-            "id": "stsidi",
+            },
             "fields": [
               {
-                "id": "stateTerritory_defineInitiative",
-                "type": "textarea",
-                "validation": "text",
-                "props": {
-                  "label": "Describe the initiative, including key activties:"
-                }
-              },
-              {
-                "id": "stateTerritory_targetPopulations",
-                "type": "checkbox",
-                "validation": "checkbox",
-                "props": {
-                  "label": "Target Population(s):",
-                  "hint": "Select all that apply. Population you've added as 'Other' in the Transition Benchmarks section will appear here.",
-                  "choices": [
-                    {
-                      "id": "2iuXO7C6nk6cuP9JXbdd2w",
-                      "label": "Older adults"
-                    },
-                    {
-                      "id": "vmlIjQAe9kyz4FbtxBZINA",
-                      "label": "Individuals with physical disabilities (PD)"
-                    },
-                    {
-                      "id": "Vg8erh64Tk2nKd5olVwM9w",
-                      "label": "Individuals with intellectual and developmental disabilities (MH/SUD)"
-                    },
-                    {
-                      "id": "azz5rhd8V0GK27fIXaYSmw",
-                      "label": "Other: {HIV/AIDS}"
-                    },
-                    {
-                      "id": "OLmKdPAEI0WnbSV1sVccVw",
-                      "label": "Other third-party vendor"
-                    },
-                    {
-                      "id": "Gxk89QOgQkmMTaNHH9WznQ",
-                      "label": "Other, specify",
-                      "children": [
-                        {
-                          "id": "stateTerritory_targetPopulations-otherText",
-                          "type": "textarea",
-                          "validation": {
-                            "type": "text",
-                            "nested": true,
-                            "parentFieldName": "stateTerritory_targetPopulations"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              },
-              {
-                "id": "stateTerritory_projectedStartDate",
-                "type": "date",
-                "validation": "date",
-                "props": {
-                  "label": "Start Date",
-                  "hint": "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in the process."
-                }
-              },
-              {
-                "id": "stateTerritory_projectedEndDate",
-                "type": "date",
-                "validation": "date",
-                "props": {
-                  "label": "End Date",
-                  "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
-                }
-              }
-            ]
-          }
-        },
-        {
-          "name": "State and Territory Specific Initiatives: II. Evaluation Plan",
-          "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
-          "pageType": "overlayModal",
-          "entityType": "evaluationPlan",
-          "verbiage": {
-            "intro": {
-              "section": "State and Territory Specific Initiatives: II. Evaluation Plan",
-              "subsection": "{Person-centered Planning}",
-              "info": [
-                {
-                  "type": "html",
-                  "content": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system."
-                }
-              ],
-              "exportSectionHeader": "exportSectionHeader"
-            },
-            "accordion": {
-              "buttonLabel": "Instructions",
-              "intro": [
-                {
-                  "type": "html",
-                  "content": "The evaluation plan captures expected results for each state or territory-specific initiative. Recipients should identify one or more objectives per initiative and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. In addition, recipients must articulate how they will achieve targets and meet milestones. For more information on developing objectives and identifying appropriate performance measures, see "
+                "name": "State & Territory Specific Initiatives: I. Define initiative",
+                "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
+                "pageType": "entityOverlay",
+                "entityType": "initiatives",
+                "entityInfo": ["entityName", "hint"],
+                "isRequired": true,
+                "verbiage": {
+                  "entityName": "I. Define initiative",
+                  "hint": "Provide initiative description, including target populations and timeframe",
+                  "intro": {
+                    "section": "State and Territory-Specific Initiatives: I. Define initiative",
+                    "subsection": "{Person-centered Planning}",
+                    "info": [
+                      {
+                        "type": "html",
+                        "content": "Provide initiative description, including target populations and timeframe."
+                      }
+                    ],
+                    "exportSectionHeader": "exportSectionHeader"
+                  },
+                  "enterEntityDetailsButtonText": "Edit"
                 },
-                {
-                  "type": "externalLink",
-                  "content": "“Using Data to Improve Money Follows the Person Program Performance.“",
-                  "props": {
-                    "href": "https://www.medicaid.gov/sites/default/files/2023-01/MFP-Technical-Assistance-Brief.pdf",
-                    "target": "_blank",
-                    "ariaLabel": "Link opens in new tab"
-                  }
-                }
-              ]
-            },
-            "text": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
-            "addEntityButtonText": "Add objective +",
-            "editEntityButtonText": "Edit objective",
-            "addEditModalAddTitle": "Add objective for {Person-centered Planning}",
-            "addEditModalHint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones.",
-            "addEditModalEditTitle": "Edit objective",
-            "deleteModalTitle": "Delete objective for this report?",
-            "deleteModalConfirmButtonText": "Yes, delete objective",
-            "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
-            "enterEntityDetailsButtonText": "Edit",
-            "dashboardTitle": "Objective total count",
-            "countEntitiesInTitle": true,
-            "deleteEntityButtonAltText": "",
-            "entityUnfinishedMessage": "",
-            "drawerTitle": ""
-          },
-          "modalForm": {
-            "id": "tb-modal",
-            "fields": [
-              {
-                "id": "evaluationPlan_objectiveName",
-                "type": "textarea",
-                "validation": "text",
-                "props": {
-                  "label": "Objective"
-                }
-              },
-              {
-                "id": "evaluationPlan_description",
-                "type": "textarea",
-                "validation": "text",
-                "props": {
-                  "label": "Describe the performance of measures or indicators your state or territory will use to monitor progress toward achieving this objective, including details on the calculation of measures if relevant. Please describe any key deliverables.",
-                  "hint": "(e.g., data sources and limitations)"
-                }
-              },
-              {
-                "id": "evaluationPlan_targets",
-                "type": "textarea",
-                "validation": "text",
-                "props": {
-                  "label": "Provide targets for the performance measures or indicators listed above. Please include milestones and expected time frames or key deliverables.",
-                  "hint": "If a performance measure includes quantitative targets, complete the quarterly fields below."
-                }
-              },
-              {
-                "id": "evaluationPlan_includesTargets",
-                "type": "radio",
-                "validation": "radio",
-                "props": {
-                  "label": "Does the performance measure include quantitative targets?",
-                  "hint": "Note: If 'Yes', fields use calendar year quarters.",
-                  "choices": [
+                "form": {
+                  "id": "stsidi",
+                  "fields": [
                     {
-                      "id": "2Ukwki4yJ8wNPqz7KnvgNoTATkO",
+                      "id": "stateTerritory_defineInitiative",
                       "type": "textarea",
                       "validation": "text",
                       "props": {
@@ -966,7 +808,7 @@
                       }
                     },
                     {
-                      "id": "target_population",
+                      "id": "stateTerritory_targetPopulations",
                       "type": "checkbox",
                       "validation": "checkbox",
                       "props": {
@@ -998,12 +840,12 @@
                             "label": "Other, specify",
                             "children": [
                               {
-                                "id": "state_encounterDataValidationEntity-otherText",
+                                "id": "stateTerritory_targetPopulations-otherText",
                                 "type": "textarea",
                                 "validation": {
                                   "type": "text",
                                   "nested": true,
-                                  "parentFieldName": "state_encounterDataValidationEntity"
+                                  "parentFieldName": "stateTerritory_targetPopulations"
                                 }
                               }
                             ]
@@ -1012,7 +854,7 @@
                       }
                     },
                     {
-                      "id": "2UkpVV0mypx5RnlS9UsflndyQDY",
+                      "id": "stateTerritory_projectedStartDate",
                       "type": "date",
                       "validation": "date",
                       "props": {
@@ -1021,7 +863,7 @@
                       }
                     },
                     {
-                      "id": "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+                      "id": "stateTerritory_projectedEndDate",
                       "type": "date",
                       "validation": "date",
                       "props": {
@@ -1037,15 +879,17 @@
                 "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
                 "pageType": "overlayModal",
                 "entityType": "evaluationPlan",
+                "entityInfo": ["entityName", "hint"],
+                "isRequired": true,
                 "verbiage": {
-                  "name": "II. Evaluation Plan",
+                  "entityName": "II. Evaluation Plan",
                   "hint": "Add evaluation plan, including measurable objectives",
                   "intro": {
                     "section": "State and Territory Specific Initiatives: II. Evaluation Plan",
                     "subsection": "{Person-centered Planning}",
                     "info": [
                       {
-                        "type": "span",
+                        "type": "html",
                         "content": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system."
                       }
                     ],
@@ -1055,7 +899,7 @@
                     "buttonLabel": "Instructions",
                     "intro": [
                       {
-                        "type": "span",
+                        "type": "html",
                         "content": "The evaluation plan captures expected results for each state or territory-specific initiative. Recipients should identify one or more objectives per initiative and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. In addition, recipients must articulate how they will achieve targets and meet milestones. For more information on developing objectives and identifying appropriate performance measures, see "
                       },
                       {
@@ -1066,23 +910,12 @@
                           "target": "_blank",
                           "ariaLabel": "Link opens in new tab"
                         }
-                      },
-                      {
-                        "type": "html",
-                        "content": "<br><br><p><strong>Please identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:</p>"
                       }
-                    ],
-                    "list": [
-                      "<strong>Specific:</strong> Specifies the activities, actors, and beneficiaries",
-                      "<strong>Measurable:</strong> Defines how a change will be measured",
-                      "<strong>Achievable:</strong> Confirms the feasibility of implementing the intervention as planned",
-                      "<strong>Realistic/relevant:</strong> Ensures the intervention relates to the goal",
-                      "<strong>Time-bound:</strong> Specifies when the results are expected"
-                    ],
-                    "text": ""
+                    ]
                   },
                   "text": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
                   "addEntityButtonText": "Add objective +",
+                  "editEntityButtonText": "Edit objective",
                   "addEditModalAddTitle": "Add objective for {Person-centered Planning}",
                   "addEditModalHint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones.",
                   "addEditModalEditTitle": "Edit objective",
@@ -1090,11 +923,11 @@
                   "deleteModalConfirmButtonText": "Yes, delete objective",
                   "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
                   "enterEntityDetailsButtonText": "Edit",
-                  "dashboardTitle": "Objective total count: 2",
+                  "dashboardTitle": "Objective total count",
+                  "countEntitiesInTitle": true,
                   "deleteEntityButtonAltText": "",
                   "entityUnfinishedMessage": "",
-                  "drawerTitle": "",
-                  "isRequired": true
+                  "drawerTitle": ""
                 },
                 "modalForm": {
                   "id": "tb-modal",
@@ -1128,207 +961,359 @@
                     {
                       "id": "evaluationPlan_includesTargets",
                       "type": "radio",
-                      "validation": {
-                        "type": "radio",
-                        "nested": true,
-                        "parentFieldName": "evaluationPlan_targets",
-                        "parentOptionId": "745yghr57654rth"
-                      },
+                      "validation": "radio",
                       "props": {
                         "label": "Does the performance measure include quantitative targets?",
                         "hint": "Note: If 'Yes', fields use calendar year quarters.",
                         "choices": [
                           {
-                            "id": "UL4dAeyyvCFAXttxZioacR",
-                            "label": "No"
+                            "id": "2Ukwki4yJ8wNPqz7KnvgNoTATkO",
+                            "type": "textarea",
+                            "validation": "text",
+                            "props": {
+                              "label": "Describe the initiative, including key activties:"
+                            }
                           },
                           {
-                            "id": "7FP4jcg4jK7Ssqp3cCW5vQ",
-                            "label": "Yes",
-                            "children": [
-                              {
-                                "id": "evaluationPlan_includesTargets2024Q1",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
+                            "id": "target_population",
+                            "type": "checkbox",
+                            "validation": "checkbox",
+                            "props": {
+                              "label": "Target Population(s):",
+                              "hint": "Select all that apply. Population you've added as 'Other' in the Transition Benchmarks section will appear here.",
+                              "choices": [
+                                {
+                                  "id": "2iuXO7C6nk6cuP9JXbdd2w",
+                                  "label": "Older adults"
                                 },
-                                "props": {
-                                  "label": "2024 Q1"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2024Q2",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
+                                {
+                                  "id": "vmlIjQAe9kyz4FbtxBZINA",
+                                  "label": "Individuals with physical disabilities (PD)"
                                 },
-                                "props": {
-                                  "label": "2024 Q2"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2024Q3",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
+                                {
+                                  "id": "Vg8erh64Tk2nKd5olVwM9w",
+                                  "label": "Individuals with intellectual and developmental disabilities (MH/SUD)"
                                 },
-                                "props": {
-                                  "label": "2024 Q3"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2024Q4",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
+                                {
+                                  "id": "azz5rhd8V0GK27fIXaYSmw",
+                                  "label": "Other: {HIV/AIDS}"
                                 },
-                                "props": {
-                                  "label": "2024 Q4"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2025Q1",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
+                                {
+                                  "id": "OLmKdPAEI0WnbSV1sVccVw",
+                                  "label": "Other third-party vendor"
                                 },
-                                "props": {
-                                  "label": "2025 Q1"
+                                {
+                                  "id": "Gxk89QOgQkmMTaNHH9WznQ",
+                                  "label": "Other, specify",
+                                  "children": [
+                                    {
+                                      "id": "state_encounterDataValidationEntity-otherText",
+                                      "type": "textarea",
+                                      "validation": {
+                                        "type": "text",
+                                        "nested": true,
+                                        "parentFieldName": "state_encounterDataValidationEntity"
+                                      }
+                                    }
+                                  ]
                                 }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2025Q2",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
-                                },
-                                "props": {
-                                  "label": "2025 Q2"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2025Q3",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
-                                },
-                                "props": {
-                                  "label": "2025 Q3"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2025Q4",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
-                                },
-                                "props": {
-                                  "label": "2025 Q4"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2026Q1",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
-                                },
-                                "props": {
-                                  "label": "2026 Q1"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2026Q2",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
-                                },
-                                "props": {
-                                  "label": "2026 Q2"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2026Q3",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
-                                },
-                                "props": {
-                                  "label": "2026 Q3"
-                                }
-                              },
-                              {
-                                "id": "evaluationPlan_includesTargets2026Q4",
-                                "type": "number",
-                                "validation": {
-                                  "type": "number",
-                                  "parentFieldName": "evaluationPlan_includesTargets",
-                                  "nested": true
-                                },
-                                "props": {
-                                  "label": "2026 Q4"
-                                }
-                              }
-                            ]
+                              ]
+                            }
+                          },
+                          {
+                            "id": "2UkpVV0mypx5RnlS9UsflndyQDY",
+                            "type": "date",
+                            "validation": "date",
+                            "props": {
+                              "label": "Start Date",
+                              "hint": "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in the process."
+                            }
+                          },
+                          {
+                            "id": "2UkpXxLfnjAcf99ldXNdNMFJ0Df",
+                            "type": "date",
+                            "validation": "date",
+                            "props": {
+                              "label": "End Date",
+                              "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
+                            }
                           }
                         ]
                       }
                     },
                     {
-                      "id": "evaluationPlan_additionalDetails",
-                      "type": "textarea",
-                      "validation": "text",
-                      "props": {
-                        "label": "Provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description)."
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "id": "n4Xt9usQxPvfEIJkhYjH9d",
-                "type": "date",
-                "validation": "date",
-                "props": {
-                  "label": "Actual end date"
-                }
-              },
-              {
-                "id": "OydJGL8N885vtXqcU2FQE4",
-                "type": "checkbox",
-                "validation": "checkbox",
-                "props": {
-                  "label": "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, please indicate the status below:",
-                  "hint": "Select all that apply.",
-                  "choices": [
-                    {
-                      "id": "xqEUNPc8TB6nZwyapjl1om",
-                      "type": "date",
-                      "validation": "textOptional",
-                      "props": {
-                        "label": "Projected end date",
-                        "disabled": true
+                      "name": "State and Territory Specific Initiatives: II. Evaluation Plan",
+                      "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
+                      "pageType": "overlayModal",
+                      "entityType": "evaluationPlan",
+                      "entityInfo": ["entityName", "hint"],
+                      "isRequired": true,
+                      "verbiage": {
+                        "entityName": "II. Evaluation Plan",
+                        "hint": "Add evaluation plan, including measurable objectives",
+                        "intro": {
+                          "section": "State and Territory Specific Initiatives: II. Evaluation Plan",
+                          "subsection": "{Person-centered Planning}",
+                          "info": [
+                            {
+                              "type": "span",
+                              "content": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system."
+                            }
+                          ],
+                          "exportSectionHeader": "exportSectionHeader"
+                        },
+                        "accordion": {
+                          "buttonLabel": "Instructions",
+                          "intro": [
+                            {
+                              "type": "span",
+                              "content": "The evaluation plan captures expected results for each state or territory-specific initiative. Recipients should identify one or more objectives per initiative and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. In addition, recipients must articulate how they will achieve targets and meet milestones. For more information on developing objectives and identifying appropriate performance measures, see "
+                            },
+                            {
+                              "type": "externalLink",
+                              "content": "“Using Data to Improve Money Follows the Person Program Performance.“",
+                              "props": {
+                                "href": "https://www.medicaid.gov/sites/default/files/2023-01/MFP-Technical-Assistance-Brief.pdf",
+                                "target": "_blank",
+                                "ariaLabel": "Link opens in new tab"
+                              }
+                            },
+                            {
+                              "type": "html",
+                              "content": "<br><br><p><strong>Please identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:</p>"
+                            }
+                          ],
+                          "list": [
+                            "<strong>Specific:</strong> Specifies the activities, actors, and beneficiaries",
+                            "<strong>Measurable:</strong> Defines how a change will be measured",
+                            "<strong>Achievable:</strong> Confirms the feasibility of implementing the intervention as planned",
+                            "<strong>Realistic/relevant:</strong> Ensures the intervention relates to the goal",
+                            "<strong>Time-bound:</strong> Specifies when the results are expected"
+                          ],
+                          "text": ""
+                        },
+                        "text": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
+                        "addEntityButtonText": "Add objective +",
+                        "addEditModalAddTitle": "Add objective for {Person-centered Planning}",
+                        "addEditModalHint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones.",
+                        "addEditModalEditTitle": "Edit objective",
+                        "deleteModalTitle": "Delete objective for this report?",
+                        "deleteModalConfirmButtonText": "Yes, delete objective",
+                        "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
+                        "enterEntityDetailsButtonText": "Edit",
+                        "dashboardTitle": "Objective total count: 2",
+                        "deleteEntityButtonAltText": "",
+                        "entityUnfinishedMessage": "",
+                        "drawerTitle": ""
+                      },
+                      "modalForm": {
+                        "id": "tb-modal",
+                        "fields": [
+                          {
+                            "id": "evaluationPlan_objectiveName",
+                            "type": "textarea",
+                            "validation": "text",
+                            "props": {
+                              "label": "Objective"
+                            }
+                          },
+                          {
+                            "id": "evaluationPlan_description",
+                            "type": "textarea",
+                            "validation": "text",
+                            "props": {
+                              "label": "Describe the performance of measures or indicators your state or territory will use to monitor progress toward achieving this objective, including details on the calculation of measures if relevant. Please describe any key deliverables.",
+                              "hint": "(e.g., data sources and limitations)"
+                            }
+                          },
+                          {
+                            "id": "evaluationPlan_targets",
+                            "type": "textarea",
+                            "validation": "text",
+                            "props": {
+                              "label": "Provide targets for the performance measures or indicators listed above. Please include milestones and expected time frames or key deliverables.",
+                              "hint": "If a performance measure includes quantitative targets, complete the quarterly fields below."
+                            }
+                          },
+                          {
+                            "id": "evaluationPlan_includesTargets",
+                            "type": "radio",
+                            "validation": {
+                              "type": "radio",
+                              "nested": true,
+                              "parentFieldName": "evaluationPlan_targets",
+                              "parentOptionId": "745yghr57654rth"
+                            },
+                            "props": {
+                              "label": "Does the performance measure include quantitative targets?",
+                              "hint": "Note: If 'Yes', fields use calendar year quarters.",
+                              "choices": [
+                                {
+                                  "id": "UL4dAeyyvCFAXttxZioacR",
+                                  "label": "No"
+                                },
+                                {
+                                  "id": "7FP4jcg4jK7Ssqp3cCW5vQ",
+                                  "label": "Yes",
+                                  "children": [
+                                    {
+                                      "id": "evaluationPlan_includesTargets2024Q1",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2024 Q1"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2024Q2",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2024 Q2"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2024Q3",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2024 Q3"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2024Q4",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2024 Q4"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2025Q1",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2025 Q1"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2025Q2",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2025 Q2"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2025Q3",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2025 Q3"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2025Q4",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2025 Q4"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2026Q1",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2026 Q1"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2026Q2",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2026 Q2"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2026Q3",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2026 Q3"
+                                      }
+                                    },
+                                    {
+                                      "id": "evaluationPlan_includesTargets2026Q4",
+                                      "type": "number",
+                                      "validation": {
+                                        "type": "number",
+                                        "parentFieldName": "evaluationPlan_includesTargets",
+                                        "nested": true
+                                      },
+                                      "props": {
+                                        "label": "2026 Q4"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "id": "evaluationPlan_additionalDetails",
+                            "type": "textarea",
+                            "validation": "text",
+                            "props": {
+                              "label": "Provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description)."
+                            }
+                          }
+                        ]
                       }
                     },
                     {
@@ -1348,245 +1333,274 @@
                         "hint": "Select all that apply.",
                         "choices": [
                           {
-                            "id": "FhAF0lzeuB4wLalyXv2BeG",
-                            "label": "Completed initiative"
+                            "id": "xqEUNPc8TB6nZwyapjl1om",
+                            "type": "date",
+                            "validation": "textOptional",
+                            "props": {
+                              "label": "Projected end date",
+                              "disabled": true
+                            }
                           },
-
                           {
-                            "id": "GUcwKDPBs8K6LY4yT1hPGD",
-                            "label": "Discontinued initiative",
-                            "children": [
-                              {
-                                "id": "gtKe0Mx7QUojplAhV3T8rg",
-                                "props": {
-                                  "label": "Indicate reason for termination"
-                                },
-                                "type": "textarea",
-                                "validation": {
-                                  "type": "text",
-                                  "nested": true,
-                                  "parentFieldName": "GUcwKDPBs8K6LY4yT1hPGD"
-                                }
-                              }
-                            ]
+                            "id": "n4Xt9usQxPvfEIJkhYjH9d",
+                            "type": "date",
+                            "validation": "date",
+                            "props": {
+                              "label": "Actual end date"
+                            }
                           },
-
                           {
-                            "id": "86SG3qhFfsZ0CAu3G4SxM5",
-                            "label": "Sustaining initiative through a Medicaid authority",
-                            "children": [
-                              {
-                                "id": "xgRHcIPIG8b3LNB35tavx3",
-                                "props": {
-                                  "label": "Indicate alternative funding source"
+                            "id": "OydJGL8N885vtXqcU2FQE4",
+                            "type": "checkbox",
+                            "validation": "checkbox",
+                            "props": {
+                              "label": "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, please indicate the status below:",
+                              "hint": "Select all that apply.",
+                              "choices": [
+                                {
+                                  "id": "FhAF0lzeuB4wLalyXv2BeG",
+                                  "label": "Completed initiative"
                                 },
-                                "type": "textarea",
-                                "validation": {
-                                  "type": "text",
-                                  "nested": true,
-                                  "parentFieldName": "86SG3qhFfsZ0CAu3G4SxM5"
+
+                                {
+                                  "id": "GUcwKDPBs8K6LY4yT1hPGD",
+                                  "label": "Discontinued initiative",
+                                  "children": [
+                                    {
+                                      "id": "gtKe0Mx7QUojplAhV3T8rg",
+                                      "props": {
+                                        "label": "Indicate reason for termination"
+                                      },
+                                      "type": "textarea",
+                                      "validation": {
+                                        "type": "text",
+                                        "nested": true,
+                                        "parentFieldName": "GUcwKDPBs8K6LY4yT1hPGD"
+                                      }
+                                    }
+                                  ]
+                                },
+
+                                {
+                                  "id": "86SG3qhFfsZ0CAu3G4SxM5",
+                                  "label": "Sustaining initiative through a Medicaid authority",
+                                  "children": [
+                                    {
+                                      "id": "xgRHcIPIG8b3LNB35tavx3",
+                                      "props": {
+                                        "label": "Indicate alternative funding source"
+                                      },
+                                      "type": "textarea",
+                                      "validation": {
+                                        "type": "text",
+                                        "nested": true,
+                                        "parentFieldName": "86SG3qhFfsZ0CAu3G4SxM5"
+                                      }
+                                    }
+                                  ]
                                 }
-                              }
-                            ]
+                              ]
+                            }
                           }
                         ]
                       }
                     }
                   ]
                 }
-              }
-            ]
-          }
-        },
-        {
-          "name": "State and Territory-Specific Initiatives: III. Funding Sources",
-          "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
-          "pageType": "overlayModal",
-          "entityType": "fundingSources",
-          "verbiage": {
-            "intro": {
-              "section": "State and Territory-Specific Initiatives: III. Funding Sources",
-              "subsection": "{Person-centered Planning}",
-              "info": [
-                {
-                  "type": "html",
-                  "content": "<br>Add funding sources with projected quarterly expenditures.</br>"
-                },
-                {
-                  "type": "html",
-                  "content": "<br>Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).</br>"
-                }
-              ],
-              "exportSectionHeader": "exportSectionHeader"
-            },
-            "addEntityButtonText": "Add funding source",
-            "editEntityButtonText": "Edit funding source",
-            "addEditModalAddTitle": "Add funding source and projected expenditures",
-            "addEditModalEditTitle": "Edit funding source and projected expenditures",
-            "deleteEntityButtonAltText": "Delete other target population",
-            "deleteModalTitle": "Delete funding source for this report? ",
-            "deleteModalConfirmButtonText": "Yes, delete funding source",
-            "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports. <br><br>Are you sure you want to proceed?",
-            "tableHeader": "Initiative name <br/> Work Plan topic",
-            "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).",
-            "emptyDashboardText": "Empty",
-            "dashboardTitle": "Funding Sources",
-            "countEntitiesInTitle": true
-          },
-          "modalForm": {
-            "id": "tb-modal",
-            "fields": [
+              },
               {
-                "id": "initiative_wpTopic",
-                "type": "radio",
-                "validation": "radio",
-                "props": {
-                  "label": "Funding source:",
-                  "hint": "Enter a dollar amount using a $ or a percentage with %. Enter 0 for quarters with no projected expenditures. Enter N/A for quarters you do not expect to report.",
-                  "choices": [
+                "name": "State and Territory-Specific Initiatives: III. Funding Sources",
+                "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
+                "pageType": "overlayModal",
+                "entityType": "fundingSources",
+                "entityInfo": ["entityName", "hint"],
+                "isRequired": true,
+                "verbiage": {
+                  "entityName": "III. Funding sources",
+                  "hint": "Add funding sources with projected quarterly expenditures",
+                  "intro": {
+                    "section": "State and Territory-Specific Initiatives: III. Funding Sources",
+                    "subsection": "{Person-centered Planning}",
+                    "info": [
+                      {
+                        "type": "html",
+                        "content": "<br>Add funding sources with projected quarterly expenditures.</br>"
+                      },
+                      {
+                        "type": "html",
+                        "content": "<br>Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).</br>"
+                      }
+                    ],
+                    "exportSectionHeader": "exportSectionHeader"
+                  },
+                  "addEntityButtonText": "Add funding source",
+                  "editEntityButtonText": "Edit funding source",
+                  "addEditModalAddTitle": "Add funding source and projected expenditures",
+                  "addEditModalEditTitle": "Edit funding source and projected expenditures",
+                  "deleteEntityButtonAltText": "Delete other target population",
+                  "deleteModalTitle": "Delete funding source for this report? ",
+                  "deleteModalConfirmButtonText": "Yes, delete funding source",
+                  "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports. <br><br>Are you sure you want to proceed?",
+                  "tableHeader": "Initiative name <br/> Work Plan topic",
+                  "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).",
+                  "emptyDashboardText": "Empty",
+                  "dashboardTitle": "Funding Sources",
+                  "enterEntityDetailsButtonText": "Edit",
+                  "countEntitiesInTitle": true
+                },
+                "modalForm": {
+                  "id": "tb-modal",
+                  "fields": [
                     {
-                      "id": "2VLpZ9A92OivbZhKvY8pE4hB65c",
-                      "label": "State-equivalent funds"
-                    },
-                    {
-                      "id": "2VLpZ9A92OivbZhKvY8pE4",
-                      "label": "Capacity-building funds"
-                    },
-                    {
-                      "id": "2VLpZCNtbcjRPq3evd1NI6",
-                      "label": "Administrative cooperative agreement funding"
-                    },
-                    {
-                      "id": "2VLpZDJ9qaKKOk78ztBdiB",
-                      "label": "MFP funding for qualified HCBS"
-                    },
-                    {
-                      "id": "2VLpZCRWieGr1Z49QX5Aqc",
-                      "label": "MFP funding for demonstrated services"
-                    },
-                    {
-                      "id": "2VLq8ASzZNfxbu520if449",
-                      "label": "MFP funding for supplemental services"
-                    },
-                    {
-                      "id": "2VLq8ASzZNfxbu520if449",
-                      "label": "Other, specify",
-                      "children": [
-                        {
-                          "id": "initiative_wp_otherTopic",
-                          "type": "textarea",
-                          "validation": {
-                            "type": "text",
-                            "nested": true,
-                            "parentFieldName": "initiative_wpTopic"
+                      "id": "initiative_wpTopic",
+                      "type": "radio",
+                      "validation": "radio",
+                      "props": {
+                        "label": "Funding source:",
+                        "hint": "Enter a dollar amount using a $ or a percentage with %. Enter 0 for quarters with no projected expenditures. Enter N/A for quarters you do not expect to report.",
+                        "choices": [
+                          {
+                            "id": "2VLpZ9A92OivbZhKvY8pE4hB65c",
+                            "label": "State-equivalent funds"
+                          },
+                          {
+                            "id": "2VLpZ9A92OivbZhKvY8pE4",
+                            "label": "Capacity-building funds"
+                          },
+                          {
+                            "id": "2VLpZCNtbcjRPq3evd1NI6",
+                            "label": "Administrative cooperative agreement funding"
+                          },
+                          {
+                            "id": "2VLpZDJ9qaKKOk78ztBdiB",
+                            "label": "MFP funding for qualified HCBS"
+                          },
+                          {
+                            "id": "2VLpZCRWieGr1Z49QX5Aqc",
+                            "label": "MFP funding for demonstrated services"
+                          },
+                          {
+                            "id": "2VLq8ASzZNfxbu520if449",
+                            "label": "MFP funding for supplemental services"
+                          },
+                          {
+                            "id": "2VLq8ASzZNfxbu520if449",
+                            "label": "Other, specify",
+                            "children": [
+                              {
+                                "id": "initiative_wp_otherTopic",
+                                "type": "textarea",
+                                "validation": {
+                                  "type": "text",
+                                  "nested": true,
+                                  "parentFieldName": "initiative_wpTopic"
+                                }
+                              }
+                            ]
                           }
-                        }
-                      ]
+                        ]
+                      }
+                    },
+                    {
+                      "id": "2VLqDuo2xxhCWuYuQdZTGmEnuYv",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2023 Q3"
+                      }
+                    },
+                    {
+                      "id": "2VLqDwTI4NOFvqwCx1wEDziIRfo",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2023 Q4"
+                      }
+                    },
+                    {
+                      "id": "2VLqDwKKHtZ8L26tMsKJEr",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2024 Q1"
+                      }
+                    },
+                    {
+                      "id": "2VLqDwwngaHbp4JPQgdWL",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2024 Q2"
+                      }
+                    },
+                    {
+                      "id": "2VLqDrcjB6oL5utYbFEodI",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2024 Q3"
+                      }
+                    },
+                    {
+                      "id": "2VLqDr6ETYFzHYaaBINTZc",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2024 Q4"
+                      }
+                    },
+                    {
+                      "id": "2VLqMGSPi3EGY8DoLNvmlf",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2025 Q1"
+                      }
+                    },
+                    {
+                      "id": "2VLqMJwh8LTB4jKD79F9PJ",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2025 Q2"
+                      }
+                    },
+                    {
+                      "id": "2VLqMIXqkLGt8uNDA6cz5g",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2025 Q3"
+                      }
+                    },
+                    {
+                      "id": "2VLsgN53FvEa4pRcNkh39BviXAY",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2025 Q4"
+                      }
+                    },
+                    {
+                      "id": "2VLqMFqSgRnEcVsURzmPey",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2026 Q1"
+                      }
+                    },
+                    {
+                      "id": "2VLqRfMwDodksiBxXrWKpL",
+                      "type": "number",
+                      "validation": "number",
+                      "props": {
+                        "label": "2026 Q2"
+                      }
                     }
                   ]
                 }
-              },
-              {
-                "id": "2VLqDuo2xxhCWuYuQdZTGmEnuYv",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2023 Q3"
-                }
-              },
-              {
-                "id": "2VLqDwTI4NOFvqwCx1wEDziIRfo",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2023 Q4"
-                }
-              },
-              {
-                "id": "2VLqDwKKHtZ8L26tMsKJEr",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2024 Q1"
-                }
-              },
-              {
-                "id": "2VLqDwwngaHbp4JPQgdWL",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2024 Q2"
-                }
-              },
-              {
-                "id": "2VLqDrcjB6oL5utYbFEodI",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2024 Q3"
-                }
-              },
-              {
-                "id": "2VLqDr6ETYFzHYaaBINTZc",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2024 Q4"
-                }
-              },
-              {
-                "id": "2VLqMGSPi3EGY8DoLNvmlf",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2025 Q1"
-                }
-              },
-              {
-                "id": "2VLqMJwh8LTB4jKD79F9PJ",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2025 Q2"
-                }
-              },
-              {
-                "id": "2VLqMIXqkLGt8uNDA6cz5g",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2025 Q3"
-                }
-              },
-              {
-                "id": "2VLsgN53FvEa4pRcNkh39BviXAY",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2025 Q4"
-                }
-              },
-              {
-                "id": "2VLqMFqSgRnEcVsURzmPey",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2026 Q1"
-                }
-              },
-              {
-                "id": "2VLqRfMwDodksiBxXrWKpL",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "2026 Q2"
-                }
               }
             ]
-          },
-          "overlayForm": {
-            "id": "abc",
-            "fields": []
           }
         }
       ]

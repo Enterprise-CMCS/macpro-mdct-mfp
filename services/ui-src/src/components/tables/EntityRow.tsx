@@ -33,10 +33,10 @@ export const EntityRow = ({
   if (entityInfo) {
     programInfo = (entityInfo as string[]).flatMap((info) => {
       //if the data is in an array, like a radio button values, get each as text
-      if (typeof entity[info] === "object") {
+      if (typeof entity.verbiage[info] === "object") {
         return (entity[info] as any[]).map((arr) => arr.value);
       }
-      return entity[info];
+      return entity.verbiage[info];
     });
   }
 
@@ -128,7 +128,7 @@ const sx = {
         "&:first-of-type": {
           fontWeight: "bold",
           fontSize: "md",
-          marginBottom: "0.25rem"
+          marginBottom: "0.25rem",
         },
       },
     },
