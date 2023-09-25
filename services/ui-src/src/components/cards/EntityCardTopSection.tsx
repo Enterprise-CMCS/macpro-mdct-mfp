@@ -27,7 +27,7 @@ export const EntityCardTopSection = ({
           <Text sx={sx.description}>
             {formattedEntityData?.includesTargets}
           </Text>
-          {formattedEntityData.quarters && (
+          {formattedEntityData.quarters.length > 0 && (
             <>
               <Text sx={sx.subtitle}>Quantitative Targets</Text>
               <Grid sx={sx.grid}>
