@@ -14,6 +14,16 @@ import { PRODUCTION_HOST_DOMAIN } from "../../constants";
 import { MFPUser, UserContextShape, UserRoles } from "types/users";
 
 export const UserContext = createContext<UserContextShape>({
+  user: {
+    userRole: UserRoles.STATE_USER,
+    email: "stateuser@test.com",
+    given_name: "Thelonious",
+    family_name: "States",
+    full_name: "Thelonious States",
+    state: "MN",
+    userIsStateUser: true,
+    userIsEndUser: true,
+  },
   logout: async () => {},
   loginWithIDM: () => {},
   updateTimeout: () => {},

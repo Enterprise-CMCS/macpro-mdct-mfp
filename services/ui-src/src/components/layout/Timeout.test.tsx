@@ -17,7 +17,12 @@ const mockLoginWithIDM = jest.fn();
 const mockUpdateTimeout = jest.fn();
 const mockGetExpiration = jest.fn();
 
+const mockUser = {
+  ...mockStateUserStore,
+};
+
 const mockUserContext = {
+  user: null,
   logout: mockLogout,
   loginWithIDM: mockLoginWithIDM,
   updateTimeout: mockUpdateTimeout,
@@ -31,10 +36,6 @@ const timeoutComponent = (
     </UserContext.Provider>
   </RouterWrappedComponent>
 );
-
-const mockUser = {
-  ...mockStateUserStore,
-};
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;

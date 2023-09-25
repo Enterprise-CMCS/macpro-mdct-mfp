@@ -14,6 +14,7 @@ export interface MFPUser {
   family_name: string;
   full_name: string;
   state?: string;
+  userReports?: string[] | undefined;
   userRole?: string;
   userIsAdmin?: boolean;
   userIsReadOnly?: boolean;
@@ -25,8 +26,10 @@ export interface MFPUser {
 }
 
 export interface UserContextShape {
+  user: MFPUser | null | undefined;
+  getExpiration: Function;
   logout: () => Promise<void>;
   loginWithIDM: () => void;
+  showLocalLogins?: boolean;
   updateTimeout: () => void;
-  getExpiration: Function;
 }

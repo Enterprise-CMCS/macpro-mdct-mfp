@@ -80,6 +80,7 @@ jest.mock("aws-amplify", () => ({
 // USER CONTEXT
 
 export const mockUserContext: UserContextShape = {
+  user: null,
   logout: async () => {},
   loginWithIDM: () => {},
   updateTimeout: async () => {},

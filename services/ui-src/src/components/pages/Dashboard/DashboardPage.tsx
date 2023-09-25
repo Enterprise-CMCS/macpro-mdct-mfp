@@ -194,9 +194,9 @@ export const DashboardPage = ({ reportType }: Props) => {
         {reportType === "WP" && (
           <InstructionsAccordion
             verbiage={
-              userIsStateUser
-                ? accordion.WP.stateUserDashboard
-                : accordion.WP.adminDashboard
+              userIsAdmin
+                ? accordion.WP.adminDashboard
+                : accordion.WP.stateUserDashboard
             }
           />
         )}
