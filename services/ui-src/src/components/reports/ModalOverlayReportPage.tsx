@@ -192,6 +192,7 @@ export const ModalOverlayReportPage = ({
       {dashboard && isEntityDetailsOpen && currentEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
+            closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             entityType={entityType as EntityType}
             dashboard={dashboard}
             selectedEntity={currentEntity}

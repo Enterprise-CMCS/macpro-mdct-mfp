@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { MouseEventHandler, useContext, useEffect } from "react";
 // components
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import { ReportPageIntro, Table, EntityRow } from "components";
@@ -14,6 +14,7 @@ import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import { EntityContext } from "components/reports/EntityProvider";
 
 export const EntityDetailsDashboardOverlay = ({
+  closeEntityDetailsOverlay,
   entityType,
   dashboard,
   selectedEntity,
@@ -37,7 +38,7 @@ export const EntityDetailsDashboardOverlay = ({
       <Button
         sx={sx.backButton}
         variant="none"
-        onClick={() => window.location.reload()}
+        onClick={closeEntityDetailsOverlay as MouseEventHandler}
         aria-label="Return to all initiatives"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
@@ -68,8 +69,7 @@ export const EntityDetailsDashboardOverlay = ({
         <Flex sx={sx.buttonFlex}>
           <Button
             variant="outline"
-            // TODO: think of a better solution for this
-            onClick={() => window.location.reload()}
+            onClick={closeEntityDetailsOverlay as MouseEventHandler}
           >
             Return
           </Button>
@@ -80,6 +80,7 @@ export const EntityDetailsDashboardOverlay = ({
 };
 
 interface Props {
+  closeEntityDetailsOverlay?: Function;
   entityType?: EntityType;
   dashboard?: FormJson;
   selectedEntity?: EntityShape;
