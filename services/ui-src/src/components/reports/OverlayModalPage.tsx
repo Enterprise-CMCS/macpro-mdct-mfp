@@ -27,7 +27,6 @@ export const OverlayModalPage = ({ route }: Props) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-
   //display variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
 
@@ -90,7 +89,7 @@ export const OverlayModalPage = ({ route }: Props) => {
           {dashTitle}
         </Heading>
         <Box>
-          {reportFieldDataEntities.map(
+          {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (
               <EntityCard
                 key={entity.id}
@@ -104,13 +103,15 @@ export const OverlayModalPage = ({ route }: Props) => {
               />
             )
           )}
-          <Button
-            sx={sx.addEntityButton}
-            onClick={addEditEntityModalOnOpenHandler}
-            leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-          >
-            {verbiage.addEntityButtonText}
-          </Button>
+          {reportFieldDataEntities.length > 1 && (
+            <Button
+              sx={sx.addEntityButton}
+              onClick={addEditEntityModalOnOpenHandler}
+              leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+            >
+              {verbiage.addEntityButtonText}
+            </Button>
+          )}
         </Box>
         <hr />
         {/* MODALS */}
