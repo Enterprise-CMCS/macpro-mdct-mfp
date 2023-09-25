@@ -14,7 +14,7 @@ import {
   ReportPageIntro,
 } from "components";
 // assets
-import addIcon from "assets/icons/icon_add.png";
+import addIcon from "assets/icons/icon_add_white.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
 import { EntityCard } from "components/cards/EntityCard";
@@ -94,7 +94,9 @@ export const OverlayModalPage = ({ route }: Props) => {
           <Button
             sx={sx.addEntityButton}
             onClick={addEditEntityModalOnOpenHandler}
-            leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+            rightIcon={
+              <Image sx={sx.buttonIcons} src={addIcon} alt="Add Objective" />
+            }
           >
             {verbiage.addEntityButtonText}
           </Button>
