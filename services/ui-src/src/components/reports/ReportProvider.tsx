@@ -20,7 +20,7 @@ import { reportErrors } from "verbiage/errors";
 // CONTEXT DECLARATION
 
 export const ReportContext = createContext<ReportContextShape>({
-  // context
+  // context 
   contextIsLoaded: false as boolean,
   // report
   createReport: Function,
@@ -36,6 +36,7 @@ export const ReportContext = createContext<ReportContextShape>({
   // selected reports by state
   clearReportsByState: Function,
   releaseReport: Function,
+  // other
   isReportPage: false as boolean,
   errorMessage: undefined as string | undefined,
 });
