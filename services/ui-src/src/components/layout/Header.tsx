@@ -1,16 +1,31 @@
+import { useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
 // components
 import { UsaBanner } from "@cmsgov/design-system";
-import { Box, Container, Flex, Image, Link } from "@chakra-ui/react";
-import { Menu, MenuOption } from "components";
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Image,
+  Link,
+  Text,
+} from "@chakra-ui/react";
+import { Menu, MenuOption, ReportContext } from "components";
 // utils
-import { useBreakpoint } from "utils";
+import { useBreakpoint, useStore } from "utils";
 // assets
 import appLogo from "assets/logos/logo_mdct_mfp.png";
 import getHelpIcon from "assets/icons/icon_help.png";
+import checkIcon from "assets/icons/icon_check_gray.png";
+import closeIcon from "assets/icons/icon_cancel_x_circle.png";
 
 export const Header = ({ handleLogout }: Props) => {
   const { isMobile } = useBreakpoint();
+  const { report } = useStore() ?? {};
+  const { lastSavedTime, isReportPage } = useContext(ReportContext);
+
+  const saveStatusText = "Last saved " + lastSavedTime;
 
   return (
     <Box sx={sx.root} id="header">
@@ -29,7 +44,6 @@ export const Header = ({ handleLogout }: Props) => {
                 to="/help"
                 variant="unstyled"
                 aria-label="Get Help"
-                data-testid="header-help-button"
               >
                 <MenuOption
                   icon={getHelpIcon}
@@ -44,6 +58,44 @@ export const Header = ({ handleLogout }: Props) => {
           </Flex>
         </Container>
       </Flex>
+      {isReportPage && (
+        <Flex sx={sx.subnavBar}>
+          <Container sx={sx.subnavContainer}>
+            <Flex sx={sx.subnavFlex}>
+              <Flex>
+                <Text sx={sx.submissionNameText}>
+                  Submission: {report?.submissionName}
+                </Text>
+              </Flex>
+              <Flex sx={sx.subnavFlexRight}>
+                {lastSavedTime && (
+                  <>
+                    <Image
+                      src={checkIcon}
+                      alt="gray checkmark icon"
+                      sx={sx.checkIcon}
+                    />
+                    <Text sx={sx.saveStatusText}>{saveStatusText}</Text>
+                  </>
+                )}
+                <Link
+                  as={RouterLink}
+                  to={report?.formTemplate.basePath || "/"}
+                  sx={sx.leaveFormLink}
+                  variant="unstyled"
+                  tabIndex={-1}
+                >
+                  {!isMobile ? (
+                    <Button variant="outline">Leave form</Button>
+                  ) : (
+                    <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
+                  )}
+                </Link>
+              </Flex>
+            </Flex>
+          </Container>
+        </Flex>
+      )}
     </Box>
   );
 };
@@ -91,7 +143,7 @@ const sx = {
   },
   appLogo: {
     maxWidth: "200px",
-    marginTop: "0.1rem",
+    marginTop: "0.5rem",
   },
   subnavBar: {
     bg: "palette.secondary_lightest",
