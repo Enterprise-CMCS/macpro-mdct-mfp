@@ -1148,33 +1148,6 @@
                 }
               },
               {
-                "name": "State & Territory-Specific Initiatives: III. Funding sources",
-                "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
-                "pageType": "entityOverlay",
-                "entityType": "",
-                "verbiage": {
-                  "name": "III. Funding sources",
-                  "hint": "Add funding sources with projected quarterly expenditures",
-                  "intro": {
-                    "section": "State & Territory-Specific Initiatives: III. Funding sources",
-                    "subsection": "{Initiative name}",
-                    "hint": "Add funding sources with projected quarterly expenditures.",
-                    "info": [
-                      {
-                        "type": "span",
-                        "content": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient's Semi-Annual Report (SAR)."
-                      }
-                    ]
-                  },
-                  "enterEntityDetailsButtonText": "Edit",
-                  "isRequired": true,
-                  "modalForm": {
-                    "id": "stsi-fs-modal",
-                    "fields": []
-                  }
-                }
-              },
-              {
                 "name": "State & Territory-Specific Initiatives: IV. Close-out information",
                 "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
                 "pageType": "entityOverlay",
