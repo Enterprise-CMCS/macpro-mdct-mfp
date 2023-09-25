@@ -5,11 +5,7 @@ import {
   ReportShape,
   ReportRoute,
 } from "types";
-import {
-  calculateCurrentQuarter,
-  calculateCurrentYear,
-  incrementQuarterAndYear,
-} from "utils/other/time";
+import { nextTwelveQuartersKeys } from "utils";
 
 export const sortReportsOldestToNewest = (
   reportsArray: ReportShape[]
@@ -35,13 +31,14 @@ export const flattenReportRoutesArray = (
   return routesArray;
 };
 
-export const twelveQuarters = (repeatingField: any, validationSchema: any) => {
-  let quarter = calculateCurrentQuarter();
-  let year = calculateCurrentYear();
-  for (var i = 0; i < 12; i++) {
-    validationSchema[`${repeatingField.id}${year}Q${quarter}`] =
-      repeatingField.validation.type;
-    [quarter, year] = incrementQuarterAndYear(quarter, year);
+export const twelveQuartersValidation = (
+  repeatingField: any,
+  validationSchema: any
+) => {
+  var keys = nextTwelveQuartersKeys(repeatingField.id);
+  for (let key of keys) {
+    validationSchema[`${key[0]}${key[1]}Q${key[2]}`] =
+      repeatingField.validation;
   }
   return validationSchema;
 };
@@ -51,7 +48,7 @@ export const createRepeatingValidationSchema = (
   validationSchema: any
 ) => {
   const repeatingNamingSchema: AnyObject = {
-    nextTwelveQuarters: twelveQuarters,
+    nextTwelveQuarters: twelveQuartersValidation,
   };
   const repeatingNameRule =
     repeatingNamingSchema[repeatingField.props.repeating?.rule];
