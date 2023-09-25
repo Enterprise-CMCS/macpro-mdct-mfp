@@ -9,6 +9,7 @@ import {
   formFieldFactory,
   getAutosaveFields,
   labelTextWithOptional,
+  nextTwelveQuartersKeys,
   parseCustomHtml,
   useStore,
 } from "utils";
@@ -138,8 +139,17 @@ export const ChoiceListField = ({
               break;
             default:
               child.props = { ...child.props, clear: true };
-              form.setValue(child.id, "");
-              form.unregister(child.id);
+              if (child.props?.repeating) {
+                child.props = { ...child.props, repeatingHydration: [] };
+                const keys = nextTwelveQuartersKeys(child.id);
+                for (let key of keys) {
+                  form.setValue(`${key[0]}${key[1]}Q${key[2]}`, "");
+                  form.unregister(`${key[0]}${key[1]}Q${key[2]}`);
+                }
+              } else {
+                form.setValue(child.id, "");
+                form.unregister(child.id);
+              }
               break;
           }
         });
