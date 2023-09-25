@@ -62,6 +62,7 @@ const reportStore = (set: Function) => ({
   report: undefined,
   reportsByState: undefined,
   submittedReportsByState: undefined,
+  lastSavedTime: undefined,
   // actions
   setReport: (newReport: ReportShape | undefined) =>
     set(() => ({ report: newReport }), false, { type: "setReport" }),
@@ -81,6 +82,10 @@ const reportStore = (set: Function) => ({
       false,
       { type: "setSubmittedReportsByState" }
     ),
+  setLastSavedTime: (savedTime: string | undefined) =>
+    set(() => ({ lastSavedTime: savedTime }), false, {
+      type: "setLastSavedTime",
+    }),
 });
 
 export const useStore = create(

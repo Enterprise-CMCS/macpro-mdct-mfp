@@ -1,19 +1,31 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 // utils
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import {
+  mockReportMethods,
+  mockUseStore,
+  RouterWrappedComponent,
+} from "utils/testing/setupJest";
 //components
-import { Header } from "components";
+import { Header, ReportContext } from "components";
+import { useStore } from "utils";
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const headerComponent = (
   <RouterWrappedComponent>
-    <Header handleLogout={() => {}} />
+    <ReportContext.Provider value={mockReportMethods}>
+      <Header handleLogout={() => {}} />
+    </ReportContext.Provider>
   </RouterWrappedComponent>
 );
 
 const reportComponent = (
   <RouterWrappedComponent>
-    <Header handleLogout={() => {}} />
+    <ReportContext.Provider value={mockReportMethods}>
+      <Header handleLogout={() => {}} />
+    </ReportContext.Provider>
   </RouterWrappedComponent>
 );
 
@@ -23,7 +35,7 @@ const reportComponent = (
  * }));
  */
 
-describe.skip("Test Header", () => {
+describe("Test Header", () => {
   beforeEach(() => {
     render(headerComponent);
   });
@@ -38,28 +50,30 @@ describe.skip("Test Header", () => {
   });
 
   test("Help button is visible", () => {
-    expect(screen.getByTestId("header-help-button")).toBeVisible();
+    expect(screen.getByAltText("Help")).toBeVisible();
   });
 
   test("Menu button is visible", () => {
-    expect(screen.getByTestId("header-menu-dropdown-button")).toBeVisible();
+    expect(screen.getByAltText("Arrow down")).toBeVisible();
+  });
+});
+
+describe("Report Context", () => {
+  test("Report Data is visible", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(reportComponent);
+    expect(screen.getByText("Submission: 2023 - Alabama 1")).toBeVisible();
+    expect(screen.getByText("Last saved 1:58 PM")).toBeVisible();
   });
 
   test("Subnav is visible on report screens; navigates to dashboard", async () => {
-    const leaveFormButton = screen.getByTestId("leave-form-button");
-    expect(leaveFormButton).toBeVisible();
-  });
-});
-
-describe.skip("Report Context", () => {
-  test("Report Data is visible", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
     render(reportComponent);
-    expect(screen.getByText("Program: testProgram")).toBeVisible();
-    expect(screen.getByText("Last saved 1:58 PM")).toBeVisible();
+    expect(screen.getByText("Leave form")).toBeVisible();
   });
 });
 
-describe.skip("Test Header accessibility", () => {
+describe("Test Header accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
     const { container } = render(headerComponent);
     const results = await axe(container);

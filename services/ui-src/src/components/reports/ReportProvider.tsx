@@ -38,12 +38,10 @@ export const ReportContext = createContext<ReportContextShape>({
   releaseReport: Function,
   isReportPage: false as boolean,
   errorMessage: undefined as string | undefined,
-  lastSavedTime: undefined as string | undefined,
 });
 
 export const ReportProvider = ({ children }: Props) => {
   const { pathname } = useLocation();
-  const [lastSavedTime, setLastSavedTime] = useState<string>();
   const [error, setError] = useState<string>();
   const [contextIsLoaded, setContextIsLoaded] = useState<boolean>(false);
   const [isReportPage, setIsReportPage] = useState<boolean>(false);
@@ -57,6 +55,8 @@ export const ReportProvider = ({ children }: Props) => {
     setReportsByState,
     clearReportsByState,
     setSubmittedReportsByState,
+    lastSavedTime,
+    setLastSavedTime,
   } = useStore();
 
   const { state: userState } = useStore().user ?? {};
