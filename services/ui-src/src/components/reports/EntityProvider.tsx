@@ -19,14 +19,8 @@ export const EntityContext = createContext<EntityContextShape>({
  * @param children - React nodes
  */
 export const EntityProvider = ({ children }: EntityProviderProps) => {
-
-    // state management
-    const {
-      entityId,
-      entityType,
-      entities,
-      selectedEntity,
-    } = useStore();
+  // state management
+  const { entityId, entityType, entities, selectedEntity } = useStore();
 
   /**
    * updateEntities updates the user's selected entity with their changes, and
