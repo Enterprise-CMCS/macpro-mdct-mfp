@@ -57,8 +57,9 @@ export const getRepeatedField = (
       var quarters = [];
       for (let key of keys) {
         const entityKey = `${key[0]}${key[1]}Q${key[2]}`;
+        const entityValue = entity?.[entityKey];
         const displayKey = `${key[1]} Q${key[2]}`;
-        quarters.push({ id: displayKey, value: entity?.[entityKey] });
+        if (entityValue) quarters.push({ id: displayKey, value: entityValue });
       }
       return quarters;
     default:
