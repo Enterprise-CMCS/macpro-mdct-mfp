@@ -40,7 +40,7 @@ export const twelveQuarters = (repeatingField: any, validationSchema: any) => {
   let year = calculateCurrentYear();
   for (var i = 0; i < 12; i++) {
     validationSchema[`${repeatingField.id}${year}Q${quarter}`] =
-      repeatingField.validation;
+      repeatingField.validation.type;
     [quarter, year] = incrementQuarterAndYear(quarter, year);
   }
   return validationSchema;
