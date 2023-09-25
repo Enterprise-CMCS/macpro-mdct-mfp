@@ -1,4 +1,5 @@
 import { EntityShape, OverlayModalEntityTypes, AnyObject } from "types";
+import { nextTwelveQuartersKeys } from "utils";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
   return entity?.[label]?.[0].value;
@@ -26,7 +27,11 @@ export const getFormattedEntityData = (
           entity,
           "evaluationPlan_includesTargets"
         ),
-        quarters: entity?.evaluationPlan_quarters,
+        quarters: getRepeatedField(
+          "twelveQuarters",
+          "evaluationPlan_includesTargetQuarters",
+          entity
+        ),
         additionalDetails: entity?.evaluationPlan_additionalDetails,
       };
     case OverlayModalEntityTypes.FUNDING_SOURCES:
@@ -40,3 +45,23 @@ export const entityWasUpdated = (
   originalEntity: EntityShape,
   newEntity: AnyObject
 ) => JSON.stringify(originalEntity) !== JSON.stringify(newEntity);
+
+export const getRepeatedField = (
+  rule: string,
+  fieldName: string,
+  entity: EntityShape | undefined
+) => {
+  switch (rule) {
+    case "twelveQuarters":
+      var keys = nextTwelveQuartersKeys(fieldName);
+      var quarters = [];
+      for (let key of keys) {
+        const entityKey = `${key[0]}${key[1]}Q${key[2]}`;
+        const displayKey = `${key[1]} Q${key[2]}`;
+        quarters.push({ id: displayKey, value: entity?.[entityKey] });
+      }
+      return quarters;
+    default:
+      return null;
+  }
+};
