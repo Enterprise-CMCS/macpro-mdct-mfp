@@ -1,5 +1,5 @@
 // components
-import { Heading, Text } from "@chakra-ui/react";
+import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
 // utils
 import { AnyObject, OverlayModalEntityTypes } from "types";
 
@@ -35,7 +35,26 @@ export const EntityCardTopSection = ({
         </>
       );
     case OverlayModalEntityTypes.FUNDING_SOURCES:
-      return <></>;
+      return (
+        <>
+          <Heading as="h3" sx={sx.heading}>
+            {formattedEntityData.objectiveName}
+          </Heading>
+          <Text sx={sx.subtitle}>Projected quarterly expenditures</Text>
+          <Grid sx={sx.grid}>
+            {formattedEntityData?.quarters.map((quarter: any) => {
+              return (
+                <GridItem>
+                  <Flex sx={sx.gridItems}>
+                    <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
+                    <Text sx={sx.subtext}>{quarter.value}</Text>
+                  </Flex>
+                </GridItem>
+              );
+            })}
+          </Grid>
+        </>
+      );
     default:
       return <Text>{entityType}</Text>;
   }
@@ -56,8 +75,16 @@ const sx = {
     fontSize: "sm",
   },
   grid: {
-    gridTemplateColumns: "33% auto",
-    columnGap: "1rem",
+    gridTemplateColumns: "repeat(3,minmax(0px,1fr))",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    display: "grid",
+  },
+  gridSubtitle: {
+    fontWeight: "bold",
+    fontSize: "sm",
+    marginRight: ".25rem",
   },
   subtitle: {
     marginTop: "1rem",
@@ -67,5 +94,12 @@ const sx = {
   subtext: {
     marginTop: "0.25rem",
     fontSize: "sm",
+  },
+  gridItems: {
+    alignItems: "end",
+    flexWrap: "wrap",
+    ".subtitle": {
+      marginRight: ".5rem",
+    },
   },
 };

@@ -22,7 +22,12 @@ export const getFormattedEntityData = (
         additionalDetails: entity?.evaluationPlan_additionalDetails,
       };
     case OverlayModalEntityTypes.FUNDING_SOURCES:
-      return {};
+      return {
+        objectiveName: entity?.objectiveName,
+        id: entity?.id,
+        report_initiative: entity?.report_initiative,
+        quarters: entity?.quarters,
+      };
     default:
       return {};
   }
