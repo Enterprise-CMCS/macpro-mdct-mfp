@@ -30,11 +30,11 @@ export const EntityRow = ({
   }, [report]);
 
   let programInfo = [];
-  if (entityInfo) {
+  if (entity && entityInfo) {
     programInfo = (entityInfo as string[]).flatMap((info) => {
       //if the data is in an array, like a radio button values, get each as text
-      if (typeof entity.verbiage[info] === "object") {
-        return (entity[info] as any[]).map((arr) => arr.value);
+      if (typeof entity?.verbiage[info] === "object") {
+        return (entity.verbiage[info] as any[]).map((arr) => arr.value);
       }
       return entity.verbiage[info];
     });

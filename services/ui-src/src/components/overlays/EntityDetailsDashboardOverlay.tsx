@@ -21,6 +21,7 @@ export const EntityDetailsDashboardOverlay = ({
 }: Props) => {
   // Entity Provider Setup
   const { setSelectedEntity, setEntityType } = useContext(EntityContext);
+
   useEffect(() => {
     setSelectedEntity(selectedEntity);
     setEntityType(entityType);
@@ -28,6 +29,11 @@ export const EntityDetailsDashboardOverlay = ({
       setSelectedEntity(undefined);
     };
   }, [entityType, selectedEntity]);
+
+  // Open/Close overlay action methods
+  const openEntityDetailsOverlay = (entity: EntityShape) => {
+    // console.log("test", entity);
+  };
 
   const tableHeaders = () => {
     return { headRow: ["", "", ""] };
@@ -50,12 +56,10 @@ export const EntityDetailsDashboardOverlay = ({
           <EntityRow
             key={entity.id}
             entity={entity}
-            entityInfo={["entityName", "hint"]}
+            // entityInfo={entityInfo}
             verbiage={entity.verbiage}
             locked={false}
-            openDrawer={() => {
-              return;
-            }}
+            openDrawer={openEntityDetailsOverlay}
             openAddEditEntityModal={() => {
               return;
             }}
