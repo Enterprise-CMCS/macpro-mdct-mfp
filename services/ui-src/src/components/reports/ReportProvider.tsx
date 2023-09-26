@@ -36,6 +36,7 @@ export const ReportContext = createContext<ReportContextShape>({
   // selected reports by state
   clearReportsByState: Function,
   releaseReport: Function,
+  // other
   isReportPage: false as boolean,
   errorMessage: undefined as string | undefined,
 });
