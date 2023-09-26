@@ -14,7 +14,6 @@ export interface MFPUser {
   family_name: string;
   full_name: string;
   state?: string;
-  userReports?: string[] | undefined;
   userRole?: string;
   userIsAdmin?: boolean;
   userIsReadOnly?: boolean;

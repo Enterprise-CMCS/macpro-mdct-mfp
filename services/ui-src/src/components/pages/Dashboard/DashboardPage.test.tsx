@@ -50,12 +50,13 @@ const dashboardViewWithReports = (
 );
 
 describe("Test Report Dashboard view (with reports, desktop view)", () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     mockedUseUser.mockReturnValue(mockStateUser);
     mockUseBreakpoint.mockReturnValue({
       isMobile: false,
     });
     mockMakeMediaQueryClasses.mockReturnValue("desktop");
+    mockedUseStore.mockReturnValue(mockReportStore);
   });
 
   afterEach(() => {
@@ -64,7 +65,6 @@ describe("Test Report Dashboard view (with reports, desktop view)", () => {
 
   test("Check that WP Dashboard view renders", async () => {
     await act(async () => {
-      mockedUseStore.mockReturnValue(mockReportStore);
       await render(dashboardViewWithReports);
     });
     expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
