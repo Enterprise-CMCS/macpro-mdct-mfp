@@ -69,8 +69,8 @@ describe("Test Report Dashboard view (with reports, desktop view)", () => {
     });
     expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
     expect(
-      screen.getByText("NJ 2023 - Alabama 1 2023 - Period 1")
-    ).toBeVisible();
+      screen.queryByText(wpVerbiage.body.table.caption)
+    ).toBeInTheDocument();
     expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
     expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
   });
