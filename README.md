@@ -36,7 +36,7 @@ Before starting the project we're going to install some tools. We recommend havi
 
 1. Clone the repo: `git clone https://github.com/Enterprise-CMCS/macpro-mdct-mfp.git`
 2. In the root directory copy the .env_example file and name it .env
-3. In the services/ui-src directory copy the .env_example file and name it .env. Within the file, remove the comment `#pragma allowlist secret` from the file
+3. In the services/ui-src directory copy the .env_example file and name it .env. NOTE: Remove the comment `#pragma allowlist secret` from the file
 4. In the root directory run `pre-commit install`
 
 ### Running the project locally
