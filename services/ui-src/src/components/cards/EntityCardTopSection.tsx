@@ -24,7 +24,10 @@ export const EntityCardTopSection = ({
           <Text sx={sx.subtitle}>
             Does the performance measure include quantitative targets?
           </Text>
-          <Text sx={sx.description}>{formattedEntityData.includesTargets}</Text>
+          <Text sx={sx.description}>
+            {formattedEntityData?.includesTargets}
+          </Text>
+          {console.log(formattedEntityData?.quarters, "quarters")}
           <Text sx={sx.subtitle}>
             Additional detail on strategies/approaches the state or territory
             will use to achieve targets and/ or meet milestones

@@ -1,9 +1,12 @@
 import { EntityShape, OverlayModalEntityTypes, AnyObject } from "types";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
-  return entity?.[label].value;
+  return entity?.[label]?.[0].value;
 };
 
+const getQuarterValues = (entity: EntityShape | undefined, value: string) => {
+  return entity?.[value];
+};
 export const getFormattedEntityData = (
   entityType: string,
   entity?: EntityShape
@@ -14,11 +17,11 @@ export const getFormattedEntityData = (
         objectiveName: entity?.evaluationPlan_objectiveName,
         description: entity?.evaluationPlan_description,
         targets: entity?.evaluationPlan_targets,
-        // TODO: add this functionality after guidance from BOs (per Design)
         includesTargets: getRadioValue(
           entity,
           "evaluationPlan_includesTargets"
         ),
+        quarters: getQuarterValues(entity, "quarterlyProjections2023Q3"),
         additionalDetails: entity?.evaluationPlan_additionalDetails,
       };
     case OverlayModalEntityTypes.FUNDING_SOURCES:

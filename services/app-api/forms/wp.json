@@ -907,7 +907,7 @@
               "text": ""
             },
             "text": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
-            "addEntityButtonText": "Add objective +",
+            "addEntityButtonText": "Add objective",
             "editEntityButtonText": "Edit objective",
             "addEditModalAddTitle": "Add objective for {Person-centered Planning}",
             "addEditModalHint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones.",
