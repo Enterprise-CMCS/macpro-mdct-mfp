@@ -1,4 +1,4 @@
-import { MouseEventHandler, useContext, useEffect } from "react";
+import { MouseEventHandler, useEffect } from "react";
 // components
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import { ReportPageIntro, Table, EntityRow } from "components";
@@ -11,7 +11,8 @@ import {
 } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
-import { EntityContext } from "components/reports/EntityProvider";
+// verbiage
+import { useStore } from "utils";
 
 export const EntityDetailsDashboardOverlay = ({
   closeEntityDetailsOverlay,
@@ -20,12 +21,13 @@ export const EntityDetailsDashboardOverlay = ({
   selectedEntity,
 }: Props) => {
   // Entity Provider Setup
-  const { setSelectedEntity, setEntityType } = useContext(EntityContext);
+  const { clearEntities, setSelectedEntity, setEntityType } = useStore();
 
   useEffect(() => {
     setSelectedEntity(selectedEntity);
     setEntityType(entityType);
     return () => {
+      clearEntities();
       setSelectedEntity(undefined);
     };
   }, [entityType, selectedEntity]);

@@ -18,10 +18,9 @@ import { EntityContext } from "components/reports/EntityProvider";
 
 export const DynamicField = ({ name, label, ...props }: Props) => {
   const { full_name, state } = useStore().user ?? {};
-  const { report } = useStore();
+  const { report, entities, entityType, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
-  const { entities, entityType, updateEntities, selectedEntity } =
-    useContext(EntityContext);
+  const { updateEntities } = useContext(EntityContext);
   const [displayValues, setDisplayValues] = useState<EntityShape[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<EntityShape | undefined>(
     undefined

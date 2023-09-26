@@ -9,6 +9,9 @@ import {
   ReportShape,
   MfpReportState,
   ReportMetadataShape,
+  EntityType,
+  EntityShape,
+  MfpEntityState,
 } from "types";
 
 // USER STORE
@@ -88,14 +91,41 @@ const reportStore = (set: Function) => ({
     }),
 });
 
+// ENTITY STORE
+const entityStore = (set: Function) => ({
+  // initial state
+  entityId: undefined,
+  entityType: undefined,
+  entities: [],
+  selectedEntity: undefined,
+  // actions
+  setEntityType: (newEntityType: EntityType | undefined) =>
+    set(() => ({ entityType: newEntityType }), false, {
+      type: "setEntityType",
+    }),
+  setEntities: (newEntities: EntityShape[] | undefined) =>
+    set(() => ({ entities: newEntities }), false, {
+      type: "setEntities",
+    }),
+  clearEntities: () =>
+    set(() => ({ entities: [] }), false, { type: "clearEntities" }),
+  setSelectedEntity: (newSelectedEntity: EntityShape | undefined) =>
+    set(() => ({ selectedEntity: newSelectedEntity }), false, {
+      type: "setSelectedEntity",
+    }),
+});
+
 export const useStore = create(
   // persist and devtools are being used for debugging state
   persist(
-    devtools<MfpUserState & AdminBannerState & MfpReportState>((set) => ({
-      ...userStore(set),
-      ...bannerStore(set),
-      ...reportStore(set),
-    })),
+    devtools<MfpUserState & AdminBannerState & MfpReportState & MfpEntityState>(
+      (set) => ({
+        ...userStore(set),
+        ...bannerStore(set),
+        ...reportStore(set),
+        ...entityStore(set),
+      })
+    ),
     {
       name: "mfp-store",
     }
