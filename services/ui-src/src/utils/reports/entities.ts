@@ -23,7 +23,7 @@ export const getFormattedEntityData = (
       };
     case OverlayModalEntityTypes.FUNDING_SOURCES:
       return {
-        objectiveName: entity?.objectiveName,
+        objectiveName: "{Funding Source}",
         id: entity?.id,
         report_initiative: entity?.report_initiative,
         quarters: entity?.quarters,
