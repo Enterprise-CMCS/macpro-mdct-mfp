@@ -30,11 +30,6 @@ export const EntityDetailsDashboardOverlay = ({
     };
   }, [entityType, selectedEntity]);
 
-  // Open/Close overlay action methods
-  const openEntityDetailsOverlay = (entity: EntityShape) => {
-    // console.log("test", entity);
-  };
-
   const tableHeaders = () => {
     return { headRow: ["", "", ""] };
   };
@@ -50,32 +45,36 @@ export const EntityDetailsDashboardOverlay = ({
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
         Return to all initiatives
       </Button>
-      <ReportPageIntro text={dashboard?.verbiage?.intro} />
+      <ReportPageIntro
+        text={dashboard?.verbiage?.intro}
+        initiativeName={selectedEntity?.initiative_name}
+      />
       <Table content={tableHeaders()}>
         {dashboard?.fields.map((entity: EntityShape) => (
-          <EntityRow
-            key={entity.id}
-            entity={entity}
-            // entityInfo={entityInfo}
-            verbiage={entity.verbiage}
-            locked={false}
-            openDrawer={openEntityDetailsOverlay}
-            openAddEditEntityModal={() => {
-              return;
-            }}
-            openDeleteEntityModal={() => {
-              return;
-            }}
-          />
+          <>
+            <EntityRow
+              key={entity.id}
+              entity={entity}
+              entityInfo={entity.entityInfo}
+              verbiage={entity.verbiage}
+              locked={false}
+              openDrawer={() => {
+                return;
+              }}
+              openAddEditEntityModal={() => {
+                return;
+              }}
+              openDeleteEntityModal={() => {
+                return;
+              }}
+            />
+          </>
         ))}
       </Table>
       <Box>
         <Flex sx={sx.buttonFlex}>
-          <Button
-            variant="outline"
-            onClick={closeEntityDetailsOverlay as MouseEventHandler}
-          >
-            Return
+          <Button onClick={closeEntityDetailsOverlay as MouseEventHandler}>
+            Return to all initiatives
           </Button>
         </Flex>
       </Box>

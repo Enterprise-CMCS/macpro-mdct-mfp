@@ -222,10 +222,7 @@ export const ModalOverlayReportPage = ({
               {dashTitle}
             </Heading>
             {reportFieldDataEntities.length === 0 ? (
-              <>
-                <Box sx={sx.tableSeparator} />
-                <Box sx={sx.emptyDashboard}>{verbiage.emptyDashboardText}</Box>
-              </>
+              <Box>{verbiage.emptyDashboardText}</Box>
             ) : (
               <Table sx={sx.table} content={tableHeaders()}>
                 {reportFieldDataEntities.map((entity: EntityShape) => (
@@ -300,15 +297,6 @@ const sx = {
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
-  },
-  emptyDashboard: {
-    paddingTop: "1rem",
-  },
-  tableSeparator: {
-    borderTop: "1px solid",
-    borderColor: "palette.gray_light",
-    paddingBottom: "1rem",
-    marginTop: "1.25rem",
   },
   table: {
     tableLayout: "fixed",

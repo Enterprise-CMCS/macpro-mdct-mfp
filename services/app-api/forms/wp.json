@@ -648,18 +648,17 @@
               "exportSectionHeader": "exportSectionHeader"
             },
             "addEntityButtonText": "Add Initiative",
-            "editEntityButtonText": "Edit name",
+            "editEntityButtonText": "Edit name/topic",
             "addEditModalAddTitle": "Add initiative",
             "addEditModalEditTitle": "Edit initiative",
             "deleteModalTitle": "Are you sure you want to delete this initiative?",
             "deleteModalConfirmButtonText": "Yes, delete initiative",
             "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
             "enterEntityDetailsButtonText": "Edit",
-            "dashboardTitle": "Initiative total count",
+            "dashboardTitle": "Initiative total count:",
             "countEntitiesInTitle": true,
             "tableHeader": "Initiative name <br/> Work Plan topic",
-            "addEditModalHint": "Provide the name of one initiative. You will be then be asked to complete details for this initiative including description, evaluation plan and funding sources.",
-            "emptyDashboardText": "Empty"
+            "addEditModalHint": "Provide the name of one initiative. You will be then be asked to complete details for this initiative including description, evaluation plan and funding sources."
           },
           "modalForm": {
             "id": "add_initiative",
@@ -762,7 +761,6 @@
             "verbiage": {
               "intro": {
                 "section": "State and Territory-Specific Initiatives Dashboard",
-                "subsection": "{initiative name here}",
                 "info": [
                   {
                     "type": "span",
@@ -779,10 +777,10 @@
                 "pageType": "entityOverlay",
                 "entityType": "initiatives",
                 "entityInfo": ["entityName", "hint"],
+                "entityName": "I. Define initiative",
+                "hint": "Provide initiative description, including target populations and timeframe",
                 "isRequired": true,
                 "verbiage": {
-                  "entityName": "I. Define initiative",
-                  "hint": "Provide initiative description, including target populations and timeframe",
                   "intro": {
                     "section": "State and Territory-Specific Initiatives: I. Define initiative",
                     "subsection": "{Person-centered Planning}",
@@ -880,10 +878,10 @@
                 "pageType": "overlayModal",
                 "entityType": "evaluationPlan",
                 "entityInfo": ["entityName", "hint"],
+                "entityName": "II. Evaluation Plan",
+                "hint": "Add evaluation plan, including measurable objectives",
                 "isRequired": true,
                 "verbiage": {
-                  "entityName": "II. Evaluation Plan",
-                  "hint": "Add evaluation plan, including measurable objectives",
                   "intro": {
                     "section": "State and Territory Specific Initiatives: II. Evaluation Plan",
                     "subsection": "{Person-centered Planning}",
@@ -1047,10 +1045,10 @@
                       "pageType": "overlayModal",
                       "entityType": "evaluationPlan",
                       "entityInfo": ["entityName", "hint"],
+                      "entityName": "II. Evaluation Plan",
+                      "hint": "Add evaluation plan, including measurable objectives",
                       "isRequired": true,
                       "verbiage": {
-                        "entityName": "II. Evaluation Plan",
-                        "hint": "Add evaluation plan, including measurable objectives",
                         "intro": {
                           "section": "State and Territory Specific Initiatives: II. Evaluation Plan",
                           "subsection": "{Person-centered Planning}",
@@ -1414,10 +1412,10 @@
                 "pageType": "overlayModal",
                 "entityType": "fundingSources",
                 "entityInfo": ["entityName", "hint"],
+                "entityName": "III. Funding sources",
+                "hint": "Add funding sources with projected quarterly expenditures",
                 "isRequired": true,
                 "verbiage": {
-                  "entityName": "III. Funding sources",
-                  "hint": "Add funding sources with projected quarterly expenditures",
                   "intro": {
                     "section": "State and Territory-Specific Initiatives: III. Funding Sources",
                     "subsection": "{Person-centered Planning}",
