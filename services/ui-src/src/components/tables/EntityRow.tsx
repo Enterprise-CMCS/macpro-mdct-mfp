@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
 import { EntityStatusIcon } from "components";
@@ -8,7 +9,6 @@ import { AnyObject, EntityShape } from "types";
 import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
-import { useMemo } from "react";
 
 export const EntityRow = ({
   entity,

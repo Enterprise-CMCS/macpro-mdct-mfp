@@ -20,7 +20,7 @@ export const EntityDetailsDashboardOverlay = ({
   dashboard,
   selectedEntity,
 }: Props) => {
-  // Entity Provider Setup
+  // Entity provider setup
   const { clearEntities, setSelectedEntity, setEntityType } = useStore();
 
   useEffect(() => {
@@ -31,6 +31,10 @@ export const EntityDetailsDashboardOverlay = ({
       setSelectedEntity(undefined);
     };
   }, [entityType, selectedEntity]);
+
+  const openDrawer = () => {
+    return;
+  };
 
   const tableHeaders = () => {
     return { headRow: ["", "", ""] };
@@ -52,25 +56,21 @@ export const EntityDetailsDashboardOverlay = ({
         initiativeName={selectedEntity?.initiative_name}
       />
       <Table content={tableHeaders()}>
-        {dashboard?.fields.map((entity: EntityShape) => (
-          <>
-            <EntityRow
-              key={entity.id}
-              entity={entity}
-              entityInfo={entity.entityInfo}
-              verbiage={entity.verbiage}
-              locked={false}
-              openDrawer={() => {
-                return;
-              }}
-              openAddEditEntityModal={() => {
-                return;
-              }}
-              openDeleteEntityModal={() => {
-                return;
-              }}
-            />
-          </>
+        {dashboard?.forms!.map((entity: EntityShape) => (
+          <EntityRow
+            key={entity.id}
+            entity={entity}
+            entityInfo={entity.entityInfo}
+            verbiage={entity.verbiage}
+            locked={false}
+            openDrawer={() => openDrawer}
+            openAddEditEntityModal={() => {
+              return;
+            }}
+            openDeleteEntityModal={() => {
+              return;
+            }}
+          />
         ))}
       </Table>
       <Box>
