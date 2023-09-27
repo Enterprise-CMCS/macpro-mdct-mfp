@@ -1492,7 +1492,7 @@
         "enterEntityDetailsButtonText": "Edit",
         "dashboardTitle": "Report progress for each initiative",
         "dashboardSubtitle": "Initiatives and Work Plan topics are auto-populated from your most recent approved Work Plan.",
-        "tableHeader": "Initaitve name <br/> Work Plan topic",
+        "tableHeader": "Initiative name <br/> Work Plan topic",
         "emptyDashboardText": "Empty"
       },
       "modalForm": {
