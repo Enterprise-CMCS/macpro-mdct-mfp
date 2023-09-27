@@ -64,7 +64,6 @@ export const AppRoutes = () => {
               )}
             </>
           )}
-          )
           <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
         </Routes>
       </AdminBannerProvider>
