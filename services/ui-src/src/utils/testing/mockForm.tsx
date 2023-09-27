@@ -157,6 +157,18 @@ export const mockVerbiageIntro = {
   enterReportText: "Enter Details",
 };
 
+export const mockOverlayModalVerbiageIntro = {
+  section: "mock section",
+  subsection: "mock subsection",
+  info: [
+    {
+      type: "html",
+      content: "mock html",
+    },
+  ],
+  exportSectionHeader: "exportSectionHeader",
+};
+
 export const mockStandardReportPageJson = {
   name: "mock-route-1",
   path: "/mock/mock-route-1",
@@ -171,7 +183,7 @@ export const mockDrawerReportPageJson = {
   name: "mock-route-2a",
   path: "/mock/mock-route-2a",
   pageType: "drawer",
-  entityType: "plans",
+  entityType: "entityType",
   verbiage: {
     intro: mockVerbiageIntro,
     dashboardTitle: "Mock dashboard title",
@@ -187,7 +199,6 @@ export const mockModalDrawerReportPageVerbiage = {
   editEntityButtonText: "Mock edit entity button text",
   addEditModalAddTitle: "Mock add/edit entity modal add title",
   addEditModalEditTitle: "Mock add/edit entity modal edit title",
-  addEditModalMessage: "Mock add/edit entity modal message",
   deleteEntityButtonAltText: "Mock delete entity button alt text",
   deleteModalTitle: "Mock delete modal title",
   deleteModalConfirmButtonText: "Mock delete modal confirm button text",
@@ -199,6 +210,27 @@ export const mockModalDrawerReportPageVerbiage = {
   drawerNoFormMessage: "Mock no form fields here",
 };
 
+export const mockOverlayModalPageVerbiage = {
+  intro: mockOverlayModalVerbiageIntro,
+  accordion: mockAccordion,
+  text: "Mock instructions text",
+  dashboardTitle: "Mock dashboard title",
+  addEntityButtonText: "Mock add entity button text",
+  editEntityButtonText: "Mock edit entity button text",
+  addEditModalAddTitle: "Mock add/edit entity modal add title",
+  addEditModalEditTitle: "Mock add/edit entity modal edit title",
+  addEditModalHint: "Mock hint",
+  addEditModalMessage: "Mock add/edit entity modal message",
+  deleteEntityButtonAltText: "Mock delete entity button alt text",
+  deleteModalTitle: "Mock delete modal title",
+  deleteModalConfirmButtonText: "Mock delete modal confirm button text",
+  deleteModalWarning: "Mock delete modal warning",
+  entityUnfinishedMessage: "Mock entity unfinished messsage",
+  enterEntityDetailsButtonText: "Mock enter entity details button text",
+  drawerTitle: "Mock drawer title",
+  countEntitiesInTitle: true,
+};
+
 export const mockModalDrawerReportPageJson = {
   name: "mock-route-2b",
   path: "/mock/mock-route-2b",
@@ -207,6 +239,37 @@ export const mockModalDrawerReportPageJson = {
   verbiage: mockModalDrawerReportPageVerbiage,
   modalForm: mockModalForm,
   drawerForm: mockDrawerForm,
+};
+
+export const mockEntityDetailsOverlayVerbiage = {
+  intro: mockVerbiageIntro,
+  closeOutWarning: {
+    title: "Warning",
+    description: "This is a warning",
+  },
+  closeOutModal: {
+    closeOutModalButtonText: "Close out modal",
+    closeOutModalTitle: "Modal title",
+    closeOutModalBodyText: "This is a modal",
+    closeOutModalConfirmButtonText: "Confirm",
+  },
+};
+
+export const mockEntityDetailsOverlayJson = {
+  name: "mock-route-entity-overlay",
+  path: "/mock/mock-route-entity-overlay",
+  pageType: "entityOverlay",
+  verbiage: mockEntityDetailsOverlayVerbiage,
+  form: mockForm,
+};
+
+export const mockOverlayModalPageJson = {
+  name: "mock-route-2d",
+  path: "/mock/mock-route-2d",
+  pageType: "overlayModal",
+  entityType: "entityType",
+  verbiage: mockOverlayModalPageVerbiage,
+  modalForm: mockModalForm,
 };
 
 export const mockOptionalFormField = {
@@ -244,7 +307,7 @@ export const mockModalOverlayReportPageJson = {
   name: "mock-route-2c",
   path: "/mock/mock-route-2c",
   pageType: "modalOverlay",
-  entityType: "program",
+  entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalOverlayForm,
   overlayForm: mockModalOverlayForm,

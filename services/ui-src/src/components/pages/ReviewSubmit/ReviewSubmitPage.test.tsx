@@ -197,7 +197,7 @@ describe("MCPAR Review and Submit Page Functionality", () => {
 
 describe("When loading a sucessfully submitted report (Success Message Generator)", () => {
   it("should give the full success date if given all params", () => {
-    const programName = "test-program";
+    const submissionName = "test-program";
     const reportType = "WP";
     const submittedDate = 1663163109045;
     const submittersName = "Carol California";
@@ -205,31 +205,31 @@ describe("When loading a sucessfully submitted report (Success Message Generator
     expect(
       SuccessMessageGenerator(
         reportType,
-        programName,
+        submissionName,
         submittedDate,
         submittersName,
         stateName
       )
     ).toEqual([
       `${reportType} submission for `,
-      <b>{`${stateName} ${programName}`}</b>,
+      <b>{`${stateName} ${submissionName}`}</b>,
       ` was submitted on Wednesday, September 14, 2022 by ${submittersName}.`,
     ]);
   });
 
   it("should give a reduced version if not given all params", () => {
-    const programName = "test-program";
+    const submissionName = "test-program";
     const reportType = "SAR";
     const submittedDate = undefined;
     const submittersName = "Carol California";
     expect(
       SuccessMessageGenerator(
         reportType,
-        programName,
+        submissionName,
         submittedDate,
         submittersName
       )
-    ).toBe(`${reportType} report for ${programName} was submitted.`);
+    ).toBe(`${reportType} report for ${submissionName} was submitted.`);
   });
 });
 

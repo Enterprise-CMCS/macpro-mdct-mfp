@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 // components
 import {
   Box,
@@ -12,6 +12,7 @@ import {
   AddEditEntityModal,
   DeleteEntityModal,
   EntityRow,
+  ReportContext,
   ReportDrawer,
   ReportPageFooter,
   ReportPageIntro,
@@ -21,48 +22,43 @@ import {
 import addIcon from "assets/icons/icon_add.png";
 import searchIcon from "assets/icons/icon_search_blue.png";
 // types
-import { EntityShape, EntityType, ModalDrawerReportPageShape } from "types";
+import {
+  AnyObject,
+  EntityShape,
+  EntityType,
+  ModalDrawerReportPageShape,
+  ReportStatus,
+  isFieldElement,
+} from "types";
 // utils
-import { parseCustomHtml } from "utils";
-import { getFormattedEntityData } from "utils/reports/entities";
+import {
+  parseCustomHtml,
+  getFormattedEntityData,
+  useStore,
+  filterFormData,
+  getEntriesToClear,
+  setClearedEntriesToDefaultValue,
+  entityWasUpdated,
+} from "utils";
 
 export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
-  const { entityType, verbiage, modalForm, drawerForm: drawerFormJson } = route;
+  const { full_name, state, userIsEndUser } = useStore().user ?? {};
+  const {
+    entityType,
+    entityInfo,
+    verbiage,
+    modalForm,
+    drawerForm: drawerFormJson,
+  } = route;
 
-  // const reportFieldDataEntities = report?.fieldData[entityType] || [];
-
-  const submitting = false;
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
 
-  const entities = [
-    {
-      id: "0",
-      name: "Older adults",
-      isOtherEntity: false,
-    },
-    {
-      id: "1",
-      name: "Individuals with physical disabilities (PD)",
-      isOtherEntity: false,
-    },
-    {
-      id: "2",
-      name: "Individuals with intellectual and developmental disabilities (I/DD)",
-      isOtherEntity: false,
-    },
-    {
-      id: "3",
-      name: "Individuals with mental health and substance abuse disorders (MH/SUD)",
-      isOtherEntity: false,
-    },
-    {
-      id: "4",
-      name: "Other: {entity}",
-      isOtherEntity: true,
-    },
-  ];
+  const { report } = useStore();
+  const { updateReport } = useContext(ReportContext);
+  const reportFieldDataEntities = report?.fieldData[entityType] || [];
 
   // create drawerForm from json
   const drawerForm = { ...drawerFormJson };
@@ -91,11 +87,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
     onClose: deleteEntityModalOnCloseHandler,
   } = useDisclosure();
 
-  const openDeleteEntityModal = () => {
-    setSelectedEntity({
-      id: "123",
-      name: "mock entity",
-    });
+  const openDeleteEntityModal = (entity: EntityShape) => {
+    setSelectedEntity(entity);
     deleteEntityModalOnOpenHandler();
   };
 
@@ -121,6 +114,57 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
     drawerOnCloseHandler();
   };
 
+  const onSubmit = async (enteredData: AnyObject) => {
+    if (userIsEndUser) {
+      setSubmitting(true);
+      const reportKeys = {
+        reportType: report?.reportType,
+        state: state,
+        id: report?.id,
+      };
+      const currentEntities = [...(report?.fieldData[entityType] || [])];
+      const selectedEntityIndex = report?.fieldData[entityType].findIndex(
+        (entity: EntityShape) => entity.id === selectedEntity?.id
+      );
+      const filteredFormData = filterFormData(
+        enteredData,
+        drawerForm.fields.filter(isFieldElement)
+      );
+      const entriesToClear = getEntriesToClear(
+        enteredData,
+        drawerForm.fields.filter(isFieldElement)
+      );
+      const newEntity = {
+        ...selectedEntity,
+        ...filteredFormData,
+      };
+      let newEntities = currentEntities;
+      newEntities[selectedEntityIndex] = newEntity;
+      newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
+        newEntities[selectedEntityIndex],
+        entriesToClear
+      );
+      const shouldSave = entityWasUpdated(
+        reportFieldDataEntities[selectedEntityIndex],
+        newEntity
+      );
+      if (shouldSave) {
+        const dataToWrite = {
+          metadata: {
+            status: ReportStatus.IN_PROGRESS,
+            lastAlteredBy: full_name,
+          },
+          fieldData: {
+            [entityType]: newEntities,
+          },
+        };
+        await updateReport(reportKeys, dataToWrite);
+      }
+      setSubmitting(false);
+    }
+    closeDrawer();
+  };
+
   const tableHeaders = {
     headRow: ["", "", ""],
   };
@@ -134,11 +178,11 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         </Heading>
         <Box>
           <Table sx={sx.table} content={tableHeaders}>
-            {/* TODO: real entities */}
-            {entities.map((entity: EntityShape) => (
+            {reportFieldDataEntities.map((entity: EntityShape) => (
               <EntityRow
                 key={entity.id}
                 entity={entity}
+                entityInfo={entityInfo}
                 verbiage={verbiage}
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
@@ -170,6 +214,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         <hr />
         {/* MODALS */}
         <AddEditEntityModal
+          entityType={entityType as EntityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           form={modalForm}
@@ -179,6 +224,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           }}
         />
         <DeleteEntityModal
+          entityType={entityType}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           modalDisclosure={{
@@ -192,10 +238,11 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           selectedEntity={selectedEntity!}
           verbiage={{
             ...verbiage,
-            drawerDetails: getFormattedEntityData(),
+            drawerTitle: `${verbiage.drawerTitle} ${selectedEntity?.name}`,
+            drawerDetails: getFormattedEntityData(entityType),
           }}
           form={drawerForm}
-          onSubmit={() => {}}
+          onSubmit={onSubmit}
           submitting={submitting}
           drawerDisclosure={{
             isOpen: drawerIsOpen,

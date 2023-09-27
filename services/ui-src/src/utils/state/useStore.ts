@@ -9,16 +9,19 @@ import {
   ReportShape,
   MfpReportState,
   ReportMetadataShape,
+  EntityType,
+  EntityShape,
+  MfpEntityState,
 } from "types";
 
 // USER STORE
 const userStore = (set: Function) => ({
   // initial state
-  user: null,
+  user: undefined,
   // show local logins
   showLocalLogins: undefined,
   // actions
-  setUser: (newUser: MFPUser | null) =>
+  setUser: (newUser?: MFPUser) =>
     set(() => ({ user: newUser }), false, { type: "setUser" }),
   // toggle show local logins (dev only)
   setShowLocalLogins: () =>
@@ -29,15 +32,30 @@ const userStore = (set: Function) => ({
 const bannerStore = (set: Function) => ({
   // initial state
   bannerData: undefined,
-  isBannerActive: false,
+  bannerActive: false,
+  bannerLoading: false,
+  bannerErrorMessage: "",
+  bannerDeleting: false,
   // actions
-  setAdminBanner: (newBanner: AdminBannerData | undefined) =>
-    set(() => ({ bannerData: newBanner }), false, { type: "setAdminBanner" }),
+  setBannerData: (newBanner: AdminBannerData | undefined) =>
+    set(() => ({ bannerData: newBanner }), false, { type: "setBannerData" }),
   clearAdminBanner: () =>
     set(() => ({ bannerData: undefined }), false, { type: "clearAdminBanner" }),
-  setIsBannerActive: (bannerStatus: boolean) =>
-    set(() => ({ isBannerActive: bannerStatus }), false, {
-      type: "setIsBannerActive",
+  setBannerActive: (bannerStatus: boolean) =>
+    set(() => ({ bannerActive: bannerStatus }), false, {
+      type: "setBannerActive",
+    }),
+  setBannerLoading: (loading: boolean) =>
+    set(() => ({ bannerLoading: loading }), false, {
+      type: "setBannerLoading",
+    }),
+  setBannerErrorMessage: (errorMessage: string) =>
+    set(() => ({ bannerErrorMessage: errorMessage }), false, {
+      type: "setBannerErrorMessage",
+    }),
+  setBannerDeleting: (deleting: boolean) =>
+    set(() => ({ bannerDeleting: deleting }), false, {
+      type: "setBannerDeleting",
     }),
 });
 
@@ -47,6 +65,7 @@ const reportStore = (set: Function) => ({
   report: undefined,
   reportsByState: undefined,
   submittedReportsByState: undefined,
+  lastSavedTime: undefined,
   // actions
   setReport: (newReport: ReportShape | undefined) =>
     set(() => ({ report: newReport }), false, { type: "setReport" }),
@@ -66,16 +85,47 @@ const reportStore = (set: Function) => ({
       false,
       { type: "setSubmittedReportsByState" }
     ),
+  setLastSavedTime: (savedTime: string | undefined) =>
+    set(() => ({ lastSavedTime: savedTime }), false, {
+      type: "setLastSavedTime",
+    }),
+});
+
+// ENTITY STORE
+const entityStore = (set: Function) => ({
+  // initial state
+  entityId: undefined,
+  entityType: undefined,
+  entities: [],
+  selectedEntity: undefined,
+  // actions
+  setEntityType: (newEntityType: EntityType | undefined) =>
+    set(() => ({ entityType: newEntityType }), false, {
+      type: "setEntityType",
+    }),
+  setEntities: (newEntities: EntityShape[] | undefined) =>
+    set(() => ({ entities: newEntities }), false, {
+      type: "setEntities",
+    }),
+  clearEntities: () =>
+    set(() => ({ entities: [] }), false, { type: "clearEntities" }),
+  setSelectedEntity: (newSelectedEntity: EntityShape | undefined) =>
+    set(() => ({ selectedEntity: newSelectedEntity }), false, {
+      type: "setSelectedEntity",
+    }),
 });
 
 export const useStore = create(
   // persist and devtools are being used for debugging state
   persist(
-    devtools<MfpUserState & AdminBannerState & MfpReportState>((set) => ({
-      ...userStore(set),
-      ...bannerStore(set),
-      ...reportStore(set),
-    })),
+    devtools<MfpUserState & AdminBannerState & MfpReportState & MfpEntityState>(
+      (set) => ({
+        ...userStore(set),
+        ...bannerStore(set),
+        ...reportStore(set),
+        ...entityStore(set),
+      })
+    ),
     {
       name: "mfp-store",
     }

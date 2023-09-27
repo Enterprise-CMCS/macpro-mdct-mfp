@@ -10,6 +10,7 @@ const mockCloseHandler = jest.fn();
 
 const modalComponent = (
   <DeleteEntityModal
+    entityType="entityType"
     selectedEntity={{ id: "123" }}
     verbiage={mockModalDrawerReportPageVerbiage}
     modalDisclosure={{

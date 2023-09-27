@@ -1,4 +1,14 @@
-import { CompletionData, AnyObject } from "../types";
+// types
+import {
+  AnyObject,
+  CompletionData,
+  FormJson,
+  FieldChoice,
+  Choice,
+  FormField,
+  ReportRoute,
+} from "../types";
+// utils
 import { validateFieldData } from "./completionValidation";
 
 export const isComplete = (completionStatus: CompletionData): Boolean => {
@@ -48,7 +58,7 @@ export const calculateCompletionStatus = async (
   };
 
   const calculateFormCompletion = async (
-    nestedFormTemplate: any,
+    nestedFormTemplate: FormJson,
     dataForObject: AnyObject = fieldData
   ) => {
     // Build an object of k:v for fields to validate
@@ -56,17 +66,20 @@ export const calculateCompletionStatus = async (
     // Repeat fields can't be validated at same time, so holding their completion status here
     let repeatersValid = true; //default to true in case of no repeat fields
 
-    const getNestedFields = (fieldChoices: any[], selectedChoices: any[]) => {
+    const getNestedFields = (
+      fieldChoices: FieldChoice[],
+      selectedChoices: Choice[]
+    ) => {
       let selectedChoicesIds = selectedChoices
-        .map((choice: any) => choice.key)
+        .map((choice: Choice) => choice.key)
         .map((choiceId: string) => choiceId?.split("-").pop());
       let selectedChoicesWithChildren = fieldChoices?.filter(
-        (fieldChoice: any) =>
+        (fieldChoice: FieldChoice) =>
           selectedChoicesIds.includes(fieldChoice.id) && fieldChoice.children
       );
       let fieldIds: string[] = [];
-      selectedChoicesWithChildren?.forEach((selectedChoice: any) => {
-        selectedChoice.children?.forEach((childChoice: any) => {
+      selectedChoicesWithChildren?.forEach((selectedChoice: FieldChoice) => {
+        selectedChoice.children?.forEach((childChoice: FormField) => {
           fieldIds.push(childChoice.id);
           if (childChoice.props?.choices && dataForObject?.[childChoice.id]) {
             let childFields = getNestedFields(
@@ -80,14 +93,19 @@ export const calculateCompletionStatus = async (
       return fieldIds;
     };
     // Iterate over all fields in form
-    for (var formField of nestedFormTemplate.fields || []) {
+    for (var formField of nestedFormTemplate?.fields || []) {
       if (formField.repeat) {
         // This is a repeated field, and must be handled differently
-        for (var repeatEntity of fieldData[formField.repeat]) {
-          // Iterate over each entity from the repeat section, build new value id, and validate it
-          repeatersValid &&= await areFieldsValid({
-            [formField.id]: dataForObject[`${formField.id}_${repeatEntity.id}`],
-          });
+        if (fieldData[formField.repeat] !== undefined)
+          for (var repeatEntity of fieldData[formField.repeat]) {
+            // Iterate over each entity from the repeat section, build new value id, and validate it
+            repeatersValid &&= await areFieldsValid({
+              [formField.id]:
+                dataForObject[`${formField.id}_${repeatEntity.id}`],
+            });
+          }
+        else {
+          repeatersValid = false;
         }
       } else {
         // Key: Form Field ID, Value: Report Data for field
@@ -113,13 +131,13 @@ export const calculateCompletionStatus = async (
   };
 
   const calculateEntityCompletion = async (
-    nestedFormTemplates: any[],
+    nestedFormTemplates: FormJson[],
     entityType: string
   ) => {
     //value for holding combined result
     var areAllFormsComplete = true;
     for (var nestedFormTemplate of nestedFormTemplates) {
-      if (fieldData[entityType]) {
+      if (fieldData[entityType] && fieldData[entityType].length > 0) {
         // iterate over each entity (eg access measure)
         for (var dataForEntity of fieldData[entityType]) {
           // get completion status for entity, using the correct form template
@@ -139,7 +157,7 @@ export const calculateCompletionStatus = async (
     return areAllFormsComplete;
   };
 
-  const calculateRouteCompletion = async (route: any) => {
+  const calculateRouteCompletion = async (route: ReportRoute) => {
     let routeCompletion;
     // Determine which type of page we are calculating status for
     switch (route.pageType) {
@@ -168,6 +186,15 @@ export const calculateCompletionStatus = async (
           ),
         };
         break;
+      case "modalOverlay":
+        if (!route.modalForm || !route.overlayForm) break;
+        routeCompletion = {
+          [route.path]: await calculateEntityCompletion(
+            [route.modalForm, route.overlayForm],
+            route.entityType
+          ),
+        };
+        break;
       case "reviewSubmit":
         // Don't evaluate the review and submit page
         break;
@@ -182,7 +209,7 @@ export const calculateCompletionStatus = async (
     return routeCompletion;
   };
 
-  const calculateRoutesCompletion = async (routes: any[]) => {
+  const calculateRoutesCompletion = async (routes: ReportRoute[]) => {
     var completionDict: CompletionData = {};
     // Iterate over each route
     for (var route of routes || []) {

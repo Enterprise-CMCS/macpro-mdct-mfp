@@ -48,7 +48,7 @@ export const mockWPReport = {
   ...mockReportKeys,
   metadata: {
     reportType: "WP",
-    programName: "testProgram",
+    submissionName: "testProgram",
     status: "Not started",
     lastAlteredBy: "Thelonious States",
     fieldDataId: "mockReportFieldData",
@@ -63,7 +63,7 @@ export const mockWPReport = {
 export const mockWPDynamoData = {
   ...mockReportKeys,
   reportType: "WP",
-  programName: "testProgram",
+  submissionName: "testProgram",
   status: "Not started",
   lastAlteredBy: "Thelonious States",
   fieldDataId: "mockReportFieldData",

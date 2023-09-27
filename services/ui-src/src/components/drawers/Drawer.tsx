@@ -18,7 +18,6 @@ import { makeMediaQueryClasses, parseCustomHtml } from "utils";
 export const Drawer = ({
   verbiage,
   drawerDisclosure,
-  selectedEntity,
   children,
   ...props
 }: Props) => {
@@ -41,9 +40,7 @@ export const Drawer = ({
               {verbiage.drawerEyebrowTitle}
             </Text>
           )}
-          <Text sx={sx.drawerHeaderText}>
-            {verbiage.drawerTitle + selectedEntity}
-          </Text>
+          <Text sx={sx.drawerHeaderText}>{verbiage.drawerTitle}</Text>
           {verbiage.drawerInfo && (
             <Box sx={sx.infoTextBox}>
               {parseCustomHtml(verbiage.drawerInfo)}
