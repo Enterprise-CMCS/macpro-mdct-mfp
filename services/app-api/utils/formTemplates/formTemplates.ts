@@ -131,11 +131,7 @@ export async function getOrCreateFormTemplate(
   reportType: ReportType
 ) {
   const currentFormTemplate = formTemplateForReportType(reportType);
-  const currentFormTemplateExpandedFields = scanForRepeatedFields(
-    currentFormTemplate.routes
-  );
-
-  const stringifiedTemplate = JSON.stringify(currentFormTemplateExpandedFields);
+  const stringifiedTemplate = JSON.stringify(currentFormTemplate);
 
   const currentTemplateHash = createHash("md5")
     .update(stringifiedTemplate)
@@ -154,6 +150,10 @@ export async function getOrCreateFormTemplate(
     };
   } else {
     const newFormTemplateId = KSUID.randomSync().string;
+    currentFormTemplate.routes = scanForRepeatedFields(
+      currentFormTemplate.routes
+    );
+
     const formTemplateWithValidationJson = {
       ...currentFormTemplate,
       validationJson: getValidationFromFormTemplate(currentFormTemplate),
