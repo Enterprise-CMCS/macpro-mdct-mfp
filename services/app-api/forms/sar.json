@@ -91,7 +91,7 @@
           {
             "id": "generalInformation_aorEmail",
             "type": "text",
-            "validation": "text",
+            "validation": "email",
             "props": {
               "label": "AOR email"
             }
