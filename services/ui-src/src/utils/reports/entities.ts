@@ -14,7 +14,7 @@ const getRepeatedField = (
   if (entity) {
     // for loop that grabs key and value of the object.entries(entity)
     for (const [key, value] of Object.entries(entity)) {
-      if (key.includes(repeatedKey)) {
+      if (key.includes(repeatedKey) && value) {
         const id = key.replace(repeatedKey, "").split("Q");
         quarters.push({ id: `${id[0]} Q${id[1]}`, value: value });
       }

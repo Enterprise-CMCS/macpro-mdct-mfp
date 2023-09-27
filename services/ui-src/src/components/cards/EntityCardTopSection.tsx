@@ -59,19 +59,23 @@ export const EntityCardTopSection = ({
           <Heading as="h3" sx={sx.heading}>
             {formattedEntityData.fundingSource}
           </Heading>
-          <Text sx={sx.subtitle}>Projected quarterly expenditures</Text>
-          <Grid sx={sx.grid}>
-            {formattedEntityData?.quarters?.map((quarter: any) => {
-              return (
-                <GridItem>
-                  <Flex sx={sx.gridItems}>
-                    <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
-                    <Text sx={sx.subtext}>{quarter.value}</Text>
-                  </Flex>
-                </GridItem>
-              );
-            })}
-          </Grid>
+          {formattedEntityData.quarters.length > 0 && (
+            <>
+              <Text sx={sx.subtitle}>Projected quarterly expenditures</Text>
+              <Grid sx={sx.grid}>
+                {formattedEntityData?.quarters?.map((quarter: any) => {
+                  return (
+                    <GridItem>
+                      <Flex sx={sx.gridItems}>
+                        <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
+                        <Text sx={sx.subtext}>{quarter.value}</Text>
+                      </Flex>
+                    </GridItem>
+                  );
+                })}
+              </Grid>
+            </>
+          )}
         </>
       );
     default:
