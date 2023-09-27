@@ -136,7 +136,7 @@
           {
             "id": "generalInformation_projectDirectorEmail",
             "type": "text",
-            "validation": "text",
+            "validation": "email",
             "props": {
               "label": "Project director email"
             }
