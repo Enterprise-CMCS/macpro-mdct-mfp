@@ -14,7 +14,6 @@ import { PRODUCTION_HOST_DOMAIN } from "../../constants";
 import { MFPUser, UserContextShape, UserRoles } from "types/users";
 
 export const UserContext = createContext<UserContextShape>({
-  user: undefined,
   logout: async () => {},
   loginWithIDM: () => {},
   updateTimeout: () => {},
@@ -50,7 +49,7 @@ export const UserProvider = ({ children }: Props) => {
 
   const logout = async () => {
     try {
-      setUser(null);
+      setUser(undefined);
       await Auth.signOut();
       localStorage.clear();
     } catch (error) {

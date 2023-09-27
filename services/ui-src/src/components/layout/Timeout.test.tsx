@@ -22,7 +22,7 @@ const mockUser = {
 };
 
 const mockUserContext = {
-  user: null,
+  user: undefined,
   logout: mockLogout,
   loginWithIDM: mockLoginWithIDM,
   updateTimeout: mockUpdateTimeout,

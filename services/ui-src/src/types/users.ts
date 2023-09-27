@@ -25,7 +25,7 @@ export interface MFPUser {
 }
 
 export interface UserContextShape {
-  user: MFPUser | null | undefined;
+  user?: MFPUser;
   getExpiration: Function;
   logout: () => Promise<void>;
   loginWithIDM: () => void;

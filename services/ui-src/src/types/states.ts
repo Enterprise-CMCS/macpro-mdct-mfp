@@ -8,10 +8,10 @@ import {
 // initial user state
 export interface MfpUserState {
   // INITIAL STATE
-  user: MFPUser | null;
+  user?: MFPUser;
   showLocalLogins: boolean | undefined;
   // ACTIONS
-  setUser: (newUser: MFPUser | null) => void;
+  setUser: (newUser?: MFPUser) => void;
   setShowLocalLogins: (showLocalLogins: boolean) => void;
 }
 
