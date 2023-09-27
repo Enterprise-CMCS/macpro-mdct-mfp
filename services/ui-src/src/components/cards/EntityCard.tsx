@@ -88,8 +88,8 @@ export const EntityCard = ({
         )}
         <EntityCardTopSection
           entityType={entityType}
-          formattedEntityData={formattedEntityData}
           printVersion={!!printVersion}
+          formattedEntityData={formattedEntityData}
         />
         {openAddEditEntityModal && (
           <Button
@@ -224,6 +224,7 @@ const sx = {
   editButton: {
     marginY: "1rem",
     fontWeight: "normal",
+    borderColor: "palette.gray_light",
   },
   openDrawerButton: {
     marginTop: "1rem",

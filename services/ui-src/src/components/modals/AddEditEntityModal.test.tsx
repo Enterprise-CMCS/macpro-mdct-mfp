@@ -13,6 +13,7 @@ const mockCloseHandler = jest.fn();
 const modalComponent = (
   <RouterWrappedComponent>
     <AddEditEntityModal
+      entityType="plans"
       verbiage={mockModalDrawerReportPageVerbiage}
       form={mockModalForm}
       modalDisclosure={{

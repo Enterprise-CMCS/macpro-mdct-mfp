@@ -52,19 +52,33 @@ export interface DrawerReportPageShape extends ReportPageShapeBase {
 
 export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   entityType: string;
+  entityInfo?: string[];
   verbiage: ModalDrawerReportPageVerbiage;
   modalForm: FormJson;
   drawerForm: FormJson;
   form?: never;
 }
 
+export interface OverlayModalPageShape extends ReportPageShapeBase {
+  entityType: string;
+  verbiage: OverlayModalPageVerbiage;
+  modalForm: FormJson;
+  form?: never;
+}
+
 export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   entityType: string;
+  entityInfo?: string[];
   verbiage: ModalOverlayReportPageVerbiage;
   modalForm: FormJson;
   overlayForm?: FormJson;
   drawerForm?: never;
   form?: never;
+}
+
+export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
+  verbiage: EntityOverlayPageVerbiage;
+  form: FormJson;
 }
 
 export interface ReportJson {
@@ -84,7 +98,9 @@ export type ReportRouteWithForm =
   | StandardReportPageShape
   | DrawerReportPageShape
   | ModalDrawerReportPageShape
-  | ModalOverlayReportPageShape;
+  | ModalOverlayReportPageShape
+  | EntityDetailsOverlayShape
+  | OverlayModalPageShape;
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
   children?: ReportRoute[];
@@ -119,6 +135,24 @@ export interface ModalDrawerReportPageVerbiage
   drawerTitle: string;
 }
 
+export interface OverlayModalPageVerbiage extends ReportPageVerbiage {
+  countEntitiesInTitle: boolean;
+  addEntityButtonText: string;
+  addEditModalHint: string;
+  editEntityButtonText: string;
+  addEditModalAddTitle: string;
+  addEditModalEditTitle: string;
+  deleteEntityButtonAltText: string;
+  deleteModalTitle: string;
+  deleteModalConfirmButtonText: string;
+  deleteModalWarning: string;
+  entityUnfinishedMessage: string;
+  enterEntityDetailsButtonText: string;
+  accordion: object;
+  dashboardTitle: string;
+  missingEntityMessage?: CustomHtmlElement[];
+}
+
 export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   addEntityButtonText: string;
   dashboardTitle: string;
@@ -126,6 +160,19 @@ export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   tableHeader: string;
   addEditModalHint: string;
   emptyDashboardText: string;
+}
+
+export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
+  closeOutWarning?: {
+    title?: string;
+    description?: string;
+  };
+  closeOutModal?: {
+    closeOutModalButtonText?: string;
+    closeOutModalTitle?: string;
+    closeOutModalBodyText?: string;
+    closeOutModalConfirmButtonText?: string;
+  };
 }
 
 /**

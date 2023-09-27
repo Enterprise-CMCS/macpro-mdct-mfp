@@ -1,7 +1,9 @@
-import * as yup from "yup";
-import { nested, endDate, schemaMap } from "./schemaMap";
-import { AnyObject } from "../types";
+import { object } from "yup";
 import { error } from "../constants/constants";
+// types
+import { AnyObject } from "../types";
+// utils
+import { nested, endDate, schemaMap } from "./schemaMap";
 
 // compare payload data against validation schema
 export const validateData = async (
@@ -94,9 +96,9 @@ export const validateFieldData = async (
     unvalidatedFieldData
   );
   // transform field validation instructions to yup validation schema
-  const fieldDataValidationSchema = yup
-    .object()
-    .shape(mapValidationTypesToSchema(filteredFieldDataValidationJson));
+  const fieldDataValidationSchema = object().shape(
+    mapValidationTypesToSchema(filteredFieldDataValidationJson)
+  );
   if (fieldDataValidationSchema) {
     validatedFieldData = await validateData(
       fieldDataValidationSchema,
