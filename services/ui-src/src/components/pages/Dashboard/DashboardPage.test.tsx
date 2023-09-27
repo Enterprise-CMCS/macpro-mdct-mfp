@@ -39,8 +39,6 @@ jest.mock("react-router-dom", () => ({
   })),
 }));
 
-// I have to inject reportsByState into the store
-
 const dashboardViewWithReports = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockDashboardReportContext}>
