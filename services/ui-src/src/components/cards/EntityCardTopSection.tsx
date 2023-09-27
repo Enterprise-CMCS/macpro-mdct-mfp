@@ -61,7 +61,7 @@ export const EntityCardTopSection = ({
           </Heading>
           <Text sx={sx.subtitle}>Projected quarterly expenditures</Text>
           <Grid sx={sx.grid}>
-            {formattedEntityData?.quarters.map((quarter: any) => {
+            {formattedEntityData?.quarters?.map((quarter: any) => {
               return (
                 <GridItem>
                   <Flex sx={sx.gridItems}>
