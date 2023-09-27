@@ -1,7 +1,7 @@
 import { MouseEventHandler, useEffect } from "react";
 // components
-import { Box, Button, Flex, Image } from "@chakra-ui/react";
-import { ReportPageIntro, Table, EntityRow } from "components";
+import { Box, Button, Flex, Image, useDisclosure } from "@chakra-ui/react";
+import { ReportPageIntro, Table, EntityRow, Drawer } from "components";
 // types
 import {
   EntityShape,
@@ -32,12 +32,25 @@ export const EntityDetailsDashboardOverlay = ({
     };
   }, [entityType, selectedEntity]);
 
-  const openDrawer = () => {
-    return;
-  };
-
   const tableHeaders = () => {
     return { headRow: ["", "", ""] };
+  };
+
+  // report drawer disclosure and methods
+  const {
+    isOpen: drawerIsOpen,
+    onOpen: drawerOnOpenHandler,
+    onClose: drawerOnCloseHandler,
+  } = useDisclosure();
+
+  const openDrawer = (entity: EntityShape) => {
+    setSelectedEntity(entity);
+    drawerOnOpenHandler();
+  };
+
+  const closeDrawer = () => {
+    setSelectedEntity(undefined);
+    drawerOnCloseHandler();
   };
 
   return (
@@ -63,7 +76,7 @@ export const EntityDetailsDashboardOverlay = ({
             entityInfo={entity.entityInfo}
             verbiage={entity.verbiage}
             locked={false}
-            openDrawer={() => openDrawer}
+            openDrawer={openDrawer}
             openAddEditEntityModal={() => {
               return;
             }}
@@ -80,6 +93,10 @@ export const EntityDetailsDashboardOverlay = ({
           </Button>
         </Flex>
       </Box>
+      <Drawer
+        verbiage={{ drawerTitle: "test" }}
+        drawerDisclosure={{ isOpen: drawerIsOpen, onClose: closeDrawer }}
+      />
     </Box>
   );
 };

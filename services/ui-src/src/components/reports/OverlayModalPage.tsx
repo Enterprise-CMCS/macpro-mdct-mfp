@@ -27,7 +27,8 @@ export const OverlayModalPage = ({ route }: Props) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-  //display variables
+
+  // display variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
 
   const dashTitle = `${verbiage.dashboardTitle}${
