@@ -27,7 +27,23 @@ export const EntityCardTopSection = ({
           <Text sx={sx.description}>
             {formattedEntityData?.includesTargets}
           </Text>
-          {console.log(formattedEntityData?.quarters, "quarters")}
+          {formattedEntityData.quarters.length > 0 && (
+            <>
+              <Text sx={sx.subtitle}>Quantitative Targets</Text>
+              <Grid sx={sx.grid}>
+                {formattedEntityData?.quarters.map((quarter: any) => {
+                  return (
+                    <GridItem>
+                      <Flex sx={sx.gridItems}>
+                        <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
+                        <Text sx={sx.subtext}>{quarter.value}</Text>
+                      </Flex>
+                    </GridItem>
+                  );
+                })}
+              </Grid>
+            </>
+          )}
           <Text sx={sx.subtitle}>
             Additional detail on strategies/approaches the state or territory
             will use to achieve targets and/ or meet milestones
@@ -41,7 +57,7 @@ export const EntityCardTopSection = ({
       return (
         <>
           <Heading as="h3" sx={sx.heading}>
-            {formattedEntityData.objectiveName}
+            {formattedEntityData.fundingSource}
           </Heading>
           <Text sx={sx.subtitle}>Projected quarterly expenditures</Text>
           <Grid sx={sx.grid}>
@@ -78,11 +94,10 @@ const sx = {
     fontSize: "sm",
   },
   grid: {
-    gridTemplateColumns: "repeat(3,minmax(0px,1fr))",
-    alignItems: "center",
-    textAlign: "center",
-    justifyContent: "center",
     display: "grid",
+    gridTemplateRows: "1fr 1fr 1fr 1fr",
+    gridAutoFlow: "column",
+    gridGap: ".5rem",
   },
   gridSubtitle: {
     fontWeight: "bold",

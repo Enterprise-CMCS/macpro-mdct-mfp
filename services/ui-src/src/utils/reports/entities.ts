@@ -1,11 +1,26 @@
 import { EntityShape, OverlayModalEntityTypes, AnyObject } from "types";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
-  return entity?.[label]?.[0].value;
+  return entity?.[label]?.[0].value !== "Other, specify"
+    ? entity?.[label]?.[0].value
+    : entity?.[label + "-otherText"];
 };
 
-const getQuarterValues = (entity: EntityShape | undefined, value: string) => {
-  return entity?.[value];
+const getRepeatedField = (
+  entity: EntityShape | undefined,
+  repeatedKey: string
+) => {
+  const quarters = [];
+  if (entity) {
+    // for loop that grabs key and value of the object.entries(entity)
+    for (const [key, value] of Object.entries(entity)) {
+      if (key.includes(repeatedKey)) {
+        const id = key.replace(repeatedKey, "").split("Q");
+        quarters.push({ id: `${id[0]} Q${id[1]}`, value: value });
+      }
+    }
+  }
+  return quarters;
 };
 export const getFormattedEntityData = (
   entityType: string,
@@ -21,15 +36,14 @@ export const getFormattedEntityData = (
           entity,
           "evaluationPlan_includesTargets"
         ),
-        quarters: getQuarterValues(entity, "quarterlyProjections2023Q3"),
+        quarters: getRepeatedField(entity, "quarterlyProjections"),
         additionalDetails: entity?.evaluationPlan_additionalDetails,
       };
     case OverlayModalEntityTypes.FUNDING_SOURCES:
       return {
-        objectiveName: entity?.objectiveName,
         id: entity?.id,
-        report_initiative: entity?.report_initiative,
-        quarters: entity?.quarters,
+        fundingSource: getRadioValue(entity, "initiative_wpTopic"),
+        quarters: getRepeatedField(entity, "initiativeQuarters"),
       };
     default:
       return {};

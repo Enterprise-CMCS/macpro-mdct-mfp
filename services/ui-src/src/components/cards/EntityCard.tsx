@@ -2,7 +2,7 @@
 import { Card } from "components";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
-import { AnyObject, EntityShape } from "types";
+import { AnyObject, EntityShape, OverlayModalEntityTypes } from "types";
 // assets
 import { svgFilters } from "styles/theme";
 import completedIcon from "assets/icons/icon_check_circle.png";
@@ -34,6 +34,12 @@ export const EntityCard = ({
 
   // any drawer-based field will do for this check
   switch (entityType) {
+    case OverlayModalEntityTypes.EVALUATION_PLAN:
+      entityCompleted = formattedEntityData?.objectiveName;
+      break;
+    case OverlayModalEntityTypes.FUNDING_SOURCES:
+      entityCompleted = formattedEntityData?.fundingSource;
+      break;
     default:
       break;
   }
