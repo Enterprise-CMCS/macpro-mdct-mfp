@@ -1621,7 +1621,7 @@
             "type": "textarea",
             "validation": "text",
             "props": {
-              "label": "Describe the technical assitance activities MFP staff have engaged in during the reporting period (e.g., participation in a learning collaborative or other training session)."
+              "label": "Describe the technical assistance activities MFP staff have engaged in during the reporting period (e.g., participation in a learning collaborative or other training session)."
             }
           },
           {
