@@ -1,9 +1,10 @@
 import { EntityShape, OverlayModalEntityTypes, AnyObject } from "types";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
-  return entity?.[label]?.[0].value !== "Other, specify"
-    ? entity?.[label]?.[0].value
-    : entity?.[label + "-otherText"];
+  const radioLabelValue = entity?.[label]?.[0].value;
+  return radioLabelValue !== "Other, specify"
+    ? radioLabelValue
+    : entity?.initiative_wp_otherTopic;
 };
 
 const getRepeatedField = (
