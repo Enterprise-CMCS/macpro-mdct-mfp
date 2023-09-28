@@ -96,7 +96,7 @@ export interface ReportPageVerbiage {
   intro: {
     section: string;
     subsection?: string;
-    spreadsheet?: string;
+    hint?: string;
     info?: string | CustomHtmlElement[];
   };
 }

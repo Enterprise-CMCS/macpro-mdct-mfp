@@ -104,6 +104,7 @@ export interface ChoiceFieldProps {
   name: string;
   label: string;
   choices: FieldChoice[];
+  heading?: string;
   sxOverride?: AnyObject;
   [key: string]: any;
 }
