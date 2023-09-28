@@ -27,12 +27,6 @@ const testEvent: APIGatewayProxyEvent = {
 };
 
 describe("Test fetchBanner API method", () => {
-  test("Test Report not found Fetch", async () => {
-    mockDocumentClient.get.promise.mockReturnValueOnce({ Item: undefined });
-    const res = await fetchBanner(testEvent, null);
-    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
-  });
-
   test("Test Successful Banner Fetch", async () => {
     mockDocumentClient.get.promise.mockReturnValueOnce({
       Item: mockBannerResponse,
@@ -44,6 +38,16 @@ describe("Test fetchBanner API method", () => {
     expect(res.body).toContain("testTitle");
   });
 
+  test("Test successful empty banner found fetch", async () => {
+    mockDocumentClient.get.promise.mockReturnValueOnce({
+      Item: { key: "admin-banner-id" },
+    });
+    const res = await fetchBanner(testEvent, null);
+
+    expect(res.body).not.toContain("testTitle");
+    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+  });
+
   test("Test bannerKey not provided throws 500 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,
@@ -51,7 +55,7 @@ describe("Test fetchBanner API method", () => {
     };
     const res = await fetchBanner(noKeyEvent, null);
 
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
     expect(res.body).toContain(error.NO_KEY);
   });
 
@@ -62,7 +66,7 @@ describe("Test fetchBanner API method", () => {
     };
     const res = await fetchBanner(noKeyEvent, null);
 
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
     expect(res.body).toContain(error.NO_KEY);
   });
 });

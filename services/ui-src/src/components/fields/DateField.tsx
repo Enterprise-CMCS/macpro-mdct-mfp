@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Box } from "@chakra-ui/react";
 import { AnyObject, CustomHtmlElement, InputChangeEvent } from "types";
@@ -7,9 +7,13 @@ import {
   labelTextWithOptional,
   checkDateCompleteness,
   parseCustomHtml,
+  getAutosaveFields,
+  autosaveFieldData,
+  useStore,
 } from "utils";
 // components
 import { SingleInputDateField as CmsdsDateField } from "@cmsgov/design-system";
+import { EntityContext, ReportContext } from "components";
 
 export const DateField = ({
   name,
@@ -17,11 +21,18 @@ export const DateField = ({
   hint,
   sxOverride,
   nested,
+  autosave,
   styleAsOptional,
   ...props
 }: Props) => {
   const defaultValue = "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
+
+  const { report, entities, entityType, selectedEntity } = useStore();
+  const { full_name, state } = useStore().user ?? {};
+
+  const { updateReport } = useContext(ReportContext);
+  const { updateEntities } = useContext(EntityContext);
 
   // get form context and register form field
   const form = useFormContext();
@@ -60,36 +71,35 @@ export const DateField = ({
     const { name, value } = event.target;
     // if field is blank, trigger client-side field validation error
     if (!value.trim()) form.trigger(name);
-    /*
-     * submit field data to database
-     * if (autosave) {
-     *   const fields = getAutosaveFields({
-     *     name,
-     *     type: "date",
-     *     value,
-     *     defaultValue,
-     *     hydrationValue,
-     *   });
-     *   const reportArgs = {
-     *     id: report?.id,
-     *     reportType: report?.reportType,
-     *     updateReport,
-     *   };
-     *   const user = { userName: full_name, state };
-     *   await autosaveFieldData({
-     *     form,
-     *     fields,
-     *     report: reportArgs,
-     *     user,
-     *     entityContext: {
-     *       selectedEntity,
-     *       entityType,
-     *       updateEntities,
-     *       entities,
-     *     },
-     *   });
-     * }
-     */
+
+    //submit field data to database
+    if (autosave) {
+      const fields = getAutosaveFields({
+        name,
+        type: "date",
+        value,
+        defaultValue,
+        hydrationValue,
+      });
+      const reportArgs = {
+        id: report?.id,
+        reportType: report?.reportType,
+        updateReport,
+      };
+      const user = { userName: full_name, state };
+      await autosaveFieldData({
+        form,
+        fields,
+        report: reportArgs,
+        user,
+        entityContext: {
+          selectedEntity,
+          entityType,
+          updateEntities,
+          entities,
+        },
+      });
+    }
   };
 
   // prepare error message, hint, and classes

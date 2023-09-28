@@ -5,16 +5,20 @@ import {
   DrawerReportPage,
   ModalDrawerReportPage,
   ModalOverlayReportPage,
+  OverlayModalPage,
   PageTemplate,
   ReviewSubmitPage,
   Sidebar,
   StandardReportPage,
+  EntityDetailsOverlay,
 } from "components";
 import { useLocation } from "react-router-dom";
 import {
   DrawerReportPageShape,
+  EntityDetailsOverlayShape,
   ModalDrawerReportPageShape,
   ModalOverlayReportPageShape,
+  OverlayModalPageShape,
   PageTypes,
   ReportRoute,
   StandardReportPageShape,
@@ -36,12 +40,18 @@ export const ReportPageWrapper = () => {
         return (
           <ModalDrawerReportPage route={route as ModalDrawerReportPageShape} />
         );
+      case PageTypes.OVERLAY_MODAL:
+        return <OverlayModalPage route={route as OverlayModalPageShape} />;
       case PageTypes.MODAL_OVERLAY:
         return (
           <ModalOverlayReportPage
             route={route as ModalOverlayReportPageShape}
             setSidebarHidden={setSidebarHidden}
           />
+        );
+      case PageTypes.ENTITY_OVERLAY:
+        return (
+          <EntityDetailsOverlay route={route as EntityDetailsOverlayShape} />
         );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;

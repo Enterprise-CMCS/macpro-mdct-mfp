@@ -40,20 +40,21 @@ export const mockReportKeys = {
 export const mockReportFieldData = {
   text: "text-input",
   "mock-number-field": 0,
+  entityType: [{ name: "entity-name", entityType_one: "hello" }],
 };
 
 export const mockWPReport = {
   ...mockReportKeys,
   metadata: {
     reportType: "WP",
-    programName: "testProgram",
+    submissionName: "testProgram",
     status: "Not started",
     lastAlteredBy: "Thelonious States",
     fieldDataId: "mockReportFieldData",
     formTemplateId: "mockReportJson",
   },
-  formTemplate: { ...mockReportJson },
-  fieldData: { ...mockReportFieldData },
+  formTemplate: mockReportJson,
+  fieldData: mockReportFieldData,
   createdAt: 162515200000,
   lastAltered: 162515200000,
 };
@@ -61,7 +62,7 @@ export const mockWPReport = {
 export const mockWPDynamoData = {
   ...mockReportKeys,
   reportType: "WP",
-  programName: "testProgram",
+  submissionName: "testProgram",
   status: "Not started",
   lastAlteredBy: "Thelonious States",
   fieldDataId: "mockReportFieldData",
@@ -78,7 +79,7 @@ export const mockWPFullReport = {
   ...mockReportKeys,
   reportType: "WP",
   formTemplate: mockReportJson,
-  programName: "2023 - Alabama 1",
+  submissionName: "2023 - Alabama 1",
   status: ReportStatus.NOT_STARTED,
   dueDate: 168515200000,
   createdAt: 162515200000,
@@ -97,6 +98,12 @@ export const mockWPFullReport = {
   isComplete: false,
 };
 
+export const mockReportsByState = [
+  { ...mockWPFullReport, id: "mock-report-id-1" },
+  { ...mockWPFullReport, id: "mock-report-id-2" },
+  { ...mockWPFullReport, id: "mock-report-id-3" },
+];
+
 export const mockReportMethods = {
   archiveReport: jest.fn(),
   releaseReport: jest.fn(),
@@ -110,4 +117,26 @@ export const mockReportMethods = {
   setReportSelection: jest.fn(),
   isReportPage: true,
   contextIsLoaded: true,
+  errorMessage: "",
+  lastSavedTime: "1:58 PM",
+};
+
+export const mockWpReportContext = {
+  ...mockReportMethods,
+  ...mockWPFullReport,
+  reportsByState: mockReportsByState,
+  copyEligibleReportsByState: mockReportsByState,
+  errorMessage: "",
+  lastSavedTime: "1:58 PM",
+};
+
+export const mockDashboardReportContext = {
+  ...mockWpReportContext,
+  reportsByState: [
+    {
+      ...mockWPReport,
+      formTemplate: undefined,
+      fieldData: undefined,
+    },
+  ],
 };

@@ -12,25 +12,37 @@ import { useMemo } from "react";
 
 export const EntityRow = ({
   entity,
+  entityInfo,
   verbiage,
+  locked,
   openAddEditEntityModal,
   openDeleteEntityModal,
   openDrawer,
 }: Props) => {
-  const { name, report_initiative, isOtherEntity } = entity;
   const { report } = useStore();
-  //const { userIsEndUser } = useStore().user ?? {};  //turn back on when routes are avaliable
-  let userIsEndUser = true; //temporary, remove once routes are added
+  const { userIsEndUser } = useStore().user ?? {};
+
+  // check for "other" target population entities
+  const { isRequired } = entity;
 
   const entityComplete = useMemo(() => {
     return report ? getEntityStatus(report, entity) : false;
   }, [report]);
 
-  const programInfo = [name, report_initiative];
+  let programInfo = [];
+  if (entityInfo) {
+    programInfo = (entityInfo as string[]).flatMap((info) => {
+      //if the data is in an array, like a radio button values, get each as text
+      if (typeof entity[info] === "object") {
+        return (entity[info] as any[]).map((arr) => arr.value);
+      }
+      return entity[info];
+    });
+  }
 
   return (
     <Tr sx={sx.content}>
-      <Td sx={sx.statusIcon}>
+      <Td>
         <EntityStatusIcon entity={entity as EntityShape} />
       </Td>
       <Td sx={sx.entityName}>
@@ -48,7 +60,7 @@ export const EntityRow = ({
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
-          {isOtherEntity && (
+          {!isRequired && (
             <Button
               sx={sx.editNameButton}
               variant="none"
@@ -58,18 +70,18 @@ export const EntityRow = ({
             </Button>
           )}
           <Button
-            sx={isOtherEntity ? sx.editOtherEntityButton : sx.editEntityButton}
+            sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
             onClick={() => openDrawer(entity)}
             variant="outline"
           >
             {verbiage.enterEntityDetailsButtonText}
           </Button>
-          {isOtherEntity && (
+          {!isRequired && (
             <Button
               sx={sx.deleteButton}
               data-testid="delete-entity"
               onClick={() => openDeleteEntityModal(entity)}
-              disabled={!userIsEndUser}
+              disabled={locked || !userIsEndUser}
             >
               <Image src={deleteIcon} alt="delete icon" boxSize="3xl" />
             </Button>
@@ -97,9 +109,6 @@ const sx = {
       borderColor: "palette.gray_light",
       paddingRight: 0,
     },
-  },
-  statusIcon: {
-    maxWidth: "fit-content",
   },
   errorText: {
     color: "palette.error_dark",

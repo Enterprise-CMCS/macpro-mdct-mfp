@@ -8,9 +8,12 @@ export * from "./auth/UserProvider";
 export * from "./auth/authLifecycle";
 // state management
 export * from "./state/useStore";
+// autosave
+export * from "./autosave/autosave";
 // forms
 export * from "./forms/forms";
 // reports
+export * from "./reports/entities";
 export * from "./reports/reports";
 export * from "./reports/routing";
 // statusing
