@@ -17,11 +17,11 @@ import {
 // USER STORE
 const userStore = (set: Function) => ({
   // initial state
-  user: null,
+  user: undefined,
   // show local logins
   showLocalLogins: undefined,
   // actions
-  setUser: (newUser: MFPUser | null) =>
+  setUser: (newUser?: MFPUser) =>
     set(() => ({ user: newUser }), false, { type: "setUser" }),
   // toggle show local logins (dev only)
   setShowLocalLogins: () =>
