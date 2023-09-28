@@ -14,8 +14,13 @@ import { AlertTypes, EntityDetailsOverlayShape } from "types";
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
+import { MouseEventHandler } from "react";
 
-export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
+export const EntityDetailsOverlay = ({
+  closeEntityDetailsOverlay,
+  route,
+  validateOnRender,
+}: Props) => {
   const submitting = false;
   const { form, verbiage } = route;
 
@@ -39,7 +44,7 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
       <Button
         sx={sx.backButton}
         variant="none"
-        //TO-DO: add onClick prop to go back to initiative dashboard
+        onClick={closeEntityDetailsOverlay as MouseEventHandler}
         aria-label="Return to dashboard for this initiative"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
@@ -79,7 +84,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
             >
               {verbiage.closeOutModal.closeOutModalButtonText}
             </Button>
-
             <CloseEntityModal
               verbiage={verbiage}
               modalDisclosure={{
@@ -90,7 +94,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
           </Box>
         )}
       </Box>
-
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
           <Button type="submit" form={form.id} sx={sx.saveButton}>
@@ -104,6 +107,7 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
 
 interface Props {
   route: EntityDetailsOverlayShape;
+  closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;
 }
 

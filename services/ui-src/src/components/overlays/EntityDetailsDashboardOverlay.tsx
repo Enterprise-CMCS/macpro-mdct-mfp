@@ -1,13 +1,20 @@
-import { MouseEventHandler, useEffect } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 // components
-import { Box, Button, Flex, Image, useDisclosure } from "@chakra-ui/react";
-import { ReportPageIntro, Table, EntityRow, Drawer } from "components";
+import { Box, Button, Flex, Image } from "@chakra-ui/react";
+import {
+  ReportPageIntro,
+  Table,
+  EntityRow,
+  EntityDetailsOverlay,
+  EntityProvider,
+} from "components";
 // types
 import {
   EntityShape,
   EntityType,
   FormJson,
   EntityDetailsDashboardOverlayShape,
+  EntityDetailsOverlayShape,
 } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
@@ -22,6 +29,8 @@ export const EntityDetailsDashboardOverlay = ({
 }: Props) => {
   // Entity provider setup
   const { clearEntities, setSelectedEntity, setEntityType } = useStore();
+  const [selectedStep, setSelectedStep] = useState<EntityShape>();
+  const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setSelectedEntity(selectedEntity);
@@ -32,71 +41,84 @@ export const EntityDetailsDashboardOverlay = ({
     };
   }, [entityType, selectedEntity]);
 
+  // Open/Close overlay action methods
+  const openEntityStepOverlay = (entity: EntityShape) => {
+    setSelectedStep(entity);
+    setIsEntityStepOpen(true);
+  };
+
+  const closeEntityStepOverlay = () => {
+    setSelectedStep(undefined);
+    setIsEntityStepOpen(false);
+  };
+
   const tableHeaders = () => {
     return { headRow: ["", "", ""] };
   };
 
-  // report drawer disclosure and methods
-  const {
-    isOpen: drawerIsOpen,
-    onOpen: drawerOnOpenHandler,
-    onClose: drawerOnCloseHandler,
-  } = useDisclosure();
-
-  const openDrawer = (entity: EntityShape) => {
-    setSelectedEntity(entity);
-    drawerOnOpenHandler();
-  };
-
-  const closeDrawer = () => {
-    setSelectedEntity(undefined);
-    drawerOnCloseHandler();
+  const openInitiativeStepOverlay = () => {
+    const pageType = selectedStep!.pageType;
+    return (
+      <Box>
+        {pageType !== "modalOverlay" && (
+          <EntityProvider>
+            <EntityDetailsOverlay
+              closeEntityDetailsOverlay={closeEntityStepOverlay}
+              route={selectedStep as unknown as EntityDetailsOverlayShape}
+            />
+          </EntityProvider>
+        )}
+        {/* TODO: modalOverlay page type */}
+      </Box>
+    );
   };
 
   return (
     <Box>
-      <Button
-        sx={sx.backButton}
-        variant="none"
-        onClick={closeEntityDetailsOverlay as MouseEventHandler}
-        aria-label="Return to all initiatives"
-      >
-        <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
-        Return to all initiatives
-      </Button>
-      <ReportPageIntro
-        text={dashboard?.verbiage?.intro}
-        initiativeName={selectedEntity?.initiative_name}
-      />
-      <Table content={tableHeaders()}>
-        {dashboard?.forms!.map((entity: EntityShape) => (
-          <EntityRow
-            key={entity.id}
-            entity={entity}
-            entityInfo={entity.entityInfo}
-            verbiage={entity.verbiage}
-            locked={false}
-            openDrawer={openDrawer}
-            openAddEditEntityModal={() => {
-              return;
-            }}
-            openDeleteEntityModal={() => {
-              return;
-            }}
-          />
-        ))}
-      </Table>
-      <Box>
-        <Flex sx={sx.buttonFlex}>
-          <Button onClick={closeEntityDetailsOverlay as MouseEventHandler}>
+      {!stepIsOpen ? (
+        <Box>
+          <Button
+            sx={sx.backButton}
+            variant="none"
+            onClick={closeEntityDetailsOverlay as MouseEventHandler}
+            aria-label="Return to all initiatives"
+          >
+            <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
             Return to all initiatives
           </Button>
-        </Flex>
-      </Box>
-      <Drawer
-        verbiage={{ drawerTitle: "test" }}
-        drawerDisclosure={{ isOpen: drawerIsOpen, onClose: closeDrawer }}
-      />
+          <ReportPageIntro
+            text={dashboard?.verbiage?.intro}
+            initiativeName={selectedEntity?.initiative_name}
+          />
+          <Table content={tableHeaders()}>
+            {dashboard?.forms!.map((entity: EntityShape) => (
+              <EntityRow
+                key={entity.id}
+                entity={entity}
+                entityInfo={entity.entityInfo}
+                verbiage={entity.verbiage}
+                locked={false}
+                openDrawer={() => openEntityStepOverlay(entity)}
+                openAddEditEntityModal={() => {
+                  return;
+                }}
+                openDeleteEntityModal={() => {
+                  return;
+                }}
+              />
+            ))}
+          </Table>
+          <Box>
+            <Flex sx={sx.buttonFlex}>
+              <Button onClick={closeEntityDetailsOverlay as MouseEventHandler}>
+                Return to all initiatives
+              </Button>
+            </Flex>
+          </Box>
+        </Box>
+      ) : (
+        openInitiativeStepOverlay()
+      )}
     </Box>
   );
 };
