@@ -2,7 +2,7 @@ import { EntityShape, OverlayModalEntityTypes, AnyObject } from "types";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
   const radioLabelValue = entity?.[label]?.[0].value;
-  return entity?.[label]?.[0].value !== "Other, specify"
+  return radioLabelValue !== "Other, specify"
     ? radioLabelValue
     : entity?.initiative_wp_otherTopic;
 };
