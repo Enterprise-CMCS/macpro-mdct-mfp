@@ -15,19 +15,14 @@ import { mockDocumentClient, mockReportJson } from "../testing/setupJest";
 import s3Lib from "../s3/s3-lib";
 import dynamodbLib from "../dynamo/dynamodb-lib";
 
-const currentWPFormHash = createHash("md5")
-  .update(JSON.stringify(wp))
-  .digest("hex");
-
-const currentSARFormHash = createHash("md5")
-  .update(JSON.stringify(sar))
-  .digest("hex");
-
 describe("Test getOrCreateFormTemplate WP", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
   });
   it("should create a new form template if none exist", async () => {
+    const currentWPFormHash = createHash("md5")
+      .update(JSON.stringify(wp))
+      .digest("hex");
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [],
     });
@@ -47,39 +42,42 @@ describe("Test getOrCreateFormTemplate WP", () => {
     expect(result.formTemplateVersion?.md5Hash).toEqual(currentWPFormHash);
   });
 
-  /*
-   * Not implemented yet
-   * it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
-   * mockDocumentClient.query.promise.mockReturnValueOnce({
-   *   Items: [
-   *     {
-   *       formTemplateId: "foo",
-   *       id: "mockReportJson",
-   *       md5Hash: currentWPFormHash,
-   *       versionNumber: 3,
-   *     },
-   *     {
-   *       formTemplateId: "foo",
-   *       id: "mockReportJson",
-   *       md5Hash: currentWPFormHash + "111",
-   *       versionNumber: 2,
-   *     },
-   *   ],
-   * });
-   * const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
-   * const s3PutSpy = jest.spyOn(s3Lib, "put");
-   * const result = await getOrCreateFormTemplate(
-   *   "local-wp-reports",
-   *   ReportType.WP
-   * );
-   * expect(dynamoPutSpy).not.toHaveBeenCalled();
-   * expect(s3PutSpy).not.toHaveBeenCalled();
-   * expect(result.formTemplateVersion?.versionNumber).toEqual(3);
-   * expect(result.formTemplateVersion?.md5Hash).toEqual(currentWPFormHash);
-   * });
-   */
+  it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
+    const currentWPFormHash = createHash("md5")
+      .update(JSON.stringify(wp))
+      .digest("hex");
+    mockDocumentClient.query.promise.mockReturnValueOnce({
+      Items: [
+        {
+          formTemplateId: "foo",
+          id: "mockReportJson",
+          md5Hash: currentWPFormHash,
+          versionNumber: 3,
+        },
+        {
+          formTemplateId: "foo",
+          id: "mockReportJson",
+          md5Hash: currentWPFormHash + "111",
+          versionNumber: 2,
+        },
+      ],
+    });
+    const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
+    const s3PutSpy = jest.spyOn(s3Lib, "put");
+    const result = await getOrCreateFormTemplate(
+      "local-wp-reports",
+      ReportType.WP
+    );
+    expect(dynamoPutSpy).not.toHaveBeenCalled();
+    expect(s3PutSpy).not.toHaveBeenCalled();
+    expect(result.formTemplateVersion?.versionNumber).toEqual(3);
+    expect(result.formTemplateVersion?.md5Hash).toEqual(currentWPFormHash);
+  });
 
   it("should create a new form if it doesn't match the most recent form", async () => {
+    const currentWPFormHash = createHash("md5")
+      .update(JSON.stringify(wp))
+      .digest("hex");
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [
         {
@@ -113,6 +111,9 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     jest.restoreAllMocks();
   });
   it("should create a new form template if none exist", async () => {
+    const currentSARFormHash = createHash("md5")
+      .update(JSON.stringify(sar))
+      .digest("hex");
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [],
     });
@@ -133,6 +134,9 @@ describe("Test getOrCreateFormTemplate SAR", () => {
   });
 
   it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
+    const currentSARFormHash = createHash("md5")
+      .update(JSON.stringify(sar))
+      .digest("hex");
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [
         {
@@ -162,6 +166,9 @@ describe("Test getOrCreateFormTemplate SAR", () => {
   });
 
   it("should create a new form if it doesn't match the most recent form", async () => {
+    const currentSARFormHash = createHash("md5")
+      .update(JSON.stringify(sar))
+      .digest("hex");
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [
         {
