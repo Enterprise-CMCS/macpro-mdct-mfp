@@ -80,6 +80,7 @@ jest.mock("aws-amplify", () => ({
 // USER CONTEXT
 
 export const mockUserContext: UserContextShape = {
+  user: undefined,
   logout: async () => {},
   loginWithIDM: () => {},
   updateTimeout: async () => {},
@@ -89,7 +90,7 @@ export const mockUserContext: UserContextShape = {
 // USER STATES / STORE
 
 export const mockNoUserStore: MfpUserState = {
-  user: null,
+  user: undefined,
   showLocalLogins: true,
   setUser: () => {},
   setShowLocalLogins: () => {},
@@ -176,10 +177,16 @@ export const mockAdminUserStore: MfpUserState = {
 
 export const mockBannerStore: AdminBannerState = {
   bannerData: mockBannerData,
-  isBannerActive: false,
-  setAdminBanner: () => {},
+  bannerActive: false,
+  bannerLoading: false,
+  bannerErrorMessage: "",
+  bannerDeleting: false,
+  setBannerData: () => {},
   clearAdminBanner: () => {},
-  setIsBannerActive: () => {},
+  setBannerActive: () => {},
+  setBannerLoading: () => {},
+  setBannerErrorMessage: () => {},
+  setBannerDeleting: () => {},
 };
 
 // REPORT STATES / STORE
@@ -188,10 +195,12 @@ export const mockReportStore: MfpReportState = {
   report: mockWPFullReport as ReportShape,
   reportsByState: [mockWPFullReport],
   submittedReportsByState: [mockWPFullReport],
+  lastSavedTime: "1:58 PM",
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
   setSubmittedReportsByState: () => {},
+  setLastSavedTime: () => {},
 };
 
 // BOUND STORE

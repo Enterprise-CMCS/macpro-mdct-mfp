@@ -49,7 +49,7 @@ export const UserProvider = ({ children }: Props) => {
 
   const logout = async () => {
     try {
-      setUser(null);
+      setUser(undefined);
       await Auth.signOut();
       localStorage.clear();
     } catch (error) {

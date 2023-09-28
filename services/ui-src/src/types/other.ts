@@ -28,11 +28,18 @@ export interface AnyObject {
   [key: string]: any;
 }
 
+export enum OverlayModalEntityTypes {
+  EVALUATION_PLAN = "evaluationPlan",
+  FUNDING_SOURCES = "fundingSources",
+}
+
 export enum PageTypes {
   STANDARD = "standard",
   DRAWER = "drawer",
   MODAL_DRAWER = "modalDrawer",
   MODAL_OVERLAY = "modalOverlay",
+  ENTITY_OVERLAY = "entityOverlay",
+  OVERLAY_MODAL = "overlayModal",
   REVIEW_SUBMIT = "reviewSubmit",
 }
 

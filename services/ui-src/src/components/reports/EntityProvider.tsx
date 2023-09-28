@@ -1,26 +1,12 @@
-import { ReactNode, useMemo, useState, createContext } from "react";
-import { EntityType, EntityShape } from "types";
+import { ReactNode, useMemo, createContext } from "react";
+import { useStore } from "utils";
 
 interface EntityContextShape {
   updateEntities: Function;
-  setEntities: Function;
-  setSelectedEntity: Function;
-  setEntityType: Function;
-  entityType?: EntityType;
-  entityId?: string;
-  entities: EntityShape[];
-  selectedEntity?: EntityShape;
 }
 
 export const EntityContext = createContext<EntityContextShape>({
   updateEntities: Function,
-  setEntities: Function,
-  setSelectedEntity: Function,
-  setEntityType: Function,
-  entityType: undefined,
-  entityId: undefined,
-  entities: [],
-  selectedEntity: undefined,
 });
 
 /**
@@ -33,9 +19,8 @@ export const EntityContext = createContext<EntityContextShape>({
  * @param children - React nodes
  */
 export const EntityProvider = ({ children }: EntityProviderProps) => {
-  const [selectedEntity, setSelectedEntity] = useState<EntityShape>();
-  const [entityType, setEntityType] = useState<EntityType>();
-  const [entities, setEntities] = useState<EntityShape[]>([]);
+  // state management
+  const { entityId, entityType, entities, selectedEntity } = useStore();
 
   /**
    * updateEntities updates the user's selected entity with their changes, and
@@ -49,18 +34,12 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
    */
   const updateEntities = () => {};
 
+  // TODO: add entity functions as we build them out
   const providerValue = useMemo(
     () => ({
       updateEntities,
-      setSelectedEntity,
-      setEntities,
-      selectedEntity,
-      entities,
-      setEntityType,
-      entityType,
-      entityId: selectedEntity?.id,
     }),
-    [entities, selectedEntity]
+    [entityId, entityType, entities, selectedEntity]
   );
 
   return (

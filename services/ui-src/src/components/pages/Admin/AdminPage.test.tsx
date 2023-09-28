@@ -11,23 +11,12 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { mockBannerData } from "utils/testing/mockBanner";
+import { bannerErrors } from "verbiage/errors";
 
 const mockBannerMethods = {
   fetchAdminBanner: jest.fn(() => {}),
   writeAdminBanner: jest.fn(() => {}),
   deleteAdminBanner: jest.fn(() => {}),
-};
-
-const mockContextWithoutBanner = {
-  ...mockBannerMethods,
-  isLoading: false,
-  errorData: null,
-};
-
-const mockContextWithBanner = {
-  ...mockBannerMethods,
-  isLoading: false,
-  errorData: null,
 };
 
 jest.mock("utils/state/useStore");
@@ -45,12 +34,12 @@ describe("Test AdminPage banner manipulation functionality", () => {
   it("Deletes current banner on delete button click", async () => {
     await act(async () => {
       mockedUseStore.mockReturnValue(mockBannerStore);
-      await render(adminView(mockContextWithBanner));
+      await render(adminView(mockBannerMethods));
     });
     const deleteButton = screen.getByText("Delete Current Banner");
     await userEvent.click(deleteButton);
     await waitFor(() =>
-      expect(mockContextWithBanner.deleteAdminBanner).toHaveBeenCalled()
+      expect(mockBannerMethods.deleteAdminBanner).toHaveBeenCalled()
     );
   });
 });
@@ -62,7 +51,7 @@ describe("Test AdminPage without banner", () => {
         ...mockBannerStore,
         bannerData: undefined,
       });
-      await render(adminView(mockContextWithoutBanner));
+      await render(adminView(mockBannerMethods));
     });
   });
 
@@ -84,7 +73,7 @@ describe("Test AdminPage with banner", () => {
   beforeEach(async () => {
     await act(async () => {
       mockedUseStore.mockReturnValue(mockBannerStore);
-      await render(adminView(mockContextWithBanner));
+      await render(adminView(mockBannerMethods));
     });
   });
 
@@ -110,7 +99,7 @@ describe("Test AdminPage with banner", () => {
 describe("Test AdminPage with active/inactive banner", () => {
   const currentTime = Date.now(); // 'current' time in ms since unix epoch
   const oneDay = 1000 * 60 * 60 * 24; // 1000ms * 60s * 60m * 24h = 86,400,000ms
-  const context = mockContextWithBanner;
+  const context = mockBannerMethods;
   mockedUseStore.mockReturnValue(mockBannerStore);
 
   test("Active banner shows 'active' status", async () => {
@@ -124,8 +113,7 @@ describe("Test AdminPage with active/inactive banner", () => {
       mockedUseStore.mockReturnValue({
         ...mockBannerStore,
         bannerData: activeBannerData,
-        // TODO: remove this next line
-        isBannerActive: true,
+        bannerActive: true,
       });
       await render(adminView(context));
     });
@@ -151,32 +139,31 @@ describe("Test AdminPage with active/inactive banner", () => {
   });
 });
 
-describe("Test AdminPage delete banner error handling", () => {
+describe("Test AdminPage displays banner error when state has set an error", () => {
   it("Displays error if deleteBanner throws error", async () => {
-    window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    const context = mockContextWithBanner;
-    context.deleteAdminBanner = jest.fn(() => {
-      throw new Error();
+    mockedUseStore.mockReturnValue({
+      ...mockBannerStore,
+      bannerErrorMessage: bannerErrors.DELETE_BANNER_FAILED,
     });
+
     await act(async () => {
-      await render(adminView(context));
+      await render(adminView(mockBannerMethods));
     });
-    const deleteButton = screen.getByText("Delete Current Banner");
-    await userEvent.click(deleteButton);
+
     expect(screen.getByText("Error")).toBeVisible();
   });
 });
 
 describe("Test AdminPage accessibility", () => {
   it("Should not have basic accessibility issues without banner", async () => {
-    const { container } = render(adminView(mockContextWithoutBanner));
+    const { container } = render(adminView(mockBannerMethods));
     await act(async () => {
       expect(await axe(container)).toHaveNoViolations();
     });
   });
 
   it("Should not have basic accessibility issues with banner", async () => {
-    const { container } = render(adminView(mockContextWithBanner));
+    const { container } = render(adminView(mockBannerMethods));
     await act(async () => {
       expect(await axe(container)).toHaveNoViolations();
     });
