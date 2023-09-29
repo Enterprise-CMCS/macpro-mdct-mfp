@@ -22,6 +22,7 @@ export { PreviewBanner } from "./banners/PreviewBanner";
 export { Card } from "./cards/Card";
 export { EmailCard } from "./cards/EmailCard";
 export { TemplateCard } from "./cards/TemplateCard";
+export { EntityCard } from "./cards/EntityCard";
 // drawers
 export { Drawer } from "./drawers/Drawer";
 export { ReportDrawer } from "./drawers/ReportDrawer";

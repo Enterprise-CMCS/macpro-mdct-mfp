@@ -192,7 +192,8 @@ export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
   };
 }
 
-export interface EntityModalOverlayPageVerbiage extends ReportPageVerbiage {
+export interface EntityModalOverlayPageVerbiage
+  extends OverlayModalPageVerbiage {
   accordion: object;
 }
 
