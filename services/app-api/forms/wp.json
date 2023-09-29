@@ -783,7 +783,6 @@
                 "verbiage": {
                   "intro": {
                     "section": "State and Territory-Specific Initiatives: I. Define initiative",
-                    "subsection": "{Person-centered Planning}",
                     "info": [
                       {
                         "type": "html",
@@ -884,7 +883,6 @@
                 "verbiage": {
                   "intro": {
                     "section": "State and Territory Specific Initiatives: II. Evaluation Plan",
-                    "subsection": "{Person-centered Planning}",
                     "info": [
                       {
                         "type": "html",
@@ -926,7 +924,7 @@
                   "text": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
                   "addEntityButtonText": "Add objective",
                   "editEntityButtonText": "Edit objective",
-                  "addEditModalAddTitle": "Add objective for {Person-centered Planning}",
+                  "addEditModalAddTitle": "Add objective for ",
                   "addEditModalHint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones.",
                   "addEditModalEditTitle": "Edit objective",
                   "deleteModalTitle": "Delete objective for this report?",
@@ -1025,7 +1023,6 @@
                 "verbiage": {
                   "intro": {
                     "section": "State and Territory-Specific Initiatives: III. Funding Sources",
-                    "subsection": "{Person-centered Planning}",
                     "info": [
                       {
                         "type": "html",

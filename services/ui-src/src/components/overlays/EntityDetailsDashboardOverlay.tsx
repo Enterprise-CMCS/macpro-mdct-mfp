@@ -65,6 +65,7 @@ export const EntityDetailsDashboardOverlay = ({
         {pageType === "modalOverlay" ? (
           <EntityProvider>
             <EntityDetailsModalOverlay
+              selectedEntity={selectedEntity}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as unknown as EntityDetailsModalOverlayShape}
             />

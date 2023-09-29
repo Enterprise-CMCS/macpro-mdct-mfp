@@ -24,6 +24,7 @@ import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import { MouseEventHandler, useState } from "react";
 
 export const EntityDetailsModalOverlay = ({
+  selectedEntity,
   route,
   closeEntityDetailsOverlay,
 }: Props) => {
@@ -31,7 +32,7 @@ export const EntityDetailsModalOverlay = ({
   const { modalForm, verbiage, entityType } = route;
   const { report } = useStore();
 
-  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
+  const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
     undefined
   );
 
@@ -50,12 +51,12 @@ export const EntityDetailsModalOverlay = ({
   } = useDisclosure();
 
   const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setSelectedEntity(entity);
+    if (entity) setCurrentEntity(entity);
     addEditEntityModalOnOpenHandler();
   };
 
   const closeAddEditEntityModal = () => {
-    setSelectedEntity(undefined);
+    setCurrentEntity(undefined);
     addEditEntityModalOnCloseHandler();
   };
 
@@ -67,12 +68,12 @@ export const EntityDetailsModalOverlay = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
-    setSelectedEntity(entity);
+    setCurrentEntity(entity);
     deleteEntityModalOnOpenHandler();
   };
 
   const closeDeleteEntityModal = () => {
-    setSelectedEntity(undefined);
+    setCurrentEntity(undefined);
     deleteEntityModalOnCloseHandler();
   };
 
@@ -92,9 +93,9 @@ export const EntityDetailsModalOverlay = ({
           sx={sx.intro}
           text={verbiage.intro}
           accordion={verbiage.accordion}
+          initiativeName={selectedEntity!.initiative_name}
         />
       )}
-      {/* TODO: actual form here */}
       <Box>
         <Button
           sx={sx.addEntityButton}
@@ -135,7 +136,7 @@ export const EntityDetailsModalOverlay = ({
         {/* MODALS */}
         <AddEditEntityModal
           entityType={entityType}
-          selectedEntity={selectedEntity}
+          selectedEntity={currentEntity}
           verbiage={verbiage}
           form={modalForm}
           modalDisclosure={{
@@ -145,7 +146,7 @@ export const EntityDetailsModalOverlay = ({
         />
         <DeleteEntityModal
           entityType={entityType}
-          selectedEntity={selectedEntity}
+          selectedEntity={currentEntity}
           verbiage={verbiage}
           modalDisclosure={{
             isOpen: deleteEntityModalIsOpen,
@@ -165,6 +166,7 @@ export const EntityDetailsModalOverlay = ({
 };
 
 interface Props {
+  selectedEntity?: EntityShape;
   route: EntityDetailsModalOverlayShape;
   closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;
