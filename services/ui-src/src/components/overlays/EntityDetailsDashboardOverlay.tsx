@@ -7,6 +7,7 @@ import {
   EntityRow,
   EntityDetailsOverlay,
   EntityProvider,
+  EntityDetailsModalOverlay,
 } from "components";
 // types
 import {
@@ -15,6 +16,7 @@ import {
   FormJson,
   EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
+  EntityDetailsModalOverlayShape,
 } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
@@ -60,15 +62,22 @@ export const EntityDetailsDashboardOverlay = ({
     const pageType = selectedStep!.pageType;
     return (
       <Box>
-        {pageType !== "modalOverlay" && (
+        {pageType !== "modalOverlay" ? (
           <EntityProvider>
             <EntityDetailsOverlay
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as unknown as EntityDetailsOverlayShape}
             />
           </EntityProvider>
+        ) : (
+          // {/* TODO: modalOverlay page type */}
+          <EntityProvider>
+            <EntityDetailsModalOverlay
+              closeEntityDetailsOverlay={closeEntityStepOverlay}
+              route={selectedStep as unknown as EntityDetailsModalOverlayShape}
+            />
+          </EntityProvider>
         )}
-        {/* TODO: modalOverlay page type */}
       </Box>
     );
   };

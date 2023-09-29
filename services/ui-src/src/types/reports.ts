@@ -81,6 +81,13 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   verbiage: EntityOverlayPageVerbiage;
   form: FormJson;
+  modalForm?: FormJson;
+}
+
+export interface EntityDetailsModalOverlayShape extends ReportPageShapeBase {
+  entityType: string;
+  verbiage: EntityModalOverlayPageVerbiage;
+  modalForm: FormJson;
 }
 
 export interface EntityDetailsDashboardOverlayShape
@@ -181,6 +188,10 @@ export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
     closeOutModalBodyText?: string;
     closeOutModalConfirmButtonText?: string;
   };
+}
+
+export interface EntityModalOverlayPageVerbiage extends ReportPageVerbiage {
+  accordion: object;
 }
 
 /**
