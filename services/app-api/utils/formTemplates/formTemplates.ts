@@ -19,6 +19,11 @@ import {
 } from "../types";
 import { getTemplate } from "../../handlers/formTemplates/populateTemplatesTable";
 import { createHash } from "crypto";
+import {
+  calculateCurrentQuarter,
+  calculateCurrentYear,
+  incrementQuarterAndYear,
+} from "../time/time";
 
 export async function getNewestTemplateVersion(reportType: ReportType) {
   const queryParams: QueryInput = {
@@ -48,6 +53,79 @@ export const formTemplateForReportType = (reportType: ReportType) => {
   }
 };
 
+export const nextTwelveQuartersKeys = (fieldId: string) => {
+  let quarter = calculateCurrentQuarter();
+  let year = calculateCurrentYear();
+  const keys: (string[] | number[])[][] = [];
+  for (let i = 0; i < 12; i++) {
+    keys.push([[fieldId], [year], [quarter]]);
+    [quarter, year] = incrementQuarterAndYear(quarter, year);
+  }
+  return keys;
+};
+
+export const nextTwelveQuarters = (
+  formFields: FormField[],
+  fieldIndex: number,
+  fieldToRepeat: FormField
+) => {
+  var keys = nextTwelveQuartersKeys(fieldToRepeat.id);
+  for (let key of keys) {
+    const formField: FormField = {
+      ...fieldToRepeat,
+      id: `${key[0]}${key[1]}Q${key[2]}`,
+      type: fieldToRepeat?.type,
+      validation: fieldToRepeat.validation,
+      props: {
+        ...fieldToRepeat?.props,
+        label: `${key[1]} Q${key[2]}`,
+      },
+    };
+    formFields.push(formField);
+  }
+  formFields.splice(fieldIndex, 1);
+  return formFields;
+};
+
+export const expandRepeatedFields = (formFields: FormField[]) => {
+  const repeatingFieldRuleMap: AnyObject = {
+    nextTwelveQuarters: nextTwelveQuarters,
+  };
+  formFields.forEach((field, fieldIndex) => {
+    // if field has choices/options (ie could have nested children)
+    const fieldChoices = field.props?.choices;
+    if (fieldChoices) {
+      fieldChoices.forEach((choice: FieldChoice) => {
+        // if given field choice has nested children
+        const nestedChildFields = choice.children;
+        if (nestedChildFields) {
+          choice.children = expandRepeatedFields(nestedChildFields);
+        }
+      });
+    }
+    if (field?.repeatable) {
+      const repeatingFieldRule = repeatingFieldRuleMap[field.repeatable.rule];
+      formFields = repeatingFieldRule(formFields, fieldIndex, field);
+    }
+  });
+  return formFields;
+};
+
+export const scanForRepeatedFields = (reportRoutes: ReportRoute[]) => {
+  for (let route of reportRoutes) {
+    if (route?.children) scanForRepeatedFields(route.children);
+    if (route?.form?.fields)
+      route.form.fields = expandRepeatedFields(route.form.fields);
+    if (route?.drawerForm?.fields)
+      route.drawerForm.fields = expandRepeatedFields(route.drawerForm.fields);
+    if (route?.modalForm?.fields)
+      route.modalForm.fields = expandRepeatedFields(route.modalForm.fields);
+    if (route?.overlayForm?.fields)
+      route.overlayForm.fields = expandRepeatedFields(route.overlayForm.fields);
+  }
+  return reportRoutes;
+};
+
 export async function getOrCreateFormTemplate(
   reportBucket: string,
   reportType: ReportType
@@ -72,6 +150,10 @@ export async function getOrCreateFormTemplate(
     };
   } else {
     const newFormTemplateId = KSUID.randomSync().string;
+    currentFormTemplate.routes = scanForRepeatedFields(
+      currentFormTemplate.routes
+    );
+
     const formTemplateWithValidationJson = {
       ...currentFormTemplate,
       validationJson: getValidationFromFormTemplate(currentFormTemplate),

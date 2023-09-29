@@ -26,3 +26,23 @@ export const convertDateUtcToEt = (date: number): string => {
 export const twoDigitCalendarDate = (date: number) => {
   return ("0" + date).slice(-2);
 };
+
+export const calculateCurrentQuarter = () => {
+  const quarter = Math.ceil((new Date().getMonth() + 1) / 3);
+  return quarter;
+};
+
+export const calculateCurrentYear = () => {
+  const year = new Date().getFullYear();
+  return year;
+};
+
+export const incrementQuarterAndYear = (quarter: number, year: number) => {
+  if (quarter >= 4) {
+    quarter = 1;
+    year++;
+  } else {
+    quarter++;
+  }
+  return [quarter, year];
+};
