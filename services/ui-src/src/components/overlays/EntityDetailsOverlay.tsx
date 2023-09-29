@@ -14,7 +14,7 @@ import { AlertTypes, EntityDetailsOverlayShape } from "types";
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
-// verbiage
+// utils
 import { useStore } from "utils";
 
 export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
