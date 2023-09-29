@@ -14,7 +14,7 @@ export const EntityDetailsModalOverlay = ({
   const submitting = false;
   const { modalForm, verbiage } = route;
 
-  // Add/edit entity modal disclosure and methods
+  // TODO: Add/edit entity modal disclosure and methods
 
   return (
     <Box>

@@ -62,19 +62,18 @@ export const EntityDetailsDashboardOverlay = ({
     const pageType = selectedStep!.pageType;
     return (
       <Box>
-        {pageType !== "modalOverlay" ? (
-          <EntityProvider>
-            <EntityDetailsOverlay
-              closeEntityDetailsOverlay={closeEntityStepOverlay}
-              route={selectedStep as unknown as EntityDetailsOverlayShape}
-            />
-          </EntityProvider>
-        ) : (
-          // {/* TODO: modalOverlay page type */}
+        {pageType === "modalOverlay" ? (
           <EntityProvider>
             <EntityDetailsModalOverlay
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as unknown as EntityDetailsModalOverlayShape}
+            />
+          </EntityProvider>
+        ) : (
+          <EntityProvider>
+            <EntityDetailsOverlay
+              closeEntityDetailsOverlay={closeEntityStepOverlay}
+              route={selectedStep as unknown as EntityDetailsOverlayShape}
             />
           </EntityProvider>
         )}
