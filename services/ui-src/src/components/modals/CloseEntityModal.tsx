@@ -5,7 +5,11 @@ import { AnyObject, EntityShape } from "types";
 //utils
 import { renderHtml } from "utils";
 
-export const CloseEntityModal = ({ verbiage, modalDisclosure }: Props) => {
+export const CloseEntityModal = ({
+  entityName,
+  verbiage,
+  modalDisclosure,
+}: Props) => {
   const closing = false;
   const closeProgramHandler = async () => {
     modalDisclosure.onClose();
@@ -18,7 +22,7 @@ export const CloseEntityModal = ({ verbiage, modalDisclosure }: Props) => {
       modalDisclosure={modalDisclosure}
       submitting={closing}
       content={{
-        heading: modalInfo.closeOutModalTitle,
+        heading: modalInfo.closeOutModalTitle + entityName,
         actionButtonText: modalInfo.closeOutModalConfirmButtonText,
         closeButtonText: "Cancel",
       }}
@@ -29,7 +33,7 @@ export const CloseEntityModal = ({ verbiage, modalDisclosure }: Props) => {
 };
 
 interface Props {
-  selectedEntity?: EntityShape;
+  entityName?: EntityShape;
   verbiage: AnyObject;
   modalDisclosure: {
     isOpen: boolean;

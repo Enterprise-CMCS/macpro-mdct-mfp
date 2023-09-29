@@ -72,6 +72,7 @@ export const EntityDetailsDashboardOverlay = ({
         ) : (
           <EntityProvider>
             <EntityDetailsOverlay
+              selectedEntity={selectedEntity}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as unknown as EntityDetailsOverlayShape}
             />

@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Alert, Form, ReportPageIntro, CloseEntityModal } from "components";
 // types
-import { AlertTypes, EntityDetailsOverlayShape } from "types";
+import { AlertTypes, EntityDetailsOverlayShape, EntityShape } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
@@ -17,9 +17,10 @@ import warningIcon from "assets/icons/icon_warning.png";
 import { MouseEventHandler } from "react";
 
 export const EntityDetailsOverlay = ({
-  closeEntityDetailsOverlay,
   route,
+  closeEntityDetailsOverlay,
   validateOnRender,
+  selectedEntity,
 }: Props) => {
   const submitting = false;
   const { form, verbiage } = route;
@@ -51,7 +52,12 @@ export const EntityDetailsOverlay = ({
         Return to dashboard for this initiative
       </Button>
 
-      {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
+      {verbiage.intro && (
+        <ReportPageIntro
+          text={verbiage.intro}
+          initiativeName={selectedEntity!.initiative_name}
+        />
+      )}
       <Form
         id={form.id}
         formJson={form}
@@ -72,7 +78,6 @@ export const EntityDetailsOverlay = ({
           />
         )}
       </Box>
-
       <Box>
         {verbiage.closeOutModal && (
           <Box>
@@ -86,6 +91,7 @@ export const EntityDetailsOverlay = ({
             </Button>
             <CloseEntityModal
               verbiage={verbiage}
+              entityName={selectedEntity!.initiative_name}
               modalDisclosure={{
                 isOpen: closeEntityModalIsOpen,
                 onClose: closeCloseEntityModal,
@@ -106,6 +112,7 @@ export const EntityDetailsOverlay = ({
 };
 
 interface Props {
+  selectedEntity?: EntityShape;
   route: EntityDetailsOverlayShape;
   closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;
