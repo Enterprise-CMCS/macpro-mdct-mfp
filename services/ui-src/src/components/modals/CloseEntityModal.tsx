@@ -1,4 +1,3 @@
-import { useState } from "react";
 // components
 import { Modal } from "components";
 // types
@@ -7,24 +6,17 @@ import { AnyObject, EntityShape } from "types";
 import { renderHtml } from "utils";
 
 export const CloseEntityModal = ({ verbiage, modalDisclosure }: Props) => {
-  //const { report } = useStore();
-  const [closingOut, setClosingOut] = useState<boolean>(false);
-  const modalInfo = verbiage.closeOutModal;
-
-  const closeOutProgramHandler = async () => {
-    setClosingOut(true);
-
-    // TO-DO: what does it mean to close out an initiative? what do i have to send to the api here
-
-    setClosingOut(false);
+  const closing = false;
+  const closeProgramHandler = async () => {
     modalDisclosure.onClose();
   };
+  const modalInfo = verbiage.closeOutModal;
 
   return (
     <Modal
-      onConfirmHandler={closeOutProgramHandler}
+      onConfirmHandler={closeProgramHandler}
       modalDisclosure={modalDisclosure}
-      submitting={closingOut}
+      submitting={closing}
       content={{
         heading: modalInfo.closeOutModalTitle,
         actionButtonText: modalInfo.closeOutModalConfirmButtonText,
