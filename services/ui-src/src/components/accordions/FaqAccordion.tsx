@@ -20,7 +20,6 @@ export const FaqAccordion = ({ accordionItems, ...props }: Props) => {
 
 interface Props {
   accordionItems: AnyObject;
-  [key: string]: any;
 }
 
 const sx = {
