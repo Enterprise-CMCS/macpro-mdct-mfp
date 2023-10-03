@@ -1167,7 +1167,7 @@
                 }
               },
               {
-                "id": "OydJGL8N885vtXqcU2FQE4",
+                "id": "initiativeStatus_checkbox",
                 "type": "checkbox",
                 "validation": "checkbox",
                 "props": {
@@ -1188,11 +1188,11 @@
                           "props": {
                             "label": "Indicate reason for termination"
                           },
-                          "type": "textarea",
+                          "type": "text",
                           "validation": {
                             "type": "text",
                             "nested": true,
-                            "parentFieldName": "OydJGL8N885vtXqcU2FQE4"
+                            "parentFieldName": "initiativeStatus_checkbox"
                           }
                         }
                       ]
