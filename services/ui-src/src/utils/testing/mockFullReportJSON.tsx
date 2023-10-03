@@ -45,7 +45,7 @@ export const mockFullReportJSON: ReportJson = {
       name: "Transition Benchmarks",
       path: "/wp/transition-benchmarks",
       pageType: "modalDrawer",
-      entityType: "targetPopulation",
+      entityType: "targetPopulations",
       verbiage: {
         intro: {
           section: "",

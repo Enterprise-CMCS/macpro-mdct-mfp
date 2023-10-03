@@ -54,6 +54,18 @@ export const mockDropdownField = {
   },
 };
 
+export const mockEntityRow = {
+  props: {
+    entity: "",
+    entityInfo: "",
+    entityTupe: "",
+    verbiage: "",
+    openAddEditEntityModal: () => {},
+    openDeleteEntityModal: () => {},
+    openDrawer: () => {},
+  },
+};
+
 export const mockModalFormField = {
   id: "mock-modal-text-field",
   type: "text",

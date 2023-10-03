@@ -1,33 +1,45 @@
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
 import { EntityStatusIcon } from "components";
-import { getEntityStatus } from "./getEntityStatus";
 // types
-import { AnyObject, EntityShape } from "types";
+import { AnyObject, EntityShape, ModalDrawerEntityTypes } from "types";
 // utils
 import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
+import { getEntityStatus } from "./getEntityStatus";
 import { useMemo } from "react";
 
 export const EntityRow = ({
   entity,
   entityInfo,
+  entityType,
   verbiage,
   locked,
   openAddEditEntityModal,
   openDeleteEntityModal,
   openDrawer,
 }: Props) => {
-  const { report } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
+  const { report } = useStore();
 
   // check for "other" target population entities
   const { isRequired } = entity;
 
-  const entityComplete = useMemo(() => {
-    return report ? getEntityStatus(report, entity) : false;
-  }, [report]);
+  console.log(entity);
+
+  let entityCompleted = false;
+  switch (entityType) {
+    case ModalDrawerEntityTypes.TARGET_POPULATIONS:
+      entityCompleted =
+        !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
+      break;
+    default:
+      entityCompleted = useMemo(() => {
+        return report ? !!getEntityStatus(report, entity) : false;
+      }, [report]);
+      break;
+  }
 
   let programInfo = [];
   if (entityInfo) {
@@ -43,7 +55,7 @@ export const EntityRow = ({
   return (
     <Tr sx={sx.content}>
       <Td>
-        <EntityStatusIcon entity={entity as EntityShape} />
+        <EntityStatusIcon entityCompleted={entityCompleted} />
       </Td>
       <Td sx={sx.entityName}>
         <ul>
@@ -51,7 +63,7 @@ export const EntityRow = ({
             <li key={index}>{renderHtml(field)}</li>
           ))}
         </ul>
-        {!entityComplete && (
+        {!entityCompleted && (
           <Text sx={sx.errorText}>
             Select "{verbiage.enterEntityDetailsButtonText}” to complete this
             report.
@@ -94,6 +106,7 @@ export const EntityRow = ({
 
 interface Props {
   entity: EntityShape;
+  entityType?: string;
   verbiage: AnyObject;
   openAddEditEntityModal: Function;
   openDeleteEntityModal: Function;
@@ -106,7 +119,7 @@ const sx = {
     verticalAlign: "middle",
     paddingLeft: "1.5rem",
     td: {
-      borderColor: "palette.gray_light",
+      borderColor: "palette.gray_lighter",
       paddingRight: 0,
     },
   },
