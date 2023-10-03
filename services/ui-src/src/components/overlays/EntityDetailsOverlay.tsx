@@ -57,7 +57,7 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
         autosave={true}
         formData={report?.fieldData}
         validateOnRender={validateOnRender || false}
-        dontReset={false}
+        dontReset={true}
       />
       <Box>
         {verbiage.closeOutWarning && (
