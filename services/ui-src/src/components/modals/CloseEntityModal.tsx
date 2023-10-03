@@ -33,7 +33,7 @@ export const CloseEntityModal = ({
 };
 
 interface Props {
-  entityName?: string;
+  entityName: string;
   verbiage: AnyObject;
   modalDisclosure: {
     isOpen: boolean;
