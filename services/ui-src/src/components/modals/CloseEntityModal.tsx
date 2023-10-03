@@ -1,7 +1,7 @@
 // components
 import { Modal } from "components";
 // types
-import { AnyObject, EntityShape } from "types";
+import { AnyObject } from "types";
 //utils
 import { renderHtml } from "utils";
 
@@ -33,7 +33,7 @@ export const CloseEntityModal = ({
 };
 
 interface Props {
-  entityName?: EntityShape;
+  entityName?: string;
   verbiage: AnyObject;
   modalDisclosure: {
     isOpen: boolean;

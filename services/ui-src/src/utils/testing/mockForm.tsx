@@ -249,7 +249,7 @@ export const mockEntityDetailsOverlayVerbiage = {
   },
   closeOutModal: {
     closeOutModalButtonText: "Close out modal",
-    closeOutModalTitle: "Modal title",
+    closeOutModalTitle: "Modal title ",
     closeOutModalBodyText: "This is a modal",
     closeOutModalConfirmButtonText: "Confirm",
   },
