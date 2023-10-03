@@ -1211,7 +1211,7 @@
                           "validation": {
                             "type": "text",
                             "nested": true,
-                            "parentFieldName": "OydJGL8N885vtXqcU2FQE4"
+                            "parentFieldName": "initiativeStatus_checkbox"
                           }
                         }
                       ]

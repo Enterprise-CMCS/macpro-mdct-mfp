@@ -14,11 +14,8 @@ import { AlertTypes, EntityDetailsOverlayShape } from "types";
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
-// utils
-import { useStore } from "utils";
 
 export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
-  const { report } = useStore();
   const submitting = false;
   const { form, verbiage } = route;
 
@@ -54,8 +51,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
         id={form.id}
         formJson={form}
         onSubmit={() => {}}
-        autosave={true}
-        formData={report?.fieldData}
         validateOnRender={validateOnRender || false}
         dontReset={true}
       />
