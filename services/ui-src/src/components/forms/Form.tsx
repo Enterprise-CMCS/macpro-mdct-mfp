@@ -45,6 +45,7 @@ export const Form = ({
 
   // determine if fields should be disabled (based on admin roles )
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
+
   const { report } = useStore();
   let location = useLocation();
   const fieldInputDisabled =
@@ -83,7 +84,46 @@ export const Form = ({
 
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const fieldsToRender = hydrateFormFields(fields, formData);
+    const getDynamicChoices = (fields: any) => {
+      const isTargetPopulationChoices = fields.filter((field: any) =>
+        field.id.match("stateTerritory_targetPopulations")
+      );
+      if (isTargetPopulationChoices) {
+        const targetPopulationChoices = report?.fieldData.targetPopulation;
+
+        const labelCustomTargetPopulationChoice = (field: any) => {
+          if (targetPopulationChoices.indexOf(field) >= 4) {
+            return `Other: {${field.transitionBenchmarks_targetPopulationName}}`;
+          } else {
+            return field.transitionBenchmarks_targetPopulationName;
+          }
+        };
+        const formatTargetPopulationChoices = targetPopulationChoices.map(
+          (field: any) => {
+            return {
+              checked: false,
+              id: field.id,
+              label: labelCustomTargetPopulationChoice(field),
+              name: field.transitionBenchmarks_targetPopulationName,
+              value: field.transitionBenchmarks_targetPopulationName,
+            };
+          }
+        );
+        // update choices with dynamic target population choices
+        if (fields[1]?.props) {
+          fields[1].props.choices = [];
+          fields[1]?.props?.choices.push(...formatTargetPopulationChoices);
+        }
+        return fields;
+      } else {
+        return fields;
+      }
+    };
+
+    const fieldsToRender = hydrateFormFields(
+      getDynamicChoices(fields),
+      formData
+    );
     return formFieldFactory(fieldsToRender, {
       disabled: !!fieldInputDisabled,
       autosave,
@@ -159,7 +199,7 @@ const sx = {
     },
   },
   // nested child fields
-  ".ds-c-choice__checkedChild.nested": {
+  ".ds-c-field__checkedChild.nested": {
     paddingY: "0.25rem",
     paddingTop: 0,
     // makes the blue line continuous
