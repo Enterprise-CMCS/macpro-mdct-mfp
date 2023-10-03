@@ -26,8 +26,6 @@ export const EntityRow = ({
   // check for "other" target population entities
   const { isRequired } = entity;
 
-  console.log(entity);
-
   let entityCompleted = false;
   switch (entityType) {
     case ModalDrawerEntityTypes.TARGET_POPULATIONS:

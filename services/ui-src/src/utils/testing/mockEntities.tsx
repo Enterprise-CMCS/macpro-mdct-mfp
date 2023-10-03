@@ -33,8 +33,14 @@ export const mockCompletedGenericFormattedEntityData = {
 };
 
 export const mockTargetPopulationEntity = {
-  id: "mock-id",
+  id: "mock-id1",
   isRequired: true,
-  transitionBenchmarks_targetPopulationName: "Older People",
+  transitionBenchmarks_targetPopulationName: "Older Adults",
   transitionBenchmarks_applicableToMfpDemonstration: [{ value: "No" }],
+};
+
+export const mockOtherTargetPopulationEntity = {
+  id: "mock-id5",
+  isRequired: false,
+  transitionBenchmarks_targetPopulationName: "New target population",
 };
