@@ -19,7 +19,6 @@ export const CheckboxField = ({
     const isTargetPopulationChoices = choices.filter((choice) =>
       choice.id.match("targetPopulations")
     );
-    // is target population choices the only choices that need to be dynamically pulled?
     if (isTargetPopulationChoices) {
       const targetPopulationChoices = report?.fieldData.targetPopulation;
 
