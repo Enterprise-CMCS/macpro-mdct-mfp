@@ -5,6 +5,7 @@ import {
   AdminBannerProvider,
   AdminPage,
   HomePage,
+  HelpPage,
   NotFoundPage,
   DashboardPage,
   ProfilePage,
@@ -36,6 +37,7 @@ export const AppRoutes = () => {
             element={!userIsAdmin ? <Navigate to="/profile" /> : <AdminPage />}
           />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/help" element={<HelpPage />} />
           <Route path="*" element={<NotFoundPage />} />
           {/* MFP Report Routes */}
           {wpReport && (

@@ -1,5 +1,6 @@
 // accordions
 export { AccordionItem } from "./accordions/AccordionItem";
+export { FaqAccordion } from "./accordions/FaqAccordion";
 export { TemplateCardAccordion } from "./accordions/TemplateCardAccordion";
 export { InstructionsAccordion } from "./accordions/InstructionsAccordion";
 // alerts
@@ -64,6 +65,7 @@ export { DeleteEntityModal } from "./modals/DeleteEntityModal";
 // pages
 export { AdminPage } from "./pages/Admin/AdminPage";
 export { HomePage } from "./pages/Home/HomePage";
+export { HelpPage } from "./pages/HelpPage/HelpPage";
 export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { ReviewSubmitPage } from "./pages/ReviewSubmit/ReviewSubmitPage";
