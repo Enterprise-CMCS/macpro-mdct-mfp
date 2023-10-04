@@ -1188,7 +1188,7 @@
                           "props": {
                             "label": "Indicate reason for termination"
                           },
-                          "type": "text",
+                          "type": "textarea",
                           "validation": {
                             "type": "text",
                             "nested": true,
