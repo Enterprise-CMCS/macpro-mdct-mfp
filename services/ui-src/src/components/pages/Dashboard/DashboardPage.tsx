@@ -51,7 +51,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     releaseReport,
     fetchReport,
   } = useContext(ReportContext);
-  const { reportsByState } = useStore();
+  const { reportsByState, workPlanToCopyFrom } = useStore();
   const navigate = useNavigate();
   const {
     state: userState,
@@ -124,8 +124,29 @@ export const DashboardPage = ({ reportType }: Props) => {
     navigate(firstReportPagePath);
   };
 
-  const openAddEditReportModal = () => {
+  const openAddEditReportModal = (report?: ReportShape) => {
     let formData = undefined;
+    //
+    if (report && reportType == ReportType.SAR) {
+      // We are editing a SAR submission
+      formData = {
+        formData: {
+          associatedWorkPlan: report.submissionName,
+          stateOrTerritory: report.state,
+          reportPeriod: report.reportPeriod,
+        },
+      };
+    } else if (reportType == ReportType.SAR) {
+      // We are creating a new SAR submission
+      formData = {
+        formData: {
+          associatedWorkPlan: workPlanToCopyFrom?.submissionName,
+          stateOrTerritory: userState,
+          reportPeriod: workPlanToCopyFrom?.reportPeriod,
+        },
+      };
+    }
+
     setSelectedReport(formData);
 
     // use disclosure to open modal

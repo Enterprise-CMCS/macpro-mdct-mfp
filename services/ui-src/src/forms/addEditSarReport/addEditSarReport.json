@@ -13,6 +13,7 @@
       "type": "text",
       "validation": "text",
       "props": {
+        "disabled": true,
         "label": "Associated Work Plan",
         "hint": "Auto-populates from your last approved Work Plan"
       }
@@ -22,15 +23,17 @@
       "type": "text",
       "validation": "text",
       "props": {
+        "disabled": true,
         "label": "State or Territory",
         "hint": "Auto-populates from your account profile."
       }
     },
     {
-      "id": "reportingPeriod",
+      "id": "reportPeriod",
       "type": "text",
       "validation": "text",
       "props": {
+        "disabled": true,
         "label": "Reporting Period",
         "hint": "Auto-populates from your last approved Work Plan."
       }
@@ -51,16 +54,6 @@
             "label": "No"
           }
         ]
-      }
-    },
-    {
-      "id": "sarTargetPopulations",
-      "type": "checkbox",
-      "validation": "checkbox",
-      "props": {
-        "label": "Target populations applicable to your MFP Demonstration project during this reporting period:",
-        "hint": "Auto-populates based on your responses from the Work Plan.",
-        "choices": []
       }
     }
   ]
