@@ -96,6 +96,7 @@ export const mockWPFullReport = {
     },
   },
   isComplete: false,
+  reportPeriod: 1,
 };
 
 export const mockReportsByState = [

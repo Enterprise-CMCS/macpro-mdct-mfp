@@ -47,6 +47,7 @@ export const mockDynamoDataWPLocked: WPReportMetadata = {
   locked: true,
   previousRevisions: [],
   isComplete: false,
+  reportPeriod: 2,
 };
 
 export const mockDynamoDataWPCompleted: WPReportMetadata = {
@@ -69,4 +70,5 @@ export const mockDynamoDataWPCompleted: WPReportMetadata = {
   submissionCount: 0,
   locked: false,
   previousRevisions: [],
+  reportPeriod: 2,
 };

@@ -14,7 +14,10 @@ import {
   error,
   reportTables,
   reportBuckets,
+  reportNames,
 } from "../../utils/constants/constants";
+import { calculatePeriod } from "../../utils/time/time";
+import { createReportName } from "../../utils/other/other";
 // types
 import {
   DynamoWrite,
@@ -69,6 +72,7 @@ export const createReport = handler(async (event, _context) => {
 
   const reportBucket = reportBuckets[reportType];
   const reportTable = reportTables[reportType];
+  const reportTypeExpanded = reportNames[reportType];
 
   let formTemplate, formTemplateVersion;
 
@@ -95,7 +99,6 @@ export const createReport = handler(async (event, _context) => {
   const fieldDataId: string = KSUID.randomSync().string;
   const formTemplateId: string = formTemplateVersion?.id;
   const creationValidationJson = {
-    submissionName: "text",
     stateName: "text",
     ["targetPopulation"]: "objectArray",
     submissionCount: "number",
@@ -144,6 +147,8 @@ export const createReport = handler(async (event, _context) => {
     };
   }
 
+  const currentDate = Date.now();
+
   // Create DyanmoDB record.
   const reportMetadataParams: DynamoWrite = {
     TableName: reportTable,
@@ -154,9 +159,11 @@ export const createReport = handler(async (event, _context) => {
       fieldDataId,
       status: "Not started",
       formTemplateId,
-      createdAt: Date.now(),
-      lastAltered: Date.now(),
+      createdAt: currentDate,
+      lastAltered: currentDate,
       versionNumber: formTemplateVersion?.versionNumber,
+      submissionName: createReportName(reportTypeExpanded, currentDate, state),
+      reportPeriod: calculatePeriod(currentDate),
     },
   };
 

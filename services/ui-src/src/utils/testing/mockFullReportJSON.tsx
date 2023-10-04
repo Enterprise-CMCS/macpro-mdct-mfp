@@ -1052,6 +1052,7 @@ export const reportShape: ReportShape = {
     submissionName: "test",
     stateName: "Minnesota",
   },
+  reportPeriod: 1,
 };
 
 export const reportByState = {
