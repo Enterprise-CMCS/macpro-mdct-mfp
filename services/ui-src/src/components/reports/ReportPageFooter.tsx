@@ -76,7 +76,7 @@ const sx = {
   footerBox: {
     marginTop: "1.0rem",
     borderTop: "1px solid",
-    borderColor: "palette.gray_light",
+    borderColor: "palette.gray_lighter",
   },
   buttonFlex: {
     justifyContent: "space-between",

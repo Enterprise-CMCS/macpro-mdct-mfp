@@ -100,7 +100,7 @@ export const createReport = handler(async (event, _context) => {
   const formTemplateId: string = formTemplateVersion?.id;
   const creationValidationJson = {
     stateName: "text",
-    ["targetPopulation"]: "objectArray",
+    ["targetPopulations"]: "objectArray",
     submissionCount: "number",
     versionControl: "objectArray",
   };

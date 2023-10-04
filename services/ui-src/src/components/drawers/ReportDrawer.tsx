@@ -77,7 +77,6 @@ export const ReportDrawer = ({
 interface Props {
   selectedEntity: EntityShape;
   verbiage: {
-    drawerEyebrowTitle?: string;
     drawerTitle: string;
     drawerInfo?: CustomHtmlElement[];
     drawerDetails?: AnyObject;
@@ -102,7 +101,7 @@ const sx = {
   },
   footerBox: {
     marginTop: "2rem",
-    borderTop: "1.5px solid var(--chakra-colors-palette-gray_light)",
+    borderTop: "1.5px solid var(--chakra-colors-palette-gray_lighter)",
   },
   buttonFlex: {
     justifyContent: "space-between",

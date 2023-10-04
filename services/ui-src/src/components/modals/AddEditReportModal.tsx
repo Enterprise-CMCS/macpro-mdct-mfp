@@ -33,7 +33,7 @@ export const AddEditReportModal = ({
   const prepareWpPayload = () => {
     const submissionName = "Work Plan";
     // static entities
-    const targetPopulation = [
+    const targetPopulations = [
       {
         id: "2Vd02CVUtKgBETwqzDXpSIhi",
         transitionBenchmarks_targetPopulationName: "Older adults",
@@ -64,7 +64,8 @@ export const AddEditReportModal = ({
         lastAlteredBy: full_name,
       },
       fieldData: {
-        ["targetPopulation"]: targetPopulation,
+        submissionName,
+        ["targetPopulations"]: targetPopulations,
       },
     };
   };
