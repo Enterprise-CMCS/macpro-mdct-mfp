@@ -73,7 +73,7 @@ export const AddEditReportModal = ({
   // SAR report payload
   const prepareSarPayload = (formData: any) => {
     const submissionName = formData["submissionName"];
-
+    const reportPeriod = formData["reportPeriod"];
     return {
       metadata: {
         submissionName: submissionName,
@@ -84,6 +84,7 @@ export const AddEditReportModal = ({
       },
       fieldData: {
         submissionName,
+        reportPeriod,
       },
     };
   };
@@ -92,7 +93,6 @@ export const AddEditReportModal = ({
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
-
     const dataToWrite =
       reportType === "WP" ? prepareWpPayload() : prepareSarPayload(formData);
 

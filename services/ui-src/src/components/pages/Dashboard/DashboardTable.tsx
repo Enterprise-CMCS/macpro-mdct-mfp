@@ -8,8 +8,7 @@ import {
   ReportType,
   TableContentShape,
 } from "types";
-import { calculatePeriod, convertDateUtcToEt } from "utils";
-import { States } from "../../../constants";
+import { convertDateUtcToEt } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 
@@ -43,7 +42,7 @@ export const DashboardTable = ({
           <Td></Td>
         )}
         {/* Report Name */}
-        <Td sx={sxOverride.submissionNameText}>{getReportName(report)}</Td>
+        <Td sx={sxOverride.submissionNameText}>{report.submissionName}</Td>
         {/* Date Fields */}
         <DateFields report={report} reportType={reportType} />
         {/* Last Altered By */}
@@ -123,16 +122,6 @@ interface DashboardTableProps {
   releasing?: boolean | undefined;
   sxOverride: AnyObject;
 }
-
-const getReportName = (report: ReportMetadataShape) => {
-  const reportName = report.submissionName;
-  const etDate = convertDateUtcToEt(report.createdAt);
-  const period = calculatePeriod(etDate);
-  const year = new Date(etDate).getFullYear();
-
-  const fullStateName = States[report.state as keyof typeof States];
-  return `${fullStateName} ${reportName} ${year} - Period ${period}`;
-};
 
 export const getStatus = (
   reportType: ReportType,
