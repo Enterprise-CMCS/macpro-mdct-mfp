@@ -14,7 +14,14 @@ import {
   sortReportsOldestToNewest,
   useStore,
 } from "utils";
-import { ReportContextShape, ReportKeys, ReportShape } from "types";
+import {
+  ReportContextShape,
+  ReportKeys,
+  ReportMetadataShape,
+  ReportShape,
+  ReportStatus,
+  ReportType,
+} from "types";
 import { reportErrors } from "verbiage/errors";
 
 // CONTEXT DECLARATION
@@ -30,6 +37,7 @@ export const ReportContext = createContext<ReportContextShape>({
   submitReport: Function,
   // reports by state
   fetchReportsByState: Function,
+  fetchReportForSarCreation: Function,
   // selected report
   clearReportSelection: Function,
   setReportSelection: Function,
@@ -51,9 +59,11 @@ export const ReportProvider = ({ children }: Props) => {
   const {
     report,
     reportsByState,
+    workPlanToCopyFrom,
     submittedReportsByState,
     setReport,
     setReportsByState,
+    setWorkPlanToCopyFrom,
     clearReportsByState,
     setSubmittedReportsByState,
     lastSavedTime,
@@ -91,6 +101,71 @@ export const ReportProvider = ({ children }: Props) => {
       clearReportsByState();
       const result = await getReportsByState(reportType, selectedState);
       setReportsByState(sortReportsOldestToNewest(result));
+    } catch (e: any) {
+      setError(reportErrors.GET_REPORTS_BY_STATE_FAILED);
+    }
+  };
+
+  const fetchReportForSarCreation = async (selectedState: string) => {
+    try {
+      // clear stored reports by state prior to fetching from current state
+      clearReportsByState();
+
+      const workPlanSubmissions = await getReportsByState(
+        ReportType.WP,
+        selectedState
+      );
+
+      const TEMPworkPlanSubmissions = [
+        {
+          reportType: "WP",
+          createdAt: 1696267999308,
+          submissionName: "Work Plan",
+          lastAltered: 1696267999308,
+          state: "NJ",
+          id: "2WIzBuVl7H5E5vmsHRPnHvfmDhK",
+          fieldDataId: "2WIzBqHHdQSkLYbVGV0nDHODofi",
+          formTemplateId: "2WIzBrmHpj6OuDSeY2EAT2ibxee",
+          lastAlteredBy: "Anthony Soprano",
+          versionNumber: 1,
+          status: ReportStatus.SUBMITTED,
+          dueDate: 123,
+        },
+      ];
+
+      let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
+      TEMPworkPlanSubmissions.forEach((submission: ReportMetadataShape) => {
+        console.log(
+          "🚀 ~ file: ReportProvider.tsx:120 ~ workPlanSubmissions.forEach ~ submission:",
+          submission
+        );
+        if (submission.status === ReportStatus.SUBMITTED) {
+          if (
+            lastFoundSubmission &&
+            submission.createdAt > lastFoundSubmission?.createdAt
+          )
+            lastFoundSubmission = submission;
+          else if (!lastFoundSubmission) {
+            lastFoundSubmission = submission;
+          }
+        }
+      });
+
+      if (lastFoundSubmission) {
+        const reportKeys = {
+          reportType: ReportType.WP,
+          state: selectedState,
+          id: lastFoundSubmission["id"],
+        };
+        const workPlan = await getReport(reportKeys);
+        setWorkPlanToCopyFrom(workPlan);
+      }
+
+      const sarSubmissions = await getReportsByState(
+        ReportType.SAR,
+        selectedState
+      );
+      setReportsByState(sortReportsOldestToNewest(sarSubmissions));
     } catch (e: any) {
       setError(reportErrors.GET_REPORTS_BY_STATE_FAILED);
     }
@@ -211,6 +286,9 @@ export const ReportProvider = ({ children }: Props) => {
       // reports by state
       reportsByState,
       fetchReportsByState,
+      // workplan copy
+      workPlanToCopyFrom,
+      fetchReportForSarCreation,
       // selected report
       clearReportSelection,
       setReportSelection,
@@ -223,6 +301,7 @@ export const ReportProvider = ({ children }: Props) => {
     [
       report,
       reportsByState,
+      workPlanToCopyFrom,
       submittedReportsByState,
       isReportPage,
       error,
