@@ -55,7 +55,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   const navigate = useNavigate();
   const {
     state: userState,
-    userIsStateUser,
+    userIsEndUser,
     userIsAdmin,
   } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
@@ -134,7 +134,20 @@ export const DashboardPage = ({ reportType }: Props) => {
           associatedWorkPlan: report.submissionName,
           stateOrTerritory: report.state,
           reportPeriod: report.reportPeriod,
+          finalSar: [
+            {
+              key: report.finalSar
+                ? "nrRmirBoVQv0ysWnEejNZD"
+                : "ekP9iVvuQE9AALchScDzoD",
+              value: report.finalSar ? "Yes" : "No",
+            },
+          ],
         },
+        state: report.state,
+        id: report.id,
+        submittedBy: report.submittedBy,
+        submitterEmail: report.submitterEmail,
+        submittedOnDate: report?.submittedOnDate,
       };
     } else if (reportType == ReportType.SAR) {
       // We are creating a new SAR submission
@@ -230,7 +243,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
-              isStateLevelUser={userIsStateUser!}
+              isStateLevelUser={userIsEndUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />
@@ -247,7 +260,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
-              isStateLevelUser={userIsStateUser!}
+              isStateLevelUser={userIsEndUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />

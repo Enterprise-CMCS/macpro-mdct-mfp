@@ -19,6 +19,7 @@ export const AddEditReportModal = ({
   modalDisclosure,
 }: Props) => {
   const { createReport, fetchReportsByState } = useContext(ReportContext);
+  const { workPlanToCopyFrom } = useStore();
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
   const modalFormJsonMap: any = {
@@ -62,6 +63,8 @@ export const AddEditReportModal = ({
       metadata: {
         submissionName,
         lastAlteredBy: full_name,
+        locked: false,
+        previousRevisions: [],
       },
       fieldData: {
         ["targetPopulation"]: targetPopulation,
@@ -71,19 +74,24 @@ export const AddEditReportModal = ({
 
   // SAR report payload
   const prepareSarPayload = (formData: any) => {
-    const submissionName = formData["submissionName"];
+    const submissionName = formData["associatedWorkPlan"];
+    const stateOrTerritory = formData["stateOrTerritory"];
     const reportPeriod = formData["reportPeriod"];
     return {
       metadata: {
-        submissionName: submissionName,
+        submissionName,
+        stateOrTerritory,
+        reportPeriod,
         lastAlteredBy: full_name,
         locked: false,
-        submissionCount: 0,
         previousRevisions: [],
+        finalSar: formData["finalSar"][0].value === "Yes" ? true : false,
       },
       fieldData: {
         submissionName,
+        stateOrTerritory,
         reportPeriod,
+        wpData: workPlanToCopyFrom,
       },
     };
   };
@@ -106,18 +114,15 @@ export const AddEditReportModal = ({
       fieldData: {
         ...dataToWrite.fieldData,
         stateName: States[activeState as keyof typeof States],
-        submissionCount: reportType === "WP" ? 0 : undefined,
+        submissionCount: 0,
         // All new WP reports are NOT resubmissions by definition.
-        versionControl:
-          reportType === "WP"
-            ? [
-                {
-                  // pragma: allowlist nextline secret
-                  key: "versionControl-KFCd3rfEu3eT4UFskUhDtx",
-                  value: "No, this is an initial submission",
-                },
-              ]
-            : undefined,
+        versionControl: [
+          {
+            // pragma: allowlist nextline secret
+            key: "versionControl-KFCd3rfEu3eT4UFskUhDtx",
+            value: "No, this is an initial submission",
+          },
+        ],
       },
     });
 
