@@ -7,7 +7,7 @@ import {
   EntityRow,
   EntityDetailsOverlay,
   EntityProvider,
-  EntityDetailsModalOverlay,
+  OverlayModalPage,
 } from "components";
 // types
 import {
@@ -16,7 +16,7 @@ import {
   FormJson,
   EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
-  EntityDetailsModalOverlayShape,
+  OverlayModalPageShape,
 } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
@@ -28,11 +28,14 @@ export const EntityDetailsDashboardOverlay = ({
   entityType,
   dashboard,
   selectedEntity,
+  route,
 }: Props) => {
   // Entity provider setup
   const { clearEntities, setSelectedEntity, setEntityType } = useStore();
   const [selectedStep, setSelectedStep] = useState<EntityShape>();
   const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
+
+  const { entitySteps } = route;
 
   useEffect(() => {
     setSelectedEntity(selectedEntity);
@@ -59,15 +62,15 @@ export const EntityDetailsDashboardOverlay = ({
   };
 
   const openInitiativeStepOverlay = () => {
-    const pageType = selectedStep!.pageType;
+    const pageType = selectedStep?.pageType;
     return (
       <Box>
         {pageType === "modalOverlay" ? (
           <EntityProvider>
-            <EntityDetailsModalOverlay
-              selectedEntity={selectedEntity}
+            <OverlayModalPage
+              selectedEntityStep={selectedEntity}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
-              route={selectedStep as unknown as EntityDetailsModalOverlayShape}
+              route={selectedStep as unknown as OverlayModalPageShape}
             />
           </EntityProvider>
         ) : (
@@ -101,7 +104,7 @@ export const EntityDetailsDashboardOverlay = ({
             initiativeName={selectedEntity?.initiative_name}
           />
           <Table content={tableHeaders()}>
-            {dashboard?.forms!.map((entity: EntityShape) => (
+            {entitySteps?.map((entity: any) => (
               <EntityRow
                 key={entity.id}
                 entity={entity}
@@ -141,7 +144,7 @@ interface Props {
   onSubmit?: Function;
   submitting?: boolean;
   validateOnRender?: boolean;
-  route?: EntityDetailsDashboardOverlayShape;
+  route: EntityDetailsDashboardOverlayShape;
 }
 
 const sx = {

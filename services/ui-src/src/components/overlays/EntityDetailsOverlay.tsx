@@ -1,3 +1,4 @@
+import { MouseEventHandler } from "react";
 // components
 import {
   Box,
@@ -14,7 +15,6 @@ import { AlertTypes, EntityDetailsOverlayShape, EntityShape } from "types";
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
-import { MouseEventHandler } from "react";
 
 export const EntityDetailsOverlay = ({
   route,

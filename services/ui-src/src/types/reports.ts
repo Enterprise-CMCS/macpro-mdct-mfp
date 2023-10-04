@@ -50,6 +50,7 @@ export interface DrawerReportPageShape extends ReportPageShapeBase {
   drawerForm: FormJson;
   modalForm?: never;
   form?: never;
+  dashboard?: never;
 }
 
 export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
@@ -59,12 +60,14 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   modalForm: FormJson;
   drawerForm: FormJson;
   form?: never;
+  dashboard?: never;
 }
 
 export interface OverlayModalPageShape extends ReportPageShapeBase {
   entityType: string;
   verbiage: OverlayModalPageVerbiage;
   modalForm: FormJson;
+  dashboard?: FormJson;
   isRequired?: boolean;
   form?: never;
 }
@@ -75,26 +78,22 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   verbiage: ModalOverlayReportPageVerbiage;
   modalForm: FormJson;
   overlayForm?: FormJson;
+  dashboard?: FormJson;
   drawerForm?: never;
   form?: never;
-  dashboard?: FormJson;
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   verbiage: EntityOverlayPageVerbiage;
   form: FormJson;
   modalForm?: FormJson;
-}
-
-export interface EntityDetailsModalOverlayShape extends ReportPageShapeBase {
-  entityType: string;
-  verbiage: EntityModalOverlayPageVerbiage;
-  modalForm: FormJson;
+  dashboard?: never;
 }
 
 export interface EntityDetailsDashboardOverlayShape
   extends ReportPageShapeBase {
   dashboard?: FormJson;
+  entitySteps?: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
 }
 
 export interface ReportJson {
@@ -127,6 +126,7 @@ export interface ReportRouteWithoutForm extends ReportRouteBase {
   modalForm?: never;
   drawerForm?: never;
   form?: never;
+  dashboard?: never;
 }
 
 export interface DrawerReportPageVerbiage extends ReportPageVerbiage {

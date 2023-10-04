@@ -8,11 +8,13 @@ import { logger } from "../logging";
 import {
   AnyObject,
   assertExhaustive,
+  EntityDetailsOverlayShape,
   FieldChoice,
   FormField,
   FormLayoutElement,
   FormTemplate,
   ModalOverlayReportPageShape,
+  OverlayModalPageShape,
   ReportJson,
   ReportRoute,
   ReportType,
@@ -289,6 +291,17 @@ export const compileValidationJsonFromRoutes = (
         route as ModalOverlayReportPageShape
       ).overlayForm?.fields.filter(isFieldElement);
       if (overlayFormFields) addValidationToAccumulator(overlayFormFields);
+    }
+    // accumulate entity steps
+    if (route.dashboard?.pageType === "modalOverlay") {
+      route.entitySteps?.map(
+        (step: EntityDetailsOverlayShape | OverlayModalPageShape) => {
+          const stepForm = step.form || step.modalForm;
+          const entityStepFormFields = stepForm?.fields.filter(isFieldElement);
+          if (entityStepFormFields)
+            addValidationToAccumulator(entityStepFormFields);
+        }
+      );
     }
   });
   return validationSchema;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 // components
 import {
   Box,
@@ -15,13 +15,19 @@ import {
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
+import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
 import { EntityCard } from "components/cards/EntityCard";
 import { getFormattedEntityData } from "utils/reports/entities";
+// utils
 import { useStore } from "utils";
 
-export const OverlayModalPage = ({ route }: Props) => {
+export const OverlayModalPage = ({
+  selectedEntityStep,
+  closeEntityDetailsOverlay,
+  route,
+}: Props) => {
   const { entityType, verbiage, modalForm } = route;
   const { report } = useStore();
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
@@ -71,6 +77,17 @@ export const OverlayModalPage = ({ route }: Props) => {
 
   return (
     <Box>
+      {selectedEntityStep && (
+        <Button
+          sx={sx.backButton}
+          variant="none"
+          onClick={closeEntityDetailsOverlay as MouseEventHandler}
+          aria-label="Return to dashboard for this initiative"
+        >
+          <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
+          Return to dashboard for this initiative
+        </Button>
+      )}
       {verbiage.intro && (
         <ReportPageIntro
           sx={sx.intro}
@@ -148,11 +165,28 @@ export const OverlayModalPage = ({ route }: Props) => {
 };
 
 interface Props {
+  selectedEntityStep?: EntityShape;
   route: OverlayModalPageShape;
+  closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;
 }
 
 const sx = {
+  backButton: {
+    padding: 0,
+    fontWeight: "normal",
+    color: "palette.primary",
+    display: "flex",
+    position: "relative",
+    right: "3rem",
+    marginBottom: "2rem",
+    marginTop: "-2rem",
+  },
+  backIcon: {
+    color: "palette.primary",
+    height: "1rem",
+    marginRight: "0.5rem",
+  },
   intro: {
     color: "palette.gray_medium",
   },

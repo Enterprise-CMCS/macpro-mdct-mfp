@@ -72,7 +72,6 @@ export { ReviewSubmitPage } from "./pages/ReviewSubmit/ReviewSubmitPage";
 // overlays
 export { EntityDetailsDashboardOverlay } from "./overlays/EntityDetailsDashboardOverlay";
 export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
-export { EntityDetailsModalOverlay } from "./overlays/EntityDetailsModalOverlay";
 // reports
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
