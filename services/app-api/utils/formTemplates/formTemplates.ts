@@ -122,8 +122,6 @@ export const scanForRepeatedFields = (reportRoutes: ReportRoute[]) => {
       route.drawerForm.fields = expandRepeatedFields(route.drawerForm.fields);
     if (route?.modalForm?.fields)
       route.modalForm.fields = expandRepeatedFields(route.modalForm.fields);
-    if (route?.overlayForm?.fields)
-      route.overlayForm.fields = expandRepeatedFields(route.overlayForm.fields);
   }
   return reportRoutes;
 };
