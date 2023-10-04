@@ -1,7 +1,7 @@
 import { ReportShape, AnyObject } from "types";
 
 //setting up function calls using entityType as call
-export const checkInitiativesTopics = (fieldData: any, entities: any[]) => {
+export const checkInitiativeTopics = (fieldData: any, entities: any[]) => {
   let topics = [
     "Transitions and transition coordination services*",
     "Housing-related supports*",
@@ -29,7 +29,7 @@ export const checkInitiativesTopics = (fieldData: any, entities: any[]) => {
 
 //store function calls here
 const alertStatusFunctions: AnyObject = {
-  initiatives: checkInitiativesTopics,
+  initiative: checkInitiativeTopics,
 };
 
 export const getWPAlertStatus = (report: ReportShape, entityType: string) => {

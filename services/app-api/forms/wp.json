@@ -5,7 +5,7 @@
   "version": "WP_2023-08-21",
   "entities": {
     "targetPopulation": { "required": true },
-    "evaluationPlan": { "required": true }
+    "initiative": { "required": true }
   },
   "routes": [
     {
@@ -622,7 +622,7 @@
           "name": "State & Territory Specific Initiatives",
           "path": "/wp/state-and-territory-specific-initiatives/initiatives",
           "pageType": "modalOverlay",
-          "entityType": "initiatives",
+          "entityType": "initiative",
           "entityInfo": ["initiative_name", "initiative_wpTopic"],
           "verbiage": {
             "intro": {
@@ -776,9 +776,10 @@
               "name": "State & Territory Specific Initiatives: I. Define initiative",
               "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
               "pageType": "entityOverlay",
-              "entityType": "initiatives",
-              "entityInfo": ["entityName", "hint"],
-              "entityName": "I. Define initiative",
+              "entityType": "initiative",
+              "stepType": "defineInitiative",
+              "stepInfo": ["stepName", "hint"],
+              "stepName": "I. Define initiative",
               "hint": "Provide initiative description, including target populations and timeframe",
               "isRequired": true,
               "verbiage": {
@@ -876,9 +877,10 @@
               "name": "State and Territory Specific Initiatives: II. Evaluation Plan",
               "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
               "pageType": "modalOverlay",
-              "entityType": "initiatives",
-              "entityInfo": ["entityName", "hint"],
-              "entityName": "II. Evaluation Plan",
+              "entityType": "initiative",
+              "stepType": "evaluationPlan",
+              "stepInfo": ["stepName", "hint"],
+              "stepName": "II. Evaluation Plan",
               "hint": "Add evaluation plan, including measurable objectives",
               "isRequired": true,
               "verbiage": {
@@ -1016,9 +1018,10 @@
               "name": "State and Territory-Specific Initiatives: III. Funding Sources",
               "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
               "pageType": "modalOverlay",
-              "entityType": "initiatives",
-              "entityInfo": ["entityName", "hint"],
-              "entityName": "III. Funding sources",
+              "entityType": "initiative",
+              "stepType": "fundingSources",
+              "stepInfo": ["stepName", "hint"],
+              "stepName": "III. Funding sources",
               "hint": "Add funding sources with projected quarterly expenditures",
               "isRequired": true,
               "verbiage": {
@@ -1119,9 +1122,10 @@
               "name": "State & Territory-Specific Initiatives: IV. Close-out information",
               "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
               "pageType": "entityOverlay",
-              "entityType": "initiatives",
-              "entityInfo": ["entityName", "hint"],
-              "entityName": "IV. Close-out information (if applicable)",
+              "entityType": "initiative",
+              "stepType": "closeOutInformation",
+              "stepInfo": ["stepName", "hint"],
+              "stepName": "IV. Close-out information (if applicable)",
               "hint": "To be completed as appropriate during Work Plan revisions",
               "isRequired": true,
               "verbiage": {

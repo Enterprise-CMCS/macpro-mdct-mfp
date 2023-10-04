@@ -23,6 +23,8 @@ export interface ReportPageVerbiage {
     exportSectionHeader?: string;
   };
   reviewPdfHint?: string;
+  closeOutWarning?: AnyObject;
+  closeOutModal?: AnyObject;
 }
 
 export interface ReportRouteBase {
@@ -63,15 +65,6 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   dashboard?: never;
 }
 
-export interface OverlayModalPageShape extends ReportPageShapeBase {
-  entityType: string;
-  verbiage: OverlayModalPageVerbiage;
-  modalForm: FormJson;
-  dashboard?: FormJson;
-  isRequired?: boolean;
-  form?: never;
-}
-
 export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   entityType: string;
   entityInfo?: string[];
@@ -84,9 +77,27 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
-  verbiage: EntityOverlayPageVerbiage;
+  stepType: string;
+  stepName: string;
+  hint: string;
   form: FormJson;
-  modalForm?: FormJson;
+  entityType?: never;
+  dashboard?: never;
+  modalForm?: never;
+  drawerForm?: never;
+  entitySteps?: never;
+}
+
+export interface OverlayModalPageShape extends ReportPageShapeBase {
+  entityType: string;
+  stepType: string;
+  stepName: string;
+  hint: string;
+  verbiage: ModalOverlayReportPageVerbiage;
+  modalForm: FormJson;
+  drawerForm?: FormJson;
+  form?: never;
+  entitySteps?: never;
   dashboard?: never;
 }
 
@@ -177,6 +188,7 @@ export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   tableHeader: string;
   addEditModalHint: string;
   emptyDashboardText: string;
+  accordion?: AnyObject;
 }
 
 export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {

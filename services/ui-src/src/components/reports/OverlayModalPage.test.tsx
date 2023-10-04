@@ -24,11 +24,8 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
-const {
-  addEntityButtonText,
-  editEntityButtonText,
-  // deleteModalConfirmButtonText,
-} = mockOverlayModalPageJson.verbiage;
+const { addEntityButtonText, editEntityButtonText } =
+  mockOverlayModalPageJson.verbiage;
 
 const overlayModalPageComponentWithEntities = (
   <RouterWrappedComponent>

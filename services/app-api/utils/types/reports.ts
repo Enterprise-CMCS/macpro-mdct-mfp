@@ -84,18 +84,22 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
 
 export interface OverlayModalPageShape extends ReportPageShapeBase {
   entityType: string;
+  stepName: string;
+  hint: string;
   verbiage: ModalOverlayReportPageVerbiage;
   modalForm: FormJson;
-  overlayForm?: FormJson;
-  form?: never;
   drawerForm?: FormJson;
+  form?: never;
   entitySteps?: never;
   dashboard?: never;
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
-  entityType?: never;
+  stepName: string;
+  hint: string;
   form: FormJson;
+  verbiage: EntityOverlayPageVerbiage;
+  entityType?: never;
   dashboard?: never;
   modalForm: never;
   drawerForm?: never;
@@ -128,6 +132,8 @@ export interface ReportPageVerbiage {
     hint?: string;
     info?: string | CustomHtmlElement[];
   };
+  closeOutWarning?: AnyObject;
+  closeOutModal?: AnyObject;
 }
 
 export interface DrawerReportPageVerbiage extends ReportPageVerbiage {
@@ -154,13 +160,27 @@ export interface ModalDrawerReportPageVerbiage
   editEntityDetailsButtonText: string;
 }
 
-export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
+export interface ModalOverlayReportPageVerbiage
+  extends EntityOverlayPageVerbiage {
   addEntityButtonText: string;
   dashboardTitle: string;
   countEntitiesInTitle: boolean;
   tableHeader: string;
   addEditModalHint: string;
   emptyDashboardText: string;
+}
+
+export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
+  closeOutWarning?: {
+    title?: string;
+    description?: string;
+  };
+  closeOutModal?: {
+    closeOutModalButtonText?: string;
+    closeOutModalTitle?: string;
+    closeOutModalBodyText?: string;
+    closeOutModalConfirmButtonText?: string;
+  };
 }
 
 // REPORT METADATA

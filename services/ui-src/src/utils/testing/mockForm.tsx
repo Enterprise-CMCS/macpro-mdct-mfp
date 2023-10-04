@@ -261,15 +261,9 @@ export const mockEntityDetailsOverlayJson = {
   pageType: "entityOverlay",
   verbiage: mockEntityDetailsOverlayVerbiage,
   form: mockForm,
-};
-
-export const mockOverlayModalPageJson = {
-  name: "mock-route-2d",
-  path: "/mock/mock-route-2d",
-  pageType: "overlayModal",
-  entityType: "entityType",
-  verbiage: mockOverlayModalPageVerbiage,
-  modalForm: mockModalForm,
+  stepType: "mock-step",
+  stepName: "Mock step name",
+  hint: "Mock hint",
 };
 
 export const mockOptionalFormField = {
@@ -301,6 +295,18 @@ export const mockModalOverlayReportPageVerbiage = {
   deleteModalConfirmButtonText: "Mock delete modal confirm button text",
   deleteModalWarning: "Mock delete modal warning",
   enterReportText: "Mock enter report text",
+};
+
+export const mockOverlayModalPageJson = {
+  name: "mock-route-2d",
+  path: "/mock/mock-route-2d",
+  pageType: "overlayModal",
+  entityType: "entityType",
+  verbiage: mockModalOverlayReportPageVerbiage,
+  modalForm: mockModalForm,
+  stepType: "mock-step",
+  stepName: "Mock step name",
+  hint: "Mock hint",
 };
 
 export const mockModalOverlayReportPageJson = {

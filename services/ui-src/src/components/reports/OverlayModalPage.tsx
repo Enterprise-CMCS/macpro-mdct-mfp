@@ -24,21 +24,33 @@ import { getFormattedEntityData } from "utils/reports/entities";
 import { useStore } from "utils";
 
 export const OverlayModalPage = ({
-  selectedEntityStep,
+  entity,
   closeEntityDetailsOverlay,
   route,
 }: Props) => {
-  const { entityType, verbiage, modalForm } = route;
+  const { entityType, verbiage, modalForm, stepType } = route;
   const { report } = useStore();
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
 
-  // display variables
-  let reportFieldDataEntities = report?.fieldData[entityType] || [];
+  const reportFieldDataEntities = report?.fieldData[entityType] || [];
+
+  let reportFieldDataEntitySteps: EntityShape[] =
+    reportFieldDataEntities.filter((entity: EntityShape) => {
+      if (
+        Object.keys(entity).findIndex((key: string) => key.includes(stepType)) >
+        0
+      ) {
+        return entity;
+      }
+      return;
+    });
 
   const dashTitle = `${verbiage.dashboardTitle}${
-    verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
+    verbiage.countEntitiesInTitle
+      ? `: ${reportFieldDataEntitySteps.length}`
+      : ""
   }`;
 
   // add/edit entity modal disclosure and methods
@@ -77,7 +89,7 @@ export const OverlayModalPage = ({
 
   return (
     <Box>
-      {selectedEntityStep && (
+      {entity && (
         <Button
           sx={sx.backButton}
           variant="none"
@@ -107,7 +119,7 @@ export const OverlayModalPage = ({
           {dashTitle}
         </Heading>
         <Box>
-          {reportFieldDataEntities?.map(
+          {reportFieldDataEntitySteps?.map(
             (entity: EntityShape, entityIndex: number) => (
               <EntityCard
                 key={entity.id}
@@ -121,7 +133,7 @@ export const OverlayModalPage = ({
               />
             )
           )}
-          {reportFieldDataEntities.length > 1 && (
+          {reportFieldDataEntitySteps.length > 1 && (
             <Button
               sx={sx.addEntityButton}
               onClick={addEditEntityModalOnOpenHandler}
@@ -165,7 +177,7 @@ export const OverlayModalPage = ({
 };
 
 interface Props {
-  selectedEntityStep?: EntityShape;
+  entity?: EntityShape;
   route: OverlayModalPageShape;
   closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;

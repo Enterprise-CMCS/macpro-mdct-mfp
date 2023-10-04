@@ -32,7 +32,9 @@ export const EntityDetailsDashboardOverlay = ({
 }: Props) => {
   // Entity provider setup
   const { clearEntities, setSelectedEntity, setEntityType } = useStore();
-  const [selectedStep, setSelectedStep] = useState<EntityShape>();
+  const [selectedStep, setSelectedStep] = useState<
+    OverlayModalPageShape | EntityDetailsOverlayShape
+  >();
   const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
 
   const { entitySteps } = route;
@@ -47,7 +49,9 @@ export const EntityDetailsDashboardOverlay = ({
   }, [entityType, selectedEntity]);
 
   // Open/Close overlay action methods
-  const openEntityStepOverlay = (entity: EntityShape) => {
+  const openEntityStepOverlay = (
+    entity: OverlayModalPageShape | EntityDetailsOverlayShape
+  ) => {
     setSelectedStep(entity);
     setIsEntityStepOpen(true);
   };
@@ -68,9 +72,9 @@ export const EntityDetailsDashboardOverlay = ({
         {pageType === "modalOverlay" ? (
           <EntityProvider>
             <OverlayModalPage
-              selectedEntityStep={selectedEntity}
+              entity={selectedEntity}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
-              route={selectedStep as unknown as OverlayModalPageShape}
+              route={selectedStep as OverlayModalPageShape}
             />
           </EntityProvider>
         ) : (
@@ -78,7 +82,7 @@ export const EntityDetailsDashboardOverlay = ({
             <EntityDetailsOverlay
               selectedEntity={selectedEntity}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
-              route={selectedStep as unknown as EntityDetailsOverlayShape}
+              route={selectedStep as EntityDetailsOverlayShape}
             />
           </EntityProvider>
         )}
@@ -108,7 +112,7 @@ export const EntityDetailsDashboardOverlay = ({
               <EntityRow
                 key={entity.id}
                 entity={entity}
-                entityInfo={entity.entityInfo}
+                entityInfo={entity.stepInfo}
                 verbiage={entity.verbiage}
                 locked={false}
                 openDrawer={() => openEntityStepOverlay(entity)}
