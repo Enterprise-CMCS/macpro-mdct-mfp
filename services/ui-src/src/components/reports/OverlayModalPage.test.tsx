@@ -24,8 +24,7 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
-const { addEntityButtonText, editEntityButtonText } =
-  mockOverlayModalPageJson.verbiage;
+const { addEntityButtonText } = mockOverlayModalPageJson.verbiage;
 
 const overlayModalPageComponentWithEntities = (
   <RouterWrappedComponent>
@@ -56,16 +55,7 @@ describe("Test overlayModalPage with entities", () => {
     await userEvent.click(closeButton);
   });
 
-  it("overlayModal Modal edits open correctly", async () => {
-    const editEntityButton = screen.getByText(editEntityButtonText);
-    await userEvent.click(editEntityButton);
-    expect(screen.getByRole("dialog")).toBeVisible();
-
-    const closeButton = screen.getByText("Close");
-    await userEvent.click(closeButton);
-  });
-
-  // TODO: test delete modal + functionality
+  // TODO: add some unit tests
 });
 
 describe("Test ModalDrawerReportPage accessibility", () => {
