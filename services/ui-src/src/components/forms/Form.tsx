@@ -82,46 +82,45 @@ export const Form = ({
     fieldToFocus?.focus({ preventScroll: true });
   };
 
+  const getRepeatableTargetPopulations = (fields: any) => {
+    const isRepeatableTargetPopulations = fields.filter((field: any) =>
+      field.id.match("stateTerritory_targetPopulations")
+    );
+    if (isRepeatableTargetPopulations) {
+      const targetPopulations = report?.fieldData.targetPopulation;
+
+      const createLabel = (field: any) => {
+        if (targetPopulations.indexOf(field) >= 4) {
+          return `Other: {${field.transitionBenchmarks_targetPopulationName}}`;
+        } else {
+          return field.transitionBenchmarks_targetPopulationName;
+        }
+      };
+
+      const formatTargetPopulations = targetPopulations.map((field: any) => {
+        return {
+          checked: false,
+          id: field.id,
+          label: createLabel(field),
+          name: field.transitionBenchmarks_targetPopulationName,
+          value: field.transitionBenchmarks_targetPopulationName,
+        };
+      });
+      // update choices with dynamic target population choices
+      if (fields[1]?.props) {
+        fields[1].props.choices = [];
+        fields[1]?.props?.choices.push(...formatTargetPopulations);
+      }
+      return fields;
+    } else {
+      return fields;
+    }
+  };
+
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const getDynamicChoices = (fields: any) => {
-      const isTargetPopulationChoices = fields.filter((field: any) =>
-        field.id.match("stateTerritory_targetPopulations")
-      );
-      if (isTargetPopulationChoices) {
-        const targetPopulationChoices = report?.fieldData.targetPopulation;
-
-        const labelCustomTargetPopulationChoice = (field: any) => {
-          if (targetPopulationChoices.indexOf(field) >= 4) {
-            return `Other: {${field.transitionBenchmarks_targetPopulationName}}`;
-          } else {
-            return field.transitionBenchmarks_targetPopulationName;
-          }
-        };
-        const formatTargetPopulationChoices = targetPopulationChoices.map(
-          (field: any) => {
-            return {
-              checked: false,
-              id: field.id,
-              label: labelCustomTargetPopulationChoice(field),
-              name: field.transitionBenchmarks_targetPopulationName,
-              value: field.transitionBenchmarks_targetPopulationName,
-            };
-          }
-        );
-        // update choices with dynamic target population choices
-        if (fields[1]?.props) {
-          fields[1].props.choices = [];
-          fields[1]?.props?.choices.push(...formatTargetPopulationChoices);
-        }
-        return fields;
-      } else {
-        return fields;
-      }
-    };
-
     const fieldsToRender = hydrateFormFields(
-      getDynamicChoices(fields),
+      getRepeatableTargetPopulations(fields),
       formData
     );
     return formFieldFactory(fieldsToRender, {
