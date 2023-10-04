@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
-import { Button, Image } from "@chakra-ui/react";
+import { Button, Image, Spinner } from "@chakra-ui/react";
 // form
 import wpFormJson from "forms/addEditWpReport/addEditWpReport.json";
 import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
@@ -126,6 +126,13 @@ export const AddEditReportModal = ({
     modalDisclosure.onClose();
   };
 
+  const actionButtonText = () => {
+    if (reportType === ReportType.WP) {
+      return "";
+    }
+    return submitting ? <Spinner size="md" /> : "Save";
+  };
+
   return (
     <Modal
       data-testid="add-edit-report-modal"
@@ -133,11 +140,8 @@ export const AddEditReportModal = ({
       modalDisclosure={modalDisclosure}
       content={{
         heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
-        subheading:
-          reportType == ReportType.WP
-            ? "Update your transition benchmarks and initiatives from the information in your last approved Work Plan by selecting Copy from previous. Use Start new only when you want to completely reset your MFP program information and start from a blank form."
-            : "",
-        actionButtonText: submitting ? "" : "",
+        subheading: selectedReport?.id ? "" : form.heading?.subheading,
+        actionButtonText: actionButtonText(),
         closeButtonText: "",
       }}
     >
