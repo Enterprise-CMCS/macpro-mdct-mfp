@@ -32,7 +32,6 @@ const creationEvent: APIGatewayProxyEvent = {
   ...mockProxyEvent,
   body: JSON.stringify({
     fieldData: {
-      submissionName: "Work Plan",
       stateName: "New Jersey",
       submissionCount: 0,
       versionControl: [
@@ -95,7 +94,6 @@ describe("Test createReport API method", () => {
     expect(body.formTemplateId).not.toEqual(
       mockWPReport.metadata.formTemplateId
     );
-    expect(body.fieldData.submissionName).toBe("Work Plan");
     expect(body.formTemplate.validationJson).toMatchObject({
       transitionBenchmarks_targetPopulationName: "text",
     });

@@ -206,6 +206,7 @@ export interface WPReportMetadata extends ReportMetadata {
   submissionName: string;
   locked: boolean;
   submissionCount: number;
+  reportPeriod: number;
   previousRevisions: string[];
 }
 

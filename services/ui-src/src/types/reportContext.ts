@@ -22,6 +22,7 @@ export interface ReportMetadataShape extends ReportKeys {
   archived?: boolean;
   locked?: boolean;
   dueDate: number;
+  reportPeriod: number;
 }
 
 export interface ReportShape extends ReportMetadataShape {

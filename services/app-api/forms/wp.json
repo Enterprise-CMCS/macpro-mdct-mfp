@@ -43,7 +43,7 @@
       "name": "Transition Benchmarks",
       "path": "/wp/transition-benchmarks",
       "pageType": "modalDrawer",
-      "entityType": "targetPopulation",
+      "entityType": "targetPopulations",
       "entityInfo": ["transitionBenchmarks_targetPopulationName"],
       "verbiage": {
         "intro": {
@@ -72,7 +72,7 @@
         "drawerInfo": [
           {
             "type": "span",
-            "content": "Please provide the projected number of transitions for <i>[entity_name]</i> during each quarter. This number includes institutional residents who are discharged from an institution to a qualified residence during the reporting period, enroll in MFP, and begin using Medicaid HCBS."
+            "content": "Please provide the projected number of transitions for the target population during each quarter. This number includes institutional residents who are discharged from an institution to a qualified residence during the reporting period, enroll in MFP, and begin using Medicaid HCBS."
           },
           {
             "type": "p",
