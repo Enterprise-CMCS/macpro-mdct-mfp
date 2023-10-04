@@ -39,6 +39,7 @@ export interface ReportContextMethods {
   createReport: Function;
   fetchReport: Function;
   fetchReportsByState: Function;
+  fetchReportForSarCreation: Function;
   archiveReport: Function;
   releaseReport: Function;
   updateReport: Function;

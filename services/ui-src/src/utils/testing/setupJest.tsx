@@ -196,11 +196,13 @@ export const mockReportStore: MfpReportState = {
   reportsByState: [mockWPFullReport],
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "1:58 PM",
+  workPlanToCopyFrom: undefined,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
   setSubmittedReportsByState: () => {},
   setLastSavedTime: () => {},
+  setWorkPlanToCopyFrom: () => {},
 };
 
 // BOUND STORE

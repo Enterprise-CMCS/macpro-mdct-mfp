@@ -109,6 +109,7 @@ export const mockReportMethods = {
   releaseReport: jest.fn(),
   fetchReport: jest.fn(),
   fetchReportsByState: jest.fn(),
+  fetchReportForSarCreation: jest.fn(),
   createReport: jest.fn(),
   updateReport: jest.fn(),
   submitReport: jest.fn(),
