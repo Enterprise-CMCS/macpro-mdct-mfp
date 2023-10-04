@@ -9,12 +9,58 @@
   },
   "fields": [
     {
-      "id": "submissionName",
+      "id": "associatedWorkPlan",
       "type": "text",
       "validation": "text",
       "props": {
-        "label": "SAR submission name",
-        "hint": "Name this SAR submission so you can easily refer to it. Consider using timeframe(s) and managed care program names (if relevant)."
+        "label": "Associated Work Plan",
+        "hint": "Auto-populates from your last approved Work Plan"
+      }
+    },
+    {
+      "id": "stateOrTerritory",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "label": "State or Territory",
+        "hint": "Auto-populates from your account profile."
+      }
+    },
+    {
+      "id": "reportingPeriod",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "label": "Reporting Period",
+        "hint": "Auto-populates from your last approved Work Plan."
+      }
+    },
+    {
+      "id": "finalSar",
+      "type": "radio",
+      "validation": "radio",
+      "props": {
+        "label": "Is this your state/territory’s final SAR for your period of performance in the MFP demonstration?",
+        "choices": [
+          {
+            "id": "NICKMAKEANID",
+            "label": "Yes"
+          },
+          {
+            "id": "NICKMAKEANID2",
+            "label": "No"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sarTargetPopulations",
+      "type": "checkbox",
+      "validation": "checkbox",
+      "props": {
+        "label": "Target populations applicable to your MFP Demonstration project during this reporting period:",
+        "hint": "Auto-populates based on your responses from the Work Plan.",
+        "choices": []
       }
     }
   ]

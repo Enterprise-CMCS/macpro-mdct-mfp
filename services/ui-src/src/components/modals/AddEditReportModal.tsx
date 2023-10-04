@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 // components
-import { Modal, ReportContext } from "components";
-import { Text, Button, Image } from "@chakra-ui/react";
+import { Form, Modal, ReportContext } from "components";
+import { Button, Image } from "@chakra-ui/react";
 // form
 import wpFormJson from "forms/addEditWpReport/addEditWpReport.json";
 import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 // utils
-import { AnyObject, FormJson, ReportStatus } from "types";
+import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
 import { useStore } from "utils";
 // assets
@@ -134,34 +134,46 @@ export const AddEditReportModal = ({
       modalDisclosure={modalDisclosure}
       content={{
         heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
+        subheading:
+          reportType == ReportType.WP
+            ? "Update your transition benchmarks and initiatives from the information in your last approved Work Plan by selecting Copy from previous. Use Start new only when you want to completely reset your MFP program information and start from a blank form."
+            : "",
         actionButtonText: submitting ? "" : "",
         closeButtonText: "",
       }}
     >
-      <Text data-testid="delete-program-modal-text">
-        Update your transition benchmarks and initiatives from the information
-        in your last approved Work Plan by selecting Copy from previous. Use
-        Start new only when you want to completely reset your MFP program
-        information and start from a blank form.
-      </Text>
-      <Button sx={sx.copyBtn} disabled={true} type="submit">
-        Copy from previous
-        <Image
-          sx={sx.muteCopyIcon}
-          src={muteCopyIcon}
-          alt="Copy Icon"
-          className="copyIcon"
+      {reportType == ReportType.WP ? (
+        <>
+          <Button sx={sx.copyBtn} disabled={true} type="submit">
+            Copy from previous
+            <Image
+              sx={sx.muteCopyIcon}
+              src={muteCopyIcon}
+              alt="Copy Icon"
+              className="copyIcon"
+            />
+          </Button>
+          <Button
+            sx={sx.close}
+            onClick={writeReport}
+            type="submit"
+            variant="outline"
+            data-testid="modal-logout-button"
+          >
+            Start new
+          </Button>
+        </>
+      ) : (
+        <Form
+          data-testid="add-edit-report-form"
+          id={form.id}
+          formJson={form}
+          formData={selectedReport?.fieldData}
+          onSubmit={writeReport}
+          validateOnRender={false}
+          dontReset={true}
         />
-      </Button>
-      <Button
-        sx={sx.close}
-        onClick={writeReport}
-        type="submit"
-        variant="outline"
-        data-testid="modal-logout-button"
-      >
-        Start new
-      </Button>
+      )}
     </Modal>
   );
 };
