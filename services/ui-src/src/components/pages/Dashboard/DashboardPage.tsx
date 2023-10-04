@@ -25,13 +25,14 @@ import {
   ReportContext,
 } from "components";
 // utils
-import { AnyObject, ReportMetadataShape, ReportKeys, ReportShape } from "types";
 import {
-  convertDateUtcToEt,
-  parseCustomHtml,
-  useBreakpoint,
-  useStore,
-} from "utils";
+  AnyObject,
+  ReportMetadataShape,
+  ReportKeys,
+  ReportShape,
+  ReportType,
+} from "types";
+import { parseCustomHtml, useBreakpoint, useStore } from "utils";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
@@ -43,6 +44,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   const {
     errorMessage,
     fetchReportsByState,
+    fetchReportForSarCreation,
     clearReportSelection,
     setReportSelection,
     archiveReport,
@@ -86,8 +88,13 @@ export const DashboardPage = ({ reportType }: Props) => {
     if (!activeState) {
       navigate("/");
     }
-    fetchReportsByState(reportType, activeState);
-    clearReportSelection();
+    if (reportType == ReportType.WP) {
+      fetchReportsByState(reportType, activeState);
+      clearReportSelection();
+    } else {
+      fetchReportForSarCreation(activeState);
+      clearReportSelection();
+    }
   }, []);
 
   useEffect(() => {
@@ -117,25 +124,8 @@ export const DashboardPage = ({ reportType }: Props) => {
     navigate(firstReportPagePath);
   };
 
-  const openAddEditReportModal = (report?: ReportShape) => {
+  const openAddEditReportModal = () => {
     let formData = undefined;
-    let submittedOnDate = undefined;
-    // Check and pre-fill the form if the user is editing an existing program
-    if (report) {
-      if (report.submittedOnDate) {
-        submittedOnDate = convertDateUtcToEt(report.submittedOnDate);
-      }
-      formData = {
-        fieldData: {
-          submissionName: report.submissionName,
-        },
-        state: report.state,
-        id: report.id,
-        submittedBy: report.submittedBy,
-        submitterEmail: report.submitterEmail,
-        submittedOnDate: submittedOnDate,
-      };
-    }
     setSelectedReport(formData);
 
     // use disclosure to open modal
@@ -256,12 +246,12 @@ export const DashboardPage = ({ reportType }: Props) => {
           <Box sx={sx.callToActionContainer}>
             <Button
               type="submit"
-              disabled={
-                reportsToDisplay &&
-                reportsToDisplay[0]?.status === "In progress"
-                  ? true
-                  : false
-              }
+              // disabled={
+              //   reportsToDisplay &&
+              //   reportsToDisplay[0]?.status === "In progress"
+              //     ? true
+              //     : false
+              // }
               onClick={() => openAddEditReportModal()}
             >
               {body.callToAction}
