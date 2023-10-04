@@ -203,3 +203,50 @@ export const flattenFormFields = (formFields: FormField[]): FormField[] => {
   compileFields(formFields);
   return flattenedFields;
 };
+
+// repeatable target population choice list
+const repeatableTargetPopulationChoices = (
+  fields: (FormField | FormLayoutElement)[],
+  choiceList: any
+) => {
+  const createLabel = (field: any) => {
+    if (choiceList.indexOf(field) >= 4) {
+      return `Other: ${field.transitionBenchmarks_targetPopulationName}`;
+    } else {
+      return field.transitionBenchmarks_targetPopulationName;
+    }
+  };
+  const formatTargetPopulations = choiceList?.map((field: any) => {
+    return {
+      checked: false,
+      id: field.id,
+      label: createLabel(field),
+      name: field.transitionBenchmarks_targetPopulationName,
+      value: field.transitionBenchmarks_targetPopulationName,
+    };
+  });
+  // update choices with dynamic target population choices
+  if (fields[1]?.props) {
+    fields[1].props.choices = [];
+    fields[1]?.props?.choices.push(...formatTargetPopulations);
+  }
+};
+
+// returns repeated choice lists - reformatting logic is needed once fields are passed into this function
+export const getRepeatableChoiceLists = (
+  fields: (FormField | FormLayoutElement)[],
+  choiceList: any
+) => {
+  // check if fields have target population data
+  const isRepeatableTargetPopulations = fields.filter((field: any) =>
+    field.id.match("targetPopulations")
+  );
+
+  // add more conditional logic for other choice lists
+  if (isRepeatableTargetPopulations.length > 0) {
+    repeatableTargetPopulationChoices(fields, choiceList);
+    return fields;
+  } else {
+    return fields;
+  }
+};
