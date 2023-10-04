@@ -8,13 +8,13 @@ export const checkInitiativesTopics = (fieldData: any, entities: any[]) => {
     "Quality measurement and improvement*",
   ];
 
-  if (fieldData?.firstquestion && fieldData?.firstquestion[0]?.value === "Yes")
-    topics.push("Self-direction(*if applicable)");
+  //if user did not answer previous question, alert stays on
+  if (!fieldData?.firstquestion || !fieldData?.secondquestion) return true;
 
-  if (
-    fieldData?.secondquestion &&
-    fieldData?.secondquestion[0]?.value === "Yes"
-  )
+  if (fieldData?.firstquestion[0]?.value === "Yes")
+    topics.push("Self-direction (*if applicable)");
+
+  if (fieldData?.secondquestion[0]?.value === "Yes")
     topics.push("Tribal Initiative (*if applicable)");
 
   //filter down to the values of the radio selection
