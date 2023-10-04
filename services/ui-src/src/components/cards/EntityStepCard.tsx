@@ -12,7 +12,7 @@ import unfinishedIcon from "assets/icons/icon_error_circle.png";
 import { EntityCardTopSection } from "./EntityCardTopSection";
 import { EntityCardBottomSection } from "./EntityCardBottomSection";
 
-export const EntityCard = ({
+export const EntityStepCard = ({
   entity,
   entityIndex,
   entityType,

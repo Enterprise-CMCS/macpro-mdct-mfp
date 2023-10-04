@@ -1058,7 +1058,7 @@
                 "id": "tb-modal",
                 "fields": [
                   {
-                    "id": "initiative_wpTopic",
+                    "id": "fundingSources_wpTopic",
                     "type": "radio",
                     "validation": "radio",
                     "props": {
@@ -1094,12 +1094,12 @@
                           "label": "Other, specify",
                           "children": [
                             {
-                              "id": "initiative_wp_otherTopic",
+                              "id": "fundingSources_wp_otherTopic",
                               "type": "textarea",
                               "validation": {
                                 "type": "text",
                                 "nested": true,
-                                "parentFieldName": "initiative_wpTopic"
+                                "parentFieldName": "fundingSources_wpTopic"
                               }
                             }
                           ]
@@ -1108,7 +1108,7 @@
                     }
                   },
                   {
-                    "id": "initiativeQuarters",
+                    "id": "fundingSourcesQuarters",
                     "type": "number",
                     "validation": "number",
                     "repeatable": {

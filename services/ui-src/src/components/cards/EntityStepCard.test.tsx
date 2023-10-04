@@ -8,7 +8,7 @@ import {
   mockCompletedGenericFormattedEntityData,
   mockUnfinishedGenericFormattedEntityData,
 } from "utils/testing/setupJest";
-import { EntityCard } from "./EntityCard";
+import { EntityStepCard } from "./EntityStepCard";
 
 const openAddEditEntityModal = jest.fn();
 const openDeleteEntityModal = jest.fn();
@@ -18,7 +18,7 @@ const { editEntityButtonText, enterEntityDetailsButtonText } =
   mockModalDrawerReportPageJson.verbiage;
 
 const UnfinishedGenericEntityCardComponent = (
-  <EntityCard
+  <EntityStepCard
     entity={mockGenericEntity}
     entityIndex={0}
     entityType="mock-entity-type"
@@ -32,7 +32,7 @@ const UnfinishedGenericEntityCardComponent = (
 );
 
 const GenericEntityTypeEntityCardComponent = (
-  <EntityCard
+  <EntityStepCard
     entity={mockGenericEntity}
     entityIndex={0}
     entityType="entityType"

@@ -12,16 +12,15 @@ import {
   AddEditEntityModal,
   DeleteEntityModal,
   ReportPageIntro,
+  EntityStepCard,
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
-import { EntityCard } from "components/cards/EntityCard";
-import { getFormattedEntityData } from "utils/reports/entities";
 // utils
-import { useStore } from "utils";
+import { getFormattedEntityData, useStore } from "utils";
 
 export const OverlayModalPage = ({
   entity,
@@ -121,13 +120,13 @@ export const OverlayModalPage = ({
         <Box>
           {reportFieldDataEntitySteps?.map(
             (entity: EntityShape, entityIndex: number) => (
-              <EntityCard
+              <EntityStepCard
                 key={entity.id}
                 entity={entity}
                 entityIndex={entityIndex}
-                entityType={entityType}
+                entityType={stepType}
                 verbiage={verbiage}
-                formattedEntityData={getFormattedEntityData(entityType, entity)}
+                formattedEntityData={getFormattedEntityData(stepType, entity)}
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
               />

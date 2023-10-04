@@ -43,8 +43,8 @@ export const getFormattedEntityData = (
     case OverlayModalEntityTypes.FUNDING_SOURCES:
       return {
         id: entity?.id,
-        fundingSource: getRadioValue(entity, "initiative_wpTopic"),
-        quarters: getRepeatedField(entity, "initiativeQuarters"),
+        fundingSource: getRadioValue(entity, "fundingSources_wpTopic"),
+        quarters: getRepeatedField(entity, "fundingSourcesQuarters"),
       };
     default:
       return {};
