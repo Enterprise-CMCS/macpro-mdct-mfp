@@ -18,6 +18,7 @@ import {
   mapValidationTypesToSchema,
   sortFormErrors,
   useStore,
+  getRepeatableChoiceLists,
 } from "utils";
 import {
   AnyObject,
@@ -47,6 +48,8 @@ export const Form = ({
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
 
   const { report } = useStore();
+  const targetPopulationChoiceList = report?.fieldData?.targetPopulation;
+
   let location = useLocation();
   const fieldInputDisabled =
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
@@ -82,45 +85,10 @@ export const Form = ({
     fieldToFocus?.focus({ preventScroll: true });
   };
 
-  const getRepeatableTargetPopulations = (fields: any) => {
-    const isRepeatableTargetPopulations = fields.filter((field: any) =>
-      field.id.match("stateTerritory_targetPopulations")
-    );
-    if (isRepeatableTargetPopulations) {
-      const targetPopulations = report?.fieldData.targetPopulation;
-
-      const createLabel = (field: any) => {
-        if (targetPopulations.indexOf(field) >= 4) {
-          return `Other: {${field.transitionBenchmarks_targetPopulationName}}`;
-        } else {
-          return field.transitionBenchmarks_targetPopulationName;
-        }
-      };
-
-      const formatTargetPopulations = targetPopulations.map((field: any) => {
-        return {
-          checked: false,
-          id: field.id,
-          label: createLabel(field),
-          name: field.transitionBenchmarks_targetPopulationName,
-          value: field.transitionBenchmarks_targetPopulationName,
-        };
-      });
-      // update choices with dynamic target population choices
-      if (fields[1]?.props) {
-        fields[1].props.choices = [];
-        fields[1]?.props?.choices.push(...formatTargetPopulations);
-      }
-      return fields;
-    } else {
-      return fields;
-    }
-  };
-
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
-      getRepeatableTargetPopulations(fields),
+      getRepeatableChoiceLists(fields, targetPopulationChoiceList),
       formData
     );
     return formFieldFactory(fieldsToRender, {
