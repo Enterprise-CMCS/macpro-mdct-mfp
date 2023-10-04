@@ -18,6 +18,7 @@ import {
   mapValidationTypesToSchema,
   sortFormErrors,
   useStore,
+  getRepeatableChoiceLists,
 } from "utils";
 import {
   AnyObject,
@@ -45,7 +46,10 @@ export const Form = ({
 
   // determine if fields should be disabled (based on admin roles )
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
+
   const { report } = useStore();
+  const targetPopulationChoiceList = report?.fieldData?.targetPopulation;
+
   let location = useLocation();
   const fieldInputDisabled =
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
@@ -83,7 +87,10 @@ export const Form = ({
 
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const fieldsToRender = hydrateFormFields(fields, formData);
+    const fieldsToRender = hydrateFormFields(
+      getRepeatableChoiceLists(fields, targetPopulationChoiceList),
+      formData
+    );
     return formFieldFactory(fieldsToRender, {
       disabled: !!fieldInputDisabled,
       autosave,
@@ -159,7 +166,7 @@ const sx = {
     },
   },
   // nested child fields
-  ".ds-c-choice__checkedChild.nested": {
+  ".ds-c-field__checkedChild.nested": {
     paddingY: "0.25rem",
     paddingTop: 0,
     // makes the blue line continuous
