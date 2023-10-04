@@ -17,7 +17,7 @@ describe("Test WP Alerts", () => {
   test("Test checkInitiativesTopics not filled", () => {
     const report: ReportShape = {
       fieldData: {
-        initiatives: [
+        initiative: [
           {
             initiative_wpTopic: [],
           },
@@ -26,14 +26,14 @@ describe("Test WP Alerts", () => {
     } as unknown as ReportShape;
 
     //turn on alertbox
-    expect(getWPAlertStatus(report, "initiatives")).toBeTruthy();
+    expect(getWPAlertStatus(report, "initiative")).toBeTruthy();
   });
   test("Test checkInitiativesTopics filled", () => {
     const report: ReportShape = {
       fieldData: {
         firstquestion: { value: "Yes" },
         secondquestion: { value: "Yes" },
-        initiatives: [
+        initiative: [
           {
             initiative_wpTopic: initiative_wpTopic,
           },
@@ -42,12 +42,12 @@ describe("Test WP Alerts", () => {
     } as unknown as ReportShape;
 
     //turn off alertbox
-    expect(getWPAlertStatus(report, "initiatives")).toBeFalsy();
+    expect(getWPAlertStatus(report, "initiative")).toBeFalsy();
   });
   test("Test checkInitiativesTopics if previous questions were not fileed", () => {
     const report: ReportShape = {
       fieldData: {
-        initiatives: [
+        initiative: [
           {
             initiative_wpTopic: initiative_wpTopic,
           },
@@ -56,6 +56,6 @@ describe("Test WP Alerts", () => {
     } as unknown as ReportShape;
 
     //alertbox will still be active
-    expect(getWPAlertStatus(report, "initiatives")).toBeTruthy();
+    expect(getWPAlertStatus(report, "initiative")).toBeTruthy();
   });
 });
