@@ -253,12 +253,13 @@ export const DashboardPage = ({ reportType }: Props) => {
           <Box sx={sx.callToActionContainer}>
             <Button
               type="submit"
+              /*
               disabled={
                 reportsToDisplay &&
                 reportsToDisplay[0]?.status === "In progress"
                   ? true
                   : false
-              }
+              } */
               onClick={() => openAddEditReportModal()}
             >
               {body.callToAction}

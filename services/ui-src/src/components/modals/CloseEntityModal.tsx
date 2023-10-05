@@ -1,45 +1,21 @@
-import { useState, useContext } from "react";
 // components
-import { Modal, ReportContext } from "components";
+import { Modal } from "components";
 // types
 import { AnyObject, EntityShape } from "types";
 //utils
-import { renderHtml, useStore } from "utils";
+import { renderHtml } from "utils";
 
-export const CloseEntityModal = ({ verbiage, modalDisclosure }: Props) => {
-  const { report } = useStore();
-  const [closingOut, setClosingOut] = useState<boolean>(false);
+export const CloseEntityModal = ({
+  verbiage,
+  modalDisclosure,
+  formId,
+}: Props) => {
   const modalInfo = verbiage.closeOutModal;
-  const { full_name, state } = useStore().user ?? {};
-  const { updateReport } = useContext(ReportContext);
-
-  const closeOutProgramHandler = async () => {
-    setClosingOut(true);
-
-    const reportKeys = {
-      reportType: report?.reportType,
-      state: state,
-      id: report?.id,
-    };
-
-    const dataToWrite = {
-      metadata: {
-        isInitiativeClosedOut: true,
-        lastAltered: Date.now(),
-        lastAlteredBy: full_name,
-      },
-    };
-    await updateReport(reportKeys, dataToWrite);
-
-    setClosingOut(false);
-    modalDisclosure.onClose();
-  };
 
   return (
     <Modal
-      onConfirmHandler={closeOutProgramHandler}
+      formId={formId}
       modalDisclosure={modalDisclosure}
-      submitting={closingOut}
       content={{
         heading: modalInfo.closeOutModalTitle,
         actionButtonText: modalInfo.closeOutModalConfirmButtonText,
@@ -58,4 +34,5 @@ interface Props {
     isOpen: boolean;
     onClose: any;
   };
+  formId: any;
 }

@@ -33,6 +33,8 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
   const { report } = useStore();
   const { form, verbiage } = route;
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [didCloseOutInitiative, setDidCloseOutInitiative] =
+    useState<boolean>(false);
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
 
@@ -44,14 +46,19 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
   } = useDisclosure();
 
   const openCloseEntityModal = () => {
+    //console.log("open modal");
+    setDidCloseOutInitiative(true);
     closeEntityModalOnOpenHandler();
   };
 
   const closeCloseEntityModal = () => {
+    //console.log("closed modal");
+    setDidCloseOutInitiative(false);
     closeEntityModalOnCloseHandler();
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
+    //console.log("this somehow worked");
     setSubmitting(true);
     const reportKeys = {
       reportType: report?.reportType,
@@ -62,12 +69,16 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
       enteredData,
       route.form.fields.filter(isFieldElement)
     );
+    //console.log("filtered form data: ", filteredFormData);
     const dataToWrite = {
       metadata: {
-        //status:
+        //status: ReportStatus.IN_PROGRESS,
         lastAlteredBy: full_name,
       },
-      fieldData: filteredFormData,
+      fieldData: {
+        filteredFormData,
+        didCloseOutInitiative,
+      },
     };
     await updateReport(reportKeys, dataToWrite);
     setSubmitting(false);
@@ -126,6 +137,7 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
                 isOpen: closeEntityModalIsOpen,
                 onClose: closeCloseEntityModal,
               }}
+              formId={form.id}
             />
           </Box>
         )}
