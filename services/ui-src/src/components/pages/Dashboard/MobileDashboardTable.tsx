@@ -26,9 +26,7 @@ export const MobileDashboardTable = ({
     {reportsByState.map((report: ReportMetadataShape) => (
       <Box data-testid="mobile-row" sx={sx.mobileTable} key={report.id}>
         <Box sx={sx.labelGroup}>
-          <Text sx={sx.label}>
-            {reportType === "WP" ? "Program name" : "Submission name"}
-          </Text>
+          <Text sx={sx.label}>{"Submission name"}</Text>
           <Flex alignContent="flex-start">
             {isStateLevelUser && !report?.locked && (
               <Box sx={sxOverride.editReport}>
@@ -48,7 +46,11 @@ export const MobileDashboardTable = ({
         </Box>
         <Box sx={sx.labelGroup}>
           <Flex alignContent="flex-start">
-            <DateFields report={report} reportType={reportType} />
+            <DateFields
+              report={report}
+              reportType={reportType}
+              isAdmin={isAdmin}
+            />
           </Flex>
         </Box>
         <Box sx={sx.labelGroup}>
@@ -66,10 +68,14 @@ export const MobileDashboardTable = ({
             )}
           </Text>
         </Box>
-        {reportType === "WP" && (
+        {/* Admin: Submission count */}
+        {isAdmin && (
           <Box sx={sx.labelGroup}>
+            <Text sx={sx.label}>#</Text>
             <Text sx={sx.label}>
-              {report.submissionCount === 0 ? 1 : report.submissionCount}
+              {!report.submissionCount || report.submissionCount === 0
+                ? 1
+                : report.submissionCount}{" "}
             </Text>
           </Box>
         )}
@@ -82,10 +88,12 @@ export const MobileDashboardTable = ({
             >
               {entering && reportId == report.id ? (
                 <Spinner size="md" />
-              ) : isStateLevelUser && !report?.locked ? (
-                "Edit"
-              ) : (
+              ) : report.status === "Approved" ||
+                report.status === "Submitted" ||
+                isAdmin ? (
                 "View"
+              ) : (
+                "Edit"
               )}
             </Button>
           </Box>
@@ -133,10 +141,10 @@ interface MobileDashboardTableProps {
   sxOverride: AnyObject;
 }
 
-const DateFields = ({ report, reportType }: DateFieldProps) => {
+const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {reportType === "WP" && (
+      {reportType === "WP" && !isAdmin && (
         <Box sx={sx.editDate}>
           <Text sx={sx.label}>Due date</Text>
           <Text>{convertDateUtcToEt(report.createdAt)}</Text>
@@ -153,6 +161,7 @@ const DateFields = ({ report, reportType }: DateFieldProps) => {
 interface DateFieldProps {
   report: ReportMetadataShape;
   reportType: string;
+  isAdmin: boolean;
 }
 
 const AdminReleaseButton = ({
@@ -162,10 +171,15 @@ const AdminReleaseButton = ({
   releaseReport,
   sxOverride,
 }: AdminActionButtonProps) => {
+  //unlock is enabled when status: approved and submitted, all other times, it is disabled
+  const isDisabled = !(
+    report.status === "Submitted" || report.status === "Approved"
+  );
+
   return (
     <Button
       variant="link"
-      disabled={report.locked === false || report.archived === true}
+      disabled={isDisabled}
       sx={sxOverride.adminActionButton}
       onClick={() => releaseReport!(report)}
     >

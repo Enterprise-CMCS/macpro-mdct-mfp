@@ -13,7 +13,7 @@ export default {
       caption: "WP Programs",
       headRow: [
         "",
-        "Program name",
+        "Submission name",
         "Due date",
         "Last edited",
         "Edited by",

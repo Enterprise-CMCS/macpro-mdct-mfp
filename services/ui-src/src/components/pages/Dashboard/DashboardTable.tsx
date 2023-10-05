@@ -56,17 +56,14 @@ export const DashboardTable = ({
             report.submissionCount
           )}
         </Td>
-        {/* SAR-ONLY and Admin: Submission count */}
-        {reportType === "SAR" ||
-          (isAdmin && (
-            <Td>
-              {!report.submissionCount
-                ? 0
-                : report.submissionCount === 0
-                ? 1
-                : report.submissionCount}{" "}
-            </Td>
-          ))}
+        {/* Admin: Submission count */}
+        {isAdmin && (
+          <Td>
+            {!report.submissionCount || report.submissionCount === 0
+              ? 1
+              : report.submissionCount}{" "}
+          </Td>
+        )}
         {/* Action Buttons */}
         <Td sx={sxOverride.editReportButtonCell}>
           <Button
@@ -77,10 +74,12 @@ export const DashboardTable = ({
           >
             {entering && reportId == report.id ? (
               <Spinner size="md" />
-            ) : isStateLevelUser ? (
-              "Edit"
-            ) : (
+            ) : report.status === "Approved" ||
+              report.status === "Submitted" ||
+              isAdmin ? (
               "View"
+            ) : (
+              "Edit"
             )}
           </Button>
         </Td>
@@ -207,8 +206,7 @@ const AdminReleaseButton = ({
   releaseReport,
   sxOverride,
 }: AdminActionButtonProps) => {
-  
-  //unlock is enabled in status: approved and submitted, all other times, it is disabled
+  //unlock is enabled when status: approved and submitted, all other times, it is disabled
   const isDisabled = !(
     report.status === "Submitted" || report.status === "Approved"
   );
