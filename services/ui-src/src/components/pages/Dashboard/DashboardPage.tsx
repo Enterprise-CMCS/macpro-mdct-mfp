@@ -31,6 +31,7 @@ import {
   ReportKeys,
   ReportShape,
   ReportType,
+  ReportStatus,
 } from "types";
 import { parseCustomHtml, useBreakpoint, useStore } from "utils";
 // verbiage
@@ -198,6 +199,21 @@ export const DashboardPage = ({ reportType }: Props) => {
     }
   };
 
+  const isAddSubmissionDisabled = (): boolean => {
+    const lastDisplayedReport =
+      reportsToDisplay?.[reportsToDisplay?.length - 1];
+    switch (reportType) {
+      case ReportType.SAR:
+        console.log(workPlanToCopyFrom);
+        return !workPlanToCopyFrom;
+      case ReportType.WP:
+        if (!lastDisplayedReport) return false;
+        return lastDisplayedReport.status !== ReportStatus.SUBMITTED;
+      default:
+        return true;
+    }
+  };
+
   // add/edit program modal disclosure
   const {
     isOpen: addEditReportModalIsOpen,
@@ -280,12 +296,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           <Box sx={sx.callToActionContainer}>
             <Button
               type="submit"
-              // disabled={
-              //   reportsToDisplay &&
-              //   reportsToDisplay[0]?.status === "In progress"
-              //     ? true
-              //     : false
-              // }
+              disabled={isAddSubmissionDisabled()}
               onClick={() => openAddEditReportModal()}
             >
               {body.callToAction}

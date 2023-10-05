@@ -116,56 +116,40 @@ export const ReportProvider = ({ children }: Props) => {
         selectedState
       );
 
-      const TEMPworkPlanSubmissions = [
-        {
-          reportType: "WP",
-          reportPeriod: 2,
-          createdAt: 1696267999308,
-          submissionName: "Work Plan",
-          lastAltered: 1696267999308,
-          state: "NJ",
-          id: "2WJNGC6jYkYoR7eGP9Fd2qPECc3",
-          fieldDataId: "2WJNGBpROcBVknIg7FjbGqi9L6o",
-          formTemplateId: "2WJNGDSwmc0F0j4dPTfSCyEHymM",
-          lastAlteredBy: "Anthony Soprano",
-          versionNumber: 1,
-          status: ReportStatus.SUBMITTED,
-          dueDate: 123,
-        },
-      ];
-
-      let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
-      TEMPworkPlanSubmissions.forEach((submission: ReportMetadataShape) => {
-        console.log(
-          "🚀 ~ file: ReportProvider.tsx:120 ~ workPlanSubmissions.forEach ~ submission:",
-          submission
-        );
-        if (submission.status === ReportStatus.SUBMITTED) {
-          if (
-            lastFoundSubmission &&
-            submission.createdAt > lastFoundSubmission?.createdAt
-          )
-            lastFoundSubmission = submission;
-          else if (!lastFoundSubmission) {
-            lastFoundSubmission = submission;
-          }
-        }
-      });
-
-      if (lastFoundSubmission) {
-        const reportKeys = {
-          reportType: ReportType.WP,
-          state: selectedState,
-          id: lastFoundSubmission["id"],
-        };
-        const workPlan = await getReport(reportKeys);
-        setWorkPlanToCopyFrom(workPlan);
-      }
-
       const sarSubmissions = await getReportsByState(
         ReportType.SAR,
         selectedState
       );
+
+      if (workPlanSubmissions?.length !== sarSubmissions?.length) {
+        let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
+        workPlanSubmissions.forEach((submission: ReportMetadataShape) => {
+          if (
+            submission.status === ReportStatus.NOT_STARTED ||
+            submission.status === ReportStatus.IN_PROGRESS
+          ) {
+            if (
+              lastFoundSubmission &&
+              submission.createdAt > lastFoundSubmission?.createdAt
+            )
+              lastFoundSubmission = submission;
+            else if (!lastFoundSubmission) {
+              lastFoundSubmission = submission;
+            }
+          }
+        });
+
+        if (lastFoundSubmission) {
+          const reportKeys = {
+            reportType: ReportType.WP,
+            state: selectedState,
+            id: lastFoundSubmission["id"],
+          };
+          const workPlan = await getReport(reportKeys);
+          setWorkPlanToCopyFrom(workPlan);
+        }
+      }
+
       setReportsByState(sortReportsOldestToNewest(sarSubmissions));
     } catch (e: any) {
       setError(reportErrors.GET_REPORTS_BY_STATE_FAILED);
@@ -181,6 +165,7 @@ export const ReportProvider = ({ children }: Props) => {
       const result = await postReport(reportType, state, report);
       hydrateAndSetReport(result);
       setLastSavedTime(getLocalHourMinuteTime());
+      setWorkPlanToCopyFrom(undefined);
     } catch (e: any) {
       setError(reportErrors.SET_REPORT_FAILED);
     }
