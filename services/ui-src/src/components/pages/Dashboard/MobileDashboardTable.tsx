@@ -172,8 +172,14 @@ const AdminReleaseButton = ({
   sxOverride,
 }: AdminActionButtonProps) => {
   //unlock is enabled when status: approved and submitted, all other times, it is disabled
+  const reportStatus = getStatus(
+    report.reportType as ReportType,
+    report.status,
+    report.archived,
+    report.submissionCount
+  );
   const isDisabled = !(
-    report.status === "Submitted" || report.status === "Approved"
+    reportStatus === "Submitted" || reportStatus === "Approved"
   );
 
   return (
