@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-import { Box } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 // utils
 import {
   autosaveFieldData,
@@ -25,6 +25,7 @@ export const TextField = ({
   autosave,
   validateOnRender,
   styleAsOptional,
+  heading,
   ...props
 }: Props) => {
   const defaultValue = "";
@@ -34,10 +35,9 @@ export const TextField = ({
   const form = useFormContext();
   const fieldIsRegistered = name in form.getValues();
   const { full_name, state } = useStore().user ?? {};
-  const { report } = useStore();
+  const { report, entities, entityType, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
-  const { entities, entityType, selectedEntity, updateEntities } =
-    useContext(EntityContext);
+  const { updateEntities } = useContext(EntityContext);
 
   useEffect(() => {
     if (!fieldIsRegistered && !validateOnRender) {
@@ -121,6 +121,8 @@ export const TextField = ({
 
   return (
     <Box sx={sxOverride} className={`${nestedChildClasses} ${labelClass}`}>
+      {/* SAR field sections */}
+      {heading && <Heading sx={sx.fieldHeading}>{heading}</Heading>}
       <CmsdsTextField
         id={name}
         name={name}
@@ -146,6 +148,14 @@ interface Props {
   nested?: boolean;
   autosave?: boolean;
   styleAsOptional?: boolean;
+  heading?: string;
   clear?: boolean;
   [key: string]: any;
 }
+
+const sx = {
+  fieldHeading: {
+    fontSize: "28px",
+    paddingTop: "1.5rem",
+  },
+};

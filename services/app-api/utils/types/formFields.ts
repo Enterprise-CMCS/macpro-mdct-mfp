@@ -67,6 +67,11 @@ export interface FormField {
   props?: AnyObject;
   choices?: FieldChoice[];
   repeat?: string;
+  repeatable?: Repeatable;
+}
+
+export interface Repeatable {
+  rule: string;
 }
 
 export interface DropdownOptions {

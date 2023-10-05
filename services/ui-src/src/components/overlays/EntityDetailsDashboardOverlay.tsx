@@ -1,43 +1,39 @@
-import { MouseEventHandler, useContext, useEffect } from "react";
+import React, { MouseEventHandler, useEffect } from "react";
 // components
-import { Box, Button, Flex, Image } from "@chakra-ui/react";
-import { ReportPageIntro, Table, EntityRow } from "components";
+import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
+import { Form, ReportPageIntro } from "components";
 // types
-import {
-  EntityShape,
-  EntityType,
-  FormJson,
-  EntityDetailsDashboardOverlayShape,
-} from "types";
+import { EntityShape, EntityType, FormJson } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
-import { EntityContext } from "components/reports/EntityProvider";
+// verbiage
+import overlayVerbiage from "../../verbiage/pages/overlays";
+import { useStore } from "utils";
 
 export const EntityDetailsDashboardOverlay = ({
   closeEntityDetailsOverlay,
   entityType,
-  dashboard,
+  entities,
+  form,
+  onSubmit,
   selectedEntity,
+  disabled,
+  submitting,
+  validateOnRender,
 }: Props) => {
   // Entity Provider Setup
-  const { setSelectedEntity, setEntityType } = useContext(EntityContext);
+  const { setEntities, clearEntities, setSelectedEntity, setEntityType } =
+    useStore();
 
   useEffect(() => {
     setSelectedEntity(selectedEntity);
     setEntityType(entityType);
+    setEntities(entities);
     return () => {
+      clearEntities();
       setSelectedEntity(undefined);
     };
   }, [entityType, selectedEntity]);
-
-  // Open/Close overlay action methods
-  const openEntityDetailsOverlay = (entity: EntityShape) => {
-    // console.log("test", entity);
-  };
-
-  const tableHeaders = () => {
-    return { headRow: ["", "", ""] };
-  };
 
   return (
     <Box>
@@ -45,38 +41,36 @@ export const EntityDetailsDashboardOverlay = ({
         sx={sx.backButton}
         variant="none"
         onClick={closeEntityDetailsOverlay as MouseEventHandler}
-        aria-label="Return to all initiatives"
+        aria-label="Return to dashboard for this initiative"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
-        Return to all initiatives
+        Return to dashboard for this initiatives
       </Button>
-      <ReportPageIntro text={dashboard?.verbiage?.intro} />
-      <Table content={tableHeaders()}>
-        {dashboard?.fields.map((entity: EntityShape) => (
-          <EntityRow
-            key={entity.id}
-            entity={entity}
-            // entityInfo={entityInfo}
-            verbiage={entity.verbiage}
-            locked={false}
-            openDrawer={openEntityDetailsOverlay}
-            openAddEditEntityModal={() => {
-              return;
-            }}
-            openDeleteEntityModal={() => {
-              return;
-            }}
-          />
-        ))}
-      </Table>
-      <Box>
+      <ReportPageIntro text={overlayVerbiage.WP.intro} />
+      <Form
+        id={form.id}
+        formJson={form}
+        onSubmit={onSubmit}
+        formData={selectedEntity}
+        autosave={true}
+        disabled={disabled}
+        validateOnRender={validateOnRender || false}
+        dontReset={true}
+      />
+      <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
-          <Button
-            variant="outline"
-            onClick={closeEntityDetailsOverlay as MouseEventHandler}
-          >
-            Return
-          </Button>
+          {disabled ? (
+            <Button
+              variant="outline"
+              onClick={closeEntityDetailsOverlay as MouseEventHandler}
+            >
+              Return
+            </Button>
+          ) : (
+            <Button type="submit" form={form.id} sx={sx.saveButton}>
+              {submitting ? <Spinner size="md" /> : "Save & return"}
+            </Button>
+          )}
         </Flex>
       </Box>
     </Box>
@@ -84,14 +78,15 @@ export const EntityDetailsDashboardOverlay = ({
 };
 
 interface Props {
-  closeEntityDetailsOverlay?: Function;
-  entityType?: EntityType;
-  dashboard?: FormJson;
-  selectedEntity?: EntityShape;
-  onSubmit?: Function;
+  closeEntityDetailsOverlay: Function;
+  entityType: EntityType;
+  entities: any;
+  form: FormJson;
+  onSubmit: Function;
+  selectedEntity: EntityShape;
+  disabled: boolean;
   submitting?: boolean;
   validateOnRender?: boolean;
-  route?: EntityDetailsDashboardOverlayShape;
 }
 
 const sx = {

@@ -53,8 +53,8 @@ export const mockWPReport = {
     fieldDataId: "mockReportFieldData",
     formTemplateId: "mockReportJson",
   },
-  formTemplate: { ...mockReportJson },
-  fieldData: { ...mockReportFieldData },
+  formTemplate: mockReportJson,
+  fieldData: mockReportFieldData,
   createdAt: 162515200000,
   lastAltered: 162515200000,
 };
@@ -96,7 +96,14 @@ export const mockWPFullReport = {
     },
   },
   isComplete: false,
+  reportPeriod: 1,
 };
+
+export const mockReportsByState = [
+  { ...mockWPFullReport, id: "mock-report-id-1" },
+  { ...mockWPFullReport, id: "mock-report-id-2" },
+  { ...mockWPFullReport, id: "mock-report-id-3" },
+];
 
 export const mockReportMethods = {
   archiveReport: jest.fn(),
@@ -113,4 +120,24 @@ export const mockReportMethods = {
   contextIsLoaded: true,
   errorMessage: "",
   lastSavedTime: "1:58 PM",
+};
+
+export const mockWpReportContext = {
+  ...mockReportMethods,
+  ...mockWPFullReport,
+  reportsByState: mockReportsByState,
+  copyEligibleReportsByState: mockReportsByState,
+  errorMessage: "",
+  lastSavedTime: "1:58 PM",
+};
+
+export const mockDashboardReportContext = {
+  ...mockWpReportContext,
+  reportsByState: [
+    {
+      ...mockWPReport,
+      formTemplate: undefined,
+      fieldData: undefined,
+    },
+  ],
 };

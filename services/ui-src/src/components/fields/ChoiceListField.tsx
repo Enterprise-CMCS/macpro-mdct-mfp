@@ -45,10 +45,9 @@ export const ChoiceListField = ({
   const { state, userIsReadOnly, userIsAdmin, full_name } =
     useStore().user ?? {};
 
-  const report = useStore().report;
+  const { report, entities, entityType, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
-  const { entities, entityType, updateEntities, selectedEntity } =
-    useContext(EntityContext);
+  const { updateEntities } = useContext(EntityContext);
 
   const shouldDisableChildFields =
     ((userIsAdmin || userIsReadOnly) && !!props?.disabled) || report?.locked;

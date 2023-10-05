@@ -126,9 +126,6 @@ export const DashboardPage = ({ reportType }: Props) => {
         submittedOnDate = convertDateUtcToEt(report.submittedOnDate);
       }
       formData = {
-        fieldData: {
-          submissionName: report.submissionName,
-        },
         state: report.state,
         id: report.id,
         submittedBy: report.submittedBy,
@@ -197,9 +194,9 @@ export const DashboardPage = ({ reportType }: Props) => {
         {reportType === "WP" && (
           <InstructionsAccordion
             verbiage={
-              userIsStateUser
-                ? accordion.WP.stateUserDashboard
-                : accordion.WP.adminDashboard
+              userIsAdmin
+                ? accordion.WP.adminDashboard
+                : accordion.WP.stateUserDashboard
             }
           />
         )}

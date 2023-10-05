@@ -9,16 +9,19 @@ import {
   ReportShape,
   MfpReportState,
   ReportMetadataShape,
+  EntityType,
+  EntityShape,
+  MfpEntityState,
 } from "types";
 
 // USER STORE
 const userStore = (set: Function) => ({
   // initial state
-  user: null,
+  user: undefined,
   // show local logins
   showLocalLogins: undefined,
   // actions
-  setUser: (newUser: MFPUser | null) =>
+  setUser: (newUser?: MFPUser) =>
     set(() => ({ user: newUser }), false, { type: "setUser" }),
   // toggle show local logins (dev only)
   setShowLocalLogins: () =>
@@ -88,14 +91,41 @@ const reportStore = (set: Function) => ({
     }),
 });
 
+// ENTITY STORE
+const entityStore = (set: Function) => ({
+  // initial state
+  entityId: undefined,
+  entityType: undefined,
+  entities: [],
+  selectedEntity: undefined,
+  // actions
+  setEntityType: (newEntityType: EntityType | undefined) =>
+    set(() => ({ entityType: newEntityType }), false, {
+      type: "setEntityType",
+    }),
+  setEntities: (newEntities: EntityShape[] | undefined) =>
+    set(() => ({ entities: newEntities }), false, {
+      type: "setEntities",
+    }),
+  clearEntities: () =>
+    set(() => ({ entities: [] }), false, { type: "clearEntities" }),
+  setSelectedEntity: (newSelectedEntity: EntityShape | undefined) =>
+    set(() => ({ selectedEntity: newSelectedEntity }), false, {
+      type: "setSelectedEntity",
+    }),
+});
+
 export const useStore = create(
   // persist and devtools are being used for debugging state
   persist(
-    devtools<MfpUserState & AdminBannerState & MfpReportState>((set) => ({
-      ...userStore(set),
-      ...bannerStore(set),
-      ...reportStore(set),
-    })),
+    devtools<MfpUserState & AdminBannerState & MfpReportState & MfpEntityState>(
+      (set) => ({
+        ...userStore(set),
+        ...bannerStore(set),
+        ...reportStore(set),
+        ...entityStore(set),
+      })
+    ),
     {
       name: "mfp-store",
     }
