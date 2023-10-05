@@ -48,33 +48,28 @@ export const Form = ({
 
   const { report } = useStore();
 
-  //const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
+  const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
 
-  /*
-   * const createLabel = (field: any) => {
-   * if (updatedTargetPopulationChoices.indexOf(field) >= 4) {
-   * return `Other: ${field.transitionBenchmarks_targetPopulationName}`;
-   * } else {
-   *  return field.transitionBenchmarks_targetPopulationName;
-   * }
-   * };
-   */
+  const createLabel = (field: any) => {
+    if (updatedTargetPopulationChoices.indexOf(field) >= 4) {
+      return `Other: ${field.transitionBenchmarks_targetPopulationName}`;
+    } else {
+      return field.transitionBenchmarks_targetPopulationName;
+    }
+  };
+
   // create new array
-  /*
-   * const formattedChoiceList = updatedTargetPopulationChoices?.map(
-   *  (field: any) => {
-   *   return {
-   *     checked: false,
-   *     id: field.id,
-   *     label: createLabel(field),
-   *     name: field.transitionBenchmarks_targetPopulationName,
-   *     value: field.transitionBenchmarks_targetPopulationName,
-   *   };
-   *  }
-   * );
-   * console.log(formattedChoiceList);
-   */
-  // need to update choice list array without mutating existing fields array
+  const formattedChoiceList = updatedTargetPopulationChoices?.map(
+    (field: any) => {
+      return {
+        checked: false,
+        id: field.id,
+        label: createLabel(field),
+        name: field.transitionBenchmarks_targetPopulationName,
+        value: field.transitionBenchmarks_targetPopulationName,
+      };
+    }
+  );
 
   let location = useLocation();
   const fieldInputDisabled =
@@ -113,7 +108,16 @@ export const Form = ({
 
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const fieldsToRender = hydrateFormFields(fields, formData);
+    const updatedFields = fields.map((field) => {
+      return field.id.match("targetPopulations")
+        ? {
+            ...field,
+            props: { ...field?.props, choices: [...formattedChoiceList] },
+          }
+        : { ...field };
+    });
+
+    const fieldsToRender = hydrateFormFields(updatedFields, formData);
     return formFieldFactory(fieldsToRender, {
       disabled: !!fieldInputDisabled,
       autosave,
