@@ -147,6 +147,7 @@ export const OverlayModalPage = ({
         <AddEditEntityModal
           entityType={entityType}
           selectedEntity={selectedEntity}
+          entityName={entity!.initiative_name}
           verbiage={verbiage}
           form={modalForm}
           modalDisclosure={{

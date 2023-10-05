@@ -92,15 +92,25 @@ export const AddEditEntityModal = ({
     setSubmitting(false);
     modalDisclosure.onClose();
   };
+
+  const modalTitle = () => {
+    let title;
+    selectedEntity?.id
+      ? (title = verbiage.addEditModalEditTitle)
+      : (title = verbiage.addEditModalAddTitle);
+    if (entityName) {
+      title += entityName;
+    }
+    return title;
+  };
+
   return (
     <Modal
       data-testid="add-edit-entity-modal"
       formId={form.id}
       modalDisclosure={modalDisclosure}
       content={{
-        heading: selectedEntity?.id
-          ? verbiage.addEditModalEditTitle + entityName
-          : verbiage.addEditModalAddTitle + entityName,
+        heading: modalTitle(),
         subheading: verbiage.addEditModalHint
           ? verbiage.addEditModalHint
           : undefined,
