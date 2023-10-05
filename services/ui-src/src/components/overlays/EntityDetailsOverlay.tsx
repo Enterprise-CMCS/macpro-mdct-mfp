@@ -1,3 +1,4 @@
+import { useState, useContext } from "react";
 // components
 import {
   Box,
@@ -7,20 +8,33 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Alert, Form, ReportPageIntro, CloseEntityModal } from "components";
+import {
+  Alert,
+  Form,
+  ReportPageIntro,
+  CloseEntityModal,
+  ReportContext,
+} from "components";
 // types
-import { AlertTypes, EntityDetailsOverlayShape } from "types";
+import {
+  AlertTypes,
+  EntityDetailsOverlayShape,
+  AnyObject,
+  isFieldElement,
+} from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
-// verbiage
-import { useStore } from "utils";
+// utils
+import { filterFormData, useStore } from "utils";
 
 export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
   const { report } = useStore();
-  const submitting = false;
   const { form, verbiage } = route;
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const { full_name, state } = useStore().user ?? {};
+  const { updateReport } = useContext(ReportContext);
 
   // add/edit entity modal disclosure and methods
   const {
@@ -35,6 +49,28 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
 
   const closeCloseEntityModal = () => {
     closeEntityModalOnCloseHandler();
+  };
+
+  const onSubmit = async (enteredData: AnyObject) => {
+    setSubmitting(true);
+    const reportKeys = {
+      reportType: report?.reportType,
+      state: state,
+      id: report?.id,
+    };
+    const filteredFormData = filterFormData(
+      enteredData,
+      route.form.fields.filter(isFieldElement)
+    );
+    const dataToWrite = {
+      metadata: {
+        //status:
+        lastAlteredBy: full_name,
+      },
+      fieldData: filteredFormData,
+    };
+    await updateReport(reportKeys, dataToWrite);
+    setSubmitting(false);
   };
 
   return (
@@ -53,7 +89,7 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
       <Form
         id={form.id}
         formJson={form}
-        onSubmit={() => {}}
+        onSubmit={onSubmit}
         autosave={true}
         formData={report?.fieldData}
         validateOnRender={validateOnRender || false}
