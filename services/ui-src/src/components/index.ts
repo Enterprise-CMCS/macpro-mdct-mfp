@@ -42,6 +42,7 @@ export { NumberField } from "./fields/NumberField";
 // forms
 export { AdminBannerForm } from "./forms/AdminBannerForm";
 export { Form } from "./forms/Form";
+export { AdminDashSelector } from "./forms/AdminDashSelector";
 // layout
 export { Footer } from "./layout/Footer";
 export { Header } from "./layout/Header";
