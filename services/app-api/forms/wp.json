@@ -580,10 +580,10 @@
             }
           },
           "form": {
-            "id": "mock-form-id",
+            "id": "sdii",
             "fields": [
               {
-                "id": "firstquestion",
+                "id": "instructions_selfDirectedInitiatives",
                 "type": "radio",
                 "validation": "radio",
                 "props": {
@@ -601,7 +601,7 @@
                 }
               },
               {
-                "id": "secondquestion",
+                "id": "instructions_tribalInitiatives",
                 "type": "radio",
                 "validation": "radio",
                 "props": {

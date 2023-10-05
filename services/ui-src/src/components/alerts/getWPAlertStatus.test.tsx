@@ -31,8 +31,8 @@ describe("Test WP Alerts", () => {
   test("Test checkInitiativesTopics filled", () => {
     const report: ReportShape = {
       fieldData: {
-        firstquestion: { value: "Yes" },
-        secondquestion: { value: "Yes" },
+        instructions_selfDirectedInitiatives: { value: "Yes" },
+        instructions_tribalInitiatives: { value: "Yes" },
         initiative: [
           {
             initiative_wpTopic: initiative_wpTopic,
