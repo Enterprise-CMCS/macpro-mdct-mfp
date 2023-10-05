@@ -18,8 +18,9 @@ export default {
         "Last edited",
         "Edited by",
         "Status",
+        "#",
         "",
-      ],
+      ]
     },
     empty:
       "Keep track of your MFP Work Plans, once you start a Work Plan you can access it here.",

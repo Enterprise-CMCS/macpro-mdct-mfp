@@ -44,7 +44,7 @@ export const DashboardTable = ({
         {/* Report Name */}
         <Td sx={sxOverride.submissionNameText}>{report.submissionName}</Td>
         {/* Date Fields */}
-        <DateFields report={report} reportType={reportType} />
+        <DateFields report={report} reportType={reportType} isAdmin={isAdmin} />
         {/* Last Altered By */}
         <Td>{report?.lastAlteredBy || "-"}</Td>
         {/* Report Status */}
@@ -56,10 +56,17 @@ export const DashboardTable = ({
             report.submissionCount
           )}
         </Td>
-        {/* SAR-ONLY: Submission count */}
-        {reportType === "SAR" && isAdmin && (
-          <Td> {report.submissionCount === 0 ? 1 : report.submissionCount} </Td>
-        )}
+        {/* SAR-ONLY and Admin: Submission count */}
+        {reportType === "SAR" ||
+          (isAdmin && (
+            <Td>
+              {!report.submissionCount
+                ? 0
+                : report.submissionCount === 0
+                ? 1
+                : report.submissionCount}{" "}
+            </Td>
+          ))}
         {/* Action Buttons */}
         <Td sx={sxOverride.editReportButtonCell}>
           <Button
@@ -79,7 +86,7 @@ export const DashboardTable = ({
         </Td>
         {isAdmin && (
           <>
-            {reportType === "SAR" && (
+            {
               <AdminReleaseButton
                 report={report}
                 reportType={reportType}
@@ -88,7 +95,7 @@ export const DashboardTable = ({
                 releasing={releasing}
                 sxOverride={sxOverride}
               />
-            )}
+            }
             <AdminArchiveButton
               report={report}
               reportType={reportType}
@@ -148,6 +155,10 @@ const tableBody = (body: TableContentShape, isAdmin: boolean) => {
   if (!isAdmin) {
     tableContent.headRow = tableContent.headRow!.filter((e) => e !== "#");
     return tableContent;
+  } else {
+    tableContent.headRow = tableContent.headRow!.filter(
+      (e) => e !== "Due date"
+    );
   }
   return body;
 };
@@ -172,10 +183,12 @@ interface EditReportProps {
   sxOverride: AnyObject;
 }
 
-const DateFields = ({ report, reportType }: DateFieldProps) => {
+const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {reportType === "WP" && <Td>{convertDateUtcToEt(report.createdAt)}</Td>}
+      {reportType === "WP" && !isAdmin && (
+        <Td>{convertDateUtcToEt(report.createdAt)}</Td>
+      )}
       <Td>{convertDateUtcToEt(report.lastAltered)}</Td>
     </>
   );
@@ -184,6 +197,7 @@ const DateFields = ({ report, reportType }: DateFieldProps) => {
 interface DateFieldProps {
   report: ReportMetadataShape;
   reportType: string;
+  isAdmin: boolean;
 }
 
 const AdminReleaseButton = ({
@@ -193,11 +207,17 @@ const AdminReleaseButton = ({
   releaseReport,
   sxOverride,
 }: AdminActionButtonProps) => {
+  
+  //unlock is enabled in status: approved and submitted, all other times, it is disabled
+  const isDisabled = !(
+    report.status === "Submitted" || report.status === "Approved"
+  );
+
   return (
     <Td>
       <Button
         variant="link"
-        disabled={report.locked === false || report.archived === true}
+        disabled={isDisabled}
         sx={sxOverride.adminActionButton}
         onClick={() => releaseReport!(report)}
       >
