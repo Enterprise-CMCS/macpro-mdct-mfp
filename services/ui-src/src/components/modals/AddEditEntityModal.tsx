@@ -21,6 +21,7 @@ import {
 
 export const AddEditEntityModal = ({
   entityType,
+  entityName,
   form,
   verbiage,
   selectedEntity,
@@ -98,8 +99,8 @@ export const AddEditEntityModal = ({
       modalDisclosure={modalDisclosure}
       content={{
         heading: selectedEntity?.id
-          ? verbiage.addEditModalEditTitle
-          : verbiage.addEditModalAddTitle,
+          ? verbiage.addEditModalEditTitle + entityName
+          : verbiage.addEditModalAddTitle + entityName,
         subheading: verbiage.addEditModalHint
           ? verbiage.addEditModalHint
           : undefined,
@@ -123,6 +124,7 @@ export const AddEditEntityModal = ({
 
 interface Props {
   entityType: string;
+  entityName?: string;
   form: FormJson;
   verbiage: AnyObject;
   selectedEntity?: EntityShape;

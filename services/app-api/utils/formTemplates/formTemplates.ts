@@ -115,6 +115,7 @@ export const expandRepeatedFields = (formFields: FormField[]) => {
 
 export const scanForRepeatedFields = (reportRoutes: ReportRoute[]) => {
   for (let route of reportRoutes) {
+    if (route?.entitySteps) scanForRepeatedFields(route.entitySteps);
     if (route?.children) scanForRepeatedFields(route.children);
     if (route?.form?.fields)
       route.form.fields = expandRepeatedFields(route.form.fields);

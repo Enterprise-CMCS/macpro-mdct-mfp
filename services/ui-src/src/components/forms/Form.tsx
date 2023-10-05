@@ -166,7 +166,7 @@ const sx = {
     },
   },
   // nested child fields
-  ".ds-c-field__checkedChild.nested": {
+  ".ds-c-choice__checkedChild.nested": {
     paddingY: "0.25rem",
     paddingTop: 0,
     // makes the blue line continuous
