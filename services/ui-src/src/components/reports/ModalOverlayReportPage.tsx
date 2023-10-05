@@ -22,7 +22,6 @@ import {
   isFieldElement,
   ModalOverlayReportPageShape,
   ReportStatus,
-  EntityDetailsDashboardOverlayShape,
 } from "types";
 // utils
 import {
@@ -49,14 +48,7 @@ export const ModalOverlayReportPage = ({
   validateOnRender,
 }: Props) => {
   // Route Information
-  const {
-    entityType,
-    verbiage,
-    modalForm,
-    overlayForm,
-    dashboard,
-    entityInfo,
-  } = route;
+  const { entityType, verbiage, modalForm, overlayForm, entityInfo } = route;
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
   const { report } = useStore();
@@ -189,17 +181,18 @@ export const ModalOverlayReportPage = ({
 
   return (
     <Box>
-      {dashboard && isEntityDetailsOpen && currentEntity ? (
+      {overlayForm && isEntityDetailsOpen && currentEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             entityType={entityType as EntityType}
-            dashboard={dashboard}
-            selectedEntity={currentEntity}
+            entities={report?.fieldData[entityType]}
+            form={overlayForm}
             onSubmit={onSubmit}
+            selectedEntity={currentEntity}
+            disabled={false}
             submitting={submitting}
             validateOnRender={validateOnRender}
-            route={route as EntityDetailsDashboardOverlayShape}
           />
         </EntityProvider>
       ) : (
