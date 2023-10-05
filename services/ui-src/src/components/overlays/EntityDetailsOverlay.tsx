@@ -27,6 +27,7 @@ export const EntityDetailsOverlay = ({
   const submitting = false;
   const { form, verbiage } = route;
   const { report } = useStore();
+
   // add/edit entity modal disclosure and methods
   const {
     isOpen: closeEntityModalIsOpen,

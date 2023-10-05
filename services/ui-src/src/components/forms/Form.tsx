@@ -48,7 +48,7 @@ export const Form = ({
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
 
   const { report } = useStore();
-  const targetPopulationChoiceList = report?.fieldData?.targetPopulation;
+  const targetPopulationChoiceList = report?.fieldData?.targetPopulations;
 
   let location = useLocation();
   const fieldInputDisabled =
