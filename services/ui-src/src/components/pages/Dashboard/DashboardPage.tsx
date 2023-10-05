@@ -204,7 +204,6 @@ export const DashboardPage = ({ reportType }: Props) => {
       reportsToDisplay?.[reportsToDisplay?.length - 1];
     switch (reportType) {
       case ReportType.SAR:
-        console.log(workPlanToCopyFrom);
         return !workPlanToCopyFrom;
       case ReportType.WP:
         if (!lastDisplayedReport) return false;
