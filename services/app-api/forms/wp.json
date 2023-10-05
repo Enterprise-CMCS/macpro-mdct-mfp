@@ -802,7 +802,7 @@
                 "id": "stsidi",
                 "fields": [
                   {
-                    "id": "stateTerritory_defineInitiative",
+                    "id": "defineInitiative_describeInitiative",
                     "type": "textarea",
                     "validation": "text",
                     "props": {
@@ -810,7 +810,7 @@
                     }
                   },
                   {
-                    "id": "stateTerritory_targetPopulations",
+                    "id": "defineInitiative_targetPopulations",
                     "type": "checkbox",
                     "validation": "checkbox",
                     "props": {
@@ -820,7 +820,7 @@
                     }
                   },
                   {
-                    "id": "stateTerritory_projectedStartDate",
+                    "id": "defineInitiative_projectedStartDate",
                     "type": "date",
                     "validation": "date",
                     "props": {
@@ -829,7 +829,7 @@
                     }
                   },
                   {
-                    "id": "stateTerritory_projectedEndDate",
+                    "id": "defineInitiative_projectedEndDate",
                     "type": "date",
                     "validation": "date",
                     "props": {
@@ -1075,7 +1075,7 @@
                     }
                   },
                   {
-                    "id": "fundingSourcesQuarters",
+                    "id": "fundingSources_quarters",
                     "type": "number",
                     "validation": "number",
                     "repeatable": {
@@ -1116,7 +1116,7 @@
                 "id": "sauxM9MnFZhIn5W44WY3BG",
                 "fields": [
                   {
-                    "id": "stateTerritory_projectedEndDate",
+                    "id": "closeOutInformation_projectedEndDate",
                     "type": "date",
                     "validation": "textOptional",
                     "props": {
@@ -1125,7 +1125,7 @@
                     }
                   },
                   {
-                    "id": "n4Xt9usQxPvfEIJkhYjH9d",
+                    "id": "closeOutInformation_actualEndDate",
                     "type": "date",
                     "validation": "date",
                     "props": {
@@ -1133,7 +1133,7 @@
                     }
                   },
                   {
-                    "id": "initiativeStatus_checkbox",
+                    "id": "closeOutInformation_initiativeStatus",
                     "type": "checkbox",
                     "validation": "checkbox",
                     "props": {
@@ -1144,7 +1144,6 @@
                           "id": "FhAF0lzeuB4wLalyXv2BeG",
                           "label": "Completed initiative"
                         },
-
                         {
                           "id": "GUcwKDPBs8K6LY4yT1hPGD",
                           "label": "Discontinued initiative",
@@ -1158,12 +1157,11 @@
                               "validation": {
                                 "type": "text",
                                 "nested": true,
-                                "parentFieldName": "initiativeStatus_checkbox"
+                                "parentFieldName": "closeOutInformation_initiativeStatus"
                               }
                             }
                           ]
                         },
-
                         {
                           "id": "86SG3qhFfsZ0CAu3G4SxM5",
                           "label": "Sustaining initiative through a Medicaid authority",

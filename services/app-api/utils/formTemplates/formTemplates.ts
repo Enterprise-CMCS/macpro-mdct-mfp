@@ -292,13 +292,12 @@ export const compileValidationJsonFromRoutes = (
       if (overlayFormFields) addValidationToAccumulator(overlayFormFields);
     }
     // accumulate entity steps
-    if (route.dashboard?.pageType === "modalOverlay") {
+    if (route.dashboard?.pageType === "entityDetailsDashboardOverlay") {
       route.entitySteps?.map(
         (step: EntityDetailsOverlayShape | OverlayModalPageShape) => {
           const stepForm = step.form || step.modalForm;
           const entityStepFormFields = stepForm?.fields.filter(isFieldElement);
-          if (entityStepFormFields)
-            addValidationToAccumulator(entityStepFormFields);
+          addValidationToAccumulator(entityStepFormFields);
         }
       );
     }
