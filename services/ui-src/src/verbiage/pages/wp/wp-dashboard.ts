@@ -20,10 +20,16 @@ export default {
         "Status",
         "#",
         "",
-      ]
+      ],
     },
     empty:
       "Keep track of your MFP Work Plans, once you start a Work Plan you can access it here.",
     callToAction: "Start MFP Work Plan",
+  },
+  modalUnlock: {
+    heading: "You unlocked this Work Plan",
+    subheading:
+      "Email the state or territory contact and let them know it requires edits.",
+    actionButtonText: "Return to dashboard",
   },
 };
