@@ -44,7 +44,7 @@ export const getFormattedEntityData = (
       return {
         id: entity?.id,
         fundingSource: getRadioValue(entity, "fundingSources_wpTopic"),
-        quarters: getRepeatedField(entity, "fundingSourcesQuarters"),
+        quarters: getRepeatedField(entity, "fundingSources_quarters"),
       };
     default:
       return {};
