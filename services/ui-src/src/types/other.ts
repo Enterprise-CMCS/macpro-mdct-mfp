@@ -33,6 +33,10 @@ export enum OverlayModalEntityTypes {
   FUNDING_SOURCES = "fundingSources",
 }
 
+export enum ModalDrawerEntityTypes {
+  TARGET_POPULATIONS = "targetPopulations",
+}
+
 export enum PageTypes {
   STANDARD = "standard",
   DRAWER = "drawer",

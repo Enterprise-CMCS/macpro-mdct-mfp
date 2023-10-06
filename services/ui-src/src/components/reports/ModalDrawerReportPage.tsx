@@ -59,6 +59,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
+  const selectedEntityName =
+    selectedEntity?.transitionBenchmarks_targetPopulationName;
 
   // create drawerForm from json
   const drawerForm = { ...drawerFormJson };
@@ -187,6 +189,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
                 openDrawer={openDrawer}
+                entityType={entityType as EntityType}
               />
             ))}
           </Table>
@@ -211,7 +214,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
             Review PDF
           </Button>
         </Box>
-        <hr />
         {/* MODALS */}
         <AddEditEntityModal
           entityType={entityType as EntityType}
@@ -238,7 +240,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           selectedEntity={selectedEntity!}
           verbiage={{
             ...verbiage,
-            drawerTitle: `${verbiage.drawerTitle} ${selectedEntity?.name}`,
+            drawerTitle: `${verbiage.drawerTitle} ${selectedEntityName}`,
             drawerDetails: getFormattedEntityData(entityType),
           }}
           form={drawerForm}
@@ -275,6 +277,26 @@ const sx = {
     marginTop: "1.5rem",
     marginBottom: "2rem",
   },
-  table: {},
+  table: {
+    tableLayout: "fixed",
+    br: {
+      marginBottom: "0.25rem",
+    },
+    th: {
+      paddingLeft: "1rem",
+      paddingRight: "0",
+      borderBottom: "1px solid",
+      borderColor: "palette.gray_lighter",
+      ".tablet &, .mobile &": {
+        border: "none",
+      },
+      "&:nth-of-type(1)": {
+        width: "2.5rem",
+      },
+      "&:nth-of-type(3)": {
+        width: "260px",
+      },
+    },
+  },
   reviewPdfButton: { marginTop: "1.5rem", marginBottom: "2rem" },
 };
