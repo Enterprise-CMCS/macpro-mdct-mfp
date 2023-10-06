@@ -10,10 +10,13 @@ import {
 } from "utils/testing/setupJest";
 const mockCloseHandler = jest.fn();
 
+const mockEntityName = "mock-name";
+
 const modalComponent = (
   <RouterWrappedComponent>
     <AddEditEntityModal
       entityType="plans"
+      entityName={mockEntityName}
       verbiage={mockModalDrawerReportPageVerbiage}
       form={mockModalForm}
       modalDisclosure={{
@@ -37,7 +40,9 @@ describe("Test AddEditEntityModal", () => {
 
   test("AddEditEntityModal shows the contents", () => {
     expect(
-      screen.getByText(mockModalDrawerReportPageVerbiage.addEditModalAddTitle)
+      screen.getByText(
+        mockModalDrawerReportPageVerbiage.addEditModalAddTitle + mockEntityName
+      )
     ).toBeTruthy();
     expect(screen.getByText("mock modal text field")).toBeTruthy();
   });
