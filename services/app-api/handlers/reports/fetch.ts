@@ -86,11 +86,12 @@ export const fetchReport = handler(async (event, _context) => {
         body: error.NO_MATCHING_RECORD,
       };
     }
-
+    console.log("Report Metadata status", reportMetadata.status);
     if (!reportMetadata.completionStatus) {
       reportMetadata.completionStatus = await calculateCompletionStatus(
         fieldData,
-        formTemplate
+        formTemplate,
+        reportMetadata.status
       );
       reportMetadata.isComplete = isComplete(reportMetadata.completionStatus);
     }

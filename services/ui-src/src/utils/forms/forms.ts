@@ -14,6 +14,8 @@ import {
   FormField,
   FormLayoutElement,
   isFieldElement,
+  ReportShape,
+  ReportStatus,
 } from "types";
 import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
@@ -232,8 +234,39 @@ const repeatableTargetPopulationChoices = (
   }
 };
 
+export const hideShowFormFields = (
+  fields: (FormField | FormLayoutElement)[],
+  report: ReportShape | undefined
+) => {
+  let finalFields: (FormField | FormLayoutElement)[] = fields;
+  const targetPopulationChoiceList = report?.fieldData?.targetPopulation;
+  if (report?.status) {
+    finalFields = filterFormFieldsBasedOnStatus(fields, report.status);
+  }
+  finalFields = expandRepeatableChoiceLists(
+    finalFields,
+    targetPopulationChoiceList
+  );
+  return finalFields;
+};
+
+export const filterFormFieldsBasedOnStatus = (
+  fields: (FormField | FormLayoutElement)[],
+  reportStatus: ReportStatus
+) => {
+  return fields.filter((formField) => {
+    if (
+      formField.props?.showOnStatus &&
+      formField.props.showOnStatus !== reportStatus
+    ) {
+      return false;
+    }
+    return true;
+  });
+};
+
 // returns repeated choice lists - reformatting logic is needed once fields are passed into this function
-export const getRepeatableChoiceLists = (
+export const expandRepeatableChoiceLists = (
   fields: (FormField | FormLayoutElement)[],
   choiceList: any
 ) => {

@@ -14,11 +14,11 @@ import { Box } from "@chakra-ui/react";
 import {
   compileValidationJsonFromFields,
   formFieldFactory,
+  hideShowFormFields,
   hydrateFormFields,
   mapValidationTypesToSchema,
   sortFormErrors,
   useStore,
-  getRepeatableChoiceLists,
 } from "utils";
 import {
   AnyObject,
@@ -48,7 +48,6 @@ export const Form = ({
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
 
   const { report } = useStore();
-  const targetPopulationChoiceList = report?.fieldData?.targetPopulation;
 
   let location = useLocation();
   const fieldInputDisabled =
@@ -87,11 +86,9 @@ export const Form = ({
 
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const fieldsToRender = hydrateFormFields(
-      getRepeatableChoiceLists(fields, targetPopulationChoiceList),
-      formData
-    );
-    return formFieldFactory(fieldsToRender, {
+    const fieldsToRender = hideShowFormFields(fields, report);
+    const hydratedFields = hydrateFormFields(fieldsToRender, formData);
+    return formFieldFactory(hydratedFields, {
       disabled: !!fieldInputDisabled,
       autosave,
       validateOnRender,

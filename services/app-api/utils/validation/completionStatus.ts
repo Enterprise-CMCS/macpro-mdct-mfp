@@ -36,7 +36,8 @@ export const isComplete = (completionStatus: CompletionData): Boolean => {
 // Entry point for calculating completion status
 export const calculateCompletionStatus = async (
   fieldData: AnyObject,
-  formTemplate: AnyObject
+  formTemplate: AnyObject,
+  reportStatus: string
 ) => {
   // Parent Dictionary for holding all route completion status
 
@@ -94,6 +95,13 @@ export const calculateCompletionStatus = async (
     };
     // Iterate over all fields in form
     for (var formField of nestedFormTemplate?.fields || []) {
+      console.log("report status", reportStatus);
+      if (
+        formField.props?.showOnStatus !== reportStatus &&
+        reportStatus !== "Submitted"
+      ) {
+        console.log("here");
+      }
       if (formField.repeat) {
         // This is a repeated field, and must be handled differently
         if (fieldData[formField.repeat] !== undefined)

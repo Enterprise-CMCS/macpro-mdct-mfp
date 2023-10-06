@@ -139,29 +139,17 @@ export const releaseReport = handler(async (event) => {
       body: error.DYNAMO_UPDATE_ERROR,
     };
   }
-
-  const updatedFieldData = {
-    ...fieldData,
-    versionControl: [
-      {
-        // pragma: allowlist nextline secret
-        key: "versionControl-cyUSrTH8mWdpqAKExLZAkz",
-        value: "Yes, this is a resubmission",
-      },
-    ],
-    versionControlDescription: null,
-    "versionControlDescription-otherText": null,
-  };
-
+  const reportStatus = "In revision";
   const newReportMetadata: WPReportMetadata = {
     ...metadata,
     fieldDataId: newFieldDataId,
     locked: false,
     previousRevisions,
-    status: "In progress",
+    status: reportStatus,
     completionStatus: await calculateCompletionStatus(
-      updatedFieldData,
-      formTemplate
+      fieldData,
+      formTemplate,
+      reportStatus
     ),
     isComplete: false,
   };
@@ -185,7 +173,7 @@ export const releaseReport = handler(async (event) => {
     const putObjectParameters: S3Put = {
       Bucket: reportBucket,
       Body: JSON.stringify({
-        ...updatedFieldData,
+        ...fieldData,
       }),
       ContentType: "application/json",
       Key: getFieldDataKey(metadata.state, newFieldDataId),

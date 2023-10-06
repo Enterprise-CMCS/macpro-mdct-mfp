@@ -27,7 +27,8 @@
             "validation": "text",
             "props": {
               "label": "Briefly describe the questions you plan to revise and the reason(s) for the revision(s):",
-              "heading": "Resubmission Information"
+              "heading": "Resubmission Information",
+              "showOnStatus": "In revision"
             }
           },
           {
