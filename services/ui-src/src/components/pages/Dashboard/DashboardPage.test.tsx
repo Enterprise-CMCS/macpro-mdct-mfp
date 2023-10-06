@@ -9,6 +9,7 @@ import {
   mockWpReportContext,
 } from "utils/testing/mockReport";
 import {
+  mockReportStore,
   mockUseAdminStore,
   mockUseStore,
   RouterWrappedComponent,
@@ -53,28 +54,56 @@ const dashboardViewWithReports = (
   </RouterWrappedComponent>
 );
 
-describe("Test Report Dashboard view (with reports, desktop view)", () => {
-  beforeEach(() => {
+describe("Test Report Dashboard view (Desktop)", () => {
+  beforeEach(async () => {
     mockedUseUser.mockReturnValue(mockStateUser);
     mockUseBreakpoint.mockReturnValue({
       isMobile: false,
     });
     mockMakeMediaQueryClasses.mockReturnValue("desktop");
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(dashboardViewWithReports);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test("Check that WP Dashboard view renders", async () => {
-    expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
-    expect(
-      screen.queryByText(wpVerbiage.body.table.caption)
-    ).toBeInTheDocument();
-    expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
-    expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+  describe("Desktop view (basic)", () => {
+    test("Check that WP Dashboard view renders", () => {
+      mockedUseStore.mockReturnValue(mockReportStore);
+      render(dashboardViewWithReports);
+
+      expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
+      expect(
+        screen.queryByText(wpVerbiage.body.table.caption)
+      ).toBeInTheDocument();
+      expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
+      expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("Desktop view with report, state & banner ", () => {
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      render(dashboardViewWithReports);
+    });
+
+    test("Clicking Call To Action text open add/edit modal", async () => {
+      const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
+      expect(callToActionButton).toBeVisible();
+      await userEvent.click(callToActionButton);
+      expect(screen.queryByText("Start new")).toBeVisible();
+    });
+  });
+});
+
+describe("Test Report Dashboard (Mobile)", () => {
+  beforeEach(() => {
+    mockUseBreakpoint.mockReturnValue({
+      isMobile: true,
+    });
+
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(dashboardViewWithReports);
   });
 
   test("Clicking Call To Action text open add/edit modal", async () => {
@@ -158,13 +187,6 @@ describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobil
         const results = await axe(container);
         expect(results).toHaveNoViolations();
       });
-    });
-
-    test("Clicking Call To Action text open add/edit modal", async () => {
-      const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
-      expect(callToActionButton).toBeVisible();
-      await userEvent.click(callToActionButton);
-      expect(screen.queryByText("Start new")).toBeVisible();
     });
 
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
