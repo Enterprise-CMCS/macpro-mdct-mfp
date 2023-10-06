@@ -31,7 +31,7 @@ export const DashboardTable = ({
     {reportsByState.map((report: ReportMetadataShape) => (
       <Tr key={report.id}>
         {/* Edit Button */}
-        {!isAdmin && reportType ==="SAR" && !report?.locked ? (
+        {!isAdmin && reportType === "SAR" && !report?.locked ? (
           <EditReportButton
             report={report}
             openAddEditReportModal={openAddEditReportModal}
