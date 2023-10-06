@@ -18,7 +18,6 @@ export const MobileDashboardTable = ({
   entering,
   releaseReport,
   releasing,
-  isStateLevelUser,
   isAdmin,
   sxOverride,
 }: MobileDashboardTableProps) => (
