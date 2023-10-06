@@ -17,28 +17,6 @@ export const AdminDashSelector = ({ verbiage }: Props) => {
   const navigate = useNavigate();
   const [reportSelected, setReportSelected] = useState<boolean>(false);
 
-  const { userIsAdmin } = useStore().user ?? {};
-
-  // create radio options
-  const reportChoices = [
-    {
-      id: "WP",
-      label: "Work Plan",
-    },
-  ];
-  const reportChoice = {
-    id: "SAR",
-    label: "...",
-  };
-
-  // assemble and inject report choices depending on whether report is enabled
-  const workPlan = true;
-  if (workPlan) {
-    reportChoices.push(reportChoice);
-  }
-  const reportField = formJson.fields.find((field) => field.id === "report")!;
-  reportField.props.choices = reportChoices;
-
   // add validation to formJson
   const form: FormJson = formJson;
 
@@ -58,12 +36,8 @@ export const AdminDashSelector = ({ verbiage }: Props) => {
     let selectedReport = formData["report"][0].key;
     selectedReport = selectedReport.replace("report-", "").toLowerCase();
     localStorage.setItem("selectedReportType", selectedReport);
-
-    if (userIsAdmin) {
-      const selectedState = formData["state"].value;
-      localStorage.setItem("selectedState", selectedState);
-    }
-
+    const selectedState = formData["state"].value;
+    localStorage.setItem("selectedState", selectedState);
     navigate(`/${selectedReport}`);
   };
 
