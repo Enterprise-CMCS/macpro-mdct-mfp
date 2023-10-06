@@ -199,7 +199,7 @@ export const ModalOverlayReportPage = ({
         <Box sx={sx.content}>
           <ReportPageIntro
             text={verbiage.intro}
-            reportType={report?.reportType}
+            reporttype={report?.reportType}
           />
           {showAlert && (
             <Alert

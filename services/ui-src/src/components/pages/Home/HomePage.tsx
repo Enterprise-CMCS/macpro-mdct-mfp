@@ -56,13 +56,13 @@ export const HomePage = () => {
               <Text></Text>
             </Box>
             <TemplateCard
-              templateName="WP"
+              templatename="WP"
               verbiage={cards.WP}
               cardprops={sx.card}
               isHidden={!wpReport}
             />
             <TemplateCard
-              templateName="SAR"
+              templatename="SAR"
               verbiage={cards.SAR}
               cardprops={sx.card}
               isHidden={!sarReport}
