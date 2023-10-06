@@ -211,7 +211,9 @@ export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
   ...mockBannerStore,
 };
 
-export const mockUseAdminStore: MfpUserState & AdminBannerState & MfpReportState = {
+export const mockUseAdminStore: MfpUserState &
+  AdminBannerState &
+  MfpReportState = {
   ...mockReportStore,
   ...mockAdminUserStore,
   ...mockBannerStore,

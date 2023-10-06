@@ -25,14 +25,13 @@ export const DashboardTable = ({
   releaseReport,
   releasing,
   sxOverride,
-  isStateLevelUser,
   isAdmin,
 }: DashboardTableProps) => (
   <Table content={tableBody(body.table, isAdmin)} sx={sx.table}>
     {reportsByState.map((report: ReportMetadataShape) => (
       <Tr key={report.id}>
         {/* Edit Button */}
-        {isStateLevelUser && !report?.locked ? (
+        {!isAdmin && reportType ==="SAR" && !report?.locked ? (
           <EditReportButton
             report={report}
             openAddEditReportModal={openAddEditReportModal}

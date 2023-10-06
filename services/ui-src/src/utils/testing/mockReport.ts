@@ -121,7 +121,7 @@ export const mockWPApprovedFullReport = {
   },
   isComplete: true,
   reportPeriod: 1,
-}
+};
 
 export const mockReportsByState = [
   { ...mockWPFullReport, id: "mock-report-id-1" },
