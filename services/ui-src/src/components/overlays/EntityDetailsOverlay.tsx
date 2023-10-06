@@ -22,7 +22,7 @@ export const EntityDetailsOverlay = ({
   route,
   closeEntityDetailsOverlay,
   validateOnRender,
-  selectedEntity,
+  entity,
 }: Props) => {
   const submitting = false;
   const { form, verbiage } = route;
@@ -58,7 +58,7 @@ export const EntityDetailsOverlay = ({
       {verbiage.intro && (
         <ReportPageIntro
           text={verbiage.intro}
-          initiativeName={selectedEntity!.initiative_name}
+          initiativeName={entity!.initiative_name}
         />
       )}
       <Form
@@ -95,7 +95,7 @@ export const EntityDetailsOverlay = ({
             </Button>
             <CloseEntityModal
               verbiage={verbiage}
-              entityName={selectedEntity!.initiative_name}
+              entityName={entity!.initiative_name}
               modalDisclosure={{
                 isOpen: closeEntityModalIsOpen,
                 onClose: closeCloseEntityModal,
@@ -116,7 +116,7 @@ export const EntityDetailsOverlay = ({
 };
 
 interface Props {
-  selectedEntity?: EntityShape;
+  entity?: EntityShape;
   route: EntityDetailsOverlayShape;
   closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;

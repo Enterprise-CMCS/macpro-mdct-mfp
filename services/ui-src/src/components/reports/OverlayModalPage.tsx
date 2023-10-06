@@ -146,7 +146,7 @@ export const OverlayModalPage = ({
         {/* MODALS */}
         <AddEditEntityModal
           entityType={entityType}
-          selectedEntity={selectedEntity}
+          selectedEntity={entity}
           entityName={entity!.initiative_name}
           verbiage={verbiage}
           form={modalForm}
@@ -177,8 +177,8 @@ export const OverlayModalPage = ({
 };
 
 interface Props {
-  entity?: EntityShape;
   route: OverlayModalPageShape;
+  entity?: EntityShape;
   closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;
 }
