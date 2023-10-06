@@ -18,7 +18,8 @@ export const AddEditReportModal = ({
   reportType,
   modalDisclosure,
 }: Props) => {
-  const { createReport, fetchReportsByState } = useContext(ReportContext);
+  const { createReport, fetchReportsByState, updateReport } =
+    useContext(ReportContext);
   const { workPlanToCopyFrom } = useStore();
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -104,28 +105,40 @@ export const AddEditReportModal = ({
     const dataToWrite =
       reportType === "WP" ? prepareWpPayload() : prepareSarPayload(formData);
 
-    await createReport(reportType, activeState, {
-      ...dataToWrite,
-      metadata: {
-        ...dataToWrite.metadata,
-        reportType,
-        status: ReportStatus.NOT_STARTED,
-        isComplete: false,
-      },
-      fieldData: {
-        ...dataToWrite.fieldData,
-        stateName: States[activeState as keyof typeof States],
-        submissionCount: 0,
-        // All new WP reports are NOT resubmissions by definition.
-        versionControl: [
-          {
-            // pragma: allowlist nextline secret
-            key: "versionControl-KFCd3rfEu3eT4UFskUhDtx",
-            value: "No, this is an initial submission",
-          },
-        ],
-      },
-    });
+    // if an existing program was selected, use that report id
+    if (selectedReport?.id) {
+      const reportKeys = {
+        reportType: reportType,
+        state: activeState,
+        id: selectedReport.id,
+      };
+      // edit existing report
+      await updateReport(reportKeys, {
+        ...dataToWrite,
+        metadata: {
+          ...dataToWrite.metadata,
+          locked: undefined,
+          status: undefined,
+          submissionCount: undefined,
+          previousRevisions: undefined,
+        },
+      });
+    } else {
+      await createReport(reportType, activeState, {
+        ...dataToWrite,
+        metadata: {
+          ...dataToWrite.metadata,
+          reportType,
+          status: ReportStatus.NOT_STARTED,
+          isComplete: false,
+        },
+        fieldData: {
+          ...dataToWrite.fieldData,
+          stateName: States[activeState as keyof typeof States],
+          submissionCount: 0,
+        },
+      });
+    }
 
     await fetchReportsByState(reportType, activeState);
     setSubmitting(false);
