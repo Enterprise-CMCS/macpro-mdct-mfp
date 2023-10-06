@@ -896,7 +896,7 @@
                 "editEntityButtonText": "Edit objective",
                 "addEditModalAddTitle": "Add objective for ",
                 "addEditModalHint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones.",
-                "addEditModalEditTitle": "Edit objective",
+                "addEditModalEditTitle": "Edit objective for ",
                 "deleteModalTitle": "Delete objective for this report?",
                 "deleteModalConfirmButtonText": "Yes, delete objective",
                 "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",

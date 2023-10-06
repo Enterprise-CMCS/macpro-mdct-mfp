@@ -28,7 +28,7 @@ export interface AnyObject {
   [key: string]: any;
 }
 
-export enum OverlayModalEntityTypes {
+export enum OverlayModalStepTypes {
   EVALUATION_PLAN = "evaluationPlan",
   FUNDING_SOURCES = "fundingSources",
 }

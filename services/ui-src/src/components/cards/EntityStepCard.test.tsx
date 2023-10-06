@@ -21,7 +21,7 @@ const UnfinishedGenericEntityCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
     entityIndex={0}
-    entityType="mock-entity-type"
+    stepType="mock-step-type"
     formattedEntityData={mockUnfinishedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}
@@ -35,7 +35,7 @@ const GenericEntityTypeEntityCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
     entityIndex={0}
-    entityType="entityType"
+    stepType="stepType"
     formattedEntityData={mockCompletedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}

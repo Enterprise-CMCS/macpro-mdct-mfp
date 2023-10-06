@@ -24,6 +24,8 @@ export { Card } from "./cards/Card";
 export { EmailCard } from "./cards/EmailCard";
 export { TemplateCard } from "./cards/TemplateCard";
 export { EntityStepCard } from "./cards/EntityStepCard";
+export { EntityStepCardTopSection } from "./cards/EntityCardTopSection";
+export { EntityStepCardBottomSection } from "./cards/EntityCardBottomSection";
 // drawers
 export { Drawer } from "./drawers/Drawer";
 export { ReportDrawer } from "./drawers/ReportDrawer";

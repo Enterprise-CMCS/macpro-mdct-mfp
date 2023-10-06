@@ -1,4 +1,4 @@
-import { EntityShape, OverlayModalEntityTypes, AnyObject } from "types";
+import { EntityShape, OverlayModalStepTypes, AnyObject } from "types";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
   const radioLabelValue = entity?.[label]?.[0].value;
@@ -28,7 +28,7 @@ export const getFormattedEntityData = (
   entity?: EntityShape
 ) => {
   switch (entityType) {
-    case OverlayModalEntityTypes.EVALUATION_PLAN:
+    case OverlayModalStepTypes.EVALUATION_PLAN:
       return {
         objectiveName: entity?.evaluationPlan_objectiveName,
         description: entity?.evaluationPlan_description,
@@ -40,7 +40,7 @@ export const getFormattedEntityData = (
         quarters: getRepeatedField(entity, "quarterlyProjections"),
         additionalDetails: entity?.evaluationPlan_additionalDetails,
       };
-    case OverlayModalEntityTypes.FUNDING_SOURCES:
+    case OverlayModalStepTypes.FUNDING_SOURCES:
       return {
         id: entity?.id,
         fundingSource: getRadioValue(entity, "fundingSources_wpTopic"),
