@@ -1,14 +1,14 @@
 // components
 import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
 // utils
-import { AnyObject, OverlayModalEntityTypes } from "types";
+import { AnyObject, OverlayModalStepTypes } from "types";
 
-export const EntityCardTopSection = ({
-  entityType,
+export const EntityStepCardTopSection = ({
+  stepType,
   formattedEntityData,
 }: Props) => {
-  switch (entityType) {
-    case OverlayModalEntityTypes.EVALUATION_PLAN:
+  switch (stepType) {
+    case OverlayModalStepTypes.EVALUATION_PLAN:
       return (
         <>
           <Heading as="h4" sx={sx.heading}>
@@ -53,7 +53,7 @@ export const EntityCardTopSection = ({
           </Text>{" "}
         </>
       );
-    case OverlayModalEntityTypes.FUNDING_SOURCES:
+    case OverlayModalStepTypes.FUNDING_SOURCES:
       return (
         <>
           <Heading as="h3" sx={sx.heading}>
@@ -79,12 +79,12 @@ export const EntityCardTopSection = ({
         </>
       );
     default:
-      return <Text>{entityType}</Text>;
+      return <Text>{stepType}</Text>;
   }
 };
 
 interface Props {
-  entityType: string;
+  stepType: string;
   formattedEntityData: AnyObject;
   printVersion?: boolean;
 }

@@ -54,7 +54,7 @@ export const AddEditReportModal = ({
       {
         id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
         transitionBenchmarks_targetPopulationName:
-          "Individuals with mental health and substance abuse disorders (MH/SUD)",
+          "Individuals with mental health and substance use disorders (MH/SUD)",
         isRequired: true,
       },
     ];

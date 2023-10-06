@@ -8,8 +8,11 @@ import { mockEntityDetailsOverlayVerbiage } from "utils/testing/setupJest";
 
 const mockCloseHandler = jest.fn();
 
+const mockEntityName = "mock-name";
+
 const modalComponent = (
   <CloseEntityModal
+    entityName={mockEntityName}
     verbiage={mockEntityDetailsOverlayVerbiage}
     modalDisclosure={{
       isOpen: true,
@@ -19,10 +22,12 @@ const modalComponent = (
 );
 
 const {
-  closeOutModalTitle,
   closeOutModalBodyText,
   closeOutModalConfirmButtonText,
+  closeOutModalTitle,
 } = mockEntityDetailsOverlayVerbiage.closeOutModal;
+
+const closeOutModalTitleWithName = closeOutModalTitle + mockEntityName;
 
 describe("Test CloseEntityModal", () => {
   beforeEach(async () => {
@@ -36,7 +41,7 @@ describe("Test CloseEntityModal", () => {
   });
 
   test("CloseEntityModal shows the contents", () => {
-    expect(screen.getByText(closeOutModalTitle)).toBeTruthy();
+    expect(screen.getByText(closeOutModalTitleWithName)).toBeTruthy();
     expect(screen.getByText(closeOutModalBodyText)).toBeTruthy();
     expect(screen.getByText(closeOutModalConfirmButtonText)).toBeTruthy();
     expect(screen.getByText("Cancel")).toBeTruthy();

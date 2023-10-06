@@ -11,9 +11,17 @@ import {
 const { closeOutWarning, closeOutModal } =
   mockEntityDetailsOverlayJson.verbiage;
 
+const mockEntity = {
+  id: "mock-id",
+  initiative_name: "mock-initiative-name",
+};
+
 const entityDetailsOverlayComponent = (
   <RouterWrappedComponent>
-    <EntityDetailsOverlay route={mockEntityDetailsOverlayJson} />
+    <EntityDetailsOverlay
+      entity={mockEntity}
+      route={mockEntityDetailsOverlayJson}
+    />
   </RouterWrappedComponent>
 );
 

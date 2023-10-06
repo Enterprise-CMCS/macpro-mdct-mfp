@@ -8,11 +8,13 @@ import { logger } from "../logging";
 import {
   AnyObject,
   assertExhaustive,
+  EntityDetailsOverlayShape,
   FieldChoice,
   FormField,
   FormLayoutElement,
   FormTemplate,
   ModalOverlayReportPageShape,
+  OverlayModalPageShape,
   ReportJson,
   ReportRoute,
   ReportType,
@@ -113,6 +115,7 @@ export const expandRepeatedFields = (formFields: FormField[]) => {
 
 export const scanForRepeatedFields = (reportRoutes: ReportRoute[]) => {
   for (let route of reportRoutes) {
+    if (route?.entitySteps) scanForRepeatedFields(route.entitySteps);
     if (route?.children) scanForRepeatedFields(route.children);
     if (route?.form?.fields)
       route.form.fields = expandRepeatedFields(route.form.fields);
@@ -120,8 +123,6 @@ export const scanForRepeatedFields = (reportRoutes: ReportRoute[]) => {
       route.drawerForm.fields = expandRepeatedFields(route.drawerForm.fields);
     if (route?.modalForm?.fields)
       route.modalForm.fields = expandRepeatedFields(route.modalForm.fields);
-    if (route?.overlayForm?.fields)
-      route.overlayForm.fields = expandRepeatedFields(route.overlayForm.fields);
   }
   return reportRoutes;
 };
@@ -289,6 +290,16 @@ export const compileValidationJsonFromRoutes = (
         route as ModalOverlayReportPageShape
       ).overlayForm?.fields.filter(isFieldElement);
       if (overlayFormFields) addValidationToAccumulator(overlayFormFields);
+    }
+    // accumulate entity steps
+    if (route.dashboard?.pageType === "entityDetailsDashboardOverlay") {
+      route.entitySteps?.map(
+        (step: EntityDetailsOverlayShape | OverlayModalPageShape) => {
+          const stepForm = step.form || step.modalForm;
+          const entityStepFormFields = stepForm?.fields.filter(isFieldElement);
+          addValidationToAccumulator(entityStepFormFields);
+        }
+      );
     }
   });
   return validationSchema;

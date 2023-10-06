@@ -1,4 +1,4 @@
-import { FormJson, ModalOverlayReportPageShape } from "./formFields";
+import { FormJson } from "./formFields";
 import { AnyObject, CompletionData, CustomHtmlElement, State } from "./other";
 
 // REPORT STRUCTURE
@@ -45,6 +45,7 @@ export interface StandardReportPageShape extends ReportPageShapeBase {
   overlayForm?: never;
   drawerForm?: never;
   entityType?: never;
+  entitySteps?: never;
 }
 
 export interface DrawerReportPageShape extends ReportPageShapeBase {
@@ -54,6 +55,8 @@ export interface DrawerReportPageShape extends ReportPageShapeBase {
   modalForm?: never;
   overlayForm?: never;
   form?: never;
+  entitySteps?: never;
+  dashboard?: never;
 }
 
 export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
@@ -63,22 +66,50 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   drawerForm: FormJson;
   overlayForm?: never;
   form?: never;
+  entitySteps?: never;
+  dashboard?: never;
+}
+
+export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
+  entityType: string;
+  entityInfo?: string[];
+  verbiage: ModalOverlayReportPageVerbiage;
+  modalForm: FormJson;
+  overlayForm?: FormJson;
+  drawerForm?: never;
+  form?: never;
+  dashboard: EntityDetailsDashboardOverlayShape;
+  entitySteps?: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
 }
 
 export interface OverlayModalPageShape extends ReportPageShapeBase {
   entityType: string;
+  stepName: string;
+  hint: string;
   verbiage: ModalOverlayReportPageVerbiage;
   modalForm: FormJson;
-  overlayForm?: FormJson;
-  form?: never;
   drawerForm?: FormJson;
+  form?: never;
+  entitySteps?: never;
+  dashboard?: never;
 }
+
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
-  entityType?: never;
+  stepName: string;
+  hint: string;
   form: FormJson;
+  verbiage: EntityOverlayPageVerbiage;
+  entityType?: never;
   dashboard?: never;
   modalForm: never;
   drawerForm?: never;
+  entitySteps?: never;
+}
+
+export interface EntityDetailsDashboardOverlayShape
+  extends ReportPageShapeBase {
+  dashboard?: never;
+  entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
 }
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
@@ -90,6 +121,8 @@ export interface ReportRouteWithoutForm extends ReportRouteBase {
   overlayForm?: never;
   drawerForm?: never;
   form?: never;
+  entitySteps?: never;
+  dashboard?: never;
 }
 
 export interface ReportPageVerbiage {
@@ -99,6 +132,8 @@ export interface ReportPageVerbiage {
     hint?: string;
     info?: string | CustomHtmlElement[];
   };
+  closeOutWarning?: AnyObject;
+  closeOutModal?: AnyObject;
 }
 
 export interface DrawerReportPageVerbiage extends ReportPageVerbiage {
@@ -125,13 +160,27 @@ export interface ModalDrawerReportPageVerbiage
   editEntityDetailsButtonText: string;
 }
 
-export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
+export interface ModalOverlayReportPageVerbiage
+  extends EntityOverlayPageVerbiage {
   addEntityButtonText: string;
   dashboardTitle: string;
   countEntitiesInTitle: boolean;
   tableHeader: string;
   addEditModalHint: string;
   emptyDashboardText: string;
+}
+
+export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
+  closeOutWarning?: {
+    title?: string;
+    description?: string;
+  };
+  closeOutModal?: {
+    closeOutModalButtonText?: string;
+    closeOutModalTitle?: string;
+    closeOutModalBodyText?: string;
+    closeOutModalConfirmButtonText?: string;
+  };
 }
 
 // REPORT METADATA

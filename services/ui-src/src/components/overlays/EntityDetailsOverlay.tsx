@@ -1,3 +1,4 @@
+import { MouseEventHandler } from "react";
 // components
 import {
   Box,
@@ -9,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { Alert, Form, ReportPageIntro, CloseEntityModal } from "components";
 // types
-import { AlertTypes, EntityDetailsOverlayShape } from "types";
+import { AlertTypes, EntityDetailsOverlayShape, EntityShape } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
@@ -17,10 +18,15 @@ import warningIcon from "assets/icons/icon_warning.png";
 // verbiage
 import { useStore } from "utils";
 
-export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
-  const { report } = useStore();
+export const EntityDetailsOverlay = ({
+  route,
+  closeEntityDetailsOverlay,
+  validateOnRender,
+  entity,
+}: Props) => {
   const submitting = false;
   const { form, verbiage } = route;
+  const { report } = useStore();
 
   // add/edit entity modal disclosure and methods
   const {
@@ -42,14 +48,19 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
       <Button
         sx={sx.backButton}
         variant="none"
-        //TO-DO: add onClick prop to go back to initiative dashboard
+        onClick={closeEntityDetailsOverlay as MouseEventHandler}
         aria-label="Return to dashboard for this initiative"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
         Return to dashboard for this initiative
       </Button>
 
-      {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
+      {verbiage.intro && (
+        <ReportPageIntro
+          text={verbiage.intro}
+          initiativeName={entity!.initiative_name}
+        />
+      )}
       <Form
         id={form.id}
         formJson={form}
@@ -71,7 +82,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
           />
         )}
       </Box>
-
       <Box>
         {verbiage.closeOutModal && (
           <Box>
@@ -83,9 +93,9 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
             >
               {verbiage.closeOutModal.closeOutModalButtonText}
             </Button>
-
             <CloseEntityModal
               verbiage={verbiage}
+              entityName={entity!.initiative_name}
               modalDisclosure={{
                 isOpen: closeEntityModalIsOpen,
                 onClose: closeCloseEntityModal,
@@ -94,7 +104,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
           </Box>
         )}
       </Box>
-
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
           <Button type="submit" form={form.id} sx={sx.saveButton}>
@@ -107,7 +116,9 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
 };
 
 interface Props {
+  entity?: EntityShape;
   route: EntityDetailsOverlayShape;
+  closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;
 }
 
