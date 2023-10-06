@@ -4,9 +4,13 @@ import { act } from "react-dom/test-utils";
 import { ReportContext, DashboardPage } from "components";
 // utils
 import { mockStateUser } from "utils/testing/mockUsers";
-import { mockDashboardReportContext } from "utils/testing/mockReport";
+import {
+  mockDashboardReportContext,
+  mockWpReportContext,
+} from "utils/testing/mockReport";
 import {
   mockReportStore,
+  mockUseAdminStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useBreakpoint, useStore, makeMediaQueryClasses } from "utils";
@@ -14,6 +18,7 @@ import { useUser } from "utils/auth/useUser";
 import { ReportType } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
+import userEvent from "@testing-library/user-event";
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
@@ -71,5 +76,60 @@ describe("Test Report Dashboard view (with reports, desktop view)", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
     expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+  });
+});
+
+describe("Test WP Admin Report Dashboard View (with reports, desktop view)", () => {
+  beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockUseAdminStore);
+    mockUseBreakpoint.mockReturnValue({
+      isMobile: false,
+    });
+    mockMakeMediaQueryClasses.mockReturnValue("desktop");
+    render(dashboardViewWithReports);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Check that Admin WP Dashboard view renders", () => {
+    expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
+    expect(
+      screen.queryByText(wpVerbiage.body.table.caption)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
+  });
+
+  test("Clicking a disabled 'Unlock' button no modal opens", async () => {
+    const unlockButton = screen.getAllByText("Unlock")[0];
+    expect(unlockButton).toBeVisible();
+    await userEvent.click(unlockButton);
+
+    expect(
+      screen.queryByText(wpVerbiage.modalUnlock.actionButtonText)
+    ).not.toBeInTheDocument();
+  });
+
+  test("Clicking 'Unlock' button opens the unlock modal", async () => {
+    const unlockButton = screen.getAllByText("Unlock")[1];
+    expect(unlockButton).toBeVisible();
+    await userEvent.click(unlockButton);
+    await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
+    // once for render, once for release
+    await expect(mockWpReportContext.fetchReportsByState).toHaveBeenCalledTimes(
+      2
+    );
+  });
+
+  test("Clicking 'Archive' button will archive the form", async () => {
+    const archiveButton = screen.getAllByText("Archive")[1];
+    expect(archiveButton).toBeVisible();
+    await userEvent.click(archiveButton);
+    await expect(mockWpReportContext.archiveReport).toHaveBeenCalledTimes(1);
+    // once for render, once for archive
+    await expect(mockWpReportContext.fetchReportsByState).toHaveBeenCalledTimes(
+      2
+    );
   });
 });

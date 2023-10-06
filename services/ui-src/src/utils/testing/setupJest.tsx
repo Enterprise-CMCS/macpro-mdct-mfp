@@ -14,7 +14,7 @@ import {
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
-import { mockWPFullReport } from "./mockReport";
+import { mockWPApprovedFullReport, mockWPFullReport } from "./mockReport";
 
 // GLOBALS
 
@@ -193,7 +193,7 @@ export const mockBannerStore: AdminBannerState = {
 
 export const mockReportStore: MfpReportState = {
   report: mockWPFullReport as ReportShape,
-  reportsByState: [mockWPFullReport],
+  reportsByState: [mockWPFullReport, mockWPApprovedFullReport],
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "1:58 PM",
   setReport: () => {},
@@ -208,6 +208,12 @@ export const mockReportStore: MfpReportState = {
 export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
   ...mockReportStore,
   ...mockStateUserStore,
+  ...mockBannerStore,
+};
+
+export const mockUseAdminStore: MfpUserState & AdminBannerState & MfpReportState = {
+  ...mockReportStore,
+  ...mockAdminUserStore,
   ...mockBannerStore,
 };
 
