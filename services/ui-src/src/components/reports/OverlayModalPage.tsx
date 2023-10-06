@@ -28,20 +28,24 @@ export const OverlayModalPage = ({
   route,
 }: Props) => {
   const { entityType, verbiage, modalForm, stepType } = route;
-  const { report } = useStore();
+  const { report, selectedEntity: currentEntity } = useStore();
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
 
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
 
+  // display only the currently selected entity steps
   let reportFieldDataEntitySteps: EntityShape[] =
     reportFieldDataEntities.filter((entity: EntityShape) => {
-      if (
-        Object.keys(entity).findIndex((key: string) => key.includes(stepType)) >
-        0
-      ) {
-        return entity;
+      if (currentEntity && entity.id === currentEntity.id) {
+        if (
+          Object.keys(entity).findIndex((key: string) =>
+            key.includes(stepType)
+          ) > 0
+        ) {
+          return entity;
+        }
       }
       return;
     });
