@@ -197,10 +197,7 @@ export const ModalOverlayReportPage = ({
         </EntityProvider>
       ) : (
         <Box sx={sx.content}>
-          <ReportPageIntro
-            text={verbiage.intro}
-            reporttype={report?.reportType}
-          />
+          <ReportPageIntro text={verbiage.intro} />
           {showAlert && (
             <Alert
               title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
