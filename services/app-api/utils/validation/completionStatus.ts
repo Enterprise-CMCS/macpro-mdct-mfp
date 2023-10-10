@@ -187,10 +187,10 @@ export const calculateCompletionStatus = async (
         };
         break;
       case "modalOverlay":
-        if (!route.modalForm || !route.overlayForm) break;
+        if (!route.modalForm) break;
         routeCompletion = {
           [route.path]: await calculateEntityCompletion(
-            [route.modalForm, route.overlayForm],
+            [route.modalForm],
             route.entityType
           ),
         };

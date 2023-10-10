@@ -19,6 +19,7 @@ import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
 import { DynamicField } from "components/fields/DynamicField";
 import { NumberField } from "components/fields/NumberField";
+import { ChoiceList } from "@cmsgov/design-system";
 
 // return created elements from provided fields
 export const formFieldFactory = (
@@ -235,11 +236,12 @@ const repeatableTargetPopulationChoices = (
 // returns repeated choice lists - reformatting logic is needed once fields are passed into this function
 export const getRepeatableChoiceLists = (
   fields: (FormField | FormLayoutElement)[],
-  choiceList: any
+  choiceList: ChoiceList
 ) => {
   // check if fields have target population data
-  const isRepeatableTargetPopulations = fields.filter((field: any) =>
-    field.id.match("targetPopulations")
+  const isRepeatableTargetPopulations = fields.filter(
+    (field: FormField | FormLayoutElement) =>
+      field.id.match("targetPopulations")
   );
 
   // add more conditional logic for other choice lists

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { MouseEventHandler, useState, useContext } from "react";
 // components
 import {
   Box,
@@ -21,6 +21,7 @@ import {
   EntityDetailsOverlayShape,
   AnyObject,
   isFieldElement,
+  EntityShape,
 } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
@@ -29,14 +30,20 @@ import warningIcon from "assets/icons/icon_warning.png";
 // utils
 import { filterFormData, useStore } from "utils";
 
-export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
-  const { report } = useStore();
-  const { form, verbiage } = route;
-  const [submitting, setSubmitting] = useState<boolean>(false);
+const { full_name, state } = useStore().user ?? {};
+const { updateReport } = useContext(ReportContext);
+
+export const EntityDetailsOverlay = ({
+  route,
+  closeEntityDetailsOverlay,
+  validateOnRender,
+  entity,
+}: Props) => {
+  const submitting = false;
   const [didCloseOutInitiative, setDidCloseOutInitiative] =
     useState<boolean>(false);
-  const { full_name, state } = useStore().user ?? {};
-  const { updateReport } = useContext(ReportContext);
+  const { form, verbiage } = route;
+  const { report } = useStore();
 
   // add/edit entity modal disclosure and methods
   const {
@@ -46,20 +53,16 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
   } = useDisclosure();
 
   const openCloseEntityModal = () => {
-    //console.log("open modal");
     setDidCloseOutInitiative(true);
     closeEntityModalOnOpenHandler();
   };
 
   const closeCloseEntityModal = () => {
-    //console.log("closed modal");
     setDidCloseOutInitiative(false);
     closeEntityModalOnCloseHandler();
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
-    //console.log("this somehow worked");
-    setSubmitting(true);
     const reportKeys = {
       reportType: report?.reportType,
       state: state,
@@ -69,7 +72,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
       enteredData,
       route.form.fields.filter(isFieldElement)
     );
-    //console.log("filtered form data: ", filteredFormData);
     const dataToWrite = {
       metadata: {
         //status: ReportStatus.IN_PROGRESS,
@@ -81,7 +83,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
       },
     };
     await updateReport(reportKeys, dataToWrite);
-    setSubmitting(false);
   };
 
   return (
@@ -89,14 +90,19 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
       <Button
         sx={sx.backButton}
         variant="none"
-        //TO-DO: add onClick prop to go back to initiative dashboard
+        onClick={closeEntityDetailsOverlay as MouseEventHandler}
         aria-label="Return to dashboard for this initiative"
       >
         <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
         Return to dashboard for this initiative
       </Button>
 
-      {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
+      {verbiage.intro && (
+        <ReportPageIntro
+          text={verbiage.intro}
+          initiativeName={entity!.initiative_name}
+        />
+      )}
       <Form
         id={form.id}
         formJson={form}
@@ -118,7 +124,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
           />
         )}
       </Box>
-
       <Box>
         {verbiage.closeOutModal && (
           <Box>
@@ -130,9 +135,9 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
             >
               {verbiage.closeOutModal.closeOutModalButtonText}
             </Button>
-
             <CloseEntityModal
               verbiage={verbiage}
+              entityName={entity!.initiative_name}
               modalDisclosure={{
                 isOpen: closeEntityModalIsOpen,
                 onClose: closeCloseEntityModal,
@@ -142,7 +147,6 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
           </Box>
         )}
       </Box>
-
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
           <Button type="submit" form={form.id} sx={sx.saveButton}>
@@ -155,7 +159,9 @@ export const EntityDetailsOverlay = ({ route, validateOnRender }: Props) => {
 };
 
 interface Props {
+  entity?: EntityShape;
   route: EntityDetailsOverlayShape;
+  closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;
 }
 

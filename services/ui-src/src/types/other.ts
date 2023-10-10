@@ -28,7 +28,7 @@ export interface AnyObject {
   [key: string]: any;
 }
 
-export enum OverlayModalEntityTypes {
+export enum OverlayModalStepTypes {
   EVALUATION_PLAN = "evaluationPlan",
   FUNDING_SOURCES = "fundingSources",
 }
@@ -45,6 +45,7 @@ export enum PageTypes {
   ENTITY_OVERLAY = "entityOverlay",
   OVERLAY_MODAL = "overlayModal",
   REVIEW_SUBMIT = "reviewSubmit",
+  ENTITY_DETAIL_DASHBOARD = "entityDetailsDashboardOverlay",
 }
 
 export interface InputChangeEvent extends React.ChangeEvent<HTMLInputElement> {}

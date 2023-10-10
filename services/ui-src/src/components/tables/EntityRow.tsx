@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
 import { EntityStatusIcon } from "components";
@@ -8,7 +9,6 @@ import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import { getEntityStatus } from "./getEntityStatus";
-import { useMemo } from "react";
 
 export const EntityRow = ({
   entity,
@@ -43,7 +43,7 @@ export const EntityRow = ({
   if (entityInfo) {
     programInfo = (entityInfo as string[]).flatMap((info) => {
       //if the data is in an array, like a radio button values, get each as text
-      if (typeof entity[info] === "object") {
+      if (typeof entity?.[info] === "object") {
         return (entity[info] as any[]).map((arr) => arr.value);
       }
       return entity[info];
@@ -138,6 +138,7 @@ const sx = {
         "&:first-of-type": {
           fontWeight: "bold",
           fontSize: "md",
+          marginBottom: "0.25rem",
         },
       },
     },
