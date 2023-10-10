@@ -188,7 +188,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
                 verbiage={verbiage}
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
-                openDrawer={openDrawer}
+                openOverlayOrDrawer={openDrawer}
                 entityType={entityType as EntityType}
               />
             ))}

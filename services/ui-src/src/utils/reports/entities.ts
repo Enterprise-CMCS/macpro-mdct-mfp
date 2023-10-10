@@ -23,6 +23,7 @@ const getRepeatedField = (
   }
   return quarters;
 };
+
 export const getFormattedEntityData = (
   entityType: string,
   entity?: EntityShape
