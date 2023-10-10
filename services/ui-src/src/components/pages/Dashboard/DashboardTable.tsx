@@ -61,7 +61,7 @@ export const DashboardTable = ({
           <Td>
             {!report.submissionCount || report.submissionCount === 0
               ? 1
-              : report.submissionCount}{" "}
+              : report.submissionCount}
           </Td>
         )}
         {/* Action Buttons */}

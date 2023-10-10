@@ -170,7 +170,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       setReportId(undefined);
       setReleasing(false);
 
-      //use discourse to open modal
+      //useDiscourse to open modal
       confirmUnlockModalOnOpenHandler();
     }
   };
