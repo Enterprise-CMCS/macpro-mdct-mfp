@@ -27,7 +27,7 @@
               "props": {
                 "href": "https://www.govinfo.gov/content/pkg/PLAW-109publ171/pdf/PLAW-109publ171.pdf",
                 "target": "_blank",
-                "aria-label": "User Guide and Help File (Link opens in new tab)"
+                "aria-label": "6071(a)(1) of the Deficit Reduction Act (DRA) (Link opens in new tab)"
               }
             },
             {
@@ -888,7 +888,7 @@
                   "props": {
                     "href": "https://www.medicaid.gov/sites/default/files/2023-01/MFP-Technical-Assistance-Brief.pdf",
                     "target": "_blank",
-                    "aria-label": "Link opens in new tab"
+                    "aria-label": "“Using Data to Improve Money Follows the Person Program Performance.“ (Link opens in new tab)"
                   }
                 },
                 {

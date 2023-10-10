@@ -7,7 +7,6 @@ export default {
         content:
           "This reporting tool is to be used by grantees for reporting of MFP program data. The information provided in this report will allow CMS to monitor grantee progress and identify challenges and improvement opportunities. For additional guidance on completing this form, please see the associated ",
       },
-
       {
         type: "externalLink",
         content: "User Guide",
@@ -16,6 +15,11 @@ export default {
           target: "_blank",
           "aria-label": "User Guide (link opens in new tab).",
         },
+      },
+      {
+        type: "text",
+        as: "span",
+        content: " and ",
       },
       {
         type: "externalLink",
