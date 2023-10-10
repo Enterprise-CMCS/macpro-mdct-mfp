@@ -20,7 +20,6 @@ export const AddEditReportModal = ({
 }: Props) => {
   const { createReport, fetchReportsByState, updateReport } =
     useContext(ReportContext);
-  const { workPlanToCopyFrom } = useStore();
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
   const modalFormJsonMap: any = {
@@ -93,7 +92,6 @@ export const AddEditReportModal = ({
         submissionName,
         stateOrTerritory,
         reportPeriod,
-        wpData: workPlanToCopyFrom,
       },
     };
   };

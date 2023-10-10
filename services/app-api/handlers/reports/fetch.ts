@@ -130,7 +130,15 @@ export const fetchReportsByState = handler(async (event, _context) => {
   }
 
   const reportType = event.pathParameters?.reportType;
+  console.log(
+    "🚀 ~ file: fetch.ts:133 ~ fetchReportsByState ~ reportType:",
+    reportType
+  );
   const reportTable = reportTables[reportType as keyof typeof reportTables];
+  console.log(
+    "🚀 ~ file: fetch.ts:135 ~ fetchReportsByState ~ reportTable:",
+    reportTable
+  );
 
   const queryParams: DynamoFetchParams = {
     TableName: reportTable,
@@ -164,7 +172,10 @@ export const fetchReportsByState = handler(async (event, _context) => {
     const items: AnyObject[] = results?.Items;
     existingItems.push(...items);
   } while (startingKey);
-
+  console.log(
+    "🚀 ~ file: fetch.ts:171 ~ fetchReportsByState ~ existingItems:",
+    existingItems
+  );
   return {
     status: StatusCodes.SUCCESS,
     body: existingItems,
