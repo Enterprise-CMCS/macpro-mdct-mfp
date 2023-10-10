@@ -25,13 +25,14 @@ export const DashboardTable = ({
   releaseReport,
   releasing,
   sxOverride,
+  isStateLevelUser,
   isAdmin,
 }: DashboardTableProps) => (
   <Table content={tableBody(body.table, isAdmin)} sx={sx.table}>
     {reportsByState.map((report: ReportMetadataShape) => (
       <Tr key={report.id}>
         {/* Edit Button */}
-        {!isAdmin && reportType === "SAR" && !report?.locked ? (
+        {isStateLevelUser && reportType === "SAR" && !report?.locked ? (
           <EditReportButton
             report={report}
             openAddEditReportModal={openAddEditReportModal}
@@ -73,12 +74,10 @@ export const DashboardTable = ({
           >
             {entering && reportId == report.id ? (
               <Spinner size="md" />
-            ) : report.status === "Approved" ||
-              report.status === "Submitted" ||
-              isAdmin ? (
-              "View"
-            ) : (
+            ) : isStateLevelUser && !report?.locked ? (
               "Edit"
+            ) : (
+              "View"
             )}
           </Button>
         </Td>

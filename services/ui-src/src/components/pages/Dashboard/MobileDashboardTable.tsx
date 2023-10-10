@@ -18,6 +18,7 @@ export const MobileDashboardTable = ({
   entering,
   releaseReport,
   releasing,
+  isStateLevelUser,
   isAdmin,
   sxOverride,
 }: MobileDashboardTableProps) => (
@@ -27,7 +28,7 @@ export const MobileDashboardTable = ({
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>{"Submission name"}</Text>
           <Flex alignContent="flex-start">
-            {!isAdmin && reportType === "SAR" && !report?.locked && (
+            {isStateLevelUser && reportType === "SAR" && !report?.locked && (
               <Box sx={sxOverride.editReport}>
                 <button onClick={() => openAddEditReportModal(report)}>
                   <Image
@@ -87,12 +88,10 @@ export const MobileDashboardTable = ({
             >
               {entering && reportId == report.id ? (
                 <Spinner size="md" />
-              ) : report.status === "Approved" ||
-                report.status === "Submitted" ||
-                isAdmin ? (
-                "View"
-              ) : (
+              ) : isStateLevelUser && !report?.locked ? (
                 "Edit"
+              ) : (
+                "View"
               )}
             </Button>
           </Box>
