@@ -55,7 +55,7 @@ const dashboardViewWithReports = (
 );
 
 describe("Test Report Dashboard view (Desktop)", () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     mockedUseUser.mockReturnValue(mockStateUser);
     mockUseBreakpoint.mockReturnValue({
       isMobile: false,
@@ -67,32 +67,25 @@ describe("Test Report Dashboard view (Desktop)", () => {
     jest.clearAllMocks();
   });
 
-  describe("Desktop view (basic)", () => {
-    test("Check that WP Dashboard view renders", () => {
-      mockedUseStore.mockReturnValue(mockReportStore);
-      render(dashboardViewWithReports);
+  test("Check that WP Dashboard view renders", () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+    render(dashboardViewWithReports);
 
-      expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
-      expect(
-        screen.queryByText(wpVerbiage.body.table.caption)
-      ).toBeInTheDocument();
-      expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
-      expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
-    });
+    expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
+    expect(
+      screen.queryByText(wpVerbiage.body.table.caption)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
+    expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
   });
 
-  describe("Desktop view with report, state & banner ", () => {
-    beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockUseStore);
-      render(dashboardViewWithReports);
-    });
-
-    test("Clicking Call To Action text open add/edit modal", async () => {
-      const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
-      expect(callToActionButton).toBeVisible();
-      await userEvent.click(callToActionButton);
-      expect(screen.queryByText("Start new")).toBeVisible();
-    });
+  test("Clicking Call To Action text open add/edit modal", async () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(dashboardViewWithReports);
+    const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
+    expect(callToActionButton).toBeVisible();
+    await userEvent.click(callToActionButton);
+    expect(screen.queryByText("Start new")).toBeVisible();
   });
 });
 
