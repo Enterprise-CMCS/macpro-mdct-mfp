@@ -22,6 +22,7 @@ import {
   AnyObject,
   isFieldElement,
   EntityShape,
+  ReportStatus,
 } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
@@ -74,7 +75,7 @@ export const EntityDetailsOverlay = ({
     );
     const dataToWrite = {
       metadata: {
-        //status: ReportStatus.IN_PROGRESS,
+        status: ReportStatus.IN_PROGRESS,
         lastAlteredBy: full_name,
       },
       fieldData: {
@@ -83,6 +84,10 @@ export const EntityDetailsOverlay = ({
       },
     };
     await updateReport(reportKeys, dataToWrite);
+
+    if (didCloseOutInitiative) {
+      closeCloseEntityModal();
+    }
   };
 
   return (
@@ -149,7 +154,12 @@ export const EntityDetailsOverlay = ({
       </Box>
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
-          <Button type="submit" form={form.id} sx={sx.saveButton}>
+          <Button
+            type="submit"
+            form={form.id}
+            sx={sx.saveButton}
+            onClick={closeEntityDetailsOverlay as MouseEventHandler}
+          >
             {submitting ? <Spinner size="md" /> : "Save & return"}
           </Button>
         </Flex>

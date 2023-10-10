@@ -11,7 +11,6 @@ export const CloseEntityModal = ({
   modalDisclosure,
   formId,
 }: Props) => {
-  //const closing = false;
   const modalInfo = verbiage.closeOutModal;
 
   return (
@@ -36,5 +35,5 @@ interface Props {
     isOpen: boolean;
     onClose: any;
   };
-  formId: any;
+  formId: string;
 }
