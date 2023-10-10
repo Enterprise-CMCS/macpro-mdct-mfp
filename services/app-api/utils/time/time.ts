@@ -1,5 +1,5 @@
 import { utcToZonedTime } from "date-fns-tz";
-import { ReportMetadata, ReportMetadataShape } from "../types";
+import { ReportMetadata } from "../types";
 
 /*
  * Converts passed UTC datetime to ET date
