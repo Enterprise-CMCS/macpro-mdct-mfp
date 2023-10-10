@@ -27,6 +27,7 @@ import {
   FormLayoutElement,
   ReportStatus,
   ReportType,
+  EntityShape,
 } from "types";
 
 export const Form = ({
@@ -52,7 +53,7 @@ export const Form = ({
     const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
 
     const formatChoiceList = updatedTargetPopulationChoices?.map(
-      (field: FormField, key: string) => {
+      (field: EntityShape, key: string) => {
         return {
           checked: false,
           id: field.id,

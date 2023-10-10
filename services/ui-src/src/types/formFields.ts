@@ -68,7 +68,6 @@ export interface FormField {
   props?: AnyObject;
   choices?: FieldChoice[];
   repeat?: string;
-  transitionBenchmarks_targetPopulationName?: string;
 }
 
 export function isFieldElement(
