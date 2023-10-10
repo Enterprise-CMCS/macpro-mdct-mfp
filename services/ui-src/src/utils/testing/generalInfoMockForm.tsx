@@ -20,7 +20,7 @@ export const mockGeneralInfoReportPageVerbiage = {
       props: {
         href: "https://www.govinfo.gov/content/pkg/PLAW-109publ171/pdf/PLAW-109publ171.pdf",
         target: "_blank",
-        "aria-label": "Link opens in new tab",
+        "aria-label": "User Guide and Help File (Link opens in new tab)",
       },
     },
     {
