@@ -1,92 +1,154 @@
-import React, { MouseEventHandler, useEffect } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 // components
-import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
-import { Form, ReportPageIntro } from "components";
+import { Box, Button, Flex, Image } from "@chakra-ui/react";
+import {
+  ReportPageIntro,
+  Table,
+  EntityRow,
+  EntityDetailsOverlay,
+  EntityProvider,
+  OverlayModalPage,
+} from "components";
 // types
-import { EntityShape, EntityType, FormJson } from "types";
+import {
+  EntityShape,
+  EntityType,
+  FormJson,
+  EntityDetailsDashboardOverlayShape,
+  EntityDetailsOverlayShape,
+  OverlayModalPageShape,
+} from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // verbiage
-import overlayVerbiage from "../../verbiage/pages/overlays";
 import { useStore } from "utils";
 
 export const EntityDetailsDashboardOverlay = ({
   closeEntityDetailsOverlay,
   entityType,
-  entities,
-  form,
-  onSubmit,
+  dashboard,
   selectedEntity,
-  disabled,
-  submitting,
-  validateOnRender,
+  route,
 }: Props) => {
-  // Entity Provider Setup
-  const { setEntities, clearEntities, setSelectedEntity, setEntityType } =
-    useStore();
+  // Entity provider setup
+  const { clearEntities, setSelectedEntity, setEntityType } = useStore();
+  const [selectedStep, setSelectedStep] = useState<
+    OverlayModalPageShape | EntityDetailsOverlayShape
+  >();
+  const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
+
+  const { entitySteps } = route;
 
   useEffect(() => {
     setSelectedEntity(selectedEntity);
     setEntityType(entityType);
-    setEntities(entities);
     return () => {
       clearEntities();
       setSelectedEntity(undefined);
     };
   }, [entityType, selectedEntity]);
 
+  // Open/Close overlay action methods
+  const openEntityStepOverlay = (
+    entity: OverlayModalPageShape | EntityDetailsOverlayShape
+  ) => {
+    setSelectedStep(entity);
+    setIsEntityStepOpen(true);
+  };
+
+  const closeEntityStepOverlay = () => {
+    setSelectedStep(undefined);
+    setIsEntityStepOpen(false);
+  };
+
+  const tableHeaders = () => {
+    return { headRow: ["", "", ""] };
+  };
+
+  const openInitiativeStepOverlay = () => {
+    const pageType = selectedStep?.pageType;
+    return (
+      <Box>
+        {pageType === "modalOverlay" ? (
+          <EntityProvider>
+            <OverlayModalPage
+              entity={selectedEntity!}
+              closeEntityDetailsOverlay={closeEntityStepOverlay}
+              route={selectedStep as OverlayModalPageShape}
+            />
+          </EntityProvider>
+        ) : (
+          <EntityProvider>
+            <EntityDetailsOverlay
+              entity={selectedEntity!}
+              closeEntityDetailsOverlay={closeEntityStepOverlay}
+              route={selectedStep as EntityDetailsOverlayShape}
+            />
+          </EntityProvider>
+        )}
+      </Box>
+    );
+  };
+
   return (
     <Box>
-      <Button
-        sx={sx.backButton}
-        variant="none"
-        onClick={closeEntityDetailsOverlay as MouseEventHandler}
-        aria-label="Return to dashboard for this initiative"
-      >
-        <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
-        Return to dashboard for this initiatives
-      </Button>
-      <ReportPageIntro text={overlayVerbiage.WP.intro} />
-      <Form
-        id={form.id}
-        formJson={form}
-        onSubmit={onSubmit}
-        formData={selectedEntity}
-        autosave={true}
-        disabled={disabled}
-        validateOnRender={validateOnRender || false}
-        dontReset={true}
-      />
-      <Box sx={sx.footerBox}>
-        <Flex sx={sx.buttonFlex}>
-          {disabled ? (
-            <Button
-              variant="outline"
-              onClick={closeEntityDetailsOverlay as MouseEventHandler}
-            >
-              Return
-            </Button>
-          ) : (
-            <Button type="submit" form={form.id} sx={sx.saveButton}>
-              {submitting ? <Spinner size="md" /> : "Save & return"}
-            </Button>
-          )}
-        </Flex>
-      </Box>
+      {!stepIsOpen ? (
+        <Box>
+          <Button
+            sx={sx.backButton}
+            variant="none"
+            onClick={closeEntityDetailsOverlay as MouseEventHandler}
+            aria-label="Return to all initiatives"
+          >
+            <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
+            Return to all initiatives
+          </Button>
+          <ReportPageIntro
+            text={dashboard?.verbiage?.intro}
+            initiativeName={selectedEntity?.initiative_name}
+          />
+          <Table content={tableHeaders()}>
+            {entitySteps?.map((entity: any) => (
+              <EntityRow
+                key={entity.id}
+                entity={entity}
+                entityInfo={entity.stepInfo}
+                verbiage={entity.verbiage}
+                locked={false}
+                openDrawer={() => openEntityStepOverlay(entity)}
+                openAddEditEntityModal={() => {
+                  return;
+                }}
+                openDeleteEntityModal={() => {
+                  return;
+                }}
+              />
+            ))}
+          </Table>
+          <Box>
+            <Flex sx={sx.buttonFlex}>
+              <Button onClick={closeEntityDetailsOverlay as MouseEventHandler}>
+                Return to all initiatives
+              </Button>
+            </Flex>
+          </Box>
+        </Box>
+      ) : (
+        openInitiativeStepOverlay()
+      )}
     </Box>
   );
 };
 
 interface Props {
-  closeEntityDetailsOverlay: Function;
-  entityType: EntityType;
-  entities: any;
-  form: FormJson;
-  onSubmit: Function;
-  selectedEntity: EntityShape;
-  disabled: boolean;
+  closeEntityDetailsOverlay?: Function;
+  entityType?: EntityType;
+  dashboard?: FormJson;
+  selectedEntity?: EntityShape;
+  onSubmit?: Function;
   submitting?: boolean;
   validateOnRender?: boolean;
+  route: EntityDetailsDashboardOverlayShape;
 }
 
 const sx = {
