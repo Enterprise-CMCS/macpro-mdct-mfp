@@ -48,28 +48,34 @@ export const Form = ({
 
   const { report } = useStore();
 
-  const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
+  const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
+    const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
 
-  const createLabel = (field: any) => {
-    if (updatedTargetPopulationChoices.indexOf(field) >= 4) {
-      return `Other: ${field.transitionBenchmarks_targetPopulationName}`;
-    } else {
-      return field.transitionBenchmarks_targetPopulationName;
-    }
+    const formatChoiceList = updatedTargetPopulationChoices?.map(
+      (field: FormField, key: string) => {
+        return {
+          checked: false,
+          id: field.id,
+          label:
+            parseInt(key) < 4
+              ? field.transitionBenchmarks_targetPopulationName
+              : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+          name: field.transitionBenchmarks_targetPopulationName,
+          value: field.transitionBenchmarks_targetPopulationName,
+        };
+      }
+    );
+
+    const updateTargetPopulationChoiceList = fields.map((field) => {
+      return field.id.match("targetPopulations")
+        ? {
+            ...field,
+            props: { ...field?.props, choices: [...formatChoiceList] },
+          }
+        : { ...field };
+    });
+    return updateTargetPopulationChoiceList;
   };
-
-  // create new array
-  const formattedChoiceList = updatedTargetPopulationChoices?.map(
-    (field: any) => {
-      return {
-        checked: false,
-        id: field.id,
-        label: createLabel(field),
-        name: field.transitionBenchmarks_targetPopulationName,
-        value: field.transitionBenchmarks_targetPopulationName,
-      };
-    }
-  );
 
   let location = useLocation();
   const fieldInputDisabled =
@@ -108,16 +114,10 @@ export const Form = ({
 
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const updatedFields = fields.map((field) => {
-      return field.id.match("targetPopulations")
-        ? {
-            ...field,
-            props: { ...field?.props, choices: [...formattedChoiceList] },
-          }
-        : { ...field };
-    });
-
-    const fieldsToRender = hydrateFormFields(updatedFields, formData);
+    const fieldsToRender = hydrateFormFields(
+      updateRenderFields(fields),
+      formData
+    );
     return formFieldFactory(fieldsToRender, {
       disabled: !!fieldInputDisabled,
       autosave,
