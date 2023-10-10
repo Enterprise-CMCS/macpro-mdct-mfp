@@ -30,9 +30,6 @@ import warningIcon from "assets/icons/icon_warning.png";
 // utils
 import { filterFormData, useStore } from "utils";
 
-const { full_name, state } = useStore().user ?? {};
-const { updateReport } = useContext(ReportContext);
-
 export const EntityDetailsOverlay = ({
   route,
   closeEntityDetailsOverlay,
@@ -44,6 +41,9 @@ export const EntityDetailsOverlay = ({
     useState<boolean>(false);
   const { form, verbiage } = route;
   const { report } = useStore();
+
+  const { full_name, state } = useStore().user ?? {};
+  const { updateReport } = useContext(ReportContext);
 
   // add/edit entity modal disclosure and methods
   const {
