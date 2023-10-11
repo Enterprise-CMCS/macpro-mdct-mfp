@@ -18,7 +18,6 @@ import {
   mapValidationTypesToSchema,
   sortFormErrors,
   useStore,
-  getRepeatableChoiceLists,
 } from "utils";
 import {
   AnyObject,
@@ -28,6 +27,7 @@ import {
   FormLayoutElement,
   ReportStatus,
   ReportType,
+  EntityShape,
 } from "types";
 
 export const Form = ({
@@ -48,7 +48,33 @@ export const Form = ({
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
 
   const { report } = useStore();
-  const targetPopulationChoiceList = report?.fieldData?.targetPopulations;
+
+  const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
+    const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
+    const formatChoiceList = updatedTargetPopulationChoices?.map(
+      (field: EntityShape) => {
+        return {
+          checked: false,
+          id: field.id,
+          label: field.isRequired
+            ? field.transitionBenchmarks_targetPopulationName
+            : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+          name: field.transitionBenchmarks_targetPopulationName,
+          value: field.transitionBenchmarks_targetPopulationName,
+        };
+      }
+    );
+
+    const updateTargetPopulationChoiceList = fields.map((field) => {
+      return field.id.match("targetPopulations")
+        ? {
+            ...field,
+            props: { ...field?.props, choices: [...formatChoiceList] },
+          }
+        : { ...field };
+    });
+    return updateTargetPopulationChoiceList;
+  };
 
   let location = useLocation();
   const fieldInputDisabled =
@@ -88,7 +114,7 @@ export const Form = ({
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
-      getRepeatableChoiceLists(fields, targetPopulationChoiceList),
+      updateRenderFields(fields),
       formData
     );
     return formFieldFactory(fieldsToRender, {
