@@ -1,4 +1,3 @@
-import { MouseEventHandler } from "react";
 // components
 import {
   Button,
@@ -45,7 +44,7 @@ export const Drawer = ({
             sx={sx.drawerCloseButton}
             leftIcon={<CloseIcon />}
             variant="link"
-            onClick={onClose as MouseEventHandler}
+            onClick={onClose}
           >
             Close
           </Button>
@@ -64,7 +63,7 @@ interface Props {
   };
   drawerDisclosure: {
     isOpen: boolean;
-    onClose: Function;
+    onClose: any;
   };
   selectedEntity?: string;
   [key: string]: any;

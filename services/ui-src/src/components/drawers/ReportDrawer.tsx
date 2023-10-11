@@ -1,4 +1,3 @@
-import { MouseEventHandler } from "react";
 // Components
 import { Box, Button, Flex, Text, Spinner } from "@chakra-ui/react";
 import { Drawer, Form } from "components";
@@ -53,10 +52,7 @@ export const ReportDrawer = ({
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
           {(!userIsAdmin || !userIsReadOnly) && (
-            <Button
-              variant="outline"
-              onClick={drawerDisclosure.onClose as MouseEventHandler}
-            >
+            <Button variant="outline" onClick={drawerDisclosure.onClose}>
               Cancel
             </Button>
           )}
@@ -88,7 +84,7 @@ interface Props {
   submitting?: boolean;
   drawerDisclosure: {
     isOpen: boolean;
-    onClose: Function;
+    onClose: any;
   };
   validateOnRender?: boolean;
 }

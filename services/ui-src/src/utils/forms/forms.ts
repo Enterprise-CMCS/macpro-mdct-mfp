@@ -252,3 +252,28 @@ export const getRepeatableChoiceLists = (
     return fields;
   }
 };
+
+/*
+ * This function resets the 'clear' prop on each field after a ChoiceListField calls
+ * clearUncheckedNestedFields(). Upon re-entering a drawer or modal, the field values will
+ * be correctly hydrated.
+ */
+export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
+  fields.forEach((field: FormField | FormLayoutElement) => {
+    switch (field.type) {
+      case "radio":
+      case "checkbox":
+        field.props?.choices.forEach((childField: FieldChoice) => {
+          if (childField?.children) {
+            resetClearProp(childField.children);
+          }
+        });
+        field.props = { ...field.props, clear: false };
+        resetClearProp(field.props?.choices);
+        break;
+      default:
+        field.props = { ...field.props, clear: false };
+        break;
+    }
+  });
+};
