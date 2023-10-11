@@ -156,6 +156,11 @@ export const mockWpReportContext = {
   lastSavedTime: "1:58 PM",
 };
 
+export const mockEmptyDashboardReportContext = {
+  ...mockWpReportContext,
+  reportsByState: [{}],
+};
+
 export const mockDashboardReportContext = {
   ...mockWpReportContext,
   reportsByState: [

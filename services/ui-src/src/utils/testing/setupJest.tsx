@@ -203,10 +203,32 @@ export const mockReportStore: MfpReportState = {
   setWorkPlanToCopyFrom: () => {},
 };
 
+export const mockEmptyReportStore: MfpReportState = {
+  report: undefined,
+  reportsByState: undefined,
+  submittedReportsByState: undefined,
+  lastSavedTime: undefined,
+  workPlanToCopyFrom: undefined,
+  setReport: () => {},
+  setReportsByState: () => {},
+  clearReportsByState: () => {},
+  setSubmittedReportsByState: () => {},
+  setLastSavedTime: () => {},
+  setWorkPlanToCopyFrom: () => {},
+};
+
 // BOUND STORE
 
 export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
   ...mockReportStore,
+  ...mockStateUserStore,
+  ...mockBannerStore,
+};
+
+export const mockUseEmptyReportStore: MfpUserState &
+  AdminBannerState &
+  MfpReportState = {
+  ...mockEmptyReportStore,
   ...mockStateUserStore,
   ...mockBannerStore,
 };
