@@ -51,17 +51,14 @@ export const Form = ({
 
   const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
     const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
-    const defaultTargetPopulationCount = 4;
-
     const formatChoiceList = updatedTargetPopulationChoices?.map(
-      (field: EntityShape, key: string) => {
+      (field: EntityShape) => {
         return {
           checked: false,
           id: field.id,
-          label:
-            parseInt(key) < defaultTargetPopulationCount
-              ? field.transitionBenchmarks_targetPopulationName
-              : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+          label: field.isRequired
+            ? field.transitionBenchmarks_targetPopulationName
+            : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
           name: field.transitionBenchmarks_targetPopulationName,
           value: field.transitionBenchmarks_targetPopulationName,
         };
