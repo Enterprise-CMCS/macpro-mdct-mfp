@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import {
   AddEditReportModal,
+  Modal,
   DashboardTable,
   InstructionsAccordion,
   ErrorAlert,
@@ -196,6 +197,9 @@ export const DashboardPage = ({ reportType }: Props) => {
       await fetchReportsByState(reportType, activeState);
       setReportId(undefined);
       setReleasing(false);
+
+      //useDiscourse to open modal
+      confirmUnlockModalOnOpenHandler();
     }
   };
 
@@ -218,6 +222,13 @@ export const DashboardPage = ({ reportType }: Props) => {
     isOpen: addEditReportModalIsOpen,
     onOpen: addEditReportModalOnOpenHandler,
     onClose: addEditReportModalOnCloseHandler,
+  } = useDisclosure();
+
+  //unlock modal disclosure
+  const {
+    isOpen: confirmUnlockModalIsOpen,
+    onOpen: confirmUnlockModalOnOpenHandler,
+    onClose: confirmUnlockModalOnCloseHandler,
   } = useDisclosure();
 
   const fullStateName = States[activeState as keyof typeof States];
@@ -311,6 +322,14 @@ export const DashboardPage = ({ reportType }: Props) => {
           isOpen: addEditReportModalIsOpen,
           onClose: addEditReportModalOnCloseHandler,
         }}
+      />
+      <Modal
+        modalDisclosure={{
+          isOpen: confirmUnlockModalIsOpen,
+          onClose: confirmUnlockModalOnCloseHandler,
+        }}
+        onConfirmHandler={confirmUnlockModalOnCloseHandler}
+        content={wpVerbiage.modalUnlock}
       />
     </PageTemplate>
   );
