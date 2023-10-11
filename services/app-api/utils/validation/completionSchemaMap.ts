@@ -24,4 +24,5 @@ export const completionSchemaMap: any = {
   dynamicOptional: schema.dynamicOptional(),
   validNumber: schema.validNumber(),
   validNumberOptional: schema.validNumberOptional(),
+  boolean: schema.boolean(),
 };

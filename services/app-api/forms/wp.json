@@ -1181,6 +1181,11 @@
                         }
                       ]
                     }
+                  },
+                  {
+                    "id": "initiativeIsClosed",
+                    "type": "hidden",
+                    "validation": "boolean"
                   }
                 ]
               }

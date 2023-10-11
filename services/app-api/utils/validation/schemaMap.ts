@@ -1,6 +1,6 @@
 import {
   array,
-  boolean,
+  boolean as booleanSchema,
   mixed,
   number as numberSchema,
   object,
@@ -185,7 +185,7 @@ export const checkbox = () =>
     .min(0)
     .of(object({ key: text(), value: text() }));
 export const checkboxOptional = () => checkbox();
-export const checkboxSingle = () => boolean();
+export const checkboxSingle = () => booleanSchema();
 
 // RADIO
 export const radio = () =>
@@ -224,12 +224,16 @@ export const nested = (
 // OBJECT ARRAY
 export const objectArray = () => array().of(mixed());
 
+// BOOLEAN
+export const boolean = () => booleanSchema();
+
 // REGEX
 export const dateFormatRegex =
   /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})|\s$/;
 
 // SCHEMA MAP
 export const schemaMap: any = {
+  boolean: boolean(),
   checkbox: checkbox(),
   checkboxOptional: checkboxOptional(),
   checkboxSingle: checkboxSingle(),

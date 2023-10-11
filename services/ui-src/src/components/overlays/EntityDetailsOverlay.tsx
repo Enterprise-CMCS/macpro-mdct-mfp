@@ -79,15 +79,18 @@ export const EntityDetailsOverlay = ({
         lastAlteredBy: full_name,
       },
       fieldData: {
-        filteredFormData,
-        didCloseOutInitiative,
+        ...filteredFormData,
+        //didCloseOutInitiative,
       },
     };
+    //console.log(dataToWrite);
     await updateReport(reportKeys, dataToWrite);
 
     if (didCloseOutInitiative) {
       closeCloseEntityModal();
     }
+    //console.log("route: ", route);
+    closeEntityDetailsOverlay();
   };
 
   return (
@@ -154,12 +157,7 @@ export const EntityDetailsOverlay = ({
       </Box>
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
-          <Button
-            type="submit"
-            form={form.id}
-            sx={sx.saveButton}
-            onClick={closeEntityDetailsOverlay as MouseEventHandler}
-          >
+          <Button type="submit" form={form.id} sx={sx.saveButton}>
             {submitting ? <Spinner size="md" /> : "Save & return"}
           </Button>
         </Flex>
@@ -171,7 +169,7 @@ export const EntityDetailsOverlay = ({
 interface Props {
   entity?: EntityShape;
   route: EntityDetailsOverlayShape;
-  closeEntityDetailsOverlay?: Function;
+  closeEntityDetailsOverlay: Function;
   validateOnRender?: boolean;
 }
 

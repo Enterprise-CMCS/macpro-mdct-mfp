@@ -38,6 +38,7 @@ export const formFieldFactory = (
     date: DateField,
     dropdown: DropdownField,
     dynamic: DynamicField,
+    hidden: React.Fragment,
     number: NumberField,
     radio: RadioField,
     text: TextField,
