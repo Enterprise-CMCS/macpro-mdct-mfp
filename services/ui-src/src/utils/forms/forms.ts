@@ -19,7 +19,6 @@ import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
 import { DynamicField } from "components/fields/DynamicField";
 import { NumberField } from "components/fields/NumberField";
-import { ChoiceList } from "@cmsgov/design-system";
 
 // return created elements from provided fields
 export const formFieldFactory = (
