@@ -1,4 +1,4 @@
-import { MouseEventHandler, useState, useContext } from "react";
+import { MouseEventHandler, useContext } from "react";
 // components
 import {
   Box,
@@ -29,18 +29,22 @@ import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
 // utils
-import { filterFormData, useStore } from "utils";
+import {
+  entityWasUpdated,
+  getEntriesToClear,
+  filterFormData,
+  setClearedEntriesToDefaultValue,
+  useStore,
+} from "utils";
 
 export const EntityDetailsOverlay = ({
   route,
   closeEntityDetailsOverlay,
   validateOnRender,
-  entity,
+  selectedEntity,
 }: Props) => {
   const submitting = false;
-  const [didCloseOutInitiative, setDidCloseOutInitiative] =
-    useState<boolean>(false);
-  const { form, verbiage } = route;
+  const { entityType, form, verbiage } = route;
   const { report } = useStore();
 
   const { full_name, state } = useStore().user ?? {};
@@ -54,12 +58,10 @@ export const EntityDetailsOverlay = ({
   } = useDisclosure();
 
   const openCloseEntityModal = () => {
-    setDidCloseOutInitiative(true);
     closeEntityModalOnOpenHandler();
   };
 
   const closeCloseEntityModal = () => {
-    setDidCloseOutInitiative(false);
     closeEntityModalOnCloseHandler();
   };
 
@@ -69,28 +71,51 @@ export const EntityDetailsOverlay = ({
       state: state,
       id: report?.id,
     };
+
+    let dataToWrite = {
+      metadata: {
+        lastAlteredBy: full_name,
+        status: ReportStatus.IN_PROGRESS,
+      },
+      fieldData: {},
+    };
+
+    const currentEntities = [...(report?.fieldData?.[entityType] || [])];
     const filteredFormData = filterFormData(
       enteredData,
-      route.form.fields.filter(isFieldElement)
+      form.fields.filter(isFieldElement)
     );
-    const dataToWrite = {
-      metadata: {
-        status: ReportStatus.IN_PROGRESS,
-        lastAlteredBy: full_name,
-      },
-      fieldData: {
-        ...filteredFormData,
-        //didCloseOutInitiative,
-      },
-    };
-    //console.log(dataToWrite);
-    await updateReport(reportKeys, dataToWrite);
 
-    if (didCloseOutInitiative) {
-      closeCloseEntityModal();
+    if (selectedEntity?.id) {
+      // if existing entity selected, edit
+      const entriesToClear = getEntriesToClear(
+        enteredData,
+        form.fields.filter(isFieldElement)
+      );
+      const selectedEntityIndex = currentEntities.findIndex(
+        (entity: EntityShape) => entity.id === selectedEntity.id
+      );
+      const updatedEntities = currentEntities;
+
+      updatedEntities[selectedEntityIndex] = {
+        id: selectedEntity.id,
+        ...currentEntities[selectedEntityIndex],
+        ...filteredFormData,
+      };
+
+      updatedEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
+        updatedEntities[selectedEntityIndex],
+        entriesToClear
+      );
+
+      dataToWrite.fieldData = { [entityType]: updatedEntities };
+      const shouldSave = entityWasUpdated(
+        report?.fieldData?.[entityType][selectedEntityIndex],
+        updatedEntities[selectedEntityIndex]
+      );
+      //console.log("data to write: ", dataToWrite);
+      if (shouldSave) await updateReport(reportKeys, dataToWrite);
     }
-    //console.log("route: ", route);
-    closeEntityDetailsOverlay();
   };
 
   return (
@@ -108,7 +133,7 @@ export const EntityDetailsOverlay = ({
       {verbiage.intro && (
         <ReportPageIntro
           text={verbiage.intro}
-          initiativeName={entity!.initiative_name}
+          initiativeName={selectedEntity!.initiative_name}
         />
       )}
       <Form
@@ -145,12 +170,11 @@ export const EntityDetailsOverlay = ({
             </Button>
             <CloseEntityModal
               verbiage={verbiage}
-              entityName={entity!.initiative_name}
+              entityName={selectedEntity!.initiative_name}
               modalDisclosure={{
                 isOpen: closeEntityModalIsOpen,
                 onClose: closeCloseEntityModal,
               }}
-              formId={form.id}
             />
           </Box>
         )}
@@ -167,9 +191,9 @@ export const EntityDetailsOverlay = ({
 };
 
 interface Props {
-  entity?: EntityShape;
+  selectedEntity?: EntityShape;
   route: EntityDetailsOverlayShape;
-  closeEntityDetailsOverlay: Function;
+  closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;
 }
 

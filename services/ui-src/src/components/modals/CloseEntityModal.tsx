@@ -10,14 +10,13 @@ export const CloseEntityModal = ({
   entityName,
   verbiage,
   modalDisclosure,
-  formId,
 }: Props) => {
   const modalInfo = verbiage.closeOutModal;
   const { report } = useStore();
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
 
-  const onConfirmHandler = async (enteredData: AnyObject) => {
+  const onConfirmHandler = async () => {
     const reportKeys = {
       reportType: report?.reportType,
       state: state,
@@ -30,17 +29,16 @@ export const CloseEntityModal = ({
         lastAlteredBy: full_name,
       },
       fieldData: {
-        enteredData, // TO-DO: remove
         initiativeIsClosed: true,
       },
     };
     //console.log(dataToWrite);
     await updateReport(reportKeys, dataToWrite);
+    modalDisclosure.onClose();
   };
 
   return (
     <Modal
-      formId={formId}
       modalDisclosure={modalDisclosure}
       content={{
         heading: modalInfo.closeOutModalTitle + entityName,
@@ -61,5 +59,4 @@ interface Props {
     isOpen: boolean;
     onClose: any;
   };
-  formId: string;
 }
