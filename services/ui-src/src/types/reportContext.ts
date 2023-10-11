@@ -61,6 +61,7 @@ export enum ReportStatus {
   NOT_STARTED = "Not started",
   IN_PROGRESS = "In progress",
   SUBMITTED = "Submitted",
+  APPROVED = "Approved",
 }
 
 export interface ReportPageProgress {
