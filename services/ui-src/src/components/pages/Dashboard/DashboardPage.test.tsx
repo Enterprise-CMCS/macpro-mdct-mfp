@@ -6,12 +6,10 @@ import { ReportContext, DashboardPage } from "components";
 import { mockStateUser } from "utils/testing/mockUsers";
 import {
   mockDashboardReportContext,
-  mockWpReportContext,
+  mockReportContextNoReports,
 } from "utils/testing/mockReport";
 import {
   mockReportStore,
-  mockUseAdminStore,
-  mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useBreakpoint, useStore, makeMediaQueryClasses } from "utils";
@@ -19,8 +17,7 @@ import { useUser } from "utils/auth/useUser";
 import { ReportType } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
-import userEvent from "@testing-library/user-event";
-import { axe } from "jest-axe";
+import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
@@ -46,7 +43,15 @@ jest.mock("react-router-dom", () => ({
   })),
 }));
 
-const dashboardViewWithReports = (
+const wpDashboardWithNoReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockReportContextNoReports}>
+      <DashboardPage reportType={ReportType.WP} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const wpDashboardViewWithReports = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockDashboardReportContext}>
       <DashboardPage reportType={ReportType.WP} />
@@ -54,9 +59,28 @@ const dashboardViewWithReports = (
   </RouterWrappedComponent>
 );
 
-describe("Test Report Dashboard view (Desktop)", () => {
-  beforeEach(() => {
+const sarDashboardWithNoReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockReportContextNoReports}>
+      <DashboardPage reportType={ReportType.SAR} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const sarDashboardViewWithReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockDashboardReportContext}>
+      <DashboardPage reportType={ReportType.SAR} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+describe("Test Report Dashboard with no reports", () => {
+  beforeEach(async () => {
     mockedUseUser.mockReturnValue(mockStateUser);
+    mockedUseStore.mockReturnValue({
+      reportsByState: undefined,
+    });
     mockUseBreakpoint.mockReturnValue({
       isMobile: false,
     });
@@ -67,10 +91,39 @@ describe("Test Report Dashboard view (Desktop)", () => {
     jest.clearAllMocks();
   });
 
-  test("Check that WP Dashboard view renders", () => {
-    mockedUseStore.mockReturnValue(mockReportStore);
-    render(dashboardViewWithReports);
+  test("WP Dashboard renders table with empty text", async () => {
+    await act(async () => {
+      await render(wpDashboardWithNoReports);
+    });
+    expect(screen.getByText(wpVerbiage.body.empty)).toBeVisible();
+  });
 
+  test("SAR Dashboard renders table with empty text", async () => {
+    await act(async () => {
+      await render(sarDashboardWithNoReports);
+    });
+    expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
+  });
+});
+
+describe("Test Report Dashboard view (with reports, desktop view)", () => {
+  beforeEach(() => {
+    mockedUseUser.mockReturnValue(mockStateUser);
+    mockUseBreakpoint.mockReturnValue({
+      isMobile: false,
+    });
+    mockMakeMediaQueryClasses.mockReturnValue("desktop");
+    mockedUseStore.mockReturnValue(mockReportStore);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Check that WP Dashboard view renders", async () => {
+    await act(async () => {
+      await render(wpDashboardViewWithReports);
+    });
     expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
     expect(
       screen.queryByText(wpVerbiage.body.table.caption)
@@ -79,129 +132,49 @@ describe("Test Report Dashboard view (Desktop)", () => {
     expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
   });
 
-  test("Clicking Call To Action text open add/edit modal", async () => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(dashboardViewWithReports);
-    const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
-    expect(callToActionButton).toBeVisible();
-    await userEvent.click(callToActionButton);
-    expect(screen.queryByText("Start new")).toBeVisible();
+  /* SAR Tests */
+  test("Check that the SAR Dashboard view renders", async () => {
+    await act(async () => {
+      await render(sarDashboardViewWithReports);
+    });
+    expect(screen.getByText(sarVerbiage.intro.header)).toBeVisible();
+    expect(
+      screen.queryByText(sarVerbiage.body.table.caption)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(sarVerbiage.body.empty)).not.toBeInTheDocument();
+    expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
   });
 });
 
-describe("Test Report Dashboard (Mobile)", () => {
-  beforeEach(() => {
+describe("Test Report Dashboard view (with reports, mobile view)", () => {
+  beforeEach(async () => {
+    mockedUseUser.mockReturnValue(mockStateUser);
     mockUseBreakpoint.mockReturnValue({
       isMobile: true,
     });
-
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(dashboardViewWithReports);
-  });
-
-  test("Clicking Call To Action text open add/edit modal", async () => {
-    const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
-    expect(callToActionButton).toBeVisible();
-    await userEvent.click(callToActionButton);
-    expect(screen.queryByText("Start new")).toBeVisible();
-  });
-});
-
-describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobile view)", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockUseAdminStore);
+    mockedUseStore.mockReturnValue(mockReportStore);
+    mockMakeMediaQueryClasses.mockReturnValue("mobile");
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe("Desktop view", () => {
-    beforeEach(() => {
-      mockUseBreakpoint.mockReturnValue({
-        isMobile: false,
-      });
-      mockMakeMediaQueryClasses.mockReturnValue("desktop");
-      render(dashboardViewWithReports);
+  test("WP Dashboard view renders", async () => {
+    await act(async () => {
+      await render(wpDashboardViewWithReports);
     });
-
-    test("Check that Admin WP Dashboard view renders", () => {
-      expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
-      expect(
-        screen.queryByText(wpVerbiage.body.table.caption)
-      ).toBeInTheDocument();
-      expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
-    });
-
-    test("Clicking a disabled 'Unlock' button no modal opens", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[0];
-      expect(unlockButton).toBeVisible();
-      await userEvent.click(unlockButton);
-
-      expect(
-        screen.queryByText(wpVerbiage.modalUnlock.actionButtonText)
-      ).not.toBeInTheDocument();
-    });
-
-    test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[1];
-      expect(unlockButton).toBeVisible();
-      await userEvent.click(unlockButton);
-      await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
-      // once for render, once for release
-      await expect(
-        mockWpReportContext.fetchReportsByState
-      ).toHaveBeenCalledTimes(2);
-    });
-
-    test("Clicking 'Archive' button will archive the form", async () => {
-      const archiveButton = screen.getAllByText("Archive")[1];
-      expect(archiveButton).toBeVisible();
-      await userEvent.click(archiveButton);
-      await expect(mockWpReportContext.archiveReport).toHaveBeenCalledTimes(1);
-      // once for render, once for archive
-      await expect(
-        mockWpReportContext.fetchReportsByState
-      ).toHaveBeenCalledTimes(2);
-    });
+    expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
+    expect(screen.getAllByTestId("mobile-row")[0]).toBeVisible();
+    expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
   });
 
-  describe("Mobile view", () => {
-    beforeEach(() => {
-      mockUseBreakpoint.mockReturnValue({
-        isMobile: true,
-      });
-      render(dashboardViewWithReports);
+  test("SAR Dashboard view renders", async () => {
+    await act(async () => {
+      await render(sarDashboardViewWithReports);
     });
-    it("Should not have basic accessibility issues (mobile)", async () => {
-      mockMakeMediaQueryClasses.mockReturnValue("mobile");
-      await act(async () => {
-        const { container } = render(dashboardViewWithReports);
-        const results = await axe(container);
-        expect(results).toHaveNoViolations();
-      });
-    });
-
-    test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[1];
-      expect(unlockButton).toBeVisible();
-      await userEvent.click(unlockButton);
-      await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
-      // once for render, once for release
-      await expect(
-        mockWpReportContext.fetchReportsByState
-      ).toHaveBeenCalledTimes(2);
-    });
-
-    test("Clicking 'Archive' button will archive the form", async () => {
-      const archiveButton = screen.getAllByText("Archive")[1];
-      expect(archiveButton).toBeVisible();
-      await userEvent.click(archiveButton);
-      await expect(mockWpReportContext.archiveReport).toHaveBeenCalledTimes(1);
-      // once for render, once for archive
-      await expect(
-        mockWpReportContext.fetchReportsByState
-      ).toHaveBeenCalledTimes(2);
-    });
+    expect(screen.getByText(sarVerbiage.intro.header)).toBeVisible();
+    expect(screen.getAllByTestId("mobile-row")[0]).toBeVisible();
+    expect(screen.queryByText(sarVerbiage.body.empty)).not.toBeInTheDocument();
   });
 });

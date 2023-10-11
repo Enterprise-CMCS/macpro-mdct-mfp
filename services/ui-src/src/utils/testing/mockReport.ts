@@ -28,6 +28,7 @@ export const mockReportJson = {
   type: "mock",
   basePath: "/mock",
   routes: mockReportRoutes,
+  flatRoutes: mockFlattenedReportRoutes,
   validationSchema: {},
 };
 
@@ -97,6 +98,7 @@ export const mockWPFullReport = {
   },
   isComplete: false,
   reportPeriod: 1,
+  locked: false,
 };
 
 export const mockWPApprovedFullReport = {
@@ -148,11 +150,11 @@ export const mockReportMethods = {
 
 export const mockWpReportContext = {
   ...mockReportMethods,
-  ...mockWPFullReport,
+  report: mockWPFullReport,
   reportsByState: mockReportsByState,
   copyEligibleReportsByState: mockReportsByState,
   errorMessage: "",
-  lastSavedTime: "1:58 PM",
+  lastSavedTime: "2:00 PM",
 };
 
 export const mockDashboardReportContext = {
@@ -164,4 +166,9 @@ export const mockDashboardReportContext = {
       fieldData: undefined,
     },
   ],
+};
+
+export const mockReportContextNoReports = {
+  ...mockWpReportContext,
+  reportsByState: undefined,
 };
