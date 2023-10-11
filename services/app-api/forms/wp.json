@@ -874,12 +874,12 @@
                       "props": {
                         "href": "https://www.medicaid.gov/sites/default/files/2023-01/MFP-Technical-Assistance-Brief.pdf",
                         "target": "_blank",
-                        "ariaLabel": "Link opens in new tab"
+                        "aria-label": "“Using Data to Improve Money Follows the Person Program Performance.“ (Link opens in new tab)"
                       }
                     },
                     {
                       "type": "html",
-                      "content": "<br><br><p><strong>Please identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:</p>"
+                      "content": "<br><br><strong>Please identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:"
                     }
                   ],
                   "list": [
