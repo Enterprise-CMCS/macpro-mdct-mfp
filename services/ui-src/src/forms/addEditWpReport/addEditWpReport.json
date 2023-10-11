@@ -4,21 +4,7 @@
     "mode": "onChange"
   },
   "heading": {
-    "add": "Add new MFP Work Plan"
-  },
-  "fields": [
-    {
-      "id": "submissionName",
-      "type": "text",
-      "props": {
-        "label": "",
-        "hint": [
-          {
-            "type": "span",
-            "content": "Update your transition benchmarks and initiatives from the information in your last approved Work Plan by selecting Copy from previous. Use Start new only when you want to completely reset your MFP program information and start from a blank form. "
-          }
-        ]
-      }
-    }
-  ]
+    "add": "Add new MFP Work Plan",
+    "subheading": "Update your transition benchmarks and initiatives from the information in your last approved Work Plan by selecting Copy from previous. Use Start new only when you want to completely reset your MFP program information and start from a blank form. "
+  }
 }

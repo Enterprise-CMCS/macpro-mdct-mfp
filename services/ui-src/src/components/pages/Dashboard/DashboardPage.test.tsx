@@ -6,12 +6,13 @@ import { ReportContext, DashboardPage } from "components";
 import { mockStateUser } from "utils/testing/mockUsers";
 import {
   mockDashboardReportContext,
+  mockEmptyDashboardReportContext,
   mockWpReportContext,
 } from "utils/testing/mockReport";
 import {
   mockReportStore,
   mockUseAdminStore,
-  mockUseStore,
+  mockUseEmptyReportStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useBreakpoint, useStore, makeMediaQueryClasses } from "utils";
@@ -45,6 +46,14 @@ jest.mock("react-router-dom", () => ({
     pathname: "/wp",
   })),
 }));
+
+const dashboardViewWithNoReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockEmptyDashboardReportContext}>
+      <DashboardPage reportType={ReportType.WP} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
 
 const dashboardViewWithReports = (
   <RouterWrappedComponent>
@@ -80,8 +89,8 @@ describe("Test Report Dashboard view (Desktop)", () => {
   });
 
   test("Clicking Call To Action text open add/edit modal", async () => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(dashboardViewWithReports);
+    mockedUseStore.mockReturnValue(mockUseEmptyReportStore);
+    render(dashboardViewWithNoReports);
     const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
     expect(callToActionButton).toBeVisible();
     await userEvent.click(callToActionButton);
@@ -95,8 +104,8 @@ describe("Test Report Dashboard (Mobile)", () => {
       isMobile: true,
     });
 
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(dashboardViewWithReports);
+    mockedUseStore.mockReturnValue(mockUseEmptyReportStore);
+    render(dashboardViewWithNoReports);
   });
 
   test("Clicking Call To Action text open add/edit modal", async () => {

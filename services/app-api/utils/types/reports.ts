@@ -186,6 +186,7 @@ export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
 // REPORT METADATA
 
 export interface ReportMetadata {
+  submissionName: string;
   archived: boolean;
   reportType: string;
   submittedBy?: string;
@@ -200,13 +201,13 @@ export interface ReportMetadata {
   status: string;
   isComplete: boolean;
   completionStatus?: CompletionData;
+  reportPeriod: number;
+  reportYear: number;
 }
 
 export interface WPReportMetadata extends ReportMetadata {
-  submissionName: string;
   locked: boolean;
   submissionCount: number;
-  reportPeriod: number;
   previousRevisions: string[];
 }
 

@@ -35,7 +35,7 @@ export const mockDynamoData = {
 export const mockDynamoDataWPLocked: WPReportMetadata = {
   ...mockReportKeys,
   archived: false,
-  reportType: "MLR",
+  reportType: "WP",
   submissionName: "testProgram",
   status: "Not started",
   lastAlteredBy: "Thelonious States",
@@ -48,6 +48,7 @@ export const mockDynamoDataWPLocked: WPReportMetadata = {
   previousRevisions: [],
   isComplete: false,
   reportPeriod: 2,
+  reportYear: 2021,
 };
 
 export const mockDynamoDataWPCompleted: WPReportMetadata = {
@@ -71,4 +72,5 @@ export const mockDynamoDataWPCompleted: WPReportMetadata = {
   locked: false,
   previousRevisions: [],
   reportPeriod: 2,
+  reportYear: 2021,
 };
