@@ -1,21 +1,23 @@
 // components
-import { Card } from "components";
+import {
+  Card,
+  EntityStepCardTopSection,
+  EntityStepCardBottomSection,
+} from "components";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
-import { AnyObject, EntityShape, OverlayModalEntityTypes } from "types";
+import { AnyObject, EntityShape, OverlayModalStepTypes } from "types";
 // assets
 import { svgFilters } from "styles/theme";
 import completedIcon from "assets/icons/icon_check_circle.png";
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
-import { EntityCardTopSection } from "./EntityCardTopSection";
-import { EntityCardBottomSection } from "./EntityCardBottomSection";
 
-export const EntityCard = ({
+export const EntityStepCard = ({
   entity,
   entityIndex,
-  entityType,
+  stepType,
   formattedEntityData,
   verbiage,
   openAddEditEntityModal,
@@ -33,16 +35,17 @@ export const EntityCard = ({
   }`;
 
   // any drawer-based field will do for this check
-  switch (entityType) {
-    case OverlayModalEntityTypes.EVALUATION_PLAN:
+  switch (stepType) {
+    case OverlayModalStepTypes.EVALUATION_PLAN:
       entityCompleted = formattedEntityData?.objectiveName;
       break;
-    case OverlayModalEntityTypes.FUNDING_SOURCES:
+    case OverlayModalStepTypes.FUNDING_SOURCES:
       entityCompleted = formattedEntityData?.fundingSource;
       break;
     default:
       break;
   }
+
   return (
     <Card {...props} marginTop="2rem" data-testid="entityCard">
       <Box sx={sx.contentBox} className={printVersion ? "print-version" : ""}>
@@ -92,8 +95,8 @@ export const EntityCard = ({
             />
           </button>
         )}
-        <EntityCardTopSection
-          entityType={entityType}
+        <EntityStepCardTopSection
+          stepType={stepType}
           printVersion={!!printVersion}
           formattedEntityData={formattedEntityData}
         />
@@ -109,8 +112,8 @@ export const EntityCard = ({
           </Button>
         )}
         {entityStarted || entityCompleted || printVersion ? (
-          <EntityCardBottomSection
-            entityType={entityType}
+          <EntityStepCardBottomSection
+            stepType={stepType}
             verbiage={verbiage}
             formattedEntityData={{
               ...formattedEntityData,
@@ -151,7 +154,7 @@ export const EntityCard = ({
 interface Props {
   entity: EntityShape;
   entityIndex: number;
-  entityType: string;
+  stepType: string;
   formattedEntityData: AnyObject;
   verbiage: AnyObject;
   openAddEditEntityModal?: Function;

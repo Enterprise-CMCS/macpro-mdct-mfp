@@ -22,6 +22,7 @@ import {
   isFieldElement,
   ModalOverlayReportPageShape,
   ReportStatus,
+  EntityDetailsDashboardOverlayShape,
 } from "types";
 // utils
 import {
@@ -48,7 +49,14 @@ export const ModalOverlayReportPage = ({
   validateOnRender,
 }: Props) => {
   // Route Information
-  const { entityType, verbiage, modalForm, overlayForm, entityInfo } = route;
+  const {
+    entityType,
+    verbiage,
+    modalForm,
+    overlayForm,
+    dashboard,
+    entityInfo,
+  } = route;
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
   const { report } = useStore();
@@ -65,9 +73,24 @@ export const ModalOverlayReportPage = ({
 
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
+
   (reportFieldDataEntities as any[]).map(
     (entity) => (entity["isOtherEntity"] = true)
   );
+
+  reportFieldDataEntities = reportFieldDataEntities.filter(
+    (entity: EntityShape) => {
+      if (
+        Object.keys(entity).findIndex((key: string) =>
+          key.includes(entityType)
+        ) > 0
+      ) {
+        return entity;
+      }
+      return;
+    }
+  );
+
   const showAlert =
     report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
@@ -181,18 +204,17 @@ export const ModalOverlayReportPage = ({
 
   return (
     <Box>
-      {overlayForm && isEntityDetailsOpen && currentEntity ? (
+      {dashboard && isEntityDetailsOpen && currentEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             entityType={entityType as EntityType}
-            entities={report?.fieldData[entityType]}
-            form={overlayForm}
-            onSubmit={onSubmit}
+            dashboard={dashboard}
             selectedEntity={currentEntity}
-            disabled={false}
+            onSubmit={onSubmit}
             submitting={submitting}
             validateOnRender={validateOnRender}
+            route={route as EntityDetailsDashboardOverlayShape}
           />
         </EntityProvider>
       ) : (
@@ -212,10 +234,7 @@ export const ModalOverlayReportPage = ({
               {dashTitle}
             </Heading>
             {reportFieldDataEntities.length === 0 ? (
-              <>
-                <Box sx={sx.tableSeparator} />
-                <Box sx={sx.emptyDashboard}>{verbiage.emptyDashboardText}</Box>
-              </>
+              <Box>{verbiage.emptyDashboardText}</Box>
             ) : (
               <Table sx={sx.table} content={tableHeaders()}>
                 {reportFieldDataEntities.map((entity: EntityShape) => (
@@ -290,15 +309,6 @@ const sx = {
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
-  },
-  emptyDashboard: {
-    paddingTop: "1rem",
-  },
-  tableSeparator: {
-    borderTop: "1px solid",
-    borderColor: "palette.gray_light",
-    paddingBottom: "1rem",
-    marginTop: "1.25rem",
   },
   table: {
     tableLayout: "fixed",
