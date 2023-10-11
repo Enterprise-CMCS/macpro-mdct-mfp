@@ -143,16 +143,12 @@ describe("Test Report Dashboard with no reports", () => {
   });
 
   test("WP Dashboard renders table with empty text", async () => {
-    await act(async () => {
-      await render(wpDashboardWithNoReports);
-    });
+    render(wpDashboardWithNoReports);
     expect(screen.getByText(wpVerbiage.body.empty)).toBeVisible();
   });
 
   test("SAR Dashboard renders table with empty text", async () => {
-    await act(async () => {
-      await render(sarDashboardWithNoReports);
-    });
+    render(sarDashboardWithNoReports);
     expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
   });
 });
