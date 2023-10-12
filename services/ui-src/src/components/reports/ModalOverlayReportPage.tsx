@@ -78,19 +78,6 @@ export const ModalOverlayReportPage = ({
     (entity) => (entity["isOtherEntity"] = true)
   );
 
-  reportFieldDataEntities = reportFieldDataEntities.filter(
-    (entity: EntityShape) => {
-      if (
-        Object.keys(entity).findIndex((key: string) =>
-          key.includes(entityType)
-        ) > 0
-      ) {
-        return entity;
-      }
-      return;
-    }
-  );
-
   const showAlert =
     report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
@@ -244,7 +231,7 @@ export const ModalOverlayReportPage = ({
                     entityInfo={entityInfo}
                     verbiage={verbiage}
                     locked={isLocked}
-                    openDrawer={openEntityDetailsOverlay}
+                    openOverlayOrDrawer={openEntityDetailsOverlay}
                     openAddEditEntityModal={openAddEditEntityModal}
                     openDeleteEntityModal={openDeleteEntityModal}
                   />
@@ -260,7 +247,7 @@ export const ModalOverlayReportPage = ({
               {verbiage.addEntityButtonText}
             </Button>
           </Box>
-
+          {/* Modals */}
           <AddEditEntityModal
             entityType={entityType}
             selectedEntity={currentEntity}
@@ -271,7 +258,6 @@ export const ModalOverlayReportPage = ({
               onClose: closeAddEditEntityModal,
             }}
           />
-
           <DeleteEntityModal
             entityType={entityType}
             selectedEntity={currentEntity}
@@ -281,7 +267,6 @@ export const ModalOverlayReportPage = ({
               onClose: closeDeleteEntityModal,
             }}
           />
-
           <ReportPageFooter />
         </Box>
       )}

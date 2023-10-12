@@ -1,11 +1,11 @@
 export default {
   intro: {
-    header: "State MFP Program Work Plan",
+    header: "MFP Semi-Annual Progress Report (SAR)",
     body: [
       {
         type: "text",
         content:
-          "This reporting tool is to be used by grantees for reporting of MFP program data. The information provided in this report will allow CMS to monitor grantee progress and identify challenges and improvement opportunities. For additional guidance on completing this form, please see the associated ",
+          "This reporting tool is to be used by MFP recipients for semi-annual reporting of MFP program data. The information provided in this report will allow CMS to monitor recipients’ progress and identify challenges and opportunities for improvement. For additional guidance on completing this form, see the associated ",
       },
       {
         type: "externalLink",
@@ -13,7 +13,7 @@ export default {
         props: {
           href: "https://www.google.com",
           target: "_blank",
-          "aria-label": "User Guide (link opens in new tab).",
+          "aria-label": "User Guide",
         },
       },
       {
@@ -27,7 +27,7 @@ export default {
         props: {
           href: "https://www.google.com",
           target: "_blank",
-          "aria-label": "Help File (link opens in new tab).",
+          "aria-label": "Help File.",
         },
       },
     ],
@@ -37,16 +37,16 @@ export default {
       caption: "WP Programs",
       headRow: [
         "",
-        "Program name",
+        "Submission name",
+        "Target populations",
         "Due date",
         "Last edited",
-        "Edited by",
+        "Edited By",
         "Status",
         "",
       ],
     },
-    empty:
-      "For this report, a managed care program is defined by a set of distinct benefits and eligibility criteria articulated in a contract between states and the state’s managed care plans",
-    callToAction: "Add managed care program",
+    empty: "Once you start a SAR submission, you can access it here.",
+    callToAction: "Add new SAR submission",
   },
 };

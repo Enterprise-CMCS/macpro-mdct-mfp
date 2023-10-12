@@ -115,7 +115,7 @@ export const EntityDetailsDashboardOverlay = ({
                 entityInfo={entity.stepInfo}
                 verbiage={entity.verbiage}
                 locked={false}
-                openDrawer={() => openEntityStepOverlay(entity)}
+                openOverlayOrDrawer={() => openEntityStepOverlay(entity)}
                 openAddEditEntityModal={() => {
                   return;
                 }}

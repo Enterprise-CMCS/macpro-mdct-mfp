@@ -99,6 +99,30 @@ export const mockWPFullReport = {
   reportPeriod: 1,
 };
 
+export const mockWPApprovedFullReport = {
+  ...mockReportKeys,
+  reportType: "WP",
+  formTemplate: mockReportJson,
+  submissionName: "2023 - Alabama 1",
+  status: ReportStatus.APPROVED,
+  dueDate: 168515200000,
+  createdAt: 162515200000,
+  lastAltered: 162515200000,
+  lastAlteredBy: "Thelonious States",
+  submittedOnDate: Date.now(),
+  fieldData: mockReportFieldData,
+  completionStatus: {
+    "/mock/mock-route-1": true,
+    "/mock/mock-route-2": {
+      "/mock/mock-route-2a": false,
+      "/mock/mock-route-2b": true,
+      "/mock/mock-route-2c": true,
+    },
+  },
+  isComplete: true,
+  reportPeriod: 1,
+};
+
 export const mockReportsByState = [
   { ...mockWPFullReport, id: "mock-report-id-1" },
   { ...mockWPFullReport, id: "mock-report-id-2" },
@@ -110,6 +134,7 @@ export const mockReportMethods = {
   releaseReport: jest.fn(),
   fetchReport: jest.fn(),
   fetchReportsByState: jest.fn(),
+  fetchReportForSarCreation: jest.fn(),
   createReport: jest.fn(),
   updateReport: jest.fn(),
   submitReport: jest.fn(),
@@ -131,12 +156,17 @@ export const mockWpReportContext = {
   lastSavedTime: "1:58 PM",
 };
 
+export const mockEmptyDashboardReportContext = {
+  ...mockWpReportContext,
+  reportsByState: [{}],
+};
+
 export const mockDashboardReportContext = {
   ...mockWpReportContext,
   reportsByState: [
     {
       ...mockWPReport,
-      formTemplate: undefined,
+      formTemplate: mockReportJson,
       fieldData: undefined,
     },
   ],
