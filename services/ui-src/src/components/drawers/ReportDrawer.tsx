@@ -13,6 +13,7 @@ import {
 } from "types";
 // constants
 import { closeText, saveAndCloseText } from "../../constants";
+import { MouseEventHandler } from "react";
 
 export const ReportDrawer = ({
   entityType,
@@ -52,7 +53,10 @@ export const ReportDrawer = ({
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
           {(!userIsAdmin || !userIsReadOnly) && (
-            <Button variant="outline" onClick={drawerDisclosure.onClose}>
+            <Button
+              variant="outline"
+              onClick={drawerDisclosure.onClose as MouseEventHandler}
+            >
               Cancel
             </Button>
           )}
@@ -84,7 +88,7 @@ interface Props {
   submitting?: boolean;
   drawerDisclosure: {
     isOpen: boolean;
-    onClose: any;
+    onClose: Function;
   };
   validateOnRender?: boolean;
 }

@@ -10,6 +10,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@cmsgov/design-system";
+import { MouseEventHandler } from "react";
 // utils
 import { AnyObject, CustomHtmlElement } from "types";
 import { makeMediaQueryClasses, parseCustomHtml } from "utils";
@@ -44,7 +45,7 @@ export const Drawer = ({
             sx={sx.drawerCloseButton}
             leftIcon={<CloseIcon />}
             variant="link"
-            onClick={onClose}
+            onClick={onClose as MouseEventHandler}
           >
             Close
           </Button>
@@ -63,7 +64,7 @@ interface Props {
   };
   drawerDisclosure: {
     isOpen: boolean;
-    onClose: any;
+    onClose: Function;
   };
   selectedEntity?: string;
   [key: string]: any;
