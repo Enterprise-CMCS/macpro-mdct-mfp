@@ -18,6 +18,7 @@ export default {
       },
       {
         type: "text",
+        as: "span",
         content: " and ",
       },
       {
