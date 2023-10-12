@@ -12,6 +12,7 @@ import {
 } from "utils";
 
 export const CloseEntityModal = ({
+  entityName,
   route,
   selectedEntity,
   modalDisclosure,
@@ -70,8 +71,7 @@ export const CloseEntityModal = ({
     <Modal
       modalDisclosure={modalDisclosure}
       content={{
-        heading:
-          modalInfo?.closeOutModalTitle + selectedEntity?.initiative_name,
+        heading: modalInfo?.closeOutModalTitle + entityName,
         actionButtonText: modalInfo?.closeOutModalConfirmButtonText,
         closeButtonText: "Cancel",
       }}
@@ -83,6 +83,7 @@ export const CloseEntityModal = ({
 };
 
 interface Props {
+  entityName: string;
   route: EntityDetailsOverlayShape;
   selectedEntity?: EntityShape;
   modalDisclosure: {

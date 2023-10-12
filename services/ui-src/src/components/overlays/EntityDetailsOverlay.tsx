@@ -99,7 +99,6 @@ export const EntityDetailsOverlay = ({
 
       updatedEntities[selectedEntityIndex] = {
         id: selectedEntity.id,
-        isInitiativeClosed: false,
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
@@ -169,6 +168,7 @@ export const EntityDetailsOverlay = ({
               {verbiage.closeOutModal.closeOutModalButtonText}
             </Button>
             <CloseEntityModal
+              entityName={selectedEntity!.initiative_name}
               selectedEntity={selectedEntity}
               route={route}
               modalDisclosure={{

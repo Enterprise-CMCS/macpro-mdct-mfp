@@ -12,6 +12,7 @@ const mockEntityName = "mock-name";
 
 const modalComponent = (
   <CloseEntityModal
+    entityName={mockEntityName}
     route={mockEntityDetailsOverlayJson}
     modalDisclosure={{
       isOpen: true,
