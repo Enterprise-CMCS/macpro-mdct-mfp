@@ -65,6 +65,18 @@ export const EntityDetailsDashboardOverlay = ({
     return { headRow: ["", "", ""] };
   };
 
+  //EntityRow uses the fieldData to generate but for this report, we want that information from the steps in the formTemplate
+  const formatEntityStep = (entity: EntityShape, step: any) => {
+    const newEntity: EntityShape = Object.assign({}, entity);
+
+    (step.stepInfo as []).forEach((info) => {
+      newEntity[info] = step[info];
+    });
+
+    newEntity["isRequired"] = true;
+    return newEntity;
+  };
+
   const openInitiativeStepOverlay = () => {
     const pageType = selectedStep?.pageType;
     return (
@@ -108,14 +120,15 @@ export const EntityDetailsDashboardOverlay = ({
             initiativeName={selectedEntity?.initiative_name}
           />
           <Table content={tableHeaders()}>
-            {entitySteps?.map((entity: any) => (
+            {entitySteps?.map((step: any) => (
               <EntityRow
-                key={entity.id}
-                entity={entity}
-                entityInfo={entity.stepInfo}
-                verbiage={entity.verbiage}
+                key={step.id}
+                entity={formatEntityStep(selectedEntity!, step)}
+                entityType={step}
+                entityInfo={step.stepInfo}
+                verbiage={step.verbiage}
                 locked={false}
-                openDrawer={() => openEntityStepOverlay(entity)}
+                openDrawer={() => openEntityStepOverlay(step)}
                 openAddEditEntityModal={() => {
                   return;
                 }}

@@ -6,21 +6,12 @@ import unfinishedIconDark from "assets/icons/icon_error_circle.png";
 import successIcon from "assets/icons/icon_check_circle.png";
 import successIconDark from "assets/icons/icon_check_circle_dark.png";
 import closedIcon from "assets/icons/icon_circle-minus-gray.png";
-import { useStore } from "utils";
-import { getEntityStatus } from "./getEntityStatus";
-import { useMemo } from "react";
 
 export type EntityStatusType = "complete" | "close" | undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const EntityStatusIcon = ({ entity, isPdf }: Props) => {
-  const { report } = useStore();
-
-  const entityComplete = useMemo(() => {
-    return report ? getEntityStatus(report, entity) : false;
-  }, [report]);
-
-  const entityStatus: EntityStatusType = entityComplete
+export const EntityStatusIcon = ({ entityCompleted, isPdf }: Props) => {
+  const entityStatus: EntityStatusType = entityCompleted
     ? "complete"
     : undefined;
 
@@ -40,14 +31,14 @@ export const EntityStatusIcon = ({ entity, isPdf }: Props) => {
           style: sx.successText,
           text: "Close",
         };
+      default:
+        return {
+          src: isPdf ? unfinishedIconDark : unfinishedIcon,
+          alt: isPdf ? "" : "warning icon",
+          style: sx.errorText,
+          text: "Error",
+        };
     }
-
-    return {
-      src: isPdf ? unfinishedIconDark : unfinishedIcon,
-      alt: isPdf ? "" : "warning icon",
-      style: sx.errorText,
-      text: "Error",
-    };
   };
 
   let status = statusIcon(entityStatus);
