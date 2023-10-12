@@ -9,7 +9,6 @@ import { mockEntityDetailsOverlayVerbiage } from "utils/testing/setupJest";
 const mockCloseHandler = jest.fn();
 
 const mockEntityName = "mock-name";
-const mockFormId = "mock-form-id";
 
 const modalComponent = (
   <CloseEntityModal
@@ -19,7 +18,6 @@ const modalComponent = (
       isOpen: true,
       onClose: mockCloseHandler,
     }}
-    formId={mockFormId}
   />
 );
 

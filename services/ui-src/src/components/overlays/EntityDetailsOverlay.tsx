@@ -101,6 +101,7 @@ export const EntityDetailsOverlay = ({
         id: selectedEntity.id,
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
+        isInitiativeClosed: false,
       };
 
       updatedEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
@@ -113,7 +114,6 @@ export const EntityDetailsOverlay = ({
         report?.fieldData?.[entityType][selectedEntityIndex],
         updatedEntities[selectedEntityIndex]
       );
-      //console.log("data to write: ", dataToWrite);
       if (shouldSave) await updateReport(reportKeys, dataToWrite);
     }
   };
@@ -169,8 +169,8 @@ export const EntityDetailsOverlay = ({
               {verbiage.closeOutModal.closeOutModalButtonText}
             </Button>
             <CloseEntityModal
-              verbiage={verbiage}
-              entityName={selectedEntity!.initiative_name}
+              selectedEntity={selectedEntity}
+              route={route}
               modalDisclosure={{
                 isOpen: closeEntityModalIsOpen,
                 onClose: closeCloseEntityModal,

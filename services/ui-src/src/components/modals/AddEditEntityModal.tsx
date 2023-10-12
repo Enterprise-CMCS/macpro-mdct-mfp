@@ -87,7 +87,7 @@ export const AddEditEntityModal = ({
       dataToWrite.fieldData = {
         [entityType]: [
           ...currentEntities,
-          { id: uuid(), initiativeIsClosed: false, ...filteredFormData },
+          { id: uuid(), ...filteredFormData, initiativeIsClosed: false },
         ],
       };
       await updateReport(reportKeys, dataToWrite);
