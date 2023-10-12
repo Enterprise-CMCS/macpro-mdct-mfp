@@ -31,3 +31,16 @@ export const mockCompletedGenericFormattedEntityData = {
   monitoringMethods: ["mock-monitoring-method-1", "mock-monitoring-method-2"],
   methodFrequency: "mock-oversight-method-frequency",
 };
+
+export const mockTargetPopulationEntity = {
+  id: "mock-id1",
+  isRequired: true,
+  transitionBenchmarks_targetPopulationName: "Older Adults",
+  transitionBenchmarks_applicableToMfpDemonstration: [{ value: "No" }],
+};
+
+export const mockOtherTargetPopulationEntity = {
+  id: "mock-id5",
+  isRequired: false,
+  transitionBenchmarks_targetPopulationName: "New target population",
+};

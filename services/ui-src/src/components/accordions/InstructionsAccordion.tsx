@@ -13,7 +13,7 @@ export const InstructionsAccordion = ({ verbiage, ...props }: Props) => {
       <AccordionItem label={buttonLabel} sx={sx.item}>
         <Box sx={sx.textBox}>{parseCustomHtml(intro)}</Box>
         <UnorderedList sx={sx.list}>
-          {list.map((listItem: string, index: number) => (
+          {list?.map((listItem: string, index: number) => (
             <ListItem key={index}>{sanitizeAndParseHtml(listItem)}</ListItem>
           ))}
         </UnorderedList>

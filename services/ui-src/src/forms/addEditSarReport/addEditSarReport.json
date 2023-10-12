@@ -9,12 +9,51 @@
   },
   "fields": [
     {
-      "id": "submissionName",
+      "id": "associatedWorkPlan",
       "type": "text",
       "validation": "text",
       "props": {
-        "label": "SAR submission name",
-        "hint": "Name this SAR submission so you can easily refer to it. Consider using timeframe(s) and managed care program names (if relevant)."
+        "disabled": true,
+        "label": "Associated Work Plan",
+        "hint": "Auto-populates from your last approved Work Plan"
+      }
+    },
+    {
+      "id": "stateOrTerritory",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "disabled": true,
+        "label": "State or Territory",
+        "hint": "Auto-populates from your account profile."
+      }
+    },
+    {
+      "id": "reportPeriod",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "disabled": true,
+        "label": "Reporting Period",
+        "hint": "Auto-populates from your last approved Work Plan."
+      }
+    },
+    {
+      "id": "finalSar",
+      "type": "radio",
+      "validation": "radio",
+      "props": {
+        "label": "Is this your state/territory’s final SAR for your period of performance in the MFP demonstration?",
+        "choices": [
+          {
+            "id": "nrRmirBoVQv0ysWnEejNZD",
+            "label": "Yes"
+          },
+          {
+            "id": "ekP9iVvuQE9AALchScDzoD",
+            "label": "No"
+          }
+        ]
       }
     }
   ]

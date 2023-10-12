@@ -14,10 +14,143 @@
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "",
-          "hint": "",
-          "exportSection": ""
+          "subsection": "General Information",
+          "hint": ""
         }
+      },
+      "form": {
+        "id": "ga",
+        "fields": [
+          {
+            "id": "generalInformation_resubmissionInformation",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label": "Briefly describe the questions you plan to revise and the reason(s) for the revision(s):",
+              "heading": "Resubmission Information"
+            }
+          },
+          {
+            "id": "generalInformation_MfpOperatingOrganizationName",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "Name of MFP operating organization",
+              "heading": "Organization Information"
+            }
+          },
+          {
+            "id": "generalInformation_stateTerritoryMedicaidAgency",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "State or Territory Medicaid agency"
+            }
+          },
+          {
+            "id": "generalInformation_stateTerritoryMedicaidDirector",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "State or Territory Medicaid director"
+            }
+          },
+          {
+            "id": "generalInformation_mfpProgramPublicName",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "MFP program's public name"
+            }
+          },
+          {
+            "id": "generalInformation_mfpProgramWebsite",
+            "type": "text",
+            "validation": "url",
+            "props": {
+              "label": "MFP program's website"
+            }
+          },
+          {
+            "id": "generalInformation_aorName",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "AOR name",
+              "heading": "Authorized Organizational Representative (AOR)"
+            }
+          },
+          {
+            "id": "generalInformation_aorTitleAgency",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "AOR title/agency"
+            }
+          },
+          {
+            "id": "generalInformation_aorEmail",
+            "type": "text",
+            "validation": "email",
+            "props": {
+              "label": "AOR email"
+            }
+          },
+          {
+            "id": "generalInformation_hasAorChangedSinceLastReport",
+            "type": "radio",
+            "validation": {
+              "type": "radio"
+            },
+            "props": {
+              "label": "Has the AOR changed since last report?",
+              "choices": [
+                {
+                  "id": "2Vff8CQXa1Z82GAXK85KI1nG",
+                  "label": "Yes"
+                },
+                {
+                  "id": "2VffASWS2XRfAlc3uLzxCVAC",
+                  "label": "No"
+                }
+              ]
+            }
+          },
+          {
+            "id": "generalInformation_projectDirectorName",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "Project director name",
+              "heading": "Project Director"
+            }
+          },
+          {
+            "id": "generalInformation_projectDirectorTitle",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "Project director title"
+            }
+          },
+          {
+            "id": "generalInformation_projectDirectorEmail",
+            "type": "text",
+            "validation": "email",
+            "props": {
+              "label": "Project director email"
+            }
+          },
+          {
+            "id": "generalInformation_cmsProjectOfficerName",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "CMS project officer name",
+              "heading": "CMS Project Officer"
+            }
+          }
+        ]
       }
     },
     {
@@ -30,9 +163,58 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
-            }
+              "section": "Recruitment, Enrollment, and Transitions",
+              "subsection": "Number of people who signed an MFP informed consent form in the reporting period",
+              "hint": "In this section, provide information for the specified period.",
+              "info": [
+                {
+                  "type": "h3",
+                  "content": "Number of people who signed an MFP informed consent form in the {January 1 to June 30, 2023} reporting period"
+                },
+                {
+                  "type": "span",
+                  "content": "Number of institutional residents who have signed an informed consent form indicating their desire to transition to the community and enroll in the state's MFP program."
+                }
+              ]
+            },
+            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "ret-psmicf",
+            "fields": [
+              {
+                "id": "ret_numberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults"
+                }
+              },
+              {
+                "id": "ret_numberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_numberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_numberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              }
+            ]
           }
         },
         {
@@ -41,9 +223,92 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
-            }
+              "section": "Recruitment, Enrollment, and Transitions",
+              "subsection": "Number of MFP transitions in the reporting period",
+              "hint": "In this section, provide information for the specified period.",
+              "info": [
+                {
+                  "type": "h3",
+                  "content": "Number of MFP transitions in the {January 1 to June 30, 2023} reporting period"
+                },
+                {
+                  "type": "span",
+                  "content": "Number of institutional residents who were discharged from an institution to a qualified residence during the reporting period, enrolled in MFP, and began using Medicaid home and community-based services (HCBS)."
+                }
+              ]
+            },
+            "reviewPdfHint": "To view totals and transition targets from your associated MFP Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "ret-mtrp",
+            "fields": [
+              {
+                "id": "ret_firstQuarterNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "{First quarter (Jan 1 - Mar 31)}"
+                }
+              },
+              {
+                "id": "ret_firstQuarterNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_firstQuarterNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_firstQuarterNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_secondQuarterNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "{Second quarter (Apr 1 - June 30)}"
+                }
+              },
+              {
+                "id": "ret_secondQuarterNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_secondQuarterNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_secondQuarterNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              }
+            ]
           }
         },
         {
@@ -52,9 +317,191 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
-            }
+              "section": "Recruitment, Enrollment, and Transitions",
+              "subsection": "Number of MFP transitions from qualified institutions",
+              "hint": "In this section, provide information for the specified period.",
+              "info": [
+                {
+                  "type": "h3",
+                  "content": "Number of MFP transitions from qualified institutions in the {January 1 to June 30, 2023} reporting period"
+                },
+                {
+                  "type": "span",
+                  "content": "Of the total transitions reported in <i>Number of MFP transitions</i>, provide the number of transitions from each qualified inpatient facility type during the reporting period."
+                }
+              ]
+            },
+            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "ret-mtfqi",
+            "fields": [
+              {
+                "id": "ret_nursingFacilityNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Nursing facility"
+                }
+              },
+              {
+                "id": "ret_nursingFacilityNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_nursingFacilityNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_nursingFacilityNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_icfIIDNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Intermediate care facility for individuals with intellectual disabilities (ICF/IID)"
+                }
+              },
+              {
+                "id": "ret_icfIIDNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_icfIIDNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_icfIIDNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_imdNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Institution for mental diseases (IMD)"
+                }
+              },
+              {
+                "id": "ret_imdNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_imdNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_imdNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_hospitalNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Hospital"
+                }
+              },
+              {
+                "id": "ret_hospitalNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_hospitalNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_hospitalNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_otherNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Other"
+                }
+              },
+              {
+                "id": "ret_otherNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_otherNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_otherNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              }
+            ]
           }
         },
         {
@@ -63,9 +510,158 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
-            }
+              "section": "Recruitment, Enrollment, and Transitions",
+              "subsection": "Number of MFP transitions to qualified residences",
+              "hint": "In this section, provide information for the specified period.",
+              "info": [
+                {
+                  "type": "h3",
+                  "content": "Number of MFP transitions to qualified residences in the {January 1 to June 30, 2023} reporting period"
+                },
+                {
+                  "type": "span",
+                  "content": "Of the total transitions reported in <i>Number of MFP transitions</i>, provide the number of transitions to each qualified residence type during the reporting period."
+                }
+              ]
+            },
+            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "ret-mtfqr",
+            "fields": [
+              {
+                "id": "ret_homeNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Home (owned or leased by individual or family)"
+                }
+              },
+              {
+                "id": "ret_homeNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_homeNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_homeNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_apartmentNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Apartment (individual lease, lockable access, etc.)"
+                }
+              },
+              {
+                "id": "ret_apartmentNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_apartmentNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_apartmentNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_groupHomeNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Group home or other residence in which four or fewer unrelated individuals live"
+                }
+              },
+              {
+                "id": "ret_groupHomeNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_groupHomeNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_groupHomeNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_apartmentQualifiedAssistedLivingNumberOfOlderAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Apartment in qualified assisted living"
+                }
+              },
+              {
+                "id": "ret_apartmentQualifiedAssistedLivingNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_apartmentQualifiedAssistedLivingNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_apartmentQualifiedAssistedLivingNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              }
+            ]
           }
         },
         {
@@ -74,9 +670,59 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
-            }
+              "section": "Recruitment, Enrollment, and Transitions",
+              "subsection": "Total number of active MFP participants in the reporting period",
+              "hint": "In this section, provide information for the specified period.",
+              "info": [
+                {
+                  "type": "h3",
+                  "content": "Total number of active MFP participants in the {January 1 to June 30, 2023} reporting period"
+                },
+                {
+                  "type": "span",
+                  "content": "Current MFP participants excludes individuals whose enrollment in the MFP Demonstration ended because they completed their 365 days of MFP eligibility, died before they exhausted their 365-day enrollment period, were institutionalized for 30 days or more and did not subsequently re-enroll in the MFP program, or otherwise disenrolled from the program."
+                }
+              ]
+            },
+            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "ret-tnamprp",
+            "fields": [
+              {
+                "id": "ret_totalActiveNumberOfAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Current reporting period {(January 1-June 30)}"
+                }
+              },
+              {
+                "id": "ret_totalActiveNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_totalActiveNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_totalActiveNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              }
+            ]
           }
         },
         {
@@ -85,9 +731,59 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
-            }
+              "section": "Recruitment, Enrollment, and Transitions",
+              "subsection": "Number of MFP participants completing the program in the reporting period",
+              "hint": "In this section, provide information for the specified period.",
+              "info": [
+                {
+                  "type": "h3",
+                  "content": "Number of MFP participants completing the program in the {January 1 to June 30, 2023} reporting period"
+                },
+                {
+                  "type": "span",
+                  "content": "Number of MFP participants who completed the 365-day enrollment period during the reporting period"
+                }
+              ]
+            },
+            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "ret-nmpcprp",
+            "fields": [
+              {
+                "id": "ret_completingProgramNumberOfAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Current reporting period {(January 1-June 30)}"
+                }
+              },
+              {
+                "id": "ret_completingProgramNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_completingProgramNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_completingProgramNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              }
+            ]
           }
         },
         {
@@ -96,9 +792,59 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
-            }
+              "section": "Recruitment, Enrollment, and Transitions",
+              "subsection": "Number of people re-enrolled in MFP during the reporting period",
+              "hint": "In this section, provide information for the specified period.",
+              "info": [
+                {
+                  "type": "h3",
+                  "content": "Number of people re-enrolled in MFP during the {January 1 to June 30, 2023} reporting period"
+                },
+                {
+                  "type": "span",
+                  "content": "Number of people who were disenrolled from the MFP program at any point (during this reporting period or a prior period) and re-enrolled during this reporting period."
+                }
+              ]
+            },
+            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "ret-npremrp",
+            "fields": [
+              {
+                "id": "ret_reEnrolledNumberOfAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Current reporting period {(January 1-June 30)}"
+                }
+              },
+              {
+                "id": "ret_reEnrolledProgramNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_reEnrolledProgramNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_reEnrolledProgramNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              }
+            ]
           }
         },
         {
@@ -107,9 +853,436 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
-            }
+              "section": "Recruitment, Enrollment, and Transitions",
+              "subsection": "Number of MFP participants disenrolled from the program during the reporting period",
+              "hint": "In this section, provide information for the specified period.",
+              "info": [
+                {
+                  "type": "h3",
+                  "content": "Number of MFP participants disenrolled from the program during the {January 1 to June 30, 2023} reporting period"
+                },
+                {
+                  "type": "span",
+                  "content": "Number of MFP participants who were disenrolled from the program because of re-institutionalization (admission to an inpatient facility, such as a hospital, nursing home, ICF/IID, or IMD); death; voluntary disenrollment; or any other cause."
+                }
+              ]
+            },
+            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "ret-mpdprp",
+            "fields": [
+              {
+                "id": "ret_reinstitutionalizationNumberOfAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Re-institutionalization"
+                }
+              },
+              {
+                "id": "ret_reinstitutionalizationNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_reinstitutionalizationNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_reinstitutionalizationNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_deathNumberOfAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Death"
+                }
+              },
+              {
+                "id": "ret_deathNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_deathNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_deathNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_voluntaryDisenrollmentNumberOfAdults",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of Older Adults",
+                  "heading": "Voluntary disenrollment"
+                }
+              },
+              {
+                "id": "ret_voluntaryDisenrollmentNumberOfPD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of PD"
+                }
+              },
+              {
+                "id": "ret_voluntaryDisenrollmentNumberOfIDD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of I/DD"
+                }
+              },
+              {
+                "id": "ret_voluntaryDisenrollmentNumberOfMHSUD",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Number of MH/SUD"
+                }
+              },
+              {
+                "id": "ret_otherReasons",
+                "type": "checkbox",
+                "validation": "checkbox",
+                "props": {
+                  "label": "Other reasons",
+                  "hint": "Check all that apply.",
+                  "heading": "Other",
+                  "choices": [
+                    {
+                      "id": "2VffASWS2XRfAlc3uLzxCVAC",
+                      "label": "Moved out of MFP jurisdiction/state/territory",
+                      "children": [
+                        {
+                          "id": "otherReasons_movedOutNumberOfOlderAdults",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
+                          },
+                          "props": {
+                            "label": "Number of Older Adults"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_movedOutNumberOfPD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
+                          },
+                          "props": {
+                            "label": "Number of PD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_movedOutNumberOfIDD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
+                          },
+                          "props": {
+                            "label": "Number of I/DD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_movedOutNumberOfMHSUD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
+                          },
+                          "props": {
+                            "label": "Number of MH/SUD"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "2Vfpwkq10cDgpGxiAkeZTIMC",
+                      "label": "Improved health",
+                      "children": [
+                        {
+                          "id": "otherReasons_improvedHealthNumberOfOlderAdults",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
+                          },
+                          "props": {
+                            "label": "Number of Older Adults"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_improvedHealthNumberOfPD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
+                          },
+                          "props": {
+                            "label": "Number of PD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_improvedHealthNumberOfIDD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
+                          },
+                          "props": {
+                            "label": "Number of I/DD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_improvedHealthNumberOfMHSUD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
+                          },
+                          "props": {
+                            "label": "Number of MH/SUD"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "2VfqAGi1lgxX3uXc98cl6q4u",
+                      "label": "Incarceration",
+                      "children": [
+                        {
+                          "id": "otherReasons_incarcerationNumberOfOlderAdults",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
+                          },
+                          "props": {
+                            "label": "Number of Older Adults"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_incarcerationNumberOfPD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
+                          },
+                          "props": {
+                            "label": "Number of PD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_incarcerationNumberOfIDD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
+                          },
+                          "props": {
+                            "label": "Number of I/DD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_incarcerationNumberOfMHSUD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
+                          },
+                          "props": {
+                            "label": "Number of MH/SUD"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "2VfqSwWMAr9xOE2zOhpLHtYQ",
+                      "label": "Move to an unqualified setting",
+                      "children": [
+                        {
+                          "id": "otherReasons_unqualifiedSettingNumberOfOlderAdults",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
+                          },
+                          "props": {
+                            "label": "Number of Older Adults"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_unqualifiedSettingNumberOfPD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
+                          },
+                          "props": {
+                            "label": "Number of PD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_unqualifiedSettingNumberOfIDD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
+                          },
+                          "props": {
+                            "label": "Number of I/DD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_unqualifiedSettingNumberOfMHSUD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
+                          },
+                          "props": {
+                            "label": "Number of MH/SUD"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "2Vfqd9gpWs2J3Wef5CAuqGx9",
+                      "label": "Other, specify",
+                      "children": [
+                        {
+                          "id": "otherReasons-otherText",
+                          "type": "text",
+                          "validation": {
+                            "type": "text",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_otherNumberOfOlderAdults",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
+                          },
+                          "props": {
+                            "label": "Number of Older Adults"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_otherNumberOfPD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
+                          },
+                          "props": {
+                            "label": "Number of PD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_otherNumberOfIDD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
+                          },
+                          "props": {
+                            "label": "Number of I/DD"
+                          }
+                        },
+                        {
+                          "id": "otherReasons_otherNumberOfMHSUD",
+                          "type": "number",
+                          "validation": {
+                            "type": "number",
+                            "nested": true,
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
+                          },
+                          "props": {
+                            "label": "Number of MH/SUD"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -118,9 +1291,137 @@
           "pageType": "standard",
           "verbiage": {
             "intro": {
-              "section": "",
-              "subsection": ""
-            }
+              "section": "Recruitment, Enrollment, and Transitions",
+              "subsection": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group",
+              "hint": "In this section, provide information for the specified period.",
+              "info": [
+                {
+                  "type": "h3",
+                  "content": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group {July 1 to December 31} reporting period"
+                },
+                {
+                  "type": "span",
+                  "content": "Inpatient facilities include hospitals, nursing homes, ICF/IID, or IMDs. Provide data for readmissions occurring between July 31 of the current reporting period and August 1 of the prior year."
+                }
+              ]
+            },
+            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "ret-hcbs",
+            "fields": [
+              {
+                "id": "ret_shortTermStayAges18to64",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 18-64",
+                  "styleAsOptional": true,
+                  "heading": "Short-term stay: 1 to 20 days"
+                }
+              },
+              {
+                "id": "ret_shortTermStayAges65to74",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 65-74",
+                  "styleAsOptional": true
+                }
+              },
+              {
+                "id": "ret_shortTermStayAges75to84",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 75-84",
+                  "styleAsOptional": true
+                }
+              },
+              {
+                "id": "ret_shortTermStayAges85AndOlder",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 85 and older",
+                  "styleAsOptional": true
+                }
+              },
+              {
+                "id": "ret_mediumTermStayAges18to64",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 18-64",
+                  "styleAsOptional": true,
+                  "heading": "Medium-term stay: 21-100 days"
+                }
+              },
+              {
+                "id": "ret_mediumTermStayAges65to74",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 65-74",
+                  "styleAsOptional": true
+                }
+              },
+              {
+                "id": "ret_mediumTermStayAges75to84",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 75-84",
+                  "styleAsOptional": true
+                }
+              },
+              {
+                "id": "ret_mediumTermStayAges85AndOlder",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 85 and older",
+                  "styleAsOptional": true
+                }
+              },
+              {
+                "id": "ret_longTermStayAges18to64",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 18-64",
+                  "styleAsOptional": true,
+                  "heading": "Long-term stay: 101 days or more"
+                }
+              },
+              {
+                "id": "ret_longTermStayAges65to74",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 65-74",
+                  "styleAsOptional": true
+                }
+              },
+              {
+                "id": "ret_longTermStayAges75to84",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 75-84",
+                  "styleAsOptional": true
+                }
+              },
+              {
+                "id": "ret_longTermStayAges85AndOlder",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Ages 85 and older",
+                  "styleAsOptional": true
+                }
+              }
+            ]
           }
         }
       ]
@@ -128,15 +1429,291 @@
     {
       "name": "State- or Territory-Specific Initiatives",
       "path": "/sar/state-or-territory-specific-initiatives",
-      "pageType": "standard",
+      "pageType": "modalOverlay",
+      "entityType": "initiative",
+      "entityInfo": ["initiative_name", "initiative_wpTopic"],
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "",
-          "hint": "",
-          "exportSection": ""
+          "subsection": "State- or Territory-Specific Initiatives",
+          "accordion": {
+            "buttonLabel": "Instructions",
+            "info": [
+              {
+                "type": "span",
+                "content": "This section requests information on current, new, or expanded initiatives implemented under the MFP demonstration. These initiatives can be funded using one or more of these funding sources:"
+              },
+              {
+                "type": "ul",
+                "children": [
+                  {
+                    "type": "li",
+                    "content": "MFP cooperative agreement funds for:",
+                    "children": [
+                      {
+                        "type": "li",
+                        "content": "Qualified HCBS and demonstration services"
+                      },
+                      {
+                        "type": "li",
+                        "content": "Supplemental services"
+                      },
+                      {
+                        "type": "li",
+                        "content": "Administrative activities"
+                      },
+                      {
+                        "type": "li",
+                        "content": "Capacity building initiatives"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "li",
+                    "content": "State/Territory equivalent funds attributable to the MFP-enhanced match"
+                  }
+                ]
+              },
+              {
+                "type": "p",
+                "content": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports (LTSS). These initiatives are specified in your MFP Work Plan and imported into the form below."
+              },
+              {
+                "type": "p",
+                "content": "Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period."
+              },
+              {
+                "type": "p",
+                "content": "For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress towards these objectives indicates the state or territory's greater ability to provide HCBS instead of services in institutional settings. If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them."
+              }
+            ]
+          }
+        },
+        "enterEntityDetailsButtonText": "Edit",
+        "dashboardTitle": "Report progress for each initiative",
+        "dashboardSubtitle": "Initiatives and Work Plan topics are auto-populated from your most recent approved Work Plan.",
+        "tableHeader": "Initiative name <br/> Work Plan topic",
+        "countEntitiesInTitle": false
+      },
+      "dashboard": {
+        "name": "Intitiative Details Dashboard",
+        "pageType": "entityDetailsDashboardOverlay",
+        "verbiage": {
+          "intro": {
+            "section": "State- or Territory-Specific Initiatives",
+            "info": [
+              {
+                "type": "span",
+                "content": "Complete each of the 3 steps for this initiative to report progress for this reporting period."
+              }
+            ]
+          }
         }
-      }
+      },
+      "modalForm": {
+        "id": "",
+        "fields": []
+      },
+      "entitySteps": [
+        {
+          "name": "Objectives progress",
+          "pageType": "modalOverlay",
+          "entityType": "initiative",
+          "stepType": "objectivesProgress",
+          "stepInfo": ["name", "hint"],
+          "hint": "Report progress for each objective",
+          "isRequired": true,
+          "verbiage": {
+            "intro": {
+              "section": "Objectives progress",
+              "subsection": "Report progress for each objective by selecting the button for each."
+            },
+            "enterEntityDetailsButtonText": "Report objective progress",
+            "modalTitle": "Report progress for ",
+            "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab."
+          },
+          "modalForm": {
+            "id": "stsiop-modal",
+            "fields": [
+              {
+                "id": "objectivesProgress_performanceMeasuresIndicators",
+                "type": "textarea",
+                "validation": "text",
+                "props": {
+                  "label": "Provide data on performance measures or indicators used for monitoring progress toward the objective during the current reporting period. Include progress toward milestones and key deliverables."
+                }
+              },
+              {
+                "id": "objectivesProgress_deliverablesMet",
+                "type": "radio",
+                "validation": "radio",
+                "props": {
+                  "label": "Were targets for performance measures and/or expected time frames for deliverables met?"
+                },
+                "choices": [
+                  {
+                    "id": "2WaO1Jj3pyUN0j9KjeOqR",
+                    "label": "Yes"
+                  },
+                  {
+                    "id": "2WaO1K5umgZcZV4bAW5sPu",
+                    "label": "No",
+                    "children": [
+                      {
+                        "id": "objectivesProgress_deliverablesMet-otherText",
+                        "type": "textarea",
+                        "validation": {
+                          "type": "text",
+                          "parentFieldName": "objectivesProgress_deliverablesMet",
+                          "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
+                          "nested": true
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Initiative progress",
+          "pageType": "entityOverlay",
+          "entityType": "initiative",
+          "stepType": "initiativeProgress",
+          "stepInfo": ["name", "hint"],
+          "hint": "Report overall progress for the initiative",
+          "isRequired": true,
+          "verbiage": {
+            "intro": {
+              "section": "Initiative progress",
+              "subsection": "Report progress for this initiative during this reporting period."
+            },
+            "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "stsiip",
+            "fields": [
+              {
+                "id": "initiativeProgress_describeProgress",
+                "type": "textarea",
+                "validation": "text",
+                "props": {
+                  "label": "Describe any progress made under this initiative during the reporting period not otherwise mentioned under the objective(s)."
+                }
+              },
+              {
+                "id": "initiativeProgress_describeIssuesChallenges",
+                "type": "textarea",
+                "validation": "text",
+                "props": {
+                  "label": "Describe any issues or challenges that have impacted the development and implementation of the initiative during the reporting period that are not otherwise mentioned under the objective(s).",
+                  "hint": "Detail what impact such issues may have on the state or territory's ability to provide HCBS rather than institutional services, and describe how you plan to address these issues."
+                }
+              },
+              {
+                "id": "initiativeProgress_describeCollaborationsWithExternalParties",
+                "type": "textarea",
+                "validation": "text",
+                "props": {
+                  "label": "List and describe any collaborations you have with any external parties to run the initiative tasks or to achieve initiative goals."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Expenditures",
+          "pageType": "entityOverlay",
+          "entityType": "initiative",
+          "stepType": "expenditures",
+          "stepInfo": ["name", "hint"],
+          "hint": "Report actual quarterly expenditures by funding source",
+          "isRequired": true,
+          "verbiage": {
+            "intro": {
+              "section": "Expenditures",
+              "subsection": "Initiative expenditures by quarter and funding source. Funding sources and projected spending are auto-populated from your associated Work Plan."
+            },
+            "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+          },
+          "form": {
+            "id": "stsie",
+            "fields": [
+              {
+                "id": "expenditures_actualSpendingQ1",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Actual spending (first quarter: January 1 - March 31)",
+                  "heading": "{Funding source}",
+                  "subheading": "This funding source auto-populates from Work Plan."
+                }
+              },
+              {
+                "id": "expenditures_projectedSpendingQ1",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Projected spending (first quarter: January 1 - March 31)",
+                  "hint": "Auto-populates from Work Plan.",
+                  "disabled": true
+                }
+              },
+              {
+                "id": "expenditures_actualSpendingQ2",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Actual spending (second quarter: April 1 - June 30)",
+                  "heading": "{Funding source}",
+                  "subheading": "This funding source auto-populates from Work Plan."
+                }
+              },
+              {
+                "id": "expenditures_projectedSpendingQ2",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Projected spending (second quarter: April 1 - June 30)",
+                  "hint": "Auto-populates from Work Plan.",
+                  "disabled": true
+                }
+              },
+              {
+                "id": "expenditures_onTrackToFullExpendFunds",
+                "type": "radio",
+                "validation": "radio",
+                "choices": [
+                  {
+                    "id": "2WaUKOjwgUvHO6CMAqE8aOC",
+                    "label": "Yes"
+                  },
+                  {
+                    "id": "2WaUKNbCmetqXVFsKnaHqeK",
+                    "label": "No",
+                    "children": [
+                      {
+                        "id": "expenditures_onTrackToFullExpendFunds-otherText",
+                        "type": "textarea",
+                        "validation": {
+                          "type": "text",
+                          "parentFieldName": "expenditures_onTrackToFullExpendFunds",
+                          "parentOptionId": "2WaUKNbCmetqXVFsKnaHqeK",
+                          "nested": true
+                        },
+                        "props": {
+                          "label": "Briefly explain what has contributed to lower than projected expenditures (e.g., challenges with hiring, delays in start-up) and describe your revised time frame for fully expending awarded funds."
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "Organization & Administration",
@@ -145,10 +1722,153 @@
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "",
-          "hint": "",
-          "exportSection": ""
+          "subsection": "Organization & Administration"
         }
+      },
+      "form": {
+        "id": "oa",
+        "fields": [
+          {
+            "id": "oa_changesOrganizationAdministration",
+            "type": "radio",
+            "validation": "radio",
+            "props": {
+              "label": "Were there any changes in the organization or administration of the MFP program during this reporting period? For example, did your Medicaid agency undergo a reorganization that altered the reporting relationship of the MFP Project Director?",
+              "choices": [
+                {
+                  "id": "2VfuG3SVaUXHaKZWzucYU6jt",
+                  "label": "No"
+                },
+                {
+                  "id": "2VfuG4GRc4ApcknSSgbMvvHg",
+                  "label": "Yes",
+                  "children": [
+                    {
+                      "id": "oa_describeOAChanges",
+                      "type": "textarea",
+                      "validation": {
+                        "type": "text",
+                        "nested": true,
+                        "parentFieldName": "oa_changesOrganizationAdministration",
+                        "parentOptionId": "2VfuG4GRc4ApcknSSgbMvvHg"
+                      },
+                      "props": {
+                        "label": "Describe the changes."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "oa_projectDirectorEmployment",
+            "type": "radio",
+            "validation": "radio",
+            "props": {
+              "label": "Is the Project Director an employee of the recipient agency or state/territory Medicaid agency?",
+              "choices": [
+                {
+                  "id": "2VfuG2OUicDROyaE5RmbtqWM",
+                  "label": "No",
+                  "children": [
+                    {
+                      "id": "oa_provideNameOfEmployerAndReportingRelationship",
+                      "type": "textarea",
+                      "validation": {
+                        "type": "text",
+                        "nested": true,
+                        "parentFieldName": "oa_projectDirectorEmployment",
+                        "parentOptionId": "2VfuG2OUicDROyaE5RmbtqWM"
+                      },
+                      "props": {
+                        "label": "Provide the name of the employer and the reporting relationship with the recipient agency."
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "2VfuG52IEKt1Fft6cz4jgi68",
+                  "label": "Yes"
+                }
+              ]
+            }
+          },
+          {
+            "id": "oa_hiringRetentionChallengesMfpStaff",
+            "type": "radio",
+            "validation": "radio",
+            "props": {
+              "label": "Are there hiring or retention challenges for MFP staff, including the MFP Project Director and MFP Data and Quality Analyst?",
+              "choices": [
+                {
+                  "id": "2VfuyVPFCc95OFfbF9tEKjzn",
+                  "label": "No"
+                },
+                {
+                  "id": "2VfuyVGyPc6ePgAicM69ayDqTpX",
+                  "label": "Yes",
+                  "children": [
+                    {
+                      "id": "oa_describeHiringRetentionChallenges",
+                      "type": "textarea",
+                      "validation": {
+                        "type": "text",
+                        "nested": true,
+                        "parentFieldName": "oa_hiringRetentionChallengesMfpStaff",
+                        "parentOptionId": "2VfuyVGyPc6ePgAicM69ayDqTpX"
+                      },
+                      "props": {
+                        "label": "Describe the challenges."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "oa_describeTechnicalAssitanceActivities",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label": "Describe the technical assistance activities MFP staff have engaged in during the reporting period (e.g., participation in a learning collaborative or other training session)."
+            }
+          },
+          {
+            "id": "oa_additionalTechnicalResourcesSupports",
+            "type": "radio",
+            "validation": "radio",
+            "props": {
+              "label": "Are there additional technical assistance resources or supports that your state or territory would benefit from?",
+              "choices": [
+                {
+                  "id": "2VfvDUpKJRmrBrqHpy77oHAi",
+                  "label": "No"
+                },
+                {
+                  "id": "2VfvDSkVxhYZwQ8AMXqR5QX8",
+                  "label": "Yes",
+                  "children": [
+                    {
+                      "id": "oa_describeAdditionalTechnicalResourcesSupports",
+                      "type": "textarea",
+                      "validation": {
+                        "type": "text",
+                        "nested": true,
+                        "parentFieldName": "oa_additionalTechnicalResourcesSupports",
+                        "parentOptionId": "2VfvDSkVxhYZwQ8AMXqR5QX8"
+                      },
+                      "props": {
+                        "label": "Describe additional technical resources or supports."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
       }
     },
     {
@@ -158,10 +1878,150 @@
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "",
-          "hint": "",
-          "exportSection": ""
+          "subsection": "Additional Achievements",
+          "hint": "Use this section to describe any additional achievements or promising practices that have contributed to the effective operation of the demonstration and successful transitions during the reporting period. Achievements or topics discussed in previous sections do not need to be reiterated here. Use the topics below as a guide, but note other important updates.",
+          "info": [
+            {
+              "type": "ul",
+              "props": {
+                "style": {
+                  "columns": "2",
+                  "paddingLeft": "1rem",
+                  "color": "#5A5A5A",
+                  "li::before": {
+                    "color": "#5A5A5A"
+                  }
+                }
+              },
+              "children": [
+                {
+                  "type": "li",
+                  "content": "Person-centered planning and services"
+                },
+                {
+                  "type": "li",
+                  "content": "No Wrong Door systems"
+                },
+                {
+                  "type": "li",
+                  "content": "Community transition support"
+                },
+                {
+                  "type": "li",
+                  "content": "Direct service workforce and caregivers"
+                },
+                {
+                  "type": "li",
+                  "content": "Housing to support community-based living options"
+                },
+                {
+                  "type": "li",
+                  "content": "Employment support"
+                },
+                {
+                  "type": "li",
+                  "content": "Convenient and accessible transportation options",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Data-based decision-making",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Financing approaches",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Stakeholder agreement",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Quality measurement and improvement",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                },
+                {
+                  "type": "li",
+                  "content": "Equity and social determinants of health",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
+      },
+      "form": {
+        "id": "aa",
+        "fields": [
+          {
+            "id": "aa_notableAchievementsPromisingPractices",
+            "type": "textarea",
+            "validation": "text",
+            "props": {
+              "label": "Describe any notable achievements and identify any promising practices by your MFP program that have not been captured elsewhere."
+            }
+          },
+          {
+            "id": "aa_changesMfpProgramAdministration",
+            "type": "radio",
+            "validation": "radio",
+            "props": {
+              "label": "Indicate whether your state or territory has made any changes to operations, objectives, or other aspects of MFP program administration that will require amendments to the Operational Protocol.",
+              "choices": [
+                {
+                  "id": "2Vfw3b0V0urpvwAz9Fnqafb1",
+                  "label": "No"
+                },
+                {
+                  "id": "2Vfw3X48qEyKOAxXt7HPlMMg",
+                  "label": "Yes",
+                  "children": [
+                    {
+                      "id": "oa_describeDevelopmentsChanges",
+                      "type": "textarea",
+                      "validation": {
+                        "type": "text",
+                        "nested": true,
+                        "parentFieldName": "aa_changesMfpProgramAdministration",
+                        "parentOptionId": "2Vfw3X48qEyKOAxXt7HPlMMg"
+                      },
+                      "props": {
+                        "label": "Describe the developments or changes."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
       }
     },
     {

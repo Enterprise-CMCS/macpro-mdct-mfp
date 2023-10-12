@@ -142,18 +142,6 @@ export const checkDateRangeStatus = (
 };
 
 /*
- * Calculates the period given a due date.
- * The periods are defined as follows:
- *     Period 1 is from 01/01 to 06/30.
- *     Period 2 is from 07/01 to 12/31.
- */
-export const calculatePeriod = (dueDate: string) => {
-  const dueDateAsDate = new Date(dueDate);
-  const period = Math.ceil((dueDateAsDate.getMonth() + 1) / 6);
-  return period.toString();
-};
-
-/*
  * Converts a date string to UTC + 180 days
  * returns -> UTC datetime in format 'ms since Unix epoch'
  * Ex: 6/30/22 Becomes 1483603200000
