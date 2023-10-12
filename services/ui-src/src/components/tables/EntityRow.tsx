@@ -1,19 +1,25 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
 import { EntityStatusIcon } from "components";
 // types
-import { AnyObject, EntityShape, ModalDrawerEntityTypes } from "types";
+import {
+  AnyObject,
+  EntityShape,
+  ModalDrawerEntityTypes,
+  ReportShape,
+} from "types";
 // utils
 import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
-import { getEntityStatus } from "./getEntityStatus";
+import { getEntityStatus, getInitiativeStatus } from "./getEntityStatus";
 
 export const EntityRow = ({
   entity,
   entityInfo,
   entityType,
+  formEntity,
   verbiage,
   locked,
   openAddEditEntityModal,
@@ -26,18 +32,21 @@ export const EntityRow = ({
   // check for "other" target population entities
   const { isRequired } = entity;
 
-  let entityCompleted = false;
-  switch (entityType) {
-    case ModalDrawerEntityTypes.TARGET_POPULATIONS:
-      entityCompleted =
-        !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
-      break;
-    default:
-      entityCompleted = useMemo(() => {
+  const setStatusByType = (entityType: string) => {
+    switch (entityType) {
+      case ModalDrawerEntityTypes.TARGET_POPULATIONS:
+        return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
+      case "initiative":
+        return report ? !!getInitiativeStatus(formEntity!, entity) : false;
+      default: {
         return report ? !!getEntityStatus(report, entity) : false;
-      }, [report]);
-      break;
-  }
+      }
+    }
+  };
+
+  let entityCompleted = useMemo(() => {
+    return setStatusByType(entityType!);
+  }, [report, entity]);
 
   let programInfo = [];
   if (entityInfo) {
@@ -104,6 +113,7 @@ export const EntityRow = ({
 interface Props {
   entity: EntityShape;
   entityType?: string;
+  formEntity?: ReportShape;
   verbiage: AnyObject;
   openAddEditEntityModal: Function;
   openDeleteEntityModal: Function;

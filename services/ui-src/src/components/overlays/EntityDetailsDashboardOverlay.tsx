@@ -65,7 +65,7 @@ export const EntityDetailsDashboardOverlay = ({
     return { headRow: ["", "", ""] };
   };
 
-  //EntityRow uses the fieldData to generate but for this report, we want that information from the steps in the formTemplate
+  //EntityRow uses the fieldData to generate, but for this report, we want that information from the steps in the formTemplate
   const formatEntityStep = (entity: EntityShape, step: any) => {
     const newEntity: EntityShape = Object.assign({}, entity);
 
@@ -93,6 +93,7 @@ export const EntityDetailsDashboardOverlay = ({
           <EntityProvider>
             <EntityDetailsOverlay
               entity={selectedEntity!}
+              entityType={entityType!}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as EntityDetailsOverlayShape}
             />
@@ -124,9 +125,10 @@ export const EntityDetailsDashboardOverlay = ({
               <EntityRow
                 key={step.id}
                 entity={formatEntityStep(selectedEntity!, step)}
-                entityType={step}
+                entityType={step.entityType}
                 entityInfo={step.stepInfo}
                 verbiage={step.verbiage}
+                formEntity={step}
                 locked={false}
                 openDrawer={() => openEntityStepOverlay(step)}
                 openAddEditEntityModal={() => {
