@@ -230,7 +230,6 @@ export const dateFormatRegex =
 
 // SCHEMA MAP
 export const schemaMap: any = {
-  boolean: boolean(),
   checkbox: checkbox(),
   checkboxOptional: checkboxOptional(),
   checkboxSingle: checkboxSingle(),
