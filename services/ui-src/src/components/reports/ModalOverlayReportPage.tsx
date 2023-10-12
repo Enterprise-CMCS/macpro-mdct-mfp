@@ -22,6 +22,7 @@ import {
   isFieldElement,
   ModalOverlayReportPageShape,
   ReportStatus,
+  EntityDetailsDashboardOverlayShape,
 } from "types";
 // utils
 import {
@@ -48,7 +49,14 @@ export const ModalOverlayReportPage = ({
   validateOnRender,
 }: Props) => {
   // Route Information
-  const { entityType, verbiage, modalForm, overlayForm, entityInfo } = route;
+  const {
+    entityType,
+    verbiage,
+    modalForm,
+    overlayForm,
+    dashboard,
+    entityInfo,
+  } = route;
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
   const { report } = useStore();
@@ -65,9 +73,11 @@ export const ModalOverlayReportPage = ({
 
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
+
   (reportFieldDataEntities as any[]).map(
     (entity) => (entity["isOtherEntity"] = true)
   );
+
   const showAlert =
     report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
@@ -181,26 +191,22 @@ export const ModalOverlayReportPage = ({
 
   return (
     <Box>
-      {overlayForm && isEntityDetailsOpen && currentEntity ? (
+      {dashboard && isEntityDetailsOpen && currentEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             entityType={entityType as EntityType}
-            entities={report?.fieldData[entityType]}
-            form={overlayForm}
-            onSubmit={onSubmit}
+            dashboard={dashboard}
             selectedEntity={currentEntity}
-            disabled={false}
+            onSubmit={onSubmit}
             submitting={submitting}
             validateOnRender={validateOnRender}
+            route={route as EntityDetailsDashboardOverlayShape}
           />
         </EntityProvider>
       ) : (
         <Box sx={sx.content}>
-          <ReportPageIntro
-            text={verbiage.intro}
-            reportType={report?.reportType}
-          />
+          <ReportPageIntro text={verbiage.intro} />
           {showAlert && (
             <Alert
               title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
@@ -215,10 +221,7 @@ export const ModalOverlayReportPage = ({
               {dashTitle}
             </Heading>
             {reportFieldDataEntities.length === 0 ? (
-              <>
-                <Box sx={sx.tableSeparator} />
-                <Box sx={sx.emptyDashboard}>{verbiage.emptyDashboardText}</Box>
-              </>
+              <Box>{verbiage.emptyDashboardText}</Box>
             ) : (
               <Table sx={sx.table} content={tableHeaders()}>
                 {reportFieldDataEntities.map((entity: EntityShape) => (
@@ -228,7 +231,7 @@ export const ModalOverlayReportPage = ({
                     entityInfo={entityInfo}
                     verbiage={verbiage}
                     locked={isLocked}
-                    openDrawer={openEntityDetailsOverlay}
+                    openOverlayOrDrawer={openEntityDetailsOverlay}
                     openAddEditEntityModal={openAddEditEntityModal}
                     openDeleteEntityModal={openDeleteEntityModal}
                   />
@@ -244,7 +247,7 @@ export const ModalOverlayReportPage = ({
               {verbiage.addEntityButtonText}
             </Button>
           </Box>
-
+          {/* Modals */}
           <AddEditEntityModal
             entityType={entityType}
             selectedEntity={currentEntity}
@@ -255,7 +258,6 @@ export const ModalOverlayReportPage = ({
               onClose: closeAddEditEntityModal,
             }}
           />
-
           <DeleteEntityModal
             entityType={entityType}
             selectedEntity={currentEntity}
@@ -265,7 +267,6 @@ export const ModalOverlayReportPage = ({
               onClose: closeDeleteEntityModal,
             }}
           />
-
           <ReportPageFooter />
         </Box>
       )}
@@ -293,15 +294,6 @@ const sx = {
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
-  },
-  emptyDashboard: {
-    paddingTop: "1rem",
-  },
-  tableSeparator: {
-    borderTop: "1px solid",
-    borderColor: "palette.gray_light",
-    paddingBottom: "1rem",
-    marginTop: "1.25rem",
   },
   table: {
     tableLayout: "fixed",

@@ -1,7 +1,27 @@
-import { EntityShape, OverlayModalEntityTypes, AnyObject } from "types";
+import { EntityShape, OverlayModalStepTypes, AnyObject } from "types";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
-  return entity?.[label].value;
+  const radioLabelValue = entity?.[label]?.[0].value;
+  return radioLabelValue !== "Other, specify"
+    ? radioLabelValue
+    : entity?.initiative_wp_otherTopic;
+};
+
+const getRepeatedField = (
+  entity: EntityShape | undefined,
+  repeatedKey: string
+) => {
+  const quarters = [];
+  if (entity) {
+    // for loop that grabs key and value of the object.entries(entity)
+    for (const [key, value] of Object.entries(entity)) {
+      if (key.includes(repeatedKey) && value) {
+        const id = key.replace(repeatedKey, "").split("Q");
+        quarters.push({ id: `${id[0]} Q${id[1]}`, value: value });
+      }
+    }
+  }
+  return quarters;
 };
 
 export const getFormattedEntityData = (
@@ -9,24 +29,23 @@ export const getFormattedEntityData = (
   entity?: EntityShape
 ) => {
   switch (entityType) {
-    case OverlayModalEntityTypes.EVALUATION_PLAN:
+    case OverlayModalStepTypes.EVALUATION_PLAN:
       return {
         objectiveName: entity?.evaluationPlan_objectiveName,
         description: entity?.evaluationPlan_description,
         targets: entity?.evaluationPlan_targets,
-        // TODO: add this functionality after guidance from BOs (per Design)
         includesTargets: getRadioValue(
           entity,
           "evaluationPlan_includesTargets"
         ),
+        quarters: getRepeatedField(entity, "quarterlyProjections"),
         additionalDetails: entity?.evaluationPlan_additionalDetails,
       };
-    case OverlayModalEntityTypes.FUNDING_SOURCES:
+    case OverlayModalStepTypes.FUNDING_SOURCES:
       return {
-        objectiveName: "{Funding Source}",
         id: entity?.id,
-        report_initiative: entity?.report_initiative,
-        quarters: entity?.quarters,
+        fundingSource: getRadioValue(entity, "fundingSources_wpTopic"),
+        quarters: getRepeatedField(entity, "fundingSources_quarters"),
       };
     default:
       return {};

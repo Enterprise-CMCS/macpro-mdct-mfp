@@ -5,7 +5,12 @@ import { InstructionsAccordion } from "components";
 import { parseCustomHtml } from "utils";
 import { AnyObject } from "types";
 
-export const ReportPageIntro = ({ text, accordion, ...props }: Props) => {
+export const ReportPageIntro = ({
+  text,
+  accordion,
+  initiativeName,
+  ...props
+}: Props) => {
   const { section, subsection, hint, info } = text;
   return (
     <Box sx={sx.introBox} {...props}>
@@ -13,7 +18,7 @@ export const ReportPageIntro = ({ text, accordion, ...props }: Props) => {
         {section}
       </Heading>
       <Heading as="h2" sx={sx.subsectionHeading}>
-        {subsection}
+        {initiativeName ? initiativeName : subsection}
       </Heading>
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
       {accordion && <InstructionsAccordion verbiage={accordion} />}
@@ -25,6 +30,7 @@ export const ReportPageIntro = ({ text, accordion, ...props }: Props) => {
 interface Props {
   text: AnyObject;
   accordion?: AnyObject;
+  initiativeName?: string;
   [key: string]: any;
 }
 

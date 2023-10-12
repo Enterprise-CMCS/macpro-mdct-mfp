@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 // components
 import {
   Box,
@@ -12,26 +12,48 @@ import {
   AddEditEntityModal,
   DeleteEntityModal,
   ReportPageIntro,
+  EntityStepCard,
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
+import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
-import { EntityCard } from "components/cards/EntityCard";
-import { getFormattedEntityData } from "utils/reports/entities";
-import { useStore } from "utils";
+// utils
+import { getFormattedEntityData, useStore } from "utils";
 
-export const OverlayModalPage = ({ route }: Props) => {
-  const { entityType, verbiage, modalForm } = route;
-  const { report } = useStore();
+export const OverlayModalPage = ({
+  entity,
+  closeEntityDetailsOverlay,
+  route,
+}: Props) => {
+  const { entityType, verbiage, modalForm, stepType } = route;
+  const { report, selectedEntity: currentEntity } = useStore();
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-  //display variables
-  let reportFieldDataEntities = report?.fieldData[entityType] || [];
+
+  const reportFieldDataEntities = report?.fieldData[entityType] || [];
+
+  // display only the currently selected entity steps
+  let reportFieldDataEntitySteps: EntityShape[] =
+    reportFieldDataEntities.filter((entity: EntityShape) => {
+      if (currentEntity && entity.id === currentEntity.id) {
+        if (
+          Object.keys(entity).findIndex((key: string) =>
+            key.includes(stepType)
+          ) > 0
+        ) {
+          return entity;
+        }
+      }
+      return;
+    });
 
   const dashTitle = `${verbiage.dashboardTitle}${
-    verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
+    verbiage.countEntitiesInTitle
+      ? `: ${reportFieldDataEntitySteps.length}`
+      : ""
   }`;
 
   // add/edit entity modal disclosure and methods
@@ -70,6 +92,17 @@ export const OverlayModalPage = ({ route }: Props) => {
 
   return (
     <Box>
+      {entity && (
+        <Button
+          sx={sx.backButton}
+          variant="none"
+          onClick={closeEntityDetailsOverlay as MouseEventHandler}
+          aria-label="Return to dashboard for this initiative"
+        >
+          <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
+          Return to dashboard for this initiative
+        </Button>
+      )}
       {verbiage.intro && (
         <ReportPageIntro
           sx={sx.intro}
@@ -89,21 +122,21 @@ export const OverlayModalPage = ({ route }: Props) => {
           {dashTitle}
         </Heading>
         <Box>
-          {reportFieldDataEntities?.map(
+          {reportFieldDataEntitySteps?.map(
             (entity: EntityShape, entityIndex: number) => (
-              <EntityCard
+              <EntityStepCard
                 key={entity.id}
                 entity={entity}
                 entityIndex={entityIndex}
-                entityType={entityType}
+                stepType={stepType}
                 verbiage={verbiage}
-                formattedEntityData={getFormattedEntityData(entityType, entity)}
+                formattedEntityData={getFormattedEntityData(stepType, entity)}
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
               />
             )
           )}
-          {reportFieldDataEntities.length > 1 && (
+          {reportFieldDataEntitySteps.length > 1 && (
             <Button
               sx={sx.addEntityButton}
               onClick={addEditEntityModalOnOpenHandler}
@@ -117,7 +150,8 @@ export const OverlayModalPage = ({ route }: Props) => {
         {/* MODALS */}
         <AddEditEntityModal
           entityType={entityType}
-          selectedEntity={selectedEntity}
+          selectedEntity={entity}
+          entityName={entity!.initiative_name}
           verbiage={verbiage}
           form={modalForm}
           modalDisclosure={{
@@ -148,10 +182,27 @@ export const OverlayModalPage = ({ route }: Props) => {
 
 interface Props {
   route: OverlayModalPageShape;
+  entity?: EntityShape;
+  closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;
 }
 
 const sx = {
+  backButton: {
+    padding: 0,
+    fontWeight: "normal",
+    color: "palette.primary",
+    display: "flex",
+    position: "relative",
+    right: "3rem",
+    marginBottom: "2rem",
+    marginTop: "-2rem",
+  },
+  backIcon: {
+    color: "palette.primary",
+    height: "1rem",
+    marginRight: "0.5rem",
+  },
   intro: {
     color: "palette.gray_medium",
   },

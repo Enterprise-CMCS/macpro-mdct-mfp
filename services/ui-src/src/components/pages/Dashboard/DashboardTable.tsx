@@ -8,8 +8,7 @@ import {
   ReportType,
   TableContentShape,
 } from "types";
-import { calculatePeriod, convertDateUtcToEt } from "utils";
-import { States } from "../../../constants";
+import { convertDateUtcToEt } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 
@@ -33,7 +32,9 @@ export const DashboardTable = ({
     {reportsByState.map((report: ReportMetadataShape) => (
       <Tr key={report.id}>
         {/* Edit Button */}
-        {isStateLevelUser && !report?.locked ? (
+        {isStateLevelUser &&
+        !report?.locked &&
+        reportType === ReportType.SAR ? (
           <EditReportButton
             report={report}
             openAddEditReportModal={openAddEditReportModal}
@@ -43,9 +44,9 @@ export const DashboardTable = ({
           <Td></Td>
         )}
         {/* Report Name */}
-        <Td sx={sxOverride.submissionNameText}>{getReportName(report)}</Td>
+        <Td sx={sxOverride.submissionNameText}>{report.submissionName}</Td>
         {/* Date Fields */}
-        <DateFields report={report} reportType={reportType} />
+        <DateFields report={report} reportType={reportType} isAdmin={isAdmin} />
         {/* Last Altered By */}
         <Td>{report?.lastAlteredBy || "-"}</Td>
         {/* Report Status */}
@@ -57,9 +58,13 @@ export const DashboardTable = ({
             report.submissionCount
           )}
         </Td>
-        {/* SAR-ONLY: Submission count */}
-        {reportType === "SAR" && isAdmin && (
-          <Td> {report.submissionCount === 0 ? 1 : report.submissionCount} </Td>
+        {/* Admin: Submission count */}
+        {isAdmin && (
+          <Td>
+            {!report.submissionCount || report.submissionCount === 0
+              ? 1
+              : report.submissionCount}
+          </Td>
         )}
         {/* Action Buttons */}
         <Td sx={sxOverride.editReportButtonCell}>
@@ -71,7 +76,7 @@ export const DashboardTable = ({
           >
             {entering && reportId == report.id ? (
               <Spinner size="md" />
-            ) : isStateLevelUser ? (
+            ) : isStateLevelUser && !report?.locked ? (
               "Edit"
             ) : (
               "View"
@@ -80,7 +85,7 @@ export const DashboardTable = ({
         </Td>
         {isAdmin && (
           <>
-            {reportType === "SAR" && (
+            {
               <AdminReleaseButton
                 report={report}
                 reportType={reportType}
@@ -89,7 +94,7 @@ export const DashboardTable = ({
                 releasing={releasing}
                 sxOverride={sxOverride}
               />
-            )}
+            }
             <AdminArchiveButton
               report={report}
               reportType={reportType}
@@ -124,16 +129,6 @@ interface DashboardTableProps {
   sxOverride: AnyObject;
 }
 
-const getReportName = (report: ReportMetadataShape) => {
-  const reportName = report.submissionName;
-  const etDate = convertDateUtcToEt(report.createdAt);
-  const period = calculatePeriod(etDate);
-  const year = new Date(etDate).getFullYear();
-
-  const fullStateName = States[report.state as keyof typeof States];
-  return `${fullStateName} ${reportName} ${year} - Period ${period}`;
-};
-
 export const getStatus = (
   reportType: ReportType,
   status: string,
@@ -159,6 +154,10 @@ const tableBody = (body: TableContentShape, isAdmin: boolean) => {
   if (!isAdmin) {
     tableContent.headRow = tableContent.headRow!.filter((e) => e !== "#");
     return tableContent;
+  } else {
+    tableContent.headRow = tableContent.headRow!.filter(
+      (e) => e !== "Due date"
+    );
   }
   return body;
 };
@@ -183,10 +182,12 @@ interface EditReportProps {
   sxOverride: AnyObject;
 }
 
-const DateFields = ({ report, reportType }: DateFieldProps) => {
+const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {reportType === "WP" && <Td>{convertDateUtcToEt(report.createdAt)}</Td>}
+      {reportType === "WP" && !isAdmin && (
+        <Td>{convertDateUtcToEt(report.createdAt)}</Td>
+      )}
       <Td>{convertDateUtcToEt(report.lastAltered)}</Td>
     </>
   );
@@ -195,6 +196,7 @@ const DateFields = ({ report, reportType }: DateFieldProps) => {
 interface DateFieldProps {
   report: ReportMetadataShape;
   reportType: string;
+  isAdmin: boolean;
 }
 
 const AdminReleaseButton = ({
@@ -204,11 +206,22 @@ const AdminReleaseButton = ({
   releaseReport,
   sxOverride,
 }: AdminActionButtonProps) => {
+  //unlock is enabled when status: approved and submitted, all other times, it is disabled
+  const reportStatus = getStatus(
+    report.reportType as ReportType,
+    report.status,
+    report.archived,
+    report.submissionCount
+  );
+  const isDisabled = !(
+    reportStatus === "Submitted" || reportStatus === "Approved"
+  );
+
   return (
     <Td>
       <Button
         variant="link"
-        disabled={report.locked === false || report.archived === true}
+        disabled={isDisabled}
         sx={sxOverride.adminActionButton}
         onClick={() => releaseReport!(report)}
       >

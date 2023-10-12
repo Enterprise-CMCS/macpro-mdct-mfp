@@ -1,39 +1,49 @@
+import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
 import { EntityStatusIcon } from "components";
-import { getEntityStatus } from "./getEntityStatus";
 // types
-import { AnyObject, EntityShape } from "types";
+import { AnyObject, EntityShape, ModalDrawerEntityTypes } from "types";
 // utils
 import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
-import { useMemo } from "react";
+import { getEntityStatus } from "./getEntityStatus";
 
 export const EntityRow = ({
   entity,
   entityInfo,
+  entityType,
   verbiage,
   locked,
   openAddEditEntityModal,
   openDeleteEntityModal,
-  openDrawer,
+  openOverlayOrDrawer,
 }: Props) => {
-  const { report } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
+  const { report } = useStore();
 
   // check for "other" target population entities
   const { isRequired } = entity;
 
-  const entityComplete = useMemo(() => {
-    return report ? getEntityStatus(report, entity) : false;
-  }, [report]);
+  let entityCompleted = false;
+  switch (entityType) {
+    case ModalDrawerEntityTypes.TARGET_POPULATIONS:
+      entityCompleted =
+        !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
+      break;
+    default:
+      entityCompleted = useMemo(() => {
+        return report ? !!getEntityStatus(report, entity) : false;
+      }, [report]);
+      break;
+  }
 
   let programInfo = [];
   if (entityInfo) {
     programInfo = (entityInfo as string[]).flatMap((info) => {
       //if the data is in an array, like a radio button values, get each as text
-      if (typeof entity[info] === "object") {
+      if (typeof entity?.[info] === "object") {
         return (entity[info] as any[]).map((arr) => arr.value);
       }
       return entity[info];
@@ -43,7 +53,7 @@ export const EntityRow = ({
   return (
     <Tr sx={sx.content}>
       <Td>
-        <EntityStatusIcon entity={entity as EntityShape} />
+        <EntityStatusIcon entityCompleted={entityCompleted} />
       </Td>
       <Td sx={sx.entityName}>
         <ul>
@@ -51,10 +61,9 @@ export const EntityRow = ({
             <li key={index}>{renderHtml(field)}</li>
           ))}
         </ul>
-        {!entityComplete && (
+        {!entityCompleted && (
           <Text sx={sx.errorText}>
-            Select "{verbiage.enterEntityDetailsButtonText}” to complete this
-            report.
+            Select "{verbiage.enterEntityDetailsButtonText}” to report data
           </Text>
         )}
       </Td>
@@ -71,7 +80,7 @@ export const EntityRow = ({
           )}
           <Button
             sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
-            onClick={() => openDrawer(entity)}
+            onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
           >
             {verbiage.enterEntityDetailsButtonText}
@@ -94,10 +103,11 @@ export const EntityRow = ({
 
 interface Props {
   entity: EntityShape;
+  entityType?: string;
   verbiage: AnyObject;
   openAddEditEntityModal: Function;
   openDeleteEntityModal: Function;
-  openDrawer: Function;
+  openOverlayOrDrawer: Function;
   [key: string]: any;
 }
 
@@ -106,7 +116,7 @@ const sx = {
     verticalAlign: "middle",
     paddingLeft: "1.5rem",
     td: {
-      borderColor: "palette.gray_light",
+      borderColor: "palette.gray_lighter",
       paddingRight: 0,
     },
   },
@@ -128,6 +138,7 @@ const sx = {
         "&:first-of-type": {
           fontWeight: "bold",
           fontSize: "md",
+          marginBottom: "0.25rem",
         },
       },
     },

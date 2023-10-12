@@ -27,6 +27,7 @@ import {
   FormLayoutElement,
   ReportStatus,
   ReportType,
+  EntityShape,
 } from "types";
 
 export const Form = ({
@@ -45,7 +46,36 @@ export const Form = ({
 
   // determine if fields should be disabled (based on admin roles )
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
+
   const { report } = useStore();
+
+  const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
+    const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
+    const formatChoiceList = updatedTargetPopulationChoices?.map(
+      (field: EntityShape) => {
+        return {
+          checked: false,
+          id: field.id,
+          label: field.isRequired
+            ? field.transitionBenchmarks_targetPopulationName
+            : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+          name: field.transitionBenchmarks_targetPopulationName,
+          value: field.transitionBenchmarks_targetPopulationName,
+        };
+      }
+    );
+
+    const updateTargetPopulationChoiceList = fields.map((field) => {
+      return field.id.match("targetPopulations")
+        ? {
+            ...field,
+            props: { ...field?.props, choices: [...formatChoiceList] },
+          }
+        : { ...field };
+    });
+    return updateTargetPopulationChoiceList;
+  };
+
   let location = useLocation();
   const fieldInputDisabled =
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
@@ -83,7 +113,10 @@ export const Form = ({
 
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const fieldsToRender = hydrateFormFields(fields, formData);
+    const fieldsToRender = hydrateFormFields(
+      updateRenderFields(fields),
+      formData
+    );
     return formFieldFactory(fieldsToRender, {
       disabled: !!fieldInputDisabled,
       autosave,
