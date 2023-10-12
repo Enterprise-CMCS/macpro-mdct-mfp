@@ -114,7 +114,7 @@ describe("Test Report Dashboard view (Desktop)", () => {
     expect(screen.queryByText("Start new")).toBeVisible();
   });
 
-  test("Check that the SAR Dashboard view renders", async () => {
+  test("Check that the SAR Dashboard view renders", () => {
     mockedUseStore.mockReturnValue(mockReportStore);
     render(sarDashboardViewWithReports);
     expect(screen.getByText(sarVerbiage.intro.header)).toBeVisible();
@@ -127,7 +127,7 @@ describe("Test Report Dashboard view (Desktop)", () => {
 });
 
 describe("Test Report Dashboard with no reports", () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     mockedUseUser.mockReturnValue(mockStateUser);
     mockedUseStore.mockReturnValue({
       reportsByState: undefined,
@@ -142,12 +142,12 @@ describe("Test Report Dashboard with no reports", () => {
     jest.clearAllMocks();
   });
 
-  test("WP Dashboard renders table with empty text", async () => {
+  test("WP Dashboard renders table with empty text", () => {
     render(wpDashboardWithNoReports);
     expect(screen.getByText(wpVerbiage.body.empty)).toBeVisible();
   });
 
-  test("SAR Dashboard renders table with empty text", async () => {
+  test("SAR Dashboard renders table with empty text", () => {
     render(sarDashboardWithNoReports);
     expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
   });

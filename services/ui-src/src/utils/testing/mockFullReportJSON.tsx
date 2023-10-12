@@ -28,7 +28,8 @@ export const mockFullReportJSON: ReportJson = {
               props: {
                 href: "https://www.govinfo.gov/content/pkg/PLAW-109publ171/pdf/PLAW-109publ171.pdf",
                 target: "_blank",
-                "aria-label": "Link opens in new tab",
+                "aria-label":
+                  "6071(a)(1) of the Deficit Reduction Act (DRA) (Link opens in new tab)",
               },
             },
             {
@@ -926,7 +927,8 @@ export const mockFullReportJSON: ReportJson = {
               props: {
                 href: "https://www.govinfo.gov/content/pkg/PLAW-109publ171/pdf/PLAW-109publ171.pdf",
                 target: "_blank",
-                "aria-label": "Link opens in new tab",
+                "aria-label":
+                  "6071(a)(1) of the Deficit Reduction Act (DRA) (Link opens in new tab)",
               },
             },
             {
