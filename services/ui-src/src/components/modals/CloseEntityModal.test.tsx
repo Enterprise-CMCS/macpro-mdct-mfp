@@ -4,7 +4,7 @@ import { axe } from "jest-axe";
 // components
 import { CloseEntityModal } from "components";
 // utils
-import { mockEntityDetailsOverlayVerbiage } from "utils/testing/setupJest";
+import { mockEntityDetailsOverlayJson } from "utils/testing/setupJest";
 
 const mockCloseHandler = jest.fn();
 
@@ -12,8 +12,7 @@ const mockEntityName = "mock-name";
 
 const modalComponent = (
   <CloseEntityModal
-    entityName={mockEntityName}
-    verbiage={mockEntityDetailsOverlayVerbiage}
+    route={mockEntityDetailsOverlayJson}
     modalDisclosure={{
       isOpen: true,
       onClose: mockCloseHandler,
@@ -25,7 +24,7 @@ const {
   closeOutModalBodyText,
   closeOutModalConfirmButtonText,
   closeOutModalTitle,
-} = mockEntityDetailsOverlayVerbiage.closeOutModal;
+} = mockEntityDetailsOverlayJson.verbiage.closeOutModal;
 
 const closeOutModalTitleWithName = closeOutModalTitle + mockEntityName;
 

@@ -99,9 +99,9 @@ export const EntityDetailsOverlay = ({
 
       updatedEntities[selectedEntityIndex] = {
         id: selectedEntity.id,
+        isInitiativeClosed: false,
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
-        isInitiativeClosed: false,
       };
 
       updatedEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(

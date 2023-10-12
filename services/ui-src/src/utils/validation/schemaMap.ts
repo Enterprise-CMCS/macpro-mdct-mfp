@@ -20,5 +20,4 @@ export const schemaMap: any = {
   radioOptional: schema.radioOptional(),
   dynamic: schema.dynamic(),
   dynamicOptional: schema.dynamicOptional(),
-  boolean: schema.boolean(),
 };

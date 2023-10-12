@@ -1,6 +1,6 @@
 import {
   array,
-  boolean as booleanSchema,
+  boolean,
   mixed,
   object,
   string,
@@ -215,7 +215,7 @@ export const checkbox = () =>
     .of(object({ key: textSchema(), value: textSchema() }))
     .required(error.REQUIRED_CHECKBOX);
 export const checkboxOptional = () => checkbox().notRequired();
-export const checkboxSingle = () => booleanSchema();
+export const checkboxSingle = () => boolean();
 
 // RADIO
 export const radioSchema = () =>
@@ -262,9 +262,6 @@ export const nested = (
     otherwise: () => baseSchema, // returns not-required Yup base schema
   });
 };
-
-// BOOLEAN
-export const boolean = () => booleanSchema();
 
 // REGEX
 export const dateFormatRegex =
