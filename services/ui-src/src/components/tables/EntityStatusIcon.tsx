@@ -1,10 +1,5 @@
-import { useMemo } from "react";
 // components
 import { Box, Image, Text } from "@chakra-ui/react";
-import { getEntityStatus } from "./getEntityStatus";
-// utils
-import { EntityShape } from "types";
-import { useStore } from "utils";
 // assets
 import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
 import unfinishedIconDark from "assets/icons/icon_error_circle.png";
@@ -12,16 +7,10 @@ import successIcon from "assets/icons/icon_check_circle.png";
 import successIconDark from "assets/icons/icon_check_circle_dark.png";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const EntityStatusIcon = ({ entity, isPdf }: Props) => {
-  const { report } = useStore();
-
-  const entityComplete = useMemo(() => {
-    return report ? getEntityStatus(report, entity) : false;
-  }, [report]);
-
+export const EntityStatusIcon = ({ entityCompleted, isPdf }: Props) => {
   return (
     <Box sx={isPdf ? sx.containerPdf : sx.container}>
-      {entityComplete ? (
+      {entityCompleted ? (
         <>
           <Image
             sx={isPdf ? sx.statusIconPdf : sx.statusIcon}
@@ -55,10 +44,7 @@ export const EntityStatusIcon = ({ entity, isPdf }: Props) => {
 };
 
 interface Props {
-  /**
-   * Entity to show status for
-   */
-  entity: EntityShape;
+  entityCompleted: boolean;
   /**
    * Whether or not icon is appearing on PDF page (used for styling)
    */

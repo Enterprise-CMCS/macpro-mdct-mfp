@@ -22,6 +22,8 @@ export interface ReportMetadataShape extends ReportKeys {
   archived?: boolean;
   locked?: boolean;
   dueDate: number;
+  reportPeriod: number;
+  finalSar?: boolean;
 }
 
 export interface ReportShape extends ReportMetadataShape {
@@ -39,6 +41,7 @@ export interface ReportContextMethods {
   createReport: Function;
   fetchReport: Function;
   fetchReportsByState: Function;
+  fetchReportForSarCreation: Function;
   archiveReport: Function;
   releaseReport: Function;
   updateReport: Function;
@@ -60,6 +63,7 @@ export enum ReportStatus {
   NOT_STARTED = "Not started",
   IN_PROGRESS = "In progress",
   SUBMITTED = "Submitted",
+  APPROVED = "Approved",
 }
 
 export interface ReportPageProgress {

@@ -78,7 +78,6 @@ export const TemplateCard = ({
 };
 
 interface Props {
-  templateName: string;
   verbiage: AnyObject;
   isHidden?: boolean;
   [key: string]: any;

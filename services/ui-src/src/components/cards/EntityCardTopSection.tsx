@@ -1,14 +1,14 @@
 // components
 import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
 // utils
-import { AnyObject, OverlayModalEntityTypes } from "types";
+import { AnyObject, OverlayModalStepTypes } from "types";
 
-export const EntityCardTopSection = ({
-  entityType,
+export const EntityStepCardTopSection = ({
+  stepType,
   formattedEntityData,
 }: Props) => {
-  switch (entityType) {
-    case OverlayModalEntityTypes.EVALUATION_PLAN:
+  switch (stepType) {
+    case OverlayModalStepTypes.EVALUATION_PLAN:
       return (
         <>
           <Heading as="h4" sx={sx.heading}>
@@ -24,7 +24,26 @@ export const EntityCardTopSection = ({
           <Text sx={sx.subtitle}>
             Does the performance measure include quantitative targets?
           </Text>
-          <Text sx={sx.description}>{formattedEntityData.includesTargets}</Text>
+          <Text sx={sx.description}>
+            {formattedEntityData?.includesTargets}
+          </Text>
+          {formattedEntityData.quarters.length > 0 && (
+            <>
+              <Text sx={sx.subtitle}>Quantitative Targets</Text>
+              <Grid sx={sx.grid}>
+                {formattedEntityData?.quarters.map((quarter: any) => {
+                  return (
+                    <GridItem>
+                      <Flex sx={sx.gridItems}>
+                        <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
+                        <Text sx={sx.subtext}>{quarter.value}</Text>
+                      </Flex>
+                    </GridItem>
+                  );
+                })}
+              </Grid>
+            </>
+          )}
           <Text sx={sx.subtitle}>
             Additional detail on strategies/approaches the state or territory
             will use to achieve targets and/ or meet milestones
@@ -34,34 +53,38 @@ export const EntityCardTopSection = ({
           </Text>{" "}
         </>
       );
-    case OverlayModalEntityTypes.FUNDING_SOURCES:
+    case OverlayModalStepTypes.FUNDING_SOURCES:
       return (
         <>
           <Heading as="h3" sx={sx.heading}>
-            {formattedEntityData.objectiveName}
+            {formattedEntityData.fundingSource}
           </Heading>
-          <Text sx={sx.subtitle}>Projected quarterly expenditures</Text>
-          <Grid sx={sx.grid}>
-            {formattedEntityData?.quarters?.map((quarter: any) => {
-              return (
-                <GridItem>
-                  <Flex sx={sx.gridItems}>
-                    <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
-                    <Text sx={sx.subtext}>{quarter.value}</Text>
-                  </Flex>
-                </GridItem>
-              );
-            })}
-          </Grid>
+          {formattedEntityData.quarters.length > 0 && (
+            <>
+              <Text sx={sx.subtitle}>Projected quarterly expenditures</Text>
+              <Grid sx={sx.grid}>
+                {formattedEntityData?.quarters?.map((quarter: any) => {
+                  return (
+                    <GridItem>
+                      <Flex sx={sx.gridItems}>
+                        <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
+                        <Text sx={sx.subtext}>{quarter.value}</Text>
+                      </Flex>
+                    </GridItem>
+                  );
+                })}
+              </Grid>
+            </>
+          )}
         </>
       );
     default:
-      return <Text>{entityType}</Text>;
+      return <Text>{stepType}</Text>;
   }
 };
 
 interface Props {
-  entityType: string;
+  stepType: string;
   formattedEntityData: AnyObject;
   printVersion?: boolean;
 }
@@ -75,11 +98,10 @@ const sx = {
     fontSize: "sm",
   },
   grid: {
-    gridTemplateColumns: "repeat(3,minmax(0px,1fr))",
-    alignItems: "center",
-    textAlign: "center",
-    justifyContent: "center",
     display: "grid",
+    gridTemplateRows: "1fr 1fr 1fr 1fr",
+    gridAutoFlow: "column",
+    gridGap: ".5rem",
   },
   gridSubtitle: {
     fontWeight: "bold",

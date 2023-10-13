@@ -1,17 +1,15 @@
-// components
-import { Text } from "@chakra-ui/react";
 // utils
 import { AnyObject } from "types";
 
-export const EntityCardBottomSection = ({ entityType }: Props) => {
-  switch (entityType) {
+export const EntityStepCardBottomSection = ({ stepType }: Props) => {
+  switch (stepType) {
     default:
-      return <Text>{entityType}</Text>;
+      return <></>;
   }
 };
 
 interface Props {
-  entityType: string;
+  stepType: string;
   formattedEntityData: AnyObject;
   printVersion?: boolean;
   verbiage?: {

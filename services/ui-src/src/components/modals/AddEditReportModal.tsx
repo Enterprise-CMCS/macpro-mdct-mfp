@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 // components
-import { Modal, ReportContext } from "components";
-import { Text, Button, Image } from "@chakra-ui/react";
+import { Form, Modal, ReportContext } from "components";
+import { Button, Image, Spinner } from "@chakra-ui/react";
 // form
 import wpFormJson from "forms/addEditWpReport/addEditWpReport.json";
 import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 // utils
-import { AnyObject, FormJson, ReportStatus } from "types";
+import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
 import { useStore } from "utils";
 // assets
@@ -18,7 +18,8 @@ export const AddEditReportModal = ({
   reportType,
   modalDisclosure,
 }: Props) => {
-  const { createReport, fetchReportsByState } = useContext(ReportContext);
+  const { createReport, fetchReportsByState, updateReport } =
+    useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
   const modalFormJsonMap: any = {
@@ -33,7 +34,7 @@ export const AddEditReportModal = ({
   const prepareWpPayload = () => {
     const submissionName = "Work Plan";
     // static entities
-    const targetPopulation = [
+    const targetPopulations = [
       {
         id: "2Vd02CVUtKgBETwqzDXpSIhi",
         transitionBenchmarks_targetPopulationName: "Older adults",
@@ -54,7 +55,7 @@ export const AddEditReportModal = ({
       {
         id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
         transitionBenchmarks_targetPopulationName:
-          "Individuals with mental health and substance abuse disorders (MH/SUD)",
+          "Individuals with mental health and substance use disorders (MH/SUD)",
         isRequired: true,
       },
     ];
@@ -62,28 +63,35 @@ export const AddEditReportModal = ({
       metadata: {
         submissionName,
         lastAlteredBy: full_name,
+        locked: false,
+        previousRevisions: [],
       },
       fieldData: {
         submissionName,
-        ["targetPopulation"]: targetPopulation,
+        ["targetPopulations"]: targetPopulations,
       },
     };
   };
 
   // SAR report payload
   const prepareSarPayload = (formData: any) => {
-    const submissionName = formData["submissionName"];
-
+    const submissionName = formData["associatedWorkPlan"];
+    const stateOrTerritory = formData["stateOrTerritory"];
+    const reportPeriod = formData["reportPeriod"];
     return {
       metadata: {
-        submissionName: submissionName,
+        submissionName,
+        stateOrTerritory,
+        reportPeriod,
         lastAlteredBy: full_name,
         locked: false,
-        submissionCount: 0,
         previousRevisions: [],
+        finalSar: formData["finalSar"][0].value === "Yes" ? true : false,
       },
       fieldData: {
         submissionName,
+        stateOrTerritory,
+        reportPeriod,
       },
     };
   };
@@ -92,39 +100,54 @@ export const AddEditReportModal = ({
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
-
     const dataToWrite =
       reportType === "WP" ? prepareWpPayload() : prepareSarPayload(formData);
 
-    await createReport(reportType, activeState, {
-      ...dataToWrite,
-      metadata: {
-        ...dataToWrite.metadata,
-        reportType,
-        status: ReportStatus.NOT_STARTED,
-        isComplete: false,
-      },
-      fieldData: {
-        ...dataToWrite.fieldData,
-        stateName: States[activeState as keyof typeof States],
-        submissionCount: reportType === "WP" ? 0 : undefined,
-        // All new WP reports are NOT resubmissions by definition.
-        versionControl:
-          reportType === "WP"
-            ? [
-                {
-                  // pragma: allowlist nextline secret
-                  key: "versionControl-KFCd3rfEu3eT4UFskUhDtx",
-                  value: "No, this is an initial submission",
-                },
-              ]
-            : undefined,
-      },
-    });
+    // if an existing program was selected, use that report id
+    if (selectedReport?.id) {
+      const reportKeys = {
+        reportType: reportType,
+        state: activeState,
+        id: selectedReport.id,
+      };
+      // edit existing report
+      await updateReport(reportKeys, {
+        ...dataToWrite,
+        metadata: {
+          ...dataToWrite.metadata,
+          locked: undefined,
+          status: undefined,
+          submissionCount: undefined,
+          previousRevisions: undefined,
+        },
+      });
+    } else {
+      await createReport(reportType, activeState, {
+        ...dataToWrite,
+        metadata: {
+          ...dataToWrite.metadata,
+          reportType,
+          status: ReportStatus.NOT_STARTED,
+          isComplete: false,
+        },
+        fieldData: {
+          ...dataToWrite.fieldData,
+          stateName: States[activeState as keyof typeof States],
+          submissionCount: 0,
+        },
+      });
+    }
 
     await fetchReportsByState(reportType, activeState);
     setSubmitting(false);
     modalDisclosure.onClose();
+  };
+
+  const actionButtonText = () => {
+    if (reportType === ReportType.WP) {
+      return "";
+    }
+    return submitting ? <Spinner size="md" /> : "Save";
   };
 
   return (
@@ -134,34 +157,43 @@ export const AddEditReportModal = ({
       modalDisclosure={modalDisclosure}
       content={{
         heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
-        actionButtonText: submitting ? "" : "",
+        subheading: selectedReport?.id ? "" : form.heading?.subheading,
+        actionButtonText: actionButtonText(),
         closeButtonText: "",
       }}
     >
-      <Text data-testid="delete-program-modal-text">
-        Update your transition benchmarks and initiatives from the information
-        in your last approved Work Plan by selecting Copy from previous. Use
-        Start new only when you want to completely reset your MFP program
-        information and start from a blank form.
-      </Text>
-      <Button sx={sx.copyBtn} disabled={true} type="submit">
-        Copy from previous
-        <Image
-          sx={sx.muteCopyIcon}
-          src={muteCopyIcon}
-          alt="Copy Icon"
-          className="copyIcon"
+      {reportType == ReportType.WP ? (
+        <>
+          <Button sx={sx.copyBtn} disabled={true} type="submit">
+            Copy from previous
+            <Image
+              sx={sx.muteCopyIcon}
+              src={muteCopyIcon}
+              alt="Copy Icon"
+              className="copyIcon"
+            />
+          </Button>
+          <Button
+            sx={sx.close}
+            onClick={writeReport}
+            type="submit"
+            variant="outline"
+            data-testid="modal-logout-button"
+          >
+            Start new
+          </Button>
+        </>
+      ) : (
+        <Form
+          data-testid="add-edit-report-form"
+          id={form.id}
+          formJson={form}
+          formData={selectedReport?.formData}
+          onSubmit={writeReport}
+          validateOnRender={false}
+          dontReset={true}
         />
-      </Button>
-      <Button
-        sx={sx.close}
-        onClick={writeReport}
-        type="submit"
-        variant="outline"
-        data-testid="modal-logout-button"
-      >
-        Start new
-      </Button>
+      )}
     </Modal>
   );
 };
