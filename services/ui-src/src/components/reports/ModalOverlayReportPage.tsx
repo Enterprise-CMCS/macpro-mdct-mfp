@@ -29,6 +29,7 @@ import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  resetClearProp,
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
@@ -103,6 +104,7 @@ export const ModalOverlayReportPage = ({
 
   const closeAddEditEntityModal = () => {
     setCurrentEntity(undefined);
+    resetClearProp(modalForm.fields);
     addEditEntityModalOnCloseHandler();
   };
 
