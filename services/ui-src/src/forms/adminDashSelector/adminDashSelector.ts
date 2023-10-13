@@ -9,10 +9,15 @@ const dropdownOptions: DropdownOptions[] = Object.keys(States).map((value) => {
   };
 });
 
+// create radio options
 const reportChoices = [
   {
     id: "WP",
-    label: "MFP Program Work Plan (WP)",
+    label: "Work Plan (WP)",
+  },
+  {
+    id: "SAR",
+    label: "Semi-Annual Report (SAR)",
   },
 ];
 
@@ -28,9 +33,9 @@ export default {
       type: "dropdown",
       validation: "dropdown",
       props: {
-        hint: "Select state to view reports:",
+        hint: "Select state or territory:",
         options: dropdownOptions,
-        ariaLabel:
+        "aria-label":
           "List of states, including District of Columbia and Puerto Rico",
       },
     },
@@ -41,7 +46,7 @@ export default {
       props: {
         hint: "Select a report:",
         choices: reportChoices,
-        ariaLabel: "Choices of report type",
+        "aria-label": "Choices of report type",
       },
     },
   ],

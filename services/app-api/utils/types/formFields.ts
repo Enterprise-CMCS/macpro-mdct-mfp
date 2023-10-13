@@ -1,19 +1,8 @@
 import { AnyObject } from "./other";
-import { ModalOverlayReportPageVerbiage, ReportPageShapeBase } from "./reports";
 
 // FORM & FIELD STRUCTURE
 
 export declare type EntityType = "plans";
-
-export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
-  entityType: string;
-  entityInfo?: string[];
-  verbiage: ModalOverlayReportPageVerbiage;
-  modalForm: FormJson;
-  overlayForm?: FormJson;
-  drawerForm?: never;
-  form?: never;
-}
 
 export interface EntityShape {
   id: string;
@@ -67,6 +56,11 @@ export interface FormField {
   props?: AnyObject;
   choices?: FieldChoice[];
   repeat?: string;
+  repeatable?: Repeatable;
+}
+
+export interface Repeatable {
+  rule: string;
 }
 
 export interface DropdownOptions {

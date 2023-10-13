@@ -14,7 +14,7 @@ import {
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
-import { mockWPFullReport } from "./mockReport";
+import { mockWPApprovedFullReport, mockWPFullReport } from "./mockReport";
 
 // GLOBALS
 
@@ -104,7 +104,6 @@ export const mockStateUserStore: MfpUserState = {
     family_name: "States",
     full_name: "Thelonious States",
     state: "MN",
-    userIsStateUser: true,
     userIsEndUser: true,
   },
   showLocalLogins: true,
@@ -120,7 +119,7 @@ export const mockStateApproverStore: MfpUserState = {
     family_name: "Zustimmer",
     full_name: "Zara Zustimmer",
     state: "MN",
-    userIsApprover: true,
+    userIsAdmin: true,
   },
   showLocalLogins: true,
   setUser: () => {},
@@ -135,7 +134,6 @@ export const mockStateRepStore: MfpUserState = {
     family_name: "States",
     full_name: "Robert States",
     state: "MA",
-    userIsStateRep: true,
     userIsEndUser: true,
   },
   showLocalLogins: true,
@@ -151,7 +149,7 @@ export const mockHelpDeskUserStore: MfpUserState = {
     family_name: "Helperson",
     full_name: "Clippy Helperson",
     state: undefined,
-    userIsHelpDeskUser: true,
+    userIsReadOnly: true,
   },
   showLocalLogins: false,
   setUser: () => {},
@@ -193,14 +191,30 @@ export const mockBannerStore: AdminBannerState = {
 
 export const mockReportStore: MfpReportState = {
   report: mockWPFullReport as ReportShape,
-  reportsByState: [mockWPFullReport],
+  reportsByState: [mockWPFullReport, mockWPApprovedFullReport],
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "1:58 PM",
+  workPlanToCopyFrom: undefined,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
   setSubmittedReportsByState: () => {},
   setLastSavedTime: () => {},
+  setWorkPlanToCopyFrom: () => {},
+};
+
+export const mockEmptyReportStore: MfpReportState = {
+  report: undefined,
+  reportsByState: undefined,
+  submittedReportsByState: undefined,
+  lastSavedTime: undefined,
+  workPlanToCopyFrom: undefined,
+  setReport: () => {},
+  setReportsByState: () => {},
+  clearReportsByState: () => {},
+  setSubmittedReportsByState: () => {},
+  setLastSavedTime: () => {},
+  setWorkPlanToCopyFrom: () => {},
 };
 
 // BOUND STORE
@@ -208,6 +222,22 @@ export const mockReportStore: MfpReportState = {
 export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
   ...mockReportStore,
   ...mockStateUserStore,
+  ...mockBannerStore,
+};
+
+export const mockUseEmptyReportStore: MfpUserState &
+  AdminBannerState &
+  MfpReportState = {
+  ...mockEmptyReportStore,
+  ...mockStateUserStore,
+  ...mockBannerStore,
+};
+
+export const mockUseAdminStore: MfpUserState &
+  AdminBannerState &
+  MfpReportState = {
+  ...mockReportStore,
+  ...mockAdminUserStore,
   ...mockBannerStore,
 };
 

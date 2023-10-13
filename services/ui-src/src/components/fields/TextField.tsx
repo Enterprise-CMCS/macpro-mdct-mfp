@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-import { Box } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 // utils
 import {
   autosaveFieldData,
@@ -25,6 +25,7 @@ export const TextField = ({
   autosave,
   validateOnRender,
   styleAsOptional,
+  heading,
   ...props
 }: Props) => {
   const defaultValue = "";
@@ -120,6 +121,8 @@ export const TextField = ({
 
   return (
     <Box sx={sxOverride} className={`${nestedChildClasses} ${labelClass}`}>
+      {/* SAR field sections */}
+      {heading && <Heading sx={sx.fieldHeading}>{heading}</Heading>}
       <CmsdsTextField
         id={name}
         name={name}
@@ -145,6 +148,14 @@ interface Props {
   nested?: boolean;
   autosave?: boolean;
   styleAsOptional?: boolean;
+  heading?: string;
   clear?: boolean;
   [key: string]: any;
 }
+
+const sx = {
+  fieldHeading: {
+    fontSize: "28px",
+    paddingTop: "1.5rem",
+  },
+};
