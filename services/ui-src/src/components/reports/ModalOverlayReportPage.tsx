@@ -59,11 +59,8 @@ export const ModalOverlayReportPage = ({
   } = route;
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
-  const { report } = useStore();
+  const { report, selectedEntity, setSelectedEntity } = useStore();
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
-  const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
-    undefined
-  );
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { userIsEndUser, full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
@@ -110,12 +107,12 @@ export const ModalOverlayReportPage = ({
   } = useDisclosure();
 
   const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setCurrentEntity(entity);
+    if (entity) setSelectedEntity(entity);
     addEditEntityModalOnOpenHandler();
   };
 
   const closeAddEditEntityModal = () => {
-    setCurrentEntity(undefined);
+    setSelectedEntity(undefined);
     addEditEntityModalOnCloseHandler();
   };
 
@@ -127,24 +124,24 @@ export const ModalOverlayReportPage = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity: EntityShape) => {
-    setCurrentEntity(entity);
+    setSelectedEntity(entity);
     deleteEntityModalOnOpenHandler();
   };
 
   const closeDeleteEntityModal = () => {
-    setCurrentEntity(undefined);
+    setSelectedEntity(undefined);
     deleteEntityModalOnCloseHandler();
   };
 
   // Open/Close overlay action methods
   const openEntityDetailsOverlay = (entity: EntityShape) => {
-    setCurrentEntity(entity);
+    setSelectedEntity(entity);
     setIsEntityDetailsOpen(true);
     setSidebarHidden(true);
   };
 
   const closeEntityDetailsOverlay = () => {
-    setCurrentEntity(undefined);
+    setSelectedEntity(undefined);
     setIsEntityDetailsOpen(false);
     setSidebarHidden(false);
   };
@@ -160,7 +157,7 @@ export const ModalOverlayReportPage = ({
       };
       const currentEntities = [...(report?.fieldData[entityType] || [])];
       const selectedEntityIndex = report?.fieldData[entityType].findIndex(
-        (entity: EntityShape) => entity.id === currentEntity?.id
+        (entity: EntityShape) => entity.id === selectedEntity?.id
       );
       const filteredFormData = filterFormData(
         enteredData,
@@ -171,7 +168,7 @@ export const ModalOverlayReportPage = ({
         overlayForm!.fields.filter(isFieldElement)
       );
       const newEntity = {
-        ...currentEntity,
+        ...selectedEntity,
         ...filteredFormData,
       };
       let newEntities = currentEntities;
@@ -204,13 +201,14 @@ export const ModalOverlayReportPage = ({
 
   return (
     <Box>
-      {dashboard && isEntityDetailsOpen && currentEntity ? (
+      {dashboard && isEntityDetailsOpen && selectedEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             entityType={entityType as EntityType}
+            entities={report?.fieldData[entityType]}
             dashboard={dashboard}
-            selectedEntity={currentEntity}
+            selectedEntity={selectedEntity}
             onSubmit={onSubmit}
             submitting={submitting}
             validateOnRender={validateOnRender}
@@ -266,7 +264,7 @@ export const ModalOverlayReportPage = ({
 
           <AddEditEntityModal
             entityType={entityType}
-            selectedEntity={currentEntity}
+            selectedEntity={selectedEntity}
             verbiage={verbiage}
             form={modalForm}
             modalDisclosure={{
@@ -277,7 +275,7 @@ export const ModalOverlayReportPage = ({
 
           <DeleteEntityModal
             entityType={entityType}
-            selectedEntity={currentEntity}
+            selectedEntity={selectedEntity}
             verbiage={verbiage}
             modalDisclosure={{
               isOpen: deleteEntityModalIsOpen,

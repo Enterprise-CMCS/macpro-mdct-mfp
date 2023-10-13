@@ -58,6 +58,8 @@ export const ReportProvider = ({ children }: Props) => {
     setSubmittedReportsByState,
     lastSavedTime,
     setLastSavedTime,
+    selectedEntity,
+    setSelectedEntity,
   } = useStore();
 
   const { state: userState } = useStore().user ?? {};
@@ -69,6 +71,14 @@ export const ReportProvider = ({ children }: Props) => {
       );
     }
     setReport(report);
+    if (selectedEntity) {
+      setSelectedEntity(
+        report?.fieldData?.initiative.find(
+          (initiative: { id: any }) => initiative.id == selectedEntity.id
+        )
+      );
+    }
+    setSelectedEntity(selectedEntity);
     setContextIsLoaded(true);
   };
 

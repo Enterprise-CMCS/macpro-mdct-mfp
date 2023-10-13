@@ -41,11 +41,10 @@ export const EntityDetailsOverlay = ({
   route,
   closeEntityDetailsOverlay,
   validateOnRender,
-  selectedEntity,
 }: Props) => {
   const submitting = false;
   const { entityType, form, verbiage } = route;
-  const { report } = useStore();
+  const { report, selectedEntity } = useStore();
 
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
@@ -140,7 +139,7 @@ export const EntityDetailsOverlay = ({
         formJson={form}
         onSubmit={onSubmit}
         autosave={true}
-        formData={report?.fieldData}
+        formData={selectedEntity}
         validateOnRender={validateOnRender || false}
         dontReset={true}
       />

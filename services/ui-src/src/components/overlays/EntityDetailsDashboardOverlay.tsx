@@ -26,12 +26,14 @@ import { useStore } from "utils";
 export const EntityDetailsDashboardOverlay = ({
   closeEntityDetailsOverlay,
   entityType,
+  entities,
   dashboard,
   selectedEntity,
   route,
 }: Props) => {
   // Entity provider setup
-  const { clearEntities, setSelectedEntity, setEntityType } = useStore();
+  const { clearEntities, setSelectedEntity, setEntityType, setEntities } =
+    useStore();
   const [selectedStep, setSelectedStep] = useState<
     OverlayModalPageShape | EntityDetailsOverlayShape
   >();
@@ -42,6 +44,7 @@ export const EntityDetailsDashboardOverlay = ({
   useEffect(() => {
     setSelectedEntity(selectedEntity);
     setEntityType(entityType);
+    setEntities(entities);
     return () => {
       clearEntities();
       setSelectedEntity(undefined);
@@ -143,6 +146,7 @@ export const EntityDetailsDashboardOverlay = ({
 interface Props {
   closeEntityDetailsOverlay?: Function;
   entityType?: EntityType;
+  entities?: EntityShape[];
   dashboard?: FormJson;
   selectedEntity?: EntityShape;
   onSubmit?: Function;
