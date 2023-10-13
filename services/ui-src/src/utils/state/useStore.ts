@@ -66,6 +66,7 @@ const reportStore = (set: Function) => ({
   reportsByState: undefined,
   submittedReportsByState: undefined,
   lastSavedTime: undefined,
+  workPlanToCopyFrom: undefined,
   // actions
   setReport: (newReport: ReportShape | undefined) =>
     set(() => ({ report: newReport }), false, { type: "setReport" }),
@@ -88,6 +89,10 @@ const reportStore = (set: Function) => ({
   setLastSavedTime: (savedTime: string | undefined) =>
     set(() => ({ lastSavedTime: savedTime }), false, {
       type: "setLastSavedTime",
+    }),
+  setWorkPlanToCopyFrom: (planToCopy: ReportShape | undefined) =>
+    set(() => ({ workPlanToCopyFrom: planToCopy }), false, {
+      type: "setWorkPlanToCopyFrom",
     }),
 });
 

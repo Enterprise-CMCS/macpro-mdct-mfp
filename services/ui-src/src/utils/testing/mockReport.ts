@@ -136,6 +136,7 @@ export const mockReportMethods = {
   releaseReport: jest.fn(),
   fetchReport: jest.fn(),
   fetchReportsByState: jest.fn(),
+  fetchReportForSarCreation: jest.fn(),
   createReport: jest.fn(),
   updateReport: jest.fn(),
   submitReport: jest.fn(),
@@ -155,6 +156,11 @@ export const mockWpReportContext = {
   copyEligibleReportsByState: mockReportsByState,
   errorMessage: "",
   lastSavedTime: "2:00 PM",
+};
+
+export const mockEmptyDashboardReportContext = {
+  ...mockWpReportContext,
+  reportsByState: [{}],
 };
 
 export const mockDashboardReportContext = {
