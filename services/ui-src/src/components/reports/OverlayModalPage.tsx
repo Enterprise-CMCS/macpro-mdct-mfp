@@ -20,7 +20,7 @@ import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
 // utils
-import { getFormattedEntityData, useStore } from "utils";
+import { getFormattedEntityData, resetClearProp, useStore } from "utils";
 
 export const OverlayModalPage = ({
   entity,
@@ -82,6 +82,7 @@ export const OverlayModalPage = ({
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
     setSelectedEntity(entity);
+    resetClearProp(modalForm.fields);
     deleteEntityModalOnOpenHandler();
   };
 
