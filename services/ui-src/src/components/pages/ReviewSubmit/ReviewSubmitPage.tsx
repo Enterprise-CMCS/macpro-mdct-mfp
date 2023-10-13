@@ -33,7 +33,7 @@ export const ReviewSubmitPage = () => {
     useState<boolean>(false);
 
   // get user information
-  const { state, userIsEndUser } = useStore().user ?? {};
+  const { state, userIsEndUser, userIsAdmin } = useStore().user ?? {};
 
   // get report type, state, and id from context or storage
   const reportType =
@@ -112,12 +112,14 @@ export const ReviewSubmitPage = () => {
               isPermittedToSubmit={isPermittedToSubmit}
               reviewVerbiage={reviewVerbiage}
             />
-            <AdminReview
-              submitForm={submitForm}
-              submitting={submitting}
-              isPermittedToSubmit={isPermittedToSubmit}
-              reviewVerbiage={reviewVerbiage}
-            />
+            {userIsAdmin && (
+              <AdminReview
+                submitForm={submitForm}
+                submitting={submitting}
+                isPermittedToSubmit={isPermittedToSubmit}
+                reviewVerbiage={reviewVerbiage}
+              />
+            )}
           </div>
         )}
       </Flex>
@@ -325,7 +327,6 @@ export const SuccessMessage = ({
     submittedBy,
     stateName
   );
-
   return (
     <Flex sx={sx.contentContainer}>
       <Box sx={sx.leadTextBox}>
