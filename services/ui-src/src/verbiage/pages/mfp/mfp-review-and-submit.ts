@@ -17,6 +17,36 @@ export default {
         },
       ],
     },
+    adminInfo: {
+      header: "Admin Review",
+      info: [
+        {
+          type: "text",
+          as: "div",
+          content:
+            "<ul><li>To allow a state or territory to make corrections or edits to a submission use “Unlock” to release the submission, then email the state or territory contact and inform them. The status will change to “In revision.</li><br/><li>To approve a submission, review the submission and select “Approve”. The status will change to “Approved” and the content will be eligible for import into the SAR. <strong>You will not be able to unapprove or unlock it.</strong></li></ul>",
+        },
+      ],
+      modal: {
+        unlockModal: {
+          header: "You unlocked this Work Plan",
+          actionButtonText: "Return to dashboard",
+          body: "Email the state or territory contact and let them know it requires edits.",
+        },
+        approveModal: {
+          header: "Are you sure you want to approve this Work Plan?",
+          closeButtonText: "Cancel",
+          actionButtonText: "Approve",
+          body: "This action can’t be undone. Once the Work Plan is approved, the initiatives and benchmarks will be pulled into the Semi-Annual Report and this Work Plan can’t be unlocked or edited.",
+        },
+      },
+      unlockLink: {
+        text: "Unlock",
+      },
+      submitLink: {
+        text: "Approve",
+      },
+    },
     table: {
       headRow: ["Section", "Status", ""],
     },

@@ -102,15 +102,23 @@ export const ReviewSubmitPage = () => {
             stateName={report.fieldData.stateName!}
           />
         ) : (
-          <ReadyToSubmit
-            submitForm={submitForm}
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onClose={onClose}
-            submitting={submitting}
-            isPermittedToSubmit={isPermittedToSubmit}
-            reviewVerbiage={reviewVerbiage}
-          />
+          <div>
+            <ReadyToSubmit
+              submitForm={submitForm}
+              isOpen={isOpen}
+              onOpen={onOpen}
+              onClose={onClose}
+              submitting={submitting}
+              isPermittedToSubmit={isPermittedToSubmit}
+              reviewVerbiage={reviewVerbiage}
+            />
+            <AdminReview
+              submitForm={submitForm}
+              submitting={submitting}
+              isPermittedToSubmit={isPermittedToSubmit}
+              reviewVerbiage={reviewVerbiage}
+            />
+          </div>
         )}
       </Flex>
     </>
@@ -197,11 +205,83 @@ const ReadyToSubmit = ({
   );
 };
 
+const AdminReview = ({
+  reviewVerbiage,
+  submitForm,
+  submitting,
+}: AdminReviewProps) => {
+  const { review } = reviewVerbiage;
+  const { adminInfo } = review;
+  const adminModal1 = useDisclosure();
+  const adminModal2 = useDisclosure();
+
+  return (
+    <Flex sx={sx.contentContainer} data-testid="ready-view">
+      <Box sx={sx.adminLeadTextBox}>
+        <Box sx={sx.infoTextBox}>
+          <Text sx={sx.infoHeading}>{adminInfo.header}</Text>
+          <Text>{parseCustomHtml(adminInfo.info)}</Text>
+        </Box>
+      </Box>
+      <Flex sx={sx.adminSubmitContainer}>
+        <Button
+          type="submit"
+          id="adminUnlock"
+          onClick={adminModal1.onOpen as MouseEventHandler}
+          sx={sx.submitButton && sx.adminReviewButtons}
+          variant="outline"
+        >
+          {adminInfo.unlockLink.text}
+        </Button>
+        <Button
+          type="submit"
+          id="adminApprove"
+          onClick={adminModal2.onOpen as MouseEventHandler}
+          sx={sx.submitButton}
+        >
+          {adminInfo.submitLink.text}
+        </Button>
+      </Flex>
+      <Modal
+        onConfirmHandler={submitForm}
+        submitting={submitting}
+        modalDisclosure={{
+          isOpen: adminModal1.isOpen,
+          onClose: adminModal1.onClose,
+        }}
+        content={adminInfo.modal.unlockModal}
+      >
+        {" "}
+        <Text>{adminInfo.modal.unlockModal.body}</Text>
+      </Modal>
+      <Modal
+        onConfirmHandler={submitForm}
+        submitting={submitting}
+        modalDisclosure={{
+          isOpen: adminModal2.isOpen,
+          onClose: adminModal2.onClose,
+        }}
+        content={adminInfo.modal.approveModal}
+      >
+        <Text>{adminInfo.modal.approveModal.body}</Text>
+      </Modal>
+    </Flex>
+  );
+};
+
 interface ReadyToSubmitProps {
   submitForm: Function;
   isOpen: boolean;
   onOpen: Function;
   onClose: Function;
+  submitting?: boolean;
+  hasStarted?: boolean;
+  isPermittedToSubmit?: boolean;
+  reviewVerbiage: AnyObject;
+}
+
+interface AdminReviewProps {
+  submitForm: Function;
   submitting?: boolean;
   hasStarted?: boolean;
   isPermittedToSubmit?: boolean;
@@ -303,6 +383,12 @@ const sx = {
     fontSize: "4xl",
     fontWeight: "normal",
   },
+  adminLeadTextBox: {
+    marginTop: "2rem",
+    ul: {
+      marginLeft: "2rem",
+    },
+  },
   infoTextBox: {
     marginTop: "2rem",
     a: {
@@ -350,11 +436,17 @@ const sx = {
     width: "100%",
     justifyContent: "space-between",
   },
+  adminSubmitContainer: {
+    width: "100%",
+    justifyContent: "start",
+    marginTop: "2rem",
+  },
   alert: {
     marginBottom: "2rem",
   },
   submitButton: {
     minHeight: "3rem",
+    paddingRight: "1rem",
     "&:disabled": {
       opacity: 1,
       background: "palette.gray_lighter",
@@ -363,5 +455,8 @@ const sx = {
         background: "palette.gray_lighter",
       },
     },
+  },
+  adminReviewButtons: {
+    marginRight: "1rem",
   },
 };
