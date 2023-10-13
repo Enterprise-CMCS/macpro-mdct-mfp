@@ -244,15 +244,15 @@ export const DashboardPage = ({ reportType }: Props) => {
         <Heading as="h1" sx={sx.headerText}>
           {fullStateName} {intro.header}
         </Heading>
-        {reportType === "WP" && (
-          <InstructionsAccordion
-            verbiage={
-              userIsAdmin
-                ? accordion.WP.adminDashboard
-                : accordion.WP.stateUserDashboard
-            }
-          />
-        )}
+        <InstructionsAccordion
+          verbiage={
+            userIsAdmin
+              ? accordion[reportType as keyof typeof ReportType].adminDashboard
+              : accordion[reportType as keyof typeof ReportType]
+                  .stateUserDashboard
+          }
+        />
+
         {parseCustomHtml(intro.body)}
       </Box>
       <Box sx={sx.bodyBox}>
@@ -370,7 +370,7 @@ const sx = {
   leadTextBox: {
     width: "100%",
     maxWidth: "55.25rem",
-    margin: "2.5rem auto",
+    margin: "2.5rem auto 0rem",
     ".tablet &, .mobile &": {
       margin: "2.5rem 0 1rem",
     },
