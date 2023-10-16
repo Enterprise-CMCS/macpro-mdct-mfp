@@ -72,6 +72,7 @@ export { HelpPage } from "./pages/HelpPage/HelpPage";
 export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { ReviewSubmitPage } from "./pages/ReviewSubmit/ReviewSubmitPage";
+export { ExportedReportPage } from "./pages/Export/ExportedReportPage";
 // overlays
 export { EntityDetailsDashboardOverlay } from "./overlays/EntityDetailsDashboardOverlay";
 export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
