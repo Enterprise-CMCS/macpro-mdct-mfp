@@ -75,31 +75,3 @@ export const getEntityStatus = (report: ReportShape, entity: EntityShape) => {
     return false;
   }
 };
-
-//NOTE: this function works on the assumption that the fieldData saved is validated
-export const getInitiativeStatus = (formEntity: any, entity: EntityShape) => {
-  //pull fields from form type
-  const fields = formEntity.form
-    ? formEntity.form.fields
-    : formEntity.modalForm.fields;
-
-  //filter the fields data down to a validation array
-  const reportFormValidation = fields.map((field: any) => {
-    return { [field.id]: field.validation };
-  });
-
-  //create an array to use as a lookup for fieldData
-  const fieldKeyInReport = reportFormValidation.map(
-    (validation: { [key: string]: string }) => {
-      return Object.keys(validation)[0];
-    }
-  );
-
-  //entity has data for all the initiatives instead of the topic, so we filter down to the data for the current status topic
-  const filterdFieldData = fieldKeyInReport.map((item: string) => {
-    return entity[item];
-  });
-
-  //if any of the field data is empty, that means we're missing data and the status is automatically false
-  return filterdFieldData.every((field: any) => field);
-};

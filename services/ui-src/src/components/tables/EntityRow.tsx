@@ -13,7 +13,7 @@ import {
 import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
-import { getEntityStatus, getInitiativeStatus } from "./getEntityStatus";
+import { getEntityStatus } from "./getEntityStatus";
 
 export const EntityRow = ({
   entity,
@@ -36,8 +36,6 @@ export const EntityRow = ({
     switch (entityType) {
       case ModalDrawerEntityTypes.TARGET_POPULATIONS:
         return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
-      case "initiative":
-        return report ? !!getInitiativeStatus(formEntity!, entity) : false;
       default: {
         return report ? !!getEntityStatus(report, entity) : false;
       }
