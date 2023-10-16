@@ -1,5 +1,6 @@
 import { MouseEventHandler, useContext, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { AdminReview } from "./AdminReview";
 // components
 import {
   Box,
@@ -9,8 +10,6 @@ import {
   Heading,
   Text,
   useDisclosure,
-  Input,
-  ModalFooter,
 } from "@chakra-ui/react";
 import { Alert, Modal, ReportContext, StatusTable } from "components";
 // types
@@ -34,7 +33,6 @@ export const ReviewSubmitPage = () => {
   const [isPermittedToSubmit, setIsPermittedToSubmit] =
     useState<boolean>(false);
 
-  // get user information
   const { state, userIsEndUser, userIsAdmin } = useStore().user ?? {};
 
   // get report type, state, and id from context or storage
@@ -50,7 +48,6 @@ export const ReviewSubmitPage = () => {
   };
 
   const reviewVerbiage = verbiage;
-
   const { alertBox } = reviewVerbiage;
 
   useEffect(() => {
@@ -164,6 +161,7 @@ const ReadyToSubmit = ({
   isPermittedToSubmit,
   reviewVerbiage,
 }: ReadyToSubmitProps) => {
+  const { userIsAdmin } = useStore().user ?? {};
   const { review } = reviewVerbiage;
   const { intro, modal, pageLink } = review;
   const pdfExport = true;
@@ -185,14 +183,16 @@ const ReadyToSubmit = ({
       </Box>
       <Flex sx={sx.submitContainer}>
         {pdfExport && <PrintButton reviewVerbiage={reviewVerbiage} />}
-        <Button
-          type="submit"
-          onClick={onOpen as MouseEventHandler}
-          isDisabled={!isPermittedToSubmit}
-          sx={sx.submitButton}
-        >
-          {pageLink.text}
-        </Button>
+        {!userIsAdmin && (
+          <Button
+            type="submit"
+            onClick={onOpen as MouseEventHandler}
+            isDisabled={!isPermittedToSubmit}
+            sx={sx.submitButton}
+          >
+            {pageLink.text}
+          </Button>
+        )}
       </Flex>
       <Modal
         onConfirmHandler={submitForm}
@@ -209,95 +209,6 @@ const ReadyToSubmit = ({
   );
 };
 
-const AdminReview = ({
-  reviewVerbiage,
-  submitForm,
-  submitting,
-}: AdminReviewProps) => {
-  const { review } = reviewVerbiage;
-  const { adminInfo } = review;
-  const adminModal1 = useDisclosure();
-  const adminModal2 = useDisclosure();
-
-  return (
-    <Flex sx={sx.contentContainer} data-testid="ready-view">
-      <Box sx={sx.adminLeadTextBox}>
-        <Box sx={sx.infoTextBox}>
-          <Text sx={sx.infoHeading}>{adminInfo.header}</Text>
-          <Text>{parseCustomHtml(adminInfo.info)}</Text>
-        </Box>
-      </Box>
-      <Flex sx={sx.adminSubmitContainer}>
-        <Button
-          type="submit"
-          id="adminUnlock"
-          onClick={adminModal1.onOpen as MouseEventHandler}
-          sx={sx.submitButton && sx.adminReviewButtons}
-          variant="outline"
-        >
-          {adminInfo.unlockLink.text}
-        </Button>
-        <Button
-          type="submit"
-          id="adminApprove"
-          onClick={adminModal2.onOpen as MouseEventHandler}
-          sx={sx.submitButton && sx.adminApprove}
-        >
-          {adminInfo.submitLink.text}
-        </Button>
-      </Flex>
-      <Modal
-        onConfirmHandler={submitForm}
-        submitting={submitting}
-        modalDisclosure={{
-          isOpen: adminModal1.isOpen,
-          onClose: adminModal1.onClose,
-        }}
-        content={{
-          heading: adminInfo.modal.unlockModal.heading,
-          actionButtonText: adminInfo.modal.unlockModal.actionButtonText,
-          closeButtonText: adminInfo.modal.unlockModal.closeButtonText,
-        }}
-      >
-        <Text>{adminInfo.modal.unlockModal.body}</Text>
-      </Modal>
-      <Modal
-        onConfirmHandler={submitForm}
-        submitting={submitting}
-        modalDisclosure={{
-          isOpen: adminModal2.isOpen,
-          onClose: adminModal2.onClose,
-        }}
-        content={adminInfo.modal.approveModal}
-      >
-        <Text sx={sx.unlockModalBody}>{adminInfo.modal.approveModal.body}</Text>
-        <Text fontWeight="bold">Enter APPROVE to confirm.</Text>
-        <Input
-          id="approve"
-          name="approve"
-          type="password"
-          value={""}
-          onChange={() => {}}
-          className="field"
-        />
-        <ModalFooter sx={sx.modalFooter}>
-          <Button
-            type="submit"
-            variant="outline"
-            data-testid="modal-logout-button"
-            sx={sx.modalCancel}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" data-testid="modal-refresh-button">
-            Approve
-          </Button>
-        </ModalFooter>
-      </Modal>
-    </Flex>
-  );
-};
-
 interface ReadyToSubmitProps {
   submitForm: Function;
   isOpen: boolean;
@@ -308,15 +219,6 @@ interface ReadyToSubmitProps {
   isPermittedToSubmit?: boolean;
   reviewVerbiage: AnyObject;
 }
-
-interface AdminReviewProps {
-  submitForm: Function;
-  submitting?: boolean;
-  hasStarted?: boolean;
-  isPermittedToSubmit?: boolean;
-  reviewVerbiage: AnyObject;
-}
-
 export const SuccessMessageGenerator = (
   reportType: string,
   name: string,
@@ -411,15 +313,6 @@ const sx = {
     fontSize: "4xl",
     fontWeight: "normal",
   },
-  unlockModalBody: {
-    marginBottom: "1rem",
-  },
-  adminLeadTextBox: {
-    marginTop: "2rem",
-    ul: {
-      marginLeft: "2rem",
-    },
-  },
   infoTextBox: {
     marginTop: "2rem",
     a: {
@@ -444,9 +337,6 @@ const sx = {
   additionalInfo: {
     color: "palette.gray",
   },
-  adminApprove: {
-    display: "flex",
-  },
   printButton: {
     minWidth: "6rem",
     height: "2rem",
@@ -470,11 +360,6 @@ const sx = {
     width: "100%",
     justifyContent: "space-between",
   },
-  adminSubmitContainer: {
-    width: "100%",
-    justifyContent: "start",
-    marginTop: "2rem",
-  },
   alert: {
     marginBottom: "2rem",
   },
@@ -489,15 +374,5 @@ const sx = {
         background: "palette.gray_lighter",
       },
     },
-  },
-  modalFooter: {
-    paddingStart: 0,
-    justifyContent: "start",
-  },
-  modalCancel: {
-    marginRight: "1rem",
-  },
-  adminReviewButtons: {
-    marginRight: "1rem",
   },
 };
