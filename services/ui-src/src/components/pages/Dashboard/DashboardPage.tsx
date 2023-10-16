@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import {
   AddEditReportModal,
+  Modal,
   DashboardTable,
   InstructionsAccordion,
   ErrorAlert,
@@ -25,13 +26,15 @@ import {
   ReportContext,
 } from "components";
 // utils
-import { AnyObject, ReportMetadataShape, ReportKeys, ReportShape } from "types";
 import {
-  convertDateUtcToEt,
-  parseCustomHtml,
-  useBreakpoint,
-  useStore,
-} from "utils";
+  AnyObject,
+  ReportMetadataShape,
+  ReportKeys,
+  ReportShape,
+  ReportType,
+  ReportStatus,
+} from "types";
+import { parseCustomHtml, useBreakpoint, useStore } from "utils";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
@@ -43,17 +46,18 @@ export const DashboardPage = ({ reportType }: Props) => {
   const {
     errorMessage,
     fetchReportsByState,
+    fetchReportForSarCreation,
     clearReportSelection,
     setReportSelection,
     archiveReport,
     releaseReport,
     fetchReport,
   } = useContext(ReportContext);
-  const { reportsByState } = useStore();
+  const { reportsByState, workPlanToCopyFrom } = useStore();
   const navigate = useNavigate();
   const {
     state: userState,
-    userIsStateUser,
+    userIsEndUser,
     userIsAdmin,
   } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
@@ -86,8 +90,13 @@ export const DashboardPage = ({ reportType }: Props) => {
     if (!activeState) {
       navigate("/");
     }
-    fetchReportsByState(reportType, activeState);
-    clearReportSelection();
+    if (reportType == ReportType.WP) {
+      fetchReportsByState(reportType, activeState);
+      clearReportSelection();
+    } else {
+      fetchReportForSarCreation(activeState);
+      clearReportSelection();
+    }
   }, []);
 
   useEffect(() => {
@@ -119,20 +128,40 @@ export const DashboardPage = ({ reportType }: Props) => {
 
   const openAddEditReportModal = (report?: ReportShape) => {
     let formData = undefined;
-    let submittedOnDate = undefined;
-    // Check and pre-fill the form if the user is editing an existing program
-    if (report) {
-      if (report.submittedOnDate) {
-        submittedOnDate = convertDateUtcToEt(report.submittedOnDate);
-      }
+    //
+    if (report && reportType == ReportType.SAR) {
+      // We are editing a SAR submission
       formData = {
+        formData: {
+          associatedWorkPlan: report.submissionName,
+          stateOrTerritory: report.state,
+          reportPeriod: report.reportPeriod,
+          finalSar: [
+            {
+              key: report.finalSar
+                ? "nrRmirBoVQv0ysWnEejNZD"
+                : "ekP9iVvuQE9AALchScDzoD",
+              value: report.finalSar ? "Yes" : "No",
+            },
+          ],
+        },
         state: report.state,
         id: report.id,
         submittedBy: report.submittedBy,
         submitterEmail: report.submitterEmail,
-        submittedOnDate: submittedOnDate,
+        submittedOnDate: report?.submittedOnDate,
+      };
+    } else if (reportType == ReportType.SAR) {
+      // We are creating a new SAR submission
+      formData = {
+        formData: {
+          associatedWorkPlan: workPlanToCopyFrom?.submissionName,
+          stateOrTerritory: userState,
+          reportPeriod: workPlanToCopyFrom?.reportPeriod,
+        },
       };
     }
+
     setSelectedReport(formData);
 
     // use disclosure to open modal
@@ -168,6 +197,23 @@ export const DashboardPage = ({ reportType }: Props) => {
       await fetchReportsByState(reportType, activeState);
       setReportId(undefined);
       setReleasing(false);
+
+      //useDiscourse to open modal
+      confirmUnlockModalOnOpenHandler();
+    }
+  };
+
+  const isAddSubmissionDisabled = (): boolean => {
+    const lastDisplayedReport =
+      reportsToDisplay?.[reportsToDisplay?.length - 1];
+    switch (reportType) {
+      case ReportType.SAR:
+        return !workPlanToCopyFrom;
+      case ReportType.WP:
+        if (!lastDisplayedReport) return false;
+        return lastDisplayedReport.status !== ReportStatus.SUBMITTED;
+      default:
+        return true;
     }
   };
 
@@ -176,6 +222,13 @@ export const DashboardPage = ({ reportType }: Props) => {
     isOpen: addEditReportModalIsOpen,
     onOpen: addEditReportModalOnOpenHandler,
     onClose: addEditReportModalOnCloseHandler,
+  } = useDisclosure();
+
+  //unlock modal disclosure
+  const {
+    isOpen: confirmUnlockModalIsOpen,
+    onOpen: confirmUnlockModalOnOpenHandler,
+    onClose: confirmUnlockModalOnCloseHandler,
   } = useDisclosure();
 
   const fullStateName = States[activeState as keyof typeof States];
@@ -216,7 +269,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
-              isStateLevelUser={userIsStateUser!}
+              isStateLevelUser={userIsEndUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />
@@ -233,7 +286,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
-              isStateLevelUser={userIsStateUser!}
+              isStateLevelUser={userIsEndUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />
@@ -253,12 +306,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           <Box sx={sx.callToActionContainer}>
             <Button
               type="submit"
-              disabled={
-                reportsToDisplay &&
-                reportsToDisplay[0]?.status === "In progress"
-                  ? true
-                  : false
-              }
+              disabled={isAddSubmissionDisabled()}
               onClick={() => openAddEditReportModal()}
             >
               {body.callToAction}
@@ -274,6 +322,14 @@ export const DashboardPage = ({ reportType }: Props) => {
           isOpen: addEditReportModalIsOpen,
           onClose: addEditReportModalOnCloseHandler,
         }}
+      />
+      <Modal
+        modalDisclosure={{
+          isOpen: confirmUnlockModalIsOpen,
+          onClose: confirmUnlockModalOnCloseHandler,
+        }}
+        onConfirmHandler={confirmUnlockModalOnCloseHandler}
+        content={wpVerbiage.modalUnlock}
       />
     </PageTemplate>
   );

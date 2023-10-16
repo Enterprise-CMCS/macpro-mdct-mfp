@@ -100,7 +100,6 @@ export const EntityDetailsDashboardOverlay = ({
           <EntityProvider>
             <EntityDetailsOverlay
               entity={selectedEntity!}
-              entityType={entityType!}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as EntityDetailsOverlayShape}
             />
@@ -137,7 +136,7 @@ export const EntityDetailsDashboardOverlay = ({
                 verbiage={step.verbiage}
                 formEntity={step}
                 locked={false}
-                openDrawer={() => openEntityStepOverlay(step)}
+                openOverlayOrDrawer={() => openEntityStepOverlay(step)}
                 openAddEditEntityModal={() => {
                   return;
                 }}

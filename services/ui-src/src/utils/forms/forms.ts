@@ -19,7 +19,6 @@ import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
 import { DynamicField } from "components/fields/DynamicField";
 import { NumberField } from "components/fields/NumberField";
-import { ChoiceList } from "@cmsgov/design-system";
 
 // return created elements from provided fields
 export const formFieldFactory = (
@@ -205,50 +204,27 @@ export const flattenFormFields = (formFields: FormField[]): FormField[] => {
   return flattenedFields;
 };
 
-// repeatable target population choice list
-const repeatableTargetPopulationChoices = (
-  fields: (FormField | FormLayoutElement)[],
-  choiceList: any
-) => {
-  const createLabel = (field: any) => {
-    if (choiceList.indexOf(field) >= 4) {
-      return `Other: ${field.transitionBenchmarks_targetPopulationName}`;
-    } else {
-      return field.transitionBenchmarks_targetPopulationName;
+/*
+ * This function resets the 'clear' prop on each field after a ChoiceListField calls
+ * clearUncheckedNestedFields(). Upon re-entering a drawer or modal, the field values will
+ * be correctly hydrated.
+ */
+export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
+  fields.forEach((field: FormField | FormLayoutElement) => {
+    switch (field.type) {
+      case "radio":
+      case "checkbox":
+        field.props?.choices.forEach((childField: FieldChoice) => {
+          if (childField?.children) {
+            resetClearProp(childField.children);
+          }
+        });
+        field.props = { ...field.props, clear: false };
+        resetClearProp(field.props?.choices);
+        break;
+      default:
+        field.props = { ...field.props, clear: false };
+        break;
     }
-  };
-  const formatTargetPopulations = choiceList?.map((field: any) => {
-    return {
-      checked: false,
-      id: field.id,
-      label: createLabel(field),
-      name: field.transitionBenchmarks_targetPopulationName,
-      value: field.transitionBenchmarks_targetPopulationName,
-    };
   });
-  // update choices with dynamic target population choices
-  if (fields[1]?.props) {
-    fields[1].props.choices = [];
-    fields[1]?.props?.choices.push(...formatTargetPopulations);
-  }
-};
-
-// returns repeated choice lists - reformatting logic is needed once fields are passed into this function
-export const getRepeatableChoiceLists = (
-  fields: (FormField | FormLayoutElement)[],
-  choiceList: ChoiceList
-) => {
-  // check if fields have target population data
-  const isRepeatableTargetPopulations = fields.filter(
-    (field: FormField | FormLayoutElement) =>
-      field.id.match("targetPopulations")
-  );
-
-  // add more conditional logic for other choice lists
-  if (isRepeatableTargetPopulations.length > 0) {
-    repeatableTargetPopulationChoices(fields, choiceList);
-    return fields;
-  } else {
-    return fields;
-  }
 };

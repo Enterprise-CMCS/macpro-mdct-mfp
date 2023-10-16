@@ -24,7 +24,7 @@ export const EntityRow = ({
   locked,
   openAddEditEntityModal,
   openDeleteEntityModal,
-  openDrawer,
+  openOverlayOrDrawer,
 }: Props) => {
   const { userIsEndUser } = useStore().user ?? {};
   const { report } = useStore();
@@ -89,7 +89,7 @@ export const EntityRow = ({
           )}
           <Button
             sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
-            onClick={() => openDrawer(entity)}
+            onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
           >
             {verbiage.enterEntityDetailsButtonText}
@@ -117,7 +117,7 @@ interface Props {
   verbiage: AnyObject;
   openAddEditEntityModal: Function;
   openDeleteEntityModal: Function;
-  openDrawer: Function;
+  openOverlayOrDrawer: Function;
   [key: string]: any;
 }
 
