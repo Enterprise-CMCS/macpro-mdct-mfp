@@ -8,6 +8,7 @@ import {
 import { ReportContext } from "../reports/ReportProvider";
 import { AddEditReportModal } from "./AddEditReportModal";
 import userEvent from "@testing-library/user-event";
+import { axe } from "jest-axe";
 
 const mockCreateReport = jest.fn();
 const mockUpdateReport = jest.fn();
@@ -101,5 +102,13 @@ describe("Test AddEditReportModal functionality for Work Plan", () => {
     await expect(mockUpdateReport).toHaveBeenCalledTimes(1);
     await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
     await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("Test AddEditReportModal accessibility", () => {
+  it("Should not have basic accessibility issues", async () => {
+    const { container } = render(modalComponent);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });
