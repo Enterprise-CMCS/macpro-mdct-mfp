@@ -1,14 +1,9 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
 import { EntityStatusIcon } from "components";
 // types
-import {
-  AnyObject,
-  EntityShape,
-  ModalDrawerEntityTypes,
-  ReportShape,
-} from "types";
+import { AnyObject, EntityShape, ModalDrawerEntityTypes } from "types";
 // utils
 import { renderHtml, useStore } from "utils";
 // assets
@@ -19,7 +14,6 @@ export const EntityRow = ({
   entity,
   entityInfo,
   entityType,
-  formEntity,
   verbiage,
   locked,
   openAddEditEntityModal,
@@ -111,7 +105,6 @@ export const EntityRow = ({
 interface Props {
   entity: EntityShape;
   entityType?: string;
-  formEntity?: ReportShape;
   verbiage: AnyObject;
   openAddEditEntityModal: Function;
   openDeleteEntityModal: Function;
