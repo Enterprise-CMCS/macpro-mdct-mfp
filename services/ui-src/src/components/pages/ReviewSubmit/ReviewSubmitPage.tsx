@@ -9,6 +9,8 @@ import {
   Heading,
   Text,
   useDisclosure,
+  Input,
+  ModalFooter,
 } from "@chakra-ui/react";
 import { Alert, Modal, ReportContext, StatusTable } from "components";
 // types
@@ -239,7 +241,7 @@ const AdminReview = ({
           type="submit"
           id="adminApprove"
           onClick={adminModal2.onOpen as MouseEventHandler}
-          sx={sx.submitButton}
+          sx={sx.submitButton && sx.adminApprove}
         >
           {adminInfo.submitLink.text}
         </Button>
@@ -251,9 +253,12 @@ const AdminReview = ({
           isOpen: adminModal1.isOpen,
           onClose: adminModal1.onClose,
         }}
-        content={adminInfo.modal.unlockModal}
+        content={{
+          heading: adminInfo.modal.unlockModal.heading,
+          actionButtonText: adminInfo.modal.unlockModal.actionButtonText,
+          closeButtonText: adminInfo.modal.unlockModal.closeButtonText,
+        }}
       >
-        {" "}
         <Text>{adminInfo.modal.unlockModal.body}</Text>
       </Modal>
       <Modal
@@ -265,7 +270,29 @@ const AdminReview = ({
         }}
         content={adminInfo.modal.approveModal}
       >
-        <Text>{adminInfo.modal.approveModal.body}</Text>
+        <Text sx={sx.unlockModalBody}>{adminInfo.modal.approveModal.body}</Text>
+        <Text fontWeight="bold">Enter APPROVE to confirm.</Text>
+        <Input
+          id="approve"
+          name="approve"
+          type="password"
+          value={""}
+          onChange={() => {}}
+          className="field"
+        />
+        <ModalFooter sx={sx.modalFooter}>
+          <Button
+            type="submit"
+            variant="outline"
+            data-testid="modal-logout-button"
+            sx={sx.modalCancel}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" data-testid="modal-refresh-button">
+            Approve
+          </Button>
+        </ModalFooter>
       </Modal>
     </Flex>
   );
@@ -384,6 +411,9 @@ const sx = {
     fontSize: "4xl",
     fontWeight: "normal",
   },
+  unlockModalBody: {
+    marginBottom: "1rem",
+  },
   adminLeadTextBox: {
     marginTop: "2rem",
     ul: {
@@ -413,6 +443,9 @@ const sx = {
   },
   additionalInfo: {
     color: "palette.gray",
+  },
+  adminApprove: {
+    display: "flex",
   },
   printButton: {
     minWidth: "6rem",
@@ -456,6 +489,13 @@ const sx = {
         background: "palette.gray_lighter",
       },
     },
+  },
+  modalFooter: {
+    paddingStart: 0,
+    justifyContent: "start",
+  },
+  modalCancel: {
+    marginRight: "1rem",
   },
   adminReviewButtons: {
     marginRight: "1rem",

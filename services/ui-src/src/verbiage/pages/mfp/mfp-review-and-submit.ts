@@ -29,14 +29,14 @@ export default {
       ],
       modal: {
         unlockModal: {
-          header: "You unlocked this Work Plan",
+          heading: "You unlocked this Work Plan",
           actionButtonText: "Return to dashboard",
           body: "Email the state or territory contact and let them know it requires edits.",
         },
         approveModal: {
-          header: "Are you sure you want to approve this Work Plan?",
-          closeButtonText: "Cancel",
-          actionButtonText: "Approve",
+          heading: "Are you sure you want to approve this Work Plan?",
+          closeButtonText: "",
+          actionButtonText: "",
           body: "This action can’t be undone. Once the Work Plan is approved, the initiatives and benchmarks will be pulled into the Semi-Annual Report and this Work Plan can’t be unlocked or edited.",
         },
       },
