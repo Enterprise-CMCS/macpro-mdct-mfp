@@ -122,8 +122,6 @@ export const createReport = handler(
 
     // Get Associated Work Plan if creating a SAR Submission
     if (reportType === ReportType.SAR) {
-      const sarSubmissions = await fetchReportsByState(event, _context);
-
       const workPlanEvent = event;
       workPlanEvent.pathParameters = {
         ...workPlanEvent.pathParameters,
@@ -138,43 +136,46 @@ export const createReport = handler(
       }
       // if current report exists, parse for archived status
       if (workPlanSubmissions.body) {
-        const currentSarSubmissions = JSON.parse(sarSubmissions.body);
         const currentWorkPlans = JSON.parse(workPlanSubmissions.body);
 
-        if (currentWorkPlans.length !== currentSarSubmissions?.length) {
-          let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
-          currentWorkPlans.forEach((submission: ReportMetadataShape) => {
+        let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
+        currentWorkPlans.forEach((submission: ReportMetadataShape) => {
+          if (
+            (submission.status === ReportStatus.NOT_STARTED ||
+              submission.status === ReportStatus.IN_PROGRESS) &&
+            !submission?.sar
+          ) {
             if (
-              submission.status === ReportStatus.NOT_STARTED ||
-              submission.status === ReportStatus.IN_PROGRESS
-            ) {
-              if (
-                lastFoundSubmission &&
-                submission.createdAt > lastFoundSubmission?.createdAt
-              )
-                lastFoundSubmission = submission;
-              else if (!lastFoundSubmission) {
-                lastFoundSubmission = submission;
-              }
+              lastFoundSubmission &&
+              submission.createdAt > lastFoundSubmission?.createdAt
+            )
+              lastFoundSubmission = submission;
+            else if (!lastFoundSubmission) {
+              lastFoundSubmission = submission;
             }
-          });
-
-          if (lastFoundSubmission) {
-            const fetchWPReportEvent = event;
-            fetchWPReportEvent.pathParameters = {
-              reportType: ReportType.WP,
-              state: state,
-              id: lastFoundSubmission["id"],
-            };
-            const workPlan = await fetchReport(fetchWPReportEvent, _context);
-            const workPlanParsed = JSON.parse(workPlan.body);
-            workPlanMetadata = workPlanParsed;
-            const workPlanFieldData = workPlanParsed?.fieldData;
-            validatedFieldData = {
-              ...validatedFieldData,
-              workPlanData: workPlanFieldData,
-            };
           }
+        });
+
+        if (lastFoundSubmission) {
+          const fetchWPReportEvent = event;
+          fetchWPReportEvent.pathParameters = {
+            reportType: ReportType.WP,
+            state: state,
+            id: lastFoundSubmission["id"],
+          };
+          const workPlan = await fetchReport(fetchWPReportEvent, _context);
+          const workPlanParsed = JSON.parse(workPlan.body);
+          workPlanMetadata = workPlanParsed;
+          const workPlanFieldData = workPlanParsed?.fieldData;
+          validatedFieldData = {
+            ...validatedFieldData,
+            workPlanData: workPlanFieldData,
+          };
+        } else {
+          return {
+            status: StatusCodes.SERVER_ERROR,
+            body: error.NO_ELIGIBLE_WORKPLANS_FOUND,
+          };
         }
       }
     }
@@ -243,6 +244,7 @@ export const createReport = handler(
         ),
         reportYear,
         reportPeriod: calculatePeriod(currentDate, workPlanMetadata),
+        workPlan: workPlanMetadata?.id,
       },
     };
 
@@ -253,6 +255,26 @@ export const createReport = handler(
         status: StatusCodes.SERVER_ERROR,
         body: error.DYNAMO_CREATION_ERROR,
       };
+    }
+
+    if (reportType === ReportType.SAR) {
+      // Let the workplan know what sar its connected too
+      const workPlanWithSarFormConnection: DynamoWrite = {
+        TableName: reportTables[ReportType.WP],
+        Item: {
+          ...workPlanMetadata,
+          sar: reportId,
+        },
+      };
+
+      try {
+        await dynamoDb.put(workPlanWithSarFormConnection);
+      } catch (err) {
+        return {
+          status: StatusCodes.SERVER_ERROR,
+          body: error.DYNAMO_CREATION_ERROR,
+        };
+      }
     }
 
     return {
