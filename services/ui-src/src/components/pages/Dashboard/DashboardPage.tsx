@@ -84,6 +84,9 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
   const { intro, body } = dashboardVerbiage;
 
+  // get Work Plan status
+  const workPlanStatus = workPlanToCopyFrom?.status;
+
   // get active state
   const adminSelectedState = localStorage.getItem("selectedState") || undefined;
   const activeState = userState || adminSelectedState;
@@ -243,16 +246,18 @@ export const DashboardPage = ({ reportType }: Props) => {
         Return home
       </Link>
       {errorMessage && <ErrorAlert error={errorMessage} />}
-      {reportType === ReportType.SAR && isAddSubmissionDisabled() && (
-        <Alert
-          title={sarVerbiage.alertBanner.title}
-          showIcon={true}
-          icon={alertIcon}
-          status={AlertTypes.ERROR}
-          description={sarVerbiage.alertBanner.body}
-          sx={sx.alertBanner}
-        />
-      )}
+      {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
+      {reportType === ReportType.SAR &&
+        workPlanStatus !== ReportStatus.APPROVED && (
+          <Alert
+            title={sarVerbiage.alertBanner.title}
+            showIcon={true}
+            icon={alertIcon}
+            status={AlertTypes.ERROR}
+            description={sarVerbiage.alertBanner.body}
+            sx={sx.alertBanner}
+          />
+        )}
       <Box sx={sx.leadTextBox}>
         <Heading as="h1" sx={sx.headerText}>
           {fullStateName} {intro.header}
