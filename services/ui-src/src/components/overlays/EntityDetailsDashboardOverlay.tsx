@@ -36,17 +36,24 @@ export const EntityDetailsDashboardOverlay = ({
     OverlayModalPageShape | EntityDetailsOverlayShape
   >();
   const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
+  const { report } = useStore();
 
   const { entitySteps } = route;
 
+  //using selectEntity directly will not re-render where there's a data change, we have to use its id to look up date from the report instead
+  const reportFieldDataEntities =
+    report?.fieldData[entityType!].find(
+      (entity: EntityShape) => entity.id === selectedEntity?.id
+    ) || [];
+
   useEffect(() => {
-    setSelectedEntity(selectedEntity);
+    setSelectedEntity(reportFieldDataEntities);
     setEntityType(entityType);
     return () => {
       clearEntities();
       setSelectedEntity(undefined);
     };
-  }, [entityType, selectedEntity]);
+  }, [entityType, reportFieldDataEntities]);
 
   // Open/Close overlay action methods
   const openEntityStepOverlay = (
@@ -124,7 +131,7 @@ export const EntityDetailsDashboardOverlay = ({
             {entitySteps?.map((step: any) => (
               <EntityRow
                 key={step.id}
-                entity={formatEntityStep(selectedEntity!, step)}
+                entity={formatEntityStep(reportFieldDataEntities!, step)}
                 entityType={step.entityType}
                 entityInfo={step.stepInfo}
                 verbiage={step.verbiage}

@@ -61,6 +61,7 @@ export { Sidebar } from "./menus/Sidebar";
 // modals
 export { Modal } from "./modals/Modal";
 export { AddEditEntityModal } from "./modals/AddEditEntityModal";
+export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";   //test
 export { CloseEntityModal } from "./modals/CloseEntityModal";
 export { AddEditReportModal } from "./modals/AddEditReportModal";
 export { DeleteDynamicFieldRecordModal } from "./modals/DeleteDynamicFieldRecordModal";
