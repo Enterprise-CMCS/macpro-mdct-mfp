@@ -10,20 +10,29 @@ export interface ReportKeys {
 }
 
 export interface ReportMetadataShape extends ReportKeys {
-  reportType: string;
+  // Main Report Information
   submissionName: string;
   status: ReportStatus;
-  reportingPeriodStartDate: number;
-  reportingPeriodEndDate: number;
-  dueDate: number;
+  // Who Touched It/Submitted It
   createdAt: number;
   lastAltered: number;
   lastAlteredBy: string;
-  combinedData: boolean;
   submittedBy?: string;
   submitterEmail?: string;
   submittedOnDate?: number;
+  // Time Information
+  dueDate: number;
+  reportPeriod: number;
+  reportYear: number;
+  // Admin Use Cases
   archived?: boolean;
+  locked?: boolean;
+  submissionCount?: number;
+  // Connection to let Sar forms know what Work Plan they use to copy data from and vice versa
+  sar?: string;
+  workPlan?: string;
+  // Any additional questions that are asked when creating a report are appended here
+  finalSar?: boolean;
 }
 
 export interface ReportShape extends ReportMetadataShape {
