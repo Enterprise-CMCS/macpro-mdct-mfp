@@ -24,6 +24,7 @@ import {
   MobileDashboardTable,
   PageTemplate,
   ReportContext,
+  Alert,
 } from "components";
 // utils
 import {
@@ -33,6 +34,7 @@ import {
   ReportShape,
   ReportType,
   ReportStatus,
+  AlertTypes,
 } from "types";
 import { parseCustomHtml, useBreakpoint, useStore } from "utils";
 // verbiage
@@ -41,6 +43,7 @@ import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
+import alertIcon from "assets/icons/icon_alert_circle.png";
 
 export const DashboardPage = ({ reportType }: Props) => {
   const {
@@ -198,7 +201,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       setReportId(undefined);
       setReleasing(false);
 
-      //useDiscourse to open modal
+      // useDisclosure to open modal
       confirmUnlockModalOnOpenHandler();
     }
   };
@@ -237,9 +240,19 @@ export const DashboardPage = ({ reportType }: Props) => {
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
         <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
-        Return Home
+        Return home
       </Link>
       {errorMessage && <ErrorAlert error={errorMessage} />}
+      {reportType === ReportType.SAR && isAddSubmissionDisabled() && (
+        <Alert
+          title={sarVerbiage.alertBanner.title}
+          showIcon={true}
+          icon={alertIcon}
+          status={AlertTypes.ERROR}
+          description={sarVerbiage.alertBanner.body}
+          sx={sx.alertBanner}
+        />
+      )}
       <Box sx={sx.leadTextBox}>
         <Heading as="h1" sx={sx.headerText}>
           {fullStateName} {intro.header}
@@ -350,6 +363,7 @@ const sx = {
   returnLink: {
     display: "flex",
     width: "8.5rem",
+    paddingTop: "0.5rem",
     svg: {
       height: "1.375rem",
       width: "1.375rem",
@@ -417,6 +431,18 @@ const sx = {
     width: "100%",
     justifyContent: "center",
     padding: "10",
+  },
+  alertBanner: {
+    marginTop: "3.5rem",
+    marginBottom: "2rem",
+    borderInlineStartWidth: "7.5px",
+    bgColor: "palette.error_lightest",
+    marginLeft: "5rem",
+    width: "65%",
+    fontSize: "18px",
+    p: {
+      fontSize: "16px",
+    },
   },
 };
 
