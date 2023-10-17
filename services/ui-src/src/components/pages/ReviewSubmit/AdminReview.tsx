@@ -22,8 +22,8 @@ export const AdminReview = ({
 }: AdminReviewProps) => {
   const { review } = reviewVerbiage;
   const { adminInfo } = review;
-  const adminModal1 = useDisclosure();
-  const adminModal2 = useDisclosure();
+  const adminUnlockModal = useDisclosure();
+  const adminApproveModal = useDisclosure();
   const report = useStore().report;
 
   return (
@@ -38,7 +38,7 @@ export const AdminReview = ({
         <Button
           type="submit"
           id="adminUnlock"
-          onClick={adminModal1.onOpen as MouseEventHandler}
+          onClick={adminUnlockModal.onOpen as MouseEventHandler}
           sx={sx.submitButton && sx.adminUnlockBtn}
           variant="outline"
           disabled={report?.status !== ReportStatus.SUBMITTED ? true : false}
@@ -48,7 +48,7 @@ export const AdminReview = ({
         <Button
           type="submit"
           id="adminApprove"
-          onClick={adminModal2.onOpen as MouseEventHandler}
+          onClick={adminApproveModal.onOpen as MouseEventHandler}
           sx={sx.submitButton && sx.adminApproveBtn}
           disabled={report?.status !== ReportStatus.SUBMITTED ? true : false}
         >
@@ -59,8 +59,8 @@ export const AdminReview = ({
         onConfirmHandler={submitForm}
         submitting={submitting}
         modalDisclosure={{
-          isOpen: adminModal1.isOpen,
-          onClose: adminModal1.onClose,
+          isOpen: adminUnlockModal.isOpen,
+          onClose: adminUnlockModal.onClose,
         }}
         content={{
           heading: adminInfo.modal.unlockModal.heading,
@@ -74,8 +74,8 @@ export const AdminReview = ({
         onConfirmHandler={submitForm}
         submitting={submitting}
         modalDisclosure={{
-          isOpen: adminModal2.isOpen,
-          onClose: adminModal2.onClose,
+          isOpen: adminApproveModal.isOpen,
+          onClose: adminApproveModal.onClose,
         }}
         content={adminInfo.modal.approveModal}
       >
@@ -183,11 +183,6 @@ const sx = {
       opacity: 1,
       background: "palette.gray_lighter",
       color: "palette.gray",
-    },
-    "&disabled:hover": {
-      opacity: 1,
-      background: "white",
-      color: "palette.gray_lighter",
     },
   },
 };
