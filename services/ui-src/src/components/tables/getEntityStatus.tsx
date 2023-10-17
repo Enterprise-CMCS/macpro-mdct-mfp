@@ -80,6 +80,9 @@ export const getEntityStatus = (report: ReportShape, entity: EntityShape) => {
 export const getInitiativeStatus = (formEntity: any, entity: EntityShape) => {
   const stepType = formEntity.stepType;
 
+  //Important: not tracking close out atm
+  if (stepType === "closeOutInformation") return true;
+
   //pull fields from form type
   const fields = formEntity.form
     ? formEntity.form.fields
