@@ -247,18 +247,18 @@ export const DashboardPage = ({ reportType }: Props) => {
       </Link>
       {errorMessage && <ErrorAlert error={errorMessage} />}
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
-      {reportType === ReportType.SAR &&
-        workPlanStatus !== ReportStatus.APPROVED && (
-          <Alert
-            title={sarVerbiage.alertBanner.title}
-            showIcon={true}
-            icon={alertIcon}
-            status={AlertTypes.ERROR}
-            description={sarVerbiage.alertBanner.body}
-            sx={sx.alertBanner}
-          />
-        )}
       <Box sx={sx.leadTextBox}>
+        {reportType === ReportType.SAR &&
+          workPlanStatus !== ReportStatus.APPROVED && (
+            <Alert
+              title={sarVerbiage.alertBanner.title}
+              showIcon={true}
+              icon={alertIcon}
+              status={AlertTypes.ERROR}
+              description={sarVerbiage.alertBanner.body}
+              sx={sx.alertBanner}
+            />
+          )}
         <Heading as="h1" sx={sx.headerText}>
           {fullStateName} {intro.header}
         </Heading>
@@ -270,7 +270,6 @@ export const DashboardPage = ({ reportType }: Props) => {
                   .stateUserDashboard
           }
         />
-
         {parseCustomHtml(intro.body)}
       </Box>
       <Box sx={sx.bodyBox}>
@@ -442,8 +441,7 @@ const sx = {
     marginBottom: "2rem",
     borderInlineStartWidth: "7.5px",
     bgColor: "palette.error_lightest",
-    marginLeft: "5rem",
-    width: "65%",
+    width: "80%",
     fontSize: "18px",
     p: {
       fontSize: "16px",
