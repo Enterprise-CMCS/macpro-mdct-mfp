@@ -88,7 +88,6 @@ export const ReportProvider = ({ children }: Props) => {
         )
       );
     }
-    //setSelectedEntity(selectedEntity);
     setContextIsLoaded(true);
   };
 
