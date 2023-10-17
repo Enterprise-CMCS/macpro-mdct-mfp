@@ -449,7 +449,15 @@ const sxChildStyles = {
       },
     },
   },
-  submissionNameText: {
+  sarSubmissionNameText: {
+    fontSize: "md",
+    fontWeight: "bold",
+    ".tablet &, .mobile &": {
+      width: "100%",
+    },
+    lineHeight: "1.25rem",
+  },
+  wpSubmissionNameText: {
     fontSize: "md",
     fontWeight: "bold",
     width: "13rem",

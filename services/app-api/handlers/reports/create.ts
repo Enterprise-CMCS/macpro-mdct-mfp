@@ -221,7 +221,7 @@ export const createReport = handler(
         ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
         : workPlanMetadata!.reportYear;
 
-    // Create DyanmoDB record.
+    // Create DynamoDB record.
     const reportMetadataParams: DynamoWrite = {
       TableName: reportTable,
       Item: {
@@ -241,7 +241,9 @@ export const createReport = handler(
           reportYear,
           workPlanMetadata
         ),
+        targetPopulations: "Older adults, PD, MH/SUD",
         reportYear,
+        dueDate: currentDate,
         reportPeriod: calculatePeriod(currentDate, workPlanMetadata),
       },
     };
