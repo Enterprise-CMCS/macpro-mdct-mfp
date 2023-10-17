@@ -1,12 +1,7 @@
 export default {
   intro: {
     header: "MFP Program Work Plan",
-    body: [
-      {
-        type: "text",
-        content: "",
-      },
-    ],
+    body: [],
   },
   body: {
     table: {
