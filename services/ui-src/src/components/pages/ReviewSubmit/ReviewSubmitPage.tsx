@@ -1,5 +1,6 @@
 import { MouseEventHandler, useContext, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { AdminReview } from "./AdminReview";
 // components
 import {
   Box,
@@ -32,8 +33,7 @@ export const ReviewSubmitPage = () => {
   const [isPermittedToSubmit, setIsPermittedToSubmit] =
     useState<boolean>(false);
 
-  // get user information
-  const { state, userIsEndUser } = useStore().user ?? {};
+  const { state, userIsEndUser, userIsAdmin } = useStore().user ?? {};
 
   // get report type, state, and id from context or storage
   const reportType =
@@ -48,7 +48,6 @@ export const ReviewSubmitPage = () => {
   };
 
   const reviewVerbiage = verbiage;
-
   const { alertBox } = reviewVerbiage;
 
   useEffect(() => {
@@ -102,15 +101,25 @@ export const ReviewSubmitPage = () => {
             stateName={report.fieldData.stateName!}
           />
         ) : (
-          <ReadyToSubmit
-            submitForm={submitForm}
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onClose={onClose}
-            submitting={submitting}
-            isPermittedToSubmit={isPermittedToSubmit}
-            reviewVerbiage={reviewVerbiage}
-          />
+          <div>
+            <ReadyToSubmit
+              submitForm={submitForm}
+              isOpen={isOpen}
+              onOpen={onOpen}
+              onClose={onClose}
+              submitting={submitting}
+              isPermittedToSubmit={isPermittedToSubmit}
+              reviewVerbiage={reviewVerbiage}
+            />
+            {userIsAdmin && (
+              <AdminReview
+                submitForm={submitForm}
+                submitting={submitting}
+                isPermittedToSubmit={isPermittedToSubmit}
+                reviewVerbiage={reviewVerbiage}
+              />
+            )}
+          </div>
         )}
       </Flex>
     </>
@@ -152,6 +161,7 @@ const ReadyToSubmit = ({
   isPermittedToSubmit,
   reviewVerbiage,
 }: ReadyToSubmitProps) => {
+  const { userIsAdmin } = useStore().user ?? {};
   const { review } = reviewVerbiage;
   const { intro, modal, pageLink } = review;
   const pdfExport = true;
@@ -173,14 +183,16 @@ const ReadyToSubmit = ({
       </Box>
       <Flex sx={sx.submitContainer}>
         {pdfExport && <PrintButton reviewVerbiage={reviewVerbiage} />}
-        <Button
-          type="submit"
-          onClick={onOpen as MouseEventHandler}
-          isDisabled={!isPermittedToSubmit}
-          sx={sx.submitButton}
-        >
-          {pageLink.text}
-        </Button>
+        {!userIsAdmin && (
+          <Button
+            type="submit"
+            onClick={onOpen as MouseEventHandler}
+            isDisabled={!isPermittedToSubmit}
+            sx={sx.submitButton}
+          >
+            {pageLink.text}
+          </Button>
+        )}
       </Flex>
       <Modal
         onConfirmHandler={submitForm}
@@ -207,7 +219,6 @@ interface ReadyToSubmitProps {
   isPermittedToSubmit?: boolean;
   reviewVerbiage: AnyObject;
 }
-
 export const SuccessMessageGenerator = (
   reportType: string,
   name: string,
@@ -245,7 +256,6 @@ export const SuccessMessage = ({
     submittedBy,
     stateName
   );
-
   return (
     <Flex sx={sx.contentContainer}>
       <Box sx={sx.leadTextBox}>
@@ -355,6 +365,7 @@ const sx = {
   },
   submitButton: {
     minHeight: "3rem",
+    paddingRight: "1rem",
     "&:disabled": {
       opacity: 1,
       background: "palette.gray_lighter",
