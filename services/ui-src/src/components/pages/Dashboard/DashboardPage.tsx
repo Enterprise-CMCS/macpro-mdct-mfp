@@ -452,6 +452,7 @@ const sxChildStyles = {
   sarSubmissionNameText: {
     fontSize: "md",
     fontWeight: "bold",
+    width: "10rem",
     ".tablet &, .mobile &": {
       width: "100%",
     },
