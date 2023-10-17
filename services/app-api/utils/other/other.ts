@@ -40,7 +40,7 @@ export const lastCreatedWorkPlan = (
     if (
       (workPlan.status === ReportStatus.NOT_STARTED ||
         workPlan.status === ReportStatus.IN_PROGRESS) &&
-      !workPlan?.sar
+      !workPlan?.associatedSar
     ) {
       /*
        * ...then do one of two things: if there are multiple work plans that meet this criteria,

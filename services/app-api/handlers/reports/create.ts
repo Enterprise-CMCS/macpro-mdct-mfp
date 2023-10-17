@@ -139,15 +139,10 @@ export const createReport = handler(
     const {
       workPlanMetadata,
       workPlanFieldData,
-    }:
-      | {
-          workPlanMetadata: ReportMetadataShape;
-          workPlanFieldData: AnyObject;
-        }
-      | {
-          workPlanMetadata: undefined;
-          workPlanFieldData: undefined;
-        } =
+    }: {
+      workPlanMetadata?: ReportMetadataShape;
+      workPlanFieldData?: AnyObject;
+    } =
       reportType === ReportType.SAR
         ? await getLastCreatedWorkPlan(event, _context, state)
         : { workPlanMetadata: undefined, workPlanFieldData: undefined };
@@ -240,7 +235,7 @@ export const createReport = handler(
         ),
         reportYear,
         reportPeriod: calculatePeriod(currentDate, workPlanMetadata),
-        workPlan: workPlanMetadata?.id,
+        associatedWorkPlan: workPlanMetadata?.id,
       },
     };
 
@@ -260,7 +255,7 @@ export const createReport = handler(
         TableName: reportTables[ReportType.WP],
         Item: {
           ...workPlanMetadata,
-          sar: reportId,
+          associatedSar: reportId,
         },
       };
       try {

@@ -28,8 +28,8 @@ export interface ReportMetadataShape extends ReportKeys {
   locked?: boolean;
   submissionCount?: number;
   // Connection to let Sar forms know what Work Plan they use to copy data from and vice versa
-  sar?: string;
-  workPlan?: string;
+  associatedSar?: string;
+  associatedWorkPlan?: string;
   // Any additional questions that are asked when creating a report are appended here
   finalSar?: AnyObject;
 }
