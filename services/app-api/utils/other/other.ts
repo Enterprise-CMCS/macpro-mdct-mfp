@@ -1,16 +1,20 @@
 import { States } from "../constants/constants";
-import { calculatePeriod, convertDateUtcToEt } from "../time/time";
+import { calculatePeriod } from "../time/time";
+import { ReportMetadata, ReportType } from "../types";
 
 export const createReportName = (
   reportType: string,
   createdAt: number,
-  state: string
+  state: string,
+  reportYear?: number,
+  workPlan?: ReportMetadata
 ) => {
   const reportName = reportType;
-  const etDate = convertDateUtcToEt(createdAt);
-  const period = calculatePeriod(createdAt);
-  const year = new Date(etDate).getFullYear();
+  const period =
+    reportType === ReportType.SAR
+      ? workPlan?.reportPeriod
+      : calculatePeriod(createdAt);
 
   const fullStateName = States[state as keyof typeof States];
-  return `${fullStateName} ${reportName} ${year} - Period ${period}`;
+  return `${fullStateName} ${reportName} ${reportYear} - Period ${period}`;
 };

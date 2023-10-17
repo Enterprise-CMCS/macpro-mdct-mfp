@@ -29,6 +29,7 @@ import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  resetClearProp,
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
@@ -75,19 +76,6 @@ export const ModalOverlayReportPage = ({
     (entity) => (entity["isOtherEntity"] = true)
   );
 
-  reportFieldDataEntities = reportFieldDataEntities.filter(
-    (entity: EntityShape) => {
-      if (
-        Object.keys(entity).findIndex((key: string) =>
-          key.includes(entityType)
-        ) > 0
-      ) {
-        return entity;
-      }
-      return;
-    }
-  );
-
   const showAlert =
     report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
@@ -113,6 +101,7 @@ export const ModalOverlayReportPage = ({
 
   const closeAddEditEntityModal = () => {
     setSelectedEntity(undefined);
+    resetClearProp(modalForm.fields);
     addEditEntityModalOnCloseHandler();
   };
 
@@ -217,10 +206,7 @@ export const ModalOverlayReportPage = ({
         </EntityProvider>
       ) : (
         <Box sx={sx.content}>
-          <ReportPageIntro
-            text={verbiage.intro}
-            reportType={report?.reportType}
-          />
+          <ReportPageIntro text={verbiage.intro} />
           {showAlert && (
             <Alert
               title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
@@ -245,7 +231,7 @@ export const ModalOverlayReportPage = ({
                     entityInfo={entityInfo}
                     verbiage={verbiage}
                     locked={isLocked}
-                    openDrawer={openEntityDetailsOverlay}
+                    openOverlayOrDrawer={openEntityDetailsOverlay}
                     openAddEditEntityModal={openAddEditEntityModal}
                     openDeleteEntityModal={openDeleteEntityModal}
                   />
@@ -261,7 +247,7 @@ export const ModalOverlayReportPage = ({
               {verbiage.addEntityButtonText}
             </Button>
           </Box>
-
+          {/* Modals */}
           <AddEditEntityModal
             entityType={entityType}
             selectedEntity={selectedEntity}
@@ -272,7 +258,6 @@ export const ModalOverlayReportPage = ({
               onClose: closeAddEditEntityModal,
             }}
           />
-
           <DeleteEntityModal
             entityType={entityType}
             selectedEntity={selectedEntity}
@@ -282,7 +267,6 @@ export const ModalOverlayReportPage = ({
               onClose: closeDeleteEntityModal,
             }}
           />
-
           <ReportPageFooter />
         </Box>
       )}

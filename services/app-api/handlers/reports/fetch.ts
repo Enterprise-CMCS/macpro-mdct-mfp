@@ -164,7 +164,6 @@ export const fetchReportsByState = handler(async (event, _context) => {
     const items: AnyObject[] = results?.Items;
     existingItems.push(...items);
   } while (startingKey);
-
   return {
     status: StatusCodes.SUCCESS,
     body: existingItems,

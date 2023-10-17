@@ -28,6 +28,7 @@ export const mockReportJson = {
   type: "mock",
   basePath: "/mock",
   routes: mockReportRoutes,
+  flatRoutes: mockFlattenedReportRoutes,
   validationSchema: {},
 };
 
@@ -97,6 +98,31 @@ export const mockWPFullReport = {
   },
   isComplete: false,
   reportPeriod: 1,
+  locked: false,
+};
+
+export const mockWPApprovedFullReport = {
+  ...mockReportKeys,
+  reportType: "WP",
+  formTemplate: mockReportJson,
+  submissionName: "2023 - Alabama 1",
+  status: ReportStatus.APPROVED,
+  dueDate: 168515200000,
+  createdAt: 162515200000,
+  lastAltered: 162515200000,
+  lastAlteredBy: "Thelonious States",
+  submittedOnDate: Date.now(),
+  fieldData: mockReportFieldData,
+  completionStatus: {
+    "/mock/mock-route-1": true,
+    "/mock/mock-route-2": {
+      "/mock/mock-route-2a": false,
+      "/mock/mock-route-2b": true,
+      "/mock/mock-route-2c": true,
+    },
+  },
+  isComplete: true,
+  reportPeriod: 1,
 };
 
 export const mockReportsByState = [
@@ -110,6 +136,7 @@ export const mockReportMethods = {
   releaseReport: jest.fn(),
   fetchReport: jest.fn(),
   fetchReportsByState: jest.fn(),
+  fetchReportForSarCreation: jest.fn(),
   createReport: jest.fn(),
   updateReport: jest.fn(),
   submitReport: jest.fn(),
@@ -124,11 +151,16 @@ export const mockReportMethods = {
 
 export const mockWpReportContext = {
   ...mockReportMethods,
-  ...mockWPFullReport,
+  report: mockWPFullReport,
   reportsByState: mockReportsByState,
   copyEligibleReportsByState: mockReportsByState,
   errorMessage: "",
-  lastSavedTime: "1:58 PM",
+  lastSavedTime: "2:00 PM",
+};
+
+export const mockEmptyDashboardReportContext = {
+  ...mockWpReportContext,
+  reportsByState: [{}],
 };
 
 export const mockDashboardReportContext = {
@@ -136,8 +168,13 @@ export const mockDashboardReportContext = {
   reportsByState: [
     {
       ...mockWPReport,
-      formTemplate: undefined,
+      formTemplate: mockReportJson,
       fieldData: undefined,
     },
   ],
+};
+
+export const mockReportContextNoReports = {
+  ...mockWpReportContext,
+  reportsByState: undefined,
 };

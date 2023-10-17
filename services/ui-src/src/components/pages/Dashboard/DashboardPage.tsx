@@ -17,43 +17,50 @@ import {
 } from "@chakra-ui/react";
 import {
   AddEditReportModal,
+  Modal,
   DashboardTable,
   InstructionsAccordion,
   ErrorAlert,
   MobileDashboardTable,
   PageTemplate,
   ReportContext,
+  Alert,
 } from "components";
 // utils
-import { AnyObject, ReportMetadataShape, ReportKeys, ReportShape } from "types";
 import {
-  convertDateUtcToEt,
-  parseCustomHtml,
-  useBreakpoint,
-  useStore,
-} from "utils";
+  AnyObject,
+  ReportMetadataShape,
+  ReportKeys,
+  ReportShape,
+  ReportType,
+  ReportStatus,
+  AlertTypes,
+} from "types";
+import { parseCustomHtml, useBreakpoint, useStore } from "utils";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
+import alertIcon from "assets/icons/icon_alert_circle.png";
 
 export const DashboardPage = ({ reportType }: Props) => {
   const {
     errorMessage,
     fetchReportsByState,
+    fetchReportForSarCreation,
     clearReportSelection,
     setReportSelection,
     archiveReport,
     releaseReport,
     fetchReport,
   } = useContext(ReportContext);
-  const { reportsByState } = useStore();
+  const { reportsByState, workPlanToCopyFrom } = useStore();
   const navigate = useNavigate();
   const {
     state: userState,
-    userIsStateUser,
+    userIsEndUser,
     userIsAdmin,
   } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
@@ -77,6 +84,9 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
   const { intro, body } = dashboardVerbiage;
 
+  // get Work Plan status
+  const workPlanStatus = workPlanToCopyFrom?.status;
+
   // get active state
   const adminSelectedState = localStorage.getItem("selectedState") || undefined;
   const activeState = userState || adminSelectedState;
@@ -86,8 +96,13 @@ export const DashboardPage = ({ reportType }: Props) => {
     if (!activeState) {
       navigate("/");
     }
-    fetchReportsByState(reportType, activeState);
-    clearReportSelection();
+    if (reportType == ReportType.WP) {
+      fetchReportsByState(reportType, activeState);
+      clearReportSelection();
+    } else {
+      fetchReportForSarCreation(activeState);
+      clearReportSelection();
+    }
   }, []);
 
   useEffect(() => {
@@ -119,20 +134,40 @@ export const DashboardPage = ({ reportType }: Props) => {
 
   const openAddEditReportModal = (report?: ReportShape) => {
     let formData = undefined;
-    let submittedOnDate = undefined;
-    // Check and pre-fill the form if the user is editing an existing program
-    if (report) {
-      if (report.submittedOnDate) {
-        submittedOnDate = convertDateUtcToEt(report.submittedOnDate);
-      }
+    //
+    if (report && reportType == ReportType.SAR) {
+      // We are editing a SAR submission
       formData = {
+        formData: {
+          associatedWorkPlan: report.submissionName,
+          stateOrTerritory: report.state,
+          reportPeriod: report.reportPeriod,
+          finalSar: [
+            {
+              key: report.finalSar
+                ? "nrRmirBoVQv0ysWnEejNZD"
+                : "ekP9iVvuQE9AALchScDzoD",
+              value: report.finalSar ? "Yes" : "No",
+            },
+          ],
+        },
         state: report.state,
         id: report.id,
         submittedBy: report.submittedBy,
         submitterEmail: report.submitterEmail,
-        submittedOnDate: submittedOnDate,
+        submittedOnDate: report?.submittedOnDate,
+      };
+    } else if (reportType == ReportType.SAR) {
+      // We are creating a new SAR submission
+      formData = {
+        formData: {
+          associatedWorkPlan: workPlanToCopyFrom?.submissionName,
+          stateOrTerritory: userState,
+          reportPeriod: workPlanToCopyFrom?.reportPeriod,
+        },
       };
     }
+
     setSelectedReport(formData);
 
     // use disclosure to open modal
@@ -168,6 +203,23 @@ export const DashboardPage = ({ reportType }: Props) => {
       await fetchReportsByState(reportType, activeState);
       setReportId(undefined);
       setReleasing(false);
+
+      // useDisclosure to open modal
+      confirmUnlockModalOnOpenHandler();
+    }
+  };
+
+  const isAddSubmissionDisabled = (): boolean => {
+    const lastDisplayedReport =
+      reportsToDisplay?.[reportsToDisplay?.length - 1];
+    switch (reportType) {
+      case ReportType.SAR:
+        return !workPlanToCopyFrom;
+      case ReportType.WP:
+        if (!lastDisplayedReport) return false;
+        return lastDisplayedReport.status !== ReportStatus.SUBMITTED;
+      default:
+        return true;
     }
   };
 
@@ -178,28 +230,46 @@ export const DashboardPage = ({ reportType }: Props) => {
     onClose: addEditReportModalOnCloseHandler,
   } = useDisclosure();
 
+  //unlock modal disclosure
+  const {
+    isOpen: confirmUnlockModalIsOpen,
+    onOpen: confirmUnlockModalOnOpenHandler,
+    onClose: confirmUnlockModalOnCloseHandler,
+  } = useDisclosure();
+
   const fullStateName = States[activeState as keyof typeof States];
 
   return (
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
         <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
-        Return Home
+        Return home
       </Link>
       {errorMessage && <ErrorAlert error={errorMessage} />}
+      {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
+        {reportType === ReportType.SAR &&
+          workPlanStatus !== ReportStatus.APPROVED && (
+            <Alert
+              title={sarVerbiage.alertBanner.title}
+              showIcon={true}
+              icon={alertIcon}
+              status={AlertTypes.ERROR}
+              description={sarVerbiage.alertBanner.body}
+              sx={sx.alertBanner}
+            />
+          )}
         <Heading as="h1" sx={sx.headerText}>
           {fullStateName} {intro.header}
         </Heading>
-        {reportType === "WP" && (
-          <InstructionsAccordion
-            verbiage={
-              userIsAdmin
-                ? accordion.WP.adminDashboard
-                : accordion.WP.stateUserDashboard
-            }
-          />
-        )}
+        <InstructionsAccordion
+          verbiage={
+            userIsAdmin
+              ? accordion[reportType as keyof typeof ReportType].adminDashboard
+              : accordion[reportType as keyof typeof ReportType]
+                  .stateUserDashboard
+          }
+        />
         {parseCustomHtml(intro.body)}
       </Box>
       <Box sx={sx.bodyBox}>
@@ -216,7 +286,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
-              isStateLevelUser={userIsStateUser!}
+              isStateLevelUser={userIsEndUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />
@@ -233,7 +303,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
-              isStateLevelUser={userIsStateUser!}
+              isStateLevelUser={userIsEndUser!}
               isAdmin={userIsAdmin!}
               sxOverride={sxChildStyles}
             />
@@ -253,12 +323,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           <Box sx={sx.callToActionContainer}>
             <Button
               type="submit"
-              disabled={
-                reportsToDisplay &&
-                reportsToDisplay[0]?.status === "In progress"
-                  ? true
-                  : false
-              }
+              disabled={isAddSubmissionDisabled()}
               onClick={() => openAddEditReportModal()}
             >
               {body.callToAction}
@@ -274,6 +339,14 @@ export const DashboardPage = ({ reportType }: Props) => {
           isOpen: addEditReportModalIsOpen,
           onClose: addEditReportModalOnCloseHandler,
         }}
+      />
+      <Modal
+        modalDisclosure={{
+          isOpen: confirmUnlockModalIsOpen,
+          onClose: confirmUnlockModalOnCloseHandler,
+        }}
+        onConfirmHandler={confirmUnlockModalOnCloseHandler}
+        content={wpVerbiage.modalUnlock}
       />
     </PageTemplate>
   );
@@ -294,6 +367,7 @@ const sx = {
   returnLink: {
     display: "flex",
     width: "8.5rem",
+    paddingTop: "0.5rem",
     svg: {
       height: "1.375rem",
       width: "1.375rem",
@@ -314,7 +388,7 @@ const sx = {
   leadTextBox: {
     width: "100%",
     maxWidth: "55.25rem",
-    margin: "2.5rem auto",
+    margin: "2.5rem auto 0rem",
     ".tablet &, .mobile &": {
       margin: "2.5rem 0 1rem",
     },
@@ -361,6 +435,17 @@ const sx = {
     width: "100%",
     justifyContent: "center",
     padding: "10",
+  },
+  alertBanner: {
+    marginTop: "3.5rem",
+    marginBottom: "2rem",
+    borderInlineStartWidth: "7.5px",
+    bgColor: "palette.error_lightest",
+    width: "80%",
+    fontSize: "18px",
+    p: {
+      fontSize: "16px",
+    },
   },
 };
 

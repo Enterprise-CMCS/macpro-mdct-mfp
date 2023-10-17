@@ -18,7 +18,7 @@ export const EntityRow = ({
   locked,
   openAddEditEntityModal,
   openDeleteEntityModal,
-  openDrawer,
+  openOverlayOrDrawer,
 }: Props) => {
   const { userIsEndUser } = useStore().user ?? {};
   const { report } = useStore();
@@ -26,18 +26,19 @@ export const EntityRow = ({
   // check for "other" target population entities
   const { isRequired } = entity;
 
-  let entityCompleted = false;
-  switch (entityType) {
-    case ModalDrawerEntityTypes.TARGET_POPULATIONS:
-      entityCompleted =
-        !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
-      break;
-    default:
-      entityCompleted = useMemo(() => {
+  const setStatusByType = (entityType: string) => {
+    switch (entityType) {
+      case ModalDrawerEntityTypes.TARGET_POPULATIONS:
+        return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
+      default: {
         return report ? !!getEntityStatus(report, entity) : false;
-      }, [report]);
-      break;
-  }
+      }
+    }
+  };
+
+  let entityCompleted = useMemo(() => {
+    return setStatusByType(entityType!);
+  }, [report, entity]);
 
   let programInfo = [];
   if (entityInfo) {
@@ -80,7 +81,7 @@ export const EntityRow = ({
           )}
           <Button
             sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
-            onClick={() => openDrawer(entity)}
+            onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
           >
             {verbiage.enterEntityDetailsButtonText}
@@ -107,7 +108,7 @@ interface Props {
   verbiage: AnyObject;
   openAddEditEntityModal: Function;
   openDeleteEntityModal: Function;
-  openDrawer: Function;
+  openOverlayOrDrawer: Function;
   [key: string]: any;
 }
 
