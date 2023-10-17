@@ -19,7 +19,7 @@ const mockEntity = {
 const entityDetailsOverlayComponent = (
   <RouterWrappedComponent>
     <EntityDetailsOverlay
-      entity={mockEntity}
+      selectedEntity={mockEntity}
       route={mockEntityDetailsOverlayJson}
     />
   </RouterWrappedComponent>
