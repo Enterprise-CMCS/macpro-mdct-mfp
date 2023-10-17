@@ -127,7 +127,7 @@ export const ReportProvider = ({ children }: Props) => {
         if (
           (submission.status === ReportStatus.NOT_STARTED ||
             submission.status === ReportStatus.IN_PROGRESS) &&
-          !submission?.sar
+          !submission?.associatedSar
         ) {
           if (
             lastFoundSubmission &&

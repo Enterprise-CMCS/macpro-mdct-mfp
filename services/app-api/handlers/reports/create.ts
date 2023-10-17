@@ -39,7 +39,6 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
-    // If user who is calling for report creation isn't a state user or state rep, return Unautorized
     if (!hasPermissions(event, [UserRoles.STATE_USER, UserRoles.STATE_REP])) {
       return {
         status: StatusCodes.UNAUTHORIZED,
@@ -62,7 +61,6 @@ export const createReport = handler(
 
     const { state, reportType } = event.pathParameters;
 
-    // If that string they passed in the state paramater isn't a real US State, return No_Key
     if (!isState(state)) {
       return {
         status: StatusCodes.BAD_REQUEST,
@@ -70,7 +68,6 @@ export const createReport = handler(
       };
     }
 
-    // If that string they passed in the reportType paramater isn't a supported Report Type, return No_Key
     if (!isReportType(reportType)) {
       return {
         status: StatusCodes.BAD_REQUEST,
@@ -247,7 +244,7 @@ export const createReport = handler(
         body: error.DYNAMO_CREATION_ERROR,
       };
     }
-    // End Section - Create DyanmoDB record.
+    // End Section - Create DynamoDB record.
 
     // Begin Section - Let the Workplan know that its been tied to a SAR that was just created
     if (reportType === ReportType.SAR) {
