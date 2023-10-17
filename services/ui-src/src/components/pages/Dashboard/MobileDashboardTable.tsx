@@ -44,6 +44,12 @@ export const MobileDashboardTable = ({
             </Text>
           </Flex>
         </Box>
+        {reportType === "SAR" && (
+          <Box sx={sx.labelGroup}>
+            <Text sx={sx.label}>Target populations</Text>
+            <Text>{report?.targetPopulations}</Text>
+          </Box>
+        )}
         <Box sx={sx.labelGroup}>
           <Flex alignContent="flex-start">
             <DateFields
@@ -146,6 +152,12 @@ const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
         <Box sx={sx.editDate}>
           <Text sx={sx.label}>Due date</Text>
           <Text>{convertDateUtcToEt(report.createdAt)}</Text>
+        </Box>
+      )}
+      {reportType === "SAR" && !isAdmin && (
+        <Box sx={sx.editDate}>
+          <Text sx={sx.label}>Due date</Text>
+          <Text>{convertDateUtcToEt(report.dueDate)}</Text>
         </Box>
       )}
       <Box>

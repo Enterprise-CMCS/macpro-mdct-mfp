@@ -24,6 +24,7 @@ export interface ReportMetadataShape extends ReportKeys {
   dueDate: number;
   reportPeriod: number;
   finalSar?: boolean;
+  targetPopulations?: object;
 }
 
 export interface ReportShape extends ReportMetadataShape {
