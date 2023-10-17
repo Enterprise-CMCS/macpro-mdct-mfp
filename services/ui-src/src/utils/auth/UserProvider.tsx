@@ -74,6 +74,8 @@ export const UserProvider = ({ children }: Props) => {
       const userRole = cms_role.split(",").find((r) => r.includes("mdctmfp"));
       const state = payload["custom:cms_state"] as string | undefined;
       const full_name = [given_name, " ", family_name].join("");
+      const reports = payload["custom:reports"] as string | undefined;
+      const userReports = !reports ? ["WP", "SAR"] : reports.split(",");
       const userCheck = {
         userIsAdmin:
           userRole === UserRoles.ADMIN || userRole === UserRoles.APPROVER,
@@ -88,6 +90,7 @@ export const UserProvider = ({ children }: Props) => {
         full_name,
         userRole,
         state,
+        userReports,
         ...userCheck,
       };
       setUser(currentUser);
