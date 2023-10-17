@@ -46,7 +46,7 @@ export const MobileDashboardTable = ({
         </Box>
         {reportType === "SAR" && (
           <Box sx={sx.labelGroup}>
-            <Text sx={sx.label}>Target Populations</Text>
+            <Text sx={sx.label}>Target populations</Text>
             <Text>{report?.targetPopulations}</Text>
           </Box>
         )}
