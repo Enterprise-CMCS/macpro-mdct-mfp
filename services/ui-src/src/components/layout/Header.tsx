@@ -143,7 +143,6 @@ const sx = {
   },
   appLogo: {
     maxWidth: "200px",
-    marginTop: "0.5rem",
   },
   subnavBar: {
     bg: "palette.secondary_lightest",

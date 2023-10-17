@@ -55,11 +55,12 @@ const entityRowWithEntities = (
     <Table content={tableContent}>
       <EntityRow
         entity={mockTargetPopulationEntity}
+        entityType={ModalDrawerEntityTypes.TARGET_POPULATIONS}
         verbiage={verbiage}
         entityInfo={mockEntityInfo}
         openAddEditEntityModal={mockOpenAddEditEntityModal}
         openDeleteEntityModal={mockOpenDeleteEntityModal}
-        openDrawer={mockOpenDrawer}
+        openOverlayOrDrawer={mockOpenDrawer}
       />
     </Table>
   </RouterWrappedComponent>
@@ -74,7 +75,7 @@ const addedOtherEntityRow = (
         verbiage={verbiage}
         openAddEditEntityModal={mockOpenAddEditEntityModal}
         openDeleteEntityModal={mockOpenDeleteEntityModal}
-        openDrawer={mockOpenDrawer}
+        openOverlayOrDrawer={mockOpenDrawer}
       />
     </Table>
   </RouterWrappedComponent>

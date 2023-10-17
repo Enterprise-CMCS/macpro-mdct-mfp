@@ -14,7 +14,14 @@ import {
   sortReportsOldestToNewest,
   useStore,
 } from "utils";
-import { ReportContextShape, ReportKeys, ReportShape } from "types";
+import {
+  ReportContextShape,
+  ReportKeys,
+  ReportMetadataShape,
+  ReportShape,
+  ReportStatus,
+  ReportType,
+} from "types";
 import { reportErrors } from "verbiage/errors";
 
 // CONTEXT DECLARATION
@@ -30,6 +37,7 @@ export const ReportContext = createContext<ReportContextShape>({
   submitReport: Function,
   // reports by state
   fetchReportsByState: Function,
+  fetchReportForSarCreation: Function,
   // selected report
   clearReportSelection: Function,
   setReportSelection: Function,
@@ -51,9 +59,11 @@ export const ReportProvider = ({ children }: Props) => {
   const {
     report,
     reportsByState,
+    workPlanToCopyFrom,
     submittedReportsByState,
     setReport,
     setReportsByState,
+    setWorkPlanToCopyFrom,
     clearReportsByState,
     setSubmittedReportsByState,
     lastSavedTime,
@@ -96,6 +106,56 @@ export const ReportProvider = ({ children }: Props) => {
     }
   };
 
+  const fetchReportForSarCreation = async (selectedState: string) => {
+    try {
+      // clear stored reports by state prior to fetching from current state
+      clearReportsByState();
+
+      const workPlanSubmissions = await getReportsByState(
+        ReportType.WP,
+        selectedState
+      );
+
+      const sarSubmissions = await getReportsByState(
+        ReportType.SAR,
+        selectedState
+      );
+
+      if (workPlanSubmissions?.length !== sarSubmissions?.length) {
+        let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
+        workPlanSubmissions.forEach((submission: ReportMetadataShape) => {
+          if (
+            submission.status === ReportStatus.NOT_STARTED ||
+            submission.status === ReportStatus.IN_PROGRESS
+          ) {
+            if (
+              lastFoundSubmission &&
+              submission.createdAt > lastFoundSubmission?.createdAt
+            )
+              lastFoundSubmission = submission;
+            else if (!lastFoundSubmission) {
+              lastFoundSubmission = submission;
+            }
+          }
+        });
+
+        if (lastFoundSubmission) {
+          const reportKeys = {
+            reportType: ReportType.WP,
+            state: selectedState,
+            id: lastFoundSubmission["id"],
+          };
+          const workPlan = await getReport(reportKeys);
+          setWorkPlanToCopyFrom(workPlan);
+        }
+      }
+
+      setReportsByState(sortReportsOldestToNewest(sarSubmissions));
+    } catch (e: any) {
+      setError(reportErrors.GET_REPORTS_BY_STATE_FAILED);
+    }
+  };
+
   const createReport = async (
     reportType: string,
     state: string,
@@ -105,6 +165,7 @@ export const ReportProvider = ({ children }: Props) => {
       const result = await postReport(reportType, state, report);
       hydrateAndSetReport(result);
       setLastSavedTime(getLocalHourMinuteTime());
+      setWorkPlanToCopyFrom(undefined);
     } catch (e: any) {
       setError(reportErrors.SET_REPORT_FAILED);
     }
@@ -211,6 +272,9 @@ export const ReportProvider = ({ children }: Props) => {
       // reports by state
       reportsByState,
       fetchReportsByState,
+      // workplan copy
+      workPlanToCopyFrom,
+      fetchReportForSarCreation,
       // selected report
       clearReportSelection,
       setReportSelection,
@@ -223,6 +287,7 @@ export const ReportProvider = ({ children }: Props) => {
     [
       report,
       reportsByState,
+      workPlanToCopyFrom,
       submittedReportsByState,
       isReportPage,
       error,
