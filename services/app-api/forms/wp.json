@@ -829,7 +829,7 @@
                     }
                   },
                   {
-                    "id": "defineInitiative_projectedEndDate",
+                    "id": "initiative_projectedEndDate",
                     "type": "date",
                     "validation": "date",
                     "props": {
@@ -1115,7 +1115,7 @@
                 "id": "sauxM9MnFZhIn5W44WY3BG",
                 "fields": [
                   {
-                    "id": "closeOutInformation_projectedEndDate",
+                    "id": "initiative_projectedEndDate",
                     "type": "date",
                     "validation": "textOptional",
                     "props": {

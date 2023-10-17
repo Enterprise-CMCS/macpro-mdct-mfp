@@ -260,6 +260,7 @@ export const mockEntityDetailsOverlayJson = {
   path: "/mock/mock-route-entity-overlay",
   pageType: "entityOverlay",
   verbiage: mockEntityDetailsOverlayVerbiage,
+  entities: [],
   form: mockForm,
   stepType: "mock-step",
   stepName: "Mock step name",
