@@ -31,7 +31,7 @@ export interface ReportMetadataShape extends ReportKeys {
   sar?: string;
   workPlan?: string;
   // Any additional questions that are asked when creating a report are appended here
-  finalSar?: boolean;
+  finalSar?: AnyObject;
 }
 
 export interface ReportShape extends ReportMetadataShape {

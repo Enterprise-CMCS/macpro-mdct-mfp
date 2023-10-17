@@ -136,14 +136,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           associatedWorkPlan: report.submissionName,
           stateOrTerritory: report.state,
           reportPeriod: report.reportPeriod,
-          finalSar: [
-            {
-              key: report.finalSar
-                ? "nrRmirBoVQv0ysWnEejNZD"
-                : "ekP9iVvuQE9AALchScDzoD",
-              value: report.finalSar ? "Yes" : "No",
-            },
-          ],
+          finalSar: report.finalSar,
         },
         state: report.state,
         id: report.id,
