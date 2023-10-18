@@ -2,7 +2,7 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { InstructionsAccordion } from "components";
 // utils
-import { parseCustomHtml } from "utils";
+import { calculatePeriod, convertDateUtcToEt, parseCustomHtml } from "utils";
 import { AnyObject } from "types";
 
 export const ReportPageIntro = ({
@@ -12,6 +12,9 @@ export const ReportPageIntro = ({
   ...props
 }: Props) => {
   const { section, subsection, hint, info } = text;
+  const currentDate = Date.now();
+  const date = new Date(convertDateUtcToEt(currentDate));
+  const currentPeriod = calculatePeriod(date);
   return (
     <Box sx={sx.introBox} {...props}>
       <Heading as="h1" sx={sx.sectionHeading}>
@@ -22,7 +25,14 @@ export const ReportPageIntro = ({
       </Heading>
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
       {accordion && <InstructionsAccordion verbiage={accordion} />}
-      {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
+      {info && (
+        <>
+          <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>
+          <Heading as="h2" sx={sx.periodText}>
+            {currentPeriod} reporting period
+          </Heading>
+        </>
+      )}
     </Box>
   );
 };
@@ -50,14 +60,10 @@ const sx = {
     color: "#5B616B",
     paddingTop: "1.5rem",
   },
-  spreadsheetWidgetBox: {
-    marginTop: "2rem",
-  },
   infoTextBox: {
     marginTop: "2rem",
-    h4: {
-      fontSize: "lg",
-      marginBottom: "0.75rem",
+    h3: {
+      marginBottom: "-0.75rem",
     },
     "p, span": {
       color: "palette.gray",
@@ -72,5 +78,9 @@ const sx = {
     b: {
       color: "palette.base",
     },
+  },
+  periodText: {
+    marginTop: "1.5rem",
+    fontSize: "2xl",
   },
 };

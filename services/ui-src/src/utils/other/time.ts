@@ -163,3 +163,20 @@ export const calculateRemainingSeconds = (expiresAt?: any) => {
   if (!expiresAt) return 0;
   return moment(expiresAt).diff(moment()) / 1000;
 };
+
+/*
+ * Calculates the period given a due date.
+ * The periods are defined as follows:
+ *     Period 1 is from 01/01 to 06/30.
+ *     Period 2 is from 07/01 to 12/31.
+ */
+export const calculatePeriod = (currentDate: Date) => {
+  const date = new Date(currentDate);
+  const currentYear = new Date().getFullYear();
+  const period = Math.ceil((date.getMonth() + 1) / 6);
+  if (period == 1) {
+    return ` {January 1 to June 30 ${currentYear}}`;
+  } else {
+    return ` {July 1 to December 31 ${currentYear}}`;
+  }
+};
