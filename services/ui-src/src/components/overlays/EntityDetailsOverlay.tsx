@@ -115,6 +115,7 @@ export const EntityDetailsOverlay = ({
       );
       if (shouldSave) await updateReport(reportKeys, dataToWrite);
     }
+    closeEntityDetailsOverlay!();
   };
 
   return (
@@ -140,7 +141,7 @@ export const EntityDetailsOverlay = ({
         formJson={form}
         onSubmit={onSubmit}
         autosave={true}
-        formData={report?.fieldData}
+        formData={selectedEntity}
         validateOnRender={validateOnRender || false}
         dontReset={true}
       />
