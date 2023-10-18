@@ -6,7 +6,12 @@ import { EntityDetailsOverlay } from "components";
 import {
   mockEntityDetailsOverlayJson,
   RouterWrappedComponent,
+  mockUseEntityStore,
 } from "utils/testing/setupJest";
+import { useStore } from "utils";
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const { closeOutWarning, closeOutModal } =
   mockEntityDetailsOverlayJson.verbiage;
@@ -27,6 +32,7 @@ const entityDetailsOverlayComponent = (
 
 describe("Test EntityDetailsOverlayPage", () => {
   test("EntityDetailsOverlayPage view renders", () => {
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
     render(entityDetailsOverlayComponent);
     // Check that the header rendered
     expect(
@@ -57,6 +63,7 @@ describe("Test EntityDetailsOverlayPage", () => {
 
 describe("Test EntityDetailsOverlay accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
     const { container } = render(entityDetailsOverlayComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
