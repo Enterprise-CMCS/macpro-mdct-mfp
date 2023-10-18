@@ -1,4 +1,11 @@
-import { EntityShape, ModalOverlayReportPageShape, ReportShape } from "types";
+import {
+  EntityDetailsDashboardOverlayShape,
+  EntityDetailsOverlayShape,
+  EntityShape,
+  ModalOverlayReportPageShape,
+  OverlayModalPageShape,
+  ReportShape,
+} from "types";
 import { mapValidationTypesToSchema } from "utils/validation/validation";
 import { object } from "yup";
 
@@ -74,4 +81,79 @@ export const getEntityStatus = (report: ReportShape, entity: EntityShape) => {
   } catch (err) {
     return false;
   }
+};
+
+export const getInitiativeStatus = (
+  report: ReportShape,
+  entity: EntityShape
+) => {
+  // Direct pull of the initiative formTemplate json chunk
+  const reportRoute = report.formTemplate
+    .routes[3] as unknown as ModalOverlayReportPageShape;
+
+  //get the intiative report child
+  const reportChild: EntityDetailsDashboardOverlayShape =
+    reportRoute.children![1];
+
+  if (reportChild.entitySteps) {
+    const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =
+      reportChild.entitySteps;
+    const stepStatuses = entitySteps.map((step) => {
+      return getInitiativeDashboardStatus(step, entity);
+    });
+
+    return stepStatuses.every((field: any) => field);
+  }
+
+  return false;
+};
+
+//NOTE: this function works on the assumption that the fieldData saved is validated
+export const getInitiativeDashboardStatus = (
+  formEntity: any,
+  entity: EntityShape
+) => {
+  const stepType = formEntity.stepType;
+
+  //Important note: not tracking close out atm so it'll be disabled
+  if (stepType === "closeOutInformation") return "disabled";
+
+  //pull fields from form type
+  const fields = formEntity.form
+    ? formEntity.form.fields
+    : formEntity.modalForm.fields;
+
+  //filter the fields data down to a validation array
+  const reportFormValidation = fields.map((field: any) => {
+    return { [field.id]: field.validation };
+  });
+
+  //create an array to use as a lookup for fieldData
+  const fieldKeyInReport = reportFormValidation.map(
+    (validation: { [key: string]: string }) => {
+      return Object.keys(validation)[0];
+    }
+  );
+
+  //this step is to consolidate the code by converting entity into a loopable array if there's no array of stepType to loop through
+  const entities = entity[stepType] ? (entity[stepType] as []) : [entity];
+  if (entities.length > 0) {
+    let isFilled = true;
+
+    entities.forEach((child: any) => {
+      //filter down to the data for the current status topic
+      const filterdFieldData = fieldKeyInReport.map((item: string) => {
+        return child[item];
+      });
+
+      //if any of the field data is empty, that means we're missing data and the status is automatically false
+      isFilled = !filterdFieldData.every((field: any) => field)
+        ? false
+        : isFilled;
+    });
+
+    return isFilled;
+  }
+
+  return false;
 };
