@@ -230,7 +230,9 @@ export const createReport = handler(
           reportYear,
           workPlanMetadata
         ),
+        targetPopulations: "Older adults, PD, MH/SUD",
         reportYear,
+        dueDate: currentDate,
         reportPeriod: calculatePeriod(currentDate, workPlanMetadata),
         associatedWorkPlan: workPlanMetadata?.id,
       },

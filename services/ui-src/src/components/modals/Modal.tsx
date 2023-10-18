@@ -52,34 +52,36 @@ export const Modal = ({
           </Button>
         </Flex>
         <ModalBody sx={sx.modalBody}>{children}</ModalBody>
-        <ModalFooter sx={sx.modalFooter}>
-          {formId && content.actionButtonText !== "" && (
+        {content.actionButtonText && content.actionButtonText !== "" && (
+          <ModalFooter sx={sx.modalFooter}>
+            {formId && content.actionButtonText !== "" && (
+              <Button
+                sx={sx.action}
+                form={formId}
+                type="submit"
+                data-testid="modal-submit-button"
+              >
+                {submitting ? <Spinner size="md" /> : content.actionButtonText}
+              </Button>
+            )}
+            {onConfirmHandler && (
+              <Button
+                sx={sx.action}
+                onClick={() => onConfirmHandler()}
+                data-testid="modal-submit-button"
+              >
+                {submitting ? <Spinner size="md" /> : content.actionButtonText}
+              </Button>
+            )}
             <Button
-              sx={sx.action}
-              form={formId}
-              type="submit"
-              data-testid="modal-submit-button"
+              sx={sx.close}
+              variant="link"
+              onClick={modalDisclosure.onClose}
             >
-              {submitting ? <Spinner size="md" /> : content.actionButtonText}
+              {content.closeButtonText}
             </Button>
-          )}
-          {onConfirmHandler && (
-            <Button
-              sx={sx.action}
-              onClick={() => onConfirmHandler()}
-              data-testid="modal-submit-button"
-            >
-              {submitting ? <Spinner size="md" /> : content.actionButtonText}
-            </Button>
-          )}
-          <Button
-            sx={sx.close}
-            variant="link"
-            onClick={modalDisclosure.onClose}
-          >
-            {content.closeButtonText}
-          </Button>
-        </ModalFooter>
+          </ModalFooter>
+        )}
       </ModalContent>
     </ChakraModal>
   );
