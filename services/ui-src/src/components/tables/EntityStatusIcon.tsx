@@ -7,16 +7,18 @@ import successIcon from "assets/icons/icon_check_circle.png";
 import successIconDark from "assets/icons/icon_check_circle_dark.png";
 import closedIcon from "assets/icons/icon_circle-minus-gray.png";
 
-export type EntityStatusType = "complete" | "close" | undefined;
+export type EntityStatusType =
+  | "complete"
+  | "close"
+  | boolean
+  | undefined
+  | "disabled";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const EntityStatusIcon = ({ entityCompleted, isPdf }: Props) => {
-  const entityStatus: EntityStatusType = entityCompleted
-    ? "complete"
-    : undefined;
-
+export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
   const statusIcon = (status: EntityStatusType) => {
     switch (status) {
+      case true:
       case "complete":
         return {
           src: isPdf ? successIconDark : successIcon,
@@ -31,6 +33,8 @@ export const EntityStatusIcon = ({ entityCompleted, isPdf }: Props) => {
           style: sx.successText,
           text: "Close",
         };
+      case "disabled":
+        return {};
       default:
         return {
           src: isPdf ? unfinishedIconDark : unfinishedIcon,
@@ -65,7 +69,7 @@ export const EntityStatusIcon = ({ entityCompleted, isPdf }: Props) => {
 };
 
 interface Props {
-  entityCompleted: boolean;
+  entityStatus: EntityStatusType;
   /**
    * Whether or not icon is appearing on PDF page (used for styling)
    */

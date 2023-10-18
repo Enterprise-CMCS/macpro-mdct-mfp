@@ -30,6 +30,8 @@ export const getEntityStatus = (report: ReportShape, entity: EntityShape) => {
   const overlayForm = reportRoute?.overlayForm;
   const modalForm = reportRoute?.modalForm;
 
+  console.log(reportRoute);
+
   /*
    * Filter the child fields so that only ones that the user has the ability to see
    * are up against validation. If the parent hasn't been checked, then we
@@ -80,8 +82,8 @@ export const getEntityStatus = (report: ReportShape, entity: EntityShape) => {
 export const getInitiativeStatus = (formEntity: any, entity: EntityShape) => {
   const stepType = formEntity.stepType;
 
-  //Important: not tracking close out atm
-  if (stepType === "closeOutInformation") return true;
+  //Important note: not tracking close out atm so it'll be disabled
+  if (stepType === "closeOutInformation") return "disabled";
 
   //pull fields from form type
   const fields = formEntity.form

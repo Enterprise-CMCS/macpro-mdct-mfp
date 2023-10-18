@@ -37,14 +37,14 @@ export const EntityRow = ({
       case ModalDrawerEntityTypes.TARGET_POPULATIONS:
         return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
       case "initiative":
-        return report ? !!getInitiativeStatus(formEntity!, entity) : false;
+        return getInitiativeStatus(formEntity!, entity);
       default: {
         return report ? !!getEntityStatus(report, entity) : false;
       }
     }
   };
 
-  let entityCompleted = useMemo(() => {
+  let entityStatus = useMemo(() => {
     return setStatusByType(entityType!);
   }, [report, entity]);
 
@@ -62,7 +62,7 @@ export const EntityRow = ({
   return (
     <Tr sx={sx.content}>
       <Td>
-        <EntityStatusIcon entityCompleted={entityCompleted} />
+        <EntityStatusIcon entityStatus={entityStatus} />
       </Td>
       <Td sx={sx.entityName}>
         <ul>
@@ -70,7 +70,7 @@ export const EntityRow = ({
             <li key={index}>{renderHtml(field)}</li>
           ))}
         </ul>
-        {!entityCompleted && (
+        {!entityStatus && (
           <Text sx={sx.errorText}>
             Select "{verbiage.enterEntityDetailsButtonText}” to report data
           </Text>
@@ -91,6 +91,7 @@ export const EntityRow = ({
             sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
+            disabled={entityStatus === "disabled"}
           >
             {verbiage.enterEntityDetailsButtonText}
           </Button>
