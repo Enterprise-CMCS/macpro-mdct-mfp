@@ -29,7 +29,6 @@ export interface ReportMetadataShape extends ReportKeys {
 export interface ReportShape extends ReportMetadataShape {
   formTemplate: ReportJson;
   fieldData: AnyObject;
-  workPlanData?: AnyObject;
   completionStatus?: CompletionData;
   isComplete?: boolean;
 }
