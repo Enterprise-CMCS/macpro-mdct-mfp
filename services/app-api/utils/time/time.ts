@@ -1,5 +1,5 @@
 import { utcToZonedTime } from "date-fns-tz";
-import { ReportMetadata } from "../types";
+import { ReportMetadata, ReportType } from "../types";
 
 /*
  * Converts passed UTC datetime to ET date
@@ -21,16 +21,79 @@ export const convertDateUtcToEt = (date: number): string => {
 };
 
 /*
- * Calculates the period given a due date.
+ * Calculates the period given the current date.
  * The periods are defined as follows:
  *     Period 1 is from 01/01 to 06/30.
  *     Period 2 is from 07/01 to 12/31.
  */
-export const calculatePeriod = (dueDate: number, workPlan?: ReportMetadata) => {
+export const calculatePeriod = (
+  currentDate: number,
+  workPlan?: ReportMetadata
+) => {
   if (workPlan) return workPlan.reportPeriod;
-  const date = new Date(dueDate);
+  const date = new Date(currentDate);
   const period = Math.ceil((date.getMonth() + 1) / 6);
   return period.toString();
+};
+
+/**
+ * Calculates if the given year is a leap year
+ * @param currentYear
+ * @returns
+ */
+export const isLeapYear = (currentYear: number) => {
+  return (
+    (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0
+  );
+};
+
+/**
+ * This method returns a date in ISO format to a date in mm/dd/yyyy format.
+ * @param date The given date in ISO format
+ * @returns a date in mm/dd/yyyy format
+ */
+export const convertToFormattedDate = (date: Date) => {
+  var year = date.getFullYear();
+
+  var month = (1 + date.getMonth()).toString();
+  month = month.length > 1 ? month : "0" + month;
+
+  var day = date.getDate().toString();
+  day = day.length > 1 ? day : "0" + day;
+
+  return month + "/" + day + "/" + year;
+};
+
+/**
+ * Calculates the due date given the period and the report type.
+ * WP due date is May 1 for Period 1, and Nov 1 for Period 2
+ * SAR due date for Period 1{*}: 60 days from June 30, due date is Aug 29.
+ * SAR due date for Period 2{*}: 60 days from December 31(for a non leap year Mar 1, for leap years it’s Feb 29).
+ *
+ * @param reportPeriod The period (1 or 2) for the given report
+ * @param reportType The report type (WP or SAR)
+ */
+export const calculateDueDate = (
+  currentYear: number,
+  reportPeriod: string,
+  reportType: ReportType
+) => {
+  let date = new Date();
+  if (reportType == ReportType.WP) {
+    reportPeriod == "1"
+      ? (date = new Date(currentYear, 4, 1))
+      : (date = new Date(currentYear, 10, 1));
+  }
+  if (reportType == ReportType.SAR) {
+    if (reportPeriod == "2") {
+      isLeapYear(currentYear + 1)
+        ? (date = new Date(currentYear + 1, 1, 29))
+        : (date = new Date(currentYear + 1, 2, 1));
+    } else {
+      date = new Date(currentYear, 7, 29);
+    }
+  }
+  return convertToFormattedDate(date);
 };
 
 /*

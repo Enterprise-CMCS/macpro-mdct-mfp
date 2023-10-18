@@ -16,7 +16,11 @@ import {
   reportBuckets,
   reportNames,
 } from "../../utils/constants/constants";
-import { calculatePeriod, convertDateUtcToEt } from "../../utils/time/time";
+import {
+  calculateDueDate,
+  calculatePeriod,
+  convertDateUtcToEt,
+} from "../../utils/time/time";
 import { createReportName } from "../../utils/other/other";
 // types
 import {
@@ -221,6 +225,8 @@ export const createReport = handler(
         ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
         : workPlanMetadata!.reportYear;
 
+    const reportPeriod = calculatePeriod(currentDate, workPlanMetadata);
+
     // Create DyanmoDB record.
     const reportMetadataParams: DynamoWrite = {
       TableName: reportTable,
@@ -242,7 +248,12 @@ export const createReport = handler(
           workPlanMetadata
         ),
         reportYear,
-        reportPeriod: calculatePeriod(currentDate, workPlanMetadata),
+        reportPeriod: reportPeriod,
+        dueDate: calculateDueDate(
+          reportYear,
+          reportPeriod.toString(),
+          reportType
+        ),
       },
     };
 

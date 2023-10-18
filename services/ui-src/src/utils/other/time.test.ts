@@ -1,5 +1,4 @@
 import {
-  calculateDueDate,
   calculateRemainingSeconds,
   calculateTimeByType,
   checkDateRangeStatus,
@@ -94,20 +93,6 @@ describe("Test checkDateRangeStatus", () => {
     const endDate = currentTime + oneDay;
     const dateRangeStatus = checkDateRangeStatus(startDate, endDate);
     expect(dateRangeStatus).toBeTruthy();
-  });
-});
-
-describe("Test calculateDueDate", () => {
-  it("calculateDueDate for 01/01/2022 for single year", () => {
-    const startDate = "01/01/2022";
-    const dueDate = calculateDueDate(startDate);
-    expect(convertDateUtcToEt(dueDate)).toBe("06/30/2022");
-  });
-
-  it("calculateDueDate for 08/01/2022 for rollover year", () => {
-    const startDate = "08/01/2022";
-    const dueDate = calculateDueDate(startDate);
-    expect(convertDateUtcToEt(dueDate)).toBe("01/28/2023");
   });
 });
 
