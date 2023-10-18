@@ -30,8 +30,6 @@ export const getEntityStatus = (report: ReportShape, entity: EntityShape) => {
   const overlayForm = reportRoute?.overlayForm;
   const modalForm = reportRoute?.modalForm;
 
-  console.log(reportRoute);
-
   /*
    * Filter the child fields so that only ones that the user has the ability to see
    * are up against validation. If the parent hasn't been checked, then we
@@ -102,30 +100,25 @@ export const getInitiativeStatus = (formEntity: any, entity: EntityShape) => {
     }
   );
 
-  //if there's an entity key that is the same named as the stepType, the assumption is that the data is in an array
-  if (entity[stepType]) {
-    if (entity[stepType].length <= 0) return false;
-
+  //this step is to consolidate the code by converting entity into a loopable array if there's no array of stepType to loop through
+  const entities = entity[stepType] ? (entity[stepType] as []) : [entity];
+  if (entities.length > 0) {
     let isFilled = true;
-    (entity[stepType] as []).forEach((child: any) => {
+
+    entities.forEach((child: any) => {
+      //filter down to the data for the current status topic
       const filterdFieldData = fieldKeyInReport.map((item: string) => {
         return child[item];
       });
 
-      //if any of the field data is empty, that means the status is false
+      //if any of the field data is empty, that means we're missing data and the status is automatically false
       isFilled = !filterdFieldData.every((field: any) => field)
         ? false
         : isFilled;
     });
 
     return isFilled;
-  } else {
-    //entity has data for all the initiatives instead of the topic, so we filter down to the data for the current status topic
-    const filterdFieldData = fieldKeyInReport.map((item: string) => {
-      return entity[item];
-    });
-
-    //if any of the field data is empty, that means we're missing data and the status is automatically false
-    return filterdFieldData.every((field: any) => field);
   }
+
+  return false;
 };

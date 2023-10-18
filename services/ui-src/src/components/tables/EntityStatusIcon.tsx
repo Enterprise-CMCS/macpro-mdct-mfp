@@ -7,12 +7,7 @@ import successIcon from "assets/icons/icon_check_circle.png";
 import successIconDark from "assets/icons/icon_check_circle_dark.png";
 import closedIcon from "assets/icons/icon_circle-minus-gray.png";
 
-export type EntityStatusType =
-  | "complete"
-  | "close"
-  | boolean
-  | undefined
-  | "disabled";
+export type EntityStatusType = string | boolean | undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
