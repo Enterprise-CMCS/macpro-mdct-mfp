@@ -59,7 +59,12 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
 
   return (
     <Box>
-      {route.verbiage?.intro && <ReportPageIntro text={route.verbiage.intro} />}
+      {route.verbiage?.intro && (
+        <ReportPageIntro
+          text={route.verbiage.intro}
+          reportType={report?.reportType}
+        />
+      )}
       <Form
         id={route.form.id}
         formJson={route.form}

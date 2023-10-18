@@ -2,19 +2,25 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { InstructionsAccordion } from "components";
 // utils
-import { calculatePeriod, convertDateUtcToEt, parseCustomHtml } from "utils";
-import { AnyObject } from "types";
+import {
+  calculateLongformPeriod,
+  convertDateUtcToEt,
+  parseCustomHtml,
+} from "utils";
+import { AnyObject, ReportType } from "types";
 
 export const ReportPageIntro = ({
   text,
   accordion,
   initiativeName,
+  reportType,
   ...props
 }: Props) => {
   const { section, subsection, hint, info } = text;
   const currentDate = Date.now();
+  const isSAR = reportType === ReportType.SAR;
   const date = new Date(convertDateUtcToEt(currentDate));
-  const currentPeriod = calculatePeriod(date);
+  const currentPeriod = calculateLongformPeriod(date);
   return (
     <Box sx={sx.introBox} {...props}>
       <Heading as="h1" sx={sx.sectionHeading}>
@@ -25,13 +31,11 @@ export const ReportPageIntro = ({
       </Heading>
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
       {accordion && <InstructionsAccordion verbiage={accordion} />}
-      {info && (
-        <>
-          <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>
-          <Heading as="h2" sx={sx.periodText}>
-            {currentPeriod} reporting period
-          </Heading>
-        </>
+      {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
+      {info && isSAR && (
+        <Heading as="h2" sx={sx.periodText}>
+          {currentPeriod} reporting period
+        </Heading>
       )}
     </Box>
   );
@@ -42,6 +46,7 @@ interface Props {
   accordion?: AnyObject;
   initiativeName?: string;
   [key: string]: any;
+  reportType?: string;
 }
 
 const sx = {

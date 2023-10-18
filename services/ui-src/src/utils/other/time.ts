@@ -170,7 +170,7 @@ export const calculateRemainingSeconds = (expiresAt?: any) => {
  *     Period 1 is from 01/01 to 06/30.
  *     Period 2 is from 07/01 to 12/31.
  */
-export const calculatePeriod = (currentDate: Date) => {
+export const calculateLongformPeriod = (currentDate: Date) => {
   const date = new Date(currentDate);
   const currentYear = new Date().getFullYear();
   const period = Math.ceil((date.getMonth() + 1) / 6);
