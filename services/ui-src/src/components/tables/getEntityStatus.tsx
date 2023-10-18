@@ -1,4 +1,11 @@
-import { EntityShape, ModalOverlayReportPageShape, ReportShape } from "types";
+import {
+  EntityDetailsDashboardOverlayShape,
+  EntityDetailsOverlayShape,
+  EntityShape,
+  ModalOverlayReportPageShape,
+  OverlayModalPageShape,
+  ReportShape,
+} from "types";
 import { mapValidationTypesToSchema } from "utils/validation/validation";
 import { object } from "yup";
 
@@ -76,8 +83,36 @@ export const getEntityStatus = (report: ReportShape, entity: EntityShape) => {
   }
 };
 
+export const getInitiativeStatus = (
+  report: ReportShape,
+  entity: EntityShape
+) => {
+  // Direct pull of the initiative formTemplate json chunk
+  const reportRoute = report.formTemplate
+    .routes[3] as unknown as ModalOverlayReportPageShape;
+
+  //get the intiative report child
+  const reportChild: EntityDetailsDashboardOverlayShape =
+    reportRoute.children![1];
+
+  if (reportChild.entitySteps) {
+    const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =
+      reportChild.entitySteps;
+    const stepStatuses = entitySteps.map((step) => {
+      return getInitiativeDashboardStatus(step, entity);
+    });
+
+    return stepStatuses.every((field: any) => field);
+  }
+
+  return false;
+};
+
 //NOTE: this function works on the assumption that the fieldData saved is validated
-export const getInitiativeStatus = (formEntity: any, entity: EntityShape) => {
+export const getInitiativeDashboardStatus = (
+  formEntity: any,
+  entity: EntityShape
+) => {
   const stepType = formEntity.stepType;
 
   //Important note: not tracking close out atm so it'll be disabled

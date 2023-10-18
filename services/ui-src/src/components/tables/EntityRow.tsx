@@ -13,7 +13,11 @@ import {
 import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
-import { getEntityStatus, getInitiativeStatus } from "./getEntityStatus";
+import {
+  getEntityStatus,
+  getInitiativeStatus,
+  getInitiativeDashboardStatus,
+} from "./getEntityStatus";
 
 export const EntityRow = ({
   entity,
@@ -37,7 +41,13 @@ export const EntityRow = ({
       case ModalDrawerEntityTypes.TARGET_POPULATIONS:
         return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
       case "initiative":
-        return getInitiativeStatus(formEntity!, entity);
+        //the entityType for initiative is being shared for both the parent and the child status
+        //to differentiate, check if formEntity is filled
+        if (formEntity) {
+          return getInitiativeDashboardStatus(formEntity, entity);
+        } else {
+          return getInitiativeStatus(report!, entity);
+        }
       default: {
         return report ? !!getEntityStatus(report, entity) : false;
       }
