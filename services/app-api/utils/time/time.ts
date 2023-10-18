@@ -51,15 +51,15 @@ export const isLeapYear = (year: number) => {
  * @returns a date in mm/dd/yyyy format
  */
 export const convertToFormattedDate = (date: Date) => {
-  var year = date.getFullYear();
+  let year = date.getFullYear();
 
-  var month = (1 + date.getMonth()).toString();
+  let month = (1 + date.getMonth()).toString();
   month = month.length > 1 ? month : "0" + month;
 
-  var day = date.getDate().toString();
+  let day = date.getDate().toString();
   day = day.length > 1 ? day : "0" + day;
 
-  return month + "/" + day + "/" + year;
+  return `${month}/${day}/${year}`;
 };
 
 /**
