@@ -53,6 +53,8 @@ export const mockWPReport = {
     lastAlteredBy: "Thelonious States",
     fieldDataId: "mockReportFieldData",
     formTemplateId: "mockReportJson",
+    reportPeriod: 1,
+    reportYear: 2023,
   },
   formTemplate: mockReportJson,
   fieldData: mockReportFieldData,
@@ -99,6 +101,7 @@ export const mockWPFullReport = {
   isComplete: false,
   reportPeriod: 1,
   locked: false,
+  reportYear: 2023,
 };
 
 export const mockWPApprovedFullReport = {
@@ -123,6 +126,7 @@ export const mockWPApprovedFullReport = {
   },
   isComplete: true,
   reportPeriod: 1,
+  reportYear: 2023,
 };
 
 export const mockReportsByState = [

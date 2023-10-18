@@ -21,15 +21,17 @@ import {
   calculatePeriod,
   convertDateUtcToEt,
 } from "../../utils/time/time";
-import { createReportName } from "../../utils/other/other";
+import {
+  createReportName,
+  getLastCreatedWorkPlan,
+} from "../../utils/other/other";
 // types
 import {
+  AnyObject,
   DynamoWrite,
   isReportType,
   isState,
-  ReportMetadata,
   ReportMetadataShape,
-  ReportStatus,
   ReportType,
   S3Put,
   StatusCodes,
@@ -37,7 +39,6 @@ import {
 } from "../../utils/types";
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { logger } from "../../utils/logging";
-import { fetchReport, fetchReportsByState } from "./fetch";
 import { APIGatewayProxyEvent } from "aws-lambda";
 
 export const createReport = handler(
@@ -51,7 +52,7 @@ export const createReport = handler(
 
     const requiredParams = ["reportType", "state"];
 
-    // Return error if no state is passed.
+    // Return No_Key when not given a state and reportType as a paramater
     if (
       !event.pathParameters ||
       !hasReportPathParams(event.pathParameters, requiredParams)
@@ -63,16 +64,13 @@ export const createReport = handler(
     }
 
     const { state, reportType } = event.pathParameters;
+
     if (!isState(state)) {
       return {
         status: StatusCodes.BAD_REQUEST,
         body: error.NO_KEY,
       };
     }
-
-    const unvalidatedPayload = JSON.parse(event.body!);
-    const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
-      unvalidatedPayload;
 
     if (!isReportType(reportType)) {
       return {
@@ -81,12 +79,13 @@ export const createReport = handler(
       };
     }
 
+    // Find S3 Bucket, DynamoTable, and full string naming scheme for reportType
     const reportBucket = reportBuckets[reportType];
     const reportTable = reportTables[reportType];
     const reportTypeExpanded = reportNames[reportType];
 
+    // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;
-
     try {
       ({ formTemplate, formTemplateVersion } = await getOrCreateFormTemplate(
         reportBucket,
@@ -96,6 +95,12 @@ export const createReport = handler(
       logger.error(err, "Error getting or creating template");
       throw err;
     }
+    // End Section - Getting/Creating newest Form Template based on reportType
+
+    // Begin Section - Check the payload that was sent with the request and validate it
+    const unvalidatedPayload = JSON.parse(event.body!);
+    const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
+      unvalidatedPayload;
 
     // Return MISSING_DATA error if missing unvalidated data or validators.
     if (!unvalidatedFieldData || !formTemplate.validationJson) {
@@ -105,83 +110,19 @@ export const createReport = handler(
       };
     }
 
-    // Create report and field ids.
-    const reportId: string = KSUID.randomSync().string;
-    const fieldDataId: string = KSUID.randomSync().string;
-    const formTemplateId: string = formTemplateVersion?.id;
     const creationValidationJson = {
+      reportPeriod: "text",
       stateName: "text",
-      ["targetPopulations"]: "objectArray",
+      stateOrTerritory: "text",
       submissionCount: "number",
-      versionControl: "objectArray",
+      submissionName: "text",
     };
 
-    // Validate field data
+    // Setup validation for what we expect to see in the payload
     let validatedFieldData = await validateFieldData(
       creationValidationJson,
       unvalidatedFieldData
     );
-
-    let workPlanMetadata: ReportMetadata | undefined = undefined;
-
-    // Get Associated Work Plan if creating a SAR Submission
-    if (reportType === ReportType.SAR) {
-      const sarSubmissions = await fetchReportsByState(event, _context);
-
-      const workPlanEvent = event;
-      workPlanEvent.pathParameters = {
-        ...workPlanEvent.pathParameters,
-        reportType: ReportType.WP,
-      };
-      const workPlanSubmissions = await fetchReportsByState(event, _context);
-      if (!workPlanSubmissions.body) {
-        return {
-          status: StatusCodes.NOT_FOUND,
-          body: error.NO_WORKPLANS_FOUND,
-        };
-      }
-      // if current report exists, parse for archived status
-      if (workPlanSubmissions.body) {
-        const currentSarSubmissions = JSON.parse(sarSubmissions.body);
-        const currentWorkPlans = JSON.parse(workPlanSubmissions.body);
-
-        if (currentWorkPlans.length !== currentSarSubmissions?.length) {
-          let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
-          currentWorkPlans.forEach((submission: ReportMetadataShape) => {
-            if (
-              submission.status === ReportStatus.NOT_STARTED ||
-              submission.status === ReportStatus.IN_PROGRESS
-            ) {
-              if (
-                lastFoundSubmission &&
-                submission.createdAt > lastFoundSubmission?.createdAt
-              )
-                lastFoundSubmission = submission;
-              else if (!lastFoundSubmission) {
-                lastFoundSubmission = submission;
-              }
-            }
-          });
-
-          if (lastFoundSubmission) {
-            const fetchWPReportEvent = event;
-            fetchWPReportEvent.pathParameters = {
-              reportType: ReportType.WP,
-              state: state,
-              id: lastFoundSubmission["id"],
-            };
-            const workPlan = await fetchReport(fetchWPReportEvent, _context);
-            const workPlanParsed = JSON.parse(workPlan.body);
-            workPlanMetadata = workPlanParsed;
-            const workPlanFieldData = workPlanParsed?.fieldData;
-            validatedFieldData = {
-              ...validatedFieldData,
-              workPlanData: workPlanFieldData,
-            };
-          }
-        }
-      }
-    }
 
     // Return INVALID_DATA error if field data is not valid.
     if (!validatedFieldData || Object.keys(validatedFieldData).length === 0) {
@@ -190,6 +131,52 @@ export const createReport = handler(
         body: error.INVALID_DATA,
       };
     }
+    // End Section - Check the payload that was sent with the request and validate it
+
+    /*
+     * Begin Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used
+     * to create a different SAR and attach all of its fieldData to the SAR Submissions FieldData
+     */
+    const {
+      workPlanMetadata,
+      workPlanFieldData,
+    }: {
+      workPlanMetadata?: ReportMetadataShape;
+      workPlanFieldData?: AnyObject;
+    } =
+      reportType === ReportType.SAR
+        ? await getLastCreatedWorkPlan(event, _context, state)
+        : { workPlanMetadata: undefined, workPlanFieldData: undefined };
+
+    // If we recieved no work plan information and we're trying to create a SAR, return NO_WORKPLANS_FOUND
+    if (
+      !workPlanFieldData &&
+      !workPlanMetadata &&
+      reportType === ReportType.SAR
+    ) {
+      return {
+        status: StatusCodes.NOT_FOUND,
+        body: error.NO_WORKPLANS_FOUND,
+      };
+    }
+
+    // If we are creating a SAR and found a Work Plan to copy from, grab its field data and add it to our SAR
+    if (workPlanFieldData) {
+      validatedFieldData = {
+        ...validatedFieldData,
+        workPlanData: workPlanFieldData,
+      };
+    }
+
+    /*
+     * End Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used
+     * to create a different SAR and attach all of its fieldData to the SAR Submissions FieldData
+     */
+
+    // Begin Section - Create report and field ids and submit the validated field data to S3
+    const reportId: string = KSUID.randomSync().string;
+    const fieldDataId: string = KSUID.randomSync().string;
+    const formTemplateId: string = formTemplateVersion?.id;
 
     const fieldDataParams: S3Put = {
       Bucket: reportBucket,
@@ -206,7 +193,9 @@ export const createReport = handler(
         body: error.S3_OBJECT_CREATION_ERROR,
       };
     }
+    // End Section - Create report and field ids and submit the validated field data to S3
 
+    // Validation the metadata for the submission
     const validatedMetadata = await validateData(metadataValidationSchema, {
       ...unvalidatedMetadata,
     });
@@ -218,8 +207,9 @@ export const createReport = handler(
         body: error.INVALID_DATA,
       };
     }
-    const currentDate = Date.now();
 
+    // Begin Section - Create DyanmoDB record.
+    const currentDate = Date.now();
     const reportYear =
       reportType === ReportType.WP
         ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
@@ -247,9 +237,10 @@ export const createReport = handler(
           reportYear,
           workPlanMetadata
         ),
+        targetPopulations: "Older adults, PD, MH/SUD",
         reportYear,
-        reportPeriod: reportPeriod,
         dueDate: calculateDueDate(reportYear, reportPeriod, reportType),
+        associatedWorkPlan: workPlanMetadata?.id,
       },
     };
 
@@ -261,7 +252,29 @@ export const createReport = handler(
         body: error.DYNAMO_CREATION_ERROR,
       };
     }
+    // End Section - Create DynamoDB record.
 
+    // Begin Section - Let the Workplan know that its been tied to a SAR that was just created
+    if (reportType === ReportType.SAR) {
+      const workPlanWithSarFormConnection: DynamoWrite = {
+        TableName: reportTables[ReportType.WP],
+        Item: {
+          ...workPlanMetadata,
+          associatedSar: reportId,
+        },
+      };
+      try {
+        await dynamoDb.put(workPlanWithSarFormConnection);
+      } catch (err) {
+        return {
+          status: StatusCodes.SERVER_ERROR,
+          body: error.DYNAMO_CREATION_ERROR,
+        };
+      }
+    }
+    // End Section - Let the Workplan know that its been tied to a SAR that was just created
+
+    // Return successful creation response!
     return {
       status: StatusCodes.CREATED,
       body: {

@@ -1,5 +1,5 @@
 import { utcToZonedTime } from "date-fns-tz";
-import { ReportMetadata, ReportType } from "../types";
+import { ReportMetadataShape, ReportType } from "../types";
 
 /*
  * Converts passed UTC datetime to ET date
@@ -28,7 +28,7 @@ export const convertDateUtcToEt = (date: number): string => {
  */
 export const calculatePeriod = (
   currentDate: number,
-  workPlan?: ReportMetadata
+  workPlan?: ReportMetadataShape
 ) => {
   if (workPlan) return workPlan.reportPeriod;
   const date = new Date(currentDate);
