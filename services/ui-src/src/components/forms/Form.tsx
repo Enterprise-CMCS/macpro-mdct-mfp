@@ -88,7 +88,7 @@ export const Form = ({
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
-      renderTargetPopulationFields(report, fields),
+      renderTargetPopulationFields(report, fields, location),
       formData
     );
     return formFieldFactory(fieldsToRender, {

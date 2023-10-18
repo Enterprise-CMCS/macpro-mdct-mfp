@@ -65,25 +65,21 @@ export const entityWasUpdated = (
   newEntity: AnyObject
 ) => JSON.stringify(originalEntity) !== JSON.stringify(newEntity);
 
-// rendering dynamic target population fields on the form
+// rendering dynamic Target Population fields on the WP and SAR forms
 export const renderTargetPopulationFields = (
   report: ReportShape | undefined,
-  fields: (FormField | FormLayoutElement)[]
+  fields: (FormField | FormLayoutElement)[],
+  location: AnyObject
 ) => {
   const updatedTargetPopulations =
     report?.reportType === ReportType.SAR
       ? report?.fieldData?.workPlanData.targetPopulations
       : report?.fieldData?.targetPopulations;
 
-  // handle the case of SAR RE&T section
-  if (
-    report?.reportType === ReportType.SAR &&
-    updatedTargetPopulations.length > 4
-  ) {
-    // if there are "other" target populations, append them to the fields to render
-    const retTextFields = updatedTargetPopulations?.map(
-      (field: EntityShape) => {
-        // append the other populations
+  // choice lists with target populations
+  const formattedFields = updatedTargetPopulations?.map(
+    (field: EntityShape) => {
+      if (report?.reportType === ReportType.SAR) {
         const fieldDisplayValue =
           field.transitionBenchmarks_targetPopulationName.match(/\(([^()]*)\)/)
             ? field.transitionBenchmarks_targetPopulationName.match(
@@ -91,6 +87,7 @@ export const renderTargetPopulationFields = (
               )[1]
             : field.transitionBenchmarks_targetPopulationName;
 
+        // number fields (RE&T sections)
         return {
           id: field.id,
           type: "number",
@@ -104,13 +101,8 @@ export const renderTargetPopulationFields = (
           },
         };
       }
-    );
-    return retTextFields;
-  }
 
-  // choice lists with target populations
-  const formatChoiceList = updatedTargetPopulations?.map(
-    (field: EntityShape) => {
+      // choice list fields (Work Plan sections)
       return {
         checked: false,
         id: field.id,
@@ -123,14 +115,19 @@ export const renderTargetPopulationFields = (
     }
   );
 
-  const updateTargetPopulationChoiceList = fields.map((field) => {
+  // only return target population text fields when rendering RE&T forms
+  if (location.pathname.startsWith("/sar/recruitment-enrollment-transitions")) {
+    return formattedFields;
+  }
+
+  const updatedTargetPopulationChoiceList = fields.map((field) => {
     return field.id.match("targetPopulations")
       ? {
           ...field,
-          props: { ...field?.props, choices: [...formatChoiceList] },
+          props: { ...field?.props, choices: [...formattedFields] },
         }
       : { ...field };
   });
 
-  return updateTargetPopulationChoiceList;
+  return updatedTargetPopulationChoiceList;
 };
