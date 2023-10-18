@@ -109,6 +109,7 @@ export const ChoiceListField = ({
         const formattedChildren = formFieldFactory(choiceChildren, {
           disabled: shouldDisableChildFields,
           nested: isNested,
+          autosave: autosave,
         });
         choiceObject.checkedChildren = formattedChildren;
       }

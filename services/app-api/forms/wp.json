@@ -1148,7 +1148,7 @@
                           "label": "Discontinued initiative",
                           "children": [
                             {
-                              "id": "gtKe0Mx7QUojplAhV3T8rg",
+                              "id": "closeOutInformation_initiativeStatus-terminationReason",
                               "props": {
                                 "label": "Indicate reason for termination"
                               },
@@ -1166,7 +1166,7 @@
                           "label": "Sustaining initiative through a Medicaid authority",
                           "children": [
                             {
-                              "id": "xgRHcIPIG8b3LNB35tavx3",
+                              "id": "closeOutInformation_initiativeStatus-alternateFunding",
                               "props": {
                                 "label": "Indicate alternative funding source"
                               },
@@ -1174,7 +1174,7 @@
                               "validation": {
                                 "type": "text",
                                 "nested": true,
-                                "parentFieldName": "initiativeStatus_checkbox"
+                                "parentFieldName": "closeOutInformation_initiativeStatus"
                               }
                             }
                           ]
