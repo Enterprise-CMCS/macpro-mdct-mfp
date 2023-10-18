@@ -29,7 +29,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
           text: "Close",
         };
       case "disabled":
-        return {};
+        return undefined;
       default:
         return {
           src: isPdf ? unfinishedIconDark : unfinishedIcon,
@@ -44,7 +44,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
 
   return (
     <Box sx={isPdf ? sx.containerPdf : sx.container}>
-      {
+      {status && (
         <>
           <Image
             sx={isPdf ? sx.statusIconPdf : sx.statusIcon}
@@ -58,7 +58,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
             </Text>
           )}
         </>
-      }
+      )}
     </Box>
   );
 };
