@@ -142,14 +142,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           associatedWorkPlan: report.submissionName,
           stateOrTerritory: report.state,
           reportPeriod: report.reportPeriod,
-          finalSar: [
-            {
-              key: report.finalSar
-                ? "nrRmirBoVQv0ysWnEejNZD"
-                : "ekP9iVvuQE9AALchScDzoD",
-              value: report.finalSar ? "Yes" : "No",
-            },
-          ],
+          finalSar: report.finalSar,
         },
         state: report.state,
         id: report.id,
@@ -437,11 +430,9 @@ const sx = {
     padding: "10",
   },
   alertBanner: {
-    marginTop: "3.5rem",
     marginBottom: "2rem",
     borderInlineStartWidth: "7.5px",
     bgColor: "palette.error_lightest",
-    width: "80%",
     fontSize: "18px",
     p: {
       fontSize: "16px",
