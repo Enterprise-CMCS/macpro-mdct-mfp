@@ -86,7 +86,7 @@ export const AddEditReportModal = ({
         lastAlteredBy: full_name,
         locked: false,
         previousRevisions: [],
-        finalSar: formData["finalSar"][0].value === "Yes" ? true : false,
+        finalSar: formData["finalSar"],
       },
       fieldData: {
         submissionName,

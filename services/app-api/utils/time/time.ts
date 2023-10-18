@@ -1,5 +1,5 @@
 import { utcToZonedTime } from "date-fns-tz";
-import { ReportMetadata } from "../types";
+import { ReportMetadataShape } from "../types";
 
 /*
  * Converts passed UTC datetime to ET date
@@ -26,7 +26,10 @@ export const convertDateUtcToEt = (date: number): string => {
  *     Period 1 is from 01/01 to 06/30.
  *     Period 2 is from 07/01 to 12/31.
  */
-export const calculatePeriod = (dueDate: number, workPlan?: ReportMetadata) => {
+export const calculatePeriod = (
+  dueDate: number,
+  workPlan?: ReportMetadataShape
+) => {
   if (workPlan) return workPlan.reportPeriod;
   const date = new Date(dueDate);
   const period = Math.ceil((date.getMonth() + 1) / 6);

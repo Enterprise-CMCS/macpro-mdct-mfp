@@ -1049,12 +1049,11 @@ export const reportShape: ReportShape = {
   formTemplate: mockFullReportJSON,
   fieldData: {
     id: "2V2LLgyP7wjNYvYXHmzd5laXl7J",
-    reportingPeriodStartDate: "01/02/2022",
-    reportingPeriodEndDate: "02/02/2022",
     submissionName: "test",
     stateName: "Minnesota",
   },
   reportPeriod: 1,
+  reportYear: 2023,
 };
 
 export const reportByState = {
@@ -1068,9 +1067,10 @@ export const reportByState = {
   submissionName: "water",
   combinedData: false,
   lastAltered: 1694029173139,
-  reportingPeriodEndDate: 1643778000000,
   state: "MN",
   id: "2V2LLf0ofcV5waGTA6XuZPev4PR",
   fieldDataId: "2V2LLgyP7wjNYvYXHmzd5laXl7J",
   status: "Not started",
+  reportPeriod: 1,
+  reportYear: 2023,
 };
