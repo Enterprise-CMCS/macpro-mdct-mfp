@@ -33,7 +33,7 @@ export const calculatePeriod = (
   if (workPlan) return workPlan.reportPeriod;
   const date = new Date(currentDate);
   const period = Math.ceil((date.getMonth() + 1) / 6);
-  return period.toString();
+  return period;
 };
 
 /**
@@ -74,17 +74,17 @@ export const convertToFormattedDate = (date: Date) => {
  */
 export const calculateDueDate = (
   currentYear: number,
-  reportPeriod: string,
+  reportPeriod: number,
   reportType: ReportType
 ) => {
   let date = new Date();
   if (reportType == ReportType.WP) {
-    reportPeriod == "1"
+    reportPeriod === 1
       ? (date = new Date(currentYear, 4, 1))
       : (date = new Date(currentYear, 10, 1));
   }
   if (reportType == ReportType.SAR) {
-    if (reportPeriod == "2") {
+    if (reportPeriod === 2) {
       isLeapYear(currentYear + 1)
         ? (date = new Date(currentYear + 1, 1, 29))
         : (date = new Date(currentYear + 1, 2, 1));

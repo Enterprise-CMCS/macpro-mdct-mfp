@@ -249,11 +249,7 @@ export const createReport = handler(
         ),
         reportYear,
         reportPeriod: reportPeriod,
-        dueDate: calculateDueDate(
-          reportYear,
-          reportPeriod.toString(),
-          reportType
-        ),
+        dueDate: calculateDueDate(reportYear, reportPeriod, reportType),
       },
     };
 
