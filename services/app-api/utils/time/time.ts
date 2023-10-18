@@ -38,13 +38,11 @@ export const calculatePeriod = (
 
 /**
  * Calculates if the given year is a leap year
- * @param currentYear
- * @returns
+ * @param year The year.
+ * @returns if the given year is a leap year.
  */
-export const isLeapYear = (currentYear: number) => {
-  return (
-    (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0
-  );
+export const isLeapYear = (year: number) => {
+  return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 };
 
 /**
@@ -70,6 +68,7 @@ export const convertToFormattedDate = (date: Date) => {
  * SAR due date for Period 1{*}: 60 days from June 30, due date is Aug 29.
  * SAR due date for Period 2{*}: 60 days from December 31(for a non leap year Mar 1, for leap years it’s Feb 29).
  *
+ * @param currentYear The current year of the report
  * @param reportPeriod The period (1 or 2) for the given report
  * @param reportType The report type (WP or SAR)
  */
