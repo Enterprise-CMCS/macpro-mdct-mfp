@@ -160,7 +160,12 @@ export const OverlayModalPage = ({
       </Box>
       <Box>
         <Flex sx={sx.buttonFlex}>
-          <Button type="submit" form={modalForm.id} sx={sx.saveButton}>
+          <Button
+            type="submit"
+            form={modalForm.id}
+            sx={sx.saveButton}
+            onClick={closeEntityDetailsOverlay as MouseEventHandler}
+          >
             Save & return
           </Button>
         </Flex>

@@ -64,8 +64,8 @@ export const EntityDetailsDashboardOverlay = ({
   };
 
   const closeEntityStepOverlay = () => {
-    setSelectedStep(undefined);
     setIsEntityStepOpen(false);
+    setSelectedStep(undefined);
   };
 
   const tableHeaders = () => {
@@ -99,7 +99,7 @@ export const EntityDetailsDashboardOverlay = ({
         ) : (
           <EntityProvider>
             <EntityDetailsOverlay
-              selectedEntity={selectedEntity!}
+              selectedEntity={reportFieldDataEntities!}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as EntityDetailsOverlayShape}
             />

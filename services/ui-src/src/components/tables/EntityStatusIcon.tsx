@@ -5,36 +5,56 @@ import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
 import unfinishedIconDark from "assets/icons/icon_error_circle.png";
 import successIcon from "assets/icons/icon_check_circle.png";
 import successIconDark from "assets/icons/icon_check_circle_dark.png";
+import closedIcon from "assets/icons/icon_circle-minus-gray.png";
+
+export type EntityStatusType = string | boolean | undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const EntityStatusIcon = ({ entityCompleted, isPdf }: Props) => {
+export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
+  const statusIcon = (status: EntityStatusType) => {
+    switch (status) {
+      case true:
+      case "complete":
+        return {
+          src: isPdf ? successIconDark : successIcon,
+          alt: isPdf ? "" : "complete icon",
+          style: sx.successText,
+          text: "Complete",
+        };
+      case "close":
+        return {
+          src: isPdf ? closedIcon : closedIcon,
+          alt: isPdf ? "" : "close icon",
+          style: sx.successText,
+          text: "Close",
+        };
+      case "disabled":
+        return undefined;
+      default:
+        return {
+          src: isPdf ? unfinishedIconDark : unfinishedIcon,
+          alt: isPdf ? "" : "warning icon",
+          style: sx.errorText,
+          text: "Error",
+        };
+    }
+  };
+
+  let status = statusIcon(entityStatus);
+
   return (
     <Box sx={isPdf ? sx.containerPdf : sx.container}>
-      {entityCompleted ? (
+      {status && (
         <>
           <Image
             sx={isPdf ? sx.statusIconPdf : sx.statusIcon}
-            src={isPdf ? successIconDark : successIcon}
-            alt={isPdf ? "" : "complete icon"}
+            src={status.src}
+            alt={status.alt}
             boxSize="xl"
           />
           {isPdf && (
-            <Text sx={sx.successText}>
-              <b>Complete</b>
-            </Text>
-          )}
-        </>
-      ) : (
-        <>
-          <Image
-            sx={isPdf ? sx.statusIconPdf : sx.statusIcon}
-            src={isPdf ? unfinishedIconDark : unfinishedIcon}
-            alt={isPdf ? "" : "warning icon"}
-            boxSize="xl"
-          />
-          {isPdf && (
-            <Text sx={sx.errorText}>
-              <b>Error</b>
+            <Text sx={status.style}>
+              <b>{status.text}</b>
             </Text>
           )}
         </>
@@ -44,7 +64,7 @@ export const EntityStatusIcon = ({ entityCompleted, isPdf }: Props) => {
 };
 
 interface Props {
-  entityCompleted: boolean;
+  entityStatus: EntityStatusType;
   /**
    * Whether or not icon is appearing on PDF page (used for styling)
    */
