@@ -41,8 +41,7 @@ export const EntityRow = ({
       case ModalDrawerEntityTypes.TARGET_POPULATIONS:
         return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
       case "initiative":
-        //the entityType for initiative is being shared for both the parent and the child status
-        //to differentiate, check if formEntity is filled
+        //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
         if (formEntity) {
           return getInitiativeDashboardStatus(formEntity, entity);
         } else {
