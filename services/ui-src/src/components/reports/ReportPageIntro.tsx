@@ -2,25 +2,20 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { InstructionsAccordion } from "components";
 // utils
-import {
-  calculateLongformPeriod,
-  convertDateUtcToEt,
-  parseCustomHtml,
-} from "utils";
-import { AnyObject, ReportType } from "types";
+import { displayLongformPeriod, parseCustomHtml } from "utils";
+import { AnyObject } from "types";
 
 export const ReportPageIntro = ({
   text,
   accordion,
   initiativeName,
-  reportType,
+  reportPeriod,
   ...props
 }: Props) => {
   const { section, subsection, hint, info } = text;
-  const currentDate = Date.now();
-  const isSAR = reportType === ReportType.SAR;
-  const date = new Date(convertDateUtcToEt(currentDate));
-  const currentPeriod = calculateLongformPeriod(date);
+  const retSection = section === "Recruitment, Enrollment, and Transitions";
+  const pageNine = subsection.includes("HCBS");
+  const currentPeriod = displayLongformPeriod(reportPeriod);
   return (
     <Box sx={sx.introBox} {...props}>
       <Heading as="h1" sx={sx.sectionHeading}>
@@ -32,11 +27,16 @@ export const ReportPageIntro = ({
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
       {accordion && <InstructionsAccordion verbiage={accordion} />}
       {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
-      {info && isSAR && (
-        <Heading as="h2" sx={sx.periodText}>
-          {currentPeriod} reporting period
-        </Heading>
-      )}
+      {retSection &&
+        (!pageNine ? (
+          <Heading as="h2" sx={sx.periodText}>
+            {currentPeriod}
+          </Heading>
+        ) : (
+          <Heading as="h2" sx={sx.periodText}>
+            This page needs a different calculation
+          </Heading>
+        ))}
     </Box>
   );
 };
@@ -46,7 +46,7 @@ interface Props {
   accordion?: AnyObject;
   initiativeName?: string;
   [key: string]: any;
-  reportType?: string;
+  reportPeriod?: number;
 }
 
 const sx = {
