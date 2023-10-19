@@ -99,24 +99,15 @@ const reportStore = (set: Function) => ({
 // ENTITY STORE
 const entityStore = (set: Function) => ({
   // initial state
-  entityId: undefined,
-  entityType: undefined,
-  entities: [],
   selectedEntity: undefined,
   // actions
-  setEntityType: (newEntityType: EntityType | undefined) =>
-    set(() => ({ entityType: newEntityType }), false, {
-      type: "setEntityType",
-    }),
-  setEntities: (newEntities: EntityShape[] | undefined) =>
-    set(() => ({ entities: newEntities }), false, {
-      type: "setEntities",
-    }),
-  clearEntities: () =>
-    set(() => ({ entities: [] }), false, { type: "clearEntities" }),
   setSelectedEntity: (newSelectedEntity: EntityShape | undefined) =>
     set(() => ({ selectedEntity: newSelectedEntity }), false, {
       type: "setSelectedEntity",
+    }),
+  clearSelectedEntity: () =>
+    set(() => ({ selectedEntity: undefined }), false, {
+      type: "clearSelectedEntity",
     }),
 });
 

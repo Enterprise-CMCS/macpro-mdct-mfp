@@ -28,19 +28,19 @@ export const OverlayModalPage = ({
   route,
 }: Props) => {
   const { entityType, verbiage, modalForm, stepType } = route;
-  const { selectedEntity: currentEntity } = useStore();
-  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
-    undefined
-  );
+  // const { selectedEntity: currentEntity } = useStore();
+  // const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
+  //   undefined
+  // );
 
-  let reportFieldDataEntities =
-    currentEntity?.[stepType ? stepType : entityType] || [];
+  // let reportFieldDataEntities =
+  //   currentEntity?.[stepType ? stepType : entityType] || [];
 
-  const dashTitle = `${verbiage.dashboardTitle}${
-    verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
-  }`;
+  // const dashTitle = `${verbiage.dashboardTitle}${
+  //   verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
+  // }`;
 
-  const entityIdLookup = { [entityType]: currentEntity?.id };
+  // const entityIdLookup = { [entityType]: currentEntity?.id };
 
   // add/edit entity modal disclosure and methods
   const {
@@ -50,12 +50,12 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setSelectedEntity(entity);
+    // if (entity) setSelectedEntity(entity);
     addEditEntityModalOnOpenHandler();
   };
 
   const closeAddEditEntityModal = () => {
-    setSelectedEntity(undefined);
+    // setSelectedEntity(undefined);
     addEditEntityModalOnCloseHandler();
   };
 
@@ -67,13 +67,13 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
-    setSelectedEntity(entity);
+    // setSelectedEntity(entity);
     resetClearProp(modalForm.fields);
     deleteEntityModalOnOpenHandler();
   };
 
   const closeDeleteEntityModal = () => {
-    setSelectedEntity(undefined);
+    // setSelectedEntity(undefined);
     deleteEntityModalOnCloseHandler();
   };
 
@@ -106,10 +106,10 @@ export const OverlayModalPage = ({
           {verbiage.addEntityButtonText}
         </Button>
         <Heading as="h3" sx={sx.dashboardTitle}>
-          {dashTitle}
+          {/* {dashTitle} */}
         </Heading>
         <Box>
-          {reportFieldDataEntities?.map(
+          {/* {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (
               <EntityStepCard
                 key={entity.id}
@@ -122,8 +122,8 @@ export const OverlayModalPage = ({
                 openDeleteEntityModal={openDeleteEntityModal}
               />
             )
-          )}
-          {reportFieldDataEntities.length > 1 && (
+          )} */}
+          {/* {reportFieldDataEntities.length > 1 && (
             <Button
               sx={sx.addEntityButton}
               onClick={addEditEntityModalOnOpenHandler}
@@ -131,15 +131,15 @@ export const OverlayModalPage = ({
             >
               {verbiage.addEntityButtonText}
             </Button>
-          )}
+          )} */}
         </Box>
         <hr />
         {/* MODALS */}
         <AddEditOverlayEntityModal
           entityType={[entityType, stepType]}
-          selectedEntity={selectedEntity}
+          // selectedEntity={selectedEntity}
           entityName={entity!.initiative_name}
-          entityIdLookup={entityIdLookup}
+          // entityIdLookup={entityIdLookup}
           verbiage={verbiage}
           form={modalForm}
           modalDisclosure={{
@@ -149,8 +149,8 @@ export const OverlayModalPage = ({
         />
         <DeleteEntityModal
           entityType={[entityType, stepType]}
-          entityIdLookup={entityIdLookup}
-          selectedEntity={selectedEntity}
+          // entityIdLookup={entityIdLookup}
+          // selectedEntity={selectedEntity}
           verbiage={verbiage}
           modalDisclosure={{
             isOpen: deleteEntityModalIsOpen,

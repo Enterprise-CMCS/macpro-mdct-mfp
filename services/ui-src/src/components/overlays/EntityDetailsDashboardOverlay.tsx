@@ -20,8 +20,8 @@ import {
 } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
-// verbiage
 import { useStore } from "utils";
+// verbiage
 
 export const EntityDetailsDashboardOverlay = ({
   closeEntityDetailsOverlay,
@@ -32,31 +32,23 @@ export const EntityDetailsDashboardOverlay = ({
   route,
 }: Props) => {
   // Entity provider setup
-  const { clearEntities, setSelectedEntity, setEntityType, setEntities } =
-    useStore();
+  // const { clearEntities, setSelectedEntity, setEntityType, setEntities } =
+  //   useStore();
   const [selectedStep, setSelectedStep] = useState<
     OverlayModalPageShape | EntityDetailsOverlayShape
   >();
   const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
-  const { report } = useStore();
 
   const { entitySteps } = route;
 
-  //using selectEntity directly will not re-render where there's a data change, we have to use its id to look up date from the report instead
-  const reportFieldDataEntities =
-    report?.fieldData[entityType!].find(
-      (entity: EntityShape) => entity.id === selectedEntity?.id
-    ) || [];
-
-  useEffect(() => {
-    setSelectedEntity(reportFieldDataEntities);
-    setEntityType(entityType);
-    setEntities(entities);
-    return () => {
-      clearEntities();
-      setSelectedEntity(undefined);
-    };
-  }, [entityType, selectedEntity]);
+  // useEffect(() => {
+  //   setEntityType(entityType);
+  //   setEntities(entities);
+  //   return () => {
+  //     clearEntities();
+  //     setSelectedEntity(undefined);
+  //   };
+  // }, [entityType, selectedEntity]);
 
   // Open/Close overlay action methods
   const openEntityStepOverlay = (

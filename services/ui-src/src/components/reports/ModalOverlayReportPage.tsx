@@ -113,12 +113,12 @@ export const ModalOverlayReportPage = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity: EntityShape) => {
-    setSelectedEntity(entity);
+    // setSelectedEntity(entity);
     deleteEntityModalOnOpenHandler();
   };
 
   const closeDeleteEntityModal = () => {
-    setSelectedEntity(undefined);
+    // setSelectedEntity(undefined);
     deleteEntityModalOnCloseHandler();
   };
 
@@ -130,7 +130,7 @@ export const ModalOverlayReportPage = ({
   };
 
   const closeEntityDetailsOverlay = () => {
-    setSelectedEntity(undefined);
+    // setSelectedEntity(undefined);
     setIsEntityDetailsOpen(false);
     setSidebarHidden(false);
   };
