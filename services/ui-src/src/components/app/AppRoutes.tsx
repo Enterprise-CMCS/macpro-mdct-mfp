@@ -19,12 +19,8 @@ import { ScrollToTopComponent, useStore } from "utils";
 import { ReportRoute, ReportType } from "types";
 
 export const AppRoutes = () => {
-  const { userIsAdmin, userReports } = useStore().user ?? {};
+  const { userIsAdmin } = useStore().user ?? {};
   const { report } = useStore();
-  const userReportAccess = {
-    WP: userReports?.includes("WP") || userIsAdmin,
-    SAR: userReports?.includes("SAR") || userIsAdmin,
-  };
 
   // LaunchDarkly
   const wpReport = true; //useFlags()?.wpReport;
@@ -51,16 +47,7 @@ export const AppRoutes = () => {
                 path="/wp"
                 element={<DashboardPage reportType={ReportType.WP} />}
               />
-              <Route
-                path="/wp/export"
-                element={
-                  userReportAccess["WP"] ? (
-                    <ExportedReportPage />
-                  ) : (
-                    <Navigate to="/" />
-                  )
-                }
-              />
+              <Route path="/wp/export" element={<ExportedReportPage />} />
             </>
           )}
           {sarReport && (
@@ -69,16 +56,7 @@ export const AppRoutes = () => {
                 path="/sar"
                 element={<DashboardPage reportType={ReportType.SAR} />}
               />
-              <Route
-                path="/sar/export"
-                element={
-                  userReportAccess["SAR"] ? (
-                    <ExportedReportPage />
-                  ) : (
-                    <Navigate to="/" />
-                  )
-                }
-              />
+              <Route path="/sar/export" element={<ExportedReportPage />} />
             </>
           )}
           {/* General Report Routes */}

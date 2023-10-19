@@ -15,7 +15,6 @@ export interface MFPUser {
   full_name: string;
   state?: string;
   userRole?: string;
-  userReports?: string[] | undefined;
   userIsAdmin?: boolean;
   userIsReadOnly?: boolean;
   userIsEndUser?: boolean;
