@@ -3,11 +3,11 @@ import { useStore } from "utils";
 import { EntityShape } from "types";
 
 interface EntityContextShape {
-  updateEntities: Function;
+  prepareEntityPayload: Function;
 }
 
 export const EntityContext = createContext<EntityContextShape>({
-  updateEntities: Function,
+  prepareEntityPayload: Function,
 });
 
 /**
@@ -21,20 +21,18 @@ export const EntityContext = createContext<EntityContextShape>({
  */
 export const EntityProvider = ({ children }: EntityProviderProps) => {
   // state management
-  const { entityId, entityType, entities, selectedEntity, setSelectedEntity } =
-    useStore();
+  const { entityId, entityType, entities, selectedEntity } = useStore();
 
   /**
-   * updateEntities updates the user's selected entity with their changes, and
+   * prepareEntityPayload updates the user's selected entity with their changes, and
    * replaces the selected entity in the entities list.
    *
    * When we submit an entity related field for autosave, we need to send
    * the updated list of all entities, not just the selected one.
    *
-   * this function is needed in MFP but we don't know the shape of entities yet
    * @param updateData - updated entity information
    */
-  const updateEntities = (updateData: EntityShape) => {
+  const prepareEntityPayload = (updateData: EntityShape) => {
     const currentEntities = entities;
     const selectedEntityIndex = currentEntities?.findIndex(
       (x) => x.id === selectedEntity?.id
@@ -45,7 +43,6 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
         ...updateData,
       };
       currentEntities[selectedEntityIndex] = newEntity;
-      setSelectedEntity(selectedEntity);
     }
     return currentEntities;
   };
@@ -53,7 +50,7 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
   // TODO: add entity functions as we build them out
   const providerValue = useMemo(
     () => ({
-      updateEntities,
+      prepareEntityPayload,
     }),
     [entityId, entityType, entities, selectedEntity]
   );

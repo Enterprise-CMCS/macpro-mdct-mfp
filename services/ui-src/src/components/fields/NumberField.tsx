@@ -37,7 +37,7 @@ export const NumberField = ({
   const { full_name, state } = useStore().user ?? {};
   const { report, entities, entityType, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
-  const { updateEntities } = useContext(EntityContext);
+  const { prepareEntityPayload } = useContext(EntityContext);
 
   useEffect(() => {
     if (!fieldIsRegistered && !validateOnRender) {
@@ -135,7 +135,7 @@ export const NumberField = ({
         entityContext: {
           selectedEntity,
           entityType,
-          updateEntities,
+          prepareEntityPayload,
           entities,
         },
       });

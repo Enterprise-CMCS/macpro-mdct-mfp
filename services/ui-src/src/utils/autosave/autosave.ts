@@ -43,7 +43,7 @@ export interface EntityContextShape {
   selectedEntity?: EntityShape;
   entities: EntityShape[];
   entityType?: EntityType;
-  updateEntities: Function;
+  prepareEntityPayload: Function;
 }
 
 /**
@@ -122,7 +122,7 @@ export const autosaveFieldData = async ({
       dataToWrite = {
         metadata: { status: ReportStatus.IN_PROGRESS, lastAlteredBy: userName },
         fieldData: {
-          [entityContext.entityType]: entityContext.updateEntities(
+          [entityContext.entityType]: entityContext.prepareEntityPayload(
             Object.fromEntries(fieldsToSave)
           ),
         }, // create field data object

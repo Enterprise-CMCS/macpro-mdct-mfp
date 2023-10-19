@@ -45,7 +45,7 @@ export const ChoiceListField = ({
 
   const { report, entities, entityType, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
-  const { updateEntities } = useContext(EntityContext);
+  const { prepareEntityPayload } = useContext(EntityContext);
 
   const shouldDisableChildFields =
     ((userIsAdmin || userIsReadOnly) && !!props?.disabled) || report?.locked;
@@ -229,7 +229,7 @@ export const ChoiceListField = ({
           entityContext: {
             selectedEntity,
             entityType,
-            updateEntities,
+            prepareEntityPayload,
             entities,
           },
         });

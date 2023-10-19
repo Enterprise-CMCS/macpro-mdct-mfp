@@ -843,7 +843,7 @@
             {
               "name": "State and Territory Specific Initiatives: II. Evaluation Plan",
               "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
-              "pageType": "modalOverlay",
+              "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "evaluationPlan",
               "stepInfo": ["stepName", "hint"],
@@ -984,7 +984,7 @@
             {
               "name": "State and Territory-Specific Initiatives: III. Funding Sources",
               "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
-              "pageType": "modalOverlay",
+              "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "fundingSources",
               "stepInfo": ["stepName", "hint"],

@@ -32,7 +32,7 @@ export const DateField = ({
   const { full_name, state } = useStore().user ?? {};
 
   const { updateReport } = useContext(ReportContext);
-  const { updateEntities } = useContext(EntityContext);
+  const { prepareEntityPayload } = useContext(EntityContext);
 
   // get form context and register form field
   const form = useFormContext();
@@ -95,7 +95,7 @@ export const DateField = ({
         entityContext: {
           selectedEntity,
           entityType,
-          updateEntities,
+          prepareEntityPayload,
           entities,
         },
       });
