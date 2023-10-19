@@ -119,6 +119,7 @@ export const ReportProvider = ({ children }: Props) => {
     try {
       // clear stored reports by state prior to fetching from current state
       clearReportsByState();
+      setWorkPlanToCopyFrom(undefined);
 
       const workPlanSubmissions = await getReportsByState(
         ReportType.WP,
@@ -130,33 +131,32 @@ export const ReportProvider = ({ children }: Props) => {
         selectedState
       );
 
-      if (workPlanSubmissions?.length !== sarSubmissions?.length) {
-        let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
-        workPlanSubmissions.forEach((submission: ReportMetadataShape) => {
+      let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
+      workPlanSubmissions.forEach((submission: ReportMetadataShape) => {
+        if (
+          (submission.status === ReportStatus.NOT_STARTED ||
+            submission.status === ReportStatus.IN_PROGRESS) &&
+          !submission?.associatedSar
+        ) {
           if (
-            submission.status === ReportStatus.NOT_STARTED ||
-            submission.status === ReportStatus.IN_PROGRESS
-          ) {
-            if (
-              lastFoundSubmission &&
-              submission.createdAt > lastFoundSubmission?.createdAt
-            )
-              lastFoundSubmission = submission;
-            else if (!lastFoundSubmission) {
-              lastFoundSubmission = submission;
-            }
+            lastFoundSubmission &&
+            submission.createdAt > lastFoundSubmission?.createdAt
+          )
+            lastFoundSubmission = submission;
+          else if (!lastFoundSubmission) {
+            lastFoundSubmission = submission;
           }
-        });
-
-        if (lastFoundSubmission) {
-          const reportKeys = {
-            reportType: ReportType.WP,
-            state: selectedState,
-            id: lastFoundSubmission["id"],
-          };
-          const workPlan = await getReport(reportKeys);
-          setWorkPlanToCopyFrom(workPlan);
         }
+      });
+
+      if (lastFoundSubmission) {
+        const reportKeys = {
+          reportType: ReportType.WP,
+          state: selectedState,
+          id: lastFoundSubmission["id"],
+        };
+        const workPlan = await getReport(reportKeys);
+        setWorkPlanToCopyFrom(workPlan);
       }
 
       setReportsByState(sortReportsOldestToNewest(sarSubmissions));

@@ -228,6 +228,7 @@ export const ModalOverlayReportPage = ({
                   <EntityRow
                     key={entity.id}
                     entity={entity}
+                    entityType={entityType}
                     entityInfo={entityInfo}
                     verbiage={verbiage}
                     locked={isLocked}

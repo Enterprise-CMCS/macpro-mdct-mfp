@@ -114,6 +114,7 @@ export const EntityDetailsOverlay = ({
       );
       if (shouldSave) await updateReport(reportKeys, dataToWrite);
     }
+    closeEntityDetailsOverlay!();
   };
 
   return (

@@ -67,8 +67,8 @@ export const EntityDetailsDashboardOverlay = ({
   };
 
   const closeEntityStepOverlay = () => {
-    setSelectedStep(undefined);
     setIsEntityStepOpen(false);
+    setSelectedStep(undefined);
   };
 
   const tableHeaders = () => {

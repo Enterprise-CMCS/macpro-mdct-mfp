@@ -3,17 +3,27 @@ import { useMemo } from "react";
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
 import { EntityStatusIcon } from "components";
 // types
-import { AnyObject, EntityShape, ModalDrawerEntityTypes } from "types";
+import {
+  AnyObject,
+  EntityShape,
+  ModalDrawerEntityTypes,
+  ReportShape,
+} from "types";
 // utils
 import { renderHtml, useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
-import { getEntityStatus } from "./getEntityStatus";
+import {
+  getEntityStatus,
+  getInitiativeStatus,
+  getInitiativeDashboardStatus,
+} from "./getEntityStatus";
 
 export const EntityRow = ({
   entity,
   entityInfo,
   entityType,
+  formEntity,
   verbiage,
   locked,
   openAddEditEntityModal,
@@ -30,13 +40,20 @@ export const EntityRow = ({
     switch (entityType) {
       case ModalDrawerEntityTypes.TARGET_POPULATIONS:
         return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
+      case "initiative":
+        //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
+        if (formEntity) {
+          return getInitiativeDashboardStatus(formEntity, entity);
+        } else {
+          return getInitiativeStatus(report!, entity);
+        }
       default: {
         return report ? !!getEntityStatus(report, entity) : false;
       }
     }
   };
 
-  let entityCompleted = useMemo(() => {
+  let entityStatus = useMemo(() => {
     return setStatusByType(entityType!);
   }, [report, entity]);
 
@@ -54,7 +71,7 @@ export const EntityRow = ({
   return (
     <Tr sx={sx.content}>
       <Td>
-        <EntityStatusIcon entityCompleted={entityCompleted} />
+        <EntityStatusIcon entityStatus={entityStatus} />
       </Td>
       <Td sx={sx.entityName}>
         <ul>
@@ -62,7 +79,7 @@ export const EntityRow = ({
             <li key={index}>{renderHtml(field)}</li>
           ))}
         </ul>
-        {!entityCompleted && (
+        {!entityStatus && (
           <Text sx={sx.errorText}>
             Select "{verbiage.enterEntityDetailsButtonText}” to report data
           </Text>
@@ -83,6 +100,7 @@ export const EntityRow = ({
             sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
+            disabled={entityStatus === "disabled"}
           >
             {verbiage.enterEntityDetailsButtonText}
           </Button>
@@ -105,6 +123,7 @@ export const EntityRow = ({
 interface Props {
   entity: EntityShape;
   entityType?: string;
+  formEntity?: ReportShape;
   verbiage: AnyObject;
   openAddEditEntityModal: Function;
   openDeleteEntityModal: Function;
