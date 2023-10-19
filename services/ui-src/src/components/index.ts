@@ -38,7 +38,6 @@ export { TextField } from "./fields/TextField";
 export { TextAreaField } from "./fields/TextAreaField";
 export { DateField } from "./fields/DateField";
 export { DropdownField } from "./fields/DropdownField";
-export { DynamicField } from "./fields/DynamicField";
 export { NumberField } from "./fields/NumberField";
 
 // forms

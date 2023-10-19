@@ -1,4 +1,4 @@
-import { MouseEventHandler, useContext } from "react";
+import { MouseEventHandler, useContext, useEffect } from "react";
 // components
 import {
   Box,
@@ -44,10 +44,20 @@ export const EntityDetailsOverlay = ({
 }: Props) => {
   const submitting = false;
   const { entityType, form, verbiage } = route;
-  const { report, selectedEntity } = useStore();
+  const { report, selectedEntity, setSelectedEntity } = useStore();
 
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
+
+  useEffect(() => {
+    if (selectedEntity) {
+      setSelectedEntity(
+        report?.fieldData?.[selectedEntity.type].find(
+          (entity: EntityShape) => entity.id == selectedEntity.id
+        )
+      );
+    }
+  }, [report]);
 
   // add/edit entity modal disclosure and methods
   const {
@@ -98,6 +108,7 @@ export const EntityDetailsOverlay = ({
 
       updatedEntities[selectedEntityIndex] = {
         id: selectedEntity.id,
+        type: selectedEntity.type,
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
@@ -191,7 +202,6 @@ export const EntityDetailsOverlay = ({
 };
 
 interface Props {
-  selectedEntity?: EntityShape;
   route: EntityDetailsOverlayShape;
   closeEntityDetailsOverlay?: Function;
   validateOnRender?: boolean;

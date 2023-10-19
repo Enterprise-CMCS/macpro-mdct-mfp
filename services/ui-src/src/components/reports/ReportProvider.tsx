@@ -15,6 +15,7 @@ import {
   useStore,
 } from "utils";
 import {
+  EntityShape,
   ReportContextShape,
   ReportKeys,
   ReportMetadataShape,
@@ -68,8 +69,6 @@ export const ReportProvider = ({ children }: Props) => {
     setSubmittedReportsByState,
     lastSavedTime,
     setLastSavedTime,
-    selectedEntity,
-    setSelectedEntity,
   } = useStore();
 
   const { state: userState } = useStore().user ?? {};
@@ -80,14 +79,8 @@ export const ReportProvider = ({ children }: Props) => {
         report.formTemplate.routes
       );
     }
+
     setReport(report);
-    if (selectedEntity) {
-      setSelectedEntity(
-        report?.fieldData?.initiative.find(
-          (initiative: { id: any }) => initiative.id == selectedEntity.id
-        )
-      );
-    }
     setContextIsLoaded(true);
   };
 

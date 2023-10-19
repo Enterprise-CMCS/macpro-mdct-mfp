@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useState } from "react";
+import { MouseEventHandler, useState } from "react";
 // components
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import {
@@ -20,35 +20,20 @@ import {
 } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
-import { useStore } from "utils";
 // verbiage
 
 export const EntityDetailsDashboardOverlay = ({
   closeEntityDetailsOverlay,
-  entityType,
-  entities,
   dashboard,
   selectedEntity,
   route,
 }: Props) => {
-  // Entity provider setup
-  // const { clearEntities, setSelectedEntity, setEntityType, setEntities } =
-  //   useStore();
   const [selectedStep, setSelectedStep] = useState<
     OverlayModalPageShape | EntityDetailsOverlayShape
   >();
   const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
 
   const { entitySteps } = route;
-
-  // useEffect(() => {
-  //   setEntityType(entityType);
-  //   setEntities(entities);
-  //   return () => {
-  //     clearEntities();
-  //     setSelectedEntity(undefined);
-  //   };
-  // }, [entityType, selectedEntity]);
 
   // Open/Close overlay action methods
   const openEntityStepOverlay = (
@@ -84,17 +69,17 @@ export const EntityDetailsDashboardOverlay = ({
     return (
       <Box>
         {pageType === "overlayModal" ? (
+          // This is page 2 and 3, Evaluation Plan and Funding Sources respectively
           <EntityProvider>
             <OverlayModalPage
-              entity={selectedEntity!}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as OverlayModalPageShape}
             />
           </EntityProvider>
         ) : (
+          // This is page 1 and 4, Define initiative and Close-out respectively
           <EntityProvider>
             <EntityDetailsOverlay
-              // selectedEntity={selectedEntity!}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as EntityDetailsOverlayShape}
             />

@@ -12,6 +12,7 @@ import {
   EntityType,
   EntityShape,
   MfpEntityState,
+  entityTypes,
 } from "types";
 
 // USER STORE
@@ -100,11 +101,18 @@ const reportStore = (set: Function) => ({
 const entityStore = (set: Function) => ({
   // initial state
   selectedEntity: undefined,
+  entityType: undefined,
   // actions
   setSelectedEntity: (newSelectedEntity: EntityShape | undefined) =>
-    set(() => ({ selectedEntity: newSelectedEntity }), false, {
-      type: "setSelectedEntity",
-    }),
+    set(
+      () => ({
+        selectedEntity: newSelectedEntity,
+      }),
+      false,
+      {
+        type: "setSelectedEntity",
+      }
+    ),
   clearSelectedEntity: () =>
     set(() => ({ selectedEntity: undefined }), false, {
       type: "clearSelectedEntity",

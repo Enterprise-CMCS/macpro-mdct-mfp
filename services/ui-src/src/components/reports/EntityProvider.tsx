@@ -1,6 +1,6 @@
 import { ReactNode, useMemo, createContext } from "react";
 import { useStore } from "utils";
-import { EntityShape } from "types";
+import { AnyObject, EntityShape } from "types";
 
 interface EntityContextShape {
   prepareEntityPayload: Function;
@@ -21,7 +21,7 @@ export const EntityContext = createContext<EntityContextShape>({
  */
 export const EntityProvider = ({ children }: EntityProviderProps) => {
   // state management
-  const { entityId, entityType, entities, selectedEntity } = useStore();
+  const { selectedEntity, report } = useStore();
 
   /**
    * prepareEntityPayload updates the user's selected entity with their changes, and
@@ -32,10 +32,11 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
    *
    * @param updateData - updated entity information
    */
-  const prepareEntityPayload = (updateData: EntityShape) => {
-    const currentEntities = entities;
+  const prepareEntityPayload = (updateData: AnyObject) => {
+    const entityType = selectedEntity!.type;
+    const currentEntities = report?.fieldData?.[entityType];
     const selectedEntityIndex = currentEntities?.findIndex(
-      (x) => x.id === selectedEntity?.id
+      (x: EntityShape) => x.id === selectedEntity?.id
     );
     if (currentEntities && selectedEntityIndex > -1) {
       const newEntity = {
@@ -52,7 +53,7 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
     () => ({
       prepareEntityPayload,
     }),
-    [entityId, entityType, entities, selectedEntity]
+    [selectedEntity]
   );
 
   return (

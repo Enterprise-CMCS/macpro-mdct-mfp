@@ -60,7 +60,8 @@ export const ModalOverlayReportPage = ({
   } = route;
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
-  const { report, selectedEntity, setSelectedEntity } = useStore();
+  const { report, selectedEntity, setSelectedEntity, clearSelectedEntity } =
+    useStore();
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { userIsEndUser, full_name, state } = useStore().user ?? {};
@@ -100,7 +101,7 @@ export const ModalOverlayReportPage = ({
   };
 
   const closeAddEditEntityModal = () => {
-    setSelectedEntity(undefined);
+    clearSelectedEntity();
     resetClearProp(modalForm.fields);
     addEditEntityModalOnCloseHandler();
   };
@@ -113,12 +114,12 @@ export const ModalOverlayReportPage = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity: EntityShape) => {
-    // setSelectedEntity(entity);
+    setSelectedEntity(entity);
     deleteEntityModalOnOpenHandler();
   };
 
   const closeDeleteEntityModal = () => {
-    // setSelectedEntity(undefined);
+    clearSelectedEntity();
     deleteEntityModalOnCloseHandler();
   };
 
@@ -130,7 +131,7 @@ export const ModalOverlayReportPage = ({
   };
 
   const closeEntityDetailsOverlay = () => {
-    // setSelectedEntity(undefined);
+    clearSelectedEntity();
     setIsEntityDetailsOpen(false);
     setSidebarHidden(false);
   };

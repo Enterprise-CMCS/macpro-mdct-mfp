@@ -35,7 +35,7 @@ export const TextField = ({
   const form = useFormContext();
   const fieldIsRegistered = name in form.getValues();
   const { full_name, state } = useStore().user ?? {};
-  const { report, entities, entityType, selectedEntity } = useStore();
+  const { report, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
@@ -102,9 +102,7 @@ export const TextField = ({
         user,
         entityContext: {
           selectedEntity,
-          entityType,
           prepareEntityPayload,
-          entities,
         },
       });
     }
