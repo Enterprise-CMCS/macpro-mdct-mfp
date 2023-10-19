@@ -195,7 +195,7 @@ export const ModalOverlayReportPage = ({
           <EntityDetailsDashboardOverlay
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             entityType={entityType as EntityType}
-            entities={report?.fieldData[entityType]}
+            entities={reportFieldDataEntities}
             dashboard={dashboard}
             selectedEntity={selectedEntity}
             onSubmit={onSubmit}
