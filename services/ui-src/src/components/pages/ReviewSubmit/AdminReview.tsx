@@ -1,4 +1,5 @@
 import { MouseEventHandler } from "react";
+import { Link as RouterLink } from "react-router-dom";
 // components
 import {
   Box,
@@ -8,10 +9,11 @@ import {
   useDisclosure,
   Input,
   ModalFooter,
+  Link,
 } from "@chakra-ui/react";
 import { Modal } from "components";
 // utils
-import { parseCustomHtml, useStore } from "utils";
+import { parseCustomHtml, useStore, releaseReport } from "utils";
 // types
 import { AnyObject, ReportStatus } from "types";
 
@@ -20,11 +22,29 @@ export const AdminReview = ({
   submitForm,
   submitting,
 }: AdminReviewProps) => {
+  const { userIsAdmin } = useStore().user ?? {};
+  const report = useStore().report;
   const { review } = reviewVerbiage;
   const { adminInfo } = review;
   const adminUnlockModal = useDisclosure();
   const adminApproveModal = useDisclosure();
-  const report = useStore().report;
+
+  const reportKeys = {
+    reportType: report!.reportType,
+    state: report!.state,
+    id: report!.id,
+  };
+
+  const unlockReport = async () => {
+    adminUnlockModal.onOpen();
+    await unlockReportHandler();
+  };
+
+  const unlockReportHandler = async () => {
+    if (userIsAdmin) {
+      await releaseReport(reportKeys);
+    }
+  };
 
   return (
     <Flex sx={sx.contentContainer} data-testid="ready-view">
@@ -38,7 +58,7 @@ export const AdminReview = ({
         <Button
           type="submit"
           id="adminUnlock"
-          onClick={adminUnlockModal.onOpen as MouseEventHandler}
+          onClick={unlockReport as MouseEventHandler}
           sx={sx.submitButton && sx.adminUnlockBtn}
           variant="outline"
           disabled={report?.status !== ReportStatus.SUBMITTED ? true : false}
@@ -64,11 +84,20 @@ export const AdminReview = ({
         }}
         content={{
           heading: adminInfo.modal.unlockModal.heading,
-          actionButtonText: adminInfo.modal.unlockModal.actionButtonText,
-          closeButtonText: adminInfo.modal.unlockModal.closeButtonText,
+          actionButtonText: "",
+          closeButtonText: "",
         }}
       >
         <Text>{adminInfo.modal.unlockModal.body}</Text>
+        <Link
+          as={RouterLink}
+          to={report?.formTemplate.basePath || "/"}
+          variant="unstyled"
+          tabIndex={-1}
+          sx={sx.action}
+        >
+          <Button>{adminInfo.modal.unlockModal.actionButtonText}</Button>
+        </Link>
       </Modal>
       <Modal
         onConfirmHandler={submitForm}
@@ -93,15 +122,17 @@ export const AdminReview = ({
           <Button
             type="submit"
             variant="outline"
-            data-testid="modal-logout-button"
+            data-testid="modal-cancel-button"
             sx={sx.modalCancel}
+            onClick={() => "cancel"}
           >
             Cancel
           </Button>
           <Button
             type="submit"
             disabled={true}
-            data-testid="modal-refresh-button"
+            data-testid="modal-approve-button"
+            onClick={() => "approve"}
           >
             Approve
           </Button>
@@ -183,6 +214,22 @@ const sx = {
       opacity: 1,
       background: "palette.gray_lighter",
       color: "palette.gray",
+    },
+  },
+  action: {
+    justifyContent: "center",
+    marginTop: "1rem",
+    marginRight: "2rem",
+    minWidth: "10rem",
+    span: {
+      marginLeft: "0.5rem",
+      marginRight: "-0.25rem",
+      "&.ds-c-spinner": {
+        marginLeft: 0,
+      },
+    },
+    ".mobile &": {
+      fontSize: "sm",
     },
   },
 };
