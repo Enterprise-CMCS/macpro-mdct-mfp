@@ -158,7 +158,7 @@ export const releaseReport = handler(async (event) => {
     fieldDataId: newFieldDataId,
     locked: false,
     previousRevisions,
-    status: "In progress",
+    status: "In Revision",
     completionStatus: await calculateCompletionStatus(
       updatedFieldData,
       formTemplate
