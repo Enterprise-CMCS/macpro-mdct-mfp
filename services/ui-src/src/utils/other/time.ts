@@ -142,21 +142,6 @@ export const checkDateRangeStatus = (
 };
 
 /*
- * Converts a date string to UTC + 180 days
- * returns -> UTC datetime in format 'ms since Unix epoch'
- * Ex: 6/30/22 Becomes 1483603200000
- */
-export const calculateDueDate = (date: string) => {
-  const gracePeriod = 1000 * 60 * 60 * 24 * 180; // 180 days in ms
-  const [month, day, year] = date.split("/");
-  const reportingPeriodEndDate = convertDateTimeEtToUtc(
-    { year: parseInt(year), month: parseInt(month), day: parseInt(day) },
-    noon
-  );
-  return reportingPeriodEndDate + gracePeriod;
-};
-
-/*
  * Calculates time remaining for things like timeout
  */
 export const calculateRemainingSeconds = (expiresAt?: any) => {

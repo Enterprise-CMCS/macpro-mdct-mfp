@@ -49,6 +49,7 @@ export const mockDynamoDataWPLocked: WPReportMetadata = {
   isComplete: false,
   reportPeriod: 2,
   reportYear: 2021,
+  dueDate: "11/01/2021",
 };
 
 export const mockDynamoDataWPCompleted: WPReportMetadata = {
@@ -73,4 +74,5 @@ export const mockDynamoDataWPCompleted: WPReportMetadata = {
   previousRevisions: [],
   reportPeriod: 2,
   reportYear: 2021,
+  dueDate: "11/01/2021",
 };
