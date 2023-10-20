@@ -2,8 +2,9 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { InstructionsAccordion } from "components";
 // utils
-import { displayLongformPeriod, parseCustomHtml } from "utils";
+import { parseCustomHtml } from "utils";
 import { AnyObject } from "types";
+import { ReportPeriod } from "./ReportPeriod";
 
 export const ReportPageIntro = ({
   text,
@@ -13,9 +14,6 @@ export const ReportPageIntro = ({
   ...props
 }: Props) => {
   const { section, subsection, hint, info } = text;
-  const retSection = section === "Recruitment, Enrollment, and Transitions";
-  const pageNine = subsection.includes("HCBS");
-  const currentPeriod = displayLongformPeriod(reportPeriod);
   return (
     <Box sx={sx.introBox} {...props}>
       <Heading as="h1" sx={sx.sectionHeading}>
@@ -27,16 +25,7 @@ export const ReportPageIntro = ({
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
       {accordion && <InstructionsAccordion verbiage={accordion} />}
       {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
-      {retSection &&
-        (!pageNine ? (
-          <Heading as="h2" sx={sx.periodText}>
-            {currentPeriod}
-          </Heading>
-        ) : (
-          <Heading as="h2" sx={sx.periodText}>
-            This page needs a different calculation
-          </Heading>
-        ))}
+      <ReportPeriod text={text} reportPeriod={reportPeriod} />
     </Box>
   );
 };

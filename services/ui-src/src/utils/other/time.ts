@@ -166,7 +166,7 @@ export const calculateRemainingSeconds = (expiresAt?: any) => {
 
 export const displayLongformPeriod = (period: number | undefined) => {
   const currentYear = new Date().getFullYear();
-  if (period == 1) {
+  if (period === 1) {
     return ` {January 1 to June 30 ${currentYear}} reporting period`;
   } else {
     return ` {July 1 to December 31 ${currentYear}} reporting period`;
