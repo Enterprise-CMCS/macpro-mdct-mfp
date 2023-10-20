@@ -1,12 +1,4 @@
-import { ReportContext } from "components/reports/ReportProvider";
-import { Context, useContext, useEffect } from "react";
-import {
-  ReportShape,
-  AnyObject,
-  ReportStatus,
-  ReportContextShape,
-} from "types";
-import { useStore } from "utils";
+import { ReportShape, AnyObject } from "types";
 
 //setting up function calls using entityType as call
 export const checkInitiativeTopics = (fieldData: any, entities: any[]) => {

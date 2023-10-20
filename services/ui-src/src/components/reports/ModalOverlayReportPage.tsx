@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 // components
 import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
 import {
@@ -38,10 +38,7 @@ import {
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
-import {
-  getWPAlertStatus,
-  saveAlertStatusToDatabase,
-} from "../alerts/getWPAlertStatus";
+import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 
 interface AlertVerbiage {
   [key: string]: { title: string; description: string };
