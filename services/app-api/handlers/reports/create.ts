@@ -112,7 +112,6 @@ export const createReport = handler(
       stateOrTerritory: "text",
       submissionCount: "number",
       submissionName: "text",
-      targetPopulations: "objectArray",
     };
 
     // Setup validation for what we expect to see in the payload
@@ -231,6 +230,7 @@ export const createReport = handler(
           reportYear,
           workPlanMetadata
         ),
+        targetPopulations: "Older adults, PD, MH/SUD",
         reportYear,
         dueDate: currentDate,
         reportPeriod: calculatePeriod(currentDate, workPlanMetadata),

@@ -33,7 +33,6 @@ export interface ReportMetadataShape extends ReportKeys {
   // Any additional questions that are asked when creating a report are appended here
   finalSar?: AnyObject;
   targetPopulations?: object;
-  entityStatusOverride?: object;
 }
 
 export interface ReportShape extends ReportMetadataShape {
