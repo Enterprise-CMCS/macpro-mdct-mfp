@@ -67,10 +67,10 @@ export const AddEditEntityModal = ({
 
       updatedEntities[selectedEntityIndex] = {
         id: selectedEntity.id,
+        type: selectedEntity.type,
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
-
       updatedEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
         updatedEntities[selectedEntityIndex],
         entriesToClear
@@ -85,7 +85,10 @@ export const AddEditEntityModal = ({
     } else {
       // create new entity
       dataToWrite.fieldData = {
-        [entityType]: [...currentEntities, { id: uuid(), ...filteredFormData }],
+        [entityType]: [
+          ...currentEntities,
+          { id: uuid(), type: entityType, ...filteredFormData },
+        ],
       };
       await updateReport(reportKeys, dataToWrite);
     }

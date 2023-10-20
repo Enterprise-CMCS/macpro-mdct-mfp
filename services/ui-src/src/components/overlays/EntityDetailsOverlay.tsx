@@ -1,4 +1,4 @@
-import { MouseEventHandler, useContext } from "react";
+import { MouseEventHandler, useContext, useEffect } from "react";
 // components
 import {
   Box,
@@ -40,15 +40,28 @@ import {
 export const EntityDetailsOverlay = ({
   route,
   closeEntityDetailsOverlay,
-  validateOnRender,
-  selectedEntity,
 }: Props) => {
   const submitting = false;
   const { entityType, form, verbiage } = route;
-  const { report } = useStore();
+  const { report, selectedEntity, setSelectedEntity } = useStore();
 
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
+
+  /**
+   * Any time the report is updated on this page,
+   * we also want to update the selectedEntity in the store
+   * with new data that the report was given.
+   */
+  useEffect(() => {
+    if (selectedEntity) {
+      setSelectedEntity(
+        report?.fieldData?.[selectedEntity.type].find(
+          (entity: EntityShape) => entity.id == selectedEntity.id
+        )
+      );
+    }
+  }, [report]);
 
   // add/edit entity modal disclosure and methods
   const {
@@ -99,6 +112,7 @@ export const EntityDetailsOverlay = ({
 
       updatedEntities[selectedEntityIndex] = {
         id: selectedEntity.id,
+        type: selectedEntity.type,
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
@@ -142,8 +156,8 @@ export const EntityDetailsOverlay = ({
         onSubmit={onSubmit}
         autosave={true}
         formData={selectedEntity}
-        validateOnRender={validateOnRender || false}
         dontReset={true}
+        validateOnRender={false}
       />
       <Box>
         {verbiage.closeOutWarning && (
@@ -192,10 +206,8 @@ export const EntityDetailsOverlay = ({
 };
 
 interface Props {
-  selectedEntity?: EntityShape;
   route: EntityDetailsOverlayShape;
   closeEntityDetailsOverlay?: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {

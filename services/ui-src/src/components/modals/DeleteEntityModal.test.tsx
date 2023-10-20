@@ -5,13 +5,14 @@ import { axe } from "jest-axe";
 import { DeleteEntityModal } from "components";
 // utils
 import { mockModalDrawerReportPageVerbiage } from "utils/testing/setupJest";
+import { entityTypes } from "types";
 
 const mockCloseHandler = jest.fn();
 
 const modalComponent = (
   <DeleteEntityModal
     entityType="entityType"
-    selectedEntity={{ id: "123" }}
+    selectedEntity={{ id: "123", type: entityTypes[0] }}
     verbiage={mockModalDrawerReportPageVerbiage}
     modalDisclosure={{
       isOpen: true,

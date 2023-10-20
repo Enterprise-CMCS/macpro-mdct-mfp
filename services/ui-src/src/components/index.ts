@@ -38,7 +38,6 @@ export { TextField } from "./fields/TextField";
 export { TextAreaField } from "./fields/TextAreaField";
 export { DateField } from "./fields/DateField";
 export { DropdownField } from "./fields/DropdownField";
-export { DynamicField } from "./fields/DynamicField";
 export { NumberField } from "./fields/NumberField";
 
 // forms
@@ -64,7 +63,6 @@ export { AddEditEntityModal } from "./modals/AddEditEntityModal";
 export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";
 export { AddEditReportModal } from "./modals/AddEditReportModal";
-export { DeleteDynamicFieldRecordModal } from "./modals/DeleteDynamicFieldRecordModal";
 export { DeleteEntityModal } from "./modals/DeleteEntityModal";
 // pages
 export { AdminPage } from "./pages/Admin/AdminPage";
@@ -73,6 +71,7 @@ export { HelpPage } from "./pages/HelpPage/HelpPage";
 export { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 export { ProfilePage } from "./pages/Profile/ProfilePage";
 export { ReviewSubmitPage } from "./pages/ReviewSubmit/ReviewSubmitPage";
+export { ExportedReportPage } from "./pages/Export/ExportedReportPage";
 // overlays
 export { EntityDetailsDashboardOverlay } from "./overlays/EntityDetailsDashboardOverlay";
 export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
