@@ -192,7 +192,7 @@ const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
       {reportType === "WP" && !isAdmin && (
-        <Td>{convertDateUtcToEt(report.createdAt)}</Td>
+        <Td>{convertDateUtcToEt(report.dueDate)}</Td>
       )}
       {reportType === "SAR" && !isAdmin && (
         <Td>{convertDateUtcToEt(report.dueDate)}</Td>
