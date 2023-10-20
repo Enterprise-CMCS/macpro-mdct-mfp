@@ -99,7 +99,6 @@ const reportStore = (set: Function) => ({
 const entityStore = (set: Function) => ({
   // initial state
   selectedEntity: undefined,
-  entityType: undefined,
   // actions
   setSelectedEntity: (newSelectedEntity: EntityShape | undefined) =>
     set(

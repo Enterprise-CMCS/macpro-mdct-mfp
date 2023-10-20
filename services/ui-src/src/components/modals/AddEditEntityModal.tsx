@@ -67,7 +67,7 @@ export const AddEditEntityModal = ({
 
       updatedEntities[selectedEntityIndex] = {
         id: selectedEntity.id,
-        type: entityType,
+        type: selectedEntity.type,
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };

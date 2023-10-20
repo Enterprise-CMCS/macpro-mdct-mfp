@@ -119,7 +119,7 @@ export const AddEditOverlayEntityModal = ({
       const updatedEntities = currentEntities;
       updatedEntities[selectedEntityIndex] = {
         id: selectedEntity.id,
-        type: entityType,
+        type: selectedEntity.type,
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
