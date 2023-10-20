@@ -16,17 +16,9 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 const { closeOutWarning, closeOutModal } =
   mockEntityDetailsOverlayJson.verbiage;
 
-const mockEntity = {
-  id: "mock-id",
-  initiative_name: "mock-initiative-name",
-};
-
 const entityDetailsOverlayComponent = (
   <RouterWrappedComponent>
-    <EntityDetailsOverlay
-      selectedEntity={mockEntity}
-      route={mockEntityDetailsOverlayJson}
-    />
+    <EntityDetailsOverlay route={mockEntityDetailsOverlayJson} />
   </RouterWrappedComponent>
 );
 

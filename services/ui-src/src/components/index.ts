@@ -63,7 +63,6 @@ export { AddEditEntityModal } from "./modals/AddEditEntityModal";
 export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";
 export { AddEditReportModal } from "./modals/AddEditReportModal";
-export { DeleteDynamicFieldRecordModal } from "./modals/DeleteDynamicFieldRecordModal";
 export { DeleteEntityModal } from "./modals/DeleteEntityModal";
 // pages
 export { AdminPage } from "./pages/Admin/AdminPage";

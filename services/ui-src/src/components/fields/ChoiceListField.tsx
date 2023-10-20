@@ -43,7 +43,7 @@ export const ChoiceListField = ({
   const { state, userIsReadOnly, userIsAdmin, full_name } =
     useStore().user ?? {};
 
-  const { report, entities, entityType, selectedEntity } = useStore();
+  const { report, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
@@ -228,9 +228,7 @@ export const ChoiceListField = ({
           user,
           entityContext: {
             selectedEntity,
-            entityType,
             prepareEntityPayload,
-            entities,
           },
         });
       }, timeInMs);

@@ -9,10 +9,8 @@ import {
   ReportShape,
   MfpReportState,
   ReportMetadataShape,
-  EntityType,
   EntityShape,
   MfpEntityState,
-  entityTypes,
 } from "types";
 
 // USER STORE

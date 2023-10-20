@@ -12,6 +12,7 @@ import {
   MfpReportState,
   ReportShape,
   MfpEntityState,
+  entityTypes,
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
@@ -205,23 +206,14 @@ export const mockReportStore: MfpReportState = {
 };
 
 export const mockEntityStore: MfpEntityState = {
-  entityId: "mock-entity-id",
-  entityType: "initiative",
-  entities: [
-    {
-      id: "mock-id",
-      initiative_name: "mock-initiative-name",
-    },
-  ],
   selectedEntity: {
     id: "mock-id",
+    type: entityTypes[0],
     initiative_name: "mock-initiative-name",
   },
   // ACTIONS
-  setEntityType: () => {},
-  setEntities: () => {},
-  clearEntities: () => {},
   setSelectedEntity: () => {},
+  clearSelectedEntity: () => {},
 };
 
 export const mockEmptyReportStore: MfpReportState = {

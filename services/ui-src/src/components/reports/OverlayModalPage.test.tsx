@@ -26,14 +26,9 @@ window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
 const { addEntityButtonText } = mockOverlayModalPageJson.verbiage;
 
-const mockEntity = {
-  id: "mock-id",
-  initiative_name: "mock-name",
-};
-
 const overlayModalPageComponentWithEntities = (
   <RouterWrappedComponent>
-    <OverlayModalPage entity={mockEntity} route={mockOverlayModalPageJson} />
+    <OverlayModalPage route={mockOverlayModalPageJson} />
   </RouterWrappedComponent>
 );
 
