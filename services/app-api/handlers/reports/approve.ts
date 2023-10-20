@@ -27,38 +27,35 @@ export const approveReport = handler(async (event, context) => {
     };
   }
 
-  // if current report exists, parse for archived status
-  if (getCurrentReport?.body) {
-    const currentReport = JSON.parse(getCurrentReport.body);
-    const reportType = currentReport?.reportType;
+  const currentReport = JSON.parse(getCurrentReport.body);
+  const reportType = currentReport?.reportType;
 
-    const reportTable = reportTables[reportType as keyof typeof reportTables];
+  const reportTable = reportTables[reportType as keyof typeof reportTables];
 
-    // Delete raw data prior to updating
-    delete currentReport.fieldData;
-    delete currentReport.formTemplate;
+  // Delete raw data prior to updating
+  delete currentReport.fieldData;
+  delete currentReport.formTemplate;
 
-    // toggle archived status in report metadata table
-    const reportMetadataParams = {
-      TableName: reportTable,
-      Item: {
-        ...currentReport,
-        status: "Approved",
-      },
-    };
+  // toggle archived status in report metadata table
+  const reportMetadataParams = {
+    TableName: reportTable,
+    Item: {
+      ...currentReport,
+      status: "Approved",
+    },
+  };
 
-    try {
-      await dynamoDb.put(reportMetadataParams);
-    } catch (err) {
-      return {
-        status: StatusCodes.SERVER_ERROR,
-        body: error.DYNAMO_UPDATE_ERROR,
-      };
-    }
-
+  try {
+    await dynamoDb.put(reportMetadataParams);
+  } catch (err) {
     return {
-      status: StatusCodes.SUCCESS,
-      body: reportMetadataParams.Item,
+      status: StatusCodes.SERVER_ERROR,
+      body: error.DYNAMO_UPDATE_ERROR,
     };
   }
+
+  return {
+    status: StatusCodes.SUCCESS,
+    body: reportMetadataParams.Item,
+  };
 });
