@@ -40,7 +40,6 @@ import {
 export const EntityDetailsOverlay = ({
   route,
   closeEntityDetailsOverlay,
-  validateOnRender,
 }: Props) => {
   const submitting = false;
   const { entityType, form, verbiage } = route;
@@ -157,8 +156,8 @@ export const EntityDetailsOverlay = ({
         onSubmit={onSubmit}
         autosave={true}
         formData={selectedEntity}
-        validateOnRender={validateOnRender || false}
         dontReset={true}
+        validateOnRender={false}
       />
       <Box>
         {verbiage.closeOutWarning && (
@@ -209,7 +208,6 @@ export const EntityDetailsOverlay = ({
 interface Props {
   route: EntityDetailsOverlayShape;
   closeEntityDetailsOverlay?: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {

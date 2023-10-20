@@ -190,9 +190,7 @@ export const OverlayModalPage = ({
 
 interface Props {
   route: OverlayModalPageShape;
-  entity?: EntityShape;
   closeEntityDetailsOverlay?: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {
