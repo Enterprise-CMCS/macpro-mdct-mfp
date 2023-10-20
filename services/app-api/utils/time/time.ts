@@ -78,12 +78,12 @@ export const calculateDueDate = (
   reportType: ReportType
 ) => {
   let date = new Date();
-  if (reportType == ReportType.WP) {
+  if (reportType === ReportType.WP) {
     reportPeriod === 1
       ? (date = new Date(currentYear, 4, 1))
       : (date = new Date(currentYear, 10, 1));
   }
-  if (reportType == ReportType.SAR) {
+  if (reportType === ReportType.SAR) {
     if (reportPeriod === 2) {
       isLeapYear(currentYear + 1)
         ? (date = new Date(currentYear + 1, 1, 29))
