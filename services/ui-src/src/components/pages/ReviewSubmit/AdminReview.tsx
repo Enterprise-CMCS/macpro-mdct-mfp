@@ -70,7 +70,7 @@ export const AdminReview = ({
   };
 
   useEffect(() => {
-    const approved = /APPROVE|Approve|approve/;
+    const approved = /^\bAPPROVE$\b|^\bApprove$\b|^\bapprove$\b/;
     approved.test(approveInput) ? setIsApproved(true) : setIsApproved(false);
   }, [approveInput]);
 
