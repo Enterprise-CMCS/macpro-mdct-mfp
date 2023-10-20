@@ -36,7 +36,8 @@ export const isComplete = (completionStatus: CompletionData): Boolean => {
 // Entry point for calculating completion status
 export const calculateCompletionStatus = async (
   fieldData: AnyObject,
-  formTemplate: AnyObject
+  formTemplate: AnyObject,
+  metaData?: AnyObject
 ) => {
   // Parent Dictionary for holding all route completion status
 
@@ -161,9 +162,15 @@ export const calculateCompletionStatus = async (
     stepFormTemplates: any[],
     entityType: string
   ) => {
-    //initiative has a special condition of tracking the workplan topic
-    if (entityType === "initiative") {
-      //NOTE: If you see this, it means I've forgotten to write code to check the alertbox condition
+    if (!fieldData[entityType]) return false;
+
+    // this is a new field added to handle the extra conditions for the intiatives
+    if (
+      metaData &&
+      metaData?.entityStatusOverride &&
+      metaData?.entityStatusOverride[entityType]
+    ) {
+      return false;
     }
 
     var areAllFormsComplete = true;
@@ -184,7 +191,6 @@ export const calculateCompletionStatus = async (
           const entityFieldsList = entityFields[stepForm.stepType]
             ? entityFields[stepForm.stepType]
             : [entityFields];
-
           //loop through all children that belong to that entity and validate the values
           for (var stepFields of entityFieldsList) {
             const nestedFormTemplate = stepForm.form

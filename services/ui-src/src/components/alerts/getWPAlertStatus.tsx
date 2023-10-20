@@ -1,4 +1,12 @@
-import { ReportShape, AnyObject } from "types";
+import { ReportContext } from "components/reports/ReportProvider";
+import { Context, useContext, useEffect } from "react";
+import {
+  ReportShape,
+  AnyObject,
+  ReportStatus,
+  ReportContextShape,
+} from "types";
+import { useStore } from "utils";
 
 //setting up function calls using entityType as call
 export const checkInitiativeTopics = (fieldData: any, entities: any[]) => {
@@ -43,4 +51,31 @@ export const getWPAlertStatus = (report: ReportShape, entityType: string) => {
     return fn(fieldData, fieldData[entityType]);
   }
   return false;
+};
+
+export const saveAlertStatusToDatabase = async (
+  report: ReportShape,
+  entityType: string,
+  alertStatus: boolean,
+  updateReport: Function
+) => {
+  if(report){
+    const reportKeys = {
+      reportType: report?.reportType,
+      state: report?.state,
+      id: report?.id,
+    };
+    let newEntityStatusOverride: any = report.entityStatusOverride ?? {};
+    newEntityStatusOverride[entityType] = alertStatus;
+  
+    const dataToWrite = {
+      metadata: {
+        lastAlteredBy: report?.lastAlteredBy,
+        status: report?.status,
+        entityStatusOverride: newEntityStatusOverride,
+      },
+      fieldData: {},
+    };
+    updateReport(reportKeys, dataToWrite);
+  }
 };

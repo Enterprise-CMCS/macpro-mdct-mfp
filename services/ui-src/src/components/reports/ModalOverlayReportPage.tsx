@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 // components
 import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
 import {
@@ -38,7 +38,10 @@ import {
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
-import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
+import {
+  getWPAlertStatus,
+  saveAlertStatusToDatabase,
+} from "../alerts/getWPAlertStatus";
 
 interface AlertVerbiage {
   [key: string]: { title: string; description: string };
@@ -79,10 +82,17 @@ export const ModalOverlayReportPage = ({
     (entity) => (entity["isOtherEntity"] = true)
   );
 
-  const showAlert =
-    report && (alertVerbiage as AlertVerbiage)[entityType]
+  //only update alert if there's been a change to the report data
+  let showAlert = useMemo(() => {
+    return report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
       : false;
+  }, [report?.fieldData[entityType]]);
+
+  //using use effect with the memo to control how often to save the alert status
+  useEffect(() => {
+    saveAlertStatusToDatabase(report!, entityType, showAlert, updateReport);
+  }, [showAlert]);
 
   const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
   const tableHeaders = () => {

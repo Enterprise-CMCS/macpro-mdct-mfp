@@ -90,7 +90,8 @@ export const fetchReport = handler(async (event, _context) => {
     if (!reportMetadata.completionStatus) {
       reportMetadata.completionStatus = await calculateCompletionStatus(
         fieldData,
-        formTemplate
+        formTemplate,
+        reportMetadata
       );
       reportMetadata.isComplete = isComplete(reportMetadata.completionStatus);
     }

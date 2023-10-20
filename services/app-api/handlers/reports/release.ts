@@ -161,7 +161,8 @@ export const releaseReport = handler(async (event) => {
     status: "In progress",
     completionStatus: await calculateCompletionStatus(
       updatedFieldData,
-      formTemplate
+      formTemplate,
+      metadata
     ),
     isComplete: false,
   };
