@@ -1,7 +1,6 @@
 import {
   AdminBannerData,
   EntityShape,
-  EntityType,
   MFPUser,
   ReportMetadataShape,
   ReportShape,

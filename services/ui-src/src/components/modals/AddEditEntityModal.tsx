@@ -71,10 +71,6 @@ export const AddEditEntityModal = ({
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
-      console.log(
-        "🚀 ~ file: AddEditEntityModal.tsx:69 ~ writeEntity ~ updatedEntities:",
-        updatedEntities
-      );
       updatedEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
         updatedEntities[selectedEntityIndex],
         entriesToClear

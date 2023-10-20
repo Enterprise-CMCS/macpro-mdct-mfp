@@ -15,7 +15,6 @@ import {
   useStore,
 } from "utils";
 import {
-  EntityShape,
   ReportContextShape,
   ReportKeys,
   ReportMetadataShape,
