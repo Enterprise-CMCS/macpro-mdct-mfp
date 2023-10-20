@@ -260,7 +260,6 @@ export const ModalOverlayReportPage = ({
               isOpen: addEditEntityModalIsOpen,
               onClose: closeAddEditEntityModal,
             }}
-            statusOverride={getWPAlertStatus}
           />
           <DeleteEntityModal
             entityType={entityType}

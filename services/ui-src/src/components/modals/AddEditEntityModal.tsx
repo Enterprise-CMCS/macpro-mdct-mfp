@@ -26,31 +26,11 @@ export const AddEditEntityModal = ({
   verbiage,
   selectedEntity,
   modalDisclosure,
-  statusOverride,
 }: Props) => {
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
-
-  //due to the addition of an alert for initiatiives, we need to check whether the data added passes the alert conditions
-  const checkStatus = (report: any, entities: any[]) => {
-    let clonedReport: any = structuredClone(report);
-    clonedReport.fieldData[entityType] = [...entities];
-    const currentStatuses = clonedReport.fieldData["statusOverride"] || {
-      [entityType]: false,
-    };
-
-    //checking for alerts that would prevent the status from being completed
-    if (statusOverride) {
-      currentStatuses[entityType]! = statusOverride(
-        clonedReport,
-        entityType,
-        true
-      );
-    }
-    return currentStatuses;
-  };
 
   const writeEntity = async (enteredData: any) => {
     setSubmitting(true);
@@ -97,8 +77,7 @@ export const AddEditEntityModal = ({
       );
 
       dataToWrite.fieldData = {
-        [entityType]: { ...updatedEntities },
-        statusOverride: checkStatus(report, currentEntities),
+        [entityType]: updatedEntities,
       };
 
       const shouldSave = entityWasUpdated(
@@ -110,7 +89,6 @@ export const AddEditEntityModal = ({
       // create new entity
       dataToWrite.fieldData = {
         [entityType]: [...currentEntities, { id: uuid(), ...filteredFormData }],
-        statusOverride: checkStatus(report, currentEntities),
       };
       await updateReport(reportKeys, dataToWrite);
     }
@@ -167,7 +145,6 @@ interface Props {
     isOpen: boolean;
     onClose: any;
   };
-  statusOverride?: Function;
 }
 
 const sx = {
