@@ -1,5 +1,5 @@
-import { MouseEventHandler } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { MouseEventHandler, useEffect, useState } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 // components
 import {
   Box,
@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Modal } from "components";
 // utils
-import { parseCustomHtml, useStore, releaseReport } from "utils";
+import { parseCustomHtml, useStore, releaseReport, approveReport } from "utils";
 // types
 import { AnyObject, ReportStatus } from "types";
 
@@ -22,12 +22,21 @@ export const AdminReview = ({
   submitForm,
   submitting,
 }: AdminReviewProps) => {
+  // approve input state
+  const [approveInput, setApproveInput] = useState<string>("");
+  const [isApproved, setIsApproved] = useState<boolean>(false);
+
+  //
+
   const { userIsAdmin } = useStore().user ?? {};
   const report = useStore().report;
   const { review } = reviewVerbiage;
   const { adminInfo } = review;
+
+  // admin modals
   const adminUnlockModal = useDisclosure();
   const adminApproveModal = useDisclosure();
+  const navigate = useNavigate();
 
   const reportKeys = {
     reportType: report!.reportType,
@@ -40,11 +49,30 @@ export const AdminReview = ({
     await unlockReportHandler();
   };
 
+  const refreshStatus = () => {
+    adminUnlockModal.onClose();
+    return navigate(0);
+  };
+
   const unlockReportHandler = async () => {
     if (userIsAdmin) {
       await releaseReport(reportKeys);
     }
   };
+
+  const handleInputVerification = (e: any) => {
+    setApproveInput(e.target.value);
+  };
+
+  const handleSubmitApproval = async () => {
+    await approveReport(reportKeys, report!);
+    await navigate(report?.formTemplate?.basePath || "/");
+  };
+
+  useEffect(() => {
+    const approved = /APPROVE|Approve|approve/;
+    approved.test(approveInput) ? setIsApproved(true) : setIsApproved(false);
+  }, [approveInput]);
 
   return (
     <Flex sx={sx.contentContainer} data-testid="ready-view">
@@ -80,7 +108,7 @@ export const AdminReview = ({
         submitting={submitting}
         modalDisclosure={{
           isOpen: adminUnlockModal.isOpen,
-          onClose: adminUnlockModal.onClose,
+          onClose: refreshStatus,
         }}
         content={{
           heading: adminInfo.modal.unlockModal.heading,
@@ -91,7 +119,7 @@ export const AdminReview = ({
         <Text>{adminInfo.modal.unlockModal.body}</Text>
         <Link
           as={RouterLink}
-          to={report?.formTemplate.basePath || "/"}
+          to={report?.formTemplate?.basePath || "/"}
           variant="unstyled"
           tabIndex={-1}
           sx={sx.action}
@@ -113,9 +141,9 @@ export const AdminReview = ({
         <Input
           id="approve"
           name="approve"
-          type="password"
-          value={""}
-          onChange={() => {}}
+          type="text"
+          value={approveInput}
+          onChange={handleInputVerification}
           className="field"
         />
         <ModalFooter sx={sx.modalFooter}>
@@ -124,15 +152,15 @@ export const AdminReview = ({
             variant="outline"
             data-testid="modal-cancel-button"
             sx={sx.modalCancel}
-            onClick={() => "cancel"}
+            onClick={() => adminApproveModal.onClose()}
           >
             Cancel
           </Button>
           <Button
             type="submit"
-            disabled={true}
+            disabled={isApproved ? false : true}
             data-testid="modal-approve-button"
-            onClick={() => "approve"}
+            onClick={handleSubmitApproval}
           >
             Approve
           </Button>

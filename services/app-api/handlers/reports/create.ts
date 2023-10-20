@@ -229,7 +229,6 @@ export const createReport = handler(
         state,
         id: reportId,
         fieldDataId,
-        status: "Not started",
         formTemplateId,
         createdAt: currentDate,
         lastAltered: currentDate,
@@ -243,6 +242,8 @@ export const createReport = handler(
         ),
         reportYear,
         reportPeriod: calculatePeriod(currentDate, workPlanMetadata),
+        status: "Submitted",
+        locked: true,
       },
     };
 

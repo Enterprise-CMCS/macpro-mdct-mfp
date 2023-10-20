@@ -5,6 +5,7 @@ import {
   archiveReport as archiveReportRequest,
   releaseReport as releaseReportRequest,
   submitReport as submitReportRequest,
+  approveReport as approveReportRequest,
   flattenReportRoutesArray,
   getLocalHourMinuteTime,
   getReport,
@@ -34,6 +35,7 @@ export const ReportContext = createContext<ReportContextShape>({
   fetchReport: Function,
   archiveReport: Function,
   updateReport: Function,
+  approveReport: Function,
   submitReport: Function,
   // reports by state
   fetchReportsByState: Function,
@@ -181,6 +183,15 @@ export const ReportProvider = ({ children }: Props) => {
     }
   };
 
+  const approveReport = async (reportKeys: ReportKeys, report: ReportShape) => {
+    try {
+      await approveReportRequest(reportKeys, report);
+      setLastSavedTime(getLocalHourMinuteTime());
+    } catch (e: any) {
+      setError(reportErrors.SET_REPORT_FAILED);
+    }
+  };
+
   const submitReport = async (reportKeys: ReportKeys) => {
     try {
       const result = await submitReportRequest(reportKeys);
@@ -268,6 +279,7 @@ export const ReportProvider = ({ children }: Props) => {
       archiveReport,
       releaseReport,
       updateReport,
+      approveReport,
       submitReport,
       // reports by state
       reportsByState,
