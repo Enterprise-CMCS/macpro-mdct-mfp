@@ -36,8 +36,7 @@ export const isComplete = (completionStatus: CompletionData): Boolean => {
 // Entry point for calculating completion status
 export const calculateCompletionStatus = async (
   fieldData: AnyObject,
-  formTemplate: AnyObject,
-  metaData?: AnyObject
+  formTemplate: AnyObject
 ) => {
   // Parent Dictionary for holding all route completion status
 
@@ -163,15 +162,6 @@ export const calculateCompletionStatus = async (
     entityType: string
   ) => {
     if (!fieldData[entityType]) return false;
-
-    // this is a new field added to handle the extra conditions for the intiatives
-    if (
-      metaData &&
-      metaData?.entityStatusOverride &&
-      metaData?.entityStatusOverride[entityType]
-    ) {
-      return false;
-    }
 
     var areAllFormsComplete = true;
     for (let i = 0; i < stepFormTemplates.length; i++) {

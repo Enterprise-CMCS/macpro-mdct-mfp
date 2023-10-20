@@ -53,13 +53,14 @@ export const getWPAlertStatus = (report: ReportShape, entityType: string) => {
   return false;
 };
 
+//failed to get this working in time, but will continue in next branch
 export const saveAlertStatusToDatabase = async (
   report: ReportShape,
   entityType: string,
   alertStatus: boolean,
   updateReport: Function
 ) => {
-  if(report){
+  if (report) {
     const reportKeys = {
       reportType: report?.reportType,
       state: report?.state,
@@ -67,7 +68,7 @@ export const saveAlertStatusToDatabase = async (
     };
     let newEntityStatusOverride: any = report.entityStatusOverride ?? {};
     newEntityStatusOverride[entityType] = alertStatus;
-  
+
     const dataToWrite = {
       metadata: {
         lastAlteredBy: report?.lastAlteredBy,

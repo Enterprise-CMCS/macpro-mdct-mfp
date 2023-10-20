@@ -89,11 +89,6 @@ export const ModalOverlayReportPage = ({
       : false;
   }, [report?.fieldData[entityType]]);
 
-  //using use effect with the memo to control how often to save the alert status
-  useEffect(() => {
-    saveAlertStatusToDatabase(report!, entityType, showAlert, updateReport);
-  }, [showAlert]);
-
   const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
