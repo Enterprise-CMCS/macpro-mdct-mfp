@@ -161,7 +161,7 @@ export const calculateCompletionStatus = async (
     stepFormTemplates: any[],
     entityType: string
   ) => {
-    if (!fieldData[entityType]) return false;
+    if (!fieldData[entityType] || fieldData[entityType].length <= 0) return false;
 
     var areAllFormsComplete = true;
     for (let i = 0; i < stepFormTemplates.length; i++) {
