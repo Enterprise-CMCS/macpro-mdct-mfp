@@ -11,6 +11,7 @@ export const ReportPageIntro = ({
   accordion,
   initiativeName,
   reportPeriod,
+  reportYear,
   ...props
 }: Props) => {
   const { section, subsection, hint, info } = text;
@@ -25,7 +26,11 @@ export const ReportPageIntro = ({
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
       {accordion && <InstructionsAccordion verbiage={accordion} />}
       {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
-      <ReportPeriod text={text} reportPeriod={reportPeriod} />
+      <ReportPeriod
+        text={text}
+        reportPeriod={reportPeriod}
+        reportYear={reportYear}
+      />
     </Box>
   );
 };
@@ -36,6 +41,7 @@ interface Props {
   initiativeName?: string;
   [key: string]: any;
   reportPeriod?: number;
+  reportYear?: number;
 }
 
 const sx = {

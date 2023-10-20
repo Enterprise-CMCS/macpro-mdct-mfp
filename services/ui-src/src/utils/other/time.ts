@@ -164,11 +164,13 @@ export const calculateRemainingSeconds = (expiresAt?: any) => {
   return moment(expiresAt).diff(moment()) / 1000;
 };
 
-export const displayLongformPeriod = (period: number | undefined) => {
-  const currentYear = new Date().getFullYear();
+export const displayLongformPeriod = (
+  period: number | undefined,
+  reportYear: number | undefined
+) => {
   if (period === 1) {
-    return ` {January 1 to June 30 ${currentYear}} reporting period`;
+    return ` {January 1 to June 30 ${reportYear}} reporting period`;
   } else {
-    return ` {July 1 to December 31 ${currentYear}} reporting period`;
+    return ` {July 1 to December 31 ${reportYear}} reporting period`;
   }
 };

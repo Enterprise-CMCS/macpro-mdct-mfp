@@ -64,6 +64,7 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
         <ReportPageIntro
           text={route.verbiage.intro}
           reportPeriod={report?.reportPeriod}
+          reportYear={report?.reportYear}
         />
       )}
       <Form

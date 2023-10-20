@@ -4,11 +4,11 @@ import { Box, Heading } from "@chakra-ui/react";
 import { displayLongformPeriod } from "utils";
 import { AnyObject } from "types";
 
-export const ReportPeriod = ({ text, reportPeriod }: Props) => {
+export const ReportPeriod = ({ text, reportPeriod, reportYear }: Props) => {
   const { section, subsection } = text;
   const retSection = section === "Recruitment, Enrollment, and Transitions";
   const pageNine = subsection.includes("HCBS");
-  const currentPeriod = displayLongformPeriod(reportPeriod);
+  const currentPeriod = displayLongformPeriod(reportPeriod, reportYear);
   return (
     <Box>
       {retSection &&
@@ -29,6 +29,7 @@ interface Props {
   text: AnyObject;
   [key: string]: any;
   reportPeriod?: number;
+  reportYear?: number;
 }
 
 const sx = {
