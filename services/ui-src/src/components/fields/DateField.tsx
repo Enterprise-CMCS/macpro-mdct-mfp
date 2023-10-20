@@ -28,11 +28,11 @@ export const DateField = ({
   const defaultValue = "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
-  const { report, entities, entityType, selectedEntity } = useStore();
+  const { report, selectedEntity } = useStore();
   const { full_name, state } = useStore().user ?? {};
 
   const { updateReport } = useContext(ReportContext);
-  const { updateEntities } = useContext(EntityContext);
+  const { prepareEntityPayload } = useContext(EntityContext);
 
   // get form context and register form field
   const form = useFormContext();
@@ -94,9 +94,7 @@ export const DateField = ({
         user,
         entityContext: {
           selectedEntity,
-          entityType,
-          updateEntities,
-          entities,
+          prepareEntityPayload,
         },
       });
     }

@@ -35,9 +35,9 @@ export const NumberField = ({
   const form = useFormContext();
   const fieldIsRegistered = name in form.getValues();
   const { full_name, state } = useStore().user ?? {};
-  const { report, entities, entityType, selectedEntity } = useStore();
+  const { report, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
-  const { updateEntities } = useContext(EntityContext);
+  const { prepareEntityPayload } = useContext(EntityContext);
 
   useEffect(() => {
     if (!fieldIsRegistered && !validateOnRender) {
@@ -134,9 +134,7 @@ export const NumberField = ({
         user,
         entityContext: {
           selectedEntity,
-          entityType,
-          updateEntities,
-          entities,
+          prepareEntityPayload,
         },
       });
     }

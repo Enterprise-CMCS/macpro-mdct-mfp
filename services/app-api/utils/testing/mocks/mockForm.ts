@@ -25,16 +25,6 @@ export const mockPlanField = {
   },
 };
 
-export const mockDynamicForm = {
-  id: "mock-dynamic-form-id",
-  type: "dynamic",
-  validation: "dynamic",
-  props: {
-    label: "mock dynamic field",
-  },
-  fields: [mockPlanField],
-};
-
 export const mockDateField = {
   id: "mock-date-field",
   type: "date",
@@ -101,13 +91,7 @@ export const mockSectionHeaderField = {
 
 export const mockForm = {
   id: "mock-form-id",
-  fields: [
-    mockFormField,
-    mockDateField,
-    mockDynamicForm,
-    mockDropdownField,
-    mockNumberField,
-  ],
+  fields: [mockFormField, mockDateField, mockDropdownField, mockNumberField],
 };
 
 export const mockModalForm = {

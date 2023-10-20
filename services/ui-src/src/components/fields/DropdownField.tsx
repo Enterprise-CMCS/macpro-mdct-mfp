@@ -119,7 +119,7 @@ export const DropdownField = ({
      *     entityContext: {
      *       selectedEntity,
      *       entityType,
-     *       updateEntities,
+     *       prepareEntityPayload,
      *       entities,
      *     },
      *   });

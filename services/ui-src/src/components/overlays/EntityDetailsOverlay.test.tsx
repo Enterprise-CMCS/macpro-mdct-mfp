@@ -6,22 +6,20 @@ import { EntityDetailsOverlay } from "components";
 import {
   mockEntityDetailsOverlayJson,
   RouterWrappedComponent,
+  mockEntityStore,
 } from "utils/testing/setupJest";
+import { useStore } from "utils";
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue(mockEntityStore);
 
 const { closeOutWarning, closeOutModal } =
   mockEntityDetailsOverlayJson.verbiage;
 
-const mockEntity = {
-  id: "mock-id",
-  initiative_name: "mock-initiative-name",
-};
-
 const entityDetailsOverlayComponent = (
   <RouterWrappedComponent>
-    <EntityDetailsOverlay
-      selectedEntity={mockEntity}
-      route={mockEntityDetailsOverlayJson}
-    />
+    <EntityDetailsOverlay route={mockEntityDetailsOverlayJson} />
   </RouterWrappedComponent>
 );
 
