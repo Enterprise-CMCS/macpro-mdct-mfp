@@ -170,7 +170,7 @@ export const calculateCompletionStatus = async (
       for (var entityFields of fieldData[entityType]) {
         //modal overlay pages should have an array of key stepType in fieldData, automatic false if it doesn't exist or array is empty
         if (
-          stepForm.pageType === "modalOverlay" &&
+          stepForm.pageType === "overlayModal" &&
           (!entityFields[stepForm.stepType] ||
             entityFields[stepForm.stepType].length <= 0)
         ) {
