@@ -48,7 +48,6 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
     return currentEntities;
   };
 
-  // TODO: add entity functions as we build them out
   const providerValue = useMemo(
     () => ({
       prepareEntityPayload,

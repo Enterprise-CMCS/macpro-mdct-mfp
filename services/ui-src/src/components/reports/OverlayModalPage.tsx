@@ -34,6 +34,11 @@ export const OverlayModalPage = ({
 
   const entityType = selectedEntity!.type;
 
+  /**
+   * Any time the report is updated on this page,
+   * we also want to update the selectedEntity in the store
+   * with new data that the report was given.
+   */
   useEffect(() => {
     if (selectedEntity) {
       setSelectedEntity(

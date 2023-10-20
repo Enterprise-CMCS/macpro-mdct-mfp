@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 // components
 import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
 import {
@@ -8,7 +8,6 @@ import {
   EntityDetailsDashboardOverlay,
   EntityProvider,
   EntityRow,
-  ReportContext,
   ReportPageFooter,
   ReportPageIntro,
   Table,
@@ -16,24 +15,12 @@ import {
 // types
 import {
   AlertTypes,
-  AnyObject,
   EntityShape,
-  EntityType,
-  isFieldElement,
   ModalOverlayReportPageShape,
-  ReportStatus,
   EntityDetailsDashboardOverlayShape,
 } from "types";
 // utils
-import {
-  entityWasUpdated,
-  filterFormData,
-  getEntriesToClear,
-  resetClearProp,
-  setClearedEntriesToDefaultValue,
-  useBreakpoint,
-  useStore,
-} from "utils";
+import { resetClearProp, useBreakpoint, useStore } from "utils";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
@@ -44,28 +31,14 @@ interface AlertVerbiage {
   [key: string]: { title: string; description: string };
 }
 
-export const ModalOverlayReportPage = ({
-  route,
-  setSidebarHidden,
-  validateOnRender,
-}: Props) => {
+export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   // Route Information
-  const {
-    entityType,
-    verbiage,
-    modalForm,
-    overlayForm,
-    dashboard,
-    entityInfo,
-  } = route;
+  const { entityType, verbiage, modalForm, dashboard, entityInfo } = route;
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
   const { report, selectedEntity, setSelectedEntity, clearSelectedEntity } =
     useStore();
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
-  const [submitting, setSubmitting] = useState<boolean>(false);
-  const { userIsEndUser, full_name, state } = useStore().user ?? {};
-  const { updateReport } = useContext(ReportContext);
 
   // Determine whether form is locked or unlocked based on user and route
   const isLocked = report?.locked;
@@ -136,72 +109,14 @@ export const ModalOverlayReportPage = ({
     setSidebarHidden(false);
   };
 
-  // Form submit methods
-  const onSubmit = async (enteredData: AnyObject) => {
-    if (userIsEndUser) {
-      setSubmitting(true);
-      const reportKeys = {
-        reportType: report?.reportType,
-        state: state,
-        id: report?.id,
-      };
-      const currentEntities = [...(report?.fieldData[entityType] || [])];
-      const selectedEntityIndex = report?.fieldData[entityType].findIndex(
-        (entity: EntityShape) => entity.id === selectedEntity?.id
-      );
-      const filteredFormData = filterFormData(
-        enteredData,
-        overlayForm!.fields.filter(isFieldElement)
-      );
-      const entriesToClear = getEntriesToClear(
-        enteredData,
-        overlayForm!.fields.filter(isFieldElement)
-      );
-      const newEntity = {
-        ...selectedEntity,
-        ...filteredFormData,
-      };
-      let newEntities = currentEntities;
-      newEntities[selectedEntityIndex] = newEntity;
-      newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
-        newEntities[selectedEntityIndex],
-        entriesToClear
-      );
-      const shouldSave = entityWasUpdated(
-        reportFieldDataEntities[selectedEntityIndex],
-        newEntity
-      );
-      if (shouldSave) {
-        const dataToWrite = {
-          metadata: {
-            status: ReportStatus.IN_PROGRESS,
-            lastAlteredBy: full_name,
-          },
-          fieldData: {
-            [entityType]: newEntities,
-          },
-        };
-        await updateReport(reportKeys, dataToWrite);
-      }
-      setSubmitting(false);
-    }
-    closeEntityDetailsOverlay();
-    setSidebarHidden(false);
-  };
-
   return (
     <Box>
       {dashboard && isEntityDetailsOpen && selectedEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
-            entityType={entityType as EntityType}
-            entities={reportFieldDataEntities}
             dashboard={dashboard}
             selectedEntity={selectedEntity}
-            onSubmit={onSubmit}
-            submitting={submitting}
-            validateOnRender={validateOnRender}
             route={route as EntityDetailsDashboardOverlayShape}
           />
         </EntityProvider>

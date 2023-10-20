@@ -12,7 +12,6 @@ import {
 // types
 import {
   EntityShape,
-  EntityType,
   FormJson,
   EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
@@ -143,13 +142,8 @@ export const EntityDetailsDashboardOverlay = ({
 
 interface Props {
   closeEntityDetailsOverlay?: Function;
-  entityType?: EntityType;
-  entities?: EntityShape[];
   dashboard?: FormJson;
   selectedEntity?: EntityShape;
-  onSubmit?: Function;
-  submitting?: boolean;
-  validateOnRender?: boolean;
   route: EntityDetailsDashboardOverlayShape;
 }
 

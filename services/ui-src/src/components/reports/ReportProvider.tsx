@@ -78,7 +78,6 @@ export const ReportProvider = ({ children }: Props) => {
         report.formTemplate.routes
       );
     }
-
     setReport(report);
     setContextIsLoaded(true);
   };
