@@ -48,6 +48,7 @@ export const CloseEntityModal = ({
 
       updatedEntities[selectedEntityIndex] = {
         id: selectedEntity.id,
+        type: selectedEntity.type,
         ...currentEntities[selectedEntityIndex],
         isInitiativeClosed: true,
       };

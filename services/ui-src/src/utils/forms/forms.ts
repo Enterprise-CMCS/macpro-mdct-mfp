@@ -17,7 +17,6 @@ import {
 } from "types";
 import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
-import { DynamicField } from "components/fields/DynamicField";
 import { NumberField } from "components/fields/NumberField";
 
 // return created elements from provided fields
@@ -36,7 +35,6 @@ export const formFieldFactory = (
     checkbox: CheckboxField,
     date: DateField,
     dropdown: DropdownField,
-    dynamic: DynamicField,
     number: NumberField,
     radio: RadioField,
     text: TextField,
