@@ -44,31 +44,3 @@ export const getWPAlertStatus = (report: ReportShape, entityType: string) => {
   }
   return false;
 };
-
-//failed to get this working in time, but will continue in next branch
-export const saveAlertStatusToDatabase = async (
-  report: ReportShape,
-  entityType: string,
-  alertStatus: boolean,
-  updateReport: Function
-) => {
-  if (report) {
-    const reportKeys = {
-      reportType: report?.reportType,
-      state: report?.state,
-      id: report?.id,
-    };
-    let newEntityStatusOverride: any = report.entityStatusOverride ?? {};
-    newEntityStatusOverride[entityType] = alertStatus;
-
-    const dataToWrite = {
-      metadata: {
-        lastAlteredBy: report?.lastAlteredBy,
-        status: report?.status,
-        entityStatusOverride: newEntityStatusOverride,
-      },
-      fieldData: {},
-    };
-    updateReport(reportKeys, dataToWrite);
-  }
-};
