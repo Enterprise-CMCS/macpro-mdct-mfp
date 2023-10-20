@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 // components
 import {
   Box,
@@ -28,6 +28,9 @@ export const OverlayModalPage = ({
 }: Props) => {
   const { verbiage, modalForm, stepType } = route;
   const { report, selectedEntity, setSelectedEntity } = useStore();
+  const [selectedStepEntity, setSelectedStepEntity] = useState<
+    EntityShape | undefined
+  >(undefined);
 
   const entityType = selectedEntity!.type;
 
@@ -58,12 +61,12 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setSelectedEntity(entity);
+    if (entity) setSelectedStepEntity(entity);
     addEditEntityModalOnOpenHandler();
   };
 
   const closeAddEditEntityModal = () => {
-    // setSelectedEntity(undefined);
+    setSelectedStepEntity(undefined);
     addEditEntityModalOnCloseHandler();
   };
 
@@ -75,29 +78,27 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
-    // setSelectedEntity(entity);
+    setSelectedStepEntity(entity);
     resetClearProp(modalForm.fields);
     deleteEntityModalOnOpenHandler();
   };
 
   const closeDeleteEntityModal = () => {
-    // setSelectedEntity(undefined);
+    setSelectedStepEntity(undefined);
     deleteEntityModalOnCloseHandler();
   };
 
   return (
     <Box>
-      {selectedEntity && (
-        <Button
-          sx={sx.backButton}
-          variant="none"
-          onClick={closeEntityDetailsOverlay as MouseEventHandler}
-          aria-label="Return to dashboard for this initiative"
-        >
-          <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
-          Return to dashboard for this initiative
-        </Button>
-      )}
+      <Button
+        sx={sx.backButton}
+        variant="none"
+        onClick={closeEntityDetailsOverlay as MouseEventHandler}
+        aria-label="Return to dashboard for this initiative"
+      >
+        <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
+        Return to dashboard for this initiative
+      </Button>
       {verbiage.intro && (
         <ReportPageIntro
           sx={sx.intro}
@@ -145,7 +146,7 @@ export const OverlayModalPage = ({
         {/* MODALS */}
         <AddEditOverlayEntityModal
           entityType={[entityType, stepType]}
-          selectedEntity={selectedEntity}
+          selectedEntity={selectedStepEntity}
           entityName={selectedEntity!.initiative_name}
           entityIdLookup={entityIdLookup}
           verbiage={verbiage}
@@ -158,7 +159,7 @@ export const OverlayModalPage = ({
         <DeleteEntityModal
           entityType={[entityType, stepType]}
           entityIdLookup={entityIdLookup}
-          selectedEntity={selectedEntity}
+          selectedEntity={selectedStepEntity}
           verbiage={verbiage}
           modalDisclosure={{
             isOpen: deleteEntityModalIsOpen,
