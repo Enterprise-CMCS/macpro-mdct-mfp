@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import {
-  AddEditEntityModal,
+  AddEditOverlayEntityModal,
   DeleteEntityModal,
   ReportPageIntro,
   EntityStepCard,
@@ -20,7 +20,7 @@ import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
 // utils
-import { getFormattedEntityData, useStore } from "utils";
+import { getFormattedEntityData, resetClearProp, useStore } from "utils";
 
 export const OverlayModalPage = ({
   entity,
@@ -28,33 +28,19 @@ export const OverlayModalPage = ({
   route,
 }: Props) => {
   const { entityType, verbiage, modalForm, stepType } = route;
-  const { report, selectedEntity: currentEntity } = useStore();
+  const { selectedEntity: currentEntity } = useStore();
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
 
-  const reportFieldDataEntities = report?.fieldData[entityType] || [];
-
-  // display only the currently selected entity steps
-  let reportFieldDataEntitySteps: EntityShape[] =
-    reportFieldDataEntities.filter((entity: EntityShape) => {
-      if (currentEntity && entity.id === currentEntity.id) {
-        if (
-          Object.keys(entity).findIndex((key: string) =>
-            key.includes(stepType)
-          ) > 0
-        ) {
-          return entity;
-        }
-      }
-      return;
-    });
+  let reportFieldDataEntities =
+    currentEntity?.[stepType ? stepType : entityType] || [];
 
   const dashTitle = `${verbiage.dashboardTitle}${
-    verbiage.countEntitiesInTitle
-      ? `: ${reportFieldDataEntitySteps.length}`
-      : ""
+    verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
   }`;
+
+  const entityIdLookup = { [entityType]: currentEntity?.id };
 
   // add/edit entity modal disclosure and methods
   const {
@@ -82,6 +68,7 @@ export const OverlayModalPage = ({
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
     setSelectedEntity(entity);
+    resetClearProp(modalForm.fields);
     deleteEntityModalOnOpenHandler();
   };
 
@@ -122,7 +109,7 @@ export const OverlayModalPage = ({
           {dashTitle}
         </Heading>
         <Box>
-          {reportFieldDataEntitySteps?.map(
+          {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (
               <EntityStepCard
                 key={entity.id}
@@ -136,7 +123,7 @@ export const OverlayModalPage = ({
               />
             )
           )}
-          {reportFieldDataEntitySteps.length > 1 && (
+          {reportFieldDataEntities.length > 1 && (
             <Button
               sx={sx.addEntityButton}
               onClick={addEditEntityModalOnOpenHandler}
@@ -148,10 +135,11 @@ export const OverlayModalPage = ({
         </Box>
         <hr />
         {/* MODALS */}
-        <AddEditEntityModal
-          entityType={entityType}
-          selectedEntity={entity}
+        <AddEditOverlayEntityModal
+          entityType={[entityType, stepType]}
+          selectedEntity={selectedEntity}
           entityName={entity!.initiative_name}
+          entityIdLookup={entityIdLookup}
           verbiage={verbiage}
           form={modalForm}
           modalDisclosure={{
@@ -160,7 +148,8 @@ export const OverlayModalPage = ({
           }}
         />
         <DeleteEntityModal
-          entityType={entityType}
+          entityType={[entityType, stepType]}
+          entityIdLookup={entityIdLookup}
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           modalDisclosure={{
@@ -171,7 +160,12 @@ export const OverlayModalPage = ({
       </Box>
       <Box>
         <Flex sx={sx.buttonFlex}>
-          <Button type="submit" form={modalForm.id} sx={sx.saveButton}>
+          <Button
+            type="submit"
+            form={modalForm.id}
+            sx={sx.saveButton}
+            onClick={closeEntityDetailsOverlay as MouseEventHandler}
+          >
             Save & return
           </Button>
         </Flex>

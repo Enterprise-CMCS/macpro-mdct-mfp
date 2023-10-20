@@ -36,17 +36,24 @@ export const EntityDetailsDashboardOverlay = ({
     OverlayModalPageShape | EntityDetailsOverlayShape
   >();
   const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
+  const { report } = useStore();
 
   const { entitySteps } = route;
 
+  //using selectEntity directly will not re-render where there's a data change, we have to use its id to look up date from the report instead
+  const reportFieldDataEntities =
+    report?.fieldData[entityType!].find(
+      (entity: EntityShape) => entity.id === selectedEntity?.id
+    ) || [];
+
   useEffect(() => {
-    setSelectedEntity(selectedEntity);
+    setSelectedEntity(reportFieldDataEntities);
     setEntityType(entityType);
     return () => {
       clearEntities();
       setSelectedEntity(undefined);
     };
-  }, [entityType, selectedEntity]);
+  }, [entityType, reportFieldDataEntities]);
 
   // Open/Close overlay action methods
   const openEntityStepOverlay = (
@@ -57,12 +64,24 @@ export const EntityDetailsDashboardOverlay = ({
   };
 
   const closeEntityStepOverlay = () => {
-    setSelectedStep(undefined);
     setIsEntityStepOpen(false);
+    setSelectedStep(undefined);
   };
 
   const tableHeaders = () => {
     return { headRow: ["", "", ""] };
+  };
+
+  //EntityRow uses the fieldData to generate, but for this report, we want that information from the steps in the formTemplate
+  const formatEntityStep = (entity: EntityShape, step: any) => {
+    const newEntity: EntityShape = Object.assign({}, entity);
+
+    (step.stepInfo as []).forEach((info) => {
+      newEntity[info] = step[info];
+    });
+
+    newEntity["isRequired"] = true;
+    return newEntity;
   };
 
   const openInitiativeStepOverlay = () => {
@@ -80,7 +99,7 @@ export const EntityDetailsDashboardOverlay = ({
         ) : (
           <EntityProvider>
             <EntityDetailsOverlay
-              entity={selectedEntity!}
+              selectedEntity={reportFieldDataEntities!}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as EntityDetailsOverlayShape}
             />
@@ -108,14 +127,16 @@ export const EntityDetailsDashboardOverlay = ({
             initiativeName={selectedEntity?.initiative_name}
           />
           <Table content={tableHeaders()}>
-            {entitySteps?.map((entity: any) => (
+            {entitySteps?.map((step: any) => (
               <EntityRow
-                key={entity.id}
-                entity={entity}
-                entityInfo={entity.stepInfo}
-                verbiage={entity.verbiage}
+                key={step.id}
+                entity={formatEntityStep(reportFieldDataEntities!, step)}
+                entityType={step.entityType}
+                entityInfo={step.stepInfo}
+                verbiage={step.verbiage}
+                formEntity={step}
                 locked={false}
-                openOverlayOrDrawer={() => openEntityStepOverlay(entity)}
+                openOverlayOrDrawer={() => openEntityStepOverlay(step)}
                 openAddEditEntityModal={() => {
                   return;
                 }}

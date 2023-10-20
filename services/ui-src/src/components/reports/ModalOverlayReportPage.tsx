@@ -29,6 +29,7 @@ import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  resetClearProp,
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
@@ -103,6 +104,7 @@ export const ModalOverlayReportPage = ({
 
   const closeAddEditEntityModal = () => {
     setCurrentEntity(undefined);
+    resetClearProp(modalForm.fields);
     addEditEntityModalOnCloseHandler();
   };
 
@@ -206,10 +208,7 @@ export const ModalOverlayReportPage = ({
         </EntityProvider>
       ) : (
         <Box sx={sx.content}>
-          <ReportPageIntro
-            text={verbiage.intro}
-            reportType={report?.reportType}
-          />
+          <ReportPageIntro text={verbiage.intro} />
           {showAlert && (
             <Alert
               title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
@@ -231,6 +230,7 @@ export const ModalOverlayReportPage = ({
                   <EntityRow
                     key={entity.id}
                     entity={entity}
+                    entityType={entityType}
                     entityInfo={entityInfo}
                     verbiage={verbiage}
                     locked={isLocked}

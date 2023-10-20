@@ -28,7 +28,8 @@ export const mockFullReportJSON: ReportJson = {
               props: {
                 href: "https://www.govinfo.gov/content/pkg/PLAW-109publ171/pdf/PLAW-109publ171.pdf",
                 target: "_blank",
-                ariaLabel: "Link opens in new tab",
+                "aria-label":
+                  "6071(a)(1) of the Deficit Reduction Act (DRA) (Link opens in new tab)",
               },
             },
             {
@@ -926,7 +927,8 @@ export const mockFullReportJSON: ReportJson = {
               props: {
                 href: "https://www.govinfo.gov/content/pkg/PLAW-109publ171/pdf/PLAW-109publ171.pdf",
                 target: "_blank",
-                ariaLabel: "Link opens in new tab",
+                "aria-label":
+                  "6071(a)(1) of the Deficit Reduction Act (DRA) (Link opens in new tab)",
               },
             },
             {
@@ -1047,12 +1049,11 @@ export const reportShape: ReportShape = {
   formTemplate: mockFullReportJSON,
   fieldData: {
     id: "2V2LLgyP7wjNYvYXHmzd5laXl7J",
-    reportingPeriodStartDate: "01/02/2022",
-    reportingPeriodEndDate: "02/02/2022",
     submissionName: "test",
     stateName: "Minnesota",
   },
   reportPeriod: 1,
+  reportYear: 2023,
 };
 
 export const reportByState = {
@@ -1066,9 +1067,10 @@ export const reportByState = {
   submissionName: "water",
   combinedData: false,
   lastAltered: 1694029173139,
-  reportingPeriodEndDate: 1643778000000,
   state: "MN",
   id: "2V2LLf0ofcV5waGTA6XuZPev4PR",
   fieldDataId: "2V2LLgyP7wjNYvYXHmzd5laXl7J",
   status: "Not started",
+  reportPeriod: 1,
+  reportYear: 2023,
 };
