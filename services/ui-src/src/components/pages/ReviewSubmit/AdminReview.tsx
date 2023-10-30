@@ -124,7 +124,9 @@ export const AdminReview = ({
           tabIndex={-1}
           sx={sx.action}
         >
-          <Button>{adminInfo.modal.unlockModal.actionButtonText}</Button>
+          <Button sx={sx.unlockModalButton}>
+            {adminInfo.modal.unlockModal.actionButtonText}
+          </Button>
         </Link>
       </Modal>
       <Modal
@@ -222,6 +224,9 @@ const sx = {
   },
   modalCancel: {
     marginRight: "1rem",
+  },
+  unlockModalButton: {
+    marginTop: "1rem",
   },
   adminUnlockBtn: {
     marginRight: "1rem",
