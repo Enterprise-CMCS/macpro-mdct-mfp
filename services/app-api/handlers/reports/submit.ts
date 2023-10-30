@@ -94,13 +94,14 @@ export const submitReport = handler(async (event, _context) => {
 
     const date = Date.now();
     const fullName = `${jwt.given_name} ${jwt.family_name}`;
+    const submissionCount = (reportMetadata.submissionCount) ? ++reportMetadata.submissionCount : 1;
     const newItem = {
       ...reportMetadata,
       submittedBy: fullName,
       submittedOnDate: date,
       status: "Submitted",
       locked: true,
-      submissionCount: reportMetadata.submissionCount + 1,
+      submissionCount: submissionCount,
     };
 
     const submitReportParams = {
