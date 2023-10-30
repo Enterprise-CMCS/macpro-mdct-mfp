@@ -52,7 +52,7 @@ describe("Test approveReport method", () => {
     jest.clearAllMocks();
   });
 
-  test("Test archive report passes with valid data", async () => {
+  test("Test approve report passes with valid data", async () => {
     mockedFetchReport.mockResolvedValue({
       statusCode: 200,
       headers: {
@@ -67,7 +67,7 @@ describe("Test approveReport method", () => {
     expect(body.status).toBe("Approved");
   });
 
-  test("Test archive report with no existing record throws 404", async () => {
+  test("Test approve report with no existing record throws 404", async () => {
     mockedFetchReport.mockResolvedValue({
       statusCode: 200,
       headers: {
@@ -81,7 +81,7 @@ describe("Test approveReport method", () => {
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
-  test("Test archive report without admin permissions throws 403", async () => {
+  test("Test approve report without admin permissions throws 403", async () => {
     mockedFetchReport.mockResolvedValue({
       statusCode: 200,
       headers: {
