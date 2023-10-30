@@ -8,6 +8,7 @@ import {
 } from "types";
 import { mapValidationTypesToSchema } from "utils/validation/validation";
 import { object } from "yup";
+import { AnyObject } from "yup/lib/types";
 
 export const getEntityStatus = (report: ReportShape, entity: EntityShape) => {
   if (!report?.formTemplate.validationJson) return;
@@ -110,7 +111,7 @@ export const getInitiativeStatus = (
 
 //NOTE: this function works on the assumption that the fieldData saved is validated
 export const getInitiativeDashboardStatus = (
-  formEntity: any,
+  formEntity: AnyObject,
   entity: EntityShape
 ) => {
   const stepType = formEntity.stepType;
