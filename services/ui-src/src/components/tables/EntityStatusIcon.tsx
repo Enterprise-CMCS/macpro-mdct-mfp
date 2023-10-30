@@ -9,7 +9,6 @@ import closedIcon from "assets/icons/icon_circle-minus-gray.png";
 
 export type EntityStatusType = string | boolean | undefined;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
   const statusIcon = (status: EntityStatusType) => {
     switch (status) {

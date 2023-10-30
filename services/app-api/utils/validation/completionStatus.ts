@@ -138,7 +138,7 @@ export const calculateCompletionStatus = async (
     var areAllFormsComplete = true;
     for (var nestedFormTemplate of nestedFormTemplates) {
       if (fieldData[entityType] && fieldData[entityType].length > 0) {
-        // iterate over each entity (eg access measure)
+        // iterate over each entity (eg transition benchmark)
         for (var dataForEntity of fieldData[entityType]) {
           // get completion status for entity, using the correct form template
           const isEntityComplete = await calculateFormCompletion(
@@ -154,6 +154,49 @@ export const calculateCompletionStatus = async (
           formTemplate.entities && !formTemplate.entities[entityType]?.required;
       }
     }
+    return areAllFormsComplete;
+  };
+
+  const calculateEntityWithStepsCompletion = async (
+    stepFormTemplates: any[],
+    entityType: string
+  ) => {
+    if (!fieldData[entityType] || fieldData[entityType].length <= 0)
+      return false;
+
+    var areAllFormsComplete = true;
+    for (let i = 0; i < stepFormTemplates.length; i++) {
+      let stepForm = stepFormTemplates[i];
+      for (var entityFields of fieldData[entityType]) {
+        //modal overlay pages should have an array of key stepType in fieldData, automatic false if it doesn't exist or array is empty
+        if (
+          stepForm.pageType === "overlayModal" &&
+          (!entityFields[stepForm.stepType] ||
+            entityFields[stepForm.stepType].length <= 0)
+        ) {
+          areAllFormsComplete &&= false;
+        } else if (stepForm.stepType === "closeOutInformation") {
+          //skip over closeOut at the moment until we can make WP copies
+        } else {
+          //detemine which fieldData to match to the stepForm
+          const entityFieldsList = entityFields[stepForm.stepType]
+            ? entityFields[stepForm.stepType]
+            : [entityFields];
+          //loop through all children that belong to that entity and validate the values
+          for (var stepFields of entityFieldsList) {
+            const nestedFormTemplate = stepForm.form
+              ? stepForm.form
+              : stepForm.modalForm;
+            const isEntityComplete = await calculateFormCompletion(
+              nestedFormTemplate,
+              stepFields
+            );
+            areAllFormsComplete &&= isEntityComplete;
+          }
+        }
+      }
+    }
+
     return areAllFormsComplete;
   };
 
@@ -188,12 +231,21 @@ export const calculateCompletionStatus = async (
         break;
       case "modalOverlay":
         if (!route.modalForm) break;
-        routeCompletion = {
-          [route.path]: await calculateEntityCompletion(
-            [route.modalForm],
-            route.entityType
-          ),
-        };
+        if (route.entitySteps) {
+          routeCompletion = {
+            [route.path]: await calculateEntityWithStepsCompletion(
+              route.entitySteps as [],
+              route.entityType
+            ),
+          };
+        } else {
+          routeCompletion = {
+            [route.path]: await calculateEntityCompletion(
+              [route.modalForm],
+              route.entityType
+            ),
+          };
+        }
         break;
       case "reviewSubmit":
         // Don't evaluate the review and submit page

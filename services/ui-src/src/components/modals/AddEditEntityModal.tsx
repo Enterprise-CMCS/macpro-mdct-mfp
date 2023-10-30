@@ -76,7 +76,10 @@ export const AddEditEntityModal = ({
         entriesToClear
       );
 
-      dataToWrite.fieldData = { [entityType]: updatedEntities };
+      dataToWrite.fieldData = {
+        [entityType]: updatedEntities,
+      };
+
       const shouldSave = entityWasUpdated(
         report?.fieldData?.[entityType][selectedEntityIndex],
         updatedEntities[selectedEntityIndex]
