@@ -51,7 +51,7 @@ export const AdminReview = ({
 
   const refreshStatus = () => {
     adminUnlockModal.onClose();
-    return navigate(report?.formTemplate?.basePath || "/wp");
+    return navigate(0);
   };
 
   const unlockReportHandler = async () => {
