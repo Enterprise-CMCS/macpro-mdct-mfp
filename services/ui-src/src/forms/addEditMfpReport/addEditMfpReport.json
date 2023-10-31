@@ -13,7 +13,7 @@
       "type": "text",
       "validation": "text",
       "props": {
-        "label": "Program name"
+        "label": "Submission name"
       }
     }
   ]

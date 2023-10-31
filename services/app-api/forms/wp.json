@@ -829,7 +829,7 @@
                     }
                   },
                   {
-                    "id": "defineInitiative_projectedEndDate",
+                    "id": "initiative_projectedEndDate",
                     "type": "date",
                     "validation": "date",
                     "props": {
@@ -843,7 +843,7 @@
             {
               "name": "State and Territory Specific Initiatives: II. Evaluation Plan",
               "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
-              "pageType": "modalOverlay",
+              "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "evaluationPlan",
               "stepInfo": ["stepName", "hint"],
@@ -984,7 +984,7 @@
             {
               "name": "State and Territory-Specific Initiatives: III. Funding Sources",
               "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
-              "pageType": "modalOverlay",
+              "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "fundingSources",
               "stepInfo": ["stepName", "hint"],
@@ -1115,7 +1115,7 @@
                 "id": "sauxM9MnFZhIn5W44WY3BG",
                 "fields": [
                   {
-                    "id": "closeOutInformation_projectedEndDate",
+                    "id": "initiative_projectedEndDate",
                     "type": "date",
                     "validation": "textOptional",
                     "props": {
@@ -1148,7 +1148,7 @@
                           "label": "Discontinued initiative",
                           "children": [
                             {
-                              "id": "gtKe0Mx7QUojplAhV3T8rg",
+                              "id": "closeOutInformation_initiativeStatus-terminationReason",
                               "props": {
                                 "label": "Indicate reason for termination"
                               },
@@ -1166,7 +1166,7 @@
                           "label": "Sustaining initiative through a Medicaid authority",
                           "children": [
                             {
-                              "id": "xgRHcIPIG8b3LNB35tavx3",
+                              "id": "closeOutInformation_initiativeStatus-alternateFunding",
                               "props": {
                                 "label": "Indicate alternative funding source"
                               },
@@ -1174,7 +1174,7 @@
                               "validation": {
                                 "type": "text",
                                 "nested": true,
-                                "parentFieldName": "initiativeStatus_checkbox"
+                                "parentFieldName": "closeOutInformation_initiativeStatus"
                               }
                             }
                           ]

@@ -1,4 +1,4 @@
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 // components
 import {
   Box,
@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import {
-  AddEditEntityModal,
+  AddEditOverlayEntityModal,
   DeleteEntityModal,
   ReportPageIntro,
   EntityStepCard,
@@ -20,41 +20,43 @@ import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
 // utils
-import { getFormattedEntityData, useStore } from "utils";
+import { getFormattedEntityData, resetClearProp, useStore } from "utils";
 
 export const OverlayModalPage = ({
-  entity,
   closeEntityDetailsOverlay,
   route,
 }: Props) => {
-  const { entityType, verbiage, modalForm, stepType } = route;
-  const { report, selectedEntity: currentEntity } = useStore();
-  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
-    undefined
-  );
+  const { verbiage, modalForm, stepType } = route;
+  const { report, selectedEntity, setSelectedEntity } = useStore();
+  const [selectedStepEntity, setSelectedStepEntity] = useState<
+    EntityShape | undefined
+  >(undefined);
 
-  const reportFieldDataEntities = report?.fieldData[entityType] || [];
+  const entityType = selectedEntity!.type;
 
-  // display only the currently selected entity steps
-  let reportFieldDataEntitySteps: EntityShape[] =
-    reportFieldDataEntities.filter((entity: EntityShape) => {
-      if (currentEntity && entity.id === currentEntity.id) {
-        if (
-          Object.keys(entity).findIndex((key: string) =>
-            key.includes(stepType)
-          ) > 0
-        ) {
-          return entity;
-        }
-      }
-      return;
-    });
+  /**
+   * Any time the report is updated on this page,
+   * we also want to update the selectedEntity in the store
+   * with new data that the report was given.
+   */
+  useEffect(() => {
+    if (selectedEntity) {
+      setSelectedEntity(
+        report?.fieldData?.[selectedEntity.type].find(
+          (entity: EntityShape) => entity.id == selectedEntity.id
+        )
+      );
+    }
+  }, [report]);
+
+  let reportFieldDataEntities =
+    selectedEntity?.[stepType ? stepType : entityType] || [];
 
   const dashTitle = `${verbiage.dashboardTitle}${
-    verbiage.countEntitiesInTitle
-      ? `: ${reportFieldDataEntitySteps.length}`
-      : ""
+    verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""
   }`;
+
+  const entityIdLookup = { [entityType]: selectedEntity?.id };
 
   // add/edit entity modal disclosure and methods
   const {
@@ -64,12 +66,12 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setSelectedEntity(entity);
+    if (entity) setSelectedStepEntity(entity);
     addEditEntityModalOnOpenHandler();
   };
 
   const closeAddEditEntityModal = () => {
-    setSelectedEntity(undefined);
+    setSelectedStepEntity(undefined);
     addEditEntityModalOnCloseHandler();
   };
 
@@ -81,28 +83,27 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
-    setSelectedEntity(entity);
+    setSelectedStepEntity(entity);
+    resetClearProp(modalForm.fields);
     deleteEntityModalOnOpenHandler();
   };
 
   const closeDeleteEntityModal = () => {
-    setSelectedEntity(undefined);
+    setSelectedStepEntity(undefined);
     deleteEntityModalOnCloseHandler();
   };
 
   return (
     <Box>
-      {entity && (
-        <Button
-          sx={sx.backButton}
-          variant="none"
-          onClick={closeEntityDetailsOverlay as MouseEventHandler}
-          aria-label="Return to dashboard for this initiative"
-        >
-          <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
-          Return to dashboard for this initiative
-        </Button>
-      )}
+      <Button
+        sx={sx.backButton}
+        variant="none"
+        onClick={closeEntityDetailsOverlay as MouseEventHandler}
+        aria-label="Return to dashboard for this initiative"
+      >
+        <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
+        Return to dashboard for this initiative
+      </Button>
       {verbiage.intro && (
         <ReportPageIntro
           sx={sx.intro}
@@ -122,7 +123,7 @@ export const OverlayModalPage = ({
           {dashTitle}
         </Heading>
         <Box>
-          {reportFieldDataEntitySteps?.map(
+          {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (
               <EntityStepCard
                 key={entity.id}
@@ -136,7 +137,7 @@ export const OverlayModalPage = ({
               />
             )
           )}
-          {reportFieldDataEntitySteps.length > 1 && (
+          {reportFieldDataEntities.length > 1 && (
             <Button
               sx={sx.addEntityButton}
               onClick={addEditEntityModalOnOpenHandler}
@@ -148,10 +149,11 @@ export const OverlayModalPage = ({
         </Box>
         <hr />
         {/* MODALS */}
-        <AddEditEntityModal
-          entityType={entityType}
-          selectedEntity={entity}
-          entityName={entity!.initiative_name}
+        <AddEditOverlayEntityModal
+          entityType={[entityType, stepType]}
+          selectedEntity={selectedStepEntity}
+          entityName={selectedEntity!.initiative_name}
+          entityIdLookup={entityIdLookup}
           verbiage={verbiage}
           form={modalForm}
           modalDisclosure={{
@@ -160,8 +162,9 @@ export const OverlayModalPage = ({
           }}
         />
         <DeleteEntityModal
-          entityType={entityType}
-          selectedEntity={selectedEntity}
+          entityType={[entityType, stepType]}
+          entityIdLookup={entityIdLookup}
+          selectedEntity={selectedStepEntity}
           verbiage={verbiage}
           modalDisclosure={{
             isOpen: deleteEntityModalIsOpen,
@@ -171,7 +174,12 @@ export const OverlayModalPage = ({
       </Box>
       <Box>
         <Flex sx={sx.buttonFlex}>
-          <Button type="submit" form={modalForm.id} sx={sx.saveButton}>
+          <Button
+            type="submit"
+            form={modalForm.id}
+            sx={sx.saveButton}
+            onClick={closeEntityDetailsOverlay as MouseEventHandler}
+          >
             Save & return
           </Button>
         </Flex>
@@ -182,9 +190,7 @@ export const OverlayModalPage = ({
 
 interface Props {
   route: OverlayModalPageShape;
-  entity?: EntityShape;
   closeEntityDetailsOverlay?: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {

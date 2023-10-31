@@ -24,6 +24,7 @@ import {
   MobileDashboardTable,
   PageTemplate,
   ReportContext,
+  Alert,
 } from "components";
 // utils
 import {
@@ -33,6 +34,7 @@ import {
   ReportShape,
   ReportType,
   ReportStatus,
+  AlertTypes,
 } from "types";
 import { parseCustomHtml, useBreakpoint, useStore } from "utils";
 // verbiage
@@ -41,6 +43,7 @@ import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
+import alertIcon from "assets/icons/icon_alert_circle.png";
 
 export const DashboardPage = ({ reportType }: Props) => {
   const {
@@ -53,7 +56,8 @@ export const DashboardPage = ({ reportType }: Props) => {
     releaseReport,
     fetchReport,
   } = useContext(ReportContext);
-  const { reportsByState, workPlanToCopyFrom } = useStore();
+  const { reportsByState, workPlanToCopyFrom, clearSelectedEntity } =
+    useStore();
   const navigate = useNavigate();
   const {
     state: userState,
@@ -80,6 +84,9 @@ export const DashboardPage = ({ reportType }: Props) => {
 
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
   const { intro, body } = dashboardVerbiage;
+
+  // get Work Plan status
+  const workPlanStatus = workPlanToCopyFrom?.status;
 
   // get active state
   const adminSelectedState = localStorage.getItem("selectedState") || undefined;
@@ -110,6 +117,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   }, [reportsByState]);
 
   const enterSelectedReport = async (report: ReportMetadataShape) => {
+    clearSelectedEntity();
     setReportId(report.id);
     setEntering(true);
     const reportKeys: ReportKeys = {
@@ -136,14 +144,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           associatedWorkPlan: report.submissionName,
           stateOrTerritory: report.state,
           reportPeriod: report.reportPeriod,
-          finalSar: [
-            {
-              key: report.finalSar
-                ? "nrRmirBoVQv0ysWnEejNZD"
-                : "ekP9iVvuQE9AALchScDzoD",
-              value: report.finalSar ? "Yes" : "No",
-            },
-          ],
+          finalSar: report.finalSar,
         },
         state: report.state,
         id: report.id,
@@ -198,7 +199,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       setReportId(undefined);
       setReleasing(false);
 
-      //useDiscourse to open modal
+      // useDisclosure to open modal
       confirmUnlockModalOnOpenHandler();
     }
   };
@@ -237,22 +238,33 @@ export const DashboardPage = ({ reportType }: Props) => {
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
         <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
-        Return Home
+        Return home
       </Link>
       {errorMessage && <ErrorAlert error={errorMessage} />}
+      {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
+        {reportType === ReportType.SAR &&
+          workPlanStatus !== ReportStatus.APPROVED && (
+            <Alert
+              title={sarVerbiage.alertBanner.title}
+              showIcon={true}
+              icon={alertIcon}
+              status={AlertTypes.ERROR}
+              description={sarVerbiage.alertBanner.body}
+              sx={sx.alertBanner}
+            />
+          )}
         <Heading as="h1" sx={sx.headerText}>
           {fullStateName} {intro.header}
         </Heading>
-        {reportType === "WP" && (
-          <InstructionsAccordion
-            verbiage={
-              userIsAdmin
-                ? accordion.WP.adminDashboard
-                : accordion.WP.stateUserDashboard
-            }
-          />
-        )}
+        <InstructionsAccordion
+          verbiage={
+            userIsAdmin
+              ? accordion[reportType as keyof typeof ReportType].adminDashboard
+              : accordion[reportType as keyof typeof ReportType]
+                  .stateUserDashboard
+          }
+        />
         {parseCustomHtml(intro.body)}
       </Box>
       <Box sx={sx.bodyBox}>
@@ -350,6 +362,7 @@ const sx = {
   returnLink: {
     display: "flex",
     width: "8.5rem",
+    paddingTop: "0.5rem",
     svg: {
       height: "1.375rem",
       width: "1.375rem",
@@ -370,7 +383,7 @@ const sx = {
   leadTextBox: {
     width: "100%",
     maxWidth: "55.25rem",
-    margin: "2.5rem auto",
+    margin: "2.5rem auto 0rem",
     ".tablet &, .mobile &": {
       margin: "2.5rem 0 1rem",
     },
@@ -418,6 +431,15 @@ const sx = {
     justifyContent: "center",
     padding: "10",
   },
+  alertBanner: {
+    marginBottom: "2rem",
+    borderInlineStartWidth: "7.5px",
+    bgColor: "palette.error_lightest",
+    fontSize: "18px",
+    p: {
+      fontSize: "16px",
+    },
+  },
 };
 
 const sxChildStyles = {
@@ -449,7 +471,16 @@ const sxChildStyles = {
       },
     },
   },
-  submissionNameText: {
+  sarSubmissionNameText: {
+    fontSize: "md",
+    fontWeight: "bold",
+    width: "10rem",
+    ".tablet &, .mobile &": {
+      width: "100%",
+    },
+    lineHeight: "1.25rem",
+  },
+  wpSubmissionNameText: {
     fontSize: "md",
     fontWeight: "bold",
     width: "13rem",

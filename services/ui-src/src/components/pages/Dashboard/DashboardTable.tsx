@@ -44,7 +44,13 @@ export const DashboardTable = ({
           <Td></Td>
         )}
         {/* Report Name */}
-        <Td sx={sxOverride.submissionNameText}>{report.submissionName}</Td>
+        {reportType === ReportType.WP ? (
+          <Td sx={sxOverride.wpSubmissionNameText}>{report.submissionName}</Td>
+        ) : (
+          <Td sx={sxOverride.sarSubmissionNameText}>{report.submissionName}</Td>
+        )}
+        {/* Target populations */}
+        {reportType === ReportType.SAR && <Td>{report?.targetPopulations}</Td>}
         {/* Date Fields */}
         <DateFields report={report} reportType={reportType} isAdmin={isAdmin} />
         {/* Last Altered By */}
@@ -186,7 +192,10 @@ const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
       {reportType === "WP" && !isAdmin && (
-        <Td>{convertDateUtcToEt(report.createdAt)}</Td>
+        <Td>{convertDateUtcToEt(report.dueDate)}</Td>
+      )}
+      {reportType === "SAR" && !isAdmin && (
+        <Td>{convertDateUtcToEt(report.dueDate)}</Td>
       )}
       <Td>{convertDateUtcToEt(report.lastAltered)}</Td>
     </>

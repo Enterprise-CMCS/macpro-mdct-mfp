@@ -14,7 +14,7 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
   const report = useStore().report;
   const { previousRoute, nextRoute } = useFindRoute(
     report?.formTemplate.flatRoutes,
-    report?.formTemplate.basePath
+    report?.formTemplate?.basePath
   );
   const hidePrevious = previousRoute === "/wp" || previousRoute === "/sar";
 

@@ -17,7 +17,6 @@ import {
 } from "types";
 import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
-import { DynamicField } from "components/fields/DynamicField";
 import { NumberField } from "components/fields/NumberField";
 
 // return created elements from provided fields
@@ -36,7 +35,6 @@ export const formFieldFactory = (
     checkbox: CheckboxField,
     date: DateField,
     dropdown: DropdownField,
-    dynamic: DynamicField,
     number: NumberField,
     radio: RadioField,
     text: TextField,
@@ -202,4 +200,29 @@ export const flattenFormFields = (formFields: FormField[]): FormField[] => {
   };
   compileFields(formFields);
   return flattenedFields;
+};
+
+/*
+ * This function resets the 'clear' prop on each field after a ChoiceListField calls
+ * clearUncheckedNestedFields(). Upon re-entering a drawer or modal, the field values will
+ * be correctly hydrated.
+ */
+export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
+  fields.forEach((field: FormField | FormLayoutElement) => {
+    switch (field.type) {
+      case "radio":
+      case "checkbox":
+        field.props?.choices.forEach((childField: FieldChoice) => {
+          if (childField?.children) {
+            resetClearProp(childField.children);
+          }
+        });
+        field.props = { ...field.props, clear: false };
+        resetClearProp(field.props?.choices);
+        break;
+      default:
+        field.props = { ...field.props, clear: false };
+        break;
+    }
+  });
 };
