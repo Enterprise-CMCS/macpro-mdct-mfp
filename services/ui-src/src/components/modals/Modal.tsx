@@ -109,7 +109,7 @@ const sx = {
   modalContent: {
     boxShadow: ".125rem .125rem .25rem",
     borderRadius: "0",
-    maxWidth: "30rem",
+    maxWidth: "33rem",
     marginX: "4rem",
     padding: "2rem",
   },
@@ -126,7 +126,7 @@ const sx = {
   },
   modalCloseContainer: {
     alignItems: "center",
-    justifycontent: "center",
+    justifyContent: "center",
     flexShrink: "0",
     position: "absolute",
     top: "2rem",
