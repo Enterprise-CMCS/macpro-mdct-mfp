@@ -81,8 +81,8 @@ export const EntityRow = ({
         </ul>
         {!entityStatus && (
           <Text sx={sx.errorText}>
-            {verbiage.editEntityHint
-              ? verbiage.editEntityHint
+            {verbiage.addEntityHint
+              ? verbiage.addEntityHint
               : `Select ${verbiage.enterEntityDetailsButtonText} to report data`}
           </Text>
         )}
@@ -150,7 +150,7 @@ const sx = {
   entityName: {
     maxWidth: "18.75rem",
     ul: {
-      margin: "0.5rem auto",
+      margin: ".5rem auto",
       listStyleType: "none",
       li: {
         wordWrap: "break-word",
@@ -178,13 +178,13 @@ const sx = {
   editEntityButton: {
     padding: 0,
     fontWeight: "bold",
-    width: "6.5rem",
-    marginLeft: "8.25rem",
+    width: "5rem",
+    marginLeft: "7.5rem",
   },
   editOtherEntityButton: {
     padding: 0,
     fontWeight: "bold",
-    width: "6.5rem",
+    minWidth: "5rem",
   },
   deleteButton: {
     height: "1.875rem",
