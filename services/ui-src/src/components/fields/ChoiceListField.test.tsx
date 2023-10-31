@@ -1,9 +1,10 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { axe } from "jest-axe";
 //components
 import { useFormContext } from "react-hook-form";
 import { ChoiceListField, ReportContext } from "components";
 import { mockWpReportContext } from "../../utils/testing/mockReport";
+import { ReportStatus } from "../../types";
 
 const mockTrigger = jest.fn().mockReturnValue(true);
 const mockSetValue = jest.fn();
@@ -363,6 +364,82 @@ describe("Test Choicelist Hydration", () => {
     // Confirm hydration successfully made the first value checked
     expect(firstRadioOption).not.toBeChecked();
     expect(secondRadioOption).toBeChecked();
+  });
+});
+
+describe("Test Choicelist Autosaving Methods", () => {
+  const CheckboxWithAutosaveEnabledComponent = (
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ChoiceListField
+        choices={mockChoices}
+        label="Autosave Enabled Checkbox Field"
+        name="autosaveCheckboxField"
+        type="checkbox"
+        autosave
+      />
+    </ReportContext.Provider>
+  );
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Choicelist Checkbox autosaves with checked value when autosave true, and form is valid", async () => {
+    mockGetValues(undefined);
+
+    // Create the Checkbox Component
+    const wrapper = render(CheckboxWithAutosaveEnabledComponent);
+
+    const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice 1" });
+    const secondCheckbox = wrapper.getByRole("checkbox", { name: "Choice 2" });
+
+    // Select the first Checkbox and check it
+    expect(firstCheckbox).not.toBeChecked();
+    expect(secondCheckbox).not.toBeChecked();
+    fireEvent.click(firstCheckbox);
+
+    // Confirm the checkboxes are checked correctly
+    const checkedCheckboxes = wrapper.getAllByRole("checkbox", {
+      checked: true,
+    });
+    expect(checkedCheckboxes).toHaveLength(1);
+    expect(firstCheckbox).toBeChecked();
+    expect(secondCheckbox).not.toBeChecked();
+
+    // Tab away to trigger onComponentBlur()
+    fireEvent.blur(firstCheckbox);
+
+    // Make sure the form value is set to what we've clicked (Which is only Choice 1)
+    const firstCheckboxData = [{ key: "Choice 1", value: "Choice 1" }];
+    expect(mockSetValue).toHaveBeenCalledWith(
+      "autosaveCheckboxField",
+      firstCheckboxData,
+      {
+        shouldValidate: true,
+      }
+    );
+
+    // Ensure we call autosave with the correct data
+    await waitFor(() => {
+      expect(mockWpReportContext.updateReport).toHaveBeenCalledTimes(1);
+    });
+    await waitFor(() =>
+      expect(mockWpReportContext.updateReport).toHaveBeenCalledWith(
+        {
+          reportType: undefined,
+          id: undefined,
+          state: undefined,
+        },
+        {
+          metadata: {
+            status: ReportStatus.IN_PROGRESS,
+          },
+          fieldData: {
+            autosaveCheckboxField: firstCheckboxData,
+          },
+        }
+      )
+    );
   });
 });
 
