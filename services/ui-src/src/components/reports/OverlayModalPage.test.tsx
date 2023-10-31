@@ -9,6 +9,7 @@ import {
   mockOverlayModalPageJson,
   RouterWrappedComponent,
   mockReportStore,
+  mockEntityStore,
 } from "utils/testing/setupJest";
 
 const mockUseNavigate = jest.fn();
@@ -26,20 +27,16 @@ window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
 const { addEntityButtonText } = mockOverlayModalPageJson.verbiage;
 
-const mockEntity = {
-  id: "mock-id",
-  initiative_name: "mock-name",
-};
-
 const overlayModalPageComponentWithEntities = (
   <RouterWrappedComponent>
-    <OverlayModalPage entity={mockEntity} route={mockOverlayModalPageJson} />
+    <OverlayModalPage route={mockOverlayModalPageJson} />
   </RouterWrappedComponent>
 );
 
 describe("Test overlayModalPage with entities", () => {
   beforeEach(() => {
     mockedUseStore.mockReturnValue(mockReportStore);
+    mockedUseStore.mockReturnValue(mockEntityStore);
     render(overlayModalPageComponentWithEntities);
   });
 
@@ -66,6 +63,7 @@ describe("Test overlayModalPage with entities", () => {
 describe("Test ModalDrawerReportPage accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
     mockedUseStore.mockReturnValue(mockReportStore);
+    mockedUseStore.mockReturnValue(mockEntityStore);
     const { container } = render(overlayModalPageComponentWithEntities);
     const results = await axe(container);
     expect(results).toHaveNoViolations();

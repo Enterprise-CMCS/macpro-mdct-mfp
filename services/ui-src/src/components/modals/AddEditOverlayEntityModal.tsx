@@ -1,3 +1,4 @@
+//note: this file is more of a temporary fix until we figure out a better way to handle deeply nested forms
 import { useContext, useState } from "react";
 import uuid from "react-uuid";
 // components
@@ -19,9 +20,10 @@ import {
   useStore,
 } from "utils";
 
-export const AddEditEntityModal = ({
+export const AddEditOverlayEntityModal = ({
   entityType,
   entityName,
+  entityIdLookup,
   form,
   verbiage,
   selectedEntity,
@@ -31,6 +33,47 @@ export const AddEditEntityModal = ({
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
+
+  //using the entityTypes as a path list, recursively go through each object layer to find the desired objectKey
+  const recusiveFindAndUpdate = (
+    index: number,
+    data: any,
+    entityPath: string[],
+    newEntity: AnyObject
+  ) => {
+    //if index is at the last avaliable path, that is the entityType we want to look at
+    if (data && index === entityPath.length - 1) {
+      data[entityPath[index]] = newEntity;
+    } else {
+      const currentEntityType = entityPath[index];
+      if (entityIdLookup) {
+        const currentEntity = data[currentEntityType].find(
+          (entity: EntityShape) =>
+            entity.id === entityIdLookup[currentEntityType]
+        );
+        recusiveFindAndUpdate(index + 1, currentEntity, entityPath, newEntity);
+      }
+    }
+  };
+
+  const findEntity = (data: AnyObject, entityTypes: string[]) => {
+    let currentEntities: any = data;
+    entityTypes.forEach((type, index) => {
+      if (index < entityTypes.length - 1) {
+        if (
+          currentEntities?.[type] &&
+          typeof currentEntities?.[type] === "object"
+        ) {
+          currentEntities = currentEntities?.[type]?.find(
+            (entity: any) => entity.id === entityIdLookup?.[type]
+          );
+        }
+      } else {
+        currentEntities = [...(currentEntities[type] || [])];
+      }
+    });
+    return currentEntities;
+  };
 
   const writeEntity = async (enteredData: any) => {
     setSubmitting(true);
@@ -49,11 +92,21 @@ export const AddEditEntityModal = ({
       },
       fieldData: {},
     };
-    const currentEntities = [...(report?.fieldData?.[entityType] || [])];
+
+    const entityTypes: string[] =
+      typeof entityType === "string" ? [entityType] : (entityType as string[]);
+
+    //try to transverse the object if there are layers
+    let currentEntities = findEntity(report?.fieldData!, entityTypes);
+
     const filteredFormData = filterFormData(
       enteredData,
       form.fields.filter(isFieldElement)
     );
+
+    //create a hardcopy of the fieldData
+    const fieldDataObject: any = structuredClone(report?.fieldData);
+
     if (selectedEntity?.id) {
       // if existing entity selected, edit
       const entriesToClear = getEntriesToClear(
@@ -64,7 +117,6 @@ export const AddEditEntityModal = ({
         (entity: EntityShape) => entity.id === selectedEntity.id
       );
       const updatedEntities = currentEntities;
-
       updatedEntities[selectedEntityIndex] = {
         id: selectedEntity.id,
         type: selectedEntity.type,
@@ -76,25 +128,29 @@ export const AddEditEntityModal = ({
         entriesToClear
       );
 
-      dataToWrite.fieldData = {
-        [entityType]: updatedEntities,
-      };
+      //using shallow update to modify the copied report data
+      recusiveFindAndUpdate(0, fieldDataObject, entityTypes, updatedEntities);
 
+      dataToWrite.fieldData = { ...fieldDataObject };
       const shouldSave = entityWasUpdated(
-        report?.fieldData?.[entityType][selectedEntityIndex],
+        findEntity(report?.fieldData!, entityTypes),
         updatedEntities[selectedEntityIndex]
       );
       if (shouldSave) await updateReport(reportKeys, dataToWrite);
     } else {
+      const newEntityData = [
+        ...currentEntities,
+        { id: uuid(), ...filteredFormData },
+      ];
+
+      //using shallow update to modify the copied report data
+      recusiveFindAndUpdate(0, fieldDataObject, entityTypes, newEntityData);
+
       // create new entity
-      dataToWrite.fieldData = {
-        [entityType]: [
-          ...currentEntities,
-          { id: uuid(), type: entityType, ...filteredFormData },
-        ],
-      };
+      dataToWrite.fieldData = { ...fieldDataObject };
       await updateReport(reportKeys, dataToWrite);
     }
+
     setSubmitting(false);
     modalDisclosure.onClose();
   };
@@ -139,8 +195,9 @@ export const AddEditEntityModal = ({
 };
 
 interface Props {
-  entityType: string;
+  entityType: string | string[];
   entityName?: string;
+  entityIdLookup?: AnyObject;
   form: FormJson;
   verbiage: AnyObject;
   selectedEntity?: EntityShape;

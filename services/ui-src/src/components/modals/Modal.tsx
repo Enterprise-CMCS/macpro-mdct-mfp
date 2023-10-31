@@ -52,34 +52,36 @@ export const Modal = ({
           </Button>
         </Flex>
         <ModalBody sx={sx.modalBody}>{children}</ModalBody>
-        <ModalFooter sx={sx.modalFooter}>
-          {formId && content.actionButtonText !== "" && (
+        {content.actionButtonText && content.actionButtonText !== "" && (
+          <ModalFooter sx={sx.modalFooter}>
+            {formId && content.actionButtonText !== "" && (
+              <Button
+                sx={sx.action}
+                form={formId}
+                type="submit"
+                data-testid="modal-submit-button"
+              >
+                {submitting ? <Spinner size="md" /> : content.actionButtonText}
+              </Button>
+            )}
+            {onConfirmHandler && (
+              <Button
+                sx={sx.action}
+                onClick={() => onConfirmHandler()}
+                data-testid="modal-submit-button"
+              >
+                {submitting ? <Spinner size="md" /> : content.actionButtonText}
+              </Button>
+            )}
             <Button
-              sx={sx.action}
-              form={formId}
-              type="submit"
-              data-testid="modal-submit-button"
+              sx={sx.close}
+              variant="link"
+              onClick={modalDisclosure.onClose}
             >
-              {submitting ? <Spinner size="md" /> : content.actionButtonText}
+              {content.closeButtonText}
             </Button>
-          )}
-          {onConfirmHandler && (
-            <Button
-              sx={sx.action}
-              onClick={() => onConfirmHandler()}
-              data-testid="modal-submit-button"
-            >
-              {submitting ? <Spinner size="md" /> : content.actionButtonText}
-            </Button>
-          )}
-          <Button
-            sx={sx.close}
-            variant="link"
-            onClick={modalDisclosure.onClose}
-          >
-            {content.closeButtonText}
-          </Button>
-        </ModalFooter>
+          </ModalFooter>
+        )}
       </ModalContent>
     </ChakraModal>
   );
@@ -107,7 +109,7 @@ const sx = {
   modalContent: {
     boxShadow: ".125rem .125rem .25rem",
     borderRadius: "0",
-    maxWidth: "30rem",
+    maxWidth: "33rem",
     marginX: "4rem",
     padding: "2rem",
   },
@@ -124,7 +126,7 @@ const sx = {
   },
   modalCloseContainer: {
     alignItems: "center",
-    justifycontent: "center",
+    justifyContent: "center",
     flexShrink: "0",
     position: "absolute",
     top: "2rem",

@@ -14,6 +14,7 @@ import {
   AnyObject,
   isFieldElement,
   ReportStatus,
+  ReportShape,
 } from "types";
 // utils
 import { filterFormData, useFindRoute, useStore } from "utils";
@@ -59,7 +60,13 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
 
   return (
     <Box>
-      {route.verbiage?.intro && <ReportPageIntro text={route.verbiage.intro} />}
+      {route.verbiage?.intro && (
+        <ReportPageIntro
+          text={route.verbiage.intro}
+          reportPeriod={report?.reportPeriod}
+          reportYear={report?.reportYear}
+        />
+      )}
       <Form
         id={route.form.id}
         formJson={route.form}
@@ -78,4 +85,5 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
 interface Props {
   route: StandardReportPageShape;
   validateOnRender?: boolean;
+  report?: ReportShape;
 }

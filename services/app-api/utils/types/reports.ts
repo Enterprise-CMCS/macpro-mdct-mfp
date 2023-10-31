@@ -203,6 +203,7 @@ export interface ReportMetadata {
   completionStatus?: CompletionData;
   reportPeriod: number;
   reportYear: number;
+  dueDate: string;
 }
 
 export interface WPReportMetadata extends ReportMetadata {

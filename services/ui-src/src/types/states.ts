@@ -1,7 +1,6 @@
 import {
   AdminBannerData,
   EntityShape,
-  EntityType,
   MFPUser,
   ReportMetadataShape,
   ReportShape,
@@ -58,13 +57,8 @@ export interface MfpReportState {
 // initial entity state
 export interface MfpEntityState {
   // INITIAL STATE
-  entityId: string | undefined;
-  entityType: EntityType | undefined;
-  entities: EntityShape[];
   selectedEntity: EntityShape | undefined;
   // ACTIONS
-  setEntityType: (newEntityType: EntityType | undefined) => void;
-  setEntities: (newEntities: EntityShape[] | undefined) => void;
-  clearEntities: () => void;
   setSelectedEntity: (newSelectedEntity: EntityShape | undefined) => void;
+  clearSelectedEntity: () => void;
 }

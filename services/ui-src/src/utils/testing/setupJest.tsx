@@ -11,6 +11,8 @@ import {
   AdminBannerState,
   MfpReportState,
   ReportShape,
+  MfpEntityState,
+  entityTypes,
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
@@ -203,6 +205,17 @@ export const mockReportStore: MfpReportState = {
   setWorkPlanToCopyFrom: () => {},
 };
 
+export const mockEntityStore: MfpEntityState = {
+  selectedEntity: {
+    id: "mock-id",
+    type: entityTypes[0],
+    initiative_name: "mock-initiative-name",
+  },
+  // ACTIONS
+  setSelectedEntity: () => {},
+  clearSelectedEntity: () => {},
+};
+
 export const mockEmptyReportStore: MfpReportState = {
   report: undefined,
   reportsByState: undefined,
@@ -239,6 +252,16 @@ export const mockUseAdminStore: MfpUserState &
   ...mockReportStore,
   ...mockAdminUserStore,
   ...mockBannerStore,
+};
+
+export const mockUseEntityStore: MfpUserState &
+  AdminBannerState &
+  MfpReportState &
+  MfpEntityState = {
+  ...mockReportStore,
+  ...mockStateUserStore,
+  ...mockBannerStore,
+  ...mockEntityStore,
 };
 
 // ROUTER

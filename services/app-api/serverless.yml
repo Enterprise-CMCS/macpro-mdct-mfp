@@ -252,6 +252,22 @@ functions:
                 reportType: true
                 state: true
                 id: true
+  approveReport:
+    handler: handlers/reports/approve.approveReport
+    timeout: 30
+    memorySize: 2048
+    events:
+      - http:
+          path: reports/approve/{reportType}/{state}/{id}
+          method: put
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                reportType: true
+                state: true
+                id: true
 resources:
   Resources:
     GatewayResponseDefault4XX:

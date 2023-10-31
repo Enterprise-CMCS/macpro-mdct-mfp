@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useState } from "react";
+import { MouseEventHandler, useState } from "react";
 // components
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import {
@@ -12,7 +12,6 @@ import {
 // types
 import {
   EntityShape,
-  EntityType,
   FormJson,
   EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
@@ -21,32 +20,19 @@ import {
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // verbiage
-import { useStore } from "utils";
 
 export const EntityDetailsDashboardOverlay = ({
   closeEntityDetailsOverlay,
-  entityType,
   dashboard,
   selectedEntity,
   route,
 }: Props) => {
-  // Entity provider setup
-  const { clearEntities, setSelectedEntity, setEntityType } = useStore();
   const [selectedStep, setSelectedStep] = useState<
     OverlayModalPageShape | EntityDetailsOverlayShape
   >();
   const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
 
   const { entitySteps } = route;
-
-  useEffect(() => {
-    setSelectedEntity(selectedEntity);
-    setEntityType(entityType);
-    return () => {
-      clearEntities();
-      setSelectedEntity(undefined);
-    };
-  }, [entityType, selectedEntity]);
 
   // Open/Close overlay action methods
   const openEntityStepOverlay = (
@@ -57,30 +43,42 @@ export const EntityDetailsDashboardOverlay = ({
   };
 
   const closeEntityStepOverlay = () => {
-    setSelectedStep(undefined);
     setIsEntityStepOpen(false);
+    setSelectedStep(undefined);
   };
 
   const tableHeaders = () => {
     return { headRow: ["", "", ""] };
   };
 
+  // EntityRow uses the fieldData to generate, but for this report, we want that information from the steps in the formTemplate
+  const formatEntityStep = (entity: EntityShape, step: any) => {
+    const newEntity: EntityShape = Object.assign({}, entity);
+
+    (step.stepInfo as []).forEach((info) => {
+      newEntity[info] = step[info];
+    });
+
+    newEntity["isRequired"] = true;
+    return newEntity;
+  };
+
   const openInitiativeStepOverlay = () => {
     const pageType = selectedStep?.pageType;
     return (
       <Box>
-        {pageType === "modalOverlay" ? (
+        {pageType === "overlayModal" ? (
+          // This is page 2 and 3, Evaluation Plan and Funding Sources respectively
           <EntityProvider>
             <OverlayModalPage
-              entity={selectedEntity!}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as OverlayModalPageShape}
             />
           </EntityProvider>
         ) : (
+          // This is page 1 and 4, Define initiative and Close-out respectively
           <EntityProvider>
             <EntityDetailsOverlay
-              entity={selectedEntity!}
               closeEntityDetailsOverlay={closeEntityStepOverlay}
               route={selectedStep as EntityDetailsOverlayShape}
             />
@@ -108,14 +106,16 @@ export const EntityDetailsDashboardOverlay = ({
             initiativeName={selectedEntity?.initiative_name}
           />
           <Table content={tableHeaders()}>
-            {entitySteps?.map((entity: any) => (
+            {entitySteps?.map((step: any) => (
               <EntityRow
-                key={entity.id}
-                entity={entity}
-                entityInfo={entity.stepInfo}
-                verbiage={entity.verbiage}
+                key={step.id}
+                entity={formatEntityStep(selectedEntity!, step)}
+                entityType={step.entityType}
+                entityInfo={step.stepInfo}
+                verbiage={step.verbiage}
+                formEntity={step}
                 locked={false}
-                openOverlayOrDrawer={() => openEntityStepOverlay(entity)}
+                openOverlayOrDrawer={() => openEntityStepOverlay(step)}
                 openAddEditEntityModal={() => {
                   return;
                 }}
@@ -142,12 +142,8 @@ export const EntityDetailsDashboardOverlay = ({
 
 interface Props {
   closeEntityDetailsOverlay?: Function;
-  entityType?: EntityType;
   dashboard?: FormJson;
   selectedEntity?: EntityShape;
-  onSubmit?: Function;
-  submitting?: boolean;
-  validateOnRender?: boolean;
   route: EntityDetailsDashboardOverlayShape;
 }
 

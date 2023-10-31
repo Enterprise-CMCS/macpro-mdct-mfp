@@ -158,7 +158,7 @@
       "path": "/sar/recruitment-enrollment-transitions",
       "children": [
         {
-          "name": "Number of people who signed an MFP informed consent form in the reporting period",
+          "name": "Number of people who signed an MFP informed consent form in the ",
           "path": "/sar/recruitment-enrollment-transitions/number-of-people-signed-informed-consent-form",
           "pageType": "standard",
           "verbiage": {
@@ -169,7 +169,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of people who signed an MFP informed consent form in the {January 1 to June 30, 2023} reporting period"
+                  "content": "Number of people who signed an MFP informed consent form in the reporting period"
                 },
                 {
                   "type": "span",
@@ -229,7 +229,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of MFP transitions in the {January 1 to June 30, 2023} reporting period"
+                  "content": "Number of MFP transitions in the reporting period"
                 },
                 {
                   "type": "span",
@@ -323,7 +323,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of MFP transitions from qualified institutions in the {January 1 to June 30, 2023} reporting period"
+                  "content": "Number of MFP transitions from qualified institutions in the reporting period"
                 },
                 {
                   "type": "span",
@@ -516,7 +516,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of MFP transitions to qualified residences in the {January 1 to June 30, 2023} reporting period"
+                  "content": "Number of MFP transitions to qualified residences in the reporting period"
                 },
                 {
                   "type": "span",
@@ -676,7 +676,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Total number of active MFP participants in the {January 1 to June 30, 2023} reporting period"
+                  "content": "Total number of active MFP participants in the reporting period"
                 },
                 {
                   "type": "span",
@@ -737,7 +737,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of MFP participants completing the program in the {January 1 to June 30, 2023} reporting period"
+                  "content": "Number of MFP participants completing the program in the reporting period"
                 },
                 {
                   "type": "span",
@@ -798,7 +798,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of people re-enrolled in MFP during the {January 1 to June 30, 2023} reporting period"
+                  "content": "Number of people re-enrolled in MFP during the reporting period"
                 },
                 {
                   "type": "span",
@@ -859,7 +859,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of MFP participants disenrolled from the program during the {January 1 to June 30, 2023} reporting period"
+                  "content": "Number of MFP participants disenrolled from the program during the reporting period"
                 },
                 {
                   "type": "span",
@@ -1297,7 +1297,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group {July 1 to December 31} reporting period"
+                  "content": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group reporting period"
                 },
                 {
                   "type": "span",
