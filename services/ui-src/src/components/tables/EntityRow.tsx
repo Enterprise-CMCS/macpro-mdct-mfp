@@ -168,6 +168,7 @@ const sx = {
   actionContainer: {
     alignItems: "center",
     display: "flex",
+    justifyContent: "end",
   },
   editNameButton: {
     paddingRight: "2.5rem",
@@ -179,7 +180,7 @@ const sx = {
     padding: 0,
     fontWeight: "bold",
     width: "5rem",
-    marginLeft: "7.5rem",
+    marginRight: "2.875rem",
   },
   editOtherEntityButton: {
     padding: 0,
