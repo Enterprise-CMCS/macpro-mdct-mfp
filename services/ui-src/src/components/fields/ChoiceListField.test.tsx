@@ -2,9 +2,9 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 //components
 import { useFormContext } from "react-hook-form";
-import { ChoiceListField } from "components";
+import { ChoiceListField, ReportContext } from "components";
+import { mockWpReportContext } from "../../utils/testing/mockReport";
 
-//
 const mockTrigger = jest.fn().mockReturnValue(true);
 const mockSetValue = jest.fn();
 const mockRhfMethods = {
@@ -229,6 +229,140 @@ describe.skip("Test ChoiceListField component rendering", () => {
     fireEvent.click(thirdCheckbox);
     expect(screen.getByText("Choice 4")).toBeVisible();
     expect(screen.getByText("Choice 5")).toBeVisible();
+  });
+});
+
+describe("Test Choicelist Hydration", () => {
+  const CheckboxHydrationComponent = (
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ChoiceListField
+        choices={mockChoices}
+        label="Checkbox Hydration Example"
+        name="checkboxHydrationField"
+        type="checkbox"
+        hydrate={[{ key: "Choice 1", value: "Choice 1" }]}
+        autosave
+      />
+    </ReportContext.Provider>
+  );
+
+  const CheckboxHydrationClearComponent = (
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ChoiceListField
+        choices={mockChoices}
+        label="Checkbox Hydration Example"
+        name=""
+        type="checkbox"
+        hydrate={[{ key: "Choice 1", value: "Choice 1" }]}
+        autosave
+        clear={true}
+      />
+    </ReportContext.Provider>
+  );
+
+  const RadioHydrationComponent = (
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ChoiceListField
+        choices={mockChoices}
+        label="Radio Hydration Example"
+        name="radioHydrationField"
+        type="radio"
+        hydrate={[{ key: "Choice 1", value: "Choice 1" }]}
+        autosave
+      />
+    </ReportContext.Provider>
+  );
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Checkbox Choicelist correctly setting passed hydration value", () => {
+    /*
+     * Set the mock of form.GetValues to return nothing to represent that a user hasn't made any updates
+     * and the form should be updated based purely on the hydration values
+     */
+    mockGetValues(undefined);
+
+    // Create the Checkbox Component
+    const wrapper = render(CheckboxHydrationComponent);
+
+    const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice 1" });
+    const secondCheckbox = wrapper.getByRole("checkbox", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstCheckbox).toBeChecked();
+    expect(secondCheckbox).not.toBeChecked();
+  });
+
+  test("Checkbox Choicelist correctly setting passed field value even when given a different hydration value", () => {
+    /*
+     * Set the mock of form.GetValues to return a users choice of the first checkbox being checked
+     * so that even though hydration is passed as having Choice 1 as checked, the users input is respected instead
+     */
+    mockGetValues([{ key: "Choice 2", value: "Choice 2" }]);
+
+    // Create the Checkbox Component
+    const wrapper = render(CheckboxHydrationComponent);
+    const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice 1" });
+    const secondCheckbox = wrapper.getByRole("checkbox", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstCheckbox).not.toBeChecked();
+    expect(secondCheckbox).toBeChecked();
+  });
+
+  test("Checkbox Choicelist correctly clearing nested checkbox values if clear prop is set to true", () => {
+    /*
+     * Set the mock of form.GetValues to return nothing to represent that a user hasn't made any updates
+     * and the form should be updated based purely on the hydration values
+     */
+    mockGetValues(undefined);
+
+    // Create the Checkbox Component
+    const wrapper = render(CheckboxHydrationClearComponent);
+    const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice 1" });
+    const secondCheckbox = wrapper.getByRole("checkbox", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstCheckbox).not.toBeChecked();
+    expect(secondCheckbox).not.toBeChecked();
+  });
+
+  // Repeat above tests for RadioField to ensure nothing changes
+  test("Radio Choicelist correctly setting passed hydration value", () => {
+    /*
+     * Set the mock of form.GetValues to return nothing to represent that a user hasn't made any updates
+     * and the form should be updated based purely on the hydration values
+     */
+    mockGetValues(undefined);
+
+    // Create the Radio Component
+    const wrapper = render(RadioHydrationComponent);
+
+    const firstRadioOption = wrapper.getByRole("radio", { name: "Choice 1" });
+    const secondRadioOption = wrapper.getByRole("radio", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstRadioOption).toBeChecked();
+    expect(secondRadioOption).not.toBeChecked();
+  });
+
+  test("Radio Choicelist correctly setting passed field value even when given a different hydration value", () => {
+    /*
+     * Set the mock of form.GetValues to return a users choice of the first radio being checked
+     * so that even though hydration is passed is Choice 1 as checked, the users input is respected instead
+     */
+    mockGetValues([{ key: "Choice 2", value: "Choice 2" }]);
+
+    // Create the Radio Component
+    const wrapper = render(RadioHydrationComponent);
+    const firstRadioOption = wrapper.getByRole("radio", { name: "Choice 1" });
+    const secondRadioOption = wrapper.getByRole("radio", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstRadioOption).not.toBeChecked();
+    expect(secondRadioOption).toBeChecked();
   });
 });
 
