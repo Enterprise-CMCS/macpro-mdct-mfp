@@ -138,6 +138,7 @@ export const mockReportsByState = [
 export const mockReportMethods = {
   archiveReport: jest.fn(),
   releaseReport: jest.fn(),
+  approveReport: jest.fn(),
   fetchReport: jest.fn(),
   fetchReportsByState: jest.fn(),
   fetchReportForSarCreation: jest.fn(),

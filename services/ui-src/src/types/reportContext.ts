@@ -55,6 +55,7 @@ export interface ReportContextMethods {
   releaseReport: Function;
   updateReport: Function;
   submitReport: Function;
+  approveReport: Function;
   setReportSelection: Function;
   clearReportSelection: Function;
   clearReportsByState: Function;
@@ -63,6 +64,7 @@ export interface ReportContextMethods {
 export interface ReportContextShape extends ReportContextMethods {
   contextIsLoaded: boolean;
   releaseReport: Function;
+  approveReport: Function;
   errorMessage?: string | undefined;
   lastSavedTime?: string | undefined;
   isReportPage: boolean;

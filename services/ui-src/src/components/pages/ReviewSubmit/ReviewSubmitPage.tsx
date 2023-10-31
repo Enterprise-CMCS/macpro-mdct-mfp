@@ -91,7 +91,7 @@ export const ReviewSubmitPage = () => {
         </Box>
       )}
       <Flex sx={sx.pageContainer} data-testid="review-submit-page">
-        {report?.status == ReportStatus.SUBMITTED ? (
+        {report?.status == ReportStatus.SUBMITTED && userIsEndUser ? (
           <SuccessMessage
             reportType={report.reportType}
             name={report.submissionName}
