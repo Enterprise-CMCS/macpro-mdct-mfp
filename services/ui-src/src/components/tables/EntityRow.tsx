@@ -150,7 +150,7 @@ const sx = {
   entityName: {
     maxWidth: "18.75rem",
     ul: {
-      margin: ".5rem auto",
+      margin: "0.5rem auto",
       listStyleType: "none",
       li: {
         wordWrap: "break-word",
