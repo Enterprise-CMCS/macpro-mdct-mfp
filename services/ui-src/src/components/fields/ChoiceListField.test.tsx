@@ -838,7 +838,7 @@ describe.skip("Test Choicelist onChangeHandler", () => {
   });
 });
 
-describe("Test getNestedChildFieldsOfUncheckedParent function", () => {
+describe("Test getNestedChildFields function", () => {
   const checkboxChoiceWithNoChildren = {
     id: "checkboxWithNoChild",
     label: "State Medicaid agency staff",
