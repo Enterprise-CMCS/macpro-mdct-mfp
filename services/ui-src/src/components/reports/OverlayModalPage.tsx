@@ -106,12 +106,15 @@ export const OverlayModalPage = ({
       </Button>
       {verbiage.intro && (
         <ReportPageIntro
-          sx={sx.intro}
           text={verbiage.intro}
           accordion={verbiage.accordion}
+          initiativeName={selectedEntity!.initiative_name}
         />
       )}
       <Box>
+        <Heading as="h3" sx={sx.dashboardTitle}>
+          {dashTitle}
+        </Heading>
         <Button
           sx={sx.addEntityButton}
           onClick={addEditEntityModalOnOpenHandler}
@@ -119,9 +122,6 @@ export const OverlayModalPage = ({
         >
           {verbiage.addEntityButtonText}
         </Button>
-        <Heading as="h3" sx={sx.dashboardTitle}>
-          {dashTitle}
-        </Heading>
         <Box>
           {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (
@@ -208,9 +208,6 @@ const sx = {
     color: "palette.primary",
     height: "1rem",
     marginRight: "0.5rem",
-  },
-  intro: {
-    color: "palette.gray_medium",
   },
   buttonIcons: {
     height: "1rem",
