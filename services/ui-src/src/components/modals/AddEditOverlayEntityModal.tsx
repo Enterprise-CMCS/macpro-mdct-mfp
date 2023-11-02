@@ -77,9 +77,7 @@ export const AddEditOverlayEntityModal = ({
 
   const writeEntity = async (enteredData: any) => {
     setSubmitting(true);
-    const submitButton = document.querySelector("[form=" + form.id + "]");
-    submitButton?.setAttribute("disabled", "true");
-
+    
     const reportKeys = {
       reportType: report?.reportType,
       state: report?.state,
