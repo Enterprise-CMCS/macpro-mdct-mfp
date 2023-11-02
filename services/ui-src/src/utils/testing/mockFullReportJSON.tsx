@@ -826,7 +826,7 @@ export const mockFullReportJSON: ReportJson = {
                 type: "textarea",
                 validation: "text",
                 props: {
-                  label: "Describe the initiative, including key activties:",
+                  label: "Describe the initiative, including key activities:",
                 },
               },
               {
@@ -835,7 +835,7 @@ export const mockFullReportJSON: ReportJson = {
                 validation: "checkbox",
                 props: {
                   label: "Target Population(s):",
-                  hint: "Select all that apply. Population you've added as 'Other' in the Transition Benchmarks section will appear here.",
+                  hint: "Select all that apply. Population you've added as &quot;Other&quot; in the Transition Benchmarks section will appear here.",
                   choices: [
                     {
                       id: "2iuXO7C6nk6cuP9JXbdd2w",
