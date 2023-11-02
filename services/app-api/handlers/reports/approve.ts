@@ -42,6 +42,8 @@ export const approveReport = handler(async (event, context) => {
     Item: {
       ...currentReport,
       status: "Approved",
+      locked: true,
+      isComplete: true,
     },
   };
 
