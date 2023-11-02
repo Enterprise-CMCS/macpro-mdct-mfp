@@ -651,6 +651,7 @@
               "exportSectionHeader": "exportSectionHeader"
             },
             "addEntityButtonText": "Add Initiative",
+            "editEntityHint": "Select \"Edit\" to complete the details.",
             "editEntityButtonText": "Edit name/topic",
             "addEditModalAddTitle": "Add initiative",
             "addEditModalEditTitle": "Edit initiative",
@@ -796,7 +797,8 @@
                   ],
                   "exportSectionHeader": "exportSectionHeader"
                 },
-                "enterEntityDetailsButtonText": "Edit"
+                "enterEntityDetailsButtonText": "Edit",
+                "editEntityHint": "Select \"Edit\" to complete initiative definition."
               },
               "form": {
                 "id": "stsidi",
@@ -893,6 +895,7 @@
                 },
                 "text": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
                 "addEntityButtonText": "Add objective",
+                "editEntityHint": "Select \"Edit\" to complete initiative evaluation plan.",
                 "editEntityButtonText": "Edit objective",
                 "addEditModalAddTitle": "Add objective for ",
                 "addEditModalHint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones.",
@@ -1007,6 +1010,7 @@
                   "exportSectionHeader": "exportSectionHeader"
                 },
                 "addEntityButtonText": "Add funding source",
+                "editEntityHint": "Select \"Edit\" to complete initiative funding information.",
                 "editEntityButtonText": "Edit funding source",
                 "addEditModalAddTitle": "Add funding source and projected expenditures for ",
                 "addEditModalEditTitle": "Edit funding source and projected expenditures for ",

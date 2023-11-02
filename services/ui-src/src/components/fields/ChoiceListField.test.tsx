@@ -1,10 +1,12 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { axe } from "jest-axe";
 //components
 import { useFormContext } from "react-hook-form";
-import { ChoiceListField } from "components";
+import { ChoiceListField, ReportContext } from "components";
+import { mockWpReportContext } from "../../utils/testing/mockReport";
+import { ReportStatus } from "../../types";
+import { getNestedChildFields } from "./ChoiceListField";
 
-//
 const mockTrigger = jest.fn().mockReturnValue(true);
 const mockSetValue = jest.fn();
 const mockRhfMethods = {
@@ -229,6 +231,216 @@ describe.skip("Test ChoiceListField component rendering", () => {
     fireEvent.click(thirdCheckbox);
     expect(screen.getByText("Choice 4")).toBeVisible();
     expect(screen.getByText("Choice 5")).toBeVisible();
+  });
+});
+
+describe("Test Choicelist Hydration", () => {
+  const CheckboxHydrationComponent = (
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ChoiceListField
+        choices={mockChoices}
+        label="Checkbox Hydration Example"
+        name="checkboxHydrationField"
+        type="checkbox"
+        hydrate={[{ key: "Choice 1", value: "Choice 1" }]}
+        autosave
+      />
+    </ReportContext.Provider>
+  );
+
+  const CheckboxHydrationClearComponent = (
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ChoiceListField
+        choices={mockChoices}
+        label="Checkbox Hydration Example"
+        name=""
+        type="checkbox"
+        hydrate={[{ key: "Choice 1", value: "Choice 1" }]}
+        autosave
+        clear={true}
+      />
+    </ReportContext.Provider>
+  );
+
+  const RadioHydrationComponent = (
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ChoiceListField
+        choices={mockChoices}
+        label="Radio Hydration Example"
+        name="radioHydrationField"
+        type="radio"
+        hydrate={[{ key: "Choice 1", value: "Choice 1" }]}
+        autosave
+      />
+    </ReportContext.Provider>
+  );
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Checkbox Choicelist correctly setting passed hydration value", () => {
+    /*
+     * Set the mock of form.GetValues to return nothing to represent that a user hasn't made any updates
+     * and the form should be updated based purely on the hydration values
+     */
+    mockGetValues(undefined);
+
+    // Create the Checkbox Component
+    const wrapper = render(CheckboxHydrationComponent);
+
+    const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice 1" });
+    const secondCheckbox = wrapper.getByRole("checkbox", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstCheckbox).toBeChecked();
+    expect(secondCheckbox).not.toBeChecked();
+  });
+
+  test("Checkbox Choicelist correctly setting passed field value even when given a different hydration value", () => {
+    /*
+     * Set the mock of form.GetValues to return a users choice of the first checkbox being checked
+     * so that even though hydration is passed as having Choice 1 as checked, the users input is respected instead
+     */
+    mockGetValues([{ key: "Choice 2", value: "Choice 2" }]);
+
+    // Create the Checkbox Component
+    const wrapper = render(CheckboxHydrationComponent);
+    const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice 1" });
+    const secondCheckbox = wrapper.getByRole("checkbox", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstCheckbox).not.toBeChecked();
+    expect(secondCheckbox).toBeChecked();
+  });
+
+  test("Checkbox Choicelist correctly clearing nested checkbox values if clear prop is set to true", () => {
+    /*
+     * Set the mock of form.GetValues to return nothing to represent that a user hasn't made any updates
+     * and the form should be updated based purely on the hydration values
+     */
+    mockGetValues(undefined);
+
+    // Create the Checkbox Component
+    const wrapper = render(CheckboxHydrationClearComponent);
+    const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice 1" });
+    const secondCheckbox = wrapper.getByRole("checkbox", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstCheckbox).not.toBeChecked();
+    expect(secondCheckbox).not.toBeChecked();
+  });
+
+  // Repeat above tests for RadioField to ensure nothing changes
+  test("Radio Choicelist correctly setting passed hydration value", () => {
+    /*
+     * Set the mock of form.GetValues to return nothing to represent that a user hasn't made any updates
+     * and the form should be updated based purely on the hydration values
+     */
+    mockGetValues(undefined);
+
+    // Create the Radio Component
+    const wrapper = render(RadioHydrationComponent);
+
+    const firstRadioOption = wrapper.getByRole("radio", { name: "Choice 1" });
+    const secondRadioOption = wrapper.getByRole("radio", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstRadioOption).toBeChecked();
+    expect(secondRadioOption).not.toBeChecked();
+  });
+
+  test("Radio Choicelist correctly setting passed field value even when given a different hydration value", () => {
+    /*
+     * Set the mock of form.GetValues to return a users choice of the first radio being checked
+     * so that even though hydration is passed is Choice 1 as checked, the users input is respected instead
+     */
+    mockGetValues([{ key: "Choice 2", value: "Choice 2" }]);
+
+    // Create the Radio Component
+    const wrapper = render(RadioHydrationComponent);
+    const firstRadioOption = wrapper.getByRole("radio", { name: "Choice 1" });
+    const secondRadioOption = wrapper.getByRole("radio", { name: "Choice 2" });
+
+    // Confirm hydration successfully made the first value checked
+    expect(firstRadioOption).not.toBeChecked();
+    expect(secondRadioOption).toBeChecked();
+  });
+});
+
+describe("Test Choicelist Autosaving Methods", () => {
+  const CheckboxWithAutosaveEnabledComponent = (
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ChoiceListField
+        choices={mockChoices}
+        label="Autosave Enabled Checkbox Field"
+        name="autosaveCheckboxField"
+        type="checkbox"
+        autosave
+      />
+    </ReportContext.Provider>
+  );
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Choicelist Checkbox autosaves with checked value when autosave true, and form is valid", async () => {
+    mockGetValues(undefined);
+
+    // Create the Checkbox Component
+    const wrapper = render(CheckboxWithAutosaveEnabledComponent);
+
+    const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice 1" });
+    const secondCheckbox = wrapper.getByRole("checkbox", { name: "Choice 2" });
+
+    // Select the first Checkbox and check it
+    expect(firstCheckbox).not.toBeChecked();
+    expect(secondCheckbox).not.toBeChecked();
+    fireEvent.click(firstCheckbox);
+
+    // Confirm the checkboxes are checked correctly
+    const checkedCheckboxes = wrapper.getAllByRole("checkbox", {
+      checked: true,
+    });
+    expect(checkedCheckboxes).toHaveLength(1);
+    expect(firstCheckbox).toBeChecked();
+    expect(secondCheckbox).not.toBeChecked();
+
+    // Tab away to trigger onComponentBlur()
+    fireEvent.blur(firstCheckbox);
+
+    // Make sure the form value is set to what we've clicked (Which is only Choice 1)
+    const firstCheckboxData = [{ key: "Choice 1", value: "Choice 1" }];
+    expect(mockSetValue).toHaveBeenCalledWith(
+      "autosaveCheckboxField",
+      firstCheckboxData,
+      {
+        shouldValidate: true,
+      }
+    );
+
+    // Ensure we call autosave with the correct data
+    await waitFor(() => {
+      expect(mockWpReportContext.updateReport).toHaveBeenCalledTimes(1);
+    });
+    await waitFor(() =>
+      expect(mockWpReportContext.updateReport).toHaveBeenCalledWith(
+        {
+          reportType: undefined,
+          id: undefined,
+          state: undefined,
+        },
+        {
+          metadata: {
+            status: ReportStatus.IN_PROGRESS,
+          },
+          fieldData: {
+            autosaveCheckboxField: firstCheckboxData,
+          },
+        }
+      )
+    );
   });
 });
 
@@ -623,6 +835,158 @@ describe.skip("Test Choicelist onChangeHandler", () => {
       wrapper.container.querySelector("[name='Choice 6']")!;
 
     expect(childCheckboxCleared).not.toBeChecked;
+  });
+});
+
+describe("Test getNestedChildFields function", () => {
+  const checkboxChoiceWithNoChildren = {
+    id: "checkboxWithNoChild",
+    label: "State Medicaid agency staff",
+    value: "State Medicaid agency staff",
+    name: "checkboxWithNoChild",
+    checked: false,
+  };
+
+  const checkboxChoiceWithRadioChild = {
+    id: "checkboxWithRadioChild",
+    label: "Proprietary system(s)",
+    children: [
+      {
+        id: "radioChild",
+        type: "radio",
+        validation: "radio",
+        props: {
+          label: "Radio Child Label",
+          hint: "Radio Child Hint",
+          choices: [
+            {
+              id: "radioChild-1",
+              label: "Yes",
+              value: "Yes",
+              name: "radioChild-1",
+              checked: false,
+            },
+            {
+              id: "radioChild-2",
+              label: "No",
+              value: "No",
+              name: "radioChild-2",
+              checked: false,
+            },
+          ],
+        },
+      },
+    ],
+    value: "Proprietary system(s)",
+    name: "checkboxWithRadioChild",
+    checked: false,
+  };
+
+  const checkboxChoiceWithTextFieldChild = {
+    id: "checkboxWithTextChild",
+    label: "Other, specify",
+    children: [
+      {
+        id: "checkboxWithTextChild-otherText",
+        type: "textarea",
+        validation: "",
+        props: {},
+      },
+    ],
+    value: "Other, specify",
+    name: "checkboxWithTextChild",
+    checked: false,
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Checking the checkbox choice, it returns empty", async () => {
+    const choices = [{ ...checkboxChoiceWithNoChildren, checked: true }];
+    const returnedValue = getNestedChildFields(choices);
+
+    expect(returnedValue).toStrictEqual([]);
+  });
+
+  test("Unchecking the checkbox choice, it returns empty", async () => {
+    const choices = [checkboxChoiceWithNoChildren];
+    const returnedValue = getNestedChildFields(choices);
+
+    expect(returnedValue).toStrictEqual([]);
+  });
+
+  test("Checking the radio choice, it returns empty", async () => {
+    const choices = [{ ...checkboxChoiceWithRadioChild, checked: true }];
+    const returnedValue = getNestedChildFields(choices);
+
+    expect(returnedValue).toStrictEqual([]);
+  });
+
+  test("Unchecking the radio choice, it returns the child object", async () => {
+    const choices = [checkboxChoiceWithRadioChild];
+    const returnedValue = getNestedChildFields(choices);
+
+    const expectedReturn = [
+      {
+        name: "radioChild",
+        type: "radio",
+        value: [],
+        overrideCheck: true,
+        defaultValue: undefined,
+        hydrationValue: undefined,
+      },
+    ];
+
+    expect(returnedValue).toStrictEqual(expectedReturn);
+  });
+
+  test("Checking the choice with text field, it returns empty", async () => {
+    const choices = [{ ...checkboxChoiceWithTextFieldChild, checked: true }];
+    const returnedValue = getNestedChildFields(choices);
+
+    expect(returnedValue).toStrictEqual([]);
+  });
+
+  test("Unchecking the choice with text field, it returns the child object", async () => {
+    const choices = [checkboxChoiceWithTextFieldChild];
+    const returnedValue = getNestedChildFields(choices);
+
+    const expectedReturn = [
+      {
+        name: "checkboxWithTextChild-otherText",
+        type: "textarea",
+        value: "",
+        overrideCheck: true,
+        defaultValue: undefined,
+        hydrationValue: undefined,
+      },
+    ];
+    expect(returnedValue).toStrictEqual(expectedReturn);
+  });
+});
+
+describe("ChoiceListField handles triggering validation", () => {
+  const choiceListFieldValidateOnRenderComponent = (
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ChoiceListField
+        choices={mockChoices}
+        label="Checkbox example"
+        name="checkboxField"
+        type="checkbox"
+        validateOnRender
+      />
+    </ReportContext.Provider>
+  );
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Component with validateOnRender passed should validate on initial render", async () => {
+    mockGetValues(undefined);
+    render(choiceListFieldValidateOnRenderComponent);
+    expect(mockTrigger).toHaveBeenCalled();
   });
 });
 
