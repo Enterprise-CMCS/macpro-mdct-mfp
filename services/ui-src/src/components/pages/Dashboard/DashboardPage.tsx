@@ -26,7 +26,7 @@ import {
   ReportContext,
   Alert,
 } from "components";
-// utils
+// types
 import {
   AnyObject,
   ReportMetadataShape,
@@ -36,6 +36,7 @@ import {
   ReportStatus,
   AlertTypes,
 } from "types";
+// utils
 import { parseCustomHtml, useBreakpoint, useStore } from "utils";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
@@ -321,7 +322,9 @@ export const DashboardPage = ({ reportType }: Props) => {
               disabled={isAddSubmissionDisabled()}
               onClick={() => openAddEditReportModal()}
             >
-              {body.callToAction}
+              {!reportsToDisplay?.length || reportType === ReportType.SAR
+                ? body.callToAction
+                : body.callToActionAdditions}
             </Button>
           </Box>
         )}
