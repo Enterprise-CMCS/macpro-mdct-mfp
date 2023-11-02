@@ -313,7 +313,8 @@
                               "content": "",
                               "props": {
                                 "style": {
-                                  "verticalAlign": "top"
+                                  "verticalAlign": "top",
+                                  "borderBottom": "1px solid #D9D9D9"
                                 }
                               },
                               "children": [
@@ -373,6 +374,11 @@
                             {
                               "type": "td",
                               "content": "",
+                              "props": {
+                                "style": {
+                                  "borderBottom": "1px solid #D9D9D9"
+                                }
+                              },
                               "children": [
                                 {
                                   "type": "ul",
