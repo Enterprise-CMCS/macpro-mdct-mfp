@@ -54,7 +54,8 @@ export const Form = ({
   const fieldInputDisabled =
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
     (report?.status === ReportStatus.SUBMITTED &&
-      report?.reportType === ReportType.WP);
+      report?.reportType === ReportType.WP) ||
+    report?.status === ReportStatus.APPROVED;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
