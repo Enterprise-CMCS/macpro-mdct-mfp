@@ -269,12 +269,13 @@
                               "props": {
                                 "style": {
                                   "textTransform": "capitalize",
-                                  "color": "#71767a",
                                   "fontFamily": "Open Sans",
+                                  "color": "#71767A",
                                   "fontSize": "14px",
                                   "lineHeight": "18px",
                                   "letterSpacing": "0px",
-                                  "textAlign": "left"
+                                  "textAlign": "left",
+                                  "borderBottom": "1px solid #D9D9D9"
                                 }
                               },
                               "content": "Required* Initiatives"
@@ -284,12 +285,13 @@
                               "props": {
                                 "style": {
                                   "textTransform": "capitalize",
-                                  "color": "#71767a",
                                   "fontFamily": "Open Sans",
+                                  "color": "#71767A",
                                   "fontSize": "14px",
                                   "lineHeight": "18px",
                                   "letterSpacing": "0px",
-                                  "textAlign": "left"
+                                  "textAlign": "left",
+                                  "borderBottom": "1px solid #D9D9D9"
                                 }
                               },
                               "content": "Optional Initiatives"
@@ -311,7 +313,8 @@
                               "content": "",
                               "props": {
                                 "style": {
-                                  "verticalAlign": "top"
+                                  "verticalAlign": "top",
+                                  "borderBottom": "1px solid #D9D9D9"
                                 }
                               },
                               "children": [
@@ -371,6 +374,11 @@
                             {
                               "type": "td",
                               "content": "",
+                              "props": {
+                                "style": {
+                                  "borderBottom": "1px solid #D9D9D9"
+                                }
+                              },
                               "children": [
                                 {
                                   "type": "ul",
@@ -498,7 +506,7 @@
                   "content": "<sup>*Required by Program Terms and Conditions</sup>",
                   "props": {
                     "style": {
-                      "paddingTop": ".25rem"
+                      "color": "#000000"
                     }
                   }
                 },
@@ -565,14 +573,21 @@
                 },
                 {
                   "type": "html",
-                  "content": "<br>If a recipient updates the WP to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br>"
+                  "content": "<br>If a recipient updates the WP to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>",
+                  "props": {
+                    "style": {
+                      "paddingBottom": "2rem"
+                    }
+                  }
                 },
                 {
                   "type": "text",
                   "content": "Answer the following questions regarding required initiative topics. This is necessary in order to track completion of required data.",
                   "props": {
                     "style": {
-                      "color": "#5B616B"
+                      "color": "#5B616B",
+                      "borderTop": "1px solid #D9D9D9",
+                      "paddingTop": "2rem"
                     }
                   }
                 }
@@ -650,8 +665,9 @@
               ],
               "exportSectionHeader": "exportSectionHeader"
             },
-            "addEntityButtonText": "Add Initiative",
+            "addEntityButtonText": "Add initiative",
             "editEntityHint": "Select \"Edit\" to complete the details.",
+
             "editEntityButtonText": "Edit name/topic",
             "addEditModalAddTitle": "Add initiative",
             "addEditModalEditTitle": "Edit initiative",
@@ -745,7 +761,7 @@
                       "children": [
                         {
                           "id": "initiative_wp_otherTopic",
-                          "type": "textarea",
+                          "type": "text",
                           "validation": {
                             "type": "text",
                             "nested": true,
@@ -764,7 +780,7 @@
             "pageType": "entityDetailsDashboardOverlay",
             "verbiage": {
               "intro": {
-                "section": "State and Territory-Specific Initiatives Dashboard",
+                "section": "State and Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "span",
@@ -808,7 +824,7 @@
                     "type": "textarea",
                     "validation": "text",
                     "props": {
-                      "label": "Describe the initiative, including key activties:"
+                      "label": "Describe the initiative, including key activities:"
                     }
                   },
                   {
@@ -817,7 +833,7 @@
                     "validation": "checkbox",
                     "props": {
                       "label": "Target Population(s):",
-                      "hint": "Select all that apply. Population you've added as 'Other' in the Transition Benchmarks section will appear here.",
+                      "hint": "Select all that apply. Population you've added as &quot;Other&quot; in the Transition Benchmarks section will appear here.",
                       "choices": []
                     }
                   },
@@ -843,7 +859,7 @@
               }
             },
             {
-              "name": "State and Territory Specific Initiatives: II. Evaluation Plan",
+              "name": "State- or Territory-Specific Initiatives: II. Evaluation Plan",
               "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
               "pageType": "overlayModal",
               "entityType": "initiative",
@@ -854,7 +870,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State and Territory Specific Initiatives: II. Evaluation Plan",
+                  "section": "State- or Territory-Specific Initiatives: II. Evaluation Plan",
                   "info": [
                     {
                       "type": "html",
@@ -978,7 +994,8 @@
                     "type": "textarea",
                     "validation": "text",
                     "props": {
-                      "label": "Provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description)."
+                      "label": "Provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description).",
+                      "hint": "Please list the responsible state or territory agency parties and any key external partners for achieving this objective."
                     }
                   }
                 ]
