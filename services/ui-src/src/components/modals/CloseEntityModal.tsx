@@ -1,40 +1,92 @@
+import { useContext } from "react";
 // components
-import { Modal } from "components";
+import { Modal, ReportContext } from "components";
 // types
-import { AnyObject } from "types";
+import { ReportStatus, EntityShape, EntityDetailsOverlayShape } from "types";
 //utils
-import { renderHtml } from "utils";
+import {
+  entityWasUpdated,
+  renderHtml,
+  setClearedEntriesToDefaultValue,
+  useStore,
+} from "utils";
 
 export const CloseEntityModal = ({
   entityName,
-  verbiage,
+  route,
+  selectedEntity,
   modalDisclosure,
 }: Props) => {
-  const closing = false;
-  const closeProgramHandler = async () => {
-    modalDisclosure.onClose();
-  };
+  const { report } = useStore();
+  const { full_name, state } = useStore().user ?? {};
+  const { updateReport } = useContext(ReportContext);
+  const { entityType, verbiage } = route;
   const modalInfo = verbiage.closeOutModal;
+
+  const onConfirmHandler = async () => {
+    const reportKeys = {
+      reportType: report?.reportType,
+      state: state,
+      id: report?.id,
+    };
+
+    let dataToWrite = {
+      metadata: {
+        lastAlteredBy: full_name,
+        status: ReportStatus.IN_PROGRESS,
+      },
+      fieldData: {},
+    };
+
+    const currentEntities = [...(report?.fieldData?.[entityType] || [])];
+
+    if (selectedEntity?.id) {
+      const selectedEntityIndex = currentEntities.findIndex(
+        (entity: EntityShape) => entity.id === selectedEntity.id
+      );
+      const updatedEntities = currentEntities;
+
+      updatedEntities[selectedEntityIndex] = {
+        id: selectedEntity.id,
+        type: selectedEntity.type,
+        ...currentEntities[selectedEntityIndex],
+        isInitiativeClosed: true,
+      };
+
+      updatedEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
+        updatedEntities[selectedEntityIndex],
+        []
+      );
+
+      dataToWrite.fieldData = { [entityType]: updatedEntities };
+      const shouldSave = entityWasUpdated(
+        report?.fieldData?.[entityType][selectedEntityIndex],
+        updatedEntities[selectedEntityIndex]
+      );
+      if (shouldSave) await updateReport(reportKeys, dataToWrite);
+      modalDisclosure.onClose();
+    }
+  };
 
   return (
     <Modal
-      onConfirmHandler={closeProgramHandler}
       modalDisclosure={modalDisclosure}
-      submitting={closing}
       content={{
-        heading: modalInfo.closeOutModalTitle + entityName,
-        actionButtonText: modalInfo.closeOutModalConfirmButtonText,
+        heading: modalInfo?.closeOutModalTitle + entityName,
+        actionButtonText: modalInfo?.closeOutModalConfirmButtonText,
         closeButtonText: "Cancel",
       }}
+      onConfirmHandler={onConfirmHandler}
     >
-      {renderHtml(modalInfo.closeOutModalBodyText)}
+      {renderHtml(modalInfo?.closeOutModalBodyText)}
     </Modal>
   );
 };
 
 interface Props {
   entityName: string;
-  verbiage: AnyObject;
+  route: EntityDetailsOverlayShape;
+  selectedEntity?: EntityShape;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;

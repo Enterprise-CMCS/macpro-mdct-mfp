@@ -1,4 +1,4 @@
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useContext, useEffect } from "react";
 // components
 import {
   Box,
@@ -8,25 +8,60 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Alert, Form, ReportPageIntro, CloseEntityModal } from "components";
+import {
+  Alert,
+  Form,
+  ReportPageIntro,
+  CloseEntityModal,
+  ReportContext,
+} from "components";
 // types
-import { AlertTypes, EntityDetailsOverlayShape, EntityShape } from "types";
+import {
+  AlertTypes,
+  EntityDetailsOverlayShape,
+  AnyObject,
+  isFieldElement,
+  EntityShape,
+  ReportStatus,
+} from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
-// verbiage
-import { useStore } from "utils";
+// utils
+import {
+  entityWasUpdated,
+  getEntriesToClear,
+  filterFormData,
+  setClearedEntriesToDefaultValue,
+  useStore,
+} from "utils";
 
 export const EntityDetailsOverlay = ({
   route,
   closeEntityDetailsOverlay,
-  validateOnRender,
-  entity,
 }: Props) => {
   const submitting = false;
-  const { form, verbiage } = route;
-  const { report } = useStore();
+  const { entityType, form, verbiage } = route;
+  const { report, selectedEntity, setSelectedEntity } = useStore();
+
+  const { full_name, state } = useStore().user ?? {};
+  const { updateReport } = useContext(ReportContext);
+
+  /**
+   * Any time the report is updated on this page,
+   * we also want to update the selectedEntity in the store
+   * with new data that the report was given.
+   */
+  useEffect(() => {
+    if (selectedEntity) {
+      setSelectedEntity(
+        report?.fieldData?.[selectedEntity.type].find(
+          (entity: EntityShape) => entity.id == selectedEntity.id
+        )
+      );
+    }
+  }, [report]);
 
   // add/edit entity modal disclosure and methods
   const {
@@ -41,6 +76,60 @@ export const EntityDetailsOverlay = ({
 
   const closeCloseEntityModal = () => {
     closeEntityModalOnCloseHandler();
+  };
+
+  const onSubmit = async (enteredData: AnyObject) => {
+    const reportKeys = {
+      reportType: report?.reportType,
+      state: state,
+      id: report?.id,
+    };
+
+    let dataToWrite = {
+      metadata: {
+        lastAlteredBy: full_name,
+        status: ReportStatus.IN_PROGRESS,
+      },
+      fieldData: {},
+    };
+
+    const currentEntities = [...(report?.fieldData?.[entityType] || [])];
+    const filteredFormData = filterFormData(
+      enteredData,
+      form.fields.filter(isFieldElement)
+    );
+
+    if (selectedEntity?.id) {
+      // if existing entity selected, edit
+      const entriesToClear = getEntriesToClear(
+        enteredData,
+        form.fields.filter(isFieldElement)
+      );
+      const selectedEntityIndex = currentEntities.findIndex(
+        (entity: EntityShape) => entity.id === selectedEntity.id
+      );
+      const updatedEntities = currentEntities;
+
+      updatedEntities[selectedEntityIndex] = {
+        id: selectedEntity.id,
+        type: selectedEntity.type,
+        ...currentEntities[selectedEntityIndex],
+        ...filteredFormData,
+      };
+
+      updatedEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
+        updatedEntities[selectedEntityIndex],
+        entriesToClear
+      );
+
+      dataToWrite.fieldData = { [entityType]: updatedEntities };
+      const shouldSave = entityWasUpdated(
+        report?.fieldData?.[entityType][selectedEntityIndex],
+        updatedEntities[selectedEntityIndex]
+      );
+      if (shouldSave) await updateReport(reportKeys, dataToWrite);
+    }
+    closeEntityDetailsOverlay!();
   };
 
   return (
@@ -58,17 +147,17 @@ export const EntityDetailsOverlay = ({
       {verbiage.intro && (
         <ReportPageIntro
           text={verbiage.intro}
-          initiativeName={entity!.initiative_name}
+          initiativeName={selectedEntity!.initiative_name}
         />
       )}
       <Form
         id={form.id}
         formJson={form}
-        onSubmit={() => {}}
+        onSubmit={onSubmit}
         autosave={true}
-        formData={report?.fieldData}
-        validateOnRender={validateOnRender || false}
+        formData={selectedEntity}
         dontReset={true}
+        validateOnRender={false}
       />
       <Box>
         {verbiage.closeOutWarning && (
@@ -94,8 +183,9 @@ export const EntityDetailsOverlay = ({
               {verbiage.closeOutModal.closeOutModalButtonText}
             </Button>
             <CloseEntityModal
-              verbiage={verbiage}
-              entityName={entity!.initiative_name}
+              entityName={selectedEntity!.initiative_name}
+              selectedEntity={selectedEntity}
+              route={route}
               modalDisclosure={{
                 isOpen: closeEntityModalIsOpen,
                 onClose: closeCloseEntityModal,
@@ -116,10 +206,8 @@ export const EntityDetailsOverlay = ({
 };
 
 interface Props {
-  entity?: EntityShape;
   route: EntityDetailsOverlayShape;
   closeEntityDetailsOverlay?: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {

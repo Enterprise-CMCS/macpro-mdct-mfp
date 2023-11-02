@@ -122,6 +122,23 @@ async function submitReport(reportKeys: ReportKeys) {
   return response;
 }
 
+async function approveReport(reportKeys: ReportKeys, report: AnyObject) {
+  const requestHeaders = await getRequestHeaders();
+  const request = {
+    headers: { ...requestHeaders },
+    body: { ...report },
+  };
+  const { reportType, state, id } = reportKeys;
+
+  updateTimeout();
+  const response = await API.put(
+    "mfp",
+    `/reports/approve/${reportType}/${state}/${id}`,
+    request
+  );
+  return response;
+}
+
 export {
   archiveReport,
   getReportsByState,
@@ -130,4 +147,5 @@ export {
   putReport,
   releaseReport,
   submitReport,
+  approveReport,
 };
