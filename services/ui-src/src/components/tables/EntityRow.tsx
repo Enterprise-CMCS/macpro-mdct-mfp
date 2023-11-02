@@ -76,7 +76,10 @@ export const EntityRow = ({
       <Td sx={sx.entityName}>
         <ul>
           {programInfo.map((field, index) => (
-            <li key={index}>{renderHtml(field)}</li>
+            <li key={index}>
+              {!isRequired && `Other: `}
+              {renderHtml(field)}
+            </li>
           ))}
         </ul>
         {!entityStatus && (
