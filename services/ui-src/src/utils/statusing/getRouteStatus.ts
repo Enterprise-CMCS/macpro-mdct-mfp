@@ -38,14 +38,13 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
   };
 
   const checkForAlertStatus = (path: string, status: boolean) => {
-    let statusOverride: boolean = status;
     switch (path) {
       case "/wp/state-and-territory-specific-initiatives/initiatives":
-        statusOverride = !getWPAlertStatus(report, "initiative");
-        break;
+        //if the alert is false (meaning no alert), default to the validation status check, else the task is not completed
+        return !getWPAlertStatus(report, "initiative") ? status : false;
     }
 
-    return statusOverride;
+    return status;
   };
 
   // Flatten the completion status to get the pages under each section
