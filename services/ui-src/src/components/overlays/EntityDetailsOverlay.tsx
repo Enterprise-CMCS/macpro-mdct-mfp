@@ -132,6 +132,22 @@ export const EntityDetailsOverlay = ({
     closeEntityDetailsOverlay!();
   };
 
+  const isCloseOutButtonDisabled = () => {
+    if (selectedEntity) {
+      const fieldIds = form.fields.map((field) => {
+        return field.id;
+      });
+      const isFilled = fieldIds.map((id) => {
+        return selectedEntity[id];
+      });
+      return !isFilled.every((field: any) => {
+        return typeof field === "object" ? field.length > 0 : field;
+      });
+    }
+
+    return true;
+  };
+
   return (
     <Box>
       <Button
@@ -179,6 +195,7 @@ export const EntityDetailsOverlay = ({
                 <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
               }
               onClick={() => openCloseEntityModal()}
+              disabled={isCloseOutButtonDisabled()}
             >
               {verbiage.closeOutModal.closeOutModalButtonText}
             </Button>
