@@ -322,7 +322,9 @@ export const DashboardPage = ({ reportType }: Props) => {
               disabled={isAddSubmissionDisabled()}
               onClick={() => openAddEditReportModal()}
             >
-              {body.callToAction}
+              {!reportsToDisplay?.length || reportType === ReportType.SAR
+                ? body.callToAction
+                : body.callToActionAdditions}
             </Button>
           </Box>
         )}
