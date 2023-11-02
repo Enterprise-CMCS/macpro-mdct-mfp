@@ -497,7 +497,12 @@
                 },
                 {
                   "type": "text",
-                  "content": "<sup>*Required by Program Terms and Conditions</sup>"
+                  "content": "<sup>*Required by Program Terms and Conditions</sup>",
+                  "props": {
+                    "style": {
+                      "color": "#000000"
+                    }
+                  }
                 },
                 {
                   "type": "html",
