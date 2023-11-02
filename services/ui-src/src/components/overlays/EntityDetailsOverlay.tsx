@@ -130,7 +130,7 @@ export const EntityDetailsOverlay = ({
       );
       if (shouldSave) await updateReport(reportKeys, dataToWrite);
     }
-    
+
     setSubmitting(false);
     closeEntityDetailsOverlay!();
   };
