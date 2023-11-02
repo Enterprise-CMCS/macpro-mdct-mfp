@@ -13,7 +13,7 @@ export default {
     language: "English",
   },
   reportPage: {
-    heading: "Managed Care Program Annual Report (WP) for ",
+    heading: "MFP Program Work Plan for ",
     metadataTableHeaders: {
       dueDate: "Due date",
       lastEdited: "Last edited",

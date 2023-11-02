@@ -29,6 +29,11 @@ export { EntityStepCardBottomSection } from "./cards/EntityCardBottomSection";
 // drawers
 export { Drawer } from "./drawers/Drawer";
 export { ReportDrawer } from "./drawers/ReportDrawer";
+// export
+export { ExportedReportMetadataTable } from "./export/ExportedReportMetadataTable";
+export { ExportedSectionHeading } from "./export/ExportedSectionHeading";
+export { ExportedReportWrapper } from "./export/ExportedReportWrapper";
+
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";
