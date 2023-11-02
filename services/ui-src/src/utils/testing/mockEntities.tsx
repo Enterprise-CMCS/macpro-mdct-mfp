@@ -1,5 +1,8 @@
+import { entityTypes } from "types";
+
 export const mockGenericEntity = {
   id: "mock-generic-id",
+  type: entityTypes[0],
   generic_generalCategory: [{ value: "mock-category" }],
   generic_standardDescription: "mock-description",
   generic_standardType: [{ value: "mock-standard-type" }],
@@ -34,6 +37,7 @@ export const mockCompletedGenericFormattedEntityData = {
 
 export const mockTargetPopulationEntity = {
   id: "mock-id1",
+  type: entityTypes[0],
   isRequired: true,
   transitionBenchmarks_targetPopulationName: "Older Adults",
   transitionBenchmarks_applicableToMfpDemonstration: [{ value: "No" }],
@@ -41,6 +45,7 @@ export const mockTargetPopulationEntity = {
 
 export const mockOtherTargetPopulationEntity = {
   id: "mock-id5",
+  type: entityTypes[0],
   isRequired: false,
   transitionBenchmarks_targetPopulationName: "New target population",
 };

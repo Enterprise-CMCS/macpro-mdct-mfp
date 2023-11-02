@@ -11,6 +11,7 @@ import {
   ProfilePage,
   ReportPageWrapper,
   ReviewSubmitPage,
+  ExportedReportPage,
 } from "components";
 // utils
 import { ScrollToTopComponent, useStore } from "utils";
@@ -41,16 +42,22 @@ export const AppRoutes = () => {
           <Route path="*" element={<NotFoundPage />} />
           {/* MFP Report Routes */}
           {wpReport && (
-            <Route
-              path="/wp"
-              element={<DashboardPage reportType={ReportType.WP} />}
-            />
+            <>
+              <Route
+                path="/wp"
+                element={<DashboardPage reportType={ReportType.WP} />}
+              />
+              <Route path="/wp/export" element={<ExportedReportPage />} />
+            </>
           )}
           {sarReport && (
-            <Route
-              path="/sar"
-              element={<DashboardPage reportType={ReportType.SAR} />}
-            />
+            <>
+              <Route
+                path="/sar"
+                element={<DashboardPage reportType={ReportType.SAR} />}
+              />
+              <Route path="/sar/export" element={<ExportedReportPage />} />
+            </>
           )}
           {/* General Report Routes */}
           {report && (

@@ -7,6 +7,7 @@ import {
   RouterWrappedComponent,
   mockModalOverlayReportPageJson,
   mockReportStore,
+  mockUseEntityStore,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 
@@ -33,20 +34,19 @@ const modalOverlayReportPageComponent = (
 const verbiage = mockModalOverlayReportPageJson.verbiage;
 
 describe("Test ModalOverlayReportPage with entities", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockReportStore);
-    render(modalOverlayReportPageComponent);
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it("modaloverlaypage should render the view", () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+    render(modalOverlayReportPageComponent);
     expect(screen.getByText(addEntityButtonText)).toBeVisible();
   });
 
   it("should open the edit modal", async () => {
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
+    render(modalOverlayReportPageComponent);
     // Get the Edit button and click it
     const editEntityButton = screen.getByText(verbiage.editEntityButtonText);
     await userEvent.click(editEntityButton);
@@ -62,6 +62,8 @@ describe("Test ModalOverlayReportPage with entities", () => {
   });
 
   it("overlayModal Modal edits open correctly", async () => {
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
+    render(modalOverlayReportPageComponent);
     const editEntityButton = screen.getByText(editEntityButtonText);
     await userEvent.click(editEntityButton);
     expect(screen.getByRole("dialog")).toBeVisible();

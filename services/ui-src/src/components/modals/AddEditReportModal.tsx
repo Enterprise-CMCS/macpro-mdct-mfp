@@ -33,6 +33,7 @@ export const AddEditReportModal = ({
   // WP report payload
   const prepareWpPayload = () => {
     const submissionName = "Work Plan";
+
     // static entities
     const targetPopulations = [
       {
@@ -59,6 +60,7 @@ export const AddEditReportModal = ({
         isRequired: true,
       },
     ];
+
     return {
       metadata: {
         submissionName,
@@ -86,7 +88,7 @@ export const AddEditReportModal = ({
         lastAlteredBy: full_name,
         locked: false,
         previousRevisions: [],
-        finalSar: formData["finalSar"][0].value === "Yes" ? true : false,
+        finalSar: formData["finalSar"],
       },
       fieldData: {
         submissionName,

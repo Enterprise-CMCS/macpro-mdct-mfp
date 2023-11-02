@@ -276,7 +276,6 @@ describe("Test compileValidationJsonFromRoutes", () => {
       "mock-date-field": "date",
       "mock-drawer-text-field": "text",
       "mock-dropdown-field": "dropdown",
-      "mock-dynamic-form-id": "dynamic",
       "mock-modal-text-field": "text",
       "mock-number-field": "number",
       "mock-text-field": "text",

@@ -6,6 +6,7 @@ import { ReportContext, DashboardPage } from "components";
 import { mockStateUser } from "utils/testing/mockUsers";
 import {
   mockDashboardReportContext,
+  mockReportContextNoReports,
   mockEmptyDashboardReportContext,
   mockWpReportContext,
 } from "utils/testing/mockReport";
@@ -20,6 +21,7 @@ import { useUser } from "utils/auth/useUser";
 import { ReportType } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
+import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 
@@ -63,6 +65,30 @@ const dashboardViewWithReports = (
   </RouterWrappedComponent>
 );
 
+const wpDashboardWithNoReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockReportContextNoReports}>
+      <DashboardPage reportType={ReportType.WP} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const sarDashboardWithNoReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockReportContextNoReports}>
+      <DashboardPage reportType={ReportType.SAR} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const sarDashboardViewWithReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockDashboardReportContext}>
+      <DashboardPage reportType={ReportType.SAR} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
 describe("Test Report Dashboard view (Desktop)", () => {
   beforeEach(() => {
     mockedUseUser.mockReturnValue(mockStateUser);
@@ -96,6 +122,44 @@ describe("Test Report Dashboard view (Desktop)", () => {
     await userEvent.click(callToActionButton);
     expect(screen.queryByText("Start new")).toBeVisible();
   });
+
+  test("Check that the SAR Dashboard view renders", () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+    render(sarDashboardViewWithReports);
+    expect(screen.getByText(sarVerbiage.intro.header)).toBeVisible();
+    expect(
+      screen.queryByText(sarVerbiage.body.table.caption)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(sarVerbiage.body.empty)).not.toBeInTheDocument();
+    expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+  });
+});
+
+describe("Test Report Dashboard with no reports", () => {
+  beforeEach(() => {
+    mockedUseUser.mockReturnValue(mockStateUser);
+    mockedUseStore.mockReturnValue({
+      reportsByState: undefined,
+    });
+    mockUseBreakpoint.mockReturnValue({
+      isMobile: false,
+    });
+    mockMakeMediaQueryClasses.mockReturnValue("desktop");
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("WP Dashboard renders table with empty text", () => {
+    render(wpDashboardWithNoReports);
+    expect(screen.getByText(wpVerbiage.body.empty)).toBeVisible();
+  });
+
+  test("SAR Dashboard renders table with empty text", () => {
+    render(sarDashboardWithNoReports);
+    expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
+  });
 });
 
 describe("Test Report Dashboard (Mobile)", () => {
@@ -103,7 +167,6 @@ describe("Test Report Dashboard (Mobile)", () => {
     mockUseBreakpoint.mockReturnValue({
       isMobile: true,
     });
-
     mockedUseStore.mockReturnValue(mockUseEmptyReportStore);
     render(dashboardViewWithNoReports);
   });

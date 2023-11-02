@@ -5,6 +5,7 @@ import {
   archiveReport as archiveReportRequest,
   releaseReport as releaseReportRequest,
   submitReport as submitReportRequest,
+  approveReport as approveReportRequest,
   flattenReportRoutesArray,
   getLocalHourMinuteTime,
   getReport,
@@ -34,6 +35,7 @@ export const ReportContext = createContext<ReportContextShape>({
   fetchReport: Function,
   archiveReport: Function,
   updateReport: Function,
+  approveReport: Function,
   submitReport: Function,
   // reports by state
   fetchReportsByState: Function,
@@ -110,6 +112,7 @@ export const ReportProvider = ({ children }: Props) => {
     try {
       // clear stored reports by state prior to fetching from current state
       clearReportsByState();
+      setWorkPlanToCopyFrom(undefined);
 
       const workPlanSubmissions = await getReportsByState(
         ReportType.WP,
@@ -121,33 +124,32 @@ export const ReportProvider = ({ children }: Props) => {
         selectedState
       );
 
-      if (workPlanSubmissions?.length !== sarSubmissions?.length) {
-        let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
-        workPlanSubmissions.forEach((submission: ReportMetadataShape) => {
+      let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
+      workPlanSubmissions.forEach((submission: ReportMetadataShape) => {
+        if (
+          (submission.status === ReportStatus.NOT_STARTED ||
+            submission.status === ReportStatus.IN_PROGRESS) &&
+          !submission?.associatedSar
+        ) {
           if (
-            submission.status === ReportStatus.NOT_STARTED ||
-            submission.status === ReportStatus.IN_PROGRESS
-          ) {
-            if (
-              lastFoundSubmission &&
-              submission.createdAt > lastFoundSubmission?.createdAt
-            )
-              lastFoundSubmission = submission;
-            else if (!lastFoundSubmission) {
-              lastFoundSubmission = submission;
-            }
+            lastFoundSubmission &&
+            submission.createdAt > lastFoundSubmission?.createdAt
+          )
+            lastFoundSubmission = submission;
+          else if (!lastFoundSubmission) {
+            lastFoundSubmission = submission;
           }
-        });
-
-        if (lastFoundSubmission) {
-          const reportKeys = {
-            reportType: ReportType.WP,
-            state: selectedState,
-            id: lastFoundSubmission["id"],
-          };
-          const workPlan = await getReport(reportKeys);
-          setWorkPlanToCopyFrom(workPlan);
         }
+      });
+
+      if (lastFoundSubmission) {
+        const reportKeys = {
+          reportType: ReportType.WP,
+          state: selectedState,
+          id: lastFoundSubmission["id"],
+        };
+        const workPlan = await getReport(reportKeys);
+        setWorkPlanToCopyFrom(workPlan);
       }
 
       setReportsByState(sortReportsOldestToNewest(sarSubmissions));
@@ -175,6 +177,15 @@ export const ReportProvider = ({ children }: Props) => {
     try {
       const result = await putReport(reportKeys, report);
       hydrateAndSetReport(result);
+      setLastSavedTime(getLocalHourMinuteTime());
+    } catch (e: any) {
+      setError(reportErrors.SET_REPORT_FAILED);
+    }
+  };
+
+  const approveReport = async (reportKeys: ReportKeys, report: ReportShape) => {
+    try {
+      await approveReportRequest(reportKeys, report);
       setLastSavedTime(getLocalHourMinuteTime());
     } catch (e: any) {
       setError(reportErrors.SET_REPORT_FAILED);
@@ -268,6 +279,7 @@ export const ReportProvider = ({ children }: Props) => {
       archiveReport,
       releaseReport,
       updateReport,
+      approveReport,
       submitReport,
       // reports by state
       reportsByState,

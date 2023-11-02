@@ -1,5 +1,5 @@
 import { FieldValues, UseFormReturn } from "react-hook-form";
-import { AutosaveField, EntityShape, EntityType, ReportStatus } from "types";
+import { AutosaveField, EntityShape, ReportStatus } from "types";
 
 type FieldValue = any;
 
@@ -41,9 +41,7 @@ export interface GetAutosaveFieldsProps extends AutosaveField {
  */
 export interface EntityContextShape {
   selectedEntity?: EntityShape;
-  entities: EntityShape[];
-  entityType?: EntityType;
-  updateEntities: Function;
+  prepareEntityPayload: Function;
 }
 
 /**
@@ -114,17 +112,14 @@ export const autosaveFieldData = async ({
   if (fieldsToSave.length) {
     const reportKeys = { reportType, id, state };
     let dataToWrite = {};
-    if (
-      entityContext &&
-      entityContext.selectedEntity &&
-      entityContext.entityType
-    ) {
+    if (entityContext && entityContext.selectedEntity) {
       dataToWrite = {
         metadata: { status: ReportStatus.IN_PROGRESS, lastAlteredBy: userName },
         fieldData: {
-          [entityContext.entityType]: entityContext.updateEntities(
-            Object.fromEntries(fieldsToSave)
-          ),
+          [entityContext.selectedEntity.type]:
+            entityContext.prepareEntityPayload(
+              Object.fromEntries(fieldsToSave)
+            ),
         }, // create field data object
       };
     } else {
@@ -139,38 +134,6 @@ export const autosaveFieldData = async ({
 };
 
 export const isFieldChanged = (field: FieldInfo) => {
-  const { type, value, hydrationValue } = field;
-  if (type === "dynamic") {
-    const changedEntities = value?.filter(
-      (entity: EntityShape, index: number) => {
-        // if value is solely whitespace (e.g. "   "), coerce to empty string
-        if (!entity.name.trim()) entity.name = "";
-
-        const entityValue = entity.name;
-        const entityHydrationValue = hydrationValue?.[index]?.name;
-
-        // handle uninitiated field with blank input
-        const isUninitiated = !entityHydrationValue;
-        const isBlank = !entityValue;
-
-        if (isUninitiated && isBlank) return false;
-        /*
-         * note: we should be able to simply check entityValue !== entityHydrationValue here,
-         * but DynamicField's hydrationValue is being partially controlled by react-hook-form
-         * via useFieldArray, which keeps it always in sync with displayValues and form state,
-         * making the check always evaluate to false because they are always equal.
-         *
-         * currently if the field has ever been initiated (saved before), we are triggering an
-         * autosave on blur, regardless of if the field has changed, because we have no easy way
-         * of determining if the field has changed.
-         *
-         * TODO: modify DynamicField hydrationValue lifecycle so we can implement a stricter check,
-         * like entityValue !== entityHydrationValue or equivalent.
-         */
-        return true;
-      }
-    );
-    return changedEntities?.length;
-  }
+  const { value, hydrationValue } = field;
   return value !== hydrationValue;
 };

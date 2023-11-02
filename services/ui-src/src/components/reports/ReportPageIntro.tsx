@@ -4,11 +4,14 @@ import { InstructionsAccordion } from "components";
 // utils
 import { parseCustomHtml } from "utils";
 import { AnyObject } from "types";
+import { ReportPeriod } from "./ReportPeriod";
 
 export const ReportPageIntro = ({
   text,
   accordion,
   initiativeName,
+  reportPeriod,
+  reportYear,
   ...props
 }: Props) => {
   const { section, subsection, hint, info } = text;
@@ -23,6 +26,11 @@ export const ReportPageIntro = ({
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
       {accordion && <InstructionsAccordion verbiage={accordion} />}
       {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
+      <ReportPeriod
+        text={text}
+        reportPeriod={reportPeriod}
+        reportYear={reportYear}
+      />
     </Box>
   );
 };
@@ -32,6 +40,8 @@ interface Props {
   accordion?: AnyObject;
   initiativeName?: string;
   [key: string]: any;
+  reportPeriod?: number;
+  reportYear?: number;
 }
 
 const sx = {
@@ -50,14 +60,10 @@ const sx = {
     color: "#5B616B",
     paddingTop: "1.5rem",
   },
-  spreadsheetWidgetBox: {
-    marginTop: "2rem",
-  },
   infoTextBox: {
     marginTop: "2rem",
-    h4: {
-      fontSize: "lg",
-      marginBottom: "0.75rem",
+    h3: {
+      marginBottom: "-0.75rem",
     },
     "p, span": {
       color: "palette.gray",
@@ -72,5 +78,9 @@ const sx = {
     b: {
       color: "palette.base",
     },
+  },
+  periodText: {
+    marginTop: "1.5rem",
+    fontSize: "2xl",
   },
 };

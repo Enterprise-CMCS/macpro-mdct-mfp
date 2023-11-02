@@ -9,6 +9,7 @@ import { renderHtml, useStore } from "utils";
 
 export const DeleteEntityModal = ({
   entityType,
+  entityIdLookup,
   selectedEntity,
   verbiage,
   modalDisclosure,
@@ -18,6 +19,46 @@ export const DeleteEntityModal = ({
   const { full_name } = useStore().user ?? {};
   const [deleting, setDeleting] = useState<boolean>(false);
 
+  const removeSelectedEntity: any = (
+    data: any,
+    entityKey: string,
+    id?: string
+  ) => {
+    //if entity is found in current data layer, do a filter to keep the entities that don't match the selected entity
+    if (data[entityKey]) {
+      data[entityKey] = data[entityKey].filter(
+        (entity: EntityShape) => entity.id !== id
+      );
+    } else {
+      //convert the lookup to only the key names
+      const lookupKeys: string[] = entityIdLookup
+        ? Object.keys(entityIdLookup)
+        : [];
+      // see if current keys in the entity matches any in the lookup
+      const matchedKey: any = Object.keys(data).find((key: string) =>
+        lookupKeys?.includes(key)
+      );
+
+      //if there's a match, use that to look for the next layer down in the object
+      if (matchedKey) {
+        const keyId: string = entityIdLookup![matchedKey];
+        const currentIndex = data[matchedKey].findIndex(
+          (entity: EntityShape) => entity.id === keyId
+        );
+
+        if (currentIndex >= 0) {
+          data[matchedKey][currentIndex] = removeSelectedEntity(
+            data[matchedKey][currentIndex],
+            entityKey,
+            id
+          );
+        }
+      }
+    }
+
+    return data;
+  };
+
   const deleteProgramHandler = async () => {
     setDeleting(true);
     const reportKeys = {
@@ -25,9 +66,14 @@ export const DeleteEntityModal = ({
       state: report?.state,
       id: report?.id,
     };
-    const currentEntities = report?.fieldData?.[entityType] || [];
-    const updatedEntities = currentEntities.filter(
-      (entity: EntityShape) => entity.id !== selectedEntity?.id
+
+    const entityTypes: string[] =
+      typeof entityType === "string" ? [entityType] : (entityType as string[]);
+
+    const updatedEntities = removeSelectedEntity(
+      structuredClone(report?.fieldData),
+      entityTypes[entityTypes.length - 1],
+      selectedEntity?.id
     );
 
     await updateReport(reportKeys, {
@@ -35,9 +81,7 @@ export const DeleteEntityModal = ({
         lastAlteredBy: full_name,
         status: ReportStatus.IN_PROGRESS,
       },
-      fieldData: {
-        [entityType]: updatedEntities,
-      },
+      fieldData: { ...updatedEntities },
     });
     setDeleting(false);
     modalDisclosure.onClose();
@@ -60,7 +104,8 @@ export const DeleteEntityModal = ({
 };
 
 interface Props {
-  entityType: string;
+  entityType: string | string[];
+  entityIdLookup?: AnyObject;
   selectedEntity?: EntityShape;
   verbiage: AnyObject;
   modalDisclosure: {

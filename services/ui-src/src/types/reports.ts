@@ -81,7 +81,8 @@ export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   stepName: string;
   hint: string;
   form: FormJson;
-  entityType?: never;
+  entityType: string;
+  entities: EntityShape[];
   dashboard?: never;
   modalForm?: never;
   drawerForm?: never;
