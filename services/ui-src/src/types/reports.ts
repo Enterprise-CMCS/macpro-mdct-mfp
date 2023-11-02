@@ -167,6 +167,7 @@ export interface ModalDrawerReportPageVerbiage
 export interface OverlayModalPageVerbiage extends ReportPageVerbiage {
   countEntitiesInTitle: boolean;
   addEntityButtonText: string;
+  editEntityHint?: string;
   addEditModalHint: string;
   editEntityButtonText: string;
   addEditModalAddTitle: string;
@@ -184,6 +185,7 @@ export interface OverlayModalPageVerbiage extends ReportPageVerbiage {
 
 export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   addEntityButtonText: string;
+  editEntityHint?: string;
   dashboardTitle: string;
   countEntitiesInTitle: boolean;
   tableHeader: string;
