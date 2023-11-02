@@ -208,7 +208,9 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           </Button>
         </Box>
         <Box>
-          <Text>{parseCustomHtml(verbiage.reviewPdfHint)}</Text>
+          <Text sx={sx.reviewPdfHint}>
+            {parseCustomHtml(verbiage.reviewPdfHint)}
+          </Text>
           <Button
             sx={sx.reviewPdfButton}
             variant="outline"
@@ -302,6 +304,9 @@ const sx = {
         width: "260px",
       },
     },
+  },
+  reviewPdfHint: {
+    color: "palette.gray_medium",
   },
   reviewPdfButton: { marginTop: "1.5rem", marginBottom: "2rem" },
 };
