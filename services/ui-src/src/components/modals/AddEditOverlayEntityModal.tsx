@@ -77,7 +77,6 @@ export const AddEditOverlayEntityModal = ({
 
   const writeEntity = async (enteredData: any) => {
     setSubmitting(true);
-    
     const reportKeys = {
       reportType: report?.reportType,
       state: report?.state,
