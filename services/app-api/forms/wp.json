@@ -748,7 +748,7 @@
                       "children": [
                         {
                           "id": "initiative_wp_otherTopic",
-                          "type": "textarea",
+                          "type": "text",
                           "validation": {
                             "type": "text",
                             "nested": true,
