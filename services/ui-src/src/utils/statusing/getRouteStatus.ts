@@ -1,5 +1,6 @@
 // utils
 import { AnyObject, ReportPageProgress, ReportRoute, ReportShape } from "types";
+import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 
 /**
  * This function takes a report and returns an array of objects that represent the
@@ -36,6 +37,17 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
     return out;
   };
 
+  const checkForAlertStatus = (path: string, status: boolean) => {
+    let statusOverride: boolean = status;
+    switch (path) {
+      case "/wp/state-and-territory-specific-initiatives/initiatives":
+        statusOverride = !getWPAlertStatus(report, "initiative");
+        break;
+    }
+
+    return statusOverride;
+  };
+
   // Flatten the completion status to get the pages under each section
   const flattenedStatus = flatten(report.completionStatus, {});
 
@@ -61,7 +73,7 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
         const routeProgress: ReportPageProgress = {
           name: route.name,
           path: route.path,
-          status: flattenedStatus[route.path],
+          status: checkForAlertStatus(route.path, flattenedStatus[route.path]),
         };
         overallReportProgress.push(routeProgress);
       }

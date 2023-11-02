@@ -204,7 +204,6 @@ export interface ReportMetadata {
   reportPeriod: number;
   reportYear: number;
   dueDate: string;
-  entityStatusOverride?: object;
 }
 
 export interface WPReportMetadata extends ReportMetadata {
