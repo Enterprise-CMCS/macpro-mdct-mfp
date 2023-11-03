@@ -1081,7 +1081,7 @@
                           "label": "Other, specify",
                           "children": [
                             {
-                              "id": "fundingSources_wp_otherTopic",
+                              "id": "initiative_wp_otherTopic",
                               "type": "textarea",
                               "validation": {
                                 "type": "text",
