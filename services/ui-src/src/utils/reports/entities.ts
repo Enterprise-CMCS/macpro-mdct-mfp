@@ -108,7 +108,7 @@ export const renderTargetPopulationFields = (
         id: field.id,
         label: field.isRequired
           ? field.transitionBenchmarks_targetPopulationName
-          : `Other: {${field.transitionBenchmarks_targetPopulationName}}`,
+          : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
         name: field.transitionBenchmarks_targetPopulationName,
         value: field.transitionBenchmarks_targetPopulationName,
       };
