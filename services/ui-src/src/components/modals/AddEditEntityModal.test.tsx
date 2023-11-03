@@ -7,14 +7,14 @@ import {
   mockModalDrawerReportPageVerbiage,
   mockModalForm,
   mockReportKeys,
-  mockUseStore,
+  mockStateUserStore,
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
-import { entityTypes } from "../../types";
+import { MfpReportState, MfpUserState, entityTypes } from "../../types";
 
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
@@ -32,25 +32,33 @@ const mockEntity = {
   "mock-modal-text-field": "mock input 1",
 };
 
-const mockedReportContext = {
-  ...mockWpReportContext,
-  updateReport: mockUpdateReport,
-  report: {
-    ...mockWPFullReport,
-    fieldData: {
-      targetPopulations: [mockEntity],
-    },
+const report = {
+  ...mockWPFullReport,
+  fieldData: {
+    targetPopulations: [mockEntity],
   },
 };
 
-const mockUpdateCallPayload = {
-  fieldData: {
-    targetPopulations: [],
-  },
-  metadata: {
-    lastAlteredBy: "Thelonious States",
-    status: "In progress",
-  },
+const mockUseStore: MfpReportState & MfpUserState = {
+  report: report,
+  reportsByState: [mockWPFullReport],
+  submittedReportsByState: [mockWPFullReport],
+  lastSavedTime: "12:30 PM",
+  workPlanToCopyFrom: undefined,
+  setReport: () => {},
+  setReportsByState: () => {},
+  clearReportsByState: () => {},
+  setSubmittedReportsByState: () => {},
+  setLastSavedTime: () => {},
+  setWorkPlanToCopyFrom: () => {},
+  // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
+  ...mockStateUserStore,
+};
+
+const mockedReportContext = {
+  ...mockWpReportContext,
+  updateReport: mockUpdateReport,
+  report: report,
 };
 
 const modalComponent = (
@@ -60,6 +68,23 @@ const modalComponent = (
         entityType={entityTypes[1]}
         verbiage={mockModalDrawerReportPageVerbiage}
         entityName={mockEntityName}
+        form={mockModalForm}
+        modalDisclosure={{
+          isOpen: true,
+          onClose: mockCloseHandler,
+        }}
+      />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const modalComponentWithSelectedEntity = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockedReportContext}>
+      <AddEditEntityModal
+        entityType={entityTypes[1]}
+        selectedEntity={mockEntity}
+        verbiage={mockModalDrawerReportPageVerbiage}
         form={mockModalForm}
         modalDisclosure={{
           isOpen: true,
@@ -108,8 +133,8 @@ describe("Test AddEditEntityModal functionality", () => {
   });
 
   afterEach(() => {
-    // reset payload to baseline with only mockEntity
-    mockUpdateCallPayload.fieldData.targetPopulations = [];
+    // reset report back to baseline with only the mockEntity
+    report.fieldData.targetPopulations = [mockEntity];
     jest.clearAllMocks();
   });
 
@@ -127,27 +152,62 @@ describe("Test AddEditEntityModal functionality", () => {
     const form = result.getByTestId("add-edit-entity-form");
     await fillAndSubmitForm(form);
 
-    const mockUpdateCallPayload = {
-      fieldData: {
-        targetPopulations: [],
-      },
+    const expectedUpdateCallPayload = {
+      fieldData: mockedReportContext.report.fieldData,
       metadata: {
         lastAlteredBy: "Thelonious States",
         status: "In progress",
       },
     };
 
-    mockUpdateCallPayload.fieldData.targetPopulations.push({
+    expectedUpdateCallPayload.fieldData.targetPopulations.push({
       id: "mock-id-2",
       "mock-modal-text-field": "mock input 2",
       type: entityTypes[1],
     });
 
-    await expect(mockUpdateReport).toHaveBeenCalledWith(
+    expect(mockUpdateReport).toHaveBeenCalledWith(
       mockReportKeys,
-      mockUpdateCallPayload
+      expectedUpdateCallPayload
     );
-    await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+  });
+
+  test("Successfully edits an existing entity", async () => {
+    const result = render(modalComponentWithSelectedEntity);
+    const form = result.getByTestId("add-edit-entity-form");
+    await fillAndSubmitForm(form);
+
+    const expectedUpdateCallPayload = {
+      fieldData: mockedReportContext.report.fieldData,
+      metadata: {
+        lastAlteredBy: "Thelonious States",
+        status: "In progress",
+      },
+    };
+
+    expectedUpdateCallPayload.fieldData.targetPopulations = [
+      {
+        id: mockEntity.id,
+        "mock-modal-text-field": "mock input 2",
+        type: entityTypes[1],
+      },
+    ];
+
+    expect(mockUpdateReport).toHaveBeenCalledWith(
+      mockReportKeys,
+      expectedUpdateCallPayload
+    );
+
+    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+  });
+
+  test("Doesn't edit an existing entity if no update was made", async () => {
+    render(modalComponentWithSelectedEntity);
+    const submitButton = screen.getByRole("button", { name: "Save & close" });
+    await userEvent.click(submitButton);
+    expect(mockUpdateReport).toHaveBeenCalledTimes(0);
+    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
   });
 });
 
