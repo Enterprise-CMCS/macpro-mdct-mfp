@@ -5,12 +5,8 @@ import { axe } from "jest-axe";
 import { useFormContext } from "react-hook-form";
 import { DateField, ReportContext } from "components";
 import { useStore } from "utils";
-import {
-  mockStateUserStore,
-  mockWpReportContext,
-} from "utils/testing/setupJest";
+import { mockUseStore, mockWpReportContext } from "utils/testing/setupJest";
 import { ReportStatus } from "../../types";
-import { mockStateUser } from "../../utils/testing/mockUsers";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -40,8 +36,11 @@ const dateFieldComponent = (
 );
 
 describe("Test DateField basic functionality", () => {
+  beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+  });
+
   test("DateField is visible", () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues(undefined);
     const result = render(dateFieldComponent);
     const dateFieldInput: HTMLInputElement = result.container.querySelector(
@@ -51,7 +50,6 @@ describe("Test DateField basic functionality", () => {
   });
 
   test("onChange event fires handler when typing and stays even after blurred", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues(undefined);
     const result = render(dateFieldComponent);
     const dateFieldInput: HTMLInputElement = result.container.querySelector(
@@ -94,11 +92,10 @@ describe("Test DateField hydration functionality", () => {
   );
 
   beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockUseStore);
   });
 
   test("If only formFieldValue exists, displayValue is set to it", () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues(mockFormFieldValue);
     const result = render(dateFieldComponent);
     const dateFieldInput: HTMLInputElement = result.container.querySelector(
@@ -158,11 +155,14 @@ describe("Test DateField autosave functionality", () => {
   );
 
   beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+  });
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
   test("Autosaves entered date when state user, autosave true, and field is valid", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
     mockTrigger.mockReturnValue(true);
     mockGetValues(undefined);
     render(dateFieldAutosavingComponent);
@@ -173,14 +173,14 @@ describe("Test DateField autosave functionality", () => {
     expect(mockWpReportContext.updateReport).toHaveBeenCalledTimes(1);
     expect(mockWpReportContext.updateReport).toHaveBeenCalledWith(
       {
-        reportType: undefined,
-        state: mockStateUser.user?.state,
-        id: undefined,
+        id: mockUseStore.report?.id,
+        state: mockUseStore.user?.state,
+        reportType: mockUseStore.report?.reportType,
       },
       {
         metadata: {
           status: ReportStatus.IN_PROGRESS,
-          lastAlteredBy: mockStateUser.user?.full_name,
+          lastAlteredBy: mockUseStore.user?.full_name,
         },
         fieldData: { testDateField: "07/14/2022" },
       }
@@ -188,7 +188,6 @@ describe("Test DateField autosave functionality", () => {
   });
 
   test("Does not autosave if autosave is false", async () => {
-    mockedUseStore.mockReturnValue(mockStateUser);
     mockGetValues(undefined);
     render(dateFieldComponent);
     const dateField = screen.getByRole("textbox", { name: "test-date-field" });
@@ -204,12 +203,15 @@ describe("Datefield handles triggering validation", () => {
     <DateField name="testDateField" label="test-date-field" validateOnRender />
   );
 
+  beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   test("Blanking field triggers form validation", async () => {
-    mockedUseStore.mockReturnValue(mockStateUser);
     mockGetValues(undefined);
     const result = render(dateFieldComponent);
     expect(mockTrigger).not.toHaveBeenCalled();
@@ -223,7 +225,6 @@ describe("Datefield handles triggering validation", () => {
   });
 
   test("Component with validateOnRender passed should validate on initial render", async () => {
-    mockedUseStore.mockReturnValue(mockStateUser);
     mockGetValues(undefined);
     render(dateFieldComponentWithValidateOnRender);
     expect(mockTrigger).toHaveBeenCalled();
@@ -232,7 +233,7 @@ describe("Datefield handles triggering validation", () => {
 
 describe("Test DateField accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockUseStore);
     mockGetValues(undefined);
     const { container } = render(dateFieldComponent);
     const results = await axe(container);
