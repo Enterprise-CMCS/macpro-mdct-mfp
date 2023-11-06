@@ -3,12 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // utils
 import { useFindRoute, useStore } from "utils";
-import { FormJson } from "types";
+import { AnyObject, FormJson } from "types";
 // assets
 import nextIcon from "assets/icons/icon_next_white.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
 
-export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
+export const ReportPageFooter = ({
+  submitting,
+  form,
+  verbiage,
+  ...props
+}: Props) => {
   const navigate = useNavigate();
   const formIsDisabled = false;
   const report = useStore().report;
@@ -17,6 +22,12 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
     report?.formTemplate?.basePath
   );
   const hidePrevious = previousRoute === "/wp" || previousRoute === "/sar";
+
+  // initiatives page requires a different button text
+  const rightButtonText =
+    verbiage?.intro.subsection === "State and Territory-Specific Initiatives"
+      ? "Review & Submit"
+      : "Continue";
 
   return (
     <Box sx={sx.footerBox} {...props}>
@@ -44,7 +55,7 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
                 )
               }
             >
-              Continue
+              {rightButtonText}
             </Button>
           ) : (
             <Button
@@ -70,6 +81,7 @@ interface Props {
   form?: FormJson;
   submitting?: boolean;
   [key: string]: any;
+  verbiage?: AnyObject;
 }
 
 const sx = {
