@@ -42,7 +42,7 @@ export const EntityDetailsOverlay = ({
   route,
   closeEntityDetailsOverlay,
 }: Props) => {
-  const submitting = false;
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const { entityType, form, verbiage } = route;
   const { report, selectedEntity, setSelectedEntity } = useStore();
   const [disableCloseOut, setDisableCloseOut] = useState<boolean>(false);
@@ -81,6 +81,7 @@ export const EntityDetailsOverlay = ({
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
+    setSubmitting(true);
     const reportKeys = {
       reportType: report?.reportType,
       state: state,
@@ -131,6 +132,8 @@ export const EntityDetailsOverlay = ({
       );
       if (shouldSave) await updateReport(reportKeys, dataToWrite);
     }
+
+    setSubmitting(false);
     closeEntityDetailsOverlay!();
   };
 
