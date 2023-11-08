@@ -184,7 +184,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
               onClose: closeDeleteEntityModal,
             }}
           />
-          <ReportPageFooter />
+          <ReportPageFooter verbiage={verbiage} />
         </Box>
       )}
     </Box>
