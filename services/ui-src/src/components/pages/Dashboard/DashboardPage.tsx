@@ -213,7 +213,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         return !workPlanToCopyFrom;
       case ReportType.WP:
         if (!lastDisplayedReport) return false;
-        return lastDisplayedReport.status !== ReportStatus.SUBMITTED;
+        return lastDisplayedReport.status !== ReportStatus.APPROVED;
       default:
         return true;
     }
