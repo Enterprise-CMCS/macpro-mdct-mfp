@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useFormContext } from "react-hook-form";
+import { FieldValues, useFormContext, UseFormReturn } from "react-hook-form";
 // components
 import { ChoiceList as CmsdsChoiceList } from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
@@ -213,7 +213,7 @@ export const ChoiceListField = ({
 
         const combinedFields = [
           ...fields,
-          ...getNestedChildFields(choicesWithNestedEnabledFields),
+          ...getNestedChildFields(choicesWithNestedEnabledFields, form),
         ];
         const reportArgs = {
           id: report?.id,
@@ -284,7 +284,8 @@ const sx = {
 };
 
 export const getNestedChildFields = (
-  choices: FieldChoice[]
+  choices: FieldChoice[],
+  form: UseFormReturn<FieldValues, any>
 ): AutosaveField[] => {
   // set up nested field compilation
   const nestedFields: any = [];
@@ -298,7 +299,7 @@ export const getNestedChildFields = (
       const fieldInfo = getAutosaveFields({
         name: field.id,
         type: field.type,
-        value: fieldDefaultValue,
+        value: form.getValues(field.id) || fieldDefaultValue,
         overrideCheck: true,
         defaultValue: undefined,
         hydrationValue: undefined,
@@ -315,8 +316,7 @@ export const getNestedChildFields = (
   };
 
   choices.forEach((choice: FieldChoice) => {
-    // if choice is not selected and there are children
-    if (choice.children && !choice.checked) {
+    if (choice.children) {
       compileNestedFields(choice.children);
     }
   });
