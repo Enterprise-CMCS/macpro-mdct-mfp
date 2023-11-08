@@ -5,7 +5,6 @@ import { useFormContext } from "react-hook-form";
 import { ChoiceListField, ReportContext } from "components";
 import { mockWpReportContext } from "../../utils/testing/mockReport";
 import { ReportStatus } from "../../types";
-import { getNestedChildFields } from "./ChoiceListField";
 
 const mockTrigger = jest.fn().mockReturnValue(true);
 const mockSetValue = jest.fn();
