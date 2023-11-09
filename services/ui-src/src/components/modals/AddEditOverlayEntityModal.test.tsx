@@ -40,7 +40,7 @@ const mockOverlayEntity = {
 
 const mockInitiative = {
   id: "mock-id-1",
-  type: "initiative",
+  type: entityTypes[0],
   initiative_name: "mock name 1",
   evaluationPlan: [mockOverlayEntity],
 };
@@ -222,7 +222,7 @@ describe("Test AddEditOverlayEntityModal functionality", () => {
     expectedUpdateCallPayload.fieldData.initiative = [
       {
         id: "mock-id-1",
-        type: "initiative",
+        type: entityTypes[0],
         initiative_name: "mock name 1",
         evaluationPlan: [expectedEvaluationPlanEntity],
       },
