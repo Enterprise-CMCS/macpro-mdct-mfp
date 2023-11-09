@@ -4,12 +4,15 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import {
   mockDocumentClient,
+  mockWPFieldData,
+  mockWPMetadata,
   mockWPReport,
 } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
+import * as authFunctions from "../../utils/auth/authorization";
+import * as helperFunctions from "../../utils/other/other";
 // types
 import { StatusCodes } from "../../utils/types";
-import * as authFunctions from "../../utils/auth/authorization";
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockResolvedValue(true),
@@ -22,24 +25,18 @@ jest.mock("../../utils/debugging/debug-lib", () => ({
   flush: jest.fn(),
 }));
 
-const mockProxyEvent = {
+const wpMockProxyEvent = {
   ...proxyEvent,
   headers: { "cognito-identity-id": "test" },
   pathParameters: { reportType: "WP", state: "AL" },
 };
 
-const creationEvent: APIGatewayProxyEvent = {
-  ...mockProxyEvent,
+const wpCreationEvent: APIGatewayProxyEvent = {
+  ...wpMockProxyEvent,
   body: JSON.stringify({
     fieldData: {
-      stateName: "New Jersey",
+      stateName: "Alabama",
       submissionCount: 0,
-      versionControl: [
-        {
-          key: "versionControl",
-          value: "No, this is an initial submission",
-        },
-      ],
     },
     metadata: {
       reportType: "WP",
@@ -52,13 +49,37 @@ const creationEvent: APIGatewayProxyEvent = {
   }),
 };
 
+const sarMockProxyEvent = {
+  ...proxyEvent,
+  headers: { "cognito-identity-id": "test" },
+  pathParameters: { reportType: "SAR", state: "AL" },
+};
+
+const sarCreationEvent: APIGatewayProxyEvent = {
+  ...sarMockProxyEvent,
+  body: JSON.stringify({
+    fieldData: {
+      stateName: "Alabama",
+      submissionCount: 0,
+    },
+    metadata: {
+      reportType: "SAR",
+      submissionName: "submissionName",
+      status: "Not started",
+      lastAlteredBy: "Thelonious States",
+      fieldDataId: "mockReportFieldData",
+      formTemplateId: "mockReportJson",
+    },
+  }),
+};
+
 const creationEventWithNoFieldData: APIGatewayProxyEvent = {
-  ...mockProxyEvent,
+  ...wpMockProxyEvent,
   body: JSON.stringify({ fieldData: undefined }),
 };
 
 const creationEventWithInvalidData: APIGatewayProxyEvent = {
-  ...mockProxyEvent,
+  ...wpMockProxyEvent,
   body: JSON.stringify({ fieldData: { number: "NAN" } }),
 };
 
@@ -72,20 +93,40 @@ describe("Test createReport API method", () => {
   });
   test("Test unauthorized report creation throws 403 error", async () => {
     jest.spyOn(authFunctions, "isAuthorized").mockResolvedValueOnce(false);
-    const res = await createReport(creationEvent, null);
+    const res = await createReport(wpCreationEvent, null);
     expect(res.statusCode).toBe(403);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
   test("Test report creation by a state user without access to a report type throws 403 error", async () => {
     jest.spyOn(authFunctions, "hasPermissions").mockReturnValueOnce(false);
-    const res = await createReport(creationEvent, null);
+    const res = await createReport(wpCreationEvent, null);
     expect(res.statusCode).toBe(403);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
-  test("Test successful run of report creation, not copied", async () => {
-    const res = await createReport(creationEvent, null);
+  test("Test report creation throws a 403 when given a bad US State", async () => {
+    const badStateEvent = {
+      ...wpCreationEvent,
+      pathParameters: { reportType: "WP", state: "ZZ" },
+    };
+    const res = await createReport(badStateEvent, null);
+
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("Test report creation throws a 403 when given a bad ReportType", async () => {
+    const badReportEvent = {
+      ...wpCreationEvent,
+      pathParameters: { reportType: "ZZ", state: "AL" },
+    };
+    const res = await createReport(badReportEvent, null);
+
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("Test successful run of work plan report creation, not copied", async () => {
+    const res = await createReport(wpCreationEvent, null);
     const body = JSON.parse(res.body);
     expect(res.statusCode).toBe(StatusCodes.CREATED);
     expect(body.status).toContain("Not started");
@@ -97,6 +138,26 @@ describe("Test createReport API method", () => {
     expect(body.formTemplate.validationJson).toMatchObject({
       transitionBenchmarks_targetPopulationName: "text",
     });
+  });
+
+  test("If no WP given when creating a SAR, return 404", async () => {
+    const res = await createReport(sarCreationEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+  });
+
+  test("Test successful run of sar report creation, not copied", async () => {
+    jest
+      .spyOn(helperFunctions, "getLastCreatedWorkPlan")
+      .mockResolvedValueOnce({
+        workPlanMetadata: mockWPMetadata,
+        workPlanFieldData: mockWPFieldData,
+      });
+    const res = await createReport(sarCreationEvent, null);
+    const body = JSON.parse(res.body);
+    expect(res.statusCode).toBe(StatusCodes.CREATED);
+    expect(body.status).toContain("Not started");
+    expect(body.fieldDataId).toBeDefined;
+    expect(body.formTemplateId).toBeDefined;
   });
 
   test("Test attempted report creation with invalid data fails", async () => {
@@ -113,7 +174,7 @@ describe("Test createReport API method", () => {
 
   test("Test reportKey not provided throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
-      ...creationEvent,
+      ...wpCreationEvent,
       pathParameters: {},
     };
     const res = await createReport(noKeyEvent, null);
@@ -124,7 +185,7 @@ describe("Test createReport API method", () => {
 
   test("Test reportKey empty throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
-      ...creationEvent,
+      ...wpCreationEvent,
       pathParameters: { state: "" },
     };
     const res = await createReport(noKeyEvent, null);
