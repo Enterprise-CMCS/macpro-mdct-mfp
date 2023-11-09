@@ -1,10 +1,15 @@
 import { act } from "react-dom/test-utils";
-import { MfpReportState, MfpUserState, entityTypes } from "../../types";
+import {
+  EntityShape,
+  MfpReportState,
+  MfpUserState,
+  entityTypes,
+} from "../../types";
 import { RouterWrappedComponent } from "../../utils/testing/mockRouter";
 import {
   mockEntityStore,
   mockModalDrawerReportPageVerbiage,
-  mockOverlayEntityModalForm,
+  mockModalForm,
   mockOverlayModalPageVerbiage,
   mockReportKeys,
   mockStateUserStore,
@@ -31,27 +36,28 @@ jest.mock("react-uuid", () => jest.fn(() => "mock-eval-id-2"));
 const mockOverlayEntity = {
   id: "mock-eval-id",
   "mock-modal-text-field": "mock input 1",
-  "mock-radio-field": {
-    key: "mock-radio-field",
-    value: "option 1",
-  },
+};
+
+const mockInitiative = {
+  id: "mock-id-1",
+  type: "initiative",
+  initiative_name: "mock name 1",
+  evaluationPlan: [mockOverlayEntity],
 };
 
 const report = {
   ...mockWPFullReport,
   fieldData: {
-    initiative: [
-      {
-        id: "mock-id-1",
-        type: "initiative",
-        initiative_name: "mock name 1",
-        evaluationPlan: [mockOverlayEntity],
-      },
-    ],
+    initiative: [mockInitiative],
   },
 };
 
 const entityIdLookup = { [entityType]: report.fieldData.initiative[0].id };
+
+const selectedStepEntity: EntityShape = {
+  type: entityTypes[0],
+  id: mockOverlayEntity.id,
+};
 
 const mockUseStore: MfpReportState & MfpUserState = {
   report: report,
@@ -86,7 +92,26 @@ const modalComponent = (
         entityType={[entityTypes[0], "evaluationPlan"]}
         entityName={mockEntityName}
         entityIdLookup={entityIdLookup}
-        form={mockOverlayEntityModalForm}
+        form={mockModalForm}
+        verbiage={mockModalDrawerReportPageVerbiage}
+        modalDisclosure={{
+          isOpen: true,
+          onClose: mockCloseHandler,
+        }}
+      />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const modalComponentWithSelectedEntity = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockedReportContext}>
+      <AddEditOverlayEntityModal
+        entityType={[entityTypes[0], "evaluationPlan"]}
+        entityName={mockEntityName}
+        selectedEntity={selectedStepEntity}
+        entityIdLookup={entityIdLookup}
+        form={mockModalForm}
         verbiage={mockModalDrawerReportPageVerbiage}
         modalDisclosure={{
           isOpen: true,
@@ -106,6 +131,7 @@ describe("Test AddEditOverlayEntityModal", () => {
   });
 
   afterEach(() => {
+    report.fieldData.initiative = [mockInitiative];
     jest.clearAllMocks();
   });
 
@@ -134,15 +160,14 @@ describe("Test AddEditOverlayEntityModal functionality", () => {
   });
 
   afterEach(() => {
-    // TODO: Reset back to mockOverlayEntity here
+    report.fieldData.initiative[0].evaluationPlan = [mockOverlayEntity];
+    jest.clearAllMocks();
   });
 
   const fillAndSubmitForm = async (form: any) => {
     const textField = form.querySelector("[name='mock-modal-text-field']")!;
     await userEvent.clear(textField);
     await userEvent.type(textField, "mock input 2");
-    const choice = screen.getByLabelText("option 1") as HTMLInputElement;
-    await userEvent.click(choice);
     const submitButton = screen.getByRole("button", { name: "Save & close" });
     await userEvent.click(submitButton);
   };
@@ -163,15 +188,45 @@ describe("Test AddEditOverlayEntityModal functionality", () => {
     expectedUpdateCallPayload.fieldData.initiative[0].evaluationPlan.push({
       id: "mock-eval-id-2",
       "mock-modal-text-field": "mock input 2",
-      "mock-radio-field": [
-        {
-          key: "mock-radio-field-option1uuid",
-          value: "option 1",
-        },
-      ],
     });
 
     expect(mockUpdateReport).toHaveBeenCalledTimes(1);
+
+    expect(mockUpdateReport).toHaveBeenCalledWith(
+      mockReportKeys,
+      expectedUpdateCallPayload
+    );
+
+    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+  });
+
+  test("Successfuly edits an existing entity", async () => {
+    const result = render(modalComponentWithSelectedEntity);
+    const form = result.getByTestId("add-edit-entity-form");
+    await fillAndSubmitForm(form);
+
+    const expectedEvaluationPlanEntity = {
+      id: mockOverlayEntity.id,
+      "mock-modal-text-field": "mock input 2",
+      type: entityTypes[0],
+    };
+
+    const expectedUpdateCallPayload = {
+      fieldData: mockedReportContext.report.fieldData,
+      metadata: {
+        lastAlteredBy: "Thelonious States",
+        status: "In progress",
+      },
+    };
+
+    expectedUpdateCallPayload.fieldData.initiative = [
+      {
+        id: "mock-id-1",
+        type: "initiative",
+        initiative_name: "mock name 1",
+        evaluationPlan: [expectedEvaluationPlanEntity],
+      },
+    ];
 
     expect(mockUpdateReport).toHaveBeenCalledWith(
       mockReportKeys,
