@@ -105,7 +105,7 @@ describe("Test createReport API method", () => {
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
-  test("Test report creation throws a 403 when given a bad US State", async () => {
+  test("Test report creation throws a 400 when given a bad US State", async () => {
     const badStateEvent = {
       ...wpCreationEvent,
       pathParameters: { reportType: "WP", state: "ZZ" },
@@ -115,7 +115,7 @@ describe("Test createReport API method", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  test("Test report creation throws a 403 when given a bad ReportType", async () => {
+  test("Test report creation throws a 400 when given a bad ReportType", async () => {
     const badReportEvent = {
       ...wpCreationEvent,
       pathParameters: { reportType: "ZZ", state: "AL" },
