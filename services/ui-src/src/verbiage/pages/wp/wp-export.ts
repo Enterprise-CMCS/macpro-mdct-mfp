@@ -31,6 +31,15 @@ export default {
     indicator: "Indicator",
     response: "Response",
   },
+  modalOverlayTableHeaders: {
+    status: "{Status}",
+    index: "{#}",
+    submissionInformation:
+      "{I., J. & L., N. & O., M. <br/> MCO, PIHP, or PAHP name <br /> Program name <br/> Eligibility group & description <br/> MLR reporting period dates}",
+    programType: "{K. Program type}",
+    discrepancyExplanation: "{P. Reporting period discrepancy explanation}",
+    notes: "{Q. Misc notes (optional)}",
+  },
   emptyEntityMessage: {
     accessMeasures: "0  - No access measures entered",
     sanctions: "0 - No sanctions entered",

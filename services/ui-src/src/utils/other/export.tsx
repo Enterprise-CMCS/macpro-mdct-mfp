@@ -2,7 +2,7 @@ import { Box, Link, Text } from "@chakra-ui/react";
 // types
 import { AnyObject, Choice, EntityShape, FieldChoice, FormField } from "types";
 // utils
-import { eligibilityGroup, maskResponseData } from "utils";
+import { maskResponseData } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/wp/wp-export";
 
@@ -250,13 +250,13 @@ export const getEntityDetailsMLR = (entity: EntityShape) => {
   const { report_programName, report_planName } = entity;
 
   const reportingPeriod = `${entity.report_reportingPeriodStartDate} to ${entity.report_reportingPeriodEndDate}`;
-  const mlrEligibilityGroup = eligibilityGroup(entity);
+  // const mlrEligibilityGroup = eligibilityGroup(entity);
 
   return {
     report_planName,
     report_programName,
     reportingPeriod,
-    mlrEligibilityGroup,
+    // mlrEligibilityGroup,
   };
 };
 

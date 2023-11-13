@@ -10,6 +10,7 @@ import {
   ExportedModalDrawerReportSection,
   ExportedReportFieldTable,
   ExportedEntityDetailsOverlaySection,
+  ExportedModalOverlayReportSection,
 } from "components";
 // types
 import {
@@ -48,9 +49,9 @@ export const ExportedReportWrapper = ({ section }: Props) => {
     case PageTypes.MODAL_OVERLAY:
       return (
         <>
-          {/* <ExportedModalOverlayReportSection
+          <ExportedModalOverlayReportSection
             section={section as ModalOverlayReportPageShape}
-          /> */}
+          />
           <ExportedEntityDetailsOverlaySection
             section={section as ModalOverlayReportPageShape}
           />
