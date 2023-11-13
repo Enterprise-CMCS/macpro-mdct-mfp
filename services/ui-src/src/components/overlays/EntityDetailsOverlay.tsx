@@ -27,6 +27,7 @@ import {
 } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
+import closeGrayIcon from "assets/icons/icon_cancel_x_gray.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
 // utils
@@ -209,7 +210,11 @@ export const EntityDetailsOverlay = ({
           <Box>
             <Button
               rightIcon={
-                <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
+                <Image
+                  src={disableCloseOut ? closeGrayIcon : closeIcon}
+                  alt="Close"
+                  sx={sx.closeIcon}
+                />
               }
               onClick={() => openCloseEntityModal()}
               disabled={disableCloseOut}
