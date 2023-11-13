@@ -145,13 +145,18 @@ export const EntityDetailsOverlay = ({
         id: selectedEntity.id,
         type: selectedEntity.type,
       };
+
+      //pulling the fields needed to build the entity to check the status of
       let fields = form.fields.flatMap((field: any) => {
         return { id: field.id, value: formProvider.getValues(field.id) };
       });
+
+      //format the field data to match EntityShape
       fields.forEach((field: any) => {
         entity[field.id] = field.value;
       });
 
+      //there's two nested textboxes the the user can fill out after checking the checkbox
       entity["closeOutInformation_initiativeStatus-alternateFunding"] =
         formProvider.getValues(
           "closeOutInformation_initiativeStatus-alternateFunding"
