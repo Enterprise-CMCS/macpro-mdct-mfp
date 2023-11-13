@@ -137,35 +137,30 @@ export const EntityDetailsOverlay = ({
     closeEntityDetailsOverlay!();
   };
 
-  const onChange = (event: HTMLFormElement) => {
-    //due to the blur, the last item change does not always update fast enough. this function will merge the last changed data to a copy of the entity
-    let entityClone = structuredClone(selectedEntity);
-    if (entityClone) {
-      //if the field is an array, it's probably a checkbox or a radio button
-      if (typeof entityClone[event.nativeEvent.target.name] === "object") {
-        //filter out the data to remove any possible copy of this object from the array
-        var filteredFields = (
-          entityClone[event.nativeEvent.target.name] as []
-        ).filter(
-          (field: AnyObject) => field.value !== event.nativeEvent.target.value
+  //used to get the exact form values to enable/disable close out button
+  const onChange = (formProvider: AnyObject) => {
+    if (selectedEntity) {
+      let entity: EntityShape = {
+        id: selectedEntity.id,
+        type: selectedEntity.type,
+      };
+      let fields = form.fields.flatMap((field: any) => {
+        return { id: field.id, value: formProvider.getValues(field.id) };
+      });
+      fields.forEach((field: any) => {
+        entity[field.id] = field.value;
+      });
+
+      entity["closeOutInformation_initiativeStatus-alternateFunding"] =
+        formProvider.getValues(
+          "closeOutInformation_initiativeStatus-alternateFunding"
+        );
+      entity["closeOutInformation_initiativeStatus-terminationReason"] =
+        formProvider.getValues(
+          "closeOutInformation_initiativeStatus-terminationReason"
         );
 
-        //add it back in if the current checked is true
-        if (event.nativeEvent.target.checked)
-          (filteredFields as any).push({
-            key: event.nativeEvent.target.id,
-            value: event.nativeEvent.target.value,
-          });
-
-        entityClone[event.nativeEvent.target.name] = filteredFields;
-      } else {
-        //non object fields tend to be a string or a number, so a direct replacement is acceptable
-        entityClone[event.nativeEvent.target.name] =
-          event.nativeEvent.target.value;
-      }
-
-      //passed the updated entityClone to be used to check for the closeout status
-      setDisableCloseOut(!getCloseoutStatus(form, entityClone));
+      setDisableCloseOut(!getCloseoutStatus(form, entity));
     }
   };
 
@@ -194,7 +189,7 @@ export const EntityDetailsOverlay = ({
         autosave={true}
         formData={selectedEntity}
         dontReset={true}
-        onChange={onChange}
+        onFormChange={onChange}
         validateOnRender={false}
       />
       <Box>
