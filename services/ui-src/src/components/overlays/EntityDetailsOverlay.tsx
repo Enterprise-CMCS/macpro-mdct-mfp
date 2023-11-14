@@ -15,6 +15,7 @@ import {
   CloseEntityModal,
   ReportContext,
 } from "components";
+import { getCloseoutStatus } from "components/tables/getEntityStatus";
 // types
 import {
   AlertTypes,
@@ -26,6 +27,7 @@ import {
 } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
+import closeGrayIcon from "assets/icons/icon_cancel_x_gray.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
 // utils
@@ -45,6 +47,7 @@ export const EntityDetailsOverlay = ({
   const { entityType, form, verbiage } = route;
   const { report, selectedEntity, setSelectedEntity, autosaveState } =
     useStore();
+  const [disableCloseOut, setDisableCloseOut] = useState<boolean>();
 
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
@@ -64,6 +67,10 @@ export const EntityDetailsOverlay = ({
       );
     }
   }, [report]);
+
+  //need to set the initial state of the closeOut button when page loads
+  if (disableCloseOut === undefined)
+    setDisableCloseOut(!getCloseoutStatus(form, selectedEntity!));
 
   // add/edit entity modal disclosure and methods
   const {
@@ -152,6 +159,38 @@ export const EntityDetailsOverlay = ({
     closeEntityDetailsOverlay!();
   };
 
+  //used to get the exact form values to enable/disable close out button
+  const onChange = (formProvider: AnyObject) => {
+    if (selectedEntity) {
+      let entity: EntityShape = {
+        id: selectedEntity.id,
+        type: selectedEntity.type,
+      };
+
+      //pulling the fields needed to build the entity to check the status of
+      let fields = form.fields.flatMap((field: any) => {
+        return { id: field.id, value: formProvider.getValues(field.id) };
+      });
+
+      //format the field data to match EntityShape
+      fields.forEach((field: any) => {
+        entity[field.id] = field.value;
+      });
+
+      //there's two nested textboxes the the user can fill out after checking the checkbox
+      entity["closeOutInformation_initiativeStatus-alternateFunding"] =
+        formProvider.getValues(
+          "closeOutInformation_initiativeStatus-alternateFunding"
+        );
+      entity["closeOutInformation_initiativeStatus-terminationReason"] =
+        formProvider.getValues(
+          "closeOutInformation_initiativeStatus-terminationReason"
+        );
+
+      setDisableCloseOut(!getCloseoutStatus(form, entity));
+    }
+  };
+
   return (
     <Box>
       <Button
@@ -183,6 +222,7 @@ export const EntityDetailsOverlay = ({
         autosave={true}
         formData={selectedEntity}
         dontReset={true}
+        onFormChange={onChange}
         validateOnRender={false}
       />
       <Box>
@@ -202,9 +242,14 @@ export const EntityDetailsOverlay = ({
           <Box>
             <Button
               rightIcon={
-                <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
+                <Image
+                  src={disableCloseOut ? closeGrayIcon : closeIcon}
+                  alt="Close"
+                  sx={sx.closeIcon}
+                />
               }
               onClick={() => openCloseEntityModal()}
+              disabled={disableCloseOut}
             >
               {verbiage.closeOutModal.closeOutModalButtonText}
             </Button>
