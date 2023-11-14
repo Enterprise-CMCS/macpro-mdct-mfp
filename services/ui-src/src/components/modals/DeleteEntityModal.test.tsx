@@ -20,7 +20,6 @@ const mockUpdateReport = jest.fn();
 
 jest.mock("utils/state/useStore");
 
-// const mockEntityName = "mock-name";
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const mockEntity = {
