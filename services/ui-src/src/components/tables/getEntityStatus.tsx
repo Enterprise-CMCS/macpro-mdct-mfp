@@ -172,17 +172,17 @@ export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
     //need to get more specific for checkboxes with nested textboxes
     const checkboxes = (
       entity["closeOutInformation_initiativeStatus"] as []
-    ).map((field: AnyObject) => field.value);
+    )?.map((field: AnyObject) => field.value);
 
     if (
-      checkboxes.includes("Discontinued initiative") &&
+      checkboxes?.includes("Discontinued initiative") &&
       !entity["closeOutInformation_initiativeStatus-terminationReason"]
     ) {
       return false;
     }
 
     if (
-      checkboxes.includes(
+      checkboxes?.includes(
         "Sustaining initiative through a Medicaid authority"
       ) &&
       !entity["closeOutInformation_initiativeStatus-alternateFunding"]
@@ -190,7 +190,7 @@ export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
       return false;
     }
 
-    return isFilled.every((field: any) => {
+    return isFilled?.every((field: any) => {
       return typeof field === "object" ? field.length > 0 : field;
     });
   }

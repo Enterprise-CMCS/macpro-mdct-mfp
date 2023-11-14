@@ -46,7 +46,7 @@ export const EntityDetailsOverlay = ({
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { entityType, form, verbiage } = route;
   const { report, selectedEntity, setSelectedEntity } = useStore();
-  const [disableCloseOut, setDisableCloseOut] = useState<boolean>(false);
+  const [disableCloseOut, setDisableCloseOut] = useState<boolean>();
 
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
@@ -65,6 +65,10 @@ export const EntityDetailsOverlay = ({
       );
     }
   }, [report]);
+
+  //need to set the initial state of the closeOut button when page loads
+  if (disableCloseOut === undefined)
+    setDisableCloseOut(!getCloseoutStatus(form, selectedEntity!));
 
   // add/edit entity modal disclosure and methods
   const {
