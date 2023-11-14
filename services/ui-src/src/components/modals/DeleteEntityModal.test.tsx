@@ -6,6 +6,7 @@ import { DeleteEntityModal, ReportContext } from "components";
 import {
   RouterWrappedComponent,
   mockModalDrawerReportPageVerbiage,
+  mockReportKeys,
   mockStateUserStore,
   mockWPFullReport,
   mockWpReportContext,
@@ -32,7 +33,7 @@ const report = {
   ...mockWPFullReport,
   updateReport: mockUpdateReport,
   fieldData: {
-    initiatives: [mockEntity],
+    initiative: [mockEntity],
   },
 };
 
@@ -63,7 +64,6 @@ const modalComponent = (
     <ReportContext.Provider value={mockedReportContext}>
       <DeleteEntityModal
         entityType="entityType"
-        selectedEntity={{ id: "123", type: entityTypes[0] }}
         verbiage={mockModalDrawerReportPageVerbiage}
         modalDisclosure={{
           isOpen: true,
@@ -78,7 +78,7 @@ const modalComponentWithSelectedEntity = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
       <DeleteEntityModal
-        entityType="entityType"
+        entityType={entityTypes[0]}
         selectedEntity={mockEntity}
         verbiage={mockModalDrawerReportPageVerbiage}
         modalDisclosure={{
@@ -139,7 +139,45 @@ describe("Test DeleteEntityModal functionality", () => {
   test("Successfully deletes an existing entity", async () => {
     render(modalComponentWithSelectedEntity);
     await deleteEntity();
+
     expect(mockUpdateReport).toHaveBeenCalledTimes(1);
+
+    const expectedUpdateCallPayload = {
+      fieldData: {
+        initiative: [],
+      },
+      metadata: {
+        lastAlteredBy: "Thelonious States",
+        status: "In progress",
+      },
+    };
+
+    expect(mockUpdateReport).toHaveBeenCalledWith(
+      mockReportKeys,
+      expectedUpdateCallPayload
+    );
+
+    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+  });
+
+  test("Successfully handles a delete call with an empty field data", async () => {
+    render(modalComponent);
+    await deleteEntity();
+
+    const expectedUpdateCallPayload = {
+      fieldData: {
+        initiative: [],
+      },
+      metadata: {
+        lastAlteredBy: "Thelonious States",
+        status: "In progress",
+      },
+    };
+
+    expect(mockUpdateReport).toHaveBeenCalledWith(
+      mockReportKeys,
+      expectedUpdateCallPayload
+    );
   });
 });
 
