@@ -89,6 +89,52 @@ const modalComponentWithSelectedEntity = (
   </RouterWrappedComponent>
 );
 
+/**
+ * Nested entity objects
+ */
+
+const mockEntityWithinEntity = {
+  id: "mock-entity-id-1",
+  "mock-name": "mock name",
+};
+
+const mockNestedEntity = {
+  id: "mock-id'2",
+  type: entityTypes[0],
+  "mock-modal-text-field": "mock input 2",
+  evaluationPlan: [mockEntityWithinEntity],
+};
+
+const reportNestedEntity = {
+  ...mockWPFullReport,
+  updateReport: mockUpdateReport,
+  fieldData: {
+    initiative: [mockNestedEntity],
+  },
+};
+
+const mockReportContextNestedEntity = {
+  ...mockWpReportContext,
+  updateReport: mockUpdateReport,
+  report: reportNestedEntity,
+};
+
+const modalComponentWithNestedEntity = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockReportContextNestedEntity}>
+      <DeleteEntityModal
+        entityType={entityTypes[0]}
+        selectedEntity={mockNestedEntity}
+        verbiage={mockModalDrawerReportPageVerbiage}
+        modalDisclosure={{
+          isOpen: true,
+          onClose: mockCloseHandler,
+        }}
+      />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
 global.structuredClone = jest.fn((val) => {
   return JSON.parse(JSON.stringify(val));
 });
@@ -161,6 +207,26 @@ describe("Test DeleteEntityModal functionality", () => {
 
   test("Successfully handles a delete call with an empty field data", async () => {
     render(modalComponent);
+    await deleteEntity();
+
+    const expectedUpdateCallPayload = {
+      fieldData: {
+        initiative: [],
+      },
+      metadata: {
+        lastAlteredBy: "Thelonious States",
+        status: "In progress",
+      },
+    };
+
+    expect(mockUpdateReport).toHaveBeenCalledWith(
+      mockReportKeys,
+      expectedUpdateCallPayload
+    );
+  });
+
+  test("Successfully deletes a nested existing entity", async () => {
+    render(modalComponentWithNestedEntity);
     await deleteEntity();
 
     const expectedUpdateCallPayload = {
