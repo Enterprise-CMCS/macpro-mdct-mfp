@@ -92,8 +92,7 @@ export const EntityDetailsOverlay = ({
   }, [autosaveState, spinner]);
 
   const returnToDashboard = () => {
-    if(!spinner)
-      setSpinner(true);
+    if (!spinner) setSpinner(true);
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
