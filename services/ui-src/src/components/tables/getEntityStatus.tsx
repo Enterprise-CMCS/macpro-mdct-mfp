@@ -2,6 +2,7 @@ import {
   EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
   EntityShape,
+  FormJson,
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   ReportShape,
@@ -154,6 +155,44 @@ export const getInitiativeDashboardStatus = (
     });
 
     return isFilled;
+  }
+
+  return false;
+};
+
+export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
+  if (entity) {
+    const fieldIds = form.fields.map((field) => {
+      return field.id;
+    });
+    const isFilled = fieldIds.map((id) => {
+      return entity[id];
+    });
+
+    //need to get more specific for checkboxes with nested textboxes
+    const checkboxes = (
+      entity["closeOutInformation_initiativeStatus"] as []
+    )?.map((field: AnyObject) => field.value);
+
+    if (
+      checkboxes?.includes("Discontinued initiative") &&
+      !entity["closeOutInformation_initiativeStatus-terminationReason"]
+    ) {
+      return false;
+    }
+
+    if (
+      checkboxes?.includes(
+        "Sustaining initiative through a Medicaid authority"
+      ) &&
+      !entity["closeOutInformation_initiativeStatus-alternateFunding"]
+    ) {
+      return false;
+    }
+
+    return isFilled?.every((field: any) => {
+      return typeof field === "object" ? field.length > 0 : field;
+    });
   }
 
   return false;

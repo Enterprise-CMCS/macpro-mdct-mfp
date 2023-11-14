@@ -77,7 +77,9 @@ export const EntityRow = ({
         <ul>
           {programInfo.map((field, index) => (
             <li key={index}>
-              {!isRequired && `Other: `}
+              {!isRequired &&
+                entityType === ModalDrawerEntityTypes.TARGET_POPULATIONS &&
+                `Other: `}
               {renderHtml(field)}
             </li>
           ))}
