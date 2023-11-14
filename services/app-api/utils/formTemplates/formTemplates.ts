@@ -89,9 +89,52 @@ export const nextTwelveQuarters = (
   return formFields;
 };
 
-export const expandRepeatedFields = (formFields: FormField[]) => {
+export const targetPopulationsByQuarterKeys = (
+  fieldId: string,
+  workPlanFieldData?: AnyObject
+) => {
+  var targetPopulations = workPlanFieldData?.targetPopulations;
+  const keys = [];
+  for (let population of targetPopulations) {
+    keys.push([fieldId, population.transitionBenchmarks_targetPopulationName]);
+  }
+  return keys;
+};
+
+export const targetPopulationsByQuarter = (
+  formFields: FormField[],
+  fieldIndex: number,
+  fieldToRepeat: FormField,
+  workPlanFieldData?: AnyObject
+) => {
+  var keys = targetPopulationsByQuarterKeys(
+    fieldToRepeat.id,
+    workPlanFieldData
+  );
+  for (let key of keys) {
+    const formField: FormField = {
+      ...fieldToRepeat,
+      id: `${key[0]}${key[1]}`,
+      type: fieldToRepeat?.type,
+      validation: fieldToRepeat.validation,
+      props: {
+        ...fieldToRepeat?.props,
+        label: `Number of ${key[1]}`,
+      },
+    };
+    formFields.push(formField);
+  }
+  formFields.splice(fieldIndex, 1);
+  return formFields;
+};
+
+export const expandRepeatedFields = (
+  formFields: FormField[],
+  workPlanFieldData?: AnyObject
+) => {
   const repeatingFieldRuleMap: AnyObject = {
     nextTwelveQuarters: nextTwelveQuarters,
+    targetPopulationsByQuarter: targetPopulationsByQuarter,
   };
   formFields.forEach((field, fieldIndex) => {
     // if field has choices/options (ie could have nested children)
@@ -101,35 +144,58 @@ export const expandRepeatedFields = (formFields: FormField[]) => {
         // if given field choice has nested children
         const nestedChildFields = choice.children;
         if (nestedChildFields) {
-          choice.children = expandRepeatedFields(nestedChildFields);
+          choice.children = expandRepeatedFields(
+            nestedChildFields,
+            workPlanFieldData
+          );
         }
       });
     }
     if (field?.repeatable) {
       const repeatingFieldRule = repeatingFieldRuleMap[field.repeatable.rule];
-      formFields = repeatingFieldRule(formFields, fieldIndex, field);
+      formFields = repeatingFieldRule(
+        formFields,
+        fieldIndex,
+        field,
+        workPlanFieldData
+      );
     }
   });
   return formFields;
 };
 
-export const scanForRepeatedFields = (reportRoutes: ReportRoute[]) => {
+export const scanForRepeatedFields = (
+  reportRoutes: ReportRoute[],
+  workPlanFieldData?: AnyObject
+) => {
   for (let route of reportRoutes) {
-    if (route?.entitySteps) scanForRepeatedFields(route.entitySteps);
-    if (route?.children) scanForRepeatedFields(route.children);
+    if (route?.entitySteps)
+      scanForRepeatedFields(route.entitySteps, workPlanFieldData);
+    if (route?.children)
+      scanForRepeatedFields(route.children, workPlanFieldData);
     if (route?.form?.fields)
-      route.form.fields = expandRepeatedFields(route.form.fields);
+      route.form.fields = expandRepeatedFields(
+        route.form.fields,
+        workPlanFieldData
+      );
     if (route?.drawerForm?.fields)
-      route.drawerForm.fields = expandRepeatedFields(route.drawerForm.fields);
+      route.drawerForm.fields = expandRepeatedFields(
+        route.drawerForm.fields,
+        workPlanFieldData
+      );
     if (route?.modalForm?.fields)
-      route.modalForm.fields = expandRepeatedFields(route.modalForm.fields);
+      route.modalForm.fields = expandRepeatedFields(
+        route.modalForm.fields,
+        workPlanFieldData
+      );
   }
   return reportRoutes;
 };
 
 export async function getOrCreateFormTemplate(
   reportBucket: string,
-  reportType: ReportType
+  reportType: ReportType,
+  workPlanFieldData?: AnyObject
 ) {
   const currentFormTemplate = formTemplateForReportType(reportType);
   const stringifiedTemplate = JSON.stringify(currentFormTemplate);
@@ -152,7 +218,8 @@ export async function getOrCreateFormTemplate(
   } else {
     const newFormTemplateId = KSUID.randomSync().string;
     currentFormTemplate.routes = scanForRepeatedFields(
-      currentFormTemplate.routes
+      currentFormTemplate.routes,
+      workPlanFieldData
     );
 
     const formTemplateWithValidationJson = {
