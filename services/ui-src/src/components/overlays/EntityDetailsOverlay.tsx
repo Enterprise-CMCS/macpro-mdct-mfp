@@ -1,4 +1,4 @@
-import { MouseEventHandler, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
 import {
   Box,
@@ -92,7 +92,8 @@ export const EntityDetailsOverlay = ({
   }, [autosaveState, spinner]);
 
   const returnToDashboard = () => {
-    setSpinner(true);
+    if(!spinner)
+      setSpinner(true);
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
