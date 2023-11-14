@@ -43,10 +43,12 @@ export const EntityDetailsOverlay = ({
 }: Props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { entityType, form, verbiage } = route;
-  const { report, selectedEntity, setSelectedEntity } = useStore();
+  const { report, selectedEntity, setSelectedEntity, autosaveState } =
+    useStore();
 
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
+  const [spinner, setSpinner] = useState<Boolean>();
 
   /**
    * Any time the report is updated on this page,
@@ -76,6 +78,21 @@ export const EntityDetailsOverlay = ({
 
   const closeCloseEntityModal = () => {
     closeEntityModalOnCloseHandler();
+  };
+
+  useEffect(() => {
+    //if spinner is active, that means the user has clicked the return button and if autosaveState is false, that means autosave had finished saving
+    if (spinner && !autosaveState) {
+      setSpinner(false);
+      if (closeEntityDetailsOverlay) {
+        //call the function to return to the dashboard
+        closeEntityDetailsOverlay();
+      }
+    }
+  }, [autosaveState, spinner]);
+
+  const returnToDashboard = () => {
+    setSpinner(true);
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
@@ -140,10 +157,16 @@ export const EntityDetailsOverlay = ({
       <Button
         sx={sx.backButton}
         variant="none"
-        onClick={closeEntityDetailsOverlay as MouseEventHandler}
+        onClick={returnToDashboard}
         aria-label="Return to dashboard for this initiative"
       >
-        <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
+        <Box sx={sx.backBox}>
+          {spinner ? (
+            <Spinner size="sm" sx={sx.backIcon} />
+          ) : (
+            <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
+          )}
+        </Box>
         Return to dashboard for this initiative
       </Button>
 
@@ -224,10 +247,13 @@ const sx = {
     marginBottom: "2rem",
     marginTop: "-2rem",
   },
+  backBox: {
+    marginRight: "0.5rem",
+    width: "1.0rem",
+  },
   backIcon: {
     color: "palette.primary",
     height: "1rem",
-    marginRight: "0.5rem",
   },
   closeIcon: {
     width: "0.85rem",

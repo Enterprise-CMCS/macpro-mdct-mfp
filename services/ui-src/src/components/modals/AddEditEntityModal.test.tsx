@@ -45,12 +45,14 @@ const mockUseStore: MfpReportState & MfpUserState = {
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "12:30 PM",
   workPlanToCopyFrom: undefined,
+  autosaveState: false,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
   setSubmittedReportsByState: () => {},
   setLastSavedTime: () => {},
   setWorkPlanToCopyFrom: () => {},
+  setAutosaveState: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
 };
