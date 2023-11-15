@@ -78,6 +78,7 @@ export const renderFieldTableBody = (
   ) => {
     tableRows.push(
       <tr>
+        {/* just displaying data for now */}
         key={JSON.stringify(formField.id)}
         ------------------------------------ formField=
         {JSON.stringify(formField)}
