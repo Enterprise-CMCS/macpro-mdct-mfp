@@ -1,4 +1,4 @@
-import { MouseEventHandler, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
 import {
   Box,
@@ -15,6 +15,7 @@ import {
   CloseEntityModal,
   ReportContext,
 } from "components";
+import { getCloseoutStatus } from "components/tables/getEntityStatus";
 // types
 import {
   AlertTypes,
@@ -26,6 +27,7 @@ import {
 } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
+import closeGrayIcon from "assets/icons/icon_cancel_x_gray.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import warningIcon from "assets/icons/icon_warning.png";
 // utils
@@ -43,10 +45,13 @@ export const EntityDetailsOverlay = ({
 }: Props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { entityType, form, verbiage } = route;
-  const { report, selectedEntity, setSelectedEntity } = useStore();
+  const { report, selectedEntity, setSelectedEntity, autosaveState } =
+    useStore();
+  const [disableCloseOut, setDisableCloseOut] = useState<boolean>();
 
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
+  const [spinner, setSpinner] = useState<Boolean>();
 
   /**
    * Any time the report is updated on this page,
@@ -63,6 +68,10 @@ export const EntityDetailsOverlay = ({
     }
   }, [report]);
 
+  //need to set the initial state of the closeOut button when page loads
+  if (disableCloseOut === undefined)
+    setDisableCloseOut(!getCloseoutStatus(form, selectedEntity!));
+
   // add/edit entity modal disclosure and methods
   const {
     isOpen: closeEntityModalIsOpen,
@@ -76,6 +85,21 @@ export const EntityDetailsOverlay = ({
 
   const closeCloseEntityModal = () => {
     closeEntityModalOnCloseHandler();
+  };
+
+  useEffect(() => {
+    //if spinner is active, that means the user has clicked the return button and if autosaveState is false, that means autosave had finished saving
+    if (spinner && !autosaveState) {
+      setSpinner(false);
+      if (closeEntityDetailsOverlay) {
+        //call the function to return to the dashboard
+        closeEntityDetailsOverlay();
+      }
+    }
+  }, [autosaveState, spinner]);
+
+  const returnToDashboard = () => {
+    if (!spinner) setSpinner(true);
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
@@ -135,15 +159,53 @@ export const EntityDetailsOverlay = ({
     closeEntityDetailsOverlay!();
   };
 
+  //used to get the exact form values to enable/disable close out button
+  const onChange = (formProvider: AnyObject) => {
+    if (selectedEntity) {
+      let entity: EntityShape = {
+        id: selectedEntity.id,
+        type: selectedEntity.type,
+      };
+
+      //pulling the fields needed to build the entity to check the status of
+      let fields = form.fields.flatMap((field: any) => {
+        return { id: field.id, value: formProvider.getValues(field.id) };
+      });
+
+      //format the field data to match EntityShape
+      fields.forEach((field: any) => {
+        entity[field.id] = field.value;
+      });
+
+      //there's two nested textboxes the the user can fill out after checking the checkbox
+      entity["closeOutInformation_initiativeStatus-alternateFunding"] =
+        formProvider.getValues(
+          "closeOutInformation_initiativeStatus-alternateFunding"
+        );
+      entity["closeOutInformation_initiativeStatus-terminationReason"] =
+        formProvider.getValues(
+          "closeOutInformation_initiativeStatus-terminationReason"
+        );
+
+      setDisableCloseOut(!getCloseoutStatus(form, entity));
+    }
+  };
+
   return (
     <Box>
       <Button
         sx={sx.backButton}
         variant="none"
-        onClick={closeEntityDetailsOverlay as MouseEventHandler}
+        onClick={returnToDashboard}
         aria-label="Return to dashboard for this initiative"
       >
-        <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
+        <Box sx={sx.backBox}>
+          {spinner ? (
+            <Spinner size="sm" sx={sx.backIcon} />
+          ) : (
+            <Image src={arrowLeftBlue} alt="Arrow left" sx={sx.backIcon} />
+          )}
+        </Box>
         Return to dashboard for this initiative
       </Button>
 
@@ -160,6 +222,7 @@ export const EntityDetailsOverlay = ({
         autosave={true}
         formData={selectedEntity}
         dontReset={true}
+        onFormChange={onChange}
         validateOnRender={false}
       />
       <Box>
@@ -179,9 +242,14 @@ export const EntityDetailsOverlay = ({
           <Box>
             <Button
               rightIcon={
-                <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
+                <Image
+                  src={disableCloseOut ? closeGrayIcon : closeIcon}
+                  alt="Close"
+                  sx={sx.closeIcon}
+                />
               }
               onClick={() => openCloseEntityModal()}
+              disabled={disableCloseOut}
             >
               {verbiage.closeOutModal.closeOutModalButtonText}
             </Button>
@@ -224,10 +292,13 @@ const sx = {
     marginBottom: "2rem",
     marginTop: "-2rem",
   },
+  backBox: {
+    marginRight: "0.5rem",
+    width: "1.0rem",
+  },
   backIcon: {
     color: "palette.primary",
     height: "1rem",
-    marginRight: "0.5rem",
   },
   closeIcon: {
     width: "0.85rem",
