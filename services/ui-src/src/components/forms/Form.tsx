@@ -34,6 +34,7 @@ export const Form = ({
   id,
   formJson,
   onSubmit,
+  onFormChange,
   onError,
   formData,
   validateOnRender,
@@ -105,11 +106,18 @@ export const Form = ({
     }
   }, [location?.pathname]);
 
+  const onChange = () => {
+    if (onFormChange) {
+      onFormChange(form);
+    }
+  };
+
   return (
     <FormProvider {...form}>
       <form
         id={id}
         autoComplete="off"
+        onChange={onChange}
         onSubmit={form.handleSubmit(onSubmit as any, onError || onErrorHandler)}
         {...props}
       >
@@ -130,6 +138,7 @@ interface Props {
   formData?: AnyObject;
   autosave?: boolean;
   children?: ReactNode;
+  onFormChange?: Function;
   [key: string]: any;
 }
 

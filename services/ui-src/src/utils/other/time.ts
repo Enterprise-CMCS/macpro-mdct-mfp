@@ -154,8 +154,8 @@ export const displayLongformPeriod = (
   reportYear: number | undefined
 ) => {
   if (period === 1) {
-    return ` {January 1 to June 30 ${reportYear}} reporting period`;
+    return ` January 1 to June 30 ${reportYear} reporting period`;
   } else {
-    return ` {July 1 to December 31 ${reportYear}} reporting period`;
+    return ` July 1 to December 31 ${reportYear} reporting period`;
   }
 };
