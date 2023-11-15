@@ -35,7 +35,7 @@ export const TextField = ({
   const form = useFormContext();
   const fieldIsRegistered = name in form.getValues();
   const { full_name, state } = useStore().user ?? {};
-  const { report, selectedEntity } = useStore();
+  const { report, selectedEntity, setAutosaveState } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
@@ -82,6 +82,8 @@ export const TextField = ({
     if (!value.trim()) form.trigger(name);
     // submit field data to database
     if (autosave) {
+      //track the state of autosave in state management
+      setAutosaveState(true);
       const fields = getAutosaveFields({
         name,
         type: "text",
@@ -104,6 +106,8 @@ export const TextField = ({
           selectedEntity,
           prepareEntityPayload,
         },
+      }).then(() => {
+        setAutosaveState(false);
       });
     }
   };
