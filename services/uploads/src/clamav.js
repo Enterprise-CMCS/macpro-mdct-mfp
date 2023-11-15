@@ -27,7 +27,7 @@ async function listBucketFiles(bucketName) {
   });
   try {
     const listFilesResult = await S3.send(listObjects);
-    const keys = listFilesResult?.Contents.map((c) => c.Key);
+    const keys = listFilesResult?.Contents?.map((c) => c.Key);
     return keys;
   } catch (err) {
     utils.generateSystemMessage(`Error listing files`);
