@@ -74,6 +74,8 @@ describe("ExportedReportBanner", () => {
       setSubmittedReportsByState: () => {},
       setLastSavedTime: () => {},
       setWorkPlanToCopyFrom: () => {},
+      setAutosaveState: () => {},
+      autosaveState: false,
       ...mockStateUserStore,
       ...mockBannerStore,
     };
