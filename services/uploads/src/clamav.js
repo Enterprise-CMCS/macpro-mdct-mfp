@@ -127,11 +127,12 @@ async function uploadAVDefinitions() {
   utils.generateSystemMessage("Uploading Definitions");
   const s3AllFullKeys = await listBucketFiles(constants.CLAMAV_BUCKET_NAME);
 
+  const s3DefinitionFileFullKeys = s3AllFullKeys.filter((key) =>
+    key.startsWith(constants.PATH_TO_AV_DEFINITIONS)
+  );
+
   // If there are any s3 Definition files in the s3 bucket, delete them.
-  if (s3AllFullKeys.length != 0) {
-    const s3DefinitionFileFullKeys = s3AllFullKeys.filter((key) =>
-      key.startsWith(constants.PATH_TO_AV_DEFINITIONS)
-    );
+  if (s3DefinitionFileFullKeys.length != 0) {
     const deleteObject = new DeleteObjectsCommand({
       Bucket: constants.CLAMAV_BUCKET_NAME,
       Delete: {
