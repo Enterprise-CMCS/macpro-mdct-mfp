@@ -30,7 +30,6 @@ const mockEntity = {
 
 const report = {
   ...mockWPFullReport,
-  updateReport: mockUpdateReport,
   fieldData: {
     initiative: [mockEntity],
   },
