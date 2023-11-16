@@ -108,7 +108,6 @@ const mockNestedEntity = {
 
 const reportNestedEntity = {
   ...mockWPFullReport,
-  updateReport: mockUpdateReport,
   fieldData: {
     initiative: [mockNestedEntity],
   },
@@ -116,7 +115,6 @@ const reportNestedEntity = {
 
 const mockReportContextNestedEntity = {
   ...mockWpReportContext,
-  updateReport: mockUpdateReport,
   report: reportNestedEntity,
 };
 
