@@ -91,6 +91,9 @@ export const EntityDetailsOverlay = ({
     //if spinner is active, that means the user has clicked the return button and if autosaveState is false, that means autosave had finished saving
     if (spinner && !autosaveState) {
       setSpinner(false);
+
+      //sometimes autosave runs a sec before submit, so we want to stop the spinner here
+      setSubmitting(false);
       if (closeEntityDetailsOverlay) {
         //call the function to return to the dashboard
         closeEntityDetailsOverlay();
@@ -155,8 +158,7 @@ export const EntityDetailsOverlay = ({
       if (shouldSave) await updateReport(reportKeys, dataToWrite);
     }
 
-    setSubmitting(false);
-    closeEntityDetailsOverlay!();
+    returnToDashboard!();
   };
 
   //used to get the exact form values to enable/disable close out button
