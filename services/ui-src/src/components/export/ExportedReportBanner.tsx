@@ -8,6 +8,8 @@ import { printPdf, useStore } from "utils";
 // types
 import { ReportType } from "types";
 // verbiage
+import wpVerbiage from "verbiage/pages/wp/wp-export";
+import sarVerbiage from "verbiage/pages/sar/sar-export";
 
 export const ExportedReportBanner = () => {
   const { report } = useStore() ?? {};
@@ -15,8 +17,8 @@ export const ExportedReportBanner = () => {
     localStorage.getItem("selectedReportType")) as ReportType;
 
   const verbiageMap: { [key in ReportType]: any } = {
-    WP: undefined,
-    SAR: undefined,
+    WP: wpVerbiage,
+    SAR: sarVerbiage,
   };
 
   const verbiage = verbiageMap[reportType];
