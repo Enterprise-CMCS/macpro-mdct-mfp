@@ -333,6 +333,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       <AddEditReportModal
         activeState={activeState!}
         selectedReport={selectedReport!}
+        previousReport={reportsToDisplay?.[reportsToDisplay?.length - 1]}
         reportType={reportType}
         modalDisclosure={{
           isOpen: addEditReportModalIsOpen,

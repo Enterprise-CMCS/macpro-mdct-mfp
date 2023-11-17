@@ -15,6 +15,7 @@ import muteCopyIcon from "assets/icons/icon_copy_gray.png";
 export const AddEditReportModal = ({
   activeState,
   selectedReport,
+  previousReport,
   reportType,
   modalDisclosure,
 }: Props) => {
@@ -65,6 +66,7 @@ export const AddEditReportModal = ({
       metadata: {
         submissionName,
         lastAlteredBy: full_name,
+        copyFieldDataSourceId: previousReport?.fieldDataId,
         locked: false,
         previousRevisions: [],
       },
@@ -104,6 +106,8 @@ export const AddEditReportModal = ({
     submitButton?.setAttribute("disabled", "true");
     const dataToWrite =
       reportType === "WP" ? prepareWpPayload() : prepareSarPayload(formData);
+
+    console.log("writeReport", dataToWrite.metadata);
 
     // if an existing program was selected, use that report id
     if (selectedReport?.id) {
@@ -152,6 +156,16 @@ export const AddEditReportModal = ({
     return submitting ? <Spinner size="md" /> : "Save";
   };
 
+  const copyReport = async (formData: any) => {
+    console.log("copyReport");
+    writeReport(undefined);
+  };
+
+  const isCopyDisabled = () => {
+    //if no previous report or the previous report is not approve, disable copy button
+    return !previousReport || previousReport?.status !== "Approved";
+  };
+
   return (
     <Modal
       data-testid="add-edit-report-modal"
@@ -166,7 +180,12 @@ export const AddEditReportModal = ({
     >
       {reportType == ReportType.WP ? (
         <>
-          <Button sx={sx.copyBtn} disabled={true} type="submit">
+          <Button
+            sx={sx.copyBtn}
+            disabled={isCopyDisabled()}
+            onClick={copyReport}
+            type="submit"
+          >
             Copy from previous
             <Image
               sx={sx.muteCopyIcon}
@@ -204,6 +223,7 @@ interface Props {
   activeState?: string;
   reportType: string;
   selectedReport?: AnyObject;
+  previousReport?: AnyObject;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
