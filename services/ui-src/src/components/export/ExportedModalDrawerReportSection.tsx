@@ -1,19 +1,14 @@
 // components
-import { Box, Heading, Text } from "@chakra-ui/react";
-import { EntityStepCard } from "components";
+import { Box, Heading } from "@chakra-ui/react";
 // utils
-import { getFormattedEntityData, useStore } from "utils";
-import { EntityShape, ModalDrawerReportPageShape } from "types";
-// verbiage
-import exportVerbiage from "verbiage/pages/wp/wp-export";
+import { useStore } from "utils";
+import { ModalDrawerReportPageShape } from "types";
 
 export const ExportedModalDrawerReportSection = ({
   section: { entityType, verbiage },
 }: Props) => {
   const { report } = useStore() ?? {};
-  const { emptyEntityMessage } = exportVerbiage;
   const entities = report?.fieldData?.[entityType];
-  const entityCount = entities?.length;
 
   return (
     <Box
@@ -21,24 +16,18 @@ export const ExportedModalDrawerReportSection = ({
       data-testid="exportedModalDrawerReportSection"
       sx={sx.container}
     >
-      <Heading as="h3" sx={sx.dashboardTitle} data-testid="headerCount">
-        {`${verbiage.dashboardTitle} ${entityCount > 0 ? entityCount : ""}`}
-        {!entityCount && (
-          <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
-            {emptyEntityMessage[entityType as keyof typeof emptyEntityMessage]}
-          </Text>
-        )}
+      <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
+        {/* {verbiage.pdfDashboardTitle} */}
+        {/* TODO delete this */}
+        Transition Benchmark Totals
+        <br />
+        {verbiage.dashboardTitle}
       </Heading>
-      {entities?.map((entity: EntityShape, entityIndex: number) => (
-        <EntityStepCard
-          key={entity.id}
-          entity={entity}
-          entityIndex={entityIndex}
-          stepType={entityType}
-          verbiage={verbiage}
-          formattedEntityData={getFormattedEntityData(entityType, entity)}
-        />
-      ))}
+      <Box sx={sx.border}>
+        THIS IS WHERE THE TRANSITION BENCHMARK TOTALS WILL GO
+        <br />
+        {JSON.stringify(entities)}
+      </Box>
     </Box>
   );
 };
@@ -65,5 +54,9 @@ const sx = {
     fontSize: "md",
     fontWeight: "bold",
     color: "palette.gray_medium",
+  },
+  // TODO: delete this
+  border: {
+    border: "10px solid black",
   },
 };
