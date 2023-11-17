@@ -149,7 +149,9 @@ export const getInitiativeDashboardStatus = (
       });
 
       //if any of the field data is empty, that means we're missing data and the status is automatically false
-      isFilled = !filterdFieldData.every((field: any) => field)
+      isFilled = !filterdFieldData.every(
+        (field: any) => field && field.length > 0
+      )
         ? false
         : isFilled;
     });
@@ -191,7 +193,7 @@ export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
     }
 
     return isFilled?.every((field: any) => {
-      return typeof field === "object" ? field.length > 0 : field;
+      return field && field.length > 0;
     });
   }
 
