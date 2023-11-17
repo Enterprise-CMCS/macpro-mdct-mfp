@@ -125,20 +125,6 @@ export const createReport = handler(
       targetPopulations: "objectArray",
     };
 
-    // Setup validation for what we expect to see in the payload
-    let validatedFieldData = await validateFieldData(
-      creationValidationJson,
-      unvalidatedFieldData
-    );
-
-    // If we are creating a SAR and found a Work Plan to copy from, grab its field data and add it to our SAR
-    if (workPlanFieldData) {
-      validatedFieldData = {
-        ...validatedFieldData,
-        workPlanData: workPlanFieldData,
-      };
-    }
-
     // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;
     try {
@@ -159,6 +145,20 @@ export const createReport = handler(
       return {
         status: StatusCodes.BAD_REQUEST,
         body: error.MISSING_DATA,
+      };
+    }
+
+    // Setup validation for what we expect to see in the payload
+    let validatedFieldData = await validateFieldData(
+      creationValidationJson,
+      unvalidatedFieldData
+    );
+
+    // If we are creating a SAR and found a Work Plan to copy from, grab its field data and add it to our SAR
+    if (workPlanFieldData) {
+      validatedFieldData = {
+        ...validatedFieldData,
+        workPlanData: workPlanFieldData,
       };
     }
 
