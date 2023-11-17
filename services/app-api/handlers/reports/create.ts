@@ -139,7 +139,6 @@ export const createReport = handler(
     let newFieldData;
 
     if (unvalidatedMetadata.copyFieldDataSourceId) {
-      console.log("unvalidatedMetadata.copyFieldDataSourceId", unvalidatedMetadata.copyFieldDataSourceId);
       newFieldData = await copyFieldDataFromSource(
         reportBucket,
         state,
@@ -150,7 +149,6 @@ export const createReport = handler(
     } else {
       newFieldData = validatedFieldData;
     }
-
     // End Section - Check if metadata has filled parameter for copyFieldDataSourceId
 
     /*

@@ -10,6 +10,9 @@ import { AnyObject, State } from "../types";
  * @param formTemplate form template json object
  * @param validatedFieldData validated field data from request
  */
+
+const additionalFields = ["id", "type", "isOtherEntity"];
+
 export async function copyFieldDataFromSource(
   reportBucket: string,
   state: string | undefined,
@@ -21,8 +24,6 @@ export async function copyFieldDataFromSource(
     Bucket: reportBucket,
     Key: getFieldDataKey(state as State, copyFieldDataSourceId),
   })) as AnyObject;
-
-  console.log("copyFieldDataFromSource");
 
   if (sourceFieldData) {
     const possibleFields = getPossibleFieldsFromFormTemplate(formTemplate);
@@ -51,25 +52,41 @@ function pruneEntityData(
   entityData: AnyObject[],
   possibleFields: string[]
 ) {
+  //adding fields to be copied over from entries
+  const concatEntityFields = possibleFields.concat(additionalFields);
 
-  console.log("entityData", entityData);
-  
   entityData.forEach((entity, index) => {
     // Delete any key existing in the source data not valid in our template, or any entity key that's not a name.
-    if (!possibleFields.includes(key)) {
+    if (!concatEntityFields.includes(key)) {
       delete sourceFieldData[key];
       return;
     }
-    Object.keys(entity).forEach((entityKey) => {
-      if (!possibleFields.includes(entityKey)) {
-        if (
-          !entityKey.includes("name") &&
-          !["key", "value"].includes(entityKey)
-        ) {
-          delete entityData[index][entityKey];
+    for (const entityKey in entity) {
+      //check to see if the object is an array, this is for capturing substeps in the initiatives
+      if (typeof entity[entityKey] === "object") {
+        entity[entityKey].forEach((subEntity: AnyObject, subIndex: number) => {
+          for (const subEntityKey in subEntity) {
+            if (!concatEntityFields.includes(subEntityKey)) {
+              if (
+                !subEntityKey.includes("name") &&
+                !["key", "value"].includes(subEntityKey)
+              ) {
+                delete entityData[index][entityKey][subIndex][subEntityKey];
+              }
+            }
+          }
+        });
+      } else {
+        if (!concatEntityFields.includes(entityKey)) {
+          if (
+            !entityKey.includes("name") &&
+            !["key", "value"].includes(entityKey)
+          ) {
+            delete entityData[index][entityKey];
+          }
         }
       }
-    });
+    }
     if (Object.keys(entity).length === 0) {
       delete entityData[index];
     }
