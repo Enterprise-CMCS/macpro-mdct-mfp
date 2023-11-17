@@ -213,7 +213,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         return !workPlanToCopyFrom;
       case ReportType.WP:
         if (!lastDisplayedReport) return false;
-        return lastDisplayedReport.status !== ReportStatus.SUBMITTED;
+        return lastDisplayedReport.status !== ReportStatus.APPROVED;
       default:
         return true;
     }
@@ -265,6 +265,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               : accordion[reportType as keyof typeof ReportType]
                   .stateUserDashboard
           }
+          defaultIndex={0} // sets the accordion to open by default
         />
         {parseCustomHtml(intro.body)}
       </Box>

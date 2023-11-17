@@ -1,42 +1,62 @@
-import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { axe } from "jest-axe";
-//components
-import { AddEditEntityModal, ReportContext } from "components";
 import {
+  EntityShape,
+  MfpReportState,
+  MfpUserState,
+  entityTypes,
+} from "../../types";
+import { RouterWrappedComponent } from "../../utils/testing/mockRouter";
+import {
+  mockEntityStore,
   mockModalDrawerReportPageVerbiage,
   mockModalForm,
+  mockOverlayModalPageVerbiage,
   mockReportKeys,
   mockStateUserStore,
   mockWPFullReport,
   mockWpReportContext,
-  RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "../../utils/testing/setupJest";
+import { ReportContext } from "components";
+import { AddEditOverlayEntityModal } from "./AddEditOverlayEntityModal";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { useStore } from "utils";
+import { axe } from "jest-axe";
 import userEvent from "@testing-library/user-event";
-import { MfpReportState, MfpUserState, entityTypes } from "../../types";
 
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
+const mockEntityName = "mock-name";
+const entityType = mockEntityStore.selectedEntity!.type;
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
 
-jest.mock("react-uuid", () => jest.fn(() => "mock-id-2"));
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-jest.mock("utils/auth/useUser");
+jest.mock("react-uuid", () => jest.fn(() => "mock-eval-id-2"));
 
-const mockEntityName = "mock-name";
-
-const mockEntity = {
-  id: "mock-id-1",
-  type: entityTypes[1],
+const mockOverlayEntity = {
+  id: "mock-eval-id",
   "mock-modal-text-field": "mock input 1",
+};
+
+const mockInitiative = {
+  id: "mock-id-1",
+  type: entityTypes[0],
+  initiative_name: "mock name 1",
+  evaluationPlan: [mockOverlayEntity],
 };
 
 const report = {
   ...mockWPFullReport,
   fieldData: {
-    targetPopulations: [mockEntity],
+    initiative: [mockInitiative],
   },
+};
+
+const entityIdLookup = { [entityType]: report.fieldData.initiative[0].id };
+
+const selectedStepEntity: EntityShape = {
+  type: entityTypes[0],
+  id: mockOverlayEntity.id,
 };
 
 const mockUseStore: MfpReportState & MfpUserState = {
@@ -45,7 +65,6 @@ const mockUseStore: MfpReportState & MfpUserState = {
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "12:30 PM",
   workPlanToCopyFrom: undefined,
-  autosaveState: false,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
@@ -53,6 +72,7 @@ const mockUseStore: MfpReportState & MfpUserState = {
   setLastSavedTime: () => {},
   setWorkPlanToCopyFrom: () => {},
   setAutosaveState: () => {},
+  autosaveState: false,
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
 };
@@ -63,14 +83,19 @@ const mockedReportContext = {
   report: report,
 };
 
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
+
 const modalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
-      <AddEditEntityModal
-        entityType={entityTypes[1]}
-        verbiage={mockModalDrawerReportPageVerbiage}
+      <AddEditOverlayEntityModal
+        entityType={[entityTypes[0], "evaluationPlan"]}
         entityName={mockEntityName}
+        entityIdLookup={entityIdLookup}
         form={mockModalForm}
+        verbiage={mockModalDrawerReportPageVerbiage}
         modalDisclosure={{
           isOpen: true,
           onClose: mockCloseHandler,
@@ -83,11 +108,13 @@ const modalComponent = (
 const modalComponentWithSelectedEntity = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
-      <AddEditEntityModal
-        entityType={entityTypes[1]}
-        selectedEntity={mockEntity}
-        verbiage={mockModalDrawerReportPageVerbiage}
+      <AddEditOverlayEntityModal
+        entityType={[entityTypes[0], "evaluationPlan"]}
+        entityName={mockEntityName}
+        selectedEntity={selectedStepEntity}
+        entityIdLookup={entityIdLookup}
         form={mockModalForm}
+        verbiage={mockModalDrawerReportPageVerbiage}
         modalDisclosure={{
           isOpen: true,
           onClose: mockCloseHandler,
@@ -97,7 +124,7 @@ const modalComponentWithSelectedEntity = (
   </RouterWrappedComponent>
 );
 
-describe("Test AddEditEntityModal", () => {
+describe("Test AddEditOverlayEntityModal", () => {
   beforeEach(async () => {
     mockedUseStore.mockReturnValue(mockUseStore);
     await act(async () => {
@@ -106,42 +133,40 @@ describe("Test AddEditEntityModal", () => {
   });
 
   afterEach(() => {
+    report.fieldData.initiative = [mockInitiative];
     jest.clearAllMocks();
   });
 
-  test("AddEditEntityModal shows the contents", () => {
+  test("AddEditOverlayEntityModal shows the contents", () => {
     expect(
       screen.getByText(
-        mockModalDrawerReportPageVerbiage.addEditModalAddTitle + mockEntityName
+        mockOverlayModalPageVerbiage.addEditModalAddTitle + mockEntityName
       )
     ).toBeTruthy();
-    expect(screen.getByText("mock modal text field")).toBeTruthy();
   });
 
-  test("AddEditEntityModal cancel button closes modal", () => {
+  test("AddEditOverlayEntityModal cancel button closes the modal", () => {
     fireEvent.click(screen.getByText("Cancel"));
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
   });
 
-  test("AddEditEntityModal close button closes modal", () => {
+  test("AddEditOverlayEntityModal close button closes the modal", () => {
     fireEvent.click(screen.getByText("Close"));
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("Test AddEditEntityModal functionality", () => {
+describe("Test AddEditOverlayEntityModal functionality", () => {
   beforeEach(() => {
     mockedUseStore.mockReturnValue(mockUseStore);
   });
 
   afterEach(() => {
-    // reset report back to baseline with only the mockEntity
-    report.fieldData.targetPopulations = [mockEntity];
+    report.fieldData.initiative[0].evaluationPlan = [mockOverlayEntity];
     jest.clearAllMocks();
   });
 
   const fillAndSubmitForm = async (form: any) => {
-    // fill and submit form
     const textField = form.querySelector("[name='mock-modal-text-field']")!;
     await userEvent.clear(textField);
     await userEvent.type(textField, "mock input 2");
@@ -150,7 +175,7 @@ describe("Test AddEditEntityModal functionality", () => {
   };
 
   test("Successfully adds new entity, even with existing entities", async () => {
-    const result = await render(modalComponent);
+    const result = render(modalComponent);
     const form = result.getByTestId("add-edit-entity-form");
     await fillAndSubmitForm(form);
 
@@ -162,23 +187,31 @@ describe("Test AddEditEntityModal functionality", () => {
       },
     };
 
-    expectedUpdateCallPayload.fieldData.targetPopulations.push({
-      id: "mock-id-2",
+    expectedUpdateCallPayload.fieldData.initiative[0].evaluationPlan.push({
+      id: "mock-eval-id-2",
       "mock-modal-text-field": "mock input 2",
-      type: entityTypes[1],
     });
+
+    expect(mockUpdateReport).toHaveBeenCalledTimes(1);
 
     expect(mockUpdateReport).toHaveBeenCalledWith(
       mockReportKeys,
       expectedUpdateCallPayload
     );
+
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
   });
 
-  test("Successfully edits an existing entity", async () => {
+  test("Successfuly edits an existing entity", async () => {
     const result = render(modalComponentWithSelectedEntity);
     const form = result.getByTestId("add-edit-entity-form");
     await fillAndSubmitForm(form);
+
+    const expectedEvaluationPlanEntity = {
+      id: mockOverlayEntity.id,
+      "mock-modal-text-field": "mock input 2",
+      type: entityTypes[0],
+    };
 
     const expectedUpdateCallPayload = {
       fieldData: mockedReportContext.report.fieldData,
@@ -188,11 +221,12 @@ describe("Test AddEditEntityModal functionality", () => {
       },
     };
 
-    expectedUpdateCallPayload.fieldData.targetPopulations = [
+    expectedUpdateCallPayload.fieldData.initiative = [
       {
-        id: mockEntity.id,
-        "mock-modal-text-field": "mock input 2",
-        type: entityTypes[1],
+        id: "mock-id-1",
+        type: entityTypes[0],
+        initiative_name: "mock name 1",
+        evaluationPlan: [expectedEvaluationPlanEntity],
       },
     ];
 
@@ -203,17 +237,9 @@ describe("Test AddEditEntityModal functionality", () => {
 
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
   });
-
-  test("Doesn't edit an existing entity if no update was made", async () => {
-    render(modalComponentWithSelectedEntity);
-    const submitButton = screen.getByRole("button", { name: "Save & close" });
-    await userEvent.click(submitButton);
-    expect(mockUpdateReport).toHaveBeenCalledTimes(0);
-    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-  });
 });
 
-describe("Test AddEditEntityModal accessibility", () => {
+describe("Test AddEditOverlayEntityModal accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
     const { container } = render(modalComponent);
     const results = await axe(container);

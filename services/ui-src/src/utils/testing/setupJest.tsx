@@ -197,12 +197,14 @@ export const mockReportStore: MfpReportState = {
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "1:58 PM",
   workPlanToCopyFrom: undefined,
+  autosaveState: false,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
   setSubmittedReportsByState: () => {},
   setLastSavedTime: () => {},
   setWorkPlanToCopyFrom: () => {},
+  setAutosaveState: () => {},
 };
 
 export const mockEntityStore: MfpEntityState = {
@@ -222,12 +224,14 @@ export const mockEmptyReportStore: MfpReportState = {
   submittedReportsByState: undefined,
   lastSavedTime: undefined,
   workPlanToCopyFrom: undefined,
+  autosaveState: false,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
   setSubmittedReportsByState: () => {},
   setLastSavedTime: () => {},
   setWorkPlanToCopyFrom: () => {},
+  setAutosaveState: () => {},
 };
 
 // BOUND STORE

@@ -176,7 +176,7 @@ export default {
           props: {
             href: "https://www.google.com",
             target: "_blank",
-            "aria-label": "User Guide",
+            "aria-label": "User Guide (Link opens in new tab)",
           },
         },
         {
@@ -190,7 +190,7 @@ export default {
           props: {
             href: "https://www.google.com",
             target: "_blank",
-            "aria-label": "Help File.",
+            "aria-label": "Help File (Link opens in new tab)",
           },
         },
         {
