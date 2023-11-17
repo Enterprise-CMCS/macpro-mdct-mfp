@@ -11,7 +11,8 @@ import { AnyObject, State } from "../types";
  * @param validatedFieldData validated field data from request
  */
 
-const additionalFields = ["id", "type", "isOtherEntity"];
+//extra fields that needs to be copied over
+const additionalFields = ["id", "type", "isOtherEntity", "isRequired", "isCopied"];
 
 export async function copyFieldDataFromSource(
   reportBucket: string,
@@ -46,6 +47,7 @@ export async function copyFieldDataFromSource(
 
   return validatedFieldData;
 }
+
 function pruneEntityData(
   sourceFieldData: AnyObject,
   key: string,
@@ -54,7 +56,6 @@ function pruneEntityData(
 ) {
   //adding fields to be copied over from entries
   const concatEntityFields = possibleFields.concat(additionalFields);
-
   entityData.forEach((entity, index) => {
     // Delete any key existing in the source data not valid in our template, or any entity key that's not a name.
     if (!concatEntityFields.includes(key)) {
@@ -90,6 +91,8 @@ function pruneEntityData(
     if (Object.keys(entity).length === 0) {
       delete entityData[index];
     }
+    else
+      entityData[index]["isCopied"] = true;
   });
   // Delete whole key if there's nothing in it.
   if (entityData.every((e) => e === null)) {

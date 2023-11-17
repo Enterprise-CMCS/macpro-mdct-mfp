@@ -34,7 +34,7 @@ export const EntityRow = ({
   const { report } = useStore();
 
   // check for "other" target population entities
-  const { isRequired } = entity;
+  const { isRequired, isCopied } = entity;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
@@ -93,7 +93,7 @@ export const EntityRow = ({
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
-          {!isRequired && (
+          {!isRequired && !isCopied && (
             <Button
               sx={sx.editNameButton}
               variant="none"
@@ -103,14 +103,18 @@ export const EntityRow = ({
             </Button>
           )}
           <Button
-            sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
+            sx={
+              !isRequired && !isCopied
+                ? sx.editOtherEntityButton
+                : sx.editEntityButton
+            }
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
             disabled={entityStatus === "disabled"}
           >
             {verbiage.enterEntityDetailsButtonText}
           </Button>
-          {!isRequired && (
+          {!isRequired && !isCopied && (
             <Button
               sx={sx.deleteButton}
               data-testid="delete-entity"
