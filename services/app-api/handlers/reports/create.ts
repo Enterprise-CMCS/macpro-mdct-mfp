@@ -145,7 +145,8 @@ export const createReport = handler(
       ({ formTemplate, formTemplateVersion } = await getOrCreateFormTemplate(
         reportBucket,
         reportType,
-        workPlanFieldData
+        workPlanFieldData,
+        workPlanMetadata
       ));
     } catch (err) {
       logger.error(err, "Error getting or creating template");

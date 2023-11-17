@@ -1,30 +1,21 @@
 import { Box, Heading } from "@chakra-ui/react";
 
-export const SectionHeader = ({
-  content,
-  divider,
-  ...props
-}: SectionHeaderProps) => {
+export const SectionHeader = ({ content, ...props }: SectionHeaderProps) => {
   const sx = {
-    hr: {
-      marginTop: "2rem",
-      paddingBottom: "1rem",
-    },
     h3: {
-      padding: divider === "bottom" ? "2rem 0 1rem 0" : "2rem 0 2rem 0",
+      marginTop: "4rem",
     },
   };
   return (
     <Box sx={sx} {...props}>
-      {divider === "top" && <hr></hr>}
-      <Heading size="md">{content}</Heading>
-      {divider === "bottom" && <hr></hr>}
+      <Heading size="md" sx={sx.h3}>
+        {content}
+      </Heading>
     </Box>
   );
 };
 
 interface SectionHeaderProps {
   content: string;
-  divider: "top" | "bottom" | "none";
   [key: string]: any;
 }

@@ -243,11 +243,11 @@
             "id": "ret-mtrp",
             "fields": [
               {
-                "id": "ret_firstQuarterNumberOfOlderAdults",
+                "id": "firstQuarter_NumberOfOlderAdults",
                 "type": "number",
                 "validation": "number",
                 "repeatable": {
-                  "rule": "targetPopulationsByQuarter"
+                  "rule": "targetPopulationsByReportingPeriod"
                 }
               }
             ]
