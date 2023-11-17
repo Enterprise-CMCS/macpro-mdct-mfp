@@ -663,8 +663,7 @@
                   "type": "html",
                   "content": " for detailed instructions."
                 }
-              ],
-              "exportSectionHeader": "exportSectionHeader"
+              ]
             },
             "addEntityButtonText": "Add initiative",
             "editEntityHint": "Select \"Edit\" to complete the details.",

@@ -17,11 +17,7 @@ export const ExportedModalDrawerReportSection = ({
       sx={sx.container}
     >
       <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
-        {/* {verbiage.pdfDashboardTitle} */}
-        {/* TODO delete this */}
-        Transition Benchmark Totals
-        <br />
-        {verbiage.dashboardTitle}
+        {verbiage.pdfDashboardTitle}
       </Heading>
       <Box sx={sx.border}>
         THIS IS WHERE THE TRANSITION BENCHMARK TOTALS WILL GO
