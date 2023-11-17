@@ -265,6 +265,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               : accordion[reportType as keyof typeof ReportType]
                   .stateUserDashboard
           }
+          defaultIndex={0} // sets the accordion to open by default
         />
         {parseCustomHtml(intro.body)}
       </Box>
