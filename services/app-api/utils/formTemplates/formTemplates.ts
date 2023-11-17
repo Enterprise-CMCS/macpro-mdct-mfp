@@ -125,7 +125,7 @@ export const targetPopulationsByQuarter = (
         ? "First quarter (January 1 - March 31)"
         : "Third quarter (July 1 - September 30)";
     const formFieldHeader: FormField = {
-      id: `P${workPlanMetaData?.reportPeriod}_Q1_header`,
+      id: `Period${workPlanMetaData?.reportPeriod}_Q1_header`,
       type: "sectionHeader",
       props: {
         content: contentString,
@@ -138,7 +138,7 @@ export const targetPopulationsByQuarter = (
         ? "Second quarter (April 1 - June 30)"
         : "Fourth quarter (October 1 - December 31)";
     const formFieldHeader: FormField = {
-      id: `P${workPlanMetaData?.reportPeriod}_Q2_header`,
+      id: `Period${workPlanMetaData?.reportPeriod}_Q2_header`,
       type: "sectionHeader",
       props: {
         content: contentString,
@@ -150,7 +150,7 @@ export const targetPopulationsByQuarter = (
   for (let key of keys) {
     const formField: FormField = {
       ...fieldToRepeat,
-      id: `${key[0]}${key[1]}${key[2]}`,
+      id: `Period${key[0]}_Q${quarter}_${key[2]}${key[2]}`,
       type: fieldToRepeat?.type,
       validation: fieldToRepeat.validation,
       props: {
@@ -171,7 +171,7 @@ export const targetPopulationsByReportingPeriod = (
   workPlanFieldData?: AnyObject,
   workPlanMetaData?: AnyObject
 ) => {
-  formFields = targetPopulationsByQuarter(
+  targetPopulationsByQuarter(
     formFields,
     fieldToRepeat,
     1,
@@ -179,7 +179,7 @@ export const targetPopulationsByReportingPeriod = (
     workPlanMetaData
   );
 
-  formFields = targetPopulationsByQuarter(
+  targetPopulationsByQuarter(
     formFields,
     fieldToRepeat,
     2,
@@ -198,7 +198,6 @@ export const expandRepeatedFields = (
 ) => {
   const repeatingFieldRuleMap: AnyObject = {
     nextTwelveQuarters: nextTwelveQuarters,
-    targetPopulationsByQuarter: targetPopulationsByQuarter,
     targetPopulationsByReportingPeriod: targetPopulationsByReportingPeriod,
   };
   formFields.forEach((field, fieldIndex) => {
