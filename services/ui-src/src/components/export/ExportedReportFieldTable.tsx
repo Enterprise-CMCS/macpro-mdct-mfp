@@ -32,7 +32,6 @@ export const ExportedReportFieldTable = ({ section }: Props) => {
   );
   const twoColumnHeaderItems = [tableHeaders.indicator, tableHeaders.response];
   const threeColumnHeaderItems = [
-    tableHeaders.number,
     tableHeaders.indicator,
     tableHeaders.response,
   ];
@@ -72,23 +71,11 @@ export const renderFieldTableBody = (
 ) => {
   const tableRows: ReactElement[] = [];
   // recursively renders field rows
-  const renderFieldRow = (
-    formField: FormField | FormLayoutElement,
-    parentFieldCheckedChoiceIds?: string[]
-  ) => {
+  const renderFieldRow = (formField: FormField | FormLayoutElement) => {
     tableRows.push(
       <tr>
-        {/* just displaying data for now */}
-        key={JSON.stringify(formField.id)}
-        ------------------------------------ formField=
-        {JSON.stringify(formField)}
-        ------------------------------------ pageType={JSON.stringify(pageType)}
-        ------------------------------------ entityType=
-        {JSON.stringify(entityType)}
-        ------------------------------------ parentFieldCheckedChoiceIds=
-        {JSON.stringify(parentFieldCheckedChoiceIds)}
-        ------------------------------------ showHintText=
-        {JSON.stringify(showHintText)}
+        <td>{formField?.props?.label}</td>
+        <td>{formField?.props?.hydrate}</td>
       </tr>
     );
     // for drawer pages, render nested child field if any entity has a checked parent choice
@@ -108,14 +95,10 @@ export const renderFieldTableBody = (
               );
             })
         );
-        // get all checked parent field choices
-        const parentFieldCheckedChoiceIds = entitiesWithCheckedChoice?.map(
-          (entity: EntityShape) => entity.id
-        );
         // if choice is checked in any entity, and the choice has children to display, render them
         if (entitiesWithCheckedChoice?.length > 0 && choice?.children) {
           choice.children?.forEach((childField: FormField) =>
-            renderFieldRow(childField, parentFieldCheckedChoiceIds)
+            renderFieldRow(childField)
           );
         }
       });
