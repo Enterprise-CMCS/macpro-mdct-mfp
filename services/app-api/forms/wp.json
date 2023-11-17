@@ -57,6 +57,7 @@
           ]
         },
         "dashboardTitle": "Report projected number of transitions for each target population",
+        "pdfDashboardTitle": "Transition Benchmark Totals",
         "addEntityButtonText": "Add other target population",
         "editEntityButtonText": "Edit name",
         "addEditModalAddTitle": "Add other target population",

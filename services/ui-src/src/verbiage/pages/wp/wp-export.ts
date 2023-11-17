@@ -15,10 +15,11 @@ export default {
   reportPage: {
     heading: "MFP Program Work Plan for ",
     metadataTableHeaders: {
+      submissionName: "Submission Name",
       dueDate: "Due date",
       lastEdited: "Last edited",
-      editedBy: "Edited by",
       status: "Status",
+      editedBy: "Edited by",
     },
     combinedDataTable: {
       title: "Exclusion of CHIP from WP",
@@ -27,7 +28,6 @@ export default {
     },
   },
   tableHeaders: {
-    number: "Number",
     indicator: "Indicator",
     response: "Response",
   },
