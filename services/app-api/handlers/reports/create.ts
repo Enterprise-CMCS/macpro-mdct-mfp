@@ -200,7 +200,7 @@ export const createReport = handler(
     const fieldDataParams: S3Put = {
       Bucket: reportBucket,
       Key: getFieldDataKey(state, fieldDataId),
-      Body: JSON.stringify(validatedFieldData),
+      Body: JSON.stringify(newFieldData),
       ContentType: "application/json",
     };
 

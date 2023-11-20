@@ -9,8 +9,6 @@ import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
 import { useStore } from "utils";
-// assets
-import muteCopyIcon from "assets/icons/icon_copy_gray.png";
 
 export const AddEditReportModal = ({
   activeState,
@@ -107,8 +105,6 @@ export const AddEditReportModal = ({
     const dataToWrite =
       reportType === "WP" ? prepareWpPayload() : prepareSarPayload(formData);
 
-    console.log("writeReport", dataToWrite.metadata);
-
     // if an existing program was selected, use that report id
     if (selectedReport?.id) {
       const reportKeys = {
@@ -149,6 +145,10 @@ export const AddEditReportModal = ({
     modalDisclosure.onClose();
   };
 
+  const resetReport = () => {
+    modalDisclosure.onClose();
+  };
+
   const actionButtonText = () => {
     if (reportType === ReportType.WP) {
       return "";
@@ -157,7 +157,6 @@ export const AddEditReportModal = ({
   };
 
   const copyReport = async (formData: any) => {
-    console.log("copyReport");
     writeReport(undefined);
   };
 
@@ -172,13 +171,30 @@ export const AddEditReportModal = ({
       formId={form.id}
       modalDisclosure={modalDisclosure}
       content={{
-        heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
-        subheading: selectedReport?.id ? "" : form.heading?.subheading,
+        heading: !isCopyDisabled() ? form.heading?.edit : form.heading?.add,
+        subheading: !isCopyDisabled()
+          ? form.heading?.subheadingEdit
+          : form.heading?.subheading,
         actionButtonText: actionButtonText(),
         closeButtonText: "",
       }}
     >
-      {reportType == ReportType.WP ? (
+      {(reportType == ReportType.SAR || !isCopyDisabled()) && (
+        <Form
+          data-testid="add-edit-report-form"
+          id={form.id}
+          formJson={form}
+          formData={
+            reportType == ReportType.WP
+              ? previousReport
+              : selectedReport?.formData
+          }
+          onSubmit={writeReport}
+          validateOnRender={false}
+          dontReset={true}
+        />
+      )}
+      {reportType == ReportType.WP && (
         <>
           <Button
             sx={sx.copyBtn}
@@ -186,34 +202,30 @@ export const AddEditReportModal = ({
             onClick={copyReport}
             type="submit"
           >
-            Copy from previous
-            <Image
-              sx={sx.muteCopyIcon}
-              src={muteCopyIcon}
-              alt="Copy Icon"
-              className="copyIcon"
-            />
+            Continue from previous period
           </Button>
-          <Button
-            sx={sx.close}
-            onClick={writeReport}
-            type="submit"
-            variant="outline"
-            data-testid="modal-logout-button"
-          >
-            Start new
-          </Button>
+          {isCopyDisabled() ? (
+            <Button
+              sx={sx.close}
+              onClick={writeReport}
+              type="submit"
+              variant="outline"
+              data-testid="modal-logout-button"
+            >
+              Start new
+            </Button>
+          ) : (
+            <Button
+              sx={sx.resetBtn}
+              onClick={resetReport}
+              type="submit"
+              variant="outline"
+              data-testid="modal-logout-button"
+            >
+              Reset Work Plan
+            </Button>
+          )}
         </>
-      ) : (
-        <Form
-          data-testid="add-edit-report-form"
-          id={form.id}
-          formJson={form}
-          formData={selectedReport?.formData}
-          onSubmit={writeReport}
-          validateOnRender={false}
-          dontReset={true}
-        />
       )}
     </Modal>
   );
@@ -237,10 +249,6 @@ const sx = {
     maxWidth: "30rem",
     marginX: "4rem",
     padding: "0",
-  },
-  muteCopyIcon: {
-    width: "20px",
-    marginLeft: "10px",
   },
   modalHeader: {
     padding: "2rem 2rem 0 2rem",
@@ -267,6 +275,13 @@ const sx = {
     ".mobile &": {
       fontSize: "sm",
     },
+  },
+  resetBtn: {
+    border: "none",
+    marginTop: "1rem",
+    fontWeight: "none",
+    textDecoration: "underline",
+    fontSize: "0.875rem",
   },
   close: {
     justifyContent: "start",

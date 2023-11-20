@@ -69,6 +69,9 @@ export const DashboardPage = ({ reportType }: Props) => {
   const [reportsToDisplay, setReportsToDisplay] = useState<
     ReportMetadataShape[] | undefined
   >(undefined);
+  const [previousReport, setPreviousReport] = useState<
+    ReportMetadataShape | undefined
+  >(undefined);
 
   const [reportId, setReportId] = useState<string | undefined>(undefined);
   const [archiving, setArchiving] = useState<boolean>(false);
@@ -114,7 +117,11 @@ export const DashboardPage = ({ reportType }: Props) => {
         (report: ReportMetadataShape) => !report?.archived
       );
     }
-    setReportsToDisplay(newReportsToDisplay);
+    //reversing the order of the reports to display, newest report on top
+    setReportsToDisplay(newReportsToDisplay?.reverse());
+
+    //grab the last report added, which is now the first report displayed
+    setPreviousReport(newReportsToDisplay?.[0]);
   }, [reportsByState]);
 
   const enterSelectedReport = async (report: ReportMetadataShape) => {
@@ -206,14 +213,12 @@ export const DashboardPage = ({ reportType }: Props) => {
   };
 
   const isAddSubmissionDisabled = (): boolean => {
-    const lastDisplayedReport =
-      reportsToDisplay?.[reportsToDisplay?.length - 1];
     switch (reportType) {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
       case ReportType.WP:
-        if (!lastDisplayedReport) return false;
-        return lastDisplayedReport.status !== ReportStatus.APPROVED;
+        if (!previousReport) return false;
+        return previousReport.status !== ReportStatus.APPROVED;
       default:
         return true;
     }
@@ -323,7 +328,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               disabled={isAddSubmissionDisabled()}
               onClick={() => openAddEditReportModal()}
             >
-              {!reportsToDisplay?.length || reportType === ReportType.SAR
+              {!previousReport || reportType === ReportType.SAR
                 ? body.callToAction
                 : body.callToActionAdditions}
             </Button>
@@ -333,7 +338,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       <AddEditReportModal
         activeState={activeState!}
         selectedReport={selectedReport!}
-        previousReport={reportsToDisplay?.[reportsToDisplay?.length - 1]}
+        previousReport={previousReport}
         reportType={reportType}
         modalDisclosure={{
           isOpen: addEditReportModalIsOpen,
