@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
-import { Button, Image, Spinner } from "@chakra-ui/react";
+import { Button, Spinner } from "@chakra-ui/react";
 // form
 import wpFormJson from "forms/addEditWpReport/addEditWpReport.json";
 import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
@@ -156,10 +156,6 @@ export const AddEditReportModal = ({
     return submitting ? <Spinner size="md" /> : "Save";
   };
 
-  const copyReport = async (formData: any) => {
-    writeReport(undefined);
-  };
-
   const isCopyDisabled = () => {
     //if no previous report or the previous report is not approve, disable copy button
     return !previousReport || previousReport?.status !== "Approved";
@@ -199,7 +195,7 @@ export const AddEditReportModal = ({
           <Button
             sx={sx.copyBtn}
             disabled={isCopyDisabled()}
-            onClick={copyReport}
+            onClick={writeReport}
             type="submit"
           >
             Continue from previous period
