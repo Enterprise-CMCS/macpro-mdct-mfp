@@ -106,7 +106,7 @@ export const EntityRow = ({
             sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
-            // disabled={entityStatus === "disabled"}
+            disabled={entityStatus === "disabled"}
           >
             {verbiage.enterEntityDetailsButtonText}
           </Button>
