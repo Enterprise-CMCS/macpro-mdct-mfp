@@ -59,7 +59,7 @@
     {
       "id": "populations",
       "type": "checkbox",
-      "validation": "checkbox",
+      "validation": "checkboxOptional",
       "props": {
         "disabled": true,
         "label": "Target Population(s):",

@@ -151,6 +151,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           stateOrTerritory: report.state,
           reportPeriod: report.reportPeriod,
           finalSar: report.finalSar,
+          populations: report.targetPopulations,
         },
         state: report.state,
         id: report.id,
@@ -327,7 +328,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           <Box sx={sx.callToActionContainer}>
             <Button
               type="submit"
-              disabled={isAddSubmissionDisabled()}
+              // disabled={isAddSubmissionDisabled()}
               onClick={() => openAddEditReportModal()}
             >
               {!reportsToDisplay?.length || reportType === ReportType.SAR
