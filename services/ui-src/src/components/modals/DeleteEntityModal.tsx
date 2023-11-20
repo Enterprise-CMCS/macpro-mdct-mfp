@@ -5,7 +5,7 @@ import { Modal, ReportContext } from "components";
 
 // types
 import { AnyObject, EntityShape, ReportStatus } from "types";
-import { renderHtml, useStore } from "utils";
+import { useStore } from "utils";
 
 export const DeleteEntityModal = ({
   entityType,
@@ -98,7 +98,7 @@ export const DeleteEntityModal = ({
         closeButtonText: "Cancel",
       }}
     >
-      <Text>{renderHtml(verbiage.deleteModalWarning)}</Text>
+      <Text>{verbiage.deleteModalWarning}</Text>
     </Modal>
   );
 };

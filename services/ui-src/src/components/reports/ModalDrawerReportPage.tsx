@@ -62,9 +62,12 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
   const selectedEntityName =
     selectedEntity?.transitionBenchmarks_targetPopulationName;
-
   // create drawerForm from json
   const drawerForm = { ...drawerFormJson };
+
+  const drawerTitleText = `${verbiage.drawerTitle} ${
+    !selectedEntity?.isRequired && `Other: `
+  }${selectedEntityName}`;
 
   // add/edit entity modal disclosure and methods
   const {
@@ -205,7 +208,9 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           </Button>
         </Box>
         <Box>
-          <Text>{parseCustomHtml(verbiage.reviewPdfHint)}</Text>
+          <Text sx={sx.reviewPdfHint}>
+            {parseCustomHtml(verbiage.reviewPdfHint)}
+          </Text>
           <Button
             sx={sx.reviewPdfButton}
             variant="outline"
@@ -242,7 +247,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           selectedEntity={selectedEntity!}
           verbiage={{
             ...verbiage,
-            drawerTitle: `${verbiage.drawerTitle} ${selectedEntityName}`,
+            drawerTitle: drawerTitleText,
             drawerDetails: getFormattedEntityData(entityType),
           }}
           form={drawerForm}
@@ -299,6 +304,9 @@ const sx = {
         width: "260px",
       },
     },
+  },
+  reviewPdfHint: {
+    color: "palette.gray_medium",
   },
   reviewPdfButton: { marginTop: "1.5rem", marginBottom: "2rem" },
 };

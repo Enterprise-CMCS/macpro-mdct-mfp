@@ -14,15 +14,9 @@ import {
   putReport,
   sortReportsOldestToNewest,
   useStore,
+  getLastSubmission,
 } from "utils";
-import {
-  ReportContextShape,
-  ReportKeys,
-  ReportMetadataShape,
-  ReportShape,
-  ReportStatus,
-  ReportType,
-} from "types";
+import { ReportContextShape, ReportKeys, ReportShape, ReportType } from "types";
 import { reportErrors } from "verbiage/errors";
 
 // CONTEXT DECLARATION
@@ -124,23 +118,7 @@ export const ReportProvider = ({ children }: Props) => {
         selectedState
       );
 
-      let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
-      workPlanSubmissions.forEach((submission: ReportMetadataShape) => {
-        if (
-          (submission.status === ReportStatus.NOT_STARTED ||
-            submission.status === ReportStatus.IN_PROGRESS) &&
-          !submission?.associatedSar
-        ) {
-          if (
-            lastFoundSubmission &&
-            submission.createdAt > lastFoundSubmission?.createdAt
-          )
-            lastFoundSubmission = submission;
-          else if (!lastFoundSubmission) {
-            lastFoundSubmission = submission;
-          }
-        }
-      });
+      const lastFoundSubmission = getLastSubmission(workPlanSubmissions);
 
       if (lastFoundSubmission) {
         const reportKeys = {

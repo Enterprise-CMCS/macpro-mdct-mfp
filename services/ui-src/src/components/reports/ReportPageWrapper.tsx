@@ -27,12 +27,17 @@ export const ReportPageWrapper = () => {
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
 
+  const showSidebar = () => {
+    if (sidebarHidden) setSidebarHidden(false);
+  };
+
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: ReportRoute) => {
     switch (route.pageType) {
       case PageTypes.DRAWER:
         return <DrawerReportPage route={route as DrawerReportPageShape} />;
       case PageTypes.MODAL_DRAWER:
+        showSidebar();
         return (
           <ModalDrawerReportPage route={route as ModalDrawerReportPageShape} />
         );
@@ -46,6 +51,7 @@ export const ReportPageWrapper = () => {
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       default:
+        showSidebar();
         return <StandardReportPage route={route as StandardReportPageShape} />;
     }
   };

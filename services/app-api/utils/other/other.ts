@@ -1,6 +1,7 @@
 import { States } from "../constants/constants";
 import { calculatePeriod } from "../time/time";
 import {
+  AnyObject,
   ReportMetadataShape,
   ReportShape,
   ReportStatus,
@@ -69,7 +70,10 @@ export const getLastCreatedWorkPlan = async (
   event: APIGatewayProxyEvent,
   _context: any,
   state: string
-) => {
+): Promise<{
+  workPlanMetadata?: ReportMetadataShape;
+  workPlanFieldData?: AnyObject;
+}> => {
   // Fetch All Work Plans for the state
   const workPlanEvent = event;
   workPlanEvent.pathParameters = {

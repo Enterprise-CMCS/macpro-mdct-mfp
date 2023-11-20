@@ -11,9 +11,16 @@ import wp from "../../forms/wp.json";
 import sar from "../../forms/sar.json";
 import { createHash } from "crypto";
 import { FormJson, ReportJson, ReportRoute, ReportType } from "../types";
-import { mockDocumentClient, mockReportJson } from "../testing/setupJest";
+import {
+  mockDocumentClient,
+  mockReportJson,
+  mockWPMetadata,
+} from "../testing/setupJest";
 import s3Lib from "../s3/s3-lib";
 import dynamodbLib from "../dynamo/dynamodb-lib";
+
+const mockWorkPlanFieldData = mockWPMetadata.fieldData;
+const mockWorkPlanMetaData = mockWPMetadata;
 
 describe("Test getOrCreateFormTemplate WP", () => {
   beforeEach(() => {
@@ -30,7 +37,9 @@ describe("Test getOrCreateFormTemplate WP", () => {
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     const result = await getOrCreateFormTemplate(
       "local-wp-reports",
-      ReportType.WP
+      ReportType.WP,
+      mockWorkPlanFieldData,
+      mockWorkPlanMetaData
     );
     expect(dynamoPutSpy).toHaveBeenCalled();
     expect(s3PutSpy).toHaveBeenCalled();
@@ -66,7 +75,9 @@ describe("Test getOrCreateFormTemplate WP", () => {
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     const result = await getOrCreateFormTemplate(
       "local-wp-reports",
-      ReportType.WP
+      ReportType.WP,
+      mockWorkPlanFieldData,
+      mockWorkPlanMetaData
     );
     expect(dynamoPutSpy).not.toHaveBeenCalled();
     expect(s3PutSpy).not.toHaveBeenCalled();
@@ -98,7 +109,9 @@ describe("Test getOrCreateFormTemplate WP", () => {
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     const result = await getOrCreateFormTemplate(
       "local-wp-reports",
-      ReportType.WP
+      ReportType.WP,
+      mockWorkPlanFieldData,
+      mockWorkPlanMetaData
     );
     expect(dynamoPutSpy).toHaveBeenCalled();
     expect(s3PutSpy).toHaveBeenCalled();
@@ -121,7 +134,9 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     const result = await getOrCreateFormTemplate(
       "local-sar-reports",
-      ReportType.SAR
+      ReportType.SAR,
+      mockWorkPlanFieldData,
+      mockWorkPlanMetaData
     );
     expect(dynamoPutSpy).toHaveBeenCalled();
     expect(s3PutSpy).toHaveBeenCalled();
@@ -157,7 +172,9 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     const result = await getOrCreateFormTemplate(
       "local-sar-reports",
-      ReportType.SAR
+      ReportType.SAR,
+      mockWorkPlanFieldData,
+      mockWorkPlanMetaData
     );
     expect(dynamoPutSpy).not.toHaveBeenCalled();
     expect(s3PutSpy).not.toHaveBeenCalled();
@@ -189,7 +206,9 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     const result = await getOrCreateFormTemplate(
       "local-sar-reports",
-      ReportType.SAR
+      ReportType.SAR,
+      mockWorkPlanFieldData,
+      mockWorkPlanMetaData
     );
     expect(dynamoPutSpy).toHaveBeenCalled();
     expect(s3PutSpy).toHaveBeenCalled();

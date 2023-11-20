@@ -150,7 +150,7 @@ export const getStatus = (
       submissionCount >= 1 &&
       !status.includes("Submitted")
     ) {
-      return `In revision`;
+      return status;
     }
   }
   return status;
