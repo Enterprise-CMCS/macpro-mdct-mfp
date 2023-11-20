@@ -10,7 +10,7 @@ import {
   ReportShape,
 } from "types";
 // utils
-import { renderHtml, useStore } from "utils";
+import { useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import {
@@ -80,7 +80,7 @@ export const EntityRow = ({
               {!isRequired &&
                 entityType === ModalDrawerEntityTypes.TARGET_POPULATIONS &&
                 `Other: `}
-              {renderHtml(field)}
+              {field}
             </li>
           ))}
         </ul>
@@ -106,7 +106,7 @@ export const EntityRow = ({
             sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
-            disabled={entityStatus === "disabled"}
+            // disabled={entityStatus === "disabled"}
           >
             {verbiage.enterEntityDetailsButtonText}
           </Button>
