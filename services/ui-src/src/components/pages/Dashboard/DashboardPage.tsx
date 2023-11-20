@@ -38,7 +38,7 @@ import {
 } from "types";
 // utils
 import {
-  formatTargetPopulationFields,
+  formatTargetPopulationFieldsFromWorkPlan,
   parseCustomHtml,
   useBreakpoint,
   useStore,
@@ -151,7 +151,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           stateOrTerritory: report.state,
           reportPeriod: report.reportPeriod,
           finalSar: report.finalSar,
-          populations: report.targetPopulations,
+          populations: report.populations,
         },
         state: report.state,
         id: report.id,
@@ -166,7 +166,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           associatedWorkPlan: workPlanToCopyFrom?.submissionName,
           stateOrTerritory: userState,
           reportPeriod: workPlanToCopyFrom?.reportPeriod,
-          populations: formatTargetPopulationFields(
+          populations: formatTargetPopulationFieldsFromWorkPlan(
             workPlanToCopyFrom?.fieldData?.targetPopulations
           ),
         },

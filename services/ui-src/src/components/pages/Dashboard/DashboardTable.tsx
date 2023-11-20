@@ -8,7 +8,7 @@ import {
   ReportType,
   TableContentShape,
 } from "types";
-import { convertDateUtcToEt } from "utils";
+import { convertDateUtcToEt, prettyPrintChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 
@@ -50,7 +50,9 @@ export const DashboardTable = ({
           <Td sx={sxOverride.sarSubmissionNameText}>{report.submissionName}</Td>
         )}
         {/* Target populations */}
-        {reportType === ReportType.SAR && <Td>{report?.targetPopulations}</Td>}
+        {reportType === ReportType.SAR && report?.populations && (
+          <Td>{prettyPrintChoices(report?.populations)}</Td>
+        )}
         {/* Date Fields */}
         <DateFields report={report} reportType={reportType} isAdmin={isAdmin} />
         {/* Last Altered By */}

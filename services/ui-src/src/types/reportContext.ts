@@ -31,8 +31,8 @@ export interface ReportMetadataShape extends ReportKeys {
   associatedSar?: string;
   associatedWorkPlan?: string;
   // Any additional questions that are asked when creating a report are appended here
-  finalSar?: AnyObject;
-  targetPopulations?: object;
+  finalSar?: AnyObject[];
+  populations?: AnyObject[];
 }
 
 export interface ReportShape extends ReportMetadataShape {

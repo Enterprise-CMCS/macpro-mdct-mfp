@@ -1,5 +1,5 @@
 import React from "react";
-import { EntityShape } from "types";
+import { AnyObject, EntityShape } from "types";
 
 // render '<' special character
 export const renderHtml = (rawHTML: string) =>
@@ -14,3 +14,6 @@ export const eligibilityGroup = (entity: EntityShape) => {
   }
   return entity.report_eligibilityGroup[0].value;
 };
+
+export const prettyPrintChoices = (choices: AnyObject[]) =>
+  choices.map((choice) => choice.name).join(", ");

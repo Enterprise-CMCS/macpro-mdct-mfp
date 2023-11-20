@@ -229,7 +229,9 @@ export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
   });
 };
 
-export const formatTargetPopulationFields = (targetPopulations: any[]) => {
+export const formatTargetPopulationFieldsFromWorkPlan = (
+  targetPopulations: any[]
+) => {
   return targetPopulations?.map((field: EntityShape) => {
     return {
       id: `targetPopulations-${field.id}`,
@@ -244,10 +246,29 @@ export const formatTargetPopulationFields = (targetPopulations: any[]) => {
   });
 };
 
-export const injectForm = (form: FormJson, dataToInject: AnyObject[]) => {
+export const formatTargetPopulationFieldsFromSAR = (
+  targetPopulations: any[]
+) => {
+  return targetPopulations?.map((field: EntityShape) => {
+    return {
+      id: field.id,
+      label: field.label,
+      name: field.label,
+      value: field.value,
+    };
+  });
+};
+
+export const injectForm = (
+  form: FormJson,
+  dataToInject: AnyObject[],
+  dataFromSAR: boolean
+) => {
   if (!dataToInject) return form;
 
-  const formattedFields = formatTargetPopulationFields(dataToInject);
+  const formattedFields = !dataFromSAR
+    ? formatTargetPopulationFieldsFromWorkPlan(dataToInject)
+    : formatTargetPopulationFieldsFromSAR(dataToInject);
 
   const updatedFields = form.fields.map((field) => {
     return field.id.match("populations")

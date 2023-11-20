@@ -25,12 +25,12 @@ export const AddEditReportModal = ({
   const { workPlanToCopyFrom } = useStore();
 
   const dataToInject = selectedReport?.id
-    ? selectedReport?.formData
+    ? selectedReport?.formData.populations
     : workPlanToCopyFrom?.fieldData?.targetPopulations;
 
   const modalFormJsonMap: any = {
     WP: wpFormJson,
-    SAR: injectForm(sarFormJson, dataToInject),
+    SAR: injectForm(sarFormJson, dataToInject, !!selectedReport?.id),
   };
 
   const modalFormJson = modalFormJsonMap[reportType]!;
@@ -86,6 +86,8 @@ export const AddEditReportModal = ({
     const submissionName = formData["associatedWorkPlan"];
     const stateOrTerritory = formData["stateOrTerritory"];
     const reportPeriod = formData["reportPeriod"];
+    const populations = formData["populations"];
+    const finalSar = formData["finalSar"];
     return {
       metadata: {
         submissionName,
@@ -94,7 +96,8 @@ export const AddEditReportModal = ({
         lastAlteredBy: full_name,
         locked: false,
         previousRevisions: [],
-        finalSar: formData["finalSar"],
+        finalSar,
+        populations,
       },
       fieldData: {
         submissionName,

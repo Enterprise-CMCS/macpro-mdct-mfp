@@ -144,6 +144,15 @@ export const ChoiceListField = ({
   };
 
   const setCheckedOrUnchecked = (choice: FieldChoice) => {
+    console.log(
+      "🚀 ~ file: ChoiceListField.tsx:147 ~ setCheckedOrUnchecked ~ choice:",
+      choice
+    );
+    console.log(
+      "🚀 ~ file: ChoiceListField.tsx:152 ~ setCheckedOrUnchecked ~ displayValue:",
+      displayValue
+    );
+
     const checkedState = displayValue?.find(
       (option) => option.value === choice.value
     );
