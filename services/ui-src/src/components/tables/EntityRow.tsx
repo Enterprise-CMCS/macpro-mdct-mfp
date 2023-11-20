@@ -10,7 +10,7 @@ import {
   ReportShape,
 } from "types";
 // utils
-import { renderHtml, useStore } from "utils";
+import { useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import {
@@ -76,12 +76,18 @@ export const EntityRow = ({
       <Td sx={sx.entityName}>
         <ul>
           {programInfo.map((field, index) => (
-            <li key={index}>{renderHtml(field)}</li>
+            <li key={index}>
+              {!isRequired &&
+                entityType === ModalDrawerEntityTypes.TARGET_POPULATIONS &&
+                `Other: `}
+              {field}
+            </li>
           ))}
         </ul>
         {!entityStatus && (
           <Text sx={sx.errorText}>
-            Select "{verbiage.enterEntityDetailsButtonText}” to report data
+            {verbiage.editEntityHint ??
+              `Select ${verbiage.enterEntityDetailsButtonText} to report data`}
           </Text>
         )}
       </Td>
@@ -166,6 +172,7 @@ const sx = {
   actionContainer: {
     alignItems: "center",
     display: "flex",
+    justifyContent: "end",
   },
   editNameButton: {
     paddingRight: "2.5rem",
@@ -176,13 +183,13 @@ const sx = {
   editEntityButton: {
     padding: 0,
     fontWeight: "bold",
-    width: "6.5rem",
-    marginLeft: "8.25rem",
+    width: "5rem",
+    marginRight: "2.875rem",
   },
   editOtherEntityButton: {
     padding: 0,
     fontWeight: "bold",
-    width: "6.5rem",
+    minWidth: "5rem",
   },
   deleteButton: {
     height: "1.875rem",

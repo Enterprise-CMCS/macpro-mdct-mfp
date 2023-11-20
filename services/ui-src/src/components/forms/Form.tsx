@@ -18,7 +18,6 @@ import {
   mapValidationTypesToSchema,
   sortFormErrors,
   useStore,
-  renderTargetPopulationFields,
 } from "utils";
 import {
   AnyObject,
@@ -28,12 +27,14 @@ import {
   FormLayoutElement,
   ReportStatus,
   ReportType,
+  EntityShape,
 } from "types";
 
 export const Form = ({
   id,
   formJson,
   onSubmit,
+  onFormChange,
   onError,
   formData,
   validateOnRender,
@@ -51,10 +52,38 @@ export const Form = ({
 
   const { report } = useStore();
 
+  const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
+    const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
+    const formatChoiceList = updatedTargetPopulationChoices?.map(
+      (field: EntityShape) => {
+        return {
+          checked: false,
+          id: field.id,
+          label: field.isRequired
+            ? field.transitionBenchmarks_targetPopulationName
+            : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+          name: field.transitionBenchmarks_targetPopulationName,
+          value: field.transitionBenchmarks_targetPopulationName,
+        };
+      }
+    );
+
+    const updateTargetPopulationChoiceList = fields.map((field) => {
+      return field.id.match("targetPopulations")
+        ? {
+            ...field,
+            props: { ...field?.props, choices: [...formatChoiceList] },
+          }
+        : { ...field };
+    });
+    return updateTargetPopulationChoiceList;
+  };
+
   const fieldInputDisabled =
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
     (report?.status === ReportStatus.SUBMITTED &&
-      report?.reportType === ReportType.WP);
+      report?.reportType === ReportType.WP) ||
+    report?.status === ReportStatus.APPROVED;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
@@ -88,7 +117,7 @@ export const Form = ({
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
-      renderTargetPopulationFields(report, fields, location),
+      updateRenderFields(fields),
       formData
     );
     return formFieldFactory(fieldsToRender, {
@@ -104,11 +133,18 @@ export const Form = ({
     }
   }, [location?.pathname]);
 
+  const onChange = () => {
+    if (onFormChange) {
+      onFormChange(form);
+    }
+  };
+
   return (
     <FormProvider {...form}>
       <form
         id={id}
         autoComplete="off"
+        onChange={onChange}
         onSubmit={form.handleSubmit(onSubmit as any, onError || onErrorHandler)}
         {...props}
       >
@@ -129,6 +165,7 @@ interface Props {
   formData?: AnyObject;
   autosave?: boolean;
   children?: ReactNode;
+  onFormChange?: Function;
   [key: string]: any;
 }
 

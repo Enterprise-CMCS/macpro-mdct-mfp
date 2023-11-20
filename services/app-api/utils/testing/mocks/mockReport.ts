@@ -1,3 +1,4 @@
+import { ReportStatus } from "../../types";
 import {
   mockStandardReportPageJson,
   mockDrawerReportPageJson,
@@ -74,4 +75,52 @@ export const mockWPDynamoData = {
   },
   createdAt: 162515200000,
   lastAltered: 162515200000,
+};
+
+export const mockWPMetadata = {
+  submissionName: "New Jersey Work Plan 2023 - Period 2",
+  dueDate: 1699496172798,
+  formTemplateId: "wp-form-template",
+  lastAlteredBy: "Anthony Soprano",
+  versionNumber: 2,
+  previousRevisions: [],
+  reportType: "WP",
+  reportPeriod: 2,
+  createdAt: 1699496227241,
+  reportYear: 2023,
+  lastAltered: 1699496227241,
+  state: "NJ",
+  id: "wp-id",
+  locked: false,
+  fieldDataId: "wp-field-id",
+  status: ReportStatus.SUBMITTED,
+  completionStatus: {
+    "/wp/general-information": true,
+    "/wp/transition-benchmarks": false,
+    "/wp/transition-benchmark-strategy": false,
+    "/wp/state-and-territory-specific-initiatives": [],
+  },
+  isComplete: false,
+  formTemplate: {
+    type: "WP",
+    name: "MFP Work Plan (WP)",
+    basePath: "/wp",
+    version: "WP_2023-08-21",
+    entities: [],
+    routes: [],
+    validationJson: [],
+  },
+  fieldData: {
+    targetPopulations: [],
+    submissionName: "Work Plan",
+    submissionCount: "0",
+    stateName: "New Jersey",
+  },
+};
+
+export const mockWPFieldData = {
+  targetPopulations: [],
+  submissionName: "Work Plan",
+  submissionCount: "0",
+  stateName: "New Jersey",
 };

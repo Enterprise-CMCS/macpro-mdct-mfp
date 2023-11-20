@@ -16,14 +16,15 @@ import {
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   ReportJson,
+  ReportMetadataShape,
   ReportRoute,
   ReportType,
 } from "../types";
 import { getTemplate } from "../../handlers/formTemplates/populateTemplatesTable";
 import { createHash } from "crypto";
 import {
-  calculateCurrentQuarter,
   calculateCurrentYear,
+  calculatePeriod,
   incrementQuarterAndYear,
 } from "../time/time";
 
@@ -55,8 +56,13 @@ export const formTemplateForReportType = (reportType: ReportType) => {
   }
 };
 
-export const nextTwelveQuartersKeys = (fieldId: string) => {
-  let quarter = calculateCurrentQuarter();
+export const nextTwelveQuartersKeys = (
+  fieldId: string,
+  currentDate: number,
+  workPlan?: ReportMetadataShape
+) => {
+  let period = calculatePeriod(currentDate, workPlan);
+  let quarter = period === 1 ? 1 : 3;
   let year = calculateCurrentYear();
   const keys: (string[] | number[])[][] = [];
   for (let i = 0; i < 12; i++) {
@@ -69,9 +75,11 @@ export const nextTwelveQuartersKeys = (fieldId: string) => {
 export const nextTwelveQuarters = (
   formFields: FormField[],
   fieldIndex: number,
-  fieldToRepeat: FormField
+  fieldToRepeat: FormField,
+  currentDate: number,
+  workPlan?: ReportMetadataShape
 ) => {
-  var keys = nextTwelveQuartersKeys(fieldToRepeat.id);
+  var keys = nextTwelveQuartersKeys(fieldToRepeat.id, currentDate, workPlan);
   for (let key of keys) {
     const formField: FormField = {
       ...fieldToRepeat,
@@ -89,9 +97,116 @@ export const nextTwelveQuarters = (
   return formFields;
 };
 
-export const expandRepeatedFields = (formFields: FormField[]) => {
+export const targetPopulationsByQuarterKeys = (
+  fieldId: string,
+  workPlanFieldData?: AnyObject,
+  workPlanMetaData?: AnyObject
+) => {
+  var targetPopulations = workPlanFieldData?.targetPopulations;
+  const keys = [];
+  for (let population of targetPopulations) {
+    keys.push([
+      workPlanMetaData?.reportPeriod,
+      fieldId,
+      population.transitionBenchmarks_targetPopulationName,
+    ]);
+  }
+  return keys;
+};
+
+export const targetPopulationsByQuarter = (
+  formFields: FormField[],
+  fieldToRepeat: FormField,
+  quarter: number,
+  workPlanFieldData?: AnyObject,
+  workPlanMetaData?: AnyObject
+) => {
+  var keys = targetPopulationsByQuarterKeys(
+    fieldToRepeat.id,
+    workPlanFieldData,
+    workPlanMetaData
+  );
+
+  if (quarter == 1) {
+    const contentString =
+      workPlanMetaData?.reportPeriod == 1
+        ? "First quarter (January 1 - March 31)"
+        : "Third quarter (July 1 - September 30)";
+    const formFieldHeader: FormField = {
+      id: `Period${workPlanMetaData?.reportPeriod}_Q1_header`,
+      type: "sectionHeader",
+      props: {
+        content: contentString,
+      },
+    };
+    formFields.push(formFieldHeader);
+  } else if (quarter == 2) {
+    const contentString =
+      workPlanMetaData?.reportPeriod == 1
+        ? "Second quarter (April 1 - June 30)"
+        : "Fourth quarter (October 1 - December 31)";
+    const formFieldHeader: FormField = {
+      id: `Period${workPlanMetaData?.reportPeriod}_Q2_header`,
+      type: "sectionHeader",
+      props: {
+        content: contentString,
+      },
+    };
+    formFields.push(formFieldHeader);
+  }
+
+  for (let key of keys) {
+    const formField: FormField = {
+      ...fieldToRepeat,
+      id: `Period${key[0]}_Q${quarter}_${key[2]}${key[2]}`,
+      type: fieldToRepeat?.type,
+      validation: fieldToRepeat.validation,
+      props: {
+        ...fieldToRepeat?.props,
+        label: `Number of ${key[2]}`,
+      },
+    };
+    formFields.push(formField);
+  }
+
+  return formFields;
+};
+
+export const targetPopulationsByReportingPeriod = (
+  formFields: FormField[],
+  fieldIndex: number,
+  fieldToRepeat: FormField,
+  workPlanFieldData?: AnyObject,
+  workPlanMetaData?: AnyObject
+) => {
+  targetPopulationsByQuarter(
+    formFields,
+    fieldToRepeat,
+    1,
+    workPlanFieldData,
+    workPlanMetaData
+  );
+
+  targetPopulationsByQuarter(
+    formFields,
+    fieldToRepeat,
+    2,
+    workPlanFieldData,
+    workPlanMetaData
+  );
+
+  formFields.splice(fieldIndex, 1);
+  return formFields;
+};
+
+export const expandRepeatedFields = (
+  formFields: FormField[],
+  workPlanFieldData?: AnyObject,
+  workPlanMetaData?: AnyObject
+) => {
   const repeatingFieldRuleMap: AnyObject = {
     nextTwelveQuarters: nextTwelveQuarters,
+    targetPopulationsByReportingPeriod: targetPopulationsByReportingPeriod,
   };
   formFields.forEach((field, fieldIndex) => {
     // if field has choices/options (ie could have nested children)
@@ -101,35 +216,73 @@ export const expandRepeatedFields = (formFields: FormField[]) => {
         // if given field choice has nested children
         const nestedChildFields = choice.children;
         if (nestedChildFields) {
-          choice.children = expandRepeatedFields(nestedChildFields);
+          choice.children = expandRepeatedFields(
+            nestedChildFields,
+            workPlanFieldData,
+            workPlanMetaData
+          );
         }
       });
     }
     if (field?.repeatable) {
       const repeatingFieldRule = repeatingFieldRuleMap[field.repeatable.rule];
-      formFields = repeatingFieldRule(formFields, fieldIndex, field);
+      formFields = repeatingFieldRule(
+        formFields,
+        fieldIndex,
+        field,
+        workPlanFieldData,
+        workPlanMetaData
+      );
     }
   });
   return formFields;
 };
 
-export const scanForRepeatedFields = (reportRoutes: ReportRoute[]) => {
+export const scanForRepeatedFields = (
+  reportRoutes: ReportRoute[],
+  workPlanFieldData?: AnyObject,
+  workPlanMetaData?: AnyObject
+) => {
   for (let route of reportRoutes) {
-    if (route?.entitySteps) scanForRepeatedFields(route.entitySteps);
-    if (route?.children) scanForRepeatedFields(route.children);
+    if (route?.entitySteps)
+      scanForRepeatedFields(
+        route.entitySteps,
+        workPlanFieldData,
+        workPlanMetaData
+      );
+    if (route?.children)
+      scanForRepeatedFields(
+        route.children,
+        workPlanFieldData,
+        workPlanMetaData
+      );
     if (route?.form?.fields)
-      route.form.fields = expandRepeatedFields(route.form.fields);
+      route.form.fields = expandRepeatedFields(
+        route.form.fields,
+        workPlanFieldData,
+        workPlanMetaData
+      );
     if (route?.drawerForm?.fields)
-      route.drawerForm.fields = expandRepeatedFields(route.drawerForm.fields);
+      route.drawerForm.fields = expandRepeatedFields(
+        route.drawerForm.fields,
+        workPlanFieldData,
+        workPlanMetaData
+      );
     if (route?.modalForm?.fields)
-      route.modalForm.fields = expandRepeatedFields(route.modalForm.fields);
+      route.modalForm.fields = expandRepeatedFields(
+        route.modalForm.fields,
+        workPlanFieldData,
+        workPlanMetaData
+      );
   }
   return reportRoutes;
 };
 
 export async function getOrCreateFormTemplate(
   reportBucket: string,
-  reportType: ReportType
+  reportType: ReportType,
+  workPlanFieldData?: AnyObject,
+  workPlanMetaData?: AnyObject
 ) {
   const currentFormTemplate = formTemplateForReportType(reportType);
   const stringifiedTemplate = JSON.stringify(currentFormTemplate);
@@ -152,7 +305,9 @@ export async function getOrCreateFormTemplate(
   } else {
     const newFormTemplateId = KSUID.randomSync().string;
     currentFormTemplate.routes = scanForRepeatedFields(
-      currentFormTemplate.routes
+      currentFormTemplate.routes,
+      workPlanFieldData,
+      workPlanMetaData
     );
 
     const formTemplateWithValidationJson = {
