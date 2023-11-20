@@ -10,7 +10,7 @@ import {
   ReportShape,
 } from "types";
 // utils
-import { renderHtml, useStore } from "utils";
+import { useStore } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import {
@@ -80,7 +80,7 @@ export const EntityRow = ({
               {!isRequired &&
                 entityType === ModalDrawerEntityTypes.TARGET_POPULATIONS &&
                 `Other: `}
-              {renderHtml(field)}
+              {field}
             </li>
           ))}
         </ul>
