@@ -12,7 +12,13 @@ import { AnyObject, State } from "../types";
  */
 
 //extra fields that needs to be copied over
-const additionalFields = ["id", "type", "isOtherEntity", "isRequired", "isCopied"];
+const additionalFields = [
+  "id",
+  "type",
+  "isOtherEntity",
+  "isRequired",
+  "isCopied",
+];
 
 export async function copyFieldDataFromSource(
   reportBucket: string,
@@ -65,18 +71,12 @@ function pruneEntityData(
     for (const entityKey in entity) {
       //check to see if the object is an array, this is for capturing substeps in the initiatives
       if (typeof entity[entityKey] === "object") {
-        entity[entityKey].forEach((subEntity: AnyObject, subIndex: number) => {
-          for (const subEntityKey in subEntity) {
-            if (!concatEntityFields.includes(subEntityKey)) {
-              if (
-                !subEntityKey.includes("name") &&
-                !["key", "value"].includes(subEntityKey)
-              ) {
-                delete entityData[index][entityKey][subIndex][subEntityKey];
-              }
-            }
-          }
-        });
+        pruneEntityData(
+          sourceFieldData,
+          key,
+          entity[entityKey],
+          possibleFields
+        );
       } else {
         if (!concatEntityFields.includes(entityKey)) {
           if (
@@ -90,9 +90,7 @@ function pruneEntityData(
     }
     if (Object.keys(entity).length === 0) {
       delete entityData[index];
-    }
-    else
-      entityData[index]["isCopied"] = true;
+    } else entityData[index]["isCopied"] = true;
   });
   // Delete whole key if there's nothing in it.
   if (entityData.every((e) => e === null)) {
