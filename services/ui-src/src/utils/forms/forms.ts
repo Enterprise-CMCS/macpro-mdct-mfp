@@ -229,21 +229,25 @@ export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
   });
 };
 
-export const injectForm = (form: FormJson, dataToInject: AnyObject) => {
-  if (!dataToInject) return form;
-
-  const formattedFields = dataToInject?.map((field: EntityShape) => {
-    // choice list fields (Work Plan sections)
+export const formatTargetPopulationFields = (targetPopulations: any[]) => {
+  return targetPopulations?.map((field: EntityShape) => {
     return {
-      checked: false,
-      id: field.id,
+      id: `targetPopulations-${field.id}`,
       label: field.isRequired
         ? field.transitionBenchmarks_targetPopulationName
         : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
       name: field.transitionBenchmarks_targetPopulationName,
-      value: field.transitionBenchmarks_targetPopulationName,
+      value: field.isRequired
+        ? field.transitionBenchmarks_targetPopulationName
+        : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
     };
   });
+};
+
+export const injectForm = (form: FormJson, dataToInject: AnyObject[]) => {
+  if (!dataToInject) return form;
+
+  const formattedFields = formatTargetPopulationFields(dataToInject);
 
   const updatedFields = form.fields.map((field) => {
     return field.id.match("populations")
