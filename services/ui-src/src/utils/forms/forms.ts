@@ -10,8 +10,10 @@ import {
 // types
 import {
   AnyObject,
+  EntityShape,
   FieldChoice,
   FormField,
+  FormJson,
   FormLayoutElement,
   isFieldElement,
 } from "types";
@@ -225,4 +227,33 @@ export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
         break;
     }
   });
+};
+
+export const injectForm = (form: FormJson, dataToInject: AnyObject) => {
+  if (!dataToInject) return form;
+
+  const formattedFields = dataToInject?.map((field: EntityShape) => {
+    // choice list fields (Work Plan sections)
+    return {
+      checked: false,
+      id: field.id,
+      label: field.isRequired
+        ? field.transitionBenchmarks_targetPopulationName
+        : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+      name: field.transitionBenchmarks_targetPopulationName,
+      value: field.transitionBenchmarks_targetPopulationName,
+    };
+  });
+
+  const updatedFields = form.fields.map((field) => {
+    return field.id.match("populations")
+      ? {
+          ...field,
+          props: { ...field?.props, choices: [...formattedFields] },
+        }
+      : { ...field };
+  });
+
+  form.fields = updatedFields;
+  return form;
 };

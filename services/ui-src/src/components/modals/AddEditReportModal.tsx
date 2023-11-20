@@ -8,7 +8,7 @@ import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 // utils
 import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
-import { useStore } from "utils";
+import { injectForm, useStore } from "utils";
 // assets
 import muteCopyIcon from "assets/icons/icon_copy_gray.png";
 
@@ -22,9 +22,15 @@ export const AddEditReportModal = ({
     useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const { workPlanToCopyFrom } = useStore();
+
+  const dataToInject = selectedReport?.id
+    ? selectedReport?.formData
+    : workPlanToCopyFrom?.fieldData?.targetPopulations;
+
   const modalFormJsonMap: any = {
     WP: wpFormJson,
-    SAR: sarFormJson,
+    SAR: injectForm(sarFormJson, dataToInject),
   };
 
   const modalFormJson = modalFormJsonMap[reportType]!;
