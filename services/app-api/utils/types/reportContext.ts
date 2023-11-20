@@ -1,3 +1,4 @@
+import { Choice } from "./formFields";
 import { AnyObject } from "./other";
 import { ReportJson } from "./reports";
 
@@ -32,8 +33,8 @@ export interface ReportMetadataShape extends ReportKeys {
   associatedSar?: string;
   associatedWorkPlan?: string;
   // Any additional questions that are asked when creating a report are appended here
-  finalSar?: AnyObject[];
-  populations?: AnyObject[];
+  finalSar?: Choice[];
+  populations?: Choice[];
 }
 
 export interface ReportShape extends ReportMetadataShape {

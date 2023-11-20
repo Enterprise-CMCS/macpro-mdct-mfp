@@ -10,6 +10,7 @@ import {
 // types
 import {
   AnyObject,
+  Choice,
   EntityShape,
   FieldChoice,
   FormField,
@@ -229,6 +230,17 @@ export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
   });
 };
 
+export const formatTargetPopulationsToChoices = (targetPopulations: any[]) => {
+  return targetPopulations?.map((field: EntityShape) => {
+    return {
+      key: `targetPopulations-${field.id}`,
+      value: field.isRequired
+        ? field.transitionBenchmarks_targetPopulationName
+        : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+    };
+  });
+};
+
 export const formatTargetPopulationFieldsFromWorkPlan = (
   targetPopulations: any[]
 ) => {
@@ -249,11 +261,11 @@ export const formatTargetPopulationFieldsFromWorkPlan = (
 export const formatTargetPopulationFieldsFromSAR = (
   targetPopulations: any[]
 ) => {
-  return targetPopulations?.map((field: EntityShape) => {
+  return targetPopulations?.map((field: Choice) => {
     return {
-      id: field.id,
-      label: field.label,
-      name: field.label,
+      id: field.key,
+      label: field.value,
+      name: field.value,
       value: field.value,
     };
   });
