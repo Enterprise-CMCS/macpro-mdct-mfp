@@ -18,6 +18,7 @@ import {
 import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
 import { NumberField } from "components/fields/NumberField";
+import { SectionHeader } from "components/forms/FormLayoutElements";
 
 // return created elements from provided fields
 export const formFieldFactory = (
@@ -39,6 +40,7 @@ export const formFieldFactory = (
     radio: RadioField,
     text: TextField,
     textarea: TextAreaField,
+    sectionHeader: SectionHeader,
   };
   fields = initializeChoiceListFields(fields);
   return fields.map((field) => {
