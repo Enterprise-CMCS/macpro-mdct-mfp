@@ -4,7 +4,20 @@
     "mode": "onChange"
   },
   "heading": {
+    "edit": "Continue MFP Work Plan",
     "add": "Add new MFP Work Plan",
-    "subheading": "Update your transition benchmarks and initiatives from the information in your last approved Work Plan by selecting Copy from previous. Use Start new only when you want to completely reset your MFP program information and start from a blank form. "
-  }
+    "subheading": "Start a new Work Plan for the reporting period. Once you complete this Work Plan and CMS approves it, you’ll be able to continue updating it by selecting Continue from previous period or completely reset your MFP program information and start from a blank form. You will be able to view all Work Plans from previous periods. ",
+    "subheadingEdit": "Update your Work Plan for the next period, starting from the information in your last approved Work Plan by selecting Continue from previous period. Use Reset Work Plan only when you want to completely reset your MFP program information and start from a blank form. You will still be able to view the Work Plans from all previous periods."
+  },
+  "fields": [
+    {
+      "id": "submissionName",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "disabled": true,
+        "label": "Continue from MFP Work Plan:"
+      }
+    }
+  ]
 }
