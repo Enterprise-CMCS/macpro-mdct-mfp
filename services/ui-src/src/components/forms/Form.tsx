@@ -13,10 +13,12 @@ import { Box } from "@chakra-ui/react";
 // utils
 import {
   compileValidationJsonFromFields,
+  convertTargetPopulationsFromWPToSAREntity,
   formFieldFactory,
   hydrateFormFields,
   mapValidationTypesToSchema,
   sortFormErrors,
+  updateFieldChoicesByID,
   useStore,
 } from "utils";
 import {
@@ -27,7 +29,6 @@ import {
   FormLayoutElement,
   ReportStatus,
   ReportType,
-  EntityShape,
 } from "types";
 
 export const Form = ({
@@ -54,28 +55,15 @@ export const Form = ({
 
   const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
     const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
-    const formatChoiceList = updatedTargetPopulationChoices?.map(
-      (field: EntityShape) => {
-        return {
-          checked: false,
-          id: field.id,
-          label: field.isRequired
-            ? field.transitionBenchmarks_targetPopulationName
-            : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
-          name: field.transitionBenchmarks_targetPopulationName,
-          value: field.transitionBenchmarks_targetPopulationName,
-        };
-      }
+    const formatChoiceList = convertTargetPopulationsFromWPToSAREntity(
+      updatedTargetPopulationChoices
     );
 
-    const updateTargetPopulationChoiceList = fields.map((field) => {
-      return field.id.match("targetPopulations")
-        ? {
-            ...field,
-            props: { ...field?.props, choices: [...formatChoiceList] },
-          }
-        : { ...field };
-    });
+    const updateTargetPopulationChoiceList = updateFieldChoicesByID(
+      fields,
+      "targetPopulations",
+      formatChoiceList
+    );
     return updateTargetPopulationChoiceList;
   };
 
