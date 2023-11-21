@@ -5,7 +5,8 @@ export default {
       preLinkText:
         "Get started by completing a MFP Work Plan for your state or territory. After your Work Plan is submitted and approved, you will be able to complete a Semi-Annual Progress Report. Learn more about this ",
       linkText: "new data collection tool",
-      linkLocation: "https://www.google.com",
+      linkLocation:
+        "https://www.medicaid.gov/medicaid/long-term-services-supports/money-follows-person/index.html",
       postLinkText: " from CMS.",
     },
   },
