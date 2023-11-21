@@ -36,7 +36,7 @@ export const AddEditEntityModal = ({
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const onChange = (e: InputChangeEvent) => {
-    const input = e.target.value;
+    const input = e.target.value.trim();
     const existingOtherTargetPopulations =
       report?.fieldData.targetPopulations.filter(
         (object: AnyObject) => !object.isRequired
