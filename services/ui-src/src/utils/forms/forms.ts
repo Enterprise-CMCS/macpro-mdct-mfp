@@ -273,6 +273,21 @@ export const convertTargetPopulationsFromWPToSAREntity = (
   });
 };
 
+export const updateFieldChoicesByID = (
+  formFields: (FormField | FormLayoutElement)[],
+  id: string,
+  fields: AnyObject[]
+) => {
+  return formFields.map((field) => {
+    return field.id.match(id)
+      ? {
+          ...field,
+          props: { ...field?.props, choices: [...fields] },
+        }
+      : { ...field };
+  });
+};
+
 export const injectFormWithTargetPopulations = (
   form: FormJson,
   dataToInject: AnyObject[],
@@ -284,14 +299,11 @@ export const injectFormWithTargetPopulations = (
     ? convertTargetPopulationsFromWPToSAREntity(dataToInject)
     : convertChoiceToEntity(dataToInject as Choice[]);
 
-  const updatedFields = form.fields.map((field) => {
-    return field.id.match("populations")
-      ? {
-          ...field,
-          props: { ...field?.props, choices: [...fields] },
-        }
-      : { ...field };
-  });
+  const updatedFields = updateFieldChoicesByID(
+    form.fields,
+    "populations",
+    fields
+  );
 
   form.fields = updatedFields;
   return form;
