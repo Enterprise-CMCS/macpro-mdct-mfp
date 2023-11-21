@@ -37,7 +37,12 @@ import {
   AlertTypes,
 } from "types";
 // utils
-import { parseCustomHtml, useBreakpoint, useStore } from "utils";
+import {
+  convertEntityToTargetPopulationChoice,
+  parseCustomHtml,
+  useBreakpoint,
+  useStore,
+} from "utils";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
@@ -153,6 +158,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           stateOrTerritory: report.state,
           reportPeriod: report.reportPeriod,
           finalSar: report.finalSar,
+          populations: report.populations,
         },
         state: report.state,
         id: report.id,
@@ -167,6 +173,9 @@ export const DashboardPage = ({ reportType }: Props) => {
           associatedWorkPlan: workPlanToCopyFrom?.submissionName,
           stateOrTerritory: userState,
           reportPeriod: workPlanToCopyFrom?.reportPeriod,
+          populations: convertEntityToTargetPopulationChoice(
+            workPlanToCopyFrom?.fieldData?.targetPopulations
+          ),
         },
       };
     }

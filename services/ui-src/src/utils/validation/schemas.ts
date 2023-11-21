@@ -148,7 +148,8 @@ export const checkbox = () =>
     .min(1, error.REQUIRED_CHECKBOX)
     .of(object({ key: text(), value: text() }))
     .required(error.REQUIRED_CHECKBOX);
-export const checkboxOptional = () => checkbox().notRequired();
+export const checkboxOptional = () =>
+  array().notRequired().typeError(error.INVALID_GENERIC);
 export const checkboxSingle = () => boolean();
 
 // RADIO
