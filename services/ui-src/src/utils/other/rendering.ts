@@ -15,5 +15,5 @@ export const eligibilityGroup = (entity: EntityShape) => {
   return entity.report_eligibilityGroup[0].value;
 };
 
-export const prettyPrintChoices = (choices: Choice[]) =>
+export const prettifyChoices = (choices: Choice[]) =>
   choices.map((choice) => choice.value).join(", ");

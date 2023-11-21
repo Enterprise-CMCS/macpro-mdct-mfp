@@ -29,7 +29,6 @@ import {
   FormLayoutElement,
   ReportStatus,
   ReportType,
-  EntityShape,
 } from "types";
 
 export const Form = ({

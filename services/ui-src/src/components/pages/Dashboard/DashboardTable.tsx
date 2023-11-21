@@ -8,7 +8,7 @@ import {
   ReportType,
   TableContentShape,
 } from "types";
-import { convertDateUtcToEt, prettyPrintChoices } from "utils";
+import { convertDateUtcToEt, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 
@@ -51,7 +51,7 @@ export const DashboardTable = ({
         )}
         {/* Target populations */}
         {reportType === ReportType.SAR && report?.populations && (
-          <Td>{prettyPrintChoices(report?.populations)}</Td>
+          <Td>{prettifyChoices(report?.populations)}</Td>
         )}
         {/* Date Fields */}
         <DateFields report={report} reportType={reportType} isAdmin={isAdmin} />

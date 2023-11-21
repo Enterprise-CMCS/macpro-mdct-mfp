@@ -245,6 +245,13 @@ export const convertEntityToTargetPopulationChoice = (
   });
 };
 
+/*
+ * This function is called when a Choice in the DB needs to be expanded to be able
+ * to create a ChoiceListField. This can happen when you need to dynamically
+ * create a field based on a users inputs. For example, when a user clicks
+ * the edit button on the SAR dashboard, they'll need a dynamically made
+ * form to show the target populations from the Work Plan.
+ */
 export const convertChoiceToEntity = (choices: Choice[]) => {
   return choices?.map((field: Choice) => {
     return {
@@ -256,8 +263,14 @@ export const convertChoiceToEntity = (choices: Choice[]) => {
   });
 };
 
+/*
+ * This function is called when a user clicks the Create SAR button on the
+ * dashboard. At that moment, we need to dynamically render a choicelistfield
+ * and display it to the user. Thus, this function grabs that data from the WP
+ * and makes the field based on the data stored there.
+ */
 export const convertTargetPopulationsFromWPToSAREntity = (
-  targetPopulations: any[]
+  targetPopulations: AnyObject[]
 ) => {
   return targetPopulations?.map((field: EntityShape) => {
     return {

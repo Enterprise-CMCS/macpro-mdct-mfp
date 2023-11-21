@@ -2,7 +2,7 @@
 import { Box, Button, Flex, Image, Text, Spinner } from "@chakra-ui/react";
 // utils
 import { AnyObject, ReportMetadataShape, ReportType } from "types";
-import { convertDateUtcToEt, prettyPrintChoices } from "utils";
+import { convertDateUtcToEt, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 import { getStatus } from "./DashboardTable";
@@ -47,7 +47,7 @@ export const MobileDashboardTable = ({
         {reportType === "SAR" && report?.populations && (
           <Box sx={sx.labelGroup}>
             <Text sx={sx.label}>Target populations</Text>
-            <Text>{prettyPrintChoices(report?.populations)}</Text>
+            <Text>{prettifyChoices(report?.populations)}</Text>
           </Box>
         )}
         <Box sx={sx.labelGroup}>
