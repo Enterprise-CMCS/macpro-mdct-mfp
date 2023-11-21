@@ -25,7 +25,7 @@ export const AddEditReportModal = ({
   const { workPlanToCopyFrom } = useStore();
 
   const dataToInject = selectedReport?.id
-    ? selectedReport?.formData.populations
+    ? selectedReport?.formData?.populations
     : workPlanToCopyFrom?.fieldData?.targetPopulations;
 
   const modalFormJsonMap: any = {
