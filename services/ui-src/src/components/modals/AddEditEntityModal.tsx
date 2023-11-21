@@ -25,6 +25,8 @@ export const AddEditEntityModal = ({
   entityName,
   form,
   verbiage,
+  error,
+  setError,
   selectedEntity,
   modalDisclosure,
 }: Props) => {
@@ -32,7 +34,6 @@ export const AddEditEntityModal = ({
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
 
   const onChange = (e: InputChangeEvent) => {
     const input = e.target.value;
@@ -57,8 +58,6 @@ export const AddEditEntityModal = ({
 
   const writeEntity = async (enteredData: any) => {
     setSubmitting(true);
-    const submitButton = document.querySelector("[form=" + form.id + "]");
-    submitButton?.setAttribute("disabled", "true");
 
     const reportKeys = {
       reportType: report?.reportType,
@@ -171,6 +170,8 @@ interface Props {
   form: FormJson;
   verbiage: AnyObject;
   selectedEntity?: EntityShape;
+  error?: string;
+  setError: Function;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
