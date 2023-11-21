@@ -43,7 +43,7 @@ export const ChoiceListField = ({
   const { state, userIsReadOnly, userIsAdmin, full_name } =
     useStore().user ?? {};
 
-  const { report, selectedEntity } = useStore();
+  const { report, selectedEntity, setAutosaveState } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
@@ -197,6 +197,8 @@ export const ChoiceListField = ({
   // if should autosave, submit field data to database on component blur
   const onComponentBlurHandler = () => {
     if (autosave) {
+      //track the state of autosave in state management
+      setAutosaveState(true);
       const timeInMs = 200;
       // Timeout because the CMSDS ChoiceList component relies on timeouts to assert its own focus, and we're stuck behind its update
       setTimeout(async () => {
@@ -239,6 +241,8 @@ export const ChoiceListField = ({
             selectedEntity,
             prepareEntityPayload,
           },
+        }).then(() => {
+          setAutosaveState(false);
         });
       }, timeInMs);
     }
