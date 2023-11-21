@@ -29,6 +29,16 @@ export { EntityStepCardBottomSection } from "./cards/EntityCardBottomSection";
 // drawers
 export { Drawer } from "./drawers/Drawer";
 export { ReportDrawer } from "./drawers/ReportDrawer";
+// export
+export { ExportedReportMetadataTable } from "./export/ExportedReportMetadataTable";
+export { ExportedSectionHeading } from "./export/ExportedSectionHeading";
+export { ExportedModalDrawerReportSection } from "./export/ExportedModalDrawerReportSection";
+export { ExportedReportWrapper } from "./export/ExportedReportWrapper";
+export { ExportedReportFieldTable } from "./export/ExportedReportFieldTable";
+export { ExportedEntityDetailsOverlaySection } from "./export/ExportedEntityDetailsOverlaySection";
+export { ExportedEntityDetailsTable } from "./export/ExportedEntityDetailsTable";
+export { ExportedEntityDetailsTableRow } from "./export/ExportedEntityDetailsTableRow";
+export { ExportedModalOverlayReportSection } from "./export/ExportedModalOverlayReportSection";
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";

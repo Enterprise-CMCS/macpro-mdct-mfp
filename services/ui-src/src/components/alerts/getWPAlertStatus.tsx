@@ -30,7 +30,6 @@ export const checkInitiativeTopics = (fieldData: any, entities: any[]) => {
   //check if the values matches all the topics, if all topics is covered, return false
   return !topics.every((topic) => values?.includes(topic));
 };
-
 //store function calls here
 const alertStatusFunctions: AnyObject = {
   initiative: checkInitiativeTopics,
