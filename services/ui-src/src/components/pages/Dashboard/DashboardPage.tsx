@@ -38,7 +38,7 @@ import {
 } from "types";
 // utils
 import {
-  formatTargetPopulationsToChoices,
+  convertEntityToTargetPopulationChoice,
   parseCustomHtml,
   useBreakpoint,
   useStore,
@@ -166,7 +166,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           associatedWorkPlan: workPlanToCopyFrom?.submissionName,
           stateOrTerritory: userState,
           reportPeriod: workPlanToCopyFrom?.reportPeriod,
-          populations: formatTargetPopulationsToChoices(
+          populations: convertEntityToTargetPopulationChoice(
             workPlanToCopyFrom?.fieldData?.targetPopulations
           ),
         },

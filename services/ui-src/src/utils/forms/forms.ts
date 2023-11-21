@@ -230,8 +230,10 @@ export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
   });
 };
 
-export const formatTargetPopulationsToChoices = (targetPopulations: any[]) => {
-  return targetPopulations?.map((field: EntityShape) => {
+export const convertEntityToTargetPopulationChoice = (
+  entity: EntityShape[]
+) => {
+  return entity?.map((field: EntityShape) => {
     return {
       key: `targetPopulations-${field.id}`,
       value: field.isRequired
@@ -241,7 +243,18 @@ export const formatTargetPopulationsToChoices = (targetPopulations: any[]) => {
   });
 };
 
-export const formatTargetPopulationFieldsFromWorkPlan = (
+export const convertChoiceToEntity = (choices: Choice[]) => {
+  return choices?.map((field: Choice) => {
+    return {
+      id: field.key,
+      label: field.value,
+      name: field.value,
+      value: field.value,
+    };
+  });
+};
+
+export const convertTargetPopulationsFromWPToSAREntity = (
   targetPopulations: any[]
 ) => {
   return targetPopulations?.map((field: EntityShape) => {
@@ -258,35 +271,22 @@ export const formatTargetPopulationFieldsFromWorkPlan = (
   });
 };
 
-export const formatTargetPopulationFieldsFromSAR = (
-  targetPopulations: any[]
-) => {
-  return targetPopulations?.map((field: Choice) => {
-    return {
-      id: field.key,
-      label: field.value,
-      name: field.value,
-      value: field.value,
-    };
-  });
-};
-
-export const injectForm = (
+export const injectFormWithTargetPopulations = (
   form: FormJson,
   dataToInject: AnyObject[],
   dataFromSAR: boolean
 ) => {
   if (!dataToInject) return form;
 
-  const formattedFields = !dataFromSAR
-    ? formatTargetPopulationFieldsFromWorkPlan(dataToInject)
-    : formatTargetPopulationFieldsFromSAR(dataToInject);
+  const fields = !dataFromSAR
+    ? convertTargetPopulationsFromWPToSAREntity(dataToInject)
+    : convertChoiceToEntity(dataToInject as Choice[]);
 
   const updatedFields = form.fields.map((field) => {
     return field.id.match("populations")
       ? {
           ...field,
-          props: { ...field?.props, choices: [...formattedFields] },
+          props: { ...field?.props, choices: [...fields] },
         }
       : { ...field };
   });
