@@ -109,6 +109,8 @@ export const DashboardPage = ({ reportType }: Props) => {
 
   useEffect(() => {
     let newReportsToDisplay = reportsByState;
+    // sort by creation date (newest to oldest)
+    newReportsToDisplay?.reverse();
     if (!userIsAdmin) {
       newReportsToDisplay = reportsByState?.filter(
         (report: ReportMetadataShape) => !report?.archived
