@@ -329,7 +329,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           <Box sx={sx.callToActionContainer}>
             <Button
               type="submit"
-              // disabled={isAddSubmissionDisabled()}
+              disabled={isAddSubmissionDisabled()}
               onClick={() => openAddEditReportModal()}
             >
               {!reportsToDisplay?.length || reportType === ReportType.SAR
