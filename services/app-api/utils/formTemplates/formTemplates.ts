@@ -16,14 +16,15 @@ import {
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   ReportJson,
+  ReportMetadataShape,
   ReportRoute,
   ReportType,
 } from "../types";
 import { getTemplate } from "../../handlers/formTemplates/populateTemplatesTable";
 import { createHash } from "crypto";
 import {
-  calculateCurrentQuarter,
   calculateCurrentYear,
+  calculatePeriod,
   incrementQuarterAndYear,
 } from "../time/time";
 
@@ -55,8 +56,13 @@ export const formTemplateForReportType = (reportType: ReportType) => {
   }
 };
 
-export const nextTwelveQuartersKeys = (fieldId: string) => {
-  let quarter = calculateCurrentQuarter();
+export const nextTwelveQuartersKeys = (
+  fieldId: string,
+  currentDate: number,
+  workPlan?: ReportMetadataShape
+) => {
+  let period = calculatePeriod(currentDate, workPlan);
+  let quarter = period === 1 ? 1 : 3;
   let year = calculateCurrentYear();
   const keys: (string[] | number[])[][] = [];
   for (let i = 0; i < 12; i++) {
@@ -69,9 +75,11 @@ export const nextTwelveQuartersKeys = (fieldId: string) => {
 export const nextTwelveQuarters = (
   formFields: FormField[],
   fieldIndex: number,
-  fieldToRepeat: FormField
+  fieldToRepeat: FormField,
+  currentDate: number,
+  workPlan?: ReportMetadataShape
 ) => {
-  var keys = nextTwelveQuartersKeys(fieldToRepeat.id);
+  var keys = nextTwelveQuartersKeys(fieldToRepeat.id, currentDate, workPlan);
   for (let key of keys) {
     const formField: FormField = {
       ...fieldToRepeat,

@@ -18,6 +18,7 @@ import { MfpReportState, MfpUserState, entityTypes } from "../../types";
 
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
+const mockSetError = jest.fn();
 
 jest.mock("react-uuid", () => jest.fn(() => "mock-id-2"));
 jest.mock("utils/state/useStore");
@@ -71,6 +72,7 @@ const modalComponent = (
         verbiage={mockModalDrawerReportPageVerbiage}
         entityName={mockEntityName}
         form={mockModalForm}
+        setError={mockSetError}
         modalDisclosure={{
           isOpen: true,
           onClose: mockCloseHandler,
@@ -88,6 +90,7 @@ const modalComponentWithSelectedEntity = (
         selectedEntity={mockEntity}
         verbiage={mockModalDrawerReportPageVerbiage}
         form={mockModalForm}
+        setError={mockSetError}
         modalDisclosure={{
           isOpen: true,
           onClose: mockCloseHandler,
@@ -126,6 +129,15 @@ describe("Test AddEditEntityModal", () => {
   test("AddEditEntityModal close button closes modal", () => {
     fireEvent.click(screen.getByText("Close"));
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+  });
+
+  test("User cannot add duplicate 'Other' target populations", async () => {
+    const form = screen.queryByTestId("add-edit-entity-form");
+    const textField = form!.querySelector("input")!;
+    await userEvent.clear(textField);
+    await userEvent.type(textField, "mock input 1");
+    const submitButton = screen.getByRole("button", { name: "Save & close" });
+    expect(submitButton).toBeDisabled;
   });
 });
 
