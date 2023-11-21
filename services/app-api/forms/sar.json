@@ -243,69 +243,11 @@
             "id": "ret-mtrp",
             "fields": [
               {
-                "id": "ret_firstQuarterNumberOfOlderAdults",
+                "id": "ret_mtrp_repeating_fields",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "{First quarter (Jan 1 - Mar 31)}"
-                }
-              },
-              {
-                "id": "ret_firstQuarterNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_firstQuarterNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_firstQuarterNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
-                }
-              },
-              {
-                "id": "ret_secondQuarterNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "{Second quarter (Apr 1 - June 30)}"
-                }
-              },
-              {
-                "id": "ret_secondQuarterNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_secondQuarterNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_secondQuarterNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "repeatable": {
+                  "rule": "targetPopulationsByReportingPeriod"
                 }
               }
             ]

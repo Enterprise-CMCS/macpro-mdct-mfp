@@ -63,7 +63,7 @@ export const App = () => {
         <main>
           <Container sx={sx.appContainer}>
             <Heading as="h1" size="xl" sx={sx.loginHeading}>
-              Money Follows People
+              Money Follows the Person
             </Heading>
           </Container>
           <Container sx={sx.loginContainer} data-testid="login-container">

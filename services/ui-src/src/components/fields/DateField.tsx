@@ -22,13 +22,14 @@ export const DateField = ({
   sxOverride,
   nested,
   autosave,
+  validateOnRender,
   styleAsOptional,
   ...props
 }: Props) => {
   const defaultValue = "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
-  const { report, selectedEntity } = useStore();
+  const { report, selectedEntity, setAutosaveState } = useStore();
   const { full_name, state } = useStore().user ?? {};
 
   const { updateReport } = useContext(ReportContext);
@@ -36,6 +37,16 @@ export const DateField = ({
 
   // get form context and register form field
   const form = useFormContext();
+
+  const fieldIsRegistered = name in form.getValues();
+
+  useEffect(() => {
+    if (!fieldIsRegistered && !validateOnRender) {
+      form.register(name);
+    } else if (validateOnRender) {
+      form.trigger(name);
+    }
+  }, []);
 
   // set initial display value to form state field value or hydration value
   const hydrationValue = props?.hydrate || defaultValue;
@@ -74,6 +85,8 @@ export const DateField = ({
 
     //submit field data to database
     if (autosave) {
+      //track the state of autosave in state management
+      setAutosaveState(true);
       const fields = getAutosaveFields({
         name,
         type: "date",
@@ -96,6 +109,8 @@ export const DateField = ({
           selectedEntity,
           prepareEntityPayload,
         },
+      }).then(() => {
+        setAutosaveState(false);
       });
     }
   };
