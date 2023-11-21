@@ -272,7 +272,7 @@ export const convertChoiceToEntity = (choices: Choice[]) => {
 export const convertTargetPopulationsFromWPToSAREntity = (
   targetPopulations: AnyObject[]
 ) => {
-  return targetPopulations?.map((field: EntityShape) => {
+  return targetPopulations?.map((field: AnyObject) => {
     return {
       id: `targetPopulations-${field.id}`,
       label: field.isRequired
