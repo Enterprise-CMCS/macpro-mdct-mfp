@@ -119,9 +119,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         (report: ReportMetadataShape) => !report?.archived
       );
     }
-    //reversing the order of the reports to display, newest report on top
-    setReportsToDisplay(newReportsToDisplay?.reverse());
-
+    setReportsToDisplay(newReportsToDisplay);
     //grab the last report added, which is now the first report displayed
     setPreviousReport(newReportsToDisplay?.[0]);
   }, [reportsByState]);
