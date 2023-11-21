@@ -40,6 +40,7 @@ import {
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { logger } from "../../utils/logging";
 import { APIGatewayProxyEvent } from "aws-lambda";
+import { copyFieldDataFromSource } from "../../utils/other/copy";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
@@ -171,6 +172,21 @@ export const createReport = handler(
     }
     // End Section - Check the payload that was sent with the request and validate it
 
+    // Being Section - Check if metadata has filled parameter for copyFieldDataSourceId
+    let newFieldData;
+
+    if (unvalidatedMetadata.copyFieldDataSourceId) {
+      newFieldData = await copyFieldDataFromSource(
+        reportBucket,
+        state,
+        unvalidatedMetadata.copyFieldDataSourceId,
+        formTemplate,
+        validatedFieldData
+      );
+    } else {
+      newFieldData = validatedFieldData;
+    }
+    // End Section - Check if metadata has filled parameter for copyFieldDataSourceId
     /*
      * End Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used
      * to create a different SAR and attach all of its fieldData to the SAR Submissions FieldData
@@ -184,7 +200,7 @@ export const createReport = handler(
     const fieldDataParams: S3Put = {
       Bucket: reportBucket,
       Key: getFieldDataKey(state, fieldDataId),
-      Body: JSON.stringify(validatedFieldData),
+      Body: JSON.stringify(newFieldData),
       ContentType: "application/json",
     };
 
