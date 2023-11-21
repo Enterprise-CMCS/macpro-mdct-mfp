@@ -1,6 +1,6 @@
 // REPORT PROVIDER/CONTEXT
 
-import { AnyObject, ReportJson } from "types";
+import { AnyObject, Choice, ReportJson } from "types";
 
 export interface ReportKeys {
   reportType: string;
@@ -31,8 +31,8 @@ export interface ReportMetadataShape extends ReportKeys {
   associatedSar?: string;
   associatedWorkPlan?: string;
   // Any additional questions that are asked when creating a report are appended here
-  finalSar?: AnyObject;
-  targetPopulations?: object;
+  finalSar?: Choice[];
+  populations?: Choice[];
 }
 
 export interface ReportShape extends ReportMetadataShape {

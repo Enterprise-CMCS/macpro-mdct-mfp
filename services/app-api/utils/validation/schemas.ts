@@ -13,4 +13,5 @@ export const metadataValidationSchema = yup.object().shape({
   submissionCount: yup.number(),
   completionStatus: yup.mixed(),
   finalSar: yup.mixed(),
+  populations: yup.mixed(),
 });
