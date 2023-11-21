@@ -1,13 +1,14 @@
 import { useContext, useState } from "react";
 import uuid from "react-uuid";
 // components
-import { Form, Modal, ReportContext } from "components";
+import { ErrorAlert, Form, Modal, ReportContext } from "components";
 import { Text, Spinner } from "@chakra-ui/react";
 // utils
 import {
   AnyObject,
   EntityShape,
   FormJson,
+  InputChangeEvent,
   isFieldElement,
   ReportStatus,
 } from "types";
@@ -31,6 +32,28 @@ export const AddEditEntityModal = ({
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+
+  const onChange = (e: InputChangeEvent) => {
+    const input = e.target.value;
+    const existingOtherTargetPopulations =
+      report?.fieldData.targetPopulations.filter(
+        (object: AnyObject) => !object.isRequired
+      );
+
+    if (
+      existingOtherTargetPopulations.some(
+        (otherPopulation: AnyObject) =>
+          otherPopulation.transitionBenchmarks_targetPopulationName === input
+      )
+    ) {
+      setError(
+        'This target population was already added. To avoid duplication, add a different target population name or select "Cancel".'
+      );
+    } else {
+      setError("");
+    }
+  };
 
   const writeEntity = async (enteredData: any) => {
     setSubmitting(true);
@@ -54,6 +77,7 @@ export const AddEditEntityModal = ({
       enteredData,
       form.fields.filter(isFieldElement)
     );
+
     if (selectedEntity?.id) {
       // if existing entity selected, edit
       const entriesToClear = getEntriesToClear(
@@ -124,12 +148,14 @@ export const AddEditEntityModal = ({
         closeButtonText: "Cancel",
       }}
     >
+      {error && <ErrorAlert error={error} />}
       <Form
         data-testid="add-edit-entity-form"
         id={form.id}
         formJson={form}
         formData={selectedEntity}
         onSubmit={writeEntity}
+        onChange={onChange}
         validateOnRender={false}
         dontReset={true}
       />
