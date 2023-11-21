@@ -56,6 +56,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
+  const [error, setError] = useState<string>();
 
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
@@ -83,6 +84,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
 
   const closeAddEditEntityModal = () => {
     setSelectedEntity(undefined);
+    setError("");
     addEditEntityModalOnCloseHandler();
   };
 
@@ -227,6 +229,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           form={modalForm}
+          error={error}
+          setError={setError}
           modalDisclosure={{
             isOpen: addEditEntityModalIsOpen,
             onClose: closeAddEditEntityModal,
