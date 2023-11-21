@@ -147,6 +147,7 @@ export const AddEditEntityModal = ({
         actionButtonText: submitting ? <Spinner size="md" /> : "Save & close",
         closeButtonText: "Cancel",
       }}
+      submitButtonDisabled={!!error}
     >
       {error && <ErrorAlert error={error} />}
       <Form
