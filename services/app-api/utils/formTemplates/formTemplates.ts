@@ -270,6 +270,19 @@ export const scanForRepeatedFields = (
   return reportRoutes;
 };
 
+export const scanForConditionalFields = (
+  reportRoutes: ReportRoute[]
+  //workPlanFieldData?: AnyObject, workPlanMetaData?: AnyObject
+) => {
+  /*
+   * Iterate through existing routes,
+   * if route has a field that is to be conditionally rendered,
+   * conditionally keep in array
+   */
+
+  return reportRoutes;
+};
+
 export async function getOrCreateFormTemplate(
   reportBucket: string,
   reportType: ReportType,
@@ -300,6 +313,12 @@ export async function getOrCreateFormTemplate(
       currentFormTemplate.routes,
       workPlanFieldData,
       workPlanMetaData
+    );
+
+    // traverse routes and scan for conditional field
+    currentFormTemplate.routes = scanForConditionalFields(
+      currentFormTemplate.routes
+      //workPlanFieldData, workPlanMetaData
     );
 
     const formTemplateWithValidationJson = {
