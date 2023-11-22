@@ -29,17 +29,19 @@ export const headerRowLabels = (
   switch (reportType) {
     case ReportType.WP:
       return [
+        verbiage.metadataTableHeaders.submissionName,
         verbiage.metadataTableHeaders.dueDate,
         verbiage.metadataTableHeaders.lastEdited,
-        verbiage.metadataTableHeaders.editedBy,
         verbiage.metadataTableHeaders.status,
+        verbiage.metadataTableHeaders.editedBy,
       ];
     case ReportType.SAR:
       return [
         verbiage.metadataTableHeaders.submissionName,
+        verbiage.metadataTableHeaders.dueDate,
         verbiage.metadataTableHeaders.lastEdited,
-        verbiage.metadataTableHeaders.editedBy,
         verbiage.metadataTableHeaders.status,
+        verbiage.metadataTableHeaders.editedBy,
       ];
     default:
       assertExhaustive(reportType);
@@ -60,10 +62,11 @@ export const bodyRowContent = (
     case ReportType.WP:
       return [
         [
+          report.submissionName,
           convertDateUtcToEt(report.dueDate),
           convertDateUtcToEt(report.lastAltered),
-          report.lastAlteredBy,
           report.status,
+          report.lastAlteredBy,
         ],
       ];
     case ReportType.SAR:

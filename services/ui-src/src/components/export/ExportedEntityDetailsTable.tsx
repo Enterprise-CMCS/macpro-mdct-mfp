@@ -28,7 +28,6 @@ export const ExportedEntityDetailsTable = ({
   const entityType = "program";
 
   const threeColumnHeaderItems = [
-    tableHeaders.number,
     tableHeaders.indicator,
     tableHeaders.response,
   ];
