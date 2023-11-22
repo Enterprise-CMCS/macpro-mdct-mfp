@@ -40,7 +40,7 @@ export interface MfpReportState {
   reportsByState: ReportMetadataShape[] | undefined;
   submittedReportsByState: ReportMetadataShape[] | undefined;
   lastSavedTime: string | undefined;
-  workPlanToCopyFrom: ReportMetadataShape | undefined;
+  workPlanToCopyFrom: ReportShape | undefined;
   autosaveState: boolean;
   // ACTIONS
   setReport: (newReport: ReportShape | undefined) => void;
