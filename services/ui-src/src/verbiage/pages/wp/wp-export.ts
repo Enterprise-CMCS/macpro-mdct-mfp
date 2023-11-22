@@ -15,10 +15,11 @@ export default {
   reportPage: {
     heading: "MFP Program Work Plan for ",
     metadataTableHeaders: {
+      submissionName: "Submission Name",
       dueDate: "Due date",
       lastEdited: "Last edited",
-      editedBy: "Edited by",
       status: "Status",
+      editedBy: "Edited by",
     },
     combinedDataTable: {
       title: "Exclusion of CHIP from WP",
@@ -27,19 +28,10 @@ export default {
     },
   },
   tableHeaders: {
-    number: "Number",
     indicator: "Indicator",
     response: "Response",
   },
-  modalOverlayTableHeaders: {
-    status: "{Status}",
-    index: "{#}",
-    submissionInformation:
-      "{I., J. & L., N. & O., M. <br/> MCO, PIHP, or PAHP name <br /> Program name <br/> Eligibility group & description <br/> MLR reporting period dates}",
-    programType: "{K. Program type}",
-    discrepancyExplanation: "{P. Reporting period discrepancy explanation}",
-    notes: "{Q. Misc notes (optional)}",
-  },
+  modalOverlayTableHeaders: {},
   emptyEntityMessage: {
     accessMeasures: "0  - No access measures entered",
     sanctions: "0 - No sanctions entered",

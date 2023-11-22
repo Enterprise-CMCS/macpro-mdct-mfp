@@ -162,6 +162,7 @@ export interface ModalDrawerReportPageVerbiage
   enterEntityDetailsButtonText: string;
   reviewPdfHint: string;
   drawerTitle: string;
+  pdfDashboardTitle?: string;
 }
 
 export interface OverlayModalPageVerbiage extends ReportPageVerbiage {
