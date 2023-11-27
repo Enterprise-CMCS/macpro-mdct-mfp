@@ -8,6 +8,7 @@ import {
   EntityShape,
   ModalDrawerEntityTypes,
   ReportShape,
+  ReportStatus,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -112,7 +113,9 @@ export const EntityRow = ({
             variant="outline"
             disabled={entityStatus === "disabled"}
           >
-            {verbiage.enterEntityDetailsButtonText}
+            {report?.status === ReportStatus.SUBMITTED
+              ? "View"
+              : verbiage.enterEntityDetailsButtonText}
           </Button>
           {!isRequired && !isCopied && (
             <Button
