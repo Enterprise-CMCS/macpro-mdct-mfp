@@ -122,16 +122,38 @@ export const dateOptional = () =>
     });
 
 export const endDate = (startDateField: string) =>
-  date().test(
-    "is-after-start-date",
-    error.INVALID_END_DATE,
-    (endDateString, context) => {
-      const startDateString = context.parent[startDateField];
-      const startDate = new Date(startDateString);
-      const endDate = new Date(endDateString!);
-      return endDate >= startDate;
-    }
-  );
+  string()
+    .typeError(error.INVALID_DATE)
+    .test({
+      message: error.INVALID_END_DATE_OR_NA,
+      test: (value) => {
+        const result =
+          !isWhitespaceString(value) ||
+          !!value?.match(dateFormatRegex) ||
+          (value as string) === "N/A";
+        return result;
+      },
+    })
+    .test({
+      message: error.INVALID_END_DATE,
+      test: (endDateString, context) => {
+        return (
+          isEndDateAfterStartDate(
+            context.parent[startDateField],
+            endDateString as string
+          ) || (endDateString as string) === "N/A"
+        );
+      },
+    });
+
+export const isEndDateAfterStartDate = (
+  startDateString: string,
+  endDateString: string
+) => {
+  const startDate = new Date(startDateString);
+  const endDate = new Date(endDateString!);
+  return endDate >= startDate;
+};
 
 // DROPDOWN
 export const dropdown = () =>

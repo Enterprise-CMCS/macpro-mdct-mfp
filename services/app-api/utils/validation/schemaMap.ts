@@ -13,6 +13,7 @@ const error = {
   INVALID_EMAIL: "Response must be a valid email address",
   INVALID_URL: "Response must be a valid hyperlink/URL",
   INVALID_DATE: "Response must be a valid date",
+  INVALID_END_DATE_OR_NA: "Response must be a valid date or 'N/A'",
   INVALID_END_DATE: "End date can't be before start date",
   NUMBER_LESS_THAN_ONE: "Response must be greater than or equal to one",
   NUMBER_LESS_THAN_ZERO: "Response must be greater than or equal to zero",
@@ -155,17 +156,31 @@ export const date = () =>
   });
 
 export const dateOptional = () => date();
+
 export const endDate = (startDateField: string) =>
-  date().test(
-    "is-after-start-date",
-    error.INVALID_END_DATE,
-    (endDateString, context) => {
-      return isEndDateAfterStartDate(
-        context.parent[startDateField],
-        endDateString as string
-      );
-    }
-  );
+  string()
+    .typeError(error.INVALID_DATE)
+    .test({
+      message: error.INVALID_END_DATE_OR_NA,
+      test: (value) => {
+        return (
+          !isWhitespaceString(value) ||
+          !!value?.match(dateFormatRegex) ||
+          (value as string) === "N/A"
+        );
+      },
+    })
+    .test({
+      message: error.INVALID_END_DATE,
+      test: (endDateString, context) => {
+        return (
+          isEndDateAfterStartDate(
+            context.parent[startDateField],
+            endDateString as string
+          ) || (endDateString as string) === "N/A"
+        );
+      },
+    });
 
 export const isEndDateAfterStartDate = (
   startDateString: string,

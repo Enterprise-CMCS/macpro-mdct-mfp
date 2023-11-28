@@ -39,7 +39,6 @@ export const DateField = ({
   const form = useFormContext();
 
   const fieldIsRegistered = name in form.getValues();
-
   useEffect(() => {
     if (!fieldIsRegistered && !validateOnRender) {
       form.register(name);
@@ -72,8 +71,8 @@ export const DateField = ({
   const onChangeHandler = (rawValue: string, maskedValue: string) => {
     setDisplayValue(rawValue);
     const isValidDate = checkDateCompleteness(maskedValue);
-    if (isValidDate || maskedValue === "") {
-      form.setValue(name, maskedValue, { shouldValidate: true });
+    if (isValidDate || maskedValue === "" || rawValue === "N/A") {
+      form.setValue(name, rawValue, { shouldValidate: true });
     }
   };
 

@@ -847,9 +847,14 @@
                     }
                   },
                   {
-                    "id": "initiative_projectedEndDate",
+                    "id": "defineInitiative_projectedEndDate",
                     "type": "date",
-                    "validation": "date",
+                    "validation": { 
+                      "type": "endDate",
+                      "dependentFieldName": "defineInitiative_projectedStartDate",
+                      "nested": false,
+                      "parentFieldName": "stsidi"
+                    },
                     "props": {
                       "label": "End Date",
                       "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
