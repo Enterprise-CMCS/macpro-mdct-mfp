@@ -23,6 +23,7 @@ export interface ReportRouteBase {
   name: string;
   path: string;
   pageType?: string;
+  conditionallyRender?: string;
 }
 
 export type ReportRouteWithForm =

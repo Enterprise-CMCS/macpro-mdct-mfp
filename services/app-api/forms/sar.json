@@ -1231,9 +1231,7 @@
           "name": "Number of HCBS participants admitted to a facility from the community, by length of stay and age group",
           "path": "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
           "pageType": "standard",
-          "props": {
-            "conditionallyRender": "showOnlyinPeriod2"
-          },
+          "conditionallyRender": "showOnlyInPeriod2",
           "verbiage": {
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",

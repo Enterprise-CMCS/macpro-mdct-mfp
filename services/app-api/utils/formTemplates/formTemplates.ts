@@ -270,15 +270,21 @@ export const scanForRepeatedFields = (
   return reportRoutes;
 };
 
-export const scanForConditionalFields = (
-  reportRoutes: ReportRoute[]
-  //workPlanFieldData?: AnyObject, workPlanMetaData?: AnyObject
-) => {
-  /*
-   * Iterate through existing routes,
-   * if route has a field that is to be conditionally rendered,
-   * conditionally keep in array
-   */
+export const scanForConditionalRoutes = (reportRoutes: ReportRoute[]) => {
+  for (let route of reportRoutes) {
+    if (route?.entitySteps) scanForConditionalRoutes(route.entitySteps);
+    if (route?.children) scanForConditionalRoutes(route.children);
+
+    // if route has a field that is to be conditionally rendered, conditionally keep in array
+    if (route?.conditionallyRender) {
+      if (route.conditionallyRender === "showOnlyInPeriod2") {
+        const index = reportRoutes.indexOf(route);
+        if (index > -1) {
+          reportRoutes.splice(index, 1);
+        }
+      }
+    }
+  }
 
   return reportRoutes;
 };
@@ -309,16 +315,15 @@ export async function getOrCreateFormTemplate(
     };
   } else {
     const newFormTemplateId = KSUID.randomSync().string;
+    // traverse routes and scan for conditional field
+    currentFormTemplate.routes = scanForConditionalRoutes(
+      currentFormTemplate.routes
+    );
+
     currentFormTemplate.routes = scanForRepeatedFields(
       currentFormTemplate.routes,
       workPlanFieldData,
       workPlanMetaData
-    );
-
-    // traverse routes and scan for conditional field
-    currentFormTemplate.routes = scanForConditionalFields(
-      currentFormTemplate.routes
-      //workPlanFieldData, workPlanMetaData
     );
 
     const formTemplateWithValidationJson = {
