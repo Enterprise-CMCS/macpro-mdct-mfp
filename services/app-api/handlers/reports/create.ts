@@ -40,6 +40,7 @@ import {
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { logger } from "../../utils/logging";
 import { APIGatewayProxyEvent } from "aws-lambda";
+import { copyFieldDataFromSource } from "../../utils/other/copy";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
@@ -84,56 +85,6 @@ export const createReport = handler(
     const reportTable = reportTables[reportType];
     const reportTypeExpanded = reportNames[reportType];
 
-    // Begin Section - Getting/Creating newest Form Template based on reportType
-    let formTemplate, formTemplateVersion;
-    try {
-      ({ formTemplate, formTemplateVersion } = await getOrCreateFormTemplate(
-        reportBucket,
-        reportType
-      ));
-    } catch (err) {
-      logger.error(err, "Error getting or creating template");
-      throw err;
-    }
-    // End Section - Getting/Creating newest Form Template based on reportType
-
-    // Begin Section - Check the payload that was sent with the request and validate it
-    const unvalidatedPayload = JSON.parse(event.body!);
-    const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
-      unvalidatedPayload;
-
-    // Return MISSING_DATA error if missing unvalidated data or validators.
-    if (!unvalidatedFieldData || !formTemplate.validationJson) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.MISSING_DATA,
-      };
-    }
-
-    const creationValidationJson = {
-      reportPeriod: "text",
-      stateName: "text",
-      stateOrTerritory: "text",
-      submissionCount: "number",
-      submissionName: "text",
-      targetPopulations: "objectArray",
-    };
-
-    // Setup validation for what we expect to see in the payload
-    let validatedFieldData = await validateFieldData(
-      creationValidationJson,
-      unvalidatedFieldData
-    );
-
-    // Return INVALID_DATA error if field data is not valid.
-    if (!validatedFieldData || Object.keys(validatedFieldData).length === 0) {
-      return {
-        status: StatusCodes.SERVER_ERROR,
-        body: error.INVALID_DATA,
-      };
-    }
-    // End Section - Check the payload that was sent with the request and validate it
-
     /*
      * Begin Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used
      * to create a different SAR and attach all of its fieldData to the SAR Submissions FieldData
@@ -161,6 +112,49 @@ export const createReport = handler(
       };
     }
 
+    // Begin Section - Check the payload that was sent with the request and validate it
+    const unvalidatedPayload = JSON.parse(event.body!);
+    const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
+      unvalidatedPayload;
+
+    const creationValidationJson = {
+      reportPeriod: "text",
+      stateName: "text",
+      stateOrTerritory: "text",
+      submissionCount: "number",
+      submissionName: "text",
+      targetPopulations: "objectArray",
+    };
+
+    // Begin Section - Getting/Creating newest Form Template based on reportType
+    let formTemplate, formTemplateVersion;
+    try {
+      ({ formTemplate, formTemplateVersion } = await getOrCreateFormTemplate(
+        reportBucket,
+        reportType,
+        workPlanFieldData,
+        workPlanMetadata
+      ));
+    } catch (err) {
+      logger.error(err, "Error getting or creating template");
+      throw err;
+    }
+    // End Section - Getting/Creating newest Form Template based on reportType
+
+    // Return MISSING_DATA error if missing unvalidated data or validators.
+    if (!unvalidatedFieldData || !formTemplate.validationJson) {
+      return {
+        status: StatusCodes.BAD_REQUEST,
+        body: error.MISSING_DATA,
+      };
+    }
+
+    // Setup validation for what we expect to see in the payload
+    let validatedFieldData = await validateFieldData(
+      creationValidationJson,
+      unvalidatedFieldData
+    );
+
     // If we are creating a SAR and found a Work Plan to copy from, grab its field data and add it to our SAR
     if (workPlanFieldData) {
       validatedFieldData = {
@@ -169,6 +163,30 @@ export const createReport = handler(
       };
     }
 
+    // Return INVALID_DATA error if field data is not valid.
+    if (!validatedFieldData || Object.keys(validatedFieldData).length === 0) {
+      return {
+        status: StatusCodes.SERVER_ERROR,
+        body: error.INVALID_DATA,
+      };
+    }
+    // End Section - Check the payload that was sent with the request and validate it
+
+    // Being Section - Check if metadata has filled parameter for copyFieldDataSourceId
+    let newFieldData;
+
+    if (unvalidatedMetadata.copyFieldDataSourceId) {
+      newFieldData = await copyFieldDataFromSource(
+        reportBucket,
+        state,
+        unvalidatedMetadata.copyFieldDataSourceId,
+        formTemplate,
+        validatedFieldData
+      );
+    } else {
+      newFieldData = validatedFieldData;
+    }
+    // End Section - Check if metadata has filled parameter for copyFieldDataSourceId
     /*
      * End Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used
      * to create a different SAR and attach all of its fieldData to the SAR Submissions FieldData
@@ -182,7 +200,7 @@ export const createReport = handler(
     const fieldDataParams: S3Put = {
       Bucket: reportBucket,
       Key: getFieldDataKey(state, fieldDataId),
-      Body: JSON.stringify(validatedFieldData),
+      Body: JSON.stringify(newFieldData),
       ContentType: "application/json",
     };
 

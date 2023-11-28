@@ -57,6 +57,7 @@
           ]
         },
         "dashboardTitle": "Report projected number of transitions for each target population",
+        "pdfDashboardTitle": "Transition Benchmark Totals",
         "addEntityButtonText": "Add other target population",
         "editEntityButtonText": "Edit name",
         "addEditModalAddTitle": "Add other target population",
@@ -662,8 +663,7 @@
                   "type": "html",
                   "content": " for detailed instructions."
                 }
-              ],
-              "exportSectionHeader": "exportSectionHeader"
+              ]
             },
             "addEntityButtonText": "Add initiative",
             "editEntityHint": "Select \"Edit\" to complete the details.",
@@ -1082,7 +1082,7 @@
                           "label": "MFP funding for supplemental services"
                         },
                         {
-                          "id": "2VLq8ASzZNfxbu520if449",
+                          "id": "2VLq8ASzZNfxbu520if529",
                           "label": "Other, specify",
                           "children": [
                             {

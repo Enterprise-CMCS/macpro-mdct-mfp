@@ -13,12 +13,13 @@ export default {
     language: "English",
   },
   reportPage: {
-    heading: "Managed Care Program Annual Report (WP) for ",
+    heading: "MFP Program Work Plan for ",
     metadataTableHeaders: {
+      submissionName: "Submission Name",
       dueDate: "Due date",
       lastEdited: "Last edited",
-      editedBy: "Edited by",
       status: "Status",
+      editedBy: "Edited by",
     },
     combinedDataTable: {
       title: "Exclusion of CHIP from WP",
@@ -27,10 +28,10 @@ export default {
     },
   },
   tableHeaders: {
-    number: "Number",
     indicator: "Indicator",
     response: "Response",
   },
+  modalOverlayTableHeaders: {},
   emptyEntityMessage: {
     accessMeasures: "0  - No access measures entered",
     sanctions: "0 - No sanctions entered",

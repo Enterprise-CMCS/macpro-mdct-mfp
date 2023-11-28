@@ -13,12 +13,13 @@ import { Box } from "@chakra-ui/react";
 // utils
 import {
   compileValidationJsonFromFields,
+  convertTargetPopulationsFromWPToSAREntity,
   formFieldFactory,
   hydrateFormFields,
   mapValidationTypesToSchema,
   sortFormErrors,
+  updateFieldChoicesByID,
   useStore,
-  renderTargetPopulationFields,
 } from "utils";
 import {
   AnyObject,
@@ -51,6 +52,20 @@ export const Form = ({
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
 
   const { report } = useStore();
+
+  const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
+    const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
+    const formatChoiceList = convertTargetPopulationsFromWPToSAREntity(
+      updatedTargetPopulationChoices
+    );
+
+    const updateTargetPopulationChoiceList = updateFieldChoicesByID(
+      fields,
+      "targetPopulations",
+      formatChoiceList
+    );
+    return updateTargetPopulationChoiceList;
+  };
 
   const fieldInputDisabled =
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
@@ -90,7 +105,7 @@ export const Form = ({
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
-      renderTargetPopulationFields(report, fields, location),
+      updateRenderFields(fields),
       formData
     );
     return formFieldFactory(fieldsToRender, {

@@ -10,14 +10,18 @@ import {
 // types
 import {
   AnyObject,
+  Choice,
+  EntityShape,
   FieldChoice,
   FormField,
+  FormJson,
   FormLayoutElement,
   isFieldElement,
 } from "types";
 import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
 import { NumberField } from "components/fields/NumberField";
+import { SectionHeader } from "components/forms/FormLayoutElements";
 
 // return created elements from provided fields
 export const formFieldFactory = (
@@ -39,6 +43,7 @@ export const formFieldFactory = (
     radio: RadioField,
     text: TextField,
     textarea: TextAreaField,
+    sectionHeader: SectionHeader,
   };
   fields = initializeChoiceListFields(fields);
   return fields.map((field) => {
@@ -225,4 +230,94 @@ export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
         break;
     }
   });
+};
+
+export const convertEntityToTargetPopulationChoice = (
+  entity: EntityShape[]
+) => {
+  return entity?.map((field: EntityShape) => {
+    return {
+      key: `targetPopulations-${field.id}`,
+      value: field.isRequired
+        ? field.transitionBenchmarks_targetPopulationName
+        : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+    };
+  });
+};
+
+/*
+ * This function is called when a Choice in the DB needs to be expanded to be able
+ * to create a ChoiceListField. This can happen when you need to dynamically
+ * create a field based on a users inputs. For example, when a user clicks
+ * the edit button on the SAR dashboard, they'll need a dynamically made
+ * form to show the target populations from the Work Plan.
+ */
+export const convertChoiceToEntity = (choices: Choice[]) => {
+  return choices?.map((field: Choice) => {
+    return {
+      id: field.key,
+      label: field.value,
+      name: field.value,
+      value: field.value,
+    };
+  });
+};
+
+/*
+ * This function is called when a user clicks the Create SAR button on the
+ * dashboard. At that moment, we need to dynamically render a choicelistfield
+ * and display it to the user. Thus, this function grabs that data from the WP
+ * and makes the field based on the data stored there.
+ */
+export const convertTargetPopulationsFromWPToSAREntity = (
+  targetPopulations: AnyObject[]
+) => {
+  return targetPopulations?.map((field: AnyObject) => {
+    return {
+      id: `targetPopulations-${field.id}`,
+      label: field.isRequired
+        ? field.transitionBenchmarks_targetPopulationName
+        : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+      name: field.transitionBenchmarks_targetPopulationName,
+      value: field.isRequired
+        ? field.transitionBenchmarks_targetPopulationName
+        : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+    };
+  });
+};
+
+export const updateFieldChoicesByID = (
+  formFields: (FormField | FormLayoutElement)[],
+  id: string,
+  fields: AnyObject[]
+) => {
+  return formFields.map((field) => {
+    return field.id.match(id)
+      ? {
+          ...field,
+          props: { ...field?.props, choices: [...fields] },
+        }
+      : { ...field };
+  });
+};
+
+export const injectFormWithTargetPopulations = (
+  form: FormJson,
+  dataToInject: AnyObject[],
+  dataFromSAR: boolean
+) => {
+  if (!dataToInject) return form;
+
+  const fields = !dataFromSAR
+    ? convertTargetPopulationsFromWPToSAREntity(dataToInject)
+    : convertChoiceToEntity(dataToInject as Choice[]);
+
+  const updatedFields = updateFieldChoicesByID(
+    form.fields,
+    "populations",
+    fields
+  );
+
+  form.fields = updatedFields;
+  return form;
 };
