@@ -298,7 +298,7 @@ export async function getOrCreateFormTemplate(
   //if copyReport form template is the same as latest report form template, create the next iteration, else use the most recent version
   const copyToNewReport = (copyReport && copyReport?.formTemplateId === mostRecentTemplateVersion?.id);
 
-  if (currentTemplateHash === mostRecentTemplateVersionHash || !copyToNewReport) {
+  if (currentTemplateHash === mostRecentTemplateVersionHash || (mostRecentTemplateVersionHash && !copyToNewReport)) {
     return {
       formTemplate: await getTemplate(
         reportBucket,

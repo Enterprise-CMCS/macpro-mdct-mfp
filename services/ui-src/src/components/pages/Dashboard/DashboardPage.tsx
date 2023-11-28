@@ -226,8 +226,21 @@ export const DashboardPage = ({ reportType }: Props) => {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
       case ReportType.WP:
-        if (!previousReport) return false;
-        return previousReport.status !== ReportStatus.APPROVED;
+        if (!previousReport) {
+          return false;
+        } else {
+          const currentDate = new Date();
+          const period = currentDate.getMonth() + 1 > 6 ? 2 : 1;
+          const year = currentDate.getFullYear();
+          const isNextPeriod =
+            year > previousReport.reportYear ||
+            (year === previousReport.reportYear &&
+              period > previousReport.reportPeriod);
+
+          return (
+            previousReport.status !== ReportStatus.APPROVED || !isNextPeriod
+          );
+        }
       default:
         return true;
     }

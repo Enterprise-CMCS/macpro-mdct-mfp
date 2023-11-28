@@ -31,9 +31,12 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
   });
 
   //Strip it to only the key information
-  const entityNestedKeys = entityNestedSelection.flat().map((entity) => {
-    return entity.key;
-  });
+  const entityNestedKeys = entityNestedSelection
+    .flat()
+    .map((entity) => {
+      return entity.key;
+    })
+    .filter((key) => key);
 
   //look for the relevant child id for the selected nested values in the formTemplate data
   entityNestedKeys.forEach((key) => {
