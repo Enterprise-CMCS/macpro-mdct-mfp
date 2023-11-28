@@ -19,6 +19,7 @@ import {
 import {
   calculateDueDate,
   calculatePeriod,
+  calculateCurrentYear,
   convertDateUtcToEt,
 } from "../../utils/time/time";
 import {
@@ -177,6 +178,19 @@ export const createReport = handler(
     let newFieldData;
 
     if (unvalidatedMetadata.copyReport) {
+      const reportPeriod = calculatePeriod(Date.now(), workPlanMetadata);
+      const isCurrentPeriod =
+        calculateCurrentYear() === unvalidatedMetadata.copyReport.reportYear &&
+        reportPeriod === unvalidatedMetadata.copyReport.reportPeriod;
+
+      //do not allow user to create a copy if it's the same period
+      if (isCurrentPeriod) {
+        return {
+          status: StatusCodes.UNAUTHORIZED,
+          body: error.NO_WORKPLANS_FOUND,
+        };
+      }
+
       newFieldData = await copyFieldDataFromSource(
         reportBucket,
         state,
