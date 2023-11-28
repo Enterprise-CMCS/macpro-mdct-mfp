@@ -333,7 +333,7 @@ export const injectFormWithTargetPopulations = (
 export const removeNotApplicablePopulations = (
   targetPopulations: AnyObject[]
 ) => {
-  const filteredPopulations = targetPopulations.filter((population) => {
+  const filteredPopulations = targetPopulations?.filter((population) => {
     const isApplicable =
       population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value;
     return isApplicable !== "No";
