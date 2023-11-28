@@ -1,20 +1,19 @@
 import { useContext, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
-import { Button, Image, Spinner } from "@chakra-ui/react";
+import { Button, Spinner } from "@chakra-ui/react";
 // form
 import wpFormJson from "forms/addEditWpReport/addEditWpReport.json";
 import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 // utils
 import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
-import { useStore } from "utils";
-// assets
-import muteCopyIcon from "assets/icons/icon_copy_gray.png";
+import { injectFormWithTargetPopulations, useStore } from "utils";
 
 export const AddEditReportModal = ({
   activeState,
   selectedReport,
+  previousReport,
   reportType,
   modalDisclosure,
 }: Props) => {
@@ -22,9 +21,19 @@ export const AddEditReportModal = ({
     useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const { workPlanToCopyFrom } = useStore();
+
+  const dataToInject = selectedReport?.id
+    ? selectedReport?.formData?.populations
+    : workPlanToCopyFrom?.fieldData?.targetPopulations;
+
   const modalFormJsonMap: any = {
     WP: wpFormJson,
-    SAR: sarFormJson,
+    SAR: injectFormWithTargetPopulations(
+      sarFormJson,
+      dataToInject,
+      !!selectedReport?.id
+    ),
   };
 
   const modalFormJson = modalFormJsonMap[reportType]!;
@@ -65,6 +74,7 @@ export const AddEditReportModal = ({
       metadata: {
         submissionName,
         lastAlteredBy: full_name,
+        copyFieldDataSourceId: previousReport?.fieldDataId,
         locked: false,
         previousRevisions: [],
       },
@@ -80,6 +90,8 @@ export const AddEditReportModal = ({
     const submissionName = formData["associatedWorkPlan"];
     const stateOrTerritory = formData["stateOrTerritory"];
     const reportPeriod = formData["reportPeriod"];
+    const populations = formData["populations"];
+    const finalSar = formData["finalSar"];
     return {
       metadata: {
         submissionName,
@@ -88,7 +100,8 @@ export const AddEditReportModal = ({
         lastAlteredBy: full_name,
         locked: false,
         previousRevisions: [],
-        finalSar: formData["finalSar"],
+        finalSar,
+        populations,
       },
       fieldData: {
         submissionName,
@@ -145,11 +158,20 @@ export const AddEditReportModal = ({
     modalDisclosure.onClose();
   };
 
+  const resetReport = () => {
+    modalDisclosure.onClose();
+  };
+
   const actionButtonText = () => {
     if (reportType === ReportType.WP) {
       return "";
     }
     return submitting ? <Spinner size="md" /> : "Save";
+  };
+
+  const isCopyDisabled = () => {
+    //if no previous report or the previous report is not approve, disable copy button
+    return !previousReport || previousReport?.status !== "Approved";
   };
 
   return (
@@ -158,43 +180,61 @@ export const AddEditReportModal = ({
       formId={form.id}
       modalDisclosure={modalDisclosure}
       content={{
-        heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
-        subheading: selectedReport?.id ? "" : form.heading?.subheading,
+        heading: !isCopyDisabled() ? form.heading?.edit : form.heading?.add,
+        subheading: !isCopyDisabled()
+          ? form.heading?.subheadingEdit
+          : form.heading?.subheading,
         actionButtonText: actionButtonText(),
         closeButtonText: "",
       }}
     >
-      {reportType == ReportType.WP ? (
-        <>
-          <Button sx={sx.copyBtn} disabled={true} type="submit">
-            Copy from previous
-            <Image
-              sx={sx.muteCopyIcon}
-              src={muteCopyIcon}
-              alt="Copy Icon"
-              className="copyIcon"
-            />
-          </Button>
-          <Button
-            sx={sx.close}
-            onClick={writeReport}
-            type="submit"
-            variant="outline"
-            data-testid="modal-logout-button"
-          >
-            Start new
-          </Button>
-        </>
-      ) : (
+      {(reportType == ReportType.SAR || !isCopyDisabled()) && (
         <Form
           data-testid="add-edit-report-form"
           id={form.id}
           formJson={form}
-          formData={selectedReport?.formData}
+          formData={
+            reportType == ReportType.WP
+              ? previousReport
+              : selectedReport?.formData
+          }
           onSubmit={writeReport}
           validateOnRender={false}
           dontReset={true}
         />
+      )}
+      {reportType == ReportType.WP && (
+        <>
+          <Button
+            sx={sx.copyBtn}
+            disabled={isCopyDisabled()}
+            onClick={writeReport}
+            type="submit"
+          >
+            Continue from previous period
+          </Button>
+          {isCopyDisabled() ? (
+            <Button
+              sx={sx.close}
+              onClick={writeReport}
+              type="submit"
+              variant="outline"
+              data-testid="modal-logout-button"
+            >
+              Start new
+            </Button>
+          ) : (
+            <Button
+              sx={sx.resetBtn}
+              onClick={resetReport}
+              type="submit"
+              variant="outline"
+              data-testid="modal-logout-button"
+            >
+              Reset Work Plan
+            </Button>
+          )}
+        </>
       )}
     </Modal>
   );
@@ -204,6 +244,7 @@ interface Props {
   activeState?: string;
   reportType: string;
   selectedReport?: AnyObject;
+  previousReport?: AnyObject;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
@@ -217,10 +258,6 @@ const sx = {
     maxWidth: "30rem",
     marginX: "4rem",
     padding: "0",
-  },
-  muteCopyIcon: {
-    width: "20px",
-    marginLeft: "10px",
   },
   modalHeader: {
     padding: "2rem 2rem 0 2rem",
@@ -247,6 +284,13 @@ const sx = {
     ".mobile &": {
       fontSize: "sm",
     },
+  },
+  resetBtn: {
+    border: "none",
+    marginTop: "1rem",
+    fontWeight: "none",
+    textDecoration: "underline",
+    fontSize: "0.875rem",
   },
   close: {
     justifyContent: "start",
