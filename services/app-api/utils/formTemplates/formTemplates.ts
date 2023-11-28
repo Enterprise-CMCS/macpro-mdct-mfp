@@ -270,14 +270,23 @@ export const scanForRepeatedFields = (
   return reportRoutes;
 };
 
-export const scanForConditionalRoutes = (reportRoutes: ReportRoute[]) => {
+export const scanForConditionalRoutes = (
+  reportRoutes: ReportRoute[],
+  workPlanMetaData?: AnyObject
+) => {
   for (let route of reportRoutes) {
-    if (route?.entitySteps) scanForConditionalRoutes(route.entitySteps);
-    if (route?.children) scanForConditionalRoutes(route.children);
+    if (route?.entitySteps)
+      scanForConditionalRoutes(route.entitySteps, workPlanMetaData);
+    if (route?.children)
+      scanForConditionalRoutes(route.children, workPlanMetaData);
 
     // if route has a field that is to be conditionally rendered, conditionally keep in array
     if (route?.conditionallyRender) {
-      if (route.conditionallyRender === "showOnlyInPeriod2") {
+      // if a path has "showOnlyInPeriod2" attached as a rule, we only want to show in reporting period 2, and remove from the list of routes otherwise
+      if (
+        route.conditionallyRender === "showOnlyInPeriod2" &&
+        workPlanMetaData?.reportPeriod != 2
+      ) {
         const index = reportRoutes.indexOf(route);
         if (index > -1) {
           reportRoutes.splice(index, 1);
@@ -317,7 +326,8 @@ export async function getOrCreateFormTemplate(
     const newFormTemplateId = KSUID.randomSync().string;
     // traverse routes and scan for conditional field
     currentFormTemplate.routes = scanForConditionalRoutes(
-      currentFormTemplate.routes
+      currentFormTemplate.routes,
+      workPlanMetaData
     );
 
     currentFormTemplate.routes = scanForRepeatedFields(

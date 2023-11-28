@@ -159,3 +159,11 @@ export const displayLongformPeriod = (
     return ` July 1 to December 31 ${reportYear} reporting period`;
   }
 };
+
+export const displayLongformPeriodSection9 = (
+  reportYear: number | undefined
+) => {
+  return ` August 1, ${
+    reportYear ? reportYear - 1 : reportYear
+  } to July 31, ${reportYear}`;
+};

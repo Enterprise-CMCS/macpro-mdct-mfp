@@ -1254,13 +1254,19 @@
             "id": "ret-hcbs",
             "fields": [
               {
+                "id": "ret_sectionHeader_shortTermStay",
+                "type": "sectionHeader",
+                "props": {
+                  "content": "Short-term stay: 1 to 20 days"
+                }
+              },
+              {
                 "id": "ret_shortTermStayAges18to64",
                 "type": "number",
                 "validation": "number",
                 "props": {
                   "label": "Ages 18-64",
-                  "styleAsOptional": true,
-                  "heading": "Short-term stay: 1 to 20 days"
+                  "styleAsOptional": true
                 }
               },
               {
@@ -1291,13 +1297,19 @@
                 }
               },
               {
+                "id": "ret_sectionHeader_mediumTermStay",
+                "type": "sectionHeader",
+                "props": {
+                  "content": "Medium-term stay: 21-100 days"
+                }
+              },
+              {
                 "id": "ret_mediumTermStayAges18to64",
                 "type": "number",
                 "validation": "number",
                 "props": {
                   "label": "Ages 18-64",
-                  "styleAsOptional": true,
-                  "heading": "Medium-term stay: 21-100 days"
+                  "styleAsOptional": true
                 }
               },
               {
@@ -1328,13 +1340,19 @@
                 }
               },
               {
+                "id": "ret_sectionHeader_longTermStay",
+                "type": "sectionHeader",
+                "props": {
+                  "content": "Long-term stay: 101 days or more"
+                }
+              },
+              {
                 "id": "ret_longTermStayAges18to64",
                 "type": "number",
                 "validation": "number",
                 "props": {
                   "label": "Ages 18-64",
-                  "styleAsOptional": true,
-                  "heading": "Long-term stay: 101 days or more"
+                  "styleAsOptional": true
                 }
               },
               {
