@@ -8,6 +8,7 @@ import {
   EntityShape,
   ModalDrawerEntityTypes,
   ReportShape,
+  OverlayModalTypes,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -38,7 +39,7 @@ export const EntityRow = ({
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
-      case "initiative":
+      case OverlayModalTypes.INITIATIVE:
         //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
         if (formEntity) {
           return getInitiativeDashboardStatus(formEntity, entity);
