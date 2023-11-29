@@ -1,25 +1,17 @@
 // components
-import { ExportedSectionHeading } from "components";
 import { Box } from "@chakra-ui/react";
 // types
 import {
+  AnyObject,
   EntityShape,
   FormField,
   FormLayoutElement,
-  ModalOverlayReportPageShape,
+  // ModalOverlayReportPageShape,
   ReportType,
 } from "types";
 // utils
 import { useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
-// verbiage
-import wpVerbiage from "verbiage/pages/wp/wp-export";
-import sarVerbiage from "verbiage/pages/sar/sar-export";
-
-const exportVerbiageMap: { [key in ReportType]: any } = {
-  WP: wpVerbiage,
-  SAR: sarVerbiage,
-};
 
 export const ExportedEntityDetailsOverlaySection = ({
   section,
@@ -30,19 +22,6 @@ export const ExportedEntityDetailsOverlaySection = ({
 
   return (
     <Box sx={sx.sectionHeading} {...props}>
-      <ExportedSectionHeading
-        heading={exportVerbiageMap[report?.reportType as ReportType]}
-        reportType={report?.reportType}
-        verbiage={{
-          ...section.verbiage,
-          intro: {
-            ...section.verbiage.intro,
-            info: undefined,
-            exportSectionHeader: undefined,
-            spreadsheet: "MLR Reporting",
-          },
-        }}
-      />
       {renderEntityDetailTables(
         report?.reportType as ReportType,
         report?.fieldData[entityType] ?? [],
@@ -53,7 +32,7 @@ export const ExportedEntityDetailsOverlaySection = ({
 };
 
 export interface ExportedEntityDetailsOverlaySectionProps {
-  section: ModalOverlayReportPageShape;
+  section: AnyObject;
 }
 /**
  * Split a list of form fields by the "sectionHeader" layout element type.
@@ -106,7 +85,7 @@ export function getFormSections(
 export function renderEntityDetailTables(
   reportType: ReportType,
   entities: EntityShape[],
-  section: ModalOverlayReportPageShape
+  section: AnyObject
 ) {
   switch (reportType) {
     case ReportType.WP: {

@@ -1,39 +1,25 @@
 // components
 import { Box, Heading } from "@chakra-ui/react";
-import { SpreadsheetWidget } from "components";
 // types
 import { ReportPageVerbiage } from "types";
 // utils
 import { parseCustomHtml } from "utils";
 
-export const ExportedSectionHeading = ({
-  heading,
-  reportType,
-  verbiage,
-}: Props) => {
+export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
   const sectionHeading = verbiage?.intro?.exportSectionHeader
     ? verbiage?.intro?.exportSectionHeader
     : verbiage?.intro?.subsection || heading;
   const sectionInfo = verbiage?.intro?.exportSectionHeader
     ? null
     : verbiage?.intro?.info;
-  const sectionSpreadsheet = verbiage?.intro?.spreadsheet;
 
   return (
     <Box data-testid="exportedSectionHeading" sx={sx.container}>
       <Heading as="h2" sx={sx.heading}>
         {sectionHeading}
       </Heading>
+      {/* TODO: remove the "See previous page for detailed instructions" blurb for Initiatives table */}
       {sectionInfo && <Box sx={sx.info}>{parseCustomHtml(sectionInfo)}</Box>}
-      {sectionSpreadsheet && (
-        <Box sx={sx.spreadsheet}>
-          <SpreadsheetWidget
-            description={sectionSpreadsheet}
-            alt=""
-            reportType={reportType}
-          />
-        </Box>
-      )}
     </Box>
   );
 };

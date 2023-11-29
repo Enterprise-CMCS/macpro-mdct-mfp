@@ -1,7 +1,11 @@
-import { useStore, getEntityDetailsMLR } from "utils";
+import { useStore } from "utils";
 // components
-import { EntityStatusIcon, Table } from "components";
-import { Box, Image, Td, Text, Tr } from "@chakra-ui/react";
+import {
+  EntityStatusIcon,
+  Table,
+  ExportedEntityDetailsOverlaySection,
+} from "components";
+import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
 import { EntityShape, ModalOverlayReportPageShape, ReportType } from "types";
 import { assertExhaustive } from "utils/other/typing";
@@ -20,6 +24,8 @@ const exportVerbiageMap: { [key in ReportType]: any } = {
 export const ExportedModalOverlayReportSection = ({ section }: Props) => {
   const { report } = useStore() ?? {};
   const entityType = section.entityType;
+
+  // console.log(section)
 
   const verbiage = exportVerbiageMap[report?.reportType as ReportType];
 
@@ -70,42 +76,27 @@ export function renderModalOverlayTableBody(
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
-        const { report_programName, reportingPeriod } =
-          getEntityDetailsMLR(entity);
+        // console.log(entity)
         return (
-          <Tr key={idx}>
-            <Td sx={sx.statusIcon}>
-              <EntityStatusIcon
-                entity={entity}
-                isPdf={true}
-                entityStatus={entity.status}
-              />
-            </Td>
-            <Td>
-              <Text sx={sx.tableIndex}>{idx + 1}</Text>
-            </Td>
-            <Td>
-              <Text sx={sx.entityList}>
-                {entity.report_planName ?? "Not entered"} <br />
-                {report_programName} <br />
-                {reportingPeriod}
-              </Text>
-            </Td>
-            <Td>
-              <Text>
-                {entity["report_reportingPeriodDiscrepancyExplanation"]
-                  ? entity["report_reportingPeriodDiscrepancyExplanation"]
-                  : "N/A"}
-              </Text>
-            </Td>
-            <Td>
-              <Text>
-                {entity.report_miscellaneousNotes
-                  ? entity.report_miscellaneousNotes
-                  : "N/A"}
-              </Text>
-            </Td>
-          </Tr>
+          <Box>
+            <Tr key={idx}>
+              <Td sx={sx.statusIcon}>
+                <EntityStatusIcon
+                  entity={entity}
+                  isPdf={true}
+                  entityStatus={entity.status}
+                />
+              </Td>
+              <Td>
+                <Heading as="h3">
+                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}{" "}
+                  <br />
+                </Heading>
+                <Heading as="h4">{entity.initiative_wpTopic[0].value}</Heading>
+              </Td>
+            </Tr>
+            <ExportedEntityDetailsOverlaySection section={entity} />
+          </Box>
         );
       });
     case ReportType.SAR:
