@@ -33,6 +33,12 @@ export const mockCompletedGenericFormattedEntityData = {
   population: "mock-population",
   monitoringMethods: ["mock-monitoring-method-1", "mock-monitoring-method-2"],
   methodFrequency: "mock-oversight-method-frequency",
+  quarters: [
+    {
+      id: "mock_id",
+      value: "mock_value",
+    },
+  ],
 };
 
 export const mockTargetPopulationEntity = {
