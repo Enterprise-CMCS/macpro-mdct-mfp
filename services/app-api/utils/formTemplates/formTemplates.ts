@@ -208,6 +208,10 @@ export const expandRepeatedFields = (
     nextTwelveQuarters: nextTwelveQuarters,
     targetPopulationsByReportingPeriod: targetPopulationsByReportingPeriod,
   };
+
+  //after creating the first formTemplate in the system, new forms will try to repeat 12 times. We have to clear it before using it again
+  formFields = clearPreviousRepeatingFields(formFields);
+
   formFields.forEach((field, fieldIndex) => {
     // if field has choices/options (ie could have nested children)
     const fieldChoices = field.props?.choices;
@@ -235,6 +239,19 @@ export const expandRepeatedFields = (
       );
     }
   });
+  return formFields;
+};
+
+const clearPreviousRepeatingFields = (formFields: FormField[]) => {
+  if (formFields.length > 1) {
+    let cleanedFormField = formFields[0];
+    //the id needs to be cleaned by stripping the quarter information
+    const quarterLabelIndex:number = cleanedFormField.id.length - 6;
+    cleanedFormField.id = cleanedFormField.id.substring(0, quarterLabelIndex);
+    delete cleanedFormField.props;
+    return [cleanedFormField];
+  }
+
   return formFields;
 };
 
@@ -296,9 +313,13 @@ export async function getOrCreateFormTemplate(
   const mostRecentTemplateVersionHash = mostRecentTemplateVersion?.md5Hash;
 
   //if copyReport form template is the same as latest report form template, create the next iteration, else use the most recent version
-  const copyToNewReport = (copyReport && copyReport?.formTemplateId === mostRecentTemplateVersion?.id);
+  const copyToRecent =
+    copyReport && copyReport?.formTemplateId !== mostRecentTemplateVersion?.id;
 
-  if (currentTemplateHash === mostRecentTemplateVersionHash || (mostRecentTemplateVersionHash && !copyToNewReport)) {
+  if (
+    mostRecentTemplateVersionHash &&
+    (currentTemplateHash === mostRecentTemplateVersionHash || copyToRecent)
+  ) {
     return {
       formTemplate: await getTemplate(
         reportBucket,
