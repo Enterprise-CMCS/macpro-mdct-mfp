@@ -71,8 +71,9 @@ export const getEntityStatus = (
     let fields: AnyObject[] = [];
 
     //store the fields data into an array to be looked through
+    console.log(route);
     pageTypes.forEach((type) => {
-      if ((route as AnyObject)[type])
+      if (route && (route as AnyObject)[type])
         fields.push((route as AnyObject)[type].fields);
     });
 
