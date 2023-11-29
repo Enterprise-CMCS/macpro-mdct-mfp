@@ -848,17 +848,41 @@
                   },
                   {
                     "id": "defineInitiative_projectedEndDate",
-                    "type": "date",
-                    "validation": { 
-                      "type": "endDate",
-                      "dependentFieldName": "defineInitiative_projectedStartDate",
-                      "nested": false,
-                      "parentFieldName": "stsidi"
-                    },
+                    "type": "radio",
+                    "validation": "radio",
                     "props": {
-                      "label": "End Date",
-                      "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
+                      "label": "Does the initiative have a projected end date?",
+                      "hint": "Select 'No' if the initiative will be ongoing without a set end point.",
+                      "choices" : [
+                        {
+                          "id": "WNsSaAHeDvRD2Pjkz6DcOE",
+                          "label": "Yes",
+                          "children": [
+                            { 
+                              "id": "defineInitiative_projectedEndDate_value",
+                              "type": "date",
+                              "validation": { 
+                                "type": "endDate",
+                                "dependentFieldName": "defineInitiative_projectedStartDate",
+                                "nested": true,
+                                "parentFieldName": "defineInitiative_projectedEndDate"
+                              },
+                              "props": {
+                                "label": "End Date",
+                                "hint": "Enter projected end date."
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "TR6HoXF3Unf2QX0zzDg2Kp",
+                          "label": "No"
+                        }
+                      ]
                     }
+                    
+                   
+                    
                   }
                 ]
               }

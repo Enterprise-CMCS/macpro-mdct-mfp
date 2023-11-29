@@ -71,8 +71,8 @@ export const DateField = ({
   const onChangeHandler = (rawValue: string, maskedValue: string) => {
     setDisplayValue(rawValue);
     const isValidDate = checkDateCompleteness(maskedValue);
-    if (isValidDate || maskedValue === "" || rawValue === "N/A") {
-      form.setValue(name, rawValue, { shouldValidate: true });
+    if (isValidDate || maskedValue === "") {
+      form.setValue(name, maskedValue, { shouldValidate: true });
     }
   };
 

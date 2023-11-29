@@ -127,26 +127,14 @@ export const dateOptional = () =>
     });
 
 export const endDate = (startDateField: string) =>
-  string()
+  date()
     .typeError(error.INVALID_DATE)
-    .test({
-      message: error.INVALID_END_DATE_OR_NA,
-      test: (value) => {
-        const result =
-          !isWhitespaceString(value) ||
-          !!value?.match(dateFormatRegex) ||
-          (value as string) === "N/A";
-        return result;
-      },
-    })
     .test({
       message: error.INVALID_END_DATE,
       test: (endDateString, context) => {
-        return (
-          isEndDateAfterStartDate(
-            context.parent[startDateField],
-            endDateString as string
-          ) || (endDateString as string) === "N/A"
+        return isEndDateAfterStartDate(
+          context.parent[startDateField],
+          endDateString as string
         );
       },
     });
