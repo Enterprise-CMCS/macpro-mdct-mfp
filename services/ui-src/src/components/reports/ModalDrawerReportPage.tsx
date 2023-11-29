@@ -176,19 +176,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const tableHeaders = {
     headRow: ["", "", ""],
   };
-  console.log(
-    "🚀 ~ file: ModalDrawerReportPage.tsx:181 ~ ModalDrawerReportPage ~ ...verbiage, drawerTitleText, getFormattedEntityData(entityType):",
-    { ...verbiage }
-  );
-  console.log(
-    "🚀 ~ file: ModalDrawerReportPage.tsx:186 ~ ModalDrawerReportPage ~ drawerTitleText, getFormattedEntityData(entityType),:",
-    drawerTitleText
-  );
-
-  console.log(
-    "🚀 ~ file: ModalDrawerReportPage.tsx:190 ~ ModalDrawerReportPage ~ getFormattedEntityData(entityType),:",
-    getFormattedEntityData(entityType)
-  );
 
   return (
     <Box>
