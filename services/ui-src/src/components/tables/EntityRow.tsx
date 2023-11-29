@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
-import { EntityStatusIcon } from "components";
+import { EntityStatusIcon, Table } from "components";
 // types
 import {
   AnyObject,
@@ -29,12 +29,13 @@ export const EntityRow = ({
   openAddEditEntityModal,
   openDeleteEntityModal,
   openOverlayOrDrawer,
+  stepType,
 }: Props) => {
   const { userIsEndUser } = useStore().user ?? {};
   const { report } = useStore();
 
   // check for "other" target population entities
-  const { isRequired, isCopied } = entity;
+  const { isRequired, isCopied, isInitiativeClosed, closedByName } = entity;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
@@ -90,6 +91,16 @@ export const EntityRow = ({
               `Select ${verbiage.enterEntityDetailsButtonText} to report data`}
           </Text>
         )}
+        {isInitiativeClosed && stepType && stepType === "closeOutInformation" && (
+          <Table
+            content={{
+              headRow: ["Actual end date", "Closed by"],
+              bodyRows: [
+                [entity.closeOutInformation_actualEndDate, closedByName],
+              ],
+            }}
+          ></Table>
+        )}
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
@@ -110,7 +121,7 @@ export const EntityRow = ({
             }
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
-            disabled={entityStatus === "disabled"}
+            //disabled={entityStatus === "disabled"}
           >
             {verbiage.enterEntityDetailsButtonText}
           </Button>
@@ -139,6 +150,7 @@ interface Props {
   openDeleteEntityModal: Function;
   openOverlayOrDrawer: Function;
   [key: string]: any;
+  stepType?: string;
 }
 
 const sx = {
