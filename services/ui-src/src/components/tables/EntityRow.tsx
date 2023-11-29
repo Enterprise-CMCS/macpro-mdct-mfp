@@ -35,7 +35,7 @@ export const EntityRow = ({
   const { report } = useStore();
 
   // check for "other" target population entities
-  const { isRequired, isCopied, isInitiativeClosed, closedByName } = entity;
+  const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
@@ -95,10 +95,10 @@ export const EntityRow = ({
           <Table
             content={{
               headRow: ["Actual end date", "Closed by"],
-              bodyRows: [
-                [entity.closeOutInformation_actualEndDate, closedByName],
-              ],
+              bodyRows: [[entity.closeOutInformation_actualEndDate, closedBy]],
             }}
+            variant="none"
+            sxOverride={sx.table}
           ></Table>
         )}
       </Td>
@@ -216,6 +216,16 @@ const sx = {
     background: "white",
     "&:hover, &:hover:disabled": {
       background: "white",
+    },
+  },
+  table: {
+    td: {
+      paddingTop: "0rem",
+    },
+    th: {
+      border: "none",
+      fontWeight: "bold",
+      color: "palette.gray_medium",
     },
   },
 };
