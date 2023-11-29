@@ -243,13 +243,29 @@ export const expandRepeatedFields = (
 };
 
 const clearPreviousRepeatingFields = (formFields: FormField[]) => {
-  if (formFields.length > 1) {
-    let cleanedFormField = formFields[0];
+  //check to see if there is a repeating field in the form fields
+  let repeatingFields = formFields.filter((field) => field.repeatable);
+
+  //if there is more than 1 repeating form call
+  if (repeatingFields.length > 1) {
+    //we want to split out the unrepeating fields
+    let unrepeatingFields = formFields.filter((field) => !field.repeatable);
+
+    //get the index of the first repeating field as that is the position where the cleaned repeating field needs to go back to
+    let firstRepeatIndex: number = formFields.findIndex(
+      (field) => field.repeatable
+    );
+
+    //we need to take the first repeating field as the template
+    let cleanRepeatField = formFields[firstRepeatIndex];
     //the id needs to be cleaned by stripping the quarter information
-    const quarterLabelIndex:number = cleanedFormField.id.length - 6;
-    cleanedFormField.id = cleanedFormField.id.substring(0, quarterLabelIndex);
-    delete cleanedFormField.props;
-    return [cleanedFormField];
+    const quarterLabelIndex: number = cleanRepeatField.id.length - 6;
+    cleanRepeatField.id = cleanRepeatField.id.substring(0, quarterLabelIndex);
+    delete cleanRepeatField.props;
+
+    //add the repeating field back into the formFields
+    unrepeatingFields.splice(firstRepeatIndex, 0, cleanRepeatField);
+    return unrepeatingFields;
   }
 
   return formFields;
