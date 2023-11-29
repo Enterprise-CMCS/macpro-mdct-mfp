@@ -62,7 +62,7 @@ export const EntityRow = ({
     programInfo = (entityInfo as string[]).flatMap((info) => {
       //if the data is in an array, like a radio button values, get each as text
       if (typeof entity?.[info] === "object") {
-        return (entity[info] as any[]).map((arr) => {
+        return (entity[info] as AnyObject[]).map((arr) => {
           if (
             entity?.initiative_wp_otherTopic &&
             arr.value === "Other, specify"
