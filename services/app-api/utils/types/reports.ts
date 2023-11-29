@@ -148,6 +148,7 @@ export interface ModalDrawerReportPageVerbiage
   extends DrawerReportPageVerbiage {
   addEntityButtonText: string;
   editEntityButtonText: string;
+  readOnlyEntityButtonText: string;
   addEditModalAddTitle: string;
   addEditModalEditTitle: string;
   addEditModalMessage: string;
@@ -157,6 +158,7 @@ export interface ModalDrawerReportPageVerbiage
   deleteModalWarning: string;
   entityUnfinishedMessage: string;
   enterEntityDetailsButtonText: string;
+  readOnlyEntityDetailsButtonText: string;
   editEntityDetailsButtonText: string;
 }
 
