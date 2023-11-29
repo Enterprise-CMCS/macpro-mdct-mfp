@@ -66,9 +66,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   // create drawerForm from json
   const drawerForm = { ...drawerFormJson };
 
-  const drawerTitleText = `${verbiage.drawerTitle} ${
-    !selectedEntity?.isRequired && `Other: `
-  }${selectedEntityName}`;
+  const otherText = !selectedEntity?.isRequired ? `Other: ` : `Other`;
+  const drawerTitleText = `${verbiage.drawerTitle} ${otherText}${selectedEntityName}`;
 
   // add/edit entity modal disclosure and methods
   const {
@@ -177,6 +176,19 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const tableHeaders = {
     headRow: ["", "", ""],
   };
+  console.log(
+    "🚀 ~ file: ModalDrawerReportPage.tsx:181 ~ ModalDrawerReportPage ~ ...verbiage, drawerTitleText, getFormattedEntityData(entityType):",
+    { ...verbiage }
+  );
+  console.log(
+    "🚀 ~ file: ModalDrawerReportPage.tsx:186 ~ ModalDrawerReportPage ~ drawerTitleText, getFormattedEntityData(entityType),:",
+    drawerTitleText
+  );
+
+  console.log(
+    "🚀 ~ file: ModalDrawerReportPage.tsx:190 ~ ModalDrawerReportPage ~ getFormattedEntityData(entityType),:",
+    getFormattedEntityData(entityType)
+  );
 
   return (
     <Box>
