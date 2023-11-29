@@ -100,7 +100,10 @@ export const EntityRow = ({
               variant="none"
               onClick={() => openAddEditEntityModal(entity)}
             >
-              {verbiage.editEntityButtonText}
+              {report?.status === ReportStatus.SUBMITTED ||
+              report?.status === ReportStatus.APPROVED
+                ? verbiage.readOnlyEntityButtonText
+                : verbiage.editEntityButtonText}
             </Button>
           )}
           <Button
@@ -113,8 +116,9 @@ export const EntityRow = ({
             variant="outline"
             disabled={entityStatus === "disabled"}
           >
-            {report?.status === ReportStatus.SUBMITTED
-              ? "View"
+            {report?.status === ReportStatus.SUBMITTED ||
+            report?.status === ReportStatus.APPROVED
+              ? verbiage.readOnlyEntityDetailsButtonText
               : verbiage.enterEntityDetailsButtonText}
           </Button>
           {!isRequired && !isCopied && (
