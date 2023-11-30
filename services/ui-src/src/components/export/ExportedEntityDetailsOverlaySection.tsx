@@ -1,17 +1,21 @@
 // components
-import { Box } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
+import { Fragment } from "react";
+import uuid from "react-uuid";
 // types
 import {
-  AnyObject,
+  EntityDetailsOverlayShape,
   EntityShape,
   FormField,
   FormLayoutElement,
-  // ModalOverlayReportPageShape,
+  ModalOverlayReportPageShape,
+  OverlayModalPageShape,
   ReportType,
 } from "types";
 // utils
 import { useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
+import { ExportedEntityDetailsTable } from "./ExportedEntityDetailsTable";
 
 export const ExportedEntityDetailsOverlaySection = ({
   section,
@@ -32,46 +36,77 @@ export const ExportedEntityDetailsOverlaySection = ({
 };
 
 export interface ExportedEntityDetailsOverlaySectionProps {
-  section: AnyObject;
+  section: ModalOverlayReportPageShape;
 }
+
 /**
- * Split a list of form fields by the "sectionHeader" layout element type.
+ * Split a list of form fields within each entity step form or modal form.
  * This allows returning distinct tables for each section, rather than one large one.
  *
- * In the returned FormField sections, the first element is the section header.
  *
- * @param formFields List of form fields, possibly containing section headers
- * @returns array of arrays containing form field elements representing a section
+ * @param entitySteps List of entity step data and form fields
+ * @returns array of arrays containing form field elements representing an entity step
  */
-export function getFormSections(
-  formFields: (FormField | FormLayoutElement)[]
-): (FormLayoutElement | FormField)[][] {
-  const formSections: (FormLayoutElement | FormField)[][] = [];
+export function getEntityStepFields(
+  entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[]
+) {
+  const entityStepFields: (string | FormLayoutElement | FormField)[][] = [];
 
-  let currentSection: (FormField | FormLayoutElement)[] = [];
-  for (let field of formFields) {
-    if (field.type === "sectionHeader") {
-      if (currentSection.length > 0) {
-        formSections.push(currentSection);
+  for (let step of entitySteps) {
+    let currentStepFields = [];
+    // store EntityStep name and hint for rendering
+    currentStepFields.push(step.stepName);
+    currentStepFields.push(step.hint);
+
+    // handle Standard forms
+    if (step.form) {
+      for (let field of step.form.fields) {
+        currentStepFields.push(field);
       }
-      currentSection = [field];
-    } else {
-      currentSection.push(field);
     }
+    // handle Modal forms
+    else if (step.modalForm) {
+      for (let field of step.modalForm.fields) {
+        currentStepFields.push(field);
+      }
+    }
+    entityStepFields.push(currentStepFields);
   }
-  formSections.push(currentSection);
 
-  return formSections;
+  return entityStepFields;
 }
 
 /**
  *
- * @param entities entities for entity type
- * @param section form json for section
- * @param formSections form fields broken down into sections
+ * @param entity entity data
  * @param report report field data
  * @returns entity table and heading information for each section
  */
+export function getEntityTableComponents(
+  entity: EntityShape,
+  entityStepFields: (string | FormField | FormLayoutElement)[][]
+) {
+  return entityStepFields?.map((step, idx) => {
+    return (
+      <Box key={uuid()}>
+        <Box>
+          <Heading as="h4">
+            <Box sx={sx.stepName}>{step[0]}</Box>
+            <Box sx={sx.stepHint}>{step[1]}</Box>
+          </Heading>
+        </Box>
+        <Fragment key={`tableContainer-${idx}`}>
+          <ExportedEntityDetailsTable
+            key={`table-${idx}`}
+            fields={step.slice(2) as FormField[]}
+            entity={entity}
+            showHintText={false}
+          />
+        </Fragment>
+      </Box>
+    );
+  });
+}
 
 /**
  * Render entity detail table(s) conditionally based on report type.
@@ -84,15 +119,13 @@ export function getFormSections(
  */
 export function renderEntityDetailTables(
   reportType: ReportType,
-  entities: EntityShape[],
-  section: AnyObject
+  entity: EntityShape,
+  section: ModalOverlayReportPageShape
 ) {
   switch (reportType) {
     case ReportType.WP: {
-      const formSections = getFormSections(section.overlayForm?.fields ?? []);
-      return `${JSON.stringify(entities)}.....${JSON.stringify(
-        section
-      )}.....${JSON.stringify(formSections)}.....`;
+      const entitySteps = getEntityStepFields(section.entitySteps ?? []);
+      return getEntityTableComponents(entity, entitySteps);
     }
     case ReportType.SAR:
       throw new Error(
@@ -175,9 +208,14 @@ const sx = {
     textAlign: "center",
     paddingBottom: "5rem",
   },
-  entityInformation: {
-    padding: "1rem 0 1rem 0",
-    fontWeight: "bold",
+  stepName: {
+    fontSize: "18px",
+    paddingBottom: "0.75rem",
+  },
+  stepHint: {
+    fontSize: "16px",
+    fontWeight: "normal",
+    color: "#5B616B",
   },
   entityHeading: {
     padding: "2rem 0 0.5rem 0",
