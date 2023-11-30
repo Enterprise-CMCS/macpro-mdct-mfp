@@ -33,7 +33,7 @@ export const EntityStepCardTopSection = ({
               <Grid sx={sx.grid}>
                 {formattedEntityData?.quarters.map((quarter: any) => {
                   return (
-                    <GridItem>
+                    <GridItem key={quarter.id}>
                       <Flex sx={sx.gridItems}>
                         <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
                         <Text sx={sx.subtext}>{quarter.value}</Text>
@@ -65,7 +65,7 @@ export const EntityStepCardTopSection = ({
               <Grid sx={sx.grid}>
                 {formattedEntityData?.quarters?.map((quarter: any) => {
                   return (
-                    <GridItem>
+                    <GridItem key={quarter.id}>
                       <Flex sx={sx.gridItems}>
                         <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
                         <Text sx={sx.subtext}>{quarter.value}</Text>
