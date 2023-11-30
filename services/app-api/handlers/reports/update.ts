@@ -24,6 +24,7 @@ import {
 } from "../../utils/validation/completionStatus";
 // types
 import { isState, ReportJson, StatusCodes, UserRoles } from "../../utils/types";
+import { removeNotApplicablePopsFromInitiatives } from "../../utils/other/other";
 
 export const updateReport = handler(async (event, context) => {
   const requiredParams = ["reportType", "id", "state"];
@@ -179,16 +180,19 @@ export const updateReport = handler(async (event, context) => {
     };
   }
 
-  // Post validated field data to s3 bucket
+  // Finalize fieldData to be sent to s3
   const fieldData = {
     ...existingFieldData,
     ...validatedFieldData,
   };
 
+  const cleanedFieldData = removeNotApplicablePopsFromInitiatives(fieldData);
+
+  // Post validated field data to s3 bucket
   const updateFieldDataParams = {
     Bucket: reportBucket,
     Key: getFieldDataKey(state, fieldDataId),
-    Body: JSON.stringify(fieldData),
+    Body: JSON.stringify(cleanedFieldData),
     ContentType: "application/json",
   };
 
