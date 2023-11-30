@@ -3,6 +3,7 @@ import { removeNotApplicablePopsFromInitiatives } from "./data";
 const targetPopulationNotApplicable = {
   id: "123",
   transitionBenchmarks_targetPopulationName: "Older adults",
+  isRequired: true,
   transitionBenchmarks_applicableToMfpDemonstration: [
     {
       key: "123-abc",
@@ -14,6 +15,7 @@ const targetPopulationNotApplicable = {
 const targetPopulationApplicable = {
   id: "123",
   transitionBenchmarks_targetPopulationName: "Older adults",
+  isRequired: true,
   transitionBenchmarks_applicableToMfpDemonstration: [
     {
       key: "123-abc",
@@ -24,7 +26,19 @@ const targetPopulationApplicable = {
 
 const targetPopulationUndefined = {
   id: "123",
+  isRequired: true,
   transitionBenchmarks_targetPopulationName: "Older adults",
+};
+
+const userCreatedTargetPopulation = {
+  id: "123",
+  transitionBenchmarks_targetPopulationName: "User Created",
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "123-abc",
+      value: "No",
+    },
+  ],
 };
 
 const initiative = {
@@ -40,6 +54,11 @@ const initiativeOlderAdults = {
 const initiativePD = {
   key: "456-def",
   value: "Individuals with physical disabilities (PD)",
+};
+
+const initiativeUserCreatedPopulation = {
+  key: "789-ghi",
+  value: "Other: User Created",
 };
 
 describe("Test removeNotApplicablePopsFromInitiatives", () => {
@@ -149,6 +168,34 @@ describe("Test removeNotApplicablePopsFromInitiatives", () => {
             initiativeOlderAdults,
             initiativePD,
           ],
+        },
+      ],
+    };
+    const updatedData = removeNotApplicablePopsFromInitiatives(fieldData);
+
+    expect(updatedData).toEqual(expectedOutput);
+  });
+
+  it("should remove a user created target populations from an initiative if that population is not applicable", async () => {
+    const fieldData = {
+      targetPopulations: [userCreatedTargetPopulation],
+      initiative: [
+        {
+          ...initiative,
+          defineInitiative_targetPopulations: [
+            initiativeOlderAdults,
+            initiativeUserCreatedPopulation,
+          ],
+        },
+      ],
+    };
+
+    const expectedOutput = {
+      targetPopulations: [userCreatedTargetPopulation],
+      initiative: [
+        {
+          ...initiative,
+          defineInitiative_targetPopulations: [initiativeOlderAdults],
         },
       ],
     };

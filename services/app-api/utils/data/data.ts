@@ -39,10 +39,10 @@ export const removeNotApplicablePopsFromInitiatives = (
       initiative?.defineInitiative_targetPopulations?.filter(
         (initiativePopulation: AnyObject) => {
           for (const population of notApplicablePopulations) {
-            if (
-              population?.transitionBenchmarks_targetPopulationName ==
-              initiativePopulation?.value
-            ) {
+            const populationName = population?.isRequired
+              ? population?.transitionBenchmarks_targetPopulationName
+              : `Other: ${population?.transitionBenchmarks_targetPopulationName}`;
+            if (populationName == initiativePopulation?.value) {
               return false;
             }
           }
