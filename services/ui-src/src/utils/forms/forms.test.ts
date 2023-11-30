@@ -1,4 +1,4 @@
-import { resetClearProp } from "./forms";
+import { removeNotApplicablePopulations, resetClearProp } from "./forms";
 // types
 import { FormField } from "types";
 import {
@@ -6,6 +6,12 @@ import {
   mockFormField,
   mockNestedFormField,
   mockNumberField,
+  mockTargetPopButOtherApplicable,
+  mockTargetPopButOtherNotApplicable,
+  mockTargetPopByOtherNotDefined,
+  mockTargetPopReqButApplicable,
+  mockTargetPopReqButApplicableIsUndefined,
+  mockTargetPopReqButNotApplicable,
 } from "utils/testing/setupJest";
 
 describe("Test resetClearProp", () => {
@@ -34,5 +40,29 @@ describe("Test resetClearProp", () => {
     const fields: FormField[] = [mockDateField];
     resetClearProp(fields);
     expect(fields[0].props?.clear).toBe(false);
+  });
+});
+
+describe("Test removeNotApplicablePopulations", () => {
+  const exampleTargetPopulations = [
+    mockTargetPopReqButNotApplicable,
+    mockTargetPopReqButApplicable,
+    mockTargetPopReqButApplicableIsUndefined,
+    mockTargetPopButOtherApplicable,
+    mockTargetPopButOtherNotApplicable,
+    mockTargetPopByOtherNotDefined,
+  ];
+
+  it("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration", async () => {
+    const filteredPopulations = removeNotApplicablePopulations(
+      exampleTargetPopulations
+    );
+    expect(filteredPopulations.length).toBe(4);
+    expect(filteredPopulations).toEqual([
+      mockTargetPopReqButApplicable,
+      mockTargetPopReqButApplicableIsUndefined,
+      mockTargetPopButOtherApplicable,
+      mockTargetPopByOtherNotDefined,
+    ]);
   });
 });

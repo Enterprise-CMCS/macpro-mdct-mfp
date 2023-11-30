@@ -321,3 +321,22 @@ export const injectFormWithTargetPopulations = (
   form.fields = updatedFields;
   return form;
 };
+
+/**
+ * This function takes the target populations given from the form data and then filters out
+ * any population that a user has answered "No". It does this by looking for a child object
+ * called transitionBenchmarks_applicableToMfpDemonstration and seeing if it has a value of "No"
+ * @param {AnyObject[]} targetPopulations - targetPopulations that are in the formData
+ * @return {AnyObject[]} Target populations filtered to no long has No answers from
+ * transitionBenchmarks_applicableToMfpDemonstration
+ */
+export const removeNotApplicablePopulations = (
+  targetPopulations: AnyObject[]
+) => {
+  const filteredPopulations = targetPopulations?.filter((population) => {
+    const isApplicable =
+      population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value;
+    return isApplicable !== "No";
+  });
+  return filteredPopulations;
+};
