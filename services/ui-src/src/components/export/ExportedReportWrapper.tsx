@@ -3,7 +3,6 @@ import { Box } from "@chakra-ui/react";
 import {
   ExportedModalDrawerReportSection,
   ExportedReportFieldTable,
-  ExportedEntityDetailsOverlaySection,
   ExportedModalOverlayReportSection,
 } from "components";
 // types
@@ -44,9 +43,6 @@ export const ExportedReportWrapper = ({ section }: Props) => {
       return (
         <>
           <ExportedModalOverlayReportSection
-            section={section as ModalOverlayReportPageShape}
-          />
-          <ExportedEntityDetailsOverlaySection
             section={section as ModalOverlayReportPageShape}
           />
         </>
