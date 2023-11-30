@@ -24,7 +24,7 @@ import {
 } from "../../utils/validation/completionStatus";
 // types
 import { isState, ReportJson, StatusCodes, UserRoles } from "../../utils/types";
-import { removeNotApplicablePopsFromInitiatives } from "../../utils/other/other";
+import { removeNotApplicablePopsFromInitiatives } from "../../utils/data/data";
 
 export const updateReport = handler(async (event, context) => {
   const requiredParams = ["reportType", "id", "state"];
