@@ -87,11 +87,13 @@ export function renderModalOverlayTableBody(
                 />
               </Td>
               <Td>
-                <Heading as="h3">
+                <Heading sx={sx.heading} as="h3">
                   {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}{" "}
                   <br />
+                  <Text sx={sx.headingSubtitle}>
+                    {entity.initiative_wpTopic[0].value}
+                  </Text>
                 </Heading>
-                <Heading as="h4">{entity.initiative_wpTopic[0].value}</Heading>
               </Td>
             </Tr>
             <ExportedEntityDetailsOverlaySection section={section} />
@@ -119,8 +121,6 @@ const sx = {
     "tr, th": {
       verticalAlign: "bottom",
       lineHeight: "base",
-      borderBottom: "1px solid",
-      borderColor: "palette.gray_lighter",
     },
     "th:nth-of-type(3)": {
       width: "15rem",
@@ -131,7 +131,7 @@ const sx = {
     },
     td: {
       p: {
-        lineHeight: "1.25rem",
+        lineHeight: "2.25rem",
       },
       padding: "0.75rem 0.5rem",
       borderStyle: "none",
@@ -184,5 +184,12 @@ const sx = {
     margin: "0 auto",
     textAlign: "center",
     paddingBottom: "5rem",
+  },
+  heading: {
+    fontSize: "xl",
+  },
+  headingSubtitle: {
+    fontWeight: "normal",
+    marginLeft: "1.5rem",
   },
 };

@@ -38,7 +38,7 @@ const sx = {
   },
   heading: {
     margin: "1.5rem 0",
-    fontSize: "xl",
+    fontSize: "24px",
     fontWeight: "bold",
   },
   info: {
