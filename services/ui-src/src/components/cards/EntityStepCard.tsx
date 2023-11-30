@@ -38,9 +38,13 @@ export const EntityStepCard = ({
   switch (stepType) {
     case OverlayModalStepTypes.EVALUATION_PLAN:
       entityCompleted = formattedEntityData?.objectiveName;
+      if (entityCompleted && formattedEntityData?.includesTargets === "Yes")
+        entityCompleted = formattedEntityData?.quarters.length === 12;
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
-      entityCompleted = formattedEntityData?.fundingSource;
+      entityCompleted =
+        formattedEntityData?.fundingSource &&
+        formattedEntityData?.quarters.length === 12;
       break;
     default:
       break;

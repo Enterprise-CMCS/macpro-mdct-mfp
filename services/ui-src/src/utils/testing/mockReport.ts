@@ -3,6 +3,7 @@ import {
   mockStandardReportPageJson,
   mockDrawerReportPageJson,
   mockModalDrawerReportPageJson,
+  mockTargetPopulationsReportPageJson,
   mockReviewSubmitPageJson,
 } from "./mockForm";
 
@@ -20,6 +21,7 @@ export const mockFlattenedReportRoutes = [
   mockStandardReportPageJson,
   mockDrawerReportPageJson,
   mockModalDrawerReportPageJson,
+  mockTargetPopulationsReportPageJson,
   mockReviewSubmitPageJson,
 ];
 
