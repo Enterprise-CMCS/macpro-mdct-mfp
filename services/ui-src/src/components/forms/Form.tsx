@@ -17,6 +17,7 @@ import {
   formFieldFactory,
   hydrateFormFields,
   mapValidationTypesToSchema,
+  removeNotApplicablePopulations,
   sortFormErrors,
   updateFieldChoicesByID,
   useStore,
@@ -54,9 +55,11 @@ export const Form = ({
   const { report } = useStore();
 
   const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
+    const targetPopulations = report?.fieldData?.targetPopulations;
+    const filteredTargetPopulations =
+      removeNotApplicablePopulations(targetPopulations);
     const formatChoiceList = convertTargetPopulationsFromWPToSAREntity(
-      updatedTargetPopulationChoices
+      filteredTargetPopulations
     );
 
     const updateTargetPopulationChoiceList = updateFieldChoicesByID(
