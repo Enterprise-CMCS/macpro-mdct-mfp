@@ -1,5 +1,12 @@
 import { AnyObject } from "../types";
 
+/**
+ * This function goes through the fieldData and looks to see if there are target populations
+ * attached to any initiatives and removes those target populations from them if the user
+ * has marked it as not applicable
+ * @param {AnyObject} fieldData - The fieldData of the Form
+ * @return {AnyObject} Returns fieldData, with the possible removal of target populations from initiatives
+ */
 export const removeNotApplicablePopsFromInitiatives = (
   fieldData: AnyObject
 ) => {
