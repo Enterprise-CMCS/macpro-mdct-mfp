@@ -8,6 +8,7 @@ import {
   EntityShape,
   ModalDrawerEntityTypes,
   ReportShape,
+  ReportStatus,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -62,7 +63,15 @@ export const EntityRow = ({
     programInfo = (entityInfo as string[]).flatMap((info) => {
       //if the data is in an array, like a radio button values, get each as text
       if (typeof entity?.[info] === "object") {
-        return (entity[info] as any[]).map((arr) => arr.value);
+        return (entity[info] as AnyObject[]).map((arr) => {
+          if (
+            entity?.initiative_wp_otherTopic &&
+            arr.value === "Other, specify"
+          ) {
+            return entity.initiative_wp_otherTopic;
+          }
+          return arr.value;
+        });
       }
       return entity[info];
     });
@@ -99,7 +108,10 @@ export const EntityRow = ({
               variant="none"
               onClick={() => openAddEditEntityModal(entity)}
             >
-              {verbiage.editEntityButtonText}
+              {report?.status === ReportStatus.SUBMITTED ||
+              report?.status === ReportStatus.APPROVED
+                ? verbiage.readOnlyEntityButtonText
+                : verbiage.editEntityButtonText}
             </Button>
           )}
           <Button
@@ -112,7 +124,10 @@ export const EntityRow = ({
             variant="outline"
             disabled={entityStatus === "disabled"}
           >
-            {verbiage.enterEntityDetailsButtonText}
+            {report?.status === ReportStatus.SUBMITTED ||
+            report?.status === ReportStatus.APPROVED
+              ? verbiage.readOnlyEntityDetailsButtonText
+              : verbiage.enterEntityDetailsButtonText}
           </Button>
           {!isRequired && !isCopied && (
             <Button
