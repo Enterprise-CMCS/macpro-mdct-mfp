@@ -25,8 +25,6 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
   const { report } = useStore() ?? {};
   const entityType = section.entityType;
 
-  // console.log(section)
-
   const verbiage = exportVerbiageMap[report?.reportType as ReportType];
 
   const { modalOverlayTableHeaders } = verbiage;
@@ -46,6 +44,7 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
       >
         {report?.fieldData[entityType] &&
           renderModalOverlayTableBody(
+            section,
             report?.reportType as ReportType,
             report?.fieldData[entityType]
           )}
@@ -70,13 +69,13 @@ export function renderStatusIcon(status: boolean) {
 }
 
 export function renderModalOverlayTableBody(
+  section: ModalOverlayReportPageShape,
   reportType: ReportType,
   entities: EntityShape[]
 ) {
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
-        // console.log(entity)
         return (
           <Box>
             <Tr key={idx}>
@@ -95,7 +94,7 @@ export function renderModalOverlayTableBody(
                 <Heading as="h4">{entity.initiative_wpTopic[0].value}</Heading>
               </Td>
             </Tr>
-            <ExportedEntityDetailsOverlaySection section={entity} />
+            <ExportedEntityDetailsOverlaySection section={section} />
           </Box>
         );
       });
