@@ -155,17 +155,19 @@ export const date = () =>
   });
 
 export const dateOptional = () => date();
+
 export const endDate = (startDateField: string) =>
-  date().test(
-    "is-after-start-date",
-    error.INVALID_END_DATE,
-    (endDateString, context) => {
-      return isEndDateAfterStartDate(
-        context.parent[startDateField],
-        endDateString as string
-      );
-    }
-  );
+  date()
+    .typeError(error.INVALID_DATE)
+    .test({
+      message: error.INVALID_END_DATE,
+      test: (endDateString, context) => {
+        return isEndDateAfterStartDate(
+          context.parent[startDateField],
+          endDateString as string
+        );
+      },
+    });
 
 export const isEndDateAfterStartDate = (
   startDateString: string,

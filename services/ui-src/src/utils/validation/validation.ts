@@ -19,6 +19,7 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
       // else if nested validation type, make and set nested schema
       else if (fieldValidation && fieldValidation.nested) {
         validationSchema[key] = makeNestedFieldSchema(fieldValidation);
+
         // else if not nested, make and set other dependent field types
       } else if (fieldValidation?.type === "endDate") {
         validationSchema[key] = makeEndDateFieldSchema(fieldValidation);
