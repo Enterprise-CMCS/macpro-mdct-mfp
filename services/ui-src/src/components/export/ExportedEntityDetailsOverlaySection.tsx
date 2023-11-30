@@ -2,6 +2,8 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { Fragment } from "react";
 import uuid from "react-uuid";
+// components
+import { ExportedEntityDetailsTable } from "components";
 // types
 import {
   EntityDetailsOverlayShape,
@@ -15,7 +17,6 @@ import {
 // utils
 import { useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
-import { ExportedEntityDetailsTable } from "./ExportedEntityDetailsTable";
 
 export const ExportedEntityDetailsOverlaySection = ({
   section,

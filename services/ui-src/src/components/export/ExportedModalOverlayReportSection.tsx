@@ -130,9 +130,6 @@ const sx = {
       display: "table-row-group",
     },
     td: {
-      p: {
-        lineHeight: "2.25rem",
-      },
       padding: "0.75rem 0.5rem",
       borderStyle: "none",
       fontWeight: "normal",
@@ -153,9 +150,6 @@ const sx = {
       color: "palette.gray_medium",
       ".shrink &": {
         padding: "0.375rem 0rem",
-      },
-      "&:first-of-type": {
-        textAlign: "center",
       },
     },
     ".desktop &": {
