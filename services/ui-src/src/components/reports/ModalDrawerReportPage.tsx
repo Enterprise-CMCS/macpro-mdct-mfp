@@ -66,9 +66,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   // create drawerForm from json
   const drawerForm = { ...drawerFormJson };
 
-  const drawerTitleText = `${verbiage.drawerTitle} ${
-    !selectedEntity?.isRequired && `Other: `
-  }${selectedEntityName}`;
+  const otherText = !selectedEntity?.isRequired ? `Other: ` : ``;
+  const drawerTitleText = `${verbiage.drawerTitle} ${otherText}${selectedEntityName}`;
 
   // add/edit entity modal disclosure and methods
   const {
