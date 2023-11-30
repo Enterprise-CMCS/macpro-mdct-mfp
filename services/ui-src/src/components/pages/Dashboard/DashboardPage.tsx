@@ -143,7 +143,8 @@ export const DashboardPage = ({ reportType }: Props) => {
     setReportSelection(selectedReport);
     setReportId(undefined);
     setEntering(false);
-    const firstReportPagePath = selectedReport?.formTemplate.flatRoutes![0].path;
+    const firstReportPagePath =
+      selectedReport?.formTemplate.flatRoutes![0].path;
     navigate(firstReportPagePath);
   };
 

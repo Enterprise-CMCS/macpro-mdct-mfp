@@ -40,7 +40,13 @@ export const mockTargetPopulationEntity = {
   type: entityTypes[1],
   isRequired: true,
   transitionBenchmarks_targetPopulationName: "Older Adults",
-  transitionBenchmarks_applicableToMfpDemonstration: [{ value: "No" }],
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "transitionBenchmarks_applicableToMfpDemonstration-mock-choice-2",
+      value: "Yes",
+    },
+  ],
+  ["mock-child-1"]: "3",
 };
 
 export const mockOtherTargetPopulationEntity = {

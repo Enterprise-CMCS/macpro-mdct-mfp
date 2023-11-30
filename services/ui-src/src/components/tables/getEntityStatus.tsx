@@ -6,6 +6,7 @@ import {
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   ReportShape,
+  OverlayModalTypes,
 } from "types";
 import { AnyObject } from "yup/lib/types";
 
@@ -74,7 +75,6 @@ export const getEntityStatus = (
       if (route && (route as AnyObject)[type])
         fields.push((route as AnyObject)[type].fields);
     });
-
     const validationIdList = getValidationList(fields.flat(), entity);
 
     const isFilled = validationIdList.map((id: string) => {
@@ -99,8 +99,9 @@ export const getInitiativeStatus = (
     .routes[3] as unknown as ModalOverlayReportPageShape;
 
   //get the intiative report child
-  const reportChild: EntityDetailsDashboardOverlayShape =
-    reportRoute.children![1];
+  const reportChild: EntityDetailsDashboardOverlayShape = (
+    reportRoute?.children! as EntityDetailsOverlayShape[]
+  ).find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
 
   if (reportChild.entitySteps) {
     const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =

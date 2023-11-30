@@ -251,7 +251,13 @@ export const mockTargetPopulationsDrawerFormField = {
       props: {
         choices: [
           { id: "mock-choice-1", label: "No" },
-          { id: "mock-choice-2", label: "Yes" },
+          {
+            id: "mock-choice-2",
+            label: "Yes",
+            children: [
+              { id: "mock-child-1", props: { label: "child", type: "number" } },
+            ],
+          },
         ],
         label: "mock drawer text field",
       },
