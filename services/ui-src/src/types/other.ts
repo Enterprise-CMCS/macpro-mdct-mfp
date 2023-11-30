@@ -28,6 +28,10 @@ export interface AnyObject {
   [key: string]: any;
 }
 
+export enum OverlayModalTypes {
+  INITIATIVE = "initiative",
+}
+
 export enum OverlayModalStepTypes {
   EVALUATION_PLAN = "evaluationPlan",
   FUNDING_SOURCES = "fundingSources",

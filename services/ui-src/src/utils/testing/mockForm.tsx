@@ -229,6 +229,54 @@ export const mockModalDrawerReportPageJson = {
   drawerForm: mockDrawerForm,
 };
 
+export const mockTargetPopulationsModalFormField = {
+  id: "mock-modal",
+  fields: [
+    {
+      id: "transitionBenchmarks_targetPopulationName",
+      type: "text",
+      validation: "text",
+      props: {
+        label: "mock modal text field",
+      },
+    },
+  ],
+};
+
+export const mockTargetPopulationsDrawerFormField = {
+  id: "mock-drawer",
+  fields: [
+    {
+      id: "transitionBenchmarks_applicableToMfpDemonstration",
+      props: {
+        choices: [
+          { id: "mock-choice-1", label: "No" },
+          {
+            id: "mock-choice-2",
+            label: "Yes",
+            children: [
+              { id: "mock-child-1", props: { label: "child", type: "number" } },
+            ],
+          },
+        ],
+        label: "mock drawer text field",
+      },
+      type: "radio",
+      validation: "radio",
+    },
+  ],
+};
+
+export const mockTargetPopulationsReportPageJson = {
+  name: "mock-route-2b",
+  path: "/mock/mock-route-2b",
+  pageType: "modalDrawer",
+  entityType: "targetPopulations",
+  verbiage: mockModalDrawerReportPageVerbiage,
+  modalForm: mockTargetPopulationsModalFormField,
+  drawerForm: mockTargetPopulationsDrawerFormField,
+};
+
 export const mockEntityDetailsOverlayVerbiage = {
   intro: mockVerbiageIntro,
   closeOutWarning: {

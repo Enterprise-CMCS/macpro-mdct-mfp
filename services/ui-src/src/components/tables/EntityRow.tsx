@@ -8,6 +8,7 @@ import {
   EntityShape,
   ModalDrawerEntityTypes,
   ReportShape,
+  OverlayModalTypes,
   ReportStatus,
 } from "types";
 // utils
@@ -39,9 +40,7 @@ export const EntityRow = ({
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
-      case ModalDrawerEntityTypes.TARGET_POPULATIONS:
-        return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
-      case "initiative":
+      case OverlayModalTypes.INITIATIVE:
         //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
         if (formEntity) {
           return getInitiativeDashboardStatus(formEntity, entity);
@@ -49,7 +48,7 @@ export const EntityRow = ({
           return getInitiativeStatus(report!, entity);
         }
       default: {
-        return report ? !!getEntityStatus(report, entity) : false;
+        return report ? !!getEntityStatus(report, entity, entityType) : false;
       }
     }
   };
