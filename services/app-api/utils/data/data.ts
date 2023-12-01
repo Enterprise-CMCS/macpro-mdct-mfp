@@ -33,8 +33,7 @@ export const removeNotApplicablePopsFromInitiatives = (
       return isApplicable === "No";
     }
   );
-  if (!notApplicablePopulations || notApplicablePopulations.length === 0)
-    return fieldData;
+  if (notApplicablePopulations.length === 0) return fieldData;
 
   /*
    * Now knowing what target populations a user doesn't feel is applicable
