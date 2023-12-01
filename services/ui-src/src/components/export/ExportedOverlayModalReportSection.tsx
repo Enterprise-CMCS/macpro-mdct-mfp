@@ -7,6 +7,7 @@ import {
   FormField,
   FormLayoutElement,
   OverlayModalPageShape,
+  OverlayModalStepTypes,
 } from "types";
 import { EntityStepCard } from "components";
 import exportVerbiage from "verbiage/pages/wp/wp-export";
@@ -20,6 +21,10 @@ export const ExportedOverlayModalReportSection = ({
 
   const stepType = entityStep![0] as string;
   const entityCount = entity?.[stepType]?.length;
+  const noDataText =
+    stepType === OverlayModalStepTypes.EVALUATION_PLAN
+      ? "objectives"
+      : "funding sources";
 
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
@@ -29,7 +34,7 @@ export const ExportedOverlayModalReportSection = ({
         <Box sx={sx.dashboardTitle} data-testid="headerCount">
           {/* TODO: FIX THIS VERBIAGE */}
           {`${verbiage.dashboardTitle} ${
-            entityCount > 0 ? entityCount : "0 - No funding sources added"
+            entityCount > 0 ? entityCount : `0 - no ${noDataText} added`
           }`}
           <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
             {emptyEntityMessage[entityType as keyof typeof emptyEntityMessage]}

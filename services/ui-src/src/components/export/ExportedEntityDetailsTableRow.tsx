@@ -22,11 +22,12 @@ export const ExportedEntityDetailsTableRow = ({
   const reportData = report?.fieldData;
   const isDynamicField = formField.type === "dynamic";
   const formFieldInfo = parseFormFieldInfo(formField?.props!);
-
   // guard against double-rendering "otherText" response
   const isOtherTextEntry = formField.id.endsWith("-otherText");
   if (isOtherTextEntry) return null;
 
+  // trying to figure out how to display the data in the rows
+  console.log(reportData);
   return (
     <Tr data-testid="exportRow">
       {/* label column/cell */}
