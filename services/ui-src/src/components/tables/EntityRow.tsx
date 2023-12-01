@@ -221,8 +221,10 @@ const sx = {
   table: {
     td: {
       paddingTop: "0rem",
+      paddingLeft: "0rem",
     },
     th: {
+      paddingLeft: "0rem",
       border: "none",
       fontWeight: "bold",
       color: "palette.gray_medium",
