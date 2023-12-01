@@ -95,7 +95,7 @@ export const EntityRow = ({
         {!entityStatus && (
           <Text sx={sx.errorText}>
             {verbiage.editEntityHint ??
-              `Select ${verbiage.enterEntityDetailsButtonText} to report data`}
+              `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
           </Text>
         )}
       </Td>
@@ -135,7 +135,7 @@ export const EntityRow = ({
               onClick={() => openDeleteEntityModal(entity)}
               disabled={locked || !userIsEndUser}
             >
-              <Image src={deleteIcon} alt="delete icon" boxSize="3xl" />
+              <Image src={deleteIcon} alt="delete icon" boxSize="3x3" />
             </Button>
           )}
         </Box>
@@ -167,22 +167,21 @@ const sx = {
   errorText: {
     color: "palette.error_dark",
     fontSize: "0.75rem",
-    marginBottom: "0.75rem",
+    marginBottom: "0.5rem",
   },
   entityName: {
     maxWidth: "18.75rem",
     ul: {
-      margin: "0.5rem auto",
+      margin: "0.3rem auto",
       listStyleType: "none",
+      lineHeight: "1.3rem",
       li: {
         wordWrap: "break-word",
-        paddingTop: "0.125rem",
-        paddingBottom: "0.125rem",
         whiteSpace: "break-spaces",
         "&:first-of-type": {
           fontWeight: "bold",
           fontSize: "md",
-          marginBottom: "0.25rem",
+          marginBottom: "0rem",
         },
       },
     },
@@ -210,11 +209,13 @@ const sx = {
     minWidth: "5rem",
   },
   deleteButton: {
-    height: "1.875rem",
-    width: "1.875rem",
-    minWidth: "1.875rem",
+    height: "1.5rem",
+    minHeight: "1.5rem",
+    width: "1.5rem",
+    minWidth: "1.5rem",
     padding: 0,
     marginLeft: "1rem",
+    marginBottom: "0.25rem",
     background: "white",
     "&:hover, &:hover:disabled": {
       background: "white",
