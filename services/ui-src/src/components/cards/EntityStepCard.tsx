@@ -245,6 +245,7 @@ const sx = {
     color: "palette.error_dark",
   },
   editButton: {
+    marginY: "1rem",
     fontWeight: "normal",
     borderColor: "palette.gray_light",
   },
