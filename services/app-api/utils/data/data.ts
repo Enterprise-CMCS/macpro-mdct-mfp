@@ -11,8 +11,8 @@ export const removeNotApplicablePopsFromInitiatives = (
   fieldData: AnyObject
 ) => {
   // Gather the data we need
-  const targetPopulations = fieldData?.targetPopulations;
-  const initiatives = fieldData?.initiative;
+  const targetPopulations = fieldData.targetPopulations;
+  const initiatives = fieldData.initiative;
 
   /*
    * If we can't find any data on targetPopulations or initiatives, we don't
@@ -28,12 +28,18 @@ export const removeNotApplicablePopsFromInitiatives = (
   const notApplicablePopulations = targetPopulations.filter(
     (population: AnyObject) => {
       const isApplicable =
-        population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]
+        population.transitionBenchmarks_applicableToMfpDemonstration?.[0]
           ?.value;
       return isApplicable === "No";
     }
   );
   if (notApplicablePopulations.length === 0) return fieldData;
+
+  const notApplicablePopulationNames = notApplicablePopulations.map(
+    (population: AnyObject) => population.isRequired
+    ? population.transitionBenchmarks_targetPopulationName
+    : `Other: ${population.transitionBenchmarks_targetPopulationName}`
+  );
 
   /*
    * Now knowing what target populations a user doesn't feel is applicable
@@ -42,18 +48,9 @@ export const removeNotApplicablePopsFromInitiatives = (
    */
   const cleanedInitiatives = initiatives.map((initiative: AnyObject) => {
     initiative.defineInitiative_targetPopulations =
-      initiative?.defineInitiative_targetPopulations?.filter(
-        (initiativePopulation: AnyObject) => {
-          for (const population of notApplicablePopulations) {
-            const populationName = population?.isRequired
-              ? population?.transitionBenchmarks_targetPopulationName
-              : `Other: ${population?.transitionBenchmarks_targetPopulationName}`;
-            if (populationName == initiativePopulation?.value) {
-              return false;
-            }
-          }
-          return true;
-        }
+      initiative.defineInitiative_targetPopulations?.filter(
+        (initiativePopulation: AnyObject) => 
+          !notApplicablePopulationNames.includes(initiativePopulation.value)
       );
     return initiative;
   });
