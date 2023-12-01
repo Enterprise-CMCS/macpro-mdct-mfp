@@ -2,18 +2,25 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 // utils
 import { getFormattedEntityData, useStore } from "utils";
-import { EntityShape, OverlayModalPageShape } from "types";
+import {
+  EntityShape,
+  FormField,
+  FormLayoutElement,
+  OverlayModalPageShape,
+} from "types";
 import { EntityStepCard } from "components/cards/EntityStepCard";
 import exportVerbiage from "verbiage/pages/wp/wp-export";
 
 export const ExportedOverlayModalReportSection = ({
-  stepType,
   section: { entityType, verbiage },
+  entityStep,
 }: Props) => {
   const { report } = useStore() ?? {};
   const entities = report?.fieldData?.[entityType];
   const entityCount = entities?.length;
   const { emptyEntityMessage } = exportVerbiage;
+
+  const stepType = entityStep![0] as string;
 
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
@@ -31,7 +38,7 @@ export const ExportedOverlayModalReportSection = ({
           entity={entity}
           entityType={stepType}
           entityIndex={entityIndex}
-          formattedEntityData={getFormattedEntityData(stepType!, entity)}
+          formattedEntityData={getFormattedEntityData(stepType, entity)}
           verbiage={verbiage}
           stepType={stepType!}
           printVersion
@@ -43,7 +50,7 @@ export const ExportedOverlayModalReportSection = ({
 
 export interface Props {
   section: OverlayModalPageShape;
-  stepType?: string;
+  entityStep?: (string | FormLayoutElement | FormField)[];
 }
 
 const sx = {

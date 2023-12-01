@@ -160,8 +160,8 @@ export function renderModalOverlayTableBody(
                     step[0] === OverlayModalStepTypes.EVALUATION_PLAN ||
                     (step[0] === OverlayModalStepTypes.FUNDING_SOURCES && (
                       <ExportedOverlayModalReportSection
-                        stepType={step[0]}
                         section={section as OverlayModalPageShape}
+                        entityStep={step}
                       />
                     ))
                   )}
