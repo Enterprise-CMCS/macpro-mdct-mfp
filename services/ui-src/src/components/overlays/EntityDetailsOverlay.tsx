@@ -69,8 +69,12 @@ export const EntityDetailsOverlay = ({
   }, [report]);
 
   //need to set the initial state of the closeOut button when page loads
-  if (disableCloseOut === undefined)
-    setDisableCloseOut(!getCloseoutStatus(form, selectedEntity!));
+  if (disableCloseOut === undefined) {
+    const closedOut =
+      selectedEntity?.isInitiativeClosed ??
+      !getCloseoutStatus(form, selectedEntity!);
+    setDisableCloseOut(closedOut);
+  }
 
   // add/edit entity modal disclosure and methods
   const {
@@ -84,6 +88,8 @@ export const EntityDetailsOverlay = ({
   };
 
   const closeCloseEntityModal = () => {
+    if (selectedEntity?.isInitiativeClosed) setDisableCloseOut(true);
+
     closeEntityModalOnCloseHandler();
   };
 
@@ -189,7 +195,9 @@ export const EntityDetailsOverlay = ({
           "closeOutInformation_initiativeStatus-terminationReason"
         );
 
-      setDisableCloseOut(!getCloseoutStatus(form, entity));
+      const isClosed =
+        selectedEntity?.isInitiativeClosed ?? !getCloseoutStatus(form, entity);
+      setDisableCloseOut(isClosed);
     }
   };
 
@@ -226,6 +234,7 @@ export const EntityDetailsOverlay = ({
         dontReset={true}
         onFormChange={onChange}
         validateOnRender={false}
+        userDisabled={selectedEntity?.isInitiativeClosed}
       />
       <Box>
         {verbiage.closeOutWarning && (

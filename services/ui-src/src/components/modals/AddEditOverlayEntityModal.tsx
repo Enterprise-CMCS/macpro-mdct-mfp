@@ -28,6 +28,7 @@ export const AddEditOverlayEntityModal = ({
   verbiage,
   selectedEntity,
   modalDisclosure,
+  userDisabled,
 }: Props) => {
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
@@ -185,6 +186,7 @@ export const AddEditOverlayEntityModal = ({
         onSubmit={writeEntity}
         validateOnRender={false}
         dontReset={true}
+        userDisabled={userDisabled}
       />
       <Text sx={sx.bottomModalMessage}>{verbiage.addEditModalMessage}</Text>
     </Modal>
@@ -198,6 +200,7 @@ interface Props {
   form: FormJson;
   verbiage: AnyObject;
   selectedEntity?: EntityShape;
+  userDisabled?: boolean;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;

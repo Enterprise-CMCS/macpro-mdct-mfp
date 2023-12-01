@@ -156,6 +156,7 @@ export const OverlayModalPage = ({
           entityIdLookup={entityIdLookup}
           verbiage={verbiage}
           form={modalForm}
+          userDisabled={selectedEntity?.isInitiativeClosed}
           modalDisclosure={{
             isOpen: addEditEntityModalIsOpen,
             onClose: closeAddEditEntityModal,

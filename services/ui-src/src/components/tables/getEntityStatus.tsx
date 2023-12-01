@@ -95,6 +95,8 @@ export const getInitiativeStatus = (
   entity: EntityShape,
   ignore?: string[]
 ) => {
+  if (entity?.isInitiativeClosed) return "close";
+
   // Direct pull of the initiative formTemplate json chunk
   const reportRoute = report.formTemplate
     .routes[3] as unknown as ModalOverlayReportPageShape;
@@ -108,12 +110,14 @@ export const getInitiativeStatus = (
     const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =
       reportChild.entitySteps;
 
-    const filteredEntitySteps = entitySteps.filter((step) => !ignore?.find((item) => step.stepType === item));
+    const filteredEntitySteps = entitySteps.filter(
+      (step) => !ignore?.find((item) => step.stepType === item)
+    );
     const stepStatuses = filteredEntitySteps.map((step) => {
       return getInitiativeDashboardStatus(step, entity);
     });
 
-    return stepStatuses.every((field: boolean | "disabled") => field);
+    return stepStatuses.every((field: any) => field);
   }
 
   return false;
@@ -125,9 +129,6 @@ export const getInitiativeDashboardStatus = (
   entity: EntityShape
 ) => {
   const stepType = formEntity.stepType;
-
-  //Important note: not tracking close out atm so it'll be disabled
-  if (stepType === "closeOutInformation") return "disabled";
 
   //pull fields from form type
   const fields = formEntity.form
@@ -164,9 +165,13 @@ export const getInitiativeDashboardStatus = (
 
 export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
   if (entity) {
-    const fieldIds = form.fields.map((field) => {
-      return field.id;
-    });
+    const fieldIds = form.fields
+      .map((field) => {
+        return !(field as AnyObject)?.validation.includes("Optional")
+          ? field.id
+          : "";
+      })
+      .filter((field) => field);
     const isFilled = fieldIds.map((id) => {
       return entity[id];
     });

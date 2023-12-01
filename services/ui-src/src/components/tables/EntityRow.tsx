@@ -38,6 +38,7 @@ export const EntityRow = ({
   // check for "other" target population entities
   const { isRequired, isCopied } = entity;
   const stepType = (formEntity as AnyObject)?.stepType;
+  const closed = entity?.isInitiativeClosed;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
@@ -46,12 +47,16 @@ export const EntityRow = ({
         if (formEntity && stepType !== "closeOutInformation") {
           return getInitiativeDashboardStatus(formEntity, entity);
         } else if (stepType === "closeOutInformation") {
-          const isCloseOutEnabled = getInitiativeStatus(report!, entity, [
-            stepType,
-          ]);
-          return !isCloseOutEnabled && "disabled";
+          if (closed) {
+            return "close";
+          } else {
+            const isCloseOutEnabled = getInitiativeStatus(report!, entity, [
+              stepType,
+            ]);
+            return isCloseOutEnabled && isCopied ? "no status" : "disabled";
+          }
         } else {
-          return getInitiativeStatus(report!, entity);
+          return getInitiativeStatus(report!, entity, ["closeOutInformation"]);
         }
       default: {
         return report ? !!getEntityStatus(report, entity, entityType) : false;
@@ -60,6 +65,9 @@ export const EntityRow = ({
   };
 
   let entityStatus = useMemo(() => {
+    if(OverlayModalTypes.INITIATIVE && formEntity && closed){
+      return (stepType === "closeOutInformation" ? "close" : "no status")
+    }    
     return setStatusByType(entityType!);
   }, [report, entity]);
 
@@ -114,7 +122,8 @@ export const EntityRow = ({
               onClick={() => openAddEditEntityModal(entity)}
             >
               {report?.status === ReportStatus.SUBMITTED ||
-              report?.status === ReportStatus.APPROVED
+              report?.status === ReportStatus.APPROVED ||
+              closed
                 ? verbiage.readOnlyEntityButtonText
                 : verbiage.editEntityButtonText}
             </Button>
@@ -130,7 +139,8 @@ export const EntityRow = ({
             disabled={entityStatus === "disabled"}
           >
             {report?.status === ReportStatus.SUBMITTED ||
-            report?.status === ReportStatus.APPROVED
+            report?.status === ReportStatus.APPROVED ||
+            closed
               ? verbiage.readOnlyEntityDetailsButtonText
               : verbiage.enterEntityDetailsButtonText}
           </Button>

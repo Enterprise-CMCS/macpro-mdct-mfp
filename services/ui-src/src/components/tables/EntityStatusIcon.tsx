@@ -27,6 +27,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
           style: sx.successText,
           text: "Close",
         };
+      case "no status":
       case "disabled":
         return undefined;
       default:
