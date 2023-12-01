@@ -55,13 +55,14 @@ const sx = {
   subsectionHeading: {
     fontWeight: "normal",
     fontSize: "4xl",
+    marginTop: "0.5rem",
   },
   hintTextBox: {
     color: "#5B616B",
     paddingTop: "1.5rem",
   },
   infoTextBox: {
-    marginTop: "2rem",
+    marginTop: "1.5rem",
     h3: {
       marginBottom: "-0.75rem",
     },
