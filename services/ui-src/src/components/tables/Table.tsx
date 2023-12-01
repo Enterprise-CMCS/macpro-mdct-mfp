@@ -5,6 +5,7 @@ import {
   TableCaption,
   Tbody,
   Td,
+  Tfoot,
   Th,
   Thead,
   Tr,
@@ -67,6 +68,13 @@ export const Table = ({
             </Tr>
           ))}
       </Tbody>
+      <Tfoot>
+        {content.footRow?.map((headerCell: string, index: number) => (
+          <Th key={index} scope="col" sx={{ ...sx.tableHeader, ...sxOverride }}>
+            {sanitizeAndParseHtml(headerCell)}
+          </Th>
+        ))}
+      </Tfoot>
     </TableRoot>
   );
 };
