@@ -1,7 +1,7 @@
 // components
 import { Box, Heading, Text } from "@chakra-ui/react";
 // utils
-import { getFormattedEntityData, useStore } from "utils";
+import { getFormattedEntityData } from "utils";
 import {
   EntityShape,
   FormField,
@@ -13,14 +13,13 @@ import exportVerbiage from "verbiage/pages/wp/wp-export";
 
 export const ExportedOverlayModalReportSection = ({
   section: { entityType, verbiage },
+  entity,
   entityStep,
 }: Props) => {
-  const { report } = useStore() ?? {};
-  const entities = report?.fieldData?.[entityType];
-  const entityCount = entities?.length;
   const { emptyEntityMessage } = exportVerbiage;
 
   const stepType = entityStep![0] as string;
+  const entityCount = entity?.[stepType]?.length;
 
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
@@ -28,36 +27,36 @@ export const ExportedOverlayModalReportSection = ({
         <Box sx={sx.stepName}>{entityStep![1]}</Box>
         <Box sx={sx.stepHint}>{entityStep![2]}</Box>
         <Box sx={sx.dashboardTitle} data-testid="headerCount">
-          {`${verbiage.dashboardTitle} ${entityCount > 0 ? entityCount : ""}`}
-          {!entityCount && (
-            <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
-              {
-                emptyEntityMessage[
-                  entityType as keyof typeof emptyEntityMessage
-                ]
-              }
-            </Text>
-          )}{" "}
+          {/* TODO: FIX THIS VERBIAGE */}
+          {`${verbiage.dashboardTitle} ${
+            entityCount > 0 ? entityCount : "0 - No funding sources added"
+          }`}
+          <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
+            {emptyEntityMessage[entityType as keyof typeof emptyEntityMessage]}
+          </Text>
         </Box>
       </Heading>
-      {entities?.map((entity: EntityShape, entityIndex: number) => (
-        <EntityStepCard
-          key={entity.id}
-          entity={entity}
-          entityType={stepType}
-          entityIndex={entityIndex}
-          formattedEntityData={getFormattedEntityData(stepType, entity)}
-          verbiage={verbiage}
-          stepType={stepType!}
-          printVersion
-        />
-      ))}
+      {entity?.[stepType]?.map((step: any, index: number) => {
+        return (
+          <EntityStepCard
+            key={entity.id}
+            entity={entity}
+            entityType={stepType}
+            entityIndex={index}
+            formattedEntityData={getFormattedEntityData(stepType, step)}
+            verbiage={verbiage}
+            stepType={stepType!}
+            printVersion
+          />
+        );
+      })}
     </Box>
   );
 };
 
 export interface Props {
   section: OverlayModalPageShape;
+  entity?: EntityShape;
   entityStep?: (string | FormLayoutElement | FormField)[];
 }
 

@@ -17,18 +17,17 @@ import { useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
 
 export const ExportedEntityDetailsOverlaySection = ({
-  section,
+  entity,
   entityStep,
   ...props
 }: ExportedEntityDetailsOverlaySectionProps) => {
   const { report } = useStore() ?? {};
-  const entityType = section.entityType;
 
   return (
     <Box sx={sx.sectionHeading} {...props}>
       {renderEntityDetailTables(
         report?.reportType as ReportType,
-        report?.fieldData[entityType] ?? [],
+        entity ?? [],
         entityStep
       )}
     </Box>
@@ -37,6 +36,7 @@ export const ExportedEntityDetailsOverlaySection = ({
 
 export interface ExportedEntityDetailsOverlaySectionProps {
   section: ModalOverlayReportPageShape;
+  entity: EntityShape;
   entityStep: (string | FormLayoutElement | FormField)[];
 }
 
