@@ -150,20 +150,30 @@ export function renderModalOverlayTableBody(
             {entitySteps.map((step, idx) => {
               return (
                 <Box key={idx}>
-                  {step[0] === EntityDetailsStepTypes.DEFINE_INITIATIVE ||
-                  step[0] === EntityDetailsStepTypes.CLOSE_OUT_INFORMATION ? (
+                  {/* TODO: make this a switch case ? */}
+                  {step[0] === EntityDetailsStepTypes.DEFINE_INITIATIVE ? (
                     <ExportedEntityDetailsOverlaySection
                       section={section as ModalOverlayReportPageShape}
                       entityStep={step}
                     />
+                  ) : step[0] === OverlayModalStepTypes.EVALUATION_PLAN ? (
+                    <ExportedOverlayModalReportSection
+                      section={section as OverlayModalPageShape}
+                      entityStep={step}
+                    />
+                  ) : step[0] === OverlayModalStepTypes.FUNDING_SOURCES ? (
+                    <ExportedOverlayModalReportSection
+                      section={section as OverlayModalPageShape}
+                      entityStep={step}
+                    />
                   ) : (
-                    step[0] === OverlayModalStepTypes.EVALUATION_PLAN ||
-                    (step[0] === OverlayModalStepTypes.FUNDING_SOURCES && (
-                      <ExportedOverlayModalReportSection
-                        section={section as OverlayModalPageShape}
+                    step[0] ===
+                      EntityDetailsStepTypes.CLOSE_OUT_INFORMATION && (
+                      <ExportedEntityDetailsOverlaySection
+                        section={section as ModalOverlayReportPageShape}
                         entityStep={step}
                       />
-                    ))
+                    )
                   )}
                 </Box>
               );

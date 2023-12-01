@@ -8,7 +8,7 @@ import {
   FormLayoutElement,
   OverlayModalPageShape,
 } from "types";
-import { EntityStepCard } from "components/cards/EntityStepCard";
+import { EntityStepCard } from "components";
 import exportVerbiage from "verbiage/pages/wp/wp-export";
 
 export const ExportedOverlayModalReportSection = ({
@@ -24,13 +24,21 @@ export const ExportedOverlayModalReportSection = ({
 
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
-      <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
-        {`${verbiage.dashboardTitle} ${entityCount > 0 ? entityCount : ""}`}
-        {!entityCount && (
-          <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
-            {emptyEntityMessage[entityType as keyof typeof emptyEntityMessage]}
-          </Text>
-        )}{" "}
+      <Heading as="h4">
+        <Box sx={sx.stepName}>{entityStep![1]}</Box>
+        <Box sx={sx.stepHint}>{entityStep![2]}</Box>
+        <Box sx={sx.dashboardTitle} data-testid="headerCount">
+          {`${verbiage.dashboardTitle} ${entityCount > 0 ? entityCount : ""}`}
+          {!entityCount && (
+            <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
+              {
+                emptyEntityMessage[
+                  entityType as keyof typeof emptyEntityMessage
+                ]
+              }
+            </Text>
+          )}{" "}
+        </Box>
       </Heading>
       {entities?.map((entity: EntityShape, entityIndex: number) => (
         <EntityStepCard
@@ -67,10 +75,19 @@ const sx = {
     marginTop: "0.5rem",
   },
   dashboardTitle: {
-    marginBottom: "1.25rem",
+    margin: "1rem auto 1.25rem",
     fontSize: "md",
     fontWeight: "bold",
     color: "palette.gray_medium",
+  },
+  stepName: {
+    fontSize: "18px",
+    paddingBottom: "0.75rem",
+  },
+  stepHint: {
+    fontSize: "16px",
+    fontWeight: "normal",
+    color: "#5B616B",
   },
   // TODO: delete this
   border: {
