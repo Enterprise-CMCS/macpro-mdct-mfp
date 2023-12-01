@@ -14,6 +14,8 @@ import {
   mockReportStore,
   mockUseAdminStore,
   mockUseEmptyReportStore,
+  mockUseEntityStore,
+  mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useBreakpoint, useStore, makeMediaQueryClasses } from "utils";
@@ -112,6 +114,26 @@ describe("Test Report Dashboard view (Desktop)", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
     expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+  });
+
+  test("Check that WP Dashboard continue button is disabled if latest WP is not approved", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(dashboardViewWithReports);
+    const reportByRows = screen.getAllByRole("row");
+    expect(reportByRows[1].querySelectorAll("td")[5]).not.toHaveTextContent(
+      "Approved"
+    );
+    const callToActionButton = screen.getByText(
+      wpVerbiage.body.callToActionAdditions
+    );
+    expect(callToActionButton).toBeDisabled();
+  });
+
+  test("Check that you can enter a WP", async () => {
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
+    render(dashboardViewWithReports);
+    const editButtons = screen.getAllByText("Edit");
+    await userEvent.click(editButtons[0]);
   });
 
   test("Clicking Call To Action text open add/edit modal", async () => {

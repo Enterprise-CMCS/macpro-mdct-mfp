@@ -74,7 +74,7 @@ export const AddEditReportModal = ({
       metadata: {
         submissionName,
         lastAlteredBy: full_name,
-        copyFieldDataSourceId: previousReport?.fieldDataId,
+        copyReport: previousReport,
         locked: false,
         previousRevisions: [],
       },
