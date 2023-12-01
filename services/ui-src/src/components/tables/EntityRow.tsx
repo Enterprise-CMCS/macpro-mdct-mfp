@@ -121,7 +121,7 @@ export const EntityRow = ({
             }
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
-            //disabled={entityStatus === "disabled"}
+            disabled={entityStatus === "disabled"}
           >
             {verbiage.enterEntityDetailsButtonText}
           </Button>
