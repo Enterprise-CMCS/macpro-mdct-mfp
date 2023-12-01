@@ -75,7 +75,8 @@ export const Form = ({
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
     (report?.status === ReportStatus.SUBMITTED &&
       report?.reportType === ReportType.WP) ||
-    report?.status === ReportStatus.APPROVED || userDisabled;
+    report?.status === ReportStatus.APPROVED ||
+    userDisabled;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(

@@ -65,9 +65,9 @@ export const EntityRow = ({
   };
 
   let entityStatus = useMemo(() => {
-    if(OverlayModalTypes.INITIATIVE && formEntity && closed){
-      return (stepType === "closeOutInformation" ? "close" : "no status")
-    }    
+    if (OverlayModalTypes.INITIATIVE && formEntity && closed) {
+      return stepType === "closeOutInformation" ? "close" : "no status";
+    }
     return setStatusByType(entityType!);
   }, [report, entity]);
 
