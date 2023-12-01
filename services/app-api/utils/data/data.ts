@@ -46,16 +46,14 @@ export const removeNotApplicablePopsFromInitiatives = (
    * to the MFP demonstration, we need to look through the initiatives
    * and remove it from the data
    */
-  const cleanedInitiatives = initiatives.map((initiative: AnyObject) => {
+  for (let initiative of initiatives) {
     initiative.defineInitiative_targetPopulations =
       initiative.defineInitiative_targetPopulations?.filter(
         (initiativePopulation: AnyObject) => 
           !notApplicablePopulationNames.includes(initiativePopulation.value)
       );
-    return initiative;
-  });
+  }
 
   // Now set and return the cleaned up data!
-  fieldData.initiative = cleanedInitiatives;
   return fieldData;
 };
