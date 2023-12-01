@@ -7,7 +7,12 @@ import {
 } from "components";
 import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
-import { EntityShape, ModalOverlayReportPageShape, ReportType } from "types";
+import {
+  EntityShape,
+  ModalOverlayReportPageShape,
+  OverlayModalPageShape,
+  ReportType,
+} from "types";
 import { assertExhaustive } from "utils/other/typing";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
@@ -15,6 +20,7 @@ import sarVerbiage from "verbiage/pages/sar/sar-export";
 // assets
 import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
 import finishedIcon from "assets/icons/icon_check_circle.png";
+import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
 
 const exportVerbiageMap: { [key in ReportType]: any } = {
   WP: wpVerbiage,
@@ -69,7 +75,7 @@ export function renderStatusIcon(status: boolean) {
 }
 
 export function renderModalOverlayTableBody(
-  section: ModalOverlayReportPageShape,
+  section: ModalOverlayReportPageShape | OverlayModalPageShape,
   reportType: ReportType,
   entities: EntityShape[]
 ) {
@@ -96,7 +102,14 @@ export function renderModalOverlayTableBody(
                 </Heading>
               </Td>
             </Tr>
-            <ExportedEntityDetailsOverlaySection section={section} />
+            {/* if Step 1 or 4, render EntityDetailsOverlaySection */}
+            <ExportedEntityDetailsOverlaySection
+              section={section as ModalOverlayReportPageShape}
+            />
+            {/* else */}
+            <ExportedOverlayModalReportSection
+              section={section as OverlayModalPageShape}
+            />
           </Box>
         );
       });
