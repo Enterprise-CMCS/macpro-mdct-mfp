@@ -7,11 +7,10 @@ import { EntityStepCard } from "components/cards/EntityStepCard";
 import exportVerbiage from "verbiage/pages/wp/wp-export";
 
 export const ExportedOverlayModalReportSection = ({
-  route,
+  stepType,
   section: { entityType, verbiage },
 }: Props) => {
   const { report } = useStore() ?? {};
-  const { stepType } = route;
   const entities = report?.fieldData?.[entityType];
   const entityCount = entities?.length;
   const { emptyEntityMessage } = exportVerbiage;
@@ -30,11 +29,11 @@ export const ExportedOverlayModalReportSection = ({
         <EntityStepCard
           key={entity.id}
           entity={entity}
-          entityType={entityType}
+          entityType={stepType}
           entityIndex={entityIndex}
-          formattedEntityData={getFormattedEntityData(entityType, entity)}
+          formattedEntityData={getFormattedEntityData(stepType!, entity)}
           verbiage={verbiage}
-          stepType={stepType}
+          stepType={stepType!}
           printVersion
         />
       ))}
@@ -44,6 +43,7 @@ export const ExportedOverlayModalReportSection = ({
 
 export interface Props {
   section: OverlayModalPageShape;
+  stepType?: string;
 }
 
 const sx = {

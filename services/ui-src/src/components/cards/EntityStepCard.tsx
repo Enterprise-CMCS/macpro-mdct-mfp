@@ -37,10 +37,10 @@ export const EntityStepCard = ({
   // any drawer-based field will do for this check
   switch (stepType) {
     case OverlayModalStepTypes.EVALUATION_PLAN:
-      entityCompleted = formattedEntityData?.objectiveName;
+      entityCompleted = formattedEntityData.objectiveName;
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
-      entityCompleted = formattedEntityData?.fundingSource;
+      entityCompleted = formattedEntityData.fundingSource;
       break;
     default:
       break;

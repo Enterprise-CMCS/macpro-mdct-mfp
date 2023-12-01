@@ -8,9 +8,14 @@ import {
 import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
 import {
+  EntityDetailsOverlayShape,
+  EntityDetailsStepTypes,
   EntityShape,
+  FormField,
+  FormLayoutElement,
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
+  OverlayModalStepTypes,
   ReportType,
 } from "types";
 import { assertExhaustive } from "utils/other/typing";
@@ -74,11 +79,50 @@ export function renderStatusIcon(status: boolean) {
   return <Image src={unfinishedIcon} alt="warning icon" boxSize="xl" />;
 }
 
+/**
+ * Split a list of form fields within each entity step form or modal form.
+ * This allows returning distinct tables for each section, rather than one large one.
+ *
+ *
+ * @param entitySteps List of entity step data and form fields
+ * @returns array of arrays containing form field elements representing an entity step
+ */
+export function getEntityStepFields(
+  entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[]
+) {
+  const entityStepFields: (string | FormLayoutElement | FormField)[][] = [];
+
+  for (let step of entitySteps) {
+    let currentStepFields = [];
+    // store EntityStep name and hint for rendering
+    currentStepFields.push(step.stepType);
+    currentStepFields.push(step.stepName);
+    currentStepFields.push(step.hint);
+
+    // handle Standard forms
+    if (step.form) {
+      for (let field of step.form.fields) {
+        currentStepFields.push(field);
+      }
+    }
+    // handle Modal forms
+    else if (step.modalForm) {
+      for (let field of step.modalForm.fields) {
+        currentStepFields.push(field);
+      }
+    }
+    entityStepFields.push(currentStepFields);
+  }
+
+  return entityStepFields;
+}
+
 export function renderModalOverlayTableBody(
   section: ModalOverlayReportPageShape | OverlayModalPageShape,
   reportType: ReportType,
   entities: EntityShape[]
 ) {
+  const entitySteps = getEntityStepFields(section.entitySteps ?? []);
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
@@ -102,14 +146,28 @@ export function renderModalOverlayTableBody(
                 </Heading>
               </Td>
             </Tr>
-            {/* if Step 1 or 4, render EntityDetailsOverlaySection */}
-            <ExportedEntityDetailsOverlaySection
-              section={section as ModalOverlayReportPageShape}
-            />
-            {/* else */}
-            <ExportedOverlayModalReportSection
-              section={section as OverlayModalPageShape}
-            />
+            {/* Depending on what the entity step type is, render its corresponding component */}
+            {entitySteps.map((step, idx) => {
+              return (
+                <Box key={idx}>
+                  {step[0] === EntityDetailsStepTypes.DEFINE_INITIATIVE ||
+                  step[0] === EntityDetailsStepTypes.CLOSE_OUT_INFORMATION ? (
+                    <ExportedEntityDetailsOverlaySection
+                      section={section as ModalOverlayReportPageShape}
+                      entityStep={step}
+                    />
+                  ) : (
+                    step[0] === OverlayModalStepTypes.EVALUATION_PLAN ||
+                    (step[0] === OverlayModalStepTypes.FUNDING_SOURCES && (
+                      <ExportedOverlayModalReportSection
+                        stepType={step[0]}
+                        section={section as OverlayModalPageShape}
+                      />
+                    ))
+                  )}
+                </Box>
+              );
+            })}
           </Box>
         );
       });
