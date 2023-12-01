@@ -152,6 +152,10 @@ const theme = extendTheme({
           border: "1px solid",
           borderColor: "palette.primary",
           textDecoration: "none",
+          "&:disabled, &:disabled:hover": {
+            color: "palette.gray",
+            borderColor: "palette.gray",
+          },
           _hover: {
             ...theme.components.Button.variants.transparent._hover,
             borderColor: "palette.primary_darker",
