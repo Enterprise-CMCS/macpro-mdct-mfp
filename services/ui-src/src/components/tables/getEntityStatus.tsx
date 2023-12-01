@@ -92,7 +92,8 @@ export const getEntityStatus = (
 
 export const getInitiativeStatus = (
   report: ReportShape,
-  entity: EntityShape
+  entity: EntityShape,
+  ignore?: string[]
 ) => {
   // Direct pull of the initiative formTemplate json chunk
   const reportRoute = report.formTemplate
@@ -106,7 +107,9 @@ export const getInitiativeStatus = (
   if (reportChild.entitySteps) {
     const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =
       reportChild.entitySteps;
-    const stepStatuses = entitySteps.map((step) => {
+
+    const filteredEntitySteps = entitySteps.filter((step) => !ignore?.find((item) => step.stepType === item));
+    const stepStatuses = filteredEntitySteps.map((step) => {
       return getInitiativeDashboardStatus(step, entity);
     });
 

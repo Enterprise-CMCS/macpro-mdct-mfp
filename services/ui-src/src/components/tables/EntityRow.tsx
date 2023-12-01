@@ -37,13 +37,19 @@ export const EntityRow = ({
 
   // check for "other" target population entities
   const { isRequired, isCopied } = entity;
+  const stepType = (formEntity as AnyObject)?.stepType;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
       case OverlayModalTypes.INITIATIVE:
         //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
-        if (formEntity) {
+        if (formEntity && stepType !== "closeOutInformation") {
           return getInitiativeDashboardStatus(formEntity, entity);
+        } else if (stepType === "closeOutInformation") {
+          const isCloseOutEnabled = getInitiativeStatus(report!, entity, [
+            stepType,
+          ]);
+          return !isCloseOutEnabled && "disabled";
         } else {
           return getInitiativeStatus(report!, entity);
         }
