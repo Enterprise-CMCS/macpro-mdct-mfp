@@ -66,7 +66,10 @@ export const EntityDetailsOverlay = ({
         )
       );
     }
-  }, [report]);
+    if (selectedEntity?.isInitiativeClosed) {
+      setDisableCloseOut(true);
+    }
+  }, [report, selectedEntity?.isInitiativeClosed]);
 
   //need to set the initial state of the closeOut button when page loads
   if (disableCloseOut === undefined) {
@@ -88,8 +91,6 @@ export const EntityDetailsOverlay = ({
   };
 
   const closeCloseEntityModal = () => {
-    if (selectedEntity?.isInitiativeClosed) setDisableCloseOut(true);
-
     closeEntityModalOnCloseHandler();
   };
 
