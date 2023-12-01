@@ -219,6 +219,8 @@ const sx = {
       marginBottom: "0.25rem",
     },
     th: {
+      fontWeight: "bold",
+      color: "palette.gray_medium",
       paddingLeft: "1rem",
       paddingRight: "0",
       borderBottom: "1px solid",
