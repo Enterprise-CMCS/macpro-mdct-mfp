@@ -25,21 +25,18 @@ export const removeNotApplicablePopsFromInitiatives = (
    * if this is applicable to the MFP demonstration. If none are found,
    * we don't need to do anything
    */
-  const notApplicablePopulations = targetPopulations.filter(
-    (population: AnyObject) => {
-      const isApplicable =
-        population.transitionBenchmarks_applicableToMfpDemonstration?.[0]
-          ?.value;
-      return isApplicable === "No";
-    }
-  );
-  if (notApplicablePopulations.length === 0) return fieldData;
+  const isNotApplicable = (population: AnyObject) => population
+    .transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value === "No";
 
-  const notApplicablePopulationNames = notApplicablePopulations.map(
-    (population: AnyObject) => population.isRequired
+  const getPopulationName = (population: AnyObject) => population.isRequired
     ? population.transitionBenchmarks_targetPopulationName
-    : `Other: ${population.transitionBenchmarks_targetPopulationName}`
-  );
+    : `Other: ${population.transitionBenchmarks_targetPopulationName}`;
+
+  const notApplicablePopulationNames = targetPopulations
+    .filter(isNotApplicable)
+    .map(getPopulationName);
+
+  if (notApplicablePopulationNames.length === 0) return fieldData;
 
   /*
    * Now knowing what target populations a user doesn't feel is applicable
