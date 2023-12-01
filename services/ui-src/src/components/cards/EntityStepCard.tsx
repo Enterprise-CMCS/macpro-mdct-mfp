@@ -13,8 +13,7 @@ import completedIcon from "assets/icons/icon_check_circle.png";
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
-import { notAnsweredText } from "../../constants";
-import { calculateNextQuarter } from "utils";
+import { fillEmptyQuarters } from "utils";
 
 export const EntityStepCard = ({
   entity,
@@ -41,26 +40,20 @@ export const EntityStepCard = ({
       entityCompleted = formattedEntityData?.objectiveName;
       if (entityCompleted && formattedEntityData?.includesTargets === "Yes") {
         entityCompleted = formattedEntityData?.quarters.length === 12;
-        const quarters = formattedEntityData?.quarters;
-        for (var i: number = quarters.length; i < 12; i++) {
-          quarters.push({
-            id: calculateNextQuarter(quarters[i - 1].id),
-            value: notAnsweredText,
-          });
-        }
+        if (formattedEntityData?.quarters)
+          formattedEntityData.quarters = fillEmptyQuarters(
+            formattedEntityData?.quarters
+          );
       }
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
       entityCompleted =
         formattedEntityData?.fundingSource &&
         formattedEntityData?.quarters.length === 12;
-      const quarters = formattedEntityData?.quarters;
-      for (var i: number = quarters.length; i < 12; i++) {
-        quarters.push({
-          id: calculateNextQuarter(quarters[i - 1].id),
-          value: notAnsweredText,
-        });
-      }
+      if (formattedEntityData?.quarters)
+        formattedEntityData.quarters = fillEmptyQuarters(
+          formattedEntityData?.quarters
+        );
       break;
     default:
       break;
