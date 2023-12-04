@@ -167,12 +167,12 @@ const sx = {
   errorText: {
     color: "palette.error_dark",
     fontSize: "0.75rem",
-    marginBottom: "0.75rem",
+    marginBottom: "0.30rem",
   },
   entityName: {
     maxWidth: "18.75rem",
     ul: {
-      margin: "0.5rem auto",
+      margin: "0.25rem auto",
       listStyleType: "none",
       li: {
         wordWrap: "break-word",
