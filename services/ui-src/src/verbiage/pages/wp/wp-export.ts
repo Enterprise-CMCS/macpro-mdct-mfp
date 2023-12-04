@@ -37,4 +37,8 @@ export default {
     sanctions: "0 - No sanctions entered",
     qualityMeasures: "0 - No quality & performance measures entered",
   },
+  dashboardTitle: {
+    objectives: "Objectives total count: ",
+    fundingSources: "Funding sources: ",
+  },
 };
