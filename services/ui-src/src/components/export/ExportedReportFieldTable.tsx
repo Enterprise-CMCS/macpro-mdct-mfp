@@ -12,9 +12,11 @@ import {
   ReportShape,
   FormLayoutElement,
   isFieldElement,
+  ReportType,
 } from "types";
 // verbiage
 import verbiage from "verbiage/pages/wp/wp-export";
+import { ExportedReportFieldRow } from "./ExportedReportFieldRow";
 
 export const ExportedReportFieldTable = ({ section }: Props) => {
   const { report } = useStore() ?? {};
@@ -36,6 +38,10 @@ export const ExportedReportFieldTable = ({ section }: Props) => {
     ? twoColumnHeaderItems
     : threeColumnHeaderItems;
 
+  const reportType = report?.reportType as ReportType;
+  const hideHintText = reportType === ReportType.WP;
+  const entityType = section.entityType;
+
   return (
     <Table
       sx={sx.root}
@@ -45,7 +51,13 @@ export const ExportedReportFieldTable = ({ section }: Props) => {
       }}
       data-testid="exportTable"
     >
-      {renderFieldTableBody(formFields!, pageType!, report)}
+      {renderFieldTableBody(
+        formFields!,
+        pageType!,
+        report,
+        !hideHintText,
+        entityType
+      )}
     </Table>
   );
 };
@@ -53,16 +65,25 @@ export const ExportedReportFieldTable = ({ section }: Props) => {
 export const renderFieldTableBody = (
   formFields: (FormField | FormLayoutElement)[],
   pageType: string,
-  report: ReportShape | undefined
+  report: ReportShape | undefined,
+  showHintText: boolean,
+  entityType?: string
 ) => {
   const tableRows: ReactElement[] = [];
   // recursively renders field rows
-  const renderFieldRow = (formField: FormField | FormLayoutElement) => {
+  const renderFieldRow = (
+    formField: FormField | FormLayoutElement,
+    parentFieldCheckedChoiceIds?: string[]
+  ) => {
     tableRows.push(
-      <tr>
-        <td>{formField?.props?.label}</td>
-        <td>{formField?.props?.hydrate}</td>
-      </tr>
+      <ExportedReportFieldRow
+        key={formField.id}
+        formField={formField}
+        pageType={pageType}
+        entityType={entityType}
+        parentFieldCheckedChoiceIds={parentFieldCheckedChoiceIds}
+        showHintText={showHintText}
+      />
     );
     // for drawer pages, render nested child field if any entity has a checked parent choice
     if (pageType === "drawer") {

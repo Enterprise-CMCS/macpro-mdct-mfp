@@ -4,10 +4,12 @@ import {
   EntityStatusIcon,
   Table,
   ExportedEntityDetailsOverlaySection,
+  Alert,
 } from "components";
 import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
 import {
+  AlertTypes,
   EntityDetailsOverlayShape,
   EntityDetailsStepTypes,
   EntityShape,
@@ -22,15 +24,20 @@ import { assertExhaustive } from "utils/other/typing";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
+import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
 import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
 import finishedIcon from "assets/icons/icon_check_circle.png";
 import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
+import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 
 const exportVerbiageMap: { [key in ReportType]: any } = {
   WP: wpVerbiage,
   SAR: sarVerbiage,
 };
+interface AlertVerbiage {
+  [key: string]: { title: string; description: string };
+}
 
 export const ExportedModalOverlayReportSection = ({ section }: Props) => {
   const { report } = useStore() ?? {};
@@ -44,8 +51,20 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
     modalOverlayTableHeaders as Record<string, string>
   );
 
+  const showAlert =
+    report && (alertVerbiage as AlertVerbiage)[entityType]
+      ? getWPAlertStatus(report, entityType)
+      : false;
+
   return (
     <Box>
+      {showAlert && (
+        <Alert
+          title={(alertVerbiage as AlertVerbiage)[entityType].title}
+          status={AlertTypes.ERROR}
+          description={(alertVerbiage as AlertVerbiage)[entityType].description}
+        />
+      )}
       <Table
         sx={sx.root}
         content={{
