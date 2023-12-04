@@ -22,6 +22,8 @@ import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
 import { NumberField } from "components/fields/NumberField";
 import { SectionHeader } from "components/forms/FormLayoutElements";
+import { calculateNextQuarter } from "utils";
+import { notAnsweredText } from "../../constants";
 
 // return created elements from provided fields
 export const formFieldFactory = (
@@ -339,4 +341,15 @@ export const removeNotApplicablePopulations = (
     return isApplicable !== "No";
   });
   return filteredPopulations;
+};
+
+//This function is used to fill out the missing quarters in cards for evaluation plan and funding sources after a copy over
+export const fillEmptyQuarters = (quarters: AnyObject[]) => {
+  for (var i: number = quarters.length; i < 12; i++) {
+    quarters.push({
+      id: calculateNextQuarter(quarters[i - 1].id),
+      value: notAnsweredText,
+    });
+  }
+  return quarters;
 };

@@ -131,6 +131,7 @@ export const OverlayModalPage = ({
                 entityIndex={entityIndex}
                 stepType={stepType}
                 verbiage={verbiage}
+                printVersion={false}
                 formattedEntityData={getFormattedEntityData(stepType, entity)}
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}

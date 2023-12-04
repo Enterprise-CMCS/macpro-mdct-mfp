@@ -1,4 +1,9 @@
-import { removeNotApplicablePopulations, resetClearProp } from "./forms";
+import { notAnsweredText } from "../../constants";
+import {
+  fillEmptyQuarters,
+  removeNotApplicablePopulations,
+  resetClearProp,
+} from "./forms";
 // types
 import { FormField } from "types";
 import {
@@ -13,6 +18,7 @@ import {
   mockTargetPopReqButApplicableIsUndefined,
   mockTargetPopReqButNotApplicable,
 } from "utils/testing/setupJest";
+import { AnyObject } from "yup/lib/types";
 
 describe("Test resetClearProp", () => {
   it("should reset clear for choicelist fields and its nested children", async () => {
@@ -64,5 +70,18 @@ describe("Test removeNotApplicablePopulations", () => {
       mockTargetPopButOtherApplicable,
       mockTargetPopByOtherNotDefined,
     ]);
+  });
+});
+
+describe("Test fillEmptyQuarters", () => {
+  it("should has 12 quarters and 2 values as not answered", () => {
+    let mockQuarters = [];
+    for (var i = 0; i < 10; i++) mockQuarters.push({ id: `2021 Q1`, value: i });
+
+    const newQuarters: AnyObject[] = fillEmptyQuarters(mockQuarters);
+    expect(newQuarters).toHaveLength(12);
+    expect(
+      newQuarters.filter((quarter) => quarter.value === notAnsweredText)
+    ).toHaveLength(2);
   });
 });
