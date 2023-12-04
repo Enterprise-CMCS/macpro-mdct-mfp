@@ -7,7 +7,17 @@ import {
 } from "components";
 import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
-import { EntityShape, ModalOverlayReportPageShape, ReportType } from "types";
+import {
+  EntityDetailsOverlayShape,
+  EntityDetailsStepTypes,
+  EntityShape,
+  FormField,
+  FormLayoutElement,
+  ModalOverlayReportPageShape,
+  OverlayModalPageShape,
+  OverlayModalStepTypes,
+  ReportType,
+} from "types";
 import { assertExhaustive } from "utils/other/typing";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
@@ -15,6 +25,7 @@ import sarVerbiage from "verbiage/pages/sar/sar-export";
 // assets
 import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
 import finishedIcon from "assets/icons/icon_check_circle.png";
+import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
 
 const exportVerbiageMap: { [key in ReportType]: any } = {
   WP: wpVerbiage,
@@ -68,11 +79,50 @@ export function renderStatusIcon(status: boolean) {
   return <Image src={unfinishedIcon} alt="warning icon" boxSize="xl" />;
 }
 
+/**
+ * Split a list of form fields within each entity step form or modal form.
+ * This allows returning distinct tables for each section, rather than one large one.
+ *
+ *
+ * @param entitySteps List of entity step data and form fields
+ * @returns array of arrays containing form field elements representing an entity step
+ */
+export function getEntityStepFields(
+  entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[]
+) {
+  const entityStepFields: (string | FormLayoutElement | FormField)[][] = [];
+
+  for (let step of entitySteps) {
+    let currentStepFields = [];
+    // store EntityStep name and hint for rendering
+    currentStepFields.push(step.stepType);
+    currentStepFields.push(step.stepName);
+    currentStepFields.push(step.hint);
+
+    // handle Standard forms
+    if (step.form) {
+      for (let field of step.form.fields) {
+        currentStepFields.push(field);
+      }
+    }
+    // handle Modal forms
+    else if (step.modalForm) {
+      for (let field of step.modalForm.fields) {
+        currentStepFields.push(field);
+      }
+    }
+    entityStepFields.push(currentStepFields);
+  }
+
+  return entityStepFields;
+}
+
 export function renderModalOverlayTableBody(
-  section: ModalOverlayReportPageShape,
+  section: ModalOverlayReportPageShape | OverlayModalPageShape,
   reportType: ReportType,
   entities: EntityShape[]
 ) {
+  const entitySteps = getEntityStepFields(section.entitySteps ?? []);
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
@@ -96,7 +146,43 @@ export function renderModalOverlayTableBody(
                 </Heading>
               </Td>
             </Tr>
-            <ExportedEntityDetailsOverlaySection section={section} />
+            {/* Depending on what the entity step type is, render its corresponding component */}
+            {entitySteps.map((step, idx) => {
+              return (
+                <Box key={idx}>
+                  {/* TODO: make this a switch case ? */}
+                  {step[0] === EntityDetailsStepTypes.DEFINE_INITIATIVE ? (
+                    <ExportedEntityDetailsOverlaySection
+                      section={section as ModalOverlayReportPageShape}
+                      entity={entity}
+                      entityStep={step}
+                    />
+                  ) : step[0] === OverlayModalStepTypes.EVALUATION_PLAN ? (
+                    <ExportedOverlayModalReportSection
+                      section={section as OverlayModalPageShape}
+                      entity={entity}
+                      entityStep={step}
+                    />
+                  ) : step[0] === OverlayModalStepTypes.FUNDING_SOURCES ? (
+                    <ExportedOverlayModalReportSection
+                      section={section as OverlayModalPageShape}
+                      entity={entity}
+                      entityStep={step}
+                    />
+                  ) : (
+                    step[0] ===
+                      EntityDetailsStepTypes.CLOSE_OUT_INFORMATION && (
+                      // TODO: if there's no data for close-out, don't render this section
+                      <ExportedEntityDetailsOverlaySection
+                        section={section as ModalOverlayReportPageShape}
+                        entity={entity}
+                        entityStep={step}
+                      />
+                    )
+                  )}
+                </Box>
+              );
+            })}
           </Box>
         );
       });
