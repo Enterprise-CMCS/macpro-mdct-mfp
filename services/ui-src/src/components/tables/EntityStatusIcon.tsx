@@ -7,28 +7,35 @@ import successIcon from "assets/icons/icon_check_circle.png";
 import successIconDark from "assets/icons/icon_check_circle_dark.png";
 import closedIcon from "assets/icons/icon_circle-minus-gray.png";
 
-export type EntityStatusType = string | boolean | undefined;
+export enum EntityStatuses {
+  COMPLETE = "complete",
+  CLOSE = "close",
+  NO_STATUS = "no status",
+  DISABLED = "disabled",
+}
+
+export type EntityStatusType = EntityStatuses | boolean | undefined;
 
 export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
   const statusIcon = (status: EntityStatusType) => {
     switch (status) {
       case true:
-      case "complete":
+      case EntityStatuses.COMPLETE:
         return {
           src: isPdf ? successIconDark : successIcon,
           alt: isPdf ? "" : "complete icon",
           style: sx.successText,
           text: "Complete",
         };
-      case "close":
+      case EntityStatuses.CLOSE:
         return {
           src: isPdf ? closedIcon : closedIcon,
           alt: isPdf ? "" : "close icon",
           style: sx.successText,
           text: "Close",
         };
-      case "no status":
-      case "disabled":
+      case EntityStatuses.NO_STATUS:
+      case EntityStatuses.DISABLED:
         return undefined;
       default:
         return {

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
-import { EntityStatusIcon } from "components";
+import { EntityStatusIcon, EntityStatuses } from "components";
 // types
 import {
   AnyObject,
@@ -10,6 +10,7 @@ import {
   ReportShape,
   OverlayModalTypes,
   ReportStatus,
+  EntityDetailsOverlayTypes,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -44,19 +45,28 @@ export const EntityRow = ({
     switch (entityType) {
       case OverlayModalTypes.INITIATIVE:
         //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
-        if (formEntity && stepType !== "closeOutInformation") {
+        if (
+          formEntity &&
+          stepType !== EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
+        ) {
           return getInitiativeDashboardStatus(formEntity, entity);
-        } else if (stepType === "closeOutInformation") {
+        } else if (
+          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
+        ) {
           if (closed) {
-            return "close";
+            return EntityStatuses.CLOSE;
           } else {
             const isCloseOutEnabled = getInitiativeStatus(report!, entity, [
               stepType,
             ]);
-            return isCloseOutEnabled && isCopied ? "no status" : "disabled";
+            return isCloseOutEnabled && isCopied
+              ? EntityStatuses.NO_STATUS
+              : EntityStatuses.DISABLED;
           }
         } else {
-          return getInitiativeStatus(report!, entity, ["closeOutInformation"]);
+          return getInitiativeStatus(report!, entity, [
+            EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
+          ]);
         }
       default: {
         return report ? !!getEntityStatus(report, entity, entityType) : false;
@@ -66,7 +76,9 @@ export const EntityRow = ({
 
   let entityStatus = useMemo(() => {
     if (OverlayModalTypes.INITIATIVE && formEntity && closed) {
-      return stepType === "closeOutInformation" ? "close" : "no status";
+      return stepType === "closeOutInformation"
+        ? EntityStatuses.CLOSE
+        : EntityStatuses.NO_STATUS;
     }
     return setStatusByType(entityType!);
   }, [report, entity]);
@@ -136,7 +148,7 @@ export const EntityRow = ({
             }
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
-            disabled={entityStatus === "disabled"}
+            disabled={entityStatus === EntityStatuses.DISABLED}
           >
             {report?.status === ReportStatus.SUBMITTED ||
             report?.status === ReportStatus.APPROVED ||

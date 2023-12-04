@@ -37,6 +37,10 @@ export enum OverlayModalStepTypes {
   FUNDING_SOURCES = "fundingSources",
 }
 
+export enum EntityDetailsOverlayTypes {
+  CLOSEOUT_INFORMATION = "closeOutInformation",
+}
+
 export enum ModalDrawerEntityTypes {
   TARGET_POPULATIONS = "targetPopulations",
 }

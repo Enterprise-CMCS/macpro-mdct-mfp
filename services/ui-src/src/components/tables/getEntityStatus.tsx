@@ -1,3 +1,4 @@
+import { EntityStatuses } from "components";
 import {
   EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
@@ -95,7 +96,7 @@ export const getInitiativeStatus = (
   entity: EntityShape,
   ignore?: string[]
 ) => {
-  if (entity?.isInitiativeClosed) return "close";
+  if (entity?.isInitiativeClosed) return EntityStatuses.CLOSE;
 
   // Direct pull of the initiative formTemplate json chunk
   const reportRoute = report.formTemplate
