@@ -49,12 +49,18 @@ export const ExportedModalDrawerReportSection = ({
   // creates arrays of 'only' quarterly values
   const quarterValueArray = entities.map((entity: AnyObject) => {
     let quarterArray = [];
-    for (const key in entity) {
-      // push key values into quarterArray that are quarters
-      if (key.includes("quarterly")) {
-        quarterArray.push(entity[key]);
+    let overflowArray = [];
+    if (entities.indexOf(entity) <= 6) {
+      for (const key in entity) {
+        // push key values into quarterArray that are quarters
+        if (key.includes("quarterly")) {
+          quarterArray.push(entity[key]);
+        }
       }
+    } else {
+      overflowArray.push(entity);
     }
+
     return quarterArray;
   });
 
@@ -68,7 +74,7 @@ export const ExportedModalDrawerReportSection = ({
   });
 
   // adds up the footer row for the grey box total on bottom right of table
-  const footerRowTotal = () => {
+  const footRowTotal = () => {
     let sum = 0;
     columnTotal.forEach((item: any) => {
       sum += convertToNum(item);
@@ -85,12 +91,13 @@ export const ExportedModalDrawerReportSection = ({
     // get quarterValueArray.length because arrays are all the same length
     for (let item = 0; item < quarterValueArray[0].length; item++) {
       let row = [];
+
       // sum to be added up for each quarter row
       let sum = 0;
       row.push(quarterLabels[item]);
 
       // Add Not Answer if cell is empty string,
-      quarterValueArray.forEach((array: any) => {
+      quarterValueArray.forEach((array: any[]) => {
         if (array[item] === "") {
           array[item] = "Not Answered";
         }
@@ -114,7 +121,7 @@ export const ExportedModalDrawerReportSection = ({
     caption: "Transition Benchmark Totals Table",
     headRow: ["Pop. by Quarter", ...getTableHeaders, "Total by Quarter"],
     bodyRows: [...createBodyRows()],
-    footRow: ["Total by Pop.", ...columnTotal, footerRowTotal()],
+    footRow: ["Total by Pop.", ...columnTotal, footRowTotal()],
   };
 
   return (
@@ -126,9 +133,10 @@ export const ExportedModalDrawerReportSection = ({
       <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
         {verbiage.pdfDashboardTitle}
       </Heading>
-      <small>{"*astrisk denotes sum of incomplete fields"}</small>
+      <small>{"*asterisk denotes sum of incomplete fields"}</small>
       <Box>
         <Table sx={sx.table} content={tableContent}></Table>
+        {}
       </Box>
     </Box>
   );
