@@ -63,6 +63,7 @@ const sx = {
   },
   infoTextBox: {
     marginTop: "1.5rem",
+    color: "palette.gray",
     h3: {
       marginBottom: "-0.75rem",
     },
