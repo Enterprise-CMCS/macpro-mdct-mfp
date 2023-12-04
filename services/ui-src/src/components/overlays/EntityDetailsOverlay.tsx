@@ -280,7 +280,13 @@ export const EntityDetailsOverlay = ({
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
           <Button type="submit" form={form.id} sx={sx.saveButton}>
-            {submitting ? <Spinner size="md" /> : "Save & return"}
+            {submitting ? (
+              <Spinner size="md" />
+            ) : !selectedEntity?.isInitiativeClosed ? (
+              "Save & return"
+            ) : (
+              "Return"
+            )}
           </Button>
         </Flex>
       </Box>

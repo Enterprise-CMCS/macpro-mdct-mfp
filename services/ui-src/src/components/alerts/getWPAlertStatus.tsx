@@ -22,7 +22,7 @@ export const checkInitiativeTopics = (fieldData: any, entities: any[]) => {
     topics.push("Tribal Initiative (*if applicable)");
 
   //remove any initiatives that have been closedout, they don't count towards removing the alert
-  const filteredEntities = entities.filter(
+  const filteredEntities = entities?.filter(
     (entity) => !entity.isInitiativeClosed
   );
 

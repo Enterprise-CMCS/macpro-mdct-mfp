@@ -77,6 +77,12 @@ export const AddEditOverlayEntityModal = ({
   };
 
   const writeEntity = async (enteredData: any) => {
+    //do not try to save if the user has disabled editing
+    if (userDisabled) {
+      modalDisclosure.onClose();
+      return;
+    }
+
     setSubmitting(true);
     const reportKeys = {
       reportType: report?.reportType,
@@ -174,7 +180,13 @@ export const AddEditOverlayEntityModal = ({
         subheading: verbiage.addEditModalHint
           ? verbiage.addEditModalHint
           : undefined,
-        actionButtonText: submitting ? <Spinner size="md" /> : "Save & close",
+        actionButtonText: submitting ? (
+          <Spinner size="md" />
+        ) : !userDisabled ? (
+          "Save & close"
+        ) : (
+          "Close"
+        ),
         closeButtonText: "Cancel",
       }}
     >
@@ -186,6 +198,7 @@ export const AddEditOverlayEntityModal = ({
         onSubmit={writeEntity}
         validateOnRender={false}
         dontReset={true}
+        disabled={true}
         userDisabled={userDisabled}
       />
       <Text sx={sx.bottomModalMessage}>{verbiage.addEditModalMessage}</Text>

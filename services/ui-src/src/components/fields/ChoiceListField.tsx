@@ -47,8 +47,9 @@ export const ChoiceListField = ({
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
+  //closeout will disables only certain parts of an active form
   const shouldDisableChildFields =
-    ((userIsAdmin || userIsReadOnly) && !!props?.disabled) || report?.locked;
+    userIsAdmin || userIsReadOnly || !!props?.disabled || report?.locked;
 
   // get form context and register field
   const form = useFormContext();
