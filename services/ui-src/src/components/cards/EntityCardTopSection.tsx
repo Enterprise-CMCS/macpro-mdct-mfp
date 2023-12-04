@@ -94,7 +94,8 @@ const sx = {
     fontSize: "sm",
   },
   description: {
-    marginTop: "0.75rem",
+    marginTop: "0.25rem",
+    marginBottom: "1.25rem",
     fontSize: "sm",
   },
   grid: {
@@ -102,6 +103,7 @@ const sx = {
     gridTemplateRows: "1fr 1fr 1fr 1fr",
     gridAutoFlow: "column",
     gridGap: ".5rem",
+    marginBottom: "1.25rem",
   },
   gridSubtitle: {
     fontWeight: "bold",
