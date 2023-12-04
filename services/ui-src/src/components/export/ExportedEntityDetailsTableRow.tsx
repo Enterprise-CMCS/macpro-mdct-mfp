@@ -27,7 +27,8 @@ export const ExportedEntityDetailsTableRow = ({
   if (isOtherTextEntry) return null;
 
   // trying to figure out how to display the data in the rows
-  console.log(reportData);
+
+  // console.log(reportData);
   return (
     <Tr data-testid="exportRow">
       {/* label column/cell */}
