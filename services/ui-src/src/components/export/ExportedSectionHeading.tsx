@@ -20,7 +20,6 @@ export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
       <Heading as="h2" sx={sx.heading}>
         {sectionHeading}
       </Heading>
-      {/* TODO: remove the "See previous page for detailed instructions" blurb for Initiatives table */}
       {!stateAndTerritory && sectionInfo && (
         <Box sx={sx.info}>{parseCustomHtml(sectionInfo)}</Box>
       )}
