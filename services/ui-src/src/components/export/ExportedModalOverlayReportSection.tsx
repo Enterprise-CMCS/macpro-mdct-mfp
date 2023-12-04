@@ -5,6 +5,7 @@ import {
   Table,
   ExportedEntityDetailsOverlaySection,
   Alert,
+  ExportedOverlayModalReportSection,
 } from "components";
 import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
@@ -18,6 +19,7 @@ import {
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   OverlayModalStepTypes,
+  ReportShape,
   ReportType,
 } from "types";
 import { assertExhaustive } from "utils/other/typing";
@@ -28,8 +30,9 @@ import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
 import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
 import finishedIcon from "assets/icons/icon_check_circle.png";
-import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
+// utils
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
+import { getInitiativeStatus } from "components/tables/getEntityStatus";
 
 const exportVerbiageMap: { [key in ReportType]: any } = {
   WP: wpVerbiage,
@@ -75,7 +78,7 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
         {report?.fieldData[entityType] &&
           renderModalOverlayTableBody(
             section,
-            report?.reportType as ReportType,
+            report,
             report?.fieldData[entityType]
           )}
       </Table>
@@ -138,9 +141,10 @@ export function getEntityStepFields(
 
 export function renderModalOverlayTableBody(
   section: ModalOverlayReportPageShape | OverlayModalPageShape,
-  reportType: ReportType,
+  report: ReportShape,
   entities: EntityShape[]
 ) {
+  const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
   switch (reportType) {
     case ReportType.WP:
@@ -152,7 +156,7 @@ export function renderModalOverlayTableBody(
                 <EntityStatusIcon
                   entity={entity}
                   isPdf={true}
-                  entityStatus={entity.status}
+                  entityStatus={getInitiativeStatus(report, entity)}
                 />
               </Td>
               <Td>

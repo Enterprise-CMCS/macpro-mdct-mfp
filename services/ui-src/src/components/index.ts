@@ -40,6 +40,7 @@ export { ExportedEntityDetailsOverlaySection } from "./export/ExportedEntityDeta
 export { ExportedEntityDetailsTable } from "./export/ExportedEntityDetailsTable";
 export { ExportedEntityDetailsTableRow } from "./export/ExportedEntityDetailsTableRow";
 export { ExportedModalOverlayReportSection } from "./export/ExportedModalOverlayReportSection";
+export { ExportedOverlayModalReportSection } from "./export/ExportedOverlayModalReportSection";
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";
