@@ -10,10 +10,11 @@ import {
   FormField,
   FormLayoutElement,
   ModalOverlayReportPageShape,
+  ReportShape,
   ReportType,
 } from "types";
 // utils
-import { useStore } from "utils";
+import { updateRenderFields, useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
 
 export const ExportedEntityDetailsOverlaySection = ({
@@ -25,11 +26,7 @@ export const ExportedEntityDetailsOverlaySection = ({
 
   return (
     <Box sx={sx.sectionHeading} {...props}>
-      {renderEntityDetailTables(
-        report?.reportType as ReportType,
-        entity ?? [],
-        entityStep
-      )}
+      {report && renderEntityDetailTables(report, entity ?? [], entityStep)}
     </Box>
   );
 };
@@ -47,9 +44,12 @@ export interface ExportedEntityDetailsOverlaySectionProps {
  * @returns entity table and heading information for each section
  */
 export function getEntityTableComponents(
+  report: ReportShape,
   entity: EntityShape,
   entityStep: (string | FormLayoutElement | FormField)[]
 ) {
+  const entityStepFields = entityStep.slice(3) as FormField[];
+  const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
   return (
     <Box key={uuid()}>
       <Box>
@@ -60,7 +60,7 @@ export function getEntityTableComponents(
       </Box>
       <Fragment>
         <ExportedEntityDetailsTable
-          fields={entityStep.slice(3) as FormField[]}
+          fields={updatedEntityStepFields as FormField[]}
           entity={entity}
           showHintText={false}
         />
@@ -72,20 +72,21 @@ export function getEntityTableComponents(
 /**
  * Render entity detail table(s) conditionally based on report type.
  *
- * @param reportType report type of report
+ * @param report report
  * @param entities entities for entity type
  * @param section form json section
  * @param report report data
  * @returns array of exported entity table components
  */
 export function renderEntityDetailTables(
-  reportType: ReportType,
+  report: ReportShape,
   entity: EntityShape,
   entityStep: (string | FormLayoutElement | FormField)[]
 ) {
+  const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
     case ReportType.WP: {
-      return getEntityTableComponents(entity, entityStep);
+      return getEntityTableComponents(report!, entity, entityStep);
     }
     case ReportType.SAR:
       throw new Error(

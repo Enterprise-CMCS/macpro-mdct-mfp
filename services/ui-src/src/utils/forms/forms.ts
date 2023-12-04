@@ -17,6 +17,7 @@ import {
   FormJson,
   FormLayoutElement,
   isFieldElement,
+  ReportShape,
 } from "types";
 import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
@@ -284,6 +285,25 @@ export const convertTargetPopulationsFromWPToSAREntity = (
         : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
     };
   });
+};
+
+export const updateRenderFields = (
+  report: ReportShape,
+  fields: (FormField | FormLayoutElement)[]
+) => {
+  const targetPopulations = report?.fieldData?.targetPopulations;
+  const filteredTargetPopulations =
+    removeNotApplicablePopulations(targetPopulations);
+  const formatChoiceList = convertTargetPopulationsFromWPToSAREntity(
+    filteredTargetPopulations
+  );
+
+  const updateTargetPopulationChoiceList = updateFieldChoicesByID(
+    fields,
+    "targetPopulations",
+    formatChoiceList
+  );
+  return updateTargetPopulationChoiceList;
 };
 
 export const updateFieldChoicesByID = (
