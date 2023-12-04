@@ -215,6 +215,7 @@ const sx = {
     minWidth: "1.5rem",
     padding: 0,
     marginLeft: "1rem",
+    marginRight: "0.4rem",
     marginBottom: "0.25rem",
     background: "white",
     "&:hover, &:hover:disabled": {
