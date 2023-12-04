@@ -118,7 +118,7 @@ export const getInitiativeStatus = (
       return getInitiativeDashboardStatus(step, entity);
     });
 
-    return stepStatuses.every((field: any) => field);
+    return stepStatuses.every((field: boolean | EntityStatuses) => field);
   }
 
   return false;
