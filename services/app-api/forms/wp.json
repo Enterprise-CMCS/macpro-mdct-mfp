@@ -858,15 +858,15 @@
                     "props": {
                       "label": "Does the initiative have a projected end date?",
                       "hint": "Select 'No' if the initiative will be ongoing without a set end point.",
-                      "choices" : [
+                      "choices": [
                         {
                           "id": "WNsSaAHeDvRD2Pjkz6DcOE",
                           "label": "Yes",
                           "children": [
-                            { 
+                            {
                               "id": "defineInitiative_projectedEndDate_value",
                               "type": "date",
-                              "validation": { 
+                              "validation": {
                                 "type": "endDate",
                                 "dependentFieldName": "defineInitiative_projectedStartDate",
                                 "nested": true,
@@ -956,7 +956,7 @@
                 "dashboardTitle": "Objective total count",
                 "countEntitiesInTitle": true,
                 "deleteEntityButtonAltText": "",
-                "entityUnfinishedMessage": "",
+                "entityUnfinishedMessage": "Add the quantitative targets for the next 2 quarters by editing the objective.",
                 "drawerTitle": ""
               },
               "modalForm": {
@@ -1074,6 +1074,7 @@
                 "dashboardTitle": "Funding Sources",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
+                "entityUnfinishedMessage": "Add the Projected quarterly expenditures for the next 2 quarters by editing funding source.",
                 "countEntitiesInTitle": true
               },
               "modalForm": {
