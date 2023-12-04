@@ -19,6 +19,7 @@ import {
 import {
   calculateDueDate,
   calculatePeriod,
+  calculateCurrentYear,
   convertDateUtcToEt,
 } from "../../utils/time/time";
 import {
@@ -133,7 +134,8 @@ export const createReport = handler(
         reportBucket,
         reportType,
         workPlanFieldData,
-        workPlanMetadata
+        workPlanMetadata,
+        unvalidatedMetadata?.copyReport!
       ));
     } catch (err) {
       logger.error(err, "Error getting or creating template");
@@ -172,21 +174,34 @@ export const createReport = handler(
     }
     // End Section - Check the payload that was sent with the request and validate it
 
-    // Being Section - Check if metadata has filled parameter for copyFieldDataSourceId
+    // Being Section - Check if metadata has filled parameter for copyReport
     let newFieldData;
 
-    if (unvalidatedMetadata.copyFieldDataSourceId) {
+    if (unvalidatedMetadata.copyReport) {
+      const reportPeriod = calculatePeriod(Date.now(), workPlanMetadata);
+      const isCurrentPeriod =
+        calculateCurrentYear() === unvalidatedMetadata.copyReport.reportYear &&
+        reportPeriod === unvalidatedMetadata.copyReport.reportPeriod;
+
+      //do not allow user to create a copy if it's the same period
+      if (isCurrentPeriod) {
+        return {
+          status: StatusCodes.UNAUTHORIZED,
+          body: error.NO_WORKPLANS_FOUND,
+        };
+      }
+
       newFieldData = await copyFieldDataFromSource(
         reportBucket,
         state,
-        unvalidatedMetadata.copyFieldDataSourceId,
+        unvalidatedMetadata.copyReport?.fieldDataId,
         formTemplate,
         validatedFieldData
       );
     } else {
       newFieldData = validatedFieldData;
     }
-    // End Section - Check if metadata has filled parameter for copyFieldDataSourceId
+    // End Section - Check if metadata has filled parameter for copyReport
     /*
      * End Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used
      * to create a different SAR and attach all of its fieldData to the SAR Submissions FieldData

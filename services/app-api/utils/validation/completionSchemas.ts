@@ -191,16 +191,26 @@ export const date = () => dateSchema().required(error.REQUIRED_GENERIC);
 export const dateOptional = () => dateSchema().notRequired().nullable();
 
 export const endDate = (startDateField: string) =>
-  date().test(
-    "is-after-start-date",
-    error.INVALID_END_DATE,
-    (endDateString, context) => {
-      const startDateString = context.parent[startDateField];
-      const startDate = new Date(startDateString);
-      const endDate = new Date(endDateString!);
-      return endDate >= startDate;
-    }
-  );
+  date()
+    .typeError(error.INVALID_DATE)
+    .test({
+      message: error.INVALID_END_DATE,
+      test: (endDateString, context) => {
+        return isEndDateAfterStartDate(
+          context.parent[startDateField],
+          endDateString as string
+        );
+      },
+    });
+
+export const isEndDateAfterStartDate = (
+  startDateString: string,
+  endDateString: string
+) => {
+  const startDate = new Date(startDateString);
+  const endDate = new Date(endDateString!);
+  return endDate >= startDate;
+};
 
 // DROPDOWN
 export const dropdown = () =>

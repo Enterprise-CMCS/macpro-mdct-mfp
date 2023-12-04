@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 // assets
 import closeIcon from "assets/icons/icon_close.png";
+import { renderHtml } from "utils";
 
 export const Modal = ({
   modalDisclosure,
@@ -40,7 +41,7 @@ export const Modal = ({
           </Heading>
         </ModalHeader>
         {content.subheading && (
-          <Box sx={sx.modalSubheader}>{content.subheading}</Box>
+          <Box sx={sx.modalSubheader}>{renderHtml(content.subheading)}</Box>
         )}
         <Flex sx={sx.modalCloseContainer}>
           <Button
