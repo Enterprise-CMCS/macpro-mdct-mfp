@@ -76,15 +76,9 @@ export const ExportedModalDrawerReportSection = ({
     return sum;
   };
 
-  {
-    /* layout of the table body rows  */
-  }
-  {
-    /* sums up body rows */
-  }
-  {
-    /* updates empty cells to "Not Answered"  */
-  }
+  /* layout of the table body rows  */
+  /* sums up body rows */
+  /* updates empty cells to "Not Answered"  */
   const createBodyRows = () => {
     let bodyRows = [];
 
