@@ -12,6 +12,8 @@ export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
   const sectionInfo = verbiage?.intro?.exportSectionHeader
     ? null
     : verbiage?.intro?.info;
+  const stateAndTerritory =
+    sectionHeading === "State and Territory-Specific Initiatives";
 
   return (
     <Box data-testid="exportedSectionHeading" sx={sx.container}>
@@ -19,7 +21,9 @@ export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
         {sectionHeading}
       </Heading>
       {/* TODO: remove the "See previous page for detailed instructions" blurb for Initiatives table */}
-      {sectionInfo && <Box sx={sx.info}>{parseCustomHtml(sectionInfo)}</Box>}
+      {!stateAndTerritory && sectionInfo && (
+        <Box sx={sx.info}>{parseCustomHtml(sectionInfo)}</Box>
+      )}
     </Box>
   );
 };
