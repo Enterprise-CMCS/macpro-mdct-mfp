@@ -18,6 +18,7 @@ const additionalFields = [
   "isOtherEntity",
   "isRequired",
   "isCopied",
+  "isInitiativeClosed",
 ];
 
 export async function copyFieldDataFromSource(

@@ -85,9 +85,11 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
-    setSelectedStepEntity(entity);
-    resetClearProp(modalForm.fields);
-    deleteEntityModalOnOpenHandler();
+    if (!userDisabled) {
+      setSelectedStepEntity(entity);
+      resetClearProp(modalForm.fields);
+      deleteEntityModalOnOpenHandler();
+    }
   };
 
   const closeDeleteEntityModal = () => {
