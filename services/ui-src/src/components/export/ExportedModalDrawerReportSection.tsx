@@ -12,11 +12,14 @@ export const ExportedModalDrawerReportSection = ({
   const { report } = useStore() ?? {};
   const entities = report?.fieldData?.[entityType];
 
-  const tableHeaders = entities.map((entity: AnyObject) =>
+  // if Transition Benchmark Header title has an abbrev.just display that
+  const getTableHeaders = entities.map((entity: AnyObject) =>
     entity.transitionBenchmarks_targetPopulationName_short
       ? entity.transitionBenchmarks_targetPopulationName_short
       : entity.transitionBenchmarks_targetPopulationName
   );
+
+  // list of quarters to be added to the table (left column)
   const quarterLabels = [
     "2023 Q3",
     "2023 Q4",
@@ -33,65 +36,91 @@ export const ExportedModalDrawerReportSection = ({
     "2026 Q2",
   ];
 
-  // create new arrays with only quarter values to populate the tbody
-  const extractQuarters = entities.map((element: any) => {
-    let arr = [];
-    for (const x in element) {
-      if (x.includes("quarterly")) {
-        arr.push(element[x]);
+  // utility to convert array strings to num for calculating totals
+  const convertToNum = (item: any) => {
+    let num = parseInt(item);
+    if (typeof num === "number" && !isNaN(num)) {
+      return num;
+    } else {
+      return 0;
+    }
+  };
+
+  // creates arrays of 'only' quarterly values
+  const quarterValueArray = entities.map((entity: AnyObject) => {
+    let quarterArray = [];
+    for (const key in entity) {
+      // push key values into quarterArray that are quarters
+      if (key.includes("quarterly")) {
+        quarterArray.push(entity[key]);
       }
     }
-    return arr;
+    return quarterArray;
   });
 
-  // create array for tfoot section
-  const totalByPopSum = extractQuarters.map((element: any) => {
+  // creates an array that totals up each each quarter column
+  const columnTotal = quarterValueArray.map((column: string[]) => {
     let sum = 0;
-
-    element.forEach((num: any) => {
-      let convertToNum = parseInt(num);
-      if (Number.isInteger(convertToNum)) {
-        sum += convertToNum;
-      }
+    column.forEach((item: any) => {
+      sum += convertToNum(item)!;
     });
     return sum;
   });
 
-  // add up bottom row sums
-  const finalPopSum = () => {
+  // adds up the footer row for the grey box total on bottom right of table
+  const footerRowTotal = () => {
     let sum = 0;
-    for (let i = 0; i < totalByPopSum.length; i++) {
-      let convertToNum = parseInt(totalByPopSum[i]);
-      if (Number.isInteger(convertToNum)) {
-        sum += convertToNum;
-      }
-    }
+    columnTotal.forEach((item: any) => {
+      sum += convertToNum(item);
+    });
     return sum;
   };
 
+  {
+    /* layout of the table body rows  */
+  }
+  {
+    /* sums up body rows */
+  }
+  {
+    /* updates empty cells to "Not Answered"  */
+  }
   const createBodyRows = () => {
     let bodyRows = [];
 
-    for (let i = 0; i < extractQuarters[0].length; i++) {
-      let arr = [];
-      arr.push(quarterLabels[i]);
-      extractQuarters.forEach((array: any) => {
-        if (array[i] === "") {
-          array[i] = "Not Answered";
+    // get quarterValueArray.length because arrays are all the same length
+    for (let item = 0; item < quarterValueArray[0].length; item++) {
+      let row = [];
+      // sum to be added up for each quarter row
+      let sum = 0;
+      row.push(quarterLabels[item]);
+
+      // Add Not Answer if cell is empty string,
+      quarterValueArray.forEach((array: any) => {
+        if (array[item] === "") {
+          array[item] = "Not Answered";
         }
-        arr.push(array[i]);
+        if (
+          typeof parseInt(array[item]) === "number" &&
+          array[item] !== "Not Answered"
+        ) {
+          sum += convertToNum(array[item]);
+        }
+        row.push(array[item].toString());
+        return sum;
       });
-      arr.push("sum");
-      bodyRows.push(arr);
+
+      row.push(sum.toString());
+      bodyRows.push(row);
     }
     return bodyRows;
   };
 
   const tableContent = {
     caption: "Transition Benchmark Totals Table",
-    headRow: ["Pop. by Quarter", ...tableHeaders, "Total by Quarter"],
+    headRow: ["Pop. by Quarter", ...getTableHeaders, "Total by Quarter"],
     bodyRows: [...createBodyRows()],
-    footRow: ["Total by Pop.", ...totalByPopSum, finalPopSum()],
+    footRow: ["Total by Pop.", ...columnTotal, footerRowTotal()],
   };
 
   return (

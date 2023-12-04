@@ -60,7 +60,10 @@ export const Table = ({
               {row.map((cell: string, index: number) => (
                 <Td
                   key={cell + index}
-                  sx={border ? sx.tableCellBorder : sx.tableCell}
+                  sx={{
+                    tableCell: border ? sx.tableCellBorder : sx.tableCell,
+                    color: cell == "Not Answered" ? "palette.error_darker" : "",
+                  }}
                 >
                   {sanitizeAndParseHtml(cell)}
                 </Td>
@@ -126,4 +129,7 @@ const sx = {
     },
   },
   ".two-column &": {}, // TODO: add additional styling for two-column dynamic field tables if needed
+  notAnswered: {
+    color: "palette.error_darker",
+  },
 };
