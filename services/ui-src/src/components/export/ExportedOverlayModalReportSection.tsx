@@ -7,24 +7,20 @@ import {
   FormField,
   FormLayoutElement,
   OverlayModalPageShape,
-  OverlayModalStepTypes,
 } from "types";
 import { EntityStepCard } from "components";
+// verbiage
 import exportVerbiage from "verbiage/pages/wp/wp-export";
 
 export const ExportedOverlayModalReportSection = ({
-  section: { entityType, verbiage },
+  section: { verbiage },
   entity,
   entityStep,
 }: Props) => {
-  const { emptyEntityMessage } = exportVerbiage;
+  const { emptyEntityMessage, dashboardTitle } = exportVerbiage;
 
   const stepType = entityStep![0] as string;
   const entityCount = entity?.[stepType]?.length;
-  const noDataText =
-    stepType === OverlayModalStepTypes.EVALUATION_PLAN
-      ? "objectives"
-      : "funding sources";
 
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
@@ -32,13 +28,15 @@ export const ExportedOverlayModalReportSection = ({
         <Box sx={sx.stepName}>{entityStep![1]}</Box>
         <Box sx={sx.stepHint}>{entityStep![2]}</Box>
         <Box sx={sx.dashboardTitle} data-testid="headerCount">
-          {/* TODO: FIX THIS VERBIAGE */}
-          {`${verbiage.dashboardTitle} ${
-            entityCount > 0 ? entityCount : `0 - no ${noDataText} added`
-          }`}
-          <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
-            {emptyEntityMessage[entityType as keyof typeof emptyEntityMessage]}
-          </Text>
+          {entityCount > 0 ? (
+            `${
+              dashboardTitle[stepType as keyof typeof dashboardTitle]
+            } ${entityCount}`
+          ) : (
+            <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
+              {emptyEntityMessage[stepType as keyof typeof emptyEntityMessage]}
+            </Text>
+          )}
         </Box>
       </Heading>
       {entity?.[stepType]?.map((step: any, index: number) => {

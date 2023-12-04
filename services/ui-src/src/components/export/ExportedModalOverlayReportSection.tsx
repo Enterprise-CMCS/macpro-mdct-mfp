@@ -167,40 +167,50 @@ export function renderModalOverlayTableBody(
             </Tr>
             {/* Depending on what the entity step type is, render its corresponding component */}
             {entitySteps.map((step, idx) => {
-              return (
-                <Box key={idx}>
-                  {/* TODO: make this a switch case ? */}
-                  {step[0] === EntityDetailsStepTypes.DEFINE_INITIATIVE ? (
-                    <ExportedEntityDetailsOverlaySection
-                      section={section as ModalOverlayReportPageShape}
-                      entity={entity}
-                      entityStep={step}
-                    />
-                  ) : step[0] === OverlayModalStepTypes.EVALUATION_PLAN ? (
-                    <ExportedOverlayModalReportSection
-                      section={section as OverlayModalPageShape}
-                      entity={entity}
-                      entityStep={step}
-                    />
-                  ) : step[0] === OverlayModalStepTypes.FUNDING_SOURCES ? (
-                    <ExportedOverlayModalReportSection
-                      section={section as OverlayModalPageShape}
-                      entity={entity}
-                      entityStep={step}
-                    />
-                  ) : (
-                    step[0] ===
-                      EntityDetailsStepTypes.CLOSE_OUT_INFORMATION && (
-                      // TODO: if there's no data for close-out, don't render this section
+              switch (step[0].toString()) {
+                case EntityDetailsStepTypes.DEFINE_INITIATIVE:
+                  return (
+                    <Box key={idx}>
                       <ExportedEntityDetailsOverlaySection
                         section={section as ModalOverlayReportPageShape}
                         entity={entity}
                         entityStep={step}
                       />
-                    )
-                  )}
-                </Box>
-              );
+                    </Box>
+                  );
+                case OverlayModalStepTypes.EVALUATION_PLAN:
+                  return (
+                    <Box key={idx}>
+                      <ExportedOverlayModalReportSection
+                        section={section as OverlayModalPageShape}
+                        entity={entity}
+                        entityStep={step}
+                      />
+                    </Box>
+                  );
+                case OverlayModalStepTypes.FUNDING_SOURCES:
+                  return (
+                    <Box key={idx}>
+                      <ExportedOverlayModalReportSection
+                        section={section as OverlayModalPageShape}
+                        entity={entity}
+                        entityStep={step}
+                      />
+                    </Box>
+                  );
+                case EntityDetailsStepTypes.CLOSE_OUT_INFORMATION:
+                  return (
+                    <Box key={idx}>
+                      <ExportedEntityDetailsOverlaySection
+                        section={section as ModalOverlayReportPageShape}
+                        entity={entity}
+                        entityStep={step}
+                      />
+                    </Box>
+                  );
+                default:
+                  return <></>;
+              }
             })}
           </Box>
         );

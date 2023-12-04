@@ -28,11 +28,7 @@ export const EntityStepCard = ({
 }: Props) => {
   let entityStarted = false;
   let entityCompleted = false;
-  // get index and length of entities
-  const reportFieldDataEntities = [];
-  const entitiesCount = `${entityIndex + 1} / ${
-    reportFieldDataEntities.length
-  }`;
+  const entitiesCount = `${entityIndex + 1} / ${entity[stepType]?.length}`;
 
   // any drawer-based field will do for this check
   switch (stepType) {
