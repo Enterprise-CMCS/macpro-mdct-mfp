@@ -107,7 +107,7 @@ export const EntityRow = ({
       case ModalDrawerEntityTypes.TARGET_POPULATIONS:
         return !isRequired && `Other: `;
       case OverlayModalTypes.INITIATIVE:
-        return closed && "[Closed] ";
+        return closed && !formEntity && "[Closed] ";
       default:
         return "";
     }
