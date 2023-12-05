@@ -173,7 +173,7 @@ export const AddEditOverlayEntityModal = ({
         subheading: verbiage.addEditModalHint
           ? verbiage.addEditModalHint
           : undefined,
-        actionButtonText: submitting ? <Spinner size="md" /> : "Save & close",
+        actionButtonText: submitting ? <Spinner size="md" /> : "Save",
         closeButtonText: "Cancel",
       }}
     >
