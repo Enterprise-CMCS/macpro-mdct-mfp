@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
-import { EntityStatusIcon, EntityStatuses } from "components";
+import { EntityStatusIcon, Table, EntityStatuses } from "components";
 // types
 import {
   AnyObject,
@@ -37,7 +37,7 @@ export const EntityRow = ({
   const { report } = useStore();
 
   // check for "other" target population entities
-  const { isRequired, isCopied } = entity;
+  const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
   const stepType = (formEntity as AnyObject)?.stepType;
   const closed = entity?.isInitiativeClosed;
 
@@ -133,6 +133,20 @@ export const EntityRow = ({
               `Select ${verbiage.enterEntityDetailsButtonText} to report data`}
           </Text>
         )}
+        {isInitiativeClosed &&
+          stepType &&
+          stepType === "closeOutInformation" && (
+            <Table
+              content={{
+                headRow: ["Actual end date", "Closed by"],
+                bodyRows: [
+                  [entity.closeOutInformation_actualEndDate, closedBy],
+                ],
+              }}
+              variant="none"
+              sxOverride={sx.table}
+            ></Table>
+          )}
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
@@ -255,6 +269,18 @@ const sx = {
     background: "white",
     "&:hover, &:hover:disabled": {
       background: "white",
+    },
+  },
+  table: {
+    td: {
+      paddingTop: "0rem",
+      paddingLeft: "0rem",
+    },
+    th: {
+      paddingLeft: "0rem",
+      border: "none",
+      fontWeight: "bold",
+      color: "palette.gray_medium",
     },
   },
 };
