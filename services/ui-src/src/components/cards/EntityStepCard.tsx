@@ -13,6 +13,7 @@ import completedIcon from "assets/icons/icon_check_circle.png";
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
+import { fillEmptyQuarters } from "utils";
 
 export const EntityStepCard = ({
   entity,
@@ -26,7 +27,6 @@ export const EntityStepCard = ({
   printVersion,
   ...props
 }: Props) => {
-  let entityStarted = false;
   let entityCompleted = false;
   // get index and length of entities
   const reportFieldDataEntities = [];
@@ -38,9 +38,22 @@ export const EntityStepCard = ({
   switch (stepType) {
     case OverlayModalStepTypes.EVALUATION_PLAN:
       entityCompleted = formattedEntityData?.objectiveName;
+      if (entityCompleted && formattedEntityData?.includesTargets === "Yes") {
+        entityCompleted = formattedEntityData?.quarters.length === 12;
+        if (formattedEntityData?.quarters)
+          formattedEntityData.quarters = fillEmptyQuarters(
+            formattedEntityData?.quarters
+          );
+      }
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
-      entityCompleted = formattedEntityData?.fundingSource;
+      entityCompleted =
+        formattedEntityData?.fundingSource &&
+        formattedEntityData?.quarters.length === 12;
+      if (formattedEntityData?.quarters)
+        formattedEntityData.quarters = fillEmptyQuarters(
+          formattedEntityData?.quarters
+        );
       break;
     default:
       break;
@@ -100,6 +113,21 @@ export const EntityStepCard = ({
           printVersion={!!printVersion}
           formattedEntityData={formattedEntityData}
         />
+        {entityCompleted || printVersion ? (
+          <EntityStepCardBottomSection
+            stepType={stepType}
+            verbiage={verbiage}
+            formattedEntityData={{
+              ...formattedEntityData,
+              isPartiallyComplete: !entityCompleted,
+            }}
+            printVersion={!!printVersion}
+          />
+        ) : (
+          <Text sx={sx.unfinishedMessage}>
+            {verbiage.entityUnfinishedMessage}
+          </Text>
+        )}
         {openAddEditEntityModal && (
           <Button
             variant="outline"
@@ -110,21 +138,6 @@ export const EntityStepCard = ({
           >
             {verbiage.editEntityButtonText}
           </Button>
-        )}
-        {entityStarted || entityCompleted || printVersion ? (
-          <EntityStepCardBottomSection
-            stepType={stepType}
-            verbiage={verbiage}
-            formattedEntityData={{
-              ...formattedEntityData,
-              isPartiallyComplete: entityStarted && !entityCompleted,
-            }}
-            printVersion={!!printVersion}
-          />
-        ) : (
-          <Text sx={sx.unfinishedMessage}>
-            {verbiage.entityUnfinishedMessage}
-          </Text>
         )}
         {openDrawer && (
           <Button
@@ -227,6 +240,7 @@ const sx = {
     },
   },
   unfinishedMessage: {
+    marginY: "1rem",
     fontSize: "xs",
     color: "palette.error_dark",
   },

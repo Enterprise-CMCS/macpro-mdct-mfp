@@ -1432,6 +1432,7 @@
           }
         },
         "enterEntityDetailsButtonText": "Edit",
+        "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
         "dashboardSubtitle": "Initiatives and Work Plan topics are auto-populated from your most recent approved Work Plan.",
         "tableHeader": "Initiative name <br/> Work Plan topic",

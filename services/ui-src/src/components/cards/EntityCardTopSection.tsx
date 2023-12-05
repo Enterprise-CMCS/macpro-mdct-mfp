@@ -1,5 +1,6 @@
 // components
 import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
+import { notAnsweredText } from "../../constants";
 // utils
 import { AnyObject, OverlayModalStepTypes } from "types";
 
@@ -33,10 +34,18 @@ export const EntityStepCardTopSection = ({
               <Grid sx={sx.grid}>
                 {formattedEntityData?.quarters.map((quarter: any) => {
                   return (
-                    <GridItem>
+                    <GridItem key={quarter.id}>
                       <Flex sx={sx.gridItems}>
                         <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
-                        <Text sx={sx.subtext}>{quarter.value}</Text>
+                        <Text
+                          sx={
+                            quarter.value === notAnsweredText
+                              ? sx.error
+                              : sx.subtext
+                          }
+                        >
+                          {quarter.value}
+                        </Text>
                       </Flex>
                     </GridItem>
                   );
@@ -65,10 +74,18 @@ export const EntityStepCardTopSection = ({
               <Grid sx={sx.grid}>
                 {formattedEntityData?.quarters?.map((quarter: any) => {
                   return (
-                    <GridItem>
+                    <GridItem key={quarter.id}>
                       <Flex sx={sx.gridItems}>
                         <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
-                        <Text sx={sx.subtext}>{quarter.value}</Text>
+                        <Text
+                          sx={
+                            quarter.value === notAnsweredText
+                              ? sx.error
+                              : sx.subtext
+                          }
+                        >
+                          {quarter.value}
+                        </Text>
                       </Flex>
                     </GridItem>
                   );
@@ -116,6 +133,10 @@ const sx = {
   subtext: {
     marginTop: "0.25rem",
     fontSize: "sm",
+  },
+  error: {
+    fontSize: "sm",
+    color: "palette.error_dark",
   },
   gridItems: {
     alignItems: "end",

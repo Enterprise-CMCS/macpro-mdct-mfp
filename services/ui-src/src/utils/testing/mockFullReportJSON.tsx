@@ -63,6 +63,7 @@ export const mockFullReportJSON: ReportJson = {
           "Report projected number of transitions for each target population",
         addEntityButtonText: "Add other target population",
         editEntityButtonText: "Edit name",
+        readOnlyEntityButtonText: "View name",
         addEditModalAddTitle: "Add other target population",
         addEditModalEditTitle: "Edit other target population",
         deleteEntityButtonAltText: "Delete other target population",
@@ -74,6 +75,7 @@ export const mockFullReportJSON: ReportJson = {
         entityUnfinishedMessage:
           "Complete the remaining indicators for this access measure by entering details.",
         enterEntityDetailsButtonText: "Edit",
+        readOnlyEntityDetailsButtonText: "View",
         reviewPdfHint:
           "To view Transition Benchmark Totals by target population and by quarter, click <i>Review PDF</i> and it will open a summary in a new tab.",
         drawerTitle: "Report transition benchmarks for ",
@@ -683,6 +685,7 @@ export const mockFullReportJSON: ReportJson = {
             },
             addEntityButtonText: "Add Initiative",
             editEntityButtonText: "Edit name",
+            readOnlyEntityButtonText: "View name",
             addEditModalAddTitle: "Add initiative",
             addEditModalEditTitle: "Edit initiative",
             deleteModalTitle:
@@ -691,6 +694,7 @@ export const mockFullReportJSON: ReportJson = {
             deleteModalWarning:
               "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
             enterEntityDetailsButtonText: "Edit",
+            readOnlyEntityDetailsButtonText: "View",
             dashboardTitle: "Initative total count",
             countEntitiesInTitle: true,
             tableHeader: "Initaitve name <br/> Work Plan topic",

@@ -8,6 +8,8 @@ import {
   EntityShape,
   ModalDrawerEntityTypes,
   ReportShape,
+  OverlayModalTypes,
+  ReportStatus,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -38,9 +40,7 @@ export const EntityRow = ({
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
-      case ModalDrawerEntityTypes.TARGET_POPULATIONS:
-        return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
-      case "initiative":
+      case OverlayModalTypes.INITIATIVE:
         //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
         if (formEntity) {
           return getInitiativeDashboardStatus(formEntity, entity);
@@ -48,7 +48,7 @@ export const EntityRow = ({
           return getInitiativeStatus(report!, entity);
         }
       default: {
-        return report ? !!getEntityStatus(report, entity) : false;
+        return report ? !!getEntityStatus(report, entity, entityType) : false;
       }
     }
   };
@@ -62,7 +62,15 @@ export const EntityRow = ({
     programInfo = (entityInfo as string[]).flatMap((info) => {
       //if the data is in an array, like a radio button values, get each as text
       if (typeof entity?.[info] === "object") {
-        return (entity[info] as any[]).map((arr) => arr.value);
+        return (entity[info] as AnyObject[]).map((arr) => {
+          if (
+            entity?.initiative_wp_otherTopic &&
+            arr.value === "Other, specify"
+          ) {
+            return entity.initiative_wp_otherTopic;
+          }
+          return arr.value;
+        });
       }
       return entity[info];
     });
@@ -113,7 +121,10 @@ export const EntityRow = ({
               variant="none"
               onClick={() => openAddEditEntityModal(entity)}
             >
-              {verbiage.editEntityButtonText}
+              {report?.status === ReportStatus.SUBMITTED ||
+              report?.status === ReportStatus.APPROVED
+                ? verbiage.readOnlyEntityButtonText
+                : verbiage.editEntityButtonText}
             </Button>
           )}
           <Button
@@ -126,7 +137,10 @@ export const EntityRow = ({
             variant="outline"
             disabled={entityStatus === "disabled"}
           >
-            {verbiage.enterEntityDetailsButtonText}
+            {report?.status === ReportStatus.SUBMITTED ||
+            report?.status === ReportStatus.APPROVED
+              ? verbiage.readOnlyEntityDetailsButtonText
+              : verbiage.enterEntityDetailsButtonText}
           </Button>
           {!isRequired && !isCopied && (
             <Button

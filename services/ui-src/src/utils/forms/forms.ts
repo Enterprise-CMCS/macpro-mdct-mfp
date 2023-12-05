@@ -22,6 +22,8 @@ import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
 import { NumberField } from "components/fields/NumberField";
 import { SectionHeader } from "components/forms/FormLayoutElements";
+import { calculateNextQuarter } from "utils";
+import { notAnsweredText } from "../../constants";
 
 // return created elements from provided fields
 export const formFieldFactory = (
@@ -320,4 +322,34 @@ export const injectFormWithTargetPopulations = (
 
   form.fields = updatedFields;
   return form;
+};
+
+/**
+ * This function takes the target populations given from the form data and then filters out
+ * any population that a user has answered "No". It does this by looking for a child object
+ * called transitionBenchmarks_applicableToMfpDemonstration and seeing if it has a value of "No"
+ * @param {AnyObject[]} targetPopulations - targetPopulations that are in the formData
+ * @return {AnyObject[]} Target populations filtered to no long has No answers from
+ * transitionBenchmarks_applicableToMfpDemonstration
+ */
+export const removeNotApplicablePopulations = (
+  targetPopulations: AnyObject[]
+) => {
+  const filteredPopulations = targetPopulations?.filter((population) => {
+    const isApplicable =
+      population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value;
+    return isApplicable !== "No";
+  });
+  return filteredPopulations;
+};
+
+//This function is used to fill out the missing quarters in cards for evaluation plan and funding sources after a copy over
+export const fillEmptyQuarters = (quarters: AnyObject[]) => {
+  for (var i: number = quarters.length; i < 12; i++) {
+    quarters.push({
+      id: calculateNextQuarter(quarters[i - 1].id),
+      value: notAnsweredText,
+    });
+  }
+  return quarters;
 };
