@@ -1,5 +1,4 @@
 import { MouseEventHandler, useContext, useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import { AdminReview } from "./AdminReview";
 // components
 import {
@@ -11,7 +10,13 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Alert, Modal, ReportContext, StatusTable } from "components";
+import {
+  Alert,
+  Modal,
+  PrintButton,
+  ReportContext,
+  StatusTable,
+} from "components";
 // types
 import { AlertTypes, AnyObject, ReportStatus } from "types";
 // utils
@@ -20,8 +25,6 @@ import { parseCustomHtml, useStore, utcDateToReadableDate } from "utils";
 import verbiage from "verbiage/pages/mfp/mfp-review-and-submit";
 // assets
 import checkIcon from "assets/icons/icon_check_circle.png";
-import iconSearchDefault from "assets/icons/icon_search_blue.png";
-import iconSearchSubmitted from "assets/icons/icon_search_white.png";
 
 export const ReviewSubmitPage = () => {
   const { fetchReport, submitReport } = useContext(ReportContext);
@@ -126,32 +129,6 @@ export const ReviewSubmitPage = () => {
   );
 };
 
-const PrintButton = ({ reviewVerbiage }: { reviewVerbiage: AnyObject }) => {
-  const { print } = reviewVerbiage;
-  const report = useStore().report;
-  const reportType = report?.reportType === "WP" ? "wp" : "sar";
-
-  const isSubmitted = report?.status === "Submitted";
-  return (
-    <Button
-      as={RouterLink}
-      to={`/${reportType}/export`}
-      target="_blank"
-      sx={!isSubmitted ? sx.printButton : sx.downloadButton}
-      leftIcon={
-        !isSubmitted ? (
-          <Image src={iconSearchDefault} alt="Search Icon" height=".9rem" />
-        ) : (
-          <Image src={iconSearchSubmitted} alt="Search Icon" height=".9rem" />
-        )
-      }
-      variant={!isSubmitted ? "outline" : "primary"}
-    >
-      {print.printButtonText}
-    </Button>
-  );
-};
-
 const ReadyToSubmit = ({
   submitForm,
   isOpen,
@@ -164,7 +141,6 @@ const ReadyToSubmit = ({
   const { userIsAdmin } = useStore().user ?? {};
   const { review } = reviewVerbiage;
   const { intro, modal, pageLink } = review;
-  const pdfExport = true;
 
   return (
     <Flex sx={sx.contentContainer} data-testid="ready-view">
@@ -182,7 +158,7 @@ const ReadyToSubmit = ({
         </Box>
       </Box>
       <Flex sx={sx.submitContainer}>
-        {pdfExport && <PrintButton reviewVerbiage={reviewVerbiage} />}
+        <PrintButton />
         {!userIsAdmin && (
           <Button
             type="submit"
@@ -276,7 +252,7 @@ export const SuccessMessage = ({
       </Box>
 
       <Box sx={sx.infoTextBox}>
-        <PrintButton reviewVerbiage={reviewVerbiage} />
+        <PrintButton />
       </Box>
     </Flex>
   );
@@ -336,25 +312,6 @@ const sx = {
   },
   additionalInfo: {
     color: "palette.gray",
-  },
-  printButton: {
-    minWidth: "6rem",
-    height: "2rem",
-    fontSize: "md",
-    fontWeight: "700",
-    border: "1px solid",
-  },
-  downloadButton: {
-    minWidth: "6rem",
-    height: "2rem",
-    fontSize: "md",
-    fontWeight: "700",
-    color: "white !important",
-    textDecoration: "none !important",
-    "&:hover, &:focus": {
-      backgroundColor: "palette.primary",
-      color: "white",
-    },
   },
   submitContainer: {
     width: "100%",
