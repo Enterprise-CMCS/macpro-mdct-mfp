@@ -85,7 +85,12 @@ export const ExportedModalDrawerReportSection = ({
     columnTotal.forEach((item: any) => {
       sum += convertToNum(item);
     });
-    return sum === 0 ? "-" : sum;
+
+    if (columnTotal.includes("N/A" || "Not Answered")) {
+      return `${sum}*`;
+    } else {
+      return sum === 0 ? "-" : sum;
+    }
   };
 
   /* layout of the table body rows  */
@@ -96,8 +101,7 @@ export const ExportedModalDrawerReportSection = ({
 
     // get quarterValueArray.length because arrays are all the same length
     for (let item = 0; item < quarterValueArray[0].length; item++) {
-      let row = [];
-
+      let row: string[] = [];
       // sum to be added up for each quarter row
       let sum = 0;
       row.push(quarterLabels[item]);
@@ -115,9 +119,19 @@ export const ExportedModalDrawerReportSection = ({
       });
 
       row.push(sum.toString());
+
+      // add asteriks to unfinished row totals
+      markUnfinishedRows(row);
       bodyRows.push(row);
     }
     return bodyRows;
+  };
+
+  const markUnfinishedRows = (row: string[]) => {
+    if (row.includes("N/A" || "Not Answered")) {
+      return (row[row.length - 1] = `${row[row.length - 1]}*`);
+    }
+    return;
   };
 
   const tableContent = {
