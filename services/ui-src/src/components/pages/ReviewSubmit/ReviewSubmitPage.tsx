@@ -62,7 +62,9 @@ export const ReviewSubmitPage = () => {
 
   useEffect(() => {
     setIsPermittedToSubmit(
-      (userIsEndUser && report?.status === ReportStatus.IN_PROGRESS) ||
+      (userIsEndUser &&
+        report?.status === ReportStatus.IN_PROGRESS &&
+        !hasError) ||
         (report?.status === ReportStatus.IN_REVISION && !hasError) ||
         false
     );
