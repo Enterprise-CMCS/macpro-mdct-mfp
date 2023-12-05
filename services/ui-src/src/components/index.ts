@@ -34,11 +34,13 @@ export { ExportedReportMetadataTable } from "./export/ExportedReportMetadataTabl
 export { ExportedSectionHeading } from "./export/ExportedSectionHeading";
 export { ExportedModalDrawerReportSection } from "./export/ExportedModalDrawerReportSection";
 export { ExportedReportWrapper } from "./export/ExportedReportWrapper";
+export { ExportedReportFieldRow } from "./export/ExportedReportFieldRow";
 export { ExportedReportFieldTable } from "./export/ExportedReportFieldTable";
 export { ExportedEntityDetailsOverlaySection } from "./export/ExportedEntityDetailsOverlaySection";
 export { ExportedEntityDetailsTable } from "./export/ExportedEntityDetailsTable";
 export { ExportedEntityDetailsTableRow } from "./export/ExportedEntityDetailsTableRow";
 export { ExportedModalOverlayReportSection } from "./export/ExportedModalOverlayReportSection";
+export { ExportedOverlayModalReportSection } from "./export/ExportedOverlayModalReportSection";
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";
