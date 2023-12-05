@@ -25,7 +25,7 @@ export const ExportedEntityDetailsTable = ({
   const { report } = useStore() ?? {};
   const { tableHeaders } = verbiage;
 
-  const entityType = "program";
+  const entityType = entity.type;
 
   const threeColumnHeaderItems = [
     tableHeaders.indicator,

@@ -139,7 +139,7 @@ export const renderResponseData = (
     : verbiage.missingEntry.noResponse;
   const missingEntryStyle = notApplicable ? sx.notApplicable : sx.noResponse;
   if (!hasResponse)
-    return <Text sx={missingEntryStyle}>{missingEntryVerbiage}</Text>;
+    return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;
   // chandle choice list fields (checkbox, radio)
   if (isChoiceListField) {
     return renderChoiceListFieldResponse(

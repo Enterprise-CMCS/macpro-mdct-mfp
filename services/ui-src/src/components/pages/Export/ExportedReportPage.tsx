@@ -115,10 +115,6 @@ export const renderReportSections = (
     (section: ReportRoute) =>
       section?.pageType !== PageTypes.REVIEW_SUBMIT && (
         <Box key={section.path} mt="5rem">
-          {/*  render top-level section headings */}
-          {/* <Heading as="h2" sx={sx.sectionHeading}>
-            {`Section ${section.name}`}
-          </Heading> */}
           {renderSection(section)}
         </Box>
       )
