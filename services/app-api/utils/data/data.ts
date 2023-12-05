@@ -25,12 +25,14 @@ export const removeNotApplicablePopsFromInitiatives = (
    * if this is applicable to the MFP demonstration. If none are found,
    * we don't need to do anything
    */
-  const isNotApplicable = (population: AnyObject) => population
-    .transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value === "No";
+  const isNotApplicable = (population: AnyObject) =>
+    population.transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value ===
+    "No";
 
-  const getPopulationName = (population: AnyObject) => population.isRequired
-    ? population.transitionBenchmarks_targetPopulationName
-    : `Other: ${population.transitionBenchmarks_targetPopulationName}`;
+  const getPopulationName = (population: AnyObject) =>
+    population.isRequired
+      ? population.transitionBenchmarks_targetPopulationName
+      : `Other: ${population.transitionBenchmarks_targetPopulationName}`;
 
   const notApplicablePopulationNames = targetPopulations
     .filter(isNotApplicable)
@@ -46,7 +48,7 @@ export const removeNotApplicablePopsFromInitiatives = (
   for (let initiative of initiatives) {
     initiative.defineInitiative_targetPopulations =
       initiative.defineInitiative_targetPopulations?.filter(
-        (initiativePopulation: AnyObject) => 
+        (initiativePopulation: AnyObject) =>
           !notApplicablePopulationNames.includes(initiativePopulation.value)
       );
   }

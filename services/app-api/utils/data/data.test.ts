@@ -207,18 +207,22 @@ describe("Test removeNotApplicablePopsFromInitiatives", () => {
   it("should not error when targetPopulations is empty", () => {
     const fieldData = {
       targetPopulations: [],
-      initiative: [{
-        ...initiative,
-        defineInitiative_targetPopulations: [initiativeOlderAdults]
-      }],
+      initiative: [
+        {
+          ...initiative,
+          defineInitiative_targetPopulations: [initiativeOlderAdults],
+        },
+      ],
     };
 
     const expectedOutput = {
       targetPopulations: [],
-      initiative: [{
-        ...initiative,
-        defineInitiative_targetPopulations: [initiativeOlderAdults]
-      }],
+      initiative: [
+        {
+          ...initiative,
+          defineInitiative_targetPopulations: [initiativeOlderAdults],
+        },
+      ],
     };
 
     const updatedData = removeNotApplicablePopsFromInitiatives(fieldData);
@@ -234,7 +238,7 @@ describe("Test removeNotApplicablePopsFromInitiatives", () => {
 
     const expectedOutput = {
       targetPopulations: [{}],
-      initiative: [{ ...initiative}],
+      initiative: [{ ...initiative }],
     };
 
     const updatedData = removeNotApplicablePopsFromInitiatives(fieldData);
@@ -244,17 +248,21 @@ describe("Test removeNotApplicablePopsFromInitiatives", () => {
 
   it("should not error when targetPopulations contains elements with empty transitionBenchmarks_applicableToMfpDemonstration", () => {
     const fieldData = {
-      targetPopulations: [{
-        transitionBenchmarks_applicableToMfpDemonstration: []
-      }],
+      targetPopulations: [
+        {
+          transitionBenchmarks_applicableToMfpDemonstration: [],
+        },
+      ],
       initiative: [{ ...initiative }],
     };
 
     const expectedOutput = {
-      targetPopulations: [{
-        transitionBenchmarks_applicableToMfpDemonstration: []
-      }],
-      initiative: [{ ...initiative}],
+      targetPopulations: [
+        {
+          transitionBenchmarks_applicableToMfpDemonstration: [],
+        },
+      ],
+      initiative: [{ ...initiative }],
     };
 
     const updatedData = removeNotApplicablePopsFromInitiatives(fieldData);
@@ -264,17 +272,21 @@ describe("Test removeNotApplicablePopsFromInitiatives", () => {
 
   it("should not error when some transitionBenchmarks_applicableToMfpDemonstration have no value", () => {
     const fieldData = {
-      targetPopulations: [{
-        transitionBenchmarks_applicableToMfpDemonstration: [{}]
-      }],
+      targetPopulations: [
+        {
+          transitionBenchmarks_applicableToMfpDemonstration: [{}],
+        },
+      ],
       initiative: [{ ...initiative }],
     };
 
     const expectedOutput = {
-      targetPopulations: [{
-        transitionBenchmarks_applicableToMfpDemonstration: [{}]
-      }],
-      initiative: [{ ...initiative}],
+      targetPopulations: [
+        {
+          transitionBenchmarks_applicableToMfpDemonstration: [{}],
+        },
+      ],
+      initiative: [{ ...initiative }],
     };
 
     const updatedData = removeNotApplicablePopsFromInitiatives(fieldData);
