@@ -102,6 +102,17 @@ export const EntityRow = ({
     });
   }
 
+  const appendToEntityName = () => {
+    switch (entityType) {
+      case ModalDrawerEntityTypes.TARGET_POPULATIONS:
+        return !isRequired && `Other: `;
+      case OverlayModalTypes.INITIATIVE:
+        return closed && "[Closed] ";
+      default:
+        return "";
+    }
+  };
+
   return (
     <Tr sx={sx.content}>
       <Td>
@@ -111,9 +122,7 @@ export const EntityRow = ({
         <ul>
           {programInfo.map((field, index) => (
             <li key={index}>
-              {!isRequired &&
-                entityType === ModalDrawerEntityTypes.TARGET_POPULATIONS &&
-                `Other: `}
+              {index === 0 && appendToEntityName()}
               {field}
             </li>
           ))}

@@ -146,6 +146,7 @@ export const OverlayModalPage = ({
                 formattedEntityData={getFormattedEntityData(stepType, entity)}
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
+                disabled={userDisabled}
               />
             )
           )}
