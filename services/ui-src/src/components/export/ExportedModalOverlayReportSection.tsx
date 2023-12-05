@@ -150,7 +150,7 @@ export function renderModalOverlayTableBody(
     case ReportType.WP:
       return entities.map((entity, idx) => {
         return (
-          <Box>
+          <Box sx={sx.container}>
             <Tr key={idx}>
               <Td sx={sx.statusIcon}>
                 <EntityStatusIcon
@@ -295,5 +295,8 @@ const sx = {
   headingSubtitle: {
     fontWeight: "normal",
     marginLeft: "1.5rem",
+  },
+  container: {
+    paddingTop: "2rem",
   },
 };

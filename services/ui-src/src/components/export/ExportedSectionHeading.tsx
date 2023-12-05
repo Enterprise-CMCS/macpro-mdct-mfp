@@ -41,7 +41,7 @@ const sx = {
   },
   heading: {
     margin: "1.5rem 0",
-    fontSize: "24px",
+    fontSize: "2xl",
     fontWeight: "bold",
   },
   info: {

@@ -83,16 +83,12 @@ const sx = {
     color: "palette.gray_medium",
   },
   stepName: {
-    fontSize: "18px",
+    fontSize: "lg",
     paddingBottom: "0.75rem",
   },
   stepHint: {
-    fontSize: "16px",
+    fontSize: "md",
     fontWeight: "normal",
-    color: "#5B616B",
-  },
-  // TODO: delete this
-  border: {
-    border: "10px solid black",
+    color: "palette.gray_medium_dark",
   },
 };

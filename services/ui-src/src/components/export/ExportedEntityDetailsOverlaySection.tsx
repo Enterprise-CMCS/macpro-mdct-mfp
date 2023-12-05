@@ -176,7 +176,7 @@ const sx = {
   stepHint: {
     fontSize: "16px",
     fontWeight: "normal",
-    color: "#5B616B",
+    color: "palette.gray_medium_dark",
   },
   entityHeading: {
     padding: "2rem 0 0.5rem 0",
