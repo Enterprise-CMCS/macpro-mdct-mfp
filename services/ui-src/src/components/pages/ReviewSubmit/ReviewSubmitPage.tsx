@@ -62,9 +62,8 @@ export const ReviewSubmitPage = () => {
 
   useEffect(() => {
     setIsPermittedToSubmit(
-      (userIsEndUser &&
-        report?.status === ReportStatus.IN_PROGRESS &&
-        !hasError) ||
+      (userIsEndUser && report?.status === ReportStatus.IN_PROGRESS) ||
+        (report?.status === ReportStatus.IN_REVISION && !hasError) ||
         false
     );
   }, [userIsEndUser, report?.status, hasError]);
@@ -274,7 +273,6 @@ export const SuccessMessage = ({
         <Text sx={sx.additionalInfoHeader}>{intro.additionalInfoHeader}</Text>
         <Text sx={sx.additionalInfo}>{intro.additionalInfo}</Text>
       </Box>
-
       <Box sx={sx.infoTextBox}>
         <PrintButton reviewVerbiage={reviewVerbiage} />
       </Box>
