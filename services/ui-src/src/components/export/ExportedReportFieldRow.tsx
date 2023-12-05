@@ -6,54 +6,54 @@ import { FormField, FormLayoutElement, isFieldElement } from "types";
 import {
   parseFormFieldInfo,
   parseCustomHtml,
-  renderOverlayEntityDataCell,
+  renderDataCell,
   useStore,
 } from "utils";
 
-export const ExportedEntityDetailsTableRow = ({
+export const ExportedReportFieldRow = ({
   formField,
+  pageType,
   entityType,
   parentFieldCheckedChoiceIds,
   showHintText = true,
-  entityId,
-  optional,
 }: Props) => {
-  const { report } = useStore() ?? {};
+  const { report } = useStore();
   const reportData = report?.fieldData;
   const isDynamicField = formField.type === "dynamic";
-  const formFieldInfo = parseFormFieldInfo(formField?.props!);
+  const formFieldInfo = parseFormFieldInfo(formField?.props);
+
   // guard against double-rendering "otherText" response
   const isOtherTextEntry = formField.id.endsWith("-otherText");
   if (isOtherTextEntry) return null;
 
   return (
     <Tr data-testid="exportRow">
+      {/* number column/cell */}
+      {!isDynamicField && (
+        <Td sx={sx.numberColumn}>
+          <Text sx={sx.fieldNumber}>
+            {formFieldInfo?.number?.replace(".", "") || "N/A"}
+          </Text>
+        </Td>
+      )}
+
       {/* label column/cell */}
       <Td sx={sx.labelColumn}>
-        {formFieldInfo.label || formFieldInfo.hint ? (
-          <>
+        {formFieldInfo?.label || formFieldInfo?.hint ? (
+          <Box>
             {formFieldInfo.label && (
-              <Text sx={sx.fieldLabel} fontSize={"sm"}>
-                {!isDynamicField ? (
-                  optional ? (
-                    <Box>
-                      {formFieldInfo.label}
-                      <span className="optional-text"> (optional)</span>
-                    </Box>
-                  ) : (
-                    formFieldInfo.label
-                  )
-                ) : (
-                  formField?.props?.label
-                )}
+              <Text sx={sx.fieldLabel}>
+                {!isDynamicField
+                  ? formFieldInfo?.label
+                  : formField?.props?.label}
               </Text>
             )}
-            {showHintText && formFieldInfo.hint && (
-              <Text sx={sx.fieldHint}>
-                {parseCustomHtml(formFieldInfo.hint)}
-              </Text>
+            {showHintText && formFieldInfo?.hint && (
+              <Box sx={sx.fieldHint}>
+                {parseCustomHtml(formFieldInfo?.hint)}
+              </Box>
             )}
-          </>
+          </Box>
         ) : (
           <Text>{"N/A"}</Text>
         )}
@@ -63,10 +63,11 @@ export const ExportedEntityDetailsTableRow = ({
       <Td>
         {reportData &&
           isFieldElement(formField) &&
-          renderOverlayEntityDataCell(
+          renderDataCell(
             formField,
-            reportData[entityType],
-            entityId,
+            reportData,
+            pageType,
+            entityType,
             parentFieldCheckedChoiceIds
           )}
       </Td>
@@ -77,14 +78,20 @@ export const ExportedEntityDetailsTableRow = ({
 export interface Props {
   formField: FormField | FormLayoutElement;
   pageType: string;
-  entityId: string;
-  entityType: string;
+  entityType?: string;
   parentFieldCheckedChoiceIds?: string[];
   showHintText?: boolean;
-  optional?: boolean;
 }
 
 const sx = {
+  numberColumn: {
+    width: "5.5rem",
+    paddingLeft: 0,
+  },
+  fieldNumber: {
+    fontSize: "sm",
+    fontWeight: "bold",
+  },
   labelColumn: {
     width: "14rem",
     ".two-column &": {
@@ -97,13 +104,10 @@ const sx = {
   fieldLabel: {
     fontSize: "sm",
     fontWeight: "bold",
-    ".optional-text": {
-      fontWeight: "lighter",
-    },
+    marginBottom: "0.5rem",
   },
   fieldHint: {
     lineHeight: "lg",
-    fontSize: "sm",
-    color: "palette.base",
+    color: "palette.gray_medium",
   },
 };

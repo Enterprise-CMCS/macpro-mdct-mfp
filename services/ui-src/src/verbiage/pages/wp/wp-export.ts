@@ -33,8 +33,11 @@ export default {
   },
   modalOverlayTableHeaders: {},
   emptyEntityMessage: {
-    accessMeasures: "0  - No access measures entered",
-    sanctions: "0 - No sanctions entered",
-    qualityMeasures: "0 - No quality & performance measures entered",
+    evaluationPlan: "Objectives: 0  - No objectives added",
+    fundingSources: "Funding sources: 0 - No funding sources added",
+  },
+  dashboardTitle: {
+    evaluationPlan: "Objectives total count: ",
+    fundingSources: "Funding sources: ",
   },
 };

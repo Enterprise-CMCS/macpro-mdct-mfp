@@ -103,6 +103,7 @@ const theme = extendTheme({
       // custom
       gray_lightest_highlight: "#f8f8f8",
       gray_medium: "#7a767a",
+      gray_medium_dark: "#5B616B",
       spreadsheet: "#1d6f42",
       spreadsheet_dark: "#174320",
     },
