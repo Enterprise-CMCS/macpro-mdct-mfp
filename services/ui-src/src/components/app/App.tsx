@@ -11,9 +11,9 @@ import {
   LoginCognito,
   LoginIDM,
   MainSkipNav,
-  // SkipNav,
   Timeout,
   PostLogoutRedirect,
+  ExportedReportBanner,
 } from "components";
 // utils
 import {
@@ -32,6 +32,8 @@ export const App = () => {
   const { user, showLocalLogins } = useStore();
   const { pathname, key } = useLocation();
 
+  const isExportPage = pathname.includes("/export");
+
   // fire tealium page view on route change
   useEffect(() => {
     fireTealiumPageView(
@@ -49,7 +51,8 @@ export const App = () => {
           <ReportProvider>
             <Timeout />
             <MainSkipNav />
-            <Header handleLogout={logout} />
+            {!isExportPage && <Header handleLogout={logout} />}
+            {isExportPage && <ExportedReportBanner />}
             <Container sx={sx.appContainer} data-testid="app-container">
               <ErrorBoundary FallbackComponent={Error}>
                 <AppRoutes />
