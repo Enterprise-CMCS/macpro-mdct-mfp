@@ -161,7 +161,7 @@ export function renderModalOverlayTableBody(
               </Td>
               <Td>
                 <Heading sx={sx.heading} as="h3">
-                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}{" "}
+                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
                   <br />
                   <Text sx={sx.headingSubtitle}>
                     {entity.initiative_wpTopic[0].value}
