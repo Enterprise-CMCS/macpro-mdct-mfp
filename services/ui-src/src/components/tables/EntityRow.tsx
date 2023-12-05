@@ -95,7 +95,7 @@ export const EntityRow = ({
         {!entityStatus && (
           <Text sx={sx.errorText}>
             {verbiage.editEntityHint ??
-              `Select ${verbiage.enterEntityDetailsButtonText} to report data`}
+              `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
           </Text>
         )}
       </Td>

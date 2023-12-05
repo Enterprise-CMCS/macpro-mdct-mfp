@@ -165,6 +165,7 @@ export interface ModalDrawerReportPageVerbiage
   reviewPdfHint: string;
   drawerTitle: string;
   pdfDashboardTitle?: string;
+  accordion?: AnyObject;
 }
 
 export interface OverlayModalPageVerbiage extends ReportPageVerbiage {
