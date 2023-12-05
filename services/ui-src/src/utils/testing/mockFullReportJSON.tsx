@@ -719,28 +719,26 @@ export const mockFullReportJSON: ReportJson = {
                 validation: "radio",
                 props: {
                   label: "Work Plan topic:",
-                  hint: "Note: Initiative topics with * are required and must be selected at least once across all initiatives.",
                   choices: [
                     {
                       id: "VjQ0OFqior9Dxu5RRNiZ5u",
-                      label:
-                        "Transitions and transition coordination services*",
+                      label: "Transitions and transition coordination services",
                     },
                     {
                       id: "wbUsMMqVP7q1n10szK5h5S",
-                      label: "Housing-related supports*",
+                      label: "Housing-related supports",
                     },
                     {
                       id: "SdaFlF3DJyzKcHCCu3Zylm",
-                      label: "Quality measurement and improvement*",
+                      label: "Quality measurement and improvement",
                     },
                     {
                       id: "8CpFrev6sMfRijIhafMj7V",
-                      label: "Self-direction(*if applicable)",
+                      label: "Self-directiom",
                     },
                     {
                       id: "tVURShWTPfVKGU94QmIwDn",
-                      label: "Tribal Initiative (*if applicable)",
+                      label: "Tribal Initiative",
                     },
                     {
                       id: "1k3EnM5WrizX3hsa6Zn85G",

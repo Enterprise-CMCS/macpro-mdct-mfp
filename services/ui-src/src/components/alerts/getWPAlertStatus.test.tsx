@@ -3,11 +3,11 @@ import { getWPAlertStatus } from "./getWPAlertStatus";
 
 describe("Test WP Alerts", () => {
   const topics = [
-    "Transitions and transition coordination services*",
-    "Housing-related supports*",
-    "Quality measurement and improvement*",
-    "Self-direction (*if applicable)",
-    "Tribal Initiative (*if applicable)",
+    "Transitions and transition coordination services",
+    "Housing-related supports",
+    "Quality measurement and improvement",
+    "Self-direction",
+    "Tribal Initiative",
   ];
 
   const initiative_wpTopic = topics.map((topic) => {
