@@ -3,8 +3,8 @@ import { Box, Heading } from "@chakra-ui/react";
 import { Table } from "components";
 // utils
 import { useStore } from "utils";
-import { ModalDrawerReportPageShape } from "types";
-import { AnyObject } from "yup/lib/types";
+import { ModalDrawerReportPageShape, AnyObject } from "types";
+import _ from "lodash";
 
 export const ExportedModalDrawerReportSection = ({
   section: { entityType, verbiage },
@@ -12,11 +12,15 @@ export const ExportedModalDrawerReportSection = ({
   const { report } = useStore() ?? {};
   const entities = report?.fieldData?.[entityType];
 
+  const truncateHeader = (text: string) => {
+    return _.truncate(text, { length: 30 });
+  };
+
   // if Transition Benchmark Header title has an abbrev.just display that
   const getTableHeaders = entities.map((entity: AnyObject) =>
     entity.transitionBenchmarks_targetPopulationName_short
       ? entity.transitionBenchmarks_targetPopulationName_short
-      : entity.transitionBenchmarks_targetPopulationName
+      : truncateHeader(entity.transitionBenchmarks_targetPopulationName)
   );
 
   // list of quarters to be added to the table (left column)
@@ -38,39 +42,41 @@ export const ExportedModalDrawerReportSection = ({
 
   // utility to convert array strings to num for calculating totals
   const convertToNum = (item: any) => {
-    let num = parseInt(item);
-    if (typeof num === "number" && !isNaN(num)) {
-      return num;
-    } else {
-      return 0;
-    }
+    let num = isNaN(parseInt(item)) ? 0 : parseInt(item);
+    return num;
   };
 
   // creates arrays of 'only' quarterly values
   const quarterValueArray = entities.map((entity: AnyObject) => {
     let quarterArray = [];
-    let overflowArray = [];
-    if (entities.indexOf(entity) <= 6) {
-      for (const key in entity) {
-        // push key values into quarterArray that are quarters
-        if (key.includes("quarterly")) {
-          quarterArray.push(entity[key]);
-        }
+    for (const key in entity) {
+      // push key values into quarterArray that are quarters
+      if (key.includes("quarterly")) {
+        quarterArray.push(entity[key]);
       }
-    } else {
-      overflowArray.push(entity);
     }
-
     return quarterArray;
   });
 
   // creates an array that totals up each each quarter column
   const columnTotal = quarterValueArray.map((column: string[]) => {
     let sum = 0;
+    let isNACol = [];
     column.forEach((item: any) => {
-      sum += convertToNum(item)!;
+      if (item === "N/A") {
+        isNACol.push(item);
+      } else {
+        sum += convertToNum(item)!;
+      }
     });
-    return sum;
+
+    if (sum === 0 && isNACol.length !== 12) {
+      return "-";
+    } else if (isNACol.length === 12) {
+      return "N/A";
+    } else {
+      return sum;
+    }
   });
 
   // adds up the footer row for the grey box total on bottom right of table
@@ -79,7 +85,7 @@ export const ExportedModalDrawerReportSection = ({
     columnTotal.forEach((item: any) => {
       sum += convertToNum(item);
     });
-    return sum;
+    return sum === 0 ? "-" : sum;
   };
 
   /* layout of the table body rows  */
@@ -101,12 +107,9 @@ export const ExportedModalDrawerReportSection = ({
         if (array[item] === "") {
           array[item] = "Not Answered";
         }
-        if (
-          typeof parseInt(array[item]) === "number" &&
-          array[item] !== "Not Answered"
-        ) {
-          sum += convertToNum(array[item]);
-        }
+
+        sum += convertToNum(array[item]);
+
         row.push(array[item].toString());
         return sum;
       });
@@ -205,6 +208,7 @@ const sx = {
     },
     "tbody tr td:last-child, tfoot": {
       background: "palette.secondary_lightest",
+      fontWeight: "bold",
     },
     "tbody tr td": {
       borderRight: "1px solid black",
