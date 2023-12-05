@@ -134,7 +134,7 @@ export const EntityRow = ({
         )}
         {isInitiativeClosed &&
           stepType &&
-          stepType === "closeOutInformation" && (
+          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION && (
             <Table
               content={{
                 headRow: ["Actual end date", "Closed by"],
