@@ -39,7 +39,6 @@ export const EntityRow = ({
   // check for "other" target population entities
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
   const stepType = (formEntity as AnyObject)?.stepType;
-  const closed = entity?.isInitiativeClosed;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
@@ -53,7 +52,7 @@ export const EntityRow = ({
         } else if (
           stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
         ) {
-          if (closed) {
+          if (isInitiativeClosed) {
             return EntityStatuses.CLOSE;
           } else {
             const isCloseOutEnabled = getInitiativeStatus(report!, entity, [
@@ -75,7 +74,7 @@ export const EntityRow = ({
   };
 
   let entityStatus = useMemo(() => {
-    if (OverlayModalTypes.INITIATIVE && formEntity && closed) {
+    if (OverlayModalTypes.INITIATIVE && formEntity && isInitiativeClosed) {
       return stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
         ? EntityStatuses.CLOSE
         : EntityStatuses.NO_STATUS;
@@ -107,7 +106,7 @@ export const EntityRow = ({
       case ModalDrawerEntityTypes.TARGET_POPULATIONS:
         return !isRequired && `Other: `;
       case OverlayModalTypes.INITIATIVE:
-        return closed && !formEntity && "[Closed] ";
+        return isInitiativeClosed && !formEntity && "[Closed] ";
       default:
         return "";
     }
@@ -158,7 +157,7 @@ export const EntityRow = ({
             >
               {report?.status === ReportStatus.SUBMITTED ||
               report?.status === ReportStatus.APPROVED ||
-              closed
+              isInitiativeClosed
                 ? verbiage.readOnlyEntityButtonText
                 : verbiage.editEntityButtonText}
             </Button>
@@ -175,7 +174,7 @@ export const EntityRow = ({
           >
             {report?.status === ReportStatus.SUBMITTED ||
             report?.status === ReportStatus.APPROVED ||
-            closed
+            isInitiativeClosed
               ? verbiage.readOnlyEntityDetailsButtonText
               : verbiage.enterEntityDetailsButtonText}
           </Button>
