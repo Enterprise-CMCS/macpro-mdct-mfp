@@ -56,6 +56,42 @@ export const formTemplateForReportType = (reportType: ReportType) => {
   }
 };
 
+export const firstQuarter = (
+  field: FormField,
+  workPlanMetaData?: AnyObject
+) => {
+  const contentString =
+    workPlanMetaData?.reportPeriod == 1
+      ? "First quarter (January 1 - March 31)"
+      : "Third quarter (July 1 - September 30)";
+  const updatedFormField: FormField = {
+    id: `${field.id}`,
+    type: `${field.type}`,
+    props: {
+      content: contentString,
+    },
+  };
+  return updatedFormField;
+};
+
+export const secondQuarter = (
+  field: FormField,
+  workPlanMetaData?: AnyObject
+) => {
+  const contentString =
+    workPlanMetaData?.reportPeriod == 1
+      ? "Second quarter (April 1 - June 30)"
+      : "Fourth quarter (October 1 - December 31)";
+  const updatedFormField: FormField = {
+    id: `${field.id}`,
+    type: `${field.type}`,
+    props: {
+      content: contentString,
+    },
+  };
+  return updatedFormField;
+};
+
 export const nextTwelveQuartersKeys = (
   fieldId: string,
   currentDate: number,
@@ -73,31 +109,34 @@ export const nextTwelveQuartersKeys = (
 };
 
 export const nextTwelveQuarters = (
-  formFields: FormField[],
-  fieldIndex: number,
   fieldToRepeat: FormField,
-  currentDate: number,
-  workPlan?: ReportMetadataShape
+  workPlanFieldData?: AnyObject,
+  workPlanMetaData?: ReportMetadataShape
 ) => {
-  var keys = nextTwelveQuartersKeys(fieldToRepeat.id, currentDate, workPlan);
+  var keys = nextTwelveQuartersKeys(
+    fieldToRepeat.id,
+    Date.now(),
+    workPlanMetaData
+  );
+  const fieldsToAppend = [];
   for (let key of keys) {
     const formField: FormField = {
       ...fieldToRepeat,
       id: `${key[0]}${key[1]}Q${key[2]}`,
       type: fieldToRepeat?.type,
       validation: fieldToRepeat.validation,
+      repeatable: { rule: "" },
       props: {
         ...fieldToRepeat?.props,
         label: `${key[1]} Q${key[2]}`,
       },
     };
-    formFields.push(formField);
+    fieldsToAppend.push(formField);
   }
-  formFields.splice(fieldIndex, 1);
-  return formFields;
+  return fieldsToAppend;
 };
 
-export const targetPopulationsByQuarterKeys = (
+export const targetPopulationsKeys = (
   fieldId: string,
   workPlanFieldData?: AnyObject,
   workPlanMetaData?: AnyObject
@@ -114,89 +153,33 @@ export const targetPopulationsByQuarterKeys = (
   return keys;
 };
 
-export const targetPopulationsByQuarter = (
-  formFields: FormField[],
+export const targetPopulations = (
   fieldToRepeat: FormField,
-  quarter: number,
   workPlanFieldData?: AnyObject,
   workPlanMetaData?: AnyObject
 ) => {
-  var keys = targetPopulationsByQuarterKeys(
+  var keys = targetPopulationsKeys(
     fieldToRepeat.id,
     workPlanFieldData,
     workPlanMetaData
   );
-
-  if (quarter == 1) {
-    const contentString =
-      workPlanMetaData?.reportPeriod == 1
-        ? "First quarter (January 1 - March 31)"
-        : "Third quarter (July 1 - September 30)";
-    const formFieldHeader: FormField = {
-      id: `Period${workPlanMetaData?.reportPeriod}_Q1_header`,
-      type: "sectionHeader",
-      props: {
-        content: contentString,
-      },
-    };
-    formFields.push(formFieldHeader);
-  } else if (quarter == 2) {
-    const contentString =
-      workPlanMetaData?.reportPeriod == 1
-        ? "Second quarter (April 1 - June 30)"
-        : "Fourth quarter (October 1 - December 31)";
-    const formFieldHeader: FormField = {
-      id: `Period${workPlanMetaData?.reportPeriod}_Q2_header`,
-      type: "sectionHeader",
-      props: {
-        content: contentString,
-      },
-    };
-    formFields.push(formFieldHeader);
-  }
-
+  const fieldsToAppend = [];
   for (let key of keys) {
     const formField: FormField = {
       ...fieldToRepeat,
-      id: `Period${key[0]}_Q${quarter}_${key[2]}${key[2]}`,
+      id: `${fieldToRepeat.id}_Period${key[0]}_${key[2]}`,
       type: fieldToRepeat?.type,
       validation: fieldToRepeat.validation,
+      repeatable: { rule: "" },
       props: {
         ...fieldToRepeat?.props,
         label: `Number of ${key[2]}`,
       },
     };
-    formFields.push(formField);
+    fieldsToAppend.push(formField);
   }
 
-  return formFields;
-};
-
-export const targetPopulationsByReportingPeriod = (
-  formFields: FormField[],
-  fieldIndex: number,
-  fieldToRepeat: FormField,
-  workPlanFieldData?: AnyObject,
-  workPlanMetaData?: AnyObject
-) => {
-  targetPopulationsByQuarter(
-    formFields,
-    fieldToRepeat,
-    1,
-    workPlanFieldData,
-    workPlanMetaData
-  );
-
-  targetPopulationsByQuarter(
-    formFields,
-    fieldToRepeat,
-    2,
-    workPlanFieldData,
-    workPlanMetaData
-  );
-
-  formFields.splice(fieldIndex, 1);
-  return formFields;
+  return fieldsToAppend;
 };
 
 export const expandRepeatedFields = (
@@ -206,13 +189,16 @@ export const expandRepeatedFields = (
 ) => {
   const repeatingFieldRuleMap: AnyObject = {
     nextTwelveQuarters: nextTwelveQuarters,
-    targetPopulationsByReportingPeriod: targetPopulationsByReportingPeriod,
+    targetPopulations: targetPopulations,
   };
 
-  //after creating the first formTemplate in the system, new forms will try to repeat 12 times. We have to clear it before using it again
-  formFields = clearPreviousRepeatingFields(formFields);
+  const contentFieldRuleMap: AnyObject = {
+    firstQuarter: firstQuarter,
+    secondQuarter: secondQuarter,
+  };
 
-  formFields.forEach((field, fieldIndex) => {
+  const expandedFields: FormField[] = [];
+  formFields.forEach((field) => {
     // if field has choices/options (ie could have nested children)
     const fieldChoices = field.props?.choices;
     if (fieldChoices) {
@@ -230,45 +216,19 @@ export const expandRepeatedFields = (
     }
     if (field?.repeatable) {
       const repeatingFieldRule = repeatingFieldRuleMap[field.repeatable.rule];
-      formFields = repeatingFieldRule(
-        formFields,
-        fieldIndex,
-        field,
-        workPlanFieldData,
-        workPlanMetaData
+      expandedFields.push(
+        ...repeatingFieldRule(field, workPlanFieldData, workPlanMetaData)
       );
+    } else if (field?.props?.contentRule) {
+      const contentFieldRule = contentFieldRuleMap[field.props.contentRule];
+      expandedFields.push(
+        contentFieldRule(field, workPlanFieldData, workPlanMetaData)
+      );
+    } else {
+      expandedFields.push(field);
     }
   });
-  return formFields;
-};
-
-const clearPreviousRepeatingFields = (formFields: FormField[]) => {
-  //check to see if there is a repeating field in the form fields
-  let repeatingFields = formFields.filter((field) => field.repeatable);
-
-  //if there is more than 1 repeating form call
-  if (repeatingFields.length > 1) {
-    //we want to split out the unrepeating fields
-    let unrepeatingFields = formFields.filter((field) => !field.repeatable);
-
-    //get the index of the first repeating field as that is the position where the cleaned repeating field needs to go back to
-    let firstRepeatIndex: number = formFields.findIndex(
-      (field) => field.repeatable
-    );
-
-    //we need to take the first repeating field as the template
-    let cleanRepeatField = formFields[firstRepeatIndex];
-    //the id needs to be cleaned by stripping the quarter information
-    const quarterLabelIndex: number = cleanRepeatField.id.length - 6;
-    cleanRepeatField.id = cleanRepeatField.id.substring(0, quarterLabelIndex);
-    delete cleanRepeatField.props;
-
-    //add the repeating field back into the formFields
-    unrepeatingFields.splice(firstRepeatIndex, 0, cleanRepeatField);
-    return unrepeatingFields;
-  }
-
-  return formFields;
+  return expandedFields;
 };
 
 export const scanForRepeatedFields = (
