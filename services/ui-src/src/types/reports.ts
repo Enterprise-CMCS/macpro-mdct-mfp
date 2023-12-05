@@ -74,6 +74,7 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   dashboard?: FormJson;
   drawerForm?: never;
   form?: never;
+  entitySteps?: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
