@@ -37,7 +37,7 @@ export default {
       title: "MFP Semi-Annual Progress Report (SAR)",
       body: {
         available:
-          "The reporting tool is to be used by grantees for semi-annual reporting on MFP program data. The information provided in this report will allow CMS to monitor grantee progress and identify challenges and improvement opportunities. For additional guidance on completing this form, please the associated ",
+          "This reporting tool is to be used by MFP recipients for semi-annual reporting of MFP program data. The information provided in this report will allow CMS to monitor MFP recipient progress and identify challenges and improvement opportunities.",
       },
       linkText: "User Guide",
       linkText2: "Help File",
@@ -52,7 +52,7 @@ export default {
       },
       accordion: {
         buttonLabel: "When is the SAR due?",
-        text: "The SAR will need to be reviewed and submitted twice a year, with 60 days following the end of each second and fourth calendar year quarter.",
+        text: "The Semi-Annual Progress Report (SAR) will need to be reviewed and submitted twice a year, within 60 days following the end of each second and fourth calendar year quarter. For example, the SAR Reporting Period 1 covers January-June activity and MFP recipients must submit their data within 60 days following June 30.",
       },
     },
   },
