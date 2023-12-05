@@ -31,6 +31,7 @@ interface Props {
 const sx = {
   root: {
     marginTop: "2rem",
+    color: "palette.base",
   },
   item: {
     marginBottom: "1.5rem",

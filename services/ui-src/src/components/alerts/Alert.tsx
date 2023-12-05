@@ -12,7 +12,7 @@ import {
 // utils
 import { AlertTypes } from "types";
 // assets
-import alertIcon from "assets/icons/icon_info_circle.png";
+import alertIcon from "assets/icons/icon_alert_circle.png";
 import { parseCustomHtml } from "utils";
 
 export const Alert = ({

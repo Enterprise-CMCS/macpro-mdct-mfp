@@ -170,7 +170,7 @@ describe("Test AddEditOverlayEntityModal functionality", () => {
     const textField = form.querySelector("[name='mock-modal-text-field']")!;
     await userEvent.clear(textField);
     await userEvent.type(textField, "mock input 2");
-    const submitButton = screen.getByRole("button", { name: "Save & close" });
+    const submitButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(submitButton);
   };
 
