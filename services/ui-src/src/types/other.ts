@@ -32,6 +32,11 @@ export enum OverlayModalTypes {
   INITIATIVE = "initiative",
 }
 
+export enum EntityDetailsStepTypes {
+  DEFINE_INITIATIVE = "defineInitiative",
+  CLOSE_OUT_INFORMATION = "closeOutInformation",
+}
+
 export enum OverlayModalStepTypes {
   EVALUATION_PLAN = "evaluationPlan",
   FUNDING_SOURCES = "fundingSources",
