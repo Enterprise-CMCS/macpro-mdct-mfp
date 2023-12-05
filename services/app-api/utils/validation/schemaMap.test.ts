@@ -6,9 +6,6 @@ import {
   date,
   isEndDateAfterStartDate,
   nested,
-  validNumber,
-  numberNotLessThanOne,
-  numberNotLessThanZero,
 } from "./schemaMap";
 
 describe("Schemas", () => {
@@ -24,29 +21,7 @@ describe("Schemas", () => {
     "N/A",
     "Data not available",
   ];
-  const badNumberTestCases = ["abc", "N", "!@#!@%"];
-
-  const zeroTest = ["0", "0.0"];
-
-  const goodPositiveNumberTestCases = [
-    "123",
-    "123.00",
-    "123..00",
-    "1,230",
-    "1,2,30",
-    "1230",
-    "123450123..,,,.123123123123",
-  ];
-
-  const negativeNumberTestCases = [
-    "-123",
-    "-123.00",
-    "-123..00",
-    "-1,230",
-    "-1,2,30",
-    "-1230",
-    "-123450123..,,,.123123123123",
-  ];
+  const badNumberTestCases = ["abc", "N", "!@#!@%", "-1"];
 
   const goodRatioTestCases = [
     "1:1",
@@ -73,9 +48,6 @@ describe("Schemas", () => {
   const goodDateTestCases = ["01/01/1990", "12/31/2020", "01012000"];
   const badDateTestCases = ["01-01-1990", "13/13/1990", "12/32/1990"];
 
-  const goodValidNumberTestCases = [1, "1", "100000", "1,000,000"];
-  const badValidNumberTestCases = ["N/A", "number", "foo"];
-
   // nested
   const fieldValidationObject = {
     type: "text",
@@ -98,48 +70,9 @@ describe("Schemas", () => {
     }
   };
 
-  const testValidNumber = (
-    schemaToUse: MixedSchema,
-    testCases: Array<string | number>,
-    expectedReturn: boolean
-  ) => {
-    for (let testCase of testCases) {
-      let test = schemaToUse.isValidSync(testCase);
-      expect(test).toEqual(expectedReturn);
-    }
-  };
-
   test("Evaluate Number Schema using number scheme", () => {
     testSchema(number(), goodNumberTestCases, true);
     testSchema(number(), badNumberTestCases, false);
-  });
-
-  // testing numberNotLessThanOne scheme
-  test("Evaluate Number Schema using numberNotLessThanOne scheme", () => {
-    testSchema(numberNotLessThanOne(), goodPositiveNumberTestCases, true);
-    testSchema(numberNotLessThanOne(), badNumberTestCases, false);
-  });
-
-  test("Test zero values using numberNotLessThanOne scheme", () => {
-    testSchema(numberNotLessThanOne(), zeroTest, false);
-  });
-
-  test("Test negative values using numberNotLessThanOne scheme", () => {
-    testSchema(numberNotLessThanOne(), negativeNumberTestCases, false);
-  });
-
-  // testing numberNotLessThanZero scheme
-  test("Evaluate Number Schema using numberNotLessThanZero scheme", () => {
-    testSchema(numberNotLessThanZero(), goodPositiveNumberTestCases, true);
-    testSchema(numberNotLessThanZero(), badNumberTestCases, false);
-  });
-
-  test("Test zero values using numberNotLessThanZero scheme", () => {
-    testSchema(numberNotLessThanZero(), zeroTest, true);
-  });
-
-  test("Test negative values using numberNotLessThanZero scheme", () => {
-    testSchema(numberNotLessThanZero(), negativeNumberTestCases, false);
   });
 
   test("Evaluate Number Schema using ratio scheme", () => {
@@ -163,10 +96,5 @@ describe("Schemas", () => {
       ["string"],
       true
     );
-  });
-
-  test("Test validNumber schema", () => {
-    testValidNumber(validNumber(), goodValidNumberTestCases, true);
-    testValidNumber(validNumber(), badValidNumberTestCases, false);
   });
 });
