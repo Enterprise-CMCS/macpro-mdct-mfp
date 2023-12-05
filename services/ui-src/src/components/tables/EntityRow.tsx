@@ -31,6 +31,7 @@ export const EntityRow = ({
   openAddEditEntityModal,
   openDeleteEntityModal,
   openOverlayOrDrawer,
+  stepType,
 }: Props) => {
   const { userIsEndUser } = useStore().user ?? {};
   const { report } = useStore();
@@ -98,20 +99,16 @@ export const EntityRow = ({
               `Select ${verbiage.enterEntityDetailsButtonText} to report data`}
           </Text>
         )}
-        {isInitiativeClosed &&
-          entity.stepType &&
-          entity.stepType === "closeOutInformation" && (
-            <Table
-              content={{
-                headRow: ["Actual end date", "Closed by"],
-                bodyRows: [
-                  [entity.closeOutInformation_actualEndDate, closedBy],
-                ],
-              }}
-              variant="none"
-              sxOverride={sx.table}
-            ></Table>
-          )}
+        {isInitiativeClosed && stepType && stepType === "closeOutInformation" && (
+          <Table
+            content={{
+              headRow: ["Actual end date", "Closed by"],
+              bodyRows: [[entity.closeOutInformation_actualEndDate, closedBy]],
+            }}
+            variant="none"
+            sxOverride={sx.table}
+          ></Table>
+        )}
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
@@ -167,6 +164,7 @@ interface Props {
   openDeleteEntityModal: Function;
   openOverlayOrDrawer: Function;
   [key: string]: any;
+  stepType?: string;
 }
 
 const sx = {
