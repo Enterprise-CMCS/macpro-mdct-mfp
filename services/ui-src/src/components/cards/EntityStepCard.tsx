@@ -132,7 +132,9 @@ export const EntityStepCard = ({
             leftIcon={<Image src={editIcon} alt="edit icon" height="1rem" />}
             onClick={() => openAddEditEntityModal(entity)}
           >
-            {verbiage.editEntityButtonText}
+            {props?.disabled
+              ? verbiage.readOnlyEntityButtonText
+              : verbiage.editEntityButtonText}
           </Button>
         )}
         {openDrawer && (

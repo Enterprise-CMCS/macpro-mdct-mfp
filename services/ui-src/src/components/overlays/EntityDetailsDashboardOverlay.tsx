@@ -122,7 +122,6 @@ export const EntityDetailsDashboardOverlay = ({
                 openDeleteEntityModal={() => {
                   return;
                 }}
-                stepType={step.stepType}
               />
             ))}
           </Table>

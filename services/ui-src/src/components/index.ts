@@ -104,7 +104,7 @@ export { StatusTable } from "./statusing/StatusTable";
 // tables
 export { EntityRow } from "./tables/EntityRow";
 export { Table } from "./tables/Table";
-export { EntityStatusIcon } from "./tables/EntityStatusIcon";
+export { EntityStatusIcon, EntityStatuses } from "./tables/EntityStatusIcon";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
 // Redirects
