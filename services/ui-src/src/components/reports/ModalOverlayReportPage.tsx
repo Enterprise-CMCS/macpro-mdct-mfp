@@ -40,9 +40,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
     useStore();
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
 
-  // Determine whether form is locked or unlocked based on user and route
-  const isLocked = report?.locked;
-
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
 
@@ -147,7 +144,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
                     entityType={entityType}
                     entityInfo={entityInfo}
                     verbiage={verbiage}
-                    locked={isLocked}
                     openOverlayOrDrawer={openEntityDetailsOverlay}
                     openAddEditEntityModal={openAddEditEntityModal}
                     openDeleteEntityModal={openDeleteEntityModal}

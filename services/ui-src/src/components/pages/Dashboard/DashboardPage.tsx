@@ -134,6 +134,16 @@ export const DashboardPage = ({ reportType }: Props) => {
     setPreviousReport(newReportsToDisplay?.[0]);
   }, [reportsByState]);
 
+  const isReportEditable = (selectedReport: ReportShape) => {
+    return (
+      !userIsAdmin &&
+      !userIsReadOnly &&
+      !selectedReport.locked &&
+      selectedReport.status !== ReportStatus.APPROVED &&
+      selectedReport.status !== ReportStatus.SUBMITTED
+    );
+  };
+
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     clearSelectedEntity();
     setReportId(report.id);
@@ -150,15 +160,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     setEntering(false);
     const firstReportPagePath =
       selectedReport?.formTemplate.flatRoutes![0].path;
-
-    //set if form can be edit or only viewed
-    const editable =
-      !userIsAdmin &&
-      !userIsReadOnly &&
-      selectedReport.status !== ReportStatus.APPROVED &&
-      selectedReport.status !== ReportStatus.SUBMITTED;
-
-    setEditable(editable);
+    setEditable(isReportEditable(selectedReport));
     navigate(firstReportPagePath);
   };
 
