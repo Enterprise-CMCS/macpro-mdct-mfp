@@ -69,6 +69,7 @@ export interface TableContentShape {
   caption?: string;
   headRow?: string[];
   bodyRows?: string[][];
+  footRow?: string[];
 }
 
 export interface CustomHtmlElement {
