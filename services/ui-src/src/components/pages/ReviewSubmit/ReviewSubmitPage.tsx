@@ -76,7 +76,7 @@ export const ReviewSubmitPage = () => {
   const submitForm = async () => {
     setSubmitting(true);
     if (isPermittedToSubmit) {
-      await submitReport(reportKeys).then(() => {
+      await submitReport(reportKeys)?.then(() => {
         setEditable(false);
       });
     }

@@ -48,7 +48,7 @@ const mockUseStore: MfpReportState & MfpUserState = {
   lastSavedTime: "12:30 PM",
   workPlanToCopyFrom: undefined,
   autosaveState: false,
-  editable: false,
+  editable: true,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},

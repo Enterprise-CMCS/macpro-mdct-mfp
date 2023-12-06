@@ -138,9 +138,9 @@ export const DashboardPage = ({ reportType }: Props) => {
     return (
       !userIsAdmin &&
       !userIsReadOnly &&
-      !selectedReport.locked &&
-      selectedReport.status !== ReportStatus.APPROVED &&
-      selectedReport.status !== ReportStatus.SUBMITTED
+      !selectedReport?.locked &&
+      selectedReport?.status !== ReportStatus.APPROVED &&
+      selectedReport?.status !== ReportStatus.SUBMITTED
     );
   };
 

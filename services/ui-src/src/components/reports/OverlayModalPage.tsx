@@ -43,7 +43,7 @@ export const OverlayModalPage = ({
   useEffect(() => {
     if (selectedEntity) {
       setSelectedEntity(
-        report?.fieldData?.[selectedEntity.type].find(
+        report?.fieldData?.[selectedEntity.type]?.find(
           (entity: EntityShape) => entity.id == selectedEntity.id
         )
       );

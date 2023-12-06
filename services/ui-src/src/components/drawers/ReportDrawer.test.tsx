@@ -8,6 +8,7 @@ import {
   mockGenericEntity,
   mockModalDrawerReportPageVerbiage,
   mockStateUserStore,
+  mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 // utils
@@ -43,14 +44,16 @@ describe("Test ReportDrawer rendering", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  it("Should render save text for state user", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
+  it("Should render save text if form is editable", async () => {
+    mockUseStore.editable = true;
+    mockedUseStore.mockReturnValue(mockUseStore);
     render(drawerComponent);
     expect(screen.getByText(saveAndCloseText)).toBeVisible();
   });
 
-  it("Should not render save text for admin user", async () => {
-    mockedUseStore.mockReturnValue(mockAdminUserStore);
+  it("Should not render save text if form is not editable", async () => {
+    mockUseStore.editable = false;
+    mockedUseStore.mockReturnValue(mockUseStore);
     render(drawerComponent);
     expect(screen.queryByText(saveAndCloseText)).not.toBeInTheDocument();
   });
