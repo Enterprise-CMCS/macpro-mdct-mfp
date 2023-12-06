@@ -2,6 +2,7 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { Table } from "components";
 // utils
+import { useEffect, useState } from "react";
 import { useStore } from "utils";
 import { ModalDrawerReportPageShape, AnyObject } from "types";
 import _ from "lodash";
@@ -9,6 +10,7 @@ import _ from "lodash";
 export const ExportedModalDrawerReportSection = ({
   section: { entityType, verbiage },
 }: Props) => {
+  const [overflow, setOverflow] = useState(false);
   const { report } = useStore() ?? {};
   const entities = report?.fieldData?.[entityType];
 
@@ -17,18 +19,25 @@ export const ExportedModalDrawerReportSection = ({
   };
 
   // if Transition Benchmark Header title has an abbrev.just display that
-  const getTableHeaders = entities.map((entity: AnyObject) =>
-    entity.transitionBenchmarks_targetPopulationName_short
-      ? entity.transitionBenchmarks_targetPopulationName_short
-      : truncateHeader(entity.transitionBenchmarks_targetPopulationName)
-  );
+  const getTableHeaders = () => {
+    let headers = [];
+    const quarterHeader = "Pop. by Quarter";
+    const bodyHeader = entities.map((entity: AnyObject) =>
+      entity.transitionBenchmarks_targetPopulationName_short
+        ? entity.transitionBenchmarks_targetPopulationName_short
+        : truncateHeader(entity.transitionBenchmarks_targetPopulationName)
+    );
+    const totalHeader = "Total by Quarter";
+
+    headers.push(quarterHeader, ...bodyHeader, totalHeader);
+    return headers;
+  };
 
   // list of quarters to be added to the table (left column)
   const quarterLabels = [
     "2023 Q3",
     "2023 Q4",
     "2024 Q1",
-    "2025 Q4",
     "2024 Q2",
     "2024 Q3",
     "2024 Q4",
@@ -38,6 +47,7 @@ export const ExportedModalDrawerReportSection = ({
     "2025 Q4",
     "2026 Q1",
     "2026 Q2",
+    "2026 Q3",
   ];
 
   // utility to convert array strings to num for calculating totals
@@ -58,88 +68,173 @@ export const ExportedModalDrawerReportSection = ({
     return quarterArray;
   });
 
-  // creates an array that totals up each each quarter column
-  const columnTotal = quarterValueArray.map((column: string[]) => {
-    let sum = 0;
-    let isNACol = [];
-    column.forEach((item: any) => {
-      if (item === "N/A") {
-        isNACol.push(item);
+  const generateFootRow = () => {
+    // creates an array that totals up each each quarter column
+    const columnTotal = quarterValueArray.map((column: string[]) => {
+      let sum = 0;
+      let isNACol = [];
+      column.forEach((item: any) => {
+        if (item === "N/A") {
+          isNACol.push(item);
+        } else {
+          sum += convertToNum(item)!;
+        }
+      });
+
+      if (sum === 0 && isNACol.length !== 12) {
+        return "-";
+      } else if (isNACol.length === 12) {
+        return "N/A";
       } else {
-        sum += convertToNum(item)!;
+        return sum.toString();
       }
     });
 
-    if (sum === 0 && isNACol.length !== 12) {
-      return "-";
-    } else if (isNACol.length === 12) {
-      return "N/A";
-    } else {
-      return sum;
-    }
-  });
-
-  // adds up the footer row for the grey box total on bottom right of table
-  const footRowTotal = () => {
-    let sum = 0;
-    columnTotal.forEach((item: any) => {
-      sum += convertToNum(item);
-    });
-
-    if (columnTotal.includes("N/A" || "Not Answered")) {
-      return `${sum}*`;
-    } else {
-      return sum === 0 ? "-" : sum;
-    }
-  };
-
-  /* layout of the table body rows  */
-  /* sums up body rows */
-  /* updates empty cells to "Not Answered"  */
-  const createBodyRows = () => {
-    let bodyRows = [];
-
-    // get quarterValueArray.length because arrays are all the same length
-    for (let item = 0; item < quarterValueArray[0].length; item++) {
-      let row: string[] = [];
-      // sum to be added up for each quarter row
+    // adds up the footer row for the grey box total on bottom right of table
+    const footRowTotal = () => {
       let sum = 0;
-      row.push(quarterLabels[item]);
-
-      // Add Not Answer if cell is empty string,
-      quarterValueArray.forEach((array: any[]) => {
-        if (array[item] === "") {
-          array[item] = "Not Answered";
-        }
-
-        sum += convertToNum(array[item]);
-
-        row.push(array[item].toString());
-        return sum;
+      columnTotal.forEach((item: any) => {
+        sum += convertToNum(item);
       });
 
-      row.push(sum.toString());
+      if (columnTotal.includes("N/A" || "Not Answered")) {
+        return `${sum}*`;
+      } else {
+        return sum === 0 ? "-" : sum;
+      }
+    };
 
-      // add asteriks to unfinished row totals
-      markUnfinishedRows(row);
-      bodyRows.push(row);
-    }
-    return bodyRows;
+    return ["Total by Pop.", ...columnTotal, footRowTotal()];
   };
 
   const markUnfinishedRows = (row: string[]) => {
-    if (row.includes("N/A" || "Not Answered")) {
+    if (row.includes("N/A") || row.includes("Not Answered")) {
       return (row[row.length - 1] = `${row[row.length - 1]}*`);
     }
     return;
   };
 
-  const tableContent = {
-    caption: "Transition Benchmark Totals Table",
-    headRow: ["Pop. by Quarter", ...getTableHeaders, "Total by Quarter"],
-    bodyRows: [...createBodyRows()],
-    footRow: ["Total by Pop.", ...columnTotal, footRowTotal()],
+  const generateMainTable = () => {
+    // create new quarter value array
+    let newQuarterValueArray = new Array(...quarterValueArray);
+    let tableHeadersArray = new Array(...getTableHeaders());
+    {
+      overflow === true ? tableHeadersArray.pop() : null;
+    }
+    const formatBodyRow = () => {
+      let bodyRows = [];
+
+      // get mainQuarterValueArray.length because arrays are all the same length
+      for (let item = 0; item < newQuarterValueArray[0].length; item++) {
+        let row: string[] = [];
+        // sum to be added up for each quarter row
+        let sum = 0;
+        row.push(quarterLabels[item]);
+
+        // Add Not Answer if cell is empty string,
+        newQuarterValueArray.forEach((array: any[]) => {
+          if (!array[item] && array[item] === "") {
+            array[item] = "Not Answered";
+          }
+
+          sum += convertToNum(array[item]);
+          row.push(array[item].toString());
+          return sum;
+        });
+
+        {
+          overflow === false ? row.push(sum.toString()) : null;
+        }
+        {
+          overflow === false ? markUnfinishedRows(row) : null;
+        }
+        bodyRows.push(row);
+      }
+      return bodyRows;
+    };
+
+    const table = {
+      caption: "Transition Benchmark Totals Table",
+      headRow: [...tableHeadersArray],
+      bodyRows: [...formatBodyRow()],
+      footRow: [...generateFootRow()],
+    };
+
+    return table;
   };
+
+  const generateOverflowTable = () => {
+    // create new quarter value array
+    let newQuarterValueArray = new Array(...quarterValueArray);
+
+    let overflowQuarterValueArray = newQuarterValueArray.filter(
+      (arr: string[]) => newQuarterValueArray.indexOf(arr) > 5
+    );
+    let tableHeadersArray = new Array(...getTableHeaders());
+
+    const formatBodyRow = () => {
+      let bodyRows = [];
+
+      // get quarterValueArray.length because arrays are all the same length
+      for (let item = 0; item < overflowQuarterValueArray[0].length; item++) {
+        let row: string[] = [];
+        // sum to be added up for each quarter row
+        let sum = 0;
+        row.push(quarterLabels[item]);
+        // Add Not Answer if cell is empty string,
+        overflowQuarterValueArray.forEach((array: any[]) => {
+          if (!array[item] && array[item] === "") {
+            array[item] = "Not Answered";
+          }
+          row.push(array[item].toString());
+        });
+
+        quarterValueArray.forEach((array: any[]) => {
+          sum += convertToNum(array[item]);
+        });
+
+        row.push(sum.toString());
+        // add asteriks to unfinished row totals
+        markUnfinishedRows(row);
+        bodyRows.push(row);
+      }
+      return bodyRows;
+    };
+
+    const formatOverflowTableHeaders = () => {
+      let overflowTableHeadersArray: string[] = [];
+      overflowTableHeadersArray.push(tableHeadersArray[0]);
+      tableHeadersArray.find((arr: any) => {
+        if (tableHeadersArray.indexOf(arr) > 6) {
+          overflowTableHeadersArray.push(arr);
+        }
+      });
+      return overflowTableHeadersArray;
+    };
+
+    const formatFootRow = () => {
+      const newFootRowArray = new Array(...generateFootRow());
+      const mainFootRow = newFootRowArray.filter((item, index) => index >= 7);
+      return ["Total by Pop.", ...mainFootRow];
+    };
+
+    const overflowTable = {
+      caption: "Transition Benchmark Totals Table - Continued",
+      headRow: [...formatOverflowTableHeaders()],
+      bodyRows: [...formatBodyRow()],
+      footRow: [...formatFootRow()],
+    };
+
+    return overflowTable;
+  };
+
+  useEffect(() => {
+    if (quarterValueArray && quarterValueArray.length > 6) {
+      setOverflow(true);
+    } else {
+      setOverflow(false);
+    }
+  }, []);
 
   return (
     <Box
@@ -151,9 +246,11 @@ export const ExportedModalDrawerReportSection = ({
         {verbiage.pdfDashboardTitle}
       </Heading>
       <small>{"*asterisk denotes sum of incomplete fields"}</small>
-      <Box>
-        <Table sx={sx.table} content={tableContent}></Table>
-        {}
+      <Box sx={overflow ? sx.overflowStyles : {}}>
+        <Table sx={sx.table} content={generateMainTable()}></Table>
+        {overflow && (
+          <Table sx={sx.table} content={generateOverflowTable()}></Table>
+        )}
       </Box>
     </Box>
   );
@@ -186,6 +283,7 @@ const sx = {
     marginTop: "1.25rem",
     borderLeft: "1px solid",
     tableLayout: "fixed",
+    marginBottom: "2.25rem",
     br: {
       marginBottom: "0.25rem",
     },
@@ -231,6 +329,12 @@ const sx = {
     "tfoot th:last-child": {
       background: "palette.gray_medium",
       color: "palette.white",
+    },
+  },
+  overflowStyles: {
+    "table:first-child tbody tr td:last-child": {
+      background: "white",
+      fontWeight: "normal",
     },
   },
   border: {
