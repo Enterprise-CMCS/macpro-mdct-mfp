@@ -174,6 +174,7 @@ export const OverlayModalPage = ({
             isOpen: deleteEntityModalIsOpen,
             onClose: closeDeleteEntityModal,
           }}
+          userDisabled={userDisabled}
         />
       </Box>
       <Box>
