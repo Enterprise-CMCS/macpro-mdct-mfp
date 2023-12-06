@@ -41,6 +41,7 @@ export const Form = ({
   autosave,
   dontReset,
   children,
+  userDisabled,
   ...props
 }: Props) => {
   const { fields, options } = formJson;
@@ -56,7 +57,8 @@ export const Form = ({
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
     (report?.status === ReportStatus.SUBMITTED &&
       report?.reportType === ReportType.WP) ||
-    report?.status === ReportStatus.APPROVED;
+    report?.status === ReportStatus.APPROVED ||
+    userDisabled;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
@@ -138,6 +140,7 @@ interface Props {
   formData?: AnyObject;
   autosave?: boolean;
   children?: ReactNode;
+  userDisabled?: boolean;
   onFormChange?: Function;
   [key: string]: any;
 }

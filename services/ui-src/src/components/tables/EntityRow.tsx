@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
-import { EntityStatusIcon, Table } from "components";
+import { EntityStatusIcon, Table, EntityStatuses } from "components";
 // types
 import {
   AnyObject,
@@ -10,6 +10,7 @@ import {
   ReportShape,
   OverlayModalTypes,
   ReportStatus,
+  EntityDetailsOverlayTypes,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -31,22 +32,40 @@ export const EntityRow = ({
   openAddEditEntityModal,
   openDeleteEntityModal,
   openOverlayOrDrawer,
-  stepType,
 }: Props) => {
   const { userIsEndUser } = useStore().user ?? {};
   const { report } = useStore();
 
   // check for "other" target population entities
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
+  const stepType = (formEntity as AnyObject)?.stepType;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
       case OverlayModalTypes.INITIATIVE:
         //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
-        if (formEntity) {
+        if (
+          formEntity &&
+          stepType !== EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
+        ) {
           return getInitiativeDashboardStatus(formEntity, entity);
+        } else if (
+          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
+        ) {
+          if (isInitiativeClosed) {
+            return EntityStatuses.CLOSE;
+          } else {
+            const isCloseOutEnabled = getInitiativeStatus(report!, entity, [
+              stepType,
+            ]);
+            return isCloseOutEnabled && isCopied
+              ? EntityStatuses.NO_STATUS
+              : EntityStatuses.DISABLED;
+          }
         } else {
-          return getInitiativeStatus(report!, entity);
+          return getInitiativeStatus(report!, entity, [
+            EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
+          ]);
         }
       default: {
         return report ? !!getEntityStatus(report, entity, entityType) : false;
@@ -55,6 +74,11 @@ export const EntityRow = ({
   };
 
   let entityStatus = useMemo(() => {
+    if (OverlayModalTypes.INITIATIVE && formEntity && isInitiativeClosed) {
+      return stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
+        ? EntityStatuses.CLOSE
+        : EntityStatuses.NO_STATUS;
+    }
     return setStatusByType(entityType!);
   }, [report, entity]);
 
@@ -77,6 +101,17 @@ export const EntityRow = ({
     });
   }
 
+  const appendToEntityName = () => {
+    switch (entityType) {
+      case ModalDrawerEntityTypes.TARGET_POPULATIONS:
+        return !isRequired && `Other: `;
+      case OverlayModalTypes.INITIATIVE:
+        return isInitiativeClosed && !formEntity && "[Closed] ";
+      default:
+        return "";
+    }
+  };
+
   return (
     <Tr sx={sx.content}>
       <Td>
@@ -86,9 +121,7 @@ export const EntityRow = ({
         <ul>
           {programInfo.map((field, index) => (
             <li key={index}>
-              {!isRequired &&
-                entityType === ModalDrawerEntityTypes.TARGET_POPULATIONS &&
-                `Other: `}
+              {index === 0 && appendToEntityName()}
               {field}
             </li>
           ))}
@@ -99,16 +132,20 @@ export const EntityRow = ({
               `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
           </Text>
         )}
-        {isInitiativeClosed && stepType && stepType === "closeOutInformation" && (
-          <Table
-            content={{
-              headRow: ["Actual end date", "Closed by"],
-              bodyRows: [[entity.closeOutInformation_actualEndDate, closedBy]],
-            }}
-            variant="none"
-            sxOverride={sx.table}
-          ></Table>
-        )}
+        {isInitiativeClosed &&
+          stepType &&
+          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION && (
+            <Table
+              content={{
+                headRow: ["Actual end date", "Closed by"],
+                bodyRows: [
+                  [entity.closeOutInformation_actualEndDate, closedBy],
+                ],
+              }}
+              variant="none"
+              sxOverride={sx.table}
+            ></Table>
+          )}
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
@@ -119,7 +156,8 @@ export const EntityRow = ({
               onClick={() => openAddEditEntityModal(entity)}
             >
               {report?.status === ReportStatus.SUBMITTED ||
-              report?.status === ReportStatus.APPROVED
+              report?.status === ReportStatus.APPROVED ||
+              isInitiativeClosed
                 ? verbiage.readOnlyEntityButtonText
                 : verbiage.editEntityButtonText}
             </Button>
@@ -132,10 +170,11 @@ export const EntityRow = ({
             }
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
-            disabled={entityStatus === "disabled"}
+            disabled={entityStatus === EntityStatuses.DISABLED}
           >
             {report?.status === ReportStatus.SUBMITTED ||
-            report?.status === ReportStatus.APPROVED
+            report?.status === ReportStatus.APPROVED ||
+            isInitiativeClosed
               ? verbiage.readOnlyEntityDetailsButtonText
               : verbiage.enterEntityDetailsButtonText}
           </Button>
@@ -164,7 +203,6 @@ interface Props {
   openDeleteEntityModal: Function;
   openOverlayOrDrawer: Function;
   [key: string]: any;
-  stepType?: string;
 }
 
 const sx = {
