@@ -9,7 +9,6 @@ import {
   ModalDrawerEntityTypes,
   ReportShape,
   OverlayModalTypes,
-  ReportStatus,
   EntityDetailsOverlayTypes,
 } from "types";
 // utils
@@ -32,7 +31,6 @@ export const EntityRow = ({
   openDeleteEntityModal,
   openOverlayOrDrawer,
 }: Props) => {
-  const { userIsEndUser } = useStore().user ?? {};
   const { report, editable } = useStore();
 
   // check for "other" target population entities
