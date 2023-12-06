@@ -366,7 +366,7 @@ const sx = {
       borderBottom: "1px solid black",
     },
     "tfoot th:last-child": {
-      background: "palette.gray_dark",
+      background: "palette.gray_medium",
       color: "palette.white",
     },
   },
