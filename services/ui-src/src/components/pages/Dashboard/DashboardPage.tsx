@@ -230,17 +230,20 @@ export const DashboardPage = ({ reportType }: Props) => {
         if (!previousReport) {
           return false;
         } else {
-          const currentDate = new Date();
-          const period = currentDate.getMonth() + 1 > 6 ? 2 : 1;
-          const year = currentDate.getFullYear();
-          const isNextPeriod =
-            year > previousReport.reportYear ||
-            (year === previousReport.reportYear &&
-              period > previousReport.reportPeriod);
+          /** turning this off atm for testing copy over
+           * const currentDate = new Date();
+           * const period = currentDate.getMonth() + 1 > 6 ? 2 : 1;
+           * const year = currentDate.getFullYear();
+           * const isNextPeriod =
+           *  year > previousReport.reportYear ||
+           *  (year === previousReport.reportYear &&
+           *  period > previousReport.reportPeriod);
+           *  return (
+           *    previousReport.status !== ReportStatus.APPROVED || !isNextPeriod
+           *  );
+           **/
 
-          return (
-            previousReport.status !== ReportStatus.APPROVED || !isNextPeriod
-          );
+          return previousReport.status !== ReportStatus.APPROVED;
         }
       default:
         return true;

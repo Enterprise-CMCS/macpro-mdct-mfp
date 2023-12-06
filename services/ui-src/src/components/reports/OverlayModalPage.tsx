@@ -16,6 +16,7 @@ import {
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
+import addIconGray from "assets/icons/icon_add_gray.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
@@ -33,6 +34,7 @@ export const OverlayModalPage = ({
   >(undefined);
 
   const entityType = selectedEntity!.type;
+  const userDisabled = selectedEntity?.isInitiativeClosed;
 
   /**
    * Any time the report is updated on this page,
@@ -83,9 +85,11 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
-    setSelectedStepEntity(entity);
-    resetClearProp(modalForm.fields);
-    deleteEntityModalOnOpenHandler();
+    if (!userDisabled) {
+      setSelectedStepEntity(entity);
+      resetClearProp(modalForm.fields);
+      deleteEntityModalOnOpenHandler();
+    }
   };
 
   const closeDeleteEntityModal = () => {
@@ -118,7 +122,14 @@ export const OverlayModalPage = ({
         <Button
           sx={sx.addEntityButton}
           onClick={addEditEntityModalOnOpenHandler}
-          leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+          leftIcon={
+            <Image
+              sx={sx.buttonIcons}
+              src={userDisabled ? addIconGray : addIcon}
+              alt="Add"
+            />
+          }
+          disabled={userDisabled}
         >
           {verbiage.addEntityButtonText}
         </Button>
@@ -135,6 +146,7 @@ export const OverlayModalPage = ({
                 formattedEntityData={getFormattedEntityData(stepType, entity)}
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
+                disabled={userDisabled}
               />
             )
           )}
@@ -157,6 +169,7 @@ export const OverlayModalPage = ({
           entityIdLookup={entityIdLookup}
           verbiage={verbiage}
           form={modalForm}
+          userDisabled={userDisabled}
           modalDisclosure={{
             isOpen: addEditEntityModalIsOpen,
             onClose: closeAddEditEntityModal,
@@ -181,7 +194,7 @@ export const OverlayModalPage = ({
             sx={sx.saveButton}
             onClick={closeEntityDetailsOverlay as MouseEventHandler}
           >
-            Save & return
+            {!userDisabled ? "Save & return" : "Return"}
           </Button>
         </Flex>
       </Box>
