@@ -125,7 +125,11 @@ export const ExportedModalDrawerReportSection = ({
         return sum === 0 ? "-" : commaMasking(sum.toString());
       }
     };
-    return ["Total by Pop.", ...columnTotal, footRowTotal()];
+
+    const commaMaskColumTotal = columnTotal.map((item: string) =>
+      commaMasking(item)
+    );
+    return ["Total by Pop.", ...commaMaskColumTotal, footRowTotal()];
   };
 
   const markUnfinishedRows = (row: string[]) => {
