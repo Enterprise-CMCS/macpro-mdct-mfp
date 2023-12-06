@@ -65,6 +65,24 @@ export const ExportedModalDrawerReportSection = ({
         quarterArray.push(entity[key]);
       }
     }
+
+    if (quarterArray.length === 0) {
+      let seedData = [
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+      ];
+      quarterArray.push(...seedData);
+    }
     return quarterArray;
   });
 
@@ -121,18 +139,31 @@ export const ExportedModalDrawerReportSection = ({
     {
       overflow === true ? tableHeadersArray.pop() : null;
     }
+
+    const overflowHeaderRows = tableHeadersArray.filter((arr: any[]) => {
+      return tableHeadersArray.indexOf(arr) <= 6 && arr;
+    });
+
+    const headerArray = overflow ? overflowHeaderRows : tableHeadersArray;
+
     const formatBodyRow = () => {
-      let bodyRows = [];
+      let bodyRows: any[] = [];
+
+      const overflowBodyRows = newQuarterValueArray.filter((arr: any[]) => {
+        return newQuarterValueArray.indexOf(arr) <= 5 && arr;
+      });
+
+      const valueArray = overflow ? overflowBodyRows : newQuarterValueArray;
 
       // get mainQuarterValueArray.length because arrays are all the same length
-      for (let item = 0; item < newQuarterValueArray[0].length; item++) {
+      for (let item = 0; item < valueArray[0].length; item++) {
         let row: string[] = [];
         // sum to be added up for each quarter row
         let sum = 0;
         row.push(quarterLabels[item]);
 
         // Add Not Answer if cell is empty string,
-        newQuarterValueArray.forEach((array: any[]) => {
+        valueArray.forEach((array: any[]) => {
           if (!array[item] && array[item] === "") {
             array[item] = "Not Answered";
           }
@@ -150,14 +181,21 @@ export const ExportedModalDrawerReportSection = ({
         }
         bodyRows.push(row);
       }
+
       return bodyRows;
     };
 
+    const updateFooterRow = overflow
+      ? generateFootRow().filter(
+          (arr: any) => generateFootRow().indexOf(arr) <= 5
+        )
+      : generateFootRow();
+
     const table = {
       caption: "Transition Benchmark Totals Table",
-      headRow: [...tableHeadersArray],
+      headRow: [...headerArray],
       bodyRows: [...formatBodyRow()],
-      footRow: [...generateFootRow()],
+      footRow: [...updateFooterRow],
     };
 
     return table;
