@@ -3,7 +3,7 @@ import { Box, Heading } from "@chakra-ui/react";
 import { Table } from "components";
 // utils
 import { useEffect, useState } from "react";
-import { useStore } from "utils";
+import { useStore, convertToThousandsSeparatedString } from "utils";
 import { ModalDrawerReportPageShape, AnyObject } from "types";
 import _ from "lodash";
 
@@ -114,19 +114,17 @@ export const ExportedModalDrawerReportSection = ({
       columnTotal.forEach((item: any) => {
         sum += convertToNum(item);
       });
-
       if (
         columnTotal.includes("N/A") ||
         columnTotal.includes("Not Answered") ||
         columnTotal.includes("-") ||
         columnTotal.includes("Data not available")
       ) {
-        return `${sum}*`;
+        return `${commaMasking(sum.toString())}*`;
       } else {
-        return sum === 0 ? "-" : sum;
+        return sum === 0 ? "-" : commaMasking(sum.toString());
       }
     };
-
     return ["Total by Pop.", ...columnTotal, footRowTotal()];
   };
 
@@ -142,6 +140,10 @@ export const ExportedModalDrawerReportSection = ({
       return (row[row.length - 1] = `${row[row.length - 1]}*`);
     }
     return;
+  };
+
+  const commaMasking = (item: string) => {
+    return convertToThousandsSeparatedString(item).maskedValue;
   };
 
   const generateMainTable = () => {
@@ -181,12 +183,12 @@ export const ExportedModalDrawerReportSection = ({
           }
 
           sum += convertToNum(array[item]);
-          row.push(array[item].toString());
+          row.push(commaMasking(array[item]));
           return sum;
         });
 
         {
-          overflow === false ? row.push(sum.toString()) : null;
+          overflow === false ? row.push(commaMasking(sum.toString())) : null;
         }
         {
           overflow === false ? markUnfinishedRows(row) : null;
@@ -199,7 +201,7 @@ export const ExportedModalDrawerReportSection = ({
 
     const updateFooterRow = overflow
       ? generateFootRow().filter(
-          (arr: any) => generateFootRow().indexOf(arr) <= 5
+          (arr: any) => generateFootRow().indexOf(arr) <= 6
         )
       : generateFootRow();
 
@@ -236,14 +238,14 @@ export const ExportedModalDrawerReportSection = ({
           if (!array[item] && array[item] === "") {
             array[item] = "Not Answered";
           }
-          row.push(array[item].toString());
+          row.push(commaMasking(array[item]));
         });
 
         quarterValueArray.forEach((array: any[]) => {
           sum += convertToNum(array[item]);
         });
 
-        row.push(sum.toString());
+        row.push(commaMasking(sum.toString()));
         // add asteriks to unfinished row totals
         markUnfinishedRows(row);
         bodyRows.push(row);
