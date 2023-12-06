@@ -22,33 +22,16 @@ export const ExportedModalDrawerReportSection = ({
   const getTableHeaders = () => {
     let headers = [];
     const quarterHeader = "Pop. by Quarter";
-    const bodyHeader = entities.map((entity: AnyObject) =>
-      entity.transitionBenchmarks_targetPopulationName_short
-        ? entity.transitionBenchmarks_targetPopulationName_short
-        : truncateHeader(entity.transitionBenchmarks_targetPopulationName)
+    const bodyHeader = entities.map(
+      (entity: AnyObject) =>
+        entity.transitionBenchmarks_targetPopulationName_short ??
+        truncateHeader(entity.transitionBenchmarks_targetPopulationName)
     );
     const totalHeader = "Total by Quarter";
 
     headers.push(quarterHeader, ...bodyHeader, totalHeader);
     return headers;
   };
-
-  // list of quarters to be added to the table (left column)
-  const quarterLabels = [
-    "2023 Q3",
-    "2023 Q4",
-    "2024 Q1",
-    "2024 Q2",
-    "2024 Q3",
-    "2024 Q4",
-    "2025 Q1",
-    "2025 Q2",
-    "2025 Q3",
-    "2025 Q4",
-    "2026 Q1",
-    "2026 Q2",
-    "2026 Q3",
-  ];
 
   // utility to convert array strings to num for calculating totals
   const convertToNum = (item: any) => {
@@ -86,13 +69,31 @@ export const ExportedModalDrawerReportSection = ({
     return quarterArray;
   });
 
+  // list of quarters to be added to the table (left column)
+  const extractQuarterLabels = () => {
+    const newEntities = new Array(...entities);
+    let quarterLabelArray: any = [];
+    newEntities.map((entity: AnyObject) => {
+      for (const key in entity) {
+        // push key values into quarterArray that are quarters
+
+        if (key.includes("quarterly")) {
+          const id = key.replace("quarterlyProjections", "").split("Q");
+          quarterLabelArray.push(`${id[0]} Q${id[1]}`);
+        }
+      }
+    });
+    return quarterLabelArray;
+  };
+  const quarterLabels = [...extractQuarterLabels()];
+
   const generateFootRow = () => {
     // creates an array that totals up each each quarter column
     const columnTotal = quarterValueArray.map((column: string[]) => {
       let sum = 0;
       let isNACol = [];
       column.forEach((item: any) => {
-        if (item === "N/A") {
+        if (item === "N/A" || item === "Data not available") {
           isNACol.push(item);
         } else {
           sum += convertToNum(item)!;
@@ -365,7 +366,7 @@ const sx = {
       borderBottom: "1px solid black",
     },
     "tfoot th:last-child": {
-      background: "palette.gray_medium",
+      background: "palette.gray_dark",
       color: "palette.white",
     },
   },
