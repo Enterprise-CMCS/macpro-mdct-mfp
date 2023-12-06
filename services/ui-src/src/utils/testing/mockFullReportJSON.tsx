@@ -734,7 +734,7 @@ export const mockFullReportJSON: ReportJson = {
                     },
                     {
                       id: "8CpFrev6sMfRijIhafMj7V",
-                      label: "Self-directiom",
+                      label: "Self-direction",
                     },
                     {
                       id: "tVURShWTPfVKGU94QmIwDn",
