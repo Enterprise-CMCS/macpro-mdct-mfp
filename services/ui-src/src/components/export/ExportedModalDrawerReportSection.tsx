@@ -91,7 +91,7 @@ export const ExportedModalDrawerReportSection = ({
     // creates an array that totals up each each quarter column
     const columnTotal = quarterValueArray.map((column: string[]) => {
       let sum = 0;
-      let isNACol = [];
+      let isNACol: any = [];
       column.forEach((item: any) => {
         if (item === "N/A" || item === "Data not available") {
           isNACol.push(item);
@@ -99,7 +99,6 @@ export const ExportedModalDrawerReportSection = ({
           sum += convertToNum(item)!;
         }
       });
-
       if (sum === 0 && isNACol.length !== 12) {
         return "-";
       } else if (isNACol.length === 12) {
@@ -116,7 +115,12 @@ export const ExportedModalDrawerReportSection = ({
         sum += convertToNum(item);
       });
 
-      if (columnTotal.includes("N/A" || "Not Answered")) {
+      if (
+        columnTotal.includes("N/A") ||
+        columnTotal.includes("Not Answered") ||
+        columnTotal.includes("-") ||
+        columnTotal.includes("Data not available")
+      ) {
         return `${sum}*`;
       } else {
         return sum === 0 ? "-" : sum;
@@ -127,7 +131,14 @@ export const ExportedModalDrawerReportSection = ({
   };
 
   const markUnfinishedRows = (row: string[]) => {
-    if (row.includes("N/A") || row.includes("Not Answered")) {
+    if (
+      row.includes("N/A") ||
+      row.includes(
+        "Not Answered" ||
+          row.includes("-") ||
+          row.includes("Data not available")
+      )
+    ) {
       return (row[row.length - 1] = `${row[row.length - 1]}*`);
     }
     return;
