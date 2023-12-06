@@ -370,6 +370,10 @@ const sx = {
     },
   },
   overflowStyles: {
+    "table:first-child tfoot th:last-child": {
+      background: "palette.secondary_lightest",
+      color: "black",
+    },
     "table:first-child tbody tr td:last-child": {
       background: "white",
       fontWeight: "normal",
