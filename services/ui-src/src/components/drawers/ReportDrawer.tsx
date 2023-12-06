@@ -28,8 +28,8 @@ export const ReportDrawer = ({
 }: Props) => {
   // determine if fields should be disabled (based on admin and read-only roles)
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
-  const buttonText =
-    userIsAdmin || userIsReadOnly ? closeText : saveAndCloseText;
+  const { editable } = useStore();
+  const buttonText = !editable ? closeText : saveAndCloseText;
   const formFieldsExist = form.fields.length;
   return (
     <Drawer

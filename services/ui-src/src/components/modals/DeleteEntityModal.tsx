@@ -14,7 +14,7 @@ export const DeleteEntityModal = ({
   verbiage,
   modalDisclosure,
 }: Props) => {
-  const { report } = useStore();
+  const { report, editable } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [deleting, setDeleting] = useState<boolean>(false);
@@ -97,6 +97,7 @@ export const DeleteEntityModal = ({
         actionButtonText: verbiage.deleteModalConfirmButtonText,
         closeButtonText: "Cancel",
       }}
+      submitButtonDisabled={!editable}
     >
       <Text>{verbiage.deleteModalWarning}</Text>
     </Modal>

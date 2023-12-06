@@ -62,12 +62,17 @@ export const DashboardPage = ({ reportType }: Props) => {
     releaseReport,
     fetchReport,
   } = useContext(ReportContext);
-  const { reportsByState, workPlanToCopyFrom, clearSelectedEntity } =
-    useStore();
+  const {
+    reportsByState,
+    workPlanToCopyFrom,
+    clearSelectedEntity,
+    setEditable,
+  } = useStore();
   const navigate = useNavigate();
   const {
     state: userState,
     userIsEndUser,
+    userIsReadOnly,
     userIsAdmin,
   } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
@@ -145,6 +150,15 @@ export const DashboardPage = ({ reportType }: Props) => {
     setEntering(false);
     const firstReportPagePath =
       selectedReport?.formTemplate.flatRoutes![0].path;
+
+    //set if form can be edit or only viewed
+    const editable =
+      !userIsAdmin &&
+      !userIsReadOnly &&
+      selectedReport.status !== ReportStatus.APPROVED &&
+      selectedReport.status !== ReportStatus.SUBMITTED;
+
+    setEditable(editable);
     navigate(firstReportPagePath);
   };
 

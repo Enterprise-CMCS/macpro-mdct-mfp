@@ -157,7 +157,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
             )}
             <Button
               sx={sx.addEntityButton}
-              disabled={isLocked}
               onClick={() => openAddEditEntityModal()}
               rightIcon={<Image src={addIcon} alt="Previous" sx={sx.addIcon} />}
             >

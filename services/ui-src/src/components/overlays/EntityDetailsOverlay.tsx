@@ -45,7 +45,7 @@ export const EntityDetailsOverlay = ({
 }: Props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { entityType, form, verbiage } = route;
-  const { report, selectedEntity, setSelectedEntity, autosaveState } =
+  const { report, selectedEntity, setSelectedEntity, autosaveState, editable } =
     useStore();
   const [disableCloseOut, setDisableCloseOut] = useState<boolean>();
 
@@ -282,7 +282,7 @@ export const EntityDetailsOverlay = ({
           <Button type="submit" form={form.id} sx={sx.saveButton}>
             {submitting ? (
               <Spinner size="md" />
-            ) : !selectedEntity?.isInitiativeClosed ? (
+            ) : editable && !selectedEntity?.isInitiativeClosed ? (
               "Save & return"
             ) : (
               "Return"

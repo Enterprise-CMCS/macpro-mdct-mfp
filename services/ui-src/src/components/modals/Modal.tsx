@@ -72,6 +72,7 @@ export const Modal = ({
                 sx={sx.action}
                 onClick={() => onConfirmHandler()}
                 data-testid="modal-submit-button"
+                disabled={submitButtonDisabled}
               >
                 {submitting ? <Spinner size="md" /> : content.actionButtonText}
               </Button>
