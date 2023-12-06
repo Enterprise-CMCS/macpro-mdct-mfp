@@ -207,7 +207,7 @@ export const AddEditReportModal = ({
         <>
           <Button
             sx={sx.copyBtn}
-            disabled={isCopyDisabled()}
+            disabled={isCopyDisabled() || submitting}
             onClick={writeReport}
             type="submit"
           >
@@ -217,6 +217,7 @@ export const AddEditReportModal = ({
             <Button
               sx={sx.close}
               onClick={writeReport}
+              disabled={submitting}
               type="submit"
               variant="outline"
               data-testid="modal-logout-button"
@@ -227,6 +228,7 @@ export const AddEditReportModal = ({
             <Button
               sx={sx.resetBtn}
               onClick={resetReport}
+              disabled={submitting}
               type="submit"
               variant="outline"
               data-testid="modal-logout-button"
