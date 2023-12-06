@@ -183,7 +183,7 @@ export const AddEditOverlayEntityModal = ({
         actionButtonText: submitting ? (
           <Spinner size="md" />
         ) : !userDisabled ? (
-          "Save & close"
+          "Save"
         ) : (
           "Close"
         ),

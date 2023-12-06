@@ -16,7 +16,7 @@ const theme = extendTheme({
   sizes: {
     appMax: "100vw",
     basicPageWidth: "46rem",
-    reportPageWidth: "40rem",
+    reportPageWidth: "46rem",
     // font sizes: https://design.cms.gov/utilities/font-size/
     xs: "0.75rem", // 12px
     sm: "0.875rem", // 14px
@@ -102,7 +102,7 @@ const theme = extendTheme({
       muted: "#e9ecf1",
       // custom
       gray_lightest_highlight: "#f8f8f8",
-      gray_medium: "#71767a",
+      gray_medium: "#7a767a",
       gray_medium_dark: "#5B616B",
       spreadsheet: "#1d6f42",
       spreadsheet_dark: "#174320",
@@ -153,6 +153,10 @@ const theme = extendTheme({
           border: "1px solid",
           borderColor: "palette.primary",
           textDecoration: "none",
+          "&:disabled, &:disabled:hover": {
+            color: "palette.gray",
+            borderColor: "palette.gray",
+          },
           _hover: {
             ...theme.components.Button.variants.transparent._hover,
             borderColor: "palette.primary_darker",
