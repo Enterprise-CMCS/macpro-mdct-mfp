@@ -17,6 +17,7 @@ import {
   hydrateFormFields,
   mapValidationTypesToSchema,
   sortFormErrors,
+  updateRenderFields,
   useStore,
 } from "utils";
 import {
@@ -27,7 +28,6 @@ import {
   FormLayoutElement,
   ReportStatus,
   ReportType,
-  EntityShape,
 } from "types";
 
 export const Form = ({
@@ -51,33 +51,6 @@ export const Form = ({
   const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
 
   const { report } = useStore();
-
-  const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
-    const formatChoiceList = updatedTargetPopulationChoices?.map(
-      (field: EntityShape) => {
-        return {
-          checked: false,
-          id: field.id,
-          label: field.isRequired
-            ? field.transitionBenchmarks_targetPopulationName
-            : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
-          name: field.transitionBenchmarks_targetPopulationName,
-          value: field.transitionBenchmarks_targetPopulationName,
-        };
-      }
-    );
-
-    const updateTargetPopulationChoiceList = fields.map((field) => {
-      return field.id.match("targetPopulations")
-        ? {
-            ...field,
-            props: { ...field?.props, choices: [...formatChoiceList] },
-          }
-        : { ...field };
-    });
-    return updateTargetPopulationChoiceList;
-  };
 
   const fieldInputDisabled =
     ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
@@ -117,7 +90,7 @@ export const Form = ({
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
-      updateRenderFields(fields),
+      updateRenderFields(report!, fields),
       formData
     );
     return formFieldFactory(fieldsToRender, {

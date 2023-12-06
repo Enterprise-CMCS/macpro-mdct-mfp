@@ -14,14 +14,11 @@ const error = {
   INVALID_URL: "Response must be a valid hyperlink/URL",
   INVALID_DATE: "Response must be a valid date",
   INVALID_END_DATE: "End date can't be before start date",
-  NUMBER_LESS_THAN_ONE: "Response must be greater than or equal to one",
   NUMBER_LESS_THAN_ZERO: "Response must be greater than or equal to zero",
   INVALID_NUMBER: "Response must be a valid number",
   INVALID_NUMBER_OR_NA: 'Response must be a valid number or "N/A"',
   INVALID_RATIO: "Response must be a valid ratio",
 };
-
-const isWhitespaceString = (value?: string) => value?.trim().length === 0;
 
 // TEXT
 export const text = (): StringSchema => string();
@@ -40,67 +37,28 @@ const valueCleaningNumberSchema = (value: string, charsToReplace: RegExp) => {
 const validNumberRegex = /^\.$|[0-9]/;
 
 // NUMBER - Number or Valid Strings
-
 export const number = () =>
-  string().test({
-    message: error.INVALID_NUMBER_OR_NA,
-    test: (value) => {
-      if (value) {
-        const isValidStringValue = validNAValues.includes(value);
-        const isValidNumberValue = validNumberRegex.test(value);
-        return isValidStringValue || isValidNumberValue;
-      } else return true;
-    },
-  });
-
-// NUMBER NOT LESS THAN ONE
-export const numberNotLessThanOne = () =>
   string()
-    .required(error.REQUIRED_GENERIC)
     .test({
-      test: (value) => validNumberRegex.test(value!),
-      message: error.INVALID_NUMBER,
+      message: error.INVALID_NUMBER_OR_NA,
+      test: (value) => {
+        if (value) {
+          const isValidStringValue = validNAValues.includes(value);
+          const isValidNumberValue = validNumberRegex.test(value);
+          return isValidStringValue || isValidNumberValue;
+        } else return true;
+      },
     })
     .test({
-      test: (value) => parseInt(value!) >= 1,
-      message: error.NUMBER_LESS_THAN_ONE,
-    });
-
-// NUMBER NOT LESS THAN ZERO
-export const numberNotLessThanZero = () =>
-  string()
-    .required(error.REQUIRED_GENERIC)
-    .test({
-      test: (value) => validNumberRegex.test(value!),
-      message: error.INVALID_NUMBER,
-    })
-    .test({
-      test: (value) => parseFloat(value!) >= 0,
+      test: (value) => {
+        if (validNumberRegex.test(value!)) {
+          return parseFloat(value!) >= 0;
+        } else return true;
+      },
       message: error.NUMBER_LESS_THAN_ZERO,
     });
 
 export const numberOptional = () => number();
-
-const validNumberSchema = () =>
-  string().test({
-    message: error.INVALID_NUMBER,
-    test: (value) => {
-      return typeof value !== "undefined"
-        ? validNumberRegex.test(value)
-        : false;
-    },
-  });
-
-export const validNumber = () =>
-  validNumberSchema()
-    .required(error.REQUIRED_GENERIC)
-    .test({
-      test: (value) => !isWhitespaceString(value),
-      message: error.REQUIRED_GENERIC,
-    });
-
-export const validNumberOptional = () =>
-  validNumberSchema().notRequired().nullable();
 
 // Number - Ratio
 export const ratio = () =>
@@ -155,17 +113,19 @@ export const date = () =>
   });
 
 export const dateOptional = () => date();
+
 export const endDate = (startDateField: string) =>
-  date().test(
-    "is-after-start-date",
-    error.INVALID_END_DATE,
-    (endDateString, context) => {
-      return isEndDateAfterStartDate(
-        context.parent[startDateField],
-        endDateString as string
-      );
-    }
-  );
+  date()
+    .typeError(error.INVALID_DATE)
+    .test({
+      message: error.INVALID_END_DATE,
+      test: (endDateString, context) => {
+        return isEndDateAfterStartDate(
+          context.parent[startDateField],
+          endDateString as string
+        );
+      },
+    });
 
 export const isEndDateAfterStartDate = (
   startDateString: string,
@@ -241,7 +201,6 @@ export const schemaMap: any = {
   email: email(),
   emailOptional: emailOptional(),
   number: number(),
-  numberNotLessThanOne: numberNotLessThanOne(),
   numberOptional: numberOptional(),
   objectArray: objectArray(),
   radio: radio(),

@@ -18,6 +18,7 @@ import { MfpReportState, MfpUserState, entityTypes } from "../../types";
 
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
+const mockSetError = jest.fn();
 
 jest.mock("react-uuid", () => jest.fn(() => "mock-id-2"));
 jest.mock("utils/state/useStore");
@@ -71,6 +72,7 @@ const modalComponent = (
         verbiage={mockModalDrawerReportPageVerbiage}
         entityName={mockEntityName}
         form={mockModalForm}
+        setError={mockSetError}
         modalDisclosure={{
           isOpen: true,
           onClose: mockCloseHandler,
@@ -88,6 +90,7 @@ const modalComponentWithSelectedEntity = (
         selectedEntity={mockEntity}
         verbiage={mockModalDrawerReportPageVerbiage}
         form={mockModalForm}
+        setError={mockSetError}
         modalDisclosure={{
           isOpen: true,
           onClose: mockCloseHandler,
@@ -127,6 +130,15 @@ describe("Test AddEditEntityModal", () => {
     fireEvent.click(screen.getByText("Close"));
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
   });
+
+  test("User cannot add duplicate 'Other' target populations", async () => {
+    const form = screen.queryByTestId("add-edit-entity-form");
+    const textField = form!.querySelector("input")!;
+    await userEvent.clear(textField);
+    await userEvent.type(textField, "mock input 1");
+    const submitButton = screen.getByRole("button", { name: "Save" });
+    expect(submitButton).toBeDisabled;
+  });
 });
 
 describe("Test AddEditEntityModal functionality", () => {
@@ -145,7 +157,7 @@ describe("Test AddEditEntityModal functionality", () => {
     const textField = form.querySelector("[name='mock-modal-text-field']")!;
     await userEvent.clear(textField);
     await userEvent.type(textField, "mock input 2");
-    const submitButton = screen.getByRole("button", { name: "Save & close" });
+    const submitButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(submitButton);
   };
 
@@ -206,7 +218,7 @@ describe("Test AddEditEntityModal functionality", () => {
 
   test("Doesn't edit an existing entity if no update was made", async () => {
     render(modalComponentWithSelectedEntity);
-    const submitButton = screen.getByRole("button", { name: "Save & close" });
+    const submitButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(submitButton);
     expect(mockUpdateReport).toHaveBeenCalledTimes(0);
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);

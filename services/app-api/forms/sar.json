@@ -1240,7 +1240,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group reporting period"
+                  "content": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group in the reporting period"
                 },
                 {
                   "type": "span",
@@ -1451,6 +1451,7 @@
           }
         },
         "enterEntityDetailsButtonText": "Edit",
+        "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
         "dashboardSubtitle": "Initiatives and Work Plan topics are auto-populated from your most recent approved Work Plan.",
         "tableHeader": "Initiative name <br/> Work Plan topic",

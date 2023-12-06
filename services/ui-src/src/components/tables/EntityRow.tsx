@@ -1,13 +1,15 @@
 import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
-import { EntityStatusIcon } from "components";
+import { EntityStatusIcon, Table } from "components";
 // types
 import {
   AnyObject,
   EntityShape,
   ModalDrawerEntityTypes,
   ReportShape,
+  OverlayModalTypes,
+  ReportStatus,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -29,18 +31,17 @@ export const EntityRow = ({
   openAddEditEntityModal,
   openDeleteEntityModal,
   openOverlayOrDrawer,
+  stepType,
 }: Props) => {
   const { userIsEndUser } = useStore().user ?? {};
   const { report } = useStore();
 
   // check for "other" target population entities
-  const { isRequired } = entity;
+  const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
-      case ModalDrawerEntityTypes.TARGET_POPULATIONS:
-        return !!entity?.transitionBenchmarks_applicableToMfpDemonstration;
-      case "initiative":
+      case OverlayModalTypes.INITIATIVE:
         //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
         if (formEntity) {
           return getInitiativeDashboardStatus(formEntity, entity);
@@ -48,7 +49,7 @@ export const EntityRow = ({
           return getInitiativeStatus(report!, entity);
         }
       default: {
-        return report ? !!getEntityStatus(report, entity) : false;
+        return report ? !!getEntityStatus(report, entity, entityType) : false;
       }
     }
   };
@@ -62,7 +63,15 @@ export const EntityRow = ({
     programInfo = (entityInfo as string[]).flatMap((info) => {
       //if the data is in an array, like a radio button values, get each as text
       if (typeof entity?.[info] === "object") {
-        return (entity[info] as any[]).map((arr) => arr.value);
+        return (entity[info] as AnyObject[]).map((arr) => {
+          if (
+            entity?.initiative_wp_otherTopic &&
+            arr.value === "Other, specify"
+          ) {
+            return entity.initiative_wp_otherTopic;
+          }
+          return arr.value;
+        });
       }
       return entity[info];
     });
@@ -87,37 +96,57 @@ export const EntityRow = ({
         {!entityStatus && (
           <Text sx={sx.errorText}>
             {verbiage.editEntityHint ??
-              `Select ${verbiage.enterEntityDetailsButtonText} to report data`}
+              `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
           </Text>
+        )}
+        {isInitiativeClosed && stepType && stepType === "closeOutInformation" && (
+          <Table
+            content={{
+              headRow: ["Actual end date", "Closed by"],
+              bodyRows: [[entity.closeOutInformation_actualEndDate, closedBy]],
+            }}
+            variant="none"
+            sxOverride={sx.table}
+          ></Table>
         )}
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
-          {!isRequired && (
+          {!isRequired && !isCopied && (
             <Button
               sx={sx.editNameButton}
               variant="none"
               onClick={() => openAddEditEntityModal(entity)}
             >
-              {verbiage.editEntityButtonText}
+              {report?.status === ReportStatus.SUBMITTED ||
+              report?.status === ReportStatus.APPROVED
+                ? verbiage.readOnlyEntityButtonText
+                : verbiage.editEntityButtonText}
             </Button>
           )}
           <Button
-            sx={!isRequired ? sx.editOtherEntityButton : sx.editEntityButton}
+            sx={
+              !isRequired && !isCopied
+                ? sx.editOtherEntityButton
+                : sx.editEntityButton
+            }
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
             disabled={entityStatus === "disabled"}
           >
-            {verbiage.enterEntityDetailsButtonText}
+            {report?.status === ReportStatus.SUBMITTED ||
+            report?.status === ReportStatus.APPROVED
+              ? verbiage.readOnlyEntityDetailsButtonText
+              : verbiage.enterEntityDetailsButtonText}
           </Button>
-          {!isRequired && (
+          {!isRequired && !isCopied && (
             <Button
               sx={sx.deleteButton}
               data-testid="delete-entity"
               onClick={() => openDeleteEntityModal(entity)}
               disabled={locked || !userIsEndUser}
             >
-              <Image src={deleteIcon} alt="delete icon" boxSize="3xl" />
+              <Image src={deleteIcon} alt="delete icon" boxSize="3x3" />
             </Button>
           )}
         </Box>
@@ -135,6 +164,7 @@ interface Props {
   openDeleteEntityModal: Function;
   openOverlayOrDrawer: Function;
   [key: string]: any;
+  stepType?: string;
 }
 
 const sx = {
@@ -149,22 +179,21 @@ const sx = {
   errorText: {
     color: "palette.error_dark",
     fontSize: "0.75rem",
-    marginBottom: "0.75rem",
+    marginBottom: "0.5rem",
   },
   entityName: {
     maxWidth: "18.75rem",
     ul: {
-      margin: "0.5rem auto",
+      margin: "0.3rem auto",
       listStyleType: "none",
+      lineHeight: "1.3rem",
       li: {
         wordWrap: "break-word",
-        paddingTop: "0.125rem",
-        paddingBottom: "0.125rem",
         whiteSpace: "break-spaces",
         "&:first-of-type": {
           fontWeight: "bold",
           fontSize: "md",
-          marginBottom: "0.25rem",
+          marginBottom: "0rem",
         },
       },
     },
@@ -192,14 +221,29 @@ const sx = {
     minWidth: "5rem",
   },
   deleteButton: {
-    height: "1.875rem",
-    width: "1.875rem",
-    minWidth: "1.875rem",
+    height: "1.5rem",
+    minHeight: "1.5rem",
+    width: "1.5rem",
+    minWidth: "1.5rem",
     padding: 0,
     marginLeft: "1rem",
+    marginRight: "0.4rem",
+    marginBottom: "0.25rem",
     background: "white",
     "&:hover, &:hover:disabled": {
       background: "white",
+    },
+  },
+  table: {
+    td: {
+      paddingTop: "0rem",
+      paddingLeft: "0rem",
+    },
+    th: {
+      paddingLeft: "0rem",
+      border: "none",
+      fontWeight: "bold",
+      color: "palette.gray_medium",
     },
   },
 };

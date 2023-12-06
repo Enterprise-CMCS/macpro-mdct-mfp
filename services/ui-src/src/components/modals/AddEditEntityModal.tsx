@@ -1,13 +1,14 @@
 import { useContext, useState } from "react";
 import uuid from "react-uuid";
 // components
-import { Form, Modal, ReportContext } from "components";
+import { ErrorAlert, Form, Modal, ReportContext } from "components";
 import { Text, Spinner } from "@chakra-ui/react";
 // utils
 import {
   AnyObject,
   EntityShape,
   FormJson,
+  InputChangeEvent,
   isFieldElement,
   ReportStatus,
 } from "types";
@@ -24,6 +25,8 @@ export const AddEditEntityModal = ({
   entityName,
   form,
   verbiage,
+  error,
+  setError,
   selectedEntity,
   modalDisclosure,
 }: Props) => {
@@ -32,10 +35,29 @@ export const AddEditEntityModal = ({
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
 
+  const onChange = (e: InputChangeEvent) => {
+    const input = e.target.value.trim();
+    const existingOtherTargetPopulations =
+      report?.fieldData.targetPopulations.filter(
+        (object: AnyObject) => !object.isRequired
+      );
+
+    if (
+      existingOtherTargetPopulations.some(
+        (otherPopulation: AnyObject) =>
+          otherPopulation.transitionBenchmarks_targetPopulationName === input
+      )
+    ) {
+      setError(
+        'This target population was already added. To avoid duplication, add a different target population name or select "Cancel".'
+      );
+    } else {
+      setError("");
+    }
+  };
+
   const writeEntity = async (enteredData: any) => {
     setSubmitting(true);
-    const submitButton = document.querySelector("[form=" + form.id + "]");
-    submitButton?.setAttribute("disabled", "true");
 
     const reportKeys = {
       reportType: report?.reportType,
@@ -54,6 +76,7 @@ export const AddEditEntityModal = ({
       enteredData,
       form.fields.filter(isFieldElement)
     );
+
     if (selectedEntity?.id) {
       // if existing entity selected, edit
       const entriesToClear = getEntriesToClear(
@@ -120,16 +143,19 @@ export const AddEditEntityModal = ({
         subheading: verbiage.addEditModalHint
           ? verbiage.addEditModalHint
           : undefined,
-        actionButtonText: submitting ? <Spinner size="md" /> : "Save & close",
+        actionButtonText: submitting ? <Spinner size="md" /> : "Save",
         closeButtonText: "Cancel",
       }}
+      submitButtonDisabled={!!error}
     >
+      {error && <ErrorAlert error={error} />}
       <Form
         data-testid="add-edit-entity-form"
         id={form.id}
         formJson={form}
         formData={selectedEntity}
         onSubmit={writeEntity}
+        onChange={onChange}
         validateOnRender={false}
         dontReset={true}
       />
@@ -144,6 +170,8 @@ interface Props {
   form: FormJson;
   verbiage: AnyObject;
   selectedEntity?: EntityShape;
+  error?: string;
+  setError: Function;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;

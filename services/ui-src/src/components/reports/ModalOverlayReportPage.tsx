@@ -170,6 +170,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
             selectedEntity={selectedEntity}
             verbiage={verbiage}
             form={modalForm}
+            setError={() => {}}
             modalDisclosure={{
               isOpen: addEditEntityModalIsOpen,
               onClose: closeAddEditEntityModal,
@@ -218,6 +219,8 @@ const sx = {
       marginBottom: "0.25rem",
     },
     th: {
+      fontWeight: "bold",
+      color: "palette.gray_medium",
       paddingLeft: "1rem",
       paddingRight: "0",
       borderBottom: "1px solid",

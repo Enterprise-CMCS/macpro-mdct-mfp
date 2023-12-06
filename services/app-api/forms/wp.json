@@ -57,8 +57,10 @@
           ]
         },
         "dashboardTitle": "Report projected number of transitions for each target population",
+        "pdfDashboardTitle": "Transition Benchmark Totals",
         "addEntityButtonText": "Add other target population",
         "editEntityButtonText": "Edit name",
+        "readOnlyEntityButtonText": "View name",
         "addEditModalAddTitle": "Add other target population",
         "addEditModalEditTitle": "Edit other target population",
         "deleteEntityButtonAltText": "Delete other target population",
@@ -67,6 +69,7 @@
         "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this population in the Work Plan. The population will remain in previously submitted Semi-Annual Reports if applicable.",
         "entityUnfinishedMessage": "Complete the remaining indicators for this access measure by entering details.",
         "enterEntityDetailsButtonText": "Edit",
+        "readOnlyEntityDetailsButtonText": "View",
         "reviewPdfHint": "To view Transition Benchmark Totals by target population and by quarter, click <i>Review PDF</i> and it will open a summary in a new tab.",
         "drawerTitle": "Report transition benchmarks for ",
         "drawerInfo": [
@@ -655,26 +658,30 @@
                   "type": "internalLink",
                   "content": "previous page",
                   "props": {
-                    "to": "/wp/state-and-territory-specific-initiatives/instructions"
+                    "to": "/wp/state-and-territory-specific-initiatives/instructions",
+                    "style": {
+                      "textDecoration": "underline"
+                    }
                   }
                 },
                 {
                   "type": "html",
                   "content": " for detailed instructions."
                 }
-              ],
-              "exportSectionHeader": "exportSectionHeader"
+              ]
             },
             "addEntityButtonText": "Add initiative",
             "editEntityHint": "Select \"Edit\" to complete the details.",
 
             "editEntityButtonText": "Edit name/topic",
+            "readOnlyEntityButtonText": "View name/topic",
             "addEditModalAddTitle": "Add initiative",
             "addEditModalEditTitle": "Edit initiative",
             "deleteModalTitle": "Are you sure you want to delete this initiative?",
             "deleteModalConfirmButtonText": "Yes, delete initiative",
             "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
             "enterEntityDetailsButtonText": "Edit",
+            "readOnlyEntityDetailsButtonText": "View",
             "dashboardTitle": "Initiative total count:",
             "countEntitiesInTitle": true,
             "tableHeader": "Initiative name <br/> Work Plan topic",
@@ -814,6 +821,7 @@
                   "exportSectionHeader": "exportSectionHeader"
                 },
                 "enterEntityDetailsButtonText": "Edit",
+                "readOnlyEntityDetailsButtonText": "View",
                 "editEntityHint": "Select \"Edit\" to complete initiative definition."
               },
               "form": {
@@ -847,12 +855,38 @@
                     }
                   },
                   {
-                    "id": "initiative_projectedEndDate",
-                    "type": "date",
-                    "validation": "date",
+                    "id": "defineInitiative_projectedEndDate",
+                    "type": "radio",
+                    "validation": "radio",
                     "props": {
-                      "label": "End Date",
-                      "hint": "Enter projected end date or “N/A” if the initiative will be ongoing without a set point."
+                      "label": "Does the initiative have a projected end date?",
+                      "hint": "Select 'No' if the initiative will be ongoing without a set end point.",
+                      "choices": [
+                        {
+                          "id": "WNsSaAHeDvRD2Pjkz6DcOE",
+                          "label": "Yes",
+                          "children": [
+                            {
+                              "id": "defineInitiative_projectedEndDate_value",
+                              "type": "date",
+                              "validation": {
+                                "type": "endDate",
+                                "dependentFieldName": "defineInitiative_projectedStartDate",
+                                "nested": true,
+                                "parentFieldName": "defineInitiative_projectedEndDate"
+                              },
+                              "props": {
+                                "label": "End Date",
+                                "hint": "Enter projected end date."
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "TR6HoXF3Unf2QX0zzDg2Kp",
+                          "label": "No"
+                        }
+                      ]
                     }
                   }
                 ]
@@ -913,6 +947,7 @@
                 "addEntityButtonText": "Add objective",
                 "editEntityHint": "Select \"Edit\" to complete initiative evaluation plan.",
                 "editEntityButtonText": "Edit objective",
+                "readOnlyEntityButtonText": "View objective",
                 "addEditModalAddTitle": "Add objective for ",
                 "addEditModalHint": "Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones.",
                 "addEditModalEditTitle": "Edit objective for ",
@@ -920,10 +955,11 @@
                 "deleteModalConfirmButtonText": "Yes, delete objective",
                 "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
                 "enterEntityDetailsButtonText": "Edit",
+                "readOnlyEntityDetailsButtonText": "View",
                 "dashboardTitle": "Objective total count",
                 "countEntitiesInTitle": true,
                 "deleteEntityButtonAltText": "",
-                "entityUnfinishedMessage": "",
+                "entityUnfinishedMessage": "Add the quantitative targets for the next 2 quarters by editing the objective.",
                 "drawerTitle": ""
               },
               "modalForm": {
@@ -1029,6 +1065,7 @@
                 "addEntityButtonText": "Add funding source",
                 "editEntityHint": "Select \"Edit\" to complete initiative funding information.",
                 "editEntityButtonText": "Edit funding source",
+                "readOnlyEntityButtonText": "View funding source",
                 "addEditModalAddTitle": "Add funding source and projected expenditures for ",
                 "addEditModalEditTitle": "Edit funding source and projected expenditures for ",
                 "deleteEntityButtonAltText": "Delete other target population",
@@ -1039,6 +1076,8 @@
                 "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).",
                 "dashboardTitle": "Funding Sources",
                 "enterEntityDetailsButtonText": "Edit",
+                "readOnlyEntityDetailsButtonText": "View",
+                "entityUnfinishedMessage": "Add the Projected quarterly expenditures for the next 2 quarters by editing funding source.",
                 "countEntitiesInTitle": true
               },
               "modalForm": {
@@ -1077,7 +1116,7 @@
                           "label": "MFP funding for supplemental services"
                         },
                         {
-                          "id": "2VLq8ASzZNfxbu520if449",
+                          "id": "2VLq8ASzZNfxbu520if529",
                           "label": "Other, specify",
                           "children": [
                             {
@@ -1130,13 +1169,14 @@
                   "closeOutModalBodyText": "This initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, select <i>Cancel</i> and you’ll be able to save your draft data.<br><br>This action cannot be undone.<br><br>Are you sure you want to proceed?",
                   "closeOutModalConfirmButtonText": "Yes, close out initiative"
                 },
-                "enterEntityDetailsButtonText": "Edit"
+                "enterEntityDetailsButtonText": "Edit",
+                "readOnlyEntityDetailsButtonText": "View"
               },
               "form": {
                 "id": "sauxM9MnFZhIn5W44WY3BG",
                 "fields": [
                   {
-                    "id": "initiative_projectedEndDate",
+                    "id": "defineInitiative_projectedEndDate_value",
                     "type": "date",
                     "validation": "textOptional",
                     "props": {

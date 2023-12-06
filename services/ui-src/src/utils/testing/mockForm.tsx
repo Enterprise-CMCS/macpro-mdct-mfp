@@ -138,6 +138,7 @@ export const mockVerbiageIntro = {
     },
   ],
   editEntityButtonText: "Edit",
+  readOnlyEntityButtonText: "View",
   enterReportText: "Enter Details",
 };
 
@@ -181,6 +182,7 @@ export const mockModalDrawerReportPageVerbiage = {
   dashboardTitle: "Mock dashboard title",
   addEntityButtonText: "Mock add entity button text",
   editEntityButtonText: "Mock edit entity button text",
+  readOnlyEntityButtonText: "Mock read-only entity button text",
   addEditModalAddTitle: "Mock add/edit entity modal add title",
   addEditModalEditTitle: "Mock add/edit entity modal edit title",
   deleteEntityButtonAltText: "Mock delete entity button alt text",
@@ -189,6 +191,7 @@ export const mockModalDrawerReportPageVerbiage = {
   deleteModalWarning: "Mock delete modal warning",
   entityUnfinishedMessage: "Mock entity unfinished messsage",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
+  readOnlyEntityDetailsButtonText: "Mock read-only entity details button text",
   drawerTitle: "Mock drawer title",
   reviewPdfHint: "Mock review PDF hint",
   drawerNoFormMessage: "Mock no form fields here",
@@ -211,6 +214,7 @@ export const mockOverlayModalPageVerbiage = {
   deleteModalWarning: "Mock delete modal warning",
   entityUnfinishedMessage: "Mock entity unfinished messsage",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
+  readOnlyEntityDetailsButtonText: "Mock read-only entity details button text",
   drawerTitle: "Mock drawer title",
   countEntitiesInTitle: true,
 };
@@ -223,6 +227,54 @@ export const mockModalDrawerReportPageJson = {
   verbiage: mockModalDrawerReportPageVerbiage,
   modalForm: mockModalForm,
   drawerForm: mockDrawerForm,
+};
+
+export const mockTargetPopulationsModalFormField = {
+  id: "mock-modal",
+  fields: [
+    {
+      id: "transitionBenchmarks_targetPopulationName",
+      type: "text",
+      validation: "text",
+      props: {
+        label: "mock modal text field",
+      },
+    },
+  ],
+};
+
+export const mockTargetPopulationsDrawerFormField = {
+  id: "mock-drawer",
+  fields: [
+    {
+      id: "transitionBenchmarks_applicableToMfpDemonstration",
+      props: {
+        choices: [
+          { id: "mock-choice-1", label: "No" },
+          {
+            id: "mock-choice-2",
+            label: "Yes",
+            children: [
+              { id: "mock-child-1", props: { label: "child", type: "number" } },
+            ],
+          },
+        ],
+        label: "mock drawer text field",
+      },
+      type: "radio",
+      validation: "radio",
+    },
+  ],
+};
+
+export const mockTargetPopulationsReportPageJson = {
+  name: "mock-route-2b",
+  path: "/mock/mock-route-2b",
+  pageType: "modalDrawer",
+  entityType: "targetPopulations",
+  verbiage: mockModalDrawerReportPageVerbiage,
+  modalForm: mockTargetPopulationsModalFormField,
+  drawerForm: mockTargetPopulationsDrawerFormField,
 };
 
 export const mockEntityDetailsOverlayVerbiage = {
@@ -277,6 +329,7 @@ export const mockModalOverlayReportPageVerbiage = {
   addEntityButtonText: "Mock add entity button text",
   emptyDashboardText: "Mock empty dashboard text",
   editEntityButtonText: "Mock edit entity button text",
+  readOnlyEntityButtonText: "Mock read-only entity button text",
   deleteModalTitle: "Mock delete modal title",
   deleteModalConfirmButtonText: "Mock delete modal confirm button text",
   deleteModalWarning: "Mock delete modal warning",

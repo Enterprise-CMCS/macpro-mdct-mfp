@@ -167,3 +167,18 @@ export const displayLongformPeriodSection9 = (
     reportYear ? reportYear - 1 : reportYear
   } to July 31, ${reportYear}`;
 };
+
+export const calculateNextQuarter = (previousQuarter: string) => {
+  if (previousQuarter) {
+    const formattedQuarter = previousQuarter.split(" ");
+    const year = parseInt(formattedQuarter[0]);
+    const period = parseInt(
+      formattedQuarter[1][formattedQuarter[1].length - 1]
+    );
+
+    const nextPeriod = period === 2 ? 1 : 2;
+    const nextYear = period === 2 ? year + 1 : year;
+    return `${nextYear} Q${nextPeriod}`;
+  }
+  return "";
+};
