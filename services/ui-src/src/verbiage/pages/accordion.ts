@@ -132,7 +132,7 @@ export default {
           type: "externalLink",
           content: "User Guide and Help File",
           props: {
-            href: "https://www.google.com",
+            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
             target: "_blank",
             "aria-label": "User Guide (Link opens in new tab)",
           },

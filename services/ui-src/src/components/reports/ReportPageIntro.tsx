@@ -15,7 +15,6 @@ export const ReportPageIntro = ({
   ...props
 }: Props) => {
   const { section, subsection, hint, info } = text;
-
   return (
     <Box sx={sx.introBox} {...props}>
       <Heading as="h1" sx={sx.sectionHeading}>
