@@ -25,6 +25,7 @@ export interface ReportPageVerbiage {
   reviewPdfHint?: string;
   closeOutWarning?: AnyObject;
   closeOutModal?: AnyObject;
+  praDisclosure?: CustomHtmlElement[];
 }
 
 export interface ReportRouteBase {
