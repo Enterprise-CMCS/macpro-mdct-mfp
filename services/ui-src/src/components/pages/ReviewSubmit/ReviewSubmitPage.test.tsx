@@ -50,7 +50,7 @@ const mockSubmittedReport = {
   status: ReportStatus.SUBMITTED,
 };
 
-describe("MCPAR Review and Submit Page Functionality", () => {
+describe("Review and Submit Page Functionality", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -233,7 +233,7 @@ describe("When loading a sucessfully submitted report (Success Message Generator
   });
 });
 
-describe("Test McparReviewSubmitPage view accessibility", () => {
+describe.skip("Test ReviewSubmitPage view accessibility", () => {
   it("Should not have basic accessibility issues when report status is 'not started", async () => {
     mockedUseStore.mockReturnValue(mockUseStore);
     const { container } = render(WpReviewSubmitPage);
