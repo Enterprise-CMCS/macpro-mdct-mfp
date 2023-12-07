@@ -26,8 +26,6 @@ import {
   FormField,
   isFieldElement,
   FormLayoutElement,
-  ReportStatus,
-  ReportType,
 } from "types";
 
 export const Form = ({
@@ -49,16 +47,12 @@ export const Form = ({
   let location = useLocation();
 
   // determine if fields should be disabled (based on admin roles )
-  const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
+  const { userIsAdmin } = useStore().user ?? {};
 
-  const { report } = useStore();
+  const { report, editable } = useStore();
 
   const fieldInputDisabled =
-    ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
-    (report?.status === ReportStatus.SUBMITTED &&
-      report?.reportType === ReportType.WP) ||
-    report?.status === ReportStatus.APPROVED ||
-    userDisabled;
+    (userIsAdmin && !formJson.editableByAdmins) || !editable || userDisabled;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(

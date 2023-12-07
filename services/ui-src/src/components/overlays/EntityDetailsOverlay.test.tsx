@@ -6,13 +6,13 @@ import { EntityDetailsOverlay } from "components";
 import {
   mockEntityDetailsOverlayJson,
   RouterWrappedComponent,
-  mockEntityStore,
+  mockUseEntityStore,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-mockedUseStore.mockReturnValue(mockEntityStore);
+mockedUseStore.mockReturnValue(mockUseEntityStore);
 
 const { closeOutWarning, closeOutModal } =
   mockEntityDetailsOverlayJson.verbiage;

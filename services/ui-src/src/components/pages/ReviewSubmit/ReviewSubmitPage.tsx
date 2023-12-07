@@ -28,7 +28,7 @@ import checkIcon from "assets/icons/icon_check_circle.png";
 
 export const ReviewSubmitPage = () => {
   const { fetchReport, submitReport } = useContext(ReportContext);
-  const report = useStore().report;
+  const { report, setEditable } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -76,7 +76,9 @@ export const ReviewSubmitPage = () => {
   const submitForm = async () => {
     setSubmitting(true);
     if (isPermittedToSubmit) {
-      await submitReport(reportKeys);
+      await submitReport(reportKeys)?.then(() => {
+        setEditable(false);
+      });
     }
     await fetchReport(reportKeys);
     setSubmitting(false);

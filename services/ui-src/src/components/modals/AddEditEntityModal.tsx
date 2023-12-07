@@ -30,7 +30,7 @@ export const AddEditEntityModal = ({
   selectedEntity,
   modalDisclosure,
 }: Props) => {
-  const { report } = useStore();
+  const { report, editable } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -146,7 +146,7 @@ export const AddEditEntityModal = ({
         actionButtonText: submitting ? <Spinner size="md" /> : "Save",
         closeButtonText: "Cancel",
       }}
-      submitButtonDisabled={!!error}
+      submitButtonDisabled={!!error || !editable}
     >
       {error && <ErrorAlert error={error} />}
       <Form

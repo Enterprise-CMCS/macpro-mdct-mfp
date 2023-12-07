@@ -9,7 +9,6 @@ import {
   ModalDrawerEntityTypes,
   ReportShape,
   OverlayModalTypes,
-  ReportStatus,
   EntityDetailsOverlayTypes,
 } from "types";
 // utils
@@ -28,13 +27,11 @@ export const EntityRow = ({
   entityType,
   formEntity,
   verbiage,
-  locked,
   openAddEditEntityModal,
   openDeleteEntityModal,
   openOverlayOrDrawer,
 }: Props) => {
-  const { userIsEndUser } = useStore().user ?? {};
-  const { report } = useStore();
+  const { report, editable } = useStore();
 
   // check for "other" target population entities
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
@@ -155,9 +152,7 @@ export const EntityRow = ({
               variant="none"
               onClick={() => openAddEditEntityModal(entity)}
             >
-              {report?.status === ReportStatus.SUBMITTED ||
-              report?.status === ReportStatus.APPROVED ||
-              isInitiativeClosed
+              {!editable || isInitiativeClosed
                 ? verbiage.readOnlyEntityButtonText
                 : verbiage.editEntityButtonText}
             </Button>
@@ -172,9 +167,7 @@ export const EntityRow = ({
             variant="outline"
             disabled={entityStatus === EntityStatuses.DISABLED}
           >
-            {report?.status === ReportStatus.SUBMITTED ||
-            report?.status === ReportStatus.APPROVED ||
-            isInitiativeClosed
+            {!editable || isInitiativeClosed
               ? verbiage.readOnlyEntityDetailsButtonText
               : verbiage.enterEntityDetailsButtonText}
           </Button>
@@ -183,7 +176,6 @@ export const EntityRow = ({
               sx={sx.deleteButton}
               data-testid="delete-entity"
               onClick={() => openDeleteEntityModal(entity)}
-              disabled={locked || !userIsEndUser}
             >
               <Image src={deleteIcon} alt="delete icon" boxSize="3x3" />
             </Button>
@@ -268,7 +260,7 @@ const sx = {
     marginRight: "0.4rem",
     marginBottom: "0.25rem",
     background: "white",
-    "&:hover, &:hover:disabled": {
+    "&:hover, &:hover:disabled, :disabled": {
       background: "white",
     },
   },

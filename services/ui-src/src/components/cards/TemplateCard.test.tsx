@@ -39,6 +39,8 @@ const mockUseStoreNoReports: MfpReportState & MfpUserState = {
   submittedReportsByState: [],
   lastSavedTime: "12:30 PM",
   workPlanToCopyFrom: undefined,
+  autosaveState: false,
+  editable: true,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
@@ -46,7 +48,7 @@ const mockUseStoreNoReports: MfpReportState & MfpUserState = {
   setLastSavedTime: () => {},
   setWorkPlanToCopyFrom: () => {},
   setAutosaveState: () => {},
-  autosaveState: false,
+  setEditable: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
 };

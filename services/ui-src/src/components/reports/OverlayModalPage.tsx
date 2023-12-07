@@ -16,7 +16,6 @@ import {
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
-import addIconGray from "assets/icons/icon_add_gray.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
 import { EntityShape, OverlayModalPageShape } from "types";
@@ -28,13 +27,13 @@ export const OverlayModalPage = ({
   route,
 }: Props) => {
   const { verbiage, modalForm, stepType } = route;
-  const { report, selectedEntity, setSelectedEntity } = useStore();
+  const { report, selectedEntity, setSelectedEntity, editable } = useStore();
   const [selectedStepEntity, setSelectedStepEntity] = useState<
     EntityShape | undefined
   >(undefined);
 
   const entityType = selectedEntity!.type;
-  const userDisabled = selectedEntity?.isInitiativeClosed;
+  const userDisabled = !editable || selectedEntity?.isInitiativeClosed;
 
   /**
    * Any time the report is updated on this page,
@@ -44,7 +43,7 @@ export const OverlayModalPage = ({
   useEffect(() => {
     if (selectedEntity) {
       setSelectedEntity(
-        report?.fieldData?.[selectedEntity.type].find(
+        report?.fieldData?.[selectedEntity.type]?.find(
           (entity: EntityShape) => entity.id == selectedEntity.id
         )
       );
@@ -85,11 +84,9 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
-    if (!userDisabled) {
-      setSelectedStepEntity(entity);
-      resetClearProp(modalForm.fields);
-      deleteEntityModalOnOpenHandler();
-    }
+    setSelectedStepEntity(entity);
+    resetClearProp(modalForm.fields);
+    deleteEntityModalOnOpenHandler();
   };
 
   const closeDeleteEntityModal = () => {
@@ -122,14 +119,7 @@ export const OverlayModalPage = ({
         <Button
           sx={sx.addEntityButton}
           onClick={addEditEntityModalOnOpenHandler}
-          leftIcon={
-            <Image
-              sx={sx.buttonIcons}
-              src={userDisabled ? addIconGray : addIcon}
-              alt="Add"
-            />
-          }
-          disabled={userDisabled}
+          rightIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
         >
           {verbiage.addEntityButtonText}
         </Button>
@@ -184,6 +174,7 @@ export const OverlayModalPage = ({
             isOpen: deleteEntityModalIsOpen,
             onClose: closeDeleteEntityModal,
           }}
+          userDisabled={userDisabled}
         />
       </Box>
       <Box>
