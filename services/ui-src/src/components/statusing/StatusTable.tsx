@@ -16,7 +16,7 @@ import successIcon from "assets/icons/icon_check_circle.png";
 import { assertExhaustive } from "utils/other/typing";
 
 export const StatusTable = () => {
-  const report = useStore().report;
+  const { report } = useStore();
   const { review } = verbiage;
   const rowDepth = 1;
   return report ? (
@@ -84,19 +84,19 @@ export const StatusIcon = ({
 const TableRow = ({ page, depth }: RowProps) => {
   const { isMobile } = useBreakpoint();
   const { name, path, children, status } = page;
-  const buttonAriaLabel = `Edit  ${name}`;
-  const report = useStore().report;
+  const { report, editable } = useStore();
+  const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
   return (
     <Tr>
       {depth == 1 ? (
         <Td sx={sx.parent} pl={!isMobile ? "1rem" : "0"}>
           <Text>{name}</Text>
-          {isMobile && !children && EditButton(buttonAriaLabel, path)}
+          {isMobile && !children && EditButton(buttonAriaLabel, path, editable)}
         </Td>
       ) : (
         <Td sx={sx.subparent} pl={!isMobile ? `${1.25 * depth}rem` : "0"}>
           <Text>{name}</Text>
-          {isMobile && !children && EditButton(buttonAriaLabel, path)}
+          {isMobile && !children && EditButton(buttonAriaLabel, path, editable)}
         </Td>
       )}
       <Td
@@ -117,7 +117,9 @@ const TableRow = ({ page, depth }: RowProps) => {
         />
       </Td>
       {!isMobile && (
-        <Td>{!children && EditButton(buttonAriaLabel, path, true)}</Td>
+        <Td>
+          {!children && EditButton(buttonAriaLabel, path, editable, true)}
+        </Td>
       )}
     </Tr>
   );
@@ -126,6 +128,7 @@ const TableRow = ({ page, depth }: RowProps) => {
 const EditButton = (
   buttonAriaLabel: string,
   path: string,
+  editable: boolean,
   showIcon = false
 ) => {
   const navigate = useNavigate();
@@ -137,7 +140,7 @@ const EditButton = (
       onClick={() => navigate(path, { state: { validateOnRender: true } })}
     >
       {showIcon && <Image src={editIcon} alt="Edit Program" />}
-      Edit
+      {editable ? "Edit" : "View"}
     </Button>
   );
 };
