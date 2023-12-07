@@ -4,6 +4,7 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import {
   mockDocumentClient,
+  mockDynamoDataWPCompleted,
   mockWPFieldData,
   mockWPMetadata,
   mockWPReport,
@@ -49,6 +50,25 @@ const wpCreationEvent: APIGatewayProxyEvent = {
   }),
 };
 
+const wpCopyCreationEvent: APIGatewayProxyEvent = {
+  ...wpMockProxyEvent,
+  body: JSON.stringify({
+    fieldData: {
+      stateName: "Alabama",
+      submissionCount: 0,
+    },
+    metadata: {
+      reportType: "WP",
+      submissionName: "submissionName",
+      status: "Not started",
+      lastAlteredBy: "Thelonious States",
+      fieldDataId: "mockReportFieldData",
+      formTemplateId: "mockReportJson",
+      copyReport: mockDynamoDataWPCompleted,
+    },
+  }),
+};
+
 const sarMockProxyEvent = {
   ...proxyEvent,
   headers: { "cognito-identity-id": "test" },
@@ -90,6 +110,7 @@ mockDocumentClient.query.promise.mockReturnValue({
 describe("Test createReport API method", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
+    jest.useRealTimers();
   });
   test("Test unauthorized report creation throws 403 error", async () => {
     jest.spyOn(authFunctions, "isAuthorized").mockResolvedValueOnce(false);
@@ -125,6 +146,12 @@ describe("Test createReport API method", () => {
     expect(res.statusCode).toBe(400);
   });
 
+  test("Test report creation throws a 403 when copying a report of the same period", async () => {
+    jest.useFakeTimers().setSystemTime(new Date(2021, 11, 1));
+    const res = await createReport(wpCopyCreationEvent, null);
+    expect(res.statusCode).toBe(403);
+  });
+
   test("Test successful run of work plan report creation, not copied", async () => {
     const res = await createReport(wpCreationEvent, null);
     const body = JSON.parse(res.body);
@@ -138,6 +165,36 @@ describe("Test createReport API method", () => {
     expect(body.formTemplate.validationJson).toMatchObject({
       transitionBenchmarks_targetPopulationName: "text",
     });
+  });
+
+  test("Test successful run of work plan report creation, copied", async () => {
+    jest.useFakeTimers().setSystemTime(new Date(2022, 11, 1));
+    const res = await createReport(wpCopyCreationEvent, null);
+    const body = JSON.parse(res.body);
+    expect(res.statusCode).toBe(StatusCodes.CREATED);
+    expect(body.status).toContain("Not started");
+    expect(body.fieldDataId).toBeDefined;
+    expect(body.formTemplateId).toBeDefined;
+    expect(body.formTemplateId).not.toEqual(
+      mockWPReport.metadata.formTemplateId
+    );
+    const quarterlyRepeatinFields = Object.keys(
+      body.formTemplate.validationJson
+    ).filter((key) => key.includes("quarterlyProjections"));
+    expect(quarterlyRepeatinFields).toHaveLength(12);
+    expect(quarterlyRepeatinFields[0]).toEqual("quarterlyProjections2022Q3");
+    expect(quarterlyRepeatinFields[11]).toEqual("quarterlyProjections2025Q2");
+
+    const fundingSoureRepeatingFields = Object.keys(
+      body.formTemplate.validationJson
+    ).filter((key) => key.includes("fundingSources_quarters"));
+    expect(fundingSoureRepeatingFields).toHaveLength(12);
+    expect(fundingSoureRepeatingFields[0]).toEqual(
+      "fundingSources_quarters2022Q3"
+    );
+    expect(fundingSoureRepeatingFields[11]).toEqual(
+      "fundingSources_quarters2025Q2"
+    );
   });
 
   test("If no WP given when creating a SAR, return 404", async () => {

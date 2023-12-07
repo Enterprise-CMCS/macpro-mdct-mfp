@@ -208,6 +208,10 @@ export const expandRepeatedFields = (
     nextTwelveQuarters: nextTwelveQuarters,
     targetPopulationsByReportingPeriod: targetPopulationsByReportingPeriod,
   };
+
+  //after creating the first formTemplate in the system, new forms will try to repeat 12 times. We have to clear it before using it again
+  formFields = clearPreviousRepeatingFields(formFields);
+
   formFields.forEach((field, fieldIndex) => {
     // if field has choices/options (ie could have nested children)
     const fieldChoices = field.props?.choices;
@@ -235,6 +239,35 @@ export const expandRepeatedFields = (
       );
     }
   });
+  return formFields;
+};
+
+const clearPreviousRepeatingFields = (formFields: FormField[]) => {
+  //check to see if there is a repeating field in the form fields
+  let repeatingFields = formFields.filter((field) => field.repeatable);
+
+  //if there is more than 1 repeating form call
+  if (repeatingFields.length > 1) {
+    //we want to split out the unrepeating fields
+    let unrepeatingFields = formFields.filter((field) => !field.repeatable);
+
+    //get the index of the first repeating field as that is the position where the cleaned repeating field needs to go back to
+    let firstRepeatIndex: number = formFields.findIndex(
+      (field) => field.repeatable
+    );
+
+    //we need to take the first repeating field as the template
+    let cleanRepeatField = formFields[firstRepeatIndex];
+    //the id needs to be cleaned by stripping the quarter information
+    const quarterLabelIndex: number = cleanRepeatField.id.length - 6;
+    cleanRepeatField.id = cleanRepeatField.id.substring(0, quarterLabelIndex);
+    delete cleanRepeatField.props;
+
+    //add the repeating field back into the formFields
+    unrepeatingFields.splice(firstRepeatIndex, 0, cleanRepeatField);
+    return unrepeatingFields;
+  }
+
   return formFields;
 };
 
@@ -278,11 +311,40 @@ export const scanForRepeatedFields = (
   return reportRoutes;
 };
 
+export const scanForConditionalRoutes = (
+  reportRoutes: ReportRoute[],
+  workPlanMetaData?: AnyObject
+) => {
+  for (let route of reportRoutes) {
+    if (route?.entitySteps)
+      scanForConditionalRoutes(route.entitySteps, workPlanMetaData);
+    if (route?.children)
+      scanForConditionalRoutes(route.children, workPlanMetaData);
+
+    // if route has a field that is to be conditionally rendered, conditionally keep in array
+    if (route?.conditionallyRender) {
+      // if a path has "showOnlyInPeriod2" attached as a rule, we only want to show in reporting period 2, and remove from the list of routes otherwise
+      if (
+        route.conditionallyRender === "showOnlyInPeriod2" &&
+        workPlanMetaData?.reportPeriod != 2
+      ) {
+        const index = reportRoutes.indexOf(route);
+        if (index > -1) {
+          reportRoutes.splice(index, 1);
+        }
+      }
+    }
+  }
+
+  return reportRoutes;
+};
+
 export async function getOrCreateFormTemplate(
   reportBucket: string,
   reportType: ReportType,
   workPlanFieldData?: AnyObject,
-  workPlanMetaData?: AnyObject
+  workPlanMetaData?: AnyObject,
+  copyReport?: AnyObject
 ) {
   const currentFormTemplate = formTemplateForReportType(reportType);
   const stringifiedTemplate = JSON.stringify(currentFormTemplate);
@@ -294,7 +356,7 @@ export async function getOrCreateFormTemplate(
   const mostRecentTemplateVersion = await getNewestTemplateVersion(reportType);
   const mostRecentTemplateVersionHash = mostRecentTemplateVersion?.md5Hash;
 
-  if (currentTemplateHash === mostRecentTemplateVersionHash) {
+  if (currentTemplateHash === mostRecentTemplateVersionHash && !copyReport) {
     return {
       formTemplate: await getTemplate(
         reportBucket,
@@ -304,6 +366,12 @@ export async function getOrCreateFormTemplate(
     };
   } else {
     const newFormTemplateId = KSUID.randomSync().string;
+    // traverse routes and scan for conditional field
+    currentFormTemplate.routes = scanForConditionalRoutes(
+      currentFormTemplate.routes,
+      workPlanMetaData
+    );
+
     currentFormTemplate.routes = scanForRepeatedFields(
       currentFormTemplate.routes,
       workPlanFieldData,

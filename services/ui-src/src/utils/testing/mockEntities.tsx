@@ -33,19 +33,95 @@ export const mockCompletedGenericFormattedEntityData = {
   population: "mock-population",
   monitoringMethods: ["mock-monitoring-method-1", "mock-monitoring-method-2"],
   methodFrequency: "mock-oversight-method-frequency",
+  quarters: [
+    {
+      id: "mock_id",
+      value: "mock_value",
+    },
+  ],
 };
 
 export const mockTargetPopulationEntity = {
   id: "mock-id1",
-  type: entityTypes[0],
+  type: entityTypes[1],
   isRequired: true,
   transitionBenchmarks_targetPopulationName: "Older Adults",
-  transitionBenchmarks_applicableToMfpDemonstration: [{ value: "No" }],
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "transitionBenchmarks_applicableToMfpDemonstration-mock-choice-2",
+      value: "Yes",
+    },
+  ],
+  ["mock-child-1"]: "3",
 };
 
 export const mockOtherTargetPopulationEntity = {
   id: "mock-id5",
-  type: entityTypes[0],
+  type: entityTypes[1],
   isRequired: false,
   transitionBenchmarks_targetPopulationName: "New target population",
+};
+
+export const mockTargetPopReqButNotApplicable = {
+  id: "1",
+  transitionBenchmarks_targetPopulationName: "Required-No",
+  isRequired: true,
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "a",
+      value: "No",
+    },
+  ],
+  quarterlyProjections2023Q3: "",
+};
+
+export const mockTargetPopReqButApplicable = {
+  id: "2",
+  transitionBenchmarks_targetPopulationName: "Required-Yes",
+  isRequired: true,
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "b",
+      value: "Yes",
+    },
+  ],
+  quarterlyProjections2023Q3: "1",
+};
+
+export const mockTargetPopReqButApplicableIsUndefined = {
+  id: "3",
+  transitionBenchmarks_targetPopulationName: "Required-Undefined",
+  isRequired: true,
+};
+
+export const mockTargetPopButOtherApplicable = {
+  id: "4",
+  type: "targetPopulations",
+  transitionBenchmarks_targetPopulationName: "Other-Yes",
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "c",
+      value: "Yes",
+    },
+  ],
+  quarterlyProjections2023Q3: "4",
+};
+
+export const mockTargetPopButOtherNotApplicable = {
+  id: "5",
+  type: "targetPopulations",
+  transitionBenchmarks_targetPopulationName: "Other-No",
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "d",
+      value: "No",
+    },
+  ],
+  quarterlyProjections2023Q3: "",
+};
+
+export const mockTargetPopByOtherNotDefined = {
+  id: "6",
+  type: "targetPopulations",
+  transitionBenchmarks_targetPopulationName: "Other-Undefined",
 };

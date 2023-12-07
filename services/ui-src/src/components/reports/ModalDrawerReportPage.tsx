@@ -12,6 +12,7 @@ import {
   AddEditEntityModal,
   DeleteEntityModal,
   EntityRow,
+  PrintButton,
   ReportContext,
   ReportDrawer,
   ReportPageFooter,
@@ -20,7 +21,6 @@ import {
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
-import searchIcon from "assets/icons/icon_search_blue.png";
 // types
 import {
   AnyObject,
@@ -56,6 +56,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
+  const [error, setError] = useState<string>();
 
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
@@ -65,9 +66,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   // create drawerForm from json
   const drawerForm = { ...drawerFormJson };
 
-  const drawerTitleText = `${verbiage.drawerTitle} ${
-    !selectedEntity?.isRequired && `Other: `
-  }${selectedEntityName}`;
+  const otherText = !selectedEntity?.isRequired ? `Other: ` : ``;
+  const drawerTitleText = `${verbiage.drawerTitle} ${otherText}${selectedEntityName}`;
 
   // add/edit entity modal disclosure and methods
   const {
@@ -83,6 +83,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
 
   const closeAddEditEntityModal = () => {
     setSelectedEntity(undefined);
+    setError("");
     addEditEntityModalOnCloseHandler();
   };
 
@@ -178,7 +179,9 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
 
   return (
     <Box>
-      {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
+      {verbiage.intro && (
+        <ReportPageIntro text={verbiage.intro} accordion={verbiage.accordion} />
+      )}
       <Box>
         <Heading as="h3" sx={sx.dashboardTitle}>
           {verbiage.dashboardTitle}
@@ -211,15 +214,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           <Text sx={sx.reviewPdfHint}>
             {parseCustomHtml(verbiage.reviewPdfHint)}
           </Text>
-          <Button
-            sx={sx.reviewPdfButton}
-            variant="outline"
-            leftIcon={
-              <Image sx={sx.buttonIcons} src={searchIcon} alt="Review" />
-            }
-          >
-            Review PDF
-          </Button>
+          <PrintButton sxOverride={sx.reviewPdfButton} />
         </Box>
         {/* MODALS */}
         <AddEditEntityModal
@@ -227,6 +222,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           form={modalForm}
+          error={error}
+          setError={setError}
           modalDisclosure={{
             isOpen: addEditEntityModalIsOpen,
             onClose: closeAddEditEntityModal,

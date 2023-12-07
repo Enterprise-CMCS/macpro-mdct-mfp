@@ -25,17 +25,26 @@ const validNAValues = ["N/A", "Data not available"];
 
 // NUMBER - Number or Valid Strings
 export const numberSchema = () =>
-  string().test({
-    message: error.INVALID_NUMBER_OR_NA,
-    test: (value) => {
-      if (value) {
-        const isValidStringValue = validNAValues.includes(value);
-        const isValidNumberValue =
-          checkStandardNumberInputAgainstRegexes(value);
-        return isValidStringValue || isValidNumberValue;
-      } else return true;
-    },
-  });
+  string()
+    .test({
+      message: error.INVALID_NUMBER_OR_NA,
+      test: (value) => {
+        if (value) {
+          const isValidStringValue = validNAValues.includes(value);
+          const isValidNumberValue =
+            checkStandardNumberInputAgainstRegexes(value);
+          return isValidStringValue || isValidNumberValue;
+        } else return true;
+      },
+    })
+    .test({
+      test: (value) => {
+        if (checkStandardNumberInputAgainstRegexes(value!)) {
+          return parseFloat(value!) >= 0;
+        } else return true;
+      },
+      message: error.NUMBER_LESS_THAN_ZERO,
+    });
 
 export const number = () =>
   numberSchema()
@@ -46,44 +55,6 @@ export const number = () =>
     });
 
 export const numberOptional = () => numberSchema().notRequired().nullable();
-
-const validNumberSchema = () =>
-  string().test({
-    message: error.INVALID_NUMBER,
-    test: (value) => {
-      return typeof value !== "undefined"
-        ? checkStandardNumberInputAgainstRegexes(value)
-        : false;
-    },
-  });
-
-// this is in case there are any fields that should only accept integers
-export const validNumber = () =>
-  validNumberSchema()
-    .required(error.REQUIRED_GENERIC)
-    .test({
-      test: (value) => !isWhitespaceString(value),
-      message: error.REQUIRED_GENERIC,
-    });
-
-export const validNumberOptional = () =>
-  validNumberSchema().notRequired().nullable();
-
-// NUMBER NOT LESS THAN ONE
-export const numberNotLessThanOne = () =>
-  validNumber().test({
-    test: (value) => {
-      return parseFloat(value!) >= 1;
-    },
-    message: error.NUMBER_LESS_THAN_ONE,
-  });
-
-// NUMBER NOT LESS THAN ZERO
-export const numberNotLessThanZero = () =>
-  validNumber().test({
-    test: (value) => parseFloat(value!) >= 0,
-    message: error.NUMBER_LESS_THAN_ZERO,
-  });
 
 // Number - Ratio
 export const ratio = () =>
@@ -127,16 +98,26 @@ export const dateOptional = () =>
     });
 
 export const endDate = (startDateField: string) =>
-  date().test(
-    "is-after-start-date",
-    error.INVALID_END_DATE,
-    (endDateString, context) => {
-      const startDateString = context.parent[startDateField];
-      const startDate = new Date(startDateString);
-      const endDate = new Date(endDateString!);
-      return endDate >= startDate;
-    }
-  );
+  date()
+    .typeError(error.INVALID_DATE)
+    .test({
+      message: error.INVALID_END_DATE,
+      test: (endDateString, context) => {
+        return isEndDateAfterStartDate(
+          context.parent[startDateField],
+          endDateString as string
+        );
+      },
+    });
+
+export const isEndDateAfterStartDate = (
+  startDateString: string,
+  endDateString: string
+) => {
+  const startDate = new Date(startDateString);
+  const endDate = new Date(endDateString!);
+  return endDate >= startDate;
+};
 
 // DROPDOWN
 export const dropdown = () =>
@@ -148,7 +129,8 @@ export const checkbox = () =>
     .min(1, error.REQUIRED_CHECKBOX)
     .of(object({ key: text(), value: text() }))
     .required(error.REQUIRED_CHECKBOX);
-export const checkboxOptional = () => checkbox().notRequired();
+export const checkboxOptional = () =>
+  array().notRequired().typeError(error.INVALID_GENERIC);
 export const checkboxSingle = () => boolean();
 
 // RADIO
