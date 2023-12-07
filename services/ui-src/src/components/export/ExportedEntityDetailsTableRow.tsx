@@ -22,22 +22,12 @@ export const ExportedEntityDetailsTableRow = ({
   const reportData = report?.fieldData;
   const isDynamicField = formField.type === "dynamic";
   const formFieldInfo = parseFormFieldInfo(formField?.props!);
-
   // guard against double-rendering "otherText" response
   const isOtherTextEntry = formField.id.endsWith("-otherText");
   if (isOtherTextEntry) return null;
 
   return (
     <Tr data-testid="exportRow">
-      {/* number column/cell */}
-      {!isDynamicField && (
-        <Td sx={sx.numberColumn}>
-          <Text sx={sx.fieldNumber} fontSize={"sm"}>
-            {formFieldInfo.number || "N/A"}
-          </Text>
-        </Td>
-      )}
-
       {/* label column/cell */}
       <Td sx={sx.labelColumn}>
         {formFieldInfo.label || formFieldInfo.hint ? (
@@ -95,13 +85,6 @@ export interface Props {
 }
 
 const sx = {
-  numberColumn: {
-    width: "5.5rem",
-    paddingLeft: 0,
-  },
-  fieldNumber: {
-    fontWeight: "bold",
-  },
   labelColumn: {
     width: "14rem",
     ".two-column &": {
@@ -121,6 +104,6 @@ const sx = {
   fieldHint: {
     lineHeight: "lg",
     fontSize: "sm",
-    color: "palette.gray_medium",
+    color: "palette.base",
   },
 };

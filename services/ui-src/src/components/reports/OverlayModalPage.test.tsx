@@ -10,6 +10,7 @@ import {
   RouterWrappedComponent,
   mockReportStore,
   mockEntityStore,
+  mockUseEntityStore,
 } from "utils/testing/setupJest";
 
 const mockUseNavigate = jest.fn();
@@ -35,8 +36,7 @@ const overlayModalPageComponentWithEntities = (
 
 describe("Test overlayModalPage with entities", () => {
   beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockReportStore);
-    mockedUseStore.mockReturnValue(mockEntityStore);
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
     render(overlayModalPageComponentWithEntities);
   });
 

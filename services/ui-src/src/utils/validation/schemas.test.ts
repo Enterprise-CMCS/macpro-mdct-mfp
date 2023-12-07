@@ -1,5 +1,5 @@
 import { MixedSchema } from "yup/lib/mixed";
-import { number, ratio, validNumber } from "./schemas";
+import { number, ratio } from "./schemas";
 
 describe("Schemas", () => {
   const goodNumberTestCases = [
@@ -12,7 +12,7 @@ describe("Schemas", () => {
     "N/A",
     "Data not available",
   ];
-  const badNumberTestCases = ["abc", "N", "", "!@#!@%"];
+  const badNumberTestCases = ["abc", "N", "", "!@#!@%", "-1"];
 
   const goodRatioTestCases = [
     "1:1",
@@ -35,24 +35,9 @@ describe("Schemas", () => {
     "%@#$!ASDF",
   ];
 
-  const goodValidNumberTestCases = [1, "1", "100000", "1,000,000"];
-
-  const badValidNumberTestCases = ["N/A", "number", "foo"];
-
   const testNumberSchema = (
     schemaToUse: MixedSchema,
     testCases: Array<string>,
-    expectedReturn: boolean
-  ) => {
-    for (let testCase of testCases) {
-      let test = schemaToUse.isValidSync(testCase);
-      expect(test).toEqual(expectedReturn);
-    }
-  };
-
-  const testValidNumber = (
-    schemaToUse: MixedSchema,
-    testCases: Array<string | number>,
     expectedReturn: boolean
   ) => {
     for (let testCase of testCases) {
@@ -69,10 +54,5 @@ describe("Schemas", () => {
   test("Evaluate Number Schema using ratio scheme", () => {
     testNumberSchema(ratio(), goodRatioTestCases, true);
     testNumberSchema(ratio(), badRatioTestCases, false);
-  });
-
-  test("Test validNumber schema", () => {
-    testValidNumber(validNumber(), goodValidNumberTestCases, true);
-    testValidNumber(validNumber(), badValidNumberTestCases, false);
   });
 });

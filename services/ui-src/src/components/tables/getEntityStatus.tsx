@@ -1,3 +1,4 @@
+import { EntityStatuses } from "components";
 import {
   EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
@@ -6,105 +7,118 @@ import {
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   ReportShape,
+  OverlayModalTypes,
 } from "types";
-import { mapValidationTypesToSchema } from "utils/validation/validation";
-import { object } from "yup";
 import { AnyObject } from "yup/lib/types";
 
-export const getEntityStatus = (report: ReportShape, entity: EntityShape) => {
-  if (!report?.formTemplate.validationJson) return;
-
-  const reportFormValidation: { [k: string]: any } =
-    report?.formTemplate.validationJson;
-
-  /*
-   * Split the formValidation into 2 groups. 1 for fields that rely on whether
-   * they show or not from a parent choice, and another that aren't themselves a child
-   */
-  const parentFormElements = Object.fromEntries(
-    Object.entries(reportFormValidation).filter(
-      ([key]) => !reportFormValidation[key]?.parentFieldName
-    )
-  );
-
-  const childFormElements = Object.fromEntries(
-    Object.entries(reportFormValidation).filter(
-      ([key]) => reportFormValidation[key]?.parentFieldName
-    )
-  );
-
-  // Grab formTemplate from MLR and get the Overlay and Modal forms
-  const reportRoute = report.formTemplate
-    .routes[1] as unknown as ModalOverlayReportPageShape;
-  const overlayForm = reportRoute?.overlayForm;
-  const modalForm = reportRoute?.modalForm;
-
-  /*
-   * Filter the child fields so that only ones that the user has the ability to see
-   * are up against validation. If the parent hasn't been checked, then we
-   * don't want to validate its child fields because the user doesn't have
-   * the ability to see them, and they aren't required for their original choice.
-   */
-  const filteredChildFormValidation = Object.fromEntries(
-    Object.entries(childFormElements).filter(([key]) => {
-      // Get the answer the user submitted for the parent choice
-      const parentFieldName = reportFormValidation[key]?.parentFieldName;
-      const parentAnswer = entity[parentFieldName]?.[0];
-
-      // Find where the answer is in the formTemplate
-      const fieldInReport =
-        overlayForm?.fields.find((field) => field.id === parentFieldName) ||
-        modalForm?.fields.find((field) => field.id === parentFieldName);
-      // And if we couldn't find it, return validation as false
-      if (!fieldInReport) return false;
-
-      /*
-       * Now check to see if the field in the formTemplate contains the child choice.
-       * if it doesn't then we dont want to validate it
-       */
-      const fieldInReportsChoices = fieldInReport?.props?.choices;
-      return fieldInReportsChoices?.find(
-        (field: { label: any }) => field.label == parentAnswer?.value
-      )?.children;
+export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
+  //we want to have an array that checks for ids that needs to have data
+  let validationIdList: string[] = [];
+  //we need to make sure nested fields are looked at
+  const fieldsNestedChoices = fields
+    .flatMap((field) => {
+      validationIdList.push(field.id);
+      if (field.props.choices) {
+        return field.props.choices;
+      }
     })
-  );
+    .filter((field) => field);
 
-  const formFieldsToValidate = {
-    ...parentFormElements,
-    ...filteredChildFormValidation,
-  };
+  //Loop through the user entered entity to see which nested id the user had selected
+  const entityNestedSelection: AnyObject[] = [];
+  Object.values(entity).forEach((field: AnyObject) => {
+    if (typeof field === "object") {
+      entityNestedSelection.push(field);
+    }
+  });
 
-  const formValidationSchema = mapValidationTypesToSchema(formFieldsToValidate);
+  //Strip it to only the key information
+  const entityNestedKeys = entityNestedSelection
+    .flat()
+    .map((entity) => {
+      return entity.key;
+    })
+    .filter((key) => key);
 
-  const formResolverSchema = object(formValidationSchema || {});
+  //look for the relevant child id for the selected nested values in the formTemplate data
+  entityNestedKeys.forEach((key) => {
+    const found = fieldsNestedChoices.find((choice) =>
+      key.includes(choice?.id)
+    );
+    if (found && found.children) {
+      found.children.forEach((child: AnyObject) => {
+        validationIdList.push(child.id);
+      });
+    }
+  });
 
-  try {
-    return formResolverSchema.validateSync(entity);
-  } catch (err) {
-    return false;
+  return validationIdList;
+};
+
+//does not work with substeps
+export const getEntityStatus = (
+  report: ReportShape,
+  entity: EntityShape,
+  entityType: string
+) => {
+  const routes = report?.formTemplate?.flatRoutes;
+  const pageTypes = ["form", "drawerForm", "modalForm"];
+
+  if (routes) {
+    //find the correct route information for this entityType
+    const route = routes.find(
+      (route) => (route as AnyObject).entityType === entityType
+    );
+
+    let fields: AnyObject[] = [];
+    //store the fields data into an array to be looked through
+    pageTypes.forEach((type) => {
+      if (route && (route as AnyObject)[type])
+        fields.push((route as AnyObject)[type].fields);
+    });
+    const validationIdList = getValidationList(fields.flat(), entity);
+
+    const isFilled = validationIdList.map((id: string) => {
+      return entity[id];
+    });
+
+    //check to see if each validation id was matched to user selected values
+    return isFilled?.every((field: AnyObject) => {
+      return field && field.length > 0;
+    });
   }
+
+  return false;
 };
 
 export const getInitiativeStatus = (
   report: ReportShape,
-  entity: EntityShape
+  entity: EntityShape,
+  ignore?: string[]
 ) => {
+  if (entity?.isInitiativeClosed) return EntityStatuses.CLOSE;
+
   // Direct pull of the initiative formTemplate json chunk
   const reportRoute = report.formTemplate
     .routes[3] as unknown as ModalOverlayReportPageShape;
 
   //get the intiative report child
-  const reportChild: EntityDetailsDashboardOverlayShape =
-    reportRoute.children![1];
+  const reportChild: EntityDetailsDashboardOverlayShape = (
+    reportRoute?.children! as EntityDetailsOverlayShape[]
+  ).find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
 
   if (reportChild.entitySteps) {
     const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =
       reportChild.entitySteps;
-    const stepStatuses = entitySteps.map((step) => {
+
+    const filteredEntitySteps = entitySteps.filter(
+      (step) => !ignore?.find((item) => step.stepType === item)
+    );
+    const stepStatuses = filteredEntitySteps.map((step) => {
       return getInitiativeDashboardStatus(step, entity);
     });
 
-    return stepStatuses.every((field: any) => field);
+    return stepStatuses.every((field: boolean | EntityStatuses) => field);
   }
 
   return false;
@@ -117,32 +131,20 @@ export const getInitiativeDashboardStatus = (
 ) => {
   const stepType = formEntity.stepType;
 
-  //Important note: not tracking close out atm so it'll be disabled
-  if (stepType === "closeOutInformation") return "disabled";
-
   //pull fields from form type
   const fields = formEntity.form
     ? formEntity.form.fields
     : formEntity.modalForm.fields;
-
-  //filter the fields data down to a validation array
-  const reportFormValidation = fields.map((field: any) => {
-    return { [field.id]: field.validation };
-  });
-
-  //create an array to use as a lookup for fieldData
-  const fieldKeyInReport = reportFormValidation.map(
-    (validation: { [key: string]: string }) => {
-      return Object.keys(validation)[0];
-    }
-  );
 
   //this step is to consolidate the code by converting entity into a loopable array if there's no array of stepType to loop through
   const entities = entity[stepType] ? (entity[stepType] as []) : [entity];
   if (entities.length > 0) {
     let isFilled = true;
 
-    entities.forEach((child: any) => {
+    entities.forEach((child: AnyObject) => {
+      //create an array to use as a lookup for fieldData
+      const fieldKeyInReport = getValidationList(fields, child);
+
       //filter down to the data for the current status topic
       const filterdFieldData = fieldKeyInReport.map((item: string) => {
         return child[item];
@@ -150,7 +152,7 @@ export const getInitiativeDashboardStatus = (
 
       //if any of the field data is empty, that means we're missing data and the status is automatically false
       isFilled = !filterdFieldData.every(
-        (field: any) => field && field.length > 0
+        (field: AnyObject) => field && field.length > 0
       )
         ? false
         : isFilled;
@@ -164,9 +166,13 @@ export const getInitiativeDashboardStatus = (
 
 export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
   if (entity) {
-    const fieldIds = form.fields.map((field) => {
-      return field.id;
-    });
+    const fieldIds = form.fields
+      .map((field) => {
+        return !(field as AnyObject)?.validation.includes("Optional")
+          ? field.id
+          : "";
+      })
+      .filter((field) => field);
     const isFilled = fieldIds.map((id) => {
       return entity[id];
     });
@@ -192,7 +198,7 @@ export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
       return false;
     }
 
-    return isFilled?.every((field: any) => {
+    return isFilled?.every((field: AnyObject) => {
       return field && field.length > 0;
     });
   }

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 // components
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // utils
-import { useFindRoute, useStore } from "utils";
+import { parseCustomHtml, useFindRoute, useStore } from "utils";
 import { AnyObject, FormJson } from "types";
 // assets
 import nextIcon from "assets/icons/icon_next_white.png";
@@ -73,6 +73,9 @@ export const ReportPageFooter = ({
           )}
         </Flex>
       </Box>
+      {props.praDisclosure && (
+        <Box sx={sx.praStatement}>{parseCustomHtml(props.praDisclosure)}</Box>
+      )}
     </Box>
   );
 };
@@ -103,5 +106,9 @@ const sx = {
   },
   button: {
     width: "8.25rem",
+  },
+  praStatement: {
+    fontSize: "0.875rem",
+    paddingTop: "1rem",
   },
 };

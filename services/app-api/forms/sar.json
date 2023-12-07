@@ -1231,6 +1231,7 @@
           "name": "Number of HCBS participants admitted to a facility from the community, by length of stay and age group",
           "path": "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
           "pageType": "standard",
+          "conditionallyRender": "showOnlyInPeriod2",
           "verbiage": {
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
@@ -1239,7 +1240,7 @@
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group reporting period"
+                  "content": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group in the reporting period"
                 },
                 {
                   "type": "span",
@@ -1253,13 +1254,19 @@
             "id": "ret-hcbs",
             "fields": [
               {
+                "id": "ret_sectionHeader_shortTermStay",
+                "type": "sectionHeader",
+                "props": {
+                  "content": "Short-term stay: 1 to 20 days"
+                }
+              },
+              {
                 "id": "ret_shortTermStayAges18to64",
                 "type": "number",
                 "validation": "number",
                 "props": {
                   "label": "Ages 18-64",
-                  "styleAsOptional": true,
-                  "heading": "Short-term stay: 1 to 20 days"
+                  "styleAsOptional": true
                 }
               },
               {
@@ -1290,13 +1297,19 @@
                 }
               },
               {
+                "id": "ret_sectionHeader_mediumTermStay",
+                "type": "sectionHeader",
+                "props": {
+                  "content": "Medium-term stay: 21-100 days"
+                }
+              },
+              {
                 "id": "ret_mediumTermStayAges18to64",
                 "type": "number",
                 "validation": "number",
                 "props": {
                   "label": "Ages 18-64",
-                  "styleAsOptional": true,
-                  "heading": "Medium-term stay: 21-100 days"
+                  "styleAsOptional": true
                 }
               },
               {
@@ -1327,13 +1340,19 @@
                 }
               },
               {
+                "id": "ret_sectionHeader_longTermStay",
+                "type": "sectionHeader",
+                "props": {
+                  "content": "Long-term stay: 101 days or more"
+                }
+              },
+              {
                 "id": "ret_longTermStayAges18to64",
                 "type": "number",
                 "validation": "number",
                 "props": {
                   "label": "Ages 18-64",
-                  "styleAsOptional": true,
-                  "heading": "Long-term stay: 101 days or more"
+                  "styleAsOptional": true
                 }
               },
               {
@@ -1432,6 +1451,7 @@
           }
         },
         "enterEntityDetailsButtonText": "Edit",
+        "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
         "dashboardSubtitle": "Initiatives and Work Plan topics are auto-populated from your most recent approved Work Plan.",
         "tableHeader": "Initiative name <br/> Work Plan topic",

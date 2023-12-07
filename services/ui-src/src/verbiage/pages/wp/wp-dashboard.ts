@@ -1,6 +1,6 @@
 export default {
   intro: {
-    header: "MFP Program Work Plan",
+    header: "MFP Work Plan",
     body: [],
   },
   body: {
@@ -20,7 +20,7 @@ export default {
     empty:
       "Keep track of your MFP Work Plans, once you start a Work Plan you can access it here.",
     callToAction: "Start MFP Work Plan",
-    callToActionAdditions: "Add new MFP Work Plan",
+    callToActionAdditions: "Continue Work Plan for next Period",
   },
   modalUnlock: {
     heading: "You unlocked this Work Plan",

@@ -198,6 +198,7 @@ export const mockReportStore: MfpReportState = {
   lastSavedTime: "1:58 PM",
   workPlanToCopyFrom: undefined,
   autosaveState: false,
+  editable: true,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
@@ -205,6 +206,7 @@ export const mockReportStore: MfpReportState = {
   setLastSavedTime: () => {},
   setWorkPlanToCopyFrom: () => {},
   setAutosaveState: () => {},
+  setEditable: () => {},
 };
 
 export const mockEntityStore: MfpEntityState = {
@@ -225,6 +227,7 @@ export const mockEmptyReportStore: MfpReportState = {
   lastSavedTime: undefined,
   workPlanToCopyFrom: undefined,
   autosaveState: false,
+  editable: true,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
@@ -232,6 +235,7 @@ export const mockEmptyReportStore: MfpReportState = {
   setLastSavedTime: () => {},
   setWorkPlanToCopyFrom: () => {},
   setAutosaveState: () => {},
+  setEditable: () => {},
 };
 
 // BOUND STORE

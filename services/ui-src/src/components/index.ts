@@ -34,11 +34,15 @@ export { ExportedReportMetadataTable } from "./export/ExportedReportMetadataTabl
 export { ExportedSectionHeading } from "./export/ExportedSectionHeading";
 export { ExportedModalDrawerReportSection } from "./export/ExportedModalDrawerReportSection";
 export { ExportedReportWrapper } from "./export/ExportedReportWrapper";
+export { ExportedReportFieldRow } from "./export/ExportedReportFieldRow";
 export { ExportedReportFieldTable } from "./export/ExportedReportFieldTable";
 export { ExportedEntityDetailsOverlaySection } from "./export/ExportedEntityDetailsOverlaySection";
 export { ExportedEntityDetailsTable } from "./export/ExportedEntityDetailsTable";
 export { ExportedEntityDetailsTableRow } from "./export/ExportedEntityDetailsTableRow";
 export { ExportedModalOverlayReportSection } from "./export/ExportedModalOverlayReportSection";
+export { ExportedOverlayModalReportSection } from "./export/ExportedOverlayModalReportSection";
+export { ExportedReportBanner } from "./export/ExportedReportBanner";
+export { PrintButton } from "./export/PrintButton";
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";
@@ -101,7 +105,7 @@ export { StatusTable } from "./statusing/StatusTable";
 // tables
 export { EntityRow } from "./tables/EntityRow";
 export { Table } from "./tables/Table";
-export { EntityStatusIcon } from "./tables/EntityStatusIcon";
+export { EntityStatusIcon, EntityStatuses } from "./tables/EntityStatusIcon";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
 // Redirects

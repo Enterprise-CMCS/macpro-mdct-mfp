@@ -40,15 +40,14 @@ export const ChoiceListField = ({
   const defaultValue: Choice[] = [];
   const [displayValue, setDisplayValue] = useState<Choice[]>(defaultValue);
 
-  const { state, userIsReadOnly, userIsAdmin, full_name } =
-    useStore().user ?? {};
+  const { state, full_name } = useStore().user ?? {};
 
-  const { report, selectedEntity, setAutosaveState } = useStore();
+  const { report, selectedEntity, setAutosaveState, editable } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
-  const shouldDisableChildFields =
-    ((userIsAdmin || userIsReadOnly) && !!props?.disabled) || report?.locked;
+  //closeout will disables only certain parts of an active form
+  const shouldDisableChildFields = !editable || !!props?.disabled;
 
   // get form context and register field
   const form = useFormContext();
