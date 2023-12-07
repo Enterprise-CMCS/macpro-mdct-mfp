@@ -62,12 +62,17 @@ export const DashboardPage = ({ reportType }: Props) => {
     releaseReport,
     fetchReport,
   } = useContext(ReportContext);
-  const { reportsByState, workPlanToCopyFrom, clearSelectedEntity } =
-    useStore();
+  const {
+    reportsByState,
+    workPlanToCopyFrom,
+    clearSelectedEntity,
+    setEditable,
+  } = useStore();
   const navigate = useNavigate();
   const {
     state: userState,
     userIsEndUser,
+    userIsReadOnly,
     userIsAdmin,
   } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
@@ -129,6 +134,16 @@ export const DashboardPage = ({ reportType }: Props) => {
     setPreviousReport(newReportsToDisplay?.[0]);
   }, [reportsByState]);
 
+  const isReportEditable = (selectedReport: ReportShape) => {
+    return (
+      !userIsAdmin &&
+      !userIsReadOnly &&
+      !selectedReport?.locked &&
+      selectedReport?.status !== ReportStatus.APPROVED &&
+      selectedReport?.status !== ReportStatus.SUBMITTED
+    );
+  };
+
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     clearSelectedEntity();
     setReportId(report.id);
@@ -145,6 +160,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     setEntering(false);
     const firstReportPagePath =
       selectedReport?.formTemplate.flatRoutes![0].path;
+    setEditable(isReportEditable(selectedReport));
     navigate(firstReportPagePath);
   };
 

@@ -67,6 +67,7 @@ const reportStore = (set: Function) => ({
   lastSavedTime: undefined,
   workPlanToCopyFrom: undefined,
   autosaveState: false,
+  editable: true,
   // actions
   setReport: (newReport: ReportShape | undefined) =>
     set(() => ({ report: newReport }), false, { type: "setReport" }),
@@ -97,6 +98,10 @@ const reportStore = (set: Function) => ({
   setAutosaveState: (state: boolean) =>
     set(() => ({ autosaveState: state }), false, {
       type: "setAutosaveState",
+    }),
+  setEditable: (state: boolean) =>
+    set(() => ({ editable: state }), false, {
+      type: "setEditable",
     }),
 });
 
