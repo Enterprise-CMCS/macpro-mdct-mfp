@@ -18,9 +18,23 @@ export default {
           type: "externalLink",
           content: "User Guide and Help File",
           props: {
-            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)", // TO-DO: currently placeholder, replace when correct link available
             target: "_blank",
-            "aria-label": "User Guide and Help File (Link opens in new tab)",
+            "aria-label": "User Guide (Link opens in new tab)",
+          },
+        },
+        {
+          type: "text",
+          as: "span",
+          content: " and ",
+        },
+        {
+          type: "externalLink",
+          content: "Help File",
+          props: {
+            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)", // TO-DO: currently placeholder, replace when correct link available
+            target: "_blank",
+            "aria-label": "Help File (Link opens in new tab)",
           },
         },
         {
@@ -55,9 +69,23 @@ export default {
           type: "externalLink",
           content: "User Guide and Help File",
           props: {
-            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)", // TO-DO: currently placeholder, replace when correct link available
             target: "_blank",
-            "aria-label": "User Guide and Help File (Link opens in new tab)",
+            "aria-label": "User Guide (Link opens in new tab)",
+          },
+        },
+        {
+          type: "text",
+          as: "span",
+          content: " and ",
+        },
+        {
+          type: "externalLink",
+          content: "Help File",
+          props: {
+            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)", // TO-DO: currently placeholder, replace when correct link available
+            target: "_blank",
+            "aria-label": "Help File (Link opens in new tab)",
           },
         },
         {
@@ -95,9 +123,23 @@ export default {
           type: "externalLink",
           content: "User Guide and Help File",
           props: {
-            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)", // TO-DO: currently placeholder, replace when correct link available
             target: "_blank",
-            "aria-label": "User Guide and Help File (Link opens in new tab)",
+            "aria-label": "User Guide (Link opens in new tab)",
+          },
+        },
+        {
+          type: "text",
+          as: "span",
+          content: " and ",
+        },
+        {
+          type: "externalLink",
+          content: "Help File",
+          props: {
+            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)", // TO-DO: currently placeholder, replace when correct link available
+            target: "_blank",
+            "aria-label": "Help File (Link opens in new tab)",
           },
         },
         {
