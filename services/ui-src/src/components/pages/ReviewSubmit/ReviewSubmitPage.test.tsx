@@ -233,7 +233,7 @@ describe("When loading a sucessfully submitted report (Success Message Generator
   });
 });
 
-describe.skip("Test ReviewSubmitPage view accessibility", () => {
+describe("Test ReviewSubmitPage view accessibility", () => {
   it("Should not have basic accessibility issues when report status is 'not started", async () => {
     mockedUseStore.mockReturnValue(mockUseStore);
     const { container } = render(WpReviewSubmitPage);

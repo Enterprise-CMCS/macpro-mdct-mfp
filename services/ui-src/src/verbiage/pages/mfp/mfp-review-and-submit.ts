@@ -17,7 +17,7 @@ export default {
         },
         {
           type: "text",
-          as: "html",
+          as: "div",
           content:
             "<br><b>Compliance review</b><br>Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made. If there are no corrections to be made, your Project Officer will approve the report by {x time before it’s due}, its status will change to “Approved” and it will no longer be editable because its information will be used in the Semi-Annual Progress Report (SAR) for the same reporting period.",
         },
