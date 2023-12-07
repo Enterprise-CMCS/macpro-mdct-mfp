@@ -28,6 +28,7 @@ export const AddEditOverlayEntityModal = ({
   verbiage,
   selectedEntity,
   modalDisclosure,
+  userDisabled,
 }: Props) => {
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
@@ -76,6 +77,12 @@ export const AddEditOverlayEntityModal = ({
   };
 
   const writeEntity = async (enteredData: any) => {
+    //do not try to save if the user has disabled editing
+    if (userDisabled) {
+      modalDisclosure.onClose();
+      return;
+    }
+
     setSubmitting(true);
     const reportKeys = {
       reportType: report?.reportType,
@@ -173,7 +180,13 @@ export const AddEditOverlayEntityModal = ({
         subheading: verbiage.addEditModalHint
           ? verbiage.addEditModalHint
           : undefined,
-        actionButtonText: submitting ? <Spinner size="md" /> : "Save & close",
+        actionButtonText: submitting ? (
+          <Spinner size="md" />
+        ) : !userDisabled ? (
+          "Save"
+        ) : (
+          "Close"
+        ),
         closeButtonText: "Cancel",
       }}
     >
@@ -185,6 +198,8 @@ export const AddEditOverlayEntityModal = ({
         onSubmit={writeEntity}
         validateOnRender={false}
         dontReset={true}
+        disabled={true}
+        userDisabled={userDisabled}
       />
       <Text sx={sx.bottomModalMessage}>{verbiage.addEditModalMessage}</Text>
     </Modal>
@@ -198,6 +213,7 @@ interface Props {
   form: FormJson;
   verbiage: AnyObject;
   selectedEntity?: EntityShape;
+  userDisabled?: boolean;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;

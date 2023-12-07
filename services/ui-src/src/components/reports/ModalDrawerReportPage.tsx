@@ -12,6 +12,7 @@ import {
   AddEditEntityModal,
   DeleteEntityModal,
   EntityRow,
+  PrintButton,
   ReportContext,
   ReportDrawer,
   ReportPageFooter,
@@ -20,7 +21,6 @@ import {
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
-import searchIcon from "assets/icons/icon_search_blue.png";
 // types
 import {
   AnyObject,
@@ -214,15 +214,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           <Text sx={sx.reviewPdfHint}>
             {parseCustomHtml(verbiage.reviewPdfHint)}
           </Text>
-          <Button
-            sx={sx.reviewPdfButton}
-            variant="outline"
-            leftIcon={
-              <Image sx={sx.buttonIcons} src={searchIcon} alt="Review" />
-            }
-          >
-            Review PDF
-          </Button>
+          <PrintButton sxOverride={sx.reviewPdfButton} />
         </Box>
         {/* MODALS */}
         <AddEditEntityModal

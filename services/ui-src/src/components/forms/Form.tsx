@@ -26,8 +26,6 @@ import {
   FormField,
   isFieldElement,
   FormLayoutElement,
-  ReportStatus,
-  ReportType,
 } from "types";
 
 export const Form = ({
@@ -41,6 +39,7 @@ export const Form = ({
   autosave,
   dontReset,
   children,
+  userDisabled,
   ...props
 }: Props) => {
   const { fields, options } = formJson;
@@ -48,15 +47,12 @@ export const Form = ({
   let location = useLocation();
 
   // determine if fields should be disabled (based on admin roles )
-  const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
+  const { userIsAdmin } = useStore().user ?? {};
 
-  const { report } = useStore();
+  const { report, editable } = useStore();
 
   const fieldInputDisabled =
-    ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
-    (report?.status === ReportStatus.SUBMITTED &&
-      report?.reportType === ReportType.WP) ||
-    report?.status === ReportStatus.APPROVED;
+    (userIsAdmin && !formJson.editableByAdmins) || !editable || userDisabled;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
@@ -138,6 +134,7 @@ interface Props {
   formData?: AnyObject;
   autosave?: boolean;
   children?: ReactNode;
+  userDisabled?: boolean;
   onFormChange?: Function;
   [key: string]: any;
 }

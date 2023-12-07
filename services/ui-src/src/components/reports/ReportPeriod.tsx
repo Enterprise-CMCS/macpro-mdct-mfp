@@ -1,7 +1,7 @@
 // components
 import { Box, Heading } from "@chakra-ui/react";
 // utils
-import { displayLongformPeriod } from "utils";
+import { displayLongformPeriod, displayLongformPeriodSection9 } from "utils";
 import { AnyObject } from "types";
 
 export const ReportPeriod = ({ text, reportPeriod, reportYear }: Props) => {
@@ -9,6 +9,7 @@ export const ReportPeriod = ({ text, reportPeriod, reportYear }: Props) => {
   const retSection = section === "Recruitment, Enrollment, and Transitions";
   const pageNine = subsection?.includes("HCBS");
   const currentPeriod = displayLongformPeriod(reportPeriod, reportYear);
+  const currentPeriodSectionNine = displayLongformPeriodSection9(reportYear);
   return (
     <Box>
       {retSection &&
@@ -18,7 +19,7 @@ export const ReportPeriod = ({ text, reportPeriod, reportYear }: Props) => {
           </Heading>
         ) : (
           <Heading as="h2" sx={sx.periodText}>
-            This page needs a different calculation
+            {currentPeriodSectionNine}
           </Heading>
         ))}
     </Box>

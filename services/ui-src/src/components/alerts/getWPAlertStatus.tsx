@@ -21,8 +21,13 @@ export const checkInitiativeTopics = (fieldData: any, entities: any[]) => {
   if (fieldData?.instructions_tribalInitiatives[0]?.value === "Yes")
     topics.push("Tribal Initiative (*if applicable)");
 
+  //remove any initiatives that have been closedout, they don't count towards removing the alert
+  const filteredEntities = entities?.filter(
+    (entity) => !entity.isInitiativeClosed
+  );
+
   //filter down to the values of the radio selection
-  const values = entities?.flatMap((entity) =>
+  const values = filteredEntities?.flatMap((entity) =>
     entity?.initiative_wpTopic?.map((topic: AnyObject) => {
       return topic?.value;
     })

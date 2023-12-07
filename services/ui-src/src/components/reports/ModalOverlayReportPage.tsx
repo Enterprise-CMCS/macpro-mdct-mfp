@@ -40,9 +40,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
     useStore();
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
 
-  // Determine whether form is locked or unlocked based on user and route
-  const isLocked = report?.locked;
-
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
 
@@ -147,7 +144,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
                     entityType={entityType}
                     entityInfo={entityInfo}
                     verbiage={verbiage}
-                    locked={isLocked}
                     openOverlayOrDrawer={openEntityDetailsOverlay}
                     openAddEditEntityModal={openAddEditEntityModal}
                     openDeleteEntityModal={openDeleteEntityModal}
@@ -157,7 +153,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
             )}
             <Button
               sx={sx.addEntityButton}
-              disabled={isLocked}
               onClick={() => openAddEditEntityModal()}
               rightIcon={<Image src={addIcon} alt="Previous" sx={sx.addIcon} />}
             >
@@ -219,6 +214,8 @@ const sx = {
       marginBottom: "0.25rem",
     },
     th: {
+      fontWeight: "bold",
+      color: "palette.gray_medium",
       paddingLeft: "1rem",
       paddingRight: "0",
       borderBottom: "1px solid",

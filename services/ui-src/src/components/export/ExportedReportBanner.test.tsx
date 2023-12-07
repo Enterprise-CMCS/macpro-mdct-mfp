@@ -68,6 +68,8 @@ describe("ExportedReportBanner", () => {
       submittedReportsByState: [],
       lastSavedTime: "1:58 PM",
       workPlanToCopyFrom: undefined,
+      autosaveState: false,
+      editable: true,
       setReport: () => {},
       setReportsByState: () => {},
       clearReportsByState: () => {},
@@ -75,7 +77,7 @@ describe("ExportedReportBanner", () => {
       setLastSavedTime: () => {},
       setWorkPlanToCopyFrom: () => {},
       setAutosaveState: () => {},
-      autosaveState: false,
+      setEditable: () => {},
       ...mockStateUserStore,
       ...mockBannerStore,
     };
