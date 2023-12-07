@@ -1187,6 +1187,7 @@
                     "validation": "textOptional",
                     "props": {
                       "label": "Projected end date",
+                      "hint": "Auto-populates from “I. Define initiative”.",
                       "disabled": true
                     }
                   },
