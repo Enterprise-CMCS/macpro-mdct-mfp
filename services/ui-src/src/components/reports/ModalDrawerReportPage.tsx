@@ -179,7 +179,9 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
 
   return (
     <Box>
-      {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
+      {verbiage.intro && (
+        <ReportPageIntro text={verbiage.intro} accordion={verbiage.accordion} />
+      )}
       <Box>
         <Heading as="h3" sx={sx.dashboardTitle}>
           {verbiage.dashboardTitle}

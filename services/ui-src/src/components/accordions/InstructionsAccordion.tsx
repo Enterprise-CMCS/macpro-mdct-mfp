@@ -17,7 +17,7 @@ export const InstructionsAccordion = ({ verbiage, ...props }: Props) => {
             <ListItem key={index}>{sanitizeAndParseHtml(listItem)}</ListItem>
           ))}
         </UnorderedList>
-        <Box sx={sx.textBox}>{sanitizeAndParseHtml(text)}</Box>
+        <Box sx={sx.textBox}>{parseCustomHtml(text)}</Box>
       </AccordionItem>
     </Accordion>
   );
