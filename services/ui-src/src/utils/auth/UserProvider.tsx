@@ -10,6 +10,11 @@ import { Auth } from "aws-amplify";
 import config from "config";
 import { initAuthManager, updateTimeout, getExpiration, useStore } from "utils";
 import { MFPUser, UserContextShape, UserRoles } from "types/users";
+import {
+  PRODUCTION_HOST_DOMAIN,
+  VAL_HOST_DOMAIN,
+  DEV_HOST_DOMAIN,
+} from "../../constants";
 
 export const UserContext = createContext<UserContextShape>({
   logout: async () => {},
@@ -37,7 +42,12 @@ const authenticateWithIDM = async () => {
 
 export const UserProvider = ({ children }: Props) => {
   const location = useLocation();
-  const idmLoginOnly = window.location.hostname.includes(".cms.gov");
+  const idmExclusiveDomains = [
+    PRODUCTION_HOST_DOMAIN,
+    VAL_HOST_DOMAIN,
+    DEV_HOST_DOMAIN,
+  ];
+  const idmLoginOnly = idmExclusiveDomains.includes(window.location.hostname);
 
   // state management
   const { user, showLocalLogins, setUser, setShowLocalLogins } = useStore();
