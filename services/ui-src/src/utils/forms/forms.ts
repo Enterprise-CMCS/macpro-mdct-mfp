@@ -119,8 +119,8 @@ export const hydrateFormFields = (
 
     /**
      * NOTE: this is an edge case specific to the MFP WP.
-     * If the Projected end date of a Close-out initiative is not entered,
-     * the value of that disabled field should be set to "No"
+     * If the user has selected "No" to the Projected End Date question in I. Define initiative,
+     * the value of the V. Close-out initiative disabled field should be set to "No"
      */
     if (
       formData?.["defineInitiative_projectedEndDate"]?.[0].value === "No" &&
