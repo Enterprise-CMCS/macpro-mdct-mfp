@@ -22,6 +22,10 @@ import dynamodbLib from "../dynamo/dynamodb-lib";
 const mockWorkPlanFieldData = mockWPMetadata.fieldData;
 const mockWorkPlanMetaData = mockWPMetadata;
 
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
+
 describe("Test getOrCreateFormTemplate WP", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
