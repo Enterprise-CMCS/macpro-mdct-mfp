@@ -65,7 +65,6 @@ export interface FormField {
   hydrate?: string;
   props?: AnyObject;
   choices?: FieldChoice[];
-  repeat?: string;
   repeatable?: Repeatable;
 }
 
