@@ -39,7 +39,7 @@ const authenticateWithIDM = async () => {
 
 export const UserProvider = ({ children }: Props) => {
   const location = useLocation();
-  const isProduction = window.location.origin.includes(PRODUCTION_HOST_DOMAIN);
+  const idmLoginOnly = window.location.origin.includes(".cms.gov");
 
   // state management
   const { user, showLocalLogins, setUser, setShowLocalLogins } = useStore();
@@ -92,13 +92,13 @@ export const UserProvider = ({ children }: Props) => {
       };
       setUser(currentUser);
     } catch (error) {
-      if (isProduction) {
+      if (idmLoginOnly) {
         authenticateWithIDM();
       } else {
         setShowLocalLogins(true);
       }
     }
-  }, [isProduction, location]);
+  }, [idmLoginOnly, location]);
 
   // re-render on auth state change, checking router location
   useEffect(() => {
