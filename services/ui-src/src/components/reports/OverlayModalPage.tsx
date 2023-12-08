@@ -27,12 +27,13 @@ export const OverlayModalPage = ({
   route,
 }: Props) => {
   const { verbiage, modalForm, stepType } = route;
-  const { report, selectedEntity, setSelectedEntity } = useStore();
+  const { report, selectedEntity, setSelectedEntity, editable } = useStore();
   const [selectedStepEntity, setSelectedStepEntity] = useState<
     EntityShape | undefined
   >(undefined);
 
   const entityType = selectedEntity!.type;
+  const userDisabled = !editable || selectedEntity?.isInitiativeClosed;
 
   /**
    * Any time the report is updated on this page,
@@ -42,7 +43,7 @@ export const OverlayModalPage = ({
   useEffect(() => {
     if (selectedEntity) {
       setSelectedEntity(
-        report?.fieldData?.[selectedEntity.type].find(
+        report?.fieldData?.[selectedEntity.type]?.find(
           (entity: EntityShape) => entity.id == selectedEntity.id
         )
       );
@@ -118,7 +119,7 @@ export const OverlayModalPage = ({
         <Button
           sx={sx.addEntityButton}
           onClick={addEditEntityModalOnOpenHandler}
-          leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+          rightIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
         >
           {verbiage.addEntityButtonText}
         </Button>
@@ -135,6 +136,7 @@ export const OverlayModalPage = ({
                 formattedEntityData={getFormattedEntityData(stepType, entity)}
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
+                disabled={userDisabled}
               />
             )
           )}
@@ -157,6 +159,7 @@ export const OverlayModalPage = ({
           entityIdLookup={entityIdLookup}
           verbiage={verbiage}
           form={modalForm}
+          userDisabled={userDisabled}
           modalDisclosure={{
             isOpen: addEditEntityModalIsOpen,
             onClose: closeAddEditEntityModal,
@@ -171,6 +174,7 @@ export const OverlayModalPage = ({
             isOpen: deleteEntityModalIsOpen,
             onClose: closeDeleteEntityModal,
           }}
+          userDisabled={userDisabled}
         />
       </Box>
       <Box>
@@ -181,7 +185,7 @@ export const OverlayModalPage = ({
             sx={sx.saveButton}
             onClick={closeEntityDetailsOverlay as MouseEventHandler}
           >
-            Save & return
+            {!userDisabled ? "Save & return" : "Return"}
           </Button>
         </Flex>
       </Box>

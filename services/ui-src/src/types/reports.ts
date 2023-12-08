@@ -25,6 +25,7 @@ export interface ReportPageVerbiage {
   reviewPdfHint?: string;
   closeOutWarning?: AnyObject;
   closeOutModal?: AnyObject;
+  praDisclosure?: CustomHtmlElement[];
 }
 
 export interface ReportRouteBase {
@@ -166,6 +167,7 @@ export interface ModalDrawerReportPageVerbiage
   reviewPdfHint: string;
   drawerTitle: string;
   pdfDashboardTitle?: string;
+  accordion?: AnyObject;
 }
 
 export interface OverlayModalPageVerbiage extends ReportPageVerbiage {

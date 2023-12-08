@@ -65,6 +65,8 @@ const mockUseStore: MfpReportState & MfpUserState = {
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "12:30 PM",
   workPlanToCopyFrom: undefined,
+  autosaveState: false,
+  editable: true,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
@@ -72,7 +74,7 @@ const mockUseStore: MfpReportState & MfpUserState = {
   setLastSavedTime: () => {},
   setWorkPlanToCopyFrom: () => {},
   setAutosaveState: () => {},
-  autosaveState: false,
+  setEditable: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
 };
@@ -170,7 +172,7 @@ describe("Test AddEditOverlayEntityModal functionality", () => {
     const textField = form.querySelector("[name='mock-modal-text-field']")!;
     await userEvent.clear(textField);
     await userEvent.type(textField, "mock input 2");
-    const submitButton = screen.getByRole("button", { name: "Save & close" });
+    const submitButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(submitButton);
   };
 

@@ -32,10 +32,25 @@
             },
             {
               "type": "html",
-              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The WP presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The WP enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the WP describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> A recipient submits an initial WP with the updated operational protocol for review and approval. The WP will be updated annually during Period 1 of SAR reporting (July–August). Recipients may also submit updates to the WP during Period 2 of SAR reporting (January–February) to reflect any planned changes in state or territory-specific initiatives or add new initiatives. Changes to the WP must be submitted to CMS for approval no later than 30 days prior to the planned date of implementation of the change and the proposed change(s) may not be implemented until approved. Approved changes will be integrated into the recipient’s SAR reporting for the following reporting period. Note that requests to change Transition Benchmark projections can be made once annually, during the July–August period. <br><br> CMS may amend or add new WP fields during the demonstration period. For additional guidance on completing this form, please see the associated User Guide and Help File. "
+              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The WP presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The WP enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the WP describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new WP fields during the demonstration period. For additional guidance on completing this form, please see the "
+            },
+            {
+              "type": "externalLink",
+              "content": "User Guide and Help File",
+              "props": {
+                "href": "google.com",
+                "target": "_blank",
+                "aria-label": "User Guide and Help File (Link opens in new tab)"
+              }
             }
           ]
-        }
+        },
+        "praDisclosure": [
+          {
+            "type": "span",
+            "content": "<b>PRA Disclosure Statement</b><br/>Under the Privacy Act of 1974 any personally identifying information obtained will be kept private to the extent of the law. According to the Paperwork Reduction Act of 1995, no persons are required to respond to a collection of information unless it displays a valid OMB control number. The valid OMB control number for this information collection is 0938-0920 (Expires: June 30, 2024). The time required to complete this information collection is estimated to average 6 hours per response, including the time to review instructions, search existing data resources, gather the data needed, and complete and review the information collection. If you have comments concerning the accuracy of the time estimate(s) or suggestions for improving this form, please write to: CMS, 7500 Security Boulevard, Attn: PRA Reports Clearance Officer, Mail Stop C4-26-05, Baltimore, Maryland 21244-1850"
+          }
+        ]
       },
       "form": { "id": "wp-gi", "fields": [] }
     },
@@ -46,13 +61,43 @@
       "entityType": "targetPopulations",
       "entityInfo": ["transitionBenchmarks_targetPopulationName"],
       "verbiage": {
+        "accordion": {
+          "buttonLabel": "Instructions",
+          "intro": [
+            {
+              "type": "html",
+              "content": "Target populations are used to understand differences in participation and the impact of the MFP Demonstration for people with varying disabilities.<br><br><b>Defining target populations</b><br>An approach for defining target populations should be outlined in your Operational Protocol. Those definitions should be used to report the transition benchmarks."
+            },
+            {
+              "type": "html",
+              "content": "<br><br>You have flexibility when defining your state or territory’s target populations. Approaches to defining the standard MFP target populations focused on older adults, people with physical disabilities (PD), intellectual or developmental disabilities (I/DD), or mental health or substance use disorders (MH/SUD), may vary among recipients, and could draw on:"
+            }
+          ],
+          "list": [
+            "the individual's primary diagnosis",
+            "qualified institutional setting",
+            "expected service utilization",
+            "HCBS authority enrollment",
+            "or other criteria"
+          ],
+          "text": [
+            {
+            "type": "html",
+            "content": "<b>About adding “other” target populations</b><br>If you are using the “Other” category, clearly describe the rationale and criteria for defining this category in your Operational Protocol, as needed."
+            },
+            {
+              "type": "html",
+              "content": "<br><br><b>How to best categorize which population to attribute the transition to avoid duplication</b><br>You may need to track some populations to see utilization to address questions from stakeholders and those circumstances should be discussed with your CMS MFP Project Officer. For example, if a person has a dual-diagnosis such as an individual with intellectual and developmental disabilities (I/DD) and mental health and substance use disorders (MH/SUD), the service dollars may be expended under an HCBS authority that focuses on people with I/DD, rather than MH/SUD. You could review claims to determine that someone is also receiving mental health services. This additional step may necessitate a tracking mechanism outside of the MFP Work Plan and Semi-Annual Progress Report and should be discussed with your Project Officer."
+            }
+        ]
+        }, 
         "intro": {
           "section": "",
           "subsection": "Transition Benchmark Projections",
           "info": [
             {
-              "type": "span",
-              "content": "Provide the projected number of transitions for target populations during each quarter. This number includes institutional residents who are discharged from an institution to a qualified residence during the reporting period, enroll in MFP, and being using Medicaid home and community-based services (HCBS)."
+              "type": "html",
+              "content": "Provide the projected number of transitions for target populations during each quarter. This number includes institutional residents who are discharged from an institution to a qualified residence during the reporting period, enroll in MFP, and begin using Medicaid home and community-based services (HCBS)."
             }
           ]
         },
@@ -79,7 +124,7 @@
           },
           {
             "type": "p",
-            "content": "Complete all fields and select the Save & close button to save this section."
+            "content": "Complete all fields and select the <i>Save & close</i> button to save this section."
           }
         ]
       },
@@ -170,17 +215,17 @@
       }
     },
     {
-      "name": "State & Territory Specific Initiatives",
+      "name": "State- or Territory Specific Initiatives",
       "path": "/wp/state-and-territory-specific-initiatives",
       "children": [
         {
-          "name": "State & Territory Specific Initiatives Instructions",
+          "name": "State- or Territory Specific Initiatives Instructions",
           "path": "/wp/state-and-territory-specific-initiatives/instructions",
           "pageType": "standard",
           "verbiage": {
             "intro": {
               "section": "",
-              "subsection": "State & Territory Specific Initiatives Instructions",
+              "subsection": "State- or Territory Specific Initiatives Instructions",
               "spreadsheet": "",
               "info": [
                 {
@@ -254,6 +299,10 @@
                       "content": "State or territory equivalent funds attributable to the MFP-enhanced match"
                     }
                   ]
+                },
+                {
+                  "type": "p",
+                  "content": "Recipients must identify and describe the required initiatives below and have the option to identify additional initiatives on other topics."
                 },
                 {
                   "type": "table",
@@ -479,7 +528,7 @@
                                     },
                                     {
                                       "type": "li",
-                                      "content": "Equity and social determinants of health (SODH)",
+                                      "content": "Equity and social determinants of health (SDOH)",
                                       "props": {
                                         "style": {
                                           "paddingBottom": ".5rem"
@@ -557,7 +606,7 @@
                     },
                     {
                       "type": "li",
-                      "content": "Close-out information, to be completed as appropriate during WP revisions",
+                      "content": "Close-out information, to be completed as appropriate during MFP Work Plan revisions",
                       "props": {
                         "style": {
                           "paddingTop": ".5rem"
@@ -568,7 +617,7 @@
                 },
                 {
                   "type": "html",
-                  "content": "<br>The WP should establish one or more demonstrable objectives for each initiative, set associated performance measures or indicators to monitor progress, and clearly articulate the actions necessary to achieve the objectives. Progress towards meeting these objectives indicates a state’s or territory’s increased capacity to provide HCBS, rather than institutional, long-term care services.<br>"
+                  "content": "<br>The MFP Work Plan should establish one or more demonstrable objectives for each initiative, set associated performance measures or indicators to monitor progress, and clearly articulate the actions necessary to achieve the objectives. Progress towards meeting these objectives indicates a state’s or territory’s increased capacity to provide HCBS, rather than institutional, long-term care services.<br>"
                 },
                 {
                   "type": "html",
@@ -576,7 +625,7 @@
                 },
                 {
                   "type": "html",
-                  "content": "<br>If a recipient updates the WP to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>",
+                  "content": "<br>If a recipient updates the MFP Work Plan to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>",
                   "props": {
                     "style": {
                       "paddingBottom": "2rem"
@@ -640,7 +689,7 @@
           }
         },
         {
-          "name": "State & Territory Specific Initiatives",
+          "name": "State- or Territory Specific Initiatives",
           "path": "/wp/state-and-territory-specific-initiatives/initiatives",
           "pageType": "modalOverlay",
           "entityType": "initiative",
@@ -648,7 +697,7 @@
           "verbiage": {
             "intro": {
               "section": "",
-              "subsection": "State and Territory-Specific Initiatives",
+              "subsection": "State- or Territory-Specific Initiatives",
               "info": [
                 {
                   "type": "html",
@@ -658,7 +707,10 @@
                   "type": "internalLink",
                   "content": "previous page",
                   "props": {
-                    "to": "/wp/state-and-territory-specific-initiatives/instructions"
+                    "to": "/wp/state-and-territory-specific-initiatives/instructions",
+                    "style": {
+                      "textDecoration": "underline"
+                    }
                   }
                 },
                 {
@@ -676,13 +728,13 @@
             "addEditModalEditTitle": "Edit initiative",
             "deleteModalTitle": "Are you sure you want to delete this initiative?",
             "deleteModalConfirmButtonText": "Yes, delete initiative",
-            "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
+            "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan.",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
             "dashboardTitle": "Initiative total count:",
             "countEntitiesInTitle": true,
             "tableHeader": "Initiative name <br/> Work Plan topic",
-            "addEditModalHint": "Provide the name of one initiative. You will be then be asked to complete details for this initiative including description, evaluation plan and funding sources."
+            "addEditModalHint": "Provide the name of one initiative. You will be then be asked to complete details for this initiative including a description, evaluation plan and funding sources."
           },
           "modalForm": {
             "id": "add_initiative",
@@ -784,11 +836,11 @@
             "pageType": "entityDetailsDashboardOverlay",
             "verbiage": {
               "intro": {
-                "section": "State and Territory-Specific Initiatives",
+                "section": "State- or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "span",
-                    "content": "Complete each of the first 3 steps for this initiative. Step IV is to be completed when this initiative will no longer be sustained with MFP funding and/or state or territory equivalent funding, and will become available once your initiative information is complete."
+                    "content": "Complete each of the first 3 steps for this initiative. Step IV is to be completed when this initiative will no longer be sustained with MFP funding and/or state or territory equivalent funding, and will become available once your initiative information is complete and approved by your CMS MFP Project Officer."
                   }
                 ]
               },
@@ -797,7 +849,7 @@
           },
           "entitySteps": [
             {
-              "name": "State & Territory Specific Initiatives: I. Define initiative",
+              "name": "State- or Territory Specific Initiatives: I. Define initiative",
               "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
               "pageType": "entityOverlay",
               "entityType": "initiative",
@@ -808,7 +860,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State and Territory-Specific Initiatives: I. Define initiative",
+                  "section": "State- or Territory-Specific Initiatives: I. Define initiative",
                   "info": [
                     {
                       "type": "html",
@@ -837,8 +889,25 @@
                     "type": "checkbox",
                     "validation": "checkbox",
                     "props": {
-                      "label": "Target Population(s):",
-                      "hint": "Select all that apply. Population you've added as &quot;Other&quot; in the Transition Benchmarks section will appear here.",
+                      "label": "Target population(s):",
+                      "hint": [
+                        {
+                          "type": "html",
+                          "content": "Select all that apply. Populations you’ve added as “Other” in the Transition Benchmarks section will appear here. Note: if your target population does not appear here, go to"
+                        },
+                        {
+                          "type": "internalLink",
+                          "content": " Transition Benchmarks",
+                          "props": {
+                            "to": "/wp/transition-benchmarks"
+                          }
+                        },
+                        {
+                          "type": "html",
+                          "content": ", add it there, and return here to select it. Select “Not Applicable” if the population is not a part of your overall MFP target populations (if this is for a non-MFP qualified initiative).]"
+                        }
+                        
+                    ],
                       "choices": []
                     }
                   },
@@ -847,8 +916,8 @@
                     "type": "date",
                     "validation": "date",
                     "props": {
-                      "label": "Start Date",
-                      "hint": "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in the process."
+                      "label": "Start date",
+                      "hint": "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in process."
                     }
                   },
                   {
@@ -873,7 +942,7 @@
                                 "parentFieldName": "defineInitiative_projectedEndDate"
                               },
                               "props": {
-                                "label": "End Date",
+                                "label": "Projected end date",
                                 "hint": "Enter projected end date."
                               }
                             }
@@ -896,7 +965,7 @@
               "entityType": "initiative",
               "stepType": "evaluationPlan",
               "stepInfo": ["stepName", "hint"],
-              "stepName": "II. Evaluation Plan",
+              "stepName": "II. Evaluation plan",
               "hint": "Add evaluation plan, including measurable objectives",
               "isRequired": true,
               "verbiage": {
@@ -939,8 +1008,8 @@
                     "<strong>Time-bound:</strong> Specifies when the results are expected"
                   ],
                   "text": ""
-                },
-                "text": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
+                }, 
+                "text": "Add evaluation plan, including measurable objectives. Select <i>Add objective</i> button for each objective you need to add to the system.",
                 "addEntityButtonText": "Add objective",
                 "editEntityHint": "Select \"Edit\" to complete initiative evaluation plan.",
                 "editEntityButtonText": "Edit objective",
@@ -950,7 +1019,7 @@
                 "addEditModalEditTitle": "Edit objective for ",
                 "deleteModalTitle": "Delete objective for this report?",
                 "deleteModalConfirmButtonText": "Yes, delete objective",
-                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports.",
+                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Progress Reports, but it will not be available in future Work Plans and Semi-Annual Reports. Are you sure you want to proceed?",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
                 "dashboardTitle": "Objective total count",
@@ -975,7 +1044,7 @@
                     "type": "textarea",
                     "validation": "text",
                     "props": {
-                      "label": "Describe the performance of measures or indicators your state or territory will use to monitor progress toward achieving this objective, including details on the calculation of measures if relevant. Please describe any key deliverables.",
+                      "label": "Describe the performance measures or indicators your state or territory will use to monitor progress toward achieving this objective, including details on the calculation of measures if relevant. Please describe any key deliverables.",
                       "hint": "(e.g., data sources and limitations)"
                     }
                   },
@@ -984,7 +1053,7 @@
                     "type": "textarea",
                     "validation": "text",
                     "props": {
-                      "label": "Provide targets for the performance measures or indicators listed above. Please include milestones and expected time frames or key deliverables.",
+                      "label": "Provide targets for the performance measures or indicators listed above. Please include milestones and expected time frames for key deliverables.",
                       "hint": "If a performance measure includes quantitative targets, complete the quarterly fields below."
                     }
                   },
@@ -1035,7 +1104,7 @@
               }
             },
             {
-              "name": "State and Territory-Specific Initiatives: III. Funding Sources",
+              "name": "State-or Territory-Specific Initiatives: III. Funding sources",
               "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
               "pageType": "overlayModal",
               "entityType": "initiative",
@@ -1046,7 +1115,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State and Territory-Specific Initiatives: III. Funding Sources",
+                  "section": "State- or Territory-Specific Initiatives: III. Funding sources",
                   "info": [
                     {
                       "type": "html",
@@ -1068,9 +1137,9 @@
                 "deleteEntityButtonAltText": "Delete other target population",
                 "deleteModalTitle": "Delete funding source for this report? ",
                 "deleteModalConfirmButtonText": "Yes, delete funding source",
-                "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived Work Plans and Semi-Annual Reports, but it will not be available in future Work Plans and Semi-Annual Reports. <br><br>Are you sure you want to proceed?",
+                "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. Are you sure you want to proceed?",
                 "tableHeader": "Initiative name <br/> Work Plan topic",
-                "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).",
+                "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Progress Report (SAR).",
                 "dashboardTitle": "Funding Sources",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
@@ -1086,7 +1155,7 @@
                     "validation": "radio",
                     "props": {
                       "label": "Funding source:",
-                      "hint": "Enter a dollar amount using a $ or a percentage with %. Enter 0 for quarters with no projected expenditures. Enter N/A for quarters you do not expect to report.",
+                      "hint": "Enter a dollar amount. Enter 0 for quarters with no projected expenditures. Enter N/A for quarters you do not expect to report.",
                       "choices": [
                         {
                           "id": "2VLpZ9A92OivbZhKvY8pE4hB65c",
@@ -1142,18 +1211,18 @@
               }
             },
             {
-              "name": "State & Territory-Specific Initiatives: IV. Close-out information",
+              "name": "State- or Territory-Specific Initiatives: IV. Close-out information",
               "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
               "pageType": "entityOverlay",
               "entityType": "initiative",
               "stepType": "closeOutInformation",
               "stepInfo": ["stepName", "hint"],
               "stepName": "IV. Close-out information (if applicable)",
-              "hint": "To be completed as appropriate during Work Plan revisions",
+              "hint": "To be completed as appropriate during MFP Work Plan revisions",
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State & Territory-Specific Initiatives: IV. Close-out information",
+                  "section": "State- or Territory-Specific Initiatives: IV. Close-out information",
                   "hint": "Complete the section below for initiatives with an end date during the upcoming semi-annual reporting period."
                 },
                 "closeOutWarning": {
@@ -1173,11 +1242,12 @@
                 "id": "sauxM9MnFZhIn5W44WY3BG",
                 "fields": [
                   {
-                    "id": "initiative_projectedEndDate",
+                    "id": "defineInitiative_projectedEndDate_value",
                     "type": "date",
                     "validation": "textOptional",
                     "props": {
                       "label": "Projected end date",
+                      "hint": "Auto-populates from “I. Define initiative”.",
                       "disabled": true
                     }
                   },

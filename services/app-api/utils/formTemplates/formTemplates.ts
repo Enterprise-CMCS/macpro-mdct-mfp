@@ -226,10 +226,14 @@ export const runFieldTransformationRules = (
     }
 
     if (field?.transformation) {
-      const repeatingFieldRule =
+      console.log(
+        "🚀 ~ file: formTemplates.ts:229 ~ formFields.forEach ~ field?.transformation:",
+        field?.transformation
+      );
+      const transformationRule =
         transformationRuleMap[field.transformation.rule];
       transformedFields.push(
-        ...repeatingFieldRule(field, workPlanFieldData, workPlanMetaData)
+        ...transformationRule(field, workPlanFieldData, workPlanMetaData)
       );
     } else {
       transformedFields.push(field);
@@ -281,6 +285,34 @@ export const findAndRunFieldTransformationRules = (
   }
 };
 
+export const scanForConditionalRoutes = (
+  reportRoutes: ReportRoute[],
+  workPlanMetaData?: AnyObject
+) => {
+  for (let route of reportRoutes) {
+    if (route?.entitySteps)
+      scanForConditionalRoutes(route.entitySteps, workPlanMetaData);
+    if (route?.children)
+      scanForConditionalRoutes(route.children, workPlanMetaData);
+
+    // if route has a field that is to be conditionally rendered, conditionally keep in array
+    if (route?.conditionallyRender) {
+      // if a path has "showOnlyInPeriod2" attached as a rule, we only want to show in reporting period 2, and remove from the list of routes otherwise
+      if (
+        route.conditionallyRender === "showOnlyInPeriod2" &&
+        workPlanMetaData?.reportPeriod != 2
+      ) {
+        const index = reportRoutes.indexOf(route);
+        if (index > -1) {
+          reportRoutes.splice(index, 1);
+        }
+      }
+    }
+  }
+
+  return reportRoutes;
+};
+
 export async function getOrCreateFormTemplate(
   reportBucket: string,
   reportType: ReportType,
@@ -288,7 +320,10 @@ export async function getOrCreateFormTemplate(
   workPlanMetaData?: ReportMetadataShape,
   copyReport?: AnyObject
 ) {
-  const currentFormTemplate = formTemplateForReportType(reportType);
+  //Make a copy of the form template so we don't accidentally corrupt the original
+  const currentFormTemplate = structuredClone(
+    formTemplateForReportType(reportType)
+  );
   const stringifiedTemplate = JSON.stringify(currentFormTemplate);
 
   const currentTemplateHash = createHash("md5")
@@ -308,6 +343,12 @@ export async function getOrCreateFormTemplate(
     };
   } else {
     const newFormTemplateId = KSUID.randomSync().string;
+
+    // traverse routes and scan for conditional field
+    currentFormTemplate.routes = scanForConditionalRoutes(
+      currentFormTemplate.routes,
+      workPlanMetaData
+    );
 
     findAndRunFieldTransformationRules(
       currentFormTemplate.routes,

@@ -47,6 +47,7 @@ const mockUseStore: MfpReportState & MfpUserState = {
   lastSavedTime: "12:30 PM",
   workPlanToCopyFrom: undefined,
   autosaveState: false,
+  editable: true,
   setReport: () => {},
   setReportsByState: () => {},
   clearReportsByState: () => {},
@@ -54,6 +55,7 @@ const mockUseStore: MfpReportState & MfpUserState = {
   setLastSavedTime: () => {},
   setWorkPlanToCopyFrom: () => {},
   setAutosaveState: () => {},
+  setEditable: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
 };
@@ -136,7 +138,7 @@ describe("Test AddEditEntityModal", () => {
     const textField = form!.querySelector("input")!;
     await userEvent.clear(textField);
     await userEvent.type(textField, "mock input 1");
-    const submitButton = screen.getByRole("button", { name: "Save & close" });
+    const submitButton = screen.getByRole("button", { name: "Save" });
     expect(submitButton).toBeDisabled;
   });
 });
@@ -157,7 +159,7 @@ describe("Test AddEditEntityModal functionality", () => {
     const textField = form.querySelector("[name='mock-modal-text-field']")!;
     await userEvent.clear(textField);
     await userEvent.type(textField, "mock input 2");
-    const submitButton = screen.getByRole("button", { name: "Save & close" });
+    const submitButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(submitButton);
   };
 
@@ -218,7 +220,7 @@ describe("Test AddEditEntityModal functionality", () => {
 
   test("Doesn't edit an existing entity if no update was made", async () => {
     render(modalComponentWithSelectedEntity);
-    const submitButton = screen.getByRole("button", { name: "Save & close" });
+    const submitButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(submitButton);
     expect(mockUpdateReport).toHaveBeenCalledTimes(0);
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);

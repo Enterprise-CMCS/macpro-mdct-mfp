@@ -54,18 +54,21 @@ export const AddEditReportModal = ({
         id: "2Vd02HAezQkxNu2ShmlQONHa",
         transitionBenchmarks_targetPopulationName:
           "Individuals with physical disabilities (PD)",
+        transitionBenchmarks_targetPopulationName_short: "PD",
         isRequired: true,
       },
       {
         id: "2Vd02IvLwE59ebYAjfiU7H66",
         transitionBenchmarks_targetPopulationName:
           "Individuals with intellectual and developmental disabilities (I/DD)",
+        transitionBenchmarks_targetPopulationName_short: "I/DD",
         isRequired: true,
       },
       {
         id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
         transitionBenchmarks_targetPopulationName:
           "Individuals with mental health and substance use disorders (MH/SUD)",
+        transitionBenchmarks_targetPopulationName_short: "MH/SUD",
         isRequired: true,
       },
     ];
@@ -207,7 +210,7 @@ export const AddEditReportModal = ({
         <>
           <Button
             sx={sx.copyBtn}
-            disabled={isCopyDisabled()}
+            disabled={isCopyDisabled() || submitting}
             onClick={writeReport}
             type="submit"
           >
@@ -217,6 +220,7 @@ export const AddEditReportModal = ({
             <Button
               sx={sx.close}
               onClick={writeReport}
+              disabled={submitting}
               type="submit"
               variant="outline"
               data-testid="modal-logout-button"
@@ -227,6 +231,7 @@ export const AddEditReportModal = ({
             <Button
               sx={sx.resetBtn}
               onClick={resetReport}
+              disabled={submitting}
               type="submit"
               variant="outline"
               data-testid="modal-logout-button"

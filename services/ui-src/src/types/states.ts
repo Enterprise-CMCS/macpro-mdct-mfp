@@ -42,6 +42,7 @@ export interface MfpReportState {
   lastSavedTime: string | undefined;
   workPlanToCopyFrom: ReportShape | undefined;
   autosaveState: boolean;
+  editable: boolean;
   // ACTIONS
   setReport: (newReport: ReportShape | undefined) => void;
   setReportsByState: (
@@ -54,6 +55,7 @@ export interface MfpReportState {
   setLastSavedTime: (lastSavedTime: string | undefined) => void;
   setWorkPlanToCopyFrom: (planToCopy: ReportShape | undefined) => void;
   setAutosaveState: (state: boolean) => void;
+  setEditable: (state: boolean) => void;
 }
 
 // initial entity state

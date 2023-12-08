@@ -18,6 +18,7 @@ const additionalFields = [
   "isOtherEntity",
   "isRequired",
   "isCopied",
+  "isInitiativeClosed",
 ];
 
 export async function copyFieldDataFromSource(
@@ -92,6 +93,13 @@ function pruneEntityData(
       delete entityData[index];
     } else entityData[index]["isCopied"] = true;
   });
+
+  //filter out any closeout data
+  if (sourceFieldData && sourceFieldData[key]) {
+    sourceFieldData[key] = sourceFieldData[key].filter(
+      (field: AnyObject) => !field["isInitiativeClosed"]
+    );
+  }
   // Delete whole key if there's nothing in it.
   if (entityData.every((e) => e === null)) {
     delete sourceFieldData[key];
