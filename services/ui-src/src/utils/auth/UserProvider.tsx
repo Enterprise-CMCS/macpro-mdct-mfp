@@ -9,8 +9,6 @@ import { useLocation } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import config from "config";
 import { initAuthManager, updateTimeout, getExpiration, useStore } from "utils";
-import { PRODUCTION_HOST_DOMAIN } from "../../constants";
-
 import { MFPUser, UserContextShape, UserRoles } from "types/users";
 
 export const UserContext = createContext<UserContextShape>({
@@ -39,7 +37,7 @@ const authenticateWithIDM = async () => {
 
 export const UserProvider = ({ children }: Props) => {
   const location = useLocation();
-  const idmLoginOnly = window.location.origin.includes(".cms.gov");
+  const idmLoginOnly = window.location.hostname.includes(".cms.gov");
 
   // state management
   const { user, showLocalLogins, setUser, setShowLocalLogins } = useStore();
