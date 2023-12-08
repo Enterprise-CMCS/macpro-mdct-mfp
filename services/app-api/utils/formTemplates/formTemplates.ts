@@ -226,10 +226,6 @@ export const runFieldTransformationRules = (
     }
 
     if (field?.transformation) {
-      console.log(
-        "🚀 ~ file: formTemplates.ts:229 ~ formFields.forEach ~ field?.transformation:",
-        field?.transformation
-      );
       const transformationRule =
         transformationRuleMap[field.transformation.rule];
       transformedFields.push(
