@@ -123,7 +123,7 @@ export const hydrateFormFields = (
      * the value of that disabled field should be set to "No"
      */
     if (
-      formData?.["defineInitiative_projectedEndDate"][0].value === "No" &&
+      formData?.["defineInitiative_projectedEndDate"]?.[0].value === "No" &&
       field.id === "defineInitiative_projectedEndDate_value" &&
       !fieldProps.hydrate &&
       fieldProps.disabled
