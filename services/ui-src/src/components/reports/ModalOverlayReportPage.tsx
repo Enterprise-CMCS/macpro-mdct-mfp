@@ -49,7 +49,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   );
 
   const showAlert =
-    report && modalForm && (alertVerbiage as AlertVerbiage)[entityType]
+    report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
       : false;
 
