@@ -94,6 +94,13 @@ export const secondQuarterOfThePeriod = (
   return [updatedFormField];
 };
 
+/**
+ * Gather all the information from the work plan and build out 12 quarters from today's today
+ * @param {string} fieldId - The fieldID from the formField we're looking at
+ * @param {number} currentDate - today's date
+ * @param {ReportMetadataShape} workPlanMetaData - workPlanMetaData that contains the report period
+ * @return {TargetPopulationKeys[]} Returns 12 quarters information based on the workplan to help build out a new field
+ */
 export const nextTwelveQuartersKeys = (
   fieldId: string,
   currentDate: number,
@@ -116,6 +123,12 @@ export const nextTwelveQuartersKeys = (
   return keys;
 };
 
+/**
+ * Run the transformation "nextTwelveQuarters" on the field and returns 12 quarters based on todays date
+ * @param {FormField} fieldToRepeat - The formFields you want to transform
+ * @param {ReportMetadataShape} workPlanMetaData - workPlanMetaData that contains the report period
+ * @return {FormField[]} Returns 12 quarters as form fields
+ */
 export const nextTwelveQuarters = (
   fieldToRepeat: FormField,
   workPlanMetaData: ReportMetadataShape
@@ -125,7 +138,7 @@ export const nextTwelveQuarters = (
     Date.now(),
     workPlanMetaData
   );
-  const fieldsToAppend = [];
+  const fieldsToAppend: FormField[] = [];
   for (let key of keys) {
     const formField: FormField = {
       ...fieldToRepeat,
@@ -143,6 +156,13 @@ export const nextTwelveQuarters = (
   return fieldsToAppend;
 };
 
+/**
+ * Gather all the information from the work plan about how many target populations we need to create
+ * @param {string} fieldId - The fieldID from the formField we're looking at
+ * @param {AnyObject} workPlanFieldData - fieldData that contains the target populations
+ * @param {ReportMetadataShape} workPlanMetaData - workPlanMetaData that contains the report period
+ * @return {TargetPopulationKeys[]} Returns all the target populations from the work plan with important information to build out a new field
+ */
 export const targetPopulationsKeys = (
   fieldId: string,
   workPlanFieldData: AnyObject,
@@ -163,17 +183,30 @@ export const targetPopulationsKeys = (
   return keys;
 };
 
+/**
+ * Run the transformation "TargetPopulations" on the field and returns all the target populations from the work plan in its place
+ * @param {FormField} formField - The formFields you want to transform
+ * @param {AnyObject} workPlanFieldData - fieldData that contains the target populations
+ * @param {ReportMetadataShape} workPlanMetaData - workPlanMetaData that contains the report period
+ * @return {FormField[]} Returns all the target populations from the work plan as form fields
+ */
 export const targetPopulations = (
   fieldToRepeat: FormField,
   workPlanFieldData: AnyObject,
   workPlanMetaData: ReportMetadataShape
 ) => {
+  //Gather all the information from the work plan about how many target populations we need to create
   var targetPopulationKeys = targetPopulationsKeys(
     fieldToRepeat.id,
     workPlanFieldData,
     workPlanMetaData
   );
   const fieldsToAppend = [];
+
+  /*
+   * Run through all the target populations found in the WP and build out a field
+   * using the target population and the field information from the SAR
+   */
   for (let population of targetPopulationKeys) {
     const formField: FormField = {
       ...fieldToRepeat,
@@ -195,11 +228,20 @@ export const targetPopulations = (
   return fieldsToAppend;
 };
 
+/**
+ * Look through the formFields provided and run the transformation provided on that field.
+ * @param {FormField[]} formFields - The formFields you want to transform
+ * @param {AnyObject} workPlanFieldData - Optional fieldData that a transformation might need of
+ * @param {ReportMetadataShape} workPlanMetaData - Optional workPlanMetaData that a transformation might need of
+ * @return {FormField[]} Returns the formFields provided but with any transformation it finds run on them
+ */
+
 export const runFieldTransformationRules = (
   formFields: FormField[],
   workPlanFieldData?: AnyObject,
-  workPlanMetaData?: AnyObject
+  workPlanMetaData?: ReportMetadataShape
 ) => {
+  //Create a map of all the possible transformations that can run on a field
   const transformationRuleMap: AnyObject = {
     nextTwelveQuarters: nextTwelveQuarters,
     targetPopulations: targetPopulations,
@@ -208,8 +250,12 @@ export const runFieldTransformationRules = (
   };
 
   const transformedFields: FormField[] = [];
+
   formFields.forEach((field) => {
-    // if field has choices/options (ie could have nested children)
+    /*
+     * Some fields are a choicelists which can have their own form fields
+     * We need to recurse through and run any transformations on those as well!
+     */
     const fieldChoices = field.props?.choices;
     if (fieldChoices) {
       fieldChoices.forEach((choice: FieldChoice) => {
@@ -225,6 +271,7 @@ export const runFieldTransformationRules = (
       });
     }
 
+    //If we find a transformation, run the rule provided with it, otherwise just pass it along
     if (field?.transformation) {
       const transformationRule =
         transformationRuleMap[field.transformation.rule];
@@ -238,6 +285,14 @@ export const runFieldTransformationRules = (
   return transformedFields;
 };
 
+/**
+ * Look through the wp.json or sar.json and find in theres a transformation that needs run
+ * on a field
+ * @param { (ReportRoute | OverlayModalPageShape | EntityDetailsOverlayShape)[]} reportRoutes - A route containing a form object
+ * @param { AnyObject } workPlanFieldData - Some transformations rely on Work plan fielddata, so pass it here if needed
+ * @param { ReportMetadataShape } workPlanMetaData - Some transformations rely on Work plan metadata, so pass it here if needed
+ * @return This will modify whatever the reportRoute was that was given and perform any transformations it finds
+ */
 export const findAndRunFieldTransformationRules = (
   reportRoutes: (
     | ReportRoute
