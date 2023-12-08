@@ -186,7 +186,7 @@
                 "id": "ret_psmicf_target_populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               }
@@ -221,32 +221,30 @@
               {
                 "id": "ret_mtrp_quarter_header_1",
                 "type": "sectionHeader",
-                "props": {
-                  "content": "",
-                  "contentRule": "firstQuarter"
+                "transformation": {
+                  "rule": "firstQuarterOfThePeriod"
                 }
               },
               {
                 "id": "ret_mtrp_quarter_1_populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
               {
                 "id": "ret_mtrp_quarter_header_2",
                 "type": "sectionHeader",
-                "props": {
-                  "content": "",
-                  "contentRule": "secondQuarter"
+                "transformation": {
+                  "rule": "secondQuarterOfThePeriod"
                 }
               },
               {
                 "id": "ret_mtrp_quarter_2_populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               }
@@ -289,7 +287,7 @@
                 "id": "ret-mtfqi-1-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -304,7 +302,7 @@
                 "id": "ret-mtfqi-2-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -319,7 +317,7 @@
                 "id": "ret-mtfqi-3-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -334,7 +332,7 @@
                 "id": "ret-mtfqi-4-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -349,7 +347,7 @@
                 "id": "ret-mtfqi-5-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               }
@@ -392,7 +390,7 @@
                 "id": "ret-mtfqr-1-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -407,7 +405,7 @@
                 "id": "ret-mtfqr-2-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -422,7 +420,7 @@
                 "id": "ret-mtfqr-3-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -437,7 +435,7 @@
                 "id": "ret-mtfqr-4-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               }
@@ -473,7 +471,7 @@
                 "id": "ret-tnamprp-1-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               }
@@ -509,7 +507,7 @@
                 "id": "ret-nmpcprp-1-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               }
@@ -545,7 +543,7 @@
                 "id": "ret-npremrp-1-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               }
@@ -588,7 +586,7 @@
                 "id": "ret-mpdprp-1-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -603,7 +601,7 @@
                 "id": "ret-mpdprp-2-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -618,7 +616,7 @@
                 "id": "ret-mpdprp-3-populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
+                "transformation": {
                   "rule": "targetPopulations"
                 }
               },
@@ -644,7 +642,7 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
                           },
-                          "repeatable": {
+                          "transformation": {
                             "rule": "targetPopulations"
                           }
                         }
@@ -663,7 +661,7 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
                           },
-                          "repeatable": {
+                          "transformation": {
                             "rule": "targetPopulations"
                           }
                         }
@@ -682,7 +680,7 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
                           },
-                          "repeatable": {
+                          "transformation": {
                             "rule": "targetPopulations"
                           }
                         }
@@ -701,7 +699,7 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
                           },
-                          "repeatable": {
+                          "transformation": {
                             "rule": "targetPopulations"
                           }
                         }
@@ -729,7 +727,7 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
                           },
-                          "repeatable": {
+                          "transformation": {
                             "rule": "targetPopulations"
                           }
                         }

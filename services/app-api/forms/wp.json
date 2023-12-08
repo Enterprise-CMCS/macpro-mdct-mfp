@@ -37,7 +37,7 @@
           ]
         }
       },
-      "form": { "id": "", "fields": [] }
+      "form": { "id": "wp-gi", "fields": [] }
     },
     {
       "name": "Transition Benchmarks",
@@ -125,7 +125,7 @@
                         "parentOptionId": "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd",
                         "nested": true
                       },
-                      "repeatable": {
+                      "transformation": {
                         "rule": "nextTwelveQuarters"
                       }
                     }
@@ -1013,7 +1013,7 @@
                                 "parentOptionId": "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
                                 "nested": true
                               },
-                              "repeatable": {
+                              "transformation": {
                                 "rule": "nextTwelveQuarters"
                               }
                             }
@@ -1134,7 +1134,7 @@
                     "id": "fundingSources_quarters",
                     "type": "number",
                     "validation": "number",
-                    "repeatable": {
+                    "transformation": {
                       "rule": "nextTwelveQuarters"
                     }
                   }
