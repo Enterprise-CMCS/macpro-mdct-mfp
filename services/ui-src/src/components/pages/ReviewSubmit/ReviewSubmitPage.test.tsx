@@ -207,8 +207,7 @@ describe("When loading a sucessfully submitted report (Success Message Generator
         reportType,
         submissionName,
         submittedDate,
-        submittersName,
-        stateName
+        submittersName
       )
     ).toEqual([
       `${reportType} submission for `,
