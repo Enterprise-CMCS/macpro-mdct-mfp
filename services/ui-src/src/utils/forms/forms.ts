@@ -97,6 +97,7 @@ export const hydrateFormFields = (
   formFields.forEach((field: FormField | FormLayoutElement) => {
     const fieldFormIndex = formFields.indexOf(field!);
     const fieldProps = formFields[fieldFormIndex].props!;
+
     // check for children on each choice in field props
     if (fieldProps) {
       const choices = fieldProps.choices;
@@ -112,8 +113,24 @@ export const hydrateFormFields = (
       // if no props on field, initialize props as empty object
       formFields[fieldFormIndex].props = {};
     }
+
     // set props.hydrate
-    const fieldHydrationValue = formData?.[field.id];
+    let fieldHydrationValue = formData?.[field.id];
+
+    /**
+     * NOTE: this is an edge case specific to the MFP WP.
+     * If the user has selected "No" to the Projected End Date question in I. Define initiative,
+     * the value of the V. Close-out initiative disabled field should be set to "No"
+     */
+    if (
+      formData?.["defineInitiative_projectedEndDate"]?.[0].value === "No" &&
+      field.id === "defineInitiative_projectedEndDate_value" &&
+      !fieldProps.hydrate &&
+      fieldProps.disabled
+    ) {
+      fieldHydrationValue = "No";
+    }
+
     formFields[fieldFormIndex].props!.hydrate = fieldHydrationValue;
   });
 
