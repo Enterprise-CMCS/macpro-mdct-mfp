@@ -41,7 +41,7 @@ import {
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { logger } from "../../utils/logging";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { copyFieldDataFromSource } from "../../utils/other/copy";
+import { copyFieldDataFromSource, overriderDate } from "../../utils/other/copy";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
@@ -117,6 +117,11 @@ export const createReport = handler(
     const unvalidatedPayload = JSON.parse(event.body!);
     const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
       unvalidatedPayload;
+
+    //override the date in the system to generate the next report based on the previous reporting period. adding flag to turn it on and off
+    if (unvalidatedMetadata?.copyReport) {
+      overriderDate(unvalidatedMetadata?.copyReport);
+    }
 
     const creationValidationJson = {
       reportPeriod: "text",

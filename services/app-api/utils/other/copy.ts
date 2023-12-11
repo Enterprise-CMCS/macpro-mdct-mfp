@@ -105,3 +105,18 @@ function pruneEntityData(
     delete sourceFieldData[key];
   }
 }
+
+export function overriderDate(copyReport:AnyObject){
+  if (copyReport) {
+    Date.prototype.getMonth = () => {
+      //if reporting period is 1, we want to generate period 2 but returning a month in the later half of the year
+      return copyReport.reportPeriod === 1 ? 11 : 2;
+    };
+    Date.prototype.getFullYear = () => {
+      //if reporting period is 1, we want to return the same year but period 2, else next year
+      return copyReport.reportPeriod === 1
+        ? copyReport.reportYear
+        : (copyReport.reportYear + 1);
+    };
+  }
+}
