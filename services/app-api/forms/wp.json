@@ -1136,7 +1136,7 @@
                 "deleteEntityButtonAltText": "Delete other target population",
                 "deleteModalTitle": "Delete funding source for this report? ",
                 "deleteModalConfirmButtonText": "Yes, delete funding source",
-                "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. Are you sure you want to proceed?",
+                "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
                 "tableHeader": "Initiative name <br/> Work Plan topic",
                 "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Progress Report (SAR).",
                 "dashboardTitle": "Funding Sources",
