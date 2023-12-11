@@ -18,6 +18,7 @@ import {
   EntityShape,
   ModalOverlayReportPageShape,
   EntityDetailsDashboardOverlayShape,
+  ReportType,
 } from "types";
 // utils
 import { resetClearProp, useBreakpoint, useStore } from "utils";
@@ -47,6 +48,10 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   (reportFieldDataEntities as any[]).map(
     (entity) => (entity["isOtherEntity"] = true)
   );
+
+  if (report?.reportType === ReportType.SAR) {
+    (reportFieldDataEntities as any[]).map((entity) => (entity["true"] = true));
+  }
 
   const showAlert =
     report && (alertVerbiage as AlertVerbiage)[entityType]
