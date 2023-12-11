@@ -9,6 +9,7 @@ import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
 import { injectFormWithTargetPopulations, useStore } from "utils";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const AddEditReportModal = ({
   activeState,
@@ -39,6 +40,9 @@ export const AddEditReportModal = ({
   const modalFormJson = modalFormJsonMap[reportType]!;
   const form: FormJson = modalFormJson;
 
+  //temporary flag for testing copyover
+  const isCopyOverTest = useFlags()?.isCopyOverTest;
+
   // WP report payload
   const prepareWpPayload = () => {
     const submissionName = "Work Plan";
@@ -54,21 +58,29 @@ export const AddEditReportModal = ({
         id: "2Vd02HAezQkxNu2ShmlQONHa",
         transitionBenchmarks_targetPopulationName:
           "Individuals with physical disabilities (PD)",
+        transitionBenchmarks_targetPopulationName_short: "PD",
         isRequired: true,
       },
       {
         id: "2Vd02IvLwE59ebYAjfiU7H66",
         transitionBenchmarks_targetPopulationName:
           "Individuals with intellectual and developmental disabilities (I/DD)",
+        transitionBenchmarks_targetPopulationName_short: "I/DD",
         isRequired: true,
       },
       {
         id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
         transitionBenchmarks_targetPopulationName:
           "Individuals with mental health and substance use disorders (MH/SUD)",
+        transitionBenchmarks_targetPopulationName_short: "MH/SUD",
         isRequired: true,
       },
     ];
+
+    //add a flag to be passed to the backend for copy over testing
+    if (previousReport) {
+      previousReport.isCopyOverTest = isCopyOverTest;
+    }
 
     return {
       metadata: {

@@ -50,7 +50,7 @@ const mockSubmittedReport = {
   status: ReportStatus.SUBMITTED,
 };
 
-describe("MCPAR Review and Submit Page Functionality", () => {
+describe("Review and Submit Page Functionality", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -63,7 +63,7 @@ describe("MCPAR Review and Submit Page Functionality", () => {
       const { title, description } = alertBox;
       expect(screen.getByText(title)).toBeVisible();
       expect(screen.getByText(description)).toBeVisible();
-      expect(screen.getByText("Submit WP")!).toBeDisabled();
+      expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
     });
 
     test("Admin users get same experience and can't submit form", () => {
@@ -76,7 +76,7 @@ describe("MCPAR Review and Submit Page Functionality", () => {
       const { title, description } = alertBox;
       expect(screen.getByText(title)).toBeVisible();
       expect(screen.getByText(description)).toBeVisible();
-      expect(screen.getByText("Submit WP")!).toBeDisabled();
+      expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
     });
   });
 
@@ -91,7 +91,7 @@ describe("MCPAR Review and Submit Page Functionality", () => {
       const { title, description } = alertBox;
       expect(screen.getByText(title)).toBeVisible();
       expect(screen.getByText(description)).toBeVisible();
-      expect(screen.getByText("Submit WP")!).toBeDisabled();
+      expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
 
       const unfilledPageImg = document.querySelector(
         "img[alt='Error notification']"
@@ -110,7 +110,7 @@ describe("MCPAR Review and Submit Page Functionality", () => {
       const { title, description } = alertBox;
       expect(screen.getByText(title)).toBeVisible();
       expect(screen.getByText(description)).toBeVisible();
-      expect(screen.getByText("Submit WP")!).toBeDisabled();
+      expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
 
       const unfilledPageImg = document.querySelector(
         "img[alt='Error notification']"
@@ -130,7 +130,7 @@ describe("MCPAR Review and Submit Page Functionality", () => {
       const { title, description } = alertBox;
       expect(screen.queryByText(title)).not.toBeInTheDocument();
       expect(screen.queryByText(description)).not.toBeInTheDocument();
-      expect(screen.getByText("Submit WP")!).not.toBeDisabled();
+      expect(screen.getByText("Submit MFP Work Plan")!).not.toBeDisabled();
       const unfilledPageImg = document.querySelector(
         "img[alt='Error notification']"
       );
@@ -157,7 +157,7 @@ describe("MCPAR Review and Submit Page Functionality", () => {
         report: mockFilledReport,
       });
       render(WpReviewSubmitPage);
-      const reviewSubmitButton = screen.getByText("Submit WP")!;
+      const reviewSubmitButton = screen.getByText("Submit MFP Work Plan")!;
       await userEvent.click(reviewSubmitButton);
       const modalSubmitButton = screen.getByTestId("modal-submit-button")!;
       await userEvent.click(modalSubmitButton);
@@ -186,7 +186,7 @@ describe("MCPAR Review and Submit Page Functionality", () => {
       const { title, description } = alertBox;
       expect(screen.queryByText(title)).not.toBeInTheDocument();
       expect(screen.queryByText(description)).not.toBeInTheDocument();
-      expect(screen.getByText("Submit WP")!).toBeDisabled();
+      expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
       const unfilledPageImg = document.querySelector(
         "img[alt='Error notification']"
       );
