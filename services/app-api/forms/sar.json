@@ -1396,64 +1396,45 @@
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "State- or Territory-Specific Initiatives",
-          "accordion": {
-            "buttonLabel": "Instructions",
-            "info": [
-              {
-                "type": "span",
-                "content": "This section requests information on current, new, or expanded initiatives implemented under the MFP demonstration. These initiatives can be funded using one or more of these funding sources:"
-              },
-              {
-                "type": "ul",
-                "children": [
-                  {
-                    "type": "li",
-                    "content": "MFP cooperative agreement funds for:",
-                    "children": [
-                      {
-                        "type": "li",
-                        "content": "Qualified HCBS and demonstration services"
-                      },
-                      {
-                        "type": "li",
-                        "content": "Supplemental services"
-                      },
-                      {
-                        "type": "li",
-                        "content": "Administrative activities"
-                      },
-                      {
-                        "type": "li",
-                        "content": "Capacity building initiatives"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "li",
-                    "content": "State/Territory equivalent funds attributable to the MFP-enhanced match"
-                  }
-                ]
-              },
-              {
-                "type": "p",
-                "content": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports (LTSS). These initiatives are specified in your MFP Work Plan and imported into the form below."
-              },
-              {
-                "type": "p",
-                "content": "Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period."
-              },
-              {
-                "type": "p",
-                "content": "For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress towards these objectives indicates the state or territory's greater ability to provide HCBS instead of services in institutional settings. If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them."
-              }
-            ]
-          }
+          "subsection": "State- or Territory-Specific Initiatives"
+        },
+        "accordion": {
+          "buttonLabel": "Instructions",
+          "intro": [
+            {
+              "type": "html",
+              "content": "This section requests information on current, new, or expanded initiatives implemented under the MFP demonstration. These initiatives can be funded using one or more of these funding sources:"
+            }
+          ],
+          "list": [
+            "MFP cooperative agreement funds for:",
+            [
+              "Qualified HCBS and demonstration services",
+              "Supplemental services",
+              "Administrative activities",
+              "Capacity building initiatives"
+            ],
+            "State/Territory equivalent funds attributable to the MFP-enhanced match"
+          ],
+          "text": [
+            {
+              "type": "html",
+              "content": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports (LTSS). These initiatives are specified in your MFP Work Plan and imported into the form below."
+            },
+            {
+              "type": "html",
+              "content": "<br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period."
+            },
+            {
+              "type": "html",
+              "content": "<br><br>For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress towards these objectives indicates the state or territory's greater ability to provide HCBS instead of services in institutional settings. If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them."
+            }
+          ]
         },
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
-        "dashboardSubtitle": "Initiatives and Work Plan topics are auto-populated from your most recent approved Work Plan.",
+        "dashboardSubtitle": "Initiatives and Work Plan topics are auto-populated from your most recent approved Work Plan. Note: Initiative topics with * are required topics.",
         "tableHeader": "Initiative name <br/> Work Plan topic",
         "countEntitiesInTitle": false
       },
@@ -1471,10 +1452,6 @@
             ]
           }
         }
-      },
-      "modalForm": {
-        "id": "",
-        "fields": []
       },
       "entitySteps": [
         {

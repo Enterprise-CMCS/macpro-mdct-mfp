@@ -161,7 +161,7 @@ export const createReport = handler(
     if (workPlanFieldData) {
       validatedFieldData = {
         ...validatedFieldData,
-        workPlanData: workPlanFieldData,
+        ...workPlanFieldData,
       };
     }
 
