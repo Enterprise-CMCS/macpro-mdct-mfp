@@ -988,6 +988,7 @@
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
             "modalTitle": "Report progress for ",
+            "editEntityHint": "Select \"Edit\" to report the objectives progress.",
             "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab."
           },
           "modalForm": {
@@ -1049,6 +1050,7 @@
             },
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
+            "editEntityHint": "Select \"Edit\" to report the overall progress.",
             "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
           },
           "form": {
@@ -1097,6 +1099,7 @@
             },
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
+            "editEntityHint": "Select \"Edit\" to report expenditures.",
             "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
           },
           "form": {
