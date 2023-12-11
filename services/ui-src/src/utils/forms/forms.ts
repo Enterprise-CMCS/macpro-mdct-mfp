@@ -252,15 +252,28 @@ export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
   });
 };
 
+export const formatOtherTargetPopulationChoices = (field: AnyObject) => {
+  const defaultTargetPopulations = [
+    "Older adults",
+    "Individuals with physical disabilities (PD)",
+    "Individuals with intellectual and developmental disabilities (I/DD)",
+    "Individuals with mental health and substance use disorders (MH/SUD)",
+    "Not applicable",
+  ];
+  return defaultTargetPopulations.includes(
+    field.transitionBenchmarks_targetPopulationName
+  )
+    ? field.transitionBenchmarks_targetPopulationName
+    : `Other: ${field.transitionBenchmarks_targetPopulationName}`;
+};
+
 export const convertEntityToTargetPopulationChoice = (
   entity: EntityShape[]
 ) => {
   return entity?.map((field: EntityShape) => {
     return {
       key: `targetPopulations-${field.id}`,
-      value: field.isRequired
-        ? field.transitionBenchmarks_targetPopulationName
-        : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+      value: formatOtherTargetPopulationChoices(field),
     };
   });
 };
@@ -295,13 +308,9 @@ export const convertTargetPopulationsFromWPToSAREntity = (
   return targetPopulations?.map((field: AnyObject) => {
     return {
       id: `targetPopulations-${field.id}`,
-      label: field.isRequired
-        ? field.transitionBenchmarks_targetPopulationName
-        : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+      label: formatOtherTargetPopulationChoices(field),
       name: field.transitionBenchmarks_targetPopulationName,
-      value: field.isRequired
-        ? field.transitionBenchmarks_targetPopulationName
-        : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
+      value: formatOtherTargetPopulationChoices(field),
     };
   });
 };
@@ -311,8 +320,18 @@ export const updateRenderFields = (
   fields: (FormField | FormLayoutElement)[]
 ) => {
   const targetPopulations = report?.fieldData?.targetPopulations;
-  const filteredTargetPopulations =
-    removeNotApplicablePopulations(targetPopulations);
+
+  const notApplicablePopulation = {
+    id: "3Nc13O5GHA6Hc4KheO5FMSD2",
+    transitionBenchmarks_targetPopulationName: "Not applicable",
+    type: "targetPopulations",
+    isRequired: false,
+  };
+
+  const filteredTargetPopulations = new Array(
+    ...removeNotApplicablePopulations(targetPopulations),
+    notApplicablePopulation
+  );
   const formatChoiceList = convertTargetPopulationsFromWPToSAREntity(
     filteredTargetPopulations
   );
