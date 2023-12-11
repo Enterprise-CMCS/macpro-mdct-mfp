@@ -3,7 +3,6 @@ import {
   flattenReportRoutesArray,
   formTemplateForReportType,
   getOrCreateFormTemplate,
-  getValidationFromFormTemplate,
   isFieldElement,
   isLayoutElement,
 } from "./formTemplates";
