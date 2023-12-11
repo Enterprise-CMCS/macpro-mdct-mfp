@@ -50,7 +50,9 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   );
 
   if (report?.reportType === ReportType.SAR) {
-    (reportFieldDataEntities as any[]).map((entity) => (entity["true"] = true));
+    (reportFieldDataEntities as any[]).map(
+      (entity) => (entity["isCopied"] = true)
+    );
   }
 
   const showAlert =
