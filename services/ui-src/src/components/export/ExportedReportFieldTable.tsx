@@ -5,7 +5,6 @@ import { Table } from "components";
 import { useStore } from "utils";
 import {
   Choice,
-  EntityShape,
   FieldChoice,
   FormField,
   StandardReportPageShape,
@@ -17,6 +16,7 @@ import {
 } from "types";
 // verbiage
 import verbiage from "verbiage/pages/wp/wp-export";
+import { ExportedReportFieldRow } from "./ExportedReportFieldRow";
 
 export const ExportedReportFieldTable = ({ section }: Props) => {
   const { report } = useStore() ?? {};
@@ -25,14 +25,12 @@ export const ExportedReportFieldTable = ({ section }: Props) => {
   const pageType = section.pageType;
   const formFields =
     pageType === "drawer" ? section.drawerForm?.fields : section.form?.fields;
-  const entityType = section.entityType;
 
   const formHasOnlyDynamicFields = formFields?.every(
     (field: FormField | FormLayoutElement) => field.type === "dynamic"
   );
   const twoColumnHeaderItems = [tableHeaders.indicator, tableHeaders.response];
   const threeColumnHeaderItems = [
-    tableHeaders.number,
     tableHeaders.indicator,
     tableHeaders.response,
   ];
@@ -41,7 +39,8 @@ export const ExportedReportFieldTable = ({ section }: Props) => {
     : threeColumnHeaderItems;
 
   const reportType = report?.reportType as ReportType;
-  const hideHintText = reportType === ReportType.SAR;
+  const hideHintText = reportType === ReportType.WP;
+  const entityType = section.entityType;
 
   return (
     <Table
@@ -77,48 +76,18 @@ export const renderFieldTableBody = (
     parentFieldCheckedChoiceIds?: string[]
   ) => {
     tableRows.push(
-      <tr>
-        {/* just displaying data for now */}
-        key={JSON.stringify(formField.id)}
-        ------------------------------------ formField=
-        {JSON.stringify(formField)}
-        ------------------------------------ pageType={JSON.stringify(pageType)}
-        ------------------------------------ entityType=
-        {JSON.stringify(entityType)}
-        ------------------------------------ parentFieldCheckedChoiceIds=
-        {JSON.stringify(parentFieldCheckedChoiceIds)}
-        ------------------------------------ showHintText=
-        {JSON.stringify(showHintText)}
-      </tr>
+      <ExportedReportFieldRow
+        key={formField.id}
+        formField={formField}
+        pageType={pageType}
+        entityType={entityType}
+        parentFieldCheckedChoiceIds={parentFieldCheckedChoiceIds}
+        showHintText={showHintText}
+      />
     );
     // for drawer pages, render nested child field if any entity has a checked parent choice
     if (pageType === "drawer") {
-      const entityData = report?.fieldData[entityType!];
-      formField?.props?.choices?.forEach((choice: FieldChoice) => {
-        // filter to only entities where this choice is checked
-        const entitiesWithCheckedChoice = entityData?.filter(
-          (entity: EntityShape) =>
-            Object.keys(entity)?.find((fieldDataKey: string) => {
-              const fieldDataValue = entity[fieldDataKey];
-              return (
-                Array.isArray(fieldDataValue) &&
-                fieldDataValue.find((selectedChoice: Choice) =>
-                  selectedChoice.key?.endsWith(choice.id)
-                )
-              );
-            })
-        );
-        // get all checked parent field choices
-        const parentFieldCheckedChoiceIds = entitiesWithCheckedChoice?.map(
-          (entity: EntityShape) => entity.id
-        );
-        // if choice is checked in any entity, and the choice has children to display, render them
-        if (entitiesWithCheckedChoice?.length > 0 && choice?.children) {
-          choice.children?.forEach((childField: FormField) =>
-            renderFieldRow(childField, parentFieldCheckedChoiceIds)
-          );
-        }
-      });
+      return;
     } else {
       // for standard pages, render nested child field if parent choice is checked
       const nestedChildren = formField?.props?.choices?.filter(

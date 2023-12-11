@@ -3,12 +3,11 @@ import { Helmet } from "react-helmet";
 import { useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
 // components
-import { Box, Center, Heading, Text, Tr, Td, Spinner } from "@chakra-ui/react";
+import { Box, Center, Heading, Spinner } from "@chakra-ui/react";
 import {
   ExportedReportMetadataTable,
   ExportedSectionHeading,
   ExportedReportWrapper,
-  Table,
 } from "components";
 // types
 import {
@@ -35,7 +34,7 @@ export const ExportedReportPage = () => {
     SAR: sarVerbiage,
   };
   const exportVerbiage = exportVerbiageMap[reportType];
-  const { metadata, reportPage, tableHeaders } = exportVerbiage;
+  const { metadata, reportPage } = exportVerbiage;
   return (
     <Box sx={sx.container}>
       {(report && routesToRender && (
@@ -56,26 +55,6 @@ export const ExportedReportPage = () => {
             reportType={reportType}
             verbiage={reportPage}
           />
-          {/* combined data table */}
-          {reportType === ReportType.WP && (
-            <Table
-              sx={sx.combinedDataTable}
-              className="short"
-              content={{
-                headRow: [tableHeaders.indicator, tableHeaders.response],
-              }}
-            >
-              <Tr>
-                <Td>
-                  <Text className="combined-data-title">
-                    {reportPage.combinedDataTable.title}
-                  </Text>
-                  <Text>{reportPage.combinedDataTable.subtitle}</Text>
-                </Td>
-                {/* <Td>{report.combinedData ? "Selected" : "Not Selected"}</Td> */}
-              </Tr>
-            </Table>
-          )}
           {/* report sections */}
           {renderReportSections(report.formTemplate.routes, report.reportType)}
         </Box>
@@ -118,7 +97,7 @@ export const renderReportSections = (
         {/* if section has children, recurse */}
         {childSections?.map((child: ReportRoute) => renderSection(child))}
         {/* if section does not have children and has content to render, render it */}
-        {!childSections && (
+        {!childSections && section.name !== "General Information" && (
           <Box>
             <ExportedSectionHeading
               heading={section.verbiage?.intro?.subsection || section.name}
@@ -136,10 +115,6 @@ export const renderReportSections = (
     (section: ReportRoute) =>
       section?.pageType !== PageTypes.REVIEW_SUBMIT && (
         <Box key={section.path} mt="5rem">
-          {/*  render top-level section headings */}
-          {/* <Heading as="h2" sx={sx.sectionHeading}>
-            {`Section ${section.name}`}
-          </Heading> */}
           {renderSection(section)}
         </Box>
       )

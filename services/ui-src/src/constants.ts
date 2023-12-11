@@ -9,6 +9,7 @@ export const dropdownDefaultOptionText = "- Select an option -";
 
 export const closeText = "Close";
 export const saveAndCloseText = "Save & close";
+export const notAnsweredText = "Not Answered";
 
 // STATES
 export enum States {

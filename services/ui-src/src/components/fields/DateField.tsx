@@ -39,7 +39,6 @@ export const DateField = ({
   const form = useFormContext();
 
   const fieldIsRegistered = name in form.getValues();
-
   useEffect(() => {
     if (!fieldIsRegistered && !validateOnRender) {
       form.register(name);

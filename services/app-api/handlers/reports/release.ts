@@ -163,7 +163,6 @@ export const releaseReport = handler(async (event) => {
       updatedFieldData,
       formTemplate
     ),
-    isComplete: false,
   };
 
   const putReportMetadataParams: DynamoWrite = {
