@@ -201,6 +201,8 @@ describe("When loading a sucessfully submitted report (Success Message Generator
     const reportType = "WP";
     const submittedDate = 1663163109045;
     const submittersName = "Carol California";
+    const fullReportType =
+      reportType === "WP" ? "Work Plan" : "Semi-Annual Progress Report";
     expect(
       SuccessMessageGenerator(
         reportType,
@@ -209,7 +211,7 @@ describe("When loading a sucessfully submitted report (Success Message Generator
         submittersName
       )
     ).toEqual([
-      `MFP ${reportType} submission for `,
+      `MFP ${fullReportType} submission for `,
       <b>{`${submissionName}`}</b>,
       ` was submitted on Wednesday, September 14, 2022 by ${submittersName}.`,
     ]);
@@ -220,6 +222,8 @@ describe("When loading a sucessfully submitted report (Success Message Generator
     const reportType = "SAR";
     const submittedDate = undefined;
     const submittersName = "Carol California";
+    const fullReportType = "Semi-Annual Progress Report";
+
     expect(
       SuccessMessageGenerator(
         reportType,
@@ -227,7 +231,7 @@ describe("When loading a sucessfully submitted report (Success Message Generator
         submittedDate,
         submittersName
       )
-    ).toBe(`${reportType} report for ${submissionName} was submitted.`);
+    ).toBe(`${fullReportType} report for ${submissionName} was submitted.`);
   });
 });
 
