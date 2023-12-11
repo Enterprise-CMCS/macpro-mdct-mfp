@@ -1458,14 +1458,20 @@
           "name": "Objectives progress",
           "pageType": "overlayModal",
           "entityType": "initiative",
-          "stepType": "objectivesProgress",
+          "stepType": "evaluationPlan",
           "stepInfo": ["name", "hint"],
           "hint": "Report progress for each objective",
           "isRequired": true,
           "verbiage": {
             "intro": {
-              "section": "Objectives progress",
-              "subsection": "Report progress for each objective by selecting the button for each."
+              "section": "State- or Territory-Specific Initiatives",
+              "info": [
+                {
+                  "type": "html",
+                  "content": "Report progress for each objective by selecting the button for each."
+                }
+              ],
+              "dashboardTitle": "Objectives progress"
             },
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
