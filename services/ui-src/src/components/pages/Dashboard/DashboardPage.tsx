@@ -135,6 +135,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   }, [reportsByState]);
 
   const isReportEditable = (selectedReport: ReportShape) => {
+    //the wp is only editable only when the user is a state user and the form has not been submitted or approved, all over users are in view mode
     return (
       !userIsAdmin &&
       !userIsReadOnly &&
