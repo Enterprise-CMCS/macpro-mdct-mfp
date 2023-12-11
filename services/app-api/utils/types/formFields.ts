@@ -65,11 +65,26 @@ export interface FormField {
   hydrate?: string;
   props?: AnyObject;
   choices?: FieldChoice[];
-  repeatable?: Repeatable;
+  repeat?: string;
+  transformation?: Transformation;
+  isRequired?: boolean;
 }
 
-export interface Repeatable {
+export interface Transformation {
   rule: string;
+}
+
+export interface TargetPopulationKeys {
+  reportPeriod: number;
+  fieldId: string;
+  targetPopulationName: string;
+  isRequired?: boolean;
+}
+
+export interface TwelveQuartersKeys {
+  fieldId: string;
+  year: number;
+  quarter: number;
 }
 
 export interface DropdownOptions {

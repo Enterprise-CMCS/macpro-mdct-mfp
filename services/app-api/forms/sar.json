@@ -183,35 +183,11 @@
             "id": "ret-psmicf",
             "fields": [
               {
-                "id": "ret_numberOfOlderAdults",
+                "id": "ret_psmicf_target_populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults"
-                }
-              },
-              {
-                "id": "ret_numberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_numberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_numberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               }
             ]
@@ -243,11 +219,33 @@
             "id": "ret-mtrp",
             "fields": [
               {
-                "id": "ret_mtrp_repeating_fields",
+                "id": "ret_mtrp_quarter_header_1",
+                "type": "sectionHeader",
+                "transformation": {
+                  "rule": "firstQuarterOfThePeriod"
+                }
+              },
+              {
+                "id": "ret_mtrp_quarter_1_populations",
                 "type": "number",
                 "validation": "number",
-                "repeatable": {
-                  "rule": "targetPopulationsByReportingPeriod"
+                "transformation": {
+                  "rule": "targetPopulations"
+                }
+              },
+              {
+                "id": "ret_mtrp_quarter_header_2",
+                "type": "sectionHeader",
+                "transformation": {
+                  "rule": "secondQuarterOfThePeriod"
+                }
+              },
+              {
+                "id": "ret_mtrp_quarter_2_populations",
+                "type": "number",
+                "validation": "number",
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               }
             ]
@@ -279,168 +277,78 @@
             "id": "ret-mtfqi",
             "fields": [
               {
-                "id": "ret_nursingFacilityNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mtfqi-header-1",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Nursing facility"
+                  "content": "Nursing facility"
                 }
               },
               {
-                "id": "ret_nursingFacilityNumberOfPD",
+                "id": "ret-mtfqi-1-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of PD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
-                "id": "ret_nursingFacilityNumberOfIDD",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mtfqi-header-2",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of I/DD"
+                  "content": "Intermediate care facility for individuals with intellecutal disabilities (ICF/IID)"
                 }
               },
               {
-                "id": "ret_nursingFacilityNumberOfMHSUD",
+                "id": "ret-mtfqi-2-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
-                "id": "ret_icfIIDNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mtfqi-header-3",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Intermediate care facility for individuals with intellectual disabilities (ICF/IID)"
+                  "content": "Institution for mental diseases (IMD)"
                 }
               },
               {
-                "id": "ret_icfIIDNumberOfPD",
+                "id": "ret-mtfqi-3-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of PD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
-                "id": "ret_icfIIDNumberOfIDD",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mtfqi-header-4",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of I/DD"
+                  "content": "Hospital"
                 }
               },
               {
-                "id": "ret_icfIIDNumberOfMHSUD",
+                "id": "ret-mtfqi-4-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
-                "id": "ret_imdNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mtfqi-header-5",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Institution for mental diseases (IMD)"
+                  "content": "Other"
                 }
               },
               {
-                "id": "ret_imdNumberOfPD",
+                "id": "ret-mtfqi-5-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_imdNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_imdNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
-                }
-              },
-              {
-                "id": "ret_hospitalNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Hospital"
-                }
-              },
-              {
-                "id": "ret_hospitalNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_hospitalNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_hospitalNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
-                }
-              },
-              {
-                "id": "ret_otherNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Other"
-                }
-              },
-              {
-                "id": "ret_otherNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_otherNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_otherNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               }
             ]
@@ -472,135 +380,63 @@
             "id": "ret-mtfqr",
             "fields": [
               {
-                "id": "ret_homeNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mtfqr-header-1",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Home (owned or leased by individual or family)"
+                  "content": "Home (owned or leased by individual or family)"
                 }
               },
               {
-                "id": "ret_homeNumberOfPD",
+                "id": "ret-mtfqr-1-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of PD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
-                "id": "ret_homeNumberOfIDD",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mtfqr-header-2",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of I/DD"
+                  "content": "Apartment (Individual lease, lockable access, etc.)"
                 }
               },
               {
-                "id": "ret_homeNumberOfMHSUD",
+                "id": "ret-mtfqr-2-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
-                "id": "ret_apartmentNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mtfqr-header-3",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Apartment (individual lease, lockable access, etc.)"
+                  "content": "Group home or other residence in which four or fewer unrelated individuals live"
                 }
               },
               {
-                "id": "ret_apartmentNumberOfPD",
+                "id": "ret-mtfqr-3-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of PD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
-                "id": "ret_apartmentNumberOfIDD",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mtfqr-header-4",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of I/DD"
+                  "content": "Apartment in qualified assisted living"
                 }
               },
               {
-                "id": "ret_apartmentNumberOfMHSUD",
+                "id": "ret-mtfqr-4-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
-                }
-              },
-              {
-                "id": "ret_groupHomeNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Group home or other residence in which four or fewer unrelated individuals live"
-                }
-              },
-              {
-                "id": "ret_groupHomeNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_groupHomeNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_groupHomeNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
-                }
-              },
-              {
-                "id": "ret_apartmentQualifiedAssistedLivingNumberOfOlderAdults",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Apartment in qualified assisted living"
-                }
-              },
-              {
-                "id": "ret_apartmentQualifiedAssistedLivingNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_apartmentQualifiedAssistedLivingNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_apartmentQualifiedAssistedLivingNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               }
             ]
@@ -632,36 +468,11 @@
             "id": "ret-tnamprp",
             "fields": [
               {
-                "id": "ret_totalActiveNumberOfAdults",
+                "id": "ret-tnamprp-1-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Current reporting period {(January 1-June 30)}"
-                }
-              },
-              {
-                "id": "ret_totalActiveNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_totalActiveNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_totalActiveNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               }
             ]
@@ -693,36 +504,11 @@
             "id": "ret-nmpcprp",
             "fields": [
               {
-                "id": "ret_completingProgramNumberOfAdults",
+                "id": "ret-nmpcprp-1-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Current reporting period {(January 1-June 30)}"
-                }
-              },
-              {
-                "id": "ret_completingProgramNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_completingProgramNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_completingProgramNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               }
             ]
@@ -754,36 +540,11 @@
             "id": "ret-npremrp",
             "fields": [
               {
-                "id": "ret_reEnrolledNumberOfAdults",
+                "id": "ret-npremrp-1-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Current reporting period {(January 1-June 30)}"
-                }
-              },
-              {
-                "id": "ret_reEnrolledProgramNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_reEnrolledProgramNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_reEnrolledProgramNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               }
             ]
@@ -815,102 +576,48 @@
             "id": "ret-mpdprp",
             "fields": [
               {
-                "id": "ret_reinstitutionalizationNumberOfAdults",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mpdprp-header-1",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Re-institutionalization"
+                  "content": "Re-institutionalization"
                 }
               },
               {
-                "id": "ret_reinstitutionalizationNumberOfPD",
+                "id": "ret-mpdprp-1-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of PD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
-                "id": "ret_reinstitutionalizationNumberOfIDD",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mpdprp-header-2",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of I/DD"
+                  "content": "Death"
                 }
               },
               {
-                "id": "ret_reinstitutionalizationNumberOfMHSUD",
+                "id": "ret-mpdprp-2-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
-                "id": "ret_deathNumberOfAdults",
-                "type": "number",
-                "validation": "number",
+                "id": "ret-mpdprp-header-3",
+                "type": "sectionHeader",
                 "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Death"
+                  "content": "Voluntary disenrollment"
                 }
               },
               {
-                "id": "ret_deathNumberOfPD",
+                "id": "ret-mpdprp-3-populations",
                 "type": "number",
                 "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_deathNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_deathNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
-                }
-              },
-              {
-                "id": "ret_voluntaryDisenrollmentNumberOfAdults",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of Older Adults",
-                  "heading": "Voluntary disenrollment"
-                }
-              },
-              {
-                "id": "ret_voluntaryDisenrollmentNumberOfPD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of PD"
-                }
-              },
-              {
-                "id": "ret_voluntaryDisenrollmentNumberOfIDD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of I/DD"
-                }
-              },
-              {
-                "id": "ret_voluntaryDisenrollmentNumberOfMHSUD",
-                "type": "number",
-                "validation": "number",
-                "props": {
-                  "label": "Number of MH/SUD"
+                "transformation": {
+                  "rule": "targetPopulations"
                 }
               },
               {
@@ -927,7 +634,7 @@
                       "label": "Moved out of MFP jurisdiction/state/territory",
                       "children": [
                         {
-                          "id": "otherReasons_movedOutNumberOfOlderAdults",
+                          "id": "ret-movedout-populations",
                           "type": "number",
                           "validation": {
                             "type": "number",
@@ -935,47 +642,8 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
                           },
-                          "props": {
-                            "label": "Number of Older Adults"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_movedOutNumberOfPD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
-                          },
-                          "props": {
-                            "label": "Number of PD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_movedOutNumberOfIDD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
-                          },
-                          "props": {
-                            "label": "Number of I/DD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_movedOutNumberOfMHSUD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
-                          },
-                          "props": {
-                            "label": "Number of MH/SUD"
+                          "transformation": {
+                            "rule": "targetPopulations"
                           }
                         }
                       ]
@@ -985,7 +653,7 @@
                       "label": "Improved health",
                       "children": [
                         {
-                          "id": "otherReasons_improvedHealthNumberOfOlderAdults",
+                          "id": "ret-health-populations",
                           "type": "number",
                           "validation": {
                             "type": "number",
@@ -993,47 +661,8 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
                           },
-                          "props": {
-                            "label": "Number of Older Adults"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_improvedHealthNumberOfPD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
-                          },
-                          "props": {
-                            "label": "Number of PD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_improvedHealthNumberOfIDD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
-                          },
-                          "props": {
-                            "label": "Number of I/DD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_improvedHealthNumberOfMHSUD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
-                          },
-                          "props": {
-                            "label": "Number of MH/SUD"
+                          "transformation": {
+                            "rule": "targetPopulations"
                           }
                         }
                       ]
@@ -1043,7 +672,7 @@
                       "label": "Incarceration",
                       "children": [
                         {
-                          "id": "otherReasons_incarcerationNumberOfOlderAdults",
+                          "id": "ret-incarceration-populations",
                           "type": "number",
                           "validation": {
                             "type": "number",
@@ -1051,47 +680,8 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
                           },
-                          "props": {
-                            "label": "Number of Older Adults"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_incarcerationNumberOfPD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
-                          },
-                          "props": {
-                            "label": "Number of PD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_incarcerationNumberOfIDD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
-                          },
-                          "props": {
-                            "label": "Number of I/DD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_incarcerationNumberOfMHSUD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
-                          },
-                          "props": {
-                            "label": "Number of MH/SUD"
+                          "transformation": {
+                            "rule": "targetPopulations"
                           }
                         }
                       ]
@@ -1101,7 +691,7 @@
                       "label": "Move to an unqualified setting",
                       "children": [
                         {
-                          "id": "otherReasons_unqualifiedSettingNumberOfOlderAdults",
+                          "id": "ret-moved-populations",
                           "type": "number",
                           "validation": {
                             "type": "number",
@@ -1109,47 +699,8 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
                           },
-                          "props": {
-                            "label": "Number of Older Adults"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_unqualifiedSettingNumberOfPD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
-                          },
-                          "props": {
-                            "label": "Number of PD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_unqualifiedSettingNumberOfIDD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
-                          },
-                          "props": {
-                            "label": "Number of I/DD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_unqualifiedSettingNumberOfMHSUD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
-                          },
-                          "props": {
-                            "label": "Number of MH/SUD"
+                          "transformation": {
+                            "rule": "targetPopulations"
                           }
                         }
                       ]
@@ -1168,7 +719,7 @@
                           }
                         },
                         {
-                          "id": "otherReasons_otherNumberOfOlderAdults",
+                          "id": "ret-other-specify-populations",
                           "type": "number",
                           "validation": {
                             "type": "number",
@@ -1176,47 +727,8 @@
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
                           },
-                          "props": {
-                            "label": "Number of Older Adults"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_otherNumberOfPD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
-                          },
-                          "props": {
-                            "label": "Number of PD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_otherNumberOfIDD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
-                          },
-                          "props": {
-                            "label": "Number of I/DD"
-                          }
-                        },
-                        {
-                          "id": "otherReasons_otherNumberOfMHSUD",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
-                          },
-                          "props": {
-                            "label": "Number of MH/SUD"
+                          "transformation": {
+                            "rule": "targetPopulations"
                           }
                         }
                       ]
