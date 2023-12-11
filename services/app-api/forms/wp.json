@@ -32,7 +32,7 @@
             },
             {
               "type": "html",
-              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The WP presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The WP enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the WP describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new WP fields during the demonstration period. For additional guidance on completing this form, please see the "
+              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The MFP Work Plan presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The MFP Work Plan enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the MFP Work Plan describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new MFP Work Plan fields during the demonstration period. For additional guidance on completing this form, please see the "
             },
             {
               "type": "externalLink",
@@ -48,8 +48,7 @@
         "praDisclosure": [
           {
             "type": "span",
-            "content": "<b>PRA Disclosure Statement</b><br/>Under the Privacy Act of 1974 any personally identifying information obtained will be kept private to the extent of the law. According to the Paperwork Reduction Act of 1995, no persons are required to respond to a collection of information unless it displays a valid OMB control number. The valid OMB control number for this information collection is 0938-0920 (Expires: June 30, 2024). The time required to complete this information collection is estimated to average 6 hours per response, including the time to review instructions, search existing data resources, gather the data needed, and complete and review the information collection. If you have comments concerning the accuracy of the time estimate(s) or suggestions for improving this form, please write to: CMS, 7500 Security Boulevard, Attn: PRA Reports Clearance Officer, Mail Stop C4-26-05, Baltimore, Maryland 21244-1850"
-          }
+            "content": "<b>PRA Disclosure Statement</b><br/>Under the Privacy Act of 1974 any personally identifying information obtained will be kept private to the extent of the law. According to the Paperwork Reduction Act of 1995, no persons are required to respond to a collection of information unless it displays a valid OMB control number. The valid OMB control number for this information collection is 0938-1053. The time required to complete this information collection is estimated to average 2.5 hours per response, including the time to review instructions, search existing data resources, gather the data needed, and complete and review the information collection. If you have comments concerning the accuracy of the time estimate(s) or suggestions for improving this form, please write to: CMS, 7500 Security Boulevard, Attn: PRA Reports Clearance Officer, Mail Stop C4-26-05, Baltimore, Maryland 21244-1850"
         ]
       },
       "form": { "id": "", "fields": [] }
@@ -111,7 +110,7 @@
         "deleteEntityButtonAltText": "Delete other target population",
         "deleteModalTitle": "Are you sure you want to delete this target population?",
         "deleteModalConfirmButtonText": "Yes, delete population",
-        "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this population in the Work Plan. The population will remain in previously submitted Semi-Annual Reports if applicable.",
+        "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this population in the MFP Work Plan. The population will remain in previously submitted Semi-Annual Reports if applicable.",
         "entityUnfinishedMessage": "Complete the remaining indicators for this access measure by entering details.",
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
@@ -728,7 +727,7 @@
             "addEditModalEditTitle": "Edit initiative",
             "deleteModalTitle": "Are you sure you want to delete this initiative?",
             "deleteModalConfirmButtonText": "Yes, delete initiative",
-            "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan.",
+            "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the MFP Work Plan.",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
             "dashboardTitle": "Initiative total count:",
