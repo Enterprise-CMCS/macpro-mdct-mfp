@@ -9,6 +9,7 @@ import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
 import { injectFormWithTargetPopulations, useStore } from "utils";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const AddEditReportModal = ({
   activeState,
@@ -38,6 +39,9 @@ export const AddEditReportModal = ({
 
   const modalFormJson = modalFormJsonMap[reportType]!;
   const form: FormJson = modalFormJson;
+
+  //temporary flag for testing copyover
+  const isCopyOverTest = useFlags()?.isCopyOverTest;
 
   // WP report payload
   const prepareWpPayload = () => {
@@ -72,6 +76,11 @@ export const AddEditReportModal = ({
         isRequired: true,
       },
     ];
+
+    //add a flag to be passed to the backend for copy over testing
+    if (previousReport) {
+      previousReport.isCopyOverTest = isCopyOverTest;
+    }
 
     return {
       metadata: {
