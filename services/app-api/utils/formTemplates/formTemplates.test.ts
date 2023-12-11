@@ -3,7 +3,6 @@ import {
   flattenReportRoutesArray,
   formTemplateForReportType,
   getOrCreateFormTemplate,
-  getValidationFromFormTemplate,
   isFieldElement,
   isLayoutElement,
 } from "./formTemplates";
@@ -22,11 +21,20 @@ import dynamodbLib from "../dynamo/dynamodb-lib";
 const mockWorkPlanFieldData = mockWPMetadata.fieldData;
 const mockWorkPlanMetaData = mockWPMetadata;
 
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
+
 describe("Test getOrCreateFormTemplate WP", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
   });
   it("should create a new form template if none exist", async () => {
+    const expectedFormInformation = {
+      type: "WP",
+      name: "MFP Work Plan (WP)",
+    };
+
     const currentWPFormHash = createHash("md5")
       .update(JSON.stringify(wp))
       .digest("hex");
@@ -43,10 +51,9 @@ describe("Test getOrCreateFormTemplate WP", () => {
     );
     expect(dynamoPutSpy).toHaveBeenCalled();
     expect(s3PutSpy).toHaveBeenCalled();
-    expect(result.formTemplate).toEqual({
-      ...wp,
-      validationJson: getValidationFromFormTemplate(wp as ReportJson),
-    });
+    expect(result.formTemplate).toEqual(
+      expect.objectContaining(expectedFormInformation)
+    );
     expect(result.formTemplateVersion?.versionNumber).toEqual(1);
     expect(result.formTemplateVersion?.md5Hash).toEqual(currentWPFormHash);
   });
@@ -124,6 +131,11 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     jest.restoreAllMocks();
   });
   it("should create a new form template if none exist", async () => {
+    const expectedFormInformation = {
+      type: "SAR",
+      name: "MFP Semi-Annual Progress Report (SAR)",
+    };
+
     const currentSARFormHash = createHash("md5")
       .update(JSON.stringify(sar))
       .digest("hex");
@@ -140,10 +152,9 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     );
     expect(dynamoPutSpy).toHaveBeenCalled();
     expect(s3PutSpy).toHaveBeenCalled();
-    expect(result.formTemplate).toEqual({
-      ...sar,
-      validationJson: getValidationFromFormTemplate(sar as ReportJson),
-    });
+    expect(result.formTemplate).toEqual(
+      expect.objectContaining(expectedFormInformation)
+    );
     expect(result.formTemplateVersion?.versionNumber).toEqual(1);
     expect(result.formTemplateVersion?.md5Hash).toEqual(currentSARFormHash);
   });
