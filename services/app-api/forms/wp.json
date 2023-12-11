@@ -1018,7 +1018,7 @@
                 "addEditModalEditTitle": "Edit objective for ",
                 "deleteModalTitle": "Delete objective for this report?",
                 "deleteModalConfirmButtonText": "Yes, delete objective",
-                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Progress Reports, but it will not be available in future Work Plans and Semi-Annual Reports. Are you sure you want to proceed?",
+                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Progress Reports, but it will not be available in future Work Plans and Semi-Annual Reports. <br><br>Are you sure you want to proceed?",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
                 "dashboardTitle": "Objective total count",

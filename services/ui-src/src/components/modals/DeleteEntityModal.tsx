@@ -5,7 +5,7 @@ import { Modal, ReportContext } from "components";
 
 // types
 import { AnyObject, EntityShape, ReportStatus } from "types";
-import { useStore } from "utils";
+import { parseCustomHtml, useStore } from "utils";
 
 export const DeleteEntityModal = ({
   entityType,
@@ -100,7 +100,7 @@ export const DeleteEntityModal = ({
       }}
       submitButtonDisabled={!editable || userDisabled}
     >
-      <Text>{verbiage.deleteModalWarning}</Text>
+      <Text>{parseCustomHtml(verbiage.deleteModalWarning)}</Text>
     </Modal>
   );
 };
