@@ -204,17 +204,20 @@ export const SuccessMessageGenerator = (
   submissionDate?: number,
   submittedBy?: string
 ) => {
+  const fullReportType =
+    reportType === "WP" ? "Work Plan" : "Semi-Annual Progress Report";
+
   if (submissionDate && submittedBy) {
     const readableDate = utcDateToReadableDate(submissionDate, "full");
     const submittedDate = `was submitted on ${readableDate}`;
     const submittersName = `${submittedBy}`;
 
     const reportTitle = <b>{`${name}`}</b>;
-    const preSubmissionMessage = `MFP ${reportType} submission for `;
+    const preSubmissionMessage = `MFP ${fullReportType} submission for `;
     const postSubmissionMessage = ` ${submittedDate} by ${submittersName}.`;
     return [preSubmissionMessage, reportTitle, postSubmissionMessage];
   }
-  return `${reportType} report for ${name} was submitted.`;
+  return `${fullReportType} report for ${name} was submitted.`;
 };
 
 export const SuccessMessage = ({
