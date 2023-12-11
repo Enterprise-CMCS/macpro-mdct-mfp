@@ -17,6 +17,7 @@ import {
   hydrateFormFields,
   mapValidationTypesToSchema,
   sortFormErrors,
+  updateRenderFields,
   useStore,
 } from "utils";
 import {
@@ -25,9 +26,6 @@ import {
   FormField,
   isFieldElement,
   FormLayoutElement,
-  ReportStatus,
-  ReportType,
-  EntityShape,
 } from "types";
 
 export const Form = ({
@@ -41,6 +39,7 @@ export const Form = ({
   autosave,
   dontReset,
   children,
+  userDisabled,
   ...props
 }: Props) => {
   const { fields, options } = formJson;
@@ -48,42 +47,12 @@ export const Form = ({
   let location = useLocation();
 
   // determine if fields should be disabled (based on admin roles )
-  const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
+  const { userIsAdmin } = useStore().user ?? {};
 
-  const { report } = useStore();
-
-  const updateRenderFields = (fields: (FormField | FormLayoutElement)[]) => {
-    const updatedTargetPopulationChoices = report?.fieldData?.targetPopulations;
-    const formatChoiceList = updatedTargetPopulationChoices?.map(
-      (field: EntityShape) => {
-        return {
-          checked: false,
-          id: field.id,
-          label: field.isRequired
-            ? field.transitionBenchmarks_targetPopulationName
-            : `Other: ${field.transitionBenchmarks_targetPopulationName}`,
-          name: field.transitionBenchmarks_targetPopulationName,
-          value: field.transitionBenchmarks_targetPopulationName,
-        };
-      }
-    );
-
-    const updateTargetPopulationChoiceList = fields.map((field) => {
-      return field.id.match("targetPopulations")
-        ? {
-            ...field,
-            props: { ...field?.props, choices: [...formatChoiceList] },
-          }
-        : { ...field };
-    });
-    return updateTargetPopulationChoiceList;
-  };
+  const { report, editable } = useStore();
 
   const fieldInputDisabled =
-    ((userIsAdmin || userIsReadOnly) && !formJson.editableByAdmins) ||
-    (report?.status === ReportStatus.SUBMITTED &&
-      report?.reportType === ReportType.WP) ||
-    report?.status === ReportStatus.APPROVED;
+    (userIsAdmin && !formJson.editableByAdmins) || !editable || userDisabled;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
@@ -117,7 +86,7 @@ export const Form = ({
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
-      updateRenderFields(fields),
+      updateRenderFields(report!, fields),
       formData
     );
     return formFieldFactory(fieldsToRender, {
@@ -165,6 +134,7 @@ interface Props {
   formData?: AnyObject;
   autosave?: boolean;
   children?: ReactNode;
+  userDisabled?: boolean;
   onFormChange?: Function;
   [key: string]: any;
 }

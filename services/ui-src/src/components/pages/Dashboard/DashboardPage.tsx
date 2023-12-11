@@ -37,7 +37,12 @@ import {
   AlertTypes,
 } from "types";
 // utils
-import { parseCustomHtml, useBreakpoint, useStore } from "utils";
+import {
+  convertEntityToTargetPopulationChoice,
+  parseCustomHtml,
+  useBreakpoint,
+  useStore,
+} from "utils";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
@@ -57,17 +62,25 @@ export const DashboardPage = ({ reportType }: Props) => {
     releaseReport,
     fetchReport,
   } = useContext(ReportContext);
-  const { reportsByState, workPlanToCopyFrom, clearSelectedEntity } =
-    useStore();
+  const {
+    reportsByState,
+    workPlanToCopyFrom,
+    clearSelectedEntity,
+    setEditable,
+  } = useStore();
   const navigate = useNavigate();
   const {
     state: userState,
     userIsEndUser,
+    userIsReadOnly,
     userIsAdmin,
   } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
   const [reportsToDisplay, setReportsToDisplay] = useState<
     ReportMetadataShape[] | undefined
+  >(undefined);
+  const [previousReport, setPreviousReport] = useState<
+    ReportMetadataShape | undefined
   >(undefined);
 
   const [reportId, setReportId] = useState<string | undefined>(undefined);
@@ -109,13 +122,27 @@ export const DashboardPage = ({ reportType }: Props) => {
 
   useEffect(() => {
     let newReportsToDisplay = reportsByState;
+    // sort by creation date (newest to oldest)
+    newReportsToDisplay?.reverse();
     if (!userIsAdmin) {
       newReportsToDisplay = reportsByState?.filter(
         (report: ReportMetadataShape) => !report?.archived
       );
     }
     setReportsToDisplay(newReportsToDisplay);
+    //grab the last report added, which is now the first report displayed
+    setPreviousReport(newReportsToDisplay?.[0]);
   }, [reportsByState]);
+
+  const isReportEditable = (selectedReport: ReportShape) => {
+    return (
+      !userIsAdmin &&
+      !userIsReadOnly &&
+      !selectedReport?.locked &&
+      selectedReport?.status !== ReportStatus.APPROVED &&
+      selectedReport?.status !== ReportStatus.SUBMITTED
+    );
+  };
 
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     clearSelectedEntity();
@@ -131,7 +158,9 @@ export const DashboardPage = ({ reportType }: Props) => {
     setReportSelection(selectedReport);
     setReportId(undefined);
     setEntering(false);
-    const firstReportPagePath = selectedReport.formTemplate.flatRoutes![0].path;
+    const firstReportPagePath =
+      selectedReport?.formTemplate.flatRoutes![0].path;
+    setEditable(isReportEditable(selectedReport));
     navigate(firstReportPagePath);
   };
 
@@ -146,6 +175,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           stateOrTerritory: report.state,
           reportPeriod: report.reportPeriod,
           finalSar: report.finalSar,
+          populations: report.populations,
         },
         state: report.state,
         id: report.id,
@@ -160,6 +190,9 @@ export const DashboardPage = ({ reportType }: Props) => {
           associatedWorkPlan: workPlanToCopyFrom?.submissionName,
           stateOrTerritory: userState,
           reportPeriod: workPlanToCopyFrom?.reportPeriod,
+          populations: convertEntityToTargetPopulationChoice(
+            workPlanToCopyFrom?.fieldData?.targetPopulations
+          ),
         },
       };
     }
@@ -206,14 +239,28 @@ export const DashboardPage = ({ reportType }: Props) => {
   };
 
   const isAddSubmissionDisabled = (): boolean => {
-    const lastDisplayedReport =
-      reportsToDisplay?.[reportsToDisplay?.length - 1];
     switch (reportType) {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
       case ReportType.WP:
-        if (!lastDisplayedReport) return false;
-        return lastDisplayedReport.status !== ReportStatus.APPROVED;
+        if (!previousReport) {
+          return false;
+        } else {
+          /** turning this off atm for testing copy over
+           * const currentDate = new Date();
+           * const period = currentDate.getMonth() + 1 > 6 ? 2 : 1;
+           * const year = currentDate.getFullYear();
+           * const isNextPeriod =
+           *  year > previousReport.reportYear ||
+           *  (year === previousReport.reportYear &&
+           *  period > previousReport.reportPeriod);
+           *  return (
+           *    previousReport.status !== ReportStatus.APPROVED || !isNextPeriod
+           *  );
+           **/
+
+          return previousReport.status !== ReportStatus.APPROVED;
+        }
       default:
         return true;
     }
@@ -323,7 +370,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               disabled={isAddSubmissionDisabled()}
               onClick={() => openAddEditReportModal()}
             >
-              {!reportsToDisplay?.length || reportType === ReportType.SAR
+              {!previousReport || reportType === ReportType.SAR
                 ? body.callToAction
                 : body.callToActionAdditions}
             </Button>
@@ -333,6 +380,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       <AddEditReportModal
         activeState={activeState!}
         selectedReport={selectedReport!}
+        previousReport={previousReport}
         reportType={reportType}
         modalDisclosure={{
           isOpen: addEditReportModalIsOpen,

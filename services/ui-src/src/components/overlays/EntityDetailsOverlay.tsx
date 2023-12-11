@@ -45,7 +45,7 @@ export const EntityDetailsOverlay = ({
 }: Props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { entityType, form, verbiage } = route;
-  const { report, selectedEntity, setSelectedEntity, autosaveState } =
+  const { report, selectedEntity, setSelectedEntity, autosaveState, editable } =
     useStore();
   const [disableCloseOut, setDisableCloseOut] = useState<boolean>();
 
@@ -61,16 +61,23 @@ export const EntityDetailsOverlay = ({
   useEffect(() => {
     if (selectedEntity) {
       setSelectedEntity(
-        report?.fieldData?.[selectedEntity.type].find(
+        report?.fieldData?.[selectedEntity.type]?.find(
           (entity: EntityShape) => entity.id == selectedEntity.id
         )
       );
     }
-  }, [report]);
+    if (selectedEntity?.isInitiativeClosed) {
+      setDisableCloseOut(true);
+    }
+  }, [report, selectedEntity?.isInitiativeClosed]);
 
   //need to set the initial state of the closeOut button when page loads
-  if (disableCloseOut === undefined)
-    setDisableCloseOut(!getCloseoutStatus(form, selectedEntity!));
+  if (disableCloseOut === undefined) {
+    const closedOut =
+      selectedEntity?.isInitiativeClosed ??
+      !getCloseoutStatus(form, selectedEntity!);
+    setDisableCloseOut(closedOut);
+  }
 
   // add/edit entity modal disclosure and methods
   const {
@@ -189,7 +196,9 @@ export const EntityDetailsOverlay = ({
           "closeOutInformation_initiativeStatus-terminationReason"
         );
 
-      setDisableCloseOut(!getCloseoutStatus(form, entity));
+      const isClosed =
+        selectedEntity?.isInitiativeClosed ?? !getCloseoutStatus(form, entity);
+      setDisableCloseOut(isClosed);
     }
   };
 
@@ -226,6 +235,7 @@ export const EntityDetailsOverlay = ({
         dontReset={true}
         onFormChange={onChange}
         validateOnRender={false}
+        userDisabled={selectedEntity?.isInitiativeClosed}
       />
       <Box>
         {verbiage.closeOutWarning && (
@@ -270,7 +280,13 @@ export const EntityDetailsOverlay = ({
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
           <Button type="submit" form={form.id} sx={sx.saveButton}>
-            {submitting ? <Spinner size="md" /> : "Save & return"}
+            {submitting ? (
+              <Spinner size="md" />
+            ) : editable && !selectedEntity?.isInitiativeClosed ? (
+              "Save & return"
+            ) : (
+              "Return"
+            )}
           </Button>
         </Flex>
       </Box>

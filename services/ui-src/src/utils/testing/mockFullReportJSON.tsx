@@ -63,6 +63,7 @@ export const mockFullReportJSON: ReportJson = {
           "Report projected number of transitions for each target population",
         addEntityButtonText: "Add other target population",
         editEntityButtonText: "Edit name",
+        readOnlyEntityButtonText: "View name",
         addEditModalAddTitle: "Add other target population",
         addEditModalEditTitle: "Edit other target population",
         deleteEntityButtonAltText: "Delete other target population",
@@ -74,6 +75,7 @@ export const mockFullReportJSON: ReportJson = {
         entityUnfinishedMessage:
           "Complete the remaining indicators for this access measure by entering details.",
         enterEntityDetailsButtonText: "Edit",
+        readOnlyEntityDetailsButtonText: "View",
         reviewPdfHint:
           "To view Transition Benchmark Totals by target population and by quarter, click <i>Review PDF</i> and it will open a summary in a new tab.",
         drawerTitle: "Report transition benchmarks for ",
@@ -178,17 +180,18 @@ export const mockFullReportJSON: ReportJson = {
       },
     },
     {
-      name: "State & Territory Specific Initiatives",
+      name: "State- or Territory Specific Initiatives",
       path: "/wp/state-and-territory-specific-initiatives",
       children: [
         {
-          name: "State & Territory Specific Initiatives Instructions",
+          name: "State- or Territory Specific Initiatives Instructions",
           path: "/wp/state-and-territory-specific-initiatives/instructions",
           pageType: "standard",
           verbiage: {
             intro: {
               section: "",
-              subsection: "State & Territory Specific Initiatives Instructions",
+              subsection:
+                "State- or Territory Specific Initiatives Instructions",
               spreadsheet: "",
               info: [
                 {
@@ -654,7 +657,7 @@ export const mockFullReportJSON: ReportJson = {
           },
         },
         {
-          name: "State & Territory Specific Initiatives",
+          name: "State- or Territory Specific Initiatives",
           path: "/wp/state-and-territory-specific-initiatives/initiatives",
           pageType: "modalOverlay",
           entityType: "initiatives",
@@ -683,6 +686,7 @@ export const mockFullReportJSON: ReportJson = {
             },
             addEntityButtonText: "Add Initiative",
             editEntityButtonText: "Edit name",
+            readOnlyEntityButtonText: "View name",
             addEditModalAddTitle: "Add initiative",
             addEditModalEditTitle: "Edit initiative",
             deleteModalTitle:
@@ -691,6 +695,7 @@ export const mockFullReportJSON: ReportJson = {
             deleteModalWarning:
               "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
             enterEntityDetailsButtonText: "Edit",
+            readOnlyEntityDetailsButtonText: "View",
             dashboardTitle: "Initative total count",
             countEntitiesInTitle: true,
             tableHeader: "Initaitve name <br/> Work Plan topic",
@@ -800,7 +805,7 @@ export const mockFullReportJSON: ReportJson = {
           },
         },
         {
-          name: "State & Territory Specific Initiatives: I. Define initiative",
+          name: "State- or Territory Specific Initiatives: I. Define initiative",
           path: "/wp/state-and-territory-specific-initiatives/define-initiative",
           pageType: "standard",
           verbiage: {
@@ -934,7 +939,7 @@ export const mockFullReportJSON: ReportJson = {
             {
               type: "html",
               content:
-                " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The WP presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The WP enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the WP describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> A recipient submits an initial WP with the updated operational protocol for review and approval. The WP will be updated annually during Period 1 of SAR reporting (July–August). Recipients may also submit updates to the WP during Period 2 of SAR reporting (January–February) to reflect any planned changes in state or territory-specific initiatives or add new initiatives. Changes to the WP must be submitted to CMS for approval no later than 30 days prior to the planned date of implementation of the change and the proposed change(s) may not be implemented until approved. Approved changes will be integrated into the recipient’s SAR reporting for the following reporting period. Note that requests to change Transition Benchmark projections can be made once annually, during the July–August period. <br><br> CMS may amend or add new WP fields during the demonstration period. For additional guidance on completing this form, please see the associated User Guide and Help File. ",
+                " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The WP presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The WP enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the WP describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new WP fields during the demonstration period. For additional guidance on completing this form, please see the associated User Guide and Help File. ",
             },
           ],
         },
@@ -1012,7 +1017,7 @@ export const mockFullReportJSON: ReportJson = {
       },
     },
     {
-      name: "State & Territory Specific Initiatives: 1. Define initiative",
+      name: "State- or Territory Specific Initiatives: 1. Define initiative",
       path: "/wp/state-and-territory-specific-initiatives/define-initiative",
       pageType: "standard",
       verbiage: {

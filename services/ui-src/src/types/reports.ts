@@ -25,6 +25,7 @@ export interface ReportPageVerbiage {
   reviewPdfHint?: string;
   closeOutWarning?: AnyObject;
   closeOutModal?: AnyObject;
+  praDisclosure?: CustomHtmlElement[];
 }
 
 export interface ReportRouteBase {
@@ -74,6 +75,7 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   dashboard?: FormJson;
   drawerForm?: never;
   form?: never;
+  entitySteps?: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
@@ -152,6 +154,7 @@ export interface ModalDrawerReportPageVerbiage
   extends DrawerReportPageVerbiage {
   addEntityButtonText: string;
   editEntityButtonText: string;
+  readOnlyEntityButtonText: string;
   addEditModalAddTitle: string;
   addEditModalEditTitle: string;
   deleteEntityButtonAltText: string;
@@ -160,8 +163,11 @@ export interface ModalDrawerReportPageVerbiage
   deleteModalWarning: string;
   entityUnfinishedMessage: string;
   enterEntityDetailsButtonText: string;
+  readOnlyEntityDetailsButtonText: string;
   reviewPdfHint: string;
   drawerTitle: string;
+  pdfDashboardTitle?: string;
+  accordion?: AnyObject;
 }
 
 export interface OverlayModalPageVerbiage extends ReportPageVerbiage {
@@ -170,6 +176,7 @@ export interface OverlayModalPageVerbiage extends ReportPageVerbiage {
   editEntityHint?: string;
   addEditModalHint: string;
   editEntityButtonText: string;
+  readOnlyEntityButtonText: string;
   addEditModalAddTitle: string;
   addEditModalEditTitle: string;
   deleteEntityButtonAltText: string;
@@ -178,6 +185,7 @@ export interface OverlayModalPageVerbiage extends ReportPageVerbiage {
   deleteModalWarning: string;
   entityUnfinishedMessage: string;
   enterEntityDetailsButtonText: string;
+  readOnlyEntityDetailsButtonText: string;
   accordion: object;
   dashboardTitle: string;
   missingEntityMessage?: CustomHtmlElement[];

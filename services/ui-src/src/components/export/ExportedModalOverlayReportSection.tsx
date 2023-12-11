@@ -1,21 +1,46 @@
-import { useStore, getEntityDetailsMLR } from "utils";
+import { useStore } from "utils";
 // components
-import { EntityStatusIcon, Table } from "components";
-import { Box, Image, Td, Text, Tr } from "@chakra-ui/react";
+import {
+  EntityStatusIcon,
+  Table,
+  ExportedEntityDetailsOverlaySection,
+  Alert,
+  ExportedOverlayModalReportSection,
+} from "components";
+import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
-import { EntityShape, ModalOverlayReportPageShape, ReportType } from "types";
+import {
+  AlertTypes,
+  EntityDetailsOverlayShape,
+  EntityDetailsStepTypes,
+  EntityShape,
+  FormField,
+  FormLayoutElement,
+  ModalOverlayReportPageShape,
+  OverlayModalPageShape,
+  OverlayModalStepTypes,
+  ReportShape,
+  ReportType,
+} from "types";
 import { assertExhaustive } from "utils/other/typing";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
+import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
 import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
 import finishedIcon from "assets/icons/icon_check_circle.png";
+// utils
+import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
+import { getInitiativeStatus } from "components/tables/getEntityStatus";
 
 const exportVerbiageMap: { [key in ReportType]: any } = {
   WP: wpVerbiage,
   SAR: sarVerbiage,
 };
+interface AlertVerbiage {
+  [key: string]: { title: string; description: string };
+}
 
 export const ExportedModalOverlayReportSection = ({ section }: Props) => {
   const { report } = useStore() ?? {};
@@ -29,8 +54,20 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
     modalOverlayTableHeaders as Record<string, string>
   );
 
+  const showAlert =
+    report && (alertVerbiage as AlertVerbiage)[entityType]
+      ? getWPAlertStatus(report, entityType)
+      : false;
+
   return (
     <Box>
+      {showAlert && (
+        <Alert
+          title={(alertVerbiage as AlertVerbiage)[entityType].title}
+          status={AlertTypes.ERROR}
+          description={(alertVerbiage as AlertVerbiage)[entityType].description}
+        />
+      )}
       <Table
         sx={sx.root}
         content={{
@@ -40,7 +77,8 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
       >
         {report?.fieldData[entityType] &&
           renderModalOverlayTableBody(
-            report?.reportType as ReportType,
+            section,
+            report,
             report?.fieldData[entityType]
           )}
       </Table>
@@ -63,49 +101,113 @@ export function renderStatusIcon(status: boolean) {
   return <Image src={unfinishedIcon} alt="warning icon" boxSize="xl" />;
 }
 
+/**
+ * Split a list of form fields within each entity step form or modal form.
+ * This allows returning distinct tables for each section, rather than one large one.
+ *
+ *
+ * @param entitySteps List of entity step data and form fields
+ * @returns array of arrays containing form field elements representing an entity step
+ */
+export function getEntityStepFields(
+  entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[]
+) {
+  const entityStepFields: (string | FormLayoutElement | FormField)[][] = [];
+
+  for (let step of entitySteps) {
+    let currentStepFields = [];
+    // store EntityStep name and hint for rendering
+    currentStepFields.push(step.stepType);
+    currentStepFields.push(step.stepName);
+    currentStepFields.push(step.hint);
+
+    // handle Standard forms
+    if (step.form) {
+      for (let field of step.form.fields) {
+        currentStepFields.push(field);
+      }
+    }
+    // handle Modal forms
+    else if (step.modalForm) {
+      for (let field of step.modalForm.fields) {
+        currentStepFields.push(field);
+      }
+    }
+    entityStepFields.push(currentStepFields);
+  }
+
+  return entityStepFields;
+}
+
 export function renderModalOverlayTableBody(
-  reportType: ReportType,
+  section: ModalOverlayReportPageShape | OverlayModalPageShape,
+  report: ReportShape,
   entities: EntityShape[]
 ) {
+  const reportType = report.reportType as ReportType;
+  const entitySteps = getEntityStepFields(section.entitySteps ?? []);
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
-        const { report_programName, reportingPeriod } =
-          getEntityDetailsMLR(entity);
         return (
-          <Tr key={idx}>
-            <Td sx={sx.statusIcon}>
-              <EntityStatusIcon
-                entity={entity}
-                isPdf={true}
-                entityStatus={entity.status}
-              />
-            </Td>
-            <Td>
-              <Text sx={sx.tableIndex}>{idx + 1}</Text>
-            </Td>
-            <Td>
-              <Text sx={sx.entityList}>
-                {entity.report_planName ?? "Not entered"} <br />
-                {report_programName} <br />
-                {reportingPeriod}
-              </Text>
-            </Td>
-            <Td>
-              <Text>
-                {entity["report_reportingPeriodDiscrepancyExplanation"]
-                  ? entity["report_reportingPeriodDiscrepancyExplanation"]
-                  : "N/A"}
-              </Text>
-            </Td>
-            <Td>
-              <Text>
-                {entity.report_miscellaneousNotes
-                  ? entity.report_miscellaneousNotes
-                  : "N/A"}
-              </Text>
-            </Td>
-          </Tr>
+          <Box sx={sx.container}>
+            <Tr key={idx}>
+              <Td sx={sx.statusIcon}>
+                <EntityStatusIcon
+                  entity={entity}
+                  isPdf={true}
+                  entityStatus={getInitiativeStatus(report, entity)}
+                />
+              </Td>
+              <Td>
+                <Heading sx={sx.heading} as="h3">
+                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
+                  <br />
+                  <Text sx={sx.headingSubtitle}>
+                    {entity.initiative_wpTopic[0].value}
+                  </Text>
+                </Heading>
+              </Td>
+            </Tr>
+            {/* Depending on what the entity step type is, render its corresponding component */}
+            {entitySteps.map((step, idx) => {
+              switch (step[0].toString()) {
+                case EntityDetailsStepTypes.DEFINE_INITIATIVE:
+                  return (
+                    <Box key={idx}>
+                      <ExportedEntityDetailsOverlaySection
+                        section={section as ModalOverlayReportPageShape}
+                        entity={entity}
+                        entityStep={step}
+                      />
+                    </Box>
+                  );
+                case OverlayModalStepTypes.EVALUATION_PLAN:
+                  return (
+                    <Box key={idx}>
+                      <ExportedOverlayModalReportSection
+                        section={section as OverlayModalPageShape}
+                        entity={entity}
+                        entityStep={step}
+                      />
+                    </Box>
+                  );
+                case OverlayModalStepTypes.FUNDING_SOURCES:
+                  return (
+                    <Box key={idx}>
+                      <ExportedOverlayModalReportSection
+                        section={section as OverlayModalPageShape}
+                        entity={entity}
+                        entityStep={step}
+                      />
+                    </Box>
+                  );
+                // TODO: Once we are tracking the close-out information step, we'll need to add it here
+                default:
+                  return <></>;
+              }
+            })}
+          </Box>
         );
       });
     case ReportType.SAR:
@@ -129,8 +231,6 @@ const sx = {
     "tr, th": {
       verticalAlign: "bottom",
       lineHeight: "base",
-      borderBottom: "1px solid",
-      borderColor: "palette.gray_lighter",
     },
     "th:nth-of-type(3)": {
       width: "15rem",
@@ -140,9 +240,6 @@ const sx = {
       display: "table-row-group",
     },
     td: {
-      p: {
-        lineHeight: "1.25rem",
-      },
       padding: "0.75rem 0.5rem",
       borderStyle: "none",
       fontWeight: "normal",
@@ -163,9 +260,6 @@ const sx = {
       color: "palette.gray_medium",
       ".shrink &": {
         padding: "0.375rem 0rem",
-      },
-      "&:first-of-type": {
-        textAlign: "center",
       },
     },
     ".desktop &": {
@@ -194,5 +288,15 @@ const sx = {
     margin: "0 auto",
     textAlign: "center",
     paddingBottom: "5rem",
+  },
+  heading: {
+    fontSize: "xl",
+  },
+  headingSubtitle: {
+    fontWeight: "normal",
+    marginLeft: "1.5rem",
+  },
+  container: {
+    paddingTop: "2rem",
   },
 };

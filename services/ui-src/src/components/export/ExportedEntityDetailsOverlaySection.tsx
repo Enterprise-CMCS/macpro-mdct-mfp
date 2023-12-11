@@ -1,119 +1,92 @@
 // components
-import { ExportedSectionHeading } from "components";
-import { Box } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
+import { Fragment } from "react";
+import uuid from "react-uuid";
+// components
+import { ExportedEntityDetailsTable } from "components";
 // types
 import {
   EntityShape,
   FormField,
   FormLayoutElement,
   ModalOverlayReportPageShape,
+  ReportShape,
   ReportType,
 } from "types";
 // utils
-import { useStore } from "utils";
+import { updateRenderFields, useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
-// verbiage
-import wpVerbiage from "verbiage/pages/wp/wp-export";
-import sarVerbiage from "verbiage/pages/sar/sar-export";
-
-const exportVerbiageMap: { [key in ReportType]: any } = {
-  WP: wpVerbiage,
-  SAR: sarVerbiage,
-};
 
 export const ExportedEntityDetailsOverlaySection = ({
-  section,
+  entity,
+  entityStep,
   ...props
 }: ExportedEntityDetailsOverlaySectionProps) => {
   const { report } = useStore() ?? {};
-  const entityType = section.entityType;
 
   return (
     <Box sx={sx.sectionHeading} {...props}>
-      <ExportedSectionHeading
-        heading={exportVerbiageMap[report?.reportType as ReportType]}
-        reportType={report?.reportType}
-        verbiage={{
-          ...section.verbiage,
-          intro: {
-            ...section.verbiage.intro,
-            info: undefined,
-            exportSectionHeader: undefined,
-            spreadsheet: "MLR Reporting",
-          },
-        }}
-      />
-      {renderEntityDetailTables(
-        report?.reportType as ReportType,
-        report?.fieldData[entityType] ?? [],
-        section
-      )}
+      {report && renderEntityDetailTables(report, entity ?? [], entityStep)}
     </Box>
   );
 };
 
 export interface ExportedEntityDetailsOverlaySectionProps {
   section: ModalOverlayReportPageShape;
-}
-/**
- * Split a list of form fields by the "sectionHeader" layout element type.
- * This allows returning distinct tables for each section, rather than one large one.
- *
- * In the returned FormField sections, the first element is the section header.
- *
- * @param formFields List of form fields, possibly containing section headers
- * @returns array of arrays containing form field elements representing a section
- */
-export function getFormSections(
-  formFields: (FormField | FormLayoutElement)[]
-): (FormLayoutElement | FormField)[][] {
-  const formSections: (FormLayoutElement | FormField)[][] = [];
-
-  let currentSection: (FormField | FormLayoutElement)[] = [];
-  for (let field of formFields) {
-    if (field.type === "sectionHeader") {
-      if (currentSection.length > 0) {
-        formSections.push(currentSection);
-      }
-      currentSection = [field];
-    } else {
-      currentSection.push(field);
-    }
-  }
-  formSections.push(currentSection);
-
-  return formSections;
+  entity: EntityShape;
+  entityStep: (string | FormLayoutElement | FormField)[];
 }
 
 /**
  *
- * @param entities entities for entity type
- * @param section form json for section
- * @param formSections form fields broken down into sections
+ * @param entity entity data
  * @param report report field data
  * @returns entity table and heading information for each section
  */
+export function getEntityTableComponents(
+  report: ReportShape,
+  entity: EntityShape,
+  entityStep: (string | FormLayoutElement | FormField)[]
+) {
+  const entityStepFields = entityStep.slice(3) as FormField[];
+  const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
+  return (
+    <Box key={uuid()}>
+      <Box>
+        <Heading as="h4">
+          <Box sx={sx.stepName}>{entityStep[1]}</Box>
+          <Box sx={sx.stepHint}>{entityStep[2]}</Box>
+        </Heading>
+      </Box>
+      <Fragment>
+        <ExportedEntityDetailsTable
+          fields={updatedEntityStepFields as FormField[]}
+          entity={entity}
+          showHintText={false}
+        />
+      </Fragment>
+    </Box>
+  );
+}
 
 /**
  * Render entity detail table(s) conditionally based on report type.
  *
- * @param reportType report type of report
+ * @param report report
  * @param entities entities for entity type
  * @param section form json section
  * @param report report data
  * @returns array of exported entity table components
  */
 export function renderEntityDetailTables(
-  reportType: ReportType,
-  entities: EntityShape[],
-  section: ModalOverlayReportPageShape
+  report: ReportShape,
+  entity: EntityShape,
+  entityStep: (string | FormLayoutElement | FormField)[]
 ) {
+  const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
     case ReportType.WP: {
-      const formSections = getFormSections(section.overlayForm?.fields ?? []);
-      return `${JSON.stringify(entities)}.....${JSON.stringify(
-        section
-      )}.....${JSON.stringify(formSections)}.....`;
+      return getEntityTableComponents(report!, entity, entityStep);
     }
     case ReportType.SAR:
       throw new Error(
@@ -196,9 +169,14 @@ const sx = {
     textAlign: "center",
     paddingBottom: "5rem",
   },
-  entityInformation: {
-    padding: "1rem 0 1rem 0",
-    fontWeight: "bold",
+  stepName: {
+    fontSize: "18px",
+    paddingBottom: "0.75rem",
+  },
+  stepHint: {
+    fontSize: "16px",
+    fontWeight: "normal",
+    color: "palette.gray_medium_dark",
   },
   entityHeading: {
     padding: "2rem 0 0.5rem 0",
