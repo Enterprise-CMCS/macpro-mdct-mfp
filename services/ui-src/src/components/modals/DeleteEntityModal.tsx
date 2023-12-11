@@ -78,13 +78,12 @@ export const DeleteEntityModal = ({
       selectedEntity?.id
     );
 
-    const tempEntities = { ...updatedEntities };
     await updateReport(reportKeys, {
       metadata: {
         lastAlteredBy: full_name,
         status: ReportStatus.IN_PROGRESS,
       },
-      fieldData: { [entityName]: tempEntities[entityName] },
+      fieldData: { [entityName]: updatedEntities[entityName] },
     });
     setDeleting(false);
     modalDisclosure.onClose();
