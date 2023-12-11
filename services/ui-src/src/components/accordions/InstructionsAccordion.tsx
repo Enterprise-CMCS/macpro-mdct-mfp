@@ -12,14 +12,24 @@ export const InstructionsAccordion = ({ verbiage, ...props }: Props) => {
     <Accordion allowToggle={true} allowMultiple={true} sx={sx.root} {...props}>
       <AccordionItem label={buttonLabel} sx={sx.item}>
         <Box sx={sx.textBox}>{parseCustomHtml(intro)}</Box>
-        <UnorderedList sx={sx.list}>
-          {list?.map((listItem: string, index: number) => (
-            <ListItem key={index}>{sanitizeAndParseHtml(listItem)}</ListItem>
-          ))}
-        </UnorderedList>
-        <Box sx={sx.textBox}>{sanitizeAndParseHtml(text)}</Box>
+        {list && parseList(list)}
+        {text && <Box sx={sx.textBox}>{parseCustomHtml(text)}</Box>}
       </AccordionItem>
     </Accordion>
+  );
+};
+
+export const parseList = (list: any) => {
+  return (
+    <UnorderedList sx={sx.list}>
+      {list?.map((listItem: string | AnyObject, index: number) =>
+        typeof listItem === "string" ? (
+          <ListItem key={index}>{sanitizeAndParseHtml(listItem)}</ListItem>
+        ) : (
+          parseList(listItem)
+        )
+      )}
+    </UnorderedList>
   );
 };
 

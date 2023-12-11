@@ -62,12 +62,17 @@ export const DashboardPage = ({ reportType }: Props) => {
     releaseReport,
     fetchReport,
   } = useContext(ReportContext);
-  const { reportsByState, workPlanToCopyFrom, clearSelectedEntity } =
-    useStore();
+  const {
+    reportsByState,
+    workPlanToCopyFrom,
+    clearSelectedEntity,
+    setEditable,
+  } = useStore();
   const navigate = useNavigate();
   const {
     state: userState,
     userIsEndUser,
+    userIsReadOnly,
     userIsAdmin,
   } = useStore().user ?? {};
   const { isTablet, isMobile } = useBreakpoint();
@@ -129,6 +134,17 @@ export const DashboardPage = ({ reportType }: Props) => {
     setPreviousReport(newReportsToDisplay?.[0]);
   }, [reportsByState]);
 
+  const isReportEditable = (selectedReport: ReportShape) => {
+    //the wp is only editable only when the user is a state user and the form has not been submitted or approved, all over users are in view mode
+    return (
+      !userIsAdmin &&
+      !userIsReadOnly &&
+      !selectedReport?.locked &&
+      selectedReport?.status !== ReportStatus.APPROVED &&
+      selectedReport?.status !== ReportStatus.SUBMITTED
+    );
+  };
+
   const enterSelectedReport = async (report: ReportMetadataShape) => {
     clearSelectedEntity();
     setReportId(report.id);
@@ -145,6 +161,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     setEntering(false);
     const firstReportPagePath =
       selectedReport?.formTemplate.flatRoutes![0].path;
+    setEditable(isReportEditable(selectedReport));
     navigate(firstReportPagePath);
   };
 
@@ -230,19 +247,6 @@ export const DashboardPage = ({ reportType }: Props) => {
         if (!previousReport) {
           return false;
         } else {
-          /** turning this off atm for testing copy over
-           * const currentDate = new Date();
-           * const period = currentDate.getMonth() + 1 > 6 ? 2 : 1;
-           * const year = currentDate.getFullYear();
-           * const isNextPeriod =
-           *  year > previousReport.reportYear ||
-           *  (year === previousReport.reportYear &&
-           *  period > previousReport.reportPeriod);
-           *  return (
-           *    previousReport.status !== ReportStatus.APPROVED || !isNextPeriod
-           *  );
-           **/
-
           return previousReport.status !== ReportStatus.APPROVED;
         }
       default:

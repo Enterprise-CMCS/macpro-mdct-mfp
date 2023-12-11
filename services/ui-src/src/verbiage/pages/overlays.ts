@@ -1,7 +1,7 @@
 export default {
   WP: {
     intro: {
-      section: "State & Terroritory Specific Initiatives",
+      section: "State- or Terroritory Specific Initiatives",
       subsection: "Medicaid Medical Loss Ratio (MLR) & Remittances",
       spreadsheet: "MLR Reporting",
       header: "Enter data for each program into the online form",
