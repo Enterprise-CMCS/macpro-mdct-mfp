@@ -119,7 +119,10 @@ export const createReport = handler(
       unvalidatedPayload;
 
     //override the date in the system to generate the next report based on the previous reporting period. adding flag to turn it on and off
-    if (unvalidatedMetadata?.copyReport) {
+    if (
+      unvalidatedMetadata?.copyReport &&
+      unvalidatedMetadata?.copyReport?.isCopyOverTest
+    ) {
       overriderDate(unvalidatedMetadata?.copyReport);
     }
 
