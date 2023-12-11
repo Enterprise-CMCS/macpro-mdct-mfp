@@ -71,6 +71,7 @@ export const DeleteEntityModal = ({
     const entityTypes: string[] =
       typeof entityType === "string" ? [entityType] : (entityType as string[]);
 
+    const entityName = entityTypes[0];
     const updatedEntities = removeSelectedEntity(
       structuredClone(report?.fieldData),
       entityTypes[entityTypes.length - 1],
@@ -82,7 +83,7 @@ export const DeleteEntityModal = ({
         lastAlteredBy: full_name,
         status: ReportStatus.IN_PROGRESS,
       },
-      fieldData: { ...updatedEntities },
+      fieldData: { [entityName]: updatedEntities[entityName] },
     });
     setDeleting(false);
     modalDisclosure.onClose();
