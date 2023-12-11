@@ -201,7 +201,6 @@ describe("When loading a sucessfully submitted report (Success Message Generator
     const reportType = "WP";
     const submittedDate = 1663163109045;
     const submittersName = "Carol California";
-    const stateName = "MN";
     expect(
       SuccessMessageGenerator(
         reportType,
@@ -210,8 +209,8 @@ describe("When loading a sucessfully submitted report (Success Message Generator
         submittersName
       )
     ).toEqual([
-      `${reportType} submission for `,
-      <b>{`${stateName} ${submissionName}`}</b>,
+      `MFP ${reportType} submission for `,
+      <b>{`${submissionName}`}</b>,
       ` was submitted on Wednesday, September 14, 2022 by ${submittersName}.`,
     ]);
   });
