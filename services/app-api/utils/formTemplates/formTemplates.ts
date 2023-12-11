@@ -2,7 +2,7 @@ import { AttributeValue, QueryInput } from "aws-sdk/clients/dynamodb";
 import dynamodbLib from "../dynamo/dynamodb-lib";
 import wpForm from "../../forms/wp.json";
 import sarForm from "../../forms/sar.json";
-import s3Lib, { getFormTemplateKey } from "../s3/s3-lib";
+import s3Lib, { getFormTemplateKey, getTemplate } from "../s3/s3-lib";
 import KSUID from "ksuid";
 import { logger } from "../logging";
 import {
@@ -20,7 +20,6 @@ import {
   ReportRoute,
   ReportType,
 } from "../types";
-import { getTemplate } from "../../handlers/formTemplates/populateTemplatesTable";
 import { createHash } from "crypto";
 import {
   calculateCurrentYear,
