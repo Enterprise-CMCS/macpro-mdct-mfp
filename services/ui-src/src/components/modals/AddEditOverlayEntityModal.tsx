@@ -184,15 +184,10 @@ export const AddEditOverlayEntityModal = ({
         subheading: verbiage.addEditModalHint
           ? verbiage.addEditModalHint
           : undefined,
-        actionButtonText: submitting ? (
-          <Spinner size="md" />
-        ) : !userDisabled ? (
-          "Save"
-        ) : (
-          "Close"
-        ),
+        actionButtonText: submitting ? <Spinner size="md" /> : "Save",
         closeButtonText: "Cancel",
       }}
+      submitButtonDisabled={userDisabled}
     >
       <Form
         data-testid="add-edit-entity-form"
