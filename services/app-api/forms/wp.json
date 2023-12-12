@@ -82,15 +82,15 @@
           ],
           "text": [
             {
-            "type": "html",
-            "content": "<b>About adding “other” target populations</b><br>If you are using the “Other” category, clearly describe the rationale and criteria for defining this category in your Operational Protocol, as needed."
+              "type": "html",
+              "content": "<b>About adding “other” target populations</b><br>If you are using the “Other” category, clearly describe the rationale and criteria for defining this category in your Operational Protocol, as needed."
             },
             {
               "type": "html",
               "content": "<br><br><b>How to best categorize which population to attribute the transition to avoid duplication</b><br>You may need to track some populations to see utilization to address questions from stakeholders and those circumstances should be discussed with your CMS MFP Project Officer. For example, if a person has a dual-diagnosis such as an individual with intellectual and developmental disabilities (I/DD) and mental health and substance use disorders (MH/SUD), the service dollars may be expended under an HCBS authority that focuses on people with I/DD, rather than MH/SUD. You could review claims to determine that someone is also receiving mental health services. This additional step may necessitate a tracking mechanism outside of the MFP Work Plan and Semi-Annual Progress Report and should be discussed with your Project Officer."
             }
-        ]
-        }, 
+          ]
+        },
         "intro": {
           "section": "",
           "subsection": "Transition Benchmark Projections",
@@ -906,8 +906,7 @@
                           "type": "html",
                           "content": ", add it there, and return here to select it. Select “Not Applicable” if the population is not a part of your overall MFP target populations (if this is for a non-MFP qualified initiative).]"
                         }
-                        
-                    ],
+                      ],
                       "choices": []
                     }
                   },
@@ -1008,7 +1007,7 @@
                     "<strong>Time-bound:</strong> Specifies when the results are expected"
                   ],
                   "text": ""
-                }, 
+                },
                 "text": "Add evaluation plan, including measurable objectives. Select <i>Add objective</i> button for each objective you need to add to the system.",
                 "addEntityButtonText": "Add objective",
                 "editEntityHint": "Select \"Edit\" to complete initiative evaluation plan.",
@@ -1205,6 +1204,9 @@
                     "validation": "number",
                     "transformation": {
                       "rule": "nextTwelveQuarters"
+                    },
+                    "props": {
+                      "mask": "currency"
                     }
                   }
                 ]
