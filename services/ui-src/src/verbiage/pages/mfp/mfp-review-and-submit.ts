@@ -74,7 +74,28 @@ export default {
       infoHeader: "Thank you",
       additionalInfoHeader: "What happens now?",
       additionalInfo:
-        "Your dashboard will indicate the status of this MFP Work Plan as “Submitted” and it is now locked from editing. ",
+        "Your dashboard will indicate the status of this MFP Work Plan as “Submitted” and it is now locked from editing. <br><br><b>Email your CMS MFP Project Officer to inform them you submitted the MFP Work Plan and it is ready for their review.</b>",
+      list: [
+        {
+          content:
+            "If CMS has questions or requested corrections: Your Project Officer will contact you.",
+          children: [],
+        },
+        {
+          content:
+            "If CMS determines corrections are <i>not</i> needed: Your Project Officer will approve the MFP Work Plan and the status will change to “Approved” {x time before it’s due}:",
+          children: [
+            {
+              content:
+                "This MFP Work Plan will be permanently locked from editing.",
+            },
+            {
+              content:
+                "You can now start the Semi-Annual Progress Report (SAR) for the same reporting period.",
+            },
+          ],
+        },
+      ],
     },
   },
   alertBox: {
