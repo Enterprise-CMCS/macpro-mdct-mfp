@@ -32,7 +32,7 @@ import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
 import finishedIcon from "assets/icons/icon_check_circle.png";
 // utils
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
-import { getInitiativeStatus } from "components/tables/getEntityStatus";
+import { getEntityStatus } from "components/tables/getEntityStatus";
 
 const exportVerbiageMap: { [key in ReportType]: any } = {
   WP: wpVerbiage,
@@ -149,6 +149,7 @@ export function renderModalOverlayTableBody(
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
+        // console.log("entity", entity);
         return (
           <Box sx={sx.container}>
             <Tr key={idx}>
@@ -156,7 +157,7 @@ export function renderModalOverlayTableBody(
                 <EntityStatusIcon
                   entity={entity}
                   isPdf={true}
-                  entityStatus={getInitiativeStatus(report, entity)}
+                  entityStatus={getEntityStatus(report, entity, entity.type)}
                 />
               </Td>
               <Td>
