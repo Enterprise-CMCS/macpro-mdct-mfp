@@ -328,10 +328,11 @@ export const updateRenderFields = (
     isRequired: false,
   };
 
-  const filteredTargetPopulations = new Array(
-    ...removeNotApplicablePopulations(targetPopulations),
-    notApplicablePopulation
-  );
+  const filteredTargetPopulations =
+    removeNotApplicablePopulations(targetPopulations);
+
+  filteredTargetPopulations?.push(notApplicablePopulation);
+
   const formatChoiceList = convertTargetPopulationsFromWPToSAREntity(
     filteredTargetPopulations
   );
