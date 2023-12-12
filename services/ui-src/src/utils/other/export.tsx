@@ -246,20 +246,6 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
   };
 };
 
-export const getEntityDetailsMLR = (entity: EntityShape) => {
-  const { report_programName, report_planName } = entity;
-
-  const reportingPeriod = `${entity.report_reportingPeriodStartDate} to ${entity.report_reportingPeriodEndDate}`;
-  // const mlrEligibilityGroup = eligibilityGroup(entity);
-
-  return {
-    report_planName,
-    report_programName,
-    reportingPeriod,
-    // mlrEligibilityGroup,
-  };
-};
-
 // style object for rendered elements
 const sx = {
   fieldChoice: {
