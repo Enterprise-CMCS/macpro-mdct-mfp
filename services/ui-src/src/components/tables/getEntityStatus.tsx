@@ -94,6 +94,7 @@ export const getEntityStatus = (
 export const getInitiativeStatus = (
   report: ReportShape,
   entity: EntityShape,
+  isPdf?: boolean,
   ignore?: string[]
 ) => {
   if (entity?.isInitiativeClosed) return EntityStatuses.CLOSE;
@@ -118,6 +119,15 @@ export const getInitiativeStatus = (
       return getInitiativeDashboardStatus(step, entity);
     });
 
+    /**
+     * Currently, on exporting a PDF of the Work Plan does not take into consideration the Close-out initiatives entity step,
+     * but the status is always returning "incomplete" because that step is used to calculate the initiative status.
+     * This removes the Close-out initiative step status from the PDF statusing calculation.
+     */
+    if (isPdf) {
+      stepStatuses.splice(-1);
+    }
+
     return stepStatuses.every((field: boolean | EntityStatuses) => field);
   }
 
@@ -138,6 +148,7 @@ export const getInitiativeDashboardStatus = (
 
   //this step is to consolidate the code by converting entity into a loopable array if there's no array of stepType to loop through
   const entities = entity[stepType] ? (entity[stepType] as []) : [entity];
+
   if (entities.length > 0) {
     let isFilled = true;
 
