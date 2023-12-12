@@ -67,6 +67,7 @@ export const ReportProvider = ({ children }: Props) => {
   } = useStore();
 
   const { state: userState } = useStore().user ?? {};
+  const { setEditable } = useStore();
 
   const hydrateAndSetReport = (report: ReportShape | undefined) => {
     if (report) {
@@ -204,6 +205,9 @@ export const ReportProvider = ({ children }: Props) => {
     hydrateAndSetReport(undefined);
     setLastSavedTime(undefined);
     localStorage.setItem("selectedReport", "");
+
+    //reset editable state when report selection is cleared
+    setEditable(true);
   };
 
   const setReportSelection = async (report: ReportShape) => {
