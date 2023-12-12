@@ -968,19 +968,27 @@
       "entitySteps": [
         {
           "name": "Objectives progress",
-          "pageType": "modalOverlay",
+          "pageType": "overlayModal",
           "entityType": "initiative",
-          "stepType": "objectivesProgress",
+          "stepType": "evaluationPlan",
           "stepInfo": ["name", "hint"],
           "hint": "Report progress for each objective",
           "isRequired": true,
           "verbiage": {
             "intro": {
-              "section": "Objectives progress",
-              "subsection": "Report progress for each objective by selecting the button for each."
+              "section": "State- or Territory-Specific Initiatives",
+              "info": [
+                {
+                  "type": "html",
+                  "content": "Report progress for each objective by selecting the button for each."
+                }
+              ],
+              "dashboardTitle": "Objectives progress"
             },
-            "enterEntityDetailsButtonText": "Report objective progress",
+            "enterEntityDetailsButtonText": "Edit",
+            "readOnlyEntityDetailsButtonText": "View",
             "modalTitle": "Report progress for ",
+            "editEntityHint": "Select \"Edit\" to report the objectives progress.",
             "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab."
           },
           "modalForm": {
@@ -1040,6 +1048,9 @@
               "section": "Initiative progress",
               "subsection": "Report progress for this initiative during this reporting period."
             },
+            "enterEntityDetailsButtonText": "Edit",
+            "readOnlyEntityDetailsButtonText": "View",
+            "editEntityHint": "Select \"Edit\" to report the overall progress.",
             "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
           },
           "form": {
@@ -1086,6 +1097,9 @@
               "section": "Expenditures",
               "subsection": "Initiative expenditures by quarter and funding source. Funding sources and projected spending are auto-populated from your associated Work Plan."
             },
+            "enterEntityDetailsButtonText": "Edit",
+            "readOnlyEntityDetailsButtonText": "View",
+            "editEntityHint": "Select \"Edit\" to report expenditures.",
             "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
           },
           "form": {
@@ -1135,31 +1149,35 @@
                 "id": "expenditures_onTrackToFullExpendFunds",
                 "type": "radio",
                 "validation": "radio",
-                "choices": [
-                  {
-                    "id": "2WaUKOjwgUvHO6CMAqE8aOC",
-                    "label": "Yes"
-                  },
-                  {
-                    "id": "2WaUKNbCmetqXVFsKnaHqeK",
-                    "label": "No",
-                    "children": [
-                      {
-                        "id": "expenditures_onTrackToFullExpendFunds-otherText",
-                        "type": "textarea",
-                        "validation": {
-                          "type": "text",
-                          "parentFieldName": "expenditures_onTrackToFullExpendFunds",
-                          "parentOptionId": "2WaUKNbCmetqXVFsKnaHqeK",
-                          "nested": true
-                        },
-                        "props": {
-                          "label": "Briefly explain what has contributed to lower than projected expenditures (e.g., challenges with hiring, delays in start-up) and describe your revised time frame for fully expending awarded funds."
+                "props": {
+                  "label": "Taking the lag time for reporting expenditures into account, is the state or territory on track to fully expend funds within the projected time frame for this initiative?",
+                  "hint": "",
+                  "choices": [
+                    {
+                      "id": "2WaUKOjwgUvHO6CMAqE8aOC",
+                      "label": "Yes"
+                    },
+                    {
+                      "id": "2WaUKNbCmetqXVFsKnaHqeK",
+                      "label": "No",
+                      "children": [
+                        {
+                          "id": "expenditures_onTrackToFullExpendFunds-otherText",
+                          "type": "textarea",
+                          "validation": {
+                            "type": "text",
+                            "parentFieldName": "expenditures_onTrackToFullExpendFunds",
+                            "parentOptionId": "2WaUKNbCmetqXVFsKnaHqeK",
+                            "nested": true
+                          },
+                          "props": {
+                            "label": "Briefly explain what has contributed to lower than projected expenditures (e.g., challenges with hiring, delays in start-up) and describe your revised time frame for fully expending awarded funds."
+                          }
                         }
-                      }
-                    ]
-                  }
-                ]
+                      ]
+                    }
+                  ]
+                }
               }
             ]
           }
