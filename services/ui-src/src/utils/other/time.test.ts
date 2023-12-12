@@ -126,7 +126,7 @@ describe("Test calculateNextQuarter", () => {
     expect(calculateNextQuarter(previousQuarter)).toBe("2027 Q2");
   });
   it("returns next year and next period", () => {
-    const previousQuarter = "2027 Q2";
+    const previousQuarter = "2027 Q4";
     expect(calculateNextQuarter(previousQuarter)).toBe("2028 Q1");
   });
   it("returns empty string when nothing is passed in", () => {
