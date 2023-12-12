@@ -321,7 +321,7 @@ export const updateRenderFields = (
 ) => {
   const targetPopulations = report?.fieldData?.targetPopulations;
 
-  const notApplicablePopulation = {
+  const notApplicableOption = {
     id: "3Nc13O5GHA6Hc4KheO5FMSD2",
     transitionBenchmarks_targetPopulationName: "Not applicable",
     type: "targetPopulations",
@@ -331,7 +331,7 @@ export const updateRenderFields = (
   const filteredTargetPopulations =
     removeNotApplicablePopulations(targetPopulations);
 
-  filteredTargetPopulations?.push(notApplicablePopulation);
+  filteredTargetPopulations?.push(notApplicableOption);
 
   const formatChoiceList = convertTargetPopulationsFromWPToSAREntity(
     filteredTargetPopulations
