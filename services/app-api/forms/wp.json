@@ -1204,6 +1204,9 @@
                     "validation": "number",
                     "transformation": {
                       "rule": "nextTwelveQuarters"
+                    },
+                    "props": {
+                      "mask": "currency"
                     }
                   }
                 ]
