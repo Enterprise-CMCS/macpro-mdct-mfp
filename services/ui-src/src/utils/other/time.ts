@@ -175,9 +175,8 @@ export const calculateNextQuarter = (previousQuarter: string) => {
     const period = parseInt(
       formattedQuarter[1][formattedQuarter[1].length - 1]
     );
-
-    const nextPeriod = period === 2 ? 1 : 2;
-    const nextYear = period === 2 ? year + 1 : year;
+    const nextPeriod = (period % 4) + 1;
+    const nextYear = period === 4 ? year + 1 : year;
     return `${nextYear} Q${nextPeriod}`;
   }
   return "";
