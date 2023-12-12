@@ -7,7 +7,6 @@ export default {
     table: {
       caption: "WP Programs",
       headRow: [
-        "",
         "Submission name",
         "Due date",
         "Last edited",
