@@ -1062,7 +1062,7 @@
                     "validation": "radio",
                     "props": {
                       "label": "Does the performance measure include quantitative targets?",
-                      "hint": "Note: If 'Yes', fields use calendar year quarters.",
+                      "hint": "Note: If 'Yes', fields use calendar year quarters.  Enter N/A for quarters you do not expect to report.",
                       "choices": [
                         {
                           "id": "UL4dAeyyvCFAXttxZioacR",
