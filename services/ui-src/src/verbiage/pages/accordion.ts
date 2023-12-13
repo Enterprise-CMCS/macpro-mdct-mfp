@@ -16,7 +16,7 @@ export default {
         },
         {
           type: "externalLink",
-          content: "User Guide and Help File",
+          content: "User Guide",
           props: {
             href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)", // TO-DO: currently placeholder, replace when correct link available
             target: "_blank",
