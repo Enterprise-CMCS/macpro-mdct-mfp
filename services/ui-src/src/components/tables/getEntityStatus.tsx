@@ -122,9 +122,9 @@ export const getInitiativeStatus = (
     /**
      * Currently, on exporting a PDF of the Work Plan does not take into consideration the Close-out initiatives entity step,
      * but the status is always returning "incomplete" because that step is used to calculate the initiative status.
-     * This removes the Close-out initiative step status from the PDF statusing calculation.
+     * This removes the Close-out initiative step status from the PDF statusing calculation if this is not a copy-over.
      */
-    if (isPdf && entity.isInitiativeClosed) {
+    if (isPdf && !entity.isCopied) {
       stepStatuses.splice(-1);
     }
 
