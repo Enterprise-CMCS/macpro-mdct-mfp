@@ -66,11 +66,25 @@ export interface FormField {
   props?: AnyObject;
   choices?: FieldChoice[];
   repeat?: string;
-  repeatable?: Repeatable;
+  transformation?: Transformation;
+  isRequired?: boolean;
 }
 
-export interface Repeatable {
+export interface Transformation {
   rule: string;
+}
+
+export interface TargetPopulationKeys {
+  reportPeriod: number;
+  fieldId: string;
+  targetPopulationName: string;
+  isRequired?: boolean;
+}
+
+export interface TwelveQuartersKeys {
+  fieldId: string;
+  year: number;
+  quarter: number;
 }
 
 export interface DropdownOptions {

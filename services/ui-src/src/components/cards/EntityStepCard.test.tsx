@@ -9,6 +9,7 @@ import {
   mockUnfinishedGenericFormattedEntityData,
 } from "utils/testing/setupJest";
 import { EntityStepCard } from "./EntityStepCard";
+import { OverlayModalStepTypes } from "types";
 
 const openAddEditEntityModal = jest.fn();
 const openDeleteEntityModal = jest.fn();
@@ -37,6 +38,87 @@ const GenericEntityTypeEntityCardComponent = (
     entityIndex={0}
     stepType="stepType"
     formattedEntityData={mockCompletedGenericFormattedEntityData}
+    verbiage={mockModalDrawerReportPageJson.verbiage}
+    openAddEditEntityModal={openAddEditEntityModal}
+    openDeleteEntityModal={openDeleteEntityModal}
+    openDrawer={mockOpenDrawer}
+    printVersion={false}
+  />
+);
+
+const UnfinishedEvaluationPlanCardComponent = (
+  <EntityStepCard
+    entity={mockGenericEntity}
+    entityIndex={0}
+    stepType={OverlayModalStepTypes.EVALUATION_PLAN}
+    formattedEntityData={{
+      ...mockUnfinishedGenericFormattedEntityData,
+      objectiveName: "mock objective name",
+      includesTargets: "Yes",
+      quarters: [{ id: "2023 Q1", value: "mock quarter text" }],
+    }}
+    verbiage={mockModalDrawerReportPageJson.verbiage}
+    openAddEditEntityModal={openAddEditEntityModal}
+    openDeleteEntityModal={openDeleteEntityModal}
+    openDrawer={mockOpenDrawer}
+    printVersion={false}
+  />
+);
+
+const CompletedEvaluationPlanCardComponent = (
+  <EntityStepCard
+    entity={mockGenericEntity}
+    entityIndex={0}
+    stepType={OverlayModalStepTypes.EVALUATION_PLAN}
+    formattedEntityData={mockCompletedGenericFormattedEntityData}
+    verbiage={mockModalDrawerReportPageJson.verbiage}
+    openAddEditEntityModal={openAddEditEntityModal}
+    openDeleteEntityModal={openDeleteEntityModal}
+    openDrawer={mockOpenDrawer}
+    printVersion={false}
+  />
+);
+
+const UnfinishedFundingSourcesCardComponent = (
+  <EntityStepCard
+    entity={mockGenericEntity}
+    entityIndex={0}
+    stepType={OverlayModalStepTypes.FUNDING_SOURCES}
+    formattedEntityData={{
+      ...mockUnfinishedGenericFormattedEntityData,
+      quarters: [{ id: "2023 Q1", value: "mock quarter text" }],
+    }}
+    verbiage={mockModalDrawerReportPageJson.verbiage}
+    openAddEditEntityModal={openAddEditEntityModal}
+    openDeleteEntityModal={openDeleteEntityModal}
+    openDrawer={mockOpenDrawer}
+    printVersion={false}
+  />
+);
+
+const CompletedFundingSourcesCardComponent = (
+  <EntityStepCard
+    entity={mockGenericEntity}
+    entityIndex={0}
+    stepType={OverlayModalStepTypes.FUNDING_SOURCES}
+    formattedEntityData={{
+      ...mockCompletedGenericFormattedEntityData,
+      fundingSource: "mock funding source",
+      quarters: [
+        { id: "2021 Q1", value: "mock quarter text" },
+        { id: "2021 Q2", value: "mock quarter text" },
+        { id: "2021 Q3", value: "mock quarter text" },
+        { id: "2021 Q4", value: "mock quarter text" },
+        { id: "2022 Q1", value: "mock quarter text" },
+        { id: "2022 Q2", value: "mock quarter text" },
+        { id: "2022 Q3", value: "mock quarter text" },
+        { id: "2022 Q4", value: "mock quarter text" },
+        { id: "2023 Q1", value: "mock quarter text" },
+        { id: "2023 Q2", value: "mock quarter text" },
+        { id: "2023 Q3", value: "mock quarter text" },
+        { id: "2023 Q4", value: "mock quarter text" },
+      ],
+    }}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
@@ -100,6 +182,32 @@ describe("Test Unfinished EntityCard", () => {
     const enterDetailsButton = screen.getByText(enterEntityDetailsButtonText);
     await userEvent.click(enterDetailsButton);
     expect(mockOpenDrawer).toBeCalledTimes(1);
+  });
+});
+
+describe("EntityCard with specific step types", () => {
+  test("Unfinished evaluation plan card should have a button to enter details", () => {
+    render(UnfinishedEvaluationPlanCardComponent);
+    const detailsButton = screen.getByText(enterEntityDetailsButtonText);
+    expect(detailsButton).toBeVisible();
+  });
+
+  test("Completed evaluation plan card should have a button to edit details", () => {
+    render(CompletedEvaluationPlanCardComponent);
+    const detailsButton = screen.getByText(editEntityButtonText);
+    expect(detailsButton).toBeVisible();
+  });
+
+  test("Unfinished funding sources card should have a button to enter details", () => {
+    render(UnfinishedFundingSourcesCardComponent);
+    const detailsButton = screen.getByText(enterEntityDetailsButtonText);
+    expect(detailsButton).toBeVisible();
+  });
+
+  test("Completed funding sources card should have a button to edit details", () => {
+    render(CompletedFundingSourcesCardComponent);
+    const detailsButton = screen.getByText(editEntityButtonText);
+    expect(detailsButton).toBeVisible();
   });
 });
 

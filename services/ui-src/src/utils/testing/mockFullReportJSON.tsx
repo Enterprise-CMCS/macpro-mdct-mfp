@@ -693,7 +693,7 @@ export const mockFullReportJSON: ReportJson = {
               "Are you sure you want to delete this initiative?",
             deleteModalConfirmButtonText: "Yes, delete initiative",
             deleteModalWarning:
-              "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. <br/><br/>To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
+              "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
             enterEntityDetailsButtonText: "Edit",
             readOnlyEntityDetailsButtonText: "View",
             dashboardTitle: "Initative total count",

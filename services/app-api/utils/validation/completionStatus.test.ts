@@ -174,5 +174,262 @@ describe("Completion Status Tests", () => {
       );
       expect(result).toMatchObject({});
     });
+
+    test("Nested fields can be validated recursively", async () => {
+      const fieldData = {
+        field1: [
+          {
+            key: "a-b-choiceId1",
+          },
+          {
+            key: "a-b-choiceId2",
+          },
+        ],
+        nestedField1: "test",
+        nestedField2: [
+          {
+            key: "a-b-doublyNestedChoice",
+          },
+        ],
+        doublyNestedField1: "not-an-email",
+      };
+      const formTemplate = {
+        routes: [
+          {
+            path: "mock/path",
+            pageType: "standard",
+            form: {
+              fields: [
+                {
+                  id: "field1",
+                  props: {
+                    choices: [
+                      {
+                        id: "choiceId1",
+                      },
+                      {
+                        id: "choiceId2",
+                        children: [
+                          {
+                            id: "nestedField1",
+                          },
+                          {
+                            id: "nestedField2",
+                            props: {
+                              choices: [
+                                {
+                                  id: "doublyNestedChoice",
+                                  children: [
+                                    {
+                                      id: "doublyNestedField1",
+                                    },
+                                  ],
+                                },
+                                {
+                                  id: "nestedField2",
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        id: "choiceId3",
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+        validationJson: {
+          doublyNestedField1: "email",
+        },
+      };
+
+      const result = await calculateCompletionStatus(fieldData, formTemplate);
+
+      // because completionSchemas.email rejects the string "not-an-email"
+      expect(result).toEqual({ "mock/path": false });
+    });
+
+    test("An entity step with overlay modals is complete if all parts are complete", async () => {
+      const fieldData = {
+        mockEntityType: [
+          {
+            mockStepType: [
+              "mockStepType is a non-empty array and therefore complete",
+            ],
+          },
+        ],
+      };
+      const formTemplate = {
+        routes: [
+          {
+            path: "mock/path",
+            pageType: "modalOverlay",
+            entityType: "mockEntityType",
+            entitySteps: [
+              {
+                pageType: "overlayModal",
+                stepType: "mockStepType",
+              },
+            ],
+            modalForm: {},
+          },
+        ],
+        validationJson: {},
+      };
+
+      const result = await calculateCompletionStatus(fieldData, formTemplate);
+
+      expect(result).toEqual({
+        "mock/path": true,
+      });
+    });
+  });
+
+  test("An entity step with overlay modals is incomplete if any parts are incomplete", async () => {
+    const fieldData = {
+      mockEntityType: [
+        {
+          mockStepType: [
+            /* mockStepType is an empty array and therefore incomplete */
+          ],
+        },
+      ],
+    };
+    const formTemplate = {
+      routes: [
+        {
+          path: "mock/path",
+          pageType: "modalOverlay",
+          entityType: "mockEntityType",
+          entitySteps: [
+            {
+              pageType: "overlayModal",
+              stepType: "mockStepType",
+            },
+          ],
+          modalForm: {},
+        },
+      ],
+      validationJson: {},
+    };
+
+    const result = await calculateCompletionStatus(fieldData, formTemplate);
+
+    expect(result).toEqual({
+      "mock/path": false,
+    });
+  });
+
+  test("An entity with steps can be marked complete with normal validation", async () => {
+    const fieldData = {
+      mockEntityType: [
+        // we are in entityFields[]
+        {
+          // we are in entityFields
+          mockStepType: [
+            // we are in entityFieldsList
+            {
+              // we are in stepFields aka dataForObject
+              mockFieldId: "test@example.com",
+            },
+          ],
+        },
+      ],
+    };
+    const formTemplate = {
+      routes: [
+        {
+          path: "mock/path",
+          pageType: "modalOverlay",
+          entityType: "mockEntityType",
+          entitySteps: [
+            // we are in entitySteps aka stepFormTemplates
+            {
+              // we are in a stepForm
+              pageType: "mockPageType",
+              stepType: "mockStepType",
+              form: {
+                // we are in nestedFormTemplate
+                fields: [
+                  {
+                    // we are in a formField
+                    id: "mockFieldId",
+                  },
+                ],
+              },
+            },
+          ],
+          modalForm: {},
+        },
+      ],
+      validationJson: {
+        mockFieldId: "email",
+      },
+    };
+
+    const result = await calculateCompletionStatus(fieldData, formTemplate);
+
+    expect(result).toEqual({
+      "mock/path": true,
+    });
+  });
+
+  test("An entity with steps can be marked incomplete with normal validation", async () => {
+    const fieldData = {
+      mockEntityType: [
+        // we are in entityFields[]
+        {
+          // we are in entityFields
+          mockStepType: [
+            // we are in entityFieldsList
+            {
+              // we are in stepFields aka dataForObject
+              mockFieldId: "not an email",
+            },
+          ],
+        },
+      ],
+    };
+    const formTemplate = {
+      routes: [
+        {
+          path: "mock/path",
+          pageType: "modalOverlay",
+          entityType: "mockEntityType",
+          entitySteps: [
+            // we are in entitySteps aka stepFormTemplates
+            {
+              // we are in a stepForm
+              pageType: "mockPageType",
+              stepType: "mockStepType",
+              form: {
+                // we are in nestedFormTemplate
+                fields: [
+                  {
+                    // we are in a formField
+                    id: "mockFieldId",
+                  },
+                ],
+              },
+            },
+          ],
+          modalForm: {},
+        },
+      ],
+      validationJson: {
+        mockFieldId: "email",
+      },
+    };
+
+    const result = await calculateCompletionStatus(fieldData, formTemplate);
+
+    expect(result).toEqual({
+      "mock/path": false,
+    });
   });
 });

@@ -32,7 +32,7 @@
             },
             {
               "type": "html",
-              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The WP presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The WP enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the WP describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new WP fields during the demonstration period. For additional guidance on completing this form, please see the "
+              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The MFP Work Plan presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The MFP Work Plan enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the MFP Work Plan describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new MFP Work Plan fields during the demonstration period. For additional guidance on completing this form, please see the "
             },
             {
               "type": "externalLink",
@@ -48,11 +48,11 @@
         "praDisclosure": [
           {
             "type": "span",
-            "content": "<b>PRA Disclosure Statement</b><br/>Under the Privacy Act of 1974 any personally identifying information obtained will be kept private to the extent of the law. According to the Paperwork Reduction Act of 1995, no persons are required to respond to a collection of information unless it displays a valid OMB control number. The valid OMB control number for this information collection is 0938-0920 (Expires: June 30, 2024). The time required to complete this information collection is estimated to average 6 hours per response, including the time to review instructions, search existing data resources, gather the data needed, and complete and review the information collection. If you have comments concerning the accuracy of the time estimate(s) or suggestions for improving this form, please write to: CMS, 7500 Security Boulevard, Attn: PRA Reports Clearance Officer, Mail Stop C4-26-05, Baltimore, Maryland 21244-1850"
+            "content": "<b>PRA Disclosure Statement</b><br/>Under the Privacy Act of 1974 any personally identifying information obtained will be kept private to the extent of the law. According to the Paperwork Reduction Act of 1995, no persons are required to respond to a collection of information unless it displays a valid OMB control number. The valid OMB control number for this information collection is 0938-1053. The time required to complete this information collection is estimated to average 2.5 hours per response, including the time to review instructions, search existing data resources, gather the data needed, and complete and review the information collection. If you have comments concerning the accuracy of the time estimate(s) or suggestions for improving this form, please write to: CMS, 7500 Security Boulevard, Attn: PRA Reports Clearance Officer, Mail Stop C4-26-05, Baltimore, Maryland 21244-1850"
           }
         ]
       },
-      "form": { "id": "", "fields": [] }
+      "form": { "id": "wp-gi", "fields": [] }
     },
     {
       "name": "Transition Benchmarks",
@@ -82,15 +82,15 @@
           ],
           "text": [
             {
-            "type": "html",
-            "content": "<b>About adding “other” target populations</b><br>If you are using the “Other” category, clearly describe the rationale and criteria for defining this category in your Operational Protocol, as needed."
+              "type": "html",
+              "content": "<b>About adding “other” target populations</b><br>If you are using the “Other” category, clearly describe the rationale and criteria for defining this category in your Operational Protocol, as needed."
             },
             {
               "type": "html",
               "content": "<br><br><b>How to best categorize which population to attribute the transition to avoid duplication</b><br>You may need to track some populations to see utilization to address questions from stakeholders and those circumstances should be discussed with your CMS MFP Project Officer. For example, if a person has a dual-diagnosis such as an individual with intellectual and developmental disabilities (I/DD) and mental health and substance use disorders (MH/SUD), the service dollars may be expended under an HCBS authority that focuses on people with I/DD, rather than MH/SUD. You could review claims to determine that someone is also receiving mental health services. This additional step may necessitate a tracking mechanism outside of the MFP Work Plan and Semi-Annual Progress Report and should be discussed with your Project Officer."
             }
-        ]
-        }, 
+          ]
+        },
         "intro": {
           "section": "",
           "subsection": "Transition Benchmark Projections",
@@ -111,7 +111,7 @@
         "deleteEntityButtonAltText": "Delete other target population",
         "deleteModalTitle": "Are you sure you want to delete this target population?",
         "deleteModalConfirmButtonText": "Yes, delete population",
-        "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this population in the Work Plan. The population will remain in previously submitted Semi-Annual Reports if applicable.",
+        "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this population in the MFP Work Plan. The population will remain in previously submitted Semi-Annual Progress Reports if applicable.",
         "entityUnfinishedMessage": "Complete the remaining indicators for this access measure by entering details.",
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
@@ -170,7 +170,7 @@
                         "parentOptionId": "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd",
                         "nested": true
                       },
-                      "repeatable": {
+                      "transformation": {
                         "rule": "nextTwelveQuarters"
                       }
                     }
@@ -728,7 +728,7 @@
             "addEditModalEditTitle": "Edit initiative",
             "deleteModalTitle": "Are you sure you want to delete this initiative?",
             "deleteModalConfirmButtonText": "Yes, delete initiative",
-            "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan.",
+            "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this initiative in the MFP Work Plan.",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
             "dashboardTitle": "Initiative total count:",
@@ -904,10 +904,9 @@
                         },
                         {
                           "type": "html",
-                          "content": ", add it there, and return here to select it. Select “Not Applicable” if the population is not a part of your overall MFP target populations (if this is for a non-MFP qualified initiative).]"
+                          "content": ", add it there, and return here to select it. Select “Not applicable” if the population is not a part of your overall MFP target populations (if this is for a non-MFP qualified initiative)."
                         }
-                        
-                    ],
+                      ],
                       "choices": []
                     }
                   },
@@ -1008,7 +1007,7 @@
                     "<strong>Time-bound:</strong> Specifies when the results are expected"
                   ],
                   "text": ""
-                }, 
+                },
                 "text": "Add evaluation plan, including measurable objectives. Select <i>Add objective</i> button for each objective you need to add to the system.",
                 "addEntityButtonText": "Add objective",
                 "editEntityHint": "Select \"Edit\" to complete initiative evaluation plan.",
@@ -1019,7 +1018,7 @@
                 "addEditModalEditTitle": "Edit objective for ",
                 "deleteModalTitle": "Delete objective for this report?",
                 "deleteModalConfirmButtonText": "Yes, delete objective",
-                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Progress Reports, but it will not be available in future Work Plans and Semi-Annual Reports. Are you sure you want to proceed?",
+                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Progress Reports, but it will not be available in future Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
                 "dashboardTitle": "Objective total count",
@@ -1082,7 +1081,7 @@
                                 "parentOptionId": "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
                                 "nested": true
                               },
-                              "repeatable": {
+                              "transformation": {
                                 "rule": "nextTwelveQuarters"
                               }
                             }
@@ -1137,7 +1136,7 @@
                 "deleteEntityButtonAltText": "Delete other target population",
                 "deleteModalTitle": "Delete funding source for this report? ",
                 "deleteModalConfirmButtonText": "Yes, delete funding source",
-                "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. Are you sure you want to proceed?",
+                "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
                 "tableHeader": "Initiative name <br/> Work Plan topic",
                 "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Progress Report (SAR).",
                 "dashboardTitle": "Funding Sources",
@@ -1203,8 +1202,11 @@
                     "id": "fundingSources_quarters",
                     "type": "number",
                     "validation": "number",
-                    "repeatable": {
+                    "transformation": {
                       "rule": "nextTwelveQuarters"
+                    },
+                    "props": {
+                      "mask": "currency"
                     }
                   }
                 ]
@@ -1247,6 +1249,7 @@
                     "validation": "textOptional",
                     "props": {
                       "label": "Projected end date",
+                      "hint": "Auto-populates from “I. Define initiative”.",
                       "disabled": true
                     }
                   },

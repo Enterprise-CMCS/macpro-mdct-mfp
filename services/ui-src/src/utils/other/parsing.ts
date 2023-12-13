@@ -51,7 +51,7 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
   } else {
     elementArray = element;
     // handle arrays of custom element objects
-    return elementArray.map((element: CustomHtmlElement) => {
+    return elementArray?.map((element: CustomHtmlElement) => {
       let { type, content, as, props } = element;
       const elementType: string = customElementMap[type] || type;
       const elementProps = {

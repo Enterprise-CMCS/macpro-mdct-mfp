@@ -94,37 +94,22 @@ export const calculateCompletionStatus = async (
     };
     // Iterate over all fields in form
     for (var formField of nestedFormTemplate?.fields || []) {
-      if (formField.repeat) {
-        // This is a repeated field, and must be handled differently
-        if (fieldData[formField.repeat] !== undefined)
-          for (var repeatEntity of fieldData[formField.repeat]) {
-            // Iterate over each entity from the repeat section, build new value id, and validate it
-            repeatersValid &&= await areFieldsValid({
-              [formField.id]:
-                dataForObject[`${formField.id}_${repeatEntity.id}`],
-            });
-          }
-        else {
-          repeatersValid = false;
-        }
-      } else {
-        // Key: Form Field ID, Value: Report Data for field
-        if (Array.isArray(dataForObject[formField.id])) {
-          let nestedFields: string[] = getNestedFields(
-            formField.props?.choices,
-            dataForObject[formField.id]
-          );
-          nestedFields?.forEach((nestedField: string) => {
-            fieldsToBeValidated[nestedField] = dataForObject[nestedField]
-              ? dataForObject[nestedField]
-              : null;
-          });
-        }
-
-        fieldsToBeValidated[formField.id] = dataForObject[formField.id]
-          ? dataForObject[formField.id]
-          : null;
+      // Key: Form Field ID, Value: Report Data for field
+      if (Array.isArray(dataForObject[formField.id])) {
+        let nestedFields: string[] = getNestedFields(
+          formField.props?.choices,
+          dataForObject[formField.id]
+        );
+        nestedFields?.forEach((nestedField: string) => {
+          fieldsToBeValidated[nestedField] = dataForObject[nestedField]
+            ? dataForObject[nestedField]
+            : null;
+        });
       }
+
+      fieldsToBeValidated[formField.id] = dataForObject[formField.id]
+        ? dataForObject[formField.id]
+        : null;
     }
     // Validate all fields en masse, passing flag that uses required validation schema
     return repeatersValid && (await areFieldsValid(fieldsToBeValidated));

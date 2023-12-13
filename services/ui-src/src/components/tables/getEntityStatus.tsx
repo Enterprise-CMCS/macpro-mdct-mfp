@@ -18,7 +18,7 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
   const fieldsNestedChoices = fields
     .flatMap((field) => {
       validationIdList.push(field.id);
-      if (field.props.choices) {
+      if (field.props?.choices) {
         return field.props.choices;
       }
     })
@@ -105,9 +105,9 @@ export const getInitiativeStatus = (
   //get the intiative report child
   const reportChild: EntityDetailsDashboardOverlayShape = (
     reportRoute?.children! as EntityDetailsOverlayShape[]
-  ).find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
+  )?.find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
 
-  if (reportChild.entitySteps) {
+  if (reportChild?.entitySteps) {
     const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =
       reportChild.entitySteps;
 
