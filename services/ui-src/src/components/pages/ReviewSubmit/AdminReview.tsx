@@ -230,16 +230,11 @@ const sx = {
   },
   adminUnlockBtn: {
     marginRight: "1rem",
-    "&:disabled": {
+    "&disabled": {
       opacity: 1,
       background: "white",
       color: "palette.gray_lighter",
       borderColor: "palette.gray_lighter",
-    },
-    "&disabled:hover": {
-      opacity: 1,
-      background: "white",
-      color: "palette.gray_lighter",
     },
   },
   adminApproveBtn: {

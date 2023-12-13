@@ -69,6 +69,12 @@ export interface FormField {
   props?: AnyObject;
   choices?: FieldChoice[];
   repeat?: string;
+  transformation?: Transformation;
+  isRequired?: boolean;
+}
+
+export interface Transformation {
+  rule: string;
 }
 
 export function isFieldElement(

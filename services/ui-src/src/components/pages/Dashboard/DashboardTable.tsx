@@ -224,9 +224,7 @@ const AdminReleaseButton = ({
     report.archived,
     report.submissionCount
   );
-  const isDisabled = !(
-    reportStatus === "Submitted" || reportStatus === "Approved"
-  );
+  const isDisabled = !(reportStatus === "Submitted");
 
   return (
     <Td>

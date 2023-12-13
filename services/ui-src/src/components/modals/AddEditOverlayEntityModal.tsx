@@ -135,7 +135,9 @@ export const AddEditOverlayEntityModal = ({
       //using shallow update to modify the copied report data
       recusiveFindAndUpdate(0, fieldDataObject, entityTypes, updatedEntities);
 
-      dataToWrite.fieldData = { ...fieldDataObject };
+      dataToWrite.fieldData = {
+        [entityType[0]]: fieldDataObject?.[entityType[0]],
+      };
       const shouldSave = entityWasUpdated(
         findEntity(report?.fieldData!, entityTypes),
         updatedEntities[selectedEntityIndex]
@@ -151,7 +153,9 @@ export const AddEditOverlayEntityModal = ({
       recusiveFindAndUpdate(0, fieldDataObject, entityTypes, newEntityData);
 
       // create new entity
-      dataToWrite.fieldData = { ...fieldDataObject };
+      dataToWrite.fieldData = {
+        [entityType[0]]: fieldDataObject?.[entityType[0]],
+      };
       await updateReport(reportKeys, dataToWrite);
     }
 
@@ -180,15 +184,10 @@ export const AddEditOverlayEntityModal = ({
         subheading: verbiage.addEditModalHint
           ? verbiage.addEditModalHint
           : undefined,
-        actionButtonText: submitting ? (
-          <Spinner size="md" />
-        ) : !userDisabled ? (
-          "Save"
-        ) : (
-          "Close"
-        ),
+        actionButtonText: submitting ? <Spinner size="md" /> : "Save",
         closeButtonText: "Cancel",
       }}
+      submitButtonDisabled={userDisabled}
     >
       <Form
         data-testid="add-edit-entity-form"

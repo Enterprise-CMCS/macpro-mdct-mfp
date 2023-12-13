@@ -16,7 +16,11 @@ import {
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
-import { mockWPApprovedFullReport, mockWPFullReport } from "./mockReport";
+import {
+  mockWPApprovedFullReport,
+  mockWPSubmittedReport,
+  mockWPFullReport,
+} from "./mockReport";
 
 // GLOBALS
 
@@ -193,7 +197,11 @@ export const mockBannerStore: AdminBannerState = {
 
 export const mockReportStore: MfpReportState = {
   report: mockWPFullReport as ReportShape,
-  reportsByState: [mockWPFullReport, mockWPApprovedFullReport],
+  reportsByState: [
+    mockWPFullReport,
+    mockWPSubmittedReport,
+    mockWPApprovedFullReport,
+  ],
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "1:58 PM",
   workPlanToCopyFrom: undefined,

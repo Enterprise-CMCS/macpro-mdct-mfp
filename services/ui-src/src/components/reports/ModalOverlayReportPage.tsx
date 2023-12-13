@@ -18,6 +18,7 @@ import {
   EntityShape,
   ModalOverlayReportPageShape,
   EntityDetailsDashboardOverlayShape,
+  ReportType,
 } from "types";
 // utils
 import { resetClearProp, useBreakpoint, useStore } from "utils";
@@ -26,6 +27,7 @@ import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
+import { AnyObject } from "yup/lib/types";
 
 interface AlertVerbiage {
   [key: string]: { title: string; description: string };
@@ -47,12 +49,21 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
     (entity) => (entity["isOtherEntity"] = true)
   );
 
+  if (report?.reportType === ReportType.SAR) {
+    (reportFieldDataEntities as any[]).map(
+      (entity) => (entity["isCopied"] = true)
+    );
+  }
+
   const showAlert =
     report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
       : false;
 
-  const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
+  const dashTitle = `${verbiage.dashboardTitle} ${
+    modalForm ? reportFieldDataEntities.length : ""
+  }`;
+  const dashSubTitle = (verbiage as AnyObject)?.dashboardSubtitle;
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
     return { headRow: ["", verbiage.tableHeader, ""] };
@@ -119,7 +130,10 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
         </EntityProvider>
       ) : (
         <Box sx={sx.content}>
-          <ReportPageIntro text={verbiage.intro} />
+          <ReportPageIntro
+            text={verbiage.intro}
+            accordion={verbiage.accordion}
+          />
           {showAlert && (
             <Alert
               title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
@@ -132,6 +146,9 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
           <Box>
             <Heading as="h3" sx={sx.dashboardTitle}>
               {dashTitle}
+            </Heading>
+            <Heading as="h2" sx={sx.subsectionHeading}>
+              {dashSubTitle}
             </Heading>
             {reportFieldDataEntities.length === 0 ? (
               <Box>{verbiage.emptyDashboardText}</Box>
@@ -151,26 +168,32 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
                 ))}
               </Table>
             )}
-            <Button
-              sx={sx.addEntityButton}
-              onClick={() => openAddEditEntityModal()}
-              rightIcon={<Image src={addIcon} alt="Previous" sx={sx.addIcon} />}
-            >
-              {verbiage.addEntityButtonText}
-            </Button>
+            {modalForm && (
+              <Button
+                sx={sx.addEntityButton}
+                onClick={() => openAddEditEntityModal()}
+                rightIcon={
+                  <Image src={addIcon} alt="Previous" sx={sx.addIcon} />
+                }
+              >
+                {verbiage.addEntityButtonText}
+              </Button>
+            )}
           </Box>
           {/* Modals */}
-          <AddEditEntityModal
-            entityType={entityType}
-            selectedEntity={selectedEntity}
-            verbiage={verbiage}
-            form={modalForm}
-            setError={() => {}}
-            modalDisclosure={{
-              isOpen: addEditEntityModalIsOpen,
-              onClose: closeAddEditEntityModal,
-            }}
-          />
+          {modalForm && (
+            <AddEditEntityModal
+              entityType={entityType}
+              selectedEntity={selectedEntity}
+              verbiage={verbiage}
+              form={modalForm}
+              setError={() => {}}
+              modalDisclosure={{
+                isOpen: addEditEntityModalIsOpen,
+                onClose: closeAddEditEntityModal,
+              }}
+            />
+          )}
           <DeleteEntityModal
             entityType={entityType}
             selectedEntity={selectedEntity}
@@ -207,6 +230,16 @@ const sx = {
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
+  },
+  subsectionHeading: {
+    fontSize: "md",
+    fontWeight: "normal",
+    color: "palette.gray_medium_dark",
+    textAlign: "left",
+    ".tablet &, .mobile &": {
+      paddingBottom: "0",
+    },
+    paddingBottom: "1rem",
   },
   table: {
     tableLayout: "fixed",
