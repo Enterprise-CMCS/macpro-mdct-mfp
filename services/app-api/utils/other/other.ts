@@ -38,11 +38,7 @@ export const lastCreatedWorkPlan = (
      * ...if the workplan hasn't been used to create a SAR before AND
      * the work plan has a status of "Not Started" OR "In Progress"...
      */
-    if (
-      (workPlan.status === ReportStatus.NOT_STARTED ||
-        workPlan.status === ReportStatus.IN_PROGRESS) &&
-      !workPlan?.associatedSar
-    ) {
+    if (workPlan.status === ReportStatus.APPROVED && !workPlan?.associatedSar) {
       /*
        * ...then do one of two things: if there are multiple work plans that meet this criteria,
        * grab the one that was created most recently and return that as our work plan to
