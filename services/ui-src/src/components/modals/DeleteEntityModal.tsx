@@ -5,7 +5,7 @@ import { Modal, ReportContext } from "components";
 
 // types
 import { AnyObject, EntityShape, ReportStatus } from "types";
-import { useStore } from "utils";
+import { parseCustomHtml, useStore } from "utils";
 
 export const DeleteEntityModal = ({
   entityType,
@@ -71,6 +71,7 @@ export const DeleteEntityModal = ({
     const entityTypes: string[] =
       typeof entityType === "string" ? [entityType] : (entityType as string[]);
 
+    const entityName = entityTypes[0];
     const updatedEntities = removeSelectedEntity(
       structuredClone(report?.fieldData),
       entityTypes[entityTypes.length - 1],
@@ -82,7 +83,7 @@ export const DeleteEntityModal = ({
         lastAlteredBy: full_name,
         status: ReportStatus.IN_PROGRESS,
       },
-      fieldData: { ...updatedEntities },
+      fieldData: { [entityName]: updatedEntities[entityName] },
     });
     setDeleting(false);
     modalDisclosure.onClose();
@@ -100,7 +101,7 @@ export const DeleteEntityModal = ({
       }}
       submitButtonDisabled={!editable || userDisabled}
     >
-      <Text>{verbiage.deleteModalWarning}</Text>
+      <Text>{parseCustomHtml(verbiage.deleteModalWarning)}</Text>
     </Modal>
   );
 };

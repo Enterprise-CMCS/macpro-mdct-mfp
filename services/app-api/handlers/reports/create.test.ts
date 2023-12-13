@@ -26,6 +26,10 @@ jest.mock("../../utils/debugging/debug-lib", () => ({
   flush: jest.fn(),
 }));
 
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
+
 const wpMockProxyEvent = {
   ...proxyEvent,
   headers: { "cognito-identity-id": "test" },
@@ -109,7 +113,7 @@ mockDocumentClient.query.promise.mockReturnValue({
 
 describe("Test createReport API method", () => {
   beforeEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
     jest.useRealTimers();
   });
   test("Test unauthorized report creation throws 403 error", async () => {
