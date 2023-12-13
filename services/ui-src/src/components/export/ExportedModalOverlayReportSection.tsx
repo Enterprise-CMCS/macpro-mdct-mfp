@@ -146,18 +146,18 @@ export function renderModalOverlayTableBody(
 ) {
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
+  const isPdf = true;
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
-        // console.log("entity", entity);
         return (
           <Box sx={sx.container}>
             <Tr key={idx}>
               <Td sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
-                  isPdf={true}
-                  entityStatus={getInitiativeStatus(report, entity, true)}
+                  isPdf={isPdf}
+                  entityStatus={getInitiativeStatus(report, entity, isPdf)}
                 />
               </Td>
               <Td>

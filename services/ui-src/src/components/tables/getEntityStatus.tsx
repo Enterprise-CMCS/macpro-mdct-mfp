@@ -124,7 +124,7 @@ export const getInitiativeStatus = (
      * but the status is always returning "incomplete" because that step is used to calculate the initiative status.
      * This removes the Close-out initiative step status from the PDF statusing calculation.
      */
-    if (isPdf) {
+    if (isPdf && entity.isInitiativeClosed) {
       stepStatuses.splice(-1);
     }
 
