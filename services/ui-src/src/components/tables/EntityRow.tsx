@@ -52,15 +52,18 @@ export const EntityRow = ({
           if (isInitiativeClosed) {
             return EntityStatuses.CLOSE;
           } else {
-            const isCloseOutEnabled = getInitiativeStatus(report!, entity, [
-              stepType,
-            ]);
+            const isCloseOutEnabled = getInitiativeStatus(
+              report!,
+              entity,
+              false,
+              [stepType]
+            );
             return isCloseOutEnabled && isCopied
               ? EntityStatuses.NO_STATUS
               : EntityStatuses.DISABLED;
           }
         } else {
-          return getInitiativeStatus(report!, entity, [
+          return getInitiativeStatus(report!, entity, false, [
             EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
           ]);
         }

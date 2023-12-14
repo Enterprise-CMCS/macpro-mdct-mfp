@@ -1,24 +1,55 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { act } from "react-dom/test-utils";
 import { axe } from "jest-axe";
 // components
-import { CloseEntityModal } from "components";
+import { CloseEntityModal, ReportContext } from "components";
 // utils
-import { mockEntityDetailsOverlayJson } from "utils/testing/setupJest";
+import {
+  mockEntityDetailsOverlayJson,
+  mockReportMethods,
+  mockWPFullReport,
+} from "utils/testing/setupJest";
+import { useStore } from "utils";
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue({
+  report: {
+    ...mockWPFullReport,
+    fieldData: {
+      ...mockWPFullReport.fieldData,
+      initiative: [
+        {
+          id: "smockEntityId",
+        },
+      ],
+    },
+  },
+});
 
 const mockCloseHandler = jest.fn();
 
 const mockEntityName = "mock-name";
 
 const modalComponent = (
-  <CloseEntityModal
-    entityName={mockEntityName}
-    route={mockEntityDetailsOverlayJson}
-    modalDisclosure={{
-      isOpen: true,
-      onClose: mockCloseHandler,
-    }}
-  />
+  <ReportContext.Provider value={mockReportMethods}>
+    <CloseEntityModal
+      entityName={mockEntityName}
+      route={{
+        ...mockEntityDetailsOverlayJson,
+        entityType: "initiative", // must match selectedEntity for confirm test
+      }}
+      selectedEntity={{
+        id: "mockEntityId",
+        type: "initiative",
+      }}
+      modalDisclosure={{
+        isOpen: true,
+        onClose: mockCloseHandler,
+      }}
+    />
+  </ReportContext.Provider>
 );
 
 const {
@@ -47,14 +78,19 @@ describe("Test CloseEntityModal", () => {
     expect(screen.getByText("Cancel")).toBeTruthy();
   });
 
-  test("CloseEntityModal top close button can be clicked", () => {
-    fireEvent.click(screen.getByText("Close"));
+  test("CloseEntityModal top close button can be clicked", async () => {
+    await userEvent.click(screen.getByText("Close"));
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
   });
 
-  test("CloseEntityModal bottom cancel button can be clicked", () => {
-    fireEvent.click(screen.getByText("Cancel"));
+  test("CloseEntityModal bottom cancel button can be clicked", async () => {
+    await userEvent.click(screen.getByText("Cancel"));
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+  });
+
+  test("CloseEntityModal confirm button can be clicked", async () => {
+    await userEvent.click(screen.getByText("Confirm"));
+    expect(mockReportMethods.updateReport).toHaveBeenCalled();
   });
 });
 

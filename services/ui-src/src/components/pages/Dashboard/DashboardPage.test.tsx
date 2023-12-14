@@ -238,7 +238,7 @@ describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobil
     });
 
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[0];
+      const unlockButton = screen.getAllByText("Unlock")[1];
       expect(unlockButton).toBeVisible();
       await userEvent.click(unlockButton);
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
@@ -277,7 +277,7 @@ describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobil
     });
 
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[0];
+      const unlockButton = screen.getAllByText("Unlock")[1];
       expect(unlockButton).toBeVisible();
       await userEvent.click(unlockButton);
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
