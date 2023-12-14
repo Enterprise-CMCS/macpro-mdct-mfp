@@ -209,9 +209,7 @@
             "validation": "text",
             "props": {
               "label": "Please provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative.",
-              "style": {
-                "marginBottom": "2.5rem"
-              }
+              "className": "tbs-bottom-margin"
             }
           }
         ]
