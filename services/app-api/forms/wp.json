@@ -625,12 +625,7 @@
                 },
                 {
                   "type": "html",
-                  "content": "<br>If a recipient updates the MFP Work Plan to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>",
-                  "props": {
-                    "style": {
-                      "paddingBottom": "2rem"
-                    }
-                  }
+                  "content": "<br>If a recipient updates the MFP Work Plan to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>"
                 },
                 {
                   "type": "text",
