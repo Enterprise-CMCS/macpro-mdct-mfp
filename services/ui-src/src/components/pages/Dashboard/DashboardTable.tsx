@@ -33,16 +33,14 @@ export const DashboardTable = ({
       <Tr key={report.id}>
         {/* Edit Button */}
         {isStateLevelUser &&
-        !report?.locked &&
-        reportType === ReportType.SAR ? (
-          <EditReportButton
-            report={report}
-            openAddEditReportModal={openAddEditReportModal}
-            sxOverride={sxOverride}
-          />
-        ) : (
-          <Td></Td>
-        )}
+          !report?.locked &&
+          reportType === ReportType.SAR && (
+            <EditReportButton
+              report={report}
+              openAddEditReportModal={openAddEditReportModal}
+              sxOverride={sxOverride}
+            />
+          )}
         {/* Report Name */}
         {reportType === ReportType.WP ? (
           <Td sx={sxOverride.wpSubmissionNameText}>{report.submissionName}</Td>
@@ -303,7 +301,6 @@ const sx = {
         paddingRight: 0,
       },
       "&:first-of-type": {
-        width: "2rem",
         minWidth: "2rem",
       },
     },
