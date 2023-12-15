@@ -18,7 +18,7 @@ export const ExportedModalDrawerReportSection = ({
     return _.truncate(text, { length: 30 });
   };
 
-  // if Transition Benchmark Header title has an abbrev.just display that
+  // if Transition Benchmark Header title has an abbrev. just display that
   const getTableHeaders = () => {
     let headers = [];
     const quarterHeader = "Pop. by Quarter";
@@ -336,7 +336,7 @@ const sx = {
     marginTop: "0.5rem",
   },
   dashboardTitle: {
-    fontSize: "md",
+    fontSize: "22px",
     fontWeight: "bold",
     color: "palette.gray_darkest",
   },
