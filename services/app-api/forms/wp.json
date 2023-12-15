@@ -753,7 +753,7 @@
                 "validation": "radio",
                 "props": {
                   "label": "Work Plan topic:",
-                  "hint": "Note: Initiative topics with * are required and must be selected at least once across all initiatives.",
+                  "hint": "Note: Initiative topics with <span aria-label='asterisk'>*</span> are required and must be selected at least once across all initiatives.",
                   "choices": [
                     {
                       "id": "VjQ0OFqior9Dxu5RRNiZ5u",
