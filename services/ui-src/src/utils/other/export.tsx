@@ -58,7 +58,7 @@ export const renderOverlayEntityDataCell = (
     } else {
       return (
         <Text sx={sx.noResponse}>
-          {verbiage.missingEntry.noResponse}; required
+          {verbiage.missingEntry.noResponse}; "required"
         </Text>
       );
     }

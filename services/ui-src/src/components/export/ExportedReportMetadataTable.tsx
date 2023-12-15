@@ -103,7 +103,6 @@ const sx = {
     },
     th: {
       fontWeight: "bold",
-      color: "palette.gray_medium",
       textAlign: "left",
       paddingBottom: "0rem",
     },

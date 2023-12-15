@@ -304,7 +304,7 @@ export const ExportedModalDrawerReportSection = ({
       data-testid="exportedModalDrawerReportSection"
       sx={sx.container}
     >
-      <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
+      <Heading as="h3" sx={sx.dashboardTitle} data-testid="headerCount">
         {verbiage.pdfDashboardTitle}
       </Heading>
       <small>{"*asterisk denotes sum of incomplete fields"}</small>
@@ -336,9 +336,13 @@ const sx = {
     marginTop: "0.5rem",
   },
   dashboardTitle: {
-    fontSize: "22px",
+    fontSize: "21px",
+    lineHeight: "130%",
     fontWeight: "bold",
     color: "palette.gray_darkest",
+  },
+  dashboardText: {
+    fontSize: "0.875rem",
   },
   // TODO: delete this
   table: {
