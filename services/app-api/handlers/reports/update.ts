@@ -52,14 +52,14 @@ export const updateReport = handler(async (event, context) => {
     };
   }
 
-  // Blacklisted keys
-  const metadataBlacklist = [
+  // Blocklisted keys
+  const metadataBlocklist = [
     "submittedBy",
     "submittedOnDate",
     "locked",
     "archive",
   ];
-  const fieldDataBlacklist = [
+  const fieldDataBlocklist = [
     "submitterName",
     "submitterEmailAddress",
     "reportSubmissionDate",
@@ -70,11 +70,11 @@ export const updateReport = handler(async (event, context) => {
     if (
       (eventBody.metadata &&
         Object.keys(eventBody.metadata).some((_) =>
-          metadataBlacklist.includes(_)
+          metadataBlocklist.includes(_)
         )) ||
       (eventBody.fieldData &&
         Object.keys(eventBody.fieldData).some((_) =>
-          fieldDataBlacklist.includes(_)
+          fieldDataBlocklist.includes(_)
         ))
     ) {
       return {

@@ -113,9 +113,6 @@ export const OverlayModalPage = ({
         />
       )}
       <Box>
-        <Heading as="h3" sx={sx.dashboardTitle}>
-          {dashTitle}
-        </Heading>
         <Button
           sx={sx.addEntityButton}
           onClick={addEditEntityModalOnOpenHandler}
@@ -123,6 +120,9 @@ export const OverlayModalPage = ({
         >
           {verbiage.addEntityButtonText}
         </Button>
+        <Heading as="h3" sx={sx.dashboardTitle}>
+          {dashTitle}
+        </Heading>
         <Box>
           {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (
@@ -219,13 +219,13 @@ const sx = {
   },
   dashboardTitle: {
     paddingTop: "1rem",
-    paddingBottom: "0",
+    marginBottom: "1rem",
     fontWeight: "bold",
     color: "palette.gray_medium",
   },
   addEntityButton: {
     marginTop: "1.5rem",
-    marginBottom: "2rem",
+    marginBottom: "1rem",
   },
   buttonFlex: {
     justifyContent: "end",
