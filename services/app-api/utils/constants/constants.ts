@@ -16,6 +16,8 @@ export const error = {
   NO_TEMPLATE_NAME: "Must request template for download.",
   INVALID_TEMPLATE_NAME: "Requested template does not exist or does not match.",
   NOT_IN_DATABASE: "Record not found in database.",
+  UNABLE_TO_COPY:
+    "Unable to copy over report if todays date is the same period and year as previous report.",
   MISSING_FORM_TEMPLATE: "Form Template not found in S3.",
   MISSING_FIELD_DATA: "Field Data not found in S3.",
   NO_WORKPLANS_FOUND: "No record of Work Plans found in database",

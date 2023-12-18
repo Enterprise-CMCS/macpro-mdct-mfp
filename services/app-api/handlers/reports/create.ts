@@ -118,14 +118,6 @@ export const createReport = handler(
     const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
       unvalidatedPayload;
 
-    // //override the date in the system to generate the next report based on the previous reporting period. adding flag to turn it on and off
-    // if (
-    //   unvalidatedMetadata?.copyReport &&
-    //   unvalidatedMetadata?.copyReport?.isCopyOverTest
-    // ) {
-    // overriderDate(unvalidatedMetadata?.copyReport);
-    // }
-
     const creationValidationJson = {
       reportPeriod: "text",
       stateName: "text",
@@ -136,19 +128,24 @@ export const createReport = handler(
     };
 
     const currentDate = Date.now();
-    const reportYear =
+    let reportYear: number =
       reportType === ReportType.WP
         ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
         : workPlanMetadata!.reportYear;
 
-    const reportPeriod =
+    let reportPeriod: number =
       reportType === ReportType.WP
         ? calculatePeriod(currentDate, workPlanMetadata)
         : workPlanMetadata!.reportPeriod;
 
-    const isCopyOver =
+    const overrideCopyOver =
       unvalidatedMetadata?.copyReport &&
       unvalidatedMetadata?.copyReport?.isCopyOverTest;
+
+    if (overrideCopyOver) {
+      reportYear = reportPeriod == 2 ? reportYear++ : reportYear;
+      reportPeriod = reportPeriod == 1 ? 2 : 1;
+    }
 
     // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;
@@ -208,10 +205,10 @@ export const createReport = handler(
         reportPeriod === unvalidatedMetadata.copyReport.reportPeriod;
 
       //do not allow user to create a copy if it's the same period
-      if (isCurrentPeriod) {
+      if (isCurrentPeriod && !overrideCopyOver) {
         return {
           status: StatusCodes.UNAUTHORIZED,
-          body: error.NO_WORKPLANS_FOUND,
+          body: error.UNABLE_TO_COPY,
         };
       }
 
