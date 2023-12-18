@@ -12,7 +12,7 @@ export const EntityStepCardTopSection = ({
     case OverlayModalStepTypes.EVALUATION_PLAN:
       return (
         <>
-          <Heading as="h4" sx={sx.heading}>
+          <Heading sx={sx.mainHeading}>
             {formattedEntityData.objectiveName}
           </Heading>
           <Text sx={sx.subtitle}>
@@ -65,7 +65,7 @@ export const EntityStepCardTopSection = ({
     case OverlayModalStepTypes.FUNDING_SOURCES:
       return (
         <>
-          <Heading as="h3" sx={sx.heading}>
+          <Heading sx={sx.mainHeading}>
             {formattedEntityData.fundingSource}
           </Heading>
           {formattedEntityData.quarters.length > 0 && (
@@ -107,6 +107,9 @@ interface Props {
 }
 
 const sx = {
+  mainHeading: {
+    fontSize: "md",
+  },
   heading: {
     fontSize: "sm",
   },
