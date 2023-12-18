@@ -41,7 +41,7 @@ export const AddEditReportModal = ({
   const form: FormJson = modalFormJson;
 
   //temporary flag for testing copyover
-  const isCopyOverTest = true;
+  const isCopyOverTest = useFlags()?.isCopyOverTest;
 
   // WP report payload
   const prepareWpPayload = () => {
