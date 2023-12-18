@@ -348,6 +348,8 @@ const sx = {
   table: {
     marginTop: "1.25rem",
     borderLeft: "1px solid",
+    borderRight: "1px solid",
+    border: "1px solid",
     tableLayout: "fixed",
     marginBottom: "2.25rem",
     br: {
@@ -355,6 +357,7 @@ const sx = {
     },
     tr: {
       background: "palette.gray_lightest",
+      border: "1px solid",
     },
     thead: {
       height: "100px",
@@ -363,6 +366,7 @@ const sx = {
     "td,th": {
       textAlign: "center",
       wordWrap: "break-word",
+      border: "1px solid",
     },
     "td:first-child": {
       background: "palette.gray_lightest",
@@ -371,6 +375,7 @@ const sx = {
     th: {
       borderBottom: "1px solid",
       borderRight: "1px solid",
+      border: "1px solid",
       borderColor: "palette.black",
       color: "palette.black",
       lineHeight: "normal",
@@ -378,7 +383,7 @@ const sx = {
       width: "100px",
       minWidth: "100px",
       ".tablet &, .mobile &": {
-        border: "none",
+        border: "1px solid",
       },
     },
     "tbody tr": {
