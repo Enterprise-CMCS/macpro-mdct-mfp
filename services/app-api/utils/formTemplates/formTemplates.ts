@@ -23,11 +23,7 @@ import {
   TwelveQuartersKeys,
 } from "../types";
 import { createHash } from "crypto";
-import {
-  calculateCurrentYear,
-  calculatePeriod,
-  incrementQuarterAndYear,
-} from "../time/time";
+import { incrementQuarterAndYear } from "../time/time";
 
 export async function getNewestTemplateVersion(reportType: ReportType) {
   const queryParams: QueryInput = {
@@ -59,10 +55,10 @@ export const formTemplateForReportType = (reportType: ReportType) => {
 
 export const firstQuarterOfThePeriod = (
   field: FormField,
-  workPlanMetaData: ReportMetadataShape
+  reportPeriod: number
 ) => {
   const contentString =
-    workPlanMetaData?.reportPeriod == 1
+    reportPeriod == 1
       ? "First quarter (January 1 - March 31)"
       : "Third quarter (July 1 - September 30)";
   const updatedFormField: FormField = {
@@ -77,10 +73,10 @@ export const firstQuarterOfThePeriod = (
 
 export const secondQuarterOfThePeriod = (
   field: FormField,
-  workPlanMetaData: ReportMetadataShape
+  reportPeriod: number
 ) => {
   const contentString =
-    workPlanMetaData?.reportPeriod == 1
+    reportPeriod == 1
       ? "Second quarter (April 1 - June 30)"
       : "Fourth quarter (October 1 - December 31)";
   const updatedFormField: FormField = {
@@ -96,18 +92,17 @@ export const secondQuarterOfThePeriod = (
 /**
  * Gather all the information from the work plan and build out 12 quarters from today's today
  * @param {string} fieldId - The fieldID from the formField we're looking at
- * @param {number} currentDate - today's date
- * @param {ReportMetadataShape} workPlanMetaData - workPlanMetaData that contains the report period
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
  * @return {TargetPopulationKeys[]} Returns 12 quarters information based on the workplan to help build out a new field
  */
 export const nextTwelveQuartersKeys = (
   fieldId: string,
-  currentDate: number,
-  workPlan: ReportMetadataShape
+  reportPeriod: number,
+  reportYear: number
 ): TwelveQuartersKeys[] => {
-  let period = calculatePeriod(currentDate, workPlan);
-  let quarter = period === 1 ? 1 : 3;
-  let year = calculateCurrentYear();
+  let quarter = reportPeriod === 1 ? 1 : 3;
+  let year = reportYear;
 
   const keys: TwelveQuartersKeys[] = [];
   for (let i = 0; i < 12; i++) {
@@ -125,18 +120,16 @@ export const nextTwelveQuartersKeys = (
 /**
  * Run the transformation "nextTwelveQuarters" on the field and returns 12 quarters based on todays date
  * @param {FormField} fieldToRepeat - The formFields you want to transform
- * @param {ReportMetadataShape} workPlanMetaData - workPlanMetaData that contains the report period
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
  * @return {FormField[]} Returns 12 quarters as form fields
  */
 export const nextTwelveQuarters = (
   fieldToRepeat: FormField,
-  workPlanMetaData: ReportMetadataShape
+  reportPeriod: number,
+  reportYear: number
 ) => {
-  var keys = nextTwelveQuartersKeys(
-    fieldToRepeat.id,
-    Date.now(),
-    workPlanMetaData
-  );
+  var keys = nextTwelveQuartersKeys(fieldToRepeat.id, reportPeriod, reportYear);
   const fieldsToAppend: FormField[] = [];
   for (let key of keys) {
     const formField: FormField = {
@@ -158,20 +151,20 @@ export const nextTwelveQuarters = (
 /**
  * Gather all the information from the work plan about how many target populations we need to create
  * @param {string} fieldId - The fieldID from the formField we're looking at
+ * @param { number } reportPeriod - The current report period
  * @param {AnyObject} workPlanFieldData - fieldData that contains the target populations
- * @param {ReportMetadataShape} workPlanMetaData - workPlanMetaData that contains the report period
  * @return {TargetPopulationKeys[]} Returns all the target populations from the work plan with important information to build out a new field
  */
 export const targetPopulationsKeys = (
   fieldId: string,
-  workPlanFieldData: AnyObject,
-  workPlanMetaData: ReportMetadataShape
+  reportPeriod: number,
+  workPlanFieldData: AnyObject
 ): TargetPopulationKeys[] => {
   var targetPopulations = workPlanFieldData?.targetPopulations;
   const keys: TargetPopulationKeys[] = [];
   for (let population of targetPopulations) {
     const key: TargetPopulationKeys = {
-      reportPeriod: workPlanMetaData.reportPeriod,
+      reportPeriod: reportPeriod,
       fieldId: fieldId,
       targetPopulationName:
         population.transitionBenchmarks_targetPopulationName,
@@ -185,20 +178,22 @@ export const targetPopulationsKeys = (
 /**
  * Run the transformation "TargetPopulations" on the field and returns all the target populations from the work plan in its place
  * @param {FormField} formField - The formFields you want to transform
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
  * @param {AnyObject} workPlanFieldData - fieldData that contains the target populations
- * @param {ReportMetadataShape} workPlanMetaData - workPlanMetaData that contains the report period
  * @return {FormField[]} Returns all the target populations from the work plan as form fields
  */
 export const targetPopulations = (
   fieldToRepeat: FormField,
-  workPlanFieldData: AnyObject,
-  workPlanMetaData: ReportMetadataShape
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData: AnyObject
 ) => {
   //Gather all the information from the work plan about how many target populations we need to create
   var targetPopulationKeys = targetPopulationsKeys(
     fieldToRepeat.id,
-    workPlanFieldData,
-    workPlanMetaData
+    reportPeriod,
+    workPlanFieldData
   );
   const fieldsToAppend = [];
 
@@ -230,15 +225,17 @@ export const targetPopulations = (
 /**
  * Look through the formFields provided and run the transformation provided on that field.
  * @param {FormField[]} formFields - The formFields you want to transform
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
  * @param {AnyObject} workPlanFieldData - Optional fieldData that a transformation might need of
- * @param {ReportMetadataShape} workPlanMetaData - Optional workPlanMetaData that a transformation might need of
  * @return {FormField[]} Returns the formFields provided but with any transformation it finds run on them
  */
 
 export const runFieldTransformationRules = (
   formFields: FormField[],
-  workPlanFieldData?: AnyObject,
-  workPlanMetaData?: ReportMetadataShape
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData?: AnyObject
 ) => {
   //Create a map of all the possible transformations that can run on a field
   const transformationRuleMap: AnyObject = {
@@ -263,8 +260,9 @@ export const runFieldTransformationRules = (
         if (nestedChildFields) {
           choice.children = runFieldTransformationRules(
             nestedChildFields,
-            workPlanFieldData,
-            workPlanMetaData
+            reportPeriod,
+            reportYear,
+            workPlanFieldData
           );
         }
       });
@@ -275,7 +273,12 @@ export const runFieldTransformationRules = (
       const transformationRule =
         transformationRuleMap[field.transformation.rule];
       transformedFields.push(
-        ...transformationRule(field, workPlanFieldData, workPlanMetaData)
+        ...transformationRule(
+          field,
+          reportPeriod,
+          reportYear,
+          workPlanFieldData
+        )
       );
     } else {
       transformedFields.push(field);
@@ -288,8 +291,9 @@ export const runFieldTransformationRules = (
  * Look through the wp.json or sar.json and find in theres a transformation that needs run
  * on a field
  * @param { (ReportRoute | OverlayModalPageShape | EntityDetailsOverlayShape)[]} reportRoutes - A route containing a form object
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
  * @param { AnyObject } workPlanFieldData - Some transformations rely on Work plan fielddata, so pass it here if needed
- * @param { ReportMetadataShape } workPlanMetaData - Some transformations rely on Work plan metadata, so pass it here if needed
  * @return This will modify whatever the reportRoute was that was given and perform any transformations it finds
  */
 export const findAndRunFieldTransformationRules = (
@@ -298,59 +302,64 @@ export const findAndRunFieldTransformationRules = (
     | OverlayModalPageShape
     | EntityDetailsOverlayShape
   )[],
-  workPlanFieldData?: AnyObject,
-  workPlanMetaData?: ReportMetadataShape
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData?: AnyObject
 ) => {
   for (let route of reportRoutes) {
     if (route?.entitySteps)
       findAndRunFieldTransformationRules(
         route.entitySteps,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
     if (route?.children)
       findAndRunFieldTransformationRules(
         route.children,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
     if (route?.form?.fields)
       route.form.fields = runFieldTransformationRules(
         route.form.fields,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
     if (route?.drawerForm?.fields)
       route.drawerForm.fields = runFieldTransformationRules(
         route.drawerForm.fields,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
     if (route?.modalForm?.fields)
       route.modalForm.fields = runFieldTransformationRules(
         route.modalForm.fields,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
   }
 };
 
 export const scanForConditionalRoutes = (
   reportRoutes: ReportRoute[],
-  workPlanMetaData?: AnyObject
+  reportPeriod: number
 ) => {
   for (let route of reportRoutes) {
     if (route?.entitySteps)
-      scanForConditionalRoutes(route.entitySteps, workPlanMetaData);
-    if (route?.children)
-      scanForConditionalRoutes(route.children, workPlanMetaData);
+      scanForConditionalRoutes(route.entitySteps, reportPeriod);
+    if (route?.children) scanForConditionalRoutes(route.children, reportPeriod);
 
     // if route has a field that is to be conditionally rendered, conditionally keep in array
     if (route?.conditionallyRender) {
       // if a path has "showOnlyInPeriod2" attached as a rule, we only want to show in reporting period 2, and remove from the list of routes otherwise
       if (
         route.conditionallyRender === "showOnlyInPeriod2" &&
-        workPlanMetaData?.reportPeriod != 2
+        reportPeriod != 2
       ) {
         const index = reportRoutes.indexOf(route);
         if (index > -1) {
@@ -366,8 +375,9 @@ export const scanForConditionalRoutes = (
 export async function getOrCreateFormTemplate(
   reportBucket: string,
   reportType: ReportType,
+  reportPeriod: number,
+  reportYear: number,
   workPlanFieldData?: AnyObject,
-  workPlanMetaData?: ReportMetadataShape,
   copyReport?: AnyObject
 ) {
   //Make a copy of the form template so we don't accidentally corrupt the original
@@ -397,13 +407,14 @@ export async function getOrCreateFormTemplate(
     // traverse routes and scan for conditional field
     currentFormTemplate.routes = scanForConditionalRoutes(
       currentFormTemplate.routes,
-      workPlanMetaData
+      reportPeriod
     );
 
     findAndRunFieldTransformationRules(
       currentFormTemplate.routes,
-      workPlanFieldData,
-      workPlanMetaData
+      reportPeriod,
+      reportYear,
+      workPlanFieldData
     );
 
     const formTemplateWithValidationJson = {

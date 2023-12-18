@@ -113,18 +113,18 @@ export const createReport = handler(
       };
     }
 
-    // Begin Section - Check the payload that was sent with the request and validate it
+    // Check the payload that was sent with the request and setup validation
     const unvalidatedPayload = JSON.parse(event.body!);
     const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
       unvalidatedPayload;
 
-    //override the date in the system to generate the next report based on the previous reporting period. adding flag to turn it on and off
-    if (
-      unvalidatedMetadata?.copyReport &&
-      unvalidatedMetadata?.copyReport?.isCopyOverTest
-    ) {
-      overriderDate(unvalidatedMetadata?.copyReport);
-    }
+    // //override the date in the system to generate the next report based on the previous reporting period. adding flag to turn it on and off
+    // if (
+    //   unvalidatedMetadata?.copyReport &&
+    //   unvalidatedMetadata?.copyReport?.isCopyOverTest
+    // ) {
+    // overriderDate(unvalidatedMetadata?.copyReport);
+    // }
 
     const creationValidationJson = {
       reportPeriod: "text",
@@ -135,14 +135,30 @@ export const createReport = handler(
       targetPopulations: "objectArray",
     };
 
+    const currentDate = Date.now();
+    const reportYear =
+      reportType === ReportType.WP
+        ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
+        : workPlanMetadata!.reportYear;
+
+    const reportPeriod =
+      reportType === ReportType.WP
+        ? calculatePeriod(currentDate, workPlanMetadata)
+        : workPlanMetadata!.reportPeriod;
+
+    const isCopyOver =
+      unvalidatedMetadata?.copyReport &&
+      unvalidatedMetadata?.copyReport?.isCopyOverTest;
+
     // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;
     try {
       ({ formTemplate, formTemplateVersion } = await getOrCreateFormTemplate(
         reportBucket,
         reportType,
+        reportPeriod,
+        reportYear,
         workPlanFieldData,
-        workPlanMetadata,
         unvalidatedMetadata?.copyReport!
       ));
     } catch (err) {
@@ -250,16 +266,7 @@ export const createReport = handler(
       };
     }
 
-    // Begin Section - Create DyanmoDB record.
-    const currentDate = Date.now();
-    const reportYear =
-      reportType === ReportType.WP
-        ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
-        : workPlanMetadata!.reportYear;
-
-    const reportPeriod = calculatePeriod(currentDate, workPlanMetadata);
-
-    // Create DyanmoDB record.
+    // Begin Section - Create DyanmoDB record
     const reportMetadataParams: DynamoWrite = {
       TableName: reportTable,
       Item: {
