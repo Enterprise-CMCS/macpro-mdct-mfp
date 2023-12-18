@@ -143,7 +143,7 @@ export const createReport = handler(
       unvalidatedMetadata?.copyReport?.isCopyOverTest;
 
     if (overrideCopyOver) {
-      reportYear = reportPeriod == 2 ? reportYear++ : reportYear;
+      reportYear = reportPeriod == 2 ? reportYear + 1 : reportYear;
       reportPeriod = reportPeriod == 1 ? 2 : 1;
     }
 
@@ -278,7 +278,7 @@ export const createReport = handler(
         versionNumber: formTemplateVersion?.versionNumber,
         submissionName: createReportName(
           reportTypeExpanded,
-          currentDate,
+          reportPeriod,
           state,
           reportYear,
           workPlanMetadata
