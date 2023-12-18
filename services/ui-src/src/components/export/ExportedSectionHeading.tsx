@@ -40,7 +40,7 @@ const sx = {
     },
   },
   heading: {
-    margin: "1.5rem 0",
+    margin: "4rem 0 1.5rem 0",
     fontSize: "2xl",
     fontWeight: "bold",
   },
