@@ -208,7 +208,8 @@
             "type": "textarea",
             "validation": "text",
             "props": {
-              "label": "Please provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative."
+              "label": "Please provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative.",
+              "className": "tbs-bottom-margin"
             }
           }
         ]
@@ -625,12 +626,7 @@
                 },
                 {
                   "type": "html",
-                  "content": "<br>If a recipient updates the MFP Work Plan to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>",
-                  "props": {
-                    "style": {
-                      "paddingBottom": "2rem"
-                    }
-                  }
+                  "content": "<br>If a recipient updates the MFP Work Plan to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>"
                 },
                 {
                   "type": "text",
@@ -1062,7 +1058,7 @@
                     "validation": "radio",
                     "props": {
                       "label": "Does the performance measure include quantitative targets?",
-                      "hint": "Note: If 'Yes', fields use calendar year quarters.",
+                      "hint": "Note: If 'Yes', fields use calendar year quarters.  Enter N/A for quarters you do not expect to report.",
                       "choices": [
                         {
                           "id": "UL4dAeyyvCFAXttxZioacR",

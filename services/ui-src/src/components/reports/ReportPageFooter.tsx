@@ -30,7 +30,7 @@ export const ReportPageFooter = ({
       : "Continue";
 
   return (
-    <Box sx={sx.footerBox} {...props}>
+    <Box sx={sx.footerBox}>
       <Box>
         <Flex sx={hidePrevious ? sx.floatButtonRight : sx.buttonFlex}>
           {!hidePrevious && (
