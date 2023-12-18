@@ -16,7 +16,6 @@ import {
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   ReportJson,
-  ReportMetadataShape,
   ReportRoute,
   ReportType,
   TargetPopulationKeys,

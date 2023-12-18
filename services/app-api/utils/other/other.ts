@@ -1,5 +1,4 @@
 import { States } from "../constants/constants";
-import { calculatePeriod } from "../time/time";
 import {
   AnyObject,
   ReportMetadataShape,
