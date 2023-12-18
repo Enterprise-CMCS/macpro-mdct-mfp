@@ -41,7 +41,7 @@ import {
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { logger } from "../../utils/logging";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { copyFieldDataFromSource, overriderDate } from "../../utils/other/copy";
+import { copyFieldDataFromSource } from "../../utils/other/copy";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
