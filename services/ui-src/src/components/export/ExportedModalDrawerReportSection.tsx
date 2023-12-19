@@ -1,5 +1,5 @@
 // components
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // utils
 import { useEffect, useState } from "react";
@@ -307,7 +307,7 @@ export const ExportedModalDrawerReportSection = ({
       <Heading as="h3" sx={sx.dashboardTitle} data-testid="headerCount">
         {verbiage.pdfDashboardTitle}
       </Heading>
-      <small>{"*asterisk denotes sum of incomplete fields"}</small>
+      <Text sx={sx.text}>{"*asterisk denotes sum of incomplete fields"}</Text>
       <Box sx={overflow ? sx.overflowStyles : {}}>
         <Table sx={sx.table} content={generateMainTable()}></Table>
         {overflow && (
@@ -415,5 +415,8 @@ const sx = {
   border: {
     border: "1px solid black",
     marginTop: "1.25rem",
+  },
+  text: {
+    fontSize: "0.875rem",
   },
 };
