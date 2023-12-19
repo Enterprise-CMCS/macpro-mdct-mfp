@@ -42,10 +42,9 @@ export const ExportedModalDrawerReportSection = ({
   // creates arrays of 'only' quarterly values
   const quarterValueArray = entities.map((entity: AnyObject) => {
     let quarterArray = [];
-
     if (
-      entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value !==
-      "No"
+      entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
+      "Yes"
     ) {
       for (const key in entity) {
         // push key values into quarterArray that are quarters
@@ -53,9 +52,10 @@ export const ExportedModalDrawerReportSection = ({
           quarterArray.push(entity[key]);
         }
       }
-    }
-
-    if (quarterArray.length === 0) {
+    } else if (
+      entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
+      "No"
+    ) {
       let seedData = [
         "N/A",
         "N/A",
@@ -71,7 +71,24 @@ export const ExportedModalDrawerReportSection = ({
         "N/A",
       ];
       quarterArray.push(...seedData);
+    } else {
+      let seedData = [
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+        "Not Answered",
+      ];
+      quarterArray.push(...seedData);
     }
+
     return quarterArray;
   });
 
@@ -82,7 +99,6 @@ export const ExportedModalDrawerReportSection = ({
     newEntities.map((entity: AnyObject) => {
       for (const key in entity) {
         // push key values into quarterArray that are quarters
-
         if (key.includes("quarterly")) {
           const id = key.replace("quarterlyProjections", "").split("Q");
           quarterLabelArray.push(`${id[0]} Q${id[1]}`);
@@ -121,7 +137,6 @@ export const ExportedModalDrawerReportSection = ({
         sum += convertToNum(item);
       });
       if (
-        columnTotal.includes("N/A") ||
         columnTotal.includes("Not Answered") ||
         columnTotal.includes("-") ||
         columnTotal.includes("Data not available")
@@ -142,7 +157,6 @@ export const ExportedModalDrawerReportSection = ({
 
   const markUnfinishedRows = (row: string[]) => {
     if (
-      row.includes("N/A") ||
       row.includes(
         "Not Answered" ||
           row.includes("-") ||
