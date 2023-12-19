@@ -330,7 +330,7 @@
                                   "borderBottom": "1px solid #D9D9D9"
                                 }
                               },
-                              "content": "Required* Initiatives"
+                              "content": "<span aria-label='Required by Program Terms and Conditions'>'Required* Initiatives'</span>"
                             },
                             {
                               "type": "th",

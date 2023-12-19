@@ -126,7 +126,9 @@ export const ExportedModalDrawerReportSection = ({
         columnTotal.includes("-") ||
         columnTotal.includes("Data not available")
       ) {
-        return `${commaMasking(sum.toString())}*`;
+        return `${commaMasking(
+          sum.toString()
+        )}<span aria-label="sum of incomplete fields">*</span>`;
       } else {
         return sum === 0 ? "-" : commaMasking(sum.toString());
       }
@@ -147,7 +149,9 @@ export const ExportedModalDrawerReportSection = ({
           row.includes("Data not available")
       )
     ) {
-      return (row[row.length - 1] = `${row[row.length - 1]}*`);
+      return (row[row.length - 1] = `${
+        row[row.length - 1]
+      }<span aria-label="sum of incomplete fields">*</span>`);
     }
     return;
   };
