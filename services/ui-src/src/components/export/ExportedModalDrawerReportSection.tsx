@@ -42,10 +42,16 @@ export const ExportedModalDrawerReportSection = ({
   // creates arrays of 'only' quarterly values
   const quarterValueArray = entities.map((entity: AnyObject) => {
     let quarterArray = [];
-    for (const key in entity) {
-      // push key values into quarterArray that are quarters
-      if (key.includes("quarterly")) {
-        quarterArray.push(entity[key]);
+
+    if (
+      entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value !==
+      "No"
+    ) {
+      for (const key in entity) {
+        // push key values into quarterArray that are quarters
+        if (key.includes("quarterly")) {
+          quarterArray.push(entity[key]);
+        }
       }
     }
 
