@@ -72,8 +72,7 @@ export const getLastSubmission = (
   let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
   workPlanSubmissions.forEach((submission: ReportMetadataShape) => {
     if (
-      (submission.status === ReportStatus.NOT_STARTED ||
-        submission.status === ReportStatus.IN_PROGRESS) &&
+      submission.status === ReportStatus.APPROVED &&
       !submission?.associatedSar
     ) {
       if (
