@@ -62,7 +62,7 @@ export const Table = ({
                   key={cell + index}
                   sx={{
                     tableCell: border ? sx.tableCellBorder : sx.tableCell,
-                    color: cell == "Not Answered" ? "palette.error_darker" : "",
+                    color: cell == "Not answered" ? "palette.error_darker" : "",
                   }}
                 >
                   {sanitizeAndParseHtml(cell)}
