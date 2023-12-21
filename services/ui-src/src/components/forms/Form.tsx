@@ -182,6 +182,9 @@ interface Props {
 }
 
 const sx = {
+  ".tbs-bottom-margin": {
+    marginBottom: "2.5rem",
+  },
   // default
   ".ds-c-field, .ds-c-label": {
     maxWidth: "32rem",
