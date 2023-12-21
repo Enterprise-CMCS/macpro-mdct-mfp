@@ -11,7 +11,7 @@ describe("Test lastFoundSubmission function", () => {
         state: "NJ",
         id: "2Xv4Me4q00ztl41PakEf7nxGPtp",
         submissionName: "New Jersey Work Plan 2023 - Period 2",
-        status: ReportStatus.IN_PROGRESS,
+        status: ReportStatus.APPROVED,
         createdAt: 1699496172798,
         lastAltered: 1699496172798,
         lastAlteredBy: "Anthony Soprano",
@@ -32,7 +32,7 @@ describe("Test lastFoundSubmission function", () => {
         state: "NJ",
         id: "2Xv4TaPFSy9Q0ZGSVB0wuzwtAnA",
         locked: false,
-        status: ReportStatus.IN_PROGRESS,
+        status: ReportStatus.APPROVED,
       },
     ];
 
