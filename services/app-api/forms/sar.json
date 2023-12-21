@@ -1045,8 +1045,15 @@
           "isRequired": true,
           "verbiage": {
             "intro": {
-              "section": "Initiative progress",
-              "subsection": "Report progress for this initiative during this reporting period."
+              "section": "State- or Territory-Specific Initiatives",
+              "subtitle": [
+                {
+                  "type": "html",
+                  "content": "Report progress for this initiative during this reporting period."
+                }
+              ],
+              "subsection": "Report progress for this initiative during this reporting period.",
+              "title": "Initiative progress"
             },
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",

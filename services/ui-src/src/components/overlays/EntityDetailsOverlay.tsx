@@ -7,6 +7,7 @@ import {
   Image,
   Spinner,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import {
   Alert,
@@ -14,6 +15,7 @@ import {
   ReportPageIntro,
   CloseEntityModal,
   ReportContext,
+  PrintButton,
 } from "components";
 import { getCloseoutStatus } from "components/tables/getEntityStatus";
 // types
@@ -37,6 +39,7 @@ import {
   filterFormData,
   setClearedEntriesToDefaultValue,
   useStore,
+  parseCustomHtml,
 } from "utils";
 
 export const EntityDetailsOverlay = ({
@@ -226,6 +229,12 @@ export const EntityDetailsOverlay = ({
           initiativeName={selectedEntity!.initiative_name}
         />
       )}
+      {verbiage.intro.title && <Box sx={sx.title}>{verbiage.intro.title}</Box>}
+      {verbiage.intro.subtitle && (
+        <Box sx={sx.infoTextBox}>
+          {parseCustomHtml(verbiage.intro.subtitle)}
+        </Box>
+      )}
       <Form
         id={form.id}
         formJson={form}
@@ -274,6 +283,14 @@ export const EntityDetailsOverlay = ({
                 onClose: closeCloseEntityModal,
               }}
             />
+          </Box>
+        )}
+        {verbiage.reviewPdfHint && (
+          <Box>
+            <Text sx={sx.reviewPdfHint}>
+              {parseCustomHtml(verbiage.reviewPdfHint)}
+            </Text>
+            <PrintButton sxOverride={sx.reviewPdfButton} />
           </Box>
         )}
       </Box>
@@ -341,4 +358,41 @@ const sx = {
   warningIcon: {
     width: "1.375rem",
   },
+  title: {
+    paddingTop: "1rem",
+    paddingBottom: "0",
+    fontWeight: "bold",
+    fontSize: "2xl",
+    color: "palette.gray_medium_dark",
+  },
+  subsectionHeading: {
+    fontWeight: "normal",
+    fontSize: "4xl",
+    marginTop: "0.5rem",
+  },
+  infoTextBox: {
+    marginTop: "1.5rem",
+    color: "palette.gray",
+    h3: {
+      marginBottom: "-0.75rem",
+    },
+    "p, span": {
+      color: "palette.gray",
+      marginTop: "1rem",
+    },
+    a: {
+      color: "palette.primary",
+      "&:hover": {
+        color: "palette.primary_darker",
+      },
+    },
+    b: {
+      color: "palette.base",
+    },
+  },
+  reviewPdfHint: {
+    paddingTop: "1rem",
+    color: "palette.gray_medium",
+  },
+  reviewPdfButton: { marginTop: "1.5rem", marginBottom: "2rem" },
 };
