@@ -99,9 +99,7 @@
           {
             "id": "generalInformation_hasAorChangedSinceLastReport",
             "type": "radio",
-            "validation": {
-              "type": "radio"
-            },
+            "validation":"radio",
             "props": {
               "label": "Has the AOR changed since last report?",
               "choices": [
