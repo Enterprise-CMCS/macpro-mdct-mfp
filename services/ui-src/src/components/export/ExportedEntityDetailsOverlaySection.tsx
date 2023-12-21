@@ -172,6 +172,7 @@ const sx = {
   stepName: {
     fontSize: "18px",
     paddingBottom: "0.75rem",
+    lineHeight: "130%",
   },
   stepHint: {
     fontSize: "16px",

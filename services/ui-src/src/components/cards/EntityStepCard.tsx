@@ -25,6 +25,8 @@ export const EntityStepCard = ({
   openDeleteEntityModal,
   openDrawer,
   printVersion,
+  hasBoxShadow,
+  hasBorder,
   ...props
 }: Props) => {
   let entityCompleted = false;
@@ -55,8 +57,19 @@ export const EntityStepCard = ({
       break;
   }
 
+  const boxShadow = hasBoxShadow ? "0px 3px 9px rgba(0, 0, 0, 0.2)" : "none";
+  const border = hasBorder ? "1px" : "none";
+  const borderColor = hasBorder ? "#D3D3D3" : "none";
+
   return (
-    <Card {...props} marginTop="2rem" data-testid="entityCard">
+    <Card
+      {...props}
+      marginTop="2rem"
+      boxShadow={boxShadow}
+      border={border}
+      borderColor={borderColor}
+      data-testid="entityCard"
+    >
       <Box sx={sx.contentBox} className={printVersion ? "print-version" : ""}>
         {printVersion && (
           <Text sx={sx.entitiesCount} data-testid="entities-count">
@@ -172,6 +185,8 @@ interface Props {
   openDeleteEntityModal?: Function;
   openDrawer?: Function;
   printVersion?: boolean;
+  hasBoxShadow?: boolean;
+  hasBorder?: boolean;
   [key: string]: any;
 }
 
@@ -212,11 +227,13 @@ const sx = {
       color: "palette.error_darker",
       fontSize: ".75rem",
       textAlign: "center",
+      fontWeight: "bold",
     },
     ".completed-text": {
       color: "green",
       fontSize: ".75rem",
       textAlign: "center",
+      fontWeight: "bold",
     },
   },
   printVersionIcon: {
@@ -255,7 +272,8 @@ const sx = {
     position: "absolute",
     right: "-2rem",
     fontSize: ".75rem",
-    color: "palette.gray_medium",
+    fontWeight: "bold",
+    color: "#71767a",
     ".mobile &": {
       right: "-1.5rem",
     },

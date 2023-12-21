@@ -20,7 +20,7 @@ export const TemplateCard = ({
   const navigate = useNavigate();
 
   return (
-    <Card {...cardprops}>
+    <Card boxShadow="0px 3px 9px rgba(0, 0, 0, 0.2)" {...cardprops}>
       <Flex sx={sx.root} {...props}>
         {isDesktop && (
           <Image

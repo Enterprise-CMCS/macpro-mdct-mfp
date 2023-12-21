@@ -126,6 +126,7 @@ export const sx = {
     width: "100%",
     maxWidth: "55.25rem",
     margin: "0 auto",
+    paddingBottom: "4rem",
   },
   innerContainer: {
     width: "100%",
