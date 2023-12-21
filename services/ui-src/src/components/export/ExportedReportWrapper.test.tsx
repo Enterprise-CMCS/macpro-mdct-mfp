@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-// import { axe } from "jest-axe";
+import { axe } from "jest-axe";
 import { useStore } from "utils";
 import {
   mockReportStore,
@@ -20,7 +20,6 @@ const exportedStandardReportWrapperComponent = (
     <ExportedReportWrapper section={mockStandardReportPageJson} />
   </ReportContext.Provider>
 );
-
 const exportedDrawerReportPageWrapperComponent = (
   <ReportContext.Provider value={mockWpReportContext}>
     <ExportedReportWrapper section={mockDrawerReportPageJson} />
@@ -50,5 +49,23 @@ describe("ExportedReportWrapper rendering", () => {
     expect(
       screen.getByTestId("exportedModalDrawerReportSection")
     ).toBeInTheDocument();
+  });
+});
+
+describe("Test ExportedReportWrapper accessibility", () => {
+  it("exportedStandardReportWrapperComponent should not have basic accessibility issues", async () => {
+    const { container } = render(exportedStandardReportWrapperComponent);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+  it("exportedDrawerReportPageWrapperComponent should not have basic accessibility issues", async () => {
+    const { container } = render(exportedDrawerReportPageWrapperComponent);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+  it("exportedModalDrawerReportWrapperComponent should not have basic accessibility issues", async () => {
+    const { container } = render(exportedModalDrawerReportWrapperComponent);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

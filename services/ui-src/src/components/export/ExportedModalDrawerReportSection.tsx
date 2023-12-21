@@ -303,9 +303,11 @@ export const ExportedModalDrawerReportSection = ({
       data-testid="exportedModalDrawerReportSection"
       sx={sx.container}
     >
-      <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
-        {verbiage.pdfDashboardTitle}
-      </Heading>
+      {verbiage.pdfDashboardTitle && (
+        <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
+          {verbiage.pdfDashboardTitle}
+        </Heading>
+      )}
       <small>{"*asterisk denotes sum of incomplete fields"}</small>
       <Box sx={overflow ? sx.overflowStyles : {}}>
         <Table sx={sx.table} content={generateMainTable()}></Table>
