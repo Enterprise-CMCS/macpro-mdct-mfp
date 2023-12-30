@@ -24,6 +24,13 @@ const fieldWithLabel = {
   props: { hint: "hint", label: "test label" },
 };
 
+const fieldWithNoLabelorHint = {
+  id: "test",
+  validation: "string",
+  type: "drawer",
+  props: {},
+};
+
 const exportRow = (
   <ReportContext.Provider value={mockWpReportContext}>
     <Table>
@@ -68,6 +75,19 @@ const noHintRow = (
   </ReportContext.Provider>
 );
 
+const noHintNoLabel = (
+  <ReportContext.Provider value={mockWpReportContext}>
+    <Table>
+      <tbody>
+        <ExportedReportFieldRow
+          formField={fieldWithNoLabelorHint}
+          pageType="drawer"
+        />
+      </tbody>
+    </Table>
+  </ReportContext.Provider>
+);
+
 describe("ExportedReportFieldRow", () => {
   test("Is present", async () => {
     render(exportRow);
@@ -97,6 +117,14 @@ describe("ExportedReportFieldRow", () => {
     render(noHintRow);
     const hint = screen.queryByText(/hint/);
     expect(hint).not.toBeInTheDocument();
+  });
+
+  test("Box element doesnt appear if there is no label or no hint", async () => {
+    render(noHintNoLabel);
+    const row = screen.getByTestId("exportRow");
+    const box = screen.queryByTestId("parentBoxElement");
+    expect(row).toBeVisible();
+    expect(box).toBeNull();
   });
 });
 
