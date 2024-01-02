@@ -1,5 +1,5 @@
 // components
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // utils
 import { useEffect, useState } from "react";
@@ -18,7 +18,7 @@ export const ExportedModalDrawerReportSection = ({
     return _.truncate(text, { length: 30 });
   };
 
-  // if Transition Benchmark Header title has an abbrev.just display that
+  // if Transition Benchmark Header title has an abbrev. just display that
   const getTableHeaders = () => {
     let headers = [];
     const quarterHeader = "Pop. by Quarter";
@@ -132,7 +132,9 @@ export const ExportedModalDrawerReportSection = ({
       });
       // the dash - gets put in totals where the user did not answer the question
       if (columnTotal.includes("-")) {
-        return `${commaMasking(sum.toString())}*`;
+        return `${commaMasking(
+          sum.toString()
+        )}<span aria-label="sum of incomplete fields">*</span>`;
       } else {
         return sum === 0 ? "-" : commaMasking(sum.toString());
       }
@@ -146,7 +148,9 @@ export const ExportedModalDrawerReportSection = ({
 
   const markUnfinishedRows = (row: string[]) => {
     if (row.includes("Not answered") || row.includes("-")) {
-      return (row[row.length - 1] = `${row[row.length - 1]}*`);
+      return (row[row.length - 1] = `${
+        row[row.length - 1]
+      }<span aria-label="sum of incomplete fields">*</span>`);
     }
     return;
   };
@@ -304,11 +308,15 @@ export const ExportedModalDrawerReportSection = ({
       sx={sx.container}
     >
       {verbiage.pdfDashboardTitle && (
-        <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
-          {verbiage.pdfDashboardTitle}
-        </Heading>
+        <>
+          <Heading as="h3" sx={sx.dashboardTitle} data-testid="headerCount">
+            {verbiage.pdfDashboardTitle}
+          </Heading>
+          <Text sx={sx.text}>
+            {"*asterisk denotes sum of incomplete fields"}
+          </Text>
+        </>
       )}
-      <small>{"*asterisk denotes sum of incomplete fields"}</small>
       <Box sx={overflow ? sx.overflowStyles : {}}>
         <Table sx={sx.table} content={generateMainTable()}></Table>
         {overflow && (
@@ -337,13 +345,20 @@ const sx = {
     marginTop: "0.5rem",
   },
   dashboardTitle: {
-    fontSize: "md",
+    fontSize: "21px",
+    lineHeight: "130%",
     fontWeight: "bold",
     color: "palette.gray_darkest",
   },
+  dashboardText: {
+    fontSize: "0.875rem",
+  },
+  // TODO: delete this
   table: {
     marginTop: "1.25rem",
     borderLeft: "1px solid",
+    borderRight: "1px solid",
+    border: "1px solid",
     tableLayout: "fixed",
     marginBottom: "2.25rem",
     br: {
@@ -351,6 +366,7 @@ const sx = {
     },
     tr: {
       background: "palette.gray_lightest",
+      border: "1px solid",
     },
     thead: {
       height: "100px",
@@ -359,6 +375,7 @@ const sx = {
     "td,th": {
       textAlign: "center",
       wordWrap: "break-word",
+      border: "1px solid",
     },
     "td:first-child": {
       background: "palette.gray_lightest",
@@ -367,6 +384,7 @@ const sx = {
     th: {
       borderBottom: "1px solid",
       borderRight: "1px solid",
+      border: "1px solid",
       borderColor: "palette.black",
       color: "palette.black",
       lineHeight: "normal",
@@ -374,7 +392,7 @@ const sx = {
       width: "100px",
       minWidth: "100px",
       ".tablet &, .mobile &": {
-        border: "none",
+        border: "1px solid",
       },
     },
     "tbody tr": {
@@ -405,5 +423,8 @@ const sx = {
   },
   border: {
     marginTop: "1.25rem",
+  },
+  text: {
+    fontSize: "0.875rem",
   },
 };
