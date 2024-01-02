@@ -18,7 +18,7 @@ import {
 import addIcon from "assets/icons/icon_add_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
-import { EntityShape, OverlayModalPageShape } from "types";
+import { EntityShape, OverlayModalPageShape, ReportType } from "types";
 // utils
 import { getFormattedEntityData, resetClearProp, useStore } from "utils";
 
@@ -113,16 +113,20 @@ export const OverlayModalPage = ({
         />
       )}
       <Box>
-        <Button
-          sx={sx.addEntityButton}
-          onClick={addEditEntityModalOnOpenHandler}
-          rightIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-        >
-          {verbiage.addEntityButtonText}
-        </Button>
-        <Heading as="h3" sx={sx.dashboardTitle}>
-          {dashTitle}
-        </Heading>
+        {report?.reportType === ReportType.WP && (
+          <>
+            <Button
+              sx={sx.addEntityButton}
+              onClick={addEditEntityModalOnOpenHandler}
+              rightIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+            >
+              {verbiage.addEntityButtonText}
+            </Button>
+            <Heading as="h3" sx={sx.dashboardTitle}>
+              {dashTitle}
+            </Heading>
+          </>
+        )}
         <Box>
           {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (

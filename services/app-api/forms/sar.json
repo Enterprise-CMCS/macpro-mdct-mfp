@@ -983,8 +983,9 @@
                   "content": "Report progress for each objective by selecting the button for each."
                 }
               ],
-              "dashboardTitle": "Objectives progress"
+              "dashboardTitle": "Objectives progress",
             },
+            "editEntityButtonText": "Report objective progress",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
             "modalTitle": "Report progress for ",

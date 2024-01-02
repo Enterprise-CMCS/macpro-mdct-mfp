@@ -6,14 +6,19 @@ import {
 } from "components";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
-import { AnyObject, EntityShape, OverlayModalStepTypes } from "types";
+import {
+  AnyObject,
+  EntityShape,
+  OverlayModalStepTypes,
+  ReportType,
+} from "types";
 // assets
 import { svgFilters } from "styles/theme";
 import completedIcon from "assets/icons/icon_check_circle.png";
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
-import { fillEmptyQuarters } from "utils";
+import { fillEmptyQuarters, useStore } from "utils";
 
 export const EntityStepCard = ({
   entity,
@@ -31,7 +36,7 @@ export const EntityStepCard = ({
 }: Props) => {
   let entityCompleted = false;
   const entitiesCount = `${entityIndex + 1} / ${entity[stepType]?.length}`;
-
+  const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
   switch (stepType) {
     case OverlayModalStepTypes.EVALUATION_PLAN:
@@ -103,7 +108,7 @@ export const EntityStepCard = ({
             )}
           </Box>
         )}
-        {openDeleteEntityModal && (
+        {openDeleteEntityModal && report?.reportType === ReportType.WP && (
           <button
             type="button"
             className="delete-entity-button"
