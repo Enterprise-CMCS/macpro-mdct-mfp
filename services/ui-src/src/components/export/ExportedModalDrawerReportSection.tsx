@@ -6,6 +6,7 @@ import { Table } from "components";
 import { EntityShape, ModalDrawerReportPageShape } from "types";
 // utils
 import { convertToThousandsSeparatedString, useStore } from "utils";
+import { notAnsweredText } from "../../constants";
 
 export const ExportedModalDrawerReportSection = ({
   section: { entityType, verbiage },
@@ -43,7 +44,8 @@ export const ExportedModalDrawerReportSection = ({
     return convertToThousandsSeparatedString(item).maskedValue;
   };
 
-  const quarterArraySeedData = Array(12).fill("Not answered");
+  const ariaLabelledAsterisk = `<span aria-label="sum of incomplete fields">*</span>`;
+  const quarterArraySeedData = Array(12).fill(notAnsweredText);
 
   // creates arrays of 'only' quarterly values
   const quarterValueArray = entities.map((entity: EntityShape) => {
@@ -105,11 +107,13 @@ export const ExportedModalDrawerReportSection = ({
       });
       // the dash - gets put in totals where the user did not answer the question
       const displaySum = getSumDisplayValue(sum.toString());
-      return displaySum === "-"
-        ? displaySum
-        : `${commaMasking(
-            displaySum
-          )}<span aria-label="sum of incomplete fields">*</span>`;
+      if (columnTotal.includes("-")) {
+        return displaySum === "-"
+          ? "-"
+          : `${commaMasking(displaySum)}${ariaLabelledAsterisk}`;
+      } else {
+        return commaMasking(displaySum);
+      }
     };
 
     const commaMaskColumTotal = columnTotal.map((item: string) =>
@@ -120,11 +124,8 @@ export const ExportedModalDrawerReportSection = ({
 
   const getRowSumDisplayValue = (row: string[], sum: string) => {
     let displayValue = sum;
-    if (row.includes("Not answered") || row.includes("-")) {
-      displayValue =
-        sum === "-"
-          ? `${sum}`
-          : `${sum}<span aria-label="sum of incomplete fields">*</span>`;
+    if (row.includes(notAnsweredText) || row.includes("-")) {
+      displayValue = sum === "-" ? `${sum}` : `${sum}${ariaLabelledAsterisk}`;
     }
     return displayValue;
   };
