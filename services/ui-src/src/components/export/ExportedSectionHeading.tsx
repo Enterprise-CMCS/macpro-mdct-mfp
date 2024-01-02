@@ -9,9 +9,11 @@ export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
   const sectionHeading = verbiage?.intro?.exportSectionHeader
     ? verbiage?.intro?.exportSectionHeader
     : verbiage?.intro?.subsection || heading;
-  const sectionInfo = verbiage?.intro?.exportSectionHeader
-    ? null
-    : verbiage?.intro?.info;
+  const sectionInfo =
+    verbiage?.intro?.exportSectionHeader ||
+    verbiage?.intro?.subsection === "State- or Territory-Specific Initiatives"
+      ? null
+      : verbiage?.intro?.info;
   const stateAndTerritory =
     sectionHeading === "State and Territory-Specific Initiatives";
 
@@ -40,7 +42,7 @@ const sx = {
     },
   },
   heading: {
-    margin: "1.5rem 0",
+    margin: "4rem 0 1.5rem 0",
     fontSize: "2xl",
     fontWeight: "bold",
   },

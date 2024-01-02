@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 // components
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // types
 import { EntityShape, ModalDrawerReportPageShape } from "types";
@@ -37,6 +37,10 @@ export const ExportedModalDrawerReportSection = ({
 
   const getSumDisplayValue = (sum: string) => {
     return sum === "0" ? "-" : sum;
+  };
+
+  const commaMasking = (item: string) => {
+    return convertToThousandsSeparatedString(item).maskedValue;
   };
 
   const quarterArraySeedData = Array(12).fill("Not answered");
@@ -101,7 +105,11 @@ export const ExportedModalDrawerReportSection = ({
       });
       // the dash - gets put in totals where the user did not answer the question
       const displaySum = getSumDisplayValue(sum.toString());
-      return displaySum === "-" ? displaySum : `${commaMasking(displaySum)}*`;
+      return displaySum === "-"
+        ? displaySum
+        : `${commaMasking(
+            displaySum
+          )}<span aria-label="sum of incomplete fields">*</span>`;
     };
 
     const commaMaskColumTotal = columnTotal.map((item: string) =>
@@ -113,13 +121,12 @@ export const ExportedModalDrawerReportSection = ({
   const getRowSumDisplayValue = (row: string[], sum: string) => {
     let displayValue = sum;
     if (row.includes("Not answered") || row.includes("-")) {
-      displayValue = sum === "-" ? `${sum}` : `${sum}*`;
+      displayValue =
+        sum === "-"
+          ? `${sum}`
+          : `${sum}<span aria-label="sum of incomplete fields">*</span>`;
     }
     return displayValue;
-  };
-
-  const commaMasking = (item: string) => {
-    return convertToThousandsSeparatedString(item).maskedValue;
   };
 
   const generateMainTable = () => {
@@ -270,10 +277,10 @@ export const ExportedModalDrawerReportSection = ({
       data-testid="exportedModalDrawerReportSection"
       sx={sx.container}
     >
-      <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
+      <Heading as="h3" sx={sx.dashboardTitle} data-testid="headerCount">
         {verbiage.pdfDashboardTitle}
       </Heading>
-      <small>{"*asterisk denotes sum of incomplete fields"}</small>
+      <Text sx={sx.text}>{"*asterisk denotes sum of incomplete fields"}</Text>
       <Box sx={overflow ? sx.overflowStyles : {}}>
         <Table sx={sx.table} content={generateMainTable()}></Table>
         {overflow && (
@@ -295,13 +302,16 @@ const sx = {
     },
   },
   dashboardTitle: {
-    fontSize: "md",
+    fontSize: "21px",
+    lineHeight: "130%",
     fontWeight: "bold",
     color: "palette.gray_darkest",
   },
   table: {
     marginTop: "1.25rem",
     borderLeft: "1px solid",
+    borderRight: "1px solid",
+    border: "1px solid",
     tableLayout: "fixed",
     marginBottom: "2.25rem",
     br: {
@@ -309,6 +319,7 @@ const sx = {
     },
     tr: {
       background: "palette.gray_lightest",
+      border: "1px solid",
     },
     thead: {
       height: "100px",
@@ -317,6 +328,7 @@ const sx = {
     "td,th": {
       textAlign: "center",
       wordWrap: "break-word",
+      border: "1px solid",
     },
     "td:first-child": {
       background: "palette.gray_lightest",
@@ -325,6 +337,7 @@ const sx = {
     th: {
       borderBottom: "1px solid",
       borderRight: "1px solid",
+      border: "1px solid",
       borderColor: "palette.black",
       color: "palette.black",
       lineHeight: "normal",
@@ -332,7 +345,7 @@ const sx = {
       width: "100px",
       minWidth: "100px",
       ".tablet &, .mobile &": {
-        border: "none",
+        border: "1px solid",
       },
     },
     "tbody tr": {
@@ -363,5 +376,8 @@ const sx = {
   },
   border: {
     marginTop: "1.25rem",
+  },
+  text: {
+    fontSize: "0.875rem",
   },
 };

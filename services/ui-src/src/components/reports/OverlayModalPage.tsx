@@ -137,6 +137,7 @@ export const OverlayModalPage = ({
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
                 disabled={userDisabled}
+                hasBoxShadow={true}
               />
             )
           )}
