@@ -8,7 +8,7 @@ import { ReportPageProgress, ReportType } from "types";
 // utils
 import { getRouteStatus, useBreakpoint, useStore } from "utils";
 // verbiage
-import verbiage from "verbiage/pages/mfp/mfp-review-and-submit";
+import verbiage from "verbiage/pages/wp/wp-review-and-submit";
 // assets
 import editIcon from "assets/icons/icon_edit.png";
 import errorIcon from "assets/icons/icon_error_circle_bright.png";

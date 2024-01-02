@@ -10,7 +10,7 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
-import reviewVerbiage from "verbiage/pages/mfp/mfp-review-and-submit";
+import reviewVerbiage from "verbiage/pages/wp/wp-review-and-submit";
 import { AdminReview } from "./AdminReview";
 // types
 import { ReportStatus } from "types";
