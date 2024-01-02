@@ -110,7 +110,9 @@ export const Form = ({
       choiceList &&
         choiceList.map((choice: AnyObject) => {
           if (choice?.label.includes("*")) {
-            let asteriskIndex = choice?.label.indexOf("*");
+            let asteriskIndex = choice?.label.includes("*if applicable")
+              ? choice?.label.indexOf("*") - 1
+              : choice?.label.indexOf("*");
             let newOption = sanitizeAndParseHtml(
               `${choice?.label.slice(
                 0,
