@@ -45,7 +45,7 @@
     "kafkajs": "^2.2.3",
     "ksuid": "^3.0.0",
     "object-hash": "^3.0.0",
-    "pino": "^8.14.1",
+    "pino": "^8.17.0",
     "serverless-plugin-warmup": "^8.2.1",
     "yup": "^0.32.11"
   },
