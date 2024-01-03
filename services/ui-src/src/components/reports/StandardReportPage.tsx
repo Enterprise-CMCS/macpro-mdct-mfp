@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 // components
 import { Box } from "@chakra-ui/react";
@@ -81,34 +81,6 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
       return formDataCopy;
     }
   };
-
-  /**
-   * generalInformation_resubmissionInformation was set to "N/A" and not "" because textfield sees empty strings as no input
-   * future revision should be to allow "" as a valid input for this specific field
-   */
-  const updateResubmissionValue = async () => {
-    const reportKeys = {
-      reportType: report?.reportType,
-      state: state,
-      id: report?.id,
-    };
-    const dataToWrite = {
-      metadata: {
-        lastAlteredBy: full_name,
-      },
-      fieldData: {
-        generalInformation_resubmissionInformation: "N/A",
-      },
-    };
-
-    await updateReport(reportKeys, dataToWrite);
-  };
-
-  useEffect(() => {
-    if (location?.pathname === "/sar/general-information") {
-      updateResubmissionValue();
-    }
-  }, [location?.pathname]);
 
   return (
     <Box>
