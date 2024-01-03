@@ -46,7 +46,7 @@
     "ksuid": "^3.0.0",
     "object-hash": "^3.0.0",
     "pino": "^8.14.1",
-    "serverless-plugin-warmup": "^8.2.1",
+    "serverless-plugin-warmup": "^8.3.0",
     "yup": "^0.32.11"
   },
   "resolutions": {
