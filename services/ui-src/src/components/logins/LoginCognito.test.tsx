@@ -1,7 +1,9 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 // utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { Auth } from "aws-amplify";
 //components
 import { LoginCognito } from "components";
 
@@ -10,6 +12,12 @@ const loginCognitoComponent = (
     <LoginCognito />
   </RouterWrappedComponent>
 );
+
+jest.mock("aws-amplify", () => ({
+  Auth: {
+    signIn: jest.fn(),
+  },
+}));
 
 describe("Test LoginCognito", () => {
   beforeEach(() => {
@@ -26,6 +34,15 @@ describe("Test LoginCognito", () => {
 
   test("LoginCognito login button is visible", () => {
     expect(screen.getByRole("button")).toBeVisible();
+  });
+
+  test("LoginCognito calls Auth.signIn", async () => {
+    const loginButton = screen.getByText("Log In with Cognito", {
+      selector: "button",
+    });
+    await userEvent.click(loginButton);
+
+    expect(Auth.signIn).toHaveBeenCalled();
   });
 });
 
