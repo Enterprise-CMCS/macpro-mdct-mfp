@@ -1,5 +1,5 @@
 // components
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // utils
 import { useEffect, useState } from "react";
@@ -18,7 +18,7 @@ export const ExportedModalDrawerReportSection = ({
     return _.truncate(text, { length: 30 });
   };
 
-  // if Transition Benchmark Header title has an abbrev.just display that
+  // if Transition Benchmark Header title has an abbrev. just display that
   const getTableHeaders = () => {
     let headers = [];
     const quarterHeader = "Pop. by Quarter";
@@ -44,8 +44,8 @@ export const ExportedModalDrawerReportSection = ({
     let quarterArray = [];
 
     if (
-      entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value !==
-      "No"
+      entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
+      "Yes"
     ) {
       for (const key in entity) {
         // push key values into quarterArray that are quarters
@@ -53,22 +53,32 @@ export const ExportedModalDrawerReportSection = ({
           quarterArray.push(entity[key]);
         }
       }
+    } else if (
+      entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
+      "No"
+    ) {
+      for (const key in entity) {
+        // push key values into quarterArray that are quarters
+        if (key.includes("quarterly")) {
+          quarterArray.push("N/A");
+        }
+      }
     }
 
     if (quarterArray.length === 0) {
       let seedData = [
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
+        "Not answered",
+        "Not answered",
+        "Not answered",
+        "Not answered",
+        "Not answered",
+        "Not answered",
+        "Not answered",
+        "Not answered",
+        "Not answered",
+        "Not answered",
+        "Not answered",
+        "Not answered",
       ];
       quarterArray.push(...seedData);
     }
@@ -120,13 +130,11 @@ export const ExportedModalDrawerReportSection = ({
       columnTotal.forEach((item: any) => {
         sum += convertToNum(item);
       });
-      if (
-        columnTotal.includes("N/A") ||
-        columnTotal.includes("Not Answered") ||
-        columnTotal.includes("-") ||
-        columnTotal.includes("Data not available")
-      ) {
-        return `${commaMasking(sum.toString())}*`;
+      // the dash - gets put in totals where the user did not answer the question
+      if (columnTotal.includes("-")) {
+        return `${commaMasking(
+          sum.toString()
+        )}<span aria-label="sum of incomplete fields">*</span>`;
       } else {
         return sum === 0 ? "-" : commaMasking(sum.toString());
       }
@@ -139,15 +147,10 @@ export const ExportedModalDrawerReportSection = ({
   };
 
   const markUnfinishedRows = (row: string[]) => {
-    if (
-      row.includes("N/A") ||
-      row.includes(
-        "Not Answered" ||
-          row.includes("-") ||
-          row.includes("Data not available")
-      )
-    ) {
-      return (row[row.length - 1] = `${row[row.length - 1]}*`);
+    if (row.includes("Not answered") || row.includes("-")) {
+      return (row[row.length - 1] = `${
+        row[row.length - 1]
+      }<span aria-label="sum of incomplete fields">*</span>`);
     }
     return;
   };
@@ -189,7 +192,7 @@ export const ExportedModalDrawerReportSection = ({
         // Add Not Answer if cell is empty string,
         valueArray.forEach((array: any[]) => {
           if (!array[item] && array[item] === "") {
-            array[item] = "Not Answered";
+            array[item] = "Not answered";
           }
 
           sum += convertToNum(array[item]);
@@ -246,7 +249,7 @@ export const ExportedModalDrawerReportSection = ({
         // Add Not Answer if cell is empty string,
         overflowQuarterValueArray.forEach((array: any[]) => {
           if (!array[item] && array[item] === "") {
-            array[item] = "Not Answered";
+            array[item] = "Not answered";
           }
           row.push(commaMasking(array[item]));
         });
@@ -304,10 +307,10 @@ export const ExportedModalDrawerReportSection = ({
       data-testid="exportedModalDrawerReportSection"
       sx={sx.container}
     >
-      <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
+      <Heading as="h3" sx={sx.dashboardTitle} data-testid="headerCount">
         {verbiage.pdfDashboardTitle}
       </Heading>
-      <small>{"*asterisk denotes sum of incomplete fields"}</small>
+      <Text sx={sx.text}>{"*asterisk denotes sum of incomplete fields"}</Text>
       <Box sx={overflow ? sx.overflowStyles : {}}>
         <Table sx={sx.table} content={generateMainTable()}></Table>
         {overflow && (
@@ -336,14 +339,20 @@ const sx = {
     marginTop: "0.5rem",
   },
   dashboardTitle: {
-    fontSize: "md",
+    fontSize: "21px",
+    lineHeight: "130%",
     fontWeight: "bold",
     color: "palette.gray_darkest",
+  },
+  dashboardText: {
+    fontSize: "0.875rem",
   },
   // TODO: delete this
   table: {
     marginTop: "1.25rem",
     borderLeft: "1px solid",
+    borderRight: "1px solid",
+    border: "1px solid",
     tableLayout: "fixed",
     marginBottom: "2.25rem",
     br: {
@@ -351,6 +360,7 @@ const sx = {
     },
     tr: {
       background: "palette.gray_lightest",
+      border: "1px solid",
     },
     thead: {
       height: "100px",
@@ -359,6 +369,7 @@ const sx = {
     "td,th": {
       textAlign: "center",
       wordWrap: "break-word",
+      border: "1px solid",
     },
     "td:first-child": {
       background: "palette.gray_lightest",
@@ -367,6 +378,7 @@ const sx = {
     th: {
       borderBottom: "1px solid",
       borderRight: "1px solid",
+      border: "1px solid",
       borderColor: "palette.black",
       color: "palette.black",
       lineHeight: "normal",
@@ -374,7 +386,7 @@ const sx = {
       width: "100px",
       minWidth: "100px",
       ".tablet &, .mobile &": {
-        border: "none",
+        border: "1px solid",
       },
     },
     "tbody tr": {
@@ -404,7 +416,9 @@ const sx = {
     },
   },
   border: {
-    border: "1px solid black",
     marginTop: "1.25rem",
+  },
+  text: {
+    fontSize: "0.875rem",
   },
 };

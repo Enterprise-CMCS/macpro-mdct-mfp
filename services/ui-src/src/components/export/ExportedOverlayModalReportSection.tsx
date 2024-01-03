@@ -50,6 +50,7 @@ export const ExportedOverlayModalReportSection = ({
             verbiage={verbiage}
             stepType={stepType!}
             printVersion
+            hasBorder={true}
           />
         );
       })}
