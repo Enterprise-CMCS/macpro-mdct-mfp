@@ -13,7 +13,7 @@ export default {
           type: "text",
           as: "span",
           content:
-            "Double check that everything in your MFP SAR Report is accurate. You will be able to make edits after submitting if you contact your CMS MFP Project Officer to unlock your report while it is in “Submitted” status.",
+            "Double check that everything in your MFP SAR submission is accurate. You will be able to make edits after submitting if you contact your CMS MFP Project Officer to unlock your report while it is in “Submitted” status.",
         },
         {
           type: "text",
@@ -28,14 +28,35 @@ export default {
     },
     modal: {
       structure: {
-        heading: "Are you sure you want to submit SAR?",
+        heading: "Are you sure you want to submit MFP SAR?",
         actionButtonText: "Submit SAR",
         closeButtonText: "Cancel",
       },
-      body: "You won’t be able to make edits after submitting unless you send a request to CMS to unlock your submission. After compliance review, a CMS representative will contact you if there are corrections to be made and your report status will change to “In revision” in the SAR dashboard.",
+      body: "You won’t be able to make edits after submitting unless you send a request to CMS to unlock your submission. After review, a CMS MFP Project Officer will contact you if there are corrections to be made and your report status will change to “In revision” in the MFP SAR dashboard.",
     },
     pageLink: {
       text: "Submit SAR",
+    },
+    adminInfo: {
+      header: "Admin Review",
+      info: [
+        {
+          type: "text",
+          as: "div",
+          content:
+            "<ul><li>To allow a state or territory to make corrections or edits to a submission use “Unlock” to release the submission, then email the state contact and inform them. The status will change to “In revision”.</li><br/></ul>",
+        },
+      ],
+      modal: {
+        unlockModal: {
+          heading: "You unlocked this MFP SAR",
+          actionButtonText: "Return to dashboard",
+          body: "Email the state contact and let them know it requires edits.",
+        },
+      },
+      unlockLink: {
+        text: "Unlock",
+      },
     },
   },
   submitted: {

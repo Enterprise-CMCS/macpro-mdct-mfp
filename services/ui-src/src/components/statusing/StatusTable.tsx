@@ -12,6 +12,7 @@ import verbiage from "verbiage/pages/wp/wp-review-and-submit";
 // assets
 import editIcon from "assets/icons/icon_edit.png";
 import errorIcon from "assets/icons/icon_error_circle_bright.png";
+import iconSearch from "assets/icons/icon_search_blue.png";
 import successIcon from "assets/icons/icon_check_circle.png";
 import { assertExhaustive } from "utils/other/typing";
 
@@ -132,6 +133,9 @@ const EditButton = (
   showIcon = false
 ) => {
   const navigate = useNavigate();
+  const icon = editable ? editIcon : iconSearch;
+  const altText = editable ? "Edit Program" : "View Program";
+  const displayText = editable ? "Edit" : "View";
   return (
     <Button
       sx={sx.enterButton}
@@ -139,8 +143,8 @@ const EditButton = (
       aria-label={buttonAriaLabel}
       onClick={() => navigate(path, { state: { validateOnRender: true } })}
     >
-      {showIcon && <Image src={editIcon} alt="Edit Program" />}
-      {editable ? "Edit" : "View"}
+      {showIcon && <Image src={icon} alt={altText} />}
+      {displayText}
     </Button>
   );
 };
