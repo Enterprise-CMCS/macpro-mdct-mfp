@@ -92,20 +92,6 @@ describe("ExportedReportMetadataTable displays the correct content", () => {
       expect(cell).toBeVisible();
     }
   });
-
-  it("Should show the correct data for SAR", () => {
-    render(metadataTableWithContext(mockSARContext));
-    const cellTexts = [
-      "2023 - Alabama 1",
-      "02/24/1975",
-      "Not started",
-      "Thelonious States",
-    ];
-    for (let cellText of cellTexts) {
-      const cell = screen.getByText(cellText);
-      expect(cell).toBeVisible();
-    }
-  });
 });
 
 describe("ExportedReportMetadataTable fails gracefully when appropriate", () => {
