@@ -72,11 +72,7 @@ export const OverlayModalPage = ({
   };
 
   const openReportEntityModal = () => {
-    /*
-     * console.log(entity);
-     * if (entity) setSelectedStepEntity(entity);
-     * addEditEntityModalOnOpenHandler();
-     */
+    // functionality to come
     return;
   };
 
