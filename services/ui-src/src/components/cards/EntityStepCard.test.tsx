@@ -7,13 +7,19 @@ import {
   mockGenericEntity,
   mockCompletedGenericFormattedEntityData,
   mockUnfinishedGenericFormattedEntityData,
+  mockUseStore,
 } from "utils/testing/setupJest";
 import { EntityStepCard } from "./EntityStepCard";
 import { OverlayModalStepTypes } from "types";
+import { useStore } from "utils";
 
 const openAddEditEntityModal = jest.fn();
 const openDeleteEntityModal = jest.fn();
 const mockOpenDrawer = jest.fn();
+jest.mock("utils/state/useStore");
+
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue(mockUseStore);
 
 const { editEntityButtonText, enterEntityDetailsButtonText } =
   mockModalDrawerReportPageJson.verbiage;
