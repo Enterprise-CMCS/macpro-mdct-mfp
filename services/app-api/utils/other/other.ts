@@ -21,7 +21,7 @@ export const createReportName = (
     reportType === ReportType.SAR ? workPlan?.reportPeriod : reportPeriod;
 
   const fullStateName = States[state as keyof typeof States];
-  return `${fullStateName} ${reportName} ${reportYear} - Period ${period}`;
+  return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
 };
 
 export const lastCreatedWorkPlan = (
