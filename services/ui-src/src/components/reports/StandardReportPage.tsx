@@ -64,11 +64,12 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
     const formDataCopy = JSON.parse(JSON.stringify(formData));
     const formDataFields = JSON.parse(JSON.stringify(formData?.fields));
 
-    //show resubmisison field if report is an 'In Revision' / SAR report
     if (
-      (report?.reportType === "SAR" &&
-        report?.status === ReportStatus.IN_REVISION) ||
-      report?.submissionCount! > 0
+      report?.reportType === "SAR" &&
+      report?.submissionCount! > 1 &&
+      (report?.status === ReportStatus.IN_REVISION ||
+        report?.status === ReportStatus.SUBMITTED ||
+        report?.status === ReportStatus.IN_PROGRESS)
     ) {
       return formDataCopy;
     } else {
