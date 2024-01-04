@@ -4,8 +4,6 @@ import { Table } from "components";
 // types, utils
 import { useStore } from "utils";
 import {
-  Choice,
-  FieldChoice,
   FormField,
   StandardReportPageShape,
   DrawerReportPageShape,
@@ -88,22 +86,6 @@ export const renderFieldTableBody = (
     // for drawer pages, render nested child field if any entity has a checked parent choice
     if (pageType === "drawer") {
       return;
-    } else {
-      // for standard pages, render nested child field if parent choice is checked
-      const nestedChildren = formField?.props?.choices?.filter(
-        (choice: FieldChoice) => {
-          const selected = report?.fieldData[formField.id];
-          const entryExists = selected?.find((selectedChoice: Choice) =>
-            selectedChoice.key.endsWith(choice.id)
-          );
-          return entryExists && choice?.children;
-        }
-      );
-      nestedChildren?.forEach((choice: FieldChoice) =>
-        choice.children?.forEach((childField: FormField) =>
-          renderFieldRow(childField)
-        )
-      );
     }
   };
   // map through form fields and call renderer
@@ -122,6 +104,7 @@ export interface Props {
 
 const sx = {
   root: {
+    border: "10px solid red",
     "@media print": {
       pageBreakInside: "avoid",
     },
