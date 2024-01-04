@@ -66,7 +66,19 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
 
     if (
       report?.reportType === "SAR" &&
-      report?.submissionCount! > 1 &&
+      report?.submissionCount! === 1 &&
+      report?.status === ReportStatus.SUBMITTED
+    ) {
+      const removeResubmissionDataFields: any[] = formDataFields.filter(
+        (data: AnyObject) =>
+          data.id !== "generalInformation_resubmissionInformation"
+      );
+      formDataCopy.fields = [...removeResubmissionDataFields];
+
+      return formDataCopy;
+    } else if (
+      report?.reportType === "SAR" &&
+      report?.submissionCount! >= 1 &&
       (report?.status === ReportStatus.IN_REVISION ||
         report?.status === ReportStatus.SUBMITTED ||
         report?.status === ReportStatus.IN_PROGRESS)
