@@ -64,23 +64,17 @@ export const EntityStepCardTopSection = ({
                 <Text sx={sx.subtitle}>
                   Quantitative targets for this reporting period
                 </Text>
-                <Grid sx={sx.grid}>
+                <Grid sx={sx.sarGrid}>
                   {formattedEntityData?.quarters
                     .slice(0, 2)
                     .map((quarter: any) => {
                       return (
                         <GridItem key={quarter.id}>
                           <Flex sx={sx.gridItems}>
-                            <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
-                            <Text
-                              sx={
-                                quarter.value === notAnsweredText
-                                  ? sx.error
-                                  : sx.subtext
-                              }
-                            >
-                              {quarter.value}
+                            <Text sx={sx.gridSubtitle}>
+                              {quarter.id} Target:
                             </Text>
+                            <Text sx={sx.subtext}>{quarter.value}</Text>
                           </Flex>
                         </GridItem>
                       );
@@ -163,6 +157,13 @@ const sx = {
     gridAutoFlow: "column",
     gridGap: ".5rem",
     marginBottom: "1.25rem",
+  },
+  sarGrid: {
+    display: "grid",
+    gridTemplateRows: "1fr",
+    gridAutoFlow: "column",
+    marginBottom: "1.25rem",
+    width: "50%",
   },
   gridSubtitle: {
     fontWeight: "bold",

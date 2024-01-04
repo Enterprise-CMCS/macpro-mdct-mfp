@@ -27,6 +27,7 @@ export const EntityStepCard = ({
   formattedEntityData,
   verbiage,
   openAddEditEntityModal,
+  openReportEntityModal,
   openDeleteEntityModal,
   openDrawer,
   printVersion,
@@ -142,7 +143,7 @@ export const EntityStepCard = ({
             {verbiage.entityUnfinishedMessage}
           </Text>
         )}
-        {openAddEditEntityModal && (
+        {openAddEditEntityModal && report?.reportType === ReportType.WP && (
           <Button
             variant="outline"
             size="sm"
@@ -153,6 +154,15 @@ export const EntityStepCard = ({
             {props?.disabled
               ? verbiage.readOnlyEntityButtonText
               : verbiage.editEntityButtonText}
+          </Button>
+        )}
+        {openReportEntityModal && (
+          <Button
+            size="md"
+            sx={sx.reportButton}
+            onClick={() => openReportEntityModal(entity)}
+          >
+            {verbiage.editEntityButtonText}
           </Button>
         )}
         {openDrawer && (
@@ -187,6 +197,7 @@ interface Props {
   formattedEntityData: AnyObject;
   verbiage: AnyObject;
   openAddEditEntityModal?: Function;
+  openReportEntityModal?: Function;
   openDeleteEntityModal?: Function;
   openDrawer?: Function;
   printVersion?: boolean;
@@ -268,6 +279,9 @@ const sx = {
     marginY: "1rem",
     fontWeight: "normal",
     borderColor: "palette.gray_light",
+  },
+  reportButton: {
+    fontWeight: "bold",
   },
   openDrawerButton: {
     marginTop: "1rem",

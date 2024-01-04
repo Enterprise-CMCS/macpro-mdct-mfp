@@ -71,6 +71,15 @@ export const OverlayModalPage = ({
     addEditEntityModalOnOpenHandler();
   };
 
+  const openReportEntityModal = () => {
+    /*
+     * console.log(entity);
+     * if (entity) setSelectedStepEntity(entity);
+     * addEditEntityModalOnOpenHandler();
+     */
+    return;
+  };
+
   const closeAddEditEntityModal = () => {
     setSelectedStepEntity(undefined);
     addEditEntityModalOnCloseHandler();
@@ -139,6 +148,7 @@ export const OverlayModalPage = ({
                 printVersion={false}
                 formattedEntityData={getFormattedEntityData(stepType, entity)}
                 openAddEditEntityModal={openAddEditEntityModal}
+                openReportEntityModal={openReportEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
                 disabled={userDisabled}
                 hasBoxShadow={true}
