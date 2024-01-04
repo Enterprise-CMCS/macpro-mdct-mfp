@@ -156,7 +156,7 @@ export const EntityStepCard = ({
               : verbiage.editEntityButtonText}
           </Button>
         )}
-        {openReportEntityModal && (
+        {openReportEntityModal && report?.reportType === ReportType.SAR && (
           <Button
             size="md"
             sx={sx.reportButton}
