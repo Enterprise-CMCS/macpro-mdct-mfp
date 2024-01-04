@@ -98,7 +98,7 @@ describe("ExportedReportFieldRow", () => {
   test("is not visible when ", async () => {
     render(otherTextRow);
     const row = screen.queryByTestId("exportRow");
-    expect(row).toBeNull();
+    expect(row).not.toBeInTheDocument();
   });
 
   test("displays alternate prop fields", async () => {
