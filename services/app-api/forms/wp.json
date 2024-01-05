@@ -941,7 +941,6 @@
                               "validation": {
                                 "type": "endDate",
                                 "dependentFieldName": "defineInitiative_projectedStartDate",
-                                "nested": true,
                                 "parentFieldName": "defineInitiative_projectedEndDate"
                               },
                               "props": {
