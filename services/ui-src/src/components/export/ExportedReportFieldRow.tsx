@@ -31,7 +31,7 @@ export const ExportedReportFieldRow = ({
       {/* label column/cell */}
       <Td sx={sx.labelColumn}>
         {formFieldInfo?.label || formFieldInfo?.hint ? (
-          <Box>
+          <Box data-testid="parentBoxElement">
             {formFieldInfo.label && (
               <Text sx={sx.fieldLabel}>
                 {!isDynamicField

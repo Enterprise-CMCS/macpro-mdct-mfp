@@ -20,7 +20,7 @@ export const AddEditReportModal = ({
 }: Props) => {
   const { createReport, fetchReportsByState, updateReport } =
     useContext(ReportContext);
-  const { full_name } = useStore().user ?? {};
+  const { full_name, userIsAdmin } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { workPlanToCopyFrom } = useStore();
 
@@ -190,7 +190,7 @@ export const AddEditReportModal = ({
     if (reportType === ReportType.WP) {
       return "";
     }
-    return submitting ? <Spinner size="md" /> : "Save";
+    return submitting ? <Spinner size="md" /> : userIsAdmin ? "Return" : "Save";
   };
 
   const isCopyDisabled = () => {
@@ -222,7 +222,8 @@ export const AddEditReportModal = ({
               ? previousReport
               : selectedReport?.formData
           }
-          onSubmit={writeReport}
+          // if view-only (user is admin), close modal
+          onSubmit={userIsAdmin ? modalDisclosure.onClose : writeReport}
           validateOnRender={false}
           dontReset={true}
         />
