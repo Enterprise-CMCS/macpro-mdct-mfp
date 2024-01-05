@@ -76,14 +76,13 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
 
     if (
       report?.reportType === "SAR" &&
-      report?.submissionCount! >= 1 &&
-      (report?.status === ReportStatus.IN_REVISION ||
-        report?.status === ReportStatus.SUBMITTED ||
-        report?.status === ReportStatus.IN_PROGRESS)
+      (report?.submissionCount! === 0 ||
+        (report?.status === ReportStatus.SUBMITTED &&
+          report?.submissionCount! === 1))
     ) {
-      return formDataCopy;
-    } else {
       return hideResubmissionField();
+    } else {
+      return formDataCopy;
     }
   };
 
