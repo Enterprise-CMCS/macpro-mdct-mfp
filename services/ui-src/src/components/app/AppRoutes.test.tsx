@@ -23,6 +23,10 @@ mockedUseStore.mockReturnValue({
 
 mockLDFlags.setDefault({ wpReport: true, sarReport: true });
 
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
+
 const appRoutesComponent = (history: any) => (
   <Router location={history.location} navigator={history}>
     <UserProvider>

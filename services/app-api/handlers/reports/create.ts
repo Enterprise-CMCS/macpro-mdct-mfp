@@ -198,6 +198,11 @@ export const createReport = handler(
     // Being Section - Check if metadata has filled parameter for copyReport
     let newFieldData;
 
+    const updatedValidatedFieldData = {
+      ...validatedFieldData,
+      generalInformation_resubmissionInformation: "N/A",
+    };
+
     if (unvalidatedMetadata.copyReport) {
       const reportPeriod = calculatePeriod(Date.now(), workPlanMetadata);
       const isCurrentPeriod =
@@ -217,11 +222,12 @@ export const createReport = handler(
         state,
         unvalidatedMetadata.copyReport?.fieldDataId,
         formTemplate,
-        validatedFieldData
+        updatedValidatedFieldData
       );
     } else {
-      newFieldData = validatedFieldData;
+      newFieldData = updatedValidatedFieldData;
     }
+
     // End Section - Check if metadata has filled parameter for copyReport
     /*
      * End Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used
