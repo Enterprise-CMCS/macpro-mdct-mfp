@@ -23,6 +23,7 @@ export interface FormLayoutElement {
   id: string;
   type: string;
   props?: AnyObject;
+  transformation?: Transformation;
 }
 
 export interface FormJson {

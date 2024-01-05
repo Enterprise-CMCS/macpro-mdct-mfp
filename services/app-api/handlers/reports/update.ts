@@ -159,17 +159,9 @@ export const updateReport = handler(async (event, context) => {
     };
   }
 
-  // Validation JSON should be there—if it's not, there's an issue.
-  if (!formTemplate.validationJson) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.MISSING_FORM_TEMPLATE,
-    };
-  }
-
   // Validate passed field data
   const validatedFieldData = await validateFieldData(
-    formTemplate.validationJson,
+    formTemplate,
     unvalidatedFieldData
   );
 

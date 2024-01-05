@@ -16,12 +16,12 @@ import s3Lib, {
 import {
   DynamoGet,
   DynamoWrite,
-  FormJson,
   WPReportMetadata,
   S3Get,
   S3Put,
   StatusCodes,
   UserRoles,
+  ReportJson,
 } from "../../utils/types";
 import { calculateCompletionStatus } from "../../utils/validation/completionStatus";
 
@@ -126,13 +126,13 @@ export const releaseReport = handler(async (event) => {
   };
 
   let fieldData: Record<string, any>;
-  let formTemplate: FormJson;
+  let formTemplate: ReportJson;
   try {
     fieldData = (await s3Lib.get(getFieldDataParameters)) as Record<
       string,
       any
     >;
-    formTemplate = (await s3Lib.get(getFormTemplateParameters)) as FormJson;
+    formTemplate = (await s3Lib.get(getFormTemplateParameters)) as ReportJson;
   } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,

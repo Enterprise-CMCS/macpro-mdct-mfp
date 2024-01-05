@@ -1,4 +1,5 @@
 // types
+import { getValidationFromFormTemplate } from "../formTemplates/validationDerivation";
 import {
   AnyObject,
   CompletionData,
@@ -7,6 +8,7 @@ import {
   Choice,
   FormField,
   ReportRoute,
+  ReportJson,
 } from "../types";
 // utils
 import { validateFieldData } from "./completionValidation";
@@ -36,11 +38,11 @@ export const isComplete = (completionStatus: CompletionData): Boolean => {
 // Entry point for calculating completion status
 export const calculateCompletionStatus = async (
   fieldData: AnyObject,
-  formTemplate: AnyObject
+  formTemplate: ReportJson
 ) => {
   // Parent Dictionary for holding all route completion status
 
-  const validationJson = formTemplate.validationJson;
+  const validationJson = getValidationFromFormTemplate(formTemplate, fieldData);
 
   const areFieldsValid = async (
     fieldsToBeValidated: Record<string, string>
@@ -136,7 +138,8 @@ export const calculateCompletionStatus = async (
       } else {
         //Entity not present in report data, so check to see if it is required and update combined result
         areAllFormsComplete &&=
-          formTemplate.entities && !formTemplate.entities[entityType]?.required;
+          !!formTemplate.entities &&
+          !formTemplate.entities[entityType]?.required;
       }
     }
     return areAllFormsComplete;

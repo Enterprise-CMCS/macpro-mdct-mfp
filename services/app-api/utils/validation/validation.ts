@@ -1,7 +1,8 @@
 import { object } from "yup";
 import { error } from "../constants/constants";
+import { getValidationFromFormTemplate } from "../formTemplates/validationDerivation";
 // types
-import { AnyObject } from "../types";
+import { AnyObject, ReportJson } from "../types";
 // utils
 import { nested, endDate, schemaMap } from "./schemaMap";
 
@@ -86,10 +87,15 @@ export const makeNestedFieldSchema = (fieldValidationObject: AnyObject) => {
 };
 
 export const validateFieldData = async (
-  validationJson: AnyObject,
+  formTemplate: ReportJson,
   unvalidatedFieldData: AnyObject
 ) => {
   let validatedFieldData: AnyObject | undefined = undefined;
+  const validationJson = getValidationFromFormTemplate(
+    formTemplate,
+    unvalidatedFieldData
+  );
+
   // filter field validation to just what's needed for the passed fields
   const filteredFieldDataValidationJson = filterValidationSchema(
     validationJson,

@@ -1,3 +1,10 @@
+import {
+  EntityDetailsOverlayShape,
+  FormField,
+  FormJson,
+  ReportJson,
+  ReportRoute,
+} from "../types";
 import { calculateCompletionStatus, isComplete } from "./completionStatus";
 
 describe("Completion Status Tests", () => {
@@ -44,7 +51,6 @@ describe("Completion Status Tests", () => {
               intro: {
                 section: "Section D: Plan-Level Indicators",
                 subsection: "Topic III. Encounter Data",
-                spreadsheet: "D1_Plan_Set",
               },
               dashboardTitle: "Report on encounter data for each plan",
               drawerTitle: "Report encounter data for",
@@ -65,17 +71,19 @@ describe("Completion Status Tests", () => {
             },
             drawerForm: {
               id: "dedr",
-              fields: undefined,
+              fields: [] as FormField[],
             },
           },
         ],
       },
-    ];
+    ] as ReportRoute[];
     test("Basic Standard Form No Fields", async () => {
       jest.clearAllMocks();
 
       const testData = {};
       const formTemplate = {
+        name: "",
+        basePath: "",
         routes: [
           {
             name: "A: Program Information",
@@ -85,12 +93,15 @@ describe("Completion Status Tests", () => {
                 name: "Point of Contact",
                 path: "/mcpar/program-information/point-of-contact",
                 pageType: "standard",
-                form: { fields: [] },
+                form: {
+                  id: "",
+                  fields: [] as FormField[],
+                },
               },
             ],
           },
         ],
-      };
+      } as ReportJson;
       const result = await calculateCompletionStatus(testData, formTemplate);
       expect(result).toStrictEqual({
         "/mcpar/program-information": {
@@ -114,6 +125,7 @@ describe("Completion Status Tests", () => {
                 path: "/mcpar/program-information/point-of-contact",
                 pageType: "standard",
                 form: {
+                  id: "",
                   fields: [
                     {
                       id: "stateName",
@@ -126,12 +138,12 @@ describe("Completion Status Tests", () => {
                       },
                     },
                   ],
-                },
+                } as FormJson,
               },
             ],
           },
         ],
-      };
+      } as ReportJson;
       const result = await calculateCompletionStatus(testData, formTemplate);
       expect(result).toStrictEqual({
         "/mcpar/program-information": {
@@ -141,22 +153,21 @@ describe("Completion Status Tests", () => {
     });
 
     test("Null routes does not cause an exception", async () => {
-      const result = await calculateCompletionStatus({}, {});
+      const result = await calculateCompletionStatus({}, {} as ReportJson);
       expect(result).toMatchObject({});
     });
 
     test("Missing entities does not cause an exception", async () => {
-      const result = await calculateCompletionStatus(
-        {},
-        { routes: entitiesRoutes }
-      );
+      const result = await calculateCompletionStatus({}, {
+        routes: entitiesRoutes,
+      } as ReportJson);
       expect(result).toMatchObject({});
     });
     test("Incomplete entities does not cause an exception", async () => {
-      const result = await calculateCompletionStatus(
-        {},
-        { entities: {}, routes: entitiesRoutes }
-      );
+      const result = await calculateCompletionStatus({}, {
+        entities: {},
+        routes: entitiesRoutes,
+      } as ReportJson);
       expect(result).toMatchObject({});
     });
 
@@ -170,7 +181,14 @@ describe("Completion Status Tests", () => {
             },
           ],
         },
-        { entities: { plans: { required: true } }, routes: entitiesRoutes }
+        {
+          name: "",
+          basePath: "",
+          entities: {
+            plans: { required: true },
+          },
+          routes: entitiesRoutes,
+        } as ReportJson
       );
       expect(result).toMatchObject({});
     });
@@ -194,14 +212,19 @@ describe("Completion Status Tests", () => {
         doublyNestedField1: "not-an-email",
       };
       const formTemplate = {
+        name: "",
+        basePath: "",
         routes: [
           {
+            name: "",
             path: "mock/path",
             pageType: "standard",
             form: {
+              id: "",
               fields: [
                 {
                   id: "field1",
+                  type: "radio",
                   props: {
                     choices: [
                       {
@@ -240,12 +263,9 @@ describe("Completion Status Tests", () => {
                   },
                 },
               ],
-            },
-          },
+            } as FormJson,
+          } as ReportRoute,
         ],
-        validationJson: {
-          doublyNestedField1: "email",
-        },
       };
 
       const result = await calculateCompletionStatus(fieldData, formTemplate);
@@ -265,6 +285,8 @@ describe("Completion Status Tests", () => {
         ],
       };
       const formTemplate = {
+        name: "",
+        basePath: "",
         routes: [
           {
             path: "mock/path",
@@ -274,13 +296,12 @@ describe("Completion Status Tests", () => {
               {
                 pageType: "overlayModal",
                 stepType: "mockStepType",
-              },
+              } as unknown as EntityDetailsOverlayShape,
             ],
             modalForm: {},
           },
         ],
-        validationJson: {},
-      };
+      } as ReportJson;
 
       const result = await calculateCompletionStatus(fieldData, formTemplate);
 
@@ -301,6 +322,8 @@ describe("Completion Status Tests", () => {
       ],
     };
     const formTemplate = {
+      name: "",
+      basePath: "",
       routes: [
         {
           path: "mock/path",
@@ -310,13 +333,12 @@ describe("Completion Status Tests", () => {
             {
               pageType: "overlayModal",
               stepType: "mockStepType",
-            },
+            } as unknown as EntityDetailsOverlayShape,
           ],
           modalForm: {},
         },
       ],
-      validationJson: {},
-    };
+    } as ReportJson;
 
     const result = await calculateCompletionStatus(fieldData, formTemplate);
 
@@ -342,6 +364,8 @@ describe("Completion Status Tests", () => {
       ],
     };
     const formTemplate = {
+      name: "",
+      basePath: "",
       routes: [
         {
           path: "mock/path",
@@ -362,15 +386,12 @@ describe("Completion Status Tests", () => {
                   },
                 ],
               },
-            },
+            } as unknown as EntityDetailsOverlayShape,
           ],
           modalForm: {},
         },
       ],
-      validationJson: {
-        mockFieldId: "email",
-      },
-    };
+    } as ReportJson;
 
     const result = await calculateCompletionStatus(fieldData, formTemplate);
 
@@ -396,6 +417,8 @@ describe("Completion Status Tests", () => {
       ],
     };
     const formTemplate = {
+      name: "",
+      basePath: "",
       routes: [
         {
           path: "mock/path",
@@ -416,15 +439,12 @@ describe("Completion Status Tests", () => {
                   },
                 ],
               },
-            },
+            } as unknown as EntityDetailsOverlayShape,
           ],
-          modalForm: {},
-        },
+          modalForm: {} as FormJson,
+        } as ReportRoute,
       ],
-      validationJson: {
-        mockFieldId: "email",
-      },
-    };
+    } as ReportJson;
 
     const result = await calculateCompletionStatus(fieldData, formTemplate);
 

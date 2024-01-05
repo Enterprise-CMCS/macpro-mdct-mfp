@@ -119,8 +119,6 @@ export interface ReportJson {
   basePath: string;
   routes: ReportRoute[];
   flatRoutes?: ReportRoute[];
-  validationSchema?: AnyObject;
-  validationJson?: AnyObject;
 }
 
 export type ReportRoute = ReportRouteWithForm | ReportRouteWithoutForm;

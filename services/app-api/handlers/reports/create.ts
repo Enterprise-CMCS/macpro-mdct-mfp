@@ -38,7 +38,7 @@ import {
   StatusCodes,
   UserRoles,
 } from "../../utils/types";
-import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
+import { getOrCreateFormTemplate } from "../../utils/formTemplates/versioning";
 import { logger } from "../../utils/logging";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { copyFieldDataFromSource } from "../../utils/other/copy";
@@ -153,9 +153,6 @@ export const createReport = handler(
       ({ formTemplate, formTemplateVersion } = await getOrCreateFormTemplate(
         reportBucket,
         reportType,
-        reportPeriod,
-        reportYear,
-        workPlanFieldData,
         unvalidatedMetadata?.copyReport!
       ));
     } catch (err) {
@@ -165,7 +162,7 @@ export const createReport = handler(
     // End Section - Getting/Creating newest Form Template based on reportType
 
     // Return MISSING_DATA error if missing unvalidated data or validators.
-    if (!unvalidatedFieldData || !formTemplate.validationJson) {
+    if (!unvalidatedFieldData) {
       return {
         status: StatusCodes.BAD_REQUEST,
         body: error.MISSING_DATA,
@@ -183,6 +180,19 @@ export const createReport = handler(
       validatedFieldData = {
         ...validatedFieldData,
         ...workPlanFieldData,
+        /*
+         * TODO, putting this data in its own special field may be unnecessary;
+         * since the entire work plan is copied over, that data is already present.
+         */
+        _targetPopulationsFromWP: workPlanFieldData.targetPopulations.map(
+          (population: any) => ({
+            name: population.transitionBenchmarks_targetPopulationName,
+            label:
+              population.isRequired === true
+                ? `Number of ${population.transitionBenchmarks_targetPopulationName}`
+                : `Other: ${population.transitionBenchmarks_targetPopulationName}`,
+          })
+        ),
       };
     }
 
@@ -222,6 +232,7 @@ export const createReport = handler(
     } else {
       newFieldData = validatedFieldData;
     }
+
     // End Section - Check if metadata has filled parameter for copyReport
     /*
      * End Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used

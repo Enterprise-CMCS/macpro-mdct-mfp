@@ -1,4 +1,4 @@
-import { getPossibleFieldsFromFormTemplate } from "../formTemplates/formTemplates";
+import { getPossibleFieldsFromFormTemplate } from "../formTemplates/validationDerivation";
 import s3Lib, { getFieldDataKey } from "../s3/s3-lib";
 import { AnyObject, State } from "../types";
 
@@ -34,7 +34,10 @@ export async function copyFieldDataFromSource(
   })) as AnyObject;
 
   if (sourceFieldData) {
-    const possibleFields = getPossibleFieldsFromFormTemplate(formTemplate);
+    const possibleFields = getPossibleFieldsFromFormTemplate(
+      formTemplate,
+      validatedFieldData
+    );
     Object.keys(sourceFieldData).forEach((key: string) => {
       // Only iterate through entities, not choice lists
       if (Array.isArray(sourceFieldData[key])) {

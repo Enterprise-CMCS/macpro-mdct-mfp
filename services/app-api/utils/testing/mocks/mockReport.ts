@@ -29,9 +29,6 @@ export const mockReportJson = {
   basePath: "/mock",
   routes: mockReportRoutes,
   validationSchema: {},
-  validationJson: {
-    "mock-number-field": "number",
-  },
 };
 
 export const mockReportKeys = {
@@ -108,7 +105,6 @@ export const mockWPMetadata = {
     version: "WP_2023-08-21",
     entities: [],
     routes: [],
-    validationJson: [],
   },
   fieldData: {
     targetPopulations: [],

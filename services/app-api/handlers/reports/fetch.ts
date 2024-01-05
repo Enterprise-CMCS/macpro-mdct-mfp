@@ -17,7 +17,13 @@ import {
   isComplete,
 } from "../../utils/validation/completionStatus";
 // types
-import { AnyObject, isState, S3Get, StatusCodes } from "../../utils/types";
+import {
+  AnyObject,
+  isState,
+  ReportJson,
+  S3Get,
+  StatusCodes,
+} from "../../utils/types";
 
 export const fetchReport = handler(async (event, _context) => {
   const requiredParams = ["reportType", "id", "state"];
@@ -64,7 +70,7 @@ export const fetchReport = handler(async (event, _context) => {
       Key: getFormTemplateKey(formTemplateId),
     };
 
-    const formTemplate = (await s3Lib.get(formTemplateParams)) as AnyObject; // TODO: strict typing
+    const formTemplate = (await s3Lib.get(formTemplateParams)) as ReportJson;
     if (!formTemplate) {
       return {
         status: StatusCodes.NOT_FOUND,
@@ -78,7 +84,7 @@ export const fetchReport = handler(async (event, _context) => {
       Key: getFieldDataKey(state, fieldDataId),
     };
 
-    const fieldData = (await s3Lib.get(fieldDataParams)) as AnyObject; // TODO: strict typing
+    const fieldData = (await s3Lib.get(fieldDataParams)) as AnyObject;
 
     if (!fieldData) {
       return {
