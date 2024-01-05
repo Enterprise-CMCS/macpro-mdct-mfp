@@ -990,9 +990,9 @@
               "dashboardTitle": "Objectives progress"
             },
             "editEntityButtonText": "Report objective progress",
+            "addEditModalEditTitle": "Report progress for ",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
-            "modalTitle": "Report progress for ",
             "editEntityHint": "Select \"Edit\" to report the objectives progress.",
             "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab."
           },
@@ -1012,30 +1012,33 @@
                 "type": "radio",
                 "validation": "radio",
                 "props": {
-                  "label": "Were targets for performance measures and/or expected time frames for deliverables met?"
-                },
-                "choices": [
-                  {
-                    "id": "2WaO1Jj3pyUN0j9KjeOqR",
-                    "label": "Yes"
-                  },
-                  {
-                    "id": "2WaO1K5umgZcZV4bAW5sPu",
-                    "label": "No",
-                    "children": [
-                      {
-                        "id": "objectivesProgress_deliverablesMet-otherText",
-                        "type": "textarea",
-                        "validation": {
-                          "type": "text",
-                          "parentFieldName": "objectivesProgress_deliverablesMet",
-                          "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
-                          "nested": true
+                  "label": "Were targets for performance measures and/or expected time frames for deliverables met?",
+                  "choices": [
+                    {
+                      "id": "2WaO1Jj3pyUN0j9KjeOqR",
+                      "label": "Yes"
+                    },
+                    {
+                      "id": "2WaO1K5umgZcZV4bAW5sPu",
+                      "label": "No",
+                      "children": [
+                        {
+                          "id": "objectivesProgress_deliverablesMet-otherText",
+                          "props": {
+                            "label": "Describe progress toward reaching the target/milestone during the reporting period. How close are you to meeting the target? How do you plan to address any obstacle(s) to meeting the target?"
+                          },
+                          "type": "textarea",
+                          "validation": {
+                            "type": "text",
+                            "parentFieldName": "objectivesProgress_deliverablesMet",
+                            "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
+                            "nested": true
+                          }
                         }
-                      }
-                    ]
-                  }
-                ]
+                      ]
+                    }
+                  ]
+                }
               }
             ]
           }
