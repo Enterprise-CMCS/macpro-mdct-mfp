@@ -45,7 +45,7 @@ import { copyFieldDataFromSource } from "../../utils/other/copy";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
-    if (!hasPermissions(event, [UserRoles.STATE_USER, UserRoles.STATE_REP])) {
+    if (!hasPermissions(event, [UserRoles.STATE_USER])) {
       return {
         status: StatusCodes.UNAUTHORIZED,
         body: error.UNAUTHORIZED,
