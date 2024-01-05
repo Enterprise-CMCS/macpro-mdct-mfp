@@ -61,14 +61,10 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
 
   const filterResubmissionData = (formData: FormJson) => {
     //make deep copies of formData
-    const formDataCopy = JSON.parse(JSON.stringify(formData));
-    const formDataFields = JSON.parse(JSON.stringify(formData?.fields));
+    const formDataCopy = structuredClone(formData);
+    const formDataFields = structuredClone(formData?.fields);
 
-    if (
-      report?.reportType === "SAR" &&
-      report?.submissionCount! === 1 &&
-      report?.status === ReportStatus.SUBMITTED
-    ) {
+    const hideResubmissionField = () => {
       const removeResubmissionDataFields: any[] = formDataFields.filter(
         (data: AnyObject) =>
           data.id !== "generalInformation_resubmissionInformation"
@@ -76,7 +72,9 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
       formDataCopy.fields = [...removeResubmissionDataFields];
 
       return formDataCopy;
-    } else if (
+    };
+
+    if (
       report?.reportType === "SAR" &&
       report?.submissionCount! >= 1 &&
       (report?.status === ReportStatus.IN_REVISION ||
@@ -85,13 +83,7 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
     ) {
       return formDataCopy;
     } else {
-      const removeResubmissionDataFields: any[] = formDataFields.filter(
-        (data: AnyObject) =>
-          data.id !== "generalInformation_resubmissionInformation"
-      );
-      formDataCopy.fields = [...removeResubmissionDataFields];
-
-      return formDataCopy;
+      return hideResubmissionField();
     }
   };
 
