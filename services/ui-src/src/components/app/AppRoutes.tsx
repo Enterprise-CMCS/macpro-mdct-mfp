@@ -18,10 +18,6 @@ import { ScrollToTopComponent, useStore } from "utils";
 // types
 import { ReportRoute, ReportType } from "types";
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 export const AppRoutes = () => {
   const { userIsAdmin } = useStore().user ?? {};
   const { report } = useStore();
