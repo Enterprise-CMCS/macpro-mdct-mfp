@@ -40,7 +40,7 @@ export const AddEditReportModal = ({
   const modalFormJson = modalFormJsonMap[reportType]!;
   const form: FormJson = modalFormJson;
 
-  //temporary flag for testing copyover
+  // temporary flag for testing copyover
   const isCopyOverTest = useFlags()?.isCopyOverTest;
 
   /**
@@ -81,7 +81,7 @@ export const AddEditReportModal = ({
       },
     ];
 
-    //add a flag to be passed to the backend for copy over testing
+    // add a flag to be passed to the backend for copy over testing
     if (previousReport) {
       previousReport.isCopyOverTest = isCopyOverTest;
     }
@@ -90,9 +90,10 @@ export const AddEditReportModal = ({
       metadata: {
         submissionName,
         lastAlteredBy: full_name,
-        copyReport: wpReset ? null : previousReport,
+        copyReport: previousReport,
         locked: false,
         previousRevisions: [],
+        isReset: wpReset,
       },
       fieldData: {
         submissionName,
