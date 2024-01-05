@@ -78,8 +78,7 @@ export const UserProvider = ({ children }: Props) => {
         userIsAdmin:
           userRole === UserRoles.ADMIN || userRole === UserRoles.APPROVER,
         userIsReadOnly: userRole === UserRoles.HELP_DESK,
-        userIsEndUser:
-          userRole === UserRoles.STATE_REP || userRole === UserRoles.STATE_USER,
+        userIsEndUser: userRole === UserRoles.STATE_USER,
       };
       const currentUser: MFPUser = {
         email,
