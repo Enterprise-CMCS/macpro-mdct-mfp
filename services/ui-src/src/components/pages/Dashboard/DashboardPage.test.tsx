@@ -174,11 +174,13 @@ describe("Test Report Dashboard with no reports", () => {
   });
 
   test("WP Dashboard renders table with empty text", () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
     render(wpDashboardWithNoReports);
     expect(screen.getByText(wpVerbiage.body.empty)).toBeVisible();
   });
 
   test("SAR Dashboard renders table with empty text", () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
     render(sarDashboardWithNoReports);
     expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
   });

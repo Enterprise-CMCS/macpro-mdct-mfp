@@ -33,9 +33,7 @@ describe("Test TemplateCardAccordion", () => {
     expect(
       screen.getByText(verbiage.cards.WP.accordion.buttonLabel)
     ).toBeVisible();
-    expect(
-      screen.getByText(verbiage.cards.WP.accordion.text)
-    ).not.toBeVisible();
+    expect(screen.getByTestId("accordion-contents")).not.toBeVisible();
   });
 
   test("Accordion should show answer on click", async () => {
@@ -44,12 +42,10 @@ describe("Test TemplateCardAccordion", () => {
       verbiage.cards.WP.accordion.buttonLabel
     );
     expect(accordionQuestion).toBeVisible();
-    expect(
-      screen.getByText(verbiage.cards.WP.accordion.text)
-    ).not.toBeVisible();
+    expect(screen.getByTestId("accordion-contents")).not.toBeVisible();
     await userEvent.click(accordionQuestion);
     expect(accordionQuestion).toBeVisible();
-    expect(screen.getByText(verbiage.cards.WP.accordion.text)).toBeVisible();
+    expect(screen.getByTestId("accordion-contents")).toBeVisible();
   });
 
   test("Accordion should render a list when given one", async () => {
