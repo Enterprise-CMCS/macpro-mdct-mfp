@@ -15,6 +15,7 @@ import {
   isFieldElement,
   ReportStatus,
   ReportShape,
+  FormJson,
 } from "types";
 // utils
 import { filterFormData, useFindRoute, useStore } from "utils";
@@ -58,6 +59,33 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
     navigate(nextRoute);
   };
 
+  const filterResubmissionData = (formData: FormJson) => {
+    //make deep copies of formData
+    const formDataCopy = structuredClone(formData);
+    const formDataFields = structuredClone(formData?.fields);
+
+    const hideResubmissionField = () => {
+      const removeResubmissionDataFields: any[] = formDataFields.filter(
+        (data: AnyObject) =>
+          data.id !== "generalInformation_resubmissionInformation"
+      );
+      formDataCopy.fields = [...removeResubmissionDataFields];
+
+      return formDataCopy;
+    };
+
+    if (
+      report?.reportType === "SAR" &&
+      (report?.submissionCount! === 0 ||
+        (report?.status === ReportStatus.SUBMITTED &&
+          report?.submissionCount! === 1))
+    ) {
+      return hideResubmissionField();
+    } else {
+      return formDataCopy;
+    }
+  };
+
   return (
     <Box>
       {route.verbiage?.intro && (
@@ -69,7 +97,7 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
       )}
       <Form
         id={route.form.id}
-        formJson={route.form}
+        formJson={filterResubmissionData(route.form)}
         onSubmit={onSubmit}
         onError={onError}
         formData={report?.fieldData}
