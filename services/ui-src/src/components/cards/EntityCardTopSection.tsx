@@ -2,12 +2,14 @@
 import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
 import { notAnsweredText } from "../../constants";
 // utils
-import { AnyObject, OverlayModalStepTypes } from "types";
+import { AnyObject, OverlayModalStepTypes, ReportType } from "types";
+import { useStore } from "utils";
 
 export const EntityStepCardTopSection = ({
   stepType,
   formattedEntityData,
 }: Props) => {
+  const { report } = useStore() ?? {};
   switch (stepType) {
     case OverlayModalStepTypes.EVALUATION_PLAN:
       return (
@@ -22,44 +24,75 @@ export const EntityStepCardTopSection = ({
           <Text sx={sx.description}>{formattedEntityData.description}</Text>
           <Text sx={sx.subtitle}>Performance measure targets</Text>
           <Text sx={sx.description}>{formattedEntityData.targets}</Text>
-          <Text sx={sx.subtitle}>
-            Does the performance measure include quantitative targets?
-          </Text>
-          <Text sx={sx.description}>
-            {formattedEntityData?.includesTargets}
-          </Text>
-          {formattedEntityData.quarters.length > 0 && (
+          {report?.reportType === ReportType.WP && (
             <>
-              <Text sx={sx.subtitle}>Quantitative Targets</Text>
-              <Grid sx={sx.grid}>
-                {formattedEntityData?.quarters.map((quarter: any) => {
-                  return (
-                    <GridItem key={quarter.id}>
-                      <Flex sx={sx.gridItems}>
-                        <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
-                        <Text
-                          sx={
-                            quarter.value === notAnsweredText
-                              ? sx.error
-                              : sx.subtext
-                          }
-                        >
-                          {quarter.value}
-                        </Text>
-                      </Flex>
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <Text sx={sx.subtitle}>
+                Does the performance measure include quantitative targets?
+              </Text>
+              <Text sx={sx.description}>
+                {formattedEntityData?.includesTargets}
+              </Text>
             </>
           )}
-          <Text sx={sx.subtitle}>
-            Additional detail on strategies/approaches the state or territory
-            will use to achieve targets and/ or meet milestones
-          </Text>
-          <Text sx={sx.description}>
-            {formattedEntityData.additionalDetails}
-          </Text>{" "}
+          {formattedEntityData.quarters.length > 0 &&
+            (report?.reportType === ReportType.WP ? (
+              <>
+                <Text sx={sx.subtitle}>Quantitative Targets</Text>
+                <Grid sx={sx.grid}>
+                  {formattedEntityData?.quarters.map((quarter: any) => {
+                    return (
+                      <GridItem key={quarter.id}>
+                        <Flex sx={sx.gridItems}>
+                          <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
+                          <Text
+                            sx={
+                              quarter.value === notAnsweredText
+                                ? sx.error
+                                : sx.subtext
+                            }
+                          >
+                            {quarter.value}
+                          </Text>
+                        </Flex>
+                      </GridItem>
+                    );
+                  })}
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Text sx={sx.subtitle}>
+                  Quantitative targets for this reporting period
+                </Text>
+                <Grid sx={sx.sarGrid}>
+                  {formattedEntityData?.quarters
+                    .slice(0, 2)
+                    .map((quarter: any) => {
+                      return (
+                        <GridItem key={quarter.id}>
+                          <Flex sx={sx.gridItems}>
+                            <Text sx={sx.gridSubtitle}>
+                              {quarter.id} Target:
+                            </Text>
+                            <Text sx={sx.subtext}>{quarter.value}</Text>
+                          </Flex>
+                        </GridItem>
+                      );
+                    })}
+                </Grid>
+              </>
+            ))}
+          {report?.reportType === ReportType.WP && (
+            <>
+              <Text sx={sx.subtitle}>
+                Additional detail on strategies/approaches the state or
+                territory will use to achieve targets and/ or meet milestones
+              </Text>
+              <Text sx={sx.description}>
+                {formattedEntityData.additionalDetails}
+              </Text>{" "}
+            </>
+          )}
         </>
       );
     case OverlayModalStepTypes.FUNDING_SOURCES:
@@ -124,6 +157,13 @@ const sx = {
     gridAutoFlow: "column",
     gridGap: ".5rem",
     marginBottom: "1.25rem",
+  },
+  sarGrid: {
+    display: "grid",
+    gridTemplateRows: "1fr",
+    gridAutoFlow: "column",
+    marginBottom: "1.25rem",
+    width: "50%",
   },
   gridSubtitle: {
     fontWeight: "bold",
