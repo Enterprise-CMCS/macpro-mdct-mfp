@@ -71,13 +71,6 @@ export const OverlayModalPage = ({
     addEditEntityModalOnOpenHandler();
   };
 
-  const openReportEntityModal = (entity?: EntityShape) => {
-    if (entity) setSelectedStepEntity(entity);
-    addEditEntityModalOnOpenHandler();
-    //probably just remove this in favor of reusing the openAddEditEntityModal function
-    return;
-  };
-
   const closeAddEditEntityModal = () => {
     setSelectedStepEntity(undefined);
     addEditEntityModalOnCloseHandler();
@@ -146,7 +139,6 @@ export const OverlayModalPage = ({
                 printVersion={false}
                 formattedEntityData={getFormattedEntityData(stepType, entity)}
                 openAddEditEntityModal={openAddEditEntityModal}
-                openReportEntityModal={openReportEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
                 disabled={userDisabled}
                 hasBoxShadow={true}

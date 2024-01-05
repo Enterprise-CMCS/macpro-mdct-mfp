@@ -8,14 +8,12 @@ import {
   mockCompletedGenericFormattedEntityData,
   mockUnfinishedGenericFormattedEntityData,
   mockUseStore,
-  mockUseSARStore,
 } from "utils/testing/setupJest";
 import { EntityStepCard } from "./EntityStepCard";
 import { OverlayModalStepTypes } from "types";
 import { useStore } from "utils";
 
 const openAddEditEntityModal = jest.fn();
-const openReportEntityModal = jest.fn();
 const openDeleteEntityModal = jest.fn();
 const mockOpenDrawer = jest.fn();
 jest.mock("utils/state/useStore");
@@ -113,7 +111,6 @@ const CompletedEvaluationPlanCardComponent = (
     formattedEntityData={mockCompletedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}
-    openReportEntityModal={openReportEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
     printVersion={false}
@@ -269,18 +266,6 @@ describe("Test Generic EntityCard accessibility", () => {
     const { container } = render(GenericEntityTypeEntityCardComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
-  });
-});
-
-describe("SAR TESTS", () => {
-  beforeEach(async () => {
-    mockedUseStore.mockReturnValue(mockUseSARStore);
-  });
-  test("Completed evaluation plan card should have a button to edit details", async () => {
-    render(CompletedEvaluationPlanCardComponent);
-    const reportEntityButton = screen.getByText(editEntityButtonText);
-    await userEvent.click(reportEntityButton);
-    await expect(openReportEntityModal).toBeCalledTimes(1);
   });
 });
 
