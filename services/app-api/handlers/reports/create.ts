@@ -143,8 +143,13 @@ export const createReport = handler(
       unvalidatedMetadata?.copyReport?.isCopyOverTest;
 
     if (overrideCopyOver) {
+      if (unvalidatedMetadata?.copyReport?.reportPeriod)
+        reportPeriod = unvalidatedMetadata?.copyReport?.reportPeriod;
+      if (unvalidatedMetadata?.copyReport?.reportYear)
+        reportYear = unvalidatedMetadata?.copyReport?.reportYear;
+
       reportYear = reportPeriod == 2 ? reportYear + 1 : reportYear;
-      reportPeriod = reportPeriod == 1 ? 2 : 1;
+      reportPeriod = (reportPeriod % 2) + 1;
     }
 
     // Begin Section - Getting/Creating newest Form Template based on reportType
@@ -155,8 +160,7 @@ export const createReport = handler(
         reportType,
         reportPeriod,
         reportYear,
-        workPlanFieldData,
-        unvalidatedMetadata?.copyReport!
+        workPlanFieldData
       ));
     } catch (err) {
       logger.error(err, "Error getting or creating template");
