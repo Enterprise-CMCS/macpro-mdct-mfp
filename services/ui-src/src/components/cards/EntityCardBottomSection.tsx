@@ -29,14 +29,19 @@ export const EntityStepCardBottomSection = ({ stepType, entity }: Props) => {
                 {entity?.objectivesProgress_deliverablesMet[0].value}
               </Text>
 
-              {/* this one should be optional, based on if they asnwered no to the above */}
-              <Text sx={sx.subtitle}>
-                Describe progress toward reaching the target/milestone during
-                the reporting period. How close are you to meeting the target?
-                How do you plan to address any obstacle(s) to meeting the
-                target?
-              </Text>
-              <Text sx={sx.description}>placeholder text</Text>
+              {entity?.objectivesProgress_deliverablesMet_otherText && (
+                <>
+                  <Text sx={sx.subtitle}>
+                    Describe progress toward reaching the target/milestone
+                    during the reporting period. How close are you to meeting
+                    the target? How do you plan to address any obstacle(s) to
+                    meeting the target?
+                  </Text>
+                  <Text sx={sx.description}>
+                    {entity?.objectivesProgress_deliverablesMet_otherText}
+                  </Text>
+                </>
+              )}
             </Box>
           </>
         );

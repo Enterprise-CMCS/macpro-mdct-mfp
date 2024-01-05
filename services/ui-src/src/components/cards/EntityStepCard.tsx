@@ -150,28 +150,35 @@ export const EntityStepCard = ({
             {verbiage.entityUnfinishedMessage}
           </Text>
         )}
-        {openAddEditEntityModal && report?.reportType === ReportType.WP && (
-          <Button
-            variant="outline"
-            size="sm"
-            sx={sx.editButton}
-            leftIcon={<Image src={editIcon} alt="edit icon" height="1rem" />}
-            onClick={() => openAddEditEntityModal(entity)}
-          >
-            {props?.disabled
-              ? verbiage.readOnlyEntityButtonText
-              : verbiage.editEntityButtonText}
-          </Button>
-        )}
-        {openReportEntityModal && report?.reportType === ReportType.SAR && (
-          <Button
-            size="md"
-            sx={sx.reportButton}
-            onClick={() => openReportEntityModal(entity)}
-          >
-            {verbiage.editEntityButtonText}
-          </Button>
-        )}
+        {(openAddEditEntityModal && report?.reportType === ReportType.WP) ||
+          (openAddEditEntityModal &&
+            report?.reportType === ReportType.SAR &&
+            entityCompleted && (
+              <Button
+                variant="outline"
+                size="sm"
+                sx={sx.editButton}
+                leftIcon={
+                  <Image src={editIcon} alt="edit icon" height="1rem" />
+                }
+                onClick={() => openAddEditEntityModal(entity)}
+              >
+                {props?.disabled
+                  ? verbiage.readOnlyEntityButtonText
+                  : verbiage.editEntityButtonText}
+              </Button>
+            ))}
+        {openReportEntityModal &&
+          report?.reportType === ReportType.SAR &&
+          !entityCompleted && (
+            <Button
+              size="md"
+              sx={sx.reportButton}
+              onClick={() => openReportEntityModal(entity)}
+            >
+              {verbiage.reportProgressButtonText}
+            </Button>
+          )}
         {openDrawer && (
           <Button
             size="sm"

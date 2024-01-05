@@ -989,7 +989,8 @@
               ],
               "dashboardTitle": "Objectives progress"
             },
-            "editEntityButtonText": "Report objective progress",
+            "editEntityButtonText": "Edit objective progress",
+            "reportProgressButtonText": "Report objective progress",
             "addEditModalEditTitle": "Report progress for ",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
@@ -1023,7 +1024,7 @@
                       "label": "No",
                       "children": [
                         {
-                          "id": "objectivesProgress_deliverablesMet-otherText",
+                          "id": "objectivesProgress_deliverablesMet_otherText",
                           "props": {
                             "label": "Describe progress toward reaching the target/milestone during the reporting period. How close are you to meeting the target? How do you plan to address any obstacle(s) to meeting the target?"
                           },
