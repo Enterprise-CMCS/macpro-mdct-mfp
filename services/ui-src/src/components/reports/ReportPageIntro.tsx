@@ -25,6 +25,9 @@ export const ReportPageIntro = ({
       </Heading>
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
       {accordion && <InstructionsAccordion verbiage={accordion} />}
+      <Heading as="h3" sx={sx.subTitle}>
+        Objectives progress
+      </Heading>
       {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
       <ReportPeriod
         text={text}
@@ -61,8 +64,13 @@ const sx = {
     color: "#5B616B",
     paddingTop: "1.5rem",
   },
+  subTitle: {
+    color: "palette.gray",
+    fontSize: "md",
+    margin: "1.5rem 0 -0.75rem 0",
+  },
   infoTextBox: {
-    marginTop: "1.5rem",
+    marginTop: "1rem",
     color: "palette.gray",
     h3: {
       marginBottom: "-0.75rem",
