@@ -98,6 +98,7 @@ export const EntityStepCard = ({
     ) {
       return (
         <Button
+          data-testid="report-button"
           size="md"
           sx={sx.reportButton}
           onClick={() => openAddEditEntityModal(entity)}

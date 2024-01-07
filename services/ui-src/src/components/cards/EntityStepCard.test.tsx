@@ -8,6 +8,7 @@ import {
   mockCompletedGenericFormattedEntityData,
   mockUnfinishedGenericFormattedEntityData,
   mockUseStore,
+  mockUseSARStore,
 } from "utils/testing/setupJest";
 import { EntityStepCard } from "./EntityStepCard";
 import { OverlayModalStepTypes } from "types";
@@ -165,6 +166,19 @@ const CompletedFundingSourcesCardComponent = (
   />
 );
 
+const NoOpenAddEditEntityFunction = (
+  <EntityStepCard
+    entity={mockGenericEntity}
+    entityIndex={0}
+    stepType="mock-step-type"
+    formattedEntityData={mockUnfinishedGenericFormattedEntityData}
+    verbiage={mockModalDrawerReportPageJson.verbiage}
+    openDeleteEntityModal={openDeleteEntityModal}
+    openDrawer={mockOpenDrawer}
+    printVersion={false}
+  />
+);
+
 describe("Test Completed EntityCard", () => {
   beforeEach(() => {
     render(GenericEntityTypeEntityCardComponent);
@@ -274,5 +288,23 @@ describe("PrintOnly TESTS", () => {
     render(PrintViewEntityTypeEntityCardComponent);
     const element = screen.getByTestId("print-status-indicator");
     expect(element).toBeVisible();
+  });
+});
+
+describe("SAR TESTS", () => {
+  beforeEach(async () => {
+    mockedUseStore.mockReturnValue(mockUseSARStore);
+  });
+  test("Completed evaluation plan card should have a button to edit details", async () => {
+    render(CompletedEvaluationPlanCardComponent);
+    const reportEntityButton = screen.getByTestId("report-button");
+    expect(reportEntityButton).toBeVisible();
+    await userEvent.click(reportEntityButton);
+    await expect(openAddEditEntityModal).toBeCalledTimes(1);
+  });
+  test("Completed evaluation plan card without OpenAddEditModal function doesn't show a button", async () => {
+    render(NoOpenAddEditEntityFunction);
+    const reportEntityButton = screen.queryByTestId("report-button");
+    expect(reportEntityButton).not.toBeInTheDocument();
   });
 });
