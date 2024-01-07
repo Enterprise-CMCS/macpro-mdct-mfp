@@ -11,7 +11,10 @@ export const EntityStepCardBottomSection = ({ stepType, entity }: Props) => {
       if (report?.reportType === ReportType.SAR) {
         return (
           <>
-            <Box sx={sx.objectiveProgressBox}>
+            <Box
+              sx={sx.objectiveProgressBox}
+              data-testid="objective-progress-box"
+            >
               <Text sx={sx.subtitle}>
                 Performance measure progress toward milestones and key
                 deliverables for current reporting period
@@ -31,7 +34,7 @@ export const EntityStepCardBottomSection = ({ stepType, entity }: Props) => {
 
               {entity?.objectivesProgress_deliverablesMet_otherText && (
                 <>
-                  <Text sx={sx.subtitle}>
+                  <Text sx={sx.subtitle} data-testid="deliverables-other">
                     Describe progress toward reaching the target/milestone
                     during the reporting period. How close are you to meeting
                     the target? How do you plan to address any obstacle(s) to

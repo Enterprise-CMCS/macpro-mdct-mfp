@@ -18,6 +18,11 @@ export const mockGenericEntity = {
   generic_oversightMethodFrequency: [
     { value: "mock-oversight-method-frequency" },
   ],
+  objectivesProgress_performanceMeasuresIndicators:
+    "mock performace indicator answer",
+  objectivesProgress_deliverablesMet: [{ value: "No" }],
+  objectivesProgress_deliverablesMet_otherText:
+    "mock deliverables met other text",
 };
 
 export const mockUnfinishedGenericFormattedEntityData = {
