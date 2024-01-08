@@ -98,8 +98,8 @@ export const renderFieldTableBody = (
       formField.props.choices.forEach((choice: FieldChoice) => {
         //check to see if the choice exist in the field
         const isChoiceInField =
-          entity[formField.id].length > 0 &&
-          entity[formField.id].find((field: any) =>
+          entity[formField.id]?.length > 0 &&
+          entity[formField.id]?.find((field: any) =>
             field.key?.endsWith(choice.id)
           );
         // If choice has been selected

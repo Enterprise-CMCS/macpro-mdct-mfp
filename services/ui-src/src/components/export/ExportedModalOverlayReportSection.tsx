@@ -204,6 +204,9 @@ export function renderModalOverlayTableBody(
                     </Box>
                   );
                 case EntityDetailsStepTypes.CLOSE_OUT_INFORMATION:
+                  //clean up title
+                  step[1] = (step[1] as string).replace(" (if applicable)", "");
+
                   return (
                     entity?.isInitiativeClosed && (
                       <Box key={idx}>

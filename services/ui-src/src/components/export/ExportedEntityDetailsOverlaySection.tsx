@@ -64,12 +64,10 @@ export function getEntityTableComponents(
       </Box>
       {closed && (
         <Box sx={sx.sectionHeading}>
-          <Text sx={sx.fieldLabel} fontSize={"sm"}>
+          <Text sx={sx.tableIndex} fontSize={"sm"}>
             Closed by
           </Text>
-          <Text sx={sx.fieldHint} fontSize={"sm"}>
-            {entity.closedBy}
-          </Text>
+          <Text fontSize={"sm"}>{entity.closedBy}</Text>
         </Box>
       )}
       <Fragment>
@@ -207,17 +205,5 @@ const sx = {
   },
   sectionHeading: {
     padding: "1.5rem 0 0 0",
-  },
-  fieldLabel: {
-    fontSize: "sm",
-    fontWeight: "bold",
-    ".optional-text": {
-      fontWeight: "lighter",
-    },
-  },
-  fieldHint: {
-    lineHeight: "lg",
-    fontSize: "sm",
-    color: "palette.base",
   },
 };
