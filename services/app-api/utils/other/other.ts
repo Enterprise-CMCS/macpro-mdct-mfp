@@ -33,7 +33,7 @@ export const lastCreatedWorkPlan = (
   currentWorkPlans.forEach((workPlan: ReportMetadataShape) => {
     /*
      * ...if the workplan hasn't been used to create a SAR before AND
-     * the work plan has a status of "Not Started" OR "In Progress"...
+     * the work plan has a status of "Approved"...
      */
     if (workPlan.status === ReportStatus.APPROVED && !workPlan?.associatedSar) {
       /*

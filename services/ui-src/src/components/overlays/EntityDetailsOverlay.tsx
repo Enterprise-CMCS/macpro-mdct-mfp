@@ -391,8 +391,9 @@ const sx = {
     },
   },
   reviewPdfHint: {
-    paddingTop: "1rem",
+    paddingTop: "2rem",
+    paddingBottom: "2rem",
     color: "palette.gray_medium",
   },
-  reviewPdfButton: { marginTop: "1.5rem", marginBottom: "2rem" },
+  reviewPdfButton: { marginBottom: "2rem" },
 };
