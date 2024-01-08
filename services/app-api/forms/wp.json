@@ -1261,7 +1261,8 @@
                     "type": "date",
                     "validation": "date",
                     "props": {
-                      "label": "Actual end date"
+                      "label": "Actual end date",
+                      "hint": "MM/DD/YYYY"
                     }
                   },
                   {

@@ -96,13 +96,18 @@ export const renderFieldTableBody = (
     // Handle rendering nested children
     if (isFieldElement(formField) && formField.props?.choices) {
       formField.props.choices.forEach((choice: FieldChoice) => {
+        //check to see if the choice exist in the field
+        const isChoiceInField =
+          entity[formField.id].length > 0 &&
+          entity[formField.id].find((field: any) =>
+            field.key?.endsWith(choice.id)
+          );
         // If choice has been selected
         if (
           entity &&
           entity[formField.id] &&
           Array.isArray(entity[formField.id]) &&
-          entity[formField.id].length > 0 &&
-          entity[formField.id][0].key?.endsWith(choice.id)
+          isChoiceInField
         ) {
           if (choice.children) {
             choice.children.forEach((c) => renderFieldRow(c));

@@ -1,5 +1,5 @@
 // components
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
 import uuid from "react-uuid";
 // components
@@ -20,13 +20,15 @@ import { assertExhaustive } from "utils/other/typing";
 export const ExportedEntityDetailsOverlaySection = ({
   entity,
   entityStep,
+  closed,
   ...props
 }: ExportedEntityDetailsOverlaySectionProps) => {
   const { report } = useStore() ?? {};
 
   return (
     <Box sx={sx.sectionHeading} {...props}>
-      {report && renderEntityDetailTables(report, entity ?? [], entityStep)}
+      {report &&
+        renderEntityDetailTables(report, entity ?? [], entityStep, closed)}
     </Box>
   );
 };
@@ -35,6 +37,7 @@ export interface ExportedEntityDetailsOverlaySectionProps {
   section: ModalOverlayReportPageShape;
   entity: EntityShape;
   entityStep: (string | FormLayoutElement | FormField)[];
+  closed?: boolean;
 }
 
 /**
@@ -46,7 +49,8 @@ export interface ExportedEntityDetailsOverlaySectionProps {
 export function getEntityTableComponents(
   report: ReportShape,
   entity: EntityShape,
-  entityStep: (string | FormLayoutElement | FormField)[]
+  entityStep: (string | FormLayoutElement | FormField)[],
+  closed?: boolean
 ) {
   const entityStepFields = entityStep.slice(3) as FormField[];
   const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
@@ -58,6 +62,16 @@ export function getEntityTableComponents(
           <Box sx={sx.stepHint}>{entityStep[2]}</Box>
         </Heading>
       </Box>
+      {closed && (
+        <Box sx={sx.sectionHeading}>
+          <Text sx={sx.fieldLabel} fontSize={"sm"}>
+            Closed by
+          </Text>
+          <Text sx={sx.fieldHint} fontSize={"sm"}>
+            {entity.closedBy}
+          </Text>
+        </Box>
+      )}
       <Fragment>
         <ExportedEntityDetailsTable
           fields={updatedEntityStepFields as FormField[]}
@@ -81,12 +95,13 @@ export function getEntityTableComponents(
 export function renderEntityDetailTables(
   report: ReportShape,
   entity: EntityShape,
-  entityStep: (string | FormLayoutElement | FormField)[]
+  entityStep: (string | FormLayoutElement | FormField)[],
+  closed?: boolean
 ) {
   const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
     case ReportType.WP: {
-      return getEntityTableComponents(report!, entity, entityStep);
+      return getEntityTableComponents(report!, entity, entityStep, closed);
     }
     case ReportType.SAR:
       throw new Error(
@@ -192,5 +207,17 @@ const sx = {
   },
   sectionHeading: {
     padding: "1.5rem 0 0 0",
+  },
+  fieldLabel: {
+    fontSize: "sm",
+    fontWeight: "bold",
+    ".optional-text": {
+      fontWeight: "lighter",
+    },
+  },
+  fieldHint: {
+    lineHeight: "lg",
+    fontSize: "sm",
+    color: "palette.base",
   },
 };
