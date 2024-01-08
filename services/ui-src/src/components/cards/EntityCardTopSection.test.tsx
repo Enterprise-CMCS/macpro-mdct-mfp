@@ -1,7 +1,14 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { EntityStepCardTopSection } from "./EntityCardTopSection";
 import { OverlayModalStepTypes } from "../../types";
-import { mockCompletedGenericFormattedEntityData } from "../../utils/testing/setupJest";
+import {
+  mockCompletedGenericFormattedEntityData,
+  mockUseSARStore,
+} from "../../utils/testing/setupJest";
+import { useStore } from "utils";
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const genericEntityStepCardTopSection = (
   <EntityStepCardTopSection
@@ -55,5 +62,16 @@ describe("Test EntityStepCardTopSection renders", () => {
     expect(
       topSection.getByText("Projected quarterly expenditures")
     ).toBeVisible();
+  });
+});
+
+describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
+  beforeEach(async () => {
+    mockedUseStore.mockReturnValue(mockUseSARStore);
+  });
+  test("EntityStepCardTopSection grid renders correctly for SAR", () => {
+    render(evaluationPlanEntityStepCardTopSection);
+    const sarGrid = screen.getByTestId("sar-grid");
+    expect(sarGrid).toBeVisible();
   });
 });

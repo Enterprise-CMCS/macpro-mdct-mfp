@@ -27,7 +27,6 @@ export const EntityStepCard = ({
   formattedEntityData,
   verbiage,
   openAddEditEntityModal,
-  openReportEntityModal,
   openDeleteEntityModal,
   openDrawer,
   printVersion,
@@ -42,6 +41,12 @@ export const EntityStepCard = ({
   switch (stepType) {
     case OverlayModalStepTypes.EVALUATION_PLAN:
       entityCompleted = formattedEntityData?.objectiveName;
+      if (report?.reportType === ReportType.SAR) {
+        // still need to add conditional for quantitative objectives
+        entityCompleted =
+          entity?.objectivesProgress_performanceMeasuresIndicators &&
+          entity?.objectivesProgress_deliverablesMet[0].value;
+      }
       if (entityCompleted && formattedEntityData?.includesTargets === "Yes") {
         entityCompleted = formattedEntityData?.quarters.length === 12;
         if (formattedEntityData?.quarters)
@@ -66,6 +71,45 @@ export const EntityStepCard = ({
   const boxShadow = hasBoxShadow ? "0px 3px 9px rgba(0, 0, 0, 0.2)" : "none";
   const border = hasBorder ? "1px" : "none";
   const borderColor = hasBorder ? "#D3D3D3" : "none";
+  const addEditEntitybutton = () => {
+    if (
+      (openAddEditEntityModal && report?.reportType === ReportType.WP) ||
+      (openAddEditEntityModal &&
+        report?.reportType === ReportType.SAR &&
+        entityCompleted)
+    ) {
+      return (
+        <Button
+          variant="outline"
+          size="sm"
+          sx={sx.editButton}
+          leftIcon={<Image src={editIcon} alt="edit icon" height="1rem" />}
+          onClick={() => openAddEditEntityModal(entity)}
+        >
+          {props?.disabled
+            ? verbiage.readOnlyEntityButtonText
+            : verbiage.editEntityButtonText}
+        </Button>
+      );
+    } else if (
+      openAddEditEntityModal &&
+      report?.reportType === ReportType.SAR &&
+      !entityCompleted
+    ) {
+      return (
+        <Button
+          data-testid="report-button"
+          size="md"
+          sx={sx.reportButton}
+          onClick={() => openAddEditEntityModal(entity)}
+        >
+          {verbiage.reportProgressButtonText}
+        </Button>
+      );
+    } else {
+      return;
+    }
+  };
 
   return (
     <Card
@@ -132,6 +176,7 @@ export const EntityStepCard = ({
           <EntityStepCardBottomSection
             stepType={stepType}
             verbiage={verbiage}
+            entity={entity}
             formattedEntityData={{
               ...formattedEntityData,
               isPartiallyComplete: !entityCompleted,
@@ -143,28 +188,7 @@ export const EntityStepCard = ({
             {verbiage.entityUnfinishedMessage}
           </Text>
         )}
-        {openAddEditEntityModal && report?.reportType === ReportType.WP && (
-          <Button
-            variant="outline"
-            size="sm"
-            sx={sx.editButton}
-            leftIcon={<Image src={editIcon} alt="edit icon" height="1rem" />}
-            onClick={() => openAddEditEntityModal(entity)}
-          >
-            {props?.disabled
-              ? verbiage.readOnlyEntityButtonText
-              : verbiage.editEntityButtonText}
-          </Button>
-        )}
-        {openReportEntityModal && report?.reportType === ReportType.SAR && (
-          <Button
-            size="md"
-            sx={sx.reportButton}
-            onClick={() => openReportEntityModal(entity)}
-          >
-            {verbiage.editEntityButtonText}
-          </Button>
-        )}
+        {addEditEntitybutton()}
         {openDrawer && (
           <Button
             size="sm"
@@ -197,7 +221,6 @@ interface Props {
   formattedEntityData: AnyObject;
   verbiage: AnyObject;
   openAddEditEntityModal?: Function;
-  openReportEntityModal?: Function;
   openDeleteEntityModal?: Function;
   openDrawer?: Function;
   printVersion?: boolean;
