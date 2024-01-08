@@ -42,6 +42,10 @@
                 "target": "_blank",
                 "aria-label": "User Guide and Help File (Link opens in new tab)"
               }
+            },
+            {
+              "type": "html",
+              "content": "."
             }
           ]
         },
@@ -331,7 +335,7 @@
                                   "borderBottom": "1px solid #D9D9D9"
                                 }
                               },
-                              "content": "Required* Initiatives"
+                              "content": "<span aria-label='Required by Program Terms and Conditions'>'Required* Initiatives'</span>"
                             },
                             {
                               "type": "th",
@@ -749,7 +753,7 @@
                 "validation": "radio",
                 "props": {
                   "label": "Work Plan topic:",
-                  "hint": "Note: Initiative topics with * are required and must be selected at least once across all initiatives.",
+                  "hint": "Note: Initiative topics with <span aria-label='asterisk'>*</span> are required and must be selected at least once across all initiatives.",
                   "choices": [
                     {
                       "id": "VjQ0OFqior9Dxu5RRNiZ5u",
@@ -790,6 +794,14 @@
                     {
                       "id": "GCBzQ9GDWMwILW0sBQ2dhN",
                       "label": "Direct service workforce and caregivers"
+                    },
+                    {
+                      "id": "jZCOy2pgOiAxgnHDfizer4",
+                      "label": "Employment support"
+                    },
+                    {
+                      "id": "xpdOyHiM2GesrYekAT2s1U",
+                      "label": "Convenient and accessible transportation options"
                     },
                     {
                       "id": "K8WifjAU3SymG751jAvv6j",
@@ -889,11 +901,11 @@
                       "hint": [
                         {
                           "type": "html",
-                          "content": "Select all that apply. Populations you’ve added as “Other” in the Transition Benchmarks section will appear here. Note: if your target population does not appear here, go to"
+                          "content": "Select all that apply. Populations you’ve added as “Other” in the Transition Benchmarks section will appear here. Note: if your target population does not appear here, go to "
                         },
                         {
                           "type": "internalLink",
-                          "content": " Transition Benchmarks",
+                          "content": "Transition Benchmarks",
                           "props": {
                             "to": "/wp/transition-benchmarks"
                           }
@@ -933,7 +945,6 @@
                               "validation": {
                                 "type": "endDate",
                                 "dependentFieldName": "defineInitiative_projectedStartDate",
-                                "nested": true,
                                 "parentFieldName": "defineInitiative_projectedEndDate"
                               },
                               "props": {

@@ -20,6 +20,7 @@ import {
   mockWPApprovedFullReport,
   mockWPSubmittedReport,
   mockWPFullReport,
+  mockSARFullReport,
 } from "./mockReport";
 
 // GLOBALS
@@ -132,21 +133,6 @@ export const mockStateApproverStore: MfpUserState = {
   setShowLocalLogins: () => {},
 };
 
-export const mockStateRepStore: MfpUserState = {
-  user: {
-    userRole: UserRoles.STATE_REP,
-    email: "staterep@test.com",
-    given_name: "Robert",
-    family_name: "States",
-    full_name: "Robert States",
-    state: "MA",
-    userIsEndUser: true,
-  },
-  showLocalLogins: true,
-  setUser: () => {},
-  setShowLocalLogins: () => {},
-};
-
 export const mockHelpDeskUserStore: MfpUserState = {
   user: {
     userRole: UserRoles.HELP_DESK,
@@ -217,6 +203,24 @@ export const mockReportStore: MfpReportState = {
   setEditable: () => {},
 };
 
+export const mockSARReportStore: MfpReportState = {
+  report: mockSARFullReport as ReportShape,
+  reportsByState: [],
+  submittedReportsByState: [mockSARFullReport],
+  lastSavedTime: "1:58 PM",
+  workPlanToCopyFrom: undefined,
+  autosaveState: false,
+  editable: true,
+  setReport: () => {},
+  setReportsByState: () => {},
+  clearReportsByState: () => {},
+  setSubmittedReportsByState: () => {},
+  setLastSavedTime: () => {},
+  setWorkPlanToCopyFrom: () => {},
+  setAutosaveState: () => {},
+  setEditable: () => {},
+};
+
 export const mockEntityStore: MfpEntityState = {
   selectedEntity: {
     id: "mock-id",
@@ -253,6 +257,13 @@ export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
   ...mockStateUserStore,
   ...mockBannerStore,
 };
+
+export const mockUseSARStore: MfpUserState & AdminBannerState & MfpReportState =
+  {
+    ...mockSARReportStore,
+    ...mockStateUserStore,
+    ...mockBannerStore,
+  };
 
 export const mockUseEmptyReportStore: MfpUserState &
   AdminBannerState &

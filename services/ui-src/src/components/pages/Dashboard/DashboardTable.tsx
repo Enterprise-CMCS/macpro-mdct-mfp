@@ -32,15 +32,13 @@ export const DashboardTable = ({
     {reportsByState.map((report: ReportMetadataShape) => (
       <Tr key={report.id}>
         {/* Edit Button */}
-        {isStateLevelUser &&
-          !report?.locked &&
-          reportType === ReportType.SAR && (
-            <EditReportButton
-              report={report}
-              openAddEditReportModal={openAddEditReportModal}
-              sxOverride={sxOverride}
-            />
-          )}
+        {!report?.locked && reportType === ReportType.SAR && (
+          <EditReportButton
+            report={report}
+            openAddEditReportModal={openAddEditReportModal}
+            sxOverride={sxOverride}
+          />
+        )}
         {/* Report Name */}
         {reportType === ReportType.WP ? (
           <Td sx={sxOverride.wpSubmissionNameText}>{report.submissionName}</Td>
@@ -48,7 +46,7 @@ export const DashboardTable = ({
           <Td sx={sxOverride.sarSubmissionNameText}>{report.submissionName}</Td>
         )}
         {/* Target populations */}
-        {reportType === ReportType.SAR && report?.populations && (
+        {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Td>{prettifyChoices(report?.populations)}</Td>
         )}
         {/* Date Fields */}
@@ -162,7 +160,7 @@ const tableBody = (body: TableContentShape, isAdmin: boolean) => {
     return tableContent;
   } else {
     tableContent.headRow = tableContent.headRow!.filter(
-      (e) => e !== "Due date"
+      (e) => e !== "Due date" && e !== "Target populations"
     );
   }
   return body;
