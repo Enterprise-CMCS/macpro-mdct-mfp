@@ -1,7 +1,40 @@
-import { getLastSubmission } from "./reports";
+import { flattenReportRoutesArray, getLastSubmission } from "./reports";
 //types
-import { ReportMetadataShape, ReportStatus } from "types";
+import { ReportMetadataShape, ReportRoute, ReportStatus } from "types";
 import { convertDateEtToUtc } from "utils/other/time";
+
+describe("flattenReportRoutesArray", () => {
+  describe("Should find all form routes, including nested ones", () => {
+    const reportRoutes: ReportRoute[] = [
+      {
+        name: "foo",
+        path: "foo",
+        children: [
+          {
+            name: "bar",
+            path: "foo/bar",
+            children: [
+              {
+                name: "baz",
+                path: "foo/bar/baz",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        name: "quux",
+        path: "quux",
+      },
+    ];
+
+    const flattenedRoutes = flattenReportRoutesArray(reportRoutes);
+
+    // Only form routes are included; routes with children don't matter here.
+    expect(flattenedRoutes).toHaveLength(2);
+    expect(flattenedRoutes.map((r) => r.name)).toEqual(["baz", "quux"]);
+  });
+});
 
 describe("Test lastFoundSubmission function", () => {
   it("should grab the last submission based on the time", async () => {

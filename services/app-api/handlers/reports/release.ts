@@ -140,13 +140,21 @@ export const releaseReport = handler(async (event) => {
     };
   }
 
+  const updatedFieldData = {
+    ...fieldData,
+    generalInformation_resubmissionInformation: "",
+  };
+
   const newReportMetadata: WPReportMetadata = {
     ...metadata,
     fieldDataId: newFieldDataId,
     locked: false,
     previousRevisions,
     status: "In revision",
-    completionStatus: await calculateCompletionStatus(fieldData, formTemplate),
+    completionStatus: await calculateCompletionStatus(
+      updatedFieldData,
+      formTemplate
+    ),
   };
 
   const putReportMetadataParams: DynamoWrite = {
@@ -168,7 +176,7 @@ export const releaseReport = handler(async (event) => {
     const putObjectParameters: S3Put = {
       Bucket: reportBucket,
       Body: JSON.stringify({
-        ...fieldData,
+        ...updatedFieldData,
       }),
       ContentType: "application/json",
       Key: getFieldDataKey(metadata.state, newFieldDataId),

@@ -6,14 +6,19 @@ import {
 } from "components";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
-import { AnyObject, EntityShape, OverlayModalStepTypes } from "types";
+import {
+  AnyObject,
+  EntityShape,
+  OverlayModalStepTypes,
+  ReportType,
+} from "types";
 // assets
 import { svgFilters } from "styles/theme";
 import completedIcon from "assets/icons/icon_check_circle.png";
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
-import { fillEmptyQuarters } from "utils";
+import { fillEmptyQuarters, useStore } from "utils";
 
 export const EntityStepCard = ({
   entity,
@@ -22,6 +27,7 @@ export const EntityStepCard = ({
   formattedEntityData,
   verbiage,
   openAddEditEntityModal,
+  openReportEntityModal,
   openDeleteEntityModal,
   openDrawer,
   printVersion,
@@ -31,7 +37,7 @@ export const EntityStepCard = ({
 }: Props) => {
   let entityCompleted = false;
   const entitiesCount = `${entityIndex + 1} / ${entity[stepType]?.length}`;
-
+  const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
   switch (stepType) {
     case OverlayModalStepTypes.EVALUATION_PLAN:
@@ -103,7 +109,7 @@ export const EntityStepCard = ({
             )}
           </Box>
         )}
-        {openDeleteEntityModal && (
+        {openDeleteEntityModal && report?.reportType === ReportType.WP && (
           <button
             type="button"
             className="delete-entity-button"
@@ -137,7 +143,7 @@ export const EntityStepCard = ({
             {verbiage.entityUnfinishedMessage}
           </Text>
         )}
-        {openAddEditEntityModal && (
+        {openAddEditEntityModal && report?.reportType === ReportType.WP && (
           <Button
             variant="outline"
             size="sm"
@@ -148,6 +154,15 @@ export const EntityStepCard = ({
             {props?.disabled
               ? verbiage.readOnlyEntityButtonText
               : verbiage.editEntityButtonText}
+          </Button>
+        )}
+        {openReportEntityModal && report?.reportType === ReportType.SAR && (
+          <Button
+            size="md"
+            sx={sx.reportButton}
+            onClick={() => openReportEntityModal(entity)}
+          >
+            {verbiage.editEntityButtonText}
           </Button>
         )}
         {openDrawer && (
@@ -182,6 +197,7 @@ interface Props {
   formattedEntityData: AnyObject;
   verbiage: AnyObject;
   openAddEditEntityModal?: Function;
+  openReportEntityModal?: Function;
   openDeleteEntityModal?: Function;
   openDrawer?: Function;
   printVersion?: boolean;
@@ -263,6 +279,9 @@ const sx = {
     marginY: "1rem",
     fontWeight: "normal",
     borderColor: "palette.gray_light",
+  },
+  reportButton: {
+    fontWeight: "bold",
   },
   openDrawerButton: {
     marginTop: "1rem",

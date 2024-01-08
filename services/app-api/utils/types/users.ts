@@ -5,7 +5,6 @@ export enum UserRoles {
   HELP_DESK = "mdctmfp-help-desk", // "MDCT MFP Help Desk"
   INTERNAL = "mdctmfp-internal-user", // "MDCT MFP Internal User"
   APPROVER = "mdctmfp-approver", // "MDCT MFP Approver"
-  STATE_REP = "mdctmfp-state-rep", // "MDCT MFP State Representative"
   STATE_USER = "mdctmfp-state-user", // "MDCT MFP State User"
 }
 
