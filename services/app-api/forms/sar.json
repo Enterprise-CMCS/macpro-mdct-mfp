@@ -1010,6 +1010,80 @@
                   "label": "Provide data on performance measures or indicators used for monitoring progress toward the objective during the current reporting period. Include progress toward milestones and key deliverables."
                 }
               },
+
+              {
+                "id": "objectivesProgress_quantitativeActualQ1",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Actual value",
+                  "heading": "a. First Quarter (January 1 - March 31)"
+                }
+              },
+              {
+                "id": "objectivesProgress_quantitativeTargetQ1",
+                "type": "number",
+                "props": {
+                  "label": "Target Value",
+                  "hint": "Auto-populates from Work Plan.",
+                  "disabled": true
+                }
+              },
+              {
+                "id": "objectivesProgress_quantitativeActualQ2",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Actual value",
+                  "heading": "b. Second Quarter (April 1 - June 30)"
+                }
+              },
+              {
+                "id": "objectivesProgress_quantitativeTargetQ2",
+                "type": "number",
+                "props": {
+                  "label": "Target Value",
+                  "hint": "Auto-populates from Work Plan.",
+                  "disabled": true
+                }
+              },
+              {
+                "id": "objectivesProgress_quantitativeActualQ3",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Actual value",
+                  "heading": "a. Third Quarter (July 1 - September 30)"
+                }
+              },
+              {
+                "id": "objectivesProgress_quantitativeTargetQ3",
+                "type": "number",
+                "props": {
+                  "label": "Target Value",
+                  "hint": "Auto-populates from Work Plan.",
+                  "disabled": true
+                }
+              },
+              {
+                "id": "objectivesProgress_quantitativeActualQ4",
+                "type": "number",
+                "validation": "number",
+                "props": {
+                  "label": "Actual value",
+                  "heading": "b. Fourth Quarter (October 1 - December 31)"
+                }
+              },
+              {
+                "id": "objectivesProgress_quantitativeTargetQ4",
+                "type": "number",
+                "props": {
+                  "label": "Target Value",
+                  "hint": "Auto-populates from Work Plan.",
+                  "disabled": true
+                }
+              },
+
               {
                 "id": "objectivesProgress_deliverablesMet",
                 "type": "radio",
