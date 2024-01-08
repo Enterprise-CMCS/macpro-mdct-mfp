@@ -42,6 +42,10 @@
                 "target": "_blank",
                 "aria-label": "User Guide and Help File (Link opens in new tab)"
               }
+            },
+            {
+              "type": "html",
+              "content": "."
             }
           ]
         },
@@ -897,11 +901,11 @@
                       "hint": [
                         {
                           "type": "html",
-                          "content": "Select all that apply. Populations you’ve added as “Other” in the Transition Benchmarks section will appear here. Note: if your target population does not appear here, go to"
+                          "content": "Select all that apply. Populations you’ve added as “Other” in the Transition Benchmarks section will appear here. Note: if your target population does not appear here, go to "
                         },
                         {
                           "type": "internalLink",
-                          "content": " Transition Benchmarks",
+                          "content": "Transition Benchmarks",
                           "props": {
                             "to": "/wp/transition-benchmarks"
                           }
