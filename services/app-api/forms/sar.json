@@ -996,7 +996,8 @@
             "readOnlyEntityDetailsButtonText": "View",
             "readOnlyEntityButtonText": "View",
             "editEntityHint": "Select \"Edit\" to report the objectives progress.",
-            "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab.",
+            "entityUnfinishedMessage": "Report objective progress to complete this section"
           },
           "modalForm": {
             "id": "stsiop-modal",
