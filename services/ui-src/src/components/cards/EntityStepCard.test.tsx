@@ -15,7 +15,6 @@ import { OverlayModalStepTypes } from "types";
 import { useStore } from "utils";
 
 const openAddEditEntityModal = jest.fn();
-const openReportEntityModal = jest.fn();
 const openDeleteEntityModal = jest.fn();
 const mockOpenDrawer = jest.fn();
 jest.mock("utils/state/useStore");
@@ -113,7 +112,6 @@ const CompletedEvaluationPlanCardComponent = (
     formattedEntityData={mockCompletedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}
-    openReportEntityModal={openReportEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
     printVersion={false}
@@ -162,6 +160,19 @@ const CompletedFundingSourcesCardComponent = (
     }}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}
+    openDeleteEntityModal={openDeleteEntityModal}
+    openDrawer={mockOpenDrawer}
+    printVersion={false}
+  />
+);
+
+const NoOpenAddEditEntityFunction = (
+  <EntityStepCard
+    entity={mockGenericEntity}
+    entityIndex={0}
+    stepType="mock-step-type"
+    formattedEntityData={mockUnfinishedGenericFormattedEntityData}
+    verbiage={mockModalDrawerReportPageJson.verbiage}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
     printVersion={false}
@@ -272,22 +283,28 @@ describe("Test Generic EntityCard accessibility", () => {
   });
 });
 
+describe("PrintOnly TESTS", () => {
+  test("in Print View the status indicator should be visible", async () => {
+    render(PrintViewEntityTypeEntityCardComponent);
+    const element = screen.getByTestId("print-status-indicator");
+    expect(element).toBeVisible();
+  });
+});
+
 describe("SAR TESTS", () => {
   beforeEach(async () => {
     mockedUseStore.mockReturnValue(mockUseSARStore);
   });
   test("Completed evaluation plan card should have a button to edit details", async () => {
     render(CompletedEvaluationPlanCardComponent);
-    const reportEntityButton = screen.getByText(editEntityButtonText);
+    const reportEntityButton = screen.getByTestId("report-button");
+    expect(reportEntityButton).toBeVisible();
     await userEvent.click(reportEntityButton);
-    await expect(openReportEntityModal).toBeCalledTimes(1);
+    await expect(openAddEditEntityModal).toBeCalledTimes(1);
   });
-});
-
-describe("PrintOnly TESTS", () => {
-  test("in Print View the status indicator should be visible", async () => {
-    render(PrintViewEntityTypeEntityCardComponent);
-    const element = screen.getByTestId("print-status-indicator");
-    expect(element).toBeVisible();
+  test("Completed evaluation plan card without OpenAddEditModal function doesn't show a button", async () => {
+    render(NoOpenAddEditEntityFunction);
+    const reportEntityButton = screen.queryByTestId("report-button");
+    expect(reportEntityButton).not.toBeInTheDocument();
   });
 });
