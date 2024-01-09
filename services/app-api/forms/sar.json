@@ -105,7 +105,9 @@
           {
             "id": "generalInformation_hasAorChangedSinceLastReport",
             "type": "radio",
-            "validation":"radio",
+            "validation": {
+              "type": "radio"
+            },
             "props": {
               "label": "Has the AOR changed since last report?",
               "choices": [
@@ -989,7 +991,6 @@
               ],
               "dashboardTitle": "Objectives progress"
             },
-            "editEntityButtonText": "Report objective progress",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
             "modalTitle": "Report progress for ",

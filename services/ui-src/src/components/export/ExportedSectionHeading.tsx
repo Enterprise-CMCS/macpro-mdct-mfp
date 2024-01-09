@@ -9,6 +9,7 @@ export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
   const sectionHeading = verbiage?.intro?.exportSectionHeader
     ? verbiage?.intro?.exportSectionHeader
     : verbiage?.intro?.subsection || heading;
+  const sectionHint = verbiage?.intro?.hint ? verbiage?.intro?.hint : null;
   const sectionInfo =
     verbiage?.intro?.exportSectionHeader ||
     verbiage?.intro?.subsection === "State- or Territory-Specific Initiatives"
@@ -22,6 +23,7 @@ export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
       <Heading as="h2" sx={sx.heading}>
         {sectionHeading}
       </Heading>
+      <Box sx={sx.hintTextBox}>{sectionHint}</Box>
       {!stateAndTerritory && sectionInfo && (
         <Box sx={sx.info}>{parseCustomHtml(sectionInfo)}</Box>
       )}
@@ -47,12 +49,20 @@ const sx = {
     fontWeight: "bold",
   },
   info: {
+    paddingTop: "1.5rem",
     p: {
       margin: "1.5rem 0",
     },
     h3: {
       fontSize: "lg",
     },
+    li: {
+      paddingBottom: "1.5rem",
+    },
+  },
+  hintTextBox: {
+    color: "#5B616B",
+    margin: "1.5rem 0",
   },
   spreadsheet: {
     margin: "1.5rem 0",

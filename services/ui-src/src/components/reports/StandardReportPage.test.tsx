@@ -8,10 +8,6 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const standardPageSectionComponent = (
   <RouterWrappedComponent>
     <StandardReportPage route={mockStandardReportPageJson} />
