@@ -11,8 +11,27 @@ export const ExportedReportMetadataTable = ({
 }: Props) => {
   const { report } = useStore() ?? {};
   return (
+    <>
+      <Table
+        data-testid="exportedReportMetadataTable"
+        sx={sx.metadataTable}
+        content={{
+          headRow: headerRowLabels(reportType, verbiage),
+          bodyRows: bodyRowContent(reportType, report),
+        }}
+      />
+      {reportType === ReportType.SAR && (
+        <ExportedSarDetailsTable reportType={reportType} verbiage={verbiage} />
+      )}
+    </>
+  );
+};
+
+export const ExportedSarDetailsTable = ({ reportType, verbiage }: Props) => {
+  const { report } = useStore() ?? {};
+  return (
     <Table
-      data-testid="exportedReportMetadataTable"
+      data-testid="exportedSarDetailsTable"
       sx={sx.metadataTable}
       content={{
         headRow: headerRowLabels(reportType, verbiage),
@@ -73,9 +92,10 @@ export const bodyRowContent = (
       return [
         [
           report?.submissionName ?? "",
-          convertDateUtcToEt(report?.lastAltered),
-          report?.lastAlteredBy,
-          report?.status,
+          convertDateUtcToEt(report.dueDate),
+          convertDateUtcToEt(report.lastAltered),
+          report.status,
+          report.lastAlteredBy,
         ],
       ];
     default:

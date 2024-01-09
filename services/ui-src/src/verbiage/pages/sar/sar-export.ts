@@ -15,10 +15,15 @@ export default {
   reportPage: {
     heading: "Managed Care Program Annual Report (SAR) for ",
     metadataTableHeaders: {
+      submissionName: "Submission Name",
       dueDate: "Due date",
       lastEdited: "Last edited",
       editedBy: "Edited by",
       status: "Status",
+    },
+    detailsTableHeaders: {
+      indicator: "Indicator",
+      response: "Response",
     },
     combinedDataTable: {
       title: "Exclusion of CHIP from SAR",
@@ -31,6 +36,7 @@ export default {
     indicator: "Indicator",
     response: "Response",
   },
+  modalOverlayTableHeaders: {},
   emptyEntityMessage: {
     accessMeasures: "0  - No access measures entered",
     sanctions: "0 - No sanctions entered",

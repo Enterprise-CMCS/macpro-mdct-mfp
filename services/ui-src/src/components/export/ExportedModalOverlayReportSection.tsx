@@ -212,9 +212,7 @@ export function renderModalOverlayTableBody(
         );
       });
     case ReportType.SAR:
-      throw new Error(
-        `The modal overlay table headers for report type '${reportType}' have not been implemented.`
-      );
+      return <></>;
     default:
       assertExhaustive(reportType);
       throw new Error(
