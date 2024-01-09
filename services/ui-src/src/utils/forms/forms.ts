@@ -345,7 +345,44 @@ export const updateRenderFields = (
     "targetPopulations",
     formatChoiceList
   );
-  return updateTargetPopulationChoiceList;
+
+  const applicableTargetPopulations = filterApplicableTargetPopulations(
+    formatChoiceList,
+    fields
+  );
+
+  return report?.reportType === "SAR"
+    ? applicableTargetPopulations
+    : updateTargetPopulationChoiceList;
+};
+
+/**
+ * We will only render the applicable target populations from the WP on the SAR.
+ * This method filters the "populations" formFields and only includes the applicable target populations from the WP.
+ * All other form fields, such as headers, radio buttons, etc are included.
+ *
+ * NOTE: This method assumes that applicable target populations have an id that includes the string "populations".
+ * @param choiceList A list of applicable target populations from the WP
+ * @param formFields A complete list of form fields that are going to be rendered
+ * @returns filtered form fields for rendering on the SAR
+ */
+const filterApplicableTargetPopulations = (
+  choiceList: AnyObject[],
+  formFields: (FormField | FormLayoutElement)[]
+) => {
+  const filteredFormField: (FormField | FormLayoutElement)[] = [];
+  formFields.map((formField) => {
+    if (formField.id.includes("populations") && choiceList !== undefined) {
+      choiceList.map((choiceItem) => {
+        if (formField.id.includes(choiceItem.label)) {
+          filteredFormField.push(formField);
+        }
+      });
+    } else {
+      filteredFormField.push(formField);
+    }
+  });
+  return filteredFormField;
 };
 
 export const updateFieldChoicesByID = (
