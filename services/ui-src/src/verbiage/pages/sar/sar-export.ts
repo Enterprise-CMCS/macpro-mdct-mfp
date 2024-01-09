@@ -26,6 +26,7 @@ export default {
         "Enrollees in separate CHIP programs funded under Title XXI should not be reported in the SAR. Please check this box if the state is unable to remove information about Separate CHIP enrollees from its reporting on this program.",
     },
   },
+  modalOverlayTableHeaders: {},
   tableHeaders: {
     number: "Number",
     indicator: "Indicator",

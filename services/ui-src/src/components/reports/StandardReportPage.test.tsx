@@ -8,15 +8,15 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const standardPageSectionComponent = (
   <RouterWrappedComponent>
     <StandardReportPage route={mockStandardReportPageJson} />
   </RouterWrappedComponent>
 );
+
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
 
 describe("Test StandardReportPage", () => {
   test("StandardReportPage view renders", () => {
