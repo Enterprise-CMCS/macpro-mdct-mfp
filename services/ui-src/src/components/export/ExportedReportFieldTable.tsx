@@ -11,6 +11,7 @@ import {
   FormLayoutElement,
   isFieldElement,
   ReportType,
+  FieldChoice,
 } from "types";
 // verbiage
 import verbiage from "verbiage/pages/wp/wp-export";
@@ -87,7 +88,17 @@ export const renderFieldTableBody = (
     if (pageType === "drawer") {
       return;
     }
+
+    // Handle rendering nested children
+    if (isFieldElement(formField) && formField.props?.choices) {
+      formField.props.choices.forEach((choice: FieldChoice) => {
+        if (choice.children) {
+          choice.children.forEach((c) => renderFieldRow(c));
+        }
+      });
+    }
   };
+
   // map through form fields and call renderer
   formFields?.map((field: FormField | FormLayoutElement) => {
     if (isFieldElement(field)) {
