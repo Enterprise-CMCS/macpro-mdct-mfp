@@ -1,4 +1,25 @@
-import { FormJson, ReportRoute } from "../types";
+import { FormField, FormJson, FormLayoutElement, ReportRoute } from "../types";
+
+export function isFieldElement(
+  field: FormField | FormLayoutElement
+): field is FormField {
+  /*
+   * This function is duplicated in ui-src/src/types/formFields.ts
+   * If you change it here, change it there!
+   */
+  const formLayoutElementTypes = ["sectionHeader", "sectionContent"];
+  return !formLayoutElementTypes.includes(field.type);
+}
+
+export function isLayoutElement(
+  field: FormField | FormLayoutElement
+): field is FormLayoutElement {
+  /*
+   * This function is duplicated in ui-src/src/types/formFields.ts
+   * If you change it here, change it there!
+   */
+  return (field as FormField).validation === undefined;
+}
 
 export function* iterateAllForms(
   routes: ReportRoute[]

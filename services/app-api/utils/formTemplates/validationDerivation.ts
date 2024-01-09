@@ -3,18 +3,22 @@ import {
   EntityDetailsOverlayShape,
   FieldChoice,
   FormField,
-  FormLayoutElement,
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   ReportJson,
   ReportRoute,
 } from "../types";
 import { transformFormTemplate } from "./transformation";
+import { isFieldElement } from "./utils";
 
 // returns flattened array of valid routes for given reportJson
 export const flattenReportRoutesArray = (
-  reportJson: ReportRoute[]
+  nestedRoutes: ReportRoute[]
 ): ReportRoute[] => {
+  if (!nestedRoutes) {
+    return [];
+  }
+
   const routesArray: ReportRoute[] = [];
   const mapRoutesToArray = (reportRoutes: ReportRoute[]) => {
     reportRoutes.map((route: ReportRoute) => {
@@ -26,7 +30,7 @@ export const flattenReportRoutesArray = (
       }
     });
   };
-  mapRoutesToArray(reportJson);
+  mapRoutesToArray(nestedRoutes);
   return routesArray;
 };
 
@@ -113,27 +117,6 @@ export const compileValidationJsonFromRoutes = (
   });
   return validationSchema;
 };
-
-export function isFieldElement(
-  field: FormField | FormLayoutElement
-): field is FormField {
-  /*
-   * This function is duplicated in ui-src/src/types/formFields.ts
-   * If you change it here, change it there!
-   */
-  const formLayoutElementTypes = ["sectionHeader", "sectionContent"];
-  return !formLayoutElementTypes.includes(field.type);
-}
-
-export function isLayoutElement(
-  field: FormField | FormLayoutElement
-): field is FormLayoutElement {
-  /*
-   * This function is duplicated in ui-src/src/types/formFields.ts
-   * If you change it here, change it there!
-   */
-  return (field as FormField).validation === undefined;
-}
 
 export function getValidationFromFormTemplate(
   formTemplate: ReportJson,

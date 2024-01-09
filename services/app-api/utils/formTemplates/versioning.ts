@@ -6,7 +6,6 @@ import s3Lib, { getFormTemplateKey, getTemplate } from "../s3/s3-lib";
 import KSUID from "ksuid";
 import { logger } from "../logging";
 import {
-  AnyObject,
   assertExhaustive,
   FormTemplate,
   ReportJson,
@@ -44,8 +43,7 @@ export const formTemplateForReportType = (reportType: ReportType) => {
 
 export async function getOrCreateFormTemplate(
   reportBucket: string,
-  reportType: ReportType,
-  copyReport?: AnyObject
+  reportType: ReportType
 ) {
   //Make a copy of the form template so we don't accidentally corrupt the original
   const currentFormTemplate = structuredClone(
@@ -60,7 +58,7 @@ export async function getOrCreateFormTemplate(
   const mostRecentTemplateVersion = await getNewestTemplateVersion(reportType);
   const mostRecentTemplateVersionHash = mostRecentTemplateVersion?.md5Hash;
 
-  if (currentTemplateHash === mostRecentTemplateVersionHash && !copyReport) {
+  if (currentTemplateHash === mostRecentTemplateVersionHash) {
     return {
       formTemplate: await getTemplate(
         reportBucket,

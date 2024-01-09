@@ -15,3 +15,12 @@ export const metadataValidationSchema = yup.object().shape({
   finalSar: yup.mixed(),
   populations: yup.mixed(),
 });
+
+export const reportCreationSchema = yup.object().shape({
+  reportYear: yup.number(),
+  reportPeriod: yup.number(),
+  stateName: yup.string(),
+  stateOrTerritory: yup.string(),
+  submissionCount: yup.number(),
+  targetPopulations: yup.array().of(yup.mixed()),
+});

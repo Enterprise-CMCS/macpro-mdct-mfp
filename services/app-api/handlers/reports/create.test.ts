@@ -166,9 +166,6 @@ describe("Test createReport API method", () => {
     expect(body.formTemplateId).not.toEqual(
       mockWPReport.metadata.formTemplateId
     );
-    expect(body.formTemplate.validationJson).toMatchObject({
-      transitionBenchmarks_targetPopulationName: "text",
-    });
   });
 
   test("Test successful run of work plan report creation, copied", async () => {
@@ -179,26 +176,6 @@ describe("Test createReport API method", () => {
     expect(body.status).toContain("Not started");
     expect(body.fieldDataId).toBeDefined;
     expect(body.formTemplateId).toBeDefined;
-    expect(body.formTemplateId).not.toEqual(
-      mockWPReport.metadata.formTemplateId
-    );
-    const quarterlyRepeatinFields = Object.keys(
-      body.formTemplate.validationJson
-    ).filter((key) => key.includes("quarterlyProjections"));
-    expect(quarterlyRepeatinFields).toHaveLength(12);
-    expect(quarterlyRepeatinFields[0]).toEqual("quarterlyProjections2022Q3");
-    expect(quarterlyRepeatinFields[11]).toEqual("quarterlyProjections2025Q2");
-
-    const fundingSoureRepeatingFields = Object.keys(
-      body.formTemplate.validationJson
-    ).filter((key) => key.includes("fundingSources_quarters"));
-    expect(fundingSoureRepeatingFields).toHaveLength(12);
-    expect(fundingSoureRepeatingFields[0]).toEqual(
-      "fundingSources_quarters2022Q3"
-    );
-    expect(fundingSoureRepeatingFields[11]).toEqual(
-      "fundingSources_quarters2025Q2"
-    );
   });
 
   test("If no WP given when creating a SAR, return 404", async () => {
@@ -223,8 +200,8 @@ describe("Test createReport API method", () => {
 
   test("Test attempted report creation with invalid data fails", async () => {
     const res = await createReport(creationEventWithInvalidData, null);
-    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
-    expect(res.body).toContain(error.INVALID_DATA);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res.body).toContain(error.MISSING_DATA);
   });
 
   test("Test attempted report creation without field data throws 400 error", async () => {

@@ -5,11 +5,11 @@ import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { hasReportPathParams } from "../../utils/dynamo/hasReportPathParams";
 import s3Lib, { getFieldDataKey } from "../../utils/s3/s3-lib";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { validateData } from "../../utils/validation/validation";
 import {
-  validateData,
-  validateFieldData,
-} from "../../utils/validation/validation";
-import { metadataValidationSchema } from "../../utils/validation/schemas";
+  metadataValidationSchema,
+  reportCreationSchema,
+} from "../../utils/validation/schemas";
 import {
   error,
   reportTables,
@@ -118,14 +118,13 @@ export const createReport = handler(
     const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
       unvalidatedPayload;
 
-    const creationValidationJson = {
-      reportPeriod: "text",
-      stateName: "text",
-      stateOrTerritory: "text",
-      submissionCount: "number",
-      submissionName: "text",
-      targetPopulations: "objectArray",
-    };
+    // Return MISSING_DATA error if missing unvalidated data or validators.
+    if (!unvalidatedFieldData || !unvalidatedMetadata) {
+      return {
+        status: StatusCodes.BAD_REQUEST,
+        body: error.MISSING_DATA,
+      };
+    }
 
     const currentDate = Date.now();
     let reportYear: number =
@@ -146,14 +145,15 @@ export const createReport = handler(
       reportYear = reportPeriod == 2 ? reportYear + 1 : reportYear;
       reportPeriod = reportPeriod == 1 ? 2 : 1;
     }
+    unvalidatedFieldData.reportYear = reportYear;
+    unvalidatedFieldData.reportPeriod = reportPeriod;
 
     // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;
     try {
       ({ formTemplate, formTemplateVersion } = await getOrCreateFormTemplate(
         reportBucket,
-        reportType,
-        unvalidatedMetadata?.copyReport!
+        reportType
       ));
     } catch (err) {
       logger.error(err, "Error getting or creating template");
@@ -161,17 +161,9 @@ export const createReport = handler(
     }
     // End Section - Getting/Creating newest Form Template based on reportType
 
-    // Return MISSING_DATA error if missing unvalidated data or validators.
-    if (!unvalidatedFieldData) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.MISSING_DATA,
-      };
-    }
-
     // Setup validation for what we expect to see in the payload
-    let validatedFieldData = await validateFieldData(
-      creationValidationJson,
+    let validatedFieldData = await validateData(
+      reportCreationSchema,
       unvalidatedFieldData
     );
 

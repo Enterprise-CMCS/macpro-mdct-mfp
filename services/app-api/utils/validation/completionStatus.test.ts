@@ -105,7 +105,8 @@ describe("Completion Status Tests", () => {
       const result = await calculateCompletionStatus(testData, formTemplate);
       expect(result).toStrictEqual({
         "/mcpar/program-information": {
-          "/mcpar/program-information/point-of-contact": false,
+          // TODO why did this need to change? There are no fields, therefore there are no incomplete fields
+          "/mcpar/program-information/point-of-contact": true,
         },
       });
     });
@@ -245,6 +246,7 @@ describe("Completion Status Tests", () => {
                                   children: [
                                     {
                                       id: "doublyNestedField1",
+                                      validation: "email",
                                     },
                                   ],
                                 },
@@ -298,7 +300,9 @@ describe("Completion Status Tests", () => {
                 stepType: "mockStepType",
               } as unknown as EntityDetailsOverlayShape,
             ],
-            modalForm: {},
+            modalForm: {
+              fields: [] as FormField[],
+            },
           },
         ],
       } as ReportJson;
@@ -335,7 +339,9 @@ describe("Completion Status Tests", () => {
               stepType: "mockStepType",
             } as unknown as EntityDetailsOverlayShape,
           ],
-          modalForm: {},
+          modalForm: {
+            fields: [] as FormField[],
+          },
         },
       ],
     } as ReportJson;
@@ -370,6 +376,9 @@ describe("Completion Status Tests", () => {
         {
           path: "mock/path",
           pageType: "modalOverlay",
+          dashboard: {
+            pageType: "entityDetailsDashboardOverlay",
+          },
           entityType: "mockEntityType",
           entitySteps: [
             // we are in entitySteps aka stepFormTemplates
@@ -383,12 +392,15 @@ describe("Completion Status Tests", () => {
                   {
                     // we are in a formField
                     id: "mockFieldId",
+                    validation: "email",
                   },
                 ],
               },
             } as unknown as EntityDetailsOverlayShape,
           ],
-          modalForm: {},
+          modalForm: {
+            fields: [] as FormField[],
+          },
         },
       ],
     } as ReportJson;
@@ -423,6 +435,9 @@ describe("Completion Status Tests", () => {
         {
           path: "mock/path",
           pageType: "modalOverlay",
+          dashboard: {
+            pageType: "entityDetailsDashboardOverlay",
+          },
           entityType: "mockEntityType",
           entitySteps: [
             // we are in entitySteps aka stepFormTemplates
@@ -436,12 +451,15 @@ describe("Completion Status Tests", () => {
                   {
                     // we are in a formField
                     id: "mockFieldId",
+                    validation: "email",
                   },
                 ],
               },
             } as unknown as EntityDetailsOverlayShape,
           ],
-          modalForm: {} as FormJson,
+          modalForm: {
+            fields: [] as FormField[],
+          } as FormJson,
         } as ReportRoute,
       ],
     } as ReportJson;

@@ -10,7 +10,7 @@ import s3Lib, {
 } from "../../utils/s3/s3-lib";
 import {
   validateData,
-  validateFieldData,
+  validateReportData,
 } from "../../utils/validation/validation";
 import { metadataValidationSchema } from "../../utils/validation/schemas";
 import {
@@ -160,7 +160,7 @@ export const updateReport = handler(async (event, context) => {
   }
 
   // Validate passed field data
-  const validatedFieldData = await validateFieldData(
+  const validatedFieldData = await validateReportData(
     formTemplate,
     unvalidatedFieldData
   );

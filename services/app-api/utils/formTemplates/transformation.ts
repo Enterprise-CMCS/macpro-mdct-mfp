@@ -51,14 +51,14 @@ const isSufficientlyValidated = (
    *
    * In prod, every report will have reportYear and reportPeriod every time.
    */
-  if (report.reportYear) {
+  if (report.reportYear !== undefined) {
     if (typeof report.reportYear !== "number") return false;
   }
-  if (report.reportPeriod) {
+  if (report.reportPeriod !== undefined) {
     if (typeof report.reportPeriod !== "number") return false;
     if (report.reportPeriod !== 1 && report.reportPeriod !== 2) return false;
   }
-  if (report.fieldData?._targetPopulationsFromWP) {
+  if (report.fieldData?._targetPopulationsFromWP !== undefined) {
     const populations = report.fieldData._targetPopulationsFromWP;
     if (!Array.isArray(populations)) return false;
     for (let population of populations) {
@@ -80,6 +80,11 @@ export const transformFormTemplate = (
     throw new Error(
       `Report data is not valid for formTemplate transformation.`
     );
+  }
+
+  if (!formTemplate.routes) {
+    // This must not be a report form; all reports have routes.
+    return formTemplate;
   }
 
   formTemplate.routes = removeConditionalRoutes(formTemplate.routes, report);
@@ -158,7 +163,7 @@ export const transformFields = (
         return secondQuarterOfThePeriod(field, report.reportPeriod);
       default:
         throw new Error(
-          `Field transformation rule ${field.transformation.rule} has not been implemented.`
+          `Field transformation rule ${field.transformation.rule} is not implemented.`
         );
     }
   });
@@ -184,12 +189,15 @@ const nextTwelveQuarters = (
     );
 
   // The first quarter will be Q1 for period 1, or Q3 for period 2.
-  const thisQuarterIndex = reportPeriod === 1 ? 0 : 2;
+  const firstQuarterIndex = reportPeriod === 1 ? 0 : 2;
+
+  // No point in keeping this around in the clones
+  delete field.transformation;
 
   return [...new Array(12)]
     .map((_, index) => ({
-      year: reportYear + Math.floor((thisQuarterIndex + index) / 4),
-      quarter: `Q${1 + ((thisQuarterIndex + index) % 4)}`,
+      year: reportYear + Math.floor((firstQuarterIndex + index) / 4),
+      quarter: `Q${1 + ((firstQuarterIndex + index) % 4)}`,
     }))
     .map(({ year, quarter }) => ({
       ...field,
@@ -220,6 +228,9 @@ const targetPopulations = (
     throw new Error(
       "Field transformation rule 'targetPopulations' requires targetPopulations."
     );
+
+  // No point keeping this around in the clones
+  delete field.transformation;
 
   return targetPopulations.map((population) => ({
     ...field,

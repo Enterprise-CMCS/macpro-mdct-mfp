@@ -86,15 +86,22 @@ export const makeNestedFieldSchema = (fieldValidationObject: AnyObject) => {
   }
 };
 
-export const validateFieldData = async (
+export const validateReportData = async (
   formTemplate: ReportJson,
   unvalidatedFieldData: AnyObject
 ) => {
-  let validatedFieldData: AnyObject | undefined = undefined;
   const validationJson = getValidationFromFormTemplate(
     formTemplate,
     unvalidatedFieldData
   );
+  return await validateFieldData(validationJson, unvalidatedFieldData);
+};
+
+export const validateFieldData = async (
+  validationJson: AnyObject,
+  unvalidatedFieldData: AnyObject
+) => {
+  let validatedFieldData: AnyObject | undefined = undefined;
 
   // filter field validation to just what's needed for the passed fields
   const filteredFieldDataValidationJson = filterValidationSchema(
