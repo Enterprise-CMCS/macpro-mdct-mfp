@@ -76,7 +76,7 @@ export const reportTitle = (
     case ReportType.WP:
       return `${report.fieldData.stateName} ${reportPage.heading} ${report.reportYear} - Period ${report.reportPeriod}`;
     case ReportType.SAR:
-      return `THIS IS A SARRRRRRRR`;
+      return `${report.fieldData.stateName} ${reportPage.heading} ${report.reportYear} - Period ${report.reportPeriod}`;
     default:
       assertExhaustive(reportType);
       throw new Error(

@@ -50,7 +50,7 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
 
   const { modalOverlayTableHeaders } = verbiage;
 
-  const headerLabels = Object.values(
+  const headerLabels = Object!.values(
     modalOverlayTableHeaders as Record<string, string>
   );
 
@@ -212,9 +212,23 @@ export function renderModalOverlayTableBody(
         );
       });
     case ReportType.SAR:
-      throw new Error(
-        `The modal overlay table headers for report type '${reportType}' have not been implemented.`
-      );
+      return entities.map((entity, idx) => {
+        return (
+          <Box sx={sx.container}>
+            <Tr key={idx}>
+              <Td>
+                <Heading sx={sx.heading} as="h2">
+                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
+                  <br />
+                  <Text sx={sx.headingSubtitle}>
+                    {entity.initiative_wpTopic[0].value}
+                  </Text>
+                </Heading>
+              </Td>
+            </Tr>
+          </Box>
+        );
+      });
     default:
       assertExhaustive(reportType);
       throw new Error(
