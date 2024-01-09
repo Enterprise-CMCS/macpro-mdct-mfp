@@ -126,7 +126,7 @@ describe("Test getOrCreateFormTemplate WP", () => {
     const currentWPFormHash = generateReportHash(
       wp,
       reportYear,
-      reportPeriod,
+      reportPeriod - 1,
       mockWorkPlanFieldData
     );
 
@@ -156,7 +156,7 @@ describe("Test getOrCreateFormTemplate WP", () => {
     const result = await getOrCreateFormTemplate(
       "local-wp-reports",
       ReportType.WP,
-      reportPeriod,
+      reportPeriod - 1,
       reportYear,
       mockWorkPlanFieldData
     );
@@ -245,7 +245,7 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     const currentSARFormHash = generateReportHash(
       sar,
       reportYear,
-      reportPeriod,
+      reportPeriod - 1,
       mockWorkPlanFieldData
     );
     const dynamoDBMockReturn = {
@@ -274,7 +274,7 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     const result = await getOrCreateFormTemplate(
       "local-sar-reports",
       ReportType.SAR,
-      reportPeriod,
+      reportPeriod - 1,
       reportYear,
       mockWorkPlanFieldData
     );
