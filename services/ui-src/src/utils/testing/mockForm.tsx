@@ -346,6 +346,7 @@ export const mockOverlayModalPageJson = {
   modalForm: mockModalForm,
   stepType: "mock-step",
   stepName: "Mock step name",
+  stepInfo: ["name, hint"],
   hint: "Mock hint",
 };
 
