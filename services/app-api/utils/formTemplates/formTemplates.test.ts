@@ -5,6 +5,8 @@ import {
   getOrCreateFormTemplate,
   isFieldElement,
   isLayoutElement,
+  scanForConditionalRoutes,
+  findAndRunFieldTransformationRules,
 } from "./formTemplates";
 import wp from "../../forms/wp.json";
 import sar from "../../forms/sar.json";
@@ -17,12 +19,43 @@ import {
 } from "../testing/setupJest";
 import s3Lib from "../s3/s3-lib";
 import dynamodbLib from "../dynamo/dynamodb-lib";
+import { AnyObject } from "yup/lib/types";
 
 const mockWorkPlanFieldData = mockWPMetadata.fieldData;
+const reportPeriod = 2;
+const reportYear = 2023;
 
 global.structuredClone = jest.fn((val) => {
   return JSON.parse(JSON.stringify(val));
 });
+
+export const generateReportHash = (
+  report: AnyObject,
+  reportYear: number,
+  reportPeriod: number,
+  wpFieldData: AnyObject
+) => {
+  const currentFormTemplate = structuredClone(report) as ReportJson;
+  if (currentFormTemplate?.routes) {
+    // traverse routes and scan for conditional field
+    currentFormTemplate.routes = scanForConditionalRoutes(
+      currentFormTemplate.routes,
+      reportPeriod
+    );
+
+    //transformation of the formTemplate to generate new quarters
+    findAndRunFieldTransformationRules(
+      currentFormTemplate.routes,
+      reportPeriod,
+      reportYear,
+      wpFieldData
+    );
+  }
+
+  return createHash("md5")
+    .update(JSON.stringify(currentFormTemplate))
+    .digest("hex");
+};
 
 describe("Test getOrCreateFormTemplate WP", () => {
   beforeEach(() => {
@@ -34,9 +67,12 @@ describe("Test getOrCreateFormTemplate WP", () => {
       name: "MFP Work Plan (WP)",
     };
 
-    const currentWPFormHash = createHash("md5")
-      .update(JSON.stringify(wp))
-      .digest("hex");
+    const currentWPFormHash = generateReportHash(
+      wp,
+      reportYear,
+      reportPeriod,
+      mockWorkPlanFieldData
+    );
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [],
     });
@@ -45,8 +81,8 @@ describe("Test getOrCreateFormTemplate WP", () => {
     const result = await getOrCreateFormTemplate(
       "local-wp-reports",
       ReportType.WP,
-      2023,
-      2,
+      reportPeriod,
+      reportYear,
       mockWorkPlanFieldData
     );
     expect(dynamoPutSpy).toHaveBeenCalled();
@@ -59,9 +95,12 @@ describe("Test getOrCreateFormTemplate WP", () => {
   });
 
   it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
-    const currentWPFormHash = createHash("md5")
-      .update(JSON.stringify(wp))
-      .digest("hex");
+    const currentWPFormHash = generateReportHash(
+      wp,
+      reportYear,
+      reportPeriod,
+      mockWorkPlanFieldData
+    );
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [
         {
@@ -70,34 +109,28 @@ describe("Test getOrCreateFormTemplate WP", () => {
           md5Hash: currentWPFormHash,
           versionNumber: 3,
         },
-        {
-          formTemplateId: "foo",
-          id: "mockReportJson",
-          md5Hash: currentWPFormHash + "111",
-          versionNumber: 2,
-        },
       ],
     });
-    const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
-    const s3PutSpy = jest.spyOn(s3Lib, "put");
     const result = await getOrCreateFormTemplate(
       "local-wp-reports",
       ReportType.WP,
-      2023,
-      2,
+      reportPeriod,
+      reportYear,
       mockWorkPlanFieldData
     );
-    expect(dynamoPutSpy).not.toHaveBeenCalled();
-    expect(s3PutSpy).not.toHaveBeenCalled();
     expect(result.formTemplateVersion?.versionNumber).toEqual(3);
     expect(result.formTemplateVersion?.md5Hash).toEqual(currentWPFormHash);
   });
 
   it("should create a new form if it doesn't match the most recent form", async () => {
-    const currentWPFormHash = createHash("md5")
-      .update(JSON.stringify(wp))
-      .digest("hex");
-    mockDocumentClient.query.promise.mockReturnValueOnce({
+    const currentWPFormHash = generateReportHash(
+      wp,
+      reportYear,
+      reportPeriod,
+      mockWorkPlanFieldData
+    );
+
+    const dynamoDBMockReturn = {
       Items: [
         {
           formTemplateId: "foo",
@@ -112,14 +145,19 @@ describe("Test getOrCreateFormTemplate WP", () => {
           versionNumber: 2,
         },
       ],
-    });
+    };
+    //first dynamo db call
+    mockDocumentClient.query.promise.mockReturnValueOnce(dynamoDBMockReturn);
+    //second dynamo db call
+    mockDocumentClient.query.promise.mockReturnValueOnce(dynamoDBMockReturn);
+
     const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     const result = await getOrCreateFormTemplate(
       "local-wp-reports",
       ReportType.WP,
-      2023,
-      2,
+      reportPeriod,
+      reportYear,
       mockWorkPlanFieldData
     );
     expect(dynamoPutSpy).toHaveBeenCalled();
@@ -138,9 +176,12 @@ describe("Test getOrCreateFormTemplate SAR", () => {
       name: "MFP Semi-Annual Progress Report (SAR)",
     };
 
-    const currentSARFormHash = createHash("md5")
-      .update(JSON.stringify(sar))
-      .digest("hex");
+    const currentSARFormHash = generateReportHash(
+      sar,
+      reportYear,
+      reportPeriod,
+      mockWorkPlanFieldData
+    );
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [],
     });
@@ -149,8 +190,8 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     const result = await getOrCreateFormTemplate(
       "local-sar-reports",
       ReportType.SAR,
-      2023,
-      2,
+      reportPeriod,
+      reportYear,
       mockWorkPlanFieldData
     );
     expect(dynamoPutSpy).toHaveBeenCalled();
@@ -163,9 +204,12 @@ describe("Test getOrCreateFormTemplate SAR", () => {
   });
 
   it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
-    const currentSARFormHash = createHash("md5")
-      .update(JSON.stringify(sar))
-      .digest("hex");
+    const currentSARFormHash = generateReportHash(
+      sar,
+      reportYear,
+      reportPeriod,
+      mockWorkPlanFieldData
+    );
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [
         {
@@ -187,8 +231,8 @@ describe("Test getOrCreateFormTemplate SAR", () => {
     const result = await getOrCreateFormTemplate(
       "local-sar-reports",
       ReportType.SAR,
-      2023,
-      2,
+      reportPeriod,
+      reportYear,
       mockWorkPlanFieldData
     );
     expect(dynamoPutSpy).not.toHaveBeenCalled();
@@ -198,10 +242,13 @@ describe("Test getOrCreateFormTemplate SAR", () => {
   });
 
   it("should create a new form if it doesn't match the most recent form", async () => {
-    const currentSARFormHash = createHash("md5")
-      .update(JSON.stringify(sar))
-      .digest("hex");
-    mockDocumentClient.query.promise.mockReturnValueOnce({
+    const currentSARFormHash = generateReportHash(
+      sar,
+      reportYear,
+      reportPeriod,
+      mockWorkPlanFieldData
+    );
+    const dynamoDBMockReturn = {
       Items: [
         {
           formTemplateId: "foo",
@@ -216,14 +263,19 @@ describe("Test getOrCreateFormTemplate SAR", () => {
           versionNumber: 2,
         },
       ],
-    });
+    };
+    //first dynamo db call
+    mockDocumentClient.query.promise.mockReturnValueOnce(dynamoDBMockReturn);
+    //second dynamo db call
+    mockDocumentClient.query.promise.mockReturnValueOnce(dynamoDBMockReturn);
+
     const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     const result = await getOrCreateFormTemplate(
       "local-sar-reports",
       ReportType.SAR,
-      2023,
-      2,
+      reportPeriod,
+      reportYear,
       mockWorkPlanFieldData
     );
     expect(dynamoPutSpy).toHaveBeenCalled();

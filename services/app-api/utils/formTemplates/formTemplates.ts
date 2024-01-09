@@ -35,7 +35,7 @@ export async function getNewestTemplateVersion(reportType: ReportType) {
     ScanIndexForward: false, // true = ascending, false = descending
   };
   const result = await dynamodbLib.query(queryParams);
-  return result.Items?.[0];
+  return result?.Items?.[0];
 }
 
 export async function getTemplateVersionByHash(
@@ -53,7 +53,7 @@ export async function getTemplateVersionByHash(
     },
   };
   const result = await dynamodbLib.query(queryParams);
-  return result.Items?.[0];
+  return result?.Items?.[0];
 }
 
 export const formTemplateForReportType = (reportType: ReportType) => {
@@ -429,7 +429,7 @@ export async function getOrCreateFormTemplate(
   );
 
   //if a template of this hash already exist
-  if (matchTemplateVersion) {
+  if (currentTemplateHash === matchTemplateVersion?.md5Hash) {
     return {
       formTemplate: await getTemplate(
         reportBucket,
