@@ -15,7 +15,7 @@ import { Modal } from "components";
 // utils
 import { parseCustomHtml, useStore, releaseReport, approveReport } from "utils";
 // types
-import { AnyObject, ReportStatus } from "types";
+import { AnyObject, ReportStatus, ReportType } from "types";
 
 export const AdminReview = ({
   reviewVerbiage,
@@ -93,15 +93,17 @@ export const AdminReview = ({
         >
           {adminInfo.unlockLink.text}
         </Button>
-        <Button
-          type="submit"
-          id="adminApprove"
-          onClick={adminApproveModal.onOpen as MouseEventHandler}
-          sx={sx.submitButton && sx.adminApproveBtn}
-          disabled={report?.status !== ReportStatus.SUBMITTED ? true : false}
-        >
-          {adminInfo.submitLink.text}
-        </Button>
+        {report!.reportType === ReportType.WP && (
+          <Button
+            type="submit"
+            id="adminApprove"
+            onClick={adminApproveModal.onOpen as MouseEventHandler}
+            sx={sx.submitButton && sx.adminApproveBtn}
+            disabled={report?.status !== ReportStatus.SUBMITTED ? true : false}
+          >
+            {adminInfo.submitLink.text}
+          </Button>
+        )}
       </Flex>
       <Modal
         onConfirmHandler={submitForm}
@@ -129,45 +131,49 @@ export const AdminReview = ({
           </Button>
         </Link>
       </Modal>
-      <Modal
-        onConfirmHandler={submitForm}
-        submitting={submitting}
-        modalDisclosure={{
-          isOpen: adminApproveModal.isOpen,
-          onClose: adminApproveModal.onClose,
-        }}
-        content={adminInfo.modal.approveModal}
-      >
-        <Text sx={sx.unlockModalBody}>{adminInfo.modal.approveModal.body}</Text>
-        <Text fontWeight="bold">Enter APPROVE to confirm.</Text>
-        <Input
-          id="approve"
-          name="approve"
-          type="text"
-          value={approveInput}
-          onChange={handleInputVerification}
-          className="field"
-        />
-        <ModalFooter sx={sx.modalFooter}>
-          <Button
-            type="submit"
-            variant="outline"
-            data-testid="modal-cancel-button"
-            sx={sx.modalCancel}
-            onClick={() => adminApproveModal.onClose()}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            disabled={isApproved ? false : true}
-            data-testid="modal-approve-button"
-            onClick={handleSubmitApproval}
-          >
-            Approve
-          </Button>
-        </ModalFooter>
-      </Modal>
+      {report!.reportType === ReportType.WP && (
+        <Modal
+          onConfirmHandler={submitForm}
+          submitting={submitting}
+          modalDisclosure={{
+            isOpen: adminApproveModal.isOpen,
+            onClose: adminApproveModal.onClose,
+          }}
+          content={adminInfo.modal.approveModal}
+        >
+          <Text sx={sx.unlockModalBody}>
+            {adminInfo.modal.approveModal.body}
+          </Text>
+          <Text fontWeight="bold">Enter APPROVE to confirm.</Text>
+          <Input
+            id="approve"
+            name="approve"
+            type="text"
+            value={approveInput}
+            onChange={handleInputVerification}
+            className="field"
+          />
+          <ModalFooter sx={sx.modalFooter}>
+            <Button
+              type="submit"
+              variant="outline"
+              data-testid="modal-cancel-button"
+              sx={sx.modalCancel}
+              onClick={() => adminApproveModal.onClose()}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isApproved ? false : true}
+              data-testid="modal-approve-button"
+              onClick={handleSubmitApproval}
+            >
+              Approve
+            </Button>
+          </ModalFooter>
+        </Modal>
+      )}
     </Flex>
   );
 };

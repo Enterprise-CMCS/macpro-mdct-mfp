@@ -40,11 +40,15 @@ export const AddEditReportModal = ({
   const modalFormJson = modalFormJsonMap[reportType]!;
   const form: FormJson = modalFormJson;
 
-  //temporary flag for testing copyover
+  // temporary flag for testing copyover
   const isCopyOverTest = useFlags()?.isCopyOverTest;
 
-  // WP report payload
-  const prepareWpPayload = () => {
+  /**
+   * @function: Prepare WP payload
+   * @param wpReset: (optional) determine whether the user would like to continue a Work Plan for next period,
+   * but clear / reset any existing data from the previous period
+   */
+  const prepareWpPayload = (wpReset?: boolean) => {
     const submissionName = "Work Plan";
 
     // static entities
@@ -77,7 +81,7 @@ export const AddEditReportModal = ({
       },
     ];
 
-    //add a flag to be passed to the backend for copy over testing
+    // add a flag to be passed to the backend for copy over testing
     if (previousReport) {
       previousReport.isCopyOverTest = isCopyOverTest;
     }
@@ -89,6 +93,7 @@ export const AddEditReportModal = ({
         copyReport: previousReport,
         locked: false,
         previousRevisions: [],
+        isReset: wpReset,
       },
       fieldData: {
         submissionName,
@@ -123,12 +128,18 @@ export const AddEditReportModal = ({
     };
   };
 
-  const writeReport = async (formData: any) => {
+  /**
+   * @param wpReset: (optional) determine whether the user would like to continue a Work Plan for next period,
+   * but clear / reset any existing data from the previous period
+   */
+  const writeReport = async (formData: any, wpReset?: boolean) => {
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
     const dataToWrite =
-      reportType === "WP" ? prepareWpPayload() : prepareSarPayload(formData);
+      reportType === "WP"
+        ? prepareWpPayload(wpReset)
+        : prepareSarPayload(formData);
 
     // if an existing program was selected, use that report id
     if (selectedReport?.id) {
@@ -170,7 +181,8 @@ export const AddEditReportModal = ({
     modalDisclosure.onClose();
   };
 
-  const resetReport = () => {
+  const resetReport = (formData: any) => {
+    writeReport(formData, true);
     modalDisclosure.onClose();
   };
 

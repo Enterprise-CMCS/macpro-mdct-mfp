@@ -343,7 +343,7 @@ export const DashboardPage = ({ reportType }: Props) => {
             </Flex>
           )
         )}
-        {!reportsToDisplay?.length && (
+        {!reportsToDisplay?.length && userIsEndUser && (
           <Text sx={sx.emptyTableContainer}>{body.empty}</Text>
         )}
         {/* only show add report button to state users */}

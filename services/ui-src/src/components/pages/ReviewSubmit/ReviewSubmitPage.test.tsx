@@ -16,7 +16,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { useStore } from "utils";
 // verbiage
-import reviewVerbiage from "verbiage/pages/mfp/mfp-review-and-submit";
+import reviewVerbiage from "verbiage/pages/wp/wp-review-and-submit";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -222,7 +222,7 @@ describe("When loading a sucessfully submitted report (Success Message Generator
     const reportType = "SAR";
     const submittedDate = undefined;
     const submittersName = "Carol California";
-    const fullReportType = "Semi-Annual Progress Report";
+    const fullReportType = "SAR";
 
     expect(
       SuccessMessageGenerator(

@@ -45,7 +45,7 @@ import { copyFieldDataFromSource } from "../../utils/other/copy";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
-    if (!hasPermissions(event, [UserRoles.STATE_USER, UserRoles.STATE_REP])) {
+    if (!hasPermissions(event, [UserRoles.STATE_USER])) {
       return {
         status: StatusCodes.UNAUTHORIZED,
         body: error.UNAUTHORIZED,
@@ -148,6 +148,9 @@ export const createReport = handler(
     unvalidatedFieldData.reportYear = reportYear;
     unvalidatedFieldData.reportPeriod = reportPeriod;
 
+    // If this Work Plan is a reset, the reporting period is the upcoming one
+    const isReset = unvalidatedMetadata?.isReset;
+
     // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;
     try {
@@ -200,7 +203,12 @@ export const createReport = handler(
     // Being Section - Check if metadata has filled parameter for copyReport
     let newFieldData;
 
-    if (unvalidatedMetadata.copyReport) {
+    const updatedValidatedFieldData = {
+      ...validatedFieldData,
+      generalInformation_resubmissionInformation: "N/A",
+    };
+
+    if (unvalidatedMetadata.copyReport && !isReset) {
       const reportPeriod = calculatePeriod(Date.now(), workPlanMetadata);
       const isCurrentPeriod =
         calculateCurrentYear() === unvalidatedMetadata.copyReport.reportYear &&
@@ -219,10 +227,10 @@ export const createReport = handler(
         state,
         unvalidatedMetadata.copyReport?.fieldDataId,
         formTemplate,
-        validatedFieldData
+        updatedValidatedFieldData
       );
     } else {
-      newFieldData = validatedFieldData;
+      newFieldData = updatedValidatedFieldData;
     }
 
     // End Section - Check if metadata has filled parameter for copyReport
