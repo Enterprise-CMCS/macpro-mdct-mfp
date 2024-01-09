@@ -1371,6 +1371,7 @@
               "props": {
                 "style": {
                   "columns": "2",
+                  "columnGap": "2rem",
                   "paddingLeft": "1rem",
                   "color": "#5A5A5A",
                   "li::before": {

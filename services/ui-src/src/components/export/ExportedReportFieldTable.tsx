@@ -134,7 +134,7 @@ const sx = {
       p: {
         lineHeight: "1.25rem",
       },
-      padding: "0.75rem 0.5rem",
+      padding: "0.75rem 0.5rem 0.75rem 0",
       borderStyle: "none",
       fontWeight: "normal",
       color: "palette.base",
