@@ -57,7 +57,7 @@ const sx = {
       fontSize: "lg",
     },
     li: {
-      paddingBottom: "1.5rem",
+      marginBottom: "1.5rem",
     },
   },
   hintTextBox: {
