@@ -21,14 +21,21 @@ export default {
       editedBy: "Edited by",
       status: "Status",
     },
-    detailsTableHeaders: {
-      indicator: "Indicator",
-      response: "Response",
-    },
     combinedDataTable: {
       title: "Exclusion of CHIP from SAR",
       subtitle:
         "Enrollees in separate CHIP programs funded under Title XXI should not be reported in the SAR. Please check this box if the state is unable to remove information about Separate CHIP enrollees from its reporting on this program.",
+    },
+    sarDetailsTable: {
+      headers: {
+        indicator: "Indicator",
+        response: "Response",
+      },
+      indicators: [
+        "Associated Work Plan",
+        "Is this SAR for a Close-out?",
+        "Select the target populations applicable to your state during this reporting period.",
+      ],
     },
   },
   tableHeaders: {

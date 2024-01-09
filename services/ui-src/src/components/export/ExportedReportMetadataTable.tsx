@@ -1,5 +1,5 @@
 // components
-import { Table } from "components";
+import { ExportedSarDetailsTable, Table } from "components";
 // utils
 import { ReportShape, ReportType } from "types";
 import { convertDateUtcToEt, useStore } from "utils";
@@ -21,23 +21,9 @@ export const ExportedReportMetadataTable = ({
         }}
       />
       {reportType === ReportType.SAR && (
-        <ExportedSarDetailsTable reportType={reportType} verbiage={verbiage} />
+        <ExportedSarDetailsTable verbiage={verbiage} />
       )}
     </>
-  );
-};
-
-export const ExportedSarDetailsTable = ({ reportType, verbiage }: Props) => {
-  const { report } = useStore() ?? {};
-  return (
-    <Table
-      data-testid="exportedSarDetailsTable"
-      sx={sx.metadataTable}
-      content={{
-        headRow: headerRowLabels(reportType, verbiage),
-        bodyRows: bodyRowContent(reportType, report),
-      }}
-    />
   );
 };
 
@@ -125,6 +111,11 @@ const sx = {
       fontWeight: "bold",
       textAlign: "left",
       paddingBottom: "0rem",
+    },
+  },
+  sarDetailsTable: {
+    td: {
+      fontWeight: "bold",
     },
   },
 };
