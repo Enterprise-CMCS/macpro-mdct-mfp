@@ -300,6 +300,7 @@ export const mockEntityDetailsOverlayJson = {
   form: mockForm,
   stepType: "mock-step",
   stepName: "Mock step name",
+  stepInfo: ["name", "hint"],
   hint: "Mock hint",
   entityType: "mock-entity-type",
 };
