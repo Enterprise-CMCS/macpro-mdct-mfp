@@ -104,7 +104,6 @@ export interface Props {
 
 const sx = {
   root: {
-    border: "10px solid red",
     "@media print": {
       pageBreakInside: "avoid",
     },

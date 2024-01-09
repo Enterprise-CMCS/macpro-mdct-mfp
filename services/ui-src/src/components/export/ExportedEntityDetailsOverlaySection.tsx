@@ -28,7 +28,13 @@ export const ExportedEntityDetailsOverlaySection = ({
   return (
     <Box sx={sx.sectionHeading} {...props}>
       {report &&
-        renderEntityDetailTables(report, entity ?? [], entityStep, closed)}
+        renderEntityDetailTables(
+          report,
+          entity ?? [],
+          entityStep,
+          props.showHintText,
+          closed
+        )}
     </Box>
   );
 };
@@ -37,6 +43,7 @@ export interface ExportedEntityDetailsOverlaySectionProps {
   section: ModalOverlayReportPageShape;
   entity: EntityShape;
   entityStep: (string | FormLayoutElement | FormField)[];
+  showHintText?: boolean;
   closed?: boolean;
 }
 
@@ -50,6 +57,7 @@ export function getEntityTableComponents(
   report: ReportShape,
   entity: EntityShape,
   entityStep: (string | FormLayoutElement | FormField)[],
+  showHintText?: boolean,
   closed?: boolean
 ) {
   const entityStepFields = entityStep.slice(3) as FormField[];
@@ -74,7 +82,7 @@ export function getEntityTableComponents(
         <ExportedEntityDetailsTable
           fields={updatedEntityStepFields as FormField[]}
           entity={entity}
-          showHintText={false}
+          showHintText={showHintText}
         />
       </Fragment>
     </Box>
@@ -94,12 +102,19 @@ export function renderEntityDetailTables(
   report: ReportShape,
   entity: EntityShape,
   entityStep: (string | FormLayoutElement | FormField)[],
+  showHintText?: boolean,
   closed?: boolean
 ) {
   const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
     case ReportType.WP: {
-      return getEntityTableComponents(report!, entity, entityStep, closed);
+      return getEntityTableComponents(
+        report!,
+        entity,
+        entityStep,
+        showHintText,
+        closed
+      );
     }
     case ReportType.SAR:
       throw new Error(

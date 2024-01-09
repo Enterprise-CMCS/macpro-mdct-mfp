@@ -33,7 +33,7 @@ export const ExportedEntityDetailsTable = ({
   ];
 
   const reportType = report?.reportType as ReportType;
-  const hideHintText = reportType === ReportType.SAR;
+  const hideHintText = !props.showHintText || reportType === ReportType.SAR;
 
   return (
     <Table

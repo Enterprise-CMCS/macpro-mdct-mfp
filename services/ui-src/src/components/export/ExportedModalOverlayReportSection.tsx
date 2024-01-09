@@ -180,6 +180,7 @@ export function renderModalOverlayTableBody(
                         section={section as ModalOverlayReportPageShape}
                         entity={entity}
                         entityStep={step}
+                        showHintText={true}
                       />
                     </Box>
                   );
@@ -214,6 +215,7 @@ export function renderModalOverlayTableBody(
                           section={section as ModalOverlayReportPageShape}
                           entity={entity}
                           entityStep={step}
+                          showHintText={false}
                           closed={true}
                         />
                       </Box>
