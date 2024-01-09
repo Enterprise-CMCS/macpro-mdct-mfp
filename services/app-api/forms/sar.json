@@ -16,7 +16,13 @@
           "section": "",
           "subsection": "General Information",
           "hint": ""
-        }
+        },
+        "praDisclosure": [
+          {
+            "type": "span",
+            "content": "<b>PRA Disclosure Statement</b><br/>Under the Privacy Act of 1974 any personally identifying information obtained will be kept private to the extent of the law. According to the Paperwork Reduction Act of 1995, no persons are required to respond to a collection of information unless it displays a valid OMB control number. The valid OMB control number for this information collection is 0938-1053. The time required to complete this information collection is estimated to average 2.5 hours per response, including the time to review instructions, search existing data resources, gather the data needed, and complete and review the information collection. If you have comments concerning the accuracy of the time estimate(s) or suggestions for improving this form, please write to: CMS, 7500 Security Boulevard, Attn: PRA Reports Clearance Officer, Mail Stop C4-26-05, Baltimore, Maryland 21244-1850"
+          }
+        ]
       },
       "form": {
         "id": "ga",
@@ -99,9 +105,7 @@
           {
             "id": "generalInformation_hasAorChangedSinceLastReport",
             "type": "radio",
-            "validation": {
-              "type": "radio"
-            },
+            "validation":"radio",
             "props": {
               "label": "Has the AOR changed since last report?",
               "choices": [
@@ -985,9 +989,12 @@
               ],
               "dashboardTitle": "Objectives progress"
             },
+            "editEntityButtonText": "Edit objective progress",
+            "reportProgressButtonText": "Report objective progress",
+            "addEditModalEditTitle": "Report progress for ",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
-            "modalTitle": "Report progress for ",
+            "readOnlyEntityButtonText": "View",
             "editEntityHint": "Select \"Edit\" to report the objectives progress.",
             "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab."
           },
@@ -1007,30 +1014,33 @@
                 "type": "radio",
                 "validation": "radio",
                 "props": {
-                  "label": "Were targets for performance measures and/or expected time frames for deliverables met?"
-                },
-                "choices": [
-                  {
-                    "id": "2WaO1Jj3pyUN0j9KjeOqR",
-                    "label": "Yes"
-                  },
-                  {
-                    "id": "2WaO1K5umgZcZV4bAW5sPu",
-                    "label": "No",
-                    "children": [
-                      {
-                        "id": "objectivesProgress_deliverablesMet-otherText",
-                        "type": "textarea",
-                        "validation": {
-                          "type": "text",
-                          "parentFieldName": "objectivesProgress_deliverablesMet",
-                          "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
-                          "nested": true
+                  "label": "Were targets for performance measures and/or expected time frames for deliverables met?",
+                  "choices": [
+                    {
+                      "id": "2WaO1Jj3pyUN0j9KjeOqR",
+                      "label": "Yes"
+                    },
+                    {
+                      "id": "2WaO1K5umgZcZV4bAW5sPu",
+                      "label": "No",
+                      "children": [
+                        {
+                          "id": "objectivesProgress_deliverablesMet_otherText",
+                          "props": {
+                            "label": "Describe progress toward reaching the target/milestone during the reporting period. How close are you to meeting the target? How do you plan to address any obstacle(s) to meeting the target?"
+                          },
+                          "type": "textarea",
+                          "validation": {
+                            "type": "text",
+                            "parentFieldName": "objectivesProgress_deliverablesMet",
+                            "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
+                            "nested": true
+                          }
                         }
-                      }
-                    ]
-                  }
-                ]
+                      ]
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -1045,8 +1055,15 @@
           "isRequired": true,
           "verbiage": {
             "intro": {
-              "section": "Initiative progress",
-              "subsection": "Report progress for this initiative during this reporting period."
+              "section": "State- or Territory-Specific Initiatives",
+              "subtitle": [
+                {
+                  "type": "html",
+                  "content": "Report progress for this initiative during this reporting period."
+                }
+              ],
+              "subsection": "Report progress for this initiative during this reporting period.",
+              "title": "Initiative progress"
             },
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",

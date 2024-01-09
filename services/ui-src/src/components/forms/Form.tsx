@@ -19,6 +19,7 @@ import {
   sortFormErrors,
   updateRenderFields,
   useStore,
+  sanitizeAndParseHtml,
 } from "utils";
 import {
   AnyObject,
@@ -89,11 +90,54 @@ export const Form = ({
       updateRenderFields(report!, fields),
       formData
     );
-    return formFieldFactory(fieldsToRender, {
-      disabled: !!fieldInputDisabled,
-      autosave,
-      validateOnRender,
-    });
+    const updateFieldsToRenderWithAriaLabels = (
+      fieldsToRender: FormField | FormLayoutElement[]
+    ) => {
+      const fieldsToRenderWithAriaLabels = JSON.parse(
+        JSON.stringify(fieldsToRender)
+      );
+      let choiceList: [] =
+        fieldsToRenderWithAriaLabels[1] &&
+        fieldsToRenderWithAriaLabels[1].props?.choices;
+
+      //add aria label to hint hint
+      sanitizeAndParseHtml(
+        fieldsToRenderWithAriaLabels[1] &&
+          fieldsToRenderWithAriaLabels[1].props.hint
+      );
+
+      // add aria label to choicelist
+      choiceList &&
+        choiceList.map((choice: AnyObject) => {
+          if (choice?.label.includes("*")) {
+            let asteriskIndex = choice?.label.includes("*if applicable")
+              ? choice?.label.indexOf("*") - 1
+              : choice?.label.indexOf("*");
+            let newOption = sanitizeAndParseHtml(
+              `${choice?.label.slice(
+                0,
+                asteriskIndex
+              )} <span aria-label="(required topic at least once across all initiatives)"> ${choice?.label.charAt(
+                asteriskIndex
+              )}</span>${choice?.label.slice(asteriskIndex + 1)}`
+            );
+            choice.label = newOption;
+            return choice;
+          } else {
+            return choice;
+          }
+        });
+      return fieldsToRenderWithAriaLabels;
+    };
+
+    return formFieldFactory(
+      updateFieldsToRenderWithAriaLabels(fieldsToRender),
+      {
+        disabled: !!fieldInputDisabled,
+        autosave,
+        validateOnRender,
+      }
+    );
   };
 
   useEffect(() => {

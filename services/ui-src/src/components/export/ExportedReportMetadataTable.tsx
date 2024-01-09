@@ -96,13 +96,15 @@ const sx = {
     margin: "3rem 0",
     maxWidth: "reportPageWidth",
     td: {
-      paddingTop: "0rem",
       verticalAlign: "middle",
+      textAlign: "left",
+      paddingTop: "0rem",
+      padding: "8px",
     },
     th: {
-      border: "none",
       fontWeight: "bold",
-      color: "palette.gray_medium",
+      textAlign: "left",
+      paddingBottom: "0rem",
     },
   },
 };
