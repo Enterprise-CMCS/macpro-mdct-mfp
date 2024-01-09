@@ -71,11 +71,6 @@ export const OverlayModalPage = ({
     addEditEntityModalOnOpenHandler();
   };
 
-  const openReportEntityModal = () => {
-    // functionality to come
-    return;
-  };
-
   const closeAddEditEntityModal = () => {
     setSelectedStepEntity(undefined);
     addEditEntityModalOnCloseHandler();
@@ -144,22 +139,22 @@ export const OverlayModalPage = ({
                 printVersion={false}
                 formattedEntityData={getFormattedEntityData(stepType, entity)}
                 openAddEditEntityModal={openAddEditEntityModal}
-                openReportEntityModal={openReportEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
                 disabled={userDisabled}
                 hasBoxShadow={true}
               />
             )
           )}
-          {reportFieldDataEntities.length > 1 && (
-            <Button
-              sx={sx.addEntityButton}
-              onClick={addEditEntityModalOnOpenHandler}
-              leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-            >
-              {verbiage.addEntityButtonText}
-            </Button>
-          )}
+          {reportFieldDataEntities.length > 1 &&
+            report?.reportType === ReportType.WP && (
+              <Button
+                sx={sx.addEntityButton}
+                onClick={addEditEntityModalOnOpenHandler}
+                leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+              >
+                {verbiage.addEntityButtonText}
+              </Button>
+            )}
         </Box>
         <hr />
         {/* MODALS */}
