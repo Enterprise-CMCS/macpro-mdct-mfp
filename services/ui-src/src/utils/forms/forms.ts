@@ -367,7 +367,7 @@ export const updateRenderFields = (
  * @returns filtered form fields for rendering on the SAR
  */
 const filterApplicableTargetPopulations = (
-  choiceList: AnyObject[],
+  choiceList: FieldChoice[],
   formFields: (FormField | FormLayoutElement)[]
 ) => {
   const filteredFormField: (FormField | FormLayoutElement)[] = [];
