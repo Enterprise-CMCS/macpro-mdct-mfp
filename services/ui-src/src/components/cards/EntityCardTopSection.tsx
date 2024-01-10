@@ -61,7 +61,7 @@ export const EntityStepCardTopSection = ({
               </>
             ) : (
               <>
-                <Text sx={sx.subtitle}>
+                <Text sx={sx.subtitle} data-testid="sar-grid">
                   Quantitative targets for this reporting period
                 </Text>
                 <Grid sx={sx.sarGrid}>

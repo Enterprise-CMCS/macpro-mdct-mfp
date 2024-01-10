@@ -11,6 +11,7 @@ import {
   FormLayoutElement,
   isFieldElement,
   ReportType,
+  FieldChoice,
 } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
@@ -151,7 +152,17 @@ export const renderFieldTableBody = (
     if (pageType === "drawer") {
       return;
     }
+
+    // Handle rendering nested children
+    if (isFieldElement(formField) && formField.props?.choices) {
+      formField.props.choices.forEach((choice: FieldChoice) => {
+        if (choice.children) {
+          choice.children.forEach((c) => renderFieldRow(c));
+        }
+      });
+    }
   };
+
   // map through form fields and call renderer
   formFields?.map((field: FormField | FormLayoutElement) => {
     if (isFieldElement(field)) {
@@ -168,7 +179,6 @@ export interface Props {
 
 const sx = {
   root: {
-    border: "10px solid red",
     "@media print": {
       pageBreakInside: "avoid",
     },
@@ -187,7 +197,7 @@ const sx = {
       p: {
         lineHeight: "1.25rem",
       },
-      padding: "0.75rem 0.5rem",
+      padding: "0.75rem 0.5rem 0.75rem 0",
       borderStyle: "none",
       fontWeight: "normal",
       color: "palette.base",

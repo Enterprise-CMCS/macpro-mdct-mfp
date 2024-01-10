@@ -47,12 +47,12 @@ export default {
       "CMS Project Officer",
     ],
   },
+  modalOverlayTableHeaders: {},
   tableHeaders: {
     number: "Number",
     indicator: "Indicator",
     response: "Response",
   },
-  modalOverlayTableHeaders: {},
   emptyEntityMessage: {
     accessMeasures: "0  - No access measures entered",
     sanctions: "0 - No sanctions entered",

@@ -105,7 +105,9 @@
           {
             "id": "generalInformation_hasAorChangedSinceLastReport",
             "type": "radio",
-            "validation":"radio",
+            "validation": {
+              "type": "radio"
+            },
             "props": {
               "label": "Has the AOR changed since last report?",
               "choices": [
@@ -989,10 +991,9 @@
               ],
               "dashboardTitle": "Objectives progress"
             },
-            "editEntityButtonText": "Report objective progress",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
-            "modalTitle": "Report progress for ",
+            "readOnlyEntityButtonText": "View",
             "editEntityHint": "Select \"Edit\" to report the objectives progress.",
             "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab."
           },
@@ -1012,30 +1013,33 @@
                 "type": "radio",
                 "validation": "radio",
                 "props": {
-                  "label": "Were targets for performance measures and/or expected time frames for deliverables met?"
-                },
-                "choices": [
-                  {
-                    "id": "2WaO1Jj3pyUN0j9KjeOqR",
-                    "label": "Yes"
-                  },
-                  {
-                    "id": "2WaO1K5umgZcZV4bAW5sPu",
-                    "label": "No",
-                    "children": [
-                      {
-                        "id": "objectivesProgress_deliverablesMet-otherText",
-                        "type": "textarea",
-                        "validation": {
-                          "type": "text",
-                          "parentFieldName": "objectivesProgress_deliverablesMet",
-                          "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
-                          "nested": true
+                  "label": "Were targets for performance measures and/or expected time frames for deliverables met?",
+                  "choices": [
+                    {
+                      "id": "2WaO1Jj3pyUN0j9KjeOqR",
+                      "label": "Yes"
+                    },
+                    {
+                      "id": "2WaO1K5umgZcZV4bAW5sPu",
+                      "label": "No",
+                      "children": [
+                        {
+                          "id": "objectivesProgress_deliverablesMet_otherText",
+                          "props": {
+                            "label": "Describe progress toward reaching the target/milestone during the reporting period. How close are you to meeting the target? How do you plan to address any obstacle(s) to meeting the target?"
+                          },
+                          "type": "textarea",
+                          "validation": {
+                            "type": "text",
+                            "parentFieldName": "objectivesProgress_deliverablesMet",
+                            "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
+                            "nested": true
+                          }
                         }
-                      }
-                    ]
-                  }
-                ]
+                      ]
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -1367,6 +1371,7 @@
               "props": {
                 "style": {
                   "columns": "2",
+                  "columnGap": "2rem",
                   "paddingLeft": "1rem",
                   "color": "#5A5A5A",
                   "li::before": {
@@ -1401,57 +1406,27 @@
                 },
                 {
                   "type": "li",
-                  "content": "Convenient and accessible transportation options",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Convenient and accessible transportation options"
                 },
                 {
                   "type": "li",
-                  "content": "Data-based decision-making",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Data-based decision-making"
                 },
                 {
                   "type": "li",
-                  "content": "Financing approaches",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Financing approaches"
                 },
                 {
                   "type": "li",
-                  "content": "Stakeholder agreement",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Stakeholder agreement"
                 },
                 {
                   "type": "li",
-                  "content": "Quality measurement and improvement",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Quality measurement and improvement"
                 },
                 {
                   "type": "li",
-                  "content": "Equity and social determinants of health",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Equity and social determinants of health"
                 }
               ]
             }
