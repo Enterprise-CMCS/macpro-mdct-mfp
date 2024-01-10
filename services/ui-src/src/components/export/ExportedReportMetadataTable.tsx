@@ -113,9 +113,4 @@ const sx = {
       paddingBottom: "0rem",
     },
   },
-  sarDetailsTable: {
-    td: {
-      fontWeight: "bold",
-    },
-  },
 };

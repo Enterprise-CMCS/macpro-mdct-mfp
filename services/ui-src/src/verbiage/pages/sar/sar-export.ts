@@ -38,6 +38,15 @@ export default {
       ],
     },
   },
+  generalInformationTable: {
+    headings: [
+      "Resubmission Information",
+      "Organization Information",
+      "Authorized Organizational Representative (AOR)",
+      "Project Director",
+      "CMS Project Officer",
+    ],
+  },
   tableHeaders: {
     number: "Number",
     indicator: "Indicator",
