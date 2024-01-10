@@ -30,10 +30,10 @@ const targetPopulations = (populations?: Choice[]): string => {
 };
 
 const bodyRowContent = (verbiage: any, report?: ReportShape): string[][] => {
-  // TODO: add responses for first two (2) rows
+  const associatedWp = `${report?.fieldData.stateName} Work Plan ${report?.reportYear} - Period ${report?.reportPeriod}`;
   return [
-    [verbiage.indicators[0]],
-    [verbiage.indicators[1]],
+    [verbiage.indicators[0], associatedWp],
+    [verbiage.indicators[1], report?.finalSar![0].value],
     [verbiage.indicators[2], targetPopulations(report?.populations!)],
   ];
 };

@@ -1,11 +1,7 @@
 import { ReactElement } from "react";
 // components
-import { Box } from "@chakra-ui/react";
-import {
-  ExportedSectionHeading,
-  ExportedReportFieldRow,
-  Table,
-} from "components";
+import { Box, Heading } from "@chakra-ui/react";
+import { ExportedReportFieldRow, Table } from "components";
 // types, utils
 import { useStore } from "utils";
 import {
@@ -105,10 +101,11 @@ const renderGeneralInformation = (
   return headings.map((heading: string, idx: number) => {
     return (
       <Box key={idx}>
-        <ExportedSectionHeading heading={heading} />
+        <Heading as="h3" sx={sx.heading}>
+          {heading}
+        </Heading>
         <Table
           sx={sx.root}
-          className={"two-column"}
           content={{
             headRow: [
               verbiage.reportPage.sarDetailsTable.headers.indicator,
@@ -220,5 +217,9 @@ const sx = {
         },
       },
     },
+  },
+  heading: {
+    fontSize: "xl",
+    fontWeight: "bold",
   },
 };
