@@ -10,7 +10,7 @@
     {
       "name": "State- or Territory-Specific Initiatives",
       "path": "/sar/state-or-territory-specific-initiatives",
-      "pageType": "modalOverlay",
+      "pageType": "dynamicModalOverlay",
       "entityType": "initiative",
       "entityInfo": ["initiative_name", "initiative_wpTopic"],
       "verbiage": {
@@ -58,106 +58,61 @@
         "tableHeader": "Initiative name <br/> Work Plan topic",
         "countEntitiesInTitle": false
       },
-      "dashboard": {
-        "name": "Intitiative Details Dashboard",
-        "pageType": "entityDetailsDashboardOverlay",
-        "verbiage": {
-          "intro": {
-            "section": "State- or Territory-Specific Initiatives",
-            "info": [
-              {
-                "type": "span",
-                "content": "Complete each of the 3 steps for this initiative to report progress for this reporting period."
-              }
-            ]
-          }
-        }
-      },
-      "entitySteps": [
-        {
-          "name": "Objectives progress",
-          "pageType": "overlayModal",
-          "entityType": "initiative",
-          "stepType": "evaluationPlan",
-          "stepInfo": ["name", "hint"],
-          "hint": "Report progress for each objective",
-          "isRequired": true,
+      "template": {
+        "dashboard": {
+          "name": "Intitiative Details Dashboard",
+          "pageType": "entityDetailsDashboardOverlay",
           "verbiage": {
             "intro": {
               "section": "State- or Territory-Specific Initiatives",
               "info": [
                 {
-                  "type": "html",
-                  "content": "Report progress for each objective by selecting the button for each."
+                  "type": "span",
+                  "content": "Complete each of the 3 steps for this initiative to report progress for this reporting period."
                 }
-              ],
-              "dashboardTitle": "Objectives progress"
-            },
-            "enterEntityDetailsButtonText": "Edit",
-            "readOnlyEntityDetailsButtonText": "View",
-            "modalTitle": "Report progress for ",
-            "editEntityHint": "Select \"Edit\" to report the objectives progress.",
-            "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab."
-          },
-          "modalForm": {
-            "id": "stsiop-modal",
-            "fields": []
+              ]
+            }
           }
         },
-        {
-          "name": "Initiative progress",
-          "pageType": "entityOverlay",
-          "entityType": "initiative",
-          "stepType": "initiativeProgress",
-          "stepInfo": ["name", "hint"],
-          "hint": "Report overall progress for the initiative",
-          "isRequired": true,
-          "verbiage": {
-            "intro": {
-              "section": "State- or Territory-Specific Initiatives",
-              "subtitle": [
+        "entitySteps": [
+          {
+            "name": "Objectives progress",
+            "pageType": "overlayModal",
+            "entityType": "initiative",
+            "form": {
+              "id": "stsiip",
+              "fields": [
                 {
-                  "type": "html",
-                  "content": "Report progress for this initiative during this reporting period."
+                  "id": "exampleTransformation",
+                  "type": "sectionHeader",
+                  "transformation": {
+                    "rule": "firstQuarterOfThePeriod"
+                  }
                 }
-              ],
-              "subsection": "Report progress for this initiative during this reporting period.",
-              "title": "Initiative progress"
-            },
-            "enterEntityDetailsButtonText": "Edit",
-            "readOnlyEntityDetailsButtonText": "View",
-            "editEntityHint": "Select \"Edit\" to report the overall progress.",
-            "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+              ]
+            }
           },
-          "form": {
-            "id": "stsiip",
-            "fields": []
-          }
-        },
-        {
-          "name": "Expenditures",
-          "pageType": "entityOverlay",
-          "entityType": "initiative",
-          "stepType": "expenditures",
-          "stepInfo": ["name", "hint"],
-          "hint": "Report actual quarterly expenditures by funding source",
-          "isRequired": true,
-          "verbiage": {
-            "intro": {
-              "section": "Expenditures",
-              "subsection": "Initiative expenditures by quarter and funding source. Funding sources and projected spending are auto-populated from your associated Work Plan."
-            },
-            "enterEntityDetailsButtonText": "Edit",
-            "readOnlyEntityDetailsButtonText": "View",
-            "editEntityHint": "Select \"Edit\" to report expenditures.",
-            "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+          {
+            "name": "Initiative progress",
+            "pageType": "entityOverlay",
+            "entityType": "initiative",
+            "form": {
+              "id": "stsiip",
+              "fields": []
+            }
           },
-          "form": {
-            "id": "stsie",
-            "fields": []
+          {
+            "name": "Expenditures",
+            "pageType": "entityOverlay",
+            "entityType": "initiative",
+            "form": {
+              "id": "stsiip",
+              "fields": []
+            }
           }
-        }
-      ]
+        ]
+      },
+      "initiatives": []
     },
     {
       "name": "Review & Submit",

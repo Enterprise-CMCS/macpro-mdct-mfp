@@ -15,6 +15,7 @@ import {
   FormTemplate,
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
+  PageTypes,
   ReportJson,
   ReportRoute,
   ReportType,
@@ -23,6 +24,7 @@ import {
 } from "../types";
 import { createHash } from "crypto";
 import { incrementQuarterAndYear } from "../time/time";
+import { generateSARFormsForInitiatives } from "../transformations/transformations";
 
 export async function getNewestTemplateVersion(reportType: ReportType) {
   const queryParams: QueryInput = {
@@ -324,6 +326,14 @@ export const findAndRunFieldTransformationRules = (
   workPlanFieldData?: AnyObject
 ) => {
   for (let route of reportRoutes) {
+    if (route?.initiatives) {
+      findAndRunFieldTransformationRules(
+        route.initiatives,
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
+      );
+    }
     if (route?.entitySteps)
       findAndRunFieldTransformationRules(
         route.entitySteps,
@@ -402,6 +412,15 @@ export async function getOrCreateFormTemplate(
   );
 
   if (currentFormTemplate?.routes) {
+    if (reportType == ReportType.SAR && workPlanFieldData) {
+      currentFormTemplate.routes = generateSARFormsForInitiatives(
+        currentFormTemplate.routes,
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
+      );
+    }
+
     // traverse routes and scan for conditional field
     currentFormTemplate.routes = scanForConditionalRoutes(
       currentFormTemplate.routes,
