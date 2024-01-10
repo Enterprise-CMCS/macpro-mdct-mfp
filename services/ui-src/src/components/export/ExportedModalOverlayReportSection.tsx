@@ -180,6 +180,7 @@ export function renderModalOverlayTableBody(
                         section={section as ModalOverlayReportPageShape}
                         entity={entity}
                         entityStep={step}
+                        showHintText={true}
                       />
                     </Box>
                   );
@@ -202,6 +203,23 @@ export function renderModalOverlayTableBody(
                         entityStep={step}
                       />
                     </Box>
+                  );
+                case EntityDetailsStepTypes.CLOSE_OUT_INFORMATION:
+                  //clean up title
+                  step[1] = (step[1] as string).replace(" (if applicable)", "");
+
+                  return (
+                    entity?.isInitiativeClosed && (
+                      <Box key={idx}>
+                        <ExportedEntityDetailsOverlaySection
+                          section={section as ModalOverlayReportPageShape}
+                          entity={entity}
+                          entityStep={step}
+                          showHintText={false}
+                          closed={true}
+                        />
+                      </Box>
+                    )
                   );
                 // TODO: Once we are tracking the close-out information step, we'll need to add it here
                 default:
