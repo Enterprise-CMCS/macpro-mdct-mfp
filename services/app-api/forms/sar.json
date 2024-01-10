@@ -83,10 +83,11 @@
               "id": "stsiip",
               "fields": [
                 {
-                  "id": "exampleTransformation",
-                  "type": "sectionHeader",
+                  "id": "fundingSources",
+                  "type": "number",
+                  "validation": "number",
                   "transformation": {
-                    "rule": "firstQuarterOfThePeriod"
+                    "rule": "fundingSources"
                   }
                 }
               ]
