@@ -16,6 +16,7 @@ import {
   EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
   OverlayModalPageShape,
+  DynamicModalOverlayReportPageShape,
 } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
@@ -32,7 +33,18 @@ export const EntityDetailsDashboardOverlay = ({
   >();
   const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
 
-  const { entitySteps } = route;
+  let entitySteps:
+    | (OverlayModalPageShape | EntityDetailsOverlayShape)[]
+    | undefined;
+  if (route.pageType === "dynamicModalOverlay") {
+    entitySteps = (
+      route as DynamicModalOverlayReportPageShape
+    ).initiatives.find(
+      (initiative) => initiative.id === selectedEntity?.id
+    )?.entitySteps;
+  } else {
+    entitySteps = route.entitySteps;
+  }
 
   // Open/Close overlay action methods
   const openEntityStepOverlay = (
