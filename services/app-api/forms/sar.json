@@ -989,9 +989,6 @@
               ],
               "dashboardTitle": "Objectives progress"
             },
-            "editEntityButtonText": "Edit objective progress",
-            "reportProgressButtonText": "Report objective progress",
-            "addEditModalEditTitle": "Report progress for ",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
             "readOnlyEntityButtonText": "View",
@@ -1373,6 +1370,7 @@
               "props": {
                 "style": {
                   "columns": "2",
+                  "columnGap": "2rem",
                   "paddingLeft": "1rem",
                   "color": "#5A5A5A",
                   "li::before": {
@@ -1407,57 +1405,27 @@
                 },
                 {
                   "type": "li",
-                  "content": "Convenient and accessible transportation options",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Convenient and accessible transportation options"
                 },
                 {
                   "type": "li",
-                  "content": "Data-based decision-making",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Data-based decision-making"
                 },
                 {
                   "type": "li",
-                  "content": "Financing approaches",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Financing approaches"
                 },
                 {
                   "type": "li",
-                  "content": "Stakeholder agreement",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Stakeholder agreement"
                 },
                 {
                   "type": "li",
-                  "content": "Quality measurement and improvement",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Quality measurement and improvement"
                 },
                 {
                   "type": "li",
-                  "content": "Equity and social determinants of health",
-                  "props": {
-                    "style": {
-                      "marginLeft": "1rem"
-                    }
-                  }
+                  "content": "Equity and social determinants of health"
                 }
               ]
             }
