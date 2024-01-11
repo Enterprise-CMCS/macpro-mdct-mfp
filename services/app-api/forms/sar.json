@@ -989,6 +989,9 @@
               ],
               "dashboardTitle": "Objectives progress"
             },
+            "editEntityButtonText": "Edit objective progress",
+            "reportProgressButtonText": "Report objective progress",
+            "addEditModalEditTitle": "Report progress for ",
             "enterEntityDetailsButtonText": "Edit",
             "readOnlyEntityDetailsButtonText": "View",
             "readOnlyEntityButtonText": "View",
