@@ -260,6 +260,7 @@ export const fundingSources = (
       type: "sectionHeader",
       props: {
         label: `${fundingSource?.fundingSources_wpTopic?.[0]?.value}`,
+        subcontent: "This funding source auto-populates from MFP Work Plan.",
       },
     };
     fieldsToAppend.push(fundingSourceHeader);
@@ -297,6 +298,7 @@ export const fundingSources = (
         validation: fieldToRepeat.validation,
         props: {
           label: `Projected Spending (${longformQuarter} quarter: ${spendingMonths})`,
+          subcontent: "Auto-populates from MFP Work Plan.",
         },
       };
       fieldsToAppend.push(actualSpending, projectedSpending);
