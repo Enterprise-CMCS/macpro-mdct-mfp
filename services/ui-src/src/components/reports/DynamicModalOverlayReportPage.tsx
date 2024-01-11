@@ -75,7 +75,9 @@ export const DynamicModalOverlayReportPage = ({
 
   // Open/Close overlay action methods
   const openEntityDetailsOverlay = (entity: EntityShape) => {
-    const initiative = initiatives.find((init) => init.id === entity.id);
+    const initiative = initiatives.find(
+      (init) => init.initiativeId === entity.id
+    );
     setSelectedInitiative(initiative);
     setSelectedEntity(entity);
     setIsEntityDetailsOpen(true);
@@ -128,11 +130,11 @@ export const DynamicModalOverlayReportPage = ({
               <Table sx={sx.table} content={tableHeaders()}>
                 {initiatives.map((initiative, idx) => {
                   const entity = reportFieldDataEntities.find(
-                    (entity) => entity.id === initiative.id
+                    (entity) => entity.id === initiative.initiativeId
                   );
                   if (!entity) {
                     throw new Error(
-                      `Could not find entity with id ${initiative.id}`
+                      `Could not find entity with id ${initiative.initiativeId}`
                     );
                   }
                   return (

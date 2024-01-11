@@ -255,7 +255,6 @@ export const fundingSources = (
 
   for (let fundingSource of initiativeToUse.fundingSources) {
     const isFirstReportPeriod = reportPeriod == 1;
-
     const fundingSourceHeader: FormField = {
       id: `123`,
       type: "sectionHeader",
@@ -287,7 +286,6 @@ export const fundingSources = (
         type: fieldToRepeat?.type,
         validation: fieldToRepeat.validation,
         props: {
-          ...fieldToRepeat?.props,
           label: `Actual Spending (${longformQuarter} quarter: ${spendingMonths})`,
         },
       };
@@ -298,7 +296,6 @@ export const fundingSources = (
         type: fieldToRepeat?.type,
         validation: fieldToRepeat.validation,
         props: {
-          ...fieldToRepeat?.props,
           label: `Projected Spending (${longformQuarter} quarter: ${spendingMonths})`,
         },
       };
@@ -405,14 +402,15 @@ export const findAndRunFieldTransformationRules = (
         initiativeId
       );
     }
-    if (route?.entitySteps)
+    if (route?.entitySteps) {
       findAndRunFieldTransformationRules(
         route.entitySteps,
         reportPeriod,
         reportYear,
         workPlanFieldData,
-        initiativeId
+        route.initiativeId
       );
+    }
     if (route?.children)
       findAndRunFieldTransformationRules(
         route.children,
@@ -421,7 +419,7 @@ export const findAndRunFieldTransformationRules = (
         workPlanFieldData,
         initiativeId
       );
-    if (route?.form?.fields)
+    if (route?.form?.fields) {
       route.form.fields = runFieldTransformationRules(
         route.form.fields,
         reportPeriod,
@@ -429,6 +427,7 @@ export const findAndRunFieldTransformationRules = (
         workPlanFieldData,
         initiativeId
       );
+    }
     if (route?.drawerForm?.fields)
       route.drawerForm.fields = runFieldTransformationRules(
         route.drawerForm.fields,
@@ -488,28 +487,26 @@ export async function getOrCreateFormTemplate(
   );
 
   if (currentFormTemplate?.routes) {
-    if (reportType == ReportType.SAR && workPlanFieldData) {
-      currentFormTemplate.routes = generateSARFormsForInitiatives(
-        currentFormTemplate.routes,
-        reportPeriod,
-        reportYear,
-        workPlanFieldData
-      );
-    } else {
-      // traverse routes and scan for conditional field
-      currentFormTemplate.routes = scanForConditionalRoutes(
-        currentFormTemplate.routes,
-        reportPeriod
-      );
+    currentFormTemplate.routes = generateSARFormsForInitiatives(
+      currentFormTemplate.routes,
+      reportPeriod,
+      reportYear,
+      workPlanFieldData
+    );
 
-      //transformation of the formTemplate to generate new quarters
-      findAndRunFieldTransformationRules(
-        currentFormTemplate.routes,
-        reportPeriod,
-        reportYear,
-        workPlanFieldData
-      );
-    }
+    // traverse routes and scan for conditional field
+    currentFormTemplate.routes = scanForConditionalRoutes(
+      currentFormTemplate.routes,
+      reportPeriod
+    );
+
+    //transformation of the formTemplate to generate new quarters
+    findAndRunFieldTransformationRules(
+      currentFormTemplate.routes,
+      reportPeriod,
+      reportYear,
+      workPlanFieldData
+    );
   }
 
   const stringifiedTemplate = JSON.stringify(currentFormTemplate);

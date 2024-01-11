@@ -90,7 +90,7 @@ export interface DynamicModalOverlayReportPageShape
   drawerForm: never;
   form: never;
   initiatives: {
-    id: string;
+    initiativeId: string;
     name: string;
     topic: string;
     dashboard: FormJson;

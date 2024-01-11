@@ -40,7 +40,7 @@ export const EntityDetailsDashboardOverlay = ({
     entitySteps = (
       route as DynamicModalOverlayReportPageShape
     ).initiatives.find(
-      (initiative) => initiative.id === selectedEntity?.id
+      (initiative) => initiative.initiativeId === selectedEntity?.id
     )?.entitySteps;
   } else {
     entitySteps = route.entitySteps;
