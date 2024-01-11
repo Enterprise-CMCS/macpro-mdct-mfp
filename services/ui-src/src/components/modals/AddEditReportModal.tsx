@@ -8,7 +8,11 @@ import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 // utils
 import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
-import { injectFormWithTargetPopulations, useStore } from "utils";
+import {
+  injectFormWithTargetPopulations,
+  removeNotApplicablePopulations,
+  useStore,
+} from "utils";
 import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const AddEditReportModal = ({
@@ -28,11 +32,13 @@ export const AddEditReportModal = ({
     ? selectedReport?.formData?.populations
     : workPlanToCopyFrom?.fieldData?.targetPopulations;
 
+  const filteredDataToInject = removeNotApplicablePopulations(dataToInject);
+
   const modalFormJsonMap: any = {
     WP: wpFormJson,
     SAR: injectFormWithTargetPopulations(
       sarFormJson,
-      dataToInject,
+      filteredDataToInject,
       !!selectedReport?.id
     ),
   };
