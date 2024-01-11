@@ -9,12 +9,13 @@ export default {
   },
   metadata: {
     author: "CMS",
-    subject: "Managed Care Program Annual Report",
+    subject: "Semi-Annual Progress Report",
     language: "English",
   },
   reportPage: {
-    heading: "Managed Care Program Annual Report (SAR) for ",
+    heading: "Semi-Annual Progress Report (SAR) for ",
     metadataTableHeaders: {
+      submissionName: "Submission Name",
       dueDate: "Due date",
       lastEdited: "Last edited",
       editedBy: "Edited by",
@@ -25,6 +26,26 @@ export default {
       subtitle:
         "Enrollees in separate CHIP programs funded under Title XXI should not be reported in the SAR. Please check this box if the state is unable to remove information about Separate CHIP enrollees from its reporting on this program.",
     },
+    sarDetailsTable: {
+      headers: {
+        indicator: "Indicator",
+        response: "Response",
+      },
+      indicators: [
+        "Associated Work Plan",
+        "Is this your state/territory's final MFP SAR for your period of performance in the MFP demonstration?",
+        "Select the target populations applicable to your state during this reporting period.",
+      ],
+    },
+  },
+  generalInformationTable: {
+    headings: [
+      "Resubmission Information",
+      "Organization Information",
+      "Authorized Organizational Representative (AOR)",
+      "Project Director",
+      "CMS Project Officer",
+    ],
   },
   modalOverlayTableHeaders: {},
   tableHeaders: {
