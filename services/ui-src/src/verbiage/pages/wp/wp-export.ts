@@ -31,23 +31,6 @@ export default {
     indicator: "Indicator",
     response: "Response",
   },
-  /**
-   * TODO FIXME OBVIOUSLY INCORRECT
-   *
-   * If this object has no entries, then ExportedModalOverlayReportSection
-   * will have an empty array for `headerLabels`,
-   * which will mean an empty array for `headRow` in Table,
-   * which will mean a <tr> with no children,
-   * which is an accessibility issue.
-   *
-   * Reproduce by deleting the junk below and running the axe unit tests.
-   */
-  modalOverlayTableHeaders: {
-    hello: "world",
-    TODO: "fixme",
-    required: "for accessibility",
-    definitely: "DO NOT MERGE",
-  },
   emptyEntityMessage: {
     evaluationPlan: "Objectives: 0  - No objectives added",
     fundingSources: "Funding sources: 0 - No funding sources added",
