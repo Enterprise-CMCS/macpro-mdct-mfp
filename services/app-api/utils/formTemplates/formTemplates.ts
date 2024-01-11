@@ -23,6 +23,7 @@ import {
 } from "../types";
 import { createHash } from "crypto";
 import { incrementQuarterAndYear } from "../time/time";
+import { generateSARFormsForInitiatives } from "../transformations/transformations";
 
 export async function getNewestTemplateVersion(reportType: ReportType) {
   const queryParams: QueryInput = {
@@ -239,6 +240,74 @@ export const targetPopulations = (
   return fieldsToAppend;
 };
 
+export const fundingSources = (
+  fieldToRepeat: FormField,
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData: AnyObject,
+  initiativeId: string
+) => {
+  const fieldsToAppend = [];
+
+  const initiativeToUse = workPlanFieldData?.initiative.find(
+    (initiative: any) => initiative.id === initiativeId
+  );
+
+  for (let fundingSource of initiativeToUse.fundingSources) {
+    const isFirstReportPeriod = reportPeriod == 1;
+
+    const fundingSourceHeader: FormField = {
+      id: `123`,
+      type: "sectionHeader",
+      props: {
+        label: `${fundingSource?.fundingSources_wpTopic?.[0]?.value}`,
+      },
+    };
+    fieldsToAppend.push(fundingSourceHeader);
+
+    // have to loop twice for both periods
+    for (let i = 0; i < 2; i++) {
+      let longformQuarter = "";
+      let spendingMonths = "";
+
+      if (i === 0) {
+        longformQuarter = isFirstReportPeriod ? "First" : "Third";
+        spendingMonths = isFirstReportPeriod
+          ? "January 1 - March 31"
+          : "July 1 - September 30";
+      } else {
+        longformQuarter = isFirstReportPeriod ? "Second" : "Fourth";
+        spendingMonths = isFirstReportPeriod
+          ? "April 1 - June 30"
+          : "October 1 - December 31";
+      }
+
+      const actualSpending: FormField = {
+        id: `fundingSources_actual${reportYear}Q${isFirstReportPeriod ? 1 : 3}`,
+        type: fieldToRepeat?.type,
+        validation: fieldToRepeat.validation,
+        props: {
+          ...fieldToRepeat?.props,
+          label: `Actual Spending (${longformQuarter} quarter: ${spendingMonths})`,
+        },
+      };
+      const projectedSpending: FormField = {
+        id: `fundingSources_quarters${reportYear}Q${
+          isFirstReportPeriod ? 1 : 3
+        }`,
+        type: fieldToRepeat?.type,
+        validation: fieldToRepeat.validation,
+        props: {
+          ...fieldToRepeat?.props,
+          label: `Projected Spending (${longformQuarter} quarter: ${spendingMonths})`,
+        },
+      };
+      fieldsToAppend.push(actualSpending, projectedSpending);
+    }
+  }
+  return fieldsToAppend;
+};
+
 /**
  * Look through the formFields provided and run the transformation provided on that field.
  * @param {FormField[]} formFields - The formFields you want to transform
@@ -252,7 +321,8 @@ export const runFieldTransformationRules = (
   formFields: FormField[],
   reportPeriod: number,
   reportYear: number,
-  workPlanFieldData?: AnyObject
+  workPlanFieldData?: AnyObject,
+  initiativeId?: string
 ) => {
   //Create a map of all the possible transformations that can run on a field
   const transformationRuleMap: AnyObject = {
@@ -260,8 +330,8 @@ export const runFieldTransformationRules = (
     targetPopulations: targetPopulations,
     firstQuarterOfThePeriod: firstQuarterOfThePeriod,
     secondQuarterOfThePeriod: secondQuarterOfThePeriod,
+    fundingSources: fundingSources,
   };
-
   const transformedFields: FormField[] = [];
 
   formFields.forEach((field) => {
@@ -294,7 +364,8 @@ export const runFieldTransformationRules = (
           field,
           reportPeriod,
           reportYear,
-          workPlanFieldData
+          workPlanFieldData,
+          initiativeId
         )
       );
     } else {
@@ -321,43 +392,58 @@ export const findAndRunFieldTransformationRules = (
   )[],
   reportPeriod: number,
   reportYear: number,
-  workPlanFieldData?: AnyObject
+  workPlanFieldData?: AnyObject,
+  initiativeId?: string
 ) => {
   for (let route of reportRoutes) {
+    if (route?.initiatives) {
+      findAndRunFieldTransformationRules(
+        route.initiatives,
+        reportPeriod,
+        reportYear,
+        workPlanFieldData,
+        initiativeId
+      );
+    }
     if (route?.entitySteps)
       findAndRunFieldTransformationRules(
         route.entitySteps,
         reportPeriod,
         reportYear,
-        workPlanFieldData
+        workPlanFieldData,
+        initiativeId
       );
     if (route?.children)
       findAndRunFieldTransformationRules(
         route.children,
         reportPeriod,
         reportYear,
-        workPlanFieldData
+        workPlanFieldData,
+        initiativeId
       );
     if (route?.form?.fields)
       route.form.fields = runFieldTransformationRules(
         route.form.fields,
         reportPeriod,
         reportYear,
-        workPlanFieldData
+        workPlanFieldData,
+        initiativeId
       );
     if (route?.drawerForm?.fields)
       route.drawerForm.fields = runFieldTransformationRules(
         route.drawerForm.fields,
         reportPeriod,
         reportYear,
-        workPlanFieldData
+        workPlanFieldData,
+        initiativeId
       );
     if (route?.modalForm?.fields)
       route.modalForm.fields = runFieldTransformationRules(
         route.modalForm.fields,
         reportPeriod,
         reportYear,
-        workPlanFieldData
+        workPlanFieldData,
+        initiativeId
       );
   }
 };
@@ -402,19 +488,28 @@ export async function getOrCreateFormTemplate(
   );
 
   if (currentFormTemplate?.routes) {
-    // traverse routes and scan for conditional field
-    currentFormTemplate.routes = scanForConditionalRoutes(
-      currentFormTemplate.routes,
-      reportPeriod
-    );
+    if (reportType == ReportType.SAR && workPlanFieldData) {
+      currentFormTemplate.routes = generateSARFormsForInitiatives(
+        currentFormTemplate.routes,
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
+      );
+    } else {
+      // traverse routes and scan for conditional field
+      currentFormTemplate.routes = scanForConditionalRoutes(
+        currentFormTemplate.routes,
+        reportPeriod
+      );
 
-    //transformation of the formTemplate to generate new quarters
-    findAndRunFieldTransformationRules(
-      currentFormTemplate.routes,
-      reportPeriod,
-      reportYear,
-      workPlanFieldData
-    );
+      //transformation of the formTemplate to generate new quarters
+      findAndRunFieldTransformationRules(
+        currentFormTemplate.routes,
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
+      );
+    }
   }
 
   const stringifiedTemplate = JSON.stringify(currentFormTemplate);
