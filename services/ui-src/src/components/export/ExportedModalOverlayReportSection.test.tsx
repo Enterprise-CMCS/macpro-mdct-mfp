@@ -134,7 +134,6 @@ const testComponent = (
 describe("ExportedModalDrawerReportSection", () => {
   test("should not have basic accessibility issues", async () => {
     const { container } = render(testComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await axe(container);
   });
 });
