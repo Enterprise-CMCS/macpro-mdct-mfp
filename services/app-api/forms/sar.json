@@ -1010,13 +1010,6 @@
                   "label": "Provide data on performance measures or indicators used for monitoring progress toward the objective during the current reporting period. Include progress toward milestones and key deliverables."
                 }
               },
-
-              {
-                "id": "objectivesProgress_quantitative",
-                "transformation": {
-                  "rule": "quantitativeQuarters"
-                }
-              },
               {
                 "id": "objectivesProgress_deliverablesMet",
                 "type": "radio",
