@@ -19,6 +19,8 @@ export interface ReportPageVerbiage {
     subsection?: string;
     hint?: string;
     info?: string | CustomHtmlElement[];
+    title?: string;
+    subtitle?: string;
     spreadsheet?: string;
     exportSectionHeader?: string;
   };

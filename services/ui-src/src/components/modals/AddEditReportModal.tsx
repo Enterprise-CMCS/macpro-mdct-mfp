@@ -9,6 +9,7 @@ import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
 import { injectFormWithTargetPopulations, useStore } from "utils";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const AddEditReportModal = ({
   activeState,
@@ -19,7 +20,7 @@ export const AddEditReportModal = ({
 }: Props) => {
   const { createReport, fetchReportsByState, updateReport } =
     useContext(ReportContext);
-  const { full_name } = useStore().user ?? {};
+  const { full_name, userIsAdmin } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { workPlanToCopyFrom } = useStore();
 
@@ -39,8 +40,15 @@ export const AddEditReportModal = ({
   const modalFormJson = modalFormJsonMap[reportType]!;
   const form: FormJson = modalFormJson;
 
-  // WP report payload
-  const prepareWpPayload = () => {
+  // temporary flag for testing copyover
+  const isCopyOverTest = useFlags()?.isCopyOverTest;
+
+  /**
+   * @function: Prepare WP payload
+   * @param wpReset: (optional) determine whether the user would like to continue a Work Plan for next period,
+   * but clear / reset any existing data from the previous period
+   */
+  const prepareWpPayload = (wpReset?: boolean) => {
     const submissionName = "Work Plan";
 
     // static entities
@@ -73,6 +81,11 @@ export const AddEditReportModal = ({
       },
     ];
 
+    // add a flag to be passed to the backend for copy over testing
+    if (previousReport) {
+      previousReport.isCopyOverTest = isCopyOverTest;
+    }
+
     return {
       metadata: {
         submissionName,
@@ -80,6 +93,7 @@ export const AddEditReportModal = ({
         copyReport: previousReport,
         locked: false,
         previousRevisions: [],
+        isReset: wpReset,
       },
       fieldData: {
         submissionName,
@@ -114,12 +128,18 @@ export const AddEditReportModal = ({
     };
   };
 
-  const writeReport = async (formData: any) => {
+  /**
+   * @param wpReset: (optional) determine whether the user would like to continue a Work Plan for next period,
+   * but clear / reset any existing data from the previous period
+   */
+  const writeReport = async (formData: any, wpReset?: boolean) => {
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
     const dataToWrite =
-      reportType === "WP" ? prepareWpPayload() : prepareSarPayload(formData);
+      reportType === "WP"
+        ? prepareWpPayload(wpReset)
+        : prepareSarPayload(formData);
 
     // if an existing program was selected, use that report id
     if (selectedReport?.id) {
@@ -161,7 +181,8 @@ export const AddEditReportModal = ({
     modalDisclosure.onClose();
   };
 
-  const resetReport = () => {
+  const resetReport = (formData: any) => {
+    writeReport(formData, true);
     modalDisclosure.onClose();
   };
 
@@ -169,7 +190,7 @@ export const AddEditReportModal = ({
     if (reportType === ReportType.WP) {
       return "";
     }
-    return submitting ? <Spinner size="md" /> : "Save";
+    return submitting ? <Spinner size="md" /> : userIsAdmin ? "Return" : "Save";
   };
 
   const isCopyDisabled = () => {
@@ -201,7 +222,8 @@ export const AddEditReportModal = ({
               ? previousReport
               : selectedReport?.formData
           }
-          onSubmit={writeReport}
+          // if view-only (user is admin), close modal
+          onSubmit={userIsAdmin ? modalDisclosure.onClose : writeReport}
           validateOnRender={false}
           dontReset={true}
         />

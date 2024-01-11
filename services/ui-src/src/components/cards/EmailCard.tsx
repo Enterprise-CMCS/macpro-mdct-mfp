@@ -24,7 +24,11 @@ export const EmailCard = ({ verbiage, icon, cardprops, ...props }: Props) => {
   const { isDesktop } = useBreakpoint();
 
   return (
-    <Card {...cardprops} paddingBottom="1.5rem !important">
+    <Card
+      boxShadow="0px 3px 9px rgba(0, 0, 0, 0.2)"
+      {...cardprops}
+      paddingBottom="1.5rem !important"
+    >
       <Flex sx={sx.root} {...props}>
         <Image src={iconMap[icon].image} alt={iconMap[icon].alt} sx={sx.icon} />
         <Flex sx={sx.cardContentFlex}>

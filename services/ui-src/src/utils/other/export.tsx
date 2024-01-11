@@ -140,7 +140,7 @@ export const renderResponseData = (
   const missingEntryStyle = notApplicable ? sx.notApplicable : sx.noResponse;
   if (!hasResponse)
     return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;
-  // chandle choice list fields (checkbox, radio)
+  // handle choice list fields (checkbox, radio)
   if (isChoiceListField) {
     return renderChoiceListFieldResponse(
       formField,
@@ -236,6 +236,7 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
   )
     return {};
   const labelArray = formFieldProps?.label?.split(" ");
+
   return {
     number: labelArray?.[0].match(/[-.0-9]+/) ? labelArray?.[0] : "N/A",
     label: labelArray?.[0].match(/[-.0-9]+/)
@@ -243,20 +244,7 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
       : labelArray?.join(" "),
     hint: formFieldProps?.hint,
     indicator: formFieldProps?.indicator,
-  };
-};
-
-export const getEntityDetailsMLR = (entity: EntityShape) => {
-  const { report_programName, report_planName } = entity;
-
-  const reportingPeriod = `${entity.report_reportingPeriodStartDate} to ${entity.report_reportingPeriodEndDate}`;
-  // const mlrEligibilityGroup = eligibilityGroup(entity);
-
-  return {
-    report_planName,
-    report_programName,
-    reportingPeriod,
-    // mlrEligibilityGroup,
+    choices: formFieldProps?.choices,
   };
 };
 

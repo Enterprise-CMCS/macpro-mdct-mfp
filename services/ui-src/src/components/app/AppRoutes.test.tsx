@@ -10,12 +10,22 @@ import {
   mockStateUserStore,
   mockLDFlags,
   mockBannerStore,
+  mockReportStore,
 } from "utils/testing/setupJest";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue({
+  ...mockStateUserStore,
+  ...mockBannerStore,
+  ...mockReportStore,
+});
 
 mockLDFlags.setDefault({ wpReport: true, sarReport: true });
+
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
 
 const appRoutesComponent = (history: any) => (
   <Router location={history.location} navigator={history}>
@@ -25,22 +35,22 @@ const appRoutesComponent = (history: any) => (
   </Router>
 );
 
-let history: any;
-
-describe("Test AppRoutes 404 handling", () => {
-  beforeEach(async () => {
-    mockedUseStore.mockReturnValue({
-      ...mockStateUserStore,
-      ...mockBannerStore,
+describe("Test AppRoutes", () => {
+  test("report routes are generated", async () => {
+    const history = createMemoryHistory();
+    history.push("/mock/mock-route-1");
+    await act(async () => {
+      await render(appRoutesComponent(history));
     });
-    history = createMemoryHistory();
+    expect(screen.getByText("mock-report")).toBeVisible();
+  });
+
+  test("not-found routes redirect to 404", async () => {
+    const history = createMemoryHistory();
     history.push("/obviously-fake-route");
     await act(async () => {
       await render(appRoutesComponent(history));
     });
-  });
-
-  test("not-found routes redirect to 404", () => {
     expect(screen.getByTestId("404-view")).toBeVisible();
   });
 });

@@ -99,9 +99,6 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
   const { intro, body } = dashboardVerbiage;
 
-  // get Work Plan status
-  const workPlanStatus = workPlanToCopyFrom?.status;
-
   // get active state
   const adminSelectedState = localStorage.getItem("selectedState") || undefined;
   const activeState = userState || adminSelectedState;
@@ -135,6 +132,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   }, [reportsByState]);
 
   const isReportEditable = (selectedReport: ReportShape) => {
+    //the wp is only editable only when the user is a state user and the form has not been submitted or approved, all over users are in view mode
     return (
       !userIsAdmin &&
       !userIsReadOnly &&
@@ -246,19 +244,6 @@ export const DashboardPage = ({ reportType }: Props) => {
         if (!previousReport) {
           return false;
         } else {
-          /** turning this off atm for testing copy over
-           * const currentDate = new Date();
-           * const period = currentDate.getMonth() + 1 > 6 ? 2 : 1;
-           * const year = currentDate.getFullYear();
-           * const isNextPeriod =
-           *  year > previousReport.reportYear ||
-           *  (year === previousReport.reportYear &&
-           *  period > previousReport.reportPeriod);
-           *  return (
-           *    previousReport.status !== ReportStatus.APPROVED || !isNextPeriod
-           *  );
-           **/
-
           return previousReport.status !== ReportStatus.APPROVED;
         }
       default:
@@ -291,17 +276,16 @@ export const DashboardPage = ({ reportType }: Props) => {
       {errorMessage && <ErrorAlert error={errorMessage} />}
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
-        {reportType === ReportType.SAR &&
-          workPlanStatus !== ReportStatus.APPROVED && (
-            <Alert
-              title={sarVerbiage.alertBanner.title}
-              showIcon={true}
-              icon={alertIcon}
-              status={AlertTypes.ERROR}
-              description={sarVerbiage.alertBanner.body}
-              sx={sx.alertBanner}
-            />
-          )}
+        {reportType === ReportType.SAR && !workPlanToCopyFrom && (
+          <Alert
+            title={sarVerbiage.alertBanner.title}
+            showIcon={true}
+            icon={alertIcon}
+            status={AlertTypes.ERROR}
+            description={sarVerbiage.alertBanner.body}
+            sx={sx.alertBanner}
+          />
+        )}
         <Heading as="h1" sx={sx.headerText}>
           {fullStateName} {intro.header}
         </Heading>
@@ -359,7 +343,7 @@ export const DashboardPage = ({ reportType }: Props) => {
             </Flex>
           )
         )}
-        {!reportsToDisplay?.length && (
+        {!reportsToDisplay?.length && userIsEndUser && (
           <Text sx={sx.emptyTableContainer}>{body.empty}</Text>
         )}
         {/* only show add report button to state users */}

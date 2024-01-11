@@ -28,7 +28,7 @@ export const MobileDashboardTable = ({
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>{"Submission name"}</Text>
           <Flex alignContent="flex-start">
-            {isStateLevelUser && reportType === "SAR" && !report?.locked && (
+            {reportType === "SAR" && !report?.locked && (
               <Box sx={sxOverride.editReport}>
                 <button onClick={() => openAddEditReportModal(report)}>
                   <Image
@@ -44,7 +44,7 @@ export const MobileDashboardTable = ({
             </Text>
           </Flex>
         </Box>
-        {reportType === "SAR" && report?.populations && (
+        {!isAdmin && reportType === "SAR" && report?.populations && (
           <Box sx={sx.labelGroup}>
             <Text sx={sx.label}>Target populations</Text>
             <Text>{prettifyChoices(report?.populations)}</Text>
@@ -188,9 +188,7 @@ const AdminReleaseButton = ({
     report.archived,
     report.submissionCount
   );
-  const isDisabled = !(
-    reportStatus === "Submitted" || reportStatus === "Approved"
-  );
+  const isDisabled = !(reportStatus === "Submitted");
 
   return (
     <Button

@@ -45,7 +45,7 @@ import { copyFieldDataFromSource } from "../../utils/other/copy";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
-    if (!hasPermissions(event, [UserRoles.STATE_USER, UserRoles.STATE_REP])) {
+    if (!hasPermissions(event, [UserRoles.STATE_USER])) {
       return {
         status: StatusCodes.UNAUTHORIZED,
         body: error.UNAUTHORIZED,
@@ -113,7 +113,7 @@ export const createReport = handler(
       };
     }
 
-    // Begin Section - Check the payload that was sent with the request and validate it
+    // Check the payload that was sent with the request and setup validation
     const unvalidatedPayload = JSON.parse(event.body!);
     const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
       unvalidatedPayload;
@@ -127,15 +127,43 @@ export const createReport = handler(
       targetPopulations: "objectArray",
     };
 
+    const currentDate = Date.now();
+    let reportYear: number =
+      reportType === ReportType.WP
+        ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
+        : workPlanMetadata!.reportYear;
+
+    let reportPeriod: number =
+      reportType === ReportType.WP
+        ? calculatePeriod(currentDate, workPlanMetadata)
+        : workPlanMetadata!.reportPeriod;
+
+    const overrideCopyOver =
+      unvalidatedMetadata?.copyReport &&
+      unvalidatedMetadata?.copyReport?.isCopyOverTest;
+
+    if (overrideCopyOver) {
+      if (unvalidatedMetadata?.copyReport?.reportPeriod)
+        reportPeriod = unvalidatedMetadata?.copyReport?.reportPeriod;
+      if (unvalidatedMetadata?.copyReport?.reportYear)
+        reportYear = unvalidatedMetadata?.copyReport?.reportYear;
+
+      reportYear = reportPeriod == 2 ? reportYear + 1 : reportYear;
+      reportPeriod = (reportPeriod % 2) + 1;
+    }
+
+    // If this Work Plan is a reset, the reporting period is the upcoming one
+    const isReset = unvalidatedMetadata?.isReset;
+
     // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;
     try {
       ({ formTemplate, formTemplateVersion } = await getOrCreateFormTemplate(
         reportBucket,
         reportType,
-        workPlanFieldData,
-        workPlanMetadata,
-        unvalidatedMetadata?.copyReport!
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       ));
     } catch (err) {
       logger.error(err, "Error getting or creating template");
@@ -161,7 +189,7 @@ export const createReport = handler(
     if (workPlanFieldData) {
       validatedFieldData = {
         ...validatedFieldData,
-        workPlanData: workPlanFieldData,
+        ...workPlanFieldData,
       };
     }
 
@@ -177,17 +205,22 @@ export const createReport = handler(
     // Being Section - Check if metadata has filled parameter for copyReport
     let newFieldData;
 
-    if (unvalidatedMetadata.copyReport) {
+    const updatedValidatedFieldData = {
+      ...validatedFieldData,
+      generalInformation_resubmissionInformation: "N/A",
+    };
+
+    if (unvalidatedMetadata.copyReport && !isReset) {
       const reportPeriod = calculatePeriod(Date.now(), workPlanMetadata);
       const isCurrentPeriod =
         calculateCurrentYear() === unvalidatedMetadata.copyReport.reportYear &&
         reportPeriod === unvalidatedMetadata.copyReport.reportPeriod;
 
       //do not allow user to create a copy if it's the same period
-      if (isCurrentPeriod) {
+      if (isCurrentPeriod && !overrideCopyOver) {
         return {
           status: StatusCodes.UNAUTHORIZED,
-          body: error.NO_WORKPLANS_FOUND,
+          body: error.UNABLE_TO_COPY,
         };
       }
 
@@ -196,11 +229,12 @@ export const createReport = handler(
         state,
         unvalidatedMetadata.copyReport?.fieldDataId,
         formTemplate,
-        validatedFieldData
+        updatedValidatedFieldData
       );
     } else {
-      newFieldData = validatedFieldData;
+      newFieldData = updatedValidatedFieldData;
     }
+
     // End Section - Check if metadata has filled parameter for copyReport
     /*
      * End Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used
@@ -242,16 +276,7 @@ export const createReport = handler(
       };
     }
 
-    // Begin Section - Create DyanmoDB record.
-    const currentDate = Date.now();
-    const reportYear =
-      reportType === ReportType.WP
-        ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
-        : workPlanMetadata!.reportYear;
-
-    const reportPeriod = calculatePeriod(currentDate, workPlanMetadata);
-
-    // Create DyanmoDB record.
+    // Begin Section - Create DyanmoDB record
     const reportMetadataParams: DynamoWrite = {
       TableName: reportTable,
       Item: {
@@ -266,7 +291,7 @@ export const createReport = handler(
         versionNumber: formTemplateVersion?.versionNumber,
         submissionName: createReportName(
           reportTypeExpanded,
-          currentDate,
+          reportPeriod,
           state,
           reportYear,
           workPlanMetadata

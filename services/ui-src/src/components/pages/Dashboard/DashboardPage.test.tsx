@@ -174,11 +174,13 @@ describe("Test Report Dashboard with no reports", () => {
   });
 
   test("WP Dashboard renders table with empty text", () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
     render(wpDashboardWithNoReports);
     expect(screen.getByText(wpVerbiage.body.empty)).toBeVisible();
   });
 
   test("SAR Dashboard renders table with empty text", () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
     render(sarDashboardWithNoReports);
     expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
   });
@@ -238,7 +240,7 @@ describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobil
     });
 
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[0];
+      const unlockButton = screen.getAllByText("Unlock")[1];
       expect(unlockButton).toBeVisible();
       await userEvent.click(unlockButton);
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
@@ -277,7 +279,7 @@ describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobil
     });
 
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[0];
+      const unlockButton = screen.getAllByText("Unlock")[1];
       expect(unlockButton).toBeVisible();
       await userEvent.click(unlockButton);
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);

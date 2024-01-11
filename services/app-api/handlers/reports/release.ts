@@ -142,15 +142,7 @@ export const releaseReport = handler(async (event) => {
 
   const updatedFieldData = {
     ...fieldData,
-    versionControl: [
-      {
-        // pragma: allowlist nextline secret
-        key: "versionControl-cyUSrTH8mWdpqAKExLZAkz",
-        value: "Yes, this is a resubmission",
-      },
-    ],
-    versionControlDescription: null,
-    "versionControlDescription-otherText": null,
+    generalInformation_resubmissionInformation: "",
   };
 
   const newReportMetadata: WPReportMetadata = {

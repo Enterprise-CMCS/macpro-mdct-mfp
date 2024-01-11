@@ -23,36 +23,30 @@ export default {
         "https://www.govinfo.gov/content/pkg/PLAW-109publ171/pdf/PLAW-109publ171.pdf",
       postLinkText:
         ' as "increasing the use of home and community-based, rather than institutional, long-term care services."',
-      downloadText: "",
+      downloadText: "User Guide and Help File",
       link: {
         text: "Enter Work Plan online",
         route: "wp",
       },
       accordion: {
         buttonLabel: "When is the MFP Work Plan due?",
-        text: "The MFP Work Plan will be created and submitted initially and then amended semi-annually. CMS will review and approve all MFP Work Plans and proposed changes.The MFP Work Plan deadlines are May 1st for Reporting Period 1 and November 1st for Reporting Period 2. Updates to existing state or territory-specific initiatives or the addition of new initiatives can occur during either of these periods, however, changes to transition benchmark projections should be made between July - November 1st and align with program budget requests. CMS approved changes will be integrated into the MFP recipient’s Semi-Annual Report for the following reporting period.",
+        text: "The MFP Work Plan will be created and submitted initially and then amended semi-annually. CMS will review and approve all MFP Work Plans and proposed changes.<br/><br/>The MFP Work Plan deadlines are May 1st for inclusion in January through June reporting (Reporting Period 1) and November 1st for inclusion in July through December reporting (Reporting Period 2). Updates to existing state or territory-specific initiatives or the addition of new initiatives can occur during either of these periods, however, changes to transition benchmark projections should be made between July - November 1st to align with program budget requests.<br/><br/>CMS approved changes will be integrated into the MFP recipient's Semi-Annual Progress Report for the following reporting period.",
       },
     },
     SAR: {
       title: "MFP Semi-Annual Progress Report (SAR)",
       body: {
         available:
-          "This reporting tool is to be used by MFP recipients for semi-annual reporting of MFP program data. The information provided in this report will allow CMS to monitor MFP recipient progress and identify challenges and improvement opportunities.",
+          "The MFP Semi-Annual Progress Report (SAR) is used to present the recipient's analysis and the status of the various operational areas in reaching the objectives of the demonstration. Through the SARs, the recipient will further enumerate how they have, or intend to, meet or align with the recipient's MFP operational procedures and processes; transition benchmarks; program goals for expanding and enhancing home and community-based services (HCBS); and sustainability plans.",
       },
-      linkText: "User Guide",
-      linkText2: "Help File",
-      midText: " and ",
-      linkLocation: "https://www.google.com",
-      linkLocation2: "https://www.google.com",
-      postLinkText: ".",
-      downloadText: "",
+      downloadText: "User Guide and Help File",
       link: {
         text: "Enter SAR online",
         route: "sar/",
       },
       accordion: {
-        buttonLabel: "When is the SAR due?",
-        text: "The Semi-Annual Progress Report (SAR) will need to be reviewed and submitted twice a year, within 60 days following the end of each second and fourth calendar year quarter. For example, the SAR Reporting Period 1 covers January-June activity and MFP recipients must submit their data within 60 days following June 30.",
+        buttonLabel: "When is the MFP SAR due?",
+        text: "The MFP Semi-Annual Progress Report will need to be reviewed and submitted twice a year, within 60 days following the end of each second and fourth calendar year quarter. For example, the SAR Reporting Period 1 represents January-June and MFP recipients must submit their data within 60 days following June 30. The recipient must submit the progress report through the final reporting period of the recipient's demonstration period of performance, even if the recipient has not operated for a complete reporting period.",
       },
     },
   },

@@ -12,7 +12,7 @@ export default {
           type: "text",
           as: "span",
           content:
-            "<br>This reporting tool is to be used by grantees for reporting of MFP program data. The information provided in this report will allow CMS to monitor grantee progress and identify challenges and improvement opportunities. For additional guidance on completing this form, please see the associated ",
+            "<br>This reporting tool is to be used by MFP recipients for semi-annual reporting of MFP program data. The information provided in this report will allow CMS to monitor MFP recipient progress and identify challenges and improvement opportunities. For additional guidance on completing this form, please see the associated ",
         },
         {
           type: "externalLink",
@@ -52,7 +52,7 @@ export default {
         "To allow a state or territory to make corrections or edits to a submission use “Unlock” to release the submission. The status will change to “In revision”.",
         "Submission count is shown in the # column. Submissions started and submitted once have a count of 1. When a state resubmits a previous submission, the count increases by 1.",
         "To archive a submission and hide it from a state or territory’s dashboard, use “Archive”.",
-        "To approve a submission, review the submission, go to the Review & Submit page and select “Approve”. The status will change to “Approved” and the content will be eligible for import into the SAR and will be available for view-only reference.",
+        "To approve a submission, review the submission, go to the “Review & Submit” page and select “Approve”. The status will change to “Approved” and the content will be eligible for import into the SAR and will be available for view-only reference.",
       ],
       text: "",
     },
@@ -63,7 +63,7 @@ export default {
           type: "text",
           as: "span",
           content:
-            "This reporting tool is to be used by grantees for reporting of MFP program data. The information provided in this report will allow CMS to monitor grantee progress and identify challenges and improvement opportunities. For additional guidance on completing this form, please see the associated ",
+            "This reporting tool is to be used by MFP recipients for semi-annual reporting of MFP program data. The information provided in this report will allow CMS to monitor MFP recipient progress and identify challenges and improvement opportunities. For additional guidance on completing this form, please see the associated ",
         },
         {
           type: "externalLink",
@@ -154,10 +154,9 @@ export default {
         },
       ],
       list: [
-        "To allow a state or territory to make corrections or edits to a submission use “Unlock” to release the submission. The status will change to “In revision”.",
+        "To allow a state to make corrections or edits to a submission use “Unlock” to release the submission. The status will change to “In revision”.",
         "Submission count is shown in the # column. Submissions started and submitted once have a count of 1. When a state resubmits a previous submission, the count increases by 1.",
-        "To archive a submission and hide it from a state or territory’s dashboard, use “Archive”.",
-        "To approve a submission, review the submission, go to the Review & Submit page and select “Approve”. The status will change to “Approved” and the content will be eligible for import into the SAR and will be available for view-only reference.",
+        "To archive a submission and hide it from a state’s dashboard, use “Archive”.",
       ],
       text: "",
     },

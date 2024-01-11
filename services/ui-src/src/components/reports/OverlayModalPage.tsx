@@ -18,7 +18,7 @@ import {
 import addIcon from "assets/icons/icon_add_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
-import { EntityShape, OverlayModalPageShape } from "types";
+import { EntityShape, OverlayModalPageShape, ReportType } from "types";
 // utils
 import { getFormattedEntityData, resetClearProp, useStore } from "utils";
 
@@ -113,16 +113,20 @@ export const OverlayModalPage = ({
         />
       )}
       <Box>
-        <Heading as="h3" sx={sx.dashboardTitle}>
-          {dashTitle}
-        </Heading>
-        <Button
-          sx={sx.addEntityButton}
-          onClick={addEditEntityModalOnOpenHandler}
-          rightIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-        >
-          {verbiage.addEntityButtonText}
-        </Button>
+        {report?.reportType === ReportType.WP && (
+          <>
+            <Button
+              sx={sx.addEntityButton}
+              onClick={addEditEntityModalOnOpenHandler}
+              rightIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+            >
+              {verbiage.addEntityButtonText}
+            </Button>
+            <Heading as="h3" sx={sx.dashboardTitle}>
+              {dashTitle}
+            </Heading>
+          </>
+        )}
         <Box>
           {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (
@@ -137,18 +141,20 @@ export const OverlayModalPage = ({
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
                 disabled={userDisabled}
+                hasBoxShadow={true}
               />
             )
           )}
-          {reportFieldDataEntities.length > 1 && (
-            <Button
-              sx={sx.addEntityButton}
-              onClick={addEditEntityModalOnOpenHandler}
-              leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-            >
-              {verbiage.addEntityButtonText}
-            </Button>
-          )}
+          {reportFieldDataEntities.length > 1 &&
+            report?.reportType === ReportType.WP && (
+              <Button
+                sx={sx.addEntityButton}
+                onClick={addEditEntityModalOnOpenHandler}
+                leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+              >
+                {verbiage.addEntityButtonText}
+              </Button>
+            )}
         </Box>
         <hr />
         {/* MODALS */}
@@ -180,7 +186,7 @@ export const OverlayModalPage = ({
       <Box>
         <Flex sx={sx.buttonFlex}>
           <Button
-            type="submit"
+            type="button"
             form={modalForm.id}
             sx={sx.saveButton}
             onClick={closeEntityDetailsOverlay as MouseEventHandler}
@@ -219,13 +225,13 @@ const sx = {
   },
   dashboardTitle: {
     paddingTop: "1rem",
-    paddingBottom: "0",
+    marginBottom: "1rem",
     fontWeight: "bold",
     color: "palette.gray_medium",
   },
   addEntityButton: {
     marginTop: "1.5rem",
-    marginBottom: "2rem",
+    marginBottom: "1rem",
   },
   buttonFlex: {
     justifyContent: "end",

@@ -2,7 +2,7 @@ import { AttributeValue, QueryInput } from "aws-sdk/clients/dynamodb";
 import dynamodbLib from "../dynamo/dynamodb-lib";
 import wpForm from "../../forms/wp.json";
 import sarForm from "../../forms/sar.json";
-import s3Lib, { getFormTemplateKey } from "../s3/s3-lib";
+import s3Lib, { getFormTemplateKey, getTemplate } from "../s3/s3-lib";
 import KSUID from "ksuid";
 import { logger } from "../logging";
 import {
@@ -16,17 +16,13 @@ import {
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   ReportJson,
-  ReportMetadataShape,
   ReportRoute,
   ReportType,
+  TargetPopulationKeys,
+  TwelveQuartersKeys,
 } from "../types";
-import { getTemplate } from "../../handlers/formTemplates/populateTemplatesTable";
 import { createHash } from "crypto";
-import {
-  calculateCurrentYear,
-  calculatePeriod,
-  incrementQuarterAndYear,
-} from "../time/time";
+import { incrementQuarterAndYear } from "../time/time";
 
 export async function getNewestTemplateVersion(reportType: ReportType) {
   const queryParams: QueryInput = {
@@ -39,7 +35,25 @@ export async function getNewestTemplateVersion(reportType: ReportType) {
     ScanIndexForward: false, // true = ascending, false = descending
   };
   const result = await dynamodbLib.query(queryParams);
-  return result.Items?.[0];
+  return result?.Items?.[0];
+}
+
+export async function getTemplateVersionByHash(
+  reportType: ReportType,
+  hash: string
+) {
+  const queryParams: QueryInput = {
+    TableName: process.env.FORM_TEMPLATE_TABLE_NAME!,
+    IndexName: "HashIndex",
+    KeyConditionExpression: "reportType = :reportType AND md5Hash = :md5Hash",
+    Limit: 1,
+    ExpressionAttributeValues: {
+      ":md5Hash": hash as AttributeValue,
+      ":reportType": reportType as unknown as AttributeValue,
+    },
+  };
+  const result = await dynamodbLib.query(queryParams);
+  return result?.Items?.[0];
 }
 
 export const formTemplateForReportType = (reportType: ReportType) => {
@@ -56,277 +70,313 @@ export const formTemplateForReportType = (reportType: ReportType) => {
   }
 };
 
+export const firstQuarterOfThePeriod = (
+  field: FormField,
+  reportPeriod: number
+) => {
+  const contentString =
+    reportPeriod == 1
+      ? "First quarter (January 1 - March 31)"
+      : "Third quarter (July 1 - September 30)";
+  const updatedFormField: FormField = {
+    id: `${field.id}`,
+    type: `${field.type}`,
+    props: {
+      content: contentString,
+    },
+  };
+  return [updatedFormField];
+};
+
+export const secondQuarterOfThePeriod = (
+  field: FormField,
+  reportPeriod: number
+) => {
+  const contentString =
+    reportPeriod == 1
+      ? "Second quarter (April 1 - June 30)"
+      : "Fourth quarter (October 1 - December 31)";
+  const updatedFormField: FormField = {
+    id: `${field.id}`,
+    type: `${field.type}`,
+    props: {
+      content: contentString,
+    },
+  };
+  return [updatedFormField];
+};
+
+/**
+ * Gather all the information from the work plan and build out 12 quarters from today's today
+ * @param {string} fieldId - The fieldID from the formField we're looking at
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
+ * @return {TargetPopulationKeys[]} Returns 12 quarters information based on the workplan to help build out a new field
+ */
 export const nextTwelveQuartersKeys = (
   fieldId: string,
-  currentDate: number,
-  workPlan?: ReportMetadataShape
-) => {
-  let period = calculatePeriod(currentDate, workPlan);
-  let quarter = period === 1 ? 1 : 3;
-  let year = calculateCurrentYear();
-  const keys: (string[] | number[])[][] = [];
+  reportPeriod: number,
+  reportYear: number
+): TwelveQuartersKeys[] => {
+  let quarter = reportPeriod === 1 ? 1 : 3;
+  let year = reportYear;
+
+  const keys: TwelveQuartersKeys[] = [];
   for (let i = 0; i < 12; i++) {
-    keys.push([[fieldId], [year], [quarter]]);
+    const key: TwelveQuartersKeys = {
+      fieldId: fieldId,
+      year: year,
+      quarter: quarter,
+    };
+    keys.push(key);
     [quarter, year] = incrementQuarterAndYear(quarter, year);
   }
   return keys;
 };
 
+/**
+ * Run the transformation "nextTwelveQuarters" on the field and returns 12 quarters based on todays date
+ * @param {FormField} fieldToRepeat - The formFields you want to transform
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
+ * @return {FormField[]} Returns 12 quarters as form fields
+ */
 export const nextTwelveQuarters = (
-  formFields: FormField[],
-  fieldIndex: number,
   fieldToRepeat: FormField,
-  currentDate: number,
-  workPlan?: ReportMetadataShape
+  reportPeriod: number,
+  reportYear: number
 ) => {
-  var keys = nextTwelveQuartersKeys(fieldToRepeat.id, currentDate, workPlan);
+  var keys = nextTwelveQuartersKeys(fieldToRepeat.id, reportPeriod, reportYear);
+  const fieldsToAppend: FormField[] = [];
   for (let key of keys) {
     const formField: FormField = {
       ...fieldToRepeat,
-      id: `${key[0]}${key[1]}Q${key[2]}`,
+      id: `${key.fieldId}${key.year}Q${key.quarter}`,
       type: fieldToRepeat?.type,
       validation: fieldToRepeat.validation,
+      transformation: { rule: "" },
       props: {
         ...fieldToRepeat?.props,
-        label: `${key[1]} Q${key[2]}`,
+        label: `${key.year} Q${key.quarter}`,
       },
     };
-    formFields.push(formField);
+    fieldsToAppend.push(formField);
   }
-  formFields.splice(fieldIndex, 1);
-  return formFields;
+  return fieldsToAppend;
 };
 
-export const targetPopulationsByQuarterKeys = (
+/**
+ * Gather all the information from the work plan about how many target populations we need to create
+ * @param {string} fieldId - The fieldID from the formField we're looking at
+ * @param { number } reportPeriod - The current report period
+ * @param {AnyObject} workPlanFieldData - fieldData that contains the target populations
+ * @return {TargetPopulationKeys[]} Returns all the target populations from the work plan with important information to build out a new field
+ */
+export const targetPopulationsKeys = (
   fieldId: string,
-  workPlanFieldData?: AnyObject,
-  workPlanMetaData?: AnyObject
-) => {
+  reportPeriod: number,
+  workPlanFieldData: AnyObject
+): TargetPopulationKeys[] => {
   var targetPopulations = workPlanFieldData?.targetPopulations;
-  const keys = [];
+  const keys: TargetPopulationKeys[] = [];
   for (let population of targetPopulations) {
-    keys.push([
-      workPlanMetaData?.reportPeriod,
-      fieldId,
-      population.transitionBenchmarks_targetPopulationName,
-    ]);
+    const key: TargetPopulationKeys = {
+      reportPeriod: reportPeriod,
+      fieldId: fieldId,
+      targetPopulationName:
+        population.transitionBenchmarks_targetPopulationName,
+      isRequired: population?.isRequired,
+    };
+    keys.push(key);
   }
   return keys;
 };
 
-export const targetPopulationsByQuarter = (
-  formFields: FormField[],
+/**
+ * Run the transformation "TargetPopulations" on the field and returns all the target populations from the work plan in its place
+ * @param {FormField} formField - The formFields you want to transform
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
+ * @param {AnyObject} workPlanFieldData - fieldData that contains the target populations
+ * @return {FormField[]} Returns all the target populations from the work plan as form fields
+ */
+export const targetPopulations = (
   fieldToRepeat: FormField,
-  quarter: number,
-  workPlanFieldData?: AnyObject,
-  workPlanMetaData?: AnyObject
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData: AnyObject
 ) => {
-  var keys = targetPopulationsByQuarterKeys(
+  //Gather all the information from the work plan about how many target populations we need to create
+  var targetPopulationKeys = targetPopulationsKeys(
     fieldToRepeat.id,
-    workPlanFieldData,
-    workPlanMetaData
+    reportPeriod,
+    workPlanFieldData
   );
+  const fieldsToAppend = [];
 
-  if (quarter == 1) {
-    const contentString =
-      workPlanMetaData?.reportPeriod == 1
-        ? "First quarter (January 1 - March 31)"
-        : "Third quarter (July 1 - September 30)";
-    const formFieldHeader: FormField = {
-      id: `Period${workPlanMetaData?.reportPeriod}_Q1_header`,
-      type: "sectionHeader",
-      props: {
-        content: contentString,
-      },
-    };
-    formFields.push(formFieldHeader);
-  } else if (quarter == 2) {
-    const contentString =
-      workPlanMetaData?.reportPeriod == 1
-        ? "Second quarter (April 1 - June 30)"
-        : "Fourth quarter (October 1 - December 31)";
-    const formFieldHeader: FormField = {
-      id: `Period${workPlanMetaData?.reportPeriod}_Q2_header`,
-      type: "sectionHeader",
-      props: {
-        content: contentString,
-      },
-    };
-    formFields.push(formFieldHeader);
-  }
-
-  for (let key of keys) {
+  /*
+   * Run through all the target populations found in the WP and build out a field
+   * using the target population and the field information from the SAR
+   */
+  for (let population of targetPopulationKeys) {
     const formField: FormField = {
       ...fieldToRepeat,
-      id: `Period${key[0]}_Q${quarter}_${key[2]}${key[2]}`,
+      id: `${fieldToRepeat.id}_Period${population.reportPeriod}_${population.targetPopulationName}`,
       type: fieldToRepeat?.type,
       validation: fieldToRepeat.validation,
+      transformation: { rule: "" },
       props: {
         ...fieldToRepeat?.props,
-        label: `Number of ${key[2]}`,
+        label:
+          population.isRequired === true
+            ? `Number of ${population.targetPopulationName}`
+            : `Other: ${population.targetPopulationName}`,
       },
     };
-    formFields.push(formField);
+    fieldsToAppend.push(formField);
   }
 
-  return formFields;
+  return fieldsToAppend;
 };
 
-export const targetPopulationsByReportingPeriod = (
+/**
+ * Look through the formFields provided and run the transformation provided on that field.
+ * @param {FormField[]} formFields - The formFields you want to transform
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
+ * @param {AnyObject} workPlanFieldData - Optional fieldData that a transformation might need of
+ * @return {FormField[]} Returns the formFields provided but with any transformation it finds run on them
+ */
+
+export const runFieldTransformationRules = (
   formFields: FormField[],
-  fieldIndex: number,
-  fieldToRepeat: FormField,
-  workPlanFieldData?: AnyObject,
-  workPlanMetaData?: AnyObject
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData?: AnyObject
 ) => {
-  targetPopulationsByQuarter(
-    formFields,
-    fieldToRepeat,
-    1,
-    workPlanFieldData,
-    workPlanMetaData
-  );
-
-  targetPopulationsByQuarter(
-    formFields,
-    fieldToRepeat,
-    2,
-    workPlanFieldData,
-    workPlanMetaData
-  );
-
-  formFields.splice(fieldIndex, 1);
-  return formFields;
-};
-
-export const expandRepeatedFields = (
-  formFields: FormField[],
-  workPlanFieldData?: AnyObject,
-  workPlanMetaData?: AnyObject
-) => {
-  const repeatingFieldRuleMap: AnyObject = {
+  //Create a map of all the possible transformations that can run on a field
+  const transformationRuleMap: AnyObject = {
     nextTwelveQuarters: nextTwelveQuarters,
-    targetPopulationsByReportingPeriod: targetPopulationsByReportingPeriod,
+    targetPopulations: targetPopulations,
+    firstQuarterOfThePeriod: firstQuarterOfThePeriod,
+    secondQuarterOfThePeriod: secondQuarterOfThePeriod,
   };
 
-  //after creating the first formTemplate in the system, new forms will try to repeat 12 times. We have to clear it before using it again
-  formFields = clearPreviousRepeatingFields(formFields);
+  const transformedFields: FormField[] = [];
 
-  formFields.forEach((field, fieldIndex) => {
-    // if field has choices/options (ie could have nested children)
+  formFields.forEach((field) => {
+    /*
+     * Some fields are a choicelists which can have their own form fields
+     * We need to recurse through and run any transformations on those as well!
+     */
     const fieldChoices = field.props?.choices;
     if (fieldChoices) {
       fieldChoices.forEach((choice: FieldChoice) => {
         // if given field choice has nested children
         const nestedChildFields = choice.children;
         if (nestedChildFields) {
-          choice.children = expandRepeatedFields(
+          choice.children = runFieldTransformationRules(
             nestedChildFields,
-            workPlanFieldData,
-            workPlanMetaData
+            reportPeriod,
+            reportYear,
+            workPlanFieldData
           );
         }
       });
     }
-    if (field?.repeatable) {
-      const repeatingFieldRule = repeatingFieldRuleMap[field.repeatable.rule];
-      formFields = repeatingFieldRule(
-        formFields,
-        fieldIndex,
-        field,
-        workPlanFieldData,
-        workPlanMetaData
+
+    //If we find a transformation, run the rule provided with it, otherwise just pass it along
+    if (field?.transformation) {
+      const transformationRule =
+        transformationRuleMap[field.transformation.rule];
+      transformedFields.push(
+        ...transformationRule(
+          field,
+          reportPeriod,
+          reportYear,
+          workPlanFieldData
+        )
       );
+    } else {
+      transformedFields.push(field);
     }
   });
-  return formFields;
+  return transformedFields;
 };
 
-const clearPreviousRepeatingFields = (formFields: FormField[]) => {
-  //check to see if there is a repeating field in the form fields
-  let repeatingFields = formFields.filter((field) => field.repeatable);
-
-  //if there is more than 1 repeating form call
-  if (repeatingFields.length > 1) {
-    //we want to split out the unrepeating fields
-    let unrepeatingFields = formFields.filter((field) => !field.repeatable);
-
-    //get the index of the first repeating field as that is the position where the cleaned repeating field needs to go back to
-    let firstRepeatIndex: number = formFields.findIndex(
-      (field) => field.repeatable
-    );
-
-    //we need to take the first repeating field as the template
-    let cleanRepeatField = formFields[firstRepeatIndex];
-    //the id needs to be cleaned by stripping the quarter information
-    const quarterLabelIndex: number = cleanRepeatField.id.length - 6;
-    cleanRepeatField.id = cleanRepeatField.id.substring(0, quarterLabelIndex);
-    delete cleanRepeatField.props;
-
-    //add the repeating field back into the formFields
-    unrepeatingFields.splice(firstRepeatIndex, 0, cleanRepeatField);
-    return unrepeatingFields;
-  }
-
-  return formFields;
-};
-
-export const scanForRepeatedFields = (
-  reportRoutes: ReportRoute[],
-  workPlanFieldData?: AnyObject,
-  workPlanMetaData?: AnyObject
+/**
+ * Look through the wp.json or sar.json and find in theres a transformation that needs run
+ * on a field
+ * @param { (ReportRoute | OverlayModalPageShape | EntityDetailsOverlayShape)[]} reportRoutes - A route containing a form object
+ * @param { number } reportPeriod - The current report period
+ * @param { number } reportYear - The current report year
+ * @param { AnyObject } workPlanFieldData - Some transformations rely on Work plan fielddata, so pass it here if needed
+ * @return This will modify whatever the reportRoute was that was given and perform any transformations it finds
+ */
+export const findAndRunFieldTransformationRules = (
+  reportRoutes: (
+    | ReportRoute
+    | OverlayModalPageShape
+    | EntityDetailsOverlayShape
+  )[],
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData?: AnyObject
 ) => {
   for (let route of reportRoutes) {
     if (route?.entitySteps)
-      scanForRepeatedFields(
+      findAndRunFieldTransformationRules(
         route.entitySteps,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
     if (route?.children)
-      scanForRepeatedFields(
+      findAndRunFieldTransformationRules(
         route.children,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
     if (route?.form?.fields)
-      route.form.fields = expandRepeatedFields(
+      route.form.fields = runFieldTransformationRules(
         route.form.fields,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
     if (route?.drawerForm?.fields)
-      route.drawerForm.fields = expandRepeatedFields(
+      route.drawerForm.fields = runFieldTransformationRules(
         route.drawerForm.fields,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
     if (route?.modalForm?.fields)
-      route.modalForm.fields = expandRepeatedFields(
+      route.modalForm.fields = runFieldTransformationRules(
         route.modalForm.fields,
-        workPlanFieldData,
-        workPlanMetaData
+        reportPeriod,
+        reportYear,
+        workPlanFieldData
       );
   }
-  return reportRoutes;
 };
 
 export const scanForConditionalRoutes = (
   reportRoutes: ReportRoute[],
-  workPlanMetaData?: AnyObject
+  reportPeriod: number
 ) => {
   for (let route of reportRoutes) {
     if (route?.entitySteps)
-      scanForConditionalRoutes(route.entitySteps, workPlanMetaData);
-    if (route?.children)
-      scanForConditionalRoutes(route.children, workPlanMetaData);
+      scanForConditionalRoutes(route.entitySteps, reportPeriod);
+    if (route?.children) scanForConditionalRoutes(route.children, reportPeriod);
 
     // if route has a field that is to be conditionally rendered, conditionally keep in array
     if (route?.conditionallyRender) {
       // if a path has "showOnlyInPeriod2" attached as a rule, we only want to show in reporting period 2, and remove from the list of routes otherwise
       if (
         route.conditionallyRender === "showOnlyInPeriod2" &&
-        workPlanMetaData?.reportPeriod != 2
+        reportPeriod != 2
       ) {
         const index = reportRoutes.indexOf(route);
         if (index > -1) {
@@ -342,46 +392,60 @@ export const scanForConditionalRoutes = (
 export async function getOrCreateFormTemplate(
   reportBucket: string,
   reportType: ReportType,
-  workPlanFieldData?: AnyObject,
-  workPlanMetaData?: AnyObject,
-  copyReport?: AnyObject
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData?: AnyObject
 ) {
-  const currentFormTemplate = formTemplateForReportType(reportType);
+  //Make a copy of the form template so we don't accidentally corrupt the original
+  const currentFormTemplate = structuredClone(
+    formTemplateForReportType(reportType)
+  );
+
+  if (currentFormTemplate?.routes) {
+    // traverse routes and scan for conditional field
+    currentFormTemplate.routes = scanForConditionalRoutes(
+      currentFormTemplate.routes,
+      reportPeriod
+    );
+
+    //transformation of the formTemplate to generate new quarters
+    findAndRunFieldTransformationRules(
+      currentFormTemplate.routes,
+      reportPeriod,
+      reportYear,
+      workPlanFieldData
+    );
+  }
+
   const stringifiedTemplate = JSON.stringify(currentFormTemplate);
 
   const currentTemplateHash = createHash("md5")
     .update(stringifiedTemplate)
     .digest("hex");
 
-  const mostRecentTemplateVersion = await getNewestTemplateVersion(reportType);
-  const mostRecentTemplateVersionHash = mostRecentTemplateVersion?.md5Hash;
+  const matchTemplateVersion = await getTemplateVersionByHash(
+    reportType,
+    currentTemplateHash
+  );
 
-  if (currentTemplateHash === mostRecentTemplateVersionHash && !copyReport) {
+  //if a template of this hash already exist
+  if (currentTemplateHash === matchTemplateVersion?.md5Hash) {
     return {
       formTemplate: await getTemplate(
         reportBucket,
-        getFormTemplateKey(mostRecentTemplateVersion?.id)
+        getFormTemplateKey(matchTemplateVersion?.id)
       ),
-      formTemplateVersion: mostRecentTemplateVersion,
+      formTemplateVersion: matchTemplateVersion,
     };
   } else {
     const newFormTemplateId = KSUID.randomSync().string;
-    // traverse routes and scan for conditional field
-    currentFormTemplate.routes = scanForConditionalRoutes(
-      currentFormTemplate.routes,
-      workPlanMetaData
-    );
-
-    currentFormTemplate.routes = scanForRepeatedFields(
-      currentFormTemplate.routes,
-      workPlanFieldData,
-      workPlanMetaData
-    );
 
     const formTemplateWithValidationJson = {
       ...currentFormTemplate,
       validationJson: getValidationFromFormTemplate(currentFormTemplate),
     };
+
+    //saving new version of the formTemplate to the database
     try {
       await s3Lib.put({
         Key: getFormTemplateKey(newFormTemplateId),
@@ -393,6 +457,11 @@ export async function getOrCreateFormTemplate(
       logger.error(err, "Error uploading new form template to S3");
       throw err;
     }
+
+    //getting the latest version so that if there isn't a match, we can use this to save to the next iteration
+    const mostRecentTemplateVersion = await getNewestTemplateVersion(
+      reportType
+    );
 
     // If we didn't find any form templates, start version at 1.
     const newFormTemplateVersionItem: FormTemplate = {

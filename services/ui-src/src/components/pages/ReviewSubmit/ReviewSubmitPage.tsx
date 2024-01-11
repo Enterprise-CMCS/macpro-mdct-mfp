@@ -5,10 +5,12 @@ import {
   Box,
   Button,
   Flex,
+  ListItem,
   Image,
   Heading,
   Text,
   useDisclosure,
+  UnorderedList,
 } from "@chakra-ui/react";
 import {
   Alert,
@@ -22,7 +24,8 @@ import { AlertTypes, AnyObject, ReportStatus } from "types";
 // utils
 import { parseCustomHtml, useStore, utcDateToReadableDate } from "utils";
 // verbiage
-import verbiage from "verbiage/pages/mfp/mfp-review-and-submit";
+import WPVerbiage from "verbiage/pages/wp/wp-review-and-submit";
+import SARVerbiage from "verbiage/pages/sar/sar-review-and-submit";
 // assets
 import checkIcon from "assets/icons/icon_check_circle.png";
 
@@ -50,7 +53,7 @@ export const ReviewSubmitPage = () => {
     id: reportId,
   };
 
-  const reviewVerbiage = verbiage;
+  const reviewVerbiage = reportType === "WP" ? WPVerbiage : SARVerbiage;
   const { alertBox } = reviewVerbiage;
 
   useEffect(() => {
@@ -104,7 +107,6 @@ export const ReviewSubmitPage = () => {
             date={report?.submittedOnDate}
             submittedBy={report?.submittedBy}
             reviewVerbiage={reviewVerbiage}
-            stateName={report.fieldData.stateName!}
           />
         ) : (
           <div>
@@ -144,7 +146,6 @@ const ReadyToSubmit = ({
   const { userIsAdmin } = useStore().user ?? {};
   const { review } = reviewVerbiage;
   const { intro, modal, pageLink } = review;
-
   return (
     <Flex sx={sx.contentContainer} data-testid="ready-view">
       <Box sx={sx.leadTextBox}>
@@ -202,20 +203,21 @@ export const SuccessMessageGenerator = (
   reportType: string,
   name: string,
   submissionDate?: number,
-  submittedBy?: string,
-  stateName?: string
+  submittedBy?: string
 ) => {
+  const fullReportType = reportType === "WP" ? "Work Plan" : "SAR";
+
   if (submissionDate && submittedBy) {
     const readableDate = utcDateToReadableDate(submissionDate, "full");
     const submittedDate = `was submitted on ${readableDate}`;
     const submittersName = `${submittedBy}`;
 
-    const reportTitle = <b>{`${stateName} ${name}`}</b>;
-    const preSubmissionMessage = `${reportType} submission for `;
+    const reportTitle = <b>{`${name}`}</b>;
+    const preSubmissionMessage = `MFP ${fullReportType} submission for `;
     const postSubmissionMessage = ` ${submittedDate} by ${submittersName}.`;
     return [preSubmissionMessage, reportTitle, postSubmissionMessage];
   }
-  return `${reportType} report for ${name} was submitted.`;
+  return `${fullReportType} report for ${name} was submitted.`;
 };
 
 export const SuccessMessage = ({
@@ -224,7 +226,6 @@ export const SuccessMessage = ({
   date,
   submittedBy,
   reviewVerbiage,
-  stateName,
 }: SuccessMessageProps) => {
   const { submitted } = reviewVerbiage;
   const { intro } = submitted;
@@ -232,9 +233,9 @@ export const SuccessMessage = ({
     reportType,
     name,
     date,
-    submittedBy,
-    stateName
+    submittedBy
   );
+
   return (
     <Flex sx={sx.contentContainer}>
       <Box sx={sx.leadTextBox}>
@@ -251,7 +252,31 @@ export const SuccessMessage = ({
       </Box>
       <Box>
         <Text sx={sx.additionalInfoHeader}>{intro.additionalInfoHeader}</Text>
-        <Text sx={sx.additionalInfo}>{intro.additionalInfo}</Text>
+        <Text sx={sx.additionalInfo}>
+          {parseCustomHtml(intro.additionalInfo)}
+        </Text>
+        {intro.list && (
+          <UnorderedList sx={sx.list}>
+            {intro.list.map((item: any, index: number) => {
+              return (
+                <ListItem key={index}>
+                  {parseCustomHtml(item.content)}
+                  {item.children && (
+                    <UnorderedList sx={sx.list} key={index}>
+                      {item.children.map((child: any, index: number) => {
+                        return (
+                          <ListItem key={index}>
+                            {parseCustomHtml(child.content)}
+                          </ListItem>
+                        );
+                      })}
+                    </UnorderedList>
+                  )}
+                </ListItem>
+              );
+            })}
+          </UnorderedList>
+        )}
       </Box>
       <Box sx={sx.infoTextBox}>
         <PrintButton />
@@ -307,6 +332,13 @@ const sx = {
     marginRight: "1rem",
     height: "27px",
   },
+  list: {
+    paddingLeft: "1rem",
+    margin: "1.5rem",
+    li: {
+      marginBottom: "0.5rem",
+    },
+  },
   additionalInfoHeader: {
     color: "palette.gray",
     fontWeight: "bold",
@@ -321,6 +353,7 @@ const sx = {
   },
   alert: {
     marginBottom: "2rem",
+    marginRight: "2.5rem",
   },
   submitButton: {
     minHeight: "3rem",

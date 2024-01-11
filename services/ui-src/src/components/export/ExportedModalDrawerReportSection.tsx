@@ -1,35 +1,32 @@
-// components
-import { Box, Heading } from "@chakra-ui/react";
-import { Table } from "components";
-// utils
 import { useEffect, useState } from "react";
-import { useStore, convertToThousandsSeparatedString } from "utils";
-import { ModalDrawerReportPageShape, AnyObject } from "types";
-import _ from "lodash";
+// components
+import { Box, Heading, Text } from "@chakra-ui/react";
+import { Table } from "components";
+// types
+import { EntityShape, ModalDrawerReportPageShape } from "types";
+// utils
+import { convertToThousandsSeparatedString, useStore } from "utils";
+import { notAnsweredText } from "../../constants";
 
 export const ExportedModalDrawerReportSection = ({
   section: { entityType, verbiage },
 }: Props) => {
   const [overflow, setOverflow] = useState(false);
-  const { report } = useStore() ?? {};
+  const report = useStore().report;
   const entities = report?.fieldData?.[entityType];
 
-  const truncateHeader = (text: string) => {
-    return _.truncate(text, { length: 30 });
-  };
-
-  // if Transition Benchmark Header title has an abbrev.just display that
+  // if Transition Benchmark Header title has an abbrev. just display that
   const getTableHeaders = () => {
     let headers = [];
     const quarterHeader = "Pop. by Quarter";
-    const bodyHeader = entities.map(
-      (entity: AnyObject) =>
+    const bodyHeaders = entities.map(
+      (entity: EntityShape) =>
         entity.transitionBenchmarks_targetPopulationName_short ??
-        truncateHeader(entity.transitionBenchmarks_targetPopulationName)
+        entity.transitionBenchmarks_targetPopulationName.slice(0, 29)
     );
     const totalHeader = "Total by Quarter";
 
-    headers.push(quarterHeader, ...bodyHeader, totalHeader);
+    headers.push(quarterHeader, ...bodyHeaders, totalHeader);
     return headers;
   };
 
@@ -39,41 +36,35 @@ export const ExportedModalDrawerReportSection = ({
     return num;
   };
 
-  // creates arrays of 'only' quarterly values
-  const quarterValueArray = entities.map((entity: AnyObject) => {
-    let quarterArray = [];
-    for (const key in entity) {
-      // push key values into quarterArray that are quarters
-      if (key.includes("quarterly")) {
-        quarterArray.push(entity[key]);
-      }
-    }
+  const getSumDisplayValue = (sum: string) => {
+    return sum === "0" ? "-" : sum;
+  };
 
-    if (quarterArray.length === 0) {
-      let seedData = [
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-        "N/A",
-      ];
-      quarterArray.push(...seedData);
-    }
-    return quarterArray;
+  const commaMasking = (item: string) => {
+    return convertToThousandsSeparatedString(item).maskedValue;
+  };
+
+  const ariaLabelledAsterisk = `<span aria-label="sum of incomplete fields">*</span>`;
+  const quarterArraySeedData = Array(12).fill(notAnsweredText);
+
+  // creates arrays of 'only' quarterly values
+  const quarterValueArray = entities.map((entity: EntityShape) => {
+    const isNotApplicableToMfp =
+      entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
+      "No";
+
+    const quarterArray = Object.keys(entity)
+      .filter((key) => key.includes("quarterly"))
+      .map((key) => (isNotApplicableToMfp ? "N/A" : entity[key]));
+
+    return quarterArray.length === 0 ? [...quarterArraySeedData] : quarterArray;
   });
 
   // list of quarters to be added to the table (left column)
   const extractQuarterLabels = () => {
     const newEntities = new Array(...entities);
     let quarterLabelArray: any = [];
-    newEntities.map((entity: AnyObject) => {
+    newEntities.map((entity: EntityShape) => {
       for (const key in entity) {
         // push key values into quarterArray that are quarters
 
@@ -91,12 +82,12 @@ export const ExportedModalDrawerReportSection = ({
     // creates an array that totals up each each quarter column
     const columnTotal = quarterValueArray.map((column: string[]) => {
       let sum = 0;
-      let isNACol: any = [];
+      const isNACol = [];
       column.forEach((item: any) => {
         if (item === "N/A" || item === "Data not available") {
           isNACol.push(item);
         } else {
-          sum += convertToNum(item)!;
+          sum += convertToNum(item);
         }
       });
       if (sum === 0 && isNACol.length !== 12) {
@@ -114,15 +105,14 @@ export const ExportedModalDrawerReportSection = ({
       columnTotal.forEach((item: any) => {
         sum += convertToNum(item);
       });
-      if (
-        columnTotal.includes("N/A") ||
-        columnTotal.includes("Not Answered") ||
-        columnTotal.includes("-") ||
-        columnTotal.includes("Data not available")
-      ) {
-        return `${commaMasking(sum.toString())}*`;
+      // the dash - gets put in totals where the user did not answer the question
+      const displaySum = getSumDisplayValue(sum.toString());
+      if (columnTotal.includes("-")) {
+        return displaySum === "-"
+          ? "-"
+          : `${commaMasking(displaySum)}${ariaLabelledAsterisk}`;
       } else {
-        return sum === 0 ? "-" : commaMasking(sum.toString());
+        return commaMasking(displaySum);
       }
     };
 
@@ -132,22 +122,12 @@ export const ExportedModalDrawerReportSection = ({
     return ["Total by Pop.", ...commaMaskColumTotal, footRowTotal()];
   };
 
-  const markUnfinishedRows = (row: string[]) => {
-    if (
-      row.includes("N/A") ||
-      row.includes(
-        "Not Answered" ||
-          row.includes("-") ||
-          row.includes("Data not available")
-      )
-    ) {
-      return (row[row.length - 1] = `${row[row.length - 1]}*`);
+  const getRowSumDisplayValue = (row: string[], sum: string) => {
+    let displayValue = sum;
+    if (row.includes(notAnsweredText) || row.includes("-")) {
+      displayValue = sum === "-" ? `${sum}` : `${sum}${ariaLabelledAsterisk}`;
     }
-    return;
-  };
-
-  const commaMasking = (item: string) => {
-    return convertToThousandsSeparatedString(item).maskedValue;
+    return displayValue;
   };
 
   const generateMainTable = () => {
@@ -165,39 +145,34 @@ export const ExportedModalDrawerReportSection = ({
     const headerArray = overflow ? overflowHeaderRows : tableHeadersArray;
 
     const formatBodyRow = () => {
-      let bodyRows: any[] = [];
+      let bodyRows = [];
 
-      const overflowBodyRows = newQuarterValueArray.filter((arr: any[]) => {
+      const overflowBodyRows = newQuarterValueArray.filter((arr) => {
         return newQuarterValueArray.indexOf(arr) <= 5 && arr;
       });
 
       const valueArray = overflow ? overflowBodyRows : newQuarterValueArray;
 
       // get mainQuarterValueArray.length because arrays are all the same length
-      for (let item = 0; item < valueArray[0].length; item++) {
-        let row: string[] = [];
+      for (let index = 0; index < valueArray[0].length; index++) {
+        let rows = [];
         // sum to be added up for each quarter row
         let sum = 0;
-        row.push(quarterLabels[item]);
-
-        // Add Not Answer if cell is empty string,
-        valueArray.forEach((array: any[]) => {
-          if (!array[item] && array[item] === "") {
-            array[item] = "Not Answered";
-          }
-
-          sum += convertToNum(array[item]);
-          row.push(commaMasking(array[item]));
-          return sum;
+        rows.push(quarterLabels[index]);
+        valueArray.forEach((array) => {
+          sum += convertToNum(array[index]);
+          rows.push(commaMasking(array[index]));
         });
 
-        {
-          overflow === false ? row.push(commaMasking(sum.toString())) : null;
+        if (!overflow) {
+          const displaySum = getRowSumDisplayValue(
+            rows,
+            getSumDisplayValue(sum.toString())
+          );
+          rows.push(commaMasking(displaySum));
         }
-        {
-          overflow === false ? markUnfinishedRows(row) : null;
-        }
-        bodyRows.push(row);
+
+        bodyRows.push(rows);
       }
 
       return bodyRows;
@@ -232,35 +207,40 @@ export const ExportedModalDrawerReportSection = ({
       let bodyRows = [];
 
       // get quarterValueArray.length because arrays are all the same length
-      for (let item = 0; item < overflowQuarterValueArray[0].length; item++) {
-        let row: string[] = [];
+      for (
+        let index = 0;
+        index < overflowQuarterValueArray[0].length;
+        index++
+      ) {
+        let rows = [];
+        let rowsForSum: string[] = [];
         // sum to be added up for each quarter row
         let sum = 0;
-        row.push(quarterLabels[item]);
-        // Add Not Answer if cell is empty string,
-        overflowQuarterValueArray.forEach((array: any[]) => {
-          if (!array[item] && array[item] === "") {
-            array[item] = "Not Answered";
-          }
-          row.push(commaMasking(array[item]));
+        rows.push(quarterLabels[index]);
+        overflowQuarterValueArray.forEach((array) => {
+          rows.push(commaMasking(array[index]));
         });
 
         quarterValueArray.forEach((array: any[]) => {
-          sum += convertToNum(array[item]);
+          rowsForSum.push(commaMasking(array[index]));
+          sum += convertToNum(array[index]);
         });
 
-        row.push(commaMasking(sum.toString()));
-        // add asteriks to unfinished row totals
-        markUnfinishedRows(row);
-        bodyRows.push(row);
+        // add asterisk to unfinished row totals
+        const displaySum = getRowSumDisplayValue(
+          new Array(...rows, ...rowsForSum),
+          getSumDisplayValue(sum.toString())
+        );
+        rows.push(commaMasking(displaySum));
+        bodyRows.push(rows);
       }
       return bodyRows;
     };
 
     const formatOverflowTableHeaders = () => {
-      let overflowTableHeadersArray: string[] = [];
+      const overflowTableHeadersArray = [];
       overflowTableHeadersArray.push(tableHeadersArray[0]);
-      tableHeadersArray.find((arr: any) => {
+      tableHeadersArray.find((arr) => {
         if (tableHeadersArray.indexOf(arr) > 6) {
           overflowTableHeadersArray.push(arr);
         }
@@ -298,10 +278,16 @@ export const ExportedModalDrawerReportSection = ({
       data-testid="exportedModalDrawerReportSection"
       sx={sx.container}
     >
-      <Heading as="h2" sx={sx.dashboardTitle} data-testid="headerCount">
-        {verbiage.pdfDashboardTitle}
-      </Heading>
-      <small>{"*asterisk denotes sum of incomplete fields"}</small>
+      {verbiage.pdfDashboardTitle && (
+        <>
+          <Heading as="h3" sx={sx.dashboardTitle} data-testid="headerCount">
+            {verbiage.pdfDashboardTitle}
+          </Heading>
+          <Text sx={sx.text}>
+            {"*asterisk denotes sum of incomplete fields"}
+          </Text>
+        </>
+      )}
       <Box sx={overflow ? sx.overflowStyles : {}}>
         <Table sx={sx.table} content={generateMainTable()}></Table>
         {overflow && (
@@ -322,22 +308,17 @@ const sx = {
       pageBreakInside: "avoid",
     },
   },
-  notAnswered: {
-    display: "block",
-    fontSize: "md",
-    fontWeight: "bold",
-    color: "palette.error_darker",
-    marginTop: "0.5rem",
-  },
   dashboardTitle: {
-    fontSize: "md",
+    fontSize: "21px",
+    lineHeight: "130%",
     fontWeight: "bold",
     color: "palette.gray_darkest",
   },
-  // TODO: delete this
   table: {
     marginTop: "1.25rem",
     borderLeft: "1px solid",
+    borderRight: "1px solid",
+    border: "1px solid",
     tableLayout: "fixed",
     marginBottom: "2.25rem",
     br: {
@@ -345,14 +326,16 @@ const sx = {
     },
     tr: {
       background: "palette.gray_lightest",
+      border: "1px solid",
     },
     thead: {
       height: "100px",
-      borderTop: "1px solid",
+      border: "1px solid",
     },
     "td,th": {
       textAlign: "center",
       wordWrap: "break-word",
+      border: "1px solid",
     },
     "td:first-child": {
       background: "palette.gray_lightest",
@@ -361,6 +344,7 @@ const sx = {
     th: {
       borderBottom: "1px solid",
       borderRight: "1px solid",
+      border: "1px solid",
       borderColor: "palette.black",
       color: "palette.black",
       lineHeight: "normal",
@@ -368,7 +352,7 @@ const sx = {
       width: "100px",
       minWidth: "100px",
       ".tablet &, .mobile &": {
-        border: "none",
+        border: "1px solid",
       },
     },
     "tbody tr": {
@@ -398,7 +382,9 @@ const sx = {
     },
   },
   border: {
-    border: "1px solid black",
     marginTop: "1.25rem",
+  },
+  text: {
+    fontSize: "0.875rem",
   },
 };

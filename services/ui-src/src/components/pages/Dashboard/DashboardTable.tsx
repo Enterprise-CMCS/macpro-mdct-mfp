@@ -32,16 +32,12 @@ export const DashboardTable = ({
     {reportsByState.map((report: ReportMetadataShape) => (
       <Tr key={report.id}>
         {/* Edit Button */}
-        {isStateLevelUser &&
-        !report?.locked &&
-        reportType === ReportType.SAR ? (
+        {!report?.locked && reportType === ReportType.SAR && (
           <EditReportButton
             report={report}
             openAddEditReportModal={openAddEditReportModal}
             sxOverride={sxOverride}
           />
-        ) : (
-          <Td></Td>
         )}
         {/* Report Name */}
         {reportType === ReportType.WP ? (
@@ -50,7 +46,7 @@ export const DashboardTable = ({
           <Td sx={sxOverride.sarSubmissionNameText}>{report.submissionName}</Td>
         )}
         {/* Target populations */}
-        {reportType === ReportType.SAR && report?.populations && (
+        {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Td>{prettifyChoices(report?.populations)}</Td>
         )}
         {/* Date Fields */}
@@ -164,7 +160,7 @@ const tableBody = (body: TableContentShape, isAdmin: boolean) => {
     return tableContent;
   } else {
     tableContent.headRow = tableContent.headRow!.filter(
-      (e) => e !== "Due date"
+      (e) => e !== "Due date" && e !== "Target populations"
     );
   }
   return body;
@@ -224,9 +220,7 @@ const AdminReleaseButton = ({
     report.archived,
     report.submissionCount
   );
-  const isDisabled = !(
-    reportStatus === "Submitted" || reportStatus === "Approved"
-  );
+  const isDisabled = !(reportStatus === "Submitted");
 
   return (
     <Td>
@@ -305,7 +299,6 @@ const sx = {
         paddingRight: 0,
       },
       "&:first-of-type": {
-        width: "2rem",
         minWidth: "2rem",
       },
     },

@@ -50,7 +50,7 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
 
   const { modalOverlayTableHeaders } = verbiage;
 
-  const headerLabels = Object.values(
+  const headerLabels = Object!.values(
     modalOverlayTableHeaders as Record<string, string>
   );
 
@@ -146,6 +146,7 @@ export function renderModalOverlayTableBody(
 ) {
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
+  const isPdf = true;
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
@@ -155,8 +156,8 @@ export function renderModalOverlayTableBody(
               <Td sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
-                  isPdf={true}
-                  entityStatus={getInitiativeStatus(report, entity)}
+                  isPdf={isPdf}
+                  entityStatus={getInitiativeStatus(report, entity, isPdf)}
                 />
               </Td>
               <Td>
@@ -179,6 +180,7 @@ export function renderModalOverlayTableBody(
                         section={section as ModalOverlayReportPageShape}
                         entity={entity}
                         entityStep={step}
+                        showHintText={true}
                       />
                     </Box>
                   );
@@ -202,6 +204,23 @@ export function renderModalOverlayTableBody(
                       />
                     </Box>
                   );
+                case EntityDetailsStepTypes.CLOSE_OUT_INFORMATION:
+                  //clean up title
+                  step[1] = (step[1] as string).replace(" (if applicable)", "");
+
+                  return (
+                    entity?.isInitiativeClosed && (
+                      <Box key={idx}>
+                        <ExportedEntityDetailsOverlaySection
+                          section={section as ModalOverlayReportPageShape}
+                          entity={entity}
+                          entityStep={step}
+                          showHintText={false}
+                          closed={true}
+                        />
+                      </Box>
+                    )
+                  );
                 // TODO: Once we are tracking the close-out information step, we'll need to add it here
                 default:
                   return <></>;
@@ -211,9 +230,23 @@ export function renderModalOverlayTableBody(
         );
       });
     case ReportType.SAR:
-      throw new Error(
-        `The modal overlay table headers for report type '${reportType}' have not been implemented.`
-      );
+      return entities.map((entity, idx) => {
+        return (
+          <Box sx={sx.container}>
+            <Tr key={idx}>
+              <Td>
+                <Heading sx={sx.heading} as="h2">
+                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
+                  <br />
+                  <Text sx={sx.headingSubtitle}>
+                    {entity.initiative_wpTopic[0].value}
+                  </Text>
+                </Heading>
+              </Td>
+            </Tr>
+          </Box>
+        );
+      });
     default:
       assertExhaustive(reportType);
       throw new Error(
