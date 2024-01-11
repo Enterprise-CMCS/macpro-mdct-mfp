@@ -94,12 +94,17 @@ export const renderReportSections = (
   // recursively render sections
   const renderSection = (section: ReportRoute) => {
     const childSections = section?.children;
+    const initatives =
+      section.name === "State- or Territory Specific Initiatives" &&
+      childSections;
+    const showGeneralInformation = !(
+      reportType === ReportType.WP && section.name === "General Information"
+    );
+
     return (
       <Box key={section.path}>
-        {/* if section has children, recurse */}
-        {childSections?.map((child: ReportRoute) => renderSection(child))}
         {/* if section does not have children and has content to render, render it */}
-        {!childSections && (
+        {showGeneralInformation && !initatives && (
           <Box>
             <ExportedSectionHeading
               heading={section.verbiage?.intro?.subsection || section.name}
@@ -109,6 +114,8 @@ export const renderReportSections = (
             <ExportedReportWrapper section={section as ReportRouteWithForm} />
           </Box>
         )}
+        {/* if section has children, recurse */}
+        {childSections?.map((child: ReportRoute) => renderSection(child))}
       </Box>
     );
   };
