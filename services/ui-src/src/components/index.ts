@@ -43,6 +43,7 @@ export { ExportedModalOverlayReportSection } from "./export/ExportedModalOverlay
 export { ExportedOverlayModalReportSection } from "./export/ExportedOverlayModalReportSection";
 export { ExportedReportBanner } from "./export/ExportedReportBanner";
 export { PrintButton } from "./export/PrintButton";
+export { ExportedSarDetailsTable } from "./export/ExportedSarDetailsTable";
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";

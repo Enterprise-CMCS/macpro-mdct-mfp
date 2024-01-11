@@ -1,5 +1,5 @@
 // components
-import { Table } from "components";
+import { ExportedSarDetailsTable, Table } from "components";
 // utils
 import { ReportShape, ReportType } from "types";
 import { convertDateUtcToEt, useStore } from "utils";
@@ -11,14 +11,19 @@ export const ExportedReportMetadataTable = ({
 }: Props) => {
   const { report } = useStore() ?? {};
   return (
-    <Table
-      data-testid="exportedReportMetadataTable"
-      sx={sx.metadataTable}
-      content={{
-        headRow: headerRowLabels(reportType, verbiage),
-        bodyRows: bodyRowContent(reportType, report),
-      }}
-    />
+    <>
+      <Table
+        data-testid="exportedReportMetadataTable"
+        sx={sx.metadataTable}
+        content={{
+          headRow: headerRowLabels(reportType, verbiage),
+          bodyRows: bodyRowContent(reportType, report),
+        }}
+      />
+      {reportType === ReportType.SAR && (
+        <ExportedSarDetailsTable verbiage={verbiage} />
+      )}
+    </>
   );
 };
 
@@ -73,9 +78,10 @@ export const bodyRowContent = (
       return [
         [
           report?.submissionName ?? "",
-          convertDateUtcToEt(report?.lastAltered),
-          report?.lastAlteredBy,
-          report?.status,
+          convertDateUtcToEt(report.dueDate),
+          convertDateUtcToEt(report.lastAltered),
+          report.status,
+          report.lastAlteredBy,
         ],
       ];
     default:

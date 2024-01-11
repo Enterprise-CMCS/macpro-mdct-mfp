@@ -1,25 +1,25 @@
 import { ReactElement } from "react";
 // components
-import { Table } from "components";
+import { Box, Heading } from "@chakra-ui/react";
+import { ExportedReportFieldRow, Table } from "components";
 // types, utils
 import { useStore } from "utils";
 import {
   FormField,
   StandardReportPageShape,
   DrawerReportPageShape,
-  ReportShape,
   FormLayoutElement,
   isFieldElement,
   ReportType,
   FieldChoice,
 } from "types";
 // verbiage
-import verbiage from "verbiage/pages/wp/wp-export";
-import { ExportedReportFieldRow } from "./ExportedReportFieldRow";
+import wpVerbiage from "verbiage/pages/wp/wp-export";
+import sarVerbiage from "verbiage/pages/sar/sar-export";
 
 export const ExportedReportFieldTable = ({ section }: Props) => {
   const { report } = useStore() ?? {};
-  const { tableHeaders } = verbiage;
+  const { tableHeaders } = wpVerbiage;
 
   const pageType = section.pageType;
   const formFields =
@@ -42,29 +42,93 @@ export const ExportedReportFieldTable = ({ section }: Props) => {
   const entityType = section.entityType;
 
   return (
-    <Table
-      sx={sx.root}
-      className={formHasOnlyDynamicFields ? "two-column" : ""}
-      content={{
-        headRow: headRowItems,
-      }}
-      data-testid="exportTable"
-    >
-      {renderFieldTableBody(
-        formFields!,
-        pageType!,
-        report,
-        !hideHintText,
-        entityType
-      )}
-    </Table>
+    // SAR "General Information" section layout is a unique case with multiple section headings within the same page
+    section.name === "General Information" ? (
+      renderGeneralInformation(sarVerbiage, formFields!, pageType!, entityType)
+    ) : (
+      <Table
+        sx={sx.root}
+        className={formHasOnlyDynamicFields ? "two-column" : ""}
+        content={{
+          headRow: headRowItems,
+        }}
+        data-testid="exportTable"
+      >
+        {renderFieldTableBody(
+          formFields!,
+          pageType!,
+          !hideHintText,
+          entityType
+        )}
+      </Table>
+    )
   );
+};
+
+const renderGeneralInformation = (
+  verbiage: any,
+  formFields: (FormField | FormLayoutElement)[],
+  pageType: string,
+  entityType?: string
+) => {
+  const headings = verbiage.generalInformationTable.headings;
+
+  // get the range of form fields for a particular section
+  const getSectionFormFields = (
+    heading: number,
+    formFields: (FormField | FormLayoutElement)[]
+  ) => {
+    let fields: (FormField | FormLayoutElement)[] = [];
+    switch (heading) {
+      case 0:
+        fields = formFields.slice(0, 1);
+        break;
+      case 1:
+        fields = formFields.slice(1, 6);
+        break;
+      case 2:
+        fields = formFields.slice(6, 10);
+        break;
+      case 3:
+        fields = formFields.slice(10, 13);
+        break;
+      case 4:
+        fields = formFields.slice(13);
+        break;
+    }
+    return fields;
+  };
+
+  return headings.map((heading: string, idx: number) => {
+    return (
+      <Box key={idx}>
+        <Heading as="h3" sx={sx.heading}>
+          {heading}
+        </Heading>
+        <Table
+          sx={sx.root}
+          content={{
+            headRow: [
+              verbiage.reportPage.sarDetailsTable.headers.indicator,
+              verbiage.reportPage.sarDetailsTable.headers.response,
+            ],
+          }}
+        >
+          {renderFieldTableBody(
+            getSectionFormFields(idx, formFields!),
+            pageType!,
+            false,
+            entityType
+          )}
+        </Table>
+      </Box>
+    );
+  });
 };
 
 export const renderFieldTableBody = (
   formFields: (FormField | FormLayoutElement)[],
   pageType: string,
-  report: ReportShape | undefined,
   showHintText: boolean,
   entityType?: string
 ) => {
@@ -124,6 +188,7 @@ const sx = {
       lineHeight: "base",
       borderBottom: "1px solid",
       borderColor: "palette.gray_lighter",
+      paddingLeft: "0",
     },
     thead: {
       //this will prevent generating a new header whenever the table spills over in another page
@@ -163,5 +228,9 @@ const sx = {
         },
       },
     },
+  },
+  heading: {
+    fontSize: "xl",
+    fontWeight: "bold",
   },
 };

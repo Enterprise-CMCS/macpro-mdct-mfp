@@ -9,7 +9,7 @@ export default {
   },
   metadata: {
     author: "CMS",
-    subject: "Managed Care Program Annual Report",
+    subject: "MFP Program Work Plan",
     language: "English",
   },
   reportPage: {
