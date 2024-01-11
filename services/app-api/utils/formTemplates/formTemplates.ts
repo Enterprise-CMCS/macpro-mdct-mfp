@@ -239,6 +239,59 @@ export const targetPopulations = (
   return fieldsToAppend;
 };
 
+export const quantitativeQuarters = (
+  fieldToRepeat: FormField,
+  reportPeriod: number
+) => {
+  const fieldsToAppend = [];
+
+  let quarter = reportPeriod === 1 ? 1 : 3;
+  const headingString =
+    reportPeriod == 1
+      ? "First quarter (January 1 - March 31)"
+      : "Third quarter (July 1 - September 30)";
+
+  for (let i = 0; i < 2; i++) {
+    const formFieldHeading: FormField = {
+      ...fieldToRepeat,
+      id: `${fieldToRepeat.id}Heading_Q${quarter}`,
+      type: "sectionHeader",
+      transformation: { rule: "" },
+      props: {
+        contentString: headingString,
+      },
+    };
+    fieldsToAppend.push(formFieldHeading);
+
+    const formFieldActual: FormField = {
+      ...fieldToRepeat,
+      id: `${fieldToRepeat.id}Actual_Q${quarter}`,
+      type: "number",
+      validation: "number",
+      transformation: { rule: "" },
+      props: {
+        label: "Actual value",
+      },
+    };
+    fieldsToAppend.push(formFieldActual);
+
+    const formFieldTarget: FormField = {
+      ...fieldToRepeat,
+      id: `${fieldToRepeat.id}Target_Q${quarter}`,
+      type: "number",
+      transformation: { rule: "" },
+      props: {
+        label: "Target Value",
+        hint: "Auto-populates from Work Plan.",
+        disabled: true,
+      },
+    };
+    fieldsToAppend.push(formFieldTarget);
+  }
+
+  return fieldsToAppend;
+};
+
 /**
  * Look through the formFields provided and run the transformation provided on that field.
  * @param {FormField[]} formFields - The formFields you want to transform
