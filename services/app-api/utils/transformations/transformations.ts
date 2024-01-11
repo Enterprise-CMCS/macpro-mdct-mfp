@@ -1,4 +1,3 @@
-import { findAndRunFieldTransformationRules } from "../formTemplates/formTemplates";
 import {
   AnyObject,
   DynamicModalOverlayReportPageShape,
@@ -22,16 +21,11 @@ export const runSARTransformations = (
   const initiatives = [];
   for (let workPlanInitiative of workPlanFieldData.initiative) {
     const initiative = {
+      initiativeId: workPlanInitiative.id,
       name: workPlanInitiative.initiative_name,
       topic: workPlanInitiative.initiative_wpTopic?.[0].value,
-      dashboard: route.template.dashboard,
-      entitySteps: findAndRunFieldTransformationRules(
-        route.template.entitySteps,
-        reportPeriod,
-        reportYear,
-        workPlanFieldData,
-        workPlanInitiative.id
-      ),
+      dashboard: route?.template.dashboard,
+      entitySteps: structuredClone(route?.template.entitySteps),
     };
 
     initiatives.push(initiative);
@@ -51,13 +45,15 @@ export const generateSARFormsForInitiatives = (
   workPlanFieldData?: AnyObject
 ) => {
   for (let route of reportRoutes) {
-    if (route?.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY)
+    if (route?.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY) {
       route = runSARTransformations(
         route as DynamicModalOverlayReportPageShape,
         reportPeriod,
         reportYear,
         workPlanFieldData
       );
+      delete route.template;
+    }
   }
   return reportRoutes;
 };
