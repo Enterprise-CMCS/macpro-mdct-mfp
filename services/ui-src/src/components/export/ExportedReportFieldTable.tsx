@@ -188,6 +188,7 @@ const sx = {
       lineHeight: "base",
       borderBottom: "1px solid",
       borderColor: "palette.gray_lighter",
+      paddingLeft: "0",
     },
     thead: {
       //this will prevent generating a new header whenever the table spills over in another page

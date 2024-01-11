@@ -9,11 +9,11 @@ export default {
   },
   metadata: {
     author: "CMS",
-    subject: "Managed Care Program Annual Report",
+    subject: "Semi-Annual Progress Report",
     language: "English",
   },
   reportPage: {
-    heading: "Managed Care Program Annual Report (SAR) for ",
+    heading: "Semi-Annual Progress Report (SAR) for ",
     metadataTableHeaders: {
       submissionName: "Submission Name",
       dueDate: "Due date",
