@@ -944,8 +944,10 @@
                               "type": "date",
                               "validation": {
                                 "type": "endDate",
+                                "parentOptionId": "defineInitiative_projectedEndDate-WNsSaAHeDvRD2Pjkz6DcOE",
+                                "parentFieldName": "defineInitiative_projectedEndDate",
                                 "dependentFieldName": "defineInitiative_projectedStartDate",
-                                "parentFieldName": "defineInitiative_projectedEndDate"
+                                "nested": true
                               },
                               "props": {
                                 "label": "Projected end date",
