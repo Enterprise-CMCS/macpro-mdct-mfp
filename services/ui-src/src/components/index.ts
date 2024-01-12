@@ -42,7 +42,7 @@ export { ExportedEntityDetailsTableRow } from "./export/ExportedEntityDetailsTab
 export { ExportedModalOverlayReportSection } from "./export/ExportedModalOverlayReportSection";
 export { ExportedOverlayModalReportSection } from "./export/ExportedOverlayModalReportSection";
 export { ExportedReportBanner } from "./export/ExportedReportBanner";
-export { ExportedOverflowTable } from "./export/ExportedOverflowTable";
+export { ExportRETTable } from "./export/ExportedRETTable";
 export { PrintButton } from "./export/PrintButton";
 export { ExportedSarDetailsTable } from "./export/ExportedSarDetailsTable";
 // fields
