@@ -116,6 +116,7 @@ export const RETFooters = (
 ) => {
   switch (formId) {
     case "ret-mtrp":
+      //Number of MFP transitions in the reporting period
       const quarterIds = [
         "quarterlyProjections2024Q1",
         "quarterlyProjections2024Q2",
@@ -143,11 +144,8 @@ export const RETFooters = (
         ...perOfTwoRows(rows[0], totalTranstionTargets),
       ];
       rows.push(totalTranstionTargets, perTargetsAchieved);
-
-      //Number of MFP transitions in the reporting period
       break;
     case "ret-mpdprp":
-      console.log(fieldData);
       //Number of MFP participants disenrolled from the program during the reporting period
       break;
   }
@@ -163,19 +161,30 @@ export const ExportRETTable = ({ section }: Props) => {
     if (field?.type === "sectionHeader") {
       currentRow = field?.props?.content ? field?.props?.content : currentRow;
     } else if (field?.type === "checkbox") {
-      const checkboxIds = (report?.fieldData[field.id] as []).map(
-        (check: AnyObject) => check.key.split("-")[1]
-      );
-      const childrens = checkboxIds.map(
-        (ids: string) =>
-          (field.props?.choices as AnyObject[])?.find(
-            (choice: AnyObject) => choice.id === ids
-          )?.children
-      );
+      const checkboxList = report?.fieldData[field.id] as [];
+      const childrens = checkboxList
+        .map(
+          (checkbox: AnyObject) =>
+            (field.props?.choices as AnyObject[])?.find(
+              (choice: AnyObject) => choice.id === checkbox.key.split("-")[1]
+            )?.children
+        )
+        .flat();
+
       const childIds = childrens.map((child: AnyObject) => {
-        return { label: child?.props?.label, id: [child.id] };
+        return {
+          label: child?.props?.label,
+          id: [child.id],
+          parentId: child?.validation?.parentOptionId,
+        };
       });
-      console.log(childrens);
+
+      checkboxList.forEach((checkbox: AnyObject) => {
+        const parentId = checkbox.key.split("-")[1];
+        rows[checkbox.value] = childIds.filter(
+          (child) => child.parentId === parentId
+        );
+      });
     } else {
       rows[currentRow] = rows[currentRow] ?? [];
       rows[currentRow].push({ label: field?.props?.label, id: [field.id] });
