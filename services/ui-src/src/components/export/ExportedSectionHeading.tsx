@@ -24,7 +24,7 @@ export const formatSectionInfo = (verbiage: ReportPageVerbiage) => {
 export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
   const sectionHeading = verbiage?.intro?.exportSectionHeader
     ? verbiage?.intro?.exportSectionHeader
-    : verbiage?.intro?.subsection || heading;
+    : heading;
   const sectionHint = verbiage?.intro?.hint ? verbiage?.intro?.hint : null;
   const sectionInfo = formatSectionInfo(verbiage!);
   const stateAndTerritory =

@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 // utils
-import { useStore } from "utils";
+import { useStore, displayLongformPeriod } from "utils";
 import { assertExhaustive } from "utils/other/typing";
 // components
 import { Box, Center, Heading, Spinner } from "@chakra-ui/react";
@@ -58,7 +58,11 @@ export const ExportedReportPage = () => {
             verbiage={reportPage}
           />
           {/* report sections */}
-          {renderReportSections(report.formTemplate.routes, report.reportType)}
+          {renderReportSections(
+            report.formTemplate.routes,
+            report.reportType,
+            report
+          )}
         </Box>
       )) || (
         <Center>
@@ -87,9 +91,19 @@ export const reportTitle = (
   }
 };
 
+export const formatSectionHeader = (report: ReportShape, header: string) => {
+  const newPeriod = `${displayLongformPeriod(
+    report.reportPeriod,
+    report.reportYear
+  )} reporting period`;
+  const newHeader = header?.replace(" reporting period", newPeriod);
+  return newHeader;
+};
+
 export const renderReportSections = (
   reportRoutes: ReportRoute[],
-  reportType: string
+  reportType: string,
+  report: ReportShape
 ) => {
   // recursively render sections
   const renderSection = (section: ReportRoute) => {
@@ -107,7 +121,12 @@ export const renderReportSections = (
         {showGeneralInformation && !initatives && (
           <Box>
             <ExportedSectionHeading
-              heading={section.verbiage?.intro?.subsection || section.name}
+              heading={
+                formatSectionHeader(
+                  report,
+                  section.verbiage?.intro?.subsection!
+                ) || section.name
+              }
               reportType={reportType}
               verbiage={section.verbiage || undefined}
             />

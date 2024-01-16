@@ -13,7 +13,11 @@ import { Table } from "components";
 import { useStore } from "utils";
 import { notAnsweredText } from "../../constants";
 
-export const generateMainTable = (rows: AnyObject, fieldData?: AnyObject) => {
+export const generateMainTable = (
+  rows: AnyObject,
+  fieldData?: AnyObject,
+  caption?: string
+) => {
   const headerRow = generateTableHeader(rows);
   const bodyRows: string[][] = generateTableBody(rows, fieldData);
   const footRow: string[][] | undefined = generateTableFooter(
@@ -22,7 +26,7 @@ export const generateMainTable = (rows: AnyObject, fieldData?: AnyObject) => {
   );
 
   const table = {
-    caption: "Transition Benchmark Totals Table",
+    caption: `${caption} Table`,
     headRow: headerRow,
     bodyRows: bodyRows,
     footRow: footRow,
@@ -70,12 +74,12 @@ export const generateTableHeader = (rows: AnyObject) => {
   const row: AnyObject[] = Object.values(rows)[0];
 
   const columnHeaders = row
-    .map((keys) => keys.label)
+    .map((keys) => truncateLabel(keys.label))
     .filter((keys) => {
       return keys;
     });
 
-  const firstHeader = ["Pop."];
+  const firstHeader = ["Population"];
   const totalHeader = ["Total"];
   return firstHeader.concat(columnHeaders.concat(totalHeader));
 };
@@ -103,10 +107,6 @@ export const generateTableFooter = (bodyRows: string[][], size: number) => {
   return footRow;
 };
 
-export const truncateLabel = (label: string) => {
-  return "";
-};
-
 export const sumOfTwoRows = (row1: string[], row2: string[]) => {
   return row1
     .map((col, index) => {
@@ -123,6 +123,18 @@ export const perOfTwoRows = (row1: string[], row2: string[]) => {
       return isNaN(total) ? "-" : total.toFixed(2) + "%";
     })
     .splice(1, row1.length);
+};
+
+export const truncateLabel = (label: string) => {
+  if (label.includes("Other:")) return label.replace("Other:", "");
+
+  switch (label) {
+    case "Number of Older adults":
+      return "Older Adults";
+    default: {
+      return label.substring(label.indexOf("(") + 1, label.indexOf(")"));
+    }
+  }
 };
 
 export const RETFooters = (
@@ -261,10 +273,9 @@ export const ExportRETTable = ({ section }: Props) => {
     }
   });
 
-  const table = generateMainTable(rows, report?.fieldData);
+  const table = generateMainTable(rows, report?.fieldData, section.name);
   RETFooters(form?.id, report?.fieldData!, table.footRow!);
-
-  const tables = truncateTable(table, 7);
+  const tables = truncateTable(table, 5);
 
   return (
     <Box
@@ -292,34 +303,18 @@ const sx = {
   },
   table: {
     marginTop: "1.25rem",
-    borderLeft: "1px solid",
-    borderRight: "1px solid",
     border: "1px solid",
     tableLayout: "fixed",
     marginBottom: "2.25rem",
     br: {
       marginBottom: "0.25rem",
     },
-    tr: {
-      background: "palette.gray_lightest",
-      border: "1px solid",
-    },
     thead: {
       height: "100px",
       border: "1px solid",
     },
-    "td,th": {
-      textAlign: "center",
-      wordWrap: "break-word",
-      border: "1px solid",
-    },
-    "td:first-child": {
+    "thead tr:first-child th": {
       background: "palette.gray_lightest",
-      fontWeight: "bold",
-    },
-    th: {
-      borderBottom: "1px solid",
-      borderRight: "1px solid",
       border: "1px solid",
       borderColor: "palette.black",
       color: "palette.black",
@@ -331,16 +326,26 @@ const sx = {
         border: "1px solid",
       },
     },
+    th: {
+      color: "black",
+    },
+    "td,th": {
+      textAlign: "center",
+      wordWrap: "break-word",
+      border: "1px solid black",
+      fontWeight: "normal",
+    },
+    "td:first-child, tfoot th:first-child": {
+      background: "palette.gray_lightest",
+      fontWeight: "bold",
+      color: "palette.black",
+    },
     "tbody tr": {
       background: "palette.white",
     },
-    "tbody tr td:last-child, tfoot tr": {
+    ":last-of-type tbody tr td:last-child, tfoot th": {
       background: "palette.secondary_lightest",
       fontWeight: "bold",
-    },
-    "tbody tr td": {
-      borderRight: "1px solid black",
-      borderBottom: "1px solid black",
     },
   },
 };
