@@ -1,4 +1,4 @@
-import { FormJson, PageTypes } from "./formFields";
+import { FormJson } from "./formFields";
 import { AnyObject, CompletionData, CustomHtmlElement, State } from "./other";
 
 // REPORT STRUCTURE

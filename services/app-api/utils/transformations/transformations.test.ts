@@ -1,6 +1,5 @@
 import {
   mockDynamicModalOverlayForm,
-  mockEntitySteps,
   mockFormField,
   mockNumberField,
   mockVerbiageIntro,
@@ -289,7 +288,7 @@ describe("transformFormTemplate", () => {
               id: "55b674-ce4-f10-d575-4a11c820268",
               fundingSources_wpTopic: [
                 {
-                  key: "fundingSources_wpTopic-2VLpZ9A92OivbZhKvY8pE4",
+                  key: "fundingSources_wpTopic-key",
                   value: "Capacity-building funds",
                 },
               ],

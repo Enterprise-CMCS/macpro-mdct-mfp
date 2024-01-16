@@ -118,7 +118,7 @@ export const mockWPMetadata = {
         isRequired: true,
         transitionBenchmarks_applicableToMfpDemonstration: [
           {
-            key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v",
+            key: "transitionBenchmarks_applicableToMfpDemonstration-key",
             value: "No",
           },
         ],
