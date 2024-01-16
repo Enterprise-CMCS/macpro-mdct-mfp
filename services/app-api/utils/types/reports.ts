@@ -1,4 +1,4 @@
-import { FormJson } from "./formFields";
+import { FormJson, PageTypes } from "./formFields";
 import { AnyObject, CompletionData, CustomHtmlElement, State } from "./other";
 
 // REPORT STRUCTURE
@@ -44,7 +44,6 @@ export interface StandardReportPageShape extends ReportPageShapeBase {
   form: FormJson;
   dashboard?: never;
   modalForm?: never;
-  overlayForm?: never;
   drawerForm?: never;
   entityType?: never;
   entitySteps?: never;
@@ -57,7 +56,6 @@ export interface DrawerReportPageShape extends ReportPageShapeBase {
   verbiage: DrawerReportPageVerbiage;
   drawerForm: FormJson;
   modalForm?: never;
-  overlayForm?: never;
   form?: never;
   entitySteps?: never;
   dashboard?: never;
@@ -70,7 +68,6 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   verbiage: ModalDrawerReportPageVerbiage;
   modalForm: FormJson;
   drawerForm: FormJson;
-  overlayForm?: never;
   form?: never;
   entitySteps?: never;
   dashboard?: never;
@@ -84,7 +81,6 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   entityInfo?: string[];
   verbiage: ModalOverlayReportPageVerbiage;
   modalForm: FormJson;
-  overlayForm?: FormJson;
   drawerForm?: never;
   form?: never;
   dashboard: EntityDetailsDashboardOverlayShape;
@@ -98,12 +94,11 @@ export interface DynamicModalOverlayReportPageShape
   entityType: string;
   entityInfo: string[];
   verbiage: ModalOverlayReportPageVerbiage;
-  drawerForm: never;
-  modalForm: never;
-  overlayForm: never;
-  form: never;
-  entitySteps: never;
-  dashboard: never;
+  drawerForm?: never;
+  modalForm?: never;
+  form?: never;
+  entitySteps?: never;
+  dashboard?: never;
   initiatives: {
     initiativeId: string;
     name: string;
@@ -136,7 +131,7 @@ export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   verbiage: EntityOverlayPageVerbiage;
   entityType?: never;
   dashboard?: never;
-  modalForm: never;
+  modalForm?: never;
   drawerForm?: never;
   entitySteps?: never;
   template?: never;
@@ -156,7 +151,6 @@ export interface ReportRouteWithoutForm extends ReportRouteBase {
   entityType?: never;
   verbiage?: never;
   modalForm?: never;
-  overlayForm?: never;
   drawerForm?: never;
   form?: never;
   entitySteps?: never;

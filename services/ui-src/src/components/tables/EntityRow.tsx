@@ -7,9 +7,10 @@ import {
   AnyObject,
   EntityShape,
   ModalDrawerEntityTypes,
-  ReportShape,
   OverlayModalTypes,
   EntityDetailsOverlayTypes,
+  EntityDetailsOverlayShape,
+  OverlayModalPageShape,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -35,7 +36,7 @@ export const EntityRow = ({
 
   // check for "other" target population entities
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
-  const stepType = (formEntity as AnyObject)?.stepType;
+  const stepType = formEntity?.stepType;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
@@ -192,7 +193,7 @@ export const EntityRow = ({
 interface Props {
   entity: EntityShape;
   entityType?: string;
-  formEntity?: ReportShape;
+  formEntity?: EntityDetailsOverlayShape | OverlayModalPageShape;
   verbiage: AnyObject;
   openAddEditEntityModal?: Function;
   openDeleteEntityModal?: Function;

@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import {
   AnyObject,
   DynamicModalOverlayReportPageShape,
@@ -11,8 +12,6 @@ import {
   ReportJson,
   ReportRoute,
 } from "../types";
-
-// type ReportPeriod = 1 | 2;
 
 export const removeConditionalRoutes = <T extends ReportRoute>(
   routes: T[],
@@ -36,10 +35,6 @@ export const removeConditionalRoutes = <T extends ReportRoute>(
         // There is no condition, so this route is always included.
         return true;
       case "showOnlyInPeriod2":
-        if (!reportPeriod)
-          throw new Error(
-            "Route transformation rule 'showOnlyInPeriod2' requires a reportPeriod."
-          );
         return reportPeriod === 2;
       default:
         throw new Error(
@@ -66,7 +61,9 @@ export function* iterateAllForms(
       yield* iterateAllForms(route.children);
     }
     if (route.initiatives) {
-      yield* iterateAllForms(route.initiatives);
+      for (let initiative of route.initiatives) {
+        yield* iterateAllForms(initiative.entitySteps);
+      }
     }
     if (route.entitySteps) {
       yield* iterateAllForms(route.entitySteps);
@@ -149,11 +146,6 @@ export const transformFormTemplate = (
   reportYear: number,
   workPlanFieldData?: AnyObject
 ) => {
-  if (!formTemplate.routes) {
-    // This must not be a report form; all reports have routes.
-    return formTemplate;
-  }
-
   formTemplate.routes = removeConditionalRoutes(
     formTemplate.routes,
     reportPeriod
@@ -188,18 +180,9 @@ export const transformFormTemplate = (
  */
 const nextTwelveQuarters = (
   field: FormField,
-  reportYear?: number,
-  reportPeriod?: number
+  reportYear: number,
+  reportPeriod: number
 ) => {
-  if (!reportYear)
-    throw new Error(
-      "Field transformation rule 'nextTwelveQuarters' requires a reportYear."
-    );
-  if (!reportPeriod)
-    throw new Error(
-      "Field transformation rule 'nextTwelveQuarters' requires a reportPeriod."
-    );
-
   // The first quarter will be Q1 for period 1, or Q3 for period 2.
   const firstQuarterIndex = reportPeriod === 1 ? 0 : 2;
 
@@ -229,25 +212,31 @@ const nextTwelveQuarters = (
  */
 const targetPopulations = (
   field: FormField,
-  reportPeriod?: number,
+  reportPeriod: number,
   targetPopulations?: AnyObject
 ) => {
-  if (!reportPeriod)
-    throw new Error(
-      "Field transformation rule 'targetPopulations' requires a reportPeriod."
-    );
-  if (!targetPopulations)
+  if (!targetPopulations) {
     throw new Error(
       "Field transformation rule 'targetPopulations' requires targetPopulations."
     );
+  }
 
-  const mappedTargetPopulations = targetPopulations.map((population: any) => ({
-    name: population.transitionBenchmarks_targetPopulationName,
-    label:
-      population.isRequired === true
-        ? `Number of ${population.transitionBenchmarks_targetPopulationName}`
-        : `Other: ${population.transitionBenchmarks_targetPopulationName}`,
-  }));
+  // We don't want populations that were marked in the WP as being non-applicable to MFP
+  const applicableTargetPopulations = targetPopulations.filter(
+    (population: any) =>
+      population.transitionBenchmarks_applicableToMfpDemonstration?.[0]
+        ?.value !== "No"
+  );
+
+  const mappedTargetPopulations = applicableTargetPopulations.map(
+    (population: any) => ({
+      name: population.transitionBenchmarks_targetPopulationName,
+      label:
+        population.isRequired === true
+          ? `Number of ${population.transitionBenchmarks_targetPopulationName}`
+          : `Other: ${population.transitionBenchmarks_targetPopulationName}`,
+    })
+  );
 
   // No point keeping this around in the clones
   delete field.transformation;
@@ -265,13 +254,8 @@ const targetPopulations = (
 /** Create a section header with content depending on the report period */
 const firstQuarterOfThePeriod = (
   field: FormLayoutElement,
-  reportPeriod?: number
+  reportPeriod: number
 ) => {
-  if (!reportPeriod)
-    throw new Error(
-      "Field transformation rule 'firstQuarterOfThePeriod' requires a reportPeriod."
-    );
-
   return {
     id: `${field.id}`,
     type: `${field.type}`,
@@ -287,13 +271,8 @@ const firstQuarterOfThePeriod = (
 /** Create a section header with content depending on the report period */
 const secondQuarterOfThePeriod = (
   field: FormLayoutElement,
-  reportPeriod?: number
+  reportPeriod: number
 ) => {
-  if (!reportPeriod)
-    throw new Error(
-      "Field transformation rule 'secondQuarterOfThePeriod' requires a reportPeriod."
-    );
-
   return {
     id: `${field.id}`,
     type: `${field.type}`,
@@ -325,7 +304,7 @@ export const fundingSources = (
   for (let fundingSource of initiativeToUse.fundingSources) {
     const isFirstReportPeriod = reportPeriod == 1;
     const fundingSourceHeader: FormField = {
-      id: `123`,
+      id: `fundingSourceHeader-${randomUUID()}`,
       type: "sectionHeader",
       props: {
         label: `${fundingSource?.fundingSources_wpTopic?.[0]?.value}`,
@@ -334,11 +313,11 @@ export const fundingSources = (
     fieldsToAppend.push(fundingSourceHeader);
 
     // have to loop twice for both periods
-    for (let i = 0; i < 2; i++) {
+    for (let quarterNumber = 1; quarterNumber <= 2; quarterNumber += 1) {
       let longformQuarter = "";
       let spendingMonths = "";
 
-      if (i === 0) {
+      if (quarterNumber === 1) {
         longformQuarter = isFirstReportPeriod ? "First" : "Third";
         spendingMonths = isFirstReportPeriod
           ? "January 1 - March 31"
@@ -351,7 +330,7 @@ export const fundingSources = (
       }
 
       const actualSpending: FormField = {
-        id: `fundingSources_actual${reportYear}Q${isFirstReportPeriod ? 1 : 3}`,
+        id: `fundingSources_actual${reportYear}Q${quarterNumber}`,
         type: "number",
         validation: "number",
         props: {
@@ -359,9 +338,7 @@ export const fundingSources = (
         },
       };
       const projectedSpending: FormField = {
-        id: `fundingSources_quarters${reportYear}Q${
-          isFirstReportPeriod ? 1 : 3
-        }`,
+        id: `fundingSources_quarters${reportYear}Q${quarterNumber}`,
         type: "number",
         validation: "number",
         props: {
@@ -386,7 +363,8 @@ export const runSARTransformations = (
   // TODO: refactor :)
   const initiatives = [];
   for (let workPlanInitiative of workPlanFieldData.initiative) {
-    let templateEntitySteps = structuredClone(route?.template.entitySteps);
+    // At this stage, we know that the route will have a template
+    let templateEntitySteps = structuredClone(route.template!.entitySteps);
     templateEntitySteps = templateEntitySteps.map((step: any) => {
       if (step.form) {
         return {
@@ -412,7 +390,8 @@ export const runSARTransformations = (
       initiativeId: workPlanInitiative.id,
       name: workPlanInitiative.initiative_name,
       topic: workPlanInitiative.initiative_wpTopic?.[0].value,
-      dashboard: route?.template.dashboard,
+      // At this stage, we know that the route will have a template
+      dashboard: route.template!.dashboard,
       entitySteps: templateEntitySteps,
     };
 

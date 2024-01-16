@@ -300,6 +300,7 @@ export const mockEntityDetailsOverlayJson = {
   form: mockForm,
   stepType: "mock-step",
   stepName: "Mock step name",
+  stepInfo: ["name", "hint"],
   hint: "Mock hint",
   entityType: "mock-entity-type",
 };
@@ -345,6 +346,7 @@ export const mockOverlayModalPageJson = {
   modalForm: mockModalForm,
   stepType: "mock-step",
   stepName: "Mock step name",
+  stepInfo: ["name, hint"],
   hint: "Mock hint",
 };
 
@@ -355,7 +357,6 @@ export const mockModalOverlayReportPageJson = {
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalOverlayForm,
-  overlayForm: mockModalOverlayForm,
 };
 
 export const mockReviewSubmitPageJson = {
