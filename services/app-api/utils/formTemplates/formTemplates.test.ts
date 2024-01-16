@@ -32,14 +32,14 @@ const generateReportHash = (
   report: AnyObject,
   reportYear: number,
   reportPeriod: number,
-  wpFieldData: AnyObject
+  workPlanFieldData: AnyObject
 ) => {
   const currentFormTemplate = structuredClone(report) as ReportJson;
   transformFormTemplate(
     currentFormTemplate,
     reportPeriod,
     reportYear,
-    wpFieldData
+    workPlanFieldData
   );
 
   return createHash("md5")
