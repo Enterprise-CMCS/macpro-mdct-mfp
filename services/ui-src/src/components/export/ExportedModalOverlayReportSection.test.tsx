@@ -131,7 +131,7 @@ const testComponent = (
   </RouterWrappedComponent>
 );
 
-describe("ExportedModalDrawerReportSection", () => {
+describe("ExportedModalOverlayReportSection", () => {
   test("should not have basic accessibility issues", async () => {
     const { container } = render(testComponent);
     const results = await axe(container);
