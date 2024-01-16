@@ -1,4 +1,9 @@
-import { AnyObject, FormJson, ReportPageShapeBase } from "types";
+import {
+  AnyObject,
+  FormJson,
+  ReportPageShapeBase,
+  TableContentShape,
+} from "types";
 
 // components
 import { Box } from "@chakra-ui/react";
@@ -9,12 +14,16 @@ import { useStore } from "utils";
 import { notAnsweredText } from "../../constants";
 
 export const generateMainTable = (rows: AnyObject, fieldData?: AnyObject) => {
+  const headerRow = generateTableHeader(rows);
   const bodyRows: string[][] = generateTableBody(rows, fieldData);
-  const footRow: string[][] | undefined = generateTableFooter(bodyRows);
+  const footRow: string[][] | undefined = generateTableFooter(
+    bodyRows,
+    headerRow.length
+  );
 
   const table = {
     caption: "Transition Benchmark Totals Table",
-    headRow: generateTableHeader(rows),
+    headRow: headerRow,
     bodyRows: bodyRows,
     footRow: footRow,
   };
@@ -46,7 +55,9 @@ export const generateTableBody = (rows: AnyObject, fieldData?: AnyObject) => {
 };
 
 export const sumRow = (row: string[], startIndex: number = 0) => {
-  return row.reduce((accumulator, currentValue, index) => {
+  if (row.length === 0) return "-";
+
+  return row?.reduce((accumulator, currentValue, index) => {
     if (index > startIndex && isNaN(Number(currentValue))) return accumulator;
 
     return index > startIndex
@@ -69,13 +80,13 @@ export const generateTableHeader = (rows: AnyObject) => {
   return firstHeader.concat(columnHeaders.concat(totalHeader));
 };
 
-export const generateTableFooter = (bodyRows: string[][]) => {
+export const generateTableFooter = (bodyRows: string[][], size: number) => {
   if (bodyRows.length <= 1) return;
 
   let footRow: string[][] = [["Total by population"]];
-
   bodyRows.forEach((row: string[]) => {
     row.forEach((col: string, index: number) => {
+      //if the column is a valid number
       if (!isNaN(Number(col))) {
         if (!footRow[0][index]) footRow[0][index] = "0";
         footRow[0][index] = (
@@ -84,6 +95,11 @@ export const generateTableFooter = (bodyRows: string[][]) => {
       }
     });
   });
+
+  for (var i = 0; i < size; i++) {
+    footRow[0][i] = footRow[0][i] ?? "-";
+  }
+
   return footRow;
 };
 
@@ -104,7 +120,7 @@ export const perOfTwoRows = (row1: string[], row2: string[]) => {
   return row1
     .map((col, index) => {
       const total = (Number(col) / Number(row2[index])) * 100;
-      return isNaN(total) ? "-" : total + "%";
+      return isNaN(total) ? "-" : total.toFixed(2) + "%";
     })
     .splice(1, row1.length);
 };
@@ -147,8 +163,62 @@ export const RETFooters = (
       break;
     case "ret-mpdprp":
       //Number of MFP participants disenrolled from the program during the reporting period
+      const table5Keys = Object.keys(fieldData)?.filter((key) =>
+        key.includes("ret-tnamprp")
+      );
+      const table5Values = (table5Keys as [])?.map((key) => {
+        return fieldData[key];
+      });
+      const table5Row = ["Total", ...table5Values, sumRow(table5Values)];
+
+      const totalPopulation = rows[rows.length - 1];
+      const totalPer = [
+        "Total as a % of all current MFP participate",
+        ...perOfTwoRows(totalPopulation, table5Row),
+      ];
+      rows.push(totalPer);
       break;
   }
+};
+
+export const truncateTable = (table: TableContentShape, maxColumn: number) => {
+  const splitTables = [];
+
+  if (table.headRow) {
+    //this prevents total from being the only column in an overflow
+    const adjustMaxColumn =
+      (table.headRow.length - 1) % maxColumn === 1 ? maxColumn - 1 : maxColumn;
+    //we remove 1 from the header count because the first column are just labels
+    const overflowTotal = (table.headRow.length - 1) / adjustMaxColumn;
+
+    //make copies of the table for each overflow
+    for (var i = 0; i < overflowTotal; i++) {
+      splitTables.push(structuredClone(table));
+    }
+
+    const rowLength = table.headRow.length;
+
+    splitTables.forEach((_table, index) => {
+      const startIndex = index * adjustMaxColumn;
+      const endIndex = (index + 1) * adjustMaxColumn + 1;
+
+      //first cut from the max column to the length
+      _table.headRow?.splice(endIndex, rowLength);
+      //then skip the first column as those are the labels and cut to the start column
+      _table.headRow?.splice(1, startIndex);
+
+      _table.bodyRows?.forEach((row) => {
+        row.splice(endIndex, rowLength);
+        row.splice(1, startIndex);
+      });
+      _table.footRow?.forEach((row) => {
+        row.splice(endIndex, rowLength);
+        row.splice(1, startIndex);
+      });
+    });
+  }
+
+  return splitTables;
 };
 
 export const ExportRETTable = ({ section }: Props) => {
@@ -163,7 +233,7 @@ export const ExportRETTable = ({ section }: Props) => {
     } else if (field?.type === "checkbox") {
       const checkboxList = report?.fieldData[field.id] as [];
       const childrens = checkboxList
-        .map(
+        ?.map(
           (checkbox: AnyObject) =>
             (field.props?.choices as AnyObject[])?.find(
               (choice: AnyObject) => choice.id === checkbox.key.split("-")[1]
@@ -171,7 +241,7 @@ export const ExportRETTable = ({ section }: Props) => {
         )
         .flat();
 
-      const childIds = childrens.map((child: AnyObject) => {
+      const childIds = childrens?.map((child: AnyObject) => {
         return {
           label: child?.props?.label,
           id: [child.id],
@@ -179,7 +249,7 @@ export const ExportRETTable = ({ section }: Props) => {
         };
       });
 
-      checkboxList.forEach((checkbox: AnyObject) => {
+      checkboxList?.forEach((checkbox: AnyObject) => {
         const parentId = checkbox.key.split("-")[1];
         rows[checkbox.value] = childIds.filter(
           (child) => child.parentId === parentId
@@ -194,13 +264,18 @@ export const ExportRETTable = ({ section }: Props) => {
   const table = generateMainTable(rows, report?.fieldData);
   RETFooters(form?.id, report?.fieldData!, table.footRow!);
 
+  const tables = truncateTable(table, 7);
+
   return (
     <Box
       mt="2rem"
       data-testid="exportedModalDrawerReportSection"
       sx={sx.container}
     >
-      <Table sx={sx.table} content={table}></Table>
+      {tables &&
+        tables.map((table) => {
+          return <Table sx={sx.table} content={table}></Table>;
+        })}
     </Box>
   );
 };
