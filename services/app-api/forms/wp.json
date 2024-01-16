@@ -42,6 +42,10 @@
                 "target": "_blank",
                 "aria-label": "User Guide and Help File (Link opens in new tab)"
               }
+            },
+            {
+              "type": "html",
+              "content": "."
             }
           ]
         },
@@ -896,11 +900,11 @@
                       "hint": [
                         {
                           "type": "html",
-                          "content": "Select all that apply. Populations you’ve added as “Other” in the Transition Benchmarks section will appear here. Note: if your target population does not appear here, go to"
+                          "content": "Select all that apply. Populations you’ve added as “Other” in the Transition Benchmarks section will appear here. Note: if your target population does not appear here, go to "
                         },
                         {
                           "type": "internalLink",
-                          "content": " Transition Benchmarks",
+                          "content": "Transition Benchmarks",
                           "props": {
                             "to": "/wp/transition-benchmarks"
                           }
@@ -939,9 +943,10 @@
                               "type": "date",
                               "validation": {
                                 "type": "endDate",
+                                "parentOptionId": "defineInitiative_projectedEndDate-WNsSaAHeDvRD2Pjkz6DcOE",
+                                "parentFieldName": "defineInitiative_projectedEndDate",
                                 "dependentFieldName": "defineInitiative_projectedStartDate",
-                                "nested": true,
-                                "parentFieldName": "defineInitiative_projectedEndDate"
+                                "nested": true
                               },
                               "props": {
                                 "label": "Projected end date",
@@ -1177,7 +1182,7 @@
                         },
                         {
                           "id": "2VLpZCRWieGr1Z49QX5Aqc",
-                          "label": "MFP funding for demonstrated services"
+                          "label": "MFP funding for demonstration services"
                         },
                         {
                           "id": "2VLq8ASzZNfxbu520if449",

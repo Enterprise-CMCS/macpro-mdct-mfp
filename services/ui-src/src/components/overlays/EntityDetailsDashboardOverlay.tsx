@@ -118,9 +118,9 @@ export const EntityDetailsDashboardOverlay = ({
             initiativeName={selectedEntity?.initiative_name}
           />
           <Table content={tableHeaders()}>
-            {entitySteps?.map((step: any) => (
+            {entitySteps?.map((step, index) => (
               <EntityRow
-                key={step.id}
+                key={`entityrow-${index}`}
                 entity={formatEntityStep(selectedEntity!, step)}
                 entityType={step.entityType}
                 entityInfo={step.stepInfo}
