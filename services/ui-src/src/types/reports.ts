@@ -103,6 +103,7 @@ export interface DynamicModalOverlayReportPageShape
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   stepType: string;
   stepName: string;
+  stepInfo: string[];
   hint: string;
   form: FormJson;
   entityType: string;
@@ -117,6 +118,7 @@ export interface OverlayModalPageShape extends ReportPageShapeBase {
   entityType: string;
   stepType: string;
   stepName: string;
+  stepInfo: string[];
   hint: string;
   verbiage: ModalOverlayReportPageVerbiage;
   modalForm: FormJson;

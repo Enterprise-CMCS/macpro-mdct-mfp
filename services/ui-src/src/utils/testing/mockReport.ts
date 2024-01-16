@@ -112,6 +112,32 @@ export const mockWPFullReport = {
   reportYear: 2023,
 };
 
+export const mockSARFullReport = {
+  ...mockReportKeys,
+  reportType: "SAR",
+  formTemplate: mockReportJson,
+  submissionName: "2023 - Alabama 1",
+  status: ReportStatus.NOT_STARTED,
+  dueDate: 168515200000,
+  createdAt: 162515200000,
+  lastAltered: 162515200000,
+  lastAlteredBy: "Thelonious States",
+  submittedOnDate: Date.now(),
+  fieldData: mockReportFieldData,
+  completionStatus: {
+    "/mock/mock-route-1": true,
+    "/mock/mock-route-2": {
+      "/mock/mock-route-2a": false,
+      "/mock/mock-route-2b": true,
+      "/mock/mock-route-2c": true,
+    },
+  },
+  isComplete: false,
+  reportPeriod: 1,
+  locked: false,
+  reportYear: 2023,
+};
+
 export const mockWPSubmittedReport = {
   ...mockReportKeys,
   reportType: "WP",

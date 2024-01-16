@@ -14,6 +14,7 @@ import wp from "../../forms/wp.json";
 import sar from "../../forms/sar.json";
 import { createHash } from "crypto";
 import {
+  AnyObject,
   DynamicModalOverlayReportPageShape,
   EntityDetailsOverlayShape,
   FormField,
@@ -31,7 +32,6 @@ import {
 } from "../testing/setupJest";
 import s3Lib from "../s3/s3-lib";
 import dynamodbLib from "../dynamo/dynamodb-lib";
-import { AnyObject } from "yup/lib/types";
 
 const mockWorkPlanFieldData = mockWPMetadata.fieldData;
 const reportPeriod = 2;

@@ -33,8 +33,10 @@ export const ExportedReportPage = () => {
     WP: wpVerbiage,
     SAR: sarVerbiage,
   };
+
   const exportVerbiage = exportVerbiageMap[reportType];
   const { metadata, reportPage } = exportVerbiage;
+
   return (
     <Box sx={sx.container}>
       {(report && routesToRender && (
@@ -76,7 +78,7 @@ export const reportTitle = (
     case ReportType.WP:
       return `${report.fieldData.stateName} ${reportPage.heading} ${report.reportYear} - Period ${report.reportPeriod}`;
     case ReportType.SAR:
-      return `THIS IS A SARRRRRRRR`;
+      return `${report.fieldData.stateName} ${reportPage.heading} ${report.reportYear} - Period ${report.reportPeriod}`;
     default:
       assertExhaustive(reportType);
       throw new Error(
@@ -97,7 +99,7 @@ export const renderReportSections = (
         {/* if section has children, recurse */}
         {childSections?.map((child: ReportRoute) => renderSection(child))}
         {/* if section does not have children and has content to render, render it */}
-        {!childSections && section.name !== "General Information" && (
+        {!childSections && (
           <Box>
             <ExportedSectionHeading
               heading={section.verbiage?.intro?.subsection || section.name}

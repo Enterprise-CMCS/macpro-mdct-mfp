@@ -7,16 +7,26 @@ import {
   mockGenericEntity,
   mockCompletedGenericFormattedEntityData,
   mockUnfinishedGenericFormattedEntityData,
+  mockUseStore,
+  mockUseSARStore,
 } from "utils/testing/setupJest";
 import { EntityStepCard } from "./EntityStepCard";
 import { OverlayModalStepTypes } from "types";
+import { useStore } from "utils";
 
 const openAddEditEntityModal = jest.fn();
 const openDeleteEntityModal = jest.fn();
 const mockOpenDrawer = jest.fn();
+jest.mock("utils/state/useStore");
 
-const { editEntityButtonText, enterEntityDetailsButtonText } =
-  mockModalDrawerReportPageJson.verbiage;
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue(mockUseStore);
+
+const {
+  editEntityButtonText,
+  enterEntityDetailsButtonText,
+  readOnlyEntityButtonText,
+} = mockModalDrawerReportPageJson.verbiage;
 
 const UnfinishedGenericEntityCardComponent = (
   <EntityStepCard
@@ -43,6 +53,35 @@ const GenericEntityTypeEntityCardComponent = (
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
     printVersion={false}
+  />
+);
+
+const DisabledEntityTypeEntityCardComponent = (
+  <EntityStepCard
+    entity={mockGenericEntity}
+    entityIndex={0}
+    stepType="stepType"
+    formattedEntityData={mockCompletedGenericFormattedEntityData}
+    verbiage={mockModalDrawerReportPageJson.verbiage}
+    openAddEditEntityModal={openAddEditEntityModal}
+    openDeleteEntityModal={openDeleteEntityModal}
+    openDrawer={mockOpenDrawer}
+    printVersion={false}
+    disabled={true}
+  />
+);
+
+const PrintViewEntityTypeEntityCardComponent = (
+  <EntityStepCard
+    entity={mockGenericEntity}
+    entityIndex={0}
+    stepType="stepType"
+    formattedEntityData={mockCompletedGenericFormattedEntityData}
+    verbiage={mockModalDrawerReportPageJson.verbiage}
+    openAddEditEntityModal={openAddEditEntityModal}
+    openDeleteEntityModal={openDeleteEntityModal}
+    openDrawer={mockOpenDrawer}
+    printVersion={true}
   />
 );
 
@@ -127,6 +166,19 @@ const CompletedFundingSourcesCardComponent = (
   />
 );
 
+const NoOpenAddEditEntityFunction = (
+  <EntityStepCard
+    entity={mockGenericEntity}
+    entityIndex={0}
+    stepType="mock-step-type"
+    formattedEntityData={mockUnfinishedGenericFormattedEntityData}
+    verbiage={mockModalDrawerReportPageJson.verbiage}
+    openDeleteEntityModal={openDeleteEntityModal}
+    openDrawer={mockOpenDrawer}
+    printVersion={false}
+  />
+);
+
 describe("Test Completed EntityCard", () => {
   beforeEach(() => {
     render(GenericEntityTypeEntityCardComponent);
@@ -192,7 +244,7 @@ describe("EntityCard with specific step types", () => {
     expect(detailsButton).toBeVisible();
   });
 
-  test("Completed evaluation plan card should have a button to edit details", () => {
+  test("Completed evaluation plan card should have a button to edit details", async () => {
     render(CompletedEvaluationPlanCardComponent);
     const detailsButton = screen.getByText(editEntityButtonText);
     expect(detailsButton).toBeVisible();
@@ -209,6 +261,12 @@ describe("EntityCard with specific step types", () => {
     const detailsButton = screen.getByText(editEntityButtonText);
     expect(detailsButton).toBeVisible();
   });
+
+  test("Disabled prop shows correct copy", () => {
+    render(DisabledEntityTypeEntityCardComponent);
+    const detailsButton = screen.getByText(readOnlyEntityButtonText);
+    expect(detailsButton).toBeVisible();
+  });
 });
 
 describe("Test Generic EntityCard accessibility", () => {
@@ -222,5 +280,31 @@ describe("Test Generic EntityCard accessibility", () => {
     const { container } = render(GenericEntityTypeEntityCardComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+});
+
+describe("PrintOnly TESTS", () => {
+  test("in Print View the status indicator should be visible", async () => {
+    render(PrintViewEntityTypeEntityCardComponent);
+    const element = screen.getByTestId("print-status-indicator");
+    expect(element).toBeVisible();
+  });
+});
+
+describe("SAR TESTS", () => {
+  beforeEach(async () => {
+    mockedUseStore.mockReturnValue(mockUseSARStore);
+  });
+  test("Completed evaluation plan card should have a button to edit details", async () => {
+    render(CompletedEvaluationPlanCardComponent);
+    const reportEntityButton = screen.getByTestId("report-button");
+    expect(reportEntityButton).toBeVisible();
+    await userEvent.click(reportEntityButton);
+    await expect(openAddEditEntityModal).toBeCalledTimes(1);
+  });
+  test("Completed evaluation plan card without OpenAddEditModal function doesn't show a button", async () => {
+    render(NoOpenAddEditEntityFunction);
+    const reportEntityButton = screen.queryByTestId("report-button");
+    expect(reportEntityButton).not.toBeInTheDocument();
   });
 });
