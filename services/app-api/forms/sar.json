@@ -957,7 +957,6 @@
       "template": {
         "dashboard": {
           "name": "Intitiative Details Dashboard",
-          "pageType": "entityDetailsDashboardOverlay",
           "verbiage": {
             "intro": {
               "section": "State- or Territory-Specific Initiatives",

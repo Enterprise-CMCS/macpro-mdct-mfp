@@ -66,7 +66,9 @@ export function* iterateAllForms(
       yield* iterateAllForms(route.children);
     }
     if (route.initiatives) {
-      yield* iterateAllForms(route.initiatives);
+      for (let initiative of route.initiatives) {
+        yield* iterateAllForms(initiative.entitySteps);
+      }
     }
     if (route.entitySteps) {
       yield* iterateAllForms(route.entitySteps);
@@ -386,7 +388,8 @@ export const runSARTransformations = (
   // TODO: refactor :)
   const initiatives = [];
   for (let workPlanInitiative of workPlanFieldData.initiative) {
-    let templateEntitySteps = structuredClone(route?.template.entitySteps);
+    // At this stage, we know that the route will have a template
+    let templateEntitySteps = structuredClone(route.template!.entitySteps);
     templateEntitySteps = templateEntitySteps.map((step: any) => {
       if (step.form) {
         return {
@@ -412,7 +415,8 @@ export const runSARTransformations = (
       initiativeId: workPlanInitiative.id,
       name: workPlanInitiative.initiative_name,
       topic: workPlanInitiative.initiative_wpTopic?.[0].value,
-      dashboard: route?.template.dashboard,
+      // At this stage, we know that the route will have a template
+      dashboard: route.template!.dashboard,
       entitySteps: templateEntitySteps,
     };
 

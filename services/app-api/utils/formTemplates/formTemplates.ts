@@ -8,13 +8,11 @@ import { logger } from "../logging";
 import {
   AnyObject,
   assertExhaustive,
-  EntityDetailsOverlayShape,
   FieldChoice,
   FormField,
+  FormJson,
   FormLayoutElement,
   FormTemplate,
-  ModalOverlayReportPageShape,
-  OverlayModalPageShape,
   ReportJson,
   ReportRoute,
   ReportType,
@@ -231,10 +229,10 @@ export const compileValidationJsonFromRoutes = (
   routeArray: ReportRoute[]
 ): AnyObject => {
   const validationSchema: AnyObject = {};
-  const addValidationToAccumulator = (formFields: FormField[]) => {
+  const addValidationToAccumulator = (form: FormJson) => {
     Object.assign(
       validationSchema,
-      compileValidationJsonFromFields(formFields)
+      compileValidationJsonFromFields(form.fields.filter(isFieldElement))
     );
   };
   routeArray.forEach((route: ReportRoute) => {
@@ -242,35 +240,34 @@ export const compileValidationJsonFromRoutes = (
     if (
       (route.pageType === "modalDrawer" ||
         route.pageType === "modalOverlay" ||
-        route.pageType === "overlayModal") &&
+        route.pageType === "overlayModal" ||
+        route.pageType === "dynamicModalOverlay") &&
       route.entityType
     ) {
       Object.assign(validationSchema, { [route.entityType]: "objectArray" });
     }
-    // if standard form present, add validation to schema
-    const standardFormFields = route.form?.fields.filter(isFieldElement);
-    if (standardFormFields) addValidationToAccumulator(standardFormFields);
-    // if modal form present, add validation to schema
-    const modalFormFields = route.modalForm?.fields.filter(isFieldElement);
-    if (modalFormFields) addValidationToAccumulator(modalFormFields);
-    // if drawer form present, add validation to schema
-    const drawerFormFields = route.drawerForm?.fields.filter(isFieldElement);
-    if (drawerFormFields) addValidationToAccumulator(drawerFormFields);
-    if (route.pageType === "modalOverlay") {
-      const overlayFormFields = (
-        route as ModalOverlayReportPageShape
-      ).overlayForm?.fields.filter(isFieldElement);
-      if (overlayFormFields) addValidationToAccumulator(overlayFormFields);
+
+    for (let formType of ["form", "modalForm", "drawerForm"] as const) {
+      if (route[formType]) {
+        addValidationToAccumulator(route[formType]!);
+      }
     }
+
     // accumulate entity steps
-    if (route.dashboard?.pageType === "entityDetailsDashboardOverlay") {
-      route.entitySteps?.map(
-        (step: EntityDetailsOverlayShape | OverlayModalPageShape) => {
+    if (route.pageType === "modalOverlay") {
+      for (let step of route.entitySteps ?? []) {
+        const stepForm = step.form || step.modalForm;
+        addValidationToAccumulator(stepForm);
+      }
+    }
+
+    if (route.pageType === "dynamicModalOverlay") {
+      for (let initiative of route.initiatives ?? []) {
+        for (let step of initiative.entitySteps) {
           const stepForm = step.form || step.modalForm;
-          const entityStepFormFields = stepForm?.fields.filter(isFieldElement);
-          addValidationToAccumulator(entityStepFormFields);
+          addValidationToAccumulator(stepForm);
         }
-      );
+      }
     }
   });
   return validationSchema;

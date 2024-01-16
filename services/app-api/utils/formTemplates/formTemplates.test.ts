@@ -5,9 +5,8 @@ import {
   getOrCreateFormTemplate,
   isFieldElement,
   isLayoutElement,
-  scanForConditionalRoutes,
-  findAndRunFieldTransformationRules,
 } from "./formTemplates";
+import { transformFormTemplate } from "../transformations/transformations";
 import wp from "../../forms/wp.json";
 import sar from "../../forms/sar.json";
 import { createHash } from "crypto";
@@ -29,28 +28,19 @@ global.structuredClone = jest.fn((val) => {
   return JSON.parse(JSON.stringify(val));
 });
 
-export const generateReportHash = (
+const generateReportHash = (
   report: AnyObject,
   reportYear: number,
   reportPeriod: number,
   wpFieldData: AnyObject
 ) => {
   const currentFormTemplate = structuredClone(report) as ReportJson;
-  if (currentFormTemplate?.routes) {
-    // traverse routes and scan for conditional field
-    currentFormTemplate.routes = scanForConditionalRoutes(
-      currentFormTemplate.routes,
-      reportPeriod
-    );
-
-    //transformation of the formTemplate to generate new quarters
-    findAndRunFieldTransformationRules(
-      currentFormTemplate.routes,
-      reportPeriod,
-      reportYear,
-      wpFieldData
-    );
-  }
+  transformFormTemplate(
+    currentFormTemplate,
+    reportPeriod,
+    reportYear,
+    wpFieldData
+  );
 
   return createHash("md5")
     .update(JSON.stringify(currentFormTemplate))

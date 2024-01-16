@@ -355,7 +355,6 @@ export const mockModalOverlayReportPageJson = {
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalOverlayForm,
-  overlayForm: mockModalOverlayForm,
 };
 
 export const mockReviewSubmitPageJson = {
