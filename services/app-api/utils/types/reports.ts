@@ -96,16 +96,23 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
 export interface DynamicModalOverlayReportPageShape
   extends ReportPageShapeBase {
   entityType: string;
-  entityInfo?: string[];
+  entityInfo: string[];
   verbiage: ModalOverlayReportPageVerbiage;
-  drawerForm?: never;
-  modalForm?: never;
-  overlayForm?: never;
-  form?: never;
-  entitySteps?: never;
-  dashboard?: never;
-  initiatives?: any[];
-  template: AnyObject;
+  drawerForm: never;
+  modalForm: never;
+  overlayForm: never;
+  form: never;
+  entitySteps: never;
+  dashboard: never;
+  initiatives: {
+    initiativeId: string;
+    name: string;
+    topic: string;
+    dashboard: FormJson;
+    entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
+  }[];
+  /** Only used during form template transformation; will be absent after transformation */
+  template?: AnyObject;
 }
 
 export interface OverlayModalPageShape extends ReportPageShapeBase {
