@@ -1,4 +1,10 @@
-import { mockDynamicModalOverlayForm } from "../testing/setupJest";
+import {
+  mockDynamicModalOverlayForm,
+  mockEntitySteps,
+  mockFormField,
+  mockNumberField,
+  mockVerbiageIntro,
+} from "../testing/setupJest";
 import {
   AnyObject,
   DynamicModalOverlayReportPageShape,
@@ -451,8 +457,8 @@ describe("SAR transformations", () => {
           initiative_name: "first",
           initiative_wpTopic: [
             {
-              key: "initiative_wpTopic-VjQ0OFqior9Dxu5RRNiZ5u",
-              value: "Transitions and transition coordination services ",
+              key: "initTopic_wp",
+              value: "Transitions and transition coordination services",
             },
           ],
           evaluationPlan: [
@@ -465,6 +471,29 @@ describe("SAR transformations", () => {
     };
     const route = mockDynamicModalOverlayForm;
 
-    runSARTransformations(route, fieldData);
+    expect(runSARTransformations(route, fieldData)).toEqual({
+      ...mockDynamicModalOverlayForm,
+      initiatives: [
+        {
+          initiativeId: "initiative123",
+          name: "first",
+          topic: "Transitions and transition coordination services",
+          dashboard: {
+            name: "mock dashboard",
+            mockVerbiageIntro,
+          },
+          entitySteps: [
+            {
+              stepName: "mock entity 1 1",
+              form: {
+                id: "mock-form-id",
+                initiativeId: "initiative123",
+                fields: [mockFormField, mockNumberField],
+              },
+            },
+          ],
+        },
+      ],
+    });
   });
 });
