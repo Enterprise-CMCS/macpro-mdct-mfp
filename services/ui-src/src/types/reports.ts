@@ -85,10 +85,12 @@ export interface DynamicModalOverlayReportPageShape
   entityType: string;
   entityInfo: string[];
   verbiage: ModalOverlayReportPageVerbiage;
+  drawerForm: never;
   modalForm: never;
   overlayForm: never;
-  drawerForm: never;
   form: never;
+  entitySteps: never;
+  dashboard: never;
   initiatives: {
     initiativeId: string;
     name: string;
@@ -96,6 +98,8 @@ export interface DynamicModalOverlayReportPageShape
     dashboard: FormJson;
     entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
   }[];
+  /** Only used during form template transformation; will be absent after transformation */
+  template?: never;
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
