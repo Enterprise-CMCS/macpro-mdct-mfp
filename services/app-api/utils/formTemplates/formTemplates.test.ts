@@ -5,8 +5,6 @@ import {
   getOrCreateFormTemplate,
   isFieldElement,
   isLayoutElement,
-  scanForConditionalRoutes,
-  findAndRunFieldTransformationRules,
 } from "./formTemplates";
 import wp from "../../forms/wp.json";
 import sar from "../../forms/sar.json";
@@ -20,6 +18,10 @@ import {
 import s3Lib from "../s3/s3-lib";
 import dynamodbLib from "../dynamo/dynamodb-lib";
 import { AnyObject } from "yup/lib/types";
+import {
+  generateSARFormsForInitiatives,
+  transformFormTemplate,
+} from "../transformations/transformations";
 
 const mockWorkPlanFieldData = mockWPMetadata.fieldData;
 const reportPeriod = 2;
@@ -33,22 +35,19 @@ export const generateReportHash = (
   report: AnyObject,
   reportYear: number,
   reportPeriod: number,
-  wpFieldData: AnyObject
+  workPlanFieldData: AnyObject
 ) => {
-  const currentFormTemplate = structuredClone(report) as ReportJson;
+  let currentFormTemplate = structuredClone(report) as ReportJson;
   if (currentFormTemplate?.routes) {
-    // traverse routes and scan for conditional field
-    currentFormTemplate.routes = scanForConditionalRoutes(
+    currentFormTemplate.routes = generateSARFormsForInitiatives(
       currentFormTemplate.routes,
-      reportPeriod
+      workPlanFieldData
     );
-
-    //transformation of the formTemplate to generate new quarters
-    findAndRunFieldTransformationRules(
-      currentFormTemplate.routes,
+    currentFormTemplate = transformFormTemplate(
+      currentFormTemplate,
       reportPeriod,
       reportYear,
-      wpFieldData
+      workPlanFieldData
     );
   }
 
