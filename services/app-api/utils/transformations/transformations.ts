@@ -336,11 +336,11 @@ export const fundingSources = (
     fieldsToAppend.push(fundingSourceHeader);
 
     // have to loop twice for both periods
-    for (let i = 0; i < 2; i++) {
+    for (let quarterNumber = 1; quarterNumber <= 2; quarterNumber += 1) {
       let longformQuarter = "";
       let spendingMonths = "";
 
-      if (i === 0) {
+      if (quarterNumber === 1) {
         longformQuarter = isFirstReportPeriod ? "First" : "Third";
         spendingMonths = isFirstReportPeriod
           ? "January 1 - March 31"
@@ -353,7 +353,7 @@ export const fundingSources = (
       }
 
       const actualSpending: FormField = {
-        id: `fundingSources_actual${reportYear}Q${isFirstReportPeriod ? 1 : 3}`,
+        id: `fundingSources_actual${reportYear}Q${quarterNumber}`,
         type: "number",
         validation: "number",
         props: {
@@ -361,9 +361,7 @@ export const fundingSources = (
         },
       };
       const projectedSpending: FormField = {
-        id: `fundingSources_quarters${reportYear}Q${
-          isFirstReportPeriod ? 1 : 3
-        }`,
+        id: `fundingSources_quarters${reportYear}Q${quarterNumber}`,
         type: "number",
         validation: "number",
         props: {
