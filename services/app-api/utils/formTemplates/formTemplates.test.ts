@@ -6,7 +6,10 @@ import {
   isFieldElement,
   isLayoutElement,
 } from "./formTemplates";
-import { transformFormTemplate } from "../transformations/transformations";
+import {
+  generateSARFormsForInitiatives,
+  transformFormTemplate,
+} from "../transformations/transformations";
 import wp from "../../forms/wp.json";
 import sar from "../../forms/sar.json";
 import { createHash } from "crypto";
@@ -34,13 +37,19 @@ const generateReportHash = (
   reportPeriod: number,
   workPlanFieldData: AnyObject
 ) => {
-  const currentFormTemplate = structuredClone(report) as ReportJson;
-  transformFormTemplate(
-    currentFormTemplate,
-    reportPeriod,
-    reportYear,
-    workPlanFieldData
-  );
+  let currentFormTemplate = structuredClone(report) as ReportJson;
+  if (currentFormTemplate?.routes) {
+    currentFormTemplate.routes = generateSARFormsForInitiatives(
+      currentFormTemplate.routes,
+      workPlanFieldData
+    );
+    currentFormTemplate = transformFormTemplate(
+      currentFormTemplate,
+      reportPeriod,
+      reportYear,
+      workPlanFieldData
+    );
+  }
 
   return createHash("md5")
     .update(JSON.stringify(currentFormTemplate))
