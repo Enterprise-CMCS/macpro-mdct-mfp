@@ -47,7 +47,7 @@ export const Form = ({
 
   let location = useLocation();
 
-  // determine if fields should be disabled (based on admin roles )
+  // determine if fields should be disabled (based on admin roles)
   const { userIsAdmin } = useStore().user ?? {};
 
   const { report, editable } = useStore();

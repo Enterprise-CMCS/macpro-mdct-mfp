@@ -221,13 +221,22 @@ const targetPopulations = (
     );
   }
 
-  const mappedTargetPopulations = targetPopulations.map((population: any) => ({
-    name: population.transitionBenchmarks_targetPopulationName,
-    label:
-      population.isRequired === true
-        ? `Number of ${population.transitionBenchmarks_targetPopulationName}`
-        : `Other: ${population.transitionBenchmarks_targetPopulationName}`,
-  }));
+  // We don't want populations that were marked in the WP as being non-applicable to MFP
+  const applicableTargetPopulations = targetPopulations.filter(
+    (population: any) =>
+      population.transitionBenchmarks_applicableToMfpDemonstration?.[0]
+        ?.value !== "No"
+  );
+
+  const mappedTargetPopulations = applicableTargetPopulations.map(
+    (population: any) => ({
+      name: population.transitionBenchmarks_targetPopulationName,
+      label:
+        population.isRequired === true
+          ? `Number of ${population.transitionBenchmarks_targetPopulationName}`
+          : `Other: ${population.transitionBenchmarks_targetPopulationName}`,
+    })
+  );
 
   // No point keeping this around in the clones
   delete field.transformation;
