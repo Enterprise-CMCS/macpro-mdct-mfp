@@ -389,7 +389,6 @@ export const runSARTransformations = (
     initiatives.push(initiative);
   }
   route.initiatives = initiatives;
-  console.log(route, "route");
   return route;
 };
 
