@@ -12,8 +12,6 @@ import {
   ReportRoute,
 } from "../types";
 
-// type ReportPeriod = 1 | 2;
-
 export const removeConditionalRoutes = <T extends ReportRoute>(
   routes: T[],
   reportPeriod: number
@@ -238,10 +236,11 @@ const targetPopulations = (
     throw new Error(
       "Field transformation rule 'targetPopulations' requires a reportPeriod."
     );
-  if (!targetPopulations)
+  if (!targetPopulations) {
     throw new Error(
       "Field transformation rule 'targetPopulations' requires targetPopulations."
     );
+  }
 
   const mappedTargetPopulations = targetPopulations.map((population: any) => ({
     name: population.transitionBenchmarks_targetPopulationName,
