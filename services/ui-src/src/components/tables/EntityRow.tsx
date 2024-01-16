@@ -7,9 +7,10 @@ import {
   AnyObject,
   EntityShape,
   ModalDrawerEntityTypes,
-  ReportShape,
   OverlayModalTypes,
   EntityDetailsOverlayTypes,
+  EntityDetailsOverlayShape,
+  OverlayModalPageShape,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -35,7 +36,7 @@ export const EntityRow = ({
 
   // check for "other" target population entities
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
-  const stepType = (formEntity as AnyObject)?.stepType;
+  const stepType = formEntity?.stepType;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
@@ -149,7 +150,7 @@ export const EntityRow = ({
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
-          {!isRequired && !isCopied && (
+          {!isRequired && !isCopied && openAddEditEntityModal && (
             <Button
               sx={sx.editNameButton}
               variant="none"
@@ -174,7 +175,7 @@ export const EntityRow = ({
               ? verbiage.readOnlyEntityDetailsButtonText
               : verbiage.enterEntityDetailsButtonText}
           </Button>
-          {!isRequired && !isCopied && (
+          {!isRequired && !isCopied && openDeleteEntityModal && (
             <Button
               sx={sx.deleteButton}
               data-testid="delete-entity"
@@ -192,10 +193,10 @@ export const EntityRow = ({
 interface Props {
   entity: EntityShape;
   entityType?: string;
-  formEntity?: ReportShape;
+  formEntity?: EntityDetailsOverlayShape | OverlayModalPageShape;
   verbiage: AnyObject;
-  openAddEditEntityModal: Function;
-  openDeleteEntityModal: Function;
+  openAddEditEntityModal?: Function;
+  openDeleteEntityModal?: Function;
   openOverlayOrDrawer: Function;
   [key: string]: any;
 }

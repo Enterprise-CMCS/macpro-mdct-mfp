@@ -288,6 +288,44 @@ describe("Completion Status Tests", () => {
         "mock/path": true,
       });
     });
+
+    test("An entity step within a dynamic modal overlay is complete if all parts are complete", async () => {
+      const fieldData = {
+        mockEntityType: [
+          {
+            mockStepType: [
+              "mockStepType is a non-empty array and therefore complete",
+            ],
+          },
+        ],
+      };
+      const formTemplate = {
+        routes: [
+          {
+            path: "mock/path",
+            pageType: "dynamicModalOverlay",
+            entityType: "mockEntityType",
+            initiatives: [
+              {
+                entitySteps: [
+                  {
+                    pageType: "overlayModal",
+                    stepType: "mockStepType",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        validationJson: {},
+      };
+
+      const result = await calculateCompletionStatus(fieldData, formTemplate);
+
+      expect(result).toEqual({
+        "mock/path": true,
+      });
+    });
   });
 
   test("An entity step with overlay modals is incomplete if any parts are incomplete", async () => {

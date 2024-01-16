@@ -33,6 +33,7 @@ export interface FormJson {
   editableByAdmins?: boolean;
   verbiage?: AnyObject;
   forms?: ReportRoute[];
+  initiativeId?: string;
 }
 
 export interface DependentFieldValidation {

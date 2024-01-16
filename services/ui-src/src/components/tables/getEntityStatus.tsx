@@ -8,6 +8,7 @@ import {
   OverlayModalPageShape,
   ReportShape,
   OverlayModalTypes,
+  isFieldElement,
 } from "types";
 import { AnyObject } from "yup/lib/types";
 
@@ -136,7 +137,7 @@ export const getInitiativeStatus = (
 
 //NOTE: this function works on the assumption that the fieldData saved is validated
 export const getInitiativeDashboardStatus = (
-  formEntity: AnyObject,
+  formEntity: EntityDetailsOverlayShape | OverlayModalPageShape,
   entity: EntityShape
 ) => {
   const stepType = formEntity.stepType;
@@ -154,7 +155,10 @@ export const getInitiativeDashboardStatus = (
 
     entities.forEach((child: AnyObject) => {
       //create an array to use as a lookup for fieldData
-      const fieldKeyInReport = getValidationList(fields, child);
+      const fieldKeyInReport = getValidationList(
+        fields.filter(isFieldElement),
+        child
+      );
 
       //filter down to the data for the current status topic
       const filterdFieldData = fieldKeyInReport.map((item: string) => {
@@ -178,10 +182,14 @@ export const getInitiativeDashboardStatus = (
 export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
   if (entity) {
     const fieldIds = form.fields
+      .filter(isFieldElement)
       .map((field) => {
-        return !(field as AnyObject)?.validation.includes("Optional")
-          ? field.id
-          : "";
+        // Some fields have validation: "foo", and some have validation: { type: "foo" }
+        let validationType = (field as AnyObject)?.validation ?? "";
+        if (typeof validationType === "object") {
+          validationType = validationType.type ?? "";
+        }
+        return !validationType.includes("Optional") ? field.id : "";
       })
       .filter((field) => field);
     const isFilled = fieldIds.map((id) => {

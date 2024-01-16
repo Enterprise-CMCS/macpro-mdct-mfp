@@ -841,7 +841,6 @@
           },
           "dashboard": {
             "name": "Intitiative Details Dashboard",
-            "pageType": "entityDetailsDashboardOverlay",
             "verbiage": {
               "intro": {
                 "section": "State- or Territory-Specific Initiatives",
@@ -944,8 +943,10 @@
                               "type": "date",
                               "validation": {
                                 "type": "endDate",
+                                "parentOptionId": "defineInitiative_projectedEndDate-WNsSaAHeDvRD2Pjkz6DcOE",
+                                "parentFieldName": "defineInitiative_projectedEndDate",
                                 "dependentFieldName": "defineInitiative_projectedStartDate",
-                                "parentFieldName": "defineInitiative_projectedEndDate"
+                                "nested": true
                               },
                               "props": {
                                 "label": "Projected end date",
