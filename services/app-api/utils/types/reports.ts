@@ -1,4 +1,4 @@
-import { FormJson } from "./formFields";
+import { FormJson, PageTypes } from "./formFields";
 import { AnyObject, CompletionData, CustomHtmlElement, State } from "./other";
 
 // REPORT STRUCTURE
@@ -93,7 +93,6 @@ export interface DynamicModalOverlayReportPageShape
   extends ReportPageShapeBase {
   entityType: string;
   entityInfo: string[];
-  pageType: "dynamicModalOverlay";
   verbiage: ModalOverlayReportPageVerbiage;
   drawerForm?: never;
   modalForm?: never;

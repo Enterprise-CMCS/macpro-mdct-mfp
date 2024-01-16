@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import {
   AnyObject,
   DynamicModalOverlayReportPageShape,
@@ -34,10 +35,6 @@ export const removeConditionalRoutes = <T extends ReportRoute>(
         // There is no condition, so this route is always included.
         return true;
       case "showOnlyInPeriod2":
-        if (!reportPeriod)
-          throw new Error(
-            "Route transformation rule 'showOnlyInPeriod2' requires a reportPeriod."
-          );
         return reportPeriod === 2;
       default:
         throw new Error(
@@ -149,11 +146,6 @@ export const transformFormTemplate = (
   reportYear: number,
   workPlanFieldData?: AnyObject
 ) => {
-  if (!formTemplate.routes) {
-    // This must not be a report form; all reports have routes.
-    return formTemplate;
-  }
-
   formTemplate.routes = removeConditionalRoutes(
     formTemplate.routes,
     reportPeriod
@@ -188,18 +180,9 @@ export const transformFormTemplate = (
  */
 const nextTwelveQuarters = (
   field: FormField,
-  reportYear?: number,
-  reportPeriod?: number
+  reportYear: number,
+  reportPeriod: number
 ) => {
-  if (!reportYear)
-    throw new Error(
-      "Field transformation rule 'nextTwelveQuarters' requires a reportYear."
-    );
-  if (!reportPeriod)
-    throw new Error(
-      "Field transformation rule 'nextTwelveQuarters' requires a reportPeriod."
-    );
-
   // The first quarter will be Q1 for period 1, or Q3 for period 2.
   const firstQuarterIndex = reportPeriod === 1 ? 0 : 2;
 
@@ -229,13 +212,9 @@ const nextTwelveQuarters = (
  */
 const targetPopulations = (
   field: FormField,
-  reportPeriod?: number,
+  reportPeriod: number,
   targetPopulations?: AnyObject
 ) => {
-  if (!reportPeriod)
-    throw new Error(
-      "Field transformation rule 'targetPopulations' requires a reportPeriod."
-    );
   if (!targetPopulations) {
     throw new Error(
       "Field transformation rule 'targetPopulations' requires targetPopulations."
@@ -266,13 +245,8 @@ const targetPopulations = (
 /** Create a section header with content depending on the report period */
 const firstQuarterOfThePeriod = (
   field: FormLayoutElement,
-  reportPeriod?: number
+  reportPeriod: number
 ) => {
-  if (!reportPeriod)
-    throw new Error(
-      "Field transformation rule 'firstQuarterOfThePeriod' requires a reportPeriod."
-    );
-
   return {
     id: `${field.id}`,
     type: `${field.type}`,
@@ -288,13 +262,8 @@ const firstQuarterOfThePeriod = (
 /** Create a section header with content depending on the report period */
 const secondQuarterOfThePeriod = (
   field: FormLayoutElement,
-  reportPeriod?: number
+  reportPeriod: number
 ) => {
-  if (!reportPeriod)
-    throw new Error(
-      "Field transformation rule 'secondQuarterOfThePeriod' requires a reportPeriod."
-    );
-
   return {
     id: `${field.id}`,
     type: `${field.type}`,
@@ -326,7 +295,7 @@ export const fundingSources = (
   for (let fundingSource of initiativeToUse.fundingSources) {
     const isFirstReportPeriod = reportPeriod == 1;
     const fundingSourceHeader: FormField = {
-      id: `123`,
+      id: `fundingSourceHeader-${randomUUID()}`,
       type: "sectionHeader",
       props: {
         label: `${fundingSource?.fundingSources_wpTopic?.[0]?.value}`,
@@ -420,6 +389,7 @@ export const runSARTransformations = (
     initiatives.push(initiative);
   }
   route.initiatives = initiatives;
+  console.log(route, "route");
   return route;
 };
 
