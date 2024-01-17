@@ -7,8 +7,10 @@ import {
 import {
   AnyObject,
   DynamicModalOverlayReportPageShape,
+  ModalOverlayReportPageVerbiage,
   ReportJson,
   ReportRoute,
+  WorkPlanFieldDataForTransforms,
 } from "../types";
 import {
   iterateAllForms,
@@ -227,12 +229,22 @@ describe("transformFormTemplate", () => {
         {
           isRequired: true,
           transitionBenchmarks_targetPopulationName: "popA",
-          label: "Number of pop A",
+          transitionBenchmarks_applicableToMfpDemonstration: [
+            {
+              key: "",
+              value: "Yes",
+            },
+          ],
         },
         {
           isRequired: false,
           transitionBenchmarks_targetPopulationName: "popB",
-          label: "Other: pop B",
+          transitionBenchmarks_applicableToMfpDemonstration: [
+            {
+              key: "",
+              value: "Yes",
+            },
+          ],
         },
       ],
     };
@@ -262,27 +274,51 @@ describe("transformFormTemplate", () => {
     ]);
   });
 
+  // BEN TODO write a test for population applicability
+
   it("should generate funding sources from wp", () => {
     const formTemplate = {
       routes: [
         {
-          form: {
-            fields: [
+          pageType: "dynamicModalOverlay",
+          entityType: "",
+          entityInfo: [""],
+          verbiage: {} as ModalOverlayReportPageVerbiage,
+          initiatives: [],
+          name: "",
+          path: "",
+          template: {
+            dashboard: {},
+            entitySteps: [
               {
-                id: "field1",
-                type: "text",
-                transformation: {
-                  rule: "fundingSources",
+                form: {
+                  fields: [
+                    {
+                      id: "field1",
+                      type: "text",
+                      transformation: {
+                        rule: "fundingSources",
+                      },
+                    },
+                  ],
                 },
               },
             ],
           },
-        },
+        } as DynamicModalOverlayReportPageShape,
       ],
     } as ReportJson;
     const fieldData = {
       initiative: [
         {
+          id: "mock-initiative-id",
+          initiative_name: "mock-initiative-name",
+          initiative_wpTopic: [
+            {
+              key: "mock-initiative-wp-topic-key",
+              value: "mock-initiative-wp-topic",
+            },
+          ],
           fundingSources: [
             {
               id: "55b674-ce4-f10-d575-4a11c820268",
@@ -316,7 +352,8 @@ describe("transformFormTemplate", () => {
 
     transformFormTemplate(formTemplate, reportPeriod, reportYear, fieldData);
 
-    const fields = formTemplate.routes[0].form?.fields;
+    const fields =
+      formTemplate.routes[0]?.initiatives?.[0].entitySteps[0].form?.fields;
     expect(fields).toHaveLength(5);
   });
 
@@ -452,7 +489,6 @@ describe("SAR transformations", () => {
       initiative: [
         {
           id: "initiative123",
-          type: "initiative",
           initiative_name: "first",
           initiative_wpTopic: [
             {
@@ -460,14 +496,9 @@ describe("SAR transformations", () => {
               value: "Transitions and transition coordination services",
             },
           ],
-          evaluationPlan: [
-            {
-              id: "evaluationPlan123",
-            },
-          ],
         },
       ],
-    };
+    } as WorkPlanFieldDataForTransforms;
     const route = mockDynamicModalOverlayForm;
 
     expect(runSARTransformations(route, fieldData)).toEqual({

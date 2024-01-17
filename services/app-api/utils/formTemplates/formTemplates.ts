@@ -18,10 +18,7 @@ import {
   ReportType,
 } from "../types";
 import { createHash } from "crypto";
-import {
-  generateSARFormsForInitiatives,
-  transformFormTemplate,
-} from "../transformations/transformations";
+import { transformFormTemplate } from "../transformations/transformations";
 
 export async function getNewestTemplateVersion(reportType: ReportType) {
   const queryParams: QueryInput = {
@@ -82,10 +79,6 @@ export async function getOrCreateFormTemplate(
   );
 
   if (currentFormTemplate?.routes) {
-    currentFormTemplate.routes = generateSARFormsForInitiatives(
-      currentFormTemplate.routes,
-      workPlanFieldData
-    );
     currentFormTemplate = transformFormTemplate(
       currentFormTemplate,
       reportPeriod,
