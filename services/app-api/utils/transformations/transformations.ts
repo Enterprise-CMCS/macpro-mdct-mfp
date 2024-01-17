@@ -344,14 +344,14 @@ export const fundingSources = (
       id: `fundingSourceHeader-${randomUUID()}`,
       type: "sectionHeader",
       props: {
-        label: `${fundingSource.fundingSources_wpTopic[0].value}`,
+        content: `${fundingSource.fundingSources_wpTopic[0].value}`,
       },
     },
     {
       id: `sectionContent-${randomUUID()}`,
       type: "sectionContent",
       props: {
-        label: "This funding source auto-populates from MFP Work Plan.",
+        content: "This funding source auto-populates from MFP Work Plan.",
       },
     },
     ...quarters.flatMap((quarter) => [
