@@ -114,7 +114,6 @@ export const formatHeaderForRET = (label: string) => {
     default: {
       if (label.includes("("))
         return label.substring(label.indexOf("(") + 1, label.indexOf(")"));
-
       return label;
     }
   }
@@ -126,7 +125,7 @@ export const formatLabelForRET = (
   report: AnyObject
 ) => {
   switch (formId) {
-    case "ret-mtrp":
+    case "ret-mtrp": {
       const quarterLabel: AnyObject = {
         "First quarter": "Q1",
         "Second quarter": "Q2",
@@ -135,11 +134,13 @@ export const formatLabelForRET = (
       };
       const quarter: string = label.split("(")[0].trim();
       return `${report?.reportYear} ${quarterLabel[quarter]}`;
-    case "ret-mtfqi":
+    }
+    case "ret-mtfqi": {
       if (label.includes("("))
         return label.substring(label.indexOf("(") + 1, label.indexOf(")"));
       break;
-    case "ret-mtfqr":
+    }
+    case "ret-mtfqr": {
       if (label.includes("(")) return label.split("(")[0];
       else {
         if (label.includes("Group home")) return "Group home";
@@ -147,10 +148,12 @@ export const formatLabelForRET = (
           return "Apt. in qualified assisted living";
       }
       break;
-    case "ret-mpdprp":
+    }
+    case "ret-mpdprp": {
       if (label === "Other, specify")
         return `Other: ${report?.fieldData["otherReasons-otherText"]}`;
       break;
+    }
   }
 
   return label;
@@ -167,7 +170,7 @@ export const formatFooterForRET = (
 
   switch (formId) {
     //Number of MFP transitions in the reporting period
-    case "ret-mtrp":
+    case "ret-mtrp": {
       //update the total label to the unique values for this RET section
       rows[0][0] = "Total transitions";
       //generate the ids to pull the correct values from WP
@@ -199,8 +202,9 @@ export const formatFooterForRET = (
       ];
       rows.push(totalTranstionTargets, perTargetsAchieved);
       break;
+    }
     //Number of MFP participants disenrolled from the program during the reporting period
-    case "ret-mpdprp":
+    case "ret-mpdprp": {
       const table5Keys = Object.keys(fieldData)?.filter((key) =>
         key.includes("ret-tnamprp")
       );
@@ -216,6 +220,7 @@ export const formatFooterForRET = (
       ];
       rows.push(totalPer);
       break;
+    }
   }
 };
 
