@@ -345,6 +345,7 @@ export const updateRenderFields = (
     "targetPopulations",
     formatChoiceList
   );
+
   return updateTargetPopulationChoiceList;
 };
 

@@ -13,6 +13,7 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
   Object.entries(fieldValidationTypes).forEach(
     (fieldValidationType: [string, string | AnyObject]) => {
       const [key, fieldValidation] = fieldValidationType;
+
       // if standard validation type, set corresponding schema from map
       if (typeof fieldValidation === "string") {
         const correspondingSchema = schemaMap[fieldValidation];
