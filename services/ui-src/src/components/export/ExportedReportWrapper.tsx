@@ -4,7 +4,7 @@ import {
   ExportedModalDrawerReportSection,
   ExportedReportFieldTable,
   ExportedModalOverlayReportSection,
-  ExportRETTable
+  ExportRETTable,
 } from "components";
 // types
 import {
@@ -23,7 +23,11 @@ export const ExportedReportWrapper = ({ section }: Props) => {
   switch (section.pageType) {
     case PageTypes.STANDARD:
       if (section.path.includes("/sar/recruitment-enrollment-transitions/")) {
-        return <ExportRETTable section={section as ReportPageShapeBase}></ExportRETTable>;
+        return (
+          <ExportRETTable
+            section={section as ReportPageShapeBase}
+          ></ExportRETTable>
+        );
       }
       return (
         <Box data-testid="exportedStandardReportSection" mt="2rem">
