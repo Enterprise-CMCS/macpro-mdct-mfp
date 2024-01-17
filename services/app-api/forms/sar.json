@@ -999,6 +999,9 @@
               "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab.",
               "entityUnfinishedMessage": "Report objective progress to complete this section"
             },
+            "transformation": {
+              "rule": "objectives"
+            },
             "modalForm": {
               "id": "stsiop-modal",
               "fields": [
@@ -1008,6 +1011,12 @@
                   "validation": "text",
                   "props": {
                     "label": "Provide data on performance measures or indicators used for monitoring progress toward the objective during the current reporting period. Include progress toward milestones and key deliverables."
+                  }
+                },
+                {
+                  "id": "objectivesProgress_quantitative",
+                  "transformation": {
+                    "rule": "quantitativeQuarters"
                   }
                 },
                 {

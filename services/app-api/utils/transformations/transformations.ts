@@ -103,7 +103,8 @@ export const transformFields = (
   reportPeriod: number,
   reportYear: number,
   workPlanFieldData?: AnyObject,
-  initiativeId?: string
+  initiativeId?: string,
+  objectiveId?: string
 ): (FormField | FormLayoutElement)[] => {
   return fields.flatMap((field) => {
     if (!field.transformation?.rule) {
@@ -132,6 +133,15 @@ export const transformFields = (
           workPlanFieldData,
           initiativeId
         );
+      case "quantitativeQuarters":
+        return quantitativeQuarters(
+          field,
+          reportPeriod,
+          reportYear,
+          workPlanFieldData,
+          initiativeId,
+          objectiveId
+        );
       default:
         throw new Error(
           `Field transformation rule ${field.transformation.rule} is not implemented.`
@@ -157,7 +167,8 @@ export const transformFormTemplate = (
       reportPeriod,
       reportYear,
       workPlanFieldData,
-      form.initiativeId
+      form.initiativeId,
+      form.objectiveId
     );
     for (let choiceWithChildren of iterateChoicesWithChildren(form.fields)) {
       choiceWithChildren.children = transformFields(
@@ -165,7 +176,8 @@ export const transformFormTemplate = (
         reportPeriod,
         reportYear,
         workPlanFieldData,
-        form.initiativeId
+        form.initiativeId,
+        form.objectiveId
       );
     }
   }
@@ -351,6 +363,87 @@ export const fundingSources = (
   return fieldsToAppend;
 };
 
+export const quantitativeQuarters = (
+  fieldToRepeat: FormField,
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData?: AnyObject,
+  initiativeId?: string,
+  objectiveId?: string
+) => {
+  const fieldsToAppend = [];
+
+  const initiativeToUse = workPlanFieldData?.initiative.find(
+    (initiative: any) => initiative.id === initiativeId
+  );
+
+  const objectiveToUse = initiativeToUse.evaluationPlan.find(
+    (objective: any) => objective.id === objectiveId
+  );
+
+  delete fieldToRepeat.transformation;
+
+  if (objectiveToUse?.evaluationPlan_includesTargets?.[0]?.value === "Yes") {
+    const objectivesHeader: FormField = {
+      id: `objectivesHeader-${objectiveToUse.id}}`,
+      type: "sectionHeader",
+      props: {
+        content: "Complete the following for quantitative targets:",
+      },
+    };
+    fieldsToAppend.push(objectivesHeader);
+
+    const headingStringFirstQuarter =
+      reportPeriod == 1
+        ? "First quarter (January 1 - March 31)"
+        : "Third quarter (July 1 - September 30)";
+
+    const headingStringSecondQuarter =
+      reportPeriod == 1
+        ? "Second quarter (April 1 - June 30)"
+        : "Fourth quarter (October 1 - December 31)";
+
+    // have to loop twice for both periods
+    for (let quarterNumber = 1; quarterNumber <= 2; quarterNumber += 1) {
+      const formFieldHeading: FormField = {
+        id: `${objectiveToUse.id}${fieldToRepeat.id}Heading_Q${quarterNumber}`,
+        type: "sectionHeader",
+        props: {
+          content:
+            quarterNumber == 1
+              ? headingStringFirstQuarter
+              : headingStringSecondQuarter,
+          label: "Complete the following for quantitative targets:",
+        },
+      };
+      fieldsToAppend.push(formFieldHeading);
+
+      const formFieldActual: FormField = {
+        id: `${objectiveToUse.id}${fieldToRepeat.id}Actual_Q${quarterNumber}`,
+        type: "number",
+        validation: "number",
+        props: {
+          label: "Actual value",
+        },
+      };
+      fieldsToAppend.push(formFieldActual);
+
+      const formFieldTarget: FormField = {
+        id: `quarterlyProjections${reportYear}Q${quarterNumber}`,
+        type: "number",
+        props: {
+          label: "Target Value",
+          hint: "Auto-populates from Work Plan.",
+          disabled: true,
+        },
+      };
+      fieldsToAppend.push(formFieldTarget);
+    }
+  }
+
+  return fieldsToAppend;
+};
+
 export const runSARTransformations = (
   route: DynamicModalOverlayReportPageShape,
   workPlanFieldData?: AnyObject
@@ -365,17 +458,30 @@ export const runSARTransformations = (
   for (let workPlanInitiative of workPlanFieldData.initiative) {
     // At this stage, we know that the route will have a template
     let templateEntitySteps = structuredClone(route.template!.entitySteps);
+
     templateEntitySteps = templateEntitySteps.map((step: any) => {
       if (step.form) {
         return {
           ...step,
           form: { ...step.form, initiativeId: workPlanInitiative.id },
         };
-      } else if (step.modalForm) {
+      } /*else if (step.modalForm) {
+        //TODO: ajaita
         return {
           ...step,
           modalForm: { ...step.modalForm, initiativeId: workPlanInitiative.id },
         };
+      } */ else if (step.stepType === "evaluationPlan") {
+        for (let workPlanObjective of workPlanInitiative.evaluationPlan) {
+          return {
+            ...step,
+            modalForm: {
+              ...step.modalForm,
+              initiativeId: workPlanInitiative.id,
+              objectiveId: workPlanObjective.id,
+            },
+          };
+        }
       } else if (step.drawerForm) {
         return {
           ...step,
@@ -398,6 +504,7 @@ export const runSARTransformations = (
     initiatives.push(initiative);
   }
   route.initiatives = initiatives;
+
   return route;
 };
 

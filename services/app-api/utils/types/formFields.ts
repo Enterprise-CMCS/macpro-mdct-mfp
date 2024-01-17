@@ -32,6 +32,7 @@ export interface FormJson {
   options?: AnyObject;
   validation?: AnyObject;
   initiativeId?: string;
+  objectiveId?: string;
 }
 
 export interface DependentFieldValidation {
