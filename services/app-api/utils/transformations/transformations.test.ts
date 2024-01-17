@@ -13,6 +13,7 @@ import {
   WorkPlanFieldDataForTransforms,
 } from "../types";
 import {
+  extractFundingSourceProjections,
   iterateAllForms,
   runSARTransformations,
   transformFormTemplate,
@@ -584,5 +585,50 @@ describe("SAR transformations", () => {
         },
       ],
     });
+  });
+});
+
+describe("extractFundingSourceProjections", () => {
+  it("Should move funding source data from the WP out to where the SAR can see it", () => {
+    const sarFieldData = {
+      initiative: [
+        {
+          fundingSources: [
+            {
+              id: "fsA",
+              fundingSources_quarters2024Q1: "50",
+              fundingSources_quarters2024Q2: "60",
+            },
+            {
+              id: "fsB",
+              fundingSources_quarters2024Q1: "70",
+              fundingSources_quarters2024Q2: "80",
+            },
+          ],
+        },
+      ],
+    };
+    const reportYear = 2024;
+    const reportPeriod = 1;
+
+    extractFundingSourceProjections(sarFieldData, reportYear, reportPeriod);
+
+    const initiative = sarFieldData.initiative[0];
+    expect(initiative).toHaveProperty(
+      "fundingSources_projected_2024Q1_fsA",
+      "50"
+    );
+    expect(initiative).toHaveProperty(
+      "fundingSources_projected_2024Q2_fsA",
+      "60"
+    );
+    expect(initiative).toHaveProperty(
+      "fundingSources_projected_2024Q1_fsB",
+      "70"
+    );
+    expect(initiative).toHaveProperty(
+      "fundingSources_projected_2024Q2_fsB",
+      "80"
+    );
   });
 });

@@ -369,6 +369,7 @@ export const fundingSources = (
         validation: "number",
         props: {
           label: `Projected Spending (${quarter.name} quarter: ${quarter.range})`,
+          disabled: true,
         },
       },
     ]),
@@ -429,4 +430,29 @@ const generateSARFormsForInitiatives = (
     }
   }
   return reportRoutes;
+};
+
+/**
+ * This function acts on the field data.
+ * It copies fields that are specific to each funding source,
+ * out into their containing initiative. The ID of each field will
+ * match up to IDs generated in the form template transformation,
+ * so that the frontend hydration code will be able to match up the data.
+ */
+export const extractFundingSourceProjections = (
+  sarFieldData: AnyObject,
+  reportYear: number,
+  reportPeriod: number
+): void => {
+  const quarters = reportPeriod === 1 ? [1, 2] : [3, 4];
+
+  for (let initiative of sarFieldData.initiative) {
+    for (let fundingSource of initiative.fundingSources) {
+      for (let quarter of quarters) {
+        const wpFieldId = `fundingSources_quarters${reportYear}Q${quarter}`;
+        const sarFieldId = `fundingSources_projected_${reportYear}Q${quarter}_${fundingSource.id}`;
+        initiative[sarFieldId] = fundingSource[wpFieldId];
+      }
+    }
+  }
 };
