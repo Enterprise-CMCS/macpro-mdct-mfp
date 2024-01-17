@@ -1113,6 +1113,12 @@
             "verbiage": {
               "intro": {
                 "section": "Expenditures",
+                "info": [
+                  {
+                    "type": "html",
+                    "content": "Report initiative expenditures by quarter and funding source. Report actual spending for each quarter for this initiative. Recipients plan quarterly expenditure targets in your MFP Work Plan’s funding sources. Recipients with discrepancies between projected and actual spending due solely to lag time between incurring costs and disbursing funds will have the option to note those cases in this section.<br></br>Funding sources and projected spending are auto-populated from your associated MFP Work Plan."
+                  }
+                ],
                 "subsection": "Initiative expenditures by quarter and funding source. Funding sources and projected spending are auto-populated from your associated Work Plan."
               },
               "enterEntityDetailsButtonText": "Edit",

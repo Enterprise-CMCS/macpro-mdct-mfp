@@ -347,6 +347,13 @@ export const fundingSources = (
         label: `${fundingSource.fundingSources_wpTopic[0].value}`,
       },
     },
+    {
+      id: `sectionContent-${randomUUID()}`,
+      type: "sectionContent",
+      props: {
+        label: "This funding source auto-populates from MFP Work Plan.",
+      },
+    },
     ...quarters.flatMap((quarter) => [
       {
         id: `fundingSources_actual${reportYear}Q${quarter.number}`,
