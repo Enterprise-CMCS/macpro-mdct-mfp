@@ -8,6 +8,7 @@ export type WorkPlanFieldDataForTransforms = {
     initiative_name: string;
     initiative_wpTopic: Choice[];
     fundingSources: {
+      id: string;
       fundingSources_wpTopic: Choice[];
     }[];
   }[];

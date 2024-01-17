@@ -356,7 +356,7 @@ export const fundingSources = (
     },
     ...quarters.flatMap((quarter) => [
       {
-        id: `fundingSources_actual${reportYear}Q${quarter.number}`,
+        id: `fundingSources_actual${reportYear}Q${quarter.number}-${fundingSource.id}`,
         type: "number",
         validation: "number",
         props: {
@@ -364,7 +364,7 @@ export const fundingSources = (
         },
       },
       {
-        id: `fundingSources_quarters${reportYear}Q${quarter.number}`,
+        id: `fundingSources_quarters${reportYear}Q${quarter.number}-${fundingSource.id}`,
         type: "number",
         validation: "number",
         props: {
