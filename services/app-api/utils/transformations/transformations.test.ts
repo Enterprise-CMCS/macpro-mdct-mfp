@@ -354,7 +354,7 @@ describe("transformFormTemplate", () => {
 
     const fields =
       formTemplate.routes[0]?.initiatives?.[0].entitySteps[0].form?.fields;
-    expect(fields).toHaveLength(5);
+    expect(fields).toHaveLength(6);
   });
 
   it("should throw for unrecognized transformations", () => {
