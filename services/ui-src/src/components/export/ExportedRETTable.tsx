@@ -10,7 +10,7 @@ import { Box } from "@chakra-ui/react";
 import { Table } from "components";
 
 // utils
-import { useStore } from "utils";
+import { useStore, sumOfRow, sumOfTwoRows, perOfTwoRows } from "utils";
 import { notAnsweredText } from "../../constants";
 
 export const generateMainTable = (
@@ -18,11 +18,19 @@ export const generateMainTable = (
   fieldData?: AnyObject,
   caption?: string
 ) => {
-  const headerRow = generateTableHeader(rows);
+  const labelHeader =
+    fieldData?.formId === "ret-hcbs" ? "Term of Stay" : "Population";
+  const totalLabel =
+    fieldData?.formId === "ret-hcbs"
+      ? "Total re-institutionalizations for any length of time"
+      : "Total by population";
+
+  const headerRow = generateTableHeader(rows, labelHeader);
   const bodyRows: string[][] = generateTableBody(rows, fieldData);
   const footRow: string[][] | undefined = generateTableFooter(
     bodyRows,
-    headerRow.length
+    headerRow.length,
+    totalLabel
   );
 
   const table = {
@@ -31,15 +39,27 @@ export const generateMainTable = (
     bodyRows: bodyRows,
     footRow: footRow,
   };
-
   return table;
 };
 
+export const generateTableHeader = (rows: AnyObject, headerLabel: string) => {
+  const row: AnyObject[] = Object.values(rows)[0];
+
+  const columnHeaders = row
+    .map((keys) => formatHeaderForRET(keys.label))
+    .filter((keys) => {
+      return keys;
+    });
+
+  return [headerLabel, ...columnHeaders, "Total"];
+};
+
 export const generateTableBody = (rows: AnyObject, fieldData?: AnyObject) => {
-  const firstRows = Object.keys(rows).map((key) => {
+  //get the table row labels
+  const firstCols = Object.keys(rows).map((key) => {
     return [key];
   });
-  let bodyRow: string[][] = firstRows;
+  let bodyRow: string[][] = firstCols;
 
   bodyRow.forEach((row: string[]) => {
     const matchRow: [] = rows[row[0]];
@@ -51,43 +71,21 @@ export const generateTableBody = (rows: AnyObject, fieldData?: AnyObject) => {
   });
 
   bodyRow.forEach((row) => {
-    const total = sumRow(row, 1);
+    const total = sumOfRow(row, 1);
     row.push(isNaN(Number(total)) ? "-" : total);
   });
 
   return bodyRow;
 };
 
-export const sumRow = (row: string[], startIndex: number = 0) => {
-  if (row.length === 0) return "-";
-
-  return row?.reduce((accumulator, currentValue, index) => {
-    if (index > startIndex && isNaN(Number(currentValue))) return accumulator;
-
-    return index > startIndex
-      ? (Number(accumulator) + Number(currentValue)).toString()
-      : currentValue;
-  });
-};
-
-export const generateTableHeader = (rows: AnyObject) => {
-  const row: AnyObject[] = Object.values(rows)[0];
-
-  const columnHeaders = row
-    .map((keys) => truncateLabel(keys.label))
-    .filter((keys) => {
-      return keys;
-    });
-
-  const firstHeader = ["Population"];
-  const totalHeader = ["Total"];
-  return firstHeader.concat(columnHeaders.concat(totalHeader));
-};
-
-export const generateTableFooter = (bodyRows: string[][], size: number) => {
+export const generateTableFooter = (
+  bodyRows: string[][],
+  size: number,
+  totalLabel: string
+) => {
   if (bodyRows.length <= 1) return;
 
-  let footRow: string[][] = [["Total by population"]];
+  let footRow: string[][] = [[totalLabel]];
   bodyRows.forEach((row: string[]) => {
     row.forEach((col: string, index: number) => {
       //if the column is a valid number
@@ -107,60 +105,88 @@ export const generateTableFooter = (bodyRows: string[][], size: number) => {
   return footRow;
 };
 
-export const sumOfTwoRows = (row1: string[], row2: string[]) => {
-  return row1
-    .map((col, index) => {
-      const total = Number(col) + Number(row2[index]);
-      return isNaN(total) ? "-" : total.toString();
-    })
-    .splice(1, row1.length);
-};
-
-export const perOfTwoRows = (row1: string[], row2: string[]) => {
-  return row1
-    .map((col, index) => {
-      const total = (Number(col) / Number(row2[index])) * 100;
-      return isNaN(total) ? "-" : total.toFixed(2) + "%";
-    })
-    .splice(1, row1.length);
-};
-
-export const truncateLabel = (label: string) => {
+export const formatHeaderForRET = (label: string) => {
   if (label.includes("Other:")) return label.replace("Other:", "");
 
   switch (label) {
     case "Number of Older adults":
       return "Older Adults";
     default: {
-      return label.substring(label.indexOf("(") + 1, label.indexOf(")"));
+      if (label.includes("("))
+        return label.substring(label.indexOf("(") + 1, label.indexOf(")"));
+
+      return label;
     }
   }
 };
 
-export const RETFooters = (
+export const formatLabelForRET = (
   formId: string,
-  fieldData: AnyObject,
-  rows: string[][]
+  label: string,
+  report: AnyObject
 ) => {
   switch (formId) {
     case "ret-mtrp":
-      //Number of MFP transitions in the reporting period
-      const quarterIds = [
-        "quarterlyProjections2024Q1",
-        "quarterlyProjections2024Q2",
-      ];
+      const quarterLabel: AnyObject = {
+        "First quarter": "Q1",
+        "Second quarter": "Q2",
+        "Third quarter": "Q3",
+        "Fourth quarter": "Q4",
+      };
+      const quarter: string = label.split("(")[0].trim();
+      return `${report?.reportYear} ${quarterLabel[quarter]}`;
+    case "ret-mtfqi":
+      if (label.includes("("))
+        return label.substring(label.indexOf("(") + 1, label.indexOf(")"));
+      break;
+    case "ret-mtfqr":
+      if (label.includes("(")) return label.split("(")[0];
+      else {
+        if (label.includes("Group home")) return "Group home";
+        else if (label === "Apartment in qualified assisted living")
+          return "Apt. in qualified assisted living";
+      }
+      break;
+    case "ret-mpdprp":
+      if (label === "Other, specify")
+        return `Other: ${report?.fieldData["otherReasons-otherText"]}`;
+      break;
+  }
 
+  return label;
+};
+
+export const formatFooterForRET = (
+  formId: string,
+  report: AnyObject,
+  rows: string[][]
+) => {
+  const fieldData = report?.fieldData;
+  const year = report?.reportYear;
+  const period = report?.reportPeriod;
+
+  switch (formId) {
+    //Number of MFP transitions in the reporting period
+    case "ret-mtrp":
+      //update the total label to the unique values for this RET section
+      rows[0][0] = "Total transitions";
+      //generate the ids to pull the correct values from WP
+      const quarterIds = [
+        `quarterlyProjections${year}${period === 1 ? "Q1" : "Q3"}`,
+        `quarterlyProjections${year}${period === 1 ? "Q2" : "Q4"}`,
+      ];
+      //get the row values for this target transition
       quarterIds.forEach((id: string) => {
         const quarterList = (fieldData?.targetPopulations as []).map(
           (target) => {
             return target[id] ? target[id] : "-";
           }
         );
-
-        const total = sumRow(quarterList);
-        rows.push(
-          ["Transition targets " + id].concat(quarterList).concat(total)
-        );
+        rows.push([
+          `Transition targets ${year} ${id.split(year)[1]}`,
+          ...quarterList,
+          sumOfRow(quarterList),
+        ]);
       });
 
       const totalTranstionTargets = [
@@ -173,15 +199,15 @@ export const RETFooters = (
       ];
       rows.push(totalTranstionTargets, perTargetsAchieved);
       break;
+    //Number of MFP participants disenrolled from the program during the reporting period
     case "ret-mpdprp":
-      //Number of MFP participants disenrolled from the program during the reporting period
       const table5Keys = Object.keys(fieldData)?.filter((key) =>
         key.includes("ret-tnamprp")
       );
       const table5Values = (table5Keys as [])?.map((key) => {
         return fieldData[key];
       });
-      const table5Row = ["Total", ...table5Values, sumRow(table5Values)];
+      const table5Row = ["Total", ...table5Values, sumOfRow(table5Values)];
 
       const totalPopulation = rows[rows.length - 1];
       const totalPer = [
@@ -209,7 +235,7 @@ export const truncateTable = (table: TableContentShape, maxColumn: number) => {
     }
 
     const rowLength = table.headRow.length;
-
+    //loop through the copied tables and start splicing columns out of the row
     splitTables.forEach((_table, index) => {
       const startIndex = index * adjustMaxColumn;
       const endIndex = (index + 1) * adjustMaxColumn + 1;
@@ -241,7 +267,9 @@ export const ExportRETTable = ({ section }: Props) => {
   let currentRow = report?.reportYear + " Period " + report?.reportPeriod;
   form?.fields?.forEach((field) => {
     if (field?.type === "sectionHeader") {
-      currentRow = field?.props?.content ? field?.props?.content : currentRow;
+      currentRow = field?.props?.content
+        ? formatLabelForRET(form?.id, field?.props?.content, report!)
+        : currentRow;
     } else if (field?.type === "checkbox") {
       const checkboxList = report?.fieldData[field.id] as [];
       const childrens = checkboxList
@@ -260,12 +288,10 @@ export const ExportRETTable = ({ section }: Props) => {
           parentId: child?.validation?.parentOptionId,
         };
       });
-
       checkboxList?.forEach((checkbox: AnyObject) => {
         const parentId = checkbox.key.split("-")[1];
-        rows[checkbox.value] = childIds.filter(
-          (child) => child.parentId === parentId
-        );
+        rows[formatLabelForRET(form?.id, checkbox.value, report!)] =
+          childIds.filter((child) => child.parentId === parentId);
       });
     } else {
       rows[currentRow] = rows[currentRow] ?? [];
@@ -273,9 +299,10 @@ export const ExportRETTable = ({ section }: Props) => {
     }
   });
 
-  const table = generateMainTable(rows, report?.fieldData, section.name);
-  RETFooters(form?.id, report?.fieldData!, table.footRow!);
-  const tables = truncateTable(table, 5);
+  const fieldData = { ...report?.fieldData, formId: form?.id };
+  const table = generateMainTable(rows, fieldData, section.name);
+  formatFooterForRET(form?.id, report!, table.footRow!);
+  const tables = truncateTable(table, 7);
 
   return (
     <Box
