@@ -33,7 +33,7 @@ describe("ExportedSectionHeading renders", () => {
 describe("ExportedSectionHeading displays correct heading", () => {
   test("Correct heading text is shown", () => {
     render(exportedReportSectionHeadingComponent);
-    const sectionHeading = screen.getByText("mock subsection");
+    const sectionHeading = screen.getByText(heading);
     expect(sectionHeading).toBeVisible();
   });
 });
