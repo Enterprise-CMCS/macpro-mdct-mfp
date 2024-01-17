@@ -274,7 +274,66 @@ describe("transformFormTemplate", () => {
     ]);
   });
 
-  // BEN TODO write a test for population applicability
+  it("should exclude populations that are not applicable to MFP", () => {
+    const formTemplate = {
+      routes: [
+        {
+          form: {
+            fields: [
+              {
+                id: "field1",
+                type: "text",
+                transformation: {
+                  rule: "targetPopulations",
+                },
+              },
+            ],
+          },
+        },
+      ],
+    } as ReportJson;
+    const fieldData = {
+      targetPopulations: [
+        {
+          isRequired: true,
+          transitionBenchmarks_targetPopulationName: "popA",
+          transitionBenchmarks_applicableToMfpDemonstration: [
+            {
+              key: "",
+              value: "Yes",
+            },
+          ],
+        },
+        {
+          isRequired: false,
+          transitionBenchmarks_targetPopulationName: "popB",
+          transitionBenchmarks_applicableToMfpDemonstration: [
+            {
+              key: "",
+              value: "No",
+            },
+          ],
+        },
+      ],
+    };
+
+    const reportPeriod = 1;
+    const reportYear = 2023;
+
+    transformFormTemplate(formTemplate, reportPeriod, reportYear, fieldData);
+
+    const fields = formTemplate.routes[0].form?.fields;
+    expect(fields).toHaveLength(1);
+    expect(fields).toEqual([
+      {
+        id: "field1_Period1_popA",
+        type: "text",
+        props: {
+          label: "Number of popA",
+        },
+      },
+    ]);
+  });
 
   it("should generate funding sources from wp", () => {
     const formTemplate = {
