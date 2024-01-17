@@ -31,7 +31,6 @@ export default {
     indicator: "Indicator",
     response: "Response",
   },
-  modalOverlayTableHeaders: {},
   emptyEntityMessage: {
     evaluationPlan: "Objectives: 0  - No objectives added",
     fundingSources: "Funding sources: 0 - No funding sources added",
