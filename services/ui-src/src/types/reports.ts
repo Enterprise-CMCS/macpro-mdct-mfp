@@ -84,11 +84,11 @@ export interface DynamicModalOverlayReportPageShape
   entityType: string;
   entityInfo: string[];
   verbiage: ModalOverlayReportPageVerbiage;
-  drawerForm: never;
-  modalForm: never;
-  form: never;
-  entitySteps: never;
-  dashboard: never;
+  drawerForm?: never;
+  modalForm?: never;
+  form?: never;
+  entitySteps?: never;
+  dashboard?: never;
   initiatives: {
     initiativeId: string;
     name: string;
