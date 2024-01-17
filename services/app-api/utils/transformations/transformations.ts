@@ -11,6 +11,10 @@ import {
   PageTypes,
   ReportJson,
   ReportRoute,
+  SomeRequired,
+  isUsableForTransforms,
+  TargetPopulation,
+  WorkPlanFieldDataForTransforms,
 } from "../types";
 
 export const removeConditionalRoutes = <T extends ReportRoute>(
@@ -70,23 +74,17 @@ export function* iterateAllForms(
     }
   }
 }
-type ChoiceWithChildren = FieldChoice & Required<Pick<FieldChoice, "children">>;
 
 export function* iterateChoicesWithChildren(
   fields: (FormField | FormLayoutElement)[]
-): Generator<ChoiceWithChildren, void, undefined> {
-  const hasChoices = (
-    field: any
-  ): field is FormField & { props: { choices: FieldChoice[] } } => {
-    return !!field.props?.choices;
-  };
+): Generator<SomeRequired<FieldChoice, "children">, void, undefined> {
+  const fieldsWithChoices = fields.filter((field) => !!field.props?.choices);
+  for (let field of fieldsWithChoices) {
+    const choicesWithChildren = field.props!.choices.filter(
+      (choice: FieldChoice) => !!choice.children
+    );
 
-  const hasChildren = (choice: any): choice is ChoiceWithChildren => {
-    return !!choice.children;
-  };
-
-  for (let field of fields.filter(hasChoices)) {
-    for (let choice of field.props.choices.filter(hasChildren)) {
+    for (let choice of choicesWithChildren) {
       yield choice;
       yield* iterateChoicesWithChildren(choice.children);
     }
@@ -102,10 +100,16 @@ export const transformFields = (
   fields: (FormField | FormLayoutElement)[],
   reportPeriod: number,
   reportYear: number,
-  workPlanFieldData?: AnyObject,
+  workPlanFieldData?: unknown,
   initiativeId?: string,
   objectiveId?: string
 ): (FormField | FormLayoutElement)[] => {
+  if (!isUsableForTransforms(workPlanFieldData)) {
+    throw new Error(
+      `Work Plan Field Data is not structured as expected for SAR form template transformation`
+    );
+  }
+
   return fields.flatMap((field) => {
     if (!field.transformation?.rule) {
       // This field doesn't require any transformation.
@@ -159,6 +163,11 @@ export const transformFormTemplate = (
   formTemplate.routes = removeConditionalRoutes(
     formTemplate.routes,
     reportPeriod
+  );
+
+  formTemplate.routes = generateSARFormsForInitiatives(
+    formTemplate.routes,
+    workPlanFieldData
   );
 
   for (let form of iterateAllForms(formTemplate.routes)) {
@@ -225,7 +234,7 @@ const nextTwelveQuarters = (
 const targetPopulations = (
   field: FormField,
   reportPeriod: number,
-  targetPopulations?: AnyObject
+  targetPopulations?: TargetPopulation[]
 ) => {
   if (!targetPopulations) {
     throw new Error(
@@ -233,32 +242,28 @@ const targetPopulations = (
     );
   }
 
-  // We don't want populations that were marked in the WP as being non-applicable to MFP
-  const applicableTargetPopulations = targetPopulations.filter(
-    (population: any) =>
-      population.transitionBenchmarks_applicableToMfpDemonstration?.[0]
-        ?.value !== "No"
-  );
-
-  const mappedTargetPopulations = applicableTargetPopulations.map(
-    (population: any) => ({
-      name: population.transitionBenchmarks_targetPopulationName,
-      label:
-        population.isRequired === true
-          ? `Number of ${population.transitionBenchmarks_targetPopulationName}`
-          : `Other: ${population.transitionBenchmarks_targetPopulationName}`,
-    })
-  );
-
   // No point keeping this around in the clones
   delete field.transformation;
 
-  return mappedTargetPopulations.map((population: any) => ({
+  // Exclude populations that were marked in the WP as being non-applicable to MFP
+  const isApplicable = (population: TargetPopulation) =>
+    population.transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value !==
+    "No";
+
+  const nameOf = (population: TargetPopulation) =>
+    population.transitionBenchmarks_targetPopulationName;
+
+  const labelOf = (population: TargetPopulation) =>
+    population.isRequired === true
+      ? `Number of ${nameOf(population)}`
+      : `Other: ${nameOf(population)}`;
+
+  return targetPopulations.filter(isApplicable).map((population: any) => ({
     ...field,
-    id: `${field.id}_Period${reportPeriod}_${population.name}`,
+    id: `${field.id}_Period${reportPeriod}_${nameOf(population)}`,
     props: {
       ...field.props,
-      label: population.label,
+      label: labelOf(population),
     },
   }));
 };
@@ -302,65 +307,77 @@ export const fundingSources = (
   field: FormField,
   reportPeriod: number,
   reportYear: number,
-  workPlanFieldData?: AnyObject,
+  workPlanFieldData?: WorkPlanFieldDataForTransforms,
   initiativeId?: string
-) => {
-  const fieldsToAppend = [];
+): (FormField | FormLayoutElement)[] => {
+  delete field.transformation;
 
-  const initiativeToUse = workPlanFieldData?.initiative.find(
+  const initiativeToUse = workPlanFieldData?.initiative?.find(
     (initiative: any) => initiative.id === initiativeId
   );
 
-  delete field.transformation;
+  if (!initiativeToUse) {
+    throw new Error(
+      `Transformation failed: Could not find initiative with id ${initiativeId}`
+    );
+  }
 
-  for (let fundingSource of initiativeToUse.fundingSources) {
-    const isFirstReportPeriod = reportPeriod == 1;
-    const fundingSourceHeader: FormField = {
+  const firstPeriodQuarters = [
+    {
+      number: 1,
+      name: "First",
+      range: "January 1 - March 31",
+    },
+    {
+      number: 2,
+      name: "Second",
+      range: "April 1 - June 30",
+    },
+  ];
+
+  const secondPeriodQuarters = [
+    {
+      number: 3,
+      name: "Third",
+      range: "July 1 - September 30",
+    },
+    {
+      number: 4,
+      name: "Fourth",
+      range: "October 1 - December 31",
+    },
+  ];
+
+  let quarters =
+    reportPeriod === 1 ? firstPeriodQuarters : secondPeriodQuarters;
+
+  return initiativeToUse.fundingSources.flatMap((fundingSource) => [
+    {
       id: `fundingSourceHeader-${randomUUID()}`,
       type: "sectionHeader",
       props: {
-        label: `${fundingSource?.fundingSources_wpTopic?.[0]?.value}`,
+        label: `${fundingSource.fundingSources_wpTopic[0].value}`,
       },
-    };
-    fieldsToAppend.push(fundingSourceHeader);
-
-    // have to loop twice for both periods
-    for (let quarterNumber = 1; quarterNumber <= 2; quarterNumber += 1) {
-      let longformQuarter = "";
-      let spendingMonths = "";
-
-      if (quarterNumber === 1) {
-        longformQuarter = isFirstReportPeriod ? "First" : "Third";
-        spendingMonths = isFirstReportPeriod
-          ? "January 1 - March 31"
-          : "July 1 - September 30";
-      } else {
-        longformQuarter = isFirstReportPeriod ? "Second" : "Fourth";
-        spendingMonths = isFirstReportPeriod
-          ? "April 1 - June 30"
-          : "October 1 - December 31";
-      }
-
-      const actualSpending: FormField = {
-        id: `fundingSources_actual${reportYear}Q${quarterNumber}`,
+    },
+    ...quarters.flatMap((quarter) => [
+      {
+        id: `fundingSources_actual${reportYear}Q${quarter.number}`,
         type: "number",
         validation: "number",
         props: {
-          label: `Actual Spending (${longformQuarter} quarter: ${spendingMonths})`,
+          label: `Actual Spending (${quarter.name} quarter: ${quarter.range})`,
         },
-      };
-      const projectedSpending: FormField = {
-        id: `fundingSources_quarters${reportYear}Q${quarterNumber}`,
+      },
+      {
+        id: `fundingSources_quarters${reportYear}Q${quarter.number}`,
         type: "number",
         validation: "number",
         props: {
-          label: `Projected Spending (${longformQuarter} quarter: ${spendingMonths})`,
+          label: `Projected Spending (${quarter.name} quarter: ${quarter.range})`,
         },
-      };
-      fieldsToAppend.push(actualSpending, projectedSpending);
-    }
-  }
-  return fieldsToAppend;
+      },
+    ]),
+  ]);
 };
 
 export const quantitativeQuarters = (
@@ -446,69 +463,55 @@ export const quantitativeQuarters = (
 
 export const runSARTransformations = (
   route: DynamicModalOverlayReportPageShape,
-  workPlanFieldData?: AnyObject
+  workPlanFieldData?: WorkPlanFieldDataForTransforms
 ): ReportRoute => {
   if (!workPlanFieldData?.initiative)
     throw new Error(
       "Not implemented yet - Workplan must have initiatives that the SAR can build from"
     );
 
-  // TODO: refactor :)
-  const initiatives = [];
-  for (let workPlanInitiative of workPlanFieldData.initiative) {
-    // At this stage, we know that the route will have a template
-    let templateEntitySteps = structuredClone(route.template!.entitySteps);
+  // At this stage, we know that the route will have a template.
+  const template = route.template!;
+  delete route.template;
 
-    templateEntitySteps = templateEntitySteps.map((step: any) => {
-      if (step.form) {
-        return {
-          ...step,
-          form: { ...step.form, initiativeId: workPlanInitiative.id },
-        };
-      } /*else if (step.modalForm) {
-        //TODO: ajaita
-        return {
-          ...step,
-          modalForm: { ...step.modalForm, initiativeId: workPlanInitiative.id },
-        };
-      } */ else if (step.stepType === "evaluationPlan") {
+  route.initiatives = [];
+  for (let workPlanInitiative of workPlanFieldData.initiative) {
+    let templateEntitySteps = structuredClone(template.entitySteps);
+    for (let step of templateEntitySteps) {
+      for (let formType of ["form", "modalForm", "drawerForm"] as const) {
+        if (step[formType]) {
+          step[formType].initiativeId = workPlanInitiative.id;
+        }
+      }
+      if (step.stepType === "evaluationPlan") {
+        step.objectiveCards = [];
         for (let workPlanObjective of workPlanInitiative.evaluationPlan) {
-          return {
+          step.objectiveCards.push({
             ...step,
+            objectiveCards: undefined,
             modalForm: {
               ...step.modalForm,
               initiativeId: workPlanInitiative.id,
               objectiveId: workPlanObjective.id,
             },
-          };
+          });
         }
-      } else if (step.drawerForm) {
-        return {
-          ...step,
-          drawerForm: {
-            ...step.drawerForm,
-            initiativeId: workPlanInitiative.id,
-          },
-        };
       }
-    });
-    const initiative = {
+    }
+
+    route.initiatives.push({
       initiativeId: workPlanInitiative.id,
       name: workPlanInitiative.initiative_name,
       topic: workPlanInitiative.initiative_wpTopic?.[0].value,
-      // At this stage, we know that the route will have a template
-      dashboard: route.template!.dashboard,
+      dashboard: template.dashboard,
       entitySteps: templateEntitySteps,
-    };
-
-    initiatives.push(initiative);
+    });
   }
-  route.initiatives = initiatives;
 
   return route;
 };
 
-export const generateSARFormsForInitiatives = (
+const generateSARFormsForInitiatives = (
   reportRoutes: (
     | ReportRoute
     | OverlayModalPageShape
