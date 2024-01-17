@@ -76,19 +76,21 @@ export const Table = ({
       <Tfoot>
         {content.footRow &&
           content.footRow?.map((row: string[], index: number) => {
-            return <Tr key={row[0] + index}>
-              {row.map((headerCell: string, index: number) => {
-                return (
-                  <Th
-                    key={index}
-                    scope="col"
-                    sx={{ ...sx.tableHeader, ...sxOverride }}
-                  >
-                    {sanitizeAndParseHtml(headerCell)}
-                  </Th>
-                );
-              })}
-            </Tr>;
+            return (
+              <Tr key={row[0] + index}>
+                {row.map((headerCell: string, index: number) => {
+                  return (
+                    <Th
+                      key={index}
+                      scope="col"
+                      sx={{ ...sx.tableHeader, ...sxOverride }}
+                    >
+                      {sanitizeAndParseHtml(headerCell)}
+                    </Th>
+                  );
+                })}
+              </Tr>
+            );
           })}
       </Tfoot>
     </TableRoot>
