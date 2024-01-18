@@ -64,4 +64,22 @@ describe("Test AppRoutes", () => {
     });
     expect(screen.getByTestId("404-view")).toBeVisible();
   });
+
+  test("export SAR report page", async () => {
+    const history = createMemoryHistory();
+    history.push("/sar/export");
+    await act(async () => {
+      await render(appRoutesComponent(history));
+    });
+    expect(screen.getByTestId("exportedReportMetadataTable")).toBeVisible();
+  });
+
+  test("export WP report page", async () => {
+    const history = createMemoryHistory();
+    history.push("/wp/export");
+    await act(async () => {
+      await render(appRoutesComponent(history));
+    });
+    expect(screen.getByTestId("exportedReportMetadataTable")).toBeVisible();
+  });
 });
