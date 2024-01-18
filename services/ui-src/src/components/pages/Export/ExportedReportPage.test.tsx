@@ -26,7 +26,9 @@ describe("reportTitle", () => {
 
     const result = reportTitle(reportType, reportPage, report);
 
-    expect(result).toBe("undefined Report Heading 2023 - Period 1");
+    expect(result).toBe(
+      `${report.fieldData.stateName} Report Heading 2023 - Period 1`
+    );
   });
 
   it("should generate the correct title for SAR report type", () => {
@@ -36,7 +38,9 @@ describe("reportTitle", () => {
 
     const result = reportTitle(reportType, reportPage, report);
 
-    expect(result).toBe("undefined Report Heading 2023 - Period 1");
+    expect(result).toBe(
+      `${report.fieldData.stateName} Report Heading 2023 - Period 1`
+    );
   });
 
   it("should throw an error for an unknown report type", () => {
