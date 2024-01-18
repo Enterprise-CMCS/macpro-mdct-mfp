@@ -33,4 +33,4 @@ export * from "./other/time";
 export * from "./other/useBreakpoint";
 export * from "./other/parsing";
 export * from "./other/export";
-export * from "./other/table";
+export * from "./other/calculations";

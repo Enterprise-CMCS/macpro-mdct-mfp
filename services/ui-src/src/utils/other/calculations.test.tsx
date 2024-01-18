@@ -1,5 +1,5 @@
 // // utils
-import { sumOfRow, sumOfTwoRows, perOfTwoRows } from "./table";
+import { sumOfRow, sumOfTwoRows, perOfTwoRows } from "./calculations";
 
 const row1 = ["label", "1", "2", "3", "4", "5"];
 const row2 = ["label", "2", "3", "4", "5", "6"];

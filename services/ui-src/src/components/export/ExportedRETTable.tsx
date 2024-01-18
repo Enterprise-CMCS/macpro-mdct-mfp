@@ -106,7 +106,7 @@ export const generateTableFooter = (
 };
 
 export const formatHeaderForRET = (label: string) => {
-  if (label.includes("Other:")) return label.replace("Other:", "");
+  if (label.includes("Other:")) return label.replace("Other:", "").trim();
 
   switch (label) {
     case "Number of Older adults":
@@ -141,7 +141,7 @@ export const formatLabelForRET = (
       break;
     }
     case "ret-mtfqr": {
-      if (label.includes("(")) return label.split("(")[0];
+      if (label.includes("(")) return label.split(" (")[0];
       else {
         if (label.includes("Group home")) return "Group home";
         else if (label === "Apartment in qualified assisted living")
@@ -180,7 +180,7 @@ export const formatFooterForRET = (
       ];
       //get the row values for this target transition
       quarterIds.forEach((id: string) => {
-        const quarterList = (fieldData?.targetPopulations as []).map(
+        const quarterList = (fieldData?.targetPopulations as [])?.map(
           (target) => {
             return target[id] ? target[id] : "-";
           }
@@ -289,14 +289,14 @@ export const ExportRETTable = ({ section }: Props) => {
       const childIds = childrens?.map((child: AnyObject) => {
         return {
           label: child?.props?.label,
-          id: [child.id],
+          id: [child?.id],
           parentId: child?.validation?.parentOptionId,
         };
       });
       checkboxList?.forEach((checkbox: AnyObject) => {
         const parentId = checkbox.key.split("-")[1];
         rows[formatLabelForRET(form?.id, checkbox.value, report!)] =
-          childIds.filter((child) => child.parentId === parentId);
+          childIds?.filter((child) => child.parentId === parentId);
       });
     } else {
       rows[currentRow] = rows[currentRow] ?? [];
@@ -310,14 +310,12 @@ export const ExportRETTable = ({ section }: Props) => {
   const tables = truncateTable(table, 7);
 
   return (
-    <Box
-      mt="2rem"
-      data-testid="exportedModalDrawerReportSection"
-      sx={sx.container}
-    >
+    <Box mt="2rem" data-testid="exportRETTable" sx={sx.container}>
       {tables &&
-        tables.map((table) => {
-          return <Table sx={sx.table} content={table}></Table>;
+        tables.map((table, index) => {
+          return (
+            <Table sx={sx.table} content={table} key={`table-${index}`}></Table>
+          );
         })}
     </Box>
   );
@@ -345,7 +343,7 @@ const sx = {
       height: "100px",
       border: "1px solid",
     },
-    "thead tr:first-child th": {
+    "thead tr:first-of-type th": {
       background: "palette.gray_lightest",
       border: "1px solid",
       borderColor: "palette.black",
@@ -367,7 +365,7 @@ const sx = {
       border: "1px solid black",
       fontWeight: "normal",
     },
-    "td:first-child, tfoot th:first-child": {
+    "td:first-of-type, tfoot th:first-of-type": {
       background: "palette.gray_lightest",
       fontWeight: "bold",
       color: "palette.black",

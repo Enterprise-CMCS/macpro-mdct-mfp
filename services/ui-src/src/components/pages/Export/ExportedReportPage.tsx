@@ -95,7 +95,7 @@ export const formatSectionHeader = (report: ReportShape, header: string) => {
   const newPeriod = `${displayLongformPeriod(
     report.reportPeriod,
     report.reportYear
-  )} reporting period`;
+  )}`;
   const newHeader = header?.replace(" reporting period", newPeriod);
   return newHeader;
 };
@@ -107,13 +107,23 @@ export const renderReportSections = (
 ) => {
   // recursively render sections
   const renderSection = (section: ReportRoute) => {
-    const childSections = section?.children;
+    //because R,E & T section needs numbers added, switch from shallow copy to deep copy
+    let childSections = structuredClone(section?.children);
     const initatives =
       section.name === "State- or Territory Specific Initiatives" &&
       childSections;
     const showGeneralInformation = !(
       reportType === ReportType.WP && section.name === "General Information"
     );
+    //adding numbers for R,E & T section
+    if (section.name === "Recruitment, Enrollment, and Transitions") {
+      childSections?.forEach((section, index) => {
+        if (section.verbiage?.intro?.subsection)
+          section.verbiage.intro.subsection = `${index + 1}. ${
+            section.verbiage?.intro?.subsection
+          }`;
+      });
+    }
 
     return (
       <Box key={section.path}>
