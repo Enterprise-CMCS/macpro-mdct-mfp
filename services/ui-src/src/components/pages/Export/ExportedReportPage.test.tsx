@@ -7,7 +7,7 @@ import {
   mockWpReportContext,
   mockSARReportContext,
 } from "utils/testing/setupJest";
-import { ReportType, ReportShape } from "types";
+import { ReportType } from "types";
 
 const exportedReportPage = (context: any) => (
   <ReportContext.Provider value={context}>
@@ -19,7 +19,7 @@ describe("reportTitle", () => {
   it("should generate the correct title for WP report type", () => {
     const reportType = ReportType.WP;
     const reportPage = { heading: "Report Heading" };
-    const report: ReportShape = {
+    const report: any = {
       fieldData: { stateName: "State", otherFields: "...otherFields" },
       reportYear: 2022,
       reportPeriod: "Q1",
@@ -32,9 +32,9 @@ describe("reportTitle", () => {
 
   it("should generate the correct title for SAR report type", () => {
     const reportType = ReportType.SAR;
-    const reportPage = { heading: "Report Heading" };
-    const report: ReportShape = {
-      fieldData: { stateName: "State", otherFields: "...otherFields" },
+    const reportPage: any = { heading: "Report Heading" };
+    const report: any = {
+      fieldData: { stateName: "State" },
       reportYear: 2022,
       reportPeriod: "Q1",
     };
@@ -45,18 +45,16 @@ describe("reportTitle", () => {
   });
 
   it("should throw an error for an unknown report type", () => {
-    const unknownReportType = "UnknownType";
+    const reportType: any = "unknownReportType";
     const reportPage = { heading: "Report Heading" };
-    const report: ReportShape = {
-      fieldData: { stateName: "State", otherFields: "...otherFields" },
+    const report: any = {
+      fieldData: { stateName: "State" },
       reportYear: 2022,
-      reportPeriod: "Q1",
+      reportPeriod: 1,
     };
 
-    expect(() =>
-      reportTitle(unknownReportType, reportPage, report)
-    ).toThrowError(
-      `The title for report type ${unknownReportType} has not been implemented.`
+    expect(() => reportTitle(reportType, reportPage, report)).toThrowError(
+      `The title for report type ${reportType} has not been implemented.`
     );
   });
 });
