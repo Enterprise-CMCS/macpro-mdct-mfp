@@ -19,6 +19,8 @@ export interface ReportPageVerbiage {
     subsection?: string;
     hint?: string;
     info?: string | CustomHtmlElement[];
+    title?: string;
+    subtitle?: string;
     spreadsheet?: string;
     exportSectionHeader?: string;
   };
@@ -81,6 +83,7 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   stepType: string;
   stepName: string;
+  stepInfo: string[];
   hint: string;
   form: FormJson;
   entityType: string;
@@ -95,6 +98,7 @@ export interface OverlayModalPageShape extends ReportPageShapeBase {
   entityType: string;
   stepType: string;
   stepName: string;
+  stepInfo: string[];
   hint: string;
   verbiage: ModalOverlayReportPageVerbiage;
   modalForm: FormJson;
@@ -198,7 +202,7 @@ export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   countEntitiesInTitle: boolean;
   tableHeader: string;
   addEditModalHint: string;
-  emptyDashboardText: string;
+  emptyDashboardText?: string;
   accordion?: AnyObject;
 }
 

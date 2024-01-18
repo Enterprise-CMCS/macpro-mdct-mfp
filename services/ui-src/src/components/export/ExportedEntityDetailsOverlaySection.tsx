@@ -1,5 +1,5 @@
 // components
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
 import uuid from "react-uuid";
 // components
@@ -20,13 +20,21 @@ import { assertExhaustive } from "utils/other/typing";
 export const ExportedEntityDetailsOverlaySection = ({
   entity,
   entityStep,
+  closed,
   ...props
 }: ExportedEntityDetailsOverlaySectionProps) => {
   const { report } = useStore() ?? {};
 
   return (
     <Box sx={sx.sectionHeading} {...props}>
-      {report && renderEntityDetailTables(report, entity ?? [], entityStep)}
+      {report &&
+        renderEntityDetailTables(
+          report,
+          entity ?? [],
+          entityStep,
+          props.showHintText,
+          closed
+        )}
     </Box>
   );
 };
@@ -35,6 +43,8 @@ export interface ExportedEntityDetailsOverlaySectionProps {
   section: ModalOverlayReportPageShape;
   entity: EntityShape;
   entityStep: (string | FormLayoutElement | FormField)[];
+  showHintText?: boolean;
+  closed?: boolean;
 }
 
 /**
@@ -46,7 +56,9 @@ export interface ExportedEntityDetailsOverlaySectionProps {
 export function getEntityTableComponents(
   report: ReportShape,
   entity: EntityShape,
-  entityStep: (string | FormLayoutElement | FormField)[]
+  entityStep: (string | FormLayoutElement | FormField)[],
+  showHintText?: boolean,
+  closed?: boolean
 ) {
   const entityStepFields = entityStep.slice(3) as FormField[];
   const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
@@ -58,11 +70,19 @@ export function getEntityTableComponents(
           <Box sx={sx.stepHint}>{entityStep[2]}</Box>
         </Heading>
       </Box>
+      {closed && (
+        <Box sx={sx.sectionHeading}>
+          <Text sx={sx.tableIndex} fontSize={"sm"}>
+            Closed by
+          </Text>
+          <Text fontSize={"sm"}>{entity.closedBy}</Text>
+        </Box>
+      )}
       <Fragment>
         <ExportedEntityDetailsTable
           fields={updatedEntityStepFields as FormField[]}
           entity={entity}
-          showHintText={false}
+          showHintText={showHintText}
         />
       </Fragment>
     </Box>
@@ -81,12 +101,20 @@ export function getEntityTableComponents(
 export function renderEntityDetailTables(
   report: ReportShape,
   entity: EntityShape,
-  entityStep: (string | FormLayoutElement | FormField)[]
+  entityStep: (string | FormLayoutElement | FormField)[],
+  showHintText?: boolean,
+  closed?: boolean
 ) {
   const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
     case ReportType.WP: {
-      return getEntityTableComponents(report!, entity, entityStep);
+      return getEntityTableComponents(
+        report!,
+        entity,
+        entityStep,
+        showHintText,
+        closed
+      );
     }
     case ReportType.SAR:
       throw new Error(
@@ -172,6 +200,7 @@ const sx = {
   stepName: {
     fontSize: "18px",
     paddingBottom: "0.75rem",
+    lineHeight: "130%",
   },
   stepHint: {
     fontSize: "16px",
