@@ -53,6 +53,7 @@ export const ExportedEntityDetailsTableRow = ({
                 {parseCustomHtml(formFieldInfo.hint)}
               </Text>
             )}
+            {formField.type === "date" && <Text>MM/DD/YYYY</Text>}
           </>
         ) : (
           <Text>{"N/A"}</Text>

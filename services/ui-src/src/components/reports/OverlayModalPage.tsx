@@ -18,7 +18,7 @@ import {
 import addIcon from "assets/icons/icon_add_white.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
-import { EntityShape, OverlayModalPageShape } from "types";
+import { EntityShape, OverlayModalPageShape, ReportType } from "types";
 // utils
 import { getFormattedEntityData, resetClearProp, useStore } from "utils";
 
@@ -110,19 +110,24 @@ export const OverlayModalPage = ({
           text={verbiage.intro}
           accordion={verbiage.accordion}
           initiativeName={selectedEntity!.initiative_name}
+          stepType={stepType}
         />
       )}
       <Box>
-        <Button
-          sx={sx.addEntityButton}
-          onClick={addEditEntityModalOnOpenHandler}
-          rightIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-        >
-          {verbiage.addEntityButtonText}
-        </Button>
-        <Heading as="h3" sx={sx.dashboardTitle}>
-          {dashTitle}
-        </Heading>
+        {report?.reportType === ReportType.WP && (
+          <>
+            <Button
+              sx={sx.addEntityButton}
+              onClick={addEditEntityModalOnOpenHandler}
+              rightIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+            >
+              {verbiage.addEntityButtonText}
+            </Button>
+            <Heading as="h3" sx={sx.dashboardTitle}>
+              {dashTitle}
+            </Heading>
+          </>
+        )}
         <Box>
           {reportFieldDataEntities?.map(
             (entity: EntityShape, entityIndex: number) => (
@@ -137,18 +142,20 @@ export const OverlayModalPage = ({
                 openAddEditEntityModal={openAddEditEntityModal}
                 openDeleteEntityModal={openDeleteEntityModal}
                 disabled={userDisabled}
+                hasBoxShadow={true}
               />
             )
           )}
-          {reportFieldDataEntities.length > 1 && (
-            <Button
-              sx={sx.addEntityButton}
-              onClick={addEditEntityModalOnOpenHandler}
-              leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-            >
-              {verbiage.addEntityButtonText}
-            </Button>
-          )}
+          {reportFieldDataEntities.length > 1 &&
+            report?.reportType === ReportType.WP && (
+              <Button
+                sx={sx.addEntityButton}
+                onClick={addEditEntityModalOnOpenHandler}
+                leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+              >
+                {verbiage.addEntityButtonText}
+              </Button>
+            )}
         </Box>
         <hr />
         {/* MODALS */}

@@ -74,7 +74,10 @@ export const initializeChoiceListFields = (
     if (isFieldElement(field)) {
       field?.props?.choices.forEach((choice: FieldChoice) => {
         // set choice value to choice label string
-        choice.value = choice.label;
+        choice.label;
+        choice.value = Array.isArray(choice.label)
+          ? choice.label[0]
+          : choice.label;
         // if choice id has not already had parent field id appended, do so now
         if (!choice.id.includes("-")) {
           choice.id = field.id + "-" + choice.id;
@@ -342,6 +345,7 @@ export const updateRenderFields = (
     "targetPopulations",
     formatChoiceList
   );
+
   return updateTargetPopulationChoiceList;
 };
 

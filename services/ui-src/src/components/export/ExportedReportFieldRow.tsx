@@ -28,19 +28,10 @@ export const ExportedReportFieldRow = ({
 
   return (
     <Tr data-testid="exportRow">
-      {/* number column/cell */}
-      {!isDynamicField && (
-        <Td sx={sx.numberColumn}>
-          <Text sx={sx.fieldNumber}>
-            {formFieldInfo?.number?.replace(".", "") || "N/A"}
-          </Text>
-        </Td>
-      )}
-
       {/* label column/cell */}
       <Td sx={sx.labelColumn}>
         {formFieldInfo?.label || formFieldInfo?.hint ? (
-          <Box>
+          <Box data-testid="parentBoxElement">
             {formFieldInfo.label && (
               <Text sx={sx.fieldLabel}>
                 {!isDynamicField
@@ -93,7 +84,7 @@ const sx = {
     fontWeight: "bold",
   },
   labelColumn: {
-    width: "14rem",
+    width: "18rem",
     ".two-column &": {
       ".desktop &": {
         paddingLeft: "6rem",

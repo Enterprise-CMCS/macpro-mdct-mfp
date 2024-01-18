@@ -136,7 +136,7 @@ export const getInitiativeStatus = (
 
 //NOTE: this function works on the assumption that the fieldData saved is validated
 export const getInitiativeDashboardStatus = (
-  formEntity: AnyObject,
+  formEntity: EntityDetailsOverlayShape | OverlayModalPageShape,
   entity: EntityShape
 ) => {
   const stepType = formEntity.stepType;
@@ -179,9 +179,12 @@ export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
   if (entity) {
     const fieldIds = form.fields
       .map((field) => {
-        return !(field as AnyObject)?.validation.includes("Optional")
-          ? field.id
-          : "";
+        // Some fields have validation: "foo", and some have validation: { type: "foo" }
+        let validationType = (field as AnyObject)?.validation ?? "";
+        if (typeof validationType === "object") {
+          validationType = validationType.type ?? "";
+        }
+        return !validationType.includes("Optional") ? field.id : "";
       })
       .filter((field) => field);
     const isFilled = fieldIds.map((id) => {

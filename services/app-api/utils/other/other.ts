@@ -21,7 +21,7 @@ export const createReportName = (
     reportType === ReportType.SAR ? workPlan?.reportPeriod : reportPeriod;
 
   const fullStateName = States[state as keyof typeof States];
-  return `${fullStateName} ${reportName} ${reportYear} - Period ${period}`;
+  return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
 };
 
 export const lastCreatedWorkPlan = (
@@ -33,7 +33,7 @@ export const lastCreatedWorkPlan = (
   currentWorkPlans.forEach((workPlan: ReportMetadataShape) => {
     /*
      * ...if the workplan hasn't been used to create a SAR before AND
-     * the work plan has a status of "Not Started" OR "In Progress"...
+     * the work plan has a status of "Approved"...
      */
     if (workPlan.status === ReportStatus.APPROVED && !workPlan?.associatedSar) {
       /*
@@ -91,9 +91,12 @@ export const getLastCreatedWorkPlan = async (
     const workPlan = await fetchReport(fetchWPReportEvent, _context);
     const workPlanBody: ReportShape = JSON.parse(workPlan.body);
 
-    // And get its metadata and field data from the response and return it!
-    const workPlanMetadata: ReportMetadataShape = workPlanBody;
+    // fetchReport returns fieldData and formTemplate together with metadata
+    const workPlanMetadata: any = structuredClone(workPlanBody);
     const workPlanFieldData = workPlanBody.fieldData;
+    // Remove these from our metadata so they don't get saved into the metadata table
+    delete workPlanMetadata.fieldData;
+    delete workPlanMetadata.formTemplate;
     return { workPlanMetadata, workPlanFieldData };
   }
   // If there wasn't an eligble work plan to copy from, return undefined

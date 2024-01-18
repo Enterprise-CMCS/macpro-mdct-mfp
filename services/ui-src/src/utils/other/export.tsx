@@ -140,7 +140,7 @@ export const renderResponseData = (
   const missingEntryStyle = notApplicable ? sx.notApplicable : sx.noResponse;
   if (!hasResponse)
     return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;
-  // chandle choice list fields (checkbox, radio)
+  // handle choice list fields (checkbox, radio)
   if (isChoiceListField) {
     return renderChoiceListFieldResponse(
       formField,
@@ -236,6 +236,7 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
   )
     return {};
   const labelArray = formFieldProps?.label?.split(" ");
+
   return {
     number: labelArray?.[0].match(/[-.0-9]+/) ? labelArray?.[0] : "N/A",
     label: labelArray?.[0].match(/[-.0-9]+/)
@@ -243,6 +244,7 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
       : labelArray?.join(" "),
     hint: formFieldProps?.hint,
     indicator: formFieldProps?.indicator,
+    choices: formFieldProps?.choices,
   };
 };
 
