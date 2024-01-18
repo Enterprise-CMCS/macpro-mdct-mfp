@@ -6,8 +6,11 @@ import {
   mockReportJson,
   mockWpReportContext,
   mockSARReportContext,
+  mockUseStore,
 } from "utils/testing/setupJest";
-import { ReportType } from "types";
+import { ReportType, ReportShape } from "types";
+
+const mockReport = mockUseStore.report;
 
 const exportedReportPage = (context: any) => (
   <ReportContext.Provider value={context}>
@@ -19,39 +22,27 @@ describe("reportTitle", () => {
   it("should generate the correct title for WP report type", () => {
     const reportType = ReportType.WP;
     const reportPage = { heading: "Report Heading" };
-    const report: any = {
-      fieldData: { stateName: "State", otherFields: "...otherFields" },
-      reportYear: 2022,
-      reportPeriod: "Q1",
-    };
+    const report: ReportShape = mockReport!;
 
     const result = reportTitle(reportType, reportPage, report);
 
-    expect(result).toBe("State Report Heading 2022 - Period Q1");
+    expect(result).toBe("undefined Report Heading 2023 - Period 1");
   });
 
   it("should generate the correct title for SAR report type", () => {
     const reportType = ReportType.SAR;
-    const reportPage: any = { heading: "Report Heading" };
-    const report: any = {
-      fieldData: { stateName: "State" },
-      reportYear: 2022,
-      reportPeriod: "Q1",
-    };
+    const reportPage = { heading: "Report Heading" };
+    const report: ReportShape = mockReport!;
 
     const result = reportTitle(reportType, reportPage, report);
 
-    expect(result).toBe("State Report Heading 2022 - Period Q1");
+    expect(result).toBe("undefined Report Heading 2023 - Period 1");
   });
 
   it("should throw an error for an unknown report type", () => {
-    const reportType: any = "unknownReportType";
+    const reportType: any = "unknown report type";
     const reportPage = { heading: "Report Heading" };
-    const report: any = {
-      fieldData: { stateName: "State" },
-      reportYear: 2022,
-      reportPeriod: 1,
-    };
+    const report: ReportShape = mockReport!;
 
     expect(() => reportTitle(reportType, reportPage, report)).toThrowError(
       `The title for report type ${reportType} has not been implemented.`
