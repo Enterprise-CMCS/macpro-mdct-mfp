@@ -1,5 +1,8 @@
+//testing lib
 import { render, screen } from "@testing-library/react";
 import { ExportRETTable } from "components";
+import { axe } from "jest-axe";
+//components
 import {
   formatHeaderForRET,
   formatLabelForRET,
@@ -7,9 +10,6 @@ import {
 } from "./ExportedRETTable";
 //utils
 import { useStore } from "utils";
-
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 global.structuredClone = jest.fn((val) => {
   return JSON.parse(JSON.stringify(val));
@@ -113,6 +113,10 @@ const mockSARReport = {
   },
 };
 
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue(mockSARReport);
+
 //These test are testing functions that uses hardcoded return values
 describe("Test table functions specific for R,E & T", () => {
   describe("Test formatHeaderForRET functionality", () => {
@@ -179,7 +183,6 @@ describe("Test table functions specific for R,E & T", () => {
     expect(footerRow[footerRow.length - 1]).toStrictEqual(expectedResults);
   });
 });
-
 describe("Test ExportedRETTable Component", () => {
   beforeEach(() => {
     mockedUseStore.mockReturnValue(mockSARReport);
@@ -189,5 +192,14 @@ describe("Test ExportedRETTable Component", () => {
     //check to see if table has rendered
     const table = screen.queryByRole("table");
     expect(table).toBeVisible();
+    //check to see if table caption exist
+    expect(screen.getByText(`${section.name} Table`)).toBeVisible();
+  });
+});
+describe("Test ExportedReportWrapper accessibility", () => {
+  it("ExportedReportWrapper should not have basic accessibility issues", async () => {
+    const { container } = render(<ExportRETTable section={section as any} />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

@@ -13,7 +13,7 @@ export const formatSectionInfo = (verbiage: ReportPageVerbiage) => {
     return null;
 
   if (verbiage?.intro.section === "Recruitment, Enrollment, and Transitions") {
-    return (verbiage?.intro?.info as CustomHtmlElement[]).filter(
+    return (verbiage?.intro?.info as CustomHtmlElement[])?.filter(
       (info) => info.type !== "h3"
     );
   }
