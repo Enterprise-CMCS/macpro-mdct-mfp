@@ -17,7 +17,6 @@ import {
   AlertTypes,
   EntityShape,
   ModalOverlayReportPageShape,
-  EntityDetailsDashboardOverlayShape,
   ReportType,
 } from "types";
 // utils
@@ -125,7 +124,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             dashboard={dashboard}
             selectedEntity={selectedEntity}
-            route={route as EntityDetailsDashboardOverlayShape}
+            entitySteps={route.entitySteps}
           />
         </EntityProvider>
       ) : (

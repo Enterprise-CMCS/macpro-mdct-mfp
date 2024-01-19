@@ -15,7 +15,6 @@ import {
   AlertTypes,
   EntityShape,
   DynamicModalOverlayReportPageShape,
-  EntityDetailsDashboardOverlayShape,
   ReportType,
 } from "types";
 // utils
@@ -75,6 +74,10 @@ export const DynamicModalOverlayReportPage = ({
 
   // Open/Close overlay action methods
   const openEntityDetailsOverlay = (entity: EntityShape) => {
+    /*
+     * Every entity in the field data has exactly one initiative in the form template,
+     * and vice versa. So we can sure that this .find will succeed.
+     */
     const initiative = initiatives.find(
       (init) => init.initiativeId === entity.id
     );
@@ -99,7 +102,7 @@ export const DynamicModalOverlayReportPage = ({
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
             dashboard={selectedInitiative?.dashboard}
             selectedEntity={selectedEntity}
-            route={route as EntityDetailsDashboardOverlayShape}
+            entitySteps={selectedInitiative?.entitySteps}
           />
         </EntityProvider>
       ) : (
@@ -124,19 +127,11 @@ export const DynamicModalOverlayReportPage = ({
             <Heading as="h2" sx={sx.subsectionHeading}>
               {dashSubTitle}
             </Heading>
-            {initiatives.length === 0 ? (
+            {reportFieldDataEntities.length === 0 ? (
               <Box>{verbiage.emptyDashboardText}</Box>
             ) : (
               <Table sx={sx.table} content={tableHeaders()}>
-                {initiatives.map((initiative, idx) => {
-                  const entity = reportFieldDataEntities.find(
-                    (entity) => entity.id === initiative.initiativeId
-                  );
-                  if (!entity) {
-                    throw new Error(
-                      `Could not find entity with id ${initiative.initiativeId}`
-                    );
-                  }
+                {reportFieldDataEntities.map((entity, idx) => {
                   return (
                     <EntityRow
                       key={`entityRow-${idx}`}
