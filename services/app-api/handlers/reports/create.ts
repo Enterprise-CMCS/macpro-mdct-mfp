@@ -194,7 +194,7 @@ export const createReport = handler(
       };
 
       extractFundingSourceProjections(
-        validatedFieldData,
+        validatedFieldData!,
         reportYear,
         reportPeriod
       );
