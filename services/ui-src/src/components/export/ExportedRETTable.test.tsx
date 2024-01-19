@@ -10,6 +10,7 @@ import {
 } from "./ExportedRETTable";
 //utils
 import { useStore } from "utils";
+import { notAnsweredText } from "../../constants";
 
 global.structuredClone = jest.fn((val) => {
   return JSON.parse(JSON.stringify(val));
@@ -61,15 +62,19 @@ const section = {
               id: "1234",
               children: [
                 {
-                  label: "mock child 1",
+                  id: "mock-child-1",
+                  props: { label: "Number of Older adults" },
                   type: "number",
-                  parentOptionId: "mock-child",
+                  validation: { parentOptionId: "1234" },
                 },
                 {
                   id: "mock-child-2",
-                  label: "mock child 2",
+                  props: {
+                    label:
+                      "Number of Individuals with physical disabilities (PD)",
+                  },
                   type: "number",
-                  parentOptionId: "mock-child",
+                  validation: { parentOptionId: "1234" },
                 },
               ],
             },
@@ -86,7 +91,6 @@ const mockSARReport = {
   report: {
     fieldData: {
       "mock-id-1": "3",
-      "mock-id-2": "",
       "mock-id-3": "4",
       "mock-id-4": "6",
       "ret-tnamprp-1": 3,
@@ -194,6 +198,10 @@ describe("Test ExportedRETTable Component", () => {
     expect(table).toBeVisible();
     //check to see if table caption exist
     expect(screen.getByText(`${section.name} Table`)).toBeVisible();
+    //there should be 1 not answered in the table
+    expect(screen.queryAllByText(notAnsweredText)).toHaveLength(1);
+    //thead, Q3, Q4, other, total, target Q3, target Q4, target total, % total, a total of 9 rows should exist
+    expect(screen.queryAllByRole("row")).toHaveLength(9);
   });
 });
 describe("Test ExportedReportWrapper accessibility", () => {

@@ -65,7 +65,7 @@ export const generateTableBody = (rows: AnyObject, fieldData?: AnyObject) => {
     const matchRow: [] = rows[row[0]];
     const rowIds = matchRow.map((info: AnyObject) => info.id).flat();
     rowIds.forEach((id) => {
-      const rowValue = fieldData?.[id] ?? notAnsweredText;
+      const rowValue = !!fieldData?.[id] ? fieldData?.[id] : notAnsweredText;
       row.push(rowValue);
     });
   });
@@ -126,14 +126,17 @@ export const formatLabelForRET = (
 ) => {
   switch (formId) {
     case "ret-mtrp": {
-      const quarterLabel: AnyObject = {
-        "First quarter": "Q1",
-        "Second quarter": "Q2",
-        "Third quarter": "Q3",
-        "Fourth quarter": "Q4",
-      };
-      const quarter: string = label.split("(")[0].trim();
-      return `${report?.reportYear} ${quarterLabel[quarter]}`;
+      if (label.includes("quarter")) {
+        const quarterLabel: AnyObject = {
+          "First quarter": "Q1",
+          "Second quarter": "Q2",
+          "Third quarter": "Q3",
+          "Fourth quarter": "Q4",
+        };
+        const quarter: string = label.split("(")[0].trim();
+        return `${report?.reportYear} ${quarterLabel[quarter]}`;
+      }
+      break;
     }
     case "ret-mtfqi": {
       if (label.includes("("))

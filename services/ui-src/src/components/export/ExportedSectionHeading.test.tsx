@@ -33,7 +33,9 @@ const stateOrTerritoryVerbiage = {
   },
 };
 
-const exportedReportSectionHeadingComponent = (verbiage:ReportPageVerbiage) => {
+const exportedReportSectionHeadingComponent = (
+  verbiage: ReportPageVerbiage
+) => {
   return (
     <ReportContext.Provider value={mockWpReportContext}>
       <ExportedSectionHeading heading={heading} verbiage={verbiage} />
@@ -43,7 +45,9 @@ const exportedReportSectionHeadingComponent = (verbiage:ReportPageVerbiage) => {
 
 describe("ExportedSectionHeading renders", () => {
   test("ExportedSectionHeading renders", () => {
-    const { getByTestId } = render(exportedReportSectionHeadingComponent(verbiage));
+    const { getByTestId } = render(
+      exportedReportSectionHeadingComponent(verbiage)
+    );
     const sectionHeading = getByTestId("exportedSectionHeading");
     expect(sectionHeading).toBeVisible();
   });
@@ -72,7 +76,9 @@ describe("ExportedSectionHeading displays correct heading", () => {
 
 describe("Test ExportedSectionHeading accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
-    const { container } = render(exportedReportSectionHeadingComponent(verbiage));
+    const { container } = render(
+      exportedReportSectionHeadingComponent(verbiage)
+    );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
