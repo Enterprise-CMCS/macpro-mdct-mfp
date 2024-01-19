@@ -45,23 +45,6 @@ export const mockStateUserNoReports: UserContextShape = {
   getExpiration: () => {},
 };
 
-export const mockStateRep: UserContextShape = {
-  user: {
-    userRole: UserRoles.STATE_REP,
-    email: "staterep@test.com",
-    given_name: "Robert",
-    family_name: "States",
-    full_name: "Robert States",
-    state: "MA",
-    userIsEndUser: true,
-  },
-  showLocalLogins: true,
-  logout: async () => {},
-  loginWithIDM: () => {},
-  updateTimeout: async () => {},
-  getExpiration: () => {},
-};
-
 export const mockStateApprover: UserContextShape = {
   user: {
     userRole: UserRoles.APPROVER,

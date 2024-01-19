@@ -35,7 +35,25 @@ export async function getNewestTemplateVersion(reportType: ReportType) {
     ScanIndexForward: false, // true = ascending, false = descending
   };
   const result = await dynamodbLib.query(queryParams);
-  return result.Items?.[0];
+  return result?.Items?.[0];
+}
+
+export async function getTemplateVersionByHash(
+  reportType: ReportType,
+  hash: string
+) {
+  const queryParams: QueryInput = {
+    TableName: process.env.FORM_TEMPLATE_TABLE_NAME!,
+    IndexName: "HashIndex",
+    KeyConditionExpression: "reportType = :reportType AND md5Hash = :md5Hash",
+    Limit: 1,
+    ExpressionAttributeValues: {
+      ":md5Hash": hash as AttributeValue,
+      ":reportType": reportType as unknown as AttributeValue,
+    },
+  };
+  const result = await dynamodbLib.query(queryParams);
+  return result?.Items?.[0];
 }
 
 export const formTemplateForReportType = (reportType: ReportType) => {
@@ -159,7 +177,9 @@ export const targetPopulationsKeys = (
   reportPeriod: number,
   workPlanFieldData: AnyObject
 ): TargetPopulationKeys[] => {
-  var targetPopulations = workPlanFieldData?.targetPopulations;
+  var targetPopulations = removeNotApplicablePopulations(
+    workPlanFieldData?.targetPopulations
+  );
   const keys: TargetPopulationKeys[] = [];
   for (let population of targetPopulations) {
     const key: TargetPopulationKeys = {
@@ -172,6 +192,27 @@ export const targetPopulationsKeys = (
     keys.push(key);
   }
   return keys;
+};
+
+/**
+ * NOTE: This method is copied from /ui-src/src/utils/forms
+ *
+ * This function takes the target populations given from the form data and then filters out
+ * any population that a user has answered "No". It does this by looking for a child object
+ * called transitionBenchmarks_applicableToMfpDemonstration and seeing if it has a value of "No"
+ * @param {AnyObject[]} targetPopulations - targetPopulations that are in the formData
+ * @return {AnyObject[]} Target populations filtered to no long has No answers from
+ * transitionBenchmarks_applicableToMfpDemonstration
+ */
+export const removeNotApplicablePopulations = (
+  targetPopulations: AnyObject[]
+) => {
+  const filteredPopulations = targetPopulations?.filter((population) => {
+    const isApplicable =
+      population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value;
+    return isApplicable !== "No";
+  });
+  return filteredPopulations;
 };
 
 /**
@@ -376,50 +417,58 @@ export async function getOrCreateFormTemplate(
   reportType: ReportType,
   reportPeriod: number,
   reportYear: number,
-  workPlanFieldData?: AnyObject,
-  copyReport?: AnyObject
+  workPlanFieldData?: AnyObject
 ) {
   //Make a copy of the form template so we don't accidentally corrupt the original
   const currentFormTemplate = structuredClone(
     formTemplateForReportType(reportType)
   );
-  const stringifiedTemplate = JSON.stringify(currentFormTemplate);
 
-  const currentTemplateHash = createHash("md5")
-    .update(stringifiedTemplate)
-    .digest("hex");
-
-  const mostRecentTemplateVersion = await getNewestTemplateVersion(reportType);
-  const mostRecentTemplateVersionHash = mostRecentTemplateVersion?.md5Hash;
-
-  if (currentTemplateHash === mostRecentTemplateVersionHash && !copyReport) {
-    return {
-      formTemplate: await getTemplate(
-        reportBucket,
-        getFormTemplateKey(mostRecentTemplateVersion?.id)
-      ),
-      formTemplateVersion: mostRecentTemplateVersion,
-    };
-  } else {
-    const newFormTemplateId = KSUID.randomSync().string;
-
+  if (currentFormTemplate?.routes) {
     // traverse routes and scan for conditional field
     currentFormTemplate.routes = scanForConditionalRoutes(
       currentFormTemplate.routes,
       reportPeriod
     );
 
+    //transformation of the formTemplate to generate new quarters
     findAndRunFieldTransformationRules(
       currentFormTemplate.routes,
       reportPeriod,
       reportYear,
       workPlanFieldData
     );
+  }
+
+  const stringifiedTemplate = JSON.stringify(currentFormTemplate);
+
+  const currentTemplateHash = createHash("md5")
+    .update(stringifiedTemplate)
+    .digest("hex");
+
+  const matchTemplateVersion = await getTemplateVersionByHash(
+    reportType,
+    currentTemplateHash
+  );
+
+  //if a template of this hash already exist
+  if (currentTemplateHash === matchTemplateVersion?.md5Hash) {
+    return {
+      formTemplate: await getTemplate(
+        reportBucket,
+        getFormTemplateKey(matchTemplateVersion?.id)
+      ),
+      formTemplateVersion: matchTemplateVersion,
+    };
+  } else {
+    const newFormTemplateId = KSUID.randomSync().string;
 
     const formTemplateWithValidationJson = {
       ...currentFormTemplate,
       validationJson: getValidationFromFormTemplate(currentFormTemplate),
     };
+
+    //saving new version of the formTemplate to the database
     try {
       await s3Lib.put({
         Key: getFormTemplateKey(newFormTemplateId),
@@ -431,6 +480,11 @@ export async function getOrCreateFormTemplate(
       logger.error(err, "Error uploading new form template to S3");
       throw err;
     }
+
+    //getting the latest version so that if there isn't a match, we can use this to save to the next iteration
+    const mostRecentTemplateVersion = await getNewestTemplateVersion(
+      reportType
+    );
 
     // If we didn't find any form templates, start version at 1.
     const newFormTemplateVersionItem: FormTemplate = {
