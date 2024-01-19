@@ -614,21 +614,23 @@ describe("extractFundingSourceProjections", () => {
     extractFundingSourceProjections(sarFieldData, reportYear, reportPeriod);
 
     const initiative = sarFieldData.initiative[0];
-    expect(initiative).toHaveProperty(
-      "fundingSources_projected_2024Q1_fsA",
-      "50"
-    );
-    expect(initiative).toHaveProperty(
-      "fundingSources_projected_2024Q2_fsA",
-      "60"
-    );
-    expect(initiative).toHaveProperty(
-      "fundingSources_projected_2024Q1_fsB",
-      "70"
-    );
-    expect(initiative).toHaveProperty(
-      "fundingSources_projected_2024Q2_fsB",
-      "80"
-    );
+    expect(initiative).toEqual({
+      fundingSources: [
+        {
+          id: "fsA",
+          fundingSources_quarters2024Q1: "50",
+          fundingSources_quarters2024Q2: "60",
+        },
+        {
+          id: "fsB",
+          fundingSources_quarters2024Q1: "70",
+          fundingSources_quarters2024Q2: "80",
+        },
+      ],
+      fundingSources_projected_2024Q1_fsA: "50",
+      fundingSources_projected_2024Q2_fsA: "60",
+      fundingSources_projected_2024Q1_fsB: "70",
+      fundingSources_projected_2024Q2_fsB: "80",
+    });
   });
 });
