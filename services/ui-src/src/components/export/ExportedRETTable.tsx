@@ -65,7 +65,7 @@ export const generateTableBody = (rows: AnyObject, fieldData?: AnyObject) => {
     const matchRow: [] = rows[row[0]];
     const rowIds = matchRow.map((info: AnyObject) => info.id).flat();
     rowIds.forEach((id) => {
-      const rowValue = !!fieldData?.[id] ? fieldData?.[id] : notAnsweredText;
+      const rowValue = fieldData?.[id] || notAnsweredText;
       row.push(rowValue);
     });
   });
@@ -99,7 +99,7 @@ export const generateTableFooter = (
   });
 
   for (var i = 0; i < size; i++) {
-    footRow[0][i] = footRow[0][i] ?? "-";
+    footRow[0][i] = footRow[0][i] || "-";
   }
 
   return footRow;
