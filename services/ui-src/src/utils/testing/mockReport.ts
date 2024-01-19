@@ -194,6 +194,12 @@ export const mockReportsByState = [
   { ...mockWPFullReport, id: "mock-report-id-3" },
 ];
 
+export const mockSARReportsByState = [
+  { ...mockSARFullReport, id: "mock-report-id-1" },
+  { ...mockSARFullReport, id: "mock-report-id-2" },
+  { ...mockSARFullReport, id: "mock-report-id-3" },
+];
+
 export const mockReportMethods = {
   archiveReport: jest.fn(),
   releaseReport: jest.fn(),
@@ -218,6 +224,15 @@ export const mockWpReportContext = {
   report: mockWPFullReport,
   reportsByState: mockReportsByState,
   copyEligibleReportsByState: mockReportsByState,
+  errorMessage: "",
+  lastSavedTime: "2:00 PM",
+};
+
+export const mockSARReportContext = {
+  ...mockReportMethods,
+  report: mockSARFullReport,
+  reportsByState: mockSARReportsByState,
+  copyEligibleReportsByState: mockSARReportsByState,
   errorMessage: "",
   lastSavedTime: "2:00 PM",
 };

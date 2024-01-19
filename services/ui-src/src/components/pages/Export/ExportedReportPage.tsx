@@ -36,7 +36,6 @@ export const ExportedReportPage = () => {
 
   const exportVerbiage = exportVerbiageMap[reportType];
   const { metadata, reportPage } = exportVerbiage;
-
   return (
     <Box sx={sx.container}>
       {(report && routesToRender && (
