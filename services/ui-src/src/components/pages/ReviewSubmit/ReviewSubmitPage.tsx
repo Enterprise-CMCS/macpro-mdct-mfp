@@ -24,7 +24,8 @@ import { AlertTypes, AnyObject, ReportStatus } from "types";
 // utils
 import { parseCustomHtml, useStore, utcDateToReadableDate } from "utils";
 // verbiage
-import verbiage from "verbiage/pages/mfp/mfp-review-and-submit";
+import WPVerbiage from "verbiage/pages/wp/wp-review-and-submit";
+import SARVerbiage from "verbiage/pages/sar/sar-review-and-submit";
 // assets
 import checkIcon from "assets/icons/icon_check_circle.png";
 
@@ -52,7 +53,7 @@ export const ReviewSubmitPage = () => {
     id: reportId,
   };
 
-  const reviewVerbiage = verbiage;
+  const reviewVerbiage = reportType === "WP" ? WPVerbiage : SARVerbiage;
   const { alertBox } = reviewVerbiage;
 
   useEffect(() => {
@@ -204,8 +205,7 @@ export const SuccessMessageGenerator = (
   submissionDate?: number,
   submittedBy?: string
 ) => {
-  const fullReportType =
-    reportType === "WP" ? "Work Plan" : "Semi-Annual Progress Report";
+  const fullReportType = reportType === "WP" ? "Work Plan" : "SAR";
 
   if (submissionDate && submittedBy) {
     const readableDate = utcDateToReadableDate(submissionDate, "full");
@@ -353,6 +353,7 @@ const sx = {
   },
   alert: {
     marginBottom: "2rem",
+    marginRight: "2.5rem",
   },
   submitButton: {
     minHeight: "3rem",

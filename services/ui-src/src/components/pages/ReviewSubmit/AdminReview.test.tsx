@@ -10,7 +10,8 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
-import reviewVerbiage from "verbiage/pages/mfp/mfp-review-and-submit";
+import WPReviewVerbiage from "verbiage/pages/wp/wp-review-and-submit";
+import SARReviewVerbiage from "verbiage/pages/sar/sar-review-and-submit";
 import { AdminReview } from "./AdminReview";
 // types
 import { ReportStatus } from "types";
@@ -20,19 +21,21 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 mockLDFlags.setDefault({ pdfExport: false });
 
-const WpReviewSubmitPage = (
-  <RouterWrappedComponent>
-    <ReportContext.Provider value={mockReportMethods}>
-      <AdminReview
-        reviewVerbiage={reviewVerbiage}
-        submitting={false}
-        submitForm={() => {}}
-      />
-    </ReportContext.Provider>
-  </RouterWrappedComponent>
-);
+const ReviewSubmitPage = (verbiage: any) => {
+  return (
+    <RouterWrappedComponent>
+      <ReportContext.Provider value={mockReportMethods}>
+        <AdminReview
+          reviewVerbiage={verbiage}
+          submitting={false}
+          submitForm={() => {}}
+        />
+      </ReportContext.Provider>
+    </RouterWrappedComponent>
+  );
+};
 
-describe("MFP Review and Submit Page Functionality", () => {
+describe("MFP WP Review and Submit Page Functionality", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -43,8 +46,8 @@ describe("MFP Review and Submit Page Functionality", () => {
         ...mockUseStore,
         user: mockAdminUserStore,
       });
-      render(WpReviewSubmitPage);
-      const { review } = reviewVerbiage;
+      render(ReviewSubmitPage(WPReviewVerbiage));
+      const { review } = WPReviewVerbiage;
       const { adminInfo } = review;
       expect(screen.getByText(adminInfo.submitLink.text)).toBeVisible();
     });
@@ -53,12 +56,13 @@ describe("MFP Review and Submit Page Functionality", () => {
       mockedUseStore.mockReturnValue({
         ...mockUseStore,
         report: {
+          reportType: "WP",
           status: ReportStatus.IN_PROGRESS,
         },
         user: mockAdminUserStore,
       });
-      render(WpReviewSubmitPage);
-      const { review } = reviewVerbiage;
+      render(ReviewSubmitPage(WPReviewVerbiage));
+      const { review } = WPReviewVerbiage;
       const { adminInfo } = review;
       expect(screen.getByText(adminInfo.submitLink.text)).toBeDisabled();
     });
@@ -67,14 +71,67 @@ describe("MFP Review and Submit Page Functionality", () => {
       mockedUseStore.mockReturnValue({
         ...mockUseStore,
         report: {
+          reportType: "WP",
           status: ReportStatus.SUBMITTED,
         },
         user: mockAdminUserStore,
       });
-      render(WpReviewSubmitPage);
-      const { review } = reviewVerbiage;
+      render(ReviewSubmitPage(WPReviewVerbiage));
+      const { review } = WPReviewVerbiage;
       const { adminInfo } = review;
       expect(screen.getByText(adminInfo.submitLink.text)).toBeEnabled();
+    });
+  });
+});
+
+describe("MFP SAR Review and Submit Page Functionality", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe("Review and Submit Page - Admin View", () => {
+    test("Show admin view when admin user is logged in", () => {
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        report: {
+          reportType: "SAR",
+        },
+        user: mockAdminUserStore,
+      });
+      render(ReviewSubmitPage(SARReviewVerbiage));
+      const { review } = SARReviewVerbiage;
+      const { adminInfo } = review;
+      expect(screen.getByText(adminInfo.unlockLink.text)).toBeVisible();
+    });
+
+    test("Disable unlock and approve buttons when report is unlocked", () => {
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        report: {
+          reportType: "SAR",
+          status: ReportStatus.IN_PROGRESS,
+        },
+        user: mockAdminUserStore,
+      });
+      render(ReviewSubmitPage(SARReviewVerbiage));
+      const { review } = SARReviewVerbiage;
+      const { adminInfo } = review;
+      expect(screen.getByText(adminInfo.unlockLink.text)).toBeDisabled();
+    });
+
+    test("Enable unlock and approve buttons when report is locked", () => {
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        report: {
+          reportType: "SAR",
+          status: ReportStatus.SUBMITTED,
+        },
+        user: mockAdminUserStore,
+      });
+      render(ReviewSubmitPage(SARReviewVerbiage));
+      const { review } = SARReviewVerbiage;
+      const { adminInfo } = review;
+      expect(screen.getByText(adminInfo.unlockLink.text)).toBeEnabled();
     });
   });
 });

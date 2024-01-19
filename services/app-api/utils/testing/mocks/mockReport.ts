@@ -78,7 +78,7 @@ export const mockWPDynamoData = {
 };
 
 export const mockWPMetadata = {
-  submissionName: "New Jersey Work Plan 2023 - Period 2",
+  submissionName: "New Jersey MFP Work Plan 2023 - Period 2",
   dueDate: 1699496172798,
   formTemplateId: "wp-form-template",
   lastAlteredBy: "Anthony Soprano",

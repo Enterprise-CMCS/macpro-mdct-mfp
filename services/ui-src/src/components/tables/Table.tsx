@@ -15,6 +15,7 @@ import {
 import { sanitizeAndParseHtml } from "utils";
 // types
 import { AnyObject, TableContentShape } from "types";
+import { notAnsweredText } from "../../constants";
 
 export const Table = ({
   content,
@@ -62,7 +63,8 @@ export const Table = ({
                   key={cell + index}
                   sx={{
                     tableCell: border ? sx.tableCellBorder : sx.tableCell,
-                    color: cell == "Not Answered" ? "palette.error_darker" : "",
+                    color:
+                      cell == notAnsweredText ? "palette.error_darker" : "",
                   }}
                 >
                   {sanitizeAndParseHtml(cell)}
