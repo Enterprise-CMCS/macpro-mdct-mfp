@@ -127,7 +127,11 @@ export const EntityDetailsDashboardOverlay = ({
           </Table>
           <Box>
             <Flex sx={sx.buttonFlex}>
-              <Button onClick={closeEntityDetailsOverlay as MouseEventHandler}>
+              <Button
+                onClick={closeEntityDetailsOverlay as MouseEventHandler}
+                variant="none"
+                aria-label="Return to all initiatives"
+              >
                 Return to all initiatives
               </Button>
             </Flex>
