@@ -44,9 +44,8 @@ export const generateMainTable = (
 
 export const generateTableHeader = (rows: AnyObject, headerLabel: string) => {
   const row: AnyObject[] = Object.values(rows)[0];
-
   const columnHeaders = row
-    .map((keys) => formatHeaderForRET(keys.label))
+    .map((keys) => keys.label)
     .filter((keys) => {
       return keys;
     });
@@ -109,6 +108,8 @@ export const formatHeaderForRET = (label: string) => {
   if (label.includes("Other:")) return label.replace("Other:", "").trim();
 
   switch (label) {
+    case "Population":
+      return "Pop.";
     case "Number of Older adults":
       return "Older Adults";
     default: {
@@ -139,13 +140,16 @@ export const formatLabelForRET = (
       break;
     }
     case "ret-mtfqi": {
+      //ex. "I am (Label)" returns "Label"
       if (label.includes("("))
         return label.substring(label.indexOf("(") + 1, label.indexOf(")"));
       break;
     }
     case "ret-mtfqr": {
+      //ex. "I am (Label)" returns "I am"
       if (label.includes("(")) return label.split(" (")[0];
       else {
+        //specific string modifications
         if (label.includes("Group home")) return "Group home";
         else if (label === "Apartment in qualified assisted living")
           return "Apt. in qualified assisted living";
@@ -181,7 +185,7 @@ export const formatFooterForRET = (
         `quarterlyProjections${year}${period === 1 ? "Q1" : "Q3"}`,
         `quarterlyProjections${year}${period === 1 ? "Q2" : "Q4"}`,
       ];
-      //get the row values for this target transition
+      //get the row values for this target transition from WP targetPopulations, unique to ret-mtrp
       quarterIds.forEach((id: string) => {
         const quarterList = (fieldData?.targetPopulations as [])?.map(
           (target) => {
@@ -194,11 +198,12 @@ export const formatFooterForRET = (
           sumOfRow(quarterList),
         ]);
       });
-
+      //extra row added to sum the transition targets, only unique to ret-mtrp section
       const totalTranstionTargets = [
         "Total transition targets",
         ...sumOfTwoRows(rows[rows.length - 2], rows[rows.length - 1]),
       ];
+      //extra row added to get the percentage of targets, only unique to ret-mtrp section
       const perTargetsAchieved = [
         "% targets achieved",
         ...perOfTwoRows(rows[0], totalTranstionTargets),
@@ -273,13 +278,15 @@ export const ExportRETTable = ({ section }: Props) => {
 
   let rows: AnyObject = {};
   let currentRow = report?.reportYear + " Period " + report?.reportPeriod;
+  //setting up the data to generate the rows
   form?.fields?.forEach((field) => {
     if (field?.type === "sectionHeader") {
-      currentRow = field?.props?.content
-        ? formatLabelForRET(form?.id, field?.props?.content, report!)
-        : currentRow;
+      //the content in sectionHeader field types are used as row labels
+      currentRow = field?.props?.content || currentRow;
     } else if (field?.type === "checkbox") {
+      //get a list of all the selected checkboxes in this section
       const checkboxList = report?.fieldData[field.id] as [];
+      //strip out the nested values in the selected checkboxes, we need the ids to find the inputted values
       const childrens = checkboxList
         ?.map(
           (checkbox: AnyObject) =>
@@ -288,7 +295,7 @@ export const ExportRETTable = ({ section }: Props) => {
             )?.children
         )
         .flat();
-
+      //clean up the children value to a usable array for lookup
       const childIds = childrens?.map((child: AnyObject) => {
         return {
           label: child?.props?.label,
@@ -296,6 +303,7 @@ export const ExportRETTable = ({ section }: Props) => {
           parentId: child?.validation?.parentOptionId,
         };
       });
+      //generate the row with the correct checkedbox inputs
       checkboxList?.forEach((checkbox: AnyObject) => {
         const parentId = checkbox.key.split("-")[1];
         rows[formatLabelForRET(form?.id, checkbox.value, report!)] =
@@ -307,9 +315,19 @@ export const ExportRETTable = ({ section }: Props) => {
     }
   });
 
-  const fieldData = { ...report?.fieldData, formId: form?.id };
-  const table = generateMainTable(rows, fieldData, section.name);
+  const formattedFieldData = { ...report?.fieldData, formId: form?.id };
+  //generate the table
+  let table = generateMainTable(rows, formattedFieldData, section.name);
   formatFooterForRET(form?.id, report!, table.footRow!);
+  //copying the current table before label truncating; these are the desired aria-labels
+  const ariaOverride = structuredClone(table);
+  //truncating the table labels
+  table.headRow = table.headRow.map((label) => formatHeaderForRET(label));
+  table.bodyRows = table.bodyRows.map((rows) => {
+    rows[0] = formatLabelForRET(form?.id, rows[0], report!);
+    return rows;
+  });
+  //split the table if there are >= 3 Other columns
   const tables = truncateTable(table, 7);
 
   return (
@@ -317,7 +335,12 @@ export const ExportRETTable = ({ section }: Props) => {
       {tables &&
         tables.map((table, index) => {
           return (
-            <Table sx={sx.table} content={table} key={`table-${index}`}></Table>
+            <Table
+              sx={sx.table}
+              content={table}
+              key={`table-${index}`}
+              ariaOverride={ariaOverride}
+            ></Table>
           );
         })}
     </Box>
