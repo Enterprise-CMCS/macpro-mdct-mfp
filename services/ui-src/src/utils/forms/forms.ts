@@ -22,7 +22,10 @@ import {
 import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
 import { NumberField } from "components/fields/NumberField";
-import { SectionHeader } from "components/forms/FormLayoutElements";
+import {
+  SectionContent,
+  SectionHeader,
+} from "components/forms/FormLayoutElements";
 import { calculateNextQuarter } from "utils";
 import { notAnsweredText } from "../../constants";
 
@@ -47,6 +50,7 @@ export const formFieldFactory = (
     text: TextField,
     textarea: TextAreaField,
     sectionHeader: SectionHeader,
+    sectionContent: SectionContent,
   };
   fields = initializeChoiceListFields(fields);
   return fields.map((field) => {

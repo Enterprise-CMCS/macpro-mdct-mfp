@@ -13,6 +13,7 @@ import {
   WorkPlanFieldDataForTransforms,
 } from "../types";
 import {
+  extractFundingSourceProjections,
   iterateAllForms,
   runSARTransformations,
   transformFormTemplate,
@@ -274,7 +275,66 @@ describe("transformFormTemplate", () => {
     ]);
   });
 
-  // BEN TODO write a test for population applicability
+  it("should exclude populations that are not applicable to MFP", () => {
+    const formTemplate = {
+      routes: [
+        {
+          form: {
+            fields: [
+              {
+                id: "field1",
+                type: "text",
+                transformation: {
+                  rule: "targetPopulations",
+                },
+              },
+            ],
+          },
+        },
+      ],
+    } as ReportJson;
+    const fieldData = {
+      targetPopulations: [
+        {
+          isRequired: true,
+          transitionBenchmarks_targetPopulationName: "popA",
+          transitionBenchmarks_applicableToMfpDemonstration: [
+            {
+              key: "",
+              value: "Yes",
+            },
+          ],
+        },
+        {
+          isRequired: false,
+          transitionBenchmarks_targetPopulationName: "popB",
+          transitionBenchmarks_applicableToMfpDemonstration: [
+            {
+              key: "",
+              value: "No",
+            },
+          ],
+        },
+      ],
+    };
+
+    const reportPeriod = 1;
+    const reportYear = 2023;
+
+    transformFormTemplate(formTemplate, reportPeriod, reportYear, fieldData);
+
+    const fields = formTemplate.routes[0].form?.fields;
+    expect(fields).toHaveLength(1);
+    expect(fields).toEqual([
+      {
+        id: "field1_Period1_popA",
+        type: "text",
+        props: {
+          label: "Number of popA",
+        },
+      },
+    ]);
+  });
 
   it("should generate funding sources from wp", () => {
     const formTemplate = {
@@ -354,7 +414,7 @@ describe("transformFormTemplate", () => {
 
     const fields =
       formTemplate.routes[0]?.initiatives?.[0].entitySteps[0].form?.fields;
-    expect(fields).toHaveLength(5);
+    expect(fields).toHaveLength(6);
   });
 
   it("should throw for unrecognized transformations", () => {
@@ -524,6 +584,53 @@ describe("SAR transformations", () => {
           ],
         },
       ],
+    });
+  });
+});
+
+describe("extractFundingSourceProjections", () => {
+  it("Should move funding source data from the WP out to where the SAR can see it", () => {
+    const sarFieldData = {
+      initiative: [
+        {
+          fundingSources: [
+            {
+              id: "fsA",
+              fundingSources_quarters2024Q1: "50",
+              fundingSources_quarters2024Q2: "60",
+            },
+            {
+              id: "fsB",
+              fundingSources_quarters2024Q1: "70",
+              fundingSources_quarters2024Q2: "80",
+            },
+          ],
+        },
+      ],
+    };
+    const reportYear = 2024;
+    const reportPeriod = 1;
+
+    extractFundingSourceProjections(sarFieldData, reportYear, reportPeriod);
+
+    const initiative = sarFieldData.initiative[0];
+    expect(initiative).toEqual({
+      fundingSources: [
+        {
+          id: "fsA",
+          fundingSources_quarters2024Q1: "50",
+          fundingSources_quarters2024Q2: "60",
+        },
+        {
+          id: "fsB",
+          fundingSources_quarters2024Q1: "70",
+          fundingSources_quarters2024Q2: "80",
+        },
+      ],
+      fundingSources_projected_2024Q1_fsA: "50",
+      fundingSources_projected_2024Q2_fsA: "60",
+      fundingSources_projected_2024Q1_fsB: "70",
+      fundingSources_projected_2024Q2_fsB: "80",
     });
   });
 });
