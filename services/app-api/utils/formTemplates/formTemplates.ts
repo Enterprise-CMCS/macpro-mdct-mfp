@@ -258,7 +258,11 @@ export const compileValidationJsonFromRoutes = (
       for (let initiative of route.initiatives ?? []) {
         for (let step of initiative.entitySteps) {
           const stepForm = step.form || step.modalForm;
-          addValidationToAccumulator(stepForm);
+          if (stepForm) {
+            addValidationToAccumulator(stepForm);
+          } else {
+            //if (step.objectiveCards) {
+          }
         }
       }
     }

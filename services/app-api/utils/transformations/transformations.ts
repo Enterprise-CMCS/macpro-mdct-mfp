@@ -486,11 +486,13 @@ export const runSARTransformations = (
       if (step.stepType === "evaluationPlan") {
         step.objectiveCards = [];
         for (let workPlanObjective of workPlanInitiative.evaluationPlan) {
+          const templateObjectiveCard = structuredClone(
+            step.objectivecardTemplate
+          );
           step.objectiveCards.push({
-            ...step,
-            objectiveCards: undefined,
+            ...templateObjectiveCard,
             modalForm: {
-              ...step.modalForm,
+              ...templateObjectiveCard.modalForm,
               initiativeId: workPlanInitiative.id,
               objectiveId: workPlanObjective.id,
             },

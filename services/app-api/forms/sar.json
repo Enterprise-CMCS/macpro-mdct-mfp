@@ -1002,57 +1002,59 @@
             "transformation": {
               "rule": "objectives"
             },
-            "modalForm": {
-              "id": "stsiop-modal",
-              "fields": [
-                {
-                  "id": "objectivesProgress_performanceMeasuresIndicators",
-                  "type": "textarea",
-                  "validation": "text",
-                  "props": {
-                    "label": "Provide data on performance measures or indicators used for monitoring progress toward the objective during the current reporting period. Include progress toward milestones and key deliverables."
-                  }
-                },
-                {
-                  "id": "objectivesProgress_quantitative",
-                  "transformation": {
-                    "rule": "quantitativeQuarters"
-                  }
-                },
-                {
-                  "id": "objectivesProgress_deliverablesMet",
-                  "type": "radio",
-                  "validation": "radio",
-                  "props": {
-                    "label": "Were targets for performance measures and/or expected time frames for deliverables met?",
-                    "choices": [
-                      {
-                        "id": "2WaO1Jj3pyUN0j9KjeOqR",
-                        "label": "Yes"
-                      },
-                      {
-                        "id": "2WaO1K5umgZcZV4bAW5sPu",
-                        "label": "No",
-                        "children": [
-                          {
-                            "id": "objectivesProgress_deliverablesMet_otherText",
-                            "props": {
-                              "label": "Describe progress toward reaching the target/milestone during the reporting period. How close are you to meeting the target? How do you plan to address any obstacle(s) to meeting the target?"
-                            },
-                            "type": "textarea",
-                            "validation": {
-                              "type": "text",
-                              "parentFieldName": "objectivesProgress_deliverablesMet",
-                              "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
-                              "nested": true
+            "objectiveCardTemplate": {
+              "modalForm": {
+                "id": "stsiop-modal",
+                "fields": [
+                  {
+                    "id": "objectivesProgress_performanceMeasuresIndicators",
+                    "type": "textarea",
+                    "validation": "text",
+                    "props": {
+                      "label": "Provide data on performance measures or indicators used for monitoring progress toward the objective during the current reporting period. Include progress toward milestones and key deliverables."
+                    }
+                  },
+                  {
+                    "id": "objectivesProgress_quantitative",
+                    "transformation": {
+                      "rule": "quantitativeQuarters"
+                    }
+                  },
+                  {
+                    "id": "objectivesProgress_deliverablesMet",
+                    "type": "radio",
+                    "validation": "radio",
+                    "props": {
+                      "label": "Were targets for performance measures and/or expected time frames for deliverables met?",
+                      "choices": [
+                        {
+                          "id": "2WaO1Jj3pyUN0j9KjeOqR",
+                          "label": "Yes"
+                        },
+                        {
+                          "id": "2WaO1K5umgZcZV4bAW5sPu",
+                          "label": "No",
+                          "children": [
+                            {
+                              "id": "objectivesProgress_deliverablesMet_otherText",
+                              "props": {
+                                "label": "Describe progress toward reaching the target/milestone during the reporting period. How close are you to meeting the target? How do you plan to address any obstacle(s) to meeting the target?"
+                              },
+                              "type": "textarea",
+                              "validation": {
+                                "type": "text",
+                                "parentFieldName": "objectivesProgress_deliverablesMet",
+                                "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
+                                "nested": true
+                              }
                             }
-                          }
-                        ]
-                      }
-                    ]
+                          ]
+                        }
+                      ]
+                    }
                   }
-                }
-              ]
+                ]
+              }
             }
           },
           {

@@ -122,6 +122,7 @@ export interface OverlayModalPageShape extends ReportPageShapeBase {
   dashboard?: never;
   template?: never;
   initiatives?: never;
+  objectiveCards?: FormJson; // TODO CHANGE
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
@@ -136,6 +137,7 @@ export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   entitySteps?: never;
   template?: never;
   initiatives?: never;
+  objectiveCards?: FormJson; // TODO CHANGE
 }
 
 export interface EntityDetailsDashboardOverlayShape
