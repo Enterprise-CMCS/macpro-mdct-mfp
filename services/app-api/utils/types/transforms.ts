@@ -18,7 +18,7 @@ export type WorkPlanFieldDataForTransforms = {
 export type TargetPopulation = {
   transitionBenchmarks_applicableToMfpDemonstration: Choice[];
   transitionBenchmarks_targetPopulationName: string;
-  isRequired: boolean;
+  isRequired?: boolean;
 };
 
 export const isUsableForTransforms = (
@@ -53,7 +53,11 @@ export const isUsableForTransforms = (
     if (!Array.isArray(populations)) return false;
     for (let population of populations) {
       if (typeof population !== "object") return false;
-      if (typeof population.isRequired !== "boolean") return false;
+      if (
+        population.isRequired !== undefined &&
+        typeof population.isRequired !== "boolean"
+      )
+        return false;
       if (
         typeof population.transitionBenchmarks_targetPopulationName !== "string"
       )
