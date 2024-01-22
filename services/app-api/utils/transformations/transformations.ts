@@ -72,6 +72,11 @@ export function* iterateAllForms(
     if (route.entitySteps) {
       yield* iterateAllForms(route.entitySteps);
     }
+    if (route.objectiveCards) {
+      for (let objectiveCard of route.objectiveCards) {
+        if (objectiveCard.modalForm) yield objectiveCard.modalForm;
+      }
+    }
   }
 }
 

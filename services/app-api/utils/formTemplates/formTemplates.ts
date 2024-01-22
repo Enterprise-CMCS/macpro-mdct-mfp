@@ -261,7 +261,13 @@ export const compileValidationJsonFromRoutes = (
           if (stepForm) {
             addValidationToAccumulator(stepForm);
           } else {
-            //if (step.objectiveCards) {
+            if (step.objectiveCards) {
+              for (let objectiveCard of step.objectiveCards) {
+                if (objectiveCard.modalForm) {
+                  addValidationToAccumulator(objectiveCard.modalForm);
+                }
+              }
+            }
           }
         }
       }
