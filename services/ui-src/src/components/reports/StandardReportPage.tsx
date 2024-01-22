@@ -75,10 +75,10 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
     };
 
     if (
-      (report?.reportType === "SAR" && !report?.submissionCount) ||
-      (report?.status === ReportStatus.SUBMITTED &&
-        report?.submissionCount! === 1 &&
-        report.locked)
+      report?.reportType === "SAR" &&
+      (report?.submissionCount! === 0 ||
+        (report?.status === ReportStatus.SUBMITTED &&
+          report?.submissionCount! === 1))
     ) {
       return hideResubmissionField();
     } else {
