@@ -31,13 +31,13 @@ export const OverlayModalPage = ({
   const [selectedStepEntity, setSelectedStepEntity] = useState<
     EntityShape | undefined
   >(undefined);
+  const [selectedEntityIndex, setSelectedEntityIndex] = useState<number>(0);
 
   const entityType = selectedEntity!.type;
   const userDisabled = !editable || selectedEntity?.isInitiativeClosed;
-
   let modalForm = route.modalForm;
-  if(!modalForm){
-    modalForm = (route as any).objectiveCards[0].modalForm
+  if (!modalForm) {
+    modalForm = (route as any).objectiveCards[selectedEntityIndex].modalForm;
   }
 
   /**
@@ -55,6 +55,12 @@ export const OverlayModalPage = ({
     }
   }, [report]);
 
+  useEffect(() => {
+    if (!modalForm) {
+      modalForm = (route as any).objectiveCards[selectedEntityIndex].modalForm;
+    }
+  }, [selectedEntityIndex]);
+
   let reportFieldDataEntities =
     selectedEntity?.[stepType ? stepType : entityType] || [];
 
@@ -71,8 +77,9 @@ export const OverlayModalPage = ({
     onClose: addEditEntityModalOnCloseHandler,
   } = useDisclosure();
 
-  const openAddEditEntityModal = (entity?: EntityShape) => {
+  const openAddEditEntityModal = (entity?: EntityShape, index?: number) => {
     if (entity) setSelectedStepEntity(entity);
+    setSelectedEntityIndex(index!);
     addEditEntityModalOnOpenHandler();
   };
 
