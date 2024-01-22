@@ -177,7 +177,9 @@ export const targetPopulationsKeys = (
   reportPeriod: number,
   workPlanFieldData: AnyObject
 ): TargetPopulationKeys[] => {
-  var targetPopulations = workPlanFieldData?.targetPopulations;
+  var targetPopulations = removeNotApplicablePopulations(
+    workPlanFieldData?.targetPopulations
+  );
   const keys: TargetPopulationKeys[] = [];
   for (let population of targetPopulations) {
     const key: TargetPopulationKeys = {
@@ -190,6 +192,27 @@ export const targetPopulationsKeys = (
     keys.push(key);
   }
   return keys;
+};
+
+/**
+ * NOTE: This method is copied from /ui-src/src/utils/forms
+ *
+ * This function takes the target populations given from the form data and then filters out
+ * any population that a user has answered "No". It does this by looking for a child object
+ * called transitionBenchmarks_applicableToMfpDemonstration and seeing if it has a value of "No"
+ * @param {AnyObject[]} targetPopulations - targetPopulations that are in the formData
+ * @return {AnyObject[]} Target populations filtered to no long has No answers from
+ * transitionBenchmarks_applicableToMfpDemonstration
+ */
+export const removeNotApplicablePopulations = (
+  targetPopulations: AnyObject[]
+) => {
+  const filteredPopulations = targetPopulations?.filter((population) => {
+    const isApplicable =
+      population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value;
+    return isApplicable !== "No";
+  });
+  return filteredPopulations;
 };
 
 /**

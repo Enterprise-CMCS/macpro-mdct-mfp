@@ -38,8 +38,9 @@ import {
 } from "types";
 // utils
 import {
-  convertEntityToTargetPopulationChoice,
+  convertTargetPopulationsFromWPToSAREntity,
   parseCustomHtml,
+  removeNotApplicablePopulations,
   useBreakpoint,
   useStore,
 } from "utils";
@@ -188,8 +189,10 @@ export const DashboardPage = ({ reportType }: Props) => {
           associatedWorkPlan: workPlanToCopyFrom?.submissionName,
           stateOrTerritory: userState,
           reportPeriod: workPlanToCopyFrom?.reportPeriod,
-          populations: convertEntityToTargetPopulationChoice(
-            workPlanToCopyFrom?.fieldData?.targetPopulations
+          populations: convertTargetPopulationsFromWPToSAREntity(
+            removeNotApplicablePopulations(
+              workPlanToCopyFrom?.fieldData?.targetPopulations
+            )
           ),
         },
       };
