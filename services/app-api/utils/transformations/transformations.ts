@@ -114,8 +114,7 @@ export const transformFields = (
       `Work Plan Field Data is not structured as expected for SAR form template transformation`
     );
   }
-
-  return fields.flatMap((field) => {
+  return fields?.flatMap((field) => {
     if (!field.transformation?.rule) {
       // This field doesn't require any transformation.
       return field;
@@ -500,12 +499,12 @@ export const runSARTransformations = (
         step.objectiveCards = [];
         for (let workPlanObjective of workPlanInitiative.evaluationPlan) {
           const templateObjectiveCard = structuredClone(
-            step.objectivecardTemplate
+            step.objectiveCardTemplate
           );
           step.objectiveCards.push({
             ...templateObjectiveCard,
             modalForm: {
-              ...templateObjectiveCard.modalForm,
+              ...templateObjectiveCard?.modalForm,
               initiativeId: workPlanInitiative.id,
               objectiveId: workPlanObjective.id,
             },
