@@ -26,7 +26,7 @@ export const OverlayModalPage = ({
   closeEntityDetailsOverlay,
   route,
 }: Props) => {
-  const { verbiage, modalForm, stepType } = route;
+  const { verbiage, stepType } = route;
   const { report, selectedEntity, setSelectedEntity, editable } = useStore();
   const [selectedStepEntity, setSelectedStepEntity] = useState<
     EntityShape | undefined
@@ -34,6 +34,11 @@ export const OverlayModalPage = ({
 
   const entityType = selectedEntity!.type;
   const userDisabled = !editable || selectedEntity?.isInitiativeClosed;
+
+  let modalForm = route.modalForm;
+  if(!modalForm){
+    modalForm = (route as any).objectiveCards[0].modalForm
+  }
 
   /**
    * Any time the report is updated on this page,
