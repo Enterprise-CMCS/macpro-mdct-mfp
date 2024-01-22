@@ -143,10 +143,13 @@ export const getInitiativeDashboardStatus = (
   const stepType = formEntity.stepType;
 
   //pull fields from form type
-  const fields = formEntity.form
-    ? formEntity.form.fields
-    : formEntity.modalForm.fields;
+  const fields = formEntity?.form
+    ? formEntity?.form?.fields
+    : formEntity?.modalForm?.fields;
 
+  //if no data could be found, return false
+  if (!fields) return false;
+  
   //this step is to consolidate the code by converting entity into a loopable array if there's no array of stepType to loop through
   const entities = entity[stepType] ? (entity[stepType] as []) : [entity];
 
