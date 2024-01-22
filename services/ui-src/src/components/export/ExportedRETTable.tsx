@@ -169,7 +169,8 @@ export const formatLabelForRET = (
 export const formatFooterForRET = (
   formId: string,
   report: AnyObject,
-  rows: string[][]
+  rows: string[][],
+  header?: string[]
 ) => {
   const fieldData = report?.fieldData;
   const year = report?.reportYear;
@@ -185,13 +186,21 @@ export const formatFooterForRET = (
         `quarterlyProjections${year}${period === 1 ? "Q1" : "Q3"}`,
         `quarterlyProjections${year}${period === 1 ? "Q2" : "Q4"}`,
       ];
+      //filter the target population to only the ones that were selected
+      const filteredTargetPopulation = (
+        fieldData?.targetPopulations as []
+      )?.filter((target) => {
+        const targetLabel = target["transitionBenchmarks_targetPopulationName"];
+        const findLabel = header?.filter((label) => {
+          return label.includes(targetLabel);
+        });
+        return findLabel?.length || false;
+      });
       //get the row values for this target transition from WP targetPopulations, unique to ret-mtrp
       quarterIds.forEach((id: string) => {
-        const quarterList = (fieldData?.targetPopulations as [])?.map(
-          (target) => {
-            return target[id] ? target[id] : "-";
-          }
-        );
+        const quarterList = filteredTargetPopulation?.map((target) => {
+          return target[id] ? target[id] : "-";
+        });
         rows.push([
           `Transition targets ${year} ${id.split(year)[1]}`,
           ...quarterList,
@@ -318,7 +327,7 @@ export const ExportRETTable = ({ section }: Props) => {
   const formattedFieldData = { ...report?.fieldData, formId: form?.id };
   //generate the table
   let table = generateMainTable(rows, formattedFieldData, section.name);
-  formatFooterForRET(form?.id, report!, table.footRow!);
+  formatFooterForRET(form?.id, report!, table.footRow!, table.headRow!);
   //copying the current table before label truncating; these are the desired aria-labels
   const ariaOverride = structuredClone(table);
   //truncating the table labels
