@@ -627,7 +627,7 @@
               {
                 "id": "ret_otherReasons",
                 "type": "checkbox",
-                "validation": "checkbox",
+                "validation": "checkboxOptional",
                 "props": {
                   "label": "Other reasons",
                   "hint": "Check all that apply.",
