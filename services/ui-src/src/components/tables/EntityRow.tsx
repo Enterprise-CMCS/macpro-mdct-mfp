@@ -150,7 +150,7 @@ export const EntityRow = ({
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
-          {!isRequired && !isCopied && (
+          {!isRequired && !isCopied && openAddEditEntityModal && (
             <Button
               sx={sx.editNameButton}
               variant="none"
@@ -177,7 +177,7 @@ export const EntityRow = ({
               ? verbiage.readOnlyEntityDetailsButtonText
               : verbiage.enterEntityDetailsButtonText}
           </Button>
-          {!isRequired && !isCopied && (
+          {!isRequired && !isCopied && openDeleteEntityModal && (
             <Button
               sx={sx.deleteButton}
               data-testid="delete-entity"
@@ -198,8 +198,8 @@ interface Props {
   entityType?: string;
   formEntity?: EntityDetailsOverlayShape | OverlayModalPageShape;
   verbiage: AnyObject;
-  openAddEditEntityModal: Function;
-  openDeleteEntityModal: Function;
+  openAddEditEntityModal?: Function;
+  openDeleteEntityModal?: Function;
   openOverlayOrDrawer: Function;
   [key: string]: any;
 }

@@ -13,7 +13,6 @@ import {
 import {
   EntityShape,
   FormJson,
-  EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
   OverlayModalPageShape,
 } from "types";
@@ -25,14 +24,12 @@ export const EntityDetailsDashboardOverlay = ({
   closeEntityDetailsOverlay,
   dashboard,
   selectedEntity,
-  route,
+  entitySteps,
 }: Props) => {
   const [selectedStep, setSelectedStep] = useState<
     OverlayModalPageShape | EntityDetailsOverlayShape
   >();
   const [stepIsOpen, setIsEntityStepOpen] = useState<boolean>(false);
-
-  const { entitySteps } = route;
 
   // Open/Close overlay action methods
   const openEntityStepOverlay = (
@@ -148,7 +145,7 @@ interface Props {
   closeEntityDetailsOverlay?: Function;
   dashboard?: FormJson;
   selectedEntity?: EntityShape;
-  route: EntityDetailsDashboardOverlayShape;
+  entitySteps?: (OverlayModalPageShape | EntityDetailsOverlayShape)[];
 }
 
 const sx = {

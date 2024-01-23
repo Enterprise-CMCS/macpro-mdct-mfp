@@ -1,3 +1,5 @@
+import { PageTypes } from "../../types";
+
 export const mockFormField = {
   id: "mock-text-field",
   type: "text",
@@ -200,4 +202,43 @@ export const mockReviewSubmitPageJson = {
   name: "mock-route-3",
   path: "/mock/mock-review-and-submit",
   pageType: "reviewSubmit",
+};
+
+export const mockEntitySteps = [
+  {
+    stepName: "mock entity 1 1",
+    form: {
+      id: "mock-form-id",
+      fields: [mockFormField, mockNumberField],
+    },
+  },
+];
+
+export const mockInitiativesTemplate = {
+  dashboard: {
+    name: "mock dashboard",
+    mockVerbiageIntro,
+  },
+  entitySteps: mockEntitySteps,
+};
+
+export const mockDynamicModalOverlayForm = {
+  name: "mock dynamic modal overlay form",
+  path: "mock/dynamic",
+  pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
+  entityType: "initiative",
+  entityInfo: ["initiative_name", "initiative_wpTopic"],
+  verbiage: {
+    addEntityButtonText: "",
+    dashboardTitle: "",
+    countEntitiesInTitle: false,
+    tableHeader: "",
+    addEditModalHint: "",
+    emptyDashboardText: "",
+    intro: {
+      section: "",
+    },
+  },
+  template: mockInitiativesTemplate,
+  initiatives: [],
 };

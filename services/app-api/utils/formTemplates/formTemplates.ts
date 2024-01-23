@@ -8,21 +8,17 @@ import { logger } from "../logging";
 import {
   AnyObject,
   assertExhaustive,
-  EntityDetailsOverlayShape,
   FieldChoice,
   FormField,
+  FormJson,
   FormLayoutElement,
   FormTemplate,
-  ModalOverlayReportPageShape,
-  OverlayModalPageShape,
   ReportJson,
   ReportRoute,
   ReportType,
-  TargetPopulationKeys,
-  TwelveQuartersKeys,
 } from "../types";
 import { createHash } from "crypto";
-import { incrementQuarterAndYear } from "../time/time";
+import { transformFormTemplate } from "../transformations/transformations";
 
 export async function getNewestTemplateVersion(reportType: ReportType) {
   const queryParams: QueryInput = {
@@ -70,348 +66,6 @@ export const formTemplateForReportType = (reportType: ReportType) => {
   }
 };
 
-export const firstQuarterOfThePeriod = (
-  field: FormField,
-  reportPeriod: number
-) => {
-  const contentString =
-    reportPeriod == 1
-      ? "First quarter (January 1 - March 31)"
-      : "Third quarter (July 1 - September 30)";
-  const updatedFormField: FormField = {
-    id: `${field.id}`,
-    type: `${field.type}`,
-    props: {
-      content: contentString,
-    },
-  };
-  return [updatedFormField];
-};
-
-export const secondQuarterOfThePeriod = (
-  field: FormField,
-  reportPeriod: number
-) => {
-  const contentString =
-    reportPeriod == 1
-      ? "Second quarter (April 1 - June 30)"
-      : "Fourth quarter (October 1 - December 31)";
-  const updatedFormField: FormField = {
-    id: `${field.id}`,
-    type: `${field.type}`,
-    props: {
-      content: contentString,
-    },
-  };
-  return [updatedFormField];
-};
-
-/**
- * Gather all the information from the work plan and build out 12 quarters from today's today
- * @param {string} fieldId - The fieldID from the formField we're looking at
- * @param { number } reportPeriod - The current report period
- * @param { number } reportYear - The current report year
- * @return {TargetPopulationKeys[]} Returns 12 quarters information based on the workplan to help build out a new field
- */
-export const nextTwelveQuartersKeys = (
-  fieldId: string,
-  reportPeriod: number,
-  reportYear: number
-): TwelveQuartersKeys[] => {
-  let quarter = reportPeriod === 1 ? 1 : 3;
-  let year = reportYear;
-
-  const keys: TwelveQuartersKeys[] = [];
-  for (let i = 0; i < 12; i++) {
-    const key: TwelveQuartersKeys = {
-      fieldId: fieldId,
-      year: year,
-      quarter: quarter,
-    };
-    keys.push(key);
-    [quarter, year] = incrementQuarterAndYear(quarter, year);
-  }
-  return keys;
-};
-
-/**
- * Run the transformation "nextTwelveQuarters" on the field and returns 12 quarters based on todays date
- * @param {FormField} fieldToRepeat - The formFields you want to transform
- * @param { number } reportPeriod - The current report period
- * @param { number } reportYear - The current report year
- * @return {FormField[]} Returns 12 quarters as form fields
- */
-export const nextTwelveQuarters = (
-  fieldToRepeat: FormField,
-  reportPeriod: number,
-  reportYear: number
-) => {
-  var keys = nextTwelveQuartersKeys(fieldToRepeat.id, reportPeriod, reportYear);
-  const fieldsToAppend: FormField[] = [];
-  for (let key of keys) {
-    const formField: FormField = {
-      ...fieldToRepeat,
-      id: `${key.fieldId}${key.year}Q${key.quarter}`,
-      type: fieldToRepeat?.type,
-      validation: fieldToRepeat.validation,
-      transformation: { rule: "" },
-      props: {
-        ...fieldToRepeat?.props,
-        label: `${key.year} Q${key.quarter}`,
-      },
-    };
-    fieldsToAppend.push(formField);
-  }
-  return fieldsToAppend;
-};
-
-/**
- * Gather all the information from the work plan about how many target populations we need to create
- * @param {string} fieldId - The fieldID from the formField we're looking at
- * @param { number } reportPeriod - The current report period
- * @param {AnyObject} workPlanFieldData - fieldData that contains the target populations
- * @return {TargetPopulationKeys[]} Returns all the target populations from the work plan with important information to build out a new field
- */
-export const targetPopulationsKeys = (
-  fieldId: string,
-  reportPeriod: number,
-  workPlanFieldData: AnyObject
-): TargetPopulationKeys[] => {
-  var targetPopulations = removeNotApplicablePopulations(
-    workPlanFieldData?.targetPopulations
-  );
-  const keys: TargetPopulationKeys[] = [];
-  for (let population of targetPopulations) {
-    const key: TargetPopulationKeys = {
-      reportPeriod: reportPeriod,
-      fieldId: fieldId,
-      targetPopulationName:
-        population.transitionBenchmarks_targetPopulationName,
-      isRequired: population?.isRequired,
-    };
-    keys.push(key);
-  }
-  return keys;
-};
-
-/**
- * NOTE: This method is copied from /ui-src/src/utils/forms
- *
- * This function takes the target populations given from the form data and then filters out
- * any population that a user has answered "No". It does this by looking for a child object
- * called transitionBenchmarks_applicableToMfpDemonstration and seeing if it has a value of "No"
- * @param {AnyObject[]} targetPopulations - targetPopulations that are in the formData
- * @return {AnyObject[]} Target populations filtered to no long has No answers from
- * transitionBenchmarks_applicableToMfpDemonstration
- */
-export const removeNotApplicablePopulations = (
-  targetPopulations: AnyObject[]
-) => {
-  const filteredPopulations = targetPopulations?.filter((population) => {
-    const isApplicable =
-      population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value;
-    return isApplicable !== "No";
-  });
-  return filteredPopulations;
-};
-
-/**
- * Run the transformation "TargetPopulations" on the field and returns all the target populations from the work plan in its place
- * @param {FormField} formField - The formFields you want to transform
- * @param { number } reportPeriod - The current report period
- * @param { number } reportYear - The current report year
- * @param {AnyObject} workPlanFieldData - fieldData that contains the target populations
- * @return {FormField[]} Returns all the target populations from the work plan as form fields
- */
-export const targetPopulations = (
-  fieldToRepeat: FormField,
-  reportPeriod: number,
-  reportYear: number,
-  workPlanFieldData: AnyObject
-) => {
-  //Gather all the information from the work plan about how many target populations we need to create
-  var targetPopulationKeys = targetPopulationsKeys(
-    fieldToRepeat.id,
-    reportPeriod,
-    workPlanFieldData
-  );
-  const fieldsToAppend = [];
-
-  /*
-   * Run through all the target populations found in the WP and build out a field
-   * using the target population and the field information from the SAR
-   */
-  for (let population of targetPopulationKeys) {
-    const formField: FormField = {
-      ...fieldToRepeat,
-      id: `${fieldToRepeat.id}_Period${population.reportPeriod}_${population.targetPopulationName}`,
-      type: fieldToRepeat?.type,
-      validation: fieldToRepeat.validation,
-      transformation: { rule: "" },
-      props: {
-        ...fieldToRepeat?.props,
-        label:
-          population.isRequired === true
-            ? `Number of ${population.targetPopulationName}`
-            : `Other: ${population.targetPopulationName}`,
-      },
-    };
-    fieldsToAppend.push(formField);
-  }
-
-  return fieldsToAppend;
-};
-
-/**
- * Look through the formFields provided and run the transformation provided on that field.
- * @param {FormField[]} formFields - The formFields you want to transform
- * @param { number } reportPeriod - The current report period
- * @param { number } reportYear - The current report year
- * @param {AnyObject} workPlanFieldData - Optional fieldData that a transformation might need of
- * @return {FormField[]} Returns the formFields provided but with any transformation it finds run on them
- */
-
-export const runFieldTransformationRules = (
-  formFields: FormField[],
-  reportPeriod: number,
-  reportYear: number,
-  workPlanFieldData?: AnyObject
-) => {
-  //Create a map of all the possible transformations that can run on a field
-  const transformationRuleMap: AnyObject = {
-    nextTwelveQuarters: nextTwelveQuarters,
-    targetPopulations: targetPopulations,
-    firstQuarterOfThePeriod: firstQuarterOfThePeriod,
-    secondQuarterOfThePeriod: secondQuarterOfThePeriod,
-  };
-
-  const transformedFields: FormField[] = [];
-
-  formFields.forEach((field) => {
-    /*
-     * Some fields are a choicelists which can have their own form fields
-     * We need to recurse through and run any transformations on those as well!
-     */
-    const fieldChoices = field.props?.choices;
-    if (fieldChoices) {
-      fieldChoices.forEach((choice: FieldChoice) => {
-        // if given field choice has nested children
-        const nestedChildFields = choice.children;
-        if (nestedChildFields) {
-          choice.children = runFieldTransformationRules(
-            nestedChildFields,
-            reportPeriod,
-            reportYear,
-            workPlanFieldData
-          );
-        }
-      });
-    }
-
-    //If we find a transformation, run the rule provided with it, otherwise just pass it along
-    if (field?.transformation) {
-      const transformationRule =
-        transformationRuleMap[field.transformation.rule];
-      transformedFields.push(
-        ...transformationRule(
-          field,
-          reportPeriod,
-          reportYear,
-          workPlanFieldData
-        )
-      );
-    } else {
-      transformedFields.push(field);
-    }
-  });
-  return transformedFields;
-};
-
-/**
- * Look through the wp.json or sar.json and find in theres a transformation that needs run
- * on a field
- * @param { (ReportRoute | OverlayModalPageShape | EntityDetailsOverlayShape)[]} reportRoutes - A route containing a form object
- * @param { number } reportPeriod - The current report period
- * @param { number } reportYear - The current report year
- * @param { AnyObject } workPlanFieldData - Some transformations rely on Work plan fielddata, so pass it here if needed
- * @return This will modify whatever the reportRoute was that was given and perform any transformations it finds
- */
-export const findAndRunFieldTransformationRules = (
-  reportRoutes: (
-    | ReportRoute
-    | OverlayModalPageShape
-    | EntityDetailsOverlayShape
-  )[],
-  reportPeriod: number,
-  reportYear: number,
-  workPlanFieldData?: AnyObject
-) => {
-  for (let route of reportRoutes) {
-    if (route?.entitySteps)
-      findAndRunFieldTransformationRules(
-        route.entitySteps,
-        reportPeriod,
-        reportYear,
-        workPlanFieldData
-      );
-    if (route?.children)
-      findAndRunFieldTransformationRules(
-        route.children,
-        reportPeriod,
-        reportYear,
-        workPlanFieldData
-      );
-    if (route?.form?.fields)
-      route.form.fields = runFieldTransformationRules(
-        route.form.fields,
-        reportPeriod,
-        reportYear,
-        workPlanFieldData
-      );
-    if (route?.drawerForm?.fields)
-      route.drawerForm.fields = runFieldTransformationRules(
-        route.drawerForm.fields,
-        reportPeriod,
-        reportYear,
-        workPlanFieldData
-      );
-    if (route?.modalForm?.fields)
-      route.modalForm.fields = runFieldTransformationRules(
-        route.modalForm.fields,
-        reportPeriod,
-        reportYear,
-        workPlanFieldData
-      );
-  }
-};
-
-export const scanForConditionalRoutes = (
-  reportRoutes: ReportRoute[],
-  reportPeriod: number
-) => {
-  for (let route of reportRoutes) {
-    if (route?.entitySteps)
-      scanForConditionalRoutes(route.entitySteps, reportPeriod);
-    if (route?.children) scanForConditionalRoutes(route.children, reportPeriod);
-
-    // if route has a field that is to be conditionally rendered, conditionally keep in array
-    if (route?.conditionallyRender) {
-      // if a path has "showOnlyInPeriod2" attached as a rule, we only want to show in reporting period 2, and remove from the list of routes otherwise
-      if (
-        route.conditionallyRender === "showOnlyInPeriod2" &&
-        reportPeriod != 2
-      ) {
-        const index = reportRoutes.indexOf(route);
-        if (index > -1) {
-          reportRoutes.splice(index, 1);
-        }
-      }
-    }
-  }
-
-  return reportRoutes;
-};
-
 export async function getOrCreateFormTemplate(
   reportBucket: string,
   reportType: ReportType,
@@ -420,20 +74,13 @@ export async function getOrCreateFormTemplate(
   workPlanFieldData?: AnyObject
 ) {
   //Make a copy of the form template so we don't accidentally corrupt the original
-  const currentFormTemplate = structuredClone(
+  let currentFormTemplate = structuredClone(
     formTemplateForReportType(reportType)
   );
 
   if (currentFormTemplate?.routes) {
-    // traverse routes and scan for conditional field
-    currentFormTemplate.routes = scanForConditionalRoutes(
-      currentFormTemplate.routes,
-      reportPeriod
-    );
-
-    //transformation of the formTemplate to generate new quarters
-    findAndRunFieldTransformationRules(
-      currentFormTemplate.routes,
+    currentFormTemplate = transformFormTemplate(
+      currentFormTemplate,
       reportPeriod,
       reportYear,
       workPlanFieldData
@@ -575,10 +222,10 @@ export const compileValidationJsonFromRoutes = (
   routeArray: ReportRoute[]
 ): AnyObject => {
   const validationSchema: AnyObject = {};
-  const addValidationToAccumulator = (formFields: FormField[]) => {
+  const addValidationToAccumulator = (form: FormJson) => {
     Object.assign(
       validationSchema,
-      compileValidationJsonFromFields(formFields)
+      compileValidationJsonFromFields(form.fields.filter(isFieldElement))
     );
   };
   routeArray.forEach((route: ReportRoute) => {
@@ -586,35 +233,34 @@ export const compileValidationJsonFromRoutes = (
     if (
       (route.pageType === "modalDrawer" ||
         route.pageType === "modalOverlay" ||
-        route.pageType === "overlayModal") &&
+        route.pageType === "overlayModal" ||
+        route.pageType === "dynamicModalOverlay") &&
       route.entityType
     ) {
       Object.assign(validationSchema, { [route.entityType]: "objectArray" });
     }
-    // if standard form present, add validation to schema
-    const standardFormFields = route.form?.fields.filter(isFieldElement);
-    if (standardFormFields) addValidationToAccumulator(standardFormFields);
-    // if modal form present, add validation to schema
-    const modalFormFields = route.modalForm?.fields.filter(isFieldElement);
-    if (modalFormFields) addValidationToAccumulator(modalFormFields);
-    // if drawer form present, add validation to schema
-    const drawerFormFields = route.drawerForm?.fields.filter(isFieldElement);
-    if (drawerFormFields) addValidationToAccumulator(drawerFormFields);
-    if (route.pageType === "modalOverlay") {
-      const overlayFormFields = (
-        route as ModalOverlayReportPageShape
-      ).overlayForm?.fields.filter(isFieldElement);
-      if (overlayFormFields) addValidationToAccumulator(overlayFormFields);
+
+    for (let formType of ["form", "modalForm", "drawerForm"] as const) {
+      if (route[formType]) {
+        addValidationToAccumulator(route[formType]!);
+      }
     }
+
     // accumulate entity steps
-    if (route.dashboard?.pageType === "entityDetailsDashboardOverlay") {
-      route.entitySteps?.map(
-        (step: EntityDetailsOverlayShape | OverlayModalPageShape) => {
+    if (route.pageType === "modalOverlay") {
+      for (let step of route.entitySteps ?? []) {
+        const stepForm = step.form || step.modalForm;
+        addValidationToAccumulator(stepForm);
+      }
+    }
+
+    if (route.pageType === "dynamicModalOverlay") {
+      for (let initiative of route.initiatives ?? []) {
+        for (let step of initiative.entitySteps) {
           const stepForm = step.form || step.modalForm;
-          const entityStepFormFields = stepForm?.fields.filter(isFieldElement);
-          addValidationToAccumulator(entityStepFormFields);
+          addValidationToAccumulator(stepForm);
         }
-      );
+      }
     }
   });
   return validationSchema;
