@@ -11,6 +11,7 @@ import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
 import {
   AlertTypes,
+  AnyObject,
   EntityDetailsOverlayShape,
   EntityDetailsStepTypes,
   EntityShape,
@@ -127,6 +128,12 @@ export function renderModalOverlayTableBody(
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
   const isPdf = true;
+
+  let dynamicSection: AnyObject[];
+  if (section.pageType === "dynamicModalOverlay") {
+    dynamicSection = (section as AnyObject).initiatives;
+  }
+
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
@@ -201,7 +208,6 @@ export function renderModalOverlayTableBody(
                       </Box>
                     )
                   );
-                // TODO: Once we are tracking the close-out information step, we'll need to add it here
                 default:
                   return <></>;
               }
@@ -224,6 +230,23 @@ export function renderModalOverlayTableBody(
                 </Heading>
               </Td>
             </Tr>
+            {dynamicSection[idx].entitySteps.map((step: any, idx: number) => {
+              switch (step.stepType) {
+                case OverlayModalStepTypes.EVALUATION_PLAN:
+                  return (
+                    <Box key={idx}>
+                      <ExportedOverlayModalReportSection
+                        section={dynamicSection[idx] as OverlayModalPageShape}
+                        entity={entity}
+                        entityStep={step}
+                      />
+                    </Box>
+                  );
+                case "initiativeProgress":
+                default:
+                  return <></>;
+              }
+            })}
           </Box>
         );
       });

@@ -29,7 +29,7 @@ export const EntityStepCardBottomSection = ({ stepType, entity }: Props) => {
                 frames for deliverables met?
               </Text>
               <Text sx={sx.description}>
-                {entity?.objectivesProgress_deliverablesMet[0].value}
+                {entity?.objectivesProgress_deliverablesMet?.[0].value}
               </Text>
 
               {entity?.objectivesProgress_deliverablesMet_otherText && (

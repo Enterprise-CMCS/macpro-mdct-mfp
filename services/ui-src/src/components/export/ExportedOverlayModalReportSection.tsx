@@ -18,8 +18,9 @@ export const ExportedOverlayModalReportSection = ({
   entityStep,
 }: Props) => {
   const { emptyEntityMessage, dashboardTitle } = exportVerbiage;
-
-  const stepType = entityStep![0] as string;
+  const stepType = (entityStep as any)?.stepType
+    ? (entityStep as any)?.stepType
+    : (entityStep![0] as string);
   const entityCount = entity?.[stepType]?.length;
 
   return (
@@ -43,12 +44,12 @@ export const ExportedOverlayModalReportSection = ({
         return (
           <EntityStepCard
             key={entity.id}
-            entity={entity}
-            entityType={stepType}
+            entity={step}
             entityIndex={index}
+            entityTotal={entity?.[stepType].length}
+            stepType={stepType!}
             formattedEntityData={getFormattedEntityData(stepType, step)}
             verbiage={verbiage}
-            stepType={stepType!}
             printVersion
             hasBorder={true}
           />

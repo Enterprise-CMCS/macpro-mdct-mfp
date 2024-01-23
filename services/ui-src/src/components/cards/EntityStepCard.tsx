@@ -23,6 +23,7 @@ import { fillEmptyQuarters, useStore } from "utils";
 export const EntityStepCard = ({
   entity,
   entityIndex,
+  entityTotal,
   stepType,
   formattedEntityData,
   verbiage,
@@ -35,7 +36,7 @@ export const EntityStepCard = ({
   ...props
 }: Props) => {
   let entityCompleted = false;
-  const entitiesCount = `${entityIndex + 1} / ${entity[stepType]?.length}`;
+  const entitiesCount = `${entityIndex + 1} / ${entityTotal}`;
   const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
   switch (stepType) {
@@ -217,6 +218,7 @@ export const EntityStepCard = ({
 interface Props {
   entity: EntityShape;
   entityIndex: number;
+  entityTotal?: number;
   stepType: string;
   formattedEntityData: AnyObject;
   verbiage: AnyObject;
