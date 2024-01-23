@@ -3,7 +3,7 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 export const SectionHeader = ({ content, ...props }: SectionHeaderProps) => {
   const sx = {
     h3: {
-      marginTop: "4rem",
+      marginTop: "2rem",
     },
   };
   return (
