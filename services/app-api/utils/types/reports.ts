@@ -33,7 +33,6 @@ export type ReportRouteWithForm =
   | ModalOverlayReportPageShape
   | OverlayModalPageShape
   | EntityDetailsOverlayShape
-  | DynamicModalOverlayReportPageShape
   | DynamicModalOverlayReportPageShape;
 
 export interface ReportPageShapeBase extends ReportRouteBase {
