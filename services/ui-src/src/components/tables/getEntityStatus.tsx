@@ -1,6 +1,5 @@
 import { EntityStatuses } from "components";
 import {
-  EntityDetailsDashboardOverlayShape,
   EntityDetailsOverlayShape,
   EntityShape,
   FormJson,
@@ -9,6 +8,7 @@ import {
   ReportShape,
   OverlayModalTypes,
   isFieldElement,
+  DynamicModalOverlayReportPageShape,
 } from "types";
 import { AnyObject } from "yup/lib/types";
 
@@ -100,14 +100,33 @@ export const getInitiativeStatus = (
 ) => {
   if (entity?.isInitiativeClosed) return EntityStatuses.CLOSE;
 
-  // Direct pull of the initiative formTemplate json chunk
-  const reportRoute = report.formTemplate
-    .routes[3] as unknown as ModalOverlayReportPageShape;
+  let reportRoute:
+    | ModalOverlayReportPageShape
+    | DynamicModalOverlayReportPageShape;
 
-  //get the intiative report child
-  const reportChild: EntityDetailsDashboardOverlayShape = (
-    reportRoute?.children! as EntityDetailsOverlayShape[]
-  )?.find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
+  let reportChild;
+  switch (report.reportType) {
+    case "WP": {
+      // Direct pull of the initiative formTemplate json chunk
+      reportRoute = report.formTemplate
+        .routes[3] as ModalOverlayReportPageShape;
+      //get the intiative report child
+      reportChild = (
+        reportRoute?.children! as EntityDetailsOverlayShape[]
+      )?.find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
+      break;
+    }
+    case "SAR": {
+      // Direct pull of the initiative formTemplate json chunk
+      reportRoute = report.formTemplate
+        .routes[2] as DynamicModalOverlayReportPageShape;
+      //get the intiative report child by the entity's initiative_name
+      reportChild = (reportRoute as DynamicModalOverlayReportPageShape)[
+        "initiatives"
+      ].find((child) => child.name === entity.initiative_name);
+      break;
+    }
+  }
 
   if (reportChild?.entitySteps) {
     const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =
