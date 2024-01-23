@@ -142,21 +142,32 @@ export const getInitiativeDashboardStatus = (
 ) => {
   const stepType = formEntity.stepType;
 
-  //pull fields from form type
-  const fields = formEntity?.form
+  //check for form fields on the first layer
+  const formFields = formEntity?.form
     ? formEntity?.form?.fields
     : formEntity?.modalForm?.fields;
 
+  //check for form fields on the second layer
+  const objectiveCardFields = (
+    (formEntity as AnyObject)?.objectiveCards as []
+  )?.map((card: AnyObject) =>
+    card?.form ? card.form.fields : card.modalForm.fields
+  );
+
   //if no data could be found, return false
-  if (!fields) return false;
-  
+  if (!formFields && !objectiveCardFields) return false;
+
   //this step is to consolidate the code by converting entity into a loopable array if there's no array of stepType to loop through
   const entities = entity[stepType] ? (entity[stepType] as []) : [entity];
 
   if (entities.length > 0) {
     let isFilled = true;
 
-    entities.forEach((child: AnyObject) => {
+    entities.forEach((child: AnyObject, index: number) => {
+      let fields = objectiveCardFields
+        ? objectiveCardFields[index]
+        : formFields;
+
       //create an array to use as a lookup for fieldData
       const fieldKeyInReport = getValidationList(
         fields.filter(isFieldElement),
