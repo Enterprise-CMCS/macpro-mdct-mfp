@@ -24,8 +24,6 @@ import {
 } from "types";
 import { assertExhaustive } from "utils/other/typing";
 // verbiage
-import wpVerbiage from "verbiage/pages/wp/wp-export";
-import sarVerbiage from "verbiage/pages/sar/sar-export";
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
 import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
@@ -34,10 +32,6 @@ import finishedIcon from "assets/icons/icon_check_circle.png";
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
 
-const exportVerbiageMap: { [key in ReportType]: any } = {
-  WP: wpVerbiage,
-  SAR: sarVerbiage,
-};
 interface AlertVerbiage {
   [key: string]: { title: string; description: string };
 }
@@ -45,14 +39,6 @@ interface AlertVerbiage {
 export const ExportedModalOverlayReportSection = ({ section }: Props) => {
   const { report } = useStore() ?? {};
   const entityType = section.entityType;
-
-  const verbiage = exportVerbiageMap[report?.reportType as ReportType];
-
-  const { modalOverlayTableHeaders } = verbiage;
-
-  const headerLabels = Object!.values(
-    modalOverlayTableHeaders as Record<string, string>
-  );
 
   const showAlert =
     report && (alertVerbiage as AlertVerbiage)[entityType]
@@ -68,13 +54,7 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
           description={(alertVerbiage as AlertVerbiage)[entityType].description}
         />
       )}
-      <Table
-        sx={sx.root}
-        content={{
-          headRow: headerLabels,
-        }}
-        data-testid="exportTable"
-      >
+      <Table sx={sx.root} content={{}} data-testid="exportTable">
         {report?.fieldData[entityType] &&
           renderModalOverlayTableBody(
             section,

@@ -311,6 +311,28 @@ export const mockEntityDetailsOverlayJson = {
   entityType: "mock-entity-type",
 };
 
+export const mockEntityDetailsDashboardOverlayJson = {
+  verbiage: mockEntityDetailsOverlayVerbiage,
+  name: "mock name",
+  path: "/mock/mock-route-entity-dashboard-overlay",
+  entitySteps: [
+    {
+      name: "mock-route-entity-dashboard-overlay",
+      path: "/mock/mock-route-entity-dasboard-overlay",
+      pageType: "entityOverlay",
+      entityType: "mock entity type",
+      stepType: "mock step type",
+      stepName: "mock step name",
+      stepInfo: ["mock step info"],
+      hint: "Mock hint",
+      isRequired: "false",
+      verbiage: mockEntityDetailsOverlayVerbiage,
+      form: mockForm,
+      entities: [],
+    },
+  ],
+};
+
 export const mockOptionalFormField = {
   id: "mock-optional-text-field",
   type: "text",
