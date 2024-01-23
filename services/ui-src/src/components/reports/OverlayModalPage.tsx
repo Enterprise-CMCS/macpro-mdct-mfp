@@ -35,10 +35,11 @@ export const OverlayModalPage = ({
 
   const entityType = selectedEntity!.type;
   const userDisabled = !editable || selectedEntity?.isInitiativeClosed;
-  let modalForm = route.modalForm;
-  if (!modalForm) {
-    modalForm = (route as any).objectiveCards[selectedEntityIndex].modalForm;
-  }
+  const objectiveCards = (route as any).objectiveCards;
+
+  let modalForm = objectiveCards
+    ? objectiveCards[selectedEntityIndex].modalForm
+    : route.modalForm;
 
   /**
    * Any time the report is updated on this page,
@@ -56,9 +57,9 @@ export const OverlayModalPage = ({
   }, [report]);
 
   useEffect(() => {
-    if (!modalForm) {
-      modalForm = (route as any).objectiveCards[selectedEntityIndex].modalForm;
-    }
+    //only update if we're using objectiveCard Templates
+    if (objectiveCards)
+      modalForm = objectiveCards[selectedEntityIndex].modalForm;
   }, [selectedEntityIndex]);
 
   let reportFieldDataEntities =
