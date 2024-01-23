@@ -60,14 +60,17 @@ export function getEntityTableComponents(
   showHintText?: boolean,
   closed?: boolean
 ) {
-  const entityStepFields = entityStep.slice(3) as FormField[];
+  const title = (entityStep as any)?.name || (entityStep![1] as string);
+  const hint = (entityStep as any)?.hint || (entityStep![2] as string);
+  const entityStepFields =
+    (entityStep as any).form.fields || (entityStep?.slice(3) as FormField[]);
   const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
   return (
     <Box key={uuid()}>
       <Box>
         <Heading as="h4">
-          <Box sx={sx.stepName}>{entityStep[1]}</Box>
-          <Box sx={sx.stepHint}>{entityStep[2]}</Box>
+          <Box sx={sx.stepName}>{title}</Box>
+          <Box sx={sx.stepHint}>{hint}</Box>
         </Heading>
       </Box>
       {closed && (
@@ -117,8 +120,12 @@ export function renderEntityDetailTables(
       );
     }
     case ReportType.SAR:
-      throw new Error(
-        `The entity detail table for report type '${reportType}' have not been implemented.`
+      return getEntityTableComponents(
+        report!,
+        entity,
+        entityStep,
+        showHintText,
+        closed
       );
     default:
       assertExhaustive(reportType);

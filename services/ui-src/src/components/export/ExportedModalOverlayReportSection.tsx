@@ -138,8 +138,8 @@ export function renderModalOverlayTableBody(
     case ReportType.WP:
       return entities.map((entity, idx) => {
         return (
-          <Box sx={sx.container}>
-            <Tr key={idx}>
+          <Box sx={sx.container} key={`${reportType}${idx}`}>
+            <Tr>
               <Td sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -158,11 +158,12 @@ export function renderModalOverlayTableBody(
               </Td>
             </Tr>
             {/* Depending on what the entity step type is, render its corresponding component */}
-            {entitySteps.map((step, idx) => {
-              switch (step[0].toString()) {
+            {entitySteps.map((step, stepIdx) => {
+              const type = step[0].toString();
+              switch (type) {
                 case EntityDetailsStepTypes.DEFINE_INITIATIVE:
                   return (
-                    <Box key={idx}>
+                    <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedEntityDetailsOverlaySection
                         section={section as ModalOverlayReportPageShape}
                         entity={entity}
@@ -173,7 +174,7 @@ export function renderModalOverlayTableBody(
                   );
                 case OverlayModalStepTypes.EVALUATION_PLAN:
                   return (
-                    <Box key={idx}>
+                    <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
@@ -183,7 +184,7 @@ export function renderModalOverlayTableBody(
                   );
                 case OverlayModalStepTypes.FUNDING_SOURCES:
                   return (
-                    <Box key={idx}>
+                    <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
@@ -197,7 +198,7 @@ export function renderModalOverlayTableBody(
 
                   return (
                     entity?.isInitiativeClosed && (
-                      <Box key={idx}>
+                      <Box key={`${type}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={section as ModalOverlayReportPageShape}
                           entity={entity}
@@ -218,8 +219,15 @@ export function renderModalOverlayTableBody(
     case ReportType.SAR:
       return entities.map((entity, idx) => {
         return (
-          <Box sx={sx.container}>
-            <Tr key={idx}>
+          <Box sx={sx.container} key={`${reportType}${idx}`}>
+            <Tr>
+              <Td sx={sx.statusIcon}>
+                <EntityStatusIcon
+                  entity={entity}
+                  isPdf={isPdf}
+                  entityStatus={getInitiativeStatus(report, entity, isPdf)}
+                />
+              </Td>
               <Td>
                 <Heading sx={sx.heading} as="h2">
                   {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
@@ -230,23 +238,35 @@ export function renderModalOverlayTableBody(
                 </Heading>
               </Td>
             </Tr>
-            {dynamicSection[idx].entitySteps.map((step: any, idx: number) => {
-              switch (step.stepType) {
-                case OverlayModalStepTypes.EVALUATION_PLAN:
-                  return (
-                    <Box key={idx}>
-                      <ExportedOverlayModalReportSection
-                        section={dynamicSection[idx] as OverlayModalPageShape}
-                        entity={entity}
-                        entityStep={step}
-                      />
-                    </Box>
-                  );
-                case "initiativeProgress":
-                default:
-                  return <></>;
+            {dynamicSection[idx].entitySteps.map(
+              (step: any, stepIdx: number) => {
+                switch (step.stepType) {
+                  case OverlayModalStepTypes.EVALUATION_PLAN:
+                    return (
+                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                        <ExportedOverlayModalReportSection
+                          section={dynamicSection[idx] as OverlayModalPageShape}
+                          entity={entity}
+                          entityStep={step}
+                        />
+                      </Box>
+                    );
+                  case EntityDetailsStepTypes.INITIAVTIVE_PROGRESS:
+                    return (
+                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                        <ExportedEntityDetailsOverlaySection
+                          section={step}
+                          entity={entity}
+                          entityStep={step}
+                        />
+                      </Box>
+                    );
+                  default:
+                    console.log("Not found " + step.stepType);
+                    return <></>;
+                }
               }
-            })}
+            )}
           </Box>
         );
       });
