@@ -216,6 +216,7 @@ export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
   if (entity) {
     const fieldIds = form.fields
       .filter(isFieldElement)
+      .filter(isFieldElement)
       .map((field) => {
         // Some fields have validation: "foo", and some have validation: { type: "foo" }
         let validationType = (field as AnyObject)?.validation ?? "";
