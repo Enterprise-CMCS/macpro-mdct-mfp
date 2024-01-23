@@ -413,15 +413,6 @@ export const quantitativeQuarters = (
   delete fieldToRepeat.transformation;
 
   if (objectiveToUse?.evaluationPlan_includesTargets?.[0]?.value === "Yes") {
-    const objectivesHeader: FormField = {
-      id: `objectivesHeader-${objectiveToUse.id}}`,
-      type: "sectionHeader",
-      props: {
-        content: "Complete the following for quantitative targets:",
-      },
-    };
-    fieldsToAppend.push(objectivesHeader);
-
     const headingStringFirstQuarter =
       reportPeriod == 1
         ? "First quarter (January 1 - March 31)"
@@ -442,7 +433,10 @@ export const quantitativeQuarters = (
             quarterNumber == 1
               ? headingStringFirstQuarter
               : headingStringSecondQuarter,
-          label: "Complete the following for quantitative targets:",
+          label:
+            quarterNumber == 1
+              ? "Complete the following for quantitative targets:"
+              : "",
         },
       };
       fieldsToAppend.push(formFieldHeading);
