@@ -263,6 +263,7 @@ describe("Entity status utilities", () => {
 
     it("should check all steps for completeness", () => {
       const report = {
+        reportType: "WP",
         formTemplate: {
           routes: [
             {},
@@ -312,6 +313,7 @@ describe("Entity status utilities", () => {
 
   it("should ignore specified step types", () => {
     const report = {
+      reportType: "WP",
       formTemplate: {
         routes: [
           {},
@@ -373,6 +375,7 @@ describe("Entity status utilities", () => {
 
   it("should ignore the closeout step when evaluating for PDF", () => {
     const report = {
+      reportType: "WP",
       formTemplate: {
         routes: [
           {},
