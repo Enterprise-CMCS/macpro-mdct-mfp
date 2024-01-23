@@ -45,6 +45,7 @@ export const mockReportFieldData = {
   "mock-number-field": 0,
   entityType: [
     {
+      id: "mock-entity-id",
       name: "entity-name",
       entityType_one: "hello",
       transitionBenchmarks_targetPopulationName: "mock benchmark name",
