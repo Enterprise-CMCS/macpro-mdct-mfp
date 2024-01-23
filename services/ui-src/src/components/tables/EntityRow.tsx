@@ -155,6 +155,7 @@ export const EntityRow = ({
               sx={sx.editNameButton}
               variant="none"
               onClick={() => openAddEditEntityModal(entity)}
+              aria-label="edit button"
             >
               {!editable || isInitiativeClosed
                 ? verbiage.readOnlyEntityButtonText
@@ -170,6 +171,7 @@ export const EntityRow = ({
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
             disabled={entityStatus === EntityStatuses.DISABLED}
+            aria-label="edit button"
           >
             {!editable || isInitiativeClosed
               ? verbiage.readOnlyEntityDetailsButtonText
@@ -180,6 +182,7 @@ export const EntityRow = ({
               sx={sx.deleteButton}
               data-testid="delete-entity"
               onClick={() => openDeleteEntityModal(entity)}
+              aria-label="delete button"
             >
               <Image src={deleteIcon} alt="delete icon" boxSize="3x3" />
             </Button>
