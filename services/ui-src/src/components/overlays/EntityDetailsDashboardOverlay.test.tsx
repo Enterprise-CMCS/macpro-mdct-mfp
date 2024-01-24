@@ -26,10 +26,7 @@ const mockDashboard = {
 
 const entityDetailsDashboardOverlayComponent = (
   <RouterWrappedComponent>
-    <EntityDetailsDashboardOverlay
-      route={mockEntityDetailsDashboardOverlayJson}
-      dashboard={mockDashboard}
-    />
+    <EntityDetailsDashboardOverlay dashboard={mockDashboard} />
   </RouterWrappedComponent>
 );
 

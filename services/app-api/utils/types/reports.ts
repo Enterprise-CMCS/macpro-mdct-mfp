@@ -49,6 +49,7 @@ export interface StandardReportPageShape extends ReportPageShapeBase {
   entitySteps?: never;
   template?: never;
   initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface DrawerReportPageShape extends ReportPageShapeBase {
@@ -61,6 +62,7 @@ export interface DrawerReportPageShape extends ReportPageShapeBase {
   dashboard?: never;
   template?: never;
   initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
@@ -73,6 +75,7 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   dashboard?: never;
   template?: never;
   initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
@@ -87,6 +90,7 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   entitySteps?: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
   template?: never;
   initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface DynamicModalOverlayReportPageShape
@@ -106,6 +110,7 @@ export interface DynamicModalOverlayReportPageShape
     dashboard: FormJson;
     entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
   }[];
+  objectiveCards?: never;
   /** Only used during form template transformation; will be absent after transformation */
   template?: AnyObject;
 }
@@ -122,6 +127,9 @@ export interface OverlayModalPageShape extends ReportPageShapeBase {
   dashboard?: never;
   template?: never;
   initiatives?: never;
+  objectiveCards?: {
+    modalForm?: FormJson;
+  }[];
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
@@ -136,6 +144,9 @@ export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   entitySteps?: never;
   template?: never;
   initiatives?: never;
+  objectiveCards?: {
+    modalForm?: FormJson;
+  }[];
 }
 
 export interface EntityDetailsDashboardOverlayShape
@@ -143,6 +154,7 @@ export interface EntityDetailsDashboardOverlayShape
   dashboard?: never;
   template?: never;
   initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
@@ -157,6 +169,7 @@ export interface ReportRouteWithoutForm extends ReportRouteBase {
   dashboard?: never;
   template?: never;
   initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface ReportPageVerbiage {
