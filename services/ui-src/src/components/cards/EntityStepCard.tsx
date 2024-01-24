@@ -84,7 +84,7 @@ export const EntityStepCard = ({
           size="sm"
           sx={sx.editButton}
           leftIcon={<Image src={editIcon} alt="edit icon" height="1rem" />}
-          onClick={() => openAddEditEntityModal(entity, entityIndex)}
+          onClick={() => openAddEditEntityModal(entity)}
         >
           {props?.disabled
             ? verbiage.readOnlyEntityButtonText
@@ -101,7 +101,7 @@ export const EntityStepCard = ({
           data-testid="report-button"
           size="md"
           sx={sx.reportButton}
-          onClick={() => openAddEditEntityModal(entity, entityIndex)}
+          onClick={() => openAddEditEntityModal(entity)}
         >
           {verbiage.reportProgressButtonText}
         </Button>

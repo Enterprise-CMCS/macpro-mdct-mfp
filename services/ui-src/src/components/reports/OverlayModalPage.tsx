@@ -31,15 +31,23 @@ export const OverlayModalPage = ({
   const [selectedStepEntity, setSelectedStepEntity] = useState<
     EntityShape | undefined
   >(undefined);
-  const [selectedEntityIndex, setSelectedEntityIndex] = useState<number>(0);
-
   const entityType = selectedEntity!.type;
   const userDisabled = !editable || selectedEntity?.isInitiativeClosed;
-  const objectiveCards = (route as any).objectiveCards;
+  const objectiveCards: any[] = (route as any).objectiveCards;
 
-  let modalForm = objectiveCards
-    ? objectiveCards[selectedEntityIndex].modalForm
-    : route.modalForm;
+  const getModalForm = () => {
+    let card = route?.modalForm;
+    if (objectiveCards) {
+      const objectiveForm = objectiveCards.find(
+        (card) => card?.modalForm?.objectiveId === selectedStepEntity?.id
+      )?.modalForm;
+      //use found form or use the first objective card form if no form is found
+      card = objectiveForm || objectiveCards[0]?.modalForm;
+    }
+    return card;
+  };
+
+  let modalForm = getModalForm();
 
   /**
    * Any time the report is updated on this page,
@@ -55,12 +63,6 @@ export const OverlayModalPage = ({
       );
     }
   }, [report]);
-
-  useEffect(() => {
-    //only update if we're using objectiveCard Templates
-    if (objectiveCards)
-      modalForm = objectiveCards[selectedEntityIndex].modalForm;
-  }, [selectedEntityIndex]);
 
   let reportFieldDataEntities =
     selectedEntity?.[stepType ? stepType : entityType] || [];
@@ -78,9 +80,8 @@ export const OverlayModalPage = ({
     onClose: addEditEntityModalOnCloseHandler,
   } = useDisclosure();
 
-  const openAddEditEntityModal = (entity?: EntityShape, index?: number) => {
+  const openAddEditEntityModal = (entity?: EntityShape) => {
     if (entity) setSelectedStepEntity(entity);
-    setSelectedEntityIndex(index!);
     addEditEntityModalOnOpenHandler();
   };
 
