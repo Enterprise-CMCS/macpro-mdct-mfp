@@ -411,6 +411,7 @@ export const quantitativeQuarters = (
   );
 
   delete fieldToRepeat.transformation;
+  delete fieldToRepeat.objectiveCardTemplate;
 
   if (objectiveToUse?.evaluationPlan_includesTargets?.[0]?.value === "Yes") {
     const headingStringFirstQuarter =

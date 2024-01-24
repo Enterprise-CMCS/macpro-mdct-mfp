@@ -70,6 +70,7 @@ export interface FormField {
   choices?: FieldChoice[];
   repeat?: string;
   transformation?: Transformation;
+  objectiveCardTemplate?: AnyObject;
   isRequired?: boolean;
 }
 
