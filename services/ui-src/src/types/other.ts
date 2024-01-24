@@ -36,6 +36,7 @@ export enum EntityDetailsStepTypes {
   DEFINE_INITIATIVE = "defineInitiative",
   CLOSE_OUT_INFORMATION = "closeOutInformation",
   INITIAVTIVE_PROGRESS = "initiativeProgress",
+  EXPENDITURES = "expenditures",
 }
 
 export enum OverlayModalStepTypes {

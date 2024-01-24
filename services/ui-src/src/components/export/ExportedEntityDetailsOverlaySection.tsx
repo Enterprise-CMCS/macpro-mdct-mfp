@@ -63,7 +63,7 @@ export function getEntityTableComponents(
   const title = (entityStep as any)?.name || (entityStep![1] as string);
   const hint = (entityStep as any)?.hint || (entityStep![2] as string);
   const entityStepFields =
-    (entityStep as any).form.fields || (entityStep?.slice(3) as FormField[]);
+    (entityStep as any)?.form?.fields || (entityStep?.slice(3) as FormField[]);
   const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
   return (
     <Box key={uuid()}>

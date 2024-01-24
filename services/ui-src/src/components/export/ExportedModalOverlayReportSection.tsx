@@ -261,8 +261,17 @@ export function renderModalOverlayTableBody(
                         />
                       </Box>
                     );
+                  case EntityDetailsStepTypes.EXPENDITURES:
+                    return (
+                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                        <ExportedEntityDetailsOverlaySection
+                          section={step}
+                          entity={entity}
+                          entityStep={step}
+                        />
+                      </Box>
+                    );
                   default:
-                    console.log("Not found " + step.stepType);
                     return <></>;
                 }
               }
