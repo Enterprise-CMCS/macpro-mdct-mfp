@@ -22,6 +22,7 @@ export const Table = ({
   variant,
   border,
   sxOverride,
+  ariaOverride,
   children,
   ...props
 }: Props) => {
@@ -44,6 +45,7 @@ export const Table = ({
                 key={index}
                 scope="col"
                 sx={{ ...sx.tableHeader, ...sxOverride }}
+                aria-label={ariaOverride?.headRow?.[index]}
               >
                 {sanitizeAndParseHtml(headerCell)}
               </Th>
@@ -58,14 +60,15 @@ export const Table = ({
         {content.bodyRows &&
           content.bodyRows!.map((row: string[], index: number) => (
             <Tr key={row[0] + index}>
-              {row.map((cell: string, index: number) => (
+              {row.map((cell: string, rowIndex: number) => (
                 <Td
-                  key={cell + index}
+                  key={cell + rowIndex}
                   sx={{
                     tableCell: border ? sx.tableCellBorder : sx.tableCell,
                     color:
                       cell == notAnsweredText ? "palette.error_darker" : "",
                   }}
+                  aria-label={ariaOverride?.bodyRows?.[index][rowIndex]}
                 >
                   {sanitizeAndParseHtml(cell)}
                 </Td>
@@ -74,11 +77,25 @@ export const Table = ({
           ))}
       </Tbody>
       <Tfoot>
-        {content.footRow?.map((headerCell: string, index: number) => (
-          <Th key={index} scope="col" sx={{ ...sx.tableHeader, ...sxOverride }}>
-            {sanitizeAndParseHtml(headerCell)}
-          </Th>
-        ))}
+        {content.footRow &&
+          content.footRow?.map((row: string[], index: number) => {
+            return (
+              <Tr key={row[0] + index}>
+                {row.map((headerCell: string, rowIndex: number) => {
+                  return (
+                    <Th
+                      key={rowIndex}
+                      scope="col"
+                      sx={{ ...sx.tableHeader, ...sxOverride }}
+                      aria-label={ariaOverride?.footRow?.[index][rowIndex]}
+                    >
+                      {sanitizeAndParseHtml(headerCell)}
+                    </Th>
+                  );
+                })}
+              </Tr>
+            );
+          })}
       </Tfoot>
     </TableRoot>
   );
@@ -89,6 +106,7 @@ interface Props {
   variant?: string;
   border?: boolean;
   sxOverride?: AnyObject;
+  ariaOverride?: TableContentShape;
   children?: ReactNode;
   [key: string]: any;
 }

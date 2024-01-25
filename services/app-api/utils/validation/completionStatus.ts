@@ -155,7 +155,8 @@ export const calculateCompletionStatus = async (
       for (var entityFields of fieldData[entityType]) {
         //modal overlay pages should have an array of key stepType in fieldData, automatic false if it doesn't exist or array is empty
         if (
-          stepForm.pageType === "overlayModal" &&
+          (stepForm.pageType === "overlayModal" ||
+            stepForm.pageType === "dynamicModalOverlay") &&
           (!entityFields[stepForm.stepType] ||
             entityFields[stepForm.stepType].length <= 0)
         ) {
@@ -182,6 +183,21 @@ export const calculateCompletionStatus = async (
       }
     }
 
+    return areAllFormsComplete;
+  };
+
+  const calculateDynamicModalOverlayCompletion = async (
+    initiatives: any[],
+    entityType: string
+  ) => {
+    var areAllFormsComplete = true;
+
+    for (let initiative of initiatives) {
+      if (!calculateEntityWithStepsCompletion(initiative, entityType)) {
+        areAllFormsComplete = false;
+        break;
+      }
+    }
     return areAllFormsComplete;
   };
 
@@ -231,6 +247,15 @@ export const calculateCompletionStatus = async (
             ),
           };
         }
+        break;
+      case "dynamicModalOverlay":
+        if (!route.initiatives) break;
+        routeCompletion = {
+          [route.path]: await calculateDynamicModalOverlayCompletion(
+            route.initiatives as [],
+            route.entityType
+          ),
+        };
         break;
       case "reviewSubmit":
         // Don't evaluate the review and submit page

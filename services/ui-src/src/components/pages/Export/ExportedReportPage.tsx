@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 // utils
-import { useStore } from "utils";
+import { useStore, displayLongformPeriod } from "utils";
 import { assertExhaustive } from "utils/other/typing";
 // components
 import { Box, Center, Heading, Spinner } from "@chakra-ui/react";
@@ -36,7 +36,6 @@ export const ExportedReportPage = () => {
 
   const exportVerbiage = exportVerbiageMap[reportType];
   const { metadata, reportPage } = exportVerbiage;
-
   return (
     <Box sx={sx.container}>
       {(report && routesToRender && (
@@ -58,7 +57,11 @@ export const ExportedReportPage = () => {
             verbiage={reportPage}
           />
           {/* report sections */}
-          {renderReportSections(report.formTemplate.routes, report.reportType)}
+          {renderReportSections(
+            report.formTemplate.routes,
+            report.reportType,
+            report
+          )}
         </Box>
       )) || (
         <Center>
@@ -87,28 +90,60 @@ export const reportTitle = (
   }
 };
 
+export const formatSectionHeader = (report: ReportShape, header: string) => {
+  const newPeriod = `${displayLongformPeriod(
+    report.reportPeriod,
+    report.reportYear
+  )}`;
+  const newHeader = header?.replace(" reporting period", newPeriod);
+  return newHeader;
+};
+
 export const renderReportSections = (
   reportRoutes: ReportRoute[],
-  reportType: string
+  reportType: string,
+  report: ReportShape
 ) => {
   // recursively render sections
   const renderSection = (section: ReportRoute) => {
-    const childSections = section?.children;
+    //because R,E & T section needs numbers added, switch from shallow copy to deep copy
+    let childSections = structuredClone(section?.children);
+    const initatives =
+      section.name === "State- or Territory Specific Initiatives" &&
+      childSections;
+    const showGeneralInformation = !(
+      reportType === ReportType.WP && section.name === "General Information"
+    );
+    //adding numbers for R,E & T section
+    if (section.name === "Recruitment, Enrollment, and Transitions") {
+      childSections?.forEach((section, index) => {
+        if (section.verbiage?.intro?.subsection)
+          section.verbiage.intro.subsection = `${index + 1}. ${
+            section.verbiage?.intro?.subsection
+          }`;
+      });
+    }
+
     return (
       <Box key={section.path}>
-        {/* if section has children, recurse */}
-        {childSections?.map((child: ReportRoute) => renderSection(child))}
         {/* if section does not have children and has content to render, render it */}
-        {!childSections && (
+        {showGeneralInformation && !initatives && (
           <Box>
             <ExportedSectionHeading
-              heading={section.verbiage?.intro?.subsection || section.name}
+              heading={
+                formatSectionHeader(
+                  report,
+                  section.verbiage?.intro?.subsection!
+                ) || section.name
+              }
               reportType={reportType}
               verbiage={section.verbiage || undefined}
             />
             <ExportedReportWrapper section={section as ReportRouteWithForm} />
           </Box>
         )}
+        {/* if section has children, recurse */}
+        {childSections?.map((child: ReportRoute) => renderSection(child))}
       </Box>
     );
   };
