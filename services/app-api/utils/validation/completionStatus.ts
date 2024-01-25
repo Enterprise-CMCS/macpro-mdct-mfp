@@ -155,8 +155,7 @@ export const calculateCompletionStatus = async (
       for (var entityFields of fieldData[entityType]) {
         //modal overlay pages should have an array of key stepType in fieldData, automatic false if it doesn't exist or array is empty
         if (
-          (stepForm.pageType === "overlayModal" ||
-            stepForm.pageType === "dynamicModalOverlay") &&
+          stepForm.pageType === "overlayModal" &&
           (!entityFields[stepForm.stepType] ||
             entityFields[stepForm.stepType].length <= 0)
         ) {
@@ -170,6 +169,20 @@ export const calculateCompletionStatus = async (
             : [entityFields];
           //loop through all children that belong to that entity and validate the values
           for (var stepFields of entityFieldsList) {
+            if (stepForm?.objectiveCards) {
+              for (let card of stepForm.objectiveCards) {
+                if (card.modalForm) {
+                  const nestedFormTemplate = stepForm.form
+                    ? stepForm.form
+                    : stepForm.modalForm;
+                  const isEntityComplete = await calculateFormCompletion(
+                    nestedFormTemplate,
+                    stepFields
+                  );
+                  areAllFormsComplete &&= isEntityComplete;
+                }
+              }
+            }
             const nestedFormTemplate = stepForm.form
               ? stepForm.form
               : stepForm.modalForm;
@@ -190,10 +203,14 @@ export const calculateCompletionStatus = async (
     initiatives: any[],
     entityType: string
   ) => {
-    var areAllFormsComplete = true;
+    let areAllFormsComplete = true;
 
     for (let initiative of initiatives) {
-      if (!calculateEntityWithStepsCompletion(initiative, entityType)) {
+      const isComplete = await calculateEntityWithStepsCompletion(
+        initiative.entitySteps,
+        entityType
+      );
+      if (!isComplete) {
         areAllFormsComplete = false;
         break;
       }
