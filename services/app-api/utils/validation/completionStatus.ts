@@ -182,15 +182,16 @@ export const calculateCompletionStatus = async (
                   areAllFormsComplete &&= isEntityComplete;
                 }
               }
+            } else {
+              const nestedFormTemplate = stepForm.form
+                ? stepForm.form
+                : stepForm.modalForm;
+              const isEntityComplete = await calculateFormCompletion(
+                nestedFormTemplate,
+                stepFields
+              );
+              areAllFormsComplete &&= isEntityComplete;
             }
-            const nestedFormTemplate = stepForm.form
-              ? stepForm.form
-              : stepForm.modalForm;
-            const isEntityComplete = await calculateFormCompletion(
-              nestedFormTemplate,
-              stepFields
-            );
-            areAllFormsComplete &&= isEntityComplete;
           }
         }
       }
