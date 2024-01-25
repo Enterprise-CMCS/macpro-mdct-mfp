@@ -72,7 +72,6 @@ const formatColumns = (rows: AnyObject, type: string) => {
       const totalProjected: number | string =
         Number(col?.[2].value) + Number(col?.[3].value);
       col.map((data) => {
-        console.log(!isNaN(Number(data.value)));
         if (!isNaN(Number(data.value))) data.value = "$" + data.value;
         return data;
       });

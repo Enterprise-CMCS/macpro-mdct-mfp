@@ -3,6 +3,7 @@ import { AnyObject, ReportType } from "types";
 import { Text, Box } from "@chakra-ui/react";
 
 import { useStore } from "utils";
+import { notAnsweredText } from "../../constants";
 
 export const EntityStepCardBottomSection = ({ stepType, entity }: Props) => {
   const { report } = useStore() ?? {};
@@ -20,7 +21,8 @@ export const EntityStepCardBottomSection = ({ stepType, entity }: Props) => {
                 deliverables for current reporting period
               </Text>
               <Text sx={sx.description}>
-                {entity?.objectivesProgress_performanceMeasuresIndicators}
+                {entity?.objectivesProgress_performanceMeasuresIndicators ||
+                  notAnsweredText}
               </Text>
             </Box>
             <Box sx={sx.objectiveProgressBox}>
@@ -29,7 +31,8 @@ export const EntityStepCardBottomSection = ({ stepType, entity }: Props) => {
                 frames for deliverables met?
               </Text>
               <Text sx={sx.description}>
-                {entity?.objectivesProgress_deliverablesMet?.[0].value}
+                {entity?.objectivesProgress_deliverablesMet?.[0].value ||
+                  notAnsweredText}
               </Text>
 
               {entity?.objectivesProgress_deliverablesMet_otherText && (
@@ -41,7 +44,8 @@ export const EntityStepCardBottomSection = ({ stepType, entity }: Props) => {
                     meeting the target?
                   </Text>
                   <Text sx={sx.description}>
-                    {entity?.objectivesProgress_deliverablesMet_otherText}
+                    {entity?.objectivesProgress_deliverablesMet_otherText ||
+                      notAnsweredText}
                   </Text>
                 </>
               )}
