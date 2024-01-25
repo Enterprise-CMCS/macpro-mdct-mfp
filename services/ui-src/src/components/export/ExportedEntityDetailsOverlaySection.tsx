@@ -3,7 +3,10 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
 import uuid from "react-uuid";
 // components
-import { ExportedEntityDetailsTable, ExportEntityDetailsTable } from "components";
+import {
+  ExportedEntityDetailsTable,
+  ExportEntityDetailsTable,
+} from "components";
 // types
 import {
   EntityShape,
@@ -85,7 +88,13 @@ export function getEntityTableComponents(
           <Text fontSize={"sm"}>{entity.closedBy}</Text>
         </Box>
       )}
-      {tableSection && (<ExportEntityDetailsTable report={report} section={tableSection} entity={entity}/>)}
+      {tableSection && (
+        <ExportEntityDetailsTable
+          report={report}
+          section={tableSection}
+          entity={entity}
+        />
+      )}
       <Fragment>
         <ExportedEntityDetailsTable
           fields={updatedEntityStepFields as FormField[]}
