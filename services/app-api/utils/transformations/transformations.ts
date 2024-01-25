@@ -357,14 +357,14 @@ export const fundingSources = (
 
   return initiativeToUse.fundingSources.flatMap((fundingSource) => [
     {
-      id: `fundingSourceHeader-${randomUUID()}`,
+      id: `fundingSourcesHeader_${randomUUID()}`,
       type: "sectionHeader",
       props: {
         content: `${fundingSource.fundingSources_wpTopic[0].value}`,
       },
     },
     {
-      id: `sectionContent-${randomUUID()}`,
+      id: `fundingSourcesContent_${randomUUID()}`,
       type: "sectionContent",
       props: {
         content: "This funding source auto-populates from MFP Work Plan.",
@@ -372,7 +372,7 @@ export const fundingSources = (
     },
     ...quarters.flatMap((quarter) => [
       {
-        id: `fundingSources_actual_${reportYear}Q${quarter.number}_${fundingSource.id}`,
+        id: `fundingSources_actual_${reportYear}Q${quarter.number}`,
         type: "number",
         validation: "number",
         props: {
@@ -380,7 +380,7 @@ export const fundingSources = (
         },
       },
       {
-        id: `fundingSources_projected_${reportYear}Q${quarter.number}_${fundingSource.id}`,
+        id: `fundingSources_projected_${reportYear}Q${quarter.number}`,
         type: "number",
         validation: "number",
         props: {
@@ -558,7 +558,7 @@ export const extractFundingSourceProjections = (
     for (let fundingSource of initiative.fundingSources) {
       for (let quarter of quarters) {
         const wpFieldId = `fundingSources_quarters${reportYear}Q${quarter}`;
-        const sarFieldId = `fundingSources_projected_${reportYear}Q${quarter}_${fundingSource.id}`;
+        const sarFieldId = `fundingSources_projected_${reportYear}Q${quarter}`;
         initiative[sarFieldId] = fundingSource[wpFieldId];
       }
     }
