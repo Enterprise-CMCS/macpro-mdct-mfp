@@ -3,13 +3,14 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
 import uuid from "react-uuid";
 // components
-import { ExportedEntityDetailsTable } from "components";
+import { ExportedEntityDetailsTable, ExportEntityDetailsTable } from "components";
 // types
 import {
   EntityShape,
   FormField,
   FormLayoutElement,
   ModalOverlayReportPageShape,
+  ReportPageShapeBase,
   ReportShape,
   ReportType,
 } from "types";
@@ -33,7 +34,8 @@ export const ExportedEntityDetailsOverlaySection = ({
           entity ?? [],
           entityStep,
           props.showHintText,
-          closed
+          closed,
+          props.tableSection
         )}
     </Box>
   );
@@ -44,6 +46,7 @@ export interface ExportedEntityDetailsOverlaySectionProps {
   entity: EntityShape;
   entityStep: (string | FormLayoutElement | FormField)[];
   showHintText?: boolean;
+  tableSection?: ReportPageShapeBase;
   closed?: boolean;
 }
 
@@ -58,7 +61,8 @@ export function getEntityTableComponents(
   entity: EntityShape,
   entityStep: (string | FormLayoutElement | FormField)[],
   showHintText?: boolean,
-  closed?: boolean
+  closed?: boolean,
+  tableSection?: ReportPageShapeBase
 ) {
   const title = (entityStep as any)?.name || (entityStep![1] as string);
   const hint = (entityStep as any)?.hint || (entityStep![2] as string);
@@ -81,6 +85,7 @@ export function getEntityTableComponents(
           <Text fontSize={"sm"}>{entity.closedBy}</Text>
         </Box>
       )}
+      {tableSection && (<ExportEntityDetailsTable report={report} section={tableSection} entity={entity}/>)}
       <Fragment>
         <ExportedEntityDetailsTable
           fields={updatedEntityStepFields as FormField[]}
@@ -106,7 +111,8 @@ export function renderEntityDetailTables(
   entity: EntityShape,
   entityStep: (string | FormLayoutElement | FormField)[],
   showHintText?: boolean,
-  closed?: boolean
+  closed?: boolean,
+  tableSection?: ReportPageShapeBase
 ) {
   const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
@@ -125,7 +131,8 @@ export function renderEntityDetailTables(
         entity,
         entityStep,
         showHintText,
-        closed
+        closed,
+        tableSection
       );
     default:
       assertExhaustive(reportType);

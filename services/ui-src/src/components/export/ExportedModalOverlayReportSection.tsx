@@ -262,12 +262,23 @@ export function renderModalOverlayTableBody(
                       </Box>
                     );
                   case EntityDetailsStepTypes.EXPENDITURES:
+                    const cloneSection = structuredClone(step);
+                    if (cloneSection?.form?.fields)
+                      cloneSection.form.fields = [
+                        cloneSection.form.fields.pop(),
+                      ];
+
+                    const tableSection = structuredClone(step);
+                    if (tableSection?.form?.fields)
+                      tableSection.form.fields.pop();
+
                     return (
                       <Box key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={step}
                           entity={entity}
-                          entityStep={step}
+                          entityStep={cloneSection}
+                          tableSection={tableSection}
                         />
                       </Box>
                     );
