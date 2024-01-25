@@ -38,6 +38,16 @@ const textFieldComponent = (
   />
 );
 
+const textFieldComponentValidateOnRender = (
+  <TextField
+    name="testTextField"
+    label="test-label"
+    placeholder="test-placeholder"
+    data-testid="test-text-field"
+    validateOnRender={true}
+  />
+);
+
 describe("Test TextField component", () => {
   test("TextField is visible", () => {
     mockedUseStore.mockReturnValue(mockStateUserStore);
@@ -45,6 +55,16 @@ describe("Test TextField component", () => {
     render(textFieldComponent);
     const textField = screen.getByTestId("test-text-field");
     expect(textField).toBeVisible();
+    jest.clearAllMocks();
+  });
+});
+
+describe("Test TextField where validateOnRender is true", () => {
+  test("TextField is visible", () => {
+    mockedUseStore.mockReturnValue(mockStateUserStore);
+    mockGetValues("");
+    render(textFieldComponentValidateOnRender);
+    expect(mockRhfMethods.trigger).toHaveBeenCalled();
     jest.clearAllMocks();
   });
 });
