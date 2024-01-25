@@ -60,7 +60,7 @@ describe("Test TextField component", () => {
 });
 
 describe("Test TextField where validateOnRender is true", () => {
-  test("TextField is visible", () => {
+  test("validateOnRender triggers form.trigger", () => {
     mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues("");
     render(textFieldComponentValidateOnRender);
