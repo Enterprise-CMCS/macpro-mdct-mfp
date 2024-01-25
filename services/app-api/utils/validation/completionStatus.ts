@@ -172,9 +172,7 @@ export const calculateCompletionStatus = async (
             if (stepForm?.objectiveCards) {
               for (let card of stepForm.objectiveCards) {
                 if (card.modalForm) {
-                  const nestedFormTemplate = stepForm.form
-                    ? stepForm.form
-                    : stepForm.modalForm;
+                  const nestedFormTemplate = card.modalForm;
                   const isEntityComplete = await calculateFormCompletion(
                     nestedFormTemplate,
                     stepFields
