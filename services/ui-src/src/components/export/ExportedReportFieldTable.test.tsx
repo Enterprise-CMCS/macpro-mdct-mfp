@@ -5,6 +5,7 @@ import {
   mockFormField,
   mockNestedFormField,
   mockWpReportContext,
+  mockSARReportContext,
   mockStandardReportPageJson,
 } from "utils/testing/setupJest";
 import { ReportContext } from "components";
@@ -42,6 +43,7 @@ const mockStandardPageJson = {
     fields: reportJsonFields,
   },
 };
+
 const mockDrawerPageJson = {
   ...mockDrawerReportPageJson,
   drawerForm: { id: "drawer", fields: reportJsonFields },
@@ -94,6 +96,17 @@ const hintComponent = (
   </ReportContext.Provider>
 );
 
+const exportedStandardSarTableComponent = (
+  <ReportContext.Provider value={mockSARReportContext}>
+    <ExportedReportFieldTable section={mockStandardPageJson} />
+  </ReportContext.Provider>
+);
+
+jest.mock("./ExportedReportFieldTable", () => ({
+  ...jest.requireActual("./ExportedReportFieldTable"), // Use the actual implementation for other functions
+  getSectionFormFields: jest.fn(),
+}));
+
 describe("ExportedReportFieldRow", () => {
   test("Is present", async () => {
     render(exportedStandardTableComponent);
@@ -117,6 +130,10 @@ describe("ExportedReportFieldRow", () => {
     render(hintComponent);
     const hint = screen.queryByText(/Mock Hint Text/);
     expect(hint).toBeVisible();
+  });
+
+  test("Is SAR component present", async () => {
+    render(exportedStandardSarTableComponent);
   });
 });
 

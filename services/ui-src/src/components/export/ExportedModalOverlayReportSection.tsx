@@ -44,7 +44,6 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
     report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
       : false;
-
   return (
     <Box>
       {showAlert && (

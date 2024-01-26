@@ -18,10 +18,8 @@ export const ExportedOverlayModalReportSection = ({
   entityStep,
 }: Props) => {
   const { emptyEntityMessage, dashboardTitle } = exportVerbiage;
-
   const stepType = entityStep![0] as string;
   const entityCount = entity?.[stepType]?.length;
-
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
       <Heading as="h4">

@@ -112,6 +112,7 @@ const defaultMockProps = {
         stepType: EntityDetailsStepTypes.DEFINE_INITIATIVE,
         stepName: "mock step name",
         hint: "mock step hint",
+        entityType: "initiative",
         modalForm: {
           fields: [
             {

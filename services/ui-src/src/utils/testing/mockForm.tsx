@@ -344,11 +344,6 @@ export const mockOptionalFormField = {
   },
 };
 
-export const mockModalOverlayForm = {
-  id: "mock-modal-overlay-form-id",
-  fields: [mockFormField, mockNumberField, mockOptionalFormField],
-};
-
 export const mockModalOverlayReportPageVerbiage = {
   intro: mockVerbiageIntro,
   dashboardTitle: "Mock dashboard title",
@@ -366,6 +361,50 @@ export const mockModalOverlayReportPageVerbiage = {
   enterEntityDetailsButtonText: "Mock enter entity details button text",
 };
 
+export const mockModalOverlayForm = {
+  id: "mock-modal-overlay-form-id",
+  fields: [mockFormField, mockNumberField, mockOptionalFormField],
+};
+
+export const mockOverlayModalPageJson2 = {
+  name: "mock-route-2d",
+  path: "/mock/mock-route-2d",
+  pageType: "overlayModal",
+  entityType: "entityType",
+  entitySteps: [
+    {
+      entityType: "initiative",
+      hint: "Provide initiative description, including target populations and timeframe",
+      isRequired: true,
+      name: "State- or Territory Specific Initiatives: I. Define initiative",
+      pageType: "entityOverlay",
+      path: "/wp/state-and-territory-specific-initiatives/define-initiative",
+      stepInfo: ["stepName", "hint"],
+      stepName: "I. Define initiative",
+      stepType: "defineInitiative",
+      verbiage: mockModalOverlayReportPageVerbiage,
+      modalForm: mockModalForm,
+    },
+    {
+      entityType: "initiative",
+      hint: "Provide initiative description, including target populations and timeframe",
+      isRequired: true,
+      name: "State- or Territory Specific Initiatives: I. Define initiative",
+      pageType: "entityOverlay",
+      path: "/wp/state-and-territory-specific-initiatives/define-initiative",
+      stepInfo: ["stepName", "hint"],
+      stepName: "I. Define initiative",
+      stepType: "defineInitiative",
+      verbiage: mockModalOverlayReportPageVerbiage,
+      modalForm: mockModalForm,
+    },
+  ],
+  verbiage: mockModalOverlayReportPageVerbiage,
+  modalForm: mockModalForm,
+  entityInfo: ["initiative_name", "initiative_wpTopic"],
+  overlayForm: mockModalOverlayForm,
+};
+
 export const mockOverlayModalPageJson = {
   name: "mock-route-2d",
   path: "/mock/mock-route-2d",
@@ -379,6 +418,19 @@ export const mockOverlayModalPageJson = {
   hint: "Mock hint",
 };
 
+export const mockUnknownPageJson = {
+  name: "mock-route-2d",
+  path: "/mock/mock-route-2d",
+  pageType: "UNKNOWN_PAGE_TYPE",
+  entityType: "entityType",
+  verbiage: mockModalOverlayReportPageVerbiage,
+  modalForm: mockModalForm,
+  stepType: "mock-step",
+  stepName: "Mock step name",
+  stepInfo: ["name, hint"],
+  hint: "Mock hint",
+};
+
 export const mockModalOverlayReportPageJson = {
   name: "mock-route-2c",
   path: "/mock/mock-route-2c",
@@ -386,6 +438,19 @@ export const mockModalOverlayReportPageJson = {
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalOverlayForm,
+  overlayForm: mockModalOverlayForm,
+  entity: {},
+};
+
+export const mockOverlayModalReportPageJson = {
+  name: "mock-route-2c",
+  path: "/mock/mock-route-2c",
+  pageType: "overlayModal",
+  entityType: "entityType",
+  verbiage: mockModalOverlayReportPageVerbiage,
+  modalForm: mockModalOverlayForm,
+  overlayForm: mockModalOverlayForm,
+  entity: {},
 };
 
 export const mockDynamicModalOverlayReportPageJson = {
