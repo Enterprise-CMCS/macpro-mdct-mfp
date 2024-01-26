@@ -261,7 +261,7 @@ export function renderModalOverlayTableBody(
                         />
                       </Box>
                     );
-                  case EntityDetailsStepTypes.EXPENDITURES:
+                  case EntityDetailsStepTypes.EXPENDITURES: {
                     const cloneSection = structuredClone(step);
                     if (cloneSection?.form?.fields)
                       cloneSection.form.fields = [
@@ -282,6 +282,7 @@ export function renderModalOverlayTableBody(
                         />
                       </Box>
                     );
+                  }
                   default:
                     return <></>;
                 }

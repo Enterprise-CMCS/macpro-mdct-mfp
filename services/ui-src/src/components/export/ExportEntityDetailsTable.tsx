@@ -1,25 +1,13 @@
-import {
-  AnyObject,
-  EntityShape,
-  FormField,
-  ReportPageShapeBase,
-  ReportShape,
-} from "types";
-
+import { AnyObject, EntityShape, FormField, ReportShape } from "types";
 // components
 import { Box } from "@chakra-ui/react";
 import { Table } from "components";
-
 // utils
 import { notAnsweredText } from "../../constants";
 
-export const generateMainTable = (
-  rows: AnyObject,
-  fieldData?: AnyObject,
-  caption?: string
-) => {
+export const generateMainTable = (rows: AnyObject, caption?: string) => {
   const headerRow: string[] = generateTableHeader(rows, "Spending");
-  const bodyRows: string[][] = generateTableBody(rows, fieldData);
+  const bodyRows: string[][] = generateTableBody(rows);
   const footRow: string[][] = [];
 
   const table = {
@@ -42,7 +30,7 @@ export const generateTableHeader = (rows: AnyObject, headerLabel: string) => {
   return [headerLabel, ...columnHeaders];
 };
 
-export const generateTableBody = (rows: AnyObject, fieldData?: AnyObject) => {
+export const generateTableBody = (rows: AnyObject) => {
   //get the table row labels
   const firstCols = Object.keys(rows).map((key) => {
     return [key];
@@ -88,7 +76,6 @@ const formatColumns = (rows: AnyObject, type: string) => {
       });
     });
   }
-
   return rows;
 };
 
@@ -142,7 +129,6 @@ export const ExportEntityDetailsTable = ({
 
   const table = generateMainTable(
     formatColumns(rows, section?.stepType),
-    entity,
     section.name
   );
   table.headRow = table.headRow.map((label) =>
