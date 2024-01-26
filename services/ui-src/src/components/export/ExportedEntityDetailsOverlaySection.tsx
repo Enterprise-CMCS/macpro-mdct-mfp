@@ -9,6 +9,7 @@ import {
 } from "components";
 // types
 import {
+  AnyObject,
   EntityShape,
   FormField,
   FormLayoutElement,
@@ -18,7 +19,7 @@ import {
   ReportType,
 } from "types";
 // utils
-import { updateRenderFields, useStore } from "utils";
+import { parseCustomHtml, updateRenderFields, useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
 
 export const ExportedEntityDetailsOverlaySection = ({
@@ -67,8 +68,16 @@ export function getEntityTableComponents(
   closed?: boolean,
   tableSection?: ReportPageShapeBase
 ) {
+  const reportType = report.reportType;
   const title = (entityStep as any)?.name || (entityStep![1] as string);
   const hint = (entityStep as any)?.hint || (entityStep![2] as string);
+
+  let info: string = "";
+  ((entityStep as any)?.verbiage?.intro?.info as [])?.forEach(
+    (text: AnyObject) => {
+      info += `${text?.content} `;
+    }
+  );
   const entityStepFields =
     (entityStep as any)?.form?.fields || (entityStep?.slice(3) as FormField[]);
   const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
@@ -77,7 +86,9 @@ export function getEntityTableComponents(
       <Box>
         <Heading as="h4">
           <Box sx={sx.stepName}>{title}</Box>
-          <Box sx={sx.stepHint}>{hint}</Box>
+          <Box sx={sx.stepHint}>
+            {reportType === ReportType.SAR ? parseCustomHtml(info) : hint}
+          </Box>
         </Heading>
       </Box>
       {closed && (

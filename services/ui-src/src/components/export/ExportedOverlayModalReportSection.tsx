@@ -3,6 +3,7 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 // utils
 import { getFormattedEntityData } from "utils";
 import {
+  AnyObject,
   EntityShape,
   FormField,
   FormLayoutElement,
@@ -23,11 +24,17 @@ export const ExportedOverlayModalReportSection = ({
   const hint = (entityStep as any)?.hint || (entityStep![2] as string);
   const entityCount = entity?.[type]?.length;
 
+  let info: string = "";
+  ((entityStep as any)?.verbiage?.intro?.info as [])?.forEach(
+    (text: AnyObject) => {
+      info += `${text?.content} `;
+    }
+  );
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
       <Heading as="h4">
         <Box sx={sx.stepName}>{title}</Box>
-        <Box sx={sx.stepHint}>{hint}</Box>
+        <Box sx={sx.stepHint}>{info || hint}</Box>
         <Box sx={sx.dashboardTitle} data-testid="headerCount">
           {entityCount > 0 ? (
             `${

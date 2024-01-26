@@ -258,6 +258,7 @@ export function renderModalOverlayTableBody(
                           section={step}
                           entity={entity}
                           entityStep={step}
+                          showHintText={true}
                         />
                       </Box>
                     );

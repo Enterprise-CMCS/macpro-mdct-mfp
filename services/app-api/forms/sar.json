@@ -960,7 +960,7 @@
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
-        "dashboardSubtitle": "Initiatives and Work Plan topics are auto-populated from your most recent approved Work Plan. Note: Initiative topics with * are required topics.",
+        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. Note: Initiative topics with * are required initiatives.<br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period.<br><br>For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide home and community-based services (HCBS) instead of services in institutional settings. <br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work Plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
         "tableHeader": "Initiative name <br/> Work Plan topic",
         "countEntitiesInTitle": false
       },
@@ -995,6 +995,10 @@
                   {
                     "type": "html",
                     "content": "Report progress for each objective by selecting the button for each."
+                  },
+                  {
+                    "type": "html",
+                    "content": "<br>Objectives are framed as SMART goals and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. Recipients define objectives in your MFP Work Plan’s evaluation plan."
                   }
                 ],
                 "dashboardTitle": "Objectives progress"
@@ -1078,13 +1082,16 @@
             "verbiage": {
               "intro": {
                 "section": "State- or Territory-Specific Initiatives",
-                "subtitle": [
+                "info": [
                   {
                     "type": "html",
                     "content": "Report progress for this initiative during this reporting period."
+                  },
+                  {
+                    "type": "html",
+                    "content": "<br>Report key accomplishments or challenges for this initiative that are not otherwise mentioned under the objective(s). Recipients can document whether they are considering changes to objective(s) or the initiative based on the developments to date, including collaborations that may be under consideration or occurring with external parties to assist with running the initiative or achieving objectives."
                   }
                 ],
-                "subsection": "Report progress for this initiative during this reporting period.",
                 "title": "Initiative progress"
               },
               "enterEntityDetailsButtonText": "Edit",
@@ -1139,8 +1146,7 @@
                     "type": "html",
                     "content": "Report initiative expenditures by quarter and funding source. Report actual spending for each quarter for this initiative. Recipients plan quarterly expenditure targets in your MFP Work Plan’s funding sources. Recipients with discrepancies between projected and actual spending due solely to lag time between incurring costs and disbursing funds will have the option to note those cases in this section.<br></br>Funding sources and projected spending are auto-populated from your associated MFP Work Plan."
                   }
-                ],
-                "subsection": "Initiative expenditures by quarter and funding source. Funding sources and projected spending are auto-populated from your associated Work Plan."
+                ]
               },
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
