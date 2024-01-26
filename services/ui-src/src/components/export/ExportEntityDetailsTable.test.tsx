@@ -2,8 +2,11 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 //components
-import { ExportEntityDetailsTable } from "./ExportEntityDetailsTable";
-import { formatHeaderLabel, formatColumns } from "./ExportEntityDetailsTable";
+import {
+  ExportEntityDetailsTable,
+  formatHeaderLabel,
+  formatColumns,
+} from "./ExportEntityDetailsTable";
 //utils
 import { mockSARFullReport } from "utils/testing/setupJest";
 import { AnyObject, EntityShape } from "types";
