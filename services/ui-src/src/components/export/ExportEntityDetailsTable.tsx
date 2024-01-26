@@ -47,7 +47,7 @@ export const generateTableBody = (rows: AnyObject) => {
   return bodyRow;
 };
 
-const formatColumns = (rows: AnyObject, type: string) => {
+export const formatColumns = (rows: AnyObject, type: string) => {
   if (type === "expenditures") {
     const cols = Object.values(rows);
     cols.forEach((col) => {
@@ -79,14 +79,14 @@ const formatColumns = (rows: AnyObject, type: string) => {
   return rows;
 };
 
-const formatHeaderLabel = (
+export const formatHeaderLabel = (
   type: string,
   label: string,
   report: ReportShape
 ) => {
   if (type === "expenditures") {
     if (label.includes("(")) {
-      let splitLabel = label.split("(");
+      let splitLabel = label.split(" (");
       const quarterLabel: AnyObject = {
         "First quarter": "Q1",
         "Second quarter": "Q2",
@@ -203,10 +203,10 @@ const sx = {
     },
     ".expenditures": {
       "tbody tr": {
-        "td:nth-child(n+4)": {
+        "td:nth-of-type(n+4)": {
           background: "palette.secondary_lightest",
         },
-        "td:nth-child(4), td:nth-child(7)": {
+        "td:nth-of-type(4), td:nth-of-type(7)": {
           fontWeight: "bold",
         },
       },
