@@ -6,10 +6,13 @@ import {
   mockFormField,
   mockVerbiageIntro,
   mockGenericEntity,
+  mockModalForm,
+  mockModalOverlayReportPageVerbiage,
 } from "../../utils/testing/setupJest";
 import { EntityDetailsDashboardOverlay } from "./EntityDetailsDashboardOverlay";
 import { useStore } from "utils";
 import { axe } from "jest-axe";
+import { entityTypes } from "../../types";
 
 const mockCloseEntityDetailsOverlay = jest.fn();
 
@@ -27,11 +30,26 @@ const mockDashboard = {
   },
 };
 
+export const mockEntitySteps = [
+  {
+    stepName: "mock entity 1 1",
+    stepType: "mock type",
+    stepInfo: ["mock step info"],
+    hint: "mock hint",
+    verbiage: mockModalOverlayReportPageVerbiage,
+    modalForm: mockModalForm,
+    entityType: entityTypes[0],
+    name: "mock name",
+    path: "/mock/mock-route-entity-dashboard-overlay",
+  },
+];
+
 const entityDetailsDashboardOverlayComponent = (
   <RouterWrappedComponent>
     <EntityDetailsDashboardOverlay
       dashboard={mockDashboard}
       closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
+      entitySteps={mockEntitySteps}
     />
   </RouterWrappedComponent>
 );
@@ -42,6 +60,7 @@ const entityDetailsDashboardOverlayComponentWithSelectedEntity = (
       dashboard={mockDashboard}
       closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
       selectedEntity={mockGenericEntity}
+      entitySteps={mockEntitySteps}
     />
   </RouterWrappedComponent>
 );
