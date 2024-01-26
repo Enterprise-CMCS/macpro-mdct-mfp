@@ -11,6 +11,7 @@ export type WorkPlanFieldDataForTransforms = {
       id: string;
       fundingSources_wpTopic: Choice[];
     }[];
+    evaluationPlan: any;
   }[];
 };
 
