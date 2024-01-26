@@ -5,8 +5,8 @@ import {
   mockFormField,
   mockNestedFormField,
   mockWpReportContext,
-  mockSARReportContext,
   mockStandardReportPageJson,
+  mockSARReportContext,
 } from "utils/testing/setupJest";
 import { ReportContext } from "components";
 import { ExportedReportFieldTable } from "./ExportedReportFieldTable";
@@ -43,7 +43,6 @@ const mockStandardPageJson = {
     fields: reportJsonFields,
   },
 };
-
 const mockDrawerPageJson = {
   ...mockDrawerReportPageJson,
   drawerForm: { id: "drawer", fields: reportJsonFields },
@@ -60,6 +59,31 @@ const hintJson = {
   ...mockStandardReportPageJson,
   form: {
     id: "not-apoc",
+    fields: [
+      {
+        ...mockFormField,
+        props: {
+          label: "X. Mock Field label",
+          hint: "Mock Hint Text",
+        },
+      },
+    ],
+  },
+};
+
+const generalInformationJson = {
+  name: "General Information",
+  path: "/sar/general-information",
+  pageType: "standard",
+  verbiage: {
+    intro: {
+      section: "",
+      subsection: "General Information",
+      hint: "",
+    },
+  },
+  form: {
+    id: "ga",
     fields: [
       {
         ...mockFormField,
@@ -96,16 +120,11 @@ const hintComponent = (
   </ReportContext.Provider>
 );
 
-const exportedStandardSarTableComponent = (
+const generalInformationComponent = (
   <ReportContext.Provider value={mockSARReportContext}>
-    <ExportedReportFieldTable section={mockStandardPageJson} />
+    <ExportedReportFieldTable section={generalInformationJson} />
   </ReportContext.Provider>
 );
-
-jest.mock("./ExportedReportFieldTable", () => ({
-  ...jest.requireActual("./ExportedReportFieldTable"), // Use the actual implementation for other functions
-  getSectionFormFields: jest.fn(),
-}));
 
 describe("ExportedReportFieldRow", () => {
   test("Is present", async () => {
@@ -132,8 +151,8 @@ describe("ExportedReportFieldRow", () => {
     expect(hint).toBeVisible();
   });
 
-  test("Is SAR component present", async () => {
-    render(exportedStandardSarTableComponent);
+  test("shows the correct section form fields based on heading", async () => {
+    render(generalInformationComponent);
   });
 });
 
