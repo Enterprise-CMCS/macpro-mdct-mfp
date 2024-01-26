@@ -74,8 +74,9 @@ describe("Test EntityStepCardBottomSection renders the evalutionStep correctly",
   });
   test("EntityStepCardBottomSection renders evalutionStep correctly", () => {
     render(cardWithQualitativeAnswers);
-    const progressBox = screen.getByTestId("objective-progress-box");
-    expect(progressBox).toBeVisible();
+    const progressBox = screen.getAllByTestId("objective-progress-box");
+    expect(progressBox[0]).toBeVisible();
+    expect(progressBox).toHaveLength(2);
     const deliverablesOther = screen.getByTestId("deliverables-other");
     expect(deliverablesOther).toBeVisible();
   });
