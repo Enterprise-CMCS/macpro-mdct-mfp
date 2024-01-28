@@ -67,9 +67,9 @@ describe("Test EntityStepCardTopSection renders", () => {
 
 describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
   const mockFullyCompletedObjectiveProgress = {
-    objectiveName: "w",
-    description: "2",
-    targets: "3",
+    objectiveName: "mockObjectiveName",
+    description: "mockDescription",
+    targets: "mock targets text",
     quarterProjections: [
       {
         id: "2024 Q1",
@@ -90,9 +90,10 @@ describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
         value: "4",
       },
     ],
-    performanceMeasureProgress: "Provided Data on performance",
+    performanceMeasureProgress: "mock provided data on performance",
     targetsMet: "No",
-    missedTargetReason: "Progress description towards reaching the milestone",
+    missedTargetReason:
+      "mock progress description towards reaching the milestone",
   };
   const ObjectiveProgressEntityStepCardTopSection = (
     <EntityStepCardTopSection
@@ -104,9 +105,49 @@ describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
   beforeEach(async () => {
     mockedUseStore.mockReturnValue(mockUseSARStore);
   });
-  test("EntityStepCardTopSection grid renders correctly for SAR", () => {
-    render(ObjectiveProgressEntityStepCardTopSection);
-    const sarGrid = screen.getByTestId("sar-grid");
-    expect(sarGrid).toBeVisible();
+  test("EntityStepCardTopSection thats been fully completed renders correctly for SAR", () => {
+    const topOfCard = render(ObjectiveProgressEntityStepCardTopSection);
+    expect(
+      topOfCard.getByText(mockFullyCompletedObjectiveProgress.objectiveName)
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(mockFullyCompletedObjectiveProgress.description)
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(mockFullyCompletedObjectiveProgress.targets)
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(
+        `${mockFullyCompletedObjectiveProgress.quarterProjections[0].id} Target:`
+      )
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(
+        `${mockFullyCompletedObjectiveProgress.quarterProjections[0].id} Target:`
+      )
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(
+        `${mockFullyCompletedObjectiveProgress.quarterActuals[0].id} Actual:`
+      )
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(
+        `${mockFullyCompletedObjectiveProgress.quarterActuals[0].id} Actual:`
+      )
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(
+        mockFullyCompletedObjectiveProgress.performanceMeasureProgress
+      )
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(mockFullyCompletedObjectiveProgress.targetsMet)
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(
+        mockFullyCompletedObjectiveProgress.missedTargetReason
+      )
+    ).toBeVisible();
   });
 });
