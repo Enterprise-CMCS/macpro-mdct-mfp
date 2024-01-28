@@ -66,11 +66,46 @@ describe("Test EntityStepCardTopSection renders", () => {
 });
 
 describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
+  const mockFullyCompletedObjectiveProgress = {
+    objectiveName: "w",
+    description: "2",
+    targets: "3",
+    quarterProjections: [
+      {
+        id: "2024 Q1",
+        value: "1",
+      },
+      {
+        id: "2024 Q2",
+        value: "2",
+      },
+    ],
+    quarterActuals: [
+      {
+        id: "2024 Q1",
+        value: "4",
+      },
+      {
+        id: "2024 Q2",
+        value: "4",
+      },
+    ],
+    performanceMeasureProgress: "Provided Data on performance",
+    targetsMet: "No",
+    missedTargetReason: "Progress description towards reaching the milestone",
+  };
+  const ObjectiveProgressEntityStepCardTopSection = (
+    <EntityStepCardTopSection
+      stepType={OverlayModalStepTypes.OBJECTIVE_PROGRESS}
+      formattedEntityData={mockFullyCompletedObjectiveProgress}
+    />
+  );
+
   beforeEach(async () => {
     mockedUseStore.mockReturnValue(mockUseSARStore);
   });
   test("EntityStepCardTopSection grid renders correctly for SAR", () => {
-    render(evaluationPlanEntityStepCardTopSection);
+    render(ObjectiveProgressEntityStepCardTopSection);
     const sarGrid = screen.getByTestId("sar-grid");
     expect(sarGrid).toBeVisible();
   });
