@@ -217,7 +217,6 @@ export const calculateCompletionStatus = async (
         initiative.entitySteps,
         entityType
       );
-      console.log("🚀 ~ isComplete:", isComplete);
       if (!isComplete) {
         areAllFormsComplete = false;
         break;
@@ -275,14 +274,6 @@ export const calculateCompletionStatus = async (
         break;
       case "dynamicModalOverlay":
         if (!route.initiatives) break;
-        console.log(
-          "Route Initiatives",
-          JSON.stringify(route.initiatives, null, 2)
-        );
-        console.log(
-          "Route.entityType",
-          JSON.stringify(route.entityType, null, 2)
-        );
         routeCompletion = {
           [route.path]: await calculateDynamicModalOverlayCompletion(
             route.initiatives as [],
