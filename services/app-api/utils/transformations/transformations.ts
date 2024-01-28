@@ -593,5 +593,4 @@ export const extractWorkPlanData = (
       }
     }
   }
-  console.log(sarFieldData);
 };
