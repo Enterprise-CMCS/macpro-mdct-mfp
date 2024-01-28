@@ -505,6 +505,7 @@ export const runSARTransformations = (
             },
           });
         }
+        delete step.transformation;
         delete step.objectiveCardTemplate;
       }
     }

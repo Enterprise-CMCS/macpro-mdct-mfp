@@ -171,8 +171,12 @@ export const calculateCompletionStatus = async (
           for (var stepFields of entityFieldsList) {
             if (stepForm?.objectiveCards) {
               for (let card of stepForm.objectiveCards) {
-                if (card.modalForm) {
+                if (card?.modalForm) {
                   const nestedFormTemplate = card.modalForm;
+
+                  if (nestedFormTemplate?.objectiveId !== stepFields?.id) {
+                    continue;
+                  }
                   const isEntityComplete = await calculateFormCompletion(
                     nestedFormTemplate,
                     stepFields
@@ -184,6 +188,10 @@ export const calculateCompletionStatus = async (
               const nestedFormTemplate = stepForm.form
                 ? stepForm.form
                 : stepForm.modalForm;
+
+              if (nestedFormTemplate?.initiativeId !== stepFields?.id) {
+                continue;
+              }
               const isEntityComplete = await calculateFormCompletion(
                 nestedFormTemplate,
                 stepFields
@@ -209,6 +217,7 @@ export const calculateCompletionStatus = async (
         initiative.entitySteps,
         entityType
       );
+      console.log("🚀 ~ isComplete:", isComplete);
       if (!isComplete) {
         areAllFormsComplete = false;
         break;
@@ -266,6 +275,14 @@ export const calculateCompletionStatus = async (
         break;
       case "dynamicModalOverlay":
         if (!route.initiatives) break;
+        console.log(
+          "Route Initiatives",
+          JSON.stringify(route.initiatives, null, 2)
+        );
+        console.log(
+          "Route.entityType",
+          JSON.stringify(route.entityType, null, 2)
+        );
         routeCompletion = {
           [route.path]: await calculateDynamicModalOverlayCompletion(
             route.initiatives as [],
