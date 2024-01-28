@@ -613,7 +613,7 @@ describe("extractWorkPlanData", () => {
               evaluationPlan_targets: "3",
               evaluationPlan_includesTargets: [
                 {
-                  key: "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
+                  key: "evaluationPlan_includesTargets-a",
                   value: "Yes",
                 },
               ],
@@ -628,7 +628,7 @@ describe("extractWorkPlanData", () => {
               evaluationPlan_targets: "targets",
               evaluationPlan_includesTargets: [
                 {
-                  key: "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
+                  key: "evaluationPlan_includesTargets-a",
                   value: "Yes",
                 },
               ],
@@ -671,7 +671,7 @@ describe("extractWorkPlanData", () => {
           evaluationPlan_targets: "3",
           evaluationPlan_includesTargets: [
             {
-              key: "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
+              key: "evaluationPlan_includesTargets-a",
               value: "Yes",
             },
           ],
@@ -686,7 +686,7 @@ describe("extractWorkPlanData", () => {
           evaluationPlan_targets: "targets",
           evaluationPlan_includesTargets: [
             {
-              key: "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
+              key: "evaluationPlan_includesTargets-a",
               value: "Yes",
             },
           ],
@@ -702,7 +702,7 @@ describe("extractWorkPlanData", () => {
           objectiveProgress_description: "2",
           objectiveProgress_includesTargets: [
             {
-              key: "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
+              key: "evaluationPlan_includesTargets-a",
               value: "Yes",
             },
           ],
@@ -717,7 +717,7 @@ describe("extractWorkPlanData", () => {
           objectiveProgress_description: "description",
           objectiveProgress_includesTargets: [
             {
-              key: "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
+              key: "evaluationPlan_includesTargets-a",
               value: "Yes",
             },
           ],
