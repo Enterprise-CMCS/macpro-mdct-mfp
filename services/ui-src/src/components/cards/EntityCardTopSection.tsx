@@ -11,6 +11,84 @@ export const EntityStepCardTopSection = ({
 }: Props) => {
   const { report } = useStore() ?? {};
   switch (stepType) {
+    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
+      return (
+        <>
+          <Heading sx={sx.mainHeading}>
+            {formattedEntityData.objectiveName}
+          </Heading>
+          <Text sx={sx.subtitle}>
+            Performance measure description or indicators your state will use to
+            monitor progress towards achievement
+          </Text>
+          <Text sx={sx.description}>{formattedEntityData.description}</Text>
+          <Text sx={sx.subtitle}>Performance measure targets</Text>
+          <Text sx={sx.description}>{formattedEntityData.targets}</Text>
+          {formattedEntityData?.performanceMeasureProgress && (
+            <>
+              <Text sx={sx.subtitle}>
+                Performance measure progress toward milestones and key
+                deliverables for current reporting period
+              </Text>
+              <Text sx={sx.description}>
+                {formattedEntityData?.performanceMeasureProgress}
+              </Text>
+            </>
+          )}
+          {formattedEntityData?.quarterProjections?.length > 0 && (
+            <>
+              <Text sx={sx.subtitle} data-testid="sar-grid">
+                Quantitative targets for this reporting period
+              </Text>
+            </>
+          )}
+          <Grid sx={sx.sarGrid}>
+            {formattedEntityData?.quarterProjections
+              .slice(0, 2)
+              .map((quarter: any) => {
+                return (
+                  <GridItem key={quarter.id}>
+                    <Flex sx={sx.gridItems}>
+                      <Text sx={sx.gridSubtitle}>{quarter.id} Target:</Text>
+                      <Text sx={sx.subtext}>{quarter.value}</Text>
+                    </Flex>
+                  </GridItem>
+                );
+              })}
+            {formattedEntityData?.quarterActuals
+              .slice(0, 2)
+              .map((quarter: any) => {
+                return (
+                  <GridItem key={quarter.id}>
+                    <Flex sx={sx.gridItems}>
+                      <Text sx={sx.gridSubtitle}>{quarter.id} Actual:</Text>
+                      <Text sx={sx.subtext}>{quarter.value}</Text>
+                    </Flex>
+                  </GridItem>
+                );
+              })}
+          </Grid>
+
+          {formattedEntityData?.targetsMet === "No" && (
+            <>
+              <Text sx={sx.subtitle}>
+                Were targets for performance measures and/or expected time
+                frames for deliverables met?
+              </Text>
+              <Text sx={sx.description}>{formattedEntityData?.targetsMet}</Text>
+              <Text sx={sx.subtitle}>
+                Describe progress toward reaching the target/milestone during
+                the reporting period. How close are you to meeting the target?
+                How do you plan to address any obstacle(s) to meeting the
+                target?
+              </Text>
+              <Text sx={sx.description}>
+                {formattedEntityData?.missedTargetReason}
+              </Text>
+            </>
+          )}
+        </>
+      );
     case OverlayModalStepTypes.EVALUATION_PLAN:
       return (
         <>
@@ -34,65 +112,38 @@ export const EntityStepCardTopSection = ({
               </Text>
             </>
           )}
-          {formattedEntityData.quarters.length > 0 &&
-            (report?.reportType === ReportType.WP ? (
-              <>
-                <Text sx={sx.subtitle}>Quantitative Targets</Text>
-                <Grid sx={sx.grid}>
-                  {formattedEntityData?.quarters.map((quarter: any) => {
-                    return (
-                      <GridItem key={quarter.id}>
-                        <Flex sx={sx.gridItems}>
-                          <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
-                          <Text
-                            sx={
-                              quarter.value === notAnsweredText
-                                ? sx.error
-                                : sx.subtext
-                            }
-                          >
-                            {quarter.value}
-                          </Text>
-                        </Flex>
-                      </GridItem>
-                    );
-                  })}
-                </Grid>
-              </>
-            ) : (
-              <>
-                <Text sx={sx.subtitle} data-testid="sar-grid">
-                  Quantitative targets for this reporting period
-                </Text>
-                <Grid sx={sx.sarGrid}>
-                  {formattedEntityData?.quarters
-                    .slice(0, 2)
-                    .map((quarter: any) => {
-                      return (
-                        <GridItem key={quarter.id}>
-                          <Flex sx={sx.gridItems}>
-                            <Text sx={sx.gridSubtitle}>
-                              {quarter.id} Target:
-                            </Text>
-                            <Text sx={sx.subtext}>{quarter.value}</Text>
-                          </Flex>
-                        </GridItem>
-                      );
-                    })}
-                </Grid>
-              </>
-            ))}
-          {report?.reportType === ReportType.WP && (
+          {formattedEntityData.quarters?.length > 0 && (
             <>
-              <Text sx={sx.subtitle}>
-                Additional detail on strategies/approaches the state or
-                territory will use to achieve targets and/ or meet milestones
-              </Text>
-              <Text sx={sx.description}>
-                {formattedEntityData.additionalDetails}
-              </Text>{" "}
+              <Text sx={sx.subtitle}>Quantitative Targets</Text>
+              <Grid sx={sx.grid}>
+                {formattedEntityData?.quarters.map((quarter: any) => {
+                  return (
+                    <GridItem key={quarter.id}>
+                      <Flex sx={sx.gridItems}>
+                        <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
+                        <Text
+                          sx={
+                            quarter.value === notAnsweredText
+                              ? sx.error
+                              : sx.subtext
+                          }
+                        >
+                          {quarter.value}
+                        </Text>
+                      </Flex>
+                    </GridItem>
+                  );
+                })}
+              </Grid>
             </>
           )}
+          <Text sx={sx.subtitle}>
+            Additional detail on strategies/approaches the state or territory
+            will use to achieve targets and/ or meet milestones
+          </Text>
+          <Text sx={sx.description}>
+            {formattedEntityData.additionalDetails}
+          </Text>{" "}
         </>
       );
     case OverlayModalStepTypes.FUNDING_SOURCES:
@@ -148,7 +199,6 @@ const sx = {
   },
   description: {
     marginTop: "0.25rem",
-    marginBottom: "1.25rem",
     fontSize: "sm",
   },
   grid: {
@@ -160,8 +210,8 @@ const sx = {
   },
   sarGrid: {
     display: "grid",
-    gridTemplateRows: "1fr",
-    gridAutoFlow: "column",
+    gridTemplateColumns: "1fr 1fr",
+    gridAutoFlow: "row",
     marginBottom: "1.25rem",
     width: "50%",
   },
