@@ -549,7 +549,7 @@ const generateSARFormsForInitiatives = (
  * match up to IDs generated in the form template transformation,
  * so that the frontend hydration code will be able to match up the data.
  */
-export const extractFundingSourceProjections = (
+export const extractWorkPlanData = (
   sarFieldData: AnyObject,
   reportYear: number,
   reportPeriod: number
@@ -593,4 +593,5 @@ export const extractFundingSourceProjections = (
       }
     }
   }
+  console.log(sarFieldData);
 };
