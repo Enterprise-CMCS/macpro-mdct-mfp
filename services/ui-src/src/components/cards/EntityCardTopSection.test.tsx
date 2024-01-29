@@ -123,7 +123,7 @@ describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
     ).toBeVisible();
     expect(
       topOfCard.getByText(
-        `${mockFullyCompletedObjectiveProgress.quarterProjections[0].id} Target:`
+        `${mockFullyCompletedObjectiveProgress.quarterProjections[1].id} Target:`
       )
     ).toBeVisible();
     expect(
@@ -133,7 +133,7 @@ describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
     ).toBeVisible();
     expect(
       topOfCard.getByText(
-        `${mockFullyCompletedObjectiveProgress.quarterActuals[0].id} Actual:`
+        `${mockFullyCompletedObjectiveProgress.quarterActuals[1].id} Actual:`
       )
     ).toBeVisible();
     expect(
