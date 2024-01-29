@@ -42,7 +42,7 @@ import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates
 import { logger } from "../../utils/logging";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { copyFieldDataFromSource } from "../../utils/other/copy";
-import { extractFundingSourceProjections } from "../../utils/transformations/transformations";
+import { extractWorkPlanData } from "../../utils/transformations/transformations";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
@@ -193,11 +193,7 @@ export const createReport = handler(
         ...workPlanFieldData,
       };
 
-      extractFundingSourceProjections(
-        validatedFieldData!,
-        reportYear,
-        reportPeriod
-      );
+      extractWorkPlanData(validatedFieldData!, reportYear, reportPeriod);
     }
 
     // Return INVALID_DATA error if field data is not valid.

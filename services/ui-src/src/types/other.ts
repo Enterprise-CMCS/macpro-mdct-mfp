@@ -40,6 +40,7 @@ export enum EntityDetailsStepTypes {
 export enum OverlayModalStepTypes {
   EVALUATION_PLAN = "evaluationPlan",
   FUNDING_SOURCES = "fundingSources",
+  OBJECTIVE_PROGRESS = "objectiveProgress",
 }
 
 export enum EntityDetailsOverlayTypes {

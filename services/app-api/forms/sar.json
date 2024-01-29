@@ -984,7 +984,7 @@
             "name": "Objectives progress",
             "pageType": "overlayModal",
             "entityType": "initiative",
-            "stepType": "evaluationPlan",
+            "stepType": "objectiveProgress",
             "stepInfo": ["name", "hint"],
             "hint": "Report progress for each objective",
             "isRequired": true,
