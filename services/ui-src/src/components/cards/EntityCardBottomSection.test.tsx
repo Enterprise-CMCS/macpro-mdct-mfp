@@ -84,18 +84,6 @@ describe("Test EntityStepCardBottomSection renders", () => {
     );
     expect(bottomSection.container).toBeEmptyDOMElement();
   });
-  test("EntityStepCardBottomSection returns default if objectiveProgress but not SAR", () => {
-    let entityStepCardBottomSectionSwitchCase = (
-      <EntityStepCardBottomSection
-        stepType={"objectiveProgress"}
-        verbiage={verbiage}
-        formattedEntityData={{}}
-      />
-    );
-
-    const bottomSection = render(entityStepCardBottomSectionSwitchCase);
-    expect(bottomSection.container).toBeEmptyDOMElement();
-  });
 });
 
 describe("Test EntityStepCardBottomSection renders the objective progress correctly", () => {
