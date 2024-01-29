@@ -1,5 +1,5 @@
 // components
-import { Heading, Text, Grid, GridItem, Flex, Box } from "@chakra-ui/react";
+import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
 import { notAnsweredText } from "../../constants";
 // utils
 import { AnyObject, OverlayModalStepTypes, ReportType } from "types";

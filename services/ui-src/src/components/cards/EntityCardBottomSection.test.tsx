@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { EntityStepCardBottomSection } from "./EntityCardBottomSection";
 import { mockGenericEntity, mockUseSARStore } from "utils/testing/setupJest";
 import { useStore } from "utils";
