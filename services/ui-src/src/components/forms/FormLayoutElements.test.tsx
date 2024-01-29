@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { SectionHeader } from "./FormLayoutElements";
+import { SectionHeader, SectionContent } from "./FormLayoutElements";
 
 describe("Section header", () => {
   test("should render content", () => {
@@ -21,5 +21,17 @@ describe("Section header", () => {
     const { container } = render(<SectionHeader {...props} />);
 
     expect(container.querySelector("#mock-id")).toBeVisible();
+  });
+});
+
+describe("Section content", () => {
+  test("should render content", () => {
+    const props = {
+      content: "mock content",
+    };
+
+    render(<SectionContent {...props} />);
+
+    expect(screen.getByText("mock content")).toBeVisible();
   });
 });
