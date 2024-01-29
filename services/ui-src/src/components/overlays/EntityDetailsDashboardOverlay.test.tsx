@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { RouterWrappedComponent } from "../../utils/testing/mockRouter";
 import {
   mockUseEntityStore,
@@ -13,6 +13,7 @@ import { EntityDetailsDashboardOverlay } from "./EntityDetailsDashboardOverlay";
 import { useStore } from "utils";
 import { axe } from "jest-axe";
 import { entityTypes } from "../../types";
+import userEvent from "@testing-library/user-event";
 
 const mockCloseEntityDetailsOverlay = jest.fn();
 
@@ -86,11 +87,11 @@ describe("Test EntityDetailsDashboardOverlay", () => {
     ).toBeVisible();
   });
 
-  test("EntityDetailsDashboardOverlay left arrow returns user to all initiatives", () => {
-    fireEvent.click(
+  test("EntityDetailsDashboardOverlay left arrow returns user to all initiatives", async () => {
+    await userEvent.click(
       screen.getAllByText("Return to all initiatives")[0] as HTMLAnchorElement
     );
-    expect(mockCloseEntityDetailsOverlay).toHaveBeenCalledTimes(1);
+    await expect(mockCloseEntityDetailsOverlay).toHaveBeenCalledTimes(1);
   });
 });
 
