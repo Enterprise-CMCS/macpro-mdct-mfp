@@ -39,14 +39,12 @@ export const EntityStepCard = ({
   const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
   switch (stepType) {
+    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
+      entityCompleted = formattedEntityData?.objectiveName;
+      entityCompleted = formattedEntityData?.performanceMeasureProgress;
+      break;
     case OverlayModalStepTypes.EVALUATION_PLAN:
       entityCompleted = formattedEntityData?.objectiveName;
-      if (report?.reportType === ReportType.SAR) {
-        // still need to add conditional for quantitative objectives
-        entityCompleted =
-          entity?.objectivesProgress_performanceMeasuresIndicators &&
-          entity?.objectivesProgress_deliverablesMet[0].value;
-      }
       if (entityCompleted && formattedEntityData?.includesTargets === "Yes") {
         entityCompleted = formattedEntityData?.quarters.length === 12;
         if (formattedEntityData?.quarters)
