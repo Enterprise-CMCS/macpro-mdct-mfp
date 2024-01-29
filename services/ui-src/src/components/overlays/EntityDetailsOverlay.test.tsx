@@ -14,12 +14,17 @@ jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseEntityStore);
 
+const mockCloseEntityDetailsOverlay = jest.fn();
+
 const { closeOutWarning, closeOutModal } =
   mockEntityDetailsOverlayJson.verbiage;
 
 const entityDetailsOverlayComponent = (
   <RouterWrappedComponent>
-    <EntityDetailsOverlay route={mockEntityDetailsOverlayJson} />
+    <EntityDetailsOverlay
+      route={mockEntityDetailsOverlayJson}
+      closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
+    />
   </RouterWrappedComponent>
 );
 
