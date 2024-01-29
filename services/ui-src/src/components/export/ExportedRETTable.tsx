@@ -6,7 +6,7 @@ import {
 } from "types";
 
 // components
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { Table } from "components";
 
 // utils
@@ -325,24 +325,28 @@ export const ExportRETTable = ({ section }: Props) => {
   });
 
   const formattedFieldData = { ...report?.fieldData, formId: form?.id };
-  //generate the table
-  let table = generateMainTable(rows, formattedFieldData, section.name);
-  formatFooterForRET(form?.id, report!, table.footRow!, table.headRow!);
-  //copying the current table before label truncating; these are the desired aria-labels
-  const ariaOverride = structuredClone(table);
-  //truncating the table labels
-  table.headRow = table.headRow.map((label) => formatHeaderForRET(label));
-  table.bodyRows = table.bodyRows.map((rows) => {
-    rows[0] = formatLabelForRET(form?.id, rows[0], report!);
-    return rows;
-  });
+  // //generate the table
+  let table: TableContentShape = {};
+  let ariaOverride: TableContentShape = {};
+  if (Object.keys(rows).length > 0) {
+    table = generateMainTable(rows, formattedFieldData, section.name);
+    formatFooterForRET(form?.id, report!, table.footRow!, table.headRow!);
+    //copying the current table before label truncating; these are the desired aria-labels
+    ariaOverride = structuredClone(table);
+    //truncating the table labels
+    table.headRow = table.headRow?.map((label) => formatHeaderForRET(label));
+    table.bodyRows = table.bodyRows?.map((rows) => {
+      rows[0] = formatLabelForRET(form?.id, rows[0], report!);
+      return rows;
+    });
+  }
   //split the table if there are >= 3 Other columns
-  const tables = truncateTable(table, 7);
+  const tables: TableContentShape[] = truncateTable(table, 7);
 
   return (
     <Box mt="2rem" data-testid="exportRETTable" sx={sx.container}>
-      {tables &&
-        tables.map((table, index) => {
+      {tables.length > 0 ? (
+        tables?.map((table, index) => {
           return (
             <Table
               sx={sx.table}
@@ -351,7 +355,12 @@ export const ExportRETTable = ({ section }: Props) => {
               ariaOverride={ariaOverride}
             ></Table>
           );
-        })}
+        })
+      ) : (
+        <Text>
+          Your associated MFP Work Plan does not contain any target populations.
+        </Text>
+      )}
     </Box>
   );
 };
