@@ -28,8 +28,6 @@ const entityDetailsOverlayComponent = (
   </RouterWrappedComponent>
 );
 
-// Mock a component where the selected entity initiative is closed
-
 describe("Test EntityDetailsOverlayPage", () => {
   test("EntityDetailsOverlayPage view renders", () => {
     render(entityDetailsOverlayComponent);
