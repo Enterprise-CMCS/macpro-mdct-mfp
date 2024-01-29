@@ -241,7 +241,7 @@ export function renderModalOverlayTableBody(
             {dynamicSection[idx].entitySteps.map(
               (step: any, stepIdx: number) => {
                 switch (step.stepType) {
-                  case OverlayModalStepTypes.EVALUATION_PLAN:
+                  case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
                     return (
                       <Box key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedOverlayModalReportSection
