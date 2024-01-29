@@ -48,6 +48,25 @@ const textFieldComponentValidateOnRender = (
   />
 );
 
+const mockHydrationValue = "abcdefg";
+
+const textFieldComponentHydration = (
+  <TextField
+    name="testTextFieldWithHydrationValue"
+    label="test-label-hydration-value"
+    hydrate={mockHydrationValue}
+  />
+);
+
+const textFieldComponentClearValue = (
+  <TextField
+    name="testTextFieldWithHydrationValue"
+    label="test-label-hydration-value"
+    hydrate={mockHydrationValue}
+    clear
+  />
+);
+
 describe("Test TextField component", () => {
   test("TextField is visible", () => {
     mockedUseStore.mockReturnValue(mockStateUserStore);
@@ -56,6 +75,35 @@ describe("Test TextField component", () => {
     const textField = screen.getByTestId("test-text-field");
     expect(textField).toBeVisible();
     jest.clearAllMocks();
+  });
+
+  test("Component with validateOnRender passed should validate on initial render", () => {
+    mockedUseStore.mockReturnValue(mockStateUserStore);
+    mockGetValues("");
+    render(textFieldComponentValidateOnRender);
+    expect(mockTrigger).toHaveBeenCalled();
+  });
+
+  test("Component with hydration value should hydrate field", () => {
+    mockedUseStore.mockReturnValue(mockStateUserStore);
+    mockGetValues("");
+    const result = render(textFieldComponentHydration);
+    const textFieldInput: HTMLInputElement = result.container.querySelector(
+      "[name='testTextFieldWithHydrationValue']"
+    )!;
+    const displayValue = textFieldInput.value;
+    expect(displayValue).toEqual(mockHydrationValue);
+  });
+
+  test("Component with hydration value and clear value should reset value to default", () => {
+    mockedUseStore.mockReturnValue(mockStateUserStore);
+    mockGetValues("");
+    const result = render(textFieldComponentClearValue);
+    const textFieldInput: HTMLInputElement = result.container.querySelector(
+      "[name='testTextFieldWithHydrationValue']"
+    )!;
+    const displayValue = textFieldInput.value;
+    expect(displayValue).toEqual("");
   });
 });
 
