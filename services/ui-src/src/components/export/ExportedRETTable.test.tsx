@@ -87,6 +87,11 @@ const section = {
   name: "mock table name",
 };
 
+const emptySection = {
+  id:"mock-empty",
+  fields: []
+}
+
 const mockSARReport = {
   report: {
     fieldData: {
@@ -204,6 +209,16 @@ describe("Test ExportedRETTable Component", () => {
     expect(screen.queryAllByRole("row")).toHaveLength(9);
   });
 });
+describe("Test ExportedRETTable Component with empty section", () =>{
+  it("Test ExportRETTable render if section is empty", () => {
+    //an empty section means no transition benchmark had been selected
+    mockedUseStore.mockReturnValue(mockSARReport);
+    render(<ExportRETTable section={emptySection as any} />);
+    const table = screen.queryByRole("table");
+    expect(table).toBe(null);
+    expect(screen.getByText("Your associated MFP Work Plan does not contain any target populations.")).toBeVisible();
+  });
+})
 describe("Test ExportedReportWrapper accessibility", () => {
   it("ExportedReportWrapper should not have basic accessibility issues", async () => {
     const { container } = render(<ExportRETTable section={section as any} />);
