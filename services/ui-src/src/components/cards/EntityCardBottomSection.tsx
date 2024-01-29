@@ -1,5 +1,5 @@
 // utils
-import { AnyObject, OverlayModalStepTypes, ReportType } from "types";
+import { AnyObject, OverlayModalStepTypes } from "types";
 import { Text, Box, Grid, GridItem, Flex } from "@chakra-ui/react";
 import { notAnsweredText } from "../../constants";
 
