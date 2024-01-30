@@ -5,15 +5,19 @@ import {
   getOrCreateFormTemplate,
   isFieldElement,
   isLayoutElement,
-  scanForConditionalRoutes,
-  findAndRunFieldTransformationRules,
 } from "./formTemplates";
+import { transformFormTemplate } from "../transformations/transformations";
 import wp from "../../forms/wp.json";
 import sar from "../../forms/sar.json";
 import { createHash } from "crypto";
 import {
   AnyObject,
+  DynamicModalOverlayReportPageShape,
+  EntityDetailsOverlayShape,
+  FormField,
   FormJson,
+  ModalOverlayReportPageVerbiage,
+  OverlayModalPageShape,
   ReportJson,
   ReportRoute,
   ReportType,
@@ -34,26 +38,19 @@ global.structuredClone = jest.fn((val) => {
   return JSON.parse(JSON.stringify(val));
 });
 
-export const generateReportHash = (
+const generateReportHash = (
   report: AnyObject,
   reportYear: number,
   reportPeriod: number,
-  wpFieldData: AnyObject
+  workPlanFieldData: AnyObject
 ) => {
-  const currentFormTemplate = structuredClone(report) as ReportJson;
+  let currentFormTemplate = structuredClone(report) as ReportJson;
   if (currentFormTemplate?.routes) {
-    // traverse routes and scan for conditional field
-    currentFormTemplate.routes = scanForConditionalRoutes(
-      currentFormTemplate.routes,
-      reportPeriod
-    );
-
-    //transformation of the formTemplate to generate new quarters
-    findAndRunFieldTransformationRules(
-      currentFormTemplate.routes,
+    currentFormTemplate = transformFormTemplate(
+      currentFormTemplate,
       reportPeriod,
       reportYear,
-      wpFieldData
+      workPlanFieldData
     );
   }
 
@@ -371,6 +368,89 @@ describe("Test compileValidationJsonFromRoutes", () => {
       "mock-modal-text-field": "text",
       "mock-number-field": "number",
       "mock-text-field": "text",
+    });
+  });
+
+  it("Compiles validation from dynamicModalOverlay pages", () => {
+    const dynamicModalOverlayRoute: DynamicModalOverlayReportPageShape = {
+      pageType: "dynamicModalOverlay",
+      name: "mock name",
+      path: "mock/path",
+      entityType: "initiative",
+      entityInfo: [] as string[],
+      verbiage: {} as ModalOverlayReportPageVerbiage,
+      initiatives: [
+        {
+          initiativeId: "init1",
+          name: "mock init 1",
+          topic: "mock topic",
+          dashboard: {} as FormJson,
+          entitySteps: [
+            {
+              stepName: "mock entity 1 1",
+              form: {
+                id: "mock-form-id",
+                fields: [
+                  {
+                    id: "text-field-1-1",
+                    validation: "text",
+                  },
+                  {
+                    id: "number-field-1-1",
+                    validation: "number",
+                  },
+                ],
+              },
+            } as EntityDetailsOverlayShape,
+            {
+              stepName: "mock entity 1 2",
+              modalForm: {
+                fields: [] as FormField[],
+              },
+            } as OverlayModalPageShape,
+          ],
+        },
+        {
+          initiativeId: "init2",
+          name: "mock init 2",
+          topic: "mock topic",
+          dashboard: {} as FormJson,
+          entitySteps: [
+            {
+              stepName: "mock entity 2 1",
+              form: {
+                fields: [] as FormField[],
+              },
+            } as EntityDetailsOverlayShape,
+            {
+              stepName: "mock entity 2 2",
+              modalForm: {
+                id: "mock-form-id",
+                fields: [
+                  {
+                    id: "email-field-2-2",
+                    validation: "email",
+                  },
+                  {
+                    id: "ratio-field-2-2",
+                    validation: "ratio",
+                  },
+                ],
+              },
+            } as OverlayModalPageShape,
+          ],
+        },
+      ],
+    };
+
+    const result = compileValidationJsonFromRoutes([dynamicModalOverlayRoute]);
+
+    expect(result).toEqual({
+      "initiative": "objectArray", // prettier-ignore
+      "text-field-1-1": "text",
+      "number-field-1-1": "number",
+      "email-field-2-2": "email",
+      "ratio-field-2-2": "ratio",
     });
   });
 });
