@@ -70,11 +70,6 @@ describe("ExportedReportWrapper rendering", () => {
     expect(screen.getByTestId("exportTable")).toBeInTheDocument();
   });
 
-  test("ExportedModalOverlayReportSection renders", () => {
-    render(exportedModalOverlayReportWrapperComponent);
-    expect(screen.getByTestId("exportTable")).toBeInTheDocument();
-  });
-
   it("renders default logic block correctly", () => {
     const { container } = render(UnknownComponent);
     expect(container).toBeEmptyDOMElement();

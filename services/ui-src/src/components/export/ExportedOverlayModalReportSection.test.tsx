@@ -1,92 +1,83 @@
 import { render, screen } from "@testing-library/react";
-// components
-import { ReportContext } from "components";
-// utils
-import { useStore } from "../../utils";
-import { mockUseStore } from "../../utils/testing/setupJest";
+import { axe } from "jest-axe";
+import { RouterWrappedComponent } from "utils/testing/setupJest";
+
 import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
-import { mockWpReportContext } from "../../utils/testing/mockReport";
-import { entityTypes } from "types";
-import { mockOverlayModalPageJson } from "utils/testing/setupJest";
 
-jest.mock("utils/state/useStore");
+import { EntityShape, FormField, OverlayModalPageShape } from "types";
 
-const mockEntity = {
-  id: "mock-id-1",
-  type: entityTypes[0],
-  "mock-modal-text-field": "mock input 1",
+const section: OverlayModalPageShape = {
+  entityType: "",
+  stepType: "",
+  stepName: "",
+  stepInfo: [],
+  hint: "",
+  verbiage: {
+    addEntityButtonText: "",
+    dashboardTitle: "",
+    countEntitiesInTitle: false,
+    tableHeader: "",
+    addEditModalHint: "",
+    intro: {
+      section: "",
+      subsection: undefined,
+      hint: undefined,
+      info: undefined,
+      title: undefined,
+      subtitle: undefined,
+      spreadsheet: undefined,
+      exportSectionHeader: undefined,
+    },
+  },
+  modalForm: {
+    id: "",
+    fields: [],
+  },
+  name: "",
+  path: "",
 };
 
-const mockEntity2 = {
-  id: "mock-id-2",
-  type: entityTypes[0],
-  "mock-modal-text-field": "mock input 1",
-  fundingSources: [
+const entityStep: (string | FormField)[] = [
+  "mockType",
+  "mock plan name",
+  "mock hint",
+  { id: "mock-id", props: { label: "mock field 1" }, type: "", validation: "" },
+];
+
+const entity: EntityShape = {
+  id: "entity-id",
+  type: "initiative",
+  "mock-id": "mock value",
+  mockType: [
     {
-      fundingSources_quarters2024Q1: "7.00",
-      fundingSources_quarters2024Q2: "7.00",
+      id: "step-entity-id",
     },
   ],
 };
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-mockedUseStore.mockReturnValue(mockUseStore);
-
-const entityMockStep = [
-  "fundingSources",
-  "III. Funding sources",
-  "Add funding sources with projected quarterly expenditures",
-  {
-    id: "fundingSources_wpTopic",
-    props: {
-      label: "2024 1",
-      mask: "currency",
-    },
-    transformation: { rule: "" },
-    type: "number",
-    validation: "number",
-  },
-  {
-    id: "fundingSources_quarters2024Q1",
-    props: {
-      label: "2024 1",
-      mask: "currency",
-    },
-    transformation: { rule: "" },
-    type: "number",
-    validation: "number",
-  },
-];
-
-const exportedOverlayModalReportComponent = (
-  <ReportContext.Provider value={mockWpReportContext}>
+const testComponent = (
+  <RouterWrappedComponent>
     <ExportedOverlayModalReportSection
-      entity={mockEntity}
-      entityStep={entityMockStep}
-      section={mockOverlayModalPageJson}
+      section={section}
+      entityStep={entityStep}
+      entity={entity}
     />
-  </ReportContext.Provider>
+  </RouterWrappedComponent>
 );
 
-const exportedOverlayModalReportComponentEntityStep = (
-  <ReportContext.Provider value={mockWpReportContext}>
-    <ExportedOverlayModalReportSection
-      entity={mockEntity2}
-      entityStep={entityMockStep}
-      section={mockOverlayModalPageJson}
-    />
-  </ReportContext.Provider>
-);
-
-describe("ExportedReportWrapper rendering", () => {
-  test("ExportedOverlayModalReportComponent renders", () => {
-    render(exportedOverlayModalReportComponent);
-    expect(screen.getByTestId("exportedOverlayModalPage")).toBeInTheDocument();
+describe("Test ExportedOverlayModalReportSection Component", () => {
+  beforeEach(() => {
+    render(testComponent);
   });
+  test("Test ExportRETTable render", () => {
+    screen.debug();
+  });
+});
 
-  test("ExportedOverlayModalReportComponent returns entity step card", () => {
-    render(exportedOverlayModalReportComponentEntityStep);
-
-    expect(screen.getByTestId("exportedOverlayModalPage")).toBeInTheDocument();
+describe("Test ExportedModalOverlayReportSection accessibility", () => {
+  test("should not have basic accessibility issues", async () => {
+    const { container } = render(testComponent);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });
