@@ -640,7 +640,7 @@ export const mockFullReportJSON: ReportJson = {
                 validation: "radio",
                 props: {
                   label:
-                    "Are Tribal initiatives applicable to your state or territory?",
+                    "Are Tribal Initiatives applicable to your state or territory?",
                   choices: [
                     {
                       id: "UG7uunqq5UCtUq1is3iyiw",

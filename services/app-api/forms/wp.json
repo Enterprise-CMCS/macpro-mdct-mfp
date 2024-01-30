@@ -235,7 +235,7 @@
               "info": [
                 {
                   "type": "html",
-                  "content": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports. These initiatives can be funded using one or more of these funding sources:<br>"
+                  "content": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of home and community-based services (HCBS) rather than institutional long-term services and supports. These initiatives can be funded using one or more of these funding sources:<br>"
                 },
                 {
                   "type": "ul",
@@ -307,7 +307,8 @@
                 },
                 {
                   "type": "p",
-                  "content": "Recipients must identify and describe the required initiatives below and have the option to identify additional initiatives on other topics."
+                  "content": "Recipients must identify and describe the required initiatives below and have the option to identify additional initiatives on other topics.",
+                  "paddingBottom": "1rem"
                 },
                 {
                   "type": "table",
@@ -335,7 +336,7 @@
                                   "borderBottom": "1px solid #D9D9D9"
                                 }
                               },
-                              "content": "<span aria-label='Required by Program Terms and Conditions'>'Required* Initiatives'</span>"
+                              "content": "<span aria-label='Required by Program Terms and Conditions'>Required* Initiatives</span>"
                             },
                             {
                               "type": "th",
@@ -672,7 +673,7 @@
                 "type": "radio",
                 "validation": "radio",
                 "props": {
-                  "label": "Are Tribal initiatives applicable to your state or territory?",
+                  "label": "Are Tribal Initiatives applicable to your state or territory?",
                   "choices": [
                     {
                       "id": "UG7uunqq5UCtUq1is3iyiw",
