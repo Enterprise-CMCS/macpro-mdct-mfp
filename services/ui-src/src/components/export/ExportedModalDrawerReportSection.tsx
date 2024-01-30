@@ -188,7 +188,7 @@ export const ExportedModalDrawerReportSection = ({
       caption: "Transition Benchmark Totals Table",
       headRow: [...headerArray],
       bodyRows: [...formatBodyRow()],
-      footRow: [...updateFooterRow],
+      footRow: [[...updateFooterRow]],
     };
 
     return table;
@@ -258,7 +258,7 @@ export const ExportedModalDrawerReportSection = ({
       caption: "Transition Benchmark Totals Table - Continued",
       headRow: [...formatOverflowTableHeaders()],
       bodyRows: [...formatBodyRow()],
-      footRow: [...formatFootRow()],
+      footRow: [[...formatFootRow()]],
     };
 
     return overflowTable;

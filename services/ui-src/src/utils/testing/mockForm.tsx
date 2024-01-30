@@ -1,3 +1,9 @@
+import {
+  DynamicModalOverlayReportPageShape,
+  FormJson,
+  OverlayModalPageShape,
+} from "types";
+
 export const mockFormField = {
   id: "mock-text-field",
   type: "text",
@@ -305,6 +311,28 @@ export const mockEntityDetailsOverlayJson = {
   entityType: "mock-entity-type",
 };
 
+export const mockEntityDetailsDashboardOverlayJson = {
+  verbiage: mockEntityDetailsOverlayVerbiage,
+  name: "mock name",
+  path: "/mock/mock-route-entity-dashboard-overlay",
+  entitySteps: [
+    {
+      name: "mock-route-entity-dashboard-overlay",
+      path: "/mock/mock-route-entity-dasboard-overlay",
+      pageType: "entityOverlay",
+      entityType: "mock entity type",
+      stepType: "mock step type",
+      stepName: "mock step name",
+      stepInfo: ["mock step info"],
+      hint: "Mock hint",
+      isRequired: "false",
+      verbiage: mockEntityDetailsOverlayVerbiage,
+      form: mockForm,
+      entities: [],
+    },
+  ],
+};
+
 export const mockOptionalFormField = {
   id: "mock-optional-text-field",
   type: "text",
@@ -335,6 +363,7 @@ export const mockModalOverlayReportPageVerbiage = {
   deleteModalConfirmButtonText: "Mock delete modal confirm button text",
   deleteModalWarning: "Mock delete modal warning",
   enterReportText: "Mock enter report text",
+  enterEntityDetailsButtonText: "Mock enter entity details button text",
 };
 
 export const mockOverlayModalPageJson = {
@@ -346,7 +375,7 @@ export const mockOverlayModalPageJson = {
   modalForm: mockModalForm,
   stepType: "mock-step",
   stepName: "Mock step name",
-  stepInfo: ["name, hint"],
+  stepInfo: ["name", "hint"],
   hint: "Mock hint",
 };
 
@@ -357,8 +386,43 @@ export const mockModalOverlayReportPageJson = {
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalOverlayForm,
-  overlayForm: mockModalOverlayForm,
 };
+
+export const mockDynamicModalOverlayReportPageJson = {
+  name: "mock-route-2e",
+  path: "/mock/mock-route-2e",
+  pageType: "dynamicModalOverlay",
+  entityType: "entityType",
+  entityInfo: [""],
+  verbiage: mockModalOverlayReportPageVerbiage,
+  initiatives: [
+    {
+      initiativeId: "mock-entity-id", // which matches the mock entity
+      name: "",
+      topic: "",
+      dashboard: {
+        verbiage: {
+          intro: {
+            section: "State- or Territory-Specific Initiatives",
+            info: [
+              {
+                type: "html",
+                content:
+                  "Report progress for each objective by selecting the button for each.",
+              },
+            ],
+            dashboardTitle: "Objectives progress",
+          },
+        },
+      } as unknown as FormJson,
+      entitySteps: [
+        {
+          modalForm: mockModalOverlayForm as FormJson,
+        } as OverlayModalPageShape,
+      ],
+    },
+  ],
+} as DynamicModalOverlayReportPageShape;
 
 export const mockReviewSubmitPageJson = {
   name: "mock-route-3",

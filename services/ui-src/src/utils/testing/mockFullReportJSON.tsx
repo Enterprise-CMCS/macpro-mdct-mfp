@@ -799,10 +799,6 @@ export const mockFullReportJSON: ReportJson = {
               },
             ],
           },
-          overlayForm: {
-            id: "abc",
-            fields: [],
-          },
         },
         {
           name: "State- or Territory Specific Initiatives: I. Define initiative",
