@@ -9,7 +9,8 @@ import {
 } from "utils/testing/setupJest";
 import { ReportContext } from "components";
 import { ExportedReportFieldTable } from "./ExportedReportFieldTable";
-import { DrawerReportPageShape } from "types";
+import { DrawerReportPageShape, FormField, FormLayoutElement } from "types";
+import sarVerbiage from "verbiage/pages/sar/sar-export";
 
 // Contexts
 const reportJsonFields = [{ ...mockNestedFormField, id: "parent" }];
@@ -70,6 +71,48 @@ const hintJson = {
   },
 };
 
+const generalInformationJson = {
+  ...mockStandardReportPageJson,
+  form: {
+    id: "not-apoc",
+    fields: [
+      {
+        ...mockFormField,
+        props: {
+          label: "X. Mock Field label",
+          hint: "Mock Hint Text",
+        },
+      },
+    ],
+  },
+};
+
+// get the range of form fields for a particular section
+const mockGetSectionFormFields = (
+  heading: number,
+  formFields: (FormField | FormLayoutElement)[]
+) => {
+  let fields: (FormField | FormLayoutElement)[] = [];
+  switch (heading) {
+    case 0:
+      fields = formFields.slice(0, 1);
+      break;
+    case 1:
+      fields = formFields.slice(1, 6);
+      break;
+    case 2:
+      fields = formFields.slice(6, 10);
+      break;
+    case 3:
+      fields = formFields.slice(10, 13);
+      break;
+    case 4:
+      fields = formFields.slice(13);
+      break;
+  }
+  return fields;
+};
+
 const exportedStandardTableComponent = (
   <ReportContext.Provider value={mockStandardContext}>
     <ExportedReportFieldTable section={mockStandardPageJson} />
@@ -117,6 +160,33 @@ describe("ExportedReportFieldRow", () => {
     render(hintComponent);
     const hint = screen.queryByText(/Mock Hint Text/);
     expect(hint).toBeVisible();
+  });
+
+  test("shows the correct section form fields based on heading", async () => {
+    const mockHeadings = sarVerbiage.generalInformationTable.headings;
+    const getSectionFormFields = mockHeadings.map((heading) => {
+      return mockGetSectionFormFields(
+        mockHeadings.indexOf(heading),
+        generalInformationJson.form.fields
+      );
+    });
+
+    const result = [
+      [
+        {
+          id: "mock-text-field",
+          props: { hint: "Mock Hint Text", label: "X. Mock Field label" },
+          type: "text",
+          validation: "text",
+        },
+      ],
+      [],
+      [],
+      [],
+      [],
+    ];
+
+    await expect(getSectionFormFields).toEqual(result);
   });
 });
 

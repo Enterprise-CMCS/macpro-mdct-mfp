@@ -1,13 +1,23 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 
-export const SectionHeader = ({ content, ...props }: SectionHeaderProps) => {
+export const SectionHeader = ({
+  content,
+  label,
+  ...props
+}: SectionHeaderProps) => {
   const sx = {
     h3: {
-      marginTop: "4rem",
+      marginTop: "2rem",
+    },
+    label: {
+      marginTop: "2rem",
     },
   };
   return (
     <Box sx={sx} {...props}>
+      <Heading size="sm" sx={sx.label}>
+        {label || ""}
+      </Heading>
       <Heading size="md" sx={sx.h3}>
         {content}
       </Heading>
@@ -15,7 +25,20 @@ export const SectionHeader = ({ content, ...props }: SectionHeaderProps) => {
   );
 };
 
+export const SectionContent = ({ content }: SectionContentProps) => {
+  const sx = {
+    paddingTop: "0.5rem",
+  };
+  return <Text sx={sx}>{content}</Text>;
+};
+
+interface SectionContentProps {
+  content: string;
+  [key: string]: any;
+}
+
 interface SectionHeaderProps {
   content: string;
+  label?: string;
   [key: string]: any;
 }

@@ -1,10 +1,8 @@
 import { useState } from "react";
 // components
-import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import {
-  AddEditEntityModal,
   Alert,
-  DeleteEntityModal,
   EntityDetailsDashboardOverlay,
   EntityProvider,
   EntityRow,
@@ -16,15 +14,13 @@ import {
 import {
   AlertTypes,
   EntityShape,
-  ModalOverlayReportPageShape,
+  DynamicModalOverlayReportPageShape,
   ReportType,
 } from "types";
 // utils
-import { resetClearProp, useBreakpoint, useStore } from "utils";
+import { useBreakpoint, useStore } from "utils";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
-// assets
-import addIcon from "assets/icons/icon_add_white.png";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 import { AnyObject } from "yup/lib/types";
 
@@ -32,26 +28,36 @@ interface AlertVerbiage {
   [key: string]: { title: string; description: string };
 }
 
-export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
+export const DynamicModalOverlayReportPage = ({
+  route,
+  setSidebarHidden,
+}: Props) => {
   // Route Information
-  const { entityType, verbiage, modalForm, dashboard, entityInfo } = route;
+  const { entityType, verbiage, entityInfo, initiatives } = route;
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
   const { report, selectedEntity, setSelectedEntity, clearSelectedEntity } =
     useStore();
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
+  const [selectedInitiative, setSelectedInitiative] =
+    useState<DynamicModalOverlayReportPageShape["initiatives"][number]>();
+
+  if (!report) {
+    throw new Error("Cannot render DynamicModalOverlayPage without a report");
+  }
 
   // Display Variables
-  let reportFieldDataEntities = report?.fieldData[entityType] || [];
+  let reportFieldDataEntities = (report?.fieldData[entityType] ||
+    []) as EntityShape[];
 
-  (reportFieldDataEntities as any[]).map(
-    (entity) => (entity["isOtherEntity"] = true)
-  );
-
-  if (report?.reportType === ReportType.SAR) {
-    (reportFieldDataEntities as any[]).map(
-      (entity) => (entity["isCopied"] = true)
-    );
+  // TODO, do we need to set isCopied here, or is setting it in the API during the copy sufficient?
+  if (
+    report.reportType ===
+    ReportType.SAR /* which it will be; only SAR has this page type */
+  ) {
+    for (let entity of reportFieldDataEntities) {
+      entity.isCopied = true;
+    }
   }
 
   const showAlert =
@@ -59,58 +65,30 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
       ? getWPAlertStatus(report, entityType)
       : false;
 
-  const dashTitle = `${verbiage.dashboardTitle} ${
-    modalForm ? reportFieldDataEntities.length : ""
-  }`;
+  const dashTitle = `${verbiage.dashboardTitle}`;
   const dashSubTitle = (verbiage as AnyObject)?.dashboardSubtitle;
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
     return { headRow: ["", verbiage.tableHeader, ""] };
   };
 
-  // Add/edit entity modal disclosure and methods
-  const {
-    isOpen: addEditEntityModalIsOpen,
-    onOpen: addEditEntityModalOnOpenHandler,
-    onClose: addEditEntityModalOnCloseHandler,
-  } = useDisclosure();
-
-  const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setSelectedEntity(entity);
-    addEditEntityModalOnOpenHandler();
-  };
-
-  const closeAddEditEntityModal = () => {
-    clearSelectedEntity();
-    resetClearProp(modalForm.fields);
-    addEditEntityModalOnCloseHandler();
-  };
-
-  // Delete entity modal disclosure and methods
-  const {
-    isOpen: deleteEntityModalIsOpen,
-    onOpen: deleteEntityModalOnOpenHandler,
-    onClose: deleteEntityModalOnCloseHandler,
-  } = useDisclosure();
-
-  const openDeleteEntityModal = (entity: EntityShape) => {
-    setSelectedEntity(entity);
-    deleteEntityModalOnOpenHandler();
-  };
-
-  const closeDeleteEntityModal = () => {
-    clearSelectedEntity();
-    deleteEntityModalOnCloseHandler();
-  };
-
   // Open/Close overlay action methods
   const openEntityDetailsOverlay = (entity: EntityShape) => {
+    /*
+     * Every entity in the field data has exactly one initiative in the form template,
+     * and vice versa. So we can sure that this .find will succeed.
+     */
+    const initiative = initiatives.find(
+      (init) => init.initiativeId === entity.id
+    );
+    setSelectedInitiative(initiative);
     setSelectedEntity(entity);
     setIsEntityDetailsOpen(true);
     setSidebarHidden(true);
   };
 
   const closeEntityDetailsOverlay = () => {
+    setSelectedInitiative(undefined);
     clearSelectedEntity();
     setIsEntityDetailsOpen(false);
     setSidebarHidden(false);
@@ -118,13 +96,13 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
 
   return (
     <Box>
-      {dashboard && isEntityDetailsOpen && selectedEntity ? (
+      {isEntityDetailsOpen && selectedEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
             closeEntityDetailsOverlay={closeEntityDetailsOverlay}
-            dashboard={dashboard}
+            dashboard={selectedInitiative?.dashboard}
             selectedEntity={selectedEntity}
-            entitySteps={route.entitySteps}
+            entitySteps={selectedInitiative?.entitySteps}
           />
         </EntityProvider>
       ) : (
@@ -153,55 +131,21 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
               <Box>{verbiage.emptyDashboardText}</Box>
             ) : (
               <Table sx={sx.table} content={tableHeaders()}>
-                {reportFieldDataEntities.map((entity: EntityShape) => (
-                  <EntityRow
-                    key={entity.id}
-                    entity={entity}
-                    entityType={entityType}
-                    entityInfo={entityInfo}
-                    verbiage={verbiage}
-                    openOverlayOrDrawer={openEntityDetailsOverlay}
-                    openAddEditEntityModal={openAddEditEntityModal}
-                    openDeleteEntityModal={openDeleteEntityModal}
-                  />
-                ))}
+                {reportFieldDataEntities.map((entity, idx) => {
+                  return (
+                    <EntityRow
+                      key={`entityRow-${idx}`}
+                      entity={entity}
+                      entityType={entityType}
+                      entityInfo={entityInfo}
+                      verbiage={verbiage}
+                      openOverlayOrDrawer={openEntityDetailsOverlay}
+                    />
+                  );
+                })}
               </Table>
             )}
-            {modalForm && (
-              <Button
-                sx={sx.addEntityButton}
-                onClick={() => openAddEditEntityModal()}
-                rightIcon={
-                  <Image src={addIcon} alt="Previous" sx={sx.addIcon} />
-                }
-              >
-                {verbiage.addEntityButtonText}
-              </Button>
-            )}
           </Box>
-          {/* Modals */}
-          {modalForm && (
-            <AddEditEntityModal
-              entityType={entityType}
-              selectedEntity={selectedEntity}
-              verbiage={verbiage}
-              form={modalForm}
-              setError={() => {}}
-              modalDisclosure={{
-                isOpen: addEditEntityModalIsOpen,
-                onClose: closeAddEditEntityModal,
-              }}
-            />
-          )}
-          <DeleteEntityModal
-            entityType={entityType}
-            selectedEntity={selectedEntity}
-            verbiage={verbiage}
-            modalDisclosure={{
-              isOpen: deleteEntityModalIsOpen,
-              onClose: closeDeleteEntityModal,
-            }}
-          />
           <ReportPageFooter verbiage={verbiage} />
         </Box>
       )}
@@ -210,7 +154,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
 };
 
 interface Props {
-  route: ModalOverlayReportPageShape;
+  route: DynamicModalOverlayReportPageShape;
   setSidebarHidden: Function;
   validateOnRender?: boolean;
 }
@@ -262,16 +206,5 @@ const sx = {
         width: "260px",
       },
     },
-  },
-  addEntityButton: {
-    marginTop: "2rem",
-    marginBottom: "2rem",
-    ".tablet &, .mobile &": {
-      wordBreak: "break-word",
-      whiteSpace: "break-spaces",
-    },
-  },
-  addIcon: {
-    width: "1rem",
   },
 };

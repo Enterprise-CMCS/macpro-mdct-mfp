@@ -150,11 +150,12 @@ export const EntityRow = ({
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
-          {!isRequired && !isCopied && (
+          {!isRequired && !isCopied && openAddEditEntityModal && (
             <Button
               sx={sx.editNameButton}
               variant="none"
               onClick={() => openAddEditEntityModal(entity)}
+              aria-label="edit button"
             >
               {!editable || isInitiativeClosed
                 ? verbiage.readOnlyEntityButtonText
@@ -170,16 +171,18 @@ export const EntityRow = ({
             onClick={() => openOverlayOrDrawer(entity)}
             variant="outline"
             disabled={entityStatus === EntityStatuses.DISABLED}
+            aria-label="edit button"
           >
             {!editable || isInitiativeClosed
               ? verbiage.readOnlyEntityDetailsButtonText
               : verbiage.enterEntityDetailsButtonText}
           </Button>
-          {!isRequired && !isCopied && (
+          {!isRequired && !isCopied && openDeleteEntityModal && (
             <Button
               sx={sx.deleteButton}
               data-testid="delete-entity"
               onClick={() => openDeleteEntityModal(entity)}
+              aria-label="delete button"
             >
               <Image src={deleteIcon} alt="delete icon" boxSize="3x3" />
             </Button>
@@ -195,8 +198,8 @@ interface Props {
   entityType?: string;
   formEntity?: EntityDetailsOverlayShape | OverlayModalPageShape;
   verbiage: AnyObject;
-  openAddEditEntityModal: Function;
-  openDeleteEntityModal: Function;
+  openAddEditEntityModal?: Function;
+  openDeleteEntityModal?: Function;
   openOverlayOrDrawer: Function;
   [key: string]: any;
 }

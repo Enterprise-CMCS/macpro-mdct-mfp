@@ -47,6 +47,23 @@ export const getFormattedEntityData = (
         fundingSource: getRadioValue(entity, "fundingSources_wpTopic"),
         quarters: getRepeatedField(entity, "fundingSources_quarters"),
       };
+    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
+      return {
+        objectiveName: entity?.objectiveProgress_objectiveName,
+        description: entity?.objectiveProgress_description,
+        targets: entity?.objectiveProgress_targets,
+        quarterProjections: getRepeatedField(
+          entity,
+          "objectiveTargets_projections_"
+        ),
+        quarterActuals: getRepeatedField(entity, "objectiveTargets_actual_"),
+        performanceMeasureProgress:
+          entity?.objectivesProgress_performanceMeasuresIndicators,
+        targetsMet: getRadioValue(entity, "objectivesProgress_deliverablesMet"),
+        missedTargetReason:
+          entity?.objectivesProgress_deliverablesMet_otherText,
+        additionalDetails: entity?.evaluationPlan_additionalDetails,
+      };
     default:
       return {};
   }

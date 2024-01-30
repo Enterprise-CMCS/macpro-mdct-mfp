@@ -169,19 +169,59 @@ export const calculateCompletionStatus = async (
             : [entityFields];
           //loop through all children that belong to that entity and validate the values
           for (var stepFields of entityFieldsList) {
-            const nestedFormTemplate = stepForm.form
-              ? stepForm.form
-              : stepForm.modalForm;
-            const isEntityComplete = await calculateFormCompletion(
-              nestedFormTemplate,
-              stepFields
-            );
-            areAllFormsComplete &&= isEntityComplete;
+            if (stepForm?.objectiveCards) {
+              for (let card of stepForm.objectiveCards) {
+                if (card?.modalForm) {
+                  const nestedFormTemplate = card.modalForm;
+
+                  if (nestedFormTemplate?.objectiveId !== stepFields?.id) {
+                    continue;
+                  }
+                  const isEntityComplete = await calculateFormCompletion(
+                    nestedFormTemplate,
+                    stepFields
+                  );
+                  areAllFormsComplete &&= isEntityComplete;
+                }
+              }
+            } else {
+              const nestedFormTemplate = stepForm.form
+                ? stepForm.form
+                : stepForm.modalForm;
+
+              if (nestedFormTemplate?.initiativeId !== stepFields?.id) {
+                continue;
+              }
+              const isEntityComplete = await calculateFormCompletion(
+                nestedFormTemplate,
+                stepFields
+              );
+              areAllFormsComplete &&= isEntityComplete;
+            }
           }
         }
       }
     }
 
+    return areAllFormsComplete;
+  };
+
+  const calculateDynamicModalOverlayCompletion = async (
+    initiatives: any[],
+    entityType: string
+  ) => {
+    let areAllFormsComplete = true;
+
+    for (let initiative of initiatives) {
+      const isComplete = await calculateEntityWithStepsCompletion(
+        initiative.entitySteps,
+        entityType
+      );
+      if (!isComplete) {
+        areAllFormsComplete = false;
+        break;
+      }
+    }
     return areAllFormsComplete;
   };
 
@@ -231,6 +271,15 @@ export const calculateCompletionStatus = async (
             ),
           };
         }
+        break;
+      case "dynamicModalOverlay":
+        if (!route.initiatives) break;
+        routeCompletion = {
+          [route.path]: await calculateDynamicModalOverlayCompletion(
+            route.initiatives as [],
+            route.entityType
+          ),
+        };
         break;
       case "reviewSubmit":
         // Don't evaluate the review and submit page
