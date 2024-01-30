@@ -1,17 +1,67 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { useStore } from "utils";
+import {
+  mockReportStore,
+  RouterWrappedComponent,
+} from "utils/testing/setupJest";
+import { mockWPFullReport } from "utils/testing/mockReport";
 import {
   EntityDetailsStepTypes,
   ModalOverlayReportPageVerbiage,
   OverlayModalPageShape,
   OverlayModalTypes,
+  ReportRoute,
   OverlayModalStepTypes,
 } from "types";
 import {
   ExportedModalOverlayReportSection,
   Props,
 } from "./ExportedModalOverlayReportSection";
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
+const mockReport = {
+  ...mockWPFullReport,
+  fieldData: {
+    ...mockWPFullReport.fieldData,
+    [OverlayModalTypes.INITIATIVE]: [
+      {
+        ...mockWPFullReport.fieldData.entityType[0],
+        type: OverlayModalTypes.INITIATIVE,
+        id: "mock wip id", // this is both our search filter and our search target in renderFieldRow
+        initiative_wpTopic: [
+          {
+            value: "mock WP topic",
+          },
+        ],
+      },
+    ],
+  },
+  formTemplate: {
+    ...mockWPFullReport.formTemplate,
+    routes: [
+      /*
+       * We need the 3th route to have a child with entityType initiative,
+       * to avoid a null reference in getInitiativeStatus()
+       */
+      ...mockWPFullReport.formTemplate.routes.slice(0, 3),
+      {
+        name: "mock-route-4",
+        path: "/mock/mock-route-4",
+        children: [
+          {
+            entityType: OverlayModalTypes.INITIATIVE,
+          },
+        ],
+      } as ReportRoute,
+      ...mockWPFullReport.formTemplate.routes.slice(3),
+    ],
+  },
+};
+mockReportStore.report = mockReport;
+mockedUseStore.mockReturnValue(mockReportStore);
 
 const defaultMockProps = {
   section: {
@@ -132,11 +182,6 @@ describe("ExportedModalOverlayReportSection rendering", () => {
     expect(
       screen.getAllByTestId("exportedOverlayModalPage")[0]
     ).toBeInTheDocument();
-  });
-
-  test("should show success status icon", () => {
-    const { container } = render(testComponent);
-    screen.debug(container);
   });
 
   test("should not have basic accessibility issues", async () => {

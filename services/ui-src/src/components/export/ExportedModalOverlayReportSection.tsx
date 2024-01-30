@@ -11,6 +11,7 @@ import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
 import {
   AlertTypes,
+  AnyObject,
   EntityDetailsOverlayShape,
   EntityDetailsStepTypes,
   EntityShape,
@@ -126,12 +127,18 @@ export function renderModalOverlayTableBody(
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
   const isPdf = true;
+
+  let dynamicSection: AnyObject[];
+  if (section.pageType === "dynamicModalOverlay") {
+    dynamicSection = (section as AnyObject).initiatives;
+  }
+
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
         return (
-          <Box sx={sx.container}>
-            <Tr key={idx}>
+          <Box sx={sx.container} key={`${reportType}${idx}`}>
+            <Tr>
               <Td sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -150,11 +157,12 @@ export function renderModalOverlayTableBody(
               </Td>
             </Tr>
             {/* Depending on what the entity step type is, render its corresponding component */}
-            {entitySteps.map((step, idx) => {
-              switch (step[0].toString()) {
+            {entitySteps.map((step, stepIdx) => {
+              const type = step[0].toString();
+              switch (type) {
                 case EntityDetailsStepTypes.DEFINE_INITIATIVE:
                   return (
-                    <Box key={idx}>
+                    <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedEntityDetailsOverlaySection
                         section={section as ModalOverlayReportPageShape}
                         entity={entity}
@@ -165,7 +173,7 @@ export function renderModalOverlayTableBody(
                   );
                 case OverlayModalStepTypes.EVALUATION_PLAN:
                   return (
-                    <Box key={idx}>
+                    <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
@@ -175,7 +183,7 @@ export function renderModalOverlayTableBody(
                   );
                 case OverlayModalStepTypes.FUNDING_SOURCES:
                   return (
-                    <Box key={idx}>
+                    <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
@@ -189,7 +197,7 @@ export function renderModalOverlayTableBody(
 
                   return (
                     entity?.isInitiativeClosed && (
-                      <Box key={idx}>
+                      <Box key={`${type}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={section as ModalOverlayReportPageShape}
                           entity={entity}
@@ -200,7 +208,6 @@ export function renderModalOverlayTableBody(
                       </Box>
                     )
                   );
-                // TODO: Once we are tracking the close-out information step, we'll need to add it here
                 default:
                   return <></>;
               }
@@ -211,8 +218,15 @@ export function renderModalOverlayTableBody(
     case ReportType.SAR:
       return entities.map((entity, idx) => {
         return (
-          <Box sx={sx.container}>
-            <Tr key={idx}>
+          <Box sx={sx.container} key={`${reportType}${idx}`}>
+            <Tr>
+              <Td sx={sx.statusIcon}>
+                <EntityStatusIcon
+                  entity={entity}
+                  isPdf={isPdf}
+                  entityStatus={getInitiativeStatus(report, entity, isPdf)}
+                />
+              </Td>
               <Td>
                 <Heading sx={sx.heading} as="h2">
                   {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
@@ -223,6 +237,57 @@ export function renderModalOverlayTableBody(
                 </Heading>
               </Td>
             </Tr>
+            {dynamicSection[idx].entitySteps.map(
+              (step: any, stepIdx: number) => {
+                switch (step.stepType) {
+                  case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
+                    return (
+                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                        <ExportedOverlayModalReportSection
+                          section={dynamicSection[idx] as OverlayModalPageShape}
+                          entity={entity}
+                          entityStep={step}
+                        />
+                      </Box>
+                    );
+                  case EntityDetailsStepTypes.INITIAVTIVE_PROGRESS:
+                    return (
+                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                        <ExportedEntityDetailsOverlaySection
+                          section={step}
+                          entity={entity}
+                          entityStep={step}
+                          showHintText={true}
+                        />
+                      </Box>
+                    );
+                  case EntityDetailsStepTypes.EXPENDITURES: {
+                    const cloneSection = structuredClone(step);
+                    if (cloneSection?.form?.fields)
+                      cloneSection.form.fields = [
+                        cloneSection.form.fields.pop(),
+                      ];
+
+                    const tableSection = structuredClone(step);
+                    if (tableSection?.form?.fields)
+                      tableSection.form.fields.pop();
+
+                    return (
+                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                        <ExportedEntityDetailsOverlaySection
+                          section={step}
+                          entity={entity}
+                          entityStep={cloneSection}
+                          tableSection={tableSection}
+                        />
+                      </Box>
+                    );
+                  }
+                  default:
+                    return <></>;
+                }
+              }
+            )}
           </Box>
         );
       });
@@ -255,7 +320,6 @@ const sx = {
       padding: "0.75rem 0.5rem",
       borderStyle: "none",
       fontWeight: "normal",
-      color: "palette.base",
       ".shrink &": {
         padding: "0.375rem 0rem",
       },

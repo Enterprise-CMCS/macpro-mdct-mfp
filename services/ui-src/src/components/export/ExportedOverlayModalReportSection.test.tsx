@@ -86,7 +86,6 @@ describe("ExportedReportWrapper rendering", () => {
 
   test("ExportedOverlayModalReportComponent returns entity step card", () => {
     render(exportedOverlayModalReportComponentEntityStep);
-
     expect(screen.getByTestId("exportedOverlayModalPage")).toBeInTheDocument();
   });
 });
