@@ -23,6 +23,7 @@ export interface FormLayoutElement {
   id: string;
   type: string;
   props?: AnyObject;
+  transformation?: Transformation;
 }
 
 export interface FormJson {
@@ -30,6 +31,8 @@ export interface FormJson {
   fields: FormField[];
   options?: AnyObject;
   validation?: AnyObject;
+  initiativeId?: string;
+  objectiveId?: string;
 }
 
 export interface DependentFieldValidation {
@@ -67,6 +70,7 @@ export interface FormField {
   choices?: FieldChoice[];
   repeat?: string;
   transformation?: Transformation;
+  objectiveCardTemplate?: AnyObject;
   isRequired?: boolean;
 }
 
@@ -123,5 +127,6 @@ export enum PageTypes {
   STANDARD = "standard",
   DRAWER = "drawer",
   MODAL_DRAWER = "modalDrawer",
+  DYNAMIC_MODAL_OVERLAY = "dynamicModalOverlay",
   REVIEW_SUBMIT = "reviewSubmit",
 }

@@ -32,7 +32,8 @@ export type ReportRouteWithForm =
   | ModalDrawerReportPageShape
   | ModalOverlayReportPageShape
   | OverlayModalPageShape
-  | EntityDetailsOverlayShape;
+  | EntityDetailsOverlayShape
+  | DynamicModalOverlayReportPageShape;
 
 export interface ReportPageShapeBase extends ReportRouteBase {
   children?: never;
@@ -43,10 +44,12 @@ export interface StandardReportPageShape extends ReportPageShapeBase {
   form: FormJson;
   dashboard?: never;
   modalForm?: never;
-  overlayForm?: never;
   drawerForm?: never;
   entityType?: never;
   entitySteps?: never;
+  template?: never;
+  initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface DrawerReportPageShape extends ReportPageShapeBase {
@@ -54,10 +57,12 @@ export interface DrawerReportPageShape extends ReportPageShapeBase {
   verbiage: DrawerReportPageVerbiage;
   drawerForm: FormJson;
   modalForm?: never;
-  overlayForm?: never;
   form?: never;
   entitySteps?: never;
   dashboard?: never;
+  template?: never;
+  initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
@@ -65,22 +70,49 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   verbiage: ModalDrawerReportPageVerbiage;
   modalForm: FormJson;
   drawerForm: FormJson;
-  overlayForm?: never;
   form?: never;
   entitySteps?: never;
   dashboard?: never;
+  template?: never;
+  initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
+  initiativeId: string | undefined;
   entityType: string;
   entityInfo?: string[];
   verbiage: ModalOverlayReportPageVerbiage;
   modalForm: FormJson;
-  overlayForm?: FormJson;
   drawerForm?: never;
   form?: never;
   dashboard: EntityDetailsDashboardOverlayShape;
   entitySteps?: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
+  template?: never;
+  initiatives?: never;
+  objectiveCards?: never;
+}
+
+export interface DynamicModalOverlayReportPageShape
+  extends ReportPageShapeBase {
+  entityType: string;
+  entityInfo: string[];
+  verbiage: ModalOverlayReportPageVerbiage;
+  drawerForm?: never;
+  modalForm?: never;
+  form?: never;
+  entitySteps?: never;
+  dashboard?: never;
+  initiatives: {
+    initiativeId: string;
+    name: string;
+    topic: string;
+    dashboard: FormJson;
+    entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
+  }[];
+  objectiveCards?: never;
+  /** Only used during form template transformation; will be absent after transformation */
+  template?: AnyObject;
 }
 
 export interface OverlayModalPageShape extends ReportPageShapeBase {
@@ -93,6 +125,11 @@ export interface OverlayModalPageShape extends ReportPageShapeBase {
   form?: never;
   entitySteps?: never;
   dashboard?: never;
+  template?: never;
+  initiatives?: never;
+  objectiveCards?: {
+    modalForm?: FormJson;
+  }[];
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
@@ -102,15 +139,22 @@ export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   verbiage: EntityOverlayPageVerbiage;
   entityType?: never;
   dashboard?: never;
-  modalForm: never;
+  modalForm?: never;
   drawerForm?: never;
   entitySteps?: never;
+  template?: never;
+  initiatives?: never;
+  objectiveCards?: {
+    modalForm?: FormJson;
+  }[];
 }
 
 export interface EntityDetailsDashboardOverlayShape
   extends ReportPageShapeBase {
   dashboard?: never;
-  entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
+  template?: never;
+  initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface ReportRouteWithoutForm extends ReportRouteBase {
@@ -119,11 +163,13 @@ export interface ReportRouteWithoutForm extends ReportRouteBase {
   entityType?: never;
   verbiage?: never;
   modalForm?: never;
-  overlayForm?: never;
   drawerForm?: never;
   form?: never;
   entitySteps?: never;
   dashboard?: never;
+  template?: never;
+  initiatives?: never;
+  objectiveCards?: never;
 }
 
 export interface ReportPageVerbiage {
