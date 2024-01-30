@@ -1,8 +1,4 @@
-import {
-  RenderResult,
-  render,
-  screen,
-} from "@testing-library/react";
+import { RenderResult, render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 // components
 import { EntityDetailsOverlay, ReportContext } from "components";
@@ -21,6 +17,8 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseEntityStore);
 
 const mockCloseEntityDetailsOverlay = jest.fn();
+
+let component: RenderResult;
 
 //bypass autosave call when simulating type inputs
 jest.mock("utils/autosave/autosave", () => ({
@@ -45,8 +43,10 @@ const entityDetailsOverlayComponent = (
 );
 
 describe("Test EntityDetailsOverlayPage", () => {
+  beforeEach(() => {
+    component = render(entityDetailsOverlayComponent);
+  });
   test("EntityDetailsOverlayPage view renders", () => {
-    render(entityDetailsOverlayComponent);
     // Check that the header rendered
     expect(
       screen.getByText(mockEntityDetailsOverlayJson.verbiage.intro.section)
@@ -74,18 +74,25 @@ describe("Test EntityDetailsOverlayPage", () => {
   });
 
   test("Test onSubmit Function", async () => {
-    let component = render(entityDetailsOverlayComponent);
     //fill out form
     const textbox = component.container.querySelector("#mock-text-field");
-    await userEvent.type(textbox!, "test");
-    const dateField = component.container.querySelector('[name="mock-date-field"]')
+    await userEvent.type(textbox!, "mock text");
+    expect(textbox).toHaveValue("mock text");
+
+    const dateField = component.container.querySelector(
+      '[name="mock-date-field"]'
+    );
     await userEvent.type(dateField!, "2/2/2022");
+    expect(dateField).toHaveValue("2/2/2022");
+
     const number = component.container.querySelector("#mock-number-field");
     await userEvent.type(number!, "3");
+    expect(number).toHaveValue("3");
 
     //trigger onSubmit
     const saveButton = screen.getByText("Save & return");
     await userEvent.click(saveButton);
+    expect(mockCloseEntityDetailsOverlay).toHaveBeenCalled();
   });
 });
 
