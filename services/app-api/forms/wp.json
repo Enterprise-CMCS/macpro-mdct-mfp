@@ -612,7 +612,7 @@
                     },
                     {
                       "type": "li",
-                      "content": "Close-out information, to be completed as appropriate during MFP Work Plan revisions",
+                      "content": "Initiative close-out information, to be completed as appropriate during MFP Work Plan revisions",
                       "props": {
                         "style": {
                           "paddingTop": ".5rem"
@@ -753,7 +753,7 @@
                 "type": "radio",
                 "validation": "radio",
                 "props": {
-                  "label": "Work Plan topic:",
+                  "label": "MFP Work Plan topic:",
                   "hint": "Note: Initiative topics with <span aria-label='asterisk'>*</span> are required and must be selected at least once across all initiatives.",
                   "choices": [
                     {
@@ -818,7 +818,7 @@
                     },
                     {
                       "id": "2qjBuLtpA5pDvUM1HSHMVq",
-                      "label": "Equity and SDOH"
+                      "label": "Equity and social determinants of health (SDOH)"
                     },
                     {
                       "id": "18Wb9b2zMIF13pZwWstdJF",
@@ -901,7 +901,7 @@
                       "hint": [
                         {
                           "type": "html",
-                          "content": "Select all that apply. Populations you’ve added as “Other” in the Transition Benchmarks section will appear here. Note: if your target population does not appear here, go to "
+                          "content": "Select all that apply. “Other” population(s) selected and defined in the"
                         },
                         {
                           "type": "internalLink",
@@ -912,7 +912,7 @@
                         },
                         {
                           "type": "html",
-                          "content": ", add it there, and return here to select it. Select “Not applicable” if the population is not a part of your overall MFP target populations (if this is for a non-MFP qualified initiative)."
+                          "content": "section automatically upload. Select “HCBS infrastructure/system-level development” for initiatives that strengthen or expand home and community-based services (HCBS)."
                         }
                       ],
                       "choices": []
@@ -982,7 +982,7 @@
                   "info": [
                     {
                       "type": "html",
-                      "content": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system."
+                      "content": "To complete your evaluation plan, create measurable objectives. Select “Add objective” button for each objective you need to add to the system."
                     }
                   ],
                   "exportSectionHeader": "exportSectionHeader"
@@ -1005,7 +1005,7 @@
                     },
                     {
                       "type": "html",
-                      "content": "<br><br><strong>Please identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:"
+                      "content": "<br><br><strong>Identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:"
                     }
                   ],
                   "list": [
@@ -1017,7 +1017,7 @@
                   ],
                   "text": ""
                 },
-                "text": "Add evaluation plan, including measurable objectives. Select <i>Add objective</i> button for each objective you need to add to the system.",
+                "text": "To complete your evaluation plan, create measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
                 "addEntityButtonText": "Add objective",
                 "editEntityHint": "Select \"Edit\" to complete initiative evaluation plan.",
                 "editEntityButtonText": "Edit objective",
@@ -1027,7 +1027,7 @@
                 "addEditModalEditTitle": "Edit objective for ",
                 "deleteModalTitle": "Delete objective for this report?",
                 "deleteModalConfirmButtonText": "Yes, delete objective",
-                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Progress Reports, but it will not be available in future Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
+                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in MFP future Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
                 "dashboardTitle": "Objective total count",
@@ -1052,7 +1052,7 @@
                     "type": "textarea",
                     "validation": "text",
                     "props": {
-                      "label": "Describe the performance measures or indicators your state or territory will use to monitor progress toward achieving this objective, including details on the calculation of measures if relevant. Please describe any key deliverables.",
+                      "label": "Describe the performance measures or indicators your state or territory will use to monitor progress toward achieving this objective, including details on the calculation of measures if relevant. Describe any key deliverables.",
                       "hint": "(e.g., data sources and limitations)"
                     }
                   },
@@ -1061,7 +1061,7 @@
                     "type": "textarea",
                     "validation": "text",
                     "props": {
-                      "label": "Provide targets for the performance measures or indicators listed above. Please include milestones and expected time frames for key deliverables.",
+                      "label": "Provide targets for the performance measures or indicators listed above. Include milestones and expected time frames for key deliverables.",
                       "hint": "If a performance measure includes quantitative targets, complete the quarterly fields below."
                     }
                   },
@@ -1105,7 +1105,7 @@
                     "validation": "text",
                     "props": {
                       "label": "Provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description).",
-                      "hint": "Please list the responsible state or territory agency parties and any key external partners for achieving this objective."
+                      "hint": "List the responsible state or territory agency parties and any key external partners for achieving this objective."
                     }
                   }
                 ]
@@ -1228,7 +1228,7 @@
               "entityType": "initiative",
               "stepType": "closeOutInformation",
               "stepInfo": ["stepName", "hint"],
-              "stepName": "IV. Close-out information (if applicable)",
+              "stepName": "IV. Initiative close-out information (if applicable)",
               "hint": "To be completed as appropriate during MFP Work Plan revisions",
               "isRequired": true,
               "verbiage": {
