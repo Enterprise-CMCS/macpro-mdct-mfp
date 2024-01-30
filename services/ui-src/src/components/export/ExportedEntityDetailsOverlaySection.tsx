@@ -3,18 +3,23 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
 import uuid from "react-uuid";
 // components
-import { ExportedEntityDetailsTable } from "components";
+import {
+  ExportedEntityDetailsTable,
+  ExportEntityDetailsTable,
+} from "components";
 // types
 import {
+  AnyObject,
   EntityShape,
   FormField,
   FormLayoutElement,
   ModalOverlayReportPageShape,
+  ReportPageShapeBase,
   ReportShape,
   ReportType,
 } from "types";
 // utils
-import { updateRenderFields, useStore } from "utils";
+import { parseCustomHtml, updateRenderFields, useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
 
 export const ExportedEntityDetailsOverlaySection = ({
@@ -33,7 +38,8 @@ export const ExportedEntityDetailsOverlaySection = ({
           entity ?? [],
           entityStep,
           props.showHintText,
-          closed
+          closed,
+          props.tableSection
         )}
     </Box>
   );
@@ -44,6 +50,7 @@ export interface ExportedEntityDetailsOverlaySectionProps {
   entity: EntityShape;
   entityStep: (string | FormLayoutElement | FormField)[];
   showHintText?: boolean;
+  tableSection?: ReportPageShapeBase;
   closed?: boolean;
 }
 
@@ -58,16 +65,30 @@ export function getEntityTableComponents(
   entity: EntityShape,
   entityStep: (string | FormLayoutElement | FormField)[],
   showHintText?: boolean,
-  closed?: boolean
+  closed?: boolean,
+  tableSection?: ReportPageShapeBase
 ) {
-  const entityStepFields = entityStep.slice(3) as FormField[];
+  const reportType = report.reportType;
+  const title = (entityStep as any)?.name || (entityStep![1] as string);
+  const hint = (entityStep as any)?.hint || (entityStep![2] as string);
+
+  let info: string = "";
+  ((entityStep as any)?.verbiage?.intro?.info as [])?.forEach(
+    (text: AnyObject) => {
+      info += `${text?.content} `;
+    }
+  );
+  const entityStepFields =
+    (entityStep as any)?.form?.fields || (entityStep?.slice(3) as FormField[]);
   const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
   return (
     <Box key={uuid()}>
       <Box>
         <Heading as="h4">
-          <Box sx={sx.stepName}>{entityStep[1]}</Box>
-          <Box sx={sx.stepHint}>{entityStep[2]}</Box>
+          <Box sx={sx.stepName}>{title}</Box>
+          <Box sx={sx.stepHint}>
+            {reportType === ReportType.SAR ? parseCustomHtml(info) : hint}
+          </Box>
         </Heading>
       </Box>
       {closed && (
@@ -77,6 +98,13 @@ export function getEntityTableComponents(
           </Text>
           <Text fontSize={"sm"}>{entity.closedBy}</Text>
         </Box>
+      )}
+      {tableSection && (
+        <ExportEntityDetailsTable
+          report={report}
+          section={tableSection}
+          entity={entity}
+        />
       )}
       <Fragment>
         <ExportedEntityDetailsTable
@@ -103,7 +131,8 @@ export function renderEntityDetailTables(
   entity: EntityShape,
   entityStep: (string | FormLayoutElement | FormField)[],
   showHintText?: boolean,
-  closed?: boolean
+  closed?: boolean,
+  tableSection?: ReportPageShapeBase
 ) {
   const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
@@ -117,8 +146,13 @@ export function renderEntityDetailTables(
       );
     }
     case ReportType.SAR:
-      throw new Error(
-        `The entity detail table for report type '${reportType}' have not been implemented.`
+      return getEntityTableComponents(
+        report!,
+        entity,
+        entityStep,
+        showHintText,
+        closed,
+        tableSection
       );
     default:
       assertExhaustive(reportType);

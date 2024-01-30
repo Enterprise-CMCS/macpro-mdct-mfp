@@ -325,7 +325,7 @@ export const ExportRETTable = ({ section }: Props) => {
   });
 
   const formattedFieldData = { ...report?.fieldData, formId: form?.id };
-  // //generate the table
+  //generate the table
   let table: TableContentShape = {};
   let ariaOverride: TableContentShape = {};
   if (Object.keys(rows).length > 0) {

@@ -8,7 +8,6 @@ import {
   FormField,
   ReportShape,
   FormLayoutElement,
-  ReportType,
   isFieldElement,
 } from "types";
 import { useStore } from "utils";
@@ -31,9 +30,7 @@ export const ExportedEntityDetailsTable = ({
     tableHeaders.indicator,
     tableHeaders.response,
   ];
-
-  const reportType = report?.reportType as ReportType;
-  const hideHintText = !props.showHintText || reportType === ReportType.SAR;
+  const hideHintText = !props.showHintText;
 
   return (
     <Table

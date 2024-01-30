@@ -50,6 +50,7 @@ export const ExportedReportWrapper = ({ section }: Props) => {
           section={section as ModalDrawerReportPageShape}
         />
       );
+    case PageTypes.DYNAMIC_MODAL_OVERLAY:
     case PageTypes.MODAL_OVERLAY:
       return (
         <>
