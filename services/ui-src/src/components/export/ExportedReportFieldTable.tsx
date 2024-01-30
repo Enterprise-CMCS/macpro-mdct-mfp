@@ -19,8 +19,8 @@ import sarVerbiage from "verbiage/pages/sar/sar-export";
 
 export const ExportedReportFieldTable = ({ section }: Props) => {
   const { report } = useStore() ?? {};
-  const { tableHeaders } = wpVerbiage;
 
+  const { tableHeaders } = wpVerbiage;
   const pageType = section.pageType;
   const formFields =
     pageType === "drawer" ? section.drawerForm?.fields : section.form?.fields;
@@ -65,14 +65,13 @@ export const ExportedReportFieldTable = ({ section }: Props) => {
   );
 };
 
-const renderGeneralInformation = (
+export const renderGeneralInformation = (
   verbiage: any,
   formFields: (FormField | FormLayoutElement)[],
   pageType: string,
   entityType?: string
 ) => {
   const headings = verbiage.generalInformationTable.headings;
-
   // get the range of form fields for a particular section
   const getSectionFormFields = (
     heading: number,

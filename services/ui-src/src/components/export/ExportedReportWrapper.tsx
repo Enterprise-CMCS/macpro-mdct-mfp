@@ -18,7 +18,6 @@ import {
   StandardReportPageShape,
 } from "types";
 import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
-
 export const ExportedReportWrapper = ({ section }: Props) => {
   switch (section.pageType) {
     case PageTypes.STANDARD:
