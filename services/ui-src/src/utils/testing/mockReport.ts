@@ -57,6 +57,12 @@ export const mockReportFieldData = {
       transitionBenchmarks_targetPopulationName: "mock benchmark name",
     },
   ],
+  initiative: [
+    {
+      id: "mock-initative-id",
+      name: "mock-name",
+    },
+  ],
 };
 
 export const mockWPReport = {

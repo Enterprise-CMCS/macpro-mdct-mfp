@@ -28,6 +28,13 @@ jest.mock("utils/autosave/autosave", () => ({
   autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
 }));
 
+//mock closeout status to enable closeout button
+jest.mock("components/tables/getEntityStatus", () => ({
+  getCloseoutStatus: jest.fn().mockImplementation(() => {
+    return true;
+  }),
+}));
+
 const { closeOutWarning, closeOutModal } =
   mockEntityDetailsOverlayJson.verbiage;
 
@@ -93,6 +100,16 @@ describe("Test EntityDetailsOverlayPage", () => {
     const saveButton = screen.getByText("Save & return");
     await userEvent.click(saveButton);
     expect(mockCloseEntityDetailsOverlay).toHaveBeenCalled();
+  });
+  it("Test Closeout Modal", async () => {
+    const closeoutBtn = screen.getByText(closeOutModal.closeOutModalButtonText);
+    await userEvent.click(closeoutBtn);
+
+    const modal = screen.getByText("This is a modal");
+    expect(modal).toBeVisible();
+
+    const modalCloseBtn = screen.getByText("Cancel");
+    await userEvent.click(modalCloseBtn);
   });
 });
 
