@@ -19,6 +19,7 @@ export const ExportedOverlayModalReportSection = ({
   entityStep,
 }: Props) => {
   const { emptyEntityMessage, dashboardTitle } = exportVerbiage;
+
   const type = (entityStep as any)?.stepType || (entityStep![0] as string);
   const title = (entityStep as any)?.name || (entityStep![1] as string);
   const hint = (entityStep as any)?.hint || (entityStep![2] as string);
