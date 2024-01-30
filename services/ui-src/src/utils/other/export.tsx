@@ -77,7 +77,7 @@ export const renderDrawerDataCell = (
   pageType: string,
   parentFieldCheckedChoiceIds?: string[]
 ) =>
-  entityResponseData?.map((entity: EntityShape, index: number) => {
+  entityResponseData?.map((entity: EntityShape) => {
     const notApplicable =
       parentFieldCheckedChoiceIds &&
       !parentFieldCheckedChoiceIds?.includes(entity.id);
