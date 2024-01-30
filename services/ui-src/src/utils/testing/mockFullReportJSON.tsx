@@ -71,7 +71,7 @@ export const mockFullReportJSON: ReportJson = {
           "Are you sure you want to delete this target population?",
         deleteModalConfirmButtonText: "Yes, delete population",
         deleteModalWarning:
-          "Are you sure you want to proceed? You will lose all information entered for this population in the Work Plan. The population will remain in previously submitted Semi-Annual Reports if applicable.",
+          "Are you sure you want to proceed? You will lose all information entered for this population in the Work Plan. The population will remain in previously submitted MFP Semi-Annual Reports if applicable.",
         entityUnfinishedMessage:
           "Complete the remaining indicators for this access measure by entering details.",
         enterEntityDetailsButtonText: "Edit",
@@ -101,7 +101,7 @@ export const mockFullReportJSON: ReportJson = {
             validation: "text",
             props: {
               label: "Target population name",
-              hint: 'Specify an "other" target population applicable to your MFP demonstration project. Individuals reported under this population must align throughout MFP. (e.g., HIV/AIDS, brain injury)',
+              hint: 'Specify an "other" target population applicable to your MFP demonstration project. (e.g., HIV/AIDS, brain injury)',
             },
           },
         ],
@@ -115,7 +115,7 @@ export const mockFullReportJSON: ReportJson = {
             validation: "radio",
             props: {
               label:
-                "Is this target population applicable to your MFP demonstration?",
+                "Is this target population applicable to your MFP Demonstration?",
               hint: "Enter 0 for quarters with no projected transitions. Enter N/A for quarters you do not expect to report.",
               choices: [
                 {
