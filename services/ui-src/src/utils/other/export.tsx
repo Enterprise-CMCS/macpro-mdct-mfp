@@ -31,12 +31,7 @@ export const renderDataCell = (
   }
   // render standard data cell (just field response data)
   const fieldResponseData = allResponseData[formField.id];
-  return renderResponseData(
-    formField,
-    fieldResponseData,
-    allResponseData,
-    pageType
-  );
+  return renderResponseData(formField, fieldResponseData);
 };
 
 export const renderOverlayEntityDataCell = (
@@ -70,13 +65,7 @@ export const renderOverlayEntityDataCell = (
   return (
     <Box>
       <Text>
-        {renderResponseData(
-          formField,
-          entity[formField.id],
-          entityResponseData,
-          "modalOverlay",
-          notApplicable
-        )}
+        {renderResponseData(formField, entity[formField.id], notApplicable)}
       </Text>
     </Box>
   );
@@ -100,14 +89,7 @@ export const renderDrawerDataCell = (
             <Text sx={sx.entityName}>{entity.name}</Text>
           </li>
           <li className="entityResponse">
-            {renderResponseData(
-              formField,
-              fieldResponseData,
-              entityResponseData,
-              pageType,
-              notApplicable,
-              index
-            )}
+            {renderResponseData(formField, fieldResponseData, notApplicable)}
           </li>
         </ul>
       </Box>
@@ -124,10 +106,7 @@ export const renderDynamicDataCell = (fieldResponseData: AnyObject) =>
 export const renderResponseData = (
   formField: FormField,
   fieldResponseData: any,
-  widerResponseData: AnyObject,
-  pageType: string,
-  notApplicable?: boolean,
-  entityIndex?: number
+  notApplicable?: boolean
 ) => {
   const isChoiceListField = ["checkbox", "radio"].includes(formField.type);
   // check for and handle no response
@@ -142,13 +121,7 @@ export const renderResponseData = (
     return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;
   // handle choice list fields (checkbox, radio)
   if (isChoiceListField) {
-    return renderChoiceListFieldResponse(
-      formField,
-      fieldResponseData,
-      widerResponseData,
-      pageType,
-      entityIndex!
-    );
+    return renderChoiceListFieldResponse(formField, fieldResponseData);
   }
   // check for and handle link fields (email, url)
   const { isLink, isEmail } = checkLinkTypes(formField);
@@ -159,10 +132,7 @@ export const renderResponseData = (
 
 export const renderChoiceListFieldResponse = (
   formField: FormField,
-  fieldResponseData: AnyObject,
-  widerResponseData: AnyObject,
-  pageType: string,
-  entityIndex: number
+  fieldResponseData: AnyObject
 ) => {
   // filter potential choices to just those that are selected
   const potentialFieldChoices = formField.props?.choices;
@@ -174,18 +144,9 @@ export const renderChoiceListFieldResponse = (
     }
   );
   const choicesToDisplay = selectedChoices?.map((choice: FieldChoice) => {
-    // get related "otherText" value, if present (always only a single child element here)
-    const firstChildId = choice?.children?.[0]?.id!;
-    const shouldDisplayRelatedOtherTextEntry =
-      choice.children?.[0]?.id.endsWith("-otherText");
-    const relatedOtherTextEntry =
-      pageType === "drawer"
-        ? widerResponseData[entityIndex]?.[firstChildId]
-        : widerResponseData?.[firstChildId];
     return (
       <Text key={choice.id} sx={sx.fieldChoice}>
         {choice.label}
-        {shouldDisplayRelatedOtherTextEntry && " – " + relatedOtherTextEntry}
       </Text>
     );
   });
