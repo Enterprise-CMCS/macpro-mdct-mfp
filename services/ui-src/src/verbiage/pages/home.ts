@@ -3,7 +3,7 @@ export default {
     header: "Money Follows the Person (MFP) Portal",
     body: {
       preLinkText:
-        "Get started by completing a MFP Work Plan for your state or territory. After your MFP Work Plan is submitted and approved, you will be able to complete a Semi-Annual Progress Report. Learn more about this ",
+        "Get started by completing a MFP Work Plan for your state or territory. After your MFP Work Plan is submitted and approved, you will be able to complete a MFP Semi-Annual Progress Report. Learn more about this ",
       linkText: "new data collection tool",
       linkLocation:
         "https://www.medicaid.gov/medicaid/long-term-services-supports/money-follows-person/index.html",
@@ -13,7 +13,7 @@ export default {
   },
   cards: {
     WP: {
-      title: "MFP Work Plan (WP)",
+      title: "MFP Work Plan",
       body: {
         available:
           "The MFP Work Plan is the state or territory's road map for accomplishing the rebalancing objective described in section ",
