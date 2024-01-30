@@ -1,42 +1,52 @@
-import { RenderResult, render, screen } from "@testing-library/react";
+import {
+  RenderResult,
+  render,
+  screen,
+} from "@testing-library/react";
 import { axe } from "jest-axe";
 // components
-import { EntityDetailsOverlay } from "components";
+import { EntityDetailsOverlay, ReportContext } from "components";
 // utils
 import {
   mockEntityDetailsOverlayJson,
   RouterWrappedComponent,
   mockUseEntityStore,
+  mockWpReportContext,
 } from "utils/testing/setupJest";
-import { autosaveFieldData, useStore } from "utils";
+import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
-import { UseFormReturn, FieldValues } from "react-hook-form";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseEntityStore);
 
 const mockCloseEntityDetailsOverlay = jest.fn();
-const mockAutoSave = jest.fn();
+
+//bypass autosave call when simulating type inputs
+jest.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: jest.fn().mockImplementation(() => {
+    return {};
+  }),
+  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
+}));
 
 const { closeOutWarning, closeOutModal } =
   mockEntityDetailsOverlayJson.verbiage;
 
 const entityDetailsOverlayComponent = (
-  <RouterWrappedComponent>
-    <EntityDetailsOverlay
-      route={mockEntityDetailsOverlayJson}
-      closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
-    />
-  </RouterWrappedComponent>
+  <ReportContext.Provider value={mockWpReportContext}>
+    <RouterWrappedComponent>
+      <EntityDetailsOverlay
+        route={mockEntityDetailsOverlayJson}
+        closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
+      />
+    </RouterWrappedComponent>
+  </ReportContext.Provider>
 );
 
-let component: RenderResult;
 describe("Test EntityDetailsOverlayPage", () => {
-  beforeEach(() => {
-    component = render(entityDetailsOverlayComponent);
-  });
   test("EntityDetailsOverlayPage view renders", () => {
+    render(entityDetailsOverlayComponent);
     // Check that the header rendered
     expect(
       screen.getByText(mockEntityDetailsOverlayJson.verbiage.intro.section)
@@ -62,14 +72,19 @@ describe("Test EntityDetailsOverlayPage", () => {
       screen.getByText(closeOutModal.closeOutModalButtonText)
     ).toBeVisible();
   });
-  test("Test onChange Function", async () => {
+
+  test("Test onSubmit Function", async () => {
+    let component = render(entityDetailsOverlayComponent);
+    //fill out form
     const textbox = component.container.querySelector("#mock-text-field");
     await userEvent.type(textbox!, "test");
-  });
-  test("Test onSubmit Function", async () => {
-    const saveButton = screen.getByText(
-      "Return to dashboard for this initiative"
-    );
+    const dateField = component.container.querySelector('[name="mock-date-field"]')
+    await userEvent.type(dateField!, "2/2/2022");
+    const number = component.container.querySelector("#mock-number-field");
+    await userEvent.type(number!, "3");
+
+    //trigger onSubmit
+    const saveButton = screen.getByText("Save & return");
     await userEvent.click(saveButton);
   });
 });
