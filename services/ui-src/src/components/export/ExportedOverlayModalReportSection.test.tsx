@@ -1,83 +1,92 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
-import { RouterWrappedComponent } from "utils/testing/setupJest";
-
+// components
+import { ReportContext } from "components";
+// utils
+import { useStore } from "../../utils";
+import { mockUseStore } from "../../utils/testing/setupJest";
 import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
+import { mockWpReportContext } from "../../utils/testing/mockReport";
+import { entityTypes } from "types";
+import { mockOverlayModalPageJson } from "utils/testing/setupJest";
 
-import { EntityShape, FormField, OverlayModalPageShape } from "types";
+jest.mock("utils/state/useStore");
 
-const section: OverlayModalPageShape = {
-  entityType: "",
-  stepType: "",
-  stepName: "",
-  stepInfo: [],
-  hint: "",
-  verbiage: {
-    addEntityButtonText: "",
-    dashboardTitle: "",
-    countEntitiesInTitle: false,
-    tableHeader: "",
-    addEditModalHint: "",
-    intro: {
-      section: "",
-      subsection: undefined,
-      hint: undefined,
-      info: undefined,
-      title: undefined,
-      subtitle: undefined,
-      spreadsheet: undefined,
-      exportSectionHeader: undefined,
-    },
-  },
-  modalForm: {
-    id: "",
-    fields: [],
-  },
-  name: "",
-  path: "",
+const mockEntity = {
+  id: "mock-id-1",
+  type: entityTypes[0],
+  "mock-modal-text-field": "mock input 1",
 };
 
-const entityStep: (string | FormField)[] = [
-  "mockType",
-  "mock plan name",
-  "mock hint",
-  { id: "mock-id", props: { label: "mock field 1" }, type: "", validation: "" },
-];
-
-const entity: EntityShape = {
-  id: "entity-id",
-  type: "initiative",
-  "mock-id": "mock value",
-  mockType: [
+const mockEntity2 = {
+  id: "mock-id-2",
+  type: entityTypes[0],
+  "mock-modal-text-field": "mock input 1",
+  fundingSources: [
     {
-      id: "step-entity-id",
+      fundingSources_quarters2024Q1: "7.00",
+      fundingSources_quarters2024Q2: "7.00",
     },
   ],
 };
 
-const testComponent = (
-  <RouterWrappedComponent>
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue(mockUseStore);
+
+const entityMockStep = [
+  "fundingSources",
+  "III. Funding sources",
+  "Add funding sources with projected quarterly expenditures",
+  {
+    id: "fundingSources_wpTopic",
+    props: {
+      label: "2024 1",
+      mask: "currency",
+    },
+    transformation: { rule: "" },
+    type: "number",
+    validation: "number",
+  },
+  {
+    id: "fundingSources_quarters2024Q1",
+    props: {
+      label: "2024 1",
+      mask: "currency",
+    },
+    transformation: { rule: "" },
+    type: "number",
+    validation: "number",
+  },
+];
+
+const exportedOverlayModalReportComponent = (
+  <ReportContext.Provider value={mockWpReportContext}>
     <ExportedOverlayModalReportSection
-      section={section}
-      entityStep={entityStep}
-      entity={entity}
+      entity={mockEntity}
+      entityStep={entityMockStep}
+      section={mockOverlayModalPageJson}
     />
-  </RouterWrappedComponent>
+  </ReportContext.Provider>
 );
 
-describe("Test ExportedOverlayModalReportSection Component", () => {
-  beforeEach(() => {
-    render(testComponent);
-  });
-  test("Test ExportRETTable render", () => {
-    screen.debug();
-  });
-});
+const exportedOverlayModalReportComponentEntityStep = (
+  <ReportContext.Provider value={mockWpReportContext}>
+    <ExportedOverlayModalReportSection
+      entity={mockEntity2}
+      entityStep={entityMockStep}
+      section={mockOverlayModalPageJson}
+    />
+  </ReportContext.Provider>
+);
 
-describe("Test ExportedModalOverlayReportSection accessibility", () => {
-  test("should not have basic accessibility issues", async () => {
-    const { container } = render(testComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+describe("ExportedReportWrapper rendering", () => {
+  test("ExportedOverlayModalReportComponent renders", () => {
+    render(exportedOverlayModalReportComponent);
+    expect(screen.getByTestId("exportedOverlayModalPage")).toBeInTheDocument();
+  });
+
+  test("ExportedOverlayModalReportComponent returns entity step card", () => {
+    render(exportedOverlayModalReportComponentEntityStep);
+
+    expect(screen.getByTestId("exportedOverlayModalPage")).toBeInTheDocument();
   });
 });

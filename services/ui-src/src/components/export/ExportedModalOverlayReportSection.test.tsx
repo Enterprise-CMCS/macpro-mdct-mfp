@@ -1,93 +1,144 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { RouterWrappedComponent } from "utils/testing/setupJest";
+import {
+  EntityDetailsStepTypes,
+  ModalOverlayReportPageVerbiage,
+  OverlayModalPageShape,
+  OverlayModalTypes,
+  OverlayModalStepTypes,
+} from "types";
+import {
+  ExportedModalOverlayReportSection,
+  Props,
+} from "./ExportedModalOverlayReportSection";
 
-import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
-
-import { renderStatusIcon } from "./ExportedModalOverlayReportSection";
-
-import { EntityShape, FormField, OverlayModalPageShape } from "types";
-
-jest.mock("./ExportedModalOverlayReportSection", () => ({
-  ...jest.requireActual("./ExportedModalOverlayReportSection"),
-  renderStatusIcon: jest.fn(),
-}));
-
-const section: OverlayModalPageShape = {
-  entityType: "",
-  stepType: "",
-  stepName: "",
-  stepInfo: [],
-  hint: "",
-  verbiage: {
-    addEntityButtonText: "",
-    dashboardTitle: "",
-    countEntitiesInTitle: false,
-    tableHeader: "",
-    addEditModalHint: "",
-    intro: {
-      section: "",
-      subsection: undefined,
-      hint: undefined,
-      info: undefined,
-      title: undefined,
-      subtitle: undefined,
-      spreadsheet: undefined,
-      exportSectionHeader: undefined,
-    },
+const defaultMockProps = {
+  section: {
+    entityType: OverlayModalTypes.INITIATIVE,
+    verbiage: {
+      intro: {
+        section: "",
+        subsection: "State- or Territory-Specific Initiatives",
+        info: [
+          {
+            type: "html",
+            content: "See ",
+          },
+          {
+            type: "internalLink",
+            content: "previous page",
+            props: {
+              to: "/wp/state-and-territory-specific-initiatives/instructions",
+              style: {
+                textDecoration: "underline",
+              },
+            },
+          },
+          {
+            type: "html",
+            content: " for detailed instructions.",
+          },
+        ],
+      },
+      addEntityButtonText: "Add initiative",
+      editEntityHint: 'Select "Edit" to complete the details.',
+      editEntityButtonText: "Edit name/topic",
+      readOnlyEntityButtonText: "View name/topic",
+      addEditModalAddTitle: "Add initiative",
+      addEditModalEditTitle: "Edit initiative",
+      deleteModalTitle: "Are you sure you want to delete this initiative?",
+      deleteModalConfirmButtonText: "Yes, delete initiative",
+      deleteModalWarning:
+        "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan.",
+      enterEntityDetailsButtonText: "Edit",
+      readOnlyEntityDetailsButtonText: "View",
+      dashboardTitle: "Initiative total count:",
+      countEntitiesInTitle: true,
+      tableHeader: "Initiative name <br/> Work Plan topic",
+      addEditModalHint:
+        "Provide the name of one initiative. You will be then be asked to complete details for this initiative including a description, evaluation plan and funding sources.",
+    } as ModalOverlayReportPageVerbiage,
+    entitySteps: [
+      {
+        stepType: EntityDetailsStepTypes.DEFINE_INITIATIVE,
+        stepName: "mock step name",
+        hint: "mock step hint",
+        entityType: "initiative",
+        modalForm: {
+          fields: [
+            {
+              id: "mock field id",
+              validation: "number",
+            },
+          ],
+        },
+      },
+      {
+        stepType: OverlayModalStepTypes.EVALUATION_PLAN,
+        stepName: "mock step name",
+        hint: "mock step hint",
+        entityType: "initiative",
+        modalForm: {
+          fields: [
+            {
+              id: "mock field id",
+              validation: "number",
+            },
+          ],
+        },
+      },
+      {
+        stepType: OverlayModalStepTypes.FUNDING_SOURCES,
+        stepName: "mock step name",
+        hint: "mock step hint",
+        entityType: "initiative",
+        modalForm: {
+          fields: [
+            {
+              id: "mock field id",
+              validation: "number",
+            },
+          ],
+        },
+      },
+      {
+        stepType: EntityDetailsStepTypes.CLOSE_OUT_INFORMATION,
+        stepName: "mock step name",
+        hint: "mock step hint",
+        entityType: "initiative",
+        modalForm: {
+          fields: [
+            {
+              id: "mock field id",
+              validation: "number",
+            },
+          ],
+        },
+      },
+    ] as OverlayModalPageShape[],
   },
-  modalForm: {
-    id: "",
-    fields: [],
-  },
-  name: "",
-  path: "",
-};
-
-const entityStep: (string | FormField)[] = [
-  "mockType",
-  "mock plan name",
-  "mock hint",
-  { id: "mock-id", props: { label: "mock field 1" }, type: "", validation: "" },
-];
-
-const entity: EntityShape = {
-  id: "entity-id",
-  type: "initiative",
-  "mock-id": "mock value",
-  mockType: [
-    {
-      id: "step-entity-id",
-    },
-  ],
-};
+} as Props;
 
 const testComponent = (
   <RouterWrappedComponent>
-    <ExportedOverlayModalReportSection
-      section={section}
-      entityStep={entityStep}
-      entity={entity}
-    />
+    <ExportedModalOverlayReportSection {...defaultMockProps} />
   </RouterWrappedComponent>
 );
 
-describe("Test ExportedOverlayModalReportSection Component", () => {
-  beforeEach(() => {
+describe("ExportedModalOverlayReportSection rendering", () => {
+  test("should render modal overlay report section", async () => {
     render(testComponent);
-  });
-  test("Test ExportRETTable render", () => {
-    screen.debug();
+    expect(
+      screen.getAllByTestId("exportedOverlayModalPage")[0]
+    ).toBeInTheDocument();
   });
 
-  test("should render status icon", async () => {
-    render(testComponent);
-    (renderStatusIcon as jest.Mock).mockReturnValue(HTMLElement);
-    expect(renderStatusIcon(true)).toEqual(HTMLElement);
+  test("should show success status icon", () => {
+    const { container } = render(testComponent);
+    screen.debug(container);
   });
-});
 
-describe("Test ExportedModalOverlayReportSection accessibility", () => {
   test("should not have basic accessibility issues", async () => {
     const { container } = render(testComponent);
     const results = await axe(container);

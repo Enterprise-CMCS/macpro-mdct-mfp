@@ -151,8 +151,9 @@ describe("ExportedReportFieldRow", () => {
     expect(hint).toBeVisible();
   });
 
-  test("shows the correct section form fields based on heading", async () => {
+  test("shows that general information renders correctly", async () => {
     render(generalInformationComponent);
+    expect(screen.getByText("Resubmission Information")).toBeInTheDocument();
   });
 });
 
