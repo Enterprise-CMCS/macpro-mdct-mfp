@@ -45,9 +45,22 @@ export const mockReportFieldData = {
   "mock-number-field": 0,
   entityType: [
     {
+      id: "mock-entity-id",
+      initiative_wpTopic: [
+        {
+          key: "initiative_wpTopic",
+          value: "Transitions and transition coordination services ",
+        },
+      ],
       name: "entity-name",
       entityType_one: "hello",
       transitionBenchmarks_targetPopulationName: "mock benchmark name",
+    },
+  ],
+  initiative: [
+    {
+      id: "mock-initative-id",
+      name: "mock-name",
     },
   ],
 };
@@ -232,7 +245,7 @@ export const mockSARReportContext = {
   ...mockReportMethods,
   report: mockSARFullReport,
   reportsByState: mockSARReportsByState,
-  copyEligibleReportsByState: mockSARReportsByState,
+  copyEligibleReportsByState: mockReportsByState,
   errorMessage: "",
   lastSavedTime: "2:00 PM",
 };

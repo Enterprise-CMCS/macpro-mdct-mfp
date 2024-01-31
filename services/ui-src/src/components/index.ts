@@ -42,8 +42,10 @@ export { ExportedEntityDetailsTableRow } from "./export/ExportedEntityDetailsTab
 export { ExportedModalOverlayReportSection } from "./export/ExportedModalOverlayReportSection";
 export { ExportedOverlayModalReportSection } from "./export/ExportedOverlayModalReportSection";
 export { ExportedReportBanner } from "./export/ExportedReportBanner";
+export { ExportRETTable } from "./export/ExportedRETTable";
 export { PrintButton } from "./export/PrintButton";
 export { ExportedSarDetailsTable } from "./export/ExportedSarDetailsTable";
+export { ExportEntityDetailsTable } from "./export/ExportEntityDetailsTable";
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";
@@ -101,6 +103,7 @@ export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
 export { OverlayModalPage } from "./reports/OverlayModalPage";
 export { ModalOverlayReportPage } from "./reports/ModalOverlayReportPage";
+export { DynamicModalOverlayReportPage } from "./reports/DynamicModalOverlayReportPage";
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables

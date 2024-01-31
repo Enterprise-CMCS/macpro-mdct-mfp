@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import {
   DrawerReportPage,
+  DynamicModalOverlayReportPage,
   ModalDrawerReportPage,
   ModalOverlayReportPage,
   PageTemplate,
@@ -15,6 +16,7 @@ import {
   DrawerReportPageShape,
   ModalDrawerReportPageShape,
   ModalOverlayReportPageShape,
+  DynamicModalOverlayReportPageShape,
   PageTypes,
   ReportRoute,
   StandardReportPageShape,
@@ -45,6 +47,13 @@ export const ReportPageWrapper = () => {
         return (
           <ModalOverlayReportPage
             route={route as ModalOverlayReportPageShape}
+            setSidebarHidden={setSidebarHidden}
+          />
+        );
+      case PageTypes.DYNAMIC_MODAL_OVERLAY:
+        return (
+          <DynamicModalOverlayReportPage
+            route={route as DynamicModalOverlayReportPageShape}
             setSidebarHidden={setSidebarHidden}
           />
         );

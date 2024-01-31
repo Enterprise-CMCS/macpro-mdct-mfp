@@ -35,11 +35,14 @@ export enum OverlayModalTypes {
 export enum EntityDetailsStepTypes {
   DEFINE_INITIATIVE = "defineInitiative",
   CLOSE_OUT_INFORMATION = "closeOutInformation",
+  INITIAVTIVE_PROGRESS = "initiativeProgress",
+  EXPENDITURES = "expenditures",
 }
 
 export enum OverlayModalStepTypes {
   EVALUATION_PLAN = "evaluationPlan",
   FUNDING_SOURCES = "fundingSources",
+  OBJECTIVE_PROGRESS = "objectiveProgress",
 }
 
 export enum EntityDetailsOverlayTypes {
@@ -55,10 +58,10 @@ export enum PageTypes {
   DRAWER = "drawer",
   MODAL_DRAWER = "modalDrawer",
   MODAL_OVERLAY = "modalOverlay",
+  DYNAMIC_MODAL_OVERLAY = "dynamicModalOverlay",
   ENTITY_OVERLAY = "entityOverlay",
   OVERLAY_MODAL = "overlayModal",
   REVIEW_SUBMIT = "reviewSubmit",
-  ENTITY_DETAIL_DASHBOARD = "entityDetailsDashboardOverlay",
 }
 
 export interface InputChangeEvent extends React.ChangeEvent<HTMLInputElement> {}
@@ -69,7 +72,7 @@ export interface TableContentShape {
   caption?: string;
   headRow?: string[];
   bodyRows?: string[][];
-  footRow?: string[];
+  footRow?: string[][];
 }
 
 export interface CustomHtmlElement {

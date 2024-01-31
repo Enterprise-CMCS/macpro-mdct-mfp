@@ -6,6 +6,7 @@ import {
   mockNestedFormField,
   mockWpReportContext,
   mockStandardReportPageJson,
+  mockSARReportContext,
 } from "utils/testing/setupJest";
 import { ReportContext } from "components";
 import { ExportedReportFieldTable } from "./ExportedReportFieldTable";
@@ -70,6 +71,31 @@ const hintJson = {
   },
 };
 
+const generalInformationJson = {
+  name: "General Information",
+  path: "/sar/general-information",
+  pageType: "standard",
+  verbiage: {
+    intro: {
+      section: "",
+      subsection: "General Information",
+      hint: "",
+    },
+  },
+  form: {
+    id: "ga",
+    fields: [
+      {
+        ...mockFormField,
+        props: {
+          label: "X. Mock Field label",
+          hint: "Mock Hint Text",
+        },
+      },
+    ],
+  },
+};
+
 const exportedStandardTableComponent = (
   <ReportContext.Provider value={mockStandardContext}>
     <ExportedReportFieldTable section={mockStandardPageJson} />
@@ -91,6 +117,12 @@ const emptyTableComponent = (
 const hintComponent = (
   <ReportContext.Provider value={mockWpReportContext}>
     <ExportedReportFieldTable section={hintJson} />
+  </ReportContext.Provider>
+);
+
+const generalInformationComponent = (
+  <ReportContext.Provider value={mockSARReportContext}>
+    <ExportedReportFieldTable section={generalInformationJson} />
   </ReportContext.Provider>
 );
 
@@ -117,6 +149,11 @@ describe("ExportedReportFieldRow", () => {
     render(hintComponent);
     const hint = screen.queryByText(/Mock Hint Text/);
     expect(hint).toBeVisible();
+  });
+
+  test("shows that general information renders correctly", async () => {
+    render(generalInformationComponent);
+    expect(screen.getByText("Resubmission Information")).toBeInTheDocument();
   });
 });
 

@@ -111,10 +111,23 @@ export const mockWPMetadata = {
     validationJson: [],
   },
   fieldData: {
-    targetPopulations: [],
+    targetPopulations: [
+      {
+        id: "targetpopulationid",
+        transitionBenchmarks_targetPopulationName: "Older adults",
+        isRequired: true,
+        transitionBenchmarks_applicableToMfpDemonstration: [
+          {
+            key: "transitionBenchmarks_applicableToMfpDemonstration-key",
+            value: "No",
+          },
+        ],
+      },
+    ],
     submissionName: "Work Plan",
     submissionCount: "0",
     stateName: "New Jersey",
+    initiative: [],
   },
 };
 

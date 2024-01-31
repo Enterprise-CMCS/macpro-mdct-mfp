@@ -1,29 +1,46 @@
 // components
 import { Box, Heading } from "@chakra-ui/react";
 // types
-import { ReportPageVerbiage } from "types";
+import { AnyObject, CustomHtmlElement, ReportPageVerbiage } from "types";
 // utils
 import { parseCustomHtml } from "utils";
+
+export const formatSectionInfo = (verbiage: ReportPageVerbiage) => {
+  if (
+    verbiage?.intro?.exportSectionHeader ||
+    verbiage?.intro?.subsection === "State- or Territory-Specific Initiatives"
+  ) {
+    return (verbiage as AnyObject)?.dashboardSubtitle;
+  }
+
+  if (verbiage?.intro.section === "Recruitment, Enrollment, and Transitions") {
+    return (verbiage?.intro?.info as CustomHtmlElement[])?.filter(
+      (info) => info.type !== "h3"
+    );
+  }
+
+  return verbiage?.intro?.info;
+};
 
 export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
   const sectionHeading = verbiage?.intro?.exportSectionHeader
     ? verbiage?.intro?.exportSectionHeader
-    : verbiage?.intro?.subsection || heading;
+    : heading;
   const sectionHint = verbiage?.intro?.hint ? verbiage?.intro?.hint : null;
-  const sectionInfo =
-    verbiage?.intro?.exportSectionHeader ||
-    verbiage?.intro?.subsection === "State- or Territory-Specific Initiatives"
-      ? null
-      : verbiage?.intro?.info;
+  const sectionInfo = formatSectionInfo(verbiage!);
   const stateAndTerritory =
     sectionHeading === "State and Territory-Specific Initiatives";
+
+  //recruit, enrollment and transition has hints that needs to be hidden
+  const hideHint =
+    verbiage?.intro.section === "Recruitment, Enrollment, and Transitions";
 
   return (
     <Box data-testid="exportedSectionHeading" sx={sx.container}>
       <Heading as="h2" sx={sx.heading}>
         {sectionHeading}
       </Heading>
-      <Box sx={sx.hintTextBox}>{sectionHint}</Box>
+      {!hideHint && <Box sx={sx.hintTextBox}>{sectionHint}</Box>}
       {!stateAndTerritory && sectionInfo && (
         <Box sx={sx.info}>{parseCustomHtml(sectionInfo)}</Box>
       )}
