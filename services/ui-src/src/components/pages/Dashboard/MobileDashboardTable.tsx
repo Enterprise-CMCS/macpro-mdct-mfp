@@ -30,7 +30,10 @@ export const MobileDashboardTable = ({
           <Flex alignContent="flex-start">
             {reportType === "SAR" && !report?.locked && (
               <Box sx={sxOverride.editReport}>
-                <button onClick={() => openAddEditReportModal(report)}>
+                <button
+                  disabled={report?.locked}
+                  onClick={() => openAddEditReportModal(report)}
+                >
                   <Image
                     src={editIcon}
                     data-testid="mobile-edit-report"

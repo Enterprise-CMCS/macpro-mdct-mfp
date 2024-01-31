@@ -32,7 +32,7 @@ export const DashboardTable = ({
     {reportsByState.map((report: ReportMetadataShape) => (
       <Tr key={report.id}>
         {/* Edit Button */}
-        {!report?.locked && reportType === ReportType.SAR && (
+        {reportType === ReportType.SAR && (
           <EditReportButton
             report={report}
             openAddEditReportModal={openAddEditReportModal}
@@ -173,7 +173,10 @@ const EditReportButton = ({
 }: EditReportProps) => {
   return (
     <Td sx={sxOverride.editReport}>
-      <button onClick={() => openAddEditReportModal(report)}>
+      <button
+        disabled={report?.locked}
+        onClick={() => openAddEditReportModal(report)}
+      >
         <Image src={editIcon} alt="Edit Report" />
       </button>
     </Td>
