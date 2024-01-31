@@ -97,7 +97,7 @@ export const mockSectionHeaderField = {
 
 export const mockForm = {
   id: "mock-form-id",
-  fields: [mockFormField, mockDateField, mockDropdownField, mockNumberField],
+  fields: [mockFormField, mockDateField, mockNumberField],
 };
 
 export const mockModalForm = {
