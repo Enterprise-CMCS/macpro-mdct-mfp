@@ -1239,7 +1239,7 @@
                 "closeOutModal": {
                   "closeOutModalButtonText": "Close out initiative",
                   "closeOutModalTitle": "Close out ",
-                  "closeOutModalBodyText": "This initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, select <i>Cancel</i> and you’ll be able to save your draft data.<br><br>This action cannot be undone.<br><br>Are you sure you want to proceed?",
+                  "closeOutModalBodyText": "This initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, select \"Cancel\" and you’ll be able to save your draft data.<br><br>This action cannot be undone.<br><br>Are you sure you want to proceed?",
                   "closeOutModalConfirmButtonText": "Yes, close out initiative"
                 },
                 "enterEntityDetailsButtonText": "Edit",

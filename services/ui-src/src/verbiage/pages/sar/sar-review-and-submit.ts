@@ -129,6 +129,6 @@ export default {
   alertBox: {
     title: "Your form is not ready for submission",
     description:
-      "Some sections of the SAR submission have errors or are missing required responses. Please ensure all required fields are completed with valid responses before submitting.",
+      "Some sections of the SAR submission have errors or are missing required responses. Ensure all required fields are completed with valid responses before submitting.",
   },
 };

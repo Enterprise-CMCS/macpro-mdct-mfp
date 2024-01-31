@@ -19,7 +19,7 @@ export default {
           type: "text",
           as: "div",
           content:
-            "<br><b>Compliance review</b><br>Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made. If there are no corrections to be made, your Project Officer will approve the report by {x time before it’s due}, its status will change to “Approved” and it will no longer be editable because its information will be used in the Semi-Annual Progress Report (SAR) for the same reporting period.",
+            "<br><b>Compliance review</b><br>Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made. If there are no corrections to be made, your Project Officer will approve the report by {x time before it’s due}, its status will change to “Approved” and it will no longer be editable because its information will be used in the MFP Semi-Annual Progress Report (SAR) for the same reporting period.",
         },
       ],
     },
@@ -91,7 +91,7 @@ export default {
             },
             {
               content:
-                "You can now start the Semi-Annual Progress Report (SAR) for the same reporting period.",
+                "You can now start the MFP Semi-Annual Progress Report for the same reporting period.",
             },
           ],
         },
@@ -101,6 +101,6 @@ export default {
   alertBox: {
     title: "Your form is not ready for submission",
     description:
-      "Some sections of the MFP Work Plan submission have errors or are missing required responses. Please ensure all required fields are completed with valid responses before submitting.",
+      "Some sections of the MFP Work Plan submission have errors or are missing required responses. Ensure all required fields are completed with valid responses before submitting.",
   },
 };
