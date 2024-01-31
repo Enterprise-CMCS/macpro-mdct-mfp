@@ -19,7 +19,7 @@ export default {
     empty:
       "Keep track of your MFP Work Plans, once you start a Work Plan you can access it here.",
     callToAction: "Start MFP Work Plan",
-    callToActionAdditions: "Continue Work Plan for next Period",
+    callToActionAdditions: "Continue MFP Work Plan for next Period",
   },
   modalUnlock: {
     heading: "You unlocked this Work Plan",
