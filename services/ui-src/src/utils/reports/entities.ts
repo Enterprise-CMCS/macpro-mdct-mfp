@@ -18,10 +18,11 @@ const getRepeatedField = (
     for (const [key, value] of Object.entries(entity)) {
       if (key.includes(repeatedKey) && value) {
         const id = key.replace(repeatedKey, "").split("Q");
-        quarters.push({
-          id: `${id[0]} Q${id[1]}`,
-          value: convertToThousandsSeparatedString(value).maskedValue,
-        });
+        const displayValue =
+          repeatedKey === "fundingSources_quarters"
+            ? `$${value}`
+            : convertToThousandsSeparatedString(value).maskedValue;
+        quarters.push({ id: `${id[0]} Q${id[1]}`, value: displayValue });
       }
     }
   }

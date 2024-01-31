@@ -60,8 +60,8 @@ describe("entity utilities", () => {
         id: "mock id",
         fundingSource: "mock source",
         quarters: [
-          { id: "2023 Q1", value: "mock sources 2023-1" },
-          { id: "2023 Q2", value: "mock sources 2023-2" },
+          { id: "2023 Q1", value: "$mock sources 2023-1" },
+          { id: "2023 Q2", value: "$mock sources 2023-2" },
         ],
       });
     });
