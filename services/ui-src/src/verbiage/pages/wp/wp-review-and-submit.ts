@@ -30,7 +30,7 @@ export default {
           type: "text",
           as: "div",
           content:
-            "<ul><li>To allow a state or territory to make corrections or edits to a submission use “Unlock” to release the submission, then email the state or territory contact and inform them. The status will change to “In revision”.</li><br/><li>To approve a submission, review the submission and select “Approve”. The status will change to “Approved” and the content will be eligible for import into the SAR. <strong>You will not be able to unapprove or unlock it.</strong></li></ul>",
+            "<ul><li>To allow a state or territory to make corrections or edits to a submission use “Unlock” to release the submission, then email the state or territory contact and inform them. The status will change to “In revision”.</li><br/><li>To approve a submission, review the submission and select “Approve”. The status will change to “Approved” and the content will be eligible for import into the MFP SAR. <strong>You will not be able to unapprove or unlock it.</strong></li></ul>",
         },
       ],
       modal: {
@@ -43,7 +43,7 @@ export default {
           heading: "Are you sure you want to approve this MFP Work Plan?",
           closeButtonText: "",
           actionButtonText: "",
-          body: "This action can’t be undone. Once the MFP Work Plan is approved, the initiatives and benchmarks will be pulled into the Semi-Annual Progress Report and this MFP Work Plan can’t be unlocked or edited.",
+          body: "This action can’t be undone. Once the MFP Work Plan is approved, the initiatives and benchmarks will be pulled into the MFP Semi-Annual Progress Report and this MFP Work Plan can’t be unlocked or edited.",
         },
       },
       unlockLink: {
