@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { mockEntityStore } from "utils/testing/setupJest";
+import { mockEntityStore, mockReportStore } from "utils/testing/setupJest";
 import { useStore } from "utils";
-import { useContext, useMemo } from "react";
-// constants
+import { useContext } from "react";
 import { EntityProvider, EntityContext } from "./EntityProvider";
+import userEvent from "@testing-library/user-event";
 
 const mockUseNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -25,9 +25,15 @@ interface Props {
 }
 
 const TestComponent = (props: Props) => {
+  const { prepareEntityPayload } = useContext(EntityContext);
   if (props) {
     return (
       <div>
+        <button
+          onClick={() => prepareEntityPayload(mockEntityStore.selectedEntity)}
+        >
+          Prepare Entity
+        </button>
         <p data-testid="initiative-name">
           {JSON.stringify(mockEntityStore.selectedEntity?.initiative_name)}
         </p>
@@ -38,26 +44,35 @@ const TestComponent = (props: Props) => {
   }
 };
 
-const providerValue = () => {
-  const { prepareEntityPayload } = useContext(EntityContext);
-  return useMemo(
-    () => ({
-      prepareEntityPayload,
-    }),
-    [mockEntityStore.selectedEntity]
-  );
-};
 const testComponent = (
   <EntityProvider>
-    <EntityContext.Provider
-      value={mockEntityStore.selectedEntity?.initiative_name}
-    >
-      <TestComponent value={providerValue} />
-    </EntityContext.Provider>
+    <TestComponent />
   </EntityProvider>
 );
 
+describe("Test EntityProvider", () => {
+  beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+    mockedUseStore.mockReturnValue(mockEntityStore);
+  });
+
+  test("EntityProvider prepares entity payload successfully", async () => {
+    const result = render(testComponent);
+    expect(
+      result.container.querySelector("[data-testid='initiative-name']")
+        ?.innerHTML
+    ).toMatch(JSON.stringify(mockEntityStore.selectedEntity?.initiative_name));
+    const button = await result.findByText("Prepare Entity");
+    await userEvent.click(button);
+  });
+});
+
 describe("Test EntityProvider accessibility", () => {
+  beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+    mockedUseStore.mockReturnValue(mockEntityStore);
+  });
+
   it("Should not have basic accessibility issues", () => {
     render(testComponent);
     expect(screen.getByTestId("initiative-name")).toBeVisible();
