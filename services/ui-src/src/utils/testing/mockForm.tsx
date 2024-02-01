@@ -420,6 +420,7 @@ export const mockOptionalFormField = {
 export const mockModalOverlayReportPageVerbiage = {
   intro: mockVerbiageIntro,
   dashboardTitle: "Mock dashboard title",
+  dashboardSubtitle: "Mock dashboard subtitle",
   addEditModalHint: "Mock modal hint",
   countEntitiesInTitle: true,
   tableHeader: "Mock table header",
