@@ -20,28 +20,19 @@ jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockEntityStore);
 
-interface Props {
-  value?: Object;
-}
-
-const TestComponent = (props: Props) => {
+const TestComponent = () => {
   const { prepareEntityPayload } = useContext(EntityContext);
-  if (props) {
-    return (
-      <div>
-        <button
-          onClick={() => prepareEntityPayload(mockEntityStore.selectedEntity)}
-        >
-          Prepare Entity
-        </button>
-        <p data-testid="initiative-name">
-          {JSON.stringify(mockEntityStore.selectedEntity?.initiative_name)}
-        </p>
-      </div>
-    );
-  } else {
-    return <div></div>;
-  }
+  return (
+    <div>
+      <button onClick={() => prepareEntityPayload({ test: "update" })}>
+        Prepare Entity
+      </button>
+      <p id="entities">{JSON.stringify(mockEntityStore.selectedEntity)}</p>
+      <p data-testid="initiative-name">
+        {JSON.stringify(mockEntityStore.selectedEntity?.initiative_name)}
+      </p>
+    </div>
+  );
 };
 
 const testComponent = (
@@ -64,6 +55,9 @@ describe("Test EntityProvider", () => {
     ).toMatch(JSON.stringify(mockEntityStore.selectedEntity?.initiative_name));
     const button = await result.findByText("Prepare Entity");
     await userEvent.click(button);
+    expect(
+      result.container.querySelector("[id='entities']")?.innerHTML
+    ).toMatch(JSON.stringify(mockEntityStore.selectedEntity));
   });
 });
 
