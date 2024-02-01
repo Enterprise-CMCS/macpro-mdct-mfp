@@ -32,12 +32,14 @@ export const DashboardTable = ({
     {reportsByState.map((report: ReportMetadataShape) => (
       <Tr key={report.id}>
         {/* Edit Button */}
-        {!report?.locked && reportType === ReportType.SAR && (
+        {!report?.locked && reportType === ReportType.SAR ? (
           <EditReportButton
             report={report}
             openAddEditReportModal={openAddEditReportModal}
             sxOverride={sxOverride}
           />
+        ) : (
+          <Td></Td>
         )}
         {/* Report Name */}
         {reportType === ReportType.WP ? (
