@@ -28,6 +28,12 @@ export const AddEditReportModal = ({
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { workPlanToCopyFrom } = useStore();
 
+  /**
+   * edit modal will be in view-only mode for admins all the time,
+   * and for state users after a SAR has been submitted
+   */
+  const viewOnly = userIsAdmin || ReportStatus.SUBMITTED;
+
   const dataToInject = selectedReport?.id
     ? selectedReport?.formData?.populations
     : workPlanToCopyFrom?.fieldData?.targetPopulations;
@@ -196,7 +202,7 @@ export const AddEditReportModal = ({
     if (reportType === ReportType.WP) {
       return "";
     }
-    return submitting ? <Spinner size="md" /> : userIsAdmin ? "Return" : "Save";
+    return submitting ? <Spinner size="md" /> : viewOnly ? "Return" : "Save";
   };
 
   const isCopyDisabled = () => {
@@ -228,8 +234,8 @@ export const AddEditReportModal = ({
               ? previousReport
               : selectedReport?.formData
           }
-          // if view-only (user is admin), close modal
-          onSubmit={userIsAdmin ? modalDisclosure.onClose : writeReport}
+          // if view-only (user is admin, report is submitted), close modal
+          onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
           validateOnRender={false}
           dontReset={true}
         />

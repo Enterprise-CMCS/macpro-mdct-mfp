@@ -27,6 +27,7 @@ import {
   FormField,
   isFieldElement,
   FormLayoutElement,
+  ReportStatus,
 } from "types";
 
 export const Form = ({
@@ -53,7 +54,10 @@ export const Form = ({
   const { report, editable } = useStore();
 
   const fieldInputDisabled =
-    (userIsAdmin && !formJson.editableByAdmins) || !editable || userDisabled;
+    (userIsAdmin && !formJson.editableByAdmins) ||
+    !editable ||
+    userDisabled ||
+    ReportStatus.SUBMITTED;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
