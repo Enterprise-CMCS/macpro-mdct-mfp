@@ -13,13 +13,13 @@ describe("Prettify Choices", () => {
     },
     {
       key: "mock-3",
-      value: "Sad adults",
+      value: "Teens",
     },
   ];
 
   it("should prettify choices", async () => {
     expect(prettifyChoices(choices)).toEqual(
-      "Older adults, Younger adults, Sad adults"
+      "Older adults, Younger adults, Teens"
     );
   });
 });
