@@ -21,6 +21,8 @@ import {
   mockWPSubmittedReport,
   mockWPFullReport,
   mockSARFullReport,
+  mockEvaluationPlan,
+  mockObjectiveProgress,
 } from "./mockReport";
 
 // GLOBALS
@@ -232,6 +234,30 @@ export const mockEntityStore: MfpEntityState = {
   clearSelectedEntity: () => {},
 };
 
+export const mockEvaluationPlanEntityStore: MfpEntityState = {
+  selectedEntity: {
+    id: "mock-id",
+    type: "evaluationPlan",
+    initiative_name: "mock-initiative-name",
+    evaluationPlan: mockEvaluationPlan,
+  },
+  // ACTIONS
+  setSelectedEntity: () => {},
+  clearSelectedEntity: () => {},
+};
+
+export const mockObjectiveProgressEntityStore: MfpEntityState = {
+  selectedEntity: {
+    id: "mock-id",
+    type: "objectiveProgress",
+    initiative_name: "mock-initiative-name",
+    objectiveProgress: mockObjectiveProgress,
+  },
+  // ACTIONS
+  setSelectedEntity: () => {},
+  clearSelectedEntity: () => {},
+};
+
 export const mockEmptyReportStore: MfpReportState = {
   report: undefined,
   reportsByState: undefined,
@@ -289,6 +315,22 @@ export const mockUseEntityStore: MfpUserState &
   ...mockStateUserStore,
   ...mockBannerStore,
   ...mockEntityStore,
+};
+
+export const mockUseEvaluationPlanEntityStore: MfpUserState &
+  AdminBannerState &
+  MfpReportState &
+  MfpEntityState = {
+  ...mockUseStore,
+  ...mockEvaluationPlanEntityStore,
+};
+
+export const mockUseObjectiveProgressEntityStore: MfpUserState &
+  AdminBannerState &
+  MfpReportState &
+  MfpEntityState = {
+  ...mockUseSARStore,
+  ...mockObjectiveProgressEntityStore,
 };
 
 // ROUTER
