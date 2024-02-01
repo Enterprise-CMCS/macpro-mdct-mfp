@@ -5,6 +5,8 @@ import {
   mockModalDrawerReportPageJson,
   mockTargetPopulationsReportPageJson,
   mockReviewSubmitPageJson,
+  mockModalOverlayReportPageJson,
+  mockDynamicModalOverlayReportPageJson,
 } from "./mockForm";
 
 export const mockReportRoutes = [
@@ -12,7 +14,12 @@ export const mockReportRoutes = [
   {
     name: "mock-route-2",
     path: "/mock/mock-route-2",
-    children: [mockDrawerReportPageJson, mockModalDrawerReportPageJson],
+    children: [
+      mockDrawerReportPageJson,
+      mockModalDrawerReportPageJson,
+      mockModalOverlayReportPageJson,
+      mockDynamicModalOverlayReportPageJson,
+    ],
   },
   mockReviewSubmitPageJson,
 ];
@@ -22,6 +29,8 @@ export const mockFlattenedReportRoutes = [
   mockDrawerReportPageJson,
   mockModalDrawerReportPageJson,
   mockTargetPopulationsReportPageJson,
+  mockModalOverlayReportPageJson,
+  mockDynamicModalOverlayReportPageJson,
   mockReviewSubmitPageJson,
 ];
 
