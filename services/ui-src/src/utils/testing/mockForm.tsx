@@ -333,6 +333,79 @@ export const mockEntityDetailsDashboardOverlayJson = {
   ],
 };
 
+export const mockObjectiveCards = [
+  {
+    modalForm: {
+      id: "mock-obj-card-1",
+      fields: [
+        {
+          id: "objectivesProgress_performanceMeasuresIndicators",
+          type: "textarea",
+          validation: "text",
+          props: {
+            label: "mock-performance-indicators",
+          },
+        },
+        {
+          id: "objectiveTargets_actual_2024Q1",
+          type: "number",
+          validation: "number",
+          props: {
+            label: "mock-actual-2024-1",
+          },
+        },
+        {
+          id: "objectiveTargets_projections_2024Q1",
+          type: "number",
+          validation: "number",
+          props: {
+            label: "mock-projected-2024-1",
+            hint: "Auto-populates from Work Plan.",
+            disabled: true,
+          },
+        },
+      ],
+      initiativeId: "mock-initative-id",
+      objectiveId: "mock-objective-1",
+    },
+  },
+  {
+    modalForm: {
+      id: "stsiop-modal",
+      fields: [
+        {
+          id: "objectivesProgress_performanceMeasuresIndicators",
+          type: "textarea",
+          validation: "text",
+          props: {
+            label: "mock-performance-indicators",
+          },
+        },
+        {
+          id: "objectiveTargets_actual_2024Q1",
+          type: "number",
+          validation: "number",
+          props: {
+            label: "mock-actual-2024-1",
+          },
+        },
+        {
+          id: "objectiveTargets_projections_2024Q1",
+          type: "number",
+          validation: "number",
+          props: {
+            label: "mock-projected-2024-1",
+            hint: "Auto-populates from Work Plan.",
+            disabled: true,
+          },
+        },
+      ],
+      initiativeId: "mock-initiative-id",
+      objectiveId: "mock-objective-2",
+    },
+  },
+];
+
 export const mockOptionalFormField = {
   id: "mock-optional-text-field",
   type: "text",
@@ -347,6 +420,7 @@ export const mockOptionalFormField = {
 export const mockModalOverlayReportPageVerbiage = {
   intro: mockVerbiageIntro,
   dashboardTitle: "Mock dashboard title",
+  dashboardSubtitle: "Mock dashboard subtitle",
   addEditModalHint: "Mock modal hint",
   countEntitiesInTitle: true,
   tableHeader: "Mock table header",
@@ -359,6 +433,7 @@ export const mockModalOverlayReportPageVerbiage = {
   deleteModalWarning: "Mock delete modal warning",
   enterReportText: "Mock enter report text",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
+  addEditModalEditTitle: "Mock AddEdit Modal Text",
 };
 
 export const mockModalOverlayForm = {
@@ -412,7 +487,20 @@ export const mockOverlayModalPageJson = {
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalForm,
-  stepType: "mock-step",
+  stepType: "evaluationPlan",
+  stepName: "Mock step name",
+  stepInfo: ["name", "hint"],
+  hint: "Mock hint",
+};
+
+export const mockOverlayModalWithCardsPageJson = {
+  name: "mock-route-2d",
+  path: "/mock/mock-route-2d",
+  pageType: "overlayModal",
+  entityType: "entityType",
+  verbiage: mockModalOverlayReportPageVerbiage,
+  objectiveCards: mockObjectiveCards,
+  stepType: "objectiveProgress",
   stepName: "Mock step name",
   stepInfo: ["name", "hint"],
   hint: "Mock hint",
