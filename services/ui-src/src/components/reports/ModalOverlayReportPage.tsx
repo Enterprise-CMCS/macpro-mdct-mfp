@@ -58,7 +58,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
     report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
       : false;
-
   const dashTitle = `${verbiage.dashboardTitle} ${
     modalForm ? reportFieldDataEntities.length : ""
   }`;
