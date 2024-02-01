@@ -3,6 +3,7 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 // utils
 import { getFormattedEntityData } from "utils";
 import {
+  AnyObject,
   EntityShape,
   FormField,
   FormLayoutElement,
@@ -19,36 +20,44 @@ export const ExportedOverlayModalReportSection = ({
 }: Props) => {
   const { emptyEntityMessage, dashboardTitle } = exportVerbiage;
 
-  const stepType = entityStep![0] as string;
-  const entityCount = entity?.[stepType]?.length;
+  const type = (entityStep as any)?.stepType || (entityStep![0] as string);
+  const title = (entityStep as any)?.name || (entityStep![1] as string);
+  const hint = (entityStep as any)?.hint || (entityStep![2] as string);
+  const entityCount = entity?.[type]?.length;
 
+  let info: string = "";
+  ((entityStep as any)?.verbiage?.intro?.info as [])?.forEach(
+    (text: AnyObject) => {
+      info += `${text?.content} `;
+    }
+  );
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
       <Heading as="h4">
-        <Box sx={sx.stepName}>{entityStep![1]}</Box>
-        <Box sx={sx.stepHint}>{entityStep![2]}</Box>
+        <Box sx={sx.stepName}>{title}</Box>
+        <Box sx={sx.stepHint}>{info || hint}</Box>
         <Box sx={sx.dashboardTitle} data-testid="headerCount">
           {entityCount > 0 ? (
             `${
-              dashboardTitle[stepType as keyof typeof dashboardTitle]
+              dashboardTitle[type as keyof typeof dashboardTitle]
             } ${entityCount}`
           ) : (
             <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
-              {emptyEntityMessage[stepType as keyof typeof emptyEntityMessage]}
+              {emptyEntityMessage[type as keyof typeof emptyEntityMessage]}
             </Text>
           )}
         </Box>
       </Heading>
-      {entity?.[stepType]?.map((step: any, index: number) => {
+      {entity?.[type]?.map((step: any, index: number) => {
         return (
           <EntityStepCard
-            key={entity.id}
-            entity={entity}
-            entityType={stepType}
+            key={`${entity.id}${index}`}
+            entity={step}
             entityIndex={index}
-            formattedEntityData={getFormattedEntityData(stepType, step)}
+            entityTotal={entityCount}
+            stepType={type!}
+            formattedEntityData={getFormattedEntityData(type, step)}
             verbiage={verbiage}
-            stepType={stepType!}
             printVersion
             hasBorder={true}
           />
