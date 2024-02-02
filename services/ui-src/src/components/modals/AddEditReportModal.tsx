@@ -32,7 +32,11 @@ export const AddEditReportModal = ({
    * edit modal will be in view-only mode for admins all the time,
    * and for state users after a SAR has been submitted
    */
-  const viewOnly = userIsAdmin || ReportStatus.SUBMITTED;
+  const sarReportWithSubmittedStatus =
+    reportType == ReportType.SAR &&
+    selectedReport?.status === ReportStatus.SUBMITTED;
+
+  const viewOnly = userIsAdmin || sarReportWithSubmittedStatus;
 
   const dataToInject = selectedReport?.id
     ? selectedReport?.formData?.populations
@@ -238,6 +242,7 @@ export const AddEditReportModal = ({
           onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
           validateOnRender={false}
           dontReset={true}
+          reportStatus={selectedReport?.status}
         />
       )}
       {reportType == ReportType.WP && (
