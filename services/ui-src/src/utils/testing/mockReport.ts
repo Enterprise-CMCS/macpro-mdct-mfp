@@ -136,6 +136,29 @@ export const mockReportFieldData = {
       transitionBenchmarks_targetPopulationName: "mock benchmark name",
     },
   ],
+  initiative: [
+    {
+      id: "mock-initative-id",
+      name: "mock-name",
+      mockObjectiveProgress: [
+        {
+          id: "mock-objective-1",
+          objectiveProgress_objectiveName: "mock-objective-name-1",
+          objectiveProgress_description: "2",
+          objectiveProgress_targets: "3",
+          objectiveTargets_projections_2024Q1: "1",
+        },
+        {
+          id: "mock-objective-2",
+          objectiveProgress_objectiveName: "mock-objective-name-2",
+          objectiveProgress_description: "0",
+          objectiveProgress_targets: "9",
+          objectiveTargets_projections_2024Q1: "8",
+        },
+      ],
+      "mock-initative-id": [[]],
+    },
+  ],
   evaluationPlan: mockEvaluationPlan,
 };
 

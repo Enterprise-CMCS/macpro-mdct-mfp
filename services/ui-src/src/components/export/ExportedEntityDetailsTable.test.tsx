@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { useStore } from "utils";
-import { ReportContext } from "components/reports/ReportProvider";
-import { entityTypes } from "types";
 import {
-  mockWpReportContext,
   mockReportStore,
   mockEntityStore,
+  mockWpReportContext,
 } from "utils/testing/setupJest";
+import { ReportContext } from "components/reports/ReportProvider";
+import { entityTypes } from "types";
 import { ExportedEntityDetailsTable } from "./ExportedEntityDetailsTable";
 
 jest.mock("utils/state/useStore");
@@ -23,43 +23,64 @@ const entity = {
   initiative_wp_otherTopic: "",
   initiative_wpTopic: [
     {
-      key: "initiative_wpTopic-",
+      key: "initiative_wpTopic",
       value: "Quality measurement and improvement",
     },
   ],
   initiative_name: "fdsfs",
-  "mock-initative-id": {
-    test: {
-      key: "mock-initative-id_Test",
-      value: "Yes",
+  initiative: [
+    {
+      id: "mock-initative-id",
+      name: "mock-name",
+      "mock-initative-id": [
+        {
+          id: "mock-objective-1",
+          objectiveProgress_objectiveName: "mock-objective-name-1",
+          objectiveProgress_description: "2",
+          objectiveProgress_targets: "3",
+          objectiveTargets_projections_2024Q1: "1",
+        },
+        {
+          id: "mock-objective-2",
+          objectiveProgress_objectiveName: "mock-objective-name-2",
+          objectiveProgress_description: "0",
+          objectiveProgress_targets: "9",
+          objectiveTargets_projections_2024Q1: "8",
+        },
+      ],
+      mockObjectiveProgress: [
+        {
+          id: "mock-objective-1",
+          objectiveProgress_objectiveName: "mock-objective-name-1",
+          objectiveProgress_description: "2",
+          objectiveProgress_targets: "3",
+          objectiveTargets_projections_2024Q1: "1",
+        },
+        {
+          id: "mock-objective-2",
+          objectiveProgress_objectiveName: "mock-objective-name-2",
+          objectiveProgress_description: "0",
+          objectiveProgress_targets: "9",
+          objectiveTargets_projections_2024Q1: "8",
+        },
+      ],
     },
-  },
+  ],
 };
 
 const fields = [
   {
     id: "mock-initative-id",
+    type: "mock type",
+    validation: "",
     props: {
-      hint: "fdsf",
-      label: "lfdsfds",
       choices: [
         {
-          id: "mock-initative-id",
+          id: "mock-initative-id_",
           label: "Yes",
         },
       ],
     },
-    type: "mock type",
-    validation: "",
-  },
-  {
-    id: "something-else",
-    props: {
-      hint: "fdsf",
-      label: "lfdsfds",
-    },
-    type: "mock type",
-    validation: "",
   },
 ];
 
@@ -76,6 +97,7 @@ const exportedEntityDetailsTableComponent = () => (
 describe("ExportedEntityDetailsTable", () => {
   it("renders successfully", () => {
     render(exportedEntityDetailsTableComponent());
+
     expect(
       screen.getByTestId("exportedEntityDetailsTable")
     ).toBeInTheDocument();
