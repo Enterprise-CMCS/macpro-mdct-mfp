@@ -83,7 +83,7 @@ export const initializeChoiceListFields = (
           ? choice.label[0]
           : choice.label;
         // if choice id has not already had parent field id appended, do so now
-        if (!choice.id.includes("-")) {
+        if (!choice.id?.includes("-")) {
           choice.id = field.id + "-" + choice.id;
         }
         choice.name = choice.id;
