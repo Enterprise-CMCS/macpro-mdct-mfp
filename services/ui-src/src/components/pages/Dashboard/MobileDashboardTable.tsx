@@ -28,7 +28,7 @@ export const MobileDashboardTable = ({
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>{"Submission name"}</Text>
           <Flex alignContent="flex-start">
-            {reportType === "SAR" && !report?.locked && (
+            {reportType === "SAR" && (
               <Box sx={sxOverride.editReport}>
                 <button onClick={() => openAddEditReportModal(report)}>
                   <Image
