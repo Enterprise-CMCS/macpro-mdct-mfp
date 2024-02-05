@@ -181,6 +181,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         submittedBy: report.submittedBy,
         submitterEmail: report.submitterEmail,
         submittedOnDate: report?.submittedOnDate,
+        status: report.status,
       };
     } else if (reportType == ReportType.SAR) {
       // We are creating a new SAR submission
