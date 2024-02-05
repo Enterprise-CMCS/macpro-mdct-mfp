@@ -42,6 +42,7 @@ export const Form = ({
   dontReset,
   children,
   userDisabled,
+  reportStatus,
   ...props
 }: Props) => {
   const { fields, options } = formJson;
@@ -49,15 +50,21 @@ export const Form = ({
   let location = useLocation();
 
   // determine if fields should be disabled (based on admin roles)
-  const { userIsAdmin } = useStore().user ?? {};
+  const { userIsAdmin, userIsEndUser } = useStore().user ?? {};
 
   const { report, editable } = useStore();
 
+  const reportWithSubmittedStatus = reportStatus === ReportStatus.SUBMITTED;
+
+  /**
+   * edit report modal should always be view only admins
+   * edit report modal should be view only for state users after SAR submission
+   */
   const fieldInputDisabled =
     (userIsAdmin && !formJson.editableByAdmins) ||
+    (userIsEndUser && reportWithSubmittedStatus) ||
     !editable ||
-    userDisabled ||
-    ReportStatus.SUBMITTED;
+    userDisabled;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
@@ -185,6 +192,7 @@ interface Props {
   userDisabled?: boolean;
   onFormChange?: Function;
   [key: string]: any;
+  reportStatus?: ReportStatus;
 }
 
 const sx = {
