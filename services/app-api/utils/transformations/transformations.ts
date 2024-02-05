@@ -423,8 +423,14 @@ export const quantitativeQuarters = (
         ? "Second quarter (April 1 - June 30)"
         : "Fourth quarter (October 1 - December 31)";
 
+    //depending on the period, the quarter starts at  Q1 or Q3
+    const currentQuarter = reportPeriod === 1 ? 1 : 3;
     // have to loop twice for both periods
-    for (let quarterNumber = 1; quarterNumber <= 2; quarterNumber += 1) {
+    for (
+      let quarterNumber = currentQuarter;
+      quarterNumber <= currentQuarter + 1;
+      quarterNumber += 1
+    ) {
       const formFieldHeading: FormField = {
         id: `objectiveTargetsHeader_Q${quarterNumber}_${fieldToRepeat.id}`,
         type: "sectionHeader",
