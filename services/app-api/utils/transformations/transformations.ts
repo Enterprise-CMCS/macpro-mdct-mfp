@@ -436,11 +436,11 @@ export const quantitativeQuarters = (
         type: "sectionHeader",
         props: {
           content:
-            quarterNumber == 1
+            quarterNumber == currentQuarter
               ? headingStringFirstQuarter
               : headingStringSecondQuarter,
           label:
-            quarterNumber == 1
+            quarterNumber == currentQuarter
               ? "Complete the following for quantitative targets:"
               : "",
         },
