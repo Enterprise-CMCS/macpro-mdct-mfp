@@ -295,7 +295,7 @@ export const convertEntityToTargetPopulationChoice = (
 export const convertChoiceToEntity = (choices: Choice[]) => {
   return choices?.map((field: Choice) => {
     return {
-      id: field.id,
+      id: field.key ?? field.id,
       label: field.value,
       name: field.value,
       value: field.value,
