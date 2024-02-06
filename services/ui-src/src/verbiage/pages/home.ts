@@ -3,7 +3,7 @@ export default {
     header: "Money Follows the Person (MFP) Portal",
     body: {
       preLinkText:
-        "Get started by completing a MFP Work Plan for your state or territory. After your MFP Work Plan is submitted and approved, you will be able to complete a Semi-Annual Progress Report. Learn more about this ",
+        "Get started by completing a MFP Work Plan for your state or territory. After your MFP Work Plan is submitted and approved, you will be able to complete a MFP Semi-Annual Progress Report. Learn more about this ",
       linkText: "new data collection tool",
       linkLocation:
         "https://www.medicaid.gov/medicaid/long-term-services-supports/money-follows-person/index.html",
@@ -13,7 +13,7 @@ export default {
   },
   cards: {
     WP: {
-      title: "MFP Work Plan (WP)",
+      title: "MFP Work Plan",
       body: {
         available:
           "The MFP Work Plan is the state or territory's road map for accomplishing the rebalancing objective described in section ",
@@ -37,7 +37,7 @@ export default {
       title: "MFP Semi-Annual Progress Report (SAR)",
       body: {
         available:
-          "The MFP Semi-Annual Progress Report (SAR) is used to present the recipient's analysis and the status of the various operational areas in reaching the objectives of the demonstration. Through the SARs, the recipient will further enumerate how they have, or intend to, meet or align with the recipient's MFP operational procedures and processes; transition benchmarks; program goals for expanding and enhancing home and community-based services (HCBS); and sustainability plans.",
+          "The MFP Semi-Annual Progress Report is used to present the recipient’s analysis and the status of the various operational areas in reaching the objectives of the Demonstration. Through the SARs, the recipient will further enumerate how they have, or intend to, meet or align with the recipient’s MFP operational procedures and processes; transition benchmarks; program goals for expanding and enhancing home and community-based services (HCBS); and sustainability plans.",
       },
       downloadText: "User Guide and Help File",
       link: {
@@ -46,7 +46,7 @@ export default {
       },
       accordion: {
         buttonLabel: "When is the MFP SAR due?",
-        text: "The MFP Semi-Annual Progress Report will need to be reviewed and submitted twice a year, within 60 days following the end of each second and fourth calendar year quarter. For example, the SAR Reporting Period 1 represents January-June and MFP recipients must submit their data within 60 days following June 30. The recipient must submit the progress report through the final reporting period of the recipient's demonstration period of performance, even if the recipient has not operated for a complete reporting period.",
+        text: "The MFP Semi-Annual Progress Report will need to be reviewed and submitted twice a year, within 60 days following the end of each second and fourth calendar year quarter. For example, the SAR Reporting Period 1 represents January-June and MFP recipients must submit their data within 60 days following June 30. The recipient must submit the progress report through the final reporting period of the recipient's Demonstration period of performance, even if the recipient has not operated for a complete reporting period.",
       },
     },
   },
