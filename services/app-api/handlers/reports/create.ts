@@ -46,16 +46,9 @@ import { extractWorkPlanData } from "../../utils/transformations/transformations
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
-    if (!hasPermissions(event, [UserRoles.STATE_USER])) {
-      return {
-        status: StatusCodes.UNAUTHORIZED,
-        body: error.UNAUTHORIZED,
-      };
-    }
-
     const requiredParams = ["reportType", "state"];
 
-    // Return No_Key when not given a state and reportType as a paramater
+    // Return No_Key when not given a state and reportType as a parameter
     if (
       !event.pathParameters ||
       !hasReportPathParams(event.pathParameters, requiredParams)
@@ -72,6 +65,12 @@ export const createReport = handler(
       return {
         status: StatusCodes.BAD_REQUEST,
         body: error.NO_KEY,
+      };
+    }
+    if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
+      return {
+        status: StatusCodes.UNAUTHORIZED,
+        body: error.UNAUTHORIZED,
       };
     }
 
