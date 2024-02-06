@@ -83,7 +83,7 @@ export const initializeChoiceListFields = (
           ? choice.label[0]
           : choice.label;
         // if choice id has not already had parent field id appended, do so now
-        if (!choice.id?.includes("-")) {
+        if (!choice.id.includes("-")) {
           choice.id = field.id + "-" + choice.id;
         }
         choice.name = choice.id;
@@ -295,7 +295,7 @@ export const convertEntityToTargetPopulationChoice = (
 export const convertChoiceToEntity = (choices: Choice[]) => {
   return choices?.map((field: Choice) => {
     return {
-      id: field.key,
+      id: field.key ? field.key : field.id,
       label: field.value,
       name: field.value,
       value: field.value,
