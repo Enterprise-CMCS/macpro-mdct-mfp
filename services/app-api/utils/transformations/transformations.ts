@@ -426,11 +426,8 @@ export const quantitativeQuarters = (
     //depending on the period, the quarter starts at  Q1 or Q3
     const currentQuarter = reportPeriod === 1 ? 1 : 3;
     // have to loop twice for both periods
-    for (
-      let quarterNumber = currentQuarter;
-      quarterNumber <= currentQuarter + 1;
-      quarterNumber += 1
-    ) {
+    const quartersInPeriod = reportPeriod === 1 ? [1, 2] : [3, 4];
+    for (let quarterNumber of quartersInPeriod) {
       const formFieldHeading: FormField = {
         id: `objectiveTargetsHeader_Q${quarterNumber}_${fieldToRepeat.id}`,
         type: "sectionHeader",
