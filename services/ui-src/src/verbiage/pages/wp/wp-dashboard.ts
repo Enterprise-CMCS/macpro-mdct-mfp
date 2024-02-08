@@ -1,6 +1,6 @@
 export default {
   intro: {
-    header: "MFP Work Plan",
+    header: "MFP Work Plan (WP)",
     body: [],
   },
   body: {

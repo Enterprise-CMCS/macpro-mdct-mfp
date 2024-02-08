@@ -5,7 +5,7 @@ import { ReportJson, ReportShape, ReportStatus } from "types";
 export const mockFullReportJSON: ReportJson = {
   id: "2V2LLezUtxYOBRMEoiTp5r1O71X",
   type: "WP",
-  name: "MFP Work Plan",
+  name: "MFP Work Plan (WP)",
   basePath: "/wp",
   routes: [
     {

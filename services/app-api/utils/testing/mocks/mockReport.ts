@@ -103,7 +103,7 @@ export const mockWPMetadata = {
   isComplete: false,
   formTemplate: {
     type: "WP",
-    name: "MFP Work Plan",
+    name: "MFP Work Plan (WP)",
     basePath: "/wp",
     version: "WP_2023-08-21",
     entities: [],
