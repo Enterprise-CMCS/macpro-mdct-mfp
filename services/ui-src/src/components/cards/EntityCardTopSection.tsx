@@ -8,6 +8,7 @@ import { useStore } from "utils";
 export const EntityStepCardTopSection = ({
   stepType,
   formattedEntityData,
+  entityCompleted,
 }: Props) => {
   const { report } = useStore() ?? {};
   switch (stepType) {
@@ -24,25 +25,30 @@ export const EntityStepCardTopSection = ({
           <Text sx={sx.description}>{formattedEntityData.description}</Text>
           <Text sx={sx.subtitle}>Performance measure targets</Text>
           <Text sx={sx.description}>{formattedEntityData.targets}</Text>
-          {formattedEntityData.quarterProjections.length > 0 && (
-            <>
-              <Text sx={sx.subtitle}>
-                Quantitative targets for this reporting period
-              </Text>
-              <Grid sx={sx.sarGrid}>
-                {formattedEntityData?.quarterProjections.map((quarter: any) => {
-                  return (
-                    <GridItem key={quarter.id}>
-                      <Flex sx={sx.gridItems}>
-                        <Text sx={sx.gridSubtitle}>{quarter.id} Target:</Text>
-                        <Text sx={sx.subtext}>{quarter.value}</Text>
-                      </Flex>
-                    </GridItem>
-                  );
-                })}
-              </Grid>
-            </>
-          )}
+          {formattedEntityData.quarterProjections.length > 0 &&
+            !entityCompleted && (
+              <>
+                <Text sx={sx.subtitle}>
+                  Quantitative targets for this reporting period
+                </Text>
+                <Grid sx={sx.sarGrid}>
+                  {formattedEntityData?.quarterProjections.map(
+                    (quarter: any) => {
+                      return (
+                        <GridItem key={quarter.id}>
+                          <Flex sx={sx.gridItems}>
+                            <Text sx={sx.gridSubtitle}>
+                              {quarter.id} Target:
+                            </Text>
+                            <Text sx={sx.subtext}>{quarter.value}</Text>
+                          </Flex>
+                        </GridItem>
+                      );
+                    }
+                  )}
+                </Grid>
+              </>
+            )}
         </>
       );
     case OverlayModalStepTypes.EVALUATION_PLAN:
@@ -144,6 +150,7 @@ interface Props {
   stepType: string;
   formattedEntityData: AnyObject;
   printVersion?: boolean;
+  entityCompleted?: boolean;
 }
 
 const sx = {
