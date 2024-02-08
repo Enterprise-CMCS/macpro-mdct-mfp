@@ -170,6 +170,7 @@ export const EntityStepCard = ({
           stepType={stepType}
           printVersion={!!printVersion}
           formattedEntityData={formattedEntityData}
+          entityCompleted={entityCompleted}
         />
         {entityCompleted || printVersion ? (
           <EntityStepCardBottomSection
