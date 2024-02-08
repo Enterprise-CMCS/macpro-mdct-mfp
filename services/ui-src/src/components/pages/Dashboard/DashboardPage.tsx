@@ -163,12 +163,6 @@ export const DashboardPage = ({ reportType }: Props) => {
     navigate(firstReportPagePath);
   };
 
-  const reportingPeriod = (reportPeriod?: number) => {
-    return reportPeriod === 1
-      ? "First reporting period (January-June)"
-      : "Second reporting period (July-December)";
-  };
-
   const openAddEditReportModal = (report?: ReportShape) => {
     let formData = undefined;
     //
@@ -178,7 +172,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         formData: {
           associatedWorkPlan: report.submissionName,
           stateOrTerritory: report.state,
-          reportPeriod: reportingPeriod(report.reportPeriod),
+          reportPeriod: report.reportPeriod,
           finalSar: report.finalSar,
           populations: report.populations,
         },
@@ -194,7 +188,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         formData: {
           associatedWorkPlan: workPlanToCopyFrom?.submissionName,
           stateOrTerritory: userState,
-          reportPeriod: reportingPeriod(workPlanToCopyFrom?.reportPeriod),
+          reportPeriod: workPlanToCopyFrom?.reportPeriod,
           populations: convertTargetPopulationsFromWPToSAREntity(
             removeNotApplicablePopulations(
               workPlanToCopyFrom?.fieldData?.targetPopulations
