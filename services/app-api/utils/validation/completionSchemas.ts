@@ -43,7 +43,7 @@ const validNAValues = ["N/A", "Data not available"];
 /** This regex must be at least as permissive as the one in ui-src */
 const validNumberRegex = /^\.$|[0-9]/;
 
-const validIntegerRegex = /^\d+$/;
+const validIntegerRegex = /^[0-9\s,]+$/;
 
 // NUMBER - Number or Valid Strings
 const numberSchema = () =>
