@@ -37,7 +37,7 @@ export default {
       title: "MFP Semi-Annual Progress Report (SAR)",
       body: {
         available:
-          "The MFP Semi-Annual Progress Report is used to present the recipient’s analysis and the status of the various operational areas in reaching the objectives of the Demonstration. Through the SARs, the recipient will further enumerate how they have, or intend to, meet or align with the recipient’s MFP operational procedures and processes; transition benchmarks; program goals for expanding and enhancing home and community-based services (HCBS); and sustainability plans.",
+          "The MFP Semi-Annual Progress Report is used to present the recipient's analysis and the status of the various operational areas in reaching the objectives of the Demonstration. Through the SARs, the recipient will further enumerate how they have, or intend to, meet or align with the recipient's MFP operational procedures and processes; transition benchmarks; program goals for expanding and enhancing home and community-based services (HCBS); and sustainability plans.",
       },
       downloadText: "User Guide and Help File",
       link: {

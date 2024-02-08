@@ -99,7 +99,7 @@ export const OverlayModalPage = ({
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
     setSelectedStepEntity(entity);
-    resetClearProp(modalForm.fields);
+    resetClearProp(modalForm!.fields);
     deleteEntityModalOnOpenHandler();
   };
 
@@ -179,7 +179,7 @@ export const OverlayModalPage = ({
           entityName={selectedEntity!.initiative_name}
           entityIdLookup={entityIdLookup}
           verbiage={verbiage}
-          form={modalForm}
+          form={modalForm!}
           userDisabled={userDisabled}
           modalDisclosure={{
             isOpen: addEditEntityModalIsOpen,
@@ -202,7 +202,7 @@ export const OverlayModalPage = ({
         <Flex sx={sx.buttonFlex}>
           <Button
             type="button"
-            form={modalForm.id}
+            form={modalForm?.id}
             sx={sx.saveButton}
             onClick={closeEntityDetailsOverlay as MouseEventHandler}
           >

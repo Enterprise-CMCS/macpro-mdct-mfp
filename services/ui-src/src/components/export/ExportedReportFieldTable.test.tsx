@@ -6,11 +6,11 @@ import {
   mockNestedFormField,
   mockWpReportContext,
   mockStandardReportPageJson,
+  mockSARReportContext,
 } from "utils/testing/setupJest";
 import { ReportContext } from "components";
 import { ExportedReportFieldTable } from "./ExportedReportFieldTable";
-import { DrawerReportPageShape, FormField, FormLayoutElement } from "types";
-import sarVerbiage from "verbiage/pages/sar/sar-export";
+import { DrawerReportPageShape } from "types";
 
 // Contexts
 const reportJsonFields = [{ ...mockNestedFormField, id: "parent" }];
@@ -72,9 +72,18 @@ const hintJson = {
 };
 
 const generalInformationJson = {
-  ...mockStandardReportPageJson,
+  name: "General Information",
+  path: "/sar/general-information",
+  pageType: "standard",
+  verbiage: {
+    intro: {
+      section: "",
+      subsection: "General Information",
+      hint: "",
+    },
+  },
   form: {
-    id: "not-apoc",
+    id: "ga",
     fields: [
       {
         ...mockFormField,
@@ -85,32 +94,6 @@ const generalInformationJson = {
       },
     ],
   },
-};
-
-// get the range of form fields for a particular section
-const mockGetSectionFormFields = (
-  heading: number,
-  formFields: (FormField | FormLayoutElement)[]
-) => {
-  let fields: (FormField | FormLayoutElement)[] = [];
-  switch (heading) {
-    case 0:
-      fields = formFields.slice(0, 1);
-      break;
-    case 1:
-      fields = formFields.slice(1, 6);
-      break;
-    case 2:
-      fields = formFields.slice(6, 10);
-      break;
-    case 3:
-      fields = formFields.slice(10, 13);
-      break;
-    case 4:
-      fields = formFields.slice(13);
-      break;
-  }
-  return fields;
 };
 
 const exportedStandardTableComponent = (
@@ -134,6 +117,12 @@ const emptyTableComponent = (
 const hintComponent = (
   <ReportContext.Provider value={mockWpReportContext}>
     <ExportedReportFieldTable section={hintJson} />
+  </ReportContext.Provider>
+);
+
+const generalInformationComponent = (
+  <ReportContext.Provider value={mockSARReportContext}>
+    <ExportedReportFieldTable section={generalInformationJson} />
   </ReportContext.Provider>
 );
 
@@ -162,31 +151,9 @@ describe("ExportedReportFieldRow", () => {
     expect(hint).toBeVisible();
   });
 
-  test("shows the correct section form fields based on heading", async () => {
-    const mockHeadings = sarVerbiage.generalInformationTable.headings;
-    const getSectionFormFields = mockHeadings.map((heading) => {
-      return mockGetSectionFormFields(
-        mockHeadings.indexOf(heading),
-        generalInformationJson.form.fields
-      );
-    });
-
-    const result = [
-      [
-        {
-          id: "mock-text-field",
-          props: { hint: "Mock Hint Text", label: "X. Mock Field label" },
-          type: "text",
-          validation: "text",
-        },
-      ],
-      [],
-      [],
-      [],
-      [],
-    ];
-
-    await expect(getSectionFormFields).toEqual(result);
+  test("shows that general information renders correctly", async () => {
+    render(generalInformationComponent);
+    expect(screen.getByText("Resubmission Information")).toBeInTheDocument();
   });
 });
 
