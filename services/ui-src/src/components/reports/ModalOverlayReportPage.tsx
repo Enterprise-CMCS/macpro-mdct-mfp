@@ -170,7 +170,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
               <Button
                 sx={sx.addEntityButton}
                 onClick={() => openAddEditEntityModal()}
-                rightIcon={
+                leftIcon={
                   <Image src={addIcon} alt="Previous" sx={sx.addIcon} />
                 }
               >
