@@ -13,7 +13,7 @@ import {
   WorkPlanFieldDataForTransforms,
 } from "../types";
 import {
-  extractFundingSourceProjections,
+  extractWorkPlanData,
   iterateAllForms,
   runSARTransformations,
   transformFormTemplate,
@@ -588,8 +588,8 @@ describe("SAR transformations", () => {
   });
 });
 
-describe("extractFundingSourceProjections", () => {
-  it("Should move funding source data from the WP out to where the SAR can see it", () => {
+describe("extractWorkPlanData", () => {
+  it("Should move fundingSource and evaluationPlan data from the WP out to where the SAR can see it", () => {
     const sarFieldData = {
       initiative: [
         {
@@ -605,13 +605,45 @@ describe("extractFundingSourceProjections", () => {
               fundingSources_quarters2024Q2: "80",
             },
           ],
+          evaluationPlan: [
+            {
+              id: "epA",
+              evaluationPlan_objectiveName: "w",
+              evaluationPlan_description: "2",
+              evaluationPlan_targets: "3",
+              evaluationPlan_includesTargets: [
+                {
+                  key: "evaluationPlan_includesTargets-a",
+                  value: "Yes",
+                },
+              ],
+              evaluationPlan_additionalDetails: "2",
+              quarterlyProjections2024Q1: "1",
+              quarterlyProjections2024Q2: "2",
+            },
+            {
+              id: "epB",
+              evaluationPlan_objectiveName: "B",
+              evaluationPlan_description: "description",
+              evaluationPlan_targets: "targets",
+              evaluationPlan_includesTargets: [
+                {
+                  key: "evaluationPlan_includesTargets-a",
+                  value: "Yes",
+                },
+              ],
+              evaluationPlan_additionalDetails: "dasda",
+              quarterlyProjections2024Q1: "9",
+              quarterlyProjections2024Q2: "8",
+            },
+          ],
         },
       ],
     };
     const reportYear = 2024;
     const reportPeriod = 1;
 
-    extractFundingSourceProjections(sarFieldData, reportYear, reportPeriod);
+    extractWorkPlanData(sarFieldData, reportYear, reportPeriod);
 
     const initiative = sarFieldData.initiative[0];
     expect(initiative).toEqual({
@@ -631,6 +663,70 @@ describe("extractFundingSourceProjections", () => {
       fundingSources_projected_2024Q2_fsA: "60",
       fundingSources_projected_2024Q1_fsB: "70",
       fundingSources_projected_2024Q2_fsB: "80",
+      evaluationPlan: [
+        {
+          id: "epA",
+          evaluationPlan_objectiveName: "w",
+          evaluationPlan_description: "2",
+          evaluationPlan_targets: "3",
+          evaluationPlan_includesTargets: [
+            {
+              key: "evaluationPlan_includesTargets-a",
+              value: "Yes",
+            },
+          ],
+          evaluationPlan_additionalDetails: "2",
+          quarterlyProjections2024Q1: "1",
+          quarterlyProjections2024Q2: "2",
+        },
+        {
+          id: "epB",
+          evaluationPlan_objectiveName: "B",
+          evaluationPlan_description: "description",
+          evaluationPlan_targets: "targets",
+          evaluationPlan_includesTargets: [
+            {
+              key: "evaluationPlan_includesTargets-a",
+              value: "Yes",
+            },
+          ],
+          evaluationPlan_additionalDetails: "dasda",
+          quarterlyProjections2024Q1: "9",
+          quarterlyProjections2024Q2: "8",
+        },
+      ],
+      objectiveProgress: [
+        {
+          id: "epA",
+          objectiveProgress_additionalDetails: "2",
+          objectiveProgress_description: "2",
+          objectiveProgress_includesTargets: [
+            {
+              key: "evaluationPlan_includesTargets-a",
+              value: "Yes",
+            },
+          ],
+          objectiveProgress_objectiveName: "w",
+          objectiveProgress_targets: "3",
+          objectiveTargets_projections_2024Q1: "1",
+          objectiveTargets_projections_2024Q2: "2",
+        },
+        {
+          id: "epB",
+          objectiveProgress_additionalDetails: "dasda",
+          objectiveProgress_description: "description",
+          objectiveProgress_includesTargets: [
+            {
+              key: "evaluationPlan_includesTargets-a",
+              value: "Yes",
+            },
+          ],
+          objectiveProgress_objectiveName: "B",
+          objectiveProgress_targets: "targets",
+          objectiveTargets_projections_2024Q1: "9",
+          objectiveTargets_projections_2024Q2: "8",
+        },
+      ],
     });
   });
 });

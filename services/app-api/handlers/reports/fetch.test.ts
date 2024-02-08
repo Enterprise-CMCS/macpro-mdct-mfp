@@ -15,9 +15,11 @@ import { StatusCodes } from "../../utils/types";
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockReturnValue(true),
-  hasPermissions: jest.fn().mockReturnValue(true),
+  isAuthorizedToFetchState: jest.fn(() => {}),
   hasReportAccess: jest.fn().mockReturnValue(true),
 }));
+
+const mockAuthUtil = require("../../utils/auth/authorization");
 
 jest.mock("../../utils/debugging/debug-lib", () => ({
   init: jest.fn(),
@@ -41,6 +43,10 @@ const testReadEventByState: APIGatewayProxyEvent = {
 };
 
 describe("Test fetchReport API method", () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+    mockAuthUtil.isAuthorizedToFetchState.mockReturnValueOnce(true);
+  });
   test("Test Report not found in DynamoDB", async () => {
     mockDocumentClient.get.promise.mockReturnValueOnce({ Item: undefined });
     const res = await fetchReport(testReadEvent, null);
@@ -119,6 +125,10 @@ describe("Test fetchReport API method", () => {
 });
 
 describe("Test fetchReportsByState API method", () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+    mockAuthUtil.isAuthorizedToFetchState.mockReturnValueOnce(true);
+  });
   test("Test successful call", async () => {
     mockDocumentClient.query.promise.mockReturnValueOnce({
       Items: [mockDynamoData],
@@ -148,5 +158,23 @@ describe("Test fetchReportsByState API method", () => {
     const res = await fetchReportsByState(noKeyEvent, null);
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
+  });
+});
+
+describe("Test failing state user permission control", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockAuthUtil.isAuthorizedToFetchState.mockReturnValueOnce(false);
+  });
+  test("Test fetchReport request unauthorized when both permission checks fail", async () => {
+    const res = await fetchReport(testReadEvent, null);
+    expect(res.statusCode).toBe(403);
+    expect(res.body).toContain(error.UNAUTHORIZED);
+  });
+
+  test("Test fetchReportsByState request unauthorized when both permission checks fail", async () => {
+    const res = await fetchReportsByState(testReadEventByState, null);
+    expect(res.statusCode).toBe(403);
+    expect(res.body).toContain(error.UNAUTHORIZED);
   });
 });

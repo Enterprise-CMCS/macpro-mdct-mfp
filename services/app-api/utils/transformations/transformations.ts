@@ -73,6 +73,11 @@ export function* iterateAllForms(
     if (route.entitySteps) {
       yield* iterateAllForms(route.entitySteps);
     }
+    if (route.objectiveCards) {
+      for (let objectiveCard of route.objectiveCards) {
+        if (objectiveCard.modalForm) yield objectiveCard.modalForm;
+      }
+    }
   }
 }
 
@@ -102,15 +107,15 @@ export const transformFields = (
   reportPeriod: number,
   reportYear: number,
   workPlanFieldData?: unknown,
-  initiativeId?: string
+  initiativeId?: string,
+  objectiveId?: string
 ): (FormField | FormLayoutElement)[] => {
   if (!isUsableForTransforms(workPlanFieldData)) {
     throw new Error(
       `Work Plan Field Data is not structured as expected for SAR form template transformation`
     );
   }
-
-  return fields.flatMap((field) => {
+  return fields?.flatMap((field) => {
     if (!field.transformation?.rule) {
       // This field doesn't require any transformation.
       return field;
@@ -136,6 +141,15 @@ export const transformFields = (
           reportYear,
           workPlanFieldData,
           initiativeId
+        );
+      case "quantitativeQuarters":
+        return quantitativeQuarters(
+          field,
+          reportPeriod,
+          reportYear,
+          workPlanFieldData,
+          initiativeId,
+          objectiveId
         );
       default:
         throw new Error(
@@ -167,7 +181,8 @@ export const transformFormTemplate = (
       reportPeriod,
       reportYear,
       workPlanFieldData,
-      form.initiativeId
+      form.initiativeId,
+      form.objectiveId
     );
     for (let choiceWithChildren of iterateChoicesWithChildren(form.fields)) {
       choiceWithChildren.children = transformFields(
@@ -175,7 +190,8 @@ export const transformFormTemplate = (
         reportPeriod,
         reportYear,
         workPlanFieldData,
-        form.initiativeId
+        form.initiativeId,
+        form.objectiveId
       );
     }
   }
@@ -350,14 +366,14 @@ export const fundingSources = (
 
   return initiativeToUse.fundingSources.flatMap((fundingSource) => [
     {
-      id: `fundingSourceHeader-${randomUUID()}`,
+      id: `fundingSourcesHeader_${randomUUID()}`,
       type: "sectionHeader",
       props: {
         content: `${getFundingSourceName(fundingSource)}`,
       },
     },
     {
-      id: `sectionContent-${randomUUID()}`,
+      id: `fundingSourcesContent_${randomUUID()}`,
       type: "sectionContent",
       props: {
         content: "This funding source auto-populates from MFP Work Plan.",
@@ -385,6 +401,85 @@ export const fundingSources = (
   ]);
 };
 
+export const quantitativeQuarters = (
+  fieldToRepeat: FormField,
+  reportPeriod: number,
+  reportYear: number,
+  workPlanFieldData?: AnyObject,
+  initiativeId?: string,
+  objectiveId?: string
+) => {
+  const fieldsToAppend = [];
+
+  const initiativeToUse = workPlanFieldData?.initiative.find(
+    (initiative: any) => initiative.id === initiativeId
+  );
+
+  const objectiveToUse = initiativeToUse.evaluationPlan.find(
+    (objective: any) => objective.id === objectiveId
+  );
+
+  delete fieldToRepeat.transformation;
+
+  if (objectiveToUse?.evaluationPlan_includesTargets?.[0]?.value === "Yes") {
+    const headingStringFirstQuarter =
+      reportPeriod == 1
+        ? "First quarter (January 1 - March 31)"
+        : "Third quarter (July 1 - September 30)";
+
+    const headingStringSecondQuarter =
+      reportPeriod == 1
+        ? "Second quarter (April 1 - June 30)"
+        : "Fourth quarter (October 1 - December 31)";
+
+    //depending on the period, the quarter starts at  Q1 or Q3
+    const currentQuarter = reportPeriod === 1 ? 1 : 3;
+    // have to loop twice for both periods
+    const quartersInPeriod = reportPeriod === 1 ? [1, 2] : [3, 4];
+    for (let quarterNumber of quartersInPeriod) {
+      const formFieldHeading: FormField = {
+        id: `objectiveTargetsHeader_Q${quarterNumber}_${fieldToRepeat.id}`,
+        type: "sectionHeader",
+        props: {
+          content:
+            quarterNumber == currentQuarter
+              ? headingStringFirstQuarter
+              : headingStringSecondQuarter,
+          label:
+            quarterNumber == currentQuarter
+              ? "Complete the following for quantitative targets:"
+              : "",
+        },
+      };
+      fieldsToAppend.push(formFieldHeading);
+
+      const formFieldActual: FormField = {
+        id: `objectiveTargets_actual_${reportYear}Q${quarterNumber}`,
+        type: "number",
+        validation: "number",
+        props: {
+          label: "Actual value",
+        },
+      };
+      fieldsToAppend.push(formFieldActual);
+
+      const formFieldTarget: FormField = {
+        id: `objectiveTargets_projections_${reportYear}Q${quarterNumber}`,
+        type: "number",
+        validation: "number",
+        props: {
+          label: "Target Value",
+          hint: "Auto-populates from Work Plan.",
+          disabled: true,
+        },
+      };
+      fieldsToAppend.push(formFieldTarget);
+    }
+  }
+
+  return fieldsToAppend;
+};
+
 export const runSARTransformations = (
   route: DynamicModalOverlayReportPageShape,
   workPlanFieldData?: WorkPlanFieldDataForTransforms
@@ -406,6 +501,24 @@ export const runSARTransformations = (
         if (step[formType]) {
           step[formType].initiativeId = workPlanInitiative.id;
         }
+      }
+      if (step.stepType === "objectiveProgress") {
+        step.objectiveCards = [];
+        for (let workPlanObjective of workPlanInitiative.evaluationPlan) {
+          const templateObjectiveCard = structuredClone(
+            step.objectiveCardTemplate
+          );
+          step.objectiveCards.push({
+            ...templateObjectiveCard,
+            modalForm: {
+              ...templateObjectiveCard?.modalForm,
+              initiativeId: workPlanInitiative.id,
+              objectiveId: workPlanObjective.id,
+            },
+          });
+        }
+        delete step.transformation;
+        delete step.objectiveCardTemplate;
       }
     }
 
@@ -448,7 +561,7 @@ const generateSARFormsForInitiatives = (
  * match up to IDs generated in the form template transformation,
  * so that the frontend hydration code will be able to match up the data.
  */
-export const extractFundingSourceProjections = (
+export const extractWorkPlanData = (
   sarFieldData: AnyObject,
   reportYear: number,
   reportPeriod: number
@@ -461,6 +574,34 @@ export const extractFundingSourceProjections = (
         const wpFieldId = `fundingSources_quarters${reportYear}Q${quarter}`;
         const sarFieldId = `fundingSources_projected_${reportYear}Q${quarter}_${fundingSource.id}`;
         initiative[sarFieldId] = fundingSource[wpFieldId];
+      }
+    }
+
+    for (let evaluationPlan of initiative.evaluationPlan) {
+      const objectiveProgress: any = {};
+      //Transfering Blanket Data
+      objectiveProgress["id"] = evaluationPlan["id"];
+      objectiveProgress["objectiveProgress_objectiveName"] =
+        evaluationPlan["evaluationPlan_objectiveName"];
+      objectiveProgress["objectiveProgress_description"] =
+        evaluationPlan["evaluationPlan_description"];
+      objectiveProgress["objectiveProgress_targets"] =
+        evaluationPlan["evaluationPlan_targets"];
+      objectiveProgress["objectiveProgress_includesTargets"] =
+        evaluationPlan["evaluationPlan_includesTargets"];
+      objectiveProgress["objectiveProgress_additionalDetails"] =
+        evaluationPlan["evaluationPlan_additionalDetails"];
+
+      //Transfering Evaluation Plan Quarters Data
+      for (let quarter of quarters) {
+        const wpFieldId = `quarterlyProjections${reportYear}Q${quarter}`;
+        const sarFieldId = `objectiveTargets_projections_${reportYear}Q${quarter}`;
+        objectiveProgress[sarFieldId] = evaluationPlan[wpFieldId];
+      }
+      if (initiative["objectiveProgress"]) {
+        initiative["objectiveProgress"].push(objectiveProgress);
+      } else {
+        initiative["objectiveProgress"] = [objectiveProgress];
       }
     }
   }

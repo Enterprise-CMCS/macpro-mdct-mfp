@@ -26,14 +26,28 @@ export const OverlayModalPage = ({
   closeEntityDetailsOverlay,
   route,
 }: Props) => {
-  const { verbiage, modalForm, stepType } = route;
+  const { verbiage, stepType } = route;
   const { report, selectedEntity, setSelectedEntity, editable } = useStore();
   const [selectedStepEntity, setSelectedStepEntity] = useState<
     EntityShape | undefined
   >(undefined);
-
   const entityType = selectedEntity!.type;
   const userDisabled = !editable || selectedEntity?.isInitiativeClosed;
+  const objectiveCards: any[] = (route as any).objectiveCards;
+
+  const getModalForm = () => {
+    let card = route?.modalForm;
+    if (objectiveCards) {
+      const objectiveForm = objectiveCards.find(
+        (card) => card?.modalForm?.objectiveId === selectedStepEntity?.id
+      )?.modalForm;
+      //use found form or use the first objective card form if no form is found
+      card = objectiveForm || objectiveCards[0]?.modalForm;
+    }
+    return card;
+  };
+
+  let modalForm = getModalForm();
 
   /**
    * Any time the report is updated on this page,
@@ -85,7 +99,7 @@ export const OverlayModalPage = ({
 
   const openDeleteEntityModal = (entity?: EntityShape) => {
     setSelectedStepEntity(entity);
-    resetClearProp(modalForm.fields);
+    resetClearProp(modalForm!.fields);
     deleteEntityModalOnOpenHandler();
   };
 
@@ -165,7 +179,7 @@ export const OverlayModalPage = ({
           entityName={selectedEntity!.initiative_name}
           entityIdLookup={entityIdLookup}
           verbiage={verbiage}
-          form={modalForm}
+          form={modalForm!}
           userDisabled={userDisabled}
           modalDisclosure={{
             isOpen: addEditEntityModalIsOpen,
@@ -188,7 +202,7 @@ export const OverlayModalPage = ({
         <Flex sx={sx.buttonFlex}>
           <Button
             type="button"
-            form={modalForm.id}
+            form={modalForm?.id}
             sx={sx.saveButton}
             onClick={closeEntityDetailsOverlay as MouseEventHandler}
           >

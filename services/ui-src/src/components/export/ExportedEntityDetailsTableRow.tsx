@@ -22,9 +22,6 @@ export const ExportedEntityDetailsTableRow = ({
   const reportData = report?.fieldData;
   const isDynamicField = formField.type === "dynamic";
   const formFieldInfo = parseFormFieldInfo(formField?.props!);
-  // guard against double-rendering "otherText" response
-  const isOtherTextEntry = formField.id.endsWith("-otherText");
-  if (isOtherTextEntry) return null;
 
   return (
     <Tr data-testid="exportRow">

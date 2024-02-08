@@ -1,4 +1,5 @@
 import { EntityShape, OverlayModalStepTypes, AnyObject } from "types";
+import { convertToThousandsSeparatedString } from "utils";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
   const radioLabelValue = entity?.[label]?.[0].value;
@@ -17,7 +18,11 @@ const getRepeatedField = (
     for (const [key, value] of Object.entries(entity)) {
       if (key.includes(repeatedKey) && value) {
         const id = key.replace(repeatedKey, "").split("Q");
-        quarters.push({ id: `${id[0]} Q${id[1]}`, value: value });
+        const displayValue =
+          repeatedKey === "fundingSources_quarters"
+            ? `$${value}`
+            : convertToThousandsSeparatedString(value).maskedValue;
+        quarters.push({ id: `${id[0]} Q${id[1]}`, value: displayValue });
       }
     }
   }
@@ -46,6 +51,23 @@ export const getFormattedEntityData = (
         id: entity?.id,
         fundingSource: getRadioValue(entity, "fundingSources_wpTopic"),
         quarters: getRepeatedField(entity, "fundingSources_quarters"),
+      };
+    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
+      return {
+        objectiveName: entity?.objectiveProgress_objectiveName,
+        description: entity?.objectiveProgress_description,
+        targets: entity?.objectiveProgress_targets,
+        quarterProjections: getRepeatedField(
+          entity,
+          "objectiveTargets_projections_"
+        ),
+        quarterActuals: getRepeatedField(entity, "objectiveTargets_actual_"),
+        performanceMeasureProgress:
+          entity?.objectivesProgress_performanceMeasuresIndicators,
+        targetsMet: getRadioValue(entity, "objectivesProgress_deliverablesMet"),
+        missedTargetReason:
+          entity?.objectivesProgress_deliverablesMet_otherText,
+        additionalDetails: entity?.evaluationPlan_additionalDetails,
       };
     default:
       return {};

@@ -960,7 +960,7 @@
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
-        "dashboardSubtitle": "Initiatives and Work Plan topics are auto-populated from your most recent approved Work Plan. Note: Initiative topics with * are required topics.",
+        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. Note: Initiative topics with <span aria-label='asterisk'>*</span> are required initiatives.<br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period.<br><br>For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide home and community-based services (HCBS) instead of services in institutional settings. <br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work Plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
         "tableHeader": "Initiative name <br/> Work Plan topic",
         "countEntitiesInTitle": false
       },
@@ -984,7 +984,7 @@
             "name": "Objectives progress",
             "pageType": "overlayModal",
             "entityType": "initiative",
-            "stepType": "evaluationPlan",
+            "stepType": "objectiveProgress",
             "stepInfo": ["name", "hint"],
             "hint": "Report progress for each objective",
             "isRequired": true,
@@ -995,6 +995,10 @@
                   {
                     "type": "html",
                     "content": "Report progress for each objective by selecting the button for each."
+                  },
+                  {
+                    "type": "html",
+                    "content": "<br>Objectives are framed as SMART goals and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. Recipients define objectives in your MFP Work Plan’s evaluation plan."
                   }
                 ],
                 "dashboardTitle": "Objectives progress"
@@ -1009,51 +1013,62 @@
               "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab.",
               "entityUnfinishedMessage": "Report objective progress to complete this section"
             },
-            "modalForm": {
-              "id": "stsiop-modal",
-              "fields": [
-                {
-                  "id": "objectivesProgress_performanceMeasuresIndicators",
-                  "type": "textarea",
-                  "validation": "text",
-                  "props": {
-                    "label": "Provide data on performance measures or indicators used for monitoring progress toward the objective during the current reporting period. Include progress toward milestones and key deliverables."
-                  }
-                },
-                {
-                  "id": "objectivesProgress_deliverablesMet",
-                  "type": "radio",
-                  "validation": "radio",
-                  "props": {
-                    "label": "Were targets for performance measures and/or expected time frames for deliverables met?",
-                    "choices": [
-                      {
-                        "id": "2WaO1Jj3pyUN0j9KjeOqR",
-                        "label": "Yes"
-                      },
-                      {
-                        "id": "2WaO1K5umgZcZV4bAW5sPu",
-                        "label": "No",
-                        "children": [
-                          {
-                            "id": "objectivesProgress_deliverablesMet_otherText",
-                            "props": {
-                              "label": "Describe progress toward reaching the target/milestone during the reporting period. How close are you to meeting the target? How do you plan to address any obstacle(s) to meeting the target?"
-                            },
-                            "type": "textarea",
-                            "validation": {
-                              "type": "text",
-                              "parentFieldName": "objectivesProgress_deliverablesMet",
-                              "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
-                              "nested": true
+            "transformation": {
+              "rule": "objectives"
+            },
+            "objectiveCardTemplate": {
+              "modalForm": {
+                "id": "stsiop-modal",
+                "fields": [
+                  {
+                    "id": "objectivesProgress_performanceMeasuresIndicators",
+                    "type": "textarea",
+                    "validation": "text",
+                    "props": {
+                      "label": "Provide data on performance measures or indicators used for monitoring progress toward the objective during the current reporting period. Include progress toward milestones and key deliverables."
+                    }
+                  },
+                  {
+                    "id": "objectivesProgress_quantitative",
+                    "transformation": {
+                      "rule": "quantitativeQuarters"
+                    }
+                  },
+                  {
+                    "id": "objectivesProgress_deliverablesMet",
+                    "type": "radio",
+                    "validation": "radio",
+                    "props": {
+                      "label": "Were targets for performance measures and/or expected time frames for deliverables met?",
+                      "choices": [
+                        {
+                          "id": "2WaO1Jj3pyUN0j9KjeOqR",
+                          "label": "Yes"
+                        },
+                        {
+                          "id": "2WaO1K5umgZcZV4bAW5sPu",
+                          "label": "No",
+                          "children": [
+                            {
+                              "id": "objectivesProgress_deliverablesMet_otherText",
+                              "props": {
+                                "label": "Describe progress toward reaching the target/milestone during the reporting period. How close are you to meeting the target? How do you plan to address any obstacle(s) to meeting the target?"
+                              },
+                              "type": "textarea",
+                              "validation": {
+                                "type": "text",
+                                "parentFieldName": "objectivesProgress_deliverablesMet",
+                                "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
+                                "nested": true
+                              }
                             }
-                          }
-                        ]
-                      }
-                    ]
+                          ]
+                        }
+                      ]
+                    }
                   }
-                }
-              ]
+                ]
+              }
             }
           },
           {
@@ -1067,13 +1082,16 @@
             "verbiage": {
               "intro": {
                 "section": "State- or Territory-Specific Initiatives",
-                "subtitle": [
+                "info": [
                   {
                     "type": "html",
                     "content": "Report progress for this initiative during this reporting period."
+                  },
+                  {
+                    "type": "html",
+                    "content": "<br>Report key accomplishments or challenges for this initiative that are not otherwise mentioned under the objective(s). Recipients can document whether they are considering changes to objective(s) or the initiative based on the developments to date, including collaborations that may be under consideration or occurring with external parties to assist with running the initiative or achieving objectives."
                   }
                 ],
-                "subsection": "Report progress for this initiative during this reporting period.",
                 "title": "Initiative progress"
               },
               "enterEntityDetailsButtonText": "Edit",
@@ -1128,8 +1146,7 @@
                     "type": "html",
                     "content": "Report initiative expenditures by quarter and funding source. Report actual spending for each quarter for this initiative. Recipients plan quarterly expenditure targets in your MFP Work Plan’s funding sources. Recipients with discrepancies between projected and actual spending due solely to lag time between incurring costs and disbursing funds will have the option to note those cases in this section.<br></br>Funding sources and projected spending are auto-populated from your associated MFP Work Plan."
                   }
-                ],
-                "subsection": "Initiative expenditures by quarter and funding source. Funding sources and projected spending are auto-populated from your associated Work Plan."
+                ]
               },
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
@@ -1359,7 +1376,6 @@
               "props": {
                 "style": {
                   "columns": "2",
-                  "columnGap": "2rem",
                   "paddingLeft": "1rem",
                   "color": "#5A5A5A",
                   "li::before": {
@@ -1394,27 +1410,57 @@
                 },
                 {
                   "type": "li",
-                  "content": "Convenient and accessible transportation options"
+                  "content": "Convenient and accessible transportation options",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
                 },
                 {
                   "type": "li",
-                  "content": "Data-based decision-making"
+                  "content": "Data-based decision-making",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
                 },
                 {
                   "type": "li",
-                  "content": "Financing approaches"
+                  "content": "Financing approaches",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
                 },
                 {
                   "type": "li",
-                  "content": "Stakeholder agreement"
+                  "content": "Stakeholder agreement",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
                 },
                 {
                   "type": "li",
-                  "content": "Quality measurement and improvement"
+                  "content": "Quality measurement and improvement",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
                 },
                 {
                   "type": "li",
-                  "content": "Equity and social determinants of health"
+                  "content": "Equity and social determinants of health",
+                  "props": {
+                    "style": {
+                      "marginLeft": "1rem"
+                    }
+                  }
                 }
               ]
             }

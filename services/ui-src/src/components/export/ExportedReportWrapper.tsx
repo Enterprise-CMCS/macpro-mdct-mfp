@@ -18,7 +18,6 @@ import {
   StandardReportPageShape,
 } from "types";
 import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
-
 export const ExportedReportWrapper = ({ section }: Props) => {
   switch (section.pageType) {
     case PageTypes.STANDARD:
@@ -50,6 +49,7 @@ export const ExportedReportWrapper = ({ section }: Props) => {
           section={section as ModalDrawerReportPageShape}
         />
       );
+    case PageTypes.DYNAMIC_MODAL_OVERLAY:
     case PageTypes.MODAL_OVERLAY:
       return (
         <>

@@ -42,20 +42,13 @@ import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates
 import { logger } from "../../utils/logging";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { copyFieldDataFromSource } from "../../utils/other/copy";
-import { extractFundingSourceProjections } from "../../utils/transformations/transformations";
+import { extractWorkPlanData } from "../../utils/transformations/transformations";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
-    if (!hasPermissions(event, [UserRoles.STATE_USER])) {
-      return {
-        status: StatusCodes.UNAUTHORIZED,
-        body: error.UNAUTHORIZED,
-      };
-    }
-
     const requiredParams = ["reportType", "state"];
 
-    // Return No_Key when not given a state and reportType as a paramater
+    // Return No_Key when not given a state and reportType as a parameter
     if (
       !event.pathParameters ||
       !hasReportPathParams(event.pathParameters, requiredParams)
@@ -72,6 +65,12 @@ export const createReport = handler(
       return {
         status: StatusCodes.BAD_REQUEST,
         body: error.NO_KEY,
+      };
+    }
+    if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
+      return {
+        status: StatusCodes.UNAUTHORIZED,
+        body: error.UNAUTHORIZED,
       };
     }
 
@@ -193,11 +192,7 @@ export const createReport = handler(
         ...workPlanFieldData,
       };
 
-      extractFundingSourceProjections(
-        validatedFieldData!,
-        reportYear,
-        reportPeriod
-      );
+      extractWorkPlanData(validatedFieldData!, reportYear, reportPeriod);
     }
 
     // Return INVALID_DATA error if field data is not valid.

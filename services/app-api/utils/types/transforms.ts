@@ -3,7 +3,16 @@ import { Choice } from "./formFields";
 /** This type is intended to be used exclusively in the form template transforms */
 export type WorkPlanFieldDataForTransforms = {
   targetPopulations?: TargetPopulation[];
-  initiative?: Initiative[];
+  initiative?: {
+    id: string;
+    initiative_name: string;
+    initiative_wpTopic: Choice[];
+    fundingSources: {
+      id: string;
+      fundingSources_wpTopic: Choice[];
+    }[];
+    evaluationPlan: any;
+  }[];
 };
 
 /** This type is intended to be used exclusively in the form template transforms */

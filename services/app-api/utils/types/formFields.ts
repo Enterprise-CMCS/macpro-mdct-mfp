@@ -32,6 +32,7 @@ export interface FormJson {
   options?: AnyObject;
   validation?: AnyObject;
   initiativeId?: string;
+  objectiveId?: string;
 }
 
 export interface DependentFieldValidation {
@@ -69,6 +70,7 @@ export interface FormField {
   choices?: FieldChoice[];
   repeat?: string;
   transformation?: Transformation;
+  objectiveCardTemplate?: AnyObject;
   isRequired?: boolean;
 }
 
