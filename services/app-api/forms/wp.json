@@ -148,7 +148,7 @@
                       "id": "quarterlyProjections",
                       "type": "number",
                       "validation": {
-                        "type": "number",
+                        "type": "validInteger",
                         "parentFieldName": "transitionBenchmarks_applicableToMfpDemonstration",
                         "parentOptionId": "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd",
                         "nested": true

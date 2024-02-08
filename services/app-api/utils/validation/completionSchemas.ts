@@ -43,6 +43,8 @@ const validNAValues = ["N/A", "Data not available"];
 /** This regex must be at least as permissive as the one in ui-src */
 const validNumberRegex = /^\.$|[0-9]/;
 
+const validIntegerRegex = /^\d+$/;
+
 // NUMBER - Number or Valid Strings
 const numberSchema = () =>
   string()
@@ -77,6 +79,30 @@ const valueCleaningNumberSchema = (value: string, charsToReplace: RegExp) => {
 
 export const number = () => numberSchema().required();
 export const numberOptional = () => numberSchema().notRequired().nullable();
+
+// Integer or Valid Strings
+export const validIntegerSchema = () =>
+  string().test({
+    message: error.INVALID_NUMBER_OR_NA,
+    test: (value) => {
+      if (value) {
+        const isValidStringValue = validNAValues.includes(value);
+        const isValidIntegerValue = validIntegerRegex.test(value);
+        return isValidStringValue || isValidIntegerValue;
+      } else return true;
+    },
+  });
+
+export const validInteger = () =>
+  validIntegerSchema()
+    .required(error.REQUIRED_GENERIC)
+    .test({
+      test: (value) => !isWhitespaceString(value),
+      message: error.REQUIRED_GENERIC,
+    });
+
+export const validIntegerOptional = () =>
+  validIntegerSchema().notRequired().nullable();
 
 // Number - Ratio
 export const ratio = () =>
