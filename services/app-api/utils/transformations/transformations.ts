@@ -15,6 +15,7 @@ import {
   isUsableForTransforms,
   TargetPopulation,
   WorkPlanFieldDataForTransforms,
+  FundingSource,
 } from "../types";
 
 export const removeConditionalRoutes = <T extends ReportRoute>(
@@ -352,15 +353,23 @@ export const fundingSources = (
     },
   ];
 
-  let quarters =
+  const quarters =
     reportPeriod === 1 ? firstPeriodQuarters : secondPeriodQuarters;
+
+  const getFundingSourceName = (fundingSource: FundingSource) => {
+    const selectedOption = fundingSource.fundingSources_wpTopic[0].value;
+    if (selectedOption !== "Other, specify") {
+      return selectedOption;
+    }
+    return fundingSource.initiative_wp_otherTopic!;
+  };
 
   return initiativeToUse.fundingSources.flatMap((fundingSource) => [
     {
       id: `fundingSourcesHeader_${randomUUID()}`,
       type: "sectionHeader",
       props: {
-        content: `${fundingSource.fundingSources_wpTopic[0].value}`,
+        content: `${getFundingSourceName(fundingSource)}`,
       },
     },
     {
