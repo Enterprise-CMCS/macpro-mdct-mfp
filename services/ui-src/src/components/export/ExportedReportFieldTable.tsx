@@ -231,5 +231,6 @@ const sx = {
   heading: {
     fontSize: "xl",
     fontWeight: "bold",
+    color: "palette.black",
   },
 };
