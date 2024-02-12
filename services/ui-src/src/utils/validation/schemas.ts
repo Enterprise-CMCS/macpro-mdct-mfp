@@ -3,6 +3,7 @@ import { validationErrors as error } from "verbiage/errors";
 import { Choice } from "types";
 import {
   checkRatioInputAgainstRegexes,
+  checkStandardIntegerInputAgainstRegexes,
   checkStandardNumberInputAgainstRegexes,
 } from "utils/other/checkInputValidity";
 
@@ -55,6 +56,31 @@ export const number = () =>
     });
 
 export const numberOptional = () => numberSchema().notRequired().nullable();
+
+// Integer or Valid Strings
+export const validIntegerSchema = () =>
+  string().test({
+    message: error.INVALID_NUMBER_OR_NA,
+    test: (value) => {
+      if (value) {
+        const isValidStringValue = validNAValues.includes(value);
+        const isValidIntegerValue =
+          checkStandardIntegerInputAgainstRegexes(value);
+        return isValidStringValue || isValidIntegerValue;
+      } else return true;
+    },
+  });
+
+export const validInteger = () =>
+  validIntegerSchema()
+    .required(error.REQUIRED_GENERIC)
+    .test({
+      test: (value) => !isWhitespaceString(value),
+      message: error.REQUIRED_GENERIC,
+    });
+
+export const validIntegerOptional = () =>
+  validIntegerSchema().notRequired().nullable();
 
 // Number - Ratio
 export const ratio = () =>
