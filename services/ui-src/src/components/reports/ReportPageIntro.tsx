@@ -28,7 +28,7 @@ export const ReportPageIntro = ({
       {accordion && !OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
         <InstructionsAccordion verbiage={accordion} />
       )}
-      {OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
+      {OverlayModalStepTypes.OBJECTIVE_PROGRESS && text.dashboardTitle && (
         <Heading as="h3" sx={sx.subTitle}>
           {text.dashboardTitle}
         </Heading>
