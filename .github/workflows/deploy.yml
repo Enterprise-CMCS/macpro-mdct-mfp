@@ -122,7 +122,7 @@ jobs:
   # e2e-test:
   #   name: E2E Integration Tests
   #   needs: deploy
-  #   if: ${{ github.ref != 'refs/heads/production' }}
+  #   if: ${{ github.ref_name != 'production' }}
   #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v3
@@ -154,7 +154,7 @@ jobs:
   # a11y-tests:
   #   name: E2E A11y Tests
   #   needs: deploy
-  #   if: ${{ github.ref != 'refs/heads/production' }}
+  #   if: ${{ github.ref_name != 'production' }}
   #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v3
