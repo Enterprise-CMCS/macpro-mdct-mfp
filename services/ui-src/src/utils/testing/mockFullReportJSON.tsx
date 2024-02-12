@@ -491,7 +491,7 @@ export const mockFullReportJSON: ReportJson = {
                                     {
                                       type: "li",
                                       content:
-                                        "Equity and social determinants of health (SODH)",
+                                        "Equity and social determinants of health (SDOH)",
                                       props: {
                                         style: {
                                           paddingBottom: ".5rem",
@@ -575,7 +575,7 @@ export const mockFullReportJSON: ReportJson = {
                     {
                       type: "li",
                       content:
-                        "Close-out information, to be completed as appropriate during WP revisions",
+                        "Initiative close-out information, to be completed as appropriate during WP revisions",
                       props: {
                         style: {
                           paddingTop: ".5rem",
@@ -640,7 +640,7 @@ export const mockFullReportJSON: ReportJson = {
                 validation: "radio",
                 props: {
                   label:
-                    "Are Tribal initiatives applicable to your state or territory?",
+                    "Are Tribal Initiatives applicable to your state or territory?",
                   choices: [
                     {
                       id: "UG7uunqq5UCtUq1is3iyiw",
@@ -719,7 +719,7 @@ export const mockFullReportJSON: ReportJson = {
                 type: "radio",
                 validation: "radio",
                 props: {
-                  label: "Work Plan topic:",
+                  label: "MFP Work Plan topic:",
                   hint: "Note: Initiative topics with * are required and must be selected at least once across all initiatives.",
                   choices: [
                     {
@@ -777,7 +777,7 @@ export const mockFullReportJSON: ReportJson = {
                     },
                     {
                       id: "2qjBuLtpA5pDvUM1HSHMVq",
-                      label: "Equity and SDOH",
+                      label: "Equity and social determinants of health (SDOH)",
                     },
                     {
                       id: "18Wb9b2zMIF13pZwWstdJF",

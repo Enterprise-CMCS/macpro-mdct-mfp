@@ -1058,7 +1058,7 @@
                               "validation": {
                                 "type": "text",
                                 "parentFieldName": "objectivesProgress_deliverablesMet",
-                                "parentOptionId": "2WaO1K5umgZcZV4bAW5sPu",
+                                "parentOptionId": "objectivesProgress_deliverablesMet-2WaO1K5umgZcZV4bAW5sPu",
                                 "nested": true
                               }
                             }
