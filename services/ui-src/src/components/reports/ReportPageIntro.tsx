@@ -3,7 +3,7 @@ import { Box, Heading } from "@chakra-ui/react";
 import { InstructionsAccordion } from "components";
 // utils
 import { parseCustomHtml } from "utils";
-import { AnyObject } from "types";
+import { AnyObject, OverlayModalStepTypes } from "types";
 import { ReportPeriod } from "./ReportPeriod";
 
 export const ReportPageIntro = ({
@@ -12,7 +12,6 @@ export const ReportPageIntro = ({
   initiativeName,
   reportPeriod,
   reportYear,
-  stepType,
   ...props
 }: Props) => {
   const { section, subsection, hint, info } = text;
@@ -26,16 +25,16 @@ export const ReportPageIntro = ({
         {initiativeName ? initiativeName : subsection}
       </Heading>
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
-      {accordion && stepType !== "objectiveProgress" && (
+      {accordion && !OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
         <InstructionsAccordion verbiage={accordion} />
       )}
-      {stepType === "objectiveProgress" && (
+      {OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
         <Heading as="h3" sx={sx.subTitle}>
-          Objectives progress
+          {text.dashboardTitle}
         </Heading>
       )}
       {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
-      {accordion && stepType === "objectiveProgress" && (
+      {accordion && OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
         <InstructionsAccordion verbiage={accordion} />
       )}
       <ReportPeriod
@@ -54,7 +53,6 @@ interface Props {
   [key: string]: any;
   reportPeriod?: number;
   reportYear?: number;
-  stepType?: string;
 }
 
 const sx = {
