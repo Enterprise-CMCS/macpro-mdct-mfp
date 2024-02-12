@@ -1162,6 +1162,9 @@
                   "validation": "number",
                   "transformation": {
                     "rule": "fundingSources"
+                  },
+                  "props": {
+                    "mask": "currency"
                   }
                 },
                 {
