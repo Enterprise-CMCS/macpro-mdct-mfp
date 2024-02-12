@@ -1,6 +1,6 @@
 // utils
 import { AnyObject, OverlayModalStepTypes } from "types";
-import { Text, Box } from "@chakra-ui/react";
+import { Text, Box, Grid, GridItem, Flex } from "@chakra-ui/react";
 import { notAnsweredText } from "../../constants";
 
 const wereTargetsMetForObjectiveProgress = (
@@ -97,8 +97,43 @@ export const EntityStepCardBottomSection = ({
                 : undefined
             }
           >
-            {formattedEntityData?.quarterProjections?.length > 0 ? (
+            {formattedEntityData?.targetsMet &&
+            formattedEntityData?.quarterProjections?.length > 0 ? (
               <>
+                <Text sx={sx.subtitle} data-testid="sar-grid">
+                  Quantitative targets for this reporting period
+                </Text>
+
+                <Grid sx={sx.sarGrid}>
+                  {formattedEntityData?.quarterProjections
+                    .slice(0, 2)
+                    .map((quarter: any) => {
+                      return (
+                        <GridItem key={quarter.id}>
+                          <Flex sx={sx.gridItems}>
+                            <Text sx={sx.sarGridSubtitle}>
+                              {quarter.id} Target:
+                            </Text>
+                            <Text sx={sx.gridItems}>{quarter.value}</Text>
+                          </Flex>
+                        </GridItem>
+                      );
+                    })}
+                  {formattedEntityData?.quarterActuals
+                    .slice(0, 2)
+                    .map((quarter: any) => {
+                      return (
+                        <GridItem key={quarter.id}>
+                          <Flex sx={sx.gridItems}>
+                            <Text sx={sx.sarGridSubtitle}>
+                              {quarter.id} Actual:
+                            </Text>
+                            <Text sx={sx.gridItems}>{quarter.value}</Text>
+                          </Flex>
+                        </GridItem>
+                      );
+                    })}
+                </Grid>
                 {(formattedEntityData?.targetsMet || printVersion) &&
                   wereTargetsMetForObjectiveProgress(
                     formattedEntityData,
