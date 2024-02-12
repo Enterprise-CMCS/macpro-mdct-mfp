@@ -62,7 +62,7 @@ describe("Report Context", () => {
   test("Report Data is visible", () => {
     mockedUseStore.mockReturnValue(mockUseStore);
     render(reportComponent);
-    expect(screen.getByText("Submission: 2023 - Alabama 1")).toBeVisible();
+    expect(screen.getByText("2023 - Alabama 1")).toBeVisible();
     expect(screen.getByText("Last saved 1:58 PM")).toBeVisible();
   });
 
