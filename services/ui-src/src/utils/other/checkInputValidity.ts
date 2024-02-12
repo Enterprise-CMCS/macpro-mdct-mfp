@@ -2,6 +2,8 @@
 
 // basic check for all possible characters -- standard number
 const validCharactersStandardNumberRegex = /^[0-9\s.,$%-]+$/;
+// basic check for all possible characters -- standard number
+const validCharactersStandardIntegerRegex = /^[0-9\s,$%]+$/;
 // basic check for all possible characters -- ratio
 const validCharactersRatioNumberRegex = /^[0-9.,-]+$/;
 // at most 1 decimal point
@@ -32,6 +34,22 @@ export const checkStandardNumberInputAgainstRegexes = (
       validPercentSignPlacementRegex.test(value)
     ) ||
     !validNegativeSignPlacementRegex.test(value)
+  )
+    return false;
+  return true;
+};
+
+export const checkStandardIntegerInputAgainstRegexes = (
+  value: string
+): boolean => {
+  if (
+    !validCharactersStandardIntegerRegex.test(value) ||
+    !validCommaLocationRegex.test(value) ||
+    !atMost1SpecialCharacterRegex.test(value) ||
+    !(
+      validDollarSignPlacementRegex.test(value) ||
+      validPercentSignPlacementRegex.test(value)
+    )
   )
     return false;
   return true;
