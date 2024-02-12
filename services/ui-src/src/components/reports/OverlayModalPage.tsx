@@ -133,7 +133,7 @@ export const OverlayModalPage = ({
             <Button
               sx={sx.addEntityButton}
               onClick={addEditEntityModalOnOpenHandler}
-              rightIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
+              leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
             >
               {verbiage.addEntityButtonText}
             </Button>

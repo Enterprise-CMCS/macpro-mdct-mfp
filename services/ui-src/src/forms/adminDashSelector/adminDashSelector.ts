@@ -17,7 +17,7 @@ const reportChoices = [
   },
   {
     id: "SAR",
-    label: "Semi-Annual Progress Report (SAR)",
+    label: "MFP Semi-Annual Progress Report (SAR)",
   },
 ];
 
