@@ -173,6 +173,7 @@ const sx = {
         lineHeight: "normal",
         fontWeight: "bold",
         minWidth: "100px",
+        width: "100px",
         ".tablet &, .mobile &": {
           border: "1px solid",
         },

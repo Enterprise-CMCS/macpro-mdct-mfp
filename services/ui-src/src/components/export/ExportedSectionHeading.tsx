@@ -55,7 +55,7 @@ const sx = {
     },
   },
   heading: {
-    margin: "margin: 2rem 0 1.5rem 0",
+    marginTop: "2rem",
     fontSize: "2xl",
     fontWeight: "bold",
     color: "palette.black",

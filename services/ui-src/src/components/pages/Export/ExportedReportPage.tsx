@@ -151,7 +151,7 @@ export const renderReportSections = (
   return reportRoutes.map(
     (section: ReportRoute) =>
       section?.pageType !== PageTypes.REVIEW_SUBMIT && (
-        <Box key={section.path} mt="5rem">
+        <Box key={section.path} mt="3.5rem">
           {renderSection(section)}
         </Box>
       )
