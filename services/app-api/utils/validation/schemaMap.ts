@@ -36,6 +36,8 @@ const valueCleaningNumberSchema = (value: string, charsToReplace: RegExp) => {
 /** This regex must be at least as permissive as the one in ui-src */
 const validNumberRegex = /^\.$|[0-9]/;
 
+const validIntegerRegex = /^[0-9\s,$%]+$/;
+
 // NUMBER - Number or Valid Strings
 export const number = () =>
   string()
@@ -59,6 +61,28 @@ export const number = () =>
     });
 
 export const numberOptional = () => number();
+
+// INTEGER - Integer or Valid Strings
+export const validInteger = () =>
+  string()
+    .test({
+      message: error.INVALID_NUMBER_OR_NA,
+      test: (value) => {
+        if (value) {
+          const isValidStringValue = validNAValues.includes(value);
+          const isValidIntegerValue = validIntegerRegex.test(value);
+          return isValidStringValue || isValidIntegerValue;
+        } else return true;
+      },
+    })
+    .test({
+      test: (value) => {
+        if (validNumberRegex.test(value!)) {
+          return parseFloat(value!) >= 0;
+        } else return true;
+      },
+      message: error.NUMBER_LESS_THAN_ZERO,
+    });
 
 // Number - Ratio
 export const ratio = () =>
