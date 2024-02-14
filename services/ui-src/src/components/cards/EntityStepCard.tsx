@@ -158,6 +158,7 @@ export const EntityStepCard = ({
             className="delete-entity-button"
             onClick={() => openDeleteEntityModal(entity)}
             data-testid="delete-entity-button"
+            aria-label="Delete"
           >
             <Image
               src={deleteIcon}
