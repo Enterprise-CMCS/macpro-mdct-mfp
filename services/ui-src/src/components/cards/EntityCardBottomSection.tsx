@@ -97,7 +97,8 @@ export const EntityStepCardBottomSection = ({
                 : undefined
             }
           >
-            {formattedEntityData?.quarterProjections?.length > 0 ? (
+            {formattedEntityData?.targetsMet &&
+            formattedEntityData?.quarterProjections?.length > 0 ? (
               <>
                 <Text sx={sx.subtitle} data-testid="sar-grid">
                   Quantitative targets for this reporting period
