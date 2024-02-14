@@ -990,7 +990,7 @@
             "isRequired": true,
             "verbiage": {
               "intro": {
-                "section": "State- or Territory-Specific Initiatives",
+                "section": "State or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "html",
@@ -1002,6 +1002,37 @@
                   }
                 ],
                 "dashboardTitle": "Objectives progress"
+              },
+              "accordion": {
+                "buttonLabel": "About SMART goals",
+                "intro": [
+                  {
+                    "type": "html",
+                    "content": "The evaluation plan in your MFP Work Plan captured expected results for each state or territory-specific initiative. You identified one or more objectives per initiative and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. In the Semi-Annual Progress Report, you must articulate how you will achieve targets and meet milestones. For more information on objectives and identifying appropriate performance measures, see "
+                  },
+                  {
+                    "type": "externalLink",
+                    "content": "\"Using Data to Improve Money Follows the Person Program Performance.\"",
+                    "props": {
+                      "href": "https://www.medicaid.gov/sites/default/files/2023-01/MFP-Technical-Assistance-Brief.pdf",
+                      "target": "_blank",
+                      "aria-label": "Using Data to Improve Money Follows the Person Program Performance (Link opens in new tab)"
+                    }
+                  },
+                  {
+                    "type": "html",
+                    "content": "<br/><br/>As a reminder, SMART stands for:"
+                  }
+                ],
+                "list": [
+                  [
+                    "<b>Specific:</b> Specifies the activities, actors, and beneficiaries",
+                    "<b>Measurable:</b> Defines how a change will be measured",
+                    "<b>Achievable:</b> Confirms the feasibility of implementing the intervention as planned",
+                    "<b>Realistic/relevant</b>: Ensures the intervention relates to the goal",
+                    "<b>Time-bound</b>: Specifies when the results are expected"
+                  ]
+                ]
               },
               "editEntityButtonText": "Edit objective progress",
               "reportProgressButtonText": "Report objective progress",

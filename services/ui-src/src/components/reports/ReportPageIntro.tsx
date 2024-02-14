@@ -2,8 +2,8 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { InstructionsAccordion } from "components";
 // utils
-import { parseCustomHtml, useStore } from "utils";
-import { AnyObject, ReportType } from "types";
+import { parseCustomHtml } from "utils";
+import { AnyObject, OverlayModalStepTypes } from "types";
 import { ReportPeriod } from "./ReportPeriod";
 
 export const ReportPageIntro = ({
@@ -12,11 +12,9 @@ export const ReportPageIntro = ({
   initiativeName,
   reportPeriod,
   reportYear,
-  stepType,
   ...props
 }: Props) => {
   const { section, subsection, hint, info } = text;
-  const { report } = useStore() ?? {};
 
   return (
     <Box sx={sx.introBox} {...props}>
@@ -27,13 +25,18 @@ export const ReportPageIntro = ({
         {initiativeName ? initiativeName : subsection}
       </Heading>
       {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
-      {accordion && <InstructionsAccordion verbiage={accordion} />}
-      {stepType === "evaluationPlan" && report?.reportType === ReportType.SAR && (
+      {accordion && !OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
+        <InstructionsAccordion verbiage={accordion} />
+      )}
+      {OverlayModalStepTypes.OBJECTIVE_PROGRESS && text.dashboardTitle && (
         <Heading as="h3" sx={sx.subTitle}>
-          Objectives progress
+          {text.dashboardTitle}
         </Heading>
       )}
       {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
+      {accordion && OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
+        <InstructionsAccordion verbiage={accordion} />
+      )}
       <ReportPeriod
         text={text}
         reportPeriod={reportPeriod}
@@ -50,7 +53,6 @@ interface Props {
   [key: string]: any;
   reportPeriod?: number;
   reportYear?: number;
-  stepType?: string;
 }
 
 const sx = {
