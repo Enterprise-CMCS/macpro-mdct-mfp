@@ -5,7 +5,9 @@ export const error = {
   MISSING_DATA: "Missing required data.",
   INVALID_DATA: "Provided data is not valid.",
   NO_MATCHING_RECORD: "No matching record found.",
-  SERVER_ERROR: "An unspecified server error occured.",
+  SERVER_ERROR: "An unspecified server error occurred.",
+  // form errors
+  CREATE_NOT_PERMITTED: "Cannot create new report at this time.",
   // bucket errors
   S3_OBJECT_CREATION_ERROR: "Report could not be created due to an S3 error.",
   S3_OBJECT_UPDATE_ERROR: "Report could not be updated due to an S3 error.",
