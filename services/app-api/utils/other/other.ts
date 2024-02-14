@@ -24,7 +24,7 @@ export const createReportName = (
   return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
 };
 
-export const lastCreatedWorkPlan = (
+export const latestSarEligibleWorkPlan = (
   currentWorkPlans: ReportMetadataShape[]
 ): ReportMetadataShape | undefined => {
   let lastCreatedWorkPlan: ReportMetadataShape | undefined = undefined;
@@ -59,7 +59,7 @@ export const lastCreatedWorkPlan = (
   return lastCreatedWorkPlan;
 };
 
-export const getLastCreatedWorkPlan = async (
+export const getLatestSarEligibleWorkPlan = async (
   event: APIGatewayProxyEvent,
   _context: any,
   state: string
@@ -77,15 +77,15 @@ export const getLastCreatedWorkPlan = async (
   const currentWorkPlans = JSON.parse(workPlanSubmissions.body);
 
   // Get last created Work Plan
-  const eligbleWorkPlan = lastCreatedWorkPlan(currentWorkPlans);
+  const eligibleWorkPlan = latestSarEligibleWorkPlan(currentWorkPlans);
 
   // And assuming we have one we want to get the data from.
-  if (eligbleWorkPlan) {
+  if (eligibleWorkPlan) {
     const fetchWPReportEvent = event;
     fetchWPReportEvent.pathParameters = {
       reportType: ReportType.WP,
       state: state,
-      id: eligbleWorkPlan["id"],
+      id: eligibleWorkPlan["id"],
     };
     // Get the data of the eligble work plan
     const workPlan = await fetchReport(fetchWPReportEvent, _context);
@@ -101,4 +101,30 @@ export const getLastCreatedWorkPlan = async (
   }
   // If there wasn't an eligble work plan to copy from, return undefined
   return { workPlanMetadata: undefined, workPlanFieldData: undefined };
+};
+
+export const eligibleToCreateNewWP = async (
+  event: APIGatewayProxyEvent,
+  _context: any
+): Promise<boolean> => {
+  // Fetch all Work Plans for the state
+  const workPlanEvent = event;
+  workPlanEvent.pathParameters = {
+    ...workPlanEvent.pathParameters,
+    reportType: ReportType.WP,
+  };
+  const workPlanSubmissions = await fetchReportsByState(event, _context);
+  const currentWorkPlans = JSON.parse(workPlanSubmissions.body);
+
+  // Get most recently created Work Plan
+  const lastCreatedWorkPlan = currentWorkPlans.reduce(
+    (nextReport: ReportMetadataShape, latestReport: ReportMetadataShape) =>
+      nextReport.createdAt > latestReport.createdAt ? nextReport : latestReport
+  );
+
+  // Allow new create if no previous WP or previous WP is approved
+  return (
+    !lastCreatedWorkPlan ||
+    lastCreatedWorkPlan?.status === ReportStatus.APPROVED
+  );
 };

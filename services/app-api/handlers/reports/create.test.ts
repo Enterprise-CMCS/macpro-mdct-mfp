@@ -116,6 +116,9 @@ describe("Test createReport API method", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useRealTimers();
+    jest
+      .spyOn(helperFunctions, "eligibleToCreateNewWP")
+      .mockResolvedValueOnce(true);
   });
   test("Test unauthorized report creation throws 403 error", async () => {
     jest.spyOn(authFunctions, "isAuthorized").mockResolvedValueOnce(false);
@@ -209,7 +212,7 @@ describe("Test createReport API method", () => {
 
   test("Test successful run of sar report creation, not copied", async () => {
     jest
-      .spyOn(helperFunctions, "getLastCreatedWorkPlan")
+      .spyOn(helperFunctions, "getLatestSarEligibleWorkPlan")
       .mockResolvedValueOnce({
         workPlanMetadata: mockWPMetadata,
         workPlanFieldData: mockWPFieldData,
@@ -254,5 +257,18 @@ describe("Test createReport API method", () => {
 
     expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_KEY);
+  });
+});
+
+describe("Test create WP not allowed", () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+  test("Cannot create WP if previous WP not approved", async () => {
+    jest
+      .spyOn(helperFunctions, "eligibleToCreateNewWP")
+      .mockResolvedValueOnce(false);
+    const res = await createReport(wpCreationEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
   });
 });

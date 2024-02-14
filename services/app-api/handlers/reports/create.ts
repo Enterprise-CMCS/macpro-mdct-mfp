@@ -24,7 +24,8 @@ import {
 } from "../../utils/time/time";
 import {
   createReportName,
-  getLastCreatedWorkPlan,
+  eligibleToCreateNewWP,
+  getLatestSarEligibleWorkPlan,
 } from "../../utils/other/other";
 // types
 import {
@@ -98,10 +99,10 @@ export const createReport = handler(
       workPlanFieldData?: AnyObject;
     } =
       reportType === ReportType.SAR
-        ? await getLastCreatedWorkPlan(event, _context, state)
+        ? await getLatestSarEligibleWorkPlan(event, _context, state)
         : { workPlanMetadata: undefined, workPlanFieldData: undefined };
 
-    // If we recieved no work plan information and we're trying to create a SAR, return NO_WORKPLANS_FOUND
+    // If we received no work plan information and we're trying to create a SAR, return NO_WORKPLANS_FOUND
     if (
       !workPlanFieldData &&
       !workPlanMetadata &&
@@ -110,6 +111,17 @@ export const createReport = handler(
       return {
         status: StatusCodes.NOT_FOUND,
         body: error.NO_WORKPLANS_FOUND,
+      };
+    }
+
+    // If reportType is WP and there is an existing unapproved report, don't create another
+    if (
+      !(await eligibleToCreateNewWP(event, _context)) &&
+      reportType === ReportType.WP
+    ) {
+      return {
+        status: StatusCodes.BAD_REQUEST,
+        body: error.CREATE_NOT_PERMITTED,
       };
     }
 
@@ -278,7 +290,7 @@ export const createReport = handler(
       };
     }
 
-    // Begin Section - Create DyanmoDB record
+    // Begin Section - Create DynamoDB record
     const reportMetadataParams: DynamoWrite = {
       TableName: reportTable,
       Item: {
