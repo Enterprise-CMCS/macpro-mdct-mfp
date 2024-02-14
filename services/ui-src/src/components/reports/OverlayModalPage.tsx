@@ -124,7 +124,6 @@ export const OverlayModalPage = ({
           text={verbiage.intro}
           accordion={verbiage.accordion}
           initiativeName={selectedEntity!.initiative_name}
-          stepType={stepType}
         />
       )}
       <Box>
