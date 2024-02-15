@@ -181,7 +181,7 @@ const sx = {
     "@media print": {
       pageBreakInside: "avoid",
     },
-    marginBottom: "1rem",
+    margin: "2rem 0 2rem 0",
     "tr, th": {
       verticalAlign: "top",
       lineHeight: "base",
@@ -231,5 +231,6 @@ const sx = {
   heading: {
     fontSize: "xl",
     fontWeight: "bold",
+    color: "palette.black",
   },
 };

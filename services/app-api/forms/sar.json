@@ -164,7 +164,6 @@
         "intro": {
           "info": [
             {
-              "type": "h3",
               "content": "In this section, please provide information for the specified period. Transition targets are populated from your state’s current MFP Work Plan, where applicable. Blue-shaded cells are auto-calculated."
             }
           ]
