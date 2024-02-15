@@ -914,7 +914,7 @@
       ]
     },
     {
-      "name": "State- or Territory-Specific Initiatives",
+      "name": "State or Territory-Specific Initiatives",
       "path": "/sar/state-or-territory-specific-initiatives",
       "pageType": "dynamicModalOverlay",
       "entityType": "initiative",
@@ -922,7 +922,7 @@
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "State- or Territory-Specific Initiatives"
+          "subsection": "State or Territory-Specific Initiatives"
         },
         "accordion": {
           "buttonLabel": "Instructions",
@@ -969,7 +969,7 @@
           "name": "Intitiative Details Dashboard",
           "verbiage": {
             "intro": {
-              "section": "State- or Territory-Specific Initiatives",
+              "section": "State or Territory-Specific Initiatives",
               "info": [
                 {
                   "type": "span",
@@ -1112,7 +1112,7 @@
             "isRequired": true,
             "verbiage": {
               "intro": {
-                "section": "State- or Territory-Specific Initiatives",
+                "section": "State or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "html",
