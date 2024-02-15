@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import userEvent from "@testing-library/user-event";
 // components
@@ -58,18 +58,25 @@ describe("Test StandardReportPage", () => {
     )!;
     await userEvent.type(textFieldInput, "ABC");
     expect(textFieldInput.value).toEqual("ABC");
-    fireEvent.blur(textFieldInput);
+    const dateFieldInput: HTMLInputElement = result.container.querySelector(
+      "[name='mock-date-field'"
+    )!;
+    await userEvent.type(dateFieldInput, "01012024");
+    expect(dateFieldInput.value).toEqual("01012024");
+    const numberFieldInput: HTMLInputElement = result.container.querySelector(
+      "[id='mock-number-field'"
+    )!;
+    await userEvent.type(numberFieldInput, "1");
+    expect(numberFieldInput.value).toEqual("1");
     const continueButton = screen.getByText("Continue")!;
     await userEvent.click(continueButton);
+    const newPath = window.location.pathname;
+    expect(newPath).toEqual("/mock");
   });
 
   test("StandardReportPage navigates to next route onError", async () => {
     mockedUseStore.mockReturnValue(mockReportStoreWithoutData);
-    const result = render(standardPageSectionComponent);
-    const textFieldInput: HTMLInputElement = result.container.querySelector(
-      "[id='mock-text-field'"
-    )!;
-    await userEvent.type(textFieldInput, "      ");
+    render(standardPageSectionComponent);
     const continueButton = screen.getByText("Continue")!;
     await userEvent.click(continueButton);
     // test that form navigates with an error in the field

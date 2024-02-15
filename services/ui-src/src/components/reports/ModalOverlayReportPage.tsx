@@ -58,7 +58,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
     report && (alertVerbiage as AlertVerbiage)[entityType]
       ? getWPAlertStatus(report, entityType)
       : false;
-
   const dashTitle = `${verbiage.dashboardTitle} ${
     modalForm ? reportFieldDataEntities.length : ""
   }`;
@@ -171,7 +170,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
               <Button
                 sx={sx.addEntityButton}
                 onClick={() => openAddEditEntityModal()}
-                rightIcon={
+                leftIcon={
                   <Image src={addIcon} alt="Previous" sx={sx.addIcon} />
                 }
               >
