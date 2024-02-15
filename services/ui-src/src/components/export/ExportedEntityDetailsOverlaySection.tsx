@@ -240,6 +240,7 @@ const sx = {
     fontSize: "16px",
     fontWeight: "normal",
     color: "palette.gray_medium_dark",
+    lineHeight: "1.5rem",
   },
   entityHeading: {
     padding: "2rem 0 0.5rem 0",

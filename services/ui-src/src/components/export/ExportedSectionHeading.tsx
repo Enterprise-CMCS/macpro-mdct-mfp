@@ -1,7 +1,7 @@
 // components
 import { Box, Heading } from "@chakra-ui/react";
 // types
-import { AnyObject, CustomHtmlElement, ReportPageVerbiage } from "types";
+import { AnyObject, ReportPageVerbiage } from "types";
 // utils
 import { parseCustomHtml } from "utils";
 
@@ -11,12 +11,6 @@ export const formatSectionInfo = (verbiage: ReportPageVerbiage) => {
     verbiage?.intro?.subsection === "State- or Territory-Specific Initiatives"
   ) {
     return (verbiage as AnyObject)?.dashboardSubtitle;
-  }
-
-  if (verbiage?.intro.section === "Recruitment, Enrollment, and Transitions") {
-    return (verbiage?.intro?.info as CustomHtmlElement[])?.filter(
-      (info) => info.type !== "h3"
-    );
   }
 
   return verbiage?.intro?.info;
@@ -61,17 +55,15 @@ const sx = {
     },
   },
   heading: {
-    margin: "4rem 0 1.5rem 0",
+    marginTop: "2rem",
     fontSize: "2xl",
     fontWeight: "bold",
+    color: "palette.black",
   },
   info: {
     paddingTop: "1.5rem",
     p: {
       margin: "1.5rem 0",
-    },
-    h3: {
-      fontSize: "lg",
     },
     li: {
       marginBottom: "1.5rem",

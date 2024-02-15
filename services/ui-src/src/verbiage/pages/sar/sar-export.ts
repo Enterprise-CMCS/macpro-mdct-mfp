@@ -33,7 +33,7 @@ export default {
       },
       indicators: [
         "Associated Work Plan",
-        "Is this your state/territory's final MFP SAR for your period of performance in the MFP demonstration?",
+        "Is this your state/territory's final MFP SAR for your period of performance in the MFP Demonstration?",
         "Select the target populations applicable to your state during this reporting period.",
       ],
     },

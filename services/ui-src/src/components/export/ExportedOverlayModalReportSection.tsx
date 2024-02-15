@@ -87,7 +87,7 @@ const sx = {
     marginTop: "0.5rem",
   },
   dashboardTitle: {
-    margin: "1rem auto 1.25rem",
+    margin: "2rem auto 1.5rem",
     fontSize: "md",
     fontWeight: "bold",
     color: "palette.gray_medium",
@@ -100,5 +100,6 @@ const sx = {
     fontSize: "md",
     fontWeight: "normal",
     color: "palette.gray_medium_dark",
+    lineHeight: "1.5rem",
   },
 };

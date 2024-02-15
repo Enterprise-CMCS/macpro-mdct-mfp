@@ -46,6 +46,7 @@ const sx = {
   sarDetailsTable: {
     margin: "3rem 0",
     maxWidth: "reportPageWidth",
+    "table-layout": "fixed",
     td: {
       verticalAlign: "middle",
       textAlign: "left",
@@ -53,11 +54,12 @@ const sx = {
     },
     "td:nth-of-type(1)": {
       fontWeight: "bold",
+      color: "palette.base",
     },
     th: {
       fontWeight: "bold",
       textAlign: "left",
-      paddingBottom: "0rem",
+      color: "palette.gray_medium",
     },
   },
 };
