@@ -151,7 +151,7 @@ export const renderReportSections = (
   return reportRoutes.map(
     (section: ReportRoute) =>
       section?.pageType !== PageTypes.REVIEW_SUBMIT && (
-        <Box key={section.path} mt="5rem">
+        <Box key={section.path} mt="3.5rem">
           {renderSection(section)}
         </Box>
       )
@@ -168,7 +168,7 @@ export const sx = {
   innerContainer: {
     width: "100%",
     maxWidth: "40rem",
-    margin: "0 auto 0 0",
+    margin: "auto",
     "@media print": {
       margin: "5rem 0",
     },
@@ -179,7 +179,7 @@ export const sx = {
     fontSize: "4xl",
   },
   combinedDataTable: {
-    marginBottom: "1rem",
+    "table-layout": "fixed",
     ".combined-data-title": {
       display: "inline-block",
       marginBottom: "0.5rem",

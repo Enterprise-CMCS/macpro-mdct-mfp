@@ -19,7 +19,7 @@
           "info": [
             {
               "type": "html",
-              "content": "The Money Follows the Person (MFP) Demonstration Work Plan (WP) is the state or territory’s road map for accomplishing the rebalancing objective described in section "
+              "content": "The Money Follows the Person (MFP) Demonstration Work Plan is the state or territory’s road map for accomplishing the rebalancing objective described in section "
             },
             {
               "type": "externalLink",
@@ -32,7 +32,7 @@
             },
             {
               "type": "html",
-              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The MFP Work Plan presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The MFP Work Plan enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the MFP Work Plan describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new MFP Work Plan fields during the demonstration period. For additional guidance on completing this form, please see the "
+              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The MFP Work Plan presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The MFP Work Plan enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the MFP Work Plan describes state or territory initiatives and sets performance measures, the MFP Semi-Annual Progress Report will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new MFP Work Plan fields during the Demonstration period. For additional guidance on completing this form, please see the "
             },
             {
               "type": "externalLink",
@@ -66,32 +66,11 @@
       "entityInfo": ["transitionBenchmarks_targetPopulationName"],
       "verbiage": {
         "accordion": {
-          "buttonLabel": "Instructions",
+          "buttonLabel": "Considerations around target populations",
           "intro": [
             {
               "type": "html",
-              "content": "Target populations are used to understand differences in participation and the impact of the MFP Demonstration for people with varying disabilities.<br><br><b>Defining target populations</b><br>An approach for defining target populations should be outlined in your Operational Protocol. Those definitions should be used to report the transition benchmarks."
-            },
-            {
-              "type": "html",
-              "content": "<br><br>You have flexibility when defining your state or territory’s target populations. Approaches to defining the standard MFP target populations focused on older adults, people with physical disabilities (PD), intellectual or developmental disabilities (I/DD), or mental health or substance use disorders (MH/SUD), may vary among recipients, and could draw on:"
-            }
-          ],
-          "list": [
-            "the individual's primary diagnosis",
-            "qualified institutional setting",
-            "expected service utilization",
-            "HCBS authority enrollment",
-            "or other criteria"
-          ],
-          "text": [
-            {
-              "type": "html",
-              "content": "<b>About adding “other” target populations</b><br>If you are using the “Other” category, clearly describe the rationale and criteria for defining this category in your Operational Protocol, as needed."
-            },
-            {
-              "type": "html",
-              "content": "<br><br><b>How to best categorize which population to attribute the transition to avoid duplication</b><br>You may need to track some populations to see utilization to address questions from stakeholders and those circumstances should be discussed with your CMS MFP Project Officer. For example, if a person has a dual-diagnosis such as an individual with intellectual and developmental disabilities (I/DD) and mental health and substance use disorders (MH/SUD), the service dollars may be expended under an HCBS authority that focuses on people with I/DD, rather than MH/SUD. You could review claims to determine that someone is also receiving mental health services. This additional step may necessitate a tracking mechanism outside of the MFP Work Plan and Semi-Annual Progress Report and should be discussed with your Project Officer."
+              "content": "An approach for defining target populations should be outlined in your Operational Protocol. Those definitions should be used to report the transition benchmarks. You may need to track some populations outside of these categories to see utilization to address questions from stakeholders and those circumstances should be discussed with your CMS MFP Project Officer. <br><br> In the next section, you will be asked to describe your state or territory-specific initiatives, which may inform which target populations you include here when you think about who is being served by your different planned initiatives. <br><br>Additional information on strategies to achieve transition targets will be included in the state or territory-specific initiative on transitions and transition coordination services in the next section."
             }
           ]
         },
@@ -101,7 +80,7 @@
           "info": [
             {
               "type": "html",
-              "content": "Provide the projected number of transitions for target populations during each quarter. This number includes institutional residents who are discharged from an institution to a qualified residence during the reporting period, enroll in MFP, and begin using Medicaid home and community-based services (HCBS)."
+              "content": "Provide the projected number of transitions for each target population during each quarter. This number includes qualified institutional residents who enroll in MFP, and are anticipated to be discharged from an institution to a qualified residence during the reporting period in the quarter."
             }
           ]
         },
@@ -115,20 +94,20 @@
         "deleteEntityButtonAltText": "Delete other target population",
         "deleteModalTitle": "Are you sure you want to delete this target population?",
         "deleteModalConfirmButtonText": "Yes, delete population",
-        "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this population in the MFP Work Plan. The population will remain in previously submitted Semi-Annual Progress Reports if applicable.",
+        "deleteModalWarning": "Are you sure you want to proceed? You will lose all information entered for this population in the MFP Work Plan. The population will remain in previously submitted MFP Semi-Annual Progress Reports if applicable.",
         "entityUnfinishedMessage": "Complete the remaining indicators for this access measure by entering details.",
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
-        "reviewPdfHint": "To view Transition Benchmark Totals by target population and by quarter, click <i>Review PDF</i> and it will open a summary in a new tab.",
+        "reviewPdfHint": "To view Transition Benchmark Totals by target population and by quarter, click \"Review PDF\" and it will open a summary in a new tab.",
         "drawerTitle": "Report transition benchmarks for ",
         "drawerInfo": [
           {
             "type": "span",
-            "content": "Please provide the projected number of transitions for the target population during each quarter. This number includes institutional residents who are discharged from an institution to a qualified residence during the reporting period, enroll in MFP, and begin using Medicaid HCBS."
+            "content": "Provide the projected number of transitions for the target population during each quarter. This number includes institutional residents who are discharged from an institution to a qualified residence during the reporting period, enroll in MFP, and begin using Medicaid home and community-based services (HCBS)."
           },
           {
             "type": "p",
-            "content": "Complete all fields and select the <i>Save & close</i> button to save this section."
+            "content": "Complete all fields and select the \"Save & close\" button to save this section."
           }
         ]
       },
@@ -141,7 +120,7 @@
             "validation": "text",
             "props": {
               "label": "Target population name",
-              "hint": "Specify an \"other\" target population applicable to your MFP demonstration project. Individuals reported under this population must align throughout MFP. (e.g., HIV/AIDS, brain injury)"
+              "hint": "Specify an \"other\" target population applicable to your MFP Demonstration project. (e.g., HIV/AIDS, brain injury)."
             }
           }
         ]
@@ -154,7 +133,7 @@
             "type": "radio",
             "validation": "radio",
             "props": {
-              "label": "Is this target population applicable to your MFP demonstration?",
+              "label": "Is this target population applicable to your MFP Demonstration?",
               "hint": "Enter 0 for quarters with no projected transitions. Enter N/A for quarters you do not expect to report.",
               "choices": [
                 {
@@ -169,7 +148,7 @@
                       "id": "quarterlyProjections",
                       "type": "number",
                       "validation": {
-                        "type": "number",
+                        "type": "validInteger",
                         "parentFieldName": "transitionBenchmarks_applicableToMfpDemonstration",
                         "parentOptionId": "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd",
                         "nested": true
@@ -235,7 +214,7 @@
               "info": [
                 {
                   "type": "html",
-                  "content": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports. These initiatives can be funded using one or more of these funding sources:<br>"
+                  "content": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of home and community-based services (HCBS) rather than institutional long-term services and supports. These initiatives can be funded using one or more of these funding sources:<br>"
                 },
                 {
                   "type": "ul",
@@ -307,7 +286,8 @@
                 },
                 {
                   "type": "p",
-                  "content": "Recipients must identify and describe the required initiatives below and have the option to identify additional initiatives on other topics."
+                  "content": "Recipients must identify and describe the required initiatives below and have the option to identify additional initiatives on other topics.",
+                  "paddingBottom": "1rem"
                 },
                 {
                   "type": "table",
@@ -335,7 +315,7 @@
                                   "borderBottom": "1px solid #D9D9D9"
                                 }
                               },
-                              "content": "<span aria-label='Required by Program Terms and Conditions'>'Required* Initiatives'</span>"
+                              "content": "<span aria-label='Required by Program Terms and Conditions'>Required* Initiatives</span>"
                             },
                             {
                               "type": "th",
@@ -611,7 +591,7 @@
                     },
                     {
                       "type": "li",
-                      "content": "Close-out information, to be completed as appropriate during MFP Work Plan revisions",
+                      "content": "Initiative close-out information, to be completed as appropriate during MFP Work Plan revisions",
                       "props": {
                         "style": {
                           "paddingTop": ".5rem"
@@ -672,7 +652,7 @@
                 "type": "radio",
                 "validation": "radio",
                 "props": {
-                  "label": "Are Tribal initiatives applicable to your state or territory?",
+                  "label": "Are Tribal Initiatives applicable to your state or territory?",
                   "choices": [
                     {
                       "id": "UG7uunqq5UCtUq1is3iyiw",
@@ -752,7 +732,7 @@
                 "type": "radio",
                 "validation": "radio",
                 "props": {
-                  "label": "Work Plan topic:",
+                  "label": "MFP Work Plan topic:",
                   "hint": "Note: Initiative topics with <span aria-label='asterisk'>*</span> are required and must be selected at least once across all initiatives.",
                   "choices": [
                     {
@@ -817,7 +797,7 @@
                     },
                     {
                       "id": "2qjBuLtpA5pDvUM1HSHMVq",
-                      "label": "Equity and SDOH"
+                      "label": "Equity and social determinants of health (SDOH)"
                     },
                     {
                       "id": "18Wb9b2zMIF13pZwWstdJF",
@@ -900,7 +880,7 @@
                       "hint": [
                         {
                           "type": "html",
-                          "content": "Select all that apply. Populations you’ve added as “Other” in the Transition Benchmarks section will appear here. Note: if your target population does not appear here, go to "
+                          "content": "Select all that apply. “Other” population(s) selected and defined in the"
                         },
                         {
                           "type": "internalLink",
@@ -911,7 +891,7 @@
                         },
                         {
                           "type": "html",
-                          "content": ", add it there, and return here to select it. Select “Not applicable” if the population is not a part of your overall MFP target populations (if this is for a non-MFP qualified initiative)."
+                          "content": "section automatically upload. Select “HCBS infrastructure/system-level development” for initiatives that strengthen or expand home and community-based services (HCBS)."
                         }
                       ],
                       "choices": []
@@ -981,7 +961,7 @@
                   "info": [
                     {
                       "type": "html",
-                      "content": "Add evaluation plan, including measurable objectives. Select “Add objective” button for each objective you need to add to the system."
+                      "content": "To complete your evaluation plan, create measurable objectives. Select “Add objective” button for each objective you need to add to the system."
                     }
                   ],
                   "exportSectionHeader": "exportSectionHeader"
@@ -1004,7 +984,7 @@
                     },
                     {
                       "type": "html",
-                      "content": "<br><br><strong>Please identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:"
+                      "content": "<br><br><strong>Identify one or more objectives.</strong> Objectives should be framed as SMART goals and have associated time-bound measures of success, including targets or milestones. As a reminder, SMART stands for:"
                     }
                   ],
                   "list": [
@@ -1016,7 +996,7 @@
                   ],
                   "text": ""
                 },
-                "text": "Add evaluation plan, including measurable objectives. Select <i>Add objective</i> button for each objective you need to add to the system.",
+                "text": "To complete your evaluation plan, create measurable objectives. Select “Add objective” button for each objective you need to add to the system.",
                 "addEntityButtonText": "Add objective",
                 "editEntityHint": "Select \"Edit\" to complete initiative evaluation plan.",
                 "editEntityButtonText": "Edit objective",
@@ -1026,7 +1006,7 @@
                 "addEditModalEditTitle": "Edit objective for ",
                 "deleteModalTitle": "Delete objective for this report?",
                 "deleteModalConfirmButtonText": "Yes, delete objective",
-                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived Work Plans and Semi-Annual Progress Reports, but it will not be available in future Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
+                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in MFP future Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
                 "dashboardTitle": "Objective total count",
@@ -1051,7 +1031,7 @@
                     "type": "textarea",
                     "validation": "text",
                     "props": {
-                      "label": "Describe the performance measures or indicators your state or territory will use to monitor progress toward achieving this objective, including details on the calculation of measures if relevant. Please describe any key deliverables.",
+                      "label": "Describe the performance measures or indicators your state or territory will use to monitor progress toward achieving this objective, including details on the calculation of measures if relevant. Describe any key deliverables.",
                       "hint": "(e.g., data sources and limitations)"
                     }
                   },
@@ -1060,7 +1040,7 @@
                     "type": "textarea",
                     "validation": "text",
                     "props": {
-                      "label": "Provide targets for the performance measures or indicators listed above. Please include milestones and expected time frames for key deliverables.",
+                      "label": "Provide targets for the performance measures or indicators listed above. Include milestones and expected time frames for key deliverables.",
                       "hint": "If a performance measure includes quantitative targets, complete the quarterly fields below."
                     }
                   },
@@ -1104,7 +1084,7 @@
                     "validation": "text",
                     "props": {
                       "label": "Provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description).",
-                      "hint": "Please list the responsible state or territory agency parties and any key external partners for achieving this objective."
+                      "hint": "List the responsible state or territory agency parties and any key external partners for achieving this objective."
                     }
                   }
                 ]
@@ -1130,7 +1110,7 @@
                     },
                     {
                       "type": "html",
-                      "content": "<br>Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Report (SAR).</br>"
+                      "content": "<br>Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report (SAR).</br>"
                     }
                   ],
                   "exportSectionHeader": "exportSectionHeader"
@@ -1146,7 +1126,7 @@
                 "deleteModalConfirmButtonText": "Yes, delete funding source",
                 "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
                 "tableHeader": "Initiative name <br/> Work Plan topic",
-                "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s Semi-Annual Progress Report (SAR).",
+                "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report (SAR).",
                 "dashboardTitle": "Funding Sources",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
@@ -1166,27 +1146,23 @@
                       "choices": [
                         {
                           "id": "2VLpZ9A92OivbZhKvY8pE4hB65c",
-                          "label": "State-equivalent funds"
+                          "label": "MFP cooperative agreement funds for qualified HCBS and demonstration services"
                         },
                         {
                           "id": "2VLpZ9A92OivbZhKvY8pE4",
-                          "label": "Capacity-building funds"
+                          "label": "MFP cooperative agreement funds for supplemental services"
                         },
                         {
                           "id": "2VLpZCNtbcjRPq3evd1NI6",
-                          "label": "Administrative cooperative agreement funding"
+                          "label": "MFP cooperative agreement funds for administrative activities"
                         },
                         {
                           "id": "2VLpZDJ9qaKKOk78ztBdiB",
-                          "label": "MFP funding for qualified HCBS"
+                          "label": "MFP cooperative agreement funds for capacity-building initiatives"
                         },
                         {
                           "id": "2VLpZCRWieGr1Z49QX5Aqc",
-                          "label": "MFP funding for demonstration services"
-                        },
-                        {
-                          "id": "2VLq8ASzZNfxbu520if449",
-                          "label": "MFP funding for supplemental services"
+                          "label": "State or territory equivalent funds attributable to the MFP-enhanced match"
                         },
                         {
                           "id": "2VLq8ASzZNfxbu520if529",
@@ -1221,28 +1197,28 @@
               }
             },
             {
-              "name": "State- or Territory-Specific Initiatives: IV. Close-out information",
+              "name": "State- or Territory-Specific Initiatives: IV. Initiative close-out information",
               "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
               "pageType": "entityOverlay",
               "entityType": "initiative",
               "stepType": "closeOutInformation",
               "stepInfo": ["stepName", "hint"],
-              "stepName": "IV. Close-out information (if applicable)",
+              "stepName": "IV. Initiative close-out information (if applicable)",
               "hint": "To be completed as appropriate during MFP Work Plan revisions",
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State- or Territory-Specific Initiatives: IV. Close-out information",
+                  "section": "State- or Territory-Specific Initiatives: IV. Initiative close-out information",
                   "hint": "Complete the section below for initiatives with an end date during the upcoming semi-annual reporting period."
                 },
                 "closeOutWarning": {
                   "title": "Warning",
-                  "description": "Once you select <i>Close out initiative</i>, this initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, select <i>Save & return</i> and you’ll be able to save your draft data. You will not be able to close out an initiative until you complete the fields above. <br><br> This action cannot be undone."
+                  "description": "Once you select \"Close out initiative\", this initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, select \"Save & return\" and you’ll be able to save your draft data. You will not be able to close out an initiative until you complete the fields above. <br><br> This action cannot be undone."
                 },
                 "closeOutModal": {
                   "closeOutModalButtonText": "Close out initiative",
                   "closeOutModalTitle": "Close out ",
-                  "closeOutModalBodyText": "This initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, select <i>Cancel</i> and you’ll be able to save your draft data.<br><br>This action cannot be undone.<br><br>Are you sure you want to proceed?",
+                  "closeOutModalBodyText": "This initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, select \"Cancel\" and you’ll be able to save your draft data.<br><br>This action cannot be undone.<br><br>Are you sure you want to proceed?",
                   "closeOutModalConfirmButtonText": "Yes, close out initiative"
                 },
                 "enterEntityDetailsButtonText": "Edit",
@@ -1274,7 +1250,7 @@
                     "type": "checkbox",
                     "validation": "checkbox",
                     "props": {
-                      "label": "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, please indicate the status below:",
+                      "label": "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, indicate the status below:",
                       "hint": "Select all that apply.",
                       "choices": [
                         {

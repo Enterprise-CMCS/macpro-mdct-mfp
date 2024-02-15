@@ -4,8 +4,8 @@
     "mode": "onChange"
   },
   "heading": {
-    "add": "Add new SAR submission",
-    "edit": "Edit SAR submission"
+    "add": "Add new MFP SAR submission",
+    "edit": "Edit MFP SAR submission"
   },
   "fields": [
     {
@@ -14,8 +14,8 @@
       "validation": "text",
       "props": {
         "disabled": true,
-        "label": "Associated Work Plan",
-        "hint": "Auto-populates from your last approved Work Plan"
+        "label": "Associated MFP Work Plan",
+        "hint": "Auto-populates from your last approved MFP Work Plan. <br/> Note: Your MFP SAR will be created for the same year and reporting period as your MFP Work Plan."
       }
     },
     {
@@ -34,8 +34,8 @@
       "validation": "text",
       "props": {
         "disabled": true,
-        "label": "Reporting Period",
-        "hint": "Auto-populates from your last approved Work Plan."
+        "label": "Reporting period",
+        "hint": "Auto-populates from your last approved MFP Work Plan. <br/> (1) First reporting period (January-June) <br /> (2) Second reporting period (July-December)"
       }
     },
     {
@@ -43,15 +43,15 @@
       "type": "radio",
       "validation": "radio",
       "props": {
-        "label": "Is this your state/territory’s final SAR for your period of performance in the MFP demonstration?",
+        "label": "Is this your state/territory’s final SAR for your period of performance in the MFP Demonstration?",
         "choices": [
-          {
-            "id": "nrRmirBoVQv0ysWnEejNZD",
-            "label": "Yes"
-          },
           {
             "id": "ekP9iVvuQE9AALchScDzoD",
             "label": "No"
+          },
+          {
+            "id": "nrRmirBoVQv0ysWnEejNZD",
+            "label": "Yes"
           }
         ]
       }
@@ -62,8 +62,8 @@
       "validation": "checkboxOptional",
       "props": {
         "disabled": true,
-        "label": "Target Population(s):",
-        "hint": "Select all that apply. Population you've added as &quot;Other&quot; in the Transition Benchmarks section will appear here.",
+        "label": "Target populations applicable to your MFP Demonstration project during this reporting period:",
+        "hint": "Auto-populates based on your responses from the MFP Work Plan.",
         "choices": []
       }
     }

@@ -63,9 +63,7 @@ export const Header = ({ handleLogout }: Props) => {
           <Container sx={sx.subnavContainer}>
             <Flex sx={sx.subnavFlex}>
               <Flex>
-                <Text sx={sx.submissionNameText}>
-                  Submission: {report?.submissionName}
-                </Text>
+                <Text sx={sx.submissionNameText}>{report?.submissionName}</Text>
               </Flex>
               <Flex sx={sx.subnavFlexRight}>
                 {lastSavedTime && (

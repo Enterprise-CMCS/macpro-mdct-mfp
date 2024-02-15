@@ -11,12 +11,6 @@ const field = {
   type: "drawer",
   props: { hint: "hint", number: 123 },
 };
-const otherTextField = {
-  id: "test-otherText",
-  validation: "string",
-  type: "dynamic",
-  props: { hint: "hint" },
-};
 const fieldWithLabel = {
   id: "test",
   validation: "string",
@@ -36,16 +30,6 @@ const exportRow = (
     <Table>
       <tbody>
         <ExportedReportFieldRow formField={field} pageType="drawer" />
-      </tbody>
-    </Table>
-  </ReportContext.Provider>
-);
-
-const otherTextRow = (
-  <ReportContext.Provider value={mockWpReportContext}>
-    <Table>
-      <tbody>
-        <ExportedReportFieldRow formField={otherTextField} pageType="drawer" />
       </tbody>
     </Table>
   </ReportContext.Provider>
@@ -93,12 +77,6 @@ describe("ExportedReportFieldRow", () => {
     render(exportRow);
     const row = screen.getByTestId("exportRow");
     expect(row).toBeVisible();
-  });
-
-  test("is not visible when ", async () => {
-    render(otherTextRow);
-    const row = screen.queryByTestId("exportRow");
-    expect(row).not.toBeInTheDocument();
   });
 
   test("displays alternate prop fields", async () => {

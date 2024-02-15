@@ -10,7 +10,11 @@ import {
   RouterWrappedComponent,
   mockReportStore,
   mockEntityStore,
-  mockUseEntityStore,
+  mockEvaluationPlan,
+  mockUseEvaluationPlanEntityStore,
+  mockUseObjectiveProgressEntityStore,
+  mockOverlayModalWithCardsPageJson,
+  mockObjectiveProgress,
 } from "utils/testing/setupJest";
 
 const mockUseNavigate = jest.fn();
@@ -26,7 +30,12 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
-const { addEntityButtonText } = mockOverlayModalPageJson.verbiage;
+const {
+  addEntityButtonText,
+  editEntityButtonText,
+  addEditModalEditTitle,
+  deleteModalTitle,
+} = mockOverlayModalPageJson.verbiage;
 
 const overlayModalPageComponentWithEntities = (
   <RouterWrappedComponent>
@@ -34,9 +43,15 @@ const overlayModalPageComponentWithEntities = (
   </RouterWrappedComponent>
 );
 
-describe("Test overlayModalPage with entities", () => {
+const overlayModalPageComponentWithCardsEntities = (
+  <RouterWrappedComponent>
+    <OverlayModalPage route={mockOverlayModalWithCardsPageJson} />
+  </RouterWrappedComponent>
+);
+
+describe("Test overlayModalPage with Work Plans's Evaluation Plan Entity", () => {
   beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockUseEntityStore);
+    mockedUseStore.mockReturnValue(mockUseEvaluationPlanEntityStore);
     render(overlayModalPageComponentWithEntities);
   });
 
@@ -45,10 +60,15 @@ describe("Test overlayModalPage with entities", () => {
   });
 
   it("overlayModalPage should render the view", () => {
-    expect(screen.getAllByText(addEntityButtonText)[0]).toBeVisible();
+    expect(
+      screen.getByText(mockEvaluationPlan[0].evaluationPlan_objectiveName)
+    ).toBeVisible();
+    expect(
+      screen.getByText(mockEvaluationPlan[1].evaluationPlan_objectiveName)
+    ).toBeVisible();
   });
 
-  it("overlayModalPage Modal opens correctly", async () => {
+  it("overlayModalPage opens the add edit modal correctly", async () => {
     const addEntityButton = screen.getAllByText(addEntityButtonText);
     await userEvent.click(addEntityButton[0]);
     expect(screen.getByRole("dialog")).toBeVisible();
@@ -57,7 +77,55 @@ describe("Test overlayModalPage with entities", () => {
     await userEvent.click(closeButton);
   });
 
-  // TODO: add some unit tests
+  it("overlayModalPage opens the edit modal and loads the data for the selectedEntity", async () => {
+    const editEntityButtons = screen.getAllByText(editEntityButtonText);
+    expect(editEntityButtons.length).toEqual(2);
+    await userEvent.click(editEntityButtons[0]);
+    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(
+      screen.getByText(
+        `${addEditModalEditTitle}${mockEntityStore.selectedEntity?.initiative_name}`
+      )
+    ).toBeVisible;
+    const closeButton = screen.getByText("Close");
+    await userEvent.click(closeButton);
+  });
+
+  it("overlayModalPage opens the delete modal and close the delete modal", async () => {
+    const deleteEntityButton = screen.getAllByTestId("delete-entity-button");
+    expect(deleteEntityButton.length).toEqual(2);
+    await userEvent.click(deleteEntityButton[0]);
+    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(screen.getByText(`${deleteModalTitle}`)).toBeVisible();
+    const closeButton = screen.getByText("Cancel");
+    await userEvent.click(closeButton);
+    expect(deleteEntityButton.length).toEqual(2);
+  });
+});
+
+describe("Test overlayModalPage with SAR's Objective Progress Entity", () => {
+  beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockUseObjectiveProgressEntityStore);
+    render(overlayModalPageComponentWithCardsEntities);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("overlayModalPage should render the view", () => {
+    expect(
+      screen.getByText(mockObjectiveProgress[0].objectiveProgress_objectiveName)
+    ).toBeVisible();
+    expect(
+      screen.getByText(mockObjectiveProgress[1].objectiveProgress_objectiveName)
+    ).toBeVisible();
+  });
+
+  it("overlayModalPage CAN NOT open the add modal", async () => {
+    const addEntityButton = screen.queryAllByText(addEntityButtonText);
+    expect(addEntityButton.length).toEqual(0);
+  });
 });
 
 describe("Test ModalDrawerReportPage accessibility", () => {
