@@ -2,8 +2,8 @@ export const fireTealiumPageView = (user, url, pathname, isReportPage) => {
   const contentType = isReportPage ? "form" : "app";
   const sectionName = isReportPage ? pathname.split("/")[1] : "main app";
   const tealiumEnvMap = {
-    "mdctmcr.cms.gov": "production",
-    "mdctmcrval.cms.gov": "qa",
+    "mdctmfp.cms.gov": "production",
+    "mdctmfpval.cms.gov": "qa",
   };
   const tealiumEnv = tealiumEnvMap[window.location.hostname] || "dev";
   const { host: siteDomain } = url ? new URL(url) : null;
