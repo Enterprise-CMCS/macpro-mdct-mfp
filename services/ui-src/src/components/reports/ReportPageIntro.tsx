@@ -16,7 +16,7 @@ export const ReportPageIntro = ({
 }: Props) => {
   const { section, subsection, hint, info } = text;
 
-  if (section && subsection) {
+  if (section && (subsection || initiativeName)) {
     return (
       <Box sx={sx.introBox} {...props}>
         <Heading as="h1" sx={sx.smallHeading}>
