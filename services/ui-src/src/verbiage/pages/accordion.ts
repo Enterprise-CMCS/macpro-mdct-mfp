@@ -169,7 +169,7 @@ export default {
           type: "text",
           as: "span",
           content:
-            "This reporting tool is to be used by MFP recipients for semi-annual reporting of MFP program data. The information provided in this report will allow CMS to monitor recipients’ progress and identify challenges and opportunities for improvement. For additional guidance on completing this form, see the associated ",
+            " Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
         },
         {
           type: "externalLink",
@@ -197,7 +197,8 @@ export default {
         {
           type: "text",
           as: "span",
-          content: ".",
+          content:
+            ".If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates including the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
         },
       ],
       list: [],
