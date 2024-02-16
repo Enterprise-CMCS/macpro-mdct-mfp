@@ -20,4 +20,6 @@ export const completionSchemaMap: any = {
   radioOptional: schema.radioOptional(),
   dynamic: schema.dynamic(),
   dynamicOptional: schema.dynamicOptional(),
+  validInteger: schema.validInteger(),
+  validIntegerOptional: schema.validIntegerOptional(),
 };

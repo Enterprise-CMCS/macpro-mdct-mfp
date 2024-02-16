@@ -162,7 +162,7 @@ export const EntityDetailsOverlay = ({
 
       dataToWrite.fieldData = { [entityType]: updatedEntities };
       const shouldSave = entityWasUpdated(
-        report?.fieldData?.[entityType][selectedEntityIndex],
+        report?.fieldData?.[entityType]?.[selectedEntityIndex],
         updatedEntities[selectedEntityIndex]
       );
       if (shouldSave) await updateReport(reportKeys, dataToWrite);

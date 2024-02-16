@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { useStore } from "utils";
 import {
@@ -12,6 +12,7 @@ import {
   OverlayModalPageShape,
   OverlayModalTypes,
   ReportRoute,
+  OverlayModalStepTypes,
 } from "types";
 import {
   ExportedModalOverlayReportSection,
@@ -20,6 +21,7 @@ import {
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
 const mockReport = {
   ...mockWPFullReport,
   fieldData: {
@@ -112,6 +114,49 @@ const defaultMockProps = {
         stepType: EntityDetailsStepTypes.DEFINE_INITIATIVE,
         stepName: "mock step name",
         hint: "mock step hint",
+        entityType: "initiative",
+        modalForm: {
+          fields: [
+            {
+              id: "mock field id",
+              validation: "number",
+            },
+          ],
+        },
+      },
+      {
+        stepType: OverlayModalStepTypes.EVALUATION_PLAN,
+        stepName: "mock step name",
+        hint: "mock step hint",
+        entityType: "initiative",
+        modalForm: {
+          fields: [
+            {
+              id: "mock field id",
+              validation: "number",
+            },
+          ],
+        },
+      },
+      {
+        stepType: OverlayModalStepTypes.FUNDING_SOURCES,
+        stepName: "mock step name",
+        hint: "mock step hint",
+        entityType: "initiative",
+        modalForm: {
+          fields: [
+            {
+              id: "mock field id",
+              validation: "number",
+            },
+          ],
+        },
+      },
+      {
+        stepType: EntityDetailsStepTypes.CLOSE_OUT_INFORMATION,
+        stepName: "mock step name",
+        hint: "mock step hint",
+        entityType: "initiative",
         modalForm: {
           fields: [
             {
@@ -131,7 +176,14 @@ const testComponent = (
   </RouterWrappedComponent>
 );
 
-describe("ExportedModalOverlayReportSection", () => {
+describe("ExportedModalOverlayReportSection rendering", () => {
+  test("should render modal overlay report section", async () => {
+    render(testComponent);
+    expect(
+      screen.getAllByTestId("exportedOverlayModalPage")[0]
+    ).toBeInTheDocument();
+  });
+
   test("should not have basic accessibility issues", async () => {
     const { container } = render(testComponent);
     const results = await axe(container);

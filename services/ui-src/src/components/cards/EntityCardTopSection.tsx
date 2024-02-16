@@ -1,5 +1,5 @@
 // components
-import { Heading, Text, Grid, GridItem, Flex, Box } from "@chakra-ui/react";
+import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
 import { notAnsweredText } from "../../constants";
 // utils
 import { AnyObject, OverlayModalStepTypes, ReportType } from "types";
@@ -8,6 +8,7 @@ import { useStore } from "utils";
 export const EntityStepCardTopSection = ({
   stepType,
   formattedEntityData,
+  entityCompleted,
 }: Props) => {
   const { report } = useStore() ?? {};
   switch (stepType) {
@@ -24,68 +25,30 @@ export const EntityStepCardTopSection = ({
           <Text sx={sx.description}>{formattedEntityData.description}</Text>
           <Text sx={sx.subtitle}>Performance measure targets</Text>
           <Text sx={sx.description}>{formattedEntityData.targets}</Text>
-          {formattedEntityData?.performanceMeasureProgress && (
-            <Box sx={sx.newContentContainer} marginBottom="1rem">
-              <Text sx={sx.subtitleEmphasized}>
-                Performance measure progress toward milestones and key
-                deliverables for current reporting period
-              </Text>
-              <Text sx={sx.description}>
-                {formattedEntityData?.performanceMeasureProgress}
-              </Text>
-            </Box>
-          )}
-
-          <Box
-            sx={
-              formattedEntityData?.quarterActuals?.length > 0
-                ? sx.newContentContainer
-                : undefined
-            }
-          >
-            {formattedEntityData?.quarterProjections?.length > 0 ? (
+          {formattedEntityData.quarterProjections.length > 0 &&
+            !entityCompleted && (
               <>
-                <Text sx={sx.subtitleEmphasized} data-testid="sar-grid">
+                <Text sx={sx.subtitle}>
                   Quantitative targets for this reporting period
                 </Text>
-
                 <Grid sx={sx.sarGrid}>
-                  {formattedEntityData?.quarterProjections
-                    .slice(0, 2)
-                    .map((quarter: any) => {
+                  {formattedEntityData?.quarterProjections.map(
+                    (quarter: any) => {
                       return (
                         <GridItem key={quarter.id}>
                           <Flex sx={sx.gridItems}>
-                            <Text sx={sx.sarGridSubtitle}>
+                            <Text sx={sx.gridSubtitle}>
                               {quarter.id} Target:
                             </Text>
                             <Text sx={sx.subtext}>{quarter.value}</Text>
                           </Flex>
                         </GridItem>
                       );
-                    })}
-                  {formattedEntityData?.quarterActuals
-                    .slice(0, 2)
-                    .map((quarter: any) => {
-                      return (
-                        <GridItem key={quarter.id}>
-                          <Flex sx={sx.gridItems}>
-                            <Text sx={sx.sarGridSubtitle}>
-                              {quarter.id} Actual:
-                            </Text>
-                            <Text sx={sx.subtext}>{quarter.value}</Text>
-                          </Flex>
-                        </GridItem>
-                      );
-                    })}
+                    }
+                  )}
                 </Grid>
-                {formattedEntityData?.targetsMet &&
-                  wereTargetsMetForObjectiveProgress(formattedEntityData)}
               </>
-            ) : (
-              wereTargetsMetForObjectiveProgress(formattedEntityData)
             )}
-          </Box>
         </>
       );
     case OverlayModalStepTypes.EVALUATION_PLAN:
@@ -187,42 +150,8 @@ interface Props {
   stepType: string;
   formattedEntityData: AnyObject;
   printVersion?: boolean;
+  entityCompleted?: boolean;
 }
-
-const wereTargetsMetForObjectiveProgress = (formattedEntityData: AnyObject) => {
-  return (
-    <>
-      {formattedEntityData?.targetsMet && (
-        <Box
-          sx={
-            formattedEntityData?.quarterActuals?.length === 0
-              ? sx.newContentContainer
-              : undefined
-          }
-        >
-          <Text sx={sx.subtitleEmphasized}>
-            Were targets for performance measures and/or expected time frames
-            for deliverables met?
-          </Text>
-          <Text sx={sx.description}>{formattedEntityData?.targetsMet}</Text>
-          {formattedEntityData?.targetsMet === "No" && (
-            <>
-              <Text sx={sx.subtitleEmphasized}>
-                Describe progress toward reaching the target/milestone during
-                the reporting period. How close are you to meeting the target?
-                How do you plan to address any obstacle(s) to meeting the
-                target?
-              </Text>
-              <Text sx={sx.description}>
-                {formattedEntityData?.missedTargetReason}
-              </Text>
-            </>
-          )}
-        </Box>
-      )}
-    </>
-  );
-};
 
 const sx = {
   mainHeading: {
@@ -236,10 +165,6 @@ const sx = {
     marginBottom: "1rem",
     fontSize: "sm",
   },
-  newContentContainer: {
-    backgroundColor: "#EEFBFF",
-    padding: ".25rem 1.5rem",
-  },
   grid: {
     display: "grid",
     gridTemplateRows: "1fr 1fr 1fr 1fr",
@@ -249,8 +174,8 @@ const sx = {
   },
   sarGrid: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gridAutoFlow: "row",
+    gridTemplateRows: "1fr",
+    gridAutoFlow: "column",
     marginBottom: "1.25rem",
     width: "50%",
   },
@@ -259,19 +184,9 @@ const sx = {
     fontSize: "sm",
     marginRight: ".25rem",
   },
-  sarGridSubtitle: {
-    fontWeight: "bold",
-    fontSize: "xs",
-    marginRight: ".25rem",
-  },
   subtitle: {
     marginTop: "1rem",
     fontSize: "xs",
-    fontWeight: "bold",
-  },
-  subtitleEmphasized: {
-    marginTop: "1rem",
-    fontSize: "sm",
     fontWeight: "bold",
   },
   subtext: {

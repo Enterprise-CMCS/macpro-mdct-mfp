@@ -189,7 +189,11 @@ export const calculateCompletionStatus = async (
                 ? stepForm.form
                 : stepForm.modalForm;
 
-              if (nestedFormTemplate?.initiativeId !== stepFields?.id) {
+              //WP uses modaloverlay so it doesn't have an initiativeId, only SAR does
+              if (
+                nestedFormTemplate?.initiativeId !== stepFields?.id &&
+                formTemplate.type === "SAR"
+              ) {
                 continue;
               }
               const isEntityComplete = await calculateFormCompletion(

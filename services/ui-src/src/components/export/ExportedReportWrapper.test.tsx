@@ -6,6 +6,8 @@ import {
   mockModalDrawerReportPageJson,
   mockStandardReportPageJson,
   mockDrawerReportPageJson,
+  mockUnknownPageJson,
+  mockModalOverlayReportPageJson,
 } from "utils/testing/setupJest";
 import { mockWpReportContext } from "../../utils/testing/mockReport";
 
@@ -31,6 +33,18 @@ const exportedModalDrawerReportWrapperComponent = (
   </ReportContext.Provider>
 );
 
+const exportedModalOverlayReportWrapperComponent = (
+  <ReportContext.Provider value={mockWpReportContext}>
+    <ExportedReportWrapper section={mockModalOverlayReportPageJson} />
+  </ReportContext.Provider>
+);
+
+const UnknownComponent = (
+  <ReportContext.Provider value={mockWpReportContext}>
+    <ExportedReportWrapper section={mockUnknownPageJson} />
+  </ReportContext.Provider>
+);
+
 describe("ExportedReportWrapper rendering", () => {
   test("exportedStandardReportWrapperComponent renders", () => {
     render(exportedStandardReportWrapperComponent);
@@ -49,6 +63,16 @@ describe("ExportedReportWrapper rendering", () => {
     expect(
       screen.getByTestId("exportedModalDrawerReportSection")
     ).toBeInTheDocument();
+  });
+
+  test("ExportedModalOverlayReportSection renders", () => {
+    render(exportedModalOverlayReportWrapperComponent);
+    expect(screen.getByTestId("exportTable")).toBeInTheDocument();
+  });
+
+  it("renders default logic block correctly", () => {
+    const { container } = render(UnknownComponent);
+    expect(container).toBeEmptyDOMElement();
   });
 });
 

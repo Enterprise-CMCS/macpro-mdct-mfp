@@ -100,9 +100,11 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
   const { intro, body } = dashboardVerbiage;
 
-  // get active state
+  // if an admin has selected a state, retrieve it from local storage
   const adminSelectedState = localStorage.getItem("selectedState") || undefined;
-  const activeState = userState || adminSelectedState;
+
+  // if a user is an admin type, use the selected state, otherwise use their assigned state
+  const activeState = userIsAdmin ? adminSelectedState : userState;
 
   useEffect(() => {
     // if no activeState, go to homepage
@@ -181,6 +183,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         submittedBy: report.submittedBy,
         submitterEmail: report.submitterEmail,
         submittedOnDate: report?.submittedOnDate,
+        status: report.status,
       };
     } else if (reportType == ReportType.SAR) {
       // We are creating a new SAR submission
