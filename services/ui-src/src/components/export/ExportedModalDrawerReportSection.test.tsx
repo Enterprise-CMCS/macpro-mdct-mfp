@@ -77,7 +77,7 @@ const defaultMockProps = {
         "Are you sure you want to delete this target population?",
       deleteModalConfirmButtonText: "Yes, delete population",
       deleteModalWarning:
-        "Are you sure you want to proceed? You will lose all information entered for this population in the Work Plan. The population will remain in previously submitted Semi-Annual Reports if applicable.",
+        "Are you sure you want to proceed? You will lose all information entered for this population in the Work Plan. The population will remain in previously submitted MFP Semi-Annual Reports if applicable.",
       entityUnfinishedMessage:
         "Complete the remaining indicators for this access measure by entering details.",
       enterEntityDetailsButtonText: "Edit",

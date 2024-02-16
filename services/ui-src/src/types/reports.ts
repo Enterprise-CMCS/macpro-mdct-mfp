@@ -121,7 +121,7 @@ export interface OverlayModalPageShape extends ReportPageShapeBase {
   stepInfo: string[];
   hint: string;
   verbiage: ModalOverlayReportPageVerbiage;
-  modalForm: FormJson;
+  modalForm?: FormJson;
   drawerForm?: FormJson;
   form?: never;
   entitySteps?: never;

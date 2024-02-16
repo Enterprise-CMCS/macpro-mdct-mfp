@@ -36,19 +36,12 @@ const releaseEvent: APIGatewayProxyEvent = {
 };
 
 describe("Test releaseReport method", () => {
-  beforeEach(() => {
-    // fail state and pass admin auth checks
-    mockAuthUtil.hasPermissions
-      .mockReturnValueOnce(true)
-      .mockReturnValueOnce(true)
-      .mockReturnValueOnce(true)
-      .mockReturnValueOnce(false);
-  });
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   test("Test release report passes with valid data", async () => {
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     mockDocumentClient.get.promise.mockReturnValueOnce({
       Item: mockDynamoDataWPLocked,
     });
@@ -63,6 +56,7 @@ describe("Test releaseReport method", () => {
   });
 
   test("Test release report passes with valid data, but it's been more than the first submission", async () => {
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     const newPreviousId = KSUID.randomSync().string;
     mockDocumentClient.get.promise.mockReturnValueOnce({
       Item: {
@@ -85,6 +79,7 @@ describe("Test releaseReport method", () => {
   });
 
   test("Test release report with no existing record throws 404", async () => {
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     mockDocumentClient.get.promise.mockReturnValueOnce({
       Item: undefined,
     });
@@ -94,6 +89,7 @@ describe("Test releaseReport method", () => {
   });
 
   test("Test release report without admin permissions throws 403", async () => {
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(false);
     mockDocumentClient.get.promise.mockReturnValueOnce({
       Item: mockDynamoDataWPLocked,
     });

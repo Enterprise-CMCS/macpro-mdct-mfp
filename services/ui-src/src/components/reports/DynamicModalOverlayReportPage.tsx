@@ -18,7 +18,7 @@ import {
   ReportType,
 } from "types";
 // utils
-import { useBreakpoint, useStore } from "utils";
+import { parseCustomHtml, useBreakpoint, useStore } from "utils";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
@@ -66,7 +66,9 @@ export const DynamicModalOverlayReportPage = ({
       : false;
 
   const dashTitle = `${verbiage.dashboardTitle}`;
-  const dashSubTitle = (verbiage as AnyObject)?.dashboardSubtitle;
+  const dashSubTitle = parseCustomHtml(
+    (verbiage as AnyObject)?.dashboardSubtitle
+  );
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
     return { headRow: ["", verbiage.tableHeader, ""] };

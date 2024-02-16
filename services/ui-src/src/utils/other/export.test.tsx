@@ -65,28 +65,14 @@ describe("Test rendering methods", () => {
       },
     ];
 
-    const widerResponseData = {
-      "test_option3uuid-otherText": "other text",
-    };
-
-    const result = renderResponseData(
-      mockNestedFormField,
-      fieldResponseData,
-      widerResponseData,
-      "drawer"
-    );
+    const result = renderResponseData(mockNestedFormField, fieldResponseData);
 
     expect(result[0].key).toEqual("option3uuid");
-    expect(result[0].props.children[0]).toEqual("option 3");
+    expect(result[0].props.children).toEqual("option 3");
   });
 
   test("Correctly renders a link or url field", () => {
-    const result = renderResponseData(
-      mockFormField,
-      emailInput,
-      emailInput,
-      "standard"
-    );
+    const result = renderResponseData(mockFormField, emailInput);
     expect(result.props.children.id).toEqual("email-field-id");
   });
 });

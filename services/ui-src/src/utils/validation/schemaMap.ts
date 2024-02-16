@@ -20,4 +20,6 @@ export const schemaMap: any = {
   radioOptional: schema.radioOptional(),
   dynamic: schema.dynamic(),
   dynamicOptional: schema.dynamicOptional(),
+  validInteger: schema.validInteger(),
+  validIntegerOptional: schema.validIntegerOptional(),
 };

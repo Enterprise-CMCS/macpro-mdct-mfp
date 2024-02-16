@@ -1,14 +1,16 @@
-import { render, screen } from "@testing-library/react";
+import { RenderResult, render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 // components
-import { EntityDetailsOverlay } from "components";
+import { EntityDetailsOverlay, ReportContext } from "components";
 // utils
 import {
   mockEntityDetailsOverlayJson,
   RouterWrappedComponent,
   mockUseEntityStore,
+  mockWpReportContext,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -16,21 +18,42 @@ mockedUseStore.mockReturnValue(mockUseEntityStore);
 
 const mockCloseEntityDetailsOverlay = jest.fn();
 
+let component: RenderResult;
+
+//bypass autosave call when simulating type inputs
+jest.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: jest.fn().mockImplementation(() => {
+    return {};
+  }),
+  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
+}));
+
+//mock closeout status to enable closeout button
+jest.mock("components/tables/getEntityStatus", () => ({
+  getCloseoutStatus: jest.fn().mockImplementation(() => {
+    return true;
+  }),
+}));
+
 const { closeOutWarning, closeOutModal } =
   mockEntityDetailsOverlayJson.verbiage;
 
 const entityDetailsOverlayComponent = (
-  <RouterWrappedComponent>
-    <EntityDetailsOverlay
-      route={mockEntityDetailsOverlayJson}
-      closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
-    />
-  </RouterWrappedComponent>
+  <ReportContext.Provider value={mockWpReportContext}>
+    <RouterWrappedComponent>
+      <EntityDetailsOverlay
+        route={mockEntityDetailsOverlayJson}
+        closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
+      />
+    </RouterWrappedComponent>
+  </ReportContext.Provider>
 );
 
 describe("Test EntityDetailsOverlayPage", () => {
+  beforeEach(() => {
+    component = render(entityDetailsOverlayComponent);
+  });
   test("EntityDetailsOverlayPage view renders", () => {
-    render(entityDetailsOverlayComponent);
     // Check that the header rendered
     expect(
       screen.getByText(mockEntityDetailsOverlayJson.verbiage.intro.section)
@@ -55,6 +78,38 @@ describe("Test EntityDetailsOverlayPage", () => {
     expect(
       screen.getByText(closeOutModal.closeOutModalButtonText)
     ).toBeVisible();
+  });
+
+  test("Test onSubmit Function", async () => {
+    //fill out form
+    const textbox = component.container.querySelector("#mock-text-field");
+    await userEvent.type(textbox!, "mock text");
+    expect(textbox).toHaveValue("mock text");
+
+    const dateField = component.container.querySelector(
+      '[name="mock-date-field"]'
+    );
+    await userEvent.type(dateField!, "2/2/2022");
+    expect(dateField).toHaveValue("2/2/2022");
+
+    const number = component.container.querySelector("#mock-number-field");
+    await userEvent.type(number!, "3");
+    expect(number).toHaveValue("3");
+
+    //trigger onSubmit
+    const saveButton = screen.getByText("Save & return");
+    await userEvent.click(saveButton);
+    expect(mockCloseEntityDetailsOverlay).toHaveBeenCalled();
+  });
+  it("Test Closeout Modal", async () => {
+    const closeoutBtn = screen.getByText(closeOutModal.closeOutModalButtonText);
+    await userEvent.click(closeoutBtn);
+
+    const modal = screen.getByText("This is a modal");
+    expect(modal).toBeVisible();
+
+    const modalCloseBtn = screen.getByText("Cancel");
+    await userEvent.click(modalCloseBtn);
   });
 });
 

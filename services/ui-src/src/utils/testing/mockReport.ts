@@ -5,6 +5,8 @@ import {
   mockModalDrawerReportPageJson,
   mockTargetPopulationsReportPageJson,
   mockReviewSubmitPageJson,
+  mockModalOverlayReportPageJson,
+  mockDynamicModalOverlayReportPageJson,
 } from "./mockForm";
 
 export const mockReportRoutes = [
@@ -12,7 +14,12 @@ export const mockReportRoutes = [
   {
     name: "mock-route-2",
     path: "/mock/mock-route-2",
-    children: [mockDrawerReportPageJson, mockModalDrawerReportPageJson],
+    children: [
+      mockDrawerReportPageJson,
+      mockModalDrawerReportPageJson,
+      mockModalOverlayReportPageJson,
+      mockDynamicModalOverlayReportPageJson,
+    ],
   },
   mockReviewSubmitPageJson,
 ];
@@ -22,6 +29,8 @@ export const mockFlattenedReportRoutes = [
   mockDrawerReportPageJson,
   mockModalDrawerReportPageJson,
   mockTargetPopulationsReportPageJson,
+  mockModalOverlayReportPageJson,
+  mockDynamicModalOverlayReportPageJson,
   mockReviewSubmitPageJson,
 ];
 
@@ -40,15 +49,156 @@ export const mockReportKeys = {
   id: "mock-report-id",
 };
 
+export const mockEvaluationPlan = [
+  {
+    id: "mock-eval-plan-1",
+    evaluationPlan_objectiveName: "mock-eval-plan-objective-name-1",
+    evaluationPlan_description: "2",
+    evaluationPlan_targets: "3",
+    evaluationPlan_includesTargets: [
+      {
+        key: "evaluationPlan_includesTargets",
+        value: "Yes",
+      },
+    ],
+    evaluationPlan_additionalDetails: "2",
+    quarterlyProjections2024Q1: "1",
+    quarterlyProjections2024Q2: "2",
+    quarterlyProjections2024Q3: "2",
+    quarterlyProjections2024Q4: "2",
+    quarterlyProjections2025Q1: "2",
+    quarterlyProjections2025Q2: "2",
+    quarterlyProjections2025Q3: "2",
+    quarterlyProjections2025Q4: "2",
+    quarterlyProjections2026Q1: "2",
+    quarterlyProjections2026Q2: "2",
+    quarterlyProjections2026Q3: "22",
+    quarterlyProjections2026Q4: "2",
+  },
+  {
+    id: "mock-eval-plan-objective-name-1",
+    evaluationPlan_objectiveName: "x",
+    evaluationPlan_description: "0",
+    evaluationPlan_targets: "9",
+    evaluationPlan_includesTargets: [
+      {
+        key: "evaluationPlan_includesTargets",
+        value: "Yes",
+      },
+    ],
+    evaluationPlan_additionalDetails: "4",
+    quarterlyProjections2024Q1: "8",
+    quarterlyProjections2024Q2: "8",
+    quarterlyProjections2024Q3: "8",
+    quarterlyProjections2024Q4: "8",
+    quarterlyProjections2025Q1: "8",
+    quarterlyProjections2025Q2: "8",
+    quarterlyProjections2025Q3: "8",
+    quarterlyProjections2025Q4: "8",
+    quarterlyProjections2026Q1: "8",
+    quarterlyProjections2026Q2: "8",
+    quarterlyProjections2026Q3: "8",
+    quarterlyProjections2026Q4: "8",
+  },
+];
+
+export const mockObjectiveProgress = [
+  {
+    id: "mock-objective-1",
+    objectiveProgress_objectiveName: "mock-objective-name-1",
+    objectiveProgress_description: "2",
+    objectiveProgress_targets: "3",
+    objectiveTargets_projections_2024Q1: "1",
+  },
+  {
+    id: "mock-objective-2",
+    objectiveProgress_objectiveName: "mock-objective-name-2",
+    objectiveProgress_description: "0",
+    objectiveProgress_targets: "9",
+    objectiveTargets_projections_2024Q1: "8",
+  },
+];
+
 export const mockReportFieldData = {
   text: "text-input",
   "mock-number-field": 0,
   entityType: [
     {
       id: "mock-entity-id",
+      initiative_wpTopic: [
+        {
+          key: "initiative_wpTopic",
+          value: "Transitions and transition coordination services ",
+        },
+      ],
       name: "entity-name",
       entityType_one: "hello",
       transitionBenchmarks_targetPopulationName: "mock benchmark name",
+    },
+  ],
+  initiative: [
+    {
+      id: "mock-initative-id",
+      name: "mock-name",
+      mockObjectiveProgress: [
+        {
+          id: "mock-objective-1",
+          objectiveProgress_objectiveName: "mock-objective-name-1",
+          objectiveProgress_description: "2",
+          objectiveProgress_targets: "3",
+          objectiveTargets_projections_2024Q1: "1",
+        },
+        {
+          id: "mock-objective-2",
+          objectiveProgress_objectiveName: "mock-objective-name-2",
+          objectiveProgress_description: "0",
+          objectiveProgress_targets: "9",
+          objectiveTargets_projections_2024Q1: "8",
+        },
+      ],
+      "mock-initative-id": [[]],
+    },
+  ],
+  evaluationPlan: mockEvaluationPlan,
+};
+
+export const mockSARReportFieldData = {
+  text: "text-input",
+  "mock-number-field": 0,
+  entityType: [
+    {
+      id: "mock-entity-id",
+      initiative_wpTopic: [
+        {
+          key: "initiative_wpTopic",
+          value: "Transitions and transition coordination services ",
+        },
+      ],
+      name: "entity-name",
+      entityType_one: "hello",
+      transitionBenchmarks_targetPopulationName: "mock benchmark name",
+    },
+  ],
+  initiative: [
+    {
+      id: "mock-initative-id",
+      name: "mock-name",
+      mockObjectiveProgress: [
+        {
+          id: "mock-objective-1",
+          objectiveProgress_objectiveName: "mock-objective-name-1",
+          objectiveProgress_description: "2",
+          objectiveProgress_targets: "3",
+          objectiveTargets_projections_2024Q1: "1",
+        },
+        {
+          id: "mock-objective-2",
+          objectiveProgress_objectiveName: "mock-objective-name-2",
+          objectiveProgress_description: "0",
+          objectiveProgress_targets: "9",
+          objectiveTargets_projections_2024Q1: "8",
+        },
+      ],
     },
   ],
 };
@@ -124,7 +274,7 @@ export const mockSARFullReport = {
   lastAltered: 162515200000,
   lastAlteredBy: "Thelonious States",
   submittedOnDate: Date.now(),
-  fieldData: mockReportFieldData,
+  fieldData: mockSARReportFieldData,
   completionStatus: {
     "/mock/mock-route-1": true,
     "/mock/mock-route-2": {
@@ -233,7 +383,7 @@ export const mockSARReportContext = {
   ...mockReportMethods,
   report: mockSARFullReport,
   reportsByState: mockSARReportsByState,
-  copyEligibleReportsByState: mockSARReportsByState,
+  copyEligibleReportsByState: mockReportsByState,
   errorMessage: "",
   lastSavedTime: "2:00 PM",
 };

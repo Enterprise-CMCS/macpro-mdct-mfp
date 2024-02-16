@@ -265,7 +265,7 @@ export const formatOtherTargetPopulationChoices = (field: AnyObject) => {
     "Individuals with physical disabilities (PD)",
     "Individuals with intellectual and developmental disabilities (I/DD)",
     "Individuals with mental health and substance use disorders (MH/SUD)",
-    "Not applicable",
+    "HCBS infrastructure/system-level development",
   ];
   return defaultTargetPopulations.includes(
     field.transitionBenchmarks_targetPopulationName
@@ -295,7 +295,7 @@ export const convertEntityToTargetPopulationChoice = (
 export const convertChoiceToEntity = (choices: Choice[]) => {
   return choices?.map((field: Choice) => {
     return {
-      id: field.key,
+      id: field.key ?? field.id,
       label: field.value,
       name: field.value,
       value: field.value,
@@ -330,7 +330,8 @@ export const updateRenderFields = (
 
   const notApplicableOption = {
     id: "3Nc13O5GHA6Hc4KheO5FMSD2",
-    transitionBenchmarks_targetPopulationName: "Not applicable",
+    transitionBenchmarks_targetPopulationName:
+      "HCBS infrastructure/system-level development",
     type: "targetPopulations",
     isRequired: false,
   };

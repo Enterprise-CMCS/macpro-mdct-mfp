@@ -12,7 +12,7 @@ export const mockGeneralInfoReportPageVerbiage = {
     {
       type: "html",
       content:
-        "The Money Follows the Person (MFP) Demonstration Work Plan (WP) is the state or territory’s road map for accomplishing the rebalancing objective described in section ",
+        "The Money Follows the Person (MFP) Demonstration Work Plan is the state or territory’s road map for accomplishing the rebalancing objective described in section ",
     },
     {
       type: "externalLink",
@@ -27,7 +27,7 @@ export const mockGeneralInfoReportPageVerbiage = {
     {
       type: "html",
       content:
-        " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The WP presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The WP enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the WP describes state or territory initiatives and sets performance measures, the Semi-Annual Progress Report (SAR) will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new WP fields during the demonstration period. For additional guidance on completing this form, please see the associated User Guide and Help File. ",
+        " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The WP presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The WP enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the WP describes state or territory initiatives and sets performance measures, the MFP Semi-Annual Progress Report will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new WP fields during the Demonstration period. For additional guidance on completing this form, please see the associated User Guide and Help File. ",
     },
   ],
 };

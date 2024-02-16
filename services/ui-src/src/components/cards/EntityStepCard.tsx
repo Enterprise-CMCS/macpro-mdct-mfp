@@ -23,6 +23,7 @@ import { fillEmptyQuarters, useStore } from "utils";
 export const EntityStepCard = ({
   entity,
   entityIndex,
+  entityTotal,
   stepType,
   formattedEntityData,
   verbiage,
@@ -35,7 +36,7 @@ export const EntityStepCard = ({
   ...props
 }: Props) => {
   let entityCompleted = false;
-  const entitiesCount = `${entityIndex + 1} / ${entity[stepType]?.length}`;
+  const entitiesCount = `${entityIndex + 1} / ${entityTotal}`;
   const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
   switch (stepType) {
@@ -68,7 +69,7 @@ export const EntityStepCard = ({
 
   const boxShadow = hasBoxShadow ? "0px 3px 9px rgba(0, 0, 0, 0.2)" : "none";
   const border = hasBorder ? "1px" : "none";
-  const borderColor = hasBorder ? "#D3D3D3" : "none";
+  const borderColor = hasBorder ? "palette.gray_light" : "none";
   const addEditEntitybutton = () => {
     if (
       (openAddEditEntityModal && report?.reportType === ReportType.WP) ||
@@ -157,6 +158,7 @@ export const EntityStepCard = ({
             className="delete-entity-button"
             onClick={() => openDeleteEntityModal(entity)}
             data-testid="delete-entity-button"
+            aria-label="Delete"
           >
             <Image
               src={deleteIcon}
@@ -169,6 +171,7 @@ export const EntityStepCard = ({
           stepType={stepType}
           printVersion={!!printVersion}
           formattedEntityData={formattedEntityData}
+          entityCompleted={entityCompleted}
         />
         {entityCompleted || printVersion ? (
           <EntityStepCardBottomSection
@@ -215,6 +218,7 @@ export const EntityStepCard = ({
 interface Props {
   entity: EntityShape;
   entityIndex: number;
+  entityTotal?: number;
   stepType: string;
   formattedEntityData: AnyObject;
   verbiage: AnyObject;
