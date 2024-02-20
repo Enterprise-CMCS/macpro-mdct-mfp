@@ -174,7 +174,7 @@ export default {
           type: "text",
           as: "span",
           content:
-            "Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
+            "<br><br>Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
         },
         {
           type: "externalLink",
@@ -189,18 +189,18 @@ export default {
           type: "text",
           as: "span",
           content:
-            ".If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates including the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
+            ". If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates including the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
         },
         {
           type: "text",
           as: "span",
-          content: "<br><br>Admin instructions</b>",
+          content: "<br><br><b>Admin instructions</b>",
         },
         {
           type: "text",
           as: "span",
           content:
-            "<ul> <li>To allow a state to make corrections or edits to a submission use “Unlock” to release the submission. The status will change to “In revision”.<li> <li>Submission count is shown in the # column. Submissions started and submitted once have a count of 1. When a state resubmits a previous submission, the count increases by 1.<li> <li>To archive a submission and hide it from a state’s dashboard, use “Archive”.<li></ul>",
+            "<ul><li>To allow a state to make corrections or edits to a submission use “Unlock” to release the submission. The status will change to “In revision”.<li>Submission count is shown in the # column. Submissions started and submitted once have a count of 1. When a state resubmits a previous submission, the count increases by 1.<li>To archive a submission and hide it from a state’s dashboard, use “Archive”.</ul>",
         },
       ],
       list: [],
