@@ -101,6 +101,7 @@ const sx = {
   metadataTable: {
     margin: "3rem 0",
     maxWidth: "reportPageWidth",
+    "table-layout": "fixed",
     td: {
       verticalAlign: "middle",
       textAlign: "left",
@@ -111,6 +112,7 @@ const sx = {
       fontWeight: "bold",
       textAlign: "left",
       paddingBottom: "0rem",
+      color: "palette.gray_medium",
     },
   },
 };

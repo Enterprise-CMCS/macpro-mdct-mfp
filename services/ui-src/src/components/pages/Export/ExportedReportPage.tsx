@@ -109,7 +109,7 @@ export const renderReportSections = (
     //because R,E & T section needs numbers added, switch from shallow copy to deep copy
     let childSections = structuredClone(section?.children);
     const initatives =
-      section.name === "State- or Territory Specific Initiatives" &&
+      section.name === "State or Territory Specific Initiatives" &&
       childSections;
     const showGeneralInformation = !(
       reportType === ReportType.WP && section.name === "General Information"
@@ -151,7 +151,7 @@ export const renderReportSections = (
   return reportRoutes.map(
     (section: ReportRoute) =>
       section?.pageType !== PageTypes.REVIEW_SUBMIT && (
-        <Box key={section.path} mt="5rem">
+        <Box key={section.path} mt="3.5rem">
           {renderSection(section)}
         </Box>
       )
@@ -168,7 +168,7 @@ export const sx = {
   innerContainer: {
     width: "100%",
     maxWidth: "40rem",
-    margin: "0 auto 0 0",
+    margin: "auto",
     "@media print": {
       margin: "5rem 0",
     },
@@ -179,7 +179,7 @@ export const sx = {
     fontSize: "4xl",
   },
   combinedDataTable: {
-    marginBottom: "1rem",
+    "table-layout": "fixed",
     ".combined-data-title": {
       display: "inline-block",
       marginBottom: "0.5rem",

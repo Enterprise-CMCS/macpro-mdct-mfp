@@ -43,7 +43,7 @@
       "type": "radio",
       "validation": "radio",
       "props": {
-        "label": "Is this your state/territory’s final SAR for your period of performance in the MFP demonstration?",
+        "label": "Is this your state/territory’s final SAR for your period of performance in the MFP Demonstration?",
         "choices": [
           {
             "id": "ekP9iVvuQE9AALchScDzoD",

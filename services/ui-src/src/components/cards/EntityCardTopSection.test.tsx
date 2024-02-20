@@ -116,5 +116,15 @@ describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
     expect(
       topOfCard.getByText(mockFullyCompletedObjectiveProgress.targets)
     ).toBeVisible();
+    expect(
+      topOfCard.getByText(
+        `${mockFullyCompletedObjectiveProgress.quarterProjections[0].id} Target:`
+      )
+    ).toBeVisible();
+    expect(
+      topOfCard.getByText(
+        `${mockFullyCompletedObjectiveProgress.quarterProjections[1].id} Target:`
+      )
+    ).toBeVisible();
   });
 });

@@ -164,7 +164,6 @@
         "intro": {
           "info": [
             {
-              "type": "h3",
               "content": "In this section, please provide information for the specified period. Transition targets are populated from your state’s current MFP Work Plan, where applicable. Blue-shaded cells are auto-calculated."
             }
           ]
@@ -914,7 +913,7 @@
       ]
     },
     {
-      "name": "State- or Territory-Specific Initiatives",
+      "name": "State or Territory-Specific Initiatives",
       "path": "/sar/state-or-territory-specific-initiatives",
       "pageType": "dynamicModalOverlay",
       "entityType": "initiative",
@@ -922,7 +921,7 @@
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "State- or Territory-Specific Initiatives"
+          "subsection": "State or Territory-Specific Initiatives"
         },
         "accordion": {
           "buttonLabel": "Instructions",
@@ -969,7 +968,7 @@
           "name": "Intitiative Details Dashboard",
           "verbiage": {
             "intro": {
-              "section": "State- or Territory-Specific Initiatives",
+              "section": "State or Territory-Specific Initiatives",
               "info": [
                 {
                   "type": "span",
@@ -1112,7 +1111,7 @@
             "isRequired": true,
             "verbiage": {
               "intro": {
-                "section": "State- or Territory-Specific Initiatives",
+                "section": "State or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "html",

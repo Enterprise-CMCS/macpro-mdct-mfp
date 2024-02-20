@@ -172,8 +172,8 @@ const sx = {
         color: "palette.black",
         lineHeight: "normal",
         fontWeight: "bold",
-        width: "100px",
         minWidth: "100px",
+        width: "100px",
         ".tablet &, .mobile &": {
           border: "1px solid",
         },
