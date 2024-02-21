@@ -1040,7 +1040,8 @@
               "readOnlyEntityDetailsButtonText": "View",
               "readOnlyEntityButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report the objectives progress.",
-              "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab.",
+              "reviewPdfHint": "To view totals against targets from your associated MFP Work Plan, click \"Review PDF\" and it will open a summary in a new tab.",
+              "addEditModalMessage": "To view totals and percent target achieved, \"Save\", close, click \"Review PDF\" button and it will open a summary in a new tab.",
               "entityUnfinishedMessage": "Report objective progress to complete this section"
             },
             "transformation": {
