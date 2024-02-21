@@ -423,15 +423,15 @@ describe("transformFormTemplate", () => {
         {
           pageType: "dynamicModalOverlay",
           entityType: "",
-          entityInfo: [""],
+          entityInfo: [],
           verbiage: {} as ModalOverlayReportPageVerbiage,
           initiatives: [],
           name: "",
           path: "",
           template: {
-            dashboard: {},
             entitySteps: [
               {
+                stepType: "objectiveProgress",
                 objectiveCardTemplate: {
                   modalForm: {
                     fields: [
@@ -494,6 +494,30 @@ describe("transformFormTemplate", () => {
               objectiveTargets_projections_2024Q2: "8",
             },
           ],
+          fundingSources: [
+            {
+              id: "55b674-ce4-f10-d575-4a11c820268",
+              fundingSources_wpTopic: [
+                {
+                  key: "fundingSources_wpTopic-key",
+                  value: "Capacity-building funds",
+                },
+              ],
+              fundingSources_quarters2024Q1: "1.00",
+              fundingSources_quarters2024Q2: "1.00",
+              fundingSources_quarters2024Q3: "1.00",
+              fundingSources_quarters2024Q4: "1.00",
+              fundingSources_quarters2025Q1: "1.00",
+              fundingSources_quarters2025Q2: "1.00",
+              fundingSources_quarters2025Q3: "1.00",
+              fundingSources_quarters2025Q4: "1.00",
+              fundingSources_quarters2026Q1: "1.00",
+              fundingSources_quarters2026Q2: "1.00",
+              fundingSources_quarters2026Q3: "1.00",
+              fundingSources_quarters2026Q4: "1.00",
+              initiative_wp_otherTopic: "",
+            },
+          ],
         },
       ],
     };
@@ -506,7 +530,7 @@ describe("transformFormTemplate", () => {
     const fields =
       formTemplate.routes[0]?.initiatives?.[0].entitySteps[0]
         .objectiveCards?.[0].modalForm?.fields;
-    expect(fields).toHaveLength(3);
+    expect(fields).toHaveLength(6);
   });
 
   it("should throw for unrecognized transformations", () => {
