@@ -171,7 +171,7 @@
       },
       "children": [
         {
-          "name": "Number of people who signed an MFP informed consent form in the ",
+          "name": "Number of people who signed an MFP informed consent form in the reporting period",
           "path": "/sar/recruitment-enrollment-transitions/number-of-people-signed-informed-consent-form",
           "pageType": "standard",
           "verbiage": {
@@ -190,7 +190,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-psmicf",
@@ -226,7 +226,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals and transition targets from your associated MFP Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals and transition targets from your associated MFP Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mtrp",
@@ -284,7 +284,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mtfqi",
@@ -387,7 +387,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mtfqr",
@@ -475,7 +475,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-tnamprp",
@@ -511,7 +511,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-nmpcprp",
@@ -547,7 +547,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-npremrp",
@@ -583,7 +583,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mpdprp",
@@ -773,7 +773,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-hcbs",
@@ -1128,7 +1128,7 @@
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report the overall progress.",
-              "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+              "reviewPdfHint": "To view totals against targets from your Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
             },
             "form": {
               "id": "stsiip",
@@ -1182,7 +1182,7 @@
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report expenditures.",
-              "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+              "reviewPdfHint": "To view totals against targets from your Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
             },
             "form": {
               "id": "stsie",
