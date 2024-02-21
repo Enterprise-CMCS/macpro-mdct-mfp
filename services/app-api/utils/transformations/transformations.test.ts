@@ -478,46 +478,8 @@ describe("transformFormTemplate", () => {
               objectiveTargets_projections_2024Q1: "1",
               objectiveTargets_projections_2024Q2: "2",
             },
-            {
-              id: "epB",
-              objectiveProgress_additionalDetails: "dasda",
-              objectiveProgress_description: "description",
-              evaluationPlan_includesTargets: [
-                {
-                  key: "evaluationPlan_includesTargets-a",
-                  value: "Yes",
-                },
-              ],
-              objectiveProgress_objectiveName: "B",
-              objectiveProgress_targets: "targets",
-              objectiveTargets_projections_2024Q1: "9",
-              objectiveTargets_projections_2024Q2: "8",
-            },
           ],
-          fundingSources: [
-            {
-              id: "55b674-ce4-f10-d575-4a11c820268",
-              fundingSources_wpTopic: [
-                {
-                  key: "fundingSources_wpTopic-key",
-                  value: "Capacity-building funds",
-                },
-              ],
-              fundingSources_quarters2024Q1: "1.00",
-              fundingSources_quarters2024Q2: "1.00",
-              fundingSources_quarters2024Q3: "1.00",
-              fundingSources_quarters2024Q4: "1.00",
-              fundingSources_quarters2025Q1: "1.00",
-              fundingSources_quarters2025Q2: "1.00",
-              fundingSources_quarters2025Q3: "1.00",
-              fundingSources_quarters2025Q4: "1.00",
-              fundingSources_quarters2026Q1: "1.00",
-              fundingSources_quarters2026Q2: "1.00",
-              fundingSources_quarters2026Q3: "1.00",
-              fundingSources_quarters2026Q4: "1.00",
-              initiative_wp_otherTopic: "",
-            },
-          ],
+          fundingSources: [],
         },
       ],
     };
