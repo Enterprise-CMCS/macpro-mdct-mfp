@@ -171,7 +171,7 @@
       },
       "children": [
         {
-          "name": "Number of people who signed an MFP informed consent form in the ",
+          "name": "Number of people who signed an MFP informed consent form in the reporting period",
           "path": "/sar/recruitment-enrollment-transitions/number-of-people-signed-informed-consent-form",
           "pageType": "standard",
           "verbiage": {
