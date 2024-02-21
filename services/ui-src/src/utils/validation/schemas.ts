@@ -197,7 +197,7 @@ export const nested = (
   return baseSchema.when(parentFieldName, {
     is: (value: Choice[]) =>
       // look for parentOptionId in checked choices
-      value?.find((option: Choice) => option.key === parentOptionId),
+      value?.find((option: Choice) => option.key.endsWith(parentOptionId)),
     then: () => fieldSchema(), // returns standard field schema (required)
     otherwise: () => baseSchema, // returns not-required Yup base schema
   });
