@@ -24,7 +24,7 @@ export const ReportPageIntro = ({
       <Heading as="h2" sx={sx.subsectionHeading}>
         {initiativeName ? initiativeName : subsection}
       </Heading>
-      {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
+      {hint && <Box sx={sx.hintTextBox}>{parseCustomHtml(hint)}</Box>}
       {accordion && !OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
         <InstructionsAccordion verbiage={accordion} />
       )}

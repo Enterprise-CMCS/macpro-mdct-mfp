@@ -171,7 +171,7 @@
       },
       "children": [
         {
-          "name": "Number of people who signed an MFP informed consent form in the ",
+          "name": "Number of people who signed an MFP informed consent form in the reporting period",
           "path": "/sar/recruitment-enrollment-transitions/number-of-people-signed-informed-consent-form",
           "pageType": "standard",
           "verbiage": {
@@ -191,6 +191,10 @@
                     "target": "_blank",
                     "aria-label": "User Guide and Help File (Link opens in new tab)"
                   }
+                },
+                {
+                  "type": "html",
+                  "content": "."
                 }
               ],
               "info": [
@@ -204,7 +208,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-psmicf",
@@ -230,8 +234,7 @@
               "subsection": "Number of MFP transitions in the reporting period",
               "hint": [
                 {
-                  "type": "text",
-                  "as": "span",
+                  "type": "html",
                   "content": "In this section, provide information for the specified period. For more information see the "
                 },
                 {
@@ -242,6 +245,10 @@
                     "target": "_blank",
                     "aria-label": "User Guide and Help File (Link opens in new tab)"
                   }
+                },
+                {
+                  "type": "html",
+                  "content": "."
                 }
               ],
               "info": [
@@ -303,8 +310,7 @@
               "subsection": "Number of MFP transitions from qualified institutions",
               "hint": [
                 {
-                  "type": "text",
-                  "as": "span",
+                  "type": "html",
                   "content": "In this section, provide information for the specified period. For more information see the "
                 },
                 {
@@ -315,6 +321,10 @@
                     "target": "_blank",
                     "aria-label": "User Guide and Help File (Link opens in new tab)"
                   }
+                },
+                {
+                  "type": "html",
+                  "content": "."
                 }
               ],
               "info": [
@@ -328,7 +338,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mtfqi",
@@ -421,8 +431,7 @@
               "subsection": "Number of MFP transitions to qualified residences",
               "hint": [
                 {
-                  "type": "text",
-                  "as": "span",
+                  "type": "html",
                   "content": "In this section, provide information for the specified period. For more information see the "
                 },
                 {
@@ -433,6 +442,10 @@
                     "target": "_blank",
                     "aria-label": "User Guide and Help File (Link opens in new tab)"
                   }
+                },
+                {
+                  "type": "html",
+                  "content": "."
                 }
               ],
               "info": [
@@ -446,7 +459,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mtfqr",
@@ -524,8 +537,7 @@
               "subsection": "Total number of active MFP participants in the reporting period",
               "hint": [
                 {
-                  "type": "text",
-                  "as": "span",
+                  "type": "html",
                   "content": "In this section, provide information for the specified period. For more information see the "
                 },
                 {
@@ -536,6 +548,10 @@
                     "target": "_blank",
                     "aria-label": "User Guide and Help File (Link opens in new tab)"
                   }
+                },
+                {
+                  "type": "html",
+                  "content": "."
                 }
               ],
               "info": [
@@ -549,7 +565,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-tnamprp",
@@ -575,8 +591,7 @@
               "subsection": "Number of MFP participants completing the program in the reporting period",
               "hint": [
                 {
-                  "type": "text",
-                  "as": "span",
+                  "type": "html",
                   "content": "In this section, provide information for the specified period. For more information see the "
                 },
                 {
@@ -587,6 +602,10 @@
                     "target": "_blank",
                     "aria-label": "User Guide and Help File (Link opens in new tab)"
                   }
+                },
+                {
+                  "type": "html",
+                  "content": "."
                 }
               ],
               "info": [
@@ -600,7 +619,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-nmpcprp",
@@ -626,8 +645,7 @@
               "subsection": "Number of people re-enrolled in MFP during the reporting period",
               "hint": [
                 {
-                  "type": "text",
-                  "as": "span",
+                  "type": "html",
                   "content": "In this section, provide information for the specified period. For more information see the "
                 },
                 {
@@ -638,6 +656,10 @@
                     "target": "_blank",
                     "aria-label": "User Guide and Help File (Link opens in new tab)"
                   }
+                },
+                {
+                  "type": "html",
+                  "content": "."
                 }
               ],
               "info": [
@@ -651,7 +673,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-npremrp",
@@ -677,8 +699,7 @@
               "subsection": "Number of MFP participants disenrolled from the program during the reporting period",
               "hint": [
                 {
-                  "type": "text",
-                  "as": "span",
+                  "type": "html",
                   "content": "In this section, provide information for the specified period. For more information see the "
                 },
                 {
@@ -689,6 +710,10 @@
                     "target": "_blank",
                     "aria-label": "User Guide and Help File (Link opens in new tab)"
                   }
+                },
+                {
+                  "type": "html",
+                  "content": "."
                 }
               ],
               "info": [
@@ -702,7 +727,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mpdprp",
@@ -882,8 +907,7 @@
               "subsection": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group",
               "hint": [
                 {
-                  "type": "text",
-                  "as": "span",
+                  "type": "html",
                   "content": "In this section, provide information for the specified period. For more information see the "
                 },
                 {
@@ -894,6 +918,10 @@
                     "target": "_blank",
                     "aria-label": "User Guide and Help File (Link opens in new tab)"
                   }
+                },
+                {
+                  "type": "html",
+                  "content": "."
                 }
               ],
               "info": [
@@ -907,7 +935,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-hcbs",
@@ -1068,7 +1096,7 @@
           "list": [
             "MFP cooperative agreement funds for:",
             [
-              "Qualified home and community-based services(HCBS) and demonstration services",
+              "Qualified home and community-based services (HCBS) and demonstration services",
               "Supplemental services",
               "Administrative activities",
               "Capacity building initiatives"
@@ -1085,7 +1113,7 @@
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
-        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. <br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period. <br><br>For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress towards these objectives indicates the state or territory's greater ability to provide HCBS instead of services in institutional settings. <br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
+        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. Note: Initiative topics with * are required initiatives. <br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period. <br><br> For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide home and community-based services (HCBS) instead of services in institutional settings. <br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work Plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
         "tableHeader": "Initiative name <br/> MFP Work Plan topic",
         "countEntitiesInTitle": false
       },
@@ -1111,7 +1139,7 @@
             "entityType": "initiative",
             "stepType": "objectiveProgress",
             "stepInfo": ["name", "hint"],
-            "hint": "Report progress for each objective by selecting the button for each. Objectives are framed as SMART goals and set associated performance measures or indicators to monitor progress toward each objective and evaluate success. Recipients define objectives in your MFP Work Plan’s evaluation plan.",
+            "hint": "Report progress for each objective",
             "isRequired": true,
             "verbiage": {
               "intro": {
