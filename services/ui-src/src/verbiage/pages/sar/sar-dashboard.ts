@@ -24,6 +24,6 @@ export default {
   alertBanner: {
     title:
       "You must have an approved MFP Work Plan not previously used in a MFP Semi-Annual Progress Report (SAR) in order to add a new MFP SAR",
-    body: "Enter your Work Plan by selecting <i>Return home</i> above.",
+    body: 'Access your MFP Work Plan by selecting "Return home" above.',
   },
 };

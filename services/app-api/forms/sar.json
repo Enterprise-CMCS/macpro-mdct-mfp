@@ -180,8 +180,7 @@
               "subsection": "Number of people who signed an MFP informed consent form in the reporting period",
               "hint": [
                 {
-                  "type": "text",
-                  "as": "span",
+                  "type": "html",
                   "content": "In this section, provide information for the specified period. For more information see the "
                 },
                 {

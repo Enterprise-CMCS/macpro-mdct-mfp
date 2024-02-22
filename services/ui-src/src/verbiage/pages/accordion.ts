@@ -112,47 +112,34 @@ export default {
       intro: [
         {
           type: "text",
-          as: "header",
-          content: "<strong>State or Territory User Instructions<strong>",
+          as: "span",
+          content: "<b>State or Territory User instructions</b>",
         },
         {
           type: "text",
           as: "span",
           content:
-            "<br>This reporting tool is to be used by grantees for reporting of MFP program data. The information provided in this report will allow CMS to monitor grantee progress and identify challenges and improvement opportunities. For additional guidance on completing this form, please see the associated ",
+            "<br><br>Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
         },
         {
           type: "externalLink",
-          content: "User Guide",
+          content: "User Guide and Help File",
           props: {
-            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)", // TO-DO: currently placeholder, replace when correct link available
+            href: "https://www.google.com",
             target: "_blank",
-            "aria-label": "User Guide (Link opens in new tab)",
+            "aria-label": "User Guide and Help File (Link opens in new tab)",
           },
         },
         {
           type: "text",
           as: "span",
-          content: " and ",
-        },
-        {
-          type: "externalLink",
-          content: "Help File",
-          props: {
-            href: "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)", // TO-DO: currently placeholder, replace when correct link available
-            target: "_blank",
-            "aria-label": "Help File (Link opens in new tab)",
-          },
+          content:
+            ". If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates including the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
         },
         {
           type: "text",
           as: "span",
-          content: ".<br>",
-        },
-        {
-          type: "text",
-          as: "span",
-          content: "<br><strong>Admin Instructions</strong>",
+          content: "<br><br><b>Admin instructions</b>",
         },
       ],
       list: [
@@ -190,17 +177,6 @@ export default {
           as: "span",
           content:
             ". If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates including the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
-        },
-        {
-          type: "text",
-          as: "span",
-          content: "<br><br><b>Admin instructions</b>",
-        },
-        {
-          type: "text",
-          as: "span",
-          content:
-            "<ul><li>To allow a state to make corrections or edits to a submission use “Unlock” to release the submission. The status will change to “In revision”.<li>Submission count is shown in the # column. Submissions started and submitted once have a count of 1. When a state resubmits a previous submission, the count increases by 1.<li>To archive a submission and hide it from a state’s dashboard, use “Archive”.</ul>",
         },
       ],
       list: [],
