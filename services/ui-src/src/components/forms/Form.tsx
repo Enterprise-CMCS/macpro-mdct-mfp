@@ -56,6 +56,11 @@ export const Form = ({
 
   const reportWithSubmittedStatus = reportStatus === ReportStatus.SUBMITTED;
 
+  // For the SAR RE&T sections, display an alert if the MFP WP does not contain any target populations
+  const displayRetError =
+    report?.populations?.length === 0 &&
+    location.pathname.startsWith("/sar/recruitment-enrollment-transitions");
+
   /**
    * edit report modal should always be view only admins
    * edit report modal should be view only for state users after SAR submission
@@ -97,18 +102,6 @@ export const Form = ({
 
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
-    // For the SAR RE&T sections, display an alert if the MFP WP does not contain any target populations
-    if (
-      report?.populations?.length === 0 &&
-      location.pathname.startsWith("/sar/recruitment-enrollment-transitions")
-    ) {
-      return (
-        <Text sx={sx.retAlert}>
-          Your associated MFP Work Plan does not contain any target populations.
-        </Text>
-      );
-    }
-
     const fieldsToRender = hydrateFormFields(
       updateRenderFields(report!, fields),
       formData
@@ -184,7 +177,16 @@ export const Form = ({
         onSubmit={form.handleSubmit(onSubmit as any, onError || onErrorHandler)}
         {...props}
       >
-        <Box sx={sx}>{renderFormFields(fields)}</Box>
+        <Box sx={sx}>
+          {displayRetError ? (
+            <Text sx={sx.retAlert}>
+              Your associated MFP Work Plan does not contain any target
+              populations.
+            </Text>
+          ) : (
+            renderFormFields(fields)
+          )}
+        </Box>
         {children}
       </form>
     </FormProvider>
