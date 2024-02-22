@@ -186,9 +186,7 @@ export const ExportedModalDrawerReportSection = ({
     };
 
     const updateFooterRow = overflow
-      ? generateFootRow().filter(
-          (arr: any) => generateFootRow().indexOf(arr) <= 6
-        )
+      ? generateFootRow().filter((item, index) => index <= 6)
       : generateFootRow();
 
     const table = {
