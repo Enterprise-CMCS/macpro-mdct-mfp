@@ -114,14 +114,17 @@ const tableComponent = (
 
 describe("ExportedModalDrawerReportSection table", () => {
   test("renders correct twelve quarters in table", async () => {
-    const mock2024Q1Report = {...mockReportStore, report: {
-      ...mockReportStore.report,
-      reportPeriod: 1,
-      reportYear: 2024,
-    }}
+    const mock2024Q1Report = {
+      ...mockReportStore,
+      report: {
+        ...mockReportStore.report,
+        reportPeriod: 1,
+        reportYear: 2024,
+      },
+    };
     mockedUseStore.mockReturnValue(mock2024Q1Report);
     render(tableComponent);
-    
+
     // should display 12 quarters starting from 2024 Q1
     expect(screen.getByText("2024 Q1")).toBeVisible();
     expect(screen.getByText("2024 Q2")).toBeVisible();
