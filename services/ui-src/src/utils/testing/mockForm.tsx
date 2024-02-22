@@ -451,7 +451,7 @@ export const mockOverlayModalPageJson2 = {
       entityType: "initiative",
       hint: "Provide initiative description, including target populations and timeframe",
       isRequired: true,
-      name: "State- or Territory Specific Initiatives: I. Define initiative",
+      name: "State or Territory Specific Initiatives: I. Define initiative",
       pageType: "entityOverlay",
       path: "/wp/state-and-territory-specific-initiatives/define-initiative",
       stepInfo: ["stepName", "hint"],
@@ -464,7 +464,7 @@ export const mockOverlayModalPageJson2 = {
       entityType: "initiative",
       hint: "Provide initiative description, including target populations and timeframe",
       isRequired: true,
-      name: "State- or Territory Specific Initiatives: I. Define initiative",
+      name: "State or Territory Specific Initiatives: I. Define initiative",
       pageType: "entityOverlay",
       path: "/wp/state-and-territory-specific-initiatives/define-initiative",
       stepInfo: ["stepName", "hint"],
@@ -556,7 +556,7 @@ export const mockDynamicModalOverlayReportPageJson = {
       dashboard: {
         verbiage: {
           intro: {
-            section: "State- or Territory-Specific Initiatives",
+            section: "State or Territory-Specific Initiatives",
             info: [
               {
                 type: "html",

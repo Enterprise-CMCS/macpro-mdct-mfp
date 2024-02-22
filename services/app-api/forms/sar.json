@@ -171,7 +171,7 @@
       },
       "children": [
         {
-          "name": "Number of people who signed an MFP informed consent form in the ",
+          "name": "Number of people who signed an MFP informed consent form in the reporting period",
           "path": "/sar/recruitment-enrollment-transitions/number-of-people-signed-informed-consent-form",
           "pageType": "standard",
           "verbiage": {
@@ -190,7 +190,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-psmicf",
@@ -226,7 +226,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals and transition targets from your associated MFP Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals and transition targets from your associated MFP Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mtrp",
@@ -284,7 +284,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mtfqi",
@@ -387,7 +387,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mtfqr",
@@ -475,7 +475,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-tnamprp",
@@ -511,7 +511,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-nmpcprp",
@@ -547,7 +547,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-npremrp",
@@ -583,7 +583,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mpdprp",
@@ -654,25 +654,6 @@
                             "nested": true,
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
-                          },
-                          "transformation": {
-                            "rule": "targetPopulations"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "id": "2Vfpwkq10cDgpGxiAkeZTIMC",
-                      "label": "Improved health",
-                      "children": [
-                        {
-                          "id": "ret-health-populations",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
                           },
                           "transformation": {
                             "rule": "targetPopulations"
@@ -773,7 +754,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-hcbs",
@@ -913,7 +894,7 @@
       ]
     },
     {
-      "name": "State- or Territory-Specific Initiatives",
+      "name": "State or Territory-Specific Initiatives",
       "path": "/sar/state-or-territory-specific-initiatives",
       "pageType": "dynamicModalOverlay",
       "entityType": "initiative",
@@ -921,7 +902,7 @@
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "State- or Territory-Specific Initiatives"
+          "subsection": "State or Territory-Specific Initiatives"
         },
         "accordion": {
           "buttonLabel": "Instructions",
@@ -968,7 +949,7 @@
           "name": "Intitiative Details Dashboard",
           "verbiage": {
             "intro": {
-              "section": "State- or Territory-Specific Initiatives",
+              "section": "State or Territory-Specific Initiatives",
               "info": [
                 {
                   "type": "span",
@@ -1040,7 +1021,7 @@
               "readOnlyEntityDetailsButtonText": "View",
               "readOnlyEntityButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report the objectives progress.",
-              "reviewPdfHint": "To view totals and percent target achieved, Save & close, click <i>Review PDF</i> button and it will open a summary in a new tab.",
+              "reviewPdfHint": "To view totals and percent target achieved, Save & close, click \"Review PDF\" button and it will open a summary in a new tab.",
               "entityUnfinishedMessage": "Report objective progress to complete this section"
             },
             "transformation": {
@@ -1111,7 +1092,7 @@
             "isRequired": true,
             "verbiage": {
               "intro": {
-                "section": "State- or Territory-Specific Initiatives",
+                "section": "State or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "html",
@@ -1127,7 +1108,7 @@
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report the overall progress.",
-              "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+              "reviewPdfHint": "To view totals against targets from your Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
             },
             "form": {
               "id": "stsiip",
@@ -1181,7 +1162,7 @@
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report expenditures.",
-              "reviewPdfHint": "To view totals against targets from your Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+              "reviewPdfHint": "To view totals against targets from your Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
             },
             "form": {
               "id": "stsie",
