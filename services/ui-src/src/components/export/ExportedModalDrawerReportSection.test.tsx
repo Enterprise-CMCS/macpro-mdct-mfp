@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { useStore } from "utils";
 import {
@@ -13,7 +13,6 @@ import {
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-mockedUseStore.mockReturnValue(mockReportStore);
 
 const defaultMockProps = {
   section: {
@@ -107,8 +106,50 @@ const testComponent = (
   </RouterWrappedComponent>
 );
 
+const tableComponent = (
+  <RouterWrappedComponent>
+    <ExportedModalDrawerReportSection {...defaultMockProps} />
+  </RouterWrappedComponent>
+);
+
+describe("ExportedModalDrawerReportSection table", () => {
+  test("renders correct twelve quarters in table", async () => {
+    const mock2024Q1Report = {...mockReportStore, report: {
+      ...mockReportStore.report,
+      reportPeriod: 1,
+      reportYear: 2024,
+    }}
+    mockedUseStore.mockReturnValue(mock2024Q1Report);
+    render(tableComponent);
+    
+    // should display 12 quarters starting from 2024 Q1
+    expect(screen.getByText("2024 Q1")).toBeVisible();
+    expect(screen.getByText("2024 Q2")).toBeVisible();
+    expect(screen.getByText("2024 Q3")).toBeVisible();
+    expect(screen.getByText("2024 Q4")).toBeVisible();
+    expect(screen.getByText("2025 Q1")).toBeVisible();
+    expect(screen.getByText("2025 Q2")).toBeVisible();
+    expect(screen.getByText("2025 Q3")).toBeVisible();
+    expect(screen.getByText("2025 Q4")).toBeVisible();
+    expect(screen.getByText("2026 Q1")).toBeVisible();
+    expect(screen.getByText("2026 Q2")).toBeVisible();
+    expect(screen.getByText("2026 Q3")).toBeVisible();
+    expect(screen.getByText("2026 Q4")).toBeVisible();
+
+    // should not display quarters before or after those 12
+    expect(screen.queryByText("2023 Q3")).not.toBeInTheDocument();
+    expect(screen.queryByText("2023 Q4")).not.toBeInTheDocument();
+    expect(screen.queryByText("2027 Q1")).not.toBeInTheDocument();
+    expect(screen.queryByText("2027 Q2")).not.toBeInTheDocument();
+
+    // renders "Not answered" for each quarter given no entity data
+    expect(screen.queryAllByText("Not answered").length).toBe(12);
+  });
+});
+
 describe("ExportedModalDrawerReportSection", () => {
   test("should not have basic accessibility issues", async () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
     const { container } = render(testComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
