@@ -151,9 +151,13 @@ export const dropdown = () =>
 
 // CHECKBOX
 export const checkboxSchema = () =>
-  array().of(object({ key: text(), value: text() })).required(error.REQUIRED_GENERIC);
+  array()
+    .of(object({ key: text(), value: text() }))
+    .required(error.REQUIRED_GENERIC);
 export const checkbox = () =>
-  checkboxSchema().min(1, error.REQUIRED_GENERIC).required(error.REQUIRED_GENERIC);
+  checkboxSchema()
+    .min(1, error.REQUIRED_GENERIC)
+    .required(error.REQUIRED_GENERIC);
 export const checkboxOptional = () =>
   checkboxSchema().min(0, error.REQUIRED_GENERIC).notRequired().nullable();
 export const checkboxSingle = () => boolean();
