@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import { object as yupSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 // components
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 // utils
 import {
   compileValidationJsonFromFields,
@@ -97,6 +97,18 @@ export const Form = ({
 
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
+    // For the SAR RE&T sections, display an alert if the MFP WP does not contain any target populations
+    if (
+      report?.populations?.length === 0 &&
+      location.pathname.startsWith("/sar/recruitment-enrollment-transitions")
+    ) {
+      return (
+        <Text sx={sx.retAlert}>
+          Your associated MFP Work Plan does not contain any target populations.
+        </Text>
+      );
+    }
+
     const fieldsToRender = hydrateFormFields(
       updateRenderFields(report!, fields),
       formData
@@ -244,5 +256,10 @@ const sx = {
   // optional text
   ".optional-text": {
     fontWeight: "lighter",
+  },
+  // RE&T warning message
+  retAlert: {
+    color: "palette.error",
+    paddingTop: "1rem",
   },
 };
