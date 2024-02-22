@@ -150,13 +150,12 @@ export const dropdown = () =>
   object({ label: text(), value: text() }).required(error.REQUIRED_GENERIC);
 
 // CHECKBOX
+export const checkboxSchema = () =>
+  array().of(object({ key: text(), value: text() })).required(error.REQUIRED_GENERIC);
 export const checkbox = () =>
-  array()
-    .min(1, error.REQUIRED_CHECKBOX)
-    .of(object({ key: text(), value: text() }))
-    .required(error.REQUIRED_CHECKBOX);
+  checkboxSchema().min(1, error.REQUIRED_GENERIC).required(error.REQUIRED_GENERIC);
 export const checkboxOptional = () =>
-  array().notRequired().typeError(error.INVALID_GENERIC);
+  checkboxSchema().min(0, error.REQUIRED_GENERIC).notRequired().nullable();
 export const checkboxSingle = () => boolean();
 
 // RADIO

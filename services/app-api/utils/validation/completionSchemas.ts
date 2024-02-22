@@ -197,12 +197,12 @@ export const dropdown = () =>
   );
 
 // CHECKBOX
+export const checkboxSchema = () =>
+  array().of(object({ key: textSchema(), value: textSchema() })).required(error.REQUIRED_CHECKBOX);
 export const checkbox = () =>
-  array()
-    .min(1, error.REQUIRED_CHECKBOX)
-    .of(object({ key: textSchema(), value: textSchema() }))
-    .required(error.REQUIRED_CHECKBOX);
-export const checkboxOptional = () => checkbox().notRequired();
+  checkboxSchema().min(1, error.REQUIRED_GENERIC).required(error.REQUIRED_GENERIC);
+export const checkboxOptional = () =>
+  checkboxSchema().min(0, error.REQUIRED_GENERIC).notRequired().nullable();
 export const checkboxSingle = () => boolean();
 
 // RADIO
