@@ -69,7 +69,7 @@ const defaultMockProps = {
     verbiage: {
       intro: {
         section: "",
-        subsection: "State- or Territory-Specific Initiatives",
+        subsection: "State or Territory-Specific Initiatives",
         info: [
           {
             type: "html",

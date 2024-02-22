@@ -1,5 +1,8 @@
 import { mapValidationTypesToSchema } from "./validation";
 import * as schema from "./schemas";
+import { FormJson, isFieldElement } from "types";
+import { compileValidationJsonFromFields } from "utils/reports/reports";
+import * as yup from "yup";
 
 const mockStandardValidationType = {
   key: "text",
@@ -74,5 +77,121 @@ describe("Test mapValidationTypesToSchema", () => {
         ),
       })
     );
+  });
+});
+
+describe("Full nested validation tests, formJson through to data", () => {
+  const petForm: FormJson = {
+    id: "mock-form-id",
+    fields: [
+      {
+        id: "hasPets",
+        type: "radio",
+        validation: "radio",
+        props: {
+          label: "Do you have any pets?",
+          choices: [
+            {
+              id: "123",
+              label: "No",
+            },
+            {
+              id: "456",
+              label: "Yes",
+              children: [
+                {
+                  id: "hasPets_howMany",
+                  props: {
+                    label: "How many pets?",
+                  },
+                  type: "number",
+                  validation: {
+                    type: "number",
+                    parentFieldName: "hasPets",
+                    parentOptionId: "456",
+                    nested: true,
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ],
+  };
+  let petSchema: any; // this type is heckin' complicated
+
+  beforeAll(() => {
+    const petFields = petForm.fields.filter(isFieldElement);
+    const validationJson = compileValidationJsonFromFields(petFields);
+
+    expect(validationJson).toEqual({
+      hasPets: "radio",
+      hasPets_howMany: {
+        nested: true,
+        parentFieldName: "hasPets",
+        parentOptionId: "456",
+        type: "number",
+      },
+    });
+
+    const fieldsSchema = mapValidationTypesToSchema(validationJson);
+    petSchema = yup.object(fieldsSchema);
+  });
+
+  it("Makes nested fields optional if parent option is not selected", () => {
+    const petReport = {
+      hasPets: [
+        {
+          key: "hasPets-123",
+          value: "No",
+        },
+      ],
+      // That's fine.
+    };
+
+    expect(() => petSchema.validateSync(petReport)).not.toThrow();
+  });
+
+  it("Makes nested fields required if parent option is selected", () => {
+    const petReport = {
+      hasPets: [
+        {
+          key: "hasPets-456",
+          value: "Yes",
+        },
+      ],
+      // Missing the hasPets_howMany field
+    };
+
+    expect(() => petSchema.validateSync(petReport)).toThrow();
+  });
+
+  it("Enforces nested field validation if parent option is selected", () => {
+    const petReport = {
+      hasPets: [
+        {
+          key: "hasPets-456",
+          value: "Yes",
+        },
+      ],
+      hasPets_howMany: "who are you, the pet police?", // This is not a number.
+    };
+
+    expect(() => petSchema.validateSync(petReport)).toThrow();
+  });
+
+  it("Passes validation for correctly-completed nested fields", () => {
+    const petReport = {
+      hasPets: [
+        {
+          key: "hasPets-456",
+          value: "Yes",
+        },
+      ],
+      hasPets_howMany: "17", // That's, like, a lot of pets. Valid though.
+    };
+
+    expect(() => petSchema.validateSync(petReport)).not.toThrow();
   });
 });

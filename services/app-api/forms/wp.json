@@ -199,17 +199,17 @@
       }
     },
     {
-      "name": "State- or Territory Specific Initiatives",
+      "name": "State or Territory Specific Initiatives",
       "path": "/wp/state-and-territory-specific-initiatives",
       "children": [
         {
-          "name": "State- or Territory Specific Initiatives Instructions",
+          "name": "State or Territory Specific Initiatives Instructions",
           "path": "/wp/state-and-territory-specific-initiatives/instructions",
           "pageType": "standard",
           "verbiage": {
             "intro": {
               "section": "",
-              "subsection": "State- or Territory Specific Initiatives Instructions",
+              "subsection": "State or Territory Specific Initiatives Instructions",
               "spreadsheet": "",
               "info": [
                 {
@@ -669,7 +669,7 @@
           }
         },
         {
-          "name": "State- or Territory Specific Initiatives",
+          "name": "State or Territory Specific Initiatives",
           "path": "/wp/state-and-territory-specific-initiatives/initiatives",
           "pageType": "modalOverlay",
           "entityType": "initiative",
@@ -677,7 +677,7 @@
           "verbiage": {
             "intro": {
               "section": "",
-              "subsection": "State- or Territory-Specific Initiatives",
+              "subsection": "State or Territory-Specific Initiatives",
               "info": [
                 {
                   "type": "html",
@@ -823,7 +823,7 @@
             "name": "Intitiative Details Dashboard",
             "verbiage": {
               "intro": {
-                "section": "State- or Territory-Specific Initiatives",
+                "section": "State or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "span",
@@ -836,7 +836,7 @@
           },
           "entitySteps": [
             {
-              "name": "State- or Territory Specific Initiatives: I. Define initiative",
+              "name": "State or Territory Specific Initiatives: I. Define initiative",
               "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
               "pageType": "entityOverlay",
               "entityType": "initiative",
@@ -847,7 +847,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State- or Territory-Specific Initiatives: I. Define initiative",
+                  "section": "State or Territory-Specific Initiatives: I. Define initiative",
                   "info": [
                     {
                       "type": "html",
@@ -946,7 +946,7 @@
               }
             },
             {
-              "name": "State- or Territory-Specific Initiatives: II. Evaluation Plan",
+              "name": "State or Territory-Specific Initiatives: II. Evaluation Plan",
               "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
               "pageType": "overlayModal",
               "entityType": "initiative",
@@ -957,7 +957,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State- or Territory-Specific Initiatives: II. Evaluation Plan",
+                  "section": "State or Territory-Specific Initiatives: II. Evaluation Plan",
                   "info": [
                     {
                       "type": "html",
@@ -1091,7 +1091,7 @@
               }
             },
             {
-              "name": "State-or Territory-Specific Initiatives: III. Funding sources",
+              "name": "State or Territory-Specific Initiatives: III. Funding sources",
               "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
               "pageType": "overlayModal",
               "entityType": "initiative",
@@ -1102,7 +1102,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State- or Territory-Specific Initiatives: III. Funding sources",
+                  "section": "State or Territory-Specific Initiatives: III. Funding sources",
                   "info": [
                     {
                       "type": "html",
@@ -1197,7 +1197,7 @@
               }
             },
             {
-              "name": "State- or Territory-Specific Initiatives: IV. Initiative close-out information",
+              "name": "State or Territory-Specific Initiatives: IV. Initiative close-out information",
               "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
               "pageType": "entityOverlay",
               "entityType": "initiative",
@@ -1208,7 +1208,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State- or Territory-Specific Initiatives: IV. Initiative close-out information",
+                  "section": "State or Territory-Specific Initiatives: IV. Initiative close-out information",
                   "hint": "Complete the section below for initiatives with an end date during the upcoming semi-annual reporting period."
                 },
                 "closeOutWarning": {

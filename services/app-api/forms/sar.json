@@ -262,7 +262,7 @@
                 }
               ]
             },
-            "reviewPdfHint": "To view totals and transition targets from your associated MFP Work Plan, click <i>Review PDF</i> and it will open a summary in a new tab."
+            "reviewPdfHint": "To view totals and transition targets from your associated MFP Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
           },
           "form": {
             "id": "ret-mtrp",
@@ -806,25 +806,6 @@
                       ]
                     },
                     {
-                      "id": "2Vfpwkq10cDgpGxiAkeZTIMC",
-                      "label": "Improved health",
-                      "children": [
-                        {
-                          "id": "ret-health-populations",
-                          "type": "number",
-                          "validation": {
-                            "type": "number",
-                            "nested": true,
-                            "parentFieldName": "ret_otherReasons",
-                            "parentOptionId": "2Vfpwkq10cDgpGxiAkeZTIMC"
-                          },
-                          "transformation": {
-                            "rule": "targetPopulations"
-                          }
-                        }
-                      ]
-                    },
-                    {
                       "id": "2VfqAGi1lgxX3uXc98cl6q4u",
                       "label": "Incarceration",
                       "children": [
@@ -1075,7 +1056,7 @@
       ]
     },
     {
-      "name": "State- or Territory-Specific Initiatives",
+      "name": "State or Territory-Specific Initiatives",
       "path": "/sar/state-or-territory-specific-initiatives",
       "pageType": "dynamicModalOverlay",
       "entityType": "initiative",
@@ -1083,7 +1064,7 @@
       "verbiage": {
         "intro": {
           "section": "",
-          "subsection": "State- or Territory-Specific Initiatives"
+          "subsection": "State or Territory-Specific Initiatives"
         },
         "accordion": {
           "buttonLabel": "Instructions",
@@ -1122,7 +1103,7 @@
           "name": "Intitiative Details Dashboard",
           "verbiage": {
             "intro": {
-              "section": "State- or Territory-Specific Initiatives",
+              "section": "State or Territory-Specific Initiatives",
               "info": [
                 {
                   "type": "span",
@@ -1194,7 +1175,7 @@
               "readOnlyEntityDetailsButtonText": "View",
               "readOnlyEntityButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report the objectives progress.",
-              "reviewPdfHint": "To view totals and percent target achieved, “Save”, click “Review PDF” button and it will open a summary in a new tab.",
+              "reviewPdfHint": "To view totals and percent target achieved, Save & close, click \"Review PDF\" button and it will open a summary in a new tab.",
               "entityUnfinishedMessage": "Report objective progress to complete this section"
             },
             "transformation": {
@@ -1265,7 +1246,7 @@
             "isRequired": true,
             "verbiage": {
               "intro": {
-                "section": "State- or Territory-Specific Initiatives",
+                "section": "State or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "html",
@@ -1277,7 +1258,7 @@
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report the overall progress.",
-              "reviewPdfHint": "To view totals against targets from your associated MFP Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
+              "reviewPdfHint": "To view totals against targets from your Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
             },
             "form": {
               "id": "stsiip",
@@ -1332,7 +1313,7 @@
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report expenditures.",
-              "reviewPdfHint": "To view totals against targets from your associated MFP Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
+              "reviewPdfHint": "To view totals against targets from your Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
             },
             "form": {
               "id": "stsie",
