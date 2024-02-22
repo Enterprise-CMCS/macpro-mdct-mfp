@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, FC } from "react";
 import { sanitize } from "dompurify";
 import parse from "html-react-parser";
 // components
@@ -59,6 +59,7 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
         as,
         ...props,
       };
+
       if (type === "html") {
         // sanitize and parse html
         content = sanitizeAndParseHtml(content);
@@ -66,7 +67,10 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
         delete elementProps.as;
         return React.createElement(elementType, elementProps, content);
       }
-      return createElementWithChildren(element);
+      if (type === "ul" || type === "ol") {
+        return createElementWithChildren(element);
+      }
+      return;
     });
   }
 };
@@ -81,7 +85,7 @@ export function createElementWithChildren(
   element: CustomHtmlElement
 ): ReactElement {
   const { type, content, as, props } = element;
-  const elementType: string = customElementMap[type] || type;
+  const elementType: string | FC = customElementMap[type] || type;
   const elementProps = {
     key: type + uuid(),
     as,
