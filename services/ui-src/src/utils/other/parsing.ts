@@ -1,4 +1,4 @@
-import React, { ReactElement, FC } from "react";
+import React, { ReactElement } from "react";
 import { sanitize } from "dompurify";
 import parse from "html-react-parser";
 // components
@@ -85,7 +85,7 @@ export function createElementWithChildren(
   element: CustomHtmlElement
 ): ReactElement {
   const { type, content, as, props } = element;
-  const elementType: string | FC = customElementMap[type] || type;
+  const elementType: string = customElementMap[type] || type;
   const elementProps = {
     key: type + uuid(),
     as,
