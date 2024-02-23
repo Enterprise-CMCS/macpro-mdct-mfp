@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cd ../../ && ./dev local && cd -",
-    "test:ci": "cypress install && cypress run --browser chrome --headless",
     "cypress": "cypress open",
-    "test": "concurrently --kill-others \"yarn start\" \"yarn cypress\""
+    "test": "concurrently --kill-others \"yarn start\" \"yarn cypress\"",
+    "test:ci": "cypress install && cypress run --browser chrome --headless"
   },
   "author": "",
   "license": "ISC",
