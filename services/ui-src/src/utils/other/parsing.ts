@@ -59,19 +59,14 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
         as,
         ...props,
       };
-      if (type === "ul" || type === "ol") {
-        return createElementWithChildren(element);
-      }
-
-      if (elementType) {
+      if (type === "html") {
         // sanitize and parse html
         content = sanitizeAndParseHtml(content);
         // delete 'as' prop since React.Fragment can't accept it
         delete elementProps.as;
         return React.createElement(elementType, elementProps, content);
       }
-
-      return;
+      return createElementWithChildren(element);
     });
   }
 };
