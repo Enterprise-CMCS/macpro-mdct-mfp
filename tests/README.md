@@ -32,6 +32,7 @@ There are two primary syntaxes for writing tests for Cypress.
   - VS Code plugins available, [Cucumber (Gherkin) Full Support](https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete) recommended
 
 Relevant Documentation
+
 - [Cypress Documentation](https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests#What-you-ll-learn)
 - [Cucumber Preprocessor Documentation](https://github.com/badeball/cypress-cucumber-preprocessor/blob/master/docs/readme.md)
 - [Gherkin Documentation](https://cucumber.io/docs/gherkin/reference/)
