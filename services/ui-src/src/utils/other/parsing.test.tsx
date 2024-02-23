@@ -12,7 +12,6 @@ const mockHtmlString = "<span><em>whatever</em></span>";
 const testElementArray = [
   {
     type: "text",
-    as: "span",
     content: "Mock text ",
   },
   {
@@ -24,7 +23,6 @@ const testElementArray = [
   },
   {
     type: "text",
-    as: "span",
     content: ".",
   },
   {
@@ -40,6 +38,31 @@ const testElementArray = [
 const mockElementsWithChildren: CustomHtmlElement[] = [
   {
     type: "ul",
+    content: "",
+    props: {
+      "data-test-id": "foo",
+    },
+    children: [
+      {
+        type: "li",
+        content: "",
+        props: {
+          "data-test-id": "bar",
+        },
+        children: [
+          {
+            type: "span",
+            content: "Foo",
+            props: {
+              "data-test-id": "biz",
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    type: "ol",
     content: "",
     props: {
       "data-test-id": "foo",
@@ -102,9 +125,17 @@ describe("Test labelTextWithOptional", () => {
 });
 
 describe("Test createElementWithChildren", () => {
-  test("should correctly create nested elements", async () => {
+  test("should correctly create ul elements", async () => {
     const { container } = render(testComponentWithChildren);
     expect(await container.querySelector("ul")).toBeVisible();
+    expect(await container.querySelector('[data-test-id="foo"]')).toBeVisible();
+    expect(await container.querySelector('[data-test-id="bar"]')).toBeVisible();
+    expect(await container.querySelector('[data-test-id="biz"]')).toBeVisible();
+  });
+
+  test("should correctly create ol elements", async () => {
+    const { container } = render(testComponentWithChildren);
+    expect(await container.querySelector("ol")).toBeVisible();
     expect(await container.querySelector('[data-test-id="foo"]')).toBeVisible();
     expect(await container.querySelector('[data-test-id="bar"]')).toBeVisible();
     expect(await container.querySelector('[data-test-id="biz"]')).toBeVisible();
