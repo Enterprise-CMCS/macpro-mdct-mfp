@@ -1094,7 +1094,7 @@
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
-        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. Note: Initiative topics with * are required initiatives. <br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period. <br><br> For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide home and community-based services (HCBS) instead of services in institutional settings. <br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work Plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
+        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. Note: Initiative topics with <span aria-label='asterisk'>*</span> are required initiatives.<br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period.<br><br>For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide home and community-based services (HCBS) instead of services in institutional settings.<br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work Plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
         "tableHeader": "Initiative name <br/> MFP Work Plan topic",
         "countEntitiesInTitle": false
       },
@@ -1302,7 +1302,7 @@
             "isRequired": true,
             "verbiage": {
               "intro": {
-                "section": "State- or Territory-Specific Initiatives",
+                "section": "State or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "html",
