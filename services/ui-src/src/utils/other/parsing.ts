@@ -60,11 +60,7 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
         ...props,
       };
 
-      if (type === "ul" || type === "ol") {
-        return createElementWithChildren(element);
-      }
-
-      if (elementType) {
+      if (type === "html") {
         // sanitize and parse html
         content = sanitizeAndParseHtml(content);
         // delete 'as' prop since React.Fragment can't accept it
@@ -72,7 +68,7 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
         return React.createElement(elementType, elementProps, content);
       }
 
-      return;
+      return createElementWithChildren(element);
     });
   }
 };
@@ -101,6 +97,15 @@ export function createElementWithChildren(
     );
   }
   const santizedContent = sanitizeAndParseHtml(content);
+
+  if (elementType === undefined) {
+    return React.createElement(
+      customElementMap["text"],
+      elementProps,
+      santizedContent
+    );
+  }
+
   return React.createElement(elementType, elementProps, santizedContent);
 }
 

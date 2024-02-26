@@ -37,13 +37,6 @@ const testElementArray = [
   },
 ];
 
-const notAnElementType = [
-  {
-    type: "",
-    content: mockHtmlString,
-  },
-];
-
 const mockElementsWithChildren: CustomHtmlElement[] = [
   {
     type: "ul",
@@ -98,9 +91,7 @@ const mockElementsWithChildren: CustomHtmlElement[] = [
 ];
 
 const testComponent = <div>{parseCustomHtml(testElementArray)}</div>;
-const testComponentNotAnElementType = (
-  <div>{parseCustomHtml(notAnElementType)}</div>
-);
+
 const testComponentWithChildren = (
   <div>{parseCustomHtml(mockElementsWithChildren)}</div>
 );
@@ -122,16 +113,6 @@ describe("Test parseCustomHtml", () => {
 
   test("Type 'html' is sanitized and parsed", () => {
     expect(sanitizationSpy).toHaveBeenCalled();
-  });
-});
-
-describe("Not part of element type array", () => {
-  const sanitizationSpy = jest.spyOn(DOMPurify, "sanitize");
-  beforeEach(() => {
-    render(testComponentNotAnElementType);
-  });
-  test("Not an element type", () => {
-    expect(sanitizationSpy).toHaveErrorMessage;
   });
 });
 
