@@ -417,7 +417,7 @@ describe("transformFormTemplate", () => {
     expect(fields).toHaveLength(6);
   });
 
-  it("should generate quantiative quarters (in objectives progress) from wp", () => {
+  it("should generate quantitative quarters (in objectives progress) from wp", () => {
     const formTemplate = {
       routes: [
         {
