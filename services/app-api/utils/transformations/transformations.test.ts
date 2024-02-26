@@ -417,6 +417,84 @@ describe("transformFormTemplate", () => {
     expect(fields).toHaveLength(6);
   });
 
+  it("should generate quantitative quarters (in objectives progress) from wp", () => {
+    const formTemplate = {
+      routes: [
+        {
+          pageType: "dynamicModalOverlay",
+          entityType: "",
+          entityInfo: [],
+          verbiage: {} as ModalOverlayReportPageVerbiage,
+          initiatives: [],
+          name: "",
+          path: "",
+          template: {
+            entitySteps: [
+              {
+                stepType: "objectiveProgress",
+                objectiveCardTemplate: {
+                  modalForm: {
+                    fields: [
+                      {
+                        id: "field1",
+                        type: "text",
+                        transformation: {
+                          rule: "quantitativeQuarters",
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        } as DynamicModalOverlayReportPageShape,
+      ],
+    } as ReportJson;
+    const fieldData = {
+      initiative: [
+        {
+          id: "mock-initiative-id",
+          initiative_name: "mock-initiative-name",
+          initiative_wpTopic: [
+            {
+              key: "mock-initiative-wp-topic-key",
+              value: "mock-initiative-wp-topic",
+            },
+          ],
+          evaluationPlan: [
+            {
+              id: "epA",
+              objectiveProgress_additionalDetails: "2",
+              objectiveProgress_description: "2",
+              evaluationPlan_includesTargets: [
+                {
+                  key: "evaluationPlan_includesTargets-a",
+                  value: "Yes",
+                },
+              ],
+              objectiveProgress_objectiveName: "w",
+              objectiveProgress_targets: "3",
+              objectiveTargets_projections_2024Q1: "1",
+              objectiveTargets_projections_2024Q2: "2",
+            },
+          ],
+          fundingSources: [],
+        },
+      ],
+    };
+
+    const reportPeriod = 1;
+    const reportYear = 2023;
+
+    transformFormTemplate(formTemplate, reportPeriod, reportYear, fieldData);
+
+    const fields =
+      formTemplate.routes[0]?.initiatives?.[0].entitySteps[0]
+        .objectiveCards?.[0].modalForm?.fields;
+    expect(fields).toHaveLength(6);
+  });
+
   it("should throw for unrecognized transformations", () => {
     const formTemplate = {
       routes: [
