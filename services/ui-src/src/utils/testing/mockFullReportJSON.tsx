@@ -698,7 +698,7 @@ export const mockFullReportJSON: ReportJson = {
             readOnlyEntityDetailsButtonText: "View",
             dashboardTitle: "Initative total count",
             countEntitiesInTitle: true,
-            tableHeader: "Initaitve name <br/> MFP Work Plan topic",
+            tableHeader: "Initiative name <br/> MFP Work Plan topic",
             addEditModalHint:
               "Provide the name of one initiative. You will be then be asked to complete details for this initiative including description, evaluation plan and funding sources.",
             emptyDashboardText: "Empty",
