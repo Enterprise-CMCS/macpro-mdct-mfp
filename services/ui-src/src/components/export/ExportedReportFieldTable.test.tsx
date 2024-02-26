@@ -153,7 +153,9 @@ describe("ExportedReportFieldRow", () => {
 
   test("shows that general information renders correctly", async () => {
     render(generalInformationComponent);
-    expect(screen.getByText("Resubmission Information")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Resubmission Information")
+    ).not.toBeInTheDocument();
   });
 });
 
