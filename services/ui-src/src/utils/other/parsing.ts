@@ -22,7 +22,7 @@ import {
 import { CustomHtmlElement } from "types";
 import uuid from "react-uuid";
 
-const customElementMap: any = {
+export const customElementMap: any = {
   externalLink: Link,
   internalLink: RouterLink,
   text: Text,

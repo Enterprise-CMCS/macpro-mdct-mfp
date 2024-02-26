@@ -37,6 +37,58 @@ const testElementArray = [
   },
 ];
 
+const undefinedElement: any = [
+  {
+    type: "ul",
+    content: "",
+    props: {
+      "data-test-id": "foo",
+    },
+    children: [
+      {
+        type: "li",
+        content: "",
+        props: {
+          "data-test-id": "bar",
+        },
+        children: [
+          {
+            type: "span",
+            content: "Foo",
+            props: {
+              "data-test-id": "biz",
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    type: "ol",
+    content: "",
+    props: {
+      "data-test-id": "foo",
+    },
+    children: [
+      {
+        type: "li",
+        content: "",
+        props: {
+          "data-test-id": "bar",
+        },
+        children: [
+          {
+            content: "Undefined element",
+            props: {
+              "data-test-id": "biz",
+            },
+          },
+        ],
+      },
+    ],
+  },
+];
+
 const mockElementsWithChildren: CustomHtmlElement[] = [
   {
     type: "ul",
@@ -95,6 +147,9 @@ const testComponent = <div>{parseCustomHtml(testElementArray)}</div>;
 const testComponentWithChildren = (
   <div>{parseCustomHtml(mockElementsWithChildren)}</div>
 );
+
+const undefinedTypeComponent = <div>{parseCustomHtml(undefinedElement)}</div>;
+
 describe("Test parseCustomHtml", () => {
   const sanitizationSpy = jest.spyOn(DOMPurify, "sanitize");
   beforeEach(() => {
@@ -113,6 +168,17 @@ describe("Test parseCustomHtml", () => {
 
   test("Type 'html' is sanitized and parsed", () => {
     expect(sanitizationSpy).toHaveBeenCalled();
+  });
+});
+
+describe("Handling undefined elementType", () => {
+  beforeEach(() => {
+    render(undefinedTypeComponent);
+  });
+
+  test("Should handle and convert undefined element type to text", () => {
+    const element = screen.getByText("Undefined element");
+    expect(element).toBeVisible();
   });
 });
 
