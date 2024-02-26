@@ -174,6 +174,9 @@ export const AddEditOverlayEntityModal = ({
     return title;
   };
 
+  const objectiveProgressWithTargets =
+    selectedEntity?.objectiveProgress_includesTargets?.[0]?.value === "Yes";
+
   return (
     <Modal
       data-testid="add-edit-entity-modal"
@@ -200,7 +203,9 @@ export const AddEditOverlayEntityModal = ({
         disabled={true}
         userDisabled={userDisabled}
       />
-      <Text sx={sx.bottomModalMessage}>{verbiage.addEditModalMessage}</Text>
+      {objectiveProgressWithTargets && (
+        <Text sx={sx.bottomModalMessage}>{verbiage.addEditModalMessage}</Text>
+      )}
     </Modal>
   );
 };
