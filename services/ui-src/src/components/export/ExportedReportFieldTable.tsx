@@ -74,14 +74,15 @@ export const renderGeneralInformation = (
 ) => {
   const { report } = useStore() ?? {};
 
-  // check if this was not a resubmission
-  const notResubmission =
-    (report?.reportType === "SAR" && !report?.submissionCount) ||
+  // check if this was a resubmission
+  const isResubmission =
+    (report?.reportType === "SAR" && report?.submissionCount) ||
     (report?.status === ReportStatus.SUBMITTED &&
-      report?.submissionCount! === 1 &&
+      report?.submissionCount! > 1 &&
       report.locked);
 
   const headings = verbiage.generalInformationTable.headings;
+
   // get the range of form fields for a particular section
   const getSectionFormFields = (
     heading: number,
@@ -111,8 +112,8 @@ export const renderGeneralInformation = (
   return headings.map((heading: string, idx: number) => {
     return (
       <Box key={idx}>
-        {!notResubmission ||
-        (notResubmission && heading != "Resubmission Information") ? (
+        {isResubmission ||
+        (!isResubmission && heading != "Resubmission Information") ? (
           <>
             <Heading as="h3" sx={sx.heading}>
               {heading}
