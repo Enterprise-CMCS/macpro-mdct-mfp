@@ -52,7 +52,7 @@ export const ReportPageIntro = ({
       <Heading as="h1" sx={sx.largeHeading}>
         {subsection}
       </Heading>
-      {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
+      {hint && <Box sx={sx.hintTextBox}>{parseCustomHtml(hint)}</Box>}
       {accordion && !OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
         <InstructionsAccordion verbiage={accordion} />
       )}

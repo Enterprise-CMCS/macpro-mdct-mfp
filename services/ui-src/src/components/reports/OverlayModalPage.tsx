@@ -6,6 +6,7 @@ import {
   Flex,
   Heading,
   Image,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -13,6 +14,7 @@ import {
   DeleteEntityModal,
   ReportPageIntro,
   EntityStepCard,
+  PrintButton,
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
@@ -20,7 +22,12 @@ import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // types
 import { EntityShape, OverlayModalPageShape, ReportType } from "types";
 // utils
-import { getFormattedEntityData, resetClearProp, useStore } from "utils";
+import {
+  getFormattedEntityData,
+  parseCustomHtml,
+  resetClearProp,
+  useStore,
+} from "utils";
 
 export const OverlayModalPage = ({
   closeEntityDetailsOverlay,
@@ -196,6 +203,14 @@ export const OverlayModalPage = ({
           }}
           userDisabled={userDisabled}
         />
+        {!!stepType && verbiage.reviewPdfHint && (
+          <Box>
+            <Text sx={sx.reviewPdfHint}>
+              {parseCustomHtml(verbiage.reviewPdfHint)}
+            </Text>
+            <PrintButton sxOverride={sx.reviewPdfButton} />
+          </Box>
+        )}
       </Box>
       <Box>
         <Flex sx={sx.buttonFlex}>
@@ -254,4 +269,10 @@ const sx = {
   saveButton: {
     width: "8.25rem",
   },
+  reviewPdfHint: {
+    paddingTop: "2rem",
+    paddingBottom: "2rem",
+    color: "palette.gray_medium",
+  },
+  reviewPdfButton: { marginBottom: "2rem" },
 };

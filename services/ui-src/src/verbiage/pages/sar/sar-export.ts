@@ -32,7 +32,7 @@ export default {
         response: "Response",
       },
       indicators: [
-        "Associated Work Plan",
+        "Associated MFP Work Plan",
         "Is this your state/territory's final MFP SAR for your period of performance in the MFP Demonstration?",
         "Select the target populations applicable to your state during this reporting period.",
       ],
