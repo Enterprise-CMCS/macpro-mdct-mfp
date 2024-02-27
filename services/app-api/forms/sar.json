@@ -179,7 +179,25 @@
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
               "subsection": "Number of people who signed an MFP informed consent form in the reporting period",
-              "hint": "In this section, provide information for the specified period.",
+              "hint": [
+                {
+                  "type": "html",
+                  "content": "In this section, provide information for the specified period. For more information see the "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "User Guide and Help File",
+                  "props": {
+                    "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+                    "target": "_blank",
+                    "aria-label": "User Guide and Help File (Link opens in new tab)"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "."
+                }
+              ],
               "info": [
                 {
                   "type": "h3",
@@ -215,7 +233,25 @@
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
               "subsection": "Number of MFP transitions in the reporting period",
-              "hint": "In this section, provide information for the specified period.",
+              "hint": [
+                {
+                  "type": "html",
+                  "content": "In this section, provide information for the specified period. For more information see the "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "User Guide and Help File",
+                  "props": {
+                    "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+                    "target": "_blank",
+                    "aria-label": "User Guide and Help File (Link opens in new tab)"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "."
+                }
+              ],
               "info": [
                 {
                   "type": "h3",
@@ -273,7 +309,25 @@
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
               "subsection": "Number of MFP transitions from qualified institutions",
-              "hint": "In this section, provide information for the specified period.",
+              "hint": [
+                {
+                  "type": "html",
+                  "content": "In this section, provide information for the specified period. For more information see the "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "User Guide and Help File",
+                  "props": {
+                    "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+                    "target": "_blank",
+                    "aria-label": "User Guide and Help File (Link opens in new tab)"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "."
+                }
+              ],
               "info": [
                 {
                   "type": "h3",
@@ -281,7 +335,7 @@
                 },
                 {
                   "type": "span",
-                  "content": "Of the total transitions reported in <i>Number of MFP transitions</i>, provide the number of transitions from each qualified inpatient facility type during the reporting period."
+                  "content": "Of the total transitions reported in \"Number of MFP transitions\", provide the number of transitions from each qualified inpatient facility type during the reporting period."
                 }
               ]
             },
@@ -376,7 +430,25 @@
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
               "subsection": "Number of MFP transitions to qualified residences",
-              "hint": "In this section, provide information for the specified period.",
+              "hint": [
+                {
+                  "type": "html",
+                  "content": "In this section, provide information for the specified period. For more information see the "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "User Guide and Help File",
+                  "props": {
+                    "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+                    "target": "_blank",
+                    "aria-label": "User Guide and Help File (Link opens in new tab)"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "."
+                }
+              ],
               "info": [
                 {
                   "type": "h3",
@@ -384,7 +456,7 @@
                 },
                 {
                   "type": "span",
-                  "content": "Of the total transitions reported in <i>Number of MFP transitions</i>, provide the number of transitions to each qualified residence type during the reporting period."
+                  "content": "Of the total transitions reported in \"Number of MFP transitions\", provide the number of transitions to each qualified residence type during the reporting period."
                 }
               ]
             },
@@ -464,7 +536,25 @@
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
               "subsection": "Total number of active MFP participants in the reporting period",
-              "hint": "In this section, provide information for the specified period.",
+              "hint": [
+                {
+                  "type": "html",
+                  "content": "In this section, provide information for the specified period. For more information see the "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "User Guide and Help File",
+                  "props": {
+                    "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+                    "target": "_blank",
+                    "aria-label": "User Guide and Help File (Link opens in new tab)"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "."
+                }
+              ],
               "info": [
                 {
                   "type": "h3",
@@ -472,7 +562,7 @@
                 },
                 {
                   "type": "span",
-                  "content": "Current MFP participants excludes individuals whose enrollment in the MFP Demonstration ended because they completed their 365 days of MFP eligibility, died before they exhausted their 365-day enrollment period, were institutionalized for 30 days or more and did not subsequently re-enroll in the MFP program, or otherwise disenrolled from the program."
+                  "content": "Active MFP participants excludes individuals whose enrollment in the MFP Demonstration ended because they completed their 365 days of MFP eligibility, died before they exhausted their 365-day enrollment period, were institutionalized for 30 days or more and did not subsequently re-enroll in the MFP program, or otherwise disenrolled from the program."
                 }
               ]
             },
@@ -500,7 +590,25 @@
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
               "subsection": "Number of MFP participants completing the program in the reporting period",
-              "hint": "In this section, provide information for the specified period.",
+              "hint": [
+                {
+                  "type": "html",
+                  "content": "In this section, provide information for the specified period. For more information see the "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "User Guide and Help File",
+                  "props": {
+                    "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+                    "target": "_blank",
+                    "aria-label": "User Guide and Help File (Link opens in new tab)"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "."
+                }
+              ],
               "info": [
                 {
                   "type": "h3",
@@ -508,7 +616,7 @@
                 },
                 {
                   "type": "span",
-                  "content": "Number of MFP participants who completed the 365-day enrollment period during the reporting period"
+                  "content": "Number of MFP participants who completed the 365-day enrollment period during the reporting period."
                 }
               ]
             },
@@ -536,7 +644,25 @@
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
               "subsection": "Number of people re-enrolled in MFP during the reporting period",
-              "hint": "In this section, provide information for the specified period.",
+              "hint": [
+                {
+                  "type": "html",
+                  "content": "In this section, provide information for the specified period. For more information see the "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "User Guide and Help File",
+                  "props": {
+                    "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+                    "target": "_blank",
+                    "aria-label": "User Guide and Help File (Link opens in new tab)"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "."
+                }
+              ],
               "info": [
                 {
                   "type": "h3",
@@ -572,7 +698,25 @@
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
               "subsection": "Number of MFP participants disenrolled from the program during the reporting period",
-              "hint": "In this section, provide information for the specified period.",
+              "hint": [
+                {
+                  "type": "html",
+                  "content": "In this section, provide information for the specified period. For more information see the "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "User Guide and Help File",
+                  "props": {
+                    "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+                    "target": "_blank",
+                    "aria-label": "User Guide and Help File (Link opens in new tab)"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "."
+                }
+              ],
               "info": [
                 {
                   "type": "h3",
@@ -580,7 +724,7 @@
                 },
                 {
                   "type": "span",
-                  "content": "Number of MFP participants who were disenrolled from the program because of re-institutionalization (admission to an inpatient facility, such as a hospital, nursing home, ICF/IID, or IMD); death; voluntary disenrollment; or any other cause."
+                  "content": "Provide the number of MFP participants for each target population (if applicable for this reporting period), by reason for disenrollment. If more than one reason applies to an individual’s disenrollment, include the individual in the total for one reason only. Include the individual under the primary reason or, if indeterminate, the first reason listed. Enter the number of participants disenrolled for the selected “other” cause in the new fields. An additional “other” reason may be specified, if one or more participants disenrolled for reasons other than those listed."
                 }
               ]
             },
@@ -743,15 +887,33 @@
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
               "subsection": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group",
-              "hint": "In this section, provide information for the specified period.",
+              "hint": [
+                {
+                  "type": "html",
+                  "content": "In this section, provide information for the specified period. For more information see the "
+                },
+                {
+                  "type": "externalLink",
+                  "content": "User Guide and Help File",
+                  "props": {
+                    "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
+                    "target": "_blank",
+                    "aria-label": "User Guide and Help File (Link opens in new tab)"
+                  }
+                },
+                {
+                  "type": "html",
+                  "content": "."
+                }
+              ],
               "info": [
                 {
                   "type": "h3",
-                  "content": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group in the reporting period"
+                  "content": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group in the reporting period (optional)"
                 },
                 {
                   "type": "span",
-                  "content": "Inpatient facilities include hospitals, nursing homes, ICF/IID, or IMDs. Provide data for readmissions occurring between July 31 of the current reporting period and August 1 of the prior year."
+                  "content": "Inpatient facilities include hospitals, nursing homes, ICF/IID, or IMD. Provide data for readmissions occurring between July 31 of the current reporting period and August 1 of the prior year."
                 }
               ]
             },
@@ -916,7 +1078,7 @@
           "list": [
             "MFP cooperative agreement funds for:",
             [
-              "Qualified HCBS and demonstration services",
+              "Qualified home and community-based services (HCBS) and demonstration services",
               "Supplemental services",
               "Administrative activities",
               "Capacity building initiatives"
@@ -927,22 +1089,14 @@
             {
               "type": "html",
               "content": "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports (LTSS). These initiatives are specified in your MFP Work Plan and imported into the form below."
-            },
-            {
-              "type": "html",
-              "content": "<br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period."
-            },
-            {
-              "type": "html",
-              "content": "<br><br>For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress towards these objectives indicates the state or territory's greater ability to provide HCBS instead of services in institutional settings. If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them."
             }
           ]
         },
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
-        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. Note: Initiative topics with <span aria-label='asterisk'>*</span> are required initiatives.<br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period.<br><br>For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide home and community-based services (HCBS) instead of services in institutional settings. <br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work Plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
-        "tableHeader": "Initiative name <br/> Work Plan topic",
+        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. Note: Initiative topics with <span aria-label='asterisk'>*</span> are required initiatives.<br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period.<br><br>For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide home and community-based services (HCBS) instead of services in institutional settings.<br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work Plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
+        "tableHeader": "Initiative name <br/> MFP Work Plan topic",
         "countEntitiesInTitle": false
       },
       "template": {
@@ -954,7 +1108,7 @@
               "info": [
                 {
                   "type": "span",
-                  "content": "Complete each of the 3 steps for this initiative to report progress for this reporting period."
+                  "content": "Report progress on this initiative for this reporting period by completing each of the following 3 sections. Further instructions will be available at the top of each section."
                 }
               ]
             }
@@ -1098,11 +1252,7 @@
                 "info": [
                   {
                     "type": "html",
-                    "content": "Report progress for this initiative during this reporting period."
-                  },
-                  {
-                    "type": "html",
-                    "content": "<br>Report key accomplishments or challenges for this initiative that are not otherwise mentioned under the objective(s). Recipients can document whether they are considering changes to objective(s) or the initiative based on the developments to date, including collaborations that may be under consideration or occurring with external parties to assist with running the initiative or achieving objectives."
+                    "content": "Report progress for this initiative during this reporting period.<br><br>Report key accomplishments or challenges for this initiative that are not otherwise mentioned under the objective(s). Recipients can document whether they are considering changes to objective(s) or the initiative based on the developments to date, including collaborations that may be under consideration or occurring with external parties to assist with running the initiative or achieving objectives."
                   }
                 ],
                 "title": "Initiative progress"
@@ -1153,13 +1303,14 @@
             "isRequired": true,
             "verbiage": {
               "intro": {
-                "section": "Expenditures",
+                "section": "State or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "html",
                     "content": "Report initiative expenditures by quarter and funding source. Report actual spending for each quarter for this initiative. Recipients plan quarterly expenditure targets in your MFP Work Plan’s funding sources. Recipients with discrepancies between projected and actual spending due solely to lag time between incurring costs and disbursing funds will have the option to note those cases in this section.<br></br>Funding sources and projected spending are auto-populated from your associated MFP Work Plan."
                   }
-                ]
+                ],
+                "title": "Expenditures"
               },
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
