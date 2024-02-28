@@ -75,10 +75,10 @@ export const renderGeneralInformation = (
   const { report } = useStore() ?? {};
 
   // check if this was a resubmission
-  const isResubmission =
-    (report?.reportType === "SAR" && report?.submissionCount) ||
+  let isNotResubmission =
+    (report?.reportType === "SAR" && !report?.submissionCount) ||
     (report?.status === ReportStatus.SUBMITTED &&
-      report?.submissionCount! > 1 &&
+      report?.submissionCount! === 1 &&
       report.locked);
 
   const headings = verbiage.generalInformationTable.headings;
@@ -112,8 +112,8 @@ export const renderGeneralInformation = (
   return headings.map((heading: string, idx: number) => {
     return (
       <Box key={idx}>
-        {isResubmission ||
-        (!isResubmission && heading != "Resubmission Information") ? (
+        {!isNotResubmission ||
+        (isNotResubmission && heading != "Resubmission Information") ? (
           <>
             <Heading as="h3" sx={sx.heading}>
               {heading}
