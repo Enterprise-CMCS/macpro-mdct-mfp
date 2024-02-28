@@ -91,9 +91,7 @@ const emptyTableComponent = (
   <ExportedReportFieldTable section={mockEmptyPageJson} />
 );
 
-const hintComponent = (
-  <ExportedReportFieldTable section={hintJson} />
-);
+const hintComponent = <ExportedReportFieldTable section={hintJson} />;
 
 const generalInformationComponent = (
   <ExportedReportFieldTable section={generalInformationJson} />
