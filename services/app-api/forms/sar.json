@@ -854,7 +854,8 @@
                           "validation": {
                             "type": "text",
                             "nested": true,
-                            "parentFieldName": "ret_otherReasons"
+                            "parentFieldName": "ret_otherReasons",
+                            "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
                           }
                         },
                         {
