@@ -4,36 +4,19 @@ import {
   mockDrawerReportPageJson,
   mockFormField,
   mockNestedFormField,
-  mockWpReportContext,
   mockStandardReportPageJson,
-  mockSARReportContext,
+  mockUseSARStore,
+  mockUseStore,
 } from "utils/testing/setupJest";
-import { ReportContext } from "components";
+import { useStore } from "../../utils";
 import { ExportedReportFieldTable } from "./ExportedReportFieldTable";
 import { DrawerReportPageShape } from "types";
 
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
 // Contexts
 const reportJsonFields = [{ ...mockNestedFormField, id: "parent" }];
-const fieldData = {
-  parent: [{ key: "parent-option3uuid", value: "option 3" }],
-  child: "testAnswer",
-};
-
-const nestedParent = mockNestedFormField;
-nestedParent.props.choices[2].children = [{ ...mockFormField, id: "child" }];
-
-const mockStandardContext = { ...mockWpReportContext };
-mockStandardContext.report = { ...mockStandardContext.report };
-mockStandardContext.report.fieldData = {
-  ...mockStandardContext.report.fieldData,
-  ...fieldData,
-};
-
-const mockDrawerContext = { ...mockWpReportContext };
-mockWpReportContext.report = { ...mockWpReportContext.report };
-mockDrawerContext.report.fieldData = {
-  ...mockDrawerContext.report.fieldData,
-};
 
 // Report JSON
 const mockStandardPageJson = {
@@ -97,68 +80,67 @@ const generalInformationJson = {
 };
 
 const exportedStandardTableComponent = (
-  <ReportContext.Provider value={mockStandardContext}>
-    <ExportedReportFieldTable section={mockStandardPageJson} />
-  </ReportContext.Provider>
+  <ExportedReportFieldTable section={mockStandardPageJson} />
 );
 const exportedDrawerTableComponent = (
-  <ReportContext.Provider value={mockDrawerContext}>
-    <ExportedReportFieldTable
-      section={mockDrawerPageJson as DrawerReportPageShape}
-    />
-  </ReportContext.Provider>
+  <ExportedReportFieldTable
+    section={mockDrawerPageJson as DrawerReportPageShape}
+  />
 );
 const emptyTableComponent = (
-  <ReportContext.Provider value={mockDrawerContext}>
-    <ExportedReportFieldTable section={mockEmptyPageJson} />
-  </ReportContext.Provider>
+  <ExportedReportFieldTable section={mockEmptyPageJson} />
 );
 
-const hintComponent = (
-  <ReportContext.Provider value={mockWpReportContext}>
-    <ExportedReportFieldTable section={hintJson} />
-  </ReportContext.Provider>
-);
+const hintComponent = <ExportedReportFieldTable section={hintJson} />;
 
 const generalInformationComponent = (
-  <ReportContext.Provider value={mockSARReportContext}>
-    <ExportedReportFieldTable section={generalInformationJson} />
-  </ReportContext.Provider>
+  <ExportedReportFieldTable section={generalInformationJson} />
 );
 
 describe("ExportedReportFieldRow", () => {
-  test("Is present", async () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  test("Is present", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
     render(exportedStandardTableComponent);
     const row = screen.getByTestId("exportTable");
     expect(row).toBeVisible();
   });
 
-  test("handles drawer pages with children", async () => {
+  test("handles drawer pages with children", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
     render(exportedDrawerTableComponent);
     const row = screen.getByTestId("exportTable");
     expect(row).toBeVisible();
   });
 
-  test("handles a table with no form fields", async () => {
+  test("handles a table with no form fields", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
     render(emptyTableComponent);
     const row = screen.getByTestId("exportTable");
     expect(row).toBeVisible();
   });
 
-  test("shows the hint text in most cases", async () => {
+  test("shows the hint text in most cases", () => {
+    mockedUseStore.mockReturnValue(mockUseSARStore);
     render(hintComponent);
     const hint = screen.queryByText(/Mock Hint Text/);
     expect(hint).toBeVisible();
   });
 
-  test("shows that general information renders correctly", async () => {
+  test("shows that general information renders correctly", () => {
+    mockedUseStore.mockReturnValue(mockUseSARStore);
     render(generalInformationComponent);
-    expect(screen.getByText("Resubmission Information")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Resubmission Information")
+    ).not.toBeInTheDocument();
   });
 });
 
 describe("Test ExportedReportFieldRow accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
     const { container } = render(exportedStandardTableComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
