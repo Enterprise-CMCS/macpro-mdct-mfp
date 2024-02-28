@@ -72,10 +72,10 @@ export const renderGeneralInformation = (
   pageType: string,
   entityType?: string
 ) => {
-  const { report } = useStore() ?? {};
+  const { report } = useStore();
 
   // check if this was a resubmission
-  let isNotResubmission =
+  const isNotResubmission =
     (report?.reportType === "SAR" && !report?.submissionCount) ||
     (report?.status === ReportStatus.SUBMITTED &&
       report?.submissionCount! === 1 &&
