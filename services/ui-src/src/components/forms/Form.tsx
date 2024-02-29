@@ -261,7 +261,7 @@ const sx = {
   },
   // RE&T warning message
   retAlert: {
-    color: "palette.error",
+    color: "palette.error_dark",
     paddingTop: "1rem",
   },
 };
