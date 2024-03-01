@@ -21,14 +21,14 @@ export const validationErrors = {
   INVALID_RATIO: "Response must be a valid ratio",
 };
 
+const genericErrorContent =
+  "Something went wrong on our end. Refresh your screen and try again. <br/>If this persists, contact the MDCT Help Desk with questions or to request technical assistance by emailing ";
+
 export const reportErrors = {
-  GET_REPORT_DATA_FAILED:
-    "Report data could not be loaded. Please contact support.",
-  SET_REPORT_DATA_FAILED:
-    "Report data could not be saved. Please contact support.",
-  GET_REPORT_FAILED: "Report could not be loaded. Please contact support.",
-  GET_REPORTS_BY_STATE_FAILED:
-    "Reports could not be loaded. Please contact support.",
-  SET_REPORT_FAILED: "Report could not be updated. Please contact support.",
-  DELETE_REPORT_FAILED: "Report could not be deleted. Please contact support.",
+  GET_REPORT_DATA_FAILED: genericErrorContent,
+  SET_REPORT_DATA_FAILED: genericErrorContent,
+  GET_REPORT_FAILED: genericErrorContent,
+  GET_REPORTS_BY_STATE_FAILED: genericErrorContent,
+  SET_REPORT_FAILED: genericErrorContent,
+  DELETE_REPORT_FAILED: genericErrorContent,
 };

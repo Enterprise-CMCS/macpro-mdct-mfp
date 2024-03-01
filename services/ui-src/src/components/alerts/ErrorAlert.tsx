@@ -24,13 +24,14 @@ export const ErrorAlert = ({
         {error && (
           <Alert
             status={AlertTypes.ERROR}
-            title="Error"
+            title="We've run into a problem"
             description={error}
-            showIcon={false}
+            showIcon={true}
             className={variant}
             sx={sx.root}
             {...props}
-          />
+            link={"link"}
+          ></Alert>
         )}
       </Collapse>
     </Box>
