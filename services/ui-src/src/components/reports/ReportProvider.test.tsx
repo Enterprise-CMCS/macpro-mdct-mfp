@@ -102,7 +102,7 @@ describe("ReportProvider", () => {
     const button = screen.getByText("Create");
     await userEvent.click(button);
     expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
+      /Something went wrong on our end. Refresh your screen and try again./
     );
   });
 
@@ -117,7 +117,7 @@ describe("ReportProvider", () => {
     const button = screen.getByText("Fetch");
     await userEvent.click(button);
     expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be loaded/
+      /Something went wrong on our end. Refresh your screen and try again./
     );
   });
 
@@ -132,7 +132,7 @@ describe("ReportProvider", () => {
     const button = screen.getByText("Archive");
     await userEvent.click(button);
     expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
+      /Something went wrong on our end. Refresh your screen and try again./
     );
   });
 
@@ -147,7 +147,7 @@ describe("ReportProvider", () => {
     const button = screen.getByText("Update");
     await userEvent.click(button);
     expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
+      /Something went wrong on our end. Refresh your screen and try again./
     );
   });
 
@@ -162,7 +162,7 @@ describe("ReportProvider", () => {
     const button = screen.getByText("Approve");
     await userEvent.click(button);
     expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
+      /Something went wrong on our end. Refresh your screen and try again./
     );
   });
 
@@ -177,7 +177,7 @@ describe("ReportProvider", () => {
     const button = screen.getByText("Submit");
     await userEvent.click(button);
     expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
+      /Something went wrong on our end. Refresh your screen and try again./
     );
   });
 
@@ -192,7 +192,7 @@ describe("ReportProvider", () => {
     const button = screen.getByText("FetchByState");
     await userEvent.click(button);
     expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Reports could not be loaded/
+      /Something went wrong on our end. Refresh your screen and try again./
     );
   });
 
@@ -210,7 +210,7 @@ describe("ReportProvider", () => {
     const button = screen.getByText("FetchForSar");
     await userEvent.click(button);
     expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Reports could not be loaded/
+      /Something went wrong on our end. Refresh your screen and try again./
     );
   });
 
@@ -225,7 +225,7 @@ describe("ReportProvider", () => {
     const button = screen.getByText("Release");
     await userEvent.click(button);
     expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
+      /Something went wrong on our end. Refresh your screen and try again./
     );
   });
 });
