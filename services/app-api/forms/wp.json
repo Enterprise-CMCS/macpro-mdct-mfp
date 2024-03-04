@@ -713,7 +713,7 @@
             "readOnlyEntityDetailsButtonText": "View",
             "dashboardTitle": "Initiative total count:",
             "countEntitiesInTitle": true,
-            "tableHeader": "Initiative name <br/> Work Plan topic",
+            "tableHeader": "Initiative name <br/> MFP Work Plan topic",
             "addEditModalHint": "Provide the name of one initiative. You will be then be asked to complete details for this initiative including a description, evaluation plan and funding sources."
           },
           "modalForm": {
@@ -880,7 +880,7 @@
                       "hint": [
                         {
                           "type": "html",
-                          "content": "Select all that apply. “Other” population(s) selected and defined in the"
+                          "content": "Select all that apply. “Other” population(s) selected and defined in the "
                         },
                         {
                           "type": "internalLink",
@@ -891,7 +891,7 @@
                         },
                         {
                           "type": "html",
-                          "content": "section automatically upload. Select “HCBS infrastructure/system-level development” for initiatives that strengthen or expand home and community-based services (HCBS)."
+                          "content": " section automatically upload. Select “HCBS infrastructure/system-level development” for initiatives that strengthen or expand home and community-based services (HCBS)."
                         }
                       ],
                       "choices": []
@@ -1006,7 +1006,7 @@
                 "addEditModalEditTitle": "Edit objective for ",
                 "deleteModalTitle": "Delete objective for this report?",
                 "deleteModalConfirmButtonText": "Yes, delete objective",
-                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in MFP future Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
+                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
                 "dashboardTitle": "Objective total count",
@@ -1091,7 +1091,7 @@
               }
             },
             {
-              "name": "Stateor Territory-Specific Initiatives: III. Funding sources",
+              "name": "State or Territory-Specific Initiatives: III. Funding sources",
               "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
               "pageType": "overlayModal",
               "entityType": "initiative",
@@ -1125,7 +1125,7 @@
                 "deleteModalTitle": "Delete funding source for this report? ",
                 "deleteModalConfirmButtonText": "Yes, delete funding source",
                 "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
-                "tableHeader": "Initiative name <br/> Work Plan topic",
+                "tableHeader": "Initiative name <br/> MFP Work Plan topic",
                 "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report (SAR).",
                 "dashboardTitle": "Funding Sources",
                 "enterEntityDetailsButtonText": "Edit",
