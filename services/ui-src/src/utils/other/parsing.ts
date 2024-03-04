@@ -22,7 +22,7 @@ import {
 import { CustomHtmlElement } from "types";
 import uuid from "react-uuid";
 
-const customElementMap: any = {
+export const customElementMap: any = {
   externalLink: Link,
   internalLink: RouterLink,
   text: Text,
@@ -59,6 +59,7 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
         as,
         ...props,
       };
+
       if (type === "html") {
         // sanitize and parse html
         content = sanitizeAndParseHtml(content);
@@ -66,6 +67,7 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
         delete elementProps.as;
         return React.createElement(elementType, elementProps, content);
       }
+
       return createElementWithChildren(element);
     });
   }
@@ -95,6 +97,15 @@ export function createElementWithChildren(
     );
   }
   const santizedContent = sanitizeAndParseHtml(content);
+
+  if (elementType === undefined) {
+    return React.createElement(
+      customElementMap["text"],
+      elementProps,
+      santizedContent
+    );
+  }
+
   return React.createElement(elementType, elementProps, santizedContent);
 }
 

@@ -357,7 +357,7 @@ export const ExportRETTable = ({ section }: Props) => {
           );
         })
       ) : (
-        <Text>
+        <Text sx={sx.retAlert}>
           Your associated MFP Work Plan does not contain any target populations.
         </Text>
       )}
@@ -421,5 +421,9 @@ const sx = {
       background: "palette.secondary_lightest",
       fontWeight: "bold",
     },
+  },
+  // RE&T warning message
+  retAlert: {
+    color: "palette.error_dark",
   },
 };

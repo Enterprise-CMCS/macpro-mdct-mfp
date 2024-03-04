@@ -12,6 +12,7 @@ import {
   isFieldElement,
   ReportType,
   FieldChoice,
+  ReportStatus,
 } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
@@ -71,7 +72,17 @@ export const renderGeneralInformation = (
   pageType: string,
   entityType?: string
 ) => {
+  const { report } = useStore();
+
+  // check if this was a resubmission
+  const isNotResubmission =
+    (report?.reportType === "SAR" && !report?.submissionCount) ||
+    (report?.status === ReportStatus.SUBMITTED &&
+      report?.submissionCount! === 1 &&
+      report.locked);
+
   const headings = verbiage.generalInformationTable.headings;
+
   // get the range of form fields for a particular section
   const getSectionFormFields = (
     heading: number,
@@ -101,25 +112,32 @@ export const renderGeneralInformation = (
   return headings.map((heading: string, idx: number) => {
     return (
       <Box key={idx}>
-        <Heading as="h3" sx={sx.heading}>
-          {heading}
-        </Heading>
-        <Table
-          sx={sx.root}
-          content={{
-            headRow: [
-              verbiage.reportPage.sarDetailsTable.headers.indicator,
-              verbiage.reportPage.sarDetailsTable.headers.response,
-            ],
-          }}
-        >
-          {renderFieldTableBody(
-            getSectionFormFields(idx, formFields!),
-            pageType!,
-            false,
-            entityType
-          )}
-        </Table>
+        {!isNotResubmission ||
+        (isNotResubmission && heading != "Resubmission Information") ? (
+          <>
+            <Heading as="h3" sx={sx.heading}>
+              {heading}
+            </Heading>
+            <Table
+              sx={sx.root}
+              content={{
+                headRow: [
+                  verbiage.reportPage.sarDetailsTable.headers.indicator,
+                  verbiage.reportPage.sarDetailsTable.headers.response,
+                ],
+              }}
+            >
+              {renderFieldTableBody(
+                getSectionFormFields(idx, formFields!),
+                pageType!,
+                false,
+                entityType
+              )}
+            </Table>
+          </>
+        ) : (
+          ""
+        )}
       </Box>
     );
   });
