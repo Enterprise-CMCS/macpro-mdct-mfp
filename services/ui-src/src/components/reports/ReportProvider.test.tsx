@@ -15,6 +15,7 @@ import {
   submitReport,
   getReportsByState,
   releaseReport,
+  parseCustomHtml,
 } from "utils";
 // components
 import { ReportContext, ReportProvider } from "./ReportProvider";
@@ -72,7 +73,11 @@ const TestComponent = () => {
         Release
       </button>
       <p data-testid="contextIsLoaded">{context.contextIsLoaded.toString()}</p>
-      <p data-testid="errorMessage">{context.errorMessage}</p>
+      {context.errorMessage && (
+        <p data-testid="errorMessage">
+          {parseCustomHtml(context.errorMessage)}
+        </p>
+      )}
     </div>
   );
 };

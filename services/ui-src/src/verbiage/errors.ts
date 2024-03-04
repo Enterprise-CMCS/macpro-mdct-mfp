@@ -35,6 +35,10 @@ const genericErrorContent = [
       target: "_blank",
     },
   },
+  {
+    type: "span",
+    content: ".",
+  },
 ];
 
 export const reportErrors = {
