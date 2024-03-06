@@ -23,6 +23,8 @@ import {
   mockTargetPopReqButApplicable,
   mockTargetPopReqButApplicableIsUndefined,
   mockTargetPopReqButNotApplicable,
+  mockTargetPopDefaultAndApplicable,
+  mockTargetPopDefaultButNotApplicable,
 } from "utils/testing/setupJest";
 import { AnyObject } from "yup/lib/types";
 
@@ -64,18 +66,22 @@ describe("form utilities", () => {
       mockTargetPopButOtherApplicable,
       mockTargetPopButOtherNotApplicable,
       mockTargetPopByOtherNotDefined,
+      mockTargetPopDefaultButNotApplicable,
+      mockTargetPopDefaultAndApplicable,
     ];
 
     it("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration", async () => {
       const filteredPopulations = removeNotApplicablePopulations(
         exampleTargetPopulations
       );
-      expect(filteredPopulations.length).toBe(4);
+      expect(filteredPopulations.length).toBe(6);
       expect(filteredPopulations).toEqual([
         mockTargetPopReqButApplicable,
         mockTargetPopReqButApplicableIsUndefined,
         mockTargetPopButOtherApplicable,
         mockTargetPopByOtherNotDefined,
+        mockTargetPopDefaultButNotApplicable,
+        mockTargetPopDefaultAndApplicable,
       ]);
     });
   });
