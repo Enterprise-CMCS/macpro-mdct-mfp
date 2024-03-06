@@ -5,6 +5,12 @@ const cognitoPasswordInputField = 'input[name="password"]';
 const cognitoLoginButton = "[data-testid='cognito-login-button']";
 const myAccountButton = '[aria-label="my account"';
 
+const breakpoints = {
+  mobile: [560, 800],
+  tablet: [880, 1000],
+  desktop: [1200, 1200],
+};
+
 const stateUserPassword = Cypress.env("STATE_USER_PASSWORD");
 const adminUserPassword = Cypress.env("ADMIN_USER_PASSWORD");
 
@@ -34,6 +40,14 @@ const adminUser = {
 
 Cypress.Commands.add("navigateToHomePage", () => {
   if (cy.location("pathname") !== "/") cy.visit("/");
+});
+
+Cypress.Commands.add("testPageAccessibility", () => {
+  Object.keys(breakpoints).forEach((deviceSize) => {
+    const size = breakpoints[deviceSize];
+    cy.viewport(...size);
+    cy.runAccessibilityTests();
+  });
 });
 
 Cypress.Commands.add("fillOutForm", (formInputs) => {
