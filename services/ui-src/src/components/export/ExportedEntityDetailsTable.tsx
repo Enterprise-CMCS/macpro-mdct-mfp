@@ -131,7 +131,7 @@ const sx = {
     "@media print": {
       pageBreakInside: "avoid",
     },
-    "table-layout": "fixed",
+    tableLayout: "fixed",
     marginBottom: "1rem",
     "tr, th": {
       verticalAlign: "top",
