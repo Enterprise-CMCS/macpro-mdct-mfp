@@ -25,12 +25,14 @@ export default {
     },
     adminInfo: {
       header: "Admin Review",
-      info: [
+      list: [
         {
-          type: "text",
-          as: "div",
           content:
-            "<ul><li>To allow a state or territory to make corrections or edits to a submission use “Unlock” to release the submission, then email the state or territory contact and inform them. The status will change to “In revision”.</li><br/><li>To approve a submission, review the submission and select “Approve”. The status will change to “Approved” and the content will be eligible for import into the MFP SAR. <strong>You will not be able to unapprove or unlock it.</strong></li></ul>",
+            "To allow a state or territory to make corrections or edits to a submission use “Unlock” to release the submission, then email the state or territory contact and inform them. The status will change to “In revision”.",
+        },
+        {
+          content:
+            "To approve a submission, review the submission and select “Approve”. The status will change to “Approved” and the content will be eligible for import into the MFP SAR. <strong>You will not be able to unapprove or unlock it.</strong>",
         },
       ],
       modal: {
