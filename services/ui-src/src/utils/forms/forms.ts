@@ -328,7 +328,7 @@ export const updateRenderFields = (
 ) => {
   const targetPopulations = report?.fieldData?.targetPopulations;
 
-  const notApplicableOption = {
+  const hcbsPopulation = {
     id: "3Nc13O5GHA6Hc4KheO5FMSD2",
     transitionBenchmarks_targetPopulationName:
       "HCBS infrastructure/system-level development",
@@ -339,7 +339,8 @@ export const updateRenderFields = (
   const filteredTargetPopulations =
     removeNotApplicablePopulations(targetPopulations);
 
-  filteredTargetPopulations?.push(notApplicableOption);
+  // This one always has to be at the end for...reasons
+  filteredTargetPopulations?.push(hcbsPopulation);
 
   const formatChoiceList = convertTargetPopulationsFromWPToSAREntity(
     filteredTargetPopulations
@@ -392,7 +393,8 @@ export const injectFormWithTargetPopulations = (
 
 /**
  * This function takes the target populations given from the form data and then filters out
- * any population that a user has answered "No". It does this by looking for a child object
+ * any population that a user has answered "No" UNLESS that population
+ * is included in the default population list. It does this by looking for a child object
  * called transitionBenchmarks_applicableToMfpDemonstration and seeing if it has a value of "No"
  * @param {AnyObject[]} targetPopulations - targetPopulations that are in the formData
  * @return {AnyObject[]} Target populations filtered to no long has No answers from
@@ -401,10 +403,21 @@ export const injectFormWithTargetPopulations = (
 export const removeNotApplicablePopulations = (
   targetPopulations: AnyObject[]
 ) => {
+  const defaultPopulationNames = [
+    "Older adults",
+    "Individuals with physical disabilities (PD)",
+    "Individuals with intellectual and developmental disabilities (I/DD)",
+    "Individuals with mental health and substance use disorders (MH/SUD)",
+  ];
+
   const filteredPopulations = targetPopulations?.filter((population) => {
+    const isDefault = defaultPopulationNames.includes(
+      population.transitionBenchmarks_targetPopulationName
+    );
+
     const isApplicable =
       population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]?.value;
-    return isApplicable !== "No";
+    return isDefault || isApplicable !== "No";
   });
   return filteredPopulations;
 };
