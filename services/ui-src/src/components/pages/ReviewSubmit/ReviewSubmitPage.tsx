@@ -158,9 +158,11 @@ const ReadyToSubmit = ({
           {intro.header}
         </Heading>
         <Box sx={sx.infoTextBox}>
-          {intro.info.map((item: AnyObject) => (
-            <React.Fragment key={item.sectionHeader}>
-              <Text sx={sx.infoHeading}>{item.sectionHeader}</Text>
+          {intro.info.map((item: any, index: number) => (
+            <React.Fragment key={index}>
+              {item.sectionHeader && (
+                <Text sx={sx.infoHeading}>{item.sectionHeader}</Text>
+              )}
               <Text sx={sx.infoParagraph}>{item.content}</Text>
             </React.Fragment>
           ))}
