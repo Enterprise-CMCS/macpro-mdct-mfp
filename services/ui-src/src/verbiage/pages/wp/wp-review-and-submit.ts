@@ -10,16 +10,16 @@ export default {
       infoHeader: "Ready to Submit?",
       info: [
         {
+          sectionHeader: "Ready to Submit?",
           type: "text",
-          as: "span",
           content:
             "Double check that everything in your MFP Work Plan submission is accurate. You will only be able to make edits after submitting if you contact your CMS MFP Project Officer to unlock your report while it is still in “Submitted” status. ",
         },
         {
+          sectionHeader: "Compliance review",
           type: "text",
-          as: "div",
           content:
-            "<br><b>Compliance review</b><br>Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made. If there are no corrections to be made, your Project Officer will approve the report by {x time before it’s due}, its status will change to “Approved” and it will no longer be editable because its information will be used in the MFP Semi-Annual Progress Report (SAR) for the same reporting period.",
+            "Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made. If there are no corrections to be made, your Project Officer will approve the report by {x time before it’s due}, its status will change to “Approved” and it will no longer be editable because its information will be used in the MFP Semi-Annual Progress Report (SAR) for the same reporting period.",
         },
       ],
     },
