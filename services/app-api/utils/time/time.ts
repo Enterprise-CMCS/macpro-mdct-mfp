@@ -1,23 +1,16 @@
-import { utcToZonedTime } from "date-fns-tz";
 import { ReportMetadataShape, ReportType } from "../types";
 
-/*
- * Converts passed UTC datetime to ET date
- * returns -> ET date in format mm/dd/yyyy
+/**
+ * @param date A UTC timestamp, as from `Date.now()`
+ * @returns A MM/dd/yyyy string, for that date on the US East Coast.
  */
-export const convertDateUtcToEt = (date: number): string => {
-  const convertedDate = date;
-  const easternDatetime = utcToZonedTime(
-    new Date(convertedDate),
-    "America/New_York"
-  );
-
-  const month = twoDigitCalendarDate(new Date(easternDatetime).getMonth() + 1);
-  const day = twoDigitCalendarDate(new Date(easternDatetime).getDate());
-  const year = new Date(easternDatetime).getFullYear();
-
-  // month + 1 because Date object months are zero-indexed
-  return `${month}/${day}/${year}`;
+export const convertDateUtcToEt = (date: number) => {
+  return Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(date));
 };
 
 /*
@@ -48,16 +41,12 @@ export const isLeapYear = (year: number) => {
 /**
  * This method returns a date in ISO format to a date in mm/dd/yyyy format.
  * @param date The given date in ISO format
- * @returns a date in mm/dd/yyyy format
+ * @returns a date in MM/dd/yyyy format
  */
 export const convertToFormattedDate = (date: Date) => {
-  let year = date.getFullYear();
-
-  let month = (1 + date.getMonth()).toString();
-  month = month.length > 1 ? month : "0" + month;
-
-  let day = date.getDate().toString();
-  day = day.length > 1 ? day : "0" + day;
+  const year = date.getFullYear();
+  const month = (1 + date.getMonth()).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
 
   return `${month}/${day}/${year}`;
 };
@@ -93,14 +82,6 @@ export const calculateDueDate = (
     }
   }
   return convertToFormattedDate(date);
-};
-
-/*
- * This code ensures the date has a preceeding 0 if the month/day is a single digit.
- * Ex: 7 becomes 07 while 10 stays 10
- */
-export const twoDigitCalendarDate = (date: number) => {
-  return ("0" + date).slice(-2);
 };
 
 export const calculateCurrentQuarter = () => {
