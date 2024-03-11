@@ -7,7 +7,7 @@ import {
   Alert,
   ExportedOverlayModalReportSection,
 } from "components";
-import { Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
+import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
 // types
 import {
   AlertTypes,
@@ -55,8 +55,8 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
         />
       )}
       <Table
-        sx={sx.root}
         sxOverride={{ container: { ...sx.container } }}
+        sx={sx.root}
         content={{}}
         data-testid="exportTable"
       >
@@ -167,34 +167,34 @@ export function renderModalOverlayTableBody(
               switch (type) {
                 case EntityDetailsStepTypes.DEFINE_INITIATIVE:
                   return (
-                    <Tr key={`${type}${idx}${stepIdx}`}>
+                    <Box as="tr" key={`${type}${idx}${stepIdx}`}>
                       <ExportedEntityDetailsOverlaySection
                         section={section as ModalOverlayReportPageShape}
                         entity={entity}
                         entityStep={step}
                         showHintText={true}
                       />
-                    </Tr>
+                    </Box>
                   );
                 case OverlayModalStepTypes.EVALUATION_PLAN:
                   return (
-                    <Tr key={`${type}${idx}${stepIdx}`}>
+                    <Box as="tr" key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
                         entityStep={step}
                       />
-                    </Tr>
+                    </Box>
                   );
                 case OverlayModalStepTypes.FUNDING_SOURCES:
                   return (
-                    <Tr key={`${type}${idx}${stepIdx}`}>
+                    <Box as="tr" key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
                         entityStep={step}
                       />
-                    </Tr>
+                    </Box>
                   );
                 case EntityDetailsStepTypes.CLOSE_OUT_INFORMATION:
                   //clean up title
@@ -202,7 +202,7 @@ export function renderModalOverlayTableBody(
 
                   return (
                     entity?.isInitiativeClosed && (
-                      <Tr key={`${type}${idx}${stepIdx}`}>
+                      <Box as="tr" key={`${type}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={section as ModalOverlayReportPageShape}
                           entity={entity}
@@ -210,7 +210,7 @@ export function renderModalOverlayTableBody(
                           showHintText={false}
                           closed={true}
                         />
-                      </Tr>
+                      </Box>
                     )
                   );
                 default:
@@ -247,24 +247,24 @@ export function renderModalOverlayTableBody(
                 switch (step.stepType) {
                   case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
                     return (
-                      <Tr key={`${step.stepType}${idx}${stepIdx}`}>
+                      <Box as="tr" key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedOverlayModalReportSection
                           section={dynamicSection[idx] as OverlayModalPageShape}
                           entity={entity}
                           entityStep={step}
                         />
-                      </Tr>
+                      </Box>
                     );
                   case EntityDetailsStepTypes.INITIAVTIVE_PROGRESS:
                     return (
-                      <Tr key={`${step.stepType}${idx}${stepIdx}`}>
-                        {/* <ExportedEntityDetailsOverlaySection
+                      <Box as="tr" key={`${step.stepType}${idx}${stepIdx}`}>
+                        <ExportedEntityDetailsOverlaySection
                           section={step}
                           entity={entity}
                           entityStep={step}
                           showHintText={true}
-                        /> */}
-                      </Tr>
+                        />
+                      </Box>
                     );
                   case EntityDetailsStepTypes.EXPENDITURES: {
                     const cloneSection = structuredClone(step);
@@ -278,14 +278,14 @@ export function renderModalOverlayTableBody(
                       tableSection.form.fields.pop();
 
                     return (
-                      <Tr key={`${step.stepType}${idx}${stepIdx}`}>
-                        {/* <ExportedEntityDetailsOverlaySection
+                      <Box as="tr" key={`${step.stepType}${idx}${stepIdx}`}>
+                        <ExportedEntityDetailsOverlaySection
                           section={step}
                           entity={entity}
                           entityStep={cloneSection}
                           tableSection={tableSection}
-                        /> */}
-                      </Tr>
+                        />
+                      </Box>
                     );
                   }
                   default:

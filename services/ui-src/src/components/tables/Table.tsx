@@ -27,7 +27,12 @@ export const Table = ({
   ...props
 }: Props) => {
   return (
-    <TableRoot variant={variant} size="sm" sx={{ ...sx.root }} {...props}>
+    <TableRoot
+      variant={variant}
+      size="sm"
+      sx={{ ...sx.root, ...sxOverride }}
+      {...props}
+    >
       <TableCaption placement="top" sx={sx.captionBox}>
         <VisuallyHidden>{content.caption}</VisuallyHidden>
       </TableCaption>
@@ -39,7 +44,7 @@ export const Table = ({
               <Th
                 key={index}
                 scope="col"
-                sx={{ ...sx.tableHeader }}
+                sx={{ ...sx.tableHeader, ...sxOverride }}
                 aria-label={ariaOverride?.headRow?.[index]}
               >
                 {sanitizeAndParseHtml(headerCell)}
@@ -81,7 +86,7 @@ export const Table = ({
                     <Th
                       key={rowIndex}
                       scope="col"
-                      sx={{ ...sx.tableHeader }}
+                      sx={{ ...sx.tableHeader, ...sxOverride }}
                       aria-label={ariaOverride?.footRow?.[index][rowIndex]}
                     >
                       {sanitizeAndParseHtml(headerCell)}

@@ -1,5 +1,5 @@
 // components
-import { Box, Heading, Text, Td } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 // utils
 import { getFormattedEntityData } from "utils";
 import {
@@ -32,7 +32,12 @@ export const ExportedOverlayModalReportSection = ({
     }
   );
   return (
-    <Td mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
+    <Box
+      as="td"
+      mt="2rem"
+      data-testid="exportedOverlayModalPage"
+      sx={sx.container}
+    >
       <Heading as="h4">
         <Box sx={sx.stepName}>{title}</Box>
         <Box sx={sx.stepHint}>{info || hint}</Box>
@@ -63,7 +68,7 @@ export const ExportedOverlayModalReportSection = ({
           />
         );
       })}
-    </Td>
+    </Box>
   );
 };
 
