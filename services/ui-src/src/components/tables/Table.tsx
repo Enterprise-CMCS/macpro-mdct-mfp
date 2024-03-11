@@ -27,12 +27,7 @@ export const Table = ({
   ...props
 }: Props) => {
   return (
-    <TableRoot
-      variant={variant}
-      size="sm"
-      sx={{ ...sx.root, ...sxOverride }}
-      {...props}
-    >
+    <TableRoot variant={variant} size="sm" sx={{ ...sx.root }} {...props}>
       <TableCaption placement="top" sx={sx.captionBox}>
         <VisuallyHidden>{content.caption}</VisuallyHidden>
       </TableCaption>
@@ -44,7 +39,7 @@ export const Table = ({
               <Th
                 key={index}
                 scope="col"
-                sx={{ ...sx.tableHeader, ...sxOverride }}
+                sx={{ ...sx.tableHeader }}
                 aria-label={ariaOverride?.headRow?.[index]}
               >
                 {sanitizeAndParseHtml(headerCell)}
@@ -53,7 +48,7 @@ export const Table = ({
           </Tr>
         </Thead>
       )}
-      <Tbody>
+      <Tbody sx={sxOverride?.container}>
         {/* if children prop is passed, just render the children */}
         {children && children}
         {/* if content prop is passed, parse and render rows and cells */}
@@ -86,7 +81,7 @@ export const Table = ({
                     <Th
                       key={rowIndex}
                       scope="col"
-                      sx={{ ...sx.tableHeader, ...sxOverride }}
+                      sx={{ ...sx.tableHeader }}
                       aria-label={ariaOverride?.footRow?.[index][rowIndex]}
                     >
                       {sanitizeAndParseHtml(headerCell)}

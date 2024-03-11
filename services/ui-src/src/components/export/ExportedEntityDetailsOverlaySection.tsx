@@ -1,5 +1,5 @@
 // components
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text, Td } from "@chakra-ui/react";
 import { Fragment } from "react";
 import uuid from "react-uuid";
 // components
@@ -31,7 +31,7 @@ export const ExportedEntityDetailsOverlaySection = ({
   const { report } = useStore() ?? {};
 
   return (
-    <Box sx={sx.sectionHeading} {...props}>
+    <Td sx={sx.sectionHeading} {...props}>
       {report &&
         renderEntityDetailTables(
           report,
@@ -41,7 +41,7 @@ export const ExportedEntityDetailsOverlaySection = ({
           closed,
           props.tableSection
         )}
-    </Box>
+    </Td>
   );
 };
 
