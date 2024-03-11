@@ -10,9 +10,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 // utils
-import { AlertTypes } from "types";
-import verbiage from "verbiage/pages/error";
-import { createEmailLink, parseCustomHtml } from "utils";
+import { AlertTypes, CustomHtmlElement } from "types";
+import { parseCustomHtml } from "utils";
 // assets
 import alertIcon from "assets/icons/icon_alert_circle.png";
 
@@ -25,9 +24,6 @@ export const Alert = ({
   icon,
   ...props
 }: Props) => {
-  const { emailText } = verbiage;
-  const { helpDeskEmail } = emailText;
-
   return (
     <AlertRoot
       status={status}
@@ -46,16 +42,14 @@ export const Alert = ({
             <AlertDescription>
               <Text sx={sx.descriptionText}>
                 {parseCustomHtml(description)}
-                {link && (
-                  <Link
-                    href={createEmailLink({ address: helpDeskEmail })}
-                    isExternal
-                  >
-                    {helpDeskEmail}
-                  </Link>
-                )}
-                .
               </Text>
+              {link && (
+                <Text sx={sx.linkText}>
+                  <Link href={link} isExternal>
+                    {link}
+                  </Link>
+                </Text>
+              )}
             </AlertDescription>
           )}
         </Box>
@@ -67,7 +61,7 @@ export const Alert = ({
 interface Props {
   status?: AlertTypes;
   title?: string;
-  description?: string;
+  description?: string | CustomHtmlElement[];
   link?: string;
   showIcon?: boolean;
   [key: string]: any;

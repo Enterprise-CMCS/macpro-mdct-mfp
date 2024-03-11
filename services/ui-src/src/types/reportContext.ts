@@ -1,6 +1,6 @@
 // REPORT PROVIDER/CONTEXT
 
-import { AnyObject, Choice, ReportJson } from "types";
+import { AnyObject, Choice, CustomHtmlElement, ReportJson } from "types";
 
 export interface ReportKeys {
   reportType: string;
@@ -65,7 +65,7 @@ export interface ReportContextShape extends ReportContextMethods {
   contextIsLoaded: boolean;
   releaseReport: Function;
   approveReport: Function;
-  errorMessage?: string | undefined;
+  errorMessage?: string | CustomHtmlElement[];
   lastSavedTime?: string | undefined;
   isReportPage: boolean;
 }

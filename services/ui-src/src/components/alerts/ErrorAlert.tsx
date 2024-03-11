@@ -3,7 +3,7 @@ import { Box, Collapse } from "@chakra-ui/react";
 import { Alert } from "components";
 import { useRef } from "react";
 // utils
-import { AlertTypes, AnyObject } from "types";
+import { AlertTypes, AnyObject, CustomHtmlElement } from "types";
 
 export const ErrorAlert = ({
   error,
@@ -30,8 +30,7 @@ export const ErrorAlert = ({
             className={variant}
             sx={sx.root}
             {...props}
-            link={"link"}
-          ></Alert>
+          />
         )}
       </Collapse>
     </Box>
@@ -39,7 +38,7 @@ export const ErrorAlert = ({
 };
 
 interface Props {
-  error?: string;
+  error?: string | CustomHtmlElement[];
   variant?: "inline" | "toast";
   sxOverride?: AnyObject;
   [key: string]: any;
