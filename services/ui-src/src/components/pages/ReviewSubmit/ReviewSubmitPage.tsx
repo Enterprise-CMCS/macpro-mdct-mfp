@@ -154,7 +154,7 @@ const ReadyToSubmit = ({
         </Heading>
         <Box sx={sx.infoTextBox}>
           <Text sx={sx.infoHeading}>{intro.infoHeader}</Text>
-          <Text>{parseCustomHtml(intro.info)}</Text>
+          <Box>{parseCustomHtml(intro.info)}</Box>
         </Box>
 
         <Box>
