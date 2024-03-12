@@ -2,6 +2,18 @@ import { removeNotApplicablePopsFromInitiatives } from "./data";
 
 const targetPopulationNotApplicable = {
   id: "123",
+  transitionBenchmarks_targetPopulationName: "Not applicable",
+  isRequired: true,
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "123-abc",
+      value: "No",
+    },
+  ],
+};
+
+const targetPopulationDefaultNotApplicable = {
+  id: "123",
   transitionBenchmarks_targetPopulationName: "Older adults",
   isRequired: true,
   transitionBenchmarks_applicableToMfpDemonstration: [
@@ -14,7 +26,7 @@ const targetPopulationNotApplicable = {
 
 const targetPopulationApplicable = {
   id: "123",
-  transitionBenchmarks_targetPopulationName: "Older adults",
+  transitionBenchmarks_targetPopulationName: "Applicable",
   isRequired: true,
   transitionBenchmarks_applicableToMfpDemonstration: [
     {
@@ -88,7 +100,10 @@ describe("Test removeNotApplicablePopsFromInitiatives", () => {
 
   it("should remove a target population from an initiative if that population does not apply", async () => {
     const fieldData = {
-      targetPopulations: [targetPopulationNotApplicable],
+      targetPopulations: [
+        targetPopulationNotApplicable,
+        targetPopulationDefaultNotApplicable,
+      ],
       initiative: [
         {
           ...initiative,
@@ -101,11 +116,17 @@ describe("Test removeNotApplicablePopsFromInitiatives", () => {
     };
 
     const expectedOutput = {
-      targetPopulations: [targetPopulationNotApplicable],
+      targetPopulations: [
+        targetPopulationNotApplicable,
+        targetPopulationDefaultNotApplicable,
+      ],
       initiative: [
         {
           ...initiative,
-          defineInitiative_targetPopulations: [initiativePD],
+          defineInitiative_targetPopulations: [
+            initiativeOlderAdults,
+            initiativePD,
+          ],
         },
       ],
     };
@@ -116,7 +137,10 @@ describe("Test removeNotApplicablePopsFromInitiatives", () => {
 
   it("should NOT remove a target population from an initiative if that population applies", async () => {
     const fieldData = {
-      targetPopulations: [targetPopulationApplicable],
+      targetPopulations: [
+        targetPopulationDefaultNotApplicable,
+        targetPopulationApplicable,
+      ],
       initiative: [
         {
           ...initiative,
@@ -129,7 +153,10 @@ describe("Test removeNotApplicablePopsFromInitiatives", () => {
     };
 
     const expectedOutput = {
-      targetPopulations: [targetPopulationApplicable],
+      targetPopulations: [
+        targetPopulationDefaultNotApplicable,
+        targetPopulationApplicable,
+      ],
       initiative: [
         {
           ...initiative,
