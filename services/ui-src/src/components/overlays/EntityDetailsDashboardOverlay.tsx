@@ -191,7 +191,7 @@ const sx = {
         whiteSpace: "break-spaces",
         fontSize: "xl",
         lineHeight: "1.75rem",
-        "&:first-child": {
+        "&:first-of-type": {
           fontWeight: "bold",
         },
       },
