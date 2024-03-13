@@ -32,7 +32,12 @@ export const ExportedOverlayModalReportSection = ({
     }
   );
   return (
-    <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
+    <Box
+      as="td"
+      mt="2rem"
+      data-testid="exportedOverlayModalPage"
+      sx={sx.container}
+    >
       <Heading as="h4">
         <Box sx={sx.stepName}>{title}</Box>
         <Box sx={sx.stepHint}>{info || hint}</Box>
