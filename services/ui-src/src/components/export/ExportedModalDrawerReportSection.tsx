@@ -342,7 +342,7 @@ const sx = {
       wordWrap: "break-word",
       border: "1px solid",
     },
-    "td:first-child": {
+    "td:first-of-type": {
       background: "palette.gray_lightest",
       fontWeight: "bold",
     },
@@ -377,11 +377,11 @@ const sx = {
     },
   },
   overflowStyles: {
-    "table:first-child tfoot th:last-child": {
+    "table:first-of-type tfoot th:last-child": {
       background: "palette.secondary_lightest",
       color: "black",
     },
-    "table:first-child tbody tr td:last-child": {
+    "table:first-of-type tbody tr td:last-child": {
       background: "white",
       fontWeight: "normal",
     },
