@@ -81,6 +81,17 @@ describe("MFP WP Review and Submit Page Functionality", () => {
       const { adminInfo } = review;
       expect(screen.getByText(adminInfo.submitLink.text)).toBeEnabled();
     });
+
+    test("should not show console errors", () => {
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        user: mockAdminUserStore,
+      });
+      render(ReviewSubmitPage(WPReviewVerbiage));
+
+      expect(consoleSpy).not.toHaveBeenCalled();
+    });
   });
 });
 
@@ -132,6 +143,20 @@ describe("MFP SAR Review and Submit Page Functionality", () => {
       const { review } = SARReviewVerbiage;
       const { adminInfo } = review;
       expect(screen.getByText(adminInfo.unlockLink.text)).toBeEnabled();
+    });
+
+    test("should not show console errors", () => {
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        report: {
+          reportType: "SAR",
+        },
+        user: mockAdminUserStore,
+      });
+      render(ReviewSubmitPage(SARReviewVerbiage));
+
+      expect(consoleSpy).not.toHaveBeenCalled();
     });
   });
 });
