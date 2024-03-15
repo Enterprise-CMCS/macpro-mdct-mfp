@@ -80,7 +80,7 @@ export const calculateDueDate = (
   let date = new Date();
   if (reportType === ReportType.WP) {
     reportPeriod === 1
-      ? (date = new Date(currentYear, 4, 1))
+      ? (date = new Date(currentYear, 8, 1))
       : (date = new Date(currentYear, 10, 1));
   }
   if (reportType === ReportType.SAR) {
