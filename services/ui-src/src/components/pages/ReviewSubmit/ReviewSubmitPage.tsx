@@ -1,4 +1,9 @@
-import { MouseEventHandler, useContext, useEffect, useState } from "react";
+import React, {
+  MouseEventHandler,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { AdminReview } from "./AdminReview";
 // components
 import {
@@ -153,8 +158,14 @@ const ReadyToSubmit = ({
           {intro.header}
         </Heading>
         <Box sx={sx.infoTextBox}>
-          <Text sx={sx.infoHeading}>{intro.infoHeader}</Text>
-          <Box>{parseCustomHtml(intro.info)}</Box>
+          {intro.info.map((item: any, index: number) => (
+            <React.Fragment key={index}>
+              {item.sectionHeader && (
+                <Text sx={sx.infoHeading}>{item.sectionHeader}</Text>
+              )}
+              <Text sx={sx.infoParagraph}>{item.content}</Text>
+            </React.Fragment>
+          ))}
         </Box>
 
         <Box>
@@ -326,6 +337,9 @@ const sx = {
   infoHeading: {
     fontWeight: "bold",
     marginBottom: ".5rem",
+  },
+  infoParagraph: {
+    marginBottom: "1rem",
   },
   headerImage: {
     display: "inline-block",

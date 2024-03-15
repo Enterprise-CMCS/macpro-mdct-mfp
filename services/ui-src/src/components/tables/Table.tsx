@@ -53,7 +53,7 @@ export const Table = ({
           </Tr>
         </Thead>
       )}
-      <Tbody>
+      <Tbody sx={sxOverride?.container}>
         {/* if children prop is passed, just render the children */}
         {children && children}
         {/* if content prop is passed, parse and render rows and cells */}
