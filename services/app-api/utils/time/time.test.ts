@@ -41,7 +41,7 @@ describe("Test calculateDueDate", () => {
     const reportPeriod = 1;
     const reportType = ReportType.WP;
     const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-    expect(dueDate).toBe("05/01/2022");
+    expect(dueDate).toBe("09/01/2022");
   });
 
   it("calculateDueDate for WP report with creation date as 08/01/2022", () => {
