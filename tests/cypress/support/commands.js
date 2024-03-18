@@ -43,11 +43,10 @@ Cypress.Commands.add("navigateToHomePage", () => {
 });
 
 Cypress.Commands.add("testPageAccessibility", () => {
-  Object.keys(breakpoints).forEach((deviceSize) => {
-    const size = breakpoints[deviceSize];
+  for (let size of Object.values(breakpoints)) {
     cy.viewport(...size);
     cy.runAccessibilityTests();
-  });
+  }
 });
 
 Cypress.Commands.add("fillOutForm", (formInputs) => {
