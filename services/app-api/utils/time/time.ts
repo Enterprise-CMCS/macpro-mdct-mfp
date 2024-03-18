@@ -72,12 +72,15 @@ export const convertToFormattedDate = (date: Date) => {
  * @param reportPeriod The period (1 or 2) for the given report
  * @param reportType The report type (WP or SAR)
  */
+
 export const calculateDueDate = (
   currentYear: number,
   reportPeriod: number,
   reportType: ReportType
 ) => {
   let date = new Date();
+
+  // Revert due date back to month index 4 after the 2024 reporting periods
   if (reportType === ReportType.WP) {
     reportPeriod === 1
       ? (date = new Date(currentYear, 8, 1))
