@@ -51,6 +51,7 @@ import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 import alertIcon from "assets/icons/icon_alert_circle.png";
+import { AddNewWorkPlanModal } from "components/modals/AddNewWorkPlanModal";
 
 export const DashboardPage = ({ reportType }: Props) => {
   const {
@@ -204,7 +205,11 @@ export const DashboardPage = ({ reportType }: Props) => {
     setSelectedReport(formData);
 
     // use disclosure to open modal
-    addEditReportModalOnOpenHandler();
+    if (!reportsToDisplay?.length && reportType == ReportType.WP) {
+      addNewWorkPlanModalOnOpenHandler();
+    } else {
+      addEditReportModalOnOpenHandler();
+    }
   };
 
   const toggleReportArchiveStatus = async (report: ReportShape) => {
@@ -256,6 +261,13 @@ export const DashboardPage = ({ reportType }: Props) => {
         return true;
     }
   };
+
+  // new work plan modal disclosure
+  const {
+    isOpen: addNewWorkPlanModalIsOpen,
+    onOpen: addNewWorkPlanModalOnOpenHandler,
+    onClose: addNewWorkPlanModalOnCloseHandler,
+  } = useDisclosure();
 
   // add/edit program modal disclosure
   const {
@@ -367,6 +379,15 @@ export const DashboardPage = ({ reportType }: Props) => {
           </Box>
         )}
       </Box>
+      <AddNewWorkPlanModal
+        activeState={activeState!}
+        selectedReport={selectedReport!}
+        reportType={reportType}
+        modalDisclosure={{
+          isOpen: addNewWorkPlanModalIsOpen,
+          onClose: addNewWorkPlanModalOnCloseHandler,
+        }}
+      />
       <AddEditReportModal
         activeState={activeState!}
         selectedReport={selectedReport!}
