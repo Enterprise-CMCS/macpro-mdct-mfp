@@ -247,6 +247,17 @@ export const AddEditReportModal = ({
       )}
       {reportType == ReportType.WP && (
         <>
+          <Form
+            data-testid="add-new-wp-form"
+            id={form.id}
+            formJson={form}
+            formData={selectedReport?.formData}
+            // if view-only (user is admin, report is submitted), close modal
+            onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
+            validateOnRender={false}
+            dontReset={true}
+            reportStatus={selectedReport?.status}
+          />
           <Button
             sx={sx.copyBtn}
             disabled={isCopyDisabled() || submitting}
