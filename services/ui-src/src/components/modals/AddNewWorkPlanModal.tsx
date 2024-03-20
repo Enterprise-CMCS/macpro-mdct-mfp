@@ -3,28 +3,80 @@ import { useContext, useState } from "react";
 import { Form, Modal, ReportContext } from "components";
 import newWpFormJson from "forms/addEditWpReport/newWpReport.json";
 import { AnyObject, FormJson, ReportStatus } from "types";
-import { useStore } from "utils";
+import { injectFormWithReportPeriodYears, useStore } from "utils";
 import { States } from "../../constants";
 
 export const AddNewWorkPlanModal = ({
   activeState,
   reportType,
-  selectedReport,
   modalDisclosure,
 }: Props) => {
   const { createReport, fetchReportsByState } = useContext(ReportContext);
   const { full_name, userIsAdmin } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  const form: FormJson = newWpFormJson;
+  /**
+   * @function: Generate report year choices
+   * Populate previous, current, and next year for the choice list,
+   * except if it is the first year of the work plan feature
+   */
+  const generateReportYearChoices = () => {
+    const WP_LAUNCH_YEAR = 2024;
+    const currentYear = new Date(Date.now()).getFullYear();
+    let yearList = [];
+
+    if (currentYear === WP_LAUNCH_YEAR) {
+      yearList = [
+        {
+          label: `${currentYear}`,
+          id: `reportYear-${currentYear}`,
+          value: `${currentYear}`,
+        },
+        {
+          label: `${currentYear + 1}`,
+          id: `reportYear-${currentYear + 1}`,
+          value: `${currentYear + 1}`,
+        },
+      ];
+    } else {
+      yearList = [
+        {
+          label: `${currentYear - 1}`,
+          id: `reportYear-${currentYear - 1}`,
+          value: `${currentYear - 1}`,
+        },
+        {
+          label: `${currentYear}`,
+          id: `reportYear-${currentYear}`,
+          value: `${currentYear}`,
+        },
+        {
+          label: `${currentYear + 1}`,
+          id: `reportYear-${currentYear + 1}`,
+          value: `${currentYear + 1}`,
+        },
+      ];
+    }
+
+    return yearList;
+  };
+
+  const modalFormJson = injectFormWithReportPeriodYears(
+    newWpFormJson,
+    generateReportYearChoices()
+  );
+  const form: FormJson = modalFormJson;
 
   /**
    * @function: Prepare WP payload
    * @param wpReset: (optional) determine whether the user would like to continue a Work Plan for next period,
    * but clear / reset any existing data from the previous period
    */
-  const prepareWpPayload = (wpReset?: boolean) => {
+  const prepareWpPayload = (formData: any, wpReset?: boolean) => {
     const submissionName = "Work Plan";
+    const formattedReportYear = Number(formData.reportPeriodYear[0].value);
+    const formattedReportPeriod =
+      formData.reportPeriod[0].key === "reportPeriod-1" ? 1 : 2;
 
     // static entities
     const targetPopulations = [
@@ -67,6 +119,8 @@ export const AddNewWorkPlanModal = ({
       fieldData: {
         submissionName,
         ["targetPopulations"]: targetPopulations,
+        reportYear: formattedReportYear,
+        reportPeriod: formattedReportPeriod,
       },
     };
   };
@@ -79,7 +133,7 @@ export const AddNewWorkPlanModal = ({
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
-    const dataToWrite = prepareWpPayload(wpReset);
+    const dataToWrite = prepareWpPayload(formData, wpReset);
 
     await createReport(reportType, activeState, {
       ...dataToWrite,
@@ -119,11 +173,9 @@ export const AddNewWorkPlanModal = ({
           data-testid="add-new-wp-form"
           id={form.id}
           formJson={form}
-          formData={selectedReport?.formData}
           onSubmit={userIsAdmin ? modalDisclosure.onClose : writeReport}
           validateOnRender={false}
           dontReset={true}
-          reportStatus={selectedReport?.status}
         />
       </>
     </Modal>

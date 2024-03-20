@@ -27,12 +27,16 @@
         "hint": "Select the reporting period.",
         "choices": [
           {
-            "id": "Sti2hohachO3Ru7RoGl0ut",
-            "label": "First reporting period (January 1 - June 30)"
+            "id": "reportPeriod-1",
+            "label": "First reporting period (January 1 - June 30)",
+            "name": "1",
+            "value": "1"
           },
           {
-            "id": "t8EstaZ9fRewewizaces79",
-            "label": "Second reporting period (July 1 - December 31)"
+            "id": "reportPeriod-2",
+            "label": "Second reporting period (July 1 - December 31)",
+            "name": "2",
+            "value": "2"
           }
         ]
       }
