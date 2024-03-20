@@ -33,6 +33,7 @@ export interface ReportMetadataShape extends ReportKeys {
   // Any additional questions that are asked when creating a report are appended here
   finalSar?: Choice[];
   populations?: Choice[];
+  versionNumber?: number;
 }
 
 export interface ReportShape extends ReportMetadataShape {
