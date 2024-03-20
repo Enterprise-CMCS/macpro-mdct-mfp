@@ -261,6 +261,7 @@ export const mockWPFullReport = {
   reportPeriod: 1,
   locked: false,
   reportYear: 2023,
+  versionNumber: 2,
 };
 
 export const mockSARFullReport = {

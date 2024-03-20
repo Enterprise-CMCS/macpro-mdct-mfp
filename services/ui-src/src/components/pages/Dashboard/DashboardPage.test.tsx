@@ -18,6 +18,7 @@ import {
   mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
+
 import { useBreakpoint, useStore, makeMediaQueryClasses } from "utils";
 import { useUser } from "utils/auth/useUser";
 import { ReportType } from "types";
@@ -127,6 +128,15 @@ describe("Test Report Dashboard view (Desktop)", () => {
       wpVerbiage.body.callToActionAdditions
     );
     expect(callToActionButton).toBeDisabled();
+  });
+
+  test("Show copied from verbiage on report versions 2 or higher", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(dashboardViewWithReports);
+    const subText = screen.getByText(
+      "copied from {undefined - Period undefined}"
+    );
+    expect(subText).toBeInTheDocument();
   });
 
   test("Check that you can enter a WP", async () => {
