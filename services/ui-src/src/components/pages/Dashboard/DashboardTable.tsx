@@ -121,7 +121,7 @@ export const DashboardTable = ({
   </Table>
 );
 
-const copyOverSubText = (
+export const copyOverSubText = (
   report: ReportMetadataShape,
   reportsByState: ReportMetadataShape[]
 ) =>
