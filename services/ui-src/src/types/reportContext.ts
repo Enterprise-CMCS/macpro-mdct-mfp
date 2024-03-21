@@ -34,6 +34,7 @@ export interface ReportMetadataShape extends ReportKeys {
   finalSar?: Choice[];
   populations?: Choice[];
   versionNumber?: number;
+  isCopied?: boolean;
 }
 
 export interface ReportShape extends ReportMetadataShape {

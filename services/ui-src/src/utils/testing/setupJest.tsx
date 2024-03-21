@@ -20,6 +20,7 @@ import {
   mockWPApprovedFullReport,
   mockWPSubmittedReport,
   mockWPFullReport,
+  mockWPCopiedReport,
   mockSARFullReport,
   mockEvaluationPlan,
   mockObjectiveProgress,
@@ -186,6 +187,7 @@ export const mockBannerStore: AdminBannerState = {
 export const mockReportStore: MfpReportState = {
   report: mockWPFullReport as ReportShape,
   reportsByState: [
+    mockWPCopiedReport,
     mockWPFullReport,
     mockWPSubmittedReport,
     mockWPApprovedFullReport,

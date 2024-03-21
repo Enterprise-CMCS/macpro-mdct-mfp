@@ -125,8 +125,7 @@ export const copyOverSubText = (
   report: ReportMetadataShape,
   reportsByState: ReportMetadataShape[]
 ) =>
-  report.versionNumber &&
-  report?.versionNumber > 1 && (
+  report.isCopied && (
     <Text sx={sx.copyOverText}>{`copied from {${
       reportsByState[reportsByState.indexOf(report) + 1]?.reportYear
     } - Period ${
