@@ -12,7 +12,7 @@ export const AddNewWorkPlanModal = ({
   modalDisclosure,
 }: Props) => {
   const { createReport, fetchReportsByState } = useContext(ReportContext);
-  const { full_name, userIsAdmin } = useStore().user ?? {};
+  const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   /**
@@ -77,7 +77,6 @@ export const AddNewWorkPlanModal = ({
     const formattedReportYear = Number(formData.reportPeriodYear[0].value);
     const formattedReportPeriod =
       formData.reportPeriod[0].key === "reportPeriod-1" ? 1 : 2;
-
     // static entities
     const targetPopulations = [
       {
@@ -115,12 +114,12 @@ export const AddNewWorkPlanModal = ({
         locked: false,
         previousRevisions: [],
         isReset: wpReset,
+        reportYear: formattedReportYear,
+        reportPeriod: formattedReportPeriod,
       },
       fieldData: {
         submissionName,
         ["targetPopulations"]: targetPopulations,
-        reportYear: formattedReportYear,
-        reportPeriod: formattedReportPeriod,
       },
     };
   };
@@ -173,7 +172,9 @@ export const AddNewWorkPlanModal = ({
           data-testid="add-new-wp-form"
           id={form.id}
           formJson={form}
-          onSubmit={userIsAdmin ? modalDisclosure.onClose : writeReport}
+          onSubmit={(formData: Record<string, any>) =>
+            writeReport(formData, false)
+          }
           validateOnRender={false}
           dontReset={true}
         />
