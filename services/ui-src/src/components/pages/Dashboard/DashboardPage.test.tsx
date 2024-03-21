@@ -132,11 +132,10 @@ describe("Test Report Dashboard view (Desktop)", () => {
 
   test("Show copied from verbiage on report versions 2 or higher", () => {
     mockedUseStore.mockReturnValue(mockUseStore);
-    const { container } = render(dashboardViewWithReports);
+    render(dashboardViewWithReports);
     const subText = screen.getByText(
       "copied from {undefined - Period undefined}"
     );
-    screen.debug(container);
     expect(subText).toBeInTheDocument();
   });
 
