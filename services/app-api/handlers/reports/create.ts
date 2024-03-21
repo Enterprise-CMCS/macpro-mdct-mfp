@@ -127,15 +127,22 @@ export const createReport = handler(
     };
 
     const currentDate = Date.now();
-    let reportYear: number =
-      reportType === ReportType.WP
-        ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
-        : workPlanMetadata!.reportYear;
+    let reportYear: number;
+    let reportPeriod: number;
 
-    let reportPeriod: number =
-      reportType === ReportType.WP
-        ? calculatePeriod(currentDate, workPlanMetadata)
-        : workPlanMetadata!.reportPeriod;
+    // Use the report year entered in the create WP modal, else use the current year
+    if (unvalidatedMetadata?.reportYear) {
+      reportYear = unvalidatedMetadata?.reportYear;
+    } else {
+      reportYear = new Date(convertDateUtcToEt(currentDate)).getFullYear();
+    }
+
+    // Use the report period entered in the create WP modal, else calculate based on current date
+    if (unvalidatedMetadata?.reportPeriod) {
+      reportPeriod = unvalidatedMetadata?.reportPeriod;
+    } else {
+      reportPeriod = calculatePeriod(currentDate, workPlanMetadata);
+    }
 
     const overrideCopyOver =
       unvalidatedMetadata?.copyReport &&
