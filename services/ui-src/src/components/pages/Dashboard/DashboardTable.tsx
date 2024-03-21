@@ -126,11 +126,11 @@ export const copyOverSubText = (
   reportsByState: ReportMetadataShape[]
 ) =>
   report.isCopied && (
-    <Text sx={sx.copyOverText}>{`copied from {${
+    <Text sx={sx.copyOverText}>{`copied from ${
       reportsByState[reportsByState.indexOf(report) + 1]?.reportYear
     } - Period ${
       reportsByState[reportsByState.indexOf(report) + 1]?.reportPeriod
-    }}`}</Text>
+    }`}</Text>
   );
 
 interface DashboardTableProps {
