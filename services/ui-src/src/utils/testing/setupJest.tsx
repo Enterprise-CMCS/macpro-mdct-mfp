@@ -187,9 +187,9 @@ export const mockBannerStore: AdminBannerState = {
 export const mockReportStore: MfpReportState = {
   report: mockWPFullReport as ReportShape,
   reportsByState: [
-    mockWPCopiedReport,
     mockWPFullReport,
     mockWPSubmittedReport,
+    mockWPCopiedReport,
     mockWPApprovedFullReport,
   ],
   submittedReportsByState: [mockWPFullReport],
