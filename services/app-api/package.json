@@ -33,8 +33,6 @@
   "dependencies": {
     "aws-jwt-verify": "^3.1.0",
     "aws-sdk": "^2.1525.0",
-    "date-fns": "^2.26.0",
-    "date-fns-tz": "^1.2.2",
     "dompurify": "^2.4.0",
     "jsdom": "^20.0.0",
     "jwt-decode": "^3.1.2",

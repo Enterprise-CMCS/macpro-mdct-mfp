@@ -10,8 +10,6 @@
     "outDir": ".build",
     "rootDir": "./",
     "resolveJsonModule": true,
-    // This module resolution strategy avoids issues with the types of date-fns-tz
-    "moduleResolution": "node",
     "lib": ["ES2022"],
     "module": "node16",
     "target": "ES2022"
