@@ -164,7 +164,6 @@ export const DashboardPage = ({ reportType }: Props) => {
     setEditable(isReportEditable(selectedReport));
     navigate(firstReportPagePath);
   };
-
   const openAddEditReportModal = (report?: ReportShape) => {
     let formData = undefined;
     //
@@ -241,7 +240,6 @@ export const DashboardPage = ({ reportType }: Props) => {
       confirmUnlockModalOnOpenHandler();
     }
   };
-
   const isAddSubmissionDisabled = (): boolean => {
     switch (reportType) {
       case ReportType.SAR:
@@ -272,7 +270,6 @@ export const DashboardPage = ({ reportType }: Props) => {
   } = useDisclosure();
 
   const fullStateName = States[activeState as keyof typeof States];
-
   return (
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
