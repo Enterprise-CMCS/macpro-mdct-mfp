@@ -46,7 +46,7 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
       ? getWPAlertStatus(report, entityType)
       : false;
   return (
-    <Box>
+    <>
       {showAlert && (
         <Alert
           title={(alertVerbiage as AlertVerbiage)[entityType].title}
@@ -54,7 +54,12 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
           description={(alertVerbiage as AlertVerbiage)[entityType].description}
         />
       )}
-      <Table sx={sx.root} content={{}} data-testid="exportTable">
+      <Table
+        sxOverride={{ container: { ...sx.container } }}
+        sx={sx.root}
+        content={{}}
+        data-testid="exportTable"
+      >
         {report?.fieldData[entityType] &&
           renderModalOverlayTableBody(
             section,
@@ -66,7 +71,7 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
         report?.fieldData[entityType].length === 0) && (
         <Text sx={sx.emptyState}> No entities found.</Text>
       )}
-    </Box>
+    </>
   );
 };
 
@@ -137,8 +142,8 @@ export function renderModalOverlayTableBody(
     case ReportType.WP:
       return entities.map((entity, idx) => {
         return (
-          <Box sx={sx.container} key={`${reportType}${idx}`}>
-            <Tr>
+          <>
+            <Tr key={`${reportType}${idx}`}>
               <Td sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -162,7 +167,7 @@ export function renderModalOverlayTableBody(
               switch (type) {
                 case EntityDetailsStepTypes.DEFINE_INITIATIVE:
                   return (
-                    <Box key={`${type}${idx}${stepIdx}`}>
+                    <Box as="tr" key={`${type}${idx}${stepIdx}`}>
                       <ExportedEntityDetailsOverlaySection
                         section={section as ModalOverlayReportPageShape}
                         entity={entity}
@@ -173,7 +178,7 @@ export function renderModalOverlayTableBody(
                   );
                 case OverlayModalStepTypes.EVALUATION_PLAN:
                   return (
-                    <Box key={`${type}${idx}${stepIdx}`}>
+                    <Box as="tr" key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
@@ -183,7 +188,7 @@ export function renderModalOverlayTableBody(
                   );
                 case OverlayModalStepTypes.FUNDING_SOURCES:
                   return (
-                    <Box key={`${type}${idx}${stepIdx}`}>
+                    <Box as="tr" key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
@@ -197,7 +202,7 @@ export function renderModalOverlayTableBody(
 
                   return (
                     entity?.isInitiativeClosed && (
-                      <Box key={`${type}${idx}${stepIdx}`}>
+                      <Box as="tr" key={`${type}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={section as ModalOverlayReportPageShape}
                           entity={entity}
@@ -212,14 +217,14 @@ export function renderModalOverlayTableBody(
                   return <></>;
               }
             })}
-          </Box>
+          </>
         );
       });
     case ReportType.SAR:
       return entities.map((entity, idx) => {
         return (
-          <Box sx={sx.container} key={`${reportType}${idx}`}>
-            <Tr>
+          <>
+            <Tr key={`${reportType}${idx}`}>
               <Td sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -242,7 +247,7 @@ export function renderModalOverlayTableBody(
                 switch (step.stepType) {
                   case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
                     return (
-                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                      <Box as="tr" key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedOverlayModalReportSection
                           section={dynamicSection[idx] as OverlayModalPageShape}
                           entity={entity}
@@ -252,7 +257,7 @@ export function renderModalOverlayTableBody(
                     );
                   case EntityDetailsStepTypes.INITIAVTIVE_PROGRESS:
                     return (
-                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                      <Box as="tr" key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={step}
                           entity={entity}
@@ -273,7 +278,7 @@ export function renderModalOverlayTableBody(
                       tableSection.form.fields.pop();
 
                     return (
-                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                      <Box as="tr" key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={step}
                           entity={entity}
@@ -288,7 +293,7 @@ export function renderModalOverlayTableBody(
                 }
               }
             )}
-          </Box>
+          </>
         );
       });
     default:
@@ -374,5 +379,7 @@ const sx = {
   },
   container: {
     paddingTop: "2rem",
+    display: "flex",
+    flexDirection: "column",
   },
 };

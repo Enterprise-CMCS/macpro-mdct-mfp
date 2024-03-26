@@ -179,7 +179,7 @@ export const sx = {
     fontSize: "4xl",
   },
   combinedDataTable: {
-    "table-layout": "fixed",
+    tableLayout: "fixed",
     ".combined-data-title": {
       display: "inline-block",
       marginBottom: "0.5rem",
