@@ -300,6 +300,7 @@ export const createReport = handler(
         ),
         reportYear,
         reportPeriod,
+        isCopied: overrideCopyOver ? true : false,
         dueDate: calculateDueDate(reportYear, reportPeriod, reportType),
         associatedWorkPlan: workPlanMetadata?.id,
       },

@@ -5,6 +5,12 @@ const cognitoPasswordInputField = 'input[name="password"]';
 const cognitoLoginButton = "[data-testid='cognito-login-button']";
 const myAccountButton = '[aria-label="my account"';
 
+const breakpoints = {
+  mobile: [560, 800],
+  tablet: [880, 1000],
+  desktop: [1200, 1200],
+};
+
 const stateUserPassword = Cypress.env("STATE_USER_PASSWORD");
 const adminUserPassword = Cypress.env("ADMIN_USER_PASSWORD");
 
@@ -31,6 +37,63 @@ const adminUser = {
   email: Cypress.env("ADMIN_USER_EMAIL"),
   password: adminUserPassword,
 };
+
+Cypress.Commands.add("navigateToHomePage", () => {
+  if (cy.location("pathname") !== "/") cy.visit("/");
+});
+
+Cypress.Commands.add("testPageAccessibility", () => {
+  for (let size of Object.values(breakpoints)) {
+    cy.viewport(...size);
+    cy.runAccessibilityTests();
+  }
+});
+
+Cypress.Commands.add("fillOutForm", (formInputs) => {
+  formInputs.forEach((row) => {
+    /*
+     * Repeated inputs have the same name, so it comes back as an array. Thus we need to grab
+     * which input in the array we need. Otherwise we can just query the name of the input
+     */
+    const repeatedInput = row?.[3];
+    const input = repeatedInput
+      ? cy.get(`input[name^="${row[0]}"]`)
+      : cy.get(`[name='${row[0]}']`);
+    const inputType = row[1];
+    const inputValue = row[2];
+    switch (inputType) {
+      case "singleCheckbox":
+        if (inputValue == "true") {
+          input.check();
+          input.blur();
+        } else input.uncheck();
+        break;
+      case "radio":
+        input.check(inputValue);
+        input.blur();
+        break;
+      case "checkbox":
+        input.check(inputValue);
+        input.blur();
+        break;
+      case "dropdown":
+        input.select(inputValue);
+        input.blur();
+        break;
+      case "repeated":
+        input.eq(repeatedInput);
+        input.clear();
+        input.type(inputValue);
+        input.blur();
+        break;
+      default:
+        input.clear();
+        input.type(inputValue);
+        input.blur();
+        break;
+    }
+  });
+});
 
 Cypress.Commands.add("authenticate", (userType, userCredentials) => {
   cy.session([userType, userCredentials], () => {

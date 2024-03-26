@@ -193,6 +193,19 @@ describe("Review and Submit Page Functionality", () => {
       expect(unfilledPageImg).toBe(null);
     });
   });
+
+  describe("Console errors", () => {
+    test("should not show console errors", () => {
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        report: mockFilledReport,
+      });
+      render(WpReviewSubmitPage);
+
+      expect(consoleSpy).not.toHaveBeenCalled();
+    });
+  });
 });
 
 describe("When loading a sucessfully submitted report (Success Message Generator)", () => {

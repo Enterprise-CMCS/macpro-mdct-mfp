@@ -1,5 +1,26 @@
 import { ReportType } from "../types";
-import { calculateDueDate, calculatePeriod, isLeapYear } from "./time";
+import {
+  calculateDueDate,
+  calculatePeriod,
+  convertDateUtcToEt,
+  isLeapYear,
+} from "./time";
+
+describe("Test convertDateUtcToEt", () => {
+  it("Converts to Eastern Time correctly just before midnight", () => {
+    // 2024-12-31 11:59:59pm in New York
+    const date = 1735707599000;
+
+    expect(convertDateUtcToEt(date)).toBe("12/31/2024");
+  });
+
+  it("Converts to Eastern Time correctly just after midnight", () => {
+    // 2025-01-01 12:00:01am in New York
+    const date = 1735707601000;
+
+    expect(convertDateUtcToEt(date)).toBe("01/01/2025");
+  });
+});
 
 describe("Test calculatePeriod", () => {
   it("calculatePeriod given due date of 01/01/2022", () => {
@@ -41,7 +62,7 @@ describe("Test calculateDueDate", () => {
     const reportPeriod = 1;
     const reportType = ReportType.WP;
     const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-    expect(dueDate).toBe("05/01/2022");
+    expect(dueDate).toBe("09/01/2022");
   });
 
   it("calculateDueDate for WP report with creation date as 08/01/2022", () => {

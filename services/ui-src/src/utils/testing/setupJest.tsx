@@ -20,6 +20,7 @@ import {
   mockWPApprovedFullReport,
   mockWPSubmittedReport,
   mockWPFullReport,
+  mockWPCopiedReport,
   mockSARFullReport,
   mockEvaluationPlan,
   mockObjectiveProgress,
@@ -188,6 +189,7 @@ export const mockReportStore: MfpReportState = {
   reportsByState: [
     mockWPFullReport,
     mockWPSubmittedReport,
+    mockWPCopiedReport,
     mockWPApprovedFullReport,
   ],
   submittedReportsByState: [mockWPFullReport],
