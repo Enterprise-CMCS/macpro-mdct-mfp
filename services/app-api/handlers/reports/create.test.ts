@@ -55,6 +55,26 @@ const wpCreationEvent: APIGatewayProxyEvent = {
   }),
 };
 
+const wpManualYearCreationEvent: APIGatewayProxyEvent = {
+  ...wpMockProxyEvent,
+  body: JSON.stringify({
+    fieldData: {
+      stateName: "Alabama",
+      submissionCount: 0,
+    },
+    metadata: {
+      reportType: "WP",
+      reportYear: 2025,
+      reportPeriod: 2,
+      submissionName: "submissionName",
+      status: "Not started",
+      lastAlteredBy: "Thelonious States",
+      fieldDataId: "mockReportFieldData",
+      formTemplateId: "mockReportJson",
+    },
+  }),
+};
+
 const wpCopyCreationEvent: APIGatewayProxyEvent = {
   ...wpMockProxyEvent,
   body: JSON.stringify({
@@ -158,6 +178,23 @@ describe("Test createReport API method", () => {
     const res = await createReport(wpCopyCreationEvent, null);
     expect(res.statusCode).toBe(403);
     expect(s3PutSpy).toHaveBeenCalled();
+  });
+
+  test("Test work plan uses the report year in the metadata", async () => {
+    const res = await createReport(wpManualYearCreationEvent, null);
+    const body = JSON.parse(res.body);
+    expect(res.statusCode).toBe(StatusCodes.CREATED);
+    expect(body.reportYear).toBe(2025);
+    expect(body.reportPeriod).toBe(2);
+  });
+
+  test("Test work plan uses the current year for report year if metadata doesn't exist", async () => {
+    jest.useFakeTimers().setSystemTime(new Date(2022, 5, 1));
+    const res = await createReport(wpCreationEvent, null);
+    const body = JSON.parse(res.body);
+    expect(res.statusCode).toBe(StatusCodes.CREATED);
+    expect(body.reportYear).toBe(2022);
+    expect(body.reportPeriod).toBe(1);
   });
 
   test("Test successful run of work plan report creation, not copied", async () => {
