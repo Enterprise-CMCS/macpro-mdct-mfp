@@ -4,6 +4,7 @@ import {
   convertEntityToTargetPopulationChoice,
   fillEmptyQuarters,
   hydrateFormFields,
+  injectFormWithReportPeriodYears,
   injectFormWithTargetPopulations,
   removeNotApplicablePopulations,
   resetClearProp,
@@ -406,6 +407,90 @@ describe("form utilities", () => {
           type: "text",
           props: {
             reallyCool: false,
+          },
+        },
+      ]);
+    });
+  });
+
+  describe("injectFormWithReportPeriodYears", () => {
+    it("should populate the form with data from the create work plan modal", () => {
+      const form = {
+        id: "form1",
+        fields: [
+          {
+            id: "reportPeriodYear", // importantly, the id is "reportPeriodYear"
+            type: "radio",
+            props: {
+              label: "Reporting Period Year",
+              choices: [],
+            },
+          },
+          {
+            id: "some other field",
+            type: "text",
+            props: {
+              label: "aw, sad",
+            },
+          },
+        ],
+      };
+      const dataToInject = [
+        {
+          label: "2020",
+          id: "reportYear-2020",
+          name: "2020",
+          value: "2020",
+        },
+        {
+          label: "2021",
+          id: `reportYear-2021`,
+          name: "2021",
+          value: "2021",
+        },
+        {
+          label: "2022",
+          id: "reportYear-2022",
+          name: "2022",
+          value: "2022",
+        },
+      ];
+
+      injectFormWithReportPeriodYears(form, dataToInject);
+
+      expect(form.fields).toEqual([
+        {
+          id: "reportPeriodYear",
+          type: "radio",
+          props: {
+            label: "Reporting Period Year",
+            choices: [
+              {
+                label: "2020",
+                id: "reportYear-2020",
+                name: "2020",
+                value: "2020",
+              },
+              {
+                label: "2021",
+                id: `reportYear-2021`,
+                name: "2021",
+                value: "2021",
+              },
+              {
+                label: "2022",
+                id: "reportYear-2022",
+                name: "2022",
+                value: "2022",
+              },
+            ],
+          },
+        },
+        {
+          id: "some other field",
+          type: "text",
+          props: {
+            label: "aw, sad",
           },
         },
       ]);
