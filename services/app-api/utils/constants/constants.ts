@@ -9,6 +9,7 @@ export const error = {
   // bucket errors
   S3_OBJECT_CREATION_ERROR: "Report could not be created due to an S3 error.",
   S3_OBJECT_UPDATE_ERROR: "Report could not be updated due to an S3 error.",
+  S3_OBJECT_GET_ERROR: "Error while fetching report.",
   // dynamo errors
   DYNAMO_CREATION_ERROR: "Report could not be created due to a database error.",
   DYNAMO_UPDATE_ERROR: "Report could not be updated due to a database error.",

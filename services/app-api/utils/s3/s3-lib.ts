@@ -1,94 +1,51 @@
-import { Credentials, S3, Endpoint } from "aws-sdk";
-import { ServiceConfigurationOptions } from "aws-sdk/lib/service";
-import { buckets } from "../constants/constants";
-import { ReportJson, S3Copy, S3Get, S3Put, State } from "../types";
+import {
+  S3Client,
+  PutObjectCommand,
+  PutObjectCommandInput,
+  GetObjectCommandInput,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
+import { logger } from "../debugging/debug-lib";
+import { buckets, error } from "../constants/constants";
+import { State } from "../types";
 
-export const createS3Client = () => {
-  const s3Config: S3.ClientConfiguration &
-    ServiceConfigurationOptions &
-    S3.ClientApiVersions = {};
-
-  const endpoint = process.env.S3_LOCAL_ENDPOINT;
-  if (endpoint) {
-    // We are working locally for testing, so set up appropriately
-    s3Config.endpoint = new Endpoint(endpoint);
-    s3Config.region = "localhost";
-    s3Config.s3ForcePathStyle = true;
-    s3Config.credentials = new Credentials({
-      accessKeyId: "S3RVER", // pragma: allowlist secret
-      secretAccessKey: "S3RVER", // pragma: allowlist secret
-    });
-  } else {
-    s3Config.region = "us-east-1";
-  }
-  return new S3(s3Config);
+const localConfig = {
+  endpoint: process.env.S3_LOCAL_ENDPOINT,
+  region: "localhost",
+  forcePathStyle: true,
+  credentials: {
+    accessKeyId: "S3RVER", // pragma: allowlist secret
+    secretAccessKey: "S3RVER", // pragma: allowlist secret
+  },
+  logger,
 };
 
-const s3Client = createS3Client();
+const awsConfig = {
+  region: "us-east-1",
+  logger,
+};
 
-const put = async (params: S3Put) => {
-  return new Promise<void>((resolve, reject) => {
-    s3Client.putObject(params, function (err: any, result: any) {
-      if (err) {
-        reject(err);
-      }
-      if (result) {
-        resolve();
-      }
-    });
-  });
+export const getConfig = () => {
+  return process.env.S3_LOCAL_ENDPOINT ? localConfig : awsConfig;
 };
-const get = async (params: S3Get) => {
-  return new Promise((resolve, reject) => {
-    s3Client.getObject(params, function (err: any, result: any) {
-      if (err) {
-        reject(err);
-      }
-      if (result) {
-        resolve(JSON.parse(result.Body));
-      }
-    });
-  });
-};
-const copy = async (params: S3Copy) => {
-  return new Promise<void>((resolve, reject) => {
-    s3Client.copyObject(params, function (err: any, result: any) {
-      if (err) {
-        reject(err);
-      }
-      if (result) {
-        resolve();
-      }
-    });
-  });
-};
-const list = async (params: S3.ListObjectsV2Request) => {
-  let continuationToken: S3.Token | undefined;
-  const s3Objects: S3.ObjectList = [];
+const client = new S3Client(getConfig());
 
-  do {
-    const response = await new Promise<S3.ListObjectsV2Output>(
-      (resolve, reject) => {
-        s3Client.listObjectsV2(
-          { ...params, ContinuationToken: continuationToken },
-          function (err: any, result: S3.ListObjectsV2Output) {
-            if (err) {
-              reject(err);
-            }
-            if (result) {
-              resolve(result);
-            }
-          }
-        );
+export default {
+  put: async (params: PutObjectCommandInput) =>
+    await client.send(new PutObjectCommand(params)),
+  get: async (params: GetObjectCommandInput) => {
+    try {
+      const response = await client.send(new GetObjectCommand(params));
+      const stringBody = await response.Body?.transformToString();
+      if (stringBody) {
+        return JSON.parse(stringBody);
+      } else {
+        throw new Error();
       }
-    );
-    if (response.Contents) {
-      s3Objects.push(...response.Contents);
+    } catch {
+      throw new Error(error.S3_OBJECT_GET_ERROR);
     }
-    continuationToken = response.NextContinuationToken;
-  } while (continuationToken);
-
-  return s3Objects;
+  },
 };
 
 export function getFieldDataKey(state: State, fieldDataId: string) {
@@ -98,19 +55,3 @@ export function getFieldDataKey(state: State, fieldDataId: string) {
 export function getFormTemplateKey(formTemplateId: string) {
   return `${buckets.FORM_TEMPLATE}/${formTemplateId}.json`;
 }
-
-/**
- * Retrieve template data from S3
- *
- * @param bucket s3 bucket
- * @param key s3 key
- * @returns s3 object body
- */
-export async function getTemplate(bucket: string, key: string) {
-  return (await get({
-    Key: key,
-    Bucket: bucket,
-  })) as ReportJson;
-}
-
-export default { put, get, copy, list };
