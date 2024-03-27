@@ -82,3 +82,8 @@ export interface CustomHtmlElement {
   props?: AnyObject;
   children?: CustomHtmlElement[];
 }
+
+export interface ErrorVerbiage {
+  title: string;
+  description: string | CustomHtmlElement[];
+}
