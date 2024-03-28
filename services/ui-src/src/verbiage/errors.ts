@@ -1,7 +1,7 @@
 export const bannerErrors = {
   GET_BANNER_FAILED: {
-    title: "error",
-    descriptiob: "Banner could not be fetched. Please contact support.",
+    title: "Error",
+    description: "Banner could not be fetched. Please contact support.",
   },
   REPLACE_BANNER_FAILED: {
     title: "Error",
@@ -14,7 +14,7 @@ export const bannerErrors = {
   },
   CREATE_BANNER_FAILED: {
     title: "Error",
-    descrption: "Could not create a banner. Please contact support.",
+    description: "Could not create a banner. Please contact support.",
   },
 };
 

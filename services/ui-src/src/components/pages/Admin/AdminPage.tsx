@@ -36,7 +36,10 @@ export const AdminPage = () => {
   } = useStore();
 
   useEffect(() => {
-    setBannerErrorMessage("");
+    setBannerErrorMessage({
+      title: "Error",
+      description: "We've run into an error",
+    });
   }, []);
 
   return (
