@@ -11,6 +11,7 @@ import {
   ReportMetadataShape,
   EntityShape,
   MfpEntityState,
+  ErrorVerbiage,
 } from "types";
 
 // USER STORE
@@ -33,7 +34,7 @@ const bannerStore = (set: Function) => ({
   bannerData: undefined,
   bannerActive: false,
   bannerLoading: false,
-  bannerErrorMessage: "",
+  bannerErrorMessage: { title: "", description: "" },
   bannerDeleting: false,
   // actions
   setBannerData: (newBanner: AdminBannerData | undefined) =>
@@ -48,7 +49,7 @@ const bannerStore = (set: Function) => ({
     set(() => ({ bannerLoading: loading }), false, {
       type: "setBannerLoading",
     }),
-  setBannerErrorMessage: (errorMessage: string) =>
+  setBannerErrorMessage: (errorMessage: ErrorVerbiage) =>
     set(() => ({ bannerErrorMessage: errorMessage }), false, {
       type: "setBannerErrorMessage",
     }),

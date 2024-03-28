@@ -395,7 +395,10 @@ export const mockReportMethods = {
   setReportSelection: jest.fn(),
   isReportPage: true,
   contextIsLoaded: true,
-  errorMessage: "",
+  errorMessage: {
+    title: "Error",
+    description: "We've run into a problem",
+  },
   lastSavedTime: "1:58 PM",
 };
 
@@ -404,7 +407,10 @@ export const mockWpReportContext = {
   report: mockWPFullReport,
   reportsByState: mockReportsByState,
   copyEligibleReportsByState: mockReportsByState,
-  errorMessage: "",
+  errorMessage: {
+    title: "Error",
+    description: "We've run into a problem",
+  },
   lastSavedTime: "2:00 PM",
 };
 

@@ -41,7 +41,7 @@ export const AdminBannerProvider = ({ children }: Props) => {
       const currentBanner = await getBanner(ADMIN_BANNER_ID);
       const newBannerData = currentBanner?.Item || {};
       setBannerData(newBannerData);
-      setBannerErrorMessage("");
+      setBannerErrorMessage({ title: "", description: "" });
     } catch (e: any) {
       // 404 expected when no current banner exists
       if (!e.toString().includes("404")) {
