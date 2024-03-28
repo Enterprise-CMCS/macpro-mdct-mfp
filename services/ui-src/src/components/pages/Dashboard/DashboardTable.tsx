@@ -1,5 +1,5 @@
 // components
-import { Button, Image, Td, Tr, Spinner } from "@chakra-ui/react";
+import { Button, Image, Td, Tr, Spinner, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // utils
 import {
@@ -41,7 +41,12 @@ export const DashboardTable = ({
         )}
         {/* Report Name */}
         {reportType === ReportType.WP ? (
-          <Td sx={sxOverride.wpSubmissionNameText}>{report.submissionName}</Td>
+          <>
+            <Td sx={sxOverride.wpSubmissionNameText}>
+              {report.submissionName}
+              {copyOverSubText(report, reportsByState)}
+            </Td>
+          </>
         ) : (
           <Td sx={sxOverride.sarSubmissionNameText}>{report.submissionName}</Td>
         )}
@@ -115,6 +120,18 @@ export const DashboardTable = ({
     ))}
   </Table>
 );
+
+export const copyOverSubText = (
+  report: ReportMetadataShape,
+  reportsByState: ReportMetadataShape[]
+) =>
+  report.isCopied && (
+    <Text sx={sx.copyOverText}>{`copied from ${
+      reportsByState[reportsByState.indexOf(report) + 1]?.reportYear
+    } - Period ${
+      reportsByState[reportsByState.indexOf(report) + 1]?.reportPeriod
+    }`}</Text>
+  );
 
 interface DashboardTableProps {
   reportsByState: ReportMetadataShape[];
@@ -302,5 +319,10 @@ const sx = {
         minWidth: "2rem",
       },
     },
+  },
+  copyOverText: {
+    fontSize: "xs",
+    fontWeight: "300",
+    color: "palette.gray_medium",
   },
 };
