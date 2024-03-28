@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import {
+  AddNewWorkPlanModal,
   AddEditReportModal,
   Modal,
   DashboardTable,
@@ -51,7 +52,6 @@ import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 import alertIcon from "assets/icons/icon_alert_circle.png";
-import { AddNewWorkPlanModal } from "components/modals/AddNewWorkPlanModal";
 
 export const DashboardPage = ({ reportType }: Props) => {
   const {
