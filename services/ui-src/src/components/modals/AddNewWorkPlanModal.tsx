@@ -4,7 +4,7 @@ import { Form, Modal, ReportContext } from "components";
 import newWpFormJson from "forms/addEditWpReport/newWpReport.json";
 import { AnyObject, FormJson, ReportStatus } from "types";
 import { injectFormWithReportPeriodYears, useStore } from "utils";
-import { States } from "../../constants";
+import { States, DEFAULT_TARGET_POPULATIONS } from "../../constants";
 
 export const AddNewWorkPlanModal = ({
   activeState,
@@ -77,35 +77,6 @@ export const AddNewWorkPlanModal = ({
     const formattedReportYear = Number(formData.reportPeriodYear[0].value);
     const formattedReportPeriod =
       formData.reportPeriod[0].key === "reportPeriod-1" ? 1 : 2;
-    // static entities
-    const targetPopulations = [
-      {
-        id: "2Vd02CVUtKgBETwqzDXpSIhi",
-        transitionBenchmarks_targetPopulationName: "Older adults",
-        isRequired: true,
-      },
-      {
-        id: "2Vd02HAezQkxNu2ShmlQONHa",
-        transitionBenchmarks_targetPopulationName:
-          "Individuals with physical disabilities (PD)",
-        transitionBenchmarks_targetPopulationName_short: "PD",
-        isRequired: true,
-      },
-      {
-        id: "2Vd02IvLwE59ebYAjfiU7H66",
-        transitionBenchmarks_targetPopulationName:
-          "Individuals with intellectual and developmental disabilities (I/DD)",
-        transitionBenchmarks_targetPopulationName_short: "I/DD",
-        isRequired: true,
-      },
-      {
-        id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
-        transitionBenchmarks_targetPopulationName:
-          "Individuals with mental health and substance use disorders (MH/SUD)",
-        transitionBenchmarks_targetPopulationName_short: "MH/SUD",
-        isRequired: true,
-      },
-    ];
 
     return {
       metadata: {
@@ -119,7 +90,7 @@ export const AddNewWorkPlanModal = ({
       },
       fieldData: {
         submissionName,
-        ["targetPopulations"]: targetPopulations,
+        ["targetPopulations"]: DEFAULT_TARGET_POPULATIONS,
       },
     };
   };
