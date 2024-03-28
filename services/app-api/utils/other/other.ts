@@ -1,12 +1,12 @@
 import { States } from "../constants/constants";
 import {
   AnyObject,
+  APIGatewayProxyEvent,
   ReportMetadataShape,
   ReportShape,
   ReportStatus,
   ReportType,
 } from "../types";
-import { APIGatewayProxyEvent } from "aws-lambda";
 import { fetchReportsByState, fetchReport } from "../../handlers/reports/fetch";
 
 export const createReportName = (
