@@ -16,7 +16,13 @@ import {
   useStore,
   getLastSubmission,
 } from "utils";
-import { ReportContextShape, ReportKeys, ReportShape, ReportType } from "types";
+import {
+  CustomHtmlElement,
+  ReportContextShape,
+  ReportKeys,
+  ReportShape,
+  ReportType,
+} from "types";
 import { reportErrors } from "verbiage/errors";
 
 // CONTEXT DECLARATION
@@ -42,12 +48,12 @@ export const ReportContext = createContext<ReportContextShape>({
   releaseReport: Function,
   // other
   isReportPage: false as boolean,
-  errorMessage: undefined as string | undefined,
+  errorMessage: undefined as string | CustomHtmlElement[] | undefined,
 });
 
 export const ReportProvider = ({ children }: Props) => {
   const { pathname } = useLocation();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<string | CustomHtmlElement[]>();
   const [contextIsLoaded, setContextIsLoaded] = useState<boolean>(false);
   const [isReportPage, setIsReportPage] = useState<boolean>(false);
 

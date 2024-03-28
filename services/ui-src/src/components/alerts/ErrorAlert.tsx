@@ -3,7 +3,7 @@ import { Box, Collapse } from "@chakra-ui/react";
 import { Alert } from "components";
 import { useRef } from "react";
 // utils
-import { AlertTypes, AnyObject } from "types";
+import { AlertTypes, AnyObject, CustomHtmlElement } from "types";
 
 export const ErrorAlert = ({
   error,
@@ -24,9 +24,9 @@ export const ErrorAlert = ({
         {error && (
           <Alert
             status={AlertTypes.ERROR}
-            title="Error"
+            title="We've run into a problem"
             description={error}
-            showIcon={false}
+            showIcon={true}
             className={variant}
             sx={sx.root}
             {...props}
@@ -38,7 +38,7 @@ export const ErrorAlert = ({
 };
 
 interface Props {
-  error?: string;
+  error?: string | CustomHtmlElement[];
   variant?: "inline" | "toast";
   sxOverride?: AnyObject;
   [key: string]: any;

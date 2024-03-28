@@ -15,6 +15,7 @@ import {
   submitReport,
   getReportsByState,
   releaseReport,
+  parseCustomHtml,
 } from "utils";
 // components
 import { ReportContext, ReportProvider } from "./ReportProvider";
@@ -36,6 +37,9 @@ const mockReportKeys = {
   state: "AL",
   id: mockReport.id,
 };
+
+const errorText =
+  "Something went wrong on our end. Refresh your screen and try again.";
 
 const TestComponent = () => {
   const { ...context } = useContext(ReportContext);
@@ -72,7 +76,11 @@ const TestComponent = () => {
         Release
       </button>
       <p data-testid="contextIsLoaded">{context.contextIsLoaded.toString()}</p>
-      <p data-testid="errorMessage">{context.errorMessage}</p>
+      {context.errorMessage && (
+        <p data-testid="errorMessage">
+          {parseCustomHtml(context.errorMessage)}
+        </p>
+      )}
     </div>
   );
 };
@@ -101,9 +109,7 @@ describe("ReportProvider", () => {
     (postReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Create");
     await userEvent.click(button);
-    expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
-    );
+    expect(screen.getByTestId("errorMessage")).toHaveTextContent(errorText);
   });
 
   it("should call the API to fetch a report", async () => {
@@ -116,9 +122,7 @@ describe("ReportProvider", () => {
     (getReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Fetch");
     await userEvent.click(button);
-    expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be loaded/
-    );
+    expect(screen.getByTestId("errorMessage")).toHaveTextContent(errorText);
   });
 
   it("should call the API to archive a report", async () => {
@@ -131,9 +135,7 @@ describe("ReportProvider", () => {
     (archiveReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Archive");
     await userEvent.click(button);
-    expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
-    );
+    expect(screen.getByTestId("errorMessage")).toHaveTextContent(errorText);
   });
 
   it("should call the API to update a report", async () => {
@@ -146,9 +148,7 @@ describe("ReportProvider", () => {
     (putReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Update");
     await userEvent.click(button);
-    expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
-    );
+    expect(screen.getByTestId("errorMessage")).toHaveTextContent(errorText);
   });
 
   it("should call the API to approve a report", async () => {
@@ -161,9 +161,7 @@ describe("ReportProvider", () => {
     (approveReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Approve");
     await userEvent.click(button);
-    expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
-    );
+    expect(screen.getByTestId("errorMessage")).toHaveTextContent(errorText);
   });
 
   it("should call the API to submit a report", async () => {
@@ -176,9 +174,7 @@ describe("ReportProvider", () => {
     (submitReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Submit");
     await userEvent.click(button);
-    expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
-    );
+    expect(screen.getByTestId("errorMessage")).toHaveTextContent(errorText);
   });
 
   it("should call the API to fetch reports for a state", async () => {
@@ -191,9 +187,7 @@ describe("ReportProvider", () => {
     (getReportsByState as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("FetchByState");
     await userEvent.click(button);
-    expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Reports could not be loaded/
-    );
+    expect(screen.getByTestId("errorMessage")).toHaveTextContent(errorText);
   });
 
   // This test passes when run by itself, but fails when the whole suite runs.
@@ -209,9 +203,7 @@ describe("ReportProvider", () => {
     (getReportsByState as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("FetchForSar");
     await userEvent.click(button);
-    expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Reports could not be loaded/
-    );
+    expect(screen.getByTestId("errorMessage")).toHaveTextContent(errorText);
   });
 
   it("should call the API to release a report", async () => {
@@ -224,8 +216,6 @@ describe("ReportProvider", () => {
     (releaseReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Release");
     await userEvent.click(button);
-    expect(screen.getByTestId("errorMessage")).toHaveTextContent(
-      /Report could not be updated/
-    );
+    expect(screen.getByTestId("errorMessage")).toHaveTextContent(errorText);
   });
 });
