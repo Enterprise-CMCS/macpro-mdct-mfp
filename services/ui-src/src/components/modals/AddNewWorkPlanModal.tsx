@@ -138,28 +138,26 @@ export const AddNewWorkPlanModal = ({
         closeButtonText: "Cancel",
       }}
     >
-      <>
-        <Form
-          data-testid="add-new-wp-form"
-          id={form.id}
-          formJson={form}
-          onSubmit={(formData: Record<string, any>) =>
-            writeReport(formData, false)
-          }
-          validateOnRender={false}
-          dontReset={true}
-        />
-      </>
+      <Form
+        data-testid="add-new-wp-form"
+        id={form.id}
+        formJson={form}
+        onSubmit={(formData: Record<string, any>) =>
+          writeReport(formData, false)
+        }
+        validateOnRender={false}
+        dontReset={true}
+      />
     </Modal>
   );
 };
 
 interface Props {
-  activeState?: string;
   reportType: string;
-  selectedReport?: AnyObject;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
   };
+  activeState?: string;
+  selectedReport?: AnyObject;
 }
