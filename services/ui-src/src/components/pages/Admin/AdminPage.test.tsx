@@ -150,7 +150,7 @@ describe("Test AdminPage displays banner error when state has set an error", () 
       await render(adminView(mockBannerMethods));
     });
 
-    expect(screen.getByText("Error")).toBeVisible();
+    expect(screen.getByText("We've run into a problem")).toBeVisible();
   });
 });
 

@@ -1,38 +1,4 @@
-export const bannerErrors = {
-  GET_BANNER_FAILED: {
-    title: "Error",
-    description: "Banner could not be fetched. Please contact support.",
-  },
-  REPLACE_BANNER_FAILED: {
-    title: "Error",
-    description:
-      "Current banner could not be replaced. Please contact support.",
-  },
-  DELETE_BANNER_FAILED: {
-    title: "Error",
-    description: "Current banner could not be deleted. Please contact support.",
-  },
-  CREATE_BANNER_FAILED: {
-    title: "Error",
-    description: "Could not create a banner. Please contact support.",
-  },
-};
-
-export const validationErrors = {
-  REQUIRED_GENERIC: "A response is required",
-  REQUIRED_CHECKBOX: "Select at least one response",
-  INVALID_GENERIC: "Response must be valid",
-  INVALID_EMAIL: "Response must be a valid email address",
-  INVALID_URL: "Response must be a valid hyperlink/URL",
-  INVALID_DATE: "Response must be a valid date",
-  INVALID_END_DATE: "End date can't be before start date",
-  NUMBER_LESS_THAN_ZERO: "Response must be greater than or equal to zero",
-  INVALID_NUMBER: "Response must be a valid number",
-  INVALID_NUMBER_OR_NA: 'Response must be a valid number or "N/A"',
-  INVALID_RATIO: "Response must be a valid ratio",
-};
-
-const genericErrorContent = [
+export const genericErrorContent = [
   {
     type: "span",
     content:
@@ -51,6 +17,39 @@ const genericErrorContent = [
     content: ".",
   },
 ];
+
+export const bannerErrors = {
+  GET_BANNER_FAILED: {
+    title: "Banner could not be fetched",
+    description: genericErrorContent,
+  },
+  REPLACE_BANNER_FAILED: {
+    title: "Current banner could not be replaced.",
+    description: genericErrorContent,
+  },
+  DELETE_BANNER_FAILED: {
+    title: "Current banner could not be deleted",
+    description: genericErrorContent,
+  },
+  CREATE_BANNER_FAILED: {
+    title: "Could not create a banner.",
+    description: genericErrorContent,
+  },
+};
+
+export const validationErrors = {
+  REQUIRED_GENERIC: "A response is required",
+  REQUIRED_CHECKBOX: "Select at least one response",
+  INVALID_GENERIC: "Response must be valid",
+  INVALID_EMAIL: "Response must be a valid email address",
+  INVALID_URL: "Response must be a valid hyperlink/URL",
+  INVALID_DATE: "Response must be a valid date",
+  INVALID_END_DATE: "End date can't be before start date",
+  NUMBER_LESS_THAN_ZERO: "Response must be greater than or equal to zero",
+  INVALID_NUMBER: "Response must be a valid number",
+  INVALID_NUMBER_OR_NA: 'Response must be a valid number or "N/A"',
+  INVALID_RATIO: "Response must be a valid ratio",
+};
 
 export const reportErrors = {
   GET_REPORT_DATA_FAILED: {

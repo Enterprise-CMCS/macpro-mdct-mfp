@@ -1,4 +1,5 @@
 import { ReportStatus } from "types";
+import { genericErrorContent } from "verbiage/errors";
 import {
   mockStandardReportPageJson,
   mockDrawerReportPageJson,
@@ -396,8 +397,8 @@ export const mockReportMethods = {
   isReportPage: true,
   contextIsLoaded: true,
   errorMessage: {
-    title: "Error",
-    description: "We've run into a problem",
+    title: "We've run into a problem",
+    description: genericErrorContent,
   },
   lastSavedTime: "1:58 PM",
 };
@@ -408,8 +409,8 @@ export const mockWpReportContext = {
   reportsByState: mockReportsByState,
   copyEligibleReportsByState: mockReportsByState,
   errorMessage: {
-    title: "Error",
-    description: "We've run into a problem",
+    title: "We've run into a problem",
+    description: genericErrorContent,
   },
   lastSavedTime: "2:00 PM",
 };

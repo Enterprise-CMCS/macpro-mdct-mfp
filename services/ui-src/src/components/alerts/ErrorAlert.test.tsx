@@ -3,10 +3,11 @@ import { axe } from "jest-axe";
 //components
 import { ErrorAlert } from "components";
 import { ErrorVerbiage } from "types";
+import { genericErrorContent } from "verbiage/errors";
 
 const error: ErrorVerbiage = {
-  title: "Error",
-  description: "We've run into a problem",
+  title: "We've run into a problem",
+  description: genericErrorContent,
 };
 
 const errorAlertComponent = (
