@@ -55,7 +55,7 @@ const genericErrorContent = [
 export const reportErrors = {
   GET_REPORT_DATA_FAILED: {
     title: "Unable to fetch Report Data.",
-    description: "Report data could not be loaded. Please contact support.",
+    description: genericErrorContent,
   },
   SET_REPORT_DATA_FAILED: {
     title: "Report data could not be saved.",
