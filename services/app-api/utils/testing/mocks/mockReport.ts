@@ -136,4 +136,5 @@ export const mockWPFieldData = {
   submissionName: "Work Plan",
   submissionCount: "0",
   stateName: "New Jersey",
+  initiative: [],
 };

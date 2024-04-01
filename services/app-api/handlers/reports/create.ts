@@ -1,4 +1,5 @@
 import KSUID from "ksuid";
+import { PutCommandInput } from "@aws-sdk/lib-dynamodb";
 import handler from "../handler-lib";
 // utils
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
@@ -26,23 +27,21 @@ import {
   createReportName,
   getLastCreatedWorkPlan,
 } from "../../utils/other/other";
+import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
+import { logger } from "../../utils/debugging/debug-lib";
+import { copyFieldDataFromSource } from "../../utils/other/copy";
+import { extractWorkPlanData } from "../../utils/transformations/transformations";
 // types
 import {
   AnyObject,
-  DynamoWrite,
+  APIGatewayProxyEvent,
   isReportType,
   isState,
   ReportMetadataShape,
   ReportType,
-  S3Put,
   StatusCodes,
   UserRoles,
 } from "../../utils/types";
-import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
-import { logger } from "../../utils/logging";
-import { APIGatewayProxyEvent } from "aws-lambda";
-import { copyFieldDataFromSource } from "../../utils/other/copy";
-import { extractWorkPlanData } from "../../utils/transformations/transformations";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
@@ -248,7 +247,7 @@ export const createReport = handler(
     const fieldDataId: string = KSUID.randomSync().string;
     const formTemplateId: string = formTemplateVersion?.id;
 
-    const fieldDataParams: S3Put = {
+    const fieldDataParams = {
       Bucket: reportBucket,
       Key: getFieldDataKey(state, fieldDataId),
       Body: JSON.stringify(newFieldData),
@@ -279,7 +278,7 @@ export const createReport = handler(
     }
 
     // Begin Section - Create DyanmoDB record
-    const reportMetadataParams: DynamoWrite = {
+    const reportMetadataParams: PutCommandInput = {
       TableName: reportTable,
       Item: {
         ...validatedMetadata,
@@ -318,7 +317,7 @@ export const createReport = handler(
 
     // Begin Section - Let the Workplan know that its been tied to a SAR that was just created
     if (reportType === ReportType.SAR) {
-      const workPlanWithSarFormConnection: DynamoWrite = {
+      const workPlanWithSarFormConnection = {
         TableName: reportTables[ReportType.WP],
         Item: {
           ...workPlanMetadata,
