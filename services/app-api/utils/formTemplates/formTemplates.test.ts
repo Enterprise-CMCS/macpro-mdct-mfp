@@ -94,9 +94,6 @@ describe("Test getOrCreateFormTemplate WP", () => {
       reportPeriod,
       mockWorkPlanFieldData
     );
-    dynamoClientMock.on(QueryCommand).resolvesOnce({
-      Items: [],
-    });
     const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);

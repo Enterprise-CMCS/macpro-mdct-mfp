@@ -45,7 +45,7 @@ export async function getNewestTemplateVersion(reportType: ReportType) {
     ScanIndexForward: false, // true = ascending, false = descending
   };
   const result = await dynamodbLib.query(queryParams);
-  return result?.Items?.[0];
+  return result?.[0];
 }
 
 export async function getTemplateVersionByHash(
@@ -63,7 +63,7 @@ export async function getTemplateVersionByHash(
     },
   };
   const result = await dynamodbLib.query(queryParams);
-  return result?.Items?.[0];
+  return result?.[0];
 }
 
 export const formTemplateForReportType = (reportType: ReportType) => {

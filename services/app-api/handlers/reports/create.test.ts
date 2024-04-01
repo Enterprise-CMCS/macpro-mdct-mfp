@@ -149,6 +149,9 @@ describe("Test createReport API method", () => {
   });
 
   test("Test report creation throws a 403 when copying a report of the same period", async () => {
+    dynamoClientMock.on(QueryCommand).resolves({
+      Items: [],
+    });
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
     jest.useFakeTimers().setSystemTime(new Date(2021, 11, 1));
@@ -228,6 +231,11 @@ describe("Test createReport API method", () => {
   });
 
   test("Test successful run of sar report creation, not copied", async () => {
+    dynamoClientMock.on(QueryCommand).resolves({
+      Items: [],
+    });
+    const s3PutSpy = jest.spyOn(s3Lib, "put");
+    s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
     jest
       .spyOn(helperFunctions, "getLastCreatedWorkPlan")
       .mockResolvedValueOnce({
@@ -240,6 +248,7 @@ describe("Test createReport API method", () => {
     expect(body.status).toContain("Not started");
     expect(body.fieldDataId).toBeDefined;
     expect(body.formTemplateId).toBeDefined;
+    expect(s3PutSpy).toHaveBeenCalled();
   });
 
   test("Test attempted report creation with invalid data fails", async () => {

@@ -143,8 +143,8 @@ describe("Test fetchReportsByState API method", () => {
     dynamoClientMock.reset();
   });
   test("Test successful call", async () => {
-    const dynamoQueryAllSpy = jest.spyOn(dynamodbLib, "queryAll");
-    dynamoQueryAllSpy.mockResolvedValue([mockDynamoData]);
+    const dynamoQuerySpy = jest.spyOn(dynamodbLib, "query");
+    dynamoQuerySpy.mockResolvedValue([mockDynamoData]);
     const res = await fetchReportsByState(testReadEventByState, null);
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);

@@ -150,7 +150,7 @@ export const fetchReportsByState = handler(async (event, _context) => {
     },
   };
 
-  const reportsByState = await dynamoDb.queryAll(queryParams);
+  const reportsByState = await dynamoDb.query(queryParams);
 
   return {
     status: StatusCodes.SUCCESS,

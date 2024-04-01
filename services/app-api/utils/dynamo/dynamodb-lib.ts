@@ -5,8 +5,8 @@ import {
   DynamoDBDocumentClient,
   GetCommand,
   GetCommandInput,
-  QueryCommand,
   QueryCommandInput,
+  paginateQuery,
   PutCommand,
   PutCommandInput,
 } from "@aws-sdk/lib-dynamodb";
@@ -44,18 +44,12 @@ export default {
     await client.send(new DeleteCommand(params)),
   put: async (params: PutCommandInput) =>
     await client.send(new PutCommand(params)),
-  query: async (params: QueryCommandInput) =>
-    await client.send(new QueryCommand(params)),
-  queryAll: async (params: Omit<QueryCommandInput, "ExclusiveStartKey">) => {
+  query: async (params: QueryCommandInput) => {
     let items: AnyObject[] = [];
-    let ExclusiveStartKey: Record<string, any> | undefined;
-
-    do {
-      const command = new QueryCommand({ ...params, ExclusiveStartKey });
-      const result = await client.send(command);
-      items = items.concat(result.Items ?? []);
-      ExclusiveStartKey = result.LastEvaluatedKey;
-    } while (ExclusiveStartKey);
+    const resultPages = paginateQuery({ client }, params);
+    for await (let page of resultPages) {
+      items = items.concat(page?.Items ?? []);
+    }
 
     return items;
   },
