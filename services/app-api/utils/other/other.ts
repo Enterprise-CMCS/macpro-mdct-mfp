@@ -8,6 +8,7 @@ import {
   ReportType,
 } from "../types";
 import { fetchReportsByState, fetchReport } from "../../handlers/reports/fetch";
+import { calculatePeriod, convertDateUtcToEt } from "../time/time";
 
 export const createReportName = (
   reportType: string,
@@ -101,4 +102,64 @@ export const getLastCreatedWorkPlan = async (
   }
   // If there wasn't an eligble work plan to copy from, return undefined
   return { workPlanMetadata: undefined, workPlanFieldData: undefined };
+};
+
+export const getReportYear = (
+  reportType: string,
+  //reportData: unvalidatedMetadata || workPlanMetadata
+  reportData: any,
+  isCopyOver: boolean = false
+): number => {
+  if (isCopyOver) {
+    if (typeof reportData?.copyReport?.reportYear !== "number") {
+      throw new Error("Invalid value for reportYear");
+    }
+    const prevReportYear = reportData?.copyReport?.reportYear;
+    const prevReportPeriod = reportData?.copyReport?.reportPeriod;
+
+    return prevReportPeriod == 2 ? prevReportYear + 1 : prevReportYear;
+  }
+
+  if (
+    (reportType === ReportType.WP && !isCopyOver) ||
+    reportType === ReportType.SAR
+  ) {
+    if (typeof reportData.reportYear !== "number") {
+      throw new Error("Invalid value for reportYear");
+    }
+
+    return reportData?.reportYear;
+  }
+
+  return new Date(convertDateUtcToEt(Date.now())).getFullYear();
+};
+
+export const getReportPeriod = (
+  reportType: string,
+  //reportData: unvalidatedMetadata || workPlanMetadata
+  reportData: any,
+  isCopyOver: boolean = false
+): number => {
+  if (isCopyOver) {
+    if (typeof reportData?.copyReport?.reportPeriod !== "number") {
+      throw new Error("Invalid value for reportPeriod");
+    }
+
+    let prevReportPeriod = reportData?.copyReport?.reportPeriod;
+
+    return (prevReportPeriod % 2) + 1;
+  }
+
+  if (
+    (reportType === ReportType.WP && !isCopyOver) ||
+    reportType === ReportType.SAR
+  ) {
+    if (typeof reportData.reportPeriod !== "number") {
+      throw new Error("Invalid value for reportPeriod");
+    }
+
+    return reportData?.reportPeriod;
+  }
+
+  return calculatePeriod(Date.now(), reportData);
 };

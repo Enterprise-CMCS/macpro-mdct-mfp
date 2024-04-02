@@ -21,11 +21,12 @@ import {
   calculateDueDate,
   calculatePeriod,
   calculateCurrentYear,
-  convertDateUtcToEt,
 } from "../../utils/time/time";
 import {
   createReportName,
   getLastCreatedWorkPlan,
+  getReportPeriod,
+  getReportYear,
 } from "../../utils/other/other";
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { logger } from "../../utils/debugging/debug-lib";
@@ -127,35 +128,44 @@ export const createReport = handler(
     };
 
     const currentDate = Date.now();
-    let reportYear: number;
-    let reportPeriod: number;
-
-    // Use the report year entered in the create WP modal, else use the current year
-    if (unvalidatedMetadata?.reportYear) {
-      reportYear = unvalidatedMetadata?.reportYear;
-    } else {
-      reportYear = new Date(convertDateUtcToEt(currentDate)).getFullYear();
-    }
-
-    // Use the report period entered in the create WP modal, else calculate based on current date
-    if (unvalidatedMetadata?.reportPeriod) {
-      reportPeriod = unvalidatedMetadata?.reportPeriod;
-    } else {
-      reportPeriod = calculatePeriod(currentDate, workPlanMetadata);
-    }
 
     const overrideCopyOver =
       unvalidatedMetadata?.copyReport &&
       unvalidatedMetadata?.copyReport?.isCopyOverTest;
+    let reportYear, reportPeriod;
 
-    if (overrideCopyOver) {
-      if (unvalidatedMetadata?.copyReport?.reportPeriod)
-        reportPeriod = unvalidatedMetadata?.copyReport?.reportPeriod;
-      if (unvalidatedMetadata?.copyReport?.reportYear)
-        reportYear = unvalidatedMetadata?.copyReport?.reportYear;
+    /**
+     * If the report is a WP, determine reportYear from the unvalidated metadata. Otherwise, a SAR will use the workplan metadata.
+     */
+    if (reportType === ReportType.WP) {
+      reportYear = getReportYear(
+        reportType,
+        unvalidatedMetadata,
+        overrideCopyOver
+      );
+    } else {
+      reportYear = getReportYear(
+        reportType,
+        workPlanMetadata,
+        overrideCopyOver
+      );
+    }
 
-      reportYear = reportPeriod == 2 ? reportYear + 1 : reportYear;
-      reportPeriod = (reportPeriod % 2) + 1;
+    /**
+     * If the report is a WP, determine reportPeriod from the unvalidated metadata. Otherwise, a SAR will use the workplan metadata.
+     */
+    if (reportType === ReportType.WP) {
+      reportPeriod = getReportPeriod(
+        reportType,
+        unvalidatedMetadata,
+        overrideCopyOver
+      );
+    } else {
+      reportPeriod = getReportPeriod(
+        reportType,
+        workPlanMetadata,
+        overrideCopyOver
+      );
     }
 
     // If this Work Plan is a reset, the reporting period is the upcoming one
