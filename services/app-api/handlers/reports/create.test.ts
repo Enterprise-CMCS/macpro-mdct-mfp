@@ -217,18 +217,18 @@ describe("Test createReport API method", () => {
       body.formTemplate.validationJson
     ).filter((key) => key.includes("quarterlyProjections"));
     expect(quarterlyRepeatinFields).toHaveLength(12);
-    expect(quarterlyRepeatinFields[0]).toEqual("quarterlyProjections2022Q3");
-    expect(quarterlyRepeatinFields[11]).toEqual("quarterlyProjections2025Q2");
+    expect(quarterlyRepeatinFields[0]).toEqual("quarterlyProjections2020Q3");
+    expect(quarterlyRepeatinFields[11]).toEqual("quarterlyProjections2023Q2");
 
     const fundingSoureRepeatingFields = Object.keys(
       body.formTemplate.validationJson
     ).filter((key) => key.includes("fundingSources_quarters"));
     expect(fundingSoureRepeatingFields).toHaveLength(12);
     expect(fundingSoureRepeatingFields[0]).toEqual(
-      "fundingSources_quarters2022Q3"
+      "fundingSources_quarters2020Q3"
     );
     expect(fundingSoureRepeatingFields[11]).toEqual(
-      "fundingSources_quarters2025Q2"
+      "fundingSources_quarters2023Q2"
     );
     expect(s3PutSpy).toHaveBeenCalled();
     expect(s3GetSpy).toHaveBeenCalled();
@@ -254,6 +254,12 @@ describe("Test createReport API method", () => {
         workPlanMetadata: mockWPMetadata,
         workPlanFieldData: mockWPFieldData,
       });
+    jest
+      .spyOn(helperFunctions, "getReportYear")
+      .mockReturnValueOnce(mockWPMetadata.reportYear);
+    jest
+      .spyOn(helperFunctions, "getReportPeriod")
+      .mockReturnValueOnce(mockWPMetadata.reportPeriod);
     const res = await createReport(sarCreationEvent, null);
     const body = JSON.parse(res.body);
     expect(res.statusCode).toBe(StatusCodes.CREATED);
