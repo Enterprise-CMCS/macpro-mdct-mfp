@@ -215,51 +215,33 @@ export const AddEditReportModal = ({
           reportStatus={selectedReport?.status}
         />
       )}
+
+      {/* 
+        If the report is a WP, it's a copyover. 
+        New work plans use the AddNewReportModal.
+      */}
       {reportType == ReportType.WP && (
-        <>
-          <Form
-            data-testid="add-new-wp-form"
-            id={form.id}
-            formJson={form}
-            formData={selectedReport?.formData}
-            // if view-only (user is admin, report is submitted), close modal
-            onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
-            validateOnRender={false}
-            dontReset={true}
-            reportStatus={selectedReport?.status}
-          />
-          <Button
-            sx={sx.copyBtn}
-            disabled={isCopyDisabled() || submitting}
-            onClick={writeReport}
-            type="submit"
-          >
-            Continue from previous period
-          </Button>
-          {isCopyDisabled() ? (
-            <Button
-              sx={sx.close}
-              onClick={writeReport}
-              disabled={submitting}
-              type="submit"
-              variant="outline"
-              data-testid="modal-logout-button"
-            >
-              Start new
-            </Button>
-          ) : (
-            <Button
-              sx={sx.resetBtn}
-              onClick={resetReport}
-              disabled={submitting}
-              type="submit"
-              variant="outline"
-              data-testid="modal-logout-button"
-            >
-              Reset Work Plan
-            </Button>
-          )}
-        </>
+        <Button
+          sx={sx.copyBtn}
+          disabled={isCopyDisabled() || submitting}
+          onClick={writeReport}
+          type="submit"
+        >
+          Continue from previous period
+        </Button>
+      )}
+
+      {isCopyDisabled() && (
+        <Button
+          sx={sx.resetBtn}
+          onClick={resetReport}
+          disabled={submitting}
+          type="submit"
+          variant="outline"
+          data-testid="modal-logout-button"
+        >
+          Reset Work Plan
+        </Button>
       )}
     </Modal>
   );
