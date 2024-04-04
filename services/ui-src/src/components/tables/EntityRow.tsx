@@ -155,7 +155,7 @@ export const EntityRow = ({
               sx={sx.editNameButton}
               variant="none"
               onClick={() => openAddEditEntityModal(entity)}
-              aria-label="edit button"
+              aria-label="edit entity button"
             >
               {!editable || isInitiativeClosed
                 ? verbiage.readOnlyEntityButtonText
