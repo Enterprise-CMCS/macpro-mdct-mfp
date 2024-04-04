@@ -221,27 +221,28 @@ export const AddEditReportModal = ({
         New work plans use the AddNewReportModal.
       */}
       {reportType == ReportType.WP && (
-        <Button
-          sx={sx.copyBtn}
-          disabled={isCopyDisabled() || submitting}
-          onClick={writeReport}
-          type="submit"
-        >
-          Continue from previous period
-        </Button>
-      )}
-
-      {isCopyDisabled() && (
-        <Button
-          sx={sx.resetBtn}
-          onClick={resetReport}
-          disabled={submitting}
-          type="submit"
-          variant="outline"
-          data-testid="modal-logout-button"
-        >
-          Reset Work Plan
-        </Button>
+        <>
+          <Button
+            sx={sx.copyBtn}
+            disabled={isCopyDisabled() || submitting}
+            onClick={writeReport}
+            type="submit"
+          >
+            Continue from previous period
+          </Button>
+          {!isCopyDisabled() && (
+            <Button
+              sx={sx.resetBtn}
+              onClick={resetReport}
+              disabled={submitting}
+              type="submit"
+              variant="outline"
+              data-testid="modal-logout-button"
+            >
+              Reset Work Plan
+            </Button>
+          )}
+        </>
       )}
     </Modal>
   );
