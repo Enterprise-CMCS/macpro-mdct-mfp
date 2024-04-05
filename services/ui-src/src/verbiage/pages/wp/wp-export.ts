@@ -4,7 +4,7 @@ export default {
     notApplicable: "Not applicable",
   },
   reportBanner: {
-    intro: "Click below to export or print WP shown here",
+    intro: "Click below to export or print MFP Work Plan shown here",
     pdfButton: "Download PDF",
   },
   metadata: {

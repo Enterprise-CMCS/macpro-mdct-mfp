@@ -363,7 +363,7 @@
                 "id": "ret-mtfqi-header-2",
                 "type": "sectionHeader",
                 "props": {
-                  "content": "Intermediate care facility for individuals with intellecutal disabilities (ICF/IID)"
+                  "content": "Intermediate care facility for individuals with intellectual disabilities (ICF/IID)"
                 }
               },
               {
@@ -529,7 +529,7 @@
           }
         },
         {
-          "name": "Total number of current MFP participants in the reporting period",
+          "name": "Total number of active MFP participants in the reporting period",
           "path": "/sar/recruitment-enrollment-transitions/total-number-of-current-mfp-participants",
           "pageType": "standard",
           "verbiage": {

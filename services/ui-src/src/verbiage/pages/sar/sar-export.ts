@@ -4,7 +4,7 @@ export default {
     notApplicable: "Not applicable",
   },
   reportBanner: {
-    intro: "Click below to export or print SAR shown here",
+    intro: "Click below to export or print MFP SAR shown here",
     pdfButton: "Download PDF",
   },
   metadata: {
