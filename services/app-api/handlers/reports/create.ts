@@ -139,12 +139,8 @@ export const createReport = handler(
     let reportData =
       reportType === ReportType.WP ? unvalidatedMetadata : workPlanMetadata;
 
-    const reportYear = getReportYear(reportType, reportData, overrideCopyOver);
-    const reportPeriod = getReportPeriod(
-      reportType,
-      reportData,
-      overrideCopyOver
-    );
+    const reportYear = getReportYear(reportData, overrideCopyOver);
+    const reportPeriod = getReportPeriod(reportData, overrideCopyOver);
 
     // If this Work Plan is a reset, the reporting period is the upcoming one
     const isReset = unvalidatedMetadata?.isReset;

@@ -8,7 +8,6 @@ import {
   ReportType,
 } from "../types";
 import { fetchReportsByState, fetchReport } from "../../handlers/reports/fetch";
-import { calculatePeriod, convertDateUtcToEt } from "../time/time";
 
 export const createReportName = (
   reportType: string,
@@ -105,7 +104,6 @@ export const getLastCreatedWorkPlan = async (
 };
 
 export const getReportYear = (
-  reportType: string,
   //reportData: unvalidatedMetadata || workPlanMetadata
   reportData: any,
   isCopyOver: boolean = false
@@ -120,22 +118,14 @@ export const getReportYear = (
     return prevReportPeriod == 2 ? prevReportYear + 1 : prevReportYear;
   }
 
-  if (
-    (reportType === ReportType.WP && !isCopyOver) ||
-    reportType === ReportType.SAR
-  ) {
-    if (typeof reportData.reportYear !== "number") {
-      throw new Error("Invalid value for reportYear");
-    }
-
-    return reportData?.reportYear;
+  if (typeof reportData.reportYear !== "number") {
+    throw new Error("Invalid value for reportYear");
   }
 
-  return new Date(convertDateUtcToEt(Date.now())).getFullYear();
+  return reportData?.reportYear;
 };
 
 export const getReportPeriod = (
-  reportType: string,
   //reportData: unvalidatedMetadata || workPlanMetadata
   reportData: any,
   isCopyOver: boolean = false
@@ -150,16 +140,9 @@ export const getReportPeriod = (
     return (prevReportPeriod % 2) + 1;
   }
 
-  if (
-    (reportType === ReportType.WP && !isCopyOver) ||
-    reportType === ReportType.SAR
-  ) {
-    if (typeof reportData.reportPeriod !== "number") {
-      throw new Error("Invalid value for reportPeriod");
-    }
-
-    return reportData?.reportPeriod;
+  if (typeof reportData.reportPeriod !== "number") {
+    throw new Error("Invalid value for reportPeriod");
   }
 
-  return calculatePeriod(Date.now(), reportData);
+  return reportData?.reportPeriod;
 };

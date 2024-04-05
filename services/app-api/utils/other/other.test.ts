@@ -1,4 +1,3 @@
-import { ReportType } from "../types";
 import { getReportPeriod, getReportYear } from "./other";
 
 const mockWPData = {
@@ -38,7 +37,7 @@ describe("getReportYear", () => {
       reportYear: 2020,
     };
 
-    const response = getReportYear(ReportType.WP, reportData, false);
+    const response = getReportYear(reportData, false);
 
     expect(response).toEqual(2020);
   });
@@ -49,7 +48,7 @@ describe("getReportYear", () => {
       copyReport: { reportYear: 2020, reportPeriod: 1, isCopyOverTest: true },
     };
 
-    const response = getReportYear(ReportType.WP, reportData, true);
+    const response = getReportYear(reportData, true);
 
     expect(response).toEqual(2020);
   });
@@ -60,14 +59,14 @@ describe("getReportYear", () => {
       copyReport: { isCopyOverTest: true, reportPeriod: 2, reportYear: 2020 },
     };
 
-    const response = getReportYear(ReportType.WP, reportData, true);
+    const response = getReportYear(reportData, true);
 
     expect(response).toEqual(2021);
   });
 
   it("should return the report year for a SAR", () => {
     const reportData = { ...mockWPData, reportPeriod: 1, reportYear: 2020 };
-    const response = getReportYear(ReportType.SAR, reportData, false);
+    const response = getReportYear(reportData, false);
 
     expect(response).toEqual(2020);
   });
@@ -75,7 +74,7 @@ describe("getReportYear", () => {
   it("should throw an error if the report year is not a number", () => {
     const reportData = { ...mockUnvalidatedMetadata, reportYear: "2020" };
 
-    expect(() => getReportYear(ReportType.WP, reportData, false)).toThrow(
+    expect(() => getReportYear(reportData, false)).toThrow(
       "Invalid value for reportYear"
     );
   });
@@ -93,7 +92,7 @@ describe("getReportPeriod", () => {
       reportYear: 2020,
     };
 
-    const response = getReportPeriod(ReportType.WP, reportData, false);
+    const response = getReportPeriod(reportData, false);
 
     expect(response).toEqual(1);
   });
@@ -103,7 +102,7 @@ describe("getReportPeriod", () => {
       ...mockWPData,
       copyReport: { isCopyOverTest: true, reportPeriod: 1, reportYear: 2020 },
     };
-    const response = getReportPeriod(ReportType.WP, reportData, true);
+    const response = getReportPeriod(reportData, true);
 
     expect(response).toEqual(2);
   });
@@ -113,9 +112,9 @@ describe("getReportPeriod", () => {
       ...mockWPData,
       copyReport: { isCopyOverTest: true, reportPeriod: 2, reportYear: 2020 },
     };
-    const responsePeriod = getReportPeriod(ReportType.WP, reportData, true);
+    const responsePeriod = getReportPeriod(reportData, true);
 
-    const responseYear = getReportYear(ReportType.WP, reportData, true);
+    const responseYear = getReportYear(reportData, true);
 
     expect(responsePeriod).toEqual(1);
     expect(responseYear).toEqual(2021);
@@ -123,7 +122,7 @@ describe("getReportPeriod", () => {
 
   it("should return the report period for a SAR", () => {
     const reportData = { ...mockWPData, reportPeriod: 1, reportYear: 2020 };
-    const response = getReportPeriod(ReportType.SAR, reportData, false);
+    const response = getReportPeriod(reportData, false);
 
     expect(response).toEqual(1);
   });
@@ -131,7 +130,7 @@ describe("getReportPeriod", () => {
   it("should throw an error if the report period is not a number", () => {
     const reportData = { ...mockUnvalidatedMetadata, reportPeriod: "2" };
 
-    expect(() => getReportPeriod(ReportType.WP, reportData, false)).toThrow(
+    expect(() => getReportPeriod(reportData, false)).toThrow(
       "Invalid value for reportPeriod"
     );
   });
