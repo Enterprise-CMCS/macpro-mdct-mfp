@@ -115,7 +115,7 @@ export const getReportYear = (
     const prevReportYear = reportData?.copyReport?.reportYear;
     const prevReportPeriod = reportData?.copyReport?.reportPeriod;
 
-    return prevReportPeriod == 2 ? prevReportYear + 1 : prevReportYear;
+    return prevReportPeriod === 2 ? prevReportYear + 1 : prevReportYear;
   }
 
   if (typeof reportData.reportYear !== "number") {
