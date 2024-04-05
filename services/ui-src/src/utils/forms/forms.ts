@@ -391,24 +391,6 @@ export const injectFormWithTargetPopulations = (
   return form;
 };
 
-export const injectFormWithReportPeriodYears = (
-  form: FormJson,
-  dataToInject: AnyObject[]
-) => {
-  if (!dataToInject) return form;
-
-  const fields = convertChoiceToEntity(dataToInject as Choice[]);
-
-  const updatedFields = updateFieldChoicesByID(
-    form.fields,
-    "reportPeriodYear",
-    fields
-  );
-
-  form.fields = updatedFields;
-  return form;
-};
-
 /**
  * This function takes the target populations given from the form data and then filters out
  * any population that a user has answered "No" UNLESS that population

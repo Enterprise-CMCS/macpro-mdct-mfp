@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
-import newWpFormJson from "forms/addEditWpReport/newWpReport.json";
-import { AnyObject, FormJson, ReportStatus } from "types";
-import { injectFormWithReportPeriodYears, useStore } from "utils";
+import form from "forms/addEditWpReport/newWpReport.json";
+import { AnyObject, ReportStatus } from "types";
+import { useStore } from "utils";
 import { States, DEFAULT_TARGET_POPULATIONS } from "../../constants";
 
 export const AddNewWorkPlanModal = ({
@@ -23,49 +23,24 @@ export const AddNewWorkPlanModal = ({
   const generateReportYearChoices = () => {
     const WP_LAUNCH_YEAR = 2024;
     const currentYear = new Date(Date.now()).getFullYear();
-    let yearList = [];
-
-    if (currentYear === WP_LAUNCH_YEAR) {
-      yearList = [
-        {
-          label: `${currentYear}`,
-          id: `reportYear-${currentYear}`,
-          value: `${currentYear}`,
-        },
-        {
-          label: `${currentYear + 1}`,
-          id: `reportYear-${currentYear + 1}`,
-          value: `${currentYear + 1}`,
-        },
-      ];
-    } else {
-      yearList = [
-        {
-          label: `${currentYear - 1}`,
-          id: `reportYear-${currentYear - 1}`,
-          value: `${currentYear - 1}`,
-        },
-        {
-          label: `${currentYear}`,
-          id: `reportYear-${currentYear}`,
-          value: `${currentYear}`,
-        },
-        {
-          label: `${currentYear + 1}`,
-          id: `reportYear-${currentYear + 1}`,
-          value: `${currentYear + 1}`,
-        },
-      ];
-    }
-
-    return yearList;
+    return [currentYear - 1, currentYear, currentYear + 1]
+      .filter((year) => year >= WP_LAUNCH_YEAR)
+      .map((year) => ({
+        id: `reportYear-${year}`,
+        label: `${year}`,
+        name: `${year}`,
+        value: `${year}`,
+      }));
   };
 
-  const modalFormJson = injectFormWithReportPeriodYears(
-    newWpFormJson,
-    generateReportYearChoices()
-  );
-  const form: FormJson = modalFormJson;
+  for (let field of form.fields) {
+    if (field.id.match("reportPeriodYear")) {
+      field.props = {
+        ...field.props,
+        choices: generateReportYearChoices(),
+      };
+    }
+  }
 
   /**
    * @function: Prepare WP payload
