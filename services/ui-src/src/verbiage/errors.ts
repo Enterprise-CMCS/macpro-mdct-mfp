@@ -10,6 +10,8 @@ export const genericErrorContent = [
     props: {
       href: "mailto:mdct_help@cms.hhs.gov",
       target: "_blank",
+      color: "black",
+      fontWeight: "bold",
     },
   },
   {

@@ -1,4 +1,4 @@
-import { useContext, useEffect, MouseEventHandler } from "react";
+import { useContext, MouseEventHandler } from "react";
 // components
 import {
   Box,
@@ -20,7 +20,6 @@ import {
 import { convertDateUtcToEt, useStore } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/admin";
-import { genericErrorContent } from "verbiage/errors";
 
 export const AdminPage = () => {
   const { deleteAdminBanner, writeAdminBanner } =
@@ -32,16 +31,8 @@ export const AdminPage = () => {
     bannerActive,
     bannerLoading,
     bannerErrorMessage,
-    setBannerErrorMessage,
     bannerDeleting,
   } = useStore();
-
-  useEffect(() => {
-    setBannerErrorMessage({
-      title: "We've run into a problem",
-      description: genericErrorContent,
-    });
-  }, []);
 
   return (
     <PageTemplate sxOverride={sx.layout} data-testid="admin-view">
