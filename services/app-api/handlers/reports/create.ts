@@ -132,41 +132,19 @@ export const createReport = handler(
     const overrideCopyOver =
       unvalidatedMetadata?.copyReport &&
       unvalidatedMetadata?.copyReport?.isCopyOverTest;
-    let reportYear, reportPeriod;
 
     /**
      * If the report is a WP, determine reportYear from the unvalidated metadata. Otherwise, a SAR will use the workplan metadata.
      */
-    if (reportType === ReportType.WP) {
-      reportYear = getReportYear(
-        reportType,
-        unvalidatedMetadata,
-        overrideCopyOver
-      );
-    } else {
-      reportYear = getReportYear(
-        reportType,
-        workPlanMetadata,
-        overrideCopyOver
-      );
-    }
+    let reportData =
+      reportType === ReportType.WP ? unvalidatedMetadata : workPlanMetadata;
 
-    /**
-     * If the report is a WP, determine reportPeriod from the unvalidated metadata. Otherwise, a SAR will use the workplan metadata.
-     */
-    if (reportType === ReportType.WP) {
-      reportPeriod = getReportPeriod(
-        reportType,
-        unvalidatedMetadata,
-        overrideCopyOver
-      );
-    } else {
-      reportPeriod = getReportPeriod(
-        reportType,
-        workPlanMetadata,
-        overrideCopyOver
-      );
-    }
+    const reportYear = getReportYear(reportType, reportData, overrideCopyOver);
+    const reportPeriod = getReportPeriod(
+      reportType,
+      reportData,
+      overrideCopyOver
+    );
 
     // If this Work Plan is a reset, the reporting period is the upcoming one
     const isReset = unvalidatedMetadata?.isReset;
