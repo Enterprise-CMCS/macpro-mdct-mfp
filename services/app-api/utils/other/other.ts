@@ -104,8 +104,7 @@ export const getLastCreatedWorkPlan = async (
 };
 
 export const getReportYear = (
-  //reportData: unvalidatedMetadata || workPlanMetadata
-  reportData: any,
+  reportData: AnyObject,
   isCopyOver: boolean = false
 ): number => {
   if (isCopyOver) {
@@ -126,8 +125,7 @@ export const getReportYear = (
 };
 
 export const getReportPeriod = (
-  //reportData: unvalidatedMetadata || workPlanMetadata
-  reportData: any,
+  reportData: AnyObject,
   isCopyOver: boolean = false
 ): number => {
   if (isCopyOver) {
