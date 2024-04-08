@@ -4,6 +4,7 @@ import { traverseRoutes } from "../../support/form";
 
 describe("MFP Work Plan E2E Submission", () => {
   it("State users can create Work Plans", () => {
+    cy.ensureAvailableReport();
     cy.authenticate("stateUser");
 
     //Given I've logged in

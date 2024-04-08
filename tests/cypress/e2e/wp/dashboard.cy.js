@@ -1,6 +1,7 @@
 describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
   describe("MFP Work Plan Dashboard Page - State User Report Creation", () => {
     it("State users can create Work Plans", () => {
+      cy.ensureAvailableReport();
       cy.authenticate("stateUser");
 
       //Given I've logged in
