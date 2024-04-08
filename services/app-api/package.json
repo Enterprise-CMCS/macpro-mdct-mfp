@@ -77,6 +77,9 @@
     "moduleDirectories": [
       "node_modules"
     ],
+    "moduleNameMapper": {
+      "#node-web-compat": "./node-web-compat-node.js"
+    },
     "setupFilesAfterEnv": [
       "<rootDir>/utils/testing/setupJest.ts"
     ]
