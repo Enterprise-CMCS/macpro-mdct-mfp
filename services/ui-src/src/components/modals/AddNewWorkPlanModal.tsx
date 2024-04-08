@@ -76,8 +76,6 @@ export const AddNewWorkPlanModal = ({
    */
   const writeReport = async (formData: any, wpReset?: boolean) => {
     setSubmitting(true);
-    const submitButton = document.querySelector("[form=" + form.id + "]");
-    submitButton?.setAttribute("disabled", "true");
     const dataToWrite = prepareWpPayload(formData, wpReset);
 
     await createReport(reportType, activeState, {
@@ -106,6 +104,7 @@ export const AddNewWorkPlanModal = ({
       formId={form.id}
       modalDisclosure={modalDisclosure}
       submitting={submitting}
+      submitButtonDisabled={submitting}
       content={{
         heading: form.heading?.add,
         subheading: form.heading?.subheading,
