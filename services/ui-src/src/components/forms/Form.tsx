@@ -224,7 +224,7 @@ const sx = {
 
   // disabled field
   ".ds-c-field[disabled]": {
-    color: "palette.gray_medium",
+    color: "palette.base",
   },
   // field hint
   ".ds-c-field__hint": {
