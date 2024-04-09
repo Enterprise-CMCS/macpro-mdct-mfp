@@ -10,7 +10,7 @@ repos:
         files: '\.[jt]sx?$' # *.js, *.jsx, *.ts and *.tsx
         types: [file]
         additional_dependencies:
-          - "eslint@8.12.0"
+          - "eslint"
           - "@typescript-eslint/parser"
           - "@typescript-eslint/eslint-plugin"
           - "eslint-plugin-jest"
