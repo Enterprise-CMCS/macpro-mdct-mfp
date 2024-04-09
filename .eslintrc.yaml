@@ -31,5 +31,3 @@ rules:
   multiline-comment-style:
     - error
     - starred-block
-
-version: 8.12.0
