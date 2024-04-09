@@ -46,6 +46,8 @@ const wpCreationEvent: APIGatewayProxyEvent = {
     },
     metadata: {
       reportType: "WP",
+      reportYear: 2020,
+      reportPeriod: 2,
       submissionName: "submissionName",
       status: "Not started",
       lastAlteredBy: "Thelonious States",
@@ -63,6 +65,8 @@ const wpCopyCreationEvent: APIGatewayProxyEvent = {
       submissionCount: 0,
     },
     metadata: {
+      reportPeriod: 2,
+      reportYear: 2020,
       reportType: "WP",
       submissionName: "submissionName",
       status: "Not started",
@@ -100,12 +104,18 @@ const sarCreationEvent: APIGatewayProxyEvent = {
 
 const creationEventWithNoFieldData: APIGatewayProxyEvent = {
   ...wpMockProxyEvent,
-  body: JSON.stringify({ fieldData: undefined }),
+  body: JSON.stringify({
+    fieldData: undefined,
+    metadata: { reportYear: 2020, reportPeriod: 2 },
+  }),
 };
 
 const creationEventWithInvalidData: APIGatewayProxyEvent = {
   ...wpMockProxyEvent,
-  body: JSON.stringify({ fieldData: { number: "NAN" } }),
+  body: JSON.stringify({
+    fieldData: { number: "NAN" },
+    metadata: { reportYear: 2020, reportPeriod: 2 },
+  }),
 };
 
 describe("Test createReport API method", () => {
@@ -178,6 +188,8 @@ describe("Test createReport API method", () => {
     expect(body.formTemplate.validationJson).toMatchObject({
       transitionBenchmarks_targetPopulationName: "text",
     });
+    expect(body.reportYear).toEqual(2020);
+    expect(body.reportPeriod).toEqual(2);
     expect(s3PutSpy).toHaveBeenCalled();
   });
 
@@ -205,18 +217,18 @@ describe("Test createReport API method", () => {
       body.formTemplate.validationJson
     ).filter((key) => key.includes("quarterlyProjections"));
     expect(quarterlyRepeatinFields).toHaveLength(12);
-    expect(quarterlyRepeatinFields[0]).toEqual("quarterlyProjections2022Q3");
-    expect(quarterlyRepeatinFields[11]).toEqual("quarterlyProjections2025Q2");
+    expect(quarterlyRepeatinFields[0]).toEqual("quarterlyProjections2020Q3");
+    expect(quarterlyRepeatinFields[11]).toEqual("quarterlyProjections2023Q2");
 
     const fundingSoureRepeatingFields = Object.keys(
       body.formTemplate.validationJson
     ).filter((key) => key.includes("fundingSources_quarters"));
     expect(fundingSoureRepeatingFields).toHaveLength(12);
     expect(fundingSoureRepeatingFields[0]).toEqual(
-      "fundingSources_quarters2022Q3"
+      "fundingSources_quarters2020Q3"
     );
     expect(fundingSoureRepeatingFields[11]).toEqual(
-      "fundingSources_quarters2025Q2"
+      "fundingSources_quarters2023Q2"
     );
     expect(s3PutSpy).toHaveBeenCalled();
     expect(s3GetSpy).toHaveBeenCalled();
@@ -242,6 +254,12 @@ describe("Test createReport API method", () => {
         workPlanMetadata: mockWPMetadata,
         workPlanFieldData: mockWPFieldData,
       });
+    jest
+      .spyOn(helperFunctions, "getReportYear")
+      .mockReturnValueOnce(mockWPMetadata.reportYear);
+    jest
+      .spyOn(helperFunctions, "getReportPeriod")
+      .mockReturnValueOnce(mockWPMetadata.reportPeriod);
     const res = await createReport(sarCreationEvent, null);
     const body = JSON.parse(res.body);
     expect(res.statusCode).toBe(StatusCodes.CREATED);
