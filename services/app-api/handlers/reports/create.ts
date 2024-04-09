@@ -21,11 +21,12 @@ import {
   calculateDueDate,
   calculatePeriod,
   calculateCurrentYear,
-  convertDateUtcToEt,
 } from "../../utils/time/time";
 import {
   createReportName,
   getLastCreatedWorkPlan,
+  getReportPeriod,
+  getReportYear,
 } from "../../utils/other/other";
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { logger } from "../../utils/debugging/debug-lib";
@@ -127,29 +128,19 @@ export const createReport = handler(
     };
 
     const currentDate = Date.now();
-    let reportYear: number =
-      reportType === ReportType.WP
-        ? new Date(convertDateUtcToEt(currentDate)).getFullYear()
-        : workPlanMetadata!.reportYear;
-
-    let reportPeriod: number =
-      reportType === ReportType.WP
-        ? calculatePeriod(currentDate, workPlanMetadata)
-        : workPlanMetadata!.reportPeriod;
 
     const overrideCopyOver =
       unvalidatedMetadata?.copyReport &&
       unvalidatedMetadata?.copyReport?.isCopyOverTest;
 
-    if (overrideCopyOver) {
-      if (unvalidatedMetadata?.copyReport?.reportPeriod)
-        reportPeriod = unvalidatedMetadata?.copyReport?.reportPeriod;
-      if (unvalidatedMetadata?.copyReport?.reportYear)
-        reportYear = unvalidatedMetadata?.copyReport?.reportYear;
+    /**
+     * If the report is a WP, determine reportYear from the unvalidated metadata. Otherwise, a SAR will use the workplan metadata.
+     */
+    let reportData =
+      reportType === ReportType.WP ? unvalidatedMetadata : workPlanMetadata;
 
-      reportYear = reportPeriod == 2 ? reportYear + 1 : reportYear;
-      reportPeriod = (reportPeriod % 2) + 1;
-    }
+    const reportYear = getReportYear(reportData, overrideCopyOver);
+    const reportPeriod = getReportPeriod(reportData, overrideCopyOver);
 
     // If this Work Plan is a reset, the reporting period is the upcoming one
     const isReset = unvalidatedMetadata?.isReset;
