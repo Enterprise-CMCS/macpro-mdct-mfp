@@ -205,7 +205,7 @@
                 },
                 {
                   "type": "span",
-                  "content": "Number of institutional residents who have signed an informed consent form indicating their desire to transition to the community and enroll in the state's MFP program."
+                  "content": "Number of institutional residents who have signed an informed consent form indicating their desire to transition to the community and enroll in the state or territory's MFP program."
                 }
               ]
             },
@@ -259,7 +259,7 @@
                 },
                 {
                   "type": "span",
-                  "content": "Number of institutional residents who were discharged from an institution to a qualified residence during the reporting period, enrolled in MFP, and began using Medicaid home and community-based services (HCBS)."
+                  "content": "Number of qualified institutional residents who enrolled in MFP and were discharged from an institution to a qualified residence during the reporting period in the quarter."
                 }
               ]
             },
@@ -302,13 +302,13 @@
           }
         },
         {
-          "name": "Number of MFP transitions from qualified institutions",
+          "name": "Number of MFP transitions from qualified institutions in the reporting period",
           "path": "/sar/recruitment-enrollment-transitions/number-of-mfp-transitions-from-qualified-institutions",
           "pageType": "standard",
           "verbiage": {
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
-              "subsection": "Number of MFP transitions from qualified institutions",
+              "subsection": "Number of MFP transitions from qualified institutions in the reporting period",
               "hint": [
                 {
                   "type": "html",
@@ -423,13 +423,13 @@
           }
         },
         {
-          "name": "Number of MFP transitions to qualified residences",
+          "name": "Number of MFP transitions to qualified residences in the reporting period",
           "path": "/sar/recruitment-enrollment-transitions/number-of-mfp-transitions-to-qualified-residences",
           "pageType": "standard",
           "verbiage": {
             "intro": {
               "section": "Recruitment, Enrollment, and Transitions",
-              "subsection": "Number of MFP transitions to qualified residences",
+              "subsection": "Number of MFP transitions to qualified residences in the reporting period",
               "hint": [
                 {
                   "type": "html",
@@ -484,7 +484,7 @@
                 "id": "ret-mtfqr-header-2",
                 "type": "sectionHeader",
                 "props": {
-                  "content": "Apartment (Individual lease, lockable access, etc.)"
+                  "content": "Apartment (individual lease, lockable access, etc.)"
                 }
               },
               {
@@ -1096,7 +1096,7 @@
         "enterEntityDetailsButtonText": "Edit",
         "readOnlyEntityDetailsButtonText": "View",
         "dashboardTitle": "Report progress for each initiative",
-        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. Note: Initiative topics with <span aria-label='asterisk'>*</span> are required initiatives.<br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period.<br><br>For each initiative, recipients must also report on progress toward achieving the objective(s) identified in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide home and community-based services (HCBS) instead of services in institutional settings.<br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the MFP Work Plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
+        "dashboardSubtitle": "Your initiatives are auto-populated from your most recent approved MFP Work Plan. Note: Initiative topics with <span aria-label='asterisk'>*</span> are required initiatives.<br><br>Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period.<br><br>For each initiative, recipients must report on the progress toward achieving the objective(s) identified in the initiative’s evaluation plan, as described in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide HCBS instead of services in institutional settings.<br><br>If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the initiative’s evaluation plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
         "tableHeader": "Initiative name <br/> MFP Work Plan topic",
         "countEntitiesInTitle": false
       },
@@ -1179,7 +1179,7 @@
               "editEntityHint": "Select \"Edit\" to report the objectives progress.",
               "reviewPdfHint": "To view totals against targets from your associated MFP Work Plan, click \"Review PDF\" and it will open a summary in a new tab.",
               "addEditModalMessage": "To view totals and percent target achieved, \"Save\", close, click \"Review PDF\" button and it will open a summary in a new tab.",
-              "entityUnfinishedMessage": "Report objective progress to complete this section"
+              "entityUnfinishedMessage": "Report objective progress to complete this section."
             },
             "transformation": {
               "rule": "objectives"
@@ -1261,7 +1261,7 @@
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report the overall progress.",
-              "reviewPdfHint": "To view totals against targets from your Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
+              "reviewPdfHint": "To view totals against targets from your associated MFP Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
             },
             "form": {
               "id": "stsiip",
@@ -1316,7 +1316,7 @@
               "enterEntityDetailsButtonText": "Edit",
               "readOnlyEntityDetailsButtonText": "View",
               "editEntityHint": "Select \"Edit\" to report expenditures.",
-              "reviewPdfHint": "To view totals against targets from your Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
+              "reviewPdfHint": "To view totals against targets from your associated MFP Work Plan, click \"Review PDF\" and it will open a summary in a new tab."
             },
             "form": {
               "id": "stsie",
@@ -1623,7 +1623,7 @@
                 },
                 {
                   "type": "li",
-                  "content": "Equity and social determinants of health",
+                  "content": "Equity and social determinants of health (SDOH)",
                   "props": {
                     "style": {
                       "marginLeft": "1rem"
