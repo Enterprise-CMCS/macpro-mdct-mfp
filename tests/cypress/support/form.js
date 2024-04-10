@@ -38,7 +38,7 @@ const completeDrawerForm = (drawerForm) => {
       .find('[aria-label="edit button"]')
       .each(($button) => {
         cy.wrap($button).click();
-        cy.wait(500);
+        cy.wait(1250);
         completeForm(drawerForm);
         cy.get("form").submit();
       });
@@ -52,7 +52,7 @@ const completeModalForm = (path, modalForm, buttonText) => {
       cy.get(`button:contains("${buttonText}")`).focus().click();
       completeForm(modalForm, i);
       cy.get('[data-testid="modal-submit-button"]').focus().click();
-      cy.wait(500);
+      cy.wait(1250);
     }
   } else {
     //open the modal, then fill out the form and save it
@@ -60,7 +60,7 @@ const completeModalForm = (path, modalForm, buttonText) => {
       cy.get(`button:contains("${buttonText}")`).focus().click();
       completeForm(modalForm);
       cy.get('[data-testid="modal-submit-button"]').focus().click();
-      cy.wait(500);
+      cy.wait(1250);
     }
   }
 };
@@ -70,18 +70,18 @@ const completeOverlayEntity = (path, entitySteps) => {
     entitySteps &&
     path === "/wp/state-and-territory-specific-initiatives/initiatives"
   ) {
-    cy.wait(500);
+    cy.wait(1250);
 
     //Edit each of the 5 initiatives
     for (let i = 0; i < 5; i++) {
       cy.get("table").find('[aria-label="edit button"]').eq(i).click();
-      cy.wait(500);
+      cy.wait(1250);
       completeOverlayEntityStep(entitySteps);
       cy.get('button:contains("Return to all initiatives")')
         .first()
         .focus()
         .click();
-      cy.wait(500);
+      cy.wait(1250);
     }
   }
 };
@@ -89,32 +89,34 @@ const completeOverlayEntity = (path, entitySteps) => {
 const completeOverlayEntityStep = (entitySteps) => {
   //first step
   cy.get("table").find('[aria-label="edit button"]').first().click();
-  cy.wait(500);
+  cy.wait(1250);
   completeForm(entitySteps[0].form);
   cy.get('button:contains("Save")').focus().click();
-  cy.wait(500);
+  cy.wait(1250);
 
   //second step
   cy.get("table").find('[aria-label="edit button"]').eq(1).click();
-  cy.wait(500);
+  cy.wait(1250);
   completeModalForm(
     undefined,
     entitySteps[1].modalForm,
     entitySteps[1].verbiage.addEntityButtonText
   );
-  cy.get('button:contains("Save")').focus().click();
-  cy.wait(500);
+  cy.get('button:contains("Return to dashboard for this initiative")')
+    .focus()
+    .click();
+  cy.wait(1250);
 
   //third step
   cy.get("table").find('[aria-label="edit button"]').eq(2).click();
-  cy.wait(500);
+  cy.wait(1250);
   completeModalForm(
     undefined,
     entitySteps[2].modalForm,
     entitySteps[2].verbiage.addEntityButtonText
   );
   cy.get('button:contains("Save")').focus().click();
-  cy.wait(500);
+  cy.wait(1250);
 };
 
 const completeForm = (form, optionToSelect = 0) => {
