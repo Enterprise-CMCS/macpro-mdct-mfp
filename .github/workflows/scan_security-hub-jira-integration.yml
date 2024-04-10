@@ -14,14 +14,14 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Check out repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
           role-to-assume: ${{ secrets.PRODUCTION_SYNC_OIDC_ROLE }}
       - name: Sync Security Hub and Jira
-        uses: Enterprise-CMCS/mac-fc-security-hub-visibility@v1.0.5
+        uses: Enterprise-CMCS/mac-fc-security-hub-visibility@v1.0.7
         with:
           jira-username: "mdct_github_service_account"
           jira-token: ${{ secrets.JIRA_ENT_USER_TOKEN }}

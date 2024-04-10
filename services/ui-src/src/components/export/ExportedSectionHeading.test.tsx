@@ -28,8 +28,8 @@ const retVerbigae = {
 };
 const stateOrTerritoryVerbiage = {
   intro: {
-    section: "State- or Territory-Specific Initiatives",
-    subsection: "State- or Territory-Specific Initiatives",
+    section: "State or Territory-Specific Initiatives",
+    subsection: "State or Territory-Specific Initiatives",
   },
 };
 
@@ -66,7 +66,7 @@ describe("ExportedSectionHeading displays correct heading", () => {
     );
     expect(sectionHeading).toBeVisible();
   });
-  test("Correct heading text is shown for State- or Territory-Specific Initiatives", () => {
+  test("Correct heading text is shown for State or Territory-Specific Initiatives", () => {
     render(exportedReportSectionHeadingComponent(stateOrTerritoryVerbiage));
     expect(
       screen.queryByText(stateOrTerritoryVerbiage.intro.subsection)

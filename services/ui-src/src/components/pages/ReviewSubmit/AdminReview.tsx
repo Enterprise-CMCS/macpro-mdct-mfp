@@ -10,6 +10,8 @@ import {
   Input,
   ModalFooter,
   Link,
+  UnorderedList,
+  ListItem,
 } from "@chakra-ui/react";
 import { Modal } from "components";
 // utils
@@ -79,7 +81,13 @@ export const AdminReview = ({
       <Box sx={sx.adminLeadTextBox}>
         <Box sx={sx.infoTextBox}>
           <Text sx={sx.infoHeading}>{adminInfo.header}</Text>
-          <Text>{parseCustomHtml(adminInfo.info)}</Text>
+          {adminInfo.list && (
+            <UnorderedList sx={sx.list}>
+              {adminInfo.list.map((item: any, index: number) => (
+                <ListItem key={index}>{parseCustomHtml(item.content)}</ListItem>
+              ))}
+            </UnorderedList>
+          )}
         </Box>
       </Box>
       <Flex sx={sx.adminSubmitContainer}>
@@ -211,6 +219,13 @@ const sx = {
   infoHeading: {
     fontWeight: "bold",
     marginBottom: ".5rem",
+  },
+  list: {
+    paddingLeft: "1rem",
+    margin: "1.5rem",
+    li: {
+      marginBottom: "0.5rem",
+    },
   },
   adminApprove: {
     display: "flex",

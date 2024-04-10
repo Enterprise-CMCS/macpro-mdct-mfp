@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import { object as yupSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 // components
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 // utils
 import {
   compileValidationJsonFromFields,
@@ -55,6 +55,11 @@ export const Form = ({
   const { report, editable } = useStore();
 
   const reportWithSubmittedStatus = reportStatus === ReportStatus.SUBMITTED;
+
+  // For the SAR RE&T sections, display an alert if the MFP WP does not contain any target populations
+  const displayRetError =
+    report?.populations?.length === 0 &&
+    location.pathname.startsWith("/sar/recruitment-enrollment-transitions");
 
   /**
    * edit report modal should always be view only admins
@@ -172,7 +177,16 @@ export const Form = ({
         onSubmit={form.handleSubmit(onSubmit as any, onError || onErrorHandler)}
         {...props}
       >
-        <Box sx={sx}>{renderFormFields(fields)}</Box>
+        <Box sx={sx}>
+          {displayRetError ? (
+            <Text sx={sx.retAlert}>
+              Your associated MFP Work Plan does not contain any target
+              populations.
+            </Text>
+          ) : (
+            renderFormFields(fields)
+          )}
+        </Box>
         {children}
       </form>
     </FormProvider>
@@ -210,7 +224,7 @@ const sx = {
 
   // disabled field
   ".ds-c-field[disabled]": {
-    color: "palette.gray",
+    color: "palette.base",
   },
   // field hint
   ".ds-c-field__hint": {
@@ -244,5 +258,10 @@ const sx = {
   // optional text
   ".optional-text": {
     fontWeight: "lighter",
+  },
+  // RE&T warning message
+  retAlert: {
+    color: "palette.error_dark",
+    paddingTop: "1rem",
   },
 };

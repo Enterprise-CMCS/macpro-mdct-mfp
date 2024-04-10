@@ -13,16 +13,16 @@ import { AnyObject, EntityShape } from "types";
 
 const expenditureRows = {
   ["row 1"]: [
-    { label: "Actual Spending (First quarter: Mock)", value: 2 },
-    { label: "Projected Spending (First quarter: Mock)", value: 6 },
-    { label: "Actual Spending (Second quarter: Mock)", value: 2 },
-    { label: "Projected Spending (Second quarter: Mock)", value: 6 },
+    { label: "Actual spending (First quarter: Mock)", value: 2 },
+    { label: "Projected spending (First quarter: Mock)", value: 6 },
+    { label: "Actual spending (Second quarter: Mock)", value: 2 },
+    { label: "Projected spending (Second quarter: Mock)", value: 6 },
   ],
   ["row 2"]: [
-    { label: "Actual Spending (First quarter: Mock)", value: 4 },
-    { label: "Projected Spending (First quarter: Mock)", value: 8 },
-    { label: "Actual Spending (Second quarter: Mock)", value: 8 },
-    { label: "Projected Spending (Second quarter: Mock)", value: 12 },
+    { label: "Actual spending (First quarter: Mock)", value: 4 },
+    { label: "Projected spending (First quarter: Mock)", value: 8 },
+    { label: "Actual spending (Second quarter: Mock)", value: 8 },
+    { label: "Projected spending (Second quarter: Mock)", value: 12 },
   ],
 };
 
@@ -67,10 +67,10 @@ describe("Test table functions specific for Expenditures", () => {
       formatHeaderLabel("expenditures", label, mockSARFullReport)
     );
     expect(formattedHeaderLabels).toStrictEqual([
-      "Actual Spending 2023 Q1",
-      "Projected Spending 2023 Q1",
-      "Actual Spending 2023 Q2",
-      "Projected Spending 2023 Q2",
+      "Actual spending 2023 Q1",
+      "Projected spending 2023 Q1",
+      "Actual spending 2023 Q2",
+      "Projected spending 2023 Q2",
     ]);
   });
   test("Test formatColumns functionality", () => {

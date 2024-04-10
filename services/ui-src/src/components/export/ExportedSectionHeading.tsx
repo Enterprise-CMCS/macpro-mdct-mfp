@@ -8,7 +8,7 @@ import { parseCustomHtml } from "utils";
 export const formatSectionInfo = (verbiage: ReportPageVerbiage) => {
   if (
     verbiage?.intro?.exportSectionHeader ||
-    verbiage?.intro?.subsection === "State- or Territory-Specific Initiatives"
+    verbiage?.intro?.subsection === "State or Territory-Specific Initiatives"
   ) {
     return (verbiage as AnyObject)?.dashboardSubtitle;
   }

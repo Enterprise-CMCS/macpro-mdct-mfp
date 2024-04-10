@@ -385,7 +385,7 @@ export const fundingSources = (
         type: "number",
         validation: "number",
         props: {
-          label: `Actual Spending (${quarter.name} quarter: ${quarter.range})`,
+          label: `Actual spending (${quarter.name} quarter: ${quarter.range})`,
           mask: "currency",
         },
       },
@@ -394,7 +394,7 @@ export const fundingSources = (
         type: "number",
         validation: "number",
         props: {
-          label: `Projected Spending (${quarter.name} quarter: ${quarter.range})`,
+          label: `Projected spending (${quarter.name} quarter: ${quarter.range})`,
           disabled: true,
           mask: "currency",
         },

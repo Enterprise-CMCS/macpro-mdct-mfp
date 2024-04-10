@@ -109,7 +109,7 @@ export const renderReportSections = (
     //because R,E & T section needs numbers added, switch from shallow copy to deep copy
     let childSections = structuredClone(section?.children);
     const initatives =
-      section.name === "State- or Territory Specific Initiatives" &&
+      section.name === "State or Territory Specific Initiatives" &&
       childSections;
     const showGeneralInformation = !(
       reportType === ReportType.WP && section.name === "General Information"
@@ -179,7 +179,7 @@ export const sx = {
     fontSize: "4xl",
   },
   combinedDataTable: {
-    "table-layout": "fixed",
+    tableLayout: "fixed",
     ".combined-data-title": {
       display: "inline-block",
       marginBottom: "0.5rem",

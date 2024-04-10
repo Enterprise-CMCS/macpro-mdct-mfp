@@ -1,10 +1,10 @@
-import { AttributeValue, QueryInput } from "aws-sdk/clients/dynamodb";
+import { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import dynamodbLib from "../dynamo/dynamodb-lib";
 import wpForm from "../../forms/wp.json";
 import sarForm from "../../forms/sar.json";
-import s3Lib, { getFormTemplateKey, getTemplate } from "../s3/s3-lib";
+import s3Lib, { getFormTemplateKey } from "../s3/s3-lib";
 import KSUID from "ksuid";
-import { logger } from "../logging";
+import { logger } from "../debugging/debug-lib";
 import {
   AnyObject,
   assertExhaustive,
@@ -20,36 +20,50 @@ import {
 import { createHash } from "crypto";
 import { transformFormTemplate } from "../transformations/transformations";
 
+/**
+ * Retrieve template data from S3
+ *
+ * @param bucket s3 bucket
+ * @param key s3 key
+ * @returns s3 object body
+ */
+export async function getTemplate(bucket: string, key: string) {
+  return (await s3Lib.get({
+    Key: key,
+    Bucket: bucket,
+  })) as ReportJson;
+}
+
 export async function getNewestTemplateVersion(reportType: ReportType) {
-  const queryParams: QueryInput = {
+  const queryParams: QueryCommandInput = {
     TableName: process.env.FORM_TEMPLATE_TABLE_NAME!,
     KeyConditionExpression: `reportType = :reportType`,
     ExpressionAttributeValues: {
-      ":reportType": reportType as unknown as AttributeValue,
+      ":reportType": reportType,
     },
     Limit: 1,
     ScanIndexForward: false, // true = ascending, false = descending
   };
   const result = await dynamodbLib.query(queryParams);
-  return result?.Items?.[0];
+  return result?.[0];
 }
 
 export async function getTemplateVersionByHash(
   reportType: ReportType,
   hash: string
 ) {
-  const queryParams: QueryInput = {
+  const queryParams: QueryCommandInput = {
     TableName: process.env.FORM_TEMPLATE_TABLE_NAME!,
     IndexName: "HashIndex",
     KeyConditionExpression: "reportType = :reportType AND md5Hash = :md5Hash",
     Limit: 1,
     ExpressionAttributeValues: {
-      ":md5Hash": hash as AttributeValue,
-      ":reportType": reportType as unknown as AttributeValue,
+      ":md5Hash": hash,
+      ":reportType": reportType,
     },
   };
   const result = await dynamodbLib.query(queryParams);
-  return result?.Items?.[0];
+  return result?.[0];
 }
 
 export const formTemplateForReportType = (reportType: ReportType) => {

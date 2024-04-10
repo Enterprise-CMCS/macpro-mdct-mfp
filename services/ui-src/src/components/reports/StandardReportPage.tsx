@@ -1,9 +1,10 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 // components
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import {
   Form,
+  PrintButton,
   ReportContext,
   ReportPageFooter,
   ReportPageIntro,
@@ -18,7 +19,7 @@ import {
   FormJson,
 } from "types";
 // utils
-import { filterFormData, useFindRoute, useStore } from "utils";
+import { filterFormData, parseCustomHtml, useFindRoute, useStore } from "utils";
 
 export const StandardReportPage = ({ route, validateOnRender }: Props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -104,6 +105,14 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
         validateOnRender={validateOnRender || false}
         dontReset={false}
       />
+      {route.verbiage.reviewPdfHint && (
+        <Box>
+          <Text sx={sx.reviewPdfHint}>
+            {parseCustomHtml(route.verbiage.reviewPdfHint)}
+          </Text>
+          <PrintButton sxOverride={sx.reviewPdfButton} />
+        </Box>
+      )}
       <ReportPageFooter
         submitting={submitting}
         form={route.form}
@@ -118,3 +127,12 @@ interface Props {
   validateOnRender?: boolean;
   report?: ReportShape;
 }
+
+const sx = {
+  reviewPdfHint: {
+    paddingTop: "2.5rem",
+    paddingBottom: "2.5rem",
+    color: "palette.gray_medium",
+  },
+  reviewPdfButton: { marginBottom: "2.5rem" },
+};

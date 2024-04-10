@@ -4,45 +4,6 @@ export interface AnyObject {
   [key: string]: any;
 }
 
-export interface DynamoGet {
-  TableName: string;
-  Key: {
-    [key: string]: any;
-  };
-}
-
-export interface DynamoWrite {
-  TableName: string;
-  Item: { [key: string]: any };
-}
-
-export interface DynamoDelete {
-  TableName: string;
-  Key: { [key: string]: any };
-}
-
-export interface DynamoUpdate {
-  TableName: string;
-  Key: {
-    key: string;
-  };
-  UpdateExpression?: string;
-  ExpressionAttributeNames: { [key: string]: string };
-  ExpressionAttributeValues: { [key: string]: any };
-}
-
-export interface DynamoScan {
-  TableName: string;
-  [key: string]: any;
-}
-
-export const enum RequestMethods {
-  POST = "POST",
-  GET = "GET",
-  PUT = "PUT",
-  DELETE = "DELETE",
-}
-
 export const enum StatusCodes {
   SUCCESS = 200,
   CREATED = 201,
@@ -52,28 +13,35 @@ export const enum StatusCodes {
   SERVER_ERROR = 500,
 }
 
-export interface S3Put extends S3Get {
-  Body: string;
-  ContentType: string;
-}
-
-export interface S3Get {
-  Bucket: string;
-  Key: string;
-}
-
-export interface S3Copy {
-  Bucket: string;
-  CopySource: string;
-  Key: string;
-}
-
-export interface S3List {
-  Bucket: string;
-}
-
 export interface CompletionData {
   [key: string]: boolean | CompletionData;
+}
+
+/**
+ * Abridged copy of the type used by `aws-lambda@1.0.7` (from `@types/aws-lambda@8.10.88`)
+ * We only this package for these types, and we use only a subset of the
+ * properties. Since `aws-lambda` depends on `aws-sdk` (that is, SDK v2),
+ * we can save ourselves a big dependency with this small redundancy.
+ */
+
+export interface APIGatewayProxyEventPathParameters {
+  [name: string]: string | undefined;
+}
+
+export interface APIGatewayProxyEvent {
+  body: string | null;
+  headers: Record<string, string | undefined>;
+  multiValueHeaders: Record<string, string | undefined>;
+  httpMethod: string;
+  isBase64Encoded: boolean;
+  path: string;
+  pathParameters: Record<string, string | undefined> | null;
+  queryStringParameters: Record<string, string | undefined> | null;
+  multiValueQueryStringParameters: Record<string, string | undefined> | null;
+  stageVariables: Record<string, string | undefined> | null;
+  /** The context is complicated, and we don't (as of 2023) use it at all. */
+  requestContext: any;
+  resource: string;
 }
 
 // ALERTS
