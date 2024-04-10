@@ -1,12 +1,15 @@
 import { fetchReport } from "./fetch";
 import { approveReport } from "./approve";
-import { APIGatewayProxyEvent } from "aws-lambda";
+import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { mockClient } from "aws-sdk-client-mock";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import { mockWPReport } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
 // types
-import { StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+
+const dynamoClientMock = mockClient(DynamoDBDocumentClient);
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockResolvedValue(true),
@@ -14,11 +17,6 @@ jest.mock("../../utils/auth/authorization", () => ({
 }));
 
 const mockAuthUtil = require("../../utils/auth/authorization");
-
-jest.mock("../../utils/debugging/debug-lib", () => ({
-  init: jest.fn(),
-  flush: jest.fn(),
-}));
 
 jest.mock("./fetch");
 const mockedFetchReport = fetchReport as jest.MockedFunction<
@@ -50,9 +48,12 @@ describe("Test approveReport method", () => {
   });
   afterEach(() => {
     jest.clearAllMocks();
+    dynamoClientMock.reset();
   });
 
   test("Test approve report passes with valid data", async () => {
+    const mockPut = jest.fn();
+    dynamoClientMock.on(PutCommand).callsFake(mockPut);
     mockedFetchReport.mockResolvedValue({
       statusCode: 200,
       headers: {
@@ -65,6 +66,7 @@ describe("Test approveReport method", () => {
     const body = JSON.parse(res.body);
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.status).toBe("Approved");
+    expect(mockPut).toHaveBeenCalled();
   });
 
   test("Test approve report with no existing record throws 404", async () => {

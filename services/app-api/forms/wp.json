@@ -1190,6 +1190,7 @@
                       "rule": "nextTwelveQuarters"
                     },
                     "props": {
+                      "data-cy": "transformedFundingSources",
                       "mask": "currency"
                     }
                   }

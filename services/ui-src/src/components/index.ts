@@ -79,6 +79,7 @@ export { Modal } from "./modals/Modal";
 export { AddEditEntityModal } from "./modals/AddEditEntityModal";
 export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";
+export { AddNewWorkPlanModal } from "./modals/AddNewWorkPlanModal";
 export { AddEditReportModal } from "./modals/AddEditReportModal";
 export { DeleteEntityModal } from "./modals/DeleteEntityModal";
 // pages
