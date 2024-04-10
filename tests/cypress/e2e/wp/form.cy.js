@@ -2,6 +2,8 @@
 import wpTemplate from "../../../..//services/app-api/forms/wp.json";
 import { traverseRoutes } from "../../support/form";
 
+const currentYear = new Date().getFullYear();
+
 describe("MFP Work Plan E2E Submission", () => {
   it("State users can create Work Plans", () => {
     cy.ensureAvailableReport();
@@ -16,13 +18,16 @@ describe("MFP Work Plan E2E Submission", () => {
 
     //When I click the create Work Plan Button and create a WP
     cy.contains("Start MFP Work Plan").click();
-    cy.get(`[id="reportYear-${new Date().getFullYear()}"]`).check();
+    cy.get(`[id="reportYear-${currentYear}"]`).check();
     cy.get(`[id="reportPeriod-1"]`).check();
 
     cy.contains("Start new").click();
 
     //Then there is a new Workplan with the title
-    cy.contains("MFP Work Plan", { matchCase: true }).should("be.visible");
+    cy.contains(
+      `District of Columbia MFP Work Plan ${currentYear} - Period 1`,
+      { matchCase: true }
+    ).should("be.visible");
 
     //Find our new program and open it
     cy.get("table").within(() => {
