@@ -50,7 +50,7 @@
             "type": "text",
             "validation": "text",
             "props": {
-              "label": "State or Territory Medicaid agency"
+              "label": "State or territory Medicaid agency"
             }
           },
           {
@@ -58,7 +58,7 @@
             "type": "text",
             "validation": "text",
             "props": {
-              "label": "State or Territory Medicaid director"
+              "label": "State or territory Medicaid director"
             }
           },
           {
@@ -1207,7 +1207,7 @@
                     "type": "radio",
                     "validation": "radio",
                     "props": {
-                      "label": "Were targets for performance measures and/or expected time frames for deliverables met?",
+                      "label": "Were targets for performance measures or expected time frames for deliverables met?",
                       "choices": [
                         {
                           "id": "2WaO1Jj3pyUN0j9KjeOqR",
