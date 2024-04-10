@@ -2,7 +2,7 @@ import { createContext, ReactNode, useMemo, useEffect } from "react";
 // utils
 import { AdminBannerData, AdminBannerShape } from "types/banners";
 import { bannerId } from "../../constants";
-import { bannerErrors, genericErrorContent } from "verbiage/errors";
+import { bannerErrors } from "verbiage/errors";
 // api
 import {
   checkDateRangeStatus,
@@ -41,10 +41,7 @@ export const AdminBannerProvider = ({ children }: Props) => {
       const currentBanner = await getBanner(ADMIN_BANNER_ID);
       const newBannerData = currentBanner?.Item || {};
       setBannerData(newBannerData);
-      setBannerErrorMessage({
-        title: "We've run into a problem",
-        description: genericErrorContent,
-      });
+      setBannerErrorMessage(undefined);
     } catch (e: any) {
       // 404 expected when no current banner exists
       if (!e.toString().includes("404")) {
