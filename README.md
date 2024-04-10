@@ -8,7 +8,6 @@ MFP is the CMCS MDCT application for collecting state data related to the [Money
 
 The MFP demonstration supports state efforts for rebalancing their long-term services and supports system so that individuals have a choice of where they live and receive services. From the start of the program in 2008 through the end of 2020, states have transitioned over 107,000 people to community living under MFP.
 
-
 ## Table of Contents
 
 - [Quick Start](#quick-start)
@@ -72,6 +71,8 @@ Local dev is configured as a Typescript project. The entrypoint in `./src/dev.ts
 Local dev is built around the Serverless plugin [serverless-offline](https://github.com/dherault/serverless-offline). `serverless-offline` runs an API Gateway locally configured by `./services/app-api/serverless.yml` and hot reloads your Lambdas on every save. The plugins [serverless-dynamodb-local](https://github.com/99x/serverless-dynamodb-local) and [serverless-s3-local](https://github.com/ar90n/serverless-s3-local) stand up the local database and s3 in a similar fashion.
 
 Local authorization bypasses Cognito. The frontend mimics login in local storage with a mock user and sends an id in the `cognito-identity-id` header on every request. `serverless-offline` expects that and sets it as the cognitoId in the requestContext for your lambdas, just like Cognito would in AWS.
+
+The [postman folder](./postman/) contains a full API collection and environment for this application. See the [README](./postman/README.md) for more information.
 
 ## Testing
 
@@ -258,6 +259,22 @@ Dropdown and dynamic fields are not currently supported as nested child fields. 
 **CustomHTML parser** - function checks if element is a string, if so then the element will be passed in the function “sanitize” from "dompurify", and then the result from that process gets passed into the function “parse” from "html-react-parser" and the result gets returned. If the element is not a string, then the elements are treated as an array and get mapped over returning a key, as, and spread the props. The last check is in this else block, checking whether the element is ‘html’, in which case the content will get passed through ‘sanitize’ and ‘parse’ and the ‘as’ prop gets deleted before returning the modified element type, element props, and content.
 
 **Report metadata table in Dynamo vs field data in S3** - When a user creates a report, metadata related to the report is stored in Dynamo, along with a unique ID corresponding to the associated form template (stored in another Dynamo table) and another unique ID corresponding to the associated field data (stored in S3 bucket). We decided to store the programs in S3 because these data can get so large that we can’t reliably store it all in Dynamo, nor search through them without the app breaking.
+
+## Slack Webhooks
+
+This repository uses 3 webhooks to publish to  3 different channels all in CMS Slack.
+
+- SLACK_WEBHOOK: This pubishes to the `macpro-mdct-mfp-alerts` channel. Alerts published there are for deploy or test failures to the `main`, `val`, or `production` branches.
+
+- INTEGRATIONS_SLACK_WEBHOOK: This is used to publish new pull requests to the `mdct-integrations-channel`
+
+- PROD_RELEASE_SLACK_WEBHOOK: This is used to publish to the `mdct-prod-releases` channel upon successful release of Seds to production.
+
+    - Webhooks are created by CMS tickets, populated into GitHub Secrets
+
+## GitHub Actions Secret Management
+- Secrets are added to GitHub secrets by GitHub Admins 
+- Upon editing and adding new secrets Admins should also update the encypted `/github/secret-list` SSM parameter in the SEDS AWS Production Account.
 
 ## Copyright and license
 

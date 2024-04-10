@@ -128,3 +128,29 @@ export const mockTargetPopByOtherNotDefined = {
   type: "targetPopulations",
   transitionBenchmarks_targetPopulationName: "Other-Undefined",
 };
+
+export const mockTargetPopDefaultButNotApplicable = {
+  id: "7",
+  transitionBenchmarks_targetPopulationName: "Older adults",
+  isRequired: true,
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "a",
+      value: "No",
+    },
+  ],
+  quarterlyProjections2023Q3: "",
+};
+
+export const mockTargetPopDefaultAndApplicable = {
+  id: "7",
+  transitionBenchmarks_targetPopulationName: "Older adults",
+  isRequired: true,
+  transitionBenchmarks_applicableToMfpDemonstration: [
+    {
+      key: "a",
+      value: "Yes",
+    },
+  ],
+  quarterlyProjections2023Q3: "",
+};

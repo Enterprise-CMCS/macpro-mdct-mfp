@@ -37,6 +37,58 @@ const testElementArray = [
   },
 ];
 
+const undefinedElement: any = [
+  {
+    type: "ul",
+    content: "",
+    props: {
+      "data-test-id": "foo",
+    },
+    children: [
+      {
+        type: "li",
+        content: "",
+        props: {
+          "data-test-id": "bar",
+        },
+        children: [
+          {
+            type: "span",
+            content: "Foo",
+            props: {
+              "data-test-id": "biz",
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    type: "ol",
+    content: "",
+    props: {
+      "data-test-id": "foo",
+    },
+    children: [
+      {
+        type: "li",
+        content: "",
+        props: {
+          "data-test-id": "bar",
+        },
+        children: [
+          {
+            content: "Undefined element",
+            props: {
+              "data-test-id": "biz",
+            },
+          },
+        ],
+      },
+    ],
+  },
+];
+
 const mockElementsWithChildren: CustomHtmlElement[] = [
   {
     type: "ul",
@@ -63,12 +115,41 @@ const mockElementsWithChildren: CustomHtmlElement[] = [
       },
     ],
   },
+  {
+    type: "ol",
+    content: "",
+    props: {
+      "data-test-id": "foo",
+    },
+    children: [
+      {
+        type: "li",
+        content: "",
+        props: {
+          "data-test-id": "bar",
+        },
+        children: [
+          {
+            type: "span",
+            content: "Foo",
+            props: {
+              "data-test-id": "biz",
+            },
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 const testComponent = <div>{parseCustomHtml(testElementArray)}</div>;
+
 const testComponentWithChildren = (
   <div>{parseCustomHtml(mockElementsWithChildren)}</div>
 );
+
+const undefinedTypeComponent = <div>{parseCustomHtml(undefinedElement)}</div>;
+
 describe("Test parseCustomHtml", () => {
   const sanitizationSpy = jest.spyOn(DOMPurify, "sanitize");
   beforeEach(() => {
@@ -90,6 +171,17 @@ describe("Test parseCustomHtml", () => {
   });
 });
 
+describe("Handling undefined elementType", () => {
+  beforeEach(() => {
+    render(undefinedTypeComponent);
+  });
+
+  test("Should handle and convert undefined element type to text", () => {
+    const element = screen.getByText("Undefined element");
+    expect(element).toBeVisible();
+  });
+});
+
 // labelTextWithOptional test
 describe("Test labelTextWithOptional", () => {
   test("if a string gets passed into labelTextWithOptional, the 'optional' text will appear", () => {
@@ -102,9 +194,17 @@ describe("Test labelTextWithOptional", () => {
 });
 
 describe("Test createElementWithChildren", () => {
-  test("should correctly create nested elements", async () => {
+  test("should correctly create ul elements", async () => {
     const { container } = render(testComponentWithChildren);
     expect(await container.querySelector("ul")).toBeVisible();
+    expect(await container.querySelector('[data-test-id="foo"]')).toBeVisible();
+    expect(await container.querySelector('[data-test-id="bar"]')).toBeVisible();
+    expect(await container.querySelector('[data-test-id="biz"]')).toBeVisible();
+  });
+
+  test("should correctly create ol elements", async () => {
+    const { container } = render(testComponentWithChildren);
+    expect(await container.querySelector("ol")).toBeVisible();
     expect(await container.querySelector('[data-test-id="foo"]')).toBeVisible();
     expect(await container.querySelector('[data-test-id="bar"]')).toBeVisible();
     expect(await container.querySelector('[data-test-id="biz"]')).toBeVisible();

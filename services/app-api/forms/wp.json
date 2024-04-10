@@ -199,17 +199,17 @@
       }
     },
     {
-      "name": "State- or Territory Specific Initiatives",
+      "name": "State or Territory Specific Initiatives",
       "path": "/wp/state-and-territory-specific-initiatives",
       "children": [
         {
-          "name": "State- or Territory Specific Initiatives Instructions",
+          "name": "State or Territory Specific Initiatives Instructions",
           "path": "/wp/state-and-territory-specific-initiatives/instructions",
           "pageType": "standard",
           "verbiage": {
             "intro": {
               "section": "",
-              "subsection": "State- or Territory Specific Initiatives Instructions",
+              "subsection": "State or Territory Specific Initiatives Instructions",
               "spreadsheet": "",
               "info": [
                 {
@@ -669,7 +669,7 @@
           }
         },
         {
-          "name": "State- or Territory Specific Initiatives",
+          "name": "State or Territory Specific Initiatives",
           "path": "/wp/state-and-territory-specific-initiatives/initiatives",
           "pageType": "modalOverlay",
           "entityType": "initiative",
@@ -677,7 +677,7 @@
           "verbiage": {
             "intro": {
               "section": "",
-              "subsection": "State- or Territory-Specific Initiatives",
+              "subsection": "State or Territory-Specific Initiatives",
               "info": [
                 {
                   "type": "html",
@@ -713,7 +713,7 @@
             "readOnlyEntityDetailsButtonText": "View",
             "dashboardTitle": "Initiative total count:",
             "countEntitiesInTitle": true,
-            "tableHeader": "Initiative name <br/> Work Plan topic",
+            "tableHeader": "Initiative name <br/> MFP Work Plan topic",
             "addEditModalHint": "Provide the name of one initiative. You will be then be asked to complete details for this initiative including a description, evaluation plan and funding sources."
           },
           "modalForm": {
@@ -823,7 +823,7 @@
             "name": "Intitiative Details Dashboard",
             "verbiage": {
               "intro": {
-                "section": "State- or Territory-Specific Initiatives",
+                "section": "State or Territory-Specific Initiatives",
                 "info": [
                   {
                     "type": "span",
@@ -836,7 +836,7 @@
           },
           "entitySteps": [
             {
-              "name": "State- or Territory Specific Initiatives: I. Define initiative",
+              "name": "State or Territory Specific Initiatives: I. Define initiative",
               "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
               "pageType": "entityOverlay",
               "entityType": "initiative",
@@ -847,7 +847,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State- or Territory-Specific Initiatives: I. Define initiative",
+                  "section": "State or Territory-Specific Initiatives: I. Define initiative",
                   "info": [
                     {
                       "type": "html",
@@ -880,7 +880,7 @@
                       "hint": [
                         {
                           "type": "html",
-                          "content": "Select all that apply. “Other” population(s) selected and defined in the"
+                          "content": "Select all that apply. “Other” population(s) selected and defined in the "
                         },
                         {
                           "type": "internalLink",
@@ -891,7 +891,7 @@
                         },
                         {
                           "type": "html",
-                          "content": "section automatically upload. Select “HCBS infrastructure/system-level development” for initiatives that strengthen or expand home and community-based services (HCBS)."
+                          "content": " section automatically upload. Select “HCBS infrastructure/system-level development” for initiatives that strengthen or expand home and community-based services (HCBS)."
                         }
                       ],
                       "choices": []
@@ -946,7 +946,7 @@
               }
             },
             {
-              "name": "State- or Territory-Specific Initiatives: II. Evaluation Plan",
+              "name": "State or Territory-Specific Initiatives: II. Evaluation Plan",
               "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
               "pageType": "overlayModal",
               "entityType": "initiative",
@@ -957,7 +957,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State- or Territory-Specific Initiatives: II. Evaluation Plan",
+                  "section": "State or Territory-Specific Initiatives: II. Evaluation Plan",
                   "info": [
                     {
                       "type": "html",
@@ -1006,7 +1006,7 @@
                 "addEditModalEditTitle": "Edit objective for ",
                 "deleteModalTitle": "Delete objective for this report?",
                 "deleteModalConfirmButtonText": "Yes, delete objective",
-                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in MFP future Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
+                "deleteModalWarning": "You will lose all information entered for this objective. Objective will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
                 "dashboardTitle": "Objective total count",
@@ -1091,7 +1091,7 @@
               }
             },
             {
-              "name": "State-or Territory-Specific Initiatives: III. Funding sources",
+              "name": "State or Territory-Specific Initiatives: III. Funding sources",
               "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
               "pageType": "overlayModal",
               "entityType": "initiative",
@@ -1102,7 +1102,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State- or Territory-Specific Initiatives: III. Funding sources",
+                  "section": "State or Territory-Specific Initiatives: III. Funding sources",
                   "info": [
                     {
                       "type": "html",
@@ -1125,7 +1125,7 @@
                 "deleteModalTitle": "Delete funding source for this report? ",
                 "deleteModalConfirmButtonText": "Yes, delete funding source",
                 "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
-                "tableHeader": "Initiative name <br/> Work Plan topic",
+                "tableHeader": "Initiative name <br/> MFP Work Plan topic",
                 "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report (SAR).",
                 "dashboardTitle": "Funding Sources",
                 "enterEntityDetailsButtonText": "Edit",
@@ -1190,6 +1190,7 @@
                       "rule": "nextTwelveQuarters"
                     },
                     "props": {
+                      "data-cy": "transformedFundingSources",
                       "mask": "currency"
                     }
                   }
@@ -1197,7 +1198,7 @@
               }
             },
             {
-              "name": "State- or Territory-Specific Initiatives: IV. Initiative close-out information",
+              "name": "State or Territory-Specific Initiatives: IV. Initiative close-out information",
               "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
               "pageType": "entityOverlay",
               "entityType": "initiative",
@@ -1208,7 +1209,7 @@
               "isRequired": true,
               "verbiage": {
                 "intro": {
-                  "section": "State- or Territory-Specific Initiatives: IV. Initiative close-out information",
+                  "section": "State or Territory-Specific Initiatives: IV. Initiative close-out information",
                   "hint": "Complete the section below for initiatives with an end date during the upcoming semi-annual reporting period."
                 },
                 "closeOutWarning": {

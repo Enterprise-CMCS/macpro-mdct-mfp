@@ -101,7 +101,7 @@ const sx = {
   metadataTable: {
     margin: "3rem 0",
     maxWidth: "reportPageWidth",
-    "table-layout": "fixed",
+    tableLayout: "fixed",
     td: {
       verticalAlign: "middle",
       textAlign: "left",

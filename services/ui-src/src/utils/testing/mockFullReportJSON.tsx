@@ -180,18 +180,18 @@ export const mockFullReportJSON: ReportJson = {
       },
     },
     {
-      name: "State- or Territory Specific Initiatives",
+      name: "State or Territory Specific Initiatives",
       path: "/wp/state-and-territory-specific-initiatives",
       children: [
         {
-          name: "State- or Territory Specific Initiatives Instructions",
+          name: "State or Territory Specific Initiatives Instructions",
           path: "/wp/state-and-territory-specific-initiatives/instructions",
           pageType: "standard",
           verbiage: {
             intro: {
               section: "",
               subsection:
-                "State- or Territory Specific Initiatives Instructions",
+                "State or Territory Specific Initiatives Instructions",
               spreadsheet: "",
               info: [
                 {
@@ -657,7 +657,7 @@ export const mockFullReportJSON: ReportJson = {
           },
         },
         {
-          name: "State- or Territory Specific Initiatives",
+          name: "State or Territory Specific Initiatives",
           path: "/wp/state-and-territory-specific-initiatives/initiatives",
           pageType: "modalOverlay",
           entityType: "initiatives",
@@ -696,9 +696,9 @@ export const mockFullReportJSON: ReportJson = {
               "Are you sure you want to proceed? You will lose all information entered for this initiative in the Work Plan. The initiative will remain in previously submitted Semi-Annual Reports if applicable. To close a completed initiative out, select “Cancel” and then the “Close out” button in the listing.",
             enterEntityDetailsButtonText: "Edit",
             readOnlyEntityDetailsButtonText: "View",
-            dashboardTitle: "Initative total count",
+            dashboardTitle: "Initiative total count",
             countEntitiesInTitle: true,
-            tableHeader: "Initaitve name <br/> Work Plan topic",
+            tableHeader: "Initiative name <br/> MFP Work Plan topic",
             addEditModalHint:
               "Provide the name of one initiative. You will be then be asked to complete details for this initiative including description, evaluation plan and funding sources.",
             emptyDashboardText: "Empty",
@@ -801,7 +801,7 @@ export const mockFullReportJSON: ReportJson = {
           },
         },
         {
-          name: "State- or Territory Specific Initiatives: I. Define initiative",
+          name: "State or Territory Specific Initiatives: I. Define initiative",
           path: "/wp/state-and-territory-specific-initiatives/define-initiative",
           pageType: "standard",
           verbiage: {
@@ -1013,7 +1013,7 @@ export const mockFullReportJSON: ReportJson = {
       },
     },
     {
-      name: "State- or Territory Specific Initiatives: 1. Define initiative",
+      name: "State or Territory Specific Initiatives: 1. Define initiative",
       path: "/wp/state-and-territory-specific-initiatives/define-initiative",
       pageType: "standard",
       verbiage: {

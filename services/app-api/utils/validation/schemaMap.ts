@@ -164,11 +164,16 @@ export const isEndDateAfterStartDate = (
 export const dropdown = () => object({ label: text(), value: text() });
 
 // CHECKBOX
-export const checkbox = () =>
+export const checkboxSchema = () =>
   array()
-    .min(0)
-    .of(object({ key: text(), value: text() }));
-export const checkboxOptional = () => checkbox();
+    .of(object({ key: text(), value: text() }))
+    .required(error.REQUIRED_GENERIC);
+export const checkbox = () =>
+  checkboxSchema()
+    .min(1, error.REQUIRED_GENERIC)
+    .required(error.REQUIRED_GENERIC);
+export const checkboxOptional = () =>
+  checkboxSchema().min(0, error.REQUIRED_GENERIC).notRequired().nullable();
 export const checkboxSingle = () => boolean();
 
 // RADIO

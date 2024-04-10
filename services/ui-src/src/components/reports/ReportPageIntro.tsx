@@ -16,15 +16,43 @@ export const ReportPageIntro = ({
 }: Props) => {
   const { section, subsection, hint, info } = text;
 
+  if (section && (subsection || initiativeName)) {
+    return (
+      <Box sx={sx.introBox} {...props}>
+        <Heading as="h1" sx={sx.smallHeading}>
+          {section}
+        </Heading>
+        <Heading as="h2" sx={sx.largeHeading}>
+          {initiativeName ? initiativeName : subsection}
+        </Heading>
+        {hint && <Box sx={sx.hintTextBox}>{parseCustomHtml(hint)}</Box>}
+        {accordion && !OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
+          <InstructionsAccordion verbiage={accordion} />
+        )}
+        {OverlayModalStepTypes.OBJECTIVE_PROGRESS && text.dashboardTitle && (
+          <Heading as="h3" sx={sx.subTitle}>
+            {text.dashboardTitle}
+          </Heading>
+        )}
+        {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
+        {accordion && OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
+          <InstructionsAccordion verbiage={accordion} />
+        )}
+        <ReportPeriod
+          text={text}
+          reportPeriod={reportPeriod}
+          reportYear={reportYear}
+        />
+      </Box>
+    );
+  }
+
   return (
     <Box sx={sx.introBox} {...props}>
-      <Heading as="h1" sx={sx.sectionHeading}>
-        {section}
+      <Heading as="h1" sx={sx.largeHeading}>
+        {subsection}
       </Heading>
-      <Heading as="h2" sx={sx.subsectionHeading}>
-        {initiativeName ? initiativeName : subsection}
-      </Heading>
-      {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
+      {hint && <Box sx={sx.hintTextBox}>{parseCustomHtml(hint)}</Box>}
       {accordion && !OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
         <InstructionsAccordion verbiage={accordion} />
       )}
@@ -59,11 +87,11 @@ const sx = {
   introBox: {
     marginBottom: "1rem",
   },
-  sectionHeading: {
+  smallHeading: {
     color: "palette.gray",
     fontSize: "md",
   },
-  subsectionHeading: {
+  largeHeading: {
     fontWeight: "normal",
     fontSize: "4xl",
     marginTop: "0.5rem",

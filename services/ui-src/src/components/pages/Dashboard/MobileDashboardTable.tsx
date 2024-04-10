@@ -5,7 +5,7 @@ import { AnyObject, ReportMetadataShape, ReportType } from "types";
 import { convertDateUtcToEt, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
-import { getStatus } from "./DashboardTable";
+import { getStatus, copyOverSubText } from "./DashboardTable";
 
 export const MobileDashboardTable = ({
   reportsByState,
@@ -41,6 +41,7 @@ export const MobileDashboardTable = ({
             )}
             <Text sx={sxOverride.submissionNameText}>
               {report.submissionName}
+              {copyOverSubText(report, reportsByState)}
             </Text>
           </Flex>
         </Box>

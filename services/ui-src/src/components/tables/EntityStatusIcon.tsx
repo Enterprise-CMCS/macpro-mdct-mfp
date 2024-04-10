@@ -31,7 +31,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
         return {
           src: isPdf ? closedIcon : closedIcon,
           alt: isPdf ? "" : "close icon",
-          style: sx.successText,
+          style: sx.closeText,
           text: "Close",
         };
       case EntityStatuses.NO_STATUS:
@@ -87,6 +87,10 @@ const sx = {
   },
   successText: {
     color: "palette.success_darker",
+    fontSize: "0.667rem",
+  },
+  closeText: {
+    color: "palette.gray",
     fontSize: "0.667rem",
   },
   errorText: {
