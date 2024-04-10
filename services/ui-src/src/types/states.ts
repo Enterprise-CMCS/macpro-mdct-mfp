@@ -23,14 +23,16 @@ export interface AdminBannerState {
   bannerData: AdminBannerData | undefined;
   bannerActive: boolean;
   bannerLoading: boolean;
-  bannerErrorMessage: ErrorVerbiage;
+  bannerErrorMessage: ErrorVerbiage | undefined;
   bannerDeleting: boolean;
   // ACTIONS
   setBannerData: (newBannerData: AdminBannerData | undefined) => void;
   clearAdminBanner: () => void;
   setBannerActive: (bannerStatus: boolean) => void;
   setBannerLoading: (bannerLoading: boolean) => void;
-  setBannerErrorMessage: (bannerErrorMessage: ErrorVerbiage) => void;
+  setBannerErrorMessage: (
+    bannerErrorMessage: ErrorVerbiage | undefined
+  ) => void;
   setBannerDeleting: (bannerDeleting: boolean) => void;
 }
 

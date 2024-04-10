@@ -34,7 +34,7 @@ const bannerStore = (set: Function) => ({
   bannerData: undefined,
   bannerActive: false,
   bannerLoading: false,
-  bannerErrorMessage: { title: "", description: "" },
+  bannerErrorMessage: undefined,
   bannerDeleting: false,
   // actions
   setBannerData: (newBanner: AdminBannerData | undefined) =>
@@ -49,7 +49,7 @@ const bannerStore = (set: Function) => ({
     set(() => ({ bannerLoading: loading }), false, {
       type: "setBannerLoading",
     }),
-  setBannerErrorMessage: (errorMessage: ErrorVerbiage) =>
+  setBannerErrorMessage: (errorMessage: ErrorVerbiage | undefined) =>
     set(() => ({ bannerErrorMessage: errorMessage }), false, {
       type: "setBannerErrorMessage",
     }),

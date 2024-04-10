@@ -48,12 +48,12 @@ export const ReportContext = createContext<ReportContextShape>({
   releaseReport: Function,
   // other
   isReportPage: false as boolean,
-  errorMessage: undefined as unknown as ErrorVerbiage,
+  errorMessage: undefined,
 });
 
 export const ReportProvider = ({ children }: Props) => {
   const { pathname } = useLocation();
-  const [error, setError] = useState<ErrorVerbiage>();
+  const [error, setError] = useState<ErrorVerbiage | undefined>();
   const [contextIsLoaded, setContextIsLoaded] = useState<boolean>(false);
   const [isReportPage, setIsReportPage] = useState<boolean>(false);
 
