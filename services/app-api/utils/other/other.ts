@@ -102,3 +102,45 @@ export const getLastCreatedWorkPlan = async (
   // If there wasn't an eligble work plan to copy from, return undefined
   return { workPlanMetadata: undefined, workPlanFieldData: undefined };
 };
+
+export const getReportYear = (
+  reportData: AnyObject,
+  isCopyOver: boolean = false
+): number => {
+  if (isCopyOver) {
+    if (typeof reportData?.copyReport?.reportYear !== "number") {
+      throw new Error("Invalid value for reportYear");
+    }
+    const prevReportYear = reportData?.copyReport?.reportYear;
+    const prevReportPeriod = reportData?.copyReport?.reportPeriod;
+
+    return prevReportPeriod === 2 ? prevReportYear + 1 : prevReportYear;
+  }
+
+  if (typeof reportData.reportYear !== "number") {
+    throw new Error("Invalid value for reportYear");
+  }
+
+  return reportData?.reportYear;
+};
+
+export const getReportPeriod = (
+  reportData: AnyObject,
+  isCopyOver: boolean = false
+): number => {
+  if (isCopyOver) {
+    if (typeof reportData?.copyReport?.reportPeriod !== "number") {
+      throw new Error("Invalid value for reportPeriod");
+    }
+
+    let prevReportPeriod = reportData?.copyReport?.reportPeriod;
+
+    return (prevReportPeriod % 2) + 1;
+  }
+
+  if (typeof reportData.reportPeriod !== "number") {
+    throw new Error("Invalid value for reportPeriod");
+  }
+
+  return reportData?.reportPeriod;
+};
