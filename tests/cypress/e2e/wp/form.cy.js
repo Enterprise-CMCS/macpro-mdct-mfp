@@ -16,6 +16,9 @@ describe("MFP Work Plan E2E Submission", () => {
 
     //When I click the create Work Plan Button and create a WP
     cy.contains("Start MFP Work Plan").click();
+    cy.get(`[id="reportYear-${new Date().getFullYear()}"]`).check();
+    cy.get(`[id="reportPeriod-1"]`).check();
+
     cy.contains("Start new").click();
 
     //Then there is a new Workplan with the title
