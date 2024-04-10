@@ -1,34 +1,32 @@
 import { fetchBanner } from "./fetch";
-import { APIGatewayProxyEvent } from "aws-lambda";
+import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { mockClient } from "aws-sdk-client-mock";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import { error } from "../../utils/constants/constants";
-import {
-  mockBannerResponse,
-  mockDocumentClient,
-} from "../../utils/testing/setupJest";
+import { mockBannerResponse } from "../../utils/testing/setupJest";
 // types
-import { StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+
+const dynamoClientMock = mockClient(DynamoDBDocumentClient);
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockReturnValue(true),
-  hasPermissions: jest.fn().mockReturnValue(true),
-}));
-
-jest.mock("../../utils/debugging/debug-lib", () => ({
-  init: jest.fn(),
-  flush: jest.fn(),
 }));
 
 const testEvent: APIGatewayProxyEvent = {
   ...proxyEvent,
   headers: { "cognito-identity-id": "test" },
-  pathParameters: { bannerId: "testKey" },
+  pathParameters: { bannerId: "admin-banner-id" },
 };
 
 describe("Test fetchBanner API method", () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+    dynamoClientMock.reset();
+  });
   test("Test Successful Banner Fetch", async () => {
-    mockDocumentClient.get.promise.mockReturnValueOnce({
+    dynamoClientMock.on(GetCommand).resolves({
       Item: mockBannerResponse,
     });
     const res = await fetchBanner(testEvent, null);
@@ -39,8 +37,8 @@ describe("Test fetchBanner API method", () => {
   });
 
   test("Test successful empty banner found fetch", async () => {
-    mockDocumentClient.get.promise.mockReturnValueOnce({
-      Item: { key: "admin-banner-id" },
+    dynamoClientMock.on(GetCommand).resolves({
+      Item: undefined,
     });
     const res = await fetchBanner(testEvent, null);
 

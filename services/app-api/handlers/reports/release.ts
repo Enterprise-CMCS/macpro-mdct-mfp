@@ -13,13 +13,14 @@ import s3Lib, {
   getFormTemplateKey,
 } from "../../utils/s3/s3-lib";
 // types
+import { GetCommandInput, PutCommandInput } from "@aws-sdk/lib-dynamodb";
 import {
-  DynamoGet,
-  DynamoWrite,
+  GetObjectCommandInput,
+  PutObjectCommandInput,
+} from "@aws-sdk/client-s3";
+import {
   FormJson,
   WPReportMetadata,
-  S3Get,
-  S3Put,
   StatusCodes,
   UserRoles,
 } from "../../utils/types";
@@ -61,7 +62,7 @@ export const releaseReport = handler(async (event) => {
   const reportTable = reportTables[reportType as keyof typeof reportTables];
   // Get report metadata
 
-  const reportMetadataParams: DynamoGet = {
+  const reportMetadataParams: GetCommandInput = {
     Key: { id, state },
     TableName: reportTable,
   };
@@ -115,12 +116,12 @@ export const releaseReport = handler(async (event) => {
 
   const reportBucket = reportBuckets[reportType as keyof typeof reportBuckets];
 
-  const getFieldDataParameters: S3Get = {
+  const getFieldDataParameters: GetObjectCommandInput = {
     Bucket: reportBucket,
     Key: getFieldDataKey(metadata.state, metadata.fieldDataId),
   };
 
-  const getFormTemplateParameters: S3Get = {
+  const getFormTemplateParameters: GetObjectCommandInput = {
     Bucket: reportBucket,
     Key: getFormTemplateKey(metadata.formTemplateId),
   };
@@ -157,7 +158,7 @@ export const releaseReport = handler(async (event) => {
     ),
   };
 
-  const putReportMetadataParams: DynamoWrite = {
+  const putReportMetadataParams: PutCommandInput = {
     TableName: reportTable,
     Item: newReportMetadata,
   };
@@ -173,7 +174,7 @@ export const releaseReport = handler(async (event) => {
 
   // Copy the original field data to a new location.
   try {
-    const putObjectParameters: S3Put = {
+    const putObjectParameters: PutObjectCommandInput = {
       Bucket: reportBucket,
       Body: JSON.stringify({
         ...updatedFieldData,

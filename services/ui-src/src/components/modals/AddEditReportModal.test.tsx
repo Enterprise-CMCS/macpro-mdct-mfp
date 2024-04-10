@@ -4,6 +4,7 @@ import {
   RouterWrappedComponent,
   mockWPFullReport,
   mockWpReportContext,
+  mockWPApprovedFullReport,
 } from "../../utils/testing/setupJest";
 import { ReportContext } from "../reports/ReportProvider";
 import { AddEditReportModal } from "./AddEditReportModal";
@@ -29,6 +30,7 @@ const modalComponent = (
       <AddEditReportModal
         activeState="CA"
         selectedReport={undefined}
+        previousReport={mockWPApprovedFullReport}
         reportType={ReportType.WP}
         modalDisclosure={{
           isOpen: true,
@@ -45,6 +47,7 @@ const modalComponentWithSelectedReport = (
       <AddEditReportModal
         activeState="CA"
         selectedReport={mockWPFullReport}
+        previousReport={mockWPApprovedFullReport}
         reportType={ReportType.WP}
         modalDisclosure={{
           isOpen: true,
@@ -67,7 +70,9 @@ describe("Test AddEditProgramModal", () => {
   });
 
   test("AddEditReportModal shows the contents", () => {
-    expect(screen.getByText("Start new")).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "Continue from previous period" })
+    ).toBeTruthy();
   });
 
   test("AddEditReportModal top close button can be clicked", () => {
@@ -82,14 +87,16 @@ describe("Test AddEditReportModal functionality for Work Plan", () => {
   });
 
   const fillForm = async () => {
-    const submitButton = screen.getByRole("button", { name: "Start new" });
+    const submitButton = screen.getByRole("button", {
+      name: "Continue from previous period",
+    });
     await userEvent.click(submitButton);
   };
 
   test("Adding a new report", async () => {
     await render(modalComponent);
     const header = screen.getByRole("heading", { level: 1 });
-    expect(header.textContent).toEqual("Add new MFP Work Plan");
+    expect(header.textContent).toEqual("Continue MFP Work Plan");
     await fillForm();
     await expect(mockCreateReport).toHaveBeenCalledTimes(1);
     await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);

@@ -1,4 +1,4 @@
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import handler from "../handler-lib";
 // utils
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
@@ -18,7 +18,7 @@ import {
 } from "../../utils/validation/completionStatus";
 import { isAuthorizedToFetchState } from "../../utils/auth/authorization";
 // types
-import { AnyObject, isState, S3Get, StatusCodes } from "../../utils/types";
+import { AnyObject, isState, StatusCodes } from "../../utils/types";
 
 export const fetchReport = handler(async (event, _context) => {
   const requiredParams = ["reportType", "id", "state"];
@@ -66,7 +66,7 @@ export const fetchReport = handler(async (event, _context) => {
     const { formTemplateId, fieldDataId } = reportMetadata;
 
     // Get form template from S3
-    const formTemplateParams: S3Get = {
+    const formTemplateParams = {
       Bucket: reportBucket,
       Key: getFormTemplateKey(formTemplateId),
     };
@@ -80,7 +80,7 @@ export const fetchReport = handler(async (event, _context) => {
     }
 
     // Get field data from S3
-    const fieldDataParams: S3Get = {
+    const fieldDataParams = {
       Bucket: reportBucket,
       Key: getFieldDataKey(state, fieldDataId),
     };
@@ -118,14 +118,6 @@ export const fetchReport = handler(async (event, _context) => {
   }
 });
 
-interface DynamoFetchParams {
-  TableName: string;
-  KeyConditionExpression: string;
-  ExpressionAttributeValues: Record<string, string>;
-  ExpressionAttributeNames: Record<string, string>;
-  ExclusiveStartKey?: DocumentClient.Key;
-}
-
 export const fetchReportsByState = handler(async (event, _context) => {
   const requiredParams = ["reportType", "state"];
 
@@ -147,7 +139,7 @@ export const fetchReportsByState = handler(async (event, _context) => {
 
   const reportTable = reportTables[reportType as keyof typeof reportTables];
 
-  const queryParams: DynamoFetchParams = {
+  const queryParams: QueryCommandInput = {
     TableName: reportTable,
     KeyConditionExpression: "#state = :state",
     ExpressionAttributeValues: {
@@ -158,29 +150,10 @@ export const fetchReportsByState = handler(async (event, _context) => {
     },
   };
 
-  let startingKey;
-  let existingItems = [];
-  let results;
+  const reportsByState = await dynamoDb.query(queryParams);
 
-  const queryTable = async (startingKey?: DocumentClient.Key) => {
-    queryParams.ExclusiveStartKey = startingKey;
-    let results = await dynamoDb.query(queryParams);
-    if (results.LastEvaluatedKey) {
-      startingKey = results.LastEvaluatedKey;
-      return [startingKey, results];
-    } else {
-      return [null, results];
-    }
-  };
-
-  // Looping to perform complete scan of tables due to 1 mb limit per iteration
-  do {
-    [startingKey, results] = await queryTable(startingKey);
-    const items: AnyObject[] = results?.Items;
-    existingItems.push(...items);
-  } while (startingKey);
   return {
     status: StatusCodes.SUCCESS,
-    body: existingItems,
+    body: reportsByState,
   };
 });

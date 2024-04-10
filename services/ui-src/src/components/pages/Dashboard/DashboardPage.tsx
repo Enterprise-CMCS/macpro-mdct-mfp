@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import {
+  AddNewWorkPlanModal,
   AddEditReportModal,
   Modal,
   DashboardTable,
@@ -203,7 +204,11 @@ export const DashboardPage = ({ reportType }: Props) => {
     setSelectedReport(formData);
 
     // use disclosure to open modal
-    addEditReportModalOnOpenHandler();
+    if (!reportsToDisplay?.length && reportType == ReportType.WP) {
+      addNewWorkPlanModalOnOpenHandler();
+    } else {
+      addEditReportModalOnOpenHandler();
+    }
   };
 
   const toggleReportArchiveStatus = async (report: ReportShape) => {
@@ -254,6 +259,13 @@ export const DashboardPage = ({ reportType }: Props) => {
         return true;
     }
   };
+
+  // new work plan modal disclosure
+  const {
+    isOpen: addNewWorkPlanModalIsOpen,
+    onOpen: addNewWorkPlanModalOnOpenHandler,
+    onClose: addNewWorkPlanModalOnCloseHandler,
+  } = useDisclosure();
 
   // add/edit program modal disclosure
   const {
@@ -364,6 +376,15 @@ export const DashboardPage = ({ reportType }: Props) => {
           </Box>
         )}
       </Box>
+      <AddNewWorkPlanModal
+        activeState={activeState!}
+        selectedReport={selectedReport!}
+        reportType={reportType}
+        modalDisclosure={{
+          isOpen: addNewWorkPlanModalIsOpen,
+          onClose: addNewWorkPlanModalOnCloseHandler,
+        }}
+      />
       <AddEditReportModal
         activeState={activeState!}
         selectedReport={selectedReport!}
