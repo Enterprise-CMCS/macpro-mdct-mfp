@@ -933,7 +933,7 @@
               {
                 "id": "ret_shortTermStayAges18to64",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 18-64",
                   "styleAsOptional": true
@@ -942,7 +942,7 @@
               {
                 "id": "ret_shortTermStayAges65to74",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 65-74",
                   "styleAsOptional": true
@@ -951,7 +951,7 @@
               {
                 "id": "ret_shortTermStayAges75to84",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 75-84",
                   "styleAsOptional": true
@@ -960,7 +960,7 @@
               {
                 "id": "ret_shortTermStayAges85AndOlder",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 85 and older",
                   "styleAsOptional": true
@@ -976,7 +976,7 @@
               {
                 "id": "ret_mediumTermStayAges18to64",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 18-64",
                   "styleAsOptional": true
@@ -985,7 +985,7 @@
               {
                 "id": "ret_mediumTermStayAges65to74",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 65-74",
                   "styleAsOptional": true
@@ -994,7 +994,7 @@
               {
                 "id": "ret_mediumTermStayAges75to84",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 75-84",
                   "styleAsOptional": true
@@ -1003,7 +1003,7 @@
               {
                 "id": "ret_mediumTermStayAges85AndOlder",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 85 and older",
                   "styleAsOptional": true
@@ -1019,7 +1019,7 @@
               {
                 "id": "ret_longTermStayAges18to64",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 18-64",
                   "styleAsOptional": true
@@ -1028,7 +1028,7 @@
               {
                 "id": "ret_longTermStayAges65to74",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 65-74",
                   "styleAsOptional": true
@@ -1037,7 +1037,7 @@
               {
                 "id": "ret_longTermStayAges75to84",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 75-84",
                   "styleAsOptional": true
@@ -1046,7 +1046,7 @@
               {
                 "id": "ret_longTermStayAges85AndOlder",
                 "type": "number",
-                "validation": "number",
+                "validation": "numberOptional",
                 "props": {
                   "label": "Ages 85 and older",
                   "styleAsOptional": true
