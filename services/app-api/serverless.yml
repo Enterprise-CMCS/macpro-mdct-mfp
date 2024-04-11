@@ -316,7 +316,7 @@ functions:
     events:
       - stream:
           type: dynamodb
-          arn: ${self:custom.wp}
+          arn: ${self:custom.wpReportTableStreamArn}
           startingPosition: TRIM_HORIZON
           maximumRetryAttempts: 2
           enabled: true
@@ -388,8 +388,8 @@ resources:
           gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
         ResponseType: DEFAULT_5XX
         RestApiId: !Ref ApiGatewayRestApi
-        KafkaSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+    KafkaSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
       Properties:
         GroupDescription: Security Group for streaming functions.  Egress all is set by default.
         VpcId: ${self:custom.vpcId}
