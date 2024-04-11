@@ -12,6 +12,11 @@
     "resolveJsonModule": true,
     "lib": ["ES2022"],
     "module": "node16",
-    "target": "ES2022"
+    "target": "ES5",
+    // downlevelIteration allows us to use generators (sync and async) despite
+    // the ancient ES5 target. We should set the target to ES2022 for Node 18,
+    // but doing so causes problems with Kafka (`Kafka is not a constructor`).
+    // Once we address that issue, we can remove the downlevelIteration flag.
+    "downlevelIteration": true,
   }
 }
