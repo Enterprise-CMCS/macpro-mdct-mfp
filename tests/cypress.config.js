@@ -3,7 +3,7 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   experimentalStudio: true,
   redirectionLimit: 20,
-  retries: 1,
+  retries: 0,
   watchForFileChanges: true,
   fixturesFolder: "fixtures",
   screenshotsFolder: "screenshots",
@@ -18,6 +18,7 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: "http://127.0.0.1:3000/",
     testIsolation: false,
+    experimentalRunAllSpecs: true,
     setupNodeEvents(on, _config) {
       on("task", {
         log(message) {
