@@ -28,7 +28,7 @@ export const ReportPageFooter = ({
    */
   const reportWithSubmittedStatus = report?.status === ReportStatus.SUBMITTED;
   const { userIsAdmin, userIsEndUser } = useStore().user ?? {};
-  const formIsDisabled = 
+  const formIsDisabled =
     (userIsAdmin && !form?.editableByAdmins) ||
     (userIsEndUser && reportWithSubmittedStatus) ||
     !editable ||
