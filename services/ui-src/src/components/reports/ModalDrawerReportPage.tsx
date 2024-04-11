@@ -29,6 +29,7 @@ import {
   ModalDrawerReportPageShape,
   ReportStatus,
   isFieldElement,
+  ErrorVerbiage,
 } from "types";
 // utils
 import {
@@ -56,7 +57,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<ErrorVerbiage>();
 
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
@@ -83,7 +84,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
 
   const closeAddEditEntityModal = () => {
     setSelectedEntity(undefined);
-    setError("");
+    setError({ title: "", description: "" });
     addEditEntityModalOnCloseHandler();
   };
 
