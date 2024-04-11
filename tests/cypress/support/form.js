@@ -46,7 +46,7 @@ const completeDrawerForm = (drawerForm) => {
 };
 
 const completeModalForm = (path, modalForm, buttonText) => {
-  if (path === "/wp/state-and-territory-specific-initiatives/initiatives") {
+  if (path === "/wp/state-or-territory-specific-initiatives/initiatives") {
     //Create 5 initiatives
     for (let i = 0; i < 5; i++) {
       cy.get(`button:contains("${buttonText}")`).focus().click();
@@ -68,7 +68,7 @@ const completeModalForm = (path, modalForm, buttonText) => {
 const completeOverlayEntity = (path, entitySteps) => {
   if (
     entitySteps &&
-    path === "/wp/state-and-territory-specific-initiatives/initiatives"
+    path === "/wp/state-or-territory-specific-initiatives/initiatives"
   ) {
     cy.wait(500);
 
