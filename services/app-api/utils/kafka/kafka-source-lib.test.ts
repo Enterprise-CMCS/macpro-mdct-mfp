@@ -16,8 +16,8 @@ const mockProducer = jest.fn().mockImplementation(() => {
 });
 
 jest.mock("kafkajs", () => ({
-  Kafka: () => ({
-    producer: mockProducer,
+  Kafka: jest.fn().mockImplementation(() => {
+    return { producer: mockProducer };
   }),
 }));
 
