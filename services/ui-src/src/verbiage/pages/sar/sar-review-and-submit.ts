@@ -67,7 +67,7 @@ export default {
           type: "text",
           as: "span",
           content:
-            "Your dashboard will indicate the status of this SAR as “Submitted” and it is now locked from editing.",
+            "Your dashboard will indicate the status of this MFP SAR as “Submitted” and it is now locked from editing.",
         },
         {
           type: "text",
@@ -111,7 +111,7 @@ export default {
                         {
                           type: "html",
                           content:
-                            "<span>You can start updating your Work Plan for the next reporting period.</span>",
+                            "<span>You can start updating your MFP Work Plan for the next reporting period.</span>",
                         },
                       ],
                     },

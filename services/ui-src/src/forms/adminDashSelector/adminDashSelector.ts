@@ -13,7 +13,7 @@ const dropdownOptions: DropdownOptions[] = Object.keys(States).map((value) => {
 const reportChoices = [
   {
     id: "WP",
-    label: "MFP Work Plan (WP)",
+    label: "MFP Work Plan",
   },
   {
     id: "SAR",

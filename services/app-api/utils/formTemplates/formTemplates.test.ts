@@ -85,7 +85,7 @@ describe("Test getOrCreateFormTemplate WP", () => {
       });
     const expectedFormInformation = {
       type: "WP",
-      name: "MFP Work Plan (WP)",
+      name: "MFP Work Plan",
     };
 
     const currentWPFormHash = generateReportHash(

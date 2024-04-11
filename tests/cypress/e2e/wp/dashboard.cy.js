@@ -29,7 +29,7 @@ describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
       //When an admin selects the state and report type to look at
       cy.fillOutForm([
         ["state", "dropdown", "District of Columbia"],
-        ["report", "radio", "MFP Work Plan (WP)"],
+        ["report", "radio", "MFP Work Plan"],
       ]);
       cy.contains("Go to Report Dashboard").click();
       cy.url().should("include", "/wp");

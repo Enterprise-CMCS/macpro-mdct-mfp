@@ -1,6 +1,6 @@
 {
   "type": "WP",
-  "name": "MFP Work Plan (WP)",
+  "name": "MFP Work Plan",
   "basePath": "/wp",
   "version": "WP_2023-08-21",
   "entities": {
@@ -191,7 +191,7 @@
             "type": "textarea",
             "validation": "text",
             "props": {
-              "label": "Please provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory specific initiative.",
+              "label": "Provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory-specific initiative.",
               "className": "tbs-bottom-margin"
             }
           }
@@ -199,17 +199,17 @@
       }
     },
     {
-      "name": "State or Territory Specific Initiatives",
-      "path": "/wp/state-and-territory-specific-initiatives",
+      "name": "State or Territory-Specific Initiatives",
+      "path": "/wp/state-or-territory-specific-initiatives",
       "children": [
         {
-          "name": "State or Territory Specific Initiatives Instructions",
-          "path": "/wp/state-and-territory-specific-initiatives/instructions",
+          "name": "State or Territory-Specific Initiatives Instructions",
+          "path": "/wp/state-or-territory-specific-initiatives/instructions",
           "pageType": "standard",
           "verbiage": {
             "intro": {
               "section": "",
-              "subsection": "State or Territory Specific Initiatives Instructions",
+              "subsection": "State or Territory-Specific Initiatives Instructions",
               "spreadsheet": "",
               "info": [
                 {
@@ -669,8 +669,8 @@
           }
         },
         {
-          "name": "State or Territory Specific Initiatives",
-          "path": "/wp/state-and-territory-specific-initiatives/initiatives",
+          "name": "State or Territory-Specific Initiatives",
+          "path": "/wp/state-or-territory-specific-initiatives/initiatives",
           "pageType": "modalOverlay",
           "entityType": "initiative",
           "entityInfo": ["initiative_name", "initiative_wpTopic"],
@@ -687,7 +687,7 @@
                   "type": "internalLink",
                   "content": "previous page",
                   "props": {
-                    "to": "/wp/state-and-territory-specific-initiatives/instructions",
+                    "to": "/wp/state-or-territory-specific-initiatives/instructions",
                     "style": {
                       "textDecoration": "underline"
                     }
@@ -836,8 +836,8 @@
           },
           "entitySteps": [
             {
-              "name": "State or Territory Specific Initiatives: I. Define initiative",
-              "path": "/wp/state-and-territory-specific-initiatives/define-initiative",
+              "name": "State or Territory-Specific Initiatives: I. Define initiative",
+              "path": "/wp/state-or-territory-specific-initiatives/define-initiative",
               "pageType": "entityOverlay",
               "entityType": "initiative",
               "stepType": "defineInitiative",
@@ -947,7 +947,7 @@
             },
             {
               "name": "State or Territory-Specific Initiatives: II. Evaluation Plan",
-              "path": "/wp/state-and-territory-specific-initiatives/evaluation-plan",
+              "path": "/wp/state-or-territory-specific-initiatives/evaluation-plan",
               "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "evaluationPlan",
@@ -1050,7 +1050,7 @@
                     "validation": "radio",
                     "props": {
                       "label": "Does the performance measure include quantitative targets?",
-                      "hint": "Note: If 'Yes', fields use calendar year quarters.  Enter N/A for quarters you do not expect to report.",
+                      "hint": "Note: If 'Yes', fields use calendar year quarters. Fields require whole numbers. Enter N/A for quarters you do not expect to report.",
                       "choices": [
                         {
                           "id": "UL4dAeyyvCFAXttxZioacR",
@@ -1092,7 +1092,7 @@
             },
             {
               "name": "State or Territory-Specific Initiatives: III. Funding sources",
-              "path": "/wp/state-and-territory-specific-initiatives/funding-sources",
+              "path": "/wp/state-or-territory-specific-initiatives/funding-sources",
               "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "fundingSources",
@@ -1106,11 +1106,7 @@
                   "info": [
                     {
                       "type": "html",
-                      "content": "<br>Add funding sources with projected quarterly expenditures.</br>"
-                    },
-                    {
-                      "type": "html",
-                      "content": "<br>Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report (SAR).</br>"
+                      "content": "<br>Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report.</br>"
                     }
                   ],
                   "exportSectionHeader": "exportSectionHeader"
@@ -1126,11 +1122,11 @@
                 "deleteModalConfirmButtonText": "Yes, delete funding source",
                 "deleteModalWarning": "You will lose all information entered for this funding source. Funding source will not be deleted from archived MFP Work Plans and Semi-Annual Progress Reports, but it will not be available in future MFP Work Plans and Semi-Annual Progress Reports. <br><br>Are you sure you want to proceed?",
                 "tableHeader": "Initiative name <br/> MFP Work Plan topic",
-                "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report (SAR).",
+                "addEditModalHint": "Provide projected quarterly expenditures, by funding source, for this initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report.",
                 "dashboardTitle": "Funding Sources",
                 "enterEntityDetailsButtonText": "Edit",
                 "readOnlyEntityDetailsButtonText": "View",
-                "entityUnfinishedMessage": "Add the Projected quarterly expenditures for the next 2 quarters by editing funding source.",
+                "entityUnfinishedMessage": "Add the projected quarterly expenditures for the next 2 quarters by editing funding source.",
                 "countEntitiesInTitle": true
               },
               "modalForm": {
@@ -1199,7 +1195,7 @@
             },
             {
               "name": "State or Territory-Specific Initiatives: IV. Initiative close-out information",
-              "path": "/wp/state-and-territory-specific-initiatives/close-out-information",
+              "path": "/wp/state-or-territory-specific-initiatives/close-out-information",
               "pageType": "entityOverlay",
               "entityType": "initiative",
               "stepType": "closeOutInformation",
