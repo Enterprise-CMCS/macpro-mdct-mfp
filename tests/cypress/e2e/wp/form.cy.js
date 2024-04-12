@@ -6,7 +6,7 @@ const currentYear = new Date().getFullYear();
 
 describe("MFP Work Plan E2E Submission", () => {
   it("State users can create Work Plans", () => {
-    cy.ensureAvailableReport();
+    cy.archiveAnyExistingWorkPlans();
     cy.authenticate("stateUser");
 
     //Given I've logged in

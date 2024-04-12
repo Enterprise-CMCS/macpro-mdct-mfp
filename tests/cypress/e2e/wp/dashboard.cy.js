@@ -3,7 +3,7 @@ const currentYear = new Date().getFullYear();
 describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
   describe("MFP Work Plan Dashboard Page - State User Report Creation", () => {
     it("State users can create Work Plans", () => {
-      cy.ensureAvailableReport();
+      cy.archiveAnyExistingWorkPlans();
       cy.authenticate("stateUser");
 
       //Given I've logged in
