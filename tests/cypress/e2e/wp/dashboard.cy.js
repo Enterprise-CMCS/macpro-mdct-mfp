@@ -1,6 +1,9 @@
+const currentYear = new Date().getFullYear();
+
 describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
   describe("MFP Work Plan Dashboard Page - State User Report Creation", () => {
     it("State users can create Work Plans", () => {
+      cy.archiveAnyExistingWorkPlans();
       cy.authenticate("stateUser");
 
       //Given I've logged in
@@ -12,10 +15,16 @@ describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
 
       //When I click the create Work Plan Button and create a WP
       cy.contains("Start MFP Work Plan").click();
+      cy.get(`[id="reportYear-${currentYear}"]`).check();
+      cy.get(`[id="reportPeriod-1"]`).check();
+
       cy.contains("Start new").click();
 
       //Then there is a new Workplan with the title
-      cy.contains("MFP Work Plan", { matchCase: true }).should("be.visible");
+      cy.contains(
+        `District of Columbia MFP Work Plan ${currentYear} - Period 1`,
+        { matchCase: true }
+      ).should("be.visible");
     });
   });
 
@@ -35,9 +44,12 @@ describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
       cy.url().should("include", "/wp");
 
       //Then there is a new Workplan with the title
-      cy.contains("District of Columbia MFP Work Plan", {
-        matchCase: true,
-      }).should("be.visible");
+      cy.contains(
+        `District of Columbia MFP Work Plan ${currentYear} - Period 1`,
+        {
+          matchCase: true,
+        }
+      ).should("be.visible");
 
       //And when the admin clicks archive/unarchive it should do that to the report
       cy.contains("Archive").click();
@@ -45,6 +57,9 @@ describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
 
       cy.contains("Unarchive").click();
       cy.contains("Archive").should("be.visible");
+
+      cy.contains("Archive").click();
+      cy.contains("Unarchive").should("be.visible");
     });
   });
 });

@@ -49,6 +49,30 @@ Cypress.Commands.add("testPageAccessibility", () => {
   }
 });
 
+Cypress.Commands.add("archiveAnyExistingWorkPlans", () => {
+  // login as admin
+  cy.authenticate("adminUser");
+  cy.navigateToHomePage();
+
+  /*
+   * Check if there is already a workplan, if so, archive
+   * is to ensure a clean test bed
+   */
+  cy.get(
+    '[aria-label="List of states, including District of Columbia and Puerto Rico"]'
+  ).select("DC");
+  cy.get('[id="report-WP"]').click();
+  cy.contains("Go to Report Dashboard").click();
+  cy.wait(3000);
+
+  cy.get("table").then(($table) => {
+    if ($table.find('*[data-cy^="Archive"]').length > 0) {
+      cy.get('*[data-cy^="Archive"]').first().click();
+      cy.wait(500);
+    }
+  });
+});
+
 Cypress.Commands.add("fillOutForm", (formInputs) => {
   formInputs.forEach((row) => {
     /*
@@ -96,6 +120,7 @@ Cypress.Commands.add("fillOutForm", (formInputs) => {
 });
 
 Cypress.Commands.add("authenticate", (userType, userCredentials) => {
+  Cypress.session.clearAllSavedSessions();
   cy.session([userType, userCredentials], () => {
     cy.visit("/");
     cy.wait(2000);
