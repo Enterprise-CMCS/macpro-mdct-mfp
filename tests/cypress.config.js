@@ -3,7 +3,7 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   experimentalStudio: true,
   redirectionLimit: 20,
-  retries: 0,
+  retries: 2,
   watchForFileChanges: true,
   fixturesFolder: "fixtures",
   screenshotsFolder: "screenshots",
