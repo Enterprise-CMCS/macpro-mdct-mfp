@@ -434,6 +434,7 @@ export const mockModalOverlayReportPageVerbiage = {
   enterReportText: "Mock enter report text",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
   addEditModalEditTitle: "Mock AddEdit Modal Text",
+  reportProgressButtonText: "Mock report preogress button text",
 };
 
 export const mockModalOverlayForm = {
@@ -500,6 +501,7 @@ export const mockOverlayModalWithCardsPageJson = {
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   objectiveCards: mockObjectiveCards,
+  modalForm: mockModalForm,
   stepType: "objectiveProgress",
   stepName: "Mock step name",
   stepInfo: ["name", "hint"],

@@ -39,7 +39,9 @@ export const OverlayModalPage = ({
     EntityShape | undefined
   >(undefined);
   const entityType = selectedEntity!.type;
-  const userDisabled = !editable || selectedEntity?.isInitiativeClosed;
+  const isSAR = report?.reportType === ReportType.SAR;
+  const userDisabled =
+    !editable || (!isSAR && selectedEntity?.isInitiativeClosed);
   const objectiveCards: any[] = (route as any).objectiveCards;
 
   const getModalForm = () => {
