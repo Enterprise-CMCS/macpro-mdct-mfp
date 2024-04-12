@@ -49,7 +49,7 @@ Cypress.Commands.add("testPageAccessibility", () => {
   }
 });
 
-Cypress.Commands.add("ensureAvailableReport", () => {
+Cypress.Commands.add("archiveAnyExistingWorkPlans", () => {
   // login as admin
   cy.authenticate("adminUser");
   cy.navigateToHomePage();
