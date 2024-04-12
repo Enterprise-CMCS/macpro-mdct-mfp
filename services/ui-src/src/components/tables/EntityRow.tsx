@@ -209,6 +209,7 @@ export const EntityRow = ({
                 variant="none"
                 onClick={() => openAddEditEntityModal(entity)}
                 aria-label="edit entity button"
+                paddingRight={"2.5rem"}
               >
                 {!editable || isInitiativeClosed
                   ? verbiage.readOnlyEntityButtonText
@@ -293,7 +294,6 @@ const sx = {
     display: "flex",
   },
   editNameButton: {
-    paddingRight: "2.5rem",
     fontWeight: "normal",
     textDecoration: "underline",
     color: "palette.primary",
