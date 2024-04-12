@@ -11,6 +11,7 @@ import {
   EntityDetailsOverlayTypes,
   EntityDetailsOverlayShape,
   OverlayModalPageShape,
+  ReportType,
 } from "types";
 // utils
 import { useStore } from "utils";
@@ -33,10 +34,10 @@ export const EntityRow = ({
   openOverlayOrDrawer,
 }: Props) => {
   const { report, editable } = useStore();
-
   // check for "other" target population entities
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
   const stepType = formEntity?.stepType;
+  const isSAR = report?.reportType === ReportType.SAR;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
@@ -173,7 +174,7 @@ export const EntityRow = ({
             disabled={entityStatus === EntityStatuses.DISABLED}
             aria-label="edit button"
           >
-            {!editable || isInitiativeClosed
+            {!editable || (!isSAR && isInitiativeClosed)
               ? verbiage.readOnlyEntityDetailsButtonText
               : verbiage.enterEntityDetailsButtonText}
           </Button>

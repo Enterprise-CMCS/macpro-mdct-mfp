@@ -7,6 +7,8 @@ import {
   mockUseStore,
   mockTargetPopulationEntity,
   mockOtherTargetPopulationEntity,
+  mockGenericEntity,
+  mockSARReportStore,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 // constants
@@ -40,6 +42,7 @@ const verbiage = {
   addEditModalEditTitle: "Edit other target population",
   deleteEntityButtonAltText: "Delete other target population",
   enterEntityDetailsButtonText: "Edit",
+  readOnlyEntityDetailsButtonText: "View",
   drawerTitle: "Report transition benchmarks for ",
 };
 
@@ -49,12 +52,29 @@ const tableContent = {
 };
 
 const mockEntityInfo = ["transitionBenchmarks_targetPopulationName"];
+const mockEntityClosed = { ...mockGenericEntity, isInitiativeClosed: true };
 
 const entityRowWithEntities = (
   <RouterWrappedComponent>
     <Table content={tableContent}>
       <EntityRow
         entity={mockTargetPopulationEntity}
+        entityType={ModalDrawerEntityTypes.TARGET_POPULATIONS}
+        verbiage={verbiage}
+        entityInfo={mockEntityInfo}
+        openAddEditEntityModal={mockOpenAddEditEntityModal}
+        openDeleteEntityModal={mockOpenDeleteEntityModal}
+        openOverlayOrDrawer={mockOpenDrawer}
+      />
+    </Table>
+  </RouterWrappedComponent>
+);
+
+const entityRowWithClosedEntities = (
+  <RouterWrappedComponent>
+    <Table content={tableContent}>
+      <EntityRow
+        entity={mockEntityClosed}
         entityType={ModalDrawerEntityTypes.TARGET_POPULATIONS}
         verbiage={verbiage}
         entityInfo={mockEntityInfo}
@@ -105,6 +125,28 @@ describe("Test EntityRow with entities", () => {
     );
     await userEvent.click(launchDrawerButton);
     expect(mockOpenDrawer).toBeCalledTimes(1);
+  });
+});
+
+describe("Test EntityRow with closed status", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should render the correct button text in a work plan", () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+    render(entityRowWithClosedEntities);
+    const viewButton = screen.getByText(
+      verbiage.readOnlyEntityDetailsButtonText
+    );
+    expect(viewButton).toBeVisible();
+  });
+
+  it("should render the correct button text in a SAR", () => {
+    mockedUseStore.mockReturnValue(mockSARReportStore);
+    render(entityRowWithClosedEntities);
+    const editButton = screen.getByText(verbiage.enterEntityDetailsButtonText);
+    expect(editButton).toBeVisible();
   });
 });
 
