@@ -115,48 +115,59 @@ export const EntityRow = ({
   };
 
   return (
-    <Tr sx={sx.content} verticalAlign={isMobile ? "baseline" : "middle"}>
-      <Td>
+    <Tr sx={sx.content}>
+      <Td
+        pt={isMobile ? "1.5rem" : ".5rem"}
+        verticalAlign={isMobile ? "baseline" : "middle"}
+      >
         <EntityStatusIcon entityStatus={entityStatus} />
       </Td>
       <Td
         sx={sx.entityName}
         pb={isMobile ? "1.5rem" : "1rem"}
         pt={isMobile ? "1.5rem" : ".5rem"}
+        colSpan={3}
       >
-        <ul>
-          {programInfo.map((field, index) => (
-            <li key={index}>
-              {index === 0 && appendToEntityName()}
-              {field}
-            </li>
-          ))}
-        </ul>
-        {!entityStatus && (
-          <Text sx={sx.errorText}>
-            {verbiage.editEntityHint ??
-              `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
-          </Text>
-        )}
-        {isInitiativeClosed &&
-          stepType &&
-          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION && (
-            <Table
-              content={{
-                headRow: ["Actual end date", "Closed by"],
-                bodyRows: [
-                  [entity.closeOutInformation_actualEndDate, closedBy],
-                ],
-              }}
-              variant="none"
-              sxOverride={sx.table}
-            ></Table>
-          )}
-        {isMobile && (
+        <Box
+          display={"flex"}
+          flexDirection={isMobile ? "column" : "row"}
+          justifyContent={"space-between"}
+        >
+          <Box display={"inline-block"}>
+            <ul>
+              {programInfo.map((field, index) => (
+                <li key={index}>
+                  {index === 0 && appendToEntityName()}
+                  {field}
+                </li>
+              ))}
+            </ul>
+            {!entityStatus && (
+              <Text sx={sx.errorText}>
+                {verbiage.editEntityHint ??
+                  `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
+              </Text>
+            )}
+            {isInitiativeClosed &&
+              stepType &&
+              stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION && (
+                <Table
+                  content={{
+                    headRow: ["Actual end date", "Closed by"],
+                    bodyRows: [
+                      [entity.closeOutInformation_actualEndDate, closedBy],
+                    ],
+                  }}
+                  variant="none"
+                  sxOverride={sx.table}
+                ></Table>
+              )}
+          </Box>
           <Box
             sx={sx.actionContainer}
             pt={isMobile ? "1rem" : "0"}
             justifyContent={isMobile ? "flex-start" : "flex-end"}
+            display={"inline-block"}
           >
             {!isRequired && !isCopied && openAddEditEntityModal && (
               <Button
@@ -198,52 +209,8 @@ export const EntityRow = ({
               </Button>
             )}
           </Box>
-        )}
+        </Box>
       </Td>
-      {!isMobile && (
-        <Td>
-          <Box sx={sx.actionContainer}>
-            {!isRequired && !isCopied && openAddEditEntityModal && (
-              <Button
-                sx={sx.editNameButton}
-                variant="none"
-                onClick={() => openAddEditEntityModal(entity)}
-                aria-label="edit entity button"
-                paddingRight={"2.5rem"}
-              >
-                {!editable || isInitiativeClosed
-                  ? verbiage.readOnlyEntityButtonText
-                  : verbiage.editEntityButtonText}
-              </Button>
-            )}
-            <Button
-              sx={
-                !isRequired && !isCopied
-                  ? sx.editOtherEntityButton
-                  : sx.editEntityButton
-              }
-              onClick={() => openOverlayOrDrawer(entity)}
-              variant="outline"
-              disabled={entityStatus === EntityStatuses.DISABLED}
-              aria-label="edit button"
-            >
-              {!editable || isInitiativeClosed
-                ? verbiage.readOnlyEntityDetailsButtonText
-                : verbiage.enterEntityDetailsButtonText}
-            </Button>
-            {!isRequired && !isCopied && openDeleteEntityModal && (
-              <Button
-                sx={sx.deleteButton}
-                data-testid="delete-entity"
-                onClick={() => openDeleteEntityModal(entity)}
-                aria-label="delete button"
-              >
-                <Image src={deleteIcon} alt="delete icon" boxSize="3x3" />
-              </Button>
-            )}
-          </Box>
-        </Td>
-      )}
     </Tr>
   );
 };
@@ -261,6 +228,8 @@ interface Props {
 
 const sx = {
   content: {
+    borderTop: "1px solid var(--chakra-colors-palette-gray_medium)",
+    borderBottom: "1px solid var(--chakra-colors-palette-gray_medium)",
     paddingLeft: "1.5rem",
     td: {
       borderColor: "palette.gray_lighter",
