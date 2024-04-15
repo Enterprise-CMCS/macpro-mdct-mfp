@@ -5,11 +5,11 @@ import { ConfigResourceTypes, Kafka } from "kafkajs";
 /**
  * Generates topics in BigMac given the following
  * @param {string} brokerString - Comma delimited list of brokers
- * @param {string} topicNamespace - String in the format of `--${event.project}--${event.stage}--`, only used for temp branches for easy identification and cleanup
  * @param {{ topic: string, numPartitions: number, replicationFactor: number }[]}
- *   topicsConfig - array of topics to create or update
+ *   topicsConfig - array of topics to create or update.
+ *   The `topic` property should include any namespace.
  */
-export async function createTopics(brokerString, topicNamespace, topicsConfig) {
+export async function createTopics(brokerString, topicsConfig) {
   const topics = topicsConfig;
   const brokers = brokerString.split(",");
 
@@ -38,16 +38,9 @@ export async function createTopics(brokerString, topicNamespace, topicsConfig) {
     );
     console.log("Topics Metadata:", JSON.stringify(topicsMetadata, null, 2));
 
-    //namespace the topics, if needed
-    var namespacedTopics = _.map(topics, function (ref) {
-      var a = { ...ref };
-      a.topic = `${topicNamespace}${a.topic}`;
-      return a;
-    });
-
     //diff the existing topics array with the topic configuration collection
     const topicsToCreate = _.differenceWith(
-      namespacedTopics,
+      topics,
       existingTopicList,
       (topicConfig, topic) => _.get(topicConfig, "topic") == topic
     );
@@ -58,7 +51,7 @@ export async function createTopics(brokerString, topicNamespace, topicsConfig) {
      * ...can't remove partitions, only add them
      */
     const topicsToUpdate = _.intersectionWith(
-      namespacedTopics,
+      topics,
       topicsMetadata,
       (topicConfig, topicMetadata) =>
         _.get(topicConfig, "topic") == _.get(topicMetadata, "name") &&

@@ -1,6 +1,13 @@
 import * as topics from "../libs/topics-lib.js";
 import _ from "lodash";
 
+/**
+ * String in the format of `--${event.project}--${event.stage}--`
+ *
+ * Only used for temp branches for easy identification and cleanup.
+ */
+const namespace = process.env.topicNamespace;
+
 const condensedTopicList = [
   {
     // topics for the mfp service's connector
@@ -27,7 +34,7 @@ exports.handler = async function (event, _context, _callback) {
     topicList.push(
       ..._.map(element.topics, (topic) => {
         return {
-          topic: `${element.topicPrefix}${topic}${element.version}`,
+          topic: `${namespace}${element.topicPrefix}${topic}${element.version}`,
           numPartitions: element.numPartitions,
           replicationFactor: element.replicationFactor,
         };
@@ -35,9 +42,5 @@ exports.handler = async function (event, _context, _callback) {
     );
   }
 
-  await topics.createTopics(
-    process.env.brokerString,
-    process.env.topicNamespace,
-    topicList
-  );
+  await topics.createTopics(process.env.brokerString, topicList);
 };
