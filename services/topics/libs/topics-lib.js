@@ -73,7 +73,7 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   console.log("Topics to Create:", JSON.stringify(topicsToCreate, null, 2));
   console.log("Topics to Update:", JSON.stringify(topicsToUpdate, null, 2));
   console.log(
-    "Partitions to Update:",
+    "Partitions to Create:",
     JSON.stringify(partitionsToCreate, null, 2)
   );
   console.log(
