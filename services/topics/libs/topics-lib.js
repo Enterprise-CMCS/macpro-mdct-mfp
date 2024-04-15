@@ -26,11 +26,10 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   console.log("Existing topics:", JSON.stringify(existingTopicNames, null, 2));
 
   // Fetch the metadata for those topics from MSK
-  const existingTopicConfigs = _.get(
-    await admin.fetchTopicMetadata({ topics: existingTopicNames }),
-    "topics",
-    {}
-  );
+  const fetchTopicResponse = await admin.fetchTopicMetadata({
+    topics: existingTopicNames,
+  });
+  const existingTopicConfigs = fetchTopicResponse?.topics;
   console.log(
     "Topics Metadata:",
     JSON.stringify(existingTopicConfigs, null, 2)
@@ -40,7 +39,7 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   const topicsToCreate = _.differenceWith(
     desiredTopicConfigs,
     existingTopicNames,
-    (topicConfig, topic) => _.get(topicConfig, "topic") == topic
+    (topicConfig, topic) => topicConfig.topic == topic
   );
 
   /*
@@ -51,16 +50,15 @@ export async function createTopics(brokers, desiredTopicConfigs) {
     desiredTopicConfigs,
     existingTopicConfigs,
     (topicConfig, topicMetadata) =>
-      _.get(topicConfig, "topic") == _.get(topicMetadata, "name") &&
-      _.get(topicConfig, "numPartitions") >
-        _.get(topicMetadata, "partitions", []).length
+      topicConfig.topic == topicMetadata.name &&
+      topicConfig.numPartitions > topicMetadata.partitions.length
   );
 
   // Format the request to update those topics (by creating partitions)
   const partitionsToCreate = _.map(topicsToUpdate, function (topic) {
     return {
-      topic: _.get(topic, "topic"),
-      count: _.get(topic, "numPartitions"),
+      topic: topic.topic,
+      count: topic.numPartitions,
     };
   });
 
@@ -69,8 +67,8 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   if (existingTopicConfigs.length > 0) {
     const resourcesToDescribe = _.map(existingTopicConfigs, function (topic) {
       return {
-        name: _.get(topic, "name"),
-        type: _.get(ConfigResourceTypes, "TOPIC"),
+        name: topic.name,
+        type: ConfigResourceTypes.TOPIC,
       };
     });
     existingTopicDescriptions = await admin.describeConfigs({
