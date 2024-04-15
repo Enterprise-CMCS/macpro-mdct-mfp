@@ -19,9 +19,10 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   await admin.connect();
 
   // Fetch topic names from MSK, filtering out __ internal management topic
-  const existingTopicNames = _.filter(await admin.listTopics(), function (n) {
-    return !n.startsWith("_");
-  });
+  const listTopicResponse = await admin.listTopics();
+  const existingTopicNames = listTopicResponse.filter(
+    (name) => !name.startsWith("_")
+  );
 
   console.log("Existing topics:", JSON.stringify(existingTopicNames, null, 2));
 
@@ -55,22 +56,18 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   );
 
   // Format the request to update those topics (by creating partitions)
-  const partitionsToCreate = _.map(topicsToUpdate, function (topic) {
-    return {
-      topic: topic.topic,
-      count: topic.numPartitions,
-    };
-  });
+  const partitionsToCreate = topicsToUpdate.map((topic) => ({
+    topic: topic.topic,
+    count: topic.numPartitions,
+  }));
 
   // Describe existing topics for informational logs
   let existingTopicDescriptions = [];
   if (existingTopicConfigs.length > 0) {
-    const resourcesToDescribe = _.map(existingTopicConfigs, function (topic) {
-      return {
-        name: topic.name,
-        type: ConfigResourceTypes.TOPIC,
-      };
-    });
+    const resourcesToDescribe = existingTopicConfigs.map((topic) => ({
+      name: topic.name,
+      type: ConfigResourceTypes.TOPIC,
+    }));
     existingTopicDescriptions = await admin.describeConfigs({
       resources: resourcesToDescribe,
     });
@@ -119,13 +116,13 @@ export async function deleteTopics(brokers, topicNamespace) {
   await admin.connect();
 
   const existingTopicNames = await admin.listTopics();
-  var topicsToDelete = _.filter(existingTopicNames, function (n) {
-    console.log(n);
-    return (
-      n.startsWith(topicNamespace) ||
-      n.startsWith(`_confluent-ksql-${topicNamespace}`)
-    );
-  });
+  console.log(`All existing topics: ${existingTopicNames}`);
+  var topicsToDelete = existingTopicNames.filter(
+    existingTopicNames,
+    (name) =>
+      name.startsWith(topicNamespace) ||
+      name.startsWith(`_confluent-ksql-${topicNamespace}`)
+  );
   console.log(`Deleting topics:  ${topicsToDelete}`);
 
   await admin.deleteTopics({
