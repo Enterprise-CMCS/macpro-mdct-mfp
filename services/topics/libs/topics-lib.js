@@ -29,7 +29,7 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   const fetchTopicResponse = await admin.fetchTopicMetadata({
     topics: existingTopicNames,
   });
-  const existingTopicConfigs = fetchTopicResponse?.topics;
+  const existingTopicConfigs = fetchTopicResponse.topics;
   console.log(
     "Topics Metadata:",
     JSON.stringify(existingTopicConfigs, null, 2)
@@ -115,7 +115,6 @@ export async function deleteTopics(brokers, topicNamespace) {
   const existingTopicNames = await admin.listTopics();
   console.log(`All existing topics: ${existingTopicNames}`);
   var topicsToDelete = existingTopicNames.filter(
-    existingTopicNames,
     (name) =>
       name.startsWith(topicNamespace) ||
       name.startsWith(`_confluent-ksql-${topicNamespace}`)
