@@ -69,17 +69,19 @@ export async function createTopics(brokers, desiredTopicConfigs) {
       };
     });
 
-    // Format a request to describe existing topics
-    const resourcesToDescribe = _.map(existingTopicConfigs, function (topic) {
-      return {
-        name: _.get(topic, "name"),
-        type: _.get(ConfigResourceTypes, "TOPIC"),
-      };
-    });
-    const existingTopicDescriptions =
-      resourcesToDescribe.length != 0
-        ? await admin.describeConfigs({ resources: resourcesToDescribe })
-        : [];
+    // Describe existing topics for informational logs
+    let existingTopicDescriptions = [];
+    if (existingTopicConfigs.length > 0) {
+      const resourcesToDescribe = _.map(existingTopicConfigs, function (topic) {
+        return {
+          name: _.get(topic, "name"),
+          type: _.get(ConfigResourceTypes, "TOPIC"),
+        };
+      });
+      existingTopicDescriptions = await admin.describeConfigs({
+        resources: resourcesToDescribe,
+      });
+    }
 
     console.log("Topics to Create:", JSON.stringify(topicsToCreate, null, 2));
     console.log("Topics to Update:", JSON.stringify(topicsToUpdate, null, 2));
@@ -96,8 +98,9 @@ export async function createTopics(brokers, desiredTopicConfigs) {
     await admin.createTopics({ topics: topicsToCreate });
 
     // Create all the new partitions
-    partitionsToCreate.length > 0 &&
-      (await admin.createPartitions({ topicPartitions: partitionsToCreate }));
+    if (partitionsToCreate.length > 0) {
+      await admin.createPartitions({ topicPartitions: partitionsToCreate });
+    }
 
     await admin.disconnect();
   };

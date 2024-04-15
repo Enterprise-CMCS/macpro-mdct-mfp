@@ -1,5 +1,4 @@
 import * as topics from "../libs/topics-lib.js";
-import _ from "lodash";
 
 /**
  * String in the format of `--${event.project}--${event.stage}--`
@@ -28,20 +27,14 @@ const condensedTopicList = [
  */
 exports.handler = async function (event, _context, _callback) {
   console.log("Received event:", JSON.stringify(event, null, 2)); // eslint-disable-line no-console
-  var desiredTopicConfigs = [];
 
-  // Generate the complete topic list from the condensed version above.
-  for (var element of condensedTopicList) {
-    desiredTopicConfigs.push(
-      ..._.map(element.topics, (topic) => {
-        return {
-          topic: `${namespace}${element.topicPrefix}${topic}${element.version}`,
-          numPartitions: element.numPartitions,
-          replicationFactor: element.replicationFactor,
-        };
-      })
-    );
-  }
+  const desiredTopicConfigs = condensedTopicList.flatMap((element) =>
+    element.topics.map((topic) => ({
+      topic: `${namespace}${element.topicPrefix}${topic}${element.version}`,
+      numPartitions: element.numPartitions,
+      replicationFactor: element.replicationFactor,
+    }))
+  );
 
   await topics.createTopics(brokers, desiredTopicConfigs);
 };
