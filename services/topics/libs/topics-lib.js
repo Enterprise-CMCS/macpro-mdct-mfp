@@ -6,12 +6,10 @@ import { ConfigResourceTypes, Kafka } from "kafkajs";
  * Generates topics in BigMac given the following
  * @param { string[] } brokers - List of brokers
  * @param {{ topic: string, numPartitions: number, replicationFactor: number }[]}
- *   topicsConfig - array of topics to create or update.
+ *   desiredTopicConfigs - array of topics to create or update.
  *   The `topic` property should include any namespace.
  */
-export async function createTopics(brokers, topicsConfig) {
-  const topics = topicsConfig;
-
+export async function createTopics(brokers, desiredTopicConfigs) {
   const kafka = new Kafka({
     clientId: "admin",
     brokers,
@@ -22,81 +20,84 @@ export async function createTopics(brokers, topicsConfig) {
   const create = async () => {
     await admin.connect();
 
-    //fetch topics from MSK and filter out __ internal management topic
-    const existingTopicList = _.filter(await admin.listTopics(), function (n) {
+    // Fetch topic names from MSK, filtering out __ internal management topic
+    const existingTopicNames = _.filter(await admin.listTopics(), function (n) {
       return !n.startsWith("_");
     });
 
-    console.log("Existing topics:", JSON.stringify(existingTopicList, null, 2));
+    console.log(
+      "Existing topics:",
+      JSON.stringify(existingTopicNames, null, 2)
+    );
 
-    //fetch the metadata for the topics in MSK
-    const topicsMetadata = _.get(
-      await admin.fetchTopicMetadata({ topics: existingTopicList }),
+    // Fetch the metadata for those topics from MSK
+    const existingTopicConfigs = _.get(
+      await admin.fetchTopicMetadata({ topics: existingTopicNames }),
       "topics",
       {}
     );
-    console.log("Topics Metadata:", JSON.stringify(topicsMetadata, null, 2));
+    console.log(
+      "Topics Metadata:",
+      JSON.stringify(existingTopicConfigs, null, 2)
+    );
 
-    //diff the existing topics array with the topic configuration collection
+    // Any desired topics whose names don't exist in MSK need to be created
     const topicsToCreate = _.differenceWith(
-      topics,
-      existingTopicList,
+      desiredTopicConfigs,
+      existingTopicNames,
       (topicConfig, topic) => _.get(topicConfig, "topic") == topic
     );
 
     /*
-     * find interestion of topics metadata collection with topic configuration collection
-     * where partition count of topic in Kafka is less than what is specified in the topic configuration collection
-     * ...can't remove partitions, only add them
+     * Any topics which do exist, but with fewer partitions than desired,
+     * need to be updated. Partitions can't be removed, only added.
      */
     const topicsToUpdate = _.intersectionWith(
-      topics,
-      topicsMetadata,
+      desiredTopicConfigs,
+      existingTopicConfigs,
       (topicConfig, topicMetadata) =>
         _.get(topicConfig, "topic") == _.get(topicMetadata, "name") &&
         _.get(topicConfig, "numPartitions") >
           _.get(topicMetadata, "partitions", []).length
     );
 
-    //create a collection to update topic paritioning
-    const paritionConfig = _.map(topicsToUpdate, function (topic) {
+    // Format the request to update those topics (by creating partitions)
+    const partitionsToCreate = _.map(topicsToUpdate, function (topic) {
       return {
         topic: _.get(topic, "topic"),
         count: _.get(topic, "numPartitions"),
       };
     });
 
-    //create a collection to allow querying of topic configuration
-    const configOptions = _.map(topicsMetadata, function (topic) {
+    // Format a request to describe existing topics
+    const resourcesToDescribe = _.map(existingTopicConfigs, function (topic) {
       return {
         name: _.get(topic, "name"),
         type: _.get(ConfigResourceTypes, "TOPIC"),
       };
     });
-
-    //query topic configuration
-    const configs =
-      configOptions.length != 0
-        ? await admin.describeConfigs({ resources: configOptions })
+    const existingTopicDescriptions =
+      resourcesToDescribe.length != 0
+        ? await admin.describeConfigs({ resources: resourcesToDescribe })
         : [];
 
     console.log("Topics to Create:", JSON.stringify(topicsToCreate, null, 2));
     console.log("Topics to Update:", JSON.stringify(topicsToUpdate, null, 2));
     console.log(
       "Partitions to Update:",
-      JSON.stringify(paritionConfig, null, 2)
+      JSON.stringify(partitionsToCreate, null, 2)
     );
     console.log(
       "Topic configuration options:",
-      JSON.stringify(configs, null, 2)
+      JSON.stringify(existingTopicDescriptions, null, 2)
     );
 
-    //create topics that don't exist in MSK
+    // Create all the new topics
     await admin.createTopics({ topics: topicsToCreate });
 
-    //if any topics have less partitions in MSK than in the configuration, add those partitions
-    paritionConfig.length > 0 &&
-      (await admin.createPartitions({ topicPartitions: paritionConfig }));
+    // Create all the new partitions
+    partitionsToCreate.length > 0 &&
+      (await admin.createPartitions({ topicPartitions: partitionsToCreate }));
 
     await admin.disconnect();
   };
@@ -124,8 +125,8 @@ export async function deleteTopics(brokers, topicNamespace) {
 
   await admin.connect();
 
-  const currentTopics = await admin.listTopics();
-  var topicsToDelete = _.filter(currentTopics, function (n) {
+  const existingTopicNames = await admin.listTopics();
+  var topicsToDelete = _.filter(existingTopicNames, function (n) {
     console.log(n);
     return (
       n.startsWith(topicNamespace) ||

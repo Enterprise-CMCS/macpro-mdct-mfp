@@ -15,5 +15,6 @@ exports.handler = async function (event, _context, _callback) {
   if (!event.project || !event.stage) {
     throw "ERROR:  project and stage keys must be sent in the event.";
   }
-  await topics.deleteTopics(brokers, `--${event.project}--${event.stage}--`);
+  const namespace = `--${event.project}--${event.stage}--`;
+  await topics.deleteTopics(brokers, namespace);
 };

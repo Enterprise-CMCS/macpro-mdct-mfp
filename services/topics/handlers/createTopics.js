@@ -28,11 +28,11 @@ const condensedTopicList = [
  */
 exports.handler = async function (event, _context, _callback) {
   console.log("Received event:", JSON.stringify(event, null, 2)); // eslint-disable-line no-console
-  var topicList = [];
+  var desiredTopicConfigs = [];
 
   // Generate the complete topic list from the condensed version above.
   for (var element of condensedTopicList) {
-    topicList.push(
+    desiredTopicConfigs.push(
       ..._.map(element.topics, (topic) => {
         return {
           topic: `${namespace}${element.topicPrefix}${topic}${element.version}`,
@@ -43,5 +43,5 @@ exports.handler = async function (event, _context, _callback) {
     );
   }
 
-  await topics.createTopics(brokers, topicList);
+  await topics.createTopics(brokers, desiredTopicConfigs);
 };
