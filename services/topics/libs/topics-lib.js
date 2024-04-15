@@ -4,18 +4,17 @@ import { ConfigResourceTypes, Kafka } from "kafkajs";
 
 /**
  * Generates topics in BigMac given the following
- * @param {string} brokerString - Comma delimited list of brokers
+ * @param { string[] } brokers - List of brokers
  * @param {{ topic: string, numPartitions: number, replicationFactor: number }[]}
  *   topicsConfig - array of topics to create or update.
  *   The `topic` property should include any namespace.
  */
-export async function createTopics(brokerString, topicsConfig) {
+export async function createTopics(brokers, topicsConfig) {
   const topics = topicsConfig;
-  const brokers = brokerString.split(",");
 
   const kafka = new Kafka({
     clientId: "admin",
-    brokers: brokers,
+    brokers,
     ssl: true,
   });
   var admin = kafka.admin();
@@ -107,19 +106,17 @@ export async function createTopics(brokerString, topicsConfig) {
 
 /**
  * Deletes all topics for an ephemeral (`--` prefixed) namespace
- * @param {string} brokerString
+ * @param { string[] } brokers - List of brokers
  * @param {string} topicNamespace
  */
-export async function deleteTopics(brokerString, topicNamespace) {
+export async function deleteTopics(brokers, topicNamespace) {
   if (!topicNamespace.startsWith("--")) {
     throw "ERROR:  The deleteTopics function only operates against topics that begin with --.";
   }
 
-  const brokers = brokerString.split(",");
-
   const kafka = new Kafka({
     clientId: "admin",
-    brokers: brokers,
+    brokers,
     ssl: true,
     requestTimeout: 295000, // 5s short of the lambda function's timeout
   });

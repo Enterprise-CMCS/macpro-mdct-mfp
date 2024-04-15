@@ -7,6 +7,7 @@ import _ from "lodash";
  * Only used for temp branches for easy identification and cleanup.
  */
 const namespace = process.env.topicNamespace;
+const brokers = process.env.brokerString?.split(",") ?? [];
 
 const condensedTopicList = [
   {
@@ -42,5 +43,5 @@ exports.handler = async function (event, _context, _callback) {
     );
   }
 
-  await topics.createTopics(process.env.brokerString, topicList);
+  await topics.createTopics(brokers, topicList);
 };
