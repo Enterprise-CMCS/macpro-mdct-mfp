@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-const _ = require("lodash");
 import { ConfigResourceTypes, Kafka } from "kafkajs";
 
 /**
@@ -37,22 +36,20 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   );
 
   // Any desired topics whose names don't exist in MSK need to be created
-  const topicsToCreate = _.differenceWith(
-    desiredTopicConfigs,
-    existingTopicNames,
-    (desired, existingName) => desired.topic == existingName
+  const topicsToCreate = desiredTopicConfigs.filter(
+    (desired) => !existingTopicNames.includes(desired.topic)
   );
 
   /*
    * Any topics which do exist, but with fewer partitions than desired,
    * need to be updated. Partitions can't be removed, only added.
    */
-  const topicsToUpdate = _.intersectionWith(
-    desiredTopicConfigs,
-    existingTopicConfigs,
-    (desired, existing) =>
-      desired.topic == existing.name &&
-      desired.numPartitions > existing.partitions.length
+  const topicsToUpdate = desiredTopicConfigs.filter((desired) =>
+    existingTopicConfigs.some(
+      (existing) =>
+        desired.topic === existing.name &&
+        desired.numPartitions > existing.partitions.length
+    )
   );
 
   // Format the request to update those topics (by creating partitions)
