@@ -16,96 +16,88 @@ export async function createTopics(brokers, desiredTopicConfigs) {
     ssl: true,
   });
   var admin = kafka.admin();
+  await admin.connect();
 
-  const create = async () => {
-    await admin.connect();
+  // Fetch topic names from MSK, filtering out __ internal management topic
+  const existingTopicNames = _.filter(await admin.listTopics(), function (n) {
+    return !n.startsWith("_");
+  });
 
-    // Fetch topic names from MSK, filtering out __ internal management topic
-    const existingTopicNames = _.filter(await admin.listTopics(), function (n) {
-      return !n.startsWith("_");
-    });
+  console.log("Existing topics:", JSON.stringify(existingTopicNames, null, 2));
 
-    console.log(
-      "Existing topics:",
-      JSON.stringify(existingTopicNames, null, 2)
-    );
+  // Fetch the metadata for those topics from MSK
+  const existingTopicConfigs = _.get(
+    await admin.fetchTopicMetadata({ topics: existingTopicNames }),
+    "topics",
+    {}
+  );
+  console.log(
+    "Topics Metadata:",
+    JSON.stringify(existingTopicConfigs, null, 2)
+  );
 
-    // Fetch the metadata for those topics from MSK
-    const existingTopicConfigs = _.get(
-      await admin.fetchTopicMetadata({ topics: existingTopicNames }),
-      "topics",
-      {}
-    );
-    console.log(
-      "Topics Metadata:",
-      JSON.stringify(existingTopicConfigs, null, 2)
-    );
+  // Any desired topics whose names don't exist in MSK need to be created
+  const topicsToCreate = _.differenceWith(
+    desiredTopicConfigs,
+    existingTopicNames,
+    (topicConfig, topic) => _.get(topicConfig, "topic") == topic
+  );
 
-    // Any desired topics whose names don't exist in MSK need to be created
-    const topicsToCreate = _.differenceWith(
-      desiredTopicConfigs,
-      existingTopicNames,
-      (topicConfig, topic) => _.get(topicConfig, "topic") == topic
-    );
+  /*
+   * Any topics which do exist, but with fewer partitions than desired,
+   * need to be updated. Partitions can't be removed, only added.
+   */
+  const topicsToUpdate = _.intersectionWith(
+    desiredTopicConfigs,
+    existingTopicConfigs,
+    (topicConfig, topicMetadata) =>
+      _.get(topicConfig, "topic") == _.get(topicMetadata, "name") &&
+      _.get(topicConfig, "numPartitions") >
+        _.get(topicMetadata, "partitions", []).length
+  );
 
-    /*
-     * Any topics which do exist, but with fewer partitions than desired,
-     * need to be updated. Partitions can't be removed, only added.
-     */
-    const topicsToUpdate = _.intersectionWith(
-      desiredTopicConfigs,
-      existingTopicConfigs,
-      (topicConfig, topicMetadata) =>
-        _.get(topicConfig, "topic") == _.get(topicMetadata, "name") &&
-        _.get(topicConfig, "numPartitions") >
-          _.get(topicMetadata, "partitions", []).length
-    );
+  // Format the request to update those topics (by creating partitions)
+  const partitionsToCreate = _.map(topicsToUpdate, function (topic) {
+    return {
+      topic: _.get(topic, "topic"),
+      count: _.get(topic, "numPartitions"),
+    };
+  });
 
-    // Format the request to update those topics (by creating partitions)
-    const partitionsToCreate = _.map(topicsToUpdate, function (topic) {
+  // Describe existing topics for informational logs
+  let existingTopicDescriptions = [];
+  if (existingTopicConfigs.length > 0) {
+    const resourcesToDescribe = _.map(existingTopicConfigs, function (topic) {
       return {
-        topic: _.get(topic, "topic"),
-        count: _.get(topic, "numPartitions"),
+        name: _.get(topic, "name"),
+        type: _.get(ConfigResourceTypes, "TOPIC"),
       };
     });
+    existingTopicDescriptions = await admin.describeConfigs({
+      resources: resourcesToDescribe,
+    });
+  }
 
-    // Describe existing topics for informational logs
-    let existingTopicDescriptions = [];
-    if (existingTopicConfigs.length > 0) {
-      const resourcesToDescribe = _.map(existingTopicConfigs, function (topic) {
-        return {
-          name: _.get(topic, "name"),
-          type: _.get(ConfigResourceTypes, "TOPIC"),
-        };
-      });
-      existingTopicDescriptions = await admin.describeConfigs({
-        resources: resourcesToDescribe,
-      });
-    }
+  console.log("Topics to Create:", JSON.stringify(topicsToCreate, null, 2));
+  console.log("Topics to Update:", JSON.stringify(topicsToUpdate, null, 2));
+  console.log(
+    "Partitions to Update:",
+    JSON.stringify(partitionsToCreate, null, 2)
+  );
+  console.log(
+    "Topic configuration options:",
+    JSON.stringify(existingTopicDescriptions, null, 2)
+  );
 
-    console.log("Topics to Create:", JSON.stringify(topicsToCreate, null, 2));
-    console.log("Topics to Update:", JSON.stringify(topicsToUpdate, null, 2));
-    console.log(
-      "Partitions to Update:",
-      JSON.stringify(partitionsToCreate, null, 2)
-    );
-    console.log(
-      "Topic configuration options:",
-      JSON.stringify(existingTopicDescriptions, null, 2)
-    );
+  // Create all the new topics
+  await admin.createTopics({ topics: topicsToCreate });
 
-    // Create all the new topics
-    await admin.createTopics({ topics: topicsToCreate });
+  // Create all the new partitions
+  if (partitionsToCreate.length > 0) {
+    await admin.createPartitions({ topicPartitions: partitionsToCreate });
+  }
 
-    // Create all the new partitions
-    if (partitionsToCreate.length > 0) {
-      await admin.createPartitions({ topicPartitions: partitionsToCreate });
-    }
-
-    await admin.disconnect();
-  };
-
-  await create();
+  await admin.disconnect();
 }
 
 /**
