@@ -4,7 +4,7 @@ import * as topics from "../libs/topics-lib.js";
 /**
  * Handler to be triggered in temporary branches by the destroy workflow, cleans up topics with the known namespace format
  * `--${event.project}--${event.stage}--`
- * @param {*} event
+ * @param {{ project: string | undefined, stage: string | undefined }} event
  * @param {*} _context
  * @param {*} _callback
  */

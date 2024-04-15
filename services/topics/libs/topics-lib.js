@@ -4,9 +4,10 @@ import { ConfigResourceTypes, Kafka } from "kafkajs";
 
 /**
  * Generates topics in BigMac given the following
- * @param {*} brokerString - Comma delimited list of brokers
- * @param {*} topicNamespace - String in the format of `--${event.project}--${event.stage}--`, only used for temp branches for easy identification and cleanup
- * @param {*} topicsConfig - array of topics to create or update
+ * @param {string} brokerString - Comma delimited list of brokers
+ * @param {string} topicNamespace - String in the format of `--${event.project}--${event.stage}--`, only used for temp branches for easy identification and cleanup
+ * @param {{ topic: string, numPartitions: number, replicationFactor: number }[]}
+ *   topicsConfig - array of topics to create or update
  */
 export async function createTopics(brokerString, topicNamespace, topicsConfig) {
   const topics = topicsConfig;
@@ -111,6 +112,11 @@ export async function createTopics(brokerString, topicNamespace, topicsConfig) {
   await create();
 }
 
+/**
+ * Deletes all topics for an ephemeral (`--` prefixed) namespace
+ * @param {string} brokerString
+ * @param {string} topicNamespace
+ */
 export async function deleteTopics(brokerString, topicNamespace) {
   if (!topicNamespace.startsWith("--")) {
     throw "ERROR:  The deleteTopics function only operates against topics that begin with --.";
