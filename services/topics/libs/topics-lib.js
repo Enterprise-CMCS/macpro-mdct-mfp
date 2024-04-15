@@ -40,7 +40,7 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   const topicsToCreate = _.differenceWith(
     desiredTopicConfigs,
     existingTopicNames,
-    (topicConfig, topic) => topicConfig.topic == topic
+    (desired, existingName) => desired.topic == existingName
   );
 
   /*
@@ -50,9 +50,9 @@ export async function createTopics(brokers, desiredTopicConfigs) {
   const topicsToUpdate = _.intersectionWith(
     desiredTopicConfigs,
     existingTopicConfigs,
-    (topicConfig, topicMetadata) =>
-      topicConfig.topic == topicMetadata.name &&
-      topicConfig.numPartitions > topicMetadata.partitions.length
+    (desired, existing) =>
+      desired.topic == existing.name &&
+      desired.numPartitions > existing.partitions.length
   );
 
   // Format the request to update those topics (by creating partitions)
