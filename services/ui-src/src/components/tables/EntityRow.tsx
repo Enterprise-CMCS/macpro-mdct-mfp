@@ -76,11 +76,15 @@ export const EntityRow = ({
   };
 
   let entityStatus = useMemo(() => {
-    if (OverlayModalTypes.INITIATIVE && formEntity && isInitiativeClosed) {
-      return stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
-        ? EntityStatuses.CLOSE
-        : EntityStatuses.NO_STATUS;
+    if (
+      OverlayModalTypes.INITIATIVE &&
+      formEntity &&
+      isInitiativeClosed &&
+      report?.reportType === ReportType.WP
+    ) {
+      return EntityStatuses.CLOSE;
     }
+
     return setStatusByType(entityType!);
   }, [report, entity]);
 
@@ -134,20 +138,16 @@ export const EntityRow = ({
               `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
           </Text>
         )}
-        {isInitiativeClosed &&
-          stepType &&
-          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION && (
-            <Table
-              content={{
-                headRow: ["Actual end date", "Closed by"],
-                bodyRows: [
-                  [entity.closeOutInformation_actualEndDate, closedBy],
-                ],
-              }}
-              variant="none"
-              sxOverride={sx.table}
-            ></Table>
-          )}
+        {isInitiativeClosed && (
+          <Table
+            content={{
+              headRow: ["Actual end date", "Closed by"],
+              bodyRows: [[entity.closeOutInformation_actualEndDate, closedBy]],
+            }}
+            variant="none"
+            sxOverride={sx.table}
+          ></Table>
+        )}
       </Td>
       <Td>
         <Box sx={sx.actionContainer}>
@@ -282,6 +282,7 @@ const sx = {
       border: "none",
       fontWeight: "bold",
       color: "palette.gray_medium",
+      width: "2rem",
     },
   },
 };
