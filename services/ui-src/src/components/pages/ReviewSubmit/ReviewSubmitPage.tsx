@@ -27,7 +27,12 @@ import {
 // types
 import { AlertTypes, AnyObject, ReportStatus } from "types";
 // utils
-import { parseCustomHtml, useStore, utcDateToReadableDate } from "utils";
+import {
+  parseCustomHtml,
+  useStore,
+  utcDateToReadableDate,
+  useBreakpoint,
+} from "utils";
 // verbiage
 import WPVerbiage from "verbiage/pages/wp/wp-review-and-submit";
 import SARVerbiage from "verbiage/pages/sar/sar-review-and-submit";
@@ -151,6 +156,7 @@ const ReadyToSubmit = ({
   const { userIsAdmin } = useStore().user ?? {};
   const { review } = reviewVerbiage;
   const { intro, modal, pageLink } = review;
+  const { isMobile } = useBreakpoint();
   return (
     <Flex sx={sx.contentContainer} data-testid="ready-view">
       <Box sx={sx.leadTextBox}>
@@ -172,7 +178,7 @@ const ReadyToSubmit = ({
           <StatusTable />
         </Box>
       </Box>
-      <Flex sx={sx.submitContainer}>
+      <Flex sx={isMobile ? sx.mobileSubmitContainer : sx.submitContainer}>
         <PrintButton />
         {!userIsAdmin && (
           <Button
@@ -364,6 +370,14 @@ const sx = {
   submitContainer: {
     width: "100%",
     justifyContent: "space-between",
+  },
+  mobileSubmitContainer: {
+    display: "flex",
+    flexDirection: "column",
+
+    "a:first-child": {
+      marginBottom: "1.5rem",
+    },
   },
   alert: {
     marginBottom: "2rem",
