@@ -5,7 +5,7 @@ import { ReportJson, ReportShape, ReportStatus } from "types";
 export const mockFullReportJSON: ReportJson = {
   id: "2V2LLezUtxYOBRMEoiTp5r1O71X",
   type: "WP",
-  name: "MFP Work Plan (WP)",
+  name: "MFP Work Plan",
   basePath: "/wp",
   routes: [
     {
@@ -180,18 +180,18 @@ export const mockFullReportJSON: ReportJson = {
       },
     },
     {
-      name: "State or Territory Specific Initiatives",
-      path: "/wp/state-and-territory-specific-initiatives",
+      name: "State or Territory-Specific Initiatives",
+      path: "/wp/state-or-territory-specific-initiatives",
       children: [
         {
-          name: "State or Territory Specific Initiatives Instructions",
-          path: "/wp/state-and-territory-specific-initiatives/instructions",
+          name: "State or Territory-Specific Initiatives Instructions",
+          path: "/wp/state-or-territory-specific-initiatives/instructions",
           pageType: "standard",
           verbiage: {
             intro: {
               section: "",
               subsection:
-                "State or Territory Specific Initiatives Instructions",
+                "State or Territory-Specific Initiatives Instructions",
               spreadsheet: "",
               info: [
                 {
@@ -657,14 +657,14 @@ export const mockFullReportJSON: ReportJson = {
           },
         },
         {
-          name: "State or Territory Specific Initiatives",
-          path: "/wp/state-and-territory-specific-initiatives/initiatives",
+          name: "State or Territory-Specific Initiatives",
+          path: "/wp/state-or-territory-specific-initiatives/initiatives",
           pageType: "modalOverlay",
           entityType: "initiatives",
           verbiage: {
             intro: {
               section: "",
-              subsection: "State and Territory-Specific Initiatives",
+              subsection: "State or Territory-Specific Initiatives",
               info: [
                 {
                   type: "html",
@@ -674,7 +674,7 @@ export const mockFullReportJSON: ReportJson = {
                   type: "internalLink",
                   content: "previous page",
                   props: {
-                    to: "/wp/state-and-territory-specific-initiatives/instructions",
+                    to: "/wp/state-or-territory-specific-initiatives/instructions",
                   },
                 },
                 {
@@ -801,13 +801,13 @@ export const mockFullReportJSON: ReportJson = {
           },
         },
         {
-          name: "State or Territory Specific Initiatives: I. Define initiative",
-          path: "/wp/state-and-territory-specific-initiatives/define-initiative",
+          name: "State or Territory-Specific Initiatives: I. Define initiative",
+          path: "/wp/state-or-territory-specific-initiatives/define-initiative",
           pageType: "standard",
           verbiage: {
             intro: {
               section:
-                "State and Territory-Specific Initiatives: I. Define initiative",
+                "State or Territory-Specific Initiatives: I. Define initiative",
               subsection: "{Person-centered Planning}",
               info: [
                 {
@@ -1013,8 +1013,8 @@ export const mockFullReportJSON: ReportJson = {
       },
     },
     {
-      name: "State or Territory Specific Initiatives: 1. Define initiative",
-      path: "/wp/state-and-territory-specific-initiatives/define-initiative",
+      name: "State or Territory-Specific Initiatives: 1. Define initiative",
+      path: "/wp/state-or-territory-specific-initiatives/define-initiative",
       pageType: "standard",
       verbiage: {
         intro: {

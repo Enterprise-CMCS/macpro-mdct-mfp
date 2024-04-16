@@ -1,6 +1,7 @@
 import {
   AdminBannerData,
   EntityShape,
+  ErrorVerbiage,
   MFPUser,
   ReportMetadataShape,
   ReportShape,
@@ -22,14 +23,16 @@ export interface AdminBannerState {
   bannerData: AdminBannerData | undefined;
   bannerActive: boolean;
   bannerLoading: boolean;
-  bannerErrorMessage: string;
+  bannerErrorMessage: ErrorVerbiage | undefined;
   bannerDeleting: boolean;
   // ACTIONS
   setBannerData: (newBannerData: AdminBannerData | undefined) => void;
   clearAdminBanner: () => void;
   setBannerActive: (bannerStatus: boolean) => void;
   setBannerLoading: (bannerLoading: boolean) => void;
-  setBannerErrorMessage: (bannerErrorMessage: string) => void;
+  setBannerErrorMessage: (
+    bannerErrorMessage: ErrorVerbiage | undefined
+  ) => void;
   setBannerDeleting: (bannerDeleting: boolean) => void;
 }
 

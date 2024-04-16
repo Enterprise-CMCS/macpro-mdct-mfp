@@ -76,6 +76,11 @@ export interface CustomHtmlElement {
   props?: AnyObject;
 }
 
+export interface ErrorVerbiage {
+  title: string;
+  description: string | CustomHtmlElement[];
+}
+
 const states = [
   "AL",
   "AK",
