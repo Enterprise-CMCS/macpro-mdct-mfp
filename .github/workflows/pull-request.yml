@@ -31,3 +31,41 @@ jobs:
           PRNUM: ${{ github.event.pull_request.number }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           PR_AUTHOR_TYPE: ${{ github.event.pull_request.user.type }}
+
+  endpoint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set branch_name
+        run: echo "branch_name=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
+      - name: Configure AWS credentials for GitHub Actions
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: get endpoint
+        run:  echo "application_endpoint_url="`aws cloudformation describe-stacks --stack-name ui-${{env.branch_name}} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue"` >> $GITHUB_ENV
+      - name: Add endpoint in PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Endpoint URL - ${{env.application_endpoint_url || 'Environment not yet deployed, delete this comment and run the Pull Request workflow again after deploy is complete'}}"
+            })
+
+  #Notify the integrations channel only when a Snyk auto merge fails pr checks
+  notify_on_pr_failure:
+    runs-on: ubuntu-latest
+    needs: 
+      - prchecks
+    #only check branch names that begin with snyk-
+    if: ${{ failure() && startsWith(github.head_ref, 'snyk-') }}
+    steps:
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: ":boom: A Synk auto merge has failed pull request checks in ${{ github.repository }}."
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{ secrets.INTEGRATIONS_SLACK_WEBHOOK }}
