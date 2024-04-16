@@ -4,6 +4,7 @@ import {
   FormField,
   OverlayModalPageShape,
   OverlayModalTypes,
+  PageTypes,
   ReportShape,
 } from "types";
 import { EntityStatuses } from "./EntityStatusIcon";
@@ -260,6 +261,41 @@ describe("Entity status utilities", () => {
       const result = getInitiativeStatus(report, entity, isPdf, ignore);
 
       expect(result).toBe(EntityStatuses.CLOSE);
+    });
+
+    it("should not return CLOSE for closed initiatives in the SAR", () => {
+      const entity = {
+        id: "entity1",
+        type: "initiative",
+        isInitiativeClosed: true,
+      } as EntityShape;
+
+      const report = {
+        reportType: "SAR",
+        formTemplate: {
+          routes: [
+            {},
+            {},
+            {
+              pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
+              entityType: "initiative",
+              entityInfo: ["initiative_name", "initiative_wpTopic"],
+              verbiage: {
+                intro: {
+                  section: "",
+                },
+              },
+              initiatives: [entity],
+            },
+          ],
+        },
+      } as ReportShape;
+      const isPdf = false;
+      const ignore: string[] = [];
+
+      const result = getInitiativeStatus(report, entity, isPdf, ignore);
+
+      expect(result).not.toBe(EntityStatuses.CLOSE);
     });
 
     it("should return false for entities without steps", () => {
