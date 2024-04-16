@@ -35,8 +35,15 @@ jobs:
   endpoint:
     runs-on: ubuntu-latest
     steps:
+      # - name: set branch_name
+      #   run: echo "branch_name=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
       - name: set branch_name
-        run: echo "branch_name=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
+        run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+      - uses: actions/checkout@v4
+      - name: set branch specific variable names
+        run: ./.github/build_vars.sh set_names
+      - name: set variable values
+        run: ./.github/build_vars.sh set_values
       - name: Configure AWS credentials for GitHub Actions
         uses: aws-actions/configure-aws-credentials@v4
         with:
