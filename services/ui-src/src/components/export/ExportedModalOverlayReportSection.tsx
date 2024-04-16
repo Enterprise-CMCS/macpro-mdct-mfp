@@ -138,6 +138,15 @@ export function renderModalOverlayTableBody(
     dynamicSection = (section as AnyObject).initiatives;
   }
 
+  const renderInitiativeTitle = (entity: EntityShape, idx: number) => {
+    if (entity.initiative_name) {
+      return entity.isInitiativeClosed
+        ? `${idx + 1}. [Closed] ${entity.initiative_name}`
+        : `${idx + 1}. ${entity.initiative_name}`;
+    }
+    return "Not entered";
+  };
+
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
@@ -234,7 +243,7 @@ export function renderModalOverlayTableBody(
               </Td>
               <Td>
                 <Heading sx={sx.heading} as="h2">
-                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
+                  {renderInitiativeTitle(entity, idx)}
                   <br />
                   <Text sx={sx.headingSubtitle}>
                     {entity.initiative_wpTopic[0].value}
@@ -242,6 +251,25 @@ export function renderModalOverlayTableBody(
                 </Heading>
               </Td>
             </Tr>
+            {entity.isInitiativeClosed && (
+              <Tr>
+                <Td colSpan={3}>
+                  <Table
+                    content={{
+                      headRow: ["Actual end date", "Closed by"],
+                      bodyRows: [
+                        [
+                          entity.closeOutInformation_actualEndDate,
+                          entity.closedBy,
+                        ],
+                      ],
+                    }}
+                    variant="none"
+                    sx={sx.closedByTable}
+                  ></Table>
+                </Td>
+              </Tr>
+            )}
             {dynamicSection[idx].entitySteps.map(
               (step: any, stepIdx: number) => {
                 switch (step.stepType) {
@@ -381,5 +409,11 @@ const sx = {
     paddingTop: "2rem",
     display: "flex",
     flexDirection: "column",
+  },
+  closedByTable: {
+    th: {
+      width: "2rem",
+      paddingBottom: "0",
+    },
   },
 };
