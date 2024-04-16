@@ -216,8 +216,39 @@ describe("Entity status utilities", () => {
   });
 
   describe("getInitiativeStatus", () => {
-    it("should return CLOSE for closed initiatives", () => {
-      const report = {} as ReportShape;
+    it("should return CLOSE for closed initiatives in the Work Plan", () => {
+      const report = {
+        reportType: "WP",
+        formTemplate: {
+          routes: [
+            {},
+            {},
+            {},
+            {
+              children: [
+                {
+                  // we are in reportChild
+                  entityType: OverlayModalTypes.INITIATIVE,
+                  entitySteps: [
+                    {
+                      stepType: "mock step type",
+                      form: {
+                        fields: [
+                          {
+                            id: "field1",
+                            type: "text",
+                            validation: "text",
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      } as ReportShape;
       const entity = {
         id: "entity1",
         type: "initiative",
