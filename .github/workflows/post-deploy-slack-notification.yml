@@ -16,6 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' && (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'val' || github.event.workflow_run.head_branch == 'production') }}
     steps:
+      - name: Get previous workflow status
+        uses: ./.github/actions/previousworkflow
+        id: last_status
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow_name: "Deploy"
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
@@ -23,6 +29,13 @@ jobs:
           SLACK_MESSAGE: "${{ github.event.workflow_run.html_url }}"
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Build fixed slack message
+        uses: rtCamp/action-slack-notify@v2
+        if: ${{ success() && steps.last_status.outputs.last_status == 'failure' }}
+        env: 
+          SLACK_TITLE: ":large_green_circle: The latest ${{ github.repository }} build on branch '${{ github.event.workflow_run.head_branch }}' has been fixed."
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          MSG_MINIMAL: true
 
   # Notify the integrations channel only when a Snyk auto merge fails
   notify_failed_snyk_auto_merge:
@@ -30,8 +43,6 @@ jobs:
     #only check branch names that begin with snyk-
     if: ${{ github.event.workflow_run.conclusion == 'failure' && startsWith(github.event.workflow_run.head_branch, 'snyk-') }}
     steps:
-      - name: Debug
-        run: echo "Ref is ${{ github.ref }}"
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
