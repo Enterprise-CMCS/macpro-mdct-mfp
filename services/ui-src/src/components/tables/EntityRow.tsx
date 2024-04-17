@@ -155,17 +155,17 @@ export const EntityRow = ({
               </Text>
             )}
             {isInitiativeClosed && (
-                <Table
-                  content={{
-                    headRow: ["Actual end date", "Closed by"],
-                    bodyRows: [
-                      [entity.closeOutInformation_actualEndDate, closedBy],
-                    ],
-                  }}
-                  variant="none"
-                  sxOverride={sx.table}
-                ></Table>
-              )}
+              <Table
+                content={{
+                  headRow: ["Actual end date", "Closed by"],
+                  bodyRows: [
+                    [entity.closeOutInformation_actualEndDate, closedBy],
+                  ],
+                }}
+                variant="none"
+                sxOverride={sx.table}
+              ></Table>
+            )}
           </Box>
           <Box
             sx={sx.actionContainer}
@@ -198,7 +198,7 @@ export const EntityRow = ({
               disabled={entityStatus === EntityStatuses.DISABLED}
               aria-label="edit button"
             >
-              {!editable || isInitiativeClosed
+              {!editable || (!isSAR && isInitiativeClosed)
                 ? verbiage.readOnlyEntityDetailsButtonText
                 : verbiage.enterEntityDetailsButtonText}
             </Button>
