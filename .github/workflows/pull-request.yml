@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v4
       - name: set branch_name # Some integrations (Snyk) build very long branch names. This is a switch to make long branch names shorter.
         run: |
-          BRANCH_NAME=$(./.github/setBranchName.sh ${{ github.ref_name }})
+          BRANCH_NAME=$(./.github/setBranchName.sh ${{ github.event.pull_request.head.ref }})
           echo "branch_name=${BRANCH_NAME}" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - name: set branch specific variable names
