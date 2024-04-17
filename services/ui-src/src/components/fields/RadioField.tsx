@@ -1,9 +1,6 @@
 // components
 import { Box } from "@chakra-ui/react";
 import { ChoiceListField } from "components";
-// utils
-import { useStore } from "utils";
-
 // types
 import { ChoiceFieldProps } from "types";
 
@@ -14,13 +11,6 @@ export const RadioField = ({
   sxOverride,
   ...props
 }: ChoiceFieldProps) => {
-  const { userIsEndUser } = useStore().user ?? {};
-  const { report } = useStore();
-
-  const isEditableRadioFields = () => {
-    return label === "Funding source:" && userIsEndUser && report?.isCopied;
-  };
-
   return (
     <Box sx={{ ...sx, ...sxOverride }}>
       <ChoiceListField
@@ -29,7 +19,6 @@ export const RadioField = ({
         label={label}
         choices={choices}
         {...props}
-        disabled={isEditableRadioFields()}
       />
     </Box>
   );

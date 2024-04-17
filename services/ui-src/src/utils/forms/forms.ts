@@ -322,10 +322,29 @@ export const convertTargetPopulationsFromWPToSAREntity = (
   });
 };
 
+const disableCopiedFundingSources = (
+  fields: (FormField | FormLayoutElement)[],
+  report: ReportShape
+) => {
+  const disabledChoiceListFields = structuredClone(fields);
+
+  disabledChoiceListFields.map((field) => {
+    if (field.id === "fundingSources_wpTopic" && report?.isCopied) {
+      field.props = { ...field.props, disabled: true };
+    }
+  });
+  return disabledChoiceListFields;
+};
+
 export const updateRenderFields = (
   report: ReportShape,
   fields: (FormField | FormLayoutElement)[]
 ) => {
+  // disable funding source radio buttons on copy over reports
+  fields[0].id === "fundingSources_wpTopic"
+    ? (fields = disableCopiedFundingSources(fields, report))
+    : fields;
+
   const targetPopulations = report?.fieldData?.targetPopulations;
 
   const hcbsPopulation = {
@@ -346,13 +365,13 @@ export const updateRenderFields = (
     filteredTargetPopulations
   );
 
-  const updateTargetPopulationChoiceList = updateFieldChoicesByID(
+  const updateChoiceList = updateFieldChoicesByID(
     fields,
     "targetPopulations",
     formatChoiceList
   );
 
-  return updateTargetPopulationChoiceList;
+  return updateChoiceList;
 };
 
 export const updateFieldChoicesByID = (
