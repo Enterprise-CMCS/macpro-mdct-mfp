@@ -322,29 +322,35 @@ export const convertTargetPopulationsFromWPToSAREntity = (
   });
 };
 
+/**
+ * Prevent users from changing a funding source's type in a copied report.
+ *
+ * If the user copied work plan A to make work plan B, we assume that the
+ * data in A was correct. When editing B, they can adjust amounts and
+ * projections, but they can't make fundamental changes to the source.
+ */
 export const disableCopiedFundingSources = (
-  fields: (FormField | FormLayoutElement)[],
-  report: ReportShape
+  report: ReportShape,
+  fields: (FormField | FormLayoutElement)[]
 ) => {
-  const disabledChoiceListFields = structuredClone(fields);
+  if (!report?.isCopied) {
+    return;
+  }
 
-  disabledChoiceListFields.map((field) => {
-    if (field.id === "fundingSources_wpTopic" && report?.isCopied) {
-      field.props = { ...field.props, disabled: true };
-    }
-  });
-  return disabledChoiceListFields;
+  const fundingSourceField = fields.find(
+    (field) => field.id === "fundingSources_wpTopic"
+  );
+
+  if (fundingSourceField) {
+    fundingSourceField.props!.disabled = true;
+  }
 };
 
 export const updateRenderFields = (
   report: ReportShape,
   fields: (FormField | FormLayoutElement)[]
 ) => {
-  // disable funding source radio buttons on copy over reports
-  fields[0]?.id === "fundingSources_wpTopic"
-    ? (fields = disableCopiedFundingSources(fields, report))
-    : fields;
-
+  disableCopiedFundingSources(report, fields);
   const targetPopulations = report?.fieldData?.targetPopulations;
 
   const hcbsPopulation = {

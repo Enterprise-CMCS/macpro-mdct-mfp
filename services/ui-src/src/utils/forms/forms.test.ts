@@ -12,7 +12,7 @@ import {
   disableCopiedFundingSources,
 } from "./forms";
 // types
-import { FormField } from "types";
+import { FormField, ReportShape } from "types";
 import {
   mockDateField,
   mockFormField,
@@ -46,14 +46,27 @@ describe("form utilities", () => {
       }
     });
 
-    describe("Test Choice List Disabling", () => {
+    describe("disableCopiedFundingSources", () => {
       it("should disable choicelist on copy over report - funding source section", () => {
-        const fields: FormField[] = [mockFundingSourceFormField];
-        const disabledFields = disableCopiedFundingSources(
-          fields,
-          mockWPCopiedReport
-        );
-        expect(disabledFields[0].props?.disabled).toBe(true);
+        const fields: FormField[] = [
+          structuredClone(mockFundingSourceFormField),
+        ];
+        disableCopiedFundingSources(mockWPCopiedReport, fields);
+        expect(fields[0].props?.disabled).toBe(true);
+      });
+
+      it("should not disable funding sources for non-copied reports", () => {
+        const fields: FormField[] = [
+          structuredClone(mockFundingSourceFormField),
+        ];
+        disableCopiedFundingSources({} as ReportShape, fields);
+        expect(fields[0].props?.disabled).toBeFalsy();
+      });
+
+      it("should not disable fields other than funding sources", () => {
+        const fields: FormField[] = [structuredClone(mockFormField)];
+        disableCopiedFundingSources(mockWPCopiedReport, fields);
+        expect(fields[0].props?.disabled).toBeFalsy();
       });
     });
 
