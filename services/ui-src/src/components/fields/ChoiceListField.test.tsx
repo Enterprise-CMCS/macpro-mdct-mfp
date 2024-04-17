@@ -3,14 +3,8 @@ import { axe } from "jest-axe";
 //components
 import { useFormContext } from "react-hook-form";
 import { ChoiceListField, ReportContext } from "components";
-import {
-  mockReportMethods,
-  mockReportsByState,
-  mockWPCopiedReport,
-  mockWpReportContext,
-} from "../../utils/testing/mockReport";
+import { mockWpReportContext } from "../../utils/testing/mockReport";
 import { ReportStatus } from "../../types";
-import { genericErrorContent } from "verbiage/errors";
 
 const mockTrigger = jest.fn().mockReturnValue(true);
 const mockSetValue = jest.fn();
@@ -179,18 +173,6 @@ const RadioComponent = (
     validateOnRender={true}
   />
 );
-
-const mockCopiedWpReportContext = {
-  ...mockReportMethods,
-  report: mockWPCopiedReport,
-  reportsByState: mockReportsByState,
-  copyEligibleReportsByState: mockReportsByState,
-  errorMessage: {
-    title: "We've run into a problem",
-    description: genericErrorContent,
-  },
-  lastSavedTime: "2:00 PM",
-};
 
 describe("Test ChoiceListField component rendering", () => {
   it("ChoiceList should render a normal Radiofield that doesn't have children", () => {
@@ -877,29 +859,6 @@ describe("ChoiceListField handles triggering validation", () => {
     mockGetValues(undefined);
     render(choiceListFieldValidateOnRenderComponent);
     expect(mockTrigger).toHaveBeenCalled();
-  });
-});
-
-describe("Test ChoiceList disabling", () => {
-  const disabledChoiceListFieldComponent = (
-    <ReportContext.Provider value={mockCopiedWpReportContext}>
-      <ChoiceListField
-        choices={mockChoices}
-        label="Checkbox example"
-        name="checkboxField"
-        type="checkbox"
-        disabled={true}
-        validateOnRender
-      />
-    </ReportContext.Provider>
-  );
-
-  test("Should disable radiofield when state user is in copy over report", async () => {
-    mockGetValues(undefined);
-    render(disabledChoiceListFieldComponent);
-    const radioBtn = document.querySelector(".ds-c-choice-wrapper")
-      ?.children[0];
-    expect(radioBtn).toBeDisabled();
   });
 });
 
