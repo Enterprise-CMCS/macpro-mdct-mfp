@@ -206,15 +206,6 @@ describe("Test AddEditOverlayEntityModal for WP", () => {
     ).toBeTruthy();
   });
 
-  test("AddEditOverlayEntityModal shows the correct contents for SAR", () => {
-    expect(
-      screen.getByText(
-        mockOverlayModalPageVerbiage.addEditModalAddTitle +
-          selectedStepEntity.objectiveProgress_objectiveName
-      )
-    ).toBeTruthy();
-  });
-
   test("AddEditOverlayEntityModal cancel button closes the modal", () => {
     fireEvent.click(screen.getByText("Cancel"));
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
@@ -235,14 +226,14 @@ describe("Test AddEditOverlayEntityModal for SAR", () => {
   });
 
   afterEach(() => {
-    wpReport.fieldData.initiative = [mockInitiative];
+    sarReport.fieldData.initiative = [mockInitiative];
     jest.clearAllMocks();
   });
 
   test("AddEditOverlayEntityModal shows the correct contents for SAR", () => {
     expect(
       screen.getByText(
-        mockOverlayModalPageVerbiage.addEditModalAddTitle +
+        mockOverlayModalPageVerbiage.addEditModalEditTitle +
           selectedStepEntity.objectiveProgress_objectiveName
       )
     ).toBeTruthy();
