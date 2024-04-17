@@ -3,7 +3,16 @@ import { axe } from "jest-axe";
 // components
 import { ReportPageFooter } from "components";
 //utils
-import { mockForm, RouterWrappedComponent } from "utils/testing/setupJest";
+import {
+  mockForm,
+  mockReportStore,
+  RouterWrappedComponent,
+} from "utils/testing/setupJest";
+import { useStore } from "utils";
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue(mockReportStore);
 
 const mockRoutes = {
   previousRoute: "/mock-previous-route",
@@ -37,20 +46,38 @@ const reportPageComponentOnModalOverlayPage = (
   </RouterWrappedComponent>
 );
 
-describe("Test ReportPageFooter without form", () => {
-  test("Check that ReportPageFooter without form renders", () => {
+describe("ReportPageFooter behavior", () => {
+  it("Should render without a form", () => {
     render(reportPageComponentWithoutForm);
     expect(screen.getByText("Continue")).toBeVisible();
   });
 
-  test("Check that ReportPageFooter with form renders", () => {
+  it("Should render with a form", () => {
     render(reportPageComponentWithForm);
     expect(screen.getByText("Continue")).toBeVisible();
   });
 
-  test("Check that ReportPageFooter on modal overlay page renders correct text", () => {
+  it("Should render correctly on a modal overlay page", () => {
     render(reportPageComponentOnModalOverlayPage);
     expect(screen.getByText("Review & Submit")).toBeVisible();
+  });
+
+  it("Should render a submit button for state users", () => {
+    mockedUseStore.mockReturnValue({
+      user: { userIsEndUser: true },
+      ...mockReportStore,
+    });
+    render(reportPageComponentWithForm);
+    expect(screen.getByText("Continue")).toHaveAttribute("type", "submit");
+  });
+
+  it("Should render only a navigation button for admins", () => {
+    mockedUseStore.mockReturnValue({
+      user: { userIsAdmin: true },
+      ...mockReportStore,
+    });
+    render(reportPageComponentWithForm);
+    expect(screen.getByText("Continue")).not.toHaveAttribute("type", "submit");
   });
 });
 
