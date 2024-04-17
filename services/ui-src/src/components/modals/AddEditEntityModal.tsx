@@ -7,6 +7,7 @@ import { Text, Spinner } from "@chakra-ui/react";
 import {
   AnyObject,
   EntityShape,
+  ErrorVerbiage,
   FormJson,
   InputChangeEvent,
   isFieldElement,
@@ -170,7 +171,7 @@ interface Props {
   form: FormJson;
   verbiage: AnyObject;
   selectedEntity?: EntityShape;
-  error?: string;
+  error?: ErrorVerbiage;
   setError: Function;
   modalDisclosure: {
     isOpen: boolean;

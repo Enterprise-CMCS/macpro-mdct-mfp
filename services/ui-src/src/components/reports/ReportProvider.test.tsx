@@ -72,7 +72,7 @@ const TestComponent = () => {
         Release
       </button>
       <p data-testid="contextIsLoaded">{context.contextIsLoaded.toString()}</p>
-      <p data-testid="errorMessage">{context.errorMessage}</p>
+      <p data-testid="errorMessage">{context.errorMessage?.title}</p>
     </div>
   );
 };

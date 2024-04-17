@@ -34,6 +34,7 @@ exclude_patterns:
   - "services/uploads/"
   - "services/ui-src/src/utils/testing/**"
   - "services/ui-src/src/utils/types/types.ts"
+  - "services/topics/"
   - "tests/"
   - "**/*.test.tsx"
   - "**/*.scss"
