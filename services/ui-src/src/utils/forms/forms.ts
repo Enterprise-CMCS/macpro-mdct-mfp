@@ -322,7 +322,7 @@ export const convertTargetPopulationsFromWPToSAREntity = (
   });
 };
 
-const disableCopiedFundingSources = (
+export const disableCopiedFundingSources = (
   fields: (FormField | FormLayoutElement)[],
   report: ReportShape
 ) => {
@@ -341,7 +341,7 @@ export const updateRenderFields = (
   fields: (FormField | FormLayoutElement)[]
 ) => {
   // disable funding source radio buttons on copy over reports
-  fields[0].id === "fundingSources_wpTopic"
+  fields[0]?.id === "fundingSources_wpTopic"
     ? (fields = disableCopiedFundingSources(fields, report))
     : fields;
 

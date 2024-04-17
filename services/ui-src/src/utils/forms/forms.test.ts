@@ -9,6 +9,7 @@ import {
   resetClearProp,
   setClearedEntriesToDefaultValue,
   sortFormErrors,
+  disableCopiedFundingSources,
 } from "./forms";
 // types
 import { FormField } from "types";
@@ -25,8 +26,14 @@ import {
   mockTargetPopReqButNotApplicable,
   mockTargetPopDefaultAndApplicable,
   mockTargetPopDefaultButNotApplicable,
+  mockWPCopiedReport,
+  mockFundingSourceFormField,
 } from "utils/testing/setupJest";
 import { AnyObject } from "yup/lib/types";
+
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
 
 describe("form utilities", () => {
   describe("Test resetClearProp", () => {
@@ -37,6 +44,17 @@ describe("form utilities", () => {
       for (let choice of fields[0].props!.choices) {
         expect(choice.props!.clear).toBe(false);
       }
+    });
+
+    describe("Test Choice List Disabling", () => {
+      it("should disable choicelist on copy over report - funding source section", () => {
+        const fields: FormField[] = [mockFundingSourceFormField];
+        const disabledFields = disableCopiedFundingSources(
+          fields,
+          mockWPCopiedReport
+        );
+        expect(disabledFields[0].props?.disabled).toBe(true);
+      });
     });
 
     it("should reset clear for text fields", async () => {
