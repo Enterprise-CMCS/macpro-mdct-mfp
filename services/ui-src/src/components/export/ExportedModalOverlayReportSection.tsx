@@ -252,7 +252,7 @@ export function renderModalOverlayTableBody(
               </Td>
             </Tr>
             {entity.isInitiativeClosed && (
-              <Tr>
+              <Tr key={`${reportType}${idx}-closeout-info`}>
                 <Td colSpan={3}>
                   <Table
                     content={{

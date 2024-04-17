@@ -5,7 +5,7 @@ import {
   mockReportStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { mockWPFullReport } from "utils/testing/mockReport";
+import { mockSARFullReport, mockWPFullReport } from "utils/testing/mockReport";
 import {
   EntityDetailsStepTypes,
   ModalOverlayReportPageVerbiage,
@@ -22,7 +22,7 @@ import {
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
-const mockReport = {
+const mockWPReportWithOverlays = {
   ...mockWPFullReport,
   fieldData: {
     ...mockWPFullReport.fieldData,
@@ -60,8 +60,45 @@ const mockReport = {
     ],
   },
 };
-mockReportStore.report = mockReport;
-mockedUseStore.mockReturnValue(mockReportStore);
+
+const mockSARReportWithOverlays = {
+  ...mockSARFullReport,
+  fieldData: {
+    ...mockSARFullReport.fieldData,
+    [OverlayModalTypes.INITIATIVE]: [
+      {
+        ...mockSARFullReport.fieldData.entityType[0],
+        type: OverlayModalTypes.INITIATIVE,
+        id: "mock wip id", // this is both our search filter and our search target in renderFieldRow
+        initiative_wpTopic: [
+          {
+            value: "mock WP topic",
+          },
+        ],
+      },
+    ],
+  },
+  formTemplate: {
+    ...mockSARFullReport.formTemplate,
+    routes: [
+      /*
+       * We need the 3th route to have a child with entityType initiative,
+       * to avoid a null reference in getInitiativeStatus()
+       */
+      ...mockSARFullReport.formTemplate.routes.slice(0, 3),
+      {
+        name: "mock-route-4",
+        path: "/mock/mock-route-4",
+        children: [
+          {
+            entityType: OverlayModalTypes.INITIATIVE,
+          },
+        ],
+      } as ReportRoute,
+      ...mockSARFullReport.formTemplate.routes.slice(3),
+    ],
+  },
+};
 
 const defaultMockProps = {
   section: {
@@ -177,14 +214,29 @@ const testComponent = (
 );
 
 describe("ExportedModalOverlayReportSection rendering", () => {
-  test("should render modal overlay report section", async () => {
+  beforeEach(
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
+    })
+  );
+
+  it("should render modal overlay report section", async () => {
     render(testComponent);
+    //screen.debug(undefined, 10000000);
     expect(
       screen.getAllByTestId("exportedOverlayModalPage")[0]
     ).toBeInTheDocument();
   });
 
-  test("should not have basic accessibility issues", async () => {
+  it("should render for SAR", async () => {
+    mockedUseStore.mockReturnValueOnce({
+      ...mockReportStore,
+      report: mockSARReportWithOverlays,
+    });
+  });
+
+  it("should not have basic accessibility issues", async () => {
     const { container } = render(testComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
