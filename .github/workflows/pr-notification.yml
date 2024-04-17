@@ -32,11 +32,12 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - name: get-endpoint
+      - name: get endpoint
+        id: getendpoint
         run:  echo "application_endpoint_url="`aws cloudformation describe-stacks --stack-name ui-${{env.branch_name}} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue"` >> $GITHUB_ENV
 
     outputs:
-      application_endpoint_url: ${{ steps.get-endpoint.outputs.application_endpoint_url }}
+      application_endpoint_url: ${{ steps.getendpoint.outputs.application_endpoint_url }}
       
 
   notify_integrations_channel:
@@ -48,6 +49,6 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_TITLE: ":github: A new pull request has been created in ${{ github.repository }} by ${{ github.event.pull_request.user.login }}"
-          SLACK_MESSAGE: "${{ github.event.pull_request.html_url }} \n Endpoint: ${{ steps.get-endpoint.outputs.application_endpoint_url }}"
+          SLACK_MESSAGE: "${{ github.event.pull_request.html_url }} \n Cloudfront URL: ${{ steps.getendpoint.outputs.application_endpoint_url }}"
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{ secrets.INTEGRATIONS_SLACK_WEBHOOK }}
