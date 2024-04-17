@@ -1,4 +1,4 @@
-import { useContext, useEffect, MouseEventHandler } from "react";
+import { useContext, MouseEventHandler } from "react";
 // components
 import {
   Box,
@@ -31,13 +31,8 @@ export const AdminPage = () => {
     bannerActive,
     bannerLoading,
     bannerErrorMessage,
-    setBannerErrorMessage,
     bannerDeleting,
   } = useStore();
-
-  useEffect(() => {
-    setBannerErrorMessage("");
-  }, []);
 
   return (
     <PageTemplate sxOverride={sx.layout} data-testid="admin-view">
