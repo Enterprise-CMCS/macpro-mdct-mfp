@@ -201,7 +201,7 @@ describe("Test AddEditOverlayEntityModal for WP", () => {
   test("AddEditOverlayEntityModal shows the correct contents for WP", () => {
     expect(
       screen.getByText(
-        mockOverlayModalPageVerbiage.addEditModalAddTitle + mockEntityName
+        `${mockOverlayModalPageVerbiage.addEditModalAddTitle} ${mockEntityName}`
       )
     ).toBeTruthy();
   });
@@ -233,8 +233,7 @@ describe("Test AddEditOverlayEntityModal for SAR", () => {
   test("AddEditOverlayEntityModal shows the correct contents for SAR", () => {
     expect(
       screen.getByText(
-        mockOverlayModalPageVerbiage.addEditModalEditTitle +
-          selectedStepEntity.objectiveProgress_objectiveName
+        `${mockOverlayModalPageVerbiage.addEditModalEditTitle} ${selectedStepEntity.objectiveProgress_objectiveName}`
       )
     ).toBeTruthy();
   });
