@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add "Hello World" to PR
-        uses: octokit/rest.js@v2
+        uses: octokit/rest.js
         with:
           script: |
             const github = require('@actions/github');
