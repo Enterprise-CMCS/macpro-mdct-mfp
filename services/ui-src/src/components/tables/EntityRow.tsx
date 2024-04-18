@@ -13,7 +13,7 @@ import {
   OverlayModalPageShape,
 } from "types";
 // utils
-import { useStore } from "utils";
+import { useStore, useBreakpoint } from "utils";
 // assets
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import {
@@ -33,6 +33,7 @@ export const EntityRow = ({
   openOverlayOrDrawer,
 }: Props) => {
   const { report, editable } = useStore();
+  const { isMobile } = useBreakpoint();
 
   // check for "other" target population entities
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
@@ -115,78 +116,99 @@ export const EntityRow = ({
 
   return (
     <Tr sx={sx.content}>
-      <Td>
+      <Td
+        pt={isMobile ? "1.5rem" : ".5rem"}
+        verticalAlign={isMobile ? "baseline" : "middle"}
+      >
         <EntityStatusIcon entityStatus={entityStatus} />
       </Td>
-      <Td sx={sx.entityName}>
-        <ul>
-          {programInfo.map((field, index) => (
-            <li key={index}>
-              {index === 0 && appendToEntityName()}
-              {field}
-            </li>
-          ))}
-        </ul>
-        {!entityStatus && (
-          <Text sx={sx.errorText}>
-            {verbiage.editEntityHint ??
-              `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
-          </Text>
-        )}
-        {isInitiativeClosed &&
-          stepType &&
-          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION && (
-            <Table
-              content={{
-                headRow: ["Actual end date", "Closed by"],
-                bodyRows: [
-                  [entity.closeOutInformation_actualEndDate, closedBy],
-                ],
-              }}
-              variant="none"
-              sxOverride={sx.table}
-            ></Table>
-          )}
-      </Td>
-      <Td>
-        <Box sx={sx.actionContainer}>
-          {!isRequired && !isCopied && openAddEditEntityModal && (
+      <Td
+        sx={sx.entityName}
+        pb={isMobile ? "1.5rem" : "1rem"}
+        pt={isMobile ? "1.5rem" : ".5rem"}
+        colSpan={3}
+      >
+        <Box
+          display={"flex"}
+          flexDirection={isMobile ? "column" : "row"}
+          justifyContent={"space-between"}
+        >
+          <Box display={"inline-block"}>
+            <ul>
+              {programInfo.map((field, index) => (
+                <li key={index}>
+                  {index === 0 && appendToEntityName()}
+                  {field}
+                </li>
+              ))}
+            </ul>
+            {!entityStatus && (
+              <Text sx={sx.errorText}>
+                {verbiage.editEntityHint ??
+                  `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
+              </Text>
+            )}
+            {isInitiativeClosed &&
+              stepType &&
+              stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION && (
+                <Table
+                  content={{
+                    headRow: ["Actual end date", "Closed by"],
+                    bodyRows: [
+                      [entity.closeOutInformation_actualEndDate, closedBy],
+                    ],
+                  }}
+                  variant="none"
+                  sxOverride={sx.table}
+                ></Table>
+              )}
+          </Box>
+          <Box
+            sx={sx.actionContainer}
+            pt={isMobile ? "1rem" : "0"}
+            justifyContent={isMobile ? "flex-start" : "flex-end"}
+            display={"inline-block"}
+          >
+            {!isRequired && !isCopied && openAddEditEntityModal && (
+              <Button
+                sx={sx.editNameButton}
+                variant="none"
+                onClick={() => openAddEditEntityModal(entity)}
+                aria-label="edit entity button"
+                pl={isMobile ? "0" : "1rem"}
+                pr={isMobile ? "1.5rem" : "2.5rem"}
+              >
+                {!editable || isInitiativeClosed
+                  ? verbiage.readOnlyEntityButtonText
+                  : verbiage.editEntityButtonText}
+              </Button>
+            )}
             <Button
-              sx={sx.editNameButton}
-              variant="none"
-              onClick={() => openAddEditEntityModal(entity)}
-              aria-label="edit entity button"
+              sx={
+                !isRequired && !isCopied
+                  ? sx.editOtherEntityButton
+                  : sx.editEntityButton
+              }
+              onClick={() => openOverlayOrDrawer(entity)}
+              variant="outline"
+              disabled={entityStatus === EntityStatuses.DISABLED}
+              aria-label="edit button"
             >
               {!editable || isInitiativeClosed
-                ? verbiage.readOnlyEntityButtonText
-                : verbiage.editEntityButtonText}
+                ? verbiage.readOnlyEntityDetailsButtonText
+                : verbiage.enterEntityDetailsButtonText}
             </Button>
-          )}
-          <Button
-            sx={
-              !isRequired && !isCopied
-                ? sx.editOtherEntityButton
-                : sx.editEntityButton
-            }
-            onClick={() => openOverlayOrDrawer(entity)}
-            variant="outline"
-            disabled={entityStatus === EntityStatuses.DISABLED}
-            aria-label="edit button"
-          >
-            {!editable || isInitiativeClosed
-              ? verbiage.readOnlyEntityDetailsButtonText
-              : verbiage.enterEntityDetailsButtonText}
-          </Button>
-          {!isRequired && !isCopied && openDeleteEntityModal && (
-            <Button
-              sx={sx.deleteButton}
-              data-testid="delete-entity"
-              onClick={() => openDeleteEntityModal(entity)}
-              aria-label="delete button"
-            >
-              <Image src={deleteIcon} alt="delete icon" boxSize="3x3" />
-            </Button>
-          )}
+            {!isRequired && !isCopied && openDeleteEntityModal && (
+              <Button
+                sx={sx.deleteButton}
+                data-testid="delete-entity"
+                onClick={() => openDeleteEntityModal(entity)}
+                aria-label="delete button"
+              >
+                <Image src={deleteIcon} alt="delete icon" boxSize="3x3" />
+              </Button>
+            )}
+          </Box>
         </Box>
       </Td>
     </Tr>
@@ -206,7 +228,8 @@ interface Props {
 
 const sx = {
   content: {
-    verticalAlign: "middle",
+    borderTop: "1px solid var(--chakra-colors-palette-gray_medium)",
+    borderBottom: "1px solid var(--chakra-colors-palette-gray_medium)",
     paddingLeft: "1.5rem",
     td: {
       borderColor: "palette.gray_lighter",
@@ -238,10 +261,8 @@ const sx = {
   actionContainer: {
     alignItems: "center",
     display: "flex",
-    justifyContent: "end",
   },
   editNameButton: {
-    paddingRight: "2.5rem",
     fontWeight: "normal",
     textDecoration: "underline",
     color: "palette.primary",

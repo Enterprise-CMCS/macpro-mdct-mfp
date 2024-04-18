@@ -1,5 +1,5 @@
 import { Choice } from "./formFields";
-import { AnyObject } from "./other";
+import { AnyObject, ErrorVerbiage } from "./other";
 import { ReportJson } from "./reports";
 
 // REPORT PROVIDER/CONTEXT
@@ -56,7 +56,7 @@ export interface ReportContextShape extends ReportContextMethods {
   report: ReportShape | undefined;
   reportsByState: ReportMetadataShape[] | undefined;
   submittedReportsByState: ReportMetadataShape[] | undefined;
-  errorMessage?: string | undefined;
+  errorMessage?: ErrorVerbiage | undefined;
   lastSavedTime?: string | undefined;
 }
 

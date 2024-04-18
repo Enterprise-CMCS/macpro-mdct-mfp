@@ -57,7 +57,7 @@ describe("ExportedReportBanner", () => {
 
   test("Does WP export banner have WP-specific verbiage", async () => {
     render(bannerWithContext(wpContext));
-    const introText = screen.getByText(/WP/);
+    const introText = screen.getByText(/MFP/);
     expect(introText).toBeVisible();
   });
 

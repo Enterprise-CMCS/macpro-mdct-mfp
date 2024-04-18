@@ -2,9 +2,16 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 //components
 import { ErrorAlert } from "components";
+import { ErrorVerbiage } from "types";
+import { genericErrorContent } from "verbiage/errors";
+
+const error: ErrorVerbiage = {
+  title: "We've run into a problem",
+  description: genericErrorContent,
+};
 
 const errorAlertComponent = (
-  <ErrorAlert error={"test-message"} data-testid="test-error-alert" />
+  <ErrorAlert error={error} data-testid="test-error-alert" />
 );
 
 describe("Test ErrorAlert component", () => {
