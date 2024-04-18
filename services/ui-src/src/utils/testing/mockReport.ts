@@ -420,7 +420,10 @@ export const mockSARReportContext = {
   report: mockSARFullReport,
   reportsByState: mockSARReportsByState,
   copyEligibleReportsByState: mockReportsByState,
-  errorMessage: "",
+  errorMessage: {
+    title: "We've run into a problem",
+    description: genericErrorContent,
+  },
   lastSavedTime: "2:00 PM",
 };
 
