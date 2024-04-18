@@ -69,32 +69,18 @@ jobs:
               repo: context.repo.repo,
               body: "Endpoint URL - ${{env.application_endpoint_url || 'Environment not yet deployed, delete this comment and run the Pull Request workflow again after deploy is complete'}}"
             })
-
   addHelloWorld:
     runs-on: ubuntu-latest
     steps:
       - name: Add "Hello World" to PR
-        uses: octokit/rest.js
-        with:
-          script: |
-            const github = require('@actions/github');
-            const context = github.context;
+        run: |
+          PR_BODY=$(gh pr view $PRNUM --json body --jq '.body' -r)
+          NEW_BODY="Hello World\n\n$PR_BODY"
+          echo "$NEW_BODY" | gh pr edit $PRNUM --body -
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRNUM: ${{ github.event.pull_request.number }}
 
-            const token = process.env.GITHUB_TOKEN;
-            const octokit = github.getOctokit(token);
-
-            const prNumber = context.payload.pull_request.number;
-            const prOwner = context.payload.repository.owner.login;
-            const prRepo = context.payload.repository.name;
-
-            const newBody = 'Hello World\n\n' + context.payload.pull_request.body;
-
-            octokit.pulls.update({
-              owner: prOwner,
-              repo: prRepo,
-              pull_number: prNumber,
-              body: newBody
-            });
 
   #Notify the integrations channel only when a Snyk auto merge fails pr checks
   notify_on_pr_failure:
