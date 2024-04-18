@@ -11,7 +11,7 @@ export default {
       {
         type: "ul",
         content:
-          "<li>Transitions and transition coordination services</li><li>Housing-related supports</li><li>Quality measurement and improvement</li><li>Self-direction (If applicable)</li><li>Tribal (if applicable)</li>",
+          "<li>Transitions and transition coordination services</li><li>Housing-related supports</li><li>Quality measurement and improvement</li><li>Self-direction (if applicable)</li><li>Tribal (if applicable)</li>",
       },
       {
         type: "p",
