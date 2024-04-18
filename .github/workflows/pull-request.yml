@@ -59,48 +59,16 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: get endpoint
         run:  echo "application_endpoint_url="`aws cloudformation describe-stacks --stack-name ui-${{env.branch_name}} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue"` >> $GITHUB_ENV
-      # - name: Add endpoint in PR
-      #   uses: actions/github-script@v6
-      #   with:
-      #     script: |
-      #       github.rest.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: "Endpoint URL - ${{env.application_endpoint_url || 'Environment not yet deployed, delete this comment and run the Pull Request workflow again after deploy is complete'}}"
-      #       })
-      - name: Update PR description with endpoint URL
+      - name: Add endpoint in PR
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            (async () => {
-              const { context, github } = require('@actions/github');
-
-              const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-
-              const owner = context.repo.owner;
-              const repo = context.repo.repo;
-              const prNumber = context.issue.number;
-
-              const endpointUrl = process.env.application_endpoint_url || 'Environment not yet deployed, delete this comment and run the Pull Request workflow again after deploy is complete';
-              const pr = await octokit.pulls.get({
-                owner: owner,
-                repo: repo,
-                pull_number: prNumber
-              });
-
-              const updatedDescription = `Endpoint URL - ${endpointUrl}\n\n${pr.data.body}`;
-
-              await octokit.pulls.update({
-                owner: owner,
-                repo: repo,
-                pull_number: prNumber,
-                body: updatedDescription
-              });
-            })();
-
-
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Endpoint URL - ${{env.application_endpoint_url || 'Environment not yet deployed, delete this comment and run the Pull Request workflow again after deploy is complete'}}"
+            })
 
   #Notify the integrations channel only when a Snyk auto merge fails pr checks
   notify_on_pr_failure:
