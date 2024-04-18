@@ -175,7 +175,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   };
 
   const tableHeaders = {
-    headRow: ["", "", ""],
+    headRow: ["", "", "", ""],
   };
 
   return (
