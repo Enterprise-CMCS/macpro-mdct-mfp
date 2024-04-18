@@ -48,10 +48,15 @@ jobs:
             ${{github.workspace}}/services/app-api/coverage/lcov.info:lcov
             ${{github.workspace}}/services/ui-src/coverage/lcov.info:lcov
       - name: Store unit test results
+        #if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: unit_test_results
-          path: ${{github.workspace}}/services/ui-src/coverage/lcov.info
+          path: |
+            ${{github.workspace}}/services/app-api/coverage/lcov.info
+            ${{github.workspace}}/services/ui-src/coverage/lcov.info
+          retention-days: 14
 
   deploy:
     needs: unit-tests
@@ -225,12 +230,14 @@ jobs:
           CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
-        if: failure()
+        #if: failure()
+        if: always()
         with:
-          name: cypress-screenshots
+          name: cypress-artifacts
           path: |
-            tests/cypress/screenshots/
-            tests/cypress/videos/
+            ${{github.workspace}}/tests/screenshots/
+            ${{github.workspace}}/tests/videos/
+          retention-days: 14
 
   a11y-tests:
     name: E2E A11y Tests
@@ -257,12 +264,14 @@ jobs:
           CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
-        if: failure()
+        #if: failure()
+        if: always()        
         with:
-          name: cypress-screenshots
+          name: a11y-artifacts
           path: |
-            tests/cypress/screenshots/
-            tests/cypress/videos/
+            ${{github.workspace}}/tests/screenshots/
+            ${{github.workspace}}/tests/videos/
+          retention-days: 14
 
   cleanup:
     name: Delist GHA Runner CIDR Blocks
