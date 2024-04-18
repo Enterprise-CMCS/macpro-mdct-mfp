@@ -14,8 +14,6 @@ jobs:
   endpoint:
     runs-on: ubuntu-latest
     steps:
-      # - name: set branch_name
-      #   run: echo "branch_name=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v4
       - name: set branch_name # Some integrations (Snyk) build very long branch names. This is a switch to make long branch names shorter.
@@ -34,8 +32,10 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: get endpoint
         id: getendpoint
-        run:  echo "application_endpoint_url="`aws cloudformation describe-stacks --stack-name ui-${{env.branch_name}} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue"` >> $GITHUB_OUTPUT
-
+        run:  |
+          application_endpoint_url=$(aws cloudformation describe-stacks --stack-name ui-${{ env.branch_name }} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue")
+          echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_OUTPUT
+          
     outputs:
       application_endpoint_url: ${{ steps.getendpoint.outputs.application_endpoint_url }}
       
