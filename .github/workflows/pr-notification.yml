@@ -34,7 +34,7 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: get endpoint
         id: getendpoint
-        run:  echo "application_endpoint_url="`aws cloudformation describe-stacks --stack-name ui-${{env.branch_name}} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue"` >> $GITHUB_ENV
+        run:  echo "application_endpoint_url="`aws cloudformation describe-stacks --stack-name ui-${{env.branch_name}} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue"` >> $GITHUB_OUTPUT
 
     outputs:
       application_endpoint_url: ${{ steps.getendpoint.outputs.application_endpoint_url }}
