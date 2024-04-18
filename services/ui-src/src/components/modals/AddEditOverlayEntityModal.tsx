@@ -175,7 +175,7 @@ export const AddEditOverlayEntityModal = ({
       report?.reportType === ReportType.SAR &&
       selectedEntity?.objectiveProgress_objectiveName
     ) {
-      title = `${title} ${selectedEntity?.objectiveProgress_objectiveName}`;
+      title = `${title} ${selectedEntity.objectiveProgress_objectiveName}`;
     }
     return title;
   };
