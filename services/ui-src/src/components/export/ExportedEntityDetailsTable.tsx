@@ -30,11 +30,10 @@ export const ExportedEntityDetailsTable = ({
     tableHeaders.indicator,
     tableHeaders.response,
   ];
-  const hideHintText = !props.showHintText;
 
   return (
     <Table
-      {...props}
+      data-testid="exportedEntityDetailsTable"
       sx={sx.root}
       content={{
         headRow: threeColumnHeaderItems,
@@ -44,7 +43,7 @@ export const ExportedEntityDetailsTable = ({
         fields!,
         "modalOverlay",
         report,
-        !hideHintText,
+        !!props.showHintText,
         entity.id,
         entityType
       )}

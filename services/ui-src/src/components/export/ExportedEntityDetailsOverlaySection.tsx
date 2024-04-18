@@ -31,7 +31,7 @@ export const ExportedEntityDetailsOverlaySection = ({
   const { report } = useStore() ?? {};
 
   return (
-    <Box as="td" sx={sx.sectionHeading} {...props}>
+    <Box sx={sx.sectionHeading}>
       {report &&
         renderEntityDetailTables(
           report,
