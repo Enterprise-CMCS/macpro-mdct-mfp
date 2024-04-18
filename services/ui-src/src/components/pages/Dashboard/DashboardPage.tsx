@@ -47,6 +47,7 @@ import {
 } from "utils";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
+import tempError from "verbiage/pages/wp/wp-alerts";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
@@ -288,7 +289,7 @@ export const DashboardPage = ({ reportType }: Props) => {
         <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
         Return home
       </Link>
-      {errorMessage && <ErrorAlert error={errorMessage} />}
+      {tempError && <ErrorAlert error={tempError.initiative} />}
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
         {reportType === ReportType.SAR && !workPlanToCopyFrom && (
