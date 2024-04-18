@@ -74,29 +74,32 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { context, github } = require('@actions/github');
+            (async () => {
+              const { context, github } = require('@actions/github');
 
-            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+              const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const prNumber = context.issue.number;
+              const owner = context.repo.owner;
+              const repo = context.repo.repo;
+              const prNumber = context.issue.number;
 
-            const endpointUrl = process.env.application_endpoint_url || 'Environment not yet deployed, delete this comment and run the Pull Request workflow again after deploy is complete';
-            const pr = await octokit.pulls.get({
-              owner: owner,
-              repo: repo,
-              pull_number: prNumber
-            });
+              const endpointUrl = process.env.application_endpoint_url || 'Environment not yet deployed, delete this comment and run the Pull Request workflow again after deploy is complete';
+              const pr = await octokit.pulls.get({
+                owner: owner,
+                repo: repo,
+                pull_number: prNumber
+              });
 
-            const updatedDescription = `Endpoint URL - ${endpointUrl}\n\n${pr.data.body}`;
+              const updatedDescription = `Endpoint URL - ${endpointUrl}\n\n${pr.data.body}`;
 
-            await octokit.pulls.update({
-              owner: owner,
-              repo: repo,
-              pull_number: prNumber,
-              body: updatedDescription
-            });
+              await octokit.pulls.update({
+                owner: owner,
+                repo: repo,
+                pull_number: prNumber,
+                body: updatedDescription
+              });
+            })();
+
 
 
   #Notify the integrations channel only when a Snyk auto merge fails pr checks
