@@ -52,7 +52,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: unit_test_results
+          name: unit-test-results
           path: |
             ${{github.workspace}}/services/app-api/coverage/lcov.info
             ${{github.workspace}}/services/ui-src/coverage/lcov.info
@@ -233,7 +233,7 @@ jobs:
         #if: failure()
         if: always()
         with:
-          name: cypress-artifacts
+          name: cypress-test-results
           path: |
             ${{github.workspace}}/tests/screenshots/
             ${{github.workspace}}/tests/videos/
@@ -267,7 +267,7 @@ jobs:
         #if: failure()
         if: always()        
         with:
-          name: a11y-artifacts
+          name: a11y-test-results
           path: |
             ${{github.workspace}}/tests/screenshots/
             ${{github.workspace}}/tests/videos/
