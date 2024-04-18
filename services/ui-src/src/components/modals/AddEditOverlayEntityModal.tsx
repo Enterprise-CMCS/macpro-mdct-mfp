@@ -170,7 +170,7 @@ export const AddEditOverlayEntityModal = ({
       ? (title = verbiage.addEditModalEditTitle)
       : (title = verbiage.addEditModalAddTitle);
     if (report?.reportType === ReportType.WP && entityName) {
-      `${title} ${entityName}`;
+      title = `${title} ${entityName}`;
     } else if (
       report?.reportType === ReportType.SAR &&
       selectedEntity?.objectiveProgress_objectiveName
