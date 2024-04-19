@@ -121,7 +121,14 @@ const completeOverlayEntityStep = (entitySteps) => {
 
 const completeForm = (form, optionToSelect = 0) => {
   //iterate over each field and fill it appropriately
-  form?.fields?.forEach((field) => processField(field, optionToSelect));
+  form?.fields?.forEach((field) => {
+    if(field.id === "transitionBenchmarks_applicableToMfpDemonstration") {
+      // mark target populations as applicable
+      processField(field, 1);
+    } else {
+      processField(field, optionToSelect)
+    }
+  });
 };
 
 const processField = (field, optionToSelect) => {
@@ -163,14 +170,10 @@ const processField = (field, optionToSelect) => {
             break;
           default:
             if (
-              field.props["data-cy"] &&
-              field.props["data-cy"] == "transformedFundingSources"
+              field.id.includes("fundingSources_quarters") ||
+              field.id.includes("quarterlyProjections")
             ) {
-              cy.get("form")
-                .find('*[data-cy^="transformedFundingSources"]')
-                .each(($numberfield) => {
-                  cy.get($numberfield).type(Math.ceil(Math.random() * 100));
-                });
+              fillTransformedFields(`*[name^="${field.id}"]`);
             } else {
               cy.get(`[name="${field.id}"]`).type(
                 Math.ceil(Math.random() * 100)
@@ -193,7 +196,7 @@ const processField = (field, optionToSelect) => {
           cy.get(
             `[id="${field.id}-${field.props.choices[optionToSelect].id}"]`
           ).check();
-          field.props.choices[0].children?.forEach((childField) =>
+          field.props.choices[optionToSelect].children?.forEach((childField) =>
             processField(childField)
           );
         }
@@ -202,3 +205,11 @@ const processField = (field, optionToSelect) => {
     }
   }
 };
+
+const fillTransformedFields = (selector) => {
+  cy.get("form")
+    .find(selector)
+    .each(($numberfield) => {
+      cy.get($numberfield).type(Math.ceil(Math.random() * 100));
+    });
+}
