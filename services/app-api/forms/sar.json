@@ -217,7 +217,7 @@
               {
                 "id": "ret_psmicf_target_populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -278,7 +278,7 @@
               {
                 "id": "ret_mtrp_quarter_1_populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -293,7 +293,7 @@
               {
                 "id": "ret_mtrp_quarter_2_populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -354,7 +354,7 @@
               {
                 "id": "ret-mtfqi-1-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -369,7 +369,7 @@
               {
                 "id": "ret-mtfqi-2-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -384,7 +384,7 @@
               {
                 "id": "ret-mtfqi-3-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -399,7 +399,7 @@
               {
                 "id": "ret-mtfqi-4-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -414,7 +414,7 @@
               {
                 "id": "ret-mtfqi-5-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -475,7 +475,7 @@
               {
                 "id": "ret-mtfqr-1-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -490,7 +490,7 @@
               {
                 "id": "ret-mtfqr-2-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -505,7 +505,7 @@
               {
                 "id": "ret-mtfqr-3-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -520,7 +520,7 @@
               {
                 "id": "ret-mtfqr-4-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -574,7 +574,7 @@
               {
                 "id": "ret-tnamprp-1-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -628,7 +628,7 @@
               {
                 "id": "ret-nmpcprp-1-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -682,7 +682,7 @@
               {
                 "id": "ret-npremrp-1-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -743,7 +743,7 @@
               {
                 "id": "ret-mpdprp-1-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -758,7 +758,7 @@
               {
                 "id": "ret-mpdprp-2-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -773,7 +773,7 @@
               {
                 "id": "ret-mpdprp-3-populations",
                 "type": "number",
-                "validation": "number",
+                "validation": "wholeNumberNotLessThanOne",
                 "transformation": {
                   "rule": "targetPopulations"
                 }
@@ -795,7 +795,7 @@
                           "id": "ret-movedout-populations",
                           "type": "number",
                           "validation": {
-                            "type": "number",
+                            "type": "wholeNumberNotLessThanOne",
                             "nested": true,
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VffASWS2XRfAlc3uLzxCVAC"
@@ -814,7 +814,7 @@
                           "id": "ret-incarceration-populations",
                           "type": "number",
                           "validation": {
-                            "type": "number",
+                            "type": "wholeNumberNotLessThanOne",
                             "nested": true,
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VfqAGi1lgxX3uXc98cl6q4u"
@@ -833,7 +833,7 @@
                           "id": "ret-moved-populations",
                           "type": "number",
                           "validation": {
-                            "type": "number",
+                            "type": "wholeNumberNotLessThanOne",
                             "nested": true,
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2VfqSwWMAr9xOE2zOhpLHtYQ"
@@ -862,7 +862,7 @@
                           "id": "ret-other-specify-populations",
                           "type": "number",
                           "validation": {
-                            "type": "number",
+                            "type": "wholeNumberNotLessThanOne",
                             "nested": true,
                             "parentFieldName": "ret_otherReasons",
                             "parentOptionId": "2Vfqd9gpWs2J3Wef5CAuqGx9"
@@ -933,7 +933,7 @@
               {
                 "id": "ret_shortTermStayAges18to64",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 18-64",
                   "styleAsOptional": true
@@ -942,7 +942,7 @@
               {
                 "id": "ret_shortTermStayAges65to74",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 65-74",
                   "styleAsOptional": true
@@ -951,7 +951,7 @@
               {
                 "id": "ret_shortTermStayAges75to84",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 75-84",
                   "styleAsOptional": true
@@ -960,7 +960,7 @@
               {
                 "id": "ret_shortTermStayAges85AndOlder",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 85 and older",
                   "styleAsOptional": true
@@ -976,7 +976,7 @@
               {
                 "id": "ret_mediumTermStayAges18to64",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 18-64",
                   "styleAsOptional": true
@@ -985,7 +985,7 @@
               {
                 "id": "ret_mediumTermStayAges65to74",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 65-74",
                   "styleAsOptional": true
@@ -994,7 +994,7 @@
               {
                 "id": "ret_mediumTermStayAges75to84",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 75-84",
                   "styleAsOptional": true
@@ -1003,7 +1003,7 @@
               {
                 "id": "ret_mediumTermStayAges85AndOlder",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 85 and older",
                   "styleAsOptional": true
@@ -1019,7 +1019,7 @@
               {
                 "id": "ret_longTermStayAges18to64",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 18-64",
                   "styleAsOptional": true
@@ -1028,7 +1028,7 @@
               {
                 "id": "ret_longTermStayAges65to74",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 65-74",
                   "styleAsOptional": true
@@ -1037,7 +1037,7 @@
               {
                 "id": "ret_longTermStayAges75to84",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 75-84",
                   "styleAsOptional": true
@@ -1046,7 +1046,7 @@
               {
                 "id": "ret_longTermStayAges85AndOlder",
                 "type": "number",
-                "validation": "numberOptional",
+                "validation": "wholeNumberNotLessThanOneOptional",
                 "props": {
                   "label": "Ages 85 and older",
                   "styleAsOptional": true

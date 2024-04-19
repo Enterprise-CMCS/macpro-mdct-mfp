@@ -57,6 +57,42 @@ export const number = () =>
 
 export const numberOptional = () => numberSchema().notRequired().nullable();
 
+// WHOLE NUMBER NOT LESS THAN ONE
+export const wholeNumberNotLessThanOne = () =>
+  validInteger()
+    .test({
+      message: error.WHOLE_NUMBER_LESS_THAN_ONE,
+      test: (value) => {
+        const isWholeNumber = parseFloat(value!) % 1 == 0;
+        return isWholeNumber;
+      },
+    })
+    .test({
+      message: error.WHOLE_NUMBER_LESS_THAN_ONE,
+      test: (value) => {
+        const isOneOrMore = parseFloat(value!) >= 1;
+        return isOneOrMore;
+      },
+    });
+
+// WHOLE NUMBER NOT LESS THAN ONE (OPTIONAL)
+export const wholeNumberNotLessThanOneOptional = () =>
+  validIntegerOptional()
+    .test({
+      message: error.WHOLE_NUMBER_LESS_THAN_ONE,
+      test: (value) => {
+        const isWholeNumber = parseFloat(value!) % 1 == 0;
+        return isWholeNumber;
+      },
+    })
+    .test({
+      message: error.WHOLE_NUMBER_LESS_THAN_ONE,
+      test: (value) => {
+        const isOneOrMore = parseFloat(value!) >= 1;
+        return isOneOrMore;
+      },
+    });
+
 // Integer or Valid Strings
 export const validIntegerSchema = () =>
   string().test({
