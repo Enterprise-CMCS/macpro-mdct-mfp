@@ -11,6 +11,8 @@ install_deps() {
   fi
 }
 
+install_deps
+
 if [[ $1 == "" ]] ; then
     echo 'ERROR:  You must pass a stage to destroy.  Ex. sh scripts/destroy.sh my-stage-name'
     exit 1
