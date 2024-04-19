@@ -39,7 +39,7 @@ jobs:
           if [[ -z $application_endpoint_url || ! $application_endpoint_url == http* ]]; then
               application_endpoint_url="endpoint not found"
           fi
-          echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_ENV
+          echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_OUTPUT
   
     outputs:
       application_endpoint_url: ${{ steps.getendpoint.outputs.application_endpoint_url }}
