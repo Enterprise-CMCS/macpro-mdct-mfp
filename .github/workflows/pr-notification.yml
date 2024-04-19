@@ -33,7 +33,9 @@ jobs:
       - name: get endpoint
         id: getendpoint
         run: |
+          set +e # Disable error exit
           application_endpoint=$(aws cloudformation describe-stacks --stack-name ui-${{ env.branch_name }} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue") || application_endpoint=""
+          set -e # Enable error exit
           if [ -z "${application_endpoint}" ]; then
               application_endpoint="endpoint doesn't exist"
           fi
