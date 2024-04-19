@@ -183,3 +183,10 @@ apiGatewayExecutionLogs=($(aws logs describe-log-groups --query "logGroups[*].lo
 if [[ -n $apiGatewayExecutionLogs ]]; then
   aws logs delete-log-group --log-group-name $apiGatewayExecutionLogs
 fi
+
+# Cleanup bigmac topics for branch
+data='{"project":"mfp","stage":"'"$stage"'"}'
+pushd services/topics
+install_deps
+sls invoke --stage main --function deleteTopics --data $data
+popd
