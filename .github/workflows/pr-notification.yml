@@ -40,7 +40,7 @@ jobs:
               application_endpoint_url="endpoint not found"
           fi
           echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_OUTPUT
-          
+  
     outputs:
       application_endpoint_url: ${{ steps.getendpoint.outputs.application_endpoint_url }}
       
