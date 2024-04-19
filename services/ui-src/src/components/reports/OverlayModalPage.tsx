@@ -88,7 +88,7 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setSelectedStepEntity(entity);
+    setSelectedStepEntity(entity);
     addEditEntityModalOnOpenHandler();
   };
 
@@ -138,7 +138,7 @@ export const OverlayModalPage = ({
           <>
             <Button
               sx={sx.addEntityButton}
-              onClick={addEditEntityModalOnOpenHandler}
+              onClick={() => openAddEditEntityModal()}
               leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
             >
               {verbiage.addEntityButtonText}
