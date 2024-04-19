@@ -10,8 +10,29 @@ export default {
       },
       {
         type: "ul",
-        content:
-          "<li>Transitions and transition coordination services</li><li>Housing-related supports</li><li>Quality measurement and improvement</li><li>Self-direction (if applicable)</li><li>Tribal (if applicable)</li>",
+        content: "",
+        children: [
+          {
+            type: "li",
+            content: "Transitions and transition coordination services",
+          },
+          {
+            type: "li",
+            content: "Housing-related supports",
+          },
+          {
+            type: "li",
+            content: "Quality measurement and improvement",
+          },
+          {
+            type: "li",
+            content: "Self-direction (if applicable)",
+          },
+          {
+            type: "li",
+            content: "Tribal (if applicable)",
+          },
+        ],
       },
       {
         type: "p",
