@@ -347,8 +347,6 @@ export const disableCopiedFundingSources = (
     return;
   }
 
-  console.log("form data", formData);
-
   const disabled = formData && formData.isCopied;
   fundingSourceField.props!.disabled = disabled;
 };
