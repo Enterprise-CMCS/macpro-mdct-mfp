@@ -32,16 +32,13 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: get endpoint
         id: getendpoint
-        run:  |
-          set +e # Disable error exit
-          application_endpoint_url=$(aws cloudformation describe-stacks --stack-name ui-${{ env.branch_name }} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue" 2>/dev/null)
-          set -e # Enable error exit
-          if [ -z "$application_endpoint_url" ]; then
-            echo "application_endpoint_url=endpoint is not deployed" >> $GITHUB_ENV
-          else
-            echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_ENV
+        run: |
+          application_endpoint=$(aws cloudformation describe-stacks --stack-name ui-${{ env.branch_name }} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue") || application_endpoint=""
+          if [ -z "${application_endpoint}" ]; then
+              application_endpoint="endpoint doesn't exist"
           fi
-          
+          echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_ENV
+  
     outputs:
       application_endpoint_url: ${{ steps.getendpoint.outputs.application_endpoint_url }}
       
