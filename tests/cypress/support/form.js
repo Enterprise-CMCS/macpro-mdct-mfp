@@ -122,11 +122,11 @@ const completeOverlayEntityStep = (entitySteps) => {
 const completeForm = (form, optionToSelect = 0) => {
   //iterate over each field and fill it appropriately
   form?.fields?.forEach((field) => {
-    if(field.id === "transitionBenchmarks_applicableToMfpDemonstration") {
+    if (field.id === "transitionBenchmarks_applicableToMfpDemonstration") {
       // mark target populations as applicable
       processField(field, 1);
     } else {
-      processField(field, optionToSelect)
+      processField(field, optionToSelect);
     }
   });
 };
@@ -212,4 +212,4 @@ const fillTransformedFields = (selector) => {
     .each(($numberfield) => {
       cy.get($numberfield).type(Math.ceil(Math.random() * 100));
     });
-}
+};
