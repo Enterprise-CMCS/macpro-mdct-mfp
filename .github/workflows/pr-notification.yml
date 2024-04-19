@@ -30,11 +30,6 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      # - name: get endpoint
-      #   id: getendpoint
-      #   run:  |
-      #     application_endpoint_url=$(aws cloudformation describe-stacks --stack-name ui-${{ env.branch_name }} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue")
-      #     echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_OUTPUT
       - name: get endpoint
         id: getendpoint
         run:  |
