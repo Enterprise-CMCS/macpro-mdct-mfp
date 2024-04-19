@@ -118,8 +118,7 @@ export const createReport = handler(
     const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
       unvalidatedPayload;
 
-    const creationValidationJson = {
-      reportPeriod: "text",
+    const creationFieldDataValidationJson = {
       stateName: "text",
       stateOrTerritory: "text",
       submissionCount: "number",
@@ -171,7 +170,7 @@ export const createReport = handler(
 
     // Setup validation for what we expect to see in the payload
     let validatedFieldData = await validateFieldData(
-      creationValidationJson,
+      creationFieldDataValidationJson,
       unvalidatedFieldData
     );
 
