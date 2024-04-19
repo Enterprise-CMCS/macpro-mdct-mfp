@@ -434,7 +434,7 @@ export const mockModalOverlayReportPageVerbiage = {
   enterReportText: "Mock enter report text",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
   addEditModalEditTitle: "Mock AddEdit Modal Text",
-  reportProgressButtonText: "Mock report preogress button text",
+  reportProgressButtonText: "Mock report progress button text",
 };
 
 export const mockModalOverlayForm = {
