@@ -331,7 +331,8 @@ export const convertTargetPopulationsFromWPToSAREntity = (
  */
 export const disableCopiedFundingSources = (
   report: ReportShape,
-  fields: (FormField | FormLayoutElement)[]
+  fields: (FormField | FormLayoutElement)[],
+  formData?: AnyObject
 ) => {
   if (!report?.isCopied) {
     return;
@@ -341,16 +342,23 @@ export const disableCopiedFundingSources = (
     (field) => field.id === "fundingSources_wpTopic"
   );
 
-  if (fundingSourceField) {
-    fundingSourceField.props!.disabled = true;
+  if (!fundingSourceField) {
+    // This must be some other form; don't touch it.
+    return;
   }
+
+  console.log("form data", formData);
+
+  const disabled = formData && formData.isCopied;
+  fundingSourceField.props!.disabled = disabled;
 };
 
 export const updateRenderFields = (
   report: ReportShape,
-  fields: (FormField | FormLayoutElement)[]
+  fields: (FormField | FormLayoutElement)[],
+  formData?: AnyObject
 ) => {
-  disableCopiedFundingSources(report, fields);
+  disableCopiedFundingSources(report, fields, formData);
   const targetPopulations = report?.fieldData?.targetPopulations;
 
   const hcbsPopulation = {
