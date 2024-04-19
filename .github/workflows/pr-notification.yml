@@ -33,11 +33,11 @@ jobs:
       - name: get endpoint
         id: getendpoint
         run: |
-          set +e # Disable error exit
-          application_endpoint=$(aws cloudformation describe-stacks --stack-name ui-${{ env.branch_name }} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue") || application_endpoint=""
-          set -e # Enable error exit
-          if [ -z "${application_endpoint}" ]; then
-              application_endpoint="endpoint doesn't exist"
+          set +e
+          application_endpoint_url=$(aws cloudformation describe-stacks --stack-name om-ui-infra-master --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue")
+          set -e
+          if [[ -z $application_endpoint_url || ! $application_endpoint_url == http* ]]; then
+              application_endpoint_url="endpoint not found"
           fi
           echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_ENV
   
