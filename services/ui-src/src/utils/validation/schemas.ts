@@ -3,7 +3,6 @@ import { validationErrors as error } from "verbiage/errors";
 import { Choice } from "types";
 import {
   checkRatioInputAgainstRegexes,
-  checkStandardIntegerInputAgainstRegexes,
   checkStandardNumberInputAgainstRegexes,
 } from "utils/other/checkInputValidity";
 
@@ -23,6 +22,8 @@ export const textOptional = () => string().typeError(error.INVALID_GENERIC);
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];
+const validNumberRegex = /^\.$|[0-9]/;
+const validIntegerRegex = /^[0-9\s,$%]+$/;
 
 // NUMBER - Number or Valid Strings
 export const numberSchema = () =>
@@ -59,48 +60,31 @@ export const numberOptional = () => numberSchema().notRequired().nullable();
 
 // Integer or Valid Strings
 export const validIntegerSchema = () =>
-  string().test({
-    message: error.INVALID_NUMBER_OR_NA,
-    test: (value) => {
-      if (value) {
-        const isValidStringValue = validNAValues.includes(value);
-        const isValidIntegerValue =
-          checkStandardIntegerInputAgainstRegexes(value);
-        return isValidStringValue || isValidIntegerValue;
-      } else return true;
-    },
-  });
+  string()
+    .test({
+      message: error.INVALID_NUMBER_OR_NA,
+      test: (value) => {
+        if (value) {
+          const isValidStringValue = validNAValues.includes(value);
+          const isValidIntegerValue = validIntegerRegex.test(value);
+          return isValidStringValue || isValidIntegerValue;
+        } else return true;
+      },
+    })
+    .test({
+      test: (value) => {
+        if (validNumberRegex.test(value!)) {
+          return parseFloat(value!) >= 0;
+        } else return true;
+      },
+      message: error.NUMBER_LESS_THAN_ZERO,
+    });
 
 export const validInteger = () =>
-  validIntegerSchema()
-    .required(error.REQUIRED_GENERIC)
-    .test({
-      test: (value) => !isWhitespaceString(value),
-      message: error.REQUIRED_GENERIC,
-    });
+  validIntegerSchema().required(error.REQUIRED_GENERIC);
 
 export const validIntegerOptional = () =>
   validIntegerSchema().notRequired().nullable();
-
-// NUMBER NOT LESS THAN ONE
-export const numberNotLessThanOne = () =>
-  number().test({
-    test: (value) => {
-      const isValidStringValue = validNAValues.includes(value!);
-      return parseFloat(value!) >= 1 || isValidStringValue;
-    },
-    message: error.NUMBER_LESS_THAN_ONE,
-  });
-
-// NUMBER NOT LESS THAN ONE (OPTIONAL)
-export const numberNotLessThanOneOptional = () =>
-  numberOptional().test({
-    test: (value) => {
-      const isValidStringValue = validNAValues.includes(value!);
-      return parseFloat(value!) >= 1 || isValidStringValue;
-    },
-    message: error.NUMBER_LESS_THAN_ONE,
-  });
 
 // Number - Ratio
 export const ratio = () =>

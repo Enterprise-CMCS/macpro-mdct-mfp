@@ -5,8 +5,6 @@ export const schemaMap: any = {
   textOptional: schema.textOptional(),
   number: schema.number(),
   numberOptional: schema.numberOptional(),
-  numberNotLessThanOne: schema.numberNotLessThanOne(),
-  numberNotLessThanOneOptional: schema.numberNotLessThanOneOptional(),
   ratio: schema.ratio(),
   email: schema.email(),
   emailOptional: schema.emailOptional(),
