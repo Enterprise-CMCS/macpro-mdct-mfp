@@ -3,6 +3,7 @@ import jwtDecode from "jwt-decode";
 import handler from "../handler-lib";
 // utils
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 import {
   error,
   reportBuckets,
@@ -16,7 +17,6 @@ import s3Lib, {
 import { convertDateUtcToEt } from "../../utils/time/time";
 // types
 import { StatusCodes, UserRoles, WPReportMetadata } from "../../utils/types";
-import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 
 export const submitReport = handler(async (event, _context) => {
   const { allParamsValid, reportType, state, id } =

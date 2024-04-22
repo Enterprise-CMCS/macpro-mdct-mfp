@@ -3,6 +3,7 @@ import { fetchReport } from "./fetch";
 // utils
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 import s3Lib, {
   getFieldDataKey,
   getFormTemplateKey,
@@ -24,7 +25,6 @@ import {
 // types
 import { ReportJson, StatusCodes, UserRoles } from "../../utils/types";
 import { removeNotApplicablePopsFromInitiatives } from "../../utils/data/data";
-import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 
 export const updateReport = handler(async (event, context) => {
   const { allParamsValid, reportType, state } =

@@ -8,6 +8,7 @@ import {
   reportTables,
 } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 import s3Lib, {
   getFieldDataKey,
   getFormTemplateKey,
@@ -25,7 +26,6 @@ import {
   UserRoles,
 } from "../../utils/types";
 import { calculateCompletionStatus } from "../../utils/validation/completionStatus";
-import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 
 /**
  * Locked reports can be released by admins.

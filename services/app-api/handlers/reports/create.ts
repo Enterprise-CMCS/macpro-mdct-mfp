@@ -5,6 +5,7 @@ import handler from "../handler-lib";
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import s3Lib, { getFieldDataKey } from "../../utils/s3/s3-lib";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseStateReportParameters } from "../../utils/auth/parameters";
 import {
   validateData,
   validateFieldData,
@@ -40,7 +41,6 @@ import {
   StatusCodes,
   UserRoles,
 } from "../../utils/types";
-import { parseStateReportParameters } from "../../utils/auth/parameters";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {

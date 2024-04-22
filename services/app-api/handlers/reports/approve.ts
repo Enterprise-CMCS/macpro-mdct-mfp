@@ -4,9 +4,9 @@ import { fetchReport } from "./fetch";
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { error, reportTables } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 // types
 import { StatusCodes, UserRoles } from "../../utils/types";
-import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 
 export const approveReport = handler(async (event, context) => {
   const { allParamsValid, reportType } = parseSpecificReportParameters(event);

@@ -16,23 +16,12 @@ import {
   isComplete,
 } from "../../utils/validation/completionStatus";
 import { isAuthorizedToFetchState } from "../../utils/auth/authorization";
-// types
-import {
-  AnyObject,
-  FormJson,
-  ReportFieldData,
-  ReportMetadataShape,
-  StatusCodes,
-} from "../../utils/types";
 import {
   parseSpecificReportParameters,
   parseStateReportParameters,
 } from "../../utils/auth/parameters";
-
-export type FetchResponse = ReportMetadataShape & {
-  fieldData?: ReportFieldData;
-  formTemplate?: FormJson;
-};
+// types
+import { AnyObject, StatusCodes } from "../../utils/types";
 
 export const fetchReport = handler(async (event, _context) => {
   const { allParamsValid, reportType, state, id } =
