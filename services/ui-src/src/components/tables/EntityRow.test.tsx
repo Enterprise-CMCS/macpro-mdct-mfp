@@ -86,6 +86,23 @@ const entityRowWithClosedEntities = (
   </RouterWrappedComponent>
 );
 
+const entityRowWithCloseoutDetails = (
+  <RouterWrappedComponent>
+    <Table content={tableContent}>
+      <EntityRow
+        entity={mockEntityClosed}
+        entityType={ModalDrawerEntityTypes.TARGET_POPULATIONS}
+        verbiage={verbiage}
+        entityInfo={mockEntityInfo}
+        showEntityCloseoutDetails={true}
+        openAddEditEntityModal={mockOpenAddEditEntityModal}
+        openDeleteEntityModal={mockOpenDeleteEntityModal}
+        openOverlayOrDrawer={mockOpenDrawer}
+      />
+    </Table>
+  </RouterWrappedComponent>
+);
+
 const addedOtherEntityRow = (
   <RouterWrappedComponent>
     <Table content={tableContent}>
@@ -147,6 +164,12 @@ describe("Test EntityRow with closed status", () => {
     render(entityRowWithClosedEntities);
     const editButton = screen.getByText(verbiage.enterEntityDetailsButtonText);
     expect(editButton).toBeVisible();
+  });
+
+  it("should show closeout details if specified", () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+    render(entityRowWithCloseoutDetails);
+    expect(screen.getByText("Closed by")).toBeVisible();
   });
 });
 

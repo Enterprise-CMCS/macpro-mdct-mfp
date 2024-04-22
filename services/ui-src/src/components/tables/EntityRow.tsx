@@ -29,6 +29,7 @@ export const EntityRow = ({
   entityType,
   formEntity,
   verbiage,
+  showEntityCloseoutDetails,
   openAddEditEntityModal,
   openDeleteEntityModal,
   openOverlayOrDrawer,
@@ -154,7 +155,7 @@ export const EntityRow = ({
                   `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
               </Text>
             )}
-            {isInitiativeClosed && (
+            {isInitiativeClosed && showEntityCloseoutDetails && (
               <Table
                 content={{
                   headRow: ["Actual end date", "Closed by"],
