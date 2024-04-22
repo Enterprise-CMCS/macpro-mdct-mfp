@@ -182,7 +182,7 @@ export const EntityRow = ({
                 pl={isMobile ? "0" : "1rem"}
                 pr={isMobile ? "1.5rem" : "2.5rem"}
               >
-                {!editable || isInitiativeClosed
+                {!editable || (!isSAR && isInitiativeClosed)
                   ? verbiage.readOnlyEntityButtonText
                   : verbiage.editEntityButtonText}
               </Button>
