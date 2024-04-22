@@ -1,5 +1,5 @@
 import handler from "../handler-lib";
-import { fetchReport } from "./fetch";
+import { fetchReport, FetchResponse } from "./fetch";
 // utils
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { error, reportTables } from "../../utils/constants/constants";
@@ -29,11 +29,11 @@ export const archiveReport = handler(async (event, context) => {
 
   // if current report exists, parse for archived status
   if (getCurrentReport?.body) {
-    const currentReport = JSON.parse(getCurrentReport.body);
+    const currentReport = JSON.parse(getCurrentReport.body) as FetchResponse;
     const currentArchivedStatus = currentReport?.archived;
     const reportType = currentReport?.reportType;
 
-    const reportTable = reportTables[reportType as keyof typeof reportTables];
+    const reportTable = reportTables[reportType];
 
     // Delete raw data prior to updating
     delete currentReport.fieldData;

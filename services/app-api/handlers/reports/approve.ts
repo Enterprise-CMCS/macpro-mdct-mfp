@@ -6,8 +6,17 @@ import { error, reportTables } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
 // types
 import { StatusCodes, UserRoles } from "../../utils/types";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 
 export const approveReport = handler(async (event, context) => {
+  const { allParamsValid, reportType } = parseSpecificReportParameters(event);
+  if (!allParamsValid) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.NO_KEY,
+    };
+  }
+
   // Return a 403 status if the user is not an admin.
   if (!hasPermissions(event, [UserRoles.ADMIN, UserRoles.APPROVER])) {
     return {
@@ -28,9 +37,8 @@ export const approveReport = handler(async (event, context) => {
   }
 
   const currentReport = JSON.parse(getCurrentReport.body);
-  const reportType = currentReport?.reportType;
 
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
+  const reportTable = reportTables[reportType];
 
   // Delete raw data prior to updating
   delete currentReport.fieldData;

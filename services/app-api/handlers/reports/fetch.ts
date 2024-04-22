@@ -2,7 +2,6 @@ import { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import handler from "../handler-lib";
 // utils
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import { hasReportPathParams } from "../../utils/dynamo/hasReportPathParams";
 import s3Lib, {
   getFieldDataKey,
   getFormTemplateKey,
@@ -18,25 +17,33 @@ import {
 } from "../../utils/validation/completionStatus";
 import { isAuthorizedToFetchState } from "../../utils/auth/authorization";
 // types
-import { AnyObject, isState, StatusCodes } from "../../utils/types";
+import {
+  AnyObject,
+  FormJson,
+  ReportFieldData,
+  ReportMetadataShape,
+  StatusCodes,
+} from "../../utils/types";
+import {
+  parseSpecificReportParameters,
+  parseStateReportParameters,
+} from "../../utils/auth/parameters";
+
+export type FetchResponse = ReportMetadataShape & {
+  fieldData?: ReportFieldData;
+  formTemplate?: FormJson;
+};
 
 export const fetchReport = handler(async (event, _context) => {
-  const requiredParams = ["reportType", "id", "state"];
-  if (!hasReportPathParams(event.pathParameters!, requiredParams)) {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
     return {
       status: StatusCodes.BAD_REQUEST,
       body: error.NO_KEY,
     };
   }
 
-  const { reportType, state, id } = event.pathParameters!;
-
-  if (!isState(state)) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.NO_KEY,
-    };
-  }
   if (!isAuthorizedToFetchState(event, state)) {
     return {
       status: StatusCodes.UNAUTHORIZED,
@@ -44,8 +51,8 @@ export const fetchReport = handler(async (event, _context) => {
     };
   }
 
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
-  const reportBucket = reportBuckets[reportType as keyof typeof reportBuckets];
+  const reportTable = reportTables[reportType];
+  const reportBucket = reportBuckets[reportType];
 
   // Get current report metadata
   const reportMetadataParams = {
@@ -119,16 +126,14 @@ export const fetchReport = handler(async (event, _context) => {
 });
 
 export const fetchReportsByState = handler(async (event, _context) => {
-  const requiredParams = ["reportType", "state"];
-
-  if (!hasReportPathParams(event.pathParameters!, requiredParams)) {
+  const { allParamsValid, reportType, state } =
+    parseStateReportParameters(event);
+  if (!allParamsValid) {
     return {
       status: StatusCodes.BAD_REQUEST,
       body: error.NO_KEY,
     };
   }
-
-  const { reportType, state } = event.pathParameters!;
 
   if (!isAuthorizedToFetchState(event, state!)) {
     return {
@@ -137,7 +142,7 @@ export const fetchReportsByState = handler(async (event, _context) => {
     };
   }
 
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
+  const reportTable = reportTables[reportType];
 
   const queryParams: QueryCommandInput = {
     TableName: reportTable,
