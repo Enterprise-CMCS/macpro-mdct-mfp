@@ -3,6 +3,7 @@ import { validationErrors as error } from "verbiage/errors";
 import { Choice } from "types";
 import {
   checkRatioInputAgainstRegexes,
+  checkStandardIntegerInputAgainstRegexes,
   checkStandardNumberInputAgainstRegexes,
 } from "utils/other/checkInputValidity";
 
@@ -22,7 +23,7 @@ export const textOptional = () => string().typeError(error.INVALID_GENERIC);
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];
-const validNumberRegex = /^\.$|[0-9]/;
+// const validNumberRegex = /^\.$|[0-9]/;
 const validIntegerRegex = /^[0-9\s,$%]+$/;
 
 // NUMBER - Number or Valid Strings
@@ -73,7 +74,7 @@ export const validIntegerSchema = () =>
     })
     .test({
       test: (value) => {
-        if (validNumberRegex.test(value!)) {
+        if (checkStandardIntegerInputAgainstRegexes(value!)) {
           return parseFloat(value!) >= 0;
         } else return true;
       },
