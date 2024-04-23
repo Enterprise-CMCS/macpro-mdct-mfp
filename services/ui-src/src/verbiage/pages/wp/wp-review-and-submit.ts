@@ -19,7 +19,7 @@ export default {
           sectionHeader: "Compliance review",
           type: "text",
           content:
-            "Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made. If there are no corrections to be made, your Project Officer will approve the report by {x time before it’s due}, its status will change to “Approved” and it will no longer be editable because its information will be used in the MFP Semi-Annual Progress Report (SAR) for the same reporting period.",
+            "Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made. If there are no corrections to be made, your Project Officer will approve the report, its status will change to “Approved”, and it will no longer be editable because its information will be used in the MFP Semi-Annual Progress Report for the same reporting period.",
         },
       ],
     },
@@ -85,7 +85,7 @@ export default {
         },
         {
           content:
-            "If CMS determines corrections are <i>not</i> needed: Your Project Officer will approve the MFP Work Plan and the status will change to “Approved” {x time before it’s due}:",
+            "If CMS determines corrections are <i>not</i> needed: Your Project Officer will approve the MFP Work Plan and the status will change to “Approved”:",
           children: [
             {
               content:

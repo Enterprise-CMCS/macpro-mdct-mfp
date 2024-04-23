@@ -1,6 +1,6 @@
 name: Destroy
 
-on: 
+on:
   delete:
   workflow_dispatch:
     inputs:
@@ -29,14 +29,14 @@ jobs:
       (
         inputs.environment != '' &&
         (!contains(fromJson('["main", "val", "production"]'), inputs.environment))
-      )       
+      )
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: set branch_name
         run: |
           BRANCH_NAME=$(./.github/setBranchName.sh ${{ inputs.environment || github.event.ref }})
-          echo "branch_name=${BRANCH_NAME}" >> $GITHUB_ENV      
+          echo "branch_name=${BRANCH_NAME}" >> $GITHUB_ENV
       - name: set branch specific variable names
         run: ./.github/build-vars.sh set_names
       - name: set variable values
@@ -54,4 +54,6 @@ jobs:
         run: ./.github/github-lock.sh $branch_name
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete topics
+        run: run deleteTopics --stage $STAGE_NAME
       - run: ./scripts/destroy.sh $STAGE_PREFIX$branch_name

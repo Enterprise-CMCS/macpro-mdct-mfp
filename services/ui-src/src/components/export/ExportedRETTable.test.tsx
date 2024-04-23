@@ -159,7 +159,7 @@ describe("Test table functions specific for R,E & T", () => {
       },
       {
         id: "ret-mtfqr",
-        label: "Apartment (Individual lease, lockable access, etc.)",
+        label: "Apartment (individual lease, lockable access, etc.)",
         result: "Apartment",
       },
       {

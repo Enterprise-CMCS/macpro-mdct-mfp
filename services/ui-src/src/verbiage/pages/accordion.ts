@@ -134,7 +134,7 @@ export default {
           type: "text",
           as: "span",
           content:
-            ". If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates including the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
+            ". If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates, complete the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
         },
         {
           type: "text",
@@ -176,7 +176,7 @@ export default {
           type: "text",
           as: "span",
           content:
-            ". If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates including the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
+            ". If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates, complete the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
         },
       ],
       list: [],

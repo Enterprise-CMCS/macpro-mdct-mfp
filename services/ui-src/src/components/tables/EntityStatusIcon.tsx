@@ -32,7 +32,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
           src: isPdf ? closedIcon : closedIcon,
           alt: isPdf ? "" : "close icon",
           style: sx.closeText,
-          text: "Close",
+          text: "Closed",
         };
       case EntityStatuses.NO_STATUS:
       case EntityStatuses.DISABLED:
