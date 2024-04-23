@@ -50,7 +50,6 @@ export const validationErrors = {
   NUMBER_LESS_THAN_ZERO: "Response must be greater than or equal to zero",
   INVALID_NUMBER: "Response must be a valid number",
   INVALID_NUMBER_OR_NA: 'Response must be a valid number or "N/A"',
-  INVALID_WHOLE_NUMBER: 'Response must be a valid whole number or "N/A"',
   INVALID_RATIO: "Response must be a valid ratio",
 };
 
