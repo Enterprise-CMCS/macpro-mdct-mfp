@@ -35,7 +35,6 @@ const valueCleaningNumberSchema = (value: string, charsToReplace: RegExp) => {
 
 /** This regex must be at least as permissive as the one in ui-src */
 const validNumberRegex = /^\.$|[0-9]/;
-
 const validIntegerRegex = /^[0-9\s,$%]+$/;
 
 // NUMBER - Number or Valid Strings
