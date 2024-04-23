@@ -48,9 +48,9 @@ import { getDefaultTargetPopulationNames } from "../../constants";
 
 const alertVerbiage = {
   title:
-    "You must have at least one target population applicable to your MFP Demonstration",
+    "You must have at least one default target population applicable to your MFP Demonstration",
   description:
-    "To correct this, select “Edit” and respond with ”Yes” to at least one target population, and add quarterly benchmark projections.",
+    "To correct this, select “Edit” and respond with ”Yes” to at least one default target population, and add quarterly benchmark projections.",
 };
 
 export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
@@ -213,7 +213,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         setInvalidEntry(false);
       }
     }
-  });
+  }, [reportFieldDataEntities]);
 
   return (
     <Box>
