@@ -14,6 +14,7 @@ import {
 import {
   AlertTypes,
   EntityShape,
+  ErrorVerbiage,
   DynamicModalOverlayReportPageShape,
   ReportType,
 } from "types";
@@ -23,10 +24,6 @@ import { parseCustomHtml, useBreakpoint, useStore } from "utils";
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 import { AnyObject } from "yup/lib/types";
-
-interface AlertVerbiage {
-  [key: string]: { title: string; description: string };
-}
 
 export const DynamicModalOverlayReportPage = ({
   route,
@@ -60,10 +57,11 @@ export const DynamicModalOverlayReportPage = ({
     }
   }
 
+  const errorMessage: ErrorVerbiage =
+    alertVerbiage[entityType as keyof typeof alertVerbiage];
+
   const showAlert =
-    report && (alertVerbiage as AlertVerbiage)[entityType]
-      ? getWPAlertStatus(report, entityType)
-      : false;
+    report && errorMessage ? getWPAlertStatus(report, entityType) : false;
 
   const dashTitle = `${verbiage.dashboardTitle}`;
   const dashSubTitle = parseCustomHtml(
@@ -115,11 +113,9 @@ export const DynamicModalOverlayReportPage = ({
           />
           {showAlert && (
             <Alert
-              title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
+              title={errorMessage.title}
               status={AlertTypes.ERROR}
-              description={
-                (alertVerbiage as AlertVerbiage)[route.entityType].description
-              }
+              description={errorMessage.description}
             />
           )}
           <Box>
