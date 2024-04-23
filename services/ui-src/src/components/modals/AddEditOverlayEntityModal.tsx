@@ -11,6 +11,7 @@ import {
   FormJson,
   isFieldElement,
   ReportStatus,
+  ReportType,
 } from "types";
 import {
   entityWasUpdated,
@@ -168,8 +169,13 @@ export const AddEditOverlayEntityModal = ({
     selectedEntity?.id
       ? (title = verbiage.addEditModalEditTitle)
       : (title = verbiage.addEditModalAddTitle);
-    if (entityName) {
-      title += entityName;
+    if (report?.reportType === ReportType.WP && entityName) {
+      title = `${title} ${entityName}`;
+    } else if (
+      report?.reportType === ReportType.SAR &&
+      selectedEntity?.objectiveProgress_objectiveName
+    ) {
+      title = `${title} ${selectedEntity.objectiveProgress_objectiveName}`;
     }
     return title;
   };

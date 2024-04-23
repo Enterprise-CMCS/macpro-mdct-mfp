@@ -84,7 +84,7 @@ describe("Test overlayModalPage with Work Plans's Evaluation Plan Entity", () =>
     expect(screen.getByRole("dialog")).toBeVisible();
     expect(
       screen.getByText(
-        `${addEditModalEditTitle}${mockEntityStore.selectedEntity?.initiative_name}`
+        `${addEditModalEditTitle} ${mockEntityStore.selectedEntity?.initiative_name}`
       )
     ).toBeVisible;
     const closeButton = screen.getByText("Close");

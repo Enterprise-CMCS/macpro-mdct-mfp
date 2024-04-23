@@ -4,16 +4,16 @@ export default {
     notApplicable: "Not applicable",
   },
   reportBanner: {
-    intro: "Click below to export or print WP shown here",
+    intro: "Click below to export or print MFP Work Plan shown here",
     pdfButton: "Download PDF",
   },
   metadata: {
     author: "CMS",
-    subject: "MFP Program Work Plan",
+    subject: "MFP Work Plan",
     language: "English",
   },
   reportPage: {
-    heading: "MFP Program Work Plan for ",
+    heading: "MFP Work Plan for ",
     metadataTableHeaders: {
       submissionName: "Submission Name",
       dueDate: "Due date",

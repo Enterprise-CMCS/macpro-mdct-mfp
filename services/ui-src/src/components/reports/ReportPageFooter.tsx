@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // utils
 import { parseCustomHtml, useFindRoute, useStore } from "utils";
-import { AnyObject, FormJson } from "types";
+import { AnyObject, FormJson, ReportStatus } from "types";
 // assets
 import nextIcon from "assets/icons/icon_next_white.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
@@ -15,13 +15,24 @@ export const ReportPageFooter = ({
   ...props
 }: Props) => {
   const navigate = useNavigate();
-  const formIsDisabled = false;
-  const report = useStore().report;
+  const { report, editable, selectedEntity } = useStore();
   const { previousRoute, nextRoute } = useFindRoute(
     report?.formTemplate.flatRoutes,
     report?.formTemplate?.basePath
   );
   const hidePrevious = previousRoute === "/wp" || previousRoute === "/sar";
+
+  /*
+   * By default, the Continue button submits the form AND navigates.
+   * If the form is disabled, the button will navigate only.
+   */
+  const reportWithSubmittedStatus = report?.status === ReportStatus.SUBMITTED;
+  const { userIsAdmin, userIsEndUser } = useStore().user ?? {};
+  const formIsDisabled =
+    (userIsAdmin && !form?.editableByAdmins) ||
+    (userIsEndUser && reportWithSubmittedStatus) ||
+    !editable ||
+    selectedEntity?.isInitiativeClosed;
 
   // initiatives page requires a different button text
   const rightButtonText =

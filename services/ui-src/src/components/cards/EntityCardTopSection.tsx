@@ -19,8 +19,8 @@ export const EntityStepCardTopSection = ({
             {formattedEntityData.objectiveName}
           </Heading>
           <Text sx={sx.subtitle}>
-            Performance measure description or indicators your state will use to
-            monitor progress towards achievement
+            Performance measure description or indicators your state or
+            territory will use to monitor progress towards achievement
           </Text>
           <Text sx={sx.description}>{formattedEntityData.description}</Text>
           <Text sx={sx.subtitle}>Performance measure targets</Text>
@@ -58,8 +58,8 @@ export const EntityStepCardTopSection = ({
             {formattedEntityData.objectiveName}
           </Heading>
           <Text sx={sx.subtitle}>
-            Performance measure description or indicators your state will use to
-            monitor progress towards achievement
+            Performance measure description or indicators your state or
+            territory will use to monitor progress towards achievement
           </Text>
           <Text sx={sx.description}>{formattedEntityData.description}</Text>
           <Text sx={sx.subtitle}>Performance measure targets</Text>

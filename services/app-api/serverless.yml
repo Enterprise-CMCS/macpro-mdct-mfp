@@ -54,6 +54,12 @@ custom:
   associateWaf:
     name: ${self:custom.webAclName}
     version: V2
+  bootstrapBrokerStringTls: ${env:BROKER_STRINGS, ssm:/configuration/${self:custom.stage}/bigmac/bootstrapBrokerStringTls, ssm:/configuration/default/bigmac/bootstrapBrokerStringTls}
+  vpcId: ${env:VPC_ID, ssm:/configuration/${self:custom.stage}/vpc/id, ssm:/configuration/default/vpc/id}
+  privateSubnets:
+    - ${env:VPC_SUBNET_A, ssm:/configuration/${self:custom.stage}/vpc/subnets/private/a/id, ssm:/configuration/default/vpc/subnets/private/a/id}
+    - ${env:VPC_SUBNET_B, ssm:/configuration/${self:custom.stage}/vpc/subnets/private/b/id, ssm:/configuration/default/vpc/subnets/private/b/id}
+    - ${env:VPC_SUBNET_C, ssm:/configuration/${self:custom.stage}/vpc/subnets/private/c/id, ssm:/configuration/default/vpc/subnets/private/c/id}
   serverlessApiClientCertificate:
     rotateCerts: true
     daysLeft: 30
@@ -70,6 +76,15 @@ custom:
     main: aws_iam
     val: aws_iam
     production: aws_iam
+params:
+  main:
+    topicNamespace: ""
+  val:
+    topicNamespace: ""
+  production:
+    topicNamespace: ""
+  default:
+    topicNamespace: --${self:custom.project}--${sls:stage}--
 provider:
   name: aws
   runtime: nodejs18.x
@@ -113,8 +128,19 @@ provider:
             - "arn:aws:s3:::${self:custom.sarFormBucket}"
             - "arn:aws:s3:::${self:custom.sarFormBucket}/formTemplates/*"
             - "arn:aws:s3:::${self:custom.sarFormBucket}/fieldData/*"
+        - Effect: "Allow"
+          Action:
+            - dynamodb:DescribeStream
+            - dynamodb:GetRecords
+            - dynamodb:GetShardIterator
+            - dynamodb:ListShards
+            - dynamodb:ListStreams
+          Resource:
+            - ${self:custom.wpReportTableStreamArn}
+            - ${self:custom.sarReportTableStreamArn}
   environment:
     BANNER_TABLE_NAME: ${self:custom.bannerTableName}
+    BOOTSTRAP_BROKER_STRING_TLS: ${self:custom.bootstrapBrokerStringTls}
     WP_REPORT_TABLE_NAME: ${self:custom.wpReportTableName}
     WP_FORM_BUCKET: ${self:custom.wpFormBucket}
     FORM_TEMPLATE_TABLE_NAME: ${self:custom.formTemplateTableName}
@@ -274,6 +300,76 @@ functions:
                 reportType: true
                 state: true
                 id: true
+  postKafkaData:
+    handler: handlers/kafka/post/postKafkaData.handler
+    environment:
+      BOOTSTRAP_BROKER_STRING_TLS: ${self:custom.bootstrapBrokerStringTls}
+      STAGE: ${self:custom.stage}
+      topicNamespace: ${param:topicNamespace}
+    maximumRetryAttempts: 2
+    timeout: 120
+    memorySize: 2048
+    vpc:
+      securityGroupIds:
+        - Ref: KafkaSecurityGroup
+      subnetIds: ${self:custom.privateSubnets}
+    events:
+      - stream:
+          type: dynamodb
+          arn: ${self:custom.wpReportTableStreamArn}
+          startingPosition: TRIM_HORIZON
+          maximumRetryAttempts: 2
+          enabled: true
+      - stream:
+          type: dynamodb
+          arn: ${self:custom.sarReportTableStreamArn}
+          startingPosition: TRIM_HORIZON
+          maximumRetryAttempts: 2
+          enabled: true
+  postWpBucketData:
+    handler: handlers/kafka/post/postKafkaData.handler
+    environment:
+      BOOTSTRAP_BROKER_STRING_TLS: ${self:custom.bootstrapBrokerStringTls}
+      STAGE: ${self:custom.stage}
+      topicNamespace: ${param:topicNamespace}
+    maximumRetryAttempts: 2
+    timeout: 120
+    memorySize: 2048
+    vpc:
+      securityGroupIds:
+        - Ref: KafkaSecurityGroup
+      subnetIds: ${self:custom.privateSubnets}
+    events:
+      - s3:
+          bucket: ${self:custom.wpFormBucket}
+          existing: true
+          forceDeploy: true
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: fieldData/
+            - suffix: .json
+  postSarBucketData:
+    handler: handlers/kafka/post/postKafkaData.handler
+    environment:
+      BOOTSTRAP_BROKER_STRING_TLS: ${self:custom.bootstrapBrokerStringTls}
+      STAGE: ${self:custom.stage}
+      topicNamespace: ${param:topicNamespace}
+    maximumRetryAttempts: 2
+    timeout: 120
+    memorySize: 2048
+    vpc:
+      securityGroupIds:
+        - Ref: KafkaSecurityGroup
+      subnetIds: ${self:custom.privateSubnets}
+    events:
+      - s3:
+          bucket: ${self:custom.sarFormBucket}
+          existing: true
+          forceDeploy: true
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: fieldData/
+            - suffix: .json
 resources:
   Resources:
     GatewayResponseDefault4XX:
@@ -292,6 +388,11 @@ resources:
           gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
         ResponseType: DEFAULT_5XX
         RestApiId: !Ref ApiGatewayRestApi
+    KafkaSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupDescription: Security Group for streaming functions.  Egress all is set by default.
+        VpcId: ${self:custom.vpcId}
   Outputs:
     ApiGatewayRestApiName:
       Value: !Ref ApiGatewayRestApi

@@ -23,7 +23,7 @@ export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
   const sectionHint = verbiage?.intro?.hint ? verbiage?.intro?.hint : null;
   const sectionInfo = formatSectionInfo(verbiage!);
   const stateAndTerritory =
-    sectionHeading === "State and Territory-Specific Initiatives";
+    sectionHeading === "State or Territory-Specific Initiatives";
 
   //recruit, enrollment and transition has hints that needs to be hidden
   const hideHint =

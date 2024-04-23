@@ -79,7 +79,7 @@ const defaultMockProps = {
             type: "internalLink",
             content: "previous page",
             props: {
-              to: "/wp/state-and-territory-specific-initiatives/instructions",
+              to: "/wp/state-or-territory-specific-initiatives/instructions",
               style: {
                 textDecoration: "underline",
               },

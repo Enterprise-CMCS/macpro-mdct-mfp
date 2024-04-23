@@ -39,7 +39,7 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
 
   const checkForAlertStatus = (path: string, status: boolean) => {
     switch (path) {
-      case "/wp/state-and-territory-specific-initiatives/initiatives":
+      case "/wp/state-or-territory-specific-initiatives/initiatives":
         //if the alert is false (meaning no alert), default to the validation status check, else the task is not completed
         return !getWPAlertStatus(report, "initiative") ? status : false;
     }
