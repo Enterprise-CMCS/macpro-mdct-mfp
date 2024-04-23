@@ -92,9 +92,6 @@ export const DashboardPage = ({ reportType }: Props) => {
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
     undefined
   );
-  const [wpToCopyFrom, setWorkPlanToCopyFrom] = useState<boolean>(
-    !!workPlanToCopyFrom
-  );
 
   const dashboardVerbiageMap: any = {
     WP: wpVerbiage,
@@ -119,7 +116,6 @@ export const DashboardPage = ({ reportType }: Props) => {
       fetchReportsByState(reportType, activeState);
       clearReportSelection();
     } else {
-      setWorkPlanToCopyFrom(!workPlanToCopyFrom);
       fetchReportForSarCreation(activeState);
       clearReportSelection();
     }
@@ -297,7 +293,7 @@ export const DashboardPage = ({ reportType }: Props) => {
       </Box>
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
-        {reportType === ReportType.SAR && wpToCopyFrom && (
+        {reportType === ReportType.SAR && !workPlanToCopyFrom === undefined && (
           <Alert
             title={sarVerbiage.alertBanner.title}
             showIcon={true}
