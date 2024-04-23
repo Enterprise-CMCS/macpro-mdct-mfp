@@ -141,6 +141,7 @@ export const DynamicModalOverlayReportPage = ({
                       entityType={entityType}
                       entityInfo={entityInfo}
                       verbiage={verbiage}
+                      showEntityCloseoutDetails={true}
                       openOverlayOrDrawer={openEntityDetailsOverlay}
                     />
                   );
