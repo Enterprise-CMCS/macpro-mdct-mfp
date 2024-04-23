@@ -151,11 +151,11 @@ describe("Test overlayModalPage with SAR's Objective Progress Entity", () => {
     const reportProgressButton = screen.getAllByText(reportProgressButtonText);
     await userEvent.click(reportProgressButton[0]);
     expect(screen.getByRole("dialog")).toBeVisible();
-    const title = await screen.getByText(
-      `${addEditModalEditTitle}${mockEntityStore.selectedEntity?.initiative_name}`
-    );
-    expect(title).toBeVisible;
-
+    const textField = screen.getByRole("textbox", {
+      name: "mock-performance-indicators",
+    });
+    expect(textField).toBeVisible();
+    await userEvent.type(textField, "test");
     const submitButton = screen.getByRole("button", { name: "Save" });
     expect(submitButton).not.toBeDisabled();
   });
