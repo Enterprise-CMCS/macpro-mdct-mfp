@@ -1,12 +1,12 @@
 import { Choice } from "./formFields";
-import { AnyObject, ErrorVerbiage } from "./other";
-import { ReportJson } from "./reports";
+import { AnyObject, ErrorVerbiage, State } from "./other";
+import { ReportJson, ReportType } from "./reports";
 
 // REPORT PROVIDER/CONTEXT
 
 export interface ReportKeys {
-  reportType: string;
-  state: string;
+  reportType: ReportType;
+  state: State;
   id: string;
 }
 
@@ -66,3 +66,9 @@ export enum ReportStatus {
   SUBMITTED = "Submitted",
   APPROVED = "Approved",
 }
+
+/** The shape of our reports' field data, as stored in S3 */
+export type ReportFieldData = Record<
+  string,
+  string | boolean | ReportFieldData[]
+>;

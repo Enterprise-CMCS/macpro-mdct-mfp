@@ -3,9 +3,9 @@ import { PutCommandInput } from "@aws-sdk/lib-dynamodb";
 import handler from "../handler-lib";
 // utils
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import { hasReportPathParams } from "../../utils/dynamo/hasReportPathParams";
 import s3Lib, { getFieldDataKey } from "../../utils/s3/s3-lib";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseStateReportParameters } from "../../utils/auth/parameters";
 import {
   validateData,
   validateFieldData,
@@ -36,8 +36,6 @@ import { extractWorkPlanData } from "../../utils/transformations/transformations
 import {
   AnyObject,
   APIGatewayProxyEvent,
-  isReportType,
-  isState,
   ReportMetadataShape,
   ReportType,
   StatusCodes,
@@ -46,38 +44,19 @@ import {
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
-    const requiredParams = ["reportType", "state"];
-
-    // Return No_Key when not given a state and reportType as a parameter
-    if (
-      !event.pathParameters ||
-      !hasReportPathParams(event.pathParameters, requiredParams)
-    ) {
+    const { allParamsValid, reportType, state } =
+      parseStateReportParameters(event);
+    if (!allParamsValid) {
       return {
         status: StatusCodes.BAD_REQUEST,
         body: error.NO_KEY,
       };
     }
 
-    const { state, reportType } = event.pathParameters;
-
-    if (!isState(state)) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.NO_KEY,
-      };
-    }
     if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
       return {
         status: StatusCodes.UNAUTHORIZED,
         body: error.UNAUTHORIZED,
-      };
-    }
-
-    if (!isReportType(reportType)) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.NO_KEY,
       };
     }
 
