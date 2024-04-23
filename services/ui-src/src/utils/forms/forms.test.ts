@@ -9,9 +9,10 @@ import {
   resetClearProp,
   setClearedEntriesToDefaultValue,
   sortFormErrors,
+  disableCopiedFundingSources,
 } from "./forms";
 // types
-import { FormField } from "types";
+import { FormField, ReportShape } from "types";
 import {
   mockDateField,
   mockFormField,
@@ -25,8 +26,37 @@ import {
   mockTargetPopReqButNotApplicable,
   mockTargetPopDefaultAndApplicable,
   mockTargetPopDefaultButNotApplicable,
+  mockWPCopiedReport,
+  mockFundingSourceFormField,
 } from "utils/testing/setupJest";
 import { AnyObject } from "yup/lib/types";
+
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
+
+const mockFormData = {
+  fundingSources_quarters2024Q3: "8.00",
+  fundingSources_quarters2024Q4: "8.00",
+  fundingSources_quarters2025Q1: "8.00",
+  fundingSources_quarters2025Q2: "8.00",
+  fundingSources_quarters2025Q3: "888.00",
+  fundingSources_quarters2025Q4: "8.00",
+  fundingSources_quarters2026Q1: "88.00",
+  fundingSources_quarters2026Q2: "8.00",
+  fundingSources_quarters2026Q3: "8.00",
+  fundingSources_quarters2026Q4: "8.00",
+  fundingSources_wpTopic: [
+    {
+      isCopied: true,
+      key: "",
+      value: "MFP cooperative agreement funds for supplemental services",
+    },
+  ],
+  id: "635d43f-21c8-3234-5630-a2d4c7ad8ca8",
+  initiative_wp_otherTopic: "",
+  isCopied: true,
+};
 
 describe("form utilities", () => {
   describe("Test resetClearProp", () => {
@@ -37,6 +67,30 @@ describe("form utilities", () => {
       for (let choice of fields[0].props!.choices) {
         expect(choice.props!.clear).toBe(false);
       }
+    });
+
+    describe("disableCopiedFundingSources", () => {
+      it("should disable choicelist on copy over report - funding source section", () => {
+        const fields: FormField[] = [
+          structuredClone(mockFundingSourceFormField),
+        ];
+        disableCopiedFundingSources(mockWPCopiedReport, fields, mockFormData);
+        expect(fields[0].props?.disabled).toBe(true);
+      });
+
+      it("should not disable funding sources for non-copied reports", () => {
+        const fields: FormField[] = [
+          structuredClone(mockFundingSourceFormField),
+        ];
+        disableCopiedFundingSources({} as ReportShape, fields, mockFormData);
+        expect(fields[0].props?.disabled).toBeFalsy();
+      });
+
+      it("should not disable fields other than funding sources", () => {
+        const fields: FormField[] = [structuredClone(mockFormField)];
+        disableCopiedFundingSources(mockWPCopiedReport, fields, mockFormData);
+        expect(fields[0].props?.disabled).toBeFalsy();
+      });
     });
 
     it("should reset clear for text fields", async () => {

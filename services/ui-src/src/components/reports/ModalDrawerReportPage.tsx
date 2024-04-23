@@ -186,7 +186,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   };
 
   const tableHeaders = {
-    headRow: ["", "", ""],
+    headRow: ["", "", "", ""],
   };
 
   const defaultsPopsNotSelected = (targetPopulations: AnyObject[]) => {

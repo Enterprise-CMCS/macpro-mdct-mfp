@@ -323,10 +323,41 @@ export const convertTargetPopulationsFromWPToSAREntity = (
   });
 };
 
+/**
+ * Prevent users from changing a funding source's type in a copied report.
+ *
+ * If the user copied work plan A to make work plan B, we assume that the
+ * data in A was correct. When editing B, they can adjust amounts and
+ * projections, but they can't make fundamental changes to the source.
+ */
+export const disableCopiedFundingSources = (
+  report: ReportShape,
+  fields: (FormField | FormLayoutElement)[],
+  formData?: AnyObject
+) => {
+  if (!report?.isCopied) {
+    return;
+  }
+
+  const fundingSourceField = fields.find(
+    (field) => field.id === "fundingSources_wpTopic"
+  );
+
+  if (!fundingSourceField) {
+    // This must be some other form; don't touch it.
+    return;
+  }
+
+  const disabled = formData && formData.isCopied;
+  fundingSourceField.props!.disabled = disabled;
+};
+
 export const updateRenderFields = (
   report: ReportShape,
-  fields: (FormField | FormLayoutElement)[]
+  fields: (FormField | FormLayoutElement)[],
+  formData?: AnyObject
 ) => {
+  disableCopiedFundingSources(report, fields, formData);
   const targetPopulations = report?.fieldData?.targetPopulations;
 
   const hcbsPopulation = {
@@ -347,13 +378,13 @@ export const updateRenderFields = (
     filteredTargetPopulations
   );
 
-  const updateTargetPopulationChoiceList = updateFieldChoicesByID(
+  const updateChoiceList = updateFieldChoicesByID(
     fields,
     "targetPopulations",
     formatChoiceList
   );
 
-  return updateTargetPopulationChoiceList;
+  return updateChoiceList;
 };
 
 export const updateFieldChoicesByID = (

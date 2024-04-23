@@ -86,6 +86,24 @@ export const mockNestedFormField = {
   },
 };
 
+export const mockFundingSourceFormField = {
+  id: "fundingSources_wpTopic",
+  type: "radio",
+  validation: "radio",
+  props: {
+    label: "mock radio field",
+    choices: [
+      { id: "option1uuid", label: "option 1" },
+      { id: "option2uuid", label: "option 2" },
+      {
+        id: "option3uuid",
+        label: "option 3",
+        children: [mockFormField],
+      },
+    ],
+  },
+};
+
 export const mockSectionHeaderField = {
   type: "sectionHeader",
   id: "testfield",

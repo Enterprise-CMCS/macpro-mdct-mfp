@@ -92,6 +92,12 @@ const sx = {
   },
   descriptionText: {
     marginTop: ".25rem",
+    p: {
+      marginY: ".5rem",
+    },
+    ul: {
+      paddingLeft: "1rem",
+    },
   },
   linkText: {
     marginTop: ".25rem",
