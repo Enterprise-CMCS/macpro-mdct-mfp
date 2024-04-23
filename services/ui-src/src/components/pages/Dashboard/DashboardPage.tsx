@@ -292,7 +292,9 @@ export const DashboardPage = ({ reportType }: Props) => {
         <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
         Return home
       </Link>
-      {errorMessage && <ErrorAlert error={errorMessage} />}
+      <Box sx={sx.errorMessage}>
+        {errorMessage && <ErrorAlert error={errorMessage} />}
+      </Box>
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
         {reportType === ReportType.SAR && wpToCopyFrom && (
@@ -503,6 +505,9 @@ const sx = {
     p: {
       fontSize: "16px",
     },
+  },
+  errorMessage: {
+    paddingTop: "1rem",
   },
 };
 
