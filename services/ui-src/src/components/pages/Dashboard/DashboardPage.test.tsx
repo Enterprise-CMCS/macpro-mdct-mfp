@@ -9,10 +9,9 @@ import {
   mockReportContextNoReports,
   mockEmptyDashboardReportContext,
   mockWpReportContext,
+  mockWPFullReport,
   mockWPCopiedReport,
   mockWPApprovedFullReport,
-  mockWPFullReport,
-  mockWPSubmittedReport,
 } from "utils/testing/mockReport";
 import {
   mockReportStore,
@@ -167,47 +166,6 @@ describe("Test Report Dashboard view (Desktop)", () => {
     expect(screen.queryByText(sarVerbiage.body.empty)).not.toBeInTheDocument();
     expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
   });
-
-  test("Check that error banner is enabled in SAR when latest WP IS NOT approved", () => {
-    mockedUseStore.mockReturnValue(mockReportStore);
-    render(sarDashboardViewWithReports);
-    const errorBannerText = screen.queryByText(
-      "You must have an approved MFP Work Plan not previously used in a MFP Semi-Annual Progress Report (SAR) in order to add a new MFP SAR"
-    );
-    expect(errorBannerText).toBeInTheDocument();
-  });
-
-  test("Check that error banner is disabled in SAR when latest WP IS approved", () => {
-    const mockReportStore: MfpReportState = {
-      report: mockWPFullReport as ReportShape,
-      reportsByState: [
-        mockWPFullReport,
-        mockWPSubmittedReport,
-        mockWPCopiedReport,
-        mockWPApprovedFullReport,
-      ],
-      submittedReportsByState: [mockWPFullReport],
-      lastSavedTime: "1:58 PM",
-      workPlanToCopyFrom: mockWPCopiedReport,
-      autosaveState: false,
-      editable: true,
-      setReport: () => {},
-      setReportsByState: () => {},
-      clearReportsByState: () => {},
-      setSubmittedReportsByState: () => {},
-      setLastSavedTime: () => {},
-      setWorkPlanToCopyFrom: () => {},
-      setAutosaveState: () => {},
-      setEditable: () => {},
-    };
-
-    mockedUseStore.mockReturnValue(mockReportStore);
-    render(sarDashboardWithNoReports);
-    const errorBannerText = screen.queryByText(
-      "You must have an approved MFP Work Plan not previously used in a MFP Semi-Annual Progress Report (SAR) in order to add a new MFP SAR"
-    );
-    expect(errorBannerText).not.toBeInTheDocument();
-  });
 });
 
 describe("Test Report Dashboard with no reports", () => {
@@ -352,5 +310,57 @@ describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobil
         mockWpReportContext.fetchReportsByState
       ).toHaveBeenCalledTimes(2);
     });
+  });
+});
+
+describe("Test error banner on SAR dashboard", () => {
+  beforeEach(() => {
+    mockedUseUser.mockReturnValue(mockStateUser);
+    mockedUseStore.mockReturnValue({
+      reportsByState: undefined,
+    });
+    mockUseBreakpoint.mockReturnValue({
+      isMobile: false,
+    });
+    mockMakeMediaQueryClasses.mockReturnValue("desktop");
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  test("Check that error banner is enabled in SAR when latest WP IS NOT approved", () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+    render(sarDashboardViewWithReports);
+    const errorBannerText = screen.queryByText(
+      "You must have an approved MFP Work Plan not previously used in a MFP Semi-Annual Progress Report (SAR) in order to add a new MFP SAR"
+    );
+    expect(errorBannerText).toBeInTheDocument();
+  });
+
+  test("Check that error banner is disabled in SAR when latest WP IS approved", () => {
+    const wpToCopyFromMockStore: MfpReportState = {
+      report: mockWPFullReport as ReportShape,
+      reportsByState: [mockWPCopiedReport, mockWPApprovedFullReport],
+      submittedReportsByState: [mockWPFullReport],
+      lastSavedTime: "1:58 PM",
+      workPlanToCopyFrom: mockWPFullReport,
+      autosaveState: false,
+      editable: true,
+      setReport: () => {},
+      setReportsByState: () => {},
+      clearReportsByState: () => {},
+      setSubmittedReportsByState: () => {},
+      setLastSavedTime: () => {},
+      setWorkPlanToCopyFrom: () => {},
+      setAutosaveState: () => {},
+      setEditable: () => {},
+    };
+
+    mockedUseStore.mockReturnValue(wpToCopyFromMockStore);
+    render(sarDashboardViewWithReports);
+    const errorBannerText = screen.queryByText(
+      "You must have an approved MFP Work Plan not previously used in a MFP Semi-Annual Progress Report (SAR) in order to add a new MFP SAR"
+    );
+    expect(errorBannerText).not.toBeInTheDocument();
   });
 });
