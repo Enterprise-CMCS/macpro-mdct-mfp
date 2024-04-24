@@ -13,10 +13,6 @@ install_deps() {
 
 install_deps
 
-echo "Where is sls:  $(which sls)"
-echo "Maybe there is no alias:  $(which serverless)"
-exit 0
-
 if [[ $1 == "" ]] ; then
     echo 'ERROR:  You must pass a stage to destroy.  Ex. sh scripts/destroy.sh my-stage-name'
     exit 1
