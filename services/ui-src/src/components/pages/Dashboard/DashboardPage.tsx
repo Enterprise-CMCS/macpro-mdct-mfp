@@ -288,12 +288,10 @@ export const DashboardPage = ({ reportType }: Props) => {
         <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
         Return home
       </Link>
-      <Box sx={sx.errorMessage}>
-        {errorMessage && <ErrorAlert error={errorMessage} />}
-      </Box>
+      {errorMessage && <ErrorAlert error={errorMessage} />}
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
-        {reportType === ReportType.SAR && !workPlanToCopyFrom === undefined && (
+        {reportType === ReportType.SAR && workPlanToCopyFrom === null && (
           <Alert
             title={sarVerbiage.alertBanner.title}
             showIcon={true}
@@ -501,9 +499,6 @@ const sx = {
     p: {
       fontSize: "16px",
     },
-  },
-  errorMessage: {
-    paddingTop: "1rem",
   },
 };
 

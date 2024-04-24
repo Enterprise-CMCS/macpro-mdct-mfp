@@ -113,7 +113,6 @@ export const ReportProvider = ({ children }: Props) => {
     try {
       // clear stored reports by state prior to fetching from current state
       clearReportsByState();
-      setWorkPlanToCopyFrom(undefined);
 
       const workPlanSubmissions = await getReportsByState(
         ReportType.WP,
@@ -133,8 +132,11 @@ export const ReportProvider = ({ children }: Props) => {
           state: selectedState,
           id: lastFoundSubmission["id"],
         };
+
         const workPlan = await getReport(reportKeys);
         setWorkPlanToCopyFrom(workPlan);
+      } else {
+        setWorkPlanToCopyFrom(null);
       }
 
       setReportsByState(sortReportsOldestToNewest(sarSubmissions));

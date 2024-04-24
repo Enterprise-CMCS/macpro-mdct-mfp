@@ -92,7 +92,7 @@ const reportStore = (set: Function) => ({
     set(() => ({ lastSavedTime: savedTime }), false, {
       type: "setLastSavedTime",
     }),
-  setWorkPlanToCopyFrom: (planToCopy: ReportShape | undefined) =>
+  setWorkPlanToCopyFrom: (planToCopy: ReportShape | undefined | null) =>
     set(() => ({ workPlanToCopyFrom: planToCopy }), false, {
       type: "setWorkPlanToCopyFrom",
     }),
