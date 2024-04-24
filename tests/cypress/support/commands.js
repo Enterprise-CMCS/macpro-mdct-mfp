@@ -66,8 +66,8 @@ Cypress.Commands.add("archiveAnyExistingWorkPlans", () => {
   cy.wait(3000);
 
   cy.get("table").then(($table) => {
-    if ($table.find('*[data-cy^="Archive"]').length > 0) {
-      cy.get('*[data-cy^="Archive"]').first().click();
+    if ($table.find('button:contains("Archive")').length > 0) {
+      cy.get('button:contains("Archive")').first().click();
       cy.wait(500);
     }
   });

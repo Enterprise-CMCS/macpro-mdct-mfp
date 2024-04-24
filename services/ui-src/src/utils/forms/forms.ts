@@ -7,6 +7,13 @@ import {
   TextAreaField,
   ChoiceField,
 } from "components";
+import { DateField } from "components/fields/DateField";
+import { DropdownField } from "components/fields/DropdownField";
+import { NumberField } from "components/fields/NumberField";
+import {
+  SectionContent,
+  SectionHeader,
+} from "components/forms/FormLayoutElements";
 // types
 import {
   AnyObject,
@@ -19,15 +26,12 @@ import {
   isFieldElement,
   ReportShape,
 } from "types";
-import { DateField } from "components/fields/DateField";
-import { DropdownField } from "components/fields/DropdownField";
-import { NumberField } from "components/fields/NumberField";
-import {
-  SectionContent,
-  SectionHeader,
-} from "components/forms/FormLayoutElements";
+// utils
 import { calculateNextQuarter } from "utils";
-import { notAnsweredText } from "../../constants";
+import {
+  getDefaultTargetPopulationNames,
+  notAnsweredText,
+} from "../../constants";
 
 // return created elements from provided fields
 export const formFieldFactory = (
@@ -260,13 +264,10 @@ export const resetClearProp = (fields: (FormField | FormLayoutElement)[]) => {
 };
 
 export const formatOtherTargetPopulationChoices = (field: AnyObject) => {
-  const defaultTargetPopulations = [
-    "Older adults",
-    "Individuals with physical disabilities (PD)",
-    "Individuals with intellectual and developmental disabilities (I/DD)",
-    "Individuals with mental health and substance use disorders (MH/SUD)",
-    "HCBS infrastructure/system-level development",
-  ];
+  const defaultTargetPopulations = getDefaultTargetPopulationNames();
+  // add HCBS population for initiatives
+  defaultTargetPopulations.push("HCBS infrastructure/system-level development");
+
   return defaultTargetPopulations.includes(
     field.transitionBenchmarks_targetPopulationName
   )
@@ -434,12 +435,7 @@ export const injectFormWithTargetPopulations = (
 export const removeNotApplicablePopulations = (
   targetPopulations: AnyObject[]
 ) => {
-  const defaultPopulationNames = [
-    "Older adults",
-    "Individuals with physical disabilities (PD)",
-    "Individuals with intellectual and developmental disabilities (I/DD)",
-    "Individuals with mental health and substance use disorders (MH/SUD)",
-  ];
+  const defaultPopulationNames = getDefaultTargetPopulationNames();
 
   const filteredPopulations = targetPopulations?.filter((population) => {
     const isDefault = defaultPopulationNames.includes(

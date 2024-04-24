@@ -6,15 +6,24 @@ import { ReportContext, ModalDrawerReportPage } from "components";
 // utils
 import {
   mockModalDrawerReportPageJson,
+  mockTargetPopulationsReportPageJson,
   mockUseStore,
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-// constants
-import { saveAndCloseText } from "../../constants";
 import { useStore } from "utils/state/useStore";
-import { ReportShape } from "types";
+import {
+  getDefaultTargetPopulationNames,
+  saveAndCloseText,
+} from "../../constants";
+// types
+import {
+  ModalDrawerReportPageShape,
+  ReportContextShape,
+  ReportShape,
+} from "types";
+import { AnyObject } from "yup/lib/types";
 
 const mockUseNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -29,14 +38,6 @@ window.HTMLElement.prototype.scrollIntoView = jest.fn();
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
-const mockReportStoreWithoutEntities = {
-  ...mockUseStore,
-  report: {
-    ...(mockWPFullReport as ReportShape),
-    fieldData: {},
-  },
-};
-
 global.structuredClone = jest.fn((val) => {
   return JSON.parse(JSON.stringify(val));
 });
@@ -49,17 +50,84 @@ const {
 } = mockModalDrawerReportPageJson.verbiage;
 
 const modalDrawerReportPageComponent = (
+  context: ReportContextShape,
+  reportJson: ModalDrawerReportPageShape
+) => (
   <RouterWrappedComponent>
-    <ReportContext.Provider value={mockWpReportContext}>
-      <ModalDrawerReportPage route={mockModalDrawerReportPageJson} />
+    <ReportContext.Provider value={context}>
+      <ModalDrawerReportPage route={reportJson} />
     </ReportContext.Provider>
   </RouterWrappedComponent>
 );
 
+const defaultTargetPopulationNames = getDefaultTargetPopulationNames();
+const mockTPIncomplete: any[] = [];
+defaultTargetPopulationNames.forEach((index) => {
+  const population = {
+    id: `mock-entity-id-${index}`,
+    initiative_wpTopic: [
+      {
+        key: "initiative_wpTopic",
+        value: "defaultTargetPopulationNames[0]",
+      },
+    ],
+    name: `entity-name-${index}`,
+    transitionBenchmarks_targetPopulationName: defaultTargetPopulationNames[0],
+  };
+  mockTPIncomplete.push(population);
+});
+
+const mockTPIncompleteFieldData = {
+  targetPopulations: mockTPIncomplete,
+};
+
+const mockTPNA = mockTPIncompleteFieldData.targetPopulations.map(
+  (population) => {
+    return {
+      ...population,
+      transitionBenchmarks_applicableToMfpDemonstration: [
+        {
+          key: "mock-is-not-applicable",
+          value: "No",
+        },
+      ],
+    };
+  }
+);
+
+const mockTargetPopulationsNAFieldData = {
+  targetPopulations: mockTPNA,
+};
+
+const mockReportContextGivenFieldData = (fieldData: AnyObject) => {
+  return {
+    ...mockWpReportContext,
+    report: {
+      ...mockWPFullReport,
+      fieldData: fieldData,
+    },
+  };
+};
+
+const mockReportStoreGivenFieldData = (fieldData: AnyObject) => {
+  return {
+    ...mockUseStore,
+    report: {
+      ...(mockWPFullReport as ReportShape),
+      fieldData: fieldData,
+    },
+  };
+};
+
 describe("Test ModalDrawerReportPage without entities", () => {
   beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockReportStoreWithoutEntities);
-    render(modalDrawerReportPageComponent);
+    mockedUseStore.mockReturnValue(mockReportStoreGivenFieldData({}));
+    render(
+      modalDrawerReportPageComponent(
+        mockWpReportContext,
+        mockModalDrawerReportPageJson
+      )
+    );
   });
 
   it("should render the view", () => {
@@ -67,10 +135,50 @@ describe("Test ModalDrawerReportPage without entities", () => {
   });
 });
 
+describe("Test ModalDrawerReportPage with target populations", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  const alertText =
+    "You must have at least one default target population applicable to your MFP Demonstration";
+  it("should render the view", () => {
+    mockedUseStore.mockReturnValue(
+      mockReportStoreGivenFieldData(mockTPIncompleteFieldData)
+    );
+    render(
+      modalDrawerReportPageComponent(
+        mockReportContextGivenFieldData(mockTPIncompleteFieldData),
+        mockTargetPopulationsReportPageJson
+      )
+    );
+    expect(screen.getByText(addEntityButtonText)).toBeVisible();
+    expect(screen.queryByText(alertText)).not.toBeInTheDocument();
+  });
+
+  it("should render the alert when no default populations are applicable", () => {
+    mockedUseStore.mockReturnValue(
+      mockReportStoreGivenFieldData(mockTargetPopulationsNAFieldData)
+    );
+    render(
+      modalDrawerReportPageComponent(
+        mockReportContextGivenFieldData(mockTargetPopulationsNAFieldData),
+        mockTargetPopulationsReportPageJson
+      )
+    );
+    expect(screen.getByText(addEntityButtonText)).toBeVisible();
+    expect(screen.getByText(alertText)).toBeVisible();
+  });
+});
+
 describe("Test ModalDrawerReportPage with entities", () => {
   beforeEach(() => {
     mockedUseStore.mockReturnValue(mockUseStore);
-    render(modalDrawerReportPageComponent);
+    render(
+      modalDrawerReportPageComponent(
+        mockWpReportContext,
+        mockModalDrawerReportPageJson
+      )
+    );
   });
 
   afterEach(() => {
@@ -144,7 +252,12 @@ describe("Test ModalDrawerReportPage with entities", () => {
 describe("Test ModalDrawerReportPage accessibility", () => {
   it("Should not have basic accessibility issues", async () => {
     mockedUseStore.mockReturnValue(mockUseStore);
-    const { container } = render(modalDrawerReportPageComponent);
+    const { container } = render(
+      modalDrawerReportPageComponent(
+        mockWpReportContext,
+        mockModalDrawerReportPageJson
+      )
+    );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

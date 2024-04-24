@@ -1,4 +1,5 @@
 // types
+import { DEFAULT_TARGET_POPULATION_NAMES } from "../constants/constants";
 import {
   AnyObject,
   CompletionData,
@@ -115,14 +116,38 @@ export const calculateCompletionStatus = async (
     return repeatersValid && (await areFieldsValid(fieldsToBeValidated));
   };
 
+  const isDefaultPopulationApplicable = (targetPopulations: AnyObject[]) => {
+    const filteredPopulations = targetPopulations?.filter((population) => {
+      const isDefault = DEFAULT_TARGET_POPULATION_NAMES.includes(
+        population.transitionBenchmarks_targetPopulationName
+      );
+
+      const isApplicable =
+        population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]
+          ?.value === "Yes";
+      return isDefault && isApplicable;
+    });
+    return filteredPopulations.length >= 1;
+  };
+
   const calculateEntityCompletion = async (
     nestedFormTemplates: FormJson[],
     entityType: string
   ) => {
+    let atLeastOneTargetPopApplicable = false;
     //value for holding combined result
     var areAllFormsComplete = true;
     for (var nestedFormTemplate of nestedFormTemplates) {
       if (fieldData[entityType] && fieldData[entityType].length > 0) {
+        // if target population, at least one must be applicable to be complete
+        if (
+          entityType === "targetPopulations" &&
+          nestedFormTemplate?.id === "tb-drawer"
+        ) {
+          atLeastOneTargetPopApplicable = isDefaultPopulationApplicable(
+            fieldData[entityType]
+          );
+        }
         // iterate over each entity (eg transition benchmark)
         for (var dataForEntity of fieldData[entityType]) {
           // get completion status for entity, using the correct form template
@@ -138,6 +163,9 @@ export const calculateCompletionStatus = async (
         areAllFormsComplete &&=
           formTemplate.entities && !formTemplate.entities[entityType]?.required;
       }
+    }
+    if (entityType === "targetPopulations" && !atLeastOneTargetPopApplicable) {
+      return false;
     }
     return areAllFormsComplete;
   };

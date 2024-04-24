@@ -264,7 +264,6 @@ const AdminArchiveButton = ({
     <Td>
       <Button
         variant="link"
-        data-cy={`${report?.archived ? "Unarchive" : "Archive"}`}
         sx={sxOverride.adminActionButton}
         onClick={() => archiveReport!(report)}
       >
