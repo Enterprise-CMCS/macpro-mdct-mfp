@@ -43,7 +43,7 @@ export interface MfpReportState {
   reportsByState: ReportMetadataShape[] | undefined;
   submittedReportsByState: ReportMetadataShape[] | undefined;
   lastSavedTime: string | undefined;
-  workPlanToCopyFrom: ReportShape | undefined | null;
+  workPlanToCopyFrom: ReportShape | undefined;
   autosaveState: boolean;
   editable: boolean;
   // ACTIONS
@@ -56,7 +56,7 @@ export interface MfpReportState {
     newSubmittedReportsByState: ReportMetadataShape[] | undefined
   ) => void;
   setLastSavedTime: (lastSavedTime: string | undefined) => void;
-  setWorkPlanToCopyFrom: (planToCopy: ReportShape | undefined | null) => void;
+  setWorkPlanToCopyFrom: (planToCopy: ReportShape | undefined) => void;
   setAutosaveState: (state: boolean) => void;
   setEditable: (state: boolean) => void;
 }

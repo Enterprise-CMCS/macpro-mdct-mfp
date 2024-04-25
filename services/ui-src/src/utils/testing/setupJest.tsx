@@ -194,7 +194,7 @@ export const mockReportStore: MfpReportState = {
   ],
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "1:58 PM",
-  workPlanToCopyFrom: null,
+  workPlanToCopyFrom: undefined,
   autosaveState: false,
   editable: true,
   setReport: () => {},

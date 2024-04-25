@@ -291,16 +291,18 @@ export const DashboardPage = ({ reportType }: Props) => {
       {errorMessage && <ErrorAlert error={errorMessage} />}
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
-        {reportType === ReportType.SAR && workPlanToCopyFrom === null && (
-          <Alert
-            title={sarVerbiage.alertBanner.title}
-            showIcon={true}
-            icon={alertIcon}
-            status={AlertTypes.ERROR}
-            description={sarVerbiage.alertBanner.body}
-            sx={sx.alertBanner}
-          />
-        )}
+        {reportType === ReportType.SAR &&
+          !workPlanToCopyFrom &&
+          reportsToDisplay && (
+            <Alert
+              title={sarVerbiage.alertBanner.title}
+              showIcon={true}
+              icon={alertIcon}
+              status={AlertTypes.ERROR}
+              description={sarVerbiage.alertBanner.body}
+              sx={sx.alertBanner}
+            />
+          )}
         <Heading as="h1" sx={sx.headerText}>
           {fullStateName} {intro.header}
         </Heading>
