@@ -137,7 +137,7 @@ export function renderModalOverlayTableBody(
       return entities.map((entity, idx) => {
         return (
           <Box key={`${reportType}${idx}`}>
-            <Flex>
+            <Flex sx={sx.entityHeading}>
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -217,7 +217,7 @@ export function renderModalOverlayTableBody(
       return entities.map((entity, idx) => {
         return (
           <Box key={`${reportType}${idx}`}>
-            <Flex>
+            <Flex sx={sx.entityHeading}>
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -351,8 +351,12 @@ const sx = {
     color: "palette.gray_medium",
     fontWeight: "bold",
   },
+  entityHeading: {
+    marginTop: "4rem",
+  },
   statusIcon: {
-    paddingLeft: "1rem",
+    paddingLeft: "0.25rem",
+    paddingRight: "1rem",
     img: {
       maxWidth: "fit-content",
     },
@@ -371,7 +375,7 @@ const sx = {
     marginLeft: "1.5rem",
   },
   container: {
-    paddingTop: "2rem",
+    marginTop: "-3rem",
     display: "flex",
     flexDirection: "column",
   },
