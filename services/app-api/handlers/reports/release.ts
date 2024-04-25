@@ -8,6 +8,7 @@ import {
   reportTables,
 } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 import s3Lib, {
   getFieldDataKey,
   getFormTemplateKey,
@@ -38,6 +39,15 @@ import { calculateCompletionStatus } from "../../utils/validation/completionStat
  *
  */
 export const releaseReport = handler(async (event) => {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.NO_KEY,
+    };
+  }
+
   // Return a 403 status if the user is not an admin.
   if (!hasPermissions(event, [UserRoles.ADMIN, UserRoles.APPROVER])) {
     return {
@@ -46,20 +56,7 @@ export const releaseReport = handler(async (event) => {
     };
   }
 
-  if (
-    !event.pathParameters?.id ||
-    !event.pathParameters?.state ||
-    !event.pathParameters?.reportType
-  ) {
-    return {
-      status: StatusCodes.NOT_FOUND,
-      body: error.NO_MATCHING_RECORD,
-    };
-  }
-
-  const { id, state, reportType } = event.pathParameters;
-
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
+  const reportTable = reportTables[reportType];
   // Get report metadata
 
   const reportMetadataParams: GetCommandInput = {
@@ -114,7 +111,7 @@ export const releaseReport = handler(async (event) => {
     ? metadata.previousRevisions.concat([metadata.fieldDataId])
     : [metadata.fieldDataId];
 
-  const reportBucket = reportBuckets[reportType as keyof typeof reportBuckets];
+  const reportBucket = reportBuckets[reportType];
 
   const getFieldDataParameters: GetObjectCommandInput = {
     Bucket: reportBucket,

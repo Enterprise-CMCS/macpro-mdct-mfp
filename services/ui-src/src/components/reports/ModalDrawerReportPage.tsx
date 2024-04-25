@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
 import {
   Box,
@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import {
   AddEditEntityModal,
+  Alert,
   DeleteEntityModal,
   EntityRow,
   PrintButton,
@@ -30,6 +31,7 @@ import {
   ReportStatus,
   isFieldElement,
   ErrorVerbiage,
+  AlertTypes,
 } from "types";
 // utils
 import {
@@ -42,6 +44,14 @@ import {
   entityWasUpdated,
   resetClearProp,
 } from "utils";
+import { getDefaultTargetPopulationNames } from "../../constants";
+
+const alertVerbiage = {
+  title:
+    "You must have at least one default target population applicable to your MFP Demonstration",
+  description:
+    "To correct this, select “Edit” and respond with ”Yes” to at least one default target population, and add quarterly benchmark projections.",
+};
 
 export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
@@ -58,6 +68,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
     undefined
   );
   const [error, setError] = useState<ErrorVerbiage>();
+  const [invalidEntry, setInvalidEntry] = useState<boolean>(false);
 
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
@@ -178,10 +189,45 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
     headRow: ["", "", "", ""],
   };
 
+  const defaultsPopsNotSelected = (targetPopulations: AnyObject[]) => {
+    const defaultPopulationNames = getDefaultTargetPopulationNames();
+
+    const filteredPopulations = targetPopulations?.filter((population) => {
+      const isDefault = defaultPopulationNames.includes(
+        population.transitionBenchmarks_targetPopulationName
+      );
+
+      const isApplicable =
+        population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]
+          ?.value;
+      return isDefault && isApplicable === "No";
+    });
+    return filteredPopulations.length === defaultPopulationNames.length;
+  };
+
+  useEffect(() => {
+    if (entityType === "targetPopulations") {
+      if (defaultsPopsNotSelected(reportFieldDataEntities)) {
+        setInvalidEntry(true);
+      } else {
+        setInvalidEntry(false);
+      }
+    }
+  }, [reportFieldDataEntities]);
+
   return (
     <Box>
       {verbiage.intro && (
         <ReportPageIntro text={verbiage.intro} accordion={verbiage.accordion} />
+      )}
+      {invalidEntry && (
+        <Box>
+          <Alert
+            title={alertVerbiage.title}
+            status={AlertTypes.ERROR}
+            description={alertVerbiage.description}
+          />
+        </Box>
       )}
       <Box>
         <Heading as="h3" sx={sx.dashboardTitle}>

@@ -1,4 +1,4 @@
-import { ReportStatus } from "../../types";
+import { ReportStatus, ReportType } from "../../types";
 import {
   mockStandardReportPageJson,
   mockDrawerReportPageJson,
@@ -84,12 +84,12 @@ export const mockWPMetadata = {
   lastAlteredBy: "Anthony Soprano",
   versionNumber: 2,
   previousRevisions: [],
-  reportType: "WP",
+  reportType: ReportType.WP,
   reportPeriod: 2,
   createdAt: 1699496227241,
   reportYear: 2023,
   lastAltered: 1699496227241,
-  state: "NJ",
+  state: "NJ" as const,
   id: "wp-id",
   locked: false,
   fieldDataId: "wp-field-id",

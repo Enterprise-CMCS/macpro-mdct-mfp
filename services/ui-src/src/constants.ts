@@ -97,6 +97,12 @@ export const DEFAULT_TARGET_POPULATIONS = [
   },
 ];
 
+export function getDefaultTargetPopulationNames() {
+  return DEFAULT_TARGET_POPULATIONS.map(
+    (population) => population.transitionBenchmarks_targetPopulationName
+  );
+}
+
 // TIMEOUT PARAMS
 export const IDLE_WINDOW = 30 * 60 * 1000; // ms
 export const PROMPT_AT = 29 * 60 * 1000; //ms

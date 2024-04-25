@@ -15,6 +15,7 @@ import {
   EntityDetailsOverlayShape,
   EntityDetailsStepTypes,
   EntityShape,
+  ErrorVerbiage,
   FormField,
   FormLayoutElement,
   ModalOverlayReportPageShape,
@@ -33,25 +34,21 @@ import finishedIcon from "assets/icons/icon_check_circle.png";
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
 
-interface AlertVerbiage {
-  [key: string]: { title: string; description: string };
-}
-
 export const ExportedModalOverlayReportSection = ({ section }: Props) => {
   const { report } = useStore() ?? {};
   const entityType = section.entityType;
+  const errorMessage: ErrorVerbiage =
+    alertVerbiage[entityType as keyof typeof alertVerbiage];
 
   const showAlert =
-    report && (alertVerbiage as AlertVerbiage)[entityType]
-      ? getWPAlertStatus(report, entityType)
-      : false;
+    report && errorMessage ? getWPAlertStatus(report, entityType) : false;
   return (
     <>
       {showAlert && (
         <Alert
-          title={(alertVerbiage as AlertVerbiage)[entityType].title}
+          title={errorMessage.title}
           status={AlertTypes.ERROR}
-          description={(alertVerbiage as AlertVerbiage)[entityType].description}
+          description={errorMessage.description}
         />
       )}
       <Table

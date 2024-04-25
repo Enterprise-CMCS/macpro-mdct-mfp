@@ -1,6 +1,18 @@
 #!/bin/bash
 set -e
 
+install_deps() {
+  if [ "$CI" == "true" ]; then       # If we're in a CI system
+    if [ ! -d "node_modules" ]; then # If we don't have any node_modules (CircleCI cache miss scenario), run yarn install --frozen-lockfile.  Otherwise, we're all set, do nothing.
+      yarn install --frozen-lockfile
+    fi
+  else # We're not in a CI system, let's yarn install
+    yarn install
+  fi
+}
+
+install_deps
+
 if [[ $1 == "" ]] ; then
     echo 'ERROR:  You must pass a stage to destroy.  Ex. sh scripts/destroy.sh my-stage-name'
     exit 1
@@ -183,3 +195,10 @@ apiGatewayExecutionLogs=($(aws logs describe-log-groups --query "logGroups[*].lo
 if [[ -n $apiGatewayExecutionLogs ]]; then
   aws logs delete-log-group --log-group-name $apiGatewayExecutionLogs
 fi
+
+# Cleanup bigmac topics for branch
+data='{"project":"mfp","stage":"'"$stage"'"}'
+pushd services/topics
+install_deps
+sls invoke --stage main --function deleteTopics --data $data
+popd

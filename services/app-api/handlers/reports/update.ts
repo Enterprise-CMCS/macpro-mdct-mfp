@@ -2,8 +2,8 @@ import handler from "../handler-lib";
 import { fetchReport } from "./fetch";
 // utils
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import { hasReportPathParams } from "../../utils/dynamo/hasReportPathParams";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 import s3Lib, {
   getFieldDataKey,
   getFormTemplateKey,
@@ -23,21 +23,13 @@ import {
   isComplete,
 } from "../../utils/validation/completionStatus";
 // types
-import { isState, ReportJson, StatusCodes, UserRoles } from "../../utils/types";
+import { ReportJson, StatusCodes, UserRoles } from "../../utils/types";
 import { removeNotApplicablePopsFromInitiatives } from "../../utils/data/data";
 
 export const updateReport = handler(async (event, context) => {
-  const requiredParams = ["reportType", "id", "state"];
-  if (!hasReportPathParams(event.pathParameters!, requiredParams)) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.NO_KEY,
-    };
-  }
-
-  const { state } = event.pathParameters!;
-
-  if (!isState(state)) {
+  const { allParamsValid, reportType, state } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
     return {
       status: StatusCodes.BAD_REQUEST,
       body: error.NO_KEY,
@@ -118,10 +110,10 @@ export const updateReport = handler(async (event, context) => {
     };
   }
 
-  const { formTemplateId, fieldDataId, reportType } = currentReport;
+  const { formTemplateId, fieldDataId } = currentReport;
 
-  const reportBucket = reportBuckets[reportType as keyof typeof reportBuckets];
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
+  const reportBucket = reportBuckets[reportType];
+  const reportTable = reportTables[reportType];
 
   if (!formTemplateId || !fieldDataId) {
     return {
