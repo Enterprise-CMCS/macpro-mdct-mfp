@@ -189,7 +189,6 @@ describe("ReportProvider", () => {
   });
 
   it("should provide an error when reports for a state cannot be fetched", async () => {
-    jest.clearAllMocks();
     (getReportsByState as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("FetchByState");
     await userEvent.click(button);
@@ -208,7 +207,6 @@ describe("ReportProvider", () => {
   });
 
   it("should provide an error when reports for SAR creation cannot be fetched", async () => {
-    jest.clearAllMocks();
     (getReportsByState as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("FetchForSar");
     await userEvent.click(button);
