@@ -55,3 +55,4 @@ jobs:
           assign-jira-ticket-to: "MWTW"
           scan-output-path: "snyk_output.txt"
           scan-type: "snyk"
+          major-version-only: 'true'
