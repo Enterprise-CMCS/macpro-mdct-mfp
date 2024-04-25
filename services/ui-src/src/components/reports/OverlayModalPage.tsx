@@ -39,7 +39,9 @@ export const OverlayModalPage = ({
     EntityShape | undefined
   >(undefined);
   const entityType = selectedEntity!.type;
-  const userDisabled = !editable || selectedEntity?.isInitiativeClosed;
+  const isSAR = report?.reportType === ReportType.SAR;
+  const userDisabled =
+    !editable || (!isSAR && selectedEntity?.isInitiativeClosed);
   const objectiveCards: any[] = (route as any).objectiveCards;
 
   const getModalForm = () => {
@@ -88,7 +90,7 @@ export const OverlayModalPage = ({
   } = useDisclosure();
 
   const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setSelectedStepEntity(entity);
+    setSelectedStepEntity(entity);
     addEditEntityModalOnOpenHandler();
   };
 
@@ -138,7 +140,7 @@ export const OverlayModalPage = ({
           <>
             <Button
               sx={sx.addEntityButton}
-              onClick={addEditEntityModalOnOpenHandler}
+              onClick={() => openAddEditEntityModal()}
               leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
             >
               {verbiage.addEntityButtonText}

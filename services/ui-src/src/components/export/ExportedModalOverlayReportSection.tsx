@@ -5,6 +5,7 @@ import {
   ExportedEntityDetailsOverlaySection,
   Alert,
   ExportedOverlayModalReportSection,
+  Table,
 } from "components";
 import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
 // types
@@ -14,6 +15,7 @@ import {
   EntityDetailsOverlayShape,
   EntityDetailsStepTypes,
   EntityShape,
+  ErrorVerbiage,
   FormField,
   FormLayoutElement,
   ModalOverlayReportPageShape,
@@ -32,25 +34,21 @@ import finishedIcon from "assets/icons/icon_check_circle.png";
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
 
-interface AlertVerbiage {
-  [key: string]: { title: string; description: string };
-}
-
 export const ExportedModalOverlayReportSection = ({ section }: Props) => {
   const { report } = useStore() ?? {};
   const entityType = section.entityType;
+  const errorMessage: ErrorVerbiage =
+    alertVerbiage[entityType as keyof typeof alertVerbiage];
 
   const showAlert =
-    report && (alertVerbiage as AlertVerbiage)[entityType]
-      ? getWPAlertStatus(report, entityType)
-      : false;
+    report && errorMessage ? getWPAlertStatus(report, entityType) : false;
   return (
     <>
       {showAlert && (
         <Alert
-          title={(alertVerbiage as AlertVerbiage)[entityType].title}
+          title={errorMessage.title}
           status={AlertTypes.ERROR}
-          description={(alertVerbiage as AlertVerbiage)[entityType].description}
+          description={errorMessage.description}
         />
       )}
       <Box sx={sx.container} data-testid="exportTable">
@@ -131,6 +129,15 @@ export function renderModalOverlayTableBody(
   if (section.pageType === "dynamicModalOverlay") {
     dynamicSection = (section as AnyObject).initiatives;
   }
+
+  const renderInitiativeTitle = (entity: EntityShape, idx: number) => {
+    if (entity.initiative_name) {
+      return entity.isInitiativeClosed
+        ? `${idx + 1}. [Closed] ${entity.initiative_name}`
+        : `${idx + 1}. ${entity.initiative_name}`;
+    }
+    return "Not entered";
+  };
 
   switch (reportType) {
     case ReportType.WP:
@@ -227,12 +234,32 @@ export function renderModalOverlayTableBody(
               </Box>
               <Box>
                 <Heading sx={sx.heading} as="h2">
-                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
+                  {renderInitiativeTitle(entity, idx)}
                   <br />
                   <Text sx={sx.headingSubtitle}>
                     {entity.initiative_wpTopic[0].value}
                   </Text>
                 </Heading>
+
+                {entity.isInitiativeClosed && (
+                  <Box key={`${reportType}${idx}-closeout-info`}>
+                    <Box>
+                      <Table
+                        content={{
+                          headRow: ["Actual end date", "Closed by"],
+                          bodyRows: [
+                            [
+                              entity.closeOutInformation_actualEndDate,
+                              entity.closedBy,
+                            ],
+                          ],
+                        }}
+                        variant="none"
+                        sx={sx.closedByTable}
+                      />
+                    </Box>
+                  </Box>
+                )}
               </Box>
             </Flex>
             {dynamicSection[idx].entitySteps.map(
@@ -378,5 +405,11 @@ const sx = {
     marginTop: "-3rem",
     display: "flex",
     flexDirection: "column",
+  },
+  closedByTable: {
+    th: {
+      width: "2rem",
+      paddingBottom: "0",
+    },
   },
 };

@@ -26,7 +26,8 @@ export const ExportedEntityDetailsOverlaySection = ({
   entity,
   entityStep,
   closed,
-  ...props
+  showHintText,
+  tableSection,
 }: ExportedEntityDetailsOverlaySectionProps) => {
   const { report } = useStore() ?? {};
 
@@ -37,9 +38,9 @@ export const ExportedEntityDetailsOverlaySection = ({
           report,
           entity ?? [],
           entityStep,
-          props.showHintText,
+          showHintText,
           closed,
-          props.tableSection
+          tableSection
         )}
     </Box>
   );

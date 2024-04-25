@@ -3,6 +3,7 @@ import jwtDecode from "jwt-decode";
 import handler from "../handler-lib";
 // utils
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 import {
   error,
   reportBuckets,
@@ -14,35 +15,19 @@ import s3Lib, {
   getFormTemplateKey,
 } from "../../utils/s3/s3-lib";
 import { convertDateUtcToEt } from "../../utils/time/time";
-import { hasReportPathParams } from "../../utils/dynamo/hasReportPathParams";
 // types
-import {
-  isState,
-  StatusCodes,
-  UserRoles,
-  WPReportMetadata,
-} from "../../utils/types";
+import { StatusCodes, UserRoles, WPReportMetadata } from "../../utils/types";
 
 export const submitReport = handler(async (event, _context) => {
-  const requiredParams = ["id", "reportType", "state"];
-  if (
-    !event.pathParameters ||
-    !hasReportPathParams(event.pathParameters!, requiredParams)
-  ) {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
     return {
       status: StatusCodes.BAD_REQUEST,
       body: error.NO_KEY,
     };
   }
 
-  const { id, state, reportType } = event.pathParameters;
-
-  if (!isState(state)) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.NO_KEY,
-    };
-  }
   if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
     return {
       status: StatusCodes.UNAUTHORIZED,
@@ -50,8 +35,8 @@ export const submitReport = handler(async (event, _context) => {
     };
   }
 
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
-  const reportBucket = reportBuckets[reportType as keyof typeof reportBuckets];
+  const reportTable = reportTables[reportType];
+  const reportBucket = reportBuckets[reportType];
 
   // Get report metadata
   const reportMetadataParams = {

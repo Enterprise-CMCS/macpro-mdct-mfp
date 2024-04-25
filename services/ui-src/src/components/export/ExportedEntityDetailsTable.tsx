@@ -19,7 +19,7 @@ import { ExportedEntityDetailsTableRow } from "./ExportedEntityDetailsTableRow";
 export const ExportedEntityDetailsTable = ({
   fields,
   entity,
-  ...props
+  showHintText,
 }: Props) => {
   const { report } = useStore() ?? {};
   const { tableHeaders } = verbiage;
@@ -43,7 +43,7 @@ export const ExportedEntityDetailsTable = ({
         fields!,
         "modalOverlay",
         report,
-        !!props.showHintText,
+        !!showHintText,
         entity.id,
         entityType
       )}

@@ -6,13 +6,14 @@ import {
   ReportShape,
   ReportStatus,
   ReportType,
+  State,
 } from "../types";
 import { fetchReportsByState, fetchReport } from "../../handlers/reports/fetch";
 
 export const createReportName = (
   reportType: string,
   reportPeriod: number,
-  state: string,
+  state: State,
   reportYear?: number,
   workPlan?: ReportMetadataShape
 ) => {
@@ -20,7 +21,7 @@ export const createReportName = (
   const period =
     reportType === ReportType.SAR ? workPlan?.reportPeriod : reportPeriod;
 
-  const fullStateName = States[state as keyof typeof States];
+  const fullStateName = States[state];
   return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
 };
 
