@@ -116,3 +116,11 @@ export const bucketTopics = {
 };
 
 export const formTemplateTableName = process.env.FORM_TEMPLATE_TABLE_NAME!;
+
+export const DEFAULT_TARGET_POPULATION_NAMES = [
+  "Older adults",
+  "Individuals with physical disabilities (PD)",
+  "Individuals with intellectual and developmental disabilities (I/DD)",
+  "Individuals with mental health and substance use disorders (MH/SUD)",
+  "HCBS infrastructure/system-level development",
+];
