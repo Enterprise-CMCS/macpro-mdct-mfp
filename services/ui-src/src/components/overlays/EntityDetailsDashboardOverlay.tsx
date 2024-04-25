@@ -48,6 +48,10 @@ export const EntityDetailsDashboardOverlay = ({
     return { headRow: ["", "", ""] };
   };
 
+  const reportPageTitle = selectedEntity?.isInitiativeClosed
+    ? `[Closed] ${selectedEntity?.initiative_name}`
+    : selectedEntity?.initiative_name;
+
   // EntityRow uses the fieldData to generate, but for this report, we want that information from the steps in the formTemplate
   const formatEntityStep = (entity: EntityShape, step: any) => {
     const newEntity: EntityShape = Object.assign({}, entity);
@@ -100,7 +104,7 @@ export const EntityDetailsDashboardOverlay = ({
           </Button>
           <ReportPageIntro
             text={dashboard?.verbiage?.intro}
-            initiativeName={selectedEntity?.initiative_name}
+            initiativeName={reportPageTitle}
           />
           <Table content={tableHeaders()}>
             {entitySteps?.map((step, index) => (

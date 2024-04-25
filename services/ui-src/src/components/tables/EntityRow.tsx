@@ -11,6 +11,7 @@ import {
   EntityDetailsOverlayTypes,
   EntityDetailsOverlayShape,
   OverlayModalPageShape,
+  ReportType,
 } from "types";
 // utils
 import { useStore, useBreakpoint } from "utils";
@@ -28,6 +29,7 @@ export const EntityRow = ({
   entityType,
   formEntity,
   verbiage,
+  showEntityCloseoutDetails,
   openAddEditEntityModal,
   openDeleteEntityModal,
   openOverlayOrDrawer,
@@ -38,6 +40,7 @@ export const EntityRow = ({
   // check for "other" target population entities
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
   const stepType = formEntity?.stepType;
+  const isSAR = report?.reportType === ReportType.SAR;
 
   const setStatusByType = (entityType: string) => {
     switch (entityType) {
@@ -76,11 +79,15 @@ export const EntityRow = ({
   };
 
   let entityStatus = useMemo(() => {
-    if (OverlayModalTypes.INITIATIVE && formEntity && isInitiativeClosed) {
-      return stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
-        ? EntityStatuses.CLOSE
-        : EntityStatuses.NO_STATUS;
+    if (
+      OverlayModalTypes.INITIATIVE &&
+      formEntity &&
+      isInitiativeClosed &&
+      report?.reportType === ReportType.WP
+    ) {
+      return EntityStatuses.CLOSE;
     }
+
     return setStatusByType(entityType!);
   }, [report, entity]);
 
@@ -148,20 +155,18 @@ export const EntityRow = ({
                   `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
               </Text>
             )}
-            {isInitiativeClosed &&
-              stepType &&
-              stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION && (
-                <Table
-                  content={{
-                    headRow: ["Actual end date", "Closed by"],
-                    bodyRows: [
-                      [entity.closeOutInformation_actualEndDate, closedBy],
-                    ],
-                  }}
-                  variant="none"
-                  sxOverride={sx.table}
-                ></Table>
-              )}
+            {isInitiativeClosed && showEntityCloseoutDetails && (
+              <Table
+                content={{
+                  headRow: ["Actual end date", "Closed by"],
+                  bodyRows: [
+                    [entity.closeOutInformation_actualEndDate, closedBy],
+                  ],
+                }}
+                variant="none"
+                sxOverride={sx.table}
+              ></Table>
+            )}
           </Box>
           <Box
             sx={sx.actionContainer}
@@ -178,7 +183,7 @@ export const EntityRow = ({
                 pl={isMobile ? "0" : "1rem"}
                 pr={isMobile ? "1.5rem" : "2.5rem"}
               >
-                {!editable || isInitiativeClosed
+                {!editable || (!isSAR && isInitiativeClosed)
                   ? verbiage.readOnlyEntityButtonText
                   : verbiage.editEntityButtonText}
               </Button>
@@ -194,7 +199,7 @@ export const EntityRow = ({
               disabled={entityStatus === EntityStatuses.DISABLED}
               aria-label="edit button"
             >
-              {!editable || isInitiativeClosed
+              {!editable || (!isSAR && isInitiativeClosed)
                 ? verbiage.readOnlyEntityDetailsButtonText
                 : verbiage.enterEntityDetailsButtonText}
             </Button>
@@ -302,6 +307,7 @@ const sx = {
       border: "none",
       fontWeight: "bold",
       color: "palette.gray_medium",
+      width: "2rem",
     },
   },
 };

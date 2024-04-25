@@ -19,6 +19,7 @@ import { ExportedEntityDetailsTableRow } from "./ExportedEntityDetailsTableRow";
 export const ExportedEntityDetailsTable = ({
   fields,
   entity,
+  showHintText,
   ...props
 }: Props) => {
   const { report } = useStore() ?? {};
@@ -30,7 +31,7 @@ export const ExportedEntityDetailsTable = ({
     tableHeaders.indicator,
     tableHeaders.response,
   ];
-  const hideHintText = !props.showHintText;
+  const hideHintText = !showHintText;
 
   return (
     <Table
