@@ -1062,12 +1062,15 @@
                           "children": [
                             {
                               "id": "quarterlyProjections",
-                              "type": "number",
+                              "type": "text",
                               "validation": {
-                                "type": "number",
+                                "type": "text",
                                 "parentFieldName": "evaluationPlan_includesTargets",
                                 "parentOptionId": "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
                                 "nested": true
+                              },
+                              "props": {
+                                "className": "number-field"
                               },
                               "transformation": {
                                 "rule": "nextTwelveQuarters"
