@@ -107,6 +107,9 @@ export const DashboardPage = ({ reportType }: Props) => {
   // if a user is an admin type, use the selected state, otherwise use their assigned state
   const activeState = userIsAdmin ? adminSelectedState : userState;
 
+  const showSarAlert =
+    reportType === ReportType.SAR && !workPlanToCopyFrom && reportsToDisplay;
+
   useEffect(() => {
     // if no activeState, go to homepage
     if (!activeState) {
@@ -282,6 +285,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   } = useDisclosure();
 
   const fullStateName = States[activeState as keyof typeof States];
+
   return (
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
@@ -293,18 +297,16 @@ export const DashboardPage = ({ reportType }: Props) => {
       </Box>
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
-        {reportType === ReportType.SAR &&
-          !workPlanToCopyFrom &&
-          reportsToDisplay && (
-            <Alert
-              title={sarVerbiage.alertBanner.title}
-              showIcon={true}
-              icon={alertIcon}
-              status={AlertTypes.ERROR}
-              description={sarVerbiage.alertBanner.body}
-              sx={sx.alertBanner}
-            />
-          )}
+        {showSarAlert && (
+          <Alert
+            title={sarVerbiage.alertBanner.title}
+            showIcon={true}
+            icon={alertIcon}
+            status={AlertTypes.ERROR}
+            description={sarVerbiage.alertBanner.body}
+            sx={sx.alertBanner}
+          />
+        )}
         <Heading as="h1" sx={sx.headerText}>
           {fullStateName} {intro.header}
         </Heading>
