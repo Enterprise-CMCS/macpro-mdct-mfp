@@ -4,10 +4,19 @@ import { fetchReport } from "./fetch";
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { error, reportTables } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 // types
 import { StatusCodes, UserRoles } from "../../utils/types";
 
 export const archiveReport = handler(async (event, context) => {
+  const { allParamsValid, reportType } = parseSpecificReportParameters(event);
+  if (!allParamsValid) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.NO_KEY,
+    };
+  }
+
   // Return a 403 status if the user is not an admin.
   if (!hasPermissions(event, [UserRoles.ADMIN, UserRoles.APPROVER])) {
     return {
@@ -31,9 +40,8 @@ export const archiveReport = handler(async (event, context) => {
   if (getCurrentReport?.body) {
     const currentReport = JSON.parse(getCurrentReport.body);
     const currentArchivedStatus = currentReport?.archived;
-    const reportType = currentReport?.reportType;
 
-    const reportTable = reportTables[reportType as keyof typeof reportTables];
+    const reportTable = reportTables[reportType];
 
     // Delete raw data prior to updating
     delete currentReport.fieldData;

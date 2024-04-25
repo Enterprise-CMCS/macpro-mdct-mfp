@@ -92,14 +92,12 @@ export const AddEditReportModal = ({
   const prepareSarPayload = (formData: any) => {
     const submissionName = formData["associatedWorkPlan"];
     const stateOrTerritory = formData["stateOrTerritory"];
-    const reportPeriod = formData["reportPeriod"];
     const populations = formData["populations"];
     const finalSar = formData["finalSar"];
     return {
       metadata: {
         submissionName,
         stateOrTerritory,
-        reportPeriod,
         lastAlteredBy: full_name,
         locked: false,
         previousRevisions: [],
@@ -109,7 +107,6 @@ export const AddEditReportModal = ({
       fieldData: {
         submissionName,
         stateOrTerritory,
-        reportPeriod,
       },
     };
   };
