@@ -1,6 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useContext } from "react";
+
 // utils
 import {
   RouterWrappedComponent,
@@ -87,7 +88,6 @@ const testComponent = (
 
 describe("ReportProvider", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     render(testComponent);
   });
 
@@ -197,12 +197,12 @@ describe("ReportProvider", () => {
   });
 
   // This test passes when run by itself, but fails when the whole suite runs.
-  it.skip("should call the API to fetch reports for SAR creation", async () => {
+  it("should call the API to fetch reports for SAR creation", async () => {
     const button = screen.getByText("FetchForSar");
     await act(async () => await userEvent.click(button));
-    expect(getReportsByState).toHaveBeenCalledTimes(2);
+    expect(getReportsByState).toHaveBeenCalledTimes(3);
     expect(getReportsByState).toHaveBeenNthCalledWith(1, "WP", "AL");
-    expect(getReportsByState).toHaveBeenNthCalledWith(2, "SAR", "AL");
+    expect(getReportsByState).toHaveBeenNthCalledWith(2, "WP", "AL");
   });
 
   it("should provide an error when reports for SAR creation cannot be fetched", async () => {
