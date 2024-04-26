@@ -467,12 +467,13 @@ export const quantitativeQuarters = (
 
       const formFieldTarget: FormField = {
         id: `objectiveTargets_projections_${reportYear}Q${quarterNumber}`,
-        type: "number",
-        validation: "number",
+        type: "text",
+        validation: "text",
         props: {
           label: "Target Value",
           hint: "Auto-populates from Work Plan.",
           disabled: true,
+          className: "number-field",
         },
       };
       fieldsToAppend.push(formFieldTarget);
