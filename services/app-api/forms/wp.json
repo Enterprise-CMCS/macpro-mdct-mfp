@@ -1050,7 +1050,7 @@
                     "validation": "radio",
                     "props": {
                       "label": "Does the performance measure include quantitative targets?",
-                      "hint": "Note: If 'Yes', fields use calendar year quarters. Fields require whole numbers. Enter N/A for quarters you do not expect to report.",
+                      "hint": "Fields allow percentages or numbers. If you wish to report percentages, enter the number in the fields and the percentage sign “%”. Enter N/A for quarters you do not expect to report.",
                       "choices": [
                         {
                           "id": "UL4dAeyyvCFAXttxZioacR",
