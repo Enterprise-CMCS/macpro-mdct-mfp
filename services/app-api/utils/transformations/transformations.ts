@@ -457,10 +457,11 @@ export const quantitativeQuarters = (
 
       const formFieldActual: FormField = {
         id: `objectiveTargets_actual_${reportYear}Q${quarterNumber}`,
-        type: "number",
-        validation: "number",
+        type: "text",
+        validation: "text",
         props: {
           label: "Actual value",
+          className: "number-field",
         },
       };
       fieldsToAppend.push(formFieldActual);
