@@ -64,9 +64,7 @@ export const renderOverlayEntityDataCell = (
     !parentFieldCheckedChoiceIds?.includes(entity.id);
   return (
     <Box>
-      <Text>
-        {renderResponseData(formField, entity[formField.id], notApplicable)}
-      </Text>
+      {renderResponseData(formField, entity[formField.id], notApplicable)}
     </Box>
   );
 };
