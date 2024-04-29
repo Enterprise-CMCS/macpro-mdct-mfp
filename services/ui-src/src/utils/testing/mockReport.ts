@@ -240,6 +240,7 @@ export const mockWPDynamoData = {
 
 export const mockWPFullReport = {
   ...mockReportKeys,
+  id: "mock-wp-full-report-id",
   reportType: "WP",
   formTemplate: mockReportJson,
   submissionName: "2023 - Alabama 1",
@@ -267,6 +268,7 @@ export const mockWPFullReport = {
 
 export const mockWPCopiedReport = {
   ...mockReportKeys,
+  id: "mock-wp-copied-report-id",
   reportType: "WP",
   formTemplate: mockReportJson,
   submissionName: "2023 - Alabama 1",
@@ -295,6 +297,7 @@ export const mockWPCopiedReport = {
 
 export const mockSARFullReport = {
   ...mockReportKeys,
+  id: "mock-sar-full-report-id",
   reportType: "SAR",
   formTemplate: mockReportJson,
   submissionName: "2023 - Alabama 1",
@@ -321,6 +324,7 @@ export const mockSARFullReport = {
 
 export const mockWPSubmittedReport = {
   ...mockReportKeys,
+  id: "mock-wp-submitted-report-id",
   reportType: "WP",
   formTemplate: mockReportJson,
   submissionName: "2023 - Alabama 1",
@@ -346,6 +350,7 @@ export const mockWPSubmittedReport = {
 
 export const mockWPApprovedFullReport = {
   ...mockReportKeys,
+  id: "mock-wp-approved-full-report-id",
   reportType: "WP",
   formTemplate: mockReportJson,
   submissionName: "2023 - Alabama 1",
