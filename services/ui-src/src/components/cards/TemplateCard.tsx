@@ -3,14 +3,24 @@ import { Button, Flex, Heading, Image, Text, Link } from "@chakra-ui/react";
 import { Card, TemplateCardAccordion } from "components";
 // utils
 import { useNavigate } from "react-router-dom";
-import { useBreakpoint } from "utils";
+import { useBreakpoint, getSignedTemplateUrl } from "utils";
 import { AnyObject } from "types";
 // assets
 import downloadIcon from "assets/icons/icon_download.png";
 import nextIcon from "assets/icons/icon_next_white.png";
 import spreadsheetIcon from "assets/icons/icon_spreadsheet.png";
 
+const downloadTemplate = async (templateName: string) => {
+  const signedUrl = await getSignedTemplateUrl(templateName);
+  const link = document.createElement("a");
+  link.setAttribute("target", "_blank");
+  link.setAttribute("href", signedUrl);
+  link.click();
+  link.remove();
+};
+
 export const TemplateCard = ({
+  templateName,
   verbiage,
   cardprops,
   isHidden,
@@ -54,6 +64,9 @@ export const TemplateCard = ({
                     height="1.5rem"
                   />
                 }
+                onClick={async () => {
+                  await downloadTemplate(templateName);
+                }}
               >
                 {verbiage.downloadText}
               </Button>
