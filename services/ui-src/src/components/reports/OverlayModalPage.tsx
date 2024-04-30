@@ -242,7 +242,10 @@ const sx = {
     color: "palette.primary",
     display: "flex",
     position: "relative",
-    right: "3rem",
+    right: 0,
+    ".tablet &": {
+      right: "3rem",
+    },
     marginBottom: "2rem",
     marginTop: "-2rem",
   },
