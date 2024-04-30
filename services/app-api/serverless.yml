@@ -123,6 +123,8 @@ provider:
             - "s3:ListBucket"
             - "s3:PutObject"
           Resource:
+            - "arn:aws:s3:::${self:custom.templateBucket}"
+            - "arn:aws:s3:::${self:custom.templateBucket}/templates/*"
             - "arn:aws:s3:::${self:custom.wpFormBucket}"
             - "arn:aws:s3:::${self:custom.wpFormBucket}/formTemplates/*"
             - "arn:aws:s3:::${self:custom.wpFormBucket}/fieldData/*"
