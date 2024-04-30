@@ -221,7 +221,11 @@ const sx = {
   ".ds-c-field": {
     margin: "0.5rem 0 0.25rem",
   },
-
+  ".number-field .ds-c-field": {
+    maxWidth: "15rem",
+    paddingLeft: ".5rem",
+    paddingRight: ".5rem",
+  },
   // disabled field
   ".ds-c-field[disabled]": {
     color: "palette.base",
