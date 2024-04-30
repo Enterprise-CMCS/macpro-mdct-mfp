@@ -533,7 +533,7 @@ const sxChildStyles = {
     },
     img: {
       height: "1.5rem",
-      minWidth: "21px",
+      minWidth: "1.5rem",
       marginLeft: "0.5rem",
       ".tablet &, .mobile &": {
         marginLeft: 0,
