@@ -35,6 +35,7 @@
     "@aws-sdk/client-s3": "^3.540.0",
     "@aws-sdk/client-ssm": "^3.540.0",
     "@aws-sdk/lib-dynamodb": "^3.540.0",
+    "@aws-sdk/s3-request-presigner": "^3.490.0",
     "aws-jwt-verify": "^3.1.0",
     "dompurify": "^2.4.9",
     "jsdom": "^20.0.0",

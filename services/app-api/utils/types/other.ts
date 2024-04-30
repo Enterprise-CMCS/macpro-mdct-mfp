@@ -149,6 +149,10 @@ export interface FormTemplate {
   reportType: string;
 }
 
+export const enum TemplateKeys {
+  WP = "templates/MFP-Work-Plan-Help-File.pdf",
+}
+
 /**
  * S3Create event
  * https://docs.aws.amazon.com/AmazonS3/latest/dev/notification-content-structure.html

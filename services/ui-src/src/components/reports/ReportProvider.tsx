@@ -133,6 +133,7 @@ export const ReportProvider = ({ children }: Props) => {
           state: selectedState,
           id: lastFoundSubmission["id"],
         };
+
         const workPlan = await getReport(reportKeys);
         setWorkPlanToCopyFrom(workPlan);
       }
