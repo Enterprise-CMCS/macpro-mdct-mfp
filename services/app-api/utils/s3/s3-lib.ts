@@ -4,7 +4,9 @@ import {
   PutObjectCommandInput,
   GetObjectCommandInput,
   GetObjectCommand,
+  GetObjectRequest,
 } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { logger } from "../debugging/debug-lib";
 import { buckets, error } from "../constants/constants";
 import { State } from "../types";
@@ -45,6 +47,11 @@ export default {
     } catch {
       throw new Error(error.S3_OBJECT_GET_ERROR);
     }
+  },
+  getSignedDownloadUrl: async (params: GetObjectRequest) => {
+    return await getSignedUrl(client, new GetObjectCommand(params), {
+      expiresIn: 3600,
+    });
   },
 };
 
