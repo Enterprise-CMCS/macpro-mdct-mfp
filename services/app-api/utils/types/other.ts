@@ -135,7 +135,7 @@ const states = [
   "WI",
   "WY",
 ] as const;
-export type State = (typeof states)[number];
+export type State = typeof states[number];
 
 export const isState = (state: unknown): state is State => {
   return states.includes(state as State);
