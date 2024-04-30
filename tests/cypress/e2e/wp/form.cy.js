@@ -31,8 +31,12 @@ describe("MFP Work Plan E2E Submission", () => {
 
     //Find our new program and open it
     cy.get("table").within(() => {
-      cy.get("td").as("workplan").contains("MFP Work Plan");
-      cy.get("@workplan").parent().as("workplancontainer");
+      cy.get("tr")
+        .as("workplan")
+        .contains(
+          `District of Columbia MFP Work Plan ${currentYear} - Period 1`
+        );
+      cy.get("@workplan").as("workplancontainer");
       cy.get("@workplancontainer")
         .find('button:contains("Edit")')
         .as("editbutton");
@@ -43,6 +47,8 @@ describe("MFP Work Plan E2E Submission", () => {
     //Using the json as a guide, traverse all the routes/forms and fill it out dynamically
     const template = wpTemplate;
     traverseRoutes(template.routes);
+
+    cy.url().should("include", "/review-and-submit");
 
     // Confirm form is submittable
     cy.get('div[role*="alert"]').should("not.exist");
@@ -73,12 +79,12 @@ describe("MFP Work Plan E2E Submission", () => {
 
     //Find our new program and open it
     cy.get("table").within(() => {
-      cy.get("td")
+      cy.get("tr")
         .as("workplan")
         .contains(
           `District of Columbia MFP Work Plan ${currentYear} - Period 1`
         );
-      cy.get("@workplan").parent().as("workplancontainer");
+      cy.get("@workplan").as("workplancontainer");
       cy.get("@workplancontainer")
         .find('button:contains("View")')
         .as("viewButton");
@@ -86,19 +92,9 @@ describe("MFP Work Plan E2E Submission", () => {
       cy.get("@viewButton").first().click();
     });
 
-    cy.get(".chakra-link .level-1")
-      .filter(":visible")
-      .eq(3)
-      .parent()
-      .parent()
-      .click();
-    cy.get(".chakra-link .level-1")
-      .filter(":visible")
-      .eq(3)
-      .parent()
-      .should("have.class", "selected");
+    cy.get("p:contains('Review & Submit')").click();
 
-    cy.contains("Review & Submit").should("be.visible");
+    cy.url().should("include", "/review-and-submit");
 
     cy.get(`button:contains("Unlock")`).focus().click();
     cy.wait(1500);
@@ -120,12 +116,12 @@ describe("MFP Work Plan E2E Submission", () => {
 
     //Find our new program and open it
     cy.get("table").within(() => {
-      cy.get("td")
+      cy.get("tr")
         .as("workplan")
         .contains(
           `District of Columbia MFP Work Plan ${currentYear} - Period 1`
         );
-      cy.get("@workplan").parent().as("workplancontainer");
+      cy.get("@workplan").as("workplancontainer");
       cy.get("@workplancontainer")
         .find('button:contains("Edit")')
         .as("editButton");
@@ -133,20 +129,9 @@ describe("MFP Work Plan E2E Submission", () => {
       cy.get("@editButton").first().click();
     });
 
-    //Using the json as a guide, traverse all the routes/forms and fill it out dynamically
-    cy.get(".chakra-link .level-1")
-      .filter(":visible")
-      .eq(3)
-      .parent()
-      .parent()
-      .click();
-    cy.get(".chakra-link .level-1")
-      .filter(":visible")
-      .eq(3)
-      .parent()
-      .should("have.class", "selected");
+    cy.get("p:contains('Review & Submit')").click();
 
-    cy.contains("Review & Submit").should("be.visible");
+    cy.url().should("include", "/review-and-submit");
 
     // Confirm form is submittable
     cy.get('div[role*="alert"]').should("not.exist");
