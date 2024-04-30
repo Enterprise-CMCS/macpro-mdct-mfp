@@ -50,6 +50,7 @@ custom:
   sarFormBucket: ${env:SAR_FORM_BUCKET, cf:database-${self:custom.stage}.SarFormBucketName}
   sarReportTableName: ${env:SAR_REPORT_TABLE_NAME, cf:database-${self:custom.stage}.SarReportTableName}
   sarReportTableStreamArn: ${env:SAR_REPORT_TABLE_STREAM_ARN, cf:database-${self:custom.stage}.SarReportTableStreamArn, cf:database-main.SarReportTableStreamArn}
+  templateBucket: ${env:TEMPLATE_BUCKET, cf:uploads-${self:custom.stage}.AttachmentsBucketName}
   webAclName: ${self:service}-${self:custom.stage}-webacl-waf
   associateWaf:
     name: ${self:custom.webAclName}
@@ -122,6 +123,8 @@ provider:
             - "s3:ListBucket"
             - "s3:PutObject"
           Resource:
+            - "arn:aws:s3:::${self:custom.templateBucket}"
+            - "arn:aws:s3:::${self:custom.templateBucket}/templates/*"
             - "arn:aws:s3:::${self:custom.wpFormBucket}"
             - "arn:aws:s3:::${self:custom.wpFormBucket}/formTemplates/*"
             - "arn:aws:s3:::${self:custom.wpFormBucket}/fieldData/*"
@@ -147,6 +150,7 @@ provider:
     SAR_REPORT_TABLE_NAME: ${self:custom.sarReportTableName}
     SAR_FORM_BUCKET: ${self:custom.sarFormBucket}
     STAGE: ${self:custom.stage}
+    TEMPLATE_BUCKET: ${self:custom.templateBucket}
 
 functions:
   createBanner:
@@ -185,6 +189,18 @@ functions:
             parameters:
               paths:
                 bannerId: true
+  fetchTemplate:
+    handler: handlers/templates/fetch.fetchTemplate
+    events:
+      - http:
+          path: templates/{templateName}
+          method: get
+          cors: true
+          authorizer: ${self:custom.authValue.${self:custom.stage}, ""}
+          request:
+            parameters:
+              paths:
+                templateName: true
   archiveReport:
     handler: handlers/reports/archive.archiveReport
     events:
