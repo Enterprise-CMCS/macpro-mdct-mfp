@@ -183,7 +183,7 @@ describe("Test AddEditEntityModal functionality", () => {
     });
 
     expect(mockUpdateReport).toHaveBeenCalledWith(
-      mockReportKeys,
+      { ...mockReportKeys, id: "mock-wp-full-report-id" },
       expectedUpdateCallPayload
     );
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
@@ -211,7 +211,7 @@ describe("Test AddEditEntityModal functionality", () => {
     ];
 
     expect(mockUpdateReport).toHaveBeenCalledWith(
-      mockReportKeys,
+      { ...mockReportKeys, id: "mock-wp-full-report-id" },
       expectedUpdateCallPayload
     );
 

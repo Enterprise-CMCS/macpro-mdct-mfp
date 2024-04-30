@@ -98,8 +98,6 @@ export const getInitiativeStatus = (
   isPdf?: boolean,
   ignore?: string[]
 ) => {
-  if (entity?.isInitiativeClosed) return EntityStatuses.CLOSE;
-
   let reportRoute:
     | ModalOverlayReportPageShape
     | DynamicModalOverlayReportPageShape;
@@ -114,6 +112,11 @@ export const getInitiativeStatus = (
       reportChild = (
         reportRoute?.children! as EntityDetailsOverlayShape[]
       )?.find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
+
+      // Only show the close icon if inside the WP; SAR can still edit entity
+      if (entity?.isInitiativeClosed) {
+        return EntityStatuses.CLOSE;
+      }
       break;
     }
     case "SAR": {

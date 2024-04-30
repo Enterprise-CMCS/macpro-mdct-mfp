@@ -154,6 +154,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
                     entityType={entityType}
                     entityInfo={entityInfo}
                     verbiage={verbiage}
+                    showEntityCloseoutDetails={true}
                     openOverlayOrDrawer={openEntityDetailsOverlay}
                     openAddEditEntityModal={openAddEditEntityModal}
                     openDeleteEntityModal={openDeleteEntityModal}

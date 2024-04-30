@@ -32,20 +32,7 @@
             },
             {
               "type": "html",
-              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The MFP Work Plan presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The MFP Work Plan enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the MFP Work Plan describes state or territory initiatives and sets performance measures, the MFP Semi-Annual Progress Report will capture progress on these initiatives and performance measures, alongside other information. <br><br> CMS may amend or add new MFP Work Plan fields during the Demonstration period. For additional guidance on completing this form, please see the "
-            },
-            {
-              "type": "externalLink",
-              "content": "User Guide and Help File",
-              "props": {
-                "href": "google.com",
-                "target": "_blank",
-                "aria-label": "User Guide and Help File (Link opens in new tab)"
-              }
-            },
-            {
-              "type": "html",
-              "content": "."
+              "content": " as “increasing the use of home and community-based, rather than institutional, long-term care services.” The MFP Work Plan presents MFP Demonstration initiatives that support the state or territory’s unique rebalancing goals and objectives. The MFP Work Plan enables states or territories and Centers for Medicare & Medicaid Services (CMS) to monitor state or territory-specific initiatives throughout the grant and make course corrections where needed. While the MFP Work Plan describes state or territory initiatives and sets performance measures, the MFP Semi-Annual Progress Report will capture progress on these initiatives and performance measures, alongside other information. CMS may amend or add new MFP Work Plan fields during the Demonstration period."
             }
           ]
         },
@@ -1050,7 +1037,7 @@
                     "validation": "radio",
                     "props": {
                       "label": "Does the performance measure include quantitative targets?",
-                      "hint": "Note: If 'Yes', fields use calendar year quarters. Fields require whole numbers. Enter N/A for quarters you do not expect to report.",
+                      "hint": "Fields allow percentages or numbers. If you wish to report percentages, enter the number in the fields and the percentage sign “%”. Enter N/A for quarters you do not expect to report.",
                       "choices": [
                         {
                           "id": "UL4dAeyyvCFAXttxZioacR",
@@ -1062,12 +1049,15 @@
                           "children": [
                             {
                               "id": "quarterlyProjections",
-                              "type": "number",
+                              "type": "text",
                               "validation": {
-                                "type": "number",
+                                "type": "text",
                                 "parentFieldName": "evaluationPlan_includesTargets",
                                 "parentOptionId": "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
                                 "nested": true
+                              },
+                              "props": {
+                                "className": "number-field"
                               },
                               "transformation": {
                                 "rule": "nextTwelveQuarters"
