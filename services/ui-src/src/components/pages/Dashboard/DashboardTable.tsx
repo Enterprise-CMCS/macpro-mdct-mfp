@@ -79,7 +79,6 @@ export const DashboardTable = ({
         <Td sx={sxOverride.editReportButtonCell}>
           <Button
             variant="outline"
-            data-testid="enter-report"
             onClick={() => enterSelectedReport(report)}
             isDisabled={report?.archived}
           >

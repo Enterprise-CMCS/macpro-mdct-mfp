@@ -31,11 +31,7 @@ export const MobileDashboardTable = ({
             {reportType === "SAR" && (
               <Box sx={sxOverride.editReport}>
                 <button onClick={() => openAddEditReportModal(report)}>
-                  <Image
-                    src={editIcon}
-                    data-testid="mobile-edit-report"
-                    alt="Edit Report"
-                  />
+                  <Image src={editIcon} alt="Edit Report" />
                 </button>
               </Box>
             )}
