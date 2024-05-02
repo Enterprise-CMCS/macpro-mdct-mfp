@@ -35,7 +35,7 @@ export default {
       props: {
         hint: "Select state or territory:",
         options: dropdownOptions,
-        "aria-label":
+        ariaLabel:
           "List of states, including District of Columbia and Puerto Rico",
       },
     },
