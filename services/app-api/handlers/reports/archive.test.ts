@@ -1,4 +1,3 @@
-import { fetchReport } from "./fetch";
 import { archiveReport } from "./archive";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
@@ -8,8 +7,13 @@ import {
 } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
 import dynamodbLib from "../../utils/dynamo/dynamodb-lib";
+import { getReportMetadata } from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+
+jest.mock("../../storage/reports", () => ({
+  getReportMetadata: jest.fn(),
+}));
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockResolvedValue(true),
@@ -17,11 +21,6 @@ jest.mock("../../utils/auth/authorization", () => ({
 }));
 
 const mockAuthUtil = require("../../utils/auth/authorization");
-
-jest.mock("./fetch");
-const mockedFetchReport = fetchReport as jest.MockedFunction<
-  typeof fetchReport
->;
 
 const mockProxyEvent: APIGatewayProxyEvent = {
   ...proxyEvent,
@@ -47,14 +46,7 @@ describe("Test archiveReport method", () => {
     const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
     dynamoPutSpy.mockResolvedValue(mockDynamoPutCommandOutput);
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: JSON.stringify(mockWPReport),
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res: any = await archiveReport(archiveEvent, null);
     const body = JSON.parse(res.body);
     expect(dynamoPutSpy).toHaveBeenCalled();
@@ -64,14 +56,7 @@ describe("Test archiveReport method", () => {
 
   test("Test archive report with no existing record throws 404", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: undefined!,
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await archiveReport(archiveEvent, null);
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
@@ -79,14 +64,7 @@ describe("Test archiveReport method", () => {
 
   test("Test archive report without admin permissions throws 403", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(false);
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: undefined!,
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await archiveReport(archiveEvent, null);
     expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(res.body).toContain(error.UNAUTHORIZED);
