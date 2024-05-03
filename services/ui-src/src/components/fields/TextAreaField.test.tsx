@@ -23,7 +23,7 @@ const textAreaFieldComponent = (
 describe("Test TextAreaField component", () => {
   test("TextAreaField is visible", () => {
     render(textAreaFieldComponent);
-    const textAreaField = screen.getByTestId("test-text-area-field");
+    const textAreaField = screen.getByRole("textbox");
     expect(textAreaField).toBeVisible();
   });
 });
