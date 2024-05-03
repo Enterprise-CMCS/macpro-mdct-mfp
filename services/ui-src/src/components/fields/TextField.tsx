@@ -135,7 +135,6 @@ export const TextField = ({
         onBlur={(e) => onBlurHandler(e)}
         errorMessage={errorMessage}
         value={displayValue}
-        {...props}
       />
     </Box>
   );
