@@ -533,12 +533,9 @@ const sxChildStyles = {
       width: "2rem",
     },
     img: {
-      height: "1.5rem",
-      minWidth: "21px",
-      marginLeft: "0.5rem",
-      ".tablet &, .mobile &": {
-        marginLeft: 0,
-      },
+      minHeight: "1.5rem",
+      width: "1.5rem",
+      marginLeft: 0,
     },
   },
   sarSubmissionNameText: {
