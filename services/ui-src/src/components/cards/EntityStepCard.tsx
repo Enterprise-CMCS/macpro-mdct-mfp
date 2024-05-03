@@ -241,7 +241,8 @@ const sx = {
     ".delete-entity-button": {
       position: "absolute",
       right: "-2rem",
-      height: "1rem",
+      height: "1.5rem",
+      width: "1.5rem",
       ".mobile &": {
         right: "-1.5rem",
       },
@@ -290,7 +291,6 @@ const sx = {
     },
   },
   deleteButtonImage: {
-    height: "1.25rem",
     _hover: {
       filter: svgFilters.primary_darker,
     },
