@@ -63,7 +63,7 @@ Cypress.Commands.add("archiveAnyExistingWorkPlans", () => {
   ).select("DC");
   cy.get('[id="report-WP"]').click();
   cy.contains("Go to Report Dashboard").click();
-  cy.wait(3000);
+  cy.wait(5000);
 
   cy.get("table").then(($table) => {
     if ($table.find('button:contains("Archive")').length > 0) {
