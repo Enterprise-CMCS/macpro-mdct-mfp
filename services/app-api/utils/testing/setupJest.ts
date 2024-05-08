@@ -1,5 +1,10 @@
 import { ServerSideEncryption } from "@aws-sdk/client-s3";
 
+process.env.WP_REPORT_TABLE_NAME = "local-wp-reports";
+process.env.SAR_REPORT_TABLE_NAME = "local-sar-reports";
+process.env.WP_FORM_BUCKET = "database-local-wp";
+process.env.SAR_FORM_BUCKET = "database-local-sar";
+
 export const mockS3PutObjectCommandOutput = {
   $metadata: { attempts: 1 },
   ETag: "some etag value",

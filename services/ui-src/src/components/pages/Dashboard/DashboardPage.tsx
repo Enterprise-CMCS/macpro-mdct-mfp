@@ -101,11 +101,12 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
   const { intro, body } = dashboardVerbiage;
 
-  // if an admin has selected a state, retrieve it from local storage
+  // if an admin or a read-only user has selected a state, retrieve it from local storage
   const adminSelectedState = localStorage.getItem("selectedState") || undefined;
 
-  // if a user is an admin type, use the selected state, otherwise use their assigned state
-  const activeState = userIsAdmin ? adminSelectedState : userState;
+  // if a user is an admin or a read-only type, use the selected state, otherwise use their assigned state
+  const activeState =
+    userIsAdmin || userIsReadOnly ? adminSelectedState : userState;
 
   const showSarAlert =
     reportType === ReportType.SAR && !workPlanToCopyFrom && reportsToDisplay;
@@ -532,12 +533,9 @@ const sxChildStyles = {
       width: "2rem",
     },
     img: {
-      height: "1.5rem",
-      minWidth: "21px",
-      marginLeft: "0.5rem",
-      ".tablet &, .mobile &": {
-        marginLeft: 0,
-      },
+      minHeight: "1.5rem",
+      width: "1.5rem",
+      marginLeft: 0,
     },
   },
   sarSubmissionNameText: {

@@ -329,7 +329,10 @@ const sx = {
     color: "palette.primary",
     display: "flex",
     position: "relative",
-    right: "3rem",
+    right: 0,
+    ".tablet &": {
+      right: "3rem",
+    },
     marginBottom: "2rem",
     marginTop: "-2rem",
   },
@@ -339,7 +342,8 @@ const sx = {
   },
   backIcon: {
     color: "palette.primary",
-    height: "1rem",
+    height: "1.5rem",
+    width: "1.5rem",
   },
   closeIcon: {
     width: "0.85rem",

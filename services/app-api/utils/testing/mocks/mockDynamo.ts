@@ -1,5 +1,5 @@
 import sign from "jwt-encode";
-import { WPReportMetadata } from "../../types";
+import { ReportMetadataShape, ReportStatus, ReportType } from "../../types";
 import { mockReportKeys } from "../setupJest";
 
 export const mockApiKey = sign(
@@ -32,12 +32,12 @@ export const mockDynamoData = {
   lastAltered: 162515200000,
 };
 
-export const mockDynamoDataWPLocked: WPReportMetadata = {
+export const mockDynamoDataWPLocked: ReportMetadataShape = {
   ...mockReportKeys,
   archived: false,
-  reportType: "WP",
+  reportType: ReportType.WP,
   submissionName: "testProgram",
-  status: "Not started",
+  status: ReportStatus.NOT_STARTED,
   lastAlteredBy: "Thelonious States",
   fieldDataId: "mockReportFieldData",
   formTemplateId: "mockReportJson",
@@ -52,11 +52,11 @@ export const mockDynamoDataWPLocked: WPReportMetadata = {
   dueDate: "11/01/2021",
 };
 
-export const mockDynamoDataWPCompleted: WPReportMetadata = {
+export const mockDynamoDataWPCompleted: ReportMetadataShape = {
   ...mockReportKeys,
-  reportType: "WP",
+  reportType: ReportType.WP,
   submissionName: "testProgram",
-  status: "Not started",
+  status: ReportStatus.NOT_STARTED,
   lastAlteredBy: "Thelonious States",
   fieldDataId: "mockReportFieldData",
   formTemplateId: "mockReportJson",
@@ -68,7 +68,7 @@ export const mockDynamoDataWPCompleted: WPReportMetadata = {
   lastAltered: 162515200000,
   archived: false,
   submittedBy: "",
-  submittedOnDate: "",
+  submittedOnDate: 0,
   submissionCount: 0,
   locked: false,
   previousRevisions: [],
