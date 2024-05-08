@@ -1,3 +1,5 @@
+import { ReportType } from "../types/reports";
+
 export const error = {
   // generic errors
   UNAUTHORIZED: "User is not authorized to access this resource.",
@@ -91,12 +93,12 @@ export enum States {
 
 // REPORTS
 
-export const reportTables = {
+export const reportTables: { [key in ReportType]: string } = {
   SAR: process.env.SAR_REPORT_TABLE_NAME!,
   WP: process.env.WP_REPORT_TABLE_NAME!,
 };
 
-export const reportBuckets = {
+export const reportBuckets: { [key in ReportType]: string } = {
   SAR: process.env.SAR_FORM_BUCKET!,
   WP: process.env.WP_FORM_BUCKET!,
 };

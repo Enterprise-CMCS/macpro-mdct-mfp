@@ -1,5 +1,5 @@
 import { releaseReport } from "./release";
-import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
 import KSUID from "ksuid";
 // utils
@@ -13,10 +13,21 @@ import {
 } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
 import s3Lib from "../../utils/s3/s3-lib";
+import {
+  getReportFieldData,
+  getReportFormTemplate,
+  getReportMetadata,
+} from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
 
-const dynamoClientMock = mockClient(DynamoDBDocumentClient);
+mockClient(DynamoDBDocumentClient);
+
+jest.mock("../../storage/reports", () => ({
+  getReportMetadata: jest.fn(),
+  getReportFieldData: jest.fn(),
+  getReportFormTemplate: jest.fn(),
+}));
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockResolvedValue(true),
@@ -39,24 +50,19 @@ const releaseEvent: APIGatewayProxyEvent = {
 describe("Test releaseReport method", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    dynamoClientMock.reset();
   });
 
   test("Test release report passes with valid data", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    // s3 mocks
-    const s3GetSpy = jest.spyOn(s3Lib, "get");
-    s3GetSpy
-      .mockResolvedValueOnce(mockReportJson)
-      .mockResolvedValueOnce(mockReportFieldData);
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoDataWPLocked);
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
-    // dynamodb mocks
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: mockDynamoDataWPLocked,
-    });
+
     const res = await releaseReport(releaseEvent, null);
     const body = JSON.parse(res.body);
+
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.locked).toBe(false);
     expect(body.previousRevisions).toEqual([
@@ -64,29 +70,26 @@ describe("Test releaseReport method", () => {
     ]);
     expect(body.fieldDataId).not.toBe(mockDynamoDataWPLocked.fieldDataId);
     expect(s3PutSpy).toHaveBeenCalled();
-    expect(s3GetSpy).toHaveBeenCalledTimes(2);
+    expect(getReportFieldData).toHaveBeenCalled();
+    expect(getReportFormTemplate).toHaveBeenCalled();
   });
 
-  test("Test release report passes with valid data, but it's been more than the first submission", async () => {
+  test("Test release report passes with valid data, but it has been more than the first submission", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    // s3 mocks
-    const s3GetSpy = jest.spyOn(s3Lib, "get");
-    s3GetSpy
-      .mockResolvedValueOnce(mockReportJson)
-      .mockResolvedValueOnce(mockReportFieldData);
+    const newPreviousId = KSUID.randomSync().string;
+    (getReportMetadata as jest.Mock).mockResolvedValue({
+      ...mockDynamoDataWPLocked,
+      previousRevisions: [newPreviousId],
+      submissionCount: 1,
+    });
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
-    // dynamodb mocks
-    const newPreviousId = KSUID.randomSync().string;
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: {
-        ...mockDynamoDataWPLocked,
-        previousRevisions: [newPreviousId],
-        submissionCount: 1,
-      },
-    });
+
     const res = await releaseReport(releaseEvent, null);
     const body = JSON.parse(res.body);
+
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.locked).toBe(false);
     expect(body.submissionCount).toBe(1);
@@ -100,9 +103,7 @@ describe("Test releaseReport method", () => {
 
   test("Test release report with no existing record throws 404", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: undefined,
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await releaseReport(releaseEvent, null);
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
@@ -110,9 +111,6 @@ describe("Test releaseReport method", () => {
 
   test("Test release report without admin permissions throws 403", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(false);
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: mockDynamoDataWPLocked,
-    });
     const res = await releaseReport(releaseEvent, null);
     expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(res.body).toContain(error.UNAUTHORIZED);

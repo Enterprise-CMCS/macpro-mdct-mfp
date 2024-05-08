@@ -1,13 +1,9 @@
 import handler from "../handler-lib";
-import { fetchReport } from "./fetch";
 // utils
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { hasPermissions } from "../../utils/auth/authorization";
 import { parseSpecificReportParameters } from "../../utils/auth/parameters";
-import s3Lib, {
-  getFieldDataKey,
-  getFormTemplateKey,
-} from "../../utils/s3/s3-lib";
+import s3Lib, { getFieldDataKey } from "../../utils/s3/s3-lib";
 import {
   validateData,
   validateFieldData,
@@ -23,11 +19,16 @@ import {
   isComplete,
 } from "../../utils/validation/completionStatus";
 // types
-import { ReportJson, StatusCodes, UserRoles } from "../../utils/types";
+import { StatusCodes, UserRoles } from "../../utils/types";
 import { removeNotApplicablePopsFromInitiatives } from "../../utils/data/data";
+import {
+  getReportFieldData,
+  getReportFormTemplate,
+  getReportMetadata,
+} from "../../storage/reports";
 
-export const updateReport = handler(async (event, context) => {
-  const { allParamsValid, reportType, state } =
+export const updateReport = handler(async (event) => {
+  const { allParamsValid, reportType, state, id } =
     parseSpecificReportParameters(event);
   if (!allParamsValid) {
     return {
@@ -89,19 +90,13 @@ export const updateReport = handler(async (event, context) => {
     };
   }
 
-  // Get current report
-  const reportEvent = { ...event, body: "" };
-  const fetchReportRequest = await fetchReport(reportEvent, context);
-
-  if (!fetchReportRequest?.body || fetchReportRequest.statusCode !== 200) {
+  const currentReport = await getReportMetadata(reportType, state, id);
+  if (!currentReport) {
     return {
       status: StatusCodes.NOT_FOUND,
       body: error.NO_MATCHING_RECORD,
     };
   }
-
-  // If current report exists, get formTemplateId and fieldDataId
-  const currentReport = JSON.parse(fetchReportRequest.body);
 
   if (currentReport.archived || currentReport.locked) {
     return {
@@ -122,21 +117,21 @@ export const updateReport = handler(async (event, context) => {
     };
   }
 
-  const formTemplateParams = {
-    Bucket: reportBucket,
-    Key: getFormTemplateKey(formTemplateId),
-  };
-  const formTemplate = (await s3Lib.get(formTemplateParams)) as ReportJson;
+  const formTemplate = await getReportFormTemplate(currentReport);
+  if (!formTemplate) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.MISSING_DATA,
+    };
+  }
 
-  // Get existing fieldData from s3 bucket (for patching with passed data)
-  const fieldDataParams = {
-    Bucket: reportBucket,
-    Key: getFieldDataKey(state, fieldDataId),
-  };
-  const existingFieldData = (await s3Lib.get(fieldDataParams)) as Record<
-    string,
-    any
-  >;
+  const existingFieldData = await getReportFieldData(currentReport);
+  if (!existingFieldData) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.MISSING_DATA,
+    };
+  }
 
   // Parse the passed payload.
   const unvalidatedPayload = JSON.parse(event.body);
@@ -215,13 +210,6 @@ export const updateReport = handler(async (event, context) => {
       body: error.INVALID_DATA,
     };
   }
-
-  /*
-   * Data has passed validation
-   * Delete raw data prior to updating
-   */
-  delete currentReport.fieldData;
-  delete currentReport.formTemplate;
 
   // Update record in report metadata table
   const reportMetadataParams = {

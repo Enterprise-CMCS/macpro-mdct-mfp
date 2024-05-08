@@ -1,6 +1,4 @@
 import { fetchReport, fetchReportsByState } from "./fetch";
-import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
-import { mockClient } from "aws-sdk-client-mock";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import { error } from "../../utils/constants/constants";
@@ -10,12 +8,21 @@ import {
   mockReportJson,
   mockReportFieldData,
 } from "../../utils/testing/setupJest";
-import dynamodbLib from "../../utils/dynamo/dynamodb-lib";
-import s3Lib from "../../utils/s3/s3-lib";
+import {
+  getReportFieldData,
+  getReportFormTemplate,
+  getReportMetadata,
+  queryReportMetadatasForState,
+} from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
 
-const dynamoClientMock = mockClient(DynamoDBDocumentClient);
+jest.mock("../../storage/reports", () => ({
+  getReportFieldData: jest.fn(),
+  getReportFormTemplate: jest.fn(),
+  getReportMetadata: jest.fn(),
+  queryReportMetadatasForState: jest.fn(),
+}));
 
 jest.mock("../../utils/auth/authorization", () => ({
   hasPermissions: jest.fn(() => {}),
@@ -45,40 +52,33 @@ describe("Test fetchReport API method", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
     mockAuthUtil.isAuthorizedToFetchState.mockReturnValueOnce(true);
-    dynamoClientMock.reset();
   });
   test("Test Report not found in DynamoDB", async () => {
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: undefined,
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await fetchReport(testReadEvent, null);
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
   test("Test Report Form not found in S3", async () => {
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: { ...mockDynamoData, formTemplateId: "badId" },
-    });
-    const res = await fetchReport(testReadEvent, "null");
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(undefined);
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+    const res = await fetchReport(testReadEvent, null);
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
   test("Test Field Data not found in S3", async () => {
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: { ...mockDynamoData, fieldDataId: null },
-    });
-    const res = await fetchReport(testReadEvent, "badId");
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as jest.Mock).mockResolvedValue(undefined);
+    const res = await fetchReport(testReadEvent, null);
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
   test("Test Successful Report Fetch w/ Incomplete Report", async () => {
-    const s3GetSpy = jest.spyOn(s3Lib, "get");
-    s3GetSpy
-      .mockResolvedValueOnce(mockReportJson)
-      .mockResolvedValueOnce(mockReportFieldData);
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: mockDynamoData,
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
     const res = await fetchReport(testReadEvent, null);
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);
@@ -90,17 +90,14 @@ describe("Test fetchReport API method", () => {
     expect(body.isComplete).toStrictEqual(false);
     expect(body.fieldData).toStrictEqual(mockReportFieldData);
     expect(body.formTemplate).toStrictEqual(mockReportJson);
-    expect(s3GetSpy).toHaveBeenCalledTimes(2);
   });
 
   test("Test Successful Report Fetch w/ Complete Report", async () => {
-    const s3GetSpy = jest.spyOn(s3Lib, "get");
-    s3GetSpy
-      .mockResolvedValueOnce(mockReportJson)
-      .mockResolvedValueOnce(mockReportFieldData);
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: mockDynamoDataWPCompleted,
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(
+      mockDynamoDataWPCompleted
+    );
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
     const res = await fetchReport(testReadEvent, null);
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);
@@ -112,7 +109,6 @@ describe("Test fetchReport API method", () => {
     expect(body.isComplete).toStrictEqual(true);
     expect(body.fieldData).toStrictEqual(mockReportFieldData);
     expect(body.formTemplate).toStrictEqual(mockReportJson);
-    expect(s3GetSpy).toHaveBeenCalledTimes(2);
   });
 
   test("Test reportKeys not provided throws 400 error", async () => {
@@ -140,11 +136,12 @@ describe("Test fetchReportsByState API method", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
     mockAuthUtil.isAuthorizedToFetchState.mockReturnValueOnce(true);
-    dynamoClientMock.reset();
   });
+
   test("Test successful call", async () => {
-    const dynamoQuerySpy = jest.spyOn(dynamodbLib, "query");
-    dynamoQuerySpy.mockResolvedValue([mockDynamoData]);
+    (queryReportMetadatasForState as jest.Mock).mockResolvedValueOnce([
+      mockDynamoData,
+    ]);
     const res = await fetchReportsByState(testReadEventByState, null);
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);

@@ -1,5 +1,5 @@
 import { FormJson } from "./formFields";
-import { AnyObject, CompletionData, CustomHtmlElement, State } from "./other";
+import { AnyObject, CustomHtmlElement } from "./other";
 
 // REPORT STRUCTURE
 
@@ -230,35 +230,6 @@ export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
     closeOutModalBodyText?: string;
     closeOutModalConfirmButtonText?: string;
   };
-}
-
-// REPORT METADATA
-
-export interface ReportMetadata {
-  submissionName: string;
-  archived: boolean;
-  reportType: string;
-  submittedBy?: string;
-  createdAt: number;
-  lastAltered: number;
-  state: State;
-  id: string;
-  submittedOnDate?: string;
-  fieldDataId: string;
-  formTemplateId: string;
-  lastAlteredBy: string;
-  status: string;
-  isComplete: boolean;
-  completionStatus?: CompletionData;
-  reportPeriod: number;
-  reportYear: number;
-  dueDate: string;
-}
-
-export interface WPReportMetadata extends ReportMetadata {
-  locked: boolean;
-  submissionCount: number;
-  previousRevisions: string[];
 }
 
 export enum ReportType {

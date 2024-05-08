@@ -12,7 +12,7 @@ import {
 // utils
 import { validateFieldData } from "./completionValidation";
 
-export const isComplete = (completionStatus: CompletionData): Boolean => {
+export const isComplete = (completionStatus: CompletionData): boolean => {
   const flatten = (obj: AnyObject, out: AnyObject) => {
     Object.keys(obj).forEach((key) => {
       if (typeof obj[key] == "object") {

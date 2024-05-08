@@ -1,5 +1,5 @@
 import { Choice } from "./formFields";
-import { AnyObject, ErrorVerbiage, State } from "./other";
+import { AnyObject, CompletionData, ErrorVerbiage, State } from "./other";
 import { ReportJson, ReportType } from "./reports";
 
 // REPORT PROVIDER/CONTEXT
@@ -14,6 +14,10 @@ export interface ReportMetadataShape extends ReportKeys {
   // Main Report Information
   submissionName: string;
   status: ReportStatus;
+  fieldDataId: string;
+  formTemplateId: string;
+  completionStatus?: CompletionData;
+  isComplete?: boolean;
   // Who Touched It/Submitted It
   createdAt: number;
   lastAltered: number;
@@ -21,8 +25,12 @@ export interface ReportMetadataShape extends ReportKeys {
   submittedBy?: string;
   submitterEmail?: string;
   submittedOnDate?: number;
+  previousRevisions?: string[];
+  /** Do we ever USE the versionNumber on the ReportMetadata? Maybe not. */
+  versionNumber?: number;
   // Time Information
-  dueDate: number;
+  /** dueDate is formatted as MM/dd/yyyy */
+  dueDate: string;
   reportPeriod: number;
   reportYear: number;
   // Admin Use Cases
@@ -63,6 +71,7 @@ export interface ReportContextShape extends ReportContextMethods {
 export enum ReportStatus {
   NOT_STARTED = "Not started",
   IN_PROGRESS = "In progress",
+  IN_REVISION = "In revision",
   SUBMITTED = "Submitted",
   APPROVED = "Approved",
 }

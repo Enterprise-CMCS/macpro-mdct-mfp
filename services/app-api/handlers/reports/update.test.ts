@@ -1,4 +1,3 @@
-import { fetchReport } from "./fetch";
 import { updateReport } from "./update";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
@@ -13,21 +12,27 @@ import {
 } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
 import s3Lib from "../../utils/s3/s3-lib";
+import {
+  getReportFieldData,
+  getReportFormTemplate,
+  getReportMetadata,
+} from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
 
 const dynamoClientMock = mockClient(DynamoDBDocumentClient);
+
+jest.mock("../../storage/reports", () => ({
+  getReportFieldData: jest.fn(),
+  getReportFormTemplate: jest.fn(),
+  getReportMetadata: jest.fn(),
+}));
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockResolvedValue(true),
   hasPermissions: jest.fn(() => {}),
 }));
 const mockAuthUtil = require("../../utils/auth/authorization");
-
-jest.mock("./fetch");
-const mockedFetchReport = fetchReport as jest.MockedFunction<
-  typeof fetchReport
->;
 
 const mockProxyEvent: APIGatewayProxyEvent = {
   ...proxyEvent,
@@ -87,28 +92,19 @@ describe("Test updateReport API method", () => {
     jest.clearAllMocks();
     dynamoClientMock.reset();
   });
+
   test("Test report update submission succeeds", async () => {
-    // s3 mocks
-    const s3GetSpy = jest.spyOn(s3Lib, "get");
-    s3GetSpy
-      .mockResolvedValueOnce(mockReportJson)
-      .mockResolvedValueOnce(mockReportFieldData);
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
-    // dynamodb mocks
     const mockPut = jest.fn();
     dynamoClientMock.on(PutCommand).callsFake(mockPut);
-    // fetch mock
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: JSON.stringify(mockDynamoData),
-    });
+
     const response = await updateReport(submissionEvent, null);
     const body = JSON.parse(response.body);
+
     expect(body.status).toContain("submitted");
     expect(body.fieldData["mock-number-field"]).toBe("2");
     expect(response.statusCode).toBe(StatusCodes.SUCCESS);
@@ -116,67 +112,40 @@ describe("Test updateReport API method", () => {
   });
 
   test("Test report update with invalid fieldData fails", async () => {
-    // s3 mocks
-    const s3GetSpy = jest.spyOn(s3Lib, "get");
-    s3GetSpy
-      .mockResolvedValueOnce(mockReportJson)
-      .mockResolvedValueOnce(mockReportFieldData);
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
     const s3PutSpy = jest.spyOn(s3Lib, "put");
     s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
-    // dynamodb mocks
     const mockPut = jest.fn();
     dynamoClientMock.on(PutCommand).callsFake(mockPut);
-    // fetch mock
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: JSON.stringify(mockDynamoData),
-    });
+
     const response = await updateReport(invalidFieldDataSubmissionEvent, null);
+
     expect(response.statusCode).toBe(StatusCodes.SERVER_ERROR);
     expect(response.body).toContain(error.INVALID_DATA);
   });
 
   test("Test attempted report update with invalid data throws 400", async () => {
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: JSON.stringify(mockWPReport),
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res = await updateReport(updateEventWithInvalidData, null);
     expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.MISSING_DATA);
   });
 
   test("Test attempted report update with no existing record throws 404", async () => {
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: undefined!,
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await updateReport(updateEventWithInvalidData, null);
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
   test("Test attempted report update to an archived report throws 403 error", async () => {
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: JSON.stringify({ ...mockDynamoData, archived: true }),
+    (getReportMetadata as jest.Mock).mockResolvedValue({
+      ...mockDynamoData,
+      archived: true,
     });
+
     const res = await updateReport(updateEvent, null);
 
     expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
