@@ -1,4 +1,3 @@
-import { fetchReport } from "./fetch";
 import { approveReport } from "./approve";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
@@ -6,10 +5,17 @@ import { mockClient } from "aws-sdk-client-mock";
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import { mockWPReport } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
+import { getReportMetadata } from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
 
 const dynamoClientMock = mockClient(DynamoDBDocumentClient);
+
+jest.mock("../../storage/reports", () => ({
+  getReportFieldData: jest.fn(),
+  getReportFormTemplate: jest.fn(),
+  getReportMetadata: jest.fn(),
+}));
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockResolvedValue(true),
@@ -17,11 +23,6 @@ jest.mock("../../utils/auth/authorization", () => ({
 }));
 
 const mockAuthUtil = require("../../utils/auth/authorization");
-
-jest.mock("./fetch");
-const mockedFetchReport = fetchReport as jest.MockedFunction<
-  typeof fetchReport
->;
 
 const mockProxyEvent: APIGatewayProxyEvent = {
   ...proxyEvent,
@@ -39,29 +40,16 @@ const approveEvent: APIGatewayProxyEvent = {
 };
 
 describe("Test approveReport method", () => {
-  beforeEach(() => {
-    // fail state and pass admin auth checks
-    mockAuthUtil.hasPermissions
-      .mockReturnValueOnce(true)
-      .mockReturnValueOnce(true)
-      .mockReturnValueOnce(false);
-  });
   afterEach(() => {
     jest.clearAllMocks();
     dynamoClientMock.reset();
   });
 
   test("Test approve report passes with valid data", async () => {
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     const mockPut = jest.fn();
     dynamoClientMock.on(PutCommand).callsFake(mockPut);
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: JSON.stringify(mockWPReport),
-    });
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res: any = await approveReport(approveEvent, null);
     const body = JSON.parse(res.body);
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
@@ -70,28 +58,16 @@ describe("Test approveReport method", () => {
   });
 
   test("Test approve report with no existing record throws 404", async () => {
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: undefined!,
-    });
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
+    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
   test("Test approve report without admin permissions throws 403", async () => {
-    mockedFetchReport.mockResolvedValue({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "string",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: undefined!,
-    });
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(false);
+    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
     expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(res.body).toContain(error.UNAUTHORIZED);

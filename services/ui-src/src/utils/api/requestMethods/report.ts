@@ -24,7 +24,6 @@ async function getReportsByState(reportType: string, state: string) {
   const request = {
     headers: { ...requestHeaders },
   };
-
   updateTimeout();
   const response = await API.get(
     "mfp",

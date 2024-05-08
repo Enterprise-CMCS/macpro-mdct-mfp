@@ -1,5 +1,4 @@
 import handler from "../handler-lib";
-import { fetchReport } from "./fetch";
 // utils
 import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { error, reportTables } from "../../utils/constants/constants";
@@ -7,9 +6,11 @@ import { hasPermissions } from "../../utils/auth/authorization";
 import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 // types
 import { StatusCodes, UserRoles } from "../../utils/types";
+import { getReportMetadata } from "../../storage/reports";
 
-export const approveReport = handler(async (event, context) => {
-  const { allParamsValid, reportType } = parseSpecificReportParameters(event);
+export const approveReport = handler(async (event) => {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
   if (!allParamsValid) {
     return {
       status: StatusCodes.BAD_REQUEST,
@@ -25,24 +26,16 @@ export const approveReport = handler(async (event, context) => {
     };
   }
 
-  // Get current report
-  const reportEvent = { ...event, body: "" };
-  const getCurrentReport = await fetchReport(reportEvent, context);
+  const currentReport = await getReportMetadata(reportType, state, id);
 
-  if (!getCurrentReport.body) {
+  if (!currentReport) {
     return {
       status: StatusCodes.NOT_FOUND,
       body: error.NO_MATCHING_RECORD,
     };
   }
 
-  const currentReport = JSON.parse(getCurrentReport.body);
-
   const reportTable = reportTables[reportType];
-
-  // Delete raw data prior to updating
-  delete currentReport.fieldData;
-  delete currentReport.formTemplate;
 
   // toggle archived status in report metadata table
   const reportMetadataParams = {
