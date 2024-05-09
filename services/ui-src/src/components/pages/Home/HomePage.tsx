@@ -1,4 +1,3 @@
-import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import { Box, Collapse, Heading, Link, Text } from "@chakra-ui/react";
 import {
@@ -30,10 +29,6 @@ export const HomePage = () => {
   const showBanner = !!bannerData?.key && bannerActive;
   const { intro, cards } = verbiage;
 
-  // LaunchDarkly
-  const wpReport = useFlags()?.wpReport;
-  const sarReport = useFlags().sarReport;
-
   return (
     <>
       <Collapse in={showBanner}>
@@ -59,13 +54,8 @@ export const HomePage = () => {
               templateName="WP"
               verbiage={cards.WP}
               cardprops={sx.card}
-              isHidden={!wpReport}
             />
-            <TemplateCard
-              verbiage={cards.SAR}
-              cardprops={sx.card}
-              isHidden={!sarReport}
-            />
+            <TemplateCard verbiage={cards.SAR} cardprops={sx.card} />
           </>
         ) : (
           <AdminDashSelector verbiage={verbiage.readOnly} />
