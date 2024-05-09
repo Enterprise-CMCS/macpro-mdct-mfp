@@ -13,16 +13,16 @@ import { AnyObject, EntityShape } from "types";
 
 const expenditureRows = {
   ["row 1"]: [
-    { label: "Actual spending (First quarter: Mock)", value: 2 },
-    { label: "Projected spending (First quarter: Mock)", value: 6 },
-    { label: "Actual spending (Second quarter: Mock)", value: 2 },
-    { label: "Projected spending (Second quarter: Mock)", value: 6 },
+    { label: "Actual spending (First quarter: Mock)", value: "2" },
+    { label: "Projected spending (First quarter: Mock)", value: "6" },
+    { label: "Actual spending (Second quarter: Mock)", value: "2" },
+    { label: "Projected spending (Second quarter: Mock)", value: "6" },
   ],
   ["row 2"]: [
-    { label: "Actual spending (First quarter: Mock)", value: 4 },
-    { label: "Projected spending (First quarter: Mock)", value: 8 },
-    { label: "Actual spending (Second quarter: Mock)", value: 8 },
-    { label: "Projected spending (Second quarter: Mock)", value: 12 },
+    { label: "Actual spending (First quarter: Mock)", value: "4000" },
+    { label: "Projected spending (First quarter: Mock)", value: "8000" },
+    { label: "Actual spending (Second quarter: Mock)", value: "4000" },
+    { label: "Projected spending (Second quarter: Mock)", value: "12000" },
   ],
 };
 
@@ -59,6 +59,9 @@ const entity: EntityShape = {
 };
 
 describe("Test table functions specific for Expenditures", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   test("Test formatHeaderLabel functionality", () => {
     const headerLabels: string[] = expenditureRows["row 1"].map(
       (row) => row.label
@@ -77,7 +80,7 @@ describe("Test table functions specific for Expenditures", () => {
     formatColumns(expenditureRows, "expenditures");
     expect(expenditureRows["row 1"][2]).toStrictEqual({
       label: "Total actual spending",
-      value: "$4",
+      value: "$4.00",
     });
     expect(expenditureRows["row 1"][5]).toStrictEqual({
       label: "% of total projected spending",
@@ -85,11 +88,11 @@ describe("Test table functions specific for Expenditures", () => {
     });
     expect(expenditureRows["row 2"][2]).toStrictEqual({
       label: "Total actual spending",
-      value: "$12",
+      value: "$8,000.00",
     });
     expect(expenditureRows["row 2"][5]).toStrictEqual({
       label: "% of total projected spending",
-      value: "60.00%",
+      value: "40.00%",
     });
   });
 });
