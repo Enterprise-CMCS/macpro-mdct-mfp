@@ -1,4 +1,8 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBClient,
+  QueryCommandOutput,
+  ScanCommandOutput,
+} from "@aws-sdk/client-dynamodb";
 import {
   DeleteCommand,
   DeleteCommandInput,
@@ -9,6 +13,7 @@ import {
   paginateQuery,
   PutCommand,
   PutCommandInput,
+  Paginator,
 } from "@aws-sdk/lib-dynamodb";
 // utils
 import { logger } from "../debugging/debug-lib";
@@ -30,11 +35,27 @@ const awsConfig = {
   logger,
 };
 
-export const getConfig = () => {
+const getConfig = () => {
   return process.env.DYNAMODB_URL ? localConfig : awsConfig;
 };
 
-const client = DynamoDBDocumentClient.from(new DynamoDBClient(getConfig()));
+export const createClient = () => {
+  return DynamoDBDocumentClient.from(new DynamoDBClient(getConfig()));
+};
+
+export const collectPageItems = async <
+  T extends QueryCommandOutput | ScanCommandOutput
+>(
+  paginator: Paginator<T>
+) => {
+  let items: Record<string, any> = [];
+  for await (let page of paginator) {
+    items = items.concat(page.Items ?? []);
+  }
+  return items;
+};
+
+const client = createClient();
 
 export default {
   get: async (params: GetCommandInput) => {

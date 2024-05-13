@@ -1,4 +1,4 @@
-import s3Lib, { getConfig } from "./s3-lib";
+import s3Lib, { createClient, parseS3Response } from "./s3-lib";
 import {
   GetObjectCommand,
   GetObjectCommandOutput,
@@ -60,17 +60,65 @@ describe("Test s3Lib Interaction API Build Structure", () => {
   });
 });
 
-describe("Checking Environment Variable Changes", () => {
-  beforeEach(() => jest.resetModules());
-  test("Check if statement with S3_LOCAL_ENDPOINT set", () => {
-    process.env.S3_LOCAL_ENDPOINT = "mock endpoint";
-    const config = getConfig();
-    expect(config).toHaveProperty("region", "localhost");
+describe("createClient", () => {
+  let originalEndpoint: string | undefined;
+  beforeAll(() => {
+    originalEndpoint = process.env.S3_LOCAL_ENDPOINT;
+  });
+  afterAll(() => {
+    process.env.S3_LOCAL_ENDPOINT = originalEndpoint;
   });
 
-  test("Check if statement with S3_LOCAL_ENDPOINT undefined", () => {
+  const getRegion = async (client: S3Client) => {
+    const configValue = client.config.region;
+    if (typeof configValue === "string") {
+      return configValue;
+    } else {
+      return await configValue();
+    }
+  };
+
+  it("should return a local client if S3_LOCAL_ENDPOINT is set", async () => {
+    process.env.S3_LOCAL_ENDPOINT = "mock endpoint";
+    const client = createClient();
+    const region = await getRegion(client);
+    expect(region).toBe("localhost");
+  });
+
+  test("should return a live client if S3_LOCAL_ENDPOINT is undefined", async () => {
     delete process.env.S3_LOCAL_ENDPOINT;
-    const config = getConfig();
-    expect(config).toHaveProperty("region", "us-east-1");
+    const client = createClient();
+    const region = await getRegion(client);
+    expect(region).toBe("us-east-1");
+  });
+});
+
+describe("parseS3Response", () => {
+  it("should return undefined for missing objects", async () => {
+    const response = {
+      Body: undefined,
+    } as GetObjectCommandOutput;
+    const parsed = await parseS3Response(response);
+    expect(parsed).toBeUndefined();
+  });
+
+  it("should return undefined for non-string objects", async () => {
+    const response = {
+      Body: {
+        transformToString: jest.fn().mockResolvedValue(""),
+      } as any,
+    } as GetObjectCommandOutput;
+    const parsed = await parseS3Response(response);
+    expect(parsed).toBeUndefined();
+  });
+
+  it("should parse JSON objects it finds", async () => {
+    const response = {
+      Body: {
+        transformToString: jest.fn().mockResolvedValue(`{"foo":"bar"}`),
+      } as any,
+    } as GetObjectCommandOutput;
+    const parsed = await parseS3Response(response);
+    expect(parsed).toEqual({ foo: "bar" });
   });
 });

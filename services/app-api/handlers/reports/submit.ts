@@ -10,13 +10,15 @@ import {
   reportTables,
 } from "../../utils/constants/constants";
 import dynamodbLib from "../../utils/dynamo/dynamodb-lib";
-import s3Lib, {
-  getFieldDataKey,
-  getFormTemplateKey,
-} from "../../utils/s3/s3-lib";
+import s3Lib, { getFieldDataKey } from "../../utils/s3/s3-lib";
 import { convertDateUtcToEt } from "../../utils/time/time";
 // types
-import { StatusCodes, UserRoles, WPReportMetadata } from "../../utils/types";
+import { StatusCodes, UserRoles } from "../../utils/types";
+import {
+  getReportFieldData,
+  getReportFormTemplate,
+  getReportMetadata,
+} from "../../storage/reports";
 
 export const submitReport = handler(async (event, _context) => {
   const { allParamsValid, reportType, state, id } =
@@ -38,23 +40,16 @@ export const submitReport = handler(async (event, _context) => {
   const reportTable = reportTables[reportType];
   const reportBucket = reportBuckets[reportType];
 
-  // Get report metadata
-  const reportMetadataParams = {
-    TableName: reportTable,
-    Key: { id, state },
-  };
-
   try {
-    const response = await dynamodbLib.get(reportMetadataParams);
-    if (!response?.Item) {
+    const reportMetadata = await getReportMetadata(reportType, state, id);
+    if (!reportMetadata) {
       return {
         status: StatusCodes.NOT_FOUND,
         body: error.NOT_IN_DATABASE,
       };
     }
 
-    const reportMetadata = response.Item as WPReportMetadata;
-    const { status, isComplete, fieldDataId, formTemplateId } = reportMetadata;
+    const { status, isComplete, fieldDataId } = reportMetadata;
 
     if (status === "Submitted") {
       return {
@@ -80,7 +75,7 @@ export const submitReport = handler(async (event, _context) => {
     const date = Date.now();
     const fullName = `${jwt.given_name} ${jwt.family_name}`;
     const submissionCount = reportMetadata.submissionCount
-      ? ++reportMetadata.submissionCount
+      ? reportMetadata.submissionCount + 1
       : 1;
     const newItem = {
       ...reportMetadata,
@@ -104,20 +99,8 @@ export const submitReport = handler(async (event, _context) => {
       };
     }
 
-    // Get field data
-    const fieldDataParams = {
-      Bucket: reportBucket,
-      Key: getFieldDataKey(state, fieldDataId),
-    };
-
-    let existingFieldData;
-
-    try {
-      existingFieldData = (await s3Lib.get(fieldDataParams)) as Record<
-        string,
-        any
-      >;
-    } catch (err) {
+    const existingFieldData = await getReportFieldData(reportMetadata);
+    if (!existingFieldData) {
       return {
         status: StatusCodes.SERVER_ERROR,
         body: error.NOT_IN_DATABASE,
@@ -138,19 +121,8 @@ export const submitReport = handler(async (event, _context) => {
       ContentType: "application/json",
     };
 
-    const getFormTemplateParams = {
-      Bucket: reportBucket,
-      Key: getFormTemplateKey(formTemplateId),
-    };
-
-    let formTemplate;
-
-    try {
-      formTemplate = (await s3Lib.get(getFormTemplateParams)) as Record<
-        string,
-        any
-      >;
-    } catch (err) {
+    const formTemplate = await getReportFormTemplate(reportMetadata);
+    if (!formTemplate) {
       return {
         status: StatusCodes.SERVER_ERROR,
         body: error.NOT_IN_DATABASE,
