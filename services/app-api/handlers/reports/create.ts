@@ -1,9 +1,6 @@
 import KSUID from "ksuid";
-import { PutCommandInput } from "@aws-sdk/lib-dynamodb";
 import handler from "../handler-lib";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import s3Lib, { getFieldDataKey } from "../../utils/s3/s3-lib";
 import { hasPermissions } from "../../utils/auth/authorization";
 import { parseStateReportParameters } from "../../utils/auth/parameters";
 import {
@@ -11,12 +8,7 @@ import {
   validateFieldData,
 } from "../../utils/validation/validation";
 import { metadataValidationSchema } from "../../utils/validation/schemas";
-import {
-  error,
-  reportTables,
-  reportBuckets,
-  reportNames,
-} from "../../utils/constants/constants";
+import { error, reportNames } from "../../utils/constants/constants";
 import {
   calculateDueDate,
   calculatePeriod,
@@ -28,10 +20,12 @@ import {
   getReportPeriod,
   getReportYear,
 } from "../../utils/other/other";
+import { putReportFieldData, putReportMetadata } from "../../storage/reports";
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { logger } from "../../utils/debugging/debug-lib";
 import { copyFieldDataFromSource } from "../../utils/other/copy";
 import { extractWorkPlanData } from "../../utils/transformations/transformations";
+import assert from "node:assert";
 // types
 import {
   AnyObject,
@@ -60,9 +54,6 @@ export const createReport = handler(
       };
     }
 
-    // Find S3 Bucket, DynamoTable, and full string naming scheme for reportType
-    const reportBucket = reportBuckets[reportType];
-    const reportTable = reportTables[reportType];
     const reportTypeExpanded = reportNames[reportType];
 
     /*
@@ -77,14 +68,13 @@ export const createReport = handler(
       workPlanFieldData?: AnyObject;
     } =
       reportType === ReportType.SAR
-        ? await getLastCreatedWorkPlan(event, _context, state)
+        ? await getLastCreatedWorkPlan(state)
         : { workPlanMetadata: undefined, workPlanFieldData: undefined };
 
     // If we recieved no work plan information and we're trying to create a SAR, return NO_WORKPLANS_FOUND
     if (
-      !workPlanFieldData &&
-      !workPlanMetadata &&
-      reportType === ReportType.SAR
+      reportType === ReportType.SAR &&
+      (!workPlanMetadata || !workPlanFieldData)
     ) {
       return {
         status: StatusCodes.NOT_FOUND,
@@ -127,7 +117,6 @@ export const createReport = handler(
     let formTemplate, formTemplateVersion;
     try {
       ({ formTemplate, formTemplateVersion } = await getOrCreateFormTemplate(
-        reportBucket,
         reportType,
         reportPeriod,
         reportYear,
@@ -195,7 +184,6 @@ export const createReport = handler(
       }
 
       newFieldData = await copyFieldDataFromSource(
-        reportBucket,
         state,
         unvalidatedMetadata.copyReport?.fieldDataId,
         formTemplate,
@@ -211,29 +199,23 @@ export const createReport = handler(
      * to create a different SAR and attach all of its fieldData to the SAR Submissions FieldData
      */
 
-    // Begin Section - Create report and field ids and submit the validated field data to S3
     const reportId: string = KSUID.randomSync().string;
     const fieldDataId: string = KSUID.randomSync().string;
     const formTemplateId: string = formTemplateVersion?.id;
 
-    const fieldDataParams = {
-      Bucket: reportBucket,
-      Key: getFieldDataKey(state, fieldDataId),
-      Body: JSON.stringify(newFieldData),
-      ContentType: "application/json",
-    };
-
     try {
-      await s3Lib.put(fieldDataParams);
+      await putReportFieldData(
+        { reportType, state, fieldDataId },
+        newFieldData
+      );
     } catch (err) {
       return {
         status: StatusCodes.SERVER_ERROR,
         body: error.S3_OBJECT_CREATION_ERROR,
       };
     }
-    // End Section - Create report and field ids and submit the validated field data to S3
 
-    // Validation the metadata for the submission
+    // Validate the metadata for the submission
     const validatedMetadata = await validateData(metadataValidationSchema, {
       ...unvalidatedMetadata,
     });
@@ -247,35 +229,32 @@ export const createReport = handler(
     }
 
     // Begin Section - Create DyanmoDB record
-    const reportMetadataParams: PutCommandInput = {
-      TableName: reportTable,
-      Item: {
-        ...validatedMetadata,
-        state,
-        id: reportId,
-        fieldDataId,
-        status: "Not started",
-        formTemplateId,
-        createdAt: currentDate,
-        lastAltered: currentDate,
-        versionNumber: formTemplateVersion?.versionNumber,
-        submissionName: createReportName(
-          reportTypeExpanded,
-          reportPeriod,
-          state,
-          reportYear,
-          workPlanMetadata
-        ),
-        reportYear,
+    const createdReportMetadata: ReportMetadataShape = {
+      ...validatedMetadata,
+      state,
+      id: reportId,
+      fieldDataId,
+      status: "Not started",
+      formTemplateId,
+      createdAt: currentDate,
+      lastAltered: currentDate,
+      versionNumber: formTemplateVersion?.versionNumber,
+      submissionName: createReportName(
+        reportTypeExpanded,
         reportPeriod,
-        isCopied: overrideCopyOver ? true : false,
-        dueDate: calculateDueDate(reportYear, reportPeriod, reportType),
-        associatedWorkPlan: workPlanMetadata?.id,
-      },
+        state,
+        reportYear,
+        workPlanMetadata
+      ),
+      reportYear,
+      reportPeriod,
+      isCopied: overrideCopyOver ? true : false,
+      dueDate: calculateDueDate(reportYear, reportPeriod, reportType),
+      associatedWorkPlan: workPlanMetadata?.id,
     };
 
     try {
-      await dynamoDb.put(reportMetadataParams);
+      await putReportMetadata(createdReportMetadata);
     } catch (err) {
       return {
         status: StatusCodes.SERVER_ERROR,
@@ -286,15 +265,13 @@ export const createReport = handler(
 
     // Begin Section - Let the Workplan know that its been tied to a SAR that was just created
     if (reportType === ReportType.SAR) {
-      const workPlanWithSarFormConnection = {
-        TableName: reportTables[ReportType.WP],
-        Item: {
-          ...workPlanMetadata,
-          associatedSar: reportId,
-        },
+      assert(workPlanMetadata !== undefined);
+      const workPlanWithSarConnection = {
+        ...workPlanMetadata,
+        associatedSar: reportId,
       };
       try {
-        await dynamoDb.put(workPlanWithSarFormConnection);
+        await putReportMetadata(workPlanWithSarConnection);
       } catch (err) {
         return {
           status: StatusCodes.SERVER_ERROR,
@@ -308,7 +285,7 @@ export const createReport = handler(
     return {
       status: StatusCodes.CREATED,
       body: {
-        ...reportMetadataParams.Item,
+        ...createdReportMetadata,
         fieldData: validatedFieldData,
         formTemplate,
         formTemplateVersion: formTemplateVersion?.versionNumber,

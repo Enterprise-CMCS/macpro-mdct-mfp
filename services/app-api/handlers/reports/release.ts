@@ -1,30 +1,24 @@
 import handler from "../handler-lib";
 import KSUID from "ksuid";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import {
-  error,
-  reportBuckets,
-  reportTables,
-} from "../../utils/constants/constants";
+import { error } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
 import { parseSpecificReportParameters } from "../../utils/auth/parameters";
-import s3Lib, { getFieldDataKey } from "../../utils/s3/s3-lib";
+import { calculateCompletionStatus } from "../../utils/validation/completionStatus";
+import {
+  getReportFieldData,
+  getReportFormTemplate,
+  getReportMetadata,
+  putReportFieldData,
+  putReportMetadata,
+} from "../../storage/reports";
 // types
-import { PutCommandInput } from "@aws-sdk/lib-dynamodb";
-import { PutObjectCommandInput } from "@aws-sdk/client-s3";
 import {
   ReportMetadataShape,
   ReportStatus,
   StatusCodes,
   UserRoles,
 } from "../../utils/types";
-import { calculateCompletionStatus } from "../../utils/validation/completionStatus";
-import {
-  getReportFieldData,
-  getReportFormTemplate,
-  getReportMetadata,
-} from "../../storage/reports";
 
 /**
  * Locked reports can be released by admins.
@@ -54,8 +48,6 @@ export const releaseReport = handler(async (event) => {
       body: error.UNAUTHORIZED,
     };
   }
-
-  const reportTable = reportTables[reportType];
 
   const metadata = await getReportMetadata(reportType, state, id);
   if (!metadata) {
@@ -108,8 +100,6 @@ export const releaseReport = handler(async (event) => {
     };
   }
 
-  const reportBucket = reportBuckets[reportType];
-
   const updatedFieldData = {
     ...fieldData,
     generalInformation_resubmissionInformation: "",
@@ -127,32 +117,17 @@ export const releaseReport = handler(async (event) => {
     ),
   };
 
-  const putReportMetadataParams: PutCommandInput = {
-    TableName: reportTable,
-    Item: newReportMetadata,
-  };
-
   try {
-    await dynamoDb.put(putReportMetadataParams);
+    await putReportMetadata(newReportMetadata);
   } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
       body: error.DYNAMO_UPDATE_ERROR,
     };
   }
-
   // Copy the original field data to a new location.
   try {
-    const putObjectParameters: PutObjectCommandInput = {
-      Bucket: reportBucket,
-      Body: JSON.stringify({
-        ...updatedFieldData,
-      }),
-      ContentType: "application/json",
-      Key: getFieldDataKey(metadata.state, newFieldDataId),
-    };
-
-    await s3Lib.put(putObjectParameters);
+    await putReportFieldData(newReportMetadata, updatedFieldData);
   } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
@@ -162,6 +137,6 @@ export const releaseReport = handler(async (event) => {
 
   return {
     status: StatusCodes.SUCCESS,
-    body: putReportMetadataParams.Item,
+    body: newReportMetadata,
   };
 });

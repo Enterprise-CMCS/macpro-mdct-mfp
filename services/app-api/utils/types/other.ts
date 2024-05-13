@@ -141,7 +141,7 @@ export const isState = (state: unknown): state is State => {
   return states.includes(state as State);
 };
 
-export interface FormTemplate {
+export interface FormTemplateVersion {
   md5Hash: string;
   versionNumber: number;
   id: string;

@@ -93,31 +93,20 @@ export enum States {
 
 // REPORTS
 
-export const reportTables: { [key in ReportType]: string } = {
-  SAR: process.env.SAR_REPORT_TABLE_NAME!,
-  WP: process.env.WP_REPORT_TABLE_NAME!,
-};
-
-export const reportBuckets: { [key in ReportType]: string } = {
-  SAR: process.env.SAR_FORM_BUCKET!,
-  WP: process.env.WP_FORM_BUCKET!,
-};
-
-export const reportNames = {
+export const reportNames: { [key in ReportType]: string } = {
   SAR: "SAR",
   WP: "Work Plan",
 };
 
-export const tableTopics = {
+export const tableTopics: { [key in ReportType]: string } = {
   SAR: "sar-reports",
   WP: "wp-reports",
 };
-export const bucketTopics = {
+
+export const bucketTopics: { [key in ReportType]: string } = {
   SAR: "sar-reports",
   WP: "wp-form",
 };
-
-export const formTemplateTableName = process.env.FORM_TEMPLATE_TABLE_NAME!;
 
 export const DEFAULT_TARGET_POPULATION_NAMES = [
   "Older adults",

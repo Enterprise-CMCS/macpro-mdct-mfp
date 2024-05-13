@@ -1,6 +1,4 @@
 import { updateReport } from "./update";
-import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
-import { mockClient } from "aws-sdk-client-mock";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import {
@@ -8,24 +6,24 @@ import {
   mockWPReport,
   mockReportFieldData,
   mockReportJson,
-  mockS3PutObjectCommandOutput,
 } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
-import s3Lib from "../../utils/s3/s3-lib";
 import {
   getReportFieldData,
   getReportFormTemplate,
   getReportMetadata,
+  putReportFieldData,
+  putReportMetadata,
 } from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
-
-const dynamoClientMock = mockClient(DynamoDBDocumentClient);
 
 jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
   getReportFormTemplate: jest.fn(),
   getReportMetadata: jest.fn(),
+  putReportFieldData: jest.fn(),
+  putReportMetadata: jest.fn(),
 }));
 
 jest.mock("../../utils/auth/authorization", () => ({
@@ -90,17 +88,12 @@ describe("Test updateReport API method", () => {
   });
   afterEach(() => {
     jest.clearAllMocks();
-    dynamoClientMock.reset();
   });
 
   test("Test report update submission succeeds", async () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
-    const s3PutSpy = jest.spyOn(s3Lib, "put");
-    s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
-    const mockPut = jest.fn();
-    dynamoClientMock.on(PutCommand).callsFake(mockPut);
 
     const response = await updateReport(submissionEvent, null);
     const body = JSON.parse(response.body);
@@ -108,22 +101,21 @@ describe("Test updateReport API method", () => {
     expect(body.status).toContain("submitted");
     expect(body.fieldData["mock-number-field"]).toBe("2");
     expect(response.statusCode).toBe(StatusCodes.SUCCESS);
-    expect(mockPut).toHaveBeenCalled();
+    expect(putReportFieldData).toHaveBeenCalled();
+    expect(putReportMetadata).toHaveBeenCalled();
   });
 
   test("Test report update with invalid fieldData fails", async () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
-    const s3PutSpy = jest.spyOn(s3Lib, "put");
-    s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
-    const mockPut = jest.fn();
-    dynamoClientMock.on(PutCommand).callsFake(mockPut);
 
     const response = await updateReport(invalidFieldDataSubmissionEvent, null);
 
     expect(response.statusCode).toBe(StatusCodes.SERVER_ERROR);
     expect(response.body).toContain(error.INVALID_DATA);
+    expect(putReportFieldData).not.toHaveBeenCalled();
+    expect(putReportMetadata).not.toHaveBeenCalled();
   });
 
   test("Test attempted report update with invalid data throws 400", async () => {
