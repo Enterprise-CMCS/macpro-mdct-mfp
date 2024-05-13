@@ -1,6 +1,6 @@
 // Feature: SAR E2E Form Create
 import wpTemplate from "../../../../services/app-api/forms/wp.json";
-import { traverseRoutes } from "../../support/sarForm";
+import { traverseRoutes } from "../../support/form";
 
 const currentYear = new Date().getFullYear();
 
