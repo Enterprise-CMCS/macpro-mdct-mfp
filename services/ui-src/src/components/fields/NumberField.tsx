@@ -162,7 +162,6 @@ export const NumberField = ({
           onBlur={onBlurHandler}
           value={displayValue}
           errorMessage={errorMessage}
-          {...props}
         />
         <SymbolOverlay
           fieldMask={mask}

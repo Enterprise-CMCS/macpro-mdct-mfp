@@ -136,7 +136,6 @@ export const DateField = ({
         value={displayValue}
         hint={parsedHint}
         errorMessage={errorMessage}
-        {...props}
       />
     </Box>
   );

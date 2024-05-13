@@ -43,6 +43,7 @@ export const mockDropdownField = {
   props: {
     label: "mock dropdown field",
     options: "mock plans",
+    ariaLabel: "mock dropdown field",
   },
 };
 
