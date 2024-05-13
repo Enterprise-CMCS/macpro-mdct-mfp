@@ -1,4 +1,4 @@
-// Feature: MCPAR E2E Form Submission
+// Feature: SAR E2E Form Create
 import wpTemplate from "../../../../services/app-api/forms/wp.json";
 import { traverseRoutes } from "../../support/sarForm";
 
