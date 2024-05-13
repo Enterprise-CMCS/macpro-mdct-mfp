@@ -1,6 +1,10 @@
 import { array, boolean, mixed, object, string } from "yup";
 import { Choice } from "../types/index";
-import { checkRatioInputAgainstRegexes, checkStandardIntegerInputAgainstRegexes, checkStandardNumberInputAgainstRegexes } from "./checkInputValidity";
+import {
+  checkRatioInputAgainstRegexes,
+  checkStandardIntegerInputAgainstRegexes,
+  checkStandardNumberInputAgainstRegexes,
+} from "./checkInputValidity";
 
 const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -246,6 +250,6 @@ export const schemaMap: any = {
   textOptional: textOptional(),
   url: url(),
   urlOptional: urlOptional(),
-  validInteger: validInteger(), 
+  validInteger: validInteger(),
   validIntegerOptional: validIntegerOptional(),
 };
