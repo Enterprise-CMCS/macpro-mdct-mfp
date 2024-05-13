@@ -28,6 +28,7 @@ export const TextField = ({
   heading,
   ...props
 }: Props) => {
+  const { rows, multiline } = props;
   const defaultValue = "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
@@ -135,7 +136,8 @@ export const TextField = ({
         onBlur={(e) => onBlurHandler(e)}
         errorMessage={errorMessage}
         value={displayValue}
-        {...props}
+        rows={rows}
+        multiline={multiline}
       />
     </Box>
   );
