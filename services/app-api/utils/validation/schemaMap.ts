@@ -1,15 +1,11 @@
-import {
-  array,
-  boolean,
-  mixed,
-  number as numberSchema,
-  object,
-  string,
-  StringSchema,
-} from "yup";
+import { array, boolean, mixed, object, string } from "yup";
+import { Choice } from "../types/index";
+import { checkRatioInputAgainstRegexes, checkStandardIntegerInputAgainstRegexes, checkStandardNumberInputAgainstRegexes } from "./checkInputValidity";
 
 const error = {
   REQUIRED_GENERIC: "A response is required",
+  REQUIRED_CHECKBOX: "Select at least one response",
+  INVALID_GENERIC: "Response must be valid",
   INVALID_EMAIL: "Response must be a valid email address",
   INVALID_URL: "Response must be a valid hyperlink/URL",
   INVALID_DATE: "Response must be a valid date",
@@ -20,49 +16,60 @@ const error = {
   INVALID_RATIO: "Response must be a valid ratio",
 };
 
+// TEXT - Helpers
+const isWhitespaceString = (value?: string) => value?.trim().length === 0;
+
 // TEXT
-export const text = (): StringSchema => string();
-export const textOptional = () => text();
+export const text = () =>
+  string()
+    .typeError(error.INVALID_GENERIC)
+    .required(error.REQUIRED_GENERIC)
+    .test({
+      test: (value) => !isWhitespaceString(value),
+      message: error.REQUIRED_GENERIC,
+    });
+export const textOptional = () => string().typeError(error.INVALID_GENERIC);
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];
-
-const valueCleaningNumberSchema = (value: string, charsToReplace: RegExp) => {
-  return numberSchema().transform((_value) => {
-    return Number(value.replace(charsToReplace, ""));
-  });
-};
-
-/** This regex must be at least as permissive as the one in ui-src */
-const validNumberRegex = /^\.$|[0-9]/;
+// const validNumberRegex = /^\.$|[0-9]/;
 const validIntegerRegex = /^[0-9\s,$%]+$/;
 
 // NUMBER - Number or Valid Strings
-export const number = () =>
+export const numberSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,
       test: (value) => {
         if (value) {
           const isValidStringValue = validNAValues.includes(value);
-          const isValidNumberValue = validNumberRegex.test(value);
+          const isValidNumberValue =
+            checkStandardNumberInputAgainstRegexes(value);
           return isValidStringValue || isValidNumberValue;
         } else return true;
       },
     })
     .test({
       test: (value) => {
-        if (validNumberRegex.test(value!)) {
+        if (checkStandardNumberInputAgainstRegexes(value!)) {
           return parseFloat(value!) >= 0;
         } else return true;
       },
       message: error.NUMBER_LESS_THAN_ZERO,
     });
 
-export const numberOptional = () => number();
+export const number = () =>
+  numberSchema()
+    .required(error.REQUIRED_GENERIC)
+    .test({
+      test: (value) => !isWhitespaceString(value),
+      message: error.REQUIRED_GENERIC,
+    });
 
-// INTEGER - Integer or Valid Strings
-export const validInteger = () =>
+export const numberOptional = () => numberSchema().notRequired().nullable();
+
+// Integer or Valid Strings
+export const validIntegerSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,
@@ -76,66 +83,59 @@ export const validInteger = () =>
     })
     .test({
       test: (value) => {
-        if (validNumberRegex.test(value!)) {
+        if (checkStandardIntegerInputAgainstRegexes(value!)) {
           return parseFloat(value!) >= 0;
         } else return true;
       },
       message: error.NUMBER_LESS_THAN_ZERO,
     });
 
+export const validInteger = () =>
+  validIntegerSchema().required(error.REQUIRED_GENERIC);
+
+export const validIntegerOptional = () =>
+  validIntegerSchema().notRequired().nullable();
+
 // Number - Ratio
 export const ratio = () =>
-  mixed().test({
-    message: error.INVALID_RATIO,
-    test: (val) => {
-      // allow if blank
-      if (val === "") return true;
-
-      const replaceCharsRegex = /[,.:]/g;
-      const ratio = val.split(":");
-
-      // Double check and make sure that a ratio contains numbers on both sides
-      if (
-        ratio.length != 2 ||
-        ratio[0].trim().length == 0 ||
-        ratio[1].trim().length == 0
-      ) {
-        return false;
-      }
-
-      // Check if the left side of the ratio is a valid number
-      const firstTest = valueCleaningNumberSchema(
-        ratio[0],
-        replaceCharsRegex
-      ).isValidSync(val);
-
-      // Check if the right side of the ratio is a valid number
-      const secondTest = valueCleaningNumberSchema(
-        ratio[1],
-        replaceCharsRegex
-      ).isValidSync(val);
-
-      // If both sides are valid numbers, return true!
-      return firstTest && secondTest;
-    },
-  });
+  mixed()
+    .test({
+      message: error.REQUIRED_GENERIC,
+      test: (val) => val != "",
+    })
+    .required(error.REQUIRED_GENERIC)
+    .test({
+      message: error.INVALID_RATIO,
+      test: (val) => {
+        return checkRatioInputAgainstRegexes(val).isValid;
+      },
+    });
 
 // EMAIL
 export const email = () => text().email(error.INVALID_EMAIL);
-export const emailOptional = () => email();
+export const emailOptional = () => email().notRequired();
 
 // URL
 export const url = () => text().url(error.INVALID_URL);
-export const urlOptional = () => url();
+export const urlOptional = () => url().notRequired();
 
 // DATE
 export const date = () =>
-  string().test({
-    message: error.INVALID_DATE,
-    test: (value) => !!value?.match(dateFormatRegex) || value?.trim() === "",
-  });
+  string()
+    .required(error.REQUIRED_GENERIC)
+    .matches(dateFormatRegex, error.INVALID_DATE)
+    .test({
+      message: error.REQUIRED_GENERIC,
+      test: (value) => !isWhitespaceString(value),
+    });
 
-export const dateOptional = () => date();
+export const dateOptional = () =>
+  string()
+    .typeError(error.INVALID_GENERIC)
+    .test({
+      message: error.INVALID_DATE,
+      test: (value) => dateFormatRegex.test(value!),
+    });
 
 export const endDate = (startDateField: string) =>
   date()
@@ -160,31 +160,39 @@ export const isEndDateAfterStartDate = (
 };
 
 // DROPDOWN
-export const dropdown = () => object({ label: text(), value: text() });
+export const dropdown = () =>
+  object({ label: text(), value: text() }).required(error.REQUIRED_GENERIC);
 
 // CHECKBOX
-export const checkboxSchema = () =>
-  array()
-    .of(object({ key: text(), value: text() }))
-    .required(error.REQUIRED_GENERIC);
 export const checkbox = () =>
-  checkboxSchema()
-    .min(1, error.REQUIRED_GENERIC)
-    .required(error.REQUIRED_GENERIC);
+  array()
+    .min(1, error.REQUIRED_CHECKBOX)
+    .of(object({ key: text(), value: text() }))
+    .required(error.REQUIRED_CHECKBOX);
 export const checkboxOptional = () =>
-  checkboxSchema().min(0, error.REQUIRED_GENERIC).notRequired().nullable();
+  array().notRequired().typeError(error.INVALID_GENERIC);
 export const checkboxSingle = () => boolean();
 
 // RADIO
 export const radio = () =>
   array()
-    .min(0)
-    .of(object({ key: text(), value: text() }));
-export const radioOptional = () => radio();
+    .min(1, error.REQUIRED_GENERIC)
+    .of(object({ key: text(), value: text() }))
+    .required(error.REQUIRED_GENERIC);
+export const radioOptional = () => radio().notRequired();
 
 // DYNAMIC
-export const dynamic = () => array().min(0).of(mixed());
-export const dynamicOptional = () => dynamic();
+export const dynamic = () =>
+  array()
+    .min(1)
+    .of(
+      object().shape({
+        id: text(),
+        name: text(),
+      })
+    )
+    .required(error.REQUIRED_GENERIC);
+export const dynamicOptional = () => dynamic().notRequired();
 
 // NESTED
 export const nested = (
@@ -201,9 +209,9 @@ export const nested = (
   const fieldType: keyof typeof fieldTypeMap = fieldSchema().type;
   const baseSchema: any = fieldTypeMap[fieldType];
   return baseSchema.when(parentFieldName, {
-    is: (value: any[]) =>
-      // look for parentOptionId in checked Choices
-      value?.find((option: any) => option.key === parentOptionId),
+    is: (value: Choice[]) =>
+      // look for parentOptionId in checked choices
+      value?.find((option: Choice) => option.key.endsWith(parentOptionId)),
     then: () => fieldSchema(), // returns standard field schema (required)
     otherwise: () => baseSchema, // returns not-required Yup base schema
   });
@@ -214,7 +222,7 @@ export const objectArray = () => array().of(mixed());
 
 // REGEX
 export const dateFormatRegex =
-  /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})|\s$/;
+  /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})$/;
 
 // SCHEMA MAP
 export const schemaMap: any = {
@@ -238,4 +246,6 @@ export const schemaMap: any = {
   textOptional: textOptional(),
   url: url(),
   urlOptional: urlOptional(),
+  validInteger: validInteger(), 
+  validIntegerOptional: validIntegerOptional(),
 };
