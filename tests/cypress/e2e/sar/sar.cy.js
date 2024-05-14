@@ -104,6 +104,7 @@ describe("Create SAR from Approved WP", () => {
   });
 
   it("State user can create SAR", () => {
+    cy.archiveAnyExistingSAR();
     cy.wait(2000);
     cy.authenticate("stateUser");
     cy.wait(2000);
