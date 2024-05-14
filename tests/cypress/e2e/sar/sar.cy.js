@@ -1,10 +1,10 @@
-// Feature: MCPAR E2E Form Submission
-import wpTemplate from "../../../..//services/app-api/forms/wp.json";
+// Feature: SAR E2E Form Create
+import wpTemplate from "../../../../services/app-api/forms/wp.json";
 import { traverseRoutes } from "../../support/form";
 
 const currentYear = new Date().getFullYear();
 
-describe("MFP Work Plan E2E Submission", () => {
+describe("Create SAR from Approved WP", () => {
   it("State users can create Work Plans", () => {
     cy.archiveAnyExistingWorkPlans();
     cy.authenticate("stateUser");
@@ -60,7 +60,7 @@ describe("MFP Work Plan E2E Submission", () => {
     cy.contains("Successfully Submitted").should("be.visible");
   });
 
-  it("Admin users can deny a Work Plan submission", () => {
+  it("Admin users can approve a Work Plan submission", () => {
     cy.authenticate("adminUser");
     cy.navigateToHomePage();
     cy.get(
@@ -95,55 +95,53 @@ describe("MFP Work Plan E2E Submission", () => {
 
     cy.url().should("include", "/review-and-submit");
 
-    cy.get(`button:contains("Unlock")`).focus().click();
+    cy.get(`button:contains("Approve")`).eq(0).focus().click();
     cy.wait(1500);
 
-    cy.get('button:contains("Return to dashboard")').focus().click();
+    cy.get("input").type("APPROVE");
 
-    cy.contains("In revision").should("be.visible");
+    cy.get(`button:contains("Approve")`).eq(1).focus().click();
   });
 
-  it("State users can update and submit an in revision Work Plan", () => {
+  it("State user can create SAR", () => {
+    cy.archiveAnyExistingSAR();
+    cy.wait(2000);
     cy.authenticate("stateUser");
+    cy.wait(2000);
 
-    //Given I've logged in
-    cy.url().should("include", "/");
+    // go back to dashboard
+    cy.visit("/");
 
-    //And I enter the Work Plan Dashboard
-    cy.contains("Enter Work Plan online").click();
-    cy.url().should("include", "/wp");
+    cy.wait(2000);
+    cy.get(`button:contains("Enter SAR online")`).focus().click();
+    cy.wait(2000);
+    cy.get(`button:contains("Add new MFP SAR submission")`).focus().click();
+    cy.wait(2000);
+    cy.get('[type="radio"]').check("No");
+    cy.wait(2000);
+    cy.get('button:contains("Save")').focus().click();
+    cy.wait(5000);
+    cy.get('button:contains("Edit")').focus().click();
+  });
 
-    //Find our new program and open it
-    cy.get("table").within(() => {
-      cy.get("tr")
-        .as("workplan")
-        .contains(
-          `District of Columbia MFP Work Plan ${currentYear} - Period 1`
-        );
-      cy.get("@workplan").as("workplancontainer");
-      cy.get("@workplancontainer")
-        .find('button:contains("Edit")')
-        .as("editButton");
-      cy.get("@editButton").first().focus();
-      cy.get("@editButton").first().click();
-    });
+  it("Fill out SAR General Information", () => {
+    cy.get("#generalInformation_MfpOperatingOrganizationName").type(
+      "input text"
+    );
+    cy.get("#generalInformation_stateTerritoryMedicaidAgency").type(
+      "input text"
+    );
+    cy.get("#generalInformation_mfpProgramPublicName").type("input text");
+    cy.get("#generalInformation_mfpProgramWebsite").type("https://google.com");
+    cy.get("#generalInformation_aorName").type("input text");
+    cy.get("#generalInformation_aorTitleAgency").type("input text");
+    cy.get("#generalInformation_aorEmail").type("test@gmail.com");
+    cy.get('[type="radio"]').check("No");
+    cy.get("#generalInformation_projectDirectorName").type("test@gmail.com");
+    cy.get("#generalInformation_projectDirectorTitle").type("input text");
+    cy.get("#generalInformation_projectDirectorEmail").type("test@gmail.com");
+    cy.get("#generalInformation_cmsProjectOfficerName").type("input text");
 
-    cy.get("p:contains('Review & Submit')").click();
-
-    cy.url().should("include", "/review-and-submit");
-
-    // Confirm form is submittable
-    cy.get('div[role*="alert"]').should("not.exist");
-    cy.get(`button:contains("Submit")`).should("not.be.disabled");
-
-    //Submit the program
-    cy.get(`button:contains("Submit")`).focus().click();
-    cy.get('[data-testid="modal-submit-button"]').focus().click();
-
-    cy.contains("Successfully Submitted").should("be.visible");
-
-    cy.get('button:contains("Leave form")').focus().click();
-    cy.url().should("include", "/wp");
-    cy.contains("2").should("be.visible");
+    cy.get('button:contains("Continue")').focus().click();
   });
 });
