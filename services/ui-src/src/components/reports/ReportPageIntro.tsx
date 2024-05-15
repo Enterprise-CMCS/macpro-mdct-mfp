@@ -3,7 +3,7 @@ import { Box, Heading } from "@chakra-ui/react";
 import { InstructionsAccordion } from "components";
 // utils
 import { parseCustomHtml } from "utils";
-import { AnyObject, OverlayModalStepTypes } from "types";
+import { AnyObject } from "types";
 import { ReportPeriod } from "./ReportPeriod";
 
 export const ReportPageIntro = ({
@@ -14,57 +14,43 @@ export const ReportPageIntro = ({
   reportYear,
   ...props
 }: Props) => {
-  const { section, subsection, hint, info } = text;
+  const { section, subsection, info, introAccordion } = text;
 
-  if (section && (subsection || initiativeName)) {
+  const isSubsectionPage = section && (subsection || initiativeName);
+
+  const header = () => {
     return (
-      <Box sx={sx.introBox} {...props}>
+      <Heading as="h1" sx={sx.largeHeading}>
+        {subsection}
+      </Heading>
+    );
+  };
+
+  const headerSubsection = () => {
+    return (
+      <>
         <Heading as="h1" sx={sx.smallHeading}>
           {section}
         </Heading>
         <Heading as="h2" sx={sx.largeHeading}>
           {initiativeName ? initiativeName : subsection}
         </Heading>
-        {hint && <Box sx={sx.hintTextBox}>{parseCustomHtml(hint)}</Box>}
-        {accordion && !OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
-          <InstructionsAccordion verbiage={accordion} />
-        )}
-        {OverlayModalStepTypes.OBJECTIVE_PROGRESS && text.dashboardTitle && (
-          <Heading as="h3" sx={sx.subTitle}>
-            {text.dashboardTitle}
-          </Heading>
-        )}
-        {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
-        {accordion && OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
-          <InstructionsAccordion verbiage={accordion} />
-        )}
-        <ReportPeriod
-          text={text}
-          reportPeriod={reportPeriod}
-          reportYear={reportYear}
-        />
-      </Box>
+      </>
     );
-  }
+  };
 
   return (
     <Box sx={sx.introBox} {...props}>
-      <Heading as="h1" sx={sx.largeHeading}>
-        {subsection}
-      </Heading>
-      {hint && <Box sx={sx.hintTextBox}>{parseCustomHtml(hint)}</Box>}
-      {accordion && !OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
-        <InstructionsAccordion verbiage={accordion} />
-      )}
-      {OverlayModalStepTypes.OBJECTIVE_PROGRESS && text.dashboardTitle && (
-        <Heading as="h3" sx={sx.subTitle}>
-          {text.dashboardTitle}
-        </Heading>
-      )}
+      {isSubsectionPage ? headerSubsection() : header()}
+
+      {/* accordion specifically nested in the intro verbiage */}
+      {introAccordion && <InstructionsAccordion verbiage={introAccordion} />}
+
       {info && <Box sx={sx.infoTextBox}>{parseCustomHtml(info)}</Box>}
-      {accordion && OverlayModalStepTypes.OBJECTIVE_PROGRESS && (
-        <InstructionsAccordion verbiage={accordion} />
-      )}
+
+      {accordion && <InstructionsAccordion verbiage={accordion} />}
+
+      {/* SAR Reporting Period section */}
       <ReportPeriod
         text={text}
         reportPeriod={reportPeriod}
@@ -86,6 +72,11 @@ interface Props {
 const sx = {
   introBox: {
     marginBottom: "1rem",
+
+    p: {
+      marginBottom: "1rem",
+      marginTop: "0",
+    },
   },
   smallHeading: {
     color: "palette.gray",
