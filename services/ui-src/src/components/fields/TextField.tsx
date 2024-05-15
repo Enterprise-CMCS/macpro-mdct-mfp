@@ -28,7 +28,6 @@ export const TextField = ({
   heading,
   ...props
 }: Props) => {
-  const { rows, multiline } = props;
   const defaultValue = "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
@@ -122,6 +121,9 @@ export const TextField = ({
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
 
+  const { autoComplete, disabled, multiline, rows } = props ?? {};
+  const additionalProps = { autoComplete, disabled, multiline, rows };
+
   return (
     <Box sx={sxOverride} className={`${nestedChildClasses} ${labelClass}`}>
       {/* SAR field sections */}
@@ -136,8 +138,7 @@ export const TextField = ({
         onBlur={(e) => onBlurHandler(e)}
         errorMessage={errorMessage}
         value={displayValue}
-        rows={rows}
-        multiline={multiline}
+        {...additionalProps}
       />
     </Box>
   );
