@@ -11,20 +11,19 @@ import {
 
 describe("Schemas", () => {
   const goodNumberTestCases = [
-    "",
     "123",
     "123.00",
-    "123..00",
     "1,230",
     "1,2,30",
     "1230",
-    "123450123..,,,.123123123123",
+    "123450123,,,.123123123123",
     "N/A",
     "Data not available",
   ];
-  const badNumberTestCases = ["abc", "N", "!@#!@%", "-1"];
+  const badNumberTestCases = ["abc", "N", "", "!@#!@%", "-1"];
 
   const goodIntegerTestCases = [
+    "1",
     "123",
     "12300",
     "1,230",
@@ -82,9 +81,13 @@ describe("Schemas", () => {
     expectedReturn: boolean
   ) => {
     for (let testCase of testCases) {
-      let test = schemaToUse.isValidSync(testCase);
-
-      expect(test).toEqual(expectedReturn);
+      if (expectedReturn) {
+        expect(schemaToUse.validateSync(testCase)).toEqual(testCase);
+      } else {
+        expect(() => {
+          schemaToUse.validateSync(testCase);
+        }).toThrowError();
+      }
     }
   };
 
