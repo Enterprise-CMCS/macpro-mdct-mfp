@@ -1,12 +1,18 @@
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { GetCommand, paginateQuery } from "@aws-sdk/lib-dynamodb";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import {
+  GetCommand,
+  paginateQuery,
+  PutCommand,
+  QueryCommand,
+} from "@aws-sdk/lib-dynamodb";
+import {
+  FormTemplateVersion,
   ReportFieldData,
   ReportJson,
   ReportMetadataShape,
   ReportType,
   State,
-} from "../utils/types/index";
+} from "../utils/types";
 import {
   createClient as createDynamoClient,
   collectPageItems,
@@ -15,12 +21,32 @@ import {
   createClient as createS3Client,
   parseS3Response,
 } from "../utils/s3/s3-lib";
-import { reportBuckets, reportTables } from "../utils/constants/constants";
 
 const dynamoClient = createDynamoClient();
 const s3Client = createS3Client();
 
+const reportTables: { [key in ReportType]: string } = {
+  SAR: process.env.SAR_REPORT_TABLE_NAME!,
+  WP: process.env.WP_REPORT_TABLE_NAME!,
+};
+
+const formTemplateVersionTable = process.env.FORM_TEMPLATE_TABLE_NAME!;
+
+const reportBuckets: { [key in ReportType]: string } = {
+  SAR: process.env.SAR_FORM_BUCKET!,
+  WP: process.env.WP_FORM_BUCKET!,
+};
+
 /* METADATA (dynamo) */
+
+export const putReportMetadata = async (metadata: ReportMetadataShape) => {
+  await dynamoClient.send(
+    new PutCommand({
+      TableName: reportTables[metadata.reportType],
+      Item: metadata,
+    })
+  );
+};
 
 export const queryReportMetadatasForState = async (
   reportType: ReportType,
@@ -57,6 +83,25 @@ export const getReportMetadata = async (
 
 /* FIELD DATA (s3) */
 
+export const putReportFieldData = async (
+  {
+    reportType,
+    state,
+    fieldDataId,
+  }: Pick<ReportMetadataShape, "reportType" | "state" | "fieldDataId">,
+  fieldData: ReportFieldData
+) => {
+  const bucket = reportBuckets[reportType];
+  await s3Client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      ContentType: "application/json",
+      Key: `fieldData/${state}/${fieldDataId}.json`,
+      Body: JSON.stringify(fieldData),
+    })
+  );
+};
+
 export const getReportFieldData = async ({
   reportType,
   state,
@@ -75,6 +120,24 @@ export const getReportFieldData = async ({
 
 /* FORM TEMPLATES (s3) */
 
+export const putReportFormTemplate = async (
+  {
+    reportType,
+    formTemplateId,
+  }: Pick<ReportMetadataShape, "reportType" | "formTemplateId">,
+  formTemplate: ReportJson
+) => {
+  const bucket = reportBuckets[reportType];
+  await s3Client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      ContentType: "application/json",
+      Key: `formTemplates/${formTemplateId}.json`,
+      Body: JSON.stringify(formTemplate),
+    })
+  );
+};
+
 export const getReportFormTemplate = async ({
   reportType,
   formTemplateId,
@@ -88,4 +151,54 @@ export const getReportFormTemplate = async ({
   );
   const fieldData = await parseS3Response(response);
   return fieldData as ReportJson | undefined;
+};
+
+/* FORM TEMPLATE VERSIONS (dynamo) */
+
+export const putFormTemplateVersion = async (
+  formTemplateVersion: FormTemplateVersion
+) => {
+  await dynamoClient.send(
+    new PutCommand({
+      TableName: formTemplateVersionTable,
+      Item: formTemplateVersion,
+    })
+  );
+};
+
+export const queryFormTemplateVersionByHash = async (
+  reportType: ReportType,
+  md5Hash: string
+) => {
+  const response = await dynamoClient.send(
+    new QueryCommand({
+      TableName: formTemplateVersionTable,
+      IndexName: "HashIndex",
+      KeyConditionExpression: "reportType = :reportType AND md5Hash = :md5Hash",
+      ExpressionAttributeValues: {
+        ":reportType": reportType,
+        ":md5Hash": md5Hash,
+      },
+      Limit: 1,
+    })
+  );
+  return response.Items?.[0] as FormTemplateVersion | undefined;
+};
+
+export const queryLatestFormTemplateVersionNumber = async (
+  reportType: ReportType
+) => {
+  const response = await dynamoClient.send(
+    new QueryCommand({
+      TableName: formTemplateVersionTable,
+      KeyConditionExpression: "reportType = :reportType",
+      ExpressionAttributeValues: { ":reportType": reportType },
+      Limit: 1,
+      ScanIndexForward: false, // false -> backwards -> highest version first
+    })
+  );
+  const latestFormTemplate = response.Items?.[0] as
+    | FormTemplateVersion
+    | undefined;
+  return latestFormTemplate?.versionNumber ?? 0;
 };

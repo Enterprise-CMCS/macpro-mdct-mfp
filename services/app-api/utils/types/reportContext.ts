@@ -79,5 +79,5 @@ export enum ReportStatus {
 /** The shape of our reports' field data, as stored in S3 */
 export type ReportFieldData = Record<
   string,
-  string | boolean | ReportFieldData[]
+  string | boolean | Choice[] | ReportFieldData[]
 >;

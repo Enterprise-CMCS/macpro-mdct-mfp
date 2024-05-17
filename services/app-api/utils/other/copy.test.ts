@@ -1,9 +1,9 @@
-import s3Lib from "../s3/s3-lib";
 import { copyFieldDataFromSource } from "./copy";
+import { getReportFieldData } from "../../storage/reports";
+import { ReportJson, ReportRoute, FormField } from "../types";
 
-jest.mock("../s3/s3-lib", () => ({
-  ...jest.requireActual("../s3/s3-lib"),
-  get: jest.fn(),
+jest.mock("../../storage/reports", () => ({
+  getReportFieldData: jest.fn(),
 }));
 
 describe("Field data copy", () => {
@@ -12,8 +12,8 @@ describe("Field data copy", () => {
   });
 
   test("Should copy validated fields", async () => {
-    (s3Lib.get as jest.Mock).mockResolvedValueOnce({
-      mockFieldId: 42,
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+      mockFieldId: "42",
     });
     const fieldData = {};
     const formTemplate = {
@@ -29,10 +29,9 @@ describe("Field data copy", () => {
           },
         },
       ],
-    };
+    } as ReportJson;
 
     const copiedData = await copyFieldDataFromSource(
-      "mock-bucket-name",
       "CO",
       "mock-source-id",
       formTemplate,
@@ -40,16 +39,16 @@ describe("Field data copy", () => {
     );
 
     expect(copiedData).toEqual({
-      mockFieldId: 42,
+      mockFieldId: "42",
     });
   });
 
   test("Should overwrite populated fields, apparently", async () => {
-    (s3Lib.get as jest.Mock).mockResolvedValueOnce({
-      mockFieldId: 42,
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+      mockFieldId: "42",
     });
     const fieldData = {
-      mockFieldId: 255,
+      mockFieldId: "255",
     };
     const formTemplate = {
       routes: [
@@ -64,10 +63,9 @@ describe("Field data copy", () => {
           },
         },
       ],
-    };
+    } as ReportJson;
 
     const copiedData = await copyFieldDataFromSource(
-      "mock-bucket-name",
       "CO",
       "mock-source-id",
       formTemplate,
@@ -75,21 +73,20 @@ describe("Field data copy", () => {
     );
 
     expect(copiedData).toEqual({
-      mockFieldId: 42,
+      mockFieldId: "42",
     });
   });
 
   test("Should not copy fields with no validation", async () => {
-    (s3Lib.get as jest.Mock).mockResolvedValueOnce({
-      mockFieldId: 42,
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+      mockFieldId: "42",
     });
     const fieldData = {};
     const formTemplate = {
-      routes: [],
-    };
+      routes: [] as ReportRoute[],
+    } as ReportJson;
 
     const copiedData = await copyFieldDataFromSource(
-      "mock-bucket-name",
       "CO",
       "mock-source-id",
       formTemplate,
@@ -100,20 +97,19 @@ describe("Field data copy", () => {
   });
 
   test("Should not copy entities with no validated fields", async () => {
-    (s3Lib.get as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
-          mockFieldId: 42,
+          mockFieldId: "42",
         },
       ],
     });
     const fieldData = {};
     const formTemplate = {
-      routes: [],
-    };
+      routes: [] as ReportRoute[],
+    } as ReportJson;
 
     const copiedData = await copyFieldDataFromSource(
-      "mock-bucket-name",
       "CO",
       "mock-source-id",
       formTemplate,
@@ -124,10 +120,10 @@ describe("Field data copy", () => {
   });
 
   test("Should copy validated fields within entities", async () => {
-    (s3Lib.get as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
-          mockFieldId: 42,
+          mockFieldId: "42",
         },
       ],
     });
@@ -147,10 +143,9 @@ describe("Field data copy", () => {
           },
         },
       ],
-    };
+    } as ReportJson;
 
     const copiedData = await copyFieldDataFromSource(
-      "mock-bucket-name",
       "CO",
       "mock-source-id",
       formTemplate,
@@ -160,14 +155,14 @@ describe("Field data copy", () => {
     expect(copiedData).toEqual({
       mockEntityType: [
         expect.objectContaining({
-          mockFieldId: 42,
+          mockFieldId: "42",
         }),
       ],
     });
   });
 
   test("Should copy special fields within entities", async () => {
-    (s3Lib.get as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mock_name_field: "mock name", // key includes the string "name"
@@ -190,14 +185,13 @@ describe("Field data copy", () => {
           drawerForm: {
             fields: [
               /* no validated fields, so anything copied is special */
-            ],
+            ] as FormField[],
           },
         },
       ],
-    };
+    } as ReportJson;
 
     const copiedData = await copyFieldDataFromSource(
-      "mock-bucket-name",
       "CO",
       "mock-source-id",
       formTemplate,
@@ -222,10 +216,10 @@ describe("Field data copy", () => {
   });
 
   test("Should not copy closed initiatives", async () => {
-    (s3Lib.get as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
-          mockFieldId: 42,
+          mockFieldId: "42",
           isInitiativeClosed: true,
         },
       ],
@@ -246,10 +240,9 @@ describe("Field data copy", () => {
           },
         },
       ],
-    };
+    } as ReportJson;
 
     const copiedData = await copyFieldDataFromSource(
-      "mock-bucket-name",
       "CO",
       "mock-source-id",
       formTemplate,
@@ -261,10 +254,10 @@ describe("Field data copy", () => {
   });
 
   test("Should wipe the entire entity if no fields are being copied", async () => {
-    (s3Lib.get as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
-          mockFieldId: 42,
+          mockFieldId: "42",
         },
       ],
     });
@@ -277,14 +270,13 @@ describe("Field data copy", () => {
           drawerForm: {
             fields: [
               /* no validated fields, therefore no copied fields */
-            ],
+            ] as FormField[],
           },
         },
       ],
-    };
+    } as ReportJson;
 
     const copiedData = await copyFieldDataFromSource(
-      "mock-bucket-name",
       "CO",
       "mock-source-id",
       formTemplate,
@@ -295,12 +287,12 @@ describe("Field data copy", () => {
   });
 
   test("Should prune entity steps", async () => {
-    (s3Lib.get as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mockSteps: [
             {
-              mockFieldId: 42,
+              mockFieldId: "42",
               mockExtraField: "not validated and thus not copied",
             },
           ],
@@ -323,10 +315,9 @@ describe("Field data copy", () => {
           },
         },
       ],
-    };
+    } as ReportJson;
 
     const copiedData = await copyFieldDataFromSource(
-      "mock-bucket-name",
       "CO",
       "mock-source-id",
       formTemplate,
@@ -338,7 +329,7 @@ describe("Field data copy", () => {
         {
           mockSteps: [
             {
-              mockFieldId: 42,
+              mockFieldId: "42",
               isCopied: true,
             },
           ],
