@@ -1,12 +1,11 @@
 import handler from "../handler-lib";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import { error, reportTables } from "../../utils/constants/constants";
+import { error } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
 import { parseSpecificReportParameters } from "../../utils/auth/parameters";
+import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
-import { StatusCodes, UserRoles } from "../../utils/types";
-import { getReportMetadata } from "../../storage/reports";
+import { ReportStatus, StatusCodes, UserRoles } from "../../utils/types";
 
 export const approveReport = handler(async (event) => {
   const { allParamsValid, reportType, state, id } =
@@ -35,21 +34,15 @@ export const approveReport = handler(async (event) => {
     };
   }
 
-  const reportTable = reportTables[reportType];
-
-  // toggle archived status in report metadata table
-  const reportMetadataParams = {
-    TableName: reportTable,
-    Item: {
-      ...currentReport,
-      status: "Approved",
-      locked: true,
-      isComplete: true,
-    },
+  const updatedReport = {
+    ...currentReport,
+    status: ReportStatus.APPROVED,
+    locked: true,
+    isComplete: true,
   };
 
   try {
-    await dynamoDb.put(reportMetadataParams);
+    await putReportMetadata(updatedReport);
   } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
@@ -59,6 +52,6 @@ export const approveReport = handler(async (event) => {
 
   return {
     status: StatusCodes.SUCCESS,
-    body: reportMetadataParams.Item,
+    body: updatedReport,
   };
 });

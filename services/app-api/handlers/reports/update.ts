@@ -1,19 +1,13 @@
 import handler from "../handler-lib";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { hasPermissions } from "../../utils/auth/authorization";
 import { parseSpecificReportParameters } from "../../utils/auth/parameters";
-import s3Lib, { getFieldDataKey } from "../../utils/s3/s3-lib";
 import {
   validateData,
   validateFieldData,
 } from "../../utils/validation/validation";
 import { metadataValidationSchema } from "../../utils/validation/schemas";
-import {
-  error,
-  reportTables,
-  reportBuckets,
-} from "../../utils/constants/constants";
+import { error } from "../../utils/constants/constants";
 import {
   calculateCompletionStatus,
   isComplete,
@@ -25,6 +19,8 @@ import {
   getReportFieldData,
   getReportFormTemplate,
   getReportMetadata,
+  putReportFieldData,
+  putReportMetadata,
 } from "../../storage/reports";
 
 export const updateReport = handler(async (event) => {
@@ -105,18 +101,6 @@ export const updateReport = handler(async (event) => {
     };
   }
 
-  const { formTemplateId, fieldDataId } = currentReport;
-
-  const reportBucket = reportBuckets[reportType];
-  const reportTable = reportTables[reportType];
-
-  if (!formTemplateId || !fieldDataId) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.MISSING_DATA,
-    };
-  }
-
   const formTemplate = await getReportFormTemplate(currentReport);
   if (!formTemplate) {
     return {
@@ -174,17 +158,8 @@ export const updateReport = handler(async (event) => {
   };
 
   const cleanedFieldData = removeNotApplicablePopsFromInitiatives(fieldData);
-
-  // Post validated field data to s3 bucket
-  const updateFieldDataParams = {
-    Bucket: reportBucket,
-    Key: getFieldDataKey(state, fieldDataId),
-    Body: JSON.stringify(cleanedFieldData),
-    ContentType: "application/json",
-  };
-
   try {
-    await s3Lib.put(updateFieldDataParams);
+    await putReportFieldData(currentReport, cleanedFieldData);
   } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
@@ -212,18 +187,15 @@ export const updateReport = handler(async (event) => {
   }
 
   // Update record in report metadata table
-  const reportMetadataParams = {
-    TableName: reportTable,
-    Item: {
-      ...currentReport,
-      ...validatedMetadata,
-      isComplete: isComplete(completionStatus),
-      lastAltered: Date.now(),
-    },
+  const updatedMetadata = {
+    ...currentReport,
+    ...validatedMetadata,
+    isComplete: isComplete(completionStatus),
+    lastAltered: Date.now(),
   };
 
   try {
-    await dynamoDb.put(reportMetadataParams);
+    await putReportMetadata(updatedMetadata);
   } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
@@ -234,7 +206,7 @@ export const updateReport = handler(async (event) => {
   return {
     status: StatusCodes.SUCCESS,
     body: {
-      ...reportMetadataParams.Item,
+      ...updatedMetadata,
       fieldData,
       formTemplate,
     },

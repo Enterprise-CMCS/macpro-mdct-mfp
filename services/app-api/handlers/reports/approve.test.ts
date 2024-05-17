@@ -1,20 +1,15 @@
 import { approveReport } from "./approve";
-import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
-import { mockClient } from "aws-sdk-client-mock";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import { mockWPReport } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
-import { getReportMetadata } from "../../storage/reports";
+import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
 
-const dynamoClientMock = mockClient(DynamoDBDocumentClient);
-
 jest.mock("../../storage/reports", () => ({
-  getReportFieldData: jest.fn(),
-  getReportFormTemplate: jest.fn(),
   getReportMetadata: jest.fn(),
+  putReportMetadata: jest.fn(),
 }));
 
 jest.mock("../../utils/auth/authorization", () => ({
@@ -42,19 +37,16 @@ const approveEvent: APIGatewayProxyEvent = {
 describe("Test approveReport method", () => {
   afterEach(() => {
     jest.clearAllMocks();
-    dynamoClientMock.reset();
   });
 
   test("Test approve report passes with valid data", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    const mockPut = jest.fn();
-    dynamoClientMock.on(PutCommand).callsFake(mockPut);
     (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res: any = await approveReport(approveEvent, null);
     const body = JSON.parse(res.body);
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.status).toBe("Approved");
-    expect(mockPut).toHaveBeenCalled();
+    expect(putReportMetadata).toHaveBeenCalled();
   });
 
   test("Test approve report with no existing record throws 404", async () => {
