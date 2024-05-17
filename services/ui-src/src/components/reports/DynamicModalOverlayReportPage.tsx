@@ -62,10 +62,7 @@ export const DynamicModalOverlayReportPage = ({
 
   const showAlert =
     report && errorMessage ? getWPAlertStatus(report, entityType) : false;
-
-  const dashTitle = verbiage.dashboardTitle
-    ? `${verbiage.dashboardTitle}`
-    : null;
+  const dashTitle = verbiage?.dashboardTitle;
   const dashSubTitle = parseCustomHtml(
     (verbiage as AnyObject)?.dashboardSubtitle
   );
