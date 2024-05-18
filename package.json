@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp#readme",
   "dependencies": {
-    "@enterprise-cmcs/serverless-waf-plugin": "^1.3.2"
+    "@enterprise-cmcs/serverless-waf-plugin": "^1.4.0"
   },
   "devDependencies": {
     "@serverless/compose": "^1.3.0",
