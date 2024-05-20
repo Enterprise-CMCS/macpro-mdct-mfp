@@ -5,7 +5,7 @@ import { AnyObject, CustomHtmlElement } from "./other";
 
 export interface ReportJson {
   id?: string;
-  type?: string;
+  type: ReportType;
   name: string;
   basePath: string;
   routes: ReportRoute[];

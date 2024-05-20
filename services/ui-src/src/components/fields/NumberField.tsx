@@ -149,6 +149,9 @@ export const NumberField = ({
     label && styleAsOptional ? labelTextWithOptional(label) : label;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
 
+  const { autoComplete, disabled } = props ?? {};
+  const additionalProps = { autoComplete, disabled };
+
   return (
     <Box sx={{ ...sx, ...sxOverride }} className={`${nestedChildClasses}`}>
       <Box sx={sx.numberFieldContainer} className={maskClass}>
@@ -162,7 +165,7 @@ export const NumberField = ({
           onBlur={onBlurHandler}
           value={displayValue}
           errorMessage={errorMessage}
-          {...props}
+          {...additionalProps}
         />
         <SymbolOverlay
           fieldMask={mask}

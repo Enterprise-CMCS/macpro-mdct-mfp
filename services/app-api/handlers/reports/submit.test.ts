@@ -10,13 +10,13 @@ import {
   mockDynamoDataWPCompleted,
   mockReportFieldData,
   mockReportJson,
-  mockS3PutObjectCommandOutput,
 } from "../../utils/testing/setupJest";
-import s3Lib from "../../utils/s3/s3-lib";
 import {
   getReportFieldData,
   getReportFormTemplate,
   getReportMetadata,
+  putReportFieldData,
+  putReportMetadata,
 } from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
@@ -27,6 +27,8 @@ jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
   getReportFormTemplate: jest.fn(),
   getReportMetadata: jest.fn(),
+  putReportFieldData: jest.fn(),
+  putReportMetadata: jest.fn(),
 }));
 
 jest.mock("../../utils/auth/authorization", () => ({
@@ -60,8 +62,6 @@ describe("Test submitReport API method", () => {
     );
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
-    const s3PutSpy = jest.spyOn(s3Lib, "put");
-    s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
 
     const res = await submitReport(testSubmitEvent, null);
     const body = JSON.parse(res.body);
@@ -74,6 +74,8 @@ describe("Test submitReport API method", () => {
     expect(body.submittedBy).toStrictEqual("Thelonious States");
     expect(body.submittedOnDate).toBeTruthy();
     expect(body.locked).toBe(true);
+    expect(putReportMetadata).toHaveBeenCalled();
+    expect(putReportFieldData).toHaveBeenCalled();
   });
 
   test("Test WP reports get locked and have submission count updated.", async () => {
@@ -82,8 +84,6 @@ describe("Test submitReport API method", () => {
     );
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
-    const s3PutSpy = jest.spyOn(s3Lib, "put");
-    s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
 
     const res = await submitReport(testSubmitEvent, null);
     const body = JSON.parse(res.body);

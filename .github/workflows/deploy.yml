@@ -217,6 +217,7 @@ jobs:
           working-directory: tests
           spec: |
             cypress/e2e/wp/*.cy.js
+            cypress/e2e/sar/*.cy.js
             cypress/e2e/*.cy.js
           browser: chrome
           config: baseUrl=${{ needs.deploy.outputs.application_endpoint }}

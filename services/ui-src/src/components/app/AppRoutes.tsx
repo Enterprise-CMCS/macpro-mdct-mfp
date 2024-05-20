@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import {
   AdminBannerProvider,
@@ -22,10 +21,6 @@ export const AppRoutes = () => {
   const { userIsAdmin } = useStore().user ?? {};
   const { report } = useStore();
 
-  // LaunchDarkly
-  const wpReport = true; //useFlags()?.wpReport;
-  const sarReport = useFlags().sarReport;
-
   return (
     <main id="main-content" tabIndex={-1}>
       <ScrollToTopComponent />
@@ -41,24 +36,16 @@ export const AppRoutes = () => {
           <Route path="/help" element={<HelpPage />} />
           <Route path="*" element={<NotFoundPage />} />
           {/* MFP Report Routes */}
-          {wpReport && (
-            <>
-              <Route
-                path="/wp"
-                element={<DashboardPage reportType={ReportType.WP} />}
-              />
-              <Route path="/wp/export" element={<ExportedReportPage />} />
-            </>
-          )}
-          {sarReport && (
-            <>
-              <Route
-                path="/sar"
-                element={<DashboardPage reportType={ReportType.SAR} />}
-              />
-              <Route path="/sar/export" element={<ExportedReportPage />} />
-            </>
-          )}
+          <Route
+            path="/wp"
+            element={<DashboardPage reportType={ReportType.WP} />}
+          />
+          <Route path="/wp/export" element={<ExportedReportPage />} />
+          <Route
+            path="/sar"
+            element={<DashboardPage reportType={ReportType.SAR} />}
+          />
+          <Route path="/sar/export" element={<ExportedReportPage />} />
           {/* General Report Routes */}
           {report && (
             <>

@@ -124,6 +124,7 @@ const mockNestedChildren = [
     type: "dropdown",
     props: {
       options: [...mockDropdownOptions],
+      ariaLabel: "test nest child dropdown",
     },
   },
 ];

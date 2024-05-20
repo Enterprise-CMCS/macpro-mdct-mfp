@@ -1,18 +1,15 @@
 import { archiveReport } from "./archive";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
-import {
-  mockDynamoPutCommandOutput,
-  mockWPReport,
-} from "../../utils/testing/setupJest";
+import { mockWPReport } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
-import dynamodbLib from "../../utils/dynamo/dynamodb-lib";
-import { getReportMetadata } from "../../storage/reports";
+import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
 
 jest.mock("../../storage/reports", () => ({
   getReportMetadata: jest.fn(),
+  putReportMetadata: jest.fn(),
 }));
 
 jest.mock("../../utils/auth/authorization", () => ({
@@ -43,13 +40,11 @@ describe("Test archiveReport method", () => {
   });
 
   test("Test archive report passes with valid data", async () => {
-    const dynamoPutSpy = jest.spyOn(dynamodbLib, "put");
-    dynamoPutSpy.mockResolvedValue(mockDynamoPutCommandOutput);
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res: any = await archiveReport(archiveEvent, null);
     const body = JSON.parse(res.body);
-    expect(dynamoPutSpy).toHaveBeenCalled();
+    expect(putReportMetadata).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.archived).toBe(true);
   });

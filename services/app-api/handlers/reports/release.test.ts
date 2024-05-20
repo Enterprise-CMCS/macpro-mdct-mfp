@@ -1,6 +1,4 @@
 import { releaseReport } from "./release";
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { mockClient } from "aws-sdk-client-mock";
 import KSUID from "ksuid";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
@@ -9,24 +7,24 @@ import {
   mockDynamoDataWPCompleted,
   mockReportFieldData,
   mockReportJson,
-  mockS3PutObjectCommandOutput,
 } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
-import s3Lib from "../../utils/s3/s3-lib";
 import {
   getReportFieldData,
   getReportFormTemplate,
   getReportMetadata,
+  putReportMetadata,
+  putReportFieldData,
 } from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
-
-mockClient(DynamoDBDocumentClient);
 
 jest.mock("../../storage/reports", () => ({
   getReportMetadata: jest.fn(),
   getReportFieldData: jest.fn(),
   getReportFormTemplate: jest.fn(),
+  putReportFieldData: jest.fn(),
+  putReportMetadata: jest.fn(),
 }));
 
 jest.mock("../../utils/auth/authorization", () => ({
@@ -57,8 +55,6 @@ describe("Test releaseReport method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoDataWPLocked);
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
-    const s3PutSpy = jest.spyOn(s3Lib, "put");
-    s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
 
     const res = await releaseReport(releaseEvent, null);
     const body = JSON.parse(res.body);
@@ -69,9 +65,10 @@ describe("Test releaseReport method", () => {
       mockDynamoDataWPLocked.fieldDataId,
     ]);
     expect(body.fieldDataId).not.toBe(mockDynamoDataWPLocked.fieldDataId);
-    expect(s3PutSpy).toHaveBeenCalled();
     expect(getReportFieldData).toHaveBeenCalled();
     expect(getReportFormTemplate).toHaveBeenCalled();
+    expect(putReportMetadata).toHaveBeenCalled();
+    expect(putReportFieldData).toHaveBeenCalled();
   });
 
   test("Test release report passes with valid data, but it has been more than the first submission", async () => {
@@ -84,8 +81,6 @@ describe("Test releaseReport method", () => {
     });
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
-    const s3PutSpy = jest.spyOn(s3Lib, "put");
-    s3PutSpy.mockResolvedValue(mockS3PutObjectCommandOutput);
 
     const res = await releaseReport(releaseEvent, null);
     const body = JSON.parse(res.body);

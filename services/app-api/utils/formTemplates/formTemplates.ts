@@ -1,96 +1,44 @@
-import { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
-import dynamodbLib from "../dynamo/dynamodb-lib";
 import wpForm from "../../forms/wp.json";
 import sarForm from "../../forms/sar.json";
-import s3Lib, { getFormTemplateKey } from "../s3/s3-lib";
 import KSUID from "ksuid";
-import { logger } from "../debugging/debug-lib";
 import {
   AnyObject,
-  assertExhaustive,
   FieldChoice,
   FormField,
   FormJson,
   FormLayoutElement,
-  FormTemplate,
+  FormTemplateVersion,
   ReportJson,
   ReportRoute,
   ReportType,
 } from "../types";
 import { createHash } from "crypto";
 import { transformFormTemplate } from "../transformations/transformations";
-
-/**
- * Retrieve template data from S3
- *
- * @param bucket s3 bucket
- * @param key s3 key
- * @returns s3 object body
- */
-export async function getTemplate(bucket: string, key: string) {
-  return (await s3Lib.get({
-    Key: key,
-    Bucket: bucket,
-  })) as ReportJson;
-}
-
-export async function getNewestTemplateVersion(reportType: ReportType) {
-  const queryParams: QueryCommandInput = {
-    TableName: process.env.FORM_TEMPLATE_TABLE_NAME!,
-    KeyConditionExpression: `reportType = :reportType`,
-    ExpressionAttributeValues: {
-      ":reportType": reportType,
-    },
-    Limit: 1,
-    ScanIndexForward: false, // true = ascending, false = descending
-  };
-  const result = await dynamodbLib.query(queryParams);
-  return result?.[0];
-}
-
-export async function getTemplateVersionByHash(
-  reportType: ReportType,
-  hash: string
-) {
-  const queryParams: QueryCommandInput = {
-    TableName: process.env.FORM_TEMPLATE_TABLE_NAME!,
-    IndexName: "HashIndex",
-    KeyConditionExpression: "reportType = :reportType AND md5Hash = :md5Hash",
-    Limit: 1,
-    ExpressionAttributeValues: {
-      ":md5Hash": hash,
-      ":reportType": reportType,
-    },
-  };
-  const result = await dynamodbLib.query(queryParams);
-  return result?.[0];
-}
+import {
+  getReportFormTemplate,
+  putFormTemplateVersion,
+  putReportFormTemplate,
+  queryFormTemplateVersionByHash,
+  queryLatestFormTemplateVersionNumber,
+} from "../../storage/reports";
+import assert from "node:assert";
 
 export const formTemplateForReportType = (reportType: ReportType) => {
-  switch (reportType) {
-    case ReportType.WP:
-      return wpForm as ReportJson;
-    case ReportType.SAR:
-      return sarForm as ReportJson;
-    default:
-      assertExhaustive(reportType);
-      throw new Error(
-        "Not Implemented: ReportType not recognized by FormTemplateProvider"
-      );
-  }
+  const map: { [key in ReportType]: ReportJson } = {
+    [ReportType.WP]: wpForm as ReportJson,
+    [ReportType.SAR]: sarForm as ReportJson,
+  };
+  // Clone to prevent accidental changes to the originals
+  return structuredClone(map[reportType]);
 };
 
 export async function getOrCreateFormTemplate(
-  reportBucket: string,
   reportType: ReportType,
   reportPeriod: number,
   reportYear: number,
   workPlanFieldData?: AnyObject
 ) {
-  //Make a copy of the form template so we don't accidentally corrupt the original
-  let currentFormTemplate = structuredClone(
-    formTemplateForReportType(reportType)
-  );
+  let currentFormTemplate = formTemplateForReportType(reportType);
 
   if (currentFormTemplate?.routes) {
     currentFormTemplate = transformFormTemplate(
@@ -107,18 +55,23 @@ export async function getOrCreateFormTemplate(
     .update(stringifiedTemplate)
     .digest("hex");
 
-  const matchTemplateVersion = await getTemplateVersionByHash(
+  const matchTemplateVersion = await queryFormTemplateVersionByHash(
     reportType,
     currentTemplateHash
   );
 
   //if a template of this hash already exist
   if (currentTemplateHash === matchTemplateVersion?.md5Hash) {
+    const matchingTemplate = await getReportFormTemplate({
+      reportType,
+      formTemplateId: matchTemplateVersion.id,
+    });
+    assert(
+      matchingTemplate !== undefined,
+      "Found version info matching form template hash, but no matching document exists in S3"
+    );
     return {
-      formTemplate: await getTemplate(
-        reportBucket,
-        getFormTemplateKey(matchTemplateVersion?.id)
-      ),
+      formTemplate: matchingTemplate,
       formTemplateVersion: matchTemplateVersion,
     };
   } else {
@@ -129,47 +82,26 @@ export async function getOrCreateFormTemplate(
       validationJson: getValidationFromFormTemplate(currentFormTemplate),
     };
 
-    //saving new version of the formTemplate to the database
-    try {
-      await s3Lib.put({
-        Key: getFormTemplateKey(newFormTemplateId),
-        Body: JSON.stringify(formTemplateWithValidationJson),
-        ContentType: "application/json",
-        Bucket: reportBucket,
-      });
-    } catch (err) {
-      logger.error(err, "Error uploading new form template to S3");
-      throw err;
-    }
-
-    //getting the latest version so that if there isn't a match, we can use this to save to the next iteration
-    const mostRecentTemplateVersion = await getNewestTemplateVersion(
-      reportType
+    await putReportFormTemplate(
+      {
+        reportType,
+        formTemplateId: newFormTemplateId,
+      },
+      formTemplateWithValidationJson
     );
 
+    const latest = await queryLatestFormTemplateVersionNumber(reportType);
+
     // If we didn't find any form templates, start version at 1.
-    const newFormTemplateVersionItem: FormTemplate = {
-      versionNumber: mostRecentTemplateVersion?.versionNumber
-        ? (mostRecentTemplateVersion.versionNumber += 1)
-        : 1,
+    const newFormTemplateVersionItem: FormTemplateVersion = {
+      versionNumber: latest + 1,
       md5Hash: currentTemplateHash,
       id: newFormTemplateId,
       lastAltered: new Date().toISOString(),
       reportType,
     };
 
-    try {
-      await dynamodbLib.put({
-        TableName: process.env.FORM_TEMPLATE_TABLE_NAME!,
-        Item: newFormTemplateVersionItem,
-      });
-    } catch (err) {
-      logger.error(
-        err,
-        "Error writing a new form template version to DynamoDB."
-      );
-      throw err;
-    }
+    await putFormTemplateVersion(newFormTemplateVersionItem);
 
     return {
       formTemplate: formTemplateWithValidationJson,
