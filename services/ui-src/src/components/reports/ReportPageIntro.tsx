@@ -33,7 +33,7 @@ export const ReportPageIntro = ({
           {section}
         </Heading>
         <Heading as="h2" sx={sx.largeHeading}>
-          {initiativeName ? initiativeName : subsection}
+          {initiativeName ?? subsection}
         </Heading>
       </>
     );
