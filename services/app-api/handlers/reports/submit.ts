@@ -4,20 +4,16 @@ import handler from "../handler-lib";
 // utils
 import { hasPermissions } from "../../utils/auth/authorization";
 import { parseSpecificReportParameters } from "../../utils/auth/parameters";
-import {
-  error,
-  reportBuckets,
-  reportTables,
-} from "../../utils/constants/constants";
-import dynamodbLib from "../../utils/dynamo/dynamodb-lib";
-import s3Lib, { getFieldDataKey } from "../../utils/s3/s3-lib";
+import { error } from "../../utils/constants/constants";
 import { convertDateUtcToEt } from "../../utils/time/time";
 // types
-import { StatusCodes, UserRoles } from "../../utils/types";
+import { ReportStatus, StatusCodes, UserRoles } from "../../utils/types";
 import {
   getReportFieldData,
   getReportFormTemplate,
   getReportMetadata,
+  putReportFieldData,
+  putReportMetadata,
 } from "../../storage/reports";
 
 export const submitReport = handler(async (event, _context) => {
@@ -37,9 +33,6 @@ export const submitReport = handler(async (event, _context) => {
     };
   }
 
-  const reportTable = reportTables[reportType];
-  const reportBucket = reportBuckets[reportType];
-
   try {
     const reportMetadata = await getReportMetadata(reportType, state, id);
     if (!reportMetadata) {
@@ -49,7 +42,7 @@ export const submitReport = handler(async (event, _context) => {
       };
     }
 
-    const { status, isComplete, fieldDataId } = reportMetadata;
+    const { status, isComplete } = reportMetadata;
 
     if (status === "Submitted") {
       return {
@@ -77,21 +70,17 @@ export const submitReport = handler(async (event, _context) => {
     const submissionCount = reportMetadata.submissionCount
       ? reportMetadata.submissionCount + 1
       : 1;
-    const newItem = {
+    const submittedReportMetadata = {
       ...reportMetadata,
       submittedBy: fullName,
       submittedOnDate: date,
-      status: "Submitted",
+      status: ReportStatus.SUBMITTED,
       locked: true,
       submissionCount: submissionCount,
     };
 
-    const submitReportParams = {
-      TableName: reportTable,
-      Item: newItem,
-    };
     try {
-      await dynamodbLib.put(submitReportParams);
+      await putReportMetadata(submittedReportMetadata);
     } catch (err) {
       return {
         status: StatusCodes.SERVER_ERROR,
@@ -114,13 +103,6 @@ export const submitReport = handler(async (event, _context) => {
       reportSubmissionDate: convertDateUtcToEt(date),
     };
 
-    const updateFieldDataParams = {
-      Bucket: reportBucket,
-      Key: getFieldDataKey(state, fieldDataId),
-      Body: JSON.stringify(fieldData),
-      ContentType: "application/json",
-    };
-
     const formTemplate = await getReportFormTemplate(reportMetadata);
     if (!formTemplate) {
       return {
@@ -130,7 +112,7 @@ export const submitReport = handler(async (event, _context) => {
     }
 
     try {
-      await s3Lib.put(updateFieldDataParams);
+      await putReportFieldData(reportMetadata, fieldData);
     } catch (err) {
       return {
         status: StatusCodes.SERVER_ERROR,
@@ -141,7 +123,7 @@ export const submitReport = handler(async (event, _context) => {
     return {
       status: StatusCodes.SUCCESS,
       body: {
-        ...newItem,
+        ...submittedReportMetadata,
         fieldData: { ...fieldData },
         formTemplate: {
           ...formTemplate,
