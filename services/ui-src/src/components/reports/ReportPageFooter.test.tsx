@@ -9,6 +9,7 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -18,6 +19,12 @@ const mockRoutes = {
   previousRoute: "/mock-previous-route",
   nextRoute: "/mock-next-route",
 };
+
+const mockUseNavigate = jest.fn();
+
+jest.mock("react-router-dom", () => ({
+  useNavigate: () => mockUseNavigate,
+}));
 
 jest.mock("utils", () => ({
   ...jest.requireActual("utils"),
@@ -62,6 +69,27 @@ describe("ReportPageFooter behavior", () => {
     });
     render(reportPageComponentWithForm);
     expect(screen.getByText("Continue")).not.toHaveAttribute("type", "submit");
+  });
+
+  it("Should navigate to the previous route when clicking the Previous button", async () => {
+    render(reportPageComponentWithForm);
+    const prevButton = screen.getByRole("button", { name: "Previous" });
+
+    await userEvent.click(prevButton);
+    expect(mockUseNavigate).toHaveBeenCalledWith(mockRoutes.previousRoute);
+  });
+
+  it("Should navigate to the next route when clicking Continue as admin user", async () => {
+    mockedUseStore.mockReturnValue({
+      user: { userIsAdmin: true },
+      ...mockReportStore,
+    });
+
+    render(reportPageComponentWithForm);
+    const nextButton = screen.getByRole("button", { name: "Continue" });
+
+    await userEvent.click(nextButton);
+    expect(mockUseNavigate).toHaveBeenCalledWith(mockRoutes.nextRoute);
   });
 });
 
