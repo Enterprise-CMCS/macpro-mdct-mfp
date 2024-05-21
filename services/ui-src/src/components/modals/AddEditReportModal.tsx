@@ -3,7 +3,8 @@ import { useContext, useState } from "react";
 import { Form, Modal, ReportContext } from "components";
 import { Button, Spinner } from "@chakra-ui/react";
 // form
-import wpFormJson from "forms/addEditWpReport/addEditWpReport.json";
+import copyWPFormJson from "forms/addEditWpReport/addEditWpReport.json";
+import newWPFormJson from "forms/addEditWpReport/newWpReport.json";
 import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 // utils
 import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
@@ -16,11 +17,11 @@ import {
 import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const AddEditReportModal = ({
-  activeState,
-  selectedReport,
-  previousReport,
-  reportType,
   modalDisclosure,
+  reportType,
+  activeState,
+  previousReport,
+  selectedReport,
 }: Props) => {
   const { createReport, fetchReportsByState, updateReport } =
     useContext(ReportContext);
@@ -33,7 +34,7 @@ export const AddEditReportModal = ({
    * and for state users after a SAR has been submitted
    */
   const sarReportWithSubmittedStatus =
-    reportType == ReportType.SAR &&
+    reportType === ReportType.SAR &&
     selectedReport?.status === ReportStatus.SUBMITTED;
 
   const viewOnly = userIsAdmin || sarReportWithSubmittedStatus;
@@ -45,7 +46,7 @@ export const AddEditReportModal = ({
   const filteredDataToInject = removeNotApplicablePopulations(dataToInject);
 
   const modalFormJsonMap: any = {
-    WP: wpFormJson,
+    WP: !previousReport ? newWPFormJson : copyWPFormJson,
     SAR: injectFormWithTargetPopulations(
       sarFormJson,
       filteredDataToInject,
@@ -56,6 +57,36 @@ export const AddEditReportModal = ({
   const modalFormJson = modalFormJsonMap[reportType]!;
   const form: FormJson = modalFormJson;
 
+  /**
+   * @function: Generate report year choices
+   * Populate previous, current, and next year for the choice list,
+   * except if it is the first year of the work plan feature
+   */
+  const generateReportYearChoices = () => {
+    const WP_LAUNCH_YEAR = 2024;
+    const currentYear = new Date(Date.now()).getFullYear();
+    return [currentYear - 1, currentYear, currentYear + 1]
+      .filter((year) => year >= WP_LAUNCH_YEAR)
+      .map((year) => ({
+        id: `reportYear-${year}`,
+        label: `${year}`,
+        name: `${year}`,
+        value: `${year}`,
+      }));
+  };
+
+  // prepare form if first WP
+  if (reportType === ReportType.WP && !previousReport) {
+    for (let field of form.fields) {
+      if (field.id.match("reportPeriodYear")) {
+        field.props = {
+          ...field.props,
+          choices: generateReportYearChoices(),
+        };
+      }
+    }
+  }
+
   // temporary flag for testing copyover
   const isCopyOverTest = useFlags()?.isCopyOverTest;
 
@@ -64,28 +95,42 @@ export const AddEditReportModal = ({
    * @param wpReset: (optional) determine whether the user would like to continue a Work Plan for next period,
    * but clear / reset any existing data from the previous period
    */
-  const prepareWpPayload = (wpReset?: boolean) => {
+  const prepareWpPayload = (formData?: any, wpReset?: boolean) => {
     const submissionName = "Work Plan";
 
-    // add a flag to be passed to the backend for copy over testing
-    if (previousReport) {
-      previousReport.isCopyOverTest = isCopyOverTest;
-    }
-
-    return {
+    const wpPayload: AnyObject = {
       metadata: {
         submissionName,
         lastAlteredBy: full_name,
-        copyReport: previousReport,
         locked: false,
         previousRevisions: [],
-        isReset: wpReset,
       },
       fieldData: {
         submissionName,
         ["targetPopulations"]: DEFAULT_TARGET_POPULATIONS,
       },
     };
+
+    // add a flag to be passed to the backend for copy over testing
+    if (previousReport) {
+      previousReport.isCopyOverTest = isCopyOverTest;
+      wpPayload.metadata = {
+        ...wpPayload.metadata,
+        copyReport: previousReport,
+        isReset: wpReset,
+      };
+    } else {
+      const formattedReportYear = Number(formData.reportPeriodYear[0].value);
+      const formattedReportPeriod =
+        formData.reportPeriod[0].key === "reportPeriod-1" ? 1 : 2;
+      wpPayload.metadata = {
+        ...wpPayload.metadata,
+        reportYear: formattedReportYear,
+        reportPeriod: formattedReportPeriod,
+      };
+    }
+
+    return wpPayload;
   };
 
   // SAR report payload
@@ -120,8 +165,8 @@ export const AddEditReportModal = ({
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
     const dataToWrite =
-      reportType === "WP"
-        ? prepareWpPayload(wpReset)
+      reportType === ReportType.WP
+        ? prepareWpPayload(formData, wpReset)
         : prepareSarPayload(formData);
 
     // if an existing program was selected, use that report id
@@ -159,9 +204,9 @@ export const AddEditReportModal = ({
       });
     }
 
+    modalDisclosure.onClose();
     await fetchReportsByState(reportType, activeState);
     setSubmitting(false);
-    modalDisclosure.onClose();
   };
 
   const resetReport = (formData: any) => {
@@ -171,7 +216,7 @@ export const AddEditReportModal = ({
 
   const actionButtonText = () => {
     if (reportType === ReportType.WP) {
-      return "";
+      return !previousReport ? "Start new" : "";
     }
     return submitting ? <Spinner size="md" /> : viewOnly ? "Return" : "Save";
   };
@@ -186,38 +231,33 @@ export const AddEditReportModal = ({
       data-testid="add-edit-report-modal"
       formId={form.id}
       modalDisclosure={modalDisclosure}
+      submitting={submitting}
+      submitButtonDisabled={submitting}
       content={{
         heading: !isCopyDisabled() ? form.heading?.edit : form.heading?.add,
         subheading: !isCopyDisabled()
           ? form.heading?.subheadingEdit
           : form.heading?.subheading,
         actionButtonText: actionButtonText(),
-        closeButtonText: "",
+        closeButtonText: !previousReport ? "Cancel" : "",
       }}
     >
-      {(reportType == ReportType.SAR || !isCopyDisabled()) && (
-        <Form
-          data-testid="add-edit-report-form"
-          id={form.id}
-          formJson={form}
-          formData={
-            reportType == ReportType.WP
-              ? previousReport
-              : selectedReport?.formData
-          }
-          // if view-only (user is admin, report is submitted), close modal
-          onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
-          validateOnRender={false}
-          dontReset={true}
-          reportStatus={selectedReport?.status}
-        />
-      )}
-
-      {/* 
-        If the report is a WP, it's a copyover. 
-        New work plans use the AddNewReportModal.
-      */}
-      {reportType == ReportType.WP && (
+      <Form
+        data-testid="add-edit-report-form"
+        id={form.id}
+        formJson={form}
+        formData={
+          reportType === ReportType.WP
+            ? previousReport
+            : selectedReport?.formData
+        }
+        // if view-only (user is admin, report is submitted), close modal
+        onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
+        validateOnRender={false}
+        dontReset={true}
+        reportStatus={selectedReport?.status}
+      />
+      {reportType === ReportType.WP && previousReport && (
         <>
           <Button
             sx={sx.copyBtn}
@@ -246,34 +286,17 @@ export const AddEditReportModal = ({
 };
 
 interface Props {
-  activeState?: string;
-  reportType: string;
-  selectedReport?: AnyObject;
-  previousReport?: AnyObject;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
   };
+  reportType: string;
+  activeState?: string;
+  previousReport?: AnyObject;
+  selectedReport?: AnyObject;
 }
 
 const sx = {
-  modalContent: {
-    boxShadow: ".125rem .125rem .25rem",
-    borderRadius: "0",
-    maxWidth: "30rem",
-    marginX: "4rem",
-    padding: "0",
-  },
-  modalHeader: {
-    padding: "2rem 2rem 0 2rem",
-  },
-  modalBody: {
-    padding: "1rem 2rem 0 2rem",
-  },
-  modalFooter: {
-    justifyContent: "flex-start",
-    padding: "0 2rem 2rem 2rem",
-  },
   copyBtn: {
     justifyContent: "center",
     marginTop: "1rem",
@@ -296,18 +319,5 @@ const sx = {
     fontWeight: "none",
     textDecoration: "underline",
     fontSize: "0.875rem",
-  },
-  close: {
-    justifyContent: "start",
-    padding: ".5rem 1rem",
-    marginTop: "1rem",
-    span: {
-      marginLeft: "0rem",
-      marginRight: "0.5rem",
-    },
-    ".mobile &": {
-      fontSize: "sm",
-      marginRight: "0",
-    },
   },
 };
