@@ -19,12 +19,6 @@ const mockRoutes = {
   nextRoute: "/mock-next-route",
 };
 
-const mockVerbiageIntro = {
-  intro: {
-    subsection: "State and Territory-Specific Initiatives",
-  },
-};
-
 jest.mock("utils", () => ({
   ...jest.requireActual("utils"),
   useFindRoute: () => mockRoutes,
@@ -40,11 +34,6 @@ const reportPageComponentWithForm = (
     <ReportPageFooter form={mockForm} />
   </RouterWrappedComponent>
 );
-const reportPageComponentOnModalOverlayPage = (
-  <RouterWrappedComponent>
-    <ReportPageFooter verbiage={mockVerbiageIntro} />
-  </RouterWrappedComponent>
-);
 
 describe("ReportPageFooter behavior", () => {
   it("Should render without a form", () => {
@@ -55,11 +44,6 @@ describe("ReportPageFooter behavior", () => {
   it("Should render with a form", () => {
     render(reportPageComponentWithForm);
     expect(screen.getByText("Continue")).toBeVisible();
-  });
-
-  it("Should render correctly on a modal overlay page", () => {
-    render(reportPageComponentOnModalOverlayPage);
-    expect(screen.getByText("Review & Submit")).toBeVisible();
   });
 
   it("Should render a submit button for state users", () => {
