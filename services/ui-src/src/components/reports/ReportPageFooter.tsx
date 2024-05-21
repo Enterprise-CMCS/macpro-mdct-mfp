@@ -35,7 +35,7 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
     <Button
       onClick={() => navigate(previousRoute)}
       variant="outline"
-      leftIcon={<Image src={previousIcon} alt="Previous" sx={sx.arrowIcon} />}
+      leftIcon={<Image src={previousIcon} alt="" sx={sx.arrowIcon} />}
     >
       Previous
     </Button>
@@ -45,7 +45,7 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
     <Button
       onClick={() => navigate(nextRoute)}
       sx={sx.nextButton}
-      rightIcon={<Image src={nextIcon} alt="Next" sx={sx.arrowIcon} />}
+      rightIcon={<Image src={nextIcon} alt="" sx={sx.arrowIcon} />}
     >
       Continue
     </Button>
@@ -58,7 +58,7 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
       sx={sx.nextButton}
       rightIcon={
         !submitting ? (
-          <Image src={nextIcon} alt="Next" sx={sx.arrowIcon} />
+          <Image src={nextIcon} alt="" sx={sx.arrowIcon} />
         ) : undefined
       }
     >
