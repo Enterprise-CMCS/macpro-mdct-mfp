@@ -1,3 +1,5 @@
+import { ReportType } from "../types/reports";
+
 export const error = {
   // generic errors
   UNAUTHORIZED: "User is not authorized to access this resource.",
@@ -37,6 +39,7 @@ export const buckets = {
 export enum States {
   AL = "Alabama",
   AK = "Alaska",
+  AS = "American Samoa",
   AZ = "Arizona",
   AR = "Arkansas",
   CA = "California",
@@ -44,8 +47,10 @@ export enum States {
   CT = "Connecticut",
   DE = "Delaware",
   DC = "District of Columbia",
+  FM = "Federated States of Micronesia",
   FL = "Florida",
   GA = "Georgia",
+  GU = "Guam",
   HI = "Hawaii",
   ID = "Idaho",
   IL = "Illinois",
@@ -55,6 +60,7 @@ export enum States {
   KY = "Kentucky",
   LA = "Louisiana",
   ME = "Maine",
+  MH = "Marshall Islands",
   MD = "Maryland",
   MA = "Massachusetts",
   MI = "Michigan",
@@ -70,9 +76,11 @@ export enum States {
   NY = "New York",
   NC = "North Carolina",
   ND = "North Dakota",
+  MP = "Northern Mariana Islands",
   OH = "Ohio",
   OK = "Oklahoma",
   OR = "Oregon",
+  PW = "Palau",
   PA = "Pennsylvania",
   PR = "Puerto Rico",
   RI = "Rhode Island",
@@ -82,6 +90,7 @@ export enum States {
   TX = "Texas",
   UT = "Utah",
   VT = "Vermont",
+  VI = "Virgin Islands",
   VA = "Virginia",
   WA = "Washington",
   WV = "West Virginia",
@@ -91,28 +100,25 @@ export enum States {
 
 // REPORTS
 
-export const reportTables = {
-  SAR: process.env.SAR_REPORT_TABLE_NAME!,
-  WP: process.env.WP_REPORT_TABLE_NAME!,
-};
-
-export const reportBuckets = {
-  SAR: process.env.SAR_FORM_BUCKET!,
-  WP: process.env.WP_FORM_BUCKET!,
-};
-
-export const reportNames = {
+export const reportNames: { [key in ReportType]: string } = {
   SAR: "SAR",
   WP: "Work Plan",
 };
 
-export const tableTopics = {
+export const tableTopics: { [key in ReportType]: string } = {
   SAR: "sar-reports",
   WP: "wp-reports",
 };
-export const bucketTopics = {
+
+export const bucketTopics: { [key in ReportType]: string } = {
   SAR: "sar-reports",
   WP: "wp-form",
 };
 
-export const formTemplateTableName = process.env.FORM_TEMPLATE_TABLE_NAME!;
+export const DEFAULT_TARGET_POPULATION_NAMES = [
+  "Older adults",
+  "Individuals with physical disabilities (PD)",
+  "Individuals with intellectual and developmental disabilities (I/DD)",
+  "Individuals with mental health and substance use disorders (MH/SUD)",
+  "HCBS infrastructure/system-level development",
+];

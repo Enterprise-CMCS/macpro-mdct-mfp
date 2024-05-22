@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "cypress": "cypress open",
-    "start": "cd ../ && ./dev local && cd -",
+    "start": "cd ../ && ./run local && cd -",
     "test": "concurrently --kill-others \"yarn start\" \"yarn cypress\"",
     "test:ci": "cypress install && cypress run --browser chrome --headless"
   },
@@ -13,7 +13,8 @@
   "license": "ISC",
   "devDependencies": {
     "axe-core": "^4.8.4",
-    "cypress": "^13.6.6",
+    "concurrently": "^8.2.2",
+    "cypress": "^13.8.0",
     "cypress-axe": "^1.5.0"
   }
 }

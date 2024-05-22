@@ -141,12 +141,16 @@ export const isState = (state: unknown): state is State => {
   return states.includes(state as State);
 };
 
-export interface FormTemplate {
+export interface FormTemplateVersion {
   md5Hash: string;
   versionNumber: number;
   id: string;
   lastAltered: string;
   reportType: string;
+}
+
+export const enum TemplateKeys {
+  WP = "templates/MFP-Work-Plan-Help-File.pdf",
 }
 
 /**

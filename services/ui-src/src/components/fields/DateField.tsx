@@ -123,6 +123,9 @@ export const DateField = ({
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
 
+  const { autoComplete, disabled } = props ?? {};
+  const additionalProps = { autoComplete, disabled };
+
   return (
     <Box
       sx={{ ...sx, ...sxOverride }}
@@ -136,7 +139,7 @@ export const DateField = ({
         value={displayValue}
         hint={parsedHint}
         errorMessage={errorMessage}
-        {...props}
+        {...additionalProps}
       />
     </Box>
   );

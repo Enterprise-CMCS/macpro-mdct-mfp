@@ -4,7 +4,10 @@ import {
   PutObjectCommandInput,
   GetObjectCommandInput,
   GetObjectCommand,
+  GetObjectRequest,
+  GetObjectCommandOutput,
 } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { logger } from "../debugging/debug-lib";
 import { buckets, error } from "../constants/constants";
 import { State } from "../types";
@@ -25,10 +28,22 @@ const awsConfig = {
   logger,
 };
 
-export const getConfig = () => {
+const getConfig = () => {
   return process.env.S3_LOCAL_ENDPOINT ? localConfig : awsConfig;
 };
-const client = new S3Client(getConfig());
+
+export const createClient = () => new S3Client(getConfig());
+
+export const parseS3Response = async (response: GetObjectCommandOutput) => {
+  const stringBody = await response.Body?.transformToString();
+  if (!stringBody) {
+    logger.warn(`Empty response from S3`);
+    return undefined;
+  }
+  return JSON.parse(stringBody);
+};
+
+const client = createClient();
 
 export default {
   put: async (params: PutObjectCommandInput) =>
@@ -45,6 +60,11 @@ export default {
     } catch {
       throw new Error(error.S3_OBJECT_GET_ERROR);
     }
+  },
+  getSignedDownloadUrl: async (params: GetObjectRequest) => {
+    return await getSignedUrl(client, new GetObjectCommand(params), {
+      expiresIn: 3600,
+    });
   },
 };
 

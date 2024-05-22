@@ -40,7 +40,7 @@ jobs:
         run: ./scripts/test-unit.sh
       - name: publish test coverage to code climate
         if: env.CODE_CLIMATE_ID != ''
-        uses: paambaati/codeclimate-action@v5
+        uses: paambaati/codeclimate-action@v6
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_ID }}
         with:
@@ -48,10 +48,14 @@ jobs:
             ${{github.workspace}}/services/app-api/coverage/lcov.info:lcov
             ${{github.workspace}}/services/ui-src/coverage/lcov.info:lcov
       - name: Store unit test results
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: unit_test_results
-          path: ${{github.workspace}}/services/ui-src/coverage/lcov.info
+          name: unit-test-results
+          path: |
+            ${{github.workspace}}/services/app-api/coverage/lcov.info
+            ${{github.workspace}}/services/ui-src/coverage/lcov.info
+          retention-days: 14
 
   deploy:
     needs: unit-tests
@@ -213,6 +217,7 @@ jobs:
           working-directory: tests
           spec: |
             cypress/e2e/wp/*.cy.js
+            cypress/e2e/sar/*.cy.js
             cypress/e2e/*.cy.js
           browser: chrome
           config: baseUrl=${{ needs.deploy.outputs.application_endpoint }}
@@ -227,10 +232,11 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots
+          name: cypress-test-results
           path: |
-            tests/cypress/screenshots/
-            tests/cypress/videos/
+            ${{github.workspace}}/tests/screenshots/
+            ${{github.workspace}}/tests/videos/
+          retention-days: 14
 
   a11y-tests:
     name: E2E A11y Tests
@@ -259,10 +265,11 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots
+          name: a11y-test-results
           path: |
-            tests/cypress/screenshots/
-            tests/cypress/videos/
+            ${{github.workspace}}/tests/screenshots/
+            ${{github.workspace}}/tests/videos/
+          retention-days: 14
 
   cleanup:
     name: Delist GHA Runner CIDR Blocks

@@ -283,7 +283,7 @@ const firstQuarterOfThePeriod = (
     type: `${field.type}`,
     props: {
       content:
-        reportPeriod == 1
+        reportPeriod === 1
           ? "First quarter (January 1 - March 31)"
           : "Third quarter (July 1 - September 30)",
     },
@@ -300,7 +300,7 @@ const secondQuarterOfThePeriod = (
     type: `${field.type}`,
     props: {
       content:
-        reportPeriod == 1
+        reportPeriod === 1
           ? "Second quarter (April 1 - June 30)"
           : "Fourth quarter (October 1 - December 31)",
     },
@@ -425,12 +425,12 @@ export const quantitativeQuarters = (
 
   if (objectiveToUse?.evaluationPlan_includesTargets?.[0]?.value === "Yes") {
     const headingStringFirstQuarter =
-      reportPeriod == 1
+      reportPeriod === 1
         ? "First quarter (January 1 - March 31)"
         : "Third quarter (July 1 - September 30)";
 
     const headingStringSecondQuarter =
-      reportPeriod == 1
+      reportPeriod === 1
         ? "Second quarter (April 1 - June 30)"
         : "Fourth quarter (October 1 - December 31)";
 
@@ -457,22 +457,24 @@ export const quantitativeQuarters = (
 
       const formFieldActual: FormField = {
         id: `objectiveTargets_actual_${reportYear}Q${quarterNumber}`,
-        type: "number",
-        validation: "number",
+        type: "text",
+        validation: "text",
         props: {
           label: "Actual value",
+          className: "number-field",
         },
       };
       fieldsToAppend.push(formFieldActual);
 
       const formFieldTarget: FormField = {
         id: `objectiveTargets_projections_${reportYear}Q${quarterNumber}`,
-        type: "number",
-        validation: "number",
+        type: "text",
+        validation: "text",
         props: {
           label: "Target Value",
           hint: "Auto-populates from Work Plan.",
           disabled: true,
+          className: "number-field",
         },
       };
       fieldsToAppend.push(formFieldTarget);

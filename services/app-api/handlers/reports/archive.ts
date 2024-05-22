@@ -1,13 +1,22 @@
 import handler from "../handler-lib";
-import { fetchReport } from "./fetch";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import { error, reportTables } from "../../utils/constants/constants";
+import { error } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
+import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
 import { StatusCodes, UserRoles } from "../../utils/types";
 
-export const archiveReport = handler(async (event, context) => {
+export const archiveReport = handler(async (event) => {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.NO_KEY,
+    };
+  }
+
   // Return a 403 status if the user is not an admin.
   if (!hasPermissions(event, [UserRoles.ADMIN, UserRoles.APPROVER])) {
     return {
@@ -16,50 +25,33 @@ export const archiveReport = handler(async (event, context) => {
     };
   }
 
-  // Get current report
-  const reportEvent = { ...event, body: "" };
-  const getCurrentReport = await fetchReport(reportEvent, context);
+  const currentReport = await getReportMetadata(reportType, state, id);
 
-  if (!getCurrentReport.body) {
+  if (!currentReport) {
     return {
       status: StatusCodes.NOT_FOUND,
       body: error.NO_MATCHING_RECORD,
     };
   }
 
-  // if current report exists, parse for archived status
-  if (getCurrentReport?.body) {
-    const currentReport = JSON.parse(getCurrentReport.body);
-    const currentArchivedStatus = currentReport?.archived;
-    const reportType = currentReport?.reportType;
+  const currentArchivedStatus = currentReport?.archived;
 
-    const reportTable = reportTables[reportType as keyof typeof reportTables];
+  const updatedReport = {
+    ...currentReport,
+    archived: !currentArchivedStatus,
+  };
 
-    // Delete raw data prior to updating
-    delete currentReport.fieldData;
-    delete currentReport.formTemplate;
-
-    // toggle archived status in report metadata table
-    const reportMetadataParams = {
-      TableName: reportTable,
-      Item: {
-        ...currentReport,
-        archived: !currentArchivedStatus,
-      },
-    };
-
-    try {
-      await dynamoDb.put(reportMetadataParams);
-    } catch (err) {
-      return {
-        status: StatusCodes.SERVER_ERROR,
-        body: error.DYNAMO_UPDATE_ERROR,
-      };
-    }
-
+  try {
+    await putReportMetadata(updatedReport);
+  } catch (err) {
     return {
-      status: StatusCodes.SUCCESS,
-      body: reportMetadataParams.Item,
+      status: StatusCodes.SERVER_ERROR,
+      body: error.DYNAMO_UPDATE_ERROR,
     };
   }
+
+  return {
+    status: StatusCodes.SUCCESS,
+    body: updatedReport,
+  };
 });

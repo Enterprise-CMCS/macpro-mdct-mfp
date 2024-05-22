@@ -72,7 +72,7 @@ describe("Test TextField component", () => {
     mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues("");
     render(textFieldComponent);
-    const textField = screen.getByTestId("test-text-field");
+    const textField = screen.getByRole("textbox");
     expect(textField).toBeVisible();
     jest.clearAllMocks();
   });

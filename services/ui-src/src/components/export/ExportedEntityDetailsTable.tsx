@@ -19,7 +19,7 @@ import { ExportedEntityDetailsTableRow } from "./ExportedEntityDetailsTableRow";
 export const ExportedEntityDetailsTable = ({
   fields,
   entity,
-  ...props
+  showHintText,
 }: Props) => {
   const { report } = useStore() ?? {};
   const { tableHeaders } = verbiage;
@@ -30,11 +30,10 @@ export const ExportedEntityDetailsTable = ({
     tableHeaders.indicator,
     tableHeaders.response,
   ];
-  const hideHintText = !props.showHintText;
 
   return (
     <Table
-      {...props}
+      data-testid="exportedEntityDetailsTable"
       sx={sx.root}
       content={{
         headRow: threeColumnHeaderItems,
@@ -44,7 +43,7 @@ export const ExportedEntityDetailsTable = ({
         fields!,
         "modalOverlay",
         report,
-        !hideHintText,
+        !!showHintText,
         entity.id,
         entityType
       )}

@@ -25,13 +25,5 @@ export default {
      *    answer: "",
      *  }
      */
-    {
-      question: "How do I log into my IDM account?",
-      answer: "TBD",
-    },
-    {
-      question: "Question #2",
-      answer: "TBD",
-    },
   ],
 };

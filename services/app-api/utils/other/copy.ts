@@ -1,6 +1,6 @@
+import { getReportFieldData } from "../../storage/reports";
 import { getPossibleFieldsFromFormTemplate } from "../formTemplates/formTemplates";
-import s3Lib, { getFieldDataKey } from "../s3/s3-lib";
-import { AnyObject, State } from "../types";
+import { AnyObject, ReportFieldData, ReportJson, State } from "../types";
 
 /**
  *
@@ -22,16 +22,16 @@ const additionalFields = [
 ];
 
 export async function copyFieldDataFromSource(
-  reportBucket: string,
-  state: string | undefined,
-  copyFieldDataSourceId: any,
-  formTemplate: any,
-  validatedFieldData: AnyObject
+  state: State,
+  copyFieldDataSourceId: string,
+  formTemplate: ReportJson,
+  validatedFieldData: ReportFieldData
 ) {
-  const sourceFieldData = (await s3Lib.get({
-    Bucket: reportBucket,
-    Key: getFieldDataKey(state as State, copyFieldDataSourceId),
-  })) as AnyObject;
+  const sourceFieldData = await getReportFieldData({
+    reportType: formTemplate.type,
+    state,
+    fieldDataId: copyFieldDataSourceId,
+  });
 
   if (sourceFieldData) {
     const possibleFields = getPossibleFieldsFromFormTemplate(formTemplate);
@@ -41,7 +41,7 @@ export async function copyFieldDataFromSource(
         pruneEntityData(
           sourceFieldData,
           key,
-          sourceFieldData[key],
+          sourceFieldData[key] as AnyObject[], // TODO, remove cast
           possibleFields
         );
       } else if (!possibleFields.includes(key)) {
@@ -56,9 +56,9 @@ export async function copyFieldDataFromSource(
 }
 
 function pruneEntityData(
-  sourceFieldData: AnyObject,
+  sourceFieldData: AnyObject, // TODO, make this ReportFieldData
   key: string,
-  entityData: AnyObject[],
+  entityData: AnyObject[], // TODO, make this Choice[] | ReportFieldData[]
   possibleFields: string[]
 ) {
   //adding fields to be copied over from entries

@@ -26,6 +26,7 @@ import {
   isFieldElement,
   EntityShape,
   ReportStatus,
+  ReportType,
 } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
@@ -55,6 +56,11 @@ export const EntityDetailsOverlay = ({
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
   const [spinner, setSpinner] = useState<Boolean>();
+  const isSAR = report?.reportType === ReportType.SAR;
+
+  const reportPageTitle = selectedEntity?.isInitiativeClosed
+    ? `[Closed] ${selectedEntity?.initiative_name}`
+    : `${selectedEntity?.initiative_name}`;
 
   /**
    * Any time the report is updated on this page,
@@ -226,7 +232,7 @@ export const EntityDetailsOverlay = ({
       {verbiage.intro && (
         <ReportPageIntro
           text={verbiage.intro}
-          initiativeName={selectedEntity!.initiative_name}
+          initiativeName={reportPageTitle}
         />
       )}
       {verbiage.intro.title && <Box sx={sx.title}>{verbiage.intro.title}</Box>}
@@ -244,7 +250,7 @@ export const EntityDetailsOverlay = ({
         dontReset={true}
         onFormChange={onChange}
         validateOnRender={false}
-        userDisabled={selectedEntity?.isInitiativeClosed}
+        userDisabled={!isSAR && selectedEntity?.isInitiativeClosed}
       />
       <Box>
         {verbiage.closeOutWarning && (
@@ -323,7 +329,10 @@ const sx = {
     color: "palette.primary",
     display: "flex",
     position: "relative",
-    right: "3rem",
+    right: 0,
+    ".tablet &": {
+      right: "3rem",
+    },
     marginBottom: "2rem",
     marginTop: "-2rem",
   },
@@ -333,7 +342,8 @@ const sx = {
   },
   backIcon: {
     color: "palette.primary",
-    height: "1rem",
+    height: "1.5rem",
+    width: "1.5rem",
   },
   closeIcon: {
     width: "0.85rem",

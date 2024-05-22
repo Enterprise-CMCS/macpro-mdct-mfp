@@ -278,7 +278,7 @@ describe("Test AddEditOverlayEntityModal functionality", () => {
     expect(mockUpdateReport).toHaveBeenCalledTimes(1);
 
     expect(mockUpdateReport).toHaveBeenCalledWith(
-      mockReportKeys,
+      { ...mockReportKeys, id: "mock-wp-full-report-id" },
       expectedUpdateCallPayload
     );
 
@@ -314,7 +314,7 @@ describe("Test AddEditOverlayEntityModal functionality", () => {
     ];
 
     expect(mockUpdateReport).toHaveBeenCalledWith(
-      mockReportKeys,
+      { ...mockReportKeys, id: "mock-wp-full-report-id" },
       expectedUpdateCallPayload
     );
 

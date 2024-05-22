@@ -1,42 +1,34 @@
-import { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import handler from "../handler-lib";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import { hasReportPathParams } from "../../utils/dynamo/hasReportPathParams";
-import s3Lib, {
-  getFieldDataKey,
-  getFormTemplateKey,
-} from "../../utils/s3/s3-lib";
-import {
-  error,
-  reportBuckets,
-  reportTables,
-} from "../../utils/constants/constants";
+import { error } from "../../utils/constants/constants";
 import {
   calculateCompletionStatus,
   isComplete,
 } from "../../utils/validation/completionStatus";
 import { isAuthorizedToFetchState } from "../../utils/auth/authorization";
+import {
+  parseSpecificReportParameters,
+  parseStateReportParameters,
+} from "../../utils/auth/parameters";
 // types
-import { AnyObject, isState, StatusCodes } from "../../utils/types";
+import { StatusCodes } from "../../utils/types";
+import {
+  getReportFieldData,
+  getReportFormTemplate,
+  getReportMetadata,
+  queryReportMetadatasForState,
+} from "../../storage/reports";
 
 export const fetchReport = handler(async (event, _context) => {
-  const requiredParams = ["reportType", "id", "state"];
-  if (!hasReportPathParams(event.pathParameters!, requiredParams)) {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
     return {
       status: StatusCodes.BAD_REQUEST,
       body: error.NO_KEY,
     };
   }
 
-  const { reportType, state, id } = event.pathParameters!;
-
-  if (!isState(state)) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.NO_KEY,
-    };
-  }
   if (!isAuthorizedToFetchState(event, state)) {
     return {
       status: StatusCodes.UNAUTHORIZED,
@@ -44,91 +36,57 @@ export const fetchReport = handler(async (event, _context) => {
     };
   }
 
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
-  const reportBucket = reportBuckets[reportType as keyof typeof reportBuckets];
-
-  // Get current report metadata
-  const reportMetadataParams = {
-    TableName: reportTable,
-    Key: { state, id },
-  };
-
-  try {
-    const response = await dynamoDb.get(reportMetadataParams);
-    if (!response?.Item) {
-      return {
-        status: StatusCodes.NOT_FOUND,
-        body: error.NOT_IN_DATABASE,
-      };
-    }
-
-    const reportMetadata = response.Item as Record<string, any>;
-    const { formTemplateId, fieldDataId } = reportMetadata;
-
-    // Get form template from S3
-    const formTemplateParams = {
-      Bucket: reportBucket,
-      Key: getFormTemplateKey(formTemplateId),
-    };
-
-    const formTemplate = (await s3Lib.get(formTemplateParams)) as AnyObject; // TODO: strict typing
-    if (!formTemplate) {
-      return {
-        status: StatusCodes.NOT_FOUND,
-        body: error.MISSING_FORM_TEMPLATE,
-      };
-    }
-
-    // Get field data from S3
-    const fieldDataParams = {
-      Bucket: reportBucket,
-      Key: getFieldDataKey(state, fieldDataId),
-    };
-
-    const fieldData = (await s3Lib.get(fieldDataParams)) as AnyObject; // TODO: strict typing
-
-    if (!fieldData) {
-      return {
-        status: StatusCodes.NOT_FOUND,
-        body: error.NO_MATCHING_RECORD,
-      };
-    }
-
-    if (!reportMetadata.completionStatus) {
-      reportMetadata.completionStatus = await calculateCompletionStatus(
-        fieldData,
-        formTemplate
-      );
-      reportMetadata.isComplete = isComplete(reportMetadata.completionStatus);
-    }
-
-    return {
-      status: StatusCodes.SUCCESS,
-      body: {
-        ...reportMetadata,
-        formTemplate,
-        fieldData,
-      },
-    };
-  } catch (err) {
+  const reportMetadata = await getReportMetadata(reportType, state, id);
+  if (!reportMetadata) {
     return {
       status: StatusCodes.NOT_FOUND,
       body: error.NO_MATCHING_RECORD,
     };
   }
+
+  const fieldData = await getReportFieldData(reportMetadata);
+  if (!fieldData) {
+    return {
+      status: StatusCodes.NOT_FOUND,
+      body: error.NO_MATCHING_RECORD,
+    };
+  }
+
+  const formTemplate = await getReportFormTemplate(reportMetadata);
+  if (!formTemplate) {
+    return {
+      status: StatusCodes.NOT_FOUND,
+      body: error.NO_MATCHING_RECORD,
+    };
+  }
+
+  if (!reportMetadata.completionStatus) {
+    reportMetadata.completionStatus = await calculateCompletionStatus(
+      fieldData,
+      formTemplate
+    );
+    reportMetadata.isComplete = isComplete(reportMetadata.completionStatus);
+  }
+
+  return {
+    status: StatusCodes.SUCCESS,
+    body: {
+      ...reportMetadata,
+      formTemplate,
+      fieldData,
+    },
+  };
 });
 
 export const fetchReportsByState = handler(async (event, _context) => {
-  const requiredParams = ["reportType", "state"];
-
-  if (!hasReportPathParams(event.pathParameters!, requiredParams)) {
+  const { allParamsValid, reportType, state } =
+    parseStateReportParameters(event);
+  if (!allParamsValid) {
     return {
       status: StatusCodes.BAD_REQUEST,
       body: error.NO_KEY,
     };
   }
-
-  const { reportType, state } = event.pathParameters!;
 
   if (!isAuthorizedToFetchState(event, state!)) {
     return {
@@ -137,20 +95,7 @@ export const fetchReportsByState = handler(async (event, _context) => {
     };
   }
 
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
-
-  const queryParams: QueryCommandInput = {
-    TableName: reportTable,
-    KeyConditionExpression: "#state = :state",
-    ExpressionAttributeValues: {
-      ":state": state!,
-    },
-    ExpressionAttributeNames: {
-      "#state": "state",
-    },
-  };
-
-  const reportsByState = await dynamoDb.query(queryParams);
+  const reportsByState = await queryReportMetadatasForState(reportType, state);
 
   return {
     status: StatusCodes.SUCCESS,

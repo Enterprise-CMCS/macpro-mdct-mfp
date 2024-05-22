@@ -1,30 +1,24 @@
 import handler from "../handler-lib";
 import KSUID from "ksuid";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import {
-  error,
-  reportBuckets,
-  reportTables,
-} from "../../utils/constants/constants";
+import { error } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
-import s3Lib, {
-  getFieldDataKey,
-  getFormTemplateKey,
-} from "../../utils/s3/s3-lib";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
+import { calculateCompletionStatus } from "../../utils/validation/completionStatus";
+import {
+  getReportFieldData,
+  getReportFormTemplate,
+  getReportMetadata,
+  putReportFieldData,
+  putReportMetadata,
+} from "../../storage/reports";
 // types
-import { GetCommandInput, PutCommandInput } from "@aws-sdk/lib-dynamodb";
 import {
-  GetObjectCommandInput,
-  PutObjectCommandInput,
-} from "@aws-sdk/client-s3";
-import {
-  FormJson,
-  WPReportMetadata,
+  ReportMetadataShape,
+  ReportStatus,
   StatusCodes,
   UserRoles,
 } from "../../utils/types";
-import { calculateCompletionStatus } from "../../utils/validation/completionStatus";
 
 /**
  * Locked reports can be released by admins.
@@ -38,6 +32,15 @@ import { calculateCompletionStatus } from "../../utils/validation/completionStat
  *
  */
 export const releaseReport = handler(async (event) => {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.NO_KEY,
+    };
+  }
+
   // Return a 403 status if the user is not an admin.
   if (!hasPermissions(event, [UserRoles.ADMIN, UserRoles.APPROVER])) {
     return {
@@ -46,46 +49,13 @@ export const releaseReport = handler(async (event) => {
     };
   }
 
-  if (
-    !event.pathParameters?.id ||
-    !event.pathParameters?.state ||
-    !event.pathParameters?.reportType
-  ) {
+  const metadata = await getReportMetadata(reportType, state, id);
+  if (!metadata) {
     return {
       status: StatusCodes.NOT_FOUND,
       body: error.NO_MATCHING_RECORD,
     };
   }
-
-  const { id, state, reportType } = event.pathParameters;
-
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
-  // Get report metadata
-
-  const reportMetadataParams: GetCommandInput = {
-    Key: { id, state },
-    TableName: reportTable,
-  };
-
-  let reportMetadata;
-
-  try {
-    reportMetadata = await dynamoDb.get(reportMetadataParams);
-  } catch (err) {
-    return {
-      status: StatusCodes.NOT_FOUND,
-      body: error.NO_MATCHING_RECORD,
-    };
-  }
-
-  if (!reportMetadata.Item) {
-    return {
-      status: StatusCodes.NOT_FOUND,
-      body: error.NO_MATCHING_RECORD,
-    };
-  }
-
-  const metadata = reportMetadata.Item as WPReportMetadata;
 
   const isLocked = metadata.locked;
 
@@ -114,30 +84,19 @@ export const releaseReport = handler(async (event) => {
     ? metadata.previousRevisions.concat([metadata.fieldDataId])
     : [metadata.fieldDataId];
 
-  const reportBucket = reportBuckets[reportType as keyof typeof reportBuckets];
-
-  const getFieldDataParameters: GetObjectCommandInput = {
-    Bucket: reportBucket,
-    Key: getFieldDataKey(metadata.state, metadata.fieldDataId),
-  };
-
-  const getFormTemplateParameters: GetObjectCommandInput = {
-    Bucket: reportBucket,
-    Key: getFormTemplateKey(metadata.formTemplateId),
-  };
-
-  let fieldData: Record<string, any>;
-  let formTemplate: FormJson;
-  try {
-    fieldData = (await s3Lib.get(getFieldDataParameters)) as Record<
-      string,
-      any
-    >;
-    formTemplate = (await s3Lib.get(getFormTemplateParameters)) as FormJson;
-  } catch (err) {
+  const fieldData = await getReportFieldData(metadata);
+  if (!fieldData) {
     return {
-      status: StatusCodes.SERVER_ERROR,
-      body: error.DYNAMO_UPDATE_ERROR,
+      status: StatusCodes.NOT_FOUND,
+      body: error.NO_MATCHING_RECORD,
+    };
+  }
+
+  const formTemplate = await getReportFormTemplate(metadata);
+  if (!formTemplate) {
+    return {
+      status: StatusCodes.NOT_FOUND,
+      body: error.NO_MATCHING_RECORD,
     };
   }
 
@@ -146,44 +105,29 @@ export const releaseReport = handler(async (event) => {
     generalInformation_resubmissionInformation: "",
   };
 
-  const newReportMetadata: WPReportMetadata = {
+  const newReportMetadata: ReportMetadataShape = {
     ...metadata,
     fieldDataId: newFieldDataId,
     locked: false,
     previousRevisions,
-    status: "In revision",
+    status: ReportStatus.IN_REVISION,
     completionStatus: await calculateCompletionStatus(
       updatedFieldData,
       formTemplate
     ),
   };
 
-  const putReportMetadataParams: PutCommandInput = {
-    TableName: reportTable,
-    Item: newReportMetadata,
-  };
-
   try {
-    await dynamoDb.put(putReportMetadataParams);
+    await putReportMetadata(newReportMetadata);
   } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
       body: error.DYNAMO_UPDATE_ERROR,
     };
   }
-
   // Copy the original field data to a new location.
   try {
-    const putObjectParameters: PutObjectCommandInput = {
-      Bucket: reportBucket,
-      Body: JSON.stringify({
-        ...updatedFieldData,
-      }),
-      ContentType: "application/json",
-      Key: getFieldDataKey(metadata.state, newFieldDataId),
-    };
-
-    await s3Lib.put(putObjectParameters);
+    await putReportFieldData(newReportMetadata, updatedFieldData);
   } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
@@ -193,6 +137,6 @@ export const releaseReport = handler(async (event) => {
 
   return {
     status: StatusCodes.SUCCESS,
-    body: putReportMetadataParams.Item,
+    body: newReportMetadata,
   };
 });

@@ -39,13 +39,13 @@ Before starting the project we're going to install some tools. We recommend havi
 
 ### Running the project locally
 
-In the root of the project run `./dev local`
+In the root of the project run `./run local`
 
 ### Logging in
 
 (Make sure you've finished setting up the project locally above before moving on to this step!)
 
-Once you've run `./dev local` you'll find yourself on a login page at localhost:3000. For local development there is a list of users that can be found at services/ui-auth/libs/users.json. That's where you can grab an email to fill in.
+Once you've run `./run local` you'll find yourself on a login page at localhost:3000. For local development there is a list of users that can be found at services/ui-auth/libs/users.json. That's where you can grab an email to fill in.
 
 For a password to that user, please ask a fellow developer.
 
@@ -66,7 +66,7 @@ If you're getting an error such as `inaccessible host: 'localhost' at port '8000
 
 ### Local Development Additional Info
 
-Local dev is configured as a Typescript project. The entrypoint in `./src/dev.ts` manages running the moving pieces locally: the API, database, filestore, and frontend.
+Local dev is configured as a Typescript project. The entrypoint in `./src/run.ts` manages running the moving pieces locally: the API, database, filestore, and frontend.
 
 Local dev is built around the Serverless plugin [serverless-offline](https://github.com/dherault/serverless-offline). `serverless-offline` runs an API Gateway locally configured by `./services/app-api/serverless.yml` and hot reloads your Lambdas on every save. The plugins [serverless-dynamodb-local](https://github.com/99x/serverless-dynamodb-local) and [serverless-s3-local](https://github.com/ar90n/serverless-s3-local) stand up the local database and s3 in a similar fashion.
 
@@ -268,13 +268,13 @@ This repository uses 3 webhooks to publish to  3 different channels all in CMS S
 
 - INTEGRATIONS_SLACK_WEBHOOK: This is used to publish new pull requests to the `mdct-integrations-channel`
 
-- PROD_RELEASE_SLACK_WEBHOOK: This is used to publish to the `mdct-prod-releases` channel upon successful release of Seds to production.
+- PROD_RELEASE_SLACK_WEBHOOK: This is used to publish to the `mdct-prod-releases` channel upon successful release of MFP to production.
 
     - Webhooks are created by CMS tickets, populated into GitHub Secrets
 
 ## GitHub Actions Secret Management
 - Secrets are added to GitHub secrets by GitHub Admins 
-- Upon editing and adding new secrets Admins should also update the encypted `/github/secret-list` SSM parameter in the SEDS AWS Production Account.
+- Upon editing and adding new secrets Admins should also update the encypted `/github/secret-list` SSM parameter in the MFP AWS Production Account.
 
 ## Copyright and license
 

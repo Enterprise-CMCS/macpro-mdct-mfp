@@ -1,5 +1,5 @@
 import { EntityShape, OverlayModalStepTypes, AnyObject } from "types";
-import { convertToThousandsSeparatedString } from "utils";
+import { convertToThousandsSeparatedString } from "utils/other/mask";
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
   const radioLabelValue = entity?.[label]?.[0].value;
@@ -18,10 +18,13 @@ const getRepeatedField = (
     for (const [key, value] of Object.entries(entity)) {
       if (key.includes(repeatedKey) && value) {
         const id = key.replace(repeatedKey, "").split("Q");
-        const displayValue =
-          repeatedKey === "fundingSources_quarters"
-            ? `$${value}`
-            : convertToThousandsSeparatedString(value).maskedValue;
+        let displayValue = `${value}`;
+
+        if (repeatedKey === "fundingSources_quarters") {
+          const formattedValue = convertToThousandsSeparatedString(value, 2);
+          displayValue = `$${formattedValue.maskedValue}`;
+        }
+
         quarters.push({ id: `${id[0]} Q${id[1]}`, value: displayValue });
       }
     }

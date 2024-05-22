@@ -15,6 +15,8 @@ import {
   mockUseObjectiveProgressEntityStore,
   mockOverlayModalWithCardsPageJson,
   mockObjectiveProgress,
+  mockUseSARStore,
+  mockObjectiveProgressEntityStore,
 } from "utils/testing/setupJest";
 
 const mockUseNavigate = jest.fn();
@@ -35,6 +37,7 @@ const {
   editEntityButtonText,
   addEditModalEditTitle,
   deleteModalTitle,
+  reportProgressButtonText,
 } = mockOverlayModalPageJson.verbiage;
 
 const overlayModalPageComponentWithEntities = (
@@ -125,6 +128,36 @@ describe("Test overlayModalPage with SAR's Objective Progress Entity", () => {
   it("overlayModalPage CAN NOT open the add modal", async () => {
     const addEntityButton = screen.queryAllByText(addEntityButtonText);
     expect(addEntityButton.length).toEqual(0);
+  });
+
+  it("overlayModalPage opens the edit modal with enabled submit for closed initiative", async () => {
+    let mockEntityStore = {
+      ...mockObjectiveProgressEntityStore,
+      selectedEntity: {
+        id: "mock-id",
+        type: "objectiveProgress",
+        initiative_name: "mock-initiative-name",
+        objectiveProgress: mockObjectiveProgress,
+        isInitiativeClosed: true,
+      },
+    };
+
+    const mockEntityWithDisabledInitiative = {
+      ...mockUseSARStore,
+      ...mockEntityStore,
+    };
+    mockedUseStore.mockReturnValue(mockEntityWithDisabledInitiative);
+    render(overlayModalPageComponentWithCardsEntities);
+    const reportProgressButton = screen.getAllByText(reportProgressButtonText);
+    await userEvent.click(reportProgressButton[0]);
+    expect(screen.getByRole("dialog")).toBeVisible();
+    const textField = screen.getByRole("textbox", {
+      name: "mock-performance-indicators",
+    });
+    expect(textField).toBeVisible();
+    await userEvent.type(textField, "test");
+    const submitButton = screen.getByRole("button", { name: "Save" });
+    expect(submitButton).not.toBeDisabled();
   });
 });
 
