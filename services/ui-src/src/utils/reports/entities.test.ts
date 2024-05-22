@@ -15,8 +15,8 @@ describe("entity utilities", () => {
             value: "Yes",
           },
         ],
-        quarterlyProjections2023Q1: "mock projections 2023-1",
-        quarterlyProjections2023Q2: "mock projections 2023-2",
+        quarterlyProjections2023Q1: "99%",
+        quarterlyProjections2023Q2: "99.9%",
         evaluationPlan_additionalDetails: "mock details",
       };
 
@@ -31,8 +31,8 @@ describe("entity utilities", () => {
         targets: "mock targets",
         includesTargets: "Yes",
         quarters: [
-          { id: "2023 Q1", value: "mock projections 2023-1" },
-          { id: "2023 Q2", value: "mock projections 2023-2" },
+          { id: "2023 Q1", value: "99%" },
+          { id: "2023 Q2", value: "99.9%" },
         ],
         additionalDetails: "mock details",
       });
@@ -49,6 +49,8 @@ describe("entity utilities", () => {
         ],
         fundingSources_quarters2023Q1: "mock sources 2023-1",
         fundingSources_quarters2023Q2: "mock sources 2023-2",
+        fundingSources_quarters2023Q3: "25.75",
+        fundingSources_quarters2023Q4: "1000",
       };
 
       const result = getFormattedEntityData(
@@ -62,6 +64,8 @@ describe("entity utilities", () => {
         quarters: [
           { id: "2023 Q1", value: "$mock sources 2023-1" },
           { id: "2023 Q2", value: "$mock sources 2023-2" },
+          { id: "2023 Q3", value: "$25.75" },
+          { id: "2023 Q4", value: "$1,000.00" },
         ],
       });
     });

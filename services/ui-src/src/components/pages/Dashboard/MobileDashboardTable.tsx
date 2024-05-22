@@ -31,18 +31,14 @@ export const MobileDashboardTable = ({
             {reportType === "SAR" && (
               <Box sx={sxOverride.editReport}>
                 <button onClick={() => openAddEditReportModal(report)}>
-                  <Image
-                    src={editIcon}
-                    data-testid="mobile-edit-report"
-                    alt="Edit Report"
-                  />
+                  <Image src={editIcon} alt="Edit Report" />
                 </button>
               </Box>
             )}
             <Text sx={sxOverride.submissionNameText}>
               {report.submissionName}
-              {copyOverSubText(report, reportsByState)}
             </Text>
+            {copyOverSubText(report, reportsByState)}
           </Flex>
         </Box>
         {!isAdmin && reportType === "SAR" && report?.populations && (

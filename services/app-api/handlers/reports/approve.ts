@@ -1,13 +1,22 @@
 import handler from "../handler-lib";
-import { fetchReport } from "./fetch";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
-import { error, reportTables } from "../../utils/constants/constants";
+import { error } from "../../utils/constants/constants";
 import { hasPermissions } from "../../utils/auth/authorization";
+import { parseSpecificReportParameters } from "../../utils/auth/parameters";
+import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
-import { StatusCodes, UserRoles } from "../../utils/types";
+import { ReportStatus, StatusCodes, UserRoles } from "../../utils/types";
 
-export const approveReport = handler(async (event, context) => {
+export const approveReport = handler(async (event) => {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.NO_KEY,
+    };
+  }
+
   // Return a 403 status if the user is not an admin.
   if (!hasPermissions(event, [UserRoles.ADMIN, UserRoles.APPROVER])) {
     return {
@@ -16,39 +25,24 @@ export const approveReport = handler(async (event, context) => {
     };
   }
 
-  // Get current report
-  const reportEvent = { ...event, body: "" };
-  const getCurrentReport = await fetchReport(reportEvent, context);
+  const currentReport = await getReportMetadata(reportType, state, id);
 
-  if (!getCurrentReport.body) {
+  if (!currentReport) {
     return {
       status: StatusCodes.NOT_FOUND,
       body: error.NO_MATCHING_RECORD,
     };
   }
 
-  const currentReport = JSON.parse(getCurrentReport.body);
-  const reportType = currentReport?.reportType;
-
-  const reportTable = reportTables[reportType as keyof typeof reportTables];
-
-  // Delete raw data prior to updating
-  delete currentReport.fieldData;
-  delete currentReport.formTemplate;
-
-  // toggle archived status in report metadata table
-  const reportMetadataParams = {
-    TableName: reportTable,
-    Item: {
-      ...currentReport,
-      status: "Approved",
-      locked: true,
-      isComplete: true,
-    },
+  const updatedReport = {
+    ...currentReport,
+    status: ReportStatus.APPROVED,
+    locked: true,
+    isComplete: true,
   };
 
   try {
-    await dynamoDb.put(reportMetadataParams);
+    await putReportMetadata(updatedReport);
   } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
@@ -58,6 +52,6 @@ export const approveReport = handler(async (event, context) => {
 
   return {
     status: StatusCodes.SUCCESS,
-    body: reportMetadataParams.Item,
+    body: updatedReport,
   };
 });

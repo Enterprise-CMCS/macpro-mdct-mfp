@@ -4,6 +4,7 @@ import { Box } from "@chakra-ui/react";
 import { Table } from "components";
 // utils
 import { notAnsweredText } from "../../constants";
+import { convertToThousandsSeparatedString } from "utils";
 
 export const generateMainTable = (rows: AnyObject, caption?: string) => {
   const headerRow: string[] = generateTableHeader(rows, "Spending");
@@ -55,20 +56,26 @@ export const formatColumns = (rows: AnyObject, type: string) => {
     });
 
     cols.forEach((col: any[]) => {
-      const totalAcutual: number | string =
+      const totalActual: number | string =
         Number(col?.[0].value) + Number(col?.[1].value);
       const totalProjected: number | string =
         Number(col?.[2].value) + Number(col?.[3].value);
       col.map((data) => {
-        if (!isNaN(Number(data.value))) data.value = "$" + data.value;
+        if (!isNaN(Number(data.value)))
+          data.value =
+            "$" + convertToThousandsSeparatedString(data.value, 2).maskedValue;
         return data;
       });
 
       const perTotalProjected: number | string =
-        (totalAcutual / totalProjected) * 100;
+        (totalActual / totalProjected) * 100;
+      const formattedTotal = convertToThousandsSeparatedString(
+        totalActual.toString(),
+        2
+      ).maskedValue;
       col.splice(2, 0, {
         label: "Total actual spending",
-        value: totalAcutual ? `$${totalAcutual}` : "-",
+        value: totalActual ? `$${formattedTotal}` : "-",
       });
       col.push({
         label: "% of total projected spending",

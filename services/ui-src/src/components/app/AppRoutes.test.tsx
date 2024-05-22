@@ -1,10 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
-import { Router } from "react-router-dom";
-import { createMemoryHistory } from "history";
+import { MemoryRouter } from "react-router-dom";
 
 // components
-import { AppRoutes, PostLogoutRedirect } from "components";
+import { AppRoutes } from "components";
 // utils
 import { useStore, UserProvider } from "utils";
 import {
@@ -28,58 +26,36 @@ global.structuredClone = jest.fn((val) => {
   return val ? JSON.parse(JSON.stringify(val)) : val;
 });
 
-const appRoutesComponent = (history: any) => (
-  <Router location={history.location} navigator={history}>
+const appRoutesComponent = (route: string) => (
+  <MemoryRouter initialEntries={[route]}>
     <UserProvider>
       <AppRoutes />
-      <PostLogoutRedirect />
     </UserProvider>
-  </Router>
+  </MemoryRouter>
 );
 
 describe("Test AppRoutes", () => {
   test("report routes are generated", async () => {
-    const history = createMemoryHistory();
-    history.push("/mock/mock-route-1");
-    await act(async () => {
-      await render(appRoutesComponent(history));
-    });
+    render(appRoutesComponent("/mock/mock-route-1"));
+
     expect(screen.getByText("mock-report")).toBeVisible();
   });
 
   test("not-found routes redirect to 404", async () => {
-    const history = createMemoryHistory();
-    history.push("/obviously-fake-route");
-    await act(async () => {
-      await render(appRoutesComponent(history));
-    });
-    expect(screen.getByTestId("404-view")).toBeVisible();
-  });
+    render(appRoutesComponent("/obviously-fake-route"));
 
-  test("redirect when hitting postLogout endpoint", async () => {
-    const history = createMemoryHistory();
-    history.push("/postLogout");
-    await act(async () => {
-      await render(appRoutesComponent(history));
-    });
     expect(screen.getByTestId("404-view")).toBeVisible();
   });
 
   test("export SAR report page", async () => {
-    const history = createMemoryHistory();
-    history.push("/sar/export");
-    await act(async () => {
-      await render(appRoutesComponent(history));
-    });
+    render(appRoutesComponent("/sar/export"));
+
     expect(screen.getByTestId("exportedReportMetadataTable")).toBeVisible();
   });
 
   test("export WP report page", async () => {
-    const history = createMemoryHistory();
-    history.push("/wp/export");
-    await act(async () => {
-      await render(appRoutesComponent(history));
-    });
+    render(appRoutesComponent("/wp/export"));
+
     expect(screen.getByTestId("exportedReportMetadataTable")).toBeVisible();
   });
 });

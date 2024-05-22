@@ -2,12 +2,12 @@ import { useStore } from "utils";
 // components
 import {
   EntityStatusIcon,
-  Table,
   ExportedEntityDetailsOverlaySection,
   Alert,
   ExportedOverlayModalReportSection,
+  Table,
 } from "components";
-import { Box, Heading, Image, Td, Text, Tr } from "@chakra-ui/react";
+import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
 // types
 import {
   AlertTypes,
@@ -15,6 +15,7 @@ import {
   EntityDetailsOverlayShape,
   EntityDetailsStepTypes,
   EntityShape,
+  ErrorVerbiage,
   FormField,
   FormLayoutElement,
   ModalOverlayReportPageShape,
@@ -33,40 +34,31 @@ import finishedIcon from "assets/icons/icon_check_circle.png";
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
 
-interface AlertVerbiage {
-  [key: string]: { title: string; description: string };
-}
-
 export const ExportedModalOverlayReportSection = ({ section }: Props) => {
   const { report } = useStore() ?? {};
   const entityType = section.entityType;
+  const errorMessage: ErrorVerbiage =
+    alertVerbiage[entityType as keyof typeof alertVerbiage];
 
   const showAlert =
-    report && (alertVerbiage as AlertVerbiage)[entityType]
-      ? getWPAlertStatus(report, entityType)
-      : false;
+    report && errorMessage ? getWPAlertStatus(report, entityType) : false;
   return (
     <>
       {showAlert && (
         <Alert
-          title={(alertVerbiage as AlertVerbiage)[entityType].title}
+          title={errorMessage.title}
           status={AlertTypes.ERROR}
-          description={(alertVerbiage as AlertVerbiage)[entityType].description}
+          description={errorMessage.description}
         />
       )}
-      <Table
-        sxOverride={{ container: { ...sx.container } }}
-        sx={sx.root}
-        content={{}}
-        data-testid="exportTable"
-      >
+      <Box sx={sx.container} data-testid="exportTable">
         {report?.fieldData[entityType] &&
           renderModalOverlayTableBody(
             section,
             report,
             report?.fieldData[entityType]
           )}
-      </Table>
+      </Box>
       {(!report?.fieldData[entityType] ||
         report?.fieldData[entityType].length === 0) && (
         <Text sx={sx.emptyState}> No entities found.</Text>
@@ -138,20 +130,29 @@ export function renderModalOverlayTableBody(
     dynamicSection = (section as AnyObject).initiatives;
   }
 
+  const renderInitiativeTitle = (entity: EntityShape, idx: number) => {
+    if (entity.initiative_name) {
+      return entity.isInitiativeClosed
+        ? `${idx + 1}. [Closed] ${entity.initiative_name}`
+        : `${idx + 1}. ${entity.initiative_name}`;
+    }
+    return "Not entered";
+  };
+
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
         return (
-          <>
-            <Tr key={`${reportType}${idx}`}>
-              <Td sx={sx.statusIcon}>
+          <Box key={`${reportType}${idx}`}>
+            <Flex sx={sx.entityHeading}>
+              <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
                   isPdf={isPdf}
                   entityStatus={getInitiativeStatus(report, entity, isPdf)}
                 />
-              </Td>
-              <Td>
+              </Box>
+              <Box>
                 <Heading sx={sx.heading} as="h3">
                   {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
                   <br />
@@ -159,15 +160,15 @@ export function renderModalOverlayTableBody(
                     {entity.initiative_wpTopic[0].value}
                   </Text>
                 </Heading>
-              </Td>
-            </Tr>
+              </Box>
+            </Flex>
             {/* Depending on what the entity step type is, render its corresponding component */}
             {entitySteps.map((step, stepIdx) => {
               const type = step[0].toString();
               switch (type) {
                 case EntityDetailsStepTypes.DEFINE_INITIATIVE:
                   return (
-                    <Box as="tr" key={`${type}${idx}${stepIdx}`}>
+                    <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedEntityDetailsOverlaySection
                         section={section as ModalOverlayReportPageShape}
                         entity={entity}
@@ -178,7 +179,7 @@ export function renderModalOverlayTableBody(
                   );
                 case OverlayModalStepTypes.EVALUATION_PLAN:
                   return (
-                    <Box as="tr" key={`${type}${idx}${stepIdx}`}>
+                    <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
@@ -188,7 +189,7 @@ export function renderModalOverlayTableBody(
                   );
                 case OverlayModalStepTypes.FUNDING_SOURCES:
                   return (
-                    <Box as="tr" key={`${type}${idx}${stepIdx}`}>
+                    <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedOverlayModalReportSection
                         section={section as OverlayModalPageShape}
                         entity={entity}
@@ -199,10 +200,9 @@ export function renderModalOverlayTableBody(
                 case EntityDetailsStepTypes.CLOSE_OUT_INFORMATION:
                   //clean up title
                   step[1] = (step[1] as string).replace(" (if applicable)", "");
-
                   return (
                     entity?.isInitiativeClosed && (
-                      <Box as="tr" key={`${type}${idx}${stepIdx}`}>
+                      <Box key={`${type}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={section as ModalOverlayReportPageShape}
                           entity={entity}
@@ -217,37 +217,57 @@ export function renderModalOverlayTableBody(
                   return <></>;
               }
             })}
-          </>
+          </Box>
         );
       });
     case ReportType.SAR:
       return entities.map((entity, idx) => {
         return (
-          <>
-            <Tr key={`${reportType}${idx}`}>
-              <Td sx={sx.statusIcon}>
+          <Box key={`${reportType}${idx}`}>
+            <Flex sx={sx.entityHeading}>
+              <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
                   isPdf={isPdf}
                   entityStatus={getInitiativeStatus(report, entity, isPdf)}
                 />
-              </Td>
-              <Td>
+              </Box>
+              <Box>
                 <Heading sx={sx.heading} as="h2">
-                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
+                  {renderInitiativeTitle(entity, idx)}
                   <br />
                   <Text sx={sx.headingSubtitle}>
                     {entity.initiative_wpTopic[0].value}
                   </Text>
                 </Heading>
-              </Td>
-            </Tr>
+
+                {entity.isInitiativeClosed && (
+                  <Box key={`${reportType}${idx}-closeout-info`}>
+                    <Box>
+                      <Table
+                        content={{
+                          headRow: ["Actual end date", "Closed by"],
+                          bodyRows: [
+                            [
+                              entity.closeOutInformation_actualEndDate,
+                              entity.closedBy,
+                            ],
+                          ],
+                        }}
+                        variant="none"
+                        sx={sx.closedByTable}
+                      />
+                    </Box>
+                  </Box>
+                )}
+              </Box>
+            </Flex>
             {dynamicSection[idx].entitySteps.map(
               (step: any, stepIdx: number) => {
                 switch (step.stepType) {
                   case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
                     return (
-                      <Box as="tr" key={`${step.stepType}${idx}${stepIdx}`}>
+                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedOverlayModalReportSection
                           section={dynamicSection[idx] as OverlayModalPageShape}
                           entity={entity}
@@ -257,7 +277,7 @@ export function renderModalOverlayTableBody(
                     );
                   case EntityDetailsStepTypes.INITIAVTIVE_PROGRESS:
                     return (
-                      <Box as="tr" key={`${step.stepType}${idx}${stepIdx}`}>
+                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={step}
                           entity={entity}
@@ -278,7 +298,7 @@ export function renderModalOverlayTableBody(
                       tableSection.form.fields.pop();
 
                     return (
-                      <Box as="tr" key={`${step.stepType}${idx}${stepIdx}`}>
+                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={step}
                           entity={entity}
@@ -293,7 +313,7 @@ export function renderModalOverlayTableBody(
                 }
               }
             )}
-          </>
+          </Box>
         );
       });
     default:
@@ -358,8 +378,12 @@ const sx = {
     color: "palette.gray_medium",
     fontWeight: "bold",
   },
+  entityHeading: {
+    marginTop: "4rem",
+  },
   statusIcon: {
-    paddingLeft: "1rem",
+    paddingLeft: "0.25rem",
+    paddingRight: "1rem",
     img: {
       maxWidth: "fit-content",
     },
@@ -378,8 +402,14 @@ const sx = {
     marginLeft: "1.5rem",
   },
   container: {
-    paddingTop: "2rem",
+    marginTop: "-3rem",
     display: "flex",
     flexDirection: "column",
+  },
+  closedByTable: {
+    th: {
+      width: "2rem",
+      paddingBottom: "0",
+    },
   },
 };

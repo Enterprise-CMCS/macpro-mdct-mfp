@@ -24,6 +24,7 @@ export const DropdownField = ({
   styleAsOptional,
   ...props
 }: Props) => {
+  const { ariaLabel } = props;
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {
     let dropdownOptions: any[] = [];
@@ -142,13 +143,13 @@ export const DropdownField = ({
         name={name}
         id={name}
         label={labelText || ""}
+        ariaLabel={ariaLabel}
         options={formattedOptions}
         hint={parsedHint}
         onChange={onChangeHandler}
         onBlur={onBlurHandler}
         errorMessage={errorMessage}
         value={displayValue?.value}
-        {...props}
       />
     </Box>
   );

@@ -103,7 +103,7 @@ export const Form = ({
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
-      updateRenderFields(report!, fields),
+      updateRenderFields(report!, fields, formData),
       formData
     );
     const updateFieldsToRenderWithAriaLabels = (
@@ -221,7 +221,11 @@ const sx = {
   ".ds-c-field": {
     margin: "0.5rem 0 0.25rem",
   },
-
+  ".number-field .ds-c-field": {
+    maxWidth: "15rem",
+    paddingLeft: ".5rem",
+    paddingRight: ".5rem",
+  },
   // disabled field
   ".ds-c-field[disabled]": {
     color: "palette.base",

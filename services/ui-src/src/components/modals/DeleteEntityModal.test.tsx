@@ -199,7 +199,7 @@ describe("Test DeleteEntityModal functionality", () => {
     };
 
     expect(mockUpdateReport).toHaveBeenCalledWith(
-      mockReportKeys,
+      { ...mockReportKeys, id: "mock-wp-full-report-id" },
       expectedUpdateCallPayload
     );
 
@@ -221,7 +221,7 @@ describe("Test DeleteEntityModal functionality", () => {
     };
 
     expect(mockUpdateReport).toHaveBeenCalledWith(
-      mockReportKeys,
+      { ...mockReportKeys, id: "mock-wp-full-report-id" },
       expectedUpdateCallPayload
     );
   });
@@ -241,7 +241,7 @@ describe("Test DeleteEntityModal functionality", () => {
     };
 
     expect(mockUpdateReport).toHaveBeenCalledWith(
-      mockReportKeys,
+      { ...mockReportKeys, id: "mock-wp-full-report-id" },
       expectedUpdateCallPayload
     );
   });

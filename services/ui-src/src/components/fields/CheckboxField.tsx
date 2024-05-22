@@ -15,7 +15,11 @@ export const CheckboxField = ({
   return (
     <Box sx={sxOverride}>
       {/* SAR field sections */}
-      {heading && <Heading sx={sx.fieldHeading}>{heading}</Heading>}
+      {heading && (
+        <Heading size="md" sx={sx.fieldHeading}>
+          {heading}
+        </Heading>
+      )}
       <ChoiceListField
         type="checkbox"
         name={name}
@@ -29,7 +33,6 @@ export const CheckboxField = ({
 
 const sx = {
   fieldHeading: {
-    fontSize: "28px",
-    paddingTop: "1.5rem",
+    marginTop: "1.5rem",
   },
 };

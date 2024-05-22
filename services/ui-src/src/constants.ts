@@ -15,6 +15,7 @@ export const notAnsweredText = "Not answered";
 export enum States {
   AL = "Alabama",
   AK = "Alaska",
+  AS = "American Samoa",
   AZ = "Arizona",
   AR = "Arkansas",
   CA = "California",
@@ -22,8 +23,10 @@ export enum States {
   CT = "Connecticut",
   DE = "Delaware",
   DC = "District of Columbia",
+  FM = "Federated States of Micronesia",
   FL = "Florida",
   GA = "Georgia",
+  GU = "Guam",
   HI = "Hawaii",
   ID = "Idaho",
   IL = "Illinois",
@@ -33,6 +36,7 @@ export enum States {
   KY = "Kentucky",
   LA = "Louisiana",
   ME = "Maine",
+  MH = "Marshall Islands",
   MD = "Maryland",
   MA = "Massachusetts",
   MI = "Michigan",
@@ -48,9 +52,11 @@ export enum States {
   NY = "New York",
   NC = "North Carolina",
   ND = "North Dakota",
+  MP = "Northern Mariana Islands",
   OH = "Ohio",
   OK = "Oklahoma",
   OR = "Oregon",
+  PW = "Palau",
   PA = "Pennsylvania",
   PR = "Puerto Rico",
   RI = "Rhode Island",
@@ -60,6 +66,7 @@ export enum States {
   TX = "Texas",
   UT = "Utah",
   VT = "Vermont",
+  VI = "Virgin Islands",
   VA = "Virginia",
   WA = "Washington",
   WV = "West Virginia",
@@ -96,6 +103,12 @@ export const DEFAULT_TARGET_POPULATIONS = [
     isRequired: true,
   },
 ];
+
+export function getDefaultTargetPopulationNames() {
+  return DEFAULT_TARGET_POPULATIONS.map(
+    (population) => population.transitionBenchmarks_targetPopulationName
+  );
+}
 
 // TIMEOUT PARAMS
 export const IDLE_WINDOW = 30 * 60 * 1000; // ms

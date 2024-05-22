@@ -1,4 +1,5 @@
 import { AnyObject } from "../types";
+import { DEFAULT_TARGET_POPULATION_NAMES } from "../constants/constants";
 
 /**
  * This function goes through the fieldData and looks to see if there are target populations
@@ -38,14 +39,6 @@ export const removeNotApplicablePopsFromInitiatives = (
     .filter(isNotApplicable)
     .map(getPopulationName);
 
-  const defaultTargetPopulationNames = [
-    "Older adults",
-    "Individuals with physical disabilities (PD)",
-    "Individuals with intellectual and developmental disabilities (I/DD)",
-    "Individuals with mental health and substance use disorders (MH/SUD)",
-    "HCBS infrastructure/system-level development",
-  ];
-
   if (notApplicablePopulationNames.length === 0) return fieldData;
 
   /*
@@ -58,7 +51,7 @@ export const removeNotApplicablePopsFromInitiatives = (
       initiative.defineInitiative_targetPopulations?.filter(
         (initiativePopulation: AnyObject) =>
           !notApplicablePopulationNames.includes(initiativePopulation.value) ||
-          defaultTargetPopulationNames.includes(initiativePopulation.value)
+          DEFAULT_TARGET_POPULATION_NAMES.includes(initiativePopulation.value)
       );
   }
 

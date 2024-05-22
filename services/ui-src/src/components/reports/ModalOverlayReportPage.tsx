@@ -16,6 +16,7 @@ import {
 import {
   AlertTypes,
   EntityShape,
+  ErrorVerbiage,
   ModalOverlayReportPageShape,
   ReportType,
 } from "types";
@@ -27,10 +28,6 @@ import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 import addIcon from "assets/icons/icon_add_white.png";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 import { AnyObject } from "yup/lib/types";
-
-interface AlertVerbiage {
-  [key: string]: { title: string; description: string };
-}
 
 export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   // Route Information
@@ -54,10 +51,10 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
     );
   }
 
+  const errorMessage: ErrorVerbiage =
+    alertVerbiage[entityType as keyof typeof alertVerbiage];
   const showAlert =
-    report && (alertVerbiage as AlertVerbiage)[entityType]
-      ? getWPAlertStatus(report, entityType)
-      : false;
+    report && errorMessage ? getWPAlertStatus(report, entityType) : false;
   const dashTitle = `${verbiage.dashboardTitle} ${
     modalForm ? reportFieldDataEntities.length : ""
   }`;
@@ -134,11 +131,9 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
           />
           {showAlert && (
             <Alert
-              title={(alertVerbiage as AlertVerbiage)[route.entityType].title}
+              title={errorMessage.title}
               status={AlertTypes.ERROR}
-              description={
-                (alertVerbiage as AlertVerbiage)[route.entityType].description
-              }
+              description={errorMessage.description}
             />
           )}
           <Box>
@@ -159,6 +154,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
                     entityType={entityType}
                     entityInfo={entityInfo}
                     verbiage={verbiage}
+                    showEntityCloseoutDetails={true}
                     openOverlayOrDrawer={openEntityDetailsOverlay}
                     openAddEditEntityModal={openAddEditEntityModal}
                     openDeleteEntityModal={openDeleteEntityModal}

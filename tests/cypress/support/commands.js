@@ -63,11 +63,35 @@ Cypress.Commands.add("archiveAnyExistingWorkPlans", () => {
   ).select("DC");
   cy.get('[id="report-WP"]').click();
   cy.contains("Go to Report Dashboard").click();
-  cy.wait(3000);
+  cy.wait(5000);
 
   cy.get("table").then(($table) => {
-    if ($table.find('*[data-cy^="Archive"]').length > 0) {
-      cy.get('*[data-cy^="Archive"]').first().click();
+    if ($table.find('button:contains("Archive")').length > 0) {
+      cy.get('button:contains("Archive")').first().click();
+      cy.wait(500);
+    }
+  });
+});
+
+Cypress.Commands.add("archiveAnyExistingSAR", () => {
+  // login as admin
+  cy.authenticate("adminUser");
+  cy.navigateToHomePage();
+
+  /*
+   * Check if there is already a SAR report, if so, archive
+   * is to ensure a clean test bed
+   */
+  cy.get(
+    '[aria-label="List of states, including District of Columbia and Puerto Rico"]'
+  ).select("DC");
+  cy.get('[id="report-SAR"]').click();
+  cy.contains("Go to Report Dashboard").click();
+  cy.wait(5000);
+
+  cy.get("table").then(($table) => {
+    if ($table.find('button:contains("Archive")').length > 0) {
+      cy.get('button:contains("Archive")').first().click();
       cy.wait(500);
     }
   });

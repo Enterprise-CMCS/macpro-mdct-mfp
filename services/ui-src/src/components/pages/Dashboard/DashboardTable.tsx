@@ -79,7 +79,6 @@ export const DashboardTable = ({
         <Td sx={sxOverride.editReportButtonCell}>
           <Button
             variant="outline"
-            data-testid="enter-report"
             onClick={() => enterSelectedReport(report)}
             isDisabled={report?.archived}
           >
@@ -264,7 +263,6 @@ const AdminArchiveButton = ({
     <Td>
       <Button
         variant="link"
-        data-cy={`${report?.archived ? "Unarchive" : "Archive"}`}
         sx={sxOverride.adminActionButton}
         onClick={() => archiveReport!(report)}
       >

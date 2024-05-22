@@ -89,7 +89,6 @@ const exportedEntityDetailsTableComponent = () => (
     <ExportedEntityDetailsTable
       fields={fields}
       entity={entity}
-      data-testid="exportedEntityDetailsTable"
     ></ExportedEntityDetailsTable>
   </ReportContext.Provider>
 );

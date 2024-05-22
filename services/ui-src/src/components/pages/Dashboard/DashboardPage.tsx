@@ -101,11 +101,15 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
   const { intro, body } = dashboardVerbiage;
 
-  // if an admin has selected a state, retrieve it from local storage
+  // if an admin or a read-only user has selected a state, retrieve it from local storage
   const adminSelectedState = localStorage.getItem("selectedState") || undefined;
 
-  // if a user is an admin type, use the selected state, otherwise use their assigned state
-  const activeState = userIsAdmin ? adminSelectedState : userState;
+  // if a user is an admin or a read-only type, use the selected state, otherwise use their assigned state
+  const activeState =
+    userIsAdmin || userIsReadOnly ? adminSelectedState : userState;
+
+  const showSarAlert =
+    reportType === ReportType.SAR && !workPlanToCopyFrom && reportsToDisplay;
 
   useEffect(() => {
     // if no activeState, go to homepage
@@ -282,16 +286,19 @@ export const DashboardPage = ({ reportType }: Props) => {
   } = useDisclosure();
 
   const fullStateName = States[activeState as keyof typeof States];
+
   return (
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
         <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
         Return home
       </Link>
-      {errorMessage && <ErrorAlert error={errorMessage} />}
+      <Box sx={sx.errorMessage}>
+        {errorMessage && <ErrorAlert error={errorMessage} />}
+      </Box>
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
-        {reportType === ReportType.SAR && !workPlanToCopyFrom && (
+        {showSarAlert && (
           <Alert
             title={sarVerbiage.alertBanner.title}
             showIcon={true}
@@ -500,6 +507,9 @@ const sx = {
       fontSize: "16px",
     },
   },
+  errorMessage: {
+    paddingTop: "1rem",
+  },
 };
 
 const sxChildStyles = {
@@ -523,12 +533,9 @@ const sxChildStyles = {
       width: "2rem",
     },
     img: {
-      height: "1.5rem",
-      minWidth: "21px",
-      marginLeft: "0.5rem",
-      ".tablet &, .mobile &": {
-        marginLeft: 0,
-      },
+      minHeight: "1.5rem",
+      width: "1.5rem",
+      marginLeft: 0,
     },
   },
   sarSubmissionNameText: {
