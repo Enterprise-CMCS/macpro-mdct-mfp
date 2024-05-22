@@ -235,7 +235,6 @@ export const EntityDetailsOverlay = ({
           initiativeName={reportPageTitle}
         />
       )}
-      {verbiage.intro.title && <Box sx={sx.title}>{verbiage.intro.title}</Box>}
       {verbiage.intro.subtitle && (
         <Box sx={sx.infoTextBox}>
           {parseCustomHtml(verbiage.intro.subtitle)}
@@ -367,13 +366,6 @@ const sx = {
   },
   warningIcon: {
     width: "1.375rem",
-  },
-  title: {
-    paddingTop: "1rem",
-    paddingBottom: "0",
-    fontWeight: "bold",
-    fontSize: "2xl",
-    color: "palette.gray_medium_dark",
   },
   subsectionHeading: {
     fontWeight: "normal",

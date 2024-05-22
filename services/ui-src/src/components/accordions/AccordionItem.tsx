@@ -5,7 +5,6 @@ import {
   AccordionItem as AccordionItemRoot,
   AccordionPanel,
   Image,
-  Text,
 } from "@chakra-ui/react";
 // assets
 import plusIcon from "assets/icons/icon_plus.png";
@@ -21,7 +20,7 @@ export const AccordionItem = ({ label, children, ...props }: Props) => {
             aria-label={label}
             title="accordion-button"
           >
-            <Text flex="1">{label}</Text>
+            {label}
             <Image
               src={isExpanded ? minusIcon : plusIcon}
               alt={isExpanded ? "Collapse" : "Expand"}
@@ -57,5 +56,6 @@ const sx = {
   },
   accordionIcon: {
     width: "1rem",
+    marginLeft: "auto",
   },
 };
