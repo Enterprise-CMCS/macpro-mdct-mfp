@@ -55,6 +55,12 @@ const sx = {
       color: "palette.primary",
       textDecoration: "underline",
     },
+    header: {
+      marginBottom: "1.5rem",
+    },
+    p: {
+      marginBottom: "1.5rem",
+    },
   },
   text: {
     marginBottom: "1rem",
