@@ -8,12 +8,7 @@ import { AnyObject, FormJson, ReportStatus } from "types";
 import nextIcon from "assets/icons/icon_next_white.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
 
-export const ReportPageFooter = ({
-  submitting,
-  form,
-  verbiage,
-  ...props
-}: Props) => {
+export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
   const navigate = useNavigate();
   const { report, editable, selectedEntity } = useStore();
   const { previousRoute, nextRoute } = useFindRoute(
@@ -34,60 +29,53 @@ export const ReportPageFooter = ({
     !editable ||
     selectedEntity?.isInitiativeClosed;
 
-  // initiatives page requires a different button text
-  const rightButtonText =
-    verbiage?.intro.subsection === "State and Territory-Specific Initiatives"
-      ? "Review & Submit"
-      : "Continue";
+  const isReadOnly = !form?.id || formIsDisabled;
+
+  const prevButton = (
+    <Button
+      onClick={() => navigate(previousRoute)}
+      variant="outline"
+      leftIcon={<Image src={previousIcon} alt="" sx={sx.arrowIcon} />}
+    >
+      Previous
+    </Button>
+  );
+
+  const nextButtonNavOnly = (
+    <Button
+      onClick={() => navigate(nextRoute)}
+      sx={sx.nextButton}
+      rightIcon={<Image src={nextIcon} alt="" sx={sx.arrowIcon} />}
+    >
+      Continue
+    </Button>
+  );
+
+  const nextButtonSubmit = (
+    <Button
+      form={form?.id}
+      type="submit"
+      sx={sx.nextButton}
+      rightIcon={
+        !submitting ? (
+          <Image src={nextIcon} alt="" sx={sx.arrowIcon} />
+        ) : undefined
+      }
+    >
+      {submitting ? <Spinner size="sm" /> : "Continue"}
+    </Button>
+  );
 
   return (
-    <Box sx={sx.footerBox}>
-      <Box>
-        <Flex sx={hidePrevious ? sx.floatButtonRight : sx.buttonFlex}>
-          {!hidePrevious && (
-            <Button
-              onClick={() => navigate(previousRoute)}
-              variant="outline"
-              leftIcon={
-                <Image src={previousIcon} alt="Previous" sx={sx.arrowIcon} />
-              }
-            >
-              Previous
-            </Button>
-          )}
-          {!form?.id || formIsDisabled ? (
-            <Button
-              onClick={() => navigate(nextRoute)}
-              rightIcon={
-                submitting ? (
-                  <></>
-                ) : (
-                  <Image src={nextIcon} alt="Next" sx={sx.arrowIcon} />
-                )
-              }
-            >
-              {rightButtonText}
-            </Button>
-          ) : (
-            <Button
-              form={form.id}
-              type="submit"
-              sx={sx.button}
-              rightIcon={
-                !submitting ? (
-                  <Image src={nextIcon} alt="Next" sx={sx.arrowIcon} />
-                ) : undefined
-              }
-            >
-              {submitting ? <Spinner size="sm" /> : "Continue"}
-            </Button>
-          )}
-        </Flex>
-      </Box>
+    <>
+      <Flex sx={sx.footerBox}>
+        {!hidePrevious ? prevButton : null}
+        {isReadOnly ? nextButtonNavOnly : nextButtonSubmit}
+      </Flex>
       {props.praDisclosure && (
         <Box sx={sx.praStatement}>{parseCustomHtml(props.praDisclosure)}</Box>
       )}
-    </Box>
+    </>
   );
 };
 
@@ -100,26 +88,20 @@ interface Props {
 
 const sx = {
   footerBox: {
-    marginTop: "1.0rem",
+    marginTop: "2.5rem",
+    paddingTop: "1.5rem",
     borderTop: "1px solid",
     borderColor: "palette.gray_light",
   },
-  buttonFlex: {
-    justifyContent: "space-between",
-    marginY: "1.5rem",
-  },
-  floatButtonRight: {
-    justifyContent: "right",
-    marginY: "1.5rem",
+  nextButton: {
+    minWidth: "8.25rem",
+    marginLeft: "auto",
   },
   arrowIcon: {
     width: "1rem",
   },
-  button: {
-    width: "8.25rem",
-  },
   praStatement: {
     fontSize: "0.875rem",
-    paddingTop: "1rem",
+    marginTop: "1rem",
   },
 };
