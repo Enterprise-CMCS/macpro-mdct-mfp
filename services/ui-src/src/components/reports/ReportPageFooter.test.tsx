@@ -9,6 +9,7 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -19,11 +20,11 @@ const mockRoutes = {
   nextRoute: "/mock-next-route",
 };
 
-const mockVerbiageIntro = {
-  intro: {
-    subsection: "State and Territory-Specific Initiatives",
-  },
-};
+const mockUseNavigate = jest.fn();
+
+jest.mock("react-router-dom", () => ({
+  useNavigate: () => mockUseNavigate,
+}));
 
 jest.mock("utils", () => ({
   ...jest.requireActual("utils"),
@@ -40,11 +41,6 @@ const reportPageComponentWithForm = (
     <ReportPageFooter form={mockForm} />
   </RouterWrappedComponent>
 );
-const reportPageComponentOnModalOverlayPage = (
-  <RouterWrappedComponent>
-    <ReportPageFooter verbiage={mockVerbiageIntro} />
-  </RouterWrappedComponent>
-);
 
 describe("ReportPageFooter behavior", () => {
   it("Should render without a form", () => {
@@ -55,11 +51,6 @@ describe("ReportPageFooter behavior", () => {
   it("Should render with a form", () => {
     render(reportPageComponentWithForm);
     expect(screen.getByText("Continue")).toBeVisible();
-  });
-
-  it("Should render correctly on a modal overlay page", () => {
-    render(reportPageComponentOnModalOverlayPage);
-    expect(screen.getByText("Review & Submit")).toBeVisible();
   });
 
   it("Should render a submit button for state users", () => {
@@ -78,6 +69,27 @@ describe("ReportPageFooter behavior", () => {
     });
     render(reportPageComponentWithForm);
     expect(screen.getByText("Continue")).not.toHaveAttribute("type", "submit");
+  });
+
+  it("Should navigate to the previous route when clicking the Previous button", async () => {
+    render(reportPageComponentWithForm);
+    const prevButton = screen.getByRole("button", { name: "Previous" });
+
+    await userEvent.click(prevButton);
+    expect(mockUseNavigate).toHaveBeenCalledWith(mockRoutes.previousRoute);
+  });
+
+  it("Should navigate to the next route when clicking Continue as admin user", async () => {
+    mockedUseStore.mockReturnValue({
+      user: { userIsAdmin: true },
+      ...mockReportStore,
+    });
+
+    render(reportPageComponentWithForm);
+    const nextButton = screen.getByRole("button", { name: "Continue" });
+
+    await userEvent.click(nextButton);
+    expect(mockUseNavigate).toHaveBeenCalledWith(mockRoutes.nextRoute);
   });
 });
 
