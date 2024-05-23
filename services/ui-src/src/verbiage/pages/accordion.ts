@@ -18,7 +18,7 @@ export default {
           type: "text",
           as: "p",
           content:
-            "<b> MFP Work Plan to Semi-Annual Progress Report Process</b>",
+            "<b>MFP Work Plan to Semi-Annual Progress Report Process</b>",
         },
         {
           type: "text",
@@ -55,7 +55,7 @@ export default {
           type: "text",
           as: "p",
           content:
-            "<strong> MFP Work Plan to Semi-Annual Progress Report Process </strong>",
+            "<strong>MFP Work Plan to Semi-Annual Progress Report Process</strong>",
         },
         {
           type: "text",
