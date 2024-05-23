@@ -7,7 +7,6 @@ import { mockStateUser } from "utils/testing/mockUsers";
 import {
   mockDashboardReportContext,
   mockReportContextNoReports,
-  mockEmptyDashboardReportContext,
   mockWpReportContext,
   mockWPFullReport,
   mockWPCopiedReport,
@@ -51,19 +50,11 @@ const mockUseNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
   useNavigate: () => mockUseNavigate,
   useLocation: jest.fn(() => ({
-    pathname: "/wp",
+    pathname: "/mock-dashboard",
   })),
 }));
 
-const dashboardViewWithNoReports = (
-  <RouterWrappedComponent>
-    <ReportContext.Provider value={mockEmptyDashboardReportContext}>
-      <DashboardPage reportType={ReportType.WP} />
-    </ReportContext.Provider>
-  </RouterWrappedComponent>
-);
-
-const dashboardViewWithReports = (
+const wpDashboardViewWithReports = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockDashboardReportContext}>
       <DashboardPage reportType={ReportType.WP} />
@@ -110,7 +101,7 @@ describe("Test Report Dashboard view (Desktop)", () => {
 
   test("Check that WP Dashboard view renders", () => {
     mockedUseStore.mockReturnValue(mockReportStore);
-    render(dashboardViewWithReports);
+    render(wpDashboardViewWithReports);
 
     expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
     expect(
@@ -122,7 +113,7 @@ describe("Test Report Dashboard view (Desktop)", () => {
 
   test("Check that WP Dashboard continue button is disabled if latest WP is not approved", () => {
     mockedUseStore.mockReturnValue(mockUseStore);
-    render(dashboardViewWithReports);
+    render(wpDashboardViewWithReports);
     const reportByRows = screen.getAllByRole("row");
     expect(reportByRows[1].querySelectorAll("td")[5]).not.toHaveTextContent(
       "Approved"
@@ -135,21 +126,21 @@ describe("Test Report Dashboard view (Desktop)", () => {
 
   test("Show copied from verbiage on report versions 2 or higher", () => {
     mockedUseStore.mockReturnValue(mockUseStore);
-    render(dashboardViewWithReports);
+    render(wpDashboardViewWithReports);
     const subText = screen.getByText("copied from 2023 - Period 1");
     expect(subText).toBeInTheDocument();
   });
 
   test("Check that you can enter a WP", async () => {
     mockedUseStore.mockReturnValue(mockUseEntityStore);
-    render(dashboardViewWithReports);
+    render(wpDashboardViewWithReports);
     const editButtons = screen.getAllByText("Edit");
     await userEvent.click(editButtons[0]);
   });
 
   test("Clicking Call To Action text open add/edit modal", async () => {
     mockedUseStore.mockReturnValue(mockUseEmptyReportStore);
-    render(dashboardViewWithNoReports);
+    render(wpDashboardWithNoReports);
     const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
     expect(callToActionButton).toBeVisible();
     await userEvent.click(callToActionButton);
@@ -203,7 +194,7 @@ describe("Test Report Dashboard (Mobile)", () => {
       isMobile: true,
     });
     mockedUseStore.mockReturnValue(mockUseEmptyReportStore);
-    render(dashboardViewWithNoReports);
+    render(wpDashboardWithNoReports);
   });
 
   test("Clicking Call To Action text open add/edit modal", async () => {
@@ -229,7 +220,7 @@ describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobil
         isMobile: false,
       });
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
-      render(dashboardViewWithReports);
+      render(wpDashboardViewWithReports);
     });
 
     test("Check that Admin WP Dashboard view renders", () => {
@@ -278,12 +269,12 @@ describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobil
       mockUseBreakpoint.mockReturnValue({
         isMobile: true,
       });
-      render(dashboardViewWithReports);
+      render(wpDashboardViewWithReports);
     });
     it("Should not have basic accessibility issues (mobile)", async () => {
       mockMakeMediaQueryClasses.mockReturnValue("mobile");
       await act(async () => {
-        const { container } = render(dashboardViewWithReports);
+        const { container } = render(wpDashboardViewWithReports);
         const results = await axe(container);
         expect(results).toHaveNoViolations();
       });
@@ -322,7 +313,6 @@ describe("Test error banner on SAR dashboard", () => {
     mockUseBreakpoint.mockReturnValue({
       isMobile: false,
     });
-    mockMakeMediaQueryClasses.mockReturnValue("desktop");
   });
 
   afterEach(() => {
