@@ -43,11 +43,6 @@ if [ "yarn.lock" -nt ".yarn_install" ]; then
 	touch .yarn_install
 fi
 
-# if .env doesn't exist, copy .env_example there
-# if [ ! -f .env ]; then 
-# 	cp .env_example .env
-# fi
-
 # Parse arguments
 UPDATE_ENV=false
 ARGS=()
