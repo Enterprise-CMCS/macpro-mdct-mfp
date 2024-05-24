@@ -313,6 +313,7 @@ describe("Test error banner on SAR dashboard", () => {
     mockUseBreakpoint.mockReturnValue({
       isMobile: false,
     });
+    mockMakeMediaQueryClasses.mockReturnValue("desktop");
   });
 
   afterEach(() => {
