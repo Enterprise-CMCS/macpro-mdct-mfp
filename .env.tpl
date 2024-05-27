@@ -33,4 +33,3 @@ CYPRESS_ADMIN_USER_EMAIL=op://mdct_devs/mfp_secrets/CYPRESS_ADMIN_USER_EMAIL
 CYPRESS_ADMIN_USER_PASSWORD=op://mdct_devs/mfp_secrets/CYPRESS_ADMIN_USER_PASSWORD # pragma: allowlist secret
 CYPRESS_STATE_USER_EMAIL=op://mdct_devs/mfp_secrets/CYPRESS_STATE_USER_EMAIL
 CYPRESS_STATE_USER_PASSWORD=op://mdct_devs/mfp_secrets/CYPRESS_STATE_USER_PASSWORD # pragma: allowlist secret
-CYPRESS_STATE_USER_2=op://mdct_devs/mfp_secrets/CYPRESS_STATE_USER_2
