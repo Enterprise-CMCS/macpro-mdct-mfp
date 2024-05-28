@@ -20,14 +20,16 @@
 
 ## Running tests
 
-To run cypress tests locally you will go to the root of the project and you'll need to pass in environment variables for the state user and admin user passwords.
-The final command will look something like this:
+To run cypress tests locally you will go to the root of the project and you'll need an upadated .env with variables for the state user and admin user passwords. To accomplish this ther are multiple options. 
 
-`CYPRESS_ADMIN_USER_PASSWORD=passwordhere CYPRESS_STATE_USER_PASSWORD=passwordhere yarn test`
+1. If you have a 1Password account and 1Password CLI installed locally you can run 
+`./run update-env` to pull values from 1Password and create an updated .env
 
-_These variables are included in GitHub secrets for CI stages._
+2. Alternatively, if you do not have a 1Password account you can copy the contents of the `.env.tpl` file to a `.env` file at the top level of the repo and reach out to the team for appropriate values to be populated by hand.
 
-These are the same passwords you use to log in with Cognito locally. If you don't have these passwords you can find them in AWS SSM parameters in the mdct-mfp-dev account. Look for the parameter with a name like `/configuration/default/cognito/bootstrapUsers/password`. Ask a repository contributor for help if needed.
+3. When you have an updated `.env` file can run tests from the top level of the repo using the `yarn test` command.
+
+If you don't have a 1Password account and do not have these passwords you can find them in AWS SSM parameters in the mdct-mfp-dev account. Look for the parameter with a name like `/configuration/default/cognito/bootstrapUsers/password`. Ask a repository contributor for help if needed.
 
 ## Troubleshooting
 
