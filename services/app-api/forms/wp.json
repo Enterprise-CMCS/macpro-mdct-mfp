@@ -510,11 +510,9 @@
                 },
                 {
                   "type": "text",
-                  "content": "<sup>*Required by Program Terms and Conditions</sup>",
+                  "content": "*Required by Program Terms and Conditions",
                   "props": {
-                    "style": {
-                      "color": "#000000"
-                    }
+                    "className": "mdct-smalltext"
                   }
                 },
                 {
