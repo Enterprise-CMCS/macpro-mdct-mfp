@@ -77,6 +77,16 @@ const sx = {
       marginBottom: "1rem",
       marginTop: "0",
     },
+    ".mdct-table th": {
+      textTransform: "capitalize",
+      fontSize: "sm",
+      fontWeight: "600",
+      color: "palette.gray_medium",
+    },
+    ".mdct-smalltext": {
+      fontSize: "xs",
+      marginTop: "0.625rem",
+    },
   },
   smallHeading: {
     color: "palette.gray",
