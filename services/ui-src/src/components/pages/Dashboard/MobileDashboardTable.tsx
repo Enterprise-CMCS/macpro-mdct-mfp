@@ -11,7 +11,7 @@ export const MobileDashboardTable = ({
   reportsByState,
   reportId,
   reportType,
-  openAddEditReportModal,
+  openCreateReportModal,
   enterSelectedReport,
   archiveReport,
   archiving,
@@ -30,7 +30,7 @@ export const MobileDashboardTable = ({
           <Flex alignContent="flex-start">
             {reportType === "SAR" && (
               <Box sx={sxOverride.editReport}>
-                <button onClick={() => openAddEditReportModal(report)}>
+                <button onClick={() => openCreateReportModal(report)}>
                   <Image src={editIcon} alt="Edit Report" />
                 </button>
               </Box>
@@ -130,7 +130,7 @@ interface MobileDashboardTableProps {
   reportsByState: ReportMetadataShape[];
   reportId: string | undefined;
   reportType: string;
-  openAddEditReportModal: Function;
+  openCreateReportModal: Function;
   enterSelectedReport: Function;
   archiveReport?: Function;
   archiving?: boolean;

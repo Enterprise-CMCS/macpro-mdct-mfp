@@ -16,8 +16,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import {
-  AddNewWorkPlanModal,
-  AddEditReportModal,
+  CreateWorkPlanModal,
+  CreateSarModal,
   Modal,
   DashboardTable,
   InstructionsAccordion,
@@ -169,7 +169,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     setEditable(isReportEditable(selectedReport));
     navigate(firstReportPagePath);
   };
-  const openAddEditReportModal = (report?: ReportShape) => {
+  const openCreateReportModal = (report?: ReportShape) => {
     let formData = undefined;
     //
     if (report && reportType == ReportType.SAR) {
@@ -208,10 +208,10 @@ export const DashboardPage = ({ reportType }: Props) => {
     setSelectedReport(formData);
 
     // use disclosure to open modal
-    if (!reportsToDisplay?.length && reportType == ReportType.WP) {
-      addNewWorkPlanModalOnOpenHandler();
+    if (reportType === ReportType.WP) {
+      createWorkPlanModalOnOpenHandler();
     } else {
-      addEditReportModalOnOpenHandler();
+      createSarModalOnOpenHandler();
     }
   };
 
@@ -266,16 +266,16 @@ export const DashboardPage = ({ reportType }: Props) => {
 
   // new work plan modal disclosure
   const {
-    isOpen: addNewWorkPlanModalIsOpen,
-    onOpen: addNewWorkPlanModalOnOpenHandler,
-    onClose: addNewWorkPlanModalOnCloseHandler,
+    isOpen: createWorkPlanModalIsOpen,
+    onOpen: createWorkPlanModalOnOpenHandler,
+    onClose: createWorkPlanModalOnCloseHandler,
   } = useDisclosure();
 
   // add/edit program modal disclosure
   const {
-    isOpen: addEditReportModalIsOpen,
-    onOpen: addEditReportModalOnOpenHandler,
-    onClose: addEditReportModalOnCloseHandler,
+    isOpen: createSarModalIsOpen,
+    onOpen: createSarModalOnOpenHandler,
+    onClose: createSarModalOnCloseHandler,
   } = useDisclosure();
 
   //unlock modal disclosure
@@ -329,7 +329,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               reportsByState={reportsToDisplay}
               reportType={reportType}
               reportId={reportId}
-              openAddEditReportModal={openAddEditReportModal}
+              openCreateReportModal={openCreateReportModal}
               enterSelectedReport={enterSelectedReport}
               archiveReport={toggleReportArchiveStatus}
               archiving={archiving}
@@ -346,7 +346,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               reportType={reportType}
               reportId={reportId}
               body={body}
-              openAddEditReportModal={openAddEditReportModal}
+              openCreateReportModal={openCreateReportModal}
               enterSelectedReport={enterSelectedReport}
               archiveReport={toggleReportArchiveStatus}
               archiving={archiving}
@@ -374,7 +374,7 @@ export const DashboardPage = ({ reportType }: Props) => {
             <Button
               type="submit"
               disabled={isAddSubmissionDisabled()}
-              onClick={() => openAddEditReportModal()}
+              onClick={() => openCreateReportModal()}
             >
               {!previousReport || reportType === ReportType.SAR
                 ? body.callToAction
@@ -383,23 +383,20 @@ export const DashboardPage = ({ reportType }: Props) => {
           </Box>
         )}
       </Box>
-      <AddNewWorkPlanModal
+      <CreateWorkPlanModal
         activeState={activeState!}
-        selectedReport={selectedReport!}
-        reportType={reportType}
+        previousReport={previousReport}
         modalDisclosure={{
-          isOpen: addNewWorkPlanModalIsOpen,
-          onClose: addNewWorkPlanModalOnCloseHandler,
+          isOpen: createWorkPlanModalIsOpen,
+          onClose: createWorkPlanModalOnCloseHandler,
         }}
       />
-      <AddEditReportModal
+      <CreateSarModal
         activeState={activeState!}
         selectedReport={selectedReport!}
-        previousReport={previousReport}
-        reportType={reportType}
         modalDisclosure={{
-          isOpen: addEditReportModalIsOpen,
-          onClose: addEditReportModalOnCloseHandler,
+          isOpen: createSarModalIsOpen,
+          onClose: createSarModalOnCloseHandler,
         }}
       />
       <Modal
