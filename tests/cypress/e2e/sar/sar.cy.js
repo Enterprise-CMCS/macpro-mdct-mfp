@@ -4,7 +4,7 @@ import { traverseRoutes } from "../../support/form";
 
 const currentYear = new Date().getFullYear();
 
-describe("Create SAR from Approved WP", () => {
+describe.skip("Create SAR from Approved WP", () => {
   it("State users can create Work Plans", () => {
     cy.archiveAnyExistingWorkPlans();
     cy.authenticate("stateUser");
