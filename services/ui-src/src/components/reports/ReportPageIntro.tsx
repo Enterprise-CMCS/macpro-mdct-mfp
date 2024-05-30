@@ -86,6 +86,7 @@ const sx = {
     ".mdct-smalltext": {
       fontSize: "xs",
       marginTop: "0.625rem",
+      color: "palette.gray",
     },
   },
   smallHeading: {
