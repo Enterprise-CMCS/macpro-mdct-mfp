@@ -353,11 +353,9 @@ const sx = {
     height: "27px",
   },
   list: {
+    color: "palette.gray",
     paddingLeft: "1rem",
-    margin: "1.5rem",
-    li: {
-      marginBottom: "0.5rem",
-    },
+    margin: "0.25rem",
   },
   additionalInfoHeader: {
     color: "palette.gray",
@@ -365,7 +363,12 @@ const sx = {
     marginBottom: ".5rem",
   },
   additionalInfo: {
-    color: "palette.gray",
+    p: {
+      color: "palette.gray",
+    },
+    "p + p": {
+      marginTop: "1.5rem",
+    },
   },
   submitContainer: {
     width: "100%",
