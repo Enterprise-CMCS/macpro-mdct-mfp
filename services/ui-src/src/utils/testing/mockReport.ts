@@ -432,11 +432,6 @@ export const mockSARReportContext = {
   lastSavedTime: "2:00 PM",
 };
 
-export const mockEmptyDashboardReportContext = {
-  ...mockWpReportContext,
-  reportsByState: [{}],
-};
-
 export const mockDashboardReportContext = {
   ...mockWpReportContext,
   reportsByState: [
