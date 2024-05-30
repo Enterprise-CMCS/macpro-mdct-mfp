@@ -12,11 +12,11 @@ This directory contains files to seed the MFP database via command line with int
 
 ### Work Plan (WP)
 
-Choosing this option will reveal more options to create a WP with a specific status. You can also get a single WP or all WPs from a state, and the JSON resppnse will print in the terminal.
+Choosing this option will reveal more options to create a WP with a specific status. You can also get a single WP or all WPs from a state, and the JSON response will print in the terminal.
 
 ### Semi-Annual Report (SAR)
 
-Choosing this option will reveal more options to create a SAR with a specific status. Creating a SAR also creates an approved WP to associate with it. You can also get a single SAR or all SARs from a state, and the JSON resppnse will print in the terminal.
+Choosing this option will reveal more options to create a SAR with a specific status. Creating a SAR also creates an approved WP to associate with it. You can also get a single SAR or all SARs from a state, and the JSON response will print in the terminal.
 
 ### Create filled WP and filled SAR
 
