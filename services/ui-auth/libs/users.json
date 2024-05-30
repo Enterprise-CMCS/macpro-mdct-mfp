@@ -95,7 +95,7 @@
       },
       {
         "Name": "custom:cms_roles",
-        "Value": "mdctmfp-internal-user"
+        "Value": "mdctmfp-cms-internal-user"
       }
     ]
   },
