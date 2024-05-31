@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const prompts = require("prompts");
-const { expandedLog } = require("./helpers.js");
+const { createdLog, expandedLog } = require("./helpers.js");
 const {
   bannerKey,
   createApprovedWorkPlan,
@@ -29,8 +29,8 @@ const {
 
 async function seed() {
   await loginUsers();
-  const wpIds = await workPlanChoices();
-  const sarIds = await semiAnnualReportChoices();
+  let wpIds = await workPlanChoices();
+  let sarIds = await semiAnnualReportChoices();
 
   const questions = [
     {
@@ -46,7 +46,7 @@ async function seed() {
     },
     {
       type: (prev) => (prev === "wp" ? "select" : null),
-      name: "task",
+      name: "wpTask",
       message: "Task",
       choices: [
         { title: "Create base WP", value: "createWorkPlan" },
@@ -79,7 +79,7 @@ async function seed() {
     },
     {
       type: (prev) => (prev === "sar" ? "select" : null),
-      name: "task",
+      name: "sarTask",
       message: "Task",
       choices: [
         { title: "Create base SAR", value: "createSemiAnnualReport" },
@@ -108,7 +108,7 @@ async function seed() {
     },
     {
       type: (prev) => (prev === "banner" ? "select" : null),
-      name: "task",
+      name: "bannerTask",
       message: "Task",
       choices: [
         {
@@ -131,7 +131,7 @@ async function seed() {
     },
     {
       type: (prev) =>
-        prev === "getSemiAnnualReportById" && semiAnnualReportChoices.length > 0
+        prev === "getSemiAnnualReportById" && sarIds.length > 0
           ? "select"
           : null,
       name: "semiAnnualReportId",
@@ -163,88 +163,85 @@ async function seed() {
         break;
     }
 
+    if (prompt.name === "wpTask" || prompt.name === "sarTask") {
+      switch (answer) {
+        case "createFilledEach": {
+          createdLog(await createFilledWorkPlan(), "WP");
+          createdLog(await createFilledSemiAnnualReport(), "SAR");
+          break;
+        }
+        case "createWorkPlan": {
+          createdLog(await createWorkPlan(), "WP");
+          break;
+        }
+        case "createFilledWorkPlan": {
+          createdLog(await createFilledWorkPlan(), "WP");
+          break;
+        }
+        case "createSubmittedWorkPlan": {
+          createdLog(await createSubmittedWorkPlan(), "WP");
+          break;
+        }
+        case "createApprovedWorkPlan": {
+          createdLog(await createApprovedWorkPlan(), "WP");
+          break;
+        }
+        case "createLockedWorkPlan": {
+          createdLog(await createLockedWorkPlan(), "WP");
+          break;
+        }
+        case "createArchivedWorkPlan": {
+          createdLog(await createArchivedWorkPlan(), "WP");
+          break;
+        }
+        case "getWorkPlansByState":
+          expandedLog(await getWorkPlansByState());
+          break;
+        case "createSemiAnnualReport": {
+          createdLog(await createSemiAnnualReport(), "SAR");
+          break;
+        }
+        case "createFilledSemiAnnualReport": {
+          createdLog(await createFilledSemiAnnualReport(), "SAR");
+          break;
+        }
+        case "createSubmittedSemiAnnualReport": {
+          createdLog(await createSubmittedSemiAnnualReport(), "SAR");
+          break;
+        }
+        case "createLockedSemiAnnualReport": {
+          createdLog(await createLockedSemiAnnualReport(), "SAR");
+          break;
+        }
+        case "createArchivedSemiAnnualReport": {
+          createdLog(await createArchivedSemiAnnualReport(), "SAR");
+          break;
+        }
+        case "getSemiAnnualReportsByState":
+          expandedLog(await getSemiAnnualReportsByState());
+          break;
+        default:
+          break;
+      }
+
+      wpIds = await workPlanChoices();
+      sarIds = await semiAnnualReportChoices();
+    }
+
     switch (answer) {
-      case "createFilledEach": {
-        const { id: wpId } = await createFilledWorkPlan();
-        console.log(`WP created: ${wpId}`);
-        const { id } = await createFilledSemiAnnualReport();
-        console.log(`SAR created: ${id}`);
-        break;
-      }
-      case "createWorkPlan": {
-        const { id } = await createWorkPlan();
-        console.log(`WP created: ${id}`);
-        break;
-      }
-      case "createFilledWorkPlan": {
-        const { id } = await createFilledWorkPlan();
-        console.log(`WP created: ${id}`);
-        break;
-      }
-      case "createSubmittedWorkPlan": {
-        const { id } = await createSubmittedWorkPlan();
-        console.log(`WP created: ${id}`);
-        break;
-      }
-      case "createApprovedWorkPlan": {
-        const { id } = await createApprovedWorkPlan();
-        console.log(`WP created: ${id}`);
-        break;
-      }
-      case "createLockedWorkPlan": {
-        const { id } = await createLockedWorkPlan();
-        console.log(`WP created: ${id}`);
-        break;
-      }
-      case "createArchivedWorkPlan": {
-        const { id } = await createArchivedWorkPlan();
-        console.log(`WP created: ${id}`);
-        break;
-      }
-      case "getWorkPlansByState":
-        expandedLog(await getWorkPlansByState());
-        break;
-      case "createSemiAnnualReport": {
-        const { id } = await createSemiAnnualReport();
-        console.log(`SAR created: ${id}`);
-        break;
-      }
-      case "createFilledSemiAnnualReport": {
-        const { id } = await createFilledSemiAnnualReport();
-        console.log(`SAR created: ${id}`);
-        break;
-      }
-      case "createSubmittedSemiAnnualReport": {
-        const { id } = await createSubmittedSemiAnnualReport();
-        console.log(`SAR created: ${id}`);
-        break;
-      }
-      case "createLockedSemiAnnualReport": {
-        const { id } = await createLockedSemiAnnualReport();
-        console.log(`SAR created: ${id}`);
-        break;
-      }
-      case "createArchivedSemiAnnualReport": {
-        const { id } = await createArchivedSemiAnnualReport();
-        console.log(`SAR created: ${id}`);
-        break;
-      }
-      case "getSemiAnnualReportsByState":
-        expandedLog(await getSemiAnnualReportsByState());
-        break;
       case "createBanner": {
         const { Item } = await createBanner();
         console.log(`Banner created: ${Item.key}`);
         break;
       }
+      case "getBanner":
+        expandedLog(await getBannerById());
+        break;
       case "deleteBanner": {
         const { Key } = await deleteBannerById();
         console.log(`Banner deleted: ${Key.key}`);
         break;
       }
-      case "getBanner":
-        expandedLog(await getBannerById());
-        break;
       default:
         break;
     }

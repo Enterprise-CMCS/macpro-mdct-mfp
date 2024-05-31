@@ -159,6 +159,11 @@ const randomReportYear = faker.number.int({
   max: currentYear + 1,
 });
 
+const createdLog = (obj, type) => {
+  const { id } = obj;
+  console.log(`${type} created: ${id}`);
+};
+
 const expandedLog = (json) => {
   console.log(JSON.stringify(json, null, 2));
 };
@@ -202,6 +207,7 @@ const quarterlyKeyGenerator = (year, period, name, numType) => {
 };
 
 module.exports = {
+  createdLog,
   dateFormat,
   deleteApi,
   expandedLog,
