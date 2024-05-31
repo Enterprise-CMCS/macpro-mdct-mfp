@@ -13,15 +13,15 @@ const region = process.env.COGNITO_USER_POOL_ID.split("_")[0];
 const userPoolId = process.env.COGNITO_USER_POOL_ID.split("_")[1];
 const cognitoUrl = `https://cognito-idp.${region}.amazonaws.com`;
 
-function errorResponse(error) {
+const errorResponse = (error) => {
   const _err = JSON.parse(error.response.data);
   const err = new Error();
   err.code = _err.__type;
   err.message = _err.message;
   return Promise.reject(err);
-}
+};
 
-async function get(url, headers) {
+const get = async (url, headers) => {
   const request = {
     url,
     method: "get",
@@ -31,13 +31,13 @@ async function get(url, headers) {
   return axios(request)
     .then((result) => result.data)
     .catch((error) => errorResponse(error));
-}
+};
 
-async function getApi(url, headers) {
+const getApi = async (url, headers) => {
   return get(`${apiUrl}${url}`, headers);
-}
+};
 
-async function post(url, headers, body) {
+const post = async (url, headers, body) => {
   const request = {
     url,
     method: "post",
@@ -49,13 +49,13 @@ async function post(url, headers, body) {
   return axios(request)
     .then((result) => JSON.parse(result.data))
     .catch((error) => errorResponse(error));
-}
+};
 
-async function postApi(url, headers, body) {
+const postApi = async (url, headers, body) => {
   return post(`${apiUrl}${url}`, headers, body);
-}
+};
 
-async function put(url, headers, body) {
+const put = async (url, headers, body) => {
   const request = {
     url,
     method: "put",
@@ -67,13 +67,13 @@ async function put(url, headers, body) {
   return axios(request)
     .then((result) => JSON.parse(result.data))
     .catch((error) => errorResponse(error));
-}
+};
 
-async function putApi(url, headers, body) {
+const putApi = async (url, headers, body) => {
   return put(`${apiUrl}${url}`, headers, body);
-}
+};
 
-async function del(url, headers) {
+const del = async (url, headers) => {
   const request = {
     url,
     method: "delete",
@@ -83,13 +83,13 @@ async function del(url, headers) {
   return axios(request)
     .then((result) => result.data)
     .catch((error) => errorResponse(error));
-}
+};
 
-async function deleteApi(url, headers) {
+const deleteApi = async (url, headers) => {
   return del(`${apiUrl}${url}`, headers);
-}
+};
 
-async function login(email, password) {
+const login = async (email, password) => {
   const srp = new SRPClient(userPoolId);
   const SRP_A = srp.calculateA();
 
@@ -142,7 +142,7 @@ async function login(email, password) {
       }
     ).then(({ AuthenticationResult }) => AuthenticationResult);
   });
-}
+};
 
 const currentYear = new Date().getFullYear();
 

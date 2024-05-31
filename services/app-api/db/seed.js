@@ -27,12 +27,12 @@ const {
   workPlanChoices,
 } = require("./options.js");
 
-async function seed() {
+const seed = async () => {
   await loginUsers();
   const wpIds = await workPlanChoices();
   const sarIds = await semiAnnualReportChoices();
 
-  function generateChoices(type) {
+  const generateChoices = (type) => {
     const choices = [
       { title: `Create base ${type}`, value: `create${type}` },
       {
@@ -66,7 +66,7 @@ async function seed() {
     }
 
     return choices;
-  }
+  };
 
   const questions = [
     {
@@ -82,7 +82,7 @@ async function seed() {
     },
     {
       type: (prev) => (["WP", "SAR"].includes(prev) ? "select" : null),
-      name: "mainTask",
+      name: "task",
       message: "Task",
       choices: (prev) => generateChoices(prev),
     },
@@ -218,6 +218,6 @@ async function seed() {
   };
 
   await prompts(questions, { onSubmit });
-}
+};
 
 seed();

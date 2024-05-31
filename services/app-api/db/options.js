@@ -16,16 +16,16 @@ const stateName = process.env.SEED_STATE_NAME;
 let headers = {};
 let adminHeaders = {};
 
-async function loginUsers() {
+const loginUsers = async () => {
   const adminLogin = await login(adminUser, adminPassword);
   const stateLogin = await login(stateUser, statePassword);
 
   headers["x-api-key"] = stateLogin.IdToken;
   adminHeaders["x-api-key"] = adminLogin.IdToken;
-}
+};
 
 // Work Plan (WP)
-async function createWorkPlan() {
+const createWorkPlan = async () => {
   const report = await postApi(
     `/reports/WP/${state}`,
     headers,
@@ -33,9 +33,9 @@ async function createWorkPlan() {
   );
 
   return report;
-}
+};
 
-async function createFilledWorkPlan() {
+const createFilledWorkPlan = async () => {
   const { id, reportYear, reportPeriod } = await createWorkPlan();
   const report = await putApi(
     `/reports/WP/${state}/${id}`,
@@ -43,63 +43,63 @@ async function createFilledWorkPlan() {
     fillWorkPlan(reportYear, reportPeriod)
   );
   return report;
-}
+};
 
-async function createSubmittedWorkPlan() {
+const createSubmittedWorkPlan = async () => {
   const { id } = await createFilledWorkPlan();
   const report = await postApi(`/reports/submit/WP/${state}/${id}`, headers);
   return report;
-}
+};
 
-async function createApprovedWorkPlan() {
+const createApprovedWorkPlan = async () => {
   const { id } = await createSubmittedWorkPlan();
   const report = await putApi(
     `/reports/approve/WP/${state}/${id}`,
     adminHeaders
   );
   return report;
-}
+};
 
-async function createLockedWorkPlan() {
+const createLockedWorkPlan = async () => {
   const { id } = await createApprovedWorkPlan();
   const report = await putApi(
     `/reports/release/WP/${state}/${id}`,
     adminHeaders
   );
   return report;
-}
+};
 
-async function createArchivedWorkPlan() {
+const createArchivedWorkPlan = async () => {
   const { id } = await createApprovedWorkPlan();
   const report = await putApi(
     `/reports/archive/WP/${state}/${id}`,
     adminHeaders
   );
   return report;
-}
+};
 
-async function getWorkPlanById(id) {
+const getWorkPlanById = async (id) => {
   const report = await getApi(`/reports/WP/${state}/${id}`, headers);
   return report;
-}
+};
 
-async function getWorkPlansByState() {
+const getWorkPlansByState = async () => {
   const reports = await getApi(`/reports/WP/${state}`, headers);
   return reports;
-}
+};
 
-async function workPlanChoices() {
+const workPlanChoices = async () => {
   const reports = await getWorkPlansByState();
   return reports.map(({ submissionName, id }) => ({
     title: `${submissionName} (${id})`,
     value: id,
   }));
-}
+};
 
 // Semi-Annual Report (SAR)
-async function createSemiAnnualReport() {
-  const approved = await createApprovedWorkPlan();
-  const wp = await getWorkPlanById(approved.id);
+const createSemiAnnualReport = async () => {
+  const { id } = await createApprovedWorkPlan();
+  const wp = await getWorkPlanById(id);
 
   const report = await postApi(
     `/reports/SAR/${state}`,
@@ -108,9 +108,9 @@ async function createSemiAnnualReport() {
   );
 
   return report;
-}
+};
 
-async function createFilledSemiAnnualReport() {
+const createFilledSemiAnnualReport = async () => {
   const sar = await createSemiAnnualReport();
 
   const report = await putApi(
@@ -120,71 +120,71 @@ async function createFilledSemiAnnualReport() {
   );
 
   return report;
-}
+};
 
-async function createSubmittedSemiAnnualReport() {
+const createSubmittedSemiAnnualReport = async () => {
   const { id } = await createFilledSemiAnnualReport();
   const report = await postApi(`/reports/submit/SAR/${state}/${id}`, headers);
   return report;
-}
+};
 
-async function createLockedSemiAnnualReport() {
+const createLockedSemiAnnualReport = async () => {
   const { id } = await createFilledSemiAnnualReport();
   const report = await putApi(
     `/reports/release/SAR/${state}/${id}`,
     adminHeaders
   );
   return report;
-}
+};
 
-async function createArchivedSemiAnnualReport() {
+const createArchivedSemiAnnualReport = async () => {
   const { id } = await createFilledSemiAnnualReport();
   const report = await putApi(
     `/reports/archive/SAR/${state}/${id}`,
     adminHeaders
   );
   return report;
-}
+};
 
-async function getSemiAnnualReportById(id) {
+const getSemiAnnualReportById = async (id) => {
   const report = await getApi(`/reports/SAR/${state}/${id}`, adminHeaders);
   return report;
-}
+};
 
-async function getSemiAnnualReportsByState() {
+const getSemiAnnualReportsByState = async () => {
   const reports = await getApi(`/reports/SAR/${state}`, adminHeaders);
   return reports;
-}
+};
 
-async function semiAnnualReportChoices() {
+const semiAnnualReportChoices = async () => {
   const reports = await getSemiAnnualReportsByState();
   return reports.map((report) => ({
     title: `${report.submissionName} (${report.id})`,
     value: report.id,
   }));
-}
+};
 
 // Banner
 const bannerKey = "admin-banner-id";
 
-async function createBanner() {
+const createBanner = async () => {
   const banner = await postApi(
     `/banners/${bannerKey}`,
     adminHeaders,
     newBanner(bannerKey)
   );
   return banner;
-}
+};
 
-async function getBannerById() {
+const getBannerById = async () => {
   const banner = await getApi(`/banners/${bannerKey}`, headers);
   return banner;
-}
+};
 
-async function deleteBannerById() {
+const deleteBannerById = async () => {
   const banner = await deleteApi(`/banners/${bannerKey}`, adminHeaders);
   return banner;
-}
+};
 
 module.exports = {
   bannerKey,
