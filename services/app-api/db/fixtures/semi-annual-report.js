@@ -124,10 +124,10 @@ const addFundingSources = (fundingSources, quarters) => {
   const obj = {};
 
   fundingSources.forEach((fs) => {
-    quarters.forEach((s) => {
-      obj[`fundingSources_projected_${s}_${fs.id}`] =
-        fs[`fundingSources_quarters${s}`];
-      obj[`fundingSources_actual_${s}_${fs.id}`] = `${faker.number.float({
+    quarters.forEach((q) => {
+      obj[`fundingSources_projected_${q}_${fs.id}`] =
+        fs[`fundingSources_quarters${q}`];
+      obj[`fundingSources_actual_${q}_${fs.id}`] = `${faker.number.float({
         min: 1,
         max: 100,
         fractionDigits: 2,
@@ -246,9 +246,9 @@ const updateObjectiveProgress = (evaluationPlan, quarters) => {
       objectivesProgress_performanceMeasuresIndicators: faker.lorem.sentence(),
     };
 
-    quarters.forEach((s) => {
-      obj[`objectiveTargets_projections_${s}`] = ep[`quarterlyProjections${s}`];
-      obj[`objectiveTargets_actual_${s}`] = `${faker.number.float({
+    quarters.forEach((q) => {
+      obj[`objectiveTargets_projections_${q}`] = ep[`quarterlyProjections${q}`];
+      obj[`objectiveTargets_actual_${q}`] = `${faker.number.float({
         min: 1,
         max: 100,
         fractionDigits: 2,

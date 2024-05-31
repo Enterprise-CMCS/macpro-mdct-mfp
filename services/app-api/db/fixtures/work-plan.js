@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const { faker } = require("@faker-js/faker");
 const {
   dateFormat,
@@ -51,9 +52,35 @@ const fillWorkPlan = (year, period) => ({
   },
 });
 
+const addEvaluationPlan = (year, period, numberOfPlans = 1) => {
+  return [...Array(numberOfPlans).keys()].map((i) => {
+    const numType = i === 0 ? null : "int";
+    const transition =
+      i === 0
+        ? {
+            key: "evaluationPlan_includesTargets-UL4dAeyyvCFAXttxZioacR", // pragma: allowlist secret
+            value: "No",
+          }
+        : {
+            key: "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ", // pragma: allowlist secret
+            value: "Yes",
+          };
+
+    return {
+      id: crypto.randomUUID(),
+      evaluationPlan_additionalDetails: faker.lorem.sentence(),
+      evaluationPlan_description: faker.lorem.sentence(),
+      evaluationPlan_includesTargets: [transition],
+      evaluationPlan_objectiveName: faker.music.songName(),
+      evaluationPlan_targets: faker.lorem.sentence(),
+      ...quarterlyKeyGenerator(year, period, "quarterlyProjections", numType),
+    };
+  });
+};
+
 const addInitiative = (year, period) => [
   {
-    id: "0233117-8310-812-e28a-6e1d33e3d1e1",
+    id: crypto.randomUUID(),
     defineInitiative_describeInitiative: faker.lorem.sentence(),
     defineInitiative_projectedStartDate: dateFormat.format(faker.date.past()),
     defineInitiative_projectedEndDate_value: "",
@@ -64,22 +91,7 @@ const addInitiative = (year, period) => [
       },
     ],
     defineInitiative_targetPopulations: initiativeTargetPopulations,
-    evaluationPlan: [
-      {
-        id: "fc50c3-d41a-131a-ac5a-b73ab8361e",
-        evaluationPlan_additionalDetails: faker.lorem.sentence(),
-        evaluationPlan_description: faker.lorem.sentence(),
-        evaluationPlan_includesTargets: [
-          {
-            key: "evaluationPlan_includesTargets-UL4dAeyyvCFAXttxZioacR", // pragma: allowlist secret
-            value: "No",
-          },
-        ],
-        evaluationPlan_objectiveName: faker.music.songName(),
-        evaluationPlan_targets: faker.lorem.sentence(),
-        ...quarterlyKeyGenerator(year, period, "quarterlyProjections", null),
-      },
-    ],
+    evaluationPlan: addEvaluationPlan(year, period),
     fundingSources: [
       {
         id: "17f1df3-4a0-a48f-8354-db0223b43b8c",
@@ -111,7 +123,7 @@ const addInitiative = (year, period) => [
     type: "initiative",
   },
   {
-    id: "717e8d5-88c-1dbf-cb06-15a755e5e468",
+    id: crypto.randomUUID(),
     defineInitiative_describeInitiative: faker.lorem.sentence(),
     defineInitiative_projectedStartDate: dateFormat.format(faker.date.past()),
     defineInitiative_projectedEndDate: [
@@ -124,39 +136,10 @@ const addInitiative = (year, period) => [
       faker.date.future()
     ),
     defineInitiative_targetPopulations: initiativeTargetPopulations,
-    evaluationPlan: [
-      {
-        id: "d1f1dd1-0501-c46f-4a8c-6d28c5c4ddb",
-        evaluationPlan_additionalDetails: faker.lorem.sentence(),
-        evaluationPlan_description: faker.lorem.sentence(),
-        evaluationPlan_includesTargets: [
-          {
-            key: "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ", // pragma: allowlist secret
-            value: "Yes",
-          },
-        ],
-        evaluationPlan_objectiveName: faker.music.songName(),
-        evaluationPlan_targets: faker.lorem.sentence(),
-        ...quarterlyKeyGenerator(year, period, "quarterlyProjections", "int"),
-      },
-      {
-        id: "0bafc3b-366c-181d-f1ee-a6026e606e5e",
-        evaluationPlan_additionalDetails: faker.lorem.sentence(),
-        evaluationPlan_description: faker.lorem.sentence(),
-        evaluationPlan_includesTargets: [
-          {
-            key: "evaluationPlan_includesTargets-UL4dAeyyvCFAXttxZioacR", // pragma: allowlist secret
-            value: "No",
-          },
-        ],
-        evaluationPlan_objectiveName: faker.music.songName(),
-        evaluationPlan_targets: faker.lorem.sentence(),
-        ...quarterlyKeyGenerator(year, period, "quarterlyProjections", null),
-      },
-    ],
+    evaluationPlan: addEvaluationPlan(year, period, 2),
     fundingSources: [
       {
-        id: "0d56d1-7bc-00c5-7841-a162068427e",
+        id: crypto.randomUUID(),
         fundingSources_wpTopic: [
           {
             key: "fundingSources_wpTopic-2VLpZ9A92OivbZhKvY8pE4hB65c", // pragma: allowlist secret
@@ -173,7 +156,7 @@ const addInitiative = (year, period) => [
         ),
       },
       {
-        id: "d7de16a-cc3d-26cc-8888-f8efa6dfb6fa", // pragma: allowlist secret
+        id: crypto.randomUUID(),
         fundingSources_wpTopic: [
           {
             key: "fundingSources_wpTopic-2VLpZCRWieGr1Z49QX5Aqc", // pragma: allowlist secret
@@ -202,7 +185,7 @@ const addInitiative = (year, period) => [
     type: "initiative",
   },
   {
-    id: "a3c64a8-52ea-b5c1-afce-46302c4aa7c",
+    id: crypto.randomUUID(),
     defineInitiative_describeInitiative: faker.lorem.sentence(),
     defineInitiative_projectedEndDate_value: "",
     defineInitiative_projectedStartDate: dateFormat.format(faker.date.future()),
@@ -213,25 +196,10 @@ const addInitiative = (year, period) => [
         value: "No",
       },
     ],
-    evaluationPlan: [
-      {
-        id: "6245730-f1a7-846f-32b4-fbfe7040c6e0",
-        evaluationPlan_additionalDetails: faker.lorem.sentence(),
-        evaluationPlan_description: faker.lorem.sentence(),
-        evaluationPlan_includesTargets: [
-          {
-            key: "evaluationPlan_includesTargets-UL4dAeyyvCFAXttxZioacR", // pragma: allowlist secret
-            value: "No",
-          },
-        ],
-        evaluationPlan_objectiveName: faker.music.songName(),
-        evaluationPlan_targets: faker.lorem.sentence(),
-        ...quarterlyKeyGenerator(year, period, "quarterlyProjections", null),
-      },
-    ],
+    evaluationPlan: addEvaluationPlan(year, period),
     fundingSources: [
       {
-        id: "c73235e-8fec-37-2062-b502384bac6",
+        id: crypto.randomUUID(),
         fundingSources_wpTopic: [
           {
             key: "fundingSources_wpTopic-2VLpZDJ9qaKKOk78ztBdiB", // pragma: allowlist secret
