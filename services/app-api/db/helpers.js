@@ -16,7 +16,6 @@ const cognitoUrl = `https://cognito-idp.${region}.amazonaws.com`;
 function errorResponse(error) {
   const _err = JSON.parse(error.response.data);
   const err = new Error();
-  console.log(_err);
   err.code = _err.__type;
   err.message = _err.message;
   return Promise.reject(err);
@@ -82,12 +81,12 @@ async function del(url, headers) {
   };
 
   return axios(request)
-    .then((result) => JSON.parse(result.data))
+    .then((result) => result.data)
     .catch((error) => errorResponse(error));
 }
 
-async function deleteApi(url, headers, body) {
-  return del(`${apiUrl}${url}`, headers, body);
+async function deleteApi(url, headers) {
+  return del(`${apiUrl}${url}`, headers);
 }
 
 async function login(email, password) {
