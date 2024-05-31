@@ -8,22 +8,22 @@ const newSemiAnnualReport = ({
   fieldData,
 }) => ({
   metadata: {
-    isComplete: false,
-    lastAlteredBy,
-    locked: false,
-    previousRevisions: [],
-    reportPeriod,
-    reportType: "SAR",
-    stateOrTerritory: state,
-    status: "Not started",
-    submissionName,
     finalSar: [
       {
         key: "finalSar-nrRmirBoVQv0ysWnEejNZD", // pragma: allowlist secret
         value: "Yes",
       },
     ],
+    isComplete: false,
+    lastAlteredBy,
+    locked: false,
+    previousRevisions: [],
     populations: updatePopulations(fieldData.targetPopulations),
+    reportPeriod,
+    reportType: "SAR",
+    stateOrTerritory: state,
+    status: "Not started",
+    submissionName,
   },
   fieldData: {
     reportPeriod,
@@ -70,7 +70,7 @@ const fillSemiAnnualReport = ({
     generalInformation_projectDirectorTitle: faker.person.jobTitle(),
     generalInformation_stateTerritoryMedicaidAgency: faker.company.name(),
     generalInformation_stateTerritoryMedicaidDirector: faker.person.fullName(),
-    initiative: updateInitiatives(
+    initiative: updateInitiative(
       fieldData.initiative,
       reportPeriod,
       reportYear
@@ -116,11 +116,29 @@ const fillSemiAnnualReport = ({
       },
     ],
     targetPopulations: fieldData.targetPopulations,
-    ...listReportNumbers(populations, reportPeriod),
+    ...listPopulationNumbers(populations, reportPeriod),
   },
 });
 
-const listReportNumbers = (populations, reportPeriod) => {
+const listFundingSources = (fundingSources, quarters) => {
+  const obj = {};
+
+  fundingSources.forEach((fs) => {
+    quarters.forEach((s) => {
+      obj[`fundingSources_projected_${s}_${fs.id}`] =
+        fs[`fundingSources_quarters${s}`];
+      obj[`fundingSources_actual_${s}_${fs.id}`] = `${faker.number.float({
+        min: 1,
+        max: 100,
+        fractionDigits: 2,
+      })}`;
+    });
+  });
+
+  return obj;
+};
+
+const listPopulationNumbers = (populations, reportPeriod) => {
   const prefixes = [
     "ret-movedout-populations",
     "ret-mpdprp-1-populations",
@@ -157,38 +175,12 @@ const listReportNumbers = (populations, reportPeriod) => {
   return obj;
 };
 
-const listFundingSources = (fundingSources, reportPeriod, reportYear) => {
-  const firstQuarter = reportPeriod === 1 ? 1 : 3;
-  const secondQuarter = firstQuarter + 1;
-  const firstSource = `${reportYear}Q${firstQuarter}`;
-  const secondSource = `${reportYear}Q${secondQuarter}`;
-  const obj = {};
+const updateInitiative = (initiatives, reportPeriod, reportYear) => {
+  const first = reportPeriod === 1 ? 1 : 3;
+  const second = first + 1;
+  const firstQuarter = `${reportYear}Q${first}`;
+  const secondQuarter = `${reportYear}Q${second}`;
 
-  fundingSources.forEach((fs) => {
-    obj[`fundingSources_projected_${firstSource}_${fs.id}`] =
-      fs[`fundingSources_quarters${firstSource}`];
-    obj[`fundingSources_projected_${secondSource}_${fs.id}`] =
-      fs[`fundingSources_quarters${secondSource}`];
-    obj[
-      `fundingSources_actual_${firstSource}_${fs.id}`
-    ] = `${faker.number.float({
-      min: 1,
-      max: 100,
-      fractionDigits: 2,
-    })}`;
-    obj[
-      `fundingSources_actual_${secondSource}_${fs.id}`
-    ] = `${faker.number.float({
-      min: 1,
-      max: 100,
-      fractionDigits: 2,
-    })}`;
-  });
-
-  return obj;
-};
-
-const updateInitiatives = (initiatives, reportPeriod, reportYear) => {
   return initiatives.map((initiative) => {
     return {
       ...initiative,
@@ -204,27 +196,20 @@ const updateInitiatives = (initiatives, reportPeriod, reportYear) => {
       initiativeProgress_describeIssuesChallenges: faker.lorem.sentence(),
       initiativeProgress_describeProgress: faker.lorem.sentence(),
       isCopied: true,
-      objectiveProgress: updateObjectiveProgress(
-        initiative.evaluationPlan,
-        reportPeriod,
-        reportYear
-      ),
-      ...listFundingSources(
-        initiative.fundingSources,
-        reportPeriod,
-        reportYear
-      ),
+      objectiveProgress: updateObjectiveProgress(initiative.evaluationPlan, [
+        firstQuarter,
+        secondQuarter,
+      ]),
+      ...listFundingSources(initiative.fundingSources, [
+        firstQuarter,
+        secondQuarter,
+      ]),
     };
   });
 };
 
-const updateObjectiveProgress = (evaluationPlan, reportPeriod, reportYear) => {
+const updateObjectiveProgress = (evaluationPlan, quarters) => {
   return evaluationPlan.map((ep) => {
-    const firstQuarter = reportPeriod === 1 ? 1 : 3;
-    const secondQuarter = firstQuarter + 1;
-    const firstSource = `${reportYear}Q${firstQuarter}`;
-    const secondSource = `${reportYear}Q${secondQuarter}`;
-
     const obj = {
       id: ep.id,
       objectiveProgress_additionalDetails: ep.evaluationPlan_additionalDetails,
@@ -247,20 +232,14 @@ const updateObjectiveProgress = (evaluationPlan, reportPeriod, reportYear) => {
       objectivesProgress_performanceMeasuresIndicators: faker.lorem.sentence(),
     };
 
-    obj[`objectiveTargets_projections_${firstSource}`] =
-      ep[`quarterlyProjections${firstSource}`];
-    obj[`objectiveTargets_projections_${secondSource}`] =
-      ep[`quarterlyProjections${secondSource}`];
-    obj[`objectiveTargets_actual_${firstSource}`] = `${faker.number.float({
-      min: 1,
-      max: 100,
-      fractionDigits: 2,
-    })}`;
-    obj[`objectiveTargets_actual_${secondSource}`] = `${faker.number.float({
-      min: 1,
-      max: 100,
-      fractionDigits: 2,
-    })}`;
+    quarters.forEach((s) => {
+      obj[`objectiveTargets_projections_${s}`] = ep[`quarterlyProjections${s}`];
+      obj[`objectiveTargets_actual_${s}`] = `${faker.number.float({
+        min: 1,
+        max: 100,
+        fractionDigits: 2,
+      })}`;
+    });
     return obj;
   });
 };

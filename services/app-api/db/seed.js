@@ -22,7 +22,7 @@ const statePassword = process.env.SEED_STATE_PASSWORD;
 const state = process.env.SEED_STATE;
 const stateName = process.env.SEED_STATE_NAME;
 
-(async () => {
+async function seed() {
   const adminLogin = await login(adminUser, adminPassword);
   const stateLogin = await login(stateUser, statePassword);
 
@@ -304,6 +304,11 @@ const stateName = process.env.SEED_STATE_NAME;
       message: "Choose",
       choices: sarIds,
     },
+    {
+      type: "confirm",
+      name: "exit",
+      message: "Exit?",
+    },
   ];
 
   const onSubmit = async (prompt, answer) => {
@@ -314,6 +319,12 @@ const stateName = process.env.SEED_STATE_NAME;
       case "semiAnnualReportId":
         expandedLog(await getSemiAnnualReportById(answer));
         break;
+      case "exit": {
+        if (answer === false) {
+          seed();
+        }
+        break;
+      }
       default:
         break;
     }
@@ -404,4 +415,6 @@ const stateName = process.env.SEED_STATE_NAME;
   };
 
   await prompts(questions, { onSubmit });
-})();
+}
+
+seed();
