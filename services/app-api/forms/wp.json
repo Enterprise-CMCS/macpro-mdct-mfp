@@ -283,6 +283,9 @@
                 {
                   "type": "table",
                   "content": "",
+                  "props": {
+                    "className": "mdct-table"
+                  },
                   "children": [
                     {
                       "type": "thead",
@@ -294,34 +297,10 @@
                           "children": [
                             {
                               "type": "th",
-                              "props": {
-                                "style": {
-                                  "textTransform": "capitalize",
-                                  "fontFamily": "Open Sans",
-                                  "color": "#71767A",
-                                  "fontSize": "14px",
-                                  "lineHeight": "18px",
-                                  "letterSpacing": "0px",
-                                  "textAlign": "left",
-                                  "borderBottom": "1px solid #D9D9D9"
-                                }
-                              },
                               "content": "<span aria-label='Required by Program Terms and Conditions'>Required* Initiatives</span>"
                             },
                             {
                               "type": "th",
-                              "props": {
-                                "style": {
-                                  "textTransform": "capitalize",
-                                  "fontFamily": "Open Sans",
-                                  "color": "#71767A",
-                                  "fontSize": "14px",
-                                  "lineHeight": "18px",
-                                  "letterSpacing": "0px",
-                                  "textAlign": "left",
-                                  "borderBottom": "1px solid #D9D9D9"
-                                }
-                              },
                               "content": "Optional Initiatives"
                             }
                           ]
@@ -531,11 +510,9 @@
                 },
                 {
                   "type": "text",
-                  "content": "<sup>*Required by Program Terms and Conditions</sup>",
+                  "content": "*Required by Program Terms and Conditions",
                   "props": {
-                    "style": {
-                      "color": "#000000"
-                    }
+                    "className": "mdct-smalltext"
                   }
                 },
                 {

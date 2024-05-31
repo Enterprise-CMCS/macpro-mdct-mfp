@@ -27,12 +27,7 @@ import {
 // types
 import { AlertTypes, AnyObject, ReportStatus } from "types";
 // utils
-import {
-  parseCustomHtml,
-  useStore,
-  utcDateToReadableDate,
-  useBreakpoint,
-} from "utils";
+import { parseCustomHtml, useStore, utcDateToReadableDate } from "utils";
 // verbiage
 import WPVerbiage from "verbiage/pages/wp/wp-review-and-submit";
 import SARVerbiage from "verbiage/pages/sar/sar-review-and-submit";
@@ -156,7 +151,6 @@ const ReadyToSubmit = ({
   const { userIsAdmin } = useStore().user ?? {};
   const { review } = reviewVerbiage;
   const { intro, modal, pageLink } = review;
-  const { isMobile } = useBreakpoint();
   return (
     <Flex sx={sx.contentContainer} data-testid="ready-view">
       <Box sx={sx.leadTextBox}>
@@ -178,7 +172,7 @@ const ReadyToSubmit = ({
           <StatusTable />
         </Box>
       </Box>
-      <Flex sx={isMobile ? sx.mobileSubmitContainer : sx.submitContainer}>
+      <Flex sx={sx.footerBox}>
         <PrintButton />
         {!userIsAdmin && (
           <Button
@@ -323,10 +317,10 @@ const sx = {
   },
   leadTextBox: {
     width: "100%",
-    paddingBottom: ".5rem",
-    marginBottom: "1.5rem",
-    borderBottom: "1px solid",
-    borderColor: "palette.gray_light",
+
+    table: {
+      marginBottom: "0",
+    },
   },
   headerText: {
     marginBottom: "1rem",
@@ -367,25 +361,30 @@ const sx = {
   additionalInfo: {
     color: "palette.gray",
   },
-  submitContainer: {
-    width: "100%",
-    justifyContent: "space-between",
-  },
-  mobileSubmitContainer: {
-    display: "flex",
-    flexDirection: "column",
-
-    "a:first-child": {
-      marginBottom: "1.5rem",
-    },
-  },
   alert: {
     marginBottom: "2rem",
     marginRight: "2.5rem",
   },
+  footerBox: {
+    marginTop: "2.5rem",
+    paddingTop: "1.5rem",
+    borderTop: "1px solid",
+    borderColor: "palette.gray_light",
+    flexDirection: {
+      base: "column",
+      sm: "row",
+    },
+  },
   submitButton: {
     minHeight: "3rem",
     paddingRight: "1rem",
+    marginTop: {
+      base: "1.5rem",
+      sm: "0",
+    },
+    marginLeft: {
+      sm: "auto",
+    },
     "&:disabled": {
       opacity: 1,
       background: "palette.gray_lighter",
