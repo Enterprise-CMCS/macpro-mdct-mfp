@@ -24,7 +24,7 @@ async function loginUsers() {
   adminHeaders["x-api-key"] = adminLogin.IdToken;
 }
 
-// Work Plans (WP)
+// Work Plan (WP)
 async function createWorkPlan() {
   const report = await postApi(
     `/reports/WP/${state}`,
@@ -96,7 +96,7 @@ async function workPlanChoices() {
   }));
 }
 
-// Semi-Annual Reports (SAR)
+// Semi-Annual Report (SAR)
 async function createSemiAnnualReport() {
   const approved = await createApprovedWorkPlan();
   const wp = await getWorkPlanById(approved.id);

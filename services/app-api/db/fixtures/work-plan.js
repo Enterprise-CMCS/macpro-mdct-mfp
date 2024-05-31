@@ -94,7 +94,7 @@ const addInitiative = (year, period) => [
     evaluationPlan: addEvaluationPlan(year, period),
     fundingSources: [
       {
-        id: "17f1df3-4a0-a48f-8354-db0223b43b8c",
+        id: crypto.randomUUID(),
         fundingSources_wpTopic: [
           {
             key: "fundingSources_wpTopic-2VLpZ9A92OivbZhKvY8pE4hB65c", // pragma: allowlist secret
@@ -276,12 +276,12 @@ const targetPopulations = [
 
 const updateTargetPopulations = (year, period) => {
   return targetPopulations.map((targetPopulation) => {
-    const notActive = ["PD", "MH/SUD"].includes(
+    const inactive = ["PD", "MH/SUD"].includes(
       targetPopulation.transitionBenchmarks_targetPopulationName_short
     );
 
-    const numType = notActive ? null : "int";
-    const transition = notActive
+    const numType = inactive ? null : "int";
+    const transition = inactive
       ? {
           key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist secret
           value: "No",

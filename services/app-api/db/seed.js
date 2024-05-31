@@ -163,7 +163,7 @@ async function seed() {
         break;
     }
 
-    if (prompt.name === "wpTask" || prompt.name === "sarTask") {
+    if (["wpTask", "sarTask"].includes(prompt.name)) {
       switch (answer) {
         case "createFilledEach": {
           createdLog(await createFilledWorkPlan(), "WP");
