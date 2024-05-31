@@ -44,84 +44,14 @@ const fillWorkPlan = (year, period) => ({
         value: "No",
       },
     ],
-    initiative: initiatives(year, period),
+    initiative: addInitiative(year, period),
     strategy_additionalDetails: faker.lorem.sentence(),
     strategy_explaination: faker.lorem.sentence(),
     targetPopulations: updateTargetPopulations(year, period),
   },
 });
 
-const initiativeTargetPopulations = [
-  {
-    key: "targetPopulations-2Vd02CVUtKgBETwqzDXpSIhi", // pragma: allowlist secret
-    value: "Older adults",
-  },
-  {
-    key: "targetPopulations-2Vd02IvLwE59ebYAjfiU7H66", // pragma: allowlist secret
-    value:
-      "Individuals with intellectual and developmental disabilities (I/DD)",
-  },
-  {
-    key: "targetPopulations-3Nc13O5GHA6Hc4KheO5FMSD2", // pragma: allowlist secret
-    value: "HCBS infrastructure/system-level development",
-  },
-];
-
-const targetPopulations = [
-  {
-    id: "2Vd02CVUtKgBETwqzDXpSIhi", // pragma: allowlist secret
-    isRequired: true,
-    transitionBenchmarks_targetPopulationName: "Older adults",
-  },
-  {
-    id: "2Vd02HAezQkxNu2ShmlQONHa", // pragma: allowlist secret
-    isRequired: true,
-    transitionBenchmarks_targetPopulationName:
-      "Individuals with physical disabilities (PD)",
-    transitionBenchmarks_targetPopulationName_short: "PD",
-  },
-  {
-    id: "2Vd02IvLwE59ebYAjfiU7H66", // pragma: allowlist secret
-    isRequired: true,
-    transitionBenchmarks_targetPopulationName:
-      "Individuals with intellectual and developmental disabilities (I/DD)",
-    transitionBenchmarks_targetPopulationName_short: "I/DD",
-  },
-  {
-    id: "2Vd02J1FHl3Ka1DbtU5FMSDh", // pragma: allowlist secret
-    isRequired: true,
-    transitionBenchmarks_targetPopulationName:
-      "Individuals with mental health and substance use disorders (MH/SUD)",
-    transitionBenchmarks_targetPopulationName_short: "MH/SUD",
-  },
-];
-
-const updateTargetPopulations = (year, period) => {
-  return targetPopulations.map((targetPopulation) => {
-    const notActive = ["PD", "MH/SUD"].includes(
-      targetPopulation.transitionBenchmarks_targetPopulationName_short
-    );
-
-    const numType = notActive ? null : "int";
-    const transition = notActive
-      ? {
-          key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist secret
-          value: "No",
-        }
-      : {
-          key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd", // pragma: allowlist secret
-          value: "Yes",
-        };
-
-    return {
-      ...targetPopulation,
-      transitionBenchmarks_applicableToMfpDemonstration: [transition],
-      ...quarterlyKeyGenerator(year, period, "quarterlyProjections", numType),
-    };
-  });
-};
-
-const initiatives = (year, period) => [
+const addInitiative = (year, period) => [
   {
     id: "0233117-8310-812-e28a-6e1d33e3d1e1",
     defineInitiative_describeInitiative: faker.lorem.sentence(),
@@ -330,6 +260,76 @@ const initiatives = (year, period) => [
     type: "initiative",
   },
 ];
+
+const initiativeTargetPopulations = [
+  {
+    key: "targetPopulations-2Vd02CVUtKgBETwqzDXpSIhi", // pragma: allowlist secret
+    value: "Older adults",
+  },
+  {
+    key: "targetPopulations-2Vd02IvLwE59ebYAjfiU7H66", // pragma: allowlist secret
+    value:
+      "Individuals with intellectual and developmental disabilities (I/DD)",
+  },
+  {
+    key: "targetPopulations-3Nc13O5GHA6Hc4KheO5FMSD2", // pragma: allowlist secret
+    value: "HCBS infrastructure/system-level development",
+  },
+];
+
+const targetPopulations = [
+  {
+    id: "2Vd02CVUtKgBETwqzDXpSIhi", // pragma: allowlist secret
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName: "Older adults",
+  },
+  {
+    id: "2Vd02HAezQkxNu2ShmlQONHa", // pragma: allowlist secret
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName:
+      "Individuals with physical disabilities (PD)",
+    transitionBenchmarks_targetPopulationName_short: "PD",
+  },
+  {
+    id: "2Vd02IvLwE59ebYAjfiU7H66", // pragma: allowlist secret
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName:
+      "Individuals with intellectual and developmental disabilities (I/DD)",
+    transitionBenchmarks_targetPopulationName_short: "I/DD",
+  },
+  {
+    id: "2Vd02J1FHl3Ka1DbtU5FMSDh", // pragma: allowlist secret
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName:
+      "Individuals with mental health and substance use disorders (MH/SUD)",
+    transitionBenchmarks_targetPopulationName_short: "MH/SUD",
+  },
+];
+
+const updateTargetPopulations = (year, period) => {
+  return targetPopulations.map((targetPopulation) => {
+    const notActive = ["PD", "MH/SUD"].includes(
+      targetPopulation.transitionBenchmarks_targetPopulationName_short
+    );
+
+    const numType = notActive ? null : "int";
+    const transition = notActive
+      ? {
+          key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist secret
+          value: "No",
+        }
+      : {
+          key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd", // pragma: allowlist secret
+          value: "Yes",
+        };
+
+    return {
+      ...targetPopulation,
+      transitionBenchmarks_applicableToMfpDemonstration: [transition],
+      ...quarterlyKeyGenerator(year, period, "quarterlyProjections", numType),
+    };
+  });
+};
 
 module.exports = {
   newWorkPlan,

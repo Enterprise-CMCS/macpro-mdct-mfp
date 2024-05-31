@@ -18,7 +18,7 @@ const newSemiAnnualReport = ({
     lastAlteredBy,
     locked: false,
     previousRevisions: [],
-    populations: updatePopulations(fieldData.targetPopulations),
+    populations: listPopulations(fieldData.targetPopulations),
     reportPeriod,
     reportType: "SAR",
     stateOrTerritory: state,
@@ -116,11 +116,11 @@ const fillSemiAnnualReport = ({
       },
     ],
     targetPopulations: fieldData.targetPopulations,
-    ...listPopulationNumbers(populations, reportPeriod),
+    ...addPopulationCounts(populations, reportPeriod),
   },
 });
 
-const listFundingSources = (fundingSources, quarters) => {
+const addFundingSources = (fundingSources, quarters) => {
   const obj = {};
 
   fundingSources.forEach((fs) => {
@@ -138,7 +138,7 @@ const listFundingSources = (fundingSources, quarters) => {
   return obj;
 };
 
-const listPopulationNumbers = (populations, reportPeriod) => {
+const addPopulationCounts = (populations, reportPeriod) => {
   const prefixes = [
     "ret-movedout-populations",
     "ret-mpdprp-1-populations",
@@ -175,6 +175,20 @@ const listPopulationNumbers = (populations, reportPeriod) => {
   return obj;
 };
 
+const listPopulations = (targetPopulations) => {
+  return targetPopulations
+    .filter(
+      ({ transitionBenchmarks_applicableToMfpDemonstration }) =>
+        transitionBenchmarks_applicableToMfpDemonstration[0].value === "Yes"
+    )
+    .map(({ id, transitionBenchmarks_targetPopulationName }) => ({
+      id: `targetPopulations-${id}`,
+      label: transitionBenchmarks_targetPopulationName,
+      name: transitionBenchmarks_targetPopulationName,
+      value: transitionBenchmarks_targetPopulationName,
+    }));
+};
+
 const updateInitiative = (initiatives, reportPeriod, reportYear) => {
   const first = reportPeriod === 1 ? 1 : 3;
   const second = first + 1;
@@ -200,7 +214,7 @@ const updateInitiative = (initiatives, reportPeriod, reportYear) => {
         firstQuarter,
         secondQuarter,
       ]),
-      ...listFundingSources(initiative.fundingSources, [
+      ...addFundingSources(initiative.fundingSources, [
         firstQuarter,
         secondQuarter,
       ]),
@@ -242,19 +256,6 @@ const updateObjectiveProgress = (evaluationPlan, quarters) => {
     });
     return obj;
   });
-};
-const updatePopulations = (targetPopulations) => {
-  return targetPopulations
-    .filter(
-      ({ transitionBenchmarks_applicableToMfpDemonstration }) =>
-        transitionBenchmarks_applicableToMfpDemonstration[0].value === "Yes"
-    )
-    .map(({ id, transitionBenchmarks_targetPopulationName }) => ({
-      id: `targetPopulations-${id}`,
-      label: transitionBenchmarks_targetPopulationName,
-      name: transitionBenchmarks_targetPopulationName,
-      value: transitionBenchmarks_targetPopulationName,
-    }));
 };
 
 module.exports = {
