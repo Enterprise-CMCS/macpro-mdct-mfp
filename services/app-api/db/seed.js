@@ -29,8 +29,44 @@ const {
 
 async function seed() {
   await loginUsers();
-  let wpIds = await workPlanChoices();
-  let sarIds = await semiAnnualReportChoices();
+  const wpIds = await workPlanChoices();
+  const sarIds = await semiAnnualReportChoices();
+
+  function generateChoices(type) {
+    const choices = [
+      { title: `Create base ${type}`, value: `create${type}` },
+      {
+        title: `Create filled ${type}`,
+        value: `createFilled${type}`,
+      },
+      {
+        title: `Create submitted ${type}`,
+        value: `createSubmitted${type}`,
+      },
+      {
+        title: `Create locked ${type}`,
+        value: `createLocked${type}`,
+      },
+      {
+        title: `Create archived ${type}`,
+        value: `createArchived${type}`,
+      },
+      { title: `Get ${type} by id`, value: `get${type}ById` },
+      {
+        title: `Get ${type}s by state: ${state}`,
+        value: `get${type}sByState`,
+      },
+    ];
+
+    if (type === "WP") {
+      choices.toSpliced(3, 0, {
+        title: `Create approved ${type}`,
+        value: `createApproved${type}`,
+      });
+    }
+
+    return choices;
+  }
 
   const questions = [
     {
@@ -38,73 +74,17 @@ async function seed() {
       name: "type",
       message: "Type",
       choices: [
-        { title: "Work Plan (WP)", value: "wp" },
-        { title: "Semi-Annual Report (SAR)", value: "sar" },
+        { title: "Work Plan (WP)", value: "WP" },
+        { title: "Semi-Annual Report (SAR)", value: "SAR" },
         { title: "Create filled WP and filled SAR", value: "createFilledEach" },
         { title: "Banner", value: "banner" },
       ],
     },
     {
-      type: (prev) => (prev === "wp" ? "select" : null),
-      name: "wpTask",
+      type: (prev) => (["WP", "SAR"].includes(prev) ? "select" : null),
+      name: "mainTask",
       message: "Task",
-      choices: [
-        { title: "Create base WP", value: "createWorkPlan" },
-        {
-          title: "Create filled WP",
-          value: "createFilledWorkPlan",
-        },
-        {
-          title: "Create submitted WP",
-          value: "createSubmittedWorkPlan",
-        },
-        {
-          title: "Create approved WP",
-          value: "createApprovedWorkPlan",
-        },
-        {
-          title: "Create locked WP",
-          value: "createLockedWorkPlan",
-        },
-        {
-          title: "Create archived WP",
-          value: "createArchivedWorkPlan",
-        },
-        { title: "Get WP by id", value: "getWorkPlanById" },
-        {
-          title: `Get WPs by state: ${state}`,
-          value: "getWorkPlansByState",
-        },
-      ],
-    },
-    {
-      type: (prev) => (prev === "sar" ? "select" : null),
-      name: "sarTask",
-      message: "Task",
-      choices: [
-        { title: "Create base SAR", value: "createSemiAnnualReport" },
-        {
-          title: "Create filled SAR",
-          value: "createFilledSemiAnnualReport",
-        },
-        {
-          title: "Create submitted SAR",
-          value: "createSubmittedSemiAnnualReport",
-        },
-        {
-          title: "Create locked SAR",
-          value: "createLockedSemiAnnualReport",
-        },
-        {
-          title: "Create archived SAR",
-          value: "createArchivedSemiAnnualReport",
-        },
-        { title: "Get SAR by id", value: "getSemiAnnualReportById" },
-        {
-          title: `Get SARs by state: ${state}`,
-          value: "getSemiAnnualReportsByState",
-        },
-      ],
+      choices: (prev) => generateChoices(prev),
     },
     {
       type: (prev) => (prev === "banner" ? "select" : null),
@@ -163,72 +143,62 @@ async function seed() {
         break;
     }
 
-    if (["wpTask", "sarTask"].includes(prompt.name)) {
-      switch (answer) {
-        case "createFilledEach": {
-          createdLog(await createFilledWorkPlan(), "WP");
-          createdLog(await createFilledSemiAnnualReport(), "SAR");
-          break;
-        }
-        case "createWorkPlan": {
-          createdLog(await createWorkPlan(), "WP");
-          break;
-        }
-        case "createFilledWorkPlan": {
-          createdLog(await createFilledWorkPlan(), "WP");
-          break;
-        }
-        case "createSubmittedWorkPlan": {
-          createdLog(await createSubmittedWorkPlan(), "WP");
-          break;
-        }
-        case "createApprovedWorkPlan": {
-          createdLog(await createApprovedWorkPlan(), "WP");
-          break;
-        }
-        case "createLockedWorkPlan": {
-          createdLog(await createLockedWorkPlan(), "WP");
-          break;
-        }
-        case "createArchivedWorkPlan": {
-          createdLog(await createArchivedWorkPlan(), "WP");
-          break;
-        }
-        case "getWorkPlansByState":
-          expandedLog(await getWorkPlansByState());
-          break;
-        case "createSemiAnnualReport": {
-          createdLog(await createSemiAnnualReport(), "SAR");
-          break;
-        }
-        case "createFilledSemiAnnualReport": {
-          createdLog(await createFilledSemiAnnualReport(), "SAR");
-          break;
-        }
-        case "createSubmittedSemiAnnualReport": {
-          createdLog(await createSubmittedSemiAnnualReport(), "SAR");
-          break;
-        }
-        case "createLockedSemiAnnualReport": {
-          createdLog(await createLockedSemiAnnualReport(), "SAR");
-          break;
-        }
-        case "createArchivedSemiAnnualReport": {
-          createdLog(await createArchivedSemiAnnualReport(), "SAR");
-          break;
-        }
-        case "getSemiAnnualReportsByState":
-          expandedLog(await getSemiAnnualReportsByState());
-          break;
-        default:
-          break;
-      }
-
-      wpIds = await workPlanChoices();
-      sarIds = await semiAnnualReportChoices();
-    }
-
     switch (answer) {
+      case "createFilledEach": {
+        createdLog(await createFilledWorkPlan(), "WP");
+        createdLog(await createFilledSemiAnnualReport(), "SAR");
+        break;
+      }
+      case "createWP": {
+        createdLog(await createWorkPlan(), "WP");
+        break;
+      }
+      case "createFilledWP": {
+        createdLog(await createFilledWorkPlan(), "WP");
+        break;
+      }
+      case "createSubmittedWP": {
+        createdLog(await createSubmittedWorkPlan(), "WP");
+        break;
+      }
+      case "createApprovedWP": {
+        createdLog(await createApprovedWorkPlan(), "WP");
+        break;
+      }
+      case "createLockedWP": {
+        createdLog(await createLockedWorkPlan(), "WP");
+        break;
+      }
+      case "createArchivedWP": {
+        createdLog(await createArchivedWorkPlan(), "WP");
+        break;
+      }
+      case "getWPsByState":
+        expandedLog(await getWorkPlansByState());
+        break;
+      case "createSAR": {
+        createdLog(await createSemiAnnualReport(), "SAR");
+        break;
+      }
+      case "createFilledSAR": {
+        createdLog(await createFilledSemiAnnualReport(), "SAR");
+        break;
+      }
+      case "createSubmittedSAR": {
+        createdLog(await createSubmittedSemiAnnualReport(), "SAR");
+        break;
+      }
+      case "createLockedSAR": {
+        createdLog(await createLockedSemiAnnualReport(), "SAR");
+        break;
+      }
+      case "createArchivedSAR": {
+        createdLog(await createArchivedSemiAnnualReport(), "SAR");
+        break;
+      }
+      case "getSARsByState":
+        expandedLog(await getSemiAnnualReportsByState());
+        break;
       case "createBanner": {
         const { Item } = await createBanner();
         console.log(`Banner created: ${Item.key}`);
