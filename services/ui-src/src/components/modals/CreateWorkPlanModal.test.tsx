@@ -1,11 +1,11 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { ReportType } from "../../types";
 import {
   RouterWrappedComponent,
   mockWpReportContext,
+  mockWPApprovedFullReport,
 } from "../../utils/testing/setupJest";
 import { ReportContext } from "../reports/ReportProvider";
-import { AddNewWorkPlanModal } from "./AddNewWorkPlanModal";
+import { CreateWorkPlanModal } from "./CreateWorkPlanModal";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 
@@ -23,10 +23,8 @@ const mockedReportContext = {
 const modalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
-      <AddNewWorkPlanModal
+      <CreateWorkPlanModal
         activeState="CA"
-        selectedReport={undefined}
-        reportType={ReportType.WP}
         modalDisclosure={{
           isOpen: true,
           onClose: mockCloseHandler,
@@ -36,7 +34,22 @@ const modalComponent = (
   </RouterWrappedComponent>
 );
 
-describe("Test AddNewWorkPlan Modal", () => {
+const modalComponentWithPreviousReport = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockedReportContext}>
+      <CreateWorkPlanModal
+        activeState="CA"
+        modalDisclosure={{
+          isOpen: true,
+          onClose: mockCloseHandler,
+        }}
+        previousReport={mockWPApprovedFullReport}
+      />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+describe("Test CreateWorkPlanModal", () => {
   beforeEach(async () => {
     await act(async () => {
       await render(modalComponent);
@@ -47,21 +60,21 @@ describe("Test AddNewWorkPlan Modal", () => {
     jest.clearAllMocks();
   });
 
-  test("AddNewReportModal shows the content", () => {
+  test("CreateWorkPlanModal shows the content", () => {
     expect(screen.getByText("Start new")).toBeTruthy();
   });
 
-  test("AddNewReportModal top close button can be clicked", () => {
+  test("CreateWorkPlanModal top close button can be clicked", () => {
     fireEvent.click(screen.getByText("Close"));
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("Test AddNewReportModal functionality for Work Plan", () => {
+describe("Test CreateWorkPlanModal functionality for new Work Plan", () => {
   const mockedDateNow = jest.spyOn(Date, "now");
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   const fillForm = async () => {
@@ -82,7 +95,7 @@ describe("Test AddNewReportModal functionality for Work Plan", () => {
     await render(modalComponent);
     const header = screen.getByRole("heading", { level: 1 });
     expect(header.textContent).toEqual("Add new MFP Work Plan");
-    expect(screen.getByTestId("add-new-wp-form")).toBeTruthy();
+    expect(screen.getByTestId("create-work-plan-form")).toBeTruthy();
     await fillForm();
     await expect(mockCreateReport).toHaveBeenCalledTimes(1);
     await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
@@ -136,10 +149,43 @@ describe("Test AddNewReportModal functionality for Work Plan", () => {
   });
 });
 
-describe("Test AddNewReportModal accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
+describe("Test CreateWorkPlanModal functionality for continuing Work Plan", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const fillForm = async () => {
+    const submitButton = screen.getByRole("button", {
+      name: "Continue from previous period",
+    });
+    await userEvent.click(submitButton);
+  };
+
+  test("Adding a new report", async () => {
+    await act(async () => {
+      await render(modalComponentWithPreviousReport);
+    });
+    const header = screen.getByRole("heading", { level: 1 });
+    expect(header.textContent).toEqual("Continue MFP Work Plan");
+    await fillForm();
+    await expect(mockCreateReport).toHaveBeenCalledTimes(1);
+    await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
+    await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("Test CreateWorkPlanModal accessibility", () => {
+  it("Should not have basic accessibility issues for new work plan", async () => {
     const { container } = render(modalComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it("Should not have basic accessibility issues for continuing work plan", async () => {
+    await act(async () => {
+      const { container } = render(modalComponentWithPreviousReport);
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 });
