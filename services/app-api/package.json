@@ -27,7 +27,6 @@
     "amazon-user-pool-srp-client": "^1.0.4",
     "aws-lambda": "^1.0.7",
     "aws-sdk-client-mock": "^4.0.0",
-    "axios": "^1.7.2",
     "jest": "^27.4.7",
     "prompts": "^2.4.2",
     "serverless-associate-waf": "^1.2.1",

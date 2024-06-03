@@ -55,6 +55,7 @@ const fillWorkPlan = (year, period) => ({
 const addEvaluationPlan = (year, period, numberOfPlans = 1) => {
   return [...Array(numberOfPlans).keys()].map((i) => {
     const numType = i === 0 ? null : "int";
+    // Plans alternate between No for first plan, Yes for second plan, etc.
     const transition =
       i === 0
         ? {

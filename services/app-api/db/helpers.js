@@ -4,7 +4,6 @@ const {
   calculateSignature,
   getNowString,
 } = require("amazon-user-pool-srp-client");
-const axios = require("axios");
 const { faker } = require("@faker-js/faker");
 
 const apiUrl = process.env.API_URL;
@@ -13,24 +12,19 @@ const region = process.env.COGNITO_USER_POOL_ID.split("_")[0];
 const userPoolId = process.env.COGNITO_USER_POOL_ID.split("_")[1];
 const cognitoUrl = `https://cognito-idp.${region}.amazonaws.com`;
 
-const errorResponse = (error) => {
-  const _err = JSON.parse(error.response.data);
-  const err = new Error();
-  err.code = _err.__type;
-  err.message = _err.message;
-  return Promise.reject(err);
-};
-
 const get = async (url, headers) => {
   const request = {
-    url,
-    method: "get",
+    method: "GET",
     headers,
+    cache: "no-cache",
   };
 
-  return axios(request)
-    .then((result) => result.data)
-    .catch((error) => errorResponse(error));
+  try {
+    const response = await fetch(url, request);
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const getApi = async (url, headers) => {
@@ -39,16 +33,17 @@ const getApi = async (url, headers) => {
 
 const post = async (url, headers, body) => {
   const request = {
-    url,
-    method: "post",
+    method: "POST",
     headers,
-    data: body ? JSON.stringify(body) : null,
-    transformResponse: (data) => data,
+    body: body ? JSON.stringify(body) : null,
   };
 
-  return axios(request)
-    .then((result) => JSON.parse(result.data))
-    .catch((error) => errorResponse(error));
+  try {
+    const response = await fetch(url, request);
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const postApi = async (url, headers, body) => {
@@ -57,16 +52,17 @@ const postApi = async (url, headers, body) => {
 
 const put = async (url, headers, body) => {
   const request = {
-    url,
-    method: "put",
+    method: "PUT",
     headers,
-    data: body ? JSON.stringify(body) : null,
-    transformResponse: (data) => data,
+    body: body ? JSON.stringify(body) : null,
   };
 
-  return axios(request)
-    .then((result) => JSON.parse(result.data))
-    .catch((error) => errorResponse(error));
+  try {
+    const response = await fetch(url, request);
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const putApi = async (url, headers, body) => {
@@ -80,9 +76,12 @@ const del = async (url, headers) => {
     headers,
   };
 
-  return axios(request)
-    .then((result) => result.data)
-    .catch((error) => errorResponse(error));
+  try {
+    const response = await fetch(url, request);
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const deleteApi = async (url, headers) => {

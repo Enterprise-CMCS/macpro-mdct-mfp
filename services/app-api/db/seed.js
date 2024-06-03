@@ -103,17 +103,13 @@ const seed = async () => {
       ],
     },
     {
-      type: (prev) =>
-        prev === "getWorkPlanById" && wpIds.length > 0 ? "select" : null,
+      type: (prev) => (prev === "getWPById" ? "select" : null),
       name: "workPlanId",
       message: "Choose",
       choices: wpIds,
     },
     {
-      type: (prev) =>
-        prev === "getSemiAnnualReportById" && sarIds.length > 0
-          ? "select"
-          : null,
+      type: (prev) => (prev === "getSARById" ? "select" : null),
       name: "semiAnnualReportId",
       message: "Choose",
       choices: sarIds,
