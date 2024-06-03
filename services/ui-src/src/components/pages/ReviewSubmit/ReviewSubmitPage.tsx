@@ -267,11 +267,9 @@ export const SuccessMessage = ({
           <Text>{submissionMessage}</Text>
         </Box>
       </Box>
-      <Box>
+      <Box sx={sx.additionalInfo}>
         <Text sx={sx.additionalInfoHeader}>{intro.additionalInfoHeader}</Text>
-        <Text sx={sx.additionalInfo}>
-          {parseCustomHtml(intro.additionalInfo)}
-        </Text>
+        {parseCustomHtml(intro.additionalInfo)}
         {intro.list && (
           <UnorderedList sx={sx.list}>
             {intro.list.map((item: any, index: number) => {
@@ -324,7 +322,7 @@ const sx = {
   leadTextBox: {
     width: "100%",
     paddingBottom: ".5rem",
-    marginBottom: "1.5rem",
+    marginBottom: "1rem",
     borderBottom: "1px solid",
     borderColor: "palette.gray_light",
   },
@@ -360,14 +358,11 @@ const sx = {
   additionalInfoHeader: {
     color: "palette.gray",
     fontWeight: "bold",
-    marginBottom: ".5rem",
   },
   additionalInfo: {
-    p: {
-      color: "palette.gray",
-    },
+    color: "palette.gray",
     "p + p": {
-      marginTop: "1.5rem",
+      marginY: "1rem",
     },
   },
   submitContainer: {
