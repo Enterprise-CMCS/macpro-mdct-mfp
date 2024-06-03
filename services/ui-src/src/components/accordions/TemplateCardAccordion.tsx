@@ -1,5 +1,5 @@
 // components
-import { Accordion, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import { Accordion, ListItem, UnorderedList } from "@chakra-ui/react";
 import { AccordionItem, Table } from "components";
 // utils
 import { AnyObject } from "types";
@@ -7,10 +7,8 @@ import { parseCustomHtml } from "utils";
 
 export const TemplateCardAccordion = ({ verbiage, ...props }: Props) => (
   <Accordion sx={sx.root} allowToggle={true} {...props}>
-    <AccordionItem label={verbiage.buttonLabel}>
-      <Text sx={sx.text} data-testid="accordion-contents">
-        {parseCustomHtml(verbiage.text)}
-      </Text>
+    <AccordionItem sx={sx.text} label={verbiage.buttonLabel}>
+      {parseCustomHtml(verbiage.text)}
       {verbiage.table && (
         <Table
           content={verbiage.table}
@@ -39,7 +37,9 @@ const sx = {
     marginTop: "2rem",
   },
   text: {
-    marginBottom: "1rem",
+    p: {
+      marginBottom: "1rem",
+    },
   },
   table: {
     "tr td:last-of-type": {
