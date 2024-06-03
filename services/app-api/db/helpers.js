@@ -12,6 +12,14 @@ const region = process.env.COGNITO_USER_POOL_ID.split("_")[0];
 const userPoolId = process.env.COGNITO_USER_POOL_ID.split("_")[1];
 const cognitoUrl = `https://cognito-idp.${region}.amazonaws.com`;
 
+const errorResponse = (error) => {
+  if (error.cause.code === "ECONNREFUSED") {
+    console.error("‼️ API server must be running to use this script");
+  } else {
+    console.error(error);
+  }
+};
+
 const get = async (url, headers) => {
   const request = {
     method: "GET",
@@ -23,7 +31,7 @@ const get = async (url, headers) => {
     const response = await fetch(url, request);
     return response.json();
   } catch (error) {
-    console.error(error);
+    errorResponse(error);
   }
 };
 
@@ -42,7 +50,7 @@ const post = async (url, headers, body) => {
     const response = await fetch(url, request);
     return response.json();
   } catch (error) {
-    console.error(error);
+    errorResponse(error);
   }
 };
 
@@ -61,7 +69,7 @@ const put = async (url, headers, body) => {
     const response = await fetch(url, request);
     return response.json();
   } catch (error) {
-    console.error(error);
+    errorResponse(error);
   }
 };
 
@@ -80,7 +88,7 @@ const del = async (url, headers) => {
     const response = await fetch(url, request);
     return response.json();
   } catch (error) {
-    console.error(error);
+    errorResponse(error);
   }
 };
 
