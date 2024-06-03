@@ -353,11 +353,13 @@ const sx = {
     fontWeight: "bold",
   },
   additionalInfo: {
-    color: "palette.gray",
-    paddingTop: "0.5rem",
+    paddingTop: "1.5rem",
     marginTop: "0.5rem",
     borderTop: "1px solid",
     borderColor: "palette.gray_light",
+    p: {
+      color: "palette.gray",
+    },
     "p + p": {
       marginY: "0.5rem",
     },
