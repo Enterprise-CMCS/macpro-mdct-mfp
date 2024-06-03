@@ -15,7 +15,14 @@
       "props": {
         "disabled": true,
         "label": "Associated MFP Work Plan",
-        "hint": "Auto-populates from your last approved MFP Work Plan. <br/> Note: Your MFP SAR will be created for the same year and reporting period as your MFP Work Plan."
+        "hint": [
+          {
+            "content": "Auto-populates from your last approved MFP Work Plan."
+          },
+          {
+            "content": "Note: Your MFP SAR will be created for the same year and reporting period as your MFP Work Plan."
+          }
+        ]
       }
     },
     {
@@ -35,7 +42,17 @@
       "props": {
         "disabled": true,
         "label": "Reporting period",
-        "hint": "Auto-populates from your last approved MFP Work Plan. <br/> (1) First reporting period (January-June) <br /> (2) Second reporting period (July-December)"
+        "hint": [
+          {
+            "content": "Auto-populates from your last approved MFP Work Plan."
+          },
+          {
+            "content": "(1) First reporting period (January-June)"
+          },
+          {
+            "content": "(2) Second reporting period (July-December)"
+          }
+        ]
       }
     },
     {
