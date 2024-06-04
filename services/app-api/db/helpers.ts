@@ -4,9 +4,12 @@ import {
   calculateSignature,
   getNowString,
 } from "amazon-user-pool-srp-client";
+import * as dotenv from "dotenv";
 import { faker } from "@faker-js/faker";
 import { AwsHeaders } from "./types";
 import { ReportFieldData } from "../utils/types";
+
+dotenv.config({ path: "../../.env" });
 
 const apiUrl: string | undefined = process.env.API_URL;
 const clientId: string | undefined = process.env.COGNITO_USER_POOL_CLIENT_ID;
