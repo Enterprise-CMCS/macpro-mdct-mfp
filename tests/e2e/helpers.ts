@@ -1,41 +1,35 @@
-import { test, expect } from "@playwright/test";
-
-test("login as a state user", async ({ page }) => {
+export async function logInStateUser({ page }) {
   await page.goto("/");
 
   const emailInput = page.getByRole("textbox", { name: "email" });
   const passwordInput = page.getByRole("textbox", { name: "password" });
   const loginButton = page.getByRole("button", { name: "Log In with Cognito" });
-
-  await expect(emailInput).toBeVisible();
-  await expect(passwordInput).toBeVisible();
 
   await emailInput.fill(process.env.SEED_STATE_USER_EMAIL!);
   await passwordInput.fill(process.env.SEED_STATE_USER_PASSWORD!);
   await loginButton.click();
+}
 
-  await expect(
-    page.getByRole("button", { name: "Enter Work Plan online" })
-  ).toBeVisible();
-});
-
-test("login as an admin user", async ({ page }) => {
+export async function logInAdminUser({ page }) {
   await page.goto("/");
 
   const emailInput = page.getByRole("textbox", { name: "email" });
   const passwordInput = page.getByRole("textbox", { name: "password" });
   const loginButton = page.getByRole("button", { name: "Log In with Cognito" });
 
-  await expect(emailInput).toBeVisible();
-  await expect(passwordInput).toBeVisible();
-
   await emailInput.fill(process.env.SEED_ADMIN_USER_EMAIL!);
   await passwordInput.fill(process.env.SEED_ADMIN_USER_PASSWORD!);
   await loginButton.click();
+}
 
-  await expect(
-    page.getByRole("combobox", {
-      name: "List of states, including District of Columbia and Puerto Rico",
-    })
-  ).toBeVisible();
-});
+export async function logOut({ page }) {
+  const menuButton = page.getByRole("button", { name: "My Account" });
+  const menu = page.getByTestId("header-menu-options-list");
+  const logoutButton = page.getByTestId("header-menu-option-log-out");
+
+  await menuButton.click();
+  await menu;
+  await logoutButton.click();
+  await page.evaluate(() => window.localStorage.clear());
+  await page.goto("/");
+}
