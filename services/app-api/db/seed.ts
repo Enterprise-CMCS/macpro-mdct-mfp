@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-const prompts = require("prompts");
-const { createdLog, expandedLog } = require("./helpers.js");
-const {
+import prompts, { Choice, PromptObject } from "prompts";
+import { createdLog, expandedLog } from "./helpers";
+import {
   bannerKey,
   createApprovedWorkPlan,
   createArchivedSemiAnnualReport,
@@ -25,14 +25,14 @@ const {
   semiAnnualReportChoices,
   state,
   workPlanChoices,
-} = require("./options.js");
+} from "./options";
 
-const seed = async () => {
+const seed = async (): Promise<void> => {
   await loginUsers();
-  const wpIds = await workPlanChoices();
-  const sarIds = await semiAnnualReportChoices();
+  const wpIds: Choice[] = await workPlanChoices();
+  const sarIds: Choice[] = await semiAnnualReportChoices();
 
-  const generateChoices = (type) => {
+  const generateChoices = (type: string): Choice[] => {
     const choices = [
       { title: `Create base ${type}`, value: `create${type}` },
       {
@@ -59,7 +59,7 @@ const seed = async () => {
     ];
 
     if (type === "WP") {
-      choices.toSpliced(3, 0, {
+      choices.splice(3, 0, {
         title: `Create approved ${type}`,
         value: `createApproved${type}`,
       });
@@ -68,7 +68,7 @@ const seed = async () => {
     return choices;
   };
 
-  const questions = [
+  const questions: PromptObject[] = [
     {
       type: "select",
       name: "type",
@@ -81,13 +81,13 @@ const seed = async () => {
       ],
     },
     {
-      type: (prev) => (["WP", "SAR"].includes(prev) ? "select" : null),
+      type: (prev: string) => (["WP", "SAR"].includes(prev) ? "select" : null),
       name: "task",
       message: "Task",
-      choices: (prev) => generateChoices(prev),
+      choices: (prev: string) => generateChoices(prev) as Choice[],
     },
     {
-      type: (prev) => (prev === "banner" ? "select" : null),
+      type: (prev: string) => (prev === "banner" ? "select" : null),
       name: "bannerTask",
       message: "Task",
       choices: [
@@ -103,14 +103,14 @@ const seed = async () => {
       ],
     },
     {
-      type: (prev) =>
+      type: (prev: string) =>
         prev === "getWPById" && wpIds.length > 0 ? "select" : null,
       name: "workPlanId",
       message: "Choose",
       choices: wpIds,
     },
     {
-      type: (prev) =>
+      type: (prev: string) =>
         prev === "getSARById" && sarIds.length > 0 ? "select" : null,
       name: "semiAnnualReportId",
       message: "Choose",
@@ -123,7 +123,7 @@ const seed = async () => {
     },
   ];
 
-  const onSubmit = async (prompt, answer) => {
+  const onSubmit = async (prompt: any, answer: any): Promise<void> => {
     switch (prompt.name) {
       case "workPlanId":
         expandedLog(await getWorkPlanById(answer));
@@ -199,7 +199,7 @@ const seed = async () => {
         break;
       case "createBanner": {
         const { Item } = await createBanner();
-        console.log(`Banner created: ${Item.key}`);
+        console.log(`Banner created: ${Item?.key}`);
         break;
       }
       case "getBanner":
@@ -207,7 +207,7 @@ const seed = async () => {
         break;
       case "deleteBanner": {
         const { Key } = await deleteBannerById();
-        console.log(`Banner deleted: ${Key.key}`);
+        console.log(`Banner deleted: ${Key?.key}`);
         break;
       }
       default:

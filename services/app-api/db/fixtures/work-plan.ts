@@ -1,36 +1,41 @@
-const crypto = require("crypto");
-const { faker } = require("@faker-js/faker");
-const {
+import crypto from "crypto";
+import { faker } from "@faker-js/faker";
+import { ReportFieldData, ReportStatus, ReportType } from "../../utils/types";
+import {
   dateFormat,
   quarterlyKeyGenerator,
   randomReportPeriod,
   randomReportYear,
-} = require("../helpers.js");
+} from "../helpers";
+import { SeedFillReportShape, SeedNewReportShape } from "../types";
 
-const newWorkPlan = (stateName) => ({
+export const newWorkPlan = (stateName: string): SeedNewReportShape => ({
   metadata: {
     isComplete: false,
     lastAlteredBy: faker.person.fullName(),
     locked: false,
     previousRevisions: [],
     reportPeriod: randomReportPeriod,
-    reportType: "WP",
+    reportType: ReportType.WP,
     reportYear: randomReportYear,
-    status: "Not started",
+    status: ReportStatus.NOT_STARTED,
+    submissionCount: 0,
     submissionName: "Work Plan",
   },
   fieldData: {
     stateName,
-    submissionCount: 0,
     submissionName: "Work Plan",
-    targetPopulations,
+    targetPopulations: [],
   },
 });
 
-const fillWorkPlan = (year, period) => ({
+export const fillWorkPlan = (
+  year: number,
+  period: number
+): SeedFillReportShape => ({
   metadata: {
     lastAlteredBy: faker.person.fullName(),
-    status: "In progress",
+    status: ReportStatus.IN_PROGRESS,
   },
   fieldData: {
     instructions_selfDirectedInitiatives: [
@@ -52,7 +57,11 @@ const fillWorkPlan = (year, period) => ({
   },
 });
 
-const addEvaluationPlan = (year, period, numberOfPlans = 1) => {
+const addEvaluationPlan = (
+  year: number,
+  period: number,
+  numberOfPlans: number = 1
+): ReportFieldData[] => {
   return [...Array(numberOfPlans).keys()].map((i) => {
     const numType = i === 0 ? null : "int";
     // Plans alternate between No for first plan, Yes for second plan, etc.
@@ -79,7 +88,7 @@ const addEvaluationPlan = (year, period, numberOfPlans = 1) => {
   });
 };
 
-const addInitiative = (year, period) => [
+const addInitiative = (year: number, period: number): ReportFieldData[] => [
   {
     id: crypto.randomUUID(),
     defineInitiative_describeInitiative: faker.lorem.sentence(),
@@ -275,10 +284,10 @@ const targetPopulations = [
   },
 ];
 
-const updateTargetPopulations = (year, period) => {
+const updateTargetPopulations = (year: number, period: number): any[] => {
   return targetPopulations.map((targetPopulation) => {
     const inactive = ["PD", "MH/SUD"].includes(
-      targetPopulation.transitionBenchmarks_targetPopulationName_short
+      targetPopulation.transitionBenchmarks_targetPopulationName_short || ""
     );
 
     const numType = inactive ? null : "int";
@@ -298,9 +307,4 @@ const updateTargetPopulations = (year, period) => {
       ...quarterlyKeyGenerator(year, period, "quarterlyProjections", numType),
     };
   });
-};
-
-module.exports = {
-  newWorkPlan,
-  fillWorkPlan,
 };

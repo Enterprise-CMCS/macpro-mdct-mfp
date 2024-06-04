@@ -1,30 +1,34 @@
 /* eslint-disable no-console */
-const {
+import {
   SRPClient,
   calculateSignature,
   getNowString,
-} = require("amazon-user-pool-srp-client");
-const { faker } = require("@faker-js/faker");
+} from "amazon-user-pool-srp-client";
+import { faker } from "@faker-js/faker";
+import { AwsHeaders } from "./types";
 
-const apiUrl = process.env.API_URL;
-const clientId = process.env.COGNITO_USER_POOL_CLIENT_ID;
-const region = process.env.COGNITO_USER_POOL_ID.split("_")[0];
-const userPoolId = process.env.COGNITO_USER_POOL_ID.split("_")[1];
-const cognitoUrl = `https://cognito-idp.${region}.amazonaws.com`;
+const apiUrl: string = process.env.API_URL || "";
+const clientId: string = process.env.COGNITO_USER_POOL_CLIENT_ID || "";
+const region: string = process.env.COGNITO_USER_POOL_ID?.split("_")[0] || "";
+const userPoolId: string =
+  process.env.COGNITO_USER_POOL_ID?.split("_")[1] || "";
+const cognitoUrl: string = `https://cognito-idp.${region}.amazonaws.com`;
 
-const errorResponse = (error) => {
-  if (error.cause.code === "ECONNREFUSED") {
+const errorResponse = (error: Error | unknown): void => {
+  if ((error as any).cause.code === "ECONNREFUSED") {
     console.error("‼️ API server must be running to use this script");
   } else {
     console.error(error);
   }
 };
 
-const get = async (url, headers) => {
+const get = async (
+  url: string,
+  headers: Headers | AwsHeaders
+): Promise<any> => {
   const request = {
     method: "GET",
     headers,
-    cache: "no-cache",
   };
 
   try {
@@ -35,15 +39,22 @@ const get = async (url, headers) => {
   }
 };
 
-const getApi = async (url, headers) => {
+export const getApi = async (
+  url: string,
+  headers: Headers | AwsHeaders
+): Promise<any> => {
   return get(`${apiUrl}${url}`, headers);
 };
 
-const post = async (url, headers, body) => {
+const post = async (
+  url: string,
+  headers: Headers | AwsHeaders,
+  body: any
+): Promise<any> => {
   const request = {
     method: "POST",
     headers,
-    body: body ? JSON.stringify(body) : null,
+    body: JSON.stringify(body),
   };
 
   try {
@@ -54,15 +65,23 @@ const post = async (url, headers, body) => {
   }
 };
 
-const postApi = async (url, headers, body) => {
+export const postApi = async (
+  url: string,
+  headers: Headers | AwsHeaders,
+  body: any
+): Promise<any> => {
   return post(`${apiUrl}${url}`, headers, body);
 };
 
-const put = async (url, headers, body) => {
+const put = async (
+  url: string,
+  headers: Headers | AwsHeaders,
+  body: any
+): Promise<any> => {
   const request = {
     method: "PUT",
     headers,
-    body: body ? JSON.stringify(body) : null,
+    body: JSON.stringify(body),
   };
 
   try {
@@ -73,13 +92,19 @@ const put = async (url, headers, body) => {
   }
 };
 
-const putApi = async (url, headers, body) => {
+export const putApi = async (
+  url: string,
+  headers: Headers | AwsHeaders,
+  body: any
+): Promise<any> => {
   return put(`${apiUrl}${url}`, headers, body);
 };
 
-const del = async (url, headers) => {
+const del = async (
+  url: string,
+  headers: Headers | AwsHeaders
+): Promise<any> => {
   const request = {
-    url,
     method: "delete",
     headers,
   };
@@ -92,11 +117,14 @@ const del = async (url, headers) => {
   }
 };
 
-const deleteApi = async (url, headers) => {
+export const deleteApi = async (
+  url: string,
+  headers: Headers | AwsHeaders
+): Promise<any> => {
   return del(`${apiUrl}${url}`, headers);
 };
 
-const login = async (email, password) => {
+export const login = async (email: string, password: string): Promise<any> => {
   const srp = new SRPClient(userPoolId);
   const SRP_A = srp.calculateA();
 
@@ -151,37 +179,45 @@ const login = async (email, password) => {
   });
 };
 
-const currentYear = new Date().getFullYear();
+const currentYear: number = new Date().getFullYear();
 
-const dateFormat = new Intl.DateTimeFormat("en-US", {
-  month: "2-digit",
-  day: "2-digit",
-  year: "numeric",
-});
+export const dateFormat: Intl.DateTimeFormat = new Intl.DateTimeFormat(
+  "en-US",
+  {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  }
+);
 
-const randomReportPeriod = faker.number.int({ min: 1, max: 2 });
+export const randomReportPeriod: number = faker.number.int({ min: 1, max: 2 });
 
-const randomReportYear = faker.number.int({
+export const randomReportYear: number = faker.number.int({
   min: currentYear,
   max: currentYear + 1,
 });
 
-const createdLog = (obj, type) => {
+export const createdLog = (obj: any, type: string): void => {
   const { id } = obj;
   console.log(`${type} created: ${id}`);
 };
 
-const expandedLog = (json) => {
+export const expandedLog = (json: any): void => {
   console.log(JSON.stringify(json, null, 2));
 };
 
-const quarterlyKeyGenerator = (year, period, name, numType) => {
-  const obj = {};
-  let startYear = year;
-  let startQuarter = period === 1 ? 1 : 3;
+export const quarterlyKeyGenerator = (
+  year: number,
+  period: number,
+  name: string,
+  numType: string | null
+): any => {
+  const obj: any = {};
+  let startYear: number = year;
+  let startQuarter: number = period === 1 ? 1 : 3;
 
   for (let i = 0; i < 12; i++) {
-    const key = `${name}${startYear}Q${startQuarter}`;
+    const key: string = `${name}${startYear}Q${startQuarter}`;
 
     switch (numType) {
       case "int":
@@ -211,18 +247,4 @@ const quarterlyKeyGenerator = (year, period, name, numType) => {
   }
 
   return obj;
-};
-
-module.exports = {
-  createdLog,
-  dateFormat,
-  deleteApi,
-  expandedLog,
-  getApi,
-  login,
-  postApi,
-  putApi,
-  quarterlyKeyGenerator,
-  randomReportPeriod,
-  randomReportYear,
 };
