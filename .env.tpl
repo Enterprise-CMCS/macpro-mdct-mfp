@@ -35,9 +35,9 @@ CYPRESS_STATE_USER_EMAIL=op://mdct_devs/mfp_secrets/CYPRESS_STATE_USER_EMAIL
 CYPRESS_STATE_USER_PASSWORD=op://mdct_devs/mfp_secrets/CYPRESS_STATE_USER_PASSWORD # pragma: allowlist secret
 
 # db:seed
-SEED_ADMIN_PASSWORD=op://mdct_devs/mfp_secrets/SEED_ADMIN_PASSWORD # pragma: allowlist secret
-SEED_ADMIN_USER=op://mdct_devs/mfp_secrets/SEED_ADMIN_USER
-SEED_STATE_PASSWORD=op://mdct_devs/mfp_secrets/SEED_STATE_PASSWORD # pragma: allowlist secret
-SEED_STATE_USER=op://mdct_devs/mfp_secrets/SEED_STATE_USER
+SEED_ADMIN_USER_EMAIL=op://mdct_devs/mfp_secrets/SEED_ADMIN_USER_EMAIL
+SEED_ADMIN_USER_PASSWORD=op://mdct_devs/mfp_secrets/SEED_ADMIN_USER_PASSWORD # pragma: allowlist secret
+SEED_STATE_USER_EMAIL=op://mdct_devs/mfp_secrets/SEED_STATE_USER_EMAIL
+SEED_STATE_USER_PASSWORD=op://mdct_devs/mfp_secrets/SEED_STATE_USER_PASSWORD # pragma: allowlist secret
 SEED_STATE=op://mdct_devs/mfp_secrets/SEED_STATE
 SEED_STATE_NAME=op://mdct_devs/mfp_secrets/SEED_STATE_NAME
