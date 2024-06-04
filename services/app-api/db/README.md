@@ -10,6 +10,10 @@ This directory contains files to seed the MFP database via command line with int
 
 ## Using the script
 
+### Create filled WP and filled SAR
+
+Choosing this option will create two WPs - one filled unsubmitted WP and one approved WP - and a filled unsubmitted SAR.
+
 ### Work Plan (WP)
 
 Choosing this option will reveal more options to create a WP with a specific status. You can also get a single WP or all WPs from a state, and the JSON response will print in the terminal.
@@ -17,10 +21,6 @@ Choosing this option will reveal more options to create a WP with a specific sta
 ### Semi-Annual Report (SAR)
 
 Choosing this option will reveal more options to create a SAR with a specific status. Creating a SAR also creates an approved WP associated with it. You can also get a single SAR or all SARs from a state, and the JSON response will print in the terminal.
-
-### Create filled WP and filled SAR
-
-Choosing this option will create two WPs - one filled unsubmitted WP and one approved WP - and a filled unsubmitted SAR.
 
 ### Banner
 

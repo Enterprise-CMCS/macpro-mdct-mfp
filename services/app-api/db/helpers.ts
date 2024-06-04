@@ -6,16 +6,18 @@ import {
 } from "amazon-user-pool-srp-client";
 import { faker } from "@faker-js/faker";
 import { AwsHeaders } from "./types";
+import { ReportFieldData } from "../utils/types";
 
-const apiUrl: string = process.env.API_URL || "";
-const clientId: string = process.env.COGNITO_USER_POOL_CLIENT_ID || "";
-const region: string = process.env.COGNITO_USER_POOL_ID?.split("_")[0] || "";
-const userPoolId: string =
-  process.env.COGNITO_USER_POOL_ID?.split("_")[1] || "";
+const apiUrl: string | undefined = process.env.API_URL;
+const clientId: string | undefined = process.env.COGNITO_USER_POOL_CLIENT_ID;
+const region: string | undefined =
+  process.env.COGNITO_USER_POOL_ID?.split("_")[0];
+const userPoolId: string | undefined =
+  process.env.COGNITO_USER_POOL_ID?.split("_")[1];
 const cognitoUrl: string = `https://cognito-idp.${region}.amazonaws.com`;
 
-const errorResponse = (error: Error | unknown): void => {
-  if ((error as any).cause.code === "ECONNREFUSED") {
+const errorResponse = (error: any): void => {
+  if (error?.cause?.code === "ECONNREFUSED") {
     console.error("‼️ API server must be running to use this script");
   } else {
     console.error(error);
@@ -124,7 +126,10 @@ export const deleteApi = async (
   return del(`${apiUrl}${url}`, headers);
 };
 
-export const login = async (email: string, password: string): Promise<any> => {
+export const login = async (
+  email: string | undefined,
+  password: string | undefined
+): Promise<any> => {
   const srp = new SRPClient(userPoolId);
   const SRP_A = srp.calculateA();
 
@@ -142,13 +147,14 @@ export const login = async (email: string, password: string): Promise<any> => {
         SRP_A,
       },
     }
-  ).then(({ ChallengeName, ChallengeParameters }) => {
+  ).then(async ({ ChallengeName, ChallengeParameters }) => {
     const hkdf = srp.getPasswordAuthenticationKey(
       ChallengeParameters.USER_ID_FOR_SRP,
       password,
       ChallengeParameters.SRP_B,
       ChallengeParameters.SALT
     );
+
     const dateNow = getNowString();
     const signatureString = calculateSignature(
       hkdf,
@@ -158,7 +164,7 @@ export const login = async (email: string, password: string): Promise<any> => {
       dateNow
     );
 
-    return post(
+    const { AuthenticationResult } = await post(
       cognitoUrl,
       {
         "Content-Type": "application/x-amz-json-1.1",
@@ -175,11 +181,11 @@ export const login = async (email: string, password: string): Promise<any> => {
           USERNAME: ChallengeParameters.USER_ID_FOR_SRP,
         },
       }
-    ).then(({ AuthenticationResult }) => AuthenticationResult);
+    );
+
+    return AuthenticationResult;
   });
 };
-
-const currentYear: number = new Date().getFullYear();
 
 export const dateFormat: Intl.DateTimeFormat = new Intl.DateTimeFormat(
   "en-US",
@@ -191,6 +197,8 @@ export const dateFormat: Intl.DateTimeFormat = new Intl.DateTimeFormat(
 );
 
 export const randomReportPeriod: number = faker.number.int({ min: 1, max: 2 });
+
+const currentYear: number = new Date().getFullYear();
 
 export const randomReportYear: number = faker.number.int({
   min: currentYear,
@@ -212,7 +220,7 @@ export const quarterlyKeyGenerator = (
   name: string,
   numType: string | null
 ): any => {
-  const obj: any = {};
+  const obj: ReportFieldData = {};
   let startYear: number = year;
   let startQuarter: number = period === 1 ? 1 : 3;
 

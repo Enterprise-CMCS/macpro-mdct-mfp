@@ -8,12 +8,12 @@ import { newBanner } from "./fixtures/banner";
 import { deleteApi, getApi, login, postApi, putApi } from "./helpers";
 import { AwsHeaders, SeedBannerShape, SeedReportShape } from "./types";
 
-const adminUser: string = process.env.SEED_ADMIN_USER || "";
-const adminPassword: string = process.env.SEED_ADMIN_PASSWORD || "";
-const stateUser: string = process.env.SEED_STATE_USER || "";
-const statePassword: string = process.env.SEED_STATE_PASSWORD || "";
-export const state: string = process.env.SEED_STATE || "";
-const stateName: string = process.env.SEED_STATE_NAME || "";
+const adminUser: string | undefined = process.env.SEED_ADMIN_USER_EMAIL;
+const adminPassword: string | undefined = process.env.SEED_ADMIN_USER_PASSWORD;
+const stateUser: string | undefined = process.env.SEED_STATE_USER_EMAIL;
+const statePassword: string | undefined = process.env.SEED_STATE_USER_PASSWORD;
+export const state: string = process.env.SEED_STATE || "PR";
+const stateName: string = process.env.SEED_STATE_NAME || "Puerto Rico";
 
 let headers: AwsHeaders = {};
 let adminHeaders: AwsHeaders = {};

@@ -284,7 +284,10 @@ const targetPopulations = [
   },
 ];
 
-const updateTargetPopulations = (year: number, period: number): any[] => {
+const updateTargetPopulations = (
+  year: number,
+  period: number
+): ReportFieldData[] => {
   return targetPopulations.map((targetPopulation) => {
     const inactive = ["PD", "MH/SUD"].includes(
       targetPopulation.transitionBenchmarks_targetPopulationName_short || ""

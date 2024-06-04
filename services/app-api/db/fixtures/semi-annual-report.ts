@@ -140,7 +140,7 @@ function addFundingSources(
   fundingSources: ReportFieldData[],
   quarters: string[]
 ) {
-  const obj: any = {};
+  const obj: ReportFieldData = {};
 
   fundingSources.forEach((fs) => {
     quarters.forEach((q) => {
@@ -183,7 +183,7 @@ function addPopulationCounts(
     "ret_psmicf_target_populations",
   ];
 
-  const obj: any = {};
+  const obj: ReportFieldData = {};
 
   prefixes.forEach((prefix) => {
     populations?.forEach(({ key }) => {
@@ -255,7 +255,7 @@ function updateObjectiveProgress(
   quarters: string[]
 ) {
   return evaluationPlan.map((ep) => {
-    const obj: any = {
+    const obj: ReportFieldData = {
       id: ep.id,
       objectiveProgress_additionalDetails: ep.evaluationPlan_additionalDetails,
       objectiveProgress_description: ep.evaluationPlan_description,
@@ -285,6 +285,7 @@ function updateObjectiveProgress(
         fractionDigits: 2,
       })}`;
     });
+
     return obj;
   });
 }

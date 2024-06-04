@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import prompts, { Choice, PromptObject } from "prompts";
+import prompts, { Choice as PromptChoice, PromptObject } from "prompts";
 import { createdLog, expandedLog } from "./helpers";
 import {
   bannerKey,
@@ -29,10 +29,10 @@ import {
 
 const seed = async (): Promise<void> => {
   await loginUsers();
-  const wpIds: Choice[] = await workPlanChoices();
-  const sarIds: Choice[] = await semiAnnualReportChoices();
+  const wpIds: PromptChoice[] = await workPlanChoices();
+  const sarIds: PromptChoice[] = await semiAnnualReportChoices();
 
-  const generateChoices = (type: string): Choice[] => {
+  const generateChoices = (type: string): PromptChoice[] => {
     const choices = [
       { title: `Create base ${type}`, value: `create${type}` },
       {
@@ -74,9 +74,9 @@ const seed = async (): Promise<void> => {
       name: "type",
       message: "Type",
       choices: [
+        { title: "Create filled WP and filled SAR", value: "createFilledEach" },
         { title: "Work Plan (WP)", value: "WP" },
         { title: "Semi-Annual Report (SAR)", value: "SAR" },
-        { title: "Create filled WP and filled SAR", value: "createFilledEach" },
         { title: "Banner", value: "banner" },
       ],
     },
@@ -84,7 +84,7 @@ const seed = async (): Promise<void> => {
       type: (prev: string) => (["WP", "SAR"].includes(prev) ? "select" : null),
       name: "task",
       message: "Task",
-      choices: (prev: string) => generateChoices(prev) as Choice[],
+      choices: (prev: string) => generateChoices(prev) as PromptChoice[],
     },
     {
       type: (prev: string) => (prev === "banner" ? "select" : null),
@@ -123,13 +123,16 @@ const seed = async (): Promise<void> => {
     },
   ];
 
-  const onSubmit = async (prompt: any, answer: any): Promise<void> => {
+  const onSubmit = async (
+    prompt: PromptObject,
+    answer: string | boolean
+  ): Promise<void> => {
     switch (prompt.name) {
       case "workPlanId":
-        expandedLog(await getWorkPlanById(answer));
+        expandedLog(await getWorkPlanById(answer as string));
         break;
       case "semiAnnualReportId":
-        expandedLog(await getSemiAnnualReportById(answer));
+        expandedLog(await getSemiAnnualReportById(answer as string));
         break;
       case "exit": {
         if (answer === false) {
