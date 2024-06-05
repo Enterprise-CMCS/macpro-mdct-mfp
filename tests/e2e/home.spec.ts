@@ -1,11 +1,9 @@
 import { test, expect } from "@playwright/test";
+import { logInStateUser, logInAdminUser } from "./helpers";
 
-test("Should see the correct home page as a state user", async ({
-  login,
-  page,
-}) => {
-  await login.goto();
-  await login.stateUser();
+test("Should see the correct home page as a state user", async ({ page }) => {
+  await page.goto("/");
+  await logInStateUser({ page });
 
   await expect(
     page.getByRole("button", { name: "Enter Work Plan online" })
@@ -15,12 +13,9 @@ test("Should see the correct home page as a state user", async ({
   ).toBeVisible();
 });
 
-test("Should see the correct home page as an admin user", async ({
-  login,
-  page,
-}) => {
-  await login.goto();
-  await login.adminUser();
+test("Should see the correct home page as an admin user", async ({ page }) => {
+  await page.goto("/");
+  await logInAdminUser({ page });
 
   await expect(
     page.getByRole("combobox", {
