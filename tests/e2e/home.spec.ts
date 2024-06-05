@@ -1,4 +1,4 @@
-import { test, expect } from "./setup";
+import { test, expect } from "@playwright/test";
 
 test("Should see the correct home page as a state user", async ({
   login,
