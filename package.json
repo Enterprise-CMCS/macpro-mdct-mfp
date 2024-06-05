@@ -11,8 +11,8 @@
     "db:seed": "cd services/app-api && yarn run db:seed",
     "test": "cd tests/cypress && npm test && cd -",
     "test:ci": "cd tests/cypress && yarn run test:ci",
-    "test:e2e": "yarn playwright test",
-    "test:e2e-ui": "yarn playwright test --ui"
+    "test:e2e": "playwright test",
+    "test:e2e-ui": "playwright test --ui"
   },
   "repository": {
     "type": "git",
