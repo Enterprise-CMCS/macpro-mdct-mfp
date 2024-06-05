@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import parse from "html-react-parser";
 // components
 import { Link as RouterLink } from "react-router-dom";
@@ -111,7 +111,7 @@ export function createElementWithChildren(
 
 // sanitize and parse html to react elements
 export const sanitizeAndParseHtml = (html: string) => {
-  const sanitizedHtml = sanitize(html);
+  const sanitizedHtml = DOMPurify.sanitize(html);
   const parsedHtml = parse(sanitizedHtml);
   return parsedHtml;
 };
