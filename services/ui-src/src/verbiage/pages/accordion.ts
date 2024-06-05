@@ -10,14 +10,26 @@ export default {
         },
         {
           type: "text",
-          as: "span",
+          as: "p",
           content:
-            "<br>This reporting tool is to be used to describe state or territory-specific initiatives. Start or amend a new MFP Work Plan below to capture these initiatives designed to increase the use and quality of home and community-based services. <br><br> <b> MFP Work Plan to Semi-Annual Progress Report Process</b> <br><br>You must create, submit, and get your MFP Work Plan approved by your CMS MFP Project Officer in order to start the corresponding MFP Semi-Annual Progress Report (SAR). Once the first MFP Work Plan is approved, for each sequential reporting period you must update it, which also requires CMS approval to start the corresponding SAR. This is to ensure that your tracked target populations, transition benchmarks, initiatives, evaluation plan objectives, and funding sources are all available to report on in the SAR. You will be able to view all MFP Work Plans from previous periods.",
+            "This reporting tool is to be used to describe state or territory-specific initiatives. Start or amend a new MFP Work Plan below to capture these initiatives designed to increase the use and quality of home and community-based services.",
         },
         {
           type: "text",
-          as: "span",
-          content: "<br><strong>Admin Instructions</strong>",
+          as: "p",
+          content:
+            "<b>MFP Work Plan to Semi-Annual Progress Report Process</b>",
+        },
+        {
+          type: "text",
+          as: "p",
+          content:
+            "You must create, submit, and get your MFP Work Plan approved by your CMS MFP Project Officer in order to start the corresponding MFP Semi-Annual Progress Report (SAR). Once the first MFP Work Plan is approved, for each sequential reporting period you must update it, which also requires CMS approval to start the corresponding SAR. This is to ensure that your tracked target populations, transition benchmarks, initiatives, evaluation plan objectives, and funding sources are all available to report on in the SAR. You will be able to view all MFP Work Plans from previous periods.",
+        },
+        {
+          type: "text",
+          as: "p",
+          content: "<strong>Admin Instructions</strong>",
         },
       ],
       list: [
@@ -35,9 +47,21 @@ export default {
       intro: [
         {
           type: "text",
-          as: "span",
+          as: "p",
           content:
-            "This reporting tool is to be used to describe state or territory-specific initiatives. Start or amend a new MFP Work Plan below to capture these initiatives designed to increase the use and quality of home and community-based services. <br><br> <strong> MFP Work Plan to Semi-Annual Progress Report Process </strong> <br><br> You must create, submit, and get your MFP Work Plan approved by your CMS MFP Project Officer in order to start the corresponding MFP Semi-Annual Progress Report (SAR). Once the first MFP Work Plan is approved, for each sequential reporting period you must update it, which also requires CMS approval to start the corresponding SAR. This is to ensure that your tracked target populations, transition benchmarks, initiatives, evaluation plan objectives, and funding sources are all available to report on in the SAR. You will be able to view all MFP Work Plans from previous periods.",
+            "This reporting tool is to be used to describe state or territory-specific initiatives. Start or amend a new MFP Work Plan below to capture these initiatives designed to increase the use and quality of home and community-based services.",
+        },
+        {
+          type: "text",
+          as: "p",
+          content:
+            "<strong>MFP Work Plan to Semi-Annual Progress Report Process</strong>",
+        },
+        {
+          type: "text",
+          as: "p",
+          content:
+            "You must create, submit, and get your MFP Work Plan approved by your CMS MFP Project Officer in order to start the corresponding MFP Semi-Annual Progress Report (SAR). Once the first MFP Work Plan is approved, for each sequential reporting period you must update it, which also requires CMS approval to start the corresponding SAR. This is to ensure that your tracked target populations, transition benchmarks, initiatives, evaluation plan objectives, and funding sources are all available to report on in the SAR. You will be able to view all MFP Work Plans from previous periods.",
         },
       ],
       list: [],
@@ -56,14 +80,14 @@ export default {
       intro: [
         {
           type: "text",
-          as: "span",
+          as: "p",
           content: "<b>State or Territory User instructions</b>",
         },
         {
           type: "text",
           as: "span",
           content:
-            "<br><br>Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
+            "Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
         },
         {
           type: "externalLink",
@@ -82,8 +106,8 @@ export default {
         },
         {
           type: "text",
-          as: "span",
-          content: "<br><br><b>Admin instructions</b>",
+          as: "p",
+          content: "<b>Admin instructions</b>",
         },
       ],
       list: [
@@ -98,14 +122,14 @@ export default {
       intro: [
         {
           type: "text",
-          as: "span",
+          as: "p",
           content: "<b>State or Territory User instructions</b>",
         },
         {
           type: "text",
           as: "span",
           content:
-            "<br><br>Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
+            "Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
         },
         {
           type: "externalLink",
