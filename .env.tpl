@@ -14,7 +14,6 @@ S3_LOCAL_ENDPOINT=http://localhost:4569
 SAR_FORM_BUCKET=op://mdct_devs/mfp_secrets/SAR_FORM_BUCKET
 SAR_REPORT_TABLE_NAME=local-sar-reports
 SKIP_PREFLIGHT_CHECK=true
-URL=http://localhost/3000
 TEMPLATE_BUCKET=op://mdct_devs/mfp_secrets/TEMPLATE_BUCKET
 WP_FORM_BUCKET=op://mdct_devs/mfp_secrets/WP_FORM_BUCKET
 WP_REPORT_TABLE_NAME=local-wp-reports
@@ -28,7 +27,7 @@ VPC_SUBNET_B=local-nonsense
 VPC_SUBNET_C=local-nonsense
 BROKER_STRINGS=local-nonsense
 
-#needed for e2e tests 
+# needed for e2e tests
 CYPRESS_ADMIN_USER_EMAIL=op://mdct_devs/mfp_secrets/CYPRESS_ADMIN_USER_EMAIL
 CYPRESS_ADMIN_USER_PASSWORD=op://mdct_devs/mfp_secrets/CYPRESS_ADMIN_USER_PASSWORD # pragma: allowlist secret
 CYPRESS_STATE_USER_EMAIL=op://mdct_devs/mfp_secrets/CYPRESS_STATE_USER_EMAIL
