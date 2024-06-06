@@ -17,7 +17,7 @@
     "@chakra-ui/react": "^1.7.0",
     "@cmsgov/design-system": "^3.8.0",
     "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11",
+    "@emotion/styled": "^11.11.5",
     "@hookform/resolvers": "^2.9.11",
     "@vitejs/plugin-react": "^4.2.1",
     "aws-amplify": "^5.3.4",
@@ -39,7 +39,7 @@
     "vite": "^5.2.11",
     "vite-tsconfig-paths": "^4.3.2",
     "yup": "^0.32.11",
-    "zustand": "^4.3.9"
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.13.16",
