@@ -13,9 +13,9 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
     formTemplate: { routes },
   } = report;
   // Filter out the reviewSubmit pageType
-  const validRoutes = routes.filter(
-    (r: ReportRoute) => r.pageType !== "reviewSubmit"
-  );
+  const validRoutes = routes
+    .filter((r: ReportRoute) => r.pageType !== "reviewSubmit")
+    .filter((r: ReportRoute) => r.name !== "General Information");
 
   // Ensure there is a response from the API containing the completion status
   if (!report.completionStatus) {
