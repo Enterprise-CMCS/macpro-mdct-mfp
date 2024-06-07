@@ -21,6 +21,12 @@ import {
   useStore,
 } from "utils";
 
+const alertVerbiage: ErrorVerbiage = {
+  title: "Error",
+  description:
+    'This target population was already added. To avoid duplication, add a different target population name or select "Cancel".',
+};
+
 export const AddEditEntityModal = ({
   entityType,
   entityName,
@@ -49,11 +55,9 @@ export const AddEditEntityModal = ({
           otherPopulation.transitionBenchmarks_targetPopulationName === input
       )
     ) {
-      setError(
-        'This target population was already added. To avoid duplication, add a different target population name or select "Cancel".'
-      );
+      setError(alertVerbiage);
     } else {
-      setError("");
+      setError(undefined);
     }
   };
 
