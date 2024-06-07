@@ -15,7 +15,7 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
   // Filter out the reviewSubmit pageType
   const validRoutes = routes
     .filter((r: ReportRoute) => r.pageType !== "reviewSubmit")
-    .filter((r: ReportRoute) => r.name !== "General Information");
+    .filter((r: ReportRoute) => r.path !== "/wp/general-information");
 
   // Ensure there is a response from the API containing the completion status
   if (!report.completionStatus) {
