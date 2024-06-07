@@ -21,7 +21,7 @@ import {
   useStore,
 } from "utils";
 
-const alertVerbiage: ErrorVerbiage = {
+export const alertVerbiage: ErrorVerbiage = {
   title: "Error",
   description:
     'This target population was already added. To avoid duplication, add a different target population name or select "Cancel".',
