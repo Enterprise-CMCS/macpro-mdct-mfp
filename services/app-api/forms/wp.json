@@ -1176,7 +1176,12 @@
               "verbiage": {
                 "intro": {
                   "section": "State or Territory-Specific Initiatives: IV. Initiative close-out information",
-                  "hint": "Complete the section below for initiatives with an end date during the upcoming semi-annual reporting period."
+                  "info": [
+                    {
+                      "type": "html",
+                      "content": "Complete the section below for initiatives with an end date during the upcoming semi-annual reporting period."
+                    }
+                  ]
                 },
                 "closeOutWarning": {
                   "title": "Warning",
