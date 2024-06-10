@@ -27,7 +27,7 @@ export const createReportName = (
   return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
 };
 
-export const getLastCreatedWorkPlan = async (
+export const getEligbleWorkPlan = async (
   state: State
 ): Promise<{
   workPlanMetadata?: ReportMetadataShape;
@@ -43,7 +43,7 @@ export const getLastCreatedWorkPlan = async (
   }
 
   const workPlanMetadata = eligibleWorkPlans.reduce((mostRecent, wp) =>
-    mostRecent.createdAt > wp.createdAt ? mostRecent : wp
+    mostRecent.createdAt < wp.createdAt ? mostRecent : wp
   );
   const workPlanFieldData = await getReportFieldData(workPlanMetadata);
   return { workPlanMetadata, workPlanFieldData };
