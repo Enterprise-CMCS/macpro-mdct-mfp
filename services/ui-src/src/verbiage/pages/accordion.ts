@@ -85,24 +85,9 @@ export default {
         },
         {
           type: "text",
-          as: "span",
+          as: "p",
           content:
-            "Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
-        },
-        {
-          type: "externalLink",
-          content: "User Guide and Help File",
-          props: {
-            href: "https://www.google.com",
-            target: "_blank",
-            "aria-label": "User Guide and Help File (Link opens in new tab)",
-          },
-        },
-        {
-          type: "text",
-          as: "span",
-          content:
-            ". If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates, complete the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
+            "Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates, complete the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
         },
         {
           type: "text",
@@ -127,24 +112,9 @@ export default {
         },
         {
           type: "text",
-          as: "span",
+          as: "p",
           content:
-            "Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. For additional guidance on completing this form, see the associated ",
-        },
-        {
-          type: "externalLink",
-          content: "User Guide and Help File",
-          props: {
-            href: "https://www.google.com",
-            target: "_blank",
-            "aria-label": "User Guide and Help File (Link opens in new tab)",
-          },
-        },
-        {
-          type: "text",
-          as: "span",
-          content:
-            ". If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates, complete the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
+            "Click “Add new MFP SAR submission” below to begin reporting for the current reporting period. If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates, complete the resubmission question at the top of the “General Information” section, resubmit, and notify your Project Officer it’s ready for their review.",
         },
       ],
       list: [],
