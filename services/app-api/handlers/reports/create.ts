@@ -16,7 +16,7 @@ import {
 } from "../../utils/time/time";
 import {
   createReportName,
-  getLastCreatedWorkPlan,
+  getEligbleWorkPlan,
   getReportPeriod,
   getReportYear,
 } from "../../utils/other/other";
@@ -57,7 +57,7 @@ export const createReport = handler(
     const reportTypeExpanded = reportNames[reportType];
 
     /*
-     * Begin Section - If creating a SAR Submission, find the last Work Plan created that hasn't been used
+     * Begin Section - If creating a SAR Submission, find the oldest Work Plan created that hasn't been used
      * to create a different SAR and attach all of its fieldData to the SAR Submissions FieldData
      */
     const {
@@ -68,7 +68,7 @@ export const createReport = handler(
       workPlanFieldData?: AnyObject;
     } =
       reportType === ReportType.SAR
-        ? await getLastCreatedWorkPlan(state)
+        ? await getEligbleWorkPlan(state)
         : { workPlanMetadata: undefined, workPlanFieldData: undefined };
 
     // If we recieved no work plan information and we're trying to create a SAR, return NO_WORKPLANS_FOUND
