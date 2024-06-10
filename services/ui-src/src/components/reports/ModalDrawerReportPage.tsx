@@ -10,9 +10,9 @@ import {
 } from "@chakra-ui/react";
 import {
   AddEditEntityModal,
-  Alert,
   DeleteEntityModal,
   EntityRow,
+  ErrorAlert,
   PrintButton,
   ReportContext,
   ReportDrawer,
@@ -31,7 +31,6 @@ import {
   ReportStatus,
   isFieldElement,
   ErrorVerbiage,
-  AlertTypes,
 } from "types";
 // utils
 import {
@@ -46,7 +45,7 @@ import {
 } from "utils";
 import { getDefaultTargetPopulationNames } from "../../constants";
 
-const alertVerbiage = {
+const alertVerbiage: ErrorVerbiage = {
   title:
     "You must have at least one default target population applicable to your MFP Demonstration",
   description:
@@ -67,9 +66,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-  const [error, setError] = useState<ErrorVerbiage>();
-  const [invalidEntry, setInvalidEntry] = useState<boolean>(false);
-
+  const [pageError, setPageError] = useState<ErrorVerbiage>();
+  const [modalError, setModalError] = useState<ErrorVerbiage>();
   const { report } = useStore();
   const { updateReport } = useContext(ReportContext);
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
@@ -95,7 +93,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
 
   const closeAddEditEntityModal = () => {
     setSelectedEntity(undefined);
-    setError({ title: "", description: "" });
+    setModalError(undefined);
     addEditEntityModalOnCloseHandler();
   };
 
@@ -208,27 +206,18 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   useEffect(() => {
     if (entityType === "targetPopulations") {
       if (defaultsPopsNotSelected(reportFieldDataEntities)) {
-        setInvalidEntry(true);
+        setPageError(alertVerbiage);
       } else {
-        setInvalidEntry(false);
+        setPageError(undefined);
       }
     }
   }, [reportFieldDataEntities]);
-
   return (
     <Box>
       {verbiage.intro && (
         <ReportPageIntro text={verbiage.intro} accordion={verbiage.accordion} />
       )}
-      {invalidEntry && (
-        <Box>
-          <Alert
-            title={alertVerbiage.title}
-            status={AlertTypes.ERROR}
-            description={alertVerbiage.description}
-          />
-        </Box>
-      )}
+      <ErrorAlert error={pageError} sxOverride={sx.pageErrorAlert} />
       <Box>
         <Heading as="h3" sx={sx.dashboardTitle}>
           {verbiage.dashboardTitle}
@@ -269,8 +258,8 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           selectedEntity={selectedEntity}
           verbiage={verbiage}
           form={modalForm}
-          error={error}
-          setError={setError}
+          error={modalError}
+          setError={setModalError}
           modalDisclosure={{
             isOpen: addEditEntityModalIsOpen,
             onClose: closeAddEditEntityModal,
@@ -348,6 +337,9 @@ const sx = {
         width: "260px",
       },
     },
+  },
+  pageErrorAlert: {
+    marginBottom: "1.5rem",
   },
   reviewPdfHint: {
     color: "palette.gray_medium",
