@@ -35,7 +35,8 @@ export const getEligbleWorkPlan = async (
 }> => {
   const allWorkPlans = await queryReportMetadatasForState(ReportType.WP, state);
   const eligibleWorkPlans = allWorkPlans.filter(
-    (wp) => wp.status === ReportStatus.APPROVED && !wp.associatedSar
+    (wp) =>
+      wp.status === ReportStatus.APPROVED && !wp.associatedSar && !wp?.archived
   );
   if (eligibleWorkPlans.length === 0) {
     // There were no eligible work plans to treat as a base for this SAR
