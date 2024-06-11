@@ -109,20 +109,20 @@ export const DashboardPage = ({ reportType }: Props) => {
     userIsAdmin || userIsReadOnly ? adminSelectedState : userState;
 
   useEffect(() => {
-    const activeSarList =
-      reportsToDisplay &&
-      reportsToDisplay.filter((report: ReportMetadataShape) => {
-        return (
-          report.reportType === ReportType.SAR &&
-          report.status !== ReportStatus.SUBMITTED &&
-          report?.archived !== true
-        );
-      });
-    const shouldShowAlert =
-      reportType === ReportType.SAR &&
-      !workPlanToCopyFrom &&
-      activeSarList?.length === 0;
-    setShowSarAlert(shouldShowAlert);
+    let showAlert = false;
+    if (reportType === ReportType.SAR) {
+      const activeSarList = reportsToDisplay?.filter(
+        (report: ReportMetadataShape) => {
+          return (
+            report.reportType === ReportType.SAR &&
+            report.status !== ReportStatus.SUBMITTED &&
+            report?.archived !== true
+          );
+        }
+      );
+      showAlert = !workPlanToCopyFrom && activeSarList?.length === 0;
+    }
+    setShowSarAlert(showAlert);
   }, [reportsToDisplay, workPlanToCopyFrom]);
 
   useEffect(() => {
