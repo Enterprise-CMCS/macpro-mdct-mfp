@@ -26,7 +26,6 @@ export const SectionHeader = ({
       <Heading size="md" sx={sx.h3}>
         {content}
       </Heading>
-      {divider === "bottom" && <hr></hr>}
     </Box>
   );
 };
@@ -40,7 +39,7 @@ export const SectionContent = ({ content }: SectionContentProps) => {
 
 interface SectionContentProps {
   content: string;
-  divider: "top" | "bottom" | "none";
+  divider: "top" | "none";
   [key: string]: any;
 }
 
