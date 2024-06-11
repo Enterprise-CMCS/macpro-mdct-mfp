@@ -188,26 +188,9 @@
                   "children": [
                     {
                       "type": "html",
-                      "content": "In this section, provide information for the specified period. For more information see the "
-                    },
-                    {
-                      "type": "externalLink",
-                      "content": "User Guide and Help File",
-                      "props": {
-                        "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
-                        "target": "_blank",
-                        "aria-label": "User Guide and Help File (Link opens in new tab)"
-                      }
-                    },
-                    {
-                      "type": "html",
-                      "content": "."
+                      "content": "In this section, provide information for the specified period."
                     }
                   ]
-                },
-                {
-                  "type": "h3",
-                  "content": "Number of people who signed an MFP informed consent form in the reporting period"
                 },
                 {
                   "type": "span",
@@ -248,26 +231,9 @@
                   "children": [
                     {
                       "type": "html",
-                      "content": "In this section, provide information for the specified period. For more information see the "
-                    },
-                    {
-                      "type": "externalLink",
-                      "content": "User Guide and Help File",
-                      "props": {
-                        "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
-                        "target": "_blank",
-                        "aria-label": "User Guide and Help File (Link opens in new tab)"
-                      }
-                    },
-                    {
-                      "type": "html",
-                      "content": "."
+                      "content": "In this section, provide information for the specified period."
                     }
                   ]
-                },
-                {
-                  "type": "h3",
-                  "content": "Number of MFP transitions in the reporting period"
                 },
                 {
                   "type": "span",
@@ -296,6 +262,13 @@
                 },
                 "transformation": {
                   "rule": "targetPopulations"
+                }
+              },
+              {
+                "id": "ret_mtrp_divider",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
                 }
               },
               {
@@ -333,26 +306,9 @@
                   "children": [
                     {
                       "type": "html",
-                      "content": "In this section, provide information for the specified period. For more information see the "
-                    },
-                    {
-                      "type": "externalLink",
-                      "content": "User Guide and Help File",
-                      "props": {
-                        "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
-                        "target": "_blank",
-                        "aria-label": "User Guide and Help File (Link opens in new tab)"
-                      }
-                    },
-                    {
-                      "type": "html",
-                      "content": "."
+                      "content": "In this section, provide information for the specified period."
                     }
                   ]
-                },
-                {
-                  "type": "h3",
-                  "content": "Number of MFP transitions from qualified institutions in the reporting period"
                 },
                 {
                   "type": "span",
@@ -384,6 +340,13 @@
                 }
               },
               {
+                "id": "ret-mtfqi-divider-2",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
+                }
+              },
+              {
                 "id": "ret-mtfqi-header-2",
                 "type": "sectionHeader",
                 "props": {
@@ -399,6 +362,13 @@
                 },
                 "transformation": {
                   "rule": "targetPopulations"
+                }
+              },
+              {
+                "id": "ret-mtfqi-divider-3",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
                 }
               },
               {
@@ -420,6 +390,13 @@
                 }
               },
               {
+                "id": "ret-mtfqi-divider-4",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
+                }
+              },
+              {
                 "id": "ret-mtfqi-header-4",
                 "type": "sectionHeader",
                 "props": {
@@ -435,6 +412,13 @@
                 },
                 "transformation": {
                   "rule": "targetPopulations"
+                }
+              },
+              {
+                "id": "ret-mtfqi-divider-5",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
                 }
               },
               {
@@ -472,26 +456,9 @@
                   "children": [
                     {
                       "type": "html",
-                      "content": "In this section, provide information for the specified period. For more information see the "
-                    },
-                    {
-                      "type": "externalLink",
-                      "content": "User Guide and Help File",
-                      "props": {
-                        "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
-                        "target": "_blank",
-                        "aria-label": "User Guide and Help File (Link opens in new tab)"
-                      }
-                    },
-                    {
-                      "type": "html",
-                      "content": "."
+                      "content": "In this section, provide information for the specified period."
                     }
                   ]
-                },
-                {
-                  "type": "h3",
-                  "content": "Number of MFP transitions to qualified residences in the reporting period"
                 },
                 {
                   "type": "span",
@@ -523,6 +490,13 @@
                 }
               },
               {
+                "id": "ret-mtfqr-divider-2",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
+                }
+              },
+              {
                 "id": "ret-mtfqr-header-2",
                 "type": "sectionHeader",
                 "props": {
@@ -541,6 +515,13 @@
                 }
               },
               {
+                "id": "ret-mtfqr-divider-3",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
+                }
+              },
+              {
                 "id": "ret-mtfqr-header-3",
                 "type": "sectionHeader",
                 "props": {
@@ -556,6 +537,13 @@
                 },
                 "transformation": {
                   "rule": "targetPopulations"
+                }
+              },
+              {
+                "id": "ret-mtfqr-divider-4",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
                 }
               },
               {
@@ -593,26 +581,9 @@
                   "children": [
                     {
                       "type": "html",
-                      "content": "In this section, provide information for the specified period. For more information see the "
-                    },
-                    {
-                      "type": "externalLink",
-                      "content": "User Guide and Help File",
-                      "props": {
-                        "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
-                        "target": "_blank",
-                        "aria-label": "User Guide and Help File (Link opens in new tab)"
-                      }
-                    },
-                    {
-                      "type": "html",
-                      "content": "."
+                      "content": "In this section, provide information for the specified period."
                     }
                   ]
-                },
-                {
-                  "type": "h3",
-                  "content": "Total number of active MFP participants in the reporting period"
                 },
                 {
                   "type": "span",
@@ -653,26 +624,9 @@
                   "children": [
                     {
                       "type": "html",
-                      "content": "In this section, provide information for the specified period. For more information see the "
-                    },
-                    {
-                      "type": "externalLink",
-                      "content": "User Guide and Help File",
-                      "props": {
-                        "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
-                        "target": "_blank",
-                        "aria-label": "User Guide and Help File (Link opens in new tab)"
-                      }
-                    },
-                    {
-                      "type": "html",
-                      "content": "."
+                      "content": "In this section, provide information for the specified period."
                     }
                   ]
-                },
-                {
-                  "type": "h3",
-                  "content": "Number of MFP participants completing the program in the reporting period"
                 },
                 {
                   "type": "span",
@@ -713,26 +667,9 @@
                   "children": [
                     {
                       "type": "html",
-                      "content": "In this section, provide information for the specified period. For more information see the "
-                    },
-                    {
-                      "type": "externalLink",
-                      "content": "User Guide and Help File",
-                      "props": {
-                        "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
-                        "target": "_blank",
-                        "aria-label": "User Guide and Help File (Link opens in new tab)"
-                      }
-                    },
-                    {
-                      "type": "html",
-                      "content": "."
+                      "content": "In this section, provide information for the specified period."
                     }
                   ]
-                },
-                {
-                  "type": "h3",
-                  "content": "Number of people re-enrolled in MFP during the reporting period"
                 },
                 {
                   "type": "span",
@@ -773,26 +710,9 @@
                   "children": [
                     {
                       "type": "html",
-                      "content": "In this section, provide information for the specified period. For more information see the "
-                    },
-                    {
-                      "type": "externalLink",
-                      "content": "User Guide and Help File",
-                      "props": {
-                        "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
-                        "target": "_blank",
-                        "aria-label": "User Guide and Help File (Link opens in new tab)"
-                      }
-                    },
-                    {
-                      "type": "html",
-                      "content": "."
+                      "content": "In this section, provide information for the specified period."
                     }
                   ]
-                },
-                {
-                  "type": "h3",
-                  "content": "Number of MFP participants disenrolled from the program during the reporting period"
                 },
                 {
                   "type": "span",
@@ -824,6 +744,13 @@
                 }
               },
               {
+                "id": "ret-mpdprp-divider-2",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
+                }
+              },
+              {
                 "id": "ret-mpdprp-header-2",
                 "type": "sectionHeader",
                 "props": {
@@ -842,6 +769,13 @@
                 }
               },
               {
+                "id": "ret-mpdprp-divider-3",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
+                }
+              },
+              {
                 "id": "ret-mpdprp-header-3",
                 "type": "sectionHeader",
                 "props": {
@@ -857,6 +791,13 @@
                 },
                 "transformation": {
                   "rule": "targetPopulations"
+                }
+              },
+              {
+                "id": "ret-mpdprp-divider-other",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
                 }
               },
               {
@@ -987,20 +928,7 @@
                   "children": [
                     {
                       "type": "html",
-                      "content": "In this section, provide information for the specified period. For more information see the "
-                    },
-                    {
-                      "type": "externalLink",
-                      "content": "User Guide and Help File",
-                      "props": {
-                        "href": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-438/subpart-A/section-438.8#p-438.8(k)",
-                        "target": "_blank",
-                        "aria-label": "User Guide and Help File (Link opens in new tab)"
-                      }
-                    },
-                    {
-                      "type": "html",
-                      "content": "."
+                      "content": "In this section, provide information for the specified period."
                     }
                   ]
                 },
@@ -1067,6 +995,13 @@
                 }
               },
               {
+                "id": "ret-mediumTermStay-divider",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
+                }
+              },
+              {
                 "id": "ret_sectionHeader_mediumTermStay",
                 "type": "sectionHeader",
                 "props": {
@@ -1111,6 +1046,13 @@
                   "label": "Ages 85 and older",
                   "styleAsOptional": true,
                   "decimalPlacesToRoundTo": 0
+                }
+              },
+              {
+                "id": "ret-longTermStay-divider",
+                "type": "sectionHeader",
+                "props": {
+                  "divider": "top"
                 }
               },
               {
