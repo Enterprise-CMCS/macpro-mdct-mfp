@@ -44,7 +44,7 @@ export default defineConfig({
   webServer: {
     command: process.env.CI ? "" : "./run local",
     url: process.env.BASE_URL || "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: process.env.CI || false,
     stdout: "pipe",
   },
 });
