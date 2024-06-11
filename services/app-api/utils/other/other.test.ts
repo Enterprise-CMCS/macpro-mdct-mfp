@@ -174,6 +174,13 @@ describe("API utility functions", () => {
           createdAt: 1710000000000,
           id: "just-right",
         },
+        {
+          status: ReportStatus.APPROVED,
+          archived: true,
+          associatedSar: undefined,
+          createdAt: 1700000000000,
+          id: "is-archived",
+        },
       ]);
       const mockFieldData = { id: "just-right-data" };
       (getReportFieldData as jest.Mock).mockResolvedValue(mockFieldData);
