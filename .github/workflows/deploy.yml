@@ -222,6 +222,7 @@ jobs:
     - name: Run Playwright tests
       run: yarn playwright test
       env:
+        baseUrl: ${{ needs.deploy.outputs.application_endpoint }}
         CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
         CYPRESS_STATE_USER_PASSWORD: ${{ secrets.CYPRESS_STATE_USER_PASSWORD }}
         CYPRESS_ADMIN_USER_EMAIL: ${{ secrets.CYPRESS_ADMIN_USER_EMAIL }}
