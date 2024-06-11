@@ -1,4 +1,3 @@
-/* eslint-disable multiline-comment-style */
 import { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { States } from "../../../constants";
@@ -92,6 +91,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
     undefined
   );
+  const [showSarAlert, setShowSarAlert] = useState<boolean>(false);
 
   const dashboardVerbiageMap: any = {
     WP: wpVerbiage,
@@ -108,8 +108,22 @@ export const DashboardPage = ({ reportType }: Props) => {
   const activeState =
     userIsAdmin || userIsReadOnly ? adminSelectedState : userState;
 
-  const showSarAlert =
-    reportType === ReportType.SAR && !workPlanToCopyFrom && reportsToDisplay;
+  useEffect(() => {
+    const activeSarList =
+      reportsToDisplay &&
+      reportsToDisplay.filter((report: ReportMetadataShape) => {
+        return (
+          report.reportType === ReportType.SAR &&
+          report.status !== ReportStatus.SUBMITTED &&
+          report?.archived !== true
+        );
+      });
+    const shouldShowAlert =
+      reportType === ReportType.SAR &&
+      !workPlanToCopyFrom &&
+      activeSarList?.length === 0;
+    setShowSarAlert(shouldShowAlert);
+  }, [reportsToDisplay, workPlanToCopyFrom]);
 
   useEffect(() => {
     // if no activeState, go to homepage
