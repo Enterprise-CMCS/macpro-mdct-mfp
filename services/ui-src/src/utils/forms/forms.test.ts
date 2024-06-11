@@ -5,11 +5,12 @@ import {
   fillEmptyQuarters,
   hydrateFormFields,
   injectFormWithTargetPopulations,
-  removeNotApplicablePopulations,
+  removeNotDefaultAndNotApplicablePopulations,
   resetClearProp,
   setClearedEntriesToDefaultValue,
   sortFormErrors,
   disableCopiedFundingSources,
+  removeNotApplicablePopulations,
 } from "./forms";
 // types
 import { FormField, ReportShape } from "types";
@@ -112,6 +113,34 @@ describe("form utilities", () => {
     });
   });
 
+  describe("Test removeNotDefaultAndNotApplicablePopulations", () => {
+    const exampleTargetPopulations = [
+      mockTargetPopReqButNotApplicable,
+      mockTargetPopReqButApplicable,
+      mockTargetPopReqButApplicableIsUndefined,
+      mockTargetPopButOtherApplicable,
+      mockTargetPopButOtherNotApplicable,
+      mockTargetPopByOtherNotDefined,
+      mockTargetPopDefaultButNotApplicable,
+      mockTargetPopDefaultAndApplicable,
+    ];
+
+    it("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration that is not a default population", async () => {
+      const filteredPopulations = removeNotDefaultAndNotApplicablePopulations(
+        exampleTargetPopulations
+      );
+      expect(filteredPopulations.length).toBe(6);
+      expect(filteredPopulations).toEqual([
+        mockTargetPopReqButApplicable,
+        mockTargetPopReqButApplicableIsUndefined,
+        mockTargetPopButOtherApplicable,
+        mockTargetPopByOtherNotDefined,
+        mockTargetPopDefaultButNotApplicable,
+        mockTargetPopDefaultAndApplicable,
+      ]);
+    });
+  });
+
   describe("Test removeNotApplicablePopulations", () => {
     const exampleTargetPopulations = [
       mockTargetPopReqButNotApplicable,
@@ -124,17 +153,14 @@ describe("form utilities", () => {
       mockTargetPopDefaultAndApplicable,
     ];
 
-    it("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration", async () => {
+    it("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration ", async () => {
       const filteredPopulations = removeNotApplicablePopulations(
         exampleTargetPopulations
       );
-      expect(filteredPopulations.length).toBe(6);
+      expect(filteredPopulations.length).toBe(3);
       expect(filteredPopulations).toEqual([
         mockTargetPopReqButApplicable,
-        mockTargetPopReqButApplicableIsUndefined,
         mockTargetPopButOtherApplicable,
-        mockTargetPopByOtherNotDefined,
-        mockTargetPopDefaultButNotApplicable,
         mockTargetPopDefaultAndApplicable,
       ]);
     });

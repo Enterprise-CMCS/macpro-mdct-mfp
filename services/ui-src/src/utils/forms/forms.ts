@@ -369,7 +369,7 @@ export const updateRenderFields = (
   };
 
   const filteredTargetPopulations =
-    removeNotApplicablePopulations(targetPopulations);
+    removeNotDefaultAndNotApplicablePopulations(targetPopulations);
 
   // This one always has to be at the end for...reasons
   filteredTargetPopulations?.push(hcbsPopulation);
@@ -432,7 +432,7 @@ export const injectFormWithTargetPopulations = (
  * @return {AnyObject[]} Target populations filtered to no long has No answers from
  * transitionBenchmarks_applicableToMfpDemonstration
  */
-export const removeNotApplicablePopulations = (
+export const removeNotDefaultAndNotApplicablePopulations = (
   targetPopulations: AnyObject[]
 ) => {
   const defaultPopulationNames = getDefaultTargetPopulationNames();
@@ -448,6 +448,16 @@ export const removeNotApplicablePopulations = (
   });
   return filteredPopulations;
 };
+
+export const removeNotApplicablePopulations = (
+  targetPopulations: AnyObject[]
+) =>
+  targetPopulations?.filter(
+    (population) =>
+      population?.transitionBenchmarks_applicableToMfpDemonstration &&
+      population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]
+        ?.value !== "No"
+  );
 
 //This function is used to fill out the missing quarters in cards for evaluation plan and funding sources after a copy over
 export const fillEmptyQuarters = (quarters: AnyObject[]) => {
