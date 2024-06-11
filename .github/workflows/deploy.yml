@@ -213,7 +213,10 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: 20
+        # node-version: 20
+        node-version-file: ".nvmrc"
+    - name: Use Node version from .nvmrc
+      run: nvm use
     - name: Install playwright
       run: yarn add playwright
     - name: Install Playwright Browsers
