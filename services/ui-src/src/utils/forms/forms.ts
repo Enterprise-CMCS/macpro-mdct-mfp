@@ -369,7 +369,7 @@ export const updateRenderFields = (
   };
 
   const filteredTargetPopulations =
-    removeNotDefaultAndNotApplicablePopulations(targetPopulations);
+    getDefaultAndApplicablePopulations(targetPopulations);
 
   // This one always has to be at the end for...reasons
   filteredTargetPopulations?.push(hcbsPopulation);
@@ -432,7 +432,7 @@ export const injectFormWithTargetPopulations = (
  * @return {AnyObject[]} Target populations filtered to no long has No answers from
  * transitionBenchmarks_applicableToMfpDemonstration
  */
-export const removeNotDefaultAndNotApplicablePopulations = (
+export const getDefaultAndApplicablePopulations = (
   targetPopulations: AnyObject[]
 ) => {
   const defaultPopulationNames = getDefaultTargetPopulationNames();
@@ -449,9 +449,7 @@ export const removeNotDefaultAndNotApplicablePopulations = (
   return filteredPopulations;
 };
 
-export const removeNotApplicablePopulations = (
-  targetPopulations: AnyObject[]
-) =>
+export const getApplicablePopulations = (targetPopulations: AnyObject[]) =>
   targetPopulations?.filter(
     (population) =>
       population?.transitionBenchmarks_applicableToMfpDemonstration &&

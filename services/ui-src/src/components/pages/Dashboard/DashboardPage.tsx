@@ -41,7 +41,7 @@ import {
 import {
   convertTargetPopulationsFromWPToSAREntity,
   parseCustomHtml,
-  removeNotApplicablePopulations,
+  getApplicablePopulations,
   useBreakpoint,
   useStore,
 } from "utils";
@@ -197,7 +197,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           stateOrTerritory: userState,
           reportPeriod: workPlanToCopyFrom?.reportPeriod,
           populations: convertTargetPopulationsFromWPToSAREntity(
-            removeNotApplicablePopulations(
+            getApplicablePopulations(
               workPlanToCopyFrom?.fieldData?.targetPopulations
             )
           ),

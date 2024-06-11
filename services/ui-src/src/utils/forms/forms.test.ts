@@ -5,12 +5,12 @@ import {
   fillEmptyQuarters,
   hydrateFormFields,
   injectFormWithTargetPopulations,
-  removeNotDefaultAndNotApplicablePopulations,
+  getDefaultAndApplicablePopulations,
   resetClearProp,
   setClearedEntriesToDefaultValue,
   sortFormErrors,
   disableCopiedFundingSources,
-  removeNotApplicablePopulations,
+  getApplicablePopulations,
 } from "./forms";
 // types
 import { FormField, ReportShape } from "types";
@@ -113,7 +113,7 @@ describe("form utilities", () => {
     });
   });
 
-  describe("Test removeNotDefaultAndNotApplicablePopulations", () => {
+  describe("Test getDefaultAndApplicablePopulations", () => {
     const exampleTargetPopulations = [
       mockTargetPopReqButNotApplicable,
       mockTargetPopReqButApplicable,
@@ -126,7 +126,7 @@ describe("form utilities", () => {
     ];
 
     it("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration that is not a default population", async () => {
-      const filteredPopulations = removeNotDefaultAndNotApplicablePopulations(
+      const filteredPopulations = getDefaultAndApplicablePopulations(
         exampleTargetPopulations
       );
       expect(filteredPopulations.length).toBe(6);
@@ -141,7 +141,7 @@ describe("form utilities", () => {
     });
   });
 
-  describe("Test removeNotApplicablePopulations", () => {
+  describe("Test getApplicablePopulations", () => {
     const exampleTargetPopulations = [
       mockTargetPopReqButNotApplicable,
       mockTargetPopReqButApplicable,
@@ -154,7 +154,7 @@ describe("form utilities", () => {
     ];
 
     it("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration ", async () => {
-      const filteredPopulations = removeNotApplicablePopulations(
+      const filteredPopulations = getApplicablePopulations(
         exampleTargetPopulations
       );
       expect(filteredPopulations.length).toBe(3);
