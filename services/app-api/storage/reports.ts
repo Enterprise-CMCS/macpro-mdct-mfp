@@ -21,21 +21,12 @@ import {
   createClient as createS3Client,
   parseS3Response,
 } from "../utils/s3/s3-lib";
+import { reportBuckets, reportTables } from "../utils/constants/constants";
 
 const dynamoClient = createDynamoClient();
 const s3Client = createS3Client();
 
-const reportTables: { [key in ReportType]: string } = {
-  SAR: process.env.SAR_REPORT_TABLE_NAME!,
-  WP: process.env.WP_REPORT_TABLE_NAME!,
-};
-
 const formTemplateVersionTable = process.env.FORM_TEMPLATE_TABLE_NAME!;
-
-const reportBuckets: { [key in ReportType]: string } = {
-  SAR: process.env.SAR_FORM_BUCKET!,
-  WP: process.env.WP_FORM_BUCKET!,
-};
 
 /* METADATA (dynamo) */
 
