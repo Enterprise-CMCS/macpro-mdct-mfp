@@ -39,7 +39,7 @@ export const SectionContent = ({ content }: SectionContentProps) => {
 
 interface SectionContentProps {
   content: string;
-  divider: "top" | "none";
+  divider?: "top" | "none";
   [key: string]: any;
 }
 
