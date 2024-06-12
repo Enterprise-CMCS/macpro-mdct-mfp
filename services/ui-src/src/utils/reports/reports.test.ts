@@ -36,8 +36,8 @@ describe("flattenReportRoutesArray", () => {
   });
 });
 
-describe("Test lastFoundSubmission function", () => {
-  it("should grab the most recently created submission", async () => {
+describe("Test getEligbleWorkplan function", () => {
+  it("should grab the oldest eligble workplan", async () => {
     const submissions: ReportMetadataShape[] = [
       {
         reportType: "WP",
@@ -69,7 +69,7 @@ describe("Test lastFoundSubmission function", () => {
       },
     ];
 
-    expect(getEligbleWorkPlan(submissions)).toBe(submissions[1]);
+    expect(getEligbleWorkPlan(submissions)).toBe(submissions[0]);
   });
 
   it("should return undefined if not given a submission", async () => {
