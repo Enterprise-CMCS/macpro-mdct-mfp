@@ -220,8 +220,10 @@ jobs:
       with:
         # node-version: 20
         node-version-file: ".nvmrc"
-    - name: Install playwright
-      run: yarn add playwright
+    # - name: Install playwright
+    #   run: yarn add playwright
+    - name: yarn install
+      run: yarn install
     - name: Install Playwright Browsers
       run: yarn playwright install --with-deps
     - name: Run Playwright tests
