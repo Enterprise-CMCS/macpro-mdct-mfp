@@ -20,32 +20,29 @@ const accordionComponent = (mockProps?: AnyObject) => {
   );
 };
 
+const accordionContent = verbiage.cards.WP.accordion.text[0].content;
+const accordionButtonLabel = verbiage.cards.WP.accordion.buttonLabel;
+
 describe("Test TemplateCardAccordion", () => {
   test("Accordion is visible", () => {
     render(accordionComponent());
-    expect(
-      screen.getByText(verbiage.cards.WP.accordion.buttonLabel)
-    ).toBeVisible();
+    expect(screen.getByText(accordionButtonLabel)).toBeVisible();
   });
 
   test("Accordion default closed state only shows the question", () => {
     render(accordionComponent());
-    expect(
-      screen.getByText(verbiage.cards.WP.accordion.buttonLabel)
-    ).toBeVisible();
-    expect(screen.getByTestId("accordion-contents")).not.toBeVisible();
+    expect(screen.getByText(accordionButtonLabel)).toBeVisible();
+    expect(screen.getByText(accordionContent)).not.toBeVisible();
   });
 
   test("Accordion should show answer on click", async () => {
     render(accordionComponent());
-    const accordionQuestion = screen.getByText(
-      verbiage.cards.WP.accordion.buttonLabel
-    );
+    const accordionQuestion = screen.getByText(accordionButtonLabel);
     expect(accordionQuestion).toBeVisible();
-    expect(screen.getByTestId("accordion-contents")).not.toBeVisible();
+    expect(screen.getByText(accordionContent)).not.toBeVisible();
     await userEvent.click(accordionQuestion);
     expect(accordionQuestion).toBeVisible();
-    expect(screen.getByTestId("accordion-contents")).toBeVisible();
+    expect(screen.getByText(accordionContent)).toBeVisible();
   });
 
   test("Accordion should render a list when given one", async () => {

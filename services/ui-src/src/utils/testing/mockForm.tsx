@@ -87,6 +87,15 @@ export const mockNestedFormField = {
   },
 };
 
+export const mockTransitionBenchmarkFormField = {
+  id: "transitionBenchmarks_targetPopulationName",
+  type: "text",
+  validation: "text",
+  props: {
+    label: "mock text field",
+  },
+};
+
 export const mockFundingSourceFormField = {
   id: "fundingSources_wpTopic",
   type: "radio",
@@ -122,6 +131,11 @@ export const mockForm = {
 export const mockModalForm = {
   id: "mock-modal-form-id",
   fields: [mockModalFormField],
+};
+
+export const mockTransitionBenchmarkModalForm = {
+  id: "mock-transition-benchmark-modal-form-id",
+  fields: [mockTransitionBenchmarkFormField],
 };
 
 export const mockDrawerForm = {
