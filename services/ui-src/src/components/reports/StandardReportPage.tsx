@@ -110,7 +110,7 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
           <Text sx={sx.reviewPdfHint}>
             {parseCustomHtml(route.verbiage.reviewPdfHint)}
           </Text>
-          <PrintButton sxOverride={sx.reviewPdfButton} />
+          <PrintButton />
         </Box>
       )}
       <ReportPageFooter
@@ -134,5 +134,4 @@ const sx = {
     paddingBottom: "2.5rem",
     color: "palette.gray_medium",
   },
-  reviewPdfButton: { marginBottom: "2.5rem" },
 };
