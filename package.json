@@ -8,6 +8,7 @@
     "test": "tests"
   },
   "scripts": {
+    "db:seed": "cd services/app-api && yarn run db:seed",
     "test": "cd tests/cypress && npm test && cd -",
     "test:ci": "cd tests/cypress && yarn run test:ci"
   },
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@serverless/compose": "^1.3.0",
+    "@stratiformdigital/serverless-stage-destroyer": "^2.0.0",
     "@types/dotenv": "^8.2.0",
     "@types/flat": "^5.0.2",
     "@types/node": "^20.12.7",
@@ -53,7 +55,6 @@
     "serverless-stack-termination-protection": "^2.0.2",
     "typescript": "^4.6.3",
     "util": "^0.12.4",
-    "yargs": "^16.1.1",
-    "@stratiformdigital/serverless-stage-destroyer": "^2.0.0"    
+    "yargs": "^16.1.1"
   }
 }

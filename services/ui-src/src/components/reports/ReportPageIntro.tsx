@@ -77,6 +77,17 @@ const sx = {
       marginBottom: "1rem",
       marginTop: "0",
     },
+    ".mdct-table th": {
+      textTransform: "capitalize",
+      fontSize: "sm",
+      fontWeight: "600",
+      color: "palette.gray_medium",
+    },
+    ".mdct-smalltext": {
+      fontSize: "xs",
+      marginTop: "0.625rem",
+      color: "palette.gray",
+    },
   },
   smallHeading: {
     color: "palette.gray",
@@ -98,22 +109,14 @@ const sx = {
   },
   infoTextBox: {
     marginTop: "1rem",
-    color: "palette.gray",
     h3: {
       marginBottom: "-0.75rem",
-    },
-    "p, span": {
-      color: "palette.gray",
-      marginTop: "1rem",
     },
     a: {
       color: "palette.primary",
       "&:hover": {
         color: "palette.primary_darker",
       },
-    },
-    b: {
-      color: "palette.base",
     },
   },
   periodText: {

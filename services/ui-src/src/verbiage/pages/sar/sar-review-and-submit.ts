@@ -65,59 +65,29 @@ export default {
       additionalInfo: [
         {
           type: "text",
-          as: "span",
+          as: "p",
           content:
             "Your dashboard will indicate the status of this MFP SAR as “Submitted” and it is now locked from editing.",
         },
         {
           type: "text",
-          as: "span",
+          as: "p",
           content:
-            "<br><br/><b>Email your CMS MFP Project Officer to inform them you submitted the SAR and it is ready for their review.</b><br><br/>",
-          props: {
-            color: "palette.gray",
-            fontWeight: "bold",
-          },
+            "<b>Email your CMS MFP Project Officer to inform them you submitted the SAR and it is ready for their review.</b>",
+        },
+      ],
+      list: [
+        {
+          content:
+            "If CMS has questions or requested corrections your Project Officer will contact you.",
+          children: [],
         },
         {
-          type: "ul",
-          content: "",
+          content: "If CMS determines corrections are not needed:",
           children: [
             {
-              type: "li",
-              children: [
-                {
-                  type: "html",
-                  content:
-                    "<span>If CMS has questions or requested corrections your Project Officer will contact you.</span>",
-                },
-              ],
-            },
-            {
-              type: "li",
-              children: [
-                {
-                  type: "html",
-                  content:
-                    "<span>If CMS determines corrections are not needed:",
-                },
-                {
-                  type: "ul",
-                  content: "",
-                  children: [
-                    {
-                      type: "li",
-                      children: [
-                        {
-                          type: "html",
-                          content:
-                            "<span>You can start updating your MFP Work Plan for the next reporting period.</span>",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
+              content:
+                "You can start updating your MFP Work Plan for the next reporting period.",
             },
           ],
         },

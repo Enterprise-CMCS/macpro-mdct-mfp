@@ -30,7 +30,20 @@ export default {
       },
       accordion: {
         buttonLabel: "When is the MFP Work Plan due?",
-        text: "The MFP Work Plan will be created and submitted initially and then amended semi-annually. CMS will review and approve all MFP Work Plans and proposed changes.<br/><br/>The MFP Work Plan deadlines are May 1st for inclusion in January through June reporting (Reporting Period 1) and November 1st for inclusion in July through December reporting (Reporting Period 2). Updates to existing state or territory-specific initiatives or the addition of new initiatives can occur during either of these periods, however, changes to transition benchmark projections should be made between July - November 1st to align with program budget requests.<br/><br/>CMS approved changes will be integrated into the MFP recipient's Semi-Annual Progress Report for the following reporting period.",
+        text: [
+          {
+            content:
+              "The MFP Work Plan will be created and submitted initially and then amended semi-annually. CMS will review and approve all MFP Work Plans and proposed changes.",
+          },
+          {
+            content:
+              "The MFP Work Plan deadlines are May 1st for inclusion in January through June reporting (Reporting Period 1) and November 1st for inclusion in July through December reporting (Reporting Period 2). Updates to existing state or territory-specific initiatives or the addition of new initiatives can occur during either of these periods, however, changes to transition benchmark projections should be made between July - November 1st to align with program budget requests.",
+          },
+          {
+            content:
+              "CMS approved changes will be integrated into the MFP recipient's Semi-Annual Progress Report for the following reporting period.",
+          },
+        ],
       },
     },
     SAR: {

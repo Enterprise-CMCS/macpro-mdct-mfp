@@ -8,6 +8,7 @@ import {
   mockModalForm,
   mockReportKeys,
   mockStateUserStore,
+  mockTransitionBenchmarkModalForm,
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
@@ -15,6 +16,7 @@ import {
 import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
 import { MfpReportState, MfpUserState, entityTypes } from "../../types";
+import { alertVerbiage } from "./AddEditEntityModal";
 
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
@@ -33,10 +35,23 @@ const mockEntity = {
   "mock-modal-text-field": "mock input 1",
 };
 
+const mockTransitionBenchmarkEntity = {
+  id: "mock-id-1",
+  type: entityTypes[1],
+  transitionBenchmarks_targetPopulationName: "mock input 1",
+};
+
 const report = {
   ...mockWPFullReport,
   fieldData: {
     targetPopulations: [mockEntity],
+  },
+};
+
+const transitionBenchmarkFilledReport = {
+  ...mockWPFullReport,
+  fieldData: {
+    targetPopulations: [mockTransitionBenchmarkEntity],
   },
 };
 
@@ -66,6 +81,12 @@ const mockedReportContext = {
   report: report,
 };
 
+const mockTransitionBenchmarkContext = {
+  ...mockWpReportContext,
+  updateReport: mockUpdateReport,
+  report: transitionBenchmarkFilledReport,
+};
+
 const modalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
@@ -74,6 +95,24 @@ const modalComponent = (
         verbiage={mockModalDrawerReportPageVerbiage}
         entityName={mockEntityName}
         form={mockModalForm}
+        setError={mockSetError}
+        modalDisclosure={{
+          isOpen: true,
+          onClose: mockCloseHandler,
+        }}
+      />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const transitionBenchmarkModalComponent = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockedReportContext}>
+      <AddEditEntityModal
+        entityType={entityTypes[1]}
+        verbiage={mockModalDrawerReportPageVerbiage}
+        entityName={mockEntityName}
+        form={mockTransitionBenchmarkModalForm}
         setError={mockSetError}
         modalDisclosure={{
           isOpen: true,
@@ -224,6 +263,51 @@ describe("Test AddEditEntityModal functionality", () => {
     await userEvent.click(submitButton);
     expect(mockUpdateReport).toHaveBeenCalledTimes(0);
     expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("Test TransitionBenchmarks Entity Error Throwing", () => {
+  test("Throws error when attempting to add a duplicate entity for Transition Benchmarks", async () => {
+    const transitionBenchmarkStore = {
+      ...mockUseStore,
+      report: transitionBenchmarkFilledReport,
+    };
+    mockedUseStore.mockReturnValue(transitionBenchmarkStore);
+    const result = await render(transitionBenchmarkModalComponent);
+    const form = result.getByTestId("add-edit-entity-form");
+
+    const textField = form.querySelector(
+      "[name='transitionBenchmarks_targetPopulationName']"
+    )!;
+    await userEvent.clear(textField);
+    await userEvent.type(textField, "mock input 2");
+    const submitButton = screen.getByRole("button", { name: "Save" });
+    await userEvent.click(submitButton);
+
+    const expectedUpdateCallPayload = {
+      fieldData: mockTransitionBenchmarkContext.report.fieldData,
+      metadata: {
+        lastAlteredBy: "Thelonious States",
+        status: "In progress",
+      },
+    };
+
+    expectedUpdateCallPayload.fieldData.targetPopulations.push({
+      id: "mock-id-2",
+      type: entityTypes[1],
+      transitionBenchmarks_targetPopulationName: "mock input 2",
+    });
+
+    expect(mockUpdateReport).toHaveBeenCalledWith(
+      { ...mockReportKeys, id: "mock-wp-full-report-id" },
+      expectedUpdateCallPayload
+    );
+    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+
+    await userEvent.clear(textField);
+    await userEvent.type(textField, "mock input 2");
+
+    expect(mockSetError).toHaveBeenCalledWith(alertVerbiage);
   });
 });
 
