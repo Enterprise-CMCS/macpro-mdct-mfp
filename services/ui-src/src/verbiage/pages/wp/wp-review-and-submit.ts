@@ -75,8 +75,20 @@ export default {
       header: "Successfully Submitted",
       infoHeader: "Thank you",
       additionalInfoHeader: "What happens now?",
-      additionalInfo:
-        "Your dashboard will indicate the status of this MFP Work Plan as “Submitted” and it is now locked from editing. <br><br><b>Email your CMS MFP Project Officer to inform them you submitted the MFP Work Plan and it is ready for their review.</b>",
+      additionalInfo: [
+        {
+          type: "text",
+          as: "p",
+          content:
+            "Your dashboard will indicate the status of this MFP Work Plan as “Submitted” and it is now locked from editing.",
+        },
+        {
+          type: "text",
+          as: "p",
+          content:
+            "<b>Email your CMS MFP Project Officer to inform them you submitted the MFP Work Plan and it is ready for their review.</b>",
+        },
+      ],
       list: [
         {
           content:

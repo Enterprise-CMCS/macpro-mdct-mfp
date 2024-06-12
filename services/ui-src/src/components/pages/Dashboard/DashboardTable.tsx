@@ -17,7 +17,7 @@ export const DashboardTable = ({
   reportType,
   reportId,
   body,
-  openAddEditReportModal,
+  openCreateReportModal,
   enterSelectedReport,
   archiveReport,
   archiving,
@@ -35,7 +35,7 @@ export const DashboardTable = ({
         {reportType === ReportType.SAR && (
           <EditReportButton
             report={report}
-            openAddEditReportModal={openAddEditReportModal}
+            openCreateReportModal={openCreateReportModal}
             sxOverride={sxOverride}
           />
         )}
@@ -137,7 +137,7 @@ interface DashboardTableProps {
   body: { table: AnyObject };
   reportType: string;
   reportId: string | undefined;
-  openAddEditReportModal: Function;
+  openCreateReportModal: Function;
   enterSelectedReport: Function;
   archiveReport?: Function;
   archiving?: boolean;
@@ -184,12 +184,12 @@ const tableBody = (body: TableContentShape, isAdmin: boolean) => {
 
 const EditReportButton = ({
   report,
-  openAddEditReportModal,
+  openCreateReportModal,
   sxOverride,
 }: EditReportProps) => {
   return (
     <Td sx={sxOverride.editReport}>
-      <button onClick={() => openAddEditReportModal(report)}>
+      <button onClick={() => openCreateReportModal(report)}>
         <Image src={editIcon} alt="Edit Report" />
       </button>
     </Td>
@@ -198,7 +198,7 @@ const EditReportButton = ({
 
 interface EditReportProps {
   report: ReportMetadataShape;
-  openAddEditReportModal: Function;
+  openCreateReportModal: Function;
   sxOverride: AnyObject;
 }
 

@@ -286,6 +286,13 @@ const theme = extendTheme({
       },
     },
   },
+  styles: {
+    global: {
+      body: {
+        color: "palette.base",
+      },
+    },
+  },
 });
 
 export default theme;

@@ -260,7 +260,6 @@ const sx = {
   },
   addEntityButton: {
     marginTop: "2rem",
-    marginBottom: "2rem",
     ".tablet &, .mobile &": {
       wordBreak: "break-word",
       whiteSpace: "break-spaces",
