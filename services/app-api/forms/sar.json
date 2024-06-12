@@ -257,13 +257,6 @@
                 }
               },
               {
-                "id": "ret_mtrp_divider",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
-                }
-              },
-              {
                 "id": "ret_mtrp_quarter_header_2",
                 "type": "sectionHeader",
                 "transformation": {
@@ -328,13 +321,6 @@
                 }
               },
               {
-                "id": "ret-mtfqi-divider-2",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
-                }
-              },
-              {
                 "id": "ret-mtfqi-header-2",
                 "type": "sectionHeader",
                 "props": {
@@ -350,13 +336,6 @@
                 },
                 "transformation": {
                   "rule": "targetPopulations"
-                }
-              },
-              {
-                "id": "ret-mtfqi-divider-3",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
                 }
               },
               {
@@ -378,13 +357,6 @@
                 }
               },
               {
-                "id": "ret-mtfqi-divider-4",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
-                }
-              },
-              {
                 "id": "ret-mtfqi-header-4",
                 "type": "sectionHeader",
                 "props": {
@@ -400,13 +372,6 @@
                 },
                 "transformation": {
                   "rule": "targetPopulations"
-                }
-              },
-              {
-                "id": "ret-mtfqi-divider-5",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
                 }
               },
               {
@@ -474,13 +439,6 @@
                 }
               },
               {
-                "id": "ret-mtfqr-divider-2",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
-                }
-              },
-              {
                 "id": "ret-mtfqr-header-2",
                 "type": "sectionHeader",
                 "props": {
@@ -499,13 +457,6 @@
                 }
               },
               {
-                "id": "ret-mtfqr-divider-3",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
-                }
-              },
-              {
                 "id": "ret-mtfqr-header-3",
                 "type": "sectionHeader",
                 "props": {
@@ -521,13 +472,6 @@
                 },
                 "transformation": {
                   "rule": "targetPopulations"
-                }
-              },
-              {
-                "id": "ret-mtfqr-divider-4",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
                 }
               },
               {
@@ -712,13 +656,6 @@
                 }
               },
               {
-                "id": "ret-mpdprp-divider-2",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
-                }
-              },
-              {
                 "id": "ret-mpdprp-header-2",
                 "type": "sectionHeader",
                 "props": {
@@ -734,13 +671,6 @@
                 },
                 "transformation": {
                   "rule": "targetPopulations"
-                }
-              },
-              {
-                "id": "ret-mpdprp-divider-3",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
                 }
               },
               {
@@ -762,10 +692,10 @@
                 }
               },
               {
-                "id": "ret-mpdprp-divider-other",
+                "id": "ret-mpdprp-header-4",
                 "type": "sectionHeader",
                 "props": {
-                  "divider": "top"
+                  "content": "Other"
                 }
               },
               {
@@ -775,7 +705,6 @@
                 "props": {
                   "label": "Other reasons",
                   "hint": "Check all that apply.",
-                  "heading": "Other",
                   "choices": [
                     {
                       "id": "2VffASWS2XRfAlc3uLzxCVAC",
@@ -955,13 +884,6 @@
                 }
               },
               {
-                "id": "ret-divider-mediumTermStay",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
-                }
-              },
-              {
                 "id": "ret_sectionHeader_mediumTermStay",
                 "type": "sectionHeader",
                 "props": {
@@ -1006,13 +928,6 @@
                   "label": "Ages 85 and older",
                   "styleAsOptional": true,
                   "decimalPlacesToRoundTo": 0
-                }
-              },
-              {
-                "id": "ret-divider-longTermStay",
-                "type": "sectionHeader",
-                "props": {
-                  "divider": "top"
                 }
               },
               {

@@ -3,7 +3,6 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 export const SectionHeader = ({
   content,
   label,
-  divider,
   ...props
 }: SectionHeaderProps) => {
   const sx = {
@@ -11,15 +10,11 @@ export const SectionHeader = ({
       marginTop: "2rem",
     },
     label: {
-      marginTop: "2rem",
-    },
-    hr: {
-      margin: divider === "top" ? "3rem 0" : "0",
+      marginTop: "3rem",
     },
   };
   return (
-    <Box sx={sx} {...props}>
-      {divider === "top" && <hr></hr>}
+    <Box sx={sx} {...props} className="sectionHeader">
       <Heading size="sm" sx={sx.label}>
         {label || ""}
       </Heading>
@@ -39,7 +34,6 @@ export const SectionContent = ({ content }: SectionContentProps) => {
 
 interface SectionContentProps {
   content: string;
-  divider?: "top" | "none";
   [key: string]: any;
 }
 
