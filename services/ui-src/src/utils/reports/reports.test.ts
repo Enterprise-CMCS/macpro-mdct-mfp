@@ -1,4 +1,4 @@
-import { flattenReportRoutesArray, getLastSubmission } from "./reports";
+import { flattenReportRoutesArray, getEligbleWorkPlan } from "./reports";
 //types
 import { ReportMetadataShape, ReportRoute, ReportStatus } from "types";
 import { convertDateEtToUtc } from "utils/other/time";
@@ -37,7 +37,7 @@ describe("flattenReportRoutesArray", () => {
 });
 
 describe("Test lastFoundSubmission function", () => {
-  it("should grab the last submission based on the time", async () => {
+  it("should grab the most recently created submission", async () => {
     const submissions: ReportMetadataShape[] = [
       {
         reportType: "WP",
@@ -69,15 +69,15 @@ describe("Test lastFoundSubmission function", () => {
       },
     ];
 
-    expect(getLastSubmission(submissions)).toBe(submissions[1]);
+    expect(getEligbleWorkPlan(submissions)).toBe(submissions[1]);
   });
 
   it("should return undefined if not given a submission", async () => {
     const submissions: ReportMetadataShape[] = [];
-    expect(getLastSubmission(submissions)).toBe(undefined);
+    expect(getEligbleWorkPlan(submissions)).toBe(undefined);
   });
 
-  it("should return undefined if given submissions but none are of right type", async () => {
+  it("should return undefined if given submissions but none are eligble", async () => {
     const submissions: ReportMetadataShape[] = [
       {
         reportType: "WP",
@@ -93,7 +93,22 @@ describe("Test lastFoundSubmission function", () => {
         reportYear: 2023,
         locked: false,
       },
+      {
+        reportType: "WP",
+        state: "NJ",
+        id: "2Xv4Me4q00ztl41PakEf7nxGPtp",
+        submissionName: "New Jersey Work Plan 2023 - Period 2",
+        status: ReportStatus.APPROVED,
+        archived: true,
+        createdAt: 1699496172798,
+        lastAltered: 1699496172798,
+        lastAlteredBy: "Anthony Soprano",
+        dueDate: convertDateEtToUtc("11/01/2023"),
+        reportPeriod: 2,
+        reportYear: 2023,
+        locked: false,
+      },
     ];
-    expect(getLastSubmission(submissions)).toBe(undefined);
+    expect(getEligbleWorkPlan(submissions)).toBe(undefined);
   });
 });

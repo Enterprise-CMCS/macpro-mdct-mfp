@@ -14,7 +14,7 @@ import {
   putReport,
   sortReportsOldestToNewest,
   useStore,
-  getLastSubmission,
+  getEligbleWorkPlan,
 } from "utils";
 import {
   ErrorVerbiage,
@@ -127,13 +127,13 @@ export const ReportProvider = ({ children }: Props) => {
         selectedState
       );
 
-      const lastFoundSubmission = getLastSubmission(workPlanSubmissions);
+      const workplan = getEligbleWorkPlan(workPlanSubmissions);
 
-      if (lastFoundSubmission) {
+      if (workplan) {
         const reportKeys = {
           reportType: ReportType.WP,
           state: selectedState,
-          id: lastFoundSubmission["id"],
+          id: workplan["id"],
         };
 
         const workPlan = await getReport(reportKeys);
