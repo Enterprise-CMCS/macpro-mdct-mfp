@@ -44,7 +44,7 @@ export const getEligbleWorkPlan = async (
   }
 
   const workPlanMetadata = eligibleWorkPlans.reduce((mostRecent, wp) =>
-    mostRecent.createdAt < wp.createdAt ? mostRecent : wp
+    mostRecent.createdAt > wp.createdAt ? mostRecent : wp
   );
   const workPlanFieldData = await getReportFieldData(workPlanMetadata);
   return { workPlanMetadata, workPlanFieldData };

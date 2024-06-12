@@ -148,7 +148,7 @@ describe("API utility functions", () => {
   });
 
   describe("getEligbleWorkPlan", () => {
-    it("Should retrieve the oldest eligible work plan", async () => {
+    it("Should retrieve the most recent eligible work plan", async () => {
       (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
         {
           status: ReportStatus.IN_PROGRESS,
@@ -166,13 +166,13 @@ describe("API utility functions", () => {
           status: ReportStatus.APPROVED,
           associatedSar: undefined,
           createdAt: 1720000000000,
-          id: "not-oldest",
+          id: "just-right",
         },
         {
           status: ReportStatus.APPROVED,
           associatedSar: undefined,
           createdAt: 1710000000000,
-          id: "just-right",
+          id: "too-old",
         },
         {
           status: ReportStatus.APPROVED,
