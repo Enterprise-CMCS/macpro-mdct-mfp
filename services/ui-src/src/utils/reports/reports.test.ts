@@ -40,20 +40,6 @@ describe("Test getEligbleWorkplan function", () => {
   it("should grab the oldest eligble workplan", async () => {
     const submissions: ReportMetadataShape[] = [
       {
-        reportType: "WP",
-        state: "NJ",
-        id: "2Xv4Me4q00ztl41PakEf7nxGPtp",
-        submissionName: "New Jersey Work Plan 2023 - Period 2",
-        status: ReportStatus.APPROVED,
-        createdAt: 1699496172798,
-        lastAltered: 1699496172798,
-        lastAlteredBy: "Anthony Soprano",
-        dueDate: convertDateEtToUtc("11/01/2023"),
-        reportPeriod: 2,
-        reportYear: 2023,
-        locked: false,
-      },
-      {
         submissionName: "New Jersey Work Plan 2023 - Period 2",
         dueDate: convertDateEtToUtc("11/01/2023"),
         lastAlteredBy: "Anthony Soprano",
@@ -63,13 +49,41 @@ describe("Test getEligbleWorkplan function", () => {
         reportYear: 2023,
         lastAltered: 1699496227241,
         state: "NJ",
-        id: "2Xv4TaPFSy9Q0ZGSVB0wuzwtAnA",
+        id: "too-new",
         locked: false,
         status: ReportStatus.APPROVED,
       },
+      {
+        reportType: "WP",
+        state: "NJ",
+        id: "just-right",
+        submissionName: "New Jersey Work Plan 2023 - Period 1",
+        status: ReportStatus.APPROVED,
+        createdAt: 1699496130000,
+        lastAltered: 1699496172798,
+        lastAlteredBy: "Anthony Soprano",
+        dueDate: convertDateEtToUtc("11/01/2023"),
+        reportPeriod: 2,
+        reportYear: 2023,
+        locked: false,
+      },
+      {
+        reportType: "WP",
+        state: "NJ",
+        id: "way-too-new",
+        submissionName: "New Jersey Work Plan 2024 - Period 2",
+        status: ReportStatus.APPROVED,
+        createdAt: 1699496172798,
+        lastAltered: 1699496172798,
+        lastAlteredBy: "Anthony Soprano",
+        dueDate: convertDateEtToUtc("11/01/2023"),
+        reportPeriod: 2,
+        reportYear: 2023,
+        locked: false,
+      },
     ];
 
-    expect(getEligbleWorkPlan(submissions)).toBe(submissions[0]);
+    expect(getEligbleWorkPlan(submissions)).toBe(submissions[1]);
   });
 
   it("should return undefined if not given a submission", async () => {
