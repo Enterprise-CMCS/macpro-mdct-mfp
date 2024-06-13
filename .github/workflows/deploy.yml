@@ -203,6 +203,102 @@ jobs:
       ipset_name: ${{ steps.fetch-ip-set-info.outputs.IPSET_NAME }}
       ipset_id: ${{ steps.fetch-ip-set-info.outputs.IPSET_ID }}
 
+  # test:
+  #   name: Playwright Tests
+  #   needs:
+  #     - deploy
+  #     - register-runner
+  #   timeout-minutes: 60
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Configure AWS credentials for GitHub Actions
+  #     uses: aws-actions/configure-aws-credentials@v4
+  #     with:
+  #       role-to-assume: ${{ secrets[env.BRANCH_SPECIFIC_VARNAME_AWS_OIDC_ROLE_TO_ASSUME] || secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+  #       aws-region: ${{ secrets[env.BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION] || secrets.AWS_DEFAULT_REGION }}
+  #   - uses: actions/setup-node@v4
+  #     with:
+  #       # node-version: 20
+  #       node-version-file: ".nvmrc"
+  #   - name: yarn install
+  #     run: yarn install
+  #   - name: Install Playwright Browsers
+  #     run: yarn playwright install --with-deps
+  #   - name: Run Playwright tests
+  #     run: yarn playwright test
+  #     env:
+  #       BASE_URL: ${{ needs.deploy.outputs.application_endpoint }}
+  #       CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
+  #       CYPRESS_STATE_USER_PASSWORD: ${{ secrets.CYPRESS_STATE_USER_PASSWORD }}
+  #       CYPRESS_ADMIN_USER_EMAIL: ${{ secrets.CYPRESS_ADMIN_USER_EMAIL }}
+  #       CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
+  #       SEED_ADMIN_USER_EMAIL: ${{ secrets.SEED_ADMIN_USER_EMAIL }}
+  #       SEED_ADMIN_USER_PASSWORD: ${{ secrets.SEED_ADMIN_USER_PASSWORD }}
+  #       SEED_STATE_USER_EMAIL: ${{ secrets.SEED_STATE_USER_EMAIL }}
+  #       SEED_STATE_USER_PASSWORD: ${{ secrets.SEED_STATE_USER_PASSWORD }}
+  #   - uses: actions/upload-artifact@v4
+  #     if: ${{ !cancelled() }}
+  #     with:
+  #       name: playwright-report
+  #       path: playwright-report
+  #       retention-days: 30
+
+  # upload-reports:
+  #   name: Upload Reports
+  #   needs:
+  #     - test
+  #   runs-on: ubuntu-latest
+
+  #   outputs:
+  #     timestamp: ${{ steps.timestampid.outputs.timestamp }}
+
+  #   steps:
+
+  #   # create a unique identifier for sub directories in github pages
+  #   - name: Set a Timestamp
+  #     id: timestampid
+  #     run: echo "timestamp=$(date -utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
+
+  #   - uses: actions/checkout@v4
+  #   - uses: actions/setup-node@v4
+  #     with:
+  #       node-version-file: ".nvmrc"
+  #   - name: Install dependencies
+  #     run: yarn install
+
+  #   # we now download the reports uploaded previously to merge them and create one single html report
+  #   - name: Download reports from GitHub Actions Artifacts
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: playwright-report # name of the file stored as artifact (as uploaded at the previous job)
+  #       path: playwright-report # name of the folder where the download will be saved
+
+
+  #   - name: Push files to github pages
+  #     uses: peaceiris/actions-gh-pages@v3
+  #     with:
+  #       github_token: ${{ secrets.GITHUB_TOKEN }}
+  #       publish_dir: playwright-report/
+  #       destination_dir: ${{ steps.timestampid.outputs.timestamp }}
+
+  #   - name: Write URL in Summary
+  #     run: echo "### Test Results (link available after 20 seconds) - https://github.com/${GITHUB_REPOSITORY}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY"
+
+
+
+    # - name: Setup Pages
+    #   uses: actions/configure-pages@v2
+    # - name: Upload artifact
+    #   uses: actions/upload-pages-artifact@v3
+    #   with:
+    #     # Upload entire repository
+    #     path: playwright-report/
+    # - name: Deploy to GitHub Pages
+    #   id: deployment
+    #   uses: actions/deploy-pages@v4
+
+
   test:
     name: Playwright Tests
     needs:
@@ -219,7 +315,6 @@ jobs:
         aws-region: ${{ secrets[env.BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION] || secrets.AWS_DEFAULT_REGION }}
     - uses: actions/setup-node@v4
       with:
-        # node-version: 20
         node-version-file: ".nvmrc"
     - name: yarn install
       run: yarn install
@@ -235,8 +330,8 @@ jobs:
         CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
         SEED_ADMIN_USER_EMAIL: ${{ secrets.SEED_ADMIN_USER_EMAIL }}
         SEED_ADMIN_USER_PASSWORD: ${{ secrets.SEED_ADMIN_USER_PASSWORD }}
-        SEED_STATE_USER_EMAIL: ${{ secrets.SEED_STATE_USER_EMAIL }}
-        SEED_STATE_USER_PASSWORD: ${{ secrets.SEED_STATE_USER_PASSWORD }}
+    - name: Debug - List Report Directory
+      run: ls -R playwright-report
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
@@ -249,54 +344,31 @@ jobs:
     needs:
       - test
     runs-on: ubuntu-latest
-
     outputs:
       timestamp: ${{ steps.timestampid.outputs.timestamp }}
-
     steps:
-
-    # create a unique identifier for sub directories in github pages
     - name: Set a Timestamp
       id: timestampid
       run: echo "timestamp=$(date -utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
-
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
     - name: Install dependencies
       run: yarn install
-
-    # we now download the reports uploaded previously to merge them and create one single html report
     - name: Download reports from GitHub Actions Artifacts
       uses: actions/download-artifact@v3
       with:
-        name: playwright-report # name of the file stored as artifact (as uploaded at the previous job)
-        path: playwright-report # name of the folder where the download will be saved
-        
-
+        name: playwright-report
+        path: playwright-report
     - name: Push files to github pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: playwright-report/
         destination_dir: ${{ steps.timestampid.outputs.timestamp }}
-
     - name: Write URL in Summary
-      run: echo "### Test Results (link available after 20 seconds) - https://github.com/${GITHUB_REPOSITORY}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY"
-
-
-
-    # - name: Setup Pages
-    #   uses: actions/configure-pages@v2
-    # - name: Upload artifact
-    #   uses: actions/upload-pages-artifact@v3
-    #   with:
-    #     # Upload entire repository
-    #     path: playwright-report/
-    # - name: Deploy to GitHub Pages
-    #   id: deployment
-    #   uses: actions/deploy-pages@v4
+      run: echo "### Test Results (link available after 20 seconds) - https://github.com/${GITHUB_REPOSITORY}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
 
   cleanup:
     name: Delist GHA Runner CIDR Blocks
