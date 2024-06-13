@@ -244,17 +244,33 @@ jobs:
         path: playwright-report
         retention-days: 30
 
+    # create a unique identifier for sub directories in github pages
+    - name: Set a Timestamp
+      id: timestampid
+      run: echo "timestamp=$(date -utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
 
-    - name: Setup Pages
-      uses: actions/configure-pages@v2
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+    - name: Push files to github pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        # Upload entire repository
-        path: playwright-report/
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: playwright-report/
+        destination_dir: ${{ steps.timestampid.outputs.timestamp }}
+
+    - name: Write URL in Summary
+      run: echo "### Test Results (link available after 20 seconds) - https://github.com/${GITHUB_REPOSITORY}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY"
+
+
+
+    # - name: Setup Pages
+    #   uses: actions/configure-pages@v2
+    # - name: Upload artifact
+    #   uses: actions/upload-pages-artifact@v3
+    #   with:
+    #     # Upload entire repository
+    #     path: playwright-report/
+    # - name: Deploy to GitHub Pages
+    #   id: deployment
+    #   uses: actions/deploy-pages@v4
 
   cleanup:
     name: Delist GHA Runner CIDR Blocks
