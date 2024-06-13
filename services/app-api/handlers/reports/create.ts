@@ -16,7 +16,7 @@ import {
 } from "../../utils/time/time";
 import {
   createReportName,
-  getEligbleWorkPlan,
+  getEligibleWorkPlan,
   getReportPeriod,
   getReportYear,
 } from "../../utils/other/other";
@@ -68,7 +68,7 @@ export const createReport = handler(
       workPlanFieldData?: AnyObject;
     } =
       reportType === ReportType.SAR
-        ? await getEligbleWorkPlan(state)
+        ? await getEligibleWorkPlan(state)
         : { workPlanMetadata: undefined, workPlanFieldData: undefined };
 
     // If we recieved no work plan information and we're trying to create a SAR, return NO_WORKPLANS_FOUND

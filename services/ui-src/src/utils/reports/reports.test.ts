@@ -1,4 +1,4 @@
-import { flattenReportRoutesArray, getEligbleWorkPlan } from "./reports";
+import { flattenReportRoutesArray, getEligibleWorkPlan } from "./reports";
 //types
 import { ReportMetadataShape, ReportRoute, ReportStatus } from "types";
 import { convertDateEtToUtc } from "utils/other/time";
@@ -36,7 +36,7 @@ describe("flattenReportRoutesArray", () => {
   });
 });
 
-describe("Test getEligbleWorkplan function", () => {
+describe("Test getEligibleWorkPlan function", () => {
   it("should grab the oldest eligble workplan", async () => {
     const submissions: ReportMetadataShape[] = [
       {
@@ -83,12 +83,12 @@ describe("Test getEligbleWorkplan function", () => {
       },
     ];
 
-    expect(getEligbleWorkPlan(submissions)).toBe(submissions[1]);
+    expect(getEligibleWorkPlan(submissions)).toBe(submissions[1]);
   });
 
   it("should return undefined if not given a submission", async () => {
     const submissions: ReportMetadataShape[] = [];
-    expect(getEligbleWorkPlan(submissions)).toBe(undefined);
+    expect(getEligibleWorkPlan(submissions)).toBe(undefined);
   });
 
   it("should return undefined if given submissions but none are eligble", async () => {
@@ -123,6 +123,6 @@ describe("Test getEligbleWorkplan function", () => {
         locked: false,
       },
     ];
-    expect(getEligbleWorkPlan(submissions)).toBe(undefined);
+    expect(getEligibleWorkPlan(submissions)).toBe(undefined);
   });
 });

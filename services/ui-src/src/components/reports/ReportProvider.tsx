@@ -14,7 +14,7 @@ import {
   putReport,
   sortReportsOldestToNewest,
   useStore,
-  getEligbleWorkPlan,
+  getEligibleWorkPlan,
 } from "utils";
 import {
   ErrorVerbiage,
@@ -127,7 +127,7 @@ export const ReportProvider = ({ children }: Props) => {
         selectedState
       );
 
-      const workplan = getEligbleWorkPlan(workPlanSubmissions);
+      const workplan = getEligibleWorkPlan(workPlanSubmissions);
 
       if (workplan) {
         const reportKeys = {

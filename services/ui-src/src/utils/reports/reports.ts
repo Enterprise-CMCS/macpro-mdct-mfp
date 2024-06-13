@@ -66,7 +66,7 @@ export const compileValidationJsonFromFields = (
   return validationSchema;
 };
 
-export const getEligbleWorkPlan = (
+export const getEligibleWorkPlan = (
   workPlanSubmissions: ReportMetadataShape[]
 ) => {
   const eligibleWorkPlans = workPlanSubmissions.filter(

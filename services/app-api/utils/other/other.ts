@@ -27,7 +27,7 @@ export const createReportName = (
   return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
 };
 
-export const getEligbleWorkPlan = async (
+export const getEligibleWorkPlan = async (
   state: State
 ): Promise<{
   workPlanMetadata?: ReportMetadataShape;

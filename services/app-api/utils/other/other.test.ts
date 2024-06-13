@@ -1,4 +1,4 @@
-import { getReportPeriod, getReportYear, getEligbleWorkPlan } from "./other";
+import { getReportPeriod, getReportYear, getEligibleWorkPlan } from "./other";
 import {
   getReportFieldData,
   queryReportMetadatasForState,
@@ -147,7 +147,7 @@ describe("API utility functions", () => {
     });
   });
 
-  describe("getEligbleWorkPlan", () => {
+  describe("getEligibleWorkPlan", () => {
     it("Should retrieve the oldest eligible work plan", async () => {
       (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
         {
@@ -185,7 +185,7 @@ describe("API utility functions", () => {
       const mockFieldData = { id: "just-right-data" };
       (getReportFieldData as jest.Mock).mockResolvedValue(mockFieldData);
 
-      const result = await getEligbleWorkPlan("CO");
+      const result = await getEligibleWorkPlan("CO");
 
       expect(result.workPlanMetadata!.id).toBe("just-right");
       expect(result.workPlanFieldData).toBe(mockFieldData);
@@ -207,7 +207,7 @@ describe("API utility functions", () => {
         },
       ]);
 
-      const result = await getEligbleWorkPlan("CO");
+      const result = await getEligibleWorkPlan("CO");
 
       expect(result.workPlanMetadata).toBeUndefined();
       expect(result.workPlanFieldData).toBeUndefined();
