@@ -11,7 +11,6 @@ import {
   mockReportPeriod,
   mockReportStore,
   mockReportYear,
-  mockSARReportContext,
   mockStateName,
   mockStandardReportPageJson,
   mockUseStore,
@@ -46,10 +45,12 @@ describe("ExportedReportPage", () => {
     mockedUseStore.mockReturnValue(mockReportStore);
     localStorage.setItem("selectedReportType", "WP");
 
+    mockWpReportContext.report.reportType = ReportType.WP;
     mockWpReportContext.report.formTemplate.routes = [
       mockStandardReportPageJson,
     ];
-    const page = render(exportedReportPage(mockStandardReportPageJson));
+
+    const page = render(exportedReportPage(mockReportJson));
     const h1 = page.getByRole("heading", { level: 1 });
 
     expect(h1).toHaveTextContent(
@@ -61,14 +62,16 @@ describe("ExportedReportPage", () => {
     mockedUseStore.mockReturnValue(mockReportStore);
     localStorage.setItem("selectedReportType", "SAR");
 
-    mockSARReportContext.report.formTemplate.routes = [
+    mockWpReportContext.report.reportType = ReportType.SAR;
+    mockWpReportContext.report.formTemplate.routes = [
       mockStandardReportPageJson,
     ];
-    const page = render(exportedReportPage(mockStandardReportPageJson));
+
+    const page = render(exportedReportPage(mockReportJson));
     const h1 = page.getByRole("heading", { level: 1 });
 
     expect(h1).toHaveTextContent(
-      `${mockStateName} MFP Work Plan for ${mockReportYear} - Period ${mockReportPeriod}`
+      `${mockStateName} Semi-Annual Progress Report (SAR) for ${mockReportYear} - Period ${mockReportPeriod}`
     );
   });
 
