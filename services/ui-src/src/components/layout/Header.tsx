@@ -177,7 +177,7 @@ const sx = {
   },
   leaveFormText: {
     border: "1px solid",
-    padding: ".5rem 1.5rem",
+    padding: ".5rem 1rem",
     borderRadius: "5px",
     color: "palette.primary",
     fontWeight: "bold",
