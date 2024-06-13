@@ -28,6 +28,7 @@ export interface ReportPageVerbiage {
   closeOutWarning?: AnyObject;
   closeOutModal?: AnyObject;
   praDisclosure?: CustomHtmlElement[];
+  dashboardSubtitle?: string;
 }
 
 export interface ReportRouteBase {

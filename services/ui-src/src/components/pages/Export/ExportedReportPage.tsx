@@ -21,11 +21,15 @@ import {
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
 
+const SAR_RET = "Recruitment, Enrollment, and Transitions";
+const WP_SAR_STATE_AND_TERRITORY = "State or Territory-Specific Initiatives";
+const WP_SAR_GENERAL_INFORMATION = "General Information";
+
 export const ExportedReportPage = () => {
-  const { report } = useStore() ?? {};
-  const routesToRender = report?.formTemplate.routes.filter(
-    (route: ReportRoute) => route
-  );
+  const { report } = useStore();
+
+  const routesToRender = report?.formTemplate.routes || [];
+
   const reportType = (report?.reportType ||
     localStorage.getItem("selectedReportType")) as ReportType;
 
@@ -36,9 +40,10 @@ export const ExportedReportPage = () => {
 
   const exportVerbiage = exportVerbiageMap[reportType];
   const { metadata, reportPage } = exportVerbiage;
+
   return (
     <Box sx={sx.container}>
-      {(report && routesToRender && (
+      {(report && routesToRender.length > 0 && (
         <Box sx={sx.innerContainer}>
           {/* pdf metadata */}
           <Helmet>
@@ -79,7 +84,6 @@ export const reportTitle = (
 ): string => {
   switch (reportType) {
     case ReportType.WP:
-      return `${report.fieldData.stateName} ${reportPage.heading} ${report.reportYear} - Period ${report.reportPeriod}`;
     case ReportType.SAR:
       return `${report.fieldData.stateName} ${reportPage.heading} ${report.reportYear} - Period ${report.reportPeriod}`;
     default:
@@ -95,7 +99,7 @@ export const formatSectionHeader = (report: ReportShape, header: string) => {
     report.reportPeriod,
     report.reportYear
   )}`;
-  const newHeader = header?.replace(" reporting period", newPeriod);
+  const newHeader = header.replace(" reporting period", newPeriod);
   return newHeader;
 };
 
@@ -105,57 +109,62 @@ export const renderReportSections = (
   report: ReportShape
 ) => {
   // recursively render sections
-  const renderSection = (section: ReportRoute) => {
+  const renderSection = (section: ReportRoute, level: number) => {
     //because R,E & T section needs numbers added, switch from shallow copy to deep copy
-    let childSections = structuredClone(section?.children);
-    const initatives =
-      section.name === "State or Territory-Specific Initiatives" &&
-      childSections;
-    const showGeneralInformation = !(
-      reportType === ReportType.WP && section.name === "General Information"
-    );
+    const childSections = structuredClone(section.children) || [];
+    let showSection = true;
+
+    if (section.name === WP_SAR_GENERAL_INFORMATION) {
+      showSection = reportType !== ReportType.WP;
+    }
+
+    if (section.name === WP_SAR_STATE_AND_TERRITORY) {
+      showSection = childSections.length == 0;
+    }
+
     //adding numbers for R,E & T section
-    if (section.name === "Recruitment, Enrollment, and Transitions") {
-      childSections?.forEach((section, index) => {
-        if (section.verbiage?.intro?.subsection)
-          section.verbiage.intro.subsection = `${index + 1}. ${
-            section.verbiage?.intro?.subsection
-          }`;
+    if (section.name === SAR_RET) {
+      childSections.forEach((section, index) => {
+        const subsectionTitle = section.verbiage?.intro.subsection;
+
+        if (subsectionTitle)
+          section.verbiage!.intro.subsection = `${
+            index + 1
+          }. ${subsectionTitle}`;
       });
     }
+
+    const heading = section.verbiage?.intro.subsection
+      ? formatSectionHeader(report, section.verbiage.intro.subsection)
+      : section.name;
 
     return (
       <Box key={section.path}>
         {/* if section does not have children and has content to render, render it */}
-        {showGeneralInformation && !initatives && (
+        {showSection && (
           <Box>
             <ExportedSectionHeading
-              heading={
-                formatSectionHeader(
-                  report,
-                  section.verbiage?.intro?.subsection!
-                ) || section.name
-              }
+              heading={heading}
+              level={level}
               reportType={reportType}
-              verbiage={section.verbiage || undefined}
+              verbiage={section.verbiage}
             />
             <ExportedReportWrapper section={section as ReportRouteWithForm} />
           </Box>
         )}
         {/* if section has children, recurse */}
-        {childSections?.map((child: ReportRoute) => renderSection(child))}
+        {childSections.map((child: ReportRoute) => renderSection(child, level))}
       </Box>
     );
   };
 
-  return reportRoutes.map(
-    (section: ReportRoute) =>
-      section?.pageType !== PageTypes.REVIEW_SUBMIT && (
-        <Box key={section.path} mt="3.5rem">
-          {renderSection(section)}
-        </Box>
-      )
-  );
+  return reportRoutes
+    .filter((section) => section.pageType !== PageTypes.REVIEW_SUBMIT)
+    .map((section: ReportRoute) => (
+      <Box key={section.path} mt="3.5rem">
+        {renderSection(section, 2)}
+      </Box>
+    ));
 };
 
 export const sx = {
