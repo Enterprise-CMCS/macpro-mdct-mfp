@@ -142,7 +142,7 @@ describe("MFP Work Plan E2E Submission", () => {
 
     cy.contains("Successfully Submitted").should("be.visible");
 
-    cy.get('button:contains("Leave form")').focus().click();
+    cy.get('text:contains("Leave form")').focus().click();
     cy.url().should("include", "/wp");
     cy.contains("2").should("be.visible");
   });
