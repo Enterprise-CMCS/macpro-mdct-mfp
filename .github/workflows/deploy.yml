@@ -244,10 +244,36 @@ jobs:
         path: playwright-report
         retention-days: 30
 
+  upload-reports:
+    name: Upload Reports
+    needs:
+      - test
+    runs-on: ubuntu-latest
+
+    outputs:
+      timestamp: ${{ steps.timestampid.outputs.timestamp }}
+
+    steps:
+
     # create a unique identifier for sub directories in github pages
     - name: Set a Timestamp
       id: timestampid
       run: echo "timestamp=$(date -utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
+
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: ".nvmrc"
+    - name: Install dependencies
+      run: yarn install
+
+    # we now download the reports uploaded previously to merge them and create one single html report
+    - name: Download reports from GitHub Actions Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: playwright-report # name of the file stored as artifact (as uploaded at the previous job)
+        path: playwright-report # name of the folder where the download will be saved
+        
 
     - name: Push files to github pages
       uses: peaceiris/actions-gh-pages@v3
