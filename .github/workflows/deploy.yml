@@ -340,6 +340,7 @@ jobs:
         retention-days: 30
 
   upload-reports:
+    if: always()
     name: Upload Reports
     needs:
       - test
