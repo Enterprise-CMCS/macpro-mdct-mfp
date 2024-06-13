@@ -184,17 +184,12 @@
               "subsection": "Number of people who signed an MFP informed consent form in the reporting period",
               "info": [
                 {
-                  "type": "p",
-                  "children": [
-                    {
-                      "type": "text",
-                      "content": "In this section, provide information for the specified period."
-                    },
-                    {
-                      "type": "text",
-                      "content": "Number of institutional residents who have signed an informed consent form indicating their desire to transition to the community and enroll in the state or territory’s MFP program."
-                    }
-                  ]
+                  "type": "text",
+                  "content": "In this section, provide information for the specified period."
+                },
+                {
+                  "type": "text",
+                  "content": "Number of institutional residents who have signed an informed consent form indicating their desire to transition to the community and enroll in the state or territory’s MFP program."
                 }
               ]
             },
@@ -227,17 +222,12 @@
               "subsection": "Number of MFP transitions in the reporting period",
               "info": [
                 {
-                  "type": "p",
-                  "children": [
-                    {
-                      "type": "text",
-                      "content": "In this section, provide information for the specified period."
-                    },
-                    {
-                      "type": "text",
-                      "content": "Number of qualified institutional residents who enrolled in MFP and were discharged from an institution to a qualified residence during the reporting period in the quarter."
-                    }
-                  ]
+                  "type": "text",
+                  "content": "In this section, provide information for the specified period."
+                },
+                {
+                  "type": "text",
+                  "content": "Number of qualified institutional residents who enrolled in MFP and were discharged from an institution to a qualified residence during the reporting period in the quarter."
                 }
               ]
             },
@@ -295,17 +285,12 @@
               "subsection": "Number of MFP transitions from qualified institutions in the reporting period",
               "info": [
                 {
-                  "type": "p",
-                  "children": [
-                    {
-                      "type": "text",
-                      "content": "In this section, provide information for the specified period."
-                    },
-                    {
-                      "type": "text",
-                      "content": "Of the total transitions reported in \"Number of MFP transitions\", provide the number of transitions from each qualified inpatient facility type during the reporting period."
-                    }
-                  ]
+                  "type": "text",
+                  "content": "In this section, provide information for the specified period."
+                },
+                {
+                  "type": "text",
+                  "content": "Of the total transitions reported in \"Number of MFP transitions\", provide the number of transitions from each qualified inpatient facility type during the reporting period."
                 }
               ]
             },
@@ -417,17 +402,12 @@
               "subsection": "Number of MFP transitions to qualified residences in the reporting period",
               "info": [
                 {
-                  "type": "p",
-                  "children": [
-                    {
-                      "type": "text",
-                      "content": "In this section, provide information for the specified period."
-                    },
-                    {
-                      "type": "text",
-                      "content": "Of the total transitions reported in \"Number of MFP transitions\", provide the number of transitions to each qualified residence type during the reporting period."
-                    }
-                  ]
+                  "type": "text",
+                  "content": "In this section, provide information for the specified period."
+                },
+                {
+                  "type": "text",
+                  "content": "Of the total transitions reported in \"Number of MFP transitions\", provide the number of transitions to each qualified residence type during the reporting period."
                 }
               ]
             },
@@ -521,17 +501,12 @@
               "subsection": "Total number of active MFP participants in the reporting period",
               "info": [
                 {
-                  "type": "p",
-                  "children": [
-                    {
-                      "type": "text",
-                      "content": "In this section, provide information for the specified period."
-                    },
-                    {
-                      "type": "text",
-                      "content": "Active MFP participants excludes individuals whose enrollment in the MFP Demonstration ended because they completed their 365 days of MFP eligibility, died before they exhausted their 365-day enrollment period, were institutionalized for 30 days or more and did not subsequently re-enroll in the MFP program, or otherwise disenrolled from the program."
-                    }
-                  ]
+                  "type": "text",
+                  "content": "In this section, provide information for the specified period."
+                },
+                {
+                  "type": "text",
+                  "content": "Active MFP participants excludes individuals whose enrollment in the MFP Demonstration ended because they completed their 365 days of MFP eligibility, died before they exhausted their 365-day enrollment period, were institutionalized for 30 days or more and did not subsequently re-enroll in the MFP program, or otherwise disenrolled from the program."
                 }
               ]
             },
@@ -564,17 +539,12 @@
               "subsection": "Number of MFP participants completing the program in the reporting period",
               "info": [
                 {
-                  "type": "p",
-                  "children": [
-                    {
-                      "type": "text",
-                      "content": "In this section, provide information for the specified period."
-                    },
-                    {
-                      "type": "text",
-                      "content": "Number of MFP participants who completed the 365-day enrollment period during the reporting period."
-                    }
-                  ]
+                  "type": "text",
+                  "content": "In this section, provide information for the specified period."
+                },
+                {
+                  "type": "text",
+                  "content": "Number of MFP participants who completed the 365-day enrollment period during the reporting period."
                 }
               ]
             },
@@ -607,17 +577,12 @@
               "subsection": "Number of people re-enrolled in MFP during the reporting period",
               "info": [
                 {
-                  "type": "p",
-                  "children": [
-                    {
-                      "type": "text",
-                      "content": "In this section, provide information for the specified period."
-                    },
-                    {
-                      "type": "text",
-                      "content": "Number of people who were disenrolled from the MFP program at any point (during this reporting period or a prior period) and re-enrolled during this reporting period."
-                    }
-                  ]
+                  "type": "text",
+                  "content": "In this section, provide information for the specified period."
+                },
+                {
+                  "type": "text",
+                  "content": "Number of people who were disenrolled from the MFP program at any point (during this reporting period or a prior period) and re-enrolled during this reporting period."
                 }
               ]
             },
@@ -650,17 +615,12 @@
               "subsection": "Number of MFP participants disenrolled from the program during the reporting period",
               "info": [
                 {
-                  "type": "p",
-                  "children": [
-                    {
-                      "type": "text",
-                      "content": "In this section, provide information for the specified period."
-                    },
-                    {
-                      "type": "text",
-                      "content": "Provide the number of MFP participants for each target population (if applicable for this reporting period), by reason for disenrollment. If more than one reason applies to an individual’s disenrollment, include the individual in the total for one reason only. Include the individual under the primary reason or, if indeterminate, the first reason listed. Enter the number of participants disenrolled for the selected “other” cause in the new fields. An additional “other” reason may be specified, if one or more participants disenrolled for reasons other than those listed."
-                    }
-                  ]
+                  "type": "text",
+                  "content": "In this section, provide information for the specified period."
+                },
+                {
+                  "type": "text",
+                  "content": "Provide the number of MFP participants for each target population (if applicable for this reporting period), by reason for disenrollment. If more than one reason applies to an individual’s disenrollment, include the individual in the total for one reason only. Include the individual under the primary reason or, if indeterminate, the first reason listed. Enter the number of participants disenrolled for the selected “other” cause in the new fields. An additional “other” reason may be specified, if one or more participants disenrolled for reasons other than those listed."
                 }
               ]
             },
@@ -853,17 +813,12 @@
               "subsection": "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group",
               "info": [
                 {
-                  "type": "p",
-                  "children": [
-                    {
-                      "type": "text",
-                      "content": "In this section, provide information for the specified period."
-                    },
-                    {
-                      "type": "text",
-                      "content": "Inpatient facilities include hospitals, nursing homes, ICF/IID, or IMD. Provide data for readmissions occurring between July 31 of the current reporting period and August 1 of the prior year."
-                    }
-                  ]
+                  "type": "text",
+                  "content": "In this section, provide information for the specified period."
+                },
+                {
+                  "type": "text",
+                  "content": "Inpatient facilities include hospitals, nursing homes, ICF/IID, or IMD. Provide data for readmissions occurring between July 31 of the current reporting period and August 1 of the prior year."
                 }
               ]
             },
