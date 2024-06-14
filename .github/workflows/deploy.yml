@@ -266,8 +266,8 @@ jobs:
       - name: Download reports from GitHub Actions Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: playwright-report
-          path: playwright-report
+          name: playwright-report-123
+          path: playwright-report-download
       - name: Debug - List Downloaded Report Directory
         if: always()
         run: ls -R
