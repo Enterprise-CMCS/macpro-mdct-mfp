@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
 // types
 import {
   MfpUserState,
@@ -128,18 +128,13 @@ const entityStore = (set: Function) => ({
 });
 
 export const useStore = create(
-  // persist and devtools are being used for debugging state
-  persist(
-    devtools<MfpUserState & AdminBannerState & MfpReportState & MfpEntityState>(
-      (set) => ({
-        ...userStore(set),
-        ...bannerStore(set),
-        ...reportStore(set),
-        ...entityStore(set),
-      })
-    ),
-    {
-      name: "mfp-store",
-    }
+  // devtools is being used for debugging state
+  devtools<MfpUserState & AdminBannerState & MfpReportState & MfpEntityState>(
+    (set) => ({
+      ...userStore(set),
+      ...bannerStore(set),
+      ...reportStore(set),
+      ...entityStore(set),
+    })
   )
 );
