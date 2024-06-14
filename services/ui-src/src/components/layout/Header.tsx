@@ -2,15 +2,7 @@ import { useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
 // components
 import { UsaBanner } from "@cmsgov/design-system";
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Image,
-  Link,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Image, Link, Text } from "@chakra-ui/react";
 import { Menu, MenuOption, ReportContext } from "components";
 // utils
 import { useBreakpoint, useStore } from "utils";
@@ -80,11 +72,11 @@ export const Header = ({ handleLogout }: Props) => {
                   as={RouterLink}
                   to={report?.formTemplate.basePath || "/"}
                   sx={sx.leaveFormLink}
-                  variant="unstyled"
+                  variant="outlineButton"
                   tabIndex={-1}
                 >
                   {!isMobile ? (
-                    <Button variant="outline">Leave form</Button>
+                    <>Leave form</>
                   ) : (
                     <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
                   )}

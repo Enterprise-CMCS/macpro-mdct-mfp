@@ -274,6 +274,22 @@ const theme = extendTheme({
             textDecoration: "none",
           },
         },
+        outlineButton: {
+          color: "palette.primary",
+          border: "1px solid",
+          padding: ".5rem 1rem",
+          borderRadius: "5px",
+          fontWeight: "bold",
+          textDecoration: "none",
+          _visited: { color: "palette.primary" },
+          ":hover, :visited:hover": {
+            color: "palette.primary_darker",
+            textDecoration: "none",
+          },
+          ".mobile &": {
+            border: "none",
+          },
+        },
       },
       defaultProps: {
         variant: "primary",
