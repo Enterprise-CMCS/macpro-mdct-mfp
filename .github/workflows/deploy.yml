@@ -245,6 +245,9 @@ jobs:
           name: playwright-report-123
           path: playwright-report
           retention-days: 30
+      - name: Debug - List Report Directory after upload
+        if: always()
+        run: ls -R
 
   upload-reports:
     name: Upload Reports
