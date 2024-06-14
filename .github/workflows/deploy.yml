@@ -249,39 +249,39 @@ jobs:
         if: always()
         run: ls -R|grep playwright
 
-  upload-reports:
-    name: Upload Reports
-    needs:
-      - test
-    runs-on: ubuntu-latest
-    outputs:
-      timestamp: ${{ steps.timestampid.outputs.timestamp }}
-    steps:
-      - name: Set a Timestamp
-        id: timestampid
-        run: echo "timestamp=$(date -utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: ".nvmrc"
-      - name: Install dependencies
-        run: yarn install
-      - name: Download reports from GitHub Actions Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: playwright-report-123
-          path: playwright-report-download
-      - name: Debug - List Downloaded Report Directory
-        if: always()
-        run: ls -R
-      - name: Push files to github pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: playwright-report/
-          destination_dir: ${{ steps.timestampid.outputs.timestamp }}
-      - name: Write URL in Summary
-        run: echo "### Test Results (link available after 20 seconds) - https://github.com/${GITHUB_REPOSITORY}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
+  # upload-reports:
+  #   name: Upload Reports
+  #   needs:
+  #     - test
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     timestamp: ${{ steps.timestampid.outputs.timestamp }}
+  #   steps:
+  #     - name: Set a Timestamp
+  #       id: timestampid
+  #       run: echo "timestamp=$(date -utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version-file: ".nvmrc"
+  #     - name: Install dependencies
+  #       run: yarn install
+  #     - name: Download reports from GitHub Actions Artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: playwright-report-123
+  #         path: playwright-report-download
+  #     - name: Debug - List Downloaded Report Directory
+  #       if: always()
+  #       run: ls -R
+  #     - name: Push files to github pages
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         publish_dir: playwright-report/
+  #         destination_dir: ${{ steps.timestampid.outputs.timestamp }}
+  #     - name: Write URL in Summary
+  #       run: echo "### Test Results (link available after 20 seconds) - https://github.com/${GITHUB_REPOSITORY}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
 
 
 
@@ -327,3 +327,38 @@ jobs:
         env:
           AWS_RETRY_MODE: adaptive
           AWS_MAX_ATTEMPTS: 10
+
+  upload-reports:
+    name: Upload Reports
+    needs:
+      - test
+      - cleanup
+    runs-on: ubuntu-latest
+    outputs:
+      timestamp: ${{ steps.timestampid.outputs.timestamp }}
+    steps:
+      - name: Set a Timestamp
+        id: timestampid
+        run: echo "timestamp=$(date -utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+      - name: Install dependencies
+        run: yarn install
+      - name: Download reports from GitHub Actions Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: playwright-report-123
+          path: playwright-report-download
+      - name: Debug - List Downloaded Report Directory
+        if: always()
+        run: ls -R
+      - name: Push files to github pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: playwright-report/
+          destination_dir: ${{ steps.timestampid.outputs.timestamp }}
+      - name: Write URL in Summary
+        run: echo "### Test Results (link available after 20 seconds) - https://github.com/${GITHUB_REPOSITORY}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
