@@ -3,6 +3,7 @@ import { axe } from "jest-axe";
 import { useStore } from "utils";
 import {
   mockReportStore,
+  mockReportFieldData,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { ModalDrawerReportPageVerbiage } from "types";
@@ -147,6 +148,33 @@ describe("ExportedModalDrawerReportSection table", () => {
 
     // renders "Not answered" for each quarter given no entity data
     expect(screen.queryAllByText("Not answered").length).toBe(12);
+  });
+
+  test("renders aria labels for target populations with abbreviated names", async () => {
+    const mockReport = {
+      ...mockReportStore,
+      report: {
+        ...mockReportStore.report,
+        fieldData: {
+          ...mockReportFieldData,
+          entityType: [
+            {
+              transitionBenchmarks_targetPopulationName:
+                "A very long target population name",
+              transitionBenchmarks_targetPopulationName_short: "ABC",
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue(mockReport);
+    render(tableComponent);
+
+    expect(screen.getByText("ABC")).toBeVisible();
+    expect(
+      screen.getByLabelText("A very long target population name")
+    ).toBeVisible();
   });
 });
 
