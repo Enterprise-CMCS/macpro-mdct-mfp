@@ -353,7 +353,7 @@ jobs:
           path: playwright-report-download
       - name: Debug - List Downloaded Report Directory
         if: always()
-        run: ls -R
+        run: ls -R| grep playwright
       - name: Push files to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
