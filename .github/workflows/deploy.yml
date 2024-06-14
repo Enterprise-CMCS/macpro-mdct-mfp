@@ -247,7 +247,7 @@ jobs:
           retention-days: 30
       - name: Debug - List Report Directory after upload
         if: always()
-        run: ls -R
+        run: ls -R|grep playwright
 
   upload-reports:
     name: Upload Reports
