@@ -11,7 +11,7 @@ import {
 } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
 import * as authFunctions from "../../utils/auth/authorization";
-import { getLastCreatedWorkPlan } from "../../utils/other/other";
+import { getEligibleWorkPlan } from "../../utils/other/other";
 import { putReportMetadata, putReportFieldData } from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
@@ -25,7 +25,7 @@ jest.mock("../../storage/reports", () => ({
 
 jest.mock("../../utils/other/other", () => ({
   ...jest.requireActual("../../utils/other/other"),
-  getLastCreatedWorkPlan: jest.fn(),
+  getEligibleWorkPlan: jest.fn(),
 }));
 
 jest.mock("../../utils/other/copy", () => ({
@@ -218,13 +218,13 @@ describe("Test createReport API method", () => {
   });
 
   test("If no WP given when creating a SAR, return 404", async () => {
-    (getLastCreatedWorkPlan as jest.Mock).mockResolvedValue({});
+    (getEligibleWorkPlan as jest.Mock).mockResolvedValue({});
     const res = await createReport(sarCreationEvent, null);
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
   test("Test successful run of sar report creation, not copied", async () => {
-    (getLastCreatedWorkPlan as jest.Mock).mockResolvedValue({
+    (getEligibleWorkPlan as jest.Mock).mockResolvedValue({
       workPlanMetadata: mockWPMetadata,
       workPlanFieldData: mockWPFieldData,
     });
