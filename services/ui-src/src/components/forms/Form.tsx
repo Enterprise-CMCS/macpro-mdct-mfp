@@ -268,4 +268,17 @@ const sx = {
     color: "palette.error_dark",
     paddingTop: "1rem",
   },
+  // dividers for R,E,T pages
+  ".sectionHeader": {
+    borderTop: "1px solid #A6A6A6",
+    marginTop: "3rem",
+    "&:first-of-type": {
+      margin: "0",
+      borderTop: "none",
+    },
+    "&:last-of-type": {
+      margin: "0",
+      borderTop: "none",
+    },
+  },
 };
