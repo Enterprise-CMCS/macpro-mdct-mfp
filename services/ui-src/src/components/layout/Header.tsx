@@ -72,11 +72,11 @@ export const Header = ({ handleLogout }: Props) => {
                   as={RouterLink}
                   to={report?.formTemplate.basePath || "/"}
                   sx={sx.leaveFormLink}
-                  variant="unstyled"
+                  variant="outlineButton"
                   tabIndex={-1}
                 >
                   {!isMobile ? (
-                    <Text sx={sx.leaveFormText}>Leave form</Text>
+                    <>Leave form</>
                   ) : (
                     <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
                   )}
@@ -174,12 +174,5 @@ const sx = {
   },
   closeIcon: {
     width: "2rem",
-  },
-  leaveFormText: {
-    border: "1px solid",
-    padding: ".5rem 1rem",
-    borderRadius: "5px",
-    color: "palette.primary",
-    fontWeight: "bold",
   },
 };
