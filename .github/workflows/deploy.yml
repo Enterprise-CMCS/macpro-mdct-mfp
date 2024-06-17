@@ -284,7 +284,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: playwright-report/
+          publish_dir: ./downloaded-html-report
           destination_dir: ${{ steps.timestampid.outputs.timestamp }}
       - name: Write URL in Summary
         run: echo "### Test Results (link available after 20 seconds) - https://github.com/${GITHUB_REPOSITORY}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
