@@ -270,9 +270,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: playwright-html-report
+      - name: Debug - pwd
+        if: always()
+        run: pwd
       - name: Debug - List Downloaded Report Directory
         if: always()
-        run: ls -R|grep playwright
+        run: ls -R|grep macpro-mdct-mfp
       - name: Push files to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
