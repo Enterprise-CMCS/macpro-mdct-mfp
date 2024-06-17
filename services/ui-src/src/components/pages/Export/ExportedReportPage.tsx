@@ -21,9 +21,10 @@ import {
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
 
-const SAR_RET = "Recruitment, Enrollment, and Transitions";
-const WP_SAR_STATE_AND_TERRITORY = "State or Territory-Specific Initiatives";
-const WP_SAR_GENERAL_INFORMATION = "General Information";
+export const SAR_RET = "Recruitment, Enrollment, and Transitions";
+export const WP_SAR_STATE_AND_TERRITORY =
+  "State or Territory-Specific Initiatives";
+export const WP_SAR_GENERAL_INFORMATION = "General Information";
 
 export const ExportedReportPage = () => {
   const { report } = useStore();
@@ -62,11 +63,7 @@ export const ExportedReportPage = () => {
             verbiage={reportPage}
           />
           {/* report sections */}
-          {renderReportSections(
-            report.formTemplate.routes,
-            report.reportType,
-            report
-          )}
+          {renderReportSections(routesToRender, report.reportType, report)}
         </Box>
       )) || (
         <Center>
