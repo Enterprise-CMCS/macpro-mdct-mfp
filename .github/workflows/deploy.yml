@@ -275,7 +275,7 @@ jobs:
         run: pwd
       - name: Debug - List Downloaded Report Directory
         if: always()
-        run: ls -R|grep macpro-mdct-mfp
+        run: ls -alh
       - name: Push files to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
