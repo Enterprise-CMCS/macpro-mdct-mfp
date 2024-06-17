@@ -250,7 +250,7 @@ jobs:
         run: ls -R|grep playwright
 
   upload-reports:
-    name: Upload Reports
+    name: Uppload Reports
     needs:
       - test
     runs-on: ubuntu-latest
@@ -297,20 +297,8 @@ jobs:
           echo "REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)" >> $GITHUB_ENV
           echo "repo name: ${REPO_NAME}"
       - name: Write URL in Summary
-        run: echo "### Test Results (link available after 20 seconds) - https://${ORG_NAME}.github.io/${REPO_NAME}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
+        run: echo "### Playwright Test Results - https://${ORG_NAME}.github.io/${REPO_NAME}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
 
-
-
-    # - name: Setup Pages
-    #   uses: actions/configure-pages@v2
-    # - name: Upload artifact
-    #   uses: actions/upload-pages-artifact@v3
-    #   with:
-    #     # Upload entire repository
-    #     path: playwright-report/
-    # - name: Deploy to GitHub Pages
-    #   id: deployment
-    #   uses: actions/deploy-pages@v4
 
   cleanup:
     name: Delist GHA Runner CIDR Blocks
