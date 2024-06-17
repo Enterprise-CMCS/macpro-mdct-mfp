@@ -1,0 +1,33 @@
+name: Push and Download Artifact Workflow
+
+on: 
+  push:
+
+jobs:
+  create-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create artifact file
+        run: echo "Hello, World!" > artifact.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: example-artifact
+          path: artifact.txt
+
+  download-artifact:
+    needs: create-artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: example-artifact
+
+      - name: List files
+        run: ls -al
+
