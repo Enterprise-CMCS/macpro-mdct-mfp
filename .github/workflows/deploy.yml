@@ -288,12 +288,16 @@ jobs:
           destination_dir: ${{ steps.timestampid.outputs.timestamp }}
       - name: Extract Organization Name
         id: extract-org
-        run: echo "ORG_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)" >> $GITHUB_ENV
+        run: | 
+          echo "ORG_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)" >> $GITHUB_ENV
+          echo "org name: $ORG_NAME"
       - name: Extract Repository Name
         id: extract-repo
-        run: echo "REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)" >> $GITHUB_ENV
+        run: |
+          echo "REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)" >> $GITHUB_ENV
+          echo "repo name: $REPO_NAME"
       - name: Write URL in Summary
-        run: echo "### Test Results (link available after 20 seconds) - https://${ORG_NAME}.github.io/${REPO_NAME/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
+        run: echo "### Test Results (link available after 20 seconds) - https://${ORG_NAME}.github.io/${REPO_NAME}/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
 
 
 
