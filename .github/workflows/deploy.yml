@@ -259,7 +259,7 @@ jobs:
     steps:
       - name: Set a Timestamp
         id: timestampid
-        run: echo "timestamp=$(date -utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
+        run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
