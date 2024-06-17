@@ -270,6 +270,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: playwright-html-report
+          path: downloaded-html-repot
       - name: Debug - pwd
         if: always()
         run: pwd
