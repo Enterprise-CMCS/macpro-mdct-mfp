@@ -277,6 +277,9 @@ jobs:
       - name: Debug - List Downloaded Report Directory
         if: always()
         run: ls -alh
+      - name: Debug - List Downloaded directory contents
+        if: always()
+        run: ls -R|grep downloaded-html-report
       - name: Push files to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
