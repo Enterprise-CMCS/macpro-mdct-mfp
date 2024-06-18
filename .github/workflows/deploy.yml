@@ -247,6 +247,7 @@ jobs:
     name: Uppload Reports
     needs:
       - test
+    if: always()
     runs-on: ubuntu-latest
     outputs:
       timestamp: ${{ steps.timestampid.outputs.timestamp }}
