@@ -22,7 +22,7 @@ import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
 
 export const SAR_RET = "Recruitment, Enrollment, and Transitions";
-export const WP_SAR_STATE_AND_TERRITORY =
+export const WP_SAR_STATE_OR_TERRITORY =
   "State or Territory-Specific Initiatives";
 export const WP_SAR_GENERAL_INFORMATION = "General Information";
 
@@ -115,7 +115,7 @@ export const renderReportSections = (
       showSection = reportType !== ReportType.WP;
     }
 
-    if (section.name === WP_SAR_STATE_AND_TERRITORY) {
+    if (section.name === WP_SAR_STATE_OR_TERRITORY) {
       showSection = childSections.length == 0;
     }
 
@@ -135,16 +135,22 @@ export const renderReportSections = (
       ? formatSectionHeader(report, section.verbiage.intro.subsection)
       : section.name;
 
+    const sectionHeading =
+      section.verbiage?.intro.exportSectionHeader || heading;
+
     return (
       <Box key={section.path}>
         {/* if section does not have children and has content to render, render it */}
         {showSection && (
           <Box>
             <ExportedSectionHeading
-              heading={heading}
+              heading={sectionHeading}
               level={level}
               reportType={reportType}
               verbiage={section.verbiage}
+              //recruit, enrollment and transition has hints that needs to be hidden
+              hasHint={section.verbiage?.intro.section !== SAR_RET}
+              hasInfo={sectionHeading !== WP_SAR_STATE_OR_TERRITORY}
             />
             <ExportedReportWrapper section={section as ReportRouteWithForm} />
           </Box>

@@ -6,15 +6,15 @@ import {
   reportTitle,
   SAR_RET,
   WP_SAR_GENERAL_INFORMATION,
-  WP_SAR_STATE_AND_TERRITORY,
+  WP_SAR_STATE_OR_TERRITORY,
 } from "./ExportedReportPage";
 import {
   mockEmptyReportStore,
+  mockForm,
   mockReportJson,
   mockReportPeriod,
   mockReportStore,
   mockReportYear,
-  mockStandardReportPageJson,
   mockStateName,
   mockUseStore,
   mockWpReportContext,
@@ -37,42 +37,53 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const mockReport = mockUseStore.report;
 
-const wpRoutes = (withChildren: boolean) =>
-  [WP_SAR_GENERAL_INFORMATION, WP_SAR_STATE_AND_TERRITORY, SAR_RET].map(
-    (name, index) => ({
-      name,
-      path: `/mock/mock-route-${index}`,
-      pageType: "standard",
-      verbiage: {
-        intro: {
-          section: "",
-          subsection: name,
+const createRoutes = (routes: string[], withChildren: boolean) =>
+  routes.map((name, index) => ({
+    name,
+    path: `/mock/mock-route-${index}`,
+    pageType: "standard",
+    verbiage: {
+      intro: {
+        section: "",
+        subsection: name,
+      },
+    },
+    form: mockForm,
+    children: withChildren && [
+      {
+        name: `${name} - Child Subsection`,
+        path: `/mock/mock-route-${index}/1`,
+        pageType: "standard",
+        verbiage: {
+          intro: {
+            section: "",
+            subsection: `${name} - Child Subsection Intro`,
+          },
         },
       },
-      children: withChildren && [
-        {
-          name: `${name} - Child Subsection`,
-          path: `/mock/mock-route-${index}/1`,
-          pageType: "standard",
-          verbiage: {
-            intro: {
-              section: "",
-              subsection: `${name} - Child Subsection Intro`,
-            },
+      {
+        name: `${name} -  Not a Subsection`,
+        path: `/mock/mock-route-${index}/2`,
+        pageType: "standard",
+        verbiage: {
+          intro: {
+            section: `${name} - Not a Subsection Intro`,
           },
         },
-        {
-          name: `${name} -  Not a Subsection`,
-          path: `/mock/mock-route-${index}/2`,
-          pageType: "standard",
-          verbiage: {
-            intro: {
-              section: `${name} - Not a Subsection Intro`,
-            },
-          },
-        },
-      ],
-    })
+      },
+    ],
+  }));
+
+const wpRoutes = (withChildren: boolean) =>
+  createRoutes(
+    [WP_SAR_GENERAL_INFORMATION, WP_SAR_STATE_OR_TERRITORY],
+    withChildren
+  );
+
+const sarRoutes = (withChildren: boolean) =>
+  createRoutes(
+    [WP_SAR_GENERAL_INFORMATION, WP_SAR_STATE_OR_TERRITORY, SAR_RET],
+    withChildren
   );
 
 const exportedReportPage = (context: any) => (
@@ -93,18 +104,12 @@ describe("ExportedReportPage", () => {
     const h1 = page.getByRole("heading", { level: 1 });
     const hiddenSectionHeading = page.queryByRole("heading", {
       level: 2,
-      name: WP_SAR_STATE_AND_TERRITORY,
+      name: WP_SAR_STATE_OR_TERRITORY,
     });
-    const visibleSectionHeading = page.getByRole("heading", {
-      level: 2,
-      name: SAR_RET,
-    });
-
     expect(h1).toHaveTextContent(
       `${mockStateName} MFP Work Plan for ${mockReportYear} - Period ${mockReportPeriod}`
     );
     expect(hiddenSectionHeading).not.toBeInTheDocument();
-    expect(visibleSectionHeading).toBeInTheDocument();
   });
 
   test("loads WP without children", async () => {
@@ -115,27 +120,20 @@ describe("ExportedReportPage", () => {
     mockWpReportContext.report.formTemplate.routes = wpRoutes(false);
 
     const page = render(exportedReportPage(mockReportJson));
-    const hiddenSectionHeading = page.queryByRole("heading", {
-      level: 2,
-      name: WP_SAR_GENERAL_INFORMATION,
-    });
     const visibleSectionHeading = page.queryByRole("heading", {
       level: 2,
-      name: WP_SAR_STATE_AND_TERRITORY,
+      name: WP_SAR_STATE_OR_TERRITORY,
     });
 
-    expect(hiddenSectionHeading).not.toBeInTheDocument();
     expect(visibleSectionHeading).toBeInTheDocument();
   });
 
-  test("loads SAR", async () => {
+  test("loads SAR with children", async () => {
     mockedUseStore.mockReturnValue(mockReportStore);
     localStorage.setItem("selectedReportType", "SAR");
 
     mockWpReportContext.report.reportType = ReportType.SAR;
-    mockWpReportContext.report.formTemplate.routes = [
-      mockStandardReportPageJson,
-    ];
+    mockWpReportContext.report.formTemplate.routes = sarRoutes(true);
 
     const page = render(exportedReportPage(mockReportJson));
     const h1 = page.getByRole("heading", { level: 1 });
@@ -143,6 +141,16 @@ describe("ExportedReportPage", () => {
     expect(h1).toHaveTextContent(
       `${mockStateName} Semi-Annual Progress Report (SAR) for ${mockReportYear} - Period ${mockReportPeriod}`
     );
+    const visibleSectionHeading1 = page.getByRole("heading", {
+      level: 2,
+      name: WP_SAR_GENERAL_INFORMATION,
+    });
+    const visibleSectionHeading2 = page.getByRole("heading", {
+      level: 2,
+      name: SAR_RET,
+    });
+    expect(visibleSectionHeading1).toBeInTheDocument();
+    expect(visibleSectionHeading2).toBeInTheDocument();
   });
 
   test("shows loading... if there is no report", async () => {

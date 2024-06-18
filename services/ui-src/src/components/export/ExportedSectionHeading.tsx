@@ -5,8 +5,9 @@ import { ReportPageVerbiage } from "types";
 // utils
 import { parseCustomHtml } from "utils";
 
-const SAR_RET = "Recruitment, Enrollment, and Transitions";
-const WP_SAR_STATE_OR_TERRITORY = "State or Territory-Specific Initiatives";
+export const SAR_RET = "Recruitment, Enrollment, and Transitions";
+export const WP_SAR_STATE_OR_TERRITORY =
+  "State or Territory-Specific Initiatives";
 
 export const formatSectionInfo = (verbiage: ReportPageVerbiage | undefined) => {
   if (!verbiage) {
@@ -29,20 +30,20 @@ export const ExportedSectionHeading = ({
   heading,
   level = 2,
   verbiage,
+  hasHint = true,
+  hasInfo = true,
 }: Props) => {
   const headingLevel = `h${level}` as any;
-  const sectionHeading = verbiage?.intro.exportSectionHeader || heading;
   const sectionHint = verbiage?.intro.hint;
   const sectionInfo = formatSectionInfo(verbiage);
 
-  //recruit, enrollment and transition has hints that needs to be hidden
-  const showHint = verbiage?.intro.section !== SAR_RET && sectionHint;
-  const showInfo = sectionHeading !== WP_SAR_STATE_OR_TERRITORY && sectionInfo;
+  const showHint = hasHint && sectionHint;
+  const showInfo = hasInfo && sectionInfo;
 
   return (
     <Box data-testid="exportedSectionHeading" sx={sx.container}>
       <Heading as={headingLevel} sx={sx.heading}>
-        {sectionHeading}
+        {heading}
       </Heading>
       {showHint && <Box sx={sx.hintTextBox}>{sectionHint}</Box>}
       {showInfo && <Box sx={sx.info}>{parseCustomHtml(sectionInfo)}</Box>}
@@ -55,6 +56,8 @@ export interface Props {
   level?: number;
   reportType?: string;
   verbiage?: ReportPageVerbiage;
+  hasHint?: boolean;
+  hasInfo?: boolean;
 }
 
 const sx = {

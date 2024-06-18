@@ -8,6 +8,7 @@ import {
   mockVerbiageIntro,
 } from "utils/testing/setupJest";
 import { ReportPageVerbiage } from "types";
+import { SAR_RET, WP_SAR_STATE_OR_TERRITORY } from "./ExportedSectionHeading";
 
 const mockSectionHeading = {
   heading: "mock-heading",
@@ -17,9 +18,9 @@ const mockSectionHeading = {
 };
 const { heading, verbiage } = mockSectionHeading;
 
-const retVerbigae = {
+const retVerbiage = {
   intro: {
-    section: "Recruitment, Enrollment, and Transitions",
+    section: SAR_RET,
     info: [
       { type: "h3", content: "this text should be filtered out" },
       { type: "span", content: "this text should be visible" },
@@ -28,8 +29,9 @@ const retVerbigae = {
 };
 const stateOrTerritoryVerbiage = {
   intro: {
-    section: "State or Territory-Specific Initiatives",
-    subsection: "State or Territory-Specific Initiatives",
+    section: "",
+    subsection: WP_SAR_STATE_OR_TERRITORY,
+    hint: "this is a hint",
   },
 };
 
@@ -60,9 +62,9 @@ describe("ExportedSectionHeading displays correct heading", () => {
     expect(sectionHeading).toBeVisible();
   });
   test("Correct heading text is shown for R,E & T", () => {
-    render(exportedReportSectionHeadingComponent(retVerbigae));
+    render(exportedReportSectionHeadingComponent(retVerbiage));
     const sectionHeading = screen.getByText(
-      retVerbigae?.intro?.info[1].content
+      retVerbiage?.intro?.info[1].content
     );
     expect(sectionHeading).toBeVisible();
   });
