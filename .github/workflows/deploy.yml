@@ -227,7 +227,6 @@ jobs:
         run: yarn playwright install --with-deps
       - name: Run Playwright tests
         run: yarn playwright test
-        # continue-on-error: true
         env:
           BASE_URL: ${{ needs.deploy.outputs.application_endpoint }}
           CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
@@ -252,6 +251,7 @@ jobs:
     outputs:
       timestamp: ${{ steps.timestampid.outputs.timestamp }}
     steps:
+      # create a unique folder name to put playwright reports in
       - name: Set a Timestamp
         id: timestampid
         run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"

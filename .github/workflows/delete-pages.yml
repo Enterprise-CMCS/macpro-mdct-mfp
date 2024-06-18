@@ -1,0 +1,32 @@
+name: Delete old folders from GitHub Pages
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # This will run the workflow daily at midnight UTC
+
+jobs:
+  delete_old_folders:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with: 
+          ref: gh-pages
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Run the script
+        run: python rm_old_folders.py --n-days 30 --folder-name '.'
+
+      - name: Commit all changed files back to the repository
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: gh-pages
+          commit_message: Delete folders older than 30 days
+
