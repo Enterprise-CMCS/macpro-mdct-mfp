@@ -9,13 +9,16 @@ export const EntityStepCardTopSection = ({
   stepType,
   formattedEntityData,
   entityCompleted,
+  level = 2,
 }: Props) => {
   const { report } = useStore() ?? {};
+  const headingLevel = `h${level}` as any;
+
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
       return (
         <>
-          <Heading sx={sx.mainHeading}>
+          <Heading as={headingLevel} sx={sx.mainHeading}>
             {formattedEntityData.objectiveName}
           </Heading>
           <Text sx={sx.subtitle}>
@@ -54,7 +57,7 @@ export const EntityStepCardTopSection = ({
     case OverlayModalStepTypes.EVALUATION_PLAN:
       return (
         <>
-          <Heading sx={sx.mainHeading}>
+          <Heading as={headingLevel} sx={sx.mainHeading}>
             {formattedEntityData.objectiveName}
           </Heading>
           <Text sx={sx.subtitle}>
@@ -111,7 +114,7 @@ export const EntityStepCardTopSection = ({
     case OverlayModalStepTypes.FUNDING_SOURCES:
       return (
         <>
-          <Heading sx={sx.mainHeading}>
+          <Heading as={headingLevel} sx={sx.mainHeading}>
             {formattedEntityData.fundingSource}
           </Heading>
           {formattedEntityData.quarters.length > 0 && (
@@ -151,6 +154,7 @@ interface Props {
   formattedEntityData: AnyObject;
   printVersion?: boolean;
   entityCompleted?: boolean;
+  level?: number;
 }
 
 const sx = {

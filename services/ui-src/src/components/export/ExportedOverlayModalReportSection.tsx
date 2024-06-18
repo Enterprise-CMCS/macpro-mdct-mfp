@@ -33,8 +33,10 @@ export const ExportedOverlayModalReportSection = ({
   );
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
-      <Heading as="h4">
-        <Box sx={sx.stepName}>{title}</Box>
+      <Box>
+        <Heading as="h4" sx={sx.stepName}>
+          {title}
+        </Heading>
         <Box sx={sx.stepHint}>{info || hint}</Box>
         <Box sx={sx.dashboardTitle} data-testid="headerCount">
           {entityCount > 0 ? (
@@ -47,7 +49,7 @@ export const ExportedOverlayModalReportSection = ({
             </Text>
           )}
         </Box>
-      </Heading>
+      </Box>
       {entity?.[type]?.map((step: any, index: number) => {
         return (
           <EntityStepCard
@@ -60,6 +62,7 @@ export const ExportedOverlayModalReportSection = ({
             verbiage={verbiage}
             printVersion
             hasBorder={true}
+            level={5}
           />
         );
       })}

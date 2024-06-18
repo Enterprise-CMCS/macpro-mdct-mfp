@@ -111,15 +111,20 @@ describe("ExportedReportPage", () => {
 
       const page = render(exportedReportPage(mockReportJson));
       const h1 = page.getByRole("heading", { level: 1 });
-      const hiddenSectionHeading = page.queryByRole("heading", {
+      const sectionHeading = page.queryByRole("heading", {
         level: 2,
-        name: `${WP_SAR_STATE_TERRITORY_INITIATIVES}`,
+        name: WP_SAR_STATE_TERRITORY_INITIATIVES,
+      });
+      const childHeading = page.getByRole("heading", {
+        level: 2,
+        name: `${WP_SAR_STATE_TERRITORY_INITIATIVES} - Child Subsection Intro`,
       });
 
       expect(h1).toHaveTextContent(
         `${mockStateName} MFP Work Plan for ${mockReportYear} - Period ${mockReportPeriod}`
       );
-      expect(hiddenSectionHeading).not.toBeInTheDocument();
+      expect(sectionHeading).not.toBeInTheDocument();
+      expect(childHeading).toBeVisible();
     });
 
     test("loads WP without children", async () => {
@@ -129,15 +134,15 @@ describe("ExportedReportPage", () => {
       );
 
       const page = render(exportedReportPage(mockReportJson));
-      const visibleSectionHeading = page.queryByRole("heading", {
+      const sectionHeading = page.getByRole("heading", {
         level: 2,
-        name: `${WP_SAR_STATE_TERRITORY_INITIATIVES}`,
+        name: WP_SAR_STATE_TERRITORY_INITIATIVES,
       });
       const sectionInfo = page.queryByText(
         `${WP_SAR_STATE_TERRITORY_INITIATIVES} - Dashboard Subtitle`
       );
 
-      expect(visibleSectionHeading).toBeVisible();
+      expect(sectionHeading).toBeVisible();
       expect(sectionInfo).not.toBeInTheDocument();
     });
   });

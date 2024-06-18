@@ -33,6 +33,7 @@ export const EntityStepCard = ({
   printVersion,
   hasBoxShadow,
   hasBorder,
+  level,
   ...props
 }: Props) => {
   let entityCompleted = false;
@@ -172,6 +173,7 @@ export const EntityStepCard = ({
           printVersion={!!printVersion}
           formattedEntityData={formattedEntityData}
           entityCompleted={entityCompleted}
+          level={level}
         />
         {entityCompleted || printVersion ? (
           <EntityStepCardBottomSection
@@ -228,6 +230,7 @@ interface Props {
   printVersion?: boolean;
   hasBoxShadow?: boolean;
   hasBorder?: boolean;
+  level?: number;
   [key: string]: any;
 }
 
