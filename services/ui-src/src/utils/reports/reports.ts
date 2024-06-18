@@ -66,24 +66,19 @@ export const compileValidationJsonFromFields = (
   return validationSchema;
 };
 
-export const getLastSubmission = (
+export const getEligibleWorkPlan = (
   workPlanSubmissions: ReportMetadataShape[]
 ) => {
-  let lastFoundSubmission: ReportMetadataShape | undefined = undefined;
-  workPlanSubmissions.forEach((submission: ReportMetadataShape) => {
-    if (
-      submission.status === ReportStatus.APPROVED &&
-      !submission?.associatedSar
-    ) {
-      if (
-        lastFoundSubmission &&
-        submission.createdAt > lastFoundSubmission?.createdAt
-      )
-        lastFoundSubmission = submission;
-      else if (!lastFoundSubmission) {
-        lastFoundSubmission = submission;
-      }
-    }
-  });
-  return lastFoundSubmission;
+  const eligibleWorkPlans = workPlanSubmissions.filter(
+    (wp) =>
+      wp.status === ReportStatus.APPROVED && !wp.associatedSar && !wp?.archived
+  );
+  if (eligibleWorkPlans.length === 0) {
+    // There were no eligible work plans to treat as a base for this SAR
+    return undefined;
+  }
+  //Return the oldest eligble workplan
+  return eligibleWorkPlans.reduce((mostRecent, wp) =>
+    mostRecent.createdAt < wp.createdAt ? mostRecent : wp
+  );
 };

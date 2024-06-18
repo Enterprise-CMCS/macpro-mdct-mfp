@@ -236,8 +236,8 @@ export const quarterlyKeyGenerator = (
         break;
       case "float":
         obj[key] = `${faker.number.float({
-          min: 1,
-          max: 100,
+          min: 99.01,
+          max: 99.99,
           fractionDigits: 2,
         })}`;
         break;

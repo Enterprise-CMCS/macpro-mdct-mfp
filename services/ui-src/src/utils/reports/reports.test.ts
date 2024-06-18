@@ -1,4 +1,4 @@
-import { flattenReportRoutesArray, getLastSubmission } from "./reports";
+import { flattenReportRoutesArray, getEligibleWorkPlan } from "./reports";
 //types
 import { ReportMetadataShape, ReportRoute, ReportStatus } from "types";
 import { convertDateEtToUtc } from "utils/other/time";
@@ -36,23 +36,9 @@ describe("flattenReportRoutesArray", () => {
   });
 });
 
-describe("Test lastFoundSubmission function", () => {
-  it("should grab the last submission based on the time", async () => {
+describe("Test getEligibleWorkPlan function", () => {
+  it("should grab the oldest eligble workplan", async () => {
     const submissions: ReportMetadataShape[] = [
-      {
-        reportType: "WP",
-        state: "NJ",
-        id: "2Xv4Me4q00ztl41PakEf7nxGPtp",
-        submissionName: "New Jersey Work Plan 2023 - Period 2",
-        status: ReportStatus.APPROVED,
-        createdAt: 1699496172798,
-        lastAltered: 1699496172798,
-        lastAlteredBy: "Anthony Soprano",
-        dueDate: convertDateEtToUtc("11/01/2023"),
-        reportPeriod: 2,
-        reportYear: 2023,
-        locked: false,
-      },
       {
         submissionName: "New Jersey Work Plan 2023 - Period 2",
         dueDate: convertDateEtToUtc("11/01/2023"),
@@ -63,21 +49,49 @@ describe("Test lastFoundSubmission function", () => {
         reportYear: 2023,
         lastAltered: 1699496227241,
         state: "NJ",
-        id: "2Xv4TaPFSy9Q0ZGSVB0wuzwtAnA",
+        id: "too-new",
         locked: false,
         status: ReportStatus.APPROVED,
       },
+      {
+        reportType: "WP",
+        state: "NJ",
+        id: "just-right",
+        submissionName: "New Jersey Work Plan 2023 - Period 1",
+        status: ReportStatus.APPROVED,
+        createdAt: 1699496130000,
+        lastAltered: 1699496172798,
+        lastAlteredBy: "Anthony Soprano",
+        dueDate: convertDateEtToUtc("11/01/2023"),
+        reportPeriod: 2,
+        reportYear: 2023,
+        locked: false,
+      },
+      {
+        reportType: "WP",
+        state: "NJ",
+        id: "way-too-new",
+        submissionName: "New Jersey Work Plan 2024 - Period 2",
+        status: ReportStatus.APPROVED,
+        createdAt: 1699496172798,
+        lastAltered: 1699496172798,
+        lastAlteredBy: "Anthony Soprano",
+        dueDate: convertDateEtToUtc("11/01/2023"),
+        reportPeriod: 2,
+        reportYear: 2023,
+        locked: false,
+      },
     ];
 
-    expect(getLastSubmission(submissions)).toBe(submissions[1]);
+    expect(getEligibleWorkPlan(submissions)).toBe(submissions[1]);
   });
 
   it("should return undefined if not given a submission", async () => {
     const submissions: ReportMetadataShape[] = [];
-    expect(getLastSubmission(submissions)).toBe(undefined);
+    expect(getEligibleWorkPlan(submissions)).toBe(undefined);
   });
 
-  it("should return undefined if given submissions but none are of right type", async () => {
+  it("should return undefined if given submissions but none are eligble", async () => {
     const submissions: ReportMetadataShape[] = [
       {
         reportType: "WP",
@@ -93,7 +107,22 @@ describe("Test lastFoundSubmission function", () => {
         reportYear: 2023,
         locked: false,
       },
+      {
+        reportType: "WP",
+        state: "NJ",
+        id: "2Xv4Me4q00ztl41PakEf7nxGPtp",
+        submissionName: "New Jersey Work Plan 2023 - Period 2",
+        status: ReportStatus.APPROVED,
+        archived: true,
+        createdAt: 1699496172798,
+        lastAltered: 1699496172798,
+        lastAlteredBy: "Anthony Soprano",
+        dueDate: convertDateEtToUtc("11/01/2023"),
+        reportPeriod: 2,
+        reportYear: 2023,
+        locked: false,
+      },
     ];
-    expect(getLastSubmission(submissions)).toBe(undefined);
+    expect(getEligibleWorkPlan(submissions)).toBe(undefined);
   });
 });

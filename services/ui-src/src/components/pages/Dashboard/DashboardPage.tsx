@@ -1,4 +1,3 @@
-/* eslint-disable multiline-comment-style */
 import { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { States } from "../../../constants";
@@ -41,7 +40,7 @@ import {
 import {
   convertTargetPopulationsFromWPToSAREntity,
   parseCustomHtml,
-  removeNotApplicablePopulations,
+  getApplicablePopulations,
   useBreakpoint,
   useStore,
 } from "utils";
@@ -92,6 +91,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
     undefined
   );
+  const [showSarAlert, setShowSarAlert] = useState<boolean>(false);
 
   const dashboardVerbiageMap: any = {
     WP: wpVerbiage,
@@ -108,8 +108,22 @@ export const DashboardPage = ({ reportType }: Props) => {
   const activeState =
     userIsAdmin || userIsReadOnly ? adminSelectedState : userState;
 
-  const showSarAlert =
-    reportType === ReportType.SAR && !workPlanToCopyFrom && reportsToDisplay;
+  useEffect(() => {
+    let showAlert = false;
+    if (reportType === ReportType.SAR) {
+      const activeSarList = reportsToDisplay?.filter(
+        (report: ReportMetadataShape) => {
+          return (
+            report.reportType === ReportType.SAR &&
+            report.status !== ReportStatus.SUBMITTED &&
+            report?.archived !== true
+          );
+        }
+      );
+      showAlert = !workPlanToCopyFrom && activeSarList?.length === 0;
+    }
+    setShowSarAlert(showAlert);
+  }, [reportsToDisplay, workPlanToCopyFrom]);
 
   useEffect(() => {
     // if no activeState, go to homepage
@@ -197,7 +211,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           stateOrTerritory: userState,
           reportPeriod: workPlanToCopyFrom?.reportPeriod,
           populations: convertTargetPopulationsFromWPToSAREntity(
-            removeNotApplicablePopulations(
+            getApplicablePopulations(
               workPlanToCopyFrom?.fieldData?.targetPopulations
             )
           ),
