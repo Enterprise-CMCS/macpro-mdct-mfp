@@ -227,7 +227,7 @@ jobs:
         run: yarn playwright install --with-deps
       - name: Run Playwright tests
         run: yarn playwright test
-        continue-on-error: true
+        # continue-on-error: true
         env:
           BASE_URL: ${{ needs.deploy.outputs.application_endpoint }}
           CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
@@ -236,19 +236,12 @@ jobs:
           CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
           SEED_ADMIN_USER_EMAIL: ${{ secrets.SEED_ADMIN_USER_EMAIL }}
           SEED_ADMIN_USER_PASSWORD: ${{ secrets.SEED_ADMIN_USER_PASSWORD }}
-      # - name: Debug - List Report Directory
-      #   if: always()
-      #   run: ls -R playwright-report
       - uses: actions/upload-artifact@v4
-        # if: ${{ always() && !cancelled() }}
         if: ${{ !cancelled() }}
         with:
           name: playwright-html-report
           path: playwright-report/index.html
           retention-days: 30
-      # - name: Debug - List Report Directory after upload
-      #   if: always()
-      #   run: ls -R|grep playwright
 
   upload-reports:
     name: Uppload Reports
@@ -272,15 +265,6 @@ jobs:
         with:
           name: playwright-html-report
           path: downloaded-html-report
-      # - name: Debug - pwd
-      #   if: always()
-      #   run: pwd
-      # - name: Debug - List Downloaded Report Directory
-      #   if: always()
-      #   run: ls -alh
-      # - name: Debug - List Downloaded directory contents
-      #   if: always()
-      #   run: ls -R|grep downloaded-html-report
       - name: Push files to github pages
         uses: peaceiris/actions-gh-pages@v4
         with:
