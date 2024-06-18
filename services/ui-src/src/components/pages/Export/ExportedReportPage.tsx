@@ -12,6 +12,7 @@ import {
 // types
 import {
   PageTypes,
+  ReportPageVerbiage,
   ReportRoute,
   ReportRouteWithForm,
   ReportShape,
@@ -22,7 +23,7 @@ import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
 
 export const SAR_RET = "Recruitment, Enrollment, and Transitions";
-export const WP_SAR_STATE_OR_TERRITORY =
+export const WP_SAR_STATE_TERRITORY_INITIATIVES =
   "State or Territory-Specific Initiatives";
 export const WP_SAR_GENERAL_INFORMATION = "General Information";
 
@@ -63,7 +64,7 @@ export const ExportedReportPage = () => {
             verbiage={reportPage}
           />
           {/* report sections */}
-          {renderReportSections(routesToRender, report.reportType, report)}
+          {renderReportSections(routesToRender, report)}
         </Box>
       )) || (
         <Center>
@@ -100,23 +101,50 @@ export const formatSectionHeader = (report: ReportShape, header: string) => {
   return newHeader;
 };
 
+export const formatSectionInfo = (verbiage: ReportPageVerbiage | undefined) => {
+  if (!verbiage) {
+    return;
+  }
+
+  if (
+    verbiage.intro.exportSectionHeader ||
+    verbiage.intro.subsection === WP_SAR_STATE_TERRITORY_INITIATIVES
+  ) {
+    return verbiage.dashboardSubtitle;
+  }
+
+  return verbiage.intro.info;
+};
+
 export const renderReportSections = (
   reportRoutes: ReportRoute[],
-  reportType: string,
   report: ReportShape
 ) => {
+  const { reportType } = report;
   // recursively render sections
   const renderSection = (section: ReportRoute, level: number) => {
     //because R,E & T section needs numbers added, switch from shallow copy to deep copy
     const childSections = structuredClone(section.children) || [];
+    const heading = section.verbiage?.intro.subsection
+      ? formatSectionHeader(report, section.verbiage.intro.subsection)
+      : section.name;
+    const sectionHeading =
+      section.verbiage?.intro.exportSectionHeader || heading;
+    let hint = section.verbiage?.intro.hint;
+    let info = formatSectionInfo(section.verbiage);
     let showSection = true;
 
     if (section.name === WP_SAR_GENERAL_INFORMATION) {
       showSection = reportType !== ReportType.WP;
     }
 
-    if (section.name === WP_SAR_STATE_OR_TERRITORY) {
+    if (section.name === WP_SAR_STATE_TERRITORY_INITIATIVES) {
       showSection = childSections.length == 0;
+    }
+
+    // Hide section info for initiatives
+    if (sectionHeading === WP_SAR_STATE_TERRITORY_INITIATIVES) {
+      info = undefined;
     }
 
     //adding numbers for R,E & T section
@@ -131,12 +159,10 @@ export const renderReportSections = (
       });
     }
 
-    const heading = section.verbiage?.intro.subsection
-      ? formatSectionHeader(report, section.verbiage.intro.subsection)
-      : section.name;
-
-    const sectionHeading =
-      section.verbiage?.intro.exportSectionHeader || heading;
+    //recruit, enrollment and transition has hints that needs to be hidden
+    if (section.verbiage?.intro.section === SAR_RET) {
+      hint = undefined;
+    }
 
     return (
       <Box key={section.path}>
@@ -145,12 +171,9 @@ export const renderReportSections = (
           <Box>
             <ExportedSectionHeading
               heading={sectionHeading}
+              hint={hint}
+              info={info}
               level={level}
-              reportType={reportType}
-              verbiage={section.verbiage}
-              //recruit, enrollment and transition has hints that needs to be hidden
-              hasHint={section.verbiage?.intro.section !== SAR_RET}
-              hasInfo={sectionHeading !== WP_SAR_STATE_OR_TERRITORY}
             />
             <ExportedReportWrapper section={section as ReportRouteWithForm} />
           </Box>

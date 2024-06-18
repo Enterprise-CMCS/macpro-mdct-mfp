@@ -3,83 +3,87 @@ import { axe } from "jest-axe";
 // components
 import { ReportContext, ExportedSectionHeading } from "components";
 // utils
-import {
-  mockWpReportContext,
-  mockVerbiageIntro,
-} from "utils/testing/setupJest";
-import { ReportPageVerbiage } from "types";
-import { SAR_RET, WP_SAR_STATE_OR_TERRITORY } from "./ExportedSectionHeading";
-
-const mockSectionHeading = {
-  heading: "mock-heading",
-  verbiage: {
-    intro: mockVerbiageIntro,
-  },
-};
-const { heading, verbiage } = mockSectionHeading;
-
-const retVerbiage = {
-  intro: {
-    section: SAR_RET,
-    info: [
-      { type: "h3", content: "this text should be filtered out" },
-      { type: "span", content: "this text should be visible" },
-    ],
-  },
-};
-const stateOrTerritoryVerbiage = {
-  intro: {
-    section: "",
-    subsection: WP_SAR_STATE_OR_TERRITORY,
-    hint: "this is a hint",
-  },
-};
+import { mockWpReportContext } from "utils/testing/setupJest";
+import { CustomHtmlElement } from "types";
 
 const exportedReportSectionHeadingComponent = (
-  verbiage: ReportPageVerbiage
+  heading: string,
+  level?: number,
+  hint?: string,
+  info?: string | CustomHtmlElement[]
 ) => {
   return (
     <ReportContext.Provider value={mockWpReportContext}>
-      <ExportedSectionHeading heading={heading} verbiage={verbiage} />
+      <ExportedSectionHeading
+        heading={heading}
+        hint={hint}
+        info={info}
+        level={level}
+      />
     </ReportContext.Provider>
   );
 };
 
-describe("ExportedSectionHeading renders", () => {
-  test("ExportedSectionHeading renders", () => {
+describe("ExportedSectionHeading", () => {
+  test("renders container", () => {
     const { getByTestId } = render(
-      exportedReportSectionHeadingComponent(verbiage)
+      exportedReportSectionHeadingComponent("Test Heading")
     );
     const sectionHeading = getByTestId("exportedSectionHeading");
     expect(sectionHeading).toBeVisible();
   });
-});
 
-describe("ExportedSectionHeading displays correct heading", () => {
-  test("Correct heading text is shown", () => {
-    render(exportedReportSectionHeadingComponent(verbiage));
-    const sectionHeading = screen.getByText(heading);
+  test("renders heading level", () => {
+    render(exportedReportSectionHeadingComponent("Test Heading"));
+    const sectionHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Test Heading",
+    });
     expect(sectionHeading).toBeVisible();
   });
-  test("Correct heading text is shown for R,E & T", () => {
-    render(exportedReportSectionHeadingComponent(retVerbiage));
-    const sectionHeading = screen.getByText(
-      retVerbiage?.intro?.info[1].content
+
+  test("renders custom heading level", () => {
+    render(exportedReportSectionHeadingComponent("Test Heading", 3));
+    const sectionHeading = screen.getByRole("heading", {
+      level: 3,
+      name: "Test Heading",
+    });
+    expect(sectionHeading).toBeVisible();
+  });
+
+  test("renders hint", () => {
+    render(
+      exportedReportSectionHeadingComponent(
+        "Test Heading",
+        undefined,
+        "This is a hint"
+      )
     );
-    expect(sectionHeading).toBeVisible();
+    const hint = screen.getByText("This is a hint");
+    expect(hint).toBeVisible();
   });
-  test("Correct heading text is shown for State or Territory-Specific Initiatives", () => {
-    render(exportedReportSectionHeadingComponent(stateOrTerritoryVerbiage));
-    expect(
-      screen.queryByText(stateOrTerritoryVerbiage.intro.subsection)
-    ).not.toBeInTheDocument();
-  });
-});
 
-describe("Test ExportedSectionHeading accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
+  test("renders info", () => {
+    render(
+      exportedReportSectionHeadingComponent(
+        "Test Heading",
+        undefined,
+        undefined,
+        "This is info"
+      )
+    );
+    const info = screen.getByText("This is info");
+    expect(info).toBeVisible();
+  });
+
+  test("passes basic accessibility checks", async () => {
     const { container } = render(
-      exportedReportSectionHeadingComponent(verbiage)
+      exportedReportSectionHeadingComponent(
+        "Test Heading",
+        2,
+        "This is a hint",
+        "This is info"
+      )
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
