@@ -235,6 +235,8 @@ jobs:
           CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
           SEED_ADMIN_USER_EMAIL: ${{ secrets.SEED_ADMIN_USER_EMAIL }}
           SEED_ADMIN_USER_PASSWORD: ${{ secrets.SEED_ADMIN_USER_PASSWORD }}
+          SEED_STATE_USER_EMAIL: ${{ secrets.SEED_STATE_USER_EMAIL }}
+          SEED_STATE_USER_PASSWORD: ${{ secrets.SEED_STATE_USER_PASSWORD }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
