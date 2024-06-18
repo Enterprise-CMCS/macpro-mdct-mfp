@@ -22,11 +22,11 @@ jobs:
           python-version: 3.9
 
       - name: Run the script
-        run: python rm_old_folders.py --n-days 30 --folder-name '.'
+        run: python rm_old_folders.py --n-days 1 --folder-name '.'
 
       - name: Commit all changed files back to the repository
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: gh-pages
-          commit_message: Delete folders older than 30 days
+          commit_message: Delete folders older than 1 days
 
