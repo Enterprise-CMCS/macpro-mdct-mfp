@@ -122,7 +122,10 @@ export const renderReportSections = (
 ) => {
   const { reportType } = report;
   // recursively render sections
-  const renderSection = (section: ReportRoute, level: number) => {
+  const renderSection = (
+    section: ReportRoute,
+    headingLevel: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+  ) => {
     //because R,E & T section needs numbers added, switch from shallow copy to deep copy
     const childSections = structuredClone(section.children) || [];
     const heading = section.verbiage?.intro.subsection
@@ -173,13 +176,15 @@ export const renderReportSections = (
               heading={sectionHeading}
               hint={hint}
               info={info}
-              level={level}
+              headingLevel={headingLevel}
             />
             <ExportedReportWrapper section={section as ReportRouteWithForm} />
           </Box>
         )}
         {/* if section has children, recurse */}
-        {childSections.map((child: ReportRoute) => renderSection(child, level))}
+        {childSections.map((child: ReportRoute) =>
+          renderSection(child, headingLevel)
+        )}
       </Box>
     );
   };
@@ -188,7 +193,7 @@ export const renderReportSections = (
     .filter((section) => section.pageType !== PageTypes.REVIEW_SUBMIT)
     .map((section: ReportRoute) => (
       <Box key={section.path} mt="3.5rem">
-        {renderSection(section, 2)}
+        {renderSection(section, "h2")}
       </Box>
     ));
 };

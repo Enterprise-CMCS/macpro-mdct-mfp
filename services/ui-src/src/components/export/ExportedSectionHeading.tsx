@@ -8,10 +8,8 @@ export const ExportedSectionHeading = ({
   heading,
   hint,
   info,
-  level = 2,
+  headingLevel = "h2",
 }: Props) => {
-  const headingLevel = `h${level}` as any;
-
   return (
     <Box data-testid="exportedSectionHeading" sx={sx.container}>
       <Heading as={headingLevel} sx={sx.heading}>
@@ -27,7 +25,7 @@ export interface Props {
   heading: string;
   hint?: string;
   info?: string | CustomHtmlElement[];
-  level?: number;
+  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 const sx = {

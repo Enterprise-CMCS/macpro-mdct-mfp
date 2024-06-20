@@ -9,10 +9,9 @@ export const EntityStepCardTopSection = ({
   stepType,
   formattedEntityData,
   entityCompleted,
-  level = 2,
+  headingLevel = "h2",
 }: Props) => {
   const { report } = useStore() ?? {};
-  const headingLevel = `h${level}` as any;
 
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
@@ -154,7 +153,7 @@ interface Props {
   formattedEntityData: AnyObject;
   printVersion?: boolean;
   entityCompleted?: boolean;
-  level?: number;
+  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 const sx = {

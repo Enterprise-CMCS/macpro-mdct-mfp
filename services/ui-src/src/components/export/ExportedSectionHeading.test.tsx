@@ -8,7 +8,7 @@ import { CustomHtmlElement } from "types";
 
 const exportedReportSectionHeadingComponent = (
   heading: string,
-  level?: number,
+  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6",
   hint?: string,
   info?: string | CustomHtmlElement[]
 ) => {
@@ -18,7 +18,7 @@ const exportedReportSectionHeadingComponent = (
         heading={heading}
         hint={hint}
         info={info}
-        level={level}
+        headingLevel={headingLevel}
       />
     </ReportContext.Provider>
   );
@@ -43,7 +43,7 @@ describe("ExportedSectionHeading", () => {
   });
 
   test("renders custom heading level", () => {
-    render(exportedReportSectionHeadingComponent("Test Heading", 3));
+    render(exportedReportSectionHeadingComponent("Test Heading", "h3"));
     const sectionHeading = screen.getByRole("heading", {
       level: 3,
       name: "Test Heading",
@@ -80,7 +80,7 @@ describe("ExportedSectionHeading", () => {
     const { container } = render(
       exportedReportSectionHeadingComponent(
         "Test Heading",
-        2,
+        "h2",
         "This is a hint",
         "This is info"
       )

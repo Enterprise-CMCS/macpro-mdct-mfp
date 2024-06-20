@@ -17,6 +17,7 @@ export const ExportedOverlayModalReportSection = ({
   section: { verbiage },
   entity,
   entityStep,
+  headingLevel = "h4",
 }: Props) => {
   const { emptyEntityMessage, dashboardTitle } = exportVerbiage;
 
@@ -34,7 +35,7 @@ export const ExportedOverlayModalReportSection = ({
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
       <Box>
-        <Heading as="h4" sx={sx.stepName}>
+        <Heading as={headingLevel} sx={sx.stepName}>
           {title}
         </Heading>
         <Box sx={sx.stepHint}>{info || hint}</Box>
@@ -74,6 +75,7 @@ export interface Props {
   section: OverlayModalPageShape;
   entity?: EntityShape;
   entityStep?: (string | FormLayoutElement | FormField)[];
+  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 const sx = {
