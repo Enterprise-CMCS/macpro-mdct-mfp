@@ -82,5 +82,5 @@ export const ExportedReportWrapper = ({
 
 export interface Props {
   section: ReportRouteWithForm;
-  headingLevel: HeadingLevel;
+  headingLevel?: HeadingLevel;
 }
