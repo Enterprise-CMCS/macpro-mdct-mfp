@@ -35,7 +35,10 @@ import finishedIcon from "assets/icons/icon_check_circle.png";
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
 
-export const ExportedModalOverlayReportSection = ({ section }: Props) => {
+export const ExportedModalOverlayReportSection = ({
+  section,
+  headingLevel = "h3",
+}: Props) => {
   const { report } = useStore() ?? {};
   const entityType = section.entityType;
   const errorMessage: ErrorVerbiage =
@@ -57,7 +60,8 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
           renderModalOverlayTableBody(
             section,
             report,
-            report?.fieldData[entityType]
+            report?.fieldData[entityType],
+            headingLevel
           )}
       </Box>
       {(!report?.fieldData[entityType] ||
@@ -70,6 +74,7 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
 
 export interface Props {
   section: ModalOverlayReportPageShape;
+  headingLevel?: HeadingLevel;
 }
 
 export function renderStatusIcon(status: boolean) {
@@ -155,7 +160,7 @@ export function renderModalOverlayTableBody(
                 />
               </Box>
               <Box>
-                <Heading as={headingLevel || "h3"} sx={sx.heading}>
+                <Heading as={headingLevel} sx={sx.heading}>
                   {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
                 </Heading>
                 <Text sx={sx.headingSubtitle}>
@@ -235,7 +240,7 @@ export function renderModalOverlayTableBody(
               </Box>
               <Box>
                 <Box>
-                  <Heading as={headingLevel || "h2"} sx={sx.heading}>
+                  <Heading as={headingLevel} sx={sx.heading}>
                     {renderInitiativeTitle(entity, idx)}
                   </Heading>
                   <Text sx={sx.headingSubtitle}>

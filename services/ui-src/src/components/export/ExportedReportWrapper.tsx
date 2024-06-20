@@ -9,6 +9,7 @@ import {
 // types
 import {
   DrawerReportPageShape,
+  HeadingLevel,
   ModalDrawerReportPageShape,
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
@@ -18,7 +19,10 @@ import {
   StandardReportPageShape,
 } from "types";
 import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
-export const ExportedReportWrapper = ({ section }: Props) => {
+export const ExportedReportWrapper = ({
+  section,
+  headingLevel = "h2",
+}: Props) => {
   switch (section.pageType) {
     case PageTypes.STANDARD:
       if (section.path.includes("/sar/recruitment-enrollment-transitions/")) {
@@ -47,6 +51,7 @@ export const ExportedReportWrapper = ({ section }: Props) => {
       return (
         <ExportedModalDrawerReportSection
           section={section as ModalDrawerReportPageShape}
+          headingLevel={headingLevel}
         />
       );
     case PageTypes.DYNAMIC_MODAL_OVERLAY:
@@ -55,6 +60,7 @@ export const ExportedReportWrapper = ({ section }: Props) => {
         <>
           <ExportedModalOverlayReportSection
             section={section as ModalOverlayReportPageShape}
+            headingLevel={headingLevel}
           />
         </>
       );
@@ -63,6 +69,7 @@ export const ExportedReportWrapper = ({ section }: Props) => {
         <>
           <ExportedOverlayModalReportSection
             section={section as OverlayModalPageShape}
+            headingLevel={headingLevel}
           />
         </>
       );
@@ -73,4 +80,5 @@ export const ExportedReportWrapper = ({ section }: Props) => {
 
 export interface Props {
   section: ReportRouteWithForm;
+  headingLevel: HeadingLevel;
 }

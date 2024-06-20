@@ -167,6 +167,10 @@ export const renderReportSections = (
       hint = undefined;
     }
 
+    const currentLevel = parseInt(headingLevel.charAt(1), 10);
+    const nextLevel = currentLevel + 1;
+    let nextHeadingLevel = `h${nextLevel}`;
+
     return (
       <Box key={section.path}>
         {/* if section does not have children and has content to render, render it */}
@@ -178,24 +182,23 @@ export const renderReportSections = (
               info={info}
               headingLevel={headingLevel}
             />
-            <ExportedReportWrapper section={section as ReportRouteWithForm} />
+            <ExportedReportWrapper
+              section={section as ReportRouteWithForm}
+              headingLevel={nextHeadingLevel as HeadingLevel}
+            />
           </Box>
         )}
         {/* if section has children, recurse */}
         {childSections.map((child: ReportRoute) => {
-          const currentLevel = parseInt(headingLevel.charAt(1), 10);
-          let nextLevel = currentLevel + 1;
-
           if (
             [
               WP_SAR_STATE_TERRITORY_INITIATIVES,
               WP_SAR_STATE_TERRITORY_INITIATIVES_INSTRUCTIONS,
             ].includes(child.name)
           ) {
-            nextLevel = 2;
+            nextHeadingLevel = "h2";
           }
 
-          const nextHeadingLevel = `h${nextLevel}`;
           return renderSection(child, nextHeadingLevel as HeadingLevel);
         })}
       </Box>
