@@ -25,6 +25,8 @@ import sarVerbiage from "verbiage/pages/sar/sar-export";
 export const SAR_RET = "Recruitment, Enrollment, and Transitions";
 export const WP_SAR_STATE_TERRITORY_INITIATIVES =
   "State or Territory-Specific Initiatives";
+export const WP_SAR_STATE_TERRITORY_INITIATIVES_INSTRUCTIONS =
+  "State or Territory-Specific Initiatives Instructions";
 export const WP_SAR_GENERAL_INFORMATION = "General Information";
 
 export const ExportedReportPage = () => {
@@ -184,8 +186,18 @@ export const renderReportSections = (
         {/* if section has children, recurse */}
         {childSections.map((child: ReportRoute) => {
           const currentLevel = parseInt(headingLevel.charAt(1), 10);
-          const nextHeadingLevel =
-            currentLevel < 6 ? `h${currentLevel + 1}` : "h6";
+          let nextLevel = currentLevel + 1;
+
+          if (
+            [
+              WP_SAR_STATE_TERRITORY_INITIATIVES,
+              WP_SAR_STATE_TERRITORY_INITIATIVES_INSTRUCTIONS,
+            ].includes(child.name)
+          ) {
+            nextLevel = 2;
+          }
+
+          const nextHeadingLevel = `h${nextLevel}`;
           return renderSection(
             child,
             nextHeadingLevel as "h1" | "h2" | "h3" | "h4" | "h5" | "h6"

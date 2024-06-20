@@ -8,6 +8,7 @@ import {
   SAR_RET,
   WP_SAR_GENERAL_INFORMATION,
   WP_SAR_STATE_TERRITORY_INITIATIVES,
+  WP_SAR_STATE_TERRITORY_INITIATIVES_INSTRUCTIONS,
 } from "./ExportedReportPage";
 import {
   mockEmptyReportStore,
@@ -57,7 +58,7 @@ const createRoutes = (routes: string[], withChildren: boolean) =>
     children: withChildren && [
       {
         name: `${name} - Child Subsection`,
-        path: `/mock/mock-route-${index}/1`,
+        path: `/mock/mock-route-${index}/subsection`,
         pageType: "standard",
         verbiage: {
           intro: {
@@ -68,7 +69,7 @@ const createRoutes = (routes: string[], withChildren: boolean) =>
       },
       {
         name: `${name} - Not a Subsection`,
-        path: `/mock/mock-route-${index}/2`,
+        path: `/mock/mock-route-${index}/section`,
         pageType: "standard",
         verbiage: {
           intro: {
@@ -83,6 +84,7 @@ const wpRoutes = [
   WP_SAR_GENERAL_INFORMATION,
   WP_SAR_STATE_TERRITORY_INITIATIVES,
 ];
+
 const sarRoutes = [
   WP_SAR_GENERAL_INFORMATION,
   WP_SAR_STATE_TERRITORY_INITIATIVES,
@@ -125,6 +127,54 @@ describe("ExportedReportPage", () => {
       );
       expect(sectionHeading).not.toBeInTheDocument();
       expect(childHeading).toBeVisible();
+    });
+
+    test("loads WP initiatives with correct heading level", async () => {
+      const initiativeRoute = {
+        name: "WP",
+        path: `/mock/mock-route-0`,
+        pageType: "standard",
+        form: mockForm,
+        children: [
+          {
+            name: WP_SAR_STATE_TERRITORY_INITIATIVES,
+            path: `/mock/mock-route-0/0`,
+            pageType: "standard",
+            verbiage: {
+              intro: {
+                section: "",
+                subsection: WP_SAR_STATE_TERRITORY_INITIATIVES,
+              },
+            },
+          },
+          {
+            name: WP_SAR_STATE_TERRITORY_INITIATIVES_INSTRUCTIONS,
+            path: `/mock/mock-route-0/1`,
+            pageType: "standard",
+            verbiage: {
+              intro: {
+                section: "",
+                subsection: WP_SAR_STATE_TERRITORY_INITIATIVES_INSTRUCTIONS,
+              },
+            },
+          },
+        ],
+      };
+
+      mockWpReportContext.report.formTemplate.routes = [initiativeRoute];
+
+      const page = render(exportedReportPage(mockReportJson));
+      const sectionHeading1 = page.queryByRole("heading", {
+        level: 2,
+        name: WP_SAR_STATE_TERRITORY_INITIATIVES,
+      });
+      const sectionHeading2 = page.getByRole("heading", {
+        level: 2,
+        name: WP_SAR_STATE_TERRITORY_INITIATIVES_INSTRUCTIONS,
+      });
+
+      expect(sectionHeading1).toBeVisible();
+      expect(sectionHeading2).toBeVisible();
     });
 
     test("loads WP without children", async () => {

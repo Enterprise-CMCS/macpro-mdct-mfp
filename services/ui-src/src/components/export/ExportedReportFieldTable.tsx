@@ -70,7 +70,8 @@ export const renderGeneralInformation = (
   verbiage: any,
   formFields: (FormField | FormLayoutElement)[],
   pageType: string,
-  entityType?: string
+  entityType?: string,
+  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
 ) => {
   const { report } = useStore();
 
@@ -115,7 +116,7 @@ export const renderGeneralInformation = (
         {!isNotResubmission ||
         (isNotResubmission && heading != "Resubmission Information") ? (
           <>
-            <Heading as="h3" sx={sx.heading}>
+            <Heading as={headingLevel || "h3"} sx={sx.heading}>
               {heading}
             </Heading>
             <Table

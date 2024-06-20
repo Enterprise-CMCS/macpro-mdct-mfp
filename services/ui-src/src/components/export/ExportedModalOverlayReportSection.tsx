@@ -119,7 +119,8 @@ export function getEntityStepFields(
 export function renderModalOverlayTableBody(
   section: ModalOverlayReportPageShape | OverlayModalPageShape,
   report: ReportShape,
-  entities: EntityShape[]
+  entities: EntityShape[],
+  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
 ) {
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
@@ -153,13 +154,12 @@ export function renderModalOverlayTableBody(
                 />
               </Box>
               <Box>
-                <Heading sx={sx.heading} as="h3">
+                <Heading as={headingLevel || "h3"} sx={sx.heading}>
                   {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
-                  <br />
-                  <Text sx={sx.headingSubtitle}>
-                    {entity.initiative_wpTopic[0].value}
-                  </Text>
                 </Heading>
+                <Text sx={sx.headingSubtitle}>
+                  {entity.initiative_wpTopic[0].value}
+                </Text>
               </Box>
             </Flex>
             {/* Depending on what the entity step type is, render its corresponding component */}
@@ -233,14 +233,14 @@ export function renderModalOverlayTableBody(
                 />
               </Box>
               <Box>
-                <Heading sx={sx.heading} as="h2">
-                  {renderInitiativeTitle(entity, idx)}
-                  <br />
+                <Box>
+                  <Heading as={headingLevel || "h2"} sx={sx.heading}>
+                    {renderInitiativeTitle(entity, idx)}
+                  </Heading>
                   <Text sx={sx.headingSubtitle}>
                     {entity.initiative_wpTopic[0].value}
                   </Text>
-                </Heading>
-
+                </Box>
                 {entity.isInitiativeClosed && (
                   <Box key={`${reportType}${idx}-closeout-info`}>
                     <Box>

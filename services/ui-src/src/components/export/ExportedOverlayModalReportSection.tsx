@@ -52,6 +52,10 @@ export const ExportedOverlayModalReportSection = ({
         </Box>
       </Box>
       {entity?.[type]?.map((step: any, index: number) => {
+        const currentLevel = parseInt(headingLevel.charAt(1), 10);
+        const nextLevel = currentLevel + 1;
+
+        const nextHeadingLevel = `h${nextLevel}`;
         return (
           <EntityStepCard
             key={`${entity.id}${index}`}
@@ -63,7 +67,9 @@ export const ExportedOverlayModalReportSection = ({
             verbiage={verbiage}
             printVersion
             hasBorder={true}
-            headingLevel={"h5"}
+            headingLevel={
+              nextHeadingLevel as "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+            }
           />
         );
       })}
