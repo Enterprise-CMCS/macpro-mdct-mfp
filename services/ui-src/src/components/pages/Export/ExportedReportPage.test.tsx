@@ -116,7 +116,7 @@ describe("ExportedReportPage", () => {
         name: WP_SAR_STATE_TERRITORY_INITIATIVES,
       });
       const childHeading = page.getByRole("heading", {
-        level: 2,
+        level: 3,
         name: `${WP_SAR_STATE_TERRITORY_INITIATIVES} - Child Subsection Intro`,
       });
 
