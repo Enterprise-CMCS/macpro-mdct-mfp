@@ -132,13 +132,13 @@ describe("ExportedReportPage", () => {
     test("loads WP initiatives with correct heading level", async () => {
       const initiativeRoute = {
         name: "WP",
-        path: `/mock/mock-route-0`,
+        path: "/mock/mock-route",
         pageType: "standard",
         form: mockForm,
         children: [
           {
             name: WP_SAR_STATE_TERRITORY_INITIATIVES,
-            path: `/mock/mock-route-0/0`,
+            path: "/mock/mock-route/0",
             pageType: "standard",
             verbiage: {
               intro: {
@@ -149,7 +149,7 @@ describe("ExportedReportPage", () => {
           },
           {
             name: WP_SAR_STATE_TERRITORY_INITIATIVES_INSTRUCTIONS,
-            path: `/mock/mock-route-0/1`,
+            path: "/mock/mock-route/1",
             pageType: "standard",
             verbiage: {
               intro: {
