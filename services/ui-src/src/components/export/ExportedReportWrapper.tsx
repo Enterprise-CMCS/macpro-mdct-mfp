@@ -36,6 +36,7 @@ export const ExportedReportWrapper = ({
         <Box data-testid="exportedStandardReportSection" mt="2rem">
           <ExportedReportFieldTable
             section={section as StandardReportPageShape}
+            headingLevel={headingLevel}
           />
         </Box>
       );
@@ -44,6 +45,7 @@ export const ExportedReportWrapper = ({
         <Box data-testid="exportedDrawerReportSection" mt="2rem">
           <ExportedReportFieldTable
             section={section as DrawerReportPageShape}
+            headingLevel={headingLevel}
           />
         </Box>
       );

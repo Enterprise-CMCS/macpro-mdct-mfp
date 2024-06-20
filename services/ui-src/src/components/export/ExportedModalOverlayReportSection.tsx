@@ -126,7 +126,7 @@ export function renderModalOverlayTableBody(
   section: ModalOverlayReportPageShape | OverlayModalPageShape,
   report: ReportShape,
   entities: EntityShape[],
-  headingLevel?: HeadingLevel
+  headingLevel: HeadingLevel
 ) {
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
@@ -172,7 +172,11 @@ export function renderModalOverlayTableBody(
             {entitySteps.map((step, stepIdx) => {
               const type = step[0].toString();
               switch (type) {
-                case EntityDetailsStepTypes.DEFINE_INITIATIVE:
+                case EntityDetailsStepTypes.DEFINE_INITIATIVE: {
+                  const currentLevel = parseInt(headingLevel.charAt(1), 10);
+                  const nextLevel = currentLevel + 1;
+                  const nextHeadingLevel = `h${nextLevel}`;
+
                   return (
                     <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedEntityDetailsOverlaySection
@@ -180,9 +184,11 @@ export function renderModalOverlayTableBody(
                         entity={entity}
                         entityStep={step}
                         showHintText={true}
+                        headingLevel={nextHeadingLevel}
                       />
                     </Box>
                   );
+                }
                 case OverlayModalStepTypes.EVALUATION_PLAN:
                   return (
                     <Box key={`${type}${idx}${stepIdx}`}>

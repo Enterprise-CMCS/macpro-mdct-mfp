@@ -29,6 +29,7 @@ export const ExportedEntityDetailsOverlaySection = ({
   closed,
   showHintText,
   tableSection,
+  headingLevel = "h4",
 }: ExportedEntityDetailsOverlaySectionProps) => {
   const { report } = useStore() ?? {};
 
@@ -41,7 +42,8 @@ export const ExportedEntityDetailsOverlaySection = ({
           entityStep,
           showHintText,
           closed,
-          tableSection
+          tableSection,
+          headingLevel
         )}
     </Box>
   );
@@ -54,6 +56,7 @@ export interface ExportedEntityDetailsOverlaySectionProps {
   showHintText?: boolean;
   tableSection?: ReportPageShapeBase;
   closed?: boolean;
+  headingLevel?: HeadingLevel;
 }
 
 /**
@@ -88,7 +91,7 @@ export function getEntityTableComponents(
     <Box key={uuid()}>
       <Box>
         <Box>
-          <Heading as={headingLevel || "h4"} sx={sx.stepName}>
+          <Heading as={headingLevel} sx={sx.stepName}>
             {title}
           </Heading>
           <Box sx={sx.stepHint}>
@@ -137,7 +140,8 @@ export function renderEntityDetailTables(
   entityStep: (string | FormLayoutElement | FormField)[],
   showHintText?: boolean,
   closed?: boolean,
-  tableSection?: ReportPageShapeBase
+  tableSection?: ReportPageShapeBase,
+  headingLevel?: HeadingLevel
 ) {
   const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
@@ -147,7 +151,9 @@ export function renderEntityDetailTables(
         entity,
         entityStep,
         showHintText,
-        closed
+        closed,
+        undefined,
+        headingLevel
       );
     }
     case ReportType.SAR:
@@ -157,7 +163,8 @@ export function renderEntityDetailTables(
         entityStep,
         showHintText,
         closed,
-        tableSection
+        tableSection,
+        headingLevel
       );
     default:
       assertExhaustive(reportType);
