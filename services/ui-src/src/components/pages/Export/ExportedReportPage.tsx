@@ -182,9 +182,15 @@ export const renderReportSections = (
           </Box>
         )}
         {/* if section has children, recurse */}
-        {childSections.map((child: ReportRoute) =>
-          renderSection(child, headingLevel)
-        )}
+        {childSections.map((child: ReportRoute) => {
+          const currentLevel = parseInt(headingLevel.charAt(1), 10);
+          const nextHeadingLevel =
+            currentLevel < 6 ? `h${currentLevel + 1}` : "h6";
+          return renderSection(
+            child,
+            nextHeadingLevel as "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+          );
+        })}
       </Box>
     );
   };

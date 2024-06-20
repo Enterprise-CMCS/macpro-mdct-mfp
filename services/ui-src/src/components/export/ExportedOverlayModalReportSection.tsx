@@ -63,7 +63,7 @@ export const ExportedOverlayModalReportSection = ({
             verbiage={verbiage}
             printVersion
             hasBorder={true}
-            level={5}
+            headingLevel={"h5"}
           />
         );
       })}

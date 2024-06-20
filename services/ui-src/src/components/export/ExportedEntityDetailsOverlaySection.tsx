@@ -67,7 +67,8 @@ export function getEntityTableComponents(
   entityStep: (string | FormLayoutElement | FormField)[],
   showHintText?: boolean,
   closed?: boolean,
-  tableSection?: ReportPageShapeBase
+  tableSection?: ReportPageShapeBase,
+  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
 ) {
   const reportType = report.reportType;
   const title = (entityStep as any)?.name || (entityStep![1] as string);
@@ -85,12 +86,14 @@ export function getEntityTableComponents(
   return (
     <Box key={uuid()}>
       <Box>
-        <Heading as="h4">
-          <Box sx={sx.stepName}>{title}</Box>
+        <Box>
+          <Heading as={headingLevel || "h4"} sx={sx.stepName}>
+            {title}
+          </Heading>
           <Box sx={sx.stepHint}>
             {reportType === ReportType.SAR ? parseCustomHtml(info) : hint}
           </Box>
-        </Heading>
+        </Box>
       </Box>
       {closed && (
         <Box sx={sx.sectionHeading}>
