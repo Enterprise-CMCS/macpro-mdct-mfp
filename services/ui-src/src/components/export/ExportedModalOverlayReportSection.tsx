@@ -184,7 +184,7 @@ export function renderModalOverlayTableBody(
                         entity={entity}
                         entityStep={step}
                         showHintText={true}
-                        headingLevel={nextHeadingLevel}
+                        headingLevel={nextHeadingLevel as HeadingLevel}
                       />
                     </Box>
                   );
@@ -410,6 +410,7 @@ const sx = {
     fontSize: "xl",
   },
   headingSubtitle: {
+    fontSize: "xl",
     fontWeight: "normal",
     marginLeft: "1.5rem",
   },
