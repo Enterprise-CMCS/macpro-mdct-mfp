@@ -11,6 +11,7 @@ import {
 } from "components";
 // types
 import {
+  HeadingLevel,
   PageTypes,
   ReportPageVerbiage,
   ReportRoute,
@@ -124,10 +125,7 @@ export const renderReportSections = (
 ) => {
   const { reportType } = report;
   // recursively render sections
-  const renderSection = (
-    section: ReportRoute,
-    headingLevel: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
-  ) => {
+  const renderSection = (section: ReportRoute, headingLevel: HeadingLevel) => {
     //because R,E & T section needs numbers added, switch from shallow copy to deep copy
     const childSections = structuredClone(section.children) || [];
     const heading = section.verbiage?.intro.subsection
@@ -198,10 +196,7 @@ export const renderReportSections = (
           }
 
           const nextHeadingLevel = `h${nextLevel}`;
-          return renderSection(
-            child,
-            nextHeadingLevel as "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
-          );
+          return renderSection(child, nextHeadingLevel as HeadingLevel);
         })}
       </Box>
     );

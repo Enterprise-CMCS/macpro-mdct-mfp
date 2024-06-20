@@ -9,6 +9,7 @@ import { Box, Button, Image, Text } from "@chakra-ui/react";
 import {
   AnyObject,
   EntityShape,
+  HeadingLevel,
   OverlayModalStepTypes,
   ReportType,
 } from "types";
@@ -230,7 +231,7 @@ interface Props {
   printVersion?: boolean;
   hasBoxShadow?: boolean;
   hasBorder?: boolean;
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  headingLevel?: HeadingLevel;
   [key: string]: any;
 }
 

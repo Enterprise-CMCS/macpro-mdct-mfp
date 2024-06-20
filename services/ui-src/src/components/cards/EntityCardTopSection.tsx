@@ -2,7 +2,12 @@
 import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
 import { notAnsweredText } from "../../constants";
 // utils
-import { AnyObject, OverlayModalStepTypes, ReportType } from "types";
+import {
+  AnyObject,
+  HeadingLevel,
+  OverlayModalStepTypes,
+  ReportType,
+} from "types";
 import { useStore } from "utils";
 
 export const EntityStepCardTopSection = ({
@@ -153,7 +158,7 @@ interface Props {
   formattedEntityData: AnyObject;
   printVersion?: boolean;
   entityCompleted?: boolean;
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  headingLevel?: HeadingLevel;
 }
 
 const sx = {
