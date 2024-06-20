@@ -1,6 +1,6 @@
 // components
 import { Box, Heading } from "@chakra-ui/react";
-import { CustomHtmlElement } from "types";
+import { CustomHtmlElement, HeadingLevel } from "types";
 // utils
 import { parseCustomHtml } from "utils";
 
@@ -25,7 +25,7 @@ export interface Props {
   heading: string;
   hint?: string;
   info?: string | CustomHtmlElement[];
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  headingLevel?: HeadingLevel;
 }
 
 const sx = {

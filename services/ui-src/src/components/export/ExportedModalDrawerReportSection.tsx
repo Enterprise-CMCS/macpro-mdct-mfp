@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // types
-import { EntityShape, ModalDrawerReportPageShape } from "types";
+import { EntityShape, HeadingLevel, ModalDrawerReportPageShape } from "types";
 // utils
 import { convertToThousandsSeparatedString, useStore } from "utils";
 import { notAnsweredText } from "../../constants";
@@ -310,7 +310,7 @@ export const ExportedModalDrawerReportSection = ({
 
 export interface Props {
   section: ModalDrawerReportPageShape;
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  headingLevel?: HeadingLevel;
 }
 
 const sx = {

@@ -13,6 +13,7 @@ import {
   ReportType,
   FieldChoice,
   ReportStatus,
+  HeadingLevel,
 } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
@@ -71,7 +72,7 @@ export const renderGeneralInformation = (
   formFields: (FormField | FormLayoutElement)[],
   pageType: string,
   entityType?: string,
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+  headingLevel?: HeadingLevel
 ) => {
   const { report } = useStore();
 

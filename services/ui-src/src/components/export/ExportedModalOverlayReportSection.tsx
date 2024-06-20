@@ -18,6 +18,7 @@ import {
   ErrorVerbiage,
   FormField,
   FormLayoutElement,
+  HeadingLevel,
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   OverlayModalStepTypes,
@@ -120,7 +121,7 @@ export function renderModalOverlayTableBody(
   section: ModalOverlayReportPageShape | OverlayModalPageShape,
   report: ReportShape,
   entities: EntityShape[],
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+  headingLevel?: HeadingLevel
 ) {
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);

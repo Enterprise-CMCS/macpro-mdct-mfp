@@ -13,6 +13,7 @@ import {
   EntityShape,
   FormField,
   FormLayoutElement,
+  HeadingLevel,
   ModalOverlayReportPageShape,
   ReportPageShapeBase,
   ReportShape,
@@ -68,7 +69,7 @@ export function getEntityTableComponents(
   showHintText?: boolean,
   closed?: boolean,
   tableSection?: ReportPageShapeBase,
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+  headingLevel?: HeadingLevel
 ) {
   const reportType = report.reportType;
   const title = (entityStep as any)?.name || (entityStep![1] as string);

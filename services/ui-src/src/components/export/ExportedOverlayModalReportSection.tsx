@@ -7,6 +7,7 @@ import {
   EntityShape,
   FormField,
   FormLayoutElement,
+  HeadingLevel,
   OverlayModalPageShape,
 } from "types";
 import { EntityStepCard } from "components";
@@ -67,9 +68,7 @@ export const ExportedOverlayModalReportSection = ({
             verbiage={verbiage}
             printVersion
             hasBorder={true}
-            headingLevel={
-              nextHeadingLevel as "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
-            }
+            headingLevel={nextHeadingLevel as HeadingLevel}
           />
         );
       })}
@@ -81,7 +80,7 @@ export interface Props {
   section: OverlayModalPageShape;
   entity?: EntityShape;
   entityStep?: (string | FormLayoutElement | FormField)[];
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  headingLevel?: HeadingLevel;
 }
 
 const sx = {

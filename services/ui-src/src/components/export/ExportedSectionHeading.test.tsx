@@ -4,11 +4,11 @@ import { axe } from "jest-axe";
 import { ReportContext, ExportedSectionHeading } from "components";
 // utils
 import { mockWpReportContext } from "utils/testing/setupJest";
-import { CustomHtmlElement } from "types";
+import { CustomHtmlElement, HeadingLevel } from "types";
 
 const exportedReportSectionHeadingComponent = (
   heading: string,
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6",
+  headingLevel?: HeadingLevel,
   hint?: string,
   info?: string | CustomHtmlElement[]
 ) => {
