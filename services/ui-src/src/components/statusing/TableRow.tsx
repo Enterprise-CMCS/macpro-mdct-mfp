@@ -4,53 +4,54 @@ import { useBreakpoint, useStore } from "utils";
 import { EditButton } from "./EditButton";
 import { StatusIcon } from "./StatusIcon";
 
-export const TableRow = ({ page, depth }: RowProps) => {
+export const TableRow = ({ page, rowDepth }: RowProps) => {
   const { isMobile } = useBreakpoint();
   const { name, path, children, status } = page;
   const { report, editable } = useStore();
   const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
+
+  const isMobileAndNotChildEditButton =
+    isMobile && !children && EditButton(buttonAriaLabel, path, editable);
+
+  const notChildEditButton =
+    !children && EditButton(buttonAriaLabel, path, editable, true);
+
+  const parentPl = !isMobile ? "1rem" : "0";
+  const subparentPl = !isMobile ? `${1.25 * rowDepth}rem` : "0";
+
+  const ptRowDepth1 = isMobile ? "1.5rem" : "0.5rem";
+  const ptRowDepthOver1 = isMobile ? "1rem" : "0.5rem";
+
   return (
     <Tr>
-      {depth == 1 ? (
-        <Td sx={sx.parent} pl={!isMobile ? "1rem" : "0"}>
+      {rowDepth == 1 ? (
+        <Td sx={sx.parent} pl={parentPl}>
           <Text>{name}</Text>
-          {isMobile && !children && EditButton(buttonAriaLabel, path, editable)}
+          {isMobileAndNotChildEditButton}
         </Td>
       ) : (
-        <Td sx={sx.subparent} pl={!isMobile ? `${1.25 * depth}rem` : "0"}>
+        <Td sx={sx.subparent} pl={subparentPl}>
           <Text>{name}</Text>
-          {isMobile && !children && EditButton(buttonAriaLabel, path, editable)}
+          {isMobileAndNotChildEditButton}
         </Td>
       )}
       <Td
         sx={sx.statusColumn}
-        pt={
-          depth == 1
-            ? isMobile
-              ? "1.5rem"
-              : "0.5rem"
-            : isMobile
-            ? "1rem"
-            : "0.5rem"
-        }
+        pt={rowDepth == 1 ? ptRowDepth1 : ptRowDepthOver1}
       >
         <StatusIcon
           reportType={report?.reportType as ReportType}
           status={status}
         />
       </Td>
-      {!isMobile && (
-        <Td>
-          {!children && EditButton(buttonAriaLabel, path, editable, true)}
-        </Td>
-      )}
+      {!isMobile && <Td>{notChildEditButton}</Td>}
     </Tr>
   );
 };
 
 interface RowProps {
   page: ReportPageProgress;
-  depth: number;
+  rowDepth: number;
 }
 
 const sx = {

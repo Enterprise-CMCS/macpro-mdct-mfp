@@ -17,7 +17,7 @@ export const StatusTable = () => {
     <Box sx={sx.container}>
       <Table content={review.table} sx={sx.table}>
         {getRouteStatus(report).map((page: ReportPageProgress) => {
-          return <ChildRow key={page.path} page={page} depth={rowDepth} />;
+          return <ChildRow key={page.path} page={page} rowDepth={rowDepth} />;
         })}
       </Table>
     </Box>
