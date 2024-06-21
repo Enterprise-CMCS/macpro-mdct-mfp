@@ -16,16 +16,32 @@ export const ExportedModalDrawerReportSection = ({
   const entities = report?.fieldData?.[entityType];
   const { reportPeriod, reportYear } = report!;
 
-  // if Transition Benchmark Header title has an abbrev. just display that
   const getTableHeaders = () => {
     let headers = [];
-    const quarterHeader = "Pop. by Quarter";
-    const bodyHeaders = entities.map(
-      (entity: EntityShape) =>
-        entity.transitionBenchmarks_targetPopulationName_short ??
-        entity.transitionBenchmarks_targetPopulationName.slice(0, 29)
-    );
-    const totalHeader = "Total by Quarter";
+    let bodyHeaders = [];
+    const quarterHeader = {
+      displayName: "Pop. by Quarter",
+      ariaLabel: "Population by Quarter",
+    };
+
+    const totalHeader = {
+      displayName: "Total by Quarter",
+      ariaLabel: "Total by Quarter",
+    };
+
+    for (const entity of entities) {
+      const shortName = entity.transitionBenchmarks_targetPopulationName_short;
+      const longName = entity.transitionBenchmarks_targetPopulationName.slice(
+        0,
+        29
+      );
+      const ariaLabel = entity.transitionBenchmarks_targetPopulationName;
+
+      bodyHeaders.push({
+        displayName: shortName ?? longName,
+        ariaLabel: ariaLabel,
+      });
+    }
 
     headers.push(quarterHeader, ...bodyHeaders, totalHeader);
     return headers;
@@ -137,10 +153,19 @@ export const ExportedModalDrawerReportSection = ({
     return displayValue;
   };
 
+  const generateHeaderAriaLabels = () => {
+    let ariaHeaders = getTableHeaders().map((obj) => obj.ariaLabel);
+    return {
+      headRow: [...ariaHeaders],
+    };
+  };
+
   const generateMainTable = () => {
     // create new quarter value array
     let newQuarterValueArray = new Array(...quarterValueArray);
-    let tableHeadersArray = new Array(...getTableHeaders());
+
+    let tableHeadersArray = getTableHeaders().map((obj) => obj.displayName);
+
     {
       overflow === true ? tableHeadersArray.pop() : null;
     }
@@ -206,7 +231,7 @@ export const ExportedModalDrawerReportSection = ({
     let overflowQuarterValueArray = newQuarterValueArray.filter(
       (arr: string[]) => newQuarterValueArray.indexOf(arr) > 5
     );
-    let tableHeadersArray = new Array(...getTableHeaders());
+    let tableHeadersArray = getTableHeaders().map((obj) => obj.displayName);
 
     const formatBodyRow = () => {
       let bodyRows = [];
@@ -245,6 +270,7 @@ export const ExportedModalDrawerReportSection = ({
     const formatOverflowTableHeaders = () => {
       const overflowTableHeadersArray = [];
       overflowTableHeadersArray.push(tableHeadersArray[0]);
+
       tableHeadersArray.find((arr) => {
         if (tableHeadersArray.indexOf(arr) > 6) {
           overflowTableHeadersArray.push(arr);
@@ -294,7 +320,11 @@ export const ExportedModalDrawerReportSection = ({
         </>
       )}
       <Box sx={overflow ? sx.overflowStyles : {}}>
-        <Table sx={sx.table} content={generateMainTable()}></Table>
+        <Table
+          sx={sx.table}
+          content={generateMainTable()}
+          ariaOverride={generateHeaderAriaLabels()}
+        ></Table>
         {overflow && (
           <Table sx={sx.table} content={generateOverflowTable()}></Table>
         )}
