@@ -245,14 +245,12 @@ export function renderModalOverlayTableBody(
                 />
               </Box>
               <Box>
-                <Box>
-                  <Heading as={headingLevel} sx={sx.heading}>
-                    {renderInitiativeTitle(entity, idx)}
-                  </Heading>
-                  <Text sx={sx.headingSubtitle}>
-                    {entity.initiative_wpTopic[0].value}
-                  </Text>
-                </Box>
+                <Heading as={headingLevel} sx={sx.heading}>
+                  {renderInitiativeTitle(entity, idx)}
+                </Heading>
+                <Text sx={sx.headingSubtitle}>
+                  {entity.initiative_wpTopic[0].value}
+                </Text>
                 {entity.isInitiativeClosed && (
                   <Box key={`${reportType}${idx}-closeout-info`}>
                     <Box>

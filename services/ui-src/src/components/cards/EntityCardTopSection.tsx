@@ -17,7 +17,6 @@ export const EntityStepCardTopSection = ({
   headingLevel = "h2",
 }: Props) => {
   const { report } = useStore() ?? {};
-
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
       return (

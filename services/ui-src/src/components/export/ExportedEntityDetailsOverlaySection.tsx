@@ -90,13 +90,11 @@ export function getEntityTableComponents(
   return (
     <Box key={uuid()}>
       <Box>
-        <Box>
-          <Heading as={headingLevel} sx={sx.stepName}>
-            {title}
-          </Heading>
-          <Box sx={sx.stepHint}>
-            {reportType === ReportType.SAR ? parseCustomHtml(info) : hint}
-          </Box>
+        <Heading as={headingLevel} sx={sx.stepName}>
+          {title}
+        </Heading>
+        <Box sx={sx.stepHint}>
+          {reportType === ReportType.SAR ? parseCustomHtml(info) : hint}
         </Box>
       </Box>
       {closed && (

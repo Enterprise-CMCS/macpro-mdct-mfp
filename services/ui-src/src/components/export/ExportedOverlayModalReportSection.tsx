@@ -35,22 +35,20 @@ export const ExportedOverlayModalReportSection = ({
   );
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
-      <Box>
-        <Heading as={headingLevel} sx={sx.stepName}>
-          {title}
-        </Heading>
-        <Box sx={sx.stepHint}>{info || hint}</Box>
-        <Box sx={sx.dashboardTitle} data-testid="headerCount">
-          {entityCount > 0 ? (
-            `${
-              dashboardTitle[type as keyof typeof dashboardTitle]
-            } ${entityCount}`
-          ) : (
-            <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
-              {emptyEntityMessage[type as keyof typeof emptyEntityMessage]}
-            </Text>
-          )}
-        </Box>
+      <Heading as={headingLevel} sx={sx.stepName}>
+        {title}
+      </Heading>
+      <Box sx={sx.stepHint}>{info || hint}</Box>
+      <Box sx={sx.dashboardTitle} data-testid="headerCount">
+        {entityCount > 0 ? (
+          `${
+            dashboardTitle[type as keyof typeof dashboardTitle]
+          } ${entityCount}`
+        ) : (
+          <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
+            {emptyEntityMessage[type as keyof typeof emptyEntityMessage]}
+          </Text>
+        )}
       </Box>
       {entity?.[type]?.map((step: any, index: number) => {
         const currentLevel = parseInt(headingLevel.charAt(1), 10);
