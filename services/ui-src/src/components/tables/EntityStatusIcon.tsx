@@ -46,12 +46,7 @@ export const EntityStatusIcon = ({ entityStatus, showLabel }: Props) => {
     <Box sx={sx.container}>
       {status && (
         <>
-          <Image
-            sx={sx.statusIcon}
-            src={status.src}
-            alt={status.alt}
-            boxSize="xl"
-          />
+          <Image src={status.src} alt={status.alt} boxSize="xl" />
           {showLabel && (
             <Text sx={status.style}>
               <b>{status.text}</b>
@@ -74,23 +69,15 @@ const sx = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    fontSize: "0.667rem",
   },
   successText: {
     color: "palette.success_darker",
-    fontSize: "0.667rem",
   },
   closeText: {
     color: "palette.gray",
-    fontSize: "0.667rem",
   },
   errorText: {
     color: "palette.error_darker",
-    fontSize: "0.667rem",
-  },
-  statusIcon: {
-    marginLeft: "0rem",
-    img: {
-      maxWidth: "fit-content",
-    },
   },
 };
