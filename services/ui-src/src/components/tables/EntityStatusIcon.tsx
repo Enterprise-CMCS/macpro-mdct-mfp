@@ -27,7 +27,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
         };
       case EntityStatuses.CLOSE:
         return {
-          src: isPdf ? closedIcon : closedIcon,
+          src: closedIcon,
           alt: isPdf ? "" : "close icon",
           style: sx.closeText,
           text: "Closed",
@@ -48,11 +48,11 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
   let status = statusIcon(entityStatus);
 
   return (
-    <Box sx={isPdf ? sx.containerPdf : sx.container}>
+    <Box sx={sx.container}>
       {status && (
         <>
           <Image
-            sx={isPdf ? sx.statusIconPdf : sx.statusIcon}
+            sx={sx.statusIcon}
             src={status.src}
             alt={status.alt}
             boxSize="xl"
@@ -95,18 +95,7 @@ const sx = {
     color: "palette.error_darker",
     fontSize: "0.667rem",
   },
-  containerPdf: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
   statusIcon: {
-    marginLeft: "0rem",
-    img: {
-      maxWidth: "fit-content",
-    },
-  },
-  statusIconPdf: {
     marginLeft: "0rem",
     img: {
       maxWidth: "fit-content",
