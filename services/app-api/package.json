@@ -44,7 +44,7 @@
     "@aws-sdk/lib-dynamodb": "^3.577.0",
     "@aws-sdk/s3-request-presigner": "^3.577.0",
     "aws-jwt-verify": "^3.1.0",
-    "dompurify": "^2.4.9",
+    "dompurify": "^2.5.5",
     "jsdom": "^20.0.0",
     "jwt-decode": "^3.1.2",
     "jwt-encode": "^1.0.1",
