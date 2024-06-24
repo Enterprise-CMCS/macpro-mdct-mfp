@@ -1,10 +1,8 @@
 // components
 import { Box, Image, Text } from "@chakra-ui/react";
 // assets
-import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
-import unfinishedIconDark from "assets/icons/icon_error_circle.png";
+import unfinishedIcon from "assets/icons/icon_error_circle.png";
 import successIcon from "assets/icons/icon_check_circle.png";
-import successIconDark from "assets/icons/icon_check_circle_dark.png";
 import closedIcon from "assets/icons/icon_circle-minus-gray.png";
 
 export enum EntityStatuses {
@@ -22,7 +20,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
       case true:
       case EntityStatuses.COMPLETE:
         return {
-          src: isPdf ? successIconDark : successIcon,
+          src: successIcon,
           alt: isPdf ? "" : "complete icon",
           style: sx.successText,
           text: "Complete",
@@ -39,7 +37,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
         return undefined;
       default:
         return {
-          src: isPdf ? unfinishedIconDark : unfinishedIcon,
+          src: unfinishedIcon,
           alt: isPdf ? "" : "warning icon",
           style: sx.errorText,
           text: "Error",
