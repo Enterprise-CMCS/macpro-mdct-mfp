@@ -3,12 +3,12 @@ import editIcon from "assets/icons/icon_edit.png";
 import iconSearch from "assets/icons/icon_search_blue.png";
 import { Button, Image } from "@chakra-ui/react";
 
-export const EditButton = (
-  buttonAriaLabel: string,
-  path: string,
-  editable: boolean,
-  showIcon = false
-) => {
+export const EditButton = ({
+  buttonAriaLabel,
+  path,
+  editable,
+  showIcon = false,
+}: Props) => {
   const navigate = useNavigate();
   const icon = editable ? editIcon : iconSearch;
   const altText = editable ? "Edit Program" : "View Program";
@@ -25,6 +25,13 @@ export const EditButton = (
     </Button>
   );
 };
+
+interface Props {
+  buttonAriaLabel: string;
+  path: string;
+  editable: boolean;
+  showIcon?: boolean;
+}
 
 const sx = {
   enterButton: {

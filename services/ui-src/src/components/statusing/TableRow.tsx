@@ -11,10 +11,11 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
   const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
 
   const isMobileAndNotChildEditButton =
-    isMobile && !children && EditButton(buttonAriaLabel, path, editable);
+    isMobile && !children && EditButton({ buttonAriaLabel, path, editable });
 
   const notChildEditButton =
-    !children && EditButton(buttonAriaLabel, path, editable, true);
+    !children &&
+    EditButton({ buttonAriaLabel, path, editable, showIcon: true });
 
   const parentPl = !isMobile ? "1rem" : "0";
   const subparentPl = !isMobile ? `${1.25 * rowDepth}rem` : "0";
