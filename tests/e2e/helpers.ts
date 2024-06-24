@@ -57,7 +57,7 @@ export async function archiveExistingWPs({ page }) {
 
   await page.getByLabel("MFP Work Plan").click();
   await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
-  await page.waitForResponse(`${process.env.API_URL}/reports/WP/PR`);
+  await page.waitForResponse(process.env.API_URL + "/reports/WP/PR");
 
   const archiveButtons = await page.getByRole("button", { name: "Archive" });
 
