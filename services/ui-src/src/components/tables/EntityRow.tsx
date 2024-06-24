@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
-import { EntityStatusIcon, Table, EntityStatuses } from "components";
+import { EntityStatusIcon, Table } from "components";
 // types
 import {
   AnyObject,
   EntityShape,
+  EntityStatuses,
   ModalDrawerEntityTypes,
   OverlayModalTypes,
   EntityDetailsOverlayTypes,

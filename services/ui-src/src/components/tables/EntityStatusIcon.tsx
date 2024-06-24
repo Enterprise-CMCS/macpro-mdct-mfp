@@ -4,13 +4,8 @@ import { Box, Image, Text } from "@chakra-ui/react";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
 import successIcon from "assets/icons/icon_check_circle.png";
 import closedIcon from "assets/icons/icon_circle-minus-gray.png";
-
-export enum EntityStatuses {
-  COMPLETE = "complete",
-  CLOSE = "close",
-  NO_STATUS = "no status",
-  DISABLED = "disabled",
-}
+// types
+import { EntityStatuses } from "types";
 
 export type EntityStatusType = EntityStatuses | boolean | undefined;
 

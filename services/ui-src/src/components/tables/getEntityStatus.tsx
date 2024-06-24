@@ -1,7 +1,7 @@
-import { EntityStatuses } from "components";
 import {
   EntityDetailsOverlayShape,
   EntityShape,
+  EntityStatuses,
   FormJson,
   ModalOverlayReportPageShape,
   OverlayModalPageShape,

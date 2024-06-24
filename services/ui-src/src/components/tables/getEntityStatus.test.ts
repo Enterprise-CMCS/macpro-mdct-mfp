@@ -1,13 +1,13 @@
 import {
   EntityDetailsOverlayShape,
   EntityShape,
+  EntityStatuses,
   FormField,
   OverlayModalPageShape,
   OverlayModalTypes,
   PageTypes,
   ReportShape,
 } from "types";
-import { EntityStatuses } from "./EntityStatusIcon";
 import {
   getValidationList,
   getEntityStatus,
