@@ -74,7 +74,7 @@ export const EntityRow = ({
           ]);
         }
       default: {
-        return report ? !!getEntityStatus(report, entity, entityType) : false;
+        return report && getEntityStatus(report, entity, entityType);
       }
     }
   };
@@ -150,7 +150,7 @@ export const EntityRow = ({
                 </li>
               ))}
             </ul>
-            {!entityStatus && (
+            {entityStatus === EntityStatuses.INCOMPLETE && (
               <Text sx={sx.errorText}>
                 {verbiage.editEntityHint ??
                   `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}

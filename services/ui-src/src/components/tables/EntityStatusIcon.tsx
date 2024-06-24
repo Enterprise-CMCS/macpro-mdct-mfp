@@ -7,12 +7,11 @@ import closedIcon from "assets/icons/icon_circle-minus-gray.png";
 // types
 import { EntityStatuses } from "types";
 
-export type EntityStatusType = EntityStatuses | boolean | undefined;
+type EntityStatusType = EntityStatuses | undefined;
 
 export const EntityStatusIcon = ({ entityStatus, showLabel }: Props) => {
   const statusIcon = (status: EntityStatusType) => {
     switch (status) {
-      case true:
       case EntityStatuses.COMPLETE:
         return {
           src: successIcon,
@@ -27,16 +26,17 @@ export const EntityStatusIcon = ({ entityStatus, showLabel }: Props) => {
           style: sx.closeText,
           text: "Closed",
         };
-      case EntityStatuses.NO_STATUS:
-      case EntityStatuses.DISABLED:
-        return undefined;
-      default:
+      case EntityStatuses.INCOMPLETE:
         return {
           src: unfinishedIcon,
           alt: showLabel ? "" : "warning icon",
           style: sx.errorText,
           text: "Error",
         };
+      case EntityStatuses.NO_STATUS:
+      case EntityStatuses.DISABLED:
+      default:
+        return undefined;
     }
   };
 

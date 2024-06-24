@@ -84,12 +84,16 @@ export const getEntityStatus = (
     });
 
     //check to see if each validation id was matched to user selected values
-    return isFilled?.every((field: AnyObject) => {
-      return field && field.length > 0;
-    });
+    if (
+      isFilled?.every((field: AnyObject) => {
+        return field && field.length > 0;
+      })
+    ) {
+      return EntityStatuses.COMPLETE;
+    }
   }
 
-  return false;
+  return EntityStatuses.INCOMPLETE;
 };
 
 export const getInitiativeStatus = (
@@ -151,10 +155,16 @@ export const getInitiativeStatus = (
       stepStatuses.splice(-1);
     }
 
-    return stepStatuses.every((field: boolean | EntityStatuses) => field);
+    if (
+      stepStatuses.every(
+        (field: EntityStatuses) => field === EntityStatuses.COMPLETE
+      )
+    ) {
+      return EntityStatuses.COMPLETE;
+    }
   }
 
-  return false;
+  return EntityStatuses.INCOMPLETE;
 };
 
 //NOTE: this function works on the assumption that the fieldData saved is validated
@@ -176,8 +186,8 @@ export const getInitiativeDashboardStatus = (
     card?.form ? card.form.fields : card.modalForm.fields
   );
 
-  //if no data could be found, return false
-  if (!formFields && !objectiveCardFields) return false;
+  //if no data could be found, return incomplete
+  if (!formFields && !objectiveCardFields) return EntityStatuses.INCOMPLETE;
 
   //this step is to consolidate the code by converting entity into a loopable array if there's no array of stepType to loop through
   const entities = entity[stepType] ? (entity[stepType] as []) : [entity];
@@ -209,10 +219,12 @@ export const getInitiativeDashboardStatus = (
         : isFilled;
     });
 
-    return isFilled;
+    if (isFilled) {
+      return EntityStatuses.COMPLETE;
+    }
   }
 
-  return false;
+  return EntityStatuses.INCOMPLETE;
 };
 
 export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {

@@ -67,8 +67,9 @@ export enum PageTypes {
 export enum EntityStatuses {
   COMPLETE = "complete",
   CLOSE = "close",
-  NO_STATUS = "no status",
   DISABLED = "disabled",
+  INCOMPLETE = "incomplete",
+  NO_STATUS = "no status",
 }
 
 export interface InputChangeEvent extends React.ChangeEvent<HTMLInputElement> {}
