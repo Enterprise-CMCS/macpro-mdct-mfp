@@ -14,21 +14,21 @@ export enum EntityStatuses {
 
 export type EntityStatusType = EntityStatuses | boolean | undefined;
 
-export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
+export const EntityStatusIcon = ({ entityStatus, showLabel }: Props) => {
   const statusIcon = (status: EntityStatusType) => {
     switch (status) {
       case true:
       case EntityStatuses.COMPLETE:
         return {
           src: successIcon,
-          alt: isPdf ? "" : "complete icon",
+          alt: showLabel ? "" : "complete icon",
           style: sx.successText,
           text: "Complete",
         };
       case EntityStatuses.CLOSE:
         return {
           src: closedIcon,
-          alt: isPdf ? "" : "close icon",
+          alt: showLabel ? "" : "close icon",
           style: sx.closeText,
           text: "Closed",
         };
@@ -38,7 +38,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
       default:
         return {
           src: unfinishedIcon,
-          alt: isPdf ? "" : "warning icon",
+          alt: showLabel ? "" : "warning icon",
           style: sx.errorText,
           text: "Error",
         };
@@ -57,7 +57,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
             alt={status.alt}
             boxSize="xl"
           />
-          {isPdf && (
+          {showLabel && (
             <Text sx={status.style}>
               <b>{status.text}</b>
             </Text>
@@ -70,10 +70,7 @@ export const EntityStatusIcon = ({ entityStatus, isPdf }: Props) => {
 
 interface Props {
   entityStatus: EntityStatusType;
-  /**
-   * Whether or not icon is appearing on PDF page (used for styling)
-   */
-  isPdf?: boolean;
+  showLabel?: boolean;
   [key: string]: any;
 }
 
