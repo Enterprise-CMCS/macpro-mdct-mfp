@@ -1,30 +1,40 @@
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+// components
 import { ChildRow } from "./ChildRow";
 import { TableRow } from "./TableRow";
-import { ReportPageProgress } from "types";
+import { Table } from "@chakra-ui/react";
+// utils
+import { useStore } from "utils";
+import {
+  mockChildRowPage,
+  mockUseStore,
+  RouterWrappedComponent,
+} from "utils/testing/setupJest";
 
-const mockPage = {
-  name: "name",
-  path: "path",
-  children: [] as ReportPageProgress[],
-  status: false,
-};
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const childRowComponent = (
   <RouterWrappedComponent>
-    <TableRow page={mockPage} rowDepth={2} />
-    {mockPage.children?.map((child) => (
-      <ChildRow key={child.path} page={child} rowDepth={2} />
-    ))}
+    <Table>
+      <TableRow page={mockChildRowPage} rowDepth={2} />
+      {mockChildRowPage.children?.map((child) => (
+        <ChildRow key={child.path} page={child} rowDepth={2} />
+      ))}
+    </Table>
   </RouterWrappedComponent>
 );
 
 describe("Test ChildRow", () => {
-  test("Check that childrow renders", () => {
+  beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockUseStore);
     render(childRowComponent);
-    expect(screen.getByText("add something here")).toBeVisible();
+  });
+  test("Check that childrow renders", () => {
+    expect(
+      screen.getByText("State or Territory-Specific Initiatives")
+    ).toBeVisible();
   });
 });
 

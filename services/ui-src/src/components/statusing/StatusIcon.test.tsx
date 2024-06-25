@@ -1,5 +1,5 @@
-import { StatusIcon } from "./StatusIcon";
 import { render } from "@testing-library/react";
+import { StatusIcon } from "./StatusIcon";
 // types
 import { ReportType } from "types";
 
