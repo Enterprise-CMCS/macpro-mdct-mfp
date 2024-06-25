@@ -7,11 +7,7 @@ import sarFormJson from "forms/addEditSarReport/addEditSarReport.json";
 // utils
 import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
-import {
-  injectFormWithTargetPopulations,
-  removeNotApplicablePopulations,
-  useStore,
-} from "utils";
+import { injectFormWithTargetPopulations, useStore } from "utils";
 
 const reportType = ReportType.SAR;
 
@@ -39,11 +35,9 @@ export const CreateSarModal = ({
     ? selectedReport?.formData?.populations
     : workPlanToCopyFrom?.fieldData?.targetPopulations;
 
-  const filteredDataToInject = removeNotApplicablePopulations(dataToInject);
-
   const form: FormJson = injectFormWithTargetPopulations(
     sarFormJson,
-    filteredDataToInject,
+    dataToInject,
     !!selectedReport?.id
   );
 

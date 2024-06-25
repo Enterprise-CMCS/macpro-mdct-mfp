@@ -121,7 +121,7 @@ export const tableTopics: { [key in ReportType]: string } = {
 };
 
 export const bucketTopics: { [key in ReportType]: string } = {
-  SAR: "sar-reports",
+  SAR: "sar-form",
   WP: "wp-form",
 };
 

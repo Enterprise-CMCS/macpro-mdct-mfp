@@ -13,12 +13,16 @@ import {
   ReportType,
   FieldChoice,
   ReportStatus,
+  HeadingLevel,
 } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
 
-export const ExportedReportFieldTable = ({ section }: Props) => {
+export const ExportedReportFieldTable = ({
+  section,
+  headingLevel = "h3",
+}: Props) => {
   const { report } = useStore() ?? {};
 
   const { tableHeaders } = wpVerbiage;
@@ -45,7 +49,13 @@ export const ExportedReportFieldTable = ({ section }: Props) => {
   return (
     // SAR "General Information" section layout is a unique case with multiple section headings within the same page
     section.name === "General Information" ? (
-      renderGeneralInformation(sarVerbiage, formFields!, pageType!, entityType)
+      renderGeneralInformation(
+        sarVerbiage,
+        formFields!,
+        pageType!,
+        entityType,
+        headingLevel
+      )
     ) : (
       <Table
         sx={sx.root}
@@ -70,7 +80,8 @@ export const renderGeneralInformation = (
   verbiage: any,
   formFields: (FormField | FormLayoutElement)[],
   pageType: string,
-  entityType?: string
+  entityType?: string,
+  headingLevel?: HeadingLevel
 ) => {
   const { report } = useStore();
 
@@ -115,7 +126,7 @@ export const renderGeneralInformation = (
         {!isNotResubmission ||
         (isNotResubmission && heading != "Resubmission Information") ? (
           <>
-            <Heading as="h3" sx={sx.heading}>
+            <Heading as={headingLevel} sx={sx.heading}>
               {heading}
             </Heading>
             <Table
@@ -192,6 +203,7 @@ export const renderFieldTableBody = (
 export interface Props {
   section: StandardReportPageShape | DrawerReportPageShape;
   showHintText?: boolean;
+  headingLevel?: HeadingLevel;
 }
 
 const sx = {
