@@ -18,6 +18,7 @@ import {
   ErrorVerbiage,
   FormField,
   FormLayoutElement,
+  HeadingLevel,
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   OverlayModalStepTypes,
@@ -34,7 +35,10 @@ import finishedIcon from "assets/icons/icon_check_circle.png";
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
 
-export const ExportedModalOverlayReportSection = ({ section }: Props) => {
+export const ExportedModalOverlayReportSection = ({
+  section,
+  headingLevel = "h3",
+}: Props) => {
   const { report } = useStore() ?? {};
   const entityType = section.entityType;
   const errorMessage: ErrorVerbiage =
@@ -56,7 +60,8 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
           renderModalOverlayTableBody(
             section,
             report,
-            report?.fieldData[entityType]
+            report?.fieldData[entityType],
+            headingLevel
           )}
       </Box>
       {(!report?.fieldData[entityType] ||
@@ -69,6 +74,7 @@ export const ExportedModalOverlayReportSection = ({ section }: Props) => {
 
 export interface Props {
   section: ModalOverlayReportPageShape;
+  headingLevel?: HeadingLevel;
 }
 
 export function renderStatusIcon(status: boolean) {
@@ -119,7 +125,8 @@ export function getEntityStepFields(
 export function renderModalOverlayTableBody(
   section: ModalOverlayReportPageShape | OverlayModalPageShape,
   report: ReportShape,
-  entities: EntityShape[]
+  entities: EntityShape[],
+  headingLevel: HeadingLevel
 ) {
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
@@ -153,20 +160,23 @@ export function renderModalOverlayTableBody(
                 />
               </Box>
               <Box>
-                <Heading sx={sx.heading} as="h3">
+                <Heading as={headingLevel} sx={sx.heading}>
                   {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
-                  <br />
-                  <Text sx={sx.headingSubtitle}>
-                    {entity.initiative_wpTopic[0].value}
-                  </Text>
                 </Heading>
+                <Text sx={sx.headingSubtitle}>
+                  {entity.initiative_wpTopic[0].value}
+                </Text>
               </Box>
             </Flex>
             {/* Depending on what the entity step type is, render its corresponding component */}
             {entitySteps.map((step, stepIdx) => {
               const type = step[0].toString();
               switch (type) {
-                case EntityDetailsStepTypes.DEFINE_INITIATIVE:
+                case EntityDetailsStepTypes.DEFINE_INITIATIVE: {
+                  const currentLevel = parseInt(headingLevel.charAt(1), 10);
+                  const nextLevel = currentLevel + 1;
+                  const nextHeadingLevel = `h${nextLevel}`;
+
                   return (
                     <Box key={`${type}${idx}${stepIdx}`}>
                       <ExportedEntityDetailsOverlaySection
@@ -174,9 +184,11 @@ export function renderModalOverlayTableBody(
                         entity={entity}
                         entityStep={step}
                         showHintText={true}
+                        headingLevel={nextHeadingLevel as HeadingLevel}
                       />
                     </Box>
                   );
+                }
                 case OverlayModalStepTypes.EVALUATION_PLAN:
                   return (
                     <Box key={`${type}${idx}${stepIdx}`}>
@@ -233,14 +245,12 @@ export function renderModalOverlayTableBody(
                 />
               </Box>
               <Box>
-                <Heading sx={sx.heading} as="h2">
+                <Heading as={headingLevel} sx={sx.heading}>
                   {renderInitiativeTitle(entity, idx)}
-                  <br />
-                  <Text sx={sx.headingSubtitle}>
-                    {entity.initiative_wpTopic[0].value}
-                  </Text>
                 </Heading>
-
+                <Text sx={sx.headingSubtitle}>
+                  {entity.initiative_wpTopic[0].value}
+                </Text>
                 {entity.isInitiativeClosed && (
                   <Box key={`${reportType}${idx}-closeout-info`}>
                     <Box>
@@ -398,6 +408,7 @@ const sx = {
     fontSize: "xl",
   },
   headingSubtitle: {
+    fontSize: "xl",
     fontWeight: "normal",
     marginLeft: "1.5rem",
   },

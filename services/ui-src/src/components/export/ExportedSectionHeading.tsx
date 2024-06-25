@@ -1,51 +1,31 @@
 // components
 import { Box, Heading } from "@chakra-ui/react";
-// types
-import { AnyObject, ReportPageVerbiage } from "types";
+import { CustomHtmlElement, HeadingLevel } from "types";
 // utils
 import { parseCustomHtml } from "utils";
 
-export const formatSectionInfo = (verbiage: ReportPageVerbiage) => {
-  if (
-    verbiage?.intro?.exportSectionHeader ||
-    verbiage?.intro?.subsection === "State or Territory-Specific Initiatives"
-  ) {
-    return (verbiage as AnyObject)?.dashboardSubtitle;
-  }
-
-  return verbiage?.intro?.info;
-};
-
-export const ExportedSectionHeading = ({ heading, verbiage }: Props) => {
-  const sectionHeading = verbiage?.intro?.exportSectionHeader
-    ? verbiage?.intro?.exportSectionHeader
-    : heading;
-  const sectionHint = verbiage?.intro?.hint ? verbiage?.intro?.hint : null;
-  const sectionInfo = formatSectionInfo(verbiage!);
-  const stateAndTerritory =
-    sectionHeading === "State or Territory-Specific Initiatives";
-
-  //recruit, enrollment and transition has hints that needs to be hidden
-  const hideHint =
-    verbiage?.intro.section === "Recruitment, Enrollment, and Transitions";
-
+export const ExportedSectionHeading = ({
+  heading,
+  hint,
+  info,
+  headingLevel = "h2",
+}: Props) => {
   return (
     <Box data-testid="exportedSectionHeading" sx={sx.container}>
-      <Heading as="h2" sx={sx.heading}>
-        {sectionHeading}
+      <Heading as={headingLevel} sx={sx.heading}>
+        {heading}
       </Heading>
-      {!hideHint && <Box sx={sx.hintTextBox}>{sectionHint}</Box>}
-      {!stateAndTerritory && sectionInfo && (
-        <Box sx={sx.info}>{parseCustomHtml(sectionInfo)}</Box>
-      )}
+      {hint && <Box sx={sx.hintTextBox}>{hint}</Box>}
+      {info && <Box sx={sx.info}>{parseCustomHtml(info)}</Box>}
     </Box>
   );
 };
 
 export interface Props {
   heading: string;
-  reportType?: string;
-  verbiage?: ReportPageVerbiage;
+  hint?: string;
+  info?: string | CustomHtmlElement[];
+  headingLevel?: HeadingLevel;
 }
 
 const sx = {
