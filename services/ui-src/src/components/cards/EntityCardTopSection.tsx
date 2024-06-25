@@ -2,20 +2,26 @@
 import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
 import { notAnsweredText } from "../../constants";
 // utils
-import { AnyObject, OverlayModalStepTypes, ReportType } from "types";
+import {
+  AnyObject,
+  HeadingLevel,
+  OverlayModalStepTypes,
+  ReportType,
+} from "types";
 import { useStore } from "utils";
 
 export const EntityStepCardTopSection = ({
   stepType,
   formattedEntityData,
   entityCompleted,
+  headingLevel = "h2",
 }: Props) => {
   const { report } = useStore() ?? {};
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
       return (
         <>
-          <Heading sx={sx.mainHeading}>
+          <Heading as={headingLevel} sx={sx.mainHeading}>
             {formattedEntityData.objectiveName}
           </Heading>
           <Text sx={sx.subtitle}>
@@ -54,7 +60,7 @@ export const EntityStepCardTopSection = ({
     case OverlayModalStepTypes.EVALUATION_PLAN:
       return (
         <>
-          <Heading sx={sx.mainHeading}>
+          <Heading as={headingLevel} sx={sx.mainHeading}>
             {formattedEntityData.objectiveName}
           </Heading>
           <Text sx={sx.subtitle}>
@@ -111,7 +117,7 @@ export const EntityStepCardTopSection = ({
     case OverlayModalStepTypes.FUNDING_SOURCES:
       return (
         <>
-          <Heading sx={sx.mainHeading}>
+          <Heading as={headingLevel} sx={sx.mainHeading}>
             {formattedEntityData.fundingSource}
           </Heading>
           {formattedEntityData.quarters.length > 0 && (
@@ -151,6 +157,7 @@ interface Props {
   formattedEntityData: AnyObject;
   printVersion?: boolean;
   entityCompleted?: boolean;
+  headingLevel?: HeadingLevel;
 }
 
 const sx = {

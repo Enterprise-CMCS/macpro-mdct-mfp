@@ -13,7 +13,7 @@ export default {
     language: "English",
   },
   reportPage: {
-    heading: "MFP Work Plan for ",
+    heading: "MFP Work Plan for",
     metadataTableHeaders: {
       submissionName: "Submission Name",
       dueDate: "Due date",

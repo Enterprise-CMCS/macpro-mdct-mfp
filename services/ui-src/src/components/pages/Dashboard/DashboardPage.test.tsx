@@ -321,7 +321,7 @@ describe("Test error banner on SAR dashboard", () => {
   });
   test("Check that error banner is enabled in SAR when latest WP IS NOT approved", () => {
     mockedUseStore.mockReturnValue(mockReportStore);
-    render(sarDashboardViewWithReports);
+    render(sarDashboardWithNoReports);
     const errorBannerText = screen.queryByText(
       "You must have an approved MFP Work Plan not previously used in a MFP Semi-Annual Progress Report (SAR) in order to add a new MFP SAR"
     );
