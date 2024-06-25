@@ -37,12 +37,13 @@ export async function logOut({ page }) {
 }
 
 /* Recursive function to click any archive buttons that appear on screen. */
-async function archiveReports(buttons: Locator) {
+async function archiveReports(buttons: Locator, page) {
   const archiveButtons = await buttons.all();
 
   if (archiveButtons.length > 0) {
     await archiveButtons[0].click();
-    await archiveReports(buttons);
+    await page.waitForResponse("**/reports/archive/WP/PR/**");
+    await archiveReports(buttons, page);
   }
 }
 
@@ -57,12 +58,12 @@ export async function archiveExistingWPs({ page }) {
 
   await page.getByLabel("MFP Work Plan").click();
   await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
-  await page.waitForResponse(`**/reports/WP/PR`);
+  await page.waitForResponse("**/reports/WP/PR");
 
   const archiveButtons = await page.getByRole("button", { name: "Archive" });
 
   if (archiveButtons) {
-    await archiveReports(archiveButtons);
+    await archiveReports(archiveButtons, page);
   }
 
   await logOut({ page });
