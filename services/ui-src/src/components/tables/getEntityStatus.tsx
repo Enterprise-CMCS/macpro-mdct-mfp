@@ -86,7 +86,7 @@ export const getEntityStatus = (
     //check to see if each validation id was matched to user selected values
     if (
       isFilled?.every((field: AnyObject) => {
-        return field && field.length > 0;
+        return field?.length > 0;
       })
     ) {
       return EntityStatuses.COMPLETE;
@@ -213,7 +213,7 @@ export const getInitiativeDashboardStatus = (
 
       //if any of the field data is empty, that means we're missing data and the status is automatically false
       isFilled = !filterdFieldData.every(
-        (field: AnyObject) => field && field.length > 0
+        (field: AnyObject) => field?.length > 0
       )
         ? false
         : isFilled;
@@ -266,7 +266,7 @@ export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
     }
 
     return isFilled?.every((field: AnyObject) => {
-      return field && field.length > 0;
+      return field?.length > 0;
     });
   }
 

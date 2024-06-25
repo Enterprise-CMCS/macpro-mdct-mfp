@@ -9,7 +9,10 @@ import { EntityStatuses } from "types";
 
 type EntityStatusType = EntityStatuses | undefined;
 
-export const EntityStatusIcon = ({ entityStatus, showLabel }: Props) => {
+export const EntityStatusIcon = ({
+  entityStatus,
+  showLabel = false,
+}: Props) => {
   const statusIcon = (status: EntityStatusType) => {
     switch (status) {
       case EntityStatuses.COMPLETE:
@@ -36,7 +39,7 @@ export const EntityStatusIcon = ({ entityStatus, showLabel }: Props) => {
       case EntityStatuses.NO_STATUS:
       case EntityStatuses.DISABLED:
       default:
-        return undefined;
+        return;
     }
   };
 

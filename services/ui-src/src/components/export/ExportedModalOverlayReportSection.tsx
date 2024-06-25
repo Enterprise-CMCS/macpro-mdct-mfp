@@ -123,7 +123,6 @@ export function renderModalOverlayTableBody(
 ) {
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
-  const showLabel = true;
   const isPdf = true;
 
   let dynamicSection: AnyObject[];
@@ -149,7 +148,7 @@ export function renderModalOverlayTableBody(
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
-                  showLabel={showLabel}
+                  showLabel={true}
                   entityStatus={getInitiativeStatus(report, entity, isPdf)}
                 />
               </Box>
@@ -229,7 +228,7 @@ export function renderModalOverlayTableBody(
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
-                  showLabel={showLabel}
+                  showLabel={true}
                   entityStatus={getInitiativeStatus(report, entity, isPdf)}
                 />
               </Box>
