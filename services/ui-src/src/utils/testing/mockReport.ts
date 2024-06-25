@@ -10,6 +10,10 @@ import {
   mockDynamicModalOverlayReportPageJson,
 } from "./mockForm";
 
+export const mockReportPeriod = 1;
+export const mockReportYear = 2023;
+export const mockStateName = "Puerto Rico";
+
 export const mockReportRoutes = [
   mockStandardReportPageJson,
   {
@@ -161,6 +165,7 @@ export const mockReportFieldData = {
     },
   ],
   evaluationPlan: mockEvaluationPlan,
+  stateName: mockStateName,
 };
 
 export const mockSARReportFieldData = {
@@ -213,8 +218,8 @@ export const mockWPReport = {
     lastAlteredBy: "Thelonious States",
     fieldDataId: "mockReportFieldData",
     formTemplateId: "mockReportJson",
-    reportPeriod: 1,
-    reportYear: 2023,
+    reportPeriod: mockReportPeriod,
+    reportYear: mockReportYear,
   },
   formTemplate: mockReportJson,
   fieldData: mockReportFieldData,
@@ -260,9 +265,9 @@ export const mockWPFullReport = {
     },
   },
   isComplete: false,
-  reportPeriod: 1,
+  reportPeriod: mockReportPeriod,
   locked: false,
-  reportYear: 2023,
+  reportYear: mockReportYear,
   versionNumber: 1,
 };
 
@@ -288,9 +293,9 @@ export const mockWPCopiedReport = {
     },
   },
   isComplete: false,
-  reportPeriod: 1,
+  reportPeriod: mockReportPeriod,
   locked: false,
-  reportYear: 2023,
+  reportYear: mockReportYear,
   versionNumber: 1,
   isCopied: true,
 };
@@ -317,9 +322,9 @@ export const mockSARFullReport = {
     },
   },
   isComplete: false,
-  reportPeriod: 1,
+  reportPeriod: mockReportPeriod,
   locked: false,
-  reportYear: 2023,
+  reportYear: mockReportYear,
 };
 
 export const mockWPSubmittedReport = {
@@ -344,8 +349,8 @@ export const mockWPSubmittedReport = {
     },
   },
   isComplete: true,
-  reportPeriod: 1,
-  reportYear: 2023,
+  reportPeriod: mockReportPeriod,
+  reportYear: mockReportYear,
 };
 
 export const mockWPApprovedFullReport = {
@@ -370,8 +375,8 @@ export const mockWPApprovedFullReport = {
     },
   },
   isComplete: true,
-  reportPeriod: 1,
-  reportYear: 2023,
+  reportPeriod: mockReportPeriod,
+  reportYear: mockReportYear,
 };
 
 export const mockReportsByState = [

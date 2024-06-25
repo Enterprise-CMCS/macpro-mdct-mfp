@@ -9,6 +9,7 @@ import { Box, Button, Image, Text } from "@chakra-ui/react";
 import {
   AnyObject,
   EntityShape,
+  HeadingLevel,
   OverlayModalStepTypes,
   ReportType,
 } from "types";
@@ -33,6 +34,7 @@ export const EntityStepCard = ({
   printVersion,
   hasBoxShadow,
   hasBorder,
+  headingLevel,
   ...props
 }: Props) => {
   let entityCompleted = false;
@@ -172,6 +174,7 @@ export const EntityStepCard = ({
           printVersion={!!printVersion}
           formattedEntityData={formattedEntityData}
           entityCompleted={entityCompleted}
+          headingLevel={headingLevel}
         />
         {entityCompleted || printVersion ? (
           <EntityStepCardBottomSection
@@ -228,6 +231,7 @@ interface Props {
   printVersion?: boolean;
   hasBoxShadow?: boolean;
   hasBorder?: boolean;
+  headingLevel?: HeadingLevel;
   [key: string]: any;
 }
 

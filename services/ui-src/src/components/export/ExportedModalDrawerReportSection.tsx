@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // types
-import { EntityShape, ModalDrawerReportPageShape } from "types";
+import { EntityShape, HeadingLevel, ModalDrawerReportPageShape } from "types";
 // utils
 import { convertToThousandsSeparatedString, useStore } from "utils";
 import { notAnsweredText } from "../../constants";
 
 export const ExportedModalDrawerReportSection = ({
   section: { entityType, verbiage },
+  headingLevel = "h3",
 }: Props) => {
   const [overflow, setOverflow] = useState(false);
   const report = useStore().report;
@@ -311,7 +312,11 @@ export const ExportedModalDrawerReportSection = ({
     >
       {verbiage.pdfDashboardTitle && (
         <>
-          <Heading as="h3" sx={sx.dashboardTitle} data-testid="headerCount">
+          <Heading
+            as={headingLevel}
+            sx={sx.dashboardTitle}
+            data-testid="headerCount"
+          >
             {verbiage.pdfDashboardTitle}
           </Heading>
           <Text sx={sx.text}>
@@ -335,6 +340,7 @@ export const ExportedModalDrawerReportSection = ({
 
 export interface Props {
   section: ModalDrawerReportPageShape;
+  headingLevel?: HeadingLevel;
 }
 
 const sx = {
