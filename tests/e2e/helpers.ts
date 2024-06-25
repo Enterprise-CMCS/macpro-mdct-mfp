@@ -1,3 +1,5 @@
+import { Locator } from "@playwright/test";
+
 export async function logInStateUser({ page }) {
   await page.goto("/");
 
@@ -32,4 +34,36 @@ export async function logOut({ page }) {
   await logoutButton.click();
   await page.evaluate(() => window.localStorage.clear());
   await page.goto("/");
+}
+
+/* Recursive function to click any archive buttons that appear on screen. */
+async function archiveReports(buttons: Locator) {
+  const archiveButtons = await buttons.all();
+
+  if (archiveButtons.length > 0) {
+    await archiveButtons[0].click();
+    await archiveReports(buttons);
+  }
+}
+
+export async function archiveExistingWPs({ page }) {
+  await logInAdminUser({ page });
+
+  await page
+    .getByRole("combobox", {
+      name: "List of states, including District of Columbia and Puerto Rico",
+    })
+    .selectOption("Puerto Rico");
+
+  await page.getByLabel("MFP Work Plan").click();
+  await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
+  await page.waitForResponse(`**/reports/WP/PR`);
+
+  const archiveButtons = await page.getByRole("button", { name: "Archive" });
+
+  if (archiveButtons) {
+    await archiveReports(archiveButtons);
+  }
+
+  await logOut({ page });
 }
