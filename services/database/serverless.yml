@@ -15,8 +15,12 @@ s3BucketHelper:
     logFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
 
 custom:
+  project: "mfp"
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
+  stackTags:  
+    PROJECT: ${self:custom.project}
+    SERVICE: ${self:service}  
   serverlessTerminationProtection:
     stages:
       - main

@@ -33,8 +33,12 @@ s3BucketHelper:
     permissionsBoundary: ${env:IAM_PERMISSIONS_BOUNDARY, ssm:/configuration/${self:custom.stage}/iam/permissionsBoundaryPolicy, ssm:/configuration/default/iam/permissionsBoundaryPolicy, ""}
 
 custom:
+  project: "mfp"
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
+  stackTags:  
+    PROJECT: ${self:custom.project}
+    SERVICE: ${self:service}  
   serverlessTerminationProtection:
     stages:
       - main

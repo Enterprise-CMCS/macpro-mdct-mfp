@@ -20,8 +20,12 @@ provider:
   region: us-east-1
 
 custom:
+  project: "mfp"
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
+  stackTags:  
+    PROJECT: ${self:custom.project}
+    SERVICE: ${self:service}  
   serverlessTerminationProtection:
     stages:
       - main
