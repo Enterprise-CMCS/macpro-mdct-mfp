@@ -36,8 +36,6 @@ export const EntityStatusIcon = ({
           style: sx.errorText,
           text: "Error",
         };
-      case EntityStatuses.NO_STATUS:
-      case EntityStatuses.DISABLED:
       default:
         return;
     }
