@@ -29,7 +29,7 @@ import { assertExhaustive } from "utils/other/typing";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
-import unfinishedIcon from "assets/icons/icon_error_circle_bright.png";
+import unfinishedIcon from "assets/icons/icon_error_circle.png";
 import finishedIcon from "assets/icons/icon_check_circle.png";
 // utils
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
@@ -155,7 +155,7 @@ export function renderModalOverlayTableBody(
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
-                  isPdf={isPdf}
+                  showLabel={true}
                   entityStatus={getInitiativeStatus(report, entity, isPdf)}
                 />
               </Box>
@@ -240,7 +240,7 @@ export function renderModalOverlayTableBody(
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
-                  isPdf={isPdf}
+                  showLabel={true}
                   entityStatus={getInitiativeStatus(report, entity, isPdf)}
                 />
               </Box>
