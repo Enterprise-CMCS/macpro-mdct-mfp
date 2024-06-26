@@ -19,7 +19,3 @@ package-lock.json
 .vscode/
 *._S3rver_cors.xml
 services/database/local_buckets
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
