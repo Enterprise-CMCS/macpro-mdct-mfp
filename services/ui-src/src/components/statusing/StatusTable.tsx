@@ -11,7 +11,7 @@ import { getRouteStatus, useBreakpoint, useStore } from "utils";
 import verbiage from "verbiage/pages/wp/wp-review-and-submit";
 // assets
 import editIcon from "assets/icons/icon_edit.png";
-import errorIcon from "assets/icons/icon_error_circle_bright.png";
+import errorIcon from "assets/icons/icon_error_circle.png";
 import iconSearch from "assets/icons/icon_search_blue.png";
 import successIcon from "assets/icons/icon_check_circle.png";
 import { assertExhaustive } from "utils/other/typing";

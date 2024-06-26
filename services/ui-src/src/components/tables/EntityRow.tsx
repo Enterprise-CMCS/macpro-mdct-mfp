@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
-import { EntityStatusIcon, Table, EntityStatuses } from "components";
+import { EntityStatusIcon, Table } from "components";
 // types
 import {
   AnyObject,
   EntityShape,
+  EntityStatuses,
   ModalDrawerEntityTypes,
   OverlayModalTypes,
   EntityDetailsOverlayTypes,
@@ -73,7 +74,7 @@ export const EntityRow = ({
           ]);
         }
       default: {
-        return report ? !!getEntityStatus(report, entity, entityType) : false;
+        return report && getEntityStatus(report, entity, entityType);
       }
     }
   };
@@ -149,7 +150,7 @@ export const EntityRow = ({
                 </li>
               ))}
             </ul>
-            {!entityStatus && (
+            {entityStatus === EntityStatuses.INCOMPLETE && (
               <Text sx={sx.errorText}>
                 {verbiage.editEntityHint ??
                   `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
