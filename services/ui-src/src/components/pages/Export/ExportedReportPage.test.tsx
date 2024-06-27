@@ -97,7 +97,7 @@ const exportedReportPage = (context: any) => (
   </ReportContext.Provider>
 );
 
-describe("ExportedReportPage", () => {
+describe("<ExportedReportPage />", () => {
   describe("ExportedReportPage WP", () => {
     beforeEach(() => {
       mockedUseStore.mockReturnValue(mockReportStore);
@@ -246,7 +246,7 @@ describe("ExportedReportPage", () => {
   });
 
   describe("ExportedReportPage utils", () => {
-    describe("reportTitle", () => {
+    describe("reportTitle()", () => {
       test("generates the correct title for WP report type", () => {
         const reportType = ReportType.WP;
         const reportPage = { heading: "MFP Work Plan for" };
@@ -279,7 +279,7 @@ describe("ExportedReportPage", () => {
       });
     });
 
-    describe("formatSectionHeader", () => {
+    describe("formatSectionHeader()", () => {
       test("generates the correct header", () => {
         const header = "Test reporting period";
         const report: ReportShape = mockReport!;
@@ -291,7 +291,7 @@ describe("ExportedReportPage", () => {
       });
     });
 
-    describe("formatSectionInfo", () => {
+    describe("formatSectionInfo()", () => {
       test("displays info", () => {
         const verbiage = {
           intro: {

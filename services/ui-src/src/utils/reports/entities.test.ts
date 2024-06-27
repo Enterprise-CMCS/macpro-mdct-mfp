@@ -1,8 +1,8 @@
 import { OverlayModalStepTypes } from "types";
 import { getFormattedEntityData, entityWasUpdated } from "./entities";
 
-describe("entity utilities", () => {
-  describe("getFormattedEntityData", () => {
+describe("utils/entities", () => {
+  describe("getFormattedEntityData()", () => {
     test("Should return the correct shape for evaluation plans", () => {
       const entity = {
         id: "mock id",
@@ -119,7 +119,7 @@ describe("entity utilities", () => {
     });
   });
 
-  describe("entityWasUpdated", () => {
+  describe("entityWasUpdated()", () => {
     test("Should not find changes if objects are recursively equal", () => {
       const originalEntity = {
         id: "mock id",
@@ -171,6 +171,7 @@ describe("entity utilities", () => {
     });
 
     /**
+     * TODO:
      * Unfortunately, entityWasUpdated IS confused by property ordering.
      * But this doesn't tend to happen in normal program flow, and should
      * be low-consequence (that is, an extra no-op network call) if it does.
