@@ -57,7 +57,8 @@ def delete_folders(directory, folder_names):
         try:
             shutil.rmtree(folder_path)
             print(
-                f"DELETED --- Folder '{folder_name}' and its contents have been deleted."
+                f"DELETED --- Folder '{folder_name}' and its contents have been "
+                f"deleted."
             )
         except FileNotFoundError:
             print(f"Folder '{folder_name}' not found.")
