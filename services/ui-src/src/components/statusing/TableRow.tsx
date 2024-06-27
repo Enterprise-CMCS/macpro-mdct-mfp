@@ -1,5 +1,5 @@
 import { Td, Text, Tr } from "@chakra-ui/react";
-import { ReportPageProgress, ReportType } from "types";
+import { ReportPageProgress } from "types";
 import { useBreakpoint, useStore } from "utils";
 import { EditButton } from "./EditButton";
 import { StatusIcon } from "./StatusIcon";
@@ -7,7 +7,7 @@ import { StatusIcon } from "./StatusIcon";
 export const TableRow = ({ page, rowDepth }: RowProps) => {
   const { isMobile } = useBreakpoint();
   const { name, path, children, status } = page;
-  const { report, editable } = useStore();
+  const { editable } = useStore();
   const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
 
   const isMobileAndNotChildEditButton =
@@ -17,11 +17,17 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
     !children &&
     EditButton({ buttonAriaLabel, path, editable, showIcon: true });
 
-  const parentPl = !isMobile ? "1rem" : "0";
-  const subparentPl = !isMobile ? `${1.25 * rowDepth}rem` : "0";
+  let parentPl = "1rem";
+  let subparentPl = `${1.25 * rowDepth}rem`;
+  let ptRowDepth1 = "0.5rem";
+  let ptRowDepthOver1 = "0.5rem";
 
-  const ptRowDepth1 = isMobile ? "1.5rem" : "0.5rem";
-  const ptRowDepthOver1 = isMobile ? "1rem" : "0.5rem";
+  if (isMobile) {
+    parentPl = "0";
+    subparentPl = "0";
+    ptRowDepth1 = "1.5rem";
+    ptRowDepthOver1 = "1rem";
+  }
 
   return (
     <Tr>
@@ -40,10 +46,7 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
         sx={sx.statusColumn}
         pt={rowDepth == 1 ? ptRowDepth1 : ptRowDepthOver1}
       >
-        <StatusIcon
-          reportType={report?.reportType as ReportType}
-          status={status}
-        />
+        <StatusIcon status={status} />
       </Td>
       {!isMobile && <Td>{notChildEditButton}</Td>}
     </Tr>

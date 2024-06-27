@@ -5,30 +5,46 @@ import { EditButton } from "./EditButton";
 
 const EditButtonComponentNotEditable = (
   <RouterWrappedComponent>
-    <EditButton buttonAriaLabel="label" path="" editable={false} />
+    <EditButton
+      buttonAriaLabel="label"
+      path=""
+      editable={false}
+      showIcon={true}
+    />
   </RouterWrappedComponent>
 );
 
 const EditButtonComponent = (
   <RouterWrappedComponent>
-    <EditButton buttonAriaLabel="label" path="" editable={true} />
+    <EditButton
+      buttonAriaLabel="label"
+      path=""
+      editable={true}
+      showIcon={true}
+    />
   </RouterWrappedComponent>
 );
 
 describe("EditButton", () => {
-  test("check text when not editable", () => {
+  test("EditButton when not editable", () => {
     render(EditButtonComponentNotEditable);
-    expect(screen.getByText("View")).toBeVisible();
+    const viewButton = screen.getByRole("button");
+    const viewIcon = screen.getByRole("img");
+    expect(viewButton).toHaveTextContent("View");
+    expect(viewIcon).toHaveAttribute("alt", "View Program");
   });
 
-  test("check text when editable", () => {
+  test("EditButton when editable", () => {
     render(EditButtonComponent);
-    expect(screen.getByText("Edit")).toBeVisible();
+    const editButton = screen.getByRole("button");
+    const editIcon = screen.getByRole("img");
+    expect(editButton).toHaveTextContent("Edit");
+    expect(editIcon).toHaveAttribute("alt", "Edit Program");
   });
 });
 
 describe("Test EditButton accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
+  test("Should not have basic accessibility issues", async () => {
     const { container } = render(EditButtonComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();

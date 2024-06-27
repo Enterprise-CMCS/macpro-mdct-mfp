@@ -32,14 +32,15 @@ describe("Test ChildRow", () => {
     render(childRowComponent);
   });
   test("Check that childrow renders", () => {
-    expect(
-      screen.getByText("State or Territory-Specific Initiatives")
-    ).toBeVisible();
+    const row = screen.getByRole("gridcell", {
+      name: "State or Territory-Specific Initiatives",
+    });
+    expect(row).toBeVisible();
   });
 });
 
 describe("Test ChildRow accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
+  test("Should not have basic accessibility issues", async () => {
     const { container } = render(childRowComponent);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
