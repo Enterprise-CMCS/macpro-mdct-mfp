@@ -7,9 +7,9 @@
 ### Integration Environment Deploy Status:
 | Branch  | Build Status |
 | ------------- | ------------- |
-| master  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg)  |
+| main  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg)  |
 | val  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=val)  |
-| prod  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=production)  |
+| production  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=production)  |
 
 
 MFP is the CMCS MDCT application for collecting state data related to the [Money Follows the Person (MFP)](https://www.medicaid.gov/medicaid/long-term-services-supports/money-follows-person/index.html) program. The collected data assists CMCS in monitoring and managing grantee progress and identifying challenges and improvement opportunities.
