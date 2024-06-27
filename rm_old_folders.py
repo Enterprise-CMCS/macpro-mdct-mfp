@@ -27,11 +27,20 @@ def find_old_folders(n_days, directory):
                 if time_difference > timedelta(days=n_days):
                     old_folders.append(entry.name)
                 else:
-                    print(f"SKIPPED --- Folder '{entry.name}' is not older than {n_days}. It will not be deleted")
+                    print(
+                        f"SKIPPED --- Folder '{entry.name}' is not older than "
+                        f"{n_days}. It will not be deleted"
+                    )
             except ValueError:
-                print(f"SKIPPED --- Error parsing timestamp for folder '{entry.name}'. It will not be deleted.")
+                print(
+                    f"SKIPPED --- Error parsing timestamp for folder '{entry.name}'. "
+                    f"It will not be deleted."
+                )
         else:
-            print(f"SKIPPED --- Found folder/file with name '{entry.name}' that does not match the expected timestamp format. It will not be deleted.")
+            print(
+                f"SKIPPED --- Found folder/file with name '{entry.name}' that does "
+                f"not match the expected timestamp format. It will not be deleted."
+            )
 
     return old_folders
 
@@ -47,16 +56,31 @@ def delete_folders(directory, folder_names):
         folder_path = os.path.join(directory, folder_name)
         try:
             shutil.rmtree(folder_path)
-            print(f"DELETED --- Folder '{folder_name}' and its contents have been deleted.")
+            print(
+                f"DELETED --- Folder '{folder_name}' and its contents have been deleted."
+            )
         except FileNotFoundError:
             print(f"Folder '{folder_name}' not found.")
         except Exception as e:
             print(f"Error deleting folder '{folder_name}': {e}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Delete old folders in a specified directory.")
-    parser.add_argument("--n-days", type=int, required=True, help="Number of days (days older than current date) to determine which folders to delete.")
-    parser.add_argument("--folder-name", type=str, required=True, help="Full path to the directory where reports are located.")
+    parser = argparse.ArgumentParser(
+        description="Delete old folders in a specified directory."
+    )
+    parser.add_argument(
+        "--n-days",
+        type=int,
+        required=True,
+        help="Number of days (days older than current date) to determine "
+             "which folders to delete."
+    )
+    parser.add_argument(
+        "--folder-name",
+        type=str,
+        required=True,
+        help="Full path to the directory where reports are located."
+    )
     args = parser.parse_args()
 
     old_folders = find_old_folders(args.n_days, args.folder_name)
