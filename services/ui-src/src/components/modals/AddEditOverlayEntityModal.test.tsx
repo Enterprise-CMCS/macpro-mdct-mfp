@@ -22,8 +22,8 @@ import { ReportContext } from "components";
 import { AddEditOverlayEntityModal } from "./AddEditOverlayEntityModal";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useStore } from "utils";
-import { axe } from "jest-axe";
 import userEvent from "@testing-library/user-event";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -185,147 +185,143 @@ const sarModalComponentWithSelectedEntity = (
   </RouterWrappedComponent>
 );
 
-describe("Test AddEditOverlayEntityModal for WP", () => {
-  beforeEach(async () => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    await act(async () => {
-      render(modalComponent);
+describe("<AddEditOverlayEntityModal />", () => {
+  describe("Test AddEditOverlayEntityModal for WP", () => {
+    beforeEach(async () => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      await act(async () => {
+        render(modalComponent);
+      });
+    });
+
+    afterEach(() => {
+      wpReport.fieldData.initiative = [mockInitiative];
+      jest.clearAllMocks();
+    });
+
+    test("AddEditOverlayEntityModal shows the correct contents for WP", () => {
+      expect(
+        screen.getByText(
+          `${mockOverlayModalPageVerbiage.addEditModalAddTitle} ${mockEntityName}`
+        )
+      ).toBeTruthy();
+    });
+
+    test("AddEditOverlayEntityModal cancel button closes the modal", () => {
+      fireEvent.click(screen.getByText("Cancel"));
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
+
+    test("AddEditOverlayEntityModal close button closes the modal", () => {
+      fireEvent.click(screen.getByText("Close"));
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
     });
   });
 
-  afterEach(() => {
-    wpReport.fieldData.initiative = [mockInitiative];
-    jest.clearAllMocks();
-  });
+  describe("Test AddEditOverlayEntityModal for SAR", () => {
+    beforeEach(async () => {
+      mockedUseStore.mockReturnValue(mockSarUseStore);
+      await act(async () => {
+        render(sarModalComponentWithSelectedEntity);
+      });
+    });
 
-  test("AddEditOverlayEntityModal shows the correct contents for WP", () => {
-    expect(
-      screen.getByText(
-        `${mockOverlayModalPageVerbiage.addEditModalAddTitle} ${mockEntityName}`
-      )
-    ).toBeTruthy();
-  });
+    afterEach(() => {
+      sarReport.fieldData.initiative = [mockInitiative];
+      jest.clearAllMocks();
+    });
 
-  test("AddEditOverlayEntityModal cancel button closes the modal", () => {
-    fireEvent.click(screen.getByText("Cancel"));
-    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-  });
-
-  test("AddEditOverlayEntityModal close button closes the modal", () => {
-    fireEvent.click(screen.getByText("Close"));
-    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe("Test AddEditOverlayEntityModal for SAR", () => {
-  beforeEach(async () => {
-    mockedUseStore.mockReturnValue(mockSarUseStore);
-    await act(async () => {
-      render(sarModalComponentWithSelectedEntity);
+    test("AddEditOverlayEntityModal shows the correct contents for SAR", () => {
+      expect(
+        screen.getByText(
+          `${mockOverlayModalPageVerbiage.addEditModalEditTitle} ${selectedStepEntity.objectiveProgress_objectiveName}`
+        )
+      ).toBeTruthy();
     });
   });
 
-  afterEach(() => {
-    sarReport.fieldData.initiative = [mockInitiative];
-    jest.clearAllMocks();
-  });
-
-  test("AddEditOverlayEntityModal shows the correct contents for SAR", () => {
-    expect(
-      screen.getByText(
-        `${mockOverlayModalPageVerbiage.addEditModalEditTitle} ${selectedStepEntity.objectiveProgress_objectiveName}`
-      )
-    ).toBeTruthy();
-  });
-});
-
-describe("Test AddEditOverlayEntityModal functionality", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-  });
-
-  afterEach(() => {
-    wpReport.fieldData.initiative[0].evaluationPlan = [mockOverlayEntity];
-    jest.clearAllMocks();
-  });
-
-  const fillAndSubmitForm = async (form: any) => {
-    const textField = form.querySelector("[name='mock-modal-text-field']")!;
-    await userEvent.clear(textField);
-    await userEvent.type(textField, "mock input 2");
-    const submitButton = screen.getByRole("button", { name: "Save" });
-    await userEvent.click(submitButton);
-  };
-
-  test("Successfully adds new entity, even with existing entities", async () => {
-    const result = render(modalComponent);
-    const form = result.getByTestId("add-edit-entity-form");
-    await fillAndSubmitForm(form);
-
-    const expectedUpdateCallPayload = {
-      fieldData: mockedReportContext.report.fieldData,
-      metadata: {
-        lastAlteredBy: "Thelonious States",
-        status: "In progress",
-      },
-    };
-
-    expectedUpdateCallPayload.fieldData.initiative[0].evaluationPlan.push({
-      id: "mock-eval-id-2",
-      "mock-modal-text-field": "mock input 2",
+  describe("Test AddEditOverlayEntityModal functionality", () => {
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockUseStore);
     });
 
-    expect(mockUpdateReport).toHaveBeenCalledTimes(1);
+    afterEach(() => {
+      wpReport.fieldData.initiative[0].evaluationPlan = [mockOverlayEntity];
+      jest.clearAllMocks();
+    });
 
-    expect(mockUpdateReport).toHaveBeenCalledWith(
-      { ...mockReportKeys, id: "mock-wp-full-report-id" },
-      expectedUpdateCallPayload
-    );
-
-    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-  });
-
-  test("Successfuly edits an existing entity", async () => {
-    const result = render(modalComponentWithSelectedEntity);
-    const form = result.getByTestId("add-edit-entity-form");
-    await fillAndSubmitForm(form);
-
-    const expectedEvaluationPlanEntity = {
-      id: mockOverlayEntity.id,
-      "mock-modal-text-field": "mock input 2",
-      type: entityTypes[0],
+    const fillAndSubmitForm = async (form: any) => {
+      const textField = form.querySelector("[name='mock-modal-text-field']")!;
+      await userEvent.clear(textField);
+      await userEvent.type(textField, "mock input 2");
+      const submitButton = screen.getByRole("button", { name: "Save" });
+      await userEvent.click(submitButton);
     };
 
-    const expectedUpdateCallPayload = {
-      fieldData: mockedReportContext.report.fieldData,
-      metadata: {
-        lastAlteredBy: "Thelonious States",
-        status: "In progress",
-      },
-    };
+    test("Successfully adds new entity, even with existing entities", async () => {
+      const result = render(modalComponent);
+      const form = result.getByTestId("add-edit-entity-form");
+      await fillAndSubmitForm(form);
 
-    expectedUpdateCallPayload.fieldData.initiative = [
-      {
-        id: "mock-id-1",
+      const expectedUpdateCallPayload = {
+        fieldData: mockedReportContext.report.fieldData,
+        metadata: {
+          lastAlteredBy: "Thelonious States",
+          status: "In progress",
+        },
+      };
+
+      expectedUpdateCallPayload.fieldData.initiative[0].evaluationPlan.push({
+        id: "mock-eval-id-2",
+        "mock-modal-text-field": "mock input 2",
+      });
+
+      expect(mockUpdateReport).toHaveBeenCalledTimes(1);
+
+      expect(mockUpdateReport).toHaveBeenCalledWith(
+        { ...mockReportKeys, id: "mock-wp-full-report-id" },
+        expectedUpdateCallPayload
+      );
+
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
+
+    test("Successfuly edits an existing entity", async () => {
+      const result = render(modalComponentWithSelectedEntity);
+      const form = result.getByTestId("add-edit-entity-form");
+      await fillAndSubmitForm(form);
+
+      const expectedEvaluationPlanEntity = {
+        id: mockOverlayEntity.id,
+        "mock-modal-text-field": "mock input 2",
         type: entityTypes[0],
-        initiative_name: "mock name 1",
-        evaluationPlan: [expectedEvaluationPlanEntity],
-      },
-    ];
+      };
 
-    expect(mockUpdateReport).toHaveBeenCalledWith(
-      { ...mockReportKeys, id: "mock-wp-full-report-id" },
-      expectedUpdateCallPayload
-    );
+      const expectedUpdateCallPayload = {
+        fieldData: mockedReportContext.report.fieldData,
+        metadata: {
+          lastAlteredBy: "Thelonious States",
+          status: "In progress",
+        },
+      };
 
-    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+      expectedUpdateCallPayload.fieldData.initiative = [
+        {
+          id: "mock-id-1",
+          type: entityTypes[0],
+          initiative_name: "mock name 1",
+          evaluationPlan: [expectedEvaluationPlanEntity],
+        },
+      ];
+
+      expect(mockUpdateReport).toHaveBeenCalledWith(
+        { ...mockReportKeys, id: "mock-wp-full-report-id" },
+        expectedUpdateCallPayload
+      );
+
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
   });
-});
 
-describe("Test AddEditOverlayEntityModal accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(modalComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(modalComponent);
 });

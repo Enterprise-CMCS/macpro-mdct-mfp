@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { useStore } from "utils";
 import {
   mockReportStore,
@@ -18,6 +17,7 @@ import {
   ExportedModalOverlayReportSection,
   Props,
 } from "./ExportedModalOverlayReportSection";
+import { testA11y } from "utils/testing/commonTests";
 
 global.structuredClone = (x: any) => JSON.parse(JSON.stringify(x));
 
@@ -403,41 +403,40 @@ const testComponent = (props: Props) => (
   </RouterWrappedComponent>
 );
 
-describe("ExportedModalOverlayReportSection rendering", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+describe("<ExportedModalOverlayReportSection />", () => {
+  describe("ExportedModalOverlayReportSection rendering", () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("should render modal overlay report section", async () => {
+      mockedUseStore.mockReturnValue({
+        ...mockReportStore,
+        report: mockWPReportWithOverlays,
+      });
+      render(testComponent(wpMockProps));
+      expect(
+        screen.getAllByTestId("exportedOverlayModalPage")[0]
+      ).toBeInTheDocument();
+    });
+
+    test("should render for SAR", async () => {
+      mockedUseStore.mockReturnValue({
+        ...mockReportStore,
+        report: mockSARReportWithOverlays,
+      });
+      render(testComponent(sarMockProps));
+      expect(
+        screen.getByText("% of total projected spending")
+      ).toBeInTheDocument();
+      expect(screen.getByText("42.86%")).toBeInTheDocument(); // (5+10)/(15+20)
+    });
   });
 
-  it("should render modal overlay report section", async () => {
+  testA11y(testComponent(wpMockProps), () => {
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
     });
-    render(testComponent(wpMockProps));
-    expect(
-      screen.getAllByTestId("exportedOverlayModalPage")[0]
-    ).toBeInTheDocument();
-  });
-
-  it("should render for SAR", async () => {
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockSARReportWithOverlays,
-    });
-    render(testComponent(sarMockProps));
-    expect(
-      screen.getByText("% of total projected spending")
-    ).toBeInTheDocument();
-    expect(screen.getByText("42.86%")).toBeInTheDocument(); // (5+10)/(15+20)
-  });
-
-  it("should not have basic accessibility issues", async () => {
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    const { container } = render(testComponent(wpMockProps));
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

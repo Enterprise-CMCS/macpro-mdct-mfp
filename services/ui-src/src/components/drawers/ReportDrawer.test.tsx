@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 //components
 import {
   mockDrawerForm,
@@ -15,6 +14,7 @@ import { useStore } from "utils";
 // constants
 import { saveAndCloseText } from "../../constants";
 import { ReportDrawer } from "./ReportDrawer";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockOnClose = jest.fn();
 const mockOnSubmit = jest.fn();
@@ -39,25 +39,6 @@ const drawerComponent = (
   </RouterWrappedComponent>
 );
 
-describe("Test ReportDrawer rendering", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  it("Should render save text if form is editable", async () => {
-    mockUseStore.editable = true;
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(drawerComponent);
-    expect(screen.getByText(saveAndCloseText)).toBeVisible();
-  });
-
-  it("Should not render save text if form is not editable", async () => {
-    mockUseStore.editable = false;
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(drawerComponent);
-    expect(screen.queryByText(saveAndCloseText)).not.toBeInTheDocument();
-  });
-});
-
 const drawerComponentWithoutFormFields = (
   <ReportDrawer
     verbiage={mockModalDrawerReportPageVerbiage}
@@ -68,25 +49,33 @@ const drawerComponentWithoutFormFields = (
   />
 );
 
-describe("Test ReportDrawerWithoutFormFields rendering", () => {
+describe("<ReportDrawer />", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  it("Should render save text for state user", async () => {
+  test("Should render save text if form is editable", async () => {
+    mockUseStore.editable = true;
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(drawerComponent);
+    expect(screen.getByText(saveAndCloseText)).toBeVisible();
+  });
+
+  test("Should not render save text if form is not editable", async () => {
+    mockUseStore.editable = false;
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(drawerComponent);
+    expect(screen.queryByText(saveAndCloseText)).not.toBeInTheDocument();
+  });
+
+  test("Should render save text for state user", async () => {
     mockedUseStore.mockReturnValue(mockStateUserStore);
     render(drawerComponentWithoutFormFields);
     expect(
       screen.getByText(mockModalDrawerReportPageVerbiage.drawerNoFormMessage)
     ).toBeVisible();
   });
-});
 
-describe("Test ReportDrawer accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
+  testA11y(drawerComponent, () => {
     mockedUseStore.mockReturnValue(mockStateUserStore);
-    const { container } = render(drawerComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-    jest.clearAllMocks();
   });
 });
