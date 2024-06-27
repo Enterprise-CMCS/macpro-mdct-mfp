@@ -13,6 +13,7 @@ import {
   EntityShape,
   FormField,
   FormLayoutElement,
+  HeadingLevel,
   ModalOverlayReportPageShape,
   ReportPageShapeBase,
   ReportShape,
@@ -28,6 +29,7 @@ export const ExportedEntityDetailsOverlaySection = ({
   closed,
   showHintText,
   tableSection,
+  headingLevel = "h4",
 }: ExportedEntityDetailsOverlaySectionProps) => {
   const { report } = useStore() ?? {};
 
@@ -40,7 +42,8 @@ export const ExportedEntityDetailsOverlaySection = ({
           entityStep,
           showHintText,
           closed,
-          tableSection
+          tableSection,
+          headingLevel
         )}
     </Box>
   );
@@ -53,6 +56,7 @@ export interface ExportedEntityDetailsOverlaySectionProps {
   showHintText?: boolean;
   tableSection?: ReportPageShapeBase;
   closed?: boolean;
+  headingLevel?: HeadingLevel;
 }
 
 /**
@@ -67,7 +71,8 @@ export function getEntityTableComponents(
   entityStep: (string | FormLayoutElement | FormField)[],
   showHintText?: boolean,
   closed?: boolean,
-  tableSection?: ReportPageShapeBase
+  tableSection?: ReportPageShapeBase,
+  headingLevel?: HeadingLevel
 ) {
   const reportType = report.reportType;
   const title = (entityStep as any)?.name || (entityStep![1] as string);
@@ -85,12 +90,12 @@ export function getEntityTableComponents(
   return (
     <Box key={uuid()}>
       <Box>
-        <Heading as="h4">
-          <Box sx={sx.stepName}>{title}</Box>
-          <Box sx={sx.stepHint}>
-            {reportType === ReportType.SAR ? parseCustomHtml(info) : hint}
-          </Box>
+        <Heading as={headingLevel} sx={sx.stepName}>
+          {title}
         </Heading>
+        <Box sx={sx.stepHint}>
+          {reportType === ReportType.SAR ? parseCustomHtml(info) : hint}
+        </Box>
       </Box>
       {closed && (
         <Box sx={sx.sectionHeading}>
@@ -133,7 +138,8 @@ export function renderEntityDetailTables(
   entityStep: (string | FormLayoutElement | FormField)[],
   showHintText?: boolean,
   closed?: boolean,
-  tableSection?: ReportPageShapeBase
+  tableSection?: ReportPageShapeBase,
+  headingLevel?: HeadingLevel
 ) {
   const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
@@ -143,7 +149,9 @@ export function renderEntityDetailTables(
         entity,
         entityStep,
         showHintText,
-        closed
+        closed,
+        undefined,
+        headingLevel
       );
     }
     case ReportType.SAR:
@@ -153,7 +161,8 @@ export function renderEntityDetailTables(
         entityStep,
         showHintText,
         closed,
-        tableSection
+        tableSection,
+        headingLevel
       );
     default:
       assertExhaustive(reportType);

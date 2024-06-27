@@ -64,6 +64,14 @@ export enum PageTypes {
   REVIEW_SUBMIT = "reviewSubmit",
 }
 
+export enum EntityStatuses {
+  COMPLETE = "complete",
+  CLOSE = "close",
+  DISABLED = "disabled",
+  INCOMPLETE = "incomplete",
+  NO_STATUS = "no status",
+}
+
 export interface InputChangeEvent extends React.ChangeEvent<HTMLInputElement> {}
 
 export type { IconType } from "react-icons";

@@ -13,7 +13,7 @@ export default {
     language: "English",
   },
   reportPage: {
-    heading: "Semi-Annual Progress Report (SAR) for ",
+    heading: "Semi-Annual Progress Report (SAR) for",
     metadataTableHeaders: {
       submissionName: "Submission Name",
       dueDate: "Due date",
