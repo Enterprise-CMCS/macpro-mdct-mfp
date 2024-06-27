@@ -1,7 +1,7 @@
 import { Flex, Image, Text } from "@chakra-ui/react";
 // assets
 import successIcon from "assets/icons/icon_check_circle.png";
-import errorIcon from "assets/icons/icon_error_circle_bright.png";
+import errorIcon from "assets/icons/icon_error_circle.png";
 
 export const StatusIcon = ({ status }: { status?: boolean }) => {
   switch (status) {
