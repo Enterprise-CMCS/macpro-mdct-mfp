@@ -1,20 +1,13 @@
-import { Fragment } from "react";
-import { useNavigate } from "react-router-dom";
 // components
-import { Box, Button, Flex, Image, Td, Text, Tr } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { Table } from "components";
+import { ChildRow } from "./ChildRow";
 // types
-import { ReportPageProgress, ReportType } from "types";
+import { ReportPageProgress } from "types";
 // utils
-import { getRouteStatus, useBreakpoint, useStore } from "utils";
+import { getRouteStatus, useStore } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/wp/wp-review-and-submit";
-// assets
-import editIcon from "assets/icons/icon_edit.png";
-import errorIcon from "assets/icons/icon_error_circle.png";
-import iconSearch from "assets/icons/icon_search_blue.png";
-import successIcon from "assets/icons/icon_check_circle.png";
-import { assertExhaustive } from "utils/other/typing";
 
 export const StatusTable = () => {
   const { report } = useStore();
@@ -24,7 +17,7 @@ export const StatusTable = () => {
     <Box sx={sx.container}>
       <Table content={review.table} sx={sx.table}>
         {getRouteStatus(report).map((page: ReportPageProgress) => {
-          return <ChildRow key={page.path} page={page} depth={rowDepth} />;
+          return <ChildRow key={page.path} page={page} rowDepth={rowDepth} />;
         })}
       </Table>
     </Box>
@@ -32,127 +25,6 @@ export const StatusTable = () => {
     <Box />
   );
 };
-
-const ChildRow = ({ page, depth }: RowProps) => {
-  const { name, children } = page;
-
-  return (
-    <Fragment key={name}>
-      <TableRow page={page} depth={depth} />
-      {children?.map((child) => (
-        <ChildRow key={child.path} page={child} depth={depth + 1} />
-      ))}
-    </Fragment>
-  );
-};
-
-export const StatusIcon = ({
-  reportType,
-  status,
-}: {
-  reportType: ReportType;
-  status?: boolean;
-}) => {
-  switch (reportType) {
-    case ReportType.SAR:
-    case ReportType.WP: {
-      if (status) {
-        return (
-          <Flex sx={sx.status}>
-            <Image src={successIcon} alt="Success notification" />
-            <Text>Complete</Text>
-          </Flex>
-        );
-      } else if (status === undefined) {
-        return <></>;
-      } else {
-        return (
-          <Flex sx={sx.status}>
-            <Image src={errorIcon} alt="Error notification" />
-            <Text>Error</Text>
-          </Flex>
-        );
-      }
-    }
-    default:
-      assertExhaustive(reportType);
-      throw new Error(
-        `Statusing icons for '${reportType}' have not been implemented.`
-      );
-  }
-};
-
-const TableRow = ({ page, depth }: RowProps) => {
-  const { isMobile } = useBreakpoint();
-  const { name, path, children, status } = page;
-  const { report, editable } = useStore();
-  const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
-  return (
-    <Tr>
-      {depth == 1 ? (
-        <Td sx={sx.parent} pl={!isMobile ? "1rem" : "0"}>
-          <Text>{name}</Text>
-          {isMobile && !children && EditButton(buttonAriaLabel, path, editable)}
-        </Td>
-      ) : (
-        <Td sx={sx.subparent} pl={!isMobile ? `${1.25 * depth}rem` : "0"}>
-          <Text>{name}</Text>
-          {isMobile && !children && EditButton(buttonAriaLabel, path, editable)}
-        </Td>
-      )}
-      <Td
-        sx={sx.statusColumn}
-        pt={
-          depth == 1
-            ? isMobile
-              ? "1.5rem"
-              : "0.5rem"
-            : isMobile
-            ? "1rem"
-            : "0.5rem"
-        }
-      >
-        <StatusIcon
-          reportType={report?.reportType as ReportType}
-          status={status}
-        />
-      </Td>
-      {!isMobile && (
-        <Td>
-          {!children && EditButton(buttonAriaLabel, path, editable, true)}
-        </Td>
-      )}
-    </Tr>
-  );
-};
-
-const EditButton = (
-  buttonAriaLabel: string,
-  path: string,
-  editable: boolean,
-  showIcon = false
-) => {
-  const navigate = useNavigate();
-  const icon = editable ? editIcon : iconSearch;
-  const altText = editable ? "Edit Program" : "View Program";
-  const displayText = editable ? "Edit" : "View";
-  return (
-    <Button
-      sx={sx.enterButton}
-      variant="outline"
-      aria-label={buttonAriaLabel}
-      onClick={() => navigate(path, { state: { validateOnRender: true } })}
-    >
-      {showIcon && <Image src={icon} alt={altText} />}
-      {displayText}
-    </Button>
-  );
-};
-
-interface RowProps {
-  page: ReportPageProgress;
-  depth: number;
-}
 
 const sx = {
   container: {
@@ -163,58 +35,6 @@ const sx = {
       },
     },
   },
-  parent: {
-    fontWeight: "bold",
-    lineHeight: "1.125rem",
-    fontSize: "sm",
-    paddingTop: "1rem",
-    paddingBottom: "1rem",
-    ".mobile &": {
-      paddingTop: "1.5rem",
-      paddingBottom: "1.5rem",
-    },
-  },
-  subparent: {
-    paddingTop: "1rem",
-    paddingBottom: "1rem",
-    lineHeight: "1.125rem",
-    fontSize: "sm",
-  },
-  enterButton: {
-    width: "4.25rem",
-    height: "1.75rem",
-    fontSize: "md",
-    fontWeight: "normal",
-    border: "1px solid",
-    borderColor: "palette.gray_lighter",
-    color: "palette.primary",
-    ".mobile &": {
-      width: "6rem",
-      borderColor: "palette.primary",
-      marginTop: ".5rem",
-    },
-    img: {
-      width: "1rem",
-      marginRight: "0.5rem",
-    },
-  },
-  statusColumn: {
-    ".mobile &": {
-      display: "flex",
-      borderTop: 0,
-      paddingLeft: 0,
-    },
-  },
-  status: {
-    gap: "0.5rem",
-    alignItems: "center",
-    img: {
-      width: "1.25rem",
-    },
-    margin: 0,
-    padding: 0,
-  },
-
   table: {
     marginBottom: "2.5rem",
     th: {
