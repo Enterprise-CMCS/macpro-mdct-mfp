@@ -11,7 +11,7 @@ import {
 import { useStore } from "utils";
 import { ObjectiveProgressCardBottomSection } from "./ObjectiveProgressCardBottomSection";
 
-export const EntityStepCardTopSection = ({
+export const EntityCardByStepType = ({
   stepType,
   formattedEntityData,
   entityCompleted,

@@ -1,5 +1,5 @@
 // components
-import { Card, EntityStepCardTopSection } from "components";
+import { Card, EntityCardByStepType } from "components";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
 import {
@@ -165,7 +165,7 @@ export const EntityStepCard = ({
             />
           </button>
         )}
-        <EntityStepCardTopSection
+        <EntityCardByStepType
           stepType={stepType}
           printVersion={!!printVersion}
           formattedEntityData={formattedEntityData}
