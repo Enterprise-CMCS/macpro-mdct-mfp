@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import { EntityStepCardBottomSection } from "./EntityCardBottomSection";
+import { ObjectiveProgressCardBottomSection } from "./ObjectiveProgressCardBottomSection";
 import { mockGenericEntity, mockUseSARStore } from "utils/testing/setupJest";
 import { useStore } from "utils";
 
@@ -41,56 +41,32 @@ const mockFullyCompletedObjectiveProgress = {
     "mock progress description towards reaching the milestone",
 };
 
-const entityStepCardBottomSection = (
-  <EntityStepCardBottomSection
-    stepType={"mockStepType"}
+const objectiveProgressCardBottomSection = (
+  <ObjectiveProgressCardBottomSection
     verbiage={verbiage}
     formattedEntityData={{}}
   />
 );
 
 const cardWithQualitativeAnswers = (
-  <EntityStepCardBottomSection
-    stepType={"objectiveProgress"}
+  <ObjectiveProgressCardBottomSection
     verbiage={verbiage}
     formattedEntityData={mockFullyCompletedObjectiveProgress}
     entity={mockGenericEntity}
   />
 );
-describe("Test EntityStepCardBottomSection renders", () => {
-  test("EntityStepCardBottomSection renders correctly", () => {
-    const bottomSection = render(entityStepCardBottomSection);
-    expect(bottomSection.container).toBeEmptyDOMElement();
-  });
-
-  test("EntityStepCardBottomSection always returns default", () => {
-    let entityStepCardBottomSectionSwitchCase = (
-      <EntityStepCardBottomSection
-        stepType={"mockStepType"}
-        verbiage={verbiage}
-        formattedEntityData={{}}
-      />
-    );
-
-    const bottomSection = render(entityStepCardBottomSectionSwitchCase);
-    expect(bottomSection.container).toBeEmptyDOMElement();
-
-    entityStepCardBottomSectionSwitchCase = (
-      <EntityStepCardBottomSection
-        stepType={"anotherMockStepType"}
-        verbiage={verbiage}
-        formattedEntityData={{}}
-      />
-    );
+describe("Test ObjectiveProgressCardBottomSection renders", () => {
+  test("ObjectiveProgressCardBottomSection renders correctly", () => {
+    const bottomSection = render(objectiveProgressCardBottomSection);
     expect(bottomSection.container).toBeEmptyDOMElement();
   });
 });
 
-describe("Test EntityStepCardBottomSection renders the objective progress correctly", () => {
+describe("Test ObjectiveProgressCardBottomSection renders the objective progress correctly", () => {
   beforeEach(async () => {
     mockedUseStore.mockReturnValue(mockUseSARStore);
   });
-  test("EntityStepCardBottomSection renders evalutionStep correctly", () => {
+  test("ObjectiveProgressCardBottomSection renders evalutionStep correctly", () => {
     const bottomOfCard = render(cardWithQualitativeAnswers);
     expect(
       bottomOfCard.getByText(

@@ -1,9 +1,5 @@
 // components
-import {
-  Card,
-  EntityStepCardTopSection,
-  EntityStepCardBottomSection,
-} from "components";
+import { Card, EntityStepCardTopSection } from "components";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
 import {
@@ -175,23 +171,9 @@ export const EntityStepCard = ({
           formattedEntityData={formattedEntityData}
           entityCompleted={entityCompleted}
           headingLevel={headingLevel}
+          verbiage={verbiage}
+          entity={entity}
         />
-        {entityCompleted || printVersion ? (
-          <EntityStepCardBottomSection
-            stepType={stepType}
-            verbiage={verbiage}
-            entity={entity}
-            formattedEntityData={{
-              ...formattedEntityData,
-              isPartiallyComplete: !entityCompleted,
-            }}
-            printVersion={!!printVersion}
-          />
-        ) : (
-          <Text sx={sx.unfinishedMessage}>
-            {verbiage.entityUnfinishedMessage}
-          </Text>
-        )}
         {addEditEntitybutton()}
         {openDrawer && (
           <Button
@@ -298,11 +280,6 @@ const sx = {
     _hover: {
       filter: svgFilters.primary_darker,
     },
-  },
-  unfinishedMessage: {
-    marginY: "1rem",
-    fontSize: "xs",
-    color: "palette.error_dark",
   },
   editButton: {
     marginY: "1rem",

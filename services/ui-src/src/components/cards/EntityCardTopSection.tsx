@@ -9,12 +9,16 @@ import {
   ReportType,
 } from "types";
 import { useStore } from "utils";
+import { ObjectiveProgressCardBottomSection } from "./ObjectiveProgressCardBottomSection";
 
 export const EntityStepCardTopSection = ({
   stepType,
   formattedEntityData,
   entityCompleted,
   headingLevel = "h2",
+  printVersion,
+  verbiage,
+  entity,
 }: Props) => {
   const { report } = useStore() ?? {};
   switch (stepType) {
@@ -55,6 +59,21 @@ export const EntityStepCardTopSection = ({
                 </Grid>
               </>
             )}
+          {entityCompleted || printVersion ? (
+            <ObjectiveProgressCardBottomSection
+              verbiage={verbiage}
+              entity={entity}
+              formattedEntityData={{
+                ...formattedEntityData,
+                isPartiallyComplete: !entityCompleted,
+              }}
+              printVersion={!!printVersion}
+            />
+          ) : (
+            <Text sx={sx.unfinishedMessage}>
+              {verbiage.entityUnfinishedMessage}
+            </Text>
+          )}
         </>
       );
     case OverlayModalStepTypes.EVALUATION_PLAN:
@@ -158,6 +177,8 @@ interface Props {
   printVersion?: boolean;
   entityCompleted?: boolean;
   headingLevel?: HeadingLevel;
+  verbiage: AnyObject;
+  entity?: AnyObject;
 }
 
 const sx = {
@@ -210,5 +231,10 @@ const sx = {
     ".subtitle": {
       marginRight: ".5rem",
     },
+  },
+  unfinishedMessage: {
+    marginY: "1rem",
+    fontSize: "xs",
+    color: "palette.error_dark",
   },
 };
