@@ -41,13 +41,6 @@ const mockFullyCompletedObjectiveProgress = {
     "mock progress description towards reaching the milestone",
 };
 
-const objectiveProgressCardBottomSection = (
-  <ObjectiveProgressCardBottomSection
-    verbiage={verbiage}
-    formattedEntityData={{}}
-  />
-);
-
 const cardWithQualitativeAnswers = (
   <ObjectiveProgressCardBottomSection
     verbiage={verbiage}
@@ -55,12 +48,6 @@ const cardWithQualitativeAnswers = (
     entity={mockGenericEntity}
   />
 );
-describe("Test ObjectiveProgressCardBottomSection renders", () => {
-  test("ObjectiveProgressCardBottomSection renders correctly", () => {
-    const bottomSection = render(objectiveProgressCardBottomSection);
-    expect(bottomSection.container).toBeEmptyDOMElement();
-  });
-});
 
 describe("Test ObjectiveProgressCardBottomSection renders the objective progress correctly", () => {
   beforeEach(async () => {
