@@ -27,11 +27,12 @@ const childRowComponent = (
 );
 
 describe("<ChildRow />", () => {
-  describe("Test ChildRow", () => {
+  describe("Renders", () => {
     beforeEach(() => {
       mockedUseStore.mockReturnValue(mockUseStore);
       render(childRowComponent);
     });
+
     test("Check that childrow renders", () => {
       const row = screen.getByRole("gridcell", {
         name: "State or Territory-Specific Initiatives",

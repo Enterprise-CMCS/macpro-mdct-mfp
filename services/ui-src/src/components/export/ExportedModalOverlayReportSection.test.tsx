@@ -404,33 +404,31 @@ const testComponent = (props: Props) => (
 );
 
 describe("<ExportedModalOverlayReportSection />", () => {
-  describe("ExportedModalOverlayReportSection rendering", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    test("should render modal overlay report section", async () => {
-      mockedUseStore.mockReturnValue({
-        ...mockReportStore,
-        report: mockWPReportWithOverlays,
-      });
-      render(testComponent(wpMockProps));
-      expect(
-        screen.getAllByTestId("exportedOverlayModalPage")[0]
-      ).toBeInTheDocument();
+  test("should render modal overlay report section", async () => {
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
     });
+    render(testComponent(wpMockProps));
+    expect(
+      screen.getAllByTestId("exportedOverlayModalPage")[0]
+    ).toBeInTheDocument();
+  });
 
-    test("should render for SAR", async () => {
-      mockedUseStore.mockReturnValue({
-        ...mockReportStore,
-        report: mockSARReportWithOverlays,
-      });
-      render(testComponent(sarMockProps));
-      expect(
-        screen.getByText("% of total projected spending")
-      ).toBeInTheDocument();
-      expect(screen.getByText("42.86%")).toBeInTheDocument(); // (5+10)/(15+20)
+  test("should render for SAR", async () => {
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockSARReportWithOverlays,
     });
+    render(testComponent(sarMockProps));
+    expect(
+      screen.getByText("% of total projected spending")
+    ).toBeInTheDocument();
+    expect(screen.getByText("42.86%")).toBeInTheDocument(); // (5+10)/(15+20)
   });
 
   testA11y(testComponent(wpMockProps), () => {

@@ -128,84 +128,89 @@ mockedUseStore.mockReturnValue(mockSARReport);
 
 //These test are testing functions that uses hardcoded return values
 describe("<ExportRETTable />", () => {
-  describe("Test table functions specific for R,E & T", () => {
-    describe("Test formatHeaderForRET functionality", () => {
-      test("Returns label without change", () => {
-        const sameLabel = formatHeaderForRET("Mock name");
-        expect(sameLabel).toBe("Mock name");
-      });
+  test("Returns label without change", () => {
+    const sameLabel = formatHeaderForRET("Mock name");
+    expect(sameLabel).toBe("Mock name");
+  });
 
-      test("Removes Other: from label", () => {
-        const newLabel = formatHeaderForRET("Other: Test");
-        expect(newLabel).toBe("Test");
-      });
+  test("Removes Other: from label", () => {
+    const newLabel = formatHeaderForRET("Other: Test");
+    expect(newLabel).toBe("Test");
+  });
 
-      test("Returns abbr label", () => {
-        const newLabel = formatHeaderForRET("Mock Long Name (MLN)");
-        expect(newLabel).toBe("MLN");
-      });
+  test("Returns abbr label", () => {
+    const newLabel = formatHeaderForRET("Mock Long Name (MLN)");
+    expect(newLabel).toBe("MLN");
+  });
 
-      test("Returns Number of Older adults as Older Adults", () => {
-        const newLabel = formatHeaderForRET("Number of Older adults");
-        expect(newLabel).toBe("Older Adults");
-      });
+  test("Returns Number of Older adults as Older Adults", () => {
+    const newLabel = formatHeaderForRET("Number of Older adults");
+    expect(newLabel).toBe("Older Adults");
+  });
+
+  test("Test formatLabelForRET functionality", () => {
+    const values = [
+      { id: "ret-mtfqi", label: "Mock name", result: "Mock name" },
+      { id: "ret-mtfqi", label: "mock (MLN)", result: "MLN" },
+      { id: "ret-mtfqr", label: "Mock name", result: "Mock name" },
+      {
+        id: "ret-mtfqr",
+        label:
+          "Group home or other residence in which four or fewer unrelated individuals live",
+        result: "Group home",
+      },
+      {
+        id: "ret-mtfqr",
+        label: "Apartment (individual lease, lockable access, etc.)",
+        result: "Apartment",
+      },
+      {
+        id: "ret-mtfqr",
+        label: "Apartment in qualified assisted living",
+        result: "Apt. in qualified assisted living",
+      },
+      {
+        id: "ret-mpdprp",
+        label: "Mock name",
+        report: {},
+        result: "Mock name",
+      },
+      {
+        id: "ret-mpdprp",
+        label: "Other, specify",
+        report: mockSARReport.report,
+        result: "Other: mock other",
+      },
+    ];
+
+    values.forEach((value) => {
+      const newLabel = formatLabelForRET(value.id, value.label, value?.report!);
+      expect(newLabel).toBe(value.result);
     });
+  });
 
-    test("Test formatLabelForRET functionality", () => {
-      const values = [
-        { id: "ret-mtfqi", label: "Mock name", result: "Mock name" },
-        { id: "ret-mtfqi", label: "mock (MLN)", result: "MLN" },
-        { id: "ret-mtfqr", label: "Mock name", result: "Mock name" },
-        {
-          id: "ret-mtfqr",
-          label:
-            "Group home or other residence in which four or fewer unrelated individuals live",
-          result: "Group home",
-        },
-        {
-          id: "ret-mtfqr",
-          label: "Apartment (individual lease, lockable access, etc.)",
-          result: "Apartment",
-        },
-        {
-          id: "ret-mtfqr",
-          label: "Apartment in qualified assisted living",
-          result: "Apt. in qualified assisted living",
-        },
-        {
-          id: "ret-mpdprp",
-          label: "Mock name",
-          report: {},
-          result: "Mock name",
-        },
-        {
-          id: "ret-mpdprp",
-          label: "Other, specify",
-          report: mockSARReport.report,
-          result: "Other: mock other",
-        },
-      ];
+  test("Test formatFooterForRET functionality", () => {
+    const expectedResults = [
+      "Total as a % of all current MFP participate",
+      "66.67%",
+      "75.00%",
+    ];
+    const footerRow = [["label", "2", "3"]];
+    formatFooterForRET("ret-mpdprp", mockSARReport.report, footerRow);
+    expect(footerRow[footerRow.length - 1]).toStrictEqual(expectedResults);
+  });
 
-      values.forEach((value) => {
-        const newLabel = formatLabelForRET(
-          value.id,
-          value.label,
-          value?.report!
-        );
-        expect(newLabel).toBe(value.result);
-      });
-    });
-
-    test("Test formatFooterForRET functionality", () => {
-      const expectedResults = [
-        "Total as a % of all current MFP participate",
-        "66.67%",
-        "75.00%",
-      ];
-      const footerRow = [["label", "2", "3"]];
-      formatFooterForRET("ret-mpdprp", mockSARReport.report, footerRow);
-      expect(footerRow[footerRow.length - 1]).toStrictEqual(expectedResults);
-    });
+  test("Test ExportRETTable render if section is empty", () => {
+    //an empty section means no transition benchmark had been selected
+    mockedUseStore.mockReturnValue(mockSARReport);
+    render(<ExportRETTable section={emptySection as any} />);
+    const table = screen.queryByRole("table");
+    expect(table).toBe(null);
+    expect(
+      screen.getByText(
+        "Your associated MFP Work Plan does not contain any target populations."
+      )
+    ).toBeVisible();
   });
 
   describe("Test ExportedRETTable Component", () => {
@@ -224,21 +229,6 @@ describe("<ExportRETTable />", () => {
       expect(screen.queryAllByText(notAnsweredText)).toHaveLength(1);
       //thead, Q3, Q4, other, total, target Q3, target Q4, target total, % total, a total of 9 rows should exist
       expect(screen.queryAllByRole("row")).toHaveLength(9);
-    });
-  });
-
-  describe("Test ExportedRETTable Component with empty section", () => {
-    test("Test ExportRETTable render if section is empty", () => {
-      //an empty section means no transition benchmark had been selected
-      mockedUseStore.mockReturnValue(mockSARReport);
-      render(<ExportRETTable section={emptySection as any} />);
-      const table = screen.queryByRole("table");
-      expect(table).toBe(null);
-      expect(
-        screen.getByText(
-          "Your associated MFP Work Plan does not contain any target populations."
-        )
-      ).toBeVisible();
     });
   });
 

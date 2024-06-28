@@ -7,7 +7,7 @@ export const testA11y = (
   beforeCallback?: any,
   afterCallback?: any
 ) => {
-  describe("Accessiblity", () => {
+  describe("Accessibility", () => {
     beforeEach(() => {
       if (beforeCallback) {
         beforeCallback();
@@ -33,7 +33,7 @@ export const testA11yAct = (
   beforeCallback?: any,
   afterCallback?: any
 ) => {
-  describe("Accessiblity", () => {
+  describe("Accessibility", () => {
     beforeEach(() => {
       if (beforeCallback) {
         beforeCallback();

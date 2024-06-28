@@ -50,7 +50,7 @@ const entityDetailsOverlayComponent = (
 );
 
 describe("<EntityDetailsOverlayPage />", () => {
-  describe("Test EntityDetailsOverlayPage", () => {
+  describe("Renders", () => {
     beforeEach(() => {
       component = render(entityDetailsOverlayComponent);
     });

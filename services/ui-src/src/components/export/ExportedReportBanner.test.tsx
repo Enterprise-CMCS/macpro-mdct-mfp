@@ -39,62 +39,61 @@ const bannerWithContext = (context: any) => {
 };
 
 describe("<ExportedReportBanner />", () => {
-  describe("Renders", () => {
-    beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockUseStore);
+  beforeEach(() => {
+    mockedUseStore.mockReturnValue(mockUseStore);
 
-      mockPrint = window.print;
-      jest.spyOn(window, "print").mockImplementation(() => {});
-    });
-    afterEach(() => {
-      window.print = mockPrint;
-    });
+    mockPrint = window.print;
+    jest.spyOn(window, "print").mockImplementation(() => {});
+  });
 
-    test("Is ExportedReportBanner present", async () => {
-      render(bannerWithContext(wpContext));
-      const banner = screen.getByTestId("exportedReportBanner");
-      expect(banner).toBeVisible();
-    });
+  afterEach(() => {
+    window.print = mockPrint;
+  });
 
-    test("Does WP export banner have WP-specific verbiage", async () => {
-      render(bannerWithContext(wpContext));
-      const introText = screen.getByText(/MFP/);
-      expect(introText).toBeVisible();
-    });
+  test("Is ExportedReportBanner present", async () => {
+    render(bannerWithContext(wpContext));
+    const banner = screen.getByTestId("exportedReportBanner");
+    expect(banner).toBeVisible();
+  });
 
-    test("Does SAR export banner have SAR-specific verbiage", async () => {
-      const mockUseStore: MfpReportState & MfpUserState = {
-        report: { reportType: "SAR" } as ReportShape,
-        reportsByState: [],
-        submittedReportsByState: [],
-        lastSavedTime: "1:58 PM",
-        workPlanToCopyFrom: undefined,
-        autosaveState: false,
-        editable: true,
-        setReport: () => {},
-        setReportsByState: () => {},
-        clearReportsByState: () => {},
-        setSubmittedReportsByState: () => {},
-        setLastSavedTime: () => {},
-        setWorkPlanToCopyFrom: () => {},
-        setAutosaveState: () => {},
-        setEditable: () => {},
-        ...mockStateUserStore,
-        ...mockBannerStore,
-      };
-      mockedUseStore.mockReturnValue(mockUseStore);
+  test("Does WP export banner have WP-specific verbiage", async () => {
+    render(bannerWithContext(wpContext));
+    const introText = screen.getByText(/MFP/);
+    expect(introText).toBeVisible();
+  });
 
-      render(bannerWithContext(sarContext));
-      const introText = screen.getByText(/SAR/);
-      expect(introText).toBeVisible();
-    });
+  test("Does SAR export banner have SAR-specific verbiage", async () => {
+    const mockUseStore: MfpReportState & MfpUserState = {
+      report: { reportType: "SAR" } as ReportShape,
+      reportsByState: [],
+      submittedReportsByState: [],
+      lastSavedTime: "1:58 PM",
+      workPlanToCopyFrom: undefined,
+      autosaveState: false,
+      editable: true,
+      setReport: () => {},
+      setReportsByState: () => {},
+      clearReportsByState: () => {},
+      setSubmittedReportsByState: () => {},
+      setLastSavedTime: () => {},
+      setWorkPlanToCopyFrom: () => {},
+      setAutosaveState: () => {},
+      setEditable: () => {},
+      ...mockStateUserStore,
+      ...mockBannerStore,
+    };
+    mockedUseStore.mockReturnValue(mockUseStore);
 
-    test("Download PDF button should be visible", async () => {
-      render(bannerWithContext(wpContext));
-      const printButton = screen.getByText("Download PDF");
-      expect(printButton).toBeVisible();
-      await userEvent.click(printButton);
-    });
+    render(bannerWithContext(sarContext));
+    const introText = screen.getByText(/SAR/);
+    expect(introText).toBeVisible();
+  });
+
+  test("Download PDF button should be visible", async () => {
+    render(bannerWithContext(wpContext));
+    const printButton = screen.getByText("Download PDF");
+    expect(printButton).toBeVisible();
+    await userEvent.click(printButton);
   });
 
   testA11y(bannerWithContext(wpContext), () => {

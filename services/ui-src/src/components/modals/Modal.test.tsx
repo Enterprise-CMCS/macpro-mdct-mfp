@@ -28,7 +28,7 @@ const modalComponent = (
 );
 
 describe("<Modal />", () => {
-  describe("Test Modal", () => {
+  describe("Renders", () => {
     beforeEach(() => {
       render(modalComponent);
     });

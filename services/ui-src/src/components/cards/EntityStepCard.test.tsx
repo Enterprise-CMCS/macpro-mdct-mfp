@@ -181,7 +181,7 @@ const NoOpenAddEditEntityFunction = (
 
 describe("<EntityCard />", () => {
   describe("Completed EntityCard", () => {
-    describe("Test Completed EntityCard", () => {
+    describe("Renders", () => {
       beforeEach(() => {
         render(GenericEntityTypeEntityCardComponent);
       });
@@ -219,7 +219,7 @@ describe("<EntityCard />", () => {
   });
 
   describe("Unfinished EntityCard", () => {
-    describe("Test Unfinished EntityCard", () => {
+    describe("Renders", () => {
       beforeEach(() => {
         render(UnfinishedGenericEntityCardComponent);
       });

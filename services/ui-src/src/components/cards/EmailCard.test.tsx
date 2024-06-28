@@ -14,7 +14,7 @@ const emailCardComponent = (
 );
 
 describe("<EmailCard />", () => {
-  describe("Test EmailCard", () => {
+  describe("Renders", () => {
     beforeEach(() => {
       render(emailCardComponent);
     });

@@ -20,7 +20,7 @@ jest.mock("aws-amplify", () => ({
 }));
 
 describe("<LoginCognito />", () => {
-  describe("Test LoginCognito", () => {
+  describe("Renders", () => {
     beforeEach(() => {
       render(loginCognitoComponent);
     });

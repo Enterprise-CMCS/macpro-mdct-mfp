@@ -35,44 +35,42 @@ const modalOverlayReportPageComponent = (
 const verbiage = mockModalOverlayReportPageJson.verbiage;
 
 describe("<ModalOverlayReportPage />", () => {
-  describe("Test ModalOverlayReportPage with entities", () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    test("modaloverlaypage should render the view", () => {
-      mockedUseStore.mockReturnValue(mockReportStore);
-      render(modalOverlayReportPageComponent);
-      expect(screen.getByText(addEntityButtonText)).toBeVisible();
-    });
+  test("modaloverlaypage should render the view", () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+    render(modalOverlayReportPageComponent);
+    expect(screen.getByText(addEntityButtonText)).toBeVisible();
+  });
 
-    test("should open the edit modal", async () => {
-      mockedUseStore.mockReturnValue(mockUseEntityStore);
-      render(modalOverlayReportPageComponent);
-      // Get the Edit button and click it
-      const editEntityButton = screen.getByText(verbiage.editEntityButtonText);
-      await userEvent.click(editEntityButton);
-      expect(screen.getByRole("dialog")).toBeVisible();
+  test("should open the edit modal", async () => {
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
+    render(modalOverlayReportPageComponent);
+    // Get the Edit button and click it
+    const editEntityButton = screen.getByText(verbiage.editEntityButtonText);
+    await userEvent.click(editEntityButton);
+    expect(screen.getByRole("dialog")).toBeVisible();
 
-      // Close out of the modal it created
-      const closeButton = screen.getByText("Close");
-      await userEvent.click(closeButton);
+    // Close out of the modal it created
+    const closeButton = screen.getByText("Close");
+    await userEvent.click(closeButton);
 
-      // And make sure they can still add entities
-      const addEntityButton = screen.getByText(verbiage.addEntityButtonText);
-      expect(addEntityButton).toBeVisible();
-    });
+    // And make sure they can still add entities
+    const addEntityButton = screen.getByText(verbiage.addEntityButtonText);
+    expect(addEntityButton).toBeVisible();
+  });
 
-    test("overlayModal Modal edits open correctly", async () => {
-      mockedUseStore.mockReturnValue(mockUseEntityStore);
-      render(modalOverlayReportPageComponent);
-      const editEntityButton = screen.getByText(editEntityButtonText);
-      await userEvent.click(editEntityButton);
-      expect(screen.getByRole("dialog")).toBeVisible();
+  test("overlayModal Modal edits open correctly", async () => {
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
+    render(modalOverlayReportPageComponent);
+    const editEntityButton = screen.getByText(editEntityButtonText);
+    await userEvent.click(editEntityButton);
+    expect(screen.getByRole("dialog")).toBeVisible();
 
-      const closeButton = screen.getByText("Close");
-      await userEvent.click(closeButton);
-    });
+    const closeButton = screen.getByText("Close");
+    await userEvent.click(closeButton);
   });
 
   // TODO: test delete modal + functionality

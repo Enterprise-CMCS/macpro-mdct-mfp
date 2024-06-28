@@ -12,7 +12,7 @@ const footerComponent = (
 );
 
 describe("<Footer />", () => {
-  describe("Test Footer", () => {
+  describe("Renders", () => {
     beforeEach(() => {
       render(footerComponent);
     });

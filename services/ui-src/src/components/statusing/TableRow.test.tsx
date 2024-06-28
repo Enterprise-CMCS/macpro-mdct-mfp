@@ -38,16 +38,11 @@ const tableRowComponent = ({ page, rowDepth }: RowProps) => {
 };
 
 describe("<TableRow />", () => {
-  describe("Test TableRow", () => {
-    beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockUseStore);
-      render(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));
-    });
-
-    test("TableRow renders correctly", () => {
-      expect(screen.getByText("Transition Benchmarks")).toBeVisible();
-      expect(screen.getByAltText("Success notification")).toBeVisible();
-    });
+  test("TableRow renders correctly", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));
+    expect(screen.getByText("Transition Benchmarks")).toBeVisible();
+    expect(screen.getByAltText("Success notification")).toBeVisible();
   });
 
   testA11y(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));

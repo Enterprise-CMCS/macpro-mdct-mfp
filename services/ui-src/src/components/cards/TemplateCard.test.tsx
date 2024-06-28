@@ -60,7 +60,7 @@ const wpTemplateCardComponent = (
 );
 
 describe("<TemplateCard />", () => {
-  describe("Test WP TemplateCard", () => {
+  describe("Renders", () => {
     beforeEach(() => {
       render(wpTemplateCardComponent);
     });

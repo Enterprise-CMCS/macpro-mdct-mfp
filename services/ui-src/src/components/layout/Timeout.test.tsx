@@ -43,7 +43,7 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 const spy = jest.spyOn(global, "setTimeout");
 
 describe("<Timeout />", () => {
-  describe("Test Timeout Modal", () => {
+  describe("Renders", () => {
     beforeEach(async () => {
       jest.useFakeTimers();
       mockedUseStore.mockReturnValue(mockUser);
@@ -92,6 +92,7 @@ describe("<Timeout />", () => {
       });
       expect(mockLogout).toHaveBeenCalledTimes(1);
     });
+
     test("Timeout modal executes logout on timeout", async () => {
       mockLogout.mockReset();
       await act(async () => {

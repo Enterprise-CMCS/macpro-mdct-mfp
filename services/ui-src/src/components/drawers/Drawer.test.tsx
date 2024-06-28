@@ -23,14 +23,12 @@ const drawerComponent = (
 );
 
 describe("<Drawer />", () => {
-  describe("Test Drawer fill form and close", () => {
-    test("Drawer can be closed with close button", async () => {
-      render(drawerComponent);
-      const closeButton = screen.getByText(closeText);
-      expect(closeButton).toBeVisible();
-      await userEvent.click(closeButton);
-      expect(mockOnClose).toHaveBeenCalledTimes(1);
-    });
+  test("Drawer can be closed with close button", async () => {
+    render(drawerComponent);
+    const closeButton = screen.getByText(closeText);
+    expect(closeButton).toBeVisible();
+    await userEvent.click(closeButton);
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
   testA11y(drawerComponent);

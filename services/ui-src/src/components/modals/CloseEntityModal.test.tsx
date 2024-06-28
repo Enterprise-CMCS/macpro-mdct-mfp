@@ -61,7 +61,7 @@ const {
 const closeOutModalTitleWithName = closeOutModalTitle + mockEntityName;
 
 describe("<CloseEntityModal />", () => {
-  describe("Test CloseEntityModal", () => {
+  describe("Renders", () => {
     beforeEach(async () => {
       await act(async () => {
         await render(modalComponent);
