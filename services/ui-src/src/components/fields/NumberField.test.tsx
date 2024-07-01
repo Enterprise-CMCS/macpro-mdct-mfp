@@ -1,12 +1,12 @@
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "jest-axe";
 // components
 import { useFormContext } from "react-hook-form";
 import { NumberField } from "components";
 // utils
 import { useStore } from "utils";
 import { mockStateUserStore } from "utils/testing/setupJest";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -58,237 +58,236 @@ const ratioMaskedNumberFieldComponent = (
   <NumberField name="testNumberField" label="test-label" mask="ratio" />
 );
 
-describe("Test Maskless NumberField", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-  });
-  afterEach(() => {
-    jest.clearAllMocks();
+describe("<NumberField />", () => {
+  describe("Test Maskless NumberField", () => {
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+    });
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("NumberField is visible", () => {
+      mockGetValues(undefined);
+      const result = render(numberFieldComponent);
+      const numberFieldInput: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberField']"
+      )!;
+      expect(numberFieldInput).toBeVisible();
+    });
+
+    test("onChangeHandler updates unmasked field value", async () => {
+      mockGetValues(undefined);
+      const result = render(numberFieldComponent);
+      const numberFieldInput: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberField']"
+      )!;
+      await userEvent.type(numberFieldInput, "123");
+      expect(numberFieldInput.value).toEqual("123");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("123");
+    });
   });
 
-  test("NumberField is visible", () => {
-    mockGetValues(undefined);
-    const result = render(numberFieldComponent);
-    const numberFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberField']"
-    )!;
-    expect(numberFieldInput).toBeVisible();
+  describe("Test Masked NumberField", () => {
+    beforeEach(() => {
+      mockGetValues(undefined);
+    });
+    test("onChangeHandler updates comma masked field value", async () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      const result = render(commaMaskedNumberFieldComponent);
+      const numberFieldInput: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberField']"
+      )!;
+      await userEvent.type(numberFieldInput, "123");
+      expect(numberFieldInput.value).toEqual("123");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("123");
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(numberFieldInput, "12055");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("12,055");
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(numberFieldInput, "12055.99");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("12,055.99");
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(numberFieldInput, "-1234");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("-1,234");
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(numberFieldInput, "$$1234567890.10");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("$$1234567890.10");
+    });
+
+    test("onChangeHandler updates Currency masked field value", async () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      const result = render(currencyMaskedNumberFieldComponent);
+      const numberFieldInput: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberField']"
+      )!;
+      await userEvent.type(numberFieldInput, "123");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("123.00");
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(numberFieldInput, "5.99");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("5.99");
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(numberFieldInput, "1234.00");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("1,234.00");
+    });
+
+    test("onChangeHandler updates Percentage masked field value", async () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      const result = render(percentageMaskedNumberFieldComponent);
+      const numberFieldInput: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberField']"
+      )!;
+      await userEvent.type(numberFieldInput, "123");
+      expect(numberFieldInput.value).toEqual("123");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("123");
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(numberFieldInput, "12055");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("12,055");
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(numberFieldInput, "12055.99");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("12,055.99");
+    });
+
+    test("onChangeHandler updates ratio field value", async () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      const result = render(ratioMaskedNumberFieldComponent);
+      const numberFieldInput: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberField']"
+      )!;
+      await userEvent.type(numberFieldInput, "123:123");
+      expect(numberFieldInput.value).toEqual("123:123");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual("123:123");
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(
+        numberFieldInput,
+        "123,,,4567.1234567.1234:12,3456,7.1"
+      );
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual(
+        "123,,,4567.1234567.1234:12,3456,7.1"
+      );
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(
+        numberFieldInput,
+        "123,,,4567.12345671234:12,3456,7.1"
+      );
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual(
+        "1,234,567.1234567123:1,234,567.1"
+      );
+      await userEvent.clear(numberFieldInput);
+      await userEvent.type(numberFieldInput, ":");
+      await userEvent.tab();
+      expect(numberFieldInput.value).toEqual(":");
+    });
   });
 
-  test("onChangeHandler updates unmasked field value", async () => {
-    mockGetValues(undefined);
-    const result = render(numberFieldComponent);
-    const numberFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberField']"
-    )!;
-    await userEvent.type(numberFieldInput, "123");
-    expect(numberFieldInput.value).toEqual("123");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("123");
-  });
-});
+  describe("Test NumberField hydration functionality", () => {
+    const mockFormFieldValue = "54321";
+    const mockHydrationValue = "12345";
 
-describe("Test Masked NumberField", () => {
-  beforeEach(() => {
-    mockGetValues(undefined);
-  });
-  test("onChangeHandler updates comma masked field value", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    const result = render(commaMaskedNumberFieldComponent);
-    const numberFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberField']"
-    )!;
-    await userEvent.type(numberFieldInput, "123");
-    expect(numberFieldInput.value).toEqual("123");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("123");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(numberFieldInput, "12055");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("12,055");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(numberFieldInput, "12055.99");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("12,055.99");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(numberFieldInput, "-1234");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("-1,234");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(numberFieldInput, "$$1234567890.10");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("$$1234567890.10");
-  });
-
-  test("onChangeHandler updates Currency masked field value", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    const result = render(currencyMaskedNumberFieldComponent);
-    const numberFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberField']"
-    )!;
-    await userEvent.type(numberFieldInput, "123");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("123.00");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(numberFieldInput, "5.99");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("5.99");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(numberFieldInput, "1234.00");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("1,234.00");
-  });
-
-  test("onChangeHandler updates Percentage masked field value", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    const result = render(percentageMaskedNumberFieldComponent);
-    const numberFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberField']"
-    )!;
-    await userEvent.type(numberFieldInput, "123");
-    expect(numberFieldInput.value).toEqual("123");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("123");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(numberFieldInput, "12055");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("12,055");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(numberFieldInput, "12055.99");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("12,055.99");
-  });
-
-  test("onChangeHandler updates ratio field value", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    const result = render(ratioMaskedNumberFieldComponent);
-    const numberFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberField']"
-    )!;
-    await userEvent.type(numberFieldInput, "123:123");
-    expect(numberFieldInput.value).toEqual("123:123");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("123:123");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(
-      numberFieldInput,
-      "123,,,4567.1234567.1234:12,3456,7.1"
+    const numberFieldComponentWithHydrationValue = (
+      <NumberField
+        name="testNumberFieldWithHydrationValue"
+        label="test-label"
+        hydrate={mockHydrationValue}
+        data-testid="test-id"
+      />
     );
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual(
-      "123,,,4567.1234567.1234:12,3456,7.1"
+
+    const clearPropGivenAndTrueNumberField = (
+      <NumberField
+        name="testNumberField"
+        label=""
+        mask="currency"
+        hydrate={mockHydrationValue}
+        clear
+      />
     );
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(
-      numberFieldInput,
-      "123,,,4567.12345671234:12,3456,7.1"
+
+    const clearPropGivenAndFalseNumberField = (
+      <NumberField
+        name="testNumberField"
+        label=""
+        mask="currency"
+        hydrate={mockHydrationValue}
+        clear={false}
+      />
     );
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual("1,234,567.1234567123:1,234,567.1");
-    await userEvent.clear(numberFieldInput);
-    await userEvent.type(numberFieldInput, ":");
-    await userEvent.tab();
-    expect(numberFieldInput.value).toEqual(":");
+
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+    });
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("If only formFieldValue exists, displayValue is set to it", () => {
+      mockGetValues(mockFormFieldValue);
+      const result = render(numberFieldComponent);
+      const numberField: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberField']"
+      )!;
+      const displayValue = numberField.value;
+      expect(displayValue).toEqual("54,321");
+    });
+
+    test("If only hydrationValue exists, displayValue is set to it", () => {
+      mockGetValues(undefined);
+      const result = render(numberFieldComponentWithHydrationValue);
+      const numberField: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberFieldWithHydrationValue']"
+      )!;
+      const displayValue = numberField.value;
+      expect(displayValue).toEqual("12,345");
+    });
+
+    test("If both formFieldValue and hydrationValue exist, displayValue is set to formFieldValue", () => {
+      mockGetValues(mockFormFieldValue);
+      const result = render(numberFieldComponentWithHydrationValue);
+      const numberField: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberFieldWithHydrationValue']"
+      )!;
+      const displayValue = numberField.value;
+      expect(displayValue).toEqual("54,321");
+    });
+
+    test("should set value to default if given clear prop and clear is set to true", () => {
+      mockGetValues(undefined);
+
+      const result = render(clearPropGivenAndTrueNumberField);
+      const numberField: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberField']"
+      )!;
+      const displayValue = numberField.value;
+      expect(displayValue).toEqual("");
+    });
+
+    test("should set value to hydrationvalue if given clear prop and clear is set to false", () => {
+      mockGetValues(undefined);
+      const result = render(clearPropGivenAndFalseNumberField);
+      const numberField: HTMLInputElement = result.container.querySelector(
+        "[name='testNumberField']"
+      )!;
+      const displayValue = numberField.value;
+      expect(displayValue).toEqual("12,345.00");
+    });
   });
-});
 
-describe("Test NumberField hydration functionality", () => {
-  const mockFormFieldValue = "54321";
-  const mockHydrationValue = "12345";
-
-  const numberFieldComponentWithHydrationValue = (
-    <NumberField
-      name="testNumberFieldWithHydrationValue"
-      label="test-label"
-      hydrate={mockHydrationValue}
-      data-testid="test-id"
-    />
-  );
-
-  const clearPropGivenAndTrueNumberField = (
-    <NumberField
-      name="testNumberField"
-      label=""
-      mask="currency"
-      hydrate={mockHydrationValue}
-      clear
-    />
-  );
-
-  const clearPropGivenAndFalseNumberField = (
-    <NumberField
-      name="testNumberField"
-      label=""
-      mask="currency"
-      hydrate={mockHydrationValue}
-      clear={false}
-    />
-  );
-
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-  });
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test("If only formFieldValue exists, displayValue is set to it", () => {
-    mockGetValues(mockFormFieldValue);
-    const result = render(numberFieldComponent);
-    const numberField: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberField']"
-    )!;
-    const displayValue = numberField.value;
-    expect(displayValue).toEqual("54,321");
-  });
-
-  test("If only hydrationValue exists, displayValue is set to it", () => {
+  testA11y(numberFieldComponent, () => {
     mockGetValues(undefined);
-    const result = render(numberFieldComponentWithHydrationValue);
-    const numberField: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberFieldWithHydrationValue']"
-    )!;
-    const displayValue = numberField.value;
-    expect(displayValue).toEqual("12,345");
-  });
-
-  test("If both formFieldValue and hydrationValue exist, displayValue is set to formFieldValue", () => {
-    mockGetValues(mockFormFieldValue);
-    const result = render(numberFieldComponentWithHydrationValue);
-    const numberField: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberFieldWithHydrationValue']"
-    )!;
-    const displayValue = numberField.value;
-    expect(displayValue).toEqual("54,321");
-  });
-
-  test("should set value to default if given clear prop and clear is set to true", () => {
-    mockGetValues(undefined);
-
-    const result = render(clearPropGivenAndTrueNumberField);
-    const numberField: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberField']"
-    )!;
-    const displayValue = numberField.value;
-    expect(displayValue).toEqual("");
-  });
-
-  test("should set value to hydrationvalue if given clear prop and clear is set to false", () => {
-    mockGetValues(undefined);
-    const result = render(clearPropGivenAndFalseNumberField);
-    const numberField: HTMLInputElement = result.container.querySelector(
-      "[name='testNumberField']"
-    )!;
-    const displayValue = numberField.value;
-    expect(displayValue).toEqual("12,345.00");
-  });
-});
-
-describe("Test NumberField accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    mockGetValues(undefined);
-    const { container } = render(numberFieldComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

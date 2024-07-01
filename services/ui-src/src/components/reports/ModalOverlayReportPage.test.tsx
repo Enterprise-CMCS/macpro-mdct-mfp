@@ -10,6 +10,7 @@ import {
   mockUseEntityStore,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -33,18 +34,18 @@ const modalOverlayReportPageComponent = (
 
 const verbiage = mockModalOverlayReportPageJson.verbiage;
 
-describe("Test ModalOverlayReportPage with entities", () => {
+describe("<ModalOverlayReportPage />", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("modaloverlaypage should render the view", () => {
+  test("modaloverlaypage should render the view", () => {
     mockedUseStore.mockReturnValue(mockReportStore);
     render(modalOverlayReportPageComponent);
     expect(screen.getByText(addEntityButtonText)).toBeVisible();
   });
 
-  it("should open the edit modal", async () => {
+  test("should open the edit modal", async () => {
     mockedUseStore.mockReturnValue(mockUseEntityStore);
     render(modalOverlayReportPageComponent);
     // Get the Edit button and click it
@@ -61,7 +62,7 @@ describe("Test ModalOverlayReportPage with entities", () => {
     expect(addEntityButton).toBeVisible();
   });
 
-  it("overlayModal Modal edits open correctly", async () => {
+  test("overlayModal Modal edits open correctly", async () => {
     mockedUseStore.mockReturnValue(mockUseEntityStore);
     render(modalOverlayReportPageComponent);
     const editEntityButton = screen.getByText(editEntityButtonText);
@@ -73,16 +74,8 @@ describe("Test ModalOverlayReportPage with entities", () => {
   });
 
   // TODO: test delete modal + functionality
-});
 
-//to do: fix issue with accessibility
-/*
- * describe("Test ModalOverlayReportPage accessibility", () => {
- *   it("Should not have basic accessibility issues", async () => {
- *     mockedUseStore.mockReturnValue(mockReportStore);
- *     const { container } = render(modalOverlayReportPageComponent);
- *     const results = await axe(container);
- *     expect(results).toHaveNoViolations();
- *   });
- * });
- */
+  testA11y(modalOverlayReportPageComponent, () => {
+    mockedUseStore.mockReturnValue(mockReportStore);
+  });
+});

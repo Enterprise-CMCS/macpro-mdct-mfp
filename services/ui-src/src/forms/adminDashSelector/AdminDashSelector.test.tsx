@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import userEvent from "@testing-library/user-event";
 // components
 import { AdminDashSelector, ReportContext } from "components";
@@ -15,6 +14,7 @@ import verbiage from "verbiage/pages/home";
 // types
 import { ReportContextShape } from "types";
 import { useStore } from "utils";
+import { testA11y } from "utils/testing/commonTests";
 
 // MOCKS
 
@@ -34,7 +34,7 @@ const adminDashSelectorView = (
 );
 // TESTS
 
-describe("Test AdminDashSelector view", () => {
+describe("<AdminDashSelector />", () => {
   test("Check that AdminDashSelector view renders", () => {
     render(adminDashSelectorView());
     expect(screen.getByText(verbiage.readOnly.header)).toBeVisible();
@@ -56,12 +56,6 @@ describe("Test AdminDashSelector view", () => {
     await userEvent.click(submitButton);
     expect(window.location.pathname).toEqual("/wp");
   });
-});
 
-describe("Test AdminDashSelector view accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(adminDashSelectorView());
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(adminDashSelectorView());
 });

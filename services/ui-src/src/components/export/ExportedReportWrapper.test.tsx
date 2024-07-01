@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { useStore } from "utils";
 import {
   mockReportStore,
@@ -12,6 +11,7 @@ import {
 import { mockWpReportContext } from "../../utils/testing/mockReport";
 
 import { ReportContext, ExportedReportWrapper } from "components";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -45,51 +45,49 @@ const UnknownComponent = (
   </ReportContext.Provider>
 );
 
-describe("ExportedReportWrapper rendering", () => {
-  test("exportedStandardReportWrapperComponent renders", () => {
-    render(exportedStandardReportWrapperComponent);
-    expect(
-      screen.getByTestId("exportedStandardReportSection")
-    ).toBeInTheDocument();
-  });
-  test("exportedDrawerReportPageWrapperComponent renders", () => {
-    render(exportedDrawerReportPageWrapperComponent);
-    expect(
-      screen.getByTestId("exportedDrawerReportSection")
-    ).toBeInTheDocument();
-  });
-  test("ExportedModalDrawerReportSection renders", () => {
-    render(exportedModalDrawerReportWrapperComponent);
-    expect(
-      screen.getByTestId("exportedModalDrawerReportSection")
-    ).toBeInTheDocument();
+describe("<ExportedReportWrapper />", () => {
+  describe("ExportedReportWrapper rendering", () => {
+    test("ExportedModalOverlayReportSection renders", () => {
+      render(exportedModalOverlayReportWrapperComponent);
+      expect(screen.getByTestId("exportTable")).toBeInTheDocument();
+    });
+
+    test("renders default logic block correctly", () => {
+      const { container } = render(UnknownComponent);
+      expect(container).toBeEmptyDOMElement();
+    });
   });
 
-  test("ExportedModalOverlayReportSection renders", () => {
-    render(exportedModalOverlayReportWrapperComponent);
-    expect(screen.getByTestId("exportTable")).toBeInTheDocument();
+  describe("Standard", () => {
+    test("exportedStandardReportWrapperComponent renders", () => {
+      render(exportedStandardReportWrapperComponent);
+      expect(
+        screen.getByTestId("exportedStandardReportSection")
+      ).toBeInTheDocument();
+    });
+
+    testA11y(exportedStandardReportWrapperComponent);
   });
 
-  it("renders default logic block correctly", () => {
-    const { container } = render(UnknownComponent);
-    expect(container).toBeEmptyDOMElement();
-  });
-});
+  describe("Drawer", () => {
+    test("exportedDrawerReportPageWrapperComponent renders", () => {
+      render(exportedDrawerReportPageWrapperComponent);
+      expect(
+        screen.getByTestId("exportedDrawerReportSection")
+      ).toBeInTheDocument();
+    });
 
-describe("Test ExportedReportWrapper accessibility", () => {
-  it("exportedStandardReportWrapperComponent should not have basic accessibility issues", async () => {
-    const { container } = render(exportedStandardReportWrapperComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    testA11y(exportedDrawerReportPageWrapperComponent);
   });
-  it("exportedDrawerReportPageWrapperComponent should not have basic accessibility issues", async () => {
-    const { container } = render(exportedDrawerReportPageWrapperComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-  it("exportedModalDrawerReportWrapperComponent should not have basic accessibility issues", async () => {
-    const { container } = render(exportedModalDrawerReportWrapperComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+
+  describe("Modal", () => {
+    test("ExportedModalDrawerReportSection renders", () => {
+      render(exportedModalDrawerReportWrapperComponent);
+      expect(
+        screen.getByTestId("exportedModalDrawerReportSection")
+      ).toBeInTheDocument();
+    });
+
+    testA11y(exportedModalDrawerReportWrapperComponent);
   });
 });

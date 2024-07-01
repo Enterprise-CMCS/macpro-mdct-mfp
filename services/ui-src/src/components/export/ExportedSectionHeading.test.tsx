@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // components
 import { ReportContext, ExportedSectionHeading } from "components";
 // utils
 import { mockWpReportContext } from "utils/testing/setupJest";
 import { CustomHtmlElement, HeadingLevel } from "types";
+import { testA11y } from "utils/testing/commonTests";
 
 const exportedReportSectionHeadingComponent = (
   heading: string,
@@ -24,7 +24,7 @@ const exportedReportSectionHeadingComponent = (
   );
 };
 
-describe("ExportedSectionHeading", () => {
+describe("<ExportedSectionHeading />", () => {
   test("renders container", () => {
     const { getByTestId } = render(
       exportedReportSectionHeadingComponent("Test Heading")
@@ -76,16 +76,12 @@ describe("ExportedSectionHeading", () => {
     expect(info).toBeVisible();
   });
 
-  test("passes basic accessibility checks", async () => {
-    const { container } = render(
-      exportedReportSectionHeadingComponent(
-        "Test Heading",
-        "h2",
-        "This is a hint",
-        "This is info"
-      )
-    );
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(
+    exportedReportSectionHeadingComponent(
+      "Test Heading",
+      "h2",
+      "This is a hint",
+      "This is info"
+    )
+  );
 });

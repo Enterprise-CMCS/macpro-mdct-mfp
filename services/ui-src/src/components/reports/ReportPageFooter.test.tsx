@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // components
 import { ReportPageFooter } from "components";
 //utils
@@ -10,6 +9,7 @@ import {
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -42,18 +42,18 @@ const reportPageComponentWithForm = (
   </RouterWrappedComponent>
 );
 
-describe("ReportPageFooter behavior", () => {
-  it("Should render without a form", () => {
+describe("<ReportPageFooter />", () => {
+  test("Should render without a form", () => {
     render(reportPageComponentWithoutForm);
     expect(screen.getByText("Continue")).toBeVisible();
   });
 
-  it("Should render with a form", () => {
+  test("Should render with a form", () => {
     render(reportPageComponentWithForm);
     expect(screen.getByText("Continue")).toBeVisible();
   });
 
-  it("Should render a submit button for state users", () => {
+  test("Should render a submit button for state users", () => {
     mockedUseStore.mockReturnValue({
       user: { userIsEndUser: true },
       ...mockReportStore,
@@ -62,7 +62,7 @@ describe("ReportPageFooter behavior", () => {
     expect(screen.getByText("Continue")).toHaveAttribute("type", "submit");
   });
 
-  it("Should render only a navigation button for admins", () => {
+  test("Should render only a navigation button for admins", () => {
     mockedUseStore.mockReturnValue({
       user: { userIsAdmin: true },
       ...mockReportStore,
@@ -71,7 +71,7 @@ describe("ReportPageFooter behavior", () => {
     expect(screen.getByText("Continue")).not.toHaveAttribute("type", "submit");
   });
 
-  it("Should navigate to the previous route when clicking the Previous button", async () => {
+  test("Should navigate to the previous route when clicking the Previous button", async () => {
     render(reportPageComponentWithForm);
     const prevButton = screen.getByRole("button", { name: "Previous" });
 
@@ -79,7 +79,7 @@ describe("ReportPageFooter behavior", () => {
     expect(mockUseNavigate).toHaveBeenCalledWith(mockRoutes.previousRoute);
   });
 
-  it("Should navigate to the next route when clicking Continue as admin user", async () => {
+  test("Should navigate to the next route when clicking Continue as admin user", async () => {
     mockedUseStore.mockReturnValue({
       user: { userIsAdmin: true },
       ...mockReportStore,
@@ -91,18 +91,12 @@ describe("ReportPageFooter behavior", () => {
     await userEvent.click(nextButton);
     expect(mockUseNavigate).toHaveBeenCalledWith(mockRoutes.nextRoute);
   });
-});
 
-describe("Test ReportPageFooter accessibility", () => {
-  test("ReportPageFooter without form should not have basic accessibility issues", async () => {
-    const { container } = render(reportPageComponentWithoutForm);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe("Without form", () => {
+    testA11y(reportPageComponentWithoutForm);
   });
 
-  test("ReportPageFooter with form should not have basic accessibility issues", async () => {
-    const { container } = render(reportPageComponentWithForm);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe("With form", () => {
+    testA11y(reportPageComponentWithForm);
   });
 });

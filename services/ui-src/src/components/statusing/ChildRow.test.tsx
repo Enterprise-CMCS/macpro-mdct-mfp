@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // components
 import { ChildRow } from "./ChildRow";
 import { TableRow } from "./TableRow";
@@ -11,6 +10,7 @@ import {
   mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -26,23 +26,20 @@ const childRowComponent = (
   </RouterWrappedComponent>
 );
 
-describe("Test ChildRow", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(childRowComponent);
-  });
-  test("Check that childrow renders", () => {
-    const row = screen.getByRole("gridcell", {
-      name: "State or Territory-Specific Initiatives",
+describe("<ChildRow />", () => {
+  describe("Renders", () => {
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      render(childRowComponent);
     });
-    expect(row).toBeVisible();
-  });
-});
 
-describe("Test ChildRow accessibility", () => {
-  test("Should not have basic accessibility issues", async () => {
-    const { container } = render(childRowComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    test("Check that childrow renders", () => {
+      const row = screen.getByRole("gridcell", {
+        name: "State or Territory-Specific Initiatives",
+      });
+      expect(row).toBeVisible();
+    });
   });
+
+  testA11y(childRowComponent);
 });

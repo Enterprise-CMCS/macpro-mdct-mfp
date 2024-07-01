@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "jest-axe";
 // components
 import { ReportContext, DrawerReportPage } from "components";
 // utils
@@ -15,6 +14,7 @@ import { useStore } from "utils/state/useStore";
 import { ReportShape } from "types";
 // constants
 import { saveAndCloseText } from "../../constants";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -45,84 +45,80 @@ const drawerReportPage = (
   </RouterWrappedComponent>
 );
 
-describe("Test DrawerReportPage without entities", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockReportStoreWithoutEntities);
-    render(drawerReportPage);
+describe("<DrawerReportPage />", () => {
+  describe("Test DrawerReportPage without entities", () => {
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockReportStoreWithoutEntities);
+      render(drawerReportPage);
+    });
+
+    test("should render the view", () => {
+      expect(
+        screen.getByText(mockDrawerReportPageJson.verbiage.dashboardTitle)
+      ).toBeVisible();
+    });
+
+    test("should not have any way to open the side drawer", () => {
+      const drawerButtons = screen.queryAllByText("Enter");
+      expect(drawerButtons).toEqual([]);
+    });
   });
 
-  it("should render the view", () => {
-    expect(
-      screen.getByText(mockDrawerReportPageJson.verbiage.dashboardTitle)
-    ).toBeVisible();
+  describe("Test DrawerReportPage with entities", () => {
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      render(drawerReportPage);
+    });
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("should render the view", () => {
+      expect(
+        screen.getByText(mockDrawerReportPageJson.verbiage.dashboardTitle)
+      ).toBeVisible();
+    });
+
+    test("Opens the sidedrawer correctly", async () => {
+      const visibleEntityText =
+        mockWpReportContext.report.fieldData.entityType[0].name;
+      expect(screen.getByText(visibleEntityText)).toBeVisible();
+      const launchDrawerButton = screen.getAllByText("Enter")[0];
+      await userEvent.click(launchDrawerButton);
+      expect(screen.getByRole("dialog")).toBeVisible();
+    });
+
+    test("Submit sidedrawer opens and saves for state user", async () => {
+      const visibleEntityText =
+        mockWpReportContext.report.fieldData.entityType[0].name;
+      expect(screen.getByText(visibleEntityText)).toBeVisible();
+      const launchDrawerButton = screen.getAllByText("Enter")[0];
+      await userEvent.click(launchDrawerButton);
+      expect(screen.getByRole("dialog")).toBeVisible();
+      const textField = await screen.getByLabelText("mock drawer text field");
+      expect(textField).toBeVisible();
+      await userEvent.type(textField, "test");
+      const saveAndCloseButton = screen.getByText(saveAndCloseText);
+      await userEvent.click(saveAndCloseButton);
+      expect(mockWpReportContext.updateReport).toHaveBeenCalledTimes(1);
+    });
+
+    test("Submit sidedrawer doesn't save if no change was made by State User", async () => {
+      const visibleEntityText =
+        mockWpReportContext.report.fieldData.entityType[0].name;
+      expect(screen.getByText(visibleEntityText)).toBeVisible();
+      const launchDrawerButton = screen.getAllByText("Enter")[0];
+      await userEvent.click(launchDrawerButton);
+      expect(screen.getByRole("dialog")).toBeVisible();
+      const textField = await screen.getByLabelText("mock drawer text field");
+      expect(textField).toBeVisible();
+      const saveAndCloseButton = screen.getByText(saveAndCloseText);
+      await userEvent.click(saveAndCloseButton);
+      expect(mockWpReportContext.updateReport).toHaveBeenCalledTimes(0);
+    });
   });
 
-  it("should not have any way to open the side drawer", () => {
-    const drawerButtons = screen.queryAllByText("Enter");
-    expect(drawerButtons).toEqual([]);
-  });
-});
-
-describe("Test DrawerReportPage with entities", () => {
-  beforeEach(() => {
+  testA11y(drawerReportPage, () => {
     mockedUseStore.mockReturnValue(mockUseStore);
-    render(drawerReportPage);
-  });
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it("should render the view", () => {
-    expect(
-      screen.getByText(mockDrawerReportPageJson.verbiage.dashboardTitle)
-    ).toBeVisible();
-  });
-
-  it("Opens the sidedrawer correctly", async () => {
-    const visibleEntityText =
-      mockWpReportContext.report.fieldData.entityType[0].name;
-    expect(screen.getByText(visibleEntityText)).toBeVisible();
-    const launchDrawerButton = screen.getAllByText("Enter")[0];
-    await userEvent.click(launchDrawerButton);
-    expect(screen.getByRole("dialog")).toBeVisible();
-  });
-
-  it("Submit sidedrawer opens and saves for state user", async () => {
-    const visibleEntityText =
-      mockWpReportContext.report.fieldData.entityType[0].name;
-    expect(screen.getByText(visibleEntityText)).toBeVisible();
-    const launchDrawerButton = screen.getAllByText("Enter")[0];
-    await userEvent.click(launchDrawerButton);
-    expect(screen.getByRole("dialog")).toBeVisible();
-    const textField = await screen.getByLabelText("mock drawer text field");
-    expect(textField).toBeVisible();
-    await userEvent.type(textField, "test");
-    const saveAndCloseButton = screen.getByText(saveAndCloseText);
-    await userEvent.click(saveAndCloseButton);
-    expect(mockWpReportContext.updateReport).toHaveBeenCalledTimes(1);
-  });
-
-  it("Submit sidedrawer doesn't save if no change was made by State User", async () => {
-    const visibleEntityText =
-      mockWpReportContext.report.fieldData.entityType[0].name;
-    expect(screen.getByText(visibleEntityText)).toBeVisible();
-    const launchDrawerButton = screen.getAllByText("Enter")[0];
-    await userEvent.click(launchDrawerButton);
-    expect(screen.getByRole("dialog")).toBeVisible();
-    const textField = await screen.getByLabelText("mock drawer text field");
-    expect(textField).toBeVisible();
-    const saveAndCloseButton = screen.getByText(saveAndCloseText);
-    await userEvent.click(saveAndCloseButton);
-    expect(mockWpReportContext.updateReport).toHaveBeenCalledTimes(0);
-  });
-});
-
-describe("Test DrawerReportPage accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(drawerReportPage);
-    const { container } = render(drawerReportPage);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

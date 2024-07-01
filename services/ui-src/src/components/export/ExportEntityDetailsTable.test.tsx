@@ -1,6 +1,5 @@
 //testing lib
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 //components
 import {
   ExportEntityDetailsTable,
@@ -10,6 +9,7 @@ import {
 //utils
 import { mockSARFullReport } from "utils/testing/setupJest";
 import { AnyObject, EntityShape } from "types";
+import { testA11y } from "utils/testing/commonTests";
 
 const expenditureRows = {
   ["row 1"]: [
@@ -58,74 +58,72 @@ const entity: EntityShape = {
   type: "targetPopulations",
 };
 
-describe("Test table functions specific for Expenditures", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  test("Test formatHeaderLabel functionality", () => {
-    const headerLabels: string[] = expenditureRows["row 1"].map(
-      (row) => row.label
-    );
-    const formattedHeaderLabels = headerLabels.map((label) =>
-      formatHeaderLabel("expenditures", label, mockSARFullReport)
-    );
-    expect(formattedHeaderLabels).toStrictEqual([
-      "Actual spending 2023 Q1",
-      "Projected spending 2023 Q1",
-      "Actual spending 2023 Q2",
-      "Projected spending 2023 Q2",
-    ]);
-  });
-  test("Test formatColumns functionality", () => {
-    formatColumns(expenditureRows, "expenditures");
-    expect(expenditureRows["row 1"][2]).toStrictEqual({
-      label: "Total actual spending",
-      value: "$4.00",
+describe("<ExportEntityDetailsTable />", () => {
+  describe("Test table functions specific for Expenditures", () => {
+    afterEach(() => {
+      jest.clearAllMocks();
     });
-    expect(expenditureRows["row 1"][5]).toStrictEqual({
-      label: "% of total projected spending",
-      value: "33.33%",
-    });
-    expect(expenditureRows["row 2"][2]).toStrictEqual({
-      label: "Total actual spending",
-      value: "$8,000.00",
-    });
-    expect(expenditureRows["row 2"][5]).toStrictEqual({
-      label: "% of total projected spending",
-      value: "40.00%",
-    });
-  });
-});
 
-describe("Test ExportEntityDetailsTable component", () => {
-  it("Test ExportEntityDetailsTable render", () => {
-    render(
-      <ExportEntityDetailsTable
-        report={mockSARFullReport}
-        section={section as any}
-        entity={entity}
-      />
-    );
-    //check to see if table has rendered
-    const table = screen.queryByRole("table");
-    expect(table).toBeVisible();
-    //check to see if table caption exist
-    expect(screen.getByText(`${section.name} Table`)).toBeVisible();
-    //thead, row 1
-    expect(screen.queryAllByRole("row")).toHaveLength(2);
-  });
-});
+    test("Test formatHeaderLabel functionality", () => {
+      const headerLabels: string[] = expenditureRows["row 1"].map(
+        (row) => row.label
+      );
+      const formattedHeaderLabels = headerLabels.map((label) =>
+        formatHeaderLabel("expenditures", label, mockSARFullReport)
+      );
+      expect(formattedHeaderLabels).toStrictEqual([
+        "Actual spending 2023 Q1",
+        "Projected spending 2023 Q1",
+        "Actual spending 2023 Q2",
+        "Projected spending 2023 Q2",
+      ]);
+    });
 
-describe("Test ExportEntityDetailsTable accessibility", () => {
-  it("ExportEntityDetailsTable should not have basic accessibility issues", async () => {
-    const { container } = render(
-      <ExportEntityDetailsTable
-        report={mockSARFullReport}
-        section={section as any}
-        entity={entity}
-      />
-    );
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    test("Test formatColumns functionality", () => {
+      formatColumns(expenditureRows, "expenditures");
+      expect(expenditureRows["row 1"][2]).toStrictEqual({
+        label: "Total actual spending",
+        value: "$4.00",
+      });
+      expect(expenditureRows["row 1"][5]).toStrictEqual({
+        label: "% of total projected spending",
+        value: "33.33%",
+      });
+      expect(expenditureRows["row 2"][2]).toStrictEqual({
+        label: "Total actual spending",
+        value: "$8,000.00",
+      });
+      expect(expenditureRows["row 2"][5]).toStrictEqual({
+        label: "% of total projected spending",
+        value: "40.00%",
+      });
+    });
   });
+
+  describe("Test ExportEntityDetailsTable component", () => {
+    test("Test ExportEntityDetailsTable render", () => {
+      render(
+        <ExportEntityDetailsTable
+          report={mockSARFullReport}
+          section={section as any}
+          entity={entity}
+        />
+      );
+      //check to see if table has rendered
+      const table = screen.queryByRole("table");
+      expect(table).toBeVisible();
+      //check to see if table caption exist
+      expect(screen.getByText(`${section.name} Table`)).toBeVisible();
+      //thead, row 1
+      expect(screen.queryAllByRole("row")).toHaveLength(2);
+    });
+  });
+
+  testA11y(
+    <ExportEntityDetailsTable
+      report={mockSARFullReport}
+      section={section as any}
+      entity={entity}
+    />
+  );
 });

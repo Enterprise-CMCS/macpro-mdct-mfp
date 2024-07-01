@@ -11,9 +11,9 @@ import {
 } from "../../utils/testing/setupJest";
 import { EntityDetailsDashboardOverlay } from "./EntityDetailsDashboardOverlay";
 import { useStore } from "utils";
-import { axe } from "jest-axe";
 import { entityTypes } from "../../types";
 import userEvent from "@testing-library/user-event";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockCloseEntityDetailsOverlay = jest.fn();
 
@@ -66,52 +66,48 @@ const entityDetailsDashboardOverlayComponentWithSelectedEntity = (
   </RouterWrappedComponent>
 );
 
-describe("Test EntityDetailsDashboardOverlay", () => {
-  beforeEach(async () => {
-    render(entityDetailsDashboardOverlayComponent);
+describe("<EntityDetailsDashboardOverlay />", () => {
+  describe("Test EntityDetailsDashboardOverlay", () => {
+    beforeEach(async () => {
+      render(entityDetailsDashboardOverlayComponent);
+    });
+
+    test("EntityDetailsDashboardOverlay view renders", () => {
+      // Check that the header rendered
+      expect(
+        screen.getByText(
+          mockEntityDetailsDashboardOverlayJson.verbiage.intro.section
+        )
+      ).toBeVisible();
+
+      // Check that the subsection rendered
+      expect(
+        screen.getByText(
+          mockEntityDetailsDashboardOverlayJson.verbiage.intro.subsection
+        )
+      ).toBeVisible();
+    });
+
+    test("EntityDetailsDashboardOverlay left arrow returns user to all initiatives", async () => {
+      await userEvent.click(
+        screen.getAllByText("Return to all initiatives")[0] as HTMLAnchorElement
+      );
+      await expect(mockCloseEntityDetailsOverlay).toHaveBeenCalledTimes(1);
+    });
   });
 
-  test("EntityDetailsDashboardOverlay view renders", () => {
-    // Check that the header rendered
-    expect(
-      screen.getByText(
-        mockEntityDetailsDashboardOverlayJson.verbiage.intro.section
-      )
-    ).toBeVisible();
+  describe("Test EntityDetailsDashboardOverlay with selected entity", () => {
+    test("EntityDetailsDashboardOverlay with selected entity renders view", () => {
+      render(entityDetailsDashboardOverlayComponentWithSelectedEntity);
 
-    // Check that the subsection rendered
-    expect(
-      screen.getByText(
-        mockEntityDetailsDashboardOverlayJson.verbiage.intro.subsection
-      )
-    ).toBeVisible();
+      // Check that the header rendered
+      expect(
+        screen.getByText(
+          mockEntityDetailsDashboardOverlayJson.verbiage.intro.section
+        )
+      ).toBeVisible();
+    });
   });
 
-  test("EntityDetailsDashboardOverlay left arrow returns user to all initiatives", async () => {
-    await userEvent.click(
-      screen.getAllByText("Return to all initiatives")[0] as HTMLAnchorElement
-    );
-    await expect(mockCloseEntityDetailsOverlay).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe("Test EntityDetailsDashboardOverlay with selected entity", () => {
-  test("EntityDetailsDashboardOverlay with selected entity renders view", () => {
-    render(entityDetailsDashboardOverlayComponentWithSelectedEntity);
-
-    // Check that the header rendered
-    expect(
-      screen.getByText(
-        mockEntityDetailsDashboardOverlayJson.verbiage.intro.section
-      )
-    ).toBeVisible();
-  });
-});
-
-describe("Test EntityDetailsDashboardOverlay accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(entityDetailsDashboardOverlayComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(entityDetailsDashboardOverlayComponent);
 });

@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
+import { testA11y } from "utils/testing/commonTests";
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { EditButton } from "./EditButton";
 
@@ -25,7 +25,7 @@ const EditButtonComponent = (
   </RouterWrappedComponent>
 );
 
-describe("EditButton", () => {
+describe("<EditButton />", () => {
   test("EditButton when not editable", () => {
     render(EditButtonComponentNotEditable);
     const viewButton = screen.getByRole("button");
@@ -41,12 +41,6 @@ describe("EditButton", () => {
     expect(editButton).toHaveTextContent("Edit");
     expect(editIcon).toHaveAttribute("alt", "Edit Program");
   });
-});
 
-describe("Test EditButton accessibility", () => {
-  test("Should not have basic accessibility issues", async () => {
-    const { container } = render(EditButtonComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(EditButtonComponent);
 });
