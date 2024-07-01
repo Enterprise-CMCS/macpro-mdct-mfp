@@ -1,10 +1,10 @@
-import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
+import { render } from "@testing-library/react";
 import { mockEntityStore, mockReportStore } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import { useContext } from "react";
 import { EntityProvider, EntityContext } from "./EntityProvider";
 import userEvent from "@testing-library/user-event";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -41,7 +41,7 @@ const testComponent = (
   </EntityProvider>
 );
 
-describe("Test EntityProvider", () => {
+describe("<EntityProvider />", () => {
   beforeEach(() => {
     mockedUseStore.mockReturnValue(mockReportStore);
     mockedUseStore.mockReturnValue(mockEntityStore);
@@ -59,24 +59,6 @@ describe("Test EntityProvider", () => {
       result.container.querySelector("[id='entities']")?.innerHTML
     ).toMatch(JSON.stringify(mockEntityStore.selectedEntity));
   });
-});
 
-describe("Test EntityProvider accessibility", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockReportStore);
-    mockedUseStore.mockReturnValue(mockEntityStore);
-  });
-
-  it("Should not have basic accessibility issues", () => {
-    render(testComponent);
-    expect(screen.getByTestId("initiative-name")).toBeVisible();
-  });
-});
-
-describe("Test EntityProvider accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(testComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(testComponent);
 });

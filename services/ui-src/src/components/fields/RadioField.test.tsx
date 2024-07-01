@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import userEvent from "@testing-library/user-event";
 //components
 import { RadioField } from "components";
 import { useFormContext } from "react-hook-form";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
 const mockSetValue = jest.fn();
@@ -58,7 +58,7 @@ const RadioFieldComponent = (
   </div>
 );
 
-describe("Test RadioField component", () => {
+describe("<RadioField />", () => {
   test("RadioField renders as Radio", () => {
     mockGetValues(undefined);
     render(RadioFieldComponent);
@@ -77,13 +77,8 @@ describe("Test RadioField component", () => {
       { shouldValidate: true }
     );
   });
-});
 
-describe("Test RadioField accessibility", () => {
-  it("Should not have basic accessibility issues when given radio", async () => {
+  testA11y(RadioFieldComponent, () => {
     mockGetValues(undefined);
-    const { container } = render(RadioFieldComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

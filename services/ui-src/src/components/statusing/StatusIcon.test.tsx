@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { StatusIcon } from "./StatusIcon";
 // types
 import { RouterWrappedComponent } from "utils/testing/setupJest";
-import { axe } from "jest-axe";
+import { testA11y } from "utils/testing/commonTests";
 
 const statusIconComponent = (
   <RouterWrappedComponent>
@@ -22,10 +22,11 @@ const statusIconComponentTest = (
   </RouterWrappedComponent>
 );
 
-describe("StatusIcon functionality", () => {
+describe("<StatusIcon />", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   test("should render the correct status for complete rows", () => {
     render(statusIconComponent);
 
@@ -33,6 +34,7 @@ describe("StatusIcon functionality", () => {
     expect(icon).not.toHaveAttribute("alt", "Error notification");
     expect(icon).toHaveAttribute("alt", "Success notification");
   });
+
   test("should render the correct status for incomplete rows", () => {
     render(statusIconComponentIncomplete);
 
@@ -40,16 +42,11 @@ describe("StatusIcon functionality", () => {
     expect(icon).toHaveAttribute("alt", "Error notification");
     expect(icon).not.toHaveAttribute("alt", "Success notification");
   });
+
   test("should not render an image component if status is undefined", () => {
     render(statusIconComponentTest);
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
   });
-});
 
-describe("Test Status Icon accessibility", () => {
-  test("Should not have basic accessibility issues", async () => {
-    const { container } = render(statusIconComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(statusIconComponent);
 });
