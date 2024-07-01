@@ -1,5 +1,5 @@
 import { MixedSchema } from "yup/lib/mixed";
-import { number, ratio, validInteger } from "./schemas";
+import { number, ratio, validInteger, validNAValues } from "./schemas";
 
 describe("Schemas", () => {
   const goodNumberTestCases = [
@@ -9,8 +9,7 @@ describe("Schemas", () => {
     "1,2,30",
     "1230",
     "123450123,,,.123123123123",
-    "N/A",
-    "Data not available",
+    ...validNAValues,
   ];
   const badNumberTestCases = ["abc", "N", "", "!@#!@%", "-1"];
 
@@ -19,8 +18,7 @@ describe("Schemas", () => {
     "12300",
     "1,230",
     "1230",
-    "N/A",
-    "Data not available",
+    ...validNAValues,
   ];
   const badIntegerTestCases = [
     "abc",

@@ -35,7 +35,14 @@ export const text = () =>
 export const textOptional = () => string().typeError(error.INVALID_GENERIC);
 
 // NUMBER - Helpers
-const validNAValues = ["N/A", "Data not available"];
+export const validNAValues = [
+  "N/A",
+  "NA",
+  "na",
+  "n/a",
+  "N/a",
+  "Data not available",
+];
 // const validNumberRegex = /^\.$|[0-9]/;
 const validIntegerRegex = /^[0-9\s,$%]+$/;
 

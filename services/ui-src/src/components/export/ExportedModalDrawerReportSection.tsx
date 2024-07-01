@@ -5,7 +5,11 @@ import { Table } from "components";
 // types
 import { EntityShape, HeadingLevel, ModalDrawerReportPageShape } from "types";
 // utils
-import { convertToThousandsSeparatedString, useStore } from "utils";
+import {
+  convertToThousandsSeparatedString,
+  useStore,
+  validNAValues,
+} from "utils";
 import { notAnsweredText } from "../../constants";
 
 export const ExportedModalDrawerReportSection = ({
@@ -108,7 +112,7 @@ export const ExportedModalDrawerReportSection = ({
       let sum = 0;
       const isNACol = [];
       column.forEach((item: any) => {
-        if (item === "N/A" || item === "Data not available") {
+        if (validNAValues.includes(item)) {
           isNACol.push(item);
         } else {
           sum += convertToNum(item);
