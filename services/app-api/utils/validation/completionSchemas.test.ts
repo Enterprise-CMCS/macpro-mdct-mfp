@@ -1,6 +1,10 @@
 import { MixedSchema } from "yup/lib/mixed";
-import { number, ratio, validInteger } from "./completionSchemas";
-import { validNAValues } from "./schemaMap";
+import {
+  number,
+  ratio,
+  validInteger,
+  validNAValues,
+} from "./completionSchemas";
 
 describe("Schemas", () => {
   const goodNumberTestCases = [
