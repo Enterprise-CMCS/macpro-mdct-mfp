@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 // components
 import { ChildRow } from "./ChildRow";
 import { TableRow } from "./TableRow";
-import { Table } from "@chakra-ui/react";
+import { Table, Tbody } from "@chakra-ui/react";
 // utils
 import { useStore } from "utils";
 import {
@@ -18,10 +18,12 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 const childRowComponent = (
   <RouterWrappedComponent>
     <Table>
-      <TableRow page={mockChildRowPage} rowDepth={2} />
-      {mockChildRowPage.children?.map((child) => (
-        <ChildRow key={child.path} page={child} rowDepth={2} />
-      ))}
+      <Tbody>
+        <TableRow page={mockChildRowPage} rowDepth={2} />
+        {mockChildRowPage.children?.map((child) => (
+          <ChildRow key={child.path} page={child} rowDepth={2} />
+        ))}
+      </Tbody>
     </Table>
   </RouterWrappedComponent>
 );

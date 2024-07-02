@@ -34,7 +34,7 @@ const appRoutesComponent = (route: string) => (
   </MemoryRouter>
 );
 
-describe("Test AppRoutes", () => {
+describe("<AppRoutes />", () => {
   test("report routes are generated", async () => {
     render(appRoutesComponent("/mock/mock-route-1"));
 

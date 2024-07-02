@@ -10,7 +10,7 @@ const testComponent = (
   </ApiProvider>
 );
 
-describe("Test ApiProvider renders", () => {
+describe("<ApiProvider />", () => {
   beforeEach(async () => {
     await act(async () => {
       await render(testComponent);
