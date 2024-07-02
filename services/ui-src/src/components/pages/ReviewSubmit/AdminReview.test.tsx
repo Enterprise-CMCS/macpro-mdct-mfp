@@ -35,128 +35,130 @@ const ReviewSubmitPage = (verbiage: any) => {
   );
 };
 
-describe("MFP WP Review and Submit Page Functionality", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+describe("<AdminReview />", () => {
+  describe("MFP WP Review and Submit Page Functionality", () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    describe("Review and Submit Page - Admin View", () => {
+      test("Show admin view when admin user is logged in", () => {
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(WPReviewVerbiage));
+        const { review } = WPReviewVerbiage;
+        const { adminInfo } = review;
+        expect(screen.getByText(adminInfo.submitLink.text)).toBeVisible();
+      });
+
+      test("Disable unlock and approve buttons when report is unlocked", () => {
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          report: {
+            reportType: "WP",
+            status: ReportStatus.IN_PROGRESS,
+          },
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(WPReviewVerbiage));
+        const { review } = WPReviewVerbiage;
+        const { adminInfo } = review;
+        expect(screen.getByText(adminInfo.submitLink.text)).toBeDisabled();
+      });
+
+      test("Enable unlock and approve buttons when report is locked", () => {
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          report: {
+            reportType: "WP",
+            status: ReportStatus.SUBMITTED,
+          },
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(WPReviewVerbiage));
+        const { review } = WPReviewVerbiage;
+        const { adminInfo } = review;
+        expect(screen.getByText(adminInfo.submitLink.text)).toBeEnabled();
+      });
+
+      test("should not show console errors", () => {
+        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(WPReviewVerbiage));
+
+        expect(consoleSpy).not.toHaveBeenCalled();
+      });
+    });
   });
 
-  describe("Review and Submit Page - Admin View", () => {
-    test("Show admin view when admin user is logged in", () => {
-      mockedUseStore.mockReturnValue({
-        ...mockUseStore,
-        user: mockAdminUserStore,
-      });
-      render(ReviewSubmitPage(WPReviewVerbiage));
-      const { review } = WPReviewVerbiage;
-      const { adminInfo } = review;
-      expect(screen.getByText(adminInfo.submitLink.text)).toBeVisible();
+  describe("MFP SAR Review and Submit Page Functionality", () => {
+    afterEach(() => {
+      jest.clearAllMocks();
     });
 
-    test("Disable unlock and approve buttons when report is unlocked", () => {
-      mockedUseStore.mockReturnValue({
-        ...mockUseStore,
-        report: {
-          reportType: "WP",
-          status: ReportStatus.IN_PROGRESS,
-        },
-        user: mockAdminUserStore,
+    describe("Review and Submit Page - Admin View", () => {
+      test("Show admin view when admin user is logged in", () => {
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          report: {
+            reportType: "SAR",
+          },
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(SARReviewVerbiage));
+        const { review } = SARReviewVerbiage;
+        const { adminInfo } = review;
+        expect(screen.getByText(adminInfo.unlockLink.text)).toBeVisible();
       });
-      render(ReviewSubmitPage(WPReviewVerbiage));
-      const { review } = WPReviewVerbiage;
-      const { adminInfo } = review;
-      expect(screen.getByText(adminInfo.submitLink.text)).toBeDisabled();
-    });
 
-    test("Enable unlock and approve buttons when report is locked", () => {
-      mockedUseStore.mockReturnValue({
-        ...mockUseStore,
-        report: {
-          reportType: "WP",
-          status: ReportStatus.SUBMITTED,
-        },
-        user: mockAdminUserStore,
+      test("Disable unlock and approve buttons when report is unlocked", () => {
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          report: {
+            reportType: "SAR",
+            status: ReportStatus.IN_PROGRESS,
+          },
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(SARReviewVerbiage));
+        const { review } = SARReviewVerbiage;
+        const { adminInfo } = review;
+        expect(screen.getByText(adminInfo.unlockLink.text)).toBeDisabled();
       });
-      render(ReviewSubmitPage(WPReviewVerbiage));
-      const { review } = WPReviewVerbiage;
-      const { adminInfo } = review;
-      expect(screen.getByText(adminInfo.submitLink.text)).toBeEnabled();
-    });
 
-    test("should not show console errors", () => {
-      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-      mockedUseStore.mockReturnValue({
-        ...mockUseStore,
-        user: mockAdminUserStore,
+      test("Enable unlock and approve buttons when report is locked", () => {
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          report: {
+            reportType: "SAR",
+            status: ReportStatus.SUBMITTED,
+          },
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(SARReviewVerbiage));
+        const { review } = SARReviewVerbiage;
+        const { adminInfo } = review;
+        expect(screen.getByText(adminInfo.unlockLink.text)).toBeEnabled();
       });
-      render(ReviewSubmitPage(WPReviewVerbiage));
 
-      expect(consoleSpy).not.toHaveBeenCalled();
-    });
-  });
-});
+      test("should not show console errors", () => {
+        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          report: {
+            reportType: "SAR",
+          },
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(SARReviewVerbiage));
 
-describe("MFP SAR Review and Submit Page Functionality", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  describe("Review and Submit Page - Admin View", () => {
-    test("Show admin view when admin user is logged in", () => {
-      mockedUseStore.mockReturnValue({
-        ...mockUseStore,
-        report: {
-          reportType: "SAR",
-        },
-        user: mockAdminUserStore,
+        expect(consoleSpy).not.toHaveBeenCalled();
       });
-      render(ReviewSubmitPage(SARReviewVerbiage));
-      const { review } = SARReviewVerbiage;
-      const { adminInfo } = review;
-      expect(screen.getByText(adminInfo.unlockLink.text)).toBeVisible();
-    });
-
-    test("Disable unlock and approve buttons when report is unlocked", () => {
-      mockedUseStore.mockReturnValue({
-        ...mockUseStore,
-        report: {
-          reportType: "SAR",
-          status: ReportStatus.IN_PROGRESS,
-        },
-        user: mockAdminUserStore,
-      });
-      render(ReviewSubmitPage(SARReviewVerbiage));
-      const { review } = SARReviewVerbiage;
-      const { adminInfo } = review;
-      expect(screen.getByText(adminInfo.unlockLink.text)).toBeDisabled();
-    });
-
-    test("Enable unlock and approve buttons when report is locked", () => {
-      mockedUseStore.mockReturnValue({
-        ...mockUseStore,
-        report: {
-          reportType: "SAR",
-          status: ReportStatus.SUBMITTED,
-        },
-        user: mockAdminUserStore,
-      });
-      render(ReviewSubmitPage(SARReviewVerbiage));
-      const { review } = SARReviewVerbiage;
-      const { adminInfo } = review;
-      expect(screen.getByText(adminInfo.unlockLink.text)).toBeEnabled();
-    });
-
-    test("should not show console errors", () => {
-      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-      mockedUseStore.mockReturnValue({
-        ...mockUseStore,
-        report: {
-          reportType: "SAR",
-        },
-        user: mockAdminUserStore,
-      });
-      render(ReviewSubmitPage(SARReviewVerbiage));
-
-      expect(consoleSpy).not.toHaveBeenCalled();
     });
   });
 });

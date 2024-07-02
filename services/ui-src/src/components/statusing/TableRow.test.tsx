@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 //components
-import { Table } from "@chakra-ui/react";
+import { Table, Tbody } from "@chakra-ui/react";
 import { TableRow } from "./TableRow";
 //types
 import { ReportPageProgress } from "types";
@@ -31,7 +31,9 @@ const tableRowComponent = ({ page, rowDepth }: RowProps) => {
   return (
     <RouterWrappedComponent>
       <Table>
-        <TableRow page={page} rowDepth={rowDepth} />
+        <Tbody>
+          <TableRow page={page} rowDepth={rowDepth} />
+        </Tbody>
       </Table>
     </RouterWrappedComponent>
   );

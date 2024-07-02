@@ -46,85 +46,87 @@ const fundingSourcesEntityStepCardTopSection = (
   />
 );
 
-describe("Test EntityStepCardTopSection renders", () => {
-  test("EntityStepCardTopSection renders correctly", () => {
-    const topSection = render(genericEntityStepCardTopSection);
-    expect(topSection.getByText("mockStepType")).toBeVisible();
+describe("<EntityStepCardTopSection />", () => {
+  describe("Test EntityStepCardTopSection renders", () => {
+    test("EntityStepCardTopSection renders correctly", () => {
+      const topSection = render(genericEntityStepCardTopSection);
+      expect(topSection.getByText("mockStepType")).toBeVisible();
+    });
+
+    test("EntityStepCardTopSection renders evaluation plan case correctly", () => {
+      const topSection = render(evaluationPlanEntityStepCardTopSection);
+      expect(topSection.getByText("Performance measure targets")).toBeVisible();
+    });
+
+    test("EntityStepCardTopSection renders funding sources case correctly", () => {
+      const topSection = render(fundingSourcesEntityStepCardTopSection);
+      expect(
+        topSection.getByText("Projected quarterly expenditures")
+      ).toBeVisible();
+    });
   });
 
-  test("EntityStepCardTopSection renders evaluation plan case correctly", () => {
-    const topSection = render(evaluationPlanEntityStepCardTopSection);
-    expect(topSection.getByText("Performance measure targets")).toBeVisible();
-  });
+  describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
+    const mockFullyCompletedObjectiveProgress = {
+      objectiveName: "mockObjectiveName",
+      description: "mockDescription",
+      targets: "mock targets text",
+      quarterProjections: [
+        {
+          id: "2024 Q1",
+          value: "1",
+        },
+        {
+          id: "2024 Q2",
+          value: "2",
+        },
+      ],
+      quarterActuals: [
+        {
+          id: "2024 Q1",
+          value: "4",
+        },
+        {
+          id: "2024 Q2",
+          value: "4",
+        },
+      ],
+      performanceMeasureProgress: "mock provided data on performance",
+      targetsMet: "No",
+      missedTargetReason:
+        "mock progress description towards reaching the milestone",
+    };
+    const ObjectiveProgressEntityStepCardTopSection = (
+      <EntityStepCardTopSection
+        stepType={OverlayModalStepTypes.OBJECTIVE_PROGRESS}
+        formattedEntityData={mockFullyCompletedObjectiveProgress}
+      />
+    );
 
-  test("EntityStepCardTopSection renders funding sources case correctly", () => {
-    const topSection = render(fundingSourcesEntityStepCardTopSection);
-    expect(
-      topSection.getByText("Projected quarterly expenditures")
-    ).toBeVisible();
-  });
-});
-
-describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
-  const mockFullyCompletedObjectiveProgress = {
-    objectiveName: "mockObjectiveName",
-    description: "mockDescription",
-    targets: "mock targets text",
-    quarterProjections: [
-      {
-        id: "2024 Q1",
-        value: "1",
-      },
-      {
-        id: "2024 Q2",
-        value: "2",
-      },
-    ],
-    quarterActuals: [
-      {
-        id: "2024 Q1",
-        value: "4",
-      },
-      {
-        id: "2024 Q2",
-        value: "4",
-      },
-    ],
-    performanceMeasureProgress: "mock provided data on performance",
-    targetsMet: "No",
-    missedTargetReason:
-      "mock progress description towards reaching the milestone",
-  };
-  const ObjectiveProgressEntityStepCardTopSection = (
-    <EntityStepCardTopSection
-      stepType={OverlayModalStepTypes.OBJECTIVE_PROGRESS}
-      formattedEntityData={mockFullyCompletedObjectiveProgress}
-    />
-  );
-
-  beforeEach(async () => {
-    mockedUseStore.mockReturnValue(mockUseSARStore);
-  });
-  test("EntityStepCardTopSection thats been fully completed renders correctly for SAR", () => {
-    const topOfCard = render(ObjectiveProgressEntityStepCardTopSection);
-    expect(
-      topOfCard.getByText(mockFullyCompletedObjectiveProgress.objectiveName)
-    ).toBeVisible();
-    expect(
-      topOfCard.getByText(mockFullyCompletedObjectiveProgress.description)
-    ).toBeVisible();
-    expect(
-      topOfCard.getByText(mockFullyCompletedObjectiveProgress.targets)
-    ).toBeVisible();
-    expect(
-      topOfCard.getByText(
-        `${mockFullyCompletedObjectiveProgress.quarterProjections[0].id} Target:`
-      )
-    ).toBeVisible();
-    expect(
-      topOfCard.getByText(
-        `${mockFullyCompletedObjectiveProgress.quarterProjections[1].id} Target:`
-      )
-    ).toBeVisible();
+    beforeEach(async () => {
+      mockedUseStore.mockReturnValue(mockUseSARStore);
+    });
+    test("EntityStepCardTopSection thats been fully completed renders correctly for SAR", () => {
+      const topOfCard = render(ObjectiveProgressEntityStepCardTopSection);
+      expect(
+        topOfCard.getByText(mockFullyCompletedObjectiveProgress.objectiveName)
+      ).toBeVisible();
+      expect(
+        topOfCard.getByText(mockFullyCompletedObjectiveProgress.description)
+      ).toBeVisible();
+      expect(
+        topOfCard.getByText(mockFullyCompletedObjectiveProgress.targets)
+      ).toBeVisible();
+      expect(
+        topOfCard.getByText(
+          `${mockFullyCompletedObjectiveProgress.quarterProjections[0].id} Target:`
+        )
+      ).toBeVisible();
+      expect(
+        topOfCard.getByText(
+          `${mockFullyCompletedObjectiveProgress.quarterProjections[1].id} Target:`
+        )
+      ).toBeVisible();
+    });
   });
 });

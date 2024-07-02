@@ -4,21 +4,28 @@ import { bannerId } from "../../../constants";
 import { mockBannerData } from "utils/testing/setupJest";
 import { initAuthManager } from "utils/auth/authLifecycle";
 
-describe("Test banner methods", () => {
+describe("utils/banner", () => {
   beforeEach(async () => {
     jest.useFakeTimers();
     initAuthManager();
     jest.runAllTimers();
   });
-  test("getBanner", () => {
-    expect(getBanner(bannerId)).toBeTruthy();
+
+  describe("getBanner()", () => {
+    test("executes", () => {
+      expect(getBanner(bannerId)).toBeTruthy();
+    });
   });
 
-  test("postBanner", () => {
-    expect(writeBanner(mockBannerData)).toBeTruthy();
+  describe("writeBanner()", () => {
+    test("executes", () => {
+      expect(writeBanner(mockBannerData)).toBeTruthy();
+    });
   });
 
-  test("delBanner", () => {
-    expect(deleteBanner(bannerId)).toBeTruthy();
+  describe("deleteBanner()", () => {
+    test("executes", () => {
+      expect(deleteBanner(bannerId)).toBeTruthy();
+    });
   });
 });
