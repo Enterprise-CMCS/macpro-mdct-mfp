@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import { EntityStepCardTopSection } from "./EntityCardTopSection";
+import { EntityCardByStepType } from "./EntityCardByStepType";
 import { OverlayModalStepTypes } from "../../types";
 import {
   mockCompletedGenericFormattedEntityData,
@@ -10,17 +10,24 @@ import { useStore } from "utils";
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
-const genericEntityStepCardTopSection = (
-  <EntityStepCardTopSection
+const verbiage = {
+  entityUnfinishedMessage:
+    "Report objective progress to complete this section.",
+};
+
+const genericEntityCard = (
+  <EntityCardByStepType
     stepType={"mockStepType"}
     formattedEntityData={{}}
+    verbiage={verbiage}
   />
 );
 
-const evaluationPlanEntityStepCardTopSection = (
-  <EntityStepCardTopSection
+const evaluationPlanEntityCard = (
+  <EntityCardByStepType
     stepType={OverlayModalStepTypes.EVALUATION_PLAN}
     formattedEntityData={mockCompletedGenericFormattedEntityData}
+    verbiage={verbiage}
   />
 );
 
@@ -39,33 +46,34 @@ const formattedEntityData = {
   ],
 };
 
-const fundingSourcesEntityStepCardTopSection = (
-  <EntityStepCardTopSection
+const fundingSourcesEntityCardByStepType = (
+  <EntityCardByStepType
     stepType={OverlayModalStepTypes.FUNDING_SOURCES}
     formattedEntityData={formattedEntityData}
+    verbiage={verbiage}
   />
 );
 
-describe("Test EntityStepCardTopSection renders", () => {
-  test("EntityStepCardTopSection renders correctly", () => {
-    const topSection = render(genericEntityStepCardTopSection);
+describe("Test EntityCardByStepType renders", () => {
+  test("EntityCardByStepType renders correctly", () => {
+    const topSection = render(genericEntityCard);
     expect(topSection.getByText("mockStepType")).toBeVisible();
   });
 
-  test("EntityStepCardTopSection renders evaluation plan case correctly", () => {
-    const topSection = render(evaluationPlanEntityStepCardTopSection);
+  test("EntityCardByStepType renders evaluation plan case correctly", () => {
+    const topSection = render(evaluationPlanEntityCard);
     expect(topSection.getByText("Performance measure targets")).toBeVisible();
   });
 
-  test("EntityStepCardTopSection renders funding sources case correctly", () => {
-    const topSection = render(fundingSourcesEntityStepCardTopSection);
+  test("EntityCardByStepType renders funding sources case correctly", () => {
+    const topSection = render(fundingSourcesEntityCardByStepType);
     expect(
       topSection.getByText("Projected quarterly expenditures")
     ).toBeVisible();
   });
 });
 
-describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
+describe("Test EntityCardByStepType renders correctly for SAR", () => {
   const mockFullyCompletedObjectiveProgress = {
     objectiveName: "mockObjectiveName",
     description: "mockDescription",
@@ -95,18 +103,19 @@ describe("Test EntityStepCardTopSection renders correctly for SAR", () => {
     missedTargetReason:
       "mock progress description towards reaching the milestone",
   };
-  const ObjectiveProgressEntityStepCardTopSection = (
-    <EntityStepCardTopSection
+  const ObjectiveProgressEntityCard = (
+    <EntityCardByStepType
       stepType={OverlayModalStepTypes.OBJECTIVE_PROGRESS}
       formattedEntityData={mockFullyCompletedObjectiveProgress}
+      verbiage={verbiage}
     />
   );
 
   beforeEach(async () => {
     mockedUseStore.mockReturnValue(mockUseSARStore);
   });
-  test("EntityStepCardTopSection thats been fully completed renders correctly for SAR", () => {
-    const topOfCard = render(ObjectiveProgressEntityStepCardTopSection);
+  test("EntityCardByStepType thats been fully completed renders correctly for SAR", () => {
+    const topOfCard = render(ObjectiveProgressEntityCard);
     expect(
       topOfCard.getByText(mockFullyCompletedObjectiveProgress.objectiveName)
     ).toBeVisible();

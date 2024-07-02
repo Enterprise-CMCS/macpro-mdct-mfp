@@ -1,5 +1,5 @@
 // utils
-import { AnyObject, OverlayModalStepTypes } from "types";
+import { AnyObject } from "types";
 import { Text, Box, Grid, GridItem, Flex } from "@chakra-ui/react";
 import { notAnsweredText } from "../../constants";
 
@@ -55,107 +55,93 @@ const wereTargetsMetForObjectiveProgress = (
   );
 };
 
-export const EntityStepCardBottomSection = ({
-  stepType,
+export const ObjectiveProgressCardBottomSection = ({
   formattedEntityData,
   printVersion,
 }: Props) => {
-  switch (stepType) {
-    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
-      return (
-        <>
-          {(formattedEntityData?.performanceMeasureProgress ||
-            printVersion) && (
-            <Box
-              sx={
-                formattedEntityData?.performanceMeasureProgress
-                  ? sx.box
-                  : sx.notAnsweredBox
-              }
-            >
-              <Text sx={sx.subtitle}>
-                Performance measure progress toward milestones and key
-                deliverables for current reporting period
-              </Text>
-              <Text
-                sx={
-                  formattedEntityData?.performanceMeasureProgress
-                    ? sx.description
-                    : sx.notAnsweredDescription
-                }
-              >
-                {formattedEntityData?.performanceMeasureProgress ??
-                  notAnsweredText}
-              </Text>
-            </Box>
-          )}
-
-          <Box
+  return (
+    <>
+      {(formattedEntityData?.performanceMeasureProgress || printVersion) && (
+        <Box
+          sx={
+            formattedEntityData?.performanceMeasureProgress
+              ? sx.box
+              : sx.notAnsweredBox
+          }
+        >
+          <Text sx={sx.subtitle}>
+            Performance measure progress toward milestones and key deliverables
+            for current reporting period
+          </Text>
+          <Text
             sx={
-              formattedEntityData?.quarterActuals?.length > 0
-                ? sx.box
-                : undefined
+              formattedEntityData?.performanceMeasureProgress
+                ? sx.description
+                : sx.notAnsweredDescription
             }
           >
-            {formattedEntityData?.targetsMet &&
-            formattedEntityData?.quarterProjections?.length > 0 ? (
-              <>
-                <Text sx={sx.subtitle} data-testid="sar-grid">
-                  Quantitative targets for this reporting period
-                </Text>
+            {formattedEntityData?.performanceMeasureProgress ?? notAnsweredText}
+          </Text>
+        </Box>
+      )}
 
-                <Grid sx={sx.sarGrid}>
-                  {formattedEntityData?.quarterProjections
-                    .slice(0, 2)
-                    .map((quarter: any) => {
-                      return (
-                        <GridItem key={quarter.id}>
-                          <Flex sx={sx.gridItems}>
-                            <Text sx={sx.sarGridSubtitle}>
-                              {quarter.id} Target:
-                            </Text>
-                            <Text sx={sx.gridItems}>{quarter.value}</Text>
-                          </Flex>
-                        </GridItem>
-                      );
-                    })}
-                  {formattedEntityData?.quarterActuals
-                    .slice(0, 2)
-                    .map((quarter: any) => {
-                      return (
-                        <GridItem key={quarter.id}>
-                          <Flex sx={sx.gridItems}>
-                            <Text sx={sx.sarGridSubtitle}>
-                              {quarter.id} Actual:
-                            </Text>
-                            <Text sx={sx.gridItems}>{quarter.value}</Text>
-                          </Flex>
-                        </GridItem>
-                      );
-                    })}
-                </Grid>
-                {(formattedEntityData?.targetsMet || printVersion) &&
-                  wereTargetsMetForObjectiveProgress(
-                    formattedEntityData,
-                    printVersion
-                  )}
-              </>
-            ) : (
+      <Box
+        sx={
+          formattedEntityData?.quarterActuals?.length > 0 ? sx.box : undefined
+        }
+      >
+        {formattedEntityData?.targetsMet &&
+        formattedEntityData?.quarterProjections?.length > 0 ? (
+          <>
+            <Text sx={sx.subtitle} data-testid="sar-grid">
+              Quantitative targets for this reporting period
+            </Text>
+
+            <Grid sx={sx.sarGrid}>
+              {formattedEntityData?.quarterProjections
+                .slice(0, 2)
+                .map((quarter: any) => {
+                  return (
+                    <GridItem key={quarter.id}>
+                      <Flex sx={sx.gridItems}>
+                        <Text sx={sx.sarGridSubtitle}>
+                          {quarter.id} Target:
+                        </Text>
+                        <Text sx={sx.gridItems}>{quarter.value}</Text>
+                      </Flex>
+                    </GridItem>
+                  );
+                })}
+              {formattedEntityData?.quarterActuals
+                .slice(0, 2)
+                .map((quarter: any) => {
+                  return (
+                    <GridItem key={quarter.id}>
+                      <Flex sx={sx.gridItems}>
+                        <Text sx={sx.sarGridSubtitle}>
+                          {quarter.id} Actual:
+                        </Text>
+                        <Text sx={sx.gridItems}>{quarter.value}</Text>
+                      </Flex>
+                    </GridItem>
+                  );
+                })}
+            </Grid>
+            {(formattedEntityData?.targetsMet || printVersion) &&
               wereTargetsMetForObjectiveProgress(
                 formattedEntityData,
                 printVersion
-              )
-            )}
-          </Box>
-        </>
-      );
-    default:
-      return <></>;
-  }
+              )}
+          </>
+        ) : (
+          wereTargetsMetForObjectiveProgress(formattedEntityData, printVersion)
+        )}
+      </Box>
+    </>
+  );
 };
 
 interface Props {
-  stepType: string;
   formattedEntityData: AnyObject;
   printVersion?: boolean;
   entity?: AnyObject;
