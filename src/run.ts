@@ -190,6 +190,7 @@ async function destroy_stage(options: {
     verify: options.verify,
   });
 
+  console.log(JSON.stringify(options));
   await delete_topics(options);
 }
 
