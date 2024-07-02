@@ -10,10 +10,8 @@ import { foundations } from "./foundations";
 // Component style overrides
 import { components } from "./components";
 
-// Component style overrides
-
 const theme = extendTheme({
-  foundations,
+  ...foundations,
   components,
   styles,
 });
