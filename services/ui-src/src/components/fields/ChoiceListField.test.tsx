@@ -210,10 +210,13 @@ describe("<ChoiceListField />", () => {
 
     test("RadioField should render nested child fields for choices with children", () => {
       // Render Initial State and choices
+      mockGetValues(undefined);
       render(RadioComponentWithNestedChildren);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
       expect(screen.getByText("Choice3")).toBeVisible();
+      expect(screen.queryByText("Choice4")).not.toBeInTheDocument();
+      expect(screen.queryByText("Choice5")).not.toBeInTheDocument();
 
       // Choice3 has 2 children underneath it, we can get them to show by choosing that choice
       const thirdRadioOption = screen.getByLabelText("Choice3");
@@ -224,10 +227,13 @@ describe("<ChoiceListField />", () => {
 
     test("CheckboxField should render nested child fields for choices with children", async () => {
       // Render Initial State and choices
+      mockGetValues(undefined);
       render(CheckboxComponentWithNestedChildren);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
       expect(screen.getByText("Choice3")).toBeVisible();
+      expect(screen.queryByText("Choice4")).not.toBeInTheDocument();
+      expect(screen.queryByText("Choice5")).not.toBeInTheDocument();
 
       // Choice3 has 2 children underneath it, we can get them to show by choosing that choice
       const thirdCheckbox = screen.getByLabelText("Choice3");

@@ -7,7 +7,7 @@ jest.mock("react-hook-form", () => ({
   useFormContext: () => ({
     setValue: () => {},
     register: () => {},
-    getValues: jest.fn().mockReturnValue({}),
+    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue("test"),
   }),
 }));
 
@@ -17,7 +17,6 @@ const textAreaFieldComponent = (
     label="test-label"
     placeholder="test-placeholder"
     data-testid="test-text-area-field"
-    defaultValue="test"
   />
 );
 

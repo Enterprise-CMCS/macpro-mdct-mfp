@@ -7,29 +7,33 @@ const mockPost = jest.fn().mockResolvedValue(btoa(testBody));
 API.post = mockPost;
 const originalURLConfig = config.DEV_API_URL;
 window.open = jest.fn();
-describe("Print Utility functions", () => {
-  beforeEach(() => {
-    global.URL.createObjectURL = jest.fn();
-    jest.clearAllMocks();
-  });
-  afterAll(() => {
-    config.DEV_API_URL = originalURLConfig;
-    jest.resetAllMocks();
-  });
-  test("Call to the dev api if an env flag is provided", async () => {
-    config.DEV_API_URL = "test.com";
-    document.body.innerHTML = testBody;
-    await printPdf();
+describe("utils/print", () => {
+  describe("printPdf()", () => {
+    beforeEach(() => {
+      global.URL.createObjectURL = jest.fn();
+      jest.clearAllMocks();
+    });
 
-    expect(mockPost.mock.calls[0][0]).toEqual("mfpDev");
-    expect(window.open).toBeCalled();
-  });
+    afterAll(() => {
+      config.DEV_API_URL = originalURLConfig;
+      jest.resetAllMocks();
+    });
 
-  test("Calls normal API env flag is not provided", async () => {
-    config.DEV_API_URL = null;
-    await printPdf();
+    test("Call to the dev api if an env flag is provided", async () => {
+      config.DEV_API_URL = "test.com";
+      document.body.innerHTML = testBody;
+      await printPdf();
 
-    expect(mockPost.mock.calls[0][0]).not.toEqual("mfpDev");
-    expect(window.open).toBeCalled();
+      expect(mockPost.mock.calls[0][0]).toEqual("mfpDev");
+      expect(window.open).toBeCalled();
+    });
+
+    test("Calls normal API env flag is not provided", async () => {
+      config.DEV_API_URL = null;
+      await printPdf();
+
+      expect(mockPost.mock.calls[0][0]).not.toEqual("mfpDev");
+      expect(window.open).toBeCalled();
+    });
   });
 });

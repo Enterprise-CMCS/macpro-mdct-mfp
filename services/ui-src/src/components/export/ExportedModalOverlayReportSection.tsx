@@ -226,7 +226,7 @@ export function renderModalOverlayTableBody(
                     )
                   );
                 default:
-                  return <></>;
+                  return <Box key={`${type}${idx}${stepIdx}`}></Box>;
               }
             })}
           </Box>
@@ -252,22 +252,20 @@ export function renderModalOverlayTableBody(
                   {entity.initiative_wpTopic[0].value}
                 </Text>
                 {entity.isInitiativeClosed && (
-                  <Box key={`${reportType}${idx}-closeout-info`}>
-                    <Box>
-                      <Table
-                        content={{
-                          headRow: ["Actual end date", "Closed by"],
-                          bodyRows: [
-                            [
-                              entity.closeOutInformation_actualEndDate,
-                              entity.closedBy,
-                            ],
+                  <Box>
+                    <Table
+                      content={{
+                        headRow: ["Actual end date", "Closed by"],
+                        bodyRows: [
+                          [
+                            entity.closeOutInformation_actualEndDate,
+                            entity.closedBy,
                           ],
-                        }}
-                        variant="none"
-                        sx={sx.closedByTable}
-                      />
-                    </Box>
+                        ],
+                      }}
+                      variant="none"
+                      sx={sx.closedByTable}
+                    />
                   </Box>
                 )}
               </Box>
@@ -319,7 +317,7 @@ export function renderModalOverlayTableBody(
                     );
                   }
                   default:
-                    return <></>;
+                    return <Box key={`${step.stepType}${idx}${stepIdx}`}></Box>;
                 }
               }
             )}

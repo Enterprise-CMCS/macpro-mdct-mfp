@@ -93,8 +93,8 @@ const exportedEntityDetailsTableComponent = () => (
   </ReportContext.Provider>
 );
 
-describe("ExportedEntityDetailsTable", () => {
-  it("renders successfully", () => {
+describe("<ExportedEntityDetailsTable />", () => {
+  test("renders successfully", () => {
     render(exportedEntityDetailsTableComponent());
 
     expect(

@@ -16,9 +16,9 @@ import {
   getCloseoutStatus,
 } from "./getEntityStatus";
 
-describe("Entity status utilities", () => {
-  describe("getValidationList", () => {
-    it("should gather field IDs, nested and otherwise", () => {
+describe("tables/getEntityStatus", () => {
+  describe("getValidationList()", () => {
+    test("should gather field IDs, nested and otherwise", () => {
       const fields = [
         {
           id: "field1",
@@ -60,8 +60,8 @@ describe("Entity status utilities", () => {
     });
   });
 
-  describe("getEntityStatus", () => {
-    it("should recognize when an entity is complete", () => {
+  describe("getEntityStatus()", () => {
+    test("should recognize when an entity is complete", () => {
       const report = {
         formTemplate: {
           flatRoutes: [
@@ -92,7 +92,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(EntityStatuses.COMPLETE);
     });
 
-    it("should recognize when an entity is not complete", () => {
+    test("should recognize when an entity is not complete", () => {
       const report = {
         formTemplate: {
           flatRoutes: [
@@ -128,7 +128,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
-    it("should ignore irrelevant routes", () => {
+    test("should ignore irrelevant routes", () => {
       const report = {
         formTemplate: {
           flatRoutes: [
@@ -172,7 +172,7 @@ describe("Entity status utilities", () => {
     });
 
     // TODO this feels like a bug, right? Or can it never come up?
-    it("should ignore subsequent routes?", () => {
+    test("should ignore subsequent routes?", () => {
       const report = {
         formTemplate: {
           flatRoutes: [
@@ -216,8 +216,8 @@ describe("Entity status utilities", () => {
     });
   });
 
-  describe("getInitiativeStatus", () => {
-    it("should return CLOSE for closed initiatives in the Work Plan", () => {
+  describe("getInitiativeStatus()", () => {
+    test("should return CLOSE for closed initiatives in the Work Plan", () => {
       const report = {
         reportType: "WP",
         formTemplate: {
@@ -263,7 +263,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(EntityStatuses.CLOSE);
     });
 
-    it("should not return CLOSE for closed initiatives in the SAR", () => {
+    test("should not return CLOSE for closed initiatives in the SAR", () => {
       const entity = {
         id: "entity1",
         type: "initiative",
@@ -298,7 +298,7 @@ describe("Entity status utilities", () => {
       expect(result).not.toBe(EntityStatuses.CLOSE);
     });
 
-    it("should return incomplete for entities without steps", () => {
+    test("should return incomplete for entities without steps", () => {
       const report = {
         formTemplate: {
           routes: [
@@ -328,7 +328,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
-    it("should check all steps for completeness", () => {
+    test("should check all steps for completeness", () => {
       const report = {
         reportType: "WP",
         formTemplate: {
@@ -378,7 +378,7 @@ describe("Entity status utilities", () => {
     });
   });
 
-  it("should ignore specified step types", () => {
+  test("should ignore specified step types", () => {
     const report = {
       reportType: "WP",
       formTemplate: {
@@ -440,7 +440,7 @@ describe("Entity status utilities", () => {
     expect(result).toBe(EntityStatuses.COMPLETE);
   });
 
-  it("should ignore the closeout step when evaluating for PDF", () => {
+  test("should ignore the closeout step when evaluating for PDF", () => {
     const report = {
       reportType: "WP",
       formTemplate: {
@@ -502,8 +502,8 @@ describe("Entity status utilities", () => {
     expect(result).toBe(EntityStatuses.COMPLETE);
   });
 
-  describe("getInitiativeDashboardStatus", () => {
-    it("should find completed fields", () => {
+  describe("getInitiativeDashboardStatus()", () => {
+    test("should find completed fields", () => {
       const formEntity = {
         stepType: "mockStepType",
         form: {
@@ -532,7 +532,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(EntityStatuses.COMPLETE);
     });
 
-    it("should find when fields are not completed", () => {
+    test("should find when fields are not completed", () => {
       const formEntity = {
         stepType: "mockStepType",
         form: {
@@ -560,7 +560,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
-    it("should find fields in modalForm when there is no form", () => {
+    test("should find fields in modalForm when there is no form", () => {
       const formEntity = {
         stepType: "mockStepType",
         modalForm: {
@@ -583,7 +583,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
-    it("should work for entities without steps", () => {
+    test("should work for entities without steps", () => {
       const formEntity = {
         stepType: "mockStepType",
         form: {
@@ -607,7 +607,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(EntityStatuses.COMPLETE);
     });
 
-    it("should require nested form fields", () => {
+    test("should require nested form fields", () => {
       const formEntity = {
         stepType: "mockStepType",
         form: {
@@ -648,7 +648,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
-    it("should find values for required nested form fields", () => {
+    test("should find values for required nested form fields", () => {
       const formEntity = {
         stepType: "mockStepType",
         form: {
@@ -691,8 +691,8 @@ describe("Entity status utilities", () => {
     });
   });
 
-  describe("getCloseoutStatus", () => {
-    it("should return true when an entity includes all fields ", () => {
+  describe("getCloseoutStatus()", () => {
+    test("should return true when an entity includes all fields ", () => {
       const form = {
         id: "form1",
         fields: [
@@ -714,7 +714,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(true);
     });
 
-    it("should return false when an entity does not include all fields", () => {
+    test("should return false when an entity does not include all fields", () => {
       const form = {
         id: "form1",
         fields: [
@@ -735,7 +735,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(false);
     });
 
-    it("should not require optional fields", () => {
+    test("should not require optional fields", () => {
       const form = {
         id: "form1",
         fields: [
@@ -763,7 +763,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(true);
     });
 
-    it("should require the termination reason for discontinued initiatives", () => {
+    test("should require the termination reason for discontinued initiatives", () => {
       const form = {
         id: "form1",
         fields: [],
@@ -790,7 +790,7 @@ describe("Entity status utilities", () => {
       expect(result).toBe(true);
     });
 
-    it("should require the alternate funding for Medicaid-sustained initiatives", () => {
+    test("should require the alternate funding for Medicaid-sustained initiatives", () => {
       const form = {
         id: "form1",
         fields: [],

@@ -408,7 +408,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
     jest.clearAllMocks();
   });
 
-  test("should render modal overlay report section", async () => {
+  test("should render modal overlay report section", () => {
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
@@ -419,7 +419,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
     ).toBeInTheDocument();
   });
 
-  test("should render for SAR", async () => {
+  test("should render for SAR", () => {
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockSARReportWithOverlays,
