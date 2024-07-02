@@ -22,13 +22,13 @@ jobs:
           python-version: 3.9
 
       - name: Run the script
-        run: python rm_old_folders.py --n-days 1 --folder-name '.'
+        run: python rm_old_folders.py --n-days 30 --folder-name '.'
 
       - name: Commit all changed files back to the repository
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: gh-pages
-          commit_message: Delete folders older than 1 days
+          commit_message: Delete folders older than 30 days
 
   #Notify the integrations channel only when a Snyk auto merge fails pr checks
   notify_on_delete_pages_failure:
