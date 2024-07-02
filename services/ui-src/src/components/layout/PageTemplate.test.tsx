@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { PageTemplate } from "components";
+import { testA11y } from "utils/testing/commonTests";
 
 const standardPageComponent = (
   <PageTemplate data-testid="page-template">
@@ -14,28 +14,22 @@ const reportPageComponent = (
   </PageTemplate>
 );
 
-describe("Test PageTemplate view", () => {
-  test("Check that PageTemplate (standard) renders", () => {
-    const { getByTestId } = render(standardPageComponent);
-    expect(getByTestId("page-template")).toBeVisible();
+describe("<PageTemplate />", () => {
+  describe("standard", () => {
+    test("Check that PageTemplate (standard) renders", () => {
+      const { getByTestId } = render(standardPageComponent);
+      expect(getByTestId("page-template")).toBeVisible();
+    });
+
+    testA11y(standardPageComponent);
   });
 
-  test("Check that PageTemplate (report) renders", () => {
-    const { getByTestId } = render(reportPageComponent);
-    expect(getByTestId("page-template")).toBeVisible();
-  });
-});
+  describe("report", () => {
+    test("Check that PageTemplate (report) renders", () => {
+      const { getByTestId } = render(reportPageComponent);
+      expect(getByTestId("page-template")).toBeVisible();
+    });
 
-describe("Test PageTemplate accessibility", () => {
-  test("PageTemplate (standard) hould not have basic accessibility issues", async () => {
-    const { container } = render(standardPageComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-
-  test("PageTemplate (report) hould not have basic accessibility issues", async () => {
-    const { container } = render(reportPageComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    testA11y(reportPageComponent);
   });
 });

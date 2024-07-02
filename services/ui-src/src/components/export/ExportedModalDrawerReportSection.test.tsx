@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { useStore } from "utils";
 import {
   mockReportStore,
@@ -11,6 +10,7 @@ import {
   ExportedModalDrawerReportSection,
   Props,
 } from "./ExportedModalDrawerReportSection";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -113,7 +113,7 @@ const tableComponent = (
   </RouterWrappedComponent>
 );
 
-describe("ExportedModalDrawerReportSection table", () => {
+describe("<ExportedModalDrawerReportSection />", () => {
   test("renders correct twelve quarters in table", async () => {
     const mock2024Q1Report = {
       ...mockReportStore,
@@ -176,13 +176,8 @@ describe("ExportedModalDrawerReportSection table", () => {
       screen.getByLabelText("A very long target population name")
     ).toBeVisible();
   });
-});
 
-describe("ExportedModalDrawerReportSection", () => {
-  test("should not have basic accessibility issues", async () => {
+  testA11y(testComponent, () => {
     mockedUseStore.mockReturnValue(mockReportStore);
-    const { container } = render(testComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

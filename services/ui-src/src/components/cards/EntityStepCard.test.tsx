@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import userEvent from "@testing-library/user-event";
 // components
 import {
@@ -13,6 +12,7 @@ import {
 import { EntityStepCard } from "./EntityStepCard";
 import { OverlayModalStepTypes } from "types";
 import { useStore } from "utils";
+import { testA11y } from "utils/testing/commonTests";
 
 const openAddEditEntityModal = jest.fn();
 const openDeleteEntityModal = jest.fn();
@@ -179,132 +179,134 @@ const NoOpenAddEditEntityFunction = (
   />
 );
 
-describe("Test Completed EntityCard", () => {
-  beforeEach(() => {
-    render(GenericEntityTypeEntityCardComponent);
+describe("<EntityCard />", () => {
+  describe("Completed EntityCard", () => {
+    describe("Renders", () => {
+      beforeEach(() => {
+        render(GenericEntityTypeEntityCardComponent);
+      });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      test("EntityCard is visible", () => {
+        expect(screen.getByTestId("entityCard")).toBeVisible();
+      });
+
+      test("Clicking edit button opens the AddEditProgramModal", async () => {
+        const editEntityButton = screen.getByText(editEntityButtonText);
+        await userEvent.click(editEntityButton);
+        await expect(openAddEditEntityModal).toBeCalledTimes(1);
+      });
+
+      test("EntityCard opens the delete modal on remove click", async () => {
+        const removeButton = screen.getByTestId("delete-entity-button");
+        await userEvent.click(removeButton);
+        expect(openDeleteEntityModal).toBeCalledTimes(1);
+      });
+
+      test("EntityCard opens the drawer on edit-details click", async () => {
+        const editDetailsButton = screen.getByText(
+          enterEntityDetailsButtonText
+        );
+        await userEvent.click(editDetailsButton);
+        expect(mockOpenDrawer).toBeCalledTimes(1);
+      });
+    });
+
+    testA11y(GenericEntityTypeEntityCardComponent);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  describe("Unfinished EntityCard", () => {
+    describe("Renders", () => {
+      beforeEach(() => {
+        render(UnfinishedGenericEntityCardComponent);
+      });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      test("EntityCard is visible", () => {
+        expect(screen.getByTestId("entityCard")).toBeVisible();
+      });
+
+      test("EntityCard opens the delete modal on remove click", async () => {
+        const removeButton = screen.getByTestId("delete-entity-button");
+        await userEvent.click(removeButton);
+        expect(openDeleteEntityModal).toBeCalledTimes(1);
+      });
+
+      test("EntityCard opens the drawer on enter-details click", async () => {
+        const enterDetailsButton = screen.getByText(
+          enterEntityDetailsButtonText
+        );
+        await userEvent.click(enterDetailsButton);
+        expect(mockOpenDrawer).toBeCalledTimes(1);
+      });
+    });
+
+    testA11y(UnfinishedGenericEntityCardComponent);
   });
 
-  test("EntityCard is visible", () => {
-    expect(screen.getByTestId("entityCard")).toBeVisible();
+  describe("EntityCard with specific step types", () => {
+    test("Unfinished evaluation plan card should have a button to enter details", () => {
+      render(UnfinishedEvaluationPlanCardComponent);
+      const detailsButton = screen.getByText(enterEntityDetailsButtonText);
+      expect(detailsButton).toBeVisible();
+    });
+
+    test("Completed evaluation plan card should have a button to edit details", async () => {
+      render(CompletedEvaluationPlanCardComponent);
+      const detailsButton = screen.getByText(editEntityButtonText);
+      expect(detailsButton).toBeVisible();
+    });
+
+    test("Unfinished funding sources card should have a button to enter details", () => {
+      render(UnfinishedFundingSourcesCardComponent);
+      const detailsButton = screen.getByText(enterEntityDetailsButtonText);
+      expect(detailsButton).toBeVisible();
+    });
+
+    test("Completed funding sources card should have a button to edit details", () => {
+      render(CompletedFundingSourcesCardComponent);
+      const detailsButton = screen.getByText(editEntityButtonText);
+      expect(detailsButton).toBeVisible();
+    });
+
+    test("Disabled prop shows correct copy", () => {
+      render(DisabledEntityTypeEntityCardComponent);
+      const detailsButton = screen.getByText(readOnlyEntityButtonText);
+      expect(detailsButton).toBeVisible();
+    });
   });
 
-  test("Clicking edit button opens the AddEditProgramModal", async () => {
-    const editEntityButton = screen.getByText(editEntityButtonText);
-    await userEvent.click(editEntityButton);
-    await expect(openAddEditEntityModal).toBeCalledTimes(1);
+  describe("PrintOnly TESTS", () => {
+    test("in Print View the status indicator should be visible", async () => {
+      render(PrintViewEntityTypeEntityCardComponent);
+      const element = screen.getByTestId("print-status-indicator");
+      expect(element).toBeVisible();
+    });
   });
 
-  test("EntityCard opens the delete modal on remove click", async () => {
-    const removeButton = screen.getByTestId("delete-entity-button");
-    await userEvent.click(removeButton);
-    expect(openDeleteEntityModal).toBeCalledTimes(1);
-  });
+  describe("SAR TESTS", () => {
+    beforeEach(async () => {
+      mockedUseStore.mockReturnValue(mockUseSARStore);
+    });
 
-  test("EntityCard opens the drawer on edit-details click", async () => {
-    const editDetailsButton = screen.getByText(enterEntityDetailsButtonText);
-    await userEvent.click(editDetailsButton);
-    expect(mockOpenDrawer).toBeCalledTimes(1);
-  });
-});
+    test("Completed evaluation plan card should have a button to edit details", async () => {
+      render(CompletedEvaluationPlanCardComponent);
+      const reportEntityButton = screen.getByTestId("report-button");
+      expect(reportEntityButton).toBeVisible();
+      await userEvent.click(reportEntityButton);
+      await expect(openAddEditEntityModal).toBeCalledTimes(1);
+    });
 
-describe("Test Unfinished EntityCard", () => {
-  beforeEach(() => {
-    render(UnfinishedGenericEntityCardComponent);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test("EntityCard is visible", () => {
-    expect(screen.getByTestId("entityCard")).toBeVisible();
-  });
-
-  test("EntityCard opens the delete modal on remove click", async () => {
-    const removeButton = screen.getByTestId("delete-entity-button");
-    await userEvent.click(removeButton);
-    expect(openDeleteEntityModal).toBeCalledTimes(1);
-  });
-
-  test("EntityCard opens the drawer on enter-details click", async () => {
-    const enterDetailsButton = screen.getByText(enterEntityDetailsButtonText);
-    await userEvent.click(enterDetailsButton);
-    expect(mockOpenDrawer).toBeCalledTimes(1);
-  });
-});
-
-describe("EntityCard with specific step types", () => {
-  test("Unfinished evaluation plan card should have a button to enter details", () => {
-    render(UnfinishedEvaluationPlanCardComponent);
-    const detailsButton = screen.getByText(enterEntityDetailsButtonText);
-    expect(detailsButton).toBeVisible();
-  });
-
-  test("Completed evaluation plan card should have a button to edit details", async () => {
-    render(CompletedEvaluationPlanCardComponent);
-    const detailsButton = screen.getByText(editEntityButtonText);
-    expect(detailsButton).toBeVisible();
-  });
-
-  test("Unfinished funding sources card should have a button to enter details", () => {
-    render(UnfinishedFundingSourcesCardComponent);
-    const detailsButton = screen.getByText(enterEntityDetailsButtonText);
-    expect(detailsButton).toBeVisible();
-  });
-
-  test("Completed funding sources card should have a button to edit details", () => {
-    render(CompletedFundingSourcesCardComponent);
-    const detailsButton = screen.getByText(editEntityButtonText);
-    expect(detailsButton).toBeVisible();
-  });
-
-  test("Disabled prop shows correct copy", () => {
-    render(DisabledEntityTypeEntityCardComponent);
-    const detailsButton = screen.getByText(readOnlyEntityButtonText);
-    expect(detailsButton).toBeVisible();
-  });
-});
-
-describe("Test Generic EntityCard accessibility", () => {
-  it("Unfinished AccessMeasures EntityCard should not have basic accessibility issues", async () => {
-    const { container } = render(UnfinishedGenericEntityCardComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-
-  it("Completed Generic EntityCard should not have basic accessibility issues", async () => {
-    const { container } = render(GenericEntityTypeEntityCardComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-});
-
-describe("PrintOnly TESTS", () => {
-  test("in Print View the status indicator should be visible", async () => {
-    render(PrintViewEntityTypeEntityCardComponent);
-    const element = screen.getByTestId("print-status-indicator");
-    expect(element).toBeVisible();
-  });
-});
-
-describe("SAR TESTS", () => {
-  beforeEach(async () => {
-    mockedUseStore.mockReturnValue(mockUseSARStore);
-  });
-  test("Completed evaluation plan card should have a button to edit details", async () => {
-    render(CompletedEvaluationPlanCardComponent);
-    const reportEntityButton = screen.getByTestId("report-button");
-    expect(reportEntityButton).toBeVisible();
-    await userEvent.click(reportEntityButton);
-    await expect(openAddEditEntityModal).toBeCalledTimes(1);
-  });
-  test("Completed evaluation plan card without OpenAddEditModal function doesn't show a button", async () => {
-    render(NoOpenAddEditEntityFunction);
-    const reportEntityButton = screen.queryByTestId("report-button");
-    expect(reportEntityButton).not.toBeInTheDocument();
+    test("Completed evaluation plan card without OpenAddEditModal function doesn't show a button", async () => {
+      render(NoOpenAddEditEntityFunction);
+      const reportEntityButton = screen.queryByTestId("report-button");
+      expect(reportEntityButton).not.toBeInTheDocument();
+    });
   });
 });

@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import {
   mockDrawerReportPageJson,
   mockFormField,
@@ -11,6 +10,7 @@ import {
 import { useStore } from "../../utils";
 import { ExportedReportFieldTable } from "./ExportedReportFieldTable";
 import { DrawerReportPageShape } from "types";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -97,10 +97,11 @@ const generalInformationComponent = (
   <ExportedReportFieldTable section={generalInformationJson} />
 );
 
-describe("ExportedReportFieldRow", () => {
+describe("<ExportedReportFieldTable />", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   test("Is present", () => {
     mockedUseStore.mockReturnValue(mockUseStore);
     render(exportedStandardTableComponent);
@@ -136,13 +137,8 @@ describe("ExportedReportFieldRow", () => {
       screen.queryByText("Resubmission Information")
     ).not.toBeInTheDocument();
   });
-});
 
-describe("Test ExportedReportFieldRow accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
+  testA11y(exportedStandardTableComponent, () => {
     mockedUseStore.mockReturnValue(mockUseStore);
-    const { container } = render(exportedStandardTableComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

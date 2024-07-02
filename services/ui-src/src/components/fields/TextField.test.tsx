@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // components
 import { useFormContext } from "react-hook-form";
 import { TextField } from "components";
 // utils
 import { mockStateUserStore } from "utils/testing/setupJest";
 import { useStore } from "utils";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -67,63 +67,65 @@ const textFieldComponentClearValue = (
   />
 );
 
-describe("Test TextField component", () => {
-  test("TextField is visible", () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    mockGetValues("");
-    render(textFieldComponent);
-    const textField = screen.getByRole("textbox");
-    expect(textField).toBeVisible();
-    jest.clearAllMocks();
+describe("<TextField />", () => {
+  describe("Test TextField component", () => {
+    test("TextField is visible", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues("");
+      render(textFieldComponent);
+      const textField = screen.getByRole("textbox");
+      expect(textField).toBeVisible();
+      jest.clearAllMocks();
+    });
+
+    test("Component with validateOnRender passed should validate on initial render", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues("");
+      render(textFieldComponentValidateOnRender);
+      expect(mockTrigger).toHaveBeenCalled();
+    });
+
+    test("Component with hydration value should hydrate field", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues("");
+      const result = render(textFieldComponentHydration);
+      const textFieldInput: HTMLInputElement = result.container.querySelector(
+        "[name='testTextFieldWithHydrationValue']"
+      )!;
+      const displayValue = textFieldInput.value;
+      expect(displayValue).toEqual(mockHydrationValue);
+    });
+
+    test("Component with hydration value and clear value should reset value to default", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues("");
+      const result = render(textFieldComponentClearValue);
+      const textFieldInput: HTMLInputElement = result.container.querySelector(
+        "[name='testTextFieldWithHydrationValue']"
+      )!;
+      const displayValue = textFieldInput.value;
+      expect(displayValue).toEqual("");
+    });
   });
 
-  test("Component with validateOnRender passed should validate on initial render", () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    mockGetValues("");
-    render(textFieldComponentValidateOnRender);
-    expect(mockTrigger).toHaveBeenCalled();
+  describe("Test TextField where validateOnRender is true", () => {
+    test("validateOnRender triggers form.trigger", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues("");
+      render(textFieldComponentValidateOnRender);
+      expect(mockRhfMethods.trigger).toHaveBeenCalled();
+      jest.clearAllMocks();
+    });
   });
 
-  test("Component with hydration value should hydrate field", () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    mockGetValues("");
-    const result = render(textFieldComponentHydration);
-    const textFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='testTextFieldWithHydrationValue']"
-    )!;
-    const displayValue = textFieldInput.value;
-    expect(displayValue).toEqual(mockHydrationValue);
-  });
-
-  test("Component with hydration value and clear value should reset value to default", () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    mockGetValues("");
-    const result = render(textFieldComponentClearValue);
-    const textFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='testTextFieldWithHydrationValue']"
-    )!;
-    const displayValue = textFieldInput.value;
-    expect(displayValue).toEqual("");
-  });
-});
-
-describe("Test TextField where validateOnRender is true", () => {
-  test("validateOnRender triggers form.trigger", () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    mockGetValues("");
-    render(textFieldComponentValidateOnRender);
-    expect(mockRhfMethods.trigger).toHaveBeenCalled();
-    jest.clearAllMocks();
-  });
-});
-
-describe("Test TextField accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    mockGetValues(undefined);
-    const { container } = render(textFieldComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-    jest.clearAllMocks();
-  });
+  testA11y(
+    textFieldComponent,
+    () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+    },
+    () => {
+      jest.clearAllMocks();
+    }
+  );
 });

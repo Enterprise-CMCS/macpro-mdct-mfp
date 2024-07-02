@@ -1,13 +1,13 @@
 import {
   EntityDetailsOverlayShape,
   EntityShape,
+  EntityStatuses,
   FormField,
   OverlayModalPageShape,
   OverlayModalTypes,
   PageTypes,
   ReportShape,
 } from "types";
-import { EntityStatuses } from "./EntityStatusIcon";
 import {
   getValidationList,
   getEntityStatus,
@@ -89,7 +89,7 @@ describe("Entity status utilities", () => {
 
       const result = getEntityStatus(report, entity, entityType);
 
-      expect(result).toBe(true);
+      expect(result).toBe(EntityStatuses.COMPLETE);
     });
 
     it("should recognize when an entity is not complete", () => {
@@ -125,7 +125,7 @@ describe("Entity status utilities", () => {
 
       const result = getEntityStatus(report, entity, entityType);
 
-      expect(result).toBe(false);
+      expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
     it("should ignore irrelevant routes", () => {
@@ -168,7 +168,7 @@ describe("Entity status utilities", () => {
 
       const result = getEntityStatus(report, entity, entityType);
 
-      expect(result).toBe(true);
+      expect(result).toBe(EntityStatuses.COMPLETE);
     });
 
     // TODO this feels like a bug, right? Or can it never come up?
@@ -212,7 +212,7 @@ describe("Entity status utilities", () => {
 
       const result = getEntityStatus(report, entity, entityType);
 
-      expect(result).toBe(true);
+      expect(result).toBe(EntityStatuses.COMPLETE);
     });
   });
 
@@ -298,7 +298,7 @@ describe("Entity status utilities", () => {
       expect(result).not.toBe(EntityStatuses.CLOSE);
     });
 
-    it("should return false for entities without steps", () => {
+    it("should return incomplete for entities without steps", () => {
       const report = {
         formTemplate: {
           routes: [
@@ -325,7 +325,7 @@ describe("Entity status utilities", () => {
 
       const result = getInitiativeStatus(report, entity, isPdf, ignore);
 
-      expect(result).toBe(false);
+      expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
     it("should check all steps for completeness", () => {
@@ -370,11 +370,11 @@ describe("Entity status utilities", () => {
       const ignore: string[] = [];
 
       let result = getInitiativeStatus(report, entity, isPdf, ignore);
-      expect(result).toBe(false);
+      expect(result).toBe(EntityStatuses.INCOMPLETE);
 
       (entity as any).field1 = "mock data";
       result = getInitiativeStatus(report, entity, isPdf, ignore);
-      expect(result).toBe(true);
+      expect(result).toBe(EntityStatuses.COMPLETE);
     });
   });
 
@@ -433,11 +433,11 @@ describe("Entity status utilities", () => {
     let ignore: string[] = [];
 
     let result = getInitiativeStatus(report, entity, isPdf, ignore);
-    expect(result).toBe(false);
+    expect(result).toBe(EntityStatuses.INCOMPLETE);
 
     ignore = ["other step type"];
     result = getInitiativeStatus(report, entity, isPdf, ignore);
-    expect(result).toBe(true);
+    expect(result).toBe(EntityStatuses.COMPLETE);
   });
 
   it("should ignore the closeout step when evaluating for PDF", () => {
@@ -495,11 +495,11 @@ describe("Entity status utilities", () => {
     const ignore: string[] = [];
 
     let result = getInitiativeStatus(report, entity, isPdf, ignore);
-    expect(result).toBe(false);
+    expect(result).toBe(EntityStatuses.INCOMPLETE);
 
     isPdf = true;
     result = getInitiativeStatus(report, entity, isPdf, ignore);
-    expect(result).toBe(true);
+    expect(result).toBe(EntityStatuses.COMPLETE);
   });
 
   describe("getInitiativeDashboardStatus", () => {
@@ -529,7 +529,7 @@ describe("Entity status utilities", () => {
 
       const result = getInitiativeDashboardStatus(formEntity, entity);
 
-      expect(result).toBe(true);
+      expect(result).toBe(EntityStatuses.COMPLETE);
     });
 
     it("should find when fields are not completed", () => {
@@ -557,7 +557,7 @@ describe("Entity status utilities", () => {
 
       const result = getInitiativeDashboardStatus(formEntity, entity);
 
-      expect(result).toBe(false);
+      expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
     it("should find fields in modalForm when there is no form", () => {
@@ -580,7 +580,7 @@ describe("Entity status utilities", () => {
 
       const result = getInitiativeDashboardStatus(formEntity, entity);
 
-      expect(result).toBe(false);
+      expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
     it("should work for entities without steps", () => {
@@ -604,7 +604,7 @@ describe("Entity status utilities", () => {
 
       const result = getInitiativeDashboardStatus(formEntity, entity);
 
-      expect(result).toBe(true);
+      expect(result).toBe(EntityStatuses.COMPLETE);
     });
 
     it("should require nested form fields", () => {
@@ -645,7 +645,7 @@ describe("Entity status utilities", () => {
 
       const result = getInitiativeDashboardStatus(formEntity, entity);
 
-      expect(result).toBe(false);
+      expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
     it("should find values for required nested form fields", () => {
@@ -687,7 +687,7 @@ describe("Entity status utilities", () => {
 
       const result = getInitiativeDashboardStatus(formEntity, entity);
 
-      expect(result).toBe(true);
+      expect(result).toBe(EntityStatuses.COMPLETE);
     });
   });
 
