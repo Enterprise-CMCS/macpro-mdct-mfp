@@ -36,10 +36,20 @@ export const EntityStepCard = ({
   const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
 
+  let cardContent = {};
+
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
       entityCompleted = formattedEntityData?.objectiveName;
       entityCompleted = formattedEntityData?.performanceMeasureProgress;
+
+      cardContent = (
+        <ObjectiveProgressCard
+          formattedEntityData={formattedEntityData}
+          verbiage={verbiage}
+          entityCompleted={entityCompleted}
+        />
+      );
       break;
     case OverlayModalStepTypes.EVALUATION_PLAN:
       entityCompleted = formattedEntityData?.objectiveName;
@@ -50,6 +60,13 @@ export const EntityStepCard = ({
             formattedEntityData?.quarters
           );
       }
+
+      cardContent = (
+        <EvaluationPlanCard
+          formattedEntityData={formattedEntityData}
+          entityCompleted={entityCompleted}
+        />
+      );
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
       entityCompleted =
@@ -59,31 +76,6 @@ export const EntityStepCard = ({
         formattedEntityData.quarters = fillEmptyQuarters(
           formattedEntityData?.quarters
         );
-      break;
-    default:
-      break;
-  }
-
-  let cardContent = {};
-  switch (stepType) {
-    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
-      cardContent = (
-        <ObjectiveProgressCard
-          formattedEntityData={formattedEntityData}
-          verbiage={verbiage}
-          entityCompleted={entityCompleted}
-        />
-      );
-      break;
-    case OverlayModalStepTypes.EVALUATION_PLAN:
-      cardContent = (
-        <EvaluationPlanCard
-          formattedEntityData={formattedEntityData}
-          entityCompleted={entityCompleted}
-        />
-      );
-      break;
-    case OverlayModalStepTypes.FUNDING_SOURCES:
       cardContent = (
         <FundingSourcesCard
           formattedEntityData={formattedEntityData}
