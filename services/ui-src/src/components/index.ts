@@ -46,6 +46,8 @@ export { ExportRETTable } from "./export/ExportedRETTable";
 export { PrintButton } from "./export/PrintButton";
 export { ExportedSarDetailsTable } from "./export/ExportedSarDetailsTable";
 export { ExportEntityDetailsTable } from "./export/ExportEntityDetailsTable";
+export { ExportedEntityStepCard } from "./export/ExportedEntityStepCard";
+
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";

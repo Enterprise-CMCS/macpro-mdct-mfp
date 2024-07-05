@@ -1,6 +1,6 @@
 // components
 import { Card, EntityCardByStepType } from "components";
-import { Box, Button, Image } from "@chakra-ui/react";
+import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
 import {
   AnyObject,
@@ -17,8 +17,10 @@ import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
 import { fillEmptyQuarters, useStore } from "utils";
 
-export const EntityStepCard = ({
+export const ExportedEntityStepCard = ({
   entity,
+  entityIndex,
+  entityTotal,
   stepType,
   formattedEntityData,
   verbiage,
@@ -31,6 +33,7 @@ export const EntityStepCard = ({
   ...props
 }: Props) => {
   let entityCompleted = false;
+  const entitiesCount = `${entityIndex + 1} / ${entityTotal}`;
   const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
   switch (stepType) {
@@ -113,12 +116,28 @@ export const EntityStepCard = ({
       borderColor={borderColor}
       data-testid="entityCard"
     >
-      <Box sx={sx.contentBox}>
-        <Image
-          src={entityCompleted ? completedIcon : unfinishedIcon}
-          alt={`entity is ${entityCompleted ? "complete" : "incomplete"}`}
-          sx={sx.statusIcon}
-        />
+      <Box sx={sx.contentBox} className={"export-version"}>
+        <Text sx={sx.entitiesCount} data-testid="entities-count">
+          {entitiesCount}
+        </Text>
+        <Box
+          className={
+            entityCompleted ? "icon-div-complete" : "icon-div-incomplete"
+          }
+          data-testid="print-status-indicator"
+        >
+          <Image
+            src={entityCompleted ? completedIcon : unfinishedIcon}
+            alt={`entity is ${entityCompleted ? "complete" : "incomplete"}`}
+            sx={sx.exportVersionIcon}
+          />
+          {entityCompleted ? (
+            <Text className="completed-text">Complete</Text>
+          ) : (
+            <Text className="error-text">Error</Text>
+          )}
+        </Box>
+
         {openDeleteEntityModal && report?.reportType === ReportType.WP && (
           <button
             type="button"
@@ -188,6 +207,9 @@ const sx = {
   contentBox: {
     position: "relative",
     marginX: "1.25rem",
+    "&.export-version": {
+      paddingLeft: "2.5rem",
+    },
     ".delete-entity-button": {
       position: "absolute",
       right: "-2rem",
@@ -195,6 +217,24 @@ const sx = {
       width: "1.5rem",
       ".mobile &": {
         right: "-1.5rem",
+      },
+    },
+    ".icon-div-complete": {
+      position: "absolute",
+      top: "0.25rem",
+      left: "-1.5rem",
+      marginLeft: "-0.75rem",
+      ".mobile &": {
+        left: "-1.5rem",
+      },
+    },
+    ".icon-div-incomplete": {
+      position: "absolute",
+      top: "0.25rem",
+      left: "-1.5rem",
+      marginLeft: "-0.25rem",
+      ".mobile &": {
+        left: "-1.5rem",
       },
     },
     ".error-text": {
@@ -209,6 +249,10 @@ const sx = {
       textAlign: "center",
       fontWeight: "bold",
     },
+  },
+  exportVersionIcon: {
+    height: "1rem",
+    margin: "0 auto",
   },
   statusIcon: {
     position: "absolute",

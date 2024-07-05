@@ -16,7 +16,6 @@ export const EntityCardByStepType = ({
   formattedEntityData,
   entityCompleted,
   headingLevel = "h2",
-  printVersion,
   verbiage,
   entity,
 }: Props) => {
@@ -59,7 +58,7 @@ export const EntityCardByStepType = ({
                 </Grid>
               </>
             )}
-          {entityCompleted || printVersion ? (
+          {entityCompleted ? (
             <ObjectiveProgressCardBottomSection
               verbiage={verbiage}
               entity={entity}
@@ -67,7 +66,6 @@ export const EntityCardByStepType = ({
                 ...formattedEntityData,
                 isPartiallyComplete: !entityCompleted,
               }}
-              printVersion={!!printVersion}
             />
           ) : (
             <Text sx={sx.unfinishedMessage}>
@@ -174,7 +172,6 @@ export const EntityCardByStepType = ({
 interface Props {
   stepType: string;
   formattedEntityData: AnyObject;
-  printVersion?: boolean;
   entityCompleted?: boolean;
   headingLevel?: HeadingLevel;
   verbiage: AnyObject;
