@@ -38,22 +38,12 @@ export const ExportedEntityStepCard = ({
   const entitiesCount = `${entityIndex + 1} / ${entityTotal}`;
   const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
-  let cardContent = {};
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
-      cardContent = (
-        <ObjectiveProgressCard
-          formattedEntityData={formattedEntityData}
-          verbiage={verbiage}
-        />
-      );
       entityCompleted = formattedEntityData?.objectiveName;
       entityCompleted = formattedEntityData?.performanceMeasureProgress;
       break;
     case OverlayModalStepTypes.EVALUATION_PLAN:
-      cardContent = (
-        <EvaluationPlanCard formattedEntityData={formattedEntityData} />
-      );
       entityCompleted = formattedEntityData?.objectiveName;
       if (entityCompleted && formattedEntityData?.includesTargets === "Yes") {
         entityCompleted = formattedEntityData?.quarters.length === 12;
@@ -64,9 +54,6 @@ export const ExportedEntityStepCard = ({
       }
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
-      cardContent = (
-        <FundingSourcesCard formattedEntityData={formattedEntityData} />
-      );
       entityCompleted =
         formattedEntityData?.fundingSource &&
         formattedEntityData?.quarters.length === 12;
@@ -74,6 +61,37 @@ export const ExportedEntityStepCard = ({
         formattedEntityData.quarters = fillEmptyQuarters(
           formattedEntityData?.quarters
         );
+      break;
+    default:
+      break;
+  }
+
+  let cardContent = {};
+  switch (stepType) {
+    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
+      cardContent = (
+        <ObjectiveProgressCard
+          formattedEntityData={formattedEntityData}
+          verbiage={verbiage}
+          entityCompleted={entityCompleted}
+        />
+      );
+      break;
+    case OverlayModalStepTypes.EVALUATION_PLAN:
+      cardContent = (
+        <EvaluationPlanCard
+          formattedEntityData={formattedEntityData}
+          entityCompleted={entityCompleted}
+        />
+      );
+      break;
+    case OverlayModalStepTypes.FUNDING_SOURCES:
+      cardContent = (
+        <FundingSourcesCard
+          formattedEntityData={formattedEntityData}
+          entityCompleted={entityCompleted}
+        />
+      );
       break;
     default:
       break;
