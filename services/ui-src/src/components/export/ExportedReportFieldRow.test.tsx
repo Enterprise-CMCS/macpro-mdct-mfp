@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { ExportedReportFieldRow } from "./ExportedReportFieldRow";
 import { mockWpReportContext } from "utils/testing/setupJest";
 import { ReportContext } from "components";
 import { Table } from "@chakra-ui/react";
+import { testA11y } from "utils/testing/commonTests";
 
 const field = {
   id: "test",
@@ -72,7 +72,7 @@ const noHintNoLabel = (
   </ReportContext.Provider>
 );
 
-describe("ExportedReportFieldRow", () => {
+describe("<ExportedReportFieldRow />", () => {
   test("Is present", async () => {
     render(exportRow);
     const row = screen.getByTestId("exportRow");
@@ -104,12 +104,6 @@ describe("ExportedReportFieldRow", () => {
     expect(row).toBeVisible();
     expect(box).toBeNull();
   });
-});
 
-describe("Test ExportedReportFieldRow accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(exportRow);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(exportRow);
 });

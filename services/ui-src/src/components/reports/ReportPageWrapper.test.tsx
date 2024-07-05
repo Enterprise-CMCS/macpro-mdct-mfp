@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // components
 import { ReportContext, ReportPageWrapper } from "components";
 // utils
@@ -15,6 +14,7 @@ import {
   mockDynamicModalOverlayReportPageJson,
 } from "utils/testing/setupJest";
 import { useStore } from "utils/state/useStore";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
 const mockUseLocation = jest.fn();
@@ -48,122 +48,118 @@ const ReportPageWrapperComponent = (
   </RouterWrappedComponent>
 );
 
-describe("Test ReportPageWrapper view", () => {
-  test("ReportPageWrapper StandardFormSection view renders", () => {
-    mockUseLocation.mockReturnValue(mockLocations.standard);
-    render(ReportPageWrapperComponent);
-    expect(
-      screen.getByText(mockStandardReportPageJson.verbiage.intro.section)
-    ).toBeVisible();
+describe("<ReportPageWrapper />", () => {
+  describe("Test ReportPageWrapper view", () => {
+    test("ReportPageWrapper StandardFormSection view renders", () => {
+      mockUseLocation.mockReturnValue(mockLocations.standard);
+      render(ReportPageWrapperComponent);
+      expect(
+        screen.getByText(mockStandardReportPageJson.verbiage.intro.section)
+      ).toBeVisible();
+    });
+
+    test("ReportPageWrapper DrawerSection view renders", () => {
+      mockUseLocation.mockReturnValue(mockLocations.drawer);
+      render(ReportPageWrapperComponent);
+      expect(
+        screen.getByText(mockDrawerReportPageJson.verbiage.dashboardTitle)
+      ).toBeVisible();
+    });
+
+    test("ReportPageWrapper ModalDrawerReportPage view renders", () => {
+      mockUseLocation.mockReturnValue(mockLocations.modalDrawer);
+      render(ReportPageWrapperComponent);
+      expect(
+        screen.getByText(
+          mockModalDrawerReportPageJson.verbiage.addEntityButtonText
+        )
+      ).toBeVisible();
+    });
+
+    test("ReportPageWrapper ModalOverlayReportPage view renders", () => {
+      mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
+      render(ReportPageWrapperComponent);
+      expect(
+        screen.getByText(mockModalOverlayReportPageJson.verbiage.intro.section)
+      ).toBeVisible();
+    });
+
+    test("ReportPageWrapper DynamicModalOverlayReportPagte view renders", () => {
+      mockUseLocation.mockReturnValue(mockLocations.dynamicModalOverlay);
+      render(ReportPageWrapperComponent);
+      expect(
+        screen.getByText(
+          mockDynamicModalOverlayReportPageJson.verbiage.intro.section
+        )
+      ).toBeVisible();
+    });
+
+    test("ReportPageWrapper ReviewSubmitPage view renders", () => {
+      mockUseLocation.mockReturnValue(mockLocations.reviewSubmit);
+      render(ReportPageWrapperComponent);
+      expect(screen.getByTestId("review-submit-page")).toBeVisible();
+    });
   });
 
-  test("ReportPageWrapper DrawerSection view renders", () => {
-    mockUseLocation.mockReturnValue(mockLocations.drawer);
-    render(ReportPageWrapperComponent);
-    expect(
-      screen.getByText(mockDrawerReportPageJson.verbiage.dashboardTitle)
-    ).toBeVisible();
+  describe("Test ReportPageWrapper functionality", () => {
+    afterEach(() => jest.clearAllMocks());
+
+    test("ReportPageWrapper doesn't display report if no matching report route template", () => {
+      mockUseLocation.mockReturnValue({ pathname: "" });
+      render(ReportPageWrapperComponent);
+      expect(
+        screen.queryByText(mockStandardReportPageJson.verbiage.intro.section)
+      ).toBeNull();
+      expect(
+        screen.queryByText(mockDrawerReportPageJson.verbiage.dashboardTitle)
+      ).toBeNull();
+      expect(
+        screen.queryByText(
+          mockModalDrawerReportPageJson.verbiage.addEntityButtonText
+        )
+      ).toBeNull();
+      expect(
+        screen.queryByText(
+          mockModalOverlayReportPageJson.verbiage.intro.section
+        )
+      ).toBeNull();
+      expect(screen.queryByTestId("review-submit-page")).toBeNull();
+    });
   });
 
-  test("ReportPageWrapper ModalDrawerReportPage view renders", () => {
-    mockUseLocation.mockReturnValue(mockLocations.modalDrawer);
-    render(ReportPageWrapperComponent);
-    expect(
-      screen.getByText(
-        mockModalDrawerReportPageJson.verbiage.addEntityButtonText
-      )
-    ).toBeVisible();
+  describe("standard", () => {
+    testA11y(ReportPageWrapperComponent, () => {
+      mockUseLocation.mockReturnValue(mockLocations.standard);
+    });
   });
 
-  test("ReportPageWrapper ModalOverlayReportPage view renders", () => {
-    mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
-    render(ReportPageWrapperComponent);
-    expect(
-      screen.getByText(mockModalOverlayReportPageJson.verbiage.intro.section)
-    ).toBeVisible();
+  describe("drawer", () => {
+    testA11y(ReportPageWrapperComponent, () => {
+      mockUseLocation.mockReturnValue(mockLocations.drawer);
+    });
   });
 
-  test("ReportPageWrapper DynamicModalOverlayReportPagte view renders", () => {
-    mockUseLocation.mockReturnValue(mockLocations.dynamicModalOverlay);
-    render(ReportPageWrapperComponent);
-    expect(
-      screen.getByText(
-        mockDynamicModalOverlayReportPageJson.verbiage.intro.section
-      )
-    ).toBeVisible();
+  describe("modalDrawer", () => {
+    testA11y(ReportPageWrapperComponent, () => {
+      mockUseLocation.mockReturnValue(mockLocations.modalDrawer);
+    });
   });
 
-  test("ReportPageWrapper ReviewSubmitPage view renders", () => {
-    mockUseLocation.mockReturnValue(mockLocations.reviewSubmit);
-    render(ReportPageWrapperComponent);
-    expect(screen.getByTestId("review-submit-page")).toBeVisible();
-  });
-});
-
-describe("Test ReportPageWrapper functionality", () => {
-  afterEach(() => jest.clearAllMocks());
-
-  test("ReportPageWrapper doesn't display report if no matching report route template", () => {
-    mockUseLocation.mockReturnValue({ pathname: "" });
-    render(ReportPageWrapperComponent);
-    expect(
-      screen.queryByText(mockStandardReportPageJson.verbiage.intro.section)
-    ).toBeNull();
-    expect(
-      screen.queryByText(mockDrawerReportPageJson.verbiage.dashboardTitle)
-    ).toBeNull();
-    expect(
-      screen.queryByText(
-        mockModalDrawerReportPageJson.verbiage.addEntityButtonText
-      )
-    ).toBeNull();
-    expect(
-      screen.queryByText(mockModalOverlayReportPageJson.verbiage.intro.section)
-    ).toBeNull();
-    expect(screen.queryByTestId("review-submit-page")).toBeNull();
-  });
-});
-
-describe("Test ReportPageWrapper accessibility", () => {
-  test("Standard page should not have basic accessibility issues", async () => {
-    mockUseLocation.mockReturnValue(mockLocations.standard);
-    const { container } = render(ReportPageWrapperComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe("modalOverlay", () => {
+    testA11y(ReportPageWrapperComponent, () => {
+      mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
+    });
   });
 
-  test("Drawer page should not have basic accessibility issues", async () => {
-    mockUseLocation.mockReturnValue(mockLocations.drawer);
-    const { container } = render(ReportPageWrapperComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe("dynamicModalOverlay", () => {
+    testA11y(ReportPageWrapperComponent, () => {
+      mockUseLocation.mockReturnValue(mockLocations.dynamicModalOverlay);
+    });
   });
 
-  test("ModalDrawer should not have basic accessibility issues", async () => {
-    mockUseLocation.mockReturnValue(mockLocations.modalDrawer);
-    const { container } = render(ReportPageWrapperComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-
-  test("ModalOverlay should not have basic accessibility issues", async () => {
-    mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
-    const { container } = render(ReportPageWrapperComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-
-  test("DynamicModalOverlay should not have basic accessibility issues", async () => {
-    mockUseLocation.mockReturnValue(mockLocations.dynamicModalOverlay);
-    const { container } = render(ReportPageWrapperComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-
-  test("ReviewSubmit should not have basic accessibility issues", async () => {
-    mockUseLocation.mockReturnValue(mockLocations.reviewSubmit);
-    const { container } = render(ReportPageWrapperComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  describe("reviewSubmit", () => {
+    testA11y(ReportPageWrapperComponent, () => {
+      mockUseLocation.mockReturnValue(mockLocations.reviewSubmit);
+    });
   });
 });

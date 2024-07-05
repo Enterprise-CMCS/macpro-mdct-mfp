@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 //components
-import { Table } from "@chakra-ui/react";
+import { Table, Tbody } from "@chakra-ui/react";
 import { TableRow } from "./TableRow";
 //types
 import { ReportPageProgress } from "types";
@@ -12,6 +11,7 @@ import {
   mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -31,30 +31,21 @@ const tableRowComponent = ({ page, rowDepth }: RowProps) => {
   return (
     <RouterWrappedComponent>
       <Table>
-        <TableRow page={page} rowDepth={rowDepth} />
+        <Tbody>
+          <TableRow page={page} rowDepth={rowDepth} />
+        </Tbody>
       </Table>
     </RouterWrappedComponent>
   );
 };
 
-describe("Test TableRow", () => {
-  beforeEach(() => {
+describe("<TableRow />", () => {
+  test("TableRow renders correctly", () => {
     mockedUseStore.mockReturnValue(mockUseStore);
     render(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));
-  });
-
-  test("TableRow renders correctly", () => {
     expect(screen.getByText("Transition Benchmarks")).toBeVisible();
     expect(screen.getByAltText("Success notification")).toBeVisible();
   });
-});
 
-describe("Test TableRow accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(
-      tableRowComponent({ page: mockTableRowPage, rowDepth: 1 })
-    );
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));
 });

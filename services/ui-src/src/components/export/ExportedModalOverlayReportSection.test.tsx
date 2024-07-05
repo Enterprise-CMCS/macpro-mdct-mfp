@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { useStore } from "utils";
 import {
   mockReportStore,
@@ -18,6 +17,7 @@ import {
   ExportedModalOverlayReportSection,
   Props,
 } from "./ExportedModalOverlayReportSection";
+import { testA11y } from "utils/testing/commonTests";
 
 global.structuredClone = (x: any) => JSON.parse(JSON.stringify(x));
 
@@ -403,12 +403,12 @@ const testComponent = (props: Props) => (
   </RouterWrappedComponent>
 );
 
-describe("ExportedModalOverlayReportSection rendering", () => {
+describe("<ExportedModalOverlayReportSection />", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should render modal overlay report section", async () => {
+  test("should render modal overlay report section", () => {
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
@@ -419,7 +419,7 @@ describe("ExportedModalOverlayReportSection rendering", () => {
     ).toBeInTheDocument();
   });
 
-  it("should render for SAR", async () => {
+  test("should render for SAR", () => {
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockSARReportWithOverlays,
@@ -431,13 +431,10 @@ describe("ExportedModalOverlayReportSection rendering", () => {
     expect(screen.getByText("42.86%")).toBeInTheDocument(); // (5+10)/(15+20)
   });
 
-  it("should not have basic accessibility issues", async () => {
+  testA11y(testComponent(wpMockProps), () => {
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
     });
-    const { container } = render(testComponent(wpMockProps));
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

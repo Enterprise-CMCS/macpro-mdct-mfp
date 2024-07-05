@@ -171,16 +171,47 @@ async function destroy_stage(options: {
   verify: boolean;
 }) {
   let destroyer = new ServerlessStageDestroyer();
-  /*
-   * Filters enable filtering by resource tags but we aren't leveraging any tags other than
-   * the STAGE tag automatically applied by the serverless framework.  Adding PROJECT and SERVICE
-   * tags would be a good idea.
-   */
+  let filters = [
+    {
+      Key: "PROJECT",
+      Value: `${process.env.PROJECT}`,
+    },
+  ];
+  if (options.service) {
+    filters.push({
+      Key: "SERVICE",
+      Value: `${options.service}`,
+    });
+  }
+
   await destroyer.destroy(`${process.env.REGION_A}`, options.stage, {
     wait: options.wait,
-    filters: [],
+    filters: filters,
     verify: options.verify,
   });
+
+  await delete_topics(options);
+}
+
+async function delete_topics(options: { stage: string }) {
+  const runner = new LabeledProcessRunner();
+  await install_deps_for_services(runner);
+  let data = { project: "mfp", stage: options.stage };
+  const deployCmd = [
+    "sls",
+    "invoke",
+    "--stage",
+    "main",
+    "--function",
+    "deleteTopics",
+    "--data",
+    JSON.stringify(data),
+  ];
+  await runner.run_command_and_output(
+    "Remove topics",
+    deployCmd,
+    "services/topics"
+  );
 }
 
 /*
@@ -218,6 +249,14 @@ yargs(process.argv.slice(2))
       verify: { type: "boolean", demandOption: false, default: true },
     },
     destroy_stage
+  )
+  .command(
+    "delete-topics",
+    "delete topics tied to serverless stage",
+    {
+      stage: { type: "string", demandOption: true },
+    },
+    delete_topics
   )
   .command(
     "update-env",

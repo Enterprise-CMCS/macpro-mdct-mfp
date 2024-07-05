@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import userEvent from "@testing-library/user-event";
 // utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
@@ -7,6 +6,7 @@ import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { TemplateCardAccordion } from "components";
 import verbiage from "verbiage/pages/home";
 import { AnyObject } from "types";
+import { testA11y } from "utils/testing/commonTests";
 
 const accordionComponent = (mockProps?: AnyObject) => {
   const props = {
@@ -23,7 +23,7 @@ const accordionComponent = (mockProps?: AnyObject) => {
 const accordionContent = verbiage.cards.WP.accordion.text[0].content;
 const accordionButtonLabel = verbiage.cards.WP.accordion.buttonLabel;
 
-describe("Test TemplateCardAccordion", () => {
+describe("<TemplateCardAccordion />", () => {
   test("Accordion is visible", () => {
     render(accordionComponent());
     expect(screen.getByText(accordionButtonLabel)).toBeVisible();
@@ -78,12 +78,6 @@ describe("Test TemplateCardAccordion", () => {
 
     expect(screen.getByText("mock column header")).toBeVisible();
   });
-});
 
-describe("Test TemplateCardAccordion accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(accordionComponent());
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(accordionComponent());
 });
