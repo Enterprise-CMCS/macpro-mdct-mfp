@@ -1,5 +1,5 @@
 // components
-import { Card, EntityCardByStepType } from "components";
+import { Card } from "components";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
 import {
@@ -16,6 +16,9 @@ import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
 import { fillEmptyQuarters, useStore } from "utils";
+import { ObjectiveProgressCard } from "components/cards/ObjectiveProgressCard";
+import { EvaluationPlanCard } from "components/cards/EvaluationPlanCard";
+import { FundingSourcesCard } from "components/cards/FundingSourcesCard";
 
 export const ExportedEntityStepCard = ({
   entity,
@@ -29,19 +32,28 @@ export const ExportedEntityStepCard = ({
   openDrawer,
   hasBoxShadow,
   hasBorder,
-  headingLevel,
   ...props
 }: Props) => {
   let entityCompleted = false;
   const entitiesCount = `${entityIndex + 1} / ${entityTotal}`;
   const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
+  let cardContent = {};
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
+      cardContent = (
+        <ObjectiveProgressCard
+          formattedEntityData={formattedEntityData}
+          verbiage={verbiage}
+        />
+      );
       entityCompleted = formattedEntityData?.objectiveName;
       entityCompleted = formattedEntityData?.performanceMeasureProgress;
       break;
     case OverlayModalStepTypes.EVALUATION_PLAN:
+      cardContent = (
+        <EvaluationPlanCard formattedEntityData={formattedEntityData} />
+      );
       entityCompleted = formattedEntityData?.objectiveName;
       if (entityCompleted && formattedEntityData?.includesTargets === "Yes") {
         entityCompleted = formattedEntityData?.quarters.length === 12;
@@ -52,6 +64,9 @@ export const ExportedEntityStepCard = ({
       }
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
+      cardContent = (
+        <FundingSourcesCard formattedEntityData={formattedEntityData} />
+      );
       entityCompleted =
         formattedEntityData?.fundingSource &&
         formattedEntityData?.quarters.length === 12;
@@ -153,14 +168,7 @@ export const ExportedEntityStepCard = ({
             />
           </button>
         )}
-        <EntityCardByStepType
-          stepType={stepType}
-          formattedEntityData={formattedEntityData}
-          entityCompleted={entityCompleted}
-          headingLevel={headingLevel}
-          verbiage={verbiage}
-          entity={entity}
-        />
+        {cardContent}
         {addEditEntitybutton()}
         {openDrawer && (
           <Button

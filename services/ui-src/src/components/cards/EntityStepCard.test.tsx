@@ -71,20 +71,6 @@ const DisabledEntityTypeEntityCardComponent = (
   />
 );
 
-const PrintViewEntityTypeEntityCardComponent = (
-  <EntityStepCard
-    entity={mockGenericEntity}
-    entityIndex={0}
-    stepType="stepType"
-    formattedEntityData={mockCompletedGenericFormattedEntityData}
-    verbiage={mockModalDrawerReportPageJson.verbiage}
-    openAddEditEntityModal={openAddEditEntityModal}
-    openDeleteEntityModal={openDeleteEntityModal}
-    openDrawer={mockOpenDrawer}
-    printVersion={true}
-  />
-);
-
 const UnfinishedEvaluationPlanCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
@@ -279,14 +265,6 @@ describe("<EntityCard />", () => {
       render(DisabledEntityTypeEntityCardComponent);
       const detailsButton = screen.getByText(readOnlyEntityButtonText);
       expect(detailsButton).toBeVisible();
-    });
-  });
-
-  describe("PrintOnly TESTS", () => {
-    test("in Print View the status indicator should be visible", async () => {
-      render(PrintViewEntityTypeEntityCardComponent);
-      const element = screen.getByTestId("print-status-indicator");
-      expect(element).toBeVisible();
     });
   });
 
