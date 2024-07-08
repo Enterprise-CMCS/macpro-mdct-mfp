@@ -4,12 +4,8 @@ import {
   mockCompletedGenericFormattedEntityData,
   mockGenericEntity,
 } from "utils/testing/mockEntities";
-import { mockModalDrawerReportPageJson } from "utils/testing/mockForm";
 import { ExportedEntityStepCard } from "./ExportedEntityStepCard";
 
-const openAddEditEntityModal = jest.fn();
-const openDeleteEntityModal = jest.fn();
-const mockOpenDrawer = jest.fn();
 jest.mock("utils/state/useStore");
 
 const ExportedEntityCardComponent = (
@@ -18,10 +14,6 @@ const ExportedEntityCardComponent = (
     entityIndex={0}
     stepType="stepType"
     formattedEntityData={mockCompletedGenericFormattedEntityData}
-    verbiage={mockModalDrawerReportPageJson.verbiage}
-    openAddEditEntityModal={openAddEditEntityModal}
-    openDeleteEntityModal={openDeleteEntityModal}
-    openDrawer={mockOpenDrawer}
   />
 );
 
@@ -38,7 +30,6 @@ describe("<ExportedEntityStepCard />", () => {
       entityIndex={0}
       stepType="stepType"
       formattedEntityData={mockCompletedGenericFormattedEntityData}
-      verbiage={mockModalDrawerReportPageJson.verbiage}
     />
   );
 });

@@ -1,42 +1,32 @@
 // components
 import { Card } from "components";
-import { Box, Button, Image, Text } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 // utils
 import {
   AnyObject,
   EntityShape,
   HeadingLevel,
   OverlayModalStepTypes,
-  ReportType,
 } from "types";
 // assets
-import { svgFilters } from "styles/theme";
 import completedIcon from "assets/icons/icon_check_circle.png";
-import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
-import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
-import { fillEmptyQuarters, useStore } from "utils";
+import { fillEmptyQuarters } from "utils";
 import { ObjectiveProgressEntity } from "components/cards/ObjectiveProgressEntity";
 import { EvaluationPlanEntity } from "components/cards/EvaluationPlanEntity";
 import { FundingSourcesEntity } from "components/cards/FundingSourcesEntity";
 
 export const ExportedEntityStepCard = ({
-  entity,
   entityIndex,
   entityTotal,
   stepType,
   formattedEntityData,
-  verbiage,
-  openAddEditEntityModal,
-  openDeleteEntityModal,
-  openDrawer,
   hasBoxShadow,
   hasBorder,
   ...props
 }: Props) => {
   let entityCompleted = false;
   const entitiesCount = `${entityIndex + 1} / ${entityTotal}`;
-  const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
   let cardContent = {};
   switch (stepType) {
@@ -86,45 +76,6 @@ export const ExportedEntityStepCard = ({
   const boxShadow = hasBoxShadow ? "0px 3px 9px rgba(0, 0, 0, 0.2)" : "none";
   const border = hasBorder ? "1px" : "none";
   const borderColor = hasBorder ? "palette.gray_light" : "none";
-  const addEditEntitybutton = () => {
-    if (
-      (openAddEditEntityModal && report?.reportType === ReportType.WP) ||
-      (openAddEditEntityModal &&
-        report?.reportType === ReportType.SAR &&
-        entityCompleted)
-    ) {
-      return (
-        <Button
-          variant="outline"
-          size="sm"
-          sx={sx.editButton}
-          leftIcon={<Image src={editIcon} alt="edit icon" height="1rem" />}
-          onClick={() => openAddEditEntityModal(entity)}
-        >
-          {props?.disabled
-            ? verbiage.readOnlyEntityButtonText
-            : verbiage.editEntityButtonText}
-        </Button>
-      );
-    } else if (
-      openAddEditEntityModal &&
-      report?.reportType === ReportType.SAR &&
-      !entityCompleted
-    ) {
-      return (
-        <Button
-          data-testid="report-button"
-          size="md"
-          sx={sx.reportButton}
-          onClick={() => openAddEditEntityModal(entity)}
-        >
-          {verbiage.reportProgressButtonText}
-        </Button>
-      );
-    } else {
-      return;
-    }
-  };
 
   return (
     <Card
@@ -156,44 +107,7 @@ export const ExportedEntityStepCard = ({
             <Text className="error-text">Error</Text>
           )}
         </Box>
-
-        {openDeleteEntityModal && report?.reportType === ReportType.WP && (
-          <button
-            type="button"
-            className="delete-entity-button"
-            onClick={() => openDeleteEntityModal(entity)}
-            data-testid="delete-entity-button"
-            aria-label="Delete"
-          >
-            <Image
-              src={deleteIcon}
-              alt={verbiage.deleteEntityButtonAltText}
-              sx={sx.deleteButtonImage}
-            />
-          </button>
-        )}
         {cardContent}
-        {addEditEntitybutton()}
-        {openDrawer && (
-          <Button
-            size="sm"
-            sx={entityCompleted ? sx.editButton : sx.openDrawerButton}
-            variant={entityCompleted ? "outline" : "primary"}
-            onClick={() => openDrawer(entity)}
-            data-testid={
-              entityCompleted ? "edit-details-button" : "enter-details-button"
-            }
-            leftIcon={
-              entityCompleted ? (
-                <Image src={editIcon} alt="edit icon" height="1rem" />
-              ) : undefined
-            }
-          >
-            {entityCompleted
-              ? verbiage.editEntityDetailsButtonText
-              : verbiage.enterEntityDetailsButtonText}
-          </Button>
-        )}
       </Box>
     </Card>
   );
@@ -205,10 +119,6 @@ interface Props {
   entityTotal?: number;
   stepType: string;
   formattedEntityData: AnyObject;
-  verbiage: AnyObject;
-  openAddEditEntityModal?: Function;
-  openDeleteEntityModal?: Function;
-  openDrawer?: Function;
   hasBoxShadow?: boolean;
   hasBorder?: boolean;
   headingLevel?: HeadingLevel;
@@ -274,22 +184,8 @@ const sx = {
       left: "-1.5rem",
     },
   },
-  deleteButtonImage: {
-    _hover: {
-      filter: svgFilters.primary_darker,
-    },
-  },
-  editButton: {
-    marginY: "1rem",
-    fontWeight: "normal",
-    borderColor: "palette.gray_light",
-  },
   reportButton: {
     fontWeight: "bold",
-  },
-  openDrawerButton: {
-    marginTop: "1rem",
-    fontWeight: "normal",
   },
   entitiesCount: {
     position: "absolute",
