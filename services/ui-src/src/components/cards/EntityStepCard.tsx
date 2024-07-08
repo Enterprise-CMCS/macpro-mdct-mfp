@@ -84,6 +84,7 @@ export const EntityStepCard = ({
       );
       break;
     default:
+      cardContent = <></>;
       break;
   }
 

@@ -86,6 +86,7 @@ export const ExportedEntityStepCard = ({
       );
       break;
     default:
+      cardContent = <></>;
       break;
   }
 

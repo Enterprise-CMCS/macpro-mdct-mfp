@@ -38,7 +38,6 @@ const UnfinishedGenericEntityCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
@@ -52,7 +51,6 @@ const GenericEntityTypeEntityCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
@@ -66,7 +64,6 @@ const DisabledEntityTypeEntityCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
     disabled={true}
   />
 );
@@ -86,7 +83,6 @@ const UnfinishedEvaluationPlanCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
@@ -100,7 +96,6 @@ const CompletedEvaluationPlanCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
@@ -117,7 +112,6 @@ const UnfinishedFundingSourcesCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
@@ -148,7 +142,6 @@ const CompletedFundingSourcesCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
@@ -161,12 +154,11 @@ const NoOpenAddEditEntityFunction = (
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
-describe("<EntityCard />", () => {
-  describe("Completed EntityCard", () => {
+describe("<EntityStepCard />", () => {
+  describe("Completed EntityStepCard", () => {
     describe("Renders", () => {
       beforeEach(() => {
         render(GenericEntityTypeEntityCardComponent);

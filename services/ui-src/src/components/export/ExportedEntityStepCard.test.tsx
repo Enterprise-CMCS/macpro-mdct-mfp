@@ -11,7 +11,7 @@ const openDeleteEntityModal = jest.fn();
 const mockOpenDrawer = jest.fn();
 jest.mock("utils/state/useStore");
 
-const PrintViewEntityTypeEntityCardComponent = (
+const ExportedEntityCardComponent = (
   <ExportedEntityStepCard
     entity={mockGenericEntity}
     entityIndex={0}
@@ -21,13 +21,12 @@ const PrintViewEntityTypeEntityCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={true}
   />
 );
 
-describe("PrintOnly TESTS", () => {
-  test("in Print View the status indicator should be visible", async () => {
-    render(PrintViewEntityTypeEntityCardComponent);
+describe("<ExportedEntityStepCard />", () => {
+  test("the status indicator should be visible", async () => {
+    render(ExportedEntityCardComponent);
     const element = screen.getByTestId("print-status-indicator");
     expect(element).toBeVisible();
   });
