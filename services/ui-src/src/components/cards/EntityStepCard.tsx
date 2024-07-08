@@ -16,9 +16,9 @@ import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
 import { fillEmptyQuarters, useStore } from "utils";
-import { ObjectiveProgressCard } from "./ObjectiveProgressCard";
-import { EvaluationPlanCard } from "./EvaluationPlanCard";
-import { FundingSourcesCard } from "./FundingSourcesCard";
+import { ObjectiveProgressEntity } from "./ObjectiveProgressEntity";
+import { EvaluationPlanEntity } from "./EvaluationPlanEntity";
+import { FundingSourcesEntity } from "./FundingSourcesEntity";
 
 export const EntityStepCard = ({
   entity,
@@ -44,7 +44,7 @@ export const EntityStepCard = ({
       entityCompleted = formattedEntityData?.performanceMeasureProgress;
 
       cardContent = (
-        <ObjectiveProgressCard
+        <ObjectiveProgressEntity
           formattedEntityData={formattedEntityData}
           verbiage={verbiage}
           entityCompleted={entityCompleted}
@@ -62,7 +62,7 @@ export const EntityStepCard = ({
       }
 
       cardContent = (
-        <EvaluationPlanCard
+        <EvaluationPlanEntity
           formattedEntityData={formattedEntityData}
           entityCompleted={entityCompleted}
         />
@@ -77,7 +77,7 @@ export const EntityStepCard = ({
           formattedEntityData?.quarters
         );
       cardContent = (
-        <FundingSourcesCard
+        <FundingSourcesEntity
           formattedEntityData={formattedEntityData}
           entityCompleted={entityCompleted}
         />

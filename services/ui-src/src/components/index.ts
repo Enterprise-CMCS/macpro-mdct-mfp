@@ -24,10 +24,9 @@ export { Card } from "./cards/Card";
 export { EmailCard } from "./cards/EmailCard";
 export { TemplateCard } from "./cards/TemplateCard";
 export { EntityStepCard } from "./cards/EntityStepCard";
-export { ObjectiveProgressCardBottomSection } from "./cards/ObjectiveProgressCardBottomSection";
-export { ObjectiveProgressCard } from "./cards/ObjectiveProgressCard";
-export { FundingSourcesCard } from "./cards/FundingSourcesCard";
-export { EvaluationPlanCard } from "./cards/EvaluationPlanCard";
+export { ObjectiveProgressEntity } from "./cards/ObjectiveProgressEntity";
+export { FundingSourcesEntity } from "./cards/FundingSourcesEntity";
+export { EvaluationPlanEntity } from "./cards/EvaluationPlanEntity";
 
 // drawers
 export { Drawer } from "./drawers/Drawer";

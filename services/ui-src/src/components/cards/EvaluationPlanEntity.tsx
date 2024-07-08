@@ -1,16 +1,15 @@
 // components
 import { Heading, Text, Grid, GridItem, Flex } from "@chakra-ui/react";
+import { notAnsweredText } from "../../constants";
 // utils
-import { AnyObject, HeadingLevel } from "types";
-import { ObjectiveProgressCardBottomSection } from "./ObjectiveProgressCardBottomSection";
+import { AnyObject, HeadingLevel, ReportType } from "types";
+import { useStore } from "utils";
 
-export const ObjectiveProgressCard = ({
+export const EvaluationPlanEntity = ({
   formattedEntityData,
-  entityCompleted,
   headingLevel = "h2",
-  verbiage,
-  entity,
 }: Props) => {
+  const { report } = useStore() ?? {};
   return (
     <>
       <Heading as={headingLevel} sx={sx.mainHeading}>
@@ -23,18 +22,34 @@ export const ObjectiveProgressCard = ({
       <Text sx={sx.description}>{formattedEntityData.description}</Text>
       <Text sx={sx.subtitle}>Performance measure targets</Text>
       <Text sx={sx.description}>{formattedEntityData.targets}</Text>
-      {formattedEntityData.quarterProjections.length > 0 && !entityCompleted && (
+      {report?.reportType === ReportType.WP && (
         <>
           <Text sx={sx.subtitle}>
-            Quantitative targets for this reporting period
+            Does the performance measure include quantitative targets?
           </Text>
-          <Grid sx={sx.sarGrid}>
-            {formattedEntityData?.quarterProjections.map((quarter: any) => {
+          <Text sx={sx.description}>
+            {formattedEntityData?.includesTargets}
+          </Text>
+        </>
+      )}
+      {formattedEntityData.quarters?.length > 0 && (
+        <>
+          <Text sx={sx.subtitle}>Quantitative Targets</Text>
+          <Grid sx={sx.grid}>
+            {formattedEntityData?.quarters.map((quarter: any) => {
               return (
                 <GridItem key={quarter.id}>
                   <Flex sx={sx.gridItems}>
-                    <Text sx={sx.gridSubtitle}>{quarter.id} Target:</Text>
-                    <Text sx={sx.subtext}>{quarter.value}</Text>
+                    <Text sx={sx.gridSubtitle}>{quarter.id}:</Text>
+                    <Text
+                      sx={
+                        quarter.value === notAnsweredText
+                          ? sx.error
+                          : sx.subtext
+                      }
+                    >
+                      {quarter.value}
+                    </Text>
                   </Flex>
                 </GridItem>
               );
@@ -42,18 +57,11 @@ export const ObjectiveProgressCard = ({
           </Grid>
         </>
       )}
-      {entityCompleted ? (
-        <ObjectiveProgressCardBottomSection
-          verbiage={verbiage}
-          entity={entity}
-          formattedEntityData={{
-            ...formattedEntityData,
-            isPartiallyComplete: !entityCompleted,
-          }}
-        />
-      ) : (
-        <Text sx={sx.unfinishedMessage}></Text>
-      )}
+      <Text sx={sx.subtitle}>
+        Additional detail on strategies/approaches the state or territory will
+        use to achieve targets and/ or meet milestones
+      </Text>
+      <Text sx={sx.description}>{formattedEntityData.additionalDetails}</Text>
     </>
   );
 };
@@ -62,7 +70,6 @@ interface Props {
   formattedEntityData: AnyObject;
   entityCompleted?: boolean;
   headingLevel?: HeadingLevel;
-  verbiage: AnyObject;
   entity?: AnyObject;
 }
 
