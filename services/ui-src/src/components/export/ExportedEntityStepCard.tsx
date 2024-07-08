@@ -47,7 +47,6 @@ export const ExportedEntityStepCard = ({
       cardContent = (
         <ObjectiveProgressEntity
           formattedEntityData={formattedEntityData}
-          verbiage={verbiage}
           entityCompleted={entityCompleted}
         />
       );
@@ -63,10 +62,7 @@ export const ExportedEntityStepCard = ({
       }
 
       cardContent = (
-        <EvaluationPlanEntity
-          formattedEntityData={formattedEntityData}
-          entityCompleted={entityCompleted}
-        />
+        <EvaluationPlanEntity formattedEntityData={formattedEntityData} />
       );
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
@@ -79,10 +75,7 @@ export const ExportedEntityStepCard = ({
         );
 
       cardContent = (
-        <FundingSourcesEntity
-          formattedEntityData={formattedEntityData}
-          entityCompleted={entityCompleted}
-        />
+        <FundingSourcesEntity formattedEntityData={formattedEntityData} />
       );
       break;
     default:

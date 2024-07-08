@@ -1,6 +1,6 @@
 // components
 import { Card } from "components";
-import { Box, Button, Image } from "@chakra-ui/react";
+import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
 import {
   AnyObject,
@@ -46,7 +46,6 @@ export const EntityStepCard = ({
       cardContent = (
         <ObjectiveProgressEntity
           formattedEntityData={formattedEntityData}
-          verbiage={verbiage}
           entityCompleted={entityCompleted}
         />
       );
@@ -62,10 +61,7 @@ export const EntityStepCard = ({
       }
 
       cardContent = (
-        <EvaluationPlanEntity
-          formattedEntityData={formattedEntityData}
-          entityCompleted={entityCompleted}
-        />
+        <EvaluationPlanEntity formattedEntityData={formattedEntityData} />
       );
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
@@ -77,10 +73,7 @@ export const EntityStepCard = ({
           formattedEntityData?.quarters
         );
       cardContent = (
-        <FundingSourcesEntity
-          formattedEntityData={formattedEntityData}
-          entityCompleted={entityCompleted}
-        />
+        <FundingSourcesEntity formattedEntityData={formattedEntityData} />
       );
       break;
     default:
@@ -162,6 +155,11 @@ export const EntityStepCard = ({
           </button>
         )}
         {cardContent}
+        {!entityCompleted && (
+          <Text sx={sx.unfinishedMessage}>
+            {verbiage.entityUnfinishedMessage}
+          </Text>
+        )}
         {addEditEntitybutton()}
         {openDrawer && (
           <Button
@@ -264,5 +262,10 @@ const sx = {
     ".mobile &": {
       right: "-1.5rem",
     },
+  },
+  unfinishedMessage: {
+    marginY: "1rem",
+    fontSize: "xs",
+    color: "palette.error_dark",
   },
 };

@@ -44,7 +44,6 @@ export const FundingSourcesEntity = ({
 
 interface Props {
   formattedEntityData: AnyObject;
-  entityCompleted?: boolean;
   headingLevel?: HeadingLevel;
   entity?: AnyObject;
 }

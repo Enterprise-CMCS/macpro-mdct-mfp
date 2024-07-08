@@ -68,7 +68,6 @@ export const EvaluationPlanEntity = ({
 
 interface Props {
   formattedEntityData: AnyObject;
-  entityCompleted?: boolean;
   headingLevel?: HeadingLevel;
   entity?: AnyObject;
 }

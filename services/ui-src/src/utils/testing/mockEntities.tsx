@@ -154,3 +154,82 @@ export const mockTargetPopDefaultAndApplicable = {
   ],
   quarterlyProjections2023Q3: "",
 };
+
+export const mockObjectiveProgressFormattedEntityData = {
+  objectiveName: "mockObjectiveName",
+  description: "mockDescription",
+  targets: "mock targets text",
+  quarterProjections: [
+    {
+      id: "2024 Q1",
+      value: "1",
+    },
+    {
+      id: "2024 Q2",
+      value: "2",
+    },
+  ],
+  quarterActuals: [
+    {
+      id: "2024 Q1",
+      value: "4",
+    },
+    {
+      id: "2024 Q2",
+      value: "4",
+    },
+  ],
+  performanceMeasureProgress: "mock provided data on performance",
+  targetsMet: "No",
+  missedTargetReason:
+    "mock progress description towards reaching the milestone",
+};
+
+export const mockFundingSourcesFormattedEntityData = {
+  objectiveName: "mockFundingSourceName",
+  description: "mockDescription",
+  fundingSource: "mock-funding-source",
+  quarters: [
+    {
+      id: "mock-id-1",
+      value: "mock-value-1",
+    },
+    {
+      id: "mock-id-2",
+      value: "mock-value-2",
+    },
+    {
+      id: "mock-id-3",
+      value: "mock-value-3",
+    },
+    {
+      id: "mock-id-4",
+      value: "mock-value-4",
+    },
+  ],
+};
+
+export const mockEvaluationPlanFormattedEntityData = {
+  objectiveName: "mockEvaluationPlanName",
+  description: "mockDescription",
+  targets: "3",
+  includesTargets: [
+    {
+      key: "evaluationPlan_includesTargets",
+      value: "Yes",
+    },
+  ],
+  additionalDetails: "2",
+  quarterlyProjections2024Q1: "1",
+  quarterlyProjections2024Q2: "2",
+  quarterlyProjections2024Q3: "2",
+  quarterlyProjections2024Q4: "2",
+  quarterlyProjections2025Q1: "2",
+  quarterlyProjections2025Q2: "2",
+  quarterlyProjections2025Q3: "2",
+  quarterlyProjections2025Q4: "2",
+  quarterlyProjections2026Q1: "2",
+  quarterlyProjections2026Q2: "2",
+  quarterlyProjections2026Q3: "22",
+  quarterlyProjections2026Q4: "2",
+};

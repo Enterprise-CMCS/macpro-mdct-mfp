@@ -170,7 +170,7 @@ export const ObjectiveProgressEntity = ({
           </Box>
         </>
       ) : (
-        <Text sx={sx.unfinishedMessage}></Text>
+        <></>
       )}
     </>
   );
@@ -180,7 +180,6 @@ interface Props {
   formattedEntityData: AnyObject;
   entityCompleted?: boolean;
   headingLevel?: HeadingLevel;
-  verbiage: AnyObject;
   entity?: AnyObject;
 }
 
@@ -239,11 +238,6 @@ const sx = {
     ".subtitle": {
       marginRight: ".5rem",
     },
-  },
-  unfinishedMessage: {
-    marginY: "1rem",
-    fontSize: "xs",
-    color: "palette.error_dark",
   },
   box: {
     backgroundColor: "#EEFBFF",

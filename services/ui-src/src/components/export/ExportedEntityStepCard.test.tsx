@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { testA11y } from "utils/testing/commonTests";
 import {
   mockCompletedGenericFormattedEntityData,
   mockGenericEntity,
@@ -30,4 +31,14 @@ describe("<ExportedEntityStepCard />", () => {
     const element = screen.getByTestId("print-status-indicator");
     expect(element).toBeVisible();
   });
+
+  testA11y(
+    <ExportedEntityStepCard
+      entity={mockGenericEntity}
+      entityIndex={0}
+      stepType="stepType"
+      formattedEntityData={mockCompletedGenericFormattedEntityData}
+      verbiage={mockModalDrawerReportPageJson.verbiage}
+    />
+  );
 });
