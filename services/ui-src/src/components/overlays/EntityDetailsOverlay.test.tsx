@@ -1,5 +1,4 @@
 import { RenderResult, render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // components
 import { EntityDetailsOverlay, ReportContext } from "components";
 // utils
@@ -11,6 +10,7 @@ import {
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -49,74 +49,75 @@ const entityDetailsOverlayComponent = (
   </ReportContext.Provider>
 );
 
-describe("Test EntityDetailsOverlayPage", () => {
-  beforeEach(() => {
-    component = render(entityDetailsOverlayComponent);
+describe("<EntityDetailsOverlayPage />", () => {
+  describe("Renders", () => {
+    beforeEach(() => {
+      component = render(entityDetailsOverlayComponent);
+    });
+    test("EntityDetailsOverlayPage view renders", () => {
+      // Check that the header rendered
+      expect(
+        screen.getByText(mockEntityDetailsOverlayJson.verbiage.intro.section)
+      ).toBeVisible();
+
+      // Check that the form rendered
+      expect(
+        screen.getByText(
+          mockEntityDetailsOverlayJson.form.fields[0].props.label
+        )
+      ).toBeVisible();
+
+      // Check that the footer rendered
+      expect(
+        screen.getByRole("button", {
+          name: /Save & return/,
+        })
+      ).toBeVisible();
+
+      // Check that the warning alert rendered
+      expect(screen.getByText(closeOutWarning.description)).toBeVisible();
+
+      // Check that the modal button rendered
+      expect(
+        screen.getByText(closeOutModal.closeOutModalButtonText)
+      ).toBeVisible();
+    });
+
+    test("Test onSubmit Function", async () => {
+      //fill out form
+      const textbox = component.container.querySelector("#mock-text-field");
+      await userEvent.type(textbox!, "mock text");
+      expect(textbox).toHaveValue("mock text");
+
+      const dateField = component.container.querySelector(
+        '[name="mock-date-field"]'
+      );
+      await userEvent.type(dateField!, "2/2/2022");
+      expect(dateField).toHaveValue("2/2/2022");
+
+      const number = component.container.querySelector("#mock-number-field");
+      await userEvent.type(number!, "3");
+      expect(number).toHaveValue("3");
+
+      //trigger onSubmit
+      const saveButton = screen.getByText("Save & return");
+      await userEvent.click(saveButton);
+      expect(mockCloseEntityDetailsOverlay).toHaveBeenCalled();
+    });
+
+    test("Test Closeout Modal", async () => {
+      const closeoutBtn = screen.getByText(
+        closeOutModal.closeOutModalButtonText
+      );
+      await userEvent.click(closeoutBtn);
+
+      const modal = screen.getByText("This is a modal");
+      expect(modal).toBeVisible();
+
+      const modalCloseBtn = screen.getByText("Cancel");
+      await userEvent.click(modalCloseBtn);
+    });
   });
-  test("EntityDetailsOverlayPage view renders", () => {
-    // Check that the header rendered
-    expect(
-      screen.getByText(mockEntityDetailsOverlayJson.verbiage.intro.section)
-    ).toBeVisible();
 
-    // Check that the form rendered
-    expect(
-      screen.getByText(mockEntityDetailsOverlayJson.form.fields[0].props.label)
-    ).toBeVisible();
-
-    // Check that the footer rendered
-    expect(
-      screen.getByRole("button", {
-        name: /Save & return/,
-      })
-    ).toBeVisible();
-
-    // Check that the warning alert rendered
-    expect(screen.getByText(closeOutWarning.description)).toBeVisible();
-
-    // Check that the modal button rendered
-    expect(
-      screen.getByText(closeOutModal.closeOutModalButtonText)
-    ).toBeVisible();
-  });
-
-  test("Test onSubmit Function", async () => {
-    //fill out form
-    const textbox = component.container.querySelector("#mock-text-field");
-    await userEvent.type(textbox!, "mock text");
-    expect(textbox).toHaveValue("mock text");
-
-    const dateField = component.container.querySelector(
-      '[name="mock-date-field"]'
-    );
-    await userEvent.type(dateField!, "2/2/2022");
-    expect(dateField).toHaveValue("2/2/2022");
-
-    const number = component.container.querySelector("#mock-number-field");
-    await userEvent.type(number!, "3");
-    expect(number).toHaveValue("3");
-
-    //trigger onSubmit
-    const saveButton = screen.getByText("Save & return");
-    await userEvent.click(saveButton);
-    expect(mockCloseEntityDetailsOverlay).toHaveBeenCalled();
-  });
-  it("Test Closeout Modal", async () => {
-    const closeoutBtn = screen.getByText(closeOutModal.closeOutModalButtonText);
-    await userEvent.click(closeoutBtn);
-
-    const modal = screen.getByText("This is a modal");
-    expect(modal).toBeVisible();
-
-    const modalCloseBtn = screen.getByText("Cancel");
-    await userEvent.click(modalCloseBtn);
-  });
-});
-
-describe("Test EntityDetailsOverlay accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(entityDetailsOverlayComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(entityDetailsOverlayComponent);
 });

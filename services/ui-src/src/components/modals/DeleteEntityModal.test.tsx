@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // components
 import { DeleteEntityModal, ReportContext } from "components";
 // utils
@@ -14,6 +13,7 @@ import {
 import { MfpReportState, MfpUserState, entityTypes } from "types";
 import { useStore } from "../../utils";
 import userEvent from "@testing-library/user-event";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
@@ -143,114 +143,110 @@ global.structuredClone = jest.fn((val) => {
 const { deleteModalTitle, deleteModalConfirmButtonText } =
   mockModalDrawerReportPageVerbiage;
 
-describe("Test DeleteEntityModal", () => {
-  beforeEach(async () => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(modalComponent);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test("DeleteEntityModal shows the contents", () => {
-    expect(screen.getByText(deleteModalTitle)).toBeTruthy();
-    expect(screen.getByText(deleteModalConfirmButtonText)).toBeTruthy();
-    expect(screen.getByText("Cancel")).toBeTruthy();
-  });
-
-  test("DeleteEntityModal top close button can be clicked", () => {
-    fireEvent.click(screen.getByText("Close"));
-    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-  });
-
-  test("DeleteEntityModal bottom cancel button can be clicked", () => {
-    fireEvent.click(screen.getByText("Cancel"));
-    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe("Test DeleteEntityModal functionality", () => {
-  const deleteEntity = async () => {
-    const confirmButton = screen.getByRole("button", {
-      name: deleteModalConfirmButtonText,
+describe("<DeleteEntityModal />", () => {
+  describe("Test DeleteEntityModal", () => {
+    beforeEach(async () => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      render(modalComponent);
     });
-    await userEvent.click(confirmButton);
-  };
 
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockUseStore);
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("DeleteEntityModal shows the contents", () => {
+      expect(screen.getByText(deleteModalTitle)).toBeTruthy();
+      expect(screen.getByText(deleteModalConfirmButtonText)).toBeTruthy();
+      expect(screen.getByText("Cancel")).toBeTruthy();
+    });
+
+    test("DeleteEntityModal top close button can be clicked", () => {
+      fireEvent.click(screen.getByText("Close"));
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
+
+    test("DeleteEntityModal bottom cancel button can be clicked", () => {
+      fireEvent.click(screen.getByText("Cancel"));
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
   });
 
-  test("Successfully deletes an existing entity", async () => {
-    render(modalComponentWithSelectedEntity);
-    await deleteEntity();
-
-    expect(mockUpdateReport).toHaveBeenCalledTimes(1);
-
-    const expectedUpdateCallPayload = {
-      fieldData: {
-        initiative: [],
-      },
-      metadata: {
-        lastAlteredBy: "Thelonious States",
-        status: "In progress",
-      },
+  describe("Test DeleteEntityModal functionality", () => {
+    const deleteEntity = async () => {
+      const confirmButton = screen.getByRole("button", {
+        name: deleteModalConfirmButtonText,
+      });
+      await userEvent.click(confirmButton);
     };
 
-    expect(mockUpdateReport).toHaveBeenCalledWith(
-      { ...mockReportKeys, id: "mock-wp-full-report-id" },
-      expectedUpdateCallPayload
-    );
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+    });
 
-    expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    test("Successfully deletes an existing entity", async () => {
+      render(modalComponentWithSelectedEntity);
+      await deleteEntity();
+
+      expect(mockUpdateReport).toHaveBeenCalledTimes(1);
+
+      const expectedUpdateCallPayload = {
+        fieldData: {
+          initiative: [],
+        },
+        metadata: {
+          lastAlteredBy: "Thelonious States",
+          status: "In progress",
+        },
+      };
+
+      expect(mockUpdateReport).toHaveBeenCalledWith(
+        { ...mockReportKeys, id: "mock-wp-full-report-id" },
+        expectedUpdateCallPayload
+      );
+
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
+
+    test("Successfully handles a delete call with an empty field data", async () => {
+      render(modalComponent);
+      await deleteEntity();
+
+      const expectedUpdateCallPayload = {
+        fieldData: {
+          initiative: [],
+        },
+        metadata: {
+          lastAlteredBy: "Thelonious States",
+          status: "In progress",
+        },
+      };
+
+      expect(mockUpdateReport).toHaveBeenCalledWith(
+        { ...mockReportKeys, id: "mock-wp-full-report-id" },
+        expectedUpdateCallPayload
+      );
+    });
+
+    test("Successfully deletes a nested existing entity", async () => {
+      render(modalComponentWithNestedEntity);
+      await deleteEntity();
+
+      const expectedUpdateCallPayload = {
+        fieldData: {
+          initiative: [],
+        },
+        metadata: {
+          lastAlteredBy: "Thelonious States",
+          status: "In progress",
+        },
+      };
+
+      expect(mockUpdateReport).toHaveBeenCalledWith(
+        { ...mockReportKeys, id: "mock-wp-full-report-id" },
+        expectedUpdateCallPayload
+      );
+    });
   });
 
-  test("Successfully handles a delete call with an empty field data", async () => {
-    render(modalComponent);
-    await deleteEntity();
-
-    const expectedUpdateCallPayload = {
-      fieldData: {
-        initiative: [],
-      },
-      metadata: {
-        lastAlteredBy: "Thelonious States",
-        status: "In progress",
-      },
-    };
-
-    expect(mockUpdateReport).toHaveBeenCalledWith(
-      { ...mockReportKeys, id: "mock-wp-full-report-id" },
-      expectedUpdateCallPayload
-    );
-  });
-
-  test("Successfully deletes a nested existing entity", async () => {
-    render(modalComponentWithNestedEntity);
-    await deleteEntity();
-
-    const expectedUpdateCallPayload = {
-      fieldData: {
-        initiative: [],
-      },
-      metadata: {
-        lastAlteredBy: "Thelonious States",
-        status: "In progress",
-      },
-    };
-
-    expect(mockUpdateReport).toHaveBeenCalledWith(
-      { ...mockReportKeys, id: "mock-wp-full-report-id" },
-      expectedUpdateCallPayload
-    );
-  });
-});
-
-describe("Test DeleteEntityModal accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(modalComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(modalComponent);
 });

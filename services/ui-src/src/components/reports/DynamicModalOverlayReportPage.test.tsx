@@ -25,12 +25,12 @@ const dynamicModalOverlayReportPageComponent = (
 
 const editEntityButtonText = "Mock enter entity details button text";
 
-describe("Test ModalOverlayReportPage with entities", () => {
+describe("<DynamicModalOverlayReportPage />", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("modaloverlaypage should render the view", () => {
+  test("modaloverlaypage should render the view", () => {
     mockedUseStore.mockReturnValue(mockReportStore);
     render(dynamicModalOverlayReportPageComponent);
     expect(screen.getByText(editEntityButtonText)).toBeVisible();

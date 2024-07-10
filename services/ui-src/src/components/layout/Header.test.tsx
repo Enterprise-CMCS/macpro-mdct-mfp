@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // utils
 import {
   mockReportMethods,
@@ -9,6 +8,7 @@ import {
 //components
 import { Header, ReportContext } from "components";
 import { useStore } from "utils";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -35,48 +35,44 @@ const reportComponent = (
  * }));
  */
 
-describe("Test Header", () => {
-  beforeEach(() => {
-    render(headerComponent);
+describe("<Header />", () => {
+  describe("Test Header", () => {
+    beforeEach(() => {
+      render(headerComponent);
+    });
+
+    test("Header is visible", () => {
+      const header = screen.getByRole("navigation");
+      expect(header).toBeVisible();
+    });
+
+    test("Logo is visible", () => {
+      expect(screen.getByAltText("MFP logo")).toBeVisible();
+    });
+
+    test("Help button is visible", () => {
+      expect(screen.getByAltText("Help")).toBeVisible();
+    });
+
+    test("Menu button is visible", () => {
+      expect(screen.getByAltText("Arrow down")).toBeVisible();
+    });
   });
 
-  test("Header is visible", () => {
-    const header = screen.getByRole("navigation");
-    expect(header).toBeVisible();
+  describe("Report Context", () => {
+    test("Report Data is visible", () => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      render(reportComponent);
+      expect(screen.getByText("2023 - Alabama 1")).toBeVisible();
+      expect(screen.getByText("Last saved 1:58 PM")).toBeVisible();
+    });
+
+    test("Subnav is visible on report screens; navigates to dashboard", async () => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      render(reportComponent);
+      expect(screen.getByText("Leave form")).toBeVisible();
+    });
   });
 
-  test("Logo is visible", () => {
-    expect(screen.getByAltText("MFP logo")).toBeVisible();
-  });
-
-  test("Help button is visible", () => {
-    expect(screen.getByAltText("Help")).toBeVisible();
-  });
-
-  test("Menu button is visible", () => {
-    expect(screen.getByAltText("Arrow down")).toBeVisible();
-  });
-});
-
-describe("Report Context", () => {
-  test("Report Data is visible", () => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(reportComponent);
-    expect(screen.getByText("2023 - Alabama 1")).toBeVisible();
-    expect(screen.getByText("Last saved 1:58 PM")).toBeVisible();
-  });
-
-  test("Subnav is visible on report screens; navigates to dashboard", async () => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(reportComponent);
-    expect(screen.getByText("Leave form")).toBeVisible();
-  });
-});
-
-describe("Test Header accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(headerComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(headerComponent);
 });
