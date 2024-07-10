@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "jest-axe";
 import {
   RouterWrappedComponent,
   mockReportStore,
@@ -15,6 +14,7 @@ import { useStore } from "utils";
 import { EntityRow } from "./EntityRow";
 import { Table } from "components";
 import { ModalDrawerEntityTypes } from "types";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -118,93 +118,92 @@ const addedOtherEntityRow = (
   </RouterWrappedComponent>
 );
 
-describe("Test EntityRow with entities", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(entityRowWithEntities);
+describe("<EntityRow />", () => {
+  describe("Test EntityRow with entities", () => {
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      render(entityRowWithEntities);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("should render the view", () => {
+      expect(screen.getByText("Older Adults")).toBeVisible();
+    });
+
+    test("should have a completed icon on the first entity", () => {
+      expect(screen.getAllByAltText("complete icon")[0]).toBeTruthy();
+    });
+
+    test("Opens the drawer correctly", async () => {
+      const launchDrawerButton = screen.getByText(
+        verbiage.enterEntityDetailsButtonText
+      );
+      await userEvent.click(launchDrawerButton);
+      expect(mockOpenDrawer).toBeCalledTimes(1);
+    });
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  describe("Test EntityRow with closed status", () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("should render the correct button text in a work plan", () => {
+      mockedUseStore.mockReturnValue(mockReportStore);
+      render(entityRowWithClosedEntities);
+      const viewButton = screen.getByText(
+        verbiage.readOnlyEntityDetailsButtonText
+      );
+      expect(viewButton).toBeVisible();
+    });
+
+    test("should render the correct button text in a SAR", () => {
+      mockedUseStore.mockReturnValue(mockSARReportStore);
+      render(entityRowWithClosedEntities);
+      const editButton = screen.getByText(
+        verbiage.enterEntityDetailsButtonText
+      );
+      expect(editButton).toBeVisible();
+    });
+
+    test("should show closeout details if specified", () => {
+      mockedUseStore.mockReturnValue(mockReportStore);
+      render(entityRowWithCloseoutDetails);
+      expect(screen.getByText("Closed by")).toBeVisible();
+    });
   });
 
-  it("should render the view", () => {
-    expect(screen.getByText("Older Adults")).toBeVisible();
+  describe("Test other EntityRow", () => {
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      render(addedOtherEntityRow);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("should have an incomplete icon on the new entity", () => {
+      expect(screen.getAllByAltText("warning icon")[0]).toBeTruthy();
+    });
+
+    test("includes an edit name button in the row", async () => {
+      const editNameButton = screen.getByText(verbiage.editEntityButtonText);
+      await userEvent.click(editNameButton);
+      expect(mockOpenAddEditEntityModal).toBeCalledTimes(1);
+    });
+
+    test("includes a delete button that removes the new other target population", async () => {
+      const deleteButton = screen.getByTestId("delete-entity");
+      await userEvent.click(deleteButton);
+      expect(mockOpenDeleteEntityModal).toBeCalledTimes(1);
+    });
   });
 
-  it("should have a completed icon on the first entity", () => {
-    expect(screen.getAllByAltText("complete icon")[0]).toBeTruthy();
-  });
-
-  it("Opens the drawer correctly", async () => {
-    const launchDrawerButton = screen.getByText(
-      verbiage.enterEntityDetailsButtonText
-    );
-    await userEvent.click(launchDrawerButton);
-    expect(mockOpenDrawer).toBeCalledTimes(1);
-  });
-});
-
-describe("Test EntityRow with closed status", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it("should render the correct button text in a work plan", () => {
+  testA11y(entityRowWithEntities, () => {
     mockedUseStore.mockReturnValue(mockReportStore);
-    render(entityRowWithClosedEntities);
-    const viewButton = screen.getByText(
-      verbiage.readOnlyEntityDetailsButtonText
-    );
-    expect(viewButton).toBeVisible();
-  });
-
-  it("should render the correct button text in a SAR", () => {
-    mockedUseStore.mockReturnValue(mockSARReportStore);
-    render(entityRowWithClosedEntities);
-    const editButton = screen.getByText(verbiage.enterEntityDetailsButtonText);
-    expect(editButton).toBeVisible();
-  });
-
-  it("should show closeout details if specified", () => {
-    mockedUseStore.mockReturnValue(mockReportStore);
-    render(entityRowWithCloseoutDetails);
-    expect(screen.getByText("Closed by")).toBeVisible();
-  });
-});
-
-describe("Test other EntityRow", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockUseStore);
-    render(addedOtherEntityRow);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it("should have an incomplete icon on the new entity", () => {
-    expect(screen.getAllByAltText("warning icon")[0]).toBeTruthy();
-  });
-
-  it("includes an edit name button in the row", async () => {
-    const editNameButton = screen.getByText(verbiage.editEntityButtonText);
-    await userEvent.click(editNameButton);
-    expect(mockOpenAddEditEntityModal).toBeCalledTimes(1);
-  });
-
-  it("includes a delete button that removes the new other target population", async () => {
-    const deleteButton = screen.getByTestId("delete-entity");
-    await userEvent.click(deleteButton);
-    expect(mockOpenDeleteEntityModal).toBeCalledTimes(1);
-  });
-});
-
-describe("Test EntityRow accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    mockedUseStore.mockReturnValue(mockReportStore);
-    const { container } = render(entityRowWithEntities);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

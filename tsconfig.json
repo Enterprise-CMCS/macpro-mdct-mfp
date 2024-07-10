@@ -39,6 +39,9 @@
   "exclude": [
     "./services/ui-src/*",
     "./services/app-api/*",
-    "./services/database/*"
+    "./services/database/*",
+    "./tests/e2e/**/**.ts",
+    "./tests/e2e/**/**.js",
+    "playwright.config.ts"
   ]
 }

@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { useStore } from "utils";
 import {
   mockReportStore,
+  mockReportFieldData,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { ModalDrawerReportPageVerbiage } from "types";
@@ -10,6 +10,7 @@ import {
   ExportedModalDrawerReportSection,
   Props,
 } from "./ExportedModalDrawerReportSection";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -112,7 +113,7 @@ const tableComponent = (
   </RouterWrappedComponent>
 );
 
-describe("ExportedModalDrawerReportSection table", () => {
+describe("<ExportedModalDrawerReportSection />", () => {
   test("renders correct twelve quarters in table", async () => {
     const mock2024Q1Report = {
       ...mockReportStore,
@@ -148,13 +149,35 @@ describe("ExportedModalDrawerReportSection table", () => {
     // renders "Not answered" for each quarter given no entity data
     expect(screen.queryAllByText("Not answered").length).toBe(12);
   });
-});
 
-describe("ExportedModalDrawerReportSection", () => {
-  test("should not have basic accessibility issues", async () => {
+  test("renders aria labels for target populations with abbreviated names", async () => {
+    const mockReport = {
+      ...mockReportStore,
+      report: {
+        ...mockReportStore.report,
+        fieldData: {
+          ...mockReportFieldData,
+          entityType: [
+            {
+              transitionBenchmarks_targetPopulationName:
+                "A very long target population name",
+              transitionBenchmarks_targetPopulationName_short: "ABC",
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue(mockReport);
+    render(tableComponent);
+
+    expect(screen.getByText("ABC")).toBeVisible();
+    expect(
+      screen.getByLabelText("A very long target population name")
+    ).toBeVisible();
+  });
+
+  testA11y(testComponent, () => {
     mockedUseStore.mockReturnValue(mockReportStore);
-    const { container } = render(testComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

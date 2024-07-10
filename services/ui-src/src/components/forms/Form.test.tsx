@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { Form } from "components";
 import { mockForm, RouterWrappedComponent } from "utils/testing/setupJest";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockOnSubmit = jest.fn();
 
@@ -20,18 +20,12 @@ const formComponent = (
   </RouterWrappedComponent>
 );
 
-describe("Test Form component", () => {
+describe("<Form />", () => {
   test("Form is visible", () => {
     render(formComponent);
     const form = screen.getByText(mockForm.fields[0].props.label);
     expect(form).toBeVisible();
   });
-});
 
-describe("Test Form accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(formComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(formComponent);
 });

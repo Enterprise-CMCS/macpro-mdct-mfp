@@ -1,85 +1,87 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // components
 import { ReportContext, ExportedSectionHeading } from "components";
 // utils
-import {
-  mockWpReportContext,
-  mockVerbiageIntro,
-} from "utils/testing/setupJest";
-import { ReportPageVerbiage } from "types";
-
-const mockSectionHeading = {
-  heading: "mock-heading",
-  verbiage: {
-    intro: mockVerbiageIntro,
-  },
-};
-const { heading, verbiage } = mockSectionHeading;
-
-const retVerbigae = {
-  intro: {
-    section: "Recruitment, Enrollment, and Transitions",
-    info: [
-      { type: "h3", content: "this text should be filtered out" },
-      { type: "span", content: "this text should be visible" },
-    ],
-  },
-};
-const stateOrTerritoryVerbiage = {
-  intro: {
-    section: "State or Territory-Specific Initiatives",
-    subsection: "State or Territory-Specific Initiatives",
-  },
-};
+import { mockWpReportContext } from "utils/testing/setupJest";
+import { CustomHtmlElement, HeadingLevel } from "types";
+import { testA11y } from "utils/testing/commonTests";
 
 const exportedReportSectionHeadingComponent = (
-  verbiage: ReportPageVerbiage
+  heading: string,
+  headingLevel?: HeadingLevel,
+  hint?: string,
+  info?: string | CustomHtmlElement[]
 ) => {
   return (
     <ReportContext.Provider value={mockWpReportContext}>
-      <ExportedSectionHeading heading={heading} verbiage={verbiage} />
+      <ExportedSectionHeading
+        heading={heading}
+        hint={hint}
+        info={info}
+        headingLevel={headingLevel}
+      />
     </ReportContext.Provider>
   );
 };
 
-describe("ExportedSectionHeading renders", () => {
-  test("ExportedSectionHeading renders", () => {
+describe("<ExportedSectionHeading />", () => {
+  test("renders container", () => {
     const { getByTestId } = render(
-      exportedReportSectionHeadingComponent(verbiage)
+      exportedReportSectionHeadingComponent("Test Heading")
     );
     const sectionHeading = getByTestId("exportedSectionHeading");
     expect(sectionHeading).toBeVisible();
   });
-});
 
-describe("ExportedSectionHeading displays correct heading", () => {
-  test("Correct heading text is shown", () => {
-    render(exportedReportSectionHeadingComponent(verbiage));
-    const sectionHeading = screen.getByText(heading);
+  test("renders heading level", () => {
+    render(exportedReportSectionHeadingComponent("Test Heading"));
+    const sectionHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Test Heading",
+    });
     expect(sectionHeading).toBeVisible();
   });
-  test("Correct heading text is shown for R,E & T", () => {
-    render(exportedReportSectionHeadingComponent(retVerbigae));
-    const sectionHeading = screen.getByText(
-      retVerbigae?.intro?.info[1].content
-    );
+
+  test("renders custom heading level", () => {
+    render(exportedReportSectionHeadingComponent("Test Heading", "h3"));
+    const sectionHeading = screen.getByRole("heading", {
+      level: 3,
+      name: "Test Heading",
+    });
     expect(sectionHeading).toBeVisible();
   });
-  test("Correct heading text is shown for State or Territory-Specific Initiatives", () => {
-    render(exportedReportSectionHeadingComponent(stateOrTerritoryVerbiage));
-    expect(
-      screen.queryByText(stateOrTerritoryVerbiage.intro.subsection)
-    ).not.toBeInTheDocument();
-  });
-});
 
-describe("Test ExportedSectionHeading accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(
-      exportedReportSectionHeadingComponent(verbiage)
+  test("renders hint", () => {
+    render(
+      exportedReportSectionHeadingComponent(
+        "Test Heading",
+        undefined,
+        "This is a hint"
+      )
     );
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    const hint = screen.getByText("This is a hint");
+    expect(hint).toBeVisible();
   });
+
+  test("renders info", () => {
+    render(
+      exportedReportSectionHeadingComponent(
+        "Test Heading",
+        undefined,
+        undefined,
+        "This is info"
+      )
+    );
+    const info = screen.getByText("This is info");
+    expect(info).toBeVisible();
+  });
+
+  testA11y(
+    exportedReportSectionHeadingComponent(
+      "Test Heading",
+      "h2",
+      "This is a hint",
+      "This is info"
+    )
+  );
 });

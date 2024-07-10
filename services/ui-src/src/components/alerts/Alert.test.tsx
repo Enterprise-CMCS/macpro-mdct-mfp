@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 //components
 import { Alert } from "components";
+import { testA11y } from "utils/testing/commonTests";
 
 const alertComponent = (
   <Alert
@@ -12,20 +12,11 @@ const alertComponent = (
   />
 );
 
-describe("Test Alert Item", () => {
-  beforeEach(() => {
-    render(alertComponent);
-  });
-
+describe("<Alert />", () => {
   test("Alert is visible", () => {
+    render(alertComponent);
     expect(screen.getByTestId("test-alert")).toBeVisible();
   });
-});
 
-describe("Test Alert accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(alertComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(alertComponent);
 });

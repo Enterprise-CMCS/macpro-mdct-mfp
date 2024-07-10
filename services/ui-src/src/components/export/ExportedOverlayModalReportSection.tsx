@@ -7,6 +7,7 @@ import {
   EntityShape,
   FormField,
   FormLayoutElement,
+  HeadingLevel,
   OverlayModalPageShape,
 } from "types";
 import { EntityStepCard } from "components";
@@ -17,6 +18,7 @@ export const ExportedOverlayModalReportSection = ({
   section: { verbiage },
   entity,
   entityStep,
+  headingLevel = "h4",
 }: Props) => {
   const { emptyEntityMessage, dashboardTitle } = exportVerbiage;
 
@@ -33,22 +35,26 @@ export const ExportedOverlayModalReportSection = ({
   );
   return (
     <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
-      <Heading as="h4">
-        <Box sx={sx.stepName}>{title}</Box>
-        <Box sx={sx.stepHint}>{info || hint}</Box>
-        <Box sx={sx.dashboardTitle} data-testid="headerCount">
-          {entityCount > 0 ? (
-            `${
-              dashboardTitle[type as keyof typeof dashboardTitle]
-            } ${entityCount}`
-          ) : (
-            <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
-              {emptyEntityMessage[type as keyof typeof emptyEntityMessage]}
-            </Text>
-          )}
-        </Box>
+      <Heading as={headingLevel} sx={sx.stepName}>
+        {title}
       </Heading>
+      <Box sx={sx.stepHint}>{info || hint}</Box>
+      <Box sx={sx.dashboardTitle} data-testid="headerCount">
+        {entityCount > 0 ? (
+          `${
+            dashboardTitle[type as keyof typeof dashboardTitle]
+          } ${entityCount}`
+        ) : (
+          <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
+            {emptyEntityMessage[type as keyof typeof emptyEntityMessage]}
+          </Text>
+        )}
+      </Box>
       {entity?.[type]?.map((step: any, index: number) => {
+        const currentLevel = parseInt(headingLevel.charAt(1), 10);
+        const nextLevel = currentLevel + 1;
+        const nextHeadingLevel = `h${nextLevel}`;
+
         return (
           <EntityStepCard
             key={`${entity.id}${index}`}
@@ -60,6 +66,7 @@ export const ExportedOverlayModalReportSection = ({
             verbiage={verbiage}
             printVersion
             hasBorder={true}
+            headingLevel={nextHeadingLevel as HeadingLevel}
           />
         );
       })}
@@ -71,6 +78,7 @@ export interface Props {
   section: OverlayModalPageShape;
   entity?: EntityShape;
   entityStep?: (string | FormLayoutElement | FormField)[];
+  headingLevel?: HeadingLevel;
 }
 
 const sx = {

@@ -27,7 +27,7 @@ export const createReportName = (
   return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
 };
 
-export const getLastCreatedWorkPlan = async (
+export const getEligibleWorkPlan = async (
   state: State
 ): Promise<{
   workPlanMetadata?: ReportMetadataShape;
@@ -35,7 +35,8 @@ export const getLastCreatedWorkPlan = async (
 }> => {
   const allWorkPlans = await queryReportMetadatasForState(ReportType.WP, state);
   const eligibleWorkPlans = allWorkPlans.filter(
-    (wp) => wp.status === ReportStatus.APPROVED && !wp.associatedSar
+    (wp) =>
+      wp.status === ReportStatus.APPROVED && !wp.associatedSar && !wp?.archived
   );
   if (eligibleWorkPlans.length === 0) {
     // There were no eligible work plans to treat as a base for this SAR
@@ -43,7 +44,7 @@ export const getLastCreatedWorkPlan = async (
   }
 
   const workPlanMetadata = eligibleWorkPlans.reduce((mostRecent, wp) =>
-    mostRecent.createdAt > wp.createdAt ? mostRecent : wp
+    mostRecent.createdAt < wp.createdAt ? mostRecent : wp
   );
   const workPlanFieldData = await getReportFieldData(workPlanMetadata);
   return { workPlanMetadata, workPlanFieldData };

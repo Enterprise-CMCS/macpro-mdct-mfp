@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { ReportContext } from "components";
 import userEvent from "@testing-library/user-event";
-import { axe } from "jest-axe";
 // components
 import { ExportedReportBanner } from "./ExportedReportBanner";
 import { useStore } from "../../utils";
@@ -11,6 +10,7 @@ import {
   mockUseStore,
 } from "../../utils/testing/setupJest";
 import { MfpReportState, MfpUserState, ReportShape } from "../../types";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 
@@ -38,13 +38,14 @@ const bannerWithContext = (context: any) => {
   );
 };
 
-describe("ExportedReportBanner", () => {
+describe("<ExportedReportBanner />", () => {
   beforeEach(() => {
     mockedUseStore.mockReturnValue(mockUseStore);
 
     mockPrint = window.print;
     jest.spyOn(window, "print").mockImplementation(() => {});
   });
+
   afterEach(() => {
     window.print = mockPrint;
   });
@@ -94,16 +95,8 @@ describe("ExportedReportBanner", () => {
     expect(printButton).toBeVisible();
     await userEvent.click(printButton);
   });
-});
 
-describe("Test ExportedReportBanner accessibility", () => {
-  beforeEach(() => {
+  testA11y(bannerWithContext(wpContext), () => {
     mockedUseStore.mockReturnValue(mockUseStore);
-  });
-
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(bannerWithContext(wpContext));
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

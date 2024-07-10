@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 // components
 import { Accordion } from "@chakra-ui/react";
 import { AccordionItem } from "components";
+import { testA11y } from "utils/testing/commonTests";
 
 const accordionItemComponent = (
   <RouterWrappedComponent>
@@ -14,7 +14,7 @@ const accordionItemComponent = (
   </RouterWrappedComponent>
 );
 
-describe("Test AccordionItem", () => {
+describe("<AccordionItem />", () => {
   beforeEach(() => {
     render(accordionItemComponent);
   });
@@ -22,12 +22,6 @@ describe("Test AccordionItem", () => {
   test("AccordionItem is visible", () => {
     expect(screen.getByTestId("accordion-item")).toBeVisible();
   });
-});
 
-describe("Test AccordionItem accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(accordionItemComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(accordionItemComponent);
 });

@@ -7,6 +7,16 @@ import { execSync } from "child_process";
 // load .env
 dotenv.config();
 
+const deployedServices = [
+  "database",
+  "uploads",
+  "topics",
+  "app-api",
+  "ui",
+  "ui-auth",
+  "ui-src",
+];
+
 // Function to update .env files using 1Password CLI
 function updateEnvFiles() {
   try {
@@ -137,6 +147,23 @@ async function run_all_locally() {
   run_fe_locally(runner);
 }
 
+async function install_deps_for_services(runner: LabeledProcessRunner) {
+  for (const service of deployedServices) {
+    await runner.run_command_and_output(
+      "Installing Dependencies",
+      ["yarn", "install", "--frozen-lockfile"],
+      `services/${service}`
+    );
+  }
+}
+
+async function deploy(options: { stage: string }) {
+  const runner = new LabeledProcessRunner();
+  await install_deps_for_services(runner);
+  const deployCmd = ["sls", "deploy", "--stage", options.stage];
+  await runner.run_command_and_output("SLS Deploy", deployCmd, ".");
+}
+
 async function destroy_stage(options: {
   stage: string;
   service: string | undefined;
@@ -144,16 +171,47 @@ async function destroy_stage(options: {
   verify: boolean;
 }) {
   let destroyer = new ServerlessStageDestroyer();
-  /*
-   * Filters enable filtering by resource tags but we aren't leveraging any tags other than
-   * the STAGE tag automatically applied by the serverless framework.  Adding PROJECT and SERVICE
-   * tags would be a good idea.
-   */
+  let filters = [
+    {
+      Key: "PROJECT",
+      Value: `${process.env.PROJECT}`,
+    },
+  ];
+  if (options.service) {
+    filters.push({
+      Key: "SERVICE",
+      Value: `${options.service}`,
+    });
+  }
+
   await destroyer.destroy(`${process.env.REGION_A}`, options.stage, {
     wait: options.wait,
-    filters: [],
+    filters: filters,
     verify: options.verify,
   });
+
+  await delete_topics(options);
+}
+
+async function delete_topics(options: { stage: string }) {
+  const runner = new LabeledProcessRunner();
+  await install_deps_for_services(runner);
+  let data = { project: "mfp", stage: options.stage };
+  const deployCmd = [
+    "sls",
+    "invoke",
+    "--stage",
+    "main",
+    "--function",
+    "deleteTopics",
+    "--data",
+    JSON.stringify(data),
+  ];
+  await runner.run_command_and_output(
+    "Remove topics",
+    deployCmd,
+    "services/topics"
+  );
 }
 
 /*
@@ -174,6 +232,14 @@ yargs(process.argv.slice(2))
     }
   )
   .command(
+    "deploy",
+    "deploy the app with serverless compose to the cloud",
+    {
+      stage: { type: "string", demandOption: true },
+    },
+    deploy
+  )
+  .command(
     "destroy",
     "destroy serverless stage",
     {
@@ -185,6 +251,14 @@ yargs(process.argv.slice(2))
     destroy_stage
   )
   .command(
+    "delete-topics",
+    "delete topics tied to serverless stage",
+    {
+      stage: { type: "string", demandOption: true },
+    },
+    delete_topics
+  )
+  .command(
     "update-env",
     "update environment variables using 1Password",
     () => {},
@@ -193,4 +267,5 @@ yargs(process.argv.slice(2))
     }
   )
   .scriptName("run")
+  .strict()
   .demandCommand(1, "").argv; // this prints out the help if you don't call a subcommand

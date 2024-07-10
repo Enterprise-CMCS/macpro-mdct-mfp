@@ -86,19 +86,19 @@ const testComponent = (
   </RouterWrappedComponent>
 );
 
-describe("ReportProvider", () => {
+describe("<ReportProvider />", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     render(testComponent);
   });
 
-  it("should call the API to create reports", async () => {
+  test("should call the API to create reports", async () => {
     const button = screen.getByText("Create");
     await userEvent.click(button);
     expect(postReport).toHaveBeenCalledWith("WP", "AL", mockReport);
   });
 
-  it("should provide an error when a report cannot be created", async () => {
+  test("should provide an error when a report cannot be created", async () => {
     (postReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Create");
     await userEvent.click(button);
@@ -107,13 +107,13 @@ describe("ReportProvider", () => {
     );
   });
 
-  it("should call the API to fetch a report", async () => {
+  test("should call the API to fetch a report", async () => {
     const button = screen.getByText("Fetch");
     await userEvent.click(button);
     expect(getReport).toHaveBeenCalledWith(mockReportKeys);
   });
 
-  it("should provide an error when a report cannot be fetched", async () => {
+  test("should provide an error when a report cannot be fetched", async () => {
     (getReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Fetch");
     await userEvent.click(button);
@@ -122,13 +122,13 @@ describe("ReportProvider", () => {
     );
   });
 
-  it("should call the API to archive a report", async () => {
+  test("should call the API to archive a report", async () => {
     const button = screen.getByText("Archive");
     await userEvent.click(button);
     expect(archiveReport).toHaveBeenCalledWith(mockReportKeys);
   });
 
-  it("should provide an error when a report cannot be archived", async () => {
+  test("should provide an error when a report cannot be archived", async () => {
     (archiveReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Archive");
     await userEvent.click(button);
@@ -137,13 +137,13 @@ describe("ReportProvider", () => {
     );
   });
 
-  it("should call the API to update a report", async () => {
+  test("should call the API to update a report", async () => {
     const button = screen.getByText("Update");
     await userEvent.click(button);
     expect(putReport).toHaveBeenCalledWith(mockReportKeys, mockReport);
   });
 
-  it("should provide an error when a report cannot be updated", async () => {
+  test("should provide an error when a report cannot be updated", async () => {
     (putReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Update");
     await userEvent.click(button);
@@ -152,13 +152,13 @@ describe("ReportProvider", () => {
     );
   });
 
-  it("should call the API to approve a report", async () => {
+  test("should call the API to approve a report", async () => {
     const button = screen.getByText("Approve");
     await userEvent.click(button);
     expect(approveReport).toHaveBeenCalledWith(mockReportKeys, mockReport);
   });
 
-  it("should provide an error when a report cannot be approved", async () => {
+  test("should provide an error when a report cannot be approved", async () => {
     (approveReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Approve");
     await userEvent.click(button);
@@ -167,13 +167,13 @@ describe("ReportProvider", () => {
     );
   });
 
-  it("should call the API to submit a report", async () => {
+  test("should call the API to submit a report", async () => {
     const button = screen.getByText("Submit");
     await userEvent.click(button);
     expect(submitReport).toHaveBeenCalledWith(mockReportKeys);
   });
 
-  it("should provide an error when a report cannot be submitted", async () => {
+  test("should provide an error when a report cannot be submitted", async () => {
     (submitReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Submit");
     await userEvent.click(button);
@@ -182,13 +182,13 @@ describe("ReportProvider", () => {
     );
   });
 
-  it("should call the API to fetch reports for a state", async () => {
+  test("should call the API to fetch reports for a state", async () => {
     const button = screen.getByText("FetchByState");
     await userEvent.click(button);
     expect(getReportsByState).toHaveBeenCalledWith("WP", "AL");
   });
 
-  it("should provide an error when reports for a state cannot be fetched", async () => {
+  test("should provide an error when reports for a state cannot be fetched", async () => {
     (getReportsByState as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("FetchByState");
     await userEvent.click(button);
@@ -197,8 +197,8 @@ describe("ReportProvider", () => {
     );
   });
 
-  // This test passes when run by itself, but fails when the whole suite runs.
-  it.skip("should call the API to fetch reports for SAR creation", async () => {
+  // TODO: This test passes when run by itself, but fails when the whole suite runs.
+  test.skip("should call the API to fetch reports for SAR creation", async () => {
     const button = screen.getByText("FetchForSar");
     await act(async () => await userEvent.click(button));
     expect(getReportsByState).toHaveBeenCalledTimes(2);
@@ -206,7 +206,7 @@ describe("ReportProvider", () => {
     expect(getReportsByState).toHaveBeenNthCalledWith(2, "SAR", "AL");
   });
 
-  it("should provide an error when reports for SAR creation cannot be fetched", async () => {
+  test("should provide an error when reports for SAR creation cannot be fetched", async () => {
     (getReportsByState as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("FetchForSar");
     await userEvent.click(button);
@@ -215,13 +215,13 @@ describe("ReportProvider", () => {
     );
   });
 
-  it("should call the API to release a report", async () => {
+  test("should call the API to release a report", async () => {
     const button = screen.getByText("Release");
     await userEvent.click(button);
     expect(releaseReport).toHaveBeenCalledWith(mockReportKeys);
   });
 
-  it("should provide an error when reports for SAR creation cannot be fetched", async () => {
+  test("should provide an error when reports for SAR creation cannot be fetched", async () => {
     (releaseReport as jest.Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Release");
     await userEvent.click(button);

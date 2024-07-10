@@ -29,7 +29,6 @@ To run cypress tests locally you will go to the root of the project and you'll n
 
 3. When you have an updated `.env` file can run tests from the top level of the repo using the `yarn test` command.
 
-If you don't have a 1Password account and do not have these passwords you can find them in AWS SSM parameters in the mdct-mfp-dev account. Look for the parameter with a name like `/configuration/default/cognito/bootstrapUsers/password`. Ask a repository contributor for help if needed.
 
 ## Troubleshooting
 

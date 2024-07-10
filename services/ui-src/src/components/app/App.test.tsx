@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { axe } from "jest-axe";
 // utils
 import {
   RouterWrappedComponent,
@@ -10,6 +9,7 @@ import {
 import { useStore, UserProvider } from "utils";
 //components
 import { App } from "components";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -23,7 +23,7 @@ const appComponent = (
   </RouterWrappedComponent>
 );
 
-describe("Test App", () => {
+describe("<App />", () => {
   test("App is visible", async () => {
     // mockedUseStore.mockReturnValue(mockUseStore);
     await act(async () => {
@@ -39,13 +39,6 @@ describe("Test App", () => {
     });
     expect(screen.getByTestId("login-container")).toBeVisible();
   });
-});
 
-describe("App login page accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(appComponent);
-    await act(async () => {
-      expect(await axe(container)).toHaveNoViolations();
-    });
-  });
+  testA11y(appComponent);
 });

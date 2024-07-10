@@ -1,7 +1,7 @@
 import { MixedSchema } from "yup/lib/mixed";
 import { number, ratio, validInteger } from "./schemas";
 
-describe("Schemas", () => {
+describe("utils/schemas", () => {
   const goodNumberTestCases = [
     "123",
     "123.00",

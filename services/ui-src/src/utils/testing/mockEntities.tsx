@@ -143,7 +143,7 @@ export const mockTargetPopDefaultButNotApplicable = {
 };
 
 export const mockTargetPopDefaultAndApplicable = {
-  id: "7",
+  id: "8",
   transitionBenchmarks_targetPopulationName: "Older adults",
   isRequired: true,
   transitionBenchmarks_applicableToMfpDemonstration: [

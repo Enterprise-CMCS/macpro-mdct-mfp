@@ -2,6 +2,7 @@ import {
   DynamicModalOverlayReportPageShape,
   FormJson,
   OverlayModalPageShape,
+  ReportPageProgress,
 } from "types";
 
 export const mockFormField = {
@@ -616,4 +617,18 @@ export const mockReviewSubmitPageJson = {
   name: "mock-route-3",
   path: "/mock/mock-review-and-submit",
   pageType: "reviewSubmit",
+};
+
+export const mockTableRowPage = {
+  name: "Transition Benchmarks",
+  path: "/wp/transition-benchmarks",
+  children: [] as ReportPageProgress[],
+  status: true,
+};
+
+export const mockChildRowPage = {
+  name: "State or Territory-Specific Initiatives",
+  path: "/wp/state-or-territory-specific-initiatives/initiatives",
+  children: [] as ReportPageProgress[],
+  status: true,
 };
