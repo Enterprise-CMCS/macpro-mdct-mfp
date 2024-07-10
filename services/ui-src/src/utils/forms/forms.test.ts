@@ -59,9 +59,9 @@ const mockFormData = {
   isCopied: true,
 };
 
-describe("form utilities", () => {
-  describe("Test resetClearProp", () => {
-    it("should reset clear for choicelist fields and its nested children", async () => {
+describe("utils/forms", () => {
+  describe("resetClearProp()", () => {
+    test("should reset clear for choicelist fields and its nested children", async () => {
       const fields: FormField[] = [mockNestedFormField];
       resetClearProp(fields);
       expect(fields[0].props!.clear).toBe(false);
@@ -70,50 +70,46 @@ describe("form utilities", () => {
       }
     });
 
-    describe("disableCopiedFundingSources", () => {
-      it("should disable choicelist on copy over report - funding source section", () => {
-        const fields: FormField[] = [
-          structuredClone(mockFundingSourceFormField),
-        ];
-        disableCopiedFundingSources(mockWPCopiedReport, fields, mockFormData);
-        expect(fields[0].props?.disabled).toBe(true);
-      });
-
-      it("should not disable funding sources for non-copied reports", () => {
-        const fields: FormField[] = [
-          structuredClone(mockFundingSourceFormField),
-        ];
-        disableCopiedFundingSources({} as ReportShape, fields, mockFormData);
-        expect(fields[0].props?.disabled).toBeFalsy();
-      });
-
-      it("should not disable fields other than funding sources", () => {
-        const fields: FormField[] = [structuredClone(mockFormField)];
-        disableCopiedFundingSources(mockWPCopiedReport, fields, mockFormData);
-        expect(fields[0].props?.disabled).toBeFalsy();
-      });
-    });
-
-    it("should reset clear for text fields", async () => {
+    test("should reset clear for text fields", async () => {
       const fields: FormField[] = [mockFormField];
       resetClearProp(fields);
       expect(fields[0].props?.clear).toBe(false);
     });
 
-    it("should reset clear for number fields", async () => {
+    test("should reset clear for number fields", async () => {
       const fields: FormField[] = [mockNumberField];
       resetClearProp(fields);
       expect(fields[0].props?.clear).toBe(false);
     });
 
-    it("should reset clear for date fields", async () => {
+    test("should reset clear for date fields", async () => {
       const fields: FormField[] = [mockDateField];
       resetClearProp(fields);
       expect(fields[0].props?.clear).toBe(false);
     });
   });
 
-  describe("Test getDefaultAndApplicablePopulations", () => {
+  describe("disableCopiedFundingSources()", () => {
+    test("should disable choicelist on copy over report - funding source section", () => {
+      const fields: FormField[] = [structuredClone(mockFundingSourceFormField)];
+      disableCopiedFundingSources(mockWPCopiedReport, fields, mockFormData);
+      expect(fields[0].props?.disabled).toBe(true);
+    });
+
+    test("should not disable funding sources for non-copied reports", () => {
+      const fields: FormField[] = [structuredClone(mockFundingSourceFormField)];
+      disableCopiedFundingSources({} as ReportShape, fields, mockFormData);
+      expect(fields[0].props?.disabled).toBeFalsy();
+    });
+
+    test("should not disable fields other than funding sources", () => {
+      const fields: FormField[] = [structuredClone(mockFormField)];
+      disableCopiedFundingSources(mockWPCopiedReport, fields, mockFormData);
+      expect(fields[0].props?.disabled).toBeFalsy();
+    });
+  });
+
+  describe("getDefaultAndApplicablePopulations()", () => {
     const exampleTargetPopulations = [
       mockTargetPopReqButNotApplicable,
       mockTargetPopReqButApplicable,
@@ -125,7 +121,7 @@ describe("form utilities", () => {
       mockTargetPopDefaultAndApplicable,
     ];
 
-    it("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration that is not a default population", async () => {
+    test("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration that is not a default population", async () => {
       const filteredPopulations = getDefaultAndApplicablePopulations(
         exampleTargetPopulations
       );
@@ -141,7 +137,7 @@ describe("form utilities", () => {
     });
   });
 
-  describe("Test getApplicablePopulations", () => {
+  describe("getApplicablePopulations()", () => {
     const exampleTargetPopulations = [
       mockTargetPopReqButNotApplicable,
       mockTargetPopReqButApplicable,
@@ -153,7 +149,7 @@ describe("form utilities", () => {
       mockTargetPopDefaultAndApplicable,
     ];
 
-    it("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration ", async () => {
+    test("should filter out any target population that has a no value for transitionBenchmarks_applicableToMfpDemonstration ", async () => {
       const filteredPopulations = getApplicablePopulations(
         exampleTargetPopulations
       );
@@ -166,8 +162,8 @@ describe("form utilities", () => {
     });
   });
 
-  describe("Test fillEmptyQuarters", () => {
-    it("should has 12 quarters and 2 values as not answered", () => {
+  describe("fillEmptyQuarters()", () => {
+    test("should has 12 quarters and 2 values as not answered", () => {
       let mockQuarters = [];
       for (var i = 0; i < 10; i++) {
         mockQuarters.push({ id: `2021 Q1`, value: i });
@@ -181,8 +177,8 @@ describe("form utilities", () => {
     });
   });
 
-  describe("hydrateFormFields", () => {
-    it("should recursively fill in values", () => {
+  describe("hydrateFormFields()", () => {
+    test("should recursively fill in values", () => {
       const formFields = [
         {
           id: "field1",
@@ -213,7 +209,7 @@ describe("form utilities", () => {
       expect(field2.props.hydrate).toBe("mock entry 2");
     });
 
-    it("should account for the WP close-out initiative disabled field", () => {
+    test("should account for the WP close-out initiative disabled field", () => {
       const formFields = [
         {
           id: "defineInitiative_projectedEndDate_value",
@@ -237,8 +233,8 @@ describe("form utilities", () => {
     });
   });
 
-  describe("sortFormErrors", () => {
-    it("should aggregate errors from a form into an array", () => {
+  describe("sortFormErrors()", () => {
+    test("should aggregate errors from a form into an array", () => {
       const form = {
         badField: "bad",
         goodField: "good",
@@ -254,8 +250,8 @@ describe("form utilities", () => {
       expect(result).toEqual(["badField", "terribleField"]);
     });
 
-    /** Evidently it should not */
-    it.skip("should sort the result", () => {
+    /** TODO: Evidently it should not */
+    test.skip("should sort the result", () => {
       const form = {
         terribleField: "terrible",
         badField: "bad",
@@ -272,8 +268,8 @@ describe("form utilities", () => {
     });
   });
 
-  describe("setClearedEntriesToDefaultValue", () => {
-    it("should clear each entry appropriately according to its type", () => {
+  describe("setClearedEntriesToDefaultValue()", () => {
+    test("should clear each entry appropriately according to its type", () => {
       const entity = {
         arr: [1, 2, 3],
         obj: { foo: "bar" },
@@ -290,7 +286,7 @@ describe("form utilities", () => {
       });
     });
 
-    it("should not clear entries unless specified", () => {
+    test("should not clear entries unless specified", () => {
       const entity = {
         arr: [1, 2, 3],
         obj: { foo: "bar" },
@@ -308,8 +304,8 @@ describe("form utilities", () => {
     });
   });
 
-  describe("convertEntityToTargetPopulationChoice", () => {
-    it("should map entities to choice answers", () => {
+  describe("convertEntityToTargetPopulationChoice()", () => {
+    test("should map entities to choice answers", () => {
       const entity = [
         {
           id: "field1",
@@ -338,8 +334,8 @@ describe("form utilities", () => {
     });
   });
 
-  describe("convertChoiceToEntity", () => {
-    it("should map choice answers to entities", () => {
+  describe("convertChoiceToEntity()", () => {
+    test("should map choice answers to entities", () => {
       const choices = [
         { key: "field1", value: "Yes" },
         { key: "field2", value: "Nah" },
@@ -354,8 +350,8 @@ describe("form utilities", () => {
     });
   });
 
-  describe("injectFormWithTargetPopulations", () => {
-    it("should populate fields with data from a work plan", () => {
+  describe("injectFormWithTargetPopulations()", () => {
+    test("should populate fields with data from a work plan", () => {
       const form = {
         id: "form1",
         fields: [
@@ -424,7 +420,7 @@ describe("form utilities", () => {
       ]);
     });
 
-    it("should populate fields with data from a semi-annual report", () => {
+    test("should populate fields with data from a semi-annual report", () => {
       const form = {
         id: "form1",
         fields: [

@@ -4,6 +4,14 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/maintainability)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/test_coverage)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/test_coverage)
 
+### Integration Environment Deploy Status:
+| Branch  | Build Status |
+| ------------- | ------------- |
+| main  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg)  |
+| val  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=val)  |
+| production  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=production)  |
+
+
 MFP is the CMCS MDCT application for collecting state data related to the [Money Follows the Person (MFP)](https://www.medicaid.gov/medicaid/long-term-services-supports/money-follows-person/index.html) program. The collected data assists CMCS in monitoring and managing grantee progress and identifying challenges and improvement opportunities.
 
 The MFP demonstration supports state efforts for rebalancing their long-term services and supports system so that individuals have a choice of where they live and receive services. From the start of the program in 2008 through the end of 2020, states have transitioned over 107,000 people to community living under MFP.

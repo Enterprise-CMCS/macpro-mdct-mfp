@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import userEvent from "@testing-library/user-event";
 // components
 import { ReportContext, StandardReportPage } from "components";
@@ -15,6 +14,7 @@ import {
 } from "utils/testing/setupJest";
 import { useStore } from "utils/state/useStore";
 import { ReportShape } from "types";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -41,7 +41,7 @@ global.structuredClone = jest.fn((val) => {
   return JSON.parse(JSON.stringify(val));
 });
 
-describe("Test StandardReportPage", () => {
+describe("<StandardReportPage />", () => {
   test("StandardReportPage view renders", () => {
     mockedUseStore.mockReturnValue(mockReportStore);
     render(standardPageSectionComponent);
@@ -83,13 +83,8 @@ describe("Test StandardReportPage", () => {
     const newPath = window.location.pathname;
     expect(newPath).not.toEqual("/");
   });
-});
 
-describe("Test StandardReportPage accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
+  testA11y(standardPageSectionComponent, () => {
     mockedUseStore.mockReturnValue(mockReportStore);
-    const { container } = render(standardPageSectionComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

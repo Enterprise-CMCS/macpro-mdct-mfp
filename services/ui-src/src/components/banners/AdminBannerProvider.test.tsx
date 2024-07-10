@@ -38,121 +38,124 @@ const testComponent = (
   </AdminBannerProvider>
 );
 
-describe("Test AdminBannerProvider fetchAdminBanner method", () => {
-  beforeEach(async () => {
-    await act(async () => {
-      await render(testComponent);
+describe("<AdminBannerProvider/>", () => {
+  describe("Test AdminBannerProvider fetchAdminBanner method", () => {
+    beforeEach(async () => {
+      await act(async () => {
+        await render(testComponent);
+      });
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("fetchAdminBanner method is called on load", async () => {
+      expect(mockAPI.getBanner).toHaveBeenCalledTimes(1);
+    });
+
+    test("fetchAdminBanner method calls API getBanner method", async () => {
+      expect(mockAPI.getBanner).toHaveBeenCalledTimes(1);
+      await act(async () => {
+        const fetchButton = screen.getByText("Fetch");
+        await userEvent.click(fetchButton);
+      });
+      // 1 call on render + 1 call on button click
+      await waitFor(() => expect(mockAPI.getBanner).toHaveBeenCalledTimes(2));
+    });
+
+    test("Shows error if fetchBanner throws error", async () => {
+      mockAPI.getBanner.mockImplementation(() => {
+        throw new Error();
+      });
+      await act(async () => {
+        await render(testComponent);
+      });
+      expect(useStore.getState().bannerErrorMessage).toBe(
+        bannerErrors.GET_BANNER_FAILED
+      );
     });
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  describe("Test AdminBannerProvider deleteAdminBanner method", () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("deleteAdminBanner method calls API deleteBanner method", async () => {
+      await act(async () => {
+        await render(testComponent);
+      });
+      await act(async () => {
+        const deleteButton = screen.getByText("Delete");
+        await userEvent.click(deleteButton);
+      });
+      expect(mockAPI.deleteBanner).toHaveBeenCalledTimes(1);
+      expect(mockAPI.deleteBanner).toHaveBeenCalledWith(mockBannerData.key);
+
+      await waitFor(() => expect(mockAPI.getBanner).toHaveBeenCalledTimes(2));
+    });
+
+    test("Shows error if deleteBanner throws error", async () => {
+      mockAPI.deleteBanner.mockImplementation(() => {
+        throw new Error();
+      });
+      await act(async () => {
+        await render(testComponent);
+      });
+      await act(async () => {
+        const deleteButton = screen.getByText("Delete");
+        await userEvent.click(deleteButton);
+      });
+      expect(mockAPI.deleteBanner).toHaveBeenCalledTimes(1);
+      expect(mockAPI.deleteBanner).toHaveBeenCalledWith(mockBannerData.key);
+
+      expect(useStore.getState().bannerErrorMessage).toBe(
+        bannerErrors.DELETE_BANNER_FAILED
+      );
+    });
   });
 
-  test("fetchAdminBanner method is called on load", async () => {
-    expect(mockAPI.getBanner).toHaveBeenCalledTimes(1);
-  });
+  describe("Test AdminBannerProvider writeAdminBanner method", () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
 
-  test("fetchAdminBanner method calls API getBanner method", async () => {
-    expect(mockAPI.getBanner).toHaveBeenCalledTimes(1);
-    await act(async () => {
-      const fetchButton = screen.getByText("Fetch");
-      await userEvent.click(fetchButton);
+    test("writeAdminBanner method calls API writeBanner method", async () => {
+      await act(async () => {
+        await render(testComponent);
+      });
+      await act(async () => {
+        const writeButton = screen.getByText("Write");
+        await userEvent.click(writeButton);
+      });
+      expect(mockAPI.writeBanner).toHaveBeenCalledTimes(1);
+      expect(mockAPI.writeBanner).toHaveBeenCalledWith(mockBannerData);
     });
-    // 1 call on render + 1 call on button click
-    await waitFor(() => expect(mockAPI.getBanner).toHaveBeenCalledTimes(2));
-  });
 
-  test("Shows error if fetchBanner throws error", async () => {
-    mockAPI.getBanner.mockImplementation(() => {
-      throw new Error();
+    /*
+     * TODO:
+     * This test is being skipped because it fails, but the failure mode is
+     * fairly unimportant. The CREATE_BANNER_FAILED error message will never
+     * show; even if creating a banner fails, we will immediately try to fetch
+     * the current banner. Successful or not, that will wipe out the create
+     * error message.
+     */
+    test.skip("Shows error if writeAdminBanner fails", async () => {
+      mockAPI.writeBanner.mockImplementation(() => {
+        throw new Error();
+      });
+      await act(async () => {
+        await render(testComponent);
+      });
+      await act(async () => {
+        const writeButton = screen.getByText("Write");
+        await userEvent.click(writeButton);
+      });
+      expect(mockAPI.writeBanner).toHaveBeenCalledTimes(1);
+      expect(useStore.getState().bannerErrorMessage).toBe(
+        bannerErrors.CREATE_BANNER_FAILED
+      );
     });
-    await act(async () => {
-      await render(testComponent);
-    });
-    expect(useStore.getState().bannerErrorMessage).toBe(
-      bannerErrors.GET_BANNER_FAILED
-    );
-  });
-});
-
-describe("Test AdminBannerProvider deleteAdminBanner method", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test("deleteAdminBanner method calls API deleteBanner method", async () => {
-    await act(async () => {
-      await render(testComponent);
-    });
-    await act(async () => {
-      const deleteButton = screen.getByText("Delete");
-      await userEvent.click(deleteButton);
-    });
-    expect(mockAPI.deleteBanner).toHaveBeenCalledTimes(1);
-    expect(mockAPI.deleteBanner).toHaveBeenCalledWith(mockBannerData.key);
-
-    await waitFor(() => expect(mockAPI.getBanner).toHaveBeenCalledTimes(2));
-  });
-
-  test("Shows error if deleteBanner throws error", async () => {
-    mockAPI.deleteBanner.mockImplementation(() => {
-      throw new Error();
-    });
-    await act(async () => {
-      await render(testComponent);
-    });
-    await act(async () => {
-      const deleteButton = screen.getByText("Delete");
-      await userEvent.click(deleteButton);
-    });
-    expect(mockAPI.deleteBanner).toHaveBeenCalledTimes(1);
-    expect(mockAPI.deleteBanner).toHaveBeenCalledWith(mockBannerData.key);
-
-    expect(useStore.getState().bannerErrorMessage).toBe(
-      bannerErrors.DELETE_BANNER_FAILED
-    );
-  });
-});
-
-describe("Test AdminBannerProvider writeAdminBanner method", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test("writeAdminBanner method calls API writeBanner method", async () => {
-    await act(async () => {
-      await render(testComponent);
-    });
-    await act(async () => {
-      const writeButton = screen.getByText("Write");
-      await userEvent.click(writeButton);
-    });
-    expect(mockAPI.writeBanner).toHaveBeenCalledTimes(1);
-    expect(mockAPI.writeBanner).toHaveBeenCalledWith(mockBannerData);
-  });
-
-  /*
-   * This test is being skipped because it fails, but the failure mode is
-   * fairly unimportant. The CREATE_BANNER_FAILED error message will never
-   * show; even if creating a banner fails, we will immediately try to fetch
-   * the current banner. Successful or not, that will wipe out the create
-   * error message.
-   */
-  test.skip("Shows error if writeAdminBanner fails", async () => {
-    mockAPI.writeBanner.mockImplementation(() => {
-      throw new Error();
-    });
-    await act(async () => {
-      await render(testComponent);
-    });
-    await act(async () => {
-      const writeButton = screen.getByText("Write");
-      await userEvent.click(writeButton);
-    });
-    expect(mockAPI.writeBanner).toHaveBeenCalledTimes(1);
-    expect(useStore.getState().bannerErrorMessage).toBe(
-      bannerErrors.CREATE_BANNER_FAILED
-    );
   });
 });

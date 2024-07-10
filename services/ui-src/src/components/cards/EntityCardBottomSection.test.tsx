@@ -57,73 +57,76 @@ const cardWithQualitativeAnswers = (
     entity={mockGenericEntity}
   />
 );
-describe("Test EntityStepCardBottomSection renders", () => {
-  test("EntityStepCardBottomSection renders correctly", () => {
-    const bottomSection = render(entityStepCardBottomSection);
-    expect(bottomSection.container).toBeEmptyDOMElement();
+
+describe("<EntityStepCardBottomSection />", () => {
+  describe("Test EntityStepCardBottomSection renders", () => {
+    test("EntityStepCardBottomSection renders correctly", () => {
+      const bottomSection = render(entityStepCardBottomSection);
+      expect(bottomSection.container).toBeEmptyDOMElement();
+    });
+
+    test("EntityStepCardBottomSection always returns default", () => {
+      let entityStepCardBottomSectionSwitchCase = (
+        <EntityStepCardBottomSection
+          stepType={"mockStepType"}
+          verbiage={verbiage}
+          formattedEntityData={{}}
+        />
+      );
+
+      const bottomSection = render(entityStepCardBottomSectionSwitchCase);
+      expect(bottomSection.container).toBeEmptyDOMElement();
+
+      entityStepCardBottomSectionSwitchCase = (
+        <EntityStepCardBottomSection
+          stepType={"anotherMockStepType"}
+          verbiage={verbiage}
+          formattedEntityData={{}}
+        />
+      );
+      expect(bottomSection.container).toBeEmptyDOMElement();
+    });
   });
 
-  test("EntityStepCardBottomSection always returns default", () => {
-    let entityStepCardBottomSectionSwitchCase = (
-      <EntityStepCardBottomSection
-        stepType={"mockStepType"}
-        verbiage={verbiage}
-        formattedEntityData={{}}
-      />
-    );
-
-    const bottomSection = render(entityStepCardBottomSectionSwitchCase);
-    expect(bottomSection.container).toBeEmptyDOMElement();
-
-    entityStepCardBottomSectionSwitchCase = (
-      <EntityStepCardBottomSection
-        stepType={"anotherMockStepType"}
-        verbiage={verbiage}
-        formattedEntityData={{}}
-      />
-    );
-    expect(bottomSection.container).toBeEmptyDOMElement();
-  });
-});
-
-describe("Test EntityStepCardBottomSection renders the objective progress correctly", () => {
-  beforeEach(async () => {
-    mockedUseStore.mockReturnValue(mockUseSARStore);
-  });
-  test("EntityStepCardBottomSection renders evalutionStep correctly", () => {
-    const bottomOfCard = render(cardWithQualitativeAnswers);
-    expect(
-      bottomOfCard.getByText(
-        `${mockFullyCompletedObjectiveProgress.quarterProjections[0].id} Target:`
-      )
-    ).toBeVisible();
-    expect(
-      bottomOfCard.getByText(
-        `${mockFullyCompletedObjectiveProgress.quarterProjections[1].id} Target:`
-      )
-    ).toBeVisible();
-    expect(
-      bottomOfCard.getByText(
-        `${mockFullyCompletedObjectiveProgress.quarterActuals[0].id} Actual:`
-      )
-    ).toBeVisible();
-    expect(
-      bottomOfCard.getByText(
-        `${mockFullyCompletedObjectiveProgress.quarterActuals[1].id} Actual:`
-      )
-    ).toBeVisible();
-    expect(
-      bottomOfCard.getByText(
-        mockFullyCompletedObjectiveProgress.performanceMeasureProgress
-      )
-    ).toBeVisible();
-    expect(
-      bottomOfCard.getByText(mockFullyCompletedObjectiveProgress.targetsMet)
-    ).toBeVisible();
-    expect(
-      bottomOfCard.getByText(
-        mockFullyCompletedObjectiveProgress.missedTargetReason
-      )
-    ).toBeVisible();
+  describe("Test EntityStepCardBottomSection renders the objective progress correctly", () => {
+    beforeEach(async () => {
+      mockedUseStore.mockReturnValue(mockUseSARStore);
+    });
+    test("EntityStepCardBottomSection renders evalutionStep correctly", () => {
+      const bottomOfCard = render(cardWithQualitativeAnswers);
+      expect(
+        bottomOfCard.getByText(
+          `${mockFullyCompletedObjectiveProgress.quarterProjections[0].id} Target:`
+        )
+      ).toBeVisible();
+      expect(
+        bottomOfCard.getByText(
+          `${mockFullyCompletedObjectiveProgress.quarterProjections[1].id} Target:`
+        )
+      ).toBeVisible();
+      expect(
+        bottomOfCard.getByText(
+          `${mockFullyCompletedObjectiveProgress.quarterActuals[0].id} Actual:`
+        )
+      ).toBeVisible();
+      expect(
+        bottomOfCard.getByText(
+          `${mockFullyCompletedObjectiveProgress.quarterActuals[1].id} Actual:`
+        )
+      ).toBeVisible();
+      expect(
+        bottomOfCard.getByText(
+          mockFullyCompletedObjectiveProgress.performanceMeasureProgress
+        )
+      ).toBeVisible();
+      expect(
+        bottomOfCard.getByText(mockFullyCompletedObjectiveProgress.targetsMet)
+      ).toBeVisible();
+      expect(
+        bottomOfCard.getByText(
+          mockFullyCompletedObjectiveProgress.missedTargetReason
+        )
+      ).toBeVisible();
+    });
   });
 });

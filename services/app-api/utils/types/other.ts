@@ -84,6 +84,7 @@ export interface ErrorVerbiage {
 const states = [
   "AL",
   "AK",
+  "AS", // American Samoa
   "AZ",
   "AR",
   "CA",
@@ -92,7 +93,9 @@ const states = [
   "DE",
   "DC",
   "FL",
+  "FM", // Federated States of Micronesia
   "GA",
+  "GU", // Guam
   "HI",
   "ID",
   "IL",
@@ -102,12 +105,14 @@ const states = [
   "KY",
   "LA",
   "ME",
+  "MH", // Marshall Islands
   "MD",
   "MA",
   "MI",
   "MN",
   "MS",
   "MO",
+  "MP", // Northern Mariana Islands
   "MT",
   "NE",
   "NV",
@@ -122,6 +127,7 @@ const states = [
   "OR",
   "PA",
   "PR",
+  "PW", // Palau
   "RI",
   "SC",
   "SD",
@@ -130,6 +136,7 @@ const states = [
   "UT",
   "VT",
   "VA",
+  "VI", // Virgin Islands
   "WA",
   "WV",
   "WI",

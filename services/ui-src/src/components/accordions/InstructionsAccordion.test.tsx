@@ -1,14 +1,14 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import userEvent from "@testing-library/user-event";
 // components
 import { InstructionsAccordion } from "components";
 // verbiage
 import { mockAccordion } from "utils/testing/setupJest";
+import { testA11y } from "utils/testing/commonTests";
 
 const accordionComponent = <InstructionsAccordion verbiage={mockAccordion} />;
 
-describe("Test InstructionsAccordion", () => {
+describe("<InstructionsAccordion />", () => {
   beforeEach(() => {
     render(accordionComponent);
   });
@@ -30,12 +30,6 @@ describe("Test InstructionsAccordion", () => {
     expect(accordionQuestion).toBeVisible();
     expect(screen.getByText(mockAccordion.text)).toBeVisible();
   });
-});
 
-describe("Test TemplateCardAccordion accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(accordionComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(accordionComponent);
 });

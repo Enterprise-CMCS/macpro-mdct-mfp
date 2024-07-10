@@ -78,7 +78,7 @@ const exportedOverlayModalReportComponentEntityStep = (
   </ReportContext.Provider>
 );
 
-describe("ExportedReportWrapper rendering", () => {
+describe("<ExportedOverlayModalReportSection />", () => {
   test("ExportedOverlayModalReportComponent renders", () => {
     render(exportedOverlayModalReportComponent);
     expect(screen.getByTestId("exportedOverlayModalPage")).toBeInTheDocument();
