@@ -36,7 +36,7 @@ export const EntityStepCard = ({
   const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
 
-  let cardContent = {};
+  let cardContent = <></>;
 
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
@@ -188,7 +188,6 @@ export const EntityStepCard = ({
 
 interface Props {
   entity: EntityShape;
-  entityIndex: number;
   entityTotal?: number;
   stepType: string;
   formattedEntityData: AnyObject;

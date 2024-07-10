@@ -10,15 +10,13 @@ const fundingSourcesEntity = (
 );
 
 describe("<FundingSourcesEntity />", () => {
-  beforeEach(() => {
-    render(fundingSourcesEntity);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
   test("FundingSourcesEntity renders correctly", () => {
+    render(fundingSourcesEntity);
+    expect(
+      screen.getByRole("heading", { name: "mock-funding-source" })
+    ).toBeVisible();
     expect(screen.getByText("Projected quarterly expenditures")).toBeVisible();
+    expect(screen.getByText("2024 Q1:")).toBeVisible();
   });
 
   testA11y(

@@ -8,11 +8,11 @@ import { notAnsweredText } from "../../constants";
 const wereTargetsMetForObjectiveProgress = (formattedEntityData: AnyObject) => {
   return (
     <>
-      {formattedEntityData?.targetsMet && (
+      {formattedEntityData.targetsMet && (
         <Box
           sx={
-            formattedEntityData?.quarterActuals?.length === 0
-              ? formattedEntityData?.targetsMet
+            formattedEntityData.quarterActuals?.length === 0
+              ? formattedEntityData.targetsMet
                 ? sx.box
                 : sx.notAnsweredBox
               : undefined
@@ -22,14 +22,14 @@ const wereTargetsMetForObjectiveProgress = (formattedEntityData: AnyObject) => {
             Were targets for performance measures and/or expected time frames
             for deliverables met?
           </Text>
-          <Text sx={sx.description}>{formattedEntityData?.targetsMet}</Text>
-          {!formattedEntityData?.targetsMet && (
+          <Text sx={sx.description}>{formattedEntityData.targetsMet}</Text>
+          {!formattedEntityData.targetsMet && (
             <Text sx={{ ...sx.notAnsweredDescription, marginTop: "-1rem" }}>
               {notAnsweredText}{" "}
             </Text>
           )}
-          {(formattedEntityData?.targetsMet === "No" ||
-            !formattedEntityData?.targetsMet) && (
+          {(formattedEntityData.targetsMet === "No" ||
+            !formattedEntityData.targetsMet) && (
             <>
               <Text sx={sx.subtitle}>
                 Describe progress toward reaching the target/milestone during
@@ -39,12 +39,12 @@ const wereTargetsMetForObjectiveProgress = (formattedEntityData: AnyObject) => {
               </Text>
               <Text
                 sx={
-                  formattedEntityData?.missedTargetReason
+                  formattedEntityData.missedTargetReason
                     ? sx.description
                     : sx.notAnsweredDescription
                 }
               >
-                {formattedEntityData?.missedTargetReason ?? notAnsweredText}
+                {formattedEntityData.missedTargetReason ?? notAnsweredText}
               </Text>
             </>
           )}
@@ -77,7 +77,7 @@ export const ObjectiveProgressEntity = ({
             Quantitative targets for this reporting period
           </Text>
           <Grid sx={sx.sarGrid}>
-            {formattedEntityData?.quarterProjections.map((quarter: any) => {
+            {formattedEntityData.quarterProjections.map((quarter: any) => {
               return (
                 <GridItem key={quarter.id}>
                   <Flex sx={sx.gridItems}>

@@ -31,7 +31,6 @@ const {
 const UnfinishedGenericEntityCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType="mock-step-type"
     formattedEntityData={mockUnfinishedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
@@ -44,7 +43,6 @@ const UnfinishedGenericEntityCardComponent = (
 const GenericEntityTypeEntityCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType="stepType"
     formattedEntityData={mockCompletedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
@@ -57,7 +55,6 @@ const GenericEntityTypeEntityCardComponent = (
 const DisabledEntityTypeEntityCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType="stepType"
     formattedEntityData={mockCompletedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
@@ -71,7 +68,6 @@ const DisabledEntityTypeEntityCardComponent = (
 const UnfinishedEvaluationPlanCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType={OverlayModalStepTypes.EVALUATION_PLAN}
     formattedEntityData={{
       ...mockUnfinishedGenericFormattedEntityData,
@@ -89,7 +85,6 @@ const UnfinishedEvaluationPlanCardComponent = (
 const CompletedEvaluationPlanCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType={OverlayModalStepTypes.EVALUATION_PLAN}
     formattedEntityData={mockCompletedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
@@ -102,7 +97,6 @@ const CompletedEvaluationPlanCardComponent = (
 const UnfinishedFundingSourcesCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType={OverlayModalStepTypes.FUNDING_SOURCES}
     formattedEntityData={{
       ...mockUnfinishedGenericFormattedEntityData,
@@ -118,7 +112,6 @@ const UnfinishedFundingSourcesCardComponent = (
 const CompletedFundingSourcesCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType={OverlayModalStepTypes.FUNDING_SOURCES}
     formattedEntityData={{
       ...mockCompletedGenericFormattedEntityData,
@@ -148,7 +141,6 @@ const CompletedFundingSourcesCardComponent = (
 const NoOpenAddEditEntityFunction = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType="mock-step-type"
     formattedEntityData={mockUnfinishedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}

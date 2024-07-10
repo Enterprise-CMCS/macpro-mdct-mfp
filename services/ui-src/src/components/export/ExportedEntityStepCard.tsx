@@ -28,11 +28,12 @@ export const ExportedEntityStepCard = ({
   let entityCompleted = false;
   const entitiesCount = `${entityIndex + 1} / ${entityTotal}`;
   // any drawer-based field will do for this check
-  let cardContent = {};
+  let cardContent = <></>;
+
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
-      entityCompleted = formattedEntityData?.objectiveName;
-      entityCompleted = formattedEntityData?.performanceMeasureProgress;
+      entityCompleted = formattedEntityData.objectiveName;
+      entityCompleted = formattedEntityData.performanceMeasureProgress;
 
       cardContent = (
         <ObjectiveProgressEntity
@@ -42,12 +43,12 @@ export const ExportedEntityStepCard = ({
       );
       break;
     case OverlayModalStepTypes.EVALUATION_PLAN:
-      entityCompleted = formattedEntityData?.objectiveName;
-      if (entityCompleted && formattedEntityData?.includesTargets === "Yes") {
-        entityCompleted = formattedEntityData?.quarters.length === 12;
-        if (formattedEntityData?.quarters)
+      entityCompleted = formattedEntityData.objectiveName;
+      if (entityCompleted && formattedEntityData.includesTargets === "Yes") {
+        entityCompleted = formattedEntityData.quarters.length === 12;
+        if (formattedEntityData.quarters)
           formattedEntityData.quarters = fillEmptyQuarters(
-            formattedEntityData?.quarters
+            formattedEntityData.quarters
           );
       }
 
@@ -57,11 +58,11 @@ export const ExportedEntityStepCard = ({
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
       entityCompleted =
-        formattedEntityData?.fundingSource &&
-        formattedEntityData?.quarters.length === 12;
-      if (formattedEntityData?.quarters)
+        formattedEntityData.fundingSource &&
+        formattedEntityData.quarters.length === 12;
+      if (formattedEntityData.quarters)
         formattedEntityData.quarters = fillEmptyQuarters(
-          formattedEntityData?.quarters
+          formattedEntityData.quarters
         );
 
       cardContent = (
@@ -84,7 +85,7 @@ export const ExportedEntityStepCard = ({
       boxShadow={boxShadow}
       border={border}
       borderColor={borderColor}
-      data-testid="entityCard"
+      data-testid="exportedEntityCard"
     >
       <Box sx={sx.contentBox} className={"export-version"}>
         <Text sx={sx.entitiesCount} data-testid="entities-count">

@@ -186,50 +186,139 @@ export const mockObjectiveProgressFormattedEntityData = {
 };
 
 export const mockFundingSourcesFormattedEntityData = {
-  objectiveName: "mockFundingSourceName",
-  description: "mockDescription",
   fundingSource: "mock-funding-source",
+  description: "mockDescription",
   quarters: [
     {
-      id: "mock-id-1",
-      value: "mock-value-1",
+      id: "2024 Q1",
+      value: "100",
     },
     {
-      id: "mock-id-2",
-      value: "mock-value-2",
+      id: "2024 Q2",
+      value: "200",
     },
     {
-      id: "mock-id-3",
-      value: "mock-value-3",
+      id: "2024 Q3",
+      value: "300",
     },
     {
-      id: "mock-id-4",
-      value: "mock-value-4",
+      id: "2024 Q4",
+      value: "400",
     },
   ],
 };
 
-export const mockEvaluationPlanFormattedEntityData = {
+export const mockEvaluationPlanFormattedEntityDataWP = {
   objectiveName: "mockEvaluationPlanName",
   description: "mockDescription",
-  targets: "3",
-  includesTargets: [
+  targets: "1",
+  includesTargets: "Yes",
+  additionalDetails: "2",
+  quarters: [
     {
-      key: "evaluationPlan_includesTargets",
-      value: "Yes",
+      id: "2024 Q1",
+      value: "1",
+    },
+    {
+      id: "2024 Q2",
+      value: "2",
+    },
+    {
+      id: "2024 Q3",
+      value: "3",
+    },
+    {
+      id: "2024 Q4",
+      value: "4",
+    },
+    {
+      id: "2025 Q1",
+      value: "2",
+    },
+    {
+      id: "2025 Q2",
+      value: "4",
+    },
+    {
+      id: "2025 Q3",
+      value: "6",
+    },
+    {
+      id: "2025 Q4",
+      value: "8",
+    },
+    {
+      id: "2026 Q1",
+      value: "1",
+    },
+    {
+      id: "2026 Q2",
+      value: "3",
+    },
+    {
+      id: "2026 Q3",
+      value: "5",
+    },
+    {
+      id: "2026 Q4",
+      value: "7",
     },
   ],
+};
+
+export const mockEvaluationPlanFormattedEntityDataSAR = {
+  objectiveName: "mockEvaluationPlanName",
+  description: "mockDescription",
+  targets: "1",
   additionalDetails: "2",
-  quarterlyProjections2024Q1: "1",
-  quarterlyProjections2024Q2: "2",
-  quarterlyProjections2024Q3: "2",
-  quarterlyProjections2024Q4: "2",
-  quarterlyProjections2025Q1: "2",
-  quarterlyProjections2025Q2: "2",
-  quarterlyProjections2025Q3: "2",
-  quarterlyProjections2025Q4: "2",
-  quarterlyProjections2026Q1: "2",
-  quarterlyProjections2026Q2: "2",
-  quarterlyProjections2026Q3: "22",
-  quarterlyProjections2026Q4: "2",
+  quarters: [
+    {
+      id: "2024 Q1",
+      value: "1",
+    },
+    {
+      id: "2024 Q2",
+      value: "2",
+    },
+    {
+      id: "2024 Q3",
+      value: "3",
+    },
+    {
+      id: "2024 Q4",
+      value: "4",
+    },
+    {
+      id: "2025 Q1",
+      value: "2",
+    },
+    {
+      id: "2025 Q2",
+      value: "4",
+    },
+    {
+      id: "2025 Q3",
+      value: "6",
+    },
+    {
+      id: "2025 Q4",
+      value: "8",
+    },
+    {
+      id: "2026 Q1",
+      value: "1",
+    },
+    {
+      id: "2026 Q2",
+      value: "3",
+    },
+    {
+      id: "2026 Q3",
+      value: "5",
+    },
+    {
+      id: "2026 Q4",
+      value: "Not Answered",
+    },
+  ],
 };

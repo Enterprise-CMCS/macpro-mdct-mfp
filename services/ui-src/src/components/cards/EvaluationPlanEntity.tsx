@@ -9,7 +9,8 @@ export const EvaluationPlanEntity = ({
   formattedEntityData,
   headingLevel = "h2",
 }: Props) => {
-  const { report } = useStore() ?? {};
+  const { report } = useStore();
+
   return (
     <>
       <Heading as={headingLevel} sx={sx.mainHeading}>
@@ -27,16 +28,14 @@ export const EvaluationPlanEntity = ({
           <Text sx={sx.subtitle}>
             Does the performance measure include quantitative targets?
           </Text>
-          <Text sx={sx.description}>
-            {formattedEntityData?.includesTargets}
-          </Text>
+          <Text sx={sx.description}>{formattedEntityData.includesTargets}</Text>
         </>
       )}
       {formattedEntityData.quarters?.length > 0 && (
         <>
           <Text sx={sx.subtitle}>Quantitative Targets</Text>
           <Grid sx={sx.grid}>
-            {formattedEntityData?.quarters.map((quarter: any) => {
+            {formattedEntityData.quarters.map((quarter: any) => {
               return (
                 <GridItem key={quarter.id}>
                   <Flex sx={sx.gridItems}>

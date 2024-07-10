@@ -151,22 +151,19 @@ export const OverlayModalPage = ({
           </>
         )}
         <Box>
-          {reportFieldDataEntities?.map(
-            (entity: EntityShape, entityIndex: number) => (
-              <EntityStepCard
-                key={entity.id}
-                entity={entity}
-                entityIndex={entityIndex}
-                stepType={stepType}
-                verbiage={verbiage}
-                formattedEntityData={getFormattedEntityData(stepType, entity)}
-                openAddEditEntityModal={openAddEditEntityModal}
-                openDeleteEntityModal={openDeleteEntityModal}
-                disabled={userDisabled}
-                hasBoxShadow={true}
-              />
-            )
-          )}
+          {reportFieldDataEntities?.map((entity: EntityShape) => (
+            <EntityStepCard
+              key={entity.id}
+              entity={entity}
+              stepType={stepType}
+              verbiage={verbiage}
+              formattedEntityData={getFormattedEntityData(stepType, entity)}
+              openAddEditEntityModal={openAddEditEntityModal}
+              openDeleteEntityModal={openDeleteEntityModal}
+              disabled={userDisabled}
+              hasBoxShadow={true}
+            />
+          ))}
           {reportFieldDataEntities.length > 1 &&
             report?.reportType === ReportType.WP && (
               <Button
