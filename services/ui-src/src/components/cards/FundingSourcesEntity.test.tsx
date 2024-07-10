@@ -19,7 +19,7 @@ const fundingSourcesEntityNoQuarters = (
 );
 
 describe("<FundingSourcesEntity />", () => {
-  test("FundingSourcesEntity renders correctly", () => {
+  test("FundingSourcesEntity renders with quarters", () => {
     render(fundingSourcesEntity);
     expect(
       screen.getByRole("heading", { name: "mock-funding-source" })
@@ -28,7 +28,7 @@ describe("<FundingSourcesEntity />", () => {
     expect(screen.getByText("2024 Q1:")).toBeVisible();
   });
 
-  test("Correctly ", () => {
+  test("Renders without quarters", () => {
     render(fundingSourcesEntityNoQuarters);
     expect(
       screen.getByRole("heading", { name: "mock-funding-source" })

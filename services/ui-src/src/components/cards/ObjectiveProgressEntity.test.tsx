@@ -9,51 +9,26 @@ const objectiveProgressEntityComponent = (
     entityCompleted={true}
   />
 );
+const renderedText = [
+  `${mockObjectiveProgressFormattedEntityData.quarterProjections[0].id} Target:`,
+  `${mockObjectiveProgressFormattedEntityData.quarterProjections[1].id} Target:`,
+  `${mockObjectiveProgressFormattedEntityData.quarterActuals[0].id} Actual:`,
+  `${mockObjectiveProgressFormattedEntityData.quarterActuals[1].id} Actual:`,
+  mockObjectiveProgressFormattedEntityData.missedTargetReason,
+  mockObjectiveProgressFormattedEntityData.performanceMeasureProgress,
+  mockObjectiveProgressFormattedEntityData.performanceMeasureProgress,
+];
 
 describe("<ObjectiveProgressEntity />", () => {
-  beforeEach(() => {
-    render(objectiveProgressEntityComponent);
-  });
   test("ObjectiveProgressEntity renders correctly", () => {
+    render(objectiveProgressEntityComponent);
     expect(
       screen.getByRole("heading", { name: "mockObjectiveName" })
     ).toBeVisible();
-  });
 
-  test("ObjectiveProgressEntity renders evalutionStep correctly", () => {
-    expect(
-      screen.getByText(
-        `${mockObjectiveProgressFormattedEntityData.quarterProjections[0].id} Target:`
-      )
-    ).toBeVisible();
-    expect(
-      screen.getByText(
-        `${mockObjectiveProgressFormattedEntityData.quarterProjections[1].id} Target:`
-      )
-    ).toBeVisible();
-    expect(
-      screen.getByText(
-        `${mockObjectiveProgressFormattedEntityData.quarterActuals[0].id} Actual:`
-      )
-    ).toBeVisible();
-    expect(
-      screen.getByText(
-        `${mockObjectiveProgressFormattedEntityData.quarterActuals[1].id} Actual:`
-      )
-    ).toBeVisible();
-    expect(
-      screen.getByText(
-        mockObjectiveProgressFormattedEntityData.performanceMeasureProgress
-      )
-    ).toBeVisible();
-    expect(
-      screen.getByText(mockObjectiveProgressFormattedEntityData.targetsMet)
-    ).toBeVisible();
-    expect(
-      screen.getByText(
-        mockObjectiveProgressFormattedEntityData.missedTargetReason
-      )
-    ).toBeVisible();
+    renderedText.forEach((text) =>
+      expect(screen.getByText(text)).toBeVisible()
+    );
   });
 
   testA11y(
