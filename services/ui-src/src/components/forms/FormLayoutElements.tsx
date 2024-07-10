@@ -10,11 +10,11 @@ export const SectionHeader = ({
       marginTop: "2rem",
     },
     label: {
-      marginTop: "2rem",
+      marginTop: "3rem",
     },
   };
   return (
-    <Box sx={sx} {...props}>
+    <Box sx={sx} {...props} className="sectionHeader">
       <Heading size="sm" sx={sx.label}>
         {label || ""}
       </Heading>

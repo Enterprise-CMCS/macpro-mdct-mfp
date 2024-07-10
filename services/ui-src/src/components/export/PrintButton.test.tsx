@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 // components
 import { PrintButton } from "./PrintButton";
 // types
@@ -11,6 +10,7 @@ import {
   mockWPApprovedFullReport,
   mockWPFullReport,
 } from "utils/testing/mockReport";
+import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 
@@ -43,7 +43,7 @@ const PrintButtonComponent = () => {
   );
 };
 
-describe("PrintButton", () => {
+describe("<PrintButton />", () => {
   test("check text when not submitted", () => {
     mockedUseStore.mockReturnValue(mockUseStore);
     render(PrintButtonComponent());
@@ -61,16 +61,8 @@ describe("PrintButton", () => {
     render(PrintButtonComponent());
     expect(screen.getByText("Download PDF")).toBeVisible();
   });
-});
 
-describe("Test PrintButton accessibility", () => {
-  beforeEach(() => {
+  testA11y(PrintButtonComponent(), () => {
     mockedUseStore.mockReturnValue(mockUseStore);
-  });
-
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(PrintButtonComponent());
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
 });

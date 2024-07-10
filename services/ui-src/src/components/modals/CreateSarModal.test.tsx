@@ -6,8 +6,8 @@ import {
 import { ReportContext } from "../reports/ReportProvider";
 import { CreateSarModal } from "./CreateSarModal";
 import userEvent from "@testing-library/user-event";
-import { axe } from "jest-axe";
 import { act } from "react-dom/test-utils";
+import { testA11yAct } from "utils/testing/commonTests";
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
@@ -86,44 +86,36 @@ const fillForm = async (option: string) => {
   await userEvent.click(submitButton);
 };
 
-describe("Test CreateSarModal", () => {
+describe("<CreateSarModal />", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-  test("Adding a new report", async () => {
-    await act(async () => {
-      await render(modalComponent);
+
+  describe("New SAR", () => {
+    test("Adding a new report", async () => {
+      await act(async () => {
+        await render(modalComponent);
+      });
+      await fillForm("No");
+      await expect(mockCreateReport).toHaveBeenCalledTimes(1);
+      await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
+      await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
     });
-    await fillForm("No");
-    await expect(mockCreateReport).toHaveBeenCalledTimes(1);
-    await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
-    await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+
+    testA11yAct(modalComponent);
   });
 
-  test("Editing an existing report", async () => {
-    await act(async () => {
-      await render(modalComponentWithSelectedSAR);
+  describe("Existing SAR", () => {
+    test("Editing an existing report", async () => {
+      await act(async () => {
+        await render(modalComponentWithSelectedSAR);
+      });
+      await fillForm("Yes");
+      await expect(mockUpdateReport).toHaveBeenCalledTimes(1);
+      await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
+      await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
     });
-    await fillForm("Yes");
-    await expect(mockUpdateReport).toHaveBeenCalledTimes(1);
-    await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
-    await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-  });
-});
 
-describe("Test CreateSarModal accessibility", () => {
-  it("Should not have basic accessibility issues for new SAR", async () => {
-    await act(async () => {
-      const { container } = await render(modalComponent);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
-  });
-  it("Should not have basic accessibility issues for existing SAR", async () => {
-    await act(async () => {
-      const { container } = render(modalComponentWithSelectedSAR);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    testA11yAct(modalComponentWithSelectedSAR);
   });
 });

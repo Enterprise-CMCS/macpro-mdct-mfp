@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { BrowserRouter as Router } from "react-router-dom";
+import { testA11y } from "utils/testing/commonTests";
 // // utils
 import { ScrollToTopComponent } from "./scrollToTop";
 
@@ -12,19 +12,11 @@ const scrollToTopComponent = (
   </Router>
 );
 
-describe("Test scrollToTop Component", () => {
-  beforeEach(() => {
-    render(scrollToTopComponent);
-  });
+describe("<ScrollToTopComponent />", () => {
   test("test scrollToTop renders", () => {
+    render(scrollToTopComponent);
     expect(screen.getByTestId("test-scroll-comp")).toBeVisible;
   });
-});
 
-describe("Test scrollToTop Component accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(scrollToTopComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(scrollToTopComponent);
 });

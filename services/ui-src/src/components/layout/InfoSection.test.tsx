@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { axe } from "jest-axe";
 import { InfoSection } from "components";
+import { testA11y } from "utils/testing/commonTests";
 
 const content = {
   sectionNumber: 1,
@@ -13,7 +13,7 @@ const InfoSectionComponent = (
   <InfoSection data-testid="section-component" content={content} />
 );
 
-describe("Test InfoSection", () => {
+describe("<InfoSection />", () => {
   test("Check that Section renders", () => {
     const { getByTestId } = render(InfoSectionComponent);
     expect(getByTestId("section-component")).toBeVisible();
@@ -26,12 +26,6 @@ describe("Test InfoSection", () => {
     const sectionHeader = screen.getByText(content.header);
     await expect(sectionHeader).toBeVisible();
   });
-});
 
-describe("Test InfoSection accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(InfoSectionComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(InfoSectionComponent);
 });

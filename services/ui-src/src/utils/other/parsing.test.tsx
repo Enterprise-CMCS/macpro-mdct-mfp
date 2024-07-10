@@ -150,63 +150,81 @@ const testComponentWithChildren = (
 
 const undefinedTypeComponent = <div>{parseCustomHtml(undefinedElement)}</div>;
 
-describe("Test parseCustomHtml", () => {
-  const sanitizationSpy = jest.spyOn(DOMPurify, "sanitize");
-  beforeEach(() => {
-    render(testComponent);
+describe("utils/parsing", () => {
+  describe("parseCustomHtml()", () => {
+    describe("Test parseCustomHtml", () => {
+      const sanitizationSpy = jest.spyOn(DOMPurify, "sanitize");
+      beforeEach(() => {
+        render(testComponent);
+      });
+
+      test("Custom element renders correctly", () => {
+        const link = screen.getByText("with link");
+        expect(link).toBeVisible();
+      });
+
+      test("Non-custom element renders correctly", () => {
+        const element = screen.getByText("Paragraph tag.");
+        expect(element).toBeVisible();
+      });
+
+      test("Type 'html' is sanitized and parsed", () => {
+        expect(sanitizationSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe("Test createElementWithChildren", () => {
+      test("should correctly create ul elements", async () => {
+        const { container } = render(testComponentWithChildren);
+        expect(await container.querySelector("ul")).toBeVisible();
+        expect(
+          await container.querySelector('[data-test-id="foo"]')
+        ).toBeVisible();
+        expect(
+          await container.querySelector('[data-test-id="bar"]')
+        ).toBeVisible();
+        expect(
+          await container.querySelector('[data-test-id="biz"]')
+        ).toBeVisible();
+      });
+
+      test("should correctly create ol elements", async () => {
+        const { container } = render(testComponentWithChildren);
+        expect(await container.querySelector("ol")).toBeVisible();
+        expect(
+          await container.querySelector('[data-test-id="foo"]')
+        ).toBeVisible();
+        expect(
+          await container.querySelector('[data-test-id="bar"]')
+        ).toBeVisible();
+        expect(
+          await container.querySelector('[data-test-id="biz"]')
+        ).toBeVisible();
+      });
+    });
+
+    describe("Handling undefined elementType", () => {
+      beforeEach(() => {
+        render(undefinedTypeComponent);
+      });
+
+      test("Should handle and convert undefined element type to text", () => {
+        const element = screen.getByText("Undefined element");
+        expect(element).toBeVisible();
+      });
+    });
   });
 
-  test("Custom element renders correctly", () => {
-    const link = screen.getByText("with link");
-    expect(link).toBeVisible();
-  });
-
-  test("Non-custom element renders correctly", () => {
-    const element = screen.getByText("Paragraph tag.");
-    expect(element).toBeVisible();
-  });
-
-  test("Type 'html' is sanitized and parsed", () => {
-    expect(sanitizationSpy).toHaveBeenCalled();
-  });
-});
-
-describe("Handling undefined elementType", () => {
-  beforeEach(() => {
-    render(undefinedTypeComponent);
-  });
-
-  test("Should handle and convert undefined element type to text", () => {
-    const element = screen.getByText("Undefined element");
-    expect(element).toBeVisible();
-  });
-});
-
-// labelTextWithOptional test
-describe("Test labelTextWithOptional", () => {
-  test("if a string gets passed into labelTextWithOptional, the 'optional' text will appear", () => {
-    const label = "field title";
-    const testComponent = <div>{labelTextWithOptional(label)}</div>;
-    render(testComponent);
-    const optionalText = screen.getByText("(optional)");
-    expect(optionalText).toBeVisible();
-  });
-});
-
-describe("Test createElementWithChildren", () => {
-  test("should correctly create ul elements", async () => {
-    const { container } = render(testComponentWithChildren);
-    expect(await container.querySelector("ul")).toBeVisible();
-    expect(await container.querySelector('[data-test-id="foo"]')).toBeVisible();
-    expect(await container.querySelector('[data-test-id="bar"]')).toBeVisible();
-    expect(await container.querySelector('[data-test-id="biz"]')).toBeVisible();
-  });
-
-  test("should correctly create ol elements", async () => {
-    const { container } = render(testComponentWithChildren);
-    expect(await container.querySelector("ol")).toBeVisible();
-    expect(await container.querySelector('[data-test-id="foo"]')).toBeVisible();
-    expect(await container.querySelector('[data-test-id="bar"]')).toBeVisible();
-    expect(await container.querySelector('[data-test-id="biz"]')).toBeVisible();
+  describe("labelTextWithOptional()", () => {
+    // labelTextWithOptional test
+    describe("Test labelTextWithOptional", () => {
+      test("if a string gets passed into labelTextWithOptional, the 'optional' text will appear", () => {
+        const label = "field title";
+        const testComponent = <div>{labelTextWithOptional(label)}</div>;
+        render(testComponent);
+        const optionalText = screen.getByText("(optional)");
+        expect(optionalText).toBeVisible();
+      });
+    });
   });
 });

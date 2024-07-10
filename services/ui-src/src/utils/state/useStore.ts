@@ -128,7 +128,7 @@ const entityStore = (set: Function) => ({
 });
 
 export const useStore = create(
-  // persist and devtools are being used for debugging state
+  // devtools is being used for debugging state
   persist(
     devtools<MfpUserState & AdminBannerState & MfpReportState & MfpEntityState>(
       (set) => ({
@@ -140,6 +140,7 @@ export const useStore = create(
     ),
     {
       name: "mfp-store",
+      partialize: (state) => ({ report: state.report }),
     }
   )
 );

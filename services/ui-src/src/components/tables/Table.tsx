@@ -42,7 +42,7 @@ export const Table = ({
           <Tr>
             {content.headRow.map((headerCell: string, index: number) => (
               <Th
-                key={index}
+                key={`${index}-head-cell`}
                 scope="col"
                 sx={{ ...sx.tableHeader, ...sxOverride }}
                 aria-label={ariaOverride?.headRow?.[index]}
@@ -59,10 +59,10 @@ export const Table = ({
         {/* if content prop is passed, parse and render rows and cells */}
         {content.bodyRows &&
           content.bodyRows!.map((row: string[], index: number) => (
-            <Tr key={row[0] + index}>
+            <Tr key={`${row[0]}${index}-body-row`}>
               {row.map((cell: string, rowIndex: number) => (
                 <Td
-                  key={cell + rowIndex}
+                  key={`${cell}${rowIndex}-body-cell`}
                   sx={{
                     tableCell: border ? sx.tableCellBorder : sx.tableCell,
                     color:
@@ -80,11 +80,11 @@ export const Table = ({
         {content.footRow &&
           content.footRow?.map((row: string[], index: number) => {
             return (
-              <Tr key={row[0] + index}>
+              <Tr key={`${row[0]}${index}-foot-row`}>
                 {row.map((headerCell: string, rowIndex: number) => {
                   return (
                     <Th
-                      key={rowIndex}
+                      key={`${rowIndex}-foot-cell`}
                       scope="col"
                       sx={{ ...sx.tableHeader, ...sxOverride }}
                       aria-label={ariaOverride?.footRow?.[index][rowIndex]}

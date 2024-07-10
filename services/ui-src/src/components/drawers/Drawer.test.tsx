@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "jest-axe";
 //components
 import { Drawer } from "components";
 // constants
 import { closeText } from "../../constants";
+import { testA11y } from "utils/testing/commonTests";
 
 const mockOnClose = jest.fn();
 
@@ -22,20 +22,14 @@ const drawerComponent = (
   <Drawer verbiage={mockVerbiage} drawerDisclosure={mockDrawerDisclosure} />
 );
 
-describe("Test Drawer fill form and close", () => {
-  it("Drawer can be closed with close button", async () => {
+describe("<Drawer />", () => {
+  test("Drawer can be closed with close button", async () => {
     render(drawerComponent);
     const closeButton = screen.getByText(closeText);
     expect(closeButton).toBeVisible();
     await userEvent.click(closeButton);
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
-});
 
-describe("Test Drawer accessibility", () => {
-  it("Should not have basic accessibility issues", async () => {
-    const { container } = render(drawerComponent);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  testA11y(drawerComponent);
 });

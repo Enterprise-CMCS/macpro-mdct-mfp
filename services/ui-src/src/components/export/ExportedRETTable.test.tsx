@@ -1,7 +1,6 @@
 //testing lib
 import { render, screen } from "@testing-library/react";
 import { ExportRETTable } from "components";
-import { axe } from "jest-axe";
 //components
 import {
   formatHeaderForRET,
@@ -11,6 +10,7 @@ import {
 //utils
 import { useStore } from "utils";
 import { notAnsweredText } from "../../constants";
+import { testA11y } from "utils/testing/commonTests";
 
 global.structuredClone = jest.fn((val) => {
   return JSON.parse(JSON.stringify(val));
@@ -127,26 +127,28 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockSARReport);
 
 //These test are testing functions that uses hardcoded return values
-describe("Test table functions specific for R,E & T", () => {
-  describe("Test formatHeaderForRET functionality", () => {
-    it("Returns label without change", () => {
-      const sameLabel = formatHeaderForRET("Mock name");
-      expect(sameLabel).toBe("Mock name");
-    });
-    it("Removes Other: from label", () => {
-      const newLabel = formatHeaderForRET("Other: Test");
-      expect(newLabel).toBe("Test");
-    });
-    it("Returns abbr label", () => {
-      const newLabel = formatHeaderForRET("Mock Long Name (MLN)");
-      expect(newLabel).toBe("MLN");
-    });
-    it("Returns Number of Older adults as Older Adults", () => {
-      const newLabel = formatHeaderForRET("Number of Older adults");
-      expect(newLabel).toBe("Older Adults");
-    });
+describe("<ExportRETTable />", () => {
+  test("Returns label without change", () => {
+    const sameLabel = formatHeaderForRET("Mock name");
+    expect(sameLabel).toBe("Mock name");
   });
-  it("Test formatLabelForRET functionality", () => {
+
+  test("Removes Other: from label", () => {
+    const newLabel = formatHeaderForRET("Other: Test");
+    expect(newLabel).toBe("Test");
+  });
+
+  test("Returns abbr label", () => {
+    const newLabel = formatHeaderForRET("Mock Long Name (MLN)");
+    expect(newLabel).toBe("MLN");
+  });
+
+  test("Returns Number of Older adults as Older Adults", () => {
+    const newLabel = formatHeaderForRET("Number of Older adults");
+    expect(newLabel).toBe("Older Adults");
+  });
+
+  test("Test formatLabelForRET functionality", () => {
     const values = [
       { id: "ret-mtfqi", label: "Mock name", result: "Mock name" },
       { id: "ret-mtfqi", label: "mock (MLN)", result: "MLN" },
@@ -167,7 +169,12 @@ describe("Test table functions specific for R,E & T", () => {
         label: "Apartment in qualified assisted living",
         result: "Apt. in qualified assisted living",
       },
-      { id: "ret-mpdprp", label: "Mock name", report: {}, result: "Mock name" },
+      {
+        id: "ret-mpdprp",
+        label: "Mock name",
+        report: {},
+        result: "Mock name",
+      },
       {
         id: "ret-mpdprp",
         label: "Other, specify",
@@ -181,7 +188,8 @@ describe("Test table functions specific for R,E & T", () => {
       expect(newLabel).toBe(value.result);
     });
   });
-  it("Test formatFooterForRET functionality", () => {
+
+  test("Test formatFooterForRET functionality", () => {
     const expectedResults = [
       "Total as a % of all current MFP participate",
       "66.67%",
@@ -191,26 +199,8 @@ describe("Test table functions specific for R,E & T", () => {
     formatFooterForRET("ret-mpdprp", mockSARReport.report, footerRow);
     expect(footerRow[footerRow.length - 1]).toStrictEqual(expectedResults);
   });
-});
-describe("Test ExportedRETTable Component", () => {
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockSARReport);
-    render(<ExportRETTable section={section as any} />);
-  });
-  it("Test ExportRETTable render", () => {
-    //check to see if table has rendered
-    const table = screen.queryByRole("table");
-    expect(table).toBeVisible();
-    //check to see if table caption exist
-    expect(screen.getByText(`${section.name} Table`)).toBeVisible();
-    //there should be 1 not answered in the table
-    expect(screen.queryAllByText(notAnsweredText)).toHaveLength(1);
-    //thead, Q3, Q4, other, total, target Q3, target Q4, target total, % total, a total of 9 rows should exist
-    expect(screen.queryAllByRole("row")).toHaveLength(9);
-  });
-});
-describe("Test ExportedRETTable Component with empty section", () => {
-  it("Test ExportRETTable render if section is empty", () => {
+
+  test("Test ExportRETTable render if section is empty", () => {
     //an empty section means no transition benchmark had been selected
     mockedUseStore.mockReturnValue(mockSARReport);
     render(<ExportRETTable section={emptySection as any} />);
@@ -222,11 +212,25 @@ describe("Test ExportedRETTable Component with empty section", () => {
       )
     ).toBeVisible();
   });
-});
-describe("Test ExportedReportWrapper accessibility", () => {
-  it("ExportedReportWrapper should not have basic accessibility issues", async () => {
-    const { container } = render(<ExportRETTable section={section as any} />);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+
+  describe("Test ExportedRETTable Component", () => {
+    beforeEach(() => {
+      mockedUseStore.mockReturnValue(mockSARReport);
+      render(<ExportRETTable section={section as any} />);
+    });
+
+    test("Test ExportRETTable render", () => {
+      //check to see if table has rendered
+      const table = screen.queryByRole("table");
+      expect(table).toBeVisible();
+      //check to see if table caption exist
+      expect(screen.getByText(`${section.name} Table`)).toBeVisible();
+      //there should be 1 not answered in the table
+      expect(screen.queryAllByText(notAnsweredText)).toHaveLength(1);
+      //thead, Q3, Q4, other, total, target Q3, target Q4, target total, % total, a total of 9 rows should exist
+      expect(screen.queryAllByRole("row")).toHaveLength(9);
+    });
   });
+
+  testA11y(<ExportRETTable section={section as any} />);
 });
