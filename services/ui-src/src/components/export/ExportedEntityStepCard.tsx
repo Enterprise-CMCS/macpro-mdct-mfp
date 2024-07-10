@@ -23,6 +23,7 @@ export const ExportedEntityStepCard = ({
   formattedEntityData,
   hasBoxShadow,
   hasBorder,
+  headingLevel = "h2",
   ...props
 }: Props) => {
   let entityCompleted = false;
@@ -39,6 +40,7 @@ export const ExportedEntityStepCard = ({
         <ObjectiveProgressEntity
           formattedEntityData={formattedEntityData}
           entityCompleted={entityCompleted}
+          headingLevel={headingLevel}
         />
       );
       break;
@@ -53,7 +55,10 @@ export const ExportedEntityStepCard = ({
       }
 
       cardContent = (
-        <EvaluationPlanEntity formattedEntityData={formattedEntityData} />
+        <EvaluationPlanEntity
+          formattedEntityData={formattedEntityData}
+          headingLevel={headingLevel}
+        />
       );
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
@@ -66,11 +71,14 @@ export const ExportedEntityStepCard = ({
         );
 
       cardContent = (
-        <FundingSourcesEntity formattedEntityData={formattedEntityData} />
+        <FundingSourcesEntity
+          formattedEntityData={formattedEntityData}
+          headingLevel={headingLevel}
+        />
       );
       break;
     default:
-      cardContent = <></>;
+      cardContent;
       break;
   }
 

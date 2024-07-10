@@ -208,7 +208,13 @@ export const mockFundingSourcesFormattedEntityData = {
   ],
 };
 
-export const mockEvaluationPlanFormattedEntityDataWP = {
+export const mockFundingSourcesFormattedEntityDataNoQuarters = {
+  fundingSource: "mock-funding-source",
+  description: "mockDescription",
+  quarters: [],
+};
+
+export const mockEvaluationPlanFormattedEntityData = {
   objectiveName: "mockEvaluationPlanName",
   description: "mockDescription",
   targets: "1",
@@ -266,59 +272,11 @@ export const mockEvaluationPlanFormattedEntityDataWP = {
   ],
 };
 
-export const mockEvaluationPlanFormattedEntityDataSAR = {
+export const mockEvaluationPlanFormattedEntityDataNoQuarters = {
   objectiveName: "mockEvaluationPlanName",
   description: "mockDescription",
-  targets: "1",
+  targets: "0",
+  includesTargets: "No",
   additionalDetails: "2",
-  quarters: [
-    {
-      id: "2024 Q1",
-      value: "1",
-    },
-    {
-      id: "2024 Q2",
-      value: "2",
-    },
-    {
-      id: "2024 Q3",
-      value: "3",
-    },
-    {
-      id: "2024 Q4",
-      value: "4",
-    },
-    {
-      id: "2025 Q1",
-      value: "2",
-    },
-    {
-      id: "2025 Q2",
-      value: "4",
-    },
-    {
-      id: "2025 Q3",
-      value: "6",
-    },
-    {
-      id: "2025 Q4",
-      value: "8",
-    },
-    {
-      id: "2026 Q1",
-      value: "1",
-    },
-    {
-      id: "2026 Q2",
-      value: "3",
-    },
-    {
-      id: "2026 Q3",
-      value: "5",
-    },
-    {
-      id: "2026 Q4",
-      value: "Not Answered",
-    },
-  ],
+  quarters: [],
 };

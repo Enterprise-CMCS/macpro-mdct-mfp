@@ -57,7 +57,7 @@ const wereTargetsMetForObjectiveProgress = (formattedEntityData: AnyObject) => {
 export const ObjectiveProgressEntity = ({
   formattedEntityData,
   entityCompleted,
-  headingLevel = "h2",
+  headingLevel,
 }: Props) => {
   return (
     <>

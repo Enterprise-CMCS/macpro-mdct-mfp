@@ -7,7 +7,7 @@ import { useStore } from "utils";
 
 export const EvaluationPlanEntity = ({
   formattedEntityData,
-  headingLevel = "h2",
+  headingLevel,
 }: Props) => {
   const { report } = useStore();
 

@@ -11,7 +11,7 @@ const objectiveProgressEntityComponent = (
 );
 
 describe("<ObjectiveProgressEntity />", () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     render(objectiveProgressEntityComponent);
   });
   test("ObjectiveProgressEntity renders correctly", () => {

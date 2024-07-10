@@ -77,7 +77,7 @@ export const EntityStepCard = ({
       );
       break;
     default:
-      cardContent = <></>;
+      cardContent;
       break;
   }
 

@@ -4,7 +4,7 @@ import { useStore } from "utils";
 import { testA11y } from "utils/testing/commonTests";
 import {
   mockCompletedGenericFormattedEntityData,
-  mockEvaluationPlanFormattedEntityDataWP,
+  mockEvaluationPlanFormattedEntityData,
   mockGenericEntity,
   mockUnfinishedGenericFormattedEntityData,
 } from "utils/testing/mockEntities";
@@ -20,7 +20,7 @@ const CompletedExportedEvaluationPlanEntityCardComponent = (
     entityIndex={0}
     entityTotal={1}
     stepType={OverlayModalStepTypes.EVALUATION_PLAN}
-    formattedEntityData={mockEvaluationPlanFormattedEntityDataWP}
+    formattedEntityData={mockEvaluationPlanFormattedEntityData}
   />
 );
 

@@ -6,7 +6,7 @@ import { AnyObject, HeadingLevel } from "types";
 
 export const FundingSourcesEntity = ({
   formattedEntityData,
-  headingLevel = "h2",
+  headingLevel,
 }: Props) => {
   return (
     <>
@@ -17,7 +17,7 @@ export const FundingSourcesEntity = ({
         <>
           <Text sx={sx.subtitle}>Projected quarterly expenditures</Text>
           <Grid sx={sx.grid}>
-            {formattedEntityData?.quarters.map((quarter: any) => {
+            {formattedEntityData.quarters.map((quarter: any) => {
               return (
                 <GridItem key={quarter.id}>
                   <Flex sx={sx.gridItems}>
