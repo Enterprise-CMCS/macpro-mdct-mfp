@@ -1,19 +1,18 @@
+// components
+import { Heading, Text, Grid, GridItem, Flex, Box } from "@chakra-ui/react";
 // utils
-import { AnyObject, OverlayModalStepTypes } from "types";
-import { Text, Box, Grid, GridItem, Flex } from "@chakra-ui/react";
+import { AnyObject, HeadingLevel } from "types";
+// constants
 import { notAnsweredText } from "../../constants";
 
-const wereTargetsMetForObjectiveProgress = (
-  formattedEntityData: AnyObject,
-  printVersion?: boolean
-) => {
+const wereTargetsMetForObjectiveProgress = (formattedEntityData: AnyObject) => {
   return (
     <>
-      {(formattedEntityData?.targetsMet || printVersion) && (
+      {formattedEntityData.targetsMet && (
         <Box
           sx={
-            formattedEntityData?.quarterActuals?.length === 0
-              ? formattedEntityData?.targetsMet
+            formattedEntityData.quarterActuals?.length === 0
+              ? formattedEntityData.targetsMet
                 ? sx.box
                 : sx.notAnsweredBox
               : undefined
@@ -23,14 +22,14 @@ const wereTargetsMetForObjectiveProgress = (
             Were targets for performance measures and/or expected time frames
             for deliverables met?
           </Text>
-          <Text sx={sx.description}>{formattedEntityData?.targetsMet}</Text>
-          {!formattedEntityData?.targetsMet && (
+          <Text sx={sx.description}>{formattedEntityData.targetsMet}</Text>
+          {!formattedEntityData.targetsMet && (
             <Text sx={{ ...sx.notAnsweredDescription, marginTop: "-1rem" }}>
               {notAnsweredText}{" "}
             </Text>
           )}
-          {(formattedEntityData?.targetsMet === "No" ||
-            (printVersion && !formattedEntityData?.targetsMet)) && (
+          {(formattedEntityData.targetsMet === "No" ||
+            !formattedEntityData.targetsMet) && (
             <>
               <Text sx={sx.subtitle}>
                 Describe progress toward reaching the target/milestone during
@@ -40,12 +39,12 @@ const wereTargetsMetForObjectiveProgress = (
               </Text>
               <Text
                 sx={
-                  formattedEntityData?.missedTargetReason
+                  formattedEntityData.missedTargetReason
                     ? sx.description
                     : sx.notAnsweredDescription
                 }
               >
-                {formattedEntityData?.missedTargetReason ?? notAnsweredText}
+                {formattedEntityData.missedTargetReason ?? notAnsweredText}
               </Text>
             </>
           )}
@@ -55,17 +54,45 @@ const wereTargetsMetForObjectiveProgress = (
   );
 };
 
-export const EntityStepCardBottomSection = ({
-  stepType,
+export const ObjectiveProgressEntity = ({
   formattedEntityData,
-  printVersion,
+  entityCompleted,
+  headingLevel,
 }: Props) => {
-  switch (stepType) {
-    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
-      return (
+  return (
+    <>
+      <Heading as={headingLevel} sx={sx.mainHeading}>
+        {formattedEntityData.objectiveName}
+      </Heading>
+      <Text sx={sx.subtitle}>
+        Performance measure description or indicators your state or territory
+        will use to monitor progress towards achievement
+      </Text>
+      <Text sx={sx.description}>{formattedEntityData.description}</Text>
+      <Text sx={sx.subtitle}>Performance measure targets</Text>
+      <Text sx={sx.description}>{formattedEntityData.targets}</Text>
+      {formattedEntityData.quarterProjections.length > 0 && !entityCompleted && (
         <>
-          {(formattedEntityData?.performanceMeasureProgress ||
-            printVersion) && (
+          <Text sx={sx.subtitle}>
+            Quantitative targets for this reporting period
+          </Text>
+          <Grid sx={sx.sarGrid}>
+            {formattedEntityData.quarterProjections.map((quarter: any) => {
+              return (
+                <GridItem key={quarter.id}>
+                  <Flex sx={sx.gridItems}>
+                    <Text sx={sx.gridSubtitle}>{quarter.id} Target:</Text>
+                    <Text sx={sx.subtext}>{quarter.value}</Text>
+                  </Flex>
+                </GridItem>
+              );
+            })}
+          </Grid>
+        </>
+      )}
+      {entityCompleted ? (
+        <>
+          {formattedEntityData?.performanceMeasureProgress && (
             <Box
               sx={
                 formattedEntityData?.performanceMeasureProgress
@@ -134,52 +161,88 @@ export const EntityStepCardBottomSection = ({
                       );
                     })}
                 </Grid>
-                {(formattedEntityData?.targetsMet || printVersion) &&
-                  wereTargetsMetForObjectiveProgress(
-                    formattedEntityData,
-                    printVersion
-                  )}
+                {formattedEntityData?.targetsMet &&
+                  wereTargetsMetForObjectiveProgress(formattedEntityData)}
               </>
             ) : (
-              wereTargetsMetForObjectiveProgress(
-                formattedEntityData,
-                printVersion
-              )
+              wereTargetsMetForObjectiveProgress(formattedEntityData)
             )}
           </Box>
         </>
-      );
-    default:
-      return <></>;
-  }
+      ) : (
+        <></>
+      )}
+    </>
+  );
 };
 
 interface Props {
-  stepType: string;
   formattedEntityData: AnyObject;
-  printVersion?: boolean;
+  entityCompleted?: boolean;
+  headingLevel?: HeadingLevel;
   entity?: AnyObject;
-  verbiage?: {
-    entityMissingResponseMessage?: string;
-    entityEmptyResponseMessage?: string;
-  };
 }
 
 const sx = {
-  box: {
-    backgroundColor: "#EEFBFF",
-    padding: "0.5rem 1rem",
-    marginBottom: "1rem",
+  mainHeading: {
+    fontSize: "md",
+  },
+  heading: {
+    fontSize: "sm",
   },
   description: {
     marginTop: "0.25rem",
-    marginBottom: "1.25rem",
+    marginBottom: "1rem",
     fontSize: "sm",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateRows: "1fr 1fr 1fr 1fr",
+    gridAutoFlow: "column",
+    gridGap: ".5rem",
+    marginBottom: "1.25rem",
+  },
+  sarGrid: {
+    display: "grid",
+    gridTemplateRows: "1fr",
+    gridAutoFlow: "column",
+    marginBottom: "1.25rem",
+    width: "50%",
+  },
+  sarGridSubtitle: {
+    fontWeight: "bold",
+    fontSize: "xs",
+    marginRight: ".25rem",
+  },
+  gridSubtitle: {
+    fontWeight: "bold",
+    fontSize: "sm",
+    marginRight: ".25rem",
   },
   subtitle: {
     marginTop: "1rem",
     fontSize: "xs",
     fontWeight: "bold",
+  },
+  subtext: {
+    marginTop: "0.25rem",
+    fontSize: "sm",
+  },
+  error: {
+    fontSize: "sm",
+    color: "palette.error_dark",
+  },
+  gridItems: {
+    alignItems: "end",
+    flexWrap: "wrap",
+    ".subtitle": {
+      marginRight: ".5rem",
+    },
+  },
+  box: {
+    backgroundColor: "#EEFBFF",
+    padding: "0.5rem 1rem",
+    marginBottom: "1rem",
   },
   notAnsweredBox: {
     backgroundColor: "#FCE8EC",
@@ -191,25 +254,5 @@ const sx = {
     marginBottom: "1.25rem",
     fontSize: "sm",
     color: "palette.error_darker",
-  },
-  sarGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gridAutoFlow: "row",
-    marginBottom: "1.25rem",
-    width: "50%",
-  },
-  gridItems: {
-    alignItems: "end",
-    flexWrap: "wrap",
-    ".subtitle": {
-      marginRight: ".5rem",
-    },
-    fontSize: "sm",
-  },
-  sarGridSubtitle: {
-    fontWeight: "bold",
-    fontSize: "xs",
-    marginRight: ".25rem",
   },
 };
