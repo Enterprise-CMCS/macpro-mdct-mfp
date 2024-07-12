@@ -48,14 +48,26 @@ const testReadEventByState: APIGatewayProxyEvent = {
   pathParameters: { reportType: "WP", state: "NJ" },
 };
 
+let consoleSpy: {
+  debug: jest.SpyInstance<void>;
+  warn: jest.SpyInstance<void>;
+} = {
+  debug: jest.fn() as jest.SpyInstance,
+  warn: jest.fn() as jest.SpyInstance,
+};
+
 describe("Test fetchReport API method", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
     mockAuthUtil.isAuthorizedToFetchState.mockReturnValueOnce(true);
+    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
+    consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
   });
+
   test("Test Report not found in DynamoDB", async () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await fetchReport(testReadEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
@@ -64,6 +76,7 @@ describe("Test fetchReport API method", () => {
     (getReportFormTemplate as jest.Mock).mockResolvedValue(undefined);
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
     const res = await fetchReport(testReadEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
@@ -72,6 +85,7 @@ describe("Test fetchReport API method", () => {
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
     (getReportFieldData as jest.Mock).mockResolvedValue(undefined);
     const res = await fetchReport(testReadEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
@@ -80,6 +94,7 @@ describe("Test fetchReport API method", () => {
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
     const res = await fetchReport(testReadEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);
     expect(body.lastAlteredBy).toContain("Thelonious States");
@@ -99,6 +114,7 @@ describe("Test fetchReport API method", () => {
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
     const res = await fetchReport(testReadEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);
     expect(body.lastAlteredBy).toContain("Thelonious States");
@@ -117,6 +133,7 @@ describe("Test fetchReport API method", () => {
       pathParameters: {},
     };
     const res = await fetchReport(noKeyEvent, null);
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -127,6 +144,7 @@ describe("Test fetchReport API method", () => {
       pathParameters: { state: "", id: "" },
     };
     const res = await fetchReport(noKeyEvent, null);
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -136,6 +154,8 @@ describe("Test fetchReportsByState API method", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
     mockAuthUtil.isAuthorizedToFetchState.mockReturnValueOnce(true);
+    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
+    consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
   });
 
   test("Test successful call", async () => {
@@ -143,6 +163,7 @@ describe("Test fetchReportsByState API method", () => {
       mockDynamoData,
     ]);
     const res = await fetchReportsByState(testReadEventByState, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     const body = JSON.parse(res.body);
     expect(body[0].lastAlteredBy).toContain("Thelonious States");
@@ -155,6 +176,7 @@ describe("Test fetchReportsByState API method", () => {
       pathParameters: {},
     };
     const res = await fetchReportsByState(noKeyEvent, null);
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -165,6 +187,7 @@ describe("Test fetchReportsByState API method", () => {
       pathParameters: { state: "" },
     };
     const res = await fetchReportsByState(noKeyEvent, null);
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
