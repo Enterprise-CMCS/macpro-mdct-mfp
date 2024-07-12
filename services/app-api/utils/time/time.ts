@@ -67,23 +67,33 @@ export const calculateDueDate = (
   reportPeriod: number,
   reportType: ReportType
 ) => {
-  let date = new Date();
+  // Use regular due dates after the 2024 reporting periods
+  const customYear = 2024;
+  let dueDate = "5/1";
+  let year = currentYear;
 
-  // Revert due date back to month index 4 after the 2024 reporting periods
   if (reportType === ReportType.WP) {
-    reportPeriod === 1
-      ? (date = new Date(currentYear, 8, 1))
-      : (date = new Date(currentYear, 10, 1));
-  }
-  if (reportType === ReportType.SAR) {
+    if (year === customYear) {
+      dueDate = "9/1";
+    }
+
     if (reportPeriod === 2) {
-      isLeapYear(currentYear + 1)
-        ? (date = new Date(currentYear + 1, 1, 29))
-        : (date = new Date(currentYear + 1, 2, 1));
-    } else {
-      date = new Date(currentYear, 7, 29);
+      dueDate = year === customYear ? "9/3" : "11/1";
     }
   }
+
+  if (reportType === ReportType.SAR) {
+    dueDate = "8/29";
+
+    if (reportPeriod === 2) {
+      year++;
+      dueDate = isLeapYear(year) ? "2/29" : "3/1";
+    }
+  }
+
+  const [month, day] = dueDate.split("/").map((i) => parseInt(i, 10));
+  const date = new Date(year, month - 1, day);
+
   return convertToFormattedDate(date);
 };
 
