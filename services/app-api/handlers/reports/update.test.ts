@@ -84,9 +84,11 @@ const updateEventWithInvalidData: APIGatewayProxyEvent = {
 let consoleSpy: {
   debug: jest.SpyInstance<void>;
   error: jest.SpyInstance<void>;
+  warn: jest.SpyInstance<void>;
 } = {
   debug: jest.fn() as jest.SpyInstance,
   error: jest.fn() as jest.SpyInstance,
+  warn: jest.fn() as jest.SpyInstance,
 };
 
 describe("Test updateReport API method", () => {
@@ -98,6 +100,7 @@ describe("Test updateReport API method", () => {
   beforeEach(() => {
     consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
     consoleSpy.error = jest.spyOn(console, "error").mockImplementation();
+    consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
   });
 
   afterEach(() => {
@@ -170,7 +173,7 @@ describe("Test updateReport API method", () => {
     };
     const res = await updateReport(noKeyEvent, null);
 
-    expect(consoleSpy.debug).toHaveBeenCalled();
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -182,7 +185,7 @@ describe("Test updateReport API method", () => {
     };
     const res = await updateReport(noKeyEvent, null);
 
-    expect(consoleSpy.debug).toHaveBeenCalled();
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
