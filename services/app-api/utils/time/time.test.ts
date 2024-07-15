@@ -61,22 +61,18 @@ describe("calculateDueDate()", () => {
     const reportPeriod = 1;
     let reportType = ReportType.WP;
 
-    test("returns WP due date in 2022 as 5/1", () => {
-      const currentYear = 2022;
-      const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-      expect(dueDate).toBe("05/01/2022");
+    test("returns WP due date as 5/1", () => {
+      const years = [2022, 2023, 2025];
+      years.forEach((currentYear) => {
+        const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
+        expect(dueDate).toBe(`05/01/${currentYear}`);
+      });
     });
 
     test("returns WP due date in 2024 as 9/1", () => {
       const currentYear = 2024;
       const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
       expect(dueDate).toBe("09/01/2024");
-    });
-
-    test("returns WP due date in 2025 as 5/1", () => {
-      const currentYear = 2025;
-      const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-      expect(dueDate).toBe("05/01/2025");
     });
 
     test("returns SAR due date as 8/29", () => {
@@ -91,22 +87,18 @@ describe("calculateDueDate()", () => {
     const reportPeriod = 2;
     let reportType = ReportType.WP;
 
-    test("returns WP due date in 2022 as 11/1", () => {
-      const currentYear = 2022;
-      const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-      expect(dueDate).toBe("11/01/2022");
+    test("returns WP due date as 11/1", () => {
+      const years = [2022, 2023, 2025];
+      years.forEach((currentYear) => {
+        const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
+        expect(dueDate).toBe(`11/01/${currentYear}`);
+      });
     });
 
     test("returns WP due date in 2024 as 9/3", () => {
       const currentYear = 2024;
       const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
       expect(dueDate).toBe("09/03/2024");
-    });
-
-    test("returns WP due date in 2025 as 11/1", () => {
-      const currentYear = 2025;
-      const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-      expect(dueDate).toBe("11/01/2025");
     });
 
     test("returns SAR due date as 3/1", () => {
