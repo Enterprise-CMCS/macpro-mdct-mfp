@@ -34,6 +34,12 @@ const approveEvent: APIGatewayProxyEvent = {
   }),
 };
 
+const consoleSpy: {
+  debug: jest.SpyInstance<void>;
+} = {
+  debug: jest.spyOn(console, "debug").mockImplementation(),
+};
+
 describe("Test approveReport method", () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -44,6 +50,7 @@ describe("Test approveReport method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res: any = await approveReport(approveEvent, null);
     const body = JSON.parse(res.body);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.status).toBe("Approved");
     expect(putReportMetadata).toHaveBeenCalled();
@@ -53,6 +60,7 @@ describe("Test approveReport method", () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
@@ -61,6 +69,7 @@ describe("Test approveReport method", () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(false);
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });

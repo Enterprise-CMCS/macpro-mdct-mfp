@@ -81,11 +81,28 @@ const updateEventWithInvalidData: APIGatewayProxyEvent = {
   body: `{"submissionName":{}}`,
 };
 
+let consoleSpy: {
+  debug: jest.SpyInstance<void>;
+  error: jest.SpyInstance<void>;
+  warn: jest.SpyInstance<void>;
+} = {
+  debug: jest.fn() as jest.SpyInstance,
+  error: jest.fn() as jest.SpyInstance,
+  warn: jest.fn() as jest.SpyInstance,
+};
+
 describe("Test updateReport API method", () => {
   beforeAll(() => {
     // pass state auth check
     mockAuthUtil.hasPermissions.mockReturnValue(true);
   });
+
+  beforeEach(() => {
+    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
+    consoleSpy.error = jest.spyOn(console, "error").mockImplementation();
+    consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -100,6 +117,7 @@ describe("Test updateReport API method", () => {
 
     expect(body.status).toContain("submitted");
     expect(body.fieldData["mock-number-field"]).toBe("2");
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(response.statusCode).toBe(StatusCodes.SUCCESS);
     expect(putReportFieldData).toHaveBeenCalled();
     expect(putReportMetadata).toHaveBeenCalled();
@@ -112,6 +130,7 @@ describe("Test updateReport API method", () => {
 
     const response = await updateReport(invalidFieldDataSubmissionEvent, null);
 
+    expect(consoleSpy.error).toHaveBeenCalled();
     expect(response.statusCode).toBe(StatusCodes.SERVER_ERROR);
     expect(response.body).toContain(error.INVALID_DATA);
     expect(putReportFieldData).not.toHaveBeenCalled();
@@ -121,6 +140,7 @@ describe("Test updateReport API method", () => {
   test("Test attempted report update with invalid data throws 400", async () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res = await updateReport(updateEventWithInvalidData, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.MISSING_DATA);
   });
@@ -128,6 +148,7 @@ describe("Test updateReport API method", () => {
   test("Test attempted report update with no existing record throws 404", async () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await updateReport(updateEventWithInvalidData, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
@@ -140,6 +161,7 @@ describe("Test updateReport API method", () => {
 
     const res = await updateReport(updateEvent, null);
 
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
@@ -151,6 +173,7 @@ describe("Test updateReport API method", () => {
     };
     const res = await updateReport(noKeyEvent, null);
 
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -162,6 +185,7 @@ describe("Test updateReport API method", () => {
     };
     const res = await updateReport(noKeyEvent, null);
 
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
