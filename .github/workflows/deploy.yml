@@ -317,10 +317,10 @@ jobs:
           retention-days: 30
 
   upload-reports:
-    name: Uppload Reports
+    name: Upload Reports
     needs:
       - test
-    if: always()
+    if: ${{ always() && github.ref_name != 'production' }}
     runs-on: ubuntu-latest
     outputs:
       timestamp: ${{ steps.timestampid.outputs.timestamp }}
