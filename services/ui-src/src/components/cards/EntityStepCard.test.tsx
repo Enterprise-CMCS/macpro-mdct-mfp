@@ -31,64 +31,43 @@ const {
 const UnfinishedGenericEntityCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType="mock-step-type"
     formattedEntityData={mockUnfinishedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
 const GenericEntityTypeEntityCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType="stepType"
     formattedEntityData={mockCompletedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
 const DisabledEntityTypeEntityCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType="stepType"
     formattedEntityData={mockCompletedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
     disabled={true}
-  />
-);
-
-const PrintViewEntityTypeEntityCardComponent = (
-  <EntityStepCard
-    entity={mockGenericEntity}
-    entityIndex={0}
-    stepType="stepType"
-    formattedEntityData={mockCompletedGenericFormattedEntityData}
-    verbiage={mockModalDrawerReportPageJson.verbiage}
-    openAddEditEntityModal={openAddEditEntityModal}
-    openDeleteEntityModal={openDeleteEntityModal}
-    openDrawer={mockOpenDrawer}
-    printVersion={true}
   />
 );
 
 const UnfinishedEvaluationPlanCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType={OverlayModalStepTypes.EVALUATION_PLAN}
     formattedEntityData={{
       ...mockUnfinishedGenericFormattedEntityData,
@@ -100,28 +79,24 @@ const UnfinishedEvaluationPlanCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
 const CompletedEvaluationPlanCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType={OverlayModalStepTypes.EVALUATION_PLAN}
     formattedEntityData={mockCompletedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
 const UnfinishedFundingSourcesCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType={OverlayModalStepTypes.FUNDING_SOURCES}
     formattedEntityData={{
       ...mockUnfinishedGenericFormattedEntityData,
@@ -131,14 +106,12 @@ const UnfinishedFundingSourcesCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
 const CompletedFundingSourcesCardComponent = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType={OverlayModalStepTypes.FUNDING_SOURCES}
     formattedEntityData={{
       ...mockCompletedGenericFormattedEntityData,
@@ -162,25 +135,22 @@ const CompletedFundingSourcesCardComponent = (
     openAddEditEntityModal={openAddEditEntityModal}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
 const NoOpenAddEditEntityFunction = (
   <EntityStepCard
     entity={mockGenericEntity}
-    entityIndex={0}
     stepType="mock-step-type"
     formattedEntityData={mockUnfinishedGenericFormattedEntityData}
     verbiage={mockModalDrawerReportPageJson.verbiage}
     openDeleteEntityModal={openDeleteEntityModal}
     openDrawer={mockOpenDrawer}
-    printVersion={false}
   />
 );
 
-describe("<EntityCard />", () => {
-  describe("Completed EntityCard", () => {
+describe("<EntityStepCard />", () => {
+  describe("Completed EntityStepCard", () => {
     describe("Renders", () => {
       beforeEach(() => {
         render(GenericEntityTypeEntityCardComponent);
@@ -279,14 +249,6 @@ describe("<EntityCard />", () => {
       render(DisabledEntityTypeEntityCardComponent);
       const detailsButton = screen.getByText(readOnlyEntityButtonText);
       expect(detailsButton).toBeVisible();
-    });
-  });
-
-  describe("PrintOnly TESTS", () => {
-    test("in Print View the status indicator should be visible", async () => {
-      render(PrintViewEntityTypeEntityCardComponent);
-      const element = screen.getByTestId("print-status-indicator");
-      expect(element).toBeVisible();
     });
   });
 
