@@ -20,17 +20,29 @@ const testEvent: APIGatewayProxyEvent = {
   pathParameters: { bannerId: "admin-banner-id" },
 };
 
+let consoleSpy: {
+  debug: jest.SpyInstance<void>;
+  error: jest.SpyInstance<void>;
+} = {
+  debug: jest.fn() as jest.SpyInstance,
+  error: jest.fn() as jest.SpyInstance,
+};
+
 describe("Test fetchBanner API method", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
     dynamoClientMock.reset();
+    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
+    consoleSpy.error = jest.spyOn(console, "error").mockImplementation();
   });
+
   test("Test Successful Banner Fetch", async () => {
     dynamoClientMock.on(GetCommand).resolves({
       Item: mockBannerResponse,
     });
     const res = await fetchBanner(testEvent, null);
 
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(res.body).toContain("testDesc");
     expect(res.body).toContain("testTitle");
@@ -42,6 +54,7 @@ describe("Test fetchBanner API method", () => {
     });
     const res = await fetchBanner(testEvent, null);
 
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.body).not.toContain("testTitle");
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
   });
@@ -53,6 +66,7 @@ describe("Test fetchBanner API method", () => {
     };
     const res = await fetchBanner(noKeyEvent, null);
 
+    expect(consoleSpy.error).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -64,6 +78,7 @@ describe("Test fetchBanner API method", () => {
     };
     const res = await fetchBanner(noKeyEvent, null);
 
+    expect(consoleSpy.error).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
     expect(res.body).toContain(error.NO_KEY);
   });
