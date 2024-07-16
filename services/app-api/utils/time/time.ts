@@ -67,19 +67,16 @@ export const calculateDueDate = (
   reportPeriod: number,
   reportType: ReportType
 ) => {
-  // Use regular due dates after the 2024 reporting periods
-  const customYear = 2024;
   let dueDate = "5/1";
   let year = currentYear;
 
-  if (reportType === ReportType.WP) {
-    if (year === customYear) {
-      dueDate = "9/1";
-    }
+  if (reportPeriod === 2) {
+    dueDate = "11/1";
+  }
 
-    if (reportPeriod === 2) {
-      dueDate = year === customYear ? "9/3" : "11/1";
-    }
+  // TODO: Remove this block in 2025
+  if (reportType === ReportType.WP && year === 2024) {
+    dueDate = reportPeriod === 1 ? "9/1" : "9/3";
   }
 
   if (reportType === ReportType.SAR) {
