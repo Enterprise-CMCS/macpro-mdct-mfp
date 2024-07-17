@@ -2,6 +2,34 @@
 import { ConfigResourceTypes, Kafka } from "kafkajs";
 
 /**
+ * Removes topics in BigMac given the following
+ * @param {*} brokerString - Comma delimited list of brokers
+ * @param {*} namespace - String in the format of `--${event.project}--`, only used for temp branches for easy identification and cleanup
+ */
+export async function listTopics(brokerString, namespace) {
+  const brokers = brokerString.split(",");
+
+  const kafka = new Kafka({
+    clientId: "admin",
+    brokers: brokers,
+    ssl: true,
+  });
+  var admin = kafka.admin();
+
+  await admin.connect();
+
+  const currentTopics = await admin.listTopics();
+  var lingeringTopics = currentTopics.filter(
+    (topic) =>
+      topic.startsWith(namespace) ||
+      topic.startsWith(`_confluent-ksql-${namespace}`)
+  );
+
+  await admin.disconnect();
+  return lingeringTopics;
+}
+
+/**
  * Generates topics in BigMac given the following
  * @param { string[] } brokers - List of brokers
  * @param {{ topic: string, numPartitions: number, replicationFactor: number }[]}
@@ -124,4 +152,7 @@ export async function deleteTopics(brokers, topicNamespace) {
   await admin.deleteTopics({
     topics: topicsToDelete,
   });
+
+  await admin.disconnect();
+  return topicsToDelete;
 }
