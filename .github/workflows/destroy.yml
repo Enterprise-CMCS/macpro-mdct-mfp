@@ -59,4 +59,7 @@ jobs:
         run: |
           echo "PATH=$(pwd)/node_modules/.bin/:$PATH" >> $GITHUB_ENV          
       - name: Destroy
-        run: ./run destroy --stage $STAGE_PREFIX$branch_name --verify false
+        # destroy app-api first due to a dependency between it and database
+        run: |
+          ./run destroy --stage $STAGE_PREFIX$branch_name --service app-api
+          ./run destroy --stage $STAGE_PREFIX$branch_name --verify false
