@@ -18,7 +18,39 @@ paths:
           schema:
             type: string
       responses:
-        # TODO
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  $metadata: #note: should not be in the response
+                    type: object
+                    properties:
+                      httpStatusCode:
+                        type: integer
+                      requestId:
+                        type: string
+                      attempts:
+                        type: integer
+                      totalRetryDelay:
+                        type: integer
+                  Item: #note: rename to "banner" for clarity
+                    type: object
+                    properties:
+                      createdAt:
+                        type: integer
+                      endDate:
+                        type: integer
+                      lastAltered:
+                        type: integer
+                      description:
+                        type: string
+                      title:
+                        type: string
+                      startDate:
+                        type: integer
     post:
       summary: Create a banner
       operationId: createBanner
@@ -35,10 +67,47 @@ paths:
         content:
           application/json:
             schema:
-              $ref: #TODO
+              $ref: "#/components/schemas/Banner"
         required: true
       responses:
-        # TODO
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  TableName: string # note: remove
+                  Item: # note: rename to "banner" for clarity
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                      createdAt:
+                        type: integer
+                      endDate:
+                        type: integer
+                      lastAltered:
+                        type: integer
+                      description:
+                        type: string
+                      title:
+                        type: string
+                      startDate:
+                        type: integer
+        # {
+        #    "TableName": "local-banners",
+        #    "Item": {
+        #        "key": "admin-banner-id",
+        #        "createdAt": 1721663673026,
+        #        "lastAltered": 1721663673026,
+        #        "title": "aoijef;oaiwje",
+        #        "description": "laiojewf;iajwe;",
+        #        "link": "https://calendar.google.com/calendar/u/0/r",
+        #        "startDate": 944974800000,
+        #        "endDate": 1580705999000
+        #    }
+        # }
     delete:
       summary: Delete a banner
       operationId: createPets
@@ -52,7 +121,37 @@ paths:
           schema:
             type: string
       responses:
-        # TODO
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  TableName: # note: remove
+                    type: string
+                  Key:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+        # {"TableName":"local-banners","Key":{"key":"admin-banner-id"}}
 components:
   schemas:
-  #TODO
+    Banner:
+      type: object
+      properties:
+        key:
+          type: string
+        createdAt:
+          type: integer
+        endDate:
+          type: integer
+        lastAltered:
+          type: integer
+        description:
+          type: string
+        title:
+          type: string
+        startDate:
+          type: integer
