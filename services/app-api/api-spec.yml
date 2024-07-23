@@ -70,7 +70,7 @@ paths:
               $ref: "#/components/schemas/Banner"
         required: true
       responses:
-        "200":
+        "201":
           description: Successful response
           content:
             application/json:
@@ -135,19 +135,51 @@ paths:
                     properties:
                       key:
                         type: string
+        "403":
+          description: Unauthorized
+          # TODO: add more
         # {"TableName":"local-banners","Key":{"key":"admin-banner-id"}}
+  # REPORTS
+  /reports/{reportType}/{state}:
+    post:
+      summary: Create report
+      operationId: createReport
+      tags:
+        - reports
+      parameters:
+        - name: reportType
+          in: path
+          required: true
+          description: The report type # WP or SAR
+          schema:
+            type: string
+        - name: state
+          in: path
+          required: true
+          description: The state abbreviation # e.g. AL, OK, WY
+          schema:
+            type: string
+
+# use as
+  # schema:
+  #   $ref: '#/components/schemas/Banner'
 components:
   schemas:
     Banner:
       type: object
+      required:
+        - title
+        - description
+        - startDate
+        - endDate
       properties:
         key:
           type: string
-        createdAt:
+        createdAt: # this only shows up in the response so we may consider removing this
           type: integer
         endDate:
           type: integer
-        lastAltered:
+        lastAltered: # this only shows up in the response so we may consider removing this
           type: integer
         description:
           type: string
@@ -155,3 +187,11 @@ components:
           type: string
         startDate:
           type: integer
+        link:
+          type: string
+
+
+# 1. schema
+# 1a. links
+# 2. post response code
+# 3. error responses
