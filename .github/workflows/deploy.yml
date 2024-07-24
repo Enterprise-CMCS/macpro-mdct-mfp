@@ -418,6 +418,9 @@ jobs:
         with:
           name: endpoint-file
           path: .
+      - name: see-contents 
+        run: |
+            ls -alh
       - name: echo contents of file
         run: |
           cat applicationendpoint.txt
