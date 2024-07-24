@@ -109,6 +109,14 @@ jobs:
           echo "## Application Endpoint" >> $GITHUB_STEP_SUMMARY
           echo "<$APPLICATION_ENDPOINT>" >> $GITHUB_STEP_SUMMARY
         working-directory: services
+      - name: write-endpoint
+        run: |
+          echo $APPLICATION_ENDPOINT" >> applicationendpoint.txt
+      - name: upload-endpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: endpoint-file
+          path: applicationendpoint.txt
     outputs:
       application_endpoint: ${{ steps.endpoint.outputs.application_endpoint}}
       BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION: ${{ steps.set_names.outputs.BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION }}
@@ -273,7 +281,7 @@ jobs:
           retention-days: 14
 
 
-  test:
+  playwright-test:
     name: Playwright Tests
     needs:
       - deploy
@@ -297,6 +305,7 @@ jobs:
         run: yarn playwright install --with-deps
       - name: Run Playwright tests
         run: yarn playwright test
+        # remove this when we want playwright to actually fail builds
         continue-on-error: true
         env:
           BASE_URL: ${{ needs.deploy.outputs.application_endpoint }}
@@ -319,7 +328,7 @@ jobs:
   upload-reports:
     name: Upload Reports
     needs:
-      - test
+      - playwright-test
     if: ${{ always() && github.ref_name != 'production' }}
     runs-on: ubuntu-latest
     outputs:
@@ -374,7 +383,7 @@ jobs:
       - register-runner
       - a11y-tests
       - e2e-test
-      - test
+      - playwright-test
     env:
       SLS_DEPRECATION_DISABLE: "*" # Turn off deprecation warnings in the pipeline
     steps:
