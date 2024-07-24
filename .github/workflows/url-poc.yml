@@ -1,0 +1,25 @@
+name: URL POC
+
+on:
+  workflow_run:
+    workflows: [Deploy]
+    types: [completed]
+    branches:
+      - 'url-poc'
+
+jobs:
+  read_message:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: endpoint-file
+          path: .
+
+      - name: Echo contents of file
+        run: cat applicationendpoint.txt
