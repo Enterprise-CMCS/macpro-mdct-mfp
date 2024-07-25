@@ -43,6 +43,25 @@ jobs:
   
     outputs:
       application_endpoint_url: ${{ steps.getendpoint.outputs.application_endpoint_url }}
+
+  echo-artifact:
+    name: Download artifact
+    runs-on: ubuntu-latest
+    # needs:
+    #   - deploy
+    steps:
+      - uses: actions/checkout@v4
+      - name: endpoint-file
+        uses: actions/download-artifact@v4
+        with:
+          name: endpoint-file
+          path: .
+      - name: see-contents 
+        run: |
+            ls -alh
+      - name: echo contents of file
+        run: |
+          cat applicationendpoint.txt
       
 
   notify_integrations_channel:

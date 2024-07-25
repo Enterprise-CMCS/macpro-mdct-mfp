@@ -109,10 +109,10 @@ jobs:
           echo "## Application Endpoint" >> $GITHUB_STEP_SUMMARY
           echo "<$APPLICATION_ENDPOINT>" >> $GITHUB_STEP_SUMMARY
         working-directory: services
+        # write application endpoint to file to be downloaded by downstream workflow
       - name: write-endpoint
         run: |
           echo ${{ steps.endpoint.outputs.application_endpoint}} >> applicationendpoint.txt
-          # echo "hello world" >> applicationendpoint.txt
       - name: upload-endpoint
         uses: actions/upload-artifact@v4
         with:
