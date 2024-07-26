@@ -149,8 +149,8 @@ const NoOpenAddEditEntityFunction = (
   />
 );
 
-describe("<EntityStepCard />", () => {
-  describe("Completed EntityStepCard", () => {
+describe("<EntityCard />", () => {
+  describe("Completed EntityCard", () => {
     describe("Renders", () => {
       beforeEach(() => {
         render(GenericEntityTypeEntityCardComponent);
