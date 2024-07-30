@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
+import { currentYear } from "../seeds/helpers";
 import { logInStateUser, archiveExistingWPs } from "./helpers";
-
-const currentYear = new Date().getFullYear();
 
 test("State user can create a work plan", async ({ page }) => {
   await archiveExistingWPs({ page });

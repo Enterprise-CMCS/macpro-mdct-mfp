@@ -299,7 +299,9 @@ jobs:
         run: yarn playwright test
         continue-on-error: true
         env:
+          API_URL: ${{ secrets.API_URL }}
           BASE_URL: ${{ needs.deploy.outputs.application_endpoint }}
+          COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
           CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
           CYPRESS_STATE_USER_PASSWORD: ${{ secrets.CYPRESS_STATE_USER_PASSWORD }}
           CYPRESS_ADMIN_USER_EMAIL: ${{ secrets.CYPRESS_ADMIN_USER_EMAIL }}
