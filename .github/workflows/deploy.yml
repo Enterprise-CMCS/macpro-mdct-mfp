@@ -110,12 +110,18 @@ jobs:
           echo "<$APPLICATION_ENDPOINT>" >> $GITHUB_STEP_SUMMARY
       - id: api_endpoint
         run: |
+          # API_ENDPOINT=$(./scripts/output.sh app-api ApiGatewayRestApiUrl $STAGE_PREFIX$branch_name)
+          # echo "api_endpoint=$API_ENDPOINT" >> $GITHUB_OUTPUT
           API_ENDPOINT=$(./scripts/output.sh app-api ApiGatewayRestApiUrl $STAGE_PREFIX$branch_name)
           echo "api_endpoint=$API_ENDPOINT" >> $GITHUB_OUTPUT
+          echo "::set-output name=api_endpoint::$API_ENDPOINT"
       - id: cognito_user_pool_id
         run: |
+          # COGNITO_USER_POOL_ID=$(./scripts/output.sh ui-auth UserPoolId $STAGE_PREFIX$branch_name)
+          # echo "cognito_user_pool_id=$COGNITO_USER_POOL_ID" >> $GITHUB_OUTPUT
           COGNITO_USER_POOL_ID=$(./scripts/output.sh ui-auth UserPoolId $STAGE_PREFIX$branch_name)
           echo "cognito_user_pool_id=$COGNITO_USER_POOL_ID" >> $GITHUB_OUTPUT
+          echo "::set-output name=cognito_user_pool_id::$COGNITO_USER_POOL_ID"
     outputs:
       application_endpoint: ${{ steps.endpoint.outputs.application_endpoint}}
       api_endpoint: ${{ steps.api_endpoint.outputs.api_endpoint}}
