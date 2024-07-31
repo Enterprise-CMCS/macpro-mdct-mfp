@@ -112,17 +112,14 @@ jobs:
         run: |
           API_ENDPOINT=$(./scripts/output.sh app-api ApiGatewayRestApiUrl $STAGE_PREFIX$branch_name)
           echo "api_endpoint=$API_ENDPOINT" >> $GITHUB_OUTPUT
-          echo "## API Endpoint" >> $GITHUB_STEP_SUMMARY
-          echo "<$API_ENDPOINT>" >> $GITHUB_STEP_SUMMARY
       - id: cognito_user_pool_id
         run: |
           COGNITO_USER_POOL_ID=$(./scripts/output.sh ui-auth UserPoolId $STAGE_PREFIX$branch_name)
           echo "cognito_user_pool_id=$COGNITO_USER_POOL_ID" >> $GITHUB_OUTPUT
-          echo "## COGNITO_USER_POOL_ID" >> $GITHUB_STEP_SUMMARY
-          echo "<$COGNITO_USER_POOL_ID>" >> $GITHUB_STEP_SUMMARY
     outputs:
       application_endpoint: ${{ steps.endpoint.outputs.application_endpoint}}
       api_endpoint: ${{ steps.api_endpoint.outputs.api_endpoint}}
+      cognito_user_pool_id: ${{ steps.cognito_user_pool_id.outputs.cognito_user_pool_id}}
       BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION: ${{ steps.set_names.outputs.BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION }}
       BRANCH_SPECIFIC_VARNAME_AWS_OIDC_ROLE_TO_ASSUME: ${{ steps.set_names.outputs.BRANCH_SPECIFIC_VARNAME_AWS_OIDC_ROLE_TO_ASSUME }}
 
@@ -311,9 +308,9 @@ jobs:
         run: yarn playwright test
         continue-on-error: true
         env:
-          API_URL: ${{ secrets.API_URL }}
+          API_URL: ${{ needs.deploy.outputs.api_endpoint }}
           BASE_URL: ${{ needs.deploy.outputs.application_endpoint }}
-          COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
+          COGNITO_USER_POOL_ID: ${{ needs.deploy.outputs.cognito_user_pool_id }}
           CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
           CYPRESS_STATE_USER_PASSWORD: ${{ secrets.CYPRESS_STATE_USER_PASSWORD }}
           CYPRESS_ADMIN_USER_EMAIL: ${{ secrets.CYPRESS_ADMIN_USER_EMAIL }}
