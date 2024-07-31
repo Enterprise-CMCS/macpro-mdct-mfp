@@ -122,6 +122,12 @@ export const EntityRow = ({
     }
   };
 
+  // for aria label
+  let entityText = "";
+  if (entity.type === "initiative") {
+    entityText = entity.stepName ?? entity.initiative_name;
+  } else entityText = entity.transitionBenchmarks_targetPopulationName;
+
   return (
     <Tr sx={sx.content}>
       <Td
@@ -198,7 +204,7 @@ export const EntityRow = ({
               onClick={() => openOverlayOrDrawer(entity)}
               variant="outline"
               disabled={entityStatus === EntityStatuses.DISABLED}
-              aria-label="edit button"
+              aria-label={`edit button for ${entityText}`}
             >
               {!editable || (!isSAR && isInitiativeClosed)
                 ? verbiage.readOnlyEntityDetailsButtonText

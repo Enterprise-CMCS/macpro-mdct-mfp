@@ -170,7 +170,7 @@
         "id": "tbs",
         "fields": [
           {
-            "id": "strategy_explaination",
+            "id": "strategy_explanation",
             "type": "textarea",
             "validation": "text",
             "props": {

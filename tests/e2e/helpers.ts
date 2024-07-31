@@ -36,17 +36,20 @@ export async function logOut({ page }) {
   await page.goto("/");
 }
 
-/* Recursive function to click any archive buttons that appear on screen. */
 async function archiveReports(buttons: Locator, page) {
   const archiveButtons = await buttons.all();
-
   if (archiveButtons.length > 0) {
+    const archivePromise = page.waitForResponse(
+      (response) =>
+        response.url().includes("/reports/archive/WP/PR/") &&
+        response.status() == 200
+    );
+
     await archiveButtons[0].click();
-    await page.waitForResponse("**/reports/archive/WP/PR/**");
+    await archivePromise;
     await archiveReports(buttons, page);
   }
 }
-
 export async function archiveExistingWPs({ page }) {
   await logInAdminUser({ page });
 
@@ -58,13 +61,33 @@ export async function archiveExistingWPs({ page }) {
 
   await page.getByLabel("MFP Work Plan").click();
   await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
-  await page.waitForResponse("**/reports/WP/PR");
-
-  const archiveButtons = await page.getByRole("button", { name: "Archive" });
-
-  if (archiveButtons) {
-    await archiveReports(archiveButtons, page);
-  }
+  const reportsPromise = page.waitForResponse(
+    (response) =>
+      response.url().includes("/reports/WP/PR") && response.status() == 200
+  );
+  await reportsPromise;
+  await archiveReports(page.getByRole("button", { name: "Archive" }), page);
 
   await logOut({ page });
+}
+
+export async function fillQuarters({ page }) {
+  const currentYear = new Date().getFullYear();
+  let theQuarter = 1;
+  let theYear = currentYear;
+  for (let i = 0; i < 12; i++) {
+    const key: string = `${theYear} Q${theQuarter}`;
+
+    if (theQuarter === 4) {
+      theQuarter = 0;
+    }
+
+    theQuarter++;
+
+    if (theQuarter === 1) {
+      theYear++;
+    }
+
+    await page.getByRole("textbox", { name: key }).fill("10");
+  }
 }
