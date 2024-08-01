@@ -18,7 +18,7 @@ test("State user can create a work plan", async ({ page }) => {
   await page.getByRole("button", { name: "Enter Work Plan online" }).click();
 
   expect(page).toHaveURL("/wp");
-  await page.getByRole("table");
+  page.waitForResponse("**/reports/WP/PR");
 
   const createButton = await page.getByRole("button", {
     name: "Start MFP Work Plan",

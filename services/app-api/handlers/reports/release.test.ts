@@ -45,9 +45,16 @@ const releaseEvent: APIGatewayProxyEvent = {
   ...mockProxyEvent,
 };
 
+let consoleSpy: {
+  debug: jest.SpyInstance<void>;
+} = {
+  debug: jest.fn() as jest.SpyInstance,
+};
+
 describe("Test releaseReport method", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
   });
 
   test("Test release report passes with valid data", async () => {
@@ -59,6 +66,7 @@ describe("Test releaseReport method", () => {
     const res = await releaseReport(releaseEvent, null);
     const body = JSON.parse(res.body);
 
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.locked).toBe(false);
     expect(body.previousRevisions).toEqual([
@@ -85,6 +93,7 @@ describe("Test releaseReport method", () => {
     const res = await releaseReport(releaseEvent, null);
     const body = JSON.parse(res.body);
 
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.locked).toBe(false);
     expect(body.submissionCount).toBe(1);
@@ -100,6 +109,7 @@ describe("Test releaseReport method", () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await releaseReport(releaseEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
@@ -107,6 +117,7 @@ describe("Test releaseReport method", () => {
   test("Test release report without admin permissions throws 403", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(false);
     const res = await releaseReport(releaseEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });

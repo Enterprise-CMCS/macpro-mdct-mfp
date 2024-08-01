@@ -10,9 +10,9 @@ import {
   HeadingLevel,
   OverlayModalPageShape,
 } from "types";
-import { EntityStepCard } from "components";
 // verbiage
 import exportVerbiage from "verbiage/pages/wp/wp-export";
+import { ExportedEntityStepCard } from "./ExportedEntityStepCard";
 
 export const ExportedOverlayModalReportSection = ({
   section: { verbiage },
@@ -56,7 +56,7 @@ export const ExportedOverlayModalReportSection = ({
         const nextHeadingLevel = `h${nextLevel}`;
 
         return (
-          <EntityStepCard
+          <ExportedEntityStepCard
             key={`${entity.id}${index}`}
             entity={step}
             entityIndex={index}
@@ -64,7 +64,6 @@ export const ExportedOverlayModalReportSection = ({
             stepType={type!}
             formattedEntityData={getFormattedEntityData(type, step)}
             verbiage={verbiage}
-            printVersion
             hasBorder={true}
             headingLevel={nextHeadingLevel as HeadingLevel}
           />

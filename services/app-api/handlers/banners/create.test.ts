@@ -21,9 +21,18 @@ const testEvent: APIGatewayProxyEvent = {
   pathParameters: { bannerId: "testKey" },
 };
 
+const consoleSpy: {
+  debug: jest.SpyInstance<void>;
+  error: jest.SpyInstance<void>;
+} = {
+  debug: jest.spyOn(console, "debug").mockImplementation(),
+  error: jest.spyOn(console, "error").mockImplementation(),
+};
+
 describe("Test createBanner API method", () => {
   test("Test unauthorized banner creation throws 403 error", async () => {
     const res = await createBanner(testEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(403);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
@@ -32,6 +41,7 @@ describe("Test createBanner API method", () => {
     const mockPut = jest.fn();
     dynamoClientMock.on(PutCommand).callsFake(mockPut);
     const res = await createBanner(testEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.CREATED);
     expect(res.body).toContain("test banner");
     expect(res.body).toContain("test description");
@@ -44,6 +54,7 @@ describe("Test createBanner API method", () => {
       pathParameters: {},
     };
     const res = await createBanner(noKeyEvent, null);
+    expect(consoleSpy.error).toHaveBeenCalled();
     expect(res.statusCode).toBe(500);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -54,6 +65,7 @@ describe("Test createBanner API method", () => {
       pathParameters: { bannerId: "" },
     };
     const res = await createBanner(noKeyEvent, null);
+    expect(consoleSpy.error).toHaveBeenCalled();
     expect(res.statusCode).toBe(500);
     expect(res.body).toContain(error.NO_KEY);
   });
