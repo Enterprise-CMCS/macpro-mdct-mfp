@@ -81,7 +81,7 @@ export const submitReport = handler(async (event, _context) => {
 
     try {
       await putReportMetadata(submittedReportMetadata);
-    } catch (err) {
+    } catch {
       return {
         status: StatusCodes.SERVER_ERROR,
         body: error.DYNAMO_UPDATE_ERROR,
@@ -113,7 +113,7 @@ export const submitReport = handler(async (event, _context) => {
 
     try {
       await putReportFieldData(reportMetadata, fieldData);
-    } catch (err) {
+    } catch {
       return {
         status: StatusCodes.SERVER_ERROR,
         body: error.S3_OBJECT_UPDATE_ERROR,
@@ -130,7 +130,7 @@ export const submitReport = handler(async (event, _context) => {
         },
       },
     };
-  } catch (err) {
+  } catch {
     return {
       status: StatusCodes.NOT_FOUND,
       body: error.NO_MATCHING_RECORD,
