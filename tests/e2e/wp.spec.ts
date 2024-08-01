@@ -230,6 +230,92 @@ test("State user can create a work plan", async ({ page }) => {
     })
     .click();
 
+  // II
+  await page
+    .getByRole("button", { name: "edit button for II. Evaluation plan" })
+    .click();
+
+  await page.getByRole("button", { name: "Add objective" }).click();
+
+  await expect(page.getByRole("dialog")).toBeVisible();
+
+  await expect(
+    page.getByRole("heading", {
+      name: "Add objective for Transitions and Transition Coordination Services Initiative",
+    })
+  ).toBeVisible();
+
+  const objectiveTextbox = await page.getByRole("textbox", {
+    name: "Objective",
+    exact: true,
+  });
+
+  await objectiveTextbox.fill("SMART goals, targets, milestones");
+
+  await expect(objectiveTextbox).toHaveValue(
+    "SMART goals, targets, milestones"
+  );
+
+  const performanceMeasuresTextbox = await page.getByLabel(
+    "Describe the performance measures"
+  );
+
+  await performanceMeasuresTextbox.fill(
+    "Performance measures or indicators your state or territory will use"
+  );
+
+  await page
+    .getByLabel("Provide targets")
+    .fill("Targets for the performance measures or indicators listed above");
+
+  await page.getByRole("radio", { name: "Yes" }).click();
+
+  await fillQuarters({ page });
+
+  const additionalDetailsTextbox = await page.getByLabel(
+    "Provide additional detail on"
+  );
+
+  await additionalDetailsTextbox.fill("Additional details");
+
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(page.getByTestId("entityCard")).toBeVisible();
+  await page.getByRole("button", { name: "Save & return" }).click();
+
+  await expect(page.getByRole("table")).toBeVisible();
+
+  // // III
+  await page
+    .getByRole("button", { name: "edit button for III. Funding sources" })
+    .click();
+
+  await page.getByRole("button", { name: "Add funding source" }).click();
+
+  await expect(page.getByRole("dialog")).toBeVisible();
+
+  await expect(
+    page.getByRole("heading", {
+      name: "Add funding source and projected expenditures for Transitions and Transition Coordination Services Initiative",
+    })
+  ).toBeVisible();
+
+  const fundingSourceRadioButton = await page.getByRole("radio", {
+    name: "MFP cooperative agreement funds for qualified HCBS and demonstration services",
+  });
+
+  await fundingSourceRadioButton.click();
+
+  await fillQuarters({ page });
+
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(page.getByTestId("entityCard")).toBeVisible();
+  await expect(page.getByTestId("entityCard")).toHaveCount(1);
+  await expect(
+    page.getByRole("button", { name: "Save & return" })
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Save & return" }).click();
+  await expect(page.getByRole("table")).toBeVisible();
+
   // I
   await page
     .getByRole("button", { name: "edit button for I. Define initiative" })
@@ -255,7 +341,11 @@ test("State user can create a work plan", async ({ page }) => {
     .getByRole("textbox", { name: "Start date" })
     .fill(`02/03/${currentYear}`);
 
-  await page.getByRole("radio", { name: "Yes" }).click();
+  const endDate = page.getByRole("radio", { name: "Yes" });
+
+  await endDate.click();
+
+  await expect(endDate).toBeChecked();
 
   await page
     .getByRole("textbox", { name: "Projected end date" })
@@ -266,89 +356,6 @@ test("State user can create a work plan", async ({ page }) => {
   await page.getByRole("button", { name: "Save & return" }).click();
 
   await expect(page.getByRole("table")).toBeVisible();
-
-  // II
-  await page
-    .getByRole("button", { name: "edit button for II. Evaluation plan" })
-    .click();
-
-  await page.getByRole("button", { name: "Add objective" }).click();
-
-  await expect(page.getByRole("dialog")).toBeVisible();
-
-  await expect(
-    page.getByRole("heading", {
-      name: "Add objective for Transitions and Transition Coordination Services Initiative",
-    })
-  ).toBeVisible();
-
-  // const objectiveTextbox = await page.getByTitle(
-  //   "evaluationPlan_objectiveName"
-  // );
-
-  // await objectiveTextbox.fill("SMART goals, targets, milestones");
-
-  const performanceMeasuresTextbox = await page.getByLabel(
-    "Describe the performance measures"
-  );
-
-  await performanceMeasuresTextbox.fill(
-    "Performance measures or indicators your state or territory will use"
-  );
-
-  await page
-    .getByLabel("Provide targets")
-    .fill("Targets for the performance measures or indicators listed above");
-
-  await page.getByRole("radio", { name: "Yes" }).click();
-
-  await fillQuarters({ page });
-
-  const additionalDetailsTextbox = await page.getByLabel(
-    "Provide additional detail on"
-  );
-
-  await additionalDetailsTextbox.fill("Additional details");
-  await page.getByRole("button", { name: "Save" }).click();
-
-  await page.getByRole("alert").fill("objective");
-
-  await page.getByRole("button", { name: "Save" }).click();
-  await expect(page.getByTestId("entityCard")).toBeVisible();
-  await page.getByRole("button", { name: "Save & return" }).click();
-
-  // III
-  await page
-    .getByRole("button", { name: "edit button for III. Funding sources" })
-    .click();
-
-  await page.getByRole("button", { name: "Add funding source" }).click();
-
-  await expect(page.getByRole("dialog")).toBeVisible();
-
-  await expect(
-    page.getByRole("heading", {
-      name: "Add funding source and projected expenditures for Transitions and Transition Coordination Services Initiative",
-    })
-  ).toBeVisible();
-
-  const fundingSourceRadioButton = await page.getByRole("radio", {
-    name: "MFP cooperative agreement funds for qualified HCBS and demonstration services",
-  });
-
-  await fundingSourceRadioButton.click();
-
-  await fillQuarters({ page });
-
-  await page.getByRole("button", { name: "Save" }).click();
-  await expect(page.getByTestId("entityCard")).toBeVisible();
-  await expect(page.getByTestId("entityCard")).toHaveCount(1);
-  await expect(
-    page.getByRole("button", { name: "Save & return" })
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Save & return" }).click();
-  await expect(page.getByRole("table")).toBeVisible();
-  await page.getByLabel("Return to all initiatives").first().click();
 
   // Housing-related Supports
 
@@ -372,42 +379,6 @@ test("State user can create a work plan", async ({ page }) => {
     })
     .click();
 
-  // I
-  await page
-    .getByRole("button", { name: "edit button for I. Define initiative" })
-    .click();
-
-  await expect(
-    page.getByText(
-      "State or Territory-Specific Initiatives: I. Define initiative"
-    )
-  ).toBeVisible();
-
-  await page
-    .getByRole("textbox", {
-      name: "Describe the initiative, including key activities",
-    })
-    .fill("initiative description, including target populations and timeframe");
-
-  await olderAdultsCheckbox.click();
-  await expect(olderAdultsCheckbox).toBeChecked();
-
-  await page
-    .getByRole("textbox", { name: "Start date" })
-    .fill(`02/03/${currentYear}`);
-
-  await page.getByRole("radio", { name: "Yes" }).click();
-
-  await page
-    .getByRole("textbox", { name: "Projected end date" })
-    .fill(`05/03/${currentYear}`);
-
-  await expect(page.getByRole("alert")).toBeHidden();
-
-  await page.getByRole("button", { name: "Save & return" }).click();
-
-  await expect(page.getByRole("table")).toBeVisible();
-
   // II
   await page
     .getByRole("button", { name: "edit button for II. Evaluation plan" })
@@ -423,11 +394,16 @@ test("State user can create a work plan", async ({ page }) => {
     })
   ).toBeVisible();
 
-  // const objectiveTextbox = await page.getByTitle(
-  //   "evaluationPlan_objectiveName"
-  // );
+  const objectiveTextboxHousing = await page.getByRole("textbox", {
+    name: "Objective",
+    exact: true,
+  });
 
-  // await objectiveTextbox.fill("SMART goals, targets, milestones");
+  await objectiveTextboxHousing.fill("SMART goals, targets, milestones");
+
+  await expect(objectiveTextboxHousing).toHaveValue(
+    "SMART goals, targets, milestones"
+  );
 
   await performanceMeasuresTextbox.fill(
     "Performance measures or indicators your state or territory will use"
@@ -444,9 +420,6 @@ test("State user can create a work plan", async ({ page }) => {
   await additionalDetailsTextbox.fill("Additional details");
   await page.getByRole("button", { name: "Save" }).click();
 
-  await page.getByRole("alert").fill("objective");
-
-  await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByTestId("entityCard")).toBeVisible();
   await page.getByRole("button", { name: "Save & return" }).click();
 
@@ -479,30 +452,6 @@ test("State user can create a work plan", async ({ page }) => {
   await expect(page.getByRole("table")).toBeVisible();
   await page.getByLabel("Return to all initiatives").first().click();
 
-  // Quality measurement and improvement
-
-  await addInitiativeButton.click();
-  await initiativeNameTextbox.fill(
-    "Quality Measurement and Improvement Initiative"
-  );
-
-  const qualityMeasurementRadio = await page.getByRole("radio", {
-    name: "Quality measurement and improvement",
-  });
-  await qualityMeasurementRadio.click();
-  await page.getByRole("button", { name: "Save" }).click();
-  await expect(
-    page.getByRole("row", {
-      name: "Quality Measurement and Improvement Initiative",
-    })
-  ).toBeVisible();
-
-  await page
-    .getByRole("button", {
-      name: "edit button for Quality Measurement and Improvement Initiative",
-    })
-    .click();
-
   // I
   await page
     .getByRole("button", { name: "edit button for I. Define initiative" })
@@ -539,6 +488,30 @@ test("State user can create a work plan", async ({ page }) => {
 
   await expect(page.getByRole("table")).toBeVisible();
 
+  // Quality measurement and improvement
+
+  await addInitiativeButton.click();
+  await initiativeNameTextbox.fill(
+    "Quality Measurement and Improvement Initiative"
+  );
+
+  const qualityMeasurementRadio = await page.getByRole("radio", {
+    name: "Quality measurement and improvement",
+  });
+  await qualityMeasurementRadio.click();
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(
+    page.getByRole("row", {
+      name: "Quality Measurement and Improvement Initiative",
+    })
+  ).toBeVisible();
+
+  await page
+    .getByRole("button", {
+      name: "edit button for Quality Measurement and Improvement Initiative",
+    })
+    .click();
+
   // II
   await page
     .getByRole("button", { name: "edit button for II. Evaluation plan" })
@@ -554,11 +527,16 @@ test("State user can create a work plan", async ({ page }) => {
     })
   ).toBeVisible();
 
-  // const objectiveTextbox = await page.getByTitle(
-  //   "evaluationPlan_objectiveName"
-  // );
+  const objectiveTextboxQualityMeasure = await page.getByRole("textbox", {
+    name: "Objective",
+    exact: true,
+  });
 
-  // await objectiveTextbox.fill("SMART goals, targets, milestones");
+  await objectiveTextboxQualityMeasure.fill("SMART goals, targets, milestones");
+
+  await expect(objectiveTextboxQualityMeasure).toHaveValue(
+    "SMART goals, targets, milestones"
+  );
 
   await performanceMeasuresTextbox.fill(
     "Performance measures or indicators your state or territory will use"
@@ -573,10 +551,6 @@ test("State user can create a work plan", async ({ page }) => {
   await fillQuarters({ page });
 
   await additionalDetailsTextbox.fill("Additional details");
-  await page.getByRole("button", { name: "Save" }).click();
-
-  await page.getByRole("alert").fill("objective");
-
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByTestId("entityCard")).toBeVisible();
   await page.getByRole("button", { name: "Save & return" }).click();
@@ -610,30 +584,6 @@ test("State user can create a work plan", async ({ page }) => {
   await expect(page.getByRole("table")).toBeVisible();
   await page.getByLabel("Return to all initiatives").first().click();
 
-  // Self-direction
-
-  await addInitiativeButton.click();
-  await initiativeNameTextbox.fill("Self-Direction Initiative");
-
-  const selfDirectionRadio = await page.getByRole("radio", {
-    name: "Self-direction",
-  });
-  await selfDirectionRadio.click();
-  await page.getByRole("button", { name: "Save" }).click();
-  await expect(
-    page.getByRole("row", {
-      name: "Self-Direction Initiative",
-    })
-  ).toBeVisible();
-
-  await expect(page.getByRole("alert")).toBeHidden();
-
-  await page
-    .getByRole("button", {
-      name: "edit button for Self-Direction Initiative",
-    })
-    .click();
-
   // I
   await page
     .getByRole("button", { name: "edit button for I. Define initiative" })
@@ -670,6 +620,30 @@ test("State user can create a work plan", async ({ page }) => {
 
   await expect(page.getByRole("table")).toBeVisible();
 
+  // Self-direction
+
+  await addInitiativeButton.click();
+  await initiativeNameTextbox.fill("Self-Direction Initiative");
+
+  const selfDirectionRadio = await page.getByRole("radio", {
+    name: "Self-direction",
+  });
+  await selfDirectionRadio.click();
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(
+    page.getByRole("row", {
+      name: "Self-Direction Initiative",
+    })
+  ).toBeVisible();
+
+  await expect(page.getByRole("alert")).toBeHidden();
+
+  await page
+    .getByRole("button", {
+      name: "edit button for Self-Direction Initiative",
+    })
+    .click();
+
   // II
   await page
     .getByRole("button", { name: "edit button for II. Evaluation plan" })
@@ -685,11 +659,16 @@ test("State user can create a work plan", async ({ page }) => {
     })
   ).toBeVisible();
 
-  // const objectiveTextbox = await page.getByTitle(
-  //   "evaluationPlan_objectiveName"
-  // );
+  const objectiveTextboxSelfDirection = await page.getByRole("textbox", {
+    name: "Objective",
+    exact: true,
+  });
 
-  // await objectiveTextbox.fill("SMART goals, targets, milestones");
+  await objectiveTextboxSelfDirection.fill("SMART goals, targets, milestones");
+
+  await expect(objectiveTextboxSelfDirection).toHaveValue(
+    "SMART goals, targets, milestones"
+  );
 
   await performanceMeasuresTextbox.fill(
     "Performance measures or indicators your state or territory will use"
@@ -739,6 +718,43 @@ test("State user can create a work plan", async ({ page }) => {
   ).toBeVisible();
   await page.getByRole("button", { name: "Save & return" }).click();
   await expect(page.getByRole("table")).toBeVisible();
+
+  // I
+  await page
+    .getByRole("button", { name: "edit button for I. Define initiative" })
+    .click();
+
+  await expect(
+    page.getByText(
+      "State or Territory-Specific Initiatives: I. Define initiative"
+    )
+  ).toBeVisible();
+
+  await page
+    .getByRole("textbox", {
+      name: "Describe the initiative, including key activities",
+    })
+    .fill("initiative description, including target populations and timeframe");
+
+  await olderAdultsCheckbox.click();
+  await expect(olderAdultsCheckbox).toBeChecked();
+
+  await page
+    .getByRole("textbox", { name: "Start date" })
+    .fill(`02/03/${currentYear}`);
+
+  await page.getByRole("radio", { name: "Yes" }).click();
+
+  await page
+    .getByRole("textbox", { name: "Projected end date" })
+    .fill(`05/03/${currentYear}`);
+
+  await expect(page.getByRole("alert")).toBeHidden();
+
+  await page.getByRole("button", { name: "Save & return" }).click();
+
+  await expect(page.getByRole("table")).toBeVisible();
+
   await page.getByLabel("Return to all initiatives").first().click();
 
   expect(continueButton).toBeEnabled();

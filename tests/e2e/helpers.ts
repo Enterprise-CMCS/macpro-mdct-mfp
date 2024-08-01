@@ -1,4 +1,4 @@
-import { Locator } from "@playwright/test";
+import { Locator, Response } from "@playwright/test";
 
 export async function logInStateUser({ page }) {
   await page.goto("/");
@@ -40,7 +40,7 @@ async function archiveReports(buttons: Locator, page) {
   const archiveButtons = await buttons.all();
   if (archiveButtons.length > 0) {
     const archivePromise = page.waitForResponse(
-      (response) =>
+      (response: Response) =>
         response.url().includes("/reports/archive/WP/PR/") &&
         response.status() == 200
     );
@@ -67,7 +67,6 @@ export async function archiveExistingWPs({ page }) {
   );
   await reportsPromise;
   await archiveReports(page.getByRole("button", { name: "Archive" }), page);
-
   await logOut({ page });
 }
 
