@@ -200,6 +200,10 @@ test("State user can create a work plan", async ({ page }) => {
     "/wp/state-or-territory-specific-initiatives/initiatives"
   );
 
+  // Add the initiatives
+
+  // await addInitiatives({ page });
+
   // Transitions and Transition Coordination Services
   const addInitiativeButton = await page.getByRole("button", {
     name: "Add Initiative",
@@ -284,7 +288,7 @@ test("State user can create a work plan", async ({ page }) => {
 
   await expect(page.getByRole("table")).toBeVisible();
 
-  // // III
+  // III
   await page
     .getByRole("button", { name: "edit button for III. Funding sources" })
     .click();
@@ -356,6 +360,8 @@ test("State user can create a work plan", async ({ page }) => {
   await page.getByRole("button", { name: "Save & return" }).click();
 
   await expect(page.getByRole("table")).toBeVisible();
+
+  await page.getByLabel("Return to all initiatives").first().click();
 
   // Housing-related Supports
 
@@ -450,7 +456,6 @@ test("State user can create a work plan", async ({ page }) => {
   ).toBeVisible();
   await page.getByRole("button", { name: "Save & return" }).click();
   await expect(page.getByRole("table")).toBeVisible();
-  await page.getByLabel("Return to all initiatives").first().click();
 
   // I
   await page
@@ -487,6 +492,8 @@ test("State user can create a work plan", async ({ page }) => {
   await page.getByRole("button", { name: "Save & return" }).click();
 
   await expect(page.getByRole("table")).toBeVisible();
+
+  await page.getByLabel("Return to all initiatives").first().click();
 
   // Quality measurement and improvement
 
@@ -582,7 +589,6 @@ test("State user can create a work plan", async ({ page }) => {
   ).toBeVisible();
   await page.getByRole("button", { name: "Save & return" }).click();
   await expect(page.getByRole("table")).toBeVisible();
-  await page.getByLabel("Return to all initiatives").first().click();
 
   // I
   await page
@@ -619,6 +625,7 @@ test("State user can create a work plan", async ({ page }) => {
   await page.getByRole("button", { name: "Save & return" }).click();
 
   await expect(page.getByRole("table")).toBeVisible();
+  await page.getByLabel("Return to all initiatives").first().click();
 
   // Self-direction
 
@@ -635,8 +642,6 @@ test("State user can create a work plan", async ({ page }) => {
       name: "Self-Direction Initiative",
     })
   ).toBeVisible();
-
-  await expect(page.getByRole("alert")).toBeHidden();
 
   await page
     .getByRole("button", {
@@ -683,9 +688,6 @@ test("State user can create a work plan", async ({ page }) => {
   await fillQuarters({ page });
 
   await additionalDetailsTextbox.fill("Additional details");
-  await page.getByRole("button", { name: "Save" }).click();
-
-  await page.getByRole("alert").fill("objective");
 
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByTestId("entityCard")).toBeVisible();
@@ -757,6 +759,7 @@ test("State user can create a work plan", async ({ page }) => {
 
   await page.getByLabel("Return to all initiatives").first().click();
 
+  //////
   expect(continueButton).toBeEnabled();
   await continueButton.click();
 

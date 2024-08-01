@@ -90,3 +90,29 @@ export async function fillQuarters({ page }) {
     await page.getByRole("textbox", { name: key }).fill("10");
   }
 }
+
+const initiatives = [
+  ["Transitions and Transition Coordination Services"],
+  ["Quality Measurement and Improvement"],
+  ["Housing-related Supports"],
+  ["Self-Direction"],
+];
+
+export async function addInitiatives({ page }) {
+  initiatives.forEach(async (initiative) => {
+    const addInitiativeButton = await page.getByRole("button", {
+      name: "Add Initiative",
+    });
+    await addInitiativeButton.click();
+
+    const initiativeNameTextbox = page.getByLabel("Initiative name");
+
+    await initiativeNameTextbox.fill(initiative);
+
+    const initiativeRadio = page.getByRole("radio", {
+      name: initiative,
+    });
+    await initiativeRadio.click();
+    await page.getByRole("button", { name: "Save" }).click();
+  });
+}
