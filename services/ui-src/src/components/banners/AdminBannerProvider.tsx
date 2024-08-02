@@ -56,7 +56,7 @@ export const AdminBannerProvider = ({ children }: Props) => {
     try {
       await deleteBanner(ADMIN_BANNER_ID);
       await fetchAdminBanner();
-    } catch (error: any) {
+    } catch {
       setBannerErrorMessage(bannerErrors.DELETE_BANNER_FAILED);
     }
     setBannerDeleting(false);
@@ -65,7 +65,7 @@ export const AdminBannerProvider = ({ children }: Props) => {
   const writeAdminBanner = async (newBannerData: AdminBannerData) => {
     try {
       await writeBanner(newBannerData);
-    } catch (e: any) {
+    } catch {
       setBannerErrorMessage(bannerErrors.CREATE_BANNER_FAILED);
     }
     await fetchAdminBanner();
