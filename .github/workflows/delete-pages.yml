@@ -1,6 +1,9 @@
 name: Delete old folders from GitHub Pages
 
 on:
+  push:
+    branches:
+      - "gh-pages"
   schedule:
     - cron: '0 0 * * *' # This will run the workflow daily at midnight UTC
 
