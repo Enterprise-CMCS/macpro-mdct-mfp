@@ -29,7 +29,7 @@ def find_old_folders(n_days, directory):
                 else:
                     print(
                         f"SKIPPED --- Folder '{entry.name}' is not older than "
-                        f"{n_days}. It will not be deleted"
+                        f"{n_days}. It will not be deleted."
                     )
             except ValueError:
                 print(
@@ -44,26 +44,35 @@ def find_old_folders(n_days, directory):
 
     return old_folders
 
-def delete_folders(directory, folder_names):
+def delete_folders(base_directory, folder_names):
     """
     Delete specified folders and their contents in the given directory.
     
     Args:
-        directory (str): The directory containing the folders to delete.
+        base_directory (str): The base directory containing the folders to delete.
         folder_names (list): List of folder names to delete.
     """
     for folder_name in folder_names:
-        folder_path = os.path.join(directory, folder_name)
-        try:
-            shutil.rmtree(folder_path)
+        folder_path = os.path.join(base_directory, folder_name)
+        # Ensure the folder_path is within the base_directory
+        if os.path.commonpath([base_directory]) == os.path.commonpath(
+            [base_directory, folder_path]
+        ):
+            try:
+                shutil.rmtree(folder_path)
+                print(
+                    f"DELETED --- Folder '{folder_name}' and its contents have been "
+                    f"deleted."
+                )
+            except FileNotFoundError:
+                print(f"Folder '{folder_name}' not found.")
+            except Exception as e:
+                print(f"Error deleting folder '{folder_name}': {e}")
+        else:
             print(
-                f"DELETED --- Folder '{folder_name}' and its contents have been "
-                f"deleted."
+                f"SKIPPED --- Attempted to delete folder outside the base directory: "
+                f"'{folder_path}'"
             )
-        except FileNotFoundError:
-            print(f"Folder '{folder_name}' not found.")
-        except Exception as e:
-            print(f"Error deleting folder '{folder_name}': {e}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -83,6 +92,10 @@ if __name__ == "__main__":
         help="Full path to the directory where reports are located."
     )
     args = parser.parse_args()
+
+    # Ensure the provided folder name is an absolute path
+    if not os.path.isabs(args.folder_name):
+        raise ValueError("The folder name must be an absolute path.")
 
     old_folders = find_old_folders(args.n_days, args.folder_name)
     delete_folders(args.folder_name, old_folders)
