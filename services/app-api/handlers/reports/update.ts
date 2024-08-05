@@ -71,7 +71,7 @@ export const updateReport = handler(async (event) => {
         body: error.INVALID_DATA,
       };
     }
-  } catch (err) {
+  } catch {
     return {
       status: StatusCodes.BAD_REQUEST,
       body: error.INVALID_DATA,
@@ -160,7 +160,7 @@ export const updateReport = handler(async (event) => {
   const cleanedFieldData = removeNotApplicablePopsFromInitiatives(fieldData);
   try {
     await putReportFieldData(currentReport, cleanedFieldData);
-  } catch (err) {
+  } catch {
     return {
       status: StatusCodes.SERVER_ERROR,
       body: error.S3_OBJECT_UPDATE_ERROR,
@@ -196,7 +196,7 @@ export const updateReport = handler(async (event) => {
 
   try {
     await putReportMetadata(updatedMetadata);
-  } catch (err) {
+  } catch {
     return {
       status: StatusCodes.SERVER_ERROR,
       body: error.DYNAMO_UPDATE_ERROR,
