@@ -12,7 +12,7 @@ export const workPlanChoices = async (): Promise<Choice[]> => {
       title: `${submissionName} (${id})`,
       value: id,
     }));
-  } catch (e) {
+  } catch {
     process.exit();
   }
 };
@@ -24,7 +24,7 @@ export const semiAnnualReportChoices = async (): Promise<Choice[]> => {
       title: `${report.submissionName} (${report.id})`,
       value: report.id,
     }));
-  } catch (e) {
+  } catch {
     process.exit();
   }
 };
