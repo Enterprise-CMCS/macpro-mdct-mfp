@@ -42,6 +42,7 @@
     "./services/database/*",
     "./tests/e2e/**/**.ts",
     "./tests/e2e/**/**.js",
+    "./tests/seeds/**/*",
     "playwright.config.ts"
   ]
 }
