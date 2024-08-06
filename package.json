@@ -49,7 +49,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.4.1",
-    "serverless": "^3.38.0",
+    "serverless": "^3.39.0",
     "serverless-bundle": "^6.0.0",
     "serverless-dotenv-plugin": "^3.0.0",
     "serverless-iam-helper": "github:Enterprise-CMCS/serverless-iam-helper",
