@@ -8,9 +8,7 @@
   },
   "author": "",
   "license": "CC0-1.0",
-  "devDependencies": {
-    "serverless-associate-waf": "^1.2.1"
-  },
+  "devDependencies": {},
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.621.0"
   }

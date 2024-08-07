@@ -29,7 +29,7 @@ plugins:
   - serverless-bundle
   - serverless-iam-helper
   - serverless-s3-bucket-helper
-  - serverless-associate-waf
+  # - serverless-associate-waf
   - "@enterprise-cmcs/serverless-waf-plugin"
 
 s3BucketHelper:
