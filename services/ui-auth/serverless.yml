@@ -145,12 +145,12 @@ resources:
         UserPoolTags:
           Name: ${self:custom.stage}-user-pool
 
-  # Associate the WAF Web ACL with the Cognito User Pool
-  # CognitoUserPoolWAFAssociation:
-  #   Type: 'AWS::WAFv2::WebACLAssociation'
-  #   Properties:
-  #     ResourceArn: !GetAtt CognitoUserPool.Arn
-  #     WebACLArn: !GetAtt WafPluginAcl.Arn
+  Associate the WAF Web ACL with the Cognito User Pool
+  CognitoUserPoolWAFAssociation:
+    Type: 'AWS::WAFv2::WebACLAssociation'
+    Properties:
+      ResourceArn: !GetAtt CognitoUserPool.Arn
+      WebACLArn: !GetAtt WafPluginAcl.Arn
 
 
     CognitoUserPoolClient:
