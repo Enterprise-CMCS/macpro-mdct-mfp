@@ -29,7 +29,6 @@ plugins:
   - serverless-bundle
   - serverless-iam-helper
   - serverless-s3-bucket-helper
-  # - serverless-associate-waf
   - "@enterprise-cmcs/serverless-waf-plugin"
 
 s3BucketHelper:
@@ -145,6 +144,12 @@ resources:
             StringAttributeConstraints:
               MinLength: 0
               MaxLength: 256
+        UserPoolAddOns:
+          AdvancedSecurityMode: ENFORCED
+        UserPoolTags:
+          Name: ${self:custom.stage}-user-pool
+        WafConfiguration:
+          WebAclArn: ${self:custom.waf_web_acl_arn}
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
