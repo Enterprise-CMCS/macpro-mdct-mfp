@@ -56,10 +56,6 @@ custom:
   application_endpoint_url: ${param:ApplicationEndpointUrl}
   bootstrapUsersEnabled: ${ssm:/configuration/${self:custom.stage}/cognito/bootstrapUsers/enabled, ssm:/configuration/default/cognito/bootstrapUsers/enabled, ""}
   bootstrapUsersPassword: ${ssm:/configuration/${self:custom.stage}/cognito/bootstrapUsers/password, ssm:/configuration/default/cognito/bootstrapUsers/password, ""}
-  # webAclName: ${self:service}-${self:custom.stage}-webacl-waf
-  # associateWaf:
-  #   name: ${self:custom.webAclName}
-  #   version: V2
   okta_metadata_url: ${ssm:/configuration/${self:custom.stage}/okta_metadata_url, ""}
   okta_oidc_client_id: ${ssm:/configuration/${self:custom.stage}/okta_client_id, ""}
   okta_oidc_client_secret: ${ssm:/configuration/${self:custom.stage}/okta_client_secret, ""}
@@ -148,6 +144,15 @@ resources:
           AdvancedSecurityMode: ENFORCED
         UserPoolTags:
           Name: ${self:custom.stage}-user-pool
+
+  # Associate the WAF Web ACL with the Cognito User Pool
+  CognitoUserPoolWAFAssociation:
+    Type: 'AWS::WAFv2::WebACLAssociation'
+    Properties:
+      ResourceArn: !GetAtt CognitoUserPool.Arn
+      WebACLArn: !GetAtt WafPluginAcl.Arn
+
+
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
