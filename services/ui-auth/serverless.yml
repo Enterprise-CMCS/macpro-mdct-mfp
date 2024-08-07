@@ -148,8 +148,6 @@ resources:
           AdvancedSecurityMode: ENFORCED
         UserPoolTags:
           Name: ${self:custom.stage}-user-pool
-        WafConfiguration:
-          WebAclArn: !GetAtt WafPluginAcl.Arn
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
