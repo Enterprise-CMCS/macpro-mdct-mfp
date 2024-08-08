@@ -1,18 +1,15 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures/base";
 import { currentYear } from "../seeds/helpers";
-import { logInStateUser, archiveExistingWPs } from "./helpers";
+import { archiveExistingWPs } from "./helpers";
 
-test("State user can create a work plan", async ({ page }) => {
+test("State user can create a work plan", async ({
+  page,
+  loginPage,
+  stateHomePage,
+}) => {
   await archiveExistingWPs({ page });
-  await logInStateUser({ page });
-
-  await expect(
-    page.getByText("Money Follows the Person (MFP) Portal")
-  ).toBeVisible();
-
-  await expect(
-    page.getByRole("button", { name: "Enter Work Plan online" })
-  ).toBeVisible();
+  await loginPage.loginStateUser();
+  await stateHomePage.isReady();
 
   await page.getByRole("button", { name: "Enter Work Plan online" }).click();
 
@@ -36,4 +33,55 @@ test("State user can create a work plan", async ({ page }) => {
   await expect(
     page.getByText(`Puerto Rico MFP Work Plan ${currentYear} - Period 1`)
   ).toBeVisible();
+});
+
+test("State user can fill out work plan", async ({
+  page,
+  loginPage,
+  wpDashboardPage,
+  wpGeneralInformationPage,
+  wpTransitionBenchmarksPage,
+  wpTransitionBenchmarkStrategyPage,
+}) => {
+  await archiveExistingWPs({ page });
+
+  await loginPage.goto();
+  await loginPage.loginStateUser();
+  // Timeout to allow API to finish starting up before seeding
+  await page.waitForTimeout(3000);
+  await wpDashboardPage.createWorkPlanPeriod1();
+  await wpDashboardPage.goto();
+  await wpDashboardPage.isReady();
+
+  await page.getByRole("button", { name: "Edit" }).click();
+
+  // General Information
+  await expect(page).toHaveURL(wpGeneralInformationPage.path);
+  await wpGeneralInformationPage.continue();
+
+  // Transition Benchmarks
+  await expect(page).toHaveURL(wpTransitionBenchmarksPage.path);
+  const buttons = await wpTransitionBenchmarksPage.getEditButtons();
+
+  for (const editButton of buttons) {
+    await editButton.click();
+    const overlay = wpTransitionBenchmarksPage.page.getByRole("dialog");
+    await expect(overlay).toBeVisible();
+
+    // Fill out quarterly targets for the first population
+    if (buttons.indexOf(editButton) === 0) {
+      await overlay.locator("//input[@value='Yes']").check();
+      const inputs = await overlay.locator("input[type='text']");
+      await expect(inputs.first()).toBeVisible();
+      await wpTransitionBenchmarksPage.fillPopulationApplicable(inputs);
+    } else {
+      await overlay.locator("//input[@value='No']").check();
+      await wpTransitionBenchmarksPage.saveAndClose.click();
+    }
+  }
+
+  await wpTransitionBenchmarksPage.continue();
+
+  // Transition Benchmark Strategy
+  await expect(page).toHaveURL(wpTransitionBenchmarkStrategyPage.path);
 });
