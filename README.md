@@ -16,6 +16,10 @@ MFP is the CMCS MDCT application for collecting state data related to the [Money
 
 The MFP demonstration supports state efforts for rebalancing their long-term services and supports system so that individuals have a choice of where they live and receive services. From the start of the program in 2008 through the end of 2020, states have transitioned over 107,000 people to community living under MFP.
 
+Project Goals:
+
+- 
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
