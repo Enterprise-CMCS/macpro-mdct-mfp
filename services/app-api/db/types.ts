@@ -1,7 +1,4 @@
-import {
-  ReportFieldData,
-  ReportMetadataShape,
-} from "../../services/app-api/utils/types";
+import { ReportFieldData, ReportMetadataShape } from "../utils/types";
 
 export type AwsHeaders = {
   "Content-Type"?: string;

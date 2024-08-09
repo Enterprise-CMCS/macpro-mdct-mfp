@@ -29,7 +29,7 @@ function updateEnvFiles() {
     execSync(
       "sed -i '' -e 's/# pragma: allowlist secret//g' services/ui-src/.env"
     );
-  } catch {
+  } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Failed to update .env files using 1Password CLI.");
     process.exit(1);

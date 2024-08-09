@@ -119,7 +119,7 @@ export const releaseReport = handler(async (event) => {
 
   try {
     await putReportMetadata(newReportMetadata);
-  } catch {
+  } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
       body: error.DYNAMO_UPDATE_ERROR,
@@ -128,7 +128,7 @@ export const releaseReport = handler(async (event) => {
   // Copy the original field data to a new location.
   try {
     await putReportFieldData(newReportMetadata, updatedFieldData);
-  } catch {
+  } catch (err) {
     return {
       status: StatusCodes.SERVER_ERROR,
       body: error.S3_OBJECT_CREATION_ERROR,

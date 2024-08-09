@@ -208,7 +208,7 @@ export const createReport = handler(
         { reportType, state, fieldDataId },
         newFieldData
       );
-    } catch {
+    } catch (err) {
       return {
         status: StatusCodes.SERVER_ERROR,
         body: error.S3_OBJECT_CREATION_ERROR,
@@ -255,7 +255,7 @@ export const createReport = handler(
 
     try {
       await putReportMetadata(createdReportMetadata);
-    } catch {
+    } catch (err) {
       return {
         status: StatusCodes.SERVER_ERROR,
         body: error.DYNAMO_CREATION_ERROR,
@@ -272,7 +272,7 @@ export const createReport = handler(
       };
       try {
         await putReportMetadata(workPlanWithSarConnection);
-      } catch {
+      } catch (err) {
         return {
           status: StatusCodes.SERVER_ERROR,
           body: error.DYNAMO_CREATION_ERROR,

@@ -104,7 +104,7 @@ export const validateData = async (
       stripUnknown: true,
       ...options,
     });
-  } catch {
+  } catch (e: any) {
     throw new Error(error.INVALID_DATA);
   }
 };

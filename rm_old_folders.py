@@ -29,7 +29,7 @@ def find_old_folders(n_days, directory):
                 else:
                     print(
                         f"SKIPPED --- Folder '{entry.name}' is not older than "
-                        f"{n_days} days. It will not be deleted."
+                        f"{n_days}. It will not be deleted"
                     )
             except ValueError:
                 print(
@@ -44,47 +44,26 @@ def find_old_folders(n_days, directory):
 
     return old_folders
 
-def is_valid_directory(base_directory, folder_path):
-    """
-    Check if the folder_path is a valid directory within the base_directory.
-
-    Args:
-        base_directory (str): The base directory.
-        folder_path (str): The path of the folder to validate.
-
-    Returns:
-        bool: True if the folder_path is valid, False otherwise.
-    """
-    # Resolve absolute paths
-    base_directory = os.path.abspath(base_directory)
-    folder_path = os.path.abspath(folder_path)
-    
-    # Ensure that the folder_path starts with the base_directory
-    return folder_path.startswith(base_directory)
-
-def delete_folders(base_directory, folder_names):
+def delete_folders(directory, folder_names):
     """
     Delete specified folders and their contents in the given directory.
     
     Args:
-        base_directory (str): The base directory containing the folders to delete.
+        directory (str): The directory containing the folders to delete.
         folder_names (list): List of folder names to delete.
     """
     for folder_name in folder_names:
-        folder_path = os.path.join(base_directory, folder_name)
-        if is_valid_directory(base_directory, folder_path):
-            try:
-                shutil.rmtree(folder_path)
-                print(
-                    f"DELETED --- Folder '{folder_name}' and its contents have "
-                    f"been deleted."
-                )
-            except FileNotFoundError:
-                print(f"Folder '{folder_name}' not found.")
-            except Exception as e:
-                print(f"Error deleting folder '{folder_name}': {e}")
-        else:
-            print(f"SKIPPED --- Invalid folder path: '{folder_path}'")
+        folder_path = os.path.join(directory, folder_name)
+        try:
+            shutil.rmtree(folder_path)
+            print(
+                f"DELETED --- Folder '{folder_name}' and its contents have been "
+                f"deleted."
+            )
+        except FileNotFoundError:
+            print(f"Folder '{folder_name}' not found.")
+        except Exception as e:
+            print(f"Error deleting folder '{folder_name}': {e}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -104,10 +83,6 @@ if __name__ == "__main__":
         help="Full path to the directory where reports are located."
     )
     args = parser.parse_args()
-
-    # Ensure the provided folder name is an absolute path
-    if not os.path.isabs(args.folder_name):
-        raise ValueError("The folder name must be an absolute path.")
 
     old_folders = find_old_folders(args.n_days, args.folder_name)
     delete_folders(args.folder_name, old_folders)
