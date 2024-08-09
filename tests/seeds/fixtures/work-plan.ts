@@ -1,23 +1,31 @@
 import crypto from "crypto";
 import { faker } from "@faker-js/faker";
-import { ReportFieldData, ReportStatus, ReportType } from "../../utils/types";
+import {
+  ReportFieldData,
+  ReportStatus,
+  ReportType,
+} from "../../../services/app-api/utils/types";
 import {
   dateFormat,
-  quarterlyKeyGenerator,
+  quarterlyKeyValueGenerator,
   randomReportPeriod,
   randomReportYear,
 } from "../helpers";
 import { SeedFillReportShape, SeedNewReportShape } from "../types";
 
-export const newWorkPlan = (stateName: string): SeedNewReportShape => ({
+export const newWorkPlan = (
+  stateName: string,
+  reportYear?: number,
+  reportPeriod?: number
+): SeedNewReportShape => ({
   metadata: {
     isComplete: false,
     lastAlteredBy: faker.person.fullName(),
     locked: false,
     previousRevisions: [],
-    reportPeriod: randomReportPeriod,
+    reportPeriod: reportPeriod || randomReportPeriod,
     reportType: ReportType.WP,
-    reportYear: randomReportYear,
+    reportYear: reportYear || randomReportYear,
     status: ReportStatus.NOT_STARTED,
     submissionCount: 0,
     submissionName: "Work Plan",
@@ -83,7 +91,12 @@ const addEvaluationPlan = (
       evaluationPlan_includesTargets: [transition],
       evaluationPlan_objectiveName: faker.music.songName(),
       evaluationPlan_targets: faker.lorem.sentence(),
-      ...quarterlyKeyGenerator(year, period, "quarterlyProjections", numType),
+      ...quarterlyKeyValueGenerator(
+        year,
+        period,
+        "quarterlyProjections",
+        numType
+      ),
     };
   });
 };
@@ -113,7 +126,7 @@ const addInitiative = (year: number, period: number): ReportFieldData[] => [
           },
         ],
         initiative_wp_otherTopic: "",
-        ...quarterlyKeyGenerator(
+        ...quarterlyKeyValueGenerator(
           year,
           period,
           "fundingSources_quarters",
@@ -158,7 +171,7 @@ const addInitiative = (year: number, period: number): ReportFieldData[] => [
           },
         ],
         initiative_wp_otherTopic: "",
-        ...quarterlyKeyGenerator(
+        ...quarterlyKeyValueGenerator(
           year,
           period,
           "fundingSources_quarters",
@@ -175,7 +188,7 @@ const addInitiative = (year: number, period: number): ReportFieldData[] => [
           },
         ],
         initiative_wp_otherTopic: "",
-        ...quarterlyKeyGenerator(
+        ...quarterlyKeyValueGenerator(
           year,
           period,
           "fundingSources_quarters",
@@ -218,7 +231,7 @@ const addInitiative = (year: number, period: number): ReportFieldData[] => [
           },
         ],
         initiative_wp_otherTopic: "",
-        ...quarterlyKeyGenerator(
+        ...quarterlyKeyValueGenerator(
           year,
           period,
           "fundingSources_quarters",
@@ -307,7 +320,12 @@ const updateTargetPopulations = (
     return {
       ...targetPopulation,
       transitionBenchmarks_applicableToMfpDemonstration: [transition],
-      ...quarterlyKeyGenerator(year, period, "quarterlyProjections", numType),
+      ...quarterlyKeyValueGenerator(
+        year,
+        period,
+        "quarterlyProjections",
+        numType
+      ),
     };
   });
 };
