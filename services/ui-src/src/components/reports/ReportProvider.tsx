@@ -91,7 +91,7 @@ export const ReportProvider = ({ children }: Props) => {
       hydrateAndSetReport(result);
       setError(undefined);
       return result;
-    } catch (e: any) {
+    } catch {
       setError(reportErrors.GET_REPORT_FAILED);
     }
   };
@@ -106,7 +106,7 @@ export const ReportProvider = ({ children }: Props) => {
       const result = await getReportsByState(reportType, selectedState);
       setReportsByState(sortReportsOldestToNewest(result));
       setError(undefined);
-    } catch (e: any) {
+    } catch {
       setError(reportErrors.GET_REPORTS_BY_STATE_FAILED);
     }
   };
@@ -142,7 +142,7 @@ export const ReportProvider = ({ children }: Props) => {
 
       setReportsByState(sortReportsOldestToNewest(sarSubmissions));
       setError(undefined);
-    } catch (e: any) {
+    } catch {
       setError(reportErrors.GET_REPORTS_BY_STATE_FAILED);
     }
   };
@@ -158,7 +158,7 @@ export const ReportProvider = ({ children }: Props) => {
       setLastSavedTime(getLocalHourMinuteTime());
       setWorkPlanToCopyFrom(undefined);
       setError(undefined);
-    } catch (e: any) {
+    } catch {
       setError(reportErrors.SET_REPORT_FAILED);
     }
   };
@@ -169,7 +169,7 @@ export const ReportProvider = ({ children }: Props) => {
       hydrateAndSetReport(result);
       setLastSavedTime(getLocalHourMinuteTime());
       setError(undefined);
-    } catch (e: any) {
+    } catch {
       setError(reportErrors.SET_REPORT_FAILED);
     }
   };
@@ -179,7 +179,7 @@ export const ReportProvider = ({ children }: Props) => {
       await approveReportRequest(reportKeys, report);
       setLastSavedTime(getLocalHourMinuteTime());
       setError(undefined);
-    } catch (e: any) {
+    } catch {
       setError(reportErrors.SET_REPORT_FAILED);
     }
   };
@@ -190,7 +190,7 @@ export const ReportProvider = ({ children }: Props) => {
       setLastSavedTime(getLocalHourMinuteTime());
       hydrateAndSetReport(result);
       setError(undefined);
-    } catch (e: any) {
+    } catch {
       setError(reportErrors.SET_REPORT_FAILED);
     }
   };
@@ -200,7 +200,7 @@ export const ReportProvider = ({ children }: Props) => {
       await archiveReportRequest(reportKeys);
       setLastSavedTime(getLocalHourMinuteTime());
       setError(undefined);
-    } catch (e: any) {
+    } catch {
       setError(reportErrors.SET_REPORT_FAILED);
     }
   };
@@ -209,7 +209,7 @@ export const ReportProvider = ({ children }: Props) => {
     try {
       await releaseReportRequest(reportKeys);
       setError(undefined);
-    } catch (e: any) {
+    } catch {
       setError(reportErrors.SET_REPORT_FAILED);
     }
   };
