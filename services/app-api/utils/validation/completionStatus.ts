@@ -52,7 +52,7 @@ export const calculateCompletionStatus = async (
       areAllFieldsValid =
         (await validateFieldData(validationJson, fieldsToBeValidated)) !==
         undefined;
-    } catch (err) {
+    } catch {
       // Silently ignore error, will result in false
     }
     return areAllFieldsValid;
