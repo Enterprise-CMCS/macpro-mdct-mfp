@@ -2,13 +2,13 @@
 import { Button, Image, Td, Tr, Spinner, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // utils
+import { convertDateUtcToEt, prettifyChoices } from "utils";
 import {
   AnyObject,
   ReportMetadataShape,
   ReportType,
   TableContentShape,
 } from "types";
-import { convertDateUtcToEt, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 
@@ -19,8 +19,7 @@ export const DashboardTable = ({
   body,
   openCreateReportModal,
   enterSelectedReport,
-  archiveReport,
-  archiving,
+  archive,
   entering,
   releaseReport,
   releasing,
@@ -103,16 +102,18 @@ export const DashboardTable = ({
                 sxOverride={sxOverride}
               />
             }
-            <AdminArchiveButton
-              report={report}
-              reportType={reportType}
-              reportId={reportId}
-              archiveReport={archiveReport}
-              archiving={archiving}
-              releaseReport={releaseReport}
-              releasing={releasing}
-              sxOverride={sxOverride}
-            />
+            {reportType === ReportType.WP && !report?.associatedSar && (
+              // archive button is available only for WP without an assoc SAR
+              <AdminArchiveButton
+                report={report}
+                reportType={reportType}
+                reportId={reportId}
+                archive={archive}
+                releaseReport={releaseReport}
+                releasing={releasing}
+                sxOverride={sxOverride}
+              />
+            )}
           </>
         )}
       </Tr>
@@ -139,7 +140,7 @@ interface DashboardTableProps {
   reportId: string | undefined;
   openCreateReportModal: Function;
   enterSelectedReport: Function;
-  archiveReport?: Function;
+  archive: Function;
   archiving?: boolean;
   entering?: boolean;
   isAdmin: boolean;
@@ -228,7 +229,7 @@ const AdminReleaseButton = ({
   releasing,
   releaseReport,
   sxOverride,
-}: AdminActionButtonProps) => {
+}: AdminReleaseButtonProps) => {
   //unlock is enabled when status: approved and submitted, all other times, it is disabled
   const reportStatus = getStatus(
     report.reportType as ReportType,
@@ -252,38 +253,40 @@ const AdminReleaseButton = ({
   );
 };
 
+// AdminArchiveButton will call openArchiveModal from DashboardPage
 const AdminArchiveButton = ({
   report,
-  reportId,
-  archiveReport,
-  archiving,
+  archive,
   sxOverride,
-}: AdminActionButtonProps) => {
+}: AdminArchiveButtonProps) => {
   return (
     <Td>
       <Button
         variant="link"
         sx={sxOverride.adminActionButton}
-        onClick={() => archiveReport!(report)}
+        onClick={() => archive(report)}
+        disabled={report?.archived}
       >
-        {archiving && reportId === report.id ? (
-          <Spinner size="md" />
-        ) : report?.archived ? (
-          "Unarchive"
-        ) : (
-          "Archive"
-        )}
+        Archive
       </Button>
     </Td>
   );
 };
 
-interface AdminActionButtonProps {
+interface AdminArchiveButtonProps {
   report: ReportMetadataShape;
   reportType: string;
   reportId: string | undefined;
-  archiveReport?: Function;
-  archiving?: boolean;
+  archive: Function;
+  releasing?: boolean;
+  releaseReport?: Function;
+  sxOverride: AnyObject;
+}
+
+interface AdminReleaseButtonProps {
+  report: ReportMetadataShape;
+  reportType: string;
+  reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
   sxOverride: AnyObject;

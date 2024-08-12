@@ -51,6 +51,7 @@ import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 import alertIcon from "assets/icons/icon_alert_circle.png";
+import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
 
 export const DashboardPage = ({ reportType }: Props) => {
   const {
@@ -59,9 +60,9 @@ export const DashboardPage = ({ reportType }: Props) => {
     fetchReportForSarCreation,
     clearReportSelection,
     setReportSelection,
-    archiveReport,
     releaseReport,
     fetchReport,
+    archiveReport,
   } = useContext(ReportContext);
   const {
     reportsByState,
@@ -85,7 +86,6 @@ export const DashboardPage = ({ reportType }: Props) => {
   >(undefined);
 
   const [reportId, setReportId] = useState<string | undefined>(undefined);
-  const [archiving, setArchiving] = useState<boolean>(false);
   const [entering, setEntering] = useState<boolean>(false);
   const [releasing, setReleasing] = useState<boolean>(false);
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
@@ -229,20 +229,9 @@ export const DashboardPage = ({ reportType }: Props) => {
     }
   };
 
-  const toggleReportArchiveStatus = async (report: ReportShape) => {
-    if (userIsAdmin) {
-      setReportId(report.id);
-      setArchiving(true);
-      const reportKeys = {
-        reportType: reportType,
-        state: adminSelectedState,
-        id: report.id,
-      };
-      await archiveReport(reportKeys);
-      await fetchReportsByState(reportType, activeState);
-      setReportId(undefined);
-      setArchiving(false);
-    }
+  const openArchiveModal = (report: ReportMetadataShape) => {
+    setReportId(report?.id);
+    confirmArchiveModalOnOpenHandler();
   };
 
   const toggleReportLockStatus = async (report: ReportShape) => {
@@ -299,6 +288,13 @@ export const DashboardPage = ({ reportType }: Props) => {
     onClose: confirmUnlockModalOnCloseHandler,
   } = useDisclosure();
 
+  //archive modal disclosure
+  const {
+    isOpen: confirmArchiveModalIsOpen,
+    onOpen: confirmArchiveModalOnOpenHandler,
+    onClose: confirmArchiveModalOnCloseHandler,
+  } = useDisclosure();
+
   const fullStateName = States[activeState as keyof typeof States];
 
   return (
@@ -345,8 +341,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               reportId={reportId}
               openCreateReportModal={openCreateReportModal}
               enterSelectedReport={enterSelectedReport}
-              archiveReport={toggleReportArchiveStatus}
-              archiving={archiving}
+              archive={openArchiveModal}
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
@@ -362,8 +357,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               body={body}
               openCreateReportModal={openCreateReportModal}
               enterSelectedReport={enterSelectedReport}
-              archiveReport={toggleReportArchiveStatus}
-              archiving={archiving}
+              archive={openArchiveModal}
               entering={entering}
               releaseReport={toggleReportLockStatus}
               releasing={releasing}
@@ -420,6 +414,17 @@ export const DashboardPage = ({ reportType }: Props) => {
         }}
         onConfirmHandler={confirmUnlockModalOnCloseHandler}
         content={wpVerbiage.modalUnlock}
+      />
+      <ArchiveReportModal
+        adminState={adminSelectedState}
+        archiveReport={archiveReport}
+        fetchReportsByState={fetchReportsByState}
+        modalDisclosure={{
+          isOpen: confirmArchiveModalIsOpen,
+          onClose: confirmArchiveModalOnCloseHandler,
+        }}
+        reportId={reportId}
+        reportType={reportType}
       />
     </PageTemplate>
   );

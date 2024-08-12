@@ -258,17 +258,13 @@ describe("<DashboardPage />", () => {
         ).toHaveBeenCalledTimes(2);
       });
 
-      test("Clicking 'Archive' button will archive the form", async () => {
+      test("Clicking 'Archive' button will open the archive modal", async () => {
         const archiveButton = screen.getAllByText("Archive")[1];
         expect(archiveButton).toBeVisible();
         await userEvent.click(archiveButton);
-        await expect(mockWpReportContext.archiveReport).toHaveBeenCalledTimes(
-          1
-        );
-        // once for render, once for archive
         await expect(
-          mockWpReportContext.fetchReportsByState
-        ).toHaveBeenCalledTimes(2);
+          screen.getByText(wpVerbiage.modalArchive.heading)
+        ).toBeVisible();
       });
     });
 
@@ -294,17 +290,13 @@ describe("<DashboardPage />", () => {
           ).toHaveBeenCalledTimes(2);
         });
 
-        test("Clicking 'Archive' button will archive the form", async () => {
+        test("Clicking 'Archive' button will open the archive modal", async () => {
           const archiveButton = screen.getAllByText("Archive")[1];
           expect(archiveButton).toBeVisible();
           await userEvent.click(archiveButton);
-          await expect(mockWpReportContext.archiveReport).toHaveBeenCalledTimes(
-            1
-          );
-          // once for render, once for archive
-          await expect(
-            mockWpReportContext.fetchReportsByState
-          ).toHaveBeenCalledTimes(2);
+          expect(
+            screen.getByText(wpVerbiage.modalArchive.heading)
+          ).toBeVisible();
         });
       });
 
