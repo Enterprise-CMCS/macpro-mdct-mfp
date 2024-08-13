@@ -56,44 +56,74 @@ describe("Test calculate isLeapYear", () => {
   });
 });
 
-describe("Test calculateDueDate", () => {
-  it("calculateDueDate for WP report with creation date 01/01/2022", () => {
-    const currentYear = 2022;
+describe("calculateDueDate()", () => {
+  describe("Period 1", () => {
     const reportPeriod = 1;
+    let reportType = ReportType.WP;
+
+    test("returns WP due date as 5/1", () => {
+      const years = [2022, 2023, 2025];
+      years.forEach((currentYear) => {
+        const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
+        expect(dueDate).toBe(`05/01/${currentYear}`);
+      });
+    });
+
+    test("returns SAR due date as 8/29", () => {
+      const currentYear = 2022;
+      reportType = ReportType.SAR;
+      const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
+      expect(dueDate).toBe("08/29/2022");
+    });
+  });
+
+  describe("Period 2", () => {
+    const reportPeriod = 2;
+    let reportType = ReportType.WP;
+
+    test("returns WP due date as 11/1", () => {
+      const years = [2022, 2023, 2025];
+      years.forEach((currentYear) => {
+        const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
+        expect(dueDate).toBe(`11/01/${currentYear}`);
+      });
+    });
+
+    test("returns SAR due date as 3/1", () => {
+      const currentYear = 2022;
+      reportType = ReportType.SAR;
+      const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
+      expect(dueDate).toBe("03/01/2023");
+    });
+
+    test("returns SAR due date in a leap year as 2/29", () => {
+      const currentYear = 2023;
+      reportType = ReportType.SAR;
+      const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
+      expect(dueDate).toBe("02/29/2024");
+    });
+  });
+
+  describe("Calculate due dates for 2024", () => {
+    const currentYear = 2024;
     const reportType = ReportType.WP;
-    const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-    expect(dueDate).toBe("09/01/2022");
-  });
 
-  it("calculateDueDate for WP report with creation date as 08/01/2022", () => {
-    const currentYear = 2022;
-    const reportPeriod = 2;
-    const reportType = ReportType.WP;
-    const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-    expect(dueDate).toBe("11/01/2022");
-  });
+    describe("Period 1", () => {
+      const reportPeriod = 1;
 
-  it("calculateDueDate for SAR report created in 2022 with period 2", () => {
-    const currentYear = 2022;
-    const reportPeriod = 1;
-    const reportType = ReportType.SAR;
-    const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-    expect(dueDate).toBe("08/29/2022");
-  });
+      test("returns WP due date in 2024 as 9/1", () => {
+        const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
+        expect(dueDate).toBe("09/01/2024");
+      });
+    });
 
-  it("calculateDueDate for SAR report created in 2022 with period 2", () => {
-    const currentYear = 2022;
-    const reportPeriod = 2;
-    const reportType = ReportType.SAR;
-    const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-    expect(dueDate).toBe("03/01/2023");
-  });
+    describe("Period 2", () => {
+      const reportPeriod = 2;
 
-  it("calculateDueDate for SAR report which is due during a leap year", () => {
-    const currentYear = 2023;
-    const reportPeriod = 2;
-    const reportType = ReportType.SAR;
-    const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-    expect(dueDate).toBe("02/29/2024");
+      test("returns WP due date in 2024 as 9/3", () => {
+        const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
+        expect(dueDate).toBe(`09/03/2024`);
+      });
+    });
   });
 });
