@@ -29,7 +29,7 @@ describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
   });
 
   describe("MFP Work Plan Dashboard Page - Admin Archiving", () => {
-    it("Admin users can archive/unarchive Work Plans", () => {
+    it("Admin users can archive Work Plans", () => {
       cy.authenticate("adminUser");
 
       //Given I've logged in
@@ -51,15 +51,16 @@ describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
         }
       ).should("be.visible");
 
-      //And when the admin clicks archive/unarchive it should do that to the report
-      cy.contains("Archive").click();
-      cy.contains("Unarchive").should("be.visible");
-
-      cy.contains("Unarchive").click();
-      cy.contains("Archive").should("be.visible");
-
-      cy.contains("Archive").click();
-      cy.contains("Unarchive").should("be.visible");
+      //And when the admin clicks archive it should open the archive modal
+      cy.contains("button", "Archive");
+      cy.contains("button", "Archive").click();
+      cy.contains("Are you sure you want to archive this MFP Work Plan").should(
+        "be.visible"
+      );
+      //prompt to confirm and then user can actually archive
+      cy.get("input").click().type("Archive");
+      cy.get('[data-cy="modal-archive"]').click();
+      cy.contains("button", "Archive").should("be.disabled");
     });
   });
 });

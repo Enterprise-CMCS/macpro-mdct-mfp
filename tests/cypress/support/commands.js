@@ -66,9 +66,14 @@ Cypress.Commands.add("archiveAnyExistingWorkPlans", () => {
   cy.wait(5000);
 
   cy.get("table").then(($table) => {
-    if ($table.find('button:contains("Archive")').length > 0) {
+    if (
+      $table.find('button:contains("Archive")').length > 0 &&
+      $table.find('button:contains("Archive")').is(":enabled")
+    ) {
       cy.get('button:contains("Archive")').first().click();
       cy.wait(500);
+      cy.get("input").click().type("Archive");
+      cy.get('[data-cy="modal-archive"]').click();
     }
   });
 });

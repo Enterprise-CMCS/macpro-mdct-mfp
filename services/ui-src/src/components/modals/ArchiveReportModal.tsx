@@ -78,6 +78,7 @@ export const ArchiveReportModal = ({
           type="submit"
           disabled={!isArchivable}
           data-testid="modal-archive-button"
+          data-cy="modal-archive"
           onClick={onConfirmHandler}
         >
           {modalArchive.actionButtonText}
