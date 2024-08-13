@@ -4,7 +4,7 @@ import {
   ReportFieldData,
   ReportStatus,
   ReportType,
-} from "../../utils/types";
+} from "../../../services/app-api/utils/types";
 import {
   SeedFillReportShape,
   SeedNewReportShape,

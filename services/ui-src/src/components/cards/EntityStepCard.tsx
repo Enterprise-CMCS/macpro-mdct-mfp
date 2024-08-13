@@ -1,9 +1,5 @@
 // components
-import {
-  Card,
-  EntityStepCardTopSection,
-  EntityStepCardBottomSection,
-} from "components";
+import { Card } from "components";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
 import {
@@ -20,31 +16,39 @@ import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import editIcon from "assets/icons/icon_edit.png";
 import unfinishedIcon from "assets/icons/icon_error_circle.png";
 import { fillEmptyQuarters, useStore } from "utils";
+import { ObjectiveProgressEntity } from "./ObjectiveProgressEntity";
+import { EvaluationPlanEntity } from "./EvaluationPlanEntity";
+import { FundingSourcesEntity } from "./FundingSourcesEntity";
 
 export const EntityStepCard = ({
   entity,
-  entityIndex,
-  entityTotal,
   stepType,
   formattedEntityData,
   verbiage,
   openAddEditEntityModal,
   openDeleteEntityModal,
   openDrawer,
-  printVersion,
   hasBoxShadow,
   hasBorder,
-  headingLevel,
   ...props
 }: Props) => {
   let entityCompleted = false;
-  const entitiesCount = `${entityIndex + 1} / ${entityTotal}`;
   const { report } = useStore() ?? {};
   // any drawer-based field will do for this check
+
+  let cardContent = <></>;
+
   switch (stepType) {
     case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
       entityCompleted = formattedEntityData?.objectiveName;
       entityCompleted = formattedEntityData?.performanceMeasureProgress;
+
+      cardContent = (
+        <ObjectiveProgressEntity
+          formattedEntityData={formattedEntityData}
+          entityCompleted={entityCompleted}
+        />
+      );
       break;
     case OverlayModalStepTypes.EVALUATION_PLAN:
       entityCompleted = formattedEntityData?.objectiveName;
@@ -55,6 +59,10 @@ export const EntityStepCard = ({
             formattedEntityData?.quarters
           );
       }
+
+      cardContent = (
+        <EvaluationPlanEntity formattedEntityData={formattedEntityData} />
+      );
       break;
     case OverlayModalStepTypes.FUNDING_SOURCES:
       entityCompleted =
@@ -64,8 +72,12 @@ export const EntityStepCard = ({
         formattedEntityData.quarters = fillEmptyQuarters(
           formattedEntityData?.quarters
         );
+      cardContent = (
+        <FundingSourcesEntity formattedEntityData={formattedEntityData} />
+      );
       break;
     default:
+      cardContent;
       break;
   }
 
@@ -121,39 +133,12 @@ export const EntityStepCard = ({
       borderColor={borderColor}
       data-testid="entityCard"
     >
-      <Box sx={sx.contentBox} className={printVersion ? "print-version" : ""}>
-        {printVersion && (
-          <Text sx={sx.entitiesCount} data-testid="entities-count">
-            {entitiesCount}
-          </Text>
-        )}
-        {!printVersion ? (
-          <Image
-            src={entityCompleted ? completedIcon : unfinishedIcon}
-            alt={`entity is ${entityCompleted ? "complete" : "incomplete"}`}
-            sx={sx.statusIcon}
-          />
-        ) : (
-          <Box
-            className={
-              entityCompleted
-                ? "print-version-icon-div-complete"
-                : "print-version-icon-div-incomplete"
-            }
-            data-testid="print-status-indicator"
-          >
-            <Image
-              src={entityCompleted ? completedIcon : unfinishedIcon}
-              alt={`entity is ${entityCompleted ? "complete" : "incomplete"}`}
-              sx={sx.printVersionIcon}
-            />
-            {entityCompleted ? (
-              <Text className="completed-text">Complete</Text>
-            ) : (
-              <Text className="error-text">Error</Text>
-            )}
-          </Box>
-        )}
+      <Box sx={sx.contentBox}>
+        <Image
+          src={entityCompleted ? completedIcon : unfinishedIcon}
+          alt={`entity is ${entityCompleted ? "complete" : "incomplete"}`}
+          sx={sx.statusIcon}
+        />
         {openDeleteEntityModal && report?.reportType === ReportType.WP && (
           <button
             type="button"
@@ -169,25 +154,8 @@ export const EntityStepCard = ({
             />
           </button>
         )}
-        <EntityStepCardTopSection
-          stepType={stepType}
-          printVersion={!!printVersion}
-          formattedEntityData={formattedEntityData}
-          entityCompleted={entityCompleted}
-          headingLevel={headingLevel}
-        />
-        {entityCompleted || printVersion ? (
-          <EntityStepCardBottomSection
-            stepType={stepType}
-            verbiage={verbiage}
-            entity={entity}
-            formattedEntityData={{
-              ...formattedEntityData,
-              isPartiallyComplete: !entityCompleted,
-            }}
-            printVersion={!!printVersion}
-          />
-        ) : (
+        {cardContent}
+        {!entityCompleted && (
           <Text sx={sx.unfinishedMessage}>
             {verbiage.entityUnfinishedMessage}
           </Text>
@@ -220,7 +188,6 @@ export const EntityStepCard = ({
 
 interface Props {
   entity: EntityShape;
-  entityIndex: number;
   entityTotal?: number;
   stepType: string;
   formattedEntityData: AnyObject;
@@ -228,7 +195,6 @@ interface Props {
   openAddEditEntityModal?: Function;
   openDeleteEntityModal?: Function;
   openDrawer?: Function;
-  printVersion?: boolean;
   hasBoxShadow?: boolean;
   hasBorder?: boolean;
   headingLevel?: HeadingLevel;
@@ -239,9 +205,6 @@ const sx = {
   contentBox: {
     position: "relative",
     marginX: "1.25rem",
-    "&.print-version": {
-      paddingLeft: "2.5rem",
-    },
     ".delete-entity-button": {
       position: "absolute",
       right: "-2rem",
@@ -249,24 +212,6 @@ const sx = {
       width: "1.5rem",
       ".mobile &": {
         right: "-1.5rem",
-      },
-    },
-    ".print-version-icon-div-complete": {
-      position: "absolute",
-      top: "0.25rem",
-      left: "-1.5rem",
-      marginLeft: "-0.75rem",
-      ".mobile &": {
-        left: "-1.5rem",
-      },
-    },
-    ".print-version-icon-div-incomplete": {
-      position: "absolute",
-      top: "0.25rem",
-      left: "-1.5rem",
-      marginLeft: "-0.25rem",
-      ".mobile &": {
-        left: "-1.5rem",
       },
     },
     ".error-text": {
@@ -282,10 +227,6 @@ const sx = {
       fontWeight: "bold",
     },
   },
-  printVersionIcon: {
-    height: "1rem",
-    margin: "0 auto",
-  },
   statusIcon: {
     position: "absolute",
     left: "-2rem",
@@ -298,11 +239,6 @@ const sx = {
     _hover: {
       filter: svgFilters.primary_darker,
     },
-  },
-  unfinishedMessage: {
-    marginY: "1rem",
-    fontSize: "xs",
-    color: "palette.error_dark",
   },
   editButton: {
     marginY: "1rem",
@@ -325,5 +261,10 @@ const sx = {
     ".mobile &": {
       right: "-1.5rem",
     },
+  },
+  unfinishedMessage: {
+    marginY: "1rem",
+    fontSize: "xs",
+    color: "palette.error_dark",
   },
 };

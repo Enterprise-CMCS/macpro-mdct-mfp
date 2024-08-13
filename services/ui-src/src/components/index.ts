@@ -24,8 +24,10 @@ export { Card } from "./cards/Card";
 export { EmailCard } from "./cards/EmailCard";
 export { TemplateCard } from "./cards/TemplateCard";
 export { EntityStepCard } from "./cards/EntityStepCard";
-export { EntityStepCardTopSection } from "./cards/EntityCardTopSection";
-export { EntityStepCardBottomSection } from "./cards/EntityCardBottomSection";
+export { ObjectiveProgressEntity } from "./cards/ObjectiveProgressEntity";
+export { FundingSourcesEntity } from "./cards/FundingSourcesEntity";
+export { EvaluationPlanEntity } from "./cards/EvaluationPlanEntity";
+
 // drawers
 export { Drawer } from "./drawers/Drawer";
 export { ReportDrawer } from "./drawers/ReportDrawer";
@@ -46,6 +48,8 @@ export { ExportRETTable } from "./export/ExportedRETTable";
 export { PrintButton } from "./export/PrintButton";
 export { ExportedSarDetailsTable } from "./export/ExportedSarDetailsTable";
 export { ExportEntityDetailsTable } from "./export/ExportEntityDetailsTable";
+export { ExportedEntityStepCard } from "./export/ExportedEntityStepCard";
+
 // fields
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";

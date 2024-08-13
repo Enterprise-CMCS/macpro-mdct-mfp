@@ -137,10 +137,20 @@ const creationEventWithInvalidData: APIGatewayProxyEvent = {
   }),
 };
 
+let consoleSpy: {
+  debug: jest.SpyInstance<void>;
+  warn: jest.SpyInstance<void>;
+} = {
+  debug: jest.fn() as jest.SpyInstance,
+  warn: jest.fn() as jest.SpyInstance,
+};
+
 describe("Test createReport API method", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useRealTimers();
+    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
+    consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
   });
 
   test("Test unauthorized report creation throws 403 error", async () => {
@@ -153,6 +163,7 @@ describe("Test createReport API method", () => {
   test("Test report creation by a state user without access to a report type throws 403 error", async () => {
     jest.spyOn(authFunctions, "hasPermissions").mockReturnValueOnce(false);
     const res = await createReport(wpCreationEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(403);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
@@ -164,6 +175,7 @@ describe("Test createReport API method", () => {
     };
     const res = await createReport(badStateEvent, null);
 
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
   });
 
@@ -174,18 +186,21 @@ describe("Test createReport API method", () => {
     };
     const res = await createReport(badReportEvent, null);
 
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
   });
 
   test("Test report creation throws a 403 when copying a report of the same period", async () => {
     jest.useFakeTimers().setSystemTime(new Date(2021, 11, 1));
     const res = await createReport(wpCopyCreationEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(403);
   });
 
   test("Test successful run of work plan report creation, not copied", async () => {
     const res = await createReport(wpCreationEvent, null);
     const body = JSON.parse(res.body);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.CREATED);
     expect(body.status).toContain("Not started");
     expect(body.fieldDataId).toBeDefined;
@@ -206,6 +221,7 @@ describe("Test createReport API method", () => {
     jest.useFakeTimers().setSystemTime(new Date(2022, 11, 1));
     const res = await createReport(wpCopyCreationEvent, null);
     const body = JSON.parse(res.body);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.CREATED);
     expect(body.status).toContain("Not started");
     expect(body.fieldDataId).toBeDefined;
@@ -220,6 +236,7 @@ describe("Test createReport API method", () => {
   test("If no WP given when creating a SAR, return 404", async () => {
     (getEligibleWorkPlan as jest.Mock).mockResolvedValue({});
     const res = await createReport(sarCreationEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
@@ -230,6 +247,7 @@ describe("Test createReport API method", () => {
     });
     const res = await createReport(sarCreationEvent, null);
     const body = JSON.parse(res.body);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.CREATED);
     expect(body.status).toContain("Not started");
     expect(body.fieldDataId).toBeDefined;
@@ -239,12 +257,14 @@ describe("Test createReport API method", () => {
 
   test("Test attempted report creation with invalid data fails", async () => {
     const res = await createReport(creationEventWithInvalidData, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
     expect(res.body).toContain(error.INVALID_DATA);
   });
 
   test("Test attempted report creation without field data throws 400 error", async () => {
     const res = await createReport(creationEventWithNoFieldData, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.MISSING_DATA);
   });
@@ -256,6 +276,7 @@ describe("Test createReport API method", () => {
     };
     const res = await createReport(noKeyEvent, null);
 
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -267,6 +288,7 @@ describe("Test createReport API method", () => {
     };
     const res = await createReport(noKeyEvent, null);
 
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_KEY);
   });

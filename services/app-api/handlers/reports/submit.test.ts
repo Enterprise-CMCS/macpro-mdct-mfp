@@ -46,13 +46,25 @@ const testSubmitEvent: APIGatewayProxyEvent = {
   },
 };
 
+let consoleSpy: {
+  debug: jest.SpyInstance<void>;
+  warn: jest.SpyInstance<void>;
+} = {
+  debug: jest.fn() as jest.SpyInstance,
+  warn: jest.fn() as jest.SpyInstance,
+};
+
 describe("Test submitReport API method", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
+    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
+    consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
   });
+
   test("Test Report not found in DynamoDB", async () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await submitReport(testSubmitEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
@@ -66,6 +78,7 @@ describe("Test submitReport API method", () => {
     const res = await submitReport(testSubmitEvent, null);
     const body = JSON.parse(res.body);
 
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.lastAlteredBy).toContain("Thelonious States");
     expect(body.submissionName).toContain("testProgram");
@@ -88,6 +101,7 @@ describe("Test submitReport API method", () => {
     const res = await submitReport(testSubmitEvent, null);
     const body = JSON.parse(res.body);
 
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
     expect(body.lastAlteredBy).toContain("Thelonious States");
     expect(body.submissionName).toContain("testProgram");
@@ -105,6 +119,7 @@ describe("Test submitReport API method", () => {
     const res = await submitReport(testSubmitEvent, null);
     const body = JSON.parse(res.body);
 
+    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
     expect(body).toStrictEqual(error.REPORT_INCOMPLETE);
   });
@@ -115,6 +130,7 @@ describe("Test submitReport API method", () => {
       pathParameters: {},
     };
     const res = await submitReport(noKeyEvent, null);
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -125,6 +141,7 @@ describe("Test submitReport API method", () => {
       pathParameters: { state: "", id: "" },
     };
     const res = await submitReport(noKeyEvent, null);
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
     expect(res.body).toContain(error.NO_KEY);
   });
