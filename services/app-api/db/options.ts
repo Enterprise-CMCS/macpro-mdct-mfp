@@ -154,17 +154,6 @@ export const createLockedSemiAnnualReport =
     return report;
   };
 
-export const createArchivedSemiAnnualReport =
-  async (): Promise<SeedReportShape> => {
-    const { id } = await createFilledSemiAnnualReport();
-    const report = await putApi(
-      `/reports/archive/SAR/${state}/${id}`,
-      adminHeaders,
-      {}
-    );
-    return report;
-  };
-
 export const getSemiAnnualReportById = async (
   id: string
 ): Promise<SeedReportShape> => {

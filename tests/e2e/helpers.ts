@@ -42,7 +42,12 @@ async function archiveReports(buttons: Locator, page) {
 
   if (archiveButtons.length > 0) {
     await archiveButtons[0].click();
+    await page.getByRole("dialog");
+    const archiveTextbox = page.getByTestId("modal-input");
+    await archiveTextbox.fill("Archive");
+    await page.getByTestId("modal-archive-button").click();
     await page.waitForResponse("**/reports/archive/WP/PR/**");
+    await page.waitForTimeout(1000);
     await archiveReports(buttons, page);
   }
 }
@@ -59,9 +64,8 @@ export async function archiveExistingWPs({ page }) {
   await page.getByLabel("MFP Work Plan").click();
   await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
   await page.waitForResponse("**/reports/WP/PR");
-
-  const archiveButtons = await page.getByRole("button", { name: "Archive" });
-
+  await page.waitForTimeout(1000);
+  const archiveButtons = await page.locator('button:text-is("Archive")');
   if (archiveButtons) {
     await archiveReports(archiveButtons, page);
   }

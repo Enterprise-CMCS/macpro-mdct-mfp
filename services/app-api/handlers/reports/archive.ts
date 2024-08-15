@@ -5,7 +5,7 @@ import { hasPermissions } from "../../utils/auth/authorization";
 import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
-import { StatusCodes, UserRoles } from "../../utils/types";
+import { ReportType, StatusCodes, UserRoles } from "../../utils/types";
 
 export const archiveReport = handler(async (event) => {
   const { allParamsValid, reportType, state, id } =
@@ -26,6 +26,15 @@ export const archiveReport = handler(async (event) => {
   }
 
   const currentReport = await getReportMetadata(reportType, state, id);
+  const hasAssociatedSar = currentReport?.associatedSar;
+
+  // WP with associated SAR cannot be archived
+  if (reportType !== ReportType.WP || hasAssociatedSar) {
+    return {
+      status: StatusCodes.BAD_REQUEST,
+      body: error.INVALID_DATA,
+    };
+  }
 
   if (!currentReport) {
     return {
@@ -34,11 +43,9 @@ export const archiveReport = handler(async (event) => {
     };
   }
 
-  const currentArchivedStatus = currentReport?.archived;
-
   const updatedReport = {
     ...currentReport,
-    archived: !currentArchivedStatus,
+    archived: true,
   };
 
   try {

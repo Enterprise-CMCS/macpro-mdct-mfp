@@ -267,7 +267,7 @@ const AdminArchiveButton = ({
         onClick={() => archive(report)}
         disabled={report?.archived}
       >
-        Archive
+        {report?.archived ? "Archived" : "Archive"}
       </Button>
     </Td>
   );

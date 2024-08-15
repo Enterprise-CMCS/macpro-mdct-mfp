@@ -4,7 +4,6 @@ import { createdLog, expandedLog } from "./helpers";
 import {
   bannerKey,
   createApprovedWorkPlan,
-  createArchivedSemiAnnualReport,
   createArchivedWorkPlan,
   createBanner,
   createFilledSemiAnnualReport,
@@ -191,10 +190,6 @@ const seed = async (): Promise<void> => {
       }
       case "createLockedSAR": {
         createdLog(await createLockedSemiAnnualReport(), "SAR");
-        break;
-      }
-      case "createArchivedSAR": {
-        createdLog(await createArchivedSemiAnnualReport(), "SAR");
         break;
       }
       case "getSARsByState":

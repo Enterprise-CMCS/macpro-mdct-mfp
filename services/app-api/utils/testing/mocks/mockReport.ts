@@ -61,6 +61,22 @@ export const mockWPReport = {
   lastAltered: 162515200000,
 };
 
+export const mockWPReportWithAssociatedSar = {
+  ...mockReportKeys,
+  metadata: {
+    reportType: "WP",
+    submissionName: "testProgram",
+    status: "Submitted",
+    lastAlteredBy: "Thelonious States",
+    fieldDataId: "mockReportFieldData",
+    formTemplateId: "mockReportJson",
+  },
+  formTemplate: { ...mockReportJson },
+  fieldData: { ...mockReportFieldData },
+  createdAt: 162515200000,
+  lastAltered: 162515200000,
+  associatedSar: "mock-sar-id",
+};
 export const mockWPDynamoData = {
   ...mockReportKeys,
   reportType: "WP",

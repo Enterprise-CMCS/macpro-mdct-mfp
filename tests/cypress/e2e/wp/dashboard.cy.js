@@ -60,7 +60,7 @@ describe("MFP Work Plan Dashboard Page - Report Creation/Archiving", () => {
       //prompt to confirm and then user can actually archive
       cy.get("input").click().type("Archive");
       cy.get('[data-cy="modal-archive"]').click();
-      cy.contains("button", "Archive").should("be.disabled");
+      cy.contains("button", "Archived").should("be.disabled");
     });
   });
 });
