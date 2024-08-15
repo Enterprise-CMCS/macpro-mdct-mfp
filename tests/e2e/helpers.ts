@@ -1,4 +1,4 @@
-import { Locator } from "@playwright/test";
+import { Locator, Response } from "@playwright/test";
 
 export async function logInStateUser({ page }) {
   await page.goto("/");
@@ -36,18 +36,16 @@ export async function logOut({ page }) {
   await page.goto("/");
 }
 
-/* Recursive function to click any archive buttons that appear on screen. */
 async function archiveReports(buttons: Locator, page) {
   const archiveButtons = await buttons.all();
-
   if (archiveButtons.length > 0) {
-    await archiveButtons[0].click();
-    await page.getByRole("dialog");
-    const archiveTextbox = page.getByTestId("modal-input");
-    await archiveTextbox.fill("Archive");
-    await page.getByTestId("modal-archive-button").click();
-    await page.waitForResponse("**/reports/archive/WP/PR/**");
-    await page.waitForTimeout(1000);
+    const archivePromise = page.waitForResponse(
+      (response: Response) =>
+        response.url().includes("/reports/archive/WP/PR/") &&
+        response.status() == 200
+    );
+
+    await archivePromise;
     await archiveReports(buttons, page);
   }
 }
@@ -62,13 +60,18 @@ export async function archiveExistingWPs({ page }) {
     .selectOption("Puerto Rico");
 
   await page.getByLabel("MFP Work Plan").click();
+
   await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
-  await page.waitForResponse("**/reports/WP/PR");
+
+  const reportsPromise = page.waitForResponse(
+    (response) =>
+      response.url().includes("/reports/WP/PR") && response.status() == 200
+  );
+  await reportsPromise;
   await page.waitForTimeout(1000);
   const archiveButtons = await page.locator('button:text-is("Archive")');
   if (archiveButtons) {
     await archiveReports(archiveButtons, page);
   }
-
   await logOut({ page });
 }
