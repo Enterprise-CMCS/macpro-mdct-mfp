@@ -2,7 +2,6 @@ import { expect, test } from "@playwright/test";
 import { currentYear } from "../../seeds/helpers";
 import { createApprovedWorkPlan } from "../../seeds/options";
 import {
-  archiveExistingSARs,
   archiveExistingWPs,
   firstPeriod,
   loginSeedUsersWithTimeout,
@@ -13,7 +12,6 @@ import {
 
 test("State user can create a SAR", async ({ page }) => {
   await archiveExistingWPs(page);
-  await archiveExistingSARs(page);
   await logInStateUser(page);
 
   // Seed WP

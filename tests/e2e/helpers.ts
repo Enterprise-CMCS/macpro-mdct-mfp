@@ -45,7 +45,7 @@ export async function logInAdminUser(page: Page) {
   await expect(page.getByText("View State/Territory Reports")).toBeVisible();
 }
 
-async function archiveReports(page: Page, pageType: string) {
+async function archiveReports(page: Page) {
   const archiveButtons = await page
     .getByRole("button", { name: "Archive", exact: true })
     .all();
@@ -53,46 +53,26 @@ async function archiveReports(page: Page, pageType: string) {
     await archiveButtons[0].click();
     await page.waitForResponse(
       (response: Response) =>
-        response
-          .url()
-          .includes(`reports/archive/${pageType}/${stateAbbreviation}/`) &&
+        response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
         response.status() == 200
     );
     await expect(page.getByRole("table")).toBeVisible();
-    await archiveReports(page, pageType);
+    await archiveReports(page);
   }
 }
 
-async function archiveExisting(
-  page: Page,
-  pageType: string,
-  label: string,
-  url: string
-) {
+export async function archiveExistingWPs(page: Page) {
   await logInAdminUser(page);
   await page
     .getByRole("combobox", {
       name: "List of states, including District of Columbia and Puerto Rico",
     })
     .selectOption(stateAbbreviation);
-  await page.getByLabel(label).click();
+  await page.getByLabel("MFP Work Plan").click();
   await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
-  await expect(page).toHaveURL(url);
-  await archiveReports(page, pageType);
+  await expect(page).toHaveURL("/wp");
+  await archiveReports(page);
   await logOutUser(page);
-}
-
-export async function archiveExistingWPs(page: Page) {
-  await archiveExisting(page, "WP", "MFP Work Plan", "/wp");
-}
-
-export async function archiveExistingSARs(page: Page) {
-  await archiveExisting(
-    page,
-    "SAR",
-    "MFP Semi-Annual Progress Report (SAR)",
-    "/sar"
-  );
 }
 
 export async function loginSeedUsersWithTimeout(page: Page, timeout?: number) {
