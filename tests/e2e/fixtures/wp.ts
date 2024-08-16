@@ -4,6 +4,7 @@ import {
   WPGeneralInformationPage,
   WPTransitionBenchmarksPage,
   WPTransitionBenchmarkStrategyPage,
+  WPInitiativesInstructionsPage,
 } from "../pages/wp.page";
 
 type WPFixtures = {
@@ -11,6 +12,7 @@ type WPFixtures = {
   wpGeneralInformationPage: WPGeneralInformationPage;
   wpTransitionBenchmarksPage: WPTransitionBenchmarksPage;
   wpTransitionBenchmarkStrategyPage: WPTransitionBenchmarkStrategyPage;
+  wpInitiativesInstructionsPage: WPInitiativesInstructionsPage;
 };
 
 export const test = base.extend<WPFixtures>({
@@ -25,5 +27,8 @@ export const test = base.extend<WPFixtures>({
   },
   wpTransitionBenchmarkStrategyPage: async ({ page }, use) => {
     await use(new WPTransitionBenchmarkStrategyPage(page));
+  },
+  wpInitiativesInstructionsPage: async ({ page }, use) => {
+    await use(new WPInitiativesInstructionsPage(page));
   },
 });

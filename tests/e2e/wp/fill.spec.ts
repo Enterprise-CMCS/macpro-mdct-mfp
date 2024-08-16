@@ -8,6 +8,7 @@ test("State user can fill out work plan", async ({
   wpGeneralInformationPage,
   wpTransitionBenchmarksPage,
   wpTransitionBenchmarkStrategyPage,
+  wpInitiativesInstructionsPage,
 }) => {
   await archiveExistingWPs(page);
 
@@ -50,4 +51,12 @@ test("State user can fill out work plan", async ({
 
   // Transition Benchmark Strategy
   await expect(page).toHaveURL(wpTransitionBenchmarkStrategyPage.path);
+  await wpTransitionBenchmarkStrategyPage.fillForm();
+  await wpTransitionBenchmarkStrategyPage.continue();
+
+  // State or Territory Initiatives Instructions
+  await expect(page).toHaveURL(wpInitiativesInstructionsPage.path);
+  await wpInitiativesInstructionsPage.checkSelfDirectedInitiativesNo();
+  await wpInitiativesInstructionsPage.checkTribalInitiativesNo();
+  await wpInitiativesInstructionsPage.continue();
 });
