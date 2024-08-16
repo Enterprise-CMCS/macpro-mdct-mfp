@@ -10,6 +10,7 @@ test("State user can fill out work plan", async ({
   wpTransitionBenchmarkStrategyPage,
   wpInitiativesInstructionsPage,
   wpInitiativesDashboardPage,
+  wpInitiativeOverlayPage,
 }) => {
   await archiveExistingWPs(page);
 
@@ -74,4 +75,15 @@ test("State user can fill out work plan", async ({
   await expect(
     wpInitiativesDashboardPage.page.getByRole("alert")
   ).not.toBeVisible();
+
+  /*
+   * Initiative Overlays:
+   * Define Initiative, Evaluation Plan, Funding Sources, Initiative Close-out
+   */
+  for (const topic of wpInitiativesDashboardPage.requiredTopics) {
+    await wpInitiativesDashboardPage.editTopic(topic);
+    await wpInitiativeOverlayPage.isReady(topic);
+    await wpInitiativeOverlayPage.fillDefineInitiative();
+    await wpInitiativeOverlayPage.returnButton.click();
+  }
 });
