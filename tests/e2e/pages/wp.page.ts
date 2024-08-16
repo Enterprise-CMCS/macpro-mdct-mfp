@@ -195,4 +195,58 @@ export class WPTransitionBenchmarkStrategyPage {
   public async isReady() {
     return expect(this.title).toBeVisible();
   }
+
+  public async fillForm() {
+    const textInputs = await this.page.locator("textarea").all();
+
+    for (const input of textInputs) {
+      await input.fill("Mock form value");
+    }
+  }
+}
+
+export class WPInitiativesInstructionsPage {
+  public path = "/wp/state-or-territory-specific-initiatives/instructions";
+
+  readonly page: Page;
+  readonly continueButton: Locator;
+  readonly title: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.continueButton = page.getByRole("button", { name: "Continue" });
+    this.title = page.getByText(
+      "State or Territory-Specific Initiatives Instructions"
+    );
+  }
+
+  public async goto() {
+    await this.page.goto(this.path);
+  }
+
+  public async continue() {
+    await this.continueButton.click();
+  }
+
+  public async isReady() {
+    return expect(this.title).toBeVisible();
+  }
+
+  public async checkSelfDirectedInitiativesNo() {
+    await this.page
+      .getByRole("group", {
+        name: "Are self-directed initiatives applicable to your state or territory?",
+      })
+      .getByLabel("No")
+      .check();
+  }
+
+  public async checkTribalInitiativesNo() {
+    await this.page
+      .getByRole("group", {
+        name: "Are Tribal Initiatives applicable to your state or territory?",
+      })
+      .getByLabel("No")
+      .check();
+  }
 }
