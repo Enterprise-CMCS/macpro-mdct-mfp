@@ -302,4 +302,65 @@ export class WPInitiativesDashboardPage {
     await editTopicButton.click();
   }
 }
+
+export class WPInitiativeOverlayPage {
+  public path = "/wp/state-or-territory-specific-initiatives/initiatives";
+
+  readonly page: Page;
+  readonly returnButton: Locator;
+  readonly sections: string[];
+
+  constructor(page: Page) {
+    this.page = page;
+    this.returnButton = page
+      .getByRole("button", { name: "Return to all initiatives" })
+      .first();
+    this.sections = [
+      "I. Define initiative",
+      "II. Evaluation plan",
+      "III. Funding sources",
+      "IV. Initiative close-out information (if applicable)",
+    ];
+  }
+
+  public async isReady(topicTitle: string) {
+    return expect(
+      this.page.getByRole("heading", { name: topicTitle })
+    ).toBeVisible();
+  }
+
+  public async fillDefineInitiative() {
+    const initiativeRow = this.page
+      .getByRole("row")
+      .filter({ hasText: this.sections[0] });
+
+    await initiativeRow.getByRole("button", { name: "edit button" }).click();
+    await expect(
+      this.page.getByRole("heading", {
+        name: "State or Territory-Specific Initiatives: " + this.sections[0],
+      })
+    ).toBeVisible();
+
+    const description = this.page.getByLabel(
+      "Describe the initiative, including key activities:"
+    );
+    const targetPopulations = this.page.getByRole("group", {
+      name: "Target population(s):",
+    });
+    const startDate = this.page.getByLabel("Start date");
+    const endDate = this.page.getByRole("group", {
+      name: "Does the initiative have a projected end date?",
+    });
+
+    await description.fill("Mock text");
+    await targetPopulations.getByRole("checkbox").first().click();
+    await startDate.fill("01/01/2024");
+    await endDate.getByLabel("No").click();
+
+    await this.page.getByRole("button", { name: "Save & return" }).click();
+  }
+
+  public async fillEvaluationPlan() {}
+
+  public async fillFundingSources() {}
 }
