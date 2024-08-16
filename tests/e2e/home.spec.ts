@@ -3,7 +3,7 @@ import { logInStateUser, logInAdminUser } from "./helpers";
 
 test("Should see the correct home page as a state user", async ({ page }) => {
   await page.goto("/");
-  await logInStateUser({ page });
+  await logInStateUser(page);
 
   await expect(
     page.getByRole("button", { name: "Enter Work Plan online" })
@@ -15,7 +15,7 @@ test("Should see the correct home page as a state user", async ({ page }) => {
 
 test("Should see the correct home page as an admin user", async ({ page }) => {
   await page.goto("/");
-  await logInAdminUser({ page });
+  await logInAdminUser(page);
 
   await expect(
     page.getByRole("combobox", {
