@@ -238,7 +238,7 @@ export class WPInitiativesInstructionsPage {
         name: "Are self-directed initiatives applicable to your state or territory?",
       })
       .getByLabel("No")
-      .check();
+      .click();
   }
 
   public async checkTribalInitiativesNo() {
@@ -247,6 +247,59 @@ export class WPInitiativesInstructionsPage {
         name: "Are Tribal Initiatives applicable to your state or territory?",
       })
       .getByLabel("No")
-      .check();
+      .click();
   }
+}
+
+export class WPInitiativesDashboardPage {
+  public path = "/wp/state-or-territory-specific-initiatives/initiatives";
+
+  readonly page: Page;
+  readonly continueButton: Locator;
+  readonly title: Locator;
+  readonly addInitiativeButton: Locator;
+  readonly requiredTopics: string[];
+
+  constructor(page: Page) {
+    this.page = page;
+    this.continueButton = page.getByRole("button", { name: "Continue" });
+    this.title = page.getByText("State or Territory-Specific Initiatives");
+    this.addInitiativeButton = page.getByRole("button", {
+      name: "Add initiative",
+    });
+    this.requiredTopics = [
+      "Transitions and transition coordination services",
+      "Housing-related supports",
+      "Quality measurement and improvement",
+    ];
+  }
+
+  public async goto() {
+    await this.page.goto(this.path);
+  }
+
+  public async continue() {
+    await this.continueButton.click();
+  }
+
+  public async isReady() {
+    return expect(this.title).toBeVisible();
+  }
+
+  public async addTopic(topic: string) {
+    await this.addInitiativeButton.click();
+    const modal = this.page.getByRole("dialog");
+    await modal;
+    await modal.getByLabel("Initiative name").fill(topic + " title");
+    await modal.getByLabel(topic).click();
+    await modal.getByRole("button", { name: "Save" }).click();
+  }
+
+  public async editTopic(topic: string) {
+    const editTopicButton = this.page
+      .getByRole("gridcell", { name: topic + " title" })
+      .getByLabel("edit button");
+    await editTopicButton.click();
+  }
+}
 }

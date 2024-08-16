@@ -16,11 +16,11 @@ test("State user can create a work plan", async ({
   expect(page).toHaveURL("/wp");
   page.waitForResponse("**/reports/WP/PR");
 
-  const createButton = await page.getByRole("button", {
+  const createButton = page.getByRole("button", {
     name: "Start MFP Work Plan",
   });
 
-  expect(createButton).toBeVisible();
+  await expect(createButton).toBeVisible();
   await createButton.click();
 
   await expect(page.getByRole("dialog")).toBeVisible();
@@ -43,6 +43,7 @@ test("State user can fill out work plan", async ({
   wpTransitionBenchmarksPage,
   wpTransitionBenchmarkStrategyPage,
   wpInitiativesInstructionsPage,
+  wpInitiativesDashboardPage,
 }) => {
   await archiveExistingWPs({ page });
 
@@ -93,4 +94,18 @@ test("State user can fill out work plan", async ({
   await wpInitiativesInstructionsPage.checkSelfDirectedInitiativesNo();
   await wpInitiativesInstructionsPage.checkTribalInitiativesNo();
   await wpInitiativesInstructionsPage.continue();
+
+  // State or Territory Initiatives Dashboard
+  await expect(page).toHaveURL(wpInitiativesDashboardPage.path);
+  await expect(
+    wpInitiativesDashboardPage.page.getByRole("alert")
+  ).toBeVisible();
+
+  for (const topic of wpInitiativesDashboardPage.requiredTopics) {
+    await wpInitiativesDashboardPage.addTopic(topic);
+  }
+
+  await expect(
+    wpInitiativesDashboardPage.page.getByRole("alert")
+  ).not.toBeVisible();
 });
