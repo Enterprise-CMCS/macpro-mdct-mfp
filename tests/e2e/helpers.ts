@@ -71,6 +71,7 @@ export async function archiveExistingWPs(page: Page) {
   await page.getByLabel("MFP Work Plan").click();
   await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
   await expect(page).toHaveURL("/wp");
+  await expect(page.getByRole("table")).toBeVisible();
   await archiveReports(page);
   await logOutUser(page);
 }

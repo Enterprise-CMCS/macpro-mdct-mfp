@@ -31,7 +31,7 @@ test("Admin user can approve a Work Plan submission", async ({ page }) => {
   // View submitted WP
   await expect(page.getByRole("table")).toBeVisible();
 
-  const row = page.getByRole("row", { name: "Submitted" }).first();
+  const row = page.getByRole("row", { name: "Submitted" }).last();
   const editedBy = await row.getByRole("gridcell").nth(2).textContent();
   await row.getByRole("button", { name: "View", exact: true }).click();
   await expect(page).toHaveURL("/wp/general-information");
