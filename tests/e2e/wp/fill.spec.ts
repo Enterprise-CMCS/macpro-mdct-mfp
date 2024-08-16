@@ -9,6 +9,7 @@ test("State user can fill out work plan", async ({
   wpTransitionBenchmarksPage,
   wpTransitionBenchmarkStrategyPage,
   wpInitiativesInstructionsPage,
+  wpInitiativesDashboardPage,
 }) => {
   await archiveExistingWPs(page);
 
@@ -59,4 +60,18 @@ test("State user can fill out work plan", async ({
   await wpInitiativesInstructionsPage.checkSelfDirectedInitiativesNo();
   await wpInitiativesInstructionsPage.checkTribalInitiativesNo();
   await wpInitiativesInstructionsPage.continue();
+
+  // State or Territory Initiatives Dashboard
+  await expect(page).toHaveURL(wpInitiativesDashboardPage.path);
+  await expect(
+    wpInitiativesDashboardPage.page.getByRole("alert")
+  ).toBeVisible();
+
+  for (const topic of wpInitiativesDashboardPage.requiredTopics) {
+    await wpInitiativesDashboardPage.addTopic(topic);
+  }
+
+  await expect(
+    wpInitiativesDashboardPage.page.getByRole("alert")
+  ).not.toBeVisible();
 });
