@@ -45,9 +45,11 @@ test("State user can create a SAR", async ({ page }) => {
   // Confirm created SAR is in table
   await expect(page.getByRole("table")).toBeVisible();
 
-  const row = page.getByRole("row", {
-    name: `${stateName} MFP SAR ${currentYear} - Period ${firstPeriod}`,
-  });
+  const row = page
+    .getByRole("row", {
+      name: `${stateName} MFP SAR ${currentYear} - Period ${firstPeriod}`,
+    })
+    .first();
 
   const editIcon = row.getByRole("button", { name: "Edit Report" });
   await expect(editIcon).toBeVisible();
