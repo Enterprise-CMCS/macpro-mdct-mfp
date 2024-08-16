@@ -8,6 +8,7 @@ export const statePassword = process.env.SEED_STATE_USER_PASSWORD!;
 export const stateAbbreviation = process.env.SEED_STATE || "PR";
 export const stateName = process.env.SEED_STATE_NAME || "Puerto Rico";
 export const firstPeriod: number = 1;
+export const secondPeriod: number = 2;
 
 async function logInUser(page: Page, email: string, password: string) {
   await page.goto("/");
@@ -51,18 +52,19 @@ async function archiveReports(page: Page) {
     .all();
   if (archiveButtons.length > 0) {
     await archiveButtons[0].click();
-    await page.waitForTimeout(1000);
-    await page.getByRole("dialog");
-    const archiveTextbox = page.getByTestId("modal-input");
-    await archiveTextbox.fill("Archive");
-    await page.getByTestId("modal-archive-button").click();
-    await page.waitForTimeout(1000);
-
+    const modal = page.getByRole("dialog");
+    await expect(modal).toBeVisible();
+    await expect(modal).toContainText(
+      "Are you sure you want to archive this MFP Work Plan?"
+    );
+    await modal.getByRole("textbox").fill("ARCHIVE");
+    await modal.getByRole("button", { name: "Archive" }).click();
     await page.waitForResponse(
       (response: Response) =>
         response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
         response.status() == 200
     );
+    await expect(modal).not.toBeVisible();
     await expect(page.getByRole("table")).toBeVisible();
     await archiveReports(page);
   }
