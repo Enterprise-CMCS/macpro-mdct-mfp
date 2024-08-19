@@ -347,6 +347,9 @@ export class WPInitiativeOverlayPage {
 
     await description.fill("Mock text");
     await targetPopulations.getByLabel("Older adults").click();
+    await targetPopulations
+      .getByLabel("Individuals with physical disabilities (PD)")
+      .click();
 
     await startDate.fill("01/01/2024");
     await endDate.getByLabel("No").click();
