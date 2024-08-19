@@ -8397,13 +8397,13 @@ posix-character-classes@^0.1.0:
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
   integrity sha1-AerA/jta9xoqbAL+q7jB/vfgDqs=
 
-postcss@^8.4.38:
-  version "8.4.38"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.38.tgz#b387d533baf2054288e337066d81c6bee9db9e0e"
-  integrity sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==
+postcss@^8.4.40:
+  version "8.4.41"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.41.tgz#d6104d3ba272d882fe18fc07d15dc2da62fa2681"
+  integrity sha512-TesUflQ0WKZqAvg52PWL6kHgLKP6xB6heTOdoYM0Wt2UHyxNa4K25EZZMgKns3BH1RLVbZCREPpLY0rhnNoHVQ==
   dependencies:
     nanoid "^3.3.7"
-    picocolors "^1.0.0"
+    picocolors "^1.0.1"
     source-map-js "^1.2.0"
 
 postinstall-postinstall@^2.1.0:
@@ -9802,13 +9802,13 @@ vite-tsconfig-paths@^4.3.2:
     globrex "^0.1.2"
     tsconfck "^3.0.3"
 
-vite@^5.2.12:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-5.3.1.tgz#bb2ca6b5fd7483249d3e86b25026e27ba8a663e6"
-  integrity sha512-XBmSKRLXLxiaPYamLv3/hnP/KXDai1NDexN0FpkTaZXTfycHvkRHoenpgl/fvuK/kPbB6xAgoyiryAhQNxYmAQ==
+vite@^5.3.4:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-5.4.0.tgz#11dca8a961369ba8b5cae42d068c7ad684d5370f"
+  integrity sha512-5xokfMX0PIiwCMCMb9ZJcMyh5wbBun0zUzKib+L65vAZ8GY9ePZMXxFrHbr/Kyll2+LSCY7xtERPpxkBDKngwg==
   dependencies:
     esbuild "^0.21.3"
-    postcss "^8.4.38"
+    postcss "^8.4.40"
     rollup "^4.13.0"
   optionalDependencies:
     fsevents "~2.3.3"
