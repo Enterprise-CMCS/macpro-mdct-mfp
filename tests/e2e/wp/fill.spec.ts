@@ -11,6 +11,7 @@ test("State user can fill out work plan", async ({
   wpInitiativesInstructionsPage,
   wpInitiativesDashboardPage,
   wpInitiativeOverlayPage,
+  wpReviewSubmitPage,
 }) => {
   await archiveExistingWPs(page);
 
@@ -87,4 +88,11 @@ test("State user can fill out work plan", async ({
     await wpInitiativeOverlayPage.fillFundingSources();
     await wpInitiativeOverlayPage.returnButton.click();
   }
+
+  await wpInitiativesDashboardPage.continue();
+
+  // Review & Submit page
+  await wpReviewSubmitPage.isReady();
+  await expect(wpReviewSubmitPage.reviewPDFButton).toBeVisible();
+  await expect(wpReviewSubmitPage.submitButton).toBeEnabled();
 });

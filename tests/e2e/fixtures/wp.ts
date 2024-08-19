@@ -7,6 +7,7 @@ import {
   WPInitiativesInstructionsPage,
   WPInitiativesDashboardPage,
   WPInitiativeOverlayPage,
+  WPReviewSubmitPage,
 } from "../pages/wp.page";
 
 type WPFixtures = {
@@ -17,6 +18,7 @@ type WPFixtures = {
   wpInitiativesInstructionsPage: WPInitiativesInstructionsPage;
   wpInitiativesDashboardPage: WPInitiativesDashboardPage;
   wpInitiativeOverlayPage: WPInitiativeOverlayPage;
+  wpReviewSubmitPage: WPReviewSubmitPage;
 };
 
 export const test = base.extend<WPFixtures>({
@@ -40,5 +42,8 @@ export const test = base.extend<WPFixtures>({
   },
   wpInitiativeOverlayPage: async ({ page }, use) => {
     await use(new WPInitiativeOverlayPage(page));
+  },
+  wpReviewSubmitPage: async ({ page }, use) => {
+    await use(new WPReviewSubmitPage(page));
   },
 });

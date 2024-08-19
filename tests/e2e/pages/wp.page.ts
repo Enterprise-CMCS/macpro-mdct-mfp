@@ -1,17 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { currentYear } from "../../seeds/helpers";
 
-/*
- * const wpPaths = [
- *  "/wp/general-information",
- *  "/wp/transition-benchmarks",
- *  "/wp/transition-benchmark-strategy",
- * "/wp/state-or-territory-specific-initiatives/instructions",
- * "/wp/state-or-territory-specific-initiatives",
- * "/wp/review-and-submit",
- * ];
- */
-
 export class WPDashboardPage {
   public path = "/wp";
 
@@ -461,4 +450,27 @@ export class WPInitiativeOverlayPage {
       .click();
   }
 }
+
+export class WPReviewSubmitPage {
+  public path = "/wp/review-and-submit";
+
+  readonly page: Page;
+  readonly title: Locator;
+  readonly reviewPDFButton: Locator;
+  readonly submitButton: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.title = this.page.getByRole("heading", {
+      name: "Review & Submit",
+    });
+    this.reviewPDFButton = page.getByRole("link", { name: "Review PDF" });
+    this.submitButton = page.getByRole("button", {
+      name: "Submit MFP Work Plan",
+    });
+  }
+
+  public async isReady() {
+    return expect(this.title).toBeVisible();
+  }
 }
