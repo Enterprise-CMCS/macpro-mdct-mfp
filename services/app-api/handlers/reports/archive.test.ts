@@ -1,7 +1,10 @@
 import { archiveReport } from "./archive";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
-import { mockWPReport } from "../../utils/testing/setupJest";
+import {
+  mockWPReport,
+  mockWPReportWithAssociatedSar,
+} from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
 import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
@@ -72,5 +75,16 @@ describe("Test archiveReport method", () => {
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(res.body).toContain(error.UNAUTHORIZED);
+  });
+
+  test("Test archive report with associatedSar throws 400", async () => {
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
+    (getReportMetadata as jest.Mock).mockResolvedValue(
+      mockWPReportWithAssociatedSar
+    );
+    const res = await archiveReport(archiveEvent, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res.body).toContain(error.INVALID_DATA);
   });
 });
