@@ -82,8 +82,9 @@ test("State user can fill out work plan", async ({
    */
   for (const topic of wpInitiativesDashboardPage.requiredTopics) {
     await wpInitiativesDashboardPage.editTopic(topic);
-    await wpInitiativeOverlayPage.isReady(topic);
     await wpInitiativeOverlayPage.fillDefineInitiative();
+    await wpInitiativeOverlayPage.fillEvaluationPlan();
+    await wpInitiativeOverlayPage.fillFundingSources();
     await wpInitiativeOverlayPage.returnButton.click();
   }
 });

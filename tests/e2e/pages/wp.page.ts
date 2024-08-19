@@ -263,7 +263,9 @@ export class WPInitiativesDashboardPage {
   constructor(page: Page) {
     this.page = page;
     this.continueButton = page.getByRole("button", { name: "Continue" });
-    this.title = page.getByText("State or Territory-Specific Initiatives");
+    this.title = page.getByRole("heading", {
+      name: "State or Territory-Specific Initiatives",
+    });
     this.addInitiativeButton = page.getByRole("button", {
       name: "Add initiative",
     });
@@ -307,11 +309,15 @@ export class WPInitiativeOverlayPage {
   public path = "/wp/state-or-territory-specific-initiatives/initiatives";
 
   readonly page: Page;
+  readonly title: Locator;
   readonly returnButton: Locator;
   readonly sections: string[];
 
   constructor(page: Page) {
     this.page = page;
+    this.title = this.page.getByRole("heading", {
+      name: "State or Territory-Specific Initiatives",
+    });
     this.returnButton = page
       .getByRole("button", { name: "Return to all initiatives" })
       .first();
@@ -323,10 +329,8 @@ export class WPInitiativeOverlayPage {
     ];
   }
 
-  public async isReady(topicTitle: string) {
-    return expect(
-      this.page.getByRole("heading", { name: topicTitle })
-    ).toBeVisible();
+  public async isReady() {
+    return expect(this.title).toBeVisible();
   }
 
   public async fillDefineInitiative() {
@@ -353,14 +357,108 @@ export class WPInitiativeOverlayPage {
     });
 
     await description.fill("Mock text");
-    await targetPopulations.getByRole("checkbox").first().click();
+    await targetPopulations.getByLabel("Older adults").click();
+
     await startDate.fill("01/01/2024");
     await endDate.getByLabel("No").click();
 
     await this.page.getByRole("button", { name: "Save & return" }).click();
   }
 
-  public async fillEvaluationPlan() {}
+  public async fillEvaluationPlan() {
+    const initiativeRow = this.page
+      .getByRole("row")
+      .filter({ hasText: this.sections[1] });
 
-  public async fillFundingSources() {}
+    await initiativeRow.getByRole("button", { name: "edit button" }).click();
+    await expect(
+      this.page.getByRole("heading", {
+        name: "State or Territory-Specific Initiatives: " + this.sections[1],
+      })
+    ).toBeVisible();
+
+    const addObjectiveButton = this.page.getByRole("button", {
+      name: "Add objective",
+    });
+
+    await addObjectiveButton.click();
+    const modal = this.page.getByRole("dialog");
+    await expect(modal).toBeVisible();
+    await expect(modal).toContainText("Add objective for ");
+
+    // Add an objective with no quantitative targets
+    const quantitativeTargets = await modal.getByRole("group", {
+      name: "Does the performance measure include quantitative targets?",
+    });
+    await quantitativeTargets.getByLabel("No").click();
+    const textareas = await modal.locator("textarea").all();
+    for (const textbox of textareas) {
+      await textbox.fill("Mock text");
+    }
+    await this.page.getByRole("button", { name: "Save" }).click();
+
+    await addObjectiveButton.click();
+    for (const textbox of textareas) {
+      await textbox.fill("Mock text");
+    }
+
+    // Add an objective with quantitative targets
+    await quantitativeTargets.getByLabel("Yes").click();
+    const textInputs = await this.page.getByRole("textbox").all();
+
+    for (const textInut of textInputs) {
+      await textInut.fill("99");
+    }
+    await this.page.getByRole("button", { name: "Save" }).click();
+    await this.page
+      .getByRole("button", { name: "Return to dashboard for this initiative" })
+      .first()
+      .click();
+  }
+
+  public async fillFundingSources() {
+    const initiativeRow = this.page
+      .getByRole("row")
+      .filter({ hasText: this.sections[2] });
+
+    await initiativeRow.getByRole("button", { name: "edit button" }).click();
+    await expect(
+      this.page.getByRole("heading", {
+        name: "State or Territory-Specific Initiatives: " + this.sections[2],
+      })
+    ).toBeVisible();
+
+    const addFundingSourceButton = this.page.getByRole("button", {
+      name: "Add funding source",
+    });
+
+    await addFundingSourceButton.click();
+    const modal = this.page.getByRole("dialog");
+    await expect(modal).toBeVisible();
+    await expect(modal).toContainText(
+      "Add funding source and projected expenditures for "
+    );
+
+    const fundingSource = await modal.getByRole("group", {
+      name: "Funding source:",
+    });
+    await fundingSource
+      .getByLabel(
+        "MFP cooperative agreement funds for qualified HCBS and demonstration services"
+      )
+      .click();
+
+    const textInputs = await modal.getByRole("textbox").all();
+
+    for (const textInut of textInputs) {
+      await textInut.fill("99");
+    }
+
+    await this.page.getByRole("button", { name: "Save" }).click();
+    await this.page
+      .getByRole("button", { name: "Return to dashboard for this initiative" })
+      .first()
+      .click();
+  }
+}
 }
