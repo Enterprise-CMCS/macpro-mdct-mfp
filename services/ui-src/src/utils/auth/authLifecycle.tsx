@@ -13,7 +13,7 @@ class AuthManager {
 
   constructor() {
     // Force users with stale tokens greater than the timeout to log in for a fresh session
-    const expiration = localStorage.getItem("mdctmcr_session_exp");
+    const expiration = localStorage.getItem("mdctmfp_session_exp");
     const isExpired =
       expiration && new Date(expiration).valueOf() < Date.now().valueOf();
     if (isExpired) {
