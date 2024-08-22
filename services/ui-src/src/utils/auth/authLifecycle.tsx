@@ -12,7 +12,7 @@ class AuthManager {
   updateTimeout = debounce(() => this.setTimer());
 
   constructor() {
-    // Force users with stale tokens > then the timeout to log in for a fresh session
+    // Force users with stale tokens greater than the timeout to log in for a fresh session
     const expiration = localStorage.getItem("mdctmcr_session_exp");
     const isExpired =
       expiration && new Date(expiration).valueOf() < Date.now().valueOf();
