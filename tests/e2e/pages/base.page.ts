@@ -5,12 +5,16 @@ export default class BasePage {
 
   readonly page: Page;
   readonly title: Locator;
+  readonly continueButton: Locator;
+  readonly previousButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.title = page.getByRole("heading", {
       name: "Money Follows the Person",
     });
+    this.continueButton = page.getByRole("button", { name: "Continue" });
+    this.previousButton = page.getByRole("button", { name: "Previous" });
   }
 
   public async goto() {

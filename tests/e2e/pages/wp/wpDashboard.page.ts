@@ -9,7 +9,7 @@ import {
 import { currentYear } from "../../../seeds/helpers";
 
 export class WPDashboardPage extends BasePage {
-  public path = "/wp/";
+  public path = "/wp";
 
   readonly page: Page;
   readonly title: Locator;
@@ -18,6 +18,7 @@ export class WPDashboardPage extends BasePage {
   readonly modal: Locator;
   readonly firstReport: Locator;
   readonly copiedReport: Locator;
+  readonly submittedReport: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -41,6 +42,9 @@ export class WPDashboardPage extends BasePage {
     this.copiedReport = this.page.getByRole("row", {
       name: `${stateName} MFP Work Plan ${currentYear} - Period ${secondPeriod}`,
     });
+    this.submittedReport = this.page
+      .getByRole("row", { name: "Submitted" })
+      .last();
   }
 
   public async isReady() {
