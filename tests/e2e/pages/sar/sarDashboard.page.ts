@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 import BasePage from "../base.page";
 import { firstPeriod, stateAbbreviation, stateName } from "../../helpers";
 import { currentYear } from "../../../seeds/helpers";
@@ -35,17 +35,16 @@ export class SARDashboardPage extends BasePage {
 
   public async isReady() {
     await this.title.isVisible();
-    await this.page.waitForResponse(
-      (response) =>
-        response.url().includes("/reports/SAR/PR") && response.status() == 200
-    );
-    const table = this.page.getByRole("table");
-
-    return expect(table).toContainText("Submission name");
+    await this.getReports();
+    await this.page.getByRole("rowheader", { name: "Submission name" });
   }
 
   public async getReports() {
-    await this.page.waitForResponse(`**/reports/SAR/${stateAbbreviation}`);
+    await this.page.waitForResponse(
+      (response) =>
+        response.url().includes(`/reports/SAR/${stateAbbreviation}`) &&
+        response.status() == 200
+    );
   }
 
   public async createNewSAR() {

@@ -27,10 +27,10 @@ test("Admin user can approve a Work Plan submission", async ({
   await adminHomePage.dropdown.selectOption(stateAbbreviation);
   await adminHomePage.selectWP();
   await adminHomePage.goToDashboard();
-  await wpDashboard.isReady();
   await expect(wpDashboard.page).toHaveURL(wpDashboard.path);
 
   // View submitted WP
+  await wpDashboard.isReady();
   await expect(wpDashboard.page.getByRole("table")).toBeVisible();
 
   const editedBy = await wpDashboard.submittedReport

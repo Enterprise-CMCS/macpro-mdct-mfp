@@ -23,10 +23,10 @@ test("State user can create a SAR", async ({
 
   // View SARs
   await stateHomePage.sarButton.click();
-  await sarDashboard.getReports();
-  await expect(sarDashboard.page).toHaveURL(sarDashboard.path);
+  await expect(page).toHaveURL(sarDashboard.path);
 
   // Create SAR
+  await sarDashboard.isReady();
   await sarDashboard.createButton.click();
   await expect(sarDashboard.modal).toBeVisible();
   await expect(sarDashboard.modal).toContainText("Add new MFP SAR submission");

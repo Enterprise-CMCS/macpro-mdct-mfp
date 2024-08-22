@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 import BasePage from "../base.page";
 import {
   firstPeriod,
@@ -49,17 +49,16 @@ export class WPDashboardPage extends BasePage {
 
   public async isReady() {
     await this.title.isVisible();
-    await this.page.waitForResponse(
-      (response) =>
-        response.url().includes("/reports/WP/PR") && response.status() == 200
-    );
-    const table = this.page.getByRole("table");
-
-    return expect(table).toContainText("Submission name");
+    await this.getReports();
+    await this.page.getByRole("rowheader", { name: "Submission name" });
   }
 
   public async getReports() {
-    await this.page.waitForResponse(`**/reports/WP/${stateAbbreviation}`);
+    await this.page.waitForResponse(
+      (response) =>
+        response.url().includes(`/reports/WP/${stateAbbreviation}`) &&
+        response.status() == 200
+    );
   }
 
   public async createNewWP() {
