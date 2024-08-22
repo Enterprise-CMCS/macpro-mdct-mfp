@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { test, expect } from "../fixtures/base";
 import { currentYear } from "../../seeds/helpers";
 import { createApprovedWorkPlan } from "../../seeds/options";
 import {
@@ -6,11 +6,14 @@ import {
   firstPeriod,
   loginSeedUsersWithTimeout,
   logInStateUser,
-  stateAbbreviation,
   stateName,
 } from "../helpers";
 
-test("State user can create a SAR", async ({ page }) => {
+test("State user can create a SAR", async ({
+  page,
+  stateHomePage,
+  sarDashboard,
+}) => {
   await archiveExistingWPs(page);
   await logInStateUser(page);
 
@@ -19,41 +22,31 @@ test("State user can create a SAR", async ({ page }) => {
   await createApprovedWorkPlan(currentYear, firstPeriod);
 
   // View SARs
-  await page.getByRole("button", { name: "Enter SAR online" }).click();
-  await expect(page).toHaveURL("/sar/");
-  await page.waitForResponse(`**/reports/SAR/${stateAbbreviation}`);
+  await stateHomePage.sarButton.click();
+  await expect(sarDashboard.path).toEqual("/sar/");
+  await sarDashboard.getReports();
 
   // Create SAR
-  await page
-    .getByRole("button", {
-      name: "Add new MFP SAR submission",
-    })
-    .click();
-
-  const modal = page.getByRole("dialog");
-  await expect(modal).toBeVisible();
-  await expect(modal).toContainText("Add new MFP SAR submission");
-  await expect(
-    page.getByRole("textbox", { name: "Associated MFP Work Plan" })
-  ).toHaveValue(
+  await sarDashboard.createButton.click();
+  await expect(sarDashboard.modal).toBeVisible();
+  await expect(sarDashboard.modal).toContainText("Add new MFP SAR submission");
+  await expect(sarDashboard.associatedWP).toHaveValue(
     `${stateName} MFP Work Plan ${currentYear} - Period ${firstPeriod}`
   );
 
-  await page.getByRole("radio", { name: "No" }).click();
-  await page.getByRole("button", { name: "Save" }).click();
+  await sarDashboard.createNewSAR();
 
   // Confirm created SAR is in table
-  await expect(page.getByRole("table")).toBeVisible();
+  await expect(sarDashboard.firstReport).toBeVisible();
 
-  const row = page
-    .getByRole("row", {
-      name: `${stateName} MFP SAR ${currentYear} - Period ${firstPeriod}`,
-    })
-    .first();
-
-  const editIcon = row.getByRole("button", { name: "Edit Report" });
+  const editIcon = sarDashboard.firstReport.getByRole("button", {
+    name: "Edit Report",
+  });
   await expect(editIcon).toBeVisible();
 
-  const editButton = row.getByRole("button", { name: "Edit", exact: true });
+  const editButton = sarDashboard.firstReport.getByRole("button", {
+    name: "Edit",
+    exact: true,
+  });
   await expect(editButton).toBeVisible();
 });
