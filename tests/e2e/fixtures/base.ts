@@ -1,5 +1,6 @@
 import { mergeTests, test as base } from "@playwright/test";
 import { test as sarTest } from "./sar.ts";
+import { test as wpTest } from "./wp.ts";
 import StateHomePage from "../pages/stateHome.page";
 import AdminHomePage from "../pages/adminHome.page";
 
@@ -17,6 +18,6 @@ export const baseTest = base.extend<CustomFixtures>({
   },
 });
 
-export const test = mergeTests(baseTest, sarTest);
+export const test = mergeTests(baseTest, sarTest, wpTest);
 
 export { expect } from "@playwright/test";
