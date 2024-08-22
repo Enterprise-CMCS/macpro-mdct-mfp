@@ -54,7 +54,7 @@ const unstyledButtonVariant = {
 };
 
 const variants = {
-  primary: primaryVarian,
+  primary: primaryVariant,
   inverse: inverseVariant,
   unstyled: unstyledVariant,
   outlineButton: unstyledButtonVariant,
