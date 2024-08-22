@@ -23,8 +23,8 @@ test("State user can create a SAR", async ({
 
   // View SARs
   await stateHomePage.sarButton.click();
-  await expect(sarDashboard.path).toEqual("/sar/");
   await sarDashboard.getReports();
+  await expect(sarDashboard.page).toHaveURL(sarDashboard.path);
 
   // Create SAR
   await sarDashboard.createButton.click();

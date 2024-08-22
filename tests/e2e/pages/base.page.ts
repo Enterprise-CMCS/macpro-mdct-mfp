@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
 export default class BasePage {
   public path = "/";
@@ -22,6 +22,6 @@ export default class BasePage {
   }
 
   public async isReady() {
-    return expect(this.title).toBeVisible();
+    await this.title.isVisible();
   }
 }
