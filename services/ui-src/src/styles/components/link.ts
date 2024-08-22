@@ -5,7 +5,7 @@ const baseStyles = {
   transition: "all 0.3s ease",
 };
 
-const primaryVarian = {
+const primaryVariant = {
   color: "palette.primary",
   _visited: {
     color: "palette.primary",
