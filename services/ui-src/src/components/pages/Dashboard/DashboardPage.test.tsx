@@ -86,6 +86,9 @@ const sarDashboardViewWithReports = (
 );
 
 describe("<DashboardPage />", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   describe("Test Report Dashboard view (Desktop)", () => {
     beforeEach(() => {
       jest.clearAllMocks();
@@ -255,6 +258,11 @@ describe("<DashboardPage />", () => {
       expect(archivedText).toBeInTheDocument();
     });
 
+    test("Can still view all WPs", async () => {
+      const viewButtons = screen.getAllByRole("button", { name: "View" });
+      viewButtons.forEach((button) => expect(button).not.toBeDisabled());
+    });
+
     testA11y(wpDashboardViewWithReports, () => {
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
     });
@@ -269,9 +277,10 @@ describe("<DashboardPage />", () => {
       mockedUseStore.mockReturnValue(mockUseAdminStore);
       render(wpDashboardViewWithReports);
     });
+
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[3];
-      expect(unlockButton).toBeVisible();
+      const unlockButton = screen.getAllByText("Unlock")[1];
+      expect(unlockButton).toBeEnabled();
       await userEvent.click(unlockButton);
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
       // once for render, once for release
@@ -290,6 +299,11 @@ describe("<DashboardPage />", () => {
     test("Cannot unarchive a WP", async () => {
       const archivedText = screen.getAllByText("Archived")[1];
       expect(archivedText).toBeInTheDocument();
+    });
+
+    test("Can still view all WPs", async () => {
+      const viewButtons = screen.getAllByRole("button", { name: "View" });
+      viewButtons.forEach((button) => expect(button).not.toBeDisabled());
     });
 
     testA11y(wpDashboardViewWithReports, () => {

@@ -76,11 +76,7 @@ export const DashboardTable = ({
         )}
         {/* Action Buttons */}
         <Td sx={sxOverride.editReportButtonCell}>
-          <Button
-            variant="outline"
-            onClick={() => enterSelectedReport(report)}
-            isDisabled={report?.archived}
-          >
+          <Button variant="outline" onClick={() => enterSelectedReport(report)}>
             {entering && reportId == report.id ? (
               <Spinner size="md" />
             ) : isStateLevelUser && !report?.locked ? (

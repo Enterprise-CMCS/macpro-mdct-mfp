@@ -86,7 +86,6 @@ export const MobileDashboardTable = ({
             <Button
               variant="outline"
               onClick={() => enterSelectedReport(report)}
-              isDisabled={report?.archived}
             >
               {entering && reportId == report.id ? (
                 <Spinner size="md" />
