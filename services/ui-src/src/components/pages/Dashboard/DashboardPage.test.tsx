@@ -251,10 +251,8 @@ describe("<DashboardPage />", () => {
     });
 
     test("Cannot unarchive a WP", async () => {
-      const archiveButton = screen.getAllByRole("button", {
-        name: "Archived",
-      })[0];
-      expect(archiveButton).toBeDisabled();
+      const archivedText = screen.getAllByText("Archived")[1];
+      expect(archivedText).toBeInTheDocument();
     });
 
     testA11y(wpDashboardViewWithReports, () => {
@@ -290,10 +288,8 @@ describe("<DashboardPage />", () => {
     });
 
     test("Cannot unarchive a WP", async () => {
-      const archiveButton = screen.getAllByRole("button", {
-        name: "Archived",
-      })[0];
-      expect(archiveButton).toBeDisabled();
+      const archivedText = screen.getAllByText("Archived")[1];
+      expect(archivedText).toBeInTheDocument();
     });
 
     testA11y(wpDashboardViewWithReports, () => {

@@ -261,14 +261,18 @@ const AdminArchiveButton = ({
 }: AdminArchiveButtonProps) => {
   return (
     <Td>
-      <Button
-        variant="link"
-        sx={sxOverride.adminActionButton}
-        onClick={() => archive(report)}
-        disabled={report?.archived}
-      >
-        {report?.archived ? "Archived" : "Archive"}
-      </Button>
+      {report?.archived ? (
+        <Text sx={sx.archivedText}>Archived</Text>
+      ) : (
+        <Button
+          variant="link"
+          sx={sxOverride.adminActionButton}
+          onClick={() => archive(report)}
+          disabled={report?.archived}
+        >
+          Archive
+        </Button>
+      )}
     </Td>
   );
 };
@@ -326,5 +330,8 @@ const sx = {
     fontSize: "xs",
     fontWeight: "300",
     color: "palette.gray_medium",
+  },
+  archivedText: {
+    paddingLeft: 3,
   },
 };
