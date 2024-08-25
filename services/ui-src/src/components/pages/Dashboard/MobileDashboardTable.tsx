@@ -209,7 +209,9 @@ const AdminArchiveButton = ({
   return (
     <>
       {report?.archived ? (
-        <Text sx={sx.archivedText}>Archived</Text>
+        <Text data-testid="archived" sx={sx.archivedText}>
+          Archived
+        </Text>
       ) : (
         <Button
           variant="link"

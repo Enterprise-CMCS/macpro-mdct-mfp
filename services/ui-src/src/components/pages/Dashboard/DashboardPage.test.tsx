@@ -224,7 +224,7 @@ describe("<DashboardPage />", () => {
     });
 
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[3];
+      const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[3];
       expect(unlockButton).toBeEnabled();
       await userEvent.click(unlockButton);
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
@@ -245,7 +245,9 @@ describe("<DashboardPage />", () => {
     });
 
     test("Clicking 'Archive' button will open the archive modal", async () => {
-      const archiveButton = screen.getAllByText("Archive")[0];
+      const archiveButton = screen.getAllByRole("button", {
+        name: "Archive",
+      })[0];
       expect(archiveButton).toBeVisible();
       await userEvent.click(archiveButton);
       await expect(
@@ -254,8 +256,8 @@ describe("<DashboardPage />", () => {
     });
 
     test("Cannot unarchive a WP", async () => {
-      const archivedText = screen.getAllByText("Archived")[1];
-      expect(archivedText).toBeInTheDocument();
+      const lastCell = screen.getAllByRole("gridcell").pop();
+      expect(lastCell).toHaveTextContent("Archived");
     });
 
     test("Can still view all WPs", async () => {
@@ -279,7 +281,7 @@ describe("<DashboardPage />", () => {
     });
 
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[1];
+      const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[1];
       expect(unlockButton).toBeEnabled();
       await userEvent.click(unlockButton);
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
@@ -290,15 +292,17 @@ describe("<DashboardPage />", () => {
     });
 
     test("Clicking 'Archive' button will open the archive modal", async () => {
-      const archiveButton = screen.getAllByText("Archive")[1];
+      const archiveButton = screen.getAllByRole("button", {
+        name: "Archive",
+      })[1];
       expect(archiveButton).toBeVisible();
       await userEvent.click(archiveButton);
       expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
     });
 
     test("Cannot unarchive a WP", async () => {
-      const archivedText = screen.getAllByText("Archived")[1];
-      expect(archivedText).toBeInTheDocument();
+      const archivedText = screen.getByTestId("archived");
+      expect(archivedText).toBeVisible();
     });
 
     test("Can still view all WPs", async () => {
