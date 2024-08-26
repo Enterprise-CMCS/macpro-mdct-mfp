@@ -76,11 +76,7 @@ export const DashboardTable = ({
         )}
         {/* Action Buttons */}
         <Td sx={sxOverride.editReportButtonCell}>
-          <Button
-            variant="outline"
-            onClick={() => enterSelectedReport(report)}
-            isDisabled={report?.archived}
-          >
+          <Button variant="outline" onClick={() => enterSelectedReport(report)}>
             {entering && reportId == report.id ? (
               <Spinner size="md" />
             ) : isStateLevelUser && !report?.locked ? (
@@ -261,14 +257,18 @@ const AdminArchiveButton = ({
 }: AdminArchiveButtonProps) => {
   return (
     <Td>
-      <Button
-        variant="transparent"
-        sx={sxOverride.adminActionButton}
-        onClick={() => archive(report)}
-        disabled={report?.archived}
-      >
-        {report?.archived ? "Archived" : "Archive"}
-      </Button>
+      {report?.archived ? (
+        <Text sx={sx.archivedText}>Archived</Text>
+      ) : (
+        <Button
+          variant="transparent"
+          sx={sxOverride.adminActionButton}
+          onClick={() => archive(report)}
+          disabled={report?.archived}
+        >
+          Archive
+        </Button>
+      )}
     </Td>
   );
 };
@@ -326,5 +326,8 @@ const sx = {
     fontSize: "xs",
     fontWeight: "300",
     color: "palette.gray_medium",
+  },
+  archivedText: {
+    paddingLeft: 3,
   },
 };
