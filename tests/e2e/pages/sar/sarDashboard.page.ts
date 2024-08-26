@@ -4,7 +4,7 @@ import { firstPeriod, stateAbbreviation, stateName } from "../../helpers";
 import { currentYear } from "../../../seeds/helpers";
 
 export class SARDashboardPage extends BasePage {
-  public path = "/sar/";
+  public path = "/sar";
 
   readonly page: Page;
   readonly title: Locator;

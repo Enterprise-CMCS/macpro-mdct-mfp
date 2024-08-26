@@ -55,7 +55,7 @@ export default {
       downloadText: "User Guide and Help File",
       link: {
         text: "Enter SAR online",
-        route: "sar/",
+        route: "sar",
       },
       accordion: {
         buttonLabel: "When is the MFP SAR due?",
