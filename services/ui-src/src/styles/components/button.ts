@@ -64,6 +64,7 @@ const transparentVariant = {
   },
   "&:disabled, &:disabled:hover": {
     color: "palette.gray_lighter",
+    backgroundColor: "transparent",
   },
 };
 
