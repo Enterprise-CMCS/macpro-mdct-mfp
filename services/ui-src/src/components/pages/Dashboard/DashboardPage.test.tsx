@@ -86,6 +86,9 @@ const sarDashboardViewWithReports = (
 );
 
 describe("<DashboardPage />", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   describe("Test Report Dashboard view (Desktop)", () => {
     beforeEach(() => {
       jest.clearAllMocks();
@@ -221,7 +224,7 @@ describe("<DashboardPage />", () => {
     });
 
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[3];
+      const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[3];
       expect(unlockButton).toBeEnabled();
       await userEvent.click(unlockButton);
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
@@ -242,7 +245,9 @@ describe("<DashboardPage />", () => {
     });
 
     test("Clicking 'Archive' button will open the archive modal", async () => {
-      const archiveButton = screen.getAllByText("Archive")[0];
+      const archiveButton = screen.getAllByRole("button", {
+        name: "Archive",
+      })[0];
       expect(archiveButton).toBeVisible();
       await userEvent.click(archiveButton);
       await expect(
@@ -251,10 +256,13 @@ describe("<DashboardPage />", () => {
     });
 
     test("Cannot unarchive a WP", async () => {
-      const archiveButton = screen.getAllByRole("button", {
-        name: "Archived",
-      })[0];
-      expect(archiveButton).toBeDisabled();
+      const lastCell = screen.getAllByRole("gridcell").pop();
+      expect(lastCell).toHaveTextContent("Archived");
+    });
+
+    test("Can still view all WPs", async () => {
+      const viewButtons = screen.getAllByRole("button", { name: "View" });
+      viewButtons.forEach((button) => expect(button).not.toBeDisabled());
     });
 
     testA11y(wpDashboardViewWithReports, () => {
@@ -271,9 +279,10 @@ describe("<DashboardPage />", () => {
       mockedUseStore.mockReturnValue(mockUseAdminStore);
       render(wpDashboardViewWithReports);
     });
+
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
-      const unlockButton = screen.getAllByText("Unlock")[3];
-      expect(unlockButton).toBeVisible();
+      const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[1];
+      expect(unlockButton).toBeEnabled();
       await userEvent.click(unlockButton);
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
       // once for render, once for release
@@ -283,17 +292,22 @@ describe("<DashboardPage />", () => {
     });
 
     test("Clicking 'Archive' button will open the archive modal", async () => {
-      const archiveButton = screen.getAllByText("Archive")[1];
+      const archiveButton = screen.getAllByRole("button", {
+        name: "Archive",
+      })[1];
       expect(archiveButton).toBeVisible();
       await userEvent.click(archiveButton);
       expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
     });
 
     test("Cannot unarchive a WP", async () => {
-      const archiveButton = screen.getAllByRole("button", {
-        name: "Archived",
-      })[0];
-      expect(archiveButton).toBeDisabled();
+      const archivedText = screen.getByTestId("archived");
+      expect(archivedText).toBeVisible();
+    });
+
+    test("Can still view all WPs", async () => {
+      const viewButtons = screen.getAllByRole("button", { name: "View" });
+      viewButtons.forEach((button) => expect(button).not.toBeDisabled());
     });
 
     testA11y(wpDashboardViewWithReports, () => {

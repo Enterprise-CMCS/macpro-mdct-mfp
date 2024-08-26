@@ -36,7 +36,7 @@ export default {
         "To view a state or territory's submission, use “View”.",
         "To allow a state or territory to make corrections or edits to a submission use “Unlock” to release the submission. The status will change to “In revision”.",
         "Submission count is shown in the # column. Submissions started and submitted once have a count of 1. When a state or territory resubmits a previous submission, the count increases by 1.",
-        "To archive a submission and hide it from a state or territory’s dashboard, use “Archive”. You can only archive an MFP Work Plan that is not associated with a MFP Semi-Annual Progress Report and once archived it can’t be unarchived",
+        "To archive a submission and hide it from a state or territory’s dashboard, use “Archive”. You can only archive an MFP Work Plan that is not associated with a MFP Semi-Annual Progress Report and once archived it can’t be unarchived.",
         "To review a submission, go to the “Review & Submit” page. You can review the submission by section, download a PDF, unlock, and find further instructions on approval and next steps.",
         "To approve a submission, go to “Review & Submit” page and select “Approve”. The status will change to “Approved” and the content will be eligible for import into the MFP Semi-Annual Progress Report and will be available for view-only reference.",
       ],
