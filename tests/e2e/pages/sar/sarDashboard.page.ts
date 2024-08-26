@@ -48,10 +48,10 @@ export class SARDashboardPage extends BasePage {
   }
 
   public async createNewSAR() {
-    const radioNo = this.modal.getByRole("radio", { name: "No" });
+    const noRadio = this.modal.getByRole("radio", { name: "No" });
     const saveButton = this.modal.getByRole("button", { name: "Save" });
 
-    await radioNo.click();
+    await noRadio.click();
     await saveButton.click();
   }
 }
