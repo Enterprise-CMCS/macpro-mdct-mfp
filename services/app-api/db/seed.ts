@@ -4,6 +4,7 @@ import { createdLog, expandedLog } from "./helpers";
 import { semiAnnualReportChoices, workPlanChoices } from "./options";
 import { currentYear } from "../../../tests/seeds/helpers";
 import {
+  archiveWorkPlansByState,
   bannerKey,
   createApprovedWorkPlan,
   createArchivedWorkPlan,
@@ -75,6 +76,10 @@ const seed = async (): Promise<void> => {
       {
         title: `Get ${type}s by state: ${state}`,
         value: `get${type}sByState`,
+      },
+      {
+        title: `Archive ${type}s by state: ${state}`,
+        value: `archive${type}sByState`,
       },
     ];
 
@@ -273,6 +278,9 @@ const seed = async (): Promise<void> => {
       }
       case "getWPsByState":
         expandedLog(await getWorkPlansByState());
+        break;
+      case "archiveWPsByState":
+        expandedLog(await archiveWorkPlansByState());
         break;
       case "createSAR": {
         createdLog(

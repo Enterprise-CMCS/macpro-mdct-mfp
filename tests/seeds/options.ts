@@ -129,6 +129,17 @@ export const getWorkPlansByState = async (): Promise<SeedReportShape[]> => {
   return reports;
 };
 
+export const archiveWorkPlansByState = async (): Promise<SeedReportShape[]> => {
+  const reports = await getApi(`/reports/WP/${state}`, headers);
+
+  for (const report of reports) {
+    const id = report.id;
+    await await putApi(`/reports/archive/WP/${state}/${id}`, adminHeaders, {});
+  }
+
+  return reports;
+};
+
 // Semi-Annual Report (SAR)
 export const createSemiAnnualReport = async (
   customReportYear?: number,
