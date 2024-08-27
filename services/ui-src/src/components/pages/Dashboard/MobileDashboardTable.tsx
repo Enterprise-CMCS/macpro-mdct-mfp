@@ -13,8 +13,7 @@ export const MobileDashboardTable = ({
   reportType,
   openCreateReportModal,
   enterSelectedReport,
-  archiveReport,
-  archiving,
+  archive,
   entering,
   releaseReport,
   releasing,
@@ -87,7 +86,6 @@ export const MobileDashboardTable = ({
             <Button
               variant="outline"
               onClick={() => enterSelectedReport(report)}
-              isDisabled={report?.archived}
             >
               {entering && reportId == report.id ? (
                 <Spinner size="md" />
@@ -101,22 +99,26 @@ export const MobileDashboardTable = ({
           <Box sx={sxOverride.adminActionCell}>
             {isAdmin && (
               <>
-                {reportType === "WP" && (
-                  <AdminReleaseButton
+                <AdminReleaseButton
+                  report={report}
+                  reportType={reportType}
+                  reportId={reportId}
+                  releaseReport={releaseReport}
+                  releasing={releasing}
+                  sxOverride={sxOverride}
+                />
+                {reportType === ReportType.WP && !report?.associatedSar && (
+                  // archive button is available only for WP without an assoc SAR
+                  <AdminArchiveButton
                     report={report}
+                    reportType={reportType}
                     reportId={reportId}
+                    archive={archive}
                     releaseReport={releaseReport}
                     releasing={releasing}
                     sxOverride={sxOverride}
                   />
                 )}
-                <AdminArchiveButton
-                  report={report}
-                  reportId={reportId}
-                  archiveReport={archiveReport}
-                  archiving={archiving}
-                  sxOverride={sxOverride}
-                />
               </>
             )}
           </Box>
@@ -132,7 +134,7 @@ interface MobileDashboardTableProps {
   reportType: string;
   openCreateReportModal: Function;
   enterSelectedReport: Function;
-  archiveReport?: Function;
+  archive: Function;
   archiving?: boolean;
   entering?: boolean;
   releaseReport?: Function | undefined;
@@ -177,7 +179,7 @@ const AdminReleaseButton = ({
   releasing,
   releaseReport,
   sxOverride,
-}: AdminActionButtonProps) => {
+}: AdminReleaseButtonProps) => {
   //unlock is enabled when status: approved and submitted, all other times, it is disabled
   const reportStatus = getStatus(
     report.reportType as ReportType,
@@ -201,33 +203,43 @@ const AdminReleaseButton = ({
 
 const AdminArchiveButton = ({
   report,
-  reportId,
-  archiveReport,
-  archiving,
+  archive,
   sxOverride,
-}: AdminActionButtonProps) => {
+}: AdminArchiveButtonProps) => {
   return (
-    <Button
-      variant="link"
-      sx={sxOverride.adminActionButton}
-      onClick={() => archiveReport!(report)}
-    >
-      {archiving && reportId === report.id ? (
-        <Spinner size="md" />
-      ) : report?.archived ? (
-        "Unarchive"
+    <>
+      {report?.archived ? (
+        <Text data-testid="archived" sx={sx.archivedText}>
+          Archived
+        </Text>
       ) : (
-        "Archive"
+        <Button
+          variant="link"
+          sx={sxOverride.adminActionButton}
+          onClick={() => archive(report)}
+          disabled={report?.archived}
+        >
+          Archive
+        </Button>
       )}
-    </Button>
+    </>
   );
 };
 
-interface AdminActionButtonProps {
+interface AdminArchiveButtonProps {
   report: ReportMetadataShape;
+  reportType: string;
   reportId: string | undefined;
-  archiveReport?: Function;
-  archiving?: boolean;
+  archive: Function;
+  releasing?: boolean;
+  releaseReport?: Function;
+  sxOverride: AnyObject;
+}
+
+interface AdminReleaseButtonProps {
+  report: ReportMetadataShape;
+  reportType: string;
+  reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
   sxOverride: AnyObject;
@@ -249,5 +261,11 @@ const sx = {
   },
   editDate: {
     marginRight: "3rem",
+  },
+  archivedText: {
+    fontSize: "sm",
+    paddingLeft: 2,
+    display: "flex",
+    alignItems: "center",
   },
 };
