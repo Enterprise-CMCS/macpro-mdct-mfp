@@ -6,7 +6,6 @@ import { currentYear } from "../../../tests/seeds/helpers";
 import {
   bannerKey,
   createApprovedWorkPlan,
-  createArchivedSemiAnnualReport,
   createArchivedWorkPlan,
   createBanner,
   createFilledSemiAnnualReport,
@@ -300,13 +299,6 @@ const seed = async (): Promise<void> => {
         createdLog(
           await createLockedSemiAnnualReport(reportYear, reportPeriod),
           "Locked SAR"
-        );
-        break;
-      }
-      case "createArchivedSAR": {
-        createdLog(
-          await createArchivedSemiAnnualReport(reportYear, reportPeriod),
-          "Archived SAR"
         );
         break;
       }

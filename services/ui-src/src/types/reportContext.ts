@@ -78,6 +78,7 @@ export enum ReportStatus {
   IN_REVISION = "In revision",
   SUBMITTED = "Submitted",
   APPROVED = "Approved",
+  ARCHIVED = "Archived",
 }
 
 export interface ReportPageProgress {

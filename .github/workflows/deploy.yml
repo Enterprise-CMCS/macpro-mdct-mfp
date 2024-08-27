@@ -108,18 +108,38 @@ jobs:
           echo "application_endpoint=$APPLICATION_ENDPOINT" >> $GITHUB_OUTPUT
           echo "## Application Endpoint" >> $GITHUB_STEP_SUMMARY
           echo "<$APPLICATION_ENDPOINT>" >> $GITHUB_STEP_SUMMARY
-      - id: api_endpoint
+      - id: api_name
         run: |
-          API_ENDPOINT=$(./scripts/output.sh app-api ApiGatewayRestApiUrl $STAGE_PREFIX$branch_name)
-          echo "API_ENDPOINT=$API_ENDPOINT" >> $GITHUB_ENV    
-      - id: cognito_user_pool_id
+          API_NAME=$(./scripts/output.sh app-api ApiGatewayRestApiName $STAGE_PREFIX$branch_name)
+          echo "api_name=$API_NAME" >> $GITHUB_OUTPUT
+      - id: branch_name
+        run: |
+          echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
+      - id: cognito_user_pool_client_id
+        run: |
+          COGNITO_USER_POOL_CLIENT_ID=$(./scripts/output.sh ui-auth UserPoolClientId $STAGE_PREFIX$branch_name)
+          echo "cognito_user_pool_client_id=$COGNITO_USER_POOL_CLIENT_ID" >> $GITHUB_OUTPUT
+      - id: cognito_user_pool_id_encrypted
         run: |
           COGNITO_USER_POOL_ID=$(./scripts/output.sh ui-auth UserPoolId $STAGE_PREFIX$branch_name)
-          echo "COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID" >> $GITHUB_ENV      
+          COGNITO_USER_POOL_ID_ENCRYPTED=$(echo -n "$COGNITO_USER_POOL_ID" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter 10000 -k "${{ secrets.CODE_CLIMATE_ID }}")
+          echo "cognito_user_pool_id_encrypted<<EOF" >> $GITHUB_OUTPUT
+          echo $COGNITO_USER_POOL_ID_ENCRYPTED >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - id: region_encrypted
+        run: |
+          REGION=$(./scripts/output.sh app-api Region $STAGE_PREFIX$branch_name)
+          REGION_ENCRYPTED=$(echo -n "$REGION" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter 10000 -k "${{ secrets.CODE_CLIMATE_ID }}")
+          echo "region_encrypted<<EOF" >> $GITHUB_OUTPUT
+          echo $REGION_ENCRYPTED >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
     outputs:
-      application_endpoint: ${{ steps.endpoint.outputs.application_endpoint}}
-      api_endpoint: ${{ steps.api_endpoint.outputs.api_endpoint}}
-      cognito_user_pool_id: ${{ steps.cognito_user_pool_id.outputs.cognito_user_pool_id}}
+      api_name: ${{ steps.api_name.outputs.api_name }}
+      application_endpoint: ${{ steps.endpoint.outputs.application_endpoint }}
+      branch_name: ${{ steps.branch_name.outputs.branch_name }}
+      cognito_user_pool_client_id: ${{ steps.cognito_user_pool_client_id.outputs.cognito_user_pool_client_id }}
+      cognito_user_pool_id_encrypted: ${{ steps.cognito_user_pool_id_encrypted.outputs.cognito_user_pool_id_encrypted }}
+      region_encrypted: ${{ steps.region_encrypted.outputs.region_encrypted }}
       BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION: ${{ steps.set_names.outputs.BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION }}
       BRANCH_SPECIFIC_VARNAME_AWS_OIDC_ROLE_TO_ASSUME: ${{ steps.set_names.outputs.BRANCH_SPECIFIC_VARNAME_AWS_OIDC_ROLE_TO_ASSUME }}
 
@@ -300,6 +320,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
+      - name: Decrypt cognito_user_pool_id
+        run: |
+          COGNITO_USER_POOL_ID_ENCRYPTED=${{ needs.deploy.outputs.cognito_user_pool_id_encrypted }}
+          COGNITO_USER_POOL_ID_DECRYPTED=$(echo "$COGNITO_USER_POOL_ID_ENCRYPTED" | openssl base64 -d)
+          COGNITO_USER_POOL_ID=$(echo -n "$COGNITO_USER_POOL_ID_DECRYPTED" | openssl enc -d -aes-256-cbc -pbkdf2 -iter 10000 -k "${{ secrets.CODE_CLIMATE_ID }}")
+          echo "cognito_user_pool_id<<EOF" >> $GITHUB_ENV
+          echo $COGNITO_USER_POOL_ID >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - name: Decrypt region
+        run: |
+          REGION_ENCRYPTED=${{ needs.deploy.outputs.region_encrypted }}
+          REGION_DECRYPTED=$(echo "$REGION_ENCRYPTED" | openssl base64 -d)
+          REGION=$(echo -n "$REGION_DECRYPTED" | openssl enc -d -aes-256-cbc -pbkdf2 -iter 10000 -k "${{ secrets.CODE_CLIMATE_ID }}")
+          echo "region<<EOF" >> $GITHUB_ENV
+          echo $REGION >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - name: yarn install
         run: yarn install
       - name: Install Playwright Browsers
@@ -308,9 +344,10 @@ jobs:
         run: yarn playwright test
         continue-on-error: true
         env:
-          API_URL: ${{ needs.deploy.outputs.api_endpoint }}
+          API_URL: https://${{ needs.deploy.outputs.api_name }}.execute-api.${{ env.region }}.amazonaws.com/${{ needs.deploy.outputs.branch_name }}
           BASE_URL: ${{ needs.deploy.outputs.application_endpoint }}
-          COGNITO_USER_POOL_ID: ${{ needs.deploy.outputs.cognito_user_pool_id }}
+          COGNITO_USER_POOL_CLIENT_ID: ${{ needs.deploy.outputs.cognito_user_pool_client_id }}
+          COGNITO_USER_POOL_ID: ${{ env.cognito_user_pool_id }}
           CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
           CYPRESS_STATE_USER_PASSWORD: ${{ secrets.CYPRESS_STATE_USER_PASSWORD }}
           CYPRESS_ADMIN_USER_EMAIL: ${{ secrets.CYPRESS_ADMIN_USER_EMAIL }}
