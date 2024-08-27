@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useMemo, useEffect } from "react";
 // utils
-import { AdminBannerData, AdminBannerShape, BannerData } from "types/banners";
+import { AdminBannerData, AdminBannerShape } from "types/banners";
 import { bannerId } from "../../constants";
 import { bannerErrors } from "verbiage/errors";
 // api
@@ -39,7 +39,7 @@ export const AdminBannerProvider = ({ children }: Props) => {
     setBannerLoading(true);
     try {
       const currentBanner = await getBanner(ADMIN_BANNER_ID);
-      const newBannerData = currentBanner as BannerData | undefined;
+      const newBannerData = currentBanner as AdminBannerData | undefined;
       setBannerData(newBannerData);
       setBannerErrorMessage(undefined);
     } catch (e: any) {
