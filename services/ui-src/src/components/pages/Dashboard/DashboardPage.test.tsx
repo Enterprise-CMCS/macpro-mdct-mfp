@@ -86,8 +86,12 @@ const sarDashboardViewWithReports = (
 );
 
 describe("<DashboardPage />", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   describe("Test Report Dashboard view (Desktop)", () => {
     beforeEach(() => {
+      jest.clearAllMocks();
       mockedUseUser.mockReturnValue(mockStateUser);
       mockUseBreakpoint.mockReturnValue({
         isMobile: false,
@@ -95,14 +99,9 @@ describe("<DashboardPage />", () => {
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
     });
 
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
     test("Check that WP Dashboard view renders", () => {
       mockedUseStore.mockReturnValue(mockReportStore);
       render(wpDashboardViewWithReports);
-
       expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
       expect(
         screen.queryByText(wpVerbiage.body.table.caption)
@@ -163,6 +162,7 @@ describe("<DashboardPage />", () => {
 
   describe("Test Report Dashboard with no reports", () => {
     beforeEach(() => {
+      jest.clearAllMocks();
       mockedUseUser.mockReturnValue(mockStateUser);
       mockedUseStore.mockReturnValue({
         reportsByState: undefined,
@@ -171,10 +171,6 @@ describe("<DashboardPage />", () => {
         isMobile: false,
       });
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
-    });
-
-    afterEach(() => {
-      jest.clearAllMocks();
     });
 
     test("WP Dashboard renders table with empty text", () => {
@@ -192,6 +188,7 @@ describe("<DashboardPage />", () => {
 
   describe("Test Report Dashboard (Mobile)", () => {
     beforeEach(() => {
+      jest.clearAllMocks();
       mockUseBreakpoint.mockReturnValue({
         isMobile: true,
       });
@@ -207,115 +204,120 @@ describe("<DashboardPage />", () => {
     });
   });
 
-  describe("Test WP Admin Report Dashboard View (with reports, desktop view, mobile view)", () => {
+  describe("Test WP Admin Report Dashboard - desktop", () => {
     beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockUseAdminStore);
-    });
-
-    afterEach(() => {
       jest.clearAllMocks();
+      mockUseBreakpoint.mockReturnValue({
+        isMobile: false,
+      });
+      mockMakeMediaQueryClasses.mockReturnValue("desktop");
+      mockedUseStore.mockReturnValue(mockUseAdminStore);
+      render(wpDashboardViewWithReports);
     });
 
-    describe("Desktop view", () => {
-      beforeEach(() => {
-        mockUseBreakpoint.mockReturnValue({
-          isMobile: false,
-        });
-        mockMakeMediaQueryClasses.mockReturnValue("desktop");
-        render(wpDashboardViewWithReports);
-      });
-
-      test("Check that Admin WP Dashboard view renders", () => {
-        expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
-        expect(
-          screen.queryByText(wpVerbiage.body.table.caption)
-        ).toBeInTheDocument();
-        expect(
-          screen.queryByText(wpVerbiage.body.empty)
-        ).not.toBeInTheDocument();
-      });
-
-      test("Clicking a disabled 'Unlock' button no modal opens", async () => {
-        const unlockButton = screen.getAllByText("Unlock")[0];
-        expect(unlockButton).toBeVisible();
-        await userEvent.click(unlockButton);
-
-        expect(
-          screen.queryByText(wpVerbiage.modalUnlock.actionButtonText)
-        ).not.toBeInTheDocument();
-      });
-
-      test("Clicking 'Unlock' button opens the unlock modal", async () => {
-        const unlockButton = screen.getAllByText("Unlock")[1];
-        expect(unlockButton).toBeVisible();
-        await userEvent.click(unlockButton);
-        await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(
-          1
-        );
-        // once for render, once for release
-        await expect(
-          mockWpReportContext.fetchReportsByState
-        ).toHaveBeenCalledTimes(2);
-      });
-
-      test("Clicking 'Archive' button will archive the form", async () => {
-        const archiveButton = screen.getAllByText("Archive")[1];
-        expect(archiveButton).toBeVisible();
-        await userEvent.click(archiveButton);
-        await expect(mockWpReportContext.archiveReport).toHaveBeenCalledTimes(
-          1
-        );
-        // once for render, once for archive
-        await expect(
-          mockWpReportContext.fetchReportsByState
-        ).toHaveBeenCalledTimes(2);
-      });
+    test("Check that Admin WP Dashboard view renders", () => {
+      expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
+      expect(
+        screen.queryByText(wpVerbiage.body.table.caption)
+      ).toBeInTheDocument();
+      expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
     });
 
-    describe("Mobile view", () => {
-      beforeEach(() => {
-        mockUseBreakpoint.mockReturnValue({
-          isMobile: true,
-        });
-        render(wpDashboardViewWithReports);
-      });
+    test("Clicking 'Unlock' button opens the unlock modal", async () => {
+      const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[3];
+      expect(unlockButton).toBeEnabled();
+      await userEvent.click(unlockButton);
+      await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
+      // once for render, once for release
+      await expect(
+        mockWpReportContext.fetchReportsByState
+      ).toHaveBeenCalledTimes(2);
+    });
 
-      describe("Renders", () => {
-        test("Clicking 'Unlock' button opens the unlock modal", async () => {
-          const unlockButton = screen.getAllByText("Unlock")[1];
-          expect(unlockButton).toBeVisible();
-          await userEvent.click(unlockButton);
-          await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(
-            1
-          );
-          // once for render, once for release
-          await expect(
-            mockWpReportContext.fetchReportsByState
-          ).toHaveBeenCalledTimes(2);
-        });
+    test("Clicking a disabled 'Unlock' button no modal opens", async () => {
+      const unlockButton = screen.getAllByText("Unlock")[0];
+      expect(unlockButton).toBeVisible();
+      await userEvent.click(unlockButton);
 
-        test("Clicking 'Archive' button will archive the form", async () => {
-          const archiveButton = screen.getAllByText("Archive")[1];
-          expect(archiveButton).toBeVisible();
-          await userEvent.click(archiveButton);
-          await expect(mockWpReportContext.archiveReport).toHaveBeenCalledTimes(
-            1
-          );
-          // once for render, once for archive
-          await expect(
-            mockWpReportContext.fetchReportsByState
-          ).toHaveBeenCalledTimes(2);
-        });
-      });
+      expect(
+        screen.queryByText(wpVerbiage.modalUnlock.actionButtonText)
+      ).not.toBeInTheDocument();
+    });
 
-      testA11y(wpDashboardViewWithReports, () => {
-        mockMakeMediaQueryClasses.mockReturnValue("mobile");
+    test("Clicking 'Archive' button will open the archive modal", async () => {
+      const archiveButton = screen.getAllByRole("button", {
+        name: "Archive",
+      })[0];
+      expect(archiveButton).toBeVisible();
+      await userEvent.click(archiveButton);
+      await expect(
+        screen.getByText(wpVerbiage.modalArchive.heading)
+      ).toBeVisible();
+    });
+
+    test("Cannot unarchive a WP", async () => {
+      const lastCell = screen.getAllByRole("gridcell").pop();
+      expect(lastCell).toHaveTextContent("Archived");
+    });
+
+    test("Can still view all WPs", async () => {
+      const viewButtons = screen.getAllByRole("button", { name: "View" });
+      viewButtons.forEach((button) => expect(button).not.toBeDisabled());
+    });
+
+    testA11y(wpDashboardViewWithReports, () => {
+      mockMakeMediaQueryClasses.mockReturnValue("desktop");
+    });
+  });
+
+  describe("Test WP Admin Report Dashboard - mobile view", () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      mockUseBreakpoint.mockReturnValue({
+        isMobile: true,
       });
+      mockedUseStore.mockReturnValue(mockUseAdminStore);
+      render(wpDashboardViewWithReports);
+    });
+
+    test("Clicking 'Unlock' button opens the unlock modal", async () => {
+      const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[1];
+      expect(unlockButton).toBeEnabled();
+      await userEvent.click(unlockButton);
+      await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
+      // once for render, once for release
+      await expect(
+        mockWpReportContext.fetchReportsByState
+      ).toHaveBeenCalledTimes(2);
+    });
+
+    test("Clicking 'Archive' button will open the archive modal", async () => {
+      const archiveButton = screen.getAllByRole("button", {
+        name: "Archive",
+      })[1];
+      expect(archiveButton).toBeVisible();
+      await userEvent.click(archiveButton);
+      expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
+    });
+
+    test("Cannot unarchive a WP", async () => {
+      const archivedText = screen.getByTestId("archived");
+      expect(archivedText).toBeVisible();
+    });
+
+    test("Can still view all WPs", async () => {
+      const viewButtons = screen.getAllByRole("button", { name: "View" });
+      viewButtons.forEach((button) => expect(button).not.toBeDisabled());
+    });
+
+    testA11y(wpDashboardViewWithReports, () => {
+      mockMakeMediaQueryClasses.mockReturnValue("mobile");
     });
   });
 
   describe("Test error banner on SAR dashboard", () => {
     beforeEach(() => {
+      jest.clearAllMocks();
       mockedUseUser.mockReturnValue(mockStateUser);
       mockedUseStore.mockReturnValue({
         reportsByState: undefined,
@@ -324,10 +326,6 @@ describe("<DashboardPage />", () => {
         isMobile: false,
       });
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
-    });
-
-    afterEach(() => {
-      jest.clearAllMocks();
     });
     test("Check that error banner is enabled in SAR when latest WP IS NOT approved", () => {
       mockedUseStore.mockReturnValue(mockReportStore);

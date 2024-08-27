@@ -24,6 +24,7 @@ import {
   mockSARFullReport,
   mockEvaluationPlan,
   mockObjectiveProgress,
+  mockWPArchivedReport,
 } from "./mockReport";
 
 // GLOBALS
@@ -191,6 +192,7 @@ export const mockReportStore: MfpReportState = {
     mockWPSubmittedReport,
     mockWPCopiedReport,
     mockWPApprovedFullReport,
+    mockWPArchivedReport,
   ],
   submittedReportsByState: [mockWPFullReport],
   lastSavedTime: "1:58 PM",

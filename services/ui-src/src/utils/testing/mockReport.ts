@@ -269,6 +269,34 @@ export const mockWPFullReport = {
   locked: false,
   reportYear: mockReportYear,
   versionNumber: 1,
+  archived: false,
+};
+export const mockWPArchivedReport = {
+  ...mockReportKeys,
+  id: "mock-wp-archived-report-id",
+  reportType: "WP",
+  formTemplate: mockReportJson,
+  submissionName: "2023 - Alabama 1",
+  status: ReportStatus.ARCHIVED,
+  dueDate: 168515200000,
+  createdAt: 162515200000,
+  lastAltered: 162515200000,
+  lastAlteredBy: "Thelonious States",
+  fieldData: mockReportFieldData,
+  completionStatus: {
+    "/mock/mock-route-1": true,
+    "/mock/mock-route-2": {
+      "/mock/mock-route-2a": false,
+      "/mock/mock-route-2b": true,
+      "/mock/mock-route-2c": true,
+    },
+  },
+  isComplete: false,
+  reportPeriod: mockReportPeriod,
+  locked: false,
+  reportYear: mockReportYear,
+  versionNumber: 1,
+  archived: true,
 };
 
 export const mockWPCopiedReport = {
