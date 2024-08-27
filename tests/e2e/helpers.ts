@@ -1,5 +1,6 @@
 import { expect, Page, Response } from "@playwright/test";
 import { loginSeedUsers } from "../seeds/options";
+import AxeBuilder from "@axe-core/playwright";
 
 export const adminUser = process.env.SEED_ADMIN_USER_EMAIL!;
 export const adminPassword = process.env.SEED_ADMIN_USER_PASSWORD!;
@@ -90,4 +91,23 @@ export async function loginSeedUsersWithTimeout(page: Page, timeout?: number) {
   // Timeout to allow API to finish starting up before seeding
   await page.waitForTimeout(timeout || 3000);
   await loginSeedUsers();
+}
+
+export async function e2eA11y(page: Page, url: string) {
+  const breakpoints = {
+    mobile: [560, 800],
+    tablet: [880, 1000],
+    desktop: [1200, 1200],
+  };
+
+  await page.goto(url);
+
+  for (const size of Object.values(breakpoints)) {
+    page.setViewportSize({ width: size[0], height: size[1] });
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa"])
+      .disableRules(["duplicate-id"])
+      .analyze();
+    expect(results.violations).toEqual([]);
+  }
 }
