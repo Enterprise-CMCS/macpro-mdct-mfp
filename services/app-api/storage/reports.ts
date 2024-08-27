@@ -16,11 +16,8 @@ import {
 import {
   createClient as createDynamoClient,
   collectPageItems,
-} from "../utils/dynamo/dynamodb-lib";
-import {
-  createClient as createS3Client,
-  parseS3Response,
-} from "../utils/s3/s3-lib";
+} from "./dynamodb-lib";
+import { createClient as createS3Client, parseS3Response } from "./s3-lib";
 import { reportBuckets, reportTables } from "../utils/constants/constants";
 
 const dynamoClient = createDynamoClient();
