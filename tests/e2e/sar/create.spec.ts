@@ -15,13 +15,13 @@ test("State user can create a SAR", async ({
   sarDashboard,
 }) => {
   await archiveExistingWPs(page);
-  await logInStateUser(page);
 
   // Seed WP
   await loginSeedUsersWithTimeout(page);
   await createApprovedWorkPlan(currentYear, firstPeriod);
 
   // View SARs
+  await logInStateUser(page);
   await stateHomePage.sarButton.click();
   await expect(page).toHaveURL(sarDashboard.path);
 
