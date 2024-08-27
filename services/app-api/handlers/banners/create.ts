@@ -46,7 +46,7 @@ export const createBanner = handler(async (event, _context) => {
         endDate: validatedPayload.endDate,
       };
       await putBanner(newBanner);
-      return { status: StatusCodes.CREATED, body: { Item: newBanner } };
+      return { status: StatusCodes.CREATED, body: newBanner };
     }
   }
 });
