@@ -86,7 +86,6 @@ export const MobileDashboardTable = ({
             <Button
               variant="outline"
               onClick={() => enterSelectedReport(report)}
-              isDisabled={report?.archived}
             >
               {entering && reportId == report.id ? (
                 <Spinner size="md" />
@@ -208,14 +207,22 @@ const AdminArchiveButton = ({
   sxOverride,
 }: AdminArchiveButtonProps) => {
   return (
-    <Button
-      variant="link"
-      sx={sxOverride.adminActionButton}
-      onClick={() => archive(report)}
-      disabled={report?.archived}
-    >
-      {report?.archived ? "Archived" : "Archive"}
-    </Button>
+    <>
+      {report?.archived ? (
+        <Text data-testid="archived" sx={sx.archivedText}>
+          Archived
+        </Text>
+      ) : (
+        <Button
+          variant="link"
+          sx={sxOverride.adminActionButton}
+          onClick={() => archive(report)}
+          disabled={report?.archived}
+        >
+          Archive
+        </Button>
+      )}
+    </>
   );
 };
 
@@ -254,5 +261,11 @@ const sx = {
   },
   editDate: {
     marginRight: "3rem",
+  },
+  archivedText: {
+    fontSize: "sm",
+    paddingLeft: 2,
+    display: "flex",
+    alignItems: "center",
   },
 };
