@@ -1,8 +1,8 @@
 import { mergeTests, test as base } from "@playwright/test";
 import { test as sarTest } from "./sar.ts";
 import { test as wpTest } from "./wp.ts";
-import StateHomePage from "../pages/stateHome.page";
-import AdminHomePage from "../pages/adminHome.page";
+import StateHomePage from "../pageObjects/stateHome.page";
+import AdminHomePage from "../pageObjects/adminHome.page";
 
 type CustomFixtures = {
   stateHomePage: StateHomePage;

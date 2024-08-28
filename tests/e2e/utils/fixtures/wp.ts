@@ -1,7 +1,7 @@
 import { test as base } from "@playwright/test";
-import { WPDashboardPage } from "../pages/wp/wpDashboard.page";
-import { WPGeneralInformationPage } from "../pages/wp/wpGeneral.page";
-import { WPReviewAndSubmitPage } from "../pages/wp/wpReviewAndSubmit.page";
+import { WPDashboardPage } from "../pageObjects/wp/wpDashboard.page";
+import { WPGeneralInformationPage } from "../pageObjects/wp/wpGeneral.page";
+import { WPReviewAndSubmitPage } from "../pageObjects/wp/wpReviewAndSubmit.page";
 
 type WPFixtures = {
   wpDashboard: WPDashboardPage;

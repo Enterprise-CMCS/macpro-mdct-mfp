@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/base";
+import { test, expect } from "../utils/fixtures/base";
 import { currentYear } from "../../seeds/helpers";
 import { createSubmittedWorkPlan } from "../../seeds/options";
 import {

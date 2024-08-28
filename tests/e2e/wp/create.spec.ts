@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/base";
+import { test, expect } from "../utils/fixtures/base";
 import { archiveExistingWPs, logInStateUser } from "../helpers";
 
 test("State user can create a Work Plan", async ({

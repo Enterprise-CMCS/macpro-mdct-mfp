@@ -1,5 +1,5 @@
 import { test as base } from "@playwright/test";
-import { SARDashboardPage } from "../pages/sar/sarDashboard.page";
+import { SARDashboardPage } from "../pageObjects/sar/sarDashboard.page";
 
 type SARFixtures = {
   sarDashboard: SARDashboardPage;

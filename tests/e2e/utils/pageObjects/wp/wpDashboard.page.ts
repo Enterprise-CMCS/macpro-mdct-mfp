@@ -5,8 +5,8 @@ import {
   secondPeriod,
   stateAbbreviation,
   stateName,
-} from "../../helpers";
-import { currentYear } from "../../../seeds/helpers";
+} from "../../../helpers";
+import { currentYear } from "../../../../seeds/helpers";
 
 export class WPDashboardPage extends BasePage {
   public path = "/wp";

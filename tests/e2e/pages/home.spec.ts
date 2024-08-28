@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/base";
+import { test, expect } from "../utils/fixtures/base";
 import { logInStateUser, logInAdminUser, e2eA11y } from "../helpers";
 
 test("Should see the correct home page as a state user", async ({
