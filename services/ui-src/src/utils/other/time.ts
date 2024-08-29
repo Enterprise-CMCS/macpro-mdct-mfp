@@ -1,6 +1,5 @@
 import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
 import { DateShape, TimeShape } from "types";
-import moment from "moment";
 
 export const midnight: TimeShape = { hour: 0, minute: 0, second: 0 };
 export const oneSecondToMidnight: TimeShape = {
@@ -146,7 +145,7 @@ export const checkDateRangeStatus = (
  */
 export const calculateRemainingSeconds = (expiresAt?: any) => {
   if (!expiresAt) return 0;
-  return moment(expiresAt).diff(moment()) / 1000;
+  return (new Date(expiresAt).valueOf() - Date.now()) / 1000;
 };
 
 export const displayLongformPeriod = (
