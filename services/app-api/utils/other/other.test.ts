@@ -32,7 +32,6 @@ const mockUnvalidatedMetadata = {
   createdAt: 1699496172798,
   lastAlteredBy: "Anthony Soprano",
   locked: false,
-  isReset: false,
 };
 
 describe("API utility functions", () => {

@@ -1,0 +1,47 @@
+{
+  "id": "rwp",
+  "options": {
+    "mode": "onChange"
+  },
+  "heading": {
+    "add": "Are you sure you want to start a blank new Work Plan?",
+    "subheading": "This action can’t be undone. Once the new blank MFP Work Plan is started, you will not be able to use information entered for the previous MFP Work Plan. “Reset MFP Work Plan” is best suited for states or territories who are completely reworking their MFP programs, and in most cases it’s recommended to cancel this action, select “Continue MFP Work Plan for next Period”."
+  },
+  "fields": [
+    {
+      "id": "reportPeriodYear",
+      "type": "radio",
+      "validation": "radio",
+      "props": {
+        "label": "Reporting Period Year",
+        "hint": "Select the reporting period year.",
+        "choices": [],
+        "clear": true
+      }
+    },
+    {
+      "id": "reportPeriod",
+      "type": "radio",
+      "validation": "radio",
+      "props": {
+        "label": "Reporting Period",
+        "hint": "Select the reporting period.",
+        "clear": true,
+        "choices": [
+          {
+            "id": "reportPeriod-1",
+            "label": "First reporting period (January 1 - June 30)",
+            "name": "1",
+            "value": "1"
+          },
+          {
+            "id": "reportPeriod-2",
+            "label": "Second reporting period (July 1 - December 31)",
+            "name": "2",
+            "value": "2"
+          }
+        ]
+      }
+    }
+  ]
+}

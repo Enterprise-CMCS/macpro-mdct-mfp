@@ -72,10 +72,10 @@ describe("<ExportEntityDetailsTable />", () => {
         formatHeaderLabel("expenditures", label, mockSARFullReport)
       );
       expect(formattedHeaderLabels).toStrictEqual([
-        "Actual spending 2023 Q1",
-        "Projected spending 2023 Q1",
-        "Actual spending 2023 Q2",
-        "Projected spending 2023 Q2",
+        "Actual spending 2024 Q1",
+        "Projected spending 2024 Q1",
+        "Actual spending 2024 Q2",
+        "Projected spending 2024 Q2",
       ]);
     });
 

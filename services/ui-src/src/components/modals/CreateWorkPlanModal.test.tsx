@@ -3,11 +3,13 @@ import {
   RouterWrappedComponent,
   mockWpReportContext,
   mockWPApprovedFullReport,
+  mockUseStore,
 } from "../../utils/testing/setupJest";
 import { ReportContext } from "../reports/ReportProvider";
 import { CreateWorkPlanModal } from "./CreateWorkPlanModal";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
+import { useStore } from "../../utils";
 
 const mockCreateReport = jest.fn();
 const mockFetchReportsByState = jest.fn();
@@ -20,10 +22,14 @@ const mockedReportContext = {
   isReportPage: true,
 };
 
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
 const modalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
       <CreateWorkPlanModal
+        isResetting={false}
         activeState="CA"
         modalDisclosure={{
           isOpen: true,
@@ -38,6 +44,23 @@ const modalComponentWithPreviousReport = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
       <CreateWorkPlanModal
+        isResetting={false}
+        activeState="CA"
+        modalDisclosure={{
+          isOpen: true,
+          onClose: mockCloseHandler,
+        }}
+        previousReport={mockWPApprovedFullReport}
+      />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const modalComponentForResetReport = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockedReportContext}>
+      <CreateWorkPlanModal
+        isResetting={true}
         activeState="CA"
         modalDisclosure={{
           isOpen: true,
@@ -177,5 +200,67 @@ describe("<CreateWorkPlanModal />", () => {
     });
 
     testA11yAct(modalComponentWithPreviousReport);
+  });
+
+  describe("Test CreateWorkPlanModal functionality for resetting a Work Plan", () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    const fillForm = async () => {
+      const submitButton = screen.getByRole("button", { name: "Start new" });
+      const firstRadio = screen.getByLabelText("2025") as HTMLInputElement;
+      const secondRadio = screen.getByLabelText(
+        "First reporting period (January 1 - June 30)"
+      ) as HTMLInputElement;
+      await userEvent.click(firstRadio);
+      await userEvent.click(secondRadio);
+      await userEvent.click(submitButton);
+    };
+
+    test("Error shows when selected data matches existing report", async () => {
+      mockedUseStore.mockReturnValue(mockUseStore);
+      await act(async () => {
+        await render(modalComponentForResetReport);
+      });
+      const header = screen.getByRole("heading", { level: 1 });
+      expect(header.textContent).toEqual(
+        "Are you sure you want to start a blank new Work Plan?"
+      );
+      const firstRadio = screen.getByLabelText("2024") as HTMLInputElement;
+      const secondRadio = screen.getByLabelText(
+        "First reporting period (January 1 - June 30)"
+      ) as HTMLInputElement;
+      await userEvent.click(firstRadio);
+      await userEvent.click(secondRadio);
+      expect(
+        screen.getByText(
+          "A MFP Work Plan for this Reporting Period already exists"
+        )
+      ).toBeVisible();
+      const nextYearRadio = screen.getByLabelText("2025") as HTMLInputElement;
+      await userEvent.click(nextYearRadio);
+      expect(
+        screen.queryByText(
+          "A MFP Work Plan for this Reporting Period already exists"
+        )
+      ).not.toBeInTheDocument();
+    });
+
+    test("Adding a new report", async () => {
+      await act(async () => {
+        await render(modalComponentForResetReport);
+      });
+      const header = screen.getByRole("heading", { level: 1 });
+      expect(header.textContent).toEqual(
+        "Are you sure you want to start a blank new Work Plan?"
+      );
+      await fillForm();
+      await expect(mockCreateReport).toHaveBeenCalledTimes(1);
+      await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
+      await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
+
+    testA11yAct(modalComponentForResetReport);
   });
 });
