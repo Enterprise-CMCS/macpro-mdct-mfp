@@ -46,6 +46,7 @@ const outlineVariant = {
   "&:disabled, &:disabled:hover": {
     color: "palette.gray_lighter",
     borderColor: "palette.gray_lighter",
+    backgroundColor: "transparent",
   },
 };
 
