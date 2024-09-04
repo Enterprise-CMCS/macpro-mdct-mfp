@@ -79,6 +79,7 @@
     "collectCoverageFrom": [
       "handlers/**/*.{ts,tsx}",
       "utils/**/*.{ts,tsx}",
+      "storage/**/*.{ts,tsx}",
       "!utils/constants/*",
       "!utils/testing/*",
       "!utils/types/*"
