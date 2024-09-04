@@ -24,6 +24,7 @@ const mockedReportContext = {
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue(mockUseStore);
 
 const modalComponent = (
   <RouterWrappedComponent>
@@ -219,7 +220,6 @@ describe("<CreateWorkPlanModal />", () => {
     };
 
     test("Error shows when selected data matches existing report", async () => {
-      mockedUseStore.mockReturnValue(mockUseStore);
       await act(async () => {
         await render(modalComponentForResetReport);
       });
