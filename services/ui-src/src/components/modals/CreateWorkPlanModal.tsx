@@ -86,7 +86,8 @@ export const CreateWorkPlanModal = ({
     for (const report of reportsByState) {
       if (
         report.reportPeriod === formPeriodValue &&
-        report.reportYear === formYearValue
+        report.reportYear === formYearValue &&
+        !report.archived
       ) {
         setShowAlert(true);
       }

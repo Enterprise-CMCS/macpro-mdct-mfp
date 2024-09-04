@@ -400,15 +400,17 @@ export const DashboardPage = ({ reportType }: Props) => {
                 ? body.callToAction
                 : body.callToActionAdditions}
             </Button>
-            <Button
-              sx={sx.resetBtn}
-              onClick={openResetWorkPlanModal}
-              disabled={isAddSubmissionDisabled()}
-              type="submit"
-              variant="outline"
-            >
-              Reset MFP Work Plan
-            </Button>
+            {previousReport && (
+              <Button
+                sx={sx.resetBtn}
+                onClick={openResetWorkPlanModal}
+                disabled={isAddSubmissionDisabled()}
+                type="submit"
+                variant="outline"
+              >
+                Reset MFP Work Plan
+              </Button>
+            )}
           </Box>
         )}
       </Box>
