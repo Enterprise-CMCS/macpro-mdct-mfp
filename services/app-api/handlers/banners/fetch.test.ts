@@ -1,17 +1,18 @@
 import { fetchBanner } from "./fetch";
-import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
-import { mockClient } from "aws-sdk-client-mock";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import { error } from "../../utils/constants/constants";
 import { mockBannerResponse } from "../../utils/testing/setupJest";
+import { getBanner } from "../../storage/banners";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
 
-const dynamoClientMock = mockClient(DynamoDBDocumentClient);
-
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockReturnValue(true),
+}));
+
+jest.mock("../../storage/banners", () => ({
+  getBanner: jest.fn(),
 }));
 
 const testEvent: APIGatewayProxyEvent = {
@@ -31,15 +32,12 @@ let consoleSpy: {
 describe("Test fetchBanner API method", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
-    dynamoClientMock.reset();
     consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
     consoleSpy.error = jest.spyOn(console, "error").mockImplementation();
   });
 
   test("Test Successful Banner Fetch", async () => {
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: mockBannerResponse,
-    });
+    (getBanner as jest.Mock).mockResolvedValueOnce(mockBannerResponse);
     const res = await fetchBanner(testEvent, null);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
@@ -49,13 +47,11 @@ describe("Test fetchBanner API method", () => {
   });
 
   test("Test successful empty banner found fetch", async () => {
-    dynamoClientMock.on(GetCommand).resolves({
-      Item: undefined,
-    });
+    (getBanner as jest.Mock).mockResolvedValueOnce(undefined);
     const res = await fetchBanner(testEvent, null);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.body).not.toContain("testTitle");
+    expect(res.body).not.toBeDefined();
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
   });
 
