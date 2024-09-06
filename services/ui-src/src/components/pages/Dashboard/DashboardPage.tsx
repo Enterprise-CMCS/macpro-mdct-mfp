@@ -88,6 +88,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   const [reportId, setReportId] = useState<string | undefined>(undefined);
   const [entering, setEntering] = useState<boolean>(false);
   const [releasing, setReleasing] = useState<boolean>(false);
+  const [isResetting, setIsResetting] = useState<boolean>(false);
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
     undefined
   );
@@ -229,6 +230,12 @@ export const DashboardPage = ({ reportType }: Props) => {
     }
   };
 
+  const openResetWorkPlanModal = () => {
+    setSelectedReport(undefined);
+    setIsResetting(true);
+    createWorkPlanModalOnOpenHandler();
+  };
+
   const openArchiveModal = (report: ReportMetadataShape) => {
     setReportId(report?.id);
     confirmArchiveModalOnOpenHandler();
@@ -265,6 +272,11 @@ export const DashboardPage = ({ reportType }: Props) => {
       default:
         return true;
     }
+  };
+
+  const closeWorkPlanModal = () => {
+    setIsResetting(false);
+    createWorkPlanModalOnCloseHandler();
   };
 
   // new work plan modal disclosure
@@ -388,15 +400,27 @@ export const DashboardPage = ({ reportType }: Props) => {
                 ? body.callToAction
                 : body.callToActionAdditions}
             </Button>
+            {previousReport && (
+              <Button
+                sx={sx.resetBtn}
+                onClick={openResetWorkPlanModal}
+                disabled={isAddSubmissionDisabled()}
+                type="submit"
+                variant="outline"
+              >
+                Reset MFP Work Plan
+              </Button>
+            )}
           </Box>
         )}
       </Box>
       <CreateWorkPlanModal
+        isResetting={isResetting}
         activeState={activeState!}
         previousReport={previousReport}
         modalDisclosure={{
           isOpen: createWorkPlanModalIsOpen,
-          onClose: createWorkPlanModalOnCloseHandler,
+          onClose: closeWorkPlanModal,
         }}
       />
       <CreateSarModal
@@ -505,8 +529,10 @@ const sx = {
     textAlign: "center",
   },
   callToActionContainer: {
-    marginTop: "2.5rem",
-    textAlign: "center",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginTop: "2rem",
   },
   spinnerContainer: {
     alignItems: "center",
@@ -525,6 +551,13 @@ const sx = {
   },
   errorMessage: {
     paddingTop: "1rem",
+  },
+  resetBtn: {
+    border: "none",
+    marginTop: "1rem",
+    fontWeight: "none",
+    textDecoration: "underline",
+    fontSize: "0.875rem",
   },
 };
 

@@ -110,9 +110,6 @@ export const createReport = handler(
     const reportYear = getReportYear(reportData, overrideCopyOver);
     const reportPeriod = getReportPeriod(reportData, overrideCopyOver);
 
-    // If this Work Plan is a reset, the reporting period is the upcoming one
-    const isReset = unvalidatedMetadata?.isReset;
-
     // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;
     try {
@@ -169,7 +166,7 @@ export const createReport = handler(
       generalInformation_resubmissionInformation: "N/A",
     };
 
-    if (unvalidatedMetadata.copyReport && !isReset) {
+    if (unvalidatedMetadata.copyReport) {
       const reportPeriod = calculatePeriod(Date.now(), workPlanMetadata);
       const isCurrentPeriod =
         calculateCurrentYear() === unvalidatedMetadata.copyReport.reportYear &&
