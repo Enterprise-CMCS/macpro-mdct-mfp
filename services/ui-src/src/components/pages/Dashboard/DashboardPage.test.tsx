@@ -126,7 +126,7 @@ describe("<DashboardPage />", () => {
     test("Show copied from verbiage on report versions 2 or higher", () => {
       mockedUseStore.mockReturnValue(mockUseStore);
       render(wpDashboardViewWithReports);
-      const subText = screen.getByText("copied from 2023 - Period 1");
+      const subText = screen.getByText("copied from 2024 - Period 1");
       expect(subText).toBeInTheDocument();
     });
 
