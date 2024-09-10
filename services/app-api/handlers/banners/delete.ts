@@ -1,8 +1,8 @@
 import handler from "../handler-lib";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { hasPermissions } from "../../utils/auth/authorization";
 import { error } from "../../utils/constants/constants";
+import { deleteBanner as deleteBannerById } from "../../storage/banners";
 // types
 import { StatusCodes, UserRoles } from "../../utils/types";
 
@@ -15,13 +15,8 @@ export const deleteBanner = handler(async (event, _context) => {
   } else if (!event?.pathParameters?.bannerId!) {
     throw new Error(error.NO_KEY);
   } else {
-    const params = {
-      TableName: process.env.BANNER_TABLE_NAME!,
-      Key: {
-        key: event?.pathParameters?.bannerId!,
-      },
-    };
-    await dynamoDb.delete(params);
-    return { status: StatusCodes.SUCCESS, body: params };
+    const bannerId = event?.pathParameters?.bannerId!;
+    await deleteBannerById(bannerId);
+    return { status: StatusCodes.SUCCESS, body: { Key: bannerId } };
   }
 });

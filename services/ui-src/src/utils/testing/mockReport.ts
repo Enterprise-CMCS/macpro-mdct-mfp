@@ -11,7 +11,7 @@ import {
 } from "./mockForm";
 
 export const mockReportPeriod = 1;
-export const mockReportYear = 2023;
+export const mockReportYear = 2024;
 export const mockStateName = "Puerto Rico";
 
 export const mockReportRoutes = [

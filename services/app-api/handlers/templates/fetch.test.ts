@@ -9,8 +9,10 @@ jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockReturnValue(true),
 }));
 
-jest.mock("../../utils/s3/s3-lib", () => ({
-  getSignedDownloadUrl: jest.fn().mockReturnValue("s3://fakeurl.bucket.here"),
+jest.mock("../../storage/templates", () => ({
+  getTemplateDownloadUrl: jest
+    .fn()
+    .mockResolvedValue("s3://fakeurl.bucket.here"),
 }));
 
 const testEvent: APIGatewayProxyEvent = {
@@ -27,10 +29,6 @@ const consoleSpy: {
 };
 
 describe("Test fetchTemplate API method", () => {
-  beforeAll(() => {
-    process.env["TEMPLATE_BUCKET"] = "fakeTestBucket";
-  });
-
   test("Test Successful template url fetch with WP", async () => {
     const wpEvent: APIGatewayProxyEvent = {
       ...testEvent,

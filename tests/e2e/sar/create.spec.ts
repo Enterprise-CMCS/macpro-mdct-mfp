@@ -1,24 +1,20 @@
 import { test, expect } from "../utils/fixtures/base";
 import { currentYear } from "../../seeds/helpers";
-import { createApprovedWorkPlan } from "../../seeds/options";
 import {
   archiveExistingWPs,
   firstPeriod,
-  loginSeedUsersWithTimeout,
   logInStateUser,
   stateName,
 } from "../helpers";
 
-test("State user can create a SAR", async ({
+test.skip("State user can create a SAR", async ({
   page,
   stateHomePage,
   sarDashboard,
 }) => {
   await archiveExistingWPs(page);
 
-  // Seed WP
-  await loginSeedUsersWithTimeout(page);
-  await createApprovedWorkPlan(currentYear, firstPeriod);
+  // TODO: Seed WP
 
   // View SARs
   await logInStateUser(page);

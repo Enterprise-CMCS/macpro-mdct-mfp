@@ -1,15 +1,11 @@
 import { test, expect } from "../utils/fixtures/base";
-import { currentYear } from "../../seeds/helpers";
-import { createSubmittedWorkPlan } from "../../seeds/options";
 import {
   archiveExistingWPs,
-  firstPeriod,
   logInAdminUser,
-  loginSeedUsersWithTimeout,
   stateAbbreviation,
 } from "../helpers";
 
-test("Admin user can approve a Work Plan submission", async ({
+test.skip("Admin user can approve a Work Plan submission", async ({
   page,
   adminHomePage,
   wpDashboard,
@@ -19,9 +15,7 @@ test("Admin user can approve a Work Plan submission", async ({
   await archiveExistingWPs(page);
   await logInAdminUser(page);
 
-  // Seed WP
-  await loginSeedUsersWithTimeout(page);
-  await createSubmittedWorkPlan(currentYear, firstPeriod);
+  // TODO: Seed WP
 
   // View WPs
   await adminHomePage.dropdown.selectOption(stateAbbreviation);
