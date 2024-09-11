@@ -11,9 +11,8 @@ test("State user can create a Work Plan", async ({
 
   // View WPs
   await stateHomePage.wpButton.click();
-  await expect(wpDashboard.page).toHaveURL(wpDashboard.path);
-
   await wpDashboard.isReady();
+
   // check if work plans exist already or not
   if (await wpDashboard.createButton.isVisible()) {
     await wpDashboard.createButton.click();

@@ -21,11 +21,10 @@ test.skip("Admin user can approve a Work Plan submission", async ({
   await adminHomePage.dropdown.selectOption(stateAbbreviation);
   await adminHomePage.selectWP();
   await adminHomePage.goToDashboard();
-  await expect(wpDashboard.page).toHaveURL(wpDashboard.path);
 
   // View submitted WP
   await wpDashboard.isReady();
-  await expect(wpDashboard.page.getByRole("table")).toBeVisible();
+  await wpDashboard.reportsReady();
 
   const editedBy = await wpDashboard.submittedReport
     .getByRole("gridcell")
@@ -36,11 +35,10 @@ test.skip("Admin user can approve a Work Plan submission", async ({
     .click();
 
   await wpGeneralInformation.isReady();
-  await expect(wpGeneralInformation.page).toHaveURL(wpGeneralInformation.path);
 
   // Approve WP
   await wpReviewAndSubmit.goto();
-  await expect(wpReviewAndSubmit.page).toHaveURL(wpReviewAndSubmit.path);
+  await wpReviewAndSubmit.isReady();
   await wpReviewAndSubmit.approveButton.click();
 
   await expect(wpReviewAndSubmit.approveModal).toBeVisible();
@@ -49,7 +47,6 @@ test.skip("Admin user can approve a Work Plan submission", async ({
 
   // Confirm approved WP is in table
   await wpDashboard.isReady();
-  await expect(wpDashboard.page).toHaveURL(wpDashboard.path);
   await expect(wpDashboard.page.getByRole("table")).toBeVisible();
   await expect(
     wpDashboard.page.getByRole("row", {

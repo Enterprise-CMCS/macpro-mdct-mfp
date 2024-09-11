@@ -47,8 +47,7 @@ export class WPDashboardPage extends BasePage {
       .last();
   }
 
-  public async isReady() {
-    await this.title.isVisible();
+  public async reportsReady() {
     await this.getReports();
     await this.page.getByRole("rowheader", { name: "Submission name" });
   }
