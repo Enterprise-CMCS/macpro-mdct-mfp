@@ -59,17 +59,17 @@ export const createWorkPlan = async (
   customReportPeriod?: number
 ): Promise<SeedReportShape> => {
   const requestPath = `/reports/WP/${state}`;
-  const signedHeaders = awsSignedHeaders("POST", requestPath);
+  const signedHeaders = awsSignedHeaders(
+    "POST",
+    requestPath,
+    clean(newWorkPlan(stateName, customReportYear, customReportPeriod))
+  );
   if (!headers["x-api-key"]) {
     await loginSeedUsers();
   }
   headers = await updateHeaders(headers, signedHeaders);
 
-  const report = await postApi(
-    requestPath,
-    headers,
-    clean(newWorkPlan(stateName, customReportYear, customReportPeriod))
-  );
+  const report = await postApi(requestPath, headers, {});
   return report;
 };
 
@@ -83,17 +83,17 @@ export const createFilledWorkPlan = async (
   );
 
   const requestPath = `/reports/WP/${state}/${id}`;
-  const signedHeaders = awsSignedHeaders("PUT", requestPath);
+  const signedHeaders = awsSignedHeaders(
+    "PUT",
+    requestPath,
+    clean(fillWorkPlan(reportYear, reportPeriod))
+  );
   if (!headers["x-api-key"]) {
     await loginSeedUsers();
   }
   headers = await updateHeaders(headers, signedHeaders);
 
-  const report = await putApi(
-    requestPath,
-    headers,
-    clean(fillWorkPlan(reportYear, reportPeriod))
-  );
+  const report = await putApi(requestPath, headers, {});
   return report;
 };
 
