@@ -52,11 +52,16 @@ export const awsSignedHeaders = (
   // Create the canonical request
   const canonicalUri = endpoint;
   const canonicalQuerystring = "";
-  const canonicalHeaders = `host:${host}\n`;
+  const canonicalHeaders = `host:${host}`;
   const payloadHash = payload
     ? crypto.createHash("sha256").update(JSON.stringify(payload)).digest("hex")
     : "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"; // pragma: allowlist secret
-  const canonicalRequest = `${method}\n${canonicalUri}\n${canonicalQuerystring}\n${canonicalHeaders}\nhost;x-amz-date;x-amz-security-token;x-api-key\n${payloadHash}`;
+  const canonicalRequest = `${method}
+${canonicalUri}
+${canonicalQuerystring}
+${canonicalHeaders}
+host;x-amz-date;x-amz-security-token;x-api-key
+${payloadHash}`;
 
   // Create the string to sign
   const credentialScope = `${dateStamp}/${region}/execute-api/aws4_request`;
@@ -64,7 +69,10 @@ export const awsSignedHeaders = (
     .createHash("sha256")
     .update(canonicalRequest)
     .digest("hex");
-  const stringToSign = `AWS4-HMAC-SHA256\n${amzDate}\n${credentialScope}\n${hashCanonicalRequest}`;
+  const stringToSign = `AWS4-HMAC-SHA256
+${amzDate}
+${credentialScope}
+${hashCanonicalRequest}`;
 
   // Sign the string
   const getSignatureKey = (
