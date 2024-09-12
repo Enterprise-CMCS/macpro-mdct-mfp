@@ -17,7 +17,9 @@ import { AwsHeaders, SeedBannerShape, SeedReportShape } from "./types";
 
 function decomment(json: any) {
   const content = JSON.stringify(json);
-  return JSON.parse(content);
+  const regex = new RegExp("'", "g");
+  const result = content.replace(regex, "");
+  return JSON.parse(result);
 }
 
 const adminUser: string | undefined = process.env.SEED_ADMIN_USER_EMAIL;
