@@ -29,7 +29,7 @@ const sessionToken: string | undefined = process.env.AWS_SESSION_TOKEN;
 export const awsSignedHeaders = (
   method: string,
   endpoint: string,
-  payload: any
+  payload?: any
 ): AwsHeaders | undefined => {
   if (!accessKey || !secretKey || !sessionToken) {
     return;
@@ -53,10 +53,9 @@ export const awsSignedHeaders = (
   const canonicalUri = endpoint;
   const canonicalQuerystring = "";
   const canonicalHeaders = `host:${host}\n`;
-  const payloadHash = crypto
-    .createHash("sha256")
-    .update(JSON.stringify(payload))
-    .digest("hex");
+  const payloadHash = payload
+    ? crypto.createHash("sha256").update(JSON.stringify(payload)).digest("hex")
+    : "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"; // pragma: allowlist secret
   const canonicalRequest = `${method}\n${canonicalUri}\n${canonicalQuerystring}\n${canonicalHeaders}\nhost;x-amz-date;x-amz-security-token;x-api-key\n${payloadHash}`;
 
   // Create the string to sign
