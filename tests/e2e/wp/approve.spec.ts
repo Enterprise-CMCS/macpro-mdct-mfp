@@ -1,16 +1,21 @@
 import { expect, test } from "@playwright/test";
 import {
   archiveExistingWPs,
+  firstPeriod,
   logInAdminUser,
+  loginSeedUsersWithTimeout,
   stateAbbreviation,
 } from "../helpers";
+import { createSubmittedWorkPlan } from "../../seeds/options";
+import { currentYear } from "../../seeds/helpers";
 
-// TODO: Unskip
-test.skip("Admin user can approve a Work Plan submission", async ({ page }) => {
+test("Admin user can approve a Work Plan submission", async ({ page }) => {
   await archiveExistingWPs(page);
   await logInAdminUser(page);
 
-  // TODO: Seed WP
+  // Seed WP
+  await loginSeedUsersWithTimeout(page);
+  await createSubmittedWorkPlan(currentYear, firstPeriod);
 
   // View WPs
   await page

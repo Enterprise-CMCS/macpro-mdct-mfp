@@ -8,16 +8,105 @@ import * as dotenv from "dotenv";
 import { faker } from "@faker-js/faker";
 import { ReportFieldData } from "../../services/app-api/utils/types";
 import { AwsHeaders } from "./types";
+import crypto, { BinaryLike } from "crypto";
 
 dotenv.config({ path: "../../.env" });
 
 const apiUrl: string | undefined = process.env.API_URL;
 const clientId: string | undefined = process.env.COGNITO_USER_POOL_CLIENT_ID;
-const region: string | undefined =
-  process.env.COGNITO_USER_POOL_ID?.split("_")[0];
+const region: string =
+  process.env.COGNITO_USER_POOL_ID?.split("_")[0] ||
+  process.env.COGNITO_REGION ||
+  "";
 const userPoolId: string | undefined =
-  process.env.COGNITO_USER_POOL_ID?.split("_")[1];
+  process.env.COGNITO_USER_POOL_ID?.split("_")[1] ||
+  process.env.COGNITO_USER_ID;
 const cognitoUrl: string = `https://cognito-idp.${region}.amazonaws.com`;
+const accessKey: string | undefined = process.env.AWS_ACCESS_KEY_ID;
+const secretKey: string | undefined = process.env.AWS_SECRET_ACCESS_KEY;
+const sessionToken: string | undefined = process.env.AWS_SESSION_TOKEN;
+
+export const awsSignedHeaders = (
+  method: string,
+  endpoint: string,
+  payload: any
+): AwsHeaders | undefined => {
+  if (!accessKey || !secretKey || !sessionToken) {
+    return;
+  }
+
+  // Request parameters
+  const host = new URL(apiUrl || "").hostname;
+
+  // Create a datetime object for signing
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const month = String(now.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(now.getUTCDate()).padStart(2, "0");
+  const hours = String(now.getUTCHours()).padStart(2, "0");
+  const minutes = String(now.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(now.getUTCSeconds()).padStart(2, "0");
+  const amzDate = `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
+  const dateStamp = amzDate.slice(0, 8);
+
+  // Create the canonical request
+  const canonicalUri = endpoint;
+  const canonicalQuerystring = "";
+  const canonicalHeaders = `host:${host}\n`;
+  const payloadHash = crypto
+    .createHash("sha256")
+    .update(JSON.stringify(payload))
+    .digest("hex");
+  const canonicalRequest = `${method}\n${canonicalUri}\n${canonicalQuerystring}\n${canonicalHeaders}\nhost;x-amz-date;x-amz-security-token;x-api-key\n${payloadHash}`;
+
+  // Create the string to sign
+  const credentialScope = `${dateStamp}/${region}/execute-api/aws4_request`;
+  const hashCanonicalRequest = crypto
+    .createHash("sha256")
+    .update(canonicalRequest)
+    .digest("hex");
+  const stringToSign = `AWS4-HMAC-SHA256\n${amzDate}\n${credentialScope}\n${hashCanonicalRequest}`;
+
+  // Sign the string
+  const getSignatureKey = (
+    key: string,
+    dateStamp: BinaryLike,
+    regionName: BinaryLike
+  ) => {
+    const kDate = crypto
+      .createHmac("SHA256", `AWS4${key}`)
+      .update(dateStamp)
+      .digest();
+    const kRegion = crypto
+      .createHmac("SHA256", kDate)
+      .update(regionName)
+      .digest();
+    const kService = crypto
+      .createHmac("SHA256", kRegion)
+      .update("execute-api")
+      .digest();
+    const kSigning = crypto
+      .createHmac("SHA256", kService)
+      .update("aws4_request")
+      .digest();
+    return kSigning;
+  };
+  const signingKey = getSignatureKey(secretKey, dateStamp, region);
+  const signature = crypto
+    .createHmac("sha256", signingKey)
+    .update(stringToSign)
+    .digest("hex");
+
+  // Add signing information to the request
+  const authorization = `AWS4-HMAC-SHA256 Credential=${accessKey}/${credentialScope}, SignedHeaders=host;x-amz-date;x-amz-security-token;x-api-key, Signature=${signature}`;
+
+  return {
+    authorization,
+    host,
+    "x-amz-date": amzDate,
+    "x-amz-security-token": sessionToken,
+  };
+};
 
 const errorResponse = (error: any): void => {
   if (error?.cause?.code === "ECONNREFUSED") {
@@ -175,7 +264,7 @@ export const login = async (
           "AWSCognitoIdentityProviderService.RespondToAuthChallenge",
       },
       {
-        ClientId: process.env.COGNITO_USER_POOL_CLIENT_ID,
+        ClientId: clientId,
         ChallengeName,
         ChallengeResponses: {
           PASSWORD_CLAIM_SIGNATURE: signatureString,

@@ -5,8 +5,20 @@ import {
   newSemiAnnualReport,
   newWorkPlan,
 } from "./fixtures";
-import { deleteApi, getApi, login, postApi, putApi } from "./helpers";
+import {
+  awsSignedHeaders,
+  deleteApi,
+  getApi,
+  login,
+  postApi,
+  putApi,
+} from "./helpers";
 import { AwsHeaders, SeedBannerShape, SeedReportShape } from "./types";
+
+function decomment(json: any) {
+  const content = JSON.stringify(json);
+  return JSON.parse(content);
+}
 
 const adminUser: string | undefined = process.env.SEED_ADMIN_USER_EMAIL;
 const adminPassword: string | undefined = process.env.SEED_ADMIN_USER_PASSWORD;
@@ -26,15 +38,39 @@ export const loginSeedUsers = async (): Promise<void> => {
   adminHeaders["x-api-key"] = adminLogin.IdToken;
 };
 
+async function updateHeaders(
+  headers: AwsHeaders,
+  signedHeaders: AwsHeaders | undefined
+) {
+  if (signedHeaders) {
+    headers["authorization"] = signedHeaders.authorization;
+    headers["host"] = signedHeaders.host;
+    headers["x-amz-date"] = signedHeaders["x-amz-date"];
+    headers["x-amz-security-token"] = signedHeaders["x-amz-security-token"];
+  }
+  return headers;
+}
+
 // Work Plan (WP)
 export const createWorkPlan = async (
   customReportYear?: number,
   customReportPeriod?: number
 ): Promise<SeedReportShape> => {
+  const requestPath = `/reports/WP/${state}`;
+  const signedHeaders = awsSignedHeaders(
+    "POST",
+    requestPath,
+    decomment(newWorkPlan(stateName, customReportYear, customReportPeriod))
+  );
+  if (!headers["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  headers = await updateHeaders(headers, signedHeaders);
+
   const report = await postApi(
-    `/reports/WP/${state}`,
+    requestPath,
     headers,
-    newWorkPlan(stateName, customReportYear, customReportPeriod)
+    decomment(newWorkPlan(stateName, customReportYear, customReportPeriod))
   );
   return report;
 };
@@ -47,10 +83,22 @@ export const createFilledWorkPlan = async (
     customReportYear,
     customReportPeriod
   );
+
+  const requestPath = `/reports/WP/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders(
+    "POST",
+    requestPath,
+    decomment(fillWorkPlan(reportYear, reportPeriod))
+  );
+  if (!headers["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  headers = await updateHeaders(headers, signedHeaders);
+
   const report = await putApi(
-    `/reports/WP/${state}/${id}`,
+    requestPath,
     headers,
-    fillWorkPlan(reportYear, reportPeriod)
+    decomment(fillWorkPlan(reportYear, reportPeriod))
   );
   return report;
 };
@@ -63,11 +111,15 @@ export const createSubmittedWorkPlan = async (
     customReportYear,
     customReportPeriod
   );
-  const report = await postApi(
-    `/reports/submit/WP/${state}/${id}`,
-    headers,
-    {}
-  );
+
+  const requestPath = `/reports/submit/WP/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders("POST", requestPath, {});
+  if (!headers["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  headers = await updateHeaders(headers, signedHeaders);
+
+  const report = await postApi(requestPath, headers, {});
   return report;
 };
 
@@ -79,11 +131,15 @@ export const createApprovedWorkPlan = async (
     customReportYear,
     customReportPeriod
   );
-  const report = await putApi(
-    `/reports/approve/WP/${state}/${id}`,
-    adminHeaders,
-    {}
-  );
+
+  const requestPath = `/reports/approve/WP/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders("POST", requestPath, {});
+  if (!adminHeaders["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  adminHeaders = await updateHeaders(adminHeaders, signedHeaders);
+
+  const report = await putApi(requestPath, adminHeaders, {});
   return report;
 };
 
@@ -95,11 +151,15 @@ export const createLockedWorkPlan = async (
     customReportYear,
     customReportPeriod
   );
-  const report = await putApi(
-    `/reports/release/WP/${state}/${id}`,
-    adminHeaders,
-    {}
-  );
+
+  const requestPath = `/reports/release/WP/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders("POST", requestPath, {});
+  if (!adminHeaders["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  adminHeaders = await updateHeaders(adminHeaders, signedHeaders);
+
+  const report = await putApi(requestPath, adminHeaders, {});
   return report;
 };
 
@@ -111,21 +171,39 @@ export const createArchivedWorkPlan = async (
     customReportYear,
     customReportPeriod
   );
-  const report = await putApi(
-    `/reports/archive/WP/${state}/${id}`,
-    adminHeaders,
-    {}
-  );
+
+  const requestPath = `/reports/archive/WP/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders("POST", requestPath, {});
+  if (!adminHeaders["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  adminHeaders = await updateHeaders(adminHeaders, signedHeaders);
+
+  const report = await putApi(requestPath, adminHeaders, {});
   return report;
 };
 
 export const getWorkPlanById = async (id: string): Promise<SeedReportShape> => {
-  const report = await getApi(`/reports/WP/${state}/${id}`, headers);
+  const requestPath = `/reports/WP/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders("GET", requestPath, {});
+  if (!headers["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  headers = await updateHeaders(headers, signedHeaders);
+
+  const report = await getApi(requestPath, headers);
   return report;
 };
 
 export const getWorkPlansByState = async (): Promise<SeedReportShape[]> => {
-  const reports = await getApi(`/reports/WP/${state}`, headers);
+  const requestPath = `/reports/WP/${state}`;
+  const signedHeaders = awsSignedHeaders("GET", requestPath, {});
+  if (!adminHeaders["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  adminHeaders = await updateHeaders(adminHeaders, signedHeaders);
+
+  const reports = await getApi(requestPath, headers);
   return reports;
 };
 
@@ -140,10 +218,21 @@ export const createSemiAnnualReport = async (
   );
   const wp = await getWorkPlanById(id);
 
+  const requestPath = `/reports/SAR/${state}`;
+  const signedHeaders = awsSignedHeaders(
+    "POST",
+    requestPath,
+    decomment(newSemiAnnualReport(wp))
+  );
+  if (!headers["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  headers = await updateHeaders(headers, signedHeaders);
+
   const report = await postApi(
-    `/reports/SAR/${state}`,
+    requestPath,
     headers,
-    newSemiAnnualReport(wp)
+    decomment(newSemiAnnualReport(wp))
   );
 
   return report;
@@ -158,10 +247,21 @@ export const createFilledSemiAnnualReport = async (
     customReportPeriod
   );
 
+  const requestPath = `/reports/SAR/${state}/${sar.id}`;
+  const signedHeaders = awsSignedHeaders(
+    "POST",
+    requestPath,
+    decomment(fillSemiAnnualReport(sar))
+  );
+  if (!headers["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  headers = await updateHeaders(headers, signedHeaders);
+
   const report = await putApi(
-    `/reports/SAR/${state}/${sar.id}`,
+    requestPath,
     headers,
-    fillSemiAnnualReport(sar)
+    decomment(fillSemiAnnualReport(sar))
   );
 
   return report;
@@ -175,11 +275,15 @@ export const createSubmittedSemiAnnualReport = async (
     customReportYear,
     customReportPeriod
   );
-  const report = await postApi(
-    `/reports/submit/SAR/${state}/${id}`,
-    headers,
-    {}
-  );
+
+  const requestPath = `/reports/submit/SAR/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders("POST", requestPath, {});
+  if (!headers["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  headers = await updateHeaders(headers, signedHeaders);
+
+  const report = await postApi(requestPath, headers, {});
   return report;
 };
 
@@ -191,11 +295,15 @@ export const createLockedSemiAnnualReport = async (
     customReportYear,
     customReportPeriod
   );
-  const report = await putApi(
-    `/reports/release/SAR/${state}/${id}`,
-    adminHeaders,
-    {}
-  );
+
+  const requestPath = `/reports/release/SAR/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders("POST", requestPath, {});
+  if (!adminHeaders["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  adminHeaders = await updateHeaders(adminHeaders, signedHeaders);
+
+  const report = await putApi(requestPath, adminHeaders, {});
   return report;
 };
 
@@ -207,25 +315,43 @@ export const createArchivedSemiAnnualReport = async (
     customReportYear,
     customReportPeriod
   );
-  const report = await putApi(
-    `/reports/archive/SAR/${state}/${id}`,
-    adminHeaders,
-    {}
-  );
+
+  const requestPath = `/reports/archive/SAR/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders("POST", requestPath, {});
+  if (!adminHeaders["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  adminHeaders = await updateHeaders(adminHeaders, signedHeaders);
+
+  const report = await putApi(requestPath, adminHeaders, {});
   return report;
 };
 
 export const getSemiAnnualReportById = async (
   id: string
 ): Promise<SeedReportShape> => {
-  const report = await getApi(`/reports/SAR/${state}/${id}`, adminHeaders);
+  const requestPath = `/reports/SAR/${state}/${id}`;
+  const signedHeaders = awsSignedHeaders("GET", requestPath, {});
+  if (!adminHeaders["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  adminHeaders = await updateHeaders(adminHeaders, signedHeaders);
+
+  const report = await getApi(requestPath, adminHeaders);
   return report;
 };
 
 export const getSemiAnnualReportsByState = async (): Promise<
   SeedReportShape[]
 > => {
-  const reports = await getApi(`/reports/SAR/${state}`, adminHeaders);
+  const requestPath = `/reports/SAR/${state}`;
+  const signedHeaders = awsSignedHeaders("GET", requestPath, {});
+  if (!adminHeaders["x-api-key"]) {
+    await loginSeedUsers();
+  }
+  adminHeaders = await updateHeaders(adminHeaders, signedHeaders);
+
+  const reports = await getApi(requestPath, adminHeaders);
   return reports;
 };
 

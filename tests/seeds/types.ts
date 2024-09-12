@@ -4,9 +4,13 @@ import {
 } from "../../services/app-api/utils/types";
 
 export type AwsHeaders = {
+  authorization?: string;
+  host?: string;
   "Content-Type"?: string;
   "X-Amz-Target"?: string;
   "x-api-key"?: string;
+  "x-amz-date"?: string;
+  "x-amz-security-token"?: string;
 };
 
 export type SeedReportMetadataShape = Omit<

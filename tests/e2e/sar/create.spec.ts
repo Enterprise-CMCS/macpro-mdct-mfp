@@ -3,17 +3,20 @@ import { currentYear } from "../../seeds/helpers";
 import {
   archiveExistingWPs,
   firstPeriod,
+  loginSeedUsersWithTimeout,
   logInStateUser,
   stateAbbreviation,
   stateName,
 } from "../helpers";
+import { createApprovedWorkPlan } from "../../seeds/options";
 
-// TODO: Unskip
-test.skip("State user can create a SAR", async ({ page }) => {
+test("State user can create a SAR", async ({ page }) => {
   await archiveExistingWPs(page);
   await logInStateUser(page);
 
-  // TODO: Seed WP
+  // Seed WP
+  await loginSeedUsersWithTimeout(page);
+  await createApprovedWorkPlan(currentYear, firstPeriod);
 
   // View SARs
   await page.getByRole("button", { name: "Enter SAR online" }).click();
