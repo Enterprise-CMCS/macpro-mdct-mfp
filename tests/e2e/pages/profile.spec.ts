@@ -1,5 +1,5 @@
 import { test } from "@playwright/test";
-import { logInStateUser, logInAdminUser, e2eA11y } from "../helpers";
+import { e2eA11y, logInAdminUser, logInStateUser } from "../utils";
 
 test("Is accessible on all device types for state user", async ({ page }) => {
   await logInStateUser(page);
