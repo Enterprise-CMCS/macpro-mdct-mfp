@@ -55,7 +55,7 @@ export const TemplateCard = ({
           <Flex sx={sx.actionsFlex}>
             {verbiage.downloadText && (
               <Button
-                variant="link"
+                variant="transparent"
                 sx={sx.templateDownloadButton}
                 leftIcon={
                   <Image
