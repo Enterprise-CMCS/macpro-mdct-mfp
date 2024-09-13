@@ -277,6 +277,8 @@ jobs:
     needs:
       - deploy
       - register-runner
+      - e2e-test
+      - a11y-tests
     if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
