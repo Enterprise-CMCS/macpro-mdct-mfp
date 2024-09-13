@@ -33,8 +33,7 @@ export class SARDashboardPage extends BasePage {
       .first();
   }
 
-  public async isReady() {
-    await this.title.isVisible();
+  public async reportsReady() {
     await this.getReports();
     await this.page.getByRole("rowheader", { name: "Submission name" });
   }

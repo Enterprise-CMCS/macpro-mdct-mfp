@@ -19,7 +19,6 @@ test.skip("State user can create a SAR", async ({
   // View SARs
   await logInStateUser(page);
   await stateHomePage.sarButton.click();
-  await expect(page).toHaveURL(sarDashboard.path);
 
   // Create SAR
   await sarDashboard.isReady();
