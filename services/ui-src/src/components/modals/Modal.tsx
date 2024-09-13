@@ -47,7 +47,7 @@ export const Modal = ({
           <Button
             sx={sx.modalClose}
             leftIcon={<Image src={closeIcon} alt="Close" sx={sx.closeIcon} />}
-            variant="link"
+            variant="transparent"
             onClick={modalDisclosure.onClose}
           >
             Close
@@ -79,7 +79,7 @@ export const Modal = ({
             )}
             <Button
               sx={sx.close}
-              variant="link"
+              variant="transparent"
               onClick={modalDisclosure.onClose}
             >
               {content.closeButtonText}

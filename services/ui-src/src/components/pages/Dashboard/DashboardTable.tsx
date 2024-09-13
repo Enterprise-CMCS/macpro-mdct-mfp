@@ -238,7 +238,7 @@ const AdminReleaseButton = ({
   return (
     <Td>
       <Button
-        variant="link"
+        variant="transparent"
         disabled={isDisabled}
         sx={sxOverride.adminActionButton}
         onClick={() => releaseReport!(report)}
@@ -261,7 +261,7 @@ const AdminArchiveButton = ({
         <Text sx={sx.archivedText}>Archived</Text>
       ) : (
         <Button
-          variant="link"
+          variant="transparent"
           sx={sxOverride.adminActionButton}
           onClick={() => archive(report)}
           disabled={report?.archived}
