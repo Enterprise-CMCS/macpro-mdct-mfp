@@ -162,7 +162,7 @@ describe("Test createReport API method", () => {
   test("Test unauthorized report creation throws 401 error", async () => {
     jest.spyOn(authFunctions, "isAuthorized").mockResolvedValueOnce(false);
     const res = await createReport(wpCreationEvent, null);
-    expect(res.statusCode).toBe(StatusCodes.Unauthorized);
+    expect(res.statusCode).toBe(StatusCodes.Unauthenticated);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 

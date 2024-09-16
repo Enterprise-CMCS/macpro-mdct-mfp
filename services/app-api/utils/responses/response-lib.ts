@@ -22,9 +22,12 @@ export const badRequest = (body?: Object) =>
 /**
  * The response for a client without any authorization.
  * Typically indicates an issue with the request's headers or token.
+ *
+ * Note: The usual name for HTTP 401 is "Unauthorized", but that's misleading.
+ * Authentication is for identity; authorization is for permissions.
  */
-export const unauthorized = (body?: Object) =>
-  new HttpResponse(StatusCodes.Unauthorized, body);
+export const unauthenticated = (body?: Object) =>
+  new HttpResponse(StatusCodes.Unauthenticated, body);
 
 /**
  * The response for a client without sufficient permissions.
@@ -65,7 +68,7 @@ export enum StatusCodes {
   Ok = 200,
   Created = 201,
   BadRequest = 400,
-  Unauthorized = 401,
+  Unauthenticated = 401,
   Forbidden = 403,
   NotFound = 404,
   Conflict = 409,

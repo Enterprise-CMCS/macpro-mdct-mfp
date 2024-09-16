@@ -1,6 +1,6 @@
 import handlerLib from "./handler-lib";
 import { proxyEvent } from "../utils/testing/proxyEvent";
-import { isAuthorized } from "../utils/auth/authorization";
+import { isAuthenticated } from "../utils/auth/authorization";
 import * as logger from "../utils/debugging/debug-lib";
 import { ok, StatusCodes } from "../utils/responses/response-lib";
 
@@ -20,7 +20,7 @@ describe("Test Lambda Handler Lib", () => {
     const testFunc = jest.fn().mockReturnValue(ok("test"));
     const handler = handlerLib(testFunc);
 
-    (isAuthorized as jest.Mock).mockReturnValue(true);
+    (isAuthenticated as jest.Mock).mockReturnValue(true);
     const res = await handler(proxyEvent, null);
 
     expect(res.statusCode).toBe(StatusCodes.Ok);
@@ -42,10 +42,10 @@ describe("Test Lambda Handler Lib", () => {
     const testFunc = jest.fn();
     const handler = handlerLib(testFunc);
 
-    (isAuthorized as jest.Mock).mockReturnValue(false);
+    (isAuthenticated as jest.Mock).mockReturnValue(false);
     const res = await handler(proxyEvent, null);
 
-    expect(res.statusCode).toBe(StatusCodes.Unauthorized);
+    expect(res.statusCode).toBe(StatusCodes.Unauthenticated);
     expect(res.body).toStrictEqual(
       '"User is not authorized to access this resource."'
     );
@@ -58,7 +58,7 @@ describe("Test Lambda Handler Lib", () => {
     });
     const handler = handlerLib(testFunc);
 
-    (isAuthorized as jest.Mock).mockReturnValue(true);
+    (isAuthenticated as jest.Mock).mockReturnValue(true);
     const res = await handler(proxyEvent, null);
 
     expect(testFunc).toHaveBeenCalledWith(proxyEvent, null);

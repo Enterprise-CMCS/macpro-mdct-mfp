@@ -2,7 +2,7 @@ import {
   ok,
   created,
   badRequest,
-  unauthorized,
+  unauthenticated,
   forbidden,
   notFound,
   conflict,
@@ -14,7 +14,7 @@ describe("HTTP Response helper functions", () => {
     expect(ok({}).statusCode).toBe(200);
     expect(created({}).statusCode).toBe(201);
     expect(badRequest({}).statusCode).toBe(400);
-    expect(unauthorized({}).statusCode).toBe(401);
+    expect(unauthenticated({}).statusCode).toBe(401);
     expect(forbidden({}).statusCode).toBe(403);
     expect(notFound({}).statusCode).toBe(404);
     expect(conflict({}).statusCode).toBe(409);

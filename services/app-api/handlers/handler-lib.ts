@@ -1,10 +1,10 @@
 // utils
 import * as logger from "../utils/debugging/debug-lib";
-import { isAuthorized } from "../utils/auth/authorization";
+import { isAuthenticated } from "../utils/auth/authorization";
 import {
   HttpResponse,
   internalServerError,
-  unauthorized,
+  unauthenticated,
 } from "../utils/responses/response-lib";
 import { error } from "../utils/constants/constants";
 import { sanitizeObject } from "../utils/sanitize/sanitize";
@@ -25,7 +25,7 @@ export default function handler(lambda: LambdaFunction) {
       pathParameters: event.pathParameters,
       queryStringParameters: event.queryStringParameters,
     });
-    if (await isAuthorized(event)) {
+    if (await isAuthenticated(event)) {
       try {
         if (event.body) {
           const newEventBody = sanitizeObject(JSON.parse(event.body));
@@ -41,7 +41,7 @@ export default function handler(lambda: LambdaFunction) {
         logger.flush();
       }
     } else {
-      return unauthorized(error.UNAUTHORIZED);
+      return unauthenticated(error.UNAUTHORIZED);
     }
   };
 }
