@@ -1,9 +1,8 @@
 import handler from "../handler-lib";
-// types
-import { StatusCodes } from "../../utils/types";
 // utils
 import { error } from "../../utils/constants/constants";
 import { getBanner } from "../../storage/banners";
+import { ok } from "../../utils/responses/response-lib";
 
 export const fetchBanner = handler(async (event, _context) => {
   if (!event?.pathParameters?.bannerId!) {
@@ -11,5 +10,5 @@ export const fetchBanner = handler(async (event, _context) => {
   }
   const bannerId = event?.pathParameters?.bannerId!;
   const banner = await getBanner(bannerId);
-  return { status: StatusCodes.SUCCESS, body: banner };
+  return ok(banner);
 });

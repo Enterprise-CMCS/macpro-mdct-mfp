@@ -36,26 +36,26 @@ import {
   APIGatewayProxyEvent,
   ReportMetadataShape,
   ReportType,
-  StatusCodes,
   UserRoles,
 } from "../../utils/types";
+import {
+  badRequest,
+  created,
+  forbidden,
+  internalServerError,
+  notFound,
+} from "../../utils/responses/response-lib";
 
 export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
     const { allParamsValid, reportType, state } =
       parseStateReportParameters(event);
     if (!allParamsValid) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.NO_KEY,
-      };
+      return badRequest(error.NO_KEY);
     }
 
     if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
-      return {
-        status: StatusCodes.UNAUTHORIZED,
-        body: error.UNAUTHORIZED,
-      };
+      return forbidden(error.UNAUTHORIZED);
     }
 
     const reportTypeExpanded = reportNames[reportType];
@@ -80,10 +80,7 @@ export const createReport = handler(
       reportType === ReportType.SAR &&
       (!workPlanMetadata || !workPlanFieldData)
     ) {
-      return {
-        status: StatusCodes.NOT_FOUND,
-        body: error.NO_WORKPLANS_FOUND,
-      };
+      return notFound(error.NO_WORKPLANS_FOUND);
     }
 
     // Check the payload that was sent with the request and setup validation
@@ -131,10 +128,7 @@ export const createReport = handler(
 
     // Return MISSING_DATA error if missing unvalidated data or validators.
     if (!unvalidatedFieldData || !formTemplate.validationJson) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.MISSING_DATA,
-      };
+      return badRequest(error.MISSING_DATA);
     }
 
     // Setup validation for what we expect to see in the payload
@@ -155,10 +149,7 @@ export const createReport = handler(
 
     // Return INVALID_DATA error if field data is not valid.
     if (!validatedFieldData || Object.keys(validatedFieldData).length === 0) {
-      return {
-        status: StatusCodes.SERVER_ERROR,
-        body: error.INVALID_DATA,
-      };
+      return badRequest(error.INVALID_DATA);
     }
     // End Section - Check the payload that was sent with the request and validate it
 
@@ -178,10 +169,7 @@ export const createReport = handler(
 
       //do not allow user to create a copy if it's the same period
       if (isCurrentPeriod && !overrideCopyOver) {
-        return {
-          status: StatusCodes.UNAUTHORIZED,
-          body: error.UNABLE_TO_COPY,
-        };
+        return badRequest(error.UNABLE_TO_COPY);
       }
 
       newFieldData = await copyFieldDataFromSource(
@@ -207,10 +195,7 @@ export const createReport = handler(
 
     // Return INVALID_DATA error if metadata is not valid.
     if (!validatedMetadata) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.INVALID_DATA,
-      };
+      return badRequest(error.INVALID_DATA);
     }
 
     const existingReports: ReportMetadataShape[] =
@@ -227,10 +212,7 @@ export const createReport = handler(
         existingReportYear === reportYear &&
         existingReportPeriod === reportPeriod
       ) {
-        return {
-          status: StatusCodes.BAD_REQUEST,
-          body: error.INVALID_DATA,
-        };
+        return badRequest(error.INVALID_DATA);
       }
     }
     const reportId: string = KSUID.randomSync().string;
@@ -243,10 +225,7 @@ export const createReport = handler(
         newFieldData
       );
     } catch {
-      return {
-        status: StatusCodes.SERVER_ERROR,
-        body: error.S3_OBJECT_CREATION_ERROR,
-      };
+      return internalServerError(error.S3_OBJECT_CREATION_ERROR);
     }
 
     // Begin Section - Create DyanmoDB record
@@ -277,10 +256,7 @@ export const createReport = handler(
     try {
       await putReportMetadata(createdReportMetadata);
     } catch {
-      return {
-        status: StatusCodes.SERVER_ERROR,
-        body: error.DYNAMO_CREATION_ERROR,
-      };
+      return internalServerError(error.DYNAMO_CREATION_ERROR);
     }
     // End Section - Create DynamoDB record.
 
@@ -294,23 +270,17 @@ export const createReport = handler(
       try {
         await putReportMetadata(workPlanWithSarConnection);
       } catch {
-        return {
-          status: StatusCodes.SERVER_ERROR,
-          body: error.DYNAMO_CREATION_ERROR,
-        };
+        return internalServerError(error.DYNAMO_CREATION_ERROR);
       }
     }
     // End Section - Let the Workplan know that its been tied to a SAR that was just created
 
     // Return successful creation response!
-    return {
-      status: StatusCodes.CREATED,
-      body: {
-        ...createdReportMetadata,
-        fieldData: validatedFieldData,
-        formTemplate,
-        formTemplateVersion: formTemplateVersion?.versionNumber,
-      },
-    };
+    return created({
+      ...createdReportMetadata,
+      fieldData: validatedFieldData,
+      formTemplate,
+      formTemplateVersion: formTemplateVersion?.versionNumber,
+    });
   }
 );
