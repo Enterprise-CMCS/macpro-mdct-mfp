@@ -20,7 +20,11 @@ import {
   getReportPeriod,
   getReportYear,
 } from "../../utils/other/other";
-import { putReportFieldData, putReportMetadata } from "../../storage/reports";
+import {
+  putReportFieldData,
+  putReportMetadata,
+  queryReportMetadatasForState,
+} from "../../storage/reports";
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { logger } from "../../utils/debugging/debug-lib";
 import { copyFieldDataFromSource } from "../../utils/other/copy";
@@ -196,6 +200,39 @@ export const createReport = handler(
      * to create a different SAR and attach all of its fieldData to the SAR Submissions FieldData
      */
 
+    // Validate the metadata for the submission
+    const validatedMetadata = await validateData(metadataValidationSchema, {
+      ...unvalidatedMetadata,
+    });
+
+    // Return INVALID_DATA error if metadata is not valid.
+    if (!validatedMetadata) {
+      return {
+        status: StatusCodes.BAD_REQUEST,
+        body: error.INVALID_DATA,
+      };
+    }
+
+    const existingReports: ReportMetadataShape[] =
+      await queryReportMetadatasForState(reportType, state);
+
+    for (const report of existingReports) {
+      const {
+        reportYear: existingReportYear,
+        reportPeriod: existingReportPeriod,
+        archived,
+      } = report;
+      if (
+        !archived &&
+        existingReportYear === reportYear &&
+        existingReportPeriod === reportPeriod
+      ) {
+        return {
+          status: StatusCodes.BAD_REQUEST,
+          body: error.INVALID_DATA,
+        };
+      }
+    }
     const reportId: string = KSUID.randomSync().string;
     const fieldDataId: string = KSUID.randomSync().string;
     const formTemplateId: string = formTemplateVersion?.id;
@@ -209,19 +246,6 @@ export const createReport = handler(
       return {
         status: StatusCodes.SERVER_ERROR,
         body: error.S3_OBJECT_CREATION_ERROR,
-      };
-    }
-
-    // Validate the metadata for the submission
-    const validatedMetadata = await validateData(metadataValidationSchema, {
-      ...unvalidatedMetadata,
-    });
-
-    // Return INVALID_DATA error if metadata is not valid.
-    if (!validatedMetadata) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.INVALID_DATA,
       };
     }
 

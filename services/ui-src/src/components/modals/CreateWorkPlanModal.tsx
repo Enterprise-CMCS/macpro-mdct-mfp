@@ -96,7 +96,11 @@ export const CreateWorkPlanModal = ({
 
   // reset error state to false upon modal close
   useEffect(() => {
-    if (!modalDisclosure.isOpen) setShowAlert(false);
+    if (!modalDisclosure.isOpen) {
+      setFormPeriodValue(undefined);
+      setFormYearValue(undefined);
+      setShowAlert(false);
+    }
   }, [modalDisclosure.isOpen]);
 
   // used to get the form values to enable/disable alert and submit button
