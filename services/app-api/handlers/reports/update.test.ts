@@ -16,7 +16,8 @@ import {
   putReportMetadata,
 } from "../../storage/reports";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
+import { StatusCodes } from "../../utils/responses/response-lib";
 
 jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
@@ -113,12 +114,12 @@ describe("Test updateReport API method", () => {
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
 
     const response = await updateReport(submissionEvent, null);
-    const body = JSON.parse(response.body);
+    const body = JSON.parse(response.body!);
 
     expect(body.status).toContain("submitted");
     expect(body.fieldData["mock-number-field"]).toBe("2");
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(response.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(response.statusCode).toBe(StatusCodes.Ok);
     expect(putReportFieldData).toHaveBeenCalled();
     expect(putReportMetadata).toHaveBeenCalled();
   });
@@ -131,7 +132,7 @@ describe("Test updateReport API method", () => {
     const response = await updateReport(invalidFieldDataSubmissionEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(response.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(response.statusCode).toBe(StatusCodes.InternalServerError);
     expect(response.body).toContain(error.INVALID_DATA);
     expect(putReportFieldData).not.toHaveBeenCalled();
     expect(putReportMetadata).not.toHaveBeenCalled();
@@ -141,7 +142,7 @@ describe("Test updateReport API method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res = await updateReport(updateEventWithInvalidData, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.MISSING_DATA);
   });
 
@@ -149,7 +150,7 @@ describe("Test updateReport API method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await updateReport(updateEventWithInvalidData, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(res.statusCode).toBe(StatusCodes.NotFound);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
@@ -162,7 +163,7 @@ describe("Test updateReport API method", () => {
     const res = await updateReport(updateEvent, null);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
+    expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
@@ -174,7 +175,7 @@ describe("Test updateReport API method", () => {
     const res = await updateReport(noKeyEvent, null);
 
     expect(consoleSpy.warn).toHaveBeenCalled();
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 
@@ -186,7 +187,7 @@ describe("Test updateReport API method", () => {
     const res = await updateReport(noKeyEvent, null);
 
     expect(consoleSpy.warn).toHaveBeenCalled();
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 });

@@ -5,7 +5,8 @@ import { error } from "../../utils/constants/constants";
 import { mockBannerResponse } from "../../utils/testing/setupJest";
 import { getBanner } from "../../storage/banners";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
+import { StatusCodes } from "../../utils/responses/response-lib";
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthorized: jest.fn().mockReturnValue(true),
@@ -41,7 +42,7 @@ describe("Test fetchBanner API method", () => {
     const res = await fetchBanner(testEvent, null);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(res.body).toContain("testDesc");
     expect(res.body).toContain("testTitle");
   });
@@ -52,7 +53,7 @@ describe("Test fetchBanner API method", () => {
 
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.body).not.toBeDefined();
-    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(res.statusCode).toBe(StatusCodes.Ok);
   });
 
   test("Test bannerKey not provided throws 500 error", async () => {
@@ -63,7 +64,7 @@ describe("Test fetchBanner API method", () => {
     const res = await fetchBanner(noKeyEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
     expect(res.body).toContain(error.NO_KEY);
   });
 
@@ -75,7 +76,7 @@ describe("Test fetchBanner API method", () => {
     const res = await fetchBanner(noKeyEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
     expect(res.body).toContain(error.NO_KEY);
   });
 });

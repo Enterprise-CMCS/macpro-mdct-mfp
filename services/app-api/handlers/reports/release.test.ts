@@ -17,7 +17,8 @@ import {
   putReportFieldData,
 } from "../../storage/reports";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
+import { StatusCodes } from "../../utils/responses/response-lib";
 
 jest.mock("../../storage/reports", () => ({
   getReportMetadata: jest.fn(),
@@ -64,10 +65,10 @@ describe("Test releaseReport method", () => {
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
 
     const res = await releaseReport(releaseEvent, null);
-    const body = JSON.parse(res.body);
+    const body = JSON.parse(res.body!);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(body.locked).toBe(false);
     expect(body.previousRevisions).toEqual([
       mockDynamoDataWPLocked.fieldDataId,
@@ -91,10 +92,10 @@ describe("Test releaseReport method", () => {
     (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
 
     const res = await releaseReport(releaseEvent, null);
-    const body = JSON.parse(res.body);
+    const body = JSON.parse(res.body!);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(body.locked).toBe(false);
     expect(body.submissionCount).toBe(1);
     expect(body.previousRevisions.length).toBe(2);
@@ -110,7 +111,7 @@ describe("Test releaseReport method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await releaseReport(releaseEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(res.statusCode).toBe(StatusCodes.NotFound);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
@@ -118,7 +119,7 @@ describe("Test releaseReport method", () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(false);
     const res = await releaseReport(releaseEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
+    expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 });

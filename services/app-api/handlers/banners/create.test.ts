@@ -2,10 +2,11 @@ import { createBanner } from "./create";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
 // utils
 import { error } from "../../utils/constants/constants";
 import { proxyEvent } from "../../utils/testing/proxyEvent";
+import { StatusCodes } from "../../utils/responses/response-lib";
 
 const dynamoClientMock = mockClient(DynamoDBDocumentClient);
 
@@ -33,7 +34,7 @@ describe("Test createBanner API method", () => {
   test("Test unauthorized banner creation throws 403 error", async () => {
     const res = await createBanner(testEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(403);
+    expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
@@ -42,7 +43,7 @@ describe("Test createBanner API method", () => {
     dynamoClientMock.on(PutCommand).callsFake(mockPut);
     const res = await createBanner(testEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.CREATED);
+    expect(res.statusCode).toBe(StatusCodes.Created);
     expect(res.body).toContain("test banner");
     expect(res.body).toContain("test description");
     expect(mockPut).toHaveBeenCalled();
@@ -54,8 +55,7 @@ describe("Test createBanner API method", () => {
       pathParameters: {},
     };
     const res = await createBanner(noKeyEvent, null);
-    expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 
@@ -65,8 +65,7 @@ describe("Test createBanner API method", () => {
       pathParameters: { bannerId: "" },
     };
     const res = await createBanner(noKeyEvent, null);
-    expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 });

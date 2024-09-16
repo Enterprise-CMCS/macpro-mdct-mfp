@@ -5,7 +5,8 @@ import { mockWPReport } from "../../utils/testing/setupJest";
 import { error } from "../../utils/constants/constants";
 import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
+import { StatusCodes } from "../../utils/responses/response-lib";
 
 jest.mock("../../storage/reports", () => ({
   getReportMetadata: jest.fn(),
@@ -51,7 +52,7 @@ describe("Test approveReport method", () => {
     const res: any = await approveReport(approveEvent, null);
     const body = JSON.parse(res.body);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(body.status).toBe("Approved");
     expect(putReportMetadata).toHaveBeenCalled();
   });
@@ -61,7 +62,7 @@ describe("Test approveReport method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(res.statusCode).toBe(StatusCodes.NotFound);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
@@ -70,7 +71,7 @@ describe("Test approveReport method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
+    expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 });

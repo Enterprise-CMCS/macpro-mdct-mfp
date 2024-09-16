@@ -8,7 +8,8 @@ import {
 import { error } from "../../utils/constants/constants";
 import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
+import { StatusCodes } from "../../utils/responses/response-lib";
 
 jest.mock("../../storage/reports", () => ({
   getReportMetadata: jest.fn(),
@@ -55,7 +56,7 @@ describe("Test archiveReport method", () => {
     const body = JSON.parse(res.body);
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(putReportMetadata).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(body.archived).toBe(true);
   });
 
@@ -64,7 +65,7 @@ describe("Test archiveReport method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await archiveReport(archiveEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(res.statusCode).toBe(StatusCodes.NotFound);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
@@ -73,7 +74,7 @@ describe("Test archiveReport method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await archiveReport(archiveEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
+    expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
@@ -84,7 +85,7 @@ describe("Test archiveReport method", () => {
     );
     const res = await archiveReport(archiveEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.INVALID_DATA);
   });
 });

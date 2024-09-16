@@ -15,7 +15,8 @@ import {
   queryReportMetadatasForState,
 } from "../../storage/reports";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
+import { StatusCodes } from "../../utils/responses/response-lib";
 
 jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
@@ -69,7 +70,7 @@ describe("handlers/reports/fetch", () => {
       (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
       const res = await fetchReport(testReadEvent, null);
       expect(consoleSpy.debug).toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+      expect(res.statusCode).toBe(StatusCodes.NotFound);
     });
 
     test("Test Report Form not found in S3", async () => {
@@ -78,7 +79,7 @@ describe("handlers/reports/fetch", () => {
       (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
       const res = await fetchReport(testReadEvent, null);
       expect(consoleSpy.debug).toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+      expect(res.statusCode).toBe(StatusCodes.NotFound);
     });
 
     test("Test Field Data not found in S3", async () => {
@@ -87,7 +88,7 @@ describe("handlers/reports/fetch", () => {
       (getReportFieldData as jest.Mock).mockResolvedValue(undefined);
       const res = await fetchReport(testReadEvent, null);
       expect(consoleSpy.debug).toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+      expect(res.statusCode).toBe(StatusCodes.NotFound);
     });
 
     test("Test Successful Report Fetch w/ Incomplete Report", async () => {
@@ -96,8 +97,8 @@ describe("handlers/reports/fetch", () => {
       (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
       const res = await fetchReport(testReadEvent, null);
       expect(consoleSpy.debug).toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.SUCCESS);
-      const body = JSON.parse(res.body);
+      expect(res.statusCode).toBe(StatusCodes.Ok);
+      const body = JSON.parse(res.body!);
       expect(body.lastAlteredBy).toContain("Thelonious States");
       expect(body.submissionName).toContain("testProgram");
       expect(body.completionStatus).toMatchObject(
@@ -116,8 +117,8 @@ describe("handlers/reports/fetch", () => {
       (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
       const res = await fetchReport(testReadEvent, null);
       expect(consoleSpy.debug).toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.SUCCESS);
-      const body = JSON.parse(res.body);
+      expect(res.statusCode).toBe(StatusCodes.Ok);
+      const body = JSON.parse(res.body!);
       expect(body.lastAlteredBy).toContain("Thelonious States");
       expect(body.submissionName).toContain("testProgram");
       expect(body.completionStatus).toMatchObject({
@@ -135,7 +136,7 @@ describe("handlers/reports/fetch", () => {
       };
       const res = await fetchReport(noKeyEvent, null);
       expect(consoleSpy.warn).toHaveBeenCalled();
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(StatusCodes.BadRequest);
       expect(res.body).toContain(error.NO_KEY);
     });
 
@@ -146,7 +147,7 @@ describe("handlers/reports/fetch", () => {
       };
       const res = await fetchReport(noKeyEvent, null);
       expect(consoleSpy.warn).toHaveBeenCalled();
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(StatusCodes.BadRequest);
       expect(res.body).toContain(error.NO_KEY);
     });
   });
@@ -158,8 +159,8 @@ describe("handlers/reports/fetch", () => {
       ]);
       const res = await fetchReportsByState(testReadEventByState, null);
       expect(consoleSpy.debug).toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.SUCCESS);
-      const body = JSON.parse(res.body);
+      expect(res.statusCode).toBe(StatusCodes.Ok);
+      const body = JSON.parse(res.body!);
       expect(body[0].lastAlteredBy).toContain("Thelonious States");
       expect(body[0].submissionName).toContain("testProgram");
     });
@@ -171,7 +172,7 @@ describe("handlers/reports/fetch", () => {
       };
       const res = await fetchReportsByState(noKeyEvent, null);
       expect(consoleSpy.warn).toHaveBeenCalled();
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(StatusCodes.BadRequest);
       expect(res.body).toContain(error.NO_KEY);
     });
 
@@ -182,7 +183,7 @@ describe("handlers/reports/fetch", () => {
       };
       const res = await fetchReportsByState(noKeyEvent, null);
       expect(consoleSpy.warn).toHaveBeenCalled();
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(StatusCodes.BadRequest);
       expect(res.body).toContain(error.NO_KEY);
     });
   });
