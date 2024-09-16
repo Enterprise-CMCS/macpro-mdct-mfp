@@ -1,11 +1,7 @@
 // utils
 import * as logger from "../utils/debugging/debug-lib";
 import { isAuthorized } from "../utils/auth/authorization";
-import {
-  internalServerError,
-  buildResponse,
-} from "../utils/responses/response-lib";
-import { error } from "../utils/constants/constants";
+import { error, errorStatusMap } from "../utils/constants/constants";
 import { sanitizeObject } from "../utils/sanitize/sanitize";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../utils/types";
@@ -38,7 +34,9 @@ export default function handler(lambda: LambdaFunction) {
         logger.error("Error: %O", error);
 
         const body = { error: error.message };
-        return internalServerError(body);
+        const status =
+          errorStatusMap[error.message] ?? StatusCodes.SERVER_ERROR;
+        return buildResponse(status, body);
       } finally {
         logger.flush();
       }
@@ -46,5 +44,16 @@ export default function handler(lambda: LambdaFunction) {
       const body = { error: error.UNAUTHORIZED };
       return buildResponse(StatusCodes.UNAUTHORIZED, body);
     }
+  };
+}
+
+function buildResponse(statusCode: number, body: any) {
+  return {
+    statusCode: statusCode,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": true,
+    },
+    body: JSON.stringify(body),
   };
 }

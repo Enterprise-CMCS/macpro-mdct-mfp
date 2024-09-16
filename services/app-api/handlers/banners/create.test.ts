@@ -48,25 +48,25 @@ describe("Test createBanner API method", () => {
     expect(mockPut).toHaveBeenCalled();
   });
 
-  test("Test bannerKey not provided throws 500 error", async () => {
+  test("Test bannerKey not provided throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,
       pathParameters: {},
     };
     const res = await createBanner(noKeyEvent, null);
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_KEY);
   });
 
-  test("Test bannerKey empty throws 500 error", async () => {
+  test("Test bannerKey empty throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,
       pathParameters: { bannerId: "" },
     };
     const res = await createBanner(noKeyEvent, null);
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_KEY);
   });
 });

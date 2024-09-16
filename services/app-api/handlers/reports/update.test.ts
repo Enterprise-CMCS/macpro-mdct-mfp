@@ -131,7 +131,7 @@ describe("Test updateReport API method", () => {
     const response = await updateReport(invalidFieldDataSubmissionEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(response.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(response.body).toContain(error.INVALID_DATA);
     expect(putReportFieldData).not.toHaveBeenCalled();
     expect(putReportMetadata).not.toHaveBeenCalled();

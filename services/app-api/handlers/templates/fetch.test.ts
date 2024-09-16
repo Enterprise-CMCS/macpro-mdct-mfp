@@ -41,7 +41,7 @@ describe("Test fetchTemplate API method", () => {
     expect(res.body).toContain("s3://fakeurl.bucket.here");
   });
 
-  test("Test templateName not provided throws 500 error", async () => {
+  test("Test templateName not provided throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,
       pathParameters: {},
@@ -49,11 +49,11 @@ describe("Test fetchTemplate API method", () => {
     const res = await fetchTemplate(noKeyEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_TEMPLATE_NAME);
   });
 
-  test("Test templateName doesn't match enum throws 500 error", async () => {
+  test("Test templateName doesn't match enum throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,
       pathParameters: { templateName: "wrongName" },
@@ -61,7 +61,7 @@ describe("Test fetchTemplate API method", () => {
     const res = await fetchTemplate(noKeyEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.INVALID_TEMPLATE_NAME);
   });
 });

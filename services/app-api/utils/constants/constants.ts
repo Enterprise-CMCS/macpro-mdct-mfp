@@ -1,3 +1,4 @@
+import { StatusCodes } from "../types";
 import { ReportType } from "../types/reports";
 
 export const error = {
@@ -7,7 +8,7 @@ export const error = {
   MISSING_DATA: "Missing required data.",
   INVALID_DATA: "Provided data is not valid.",
   NO_MATCHING_RECORD: "No matching record found.",
-  SERVER_ERROR: "An unspecified server error occured.",
+  SERVER_ERROR: "An unspecified server error occurred.",
   // bucket errors
   S3_OBJECT_CREATION_ERROR: "Report could not be created due to an S3 error.",
   S3_OBJECT_UPDATE_ERROR: "Report could not be updated due to an S3 error.",
@@ -28,6 +29,24 @@ export const error = {
   ALREADY_ARCHIVED: "Cannot update archived report.",
   ALREADY_LOCKED: "Cannot update locked report.",
   REPORT_INCOMPLETE: "Cannot submit incomplete form.",
+};
+
+// map for error status codes other than 500
+export const errorStatusMap = {
+  // generic errors
+  [error.UNAUTHORIZED]: StatusCodes.UNAUTHORIZED,
+  [error.NO_KEY]: StatusCodes.BAD_REQUEST,
+  [error.MISSING_DATA]: StatusCodes.BAD_REQUEST,
+  [error.INVALID_DATA]: StatusCodes.BAD_REQUEST,
+  [error.NO_MATCHING_RECORD]: StatusCodes.NOT_FOUND,
+  // template errors
+  [error.NO_TEMPLATE_NAME]: StatusCodes.BAD_REQUEST,
+  [error.INVALID_TEMPLATE_NAME]: StatusCodes.BAD_REQUEST,
+  [error.NOT_IN_DATABASE]: StatusCodes.NOT_FOUND,
+  [error.UNABLE_TO_COPY]: StatusCodes.UNAUTHORIZED,
+  [error.MISSING_FORM_TEMPLATE]: StatusCodes.BAD_REQUEST,
+  [error.MISSING_FIELD_DATA]: StatusCodes.BAD_REQUEST,
+  [error.NO_WORKPLANS_FOUND]: StatusCodes.NOT_FOUND,
 };
 
 export const buckets = {

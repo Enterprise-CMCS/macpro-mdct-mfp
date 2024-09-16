@@ -44,18 +44,10 @@ export const createReport = handler(
   async (event: APIGatewayProxyEvent, _context) => {
     const { allParamsValid, reportType, state } =
       parseStateReportParameters(event);
-    if (!allParamsValid) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.NO_KEY,
-      };
-    }
+    if (!allParamsValid) throw new Error(error.NO_KEY);
 
     if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
-      return {
-        status: StatusCodes.UNAUTHORIZED,
-        body: error.UNAUTHORIZED,
-      };
+      throw new Error(error.UNAUTHORIZED);
     }
 
     const reportTypeExpanded = reportNames[reportType];
@@ -75,15 +67,12 @@ export const createReport = handler(
         ? await getEligibleWorkPlan(state)
         : { workPlanMetadata: undefined, workPlanFieldData: undefined };
 
-    // If we recieved no work plan information and we're trying to create a SAR, return NO_WORKPLANS_FOUND
+    // If we received no work plan information and we're trying to create a SAR, throw NO_WORKPLANS_FOUND
     if (
       reportType === ReportType.SAR &&
       (!workPlanMetadata || !workPlanFieldData)
     ) {
-      return {
-        status: StatusCodes.NOT_FOUND,
-        body: error.NO_WORKPLANS_FOUND,
-      };
+      throw new Error(error.NO_WORKPLANS_FOUND);
     }
 
     // Check the payload that was sent with the request and setup validation
@@ -105,9 +94,7 @@ export const createReport = handler(
       unvalidatedMetadata?.copyReport &&
       unvalidatedMetadata?.copyReport?.isCopyOverTest;
 
-    /**
-     * If the report is a WP, determine reportYear from the unvalidated metadata. Otherwise, a SAR will use the workplan metadata.
-     */
+    // If the report is a WP, determine reportYear from the unvalidated metadata. Otherwise, a SAR will use the workplan metadata.
     let reportData =
       reportType === ReportType.WP ? unvalidatedMetadata : workPlanMetadata;
 
@@ -131,10 +118,7 @@ export const createReport = handler(
 
     // Return MISSING_DATA error if missing unvalidated data or validators.
     if (!unvalidatedFieldData || !formTemplate.validationJson) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.MISSING_DATA,
-      };
+      throw new Error(error.MISSING_DATA);
     }
 
     // Setup validation for what we expect to see in the payload
@@ -155,10 +139,7 @@ export const createReport = handler(
 
     // Return INVALID_DATA error if field data is not valid.
     if (!validatedFieldData || Object.keys(validatedFieldData).length === 0) {
-      return {
-        status: StatusCodes.SERVER_ERROR,
-        body: error.INVALID_DATA,
-      };
+      throw new Error(error.INVALID_DATA);
     }
     // End Section - Check the payload that was sent with the request and validate it
 
@@ -178,10 +159,7 @@ export const createReport = handler(
 
       //do not allow user to create a copy if it's the same period
       if (isCurrentPeriod && !overrideCopyOver) {
-        return {
-          status: StatusCodes.UNAUTHORIZED,
-          body: error.UNABLE_TO_COPY,
-        };
+        throw new Error(error.UNABLE_TO_COPY);
       }
 
       newFieldData = await copyFieldDataFromSource(
@@ -201,16 +179,14 @@ export const createReport = handler(
      */
 
     // Validate the metadata for the submission
-    const validatedMetadata = await validateData(metadataValidationSchema, {
-      ...unvalidatedMetadata,
-    });
-
-    // Return INVALID_DATA error if metadata is not valid.
-    if (!validatedMetadata) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.INVALID_DATA,
-      };
+    let validatedMetadata;
+    try {
+      validatedMetadata = await validateData(metadataValidationSchema, {
+        ...unvalidatedMetadata,
+      });
+    } catch {
+      // Return INVALID_DATA error if metadata fails validation
+      throw new Error(error.INVALID_DATA);
     }
 
     const existingReports: ReportMetadataShape[] =
@@ -227,10 +203,7 @@ export const createReport = handler(
         existingReportYear === reportYear &&
         existingReportPeriod === reportPeriod
       ) {
-        return {
-          status: StatusCodes.BAD_REQUEST,
-          body: error.INVALID_DATA,
-        };
+        throw new Error(error.INVALID_DATA);
       }
     }
     const reportId: string = KSUID.randomSync().string;
@@ -243,13 +216,10 @@ export const createReport = handler(
         newFieldData
       );
     } catch {
-      return {
-        status: StatusCodes.SERVER_ERROR,
-        body: error.S3_OBJECT_CREATION_ERROR,
-      };
+      throw new Error(error.S3_OBJECT_CREATION_ERROR);
     }
 
-    // Begin Section - Create DyanmoDB record
+    // Begin Section - Create DynamoDB record
     const createdReportMetadata: ReportMetadataShape = {
       ...validatedMetadata,
       state,
@@ -277,10 +247,7 @@ export const createReport = handler(
     try {
       await putReportMetadata(createdReportMetadata);
     } catch {
-      return {
-        status: StatusCodes.SERVER_ERROR,
-        body: error.DYNAMO_CREATION_ERROR,
-      };
+      throw new Error(error.DYNAMO_CREATION_ERROR);
     }
     // End Section - Create DynamoDB record.
 
@@ -294,10 +261,7 @@ export const createReport = handler(
       try {
         await putReportMetadata(workPlanWithSarConnection);
       } catch {
-        return {
-          status: StatusCodes.SERVER_ERROR,
-          body: error.DYNAMO_CREATION_ERROR,
-        };
+        throw new Error(error.DYNAMO_CREATION_ERROR);
       }
     }
     // End Section - Let the Workplan know that its been tied to a SAR that was just created

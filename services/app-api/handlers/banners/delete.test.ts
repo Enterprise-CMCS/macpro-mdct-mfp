@@ -48,7 +48,7 @@ describe("Test deleteBanner API method", () => {
     expect(mockDelete).toHaveBeenCalled();
   });
 
-  test("Test bannerKey not provided throws 500 error", async () => {
+  test("Test bannerKey not provided throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,
       pathParameters: {},
@@ -56,11 +56,11 @@ describe("Test deleteBanner API method", () => {
     const res = await deleteBanner(noKeyEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_KEY);
   });
 
-  test("Test bannerKey empty throws 500 error", async () => {
+  test("Test bannerKey empty throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,
       pathParameters: { bannerId: "" },
@@ -68,7 +68,7 @@ describe("Test deleteBanner API method", () => {
     const res = await deleteBanner(noKeyEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_KEY);
   });
 });

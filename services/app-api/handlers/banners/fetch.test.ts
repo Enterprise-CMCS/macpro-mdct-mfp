@@ -55,7 +55,7 @@ describe("Test fetchBanner API method", () => {
     expect(res.statusCode).toBe(StatusCodes.SUCCESS);
   });
 
-  test("Test bannerKey not provided throws 500 error", async () => {
+  test("Test bannerKey not provided throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,
       pathParameters: {},
@@ -63,11 +63,11 @@ describe("Test fetchBanner API method", () => {
     const res = await fetchBanner(noKeyEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_KEY);
   });
 
-  test("Test bannerKey empty throws 500 error", async () => {
+  test("Test bannerKey empty throws 400 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,
       pathParameters: { bannerId: "" },
@@ -75,7 +75,7 @@ describe("Test fetchBanner API method", () => {
     const res = await fetchBanner(noKeyEvent, null);
 
     expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.NO_KEY);
   });
 });

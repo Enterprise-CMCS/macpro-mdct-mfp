@@ -280,7 +280,7 @@ describe("Test createReport API method", () => {
   test("Test attempted report creation with invalid data fails", async () => {
     const res = await createReport(creationEventWithInvalidData, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body).toContain(error.INVALID_DATA);
   });
 
