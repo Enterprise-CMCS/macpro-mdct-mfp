@@ -12,13 +12,18 @@ import {
 import { error } from "../../utils/constants/constants";
 import * as authFunctions from "../../utils/auth/authorization";
 import { getEligibleWorkPlan } from "../../utils/other/other";
-import { putReportMetadata, putReportFieldData } from "../../storage/reports";
+import {
+  queryReportMetadatasForState,
+  putReportMetadata,
+  putReportFieldData,
+} from "../../storage/reports";
 // types
 import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
 import { copyFieldDataFromSource } from "../../utils/other/copy";
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 
 jest.mock("../../storage/reports", () => ({
+  queryReportMetadatasForState: jest.fn(),
   putReportFieldData: jest.fn(),
   putReportMetadata: jest.fn(),
 }));
@@ -66,7 +71,7 @@ const wpCreationEvent: APIGatewayProxyEvent = {
     metadata: {
       reportType: "WP",
       reportYear: 2020,
-      reportPeriod: 2,
+      reportPeriod: 1,
       submissionName: "submissionName",
       status: "Not started",
       lastAlteredBy: "Thelonious States",
@@ -198,6 +203,9 @@ describe("Test createReport API method", () => {
   });
 
   test("Test successful run of work plan report creation, not copied", async () => {
+    (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+      { reportYear: 2020, reportPeriod: 1, archived: true },
+    ]);
     const res = await createReport(wpCreationEvent, null);
     const body = JSON.parse(res.body);
     expect(consoleSpy.debug).toHaveBeenCalled();
@@ -209,12 +217,23 @@ describe("Test createReport API method", () => {
       mockWPReport.metadata.formTemplateId
     );
     expect(body.reportYear).toEqual(2020);
-    expect(body.reportPeriod).toEqual(2);
+    expect(body.reportPeriod).toEqual(1);
     expect(putReportMetadata).toHaveBeenCalled();
     expect(putReportFieldData).toHaveBeenCalled();
   });
 
+  test("Test work plan report creation returns 400 if report in year and period exists", async () => {
+    (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+      { reportYear: 2020, reportPeriod: 1, archived: undefined },
+    ]);
+    const res = await createReport(wpCreationEvent, null);
+    expect(res.statusCode).toBe(400);
+  });
+
   test("Test successful run of work plan report creation, copied", async () => {
+    (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+      { reportYear: 2020, reportPeriod: 1, archived: undefined },
+    ]);
     (copyFieldDataFromSource as jest.Mock).mockResolvedValue(
       mockReportFieldData
     );
@@ -245,6 +264,9 @@ describe("Test createReport API method", () => {
       workPlanMetadata: mockWPMetadata,
       workPlanFieldData: mockWPFieldData,
     });
+    (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+      { reportYear: 2020, reportPeriod: 1, archived: true },
+    ]);
     const res = await createReport(sarCreationEvent, null);
     const body = JSON.parse(res.body);
     expect(consoleSpy.debug).toHaveBeenCalled();
