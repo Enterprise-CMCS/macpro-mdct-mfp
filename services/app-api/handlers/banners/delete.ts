@@ -10,11 +10,11 @@ import { badRequest, forbidden, ok } from "../../utils/responses/response-lib";
 export const deleteBanner = handler(async (event, _context) => {
   if (!hasPermissions(event, [UserRoles.ADMIN])) {
     return forbidden(error.UNAUTHORIZED);
-  } else if (!event?.pathParameters?.bannerId!) {
-    return badRequest(error.NO_KEY);
-  } else {
-    const bannerId = event?.pathParameters?.bannerId!;
-    await deleteBannerById(bannerId);
-    return ok();
   }
+  if (!event?.pathParameters?.bannerId!) {
+    return badRequest(error.NO_KEY);
+  }
+  const bannerId = event?.pathParameters?.bannerId!;
+  await deleteBannerById(bannerId);
+  return ok();
 });
