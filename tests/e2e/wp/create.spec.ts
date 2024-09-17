@@ -58,6 +58,7 @@ test.describe("Creating a new Work Plan", () => {
     wpDashboard,
     wpGeneralInformation,
     wpTransitionBenchmarksProjections,
+    wpTransitionBenchmarkStrategy,
   }) => {
     await logInStateUser(page);
     await stateHomePage.wpButton.click();
@@ -87,5 +88,10 @@ test.describe("Creating a new Work Plan", () => {
     await wpTransitionBenchmarksProjections.editPopulations(populations);
 
     await expect(warnings.length).toBe(0);
+
+    // Transition Benchmark Strategy
+    await wpTransitionBenchmarksProjections.continueButton.click();
+    await wpTransitionBenchmarkStrategy.isReady();
+    await wpTransitionBenchmarkStrategy.fillTextFields();
   });
 });
