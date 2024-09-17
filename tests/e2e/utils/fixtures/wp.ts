@@ -5,6 +5,7 @@ import { WPReviewAndSubmitPage } from "../pageObjects/wp/wpReviewAndSubmit.page"
 import { WPTransitionBenchmarkProjectionsPage } from "../pageObjects/wp/wpTransitionBenchmarkProjections.page";
 import { WPTransitionBenchmarkStrategyPage } from "../pageObjects/wp/wpTransitionBenchmarkStrategy.page";
 import { WPInitiativesInstructionsPage } from "../pageObjects/wp/wpInitiativesInstructions.page";
+import { WPInitiativesDashboardPage } from "../pageObjects/wp/wpInitiativesDashboard.page";
 
 type WPFixtures = {
   wpDashboard: WPDashboardPage;
@@ -12,6 +13,7 @@ type WPFixtures = {
   wpTransitionBenchmarksProjections: WPTransitionBenchmarkProjectionsPage;
   wpTransitionBenchmarkStrategy: WPTransitionBenchmarkStrategyPage;
   wpInitiativesInstructions: WPInitiativesInstructionsPage;
+  wpInitiativesDashboard: WPInitiativesDashboardPage;
   wpReviewAndSubmit: WPReviewAndSubmitPage;
 };
 
@@ -30,6 +32,9 @@ export const test = base.extend<WPFixtures>({
   },
   wpInitiativesInstructions: async ({ page }, use) => {
     await use(new WPInitiativesInstructionsPage(page));
+  },
+  wpInitiativesDashboard: async ({ page }, use) => {
+    await use(new WPInitiativesDashboardPage(page));
   },
   wpReviewAndSubmit: async ({ page }, use) => {
     await use(new WPReviewAndSubmitPage(page));

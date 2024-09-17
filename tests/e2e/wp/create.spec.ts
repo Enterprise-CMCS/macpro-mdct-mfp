@@ -60,6 +60,7 @@ test.describe("Creating a new Work Plan", () => {
     wpTransitionBenchmarksProjections,
     wpTransitionBenchmarkStrategy,
     wpInitiativesInstructions,
+    wpInitiativesDashboard,
   }) => {
     await logInStateUser(page);
     await stateHomePage.wpButton.click();
@@ -96,5 +97,17 @@ test.describe("Creating a new Work Plan", () => {
     await wpTransitionBenchmarkStrategy.continueButton.click();
     await wpInitiativesInstructions.isReady();
     await wpInitiativesInstructions.fillFormFields();
+
+    // Initiatives Dashboard
+    await wpInitiativesInstructions.continueButton.click();
+    await wpInitiativesDashboard.isReady();
+
+    if (await wpInitiativesDashboard.alert) {
+      for (const topic of wpInitiativesDashboard.requiredTopics) {
+        await wpInitiativesDashboard.addInitiative(topic);
+      }
+    }
+
+    await expect(wpInitiativesDashboard.alert).not.toBeVisible();
   });
 });
