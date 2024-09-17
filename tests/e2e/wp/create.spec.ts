@@ -1,5 +1,5 @@
+import { archiveExistingWPs, logInStateUser } from "../utils";
 import { test, expect } from "../utils/fixtures/base";
-import { archiveExistingWPs, logInStateUser } from "../helpers";
 
 test("State user can create a Work Plan", async ({
   page,

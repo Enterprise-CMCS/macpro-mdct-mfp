@@ -1,9 +1,9 @@
-import { test, expect } from "../utils/fixtures/base";
 import {
   archiveExistingWPs,
   logInAdminUser,
   stateAbbreviation,
-} from "../helpers";
+} from "../utils";
+import { test, expect } from "../utils/fixtures/base";
 
 test.skip("Admin user can approve a Work Plan submission", async ({
   page,
