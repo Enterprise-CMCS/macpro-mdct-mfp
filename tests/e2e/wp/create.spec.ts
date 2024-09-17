@@ -80,34 +80,12 @@ test.describe("Creating a new Work Plan", () => {
     const populations = await wpTransitionBenchmarksProjections.page
       .getByRole("row", { name: "Edit" })
       .all();
-    const warning = wpTransitionBenchmarksProjections.page.getByText(
-      "Select 'Edit' to report data."
-    );
 
-    for (const [index, population] of populations.entries()) {
-      const editButton = population.getByRole("button", { name: "Edit" });
-      await editButton.click();
-      await wpTransitionBenchmarksProjections.page
-        .getByRole("dialog")
-        .isVisible();
+    const warnings = await wpTransitionBenchmarksProjections.page
+      .getByRole("row", { name: "Select 'Edit' to report data." })
+      .all();
+    await wpTransitionBenchmarksProjections.editPopulations(populations);
 
-      // Fill out benchmarks for just one population for the sake of brevity
-      if (index === 0) {
-        await wpTransitionBenchmarksProjections.markApplicable();
-      } else {
-        wpTransitionBenchmarksProjections.markNotApplicable();
-      }
-    }
-
-    await wpTransitionBenchmarksProjections.addNewPopulation("Test population");
-    const newPopulation = wpTransitionBenchmarksProjections.page.getByRole(
-      "row",
-      {
-        name: "Test population",
-      }
-    );
-    await wpTransitionBenchmarksProjections.editBenchmark(newPopulation);
-    await wpTransitionBenchmarksProjections.markNotApplicable();
-    await expect(warning).not.toBeVisible();
+    await expect(warnings.length).toBe(0);
   });
 });

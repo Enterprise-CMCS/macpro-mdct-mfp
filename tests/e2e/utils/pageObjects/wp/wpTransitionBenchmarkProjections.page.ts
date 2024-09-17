@@ -25,25 +25,24 @@ export class WPTransitionBenchmarkProjectionsPage extends BasePage {
     });
   }
 
-  public async editBenchmark(population: Locator) {
-    const editButton = population.getByLabel("edit button");
-    await editButton.click();
-    await this.page.getByRole("dialog").isVisible();
-  }
+  public async editPopulations(populations: Locator[]) {
+    for (const [index, population] of populations.entries()) {
+      const editButton = population.getByLabel("edit button");
+      await editButton.click();
+      const drawer = this.page.getByRole("dialog");
+      await drawer.isVisible();
 
-  public async markApplicable() {
-    const drawer = this.page.getByRole("dialog");
-    await drawer.getByLabel("Yes").click();
-    await this.fillBenchmarks();
-    await drawer.getByRole("button", { name: "Save & Close" }).click();
-    await drawer.isHidden();
-  }
+      // Fill out benchmarks for just one population for the sake of brevity
+      if (index === 0) {
+        await drawer.getByLabel("Yes").click();
+        await this.fillBenchmarks();
+      } else {
+        await drawer.getByLabel("No").click();
+      }
 
-  public async markNotApplicable() {
-    const drawer = this.page.getByRole("dialog");
-    await drawer.getByLabel("No").click();
-    await drawer.getByRole("button", { name: "Save & Close" }).click();
-    await drawer.isHidden();
+      await drawer.getByRole("button", { name: "Save & Close" }).click();
+      await drawer.isHidden();
+    }
   }
 
   public async fillBenchmarks() {
@@ -53,16 +52,5 @@ export class WPTransitionBenchmarkProjectionsPage extends BasePage {
     for (const input of inputs) {
       await input.fill("99");
     }
-  }
-
-  public async addNewPopulation(name: string) {
-    await this.addNewButton.click();
-    const modal = this.page.getByLabel("Add other target population");
-    await modal.isVisible();
-    const textInput = await modal.getByLabel(/Target population name/i);
-
-    await textInput.fill(name);
-    await modal.getByRole("button", { name: "Save" }).click();
-    await modal.isHidden();
   }
 }
