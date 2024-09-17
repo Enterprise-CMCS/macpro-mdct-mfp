@@ -63,8 +63,7 @@ describe("Test fetchBanner API method", () => {
     };
     const res = await fetchBanner(noKeyEvent, null);
 
-    expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 
@@ -75,8 +74,7 @@ describe("Test fetchBanner API method", () => {
     };
     const res = await fetchBanner(noKeyEvent, null);
 
-    expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 });

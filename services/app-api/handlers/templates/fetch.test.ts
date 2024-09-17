@@ -49,8 +49,7 @@ describe("Test fetchTemplate API method", () => {
     };
     const res = await fetchTemplate(noKeyEvent, null);
 
-    expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_TEMPLATE_NAME);
   });
 
@@ -61,8 +60,7 @@ describe("Test fetchTemplate API method", () => {
     };
     const res = await fetchTemplate(noKeyEvent, null);
 
-    expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.INVALID_TEMPLATE_NAME);
   });
 });

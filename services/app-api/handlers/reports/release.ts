@@ -104,13 +104,13 @@ export const releaseReport = handler(async (event) => {
   try {
     await putReportMetadata(newReportMetadata);
   } catch {
-    internalServerError(error.DYNAMO_UPDATE_ERROR);
+    return internalServerError(error.DYNAMO_UPDATE_ERROR);
   }
   // Copy the original field data to a new location.
   try {
     await putReportFieldData(newReportMetadata, updatedFieldData);
   } catch {
-    internalServerError(error.S3_OBJECT_CREATION_ERROR);
+    return internalServerError(error.S3_OBJECT_CREATION_ERROR);
   }
 
   return ok(newReportMetadata);
