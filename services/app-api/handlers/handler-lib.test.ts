@@ -12,7 +12,7 @@ jest.mock("../utils/debugging/debug-lib", () => ({
 }));
 
 jest.mock("../utils/auth/authorization", () => ({
-  isAuthorized: jest.fn(),
+  isAuthenticated: jest.fn(),
 }));
 
 describe("Test Lambda Handler Lib", () => {

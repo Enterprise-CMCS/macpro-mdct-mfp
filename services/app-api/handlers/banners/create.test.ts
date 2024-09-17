@@ -11,7 +11,7 @@ import { StatusCodes } from "../../utils/responses/response-lib";
 const dynamoClientMock = mockClient(DynamoDBDocumentClient);
 
 jest.mock("../../utils/auth/authorization", () => ({
-  isAuthorized: jest.fn().mockReturnValue(true),
+  isAuthenticated: jest.fn().mockReturnValue(true),
   hasPermissions: jest.fn().mockReturnValueOnce(false).mockReturnValue(true),
 }));
 
