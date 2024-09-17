@@ -78,14 +78,11 @@ test.describe("Creating a new Work Plan", () => {
     // Transition Benchmarks
     await wpGeneralInformation.continueButton.click();
     await wpTransitionBenchmarksProjections.isReady();
-    const populations = await wpTransitionBenchmarksProjections.page
-      .getByRole("row", { name: "Edit" })
-      .all();
 
     const warnings = await wpTransitionBenchmarksProjections.page
       .getByRole("row", { name: "Select 'Edit' to report data." })
       .all();
-    await wpTransitionBenchmarksProjections.editPopulations(populations);
+    await wpTransitionBenchmarksProjections.editPopulations(warnings);
 
     await expect(warnings.length).toBe(0);
 
