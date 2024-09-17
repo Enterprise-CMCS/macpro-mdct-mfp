@@ -1,12 +1,12 @@
 import { Locator, Page } from "@playwright/test";
 import BasePage from "../base.page";
 import {
+  currentYear,
   firstPeriod,
   secondPeriod,
   stateAbbreviation,
   stateName,
-} from "../../../helpers";
-import { currentYear } from "../../../../seeds/helpers";
+} from "../../consts";
 
 export class WPDashboardPage extends BasePage {
   public path = "/wp";
