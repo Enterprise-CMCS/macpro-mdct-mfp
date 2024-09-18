@@ -60,6 +60,20 @@ describe("Test archiveReport method", () => {
     expect(body.archived).toBe(true);
   });
 
+  test("Test archive report with missing parameters returns 400", async () => {
+    const event = {
+      ...archiveEvent,
+      pathParameters: {
+        ...archiveEvent.pathParameters,
+        state: undefined,
+      },
+    };
+    const res = await archiveReport(event, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
+    expect(res.body).toContain(error.NO_KEY);
+  });
+
   test("Test archive report with no existing record throws 404", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
@@ -87,5 +101,16 @@ describe("Test archiveReport method", () => {
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.INVALID_DATA);
+  });
+
+  test("Test approve report gives dynamo errors nicer messages", async () => {
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
+    (putReportMetadata as jest.Mock).mockImplementation(() => {
+      throw new Error("A scary message about Dynamo internals 👻");
+    });
+    const res: any = await archiveReport(archiveEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(res.body).toContain(error.DYNAMO_UPDATE_ERROR);
   });
 });

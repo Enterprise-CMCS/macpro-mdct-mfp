@@ -7,17 +7,25 @@ import { APIGatewayProxyEvent } from "../../utils/types";
 import { error } from "../../utils/constants/constants";
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import { StatusCodes } from "../../utils/responses/response-lib";
+import { hasPermissions } from "../../utils/auth/authorization";
 
 const dynamoClientMock = mockClient(DynamoDBDocumentClient);
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthenticated: jest.fn().mockReturnValue(true),
-  hasPermissions: jest.fn().mockReturnValueOnce(false).mockReturnValue(true),
+  hasPermissions: jest.fn().mockReturnValue(true),
 }));
 
 const testEvent: APIGatewayProxyEvent = {
   ...proxyEvent,
   body: `{"key":"mock-id","title":"test banner","description":"test description","link":"https://www.mocklink.com","startDate":1000,"endDate":2000}`,
+  headers: { "cognito-identity-id": "test" },
+  pathParameters: { bannerId: "testKey" },
+};
+
+const testInvalidEvent: APIGatewayProxyEvent = {
+  ...proxyEvent,
+  body: `{"key":"mock-id","title":"test banner","description":"test description","link":"https://www.mocklink.com","startDate":1000}`,
   headers: { "cognito-identity-id": "test" },
   pathParameters: { bannerId: "testKey" },
 };
@@ -32,6 +40,7 @@ const consoleSpy: {
 
 describe("Test createBanner API method", () => {
   test("Test unauthorized banner creation throws 403 error", async () => {
+    (hasPermissions as jest.Mock).mockReturnValueOnce(false);
     const res = await createBanner(testEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Forbidden);
@@ -47,6 +56,11 @@ describe("Test createBanner API method", () => {
     expect(res.body).toContain("test banner");
     expect(res.body).toContain("test description");
     expect(mockPut).toHaveBeenCalled();
+  });
+
+  test("Test invalid banner payload returns 400", async () => {
+    const res = await createBanner(testInvalidEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
   });
 
   test("Test bannerKey not provided throws 500 error", async () => {

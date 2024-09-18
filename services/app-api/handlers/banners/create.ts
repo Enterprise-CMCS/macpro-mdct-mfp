@@ -30,12 +30,13 @@ export const createBanner = handler(async (event, _context) => {
       endDate: number().required(),
     });
 
-    const validatedPayload = await validateData(
-      validationSchema,
-      unvalidatedPayload
-    );
-
-    if (!validatedPayload) {
+    let validatedPayload;
+    try {
+      validatedPayload = await validateData(
+        validationSchema,
+        unvalidatedPayload
+      );
+    } catch {
       return badRequest(error.INVALID_DATA);
     }
 
