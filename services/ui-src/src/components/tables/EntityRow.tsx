@@ -136,7 +136,7 @@ export const EntityRow = ({
           flexDirection={isMobile ? "column" : "row"}
           justifyContent={"space-between"}
         >
-          <Box display={"inline-block"}>
+          <Box display={"inline-block"} marginY={"auto"}>
             <ul>
               {programInfo.map((field, index) => (
                 <li key={index}>
