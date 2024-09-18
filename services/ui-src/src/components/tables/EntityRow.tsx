@@ -135,6 +135,7 @@ export const EntityRow = ({
           display={"flex"}
           flexDirection={isMobile ? "column" : "row"}
           justifyContent={"space-between"}
+          minHeight={"3.5rem"}
         >
           <Box display={"inline-block"} marginY={"auto"}>
             <ul>
@@ -231,7 +232,6 @@ const sx = {
   content: {
     borderTop: "1px solid var(--chakra-colors-palette-gray_medium)",
     borderBottom: "1px solid var(--chakra-colors-palette-gray_medium)",
-    paddingLeft: "1.5rem",
     td: {
       borderColor: "palette.gray_lighter",
       paddingRight: 0,
