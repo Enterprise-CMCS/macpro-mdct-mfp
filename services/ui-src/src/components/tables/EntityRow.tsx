@@ -130,12 +130,7 @@ export const EntityRow = ({
       >
         <EntityStatusIcon entityStatus={entityStatus} />
       </Td>
-      <Td
-        sx={sx.entityName}
-        pb={isMobile ? "1.5rem" : "1rem"}
-        pt={isMobile ? "1.5rem" : ".5rem"}
-        colSpan={3}
-      >
+      <Td sx={sx.entityName} colSpan={3}>
         <Box
           display={"flex"}
           flexDirection={isMobile ? "column" : "row"}
@@ -262,6 +257,9 @@ const sx = {
           marginBottom: "0rem",
         },
       },
+    },
+    ".mobile &": {
+      paddingY: "1.5rem",
     },
   },
   actionContainer: {
