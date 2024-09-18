@@ -18,6 +18,7 @@ import {
 // types
 import { APIGatewayProxyEvent } from "../../utils/types";
 import { StatusCodes } from "../../utils/responses/response-lib";
+import { hasPermissions } from "../../utils/auth/authorization";
 
 jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
@@ -138,12 +139,49 @@ describe("Test updateReport API method", () => {
     expect(putReportMetadata).not.toHaveBeenCalled();
   });
 
+  test("Test attempted report update with no data returns 400", async () => {
+    const noBodyEvent = {
+      ...submissionEvent,
+      body: null,
+    };
+    const res = await updateReport(noBodyEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
+    expect(res.body).toContain(error.MISSING_DATA);
+  });
+
   test("Test attempted report update with invalid data throws 400", async () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res = await updateReport(updateEventWithInvalidData, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.MISSING_DATA);
+  });
+
+  test("Test attempted report update with disallowed metadata properties returns 400", async () => {
+    const eventWritingToReadonlyMetadataFields = {
+      ...submissionEvent,
+      body: `{"metadata":{"locked":true}}`,
+    };
+    const res = await updateReport(eventWritingToReadonlyMetadataFields, null);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
+    expect(res.body).toContain(error.INVALID_DATA);
+  });
+
+  test("Test attempted report update with disallowed fieldData properties returns 400", async () => {
+    const eventWritingToReadonlyFieldDataFields = {
+      ...submissionEvent,
+      body: `{"fieldData":{"submitterName":"Abaraham Lincoln"}}`,
+    };
+    const res = await updateReport(eventWritingToReadonlyFieldDataFields, null);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
+    expect(res.body).toContain(error.INVALID_DATA);
+  });
+
+  test("Test attempted report update without permissions returns 403", async () => {
+    (hasPermissions as jest.Mock).mockReturnValueOnce(false);
+    const res = await updateReport(submissionEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.Forbidden);
+    expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
   test("Test attempted report update with no existing record throws 404", async () => {
@@ -189,5 +227,45 @@ describe("Test updateReport API method", () => {
     expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
+  });
+
+  test("Test missing form template returns 404", async () => {
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(undefined);
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+
+    const response = await updateReport(submissionEvent, null);
+
+    expect(response.statusCode).toBe(StatusCodes.NotFound);
+    expect(response.body).toContain(error.MISSING_DATA);
+  });
+
+  test("Test missing field data returns 404", async () => {
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as jest.Mock).mockResolvedValue(undefined);
+
+    const response = await updateReport(submissionEvent, null);
+
+    expect(response.statusCode).toBe(StatusCodes.NotFound);
+    expect(response.body).toContain(error.MISSING_DATA);
+  });
+
+  test("Test attempted report update when form template missing validationJson throws 500", async () => {
+    const formTemplateWithNoValidation = {
+      ...mockReportJson,
+      validationJson: undefined,
+    };
+
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(
+      formTemplateWithNoValidation
+    );
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+
+    const response = await updateReport(submissionEvent, null);
+
+    expect(response.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(response.body).toContain(error.MISSING_FORM_TEMPLATE);
   });
 });
