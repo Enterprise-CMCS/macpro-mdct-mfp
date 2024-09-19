@@ -263,7 +263,7 @@ const sx = {
     },
   },
   actionContainer: {
-    // paddingLeft: "1.5rem",
+    paddingLeft: "1.5rem",
     alignItems: "center",
     display: "flex",
   },
