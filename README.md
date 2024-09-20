@@ -16,6 +16,12 @@ MFP is the CMCS MDCT application for collecting state data related to the [Money
 
 The MFP demonstration supports state efforts for rebalancing their long-term services and supports system so that individuals have a choice of where they live and receive services. From the start of the program in 2008 through the end of 2020, states have transitioned over 107,000 people to community living under MFP.
 
+Project Goals:
+- Increase the use of home and community-based services (HCBS) in the Medicaid program
+- Eliminate barriers or mechanisms that prevent or restrict the flexible use of Medicaid funds to enable Medicaid-eligible individuals to receive support for appropriate and necessary long-term services and supports in the settings of their choice
+- Increase the ability of state Medicaid programs to assure continued provision of HCBS to eligible individuals who choose to transition from an institutional to a community setting
+- Ensure that procedures are in place to provide quality assurance for eligible individuals receiving Medicaid HCBS and to provide for continuous quality improvement in such services
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
