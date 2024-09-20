@@ -1,5 +1,6 @@
 import { archiveExistingWPs, logInStateUser } from "../utils";
 import { test, expect } from "../utils/fixtures/base";
+import { WPInitiativeOverlayPage } from "../utils/pageObjects/wp/wpInitiativeOverlay.page";
 
 test.describe("Creating a new Work Plan", () => {
   test("State user can create a Work Plan", async ({
@@ -84,6 +85,8 @@ test.describe("Creating a new Work Plan", () => {
     const warnings = await wpTransitionBenchmarksProjections.page
       .getByRole("row", { name: "Select 'Edit' to report data." })
       .all();
+
+    // only edit the benchmarks that are incomplete (with warnings)
     await wpTransitionBenchmarksProjections.editPopulations(warnings);
 
     await expect(warnings.length).toBe(0);
@@ -102,12 +105,30 @@ test.describe("Creating a new Work Plan", () => {
     await wpInitiativesInstructions.continueButton.click();
     await wpInitiativesDashboard.isReady();
 
-    if (await wpInitiativesDashboard.alert) {
+    if (await wpInitiativesDashboard.alert.isVisible()) {
       for (const topic of wpInitiativesDashboard.requiredTopics) {
         await wpInitiativesDashboard.addInitiative(topic);
       }
     }
 
     await expect(wpInitiativesDashboard.alert).not.toBeVisible();
+
+    // Initiatives Overlays
+    const initiatives = await wpInitiativesDashboard.page
+      .getByRole("row", {
+        name: "Edit",
+      })
+      .all();
+
+    for (const initiative of initiatives) {
+      await initiative.getByRole("button", { name: "edit button" }).click();
+      const overlayPage = new WPInitiativeOverlayPage(page);
+      await overlayPage.isReady();
+
+      await overlayPage.completeDefineInitiative();
+      await overlayPage.completeEvaluationPlan();
+      await overlayPage.completeFundingSources();
+      await overlayPage.backButton.click();
+    }
   });
 });

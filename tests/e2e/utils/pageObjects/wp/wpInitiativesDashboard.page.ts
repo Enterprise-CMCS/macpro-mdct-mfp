@@ -17,9 +17,9 @@ export class WPInitiativesDashboardPage extends BasePage {
     this.title = page.getByRole("heading", {
       name: "State or Territory-Specific Initiatives",
     });
-    this.alert = page.getByRole("alert", {
-      name: "This alert will disappear once you add initiatives that meet the topic requirements",
-    });
+    this.alert = page.getByText(
+      "This alert will disappear once you add initiatives that meet the topic requirements"
+    );
     this.addInitiativeButton = page.getByRole("button", {
       name: "Add initiative",
     });
