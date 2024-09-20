@@ -393,6 +393,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           <Box sx={sx.callToActionContainer}>
             <Button
               type="submit"
+              variant="primary"
               disabled={isAddSubmissionDisabled()}
               onClick={() => openCreateReportModal()}
             >
@@ -406,7 +407,7 @@ export const DashboardPage = ({ reportType }: Props) => {
                 onClick={openResetWorkPlanModal}
                 disabled={isAddSubmissionDisabled()}
                 type="submit"
-                variant="outline"
+                variant="transparent"
               >
                 Reset MFP Work Plan
               </Button>
