@@ -33,7 +33,7 @@ export class WPDefineInitiativePage extends BasePage {
 
   public async fillFields() {
     await this.description.fill("test");
-    await this.targetPopulations.nth(1).click();
+    await this.targetPopulations.first().click();
     await this.targetPopulations.nth(2).click();
     await this.startDate.fill("01/01/2024");
     await this.endDate.click();

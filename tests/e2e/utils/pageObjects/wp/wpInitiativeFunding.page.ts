@@ -22,9 +22,11 @@ export class WPFundingSourcesPage extends BasePage {
       })
       .first();
     this.modal = page.getByRole("dialog");
-    this.addSourceButton = page.getByRole("button", {
-      name: "Add funding source",
-    });
+    this.addSourceButton = page
+      .getByRole("button", {
+        name: "Add funding source",
+      })
+      .first();
   }
 
   public async fillFields() {

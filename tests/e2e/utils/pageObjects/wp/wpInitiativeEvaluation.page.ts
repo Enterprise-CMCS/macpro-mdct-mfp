@@ -21,9 +21,11 @@ export class WPEvaluationPlanPage extends BasePage {
         name: "Return to dashboard for this initiative",
       })
       .first();
-    this.addObjectiveButton = page.getByRole("button", {
-      name: "Add objective",
-    });
+    this.addObjectiveButton = page
+      .getByRole("button", {
+        name: "Add objective",
+      })
+      .first();
     this.modal = page.getByRole("dialog");
   }
 

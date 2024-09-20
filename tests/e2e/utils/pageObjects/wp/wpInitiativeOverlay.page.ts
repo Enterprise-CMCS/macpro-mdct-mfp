@@ -43,6 +43,7 @@ export class WPInitiativeOverlayPage extends BasePage {
     const definePage = new WPDefineInitiativePage(this.page);
     await definePage.isReady();
     await definePage.fillFields();
+    await definePage.savedFormResponse();
     await definePage.backButton.click();
   }
 
@@ -52,6 +53,7 @@ export class WPInitiativeOverlayPage extends BasePage {
     await evaluationPage.isReady();
     await evaluationPage.addObjectiveButton.click();
     await evaluationPage.fillFields();
+    await evaluationPage.savedFormResponse();
     await evaluationPage.backButton.click();
   }
 
@@ -61,6 +63,7 @@ export class WPInitiativeOverlayPage extends BasePage {
     await fundingPage.isReady();
     await fundingPage.addSourceButton.click();
     await fundingPage.fillFields();
+    await fundingPage.savedFormResponse();
     await fundingPage.backButton.click();
   }
 }
