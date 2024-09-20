@@ -83,12 +83,16 @@ test.describe("Creating a new Work Plan", () => {
     await wpGeneralInformation.continueButton.click();
     await wpTransitionBenchmarksProjections.isReady();
 
+    const warningIcon = page.getByAltText("warning icon");
     const warnings = await wpTransitionBenchmarksProjections.page
-      .getByRole("row", { name: "Select 'Edit' to report data." })
+      .getByRole("row")
+      .filter({ has: warningIcon })
       .all();
 
     // only edit the benchmarks that are incomplete (with warnings)
-    await wpTransitionBenchmarksProjections.editPopulations(warnings);
+    if (warnings.length > 0) {
+      await wpTransitionBenchmarksProjections.editPopulations(warnings);
+    }
 
     await expect(warnings.length).toBe(0);
 
