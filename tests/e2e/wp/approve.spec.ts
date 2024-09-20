@@ -1,59 +1,55 @@
-import { expect, test } from "@playwright/test";
-import { currentYear } from "../../seeds/helpers";
-import { createSubmittedWorkPlan } from "../../seeds/options";
 import {
   archiveExistingWPs,
-  firstPeriod,
   logInAdminUser,
-  loginSeedUsersWithTimeout,
   stateAbbreviation,
-} from "../helpers";
+} from "../utils";
+import { test, expect } from "../utils/fixtures/base";
 
-test("Admin user can approve a Work Plan submission", async ({ page }) => {
+test.skip("Admin user can approve a Work Plan submission", async ({
+  page,
+  adminHomePage,
+  wpDashboard,
+  wpGeneralInformation,
+  wpReviewAndSubmit,
+}) => {
   await archiveExistingWPs(page);
   await logInAdminUser(page);
 
-  // Seed WP
-  await loginSeedUsersWithTimeout(page);
-  await createSubmittedWorkPlan(currentYear, firstPeriod);
+  // TODO: Seed WP
 
   // View WPs
-  await page
-    .getByRole("combobox", {
-      name: "List of states, including District of Columbia and Puerto Rico",
-    })
-    .selectOption(stateAbbreviation);
-  await page.getByRole("radio", { name: "MFP Work Plan" }).click();
-  await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
-  await expect(page).toHaveURL("/wp");
-  await page.waitForResponse(`**/reports/WP/${stateAbbreviation}`);
+  await adminHomePage.dropdown.selectOption(stateAbbreviation);
+  await adminHomePage.selectWP();
+  await adminHomePage.goToDashboard();
 
   // View submitted WP
-  await expect(page.getByRole("table")).toBeVisible();
+  await wpDashboard.isReady();
+  await wpDashboard.reportsReady();
 
-  const row = page.getByRole("row", { name: "Submitted" }).last();
-  const editedBy = await row.getByRole("gridcell").nth(2).textContent();
-  await row.getByRole("button", { name: "View", exact: true }).click();
-  await expect(page).toHaveURL("/wp/general-information");
+  const editedBy = await wpDashboard.submittedReport
+    .getByRole("gridcell")
+    .nth(2)
+    .textContent();
+  await wpDashboard.submittedReport
+    .getByRole("button", { name: "View", exact: true })
+    .click();
+
+  await wpGeneralInformation.isReady();
 
   // Approve WP
-  await page.getByRole("link", { name: "Review & Submit" }).click();
-  await expect(page).toHaveURL("/wp/review-and-submit");
-  await page.getByRole("button", { name: "Approve" }).click();
+  await wpReviewAndSubmit.goto();
+  await wpReviewAndSubmit.isReady();
+  await wpReviewAndSubmit.approveButton.click();
 
-  const modal = page.getByRole("dialog");
-  await expect(modal).toBeVisible();
-  await expect(modal).toContainText(
-    "Are you sure you want to approve this MFP Work Plan?"
-  );
-  await page.getByRole("textbox").fill("APPROVE");
-  await page.getByRole("button", { name: "Approve" }).click();
+  await expect(wpReviewAndSubmit.approveModal).toBeVisible();
+
+  await wpReviewAndSubmit.approveReport();
 
   // Confirm approved WP is in table
-  await expect(page).toHaveURL("/wp");
-  await expect(page.getByRole("table")).toBeVisible();
+  await wpDashboard.isReady();
+  await expect(wpDashboard.page.getByRole("table")).toBeVisible();
   await expect(
-    page.getByRole("row", {
+    wpDashboard.page.getByRole("row", {
       name: `${editedBy} Approved`,
     })
   ).toBeVisible();

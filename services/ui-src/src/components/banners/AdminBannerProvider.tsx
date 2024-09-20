@@ -39,7 +39,7 @@ export const AdminBannerProvider = ({ children }: Props) => {
     setBannerLoading(true);
     try {
       const currentBanner = await getBanner(ADMIN_BANNER_ID);
-      const newBannerData = currentBanner?.Item || {};
+      const newBannerData = currentBanner as AdminBannerData | undefined;
       setBannerData(newBannerData);
       setBannerErrorMessage(undefined);
     } catch (e: any) {

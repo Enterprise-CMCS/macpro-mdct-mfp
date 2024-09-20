@@ -562,7 +562,7 @@
                       "content": "Initiative close-out information, to be completed as appropriate during MFP Work Plan revisions",
                       "props": {
                         "style": {
-                          "paddingTop": ".5rem"
+                          "padding": ".5rem"
                         }
                       }
                     }

@@ -16,13 +16,13 @@ export default {
       title: "MFP Work Plan",
       body: {
         available:
-          "The MFP Work Plan is the state or territory's road map for accomplishing the rebalancing objective described in section ",
+          "The MFP Work Plan is the state or territory’s road map for accomplishing the rebalancing objective described in section ",
       },
       linkText: "6071(a)(1) of the Deficit Reduction Act (DRA)",
       linkLocation:
         "https://www.govinfo.gov/content/pkg/PLAW-109publ171/pdf/PLAW-109publ171.pdf",
       postLinkText:
-        ' as "increasing the use of home and community-based, rather than institutional, long-term care services."',
+        " as “increasing the use of home and community-based, rather than institutional, long-term care services.”",
       downloadText: "User Guide and Help File",
       link: {
         text: "Enter Work Plan online",
@@ -41,7 +41,7 @@ export default {
           },
           {
             content:
-              "CMS approved changes will be integrated into the MFP recipient's Semi-Annual Progress Report for the following reporting period.",
+              "CMS approved changes will be integrated into the MFP recipient’s Semi-Annual Progress Report for the following reporting period.",
           },
         ],
       },
@@ -50,16 +50,16 @@ export default {
       title: "MFP Semi-Annual Progress Report (SAR)",
       body: {
         available:
-          "The MFP Semi-Annual Progress Report is used to present the recipient's analysis and the status of the various operational areas in reaching the objectives of the Demonstration. Through the SARs, the recipient will further enumerate how they have, or intend to, meet or align with the recipient's MFP operational procedures and processes; transition benchmarks; program goals for expanding and enhancing home and community-based services (HCBS); and sustainability plans.",
+          "The MFP Semi-Annual Progress Report is used to present the recipient’s analysis and the status of the various operational areas in reaching the objectives of the Demonstration. Through the SARs, the recipient will further enumerate how they have, or intend to, meet or align with the recipient’s MFP operational procedures and processes; transition benchmarks; program goals for expanding and enhancing home and community-based services (HCBS); and sustainability plans.",
       },
       downloadText: "User Guide and Help File",
       link: {
         text: "Enter SAR online",
-        route: "sar/",
+        route: "sar",
       },
       accordion: {
         buttonLabel: "When is the MFP SAR due?",
-        text: "The MFP Semi-Annual Progress Report will need to be reviewed and submitted twice a year, within 60 days following the end of each second and fourth calendar year quarter. For example, the SAR Reporting Period 1 represents January-June and MFP recipients must submit their data within 60 days following June 30. The recipient must submit the progress report through the final reporting period of the recipient's Demonstration period of performance, even if the recipient has not operated for a complete reporting period.",
+        text: "The MFP Semi-Annual Progress Report will need to be reviewed and submitted twice a year, within 60 days following the end of each second and fourth calendar year quarter. For example, the SAR Reporting Period 1 represents January-June and MFP recipients must submit their data within 60 days following June 30. The recipient must submit the progress report through the final reporting period of the recipient’s Demonstration period of performance, even if the recipient has not operated for a complete reporting period.",
       },
     },
   },
