@@ -266,6 +266,9 @@ const sx = {
     paddingLeft: "1.5rem",
     alignItems: "center",
     display: "flex",
+    ".mobile &": {
+      paddingLeft: 0,
+    },
   },
   editNameButton: {
     fontWeight: "normal",
