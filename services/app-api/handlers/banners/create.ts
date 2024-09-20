@@ -1,12 +1,12 @@
 import handler from "../handler-lib";
 // utils
-import dynamoDb from "../../utils/dynamo/dynamodb-lib";
 import { hasPermissions } from "../../utils/auth/authorization";
 import { error } from "../../utils/constants/constants";
 // types
 import { StatusCodes, UserRoles } from "../../utils/types";
 import { number, object, string } from "yup";
 import { validateData } from "../../utils/validation/validation";
+import { putBanner } from "../../storage/banners";
 
 export const createBanner = handler(async (event, _context) => {
   if (!hasPermissions(event, [UserRoles.ADMIN])) {
@@ -34,22 +34,19 @@ export const createBanner = handler(async (event, _context) => {
     );
 
     if (validatedPayload) {
-      const params = {
-        TableName: process.env.BANNER_TABLE_NAME!,
-        Item: {
-          key: event.pathParameters.bannerId,
-          createdAt: Date.now(),
-          lastAltered: Date.now(),
-          lastAlteredBy: event?.headers["cognito-identity-id"],
-          title: validatedPayload.title,
-          description: validatedPayload.description,
-          link: validatedPayload.link,
-          startDate: validatedPayload.startDate,
-          endDate: validatedPayload.endDate,
-        },
+      const newBanner = {
+        key: event.pathParameters.bannerId,
+        createdAt: Date.now(),
+        lastAltered: Date.now(),
+        lastAlteredBy: event?.headers["cognito-identity-id"],
+        title: validatedPayload.title,
+        description: validatedPayload.description,
+        link: validatedPayload.link,
+        startDate: validatedPayload.startDate,
+        endDate: validatedPayload.endDate,
       };
-      await dynamoDb.put(params);
-      return { status: StatusCodes.CREATED, body: params };
+      await putBanner(newBanner);
+      return { status: StatusCodes.CREATED, body: newBanner };
     }
   }
 });

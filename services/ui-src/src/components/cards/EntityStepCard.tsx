@@ -10,7 +10,6 @@ import {
   ReportType,
 } from "types";
 // assets
-import { svgFilters } from "styles/theme";
 import completedIcon from "assets/icons/icon_check_circle.png";
 import deleteIcon from "assets/icons/icon_cancel_x_circle.png";
 import editIcon from "assets/icons/icon_edit.png";
@@ -19,6 +18,7 @@ import { fillEmptyQuarters, useStore } from "utils";
 import { ObjectiveProgressEntity } from "./ObjectiveProgressEntity";
 import { EvaluationPlanEntity } from "./EvaluationPlanEntity";
 import { FundingSourcesEntity } from "./FundingSourcesEntity";
+import { svgFilters } from "styles/foundations/filters";
 
 export const EntityStepCard = ({
   entity,

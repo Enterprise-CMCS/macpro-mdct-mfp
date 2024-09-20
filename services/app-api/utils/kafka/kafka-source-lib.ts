@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import s3Lib from "../s3/s3-lib";
 import { Kafka, Producer } from "kafkajs";
+import { createClient } from "../../storage/s3-lib";
 import { S3EventRecord } from "../types";
 
 type KafkaPayload = {
@@ -143,11 +144,21 @@ class KafkaSourceLib {
     const { eventName, eventTime } = record;
     let entry = "";
     if (!eventName.includes("ObjectRemoved")) {
-      const s3Doc = await s3Lib.get({
-        Bucket: record.s3.bucket.name,
-        Key: record.s3.object.key,
-      });
-      entry = this.stringify(s3Doc);
+      const client = createClient();
+      const response = await client.send(
+        new GetObjectCommand({
+          Bucket: record.s3.bucket.name,
+          Key: record.s3.object.key,
+        })
+      );
+      const responseString = await response.Body?.transformToString();
+      if (responseString) {
+        entry = responseString;
+      } else {
+        throw new Error(
+          `Failed to fetch S3 object with key: "${record.s3.object.key}"`
+        );
+      }
     }
 
     return {

@@ -1,5 +1,8 @@
 import KafkaSourceLib from "./kafka-source-lib";
-import s3Lib from "../s3/s3-lib";
+import { mockClient } from "aws-sdk-client-mock";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+
+const mockS3 = mockClient(S3Client);
 
 let tempStage: string | undefined;
 let tempNamespace: string | undefined;
@@ -172,12 +175,16 @@ describe("Test Kafka Lib", () => {
   });
 
   test("Processes bucket events", async () => {
-    const s3GetSpy = jest.spyOn(s3Lib, "get");
-    s3GetSpy.mockResolvedValue("response object");
+    const mockS3Get = jest.fn().mockResolvedValueOnce({
+      Body: {
+        transformToString: jest.fn().mockResolvedValueOnce("response object"),
+      },
+    });
+    mockS3.on(GetObjectCommand).callsFakeOnce(mockS3Get);
     const sourceLib = new KafkaSourceLib("mfp", "v0", [table], [bucket]);
     await sourceLib.handler(s3Event);
     expect(consoleSpy.log).toHaveBeenCalled();
-    expect(s3GetSpy).toHaveBeenCalled();
+    expect(mockS3Get).toHaveBeenCalled();
     expect(mockSendBatch).toBeCalledTimes(1);
   });
 
