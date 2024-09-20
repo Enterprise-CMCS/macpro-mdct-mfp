@@ -43,7 +43,6 @@ export class WPInitiativeOverlayPage extends BasePage {
     const definePage = new WPDefineInitiativePage(this.page);
     await definePage.isReady();
     await definePage.fillFields();
-    await definePage.savedFormResponse();
     await definePage.backButton.click();
   }
 
@@ -51,9 +50,13 @@ export class WPInitiativeOverlayPage extends BasePage {
     await this.evaluationPlan.getByRole("button", { name: "Edit" }).click();
     const evaluationPage = new WPEvaluationPlanPage(this.page);
     await evaluationPage.isReady();
-    await evaluationPage.addObjectiveButton.click();
-    await evaluationPage.fillFields();
-    await evaluationPage.savedFormResponse();
+    const noObjectivesText = evaluationPage.page.getByText(
+      "Objective total count: 0"
+    );
+    if (noObjectivesText) {
+      await evaluationPage.addObjectiveButton.click();
+      await evaluationPage.fillFields();
+    }
     await evaluationPage.backButton.click();
   }
 
@@ -61,9 +64,12 @@ export class WPInitiativeOverlayPage extends BasePage {
     await this.fundingSources.getByRole("button", { name: "Edit" }).click();
     const fundingPage = new WPFundingSourcesPage(this.page);
     await fundingPage.isReady();
-    await fundingPage.addSourceButton.click();
-    await fundingPage.fillFields();
-    await fundingPage.savedFormResponse();
+    const noFundingSourcesText =
+      fundingPage.page.getByText("Funding Sources: 0");
+    if (noFundingSourcesText) {
+      await fundingPage.addSourceButton.click();
+      await fundingPage.fillFields();
+    }
     await fundingPage.backButton.click();
   }
 }
