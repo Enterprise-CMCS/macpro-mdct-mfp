@@ -16,7 +16,7 @@ export class WPTransitionBenchmarkStrategyPage extends BasePage {
   }
 
   public async fillTextFields() {
-    const textFields = await this.page.getByRole("combobox").all();
+    const textFields = await this.page.getByRole("textbox").all();
 
     for (const textField of textFields) {
       await textField.fill("test");
