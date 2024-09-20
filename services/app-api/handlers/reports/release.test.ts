@@ -27,10 +27,13 @@ jest.mock("../../storage/reports", () => ({
   putReportFieldData: jest.fn(),
   putReportMetadata: jest.fn(),
 }));
+(getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoDataWPLocked);
+(getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+(getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
 
 jest.mock("../../utils/auth/authorization", () => ({
   isAuthenticated: jest.fn().mockResolvedValue(true),
-  hasPermissions: jest.fn(() => {}),
+  hasPermissions: jest.fn().mockReturnValue(true),
 }));
 
 const mockAuthUtil = require("../../utils/auth/authorization");
@@ -59,11 +62,6 @@ describe("Test releaseReport method", () => {
   });
 
   test("Test release report passes with valid data", async () => {
-    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoDataWPLocked);
-    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
-    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
-
     const res = await releaseReport(releaseEvent, null);
     const body = JSON.parse(res.body!);
 
@@ -81,15 +79,12 @@ describe("Test releaseReport method", () => {
   });
 
   test("Test release report passes with valid data, but it has been more than the first submission", async () => {
-    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     const newPreviousId = KSUID.randomSync().string;
-    (getReportMetadata as jest.Mock).mockResolvedValue({
+    (getReportMetadata as jest.Mock).mockResolvedValueOnce({
       ...mockDynamoDataWPLocked,
       previousRevisions: [newPreviousId],
       submissionCount: 1,
     });
-    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
-    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
 
     const res = await releaseReport(releaseEvent, null);
     const body = JSON.parse(res.body!);
@@ -106,11 +101,64 @@ describe("Test releaseReport method", () => {
     expect(body.fieldDataId).not.toBe(mockDynamoDataWPLocked.fieldDataId);
   });
 
+  test("Test release report on already-released report", async () => {
+    const unlockedReport = {
+      ...mockDynamoDataWPLocked,
+      locked: false,
+    };
+    (getReportMetadata as jest.Mock).mockResolvedValueOnce(unlockedReport);
+
+    const res = await releaseReport(releaseEvent, null);
+    const body = JSON.parse(res.body!);
+
+    expect(res.statusCode).toBe(StatusCodes.Ok);
+    expect(body.locked).toBe(false);
+  });
+
+  test("Test release report on archived report", async () => {
+    const unlockedReport = {
+      ...mockDynamoDataWPLocked,
+      archived: true,
+    };
+    (getReportMetadata as jest.Mock).mockResolvedValueOnce(unlockedReport);
+
+    const res = await releaseReport(releaseEvent, null);
+
+    expect(res.statusCode).toBe(StatusCodes.Conflict);
+    expect(res.body).toContain(error.ALREADY_ARCHIVED);
+  });
+
+  test("Test release report with no parameters returns 400", async () => {
+    const event = {
+      ...releaseEvent,
+      pathParameters: {
+        ...releaseEvent.pathParameters,
+        state: undefined,
+      },
+    };
+    const res = await releaseReport(event, null);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
+    expect(res.body).toContain(error.NO_KEY);
+  });
+
   test("Test release report with no existing record throws 404", async () => {
-    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
+    (getReportMetadata as jest.Mock).mockResolvedValueOnce(undefined);
     const res = await releaseReport(releaseEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.NotFound);
+    expect(res.body).toContain(error.NO_MATCHING_RECORD);
+  });
+
+  test("Test release report with no field data returns 404", async () => {
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce(undefined);
+    const res = await releaseReport(releaseEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.NotFound);
+    expect(res.body).toContain(error.NO_MATCHING_RECORD);
+  });
+
+  test("Test release report with no form template returns 404", async () => {
+    (getReportFormTemplate as jest.Mock).mockResolvedValueOnce(undefined);
+    const res = await releaseReport(releaseEvent, null);
     expect(res.statusCode).toBe(StatusCodes.NotFound);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
@@ -121,5 +169,28 @@ describe("Test releaseReport method", () => {
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
+  });
+
+  test("Test release report gives dynamo errors nicer messages", async () => {
+    (putReportMetadata as jest.Mock).mockImplementationOnce(() => {
+      throw new Error("A scary message about Dynamo internals 👻");
+    });
+
+    const res = await releaseReport(releaseEvent, null);
+
+    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(res.body).toContain(error.DYNAMO_UPDATE_ERROR);
+  });
+
+  test("Test release report gives s3 errors nicer messages", async () => {
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
+    (putReportFieldData as jest.Mock).mockImplementationOnce(() => {
+      throw new Error("A scary message about S3 internals 👻");
+    });
+
+    const res = await releaseReport(releaseEvent, null);
+
+    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(res.body).toContain(error.S3_OBJECT_CREATION_ERROR);
   });
 });

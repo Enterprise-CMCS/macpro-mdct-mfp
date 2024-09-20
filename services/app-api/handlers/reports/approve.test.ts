@@ -57,7 +57,22 @@ describe("Test approveReport method", () => {
     expect(putReportMetadata).toHaveBeenCalled();
   });
 
-  test("Test approve report with no existing record throws 404", async () => {
+  test("Test approve report with missing parameters returns 400", async () => {
+    const event = {
+      ...approveEvent,
+      pathParameters: {
+        ...approveEvent.pathParameters,
+        state: undefined,
+      },
+    };
+
+    const res = await approveReport(event, null);
+    expect(consoleSpy.debug).toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
+    expect(res.body).toContain(error.NO_KEY);
+  });
+
+  test("Test approve report with no existing record returns 404", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
@@ -66,12 +81,23 @@ describe("Test approveReport method", () => {
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
-  test("Test approve report without admin permissions throws 403", async () => {
+  test("Test approve report without admin permissions returns 403", async () => {
     mockAuthUtil.hasPermissions.mockReturnValueOnce(false);
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
+  });
+
+  test("Test approve report gives dynamo errors nicer messages", async () => {
+    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
+    (putReportMetadata as jest.Mock).mockImplementation(() => {
+      throw new Error("A scary message about Dynamo internals 👻");
+    });
+    const res: any = await approveReport(approveEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(res.body).toContain(error.DYNAMO_UPDATE_ERROR);
   });
 });

@@ -1,7 +1,11 @@
 import { Locator, Page } from "@playwright/test";
 import BasePage from "../base.page";
-import { firstPeriod, stateAbbreviation, stateName } from "../../../helpers";
-import { currentYear } from "../../../../seeds/helpers";
+import {
+  currentYear,
+  firstPeriod,
+  stateAbbreviation,
+  stateName,
+} from "../../consts";
 
 export class SARDashboardPage extends BasePage {
   public path = "/sar";

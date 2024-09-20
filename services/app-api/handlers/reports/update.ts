@@ -55,21 +55,18 @@ export const updateReport = handler(async (event) => {
     "reportSubmissionDate",
   ];
 
-  try {
-    const eventBody = JSON.parse(event.body);
-    if (
-      (eventBody.metadata &&
-        Object.keys(eventBody.metadata).some((_) =>
-          metadataBlocklist.includes(_)
-        )) ||
-      (eventBody.fieldData &&
-        Object.keys(eventBody.fieldData).some((_) =>
-          fieldDataBlocklist.includes(_)
-        ))
-    ) {
-      return badRequest(error.INVALID_DATA);
-    }
-  } catch {
+  // This parse is guaranteed to succeed, because handler-lib already did it.
+  const eventBody = JSON.parse(event.body);
+  if (
+    (eventBody.metadata &&
+      Object.keys(eventBody.metadata).some((_) =>
+        metadataBlocklist.includes(_)
+      )) ||
+    (eventBody.fieldData &&
+      Object.keys(eventBody.fieldData).some((_) =>
+        fieldDataBlocklist.includes(_)
+      ))
+  ) {
     return badRequest(error.INVALID_DATA);
   }
 
@@ -89,12 +86,12 @@ export const updateReport = handler(async (event) => {
 
   const formTemplate = await getReportFormTemplate(currentReport);
   if (!formTemplate) {
-    return badRequest(error.MISSING_DATA);
+    return notFound(error.MISSING_DATA);
   }
 
   const existingFieldData = await getReportFieldData(currentReport);
   if (!existingFieldData) {
-    return badRequest(error.MISSING_DATA);
+    return notFound(error.MISSING_DATA);
   }
 
   // Parse the passed payload.
@@ -109,7 +106,7 @@ export const updateReport = handler(async (event) => {
 
   // Validation JSON should be there—if it's not, there's an issue.
   if (!formTemplate.validationJson) {
-    return badRequest(error.MISSING_FORM_TEMPLATE);
+    return internalServerError(error.MISSING_FORM_TEMPLATE);
   }
 
   // Validate passed field data
