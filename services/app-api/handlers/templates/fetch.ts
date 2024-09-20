@@ -3,7 +3,8 @@ import handler from "../handler-lib";
 import { error } from "../../utils/constants/constants";
 import { getTemplateDownloadUrl } from "../../storage/templates";
 // types
-import { StatusCodes, TemplateKeys } from "../../utils/types";
+import { TemplateKeys } from "../../utils/types";
+import { badRequest, ok } from "../../utils/responses/response-lib";
 
 /*
  * NOTE: This handler is not concerned with _form_ templates, like wp.json!
@@ -14,14 +15,14 @@ import { StatusCodes, TemplateKeys } from "../../utils/types";
 
 export const fetchTemplate = handler(async (event, _context) => {
   if (!event?.pathParameters?.templateName!) {
-    throw new Error(error.NO_TEMPLATE_NAME);
+    return badRequest(error.NO_TEMPLATE_NAME);
   }
   let key: TemplateKeys | undefined;
   if (event.pathParameters.templateName === "WP") {
     key = TemplateKeys.WP;
   } else {
-    throw new Error(error.INVALID_TEMPLATE_NAME);
+    return badRequest(error.INVALID_TEMPLATE_NAME);
   }
   const url = await getTemplateDownloadUrl(key);
-  return { status: StatusCodes.SUCCESS, body: url };
+  return ok(url);
 });
