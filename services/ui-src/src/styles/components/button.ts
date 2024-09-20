@@ -10,6 +10,7 @@ const baseStyles = {
   "&:disabled, &:disabled:hover": {
     color: "palette.gray",
     backgroundColor: "palette.gray_lighter",
+    opacity: "1",
   },
 };
 
@@ -64,7 +65,7 @@ const transparentVariant = {
     color: "palette.primary",
   },
   "&:disabled, &:disabled:hover": {
-    color: "palette.gray_lighter",
+    color: "palette.gray_light",
     backgroundColor: "transparent",
   },
 };
