@@ -45,7 +45,9 @@ describe("Test authorization with api key and environment variables", () => {
     jest.clearAllMocks();
   });
   test("is not authorized when no api key is passed", async () => {
-    mockVerifier.mockReturnValue(true);
+    mockVerifier.mockImplementation(() => {
+      throw new Error("no key provided");
+    });
     const authStatus = await isAuthenticated(noApiKeyEvent);
     expect(authStatus).toBeFalsy();
   });
