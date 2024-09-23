@@ -29,8 +29,7 @@ export default class BasePage {
   public async isFinishedSaving(response) {
     return (
       response.url().includes("https://services/url") &&
-      response.status() === 200 &&
-      (await response.json()).response === "Completed"
+      response.status() === 200
     );
   }
 

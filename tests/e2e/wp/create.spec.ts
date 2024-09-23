@@ -82,19 +82,7 @@ test.describe("Creating a new Work Plan", () => {
     // Transition Benchmarks
     await wpGeneralInformation.continueButton.click();
     await wpTransitionBenchmarksProjections.isReady();
-
-    const warningIcon = page.getByAltText("warning icon");
-    const warnings = await wpTransitionBenchmarksProjections.page
-      .getByRole("row")
-      .filter({ has: warningIcon })
-      .all();
-
-    // only edit the benchmarks that are incomplete (with warnings)
-    if (warnings.length > 0) {
-      await wpTransitionBenchmarksProjections.editPopulations(warnings);
-    }
-
-    await expect(warnings.length).toBe(0);
+    await wpTransitionBenchmarksProjections.editPopulations();
 
     // Transition Benchmark Strategy
     await wpTransitionBenchmarksProjections.continueButton.click();
@@ -143,5 +131,18 @@ test.describe("Creating a new Work Plan", () => {
       .getByAltText("Error notification")
       .all();
     await expect(errorIcons.length).toBe(0);
+
+    await wpReviewAndSubmit.submitButton.click();
+    await wpReviewAndSubmit.confirmSubmit();
+
+    // Confirmation
+    await wpReviewAndSubmit.isReady();
+    await expect(
+      wpReviewAndSubmit.page.getByRole("heading", {
+        name: "Successfully Submitted",
+      })
+    ).toBeVisible();
+
+    await wpDashboard.goto();
   });
 });

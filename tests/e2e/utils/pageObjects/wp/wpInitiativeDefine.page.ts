@@ -36,7 +36,8 @@ export class WPDefineInitiativePage extends BasePage {
     // Playwright is fast we gotta be really sure the checkboxes are fully loaded before trying to check them ¯\(°_o)/¯
     await this.targetPopulations.first().waitFor();
     await this.targetPopulations.first().check();
-    await this.targetPopulations.nth(2).check();
+    await this.targetPopulations.nth(1).waitFor();
+    await this.targetPopulations.nth(1).check();
     await this.startDate.fill("01/01/2024");
     await this.endDate.click();
   }

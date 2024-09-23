@@ -25,23 +25,38 @@ export class WPTransitionBenchmarkProjectionsPage extends BasePage {
     });
   }
 
-  public async editPopulations(populations: Locator[]) {
-    for (const [index, population] of populations.entries()) {
-      const editButton = population.getByLabel("edit button");
-      await editButton.click();
-      const drawer = this.page.getByRole("dialog");
-      await drawer.isVisible();
+  public async getIncompletePopulations() {
+    const warningIcon = await this.page.getByAltText("warning icon");
+    const warnings = await this.page
+      .getByRole("row")
+      .filter({ has: warningIcon })
+      .all();
 
-      // Fill out benchmarks for just one population for the sake of brevity
-      if (index === 0) {
-        await drawer.getByLabel("Yes").click();
-        await this.fillBenchmarks();
-      } else {
-        await drawer.getByLabel("No").click();
+    return warnings;
+  }
+
+  public async editPopulations() {
+    const populations = await this.getIncompletePopulations();
+
+    if (populations.length > 0) {
+      for (const [index, population] of populations.entries()) {
+        const editButton = population.getByLabel("edit button");
+        await editButton.click();
+        const drawer = this.page.getByRole("dialog");
+        await drawer.isVisible();
+
+        // Fill out benchmarks for just one population for the sake of brevity
+        if (index === 0) {
+          await drawer.getByLabel("Yes").click();
+          await this.fillBenchmarks();
+        } else {
+          await drawer.getByLabel("No").click();
+        }
+
+        await drawer.getByRole("button", { name: "Save & Close" }).click();
+        await drawer.waitFor({ state: "hidden" });
+        await this.editPopulations();
       }
-
-      await drawer.getByRole("button", { name: "Save & Close" }).click();
-      await drawer.isHidden();
     }
   }
 
