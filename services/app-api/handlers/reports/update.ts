@@ -110,12 +110,13 @@ export const updateReport = handler(async (event) => {
   }
 
   // Validate passed field data
-  const validatedFieldData = await validateFieldData(
-    formTemplate.validationJson,
-    unvalidatedFieldData
-  );
-
-  if (!validatedFieldData) {
+  let validatedFieldData;
+  try {
+    validatedFieldData = await validateFieldData(
+      formTemplate.validationJson,
+      unvalidatedFieldData
+    );
+  } catch {
     return badRequest(error.INVALID_DATA);
   }
 
@@ -138,13 +139,14 @@ export const updateReport = handler(async (event) => {
   );
 
   // validate report metadata
-  const validatedMetadata = await validateData(metadataValidationSchema, {
-    ...unvalidatedMetadata,
-    completionStatus,
-  });
-
-  // If metadata fails validation, return 400
-  if (!validatedMetadata) {
+  let validatedMetadata;
+  try {
+    validatedMetadata = await validateData(metadataValidationSchema, {
+      ...unvalidatedMetadata,
+      completionStatus,
+    });
+  } catch {
+    // If metadata fails validation, return 400
     return badRequest(error.INVALID_DATA);
   }
 

@@ -75,7 +75,7 @@ export const createReport = handler(
         ? await getEligibleWorkPlan(state)
         : { workPlanMetadata: undefined, workPlanFieldData: undefined };
 
-    // If we recieved no work plan information and we're trying to create a SAR, return NO_WORKPLANS_FOUND
+    // If we received no work plan information and we're trying to create a SAR, return NO_WORKPLANS_FOUND
     if (
       reportType === ReportType.SAR &&
       (!workPlanMetadata || !workPlanFieldData)
@@ -132,10 +132,15 @@ export const createReport = handler(
     }
 
     // Setup validation for what we expect to see in the payload
-    let validatedFieldData = await validateFieldData(
-      creationFieldDataValidationJson,
-      unvalidatedFieldData
-    );
+    let validatedFieldData;
+    try {
+      validatedFieldData = await validateFieldData(
+        creationFieldDataValidationJson,
+        unvalidatedFieldData
+      );
+    } catch {
+      return badRequest(error.INVALID_DATA);
+    }
 
     // If we are creating a SAR and found a Work Plan to copy from, grab its field data and add it to our SAR
     if (workPlanFieldData) {
@@ -147,8 +152,8 @@ export const createReport = handler(
       extractWorkPlanData(validatedFieldData!, reportYear, reportPeriod);
     }
 
-    // Return INVALID_DATA error if field data is not valid.
-    if (!validatedFieldData || Object.keys(validatedFieldData).length === 0) {
+    // Return INVALID_DATA error field data has no valid entries
+    if (validatedFieldData && Object.keys(validatedFieldData).length === 0) {
       return badRequest(error.INVALID_DATA);
     }
     // End Section - Check the payload that was sent with the request and validate it
@@ -189,12 +194,13 @@ export const createReport = handler(
      */
 
     // Validate the metadata for the submission
-    const validatedMetadata = await validateData(metadataValidationSchema, {
-      ...unvalidatedMetadata,
-    });
-
-    // Return INVALID_DATA error if metadata is not valid.
-    if (!validatedMetadata) {
+    let validatedMetadata;
+    try {
+      validatedMetadata = await validateData(metadataValidationSchema, {
+        ...unvalidatedMetadata,
+      });
+    } catch {
+      // Return INVALID_DATA error if metadata is not valid.
       return badRequest(error.INVALID_DATA);
     }
 
