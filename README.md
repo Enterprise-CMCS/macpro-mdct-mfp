@@ -96,8 +96,6 @@ Local dev is built around the Serverless plugin [serverless-offline](https://git
 
 Local authorization bypasses Cognito. The frontend mimics login in local storage with a mock user and sends an id in the `cognito-identity-id` header on every request. `serverless-offline` expects that and sets it as the cognitoId in the requestContext for your lambdas, just like Cognito would in AWS.
 
-The [postman folder](./postman/) contains a full API collection and environment for this application. See the [README](./postman/README.md) for more information.
-
 ## Testing
 
 ### Unit Testing
