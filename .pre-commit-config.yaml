@@ -38,8 +38,6 @@ repos:
         args:
           - --exclude-files
           - .*test\.json
-          - --exclude-files
-          - .*\.postman_collection\.json
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
     rev: v0.0.272
