@@ -106,7 +106,7 @@ export const EntityDetailsDashboardOverlay = ({
             text={dashboard?.verbiage?.intro}
             initiativeName={reportPageTitle}
           />
-          <Table content={tableHeaders()}>
+          <Table sx={sx.table} content={tableHeaders()}>
             {entitySteps?.map((step, index) => (
               <EntityRow
                 key={`entityrow-${index}`}
@@ -155,6 +155,19 @@ const sx = {
   overlayContainer: {
     backgroundColor: "palette.white",
     width: "100%",
+  },
+  table: {
+    th: {
+      fontWeight: "bold",
+      color: "palette.gray_medium",
+      paddingLeft: "1rem",
+      paddingRight: "0",
+      borderBottom: "1px solid",
+      borderColor: "palette.gray_light",
+      ".tablet &, .mobile &": {
+        border: "none",
+      },
+    },
   },
   backButton: {
     padding: 0,

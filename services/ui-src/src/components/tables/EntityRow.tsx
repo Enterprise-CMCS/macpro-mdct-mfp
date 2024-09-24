@@ -130,7 +130,7 @@ export const EntityRow = ({
       >
         <EntityStatusIcon entityStatus={entityStatus} />
       </Td>
-      <Td sx={sx.entityName} colSpan={3}>
+      <Td sx={sx.entityName} colSpan={2}>
         <Box
           display={"flex"}
           flexDirection={isMobile ? "column" : "row"}
@@ -230,10 +230,8 @@ interface Props {
 
 const sx = {
   content: {
-    borderTop: "1px solid var(--chakra-colors-palette-gray_medium)",
-    borderBottom: "1px solid var(--chakra-colors-palette-gray_medium)",
     td: {
-      borderColor: "palette.gray_lighter",
+      borderColor: "palette.gray_light",
       paddingRight: 0,
     },
   },
