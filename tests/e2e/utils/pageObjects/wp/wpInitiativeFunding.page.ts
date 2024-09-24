@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import BasePage from "../base.page";
 
 export class WPFundingSourcesPage extends BasePage {
@@ -46,6 +46,7 @@ export class WPFundingSourcesPage extends BasePage {
     }
 
     await this.modal.getByRole("button", { name: "Save" }).click();
+    await expect(this.page.getByRole("alert")).not.toBeVisible();
     await this.modal.isHidden();
   }
 }

@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import BasePage from "../base.page";
 import { WPDefineInitiativePage } from "./wpInitiativeDefine.page";
 import { WPEvaluationPlanPage } from "./wpInitiativeEvaluation.page";
@@ -43,7 +43,8 @@ export class WPInitiativeOverlayPage extends BasePage {
     const definePage = new WPDefineInitiativePage(this.page);
     await definePage.isReady();
     await definePage.fillFields();
-    await definePage.backButton.click();
+    await definePage.saveButton.click();
+    await expect(definePage.page.getByRole("alert")).not.toBeVisible();
   }
 
   public async completeEvaluationPlan() {

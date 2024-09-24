@@ -11,6 +11,7 @@ export class WPDefineInitiativePage extends BasePage {
   readonly targetPopulations: Locator;
   readonly startDate: Locator;
   readonly endDate: Locator;
+  readonly saveButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -28,17 +29,17 @@ export class WPDefineInitiativePage extends BasePage {
     );
     this.targetPopulations = page.getByRole("checkbox");
     this.startDate = page.getByLabel("Start date");
-    this.endDate = page.getByRole("radio", { name: "No" });
+    this.endDate = page.getByRole("group", {
+      name: "Does the initiative have a projected end date?",
+    });
+    this.saveButton = page.getByRole("button", { name: "Save & return" });
   }
 
   public async fillFields() {
     await this.description.fill("test");
-    // Playwright is fast we gotta be really sure the checkboxes are fully loaded before trying to check them ¯\(°_o)/¯
-    await this.targetPopulations.first().waitFor();
-    await this.targetPopulations.first().check();
-    await this.targetPopulations.nth(1).waitFor();
-    await this.targetPopulations.nth(1).check();
+    await this.page.getByLabel("Older adults").check();
+    await this.page.getByLabel("Individuals with physical").check();
     await this.startDate.fill("01/01/2024");
-    await this.endDate.click();
+    await this.endDate.getByLabel("No").click();
   }
 }

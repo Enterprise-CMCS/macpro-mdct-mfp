@@ -124,6 +124,8 @@ test.describe("Creating a new Work Plan", () => {
       await overlayPage.backButton.click();
     }
 
+    await wpInitiativesDashboard.isReady();
+
     // Review and Submit
     await wpInitiativesDashboard.continueButton.click();
     await wpReviewAndSubmit.isReady();

@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import BasePage from "../base.page";
 
 export class WPEvaluationPlanPage extends BasePage {
@@ -44,6 +44,7 @@ export class WPEvaluationPlanPage extends BasePage {
     // Click the "No" radio option so we don't have to fill out conditional fields
     await radioGroup.getByLabel("No").click();
     await modal.getByRole("button", { name: "Save" }).click();
+    await expect(this.page.getByRole("alert")).not.toBeVisible();
     await modal.isHidden();
   }
 }
