@@ -326,7 +326,7 @@ const sx = {
       paddingLeft: "1rem",
       paddingRight: "0",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_lighter",
+      borderColor: "palette.gray_light",
       ".tablet &, .mobile &": {
         border: "none",
       },
