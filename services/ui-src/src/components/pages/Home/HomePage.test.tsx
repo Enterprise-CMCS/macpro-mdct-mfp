@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 // components
 import { HomePage } from "components";
 // utils
-import { mockLDFlags, RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { testA11y } from "utils/testing/commonTests";
 
 const homeView = (
@@ -10,8 +10,6 @@ const homeView = (
     <HomePage />
   </RouterWrappedComponent>
 );
-
-mockLDFlags.setDefault({ wpReport: true, sarReport: true });
 
 describe("<HomePage />", () => {
   test("Check that HomePage renders", () => {

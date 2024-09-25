@@ -58,7 +58,7 @@ export const CreateWorkPlanModal = ({
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  // temporary flag for testing copyover
+  // LaunchDarkly - temporary flag for testing copyover
   const isCopyOverTest = useFlags()?.isCopyOverTest;
 
   const form: FormJson = !previousReport

@@ -23,6 +23,8 @@ export const ExportedReportBanner = () => {
 
   const verbiage = verbiageMap[reportType];
   const { reportBanner } = verbiage;
+
+  // LaunchDarkly
   const printExperience = useFlags()?.printExperience;
 
   const onClickHandler = () => {
