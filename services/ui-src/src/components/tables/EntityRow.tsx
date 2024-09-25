@@ -130,7 +130,7 @@ export const EntityRow = ({
       >
         <EntityStatusIcon entityStatus={entityStatus} />
       </Td>
-      <Td sx={sx.entityName} colSpan={2}>
+      <Td sx={sx.entityName}>
         <Box
           display={"flex"}
           flexDirection={isMobile ? "column" : "row"}

@@ -45,7 +45,7 @@ export const EntityDetailsDashboardOverlay = ({
   };
 
   const tableHeaders = () => {
-    return { headRow: ["", "", ""] };
+    return { headRow: ["", ""] };
   };
 
   const reportPageTitle = selectedEntity?.isInitiativeClosed
