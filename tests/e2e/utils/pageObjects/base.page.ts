@@ -25,18 +25,4 @@ export default class BasePage {
     await this.title.isVisible();
     return expect(this.page).toHaveURL(this.path);
   }
-
-  public async isFinishedSaving(response) {
-    return (
-      response.url().includes("https://services/url") &&
-      response.status() === 200
-    );
-  }
-
-  public async savedFormResponse() {
-    const response = await this.page.waitForResponse(
-      async (response) => await this.isFinishedSaving(response)
-    );
-    return response;
-  }
 }
