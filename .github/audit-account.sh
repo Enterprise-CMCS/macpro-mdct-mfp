@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o pipefail -o nounset -u
 git fetch --all > /dev/null
+#debug
+git branch -a
 
 #Parse inputs
 case ${1-} in

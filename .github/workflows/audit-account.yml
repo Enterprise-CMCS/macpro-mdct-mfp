@@ -60,6 +60,7 @@ jobs:
       - name: Assemble CSV files
         run: |
           #!/bin/bash
+          gh cache delete --all
           pushd .github
           echo "Reports with no entries will be omitted"
           CI_ACTIVE="$(./audit-account.sh ci_active resources.json)"
