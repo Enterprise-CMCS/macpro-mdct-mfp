@@ -7,7 +7,6 @@ import { AppRoutes } from "components";
 import { useStore, UserProvider } from "utils";
 import {
   mockStateUserStore,
-  mockLDFlags,
   mockBannerStore,
   mockReportStore,
 } from "utils/testing/setupJest";
@@ -19,8 +18,6 @@ mockedUseStore.mockReturnValue({
   ...mockBannerStore,
   ...mockReportStore,
 });
-
-mockLDFlags.setDefault({ wpReport: true, sarReport: true });
 
 global.structuredClone = jest.fn((val) => {
   return val ? JSON.parse(JSON.stringify(val)) : val;

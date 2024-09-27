@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "@testing-library/jest-dom";
 import "jest-axe/extend-expect";
-import { mockFlags, resetLDMocks } from "jest-launchdarkly-mock";
 // types
 import {
   UserRoles,
@@ -54,13 +53,6 @@ jest.mock("@chakra-ui/transition", () => ({
     <div hidden={!inProp}>{children}</div>
   )),
 }));
-
-/* Mock LaunchDarkly (see https://bit.ly/3QAeS7j) */
-export const mockLDFlags = {
-  setDefault: (baseline: any) => mockFlags(baseline),
-  clear: resetLDMocks,
-  set: mockFlags,
-};
 
 // AUTH
 
@@ -343,12 +335,6 @@ export const RouterWrappedComponent: React.FC = ({ children }) => (
   <Router>{children}</Router>
 );
 
-// LAUNCHDARKLY
-
-export const mockLDClient = {
-  variation: jest.fn(() => true),
-};
-
 // ASSET
 export * from "./mockAsset";
 // BANNER
@@ -357,6 +343,8 @@ export * from "./mockBanner";
 export * from "./mockEntities";
 // FORM
 export * from "./mockForm";
+// LAUNCHDARKLY
+export * from "./mockLaunchDarkly";
 // REPORT
 export * from "./mockReport";
 // ROUTER
