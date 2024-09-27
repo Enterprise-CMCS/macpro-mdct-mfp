@@ -26,6 +26,8 @@ export default {
       subtitle:
         "Enrollees in separate CHIP programs funded under Title XXI should not be reported in the WP. Please check this box if the state is unable to remove information about Separate CHIP enrollees from its reporting on this program.",
     },
+    reportTitle:
+      "{{stateName}} MFP Work Plan for {{reportYear}} - Period {{reportPeriod}}",
   },
   tableHeaders: {
     indicator: "Indicator",

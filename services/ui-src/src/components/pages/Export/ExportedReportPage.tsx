@@ -22,6 +22,8 @@ import {
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
+import { useFlags } from "launchdarkly-react-client-sdk";
+import { translate } from "utils/text/translate";
 
 export const SAR_RET = "Recruitment, Enrollment, and Transitions";
 export const WP_SAR_STATE_TERRITORY_INITIATIVES =
@@ -52,14 +54,14 @@ export const ExportedReportPage = () => {
         <Box sx={sx.innerContainer}>
           {/* pdf metadata */}
           <Helmet>
-            <title>{reportTitle(reportType, reportPage, report)}</title>
+            <title>{reportTitle(reportType, report, reportPage)}</title>
             <meta name="author" content={metadata.author} />
             <meta name="subject" content={metadata.subject} />
             <meta name="language" content={metadata.language} />
           </Helmet>
           {/* report heading */}
           <Heading as="h1" sx={sx.heading}>
-            {reportTitle(reportType, reportPage, report)}
+            {reportTitle(reportType, report, reportPage)}
           </Heading>
           {/* report metadata tables */}
           <ExportedReportMetadataTable
@@ -80,13 +82,37 @@ export const ExportedReportPage = () => {
 
 export const reportTitle = (
   reportType: ReportType,
-  reportPage: any,
-  report: ReportShape
+  report: ReportShape,
+  reportPage?: any
 ): string => {
+  // LaunchDarkly
+  const translateReport = useFlags()?.translateReport;
+
+  const { fieldData, reportYear, reportPeriod } = report;
+  const { stateName } = fieldData;
   switch (reportType) {
-    case ReportType.WP:
-    case ReportType.SAR:
-      return `${report.fieldData.stateName} ${reportPage.heading} ${report.reportYear} - Period ${report.reportPeriod}`;
+    case ReportType.WP: {
+      if (translateReport) {
+        return translate(wpVerbiage.reportPage.reportTitle, {
+          stateName,
+          reportYear,
+          reportPeriod,
+        });
+      }
+
+      return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
+    }
+    case ReportType.SAR: {
+      if (translateReport) {
+        return translate(sarVerbiage.reportPage.reportTitle, {
+          stateName,
+          reportYear,
+          reportPeriod,
+        });
+      }
+
+      return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
+    }
     default:
       assertExhaustive(reportType);
       throw new Error(
@@ -95,12 +121,21 @@ export const reportTitle = (
   }
 };
 
-export const formatSectionHeader = (report: ReportShape, header: string) => {
+export const formatSectionHeader = (
+  report: ReportShape,
+  header: string,
+  translateReport: boolean
+) => {
   const newPeriod = `${displayLongformPeriod(
     report.reportPeriod,
     report.reportYear
   )}`;
-  const newHeader = header.replace(" reporting period", newPeriod);
+
+  if (translateReport) {
+    return translate(header, { reportingPeriod: newPeriod });
+  }
+
+  const newHeader = header.replace("reporting period", newPeriod);
   return newHeader;
 };
 
@@ -123,13 +158,25 @@ export const renderReportSections = (
   reportRoutes: ReportRoute[],
   report: ReportShape
 ) => {
+  // LaunchDarkly
+  let translateReport = useFlags()?.translateReport;
+
   const { reportType } = report;
   // recursively render sections
   const renderSection = (section: ReportRoute, headingLevel: HeadingLevel) => {
     //because R,E & T section needs numbers added, switch from shallow copy to deep copy
     const childSections = structuredClone(section.children) || [];
-    const heading = section.verbiage?.intro.subsection
-      ? formatSectionHeader(report, section.verbiage.intro.subsection)
+    let subsection;
+
+    if (translateReport && section.verbiage?.intro.subsectionTitle) {
+      subsection = section.verbiage.intro.subsectionTitle;
+    } else {
+      subsection = section.verbiage?.intro.subsection;
+      translateReport = false;
+    }
+
+    const heading = subsection
+      ? formatSectionHeader(report, subsection, translateReport)
       : section.name;
     const sectionHeading =
       section.verbiage?.intro.exportSectionHeader || heading;
