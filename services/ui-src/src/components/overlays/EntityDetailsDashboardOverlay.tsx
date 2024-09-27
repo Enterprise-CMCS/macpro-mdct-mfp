@@ -164,9 +164,6 @@ const sx = {
       paddingRight: "0",
       borderBottom: "1px solid",
       borderColor: "palette.gray_light",
-      ".tablet &, .mobile &": {
-        border: "none",
-      },
     },
   },
   backButton: {
