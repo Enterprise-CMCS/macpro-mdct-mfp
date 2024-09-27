@@ -246,6 +246,9 @@ const sx = {
       margin: "0.3rem auto",
       listStyleType: "none",
       lineHeight: "1.3rem",
+      ".mobile &": {
+        margin: "auto",
+      },
       li: {
         wordWrap: "break-word",
         whiteSpace: "break-spaces",
