@@ -1,17 +1,30 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
 import { Button } from "@chakra-ui/react";
-import { Form, Modal, ReportContext } from "components";
+import { Alert, Form, Modal, ReportContext } from "components";
 // forms
 import copyWPFormJson from "forms/addEditWpReport/addEditWpReport.json";
 import newWPFormJson from "forms/addEditWpReport/newWpReport.json";
+import resetWPFormJson from "forms/addEditWpReport/resetWpReport.json";
 // utils
-import { AnyObject, FormJson, ReportStatus, ReportType } from "types";
+import {
+  AlertTypes,
+  AnyObject,
+  FormJson,
+  ReportStatus,
+  ReportType,
+} from "types";
 import { useStore } from "utils";
 import { States, DEFAULT_TARGET_POPULATIONS } from "../../constants";
 import { useFlags } from "launchdarkly-react-client-sdk";
 
 const reportType = ReportType.WP;
+
+const resetAlertText = {
+  title: "A MFP Work Plan for this Reporting Period already exists",
+  description:
+    "To avoid duplication, select a different Year or Reporting Period; or select “Cancel” and select “Continue MFP Work Plan for next Period”.",
+};
 
 /**
  * @function: Generate report year choices
@@ -32,20 +45,31 @@ const generateReportYearChoices = () => {
 };
 
 export const CreateWorkPlanModal = ({
+  isResetting,
   activeState,
   previousReport,
   modalDisclosure,
 }: Props) => {
   const { createReport, fetchReportsByState } = useContext(ReportContext);
+  const { reportsByState } = useStore();
   const { full_name } = useStore().user ?? {};
+  const [formPeriodValue, setFormPeriodValue] = useState<number>();
+  const [formYearValue, setFormYearValue] = useState<number>();
+  const [showAlert, setShowAlert] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   // temporary flag for testing copyover
   const isCopyOverTest = useFlags()?.isCopyOverTest;
 
-  const form: FormJson = !previousReport ? newWPFormJson : copyWPFormJson;
+  const form: FormJson = !previousReport
+    ? newWPFormJson
+    : isResetting
+    ? resetWPFormJson
+    : copyWPFormJson;
 
-  if (!previousReport) {
+  const notCopyingReport = !previousReport || isResetting;
+
+  if (notCopyingReport) {
     for (let field of form.fields) {
       if (field.id.match("reportPeriodYear")) {
         field.props = {
@@ -56,12 +80,39 @@ export const CreateWorkPlanModal = ({
     }
   }
 
-  /**
-   * @function: Prepare WP payload
-   * @param wpReset: (optional) determine whether the user would like to continue a Work Plan for next period,
-   * but clear / reset any existing data from the previous period
-   */
-  const prepareWpPayload = (formData: any, wpReset?: boolean) => {
+  // set alert to show if selected period and year match any existing report
+  useEffect(() => {
+    if (!reportsByState) return;
+    for (const report of reportsByState) {
+      if (
+        report.reportPeriod === formPeriodValue &&
+        report.reportYear === formYearValue &&
+        !report.archived
+      ) {
+        setShowAlert(true);
+      }
+    }
+  }, [formPeriodValue, formYearValue]);
+
+  // reset error state to false upon modal close
+  useEffect(() => {
+    if (!modalDisclosure.isOpen) {
+      setFormPeriodValue(undefined);
+      setFormYearValue(undefined);
+      setShowAlert(false);
+    }
+  }, [modalDisclosure.isOpen]);
+
+  // used to get the form values to enable/disable alert and submit button
+  const onChange = (formProvider: AnyObject) => {
+    if (formProvider.target.name === "reportPeriod")
+      setFormPeriodValue(formProvider.target.id === "reportPeriod-1" ? 1 : 2);
+    if (formProvider.target.name === "reportPeriodYear")
+      setFormYearValue(Number(formProvider.target.value));
+    setShowAlert(false);
+  };
+
+  const prepareWpPayload = (formData: AnyObject) => {
     const submissionName = "Work Plan";
 
     const wpPayload: AnyObject = {
@@ -77,7 +128,7 @@ export const CreateWorkPlanModal = ({
       },
     };
 
-    if (!previousReport) {
+    if (notCopyingReport) {
       const formattedReportYear = Number(formData.reportPeriodYear[0].value);
       const formattedReportPeriod =
         formData.reportPeriod[0].key === "reportPeriod-1" ? 1 : 2;
@@ -91,22 +142,17 @@ export const CreateWorkPlanModal = ({
       wpPayload.metadata = {
         ...wpPayload.metadata,
         copyReport: previousReport,
-        isReset: wpReset,
       };
     }
 
     return wpPayload;
   };
 
-  /**
-   * @param wpReset: (optional) determine whether the user would like to continue a Work Plan for next period,
-   * but clear / reset any existing data from the previous period
-   */
-  const writeReport = async (formData: any, wpReset?: boolean) => {
+  const writeReport = async (formData: AnyObject) => {
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
-    const dataToWrite = prepareWpPayload(formData, wpReset);
+    const dataToWrite = prepareWpPayload(formData);
 
     await createReport(reportType, activeState, {
       ...dataToWrite,
@@ -128,14 +174,9 @@ export const CreateWorkPlanModal = ({
     setSubmitting(false);
   };
 
-  const resetReport = (formData: any) => {
-    writeReport(formData, true);
-    modalDisclosure.onClose();
-  };
-
   const isCopyDisabled = () => {
     //if no previous report or the previous report is not approve, disable copy button
-    return !previousReport || previousReport?.status !== "Approved";
+    return notCopyingReport || previousReport?.status !== "Approved";
   };
 
   return (
@@ -144,14 +185,14 @@ export const CreateWorkPlanModal = ({
       formId={form.id}
       modalDisclosure={modalDisclosure}
       submitting={submitting}
-      submitButtonDisabled={submitting}
+      submitButtonDisabled={submitting || showAlert}
       content={{
         heading: !isCopyDisabled() ? form.heading?.edit : form.heading?.add,
         subheading: !isCopyDisabled()
           ? form.heading?.subheadingEdit
           : form.heading?.subheading,
-        actionButtonText: !previousReport ? "Start new" : "",
-        closeButtonText: !previousReport ? "Cancel" : "",
+        actionButtonText: notCopyingReport ? "Start new" : "",
+        closeButtonText: notCopyingReport ? "Cancel" : "",
       }}
     >
       <Form
@@ -162,35 +203,31 @@ export const CreateWorkPlanModal = ({
         onSubmit={writeReport}
         validateOnRender={false}
         dontReset={true}
+        onChange={onChange}
       />
-      {previousReport && (
-        <>
-          <Button
-            sx={sx.copyBtn}
-            disabled={isCopyDisabled() || submitting}
-            onClick={writeReport}
-            type="submit"
-          >
-            Continue from previous period
-          </Button>
-          {!isCopyDisabled() && (
-            <Button
-              sx={sx.resetBtn}
-              onClick={resetReport}
-              disabled={submitting}
-              type="submit"
-              variant="outline"
-            >
-              Reset Work Plan
-            </Button>
-          )}
-        </>
+      {showAlert && (
+        <Alert
+          title={resetAlertText.title}
+          status={AlertTypes.ERROR}
+          description={resetAlertText.description}
+        />
+      )}
+      {!notCopyingReport && (
+        <Button
+          sx={sx.copyBtn}
+          disabled={isCopyDisabled() || submitting}
+          onClick={writeReport}
+          type="submit"
+        >
+          Continue from previous period
+        </Button>
       )}
     </Modal>
   );
 };
 
 interface Props {
+  isResetting: boolean;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
@@ -215,12 +252,5 @@ const sx = {
     ".mobile &": {
       fontSize: "sm",
     },
-  },
-  resetBtn: {
-    border: "none",
-    marginTop: "1rem",
-    fontWeight: "none",
-    textDecoration: "underline",
-    fontSize: "0.875rem",
   },
 };
