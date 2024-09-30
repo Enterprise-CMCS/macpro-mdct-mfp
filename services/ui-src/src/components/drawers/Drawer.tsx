@@ -44,7 +44,7 @@ export const Drawer = ({
           <Button
             sx={sx.drawerCloseButton}
             leftIcon={<CloseIcon />}
-            variant="link"
+            variant="transparent"
             onClick={onClose as MouseEventHandler}
           >
             Close
