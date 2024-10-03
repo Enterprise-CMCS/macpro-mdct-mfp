@@ -29,8 +29,8 @@ setup("authenticate as user", async ({ page }) => {
   const emailInput = page.getByRole("textbox", { name: "email" });
   const passwordInput = page.getByRole("textbox", { name: "password" });
   const loginButton = page.getByRole("button", { name: "Log In with Cognito" });
-  await emailInput.fill(statePassword);
-  await passwordInput.fill(stateUser);
+  await emailInput.fill(stateUser);
+  await passwordInput.fill(statePassword);
   await loginButton.click();
   await page.waitForURL("/");
   await page
