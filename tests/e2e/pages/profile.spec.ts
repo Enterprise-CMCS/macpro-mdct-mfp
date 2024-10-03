@@ -1,5 +1,4 @@
 import { expect, test } from "../utils/fixtures/base";
-import { e2eA11y } from "../utils";
 import { BrowserContext, Page } from "@playwright/test";
 import ProfilePage from "../utils/pageObjects/profile.page";
 import BannerEditorPage from "../utils/pageObjects/banner.page";
@@ -25,27 +24,33 @@ test.afterAll(async () => {
   await userContext.close();
 });
 test.describe("Admin profile", () => {
-  test("Admin user can navigate to /admin", async ({ adminHomePage }) => {
-    const profilePage = new ProfilePage(adminPage);
-    const bannerEditorPage = new BannerEditorPage(adminPage);
-    await adminHomePage.goto();
-    await adminHomePage.isReady();
-    await adminHomePage.manageAccount();
-    await profilePage.goto();
-    await expect(profilePage.bannerEditorButton).toBeVisible();
+  test(
+    "Admin user can navigate to /admin",
+    { tag: "@admin" },
+    async ({ adminHomePage }) => {
+      const profilePage = new ProfilePage(adminPage);
+      const bannerEditorPage = new BannerEditorPage(adminPage);
+      await adminHomePage.goto();
+      await adminHomePage.isReady();
+      await adminHomePage.manageAccount();
+      await profilePage.goto();
+      await expect(profilePage.bannerEditorButton).toBeVisible();
 
-    await profilePage.bannerEditorButton.click();
-    await bannerEditorPage.goto();
-    await bannerEditorPage.isReady();
-  });
+      await profilePage.bannerEditorButton.click();
+      await bannerEditorPage.goto();
+      await bannerEditorPage.isReady();
+    }
+  );
 
-  test("Is accessible on all device types for admin user", async ({
-    adminHomePage,
-  }) => {
-    await adminHomePage.goto();
-    await adminHomePage.isReady();
-    await e2eA11y(adminPage, "/profile");
-  });
+  test(
+    "Is accessible on all device types for admin user",
+    { tag: "@admin" },
+    async () => {
+      const profilePage = new ProfilePage(adminPage);
+      await profilePage.goto();
+      await profilePage.e2eA11y();
+    }
+  );
 });
 
 test.describe("State user profile", { tag: "@user" }, () => {
@@ -64,11 +69,9 @@ test.describe("State user profile", { tag: "@user" }, () => {
     await profilePage.isReady();
   });
 
-  test("Is accessible on all device types for state user", async ({
-    stateHomePage,
-  }) => {
-    await stateHomePage.goto();
-    await stateHomePage.isReady();
-    await e2eA11y(userPage, "/profile");
+  test("Is accessible on all device types for state user", async () => {
+    const profilePage = new ProfilePage(userPage);
+    await profilePage.goto();
+    await profilePage.e2eA11y();
   });
 });
