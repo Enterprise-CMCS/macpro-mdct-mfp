@@ -1,53 +1,74 @@
 import { expect, test } from "../utils/fixtures/base";
-import { e2eA11y, logInAdminUser, logInStateUser } from "../utils";
+import { e2eA11y } from "../utils";
+import { BrowserContext, Page } from "@playwright/test";
+import ProfilePage from "../utils/pageObjects/profile.page";
+import BannerEditorPage from "../utils/pageObjects/banner.page";
 
-test("Admin user can navigate to /admin", async ({
-  page,
-  adminHomePage,
-  profilePage,
-  bannerEditorPage,
-}) => {
-  await logInAdminUser(page);
-  await adminHomePage.isReady();
-  await adminHomePage.manageAccount();
-  await profilePage.isReady();
-  await expect(profilePage.bannerEditorButton).toBeVisible();
+let adminPage: Page;
+let userPage: Page;
+let adminContext: BrowserContext;
+let userContext: BrowserContext;
+test.beforeAll(async ({ browser }) => {
+  adminContext = await browser.newContext({
+    storageState: "playwright/.auth/admin.json",
+  });
+  adminPage = await adminContext.newPage();
 
-  await profilePage.bannerEditorButton.click();
-  await bannerEditorPage.isReady();
+  userContext = await browser.newContext({
+    storageState: "playwright/.auth/user.json",
+  });
+  userPage = await userContext.newPage();
 });
 
-test("State user cannot navigate to /admin", async ({
-  page,
-  stateHomePage,
-  profilePage,
-  bannerEditorPage,
-}) => {
-  await logInStateUser(page);
-  await stateHomePage.isReady();
-  await stateHomePage.manageAccount();
-  await profilePage.isReady();
-  await expect(profilePage.bannerEditorButton).not.toBeVisible();
-  await bannerEditorPage.goto();
+test.afterAll(async () => {
+  await adminContext.close();
+  await userContext.close();
+});
+test.describe("Admin profile", () => {
+  test("Admin user can navigate to /admin", async ({ adminHomePage }) => {
+    const profilePage = new ProfilePage(adminPage);
+    const bannerEditorPage = new BannerEditorPage(adminPage);
+    await adminHomePage.goto();
+    await adminHomePage.isReady();
+    await adminHomePage.manageAccount();
+    await profilePage.goto();
+    await expect(profilePage.bannerEditorButton).toBeVisible();
 
-  // Expect a redirect to the profile page
-  await profilePage.isReady();
+    await profilePage.bannerEditorButton.click();
+    await bannerEditorPage.goto();
+    await bannerEditorPage.isReady();
+  });
+
+  test("Is accessible on all device types for admin user", async ({
+    adminHomePage,
+  }) => {
+    await adminHomePage.goto();
+    await adminHomePage.isReady();
+    await e2eA11y(adminPage, "/profile");
+  });
 });
 
-test("Is accessible on all device types for state user", async ({
-  page,
-  stateHomePage,
-}) => {
-  await logInStateUser(page);
-  await stateHomePage.isReady();
-  await e2eA11y(page, "/profile");
-});
+test.describe("State user profile", { tag: "@user" }, () => {
+  test("State user cannot navigate to /admin", async ({ stateHomePage }) => {
+    const profilePage = new ProfilePage(userPage);
+    const bannerEditorPage = new BannerEditorPage(userPage);
 
-test("Is accessible on all device types for admin user", async ({
-  page,
-  adminHomePage,
-}) => {
-  await logInAdminUser(page);
-  await adminHomePage.isReady();
-  await e2eA11y(page, "/profile");
+    await stateHomePage.goto();
+    await stateHomePage.isReady();
+    await stateHomePage.manageAccount();
+    await profilePage.goto();
+    await expect(profilePage.bannerEditorButton).not.toBeVisible();
+    await bannerEditorPage.goto();
+
+    // Expect a redirect to the profile page
+    await profilePage.isReady();
+  });
+
+  test("Is accessible on all device types for state user", async ({
+    stateHomePage,
+  }) => {
+    await stateHomePage.goto();
+    await stateHomePage.isReady();
+    await e2eA11y(userPage, "/profile");
+  });
 });
