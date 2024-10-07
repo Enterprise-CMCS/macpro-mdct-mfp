@@ -28,8 +28,12 @@ export default class BasePage {
     this.logoutButton = page.getByRole("menuitem", { name: "Log Out" });
   }
 
-  public async goto() {
-    await this.page.goto(this.path);
+  public async goto(url?: string) {
+    if (url) {
+      await this.page.goto(url);
+    } else {
+      await this.page.goto(this.path);
+    }
   }
 
   public async isReady() {
