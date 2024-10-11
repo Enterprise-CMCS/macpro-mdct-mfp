@@ -43,7 +43,7 @@ export default defineConfig({
       testMatch: /.*\.setup\.ts/,
     },
     {
-      name: "behind-auth",
+      name: "chromium",
       use: { ...devices["Desktop Chrome"] },
       dependencies: ["setup"],
     },
