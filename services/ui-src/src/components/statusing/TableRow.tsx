@@ -6,16 +6,26 @@ import { StatusIcon } from "./StatusIcon";
 
 export const TableRow = ({ page, rowDepth }: RowProps) => {
   const { isMobile } = useBreakpoint();
-  const { name, path, children, status } = page;
   const { editable } = useStore();
+  const { name, path, children, status } = page;
   const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
 
-  const isMobileAndNotChildEditButton =
-    isMobile && !children && EditButton({ buttonAriaLabel, path, editable });
+  const isMobileAndNotChildEditButton = isMobile && !children && (
+    <EditButton
+      buttonAriaLabel={buttonAriaLabel}
+      path={path}
+      editable={editable}
+    />
+  );
 
-  const notChildEditButton =
-    !children &&
-    EditButton({ buttonAriaLabel, path, editable, showIcon: true });
+  const notChildEditButton = !children && (
+    <EditButton
+      buttonAriaLabel={buttonAriaLabel}
+      path={path}
+      editable={editable}
+      showIcon={true}
+    />
+  );
 
   let parentPl = "1rem";
   let subparentPl = `${1.25 * rowDepth}rem`;
