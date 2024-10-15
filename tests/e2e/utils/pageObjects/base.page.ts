@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 export default class BasePage {
   public path = "/";
@@ -27,8 +28,12 @@ export default class BasePage {
     this.logoutButton = page.getByRole("menuitem", { name: "Log Out" });
   }
 
-  public async goto() {
-    await this.page.goto(this.path);
+  public async goto(url?: string) {
+    if (url) {
+      await this.page.goto(url);
+    } else {
+      await this.page.goto(this.path);
+    }
   }
 
   public async isReady() {
@@ -46,5 +51,22 @@ export default class BasePage {
     await this.myAccountButton.click();
     await this.accountMenu.isVisible();
     await this.logoutButton.click();
+  }
+
+  public async e2eA11y() {
+    const breakpoints = {
+      mobile: [560, 800],
+      tablet: [880, 1000],
+      desktop: [1200, 1200],
+    };
+
+    for (const size of Object.values(breakpoints)) {
+      this.page.setViewportSize({ width: size[0], height: size[1] });
+      const results = await new AxeBuilder({ page: this.page })
+        .withTags(["wcag2a", "wcag2aa"])
+        .disableRules(["duplicate-id"])
+        .analyze();
+      expect(results.violations).toEqual([]);
+    }
   }
 }
