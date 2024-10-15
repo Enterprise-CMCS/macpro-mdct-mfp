@@ -8,7 +8,8 @@ export class WPDefineInitiativePage extends BasePage {
   readonly title: Locator;
   readonly backButton: Locator;
   readonly description: Locator;
-  readonly targetPopulations: Locator;
+  readonly olderAdultsCheckbox: Locator;
+  readonly individualsPhysicalCheckbox: Locator;
   readonly startDate: Locator;
   readonly endDate: Locator;
   readonly saveButton: Locator;
@@ -27,7 +28,10 @@ export class WPDefineInitiativePage extends BasePage {
     this.description = page.getByLabel(
       "Describe the initiative, including key activities:"
     );
-    this.targetPopulations = page.getByRole("checkbox");
+    this.olderAdultsCheckbox = page.getByLabel("Older adults");
+    this.individualsPhysicalCheckbox = page.getByLabel(
+      "Individuals with physical"
+    );
     this.startDate = page.getByLabel("Start date");
     this.endDate = page.getByRole("group", {
       name: "Does the initiative have a projected end date?",
@@ -37,8 +41,8 @@ export class WPDefineInitiativePage extends BasePage {
 
   public async fillFields() {
     await this.description.fill("test");
-    await this.page.getByLabel("Older adults").check();
-    await this.page.getByLabel("Individuals with physical").check();
+    await this.olderAdultsCheckbox.check();
+    await this.individualsPhysicalCheckbox.check();
     await this.startDate.fill("01/01/2024");
     await this.endDate.getByLabel("No").click();
   }

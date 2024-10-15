@@ -38,18 +38,18 @@ export class WPInitiativeOverlayPage extends BasePage {
     return this.page.getByRole("heading", { name: topic }).isVisible();
   }
 
-  public async completeDefineInitiative() {
+  public async completeDefineInitiative(page: Page) {
     await this.defineInitiative.getByRole("button", { name: "Edit" }).click();
-    const definePage = new WPDefineInitiativePage(this.page);
+    const definePage = new WPDefineInitiativePage(page);
     await definePage.isReady();
     await definePage.fillFields();
     await definePage.saveButton.click();
     await expect(definePage.page.getByRole("alert")).not.toBeVisible();
   }
 
-  public async completeEvaluationPlan() {
+  public async completeEvaluationPlan(page: Page) {
     await this.evaluationPlan.getByRole("button", { name: "Edit" }).click();
-    const evaluationPage = new WPEvaluationPlanPage(this.page);
+    const evaluationPage = new WPEvaluationPlanPage(page);
     await evaluationPage.isReady();
     const noObjectivesText = evaluationPage.page.getByText(
       "Objective total count: 0"
@@ -61,9 +61,9 @@ export class WPInitiativeOverlayPage extends BasePage {
     await evaluationPage.backButton.click();
   }
 
-  public async completeFundingSources() {
+  public async completeFundingSources(page: Page) {
     await this.fundingSources.getByRole("button", { name: "Edit" }).click();
-    const fundingPage = new WPFundingSourcesPage(this.page);
+    const fundingPage = new WPFundingSourcesPage(page);
     await fundingPage.isReady();
     const noFundingSourcesText =
       fundingPage.page.getByText("Funding Sources: 0");
