@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 //components
 import { Table, Tbody } from "@chakra-ui/react";
 import { TableRow } from "./TableRow";
@@ -18,7 +18,7 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 jest.mock("utils/other/useBreakpoint", () => ({
   useBreakpoint: jest.fn(() => ({
-    isDesktop: false,
+    isMobile: false,
   })),
 }));
 
@@ -45,6 +45,28 @@ describe("<TableRow />", () => {
     render(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));
     expect(screen.getByText("Transition Benchmarks")).toBeVisible();
     expect(screen.getByAltText("Success notification")).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Edit Transition Benchmarks" })
+    ).toBeVisible();
+  });
+
+  test("TableRow renders correctly across breakpoints", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));
+    expect(screen.getByText("Transition Benchmarks")).toBeVisible();
+    expect(screen.getByAltText("Success notification")).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Edit Transition Benchmarks" })
+    ).toBeVisible();
+
+    window.innerWidth = 500;
+    fireEvent(window, new Event("resize"));
+
+    expect(screen.getByText("Transition Benchmarks")).toBeVisible();
+    expect(screen.getByAltText("Success notification")).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Edit Transition Benchmarks" })
+    ).toBeVisible();
   });
 
   testA11y(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));

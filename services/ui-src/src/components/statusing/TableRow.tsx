@@ -10,22 +10,8 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
   const { name, path, children, status } = page;
   const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
 
-  const isMobileAndNotChildEditButton = isMobile && !children && (
-    <EditButton
-      buttonAriaLabel={buttonAriaLabel}
-      path={path}
-      editable={editable}
-    />
-  );
-
-  const notChildEditButton = !children && (
-    <EditButton
-      buttonAriaLabel={buttonAriaLabel}
-      path={path}
-      editable={editable}
-      showIcon={true}
-    />
-  );
+  const displayMobileEditButton = isMobile && !children?.length;
+  const displayDefaultEditButton = !isMobile && !children?.length;
 
   let parentPl = "1rem";
   let subparentPl = `${1.25 * rowDepth}rem`;
@@ -41,24 +27,35 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
 
   return (
     <Tr>
-      {rowDepth == 1 ? (
-        <Td sx={sx.parent} pl={parentPl}>
-          <Text>{name}</Text>
-          {isMobileAndNotChildEditButton}
-        </Td>
-      ) : (
-        <Td sx={sx.subparent} pl={subparentPl}>
-          <Text>{name}</Text>
-          {isMobileAndNotChildEditButton}
-        </Td>
-      )}
+      <Td
+        sx={rowDepth == 1 ? sx.parent : sx.subparent}
+        pl={rowDepth == 1 ? parentPl : subparentPl}
+      >
+        <Text>{name}</Text>
+        {displayMobileEditButton && (
+          <EditButton
+            buttonAriaLabel={buttonAriaLabel}
+            path={path}
+            editable={editable}
+          />
+        )}
+      </Td>
       <Td
         sx={sx.statusColumn}
         pt={rowDepth == 1 ? ptRowDepth1 : ptRowDepthOver1}
       >
         <StatusIcon status={status} />
       </Td>
-      {!isMobile && <Td>{notChildEditButton}</Td>}
+      {displayDefaultEditButton && (
+        <Td>
+          <EditButton
+            buttonAriaLabel={buttonAriaLabel}
+            path={path}
+            editable={editable}
+            showIcon={true}
+          />
+        </Td>
+      )}
     </Tr>
   );
 };
