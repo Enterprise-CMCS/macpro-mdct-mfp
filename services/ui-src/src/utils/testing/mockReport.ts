@@ -1,4 +1,4 @@
-import { ReportStatus } from "types";
+import { OverlayModalTypes, ReportRoute, ReportStatus } from "types";
 import { genericErrorContent } from "verbiage/errors";
 import {
   mockStandardReportPageJson,
@@ -479,4 +479,114 @@ export const mockDashboardReportContext = {
 export const mockReportContextNoReports = {
   ...mockWpReportContext,
   reportsByState: undefined,
+};
+
+export const mockWPReportWithOverlays = {
+  ...mockWPFullReport,
+  fieldData: {
+    ...mockWPFullReport.fieldData,
+    [OverlayModalTypes.INITIATIVE]: [
+      {
+        ...mockWPFullReport.fieldData.entityType[0],
+        type: OverlayModalTypes.INITIATIVE,
+        id: "mock wip id", // this is both our search filter and our search target in renderFieldRow
+        initiative_wpTopic: [
+          {
+            value: "mock WP topic",
+          },
+        ],
+      },
+    ],
+  },
+  formTemplate: {
+    ...mockWPFullReport.formTemplate,
+    routes: [
+      /*
+       * We need the 3th route to have a child with entityType initiative,
+       * to avoid a null reference in getInitiativeStatus()
+       */
+      ...mockWPFullReport.formTemplate.routes.slice(0, 3),
+      {
+        name: "mock-route-4",
+        path: "/mock/mock-route-4",
+        children: [
+          {
+            entityType: OverlayModalTypes.INITIATIVE,
+          },
+        ],
+      } as ReportRoute,
+      ...mockWPFullReport.formTemplate.routes.slice(3),
+    ],
+  },
+};
+
+export const mockWPReportWithOtherTypeOverlays = {
+  ...mockWPFullReport,
+  fieldData: {
+    ...mockWPFullReport.fieldData,
+    [OverlayModalTypes.INITIATIVE]: [
+      {
+        ...mockWPFullReport.fieldData.entityType[0],
+        type: OverlayModalTypes.INITIATIVE,
+        id: "mock wip id",
+        initiative_wpTopic: [
+          {
+            key: "other-type-key",
+            value: "Other, specify",
+          },
+        ],
+        initiative_wp_otherTopic: "Unique initiative type",
+      },
+    ],
+  },
+};
+
+export const mockSARReportWithOverlays = {
+  ...mockSARFullReport,
+  fieldData: {
+    ...mockSARFullReport.fieldData,
+    [OverlayModalTypes.INITIATIVE]: [
+      {
+        ...mockSARFullReport.fieldData.entityType[0],
+        type: OverlayModalTypes.INITIATIVE,
+        id: "mock wip id", // this is both our search filter and our search target in renderFieldRow
+        initiative_wpTopic: [
+          {
+            value: "mock WP topic",
+          },
+        ],
+        "mock-expenditure-field-1": "5",
+        "mock-expenditure-field-2": "10",
+        "mock-expenditure-field-3": "15",
+        "mock-expenditure-field-4": "20",
+      },
+    ],
+  },
+  formTemplate: {
+    ...mockSARFullReport.formTemplate,
+    routes: [
+      /*
+       * We need the 2th route to have a child with entityType initiative,
+       * to avoid a null reference in getInitiativeStatus()
+       */
+      ...mockSARFullReport.formTemplate.routes.slice(0, 2),
+      {
+        name: "mock-dynamic-route",
+        path: "/mock/mock-dynamic-route",
+        initiatives: [
+          {
+            initiatiaveId: "mock-init-id",
+            name: "mock init name",
+            entitySteps: [
+              {
+                // TODO what here?
+                foo: "bar",
+              },
+            ],
+          },
+        ],
+      } as ReportRoute,
+      ...mockSARFullReport.formTemplate.routes.slice(2),
+    ],
+  },
 };
