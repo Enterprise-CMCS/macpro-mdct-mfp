@@ -16,6 +16,12 @@ MFP is the CMCS MDCT application for collecting state data related to the [Money
 
 The MFP demonstration supports state efforts for rebalancing their long-term services and supports system so that individuals have a choice of where they live and receive services. From the start of the program in 2008 through the end of 2020, states have transitioned over 107,000 people to community living under MFP.
 
+Project Goals:
+- Increase the use of home and community-based services (HCBS) in the Medicaid program
+- Eliminate barriers or mechanisms that prevent or restrict the flexible use of Medicaid funds to enable Medicaid-eligible individuals to receive support for appropriate and necessary long-term services and supports in the settings of their choice
+- Increase the ability of state Medicaid programs to assure continued provision of HCBS to eligible individuals who choose to transition from an institutional to a community setting
+- Ensure that procedures are in place to provide quality assurance for eligible individuals receiving Medicaid HCBS and to provide for continuous quality improvement in such services
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
@@ -89,8 +95,6 @@ Local dev is configured as a Typescript project. The entrypoint in `./src/run.ts
 Local dev is built around the Serverless plugin [serverless-offline](https://github.com/dherault/serverless-offline). `serverless-offline` runs an API Gateway locally configured by `./services/app-api/serverless.yml` and hot reloads your Lambdas on every save. The plugins [serverless-dynamodb-local](https://github.com/99x/serverless-dynamodb-local) and [serverless-s3-local](https://github.com/ar90n/serverless-s3-local) stand up the local database and s3 in a similar fashion.
 
 Local authorization bypasses Cognito. The frontend mimics login in local storage with a mock user and sends an id in the `cognito-identity-id` header on every request. `serverless-offline` expects that and sets it as the cognitoId in the requestContext for your lambdas, just like Cognito would in AWS.
-
-The [postman folder](./postman/) contains a full API collection and environment for this application. See the [README](./postman/README.md) for more information.
 
 ## Testing
 

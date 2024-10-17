@@ -37,6 +37,8 @@ export default {
         "Select the target populations applicable to your state during this reporting period.",
       ],
     },
+    reportTitle:
+      "{{stateName}} Semi-Annual Progress Report (SAR) for {{reportYear}} - Period {{reportPeriod}}",
   },
   generalInformationTable: {
     headings: [

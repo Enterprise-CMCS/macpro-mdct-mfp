@@ -13,7 +13,7 @@ import {
   isComplete,
 } from "../../utils/validation/completionStatus";
 // types
-import { StatusCodes, UserRoles } from "../../utils/types";
+import { UserRoles } from "../../utils/types";
 import { removeNotApplicablePopsFromInitiatives } from "../../utils/data/data";
 import {
   getReportFieldData,
@@ -22,23 +22,24 @@ import {
   putReportFieldData,
   putReportMetadata,
 } from "../../storage/reports";
+import {
+  badRequest,
+  forbidden,
+  internalServerError,
+  notFound,
+  ok,
+} from "../../utils/responses/response-lib";
 
 export const updateReport = handler(async (event) => {
   const { allParamsValid, reportType, state, id } =
     parseSpecificReportParameters(event);
   if (!allParamsValid) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.NO_KEY,
-    };
+    return badRequest(error.NO_KEY);
   }
 
   // If request body is missing, return a 400 error.
   if (!event?.body) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.MISSING_DATA,
-    };
+    return badRequest(error.MISSING_DATA);
   }
 
   // Blocklisted keys
@@ -54,67 +55,43 @@ export const updateReport = handler(async (event) => {
     "reportSubmissionDate",
   ];
 
-  try {
-    const eventBody = JSON.parse(event.body);
-    if (
-      (eventBody.metadata &&
-        Object.keys(eventBody.metadata).some((_) =>
-          metadataBlocklist.includes(_)
-        )) ||
-      (eventBody.fieldData &&
-        Object.keys(eventBody.fieldData).some((_) =>
-          fieldDataBlocklist.includes(_)
-        ))
-    ) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: error.INVALID_DATA,
-      };
-    }
-  } catch {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.INVALID_DATA,
-    };
+  // This parse is guaranteed to succeed, because handler-lib already did it.
+  const eventBody = JSON.parse(event.body);
+  if (
+    (eventBody.metadata &&
+      Object.keys(eventBody.metadata).some((_) =>
+        metadataBlocklist.includes(_)
+      )) ||
+    (eventBody.fieldData &&
+      Object.keys(eventBody.fieldData).some((_) =>
+        fieldDataBlocklist.includes(_)
+      ))
+  ) {
+    return badRequest(error.INVALID_DATA);
   }
 
   // Ensure user has correct permissions to update a report.
   if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
-    return {
-      status: StatusCodes.UNAUTHORIZED,
-      body: error.UNAUTHORIZED,
-    };
+    return forbidden(error.UNAUTHORIZED);
   }
 
   const currentReport = await getReportMetadata(reportType, state, id);
   if (!currentReport) {
-    return {
-      status: StatusCodes.NOT_FOUND,
-      body: error.NO_MATCHING_RECORD,
-    };
+    return notFound(error.NO_MATCHING_RECORD);
   }
 
   if (currentReport.archived || currentReport.locked) {
-    return {
-      status: StatusCodes.UNAUTHORIZED,
-      body: error.UNAUTHORIZED,
-    };
+    return forbidden(error.UNAUTHORIZED);
   }
 
   const formTemplate = await getReportFormTemplate(currentReport);
   if (!formTemplate) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.MISSING_DATA,
-    };
+    return notFound(error.MISSING_DATA);
   }
 
   const existingFieldData = await getReportFieldData(currentReport);
   if (!existingFieldData) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.MISSING_DATA,
-    };
+    return notFound(error.MISSING_DATA);
   }
 
   // Parse the passed payload.
@@ -124,31 +101,23 @@ export const updateReport = handler(async (event) => {
     unvalidatedPayload;
 
   if (!unvalidatedFieldData) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.MISSING_DATA,
-    };
+    return badRequest(error.MISSING_DATA);
   }
 
   // Validation JSON should be there—if it's not, there's an issue.
   if (!formTemplate.validationJson) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.MISSING_FORM_TEMPLATE,
-    };
+    return internalServerError(error.MISSING_FORM_TEMPLATE);
   }
 
   // Validate passed field data
-  const validatedFieldData = await validateFieldData(
-    formTemplate.validationJson,
-    unvalidatedFieldData
-  );
-
-  if (!validatedFieldData) {
-    return {
-      status: StatusCodes.SERVER_ERROR,
-      body: error.INVALID_DATA,
-    };
+  let validatedFieldData;
+  try {
+    validatedFieldData = await validateFieldData(
+      formTemplate.validationJson,
+      unvalidatedFieldData
+    );
+  } catch {
+    return badRequest(error.INVALID_DATA);
   }
 
   // Finalize fieldData to be sent to s3
@@ -161,10 +130,7 @@ export const updateReport = handler(async (event) => {
   try {
     await putReportFieldData(currentReport, cleanedFieldData);
   } catch {
-    return {
-      status: StatusCodes.SERVER_ERROR,
-      body: error.S3_OBJECT_UPDATE_ERROR,
-    };
+    return internalServerError(error.S3_OBJECT_UPDATE_ERROR);
   }
 
   const completionStatus = await calculateCompletionStatus(
@@ -173,17 +139,15 @@ export const updateReport = handler(async (event) => {
   );
 
   // validate report metadata
-  const validatedMetadata = await validateData(metadataValidationSchema, {
-    ...unvalidatedMetadata,
-    completionStatus,
-  });
-
-  // If metadata fails validation, return 400
-  if (!validatedMetadata) {
-    return {
-      status: StatusCodes.BAD_REQUEST,
-      body: error.INVALID_DATA,
-    };
+  let validatedMetadata;
+  try {
+    validatedMetadata = await validateData(metadataValidationSchema, {
+      ...unvalidatedMetadata,
+      completionStatus,
+    });
+  } catch {
+    // If metadata fails validation, return 400
+    return badRequest(error.INVALID_DATA);
   }
 
   // Update record in report metadata table
@@ -197,18 +161,12 @@ export const updateReport = handler(async (event) => {
   try {
     await putReportMetadata(updatedMetadata);
   } catch {
-    return {
-      status: StatusCodes.SERVER_ERROR,
-      body: error.DYNAMO_UPDATE_ERROR,
-    };
+    return internalServerError(error.DYNAMO_UPDATE_ERROR);
   }
 
-  return {
-    status: StatusCodes.SUCCESS,
-    body: {
-      ...updatedMetadata,
-      fieldData,
-      formTemplate,
-    },
-  };
+  return ok({
+    ...updatedMetadata,
+    fieldData,
+    formTemplate,
+  });
 });

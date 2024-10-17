@@ -13,7 +13,7 @@ export async function archiveReports(page: Page) {
     await modal.getByRole("textbox").fill("ARCHIVE");
     await modal.getByRole("button", { name: "Archive" }).click();
     await page.waitForResponse(
-      (response: Response) =>
+      (response) =>
         response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
         response.status() == 200
     );
@@ -33,6 +33,11 @@ export async function archiveExistingWPs(page: Page) {
   await page.getByLabel("MFP Work Plan").click();
 
   await page.getByRole("button", { name: "Go to Report Dashboard" }).click();
+  await page.waitForResponse(
+    (response) =>
+      response.url().includes(`/reports/WP/${stateAbbreviation}`) &&
+      response.status() == 200
+  );
   await page.getByRole("table").isVisible();
   await archiveReports(page);
   await logOutUser(page);

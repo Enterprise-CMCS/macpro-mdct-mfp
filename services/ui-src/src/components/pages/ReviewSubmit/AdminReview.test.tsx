@@ -4,7 +4,6 @@ import { ReportContext } from "components";
 // utils
 import {
   mockAdminUserStore,
-  mockLDFlags,
   mockReportMethods,
   mockUseStore,
   RouterWrappedComponent,
@@ -18,8 +17,6 @@ import { ReportStatus } from "types";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-
-mockLDFlags.setDefault({ pdfExport: false });
 
 const ReviewSubmitPage = (verbiage: any) => {
   return (
