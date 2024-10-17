@@ -68,7 +68,7 @@ export const DynamicModalOverlayReportPage = ({
   );
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
-    return { headRow: ["", verbiage.tableHeader, ""] };
+    return { headRow: ["", verbiage.tableHeader] };
   };
 
   // Open/Close overlay action methods
@@ -194,14 +194,22 @@ const sx = {
       paddingRight: "0",
       borderBottom: "1px solid",
       borderColor: "palette.gray_light",
-      ".tablet &, .mobile &": {
-        border: "none",
-      },
       "&:nth-of-type(1)": {
         width: "2.5rem",
       },
       "&:nth-of-type(3)": {
         width: "260px",
+      },
+    },
+    /**
+     * removes bottom border only for
+     * State or Territory-Specific Initiatives
+     */
+    tr: {
+      "&:last-of-type": {
+        td: {
+          border: "none",
+        },
       },
     },
   },

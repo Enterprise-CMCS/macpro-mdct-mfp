@@ -1,52 +1,62 @@
 import handler from "../handler-lib";
+// types
+import { UserRoles } from "../../utils/types";
+import { number, object, string } from "yup";
 // utils
+import { putBanner } from "../../storage/banners";
 import { hasPermissions } from "../../utils/auth/authorization";
 import { error } from "../../utils/constants/constants";
-// types
-import { StatusCodes, UserRoles } from "../../utils/types";
-import { number, object, string } from "yup";
 import { validateData } from "../../utils/validation/validation";
-import { putBanner } from "../../storage/banners";
+import {
+  badRequest,
+  created,
+  forbidden,
+  internalServerError,
+} from "../../utils/responses/response-lib";
+
+const validationSchema = object().shape({
+  key: string().required(),
+  title: string().required(),
+  description: string().required(),
+  link: string().url().notRequired(),
+  startDate: number().required(),
+  endDate: number().required(),
+});
 
 export const createBanner = handler(async (event, _context) => {
   if (!hasPermissions(event, [UserRoles.ADMIN])) {
-    return {
-      status: StatusCodes.UNAUTHORIZED,
-      body: error.UNAUTHORIZED,
-    };
-  } else if (!event?.pathParameters?.bannerId!) {
-    throw new Error(error.NO_KEY);
-  } else {
-    const unvalidatedPayload = JSON.parse(event!.body!);
-
-    const validationSchema = object().shape({
-      key: string().required(),
-      title: string().required(),
-      description: string().required(),
-      link: string().url().notRequired(),
-      startDate: number().required(),
-      endDate: number().required(),
-    });
-
-    const validatedPayload = await validateData(
-      validationSchema,
-      unvalidatedPayload
-    );
-
-    if (validatedPayload) {
-      const newBanner = {
-        key: event.pathParameters.bannerId,
-        createdAt: Date.now(),
-        lastAltered: Date.now(),
-        lastAlteredBy: event?.headers["cognito-identity-id"],
-        title: validatedPayload.title,
-        description: validatedPayload.description,
-        link: validatedPayload.link,
-        startDate: validatedPayload.startDate,
-        endDate: validatedPayload.endDate,
-      };
-      await putBanner(newBanner);
-      return { status: StatusCodes.CREATED, body: newBanner };
-    }
+    return forbidden(error.UNAUTHORIZED);
   }
+  if (!event?.pathParameters?.bannerId!) {
+    return badRequest(error.NO_KEY);
+  }
+  const unvalidatedPayload = JSON.parse(event.body!);
+
+  let validatedPayload;
+  try {
+    validatedPayload = await validateData(validationSchema, unvalidatedPayload);
+  } catch {
+    return badRequest(error.INVALID_DATA);
+  }
+
+  const { title, description, link, startDate, endDate } = validatedPayload;
+  const currentTime = Date.now();
+
+  const newBanner = {
+    key: event.pathParameters.bannerId,
+    createdAt: currentTime,
+    lastAltered: currentTime,
+    lastAlteredBy: event?.headers["cognito-identity-id"],
+    title,
+    description,
+    link,
+    startDate,
+    endDate,
+  };
+  try {
+    await putBanner(newBanner);
+  } catch {
+    return internalServerError(error.DYNAMO_CREATION_ERROR);
+  }
+  return created(newBanner);
 });

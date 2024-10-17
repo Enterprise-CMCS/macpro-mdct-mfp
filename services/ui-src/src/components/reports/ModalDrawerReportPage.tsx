@@ -184,7 +184,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   };
 
   const tableHeaders = {
-    headRow: ["", "", "", ""],
+    headRow: ["", ""],
   };
 
   const defaultsPopsNotSelected = (targetPopulations: AnyObject[]) => {
@@ -326,10 +326,7 @@ const sx = {
       paddingLeft: "1rem",
       paddingRight: "0",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_lighter",
-      ".tablet &, .mobile &": {
-        border: "none",
-      },
+      borderColor: "palette.gray_light",
       "&:nth-of-type(1)": {
         width: "2.5rem",
       },

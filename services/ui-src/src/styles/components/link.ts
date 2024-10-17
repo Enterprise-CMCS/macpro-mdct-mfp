@@ -33,6 +33,7 @@ const unstyledVariant = {
   textDecoration: "none",
   ":focus, :focus-visible, :hover, :visited, :visited:hover": {
     textDecoration: "none",
+    color: "palette.base",
   },
 };
 

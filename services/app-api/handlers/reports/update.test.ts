@@ -16,7 +16,9 @@ import {
   putReportMetadata,
 } from "../../storage/reports";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
+import { StatusCodes } from "../../utils/responses/response-lib";
+import { hasPermissions } from "../../utils/auth/authorization";
 
 jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
@@ -27,7 +29,7 @@ jest.mock("../../storage/reports", () => ({
 }));
 
 jest.mock("../../utils/auth/authorization", () => ({
-  isAuthorized: jest.fn().mockResolvedValue(true),
+  isAuthenticated: jest.fn().mockResolvedValue(true),
   hasPermissions: jest.fn(() => {}),
 }));
 const mockAuthUtil = require("../../utils/auth/authorization");
@@ -113,12 +115,12 @@ describe("Test updateReport API method", () => {
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
 
     const response = await updateReport(submissionEvent, null);
-    const body = JSON.parse(response.body);
+    const body = JSON.parse(response.body!);
 
     expect(body.status).toContain("submitted");
     expect(body.fieldData["mock-number-field"]).toBe("2");
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(response.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(response.statusCode).toBe(StatusCodes.Ok);
     expect(putReportFieldData).toHaveBeenCalled();
     expect(putReportMetadata).toHaveBeenCalled();
   });
@@ -130,26 +132,62 @@ describe("Test updateReport API method", () => {
 
     const response = await updateReport(invalidFieldDataSubmissionEvent, null);
 
-    expect(consoleSpy.error).toHaveBeenCalled();
-    expect(response.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(response.statusCode).toBe(StatusCodes.BadRequest);
     expect(response.body).toContain(error.INVALID_DATA);
     expect(putReportFieldData).not.toHaveBeenCalled();
     expect(putReportMetadata).not.toHaveBeenCalled();
+  });
+
+  test("Test attempted report update with no data returns 400", async () => {
+    const noBodyEvent = {
+      ...submissionEvent,
+      body: null,
+    };
+    const res = await updateReport(noBodyEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
+    expect(res.body).toContain(error.MISSING_DATA);
   });
 
   test("Test attempted report update with invalid data throws 400", async () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
     const res = await updateReport(updateEventWithInvalidData, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.MISSING_DATA);
+  });
+
+  test("Test attempted report update with disallowed metadata properties returns 400", async () => {
+    const eventWritingToReadonlyMetadataFields = {
+      ...submissionEvent,
+      body: `{"metadata":{"locked":true}}`,
+    };
+    const res = await updateReport(eventWritingToReadonlyMetadataFields, null);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
+    expect(res.body).toContain(error.INVALID_DATA);
+  });
+
+  test("Test attempted report update with disallowed fieldData properties returns 400", async () => {
+    const eventWritingToReadonlyFieldDataFields = {
+      ...submissionEvent,
+      body: `{"fieldData":{"submitterName":"Abaraham Lincoln"}}`,
+    };
+    const res = await updateReport(eventWritingToReadonlyFieldDataFields, null);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
+    expect(res.body).toContain(error.INVALID_DATA);
+  });
+
+  test("Test attempted report update without permissions returns 403", async () => {
+    (hasPermissions as jest.Mock).mockReturnValueOnce(false);
+    const res = await updateReport(submissionEvent, null);
+    expect(res.statusCode).toBe(StatusCodes.Forbidden);
+    expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
   test("Test attempted report update with no existing record throws 404", async () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await updateReport(updateEventWithInvalidData, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(res.statusCode).toBe(StatusCodes.NotFound);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
@@ -162,7 +200,7 @@ describe("Test updateReport API method", () => {
     const res = await updateReport(updateEvent, null);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
+    expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
@@ -174,7 +212,7 @@ describe("Test updateReport API method", () => {
     const res = await updateReport(noKeyEvent, null);
 
     expect(consoleSpy.warn).toHaveBeenCalled();
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 
@@ -186,7 +224,47 @@ describe("Test updateReport API method", () => {
     const res = await updateReport(noKeyEvent, null);
 
     expect(consoleSpy.warn).toHaveBeenCalled();
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
+  });
+
+  test("Test missing form template returns 404", async () => {
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(undefined);
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+
+    const response = await updateReport(submissionEvent, null);
+
+    expect(response.statusCode).toBe(StatusCodes.NotFound);
+    expect(response.body).toContain(error.MISSING_DATA);
+  });
+
+  test("Test missing field data returns 404", async () => {
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as jest.Mock).mockResolvedValue(undefined);
+
+    const response = await updateReport(submissionEvent, null);
+
+    expect(response.statusCode).toBe(StatusCodes.NotFound);
+    expect(response.body).toContain(error.MISSING_DATA);
+  });
+
+  test("Test attempted report update when form template missing validationJson throws 500", async () => {
+    const formTemplateWithNoValidation = {
+      ...mockReportJson,
+      validationJson: undefined,
+    };
+
+    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportFormTemplate as jest.Mock).mockResolvedValue(
+      formTemplateWithNoValidation
+    );
+    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+
+    const response = await updateReport(submissionEvent, null);
+
+    expect(response.statusCode).toBe(StatusCodes.InternalServerError);
+    expect(response.body).toContain(error.MISSING_FORM_TEMPLATE);
   });
 });
