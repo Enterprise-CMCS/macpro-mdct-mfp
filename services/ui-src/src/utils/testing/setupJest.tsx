@@ -54,30 +54,43 @@ jest.mock("@chakra-ui/transition", () => ({
   )),
 }));
 
-// AUTH
-
-jest.mock("aws-amplify", () => ({
-  Auth: {
-    currentSession: jest.fn().mockReturnValue({
-      getIdToken: () => ({
-        getJwtToken: () => "eyJLongToken",
-      }),
+/* Mock Amplify */
+jest.mock("aws-amplify/api", () => ({
+  get: jest.fn().mockImplementation(() => ({
+    response: Promise.resolve({
+      body: {
+        json: () => Promise.resolve(`{"json":"blob"}`),
+      },
     }),
-    currentAuthenticatedUser: () => {},
-    configure: () => {},
-    signOut: async () => {},
-    federatedSignIn: () => {},
-  },
-  API: {
-    get: () => {},
-    post: () => {},
-    put: () => {},
-    del: () => {},
-    configure: () => {},
-  },
-  Hub: {
-    listen: jest.fn(),
-  },
+  })),
+  post: jest.fn().mockImplementation(() => ({
+    response: Promise.resolve({
+      body: {
+        json: () => Promise.resolve(`{"json":"blob"}`),
+      },
+    }),
+  })),
+  put: jest.fn().mockImplementation(() => ({
+    response: Promise.resolve({
+      body: {
+        json: () => Promise.resolve(`{"json":"blob"}`),
+      },
+    }),
+  })),
+  del: jest.fn().mockImplementation(() => ({
+    response: Promise.resolve({}),
+  })),
+}));
+
+jest.mock("aws-amplify/auth", () => ({
+  fetchAuthSession: jest.fn().mockReturnValue({
+    idToken: () => ({
+      payload: "eyJLongToken",
+    }),
+  }),
+  configure: () => {},
+  signOut: jest.fn().mockImplementation(() => Promise.resolve()),
+  federatedSignIn: () => {},
 }));
 
 // USER CONTEXT

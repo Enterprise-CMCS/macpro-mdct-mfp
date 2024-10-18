@@ -2,8 +2,12 @@ import { getSignedTemplateUrl } from "./getTemplateUrl";
 
 const testTemplateName = "TestName";
 
-describe("utils/getTemplateUrl", () => {
-  test("getSignedTemplateUrl()", () => {
-    expect(getSignedTemplateUrl(testTemplateName)).toBeTruthy();
+const mockAmplifyApi = require("aws-amplify/api");
+
+describe("Test template methods", () => {
+  test("getSignedTemplateUrl", async () => {
+    const apiSpy = jest.spyOn(mockAmplifyApi, "get");
+    await getSignedTemplateUrl(testTemplateName);
+    expect(apiSpy).toHaveBeenCalledTimes(1);
   });
 });
