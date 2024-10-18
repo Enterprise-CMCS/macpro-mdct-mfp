@@ -2,30 +2,34 @@ import { getBanner, writeBanner, deleteBanner } from "./banner";
 // utils
 import { bannerId } from "../../../constants";
 import { mockBannerData } from "utils/testing/setupJest";
-import { initAuthManager } from "utils/auth/authLifecycle";
 
-describe("utils/banner", () => {
-  beforeEach(async () => {
-    jest.useFakeTimers();
-    initAuthManager();
-    jest.runAllTimers();
+const mockAmplifyApi = require("aws-amplify/api");
+
+jest.mock("utils/auth/authLifecycle", () => ({
+  updateTimeout: jest.fn(),
+  initAuthManager: jest.fn(),
+  refreshCredentials: jest.fn(),
+}));
+
+describe("Test banner methods", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+  test("getBanner", async () => {
+    const apiSpy = jest.spyOn(mockAmplifyApi, "get");
+    expect(await getBanner(bannerId)).toBeTruthy();
+    expect(apiSpy).toHaveBeenCalledTimes(1);
   });
 
-  describe("getBanner()", () => {
-    test("executes", () => {
-      expect(getBanner(bannerId)).toBeTruthy();
-    });
+  test("postBanner", async () => {
+    const apiSpy = jest.spyOn(mockAmplifyApi, "post");
+    await writeBanner(mockBannerData);
+    expect(apiSpy).toHaveBeenCalledTimes(1);
   });
 
-  describe("writeBanner()", () => {
-    test("executes", () => {
-      expect(writeBanner(mockBannerData)).toBeTruthy();
-    });
-  });
-
-  describe("deleteBanner()", () => {
-    test("executes", () => {
-      expect(deleteBanner(bannerId)).toBeTruthy();
-    });
+  test("delBanner", async () => {
+    const apiSpy = jest.spyOn(mockAmplifyApi, "del");
+    await deleteBanner(bannerId);
+    expect(apiSpy).toHaveBeenCalledTimes(1);
   });
 });
