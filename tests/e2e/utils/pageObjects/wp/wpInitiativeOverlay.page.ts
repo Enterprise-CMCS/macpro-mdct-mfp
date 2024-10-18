@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 import BasePage from "../base.page";
 import { WPDefineInitiativePage } from "./wpInitiativeDefine.page";
 import { WPEvaluationPlanPage } from "./wpInitiativeEvaluation.page";
@@ -44,7 +44,7 @@ export class WPInitiativeOverlayPage extends BasePage {
     await definePage.isReady();
     await definePage.fillFields();
     await definePage.saveButton.click();
-    await expect(definePage.page.getByRole("alert")).not.toBeVisible();
+    await this.defineInitiative.isVisible();
   }
 
   public async completeEvaluationPlan(page: Page) {
@@ -59,6 +59,7 @@ export class WPInitiativeOverlayPage extends BasePage {
       await evaluationPage.fillFields();
     }
     await evaluationPage.backButton.click();
+    await this.evaluationPlan.isVisible();
   }
 
   public async completeFundingSources(page: Page) {
@@ -72,5 +73,6 @@ export class WPInitiativeOverlayPage extends BasePage {
       await fundingPage.fillFields();
     }
     await fundingPage.backButton.click();
+    await this.fundingSources.isVisible();
   }
 }

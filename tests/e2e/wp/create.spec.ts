@@ -1,5 +1,4 @@
 import { BrowserContext, Page } from "@playwright/test";
-import { archiveExistingWPs, logInStateUser } from "../utils";
 import { test, expect } from "../utils/fixtures/base";
 import { WPInitiativeOverlayPage } from "../utils/pageObjects/wp/wpInitiativeOverlay.page";
 import StateHomePage from "../utils/pageObjects/stateHome.page";
@@ -10,9 +9,12 @@ import { WPTransitionBenchmarkStrategyPage } from "../utils/pageObjects/wp/wpTra
 import { WPInitiativesInstructionsPage } from "../utils/pageObjects/wp/wpInitiativesInstructions.page";
 import { WPInitiativesDashboardPage } from "../utils/pageObjects/wp/wpInitiativesDashboard.page";
 import { WPReviewAndSubmitPage } from "../utils/pageObjects/wp/wpReviewAndSubmit.page";
+import AdminHomePage from "../utils/pageObjects/adminHome.page";
 
 let userPage: Page;
 let userContext: BrowserContext;
+let adminPage: Page;
+let adminContext: BrowserContext;
 let homePage: StateHomePage;
 let wpDashboard: WPDashboardPage;
 let wpGeneralInformation: WPGeneralInformationPage;
@@ -21,12 +23,18 @@ let wpTransitionBenchmarkStrategy: WPTransitionBenchmarkStrategyPage;
 let wpInitiativesInstructions: WPInitiativesInstructionsPage;
 let wpInitiativesDashboard: WPInitiativesDashboardPage;
 let wpReviewAndSubmit: WPReviewAndSubmitPage;
+let adminHomePage: AdminHomePage;
+let adminWpDashboard: WPDashboardPage;
 
 test.beforeAll(async ({ browser }) => {
   userContext = await browser.newContext({
     storageState: "playwright/.auth/user.json",
   });
+  adminContext = await browser.newContext({
+    storageState: "playwright/.auth/admin.json",
+  });
   userPage = await userContext.newPage();
+  adminPage = await adminContext.newPage();
 
   homePage = new StateHomePage(userPage);
   wpDashboard = new WPDashboardPage(userPage);
@@ -40,6 +48,8 @@ test.beforeAll(async ({ browser }) => {
   wpInitiativesInstructions = new WPInitiativesInstructionsPage(userPage);
   wpInitiativesDashboard = new WPInitiativesDashboardPage(userPage);
   wpReviewAndSubmit = new WPReviewAndSubmitPage(userPage);
+  adminHomePage = new AdminHomePage(adminPage);
+  adminWpDashboard = new WPDashboardPage(adminPage);
 });
 
 test.afterAll(async () => {
@@ -47,10 +57,11 @@ test.afterAll(async () => {
 });
 
 test.describe("Creating a new Work Plan", () => {
-  test("State user can create a Work Plan", async ({ page }) => {
-    // TODO: migrate these functions to use the save auth model
-    await archiveExistingWPs(page);
-    await logInStateUser(page);
+  test("State user can create a Work Plan", async () => {
+    await adminHomePage.goto();
+    await adminHomePage.selectWP("PR");
+    await adminWpDashboard.reportsReady();
+    await adminWpDashboard.archiveAllReports();
 
     // View WPs
     await homePage.goto();
@@ -95,8 +106,7 @@ test.describe("Creating a new Work Plan", () => {
     }
   });
 
-  test("State user can fill and submit a Work Plan", async ({ page }) => {
-    await logInStateUser(page);
+  test("State user can fill and submit a Work Plan", async () => {
     await homePage.goto();
     await homePage.wpButton.click();
 

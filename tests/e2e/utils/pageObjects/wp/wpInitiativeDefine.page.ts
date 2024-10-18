@@ -44,6 +44,6 @@ export class WPDefineInitiativePage extends BasePage {
     await this.olderAdultsCheckbox.check();
     await this.individualsPhysicalCheckbox.check();
     await this.startDate.fill("01/01/2024");
-    await this.endDate.getByLabel("No").click();
+    await this.endDate.getByLabel("No").check();
   }
 }

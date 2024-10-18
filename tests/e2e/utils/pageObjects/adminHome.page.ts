@@ -19,8 +19,14 @@ export default class AdminHomePage extends BasePage {
     });
   }
 
-  public async selectWP() {
+  public async selectWP(state: string) {
+    await this.page
+      .getByRole("combobox", {
+        name: "List of states, including District of Columbia and Puerto Rico",
+      })
+      .selectOption(state);
     await this.page.getByRole("radio", { name: "MFP Work Plan" }).click();
+    await this.goToDashboard();
   }
 
   public async selectSAR() {
