@@ -13,27 +13,53 @@ import { ChakraProvider } from "@chakra-ui/react";
 import theme from "styles/theme";
 import "./styles/index.scss";
 
+let apiRestConfig: any = {
+  mfp: {
+    endpoint: config.apiGateway.URL,
+    region: config.apiGateway.REGION,
+  },
+};
+
+if (config.DEV_API_URL) {
+  apiRestConfig = {
+    ...apiRestConfig,
+    mfpDev: {
+      endpoint: config.DEV_API_URL,
+      region: "us-east-1",
+    },
+  };
+}
+
 Amplify.configure({
   Storage: {
-    region: config.s3.REGION,
-    bucket: config.s3.BUCKET,
-    identityPoolId: config.cognito.IDENTITY_POOL_ID,
+    S3: {
+      region: config.s3.REGION,
+      bucket: config.s3.BUCKET,
+    },
   },
   Auth: {
-    mandatorySignIn: true,
-    region: config.cognito.REGION,
-    userPoolId: config.cognito.USER_POOL_ID,
-    identityPoolId: config.cognito.IDENTITY_POOL_ID,
-    userPoolWebClientId: config.cognito.APP_CLIENT_ID,
-    oauth: {
-      domain: config.cognito.APP_CLIENT_DOMAIN,
-      redirectSignIn: config.cognito.REDIRECT_SIGNIN,
-      redirectSignOut: config.cognito.REDIRECT_SIGNOUT,
-      scope: ["email", "openid", "profile"],
-      responseType: "code",
+    Cognito: {
+      userPoolId: config.cognito.USER_POOL_ID,
+      identityPoolId: config.cognito.IDENTITY_POOL_ID,
+      userPoolClientId: config.cognito.APP_CLIENT_ID,
+      loginWith: {
+        oauth: {
+          domain: config.cognito.APP_CLIENT_DOMAIN,
+          redirectSignIn: config.cognito.REDIRECT_SIGNIN,
+          redirectSignOut: config.cognito.REDIRECT_SIGNOUT,
+          scope: ["email", "openid", "profile"],
+          responseType: "code",
+        },
+      },
+    },
+  },
+  API: {
+    REST: {
+      ...apiRestConfig,
     },
   },
 });
+
 // LaunchDarkly configuration
 const ldClientId = config.REACT_APP_LD_SDK_CLIENT;
 (async () => {
