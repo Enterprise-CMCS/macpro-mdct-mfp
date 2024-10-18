@@ -1,5 +1,5 @@
 import { getRequestHeaders } from "utils";
-import { API } from "aws-amplify";
+import { post } from "aws-amplify/api";
 import config from "config";
 
 export const printPdf = async () => {
@@ -21,15 +21,18 @@ export const printPdf = async () => {
     .replaceAll("\u2014", "-");
   const base64String = btoa(unescape(encodeURIComponent(htmlString)));
   const requestHeaders = await getRequestHeaders();
-  const request = {
+  const options = {
     headers: { ...requestHeaders },
     body: { encodedHtml: base64String },
   };
+  const path = `/print_pdf`;
   let response;
   if (config.DEV_API_URL) {
-    response = await API.post("mfpDev", `/print_pdf`, request);
+    const { body } = await post({ apiName: "mfpDev", path, options }).response;
+    response = (await body.json()) as string;
   } else {
-    response = await API.post("mfp", `/print_pdf`, request);
+    const { body } = await post({ apiName: "mfp", path, options }).response;
+    response = (await body.json()) as string;
   }
   openPdf(response);
 };
