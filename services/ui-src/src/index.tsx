@@ -47,7 +47,7 @@ Amplify.configure({
           domain: config.cognito.APP_CLIENT_DOMAIN,
           redirectSignIn: config.cognito.REDIRECT_SIGNIN,
           redirectSignOut: config.cognito.REDIRECT_SIGNOUT,
-          scope: ["email", "openid", "profile"],
+          scopes: ["email", "openid", "profile"],
           responseType: "code",
         },
       },
