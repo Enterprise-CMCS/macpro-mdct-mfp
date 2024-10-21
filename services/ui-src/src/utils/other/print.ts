@@ -26,14 +26,9 @@ export const printPdf = async () => {
     body: { encodedHtml: base64String },
   };
   const path = `/print_pdf`;
-  let response;
-  if (config.DEV_API_URL) {
-    const { body } = await post({ apiName: "mfpDev", path, options }).response;
-    response = (await body.json()) as string;
-  } else {
-    const { body } = await post({ apiName: "mfp", path, options }).response;
-    response = (await body.json()) as string;
-  }
+  const apiName = config.DEV_API_URL ? "mfpDev" : "mfp";
+  const { body } = await post({ apiName, path, options }).response;
+  const response = (await body.json()) as string;
   openPdf(response);
 };
 
