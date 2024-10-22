@@ -1,9 +1,6 @@
-import { get, post, put } from "aws-amplify/api";
-import { AnyObject, ReportKeys, ReportShape } from "types";
+import { AnyObject, ReportKeys } from "types";
 import { getRequestHeaders } from "./getRequestHeaders";
-import { updateTimeout } from "utils";
-
-const apiName = "mfp";
+import { apiLib } from "utils";
 
 async function archiveReport(reportKeys: ReportKeys) {
   const requestHeaders = await getRequestHeaders();
@@ -13,12 +10,7 @@ async function archiveReport(reportKeys: ReportKeys) {
   const { reportType, state, id } = reportKeys;
   const path = `/reports/archive/${reportType}/${state}/${id}`;
 
-  updateTimeout();
-  await put({
-    apiName,
-    path,
-    options,
-  }).response;
+  await apiLib.put(path, options);
 }
 
 async function getReportsByState(reportType: string, state: string) {
@@ -28,13 +20,7 @@ async function getReportsByState(reportType: string, state: string) {
   };
   const path = `/reports/${reportType}/${state}`;
 
-  updateTimeout();
-  const { body } = await get({
-    apiName,
-    path,
-    options,
-  }).response;
-  return (await body.json()) as unknown as ReportShape[];
+  return await apiLib.get(path, options);
 }
 
 async function getReport(reportKeys: ReportKeys) {
@@ -45,13 +31,7 @@ async function getReport(reportKeys: ReportKeys) {
   const { reportType, state, id } = reportKeys;
   const path = `/reports/${reportType}/${state}/${id}`;
 
-  updateTimeout();
-  const { body } = await get({
-    apiName,
-    path,
-    options,
-  }).response;
-  return (await body.json()) as unknown as ReportShape;
+  return await apiLib.get(path, options);
 }
 
 /**
@@ -69,13 +49,7 @@ async function postReport(
   };
   const path = `/reports/${reportType}/${state}`;
 
-  updateTimeout();
-  const { body } = await post({
-    apiName,
-    path,
-    options,
-  }).response;
-  return (await body.json()) as unknown as ReportShape;
+  return await apiLib.post(path, options);
 }
 
 async function putReport(reportKeys: ReportKeys, report: AnyObject) {
@@ -87,13 +61,7 @@ async function putReport(reportKeys: ReportKeys, report: AnyObject) {
   const { reportType, state, id } = reportKeys;
   const path = `/reports/${reportType}/${state}/${id}`;
 
-  updateTimeout();
-  const { body } = await put({
-    apiName,
-    path,
-    options,
-  }).response;
-  return (await body.json()) as unknown as ReportShape;
+  return await apiLib.put(path, options);
 }
 
 async function releaseReport(reportKeys: ReportKeys) {
@@ -104,12 +72,7 @@ async function releaseReport(reportKeys: ReportKeys) {
   const { reportType, state, id } = reportKeys;
   const path = `/reports/release/${reportType}/${state}/${id}`;
 
-  updateTimeout();
-  await put({
-    apiName,
-    path,
-    options,
-  }).response;
+  await apiLib.put(path, options);
 }
 
 async function submitReport(reportKeys: ReportKeys) {
@@ -120,13 +83,7 @@ async function submitReport(reportKeys: ReportKeys) {
   const { reportType, state, id } = reportKeys;
   const path = `/reports/submit/${reportType}/${state}/${id}`;
 
-  updateTimeout();
-  const { body } = await post({
-    apiName,
-    path,
-    options,
-  }).response;
-  return (await body.json()) as unknown as ReportShape;
+  return await apiLib.post(path, options);
 }
 
 async function approveReport(reportKeys: ReportKeys, report: AnyObject) {
@@ -138,12 +95,7 @@ async function approveReport(reportKeys: ReportKeys, report: AnyObject) {
   const { reportType, state, id } = reportKeys;
   const path = `/reports/approve/${reportType}/${state}/${id}`;
 
-  updateTimeout();
-  await put({
-    apiName,
-    path,
-    options,
-  }).response;
+  await apiLib.put(path, options);
 }
 
 export {

@@ -8,65 +8,66 @@ import {
   releaseReport,
   submitReport,
 } from "./report";
+// types
+import { AnyObject } from "types";
 // utils
 import { mockReportKeys, mockWPReport } from "utils/testing/setupJest";
-import { initAuthManager } from "utils/auth/authLifecycle";
 
-const mockAmplifyApi = require("aws-amplify/api");
+const mockDel = jest.fn();
+const mockGet = jest.fn();
+const mockPost = jest.fn();
+const mockPut = jest.fn();
+jest.mock("../apiLib", () => ({
+  apiLib: {
+    del: (path: string, options: AnyObject) => mockDel(path, options),
+    get: (path: string, options: AnyObject) => mockGet(path, options),
+    post: (path: string, options: AnyObject) => mockPost(path, options),
+    put: (path: string, options: AnyObject) => mockPut(path, options),
+  },
+}));
 
 describe("utils/report", () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    initAuthManager();
-    jest.runAllTimers();
     jest.clearAllMocks();
   });
 
   test("approveReport", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "put");
     await approveReport(mockReportKeys, mockWPReport);
-    expect(apiSpy).toHaveBeenCalledTimes(1);
+    expect(mockPut).toHaveBeenCalledTimes(1);
   });
 
   test("archiveReport", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "put");
     await archiveReport(mockReportKeys);
-    expect(apiSpy).toHaveBeenCalledTimes(1);
+    expect(mockPut).toHaveBeenCalledTimes(1);
   });
 
   test("getReport", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "get");
     await getReport(mockReportKeys);
-    expect(apiSpy).toHaveBeenCalledTimes(1);
+    expect(mockGet).toHaveBeenCalledTimes(1);
   });
 
   test("getReportsByState", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "get");
     await getReportsByState("WP", "NJ");
-    expect(apiSpy).toHaveBeenCalledTimes(1);
+    expect(mockGet).toHaveBeenCalledTimes(1);
   });
 
   test("postReport", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "post");
     await postReport("WP", "NJ", mockWPReport);
-    expect(apiSpy).toHaveBeenCalledTimes(1);
+    expect(mockPost).toHaveBeenCalledTimes(1);
   });
 
   test("putReport", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "put");
     await putReport(mockReportKeys, mockWPReport);
-    expect(apiSpy).toHaveBeenCalledTimes(1);
+    expect(mockPut).toHaveBeenCalledTimes(1);
   });
 
   test("releaseReport", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "put");
     await releaseReport(mockReportKeys);
-    expect(apiSpy).toHaveBeenCalledTimes(1);
+    expect(mockPut).toHaveBeenCalledTimes(1);
   });
 
   test("submitReport", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "post");
     await submitReport(mockReportKeys);
-    expect(apiSpy).toHaveBeenCalledTimes(1);
+    expect(mockPost).toHaveBeenCalledTimes(1);
   });
 });
