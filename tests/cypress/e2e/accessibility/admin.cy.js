@@ -2,7 +2,7 @@ describe("Admin Page - Accessibility Test", () => {
   it("is accessible on all device types for admin user", () => {
     cy.authenticate("adminUser");
     cy.visit("/admin");
-    cy.wait(1000);
+    cy.get("h1"); // ensure page loaded
     cy.testPageAccessibility();
   });
 });

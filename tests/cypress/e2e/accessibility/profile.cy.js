@@ -3,7 +3,7 @@ describe("Profile Page - Accessibility Test", () => {
     cy.authenticate("adminUser");
 
     cy.visit("/profile");
-    cy.wait(1000);
+    cy.get("h1"); // ensure page loaded
     cy.location("pathname").should("match", /profile/);
 
     cy.testPageAccessibility();
@@ -13,7 +13,7 @@ describe("Profile Page - Accessibility Test", () => {
     cy.authenticate("stateUser");
 
     cy.visit("/profile");
-    cy.wait(1000);
+    cy.get("h1"); // ensure page loaded
     cy.location("pathname").should("match", /profile/);
 
     cy.testPageAccessibility();
