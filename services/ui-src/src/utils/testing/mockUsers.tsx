@@ -6,7 +6,7 @@ export const mockNoUser: UserContextShape = {
   user: undefined,
   showLocalLogins: true,
   logout: async () => {},
-  loginWithIDM: () => {},
+  loginWithIDM: async () => {},
   updateTimeout: async () => {},
   getExpiration: () => {},
 };
@@ -23,7 +23,7 @@ export const mockStateUser: UserContextShape = {
   },
   showLocalLogins: true,
   logout: async () => {},
-  loginWithIDM: () => {},
+  loginWithIDM: async () => {},
   updateTimeout: async () => {},
   getExpiration: () => {},
 };
@@ -40,7 +40,7 @@ export const mockStateUserNoReports: UserContextShape = {
   },
   showLocalLogins: true,
   logout: async () => {},
-  loginWithIDM: () => {},
+  loginWithIDM: async () => {},
   updateTimeout: async () => {},
   getExpiration: () => {},
 };
@@ -57,7 +57,7 @@ export const mockStateApprover: UserContextShape = {
   },
   showLocalLogins: true,
   logout: async () => {},
-  loginWithIDM: () => {},
+  loginWithIDM: async () => {},
   updateTimeout: async () => {},
   getExpiration: () => {},
 };
@@ -74,7 +74,7 @@ export const mockHelpDeskUser: UserContextShape = {
   },
   showLocalLogins: false,
   logout: async () => {},
-  loginWithIDM: () => {},
+  loginWithIDM: async () => {},
   updateTimeout: async () => {},
   getExpiration: () => {},
 };
@@ -91,7 +91,7 @@ export const mockAdminUser: UserContextShape = {
   },
   showLocalLogins: false,
   logout: async () => {},
-  loginWithIDM: () => {},
+  loginWithIDM: async () => {},
   updateTimeout: async () => {},
   getExpiration: () => {},
 };
