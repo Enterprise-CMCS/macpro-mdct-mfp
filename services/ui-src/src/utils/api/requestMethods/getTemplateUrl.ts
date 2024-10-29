@@ -1,12 +1,11 @@
-import { API } from "aws-amplify";
 import { getRequestHeaders } from "./getRequestHeaders";
+import { apiLib } from "utils";
 
 export async function getSignedTemplateUrl(templateName: string) {
   const requestHeaders = await getRequestHeaders();
-  const request = {
+  const options = {
     headers: { ...requestHeaders },
   };
 
-  const response = await API.get("mfp", `/templates/${templateName}`, request);
-  return response;
+  return await apiLib.get(`/templates/${templateName}`, options);
 }
