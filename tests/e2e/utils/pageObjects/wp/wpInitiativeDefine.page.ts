@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import BasePage from "../base.page";
 
 export class WPDefineInitiativePage extends BasePage {
@@ -45,5 +45,7 @@ export class WPDefineInitiativePage extends BasePage {
     await this.individualsPhysicalCheckbox.check();
     await this.startDate.fill("01/01/2024");
     await this.endDate.getByLabel("No").check();
+    await expect(this.olderAdultsCheckbox).toBeChecked();
+    await expect(this.individualsPhysicalCheckbox).toBeChecked();
   }
 }
