@@ -229,10 +229,7 @@ export const createSubmittedSemiAnnualReport = async (
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const sar = (await createFilledSemiAnnualReport(
-    year,
-    period
-  )) as SeedReportShape;
+  const sar = await createFilledSemiAnnualReport(year, period);
 
   if (sar.id) {
     const report = await updateSubmitSemiAnnualReport(sar.id);
@@ -258,10 +255,7 @@ export const createLockedSemiAnnualReport = async (
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const sar = (await createFilledSemiAnnualReport(
-    year,
-    period
-  )) as SeedReportShape;
+  const sar = await createFilledSemiAnnualReport(year, period);
 
   if (sar.id) {
     const report = await updateLockSemiAnnualReport(sar.id);
@@ -287,10 +281,7 @@ export const createArchivedSemiAnnualReport = async (
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const sar = (await createFilledSemiAnnualReport(
-    year,
-    period
-  )) as SeedReportShape;
+  const sar = await createFilledSemiAnnualReport(year, period);
 
   if (sar.id) {
     const report = await updateArchiveSemiAnnualReport(sar.id);
