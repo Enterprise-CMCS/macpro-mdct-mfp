@@ -115,8 +115,8 @@ const del = async (
   };
 
   try {
-    const response = await fetch(url, request);
-    return response.json();
+    await fetch(url, request);
+    return {};
   } catch (error) {
     errorResponse(error);
   }

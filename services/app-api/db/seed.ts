@@ -1,7 +1,12 @@
 /* eslint-disable no-console */
-import prompts, { Choice as PromptChoice, PromptObject } from "prompts";
-import { createdLog, expandedLog } from "./helpers";
-import { semiAnnualReportChoices, workPlanChoices } from "./options";
+import prompts, { Choice, PromptObject } from "prompts";
+import { createdLog, expandedLog, generateReportingPeriod } from "./helpers";
+import {
+  backToMenu,
+  generateChoices,
+  semiAnnualReportChoices,
+  workPlanChoices,
+} from "./options";
 import { currentYear } from "../../../tests/seeds/helpers";
 import {
   bannerKey,
@@ -24,7 +29,6 @@ import {
   getWorkPlanById,
   getWorkPlansByState,
   loginSeedUsers,
-  state,
 } from "../../../tests/seeds/options";
 
 const seed = async (
@@ -32,10 +36,10 @@ const seed = async (
   chosenPeriod?: number
 ): Promise<void> => {
   await loginSeedUsers();
-  const wpIds: PromptChoice[] = await workPlanChoices();
-  const sarIds: PromptChoice[] = await semiAnnualReportChoices();
+  const wpIds: Choice[] = await workPlanChoices();
+  const sarIds: Choice[] = await semiAnnualReportChoices();
 
-  const entityChoices: PromptChoice[] = [
+  const entityChoices: Choice[] = [
     { title: "Work Plan (WP)", value: "WP" },
     { title: "Semi-Annual Report (SAR)", value: "SAR" },
     { title: "Banner", value: "banner" },
@@ -43,60 +47,6 @@ const seed = async (
 
   let reportYear = chosenYear || currentYear;
   let reportPeriod = chosenPeriod || 1;
-
-  const backToMenu = {
-    title: "Back to Menu",
-    value: "back",
-  };
-
-  const generateReportingPeriod = (year: number, period: number) =>
-    `${year} Period ${period}`;
-
-  const generateChoices = (
-    type: string,
-    year: number,
-    period: number
-  ): PromptChoice[] => {
-    const reportingPeriod = generateReportingPeriod(year, period);
-
-    const choices = [
-      {
-        title: `Create base ${type}: ${reportingPeriod}`,
-        value: `create${type}`,
-      },
-      {
-        title: `Create filled ${type}: ${reportingPeriod}`,
-        value: `createFilled${type}`,
-      },
-      {
-        title: `Create submitted ${type}: ${reportingPeriod}`,
-        value: `createSubmitted${type}`,
-      },
-      {
-        title: `Create locked ${type}: ${reportingPeriod}`,
-        value: `createLocked${type}`,
-      },
-      {
-        title: `Create archived ${type}: ${reportingPeriod}`,
-        value: `createArchived${type}`,
-      },
-      { title: `Get ${type} by id`, value: `get${type}ById` },
-      {
-        title: `Get ${type}s by state: ${state}`,
-        value: `get${type}sByState`,
-      },
-      backToMenu,
-    ];
-
-    if (type === "WP") {
-      choices.splice(3, 0, {
-        title: `Create approved ${type}: ${reportingPeriod}`,
-        value: `createApproved${type}`,
-      });
-    }
-
-    return choices;
-  };
 
   const questions: PromptObject[] = [
     {
@@ -154,11 +104,7 @@ const seed = async (
       name: "task",
       message: "Task",
       choices: (prev: string) => {
-        return generateChoices(
-          prev,
-          reportYear,
-          reportPeriod
-        ) as PromptChoice[];
+        return generateChoices(prev, reportYear, reportPeriod) as Choice[];
       },
     },
     {
@@ -337,16 +283,16 @@ const seed = async (
         expandedLog(await getSemiAnnualReportsByState());
         break;
       case "createBanner": {
-        const { Item } = await createBanner();
-        console.log(`Banner created: ${Item?.key}`);
+        await createBanner();
+        console.log("Banner created.");
         break;
       }
       case "getBanner":
         expandedLog(await getBannerById());
         break;
       case "deleteBanner": {
-        const { Key } = await deleteBannerById();
-        console.log(`Banner deleted: ${Key?.key}`);
+        await deleteBannerById();
+        console.log("Banner deleted.");
         break;
       }
       default:

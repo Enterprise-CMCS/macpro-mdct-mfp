@@ -14,3 +14,6 @@ export const createdLog = (obj: any, action: string, type: string): void => {
 export const expandedLog = (json: any): void => {
   console.log(JSON.stringify(json, null, 2));
 };
+
+export const generateReportingPeriod = (year: number, period: number) =>
+  `${year} Period ${period}`;

@@ -334,7 +334,6 @@ export const getBannerById = async (): Promise<SeedBannerShape> => {
   return banner;
 };
 
-export const deleteBannerById = async (): Promise<SeedBannerShape> => {
-  const banner = await deleteApi(`/banners/${bannerKey}`, adminHeaders);
-  return banner;
+export const deleteBannerById = async (): Promise<void> => {
+  await deleteApi(`/banners/${bannerKey}`, adminHeaders);
 };
