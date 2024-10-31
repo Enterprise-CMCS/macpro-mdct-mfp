@@ -201,13 +201,6 @@ export const dateFormat: Intl.DateTimeFormat = new Intl.DateTimeFormat(
 
 export const currentYear: number = new Date().getFullYear();
 
-export const randomReportPeriod: number = faker.number.int({ min: 1, max: 2 });
-
-export const randomReportYear: number = faker.number.int({
-  min: currentYear,
-  max: currentYear + 1,
-});
-
 export const quarterlyKeyValueGenerator = (
   year: number,
   period: number,
