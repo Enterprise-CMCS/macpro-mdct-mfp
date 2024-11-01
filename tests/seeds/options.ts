@@ -333,6 +333,7 @@ export const getBannerById = async (): Promise<SeedBannerShape> => {
   try {
     const banner = await getApi(`/banners/${bannerKey}`, adminHeaders);
     return banner;
+    // eslint-disable-next-line no-unused-vars
   } catch (_e) {
     return {} as SeedBannerShape;
   }
