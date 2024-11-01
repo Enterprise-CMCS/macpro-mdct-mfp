@@ -330,8 +330,12 @@ export const createBanner = async (): Promise<SeedBannerShape> => {
 };
 
 export const getBannerById = async (): Promise<SeedBannerShape> => {
-  const banner = await getApi(`/banners/${bannerKey}`, headers);
-  return banner;
+  try {
+    const banner = await getApi(`/banners/${bannerKey}`, adminHeaders);
+    return banner;
+  } catch (e) {
+    return {} as SeedBannerShape;
+  }
 };
 
 export const deleteBannerById = async (): Promise<void> => {
