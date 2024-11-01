@@ -333,7 +333,7 @@ export const getBannerById = async (): Promise<SeedBannerShape> => {
   try {
     const banner = await getApi(`/banners/${bannerKey}`, adminHeaders);
     return banner;
-  } catch (e) {
+  } catch (_e) {
     return {} as SeedBannerShape;
   }
 };
