@@ -1,70 +1,163 @@
-import { apiLib } from "./apiLib";
-import { updateTimeout } from "utils";
+import {
+  authenticateWithIDM,
+  del,
+  get,
+  getRequestHeaders,
+  getTokens,
+  loginUser,
+  logoutUser,
+  post,
+  put,
+  refreshSession,
+} from "utils";
 
-const mockAmplifyApi = require("aws-amplify/api");
+const mockResponse = (method?: string) => ({
+  response: { body: { json: () => ({ test: method }) } },
+});
+const mockDelete = jest.fn().mockImplementation(() => mockResponse());
+const mockGet = jest.fn().mockImplementation(() => mockResponse("get"));
+const mockPost = jest.fn().mockImplementation(() => mockResponse("post"));
+const mockPut = jest.fn().mockImplementation(() => mockResponse("put"));
+const mockSession = jest.fn();
+const mockSignInWithRedirect = jest.fn();
+const mockSignIn = jest.fn();
+const mockSignOut = jest.fn();
+const mockTimeout = jest.fn();
 
-jest.mock("utils", () => ({
-  updateTimeout: jest.fn(),
+jest.mock("aws-amplify/api", () => ({
+  del: () => mockDelete(),
+  get: () => mockGet(),
+  post: () => mockPost(),
+  put: () => mockPut(),
 }));
 
-const path = "my/url";
-const mockOptions = {
-  headers: {
-    "x-api-key": "mock key",
-  },
-  body: {
-    foo: "bar",
-  },
-};
-const requestObj = {
-  apiName: "mfp",
-  path,
-  options: mockOptions,
-};
+jest.mock("aws-amplify/auth", () => ({
+  fetchAuthSession: () => mockSession(),
+  signIn: () => mockSignIn(),
+  signOut: () => mockSignOut(),
+  signInWithRedirect: () => mockSignInWithRedirect(),
+}));
 
-describe("API lib", () => {
+jest.mock("utils/auth/authLifecycle", () => ({
+  updateTimeout: () => mockTimeout(),
+}));
+
+describe("utils/api/apiLib", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  test("Calling post should update the session timeout", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "post");
-    await apiLib.post(path, mockOptions);
+  describe("getRequestHeaders()", () => {
+    test("Logs error to console if Auth throws error", async () => {
+      jest.spyOn(console, "log").mockImplementation(jest.fn());
+      const spy = jest.spyOn(console, "log");
 
-    expect(apiSpy).toBeCalledWith(requestObj);
-    expect(updateTimeout).toBeCalled();
-  });
+      mockSession.mockImplementation(() => {
+        throw new Error();
+      });
 
-  test("Calling put should update the session timeout", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "put");
-    await apiLib.put(path, mockOptions);
+      await getRequestHeaders();
 
-    expect(apiSpy).toBeCalledWith(requestObj);
-    expect(updateTimeout).toBeCalled();
-  });
-
-  test("Calling get should update the session timeout", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "get");
-    await apiLib.get(path, mockOptions);
-
-    expect(apiSpy).toBeCalledWith(requestObj);
-    expect(updateTimeout).toBeCalled();
-  });
-
-  test("Calling del should update the session timeout", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "del");
-    await apiLib.del(path, mockOptions);
-
-    expect(apiSpy).toBeCalledWith(requestObj);
-    expect(updateTimeout).toBeCalled();
-  });
-
-  test("API errors should be surfaced for handling", async () => {
-    const apiSpy = jest.spyOn(mockAmplifyApi, "del");
-    apiSpy.mockImplementationOnce(() => {
-      throw new Error("500");
+      expect(spy).toHaveBeenCalledTimes(1);
     });
 
-    await expect(apiLib.del(path, mockOptions)).rejects.toThrow(Error);
+    test("Returns token if current idToken exists", async () => {
+      mockSession.mockResolvedValue({
+        tokens: {
+          idToken: {
+            toString: () => "stringToken",
+          },
+        },
+      });
+
+      const result = await getRequestHeaders();
+
+      expect(result).toStrictEqual({ "x-api-key": "stringToken" });
+    });
+  });
+
+  test("getTokens()", async () => {
+    await getTokens();
+    expect(mockSession).toHaveBeenCalledTimes(1);
+  });
+
+  test("authenticateWithIDM()", async () => {
+    await authenticateWithIDM();
+    expect(mockSignInWithRedirect).toHaveBeenCalledTimes(1);
+  });
+
+  test("loginUser()", async () => {
+    await loginUser("email@address.com", "test");
+    expect(mockSignIn).toHaveBeenCalledTimes(1);
+  });
+
+  test("logoutUser()", async () => {
+    await logoutUser();
+    expect(mockSignOut).toHaveBeenCalledTimes(1);
+  });
+
+  test("refreshSession()", async () => {
+    await refreshSession();
+    expect(mockSession).toHaveBeenCalledTimes(1);
+  });
+
+  test("del()", async () => {
+    const test = async () => await del("/del");
+    await expect(test()).resolves.toBeUndefined();
+    expect(mockDelete).toHaveBeenCalledTimes(1);
+    expect(mockTimeout).toHaveBeenCalledTimes(1);
+  });
+
+  test("get()", async () => {
+    const test = async () => await get<string>("/get");
+    await expect(test()).resolves.toEqual({ test: "get" });
+    expect(mockGet).toHaveBeenCalledTimes(1);
+    expect(mockTimeout).toHaveBeenCalledTimes(1);
+  });
+
+  test("post()", async () => {
+    const test = async () => await post<string>("/post");
+    await expect(test()).resolves.toEqual({ test: "post" });
+    expect(mockPost).toHaveBeenCalledTimes(1);
+    expect(mockTimeout).toHaveBeenCalledTimes(1);
+  });
+
+  test("put()", async () => {
+    const test = async () => await put<string>("/put");
+    await expect(test()).resolves.toEqual({ test: "put" });
+    expect(mockPut).toHaveBeenCalledTimes(1);
+    expect(mockTimeout).toHaveBeenCalledTimes(1);
+  });
+
+  test("API error throws with response info", async () => {
+    jest.spyOn(console, "log").mockImplementation(jest.fn());
+    const spy = jest.spyOn(console, "log");
+
+    mockGet.mockImplementationOnce(() => {
+      throw {
+        response: {
+          body: "Error Info",
+        },
+      };
+    });
+
+    await expect(get("/get")).rejects.toThrow(
+      "Request Failed - /get - Error Info"
+    );
+    expect(spy).toHaveBeenCalledTimes(2);
+  });
+
+  test("API error throws without response info", async () => {
+    jest.spyOn(console, "log").mockImplementation(jest.fn());
+    const spy = jest.spyOn(console, "log");
+
+    mockPost.mockImplementationOnce(() => {
+      throw "String Error";
+    });
+
+    await expect(post("/post")).rejects.toThrow(
+      "Request Failed - /post - undefined"
+    );
+    expect(spy).toHaveBeenCalledTimes(2);
   });
 });

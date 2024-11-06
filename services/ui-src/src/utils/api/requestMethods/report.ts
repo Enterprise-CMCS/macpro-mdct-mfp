@@ -1,37 +1,21 @@
 import { AnyObject, ReportKeys } from "types";
-import { getRequestHeaders } from "./getRequestHeaders";
-import { apiLib } from "utils";
+import { get, post, put } from "utils";
 
 async function archiveReport(reportKeys: ReportKeys) {
-  const requestHeaders = await getRequestHeaders();
-  const options = {
-    headers: { ...requestHeaders },
-  };
   const { reportType, state, id } = reportKeys;
   const path = `/reports/archive/${reportType}/${state}/${id}`;
-
-  await apiLib.put(path, options);
+  return put<AnyObject>(path);
 }
 
 async function getReportsByState(reportType: string, state: string) {
-  const requestHeaders = await getRequestHeaders();
-  const options = {
-    headers: { ...requestHeaders },
-  };
   const path = `/reports/${reportType}/${state}`;
-
-  return await apiLib.get(path, options);
+  return get<AnyObject[]>(path);
 }
 
 async function getReport(reportKeys: ReportKeys) {
-  const requestHeaders = await getRequestHeaders();
-  const options = {
-    headers: { ...requestHeaders },
-  };
   const { reportType, state, id } = reportKeys;
   const path = `/reports/${reportType}/${state}/${id}`;
-
-  return await apiLib.get(path, options);
+  return get<AnyObject>(path);
 }
 
 /**
@@ -42,60 +26,42 @@ async function postReport(
   state: string,
   report: AnyObject
 ) {
-  const requestHeaders = await getRequestHeaders();
-  const options = {
-    headers: { ...requestHeaders },
+  const options: any = {
     body: { ...report },
   };
   const path = `/reports/${reportType}/${state}`;
-
-  return await apiLib.post(path, options);
+  return post<AnyObject>(path, options);
 }
 
 async function putReport(reportKeys: ReportKeys, report: AnyObject) {
-  const requestHeaders = await getRequestHeaders();
-  const options = {
-    headers: { ...requestHeaders },
+  const options: any = {
     body: { ...report },
   };
   const { reportType, state, id } = reportKeys;
   const path = `/reports/${reportType}/${state}/${id}`;
 
-  return await apiLib.put(path, options);
+  return put<AnyObject>(path, options);
 }
 
 async function releaseReport(reportKeys: ReportKeys) {
-  const requestHeaders = await getRequestHeaders();
-  const options = {
-    headers: { ...requestHeaders },
-  };
   const { reportType, state, id } = reportKeys;
   const path = `/reports/release/${reportType}/${state}/${id}`;
-
-  await apiLib.put(path, options);
+  return put<AnyObject>(path);
 }
 
 async function submitReport(reportKeys: ReportKeys) {
-  const requestHeaders = await getRequestHeaders();
-  const options = {
-    headers: { ...requestHeaders },
-  };
   const { reportType, state, id } = reportKeys;
   const path = `/reports/submit/${reportType}/${state}/${id}`;
-
-  return await apiLib.post(path, options);
+  return post<AnyObject>(path);
 }
 
 async function approveReport(reportKeys: ReportKeys, report: AnyObject) {
-  const requestHeaders = await getRequestHeaders();
-  const options = {
-    headers: { ...requestHeaders },
+  const options: any = {
     body: { ...report },
   };
   const { reportType, state, id } = reportKeys;
   const path = `/reports/approve/${reportType}/${state}/${id}`;
-
-  await apiLib.put(path, options);
+  return put<AnyObject>(path, options);
 }
 
 export {
