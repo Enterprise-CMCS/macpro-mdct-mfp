@@ -66,24 +66,24 @@ export async function apiRequest<T>(
   request: any,
   path: string,
   opts?: RequestOptions,
-  hasResponseBody?: Boolean
+  customApiName?: string
 ): Promise<T> {
   const requestHeaders = await getRequestHeaders();
   const options = {
     headers: { ...requestHeaders },
     ...opts,
   };
+  const name = customApiName || apiName;
 
   try {
     await updateTimeout();
 
-    if (!hasResponseBody) {
-      await request({ apiName, path, options }).response;
+    const response = await request({ apiName: name, path, options }).response;
+    if (!response.body || response.statusCode === 204) {
       return undefined as unknown as T;
     }
 
-    const { body } = await request({ apiName, path, options }).response;
-    return (await body.json()) as unknown as T;
+    return (await response.body.json()) as unknown as T;
   } catch (e: any) {
     const info = `Request Failed - ${path} - ${e.response?.body}`;
     console.log(e);
@@ -93,17 +93,21 @@ export async function apiRequest<T>(
 }
 
 export async function del<T>(path: string, opts?: RequestOptions): Promise<T> {
-  return apiRequest<T>(ampDel, path, opts, false);
+  return apiRequest<T>(ampDel, path, opts);
 }
 
 export async function get<T>(path: string, opts?: RequestOptions): Promise<T> {
-  return apiRequest<T>(ampGet, path, opts, true);
+  return apiRequest<T>(ampGet, path, opts);
 }
 
-export async function post<T>(path: string, opts?: RequestOptions): Promise<T> {
-  return apiRequest<T>(ampPost, path, opts, true);
+export async function post<T>(
+  path: string,
+  opts?: RequestOptions,
+  customApiName?: string
+): Promise<T> {
+  return apiRequest<T>(ampPost, path, opts, customApiName);
 }
 
 export async function put<T>(path: string, opts?: RequestOptions): Promise<T> {
-  return apiRequest<T>(ampPut, path, opts, true);
+  return apiRequest<T>(ampPut, path, opts);
 }
