@@ -164,6 +164,12 @@ test.describe("Creating a new Work Plan", () => {
       await overlayPage.completeDefineInitiative(userPage);
       await overlayPage.completeEvaluationPlan(userPage);
       await overlayPage.completeFundingSources(userPage);
+      await overlayPage.isReady();
+      const errorIcons = await wpReviewAndSubmit.page
+        .getByAltText("warning icon")
+        .all();
+      await expect(errorIcons.length).toBe(0);
+
       await overlayPage.backButton.click();
     }
 
