@@ -66,7 +66,8 @@ export async function apiRequest<T>(
   request: any,
   path: string,
   opts?: RequestOptions,
-  customApiName?: string
+  customApiName?: string,
+  hasResponseBody?: Boolean
 ): Promise<T> {
   const requestHeaders = await getRequestHeaders();
   const options = {
@@ -80,7 +81,8 @@ export async function apiRequest<T>(
 
     const { body, statusCode } = await request({ apiName: name, path, options })
       .response;
-    if (!body || statusCode === 204) {
+
+    if (hasResponseBody === false || statusCode === 204) {
       return undefined as unknown as T;
     }
 
@@ -94,7 +96,7 @@ export async function apiRequest<T>(
 }
 
 export async function del<T>(path: string, opts?: RequestOptions): Promise<T> {
-  return apiRequest<T>(ampDel, path, opts);
+  return apiRequest<T>(ampDel, path, opts, undefined, false);
 }
 
 export async function get<T>(path: string, opts?: RequestOptions): Promise<T> {
