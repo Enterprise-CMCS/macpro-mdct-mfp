@@ -1,4 +1,4 @@
-import { ReportKeys, ReportShape } from "types";
+import { AnyObject, ReportShape, ReportKeys } from "types";
 import { get, post, put } from "utils";
 
 async function archiveReport(reportKeys: ReportKeys) {
@@ -19,28 +19,28 @@ async function getReport(reportKeys: ReportKeys) {
 }
 
 /**
- * @todo Swap report from ReportShape to a ReportMetaData + FieldData type
+ * @todo Swap report from AnyObject to a ReportMetaData + FieldData type
  */
 async function postReport(
   reportType: string,
   state: string,
-  report: ReportShape
+  report: AnyObject
 ) {
   const options: any = {
     body: { ...report },
   };
   const path = `/reports/${reportType}/${state}`;
-  return post<ReportShape>(path, options);
+  return post<AnyObject>(path, options);
 }
 
-async function putReport(reportKeys: ReportKeys, report: ReportShape) {
+async function putReport(reportKeys: ReportKeys, report: AnyObject) {
   const options: any = {
     body: { ...report },
   };
   const { reportType, state, id } = reportKeys;
   const path = `/reports/${reportType}/${state}/${id}`;
 
-  return put<ReportShape>(path, options);
+  return put<AnyObject>(path, options);
 }
 
 async function releaseReport(reportKeys: ReportKeys) {
@@ -55,13 +55,13 @@ async function submitReport(reportKeys: ReportKeys) {
   return post<ReportShape>(path);
 }
 
-async function approveReport(reportKeys: ReportKeys, report: ReportShape) {
+async function approveReport(reportKeys: ReportKeys, report: AnyObject) {
   const options: any = {
     body: { ...report },
   };
   const { reportType, state, id } = reportKeys;
   const path = `/reports/approve/${reportType}/${state}/${id}`;
-  return put<ReportShape>(path, options);
+  return put<AnyObject>(path, options);
 }
 
 export {
