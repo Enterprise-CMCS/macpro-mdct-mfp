@@ -154,7 +154,12 @@ export const ReportProvider = ({ children }: Props) => {
     report: ReportShape
   ) => {
     try {
-      const result = await postReport(reportType, state, report);
+      // TODO: Remove casting
+      const result = (await postReport(
+        reportType,
+        state,
+        report
+      )) as ReportShape;
       hydrateAndSetReport(result);
       setLastSavedTime(getLocalHourMinuteTime());
       setWorkPlanToCopyFrom(undefined);
@@ -166,7 +171,8 @@ export const ReportProvider = ({ children }: Props) => {
 
   const updateReport = async (reportKeys: ReportKeys, report: ReportShape) => {
     try {
-      const result = await putReport(reportKeys, report);
+      // TODO: Remove casting
+      const result = (await putReport(reportKeys, report)) as ReportShape;
       hydrateAndSetReport(result);
       setLastSavedTime(getLocalHourMinuteTime());
       setError(undefined);

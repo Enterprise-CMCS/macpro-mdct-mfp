@@ -19,7 +19,7 @@ async function getReport(reportKeys: ReportKeys) {
 }
 
 /**
- * @todo Swap report from AnyObject to a ReportMetaData + FieldData type
+ * TODO: Swap report from AnyObject to a ReportMetaData + FieldData type
  */
 async function postReport(
   reportType: string,
