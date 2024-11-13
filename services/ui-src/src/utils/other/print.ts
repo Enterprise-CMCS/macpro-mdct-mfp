@@ -1,12 +1,18 @@
-import { getRequestHeaders } from "utils";
-import { post } from "aws-amplify/api";
 import config from "config";
+import { post } from "utils";
 
 export const printPdf = async () => {
   const noscriptTag = document.querySelector("noscript");
   if (noscriptTag) {
     noscriptTag.remove();
   }
+  const path = "/print_pdf";
+  let apiName;
+
+  if (config.DEV_API_URL) {
+    apiName = "mfpDev";
+  }
+
   const htmlString = document!
     .querySelector("html")!
     .outerHTML.replaceAll(
@@ -19,27 +25,18 @@ export const printPdf = async () => {
     .replaceAll(`“`, `"`)
     .replaceAll("\u2013", "-")
     .replaceAll("\u2014", "-");
-  const base64String = btoa(unescape(encodeURIComponent(htmlString)));
-  const requestHeaders = await getRequestHeaders();
+
+  const base64String = Buffer.from(htmlString, "utf-8").toString("base64");
   const options = {
-    headers: { ...requestHeaders },
     body: { encodedHtml: base64String },
   };
-  const path = `/print_pdf`;
-  const apiName = config.DEV_API_URL ? "mfpDev" : "mfp";
-  const { body } = await post({ apiName, path, options }).response;
-  const response = (await body.json()) as string;
+  const response = await post<string>(path, options, apiName);
   openPdf(response);
 };
 
 const openPdf = (basePdf: string) => {
-  let byteCharacters = atob(basePdf);
-  let byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-  let byteArray = new Uint8Array(byteNumbers);
-  let file = new Blob([byteArray], { type: "application/pdf;base64" });
-  let fileURL = URL.createObjectURL(file);
+  const byteArray = new Uint8Array(Buffer.from(basePdf, "base64"));
+  const file = new Blob([byteArray], { type: "application/pdf" });
+  const fileURL = URL.createObjectURL(file);
   window.open(fileURL);
 };

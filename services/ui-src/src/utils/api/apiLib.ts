@@ -21,7 +21,7 @@ interface RequestHeaders {
   "x-api-key": string | undefined;
 }
 
-interface RequestOptions {
+export interface RequestOptions {
   body: any;
 }
 
