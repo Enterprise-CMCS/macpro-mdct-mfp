@@ -73,7 +73,7 @@ export const AdminPage = () => {
                   <Flex sx={sx.currentBannerFlex}>
                     <Banner bannerData={bannerData} />
                     <Button
-                      variant="danger"
+                      variant="primary"
                       sx={sx.deleteBannerButton}
                       onClick={deleteAdminBanner as MouseEventHandler}
                     >
