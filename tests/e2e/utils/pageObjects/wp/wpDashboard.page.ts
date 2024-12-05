@@ -69,15 +69,13 @@ export class WPDashboardPage extends BasePage {
   }
 
   public async archiveAllReports() {
-    const archiveButtons = await this.page
-      .getByRole("button", {
-        name: "Archive",
-        exact: true,
-      })
-      .all();
+    const archiveButtons = await this.page.getByRole("button", {
+      name: "Archive",
+    });
+    const count = await archiveButtons.count();
 
-    if (archiveButtons.length > 0) {
-      await archiveButtons[0].click();
+    for (let i = 0; i < count; i++) {
+      await archiveButtons.nth(i).click();
       const modal = this.page.getByRole("dialog");
       await modal.isVisible();
       await modal.getByRole("textbox").fill("ARCHIVE");
@@ -87,7 +85,6 @@ export class WPDashboardPage extends BasePage {
           response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
           response.status() == 200
       );
-      await modal.isHidden();
       await this.getReports();
       await this.archiveAllReports();
     }
