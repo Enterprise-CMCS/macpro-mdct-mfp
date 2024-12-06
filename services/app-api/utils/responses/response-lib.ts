@@ -13,6 +13,12 @@ export const created = (body: Object) =>
   new HttpResponse(StatusCodes.Created, body);
 
 /**
+ * The response for a successful request which returns no content.
+ */
+export const noContent = (body?: Object) =>
+  new HttpResponse(StatusCodes.NoContent, body);
+
+/**
  * The response for a failed request, due to client-side issues.
  * Typically indicates a missing parameter or malformed body.
  */
@@ -67,6 +73,7 @@ export const internalServerError = (body?: Object) =>
 export enum StatusCodes {
   Ok = 200,
   Created = 201,
+  NoContent = 204,
   BadRequest = 400,
   Unauthenticated = 401,
   Forbidden = 403,

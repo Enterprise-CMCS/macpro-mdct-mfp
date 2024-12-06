@@ -6,9 +6,11 @@ import { testA11y } from "utils/testing/commonTests";
 // utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 
-const mockSignIn = jest.fn();
-jest.mock("aws-amplify/auth", () => ({
-  signIn: (credentials: any) => mockSignIn(credentials),
+const mockLoginUser = jest.fn();
+
+jest.mock("utils", () => ({
+  loginUser: (username: string, password: string) =>
+    mockLoginUser(username, password),
 }));
 
 const mockUseNavigate = jest.fn();
@@ -24,24 +26,16 @@ const loginCognitoComponent = (
 );
 
 describe("<LoginCognito />", () => {
-  describe("Renders", () => {
-    beforeEach(() => {
-      render(loginCognitoComponent);
-    });
-
-    test("LoginCognito login calls amplify auth login", async () => {
-      const emailInput = screen.getByLabelText("Email");
-      const passwordInput = screen.getByLabelText("Password");
-      const submitButton = screen.getByRole("button");
-      await userEvent.type(emailInput, "email@address.com");
-      await userEvent.type(passwordInput, "p@$$w0rd"); //pragma: allowlist secret
-      await userEvent.click(submitButton);
-      expect(mockSignIn).toHaveBeenCalledWith({
-        username: "email@address.com",
-        password: "p@$$w0rd", //pragma: allowlist secret
-      });
-      expect(mockUseNavigate).toHaveBeenCalledWith("/");
-    });
+  test("LoginCognito login calls amplify auth login", async () => {
+    render(loginCognitoComponent);
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const submitButton = screen.getByRole("button");
+    await userEvent.type(emailInput, "email@address.com");
+    await userEvent.type(passwordInput, "test");
+    await userEvent.click(submitButton);
+    expect(mockLoginUser).toHaveBeenCalledWith("email@address.com", "test");
+    expect(mockUseNavigate).toHaveBeenCalledWith("/");
   });
 
   testA11y(loginCognitoComponent);

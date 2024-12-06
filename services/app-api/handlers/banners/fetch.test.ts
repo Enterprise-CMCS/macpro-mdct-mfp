@@ -53,7 +53,7 @@ describe("Test fetchBanner API method", () => {
 
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.body).not.toBeDefined();
-    expect(res.statusCode).toBe(StatusCodes.Ok);
+    expect(res.statusCode).toBe(StatusCodes.NoContent);
   });
 
   test("Test bannerKey not provided throws 500 error", async () => {

@@ -42,8 +42,15 @@ export class WPDefineInitiativePage extends BasePage {
   public async fillFields() {
     await this.description.fill("test");
     await this.olderAdultsCheckbox.check();
+    await this.olderAdultsCheckbox.blur();
+    // ChoiceListField component has a hard timeout in the onblur handler to call the updateReport function and a hard timeout this is how we are working with that. :(
+    await this.page.waitForTimeout(200);
     await this.individualsPhysicalCheckbox.check();
+    await this.individualsPhysicalCheckbox.blur();
+    await this.page.waitForTimeout(200);
     await this.startDate.fill("01/01/2024");
-    await this.endDate.getByLabel("No").click();
+    await this.endDate.getByLabel("No").check();
+    await this.endDate.getByLabel("No").blur();
+    await this.page.waitForTimeout(200);
   }
 }
