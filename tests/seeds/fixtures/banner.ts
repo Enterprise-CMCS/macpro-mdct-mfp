@@ -1,8 +1,10 @@
 import { faker } from "@faker-js/faker";
-import { SeedBannerDataShape } from "../types";
+import { SeedBannerShape } from "../types";
 
-export const newBanner = (key: string): SeedBannerDataShape => ({
+export const newBanner = (key: string): SeedBannerShape => ({
   key,
+  createdAt: faker.date.past({ years: 1 }).getTime(),
+  lastAltered: faker.date.past({ years: 1 }).getTime(),
   title: faker.lorem.sentence(),
   description: faker.lorem.sentence(),
   startDate: faker.date.past({ years: 1 }).getTime(),

@@ -1,6 +1,7 @@
 import {
   ok,
   created,
+  noContent,
   badRequest,
   unauthenticated,
   forbidden,
@@ -13,6 +14,7 @@ describe("HTTP Response helper functions", () => {
   test("Responses should have correct status codes", () => {
     expect(ok({}).statusCode).toBe(200);
     expect(created({}).statusCode).toBe(201);
+    expect(noContent({}).statusCode).toBe(204);
     expect(badRequest({}).statusCode).toBe(400);
     expect(unauthenticated({}).statusCode).toBe(401);
     expect(forbidden({}).statusCode).toBe(403);

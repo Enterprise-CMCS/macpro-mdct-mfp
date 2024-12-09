@@ -5,27 +5,22 @@ import {
   ReportStatus,
   ReportType,
 } from "../../../services/app-api/utils/types";
-import {
-  dateFormat,
-  quarterlyKeyValueGenerator,
-  randomReportPeriod,
-  randomReportYear,
-} from "../helpers";
+import { dateFormat, quarterlyKeyValueGenerator } from "../helpers";
 import { SeedFillReportShape, SeedNewReportShape } from "../types";
 
 export const newWorkPlan = (
   stateName: string,
-  reportYear?: number,
-  reportPeriod?: number
+  reportYear: number,
+  reportPeriod: number
 ): SeedNewReportShape => ({
   metadata: {
     isComplete: false,
     lastAlteredBy: faker.person.fullName(),
     locked: false,
     previousRevisions: [],
-    reportPeriod: reportPeriod || randomReportPeriod,
+    reportPeriod: reportPeriod,
     reportType: ReportType.WP,
-    reportYear: reportYear || randomReportYear,
+    reportYear: reportYear,
     status: ReportStatus.NOT_STARTED,
     submissionCount: 0,
     submissionName: "Work Plan",
