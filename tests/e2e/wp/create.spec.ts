@@ -196,4 +196,18 @@ test.describe("Creating a new Work Plan", () => {
 
     await wpDashboard.goto();
   });
+
+  test("Admin user can deny a work plan", async () => {
+    const page = adminWpDashboard.page;
+    const unlockButton = page.getByRole("button", { name: "Unlock" }).first();
+    const modal = page.getByRole("dialog");
+
+    await adminWpDashboard.goto();
+    await unlockButton.click();
+    await modal
+      .getByRole("heading", { name: "You unlocked this Work Plan" })
+      .isVisible();
+    await modal.getByRole("button", { name: "Return to dashboard" }).click();
+    await expect(unlockButton).toBeDisabled();
+  });
 });
