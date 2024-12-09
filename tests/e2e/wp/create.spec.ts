@@ -199,16 +199,15 @@ test.describe("Creating a new Work Plan", () => {
 
   test("Admin user can deny a work plan", async () => {
     const page = adminWpDashboard.page;
+    const unlockButton = page.getByRole("button", { name: "Unlock" }).first();
+    const modal = page.getByRole("dialog");
 
     await adminWpDashboard.goto();
-    const unlockButton = page.getByRole("button", { name: "Unlock" }).first();
     await unlockButton.click();
-    const modal = page.getByRole("dialog");
-    await modal.isVisible();
-    await expect(modal).toContainText("You unlocked this Work Plan");
+    await modal
+      .getByRole("heading", { name: "You unlocked this Work Plan" })
+      .isVisible();
     await modal.getByRole("button", { name: "Return to dashboard" }).click();
-    await expect(
-      page.getByRole("button", { name: "Unlock" }).first()
-    ).toBeDisabled();
+    await expect(unlockButton).toBeDisabled();
   });
 });
