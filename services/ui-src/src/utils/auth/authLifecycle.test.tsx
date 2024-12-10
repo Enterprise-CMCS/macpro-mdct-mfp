@@ -1,7 +1,7 @@
 import { initAuthManager, updateTimeout, getExpiration } from "utils";
 import { refreshCredentials } from "./authLifecycle";
 import { sub } from "date-fns";
-import { Hub } from "aws-amplify";
+import { Hub } from "aws-amplify/utils";
 
 describe("utils/auth", () => {
   describe("Test AuthManager Init", () => {
