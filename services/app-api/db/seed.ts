@@ -1,11 +1,17 @@
 /* eslint-disable no-console */
-import prompts, { Choice as PromptChoice, PromptObject } from "prompts";
-import { createdLog, expandedLog } from "./helpers";
-import { semiAnnualReportChoices, workPlanChoices } from "./options";
+import prompts, { Choice, PromptObject } from "prompts";
+import { createdLog, expandedLog, generateReportingPeriod } from "./helpers";
+import {
+  backToMenu,
+  generateChoices,
+  semiAnnualReportChoices,
+  workPlanChoices,
+} from "./options";
 import { currentYear } from "../../../tests/seeds/helpers";
 import {
   bannerKey,
   createApprovedWorkPlan,
+  createArchivedSemiAnnualReport,
   createArchivedWorkPlan,
   createBanner,
   createFilledSemiAnnualReport,
@@ -23,70 +29,24 @@ import {
   getWorkPlanById,
   getWorkPlansByState,
   loginSeedUsers,
-  state,
 } from "../../../tests/seeds/options";
 
-const seed = async (): Promise<void> => {
+const seed = async (
+  chosenYear?: number,
+  chosenPeriod?: number
+): Promise<void> => {
   await loginSeedUsers();
-  const wpIds: PromptChoice[] = await workPlanChoices();
-  const sarIds: PromptChoice[] = await semiAnnualReportChoices();
+  const wpIds: Choice[] = await workPlanChoices();
+  const sarIds: Choice[] = await semiAnnualReportChoices();
 
-  const entityChoices: PromptChoice[] = [
+  const entityChoices: Choice[] = [
     { title: "Work Plan (WP)", value: "WP" },
     { title: "Semi-Annual Report (SAR)", value: "SAR" },
     { title: "Banner", value: "banner" },
   ];
 
-  let reportYear = currentYear;
-  let reportPeriod = 1;
-
-  const generateReportingPeriod = (year: number, period: number) =>
-    `${year} Period ${period}`;
-
-  const generateChoices = (
-    type: string,
-    year: number,
-    period: number
-  ): PromptChoice[] => {
-    const reportingPeriod = generateReportingPeriod(year, period);
-
-    const choices = [
-      {
-        title: `Create base ${type}: ${reportingPeriod}`,
-        value: `create${type}`,
-      },
-      {
-        title: `Create filled ${type}: ${reportingPeriod}`,
-        value: `createFilled${type}`,
-      },
-      {
-        title: `Create submitted ${type}: ${reportingPeriod}`,
-        value: `createSubmitted${type}`,
-      },
-      {
-        title: `Create locked ${type}: ${reportingPeriod}`,
-        value: `createLocked${type}`,
-      },
-      {
-        title: `Create archived ${type}: ${reportingPeriod}`,
-        value: `createArchived${type}`,
-      },
-      { title: `Get ${type} by id`, value: `get${type}ById` },
-      {
-        title: `Get ${type}s by state: ${state}`,
-        value: `get${type}sByState`,
-      },
-    ];
-
-    if (type === "WP") {
-      choices.splice(3, 0, {
-        title: `Create approved ${type}: ${reportingPeriod}`,
-        value: `createApproved${type}`,
-      });
-    }
-
-    return choices;
-  };
+  let reportYear = chosenYear || currentYear;
+  let reportPeriod = chosenPeriod || 1;
 
   const questions: PromptObject[] = [
     {
@@ -95,15 +55,37 @@ const seed = async (): Promise<void> => {
       message: "Type",
       choices: [
         {
-          title: `Change Reporting Period: ${generateReportingPeriod(
+          title: `Change Reporting Year: ${reportYear}`,
+          value: "chooseReportingYear",
+        },
+        {
+          title: `Change Reporting Period: ${reportPeriod}`,
+          value: "chooseReportingPeriod",
+        },
+        {
+          title: `Create approved WP and filled SAR: ${generateReportingPeriod(
             reportYear,
             reportPeriod
           )}`,
-          value: "chooseReportingPeriod",
+          value: "createFilledSAR",
         },
-        { title: "Create filled WP and filled SAR", value: "createFilledEach" },
         ...entityChoices,
       ],
+    },
+    {
+      type: (prev: string) =>
+        prev === "chooseReportingYear" ? "select" : null,
+      name: "reportingYear",
+      message: "Reporting Year",
+      choices: () => {
+        return [
+          { title: `${currentYear}`, value: `${currentYear}` },
+          { title: `${currentYear + 1}`, value: `${currentYear + 1}` },
+          { title: `${currentYear + 2}`, value: `${currentYear + 2}` },
+          { title: `${currentYear + 3}`, value: `${currentYear + 3}` },
+          { title: `${currentYear + 4}`, value: `${currentYear + 4}` },
+        ];
+      },
     },
     {
       type: (prev: string) =>
@@ -112,41 +94,8 @@ const seed = async (): Promise<void> => {
       message: "Reporting Period",
       choices: () => {
         return [
-          { title: `${currentYear} Period 1`, value: "period1" },
-          { title: `${currentYear} Period 2`, value: "period2" },
-          { title: `${currentYear + 1} Period 1`, value: "period3" },
-          { title: `${currentYear + 1} Period 2`, value: "period4" },
-        ];
-      },
-    },
-    {
-      type: (prev: string) =>
-        ["period1", "period2", "period3", "period4"].includes(prev)
-          ? "select"
-          : null,
-      name: "type",
-      message: "Type",
-      choices: (prev: string) => {
-        reportYear = currentYear;
-        reportPeriod = 1;
-
-        if (["period2", "period4"].includes(prev)) {
-          reportPeriod = 2;
-        }
-
-        if (["period3", "period4"].includes(prev)) {
-          reportYear = currentYear + 1;
-        }
-
-        return [
-          {
-            title: `Create filled WP and filled SAR: ${generateReportingPeriod(
-              reportYear,
-              reportPeriod
-            )}`,
-            value: "createFilledEach",
-          },
-          ...entityChoices,
+          { title: "1", value: "1" },
+          { title: "2", value: "2" },
         ];
       },
     },
@@ -155,11 +104,7 @@ const seed = async (): Promise<void> => {
       name: "task",
       message: "Task",
       choices: (prev: string) => {
-        return generateChoices(
-          prev,
-          reportYear,
-          reportPeriod
-        ) as PromptChoice[];
+        return generateChoices(prev, reportYear, reportPeriod) as Choice[];
       },
     },
     {
@@ -176,6 +121,7 @@ const seed = async (): Promise<void> => {
           title: `Delete Banner: ${bannerKey}`,
           value: "deleteBanner",
         },
+        backToMenu,
       ],
     },
     {
@@ -193,7 +139,10 @@ const seed = async (): Promise<void> => {
       choices: sarIds,
     },
     {
-      type: "confirm",
+      type: (prev: string) =>
+        Number.isInteger(parseInt(prev, 10)) || prev === "back"
+          ? null
+          : "confirm",
       name: "exit",
       message: "Exit?",
     },
@@ -204,6 +153,21 @@ const seed = async (): Promise<void> => {
     answer: string | boolean
   ): Promise<void> => {
     switch (prompt.name) {
+      case "reportingPeriod":
+      case "reportingYear": {
+        const answerInt = parseInt(answer as string, 10);
+
+        if ([1, 2].includes(answerInt)) {
+          reportPeriod = answerInt;
+        }
+
+        if (answerInt >= currentYear) {
+          reportYear = answerInt;
+        }
+
+        seed(reportYear, reportPeriod);
+        break;
+      }
       case "workPlanId":
         expandedLog(await getWorkPlanById(answer as string));
         break;
@@ -212,7 +176,7 @@ const seed = async (): Promise<void> => {
         break;
       case "exit": {
         if (answer === false) {
-          seed();
+          seed(reportYear, reportPeriod);
         }
         break;
       }
@@ -221,53 +185,54 @@ const seed = async (): Promise<void> => {
     }
 
     switch (answer) {
-      case "createFilledEach": {
+      case "back":
+        seed(reportYear, reportPeriod);
+        break;
+      case "createFilledWP": {
         createdLog(
           await createFilledWorkPlan(reportYear, reportPeriod),
-          "Filled WP"
-        );
-        createdLog(
-          await createFilledSemiAnnualReport(reportYear, reportPeriod),
-          "Filled SAR"
+          "Filled",
+          "WP"
         );
         break;
       }
       case "createWP": {
-        createdLog(await createWorkPlan(reportYear, reportPeriod), "Base WP");
-        break;
-      }
-      case "createFilledWP": {
         createdLog(
-          await createFilledWorkPlan(reportYear, reportPeriod),
-          "Filled WP"
+          await createWorkPlan(reportYear, reportPeriod),
+          "Base",
+          "WP"
         );
         break;
       }
       case "createSubmittedWP": {
         createdLog(
           await createSubmittedWorkPlan(reportYear, reportPeriod),
-          "Submitted WP"
+          "Submitted",
+          "WP"
         );
         break;
       }
       case "createApprovedWP": {
         createdLog(
           await createApprovedWorkPlan(reportYear, reportPeriod),
-          "Approved WP"
+          "Approved",
+          "WP"
         );
         break;
       }
       case "createLockedWP": {
         createdLog(
           await createLockedWorkPlan(reportYear, reportPeriod),
-          "Locked WP"
+          "Locked",
+          "WP"
         );
         break;
       }
       case "createArchivedWP": {
         createdLog(
           await createArchivedWorkPlan(reportYear, reportPeriod),
-          "Archived WP"
+          "Archived",
+          "WP"
         );
         break;
       }
@@ -277,28 +242,40 @@ const seed = async (): Promise<void> => {
       case "createSAR": {
         createdLog(
           await createSemiAnnualReport(reportYear, reportPeriod),
-          "Base SAR"
+          "Base",
+          "SAR"
         );
         break;
       }
       case "createFilledSAR": {
         createdLog(
           await createFilledSemiAnnualReport(reportYear, reportPeriod),
-          "Filled SAR"
+          "Filled",
+          "SAR"
         );
         break;
       }
       case "createSubmittedSAR": {
         createdLog(
           await createSubmittedSemiAnnualReport(reportYear, reportPeriod),
-          "Submitted SAR"
+          "Submitted",
+          "SAR"
         );
         break;
       }
       case "createLockedSAR": {
         createdLog(
           await createLockedSemiAnnualReport(reportYear, reportPeriod),
-          "Locked SAR"
+          "Locked",
+          "SAR"
+        );
+        break;
+      }
+      case "createArchivedSAR": {
+        createdLog(
+          await createArchivedSemiAnnualReport(reportYear, reportPeriod),
+          "Archived",
+          "SAR"
         );
         break;
       }
@@ -306,16 +283,16 @@ const seed = async (): Promise<void> => {
         expandedLog(await getSemiAnnualReportsByState());
         break;
       case "createBanner": {
-        const { Item } = await createBanner();
-        console.log(`Banner created: ${Item?.key}`);
+        await createBanner();
+        console.log("Banner created.");
         break;
       }
       case "getBanner":
         expandedLog(await getBannerById());
         break;
       case "deleteBanner": {
-        const { Key } = await deleteBannerById();
-        console.log(`Banner deleted: ${Key?.key}`);
+        await deleteBannerById();
+        console.log("Banner deleted.");
         break;
       }
       default:

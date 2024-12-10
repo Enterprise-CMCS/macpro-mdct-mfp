@@ -3,6 +3,7 @@ describe("Help Page - Accessibility Test", () => {
     cy.authenticate("adminUser");
 
     cy.visit("/help");
+    cy.get("h1"); // ensure page loaded
     cy.location("pathname").should("match", /help/);
 
     cy.testPageAccessibility();
@@ -12,6 +13,7 @@ describe("Help Page - Accessibility Test", () => {
     cy.authenticate("stateUser");
 
     cy.visit("/help");
+    cy.get("h1"); // ensure page loaded
     cy.location("pathname").should("match", /help/);
 
     cy.testPageAccessibility();

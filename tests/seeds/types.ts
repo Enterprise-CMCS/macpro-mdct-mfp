@@ -38,15 +38,12 @@ export type SeedReportShape = ReportMetadataShape & {
   fieldData: ReportFieldData;
 };
 
-export type SeedBannerDataShape = {
+export type SeedBannerShape = {
   key: string;
+  createdAt: number;
+  lastAltered: number;
   title: string;
   description: string;
   startDate: number;
   endDate: number;
-};
-
-export type SeedBannerShape = {
-  Item?: SeedBannerDataShape;
-  Key?: SeedBannerDataShape;
 };
