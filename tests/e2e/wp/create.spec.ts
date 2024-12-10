@@ -210,4 +210,18 @@ test.describe("Creating a new Work Plan", () => {
     await modal.getByRole("button", { name: "Return to dashboard" }).click();
     await expect(unlockButton).toBeDisabled();
   });
+
+  test("State user can resubmit a work plan", async () => {
+    await wpDashboard.goto();
+    await wpDashboard.firstReport.getByRole("button", { name: "Edit" }).click();
+    await wpGeneralInformation.isReady();
+    await wpReviewAndSubmit.goto();
+    await expect(wpReviewAndSubmit.submitButton).toBeEnabled();
+    await wpReviewAndSubmit.submitButton.click();
+    await wpReviewAndSubmit.confirmSubmit();
+    await adminWpDashboard.goto();
+    await expect(
+      adminWpDashboard.page.getByTestId("dashboard-submission-count")
+    ).toContainText("2");
+  });
 });
