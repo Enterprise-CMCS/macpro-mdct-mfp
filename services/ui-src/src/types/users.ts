@@ -24,7 +24,7 @@ export interface UserContextShape {
   user?: MFPUser;
   getExpiration: Function;
   logout: () => Promise<void>;
-  loginWithIDM: () => void;
+  loginWithIDM: () => Promise<void>;
   showLocalLogins?: boolean;
   updateTimeout: () => void;
 }

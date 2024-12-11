@@ -153,16 +153,16 @@ export const displayLongformPeriod = (
   reportYear: number | undefined
 ) => {
   if (period === 1) {
-    return ` January 1 to June 30, ${reportYear} reporting period`;
+    return `January 1 to June 30, ${reportYear} reporting period`;
   } else {
-    return ` July 1 to December 31, ${reportYear} reporting period`;
+    return `July 1 to December 31, ${reportYear} reporting period`;
   }
 };
 
 export const displayLongformPeriodSection9 = (
   reportYear: number | undefined
 ) => {
-  return ` August 1, ${
+  return `August 1, ${
     reportYear ? reportYear - 1 : reportYear
   } to July 31, ${reportYear}`;
 };
