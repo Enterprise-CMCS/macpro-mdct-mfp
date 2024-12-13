@@ -19,7 +19,8 @@ import {
   putReportMetadata,
 } from "../../storage/reports";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
+import { StatusCodes } from "../../utils/responses/response-lib";
 
 mockClient(DynamoDBDocumentClient);
 
@@ -32,7 +33,7 @@ jest.mock("../../storage/reports", () => ({
 }));
 
 jest.mock("../../utils/auth/authorization", () => ({
-  isAuthorized: jest.fn().mockReturnValue(true),
+  isAuthenticated: jest.fn().mockReturnValue(true),
   hasPermissions: jest.fn().mockReturnValue(true),
 }));
 
@@ -65,7 +66,7 @@ describe("Test submitReport API method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
     const res = await submitReport(testSubmitEvent, null);
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(res.statusCode).toBe(StatusCodes.NotFound);
   });
 
   test("Test Successful Report Submittal", async () => {
@@ -76,10 +77,10 @@ describe("Test submitReport API method", () => {
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
 
     const res = await submitReport(testSubmitEvent, null);
-    const body = JSON.parse(res.body);
+    const body = JSON.parse(res.body!);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(body.lastAlteredBy).toContain("Thelonious States");
     expect(body.submissionName).toContain("testProgram");
     expect(body.isComplete).toStrictEqual(true);
@@ -99,10 +100,10 @@ describe("Test submitReport API method", () => {
     (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
 
     const res = await submitReport(testSubmitEvent, null);
-    const body = JSON.parse(res.body);
+    const body = JSON.parse(res.body!);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(body.lastAlteredBy).toContain("Thelonious States");
     expect(body.submissionName).toContain("testProgram");
     expect(body.isComplete).toStrictEqual(true);
@@ -117,10 +118,10 @@ describe("Test submitReport API method", () => {
     (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
 
     const res = await submitReport(testSubmitEvent, null);
-    const body = JSON.parse(res.body);
+    const body = JSON.parse(res.body!);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SERVER_ERROR);
+    expect(res.statusCode).toBe(StatusCodes.Conflict);
     expect(body).toStrictEqual(error.REPORT_INCOMPLETE);
   });
 
@@ -131,7 +132,7 @@ describe("Test submitReport API method", () => {
     };
     const res = await submitReport(noKeyEvent, null);
     expect(consoleSpy.warn).toHaveBeenCalled();
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 
@@ -142,7 +143,7 @@ describe("Test submitReport API method", () => {
     };
     const res = await submitReport(noKeyEvent, null);
     expect(consoleSpy.warn).toHaveBeenCalled();
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 });

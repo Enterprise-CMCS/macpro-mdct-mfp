@@ -7,7 +7,6 @@ import { ReportStatus } from "types";
 // utils
 import {
   mockAdminUserStore,
-  mockLDFlags,
   mockReportMethods,
   mockUseStore,
   RouterWrappedComponent,
@@ -20,8 +19,6 @@ import { testA11y } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-
-mockLDFlags.setDefault({ pdfExport: false });
 
 const WpReviewSubmitPage = (
   <RouterWrappedComponent>

@@ -38,8 +38,6 @@ repos:
         args:
           - --exclude-files
           - .*test\.json
-          - --exclude-files
-          - .*\.postman_collection\.json
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
     rev: v0.0.272
@@ -49,3 +47,10 @@ repos:
     rev: v8.12.0
     hooks:
       - id: gitleaks
+  - repo: local
+    hooks:
+      - id: branch-name-validation
+        name: branch-name-validation
+        entry: .github/branch-name-validation.sh
+        language: script
+        pass_filenames: false

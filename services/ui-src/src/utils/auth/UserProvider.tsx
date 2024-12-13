@@ -6,36 +6,26 @@ import {
   useMemo,
 } from "react";
 import { useLocation } from "react-router-dom";
-import { Auth } from "aws-amplify";
 import config from "config";
-import { initAuthManager, updateTimeout, getExpiration, useStore } from "utils";
+import {
+  authenticateWithIDM,
+  getExpiration,
+  getTokens,
+  initAuthManager,
+  logoutUser,
+  updateTimeout,
+  useStore,
+} from "utils";
 import { PRODUCTION_HOST_DOMAIN } from "../../constants";
 
 import { MFPUser, UserContextShape, UserRoles } from "types/users";
 
 export const UserContext = createContext<UserContextShape>({
   logout: async () => {},
-  loginWithIDM: () => {},
+  loginWithIDM: async () => {},
   updateTimeout: () => {},
   getExpiration: () => {},
 });
-
-const authenticateWithIDM = async () => {
-  const authConfig = Auth.configure();
-  if (authConfig?.oauth) {
-    const oAuthOpts = authConfig.oauth;
-    const domain = oAuthOpts.domain;
-    const responseType = oAuthOpts.responseType;
-    const redirectSignIn = (oAuthOpts as any).redirectSignIn;
-    const clientId = authConfig.userPoolWebClientId;
-    const url = `https://${domain}/oauth2/authorize?identity_provider=Okta&redirect_uri=${redirectSignIn}&response_type=${responseType}&client_id=${clientId}`;
-    window.location.assign(url);
-  }
-  const cognitoHostedUrl = new URL(
-    `https://${config.cognito.APP_CLIENT_DOMAIN}/oauth2/authorize?identity_provider=${config.cognito.COGNITO_IDP_NAME}&redirect_uri=${config.APPLICATION_ENDPOINT}&response_type=CODE&client_id=${config.cognito.APP_CLIENT_ID}&scope=email openid profile`
-  );
-  window.location.replace(cognitoHostedUrl);
-};
 
 export const UserProvider = ({ children }: Props) => {
   const location = useLocation();
@@ -50,12 +40,11 @@ export const UserProvider = ({ children }: Props) => {
   const logout = async () => {
     try {
       setUser(undefined);
-      await Auth.signOut();
+      await logoutUser();
       localStorage.clear();
     } catch (error) {
       console.log(error); // eslint-disable-line no-console
     }
-    window.location.assign(config.POST_SIGNOUT_REDIRECT);
   };
 
   const checkAuthState = useCallback(async () => {
@@ -66,9 +55,15 @@ export const UserProvider = ({ children }: Props) => {
     }
 
     try {
-      const session = await Auth.currentSession();
-      const payload = session.getIdToken().payload;
-      const { email, given_name, family_name } = payload;
+      const tokens = await getTokens();
+      if (!tokens?.idToken) {
+        throw new Error("Missing tokens auth session.");
+      }
+      const payload = tokens.idToken.payload;
+      const { email, given_name, family_name } = payload as Record<
+        string,
+        string
+      >;
       // "custom:cms_roles" is an string of concat roles so we need to check for the one applicable to MFP
       const cms_role = payload["custom:cms_roles"] as string;
       const userRole = cms_role.split(",").find((r) => r.includes("mdctmfp"));
@@ -93,7 +88,7 @@ export const UserProvider = ({ children }: Props) => {
       setUser(currentUser);
     } catch {
       if (isProduction) {
-        authenticateWithIDM();
+        await authenticateWithIDM();
       } else {
         setShowLocalLogins(true);
       }

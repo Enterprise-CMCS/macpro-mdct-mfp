@@ -3,10 +3,11 @@ import { fetchTemplate } from "./fetch";
 import { proxyEvent } from "../../utils/testing/proxyEvent";
 import { error } from "../../utils/constants/constants";
 // types
-import { APIGatewayProxyEvent, StatusCodes } from "../../utils/types";
+import { APIGatewayProxyEvent } from "../../utils/types";
+import { StatusCodes } from "../../utils/responses/response-lib";
 
 jest.mock("../../utils/auth/authorization", () => ({
-  isAuthorized: jest.fn().mockReturnValue(true),
+  isAuthenticated: jest.fn().mockReturnValue(true),
 }));
 
 jest.mock("../../storage/templates", () => ({
@@ -37,7 +38,7 @@ describe("Test fetchTemplate API method", () => {
     const res = await fetchTemplate(wpEvent, null);
 
     expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.SUCCESS);
+    expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(res.body).toContain("s3://fakeurl.bucket.here");
   });
 
@@ -48,8 +49,7 @@ describe("Test fetchTemplate API method", () => {
     };
     const res = await fetchTemplate(noKeyEvent, null);
 
-    expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_TEMPLATE_NAME);
   });
 
@@ -60,8 +60,7 @@ describe("Test fetchTemplate API method", () => {
     };
     const res = await fetchTemplate(noKeyEvent, null);
 
-    expect(consoleSpy.error).toHaveBeenCalled();
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.INVALID_TEMPLATE_NAME);
   });
 });

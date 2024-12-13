@@ -1,6 +1,6 @@
 // necessary to render the UsaBanner correctly
 $image-path: "~@cmsgov/design-system/dist/images";
-@import "@cmsgov/design-system/dist/css/index";
+@use "@cmsgov/design-system/dist/css/index";
 
 @mixin tabbed-focus {
   box-shadow: 0 0 0 3px #fff,
@@ -36,13 +36,13 @@ li::marker {
 
 a {
   color: var(--chakra-colors-palette-white);
+  transition: all 0.3s ease !important;
   &:hover {
     color: var(--chakra-colors-palette-gray_light);
   }
   &:visited {
     color: inherit;
   }
-  transition: all 0.3s ease !important;
 }
 
 // USA BANNER STYLES
