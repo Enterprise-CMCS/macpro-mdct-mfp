@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "@testing-library/jest-dom";
 import "jest-axe/extend-expect";
-import { mockFlags, resetLDMocks } from "jest-launchdarkly-mock";
 // types
 import {
   UserRoles,
@@ -55,37 +54,46 @@ jest.mock("@chakra-ui/transition", () => ({
   )),
 }));
 
-/* Mock LaunchDarkly (see https://bit.ly/3QAeS7j) */
-export const mockLDFlags = {
-  setDefault: (baseline: any) => mockFlags(baseline),
-  clear: resetLDMocks,
-  set: mockFlags,
-};
-
-// AUTH
-
-jest.mock("aws-amplify", () => ({
-  Auth: {
-    currentSession: jest.fn().mockReturnValue({
-      getIdToken: () => ({
-        getJwtToken: () => "eyJLongToken",
-      }),
+/* Mock Amplify */
+jest.mock("aws-amplify/api", () => ({
+  get: jest.fn().mockImplementation(() => ({
+    response: Promise.resolve({
+      body: {
+        json: () => Promise.resolve(`{"json":"blob"}`),
+      },
     }),
-    currentAuthenticatedUser: () => {},
-    configure: () => {},
-    signOut: async () => {},
-    federatedSignIn: () => {},
-  },
-  API: {
-    get: () => {},
-    post: () => {},
-    put: () => {},
-    del: () => {},
-    configure: () => {},
-  },
-  Hub: {
-    listen: jest.fn(),
-  },
+  })),
+  post: jest.fn().mockImplementation(() => ({
+    response: Promise.resolve({
+      body: {
+        json: () => Promise.resolve(`{"json":"blob"}`),
+      },
+    }),
+  })),
+  put: jest.fn().mockImplementation(() => ({
+    response: Promise.resolve({
+      body: {
+        json: () => Promise.resolve(`{"json":"blob"}`),
+      },
+    }),
+  })),
+  del: jest.fn().mockImplementation(() => ({
+    response: Promise.resolve({
+      body: {
+        json: () => Promise.resolve(`{"json":"blob"}`),
+      },
+    }),
+  })),
+}));
+
+jest.mock("aws-amplify/auth", () => ({
+  fetchAuthSession: jest.fn().mockReturnValue({
+    idToken: () => ({
+      payload: "eyJLongToken",
+    }),
+  }),
+  signOut: jest.fn().mockImplementation(() => Promise.resolve()),
+  signInWithRedirect: () => {},
 }));
 
 // USER CONTEXT
@@ -93,7 +101,7 @@ jest.mock("aws-amplify", () => ({
 export const mockUserContext: UserContextShape = {
   user: undefined,
   logout: async () => {},
-  loginWithIDM: () => {},
+  loginWithIDM: async () => {},
   updateTimeout: async () => {},
   getExpiration: () => {},
 };
@@ -343,12 +351,6 @@ export const RouterWrappedComponent: React.FC = ({ children }) => (
   <Router>{children}</Router>
 );
 
-// LAUNCHDARKLY
-
-export const mockLDClient = {
-  variation: jest.fn(() => true),
-};
-
 // ASSET
 export * from "./mockAsset";
 // BANNER
@@ -357,6 +359,8 @@ export * from "./mockBanner";
 export * from "./mockEntities";
 // FORM
 export * from "./mockForm";
+// LAUNCHDARKLY
+export * from "./mockLaunchDarkly";
 // REPORT
 export * from "./mockReport";
 // ROUTER

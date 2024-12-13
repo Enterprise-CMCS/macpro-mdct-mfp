@@ -67,4 +67,26 @@ export class WPDashboardPage extends BasePage {
       .click();
     await this.modal.getByRole("button", { name: "Start new" }).click();
   }
+
+  public async archiveAllReports() {
+    const archiveButtons = this.page.getByRole("button", {
+      name: "Archive",
+    });
+    const count = await archiveButtons.count();
+
+    for (let i = 0; i < count; i++) {
+      await archiveButtons.nth(i).click();
+      const modal = this.page.getByRole("dialog");
+      await modal.isVisible();
+      await modal.getByRole("textbox").fill("ARCHIVE");
+      await modal.getByRole("button", { name: "Archive" }).click();
+      await this.page.waitForResponse(
+        (response) =>
+          response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
+          response.status() == 200
+      );
+      await this.getReports();
+      await this.archiveAllReports();
+    }
+  }
 }
