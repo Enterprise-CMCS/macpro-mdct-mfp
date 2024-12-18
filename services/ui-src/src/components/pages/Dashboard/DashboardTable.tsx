@@ -68,7 +68,7 @@ export const DashboardTable = ({
         </Td>
         {/* Admin: Submission count */}
         {isAdmin && (
-          <Td>
+          <Td data-testid="dashboard-submission-count">
             {!report.submissionCount || report.submissionCount === 0
               ? 1
               : report.submissionCount}
