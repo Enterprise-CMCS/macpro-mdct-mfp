@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation, Routes, Route } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 // components
@@ -20,15 +20,12 @@ import {
   fireTealiumPageView,
   isApparentReportPage,
   makeMediaQueryClasses,
-  UserContext,
   useStore,
 } from "utils";
 import { ReportProvider } from "components/reports/ReportProvider";
 
 export const App = () => {
   const mqClasses = makeMediaQueryClasses();
-  const context = useContext(UserContext);
-  const { logout } = context;
   const { user, showLocalLogins } = useStore();
   const { pathname, key } = useLocation();
 
@@ -51,11 +48,7 @@ export const App = () => {
           <ReportProvider>
             <Timeout />
             <MainSkipNav />
-            {!isExportPage ? (
-              <Header handleLogout={logout} />
-            ) : (
-              <ExportedReportBanner />
-            )}
+            {!isExportPage ? <Header /> : <ExportedReportBanner />}
             <Container sx={sx.appContainer} data-testid="app-container">
               <ErrorBoundary FallbackComponent={Error}>
                 <AppRoutes />
