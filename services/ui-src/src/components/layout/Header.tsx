@@ -12,7 +12,7 @@ import getHelpIcon from "assets/icons/icon_help.png";
 import checkIcon from "assets/icons/icon_check_gray.png";
 import closeIcon from "assets/icons/icon_cancel_x_circle.png";
 
-export const Header = ({ handleLogout }: Props) => {
+export const Header = () => {
   const { isMobile } = useBreakpoint();
   const { report } = useStore() ?? {};
   const { lastSavedTime, isReportPage } = useContext(ReportContext);
@@ -45,7 +45,7 @@ export const Header = ({ handleLogout }: Props) => {
                   hideText={isMobile}
                 />
               </Link>
-              <Menu handleLogout={handleLogout} />
+              <Menu />
             </Flex>
           </Flex>
         </Container>
@@ -89,10 +89,6 @@ export const Header = ({ handleLogout }: Props) => {
     </Box>
   );
 };
-
-interface Props {
-  handleLogout: () => void;
-}
 
 const sx = {
   root: {

@@ -16,7 +16,7 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 const headerComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockReportMethods}>
-      <Header handleLogout={() => {}} />
+      <Header />
     </ReportContext.Provider>
   </RouterWrappedComponent>
 );
@@ -24,16 +24,10 @@ const headerComponent = (
 const reportComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockReportMethods}>
-      <Header handleLogout={() => {}} />
+      <Header />
     </ReportContext.Provider>
   </RouterWrappedComponent>
 );
-
-/*
- * jest.mock("utils/reports/routing", () => ({
- * isReportFormPage: jest.fn(() => true),
- * }));
- */
 
 describe("<Header />", () => {
   describe("Test Header", () => {
