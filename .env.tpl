@@ -28,10 +28,10 @@ VPC_SUBNET_C=local-nonsense
 BROKER_STRINGS=local-nonsense
 
 # needed for e2e tests
-CYPRESS_ADMIN_USER_EMAIL=op://mdct_devs/mfp_secrets/CYPRESS_ADMIN_USER_EMAIL
-CYPRESS_ADMIN_USER_PASSWORD=op://mdct_devs/mfp_secrets/CYPRESS_ADMIN_USER_PASSWORD # pragma: allowlist secret
-CYPRESS_STATE_USER_EMAIL=op://mdct_devs/mfp_secrets/CYPRESS_STATE_USER_EMAIL
-CYPRESS_STATE_USER_PASSWORD=op://mdct_devs/mfp_secrets/CYPRESS_STATE_USER_PASSWORD # pragma: allowlist secret
+E2E_ADMIN_USER_EMAIL=op://mdct_devs/mfp_secrets/E2E_ADMIN_USER_EMAIL
+E2E_ADMIN_USER_PASSWORD=op://mdct_devs/mfp_secrets/E2E_ADMIN_USER_PASSWORD # pragma: allowlist secret
+E2E_STATE_USER_EMAIL=op://mdct_devs/mfp_secrets/E2E_STATE_USER_EMAIL
+E2E_STATE_USER_PASSWORD=op://mdct_devs/mfp_secrets/E2E_STATE_USER_PASSWORD # pragma: allowlist secret
 
 # db:seed
 SEED_ADMIN_USER_EMAIL=op://mdct_devs/mfp_secrets/SEED_ADMIN_USER_EMAIL

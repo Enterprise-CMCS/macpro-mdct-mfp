@@ -303,15 +303,15 @@
     ]
   },
   {
-    "username": "cypressadminuser@test.com",
+    "username": "e2eadminuser@test.com",
     "attributes": [
       {
         "Name": "email",
-        "Value": "cypressadminuser@test.com"
+        "Value": "e2eadminuser@test.com"
       },
       {
         "Name": "given_name",
-        "Value": "CypressAutomatedIntegrationTests"
+        "Value": "E2EAutomatedIntegrationTests"
       },
       {
         "Name": "family_name",
@@ -328,15 +328,15 @@
     ]
   },
   {
-    "username": "cypressstateuser@test.com",
+    "username": "e2estateuser@test.com",
     "attributes": [
       {
         "Name": "email",
-        "Value": "cypressstateuser@test.com"
+        "Value": "e2estateuser@test.com"
       },
       {
         "Name": "given_name",
-        "Value": "CypressAutomatedIntegrationTests"
+        "Value": "E2EAutomatedIntegrationTests"
       },
       {
         "Name": "family_name",

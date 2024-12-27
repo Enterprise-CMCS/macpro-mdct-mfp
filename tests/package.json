@@ -1,21 +1,16 @@
 {
-  "name": "cypress-tests",
+  "name": "tests",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cd ../ && ./run local && cd -",
-    "cypress": "cypress open",
-    "test": "concurrently --kill-others \"yarn start\" \"yarn cypress\"",
-    "test:ci": "cypress install && cypress run --browser chrome --headless"
+    "start": "cd ../ && ./run local && cd -"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "axe-core": "^4.8.4",
     "concurrently": "^8.2.2",
-    "cypress": "^13.8.0",
-    "cypress-axe": "^1.5.0",
     "dotenv": "^16.4.5"
   },
   "dependencies": {}
