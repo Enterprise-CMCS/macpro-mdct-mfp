@@ -496,6 +496,18 @@ export const mockWPReportWithOverlays = {
           },
         ],
       },
+      {
+        ...mockWPFullReport.fieldData.entityType[0],
+        type: OverlayModalTypes.INITIATIVE,
+        id: "mock wip id",
+        initiative_wpTopic: [
+          {
+            key: "other-type-key",
+            value: "Other, specify",
+          },
+        ],
+        initiative_wp_otherTopic: "Unique initiative type",
+      },
     ],
   },
   formTemplate: {
@@ -516,27 +528,6 @@ export const mockWPReportWithOverlays = {
         ],
       } as ReportRoute,
       ...mockWPFullReport.formTemplate.routes.slice(3),
-    ],
-  },
-};
-
-export const mockWPReportWithOtherTypeOverlays = {
-  ...mockWPFullReport,
-  fieldData: {
-    ...mockWPFullReport.fieldData,
-    [OverlayModalTypes.INITIATIVE]: [
-      {
-        ...mockWPFullReport.fieldData.entityType[0],
-        type: OverlayModalTypes.INITIATIVE,
-        id: "mock wip id",
-        initiative_wpTopic: [
-          {
-            key: "other-type-key",
-            value: "Other, specify",
-          },
-        ],
-        initiative_wp_otherTopic: "Unique initiative type",
-      },
     ],
   },
 };
