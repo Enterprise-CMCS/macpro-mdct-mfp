@@ -6,7 +6,6 @@ import {
 } from "utils/testing/setupJest";
 import {
   mockSARReportWithOverlays,
-  mockWPReportWithOtherTypeOverlays,
   mockWPReportWithOverlays,
 } from "utils/testing/mockReport";
 import {
@@ -336,9 +335,10 @@ describe("<ExportedModalOverlayReportSection />", () => {
   test("should render correct initiative topic", () => {
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
-      report: mockWPReportWithOtherTypeOverlays,
+      report: mockWPReportWithOverlays,
     });
     render(testComponent(wpMockProps));
+    expect(screen.getByText("mock WP topic")).toBeInTheDocument();
     expect(screen.getByText("Unique initiative type")).toBeInTheDocument();
   });
 
