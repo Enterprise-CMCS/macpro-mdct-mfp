@@ -224,7 +224,6 @@ jobs:
         run: yarn playwright install --with-deps
       - name: Run Playwright tests
         run: yarn playwright test
-        continue-on-error: true
         env:
           BASE_URL: ${{ needs.deploy.outputs.application_endpoint }}
           E2E_STATE_USER_EMAIL: ${{ secrets.E2E_STATE_USER_EMAIL }}
