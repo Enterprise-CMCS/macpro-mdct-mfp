@@ -164,7 +164,7 @@ export function renderModalOverlayTableBody(
                   {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
                 </Heading>
                 <Text sx={sx.headingSubtitle}>
-                  {entity.initiative_wp_otherTopic ??
+                  {entity.initiative_wp_otherTopic ||
                     entity.initiative_wpTopic[0].value}
                 </Text>
               </Box>
