@@ -28,7 +28,7 @@
     "html-react-parser": "^3.0.16",
     "jest": "^28.0.0",
     "jest-environment-jsdom": "^28.0.0",
-    "launchdarkly-react-client-sdk": "^3.3.0",
+    "launchdarkly-react-client-sdk": "^3.6.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-error-boundary": "^3.1.4",
