@@ -198,14 +198,14 @@ test.describe("Creating a new Work Plan", () => {
   });
 
   test("Admin user can deny a work plan", async () => {
-    const page = adminWpDashboard.page;
-    const unlockButton = page.getByRole("button", { name: "Unlock" }).first();
-    const modal = page.getByRole("dialog");
-
     await adminWpDashboard.goto();
     await adminWpDashboard.isReady();
+    const unlockButton = adminWpDashboard.page
+      .getByRole("button", { name: "Unlock" })
+      .first();
     await unlockButton.isVisible();
     await unlockButton.click();
+    const modal = adminWpDashboard.page.getByRole("dialog");
     await modal
       .getByRole("heading", { name: "You unlocked this Work Plan" })
       .isVisible();
@@ -224,8 +224,9 @@ test.describe("Creating a new Work Plan", () => {
     await wpReviewAndSubmit.submitButton.click();
     await wpReviewAndSubmit.confirmSubmit();
     await adminWpDashboard.goto();
+
     await expect(
-      adminWpDashboard.page.getByTestId("dashboard-submission-count")
+      adminWpDashboard.firstReport.getByTestId("dashboard-submission-count")
     ).toContainText("2");
   });
 });
