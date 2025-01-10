@@ -203,6 +203,7 @@ test.describe("Creating a new Work Plan", () => {
     const modal = page.getByRole("dialog");
 
     await adminWpDashboard.goto();
+    await adminWpDashboard.isReady();
     await unlockButton.click();
     await modal
       .getByRole("heading", { name: "You unlocked this Work Plan" })
@@ -213,6 +214,7 @@ test.describe("Creating a new Work Plan", () => {
 
   test("State user can resubmit a work plan", async () => {
     await wpDashboard.goto();
+    await wpDashboard.isReady();
     await wpDashboard.firstReport.getByRole("button", { name: "Edit" }).click();
     await wpGeneralInformation.isReady();
     await wpReviewAndSubmit.goto();
