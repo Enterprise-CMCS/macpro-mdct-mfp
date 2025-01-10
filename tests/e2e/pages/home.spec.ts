@@ -2,6 +2,7 @@ import { test, expect } from "../utils/fixtures/base";
 import BasePage from "../utils/pageObjects/base.page";
 
 test.describe("state user home page", () => {
+  test.use({ storageState: "playwright/.auth/user.json" });
   test("Should see the correct home page as a state user", async ({
     stateHomePage,
   }) => {
@@ -20,6 +21,8 @@ test.describe("state user home page", () => {
 });
 
 test.describe("admin user home page", () => {
+  test.use({ storageState: "playwright/.auth/admin.json" });
+
   test("Should see the correct home page as an admin user", async ({
     adminHomePage,
   }) => {
