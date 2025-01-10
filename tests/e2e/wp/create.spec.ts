@@ -204,6 +204,7 @@ test.describe("Creating a new Work Plan", () => {
 
     await adminWpDashboard.goto();
     await adminWpDashboard.isReady();
+    await unlockButton.isVisible();
     await unlockButton.click();
     await modal
       .getByRole("heading", { name: "You unlocked this Work Plan" })
@@ -215,6 +216,7 @@ test.describe("Creating a new Work Plan", () => {
   test("State user can resubmit a work plan", async () => {
     await wpDashboard.goto();
     await wpDashboard.isReady();
+    await wpDashboard.firstReport.isVisible();
     await wpDashboard.firstReport.getByRole("button", { name: "Edit" }).click();
     await wpGeneralInformation.isReady();
     await wpReviewAndSubmit.goto();
