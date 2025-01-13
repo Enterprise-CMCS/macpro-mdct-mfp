@@ -11,7 +11,7 @@ import { Table } from "components";
 
 // utils
 import { useStore, sumOfRow, sumOfTwoRows, perOfTwoRows } from "utils";
-import { notAnsweredText } from "../../constants";
+import { notAnsweredText, optionalNotAnsweredText } from "../../constants";
 
 export const generateMainTable = (
   rows: AnyObject,
@@ -49,7 +49,6 @@ export const generateTableHeader = (rows: AnyObject, headerLabel: string) => {
     .filter((keys) => {
       return keys;
     });
-
   return [headerLabel, ...columnHeaders, "Total"];
 };
 
@@ -61,10 +60,13 @@ export const generateTableBody = (rows: AnyObject, fieldData?: AnyObject) => {
   let bodyRow: string[][] = firstCols;
 
   bodyRow.forEach((row: string[]) => {
+    const sarHcbs = fieldData?.formId === "ret-hcbs";
     const matchRow: [] = rows[row[0]];
     const rowIds = matchRow.map((info: AnyObject) => info.id).flat();
     rowIds.forEach((id) => {
-      const rowValue = fieldData?.[id] || notAnsweredText;
+      const rowValue =
+        fieldData?.[id] ||
+        (sarHcbs ? optionalNotAnsweredText : notAnsweredText);
       row.push(rowValue);
     });
   });

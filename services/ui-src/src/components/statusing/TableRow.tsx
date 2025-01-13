@@ -1,4 +1,5 @@
 import { Td, Text, Tr } from "@chakra-ui/react";
+import { sarHcbsText } from "../../constants";
 import { ReportPageProgress } from "types";
 import { useBreakpoint, useStore } from "utils";
 import { EditButton } from "./EditButton";
@@ -8,6 +9,7 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
   const { isMobile } = useBreakpoint();
   const { editable } = useStore();
   const { name, path, children, status } = page;
+
   const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
 
   const displayMobileEditButton = isMobile && !children?.length;
@@ -44,7 +46,7 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
         sx={sx.statusColumn}
         pt={rowDepth == 1 ? ptRowDepth1 : ptRowDepthOver1}
       >
-        <StatusIcon status={status} />
+        {name !== sarHcbsText && <StatusIcon status={status} />}
       </Td>
       {displayDefaultEditButton && (
         <Td>

@@ -626,6 +626,11 @@ export const mockTableRowPage = {
   status: true,
 };
 
+export const mockRETTableRowPage = {
+  name: "Number of HCBS participants admitted to a facility from the community, by length of stay and age group",
+  path: "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
+};
+
 export const mockChildRowPage = {
   name: "State or Territory-Specific Initiatives",
   path: "/wp/state-or-territory-specific-initiatives/initiatives",
