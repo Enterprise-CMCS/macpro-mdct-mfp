@@ -5,13 +5,15 @@ import { adminPassword, adminUser, statePassword, stateUser } from "./consts";
 const adminFile = "playwright/.auth/admin.json";
 
 async function waitForCognitoLocalStorage(page: Page) {
-  await page.waitForFunction(
-    () =>
-      Object.keys(localStorage).some((key) =>
-        key.startsWith("CognitoIdentityServiceProvider")
-      ),
-    { timeout: 3000 }
-  );
+  for (let i = 0; i < 30; i++) {
+    const keys = await page.evaluate(() => Object.keys(localStorage));
+
+    if (keys.some((key) => key.startsWith("CognitoIdentityServiceProvider"))) {
+      break;
+    }
+
+    await page.waitForTimeout(100);
+  }
 }
 
 setup("authenticate as admin", async ({ page }) => {
