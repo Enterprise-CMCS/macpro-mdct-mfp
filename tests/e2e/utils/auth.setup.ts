@@ -1,8 +1,18 @@
-import { test as setup } from "@playwright/test";
+import { Page, test as setup } from "@playwright/test";
 
 import { adminPassword, adminUser, statePassword, stateUser } from "./consts";
 
 const adminFile = "playwright/.auth/admin.json";
+
+async function waitForCognitoLocalStorage(page: Page) {
+  await page.waitForFunction(
+    () =>
+      Object.keys(localStorage).some((key) =>
+        key.startsWith("CognitoIdentityServiceProvider")
+      ),
+    { timeout: 3000 }
+  );
+}
 
 setup("authenticate as admin", async ({ page }) => {
   await page.goto("/");
@@ -18,7 +28,7 @@ setup("authenticate as admin", async ({ page }) => {
       name: "View State/Territory Reports",
     })
     .isVisible();
-  await page.waitForTimeout(1000);
+  await waitForCognitoLocalStorage(page);
   await page.context().storageState({ path: adminFile });
 });
 
@@ -38,6 +48,6 @@ setup("authenticate as user", async ({ page }) => {
       name: "Money Follows the Person (MFP) Portal",
     })
     .isVisible();
-  await page.waitForTimeout(1000);
+  await waitForCognitoLocalStorage(page);
   await page.context().storageState({ path: userFile });
 });
