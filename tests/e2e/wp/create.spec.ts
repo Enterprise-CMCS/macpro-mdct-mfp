@@ -10,6 +10,7 @@ import { WPInitiativesInstructionsPage } from "../utils/pageObjects/wp/wpInitiat
 import { WPInitiativesDashboardPage } from "../utils/pageObjects/wp/wpInitiativesDashboard.page";
 import { WPReviewAndSubmitPage } from "../utils/pageObjects/wp/wpReviewAndSubmit.page";
 import AdminHomePage from "../utils/pageObjects/adminHome.page";
+import { stateAbbreviation } from "../utils/consts";
 
 let userPage: Page;
 let userContext: BrowserContext;
@@ -198,7 +199,9 @@ test.describe("Creating a new Work Plan", () => {
   });
 
   test("Admin user can deny a work plan", async () => {
-    await adminWpDashboard.goto();
+    await adminHomePage.goto();
+    await adminHomePage.isReady();
+    await adminHomePage.selectWP(stateAbbreviation);
     await adminWpDashboard.isReady();
     const unlockButton = adminWpDashboard.page
       .getByRole("button", { name: "Unlock" })
@@ -223,7 +226,11 @@ test.describe("Creating a new Work Plan", () => {
     await expect(wpReviewAndSubmit.submitButton).toBeEnabled();
     await wpReviewAndSubmit.submitButton.click();
     await wpReviewAndSubmit.confirmSubmit();
-    await adminWpDashboard.goto();
+
+    await adminHomePage.goto();
+    await adminHomePage.isReady();
+    await adminHomePage.selectWP(stateAbbreviation);
+    await adminWpDashboard.isReady();
 
     await expect(
       adminWpDashboard.firstReport.getByTestId("dashboard-submission-count")
