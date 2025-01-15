@@ -69,6 +69,7 @@ export class WPDashboardPage extends BasePage {
   }
 
   public async archiveAllReports() {
+    await this.reportsReady();
     const archiveButtons = this.page.getByRole("button", {
       name: "Archive",
     });
