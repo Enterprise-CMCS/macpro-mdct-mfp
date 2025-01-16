@@ -20,6 +20,8 @@ export const fetchTemplate = handler(async (event, _context) => {
   let key: TemplateKeys | undefined;
   if (event.pathParameters.templateName === "WP") {
     key = TemplateKeys.WP;
+  } else if (event.pathParameters.templateName === "SAR") {
+    key = TemplateKeys.SAR;
   } else {
     return badRequest(error.INVALID_TEMPLATE_NAME);
   }
