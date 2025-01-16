@@ -200,9 +200,8 @@ test.describe("Creating a new Work Plan", () => {
 
   test("Admin user can deny a work plan", async () => {
     await adminHomePage.goto();
-    await adminHomePage.isReady();
-    await adminHomePage.selectWP(stateAbbreviation);
-    await adminWpDashboard.isReady();
+    await adminHomePage.selectWP("PR");
+    await adminWpDashboard.reportsReady();
     const unlockButton = adminWpDashboard.page
       .getByRole("button", { name: "Unlock" })
       .first();
