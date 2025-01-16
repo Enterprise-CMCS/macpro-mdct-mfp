@@ -55,7 +55,11 @@ export const HomePage = () => {
               verbiage={cards.WP}
               cardprops={sx.card}
             />
-            <TemplateCard verbiage={cards.SAR} cardprops={sx.card} />
+            <TemplateCard
+              templateName="SAR"
+              verbiage={cards.SAR}
+              cardprops={sx.card}
+            />
           </>
         ) : (
           <AdminDashSelector verbiage={verbiage.readOnly} />
