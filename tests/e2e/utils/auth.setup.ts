@@ -18,7 +18,7 @@ setup("authenticate as admin", async ({ page }) => {
       name: "View State/Territory Reports",
     })
     .isVisible();
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(2000);
   await page.context().storageState({ path: adminFile });
 });
 
@@ -38,6 +38,6 @@ setup("authenticate as user", async ({ page }) => {
       name: "Money Follows the Person (MFP) Portal",
     })
     .isVisible();
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(2000);
   await page.context().storageState({ path: userFile });
 });
