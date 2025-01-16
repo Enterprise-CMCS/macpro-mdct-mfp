@@ -77,7 +77,7 @@ export class WPDashboardPage extends BasePage {
     if (count > 0) {
       for (let i = 0; i < count; i++) {
         const modal = this.page.getByRole("dialog");
-        await archiveButtons.nth(i).click();
+        await archiveButtons.nth(i).click({ force: true });
         await modal.isVisible();
         await modal.getByRole("textbox").fill("ARCHIVE");
         await modal.getByRole("button", { name: "Archive" }).click();
