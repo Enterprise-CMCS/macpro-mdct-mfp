@@ -9,11 +9,6 @@ plugins:
   - serverless-stack-termination-protection
   - serverless-iam-helper
 
-s3BucketHelper:
-  loggingConfiguration:
-    destinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
-    logFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
-
 provider:
   name: aws
   runtime: nodejs20.x
@@ -26,14 +21,24 @@ provider:
       path: /delegatedadmin/developer/
       permissionsBoundary: !Sub arn:aws:iam::${AWS::AccountId}:policy/cms-cloud-admin/developer-boundary-policy
       statements:
-        - Sid: ScanUploads
-          Effect: "Allow"
+        - Effect: "Allow"
           Action:
-            - s3:GetObject*
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - s3:GetObject
+            - s3:GetObjectTagging
+            - s3:PutObject
+            - s3:PutObjectAcl
             - s3:PutObjectTagging
             - s3:PutObjectVersionTagging
-          Resource:
-            - !Sub arn:aws:s3:::${self:service}-${self:custom.stage}-attachments-${AWS::AccountId}/*
+            - s3:DeleteObject
+            - s3:ListBucket
+          Resource: "*"
 
 custom:
   project: "mfp"
@@ -118,7 +123,7 @@ resources:
                 - ETag
         NotificationConfiguration:
           LambdaConfigurations:
-            - Event: s3:ObjectCreated:Put
+            - Event: s3:ObjectCreated:*
               Function: !GetAtt AvScanLambdaFunction.Arn
       DependsOn: LambdaInvokePermission
     AVBucketPolicy:
@@ -155,7 +160,7 @@ resources:
                 - !Sub arn:aws:s3:::${ClamDefsBucket}
               Condition:
                 Bool:
-                  aws:SecureTransport: false
+                  "aws:SecureTransport": false
     AttachmentsBucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
@@ -163,15 +168,72 @@ resources:
         PolicyDocument:
           Statement:
             - Action:
+                - "s3:GetBucketLocation"
+                - "s3:ListBucket"
+              Effect: "Allow"
+              Resource: !Sub ${AttachmentsBucket.Arn}
+              Principal:
+                AWS: ${ssm:/configuration/mpriamrole, "*"}
+            - Action:
+                - "s3:GetObject"
+              Effect: "Allow"
+              Resource: !Sub ${AttachmentsBucket.Arn}/*
+              Principal:
+                AWS: ${ssm:/configuration/mpriamrole, "*"}
+            - Action:
+                - "s3:GetBucketLocation"
+                - "s3:ListBucket"
+              Effect: "Allow"
+              Resource: !Sub ${AttachmentsBucket.Arn}
+              Principal:
+                AWS: ${ssm:/configuration/mprdeviam, "*"}
+            - Action:
+                - "s3:GetObject"
+              Effect: "Allow"
+              Resource: !Sub ${AttachmentsBucket.Arn}/*
+              Principal:
+                AWS: ${ssm:/configuration/mprdeviam, "*"}
+            - Action:
+                - "s3:PutObject"
+              Effect: "Allow"
+              Resource: !Sub ${AttachmentsBucket.Arn}/*
+              Principal:
+                AWS: !GetAtt IamRoleLambdaExecution.Arn
+            - Action:
+                - "s3:GetBucketLocation"
+                - "s3:ListBucket"
+              Effect: "Allow"
+              Resource: !Sub ${AttachmentsBucket.Arn}
+              Principal:
+                AWS: !GetAtt IamRoleLambdaExecution.Arn
+            - Sid: "AllowSSLRequestsOnly"
+              Effect: Deny
+              Action: "s3:*"
+              Principal: "*"
+              Resource:
+                - !Sub arn:aws:s3:::${AttachmentsBucket}/*
+                - !Sub arn:aws:s3:::${AttachmentsBucket}
+              Condition:
+                Bool:
+                  "aws:SecureTransport": false
+            - Action:
                 - "s3:GetObject"
               Effect: "Deny"
-              Resource: !Sub ${AttachmentsBucket.Arn}/*
-              Principal: "*"
+              Resource: !Sub ${AttachmentsBucket.Arn}/public/*
+              NotPrincipal:
+                AWS: !GetAtt BucketAVScanRole.Arn
               Condition:
                 StringNotEquals:
                   s3:ExistingObjectTag/virusScanStatus:
                     - "CLEAN"
+                    - "PENDING"
                   aws:PrincipalArn: !GetAtt IamRoleLambdaExecution.Arn
+            - Action:
+                - "s3:DeleteObject"
+              Effect: "Allow"
+              Resource: !Sub ${AttachmentsBucket.Arn}/public/*
+              Principal:
+                AWS: !GetAtt IamRoleLambdaExecution.Arn
             - Action: "s3:PutObject"
               Effect: Deny
               Principal: "*"
@@ -197,16 +259,54 @@ resources:
                 - !Sub ${AttachmentsBucket.Arn}/*.xls
                 - !Sub ${AttachmentsBucket.Arn}/*.xlsx
                 - !Sub ${AttachmentsBucket.Arn}/*.json
-            - Sid: "AllowSSLRequestsOnly"
-              Effect: Deny
-              Action: "s3:*"
-              Principal: "*"
-              Resource:
-                - !Sub arn:aws:s3:::${AttachmentsBucket}/*
-                - !Sub arn:aws:s3:::${AttachmentsBucket}
-              Condition:
-                Bool:
-                  aws:SecureTransport: false
+    BucketEncryptionKMSKey:
+      Type: "AWS::KMS::Key"
+      Properties:
+        Description: "Key for encrypting dynamo snapshots and upload buckets"
+        EnableKeyRotation: true
+        PendingWindowInDays: 10
+        MultiRegion: true
+        KeyPolicy:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+              Action:
+                - "kms:Create*"
+                - "kms:Describe*"
+                - "kms:Enable*"
+                - "kms:List*"
+                - "kms:Put*"
+                - "kms:Update*"
+                - "kms:Revoke*"
+                - "kms:Disable*"
+                - "kms:Get*"
+                - "kms:Delete*"
+                - "kms:TagResource"
+                - "kms:UntagResource"
+                - "kms:ScheduleKeyDeletion"
+                - "kms:CancelKeyDeletion"
+                - "kms:Encrypt"
+                - "kms:Decrypt"
+                - "kms:ReEncrypt*"
+                - "kms:GenerateDataKey*"
+                - "kms:DescribeKey"
+              Resource: "*"
+            - Effect: Allow
+              Principal:
+                AWS:
+                  - ${ssm:/configuration/mpriamrole, "*"}
+                  - ${ssm:/configuration/mprdeviam, "*"}
+                  - !GetAtt IamRoleLambdaExecution.Arn
+              Action:
+                - "kms:Encrypt"
+                - "kms:Decrypt"
+                - "kms:ReEncrypt*"
+                - "kms:GenerateDataKey*"
+                - "kms:DescribeKey"
+              Resource: "*"
+
     LambdaInvokePermission:
       Type: AWS::Lambda::Permission
       Properties:
@@ -224,6 +324,91 @@ resources:
             - ServerSideEncryptionByDefault:
                 SSEAlgorithm: AES256
         AccessControl: Private
+    BucketAVScanRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service: "lambda.amazonaws.com"
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: "BucketAVScanRolePolicy"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: "Allow"
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: "arn:aws:logs:*:*:*"
+                - Effect: "Allow"
+                  Action:
+                    - s3:GetObject
+                    - s3:GetObjectTagging
+                    - s3:PutObject
+                    - s3:PutObjectAcl
+                    - s3:PutObjectTagging
+                    - s3:PutObjectVersionTagging
+                  Resource: !Sub ${AttachmentsBucket.Arn}/*
+                - Effect: "Allow"
+                  Action:
+                    - s3:ListBucket
+                  Resource: !Sub ${AttachmentsBucket.Arn}
+                - Effect: "Allow"
+                  Action:
+                    - s3:ListBucket
+                  Resource: !Sub ${ClamDefsBucket.Arn}
+                - Effect: "Allow"
+                  Action:
+                    - s3:GetObject
+                    - s3:GetObjectTagging
+                    - s3:PutObject
+                    - s3:PutObjectAcl
+                    - s3:PutObjectTagging
+                    - s3:PutObjectVersionTagging
+                    - s3:DeleteObject
+                    - s3:ListBucket
+                  Resource: !Sub ${ClamDefsBucket.Arn}/*
+    BucketAVDownloadRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service: "lambda.amazonaws.com"
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: "BucketAVDownloadRolePolicy"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: "Allow"
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: "arn:aws:logs:*:*:*"
+                - Effect: "Allow"
+                  Action:
+                    - s3:GetObject
+                    - s3:GetObjectTagging
+                    - s3:PutObject
+                    - s3:PutObjectAcl
+                    - s3:PutObjectTagging
+                    - s3:PutObjectVersionTagging
+                    - s3:ListBucket
+                  Resource: !Sub ${ClamDefsBucket.Arn}/*
+                - Effect: "Allow"
+                  Action:
+                    - s3:ListBucket
+                  Resource: !GetAtt ClamDefsBucket.Arn
+
   Outputs:
     AttachmentsBucketName: # Print out the name of the bucket that is created
       Value: !Ref AttachmentsBucket
