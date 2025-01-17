@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 const {
   S3Client,
   DeleteObjectsCommand,
@@ -82,7 +80,6 @@ async function downloadAVDefinitions() {
     const downloadPromises = definitionFileKeys.map(
       async (filenameToDownload) => {
         const destinationFile = path.join("/tmp/", filenameToDownload);
-
         utils.generateSystemMessage(
           `Downloading ${filenameToDownload} from S3 to ${destinationFile}`
         );

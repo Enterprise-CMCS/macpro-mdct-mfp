@@ -26,7 +26,17 @@ function generateTagSet(virusScanStatus) {
  * We need that to cleanup the /tmp/ folder after the download of the definitions.
  */
 function cleanupFolder(folderToClean) {
+  let result = execSync(`ls -l ${folderToClean}`);
+
+  console.log("-- Folder before cleanup--");
+  console.log(result.toString());
+
   execSync(`rm -rf ${folderToClean}*`);
+
+  result = execSync(`ls -l ${folderToClean}`);
+
+  console.log("-- Folder after cleanup --");
+  console.log(result.toString());
 }
 
 /**
@@ -96,7 +106,6 @@ function extractBucketFromApiEvent(s3Event) {
  */
 function generateSystemMessage(systemMessage) {
   let finalMessage = `--- ${systemMessage} ---`;
-  // eslint-disable-next-line no-console
   console.log(finalMessage);
   return finalMessage;
 }
