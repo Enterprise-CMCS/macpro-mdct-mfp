@@ -12,7 +12,7 @@ $example}
 
 service=${1}
 output=${2}
-stage=${3:-dev}
+stage=${3}
 
 if [ $output == "url" ]; then
   output="CloudFrontEndpointUrl"

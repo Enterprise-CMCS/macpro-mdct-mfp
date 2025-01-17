@@ -1,11 +1,10 @@
 service: database
 
-frameworkVersion: "3"
+frameworkVersion: "4"
 
 plugins:
   - serverless-dynamodb
   - serverless-stack-termination-protection
-  - serverless-s3-bucket-helper
   - serverless-plugin-scripts
   - serverless-offline
 
@@ -43,13 +42,13 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
-  stackTags:  
+  stackTags:
     PROJECT: ${self:custom.project}
-    SERVICE: ${self:service}  
+    SERVICE: ${self:service}
   iam:
     role:
-      path: ${env:IAM_PATH, ssm:/configuration/${self:custom.stage}/iam/path, ssm:/configuration/default/iam/path, "/"}
-      permissionsBoundary: ${env:IAM_PERMISSIONS_BOUNDARY, ssm:/configuration/${self:custom.stage}/iam/permissionsBoundaryPolicy, ssm:/configuration/default/iam/permissionsBoundaryPolicy, ""}
+      path: /delegatedadmin/developer/
+      permissionsBoundary: !Sub arn:aws:iam::${AWS::AccountId}:policy/cms-cloud-admin/developer-boundary-policy
       statements:
         - Effect: "Allow"
           Action:

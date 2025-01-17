@@ -1,14 +1,13 @@
 # Refer to the README.md file in within this service directory to configure all ssm parameters required for this service.
 service: uploads
 
-frameworkVersion: "3"
+frameworkVersion: "4"
 
 plugins:
   - serverless-plugin-scripts
   - serverless-s3-local
   - serverless-stack-termination-protection
   - serverless-iam-helper
-  - serverless-s3-bucket-helper
 
 s3BucketHelper:
   loggingConfiguration:
@@ -19,13 +18,13 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
-  stackTags:  
+  stackTags:
     PROJECT: ${self:custom.project}
-    SERVICE: ${self:service}  
+    SERVICE: ${self:service}
   iam:
     role:
-      path: ${env:IAM_PATH, ssm:/configuration/${self:custom.stage}/iam/path, ssm:/configuration/default/iam/path, "/"}
-      permissionsBoundary: ${env:IAM_PERMISSIONS_BOUNDARY, ssm:/configuration/${self:custom.stage}/iam/permissionsBoundaryPolicy, ssm:/configuration/default/iam/permissionsBoundaryPolicy, ""}
+      path: /delegatedadmin/developer/
+      permissionsBoundary: !Sub arn:aws:iam::${AWS::AccountId}:policy/cms-cloud-admin/developer-boundary-policy
       statements:
         - Sid: ScanUploads
           Effect: "Allow"
