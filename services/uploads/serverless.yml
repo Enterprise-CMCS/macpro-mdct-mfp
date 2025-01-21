@@ -57,16 +57,10 @@ custom:
   scripts:
     hooks:
       # This script is run locally when running 'serverless deploy'
-      # before:package:initialize: |
-      #   echo "I am in the before:package:initialize block"
       package:initialize: |
         set -e
-        echo "I am in the package:initialize block"
-        # cd services/uploads/
-        pwd
-        curl -L --output lambda_layer.zip https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip
+        # curl -L --output lambda_layer.zip https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip
         curl -L --output services/uploads/lambda_layer.zip https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip
-        ls -l
       deploy:finalize: |
         # rm lambda_layer.zip
         echo "I am in the deploy:finalize block"
