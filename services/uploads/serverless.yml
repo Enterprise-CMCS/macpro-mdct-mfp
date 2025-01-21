@@ -54,13 +54,14 @@ custom:
       # This script is run locally when running 'serverless deploy'
       package:initialize: |
         set -e
+        echo "I am in the package:initialize block"
         cd services/uploads/
-        curl -L --output lambda_layer.zip https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip
-        echo hi
         pwd
+        curl -L --output lambda_layer.zip https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip
         ls -l
       deploy:finalize: |
         # rm lambda_layer.zip
+        echo "I am in the deploy:finalize block"
         pwd
         ls -l
         aws lambda invoke --region ${self:provider.region} --function-name ${self:service}-${self:custom.stage}-avDownloadDefinitions --invocation-type Event response.json
