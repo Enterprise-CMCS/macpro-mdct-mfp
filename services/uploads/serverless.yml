@@ -6,7 +6,7 @@ frameworkVersion: "4"
 package:
   patterns:
     - "!node_modules/**"
-    - "services/uploads/lambda_layer.zip"
+    - "lambda_layer.zip"
 
 plugins:
   - serverless-plugin-scripts
@@ -60,7 +60,7 @@ custom:
       before:package:initialize: |
         echo "I am in the before:package:initialize block"
         echo "Fetching ClamAV Layer"
-        curl -L --output services/uploads/lambda_layer.zip \
+        curl -L --output lambda_layer.zip \
           https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip
       package:initialize: |
         set -e
