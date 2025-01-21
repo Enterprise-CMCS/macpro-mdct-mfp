@@ -61,7 +61,9 @@ custom:
         set -e
         curl -L --output lambda_layer.zip https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip
         # Without the above line I get Error: Error: ENOENT: no such file or directory, open 'lambda_layer.zip' encountered during hash calculation for provided filePath: lambda_layer.zip
+        cp lambda_layer.zip services/uploads/lambda_layer.zip
         # curl -L --output services/uploads/lambda_layer.zip https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip
+        # Without the above line I get ENOENT: no such file or directory, open '/home/runner/work/macpro-***/macpro-***/services/uploads/lambda_layer.zip'
       deploy:finalize: |
         # rm lambda_layer.zip
         echo "I am in the deploy:finalize block"
