@@ -186,16 +186,16 @@ resources:
               Resource: !Sub ${AttachmentsBucket.Arn}
               Principal:
                 AWS:
-                  - !Sub ${ssm:/configuration/mpriamrole}
-                  - !Sub ${ssm:/configuration/mprdeviam}
+                  - !Sub ${ssm:/configuration/mpriamrole, "*"}
+                  - !Sub ${ssm:/configuration/mprdeviam, "*"}
             - Action:
                 - "s3:GetObject"
               Effect: "Allow"
               Resource: !Sub ${AttachmentsBucket.Arn}/*
               Principal:
                 AWS:
-                  - !Sub ${ssm:/configuration/mpriamrole}
-                  - !Sub ${ssm:/configuration/mprdeviam}
+                  - !Sub ${ssm:/configuration/mpriamrole, "*"}
+                  - !Sub ${ssm:/configuration/mprdeviam, "*"}
             - Action:
                 - "s3:PutObject"
               Effect: "Allow"
@@ -207,8 +207,8 @@ resources:
               Action: "s3:*"
               Principal:
                 AWS:
-                  - !Sub ${ssm:/configuration/mpriamrole}
-                  - !Sub ${ssm:/configuration/mprdeviam}
+                  - !Sub ${ssm:/configuration/mpriamrole, "*"}
+                  - !Sub ${ssm:/configuration/mprdeviam, "*"}
                   - !GetAtt IamRoleLambdaExecution.Arn
               Resource:
                 - !Sub arn:aws:s3:::${AttachmentsBucket}/*
