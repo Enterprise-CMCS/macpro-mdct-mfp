@@ -54,7 +54,7 @@
     "serverless-bundle": "^6.0.0",
     "serverless-dotenv-plugin": "^3.0.0",
     "serverless-iam-helper": "github:Enterprise-CMCS/serverless-iam-helper",
-    "serverless-offline": "^13.5.0",
+    "serverless-offline": "^14.4.0",
     "serverless-plugin-scripts": "^1.0.2",
     "serverless-stack-termination-protection": "^2.0.2",
     "typescript": "^4.6.3",
