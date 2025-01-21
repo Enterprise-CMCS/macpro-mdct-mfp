@@ -137,6 +137,13 @@ resources:
           LambdaConfigurations:
             - Event: s3:ObjectCreated:*
               Function: !GetAtt AvScanLambdaFunction.Arn
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+        VersioningConfiguration:
+          Status: Enabled
       DependsOn: LambdaInvokePermission
     AVBucketPolicy:
       Type: AWS::S3::BucketPolicy
