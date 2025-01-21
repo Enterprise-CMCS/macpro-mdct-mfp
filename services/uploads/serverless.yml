@@ -60,7 +60,9 @@ custom:
         pwd
         ls -l
       deploy:finalize: |
-        rm lambda_layer.zip
+        # rm lambda_layer.zip
+        pwd
+        ls -l
         aws lambda invoke --region ${self:provider.region} --function-name ${self:service}-${self:custom.stage}-avDownloadDefinitions --invocation-type Event response.json
         cat response.json
         rm response.json
