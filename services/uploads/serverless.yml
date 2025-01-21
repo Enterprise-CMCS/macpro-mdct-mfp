@@ -185,43 +185,31 @@ resources:
               Effect: "Allow"
               Resource: !Sub ${AttachmentsBucket.Arn}
               Principal:
-                AWS: ${ssm:/configuration/mpriamrole, "*"}
+                AWS:
+                  - !Sub ${ssm:/configuration/mpriamrole}
+                  - !Sub ${ssm:/configuration/mprdeviam}
             - Action:
                 - "s3:GetObject"
               Effect: "Allow"
               Resource: !Sub ${AttachmentsBucket.Arn}/*
               Principal:
-                AWS: ${ssm:/configuration/mpriamrole, "*"}
-            - Action:
-                - "s3:GetBucketLocation"
-                - "s3:ListBucket"
-              Effect: "Allow"
-              Resource: !Sub ${AttachmentsBucket.Arn}
-              Principal:
-                AWS: ${ssm:/configuration/mprdeviam, "*"}
-            - Action:
-                - "s3:GetObject"
-              Effect: "Allow"
-              Resource: !Sub ${AttachmentsBucket.Arn}/*
-              Principal:
-                AWS: ${ssm:/configuration/mprdeviam, "*"}
+                AWS:
+                  - !Sub ${ssm:/configuration/mpriamrole}
+                  - !Sub ${ssm:/configuration/mprdeviam}
             - Action:
                 - "s3:PutObject"
               Effect: "Allow"
               Resource: !Sub ${AttachmentsBucket.Arn}/*
               Principal:
                 AWS: !GetAtt IamRoleLambdaExecution.Arn
-            - Action:
-                - "s3:GetBucketLocation"
-                - "s3:ListBucket"
-              Effect: "Allow"
-              Resource: !Sub ${AttachmentsBucket.Arn}
-              Principal:
-                AWS: !GetAtt IamRoleLambdaExecution.Arn
             - Sid: "AllowSSLRequestsOnly"
               Effect: Deny
               Action: "s3:*"
-              Principal: "*"
+              Principal:
+                AWS:
+                  - !Sub ${ssm:/configuration/mpriamrole}
+                  - !Sub ${ssm:/configuration/mprdeviam}
+                  - !GetAtt IamRoleLambdaExecution.Arn
               Resource:
                 - !Sub arn:aws:s3:::${AttachmentsBucket}/*
                 - !Sub arn:aws:s3:::${AttachmentsBucket}
@@ -232,7 +220,7 @@ resources:
                 - "s3:GetObject"
               Effect: "Deny"
               Resource: !Sub ${AttachmentsBucket.Arn}/public/*
-              NotPrincipal:
+              Principal:
                 AWS: !GetAtt BucketAVScanRole.Arn
               Condition:
                 StringNotEquals:
