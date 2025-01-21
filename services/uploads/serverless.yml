@@ -89,7 +89,7 @@ custom:
 layers:
   clamDefs:
     package:
-      artifact: services/uploads/lambda_layer.zip
+      artifact: lambda_layer.zip
 functions:
   avScan:
     handler: src/antivirus.lambdaHandleEvent
