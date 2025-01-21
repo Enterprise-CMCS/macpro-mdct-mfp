@@ -78,7 +78,7 @@ custom:
 layers:
   clamDefs:
     package:
-      artifact: lambda_layer.zip
+      artifact: /home/runner/work/macpro-***/macpro-***/services/uploads/lambda_layer.zip
 functions:
   avScan:
     handler: src/antivirus.lambdaHandleEvent
