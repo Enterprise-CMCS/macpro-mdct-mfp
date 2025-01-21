@@ -337,12 +337,12 @@ resources:
                 SSEAlgorithm: AES256
         AccessControl: Private
         PublicAccessBlockConfiguration:
-           BlockPublicAcls: true
-           BlockPublicPolicy: true
-           IgnorePublicAcls: true
-           RestrictPublicBuckets: true
-         VersioningConfiguration:
-           Status: Enabled
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+        VersioningConfiguration:
+          Status: Enabled
     BucketAVScanRole:
       Type: "AWS::IAM::Role"
       Properties:
