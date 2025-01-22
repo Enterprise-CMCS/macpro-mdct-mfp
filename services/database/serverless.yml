@@ -8,11 +8,6 @@ plugins:
   - serverless-plugin-scripts
   - serverless-offline
 
-s3BucketHelper:
-  loggingConfiguration:
-    destinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
-    logFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
-
 custom:
   project: "mfp"
   stage: ${opt:stage, self:provider.stage}
@@ -166,6 +161,9 @@ resources:
           RestrictPublicBuckets: true
         VersioningConfiguration:
           Status: Enabled
+        LoggingConfiguration:
+          DestinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
+          LogFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
     WpReportTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -200,6 +198,9 @@ resources:
           RestrictPublicBuckets: true
         VersioningConfiguration:
           Status: Enabled
+        LoggingConfiguration:
+          DestinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
+          LogFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
   Outputs:
     BannerTableName:
       Value: !Ref BannerTable

@@ -29,11 +29,6 @@ plugins:
   - serverless-iam-helper
   - "@enterprise-cmcs/serverless-waf-plugin"
 
-s3BucketHelper:
-  loggingConfiguration:
-    path: /delegatedadmin/developer/
-    permissionsBoundary: !Sub arn:aws:iam::${AWS::AccountId}:policy/cms-cloud-admin/developer-boundary-policy
-
 custom:
   project: "mfp"
   stage: ${opt:stage, self:provider.stage}

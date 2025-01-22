@@ -21,11 +21,6 @@ plugins:
   - serverless-iam-helper
   - "@enterprise-cmcs/serverless-waf-plugin"
 
-s3BucketHelper:
-  loggingConfiguration:
-    destinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
-    logFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
-
 custom:
   project: "mfp"
   stage: ${opt:stage, self:provider.stage}
@@ -149,7 +144,11 @@ resources:
           RestrictPublicBuckets: true
         VersioningConfiguration:
           Status: Enabled
+        LoggingConfiguration:
+          DestinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
+          LogFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
       DeletionPolicy: Delete
+
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
@@ -172,6 +171,7 @@ resources:
                 Bool:
                   aws:SecureTransport: false
         Bucket: !Ref S3Bucket
+
     LoggingBucket:
       Type: "AWS::S3::Bucket"
       Properties:
@@ -190,6 +190,9 @@ resources:
         OwnershipControls:
           Rules:
             - ObjectOwnership: BucketOwnerPreferred
+        LoggingConfiguration:
+          DestinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
+          LogFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
       DeletionPolicy: Delete
     LoggingBucketPolicy:
       Type: "AWS::S3::BucketPolicy"
@@ -313,6 +316,10 @@ resources:
           RestrictPublicBuckets: true
         VersioningConfiguration:
           Status: Enabled
+        LoggingConfiguration:
+          DestinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
+          LogFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
+
     WaflogsUploadBucketPolicy:
       Type: "AWS::S3::BucketPolicy"
       Properties:
