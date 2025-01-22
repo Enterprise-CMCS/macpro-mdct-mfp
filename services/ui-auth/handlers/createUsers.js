@@ -1,4 +1,4 @@
-import * as cognitolib from "../libs/cognito-lib";
+import * as cognitolib from "../libs/cognito-lib.js";
 const userPoolId = process.env.userPoolId;
 const users = require("../libs/users.json");
 
