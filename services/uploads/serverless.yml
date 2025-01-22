@@ -3,10 +3,6 @@ service: uploads
 
 frameworkVersion: "4"
 
-package:
-  patterns:
-    - "!node_modules/**"
-    - "lambda_layer.zip"
 
 plugins:
   - serverless-plugin-scripts
