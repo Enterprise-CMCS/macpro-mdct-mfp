@@ -21,9 +21,9 @@ export const Header = () => {
 
   return (
     <Box sx={sx.root} id="header">
-      <Flex sx={sx.usaBannerContainer}>
+      <Box sx={sx.usaBannerContainer}>
         <UsaBanner />
-      </Flex>
+      </Box>
       <Flex sx={sx.headerBar} role="navigation">
         <Container sx={sx.headerContainer}>
           <Flex sx={sx.headerFlex}>
@@ -101,12 +101,8 @@ const sx = {
     },
   },
   usaBannerContainer: {
-    width: "100%",
-    flexDirection: "column",
-    alignItems: "center",
-    backgroundColor: "palette.gray_lightest",
     ".desktop &": {
-      padding: "0 1rem",
+      padding: "0 0rem",
     },
   },
   headerBar: {

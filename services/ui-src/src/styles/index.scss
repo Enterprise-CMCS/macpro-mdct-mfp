@@ -48,12 +48,17 @@ a {
 
 // USA BANNER STYLES
 
-.ds-c-usa-banner {
+.ds-c-usa-banner__header {
   width: 100%;
   max-width: var(--chakra-sizes-appMax);
-  display: flex;
-  flex-direction: column;
-  background-color: var(--chakra-colors-palette-gray_lightest);
+
+  @media (min-width: 560px) {
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 880px) {
+    padding-inline: 2rem;
+  }
 }
 
 // SCROLLBARS
