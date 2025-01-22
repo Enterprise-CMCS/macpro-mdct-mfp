@@ -43,6 +43,9 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
       case "/wp/state-or-territory-specific-initiatives/initiatives":
         //if the alert is false (meaning no alert), default to the validation status check, else the task is not completed
         return !getWPAlertStatus(report, "initiative") ? status : false;
+      // this section is optional and should not have a status
+      case "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community":
+        return undefined;
     }
 
     return status;

@@ -12,9 +12,6 @@ export const saveAndCloseText = "Save & close";
 export const notAnsweredText = "Not answered";
 export const optionalNotAnsweredText = "Not answered; optional";
 
-export const sarHcbsText =
-  "Number of HCBS participants admitted to a facility from the community, by length of stay and age group";
-
 // STATES
 export enum States {
   AL = "Alabama",
