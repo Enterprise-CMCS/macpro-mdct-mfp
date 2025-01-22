@@ -1,6 +1,7 @@
 // necessary to render the UsaBanner correctly
 $image-path: "~@cmsgov/design-system/dist/images";
 @use "@cmsgov/design-system/dist/css/index";
+@use '@cmsgov/design-system/dist/css/core-theme';
 
 @mixin tabbed-focus {
   box-shadow: 0 0 0 3px #fff,

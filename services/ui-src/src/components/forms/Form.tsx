@@ -254,7 +254,7 @@ const sx = {
     paddingY: "0.25rem",
     paddingTop: 0,
     // makes the blue line continuous
-    marginBottom: 0,
+    marginTop: 0,
     ".ds-c-fieldset, label": {
       marginTop: "1rem",
     },
