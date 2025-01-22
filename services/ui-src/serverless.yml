@@ -61,6 +61,8 @@ custom:
       # Build the static archive and populate the config
       package:initialize: |
         set -e
+        echo "I am here"
+        ls -l
         SKIP_PREFLIGHT_CHECK=true yarn run build
         export API_REGION=${self:custom.api_region}
         export API_URL=${self:custom.api_url}
