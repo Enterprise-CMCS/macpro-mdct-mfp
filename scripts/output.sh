@@ -18,4 +18,6 @@ if [ $output == "url" ]; then
   output="CloudFrontEndpointUrl"
 fi
 
-sls $service info --stage $stage --verbose | grep "$output:" | sed "s/.*$output: //"
+cd $service
+serverless info --stage $stage --json | jq --arg output $output '.outputs[] | select(.OutputKey == $output) | .OutputValue'
+cd ..
