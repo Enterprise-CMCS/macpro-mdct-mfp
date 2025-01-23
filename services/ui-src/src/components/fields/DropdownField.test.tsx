@@ -47,12 +47,18 @@ describe("<DropdownField />", () => {
     test("Dropdown renders", () => {
       mockGetValues(undefined);
       render(dropdownComponentWithOptions);
-      const dropdown = screen.getByLabelText("test-dropdown-label");
-      expect(dropdown).toBeVisible();
+      const dropdown = screen.queryAllByText("test-dropdown-label");
+      expect(dropdown).toHaveLength(2);
     });
   });
 
   describe("Test DropdownField hydration functionality", () => {
+    /*
+     * This has updated to see if a button exists with the intended displayValue. This is because of the CMSDS
+     * Dropdown custom component released in 7.0.7 and how it builds itself now that its no longer a native selct.
+     * It builds a button with the value displayed and then builds a list underneath it. Jest has a hard
+     * time handling this hence the implementation below and the other tests in this group.
+     */
     const mockFormFieldValue = { label: "Option 1", value: "test-dropdown-1" };
     const mockHydrationValue = { label: "Option 3", value: "test-dropdown-3" };
     const dropdownComponentWithHydrationValue = (
@@ -71,31 +77,28 @@ describe("<DropdownField />", () => {
     test("If only formFieldValue exists, displayValue is set to it", () => {
       mockGetValues(mockFormFieldValue);
       render(dropdownComponentWithOptions);
-      const dropdownField: HTMLSelectElement = screen.getByLabelText(
-        "test-dropdown-label"
-      );
-      const displayValue = dropdownField.value;
-      expect(displayValue).toEqual(mockFormFieldValue.value);
+      const option = screen.getByRole("button", {
+        name: `${mockFormFieldValue.label} test-dropdown-label`,
+      }) as HTMLOptionElement;
+      expect(option).toBeInTheDocument();
     });
 
     test("If only hydrationValue exists, displayValue is set to it", () => {
       mockGetValues(undefined);
       render(dropdownComponentWithHydrationValue);
-      const dropdownField: HTMLSelectElement = screen.getByLabelText(
-        "test-dropdown-field-to-hydrate"
-      );
-      const displayValue = dropdownField.value;
-      expect(displayValue).toEqual(mockHydrationValue.value);
+      const option = screen.getByRole("button", {
+        name: `${mockHydrationValue.label} test-dropdown-field-to-hydrate`,
+      }) as HTMLOptionElement;
+      expect(option).toBeInTheDocument();
     });
 
     test("If both formFieldValue and hydrationValue exist, displayValue is set to formFieldValue", () => {
       mockGetValues(mockFormFieldValue);
       render(dropdownComponentWithHydrationValue);
-      const dropdownField: HTMLSelectElement = screen.getByLabelText(
-        "test-dropdown-field-to-hydrate"
-      );
-      const displayValue = dropdownField.value;
-      expect(displayValue).toEqual(mockFormFieldValue.value);
+      const option = screen.getByRole("button", {
+        name: `${mockFormFieldValue.label} test-dropdown-field-to-hydrate`,
+      }) as HTMLOptionElement;
+      expect(option).toBeInTheDocument();
     });
   });
 

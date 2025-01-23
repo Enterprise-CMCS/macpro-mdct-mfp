@@ -81,7 +81,7 @@ export const DropdownField = ({
   // update form data
   const onChangeHandler = async (event: InputChangeEvent) => {
     const selectedOption: SelectedOption = {
-      label: event.target.id,
+      label: event.target.name,
       value: event.target.value,
     };
     setDisplayValue(selectedOption);
