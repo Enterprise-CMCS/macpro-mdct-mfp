@@ -64,9 +64,9 @@ export const generateTableBody = (rows: AnyObject, fieldData?: AnyObject) => {
     const rowIds = matchRow.map((info: AnyObject) => info.id).flat();
     rowIds.forEach((id) => {
       const value = fieldData?.[id];
-      const isOptional = fieldData?.optional || false;
+      const isOptional = fieldData?.optional;
       const rowValue =
-        value || isOptional ? optionalNotAnsweredText : notAnsweredText;
+        value || (isOptional ? optionalNotAnsweredText : notAnsweredText);
       row.push(rowValue);
     });
   });
@@ -329,8 +329,12 @@ export const ExportRETTable = ({ section }: Props) => {
   const formattedFieldData = {
     ...report?.fieldData,
     formId: form?.id,
-    optional: form?.optional,
-  };
+  } as AnyObject;
+
+  if (form?.optional) {
+    formattedFieldData.optional = form.optional;
+  }
+
   //generate the table
   let table: TableContentShape = {};
   let ariaOverride: TableContentShape = {};
