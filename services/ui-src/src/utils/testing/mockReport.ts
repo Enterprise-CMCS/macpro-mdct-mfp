@@ -572,7 +572,6 @@ export const mockSARReportWithOverlays = {
             name: "mock init name",
             entitySteps: [
               {
-                // TODO what here?
                 foo: "bar",
               },
             ],
