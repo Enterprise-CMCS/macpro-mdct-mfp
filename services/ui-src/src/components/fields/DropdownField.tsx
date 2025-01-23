@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Dropdown as CmsdsDropdown } from "@cmsgov/design-system";
+import {
+  Dropdown as CmsdsDropdown,
+  DropdownChangeObject,
+} from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
 // utils
 import { labelTextWithOptional, parseCustomHtml } from "utils";
@@ -79,9 +82,9 @@ export const DropdownField = ({
   }, [hydrationValue]); // only runs on hydrationValue fetch/update
 
   // update form data
-  const onChangeHandler = async (event: InputChangeEvent) => {
+  const onChangeHandler = async (event: DropdownChangeObject) => {
     const selectedOption: SelectedOption = {
-      label: event.target.id,
+      label: event.target.name,
       value: event.target.value,
     };
     setDisplayValue(selectedOption);
@@ -143,7 +146,7 @@ export const DropdownField = ({
         name={name}
         id={name}
         label={labelText || ""}
-        ariaLabel={ariaLabel}
+        aria-label={ariaLabel}
         options={formattedOptions}
         hint={parsedHint}
         onChange={onChangeHandler}
