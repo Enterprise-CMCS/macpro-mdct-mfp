@@ -38,7 +38,7 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
     return out;
   };
 
-  const checkForAlertStatus = (path: string, status: boolean) => {
+  const checkForAlertOrUndefinedStatus = (path: string, status: boolean) => {
     switch (path) {
       case "/wp/state-or-territory-specific-initiatives/initiatives":
         //if the alert is false (meaning no alert), default to the validation status check, else the task is not completed
@@ -76,7 +76,10 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
         const routeProgress: ReportPageProgress = {
           name: route.name,
           path: route.path,
-          status: checkForAlertStatus(route.path, flattenedStatus[route.path]),
+          status: checkForAlertOrUndefinedStatus(
+            route.path,
+            flattenedStatus[route.path]
+          ),
         };
         overallReportProgress.push(routeProgress);
       }
