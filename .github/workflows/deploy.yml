@@ -224,7 +224,7 @@ jobs:
             cypress/e2e/*.cy.js
           browser: chrome
           config: baseUrl=${{ needs.deploy.outputs.application_endpoint }}
-          wait-on: "${{ needs.deploy.outputs.application_endpoint }}"
+          wait-on: ${{ needs.deploy.outputs.application_endpoint }}
           env: true
         env:
           CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
