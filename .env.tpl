@@ -40,3 +40,5 @@ SEED_STATE_USER_EMAIL=op://mdct_devs/mfp_secrets/SEED_STATE_USER_EMAIL
 SEED_STATE_USER_PASSWORD=op://mdct_devs/mfp_secrets/SEED_STATE_USER_PASSWORD # pragma: allowlist secret
 SEED_STATE=op://mdct_devs/mfp_secrets/SEED_STATE
 SEED_STATE_NAME=op://mdct_devs/mfp_secrets/SEED_STATE_NAME
+
+SERVERLESS_LICENSE_KEY=op://mdct_devs/mfp_secrets/SERVERLESS_LICENSE_KEY
