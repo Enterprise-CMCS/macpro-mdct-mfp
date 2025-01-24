@@ -626,9 +626,50 @@ export const mockTableRowPage = {
   status: true,
 };
 
+export const mockRETTableRowPage = {
+  name: "Number of HCBS participants admitted to a facility from the community, by length of stay and age group",
+  path: "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
+};
+
 export const mockChildRowPage = {
   name: "State or Territory-Specific Initiatives",
   path: "/wp/state-or-territory-specific-initiatives/initiatives",
   children: [] as ReportPageProgress[],
   status: true,
 };
+
+export const mockInitiativesSpecificDynamicModalOverlayReportPageJson = {
+  name: "mock-initiatives-route",
+  path: "/wp/state-or-territory-specific-initiatives/initiatives",
+  pageType: "dynamicModalOverlay",
+  entityType: "entityType",
+  entityInfo: [""],
+  verbiage: mockModalOverlayReportPageVerbiage,
+  initiatives: [
+    {
+      initiativeId: "mock-entity-id", // which matches the mock entity
+      name: "",
+      topic: "",
+      dashboard: {
+        verbiage: {
+          intro: {
+            section: "State or Territory-Specific Initiatives",
+            info: [
+              {
+                type: "html",
+                content:
+                  "Report progress for each objective by selecting the button for each.",
+              },
+            ],
+            dashboardTitle: "Objectives progress",
+          },
+        },
+      } as unknown as FormJson,
+      entitySteps: [
+        {
+          modalForm: mockModalOverlayForm as FormJson,
+        } as OverlayModalPageShape,
+      ],
+    },
+  ],
+} as DynamicModalOverlayReportPageShape;
