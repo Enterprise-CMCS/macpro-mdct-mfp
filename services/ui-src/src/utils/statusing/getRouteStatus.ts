@@ -45,10 +45,10 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
         return !getWPAlertStatus(report, "initiative") ? status : false;
       // this section is optional and should not have a status
       case "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community":
-        return undefined;
+        return;
+      default:
+        return status;
     }
-
-    return status;
   };
 
   // Flatten the completion status to get the pages under each section

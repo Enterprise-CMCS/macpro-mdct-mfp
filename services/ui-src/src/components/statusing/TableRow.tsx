@@ -8,7 +8,6 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
   const { isMobile } = useBreakpoint();
   const { editable } = useStore();
   const { name, path, children, status } = page;
-
   const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
 
   const displayMobileEditButton = isMobile && !children?.length;

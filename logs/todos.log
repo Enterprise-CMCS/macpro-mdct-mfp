@@ -18,7 +18,6 @@
 ./services/ui-src/src/utils/api/requestMethods/report.ts:22: TODO: Swap report from AnyObject to a ReportMetaData + FieldData type
 ./services/ui-src/src/utils/forms/forms.test.ts:253: TODO: Evidently it should not */
 ./services/ui-src/src/utils/reports/entities.test.ts:174: TODO:
-./services/ui-src/src/utils/testing/mockReport.ts:573: TODO what here?
 ./tests/cypress/e2e/login.cy.js:1: TODO: make an assertion in these tests
 ./tests/e2e/sar/create.spec.ts:17: TODO: Seed WP
 ./tests/e2e/wp/approve.spec.ts:18: TODO: Seed WP
