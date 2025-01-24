@@ -45,6 +45,6 @@ SERVERLESS_LICENSE_KEY=op://mdct_devs/mfp_secrets/SERVERLESS_LICENSE_KEY
 
 # AWS
 AWS_ACCESS_KEY_ID=dummy_access_key
-AWS_SECRET_ACCESS_KEY=dummy_secret_key
+AWS_SECRET_ACCESS_KEY=dummy_secret_key # pragma: allowlist secret
 AWS_SESSION_TOKEN=dummy_session_token
 AWS_REGION=us-east-1
