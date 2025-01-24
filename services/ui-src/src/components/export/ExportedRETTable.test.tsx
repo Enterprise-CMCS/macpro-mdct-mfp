@@ -92,6 +92,32 @@ const emptySection = {
   fields: [],
 };
 
+const optionalSection = {
+  form: {
+    id: "ret-hcbs",
+    optional: true,
+    fields: [
+      {
+        id: "ret_sectionHeader",
+        type: "sectionHeader",
+        props: {
+          content: "mock text",
+        },
+      },
+      {
+        id: "ret_shortTermStayAges",
+        type: "number",
+        validation: "validIntegerOptional",
+        props: {
+          label: "Ages 18-64",
+          styleAsOptional: true,
+          decimalPlacesToRoundTo: 0,
+        },
+      },
+    ],
+  },
+};
+
 const mockSARReport = {
   report: {
     fieldData: {
@@ -211,6 +237,14 @@ describe("<ExportRETTable />", () => {
         "Your associated MFP Work Plan does not contain any target populations."
       )
     ).toBeVisible();
+  });
+
+  test("Test ExportRETTable text for unanswered optional section", () => {
+    mockedUseStore.mockReturnValue(mockSARReport);
+    render(<ExportRETTable section={optionalSection as any} />);
+    const table = screen.queryByRole("table");
+    expect(table).toBeVisible;
+    expect(screen.getByText("Not answered; optional")).toBeVisible();
   });
 
   describe("Test ExportedRETTable Component", () => {
