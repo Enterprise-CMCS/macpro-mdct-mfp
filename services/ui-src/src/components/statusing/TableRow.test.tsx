@@ -7,6 +7,7 @@ import { ReportPageProgress } from "types";
 // utils
 import { useStore } from "utils";
 import {
+  mockRETTableRowPage,
   mockTableRowPage,
   mockUseStore,
   RouterWrappedComponent,
@@ -67,6 +68,15 @@ describe("<TableRow />", () => {
     expect(
       screen.getByRole("button", { name: "Edit Transition Benchmarks" })
     ).toBeVisible();
+  });
+
+  test("TableRow does not display status for RET HCBS", () => {
+    const sarHcbsText =
+      "Number of HCBS participants admitted to a facility from the community, by length of stay and age group";
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(tableRowComponent({ page: mockRETTableRowPage, rowDepth: 0 }));
+    expect(screen.getByText(sarHcbsText)).toBeVisible();
+    expect(screen.queryByAltText("Success notification")).toBeNull();
   });
 
   testA11y(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));

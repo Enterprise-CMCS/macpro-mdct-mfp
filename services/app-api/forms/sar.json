@@ -834,6 +834,7 @@
           },
           "form": {
             "id": "ret-hcbs",
+            "optional": true,
             "fields": [
               {
                 "id": "ret_sectionHeader_shortTermStay",

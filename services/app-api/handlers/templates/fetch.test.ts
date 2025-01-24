@@ -42,6 +42,18 @@ describe("Test fetchTemplate API method", () => {
     expect(res.body).toContain("s3://fakeurl.bucket.here");
   });
 
+  test("Test Successful template url fetch with SAR", async () => {
+    const sarEvent: APIGatewayProxyEvent = {
+      ...testEvent,
+      pathParameters: { templateName: "SAR" },
+    };
+    const res = await fetchTemplate(sarEvent, null);
+
+    expect(consoleSpy.debug).toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.Ok);
+    expect(res.body).toContain("s3://fakeurl.bucket.here");
+  });
+
   test("Test templateName not provided throws 500 error", async () => {
     const noKeyEvent: APIGatewayProxyEvent = {
       ...testEvent,

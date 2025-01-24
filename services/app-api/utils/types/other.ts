@@ -149,6 +149,7 @@ export interface FormTemplateVersion {
 
 export const enum TemplateKeys {
   WP = "templates/MFP-Work-Plan-Help-File.pdf",
+  SAR = "templates/MFP-Semi-Annual-Rprt-Help-File.pdf",
 }
 
 /**
