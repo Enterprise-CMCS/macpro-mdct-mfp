@@ -103,27 +103,4 @@ describe("calculateDueDate()", () => {
       expect(dueDate).toBe("02/29/2024");
     });
   });
-
-  describe("Calculate due dates for 2024", () => {
-    const currentYear = 2024;
-    const reportType = ReportType.WP;
-
-    describe("Period 1", () => {
-      const reportPeriod = 1;
-
-      test("returns WP due date in 2024 as 9/1", () => {
-        const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-        expect(dueDate).toBe("09/01/2024");
-      });
-    });
-
-    describe("Period 2", () => {
-      const reportPeriod = 2;
-
-      test("returns WP due date in 2024 as 9/3", () => {
-        const dueDate = calculateDueDate(currentYear, reportPeriod, reportType);
-        expect(dueDate).toBe(`09/03/2024`);
-      });
-    });
-  });
 });

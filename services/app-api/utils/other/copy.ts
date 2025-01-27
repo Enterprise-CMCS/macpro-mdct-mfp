@@ -1,6 +1,6 @@
 import { getReportFieldData } from "../../storage/reports";
 import { getPossibleFieldsFromFormTemplate } from "../formTemplates/formTemplates";
-import { AnyObject, ReportFieldData, ReportJson, State } from "../types";
+import { ReportFieldData, ReportJson, State } from "../types";
 
 /**
  *
@@ -41,7 +41,7 @@ export async function copyFieldDataFromSource(
         pruneEntityData(
           sourceFieldData,
           key,
-          sourceFieldData[key] as AnyObject[], // TODO, remove cast
+          sourceFieldData[key] as ReportFieldData[],
           possibleFields
         );
       } else if (!possibleFields.includes(key)) {
@@ -56,9 +56,9 @@ export async function copyFieldDataFromSource(
 }
 
 function pruneEntityData(
-  sourceFieldData: AnyObject, // TODO, make this ReportFieldData
+  sourceFieldData: ReportFieldData,
   key: string,
-  entityData: AnyObject[], // TODO, make this Choice[] | ReportFieldData[]
+  entityData: ReportFieldData[],
   possibleFields: string[]
 ) {
   //adding fields to be copied over from entries
@@ -69,36 +69,38 @@ function pruneEntityData(
       delete sourceFieldData[key];
       return;
     }
-    for (const entityKey in entity) {
+
+    Object.keys(entity).forEach((entityKey) => {
       //check to see if the object is an array, this is for capturing substeps in the initiatives
-      if (typeof entity[entityKey] === "object") {
+      if (Array.isArray(entity[entityKey])) {
         pruneEntityData(
           sourceFieldData,
           key,
-          entity[entityKey],
+          entity[entityKey] as ReportFieldData[],
           possibleFields
         );
-      } else {
-        if (!concatEntityFields.includes(entityKey)) {
-          if (
-            !entityKey.includes("name") &&
-            !["key", "value"].includes(entityKey)
-          ) {
-            delete entityData[index][entityKey];
-          }
-        }
+      } else if (
+        !concatEntityFields.includes(entityKey) &&
+        !entityKey.includes("name") &&
+        !["key", "value"].includes(entityKey)
+      ) {
+        delete entityData[index][entityKey];
       }
-    }
+    });
+
     if (Object.keys(entity).length === 0) {
       delete entityData[index];
-    } else entityData[index]["isCopied"] = true;
+    } else {
+      entityData[index]["isCopied"] = true;
+    }
   });
 
   //filter out any closeout data
-  if (sourceFieldData && sourceFieldData[key]) {
-    sourceFieldData[key] = sourceFieldData[key].filter(
-      (field: AnyObject) => !field["isInitiativeClosed"]
+  if (Array.isArray(sourceFieldData[key])) {
+    const filteredData = (sourceFieldData[key] as ReportFieldData[]).filter(
+      (field) => !field["isInitiativeClosed"]
     );
+    sourceFieldData[key] = filteredData;
   }
   // Delete whole key if there's nothing in it.
   if (entityData.every((e) => e === null)) {
