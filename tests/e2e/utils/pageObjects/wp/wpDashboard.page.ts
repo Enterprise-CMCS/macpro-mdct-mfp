@@ -80,7 +80,8 @@ export class WPDashboardPage extends BasePage {
         await archiveButtons.nth(i).click({ force: true });
         await modal.isVisible();
         await modal.getByRole("textbox").fill("ARCHIVE");
-        await modal.getByRole("button", { name: "Archive" }).click();
+        await modal.getByRole("button", { name: "Archive" }).isEnabled();
+        modal.getByRole("button", { name: "Archive" }).click();
         await this.page.waitForResponse(
           (response) =>
             response
