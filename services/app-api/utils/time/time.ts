@@ -74,11 +74,6 @@ export const calculateDueDate = (
     dueDate = "11/1";
   }
 
-  // TODO: Remove this block when 2024 is no longer a Reporting Period Year option (2026-)
-  if (reportType === ReportType.WP && year === 2024) {
-    dueDate = reportPeriod === 1 ? "9/1" : "9/3";
-  }
-
   if (reportType === ReportType.SAR) {
     dueDate = "8/29";
 
