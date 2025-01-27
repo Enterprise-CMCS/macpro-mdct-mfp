@@ -63,7 +63,7 @@ function pruneEntityData(
 ) {
   //adding fields to be copied over from entries
   const concatEntityFields = possibleFields.concat(additionalFields);
-  entityData.forEach((entity: ReportFieldData, index: number) => {
+  entityData.forEach((entity, index) => {
     // Delete any key existing in the source data not valid in our template, or any entity key that's not a name.
     if (!concatEntityFields.includes(key)) {
       delete sourceFieldData[key];
