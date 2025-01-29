@@ -167,7 +167,7 @@ export const getStatus = (
   return status;
 };
 
-const tableBody = (body: TableContentShape, isAdmin: boolean) => {
+export const tableBody = (body: TableContentShape, isAdmin: boolean) => {
   const tableContent = { ...body };
 
   if (!tableContent.headRow) {

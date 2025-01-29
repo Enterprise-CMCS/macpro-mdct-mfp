@@ -1,5 +1,5 @@
 import { ReportType } from "types";
-import { getStatus } from "./DashboardTable";
+import { getStatus, tableBody } from "./DashboardTable";
 
 describe("<DashboardTable />", () => {
   describe("getStatus()", () => {
@@ -39,6 +39,26 @@ describe("<DashboardTable />", () => {
       expect(getStatus(ReportType.SAR, "Not started", false, 1)).toBe(
         "Not started"
       );
+    });
+  });
+
+  describe("tableBody()", () => {
+    const all = {
+      headRow: ["row1", "Due date", "Target populations", "#"],
+    };
+    const adminBody = {
+      headRow: ["row1", "#"],
+    };
+    const stateBody = {
+      headRow: ["row1", "Due date", "Target populations"],
+    };
+
+    test("should remove Due date and Target populations rows for admin", () => {
+      expect(tableBody(all, true)).toEqual(adminBody);
+    });
+
+    test("should remove # row for non-admin", () => {
+      expect(tableBody(all, false)).toEqual(stateBody);
     });
   });
 });
