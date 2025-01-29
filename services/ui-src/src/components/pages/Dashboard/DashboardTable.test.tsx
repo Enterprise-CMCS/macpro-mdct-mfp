@@ -52,6 +52,9 @@ describe("<DashboardTable />", () => {
     const stateBody = {
       headRow: ["row1", "Due date", "Target populations"],
     };
+    const noHeadRow = {
+      caption: "Test",
+    };
 
     test("should remove Due date and Target populations rows for admin", () => {
       expect(tableBody(all, true)).toEqual(adminBody);
@@ -59,6 +62,10 @@ describe("<DashboardTable />", () => {
 
     test("should remove # row for non-admin", () => {
       expect(tableBody(all, false)).toEqual(stateBody);
+    });
+
+    test("should return original body if no headRow key", () => {
+      expect(tableBody(noHeadRow, false)).toEqual(noHeadRow);
     });
   });
 });
