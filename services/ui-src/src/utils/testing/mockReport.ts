@@ -8,6 +8,7 @@ import {
   mockReviewSubmitPageJson,
   mockModalOverlayReportPageJson,
   mockDynamicModalOverlayReportPageJson,
+  mockInitiativesSpecificDynamicModalOverlayReportPageJson,
 } from "./mockForm";
 
 export const mockReportPeriod = 1;
@@ -271,6 +272,7 @@ export const mockWPFullReport = {
   versionNumber: 1,
   archived: false,
 };
+
 export const mockWPArchivedReport = {
   ...mockReportKeys,
   id: "mock-wp-archived-report-id",
@@ -570,7 +572,6 @@ export const mockSARReportWithOverlays = {
             name: "mock init name",
             entitySteps: [
               {
-                // TODO what here?
                 foo: "bar",
               },
             ],
@@ -581,3 +582,33 @@ export const mockSARReportWithOverlays = {
     ],
   },
 };
+
+export const mockSARReportRoutesForStatus = [
+  mockStandardReportPageJson,
+  {
+    name: "mock-route-1",
+    path: "/mock/mock-route-1",
+    children: [
+      {
+        name: "mock-sar-ret-hcbs",
+        path: "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
+      },
+    ],
+  },
+  mockReviewSubmitPageJson,
+];
+
+export const mockWPReportRoutesForStatus = [
+  mockStandardReportPageJson,
+  {
+    name: "mock-route-2",
+    path: "/mock/mock-route-2",
+    children: [
+      mockDrawerReportPageJson,
+      mockModalDrawerReportPageJson,
+      mockModalOverlayReportPageJson,
+      mockInitiativesSpecificDynamicModalOverlayReportPageJson,
+    ],
+  },
+  mockReviewSubmitPageJson,
+];
