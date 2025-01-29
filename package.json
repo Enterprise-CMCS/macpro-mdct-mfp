@@ -12,7 +12,9 @@
     "test": "cd tests/cypress && npm test && cd -",
     "test:ci": "cd tests/cypress && yarn run test:ci",
     "test:e2e": "playwright test",
-    "test:e2e-ui": "playwright test --ui"
+    "test:e2e-ui": "playwright test --ui",
+    "track-flags": "./scripts/track-flags.sh",
+    "track-todos": "./scripts/track-todos.sh"
   },
   "repository": {
     "type": "git",
@@ -50,13 +52,12 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.4.1",
-    "serverless": "^3.39.0",
+    "serverless": "^4.4.18",
     "serverless-bundle": "^6.0.0",
     "serverless-dotenv-plugin": "^3.0.0",
     "serverless-iam-helper": "github:Enterprise-CMCS/serverless-iam-helper",
-    "serverless-offline": "^13.5.0",
+    "serverless-offline": "^14.4.0",
     "serverless-plugin-scripts": "^1.0.2",
-    "serverless-s3-bucket-helper": "github:Enterprise-CMCS/serverless-s3-bucket-helper#master",
     "serverless-stack-termination-protection": "^2.0.2",
     "typescript": "^4.6.3",
     "util": "^0.12.4",

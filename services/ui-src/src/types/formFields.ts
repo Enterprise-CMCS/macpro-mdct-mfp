@@ -39,6 +39,7 @@ export interface FormJson {
   verbiage?: AnyObject;
   forms?: ReportRoute[];
   initiativeId?: string;
+  optional?: boolean;
 }
 
 export interface DependentFieldValidation {
