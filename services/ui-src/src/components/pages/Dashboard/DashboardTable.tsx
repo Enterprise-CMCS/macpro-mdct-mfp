@@ -166,17 +166,23 @@ export const getStatus = (
   }
   return status;
 };
-const tableBody = (body: TableContentShape, isAdmin: boolean) => {
-  var tableContent = body;
-  if (!isAdmin) {
-    tableContent.headRow = tableContent.headRow!.filter((e) => e !== "#");
-    return tableContent;
-  } else {
-    tableContent.headRow = tableContent.headRow!.filter(
-      (e) => e !== "Due date" && e !== "Target populations"
-    );
+
+export const tableBody = (body: TableContentShape, isAdmin: boolean) => {
+  const tableContent = { ...body };
+
+  if (!tableContent.headRow) {
+    return body;
   }
-  return body;
+
+  if (isAdmin) {
+    tableContent.headRow = tableContent.headRow.filter(
+      (e) => !["Due date", "Target populations"].includes(e)
+    );
+  } else {
+    tableContent.headRow = tableContent.headRow.filter((e) => e !== "#");
+  }
+
+  return tableContent;
 };
 
 const EditReportButton = ({
