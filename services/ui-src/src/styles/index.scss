@@ -1,6 +1,7 @@
 // necessary to render the UsaBanner correctly
 $image-path: "~@cmsgov/design-system/dist/images";
 @use "@cmsgov/design-system/dist/css/index";
+@use '@cmsgov/design-system/dist/css/core-theme';
 
 @mixin tabbed-focus {
   box-shadow: 0 0 0 3px #fff,
@@ -47,12 +48,17 @@ a {
 
 // USA BANNER STYLES
 
-.ds-c-usa-banner {
+.ds-c-usa-banner__header {
   width: 100%;
   max-width: var(--chakra-sizes-appMax);
-  display: flex;
-  flex-direction: column;
-  background-color: var(--chakra-colors-palette-gray_lightest);
+
+  @media (min-width: 544px) {
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 880px) {
+    padding-inline: 2rem;
+  }
 }
 
 // SCROLLBARS
