@@ -34,7 +34,6 @@ export default {
       validation: "dropdown",
       props: {
         label: "Select state or territory:",
-        hint: "This is a temp hint text Nick added",
         options: dropdownOptions,
         ariaLabel:
           "List of states, including District of Columbia and Puerto Rico",
