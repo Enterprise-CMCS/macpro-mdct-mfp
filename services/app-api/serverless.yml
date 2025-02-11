@@ -1,32 +1,29 @@
 # Refer to the README.md file in within this service directory to configure all ssm parameters required for this service.
 service: app-api
 
-frameworkVersion: "3"
+frameworkVersion: "4"
 
 package:
   individually: true
 
+build:
+  esbuild:
+    packages: external
+
 plugins:
-  - serverless-plugin-typescript
   - serverless-dotenv-plugin
   - serverless-associate-waf
   - serverless-stack-termination-protection
   - serverless-iam-helper
-  - serverless-s3-bucket-helper
   - serverless-offline
   - "@enterprise-cmcs/serverless-waf-plugin"
-
-s3BucketHelper:
-  loggingConfiguration:
-    destinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
-    logFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
 
 custom:
   project: "mfp"
   serverlessPluginTypescript:
     tsConfigFileLocation: "./tsconfig.json"
   stage: ${sls:stage}
-  region: ${aws:region}
+  region: ${self:provider.region}
   wafPlugin:
     name: ${self:service}-${self:custom.stage}-webacl-waf
   wafExcludeRules:
@@ -71,17 +68,17 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
-  stackTags:  
+  stackTags:
     PROJECT: ${self:custom.project}
-    SERVICE: ${self:service}  
+    SERVICE: ${self:service}
   tracing:
     apiGateway: true
   logs:
     restApi: true
   iam:
     role:
-      path: ${env:IAM_PATH, ssm:/configuration/${self:custom.stage}/iam/path, ssm:/configuration/default/iam/path, "/"}
-      permissionsBoundary: ${env:IAM_PERMISSIONS_BOUNDARY, ssm:/configuration/${self:custom.stage}/iam/permissionsBoundaryPolicy, ssm:/configuration/default/iam/permissionsBoundaryPolicy, ""}
+      path: /delegatedadmin/developer/
+      permissionsBoundary: !Sub arn:aws:iam::${AWS::AccountId}:policy/cms-cloud-admin/developer-boundary-policy
       statements:
         - Effect: "Allow"
           Action:
