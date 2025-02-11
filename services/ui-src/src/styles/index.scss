@@ -61,6 +61,20 @@ a {
   }
 }
 
+// DROPDOWN 
+
+select.ds-c-field {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  background-image: url(src/assets/icons/icon_dropdown_arrow.svg);
+  background-position: right 8px center;
+  background-repeat: no-repeat;
+  background-size: 10px;
+  padding-right: 28px;
+}
+
 // SCROLLBARS
 
 /* Hide scrollbar for Chrome, Safari and Opera */

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import {
-  Dropdown as CmsdsDropdown,
   DropdownChangeObject,
+  Hint,
+  InlineError,
+  Label,
 } from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
 // utils
@@ -11,7 +13,6 @@ import {
   AnyObject,
   DropdownChoice,
   DropdownOptions,
-  InputChangeEvent,
   SelectedOption,
 } from "types";
 import { dropdownDefaultOptionText } from "../../constants";
@@ -92,43 +93,9 @@ export const DropdownField = ({
   };
 
   // update form field data & database data on blur
-  const onBlurHandler = async (event: InputChangeEvent) => {
-    const selectedOption = {
-      label: event.target.id,
-      value: event.target.value,
-    };
+  const onBlurHandler = async () => {
     // if blanking field, trigger client-side field validation error
-    if (selectedOption === defaultValue) form.trigger(name);
-    /*
-     * submit field data to database
-     * if (autosave) {
-     *   const fields = getAutosaveFields({
-     *     name,
-     *     type: "dropdown",
-     *     value: selectedOption,
-     *     defaultValue,
-     *     hydrationValue,
-     *   });
-     *   const reportArgs = {
-     *     id: report?.id,
-     *     reportType: report?.reportType,
-     *     updateReport,
-     *   };
-     *   const user = { userName: full_name, state };
-     *   await autosaveFieldData({
-     *     form,
-     *     fields,
-     *     report: reportArgs,
-     *     user,
-     *     entityContext: {
-     *       selectedEntity,
-     *       entityType,
-     *       prepareEntityPayload,
-     *       entities,
-     *     },
-     *   });
-     * }
-     */
+    if (displayValue === defaultValue) form.trigger(name);
   };
 
   // prepare error message, hint, and classes
@@ -142,18 +109,25 @@ export const DropdownField = ({
 
   return (
     <Box sx={sxOverride} className={`${nestedChildClasses} ${labelClass}`}>
-      <CmsdsDropdown
+      <Label htmlFor={name} id={`${name}-label`}>
+        {labelText || ""}
+        {parsedHint && <Hint id={name}>{parsedHint}</Hint>}
+      </Label>
+      {errorMessage && <InlineError>{errorMessage}</InlineError>}
+      <select
         name={name}
         id={name}
-        label={labelText || ""}
         aria-label={ariaLabel}
-        options={formattedOptions}
-        hint={parsedHint}
+        aria-invalid="false"
         onChange={onChangeHandler}
         onBlur={onBlurHandler}
-        errorMessage={errorMessage}
         value={displayValue?.value}
-      />
+        className="ds-c-field"
+      >
+        {formattedOptions.map((option) => (
+          <option value={option.value}>{option.label}</option>
+        ))}
+      </select>
     </Box>
   );
 };
