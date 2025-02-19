@@ -58,7 +58,7 @@ params:
     topicNamespace: ""
   default:
     topicNamespace: --${self:custom.project}--${sls:stage}--
-    deleteTopicsEnabled: false
+    deleteTopicsEnabled: true
 
 functions:
   createTopics:
