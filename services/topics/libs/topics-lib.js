@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ConfigResourceTypes, Kafka } from "kafkajs";
+const { ConfigResourceTypes, Kafka } = require("kafkajs");
 
 /**
  * Removes topics in BigMac given the following
