@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Creates mmdl topics in CMS Bigmac.",
   "author": "",
+  "type": "module",
   "devDependencies": {
     "@stratiformdigital/serverless-iam-helper": "^3.2.0",
     "@stratiformdigital/serverless-online": "^3.2.0",
