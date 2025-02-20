@@ -294,10 +294,15 @@ jobs:
           node-version-file: ".nvmrc"
       - name: yarn install
         run: yarn install
+      - name: yarn install tests
+        run: yarn install
+        working-directory: tests
       - name: Install Playwright Browsers
         run: yarn playwright install --with-deps
+        working-directory: tests
       - name: Run Playwright tests
         run: yarn playwright test
+        working-directory: tests
         continue-on-error: true
         env:
           BASE_URL: ${{ needs.deploy.outputs.application_endpoint }}
@@ -313,8 +318,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: playwright-html-report # upload artifact as this name
-          # path: playwright-report/index.html # path on runner
-          path: playwright-report # path on runner
+          path: tests/playwright-report # path on runner
           retention-days: 30
 
   upload-reports:
