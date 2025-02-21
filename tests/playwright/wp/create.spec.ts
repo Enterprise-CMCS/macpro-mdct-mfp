@@ -201,10 +201,11 @@ test.describe("Creating a new Work Plan", () => {
 
   test("Admin user can deny a work plan", async () => {
     const page = adminWpDashboard.page;
-    const unlockButton = page.getByRole("button", { name: "Unlock" }).first();
     const modal = page.getByRole("dialog");
 
     await adminWpDashboard.goto();
+    await adminWpDashboard.reportsReady();
+    const unlockButton = page.getByRole("button", { name: "Unlock" }).first();
     await unlockButton.click();
     await modal
       .getByRole("heading", { name: "You unlocked this Work Plan" })
@@ -215,6 +216,7 @@ test.describe("Creating a new Work Plan", () => {
 
   test("State user can resubmit a work plan", async () => {
     await wpDashboard.goto();
+    await wpDashboard.reportsReady();
     await wpDashboard.firstReport.getByRole("button", { name: "Edit" }).click();
     await wpGeneralInformation.isReady();
     await wpReviewAndSubmit.goto();
@@ -222,6 +224,7 @@ test.describe("Creating a new Work Plan", () => {
     await wpReviewAndSubmit.submitButton.click();
     await wpReviewAndSubmit.confirmSubmit();
     await adminWpDashboard.goto();
+    await adminWpDashboard.reportsReady();
     await expect(
       adminWpDashboard.page.getByTestId("dashboard-submission-count")
     ).toContainText("2");
