@@ -11,6 +11,8 @@ import { WPInitiativesDashboardPage } from "../utils/pageObjects/wp/wpInitiative
 import { WPReviewAndSubmitPage } from "../utils/pageObjects/wp/wpReviewAndSubmit.page";
 import AdminHomePage from "../utils/pageObjects/adminHome.page";
 
+import { stateAbbreviation } from "../utils/consts";
+
 let userPage: Page;
 let userContext: BrowserContext;
 let adminPage: Page;
@@ -59,7 +61,7 @@ test.afterAll(async () => {
 test.describe("Creating a new Work Plan", () => {
   test("State user can create a Work Plan", async () => {
     await adminHomePage.goto();
-    await adminHomePage.selectWP("PR");
+    await adminHomePage.selectWP(stateAbbreviation);
     await adminWpDashboard.reportsReady();
     await adminWpDashboard.archiveAllReports();
 
