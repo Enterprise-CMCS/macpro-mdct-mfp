@@ -48,6 +48,7 @@ if [[ -n "$1" ]]; then
     fi
 else
     for i in "${!tests[@]}"; do
+        echo "============================================================"
         echo "Running test #$((i + 1)): \"${tests[i]}\""
         npx playwright test -g "${tests[i]}"
         echo ""
