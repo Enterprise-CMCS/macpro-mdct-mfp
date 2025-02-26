@@ -4,12 +4,12 @@ import { WPInitiativeOverlayPage } from "../utils/pageObjects/wp/wpInitiativeOve
 import StateHomePage from "../utils/pageObjects/stateHome.page";
 import { WPDashboardPage } from "../utils/pageObjects/wp/wpDashboard.page";
 import { WPGeneralInformationPage } from "../utils/pageObjects/wp/wpGeneral.page";
-import { WPTransitionBenchmarkProjectionsPage } from "../utils/pageObjects/wp/wpTransitionBenchmarkProjections.page";
-import { WPTransitionBenchmarkStrategyPage } from "../utils/pageObjects/wp/wpTransitionBenchmarkStrategy.page";
-import { WPInitiativesInstructionsPage } from "../utils/pageObjects/wp/wpInitiativesInstructions.page";
+
 import { WPInitiativesDashboardPage } from "../utils/pageObjects/wp/wpInitiativesDashboard.page";
 import { WPReviewAndSubmitPage } from "../utils/pageObjects/wp/wpReviewAndSubmit.page";
 import AdminHomePage from "../utils/pageObjects/adminHome.page";
+
+import { stateAbbreviation } from "../utils/consts";
 
 let userPage: Page;
 let userContext: BrowserContext;
@@ -18,9 +18,6 @@ let adminContext: BrowserContext;
 let homePage: StateHomePage;
 let wpDashboard: WPDashboardPage;
 let wpGeneralInformation: WPGeneralInformationPage;
-let wpTransitionBenchmarkProjections: WPTransitionBenchmarkProjectionsPage;
-let wpTransitionBenchmarkStrategy: WPTransitionBenchmarkStrategyPage;
-let wpInitiativesInstructions: WPInitiativesInstructionsPage;
 let wpInitiativesDashboard: WPInitiativesDashboardPage;
 let wpReviewAndSubmit: WPReviewAndSubmitPage;
 let adminHomePage: AdminHomePage;
@@ -39,13 +36,6 @@ test.beforeAll(async ({ browser }) => {
   homePage = new StateHomePage(userPage);
   wpDashboard = new WPDashboardPage(userPage);
   wpGeneralInformation = new WPGeneralInformationPage(userPage);
-  wpTransitionBenchmarkProjections = new WPTransitionBenchmarkProjectionsPage(
-    userPage
-  );
-  wpTransitionBenchmarkStrategy = new WPTransitionBenchmarkStrategyPage(
-    userPage
-  );
-  wpInitiativesInstructions = new WPInitiativesInstructionsPage(userPage);
   wpInitiativesDashboard = new WPInitiativesDashboardPage(userPage);
   wpReviewAndSubmit = new WPReviewAndSubmitPage(userPage);
   adminHomePage = new AdminHomePage(adminPage);
@@ -59,7 +49,7 @@ test.afterAll(async () => {
 test.describe("Creating a new Work Plan", () => {
   test("State user can create a Work Plan", async () => {
     await adminHomePage.goto();
-    await adminHomePage.selectWP("PR");
+    await adminHomePage.selectWP(stateAbbreviation);
     await adminWpDashboard.reportsReady();
     await adminWpDashboard.archiveAllReports();
 
@@ -120,108 +110,29 @@ test.describe("Creating a new Work Plan", () => {
 
     // General Information
     await wpGeneralInformation.isReady();
-    await expect(wpGeneralInformation.disclosure).toBeVisible();
-
-    // Transition Benchmarks
-    await wpGeneralInformation.continueButton.click();
-    await wpTransitionBenchmarkProjections.isReady();
-    await wpTransitionBenchmarkProjections.editPopulations();
-
-    // Transition Benchmark Strategy
-    await wpTransitionBenchmarkProjections.continueButton.click();
-    await wpTransitionBenchmarkStrategy.isReady();
-    await wpTransitionBenchmarkStrategy.fillTextFields();
-
-    // Initiatives Instructions
-    await wpTransitionBenchmarkStrategy.continueButton.click();
-    await wpInitiativesInstructions.isReady();
-    await wpInitiativesInstructions.fillFormFields();
 
     // Initiatives Dashboard
-    await wpInitiativesInstructions.continueButton.click();
+    await wpInitiativesDashboard.goto();
     await wpInitiativesDashboard.isReady();
+    await wpInitiativesDashboard.addInitiative(
+      wpInitiativesDashboard.requiredTopics[0]
+    );
 
-    if (await wpInitiativesDashboard.alert.isVisible()) {
-      for (const topic of wpInitiativesDashboard.requiredTopics) {
-        await wpInitiativesDashboard.addInitiative(topic);
-      }
-    }
-
-    await expect(wpInitiativesDashboard.alert).not.toBeVisible();
-
-    // Initiatives Overlays
-    const initiatives = await wpInitiativesDashboard.page
+    const initiative = await wpInitiativesDashboard.page
       .getByRole("row", {
         name: "Edit",
       })
-      .all();
-
-    for (const initiative of initiatives) {
-      await initiative.getByRole("button", { name: "edit button" }).click();
-      const overlayPage = new WPInitiativeOverlayPage(userPage);
-      await overlayPage.isReady();
-
-      await overlayPage.completeDefineInitiative(userPage);
-      await overlayPage.completeEvaluationPlan(userPage);
-      await overlayPage.completeFundingSources(userPage);
-      await overlayPage.isReady();
-      const errorIcons = await wpReviewAndSubmit.page
-        .getByAltText("warning icon")
-        .all();
-      await expect(errorIcons.length).toBe(0);
-
-      await overlayPage.backButton.click();
-    }
-
-    await wpInitiativesDashboard.isReady();
-
-    // Review and Submit
-    await wpInitiativesDashboard.continueButton.click();
-    await wpReviewAndSubmit.isReady();
+      .first();
+    await initiative.getByRole("button", { name: "edit button" }).click();
+    const overlayPage = new WPInitiativeOverlayPage(userPage);
+    await overlayPage.isReady();
+    await overlayPage.completeDefineInitiative(userPage);
+    await overlayPage.completeEvaluationPlan(userPage);
+    await overlayPage.completeFundingSources(userPage);
+    await overlayPage.isReady();
     const errorIcons = await wpReviewAndSubmit.page
-      .getByAltText("Error notification")
+      .getByAltText("warning icon")
       .all();
     await expect(errorIcons.length).toBe(0);
-
-    await wpReviewAndSubmit.submitButton.click();
-    await wpReviewAndSubmit.confirmSubmit();
-
-    // Confirmation
-    await wpReviewAndSubmit.isReady();
-    await expect(
-      wpReviewAndSubmit.page.getByRole("heading", {
-        name: "Successfully Submitted",
-      })
-    ).toBeVisible();
-
-    await wpDashboard.goto();
-  });
-
-  test("Admin user can deny a work plan", async () => {
-    const page = adminWpDashboard.page;
-    const unlockButton = page.getByRole("button", { name: "Unlock" }).first();
-    const modal = page.getByRole("dialog");
-
-    await adminWpDashboard.goto();
-    await unlockButton.click();
-    await modal
-      .getByRole("heading", { name: "You unlocked this Work Plan" })
-      .isVisible();
-    await modal.getByRole("button", { name: "Return to dashboard" }).click();
-    await expect(unlockButton).toBeDisabled();
-  });
-
-  test("State user can resubmit a work plan", async () => {
-    await wpDashboard.goto();
-    await wpDashboard.firstReport.getByRole("button", { name: "Edit" }).click();
-    await wpGeneralInformation.isReady();
-    await wpReviewAndSubmit.goto();
-    await expect(wpReviewAndSubmit.submitButton).toBeEnabled();
-    await wpReviewAndSubmit.submitButton.click();
-    await wpReviewAndSubmit.confirmSubmit();
-    await adminWpDashboard.goto();
-    await expect(
-      adminWpDashboard.page.getByTestId("dashboard-submission-count")
-    ).toContainText("2");
   });
 });

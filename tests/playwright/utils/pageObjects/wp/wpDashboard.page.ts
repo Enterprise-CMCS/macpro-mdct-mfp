@@ -74,19 +74,23 @@ export class WPDashboardPage extends BasePage {
     });
     const count = await archiveButtons.count();
 
-    for (let i = 0; i < count; i++) {
-      await archiveButtons.nth(i).click();
-      const modal = this.page.getByRole("dialog");
-      await modal.isVisible();
-      await modal.getByRole("textbox").fill("ARCHIVE");
-      await modal.getByRole("button", { name: "Archive" }).click();
-      await this.page.waitForResponse(
-        (response) =>
-          response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
-          response.status() == 200
-      );
-      await this.getReports();
-      await this.archiveAllReports();
+    if (count > 1) {
+      for (let i = 0; i < count; i++) {
+        await archiveButtons.nth(i).click();
+        const modal = this.page.getByRole("dialog");
+        await modal.isVisible();
+        await modal.getByRole("textbox").fill("ARCHIVE");
+        await modal.getByRole("button", { name: "Archive" }).click();
+        await this.page.waitForResponse(
+          (response) =>
+            response
+              .url()
+              .includes(`reports/archive/WP/${stateAbbreviation}/`) &&
+            response.status() == 200
+        );
+        await this.getReports();
+        await this.archiveAllReports();
+      }
     }
   }
 }
