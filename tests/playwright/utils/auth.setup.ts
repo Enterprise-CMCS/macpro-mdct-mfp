@@ -1,11 +1,35 @@
-import { test as setup } from "@playwright/test";
-
+import { Browser, test as setup } from "@playwright/test";
 import { adminPassword, adminUser, statePassword, stateUser } from "./consts";
 
 const adminFile = "playwright/.auth/admin.json";
+const userFile = "playwright/.auth/user.json";
 
-setup("authenticate as admin", async ({ page }) => {
+async function isAlreadyLoggedIn(page) {
+  await page.waitForTimeout(1000);
+  return !(await page
+    .getByRole("textbox", { name: "email" })
+    .isVisible()
+    .catch(() => false));
+}
+
+async function getContext(browser: Browser, file: string) {
+  try {
+    return await browser.newContext({ storageState: file });
+  } catch (error) {
+    return await browser.newContext();
+  }
+}
+
+setup("authenticate as admin", async ({ browser }) => {
+  const context = await getContext(browser, adminFile);
+
+  const page = await context.newPage();
   await page.goto("/");
+
+  if (await isAlreadyLoggedIn(page)) {
+    return;
+  }
+
   const emailInput = page.getByRole("textbox", { name: "email" });
   const passwordInput = page.getByRole("textbox", { name: "password" });
   const loginButton = page.getByRole("button", { name: "Log In with Cognito" });
@@ -18,14 +42,20 @@ setup("authenticate as admin", async ({ page }) => {
       name: "View State/Territory Reports",
     })
     .isVisible();
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(2000);
   await page.context().storageState({ path: adminFile });
 });
 
-const userFile = "playwright/.auth/user.json";
+setup("authenticate as user", async ({ browser }) => {
+  const context = await getContext(browser, userFile);
 
-setup("authenticate as user", async ({ page }) => {
+  const page = await context.newPage();
   await page.goto("/");
+
+  if (await isAlreadyLoggedIn(page)) {
+    return;
+  }
+
   const emailInput = page.getByRole("textbox", { name: "email" });
   const passwordInput = page.getByRole("textbox", { name: "password" });
   const loginButton = page.getByRole("button", { name: "Log In with Cognito" });
@@ -38,6 +68,6 @@ setup("authenticate as user", async ({ page }) => {
       name: "Money Follows the Person (MFP) Portal",
     })
     .isVisible();
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(2000);
   await page.context().storageState({ path: userFile });
 });
