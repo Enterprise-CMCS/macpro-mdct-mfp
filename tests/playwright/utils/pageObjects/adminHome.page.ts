@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page, Route } from "@playwright/test";
 import BasePage from "./base.page";
 
 export default class AdminHomePage extends BasePage {
@@ -43,5 +43,12 @@ export default class AdminHomePage extends BasePage {
         name: "Go to Report Dashboard",
       })
       .click();
+  }
+
+  public async interceptRequests(
+    urlPattern: string,
+    handler: (route: Route) => Promise<void>,
+  ) {
+    await this.page.route(urlPattern, handler);
   }
 }
