@@ -33,7 +33,7 @@ export default {
       type: "dropdown",
       validation: "dropdown",
       props: {
-        hint: "Select state or territory:",
+        label: "Select state or territory:",
         options: dropdownOptions,
         ariaLabel:
           "List of states, including District of Columbia and Puerto Rico",
@@ -44,7 +44,7 @@ export default {
       type: "radio",
       validation: "radio",
       props: {
-        hint: "Select a report:",
+        label: "Select a report:",
         choices: reportChoices,
         "aria-label": "Choices of report type",
       },
