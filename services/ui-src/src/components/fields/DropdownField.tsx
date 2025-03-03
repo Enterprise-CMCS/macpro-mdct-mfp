@@ -7,6 +7,7 @@ import {
   Label,
 } from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
+import uuid from "react-uuid";
 // utils
 import { labelTextWithOptional, parseCustomHtml } from "utils";
 import {
@@ -111,8 +112,8 @@ export const DropdownField = ({
     <Box sx={sxOverride} className={`${nestedChildClasses} ${labelClass}`}>
       <Label htmlFor={name} id={`${name}-label`}>
         {labelText || ""}
-        {parsedHint && <Hint id={name}>{parsedHint}</Hint>}
       </Label>
+      {parsedHint && <Hint id={name}>{parsedHint}</Hint>}
       {errorMessage && <InlineError>{errorMessage}</InlineError>}
       <select
         name={name}
@@ -125,7 +126,9 @@ export const DropdownField = ({
         className="ds-c-field"
       >
         {formattedOptions.map((option) => (
-          <option value={option.value}>{option.label}</option>
+          <option key={uuid()} value={option.value}>
+            {option.label}
+          </option>
         ))}
       </select>
     </Box>
