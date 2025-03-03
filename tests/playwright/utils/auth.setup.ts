@@ -1,8 +1,12 @@
 import { Browser, test as setup } from "@playwright/test";
-import { adminPassword, adminUser, statePassword, stateUser } from "./consts";
-
-const adminFile = "playwright/.auth/admin.json";
-const userFile = "playwright/.auth/user.json";
+import {
+  adminAuthPath,
+  adminPassword,
+  adminUser,
+  statePassword,
+  stateUser,
+  stateUserAuthPath,
+} from "./consts";
 
 async function isAlreadyLoggedIn(page) {
   await page.waitForTimeout(1000);
@@ -21,7 +25,7 @@ async function getContext(browser: Browser, file: string) {
 }
 
 setup("authenticate as admin", async ({ browser }) => {
-  const context = await getContext(browser, adminFile);
+  const context = await getContext(browser, adminAuthPath);
 
   const page = await context.newPage();
   await page.goto("/");
@@ -43,11 +47,11 @@ setup("authenticate as admin", async ({ browser }) => {
     })
     .isVisible();
   await page.waitForTimeout(2000);
-  await page.context().storageState({ path: adminFile });
+  await page.context().storageState({ path: adminAuthPath });
 });
 
 setup("authenticate as user", async ({ browser }) => {
-  const context = await getContext(browser, userFile);
+  const context = await getContext(browser, stateUserAuthPath);
 
   const page = await context.newPage();
   await page.goto("/");
@@ -69,5 +73,5 @@ setup("authenticate as user", async ({ browser }) => {
     })
     .isVisible();
   await page.waitForTimeout(2000);
-  await page.context().storageState({ path: userFile });
+  await page.context().storageState({ path: stateUserAuthPath });
 });
