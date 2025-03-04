@@ -8,6 +8,29 @@ export async function logRequestsAndResponses(source: string, route: Route) {
   const headers = request.headers();
   const postData = request.postData();
 
+  const skipLoggingIncludesPatterns = [
+    "launchdarkly",
+    "adobe-ep.cms.gov",
+    "tags.tiqcdn.com",
+  ];
+
+  const skipLoggingEndsWithPatterns = [
+    ".svg",
+    ".png",
+    ".woff2",
+    ".css",
+    ".js",
+    ".cloudfront.net/",
+  ];
+
+  if (
+    skipLoggingIncludesPatterns.some((pattern) => url.includes(pattern)) ||
+    skipLoggingEndsWithPatterns.some((pattern) => url.endsWith(pattern))
+  ) {
+    await route.continue();
+    return;
+  }
+
   console.log(`[${source}] Intercepted request: ${method} ${url}`);
   console.log(`[${source}] Headers: ${JSON.stringify(headers, null, 2)}`);
   if (postData) {
@@ -24,14 +47,14 @@ export async function logRequestsAndResponses(source: string, route: Route) {
       const responseBody = await response.text();
 
       console.log(
-        `[${source}] Response for ${method} ${url} - Status: ${status}`,
+        `[${source}] Response for ${method} ${url} - Status: ${status}`
       );
       console.log(
         `[${source}] Response Headers: ${JSON.stringify(
           responseHeaders,
           null,
-          2,
-        )}`,
+          2
+        )}`
       );
       console.log(`[${source}] Response Body: ${responseBody}`);
     } else {
