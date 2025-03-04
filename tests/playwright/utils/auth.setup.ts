@@ -1,4 +1,4 @@
-import { Browser, test as setup } from "@playwright/test";
+import { Browser, Page, test as setup } from "@playwright/test";
 import {
   adminAuthPath,
   adminPassword,
@@ -9,7 +9,7 @@ import {
 } from "./consts";
 
 async function isAlreadyLoggedIn(page) {
-  await page.waitForTimeout(1000);
+  await page.waitForSelector('input[name="email"]', { timeout: 3000 });
   return !(await page
     .getByRole("textbox", { name: "email" })
     .isVisible()
@@ -19,7 +19,7 @@ async function isAlreadyLoggedIn(page) {
 async function getContext(browser: Browser, file: string) {
   try {
     return await browser.newContext({ storageState: file });
-  } catch (error) {
+  } catch {
     return await browser.newContext();
   }
 }
@@ -46,7 +46,7 @@ setup("authenticate as admin", async ({ browser }) => {
       name: "View State/Territory Reports",
     })
     .isVisible();
-  await page.waitForTimeout(2000);
+  await waitForJwtResponse(page);
   await page.context().storageState({ path: adminAuthPath });
 });
 
@@ -72,6 +72,22 @@ setup("authenticate as user", async ({ browser }) => {
       name: "Money Follows the Person (MFP) Portal",
     })
     .isVisible();
-  await page.waitForTimeout(2000);
+  await waitForJwtResponse(page);
   await page.context().storageState({ path: stateUserAuthPath });
 });
+
+const waitForJwtResponse = async (page: Page) => {
+  await page.waitForResponse(async (response) => {
+    if (
+      response.url() === "https://cognito-idp.us-east-1.amazonaws.com/" &&
+      response.request().method() === "POST" &&
+      response.ok()
+    ) {
+      const data = await response.json();
+      return (
+        data?.AuthenticationResult && data.AuthenticationResult.AccessToken
+      );
+    }
+    return false;
+  });
+};
