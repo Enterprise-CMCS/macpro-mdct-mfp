@@ -9,10 +9,14 @@ import {
 } from "./consts";
 
 async function isAlreadyLoggedIn(page) {
-  await page.waitForResponse(
-    (response: APIResponse) =>
-      response.url().includes("assets") && response.status() == 200
-  );
+  try {
+    await page.waitForResponse(
+      (response: APIResponse) =>
+        response.url().includes("assets") && response.status() == 200,
+      { timeout: 1000 }
+    );
+    // eslint-disable-next-line no-empty
+  } catch {}
 
   return !(await page
     .getByRole("textbox", { name: "email" })
