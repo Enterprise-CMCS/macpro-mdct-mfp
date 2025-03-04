@@ -1,4 +1,4 @@
-import { Browser, Page, test as setup } from "@playwright/test";
+import { APIResponse, Browser, Page, test } from "@playwright/test";
 import {
   adminAuthPath,
   adminPassword,
@@ -9,7 +9,11 @@ import {
 } from "./consts";
 
 async function isAlreadyLoggedIn(page) {
-  await page.waitForSelector('input[name="email"]', { timeout: 3000 });
+  await page.waitForResponse(
+    (response: APIResponse) =>
+      response.url().includes("assets") && response.status() == 200
+  );
+
   return !(await page
     .getByRole("textbox", { name: "email" })
     .isVisible()
@@ -24,7 +28,7 @@ async function getContext(browser: Browser, file: string) {
   }
 }
 
-setup("authenticate as admin", async ({ browser }) => {
+test("authenticate as admin", async ({ browser }) => {
   const context = await getContext(browser, adminAuthPath);
 
   const page = await context.newPage();
@@ -50,7 +54,7 @@ setup("authenticate as admin", async ({ browser }) => {
   await page.context().storageState({ path: adminAuthPath });
 });
 
-setup("authenticate as user", async ({ browser }) => {
+test("authenticate as user", async ({ browser }) => {
   const context = await getContext(browser, stateUserAuthPath);
 
   const page = await context.newPage();
