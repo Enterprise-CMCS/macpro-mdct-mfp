@@ -84,9 +84,9 @@ export class WPDashboardPage extends BasePage {
         (response) =>
           response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
           response.status() == 200
-       );
-       await this.getReports();
-       await this.archiveAllReports();
+      );
+      await this.getReports();
+      await this.archiveAllReports();
       );
     }
   }
