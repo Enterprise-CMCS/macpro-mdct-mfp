@@ -1,4 +1,4 @@
-import { APIResponse, Browser, Page, test } from "@playwright/test";
+import { APIResponse, Browser, Page, test, expect } from "@playwright/test";
 import {
   adminAuthPath,
   adminPassword,
@@ -70,7 +70,7 @@ test("authenticate as user", async ({ browser }) => {
   await page.context().storageState({ path: stateUserAuthPath });
 });
 
-const waitForJwtResponse = async (page: Page) => {
+async function waitForJwtResponse(page: Page) {
   await page.waitForResponse(async (response) => {
     if (
       response.url() === "https://cognito-idp.us-east-1.amazonaws.com/" &&
@@ -84,7 +84,7 @@ const waitForJwtResponse = async (page: Page) => {
     }
     return false;
   });
-};
+}
 
 async function loginUser(
   page: Page,
@@ -99,10 +99,6 @@ async function loginUser(
   await passwordInput.fill(password);
   await loginButton.click();
   await page.waitForURL("/");
-  await page
-    .getByRole("heading", {
-      name: finalHeading,
-    })
-    .isVisible();
   await waitForJwtResponse(page);
+  await expect(page.getByRole("heading", { name: finalHeading })).toBeVisible();
 }
