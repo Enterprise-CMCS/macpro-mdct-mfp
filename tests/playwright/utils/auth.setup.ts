@@ -42,19 +42,12 @@ test("authenticate as admin", async ({ browser }) => {
     return;
   }
 
-  const emailInput = page.getByRole("textbox", { name: "email" });
-  const passwordInput = page.getByRole("textbox", { name: "password" });
-  const loginButton = page.getByRole("button", { name: "Log In with Cognito" });
-  await emailInput.fill(adminUser);
-  await passwordInput.fill(adminPassword);
-  await loginButton.click();
-  await page.waitForURL("/");
-  await page
-    .getByRole("heading", {
-      name: "View State/Territory Reports",
-    })
-    .isVisible();
-  await waitForJwtResponse(page);
+  await loginUser(
+    page,
+    adminUser,
+    adminPassword,
+    "View State/Territory Reports"
+  );
   await page.context().storageState({ path: adminAuthPath });
 });
 
@@ -68,19 +61,12 @@ test("authenticate as user", async ({ browser }) => {
     return;
   }
 
-  const emailInput = page.getByRole("textbox", { name: "email" });
-  const passwordInput = page.getByRole("textbox", { name: "password" });
-  const loginButton = page.getByRole("button", { name: "Log In with Cognito" });
-  await emailInput.fill(stateUser);
-  await passwordInput.fill(statePassword);
-  await loginButton.click();
-  await page.waitForURL("/");
-  await page
-    .getByRole("heading", {
-      name: "Money Follows the Person (MFP) Portal",
-    })
-    .isVisible();
-  await waitForJwtResponse(page);
+  await loginUser(
+    page,
+    stateUser,
+    statePassword,
+    "Money Follows the Person (MFP) Portal"
+  );
   await page.context().storageState({ path: stateUserAuthPath });
 });
 
@@ -99,3 +85,24 @@ const waitForJwtResponse = async (page: Page) => {
     return false;
   });
 };
+
+async function loginUser(
+  page: Page,
+  email: string,
+  password: string,
+  finalHeading: string
+) {
+  const emailInput = page.getByRole("textbox", { name: "email" });
+  const passwordInput = page.getByRole("textbox", { name: "password" });
+  const loginButton = page.getByRole("button", { name: "Log In with Cognito" });
+  await emailInput.fill(email);
+  await passwordInput.fill(password);
+  await loginButton.click();
+  await page.waitForURL("/");
+  await page
+    .getByRole("heading", {
+      name: finalHeading,
+    })
+    .isVisible();
+  await waitForJwtResponse(page);
+}
