@@ -87,7 +87,6 @@ export class WPDashboardPage extends BasePage {
       );
       await this.getReports();
       await this.archiveAllReports();
-      );
     }
   }
 }
