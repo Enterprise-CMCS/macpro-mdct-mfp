@@ -56,7 +56,7 @@ export class WPDashboardPage extends BasePage {
     await this.page.waitForResponse(
       (response) =>
         response.url().includes(`/reports/WP/${stateAbbreviation}`) &&
-        response.status() == 200,
+        response.status() == 200
     );
   }
 
@@ -83,7 +83,10 @@ export class WPDashboardPage extends BasePage {
       await this.page.waitForResponse(
         (response) =>
           response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
-          response.status() == 200,
+          response.status() == 200
+       );
+       await this.getReports();
+       await this.archiveAllReports();
       );
     }
   }
