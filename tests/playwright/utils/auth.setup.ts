@@ -12,7 +12,7 @@ async function isAlreadyLoggedIn(page) {
   try {
     await page.waitForResponse(
       (response: APIResponse) =>
-        response.url().includes("assets") && response.status() == 200,
+        response.url().includes("assets") && response.status() === 200,
       { timeout: 1000 }
     );
     // eslint-disable-next-line no-empty
@@ -24,9 +24,9 @@ async function isAlreadyLoggedIn(page) {
     .catch(() => false));
 }
 
-async function getContext(browser: Browser, file: string) {
+async function getContext(browser: Browser, storageStatePath: string) {
   try {
-    return await browser.newContext({ storageState: file });
+    return await browser.newContext({ storageState: storageStatePath });
   } catch {
     return await browser.newContext();
   }
