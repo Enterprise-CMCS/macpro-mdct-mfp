@@ -10,11 +10,16 @@ import {
 
 async function isAlreadyLoggedIn(page) {
   try {
-    await page.waitForResponse(
-      (response: APIResponse) =>
-        response.url().includes("assets") && response.status() === 200,
-      { timeout: 1000 }
-    );
+    await Promise.race([
+      page
+        .waitForResponse(
+          (response: APIResponse) =>
+            response.url().includes("assets") && response.status() === 200,
+          { timeout: 1000 }
+        )
+        .catch(() => {}),
+      page.waitForTimeout(1000),
+    ]);
     // eslint-disable-next-line no-empty
   } catch {}
 
