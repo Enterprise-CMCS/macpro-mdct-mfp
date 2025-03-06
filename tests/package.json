@@ -7,11 +7,15 @@
     "start": "cd ../ && ./run local && cd -",
     "cypress": "cypress open",
     "test": "concurrently --kill-others \"yarn start\" \"yarn cypress\"",
-    "test:ci": "cypress install && cypress run --browser chrome --headless"
+    "test:ci": "cypress install && cypress run --browser chrome --headless",
+    "test:e2e": "playwright test",
+    "test:e2e-ui": "playwright test --ui"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.48.0",
     "axe-core": "^4.8.4",
     "concurrently": "^8.2.2",
     "cypress": "^13.8.0",

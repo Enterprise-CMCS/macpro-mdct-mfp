@@ -20,7 +20,7 @@
 
 ## Running tests
 
-To run cypress tests locally you will go to the root of the project and you'll need an upadated .env with variables for the state user and admin user passwords. To accomplish this ther are multiple options. 
+To run cypress tests locally you will go to the root of the project and you'll need an updated .env with variables for the state user and admin user passwords. To accomplish this there are multiple options. 
 
 1. If you have a 1Password account and 1Password CLI installed locally you can run 
 `./run update-env` to pull values from 1Password and create an updated .env
