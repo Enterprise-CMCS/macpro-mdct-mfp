@@ -69,14 +69,16 @@ export class WPDashboardPage extends BasePage {
   }
 
   public async archiveAllReports() {
-    const archiveButtons = this.page.getByRole("button", {
-      name: "Archive",
-    });
-    const count = await archiveButtons.count();
+    const archiveButtons = await this.page
+      .getByRole("button", {
+        name: "Archive",
+      })
+      .all();
+    const count = archiveButtons.length;
 
     if (count > 0) {
       for (let i = 0; i < count; i++) {
-        await archiveButtons.first().click();
+        await archiveButtons[i].click();
         const modal = this.page.getByRole("dialog");
         await modal.isVisible();
         await modal.getByRole("textbox").fill("ARCHIVE");
