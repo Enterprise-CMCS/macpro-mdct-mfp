@@ -26,3 +26,4 @@ tests/playwright-report/
 /blob-report/
 tests/playwright/.cache/
 tests/playwright/.auth
+test-results/.last-run.json

@@ -10,6 +10,7 @@ import { WPInitiativesInstructionsPage } from "../utils/pageObjects/wp/wpInitiat
 import { WPInitiativesDashboardPage } from "../utils/pageObjects/wp/wpInitiativesDashboard.page";
 import { WPReviewAndSubmitPage } from "../utils/pageObjects/wp/wpReviewAndSubmit.page";
 import AdminHomePage from "../utils/pageObjects/adminHome.page";
+import { adminAuthPath, stateUserAuthPath } from "../utils/consts";
 
 let userPage: Page;
 let userContext: BrowserContext;
@@ -28,10 +29,10 @@ let adminWpDashboard: WPDashboardPage;
 
 test.beforeAll(async ({ browser }) => {
   userContext = await browser.newContext({
-    storageState: "playwright/.auth/user.json",
+    storageState: stateUserAuthPath,
   });
   adminContext = await browser.newContext({
-    storageState: "playwright/.auth/admin.json",
+    storageState: adminAuthPath,
   });
   userPage = await userContext.newPage();
   adminPage = await adminContext.newPage();

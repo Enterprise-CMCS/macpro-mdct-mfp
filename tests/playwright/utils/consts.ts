@@ -3,6 +3,11 @@ export const adminPassword = process.env.SEED_ADMIN_USER_PASSWORD!; // pragma: a
 export const stateUser = process.env.SEED_STATE_USER_EMAIL!;
 export const statePassword = process.env.SEED_STATE_USER_PASSWORD!; // pragma: allowlist secret
 
+/** The path to the file containing admin browser session data */
+export const adminAuthPath = "playwright/.auth/admin.json";
+/** The path to the file containing state user browser session data */
+export const stateUserAuthPath = "playwright/.auth/user.json";
+
 export const stateAbbreviation = process.env.SEED_STATE || "PR";
 export const stateName = process.env.SEED_STATE_NAME || "Puerto Rico";
 
