@@ -23,36 +23,36 @@ let wpInitiativesDashboard: WPInitiativesDashboardPage;
 let adminHomePage: AdminHomePage;
 let adminWpDashboard: WPDashboardPage;
 
-test.beforeAll(async ({ browser }) => {
-  userContext = await browser.newContext({
-    storageState: "playwright/.auth/user.json",
-  });
-  adminContext = await browser.newContext({
-    storageState: "playwright/.auth/admin.json",
-  });
-  userPage = await userContext.newPage();
-  adminPage = await adminContext.newPage();
-
-  homePage = new StateHomePage(userPage);
-  wpDashboard = new WPDashboardPage(userPage);
-  wpGeneralInformation = new WPGeneralInformationPage(userPage);
-  wpTransitionBenchmarkProjections = new WPTransitionBenchmarkProjectionsPage(
-    userPage
-  );
-  wpTransitionBenchmarkStrategy = new WPTransitionBenchmarkStrategyPage(
-    userPage
-  );
-  wpInitiativesInstructions = new WPInitiativesInstructionsPage(userPage);
-  wpInitiativesDashboard = new WPInitiativesDashboardPage(userPage);
-  adminHomePage = new AdminHomePage(adminPage);
-  adminWpDashboard = new WPDashboardPage(adminPage);
-});
-
-test.afterAll(async () => {
-  await userContext.close();
-});
-
 test.describe("Creating a new Work Plan", () => {
+  test.beforeAll(async ({ browser }) => {
+    userContext = await browser.newContext({
+      storageState: "playwright/.auth/user.json",
+    });
+    adminContext = await browser.newContext({
+      storageState: "playwright/.auth/admin.json",
+    });
+    userPage = await userContext.newPage();
+    adminPage = await adminContext.newPage();
+
+    homePage = new StateHomePage(userPage);
+    wpDashboard = new WPDashboardPage(userPage);
+    wpGeneralInformation = new WPGeneralInformationPage(userPage);
+    wpTransitionBenchmarkProjections = new WPTransitionBenchmarkProjectionsPage(
+      userPage
+    );
+    wpTransitionBenchmarkStrategy = new WPTransitionBenchmarkStrategyPage(
+      userPage
+    );
+    wpInitiativesInstructions = new WPInitiativesInstructionsPage(userPage);
+    wpInitiativesDashboard = new WPInitiativesDashboardPage(userPage);
+    adminHomePage = new AdminHomePage(adminPage);
+    adminWpDashboard = new WPDashboardPage(adminPage);
+  });
+
+  test.afterAll(async () => {
+    await userContext.close();
+  });
+
   test("State user can create a Work Plan", async () => {
     await adminHomePage.goto();
     await adminHomePage.selectWP("PR");
