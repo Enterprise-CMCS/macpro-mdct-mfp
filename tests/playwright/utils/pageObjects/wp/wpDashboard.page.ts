@@ -69,24 +69,30 @@ export class WPDashboardPage extends BasePage {
   }
 
   public async archiveAllReports() {
-    await this.getReports();
     const archiveButtons = await this.page
       .getByRole("button", {
         name: "Archive",
       })
       .all();
 
-    for (const button of archiveButtons) await button.click();
-    const modal = this.page.getByRole("dialog");
-    await modal.isVisible();
-    await modal.getByRole("textbox").fill("ARCHIVE");
-    await modal.getByRole("button", { name: "Archive" }).click();
-    await this.page.waitForResponse(
-      (response) =>
-        response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
-        response.status() == 200
-    );
-    await modal.isHidden();
-    await this.archiveAllReports();
+    if (archiveButtons.length > 0) {
+      for (const button of archiveButtons) {
+        await button.click();
+        const modal = this.page.getByRole("dialog");
+        await modal.isVisible();
+        await modal.getByRole("textbox").fill("ARCHIVE");
+        await modal.getByRole("button", { name: "Archive" }).click();
+        await this.page.waitForResponse(
+          (response) =>
+            response
+              .url()
+              .includes(`reports/archive/WP/${stateAbbreviation}/`) &&
+            response.status() == 200
+        );
+        await this.getReports();
+        await modal.isHidden;
+        await this.archiveAllReports();
+      }
+    }
   }
 }
