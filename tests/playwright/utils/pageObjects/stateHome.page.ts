@@ -1,4 +1,4 @@
-import { Locator, Page, Route } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 import BasePage from "./base.page";
 
 export default class StateHomePage extends BasePage {
@@ -19,12 +19,5 @@ export default class StateHomePage extends BasePage {
       name: "Enter Work Plan online",
     });
     this.sarButton = page.getByRole("button", { name: "Enter SAR online" });
-  }
-
-  public async interceptRequests(
-    urlPattern: string,
-    handler: (route: Route) => Promise<void>,
-  ) {
-    await this.page.route(urlPattern, handler);
   }
 }
