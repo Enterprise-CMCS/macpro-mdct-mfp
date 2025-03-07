@@ -1,4 +1,10 @@
-import { APIResponse, Browser, Page, test, expect } from "@playwright/test";
+import {
+  APIResponse,
+  Browser,
+  Page,
+  test as setup,
+  expect,
+} from "@playwright/test";
 import {
   adminAuthPath,
   adminPassword,
@@ -37,7 +43,7 @@ async function getContext(browser: Browser, storageStatePath: string) {
   }
 }
 
-test("authenticate as admin", async ({ browser }) => {
+setup("authenticate as admin", async ({ browser }) => {
   const context = await getContext(browser, adminAuthPath);
 
   const page = await context.newPage();
@@ -56,7 +62,7 @@ test("authenticate as admin", async ({ browser }) => {
   await page.context().storageState({ path: adminAuthPath });
 });
 
-test("authenticate as user", async ({ browser }) => {
+setup("authenticate as user", async ({ browser }) => {
   const context = await getContext(browser, stateUserAuthPath);
 
   const page = await context.newPage();
