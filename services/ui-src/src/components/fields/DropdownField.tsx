@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Dropdown as CmsdsDropdown } from "@cmsgov/design-system";
+import {
+  DropdownChangeObject,
+  Hint,
+  InlineError,
+  Label,
+} from "@cmsgov/design-system";
 import { Box } from "@chakra-ui/react";
+import uuid from "react-uuid";
 // utils
 import { labelTextWithOptional, parseCustomHtml } from "utils";
 import {
   AnyObject,
   DropdownChoice,
   DropdownOptions,
-  InputChangeEvent,
   SelectedOption,
 } from "types";
 import { dropdownDefaultOptionText } from "../../constants";
@@ -79,9 +84,9 @@ export const DropdownField = ({
   }, [hydrationValue]); // only runs on hydrationValue fetch/update
 
   // update form data
-  const onChangeHandler = async (event: InputChangeEvent) => {
+  const onChangeHandler = async (event: DropdownChangeObject) => {
     const selectedOption: SelectedOption = {
-      label: event.target.id,
+      label: event.target.name,
       value: event.target.value,
     };
     setDisplayValue(selectedOption);
@@ -89,43 +94,9 @@ export const DropdownField = ({
   };
 
   // update form field data & database data on blur
-  const onBlurHandler = async (event: InputChangeEvent) => {
-    const selectedOption = {
-      label: event.target.id,
-      value: event.target.value,
-    };
+  const onBlurHandler = async () => {
     // if blanking field, trigger client-side field validation error
-    if (selectedOption === defaultValue) form.trigger(name);
-    /*
-     * submit field data to database
-     * if (autosave) {
-     *   const fields = getAutosaveFields({
-     *     name,
-     *     type: "dropdown",
-     *     value: selectedOption,
-     *     defaultValue,
-     *     hydrationValue,
-     *   });
-     *   const reportArgs = {
-     *     id: report?.id,
-     *     reportType: report?.reportType,
-     *     updateReport,
-     *   };
-     *   const user = { userName: full_name, state };
-     *   await autosaveFieldData({
-     *     form,
-     *     fields,
-     *     report: reportArgs,
-     *     user,
-     *     entityContext: {
-     *       selectedEntity,
-     *       entityType,
-     *       prepareEntityPayload,
-     *       entities,
-     *     },
-     *   });
-     * }
-     */
+    if (displayValue === defaultValue) form.trigger(name);
   };
 
   // prepare error message, hint, and classes
@@ -139,18 +110,27 @@ export const DropdownField = ({
 
   return (
     <Box sx={sxOverride} className={`${nestedChildClasses} ${labelClass}`}>
-      <CmsdsDropdown
+      <Label htmlFor={name} id={`${name}-label`}>
+        {labelText || ""}
+      </Label>
+      {parsedHint && <Hint id={name}>{parsedHint}</Hint>}
+      {errorMessage && <InlineError>{errorMessage}</InlineError>}
+      <select
         name={name}
         id={name}
-        label={labelText || ""}
-        ariaLabel={ariaLabel}
-        options={formattedOptions}
-        hint={parsedHint}
+        aria-label={ariaLabel}
+        aria-invalid="false"
         onChange={onChangeHandler}
         onBlur={onBlurHandler}
-        errorMessage={errorMessage}
         value={displayValue?.value}
-      />
+        className="ds-c-field"
+      >
+        {formattedOptions.map((option) => (
+          <option key={uuid()} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
     </Box>
   );
 };

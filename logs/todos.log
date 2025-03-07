@@ -15,5 +15,5 @@
 ./services/ui-src/src/utils/forms/forms.test.ts:253: TODO: Evidently it should not */
 ./services/ui-src/src/utils/reports/entities.test.ts:174: TODO:
 ./tests/cypress/e2e/login.cy.js:1: TODO: make an assertion in these tests
-./tests/e2e/sar/create.spec.ts:17: TODO: Seed WP
-./tests/e2e/wp/approve.spec.ts:18: TODO: Seed WP
+./tests/playwright/sar/create.spec.ts:17: TODO: Seed WP
+./tests/playwright/wp/approve.spec.ts:18: TODO: Seed WP

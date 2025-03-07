@@ -9,6 +9,7 @@ plugins:
   - '@typescript-eslint'
   - 'jest'
   - 'cypress'
+  - 'playwright'
 parserOptions:
   ecmaVersion: 6
   sourceType: module
