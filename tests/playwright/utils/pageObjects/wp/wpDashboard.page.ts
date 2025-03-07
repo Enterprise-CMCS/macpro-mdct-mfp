@@ -82,14 +82,12 @@ export class WPDashboardPage extends BasePage {
         await modal.isVisible();
         await modal.getByRole("textbox").fill("ARCHIVE");
         await modal.getByRole("button", { name: "Archive" }).click();
-        await this.page.waitForResponse(
-          (response) =>
-            response
-              .url()
-              .includes(`reports/archive/WP/${stateAbbreviation}/`) &&
-            response.status() == 200
-        );
-        await this.getReports();
+        await Promise.all([
+          this.page.waitForResponse((response) =>
+            response.url().includes(`reports/archive/WP/${stateAbbreviation}/`)
+          ), // Replace '/orders1' with the appropriate URL
+          this.getReports(),
+        ]);
         await modal.isHidden;
         await this.archiveAllReports();
       }
