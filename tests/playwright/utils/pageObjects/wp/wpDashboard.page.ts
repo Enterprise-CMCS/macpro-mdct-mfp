@@ -69,7 +69,8 @@ export class WPDashboardPage extends BasePage {
   }
 
   public async archiveAllReports() {
-    const archiveButtons = await this.page
+    const table = await this.page.getByRole("table");
+    const archiveButtons = await table
       .getByRole("button", {
         name: "Archive",
       })
@@ -85,7 +86,7 @@ export class WPDashboardPage extends BasePage {
         await Promise.all([
           this.page.waitForResponse((response) =>
             response.url().includes(`reports/archive/WP/${stateAbbreviation}/`)
-          ), // Replace '/orders1' with the appropriate URL
+          ),
           this.getReports(),
         ]);
         await modal.isHidden;
