@@ -31,13 +31,6 @@ if ! which yarn > /dev/null ; then
 	exit 1
 fi
 
-# check serverless is installed globally.
-if ! which serverless > /dev/null || ! serverless --version 2>&1 | grep -q "Framework 4."; then
-    echo "installing serverless v4 globally"
-    yarn global add serverless@4.4.18
-    export PATH="$PATH:$(yarn global bin)"
-fi
-
 # have to ensure that yarn install is up to date.
 # we use .yarn_install as a marker for the last time `yarn install` was run. Rerun the command when yarn.lock is updated
 if [ "yarn.lock" -nt ".yarn_install" ]; then
@@ -51,7 +44,7 @@ ARGS=()
 
 for arg in "$@"; do
     case $arg in
-        --update-env)
+        update-env)
         UPDATE_ENV=true
         ;;
         *)

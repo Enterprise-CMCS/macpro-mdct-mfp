@@ -4,7 +4,6 @@ COGNITO_USER_POOL_CLIENT_ID=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_CLIENT_
 COGNITO_USER_POOL_ID=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_ID
 POST_SIGNOUT_REDIRECT=http://localhost:3000/
 DISABLE_ESLINT_PLUGIN=true
-DYNAMODB_URL=http://localhost:8000
 FORM_TEMPLATE_TABLE_NAME=local-form-template-versions
 IAM_PATH=/
 IAM_PERMISSIONS_BOUNDARY="bound"

@@ -5,18 +5,19 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/test_coverage)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/test_coverage)
 
 ## Integration Environment Deploy Status:
-| Branch  | Build Status |
-| ------------- | ------------- |
-| main  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg)  |
-| val  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=val)  |
-| production  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=production)  |
 
+| Branch     | Build Status                                                                                                           |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| main       | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg)                   |
+| val        | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=val)        |
+| production | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=production) |
 
 MFP is the CMCS MDCT application for collecting state data related to the [Money Follows the Person (MFP)](https://www.medicaid.gov/medicaid/long-term-services-supports/money-follows-person/index.html) program. The collected data assists CMCS in monitoring and managing grantee progress and identifying challenges and improvement opportunities.
 
 The MFP demonstration supports state efforts for rebalancing their long-term services and supports system so that individuals have a choice of where they live and receive services. From the start of the program in 2008 through the end of 2020, states have transitioned over 107,000 people to community living under MFP.
 
 Project Goals:
+
 - Increase the use of home and community-based services (HCBS) in the Medicaid program
 - Eliminate barriers or mechanisms that prevent or restrict the flexible use of Medicaid funds to enable Medicaid-eligible individuals to receive support for appropriate and necessary long-term services and supports in the settings of their choice
 - Increase the ability of state Medicaid programs to assure continued provision of HCBS to eligible individuals who choose to transition from an institutional to a community setting
@@ -33,7 +34,8 @@ Project Goals:
 ## Quick Start
 
 ### Running MDCT Workspace Setup
-Team members are encouraged to setup all MDCT Products using the script located in the [MDCT Tools Repository](https://github.com/Enterprise-CMCS/macpro-mdct-tools). Please refer to the README for instructions running the MDCT Workspace Setup. After Running workspace setup team members can refer to the Running the project locally section below to proceed with running the application. 
+
+Team members are encouraged to setup all MDCT Products using the script located in the [MDCT Tools Repository](https://github.com/Enterprise-CMCS/macpro-mdct-tools). Please refer to the README for instructions running the MDCT Workspace Setup. After Running workspace setup team members can refer to the Running the project locally section below to proceed with running the application.
 
 ### One time only
 
@@ -286,7 +288,7 @@ Dropdown and dynamic fields are not currently supported as nested child fields. 
 
 ## Slack Webhooks
 
-This repository uses 3 webhooks to publish to  3 different channels all in CMS Slack.
+This repository uses 3 webhooks to publish to 3 different channels all in CMS Slack.
 
 - SLACK_WEBHOOK: This pubishes to the `macpro-mdct-mfp-alerts` channel. Alerts published there are for deploy or test failures to the `main`, `val`, or `production` branches.
 
@@ -294,11 +296,22 @@ This repository uses 3 webhooks to publish to  3 different channels all in CMS S
 
 - PROD_RELEASE_SLACK_WEBHOOK: This is used to publish to the `mdct-prod-releases` channel upon successful release of MFP to production.
 
-    - Webhooks are created by CMS tickets, populated into GitHub Secrets
+  - Webhooks are created by CMS tickets, populated into GitHub Secrets
 
 ## GitHub Actions Secret Management
-- Secrets are added to GitHub secrets by GitHub Admins 
+
+- Secrets are added to GitHub secrets by GitHub Admins
 - Development secrets are maintained in a 1Password vault
+
+## Deployment
+
+While application deployment is generally handled by Github Actions, when you initially set up a new AWS account to host this application, you'll need to deploy a prerequisite stack like so:
+
+```bash
+./run deploy-prerequisites
+```
+
+That will create a stack called `mfp-prerequisites` which will contain resources needed by any application stacks.
 
 ## Copyright and license
 
