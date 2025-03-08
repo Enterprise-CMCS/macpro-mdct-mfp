@@ -90,7 +90,11 @@ export function createUiComponents(props: CreateUiComponentsProps) {
         },
         contentSecurityPolicy: {
           contentSecurityPolicy:
-            "default-src 'self'; img-src 'self' data: https://www.google-analytics.com; script-src 'self' https://www.google-analytics.com https://ssl.google-analytics.com https://www.googletagmanager.com tags.tiqcdn.com tags.tiqcdn.cn tags-eu.tiqcdn.com tealium-tags.cms.gov dap.digitalgov.gov https://*.adoberesources.net 'unsafe-inline'; style-src 'self' maxcdn.bootstrapcdn.com fonts.googleapis.com 'unsafe-inline'; font-src 'self' maxcdn.bootstrapcdn.com fonts.gstatic.com; connect-src https://*.amazonaws.com/ https://*.amazoncognito.com https://www.google-analytics.com https://*.launchdarkly.us https://adobe-ep.cms.gov https://adobedc.demdex.net; frame-ancestors 'none'; object-src 'none'",
+            "default-src 'self'; img-src 'self' data: https://www.google-analytics.com; script-src 'self' https://www.google-analytics.com https://ssl.google-analytics.com https://www.googletagmanager.com tags.tiqcdn.com tags.tiqcdn.cn tags-eu.tiqcdn.com https://*.adoberesources.net 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src https://*.amazonaws.com/ https://*.amazoncognito.com https://www.google-analytics.com https://*.launchdarkly.us https://adobe-ep.cms.gov https://adobedc.demdex.net; frame-ancestors 'none'; object-src 'none'",
+          override: true,
+        },
+        xssProtection: {
+          protection: false,
           override: true,
         },
       },
@@ -98,7 +102,7 @@ export function createUiComponents(props: CreateUiComponentsProps) {
   );
   securityHeadersPolicy.applyRemovalPolicy(
     isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN
-  )
+  );
 
   const distribution = new cloudfront.Distribution(
     scope,
@@ -111,13 +115,10 @@ export function createUiComponents(props: CreateUiComponentsProps) {
             cloudfrontCertificateArn
           )
         : undefined,
-      domainNames: cloudfrontDomainName
-        ? [cloudfrontDomainName]
-        : [],
+      domainNames: cloudfrontDomainName ? [cloudfrontDomainName] : [],
       defaultBehavior: {
-        origin: cloudfrontOrigins.S3BucketOrigin.withOriginAccessControl(
-          uiBucket
-        ),
+        origin:
+          cloudfrontOrigins.S3BucketOrigin.withOriginAccessControl(uiBucket),
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
@@ -144,7 +145,7 @@ export function createUiComponents(props: CreateUiComponentsProps) {
 
   if (!isLocalStack) {
     const waf = setupWaf(scope, stage, project); // vpnIpSetArn, vpnIpv6SetArn
-    distribution.attachWebAclId(waf.webAcl.attrArn)
+    distribution.attachWebAclId(waf.webAcl.attrArn);
   }
 
   const applicationEndpointUrl = `https://${distribution.distributionDomainName}/`;
@@ -167,7 +168,7 @@ export function createUiComponents(props: CreateUiComponentsProps) {
 function setupWaf(
   scope: Construct,
   stage: string,
-  project: string,
+  project: string
   // vpnIpSetArn?: string,
   // vpnIpv6SetArn?: string,
 ) {
