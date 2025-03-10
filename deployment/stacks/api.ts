@@ -7,6 +7,7 @@ import {
   aws_iam as iam,
   aws_logs as logs,
   aws_s3 as s3,
+  aws_s3_notifications as s3notifications,
   aws_wafv2 as wafv2,
   Duration,
   RemovalPolicy,
@@ -14,11 +15,15 @@ import {
 } from "aws-cdk-lib";
 import { Lambda } from "../constructs/lambda";
 import { WafConstruct } from "../constructs/waf";
-import { addIamPropertiesToBucketAutoDeleteRole } from "../utils/s3";
 import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
 import { DynamoDBTableIdentifiers } from "../constructs/dynamodb-table";
 import { isDefined } from "../utils/misc";
 import { isLocalStack } from "../local/util";
+
+// TODO: does this need to point to the tsconfig.json file in services/app-api?
+// TODO: with seds, table names and streams came from the database stack, confirm that is still happening here.
+// TODO: add topicNamespace
+// TODO: check function timeouts and memory sizes and environment variables
 
 interface CreateApiComponentsProps {
   scope: Construct;
@@ -31,6 +36,9 @@ interface CreateApiComponentsProps {
   brokerString: string;
   iamPermissionsBoundary: iam.IManagedPolicy;
   iamPath: string;
+  wpFormBucket: s3.IBucket;
+  sarFormBucket: s3.IBucket;
+  templateBucket: s3.IBucket;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
@@ -45,6 +53,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     brokerString,
     iamPermissionsBoundary,
     iamPath,
+    wpFormBucket,
+    sarFormBucket,
+    templateBucket,
   } = props;
 
   const service = "app-api";
@@ -450,12 +461,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       webAclArn: waf.webAcl.attrArn,
     });
   }
-
-  addIamPropertiesToBucketAutoDeleteRole(
-    scope,
-    iamPermissionsBoundary.managedPolicyArn,
-    iamPath
-  );
 
   return {
     restApiId: api.restApiId,
