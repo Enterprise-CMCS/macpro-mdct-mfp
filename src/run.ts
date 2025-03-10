@@ -165,35 +165,73 @@ async function getCloudFormationStackOutputValue(
   )?.OutputValue;
 }
 
-// run_s3_locally runs s3 locally
-async function run_s3_locally(runner: LabeledProcessRunner) {
-  await runner.run_command_and_output(
-    "s3 yarn",
-    ["yarn", "install"],
-    "services/uploads"
-  );
-  runner.run_command_and_output(
-    "s3",
-    ["serverless", "s3", "start", "--stage", "local"],
-    "services/uploads"
-  );
-}
+async function run_local() {
+  const runner = new LabeledProcessRunner();
+  await prepare_services(runner);
 
-// run_fe_locally runs the frontend and its dependencies locally
-async function run_fe_locally(runner: LabeledProcessRunner) {
+  if (!isColimaRunning()) {
+    throw "Colima needs to be running.";
+  }
+
+  if (!isLocalStackRunning()) {
+    throw "LocalStack needs to be running.";
+  }
+
+  process.env.AWS_DEFAULT_REGION = "us-east-1";
+  process.env.AWS_ACCESS_KEY_ID = "localstack";
+  process.env.AWS_SECRET_ACCESS_KEY = "localstack";
+  process.env.AWS_ENDPOINT_URL = "http://localhost:4566";
+
+  const cdklocalBootstrapCmd = [
+    "yarn",
+    "cdklocal",
+    "bootstrap",
+    "aws://000000000000/us-east-1",
+    "--context",
+    "stage=localstack",
+  ];
   await runner.run_command_and_output(
-    "ui deps",
-    ["yarn", "install"],
-    "services/ui-src"
-  );
-  await runner.run_command_and_output(
-    "ui conf",
-    ["./scripts/configure-env.sh", "local"],
-    "services/ui-src"
+    "CDK local bootstrap",
+    cdklocalBootstrapCmd,
+    "."
   );
 
-  runner.run_command_and_output("ui", ["npm", "start"], "services/ui-src");
-}
+  const deployLocalPrequisitesCmd = [
+    "yarn",
+    "cdklocal",
+    "deploy",
+    "--app",
+    '"npx tsx deployment/local/prerequisites.ts"',
+  ];
+  await runner.run_command_and_output(
+    "CDK local prerequisite deploy",
+    deployLocalPrequisitesCmd,
+    "."
+  );
+
+  const deployPrequisitesCmd = [
+    "yarn",
+    "cdklocal",
+    "deploy",
+    "--app",
+    '"npx tsx deployment/prerequisites.ts"',
+  ];
+  await runner.run_command_and_output(
+    "CDK prerequisite deploy",
+    deployPrequisitesCmd,
+    "."
+  );
+
+  const deployCmd = [
+    "yarn",
+    "cdklocal",
+    "deploy",
+    "--context",
+    "stage=localstack",
+    "--all",
+    "--no-rollback",
+  ];
+  await runner.run_command_and_output("CDK deploy", deployCmd, ".");
 
 // run_all_locally runs all of our services locally
 async function run_all_locally() {
