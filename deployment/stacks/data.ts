@@ -2,11 +2,8 @@ import { Construct } from "constructs";
 import {
   aws_dynamodb as dynamodb,
   aws_iam as iam,
-  aws_lambda as lambda,
-  aws_lambda_nodejs as lambda_nodejs,
-  custom_resources as cr,
+  aws_s3 as s3,
   CfnOutput,
-  Duration,
 } from "aws-cdk-lib";
 import { DynamoDBTable } from "../constructs/dynamodb-table";
 import { IManagedPolicy } from "aws-cdk-lib/aws-iam";
@@ -20,6 +17,9 @@ interface CreateDataComponentsProps {
   customResourceRole: iam.Role;
 }
 
+// TODO: check table configs
+// TODO: check bucket logging configs
+
 export function createDataComponents(props: CreateDataComponentsProps) {
   const {
     scope,
@@ -28,161 +28,70 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     iamPermissionsBoundary,
     iamPath,
     customResourceRole,
-   } = props;
+  } = props;
 
   const tables = [
-    new DynamoDBTable(scope, "FormAnswers", {
+    new DynamoDBTable(scope, "BannerTable", {
       stage,
       isDev,
-      name: "form-answers",
-      partitionKey: {
-        name: "answer_entry",
-        type: dynamodb.AttributeType.STRING,
-      },
-      gsi: {
-        indexName: "state-form-index",
-        partitionKey: {
-          name: "state_form",
-          type: dynamodb.AttributeType.STRING,
+      name: "banners",
+      partitionKey: { name: "key", type: dynamodb.AttributeType.STRING },
+    }).identifiers,
+    new DynamoDBTable(scope, "FormTemplateVersions", {
+      stage,
+      isDev,
+      name: "form-template-versions",
+      partitionKey: { name: "reportType", type: dynamodb.AttributeType.STRING },
+      sortKey: { name: "versionNumber", type: dynamodb.AttributeType.NUMBER },
+      lsi: [
+        {
+          indexName: "LastAlteredIndex",
+          sortKey: { name: "lastAltered", type: dynamodb.AttributeType.STRING },
         },
-      },
+        {
+          indexName: "IdIndex",
+          sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
+        },
+        {
+          indexName: "HashIndex",
+          sortKey: { name: "md5Hash", type: dynamodb.AttributeType.STRING },
+        },
+      ],
     }).identifiers,
-    new DynamoDBTable(scope, "FormQuestions", {
+    new DynamoDBTable(scope, "SarReports", {
       stage,
       isDev,
-      name: "form-questions",
-      partitionKey: { name: "question", type: dynamodb.AttributeType.STRING },
+      name: "sar-reports",
+      partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
+      sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
     }).identifiers,
-    new DynamoDBTable(scope, "FormTemplates", {
+    new DynamoDBTable(scope, "WpReports", {
       stage,
       isDev,
-      name: "form-templates",
-      partitionKey: { name: "year", type: dynamodb.AttributeType.NUMBER },
-    }).identifiers,
-    new DynamoDBTable(scope, "Forms", {
-      stage,
-      isDev,
-      name: "forms",
-      partitionKey: { name: "form", type: dynamodb.AttributeType.STRING },
-    }).identifiers,
-    new DynamoDBTable(scope, "StateForms", {
-      stage,
-      isDev,
-      name: "state-forms",
-      partitionKey: {
-        name: "state_form",
-        type: dynamodb.AttributeType.STRING,
-      },
-    }).identifiers,
-    new DynamoDBTable(scope, "States", {
-      stage,
-      isDev,
-      name: "states",
-      partitionKey: { name: "state_id", type: dynamodb.AttributeType.STRING },
-    }).identifiers,
-    new DynamoDBTable(scope, "AuthUser", {
-      stage,
-      isDev,
-      name: "auth-user",
-      partitionKey: { name: "userId", type: dynamodb.AttributeType.STRING },
+      name: "wp-reports",
+      partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
+      sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
     }).identifiers,
   ];
 
-  // seed data
-  const lambdaApiRole = new iam.Role(scope, "SeedDataLambdaApiRole", {
-    assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-    managedPolicies: [
-      iam.ManagedPolicy.fromAwsManagedPolicyName(
-        "service-role/AWSLambdaVPCAccessExecutionRole"
-      ),
-    ],
-    inlinePolicies: {
-      DynamoPolicy: new iam.PolicyDocument({
-        statements: [
-          new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            actions: [
-              "dynamodb:DescribeTable",
-              "dynamodb:Query",
-              "dynamodb:Scan",
-              "dynamodb:GetItem",
-              "dynamodb:PutItem",
-              "dynamodb:UpdateItem",
-              "dynamodb:DeleteItem",
-            ],
-            resources: ["*"],
-          }),
-        ],
-      }),
-    },
-    permissionsBoundary: iamPermissionsBoundary,
-    path: iamPath,
+  const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
+    bucketName: `${stage}-sar-forms`,
+    encryption: s3.BucketEncryption.S3_MANAGED,
+    versioned: true,
+    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
   });
 
-  // TODO: test deploy and watch performance with this using lambda.Function vs lambda_nodejs.NodejsFunction
-  const seedDataFunction = new lambda_nodejs.NodejsFunction(scope, "seedData", {
-    entry: "services/database/handlers/seed/seed.js",
-    handler: "handler",
-    runtime: lambda.Runtime.NODEJS_20_X,
-    timeout: Duration.seconds(900),
-    role: lambdaApiRole,
-    environment: {
-      dynamoPrefix: stage,
-      seedData: (!["production", "val", "master"].includes(stage)).toString(),
-      // DYNAMODB_URL: process.env.DYNAMODB_URL || "",
-    },
-    bundling: {
-      commandHooks: {
-        beforeBundling(inputDir: string, outputDir: string): string[] {
-          return [
-            `mkdir -p ${outputDir}/data/initial_data_load/`,
-            `cp -r ${inputDir}/services/database/data/initial_data_load/* ${outputDir}/data/initial_data_load/`,
-          ];
-        },
-        afterBundling() {
-          return [];
-        },
-        beforeInstall() {
-          return [];
-        },
-      },
-    },
+  const wpFormBucket = new s3.Bucket(scope, "WpFormBucket", {
+    bucketName: `${stage}-wp-forms`,
+    encryption: s3.BucketEncryption.S3_MANAGED,
+    versioned: true,
+    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
   });
 
-  const seedDataInvoke = new cr.AwsCustomResource(
-    scope,
-    "InvokeSeedDataFunction",
-    {
-      onCreate: {
-        service: "Lambda",
-        action: "invoke",
-        parameters: {
-          FunctionName: seedDataFunction.functionName,
-          InvocationType: "Event",
-          Payload: JSON.stringify({}),
-        },
-        physicalResourceId: cr.PhysicalResourceId.of(
-          `InvokeSeedDataFunction-${stage}`
-        ),
-      },
-      onUpdate: undefined,
-      onDelete: undefined,
-      policy: cr.AwsCustomResourcePolicy.fromStatements([
-        new iam.PolicyStatement({
-          actions: ["lambda:InvokeFunction"],
-          resources: [seedDataFunction.functionArn],
-        }),
-      ]),
-      role: customResourceRole,
-      resourceType: "Custom::InvokeSeedDataFunction",
-    }
-  );
-
-  new CfnOutput(scope, "SeedDataFunctionName", {
-    value: seedDataFunction.functionName,
+  new CfnOutput(scope, "SarFormBucketName", {
+    value: sarFormBucket.bucketName,
   });
+  new CfnOutput(scope, "WpFormBucketName", { value: wpFormBucket.bucketName });
 
-  seedDataInvoke.node.addDependency(seedDataFunction);
-
-  return { tables };
+  return { tables, sarFormBucket, wpFormBucket };
 }

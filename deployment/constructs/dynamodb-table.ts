@@ -7,6 +7,11 @@ interface DynamoDBTableProps {
   readonly isDev: boolean;
   readonly name: string;
   readonly partitionKey: { name: string; type: dynamodb.AttributeType };
+  readonly sortKey?: { name: string; type: dynamodb.AttributeType };
+  readonly lsi?: {
+    indexName: string;
+    sortKey: { name: string; type: dynamodb.AttributeType };
+  }[];
   readonly gsi?: {
     indexName: string;
     partitionKey: { name: string; type: dynamodb.AttributeType };
@@ -15,13 +20,13 @@ interface DynamoDBTableProps {
 
 export interface DynamoDBTableIdentifiers {
   /** The invariant identifier for the table. Example: "FormAnswers" */
-  id: string,
+  id: string;
   /** The name of the table within the environment. Example: "production-form-answers" */
-  name: string,
+  name: string;
   /** The table's TableArn */
-  arn: string,
+  arn: string;
   /** The table's TableStreamArn (if it has one) */
-  streamArn: string | undefined,
+  streamArn: string | undefined;
 }
 
 export class DynamoDBTable extends Construct {
@@ -35,10 +40,11 @@ export class DynamoDBTable extends Construct {
     this.table = new dynamodb.Table(this, "Table", {
       tableName,
       partitionKey: props.partitionKey,
+      sortKey: props.sortKey,
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
       pointInTimeRecovery: true,
-      removalPolicy: props.isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN
+      removalPolicy: props.isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
     });
 
     this.identifiers = {
@@ -47,6 +53,16 @@ export class DynamoDBTable extends Construct {
       arn: this.table.tableArn,
       streamArn: this.table.tableStreamArn,
     };
+
+    if (props.lsi) {
+      props.lsi.forEach((index) => {
+        this.table.addLocalSecondaryIndex({
+          indexName: index.indexName,
+          sortKey: index.sortKey,
+          projectionType: dynamodb.ProjectionType.ALL,
+        });
+      });
+    }
 
     if (props.gsi) {
       this.table.addGlobalSecondaryIndex({
