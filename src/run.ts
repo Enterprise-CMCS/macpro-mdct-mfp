@@ -75,7 +75,7 @@ function updateEnvFiles() {
       stdio: "inherit",
     });
     execSync(
-      "op inject -i services/ui-src/.env.tpl -o services/ui-src/.env -f",
+      "op inject --in-file services/ui-src/.env.tpl --out-file services/ui-src/.env --force",
       { stdio: "inherit" }
     );
     execSync("sed -i '' -e 's/# pragma: allowlist secret//g' .env");
