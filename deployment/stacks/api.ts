@@ -168,11 +168,99 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     iamPath,
   };
 
-  new Lambda(scope, "ForceKafkaSync", {
-    entry: "services/app-api/handlers/kafka/get/forceKafkaSync.js",
-    handler: "main",
-    timeout: Duration.minutes(15),
-    memorySize: 3072,
+  new Lambda(scope, "createBanner", {
+    entry: "services/app-api/handlers/banners/create.js",
+    handler: "createBanner",
+    path: "/banners/{bannerId}",
+    method: "POST",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "deleteBanner", {
+    entry: "services/app-api/handlers/banners/delete.js",
+    handler: "deleteBanner",
+    path: "/banners/{bannerId}",
+    method: "DELETE",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "fetchBanner", {
+    entry: "services/app-api/handlers/banners/fetch.js",
+    handler: "fetchBanner",
+    path: "/banners/{bannerId}",
+    method: "GET",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "fetchTemplate", {
+    entry: "services/app-api/handlers/templates/fetch.js",
+    handler: "fetchTemplate",
+    path: "/templates/{templateName}",
+    method: "GET",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "archiveReport", {
+    entry: "services/app-api/handlers/reports/archive.js",
+    handler: "archiveReport",
+    path: "/reports/archive/{reportType}/{state}/{id}",
+    method: "PUT",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "createReport", {
+    entry: "services/app-api/handlers/reports/create.js",
+    handler: "createReport",
+    path: "/reports/{reportType}/{state}",
+    method: "POST",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "fetchReport", {
+    entry: "services/app-api/handlers/reports/fetch.js",
+    handler: "fetchReport",
+    path: "/reports/{reportType}/{state}/{id}",
+    method: "GET",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "fetchReportsByState", {
+    entry: "services/app-api/handlers/reports/fetch.js",
+    handler: "fetchReportsByState",
+    path: "/reports/{reportType}/{state}",
+    method: "GET",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "releaseReport", {
+    entry: "services/app-api/handlers/reports/release.js",
+    handler: "releaseReport",
+    path: "/reports/release/{reportType}/{state}/{id}",
+    method: "PUT",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "submitReport", {
+    entry: "services/app-api/handlers/reports/submit.js",
+    handler: "submitReport",
+    path: "/reports/submit/{reportType}/{state}/{id}",
+    method: "POST",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "updateReport", {
+    entry: "services/app-api/handlers/reports/update.js",
+    handler: "updateReport",
+    path: "/reports/{reportType}/{state}/{id}",
+    method: "PUT",
+    ...commonProps,
+  });
+
+  new Lambda(scope, "approveReport", {
+    entry: "services/app-api/handlers/reports/approve.js",
+    handler: "approveReport",
+    path: "/reports/approve/{reportType}/{state}/{id}",
+    method: "PUT",
     ...commonProps,
   });
 
@@ -188,246 +276,63 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
     tables,
   });
+  // TODO: confirm only attached to the streams wpReport and sarReport
 
-  const dataConnectTables = tables.filter((table) =>
-    [
-      "FormQuestions",
-      "AuthUser",
-      "StateForms",
-      "Forms",
-      "FormTemplates",
-      "States",
-      "FormAnswers",
-    ].includes(table.id)
-  );
-
-  new LambdaDynamoEventSource(scope, "dataConnectSource", {
-    entry: "services/app-api/handlers/kafka/post/dataConnectSource.js",
-    handler: "handler",
+  const bucketLambdaProps = {
     timeout: Duration.seconds(120),
     memorySize: 2048,
-    retryAttempts: 2,
     vpc,
     vpcSubnets: { subnets: privateSubnets },
     securityGroups: [kafkaSecurityGroup],
     ...commonProps,
-    tables: dataConnectTables,
-  });
+  };
 
-  new Lambda(scope, "getUserById", {
-    entry: "services/app-api/handlers/users/get/getUserById.js",
-    handler: "main",
-    path: "/users/{id}",
-    method: "GET",
-    ...commonProps,
-  });
+  const postWpBucketDataLambda = new Lambda(scope, "postWpBucketData", {
+    entry: "services/app-api/handlers/kafka/post/postKafkaData.js",
+    handler: "handler",
+    ...bucketLambdaProps,
+  }).lambda;
 
-  new Lambda(scope, "getUsers", {
-    entry: "services/app-api/handlers/users/get/listUsers.js",
-    handler: "main",
-    path: "/users",
-    method: "GET",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "obtainUserByUsername", {
-    entry: "services/app-api/handlers/users/post/obtainUserByUsername.js",
-    handler: "main",
-    path: "/users/get",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "obtainUserByEmail", {
-    entry: "services/app-api/handlers/users/post/obtainUserByEmail.js",
-    handler: "main",
-    path: "/users/get/email",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "createUser", {
-    entry: "services/app-api/handlers/users/post/createUser.js",
-    handler: "main",
-    path: "/users/add",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "adminCreateUser", {
-    entry: "services/app-api/handlers/users/post/createUser.js",
-    handler: "adminCreateUser",
-    path: "/users/admin-add",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "updateUser", {
-    entry: "services/app-api/handlers/users/post/updateUser.js",
-    handler: "main",
-    path: "/users/update/{userId}",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "getForm", {
-    entry: "services/app-api/handlers/forms/get.js",
-    handler: "main",
-    path: "/single-form/{state}/{specifiedYear}/{quarter}/{form}",
-    method: "GET",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "getStateFormList", {
-    entry: "services/app-api/handlers/forms/post/obtainFormsList.js",
-    handler: "main",
-    path: "/forms/obtain-state-forms",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "updateStateFormList", {
-    entry: "services/app-api/handlers/state-forms/post/updateStateForms.js",
-    handler: "main",
-    path: "/state-forms/update",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "generateEnrollmentTotals", {
-    entry:
-      "services/app-api/handlers/state-forms/post/generateEnrollmentTotals.js",
-    handler: "main",
-    path: "/generate-enrollment-totals",
-    method: "POST",
-    timeout: Duration.minutes(15),
-    ...commonProps,
-  });
-
-  new Lambda(scope, "obtainAvailableForms", {
-    entry: "services/app-api/handlers/forms/post/obtainAvailableForms.js",
-    handler: "main",
-    path: "/forms/obtainAvailableForms",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "getFormTypes", {
-    entry: "services/app-api/handlers/forms/get/getFormTypes.js",
-    handler: "main",
-    path: "/form-types",
-    method: "GET",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "generateQuarterForms", {
-    entry: "services/app-api/handlers/forms/post/generateQuarterForms.js",
-    handler: "main",
-    path: "/generate-forms",
-    method: "POST",
-    timeout: Duration.minutes(15),
-    ...commonProps,
-  });
-
-  const generateQuarterFormsOnScheduleLambda = new Lambda(
-    scope,
-    "generateQuarterFormsOnSchedule",
+  wpFormBucket.addEventNotification(
+    s3.EventType.OBJECT_CREATED,
+    new s3notifications.LambdaDestination(postWpBucketDataLambda),
     {
-      entry: "services/app-api/handlers/forms/post/generateQuarterForms.js",
-      handler: "scheduled",
-      timeout: Duration.minutes(15),
-      ...commonProps,
+      prefix: "fieldData/",
+      suffix: ".json",
     }
-  ).lambda;
-
-  const rule = new events.Rule(scope, "GenerateQuarterFormsOnScheduleRule", {
-    schedule: events.Schedule.cron({
-      minute: "0",
-      hour: "0",
-      day: "1",
-      month: "1,4,7,10",
-    }),
-  });
-  rule.addTarget(
-    new targets.LambdaFunction(generateQuarterFormsOnScheduleLambda)
+  );
+  wpFormBucket.addEventNotification(
+    s3.EventType.OBJECT_TAGGING_PUT,
+    new s3notifications.LambdaDestination(postWpBucketDataLambda),
+    {
+      prefix: "fieldData/",
+      suffix: ".json",
+    }
   );
 
-  //   #
-  //   # NOTE: The MFP business owners have requested that the email flow to users be disabled, but would like to be
-  //   # able to re-enable it at a future point (see: https://bit.ly/3w3mVmT). For now, scope handler will be commented out
-  //   # and not removed.
-  //   #
-  //   # stateUsersEmail:
-  //   #   handler: handlers/notification/stateUsers.main
-  //   #   role: LambdaApiRole
-  //   #   events:
-  //   #     - http:
-  //   #         path: notification/stateUsersEmail
-  //   #         method: post
-  //   #         cors: true
-  //   #         authorizer: aws_iam
-  //   #     - schedule:
-  //   #         enabled: true
-  //   #         rate: cron(0 0 1 */3 ? *)
-  //   #
-  //   # businessUsersEmail:
-  //   #   handler: handlers/notification/businessUsers.main
-  //   #   role: LambdaApiRole
-  //   #   events:
-  //   #     - http:
-  //   #         path: notification/businessUsersEmail
-  //   #         method: post
-  //   #         cors: true
-  //   #         authorizer: aws_iam
-  //   #     - schedule:
-  //   #         enabled: false
-  //   #         rate: cron(0 0 1 */3 ? *)
-  //   #
-  //   # uncertified:
-  //   #   handler: handlers/notification/uncertified.main
-  //   #   role: LambdaApiRole
-  //   #   events:
-  //   #     - http:
-  //   #         path: notification/uncertified
-  //   #         method: post
-  //   #         cors: true
-  //   #         authorizer: aws_iam
-  //   #
+  const postSarBucketDataLambda = new Lambda(scope, "postSarBucketData", {
+    entry: "services/app-api/handlers/kafka/post/postKafkaData.js",
+    handler: "handler",
+    ...bucketLambdaProps,
+  }).lambda;
 
-  new Lambda(scope, "saveForm", {
-    entry: "services/app-api/handlers/forms/post/saveForm.js",
-    handler: "main",
-    path: "/single-form/save",
-    method: "POST",
-    ...commonProps,
-  });
+  sarFormBucket.addEventNotification(
+    s3.EventType.OBJECT_CREATED,
+    new s3notifications.LambdaDestination(postSarBucketDataLambda),
+    {
+      prefix: "fieldData/",
+      suffix: ".json",
+    }
+  );
 
-  new Lambda(scope, "getFormTemplate", {
-    entry:
-      "services/app-api/handlers/form-templates/post/obtainFormTemplate.js",
-    handler: "main",
-    path: "/form-template",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "getFormTemplateYears", {
-    entry:
-      "services/app-api/handlers/form-templates/post/obtainFormTemplateYears.js",
-    handler: "main",
-    path: "/form-templates/years",
-    method: "POST",
-    ...commonProps,
-  });
-
-  new Lambda(scope, "updateCreateFormTemplate", {
-    entry:
-      "services/app-api/handlers/form-templates/post/updateCreateFormTemplate.js",
-    handler: "main",
-    path: "/form-templates/add",
-    method: "POST",
-    ...commonProps,
-  });
+  sarFormBucket.addEventNotification(
+    s3.EventType.OBJECT_TAGGING_PUT,
+    new s3notifications.LambdaDestination(postSarBucketDataLambda),
+    {
+      prefix: "fieldData/",
+      suffix: ".json",
+    }
+  );
 
   if (!isLocalStack) {
     const waf = new WafConstruct(
