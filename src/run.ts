@@ -89,31 +89,80 @@ function updateEnvFiles() {
   }
 }
 
+// run_fe_locally runs the frontend and its dependencies locally
+// @ts-ignore
+async function run_fe_locally(runner: LabeledProcessRunner) {
+  const apiUrl = await getCloudFormationStackOutputValue(
+    "mfp-localstack",
+    "ApiUrl"
   );
+
+  await writeLocalUiEnvFile(apiUrl!);
+
+  runner.run_command_and_output("ui", ["npm", "start"], "services/ui-src");
 }
 
-// run_api_locally uses the serverless-offline plugin to run the api lambdas locally
-async function run_api_locally(runner: LabeledProcessRunner) {
-  await runner.run_command_and_output(
-    "api deps",
-    ["yarn", "install"],
-    "services/app-api"
-  );
-  runner.run_command_and_output(
-    "api",
-    [
-      "serverless",
-      "offline",
-      "start",
-      "--stage",
-      "local",
-      "--region",
-      "us-east-1",
-      "--httpPort",
-      "3030",
-    ],
-    "services/app-api"
-  );
+async function run_cdk_watch(
+  runner: LabeledProcessRunner,
+  options: { stage: string }
+) {
+  const stage = options.stage;
+  const watchCmd = [
+    "yarn",
+    "cdk",
+    "watch",
+    "--context",
+    `stage=${stage}`,
+    "--no-rollback",
+  ];
+  await runner.run_command_and_output("CDK watch", watchCmd, ".");
+}
+
+function isColimaRunning() {
+  try {
+    const output = execSync("colima status 2>&1", {
+      encoding: "utf-8",
+      stdio: "pipe",
+    }).trim();
+    return output.includes("running");
+  } catch {
+    return false;
+  }
+}
+
+function isLocalStackRunning() {
+  try {
+    const output = execSync("localstack status", {
+      encoding: "utf-8",
+      stdio: "pipe",
+    }).trim();
+    return output.includes("running");
+  } catch {
+    return false;
+  }
+}
+
+async function run_watch(options: { stage: string }) {
+  const runner = new LabeledProcessRunner();
+  await prepare_services(runner);
+
+  run_cdk_watch(runner, options);
+  run_fe_locally(runner);
+}
+
+async function getCloudFormationStackOutputValue(
+  stackName: string,
+  outputName: string
+) {
+  const cloudFormationClient = new CloudFormationClient({
+    region: "us-east-1",
+  });
+  const command = new DescribeStacksCommand({ StackName: stackName });
+  const response = cloudFormationClient.send(command);
+
+  return (await response).Stacks?.[0]?.Outputs?.find(
+    (output) => output.OutputKey === outputName
+  )?.OutputValue;
 }
 
 // run_s3_locally runs s3 locally
