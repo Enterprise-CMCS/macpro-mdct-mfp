@@ -4,6 +4,11 @@ import { MainSkipNav, ReportContext } from "components";
 import { ReportContextShape } from "types";
 import { testA11y } from "utils/testing/commonTests";
 
+const mockUseLocation = jest.fn();
+jest.mock("react-router-dom", () => ({
+  useLocation: () => mockUseLocation(),
+}));
+
 const mainSkipNavOutsideReport = (
   <ReportContext.Provider
     value={
@@ -30,6 +35,7 @@ const mainSkipNavInsideReport = (
 
 describe("<MainSkipNav />", () => {
   test("should be visible and focusable", async () => {
+    mockUseLocation.mockReturnValue({ pathname: "/home" });
     render(mainSkipNavOutsideReport);
     const skipNav = document.getElementById("skip-nav-main")!;
     skipNav.focus();
@@ -40,11 +46,23 @@ describe("<MainSkipNav />", () => {
   });
 
   test("should skip to report content when on a report page", async () => {
+    mockUseLocation.mockReturnValue({ pathname: "/report-page" });
     render(mainSkipNavInsideReport);
     const skipNav = document.getElementById("skip-nav-main")!;
     skipNav.focus();
 
     const skipNavLink = screen.getByText("Skip to report sidebar");
+    await expect(skipNavLink).toHaveFocus();
+    await expect(skipNavLink).toBeVisible();
+  });
+
+  test("should skip to main content when on an export page", async () => {
+    mockUseLocation.mockReturnValue({ pathname: "/export" });
+    render(mainSkipNavInsideReport);
+    const skipNav = document.getElementById("skip-nav-main")!;
+    skipNav.focus();
+
+    const skipNavLink = screen.getByText("Skip to main content");
     await expect(skipNavLink).toHaveFocus();
     await expect(skipNavLink).toBeVisible();
   });
