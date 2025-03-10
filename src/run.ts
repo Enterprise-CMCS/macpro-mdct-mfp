@@ -71,7 +71,9 @@ The destroy operation has been aborted.
 // Function to update .env files using 1Password CLI
 function updateEnvFiles() {
   try {
-    execSync("op inject -i .env.tpl -o .env -f", { stdio: "inherit" });
+    execSync("op inject --in-file .env.tpl --out-file .env --force", {
+      stdio: "inherit",
+    });
     execSync(
       "op inject -i services/ui-src/.env.tpl -o services/ui-src/.env -f",
       { stdio: "inherit" }
