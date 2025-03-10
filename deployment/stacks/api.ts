@@ -85,20 +85,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       tracingEnabled: true,
       loggingLevel: apigateway.MethodLoggingLevel.INFO,
       dataTraceEnabled: true,
-      metricsEnabled: false,
-      throttlingBurstLimit: 5000,
-      throttlingRateLimit: 10000.0,
-      cachingEnabled: false,
-      cacheTtl: Duration.seconds(300),
-      cacheDataEncrypted: false,
       accessLogDestination: new apigateway.LogGroupLogDestination(logGroup),
-      accessLogFormat: apigateway.AccessLogFormat.custom(
-        "requestId: $context.requestId, ip: $context.identity.sourceIp, " +
-          "caller: $context.identity.caller, user: $context.identity.user, " +
-          "requestTime: $context.requestTime, httpMethod: $context.httpMethod, " +
-          "resourcePath: $context.resourcePath, status: $context.status, " +
-          "protocol: $context.protocol, responseLength: $context.responseLength"
-      ),
     },
     defaultCorsPreflightOptions: {
       allowOrigins: apigateway.Cors.ALL_ORIGINS,
@@ -125,6 +112,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   const environment = {
     BOOTSTRAP_BROKER_STRING_TLS: brokerString,
     stage,
+    TEMPLATE_BUCKET: templateBucket.bucketName,
+    WP_FORM_BUCKET: wpFormBucket.bucketName,
+    SAR_FORM_BUCKET: sarFormBucket.bucketName,
     ...Object.fromEntries(
       tables.map((table) => [`${table.id}Table`, table.name])
     ),
@@ -134,17 +124,16 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
-        "dynamodb:BatchWriteItem",
-        "dynamodb:DeleteItem",
-        "dynamodb:GetItem",
-        "dynamodb:PutItem",
+        "dynamodb:DescribeTable",
         "dynamodb:Query",
         "dynamodb:Scan",
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
         "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
       ],
       resources: tables.map((table) => table.arn),
     }),
-
     new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
@@ -158,19 +147,14 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     }),
     new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: ["dynamodb:Query", "dynamodb:Scan"],
-      resources: tables.map((table) => `${table.arn}/index/*`),
-    }),
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "cognito-idp:AdminGetUser",
-        "ses:SendEmail",
-        "ses:SendRawEmail",
-        "lambda:InvokeFunction",
-        "ssm:GetParameter",
+      actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+      resources: [
+        templateBucket.bucketArn,
+        wpFormBucket.bucketArn,
+        sarFormBucket.bucketArn,
+        `${wpFormBucket.bucketArn}/fieldData/*`,
+        `${sarFormBucket.bucketArn}/fieldData/*`,
       ],
-      resources: ["*"],
     }),
   ];
 
