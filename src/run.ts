@@ -354,6 +354,24 @@ async function destroy({
 
   if (verify) await confirmDestroyCommand(stackName);
 
+  const client = new CloudFormationClient({ region });
+  await client.send(new DeleteStackCommand({ StackName: stackName }));
+  console.log(`Stack ${stackName} delete initiated.`);
+
+  if (wait) {
+    console.log(`Waiting for stack ${stackName} to be deleted...`);
+    const result = await waitForStackDeleteComplete(client, stackName);
+    console.log(
+      result.state === "SUCCESS"
+        ? `Stack ${stackName} deleted successfully.`
+        : `Error: Stack ${stackName} deletion failed.`
+    );
+  } else {
+    console.log(
+      `Stack ${stackName} delete initiated. Not waiting for completion as --wait is set to false.`
+    );
+  }
+
   await delete_topics(options);
 }
 
