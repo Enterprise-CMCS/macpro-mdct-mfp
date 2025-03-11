@@ -233,18 +233,40 @@ async function run_local() {
   ];
   await runner.run_command_and_output("CDK deploy", deployCmd, ".");
 
-// run_all_locally runs all of our services locally
-async function run_all_locally() {
-  const runner = new LabeledProcessRunner();
+  const watchCmd = [
+    "yarn",
+    "cdklocal",
+    "watch",
+    "--context",
+    "stage=localstack",
+    "--no-rollback",
+  ];
 
-  run_db_locally(runner);
-  run_s3_locally(runner);
-  run_api_locally(runner);
+  runner.run_command_and_output("CDK watch", watchCmd, ".");
   run_fe_locally(runner);
 }
 
+// TODO: may not be needed anymore.
 async function install_deps_for_services(runner: LabeledProcessRunner) {
+  await runner.run_command_and_output(
+    "Installing Dependencies",
+    ["yarn", "install", "--frozen-lockfile"],
+    `services/${service}`
+  );
+}
+
+async function install_deps(runner: LabeledProcessRunner, service: string) {
+  await runner.run_command_and_output(
+    "Installing dependencies",
+    ["yarn", "install", "--frozen-lockfile"],
+    `services/${service}`
+  );
+}
+
+async function prepare_services(runner: LabeledProcessRunner) {
   for (const service of deployedServices) {
+    await install_deps(runner, service);
+    // TODO: may not need the below? or the above?
     await runner.run_command_and_output(
       "Installing Dependencies",
       ["yarn", "install", "--frozen-lockfile"],
@@ -253,39 +275,84 @@ async function install_deps_for_services(runner: LabeledProcessRunner) {
   }
 }
 
-async function deploy(options: { stage: string }) {
+async function deploy_prerequisites() {
   const runner = new LabeledProcessRunner();
-  await install_deps_for_services(runner);
-  const deployCmd = ["sls", "deploy", "--stage", options.stage];
-  await runner.run_command_and_output("SLS Deploy", deployCmd, ".");
-  await addSlsBucketPolicies();
+  await prepare_services(runner);
+  const deployPrequisitesCmd = [
+    "yarn",
+    "cdk",
+    "deploy",
+    "--app",
+    '"npx tsx deployment/prerequisites.ts"',
+  ];
+  await runner.run_command_and_output(
+    "CDK prerequisite deploy",
+    deployPrequisitesCmd,
+    "."
+  );
 }
 
-async function destroy_stage(options: {
+const stackExists = async (stackName: string): Promise<boolean> => {
+  const client = new CloudFormationClient({ region });
+  try {
+    await client.send(new DescribeStacksCommand({ StackName: stackName }));
+    return true;
+  } catch (error: any) {
+    return false;
+  }
+};
+
+async function deploy(options: { stage: string }) {
+  const stage = options.stage;
+  const runner = new LabeledProcessRunner();
+  await install_deps_for_services(runner);
+  // TODO: the line above or below, not both
+  await prepare_services(runner);
+  if (await stackExists("mfp-prerequisites")) {
+    const deployCmd = [
+      "yarn",
+      "cdk",
+      "deploy",
+      "--context",
+      `stage=${stage}`,
+      "--method=direct",
+      "--all",
+    ];
+    await runner.run_command_and_output("CDK deploy", deployCmd, ".");
+  } else {
+    console.error(
+      "MISSING PREREQUISITE STACK! Must deploy it before attempting to deploy the application."
+    );
+  }
+}
+
+const waitForStackDeleteComplete = async (
+  client: CloudFormationClient,
+  stackName: string
+) => {
+  return waitUntilStackDeleteComplete(
+    { client, maxWaitTime: 3600 },
+    { StackName: stackName }
+  );
+};
+
+async function destroy({
+  stage,
+  wait,
+  verify,
+}: {
   stage: string;
-  service: string | undefined;
   wait: boolean;
   verify: boolean;
 }) {
-  let destroyer = new ServerlessStageDestroyer();
-  let filters = [
-    {
-      Key: "PROJECT",
-      Value: `${process.env.PROJECT}`,
-    },
-  ];
-  if (options.service) {
-    filters.push({
-      Key: "SERVICE",
-      Value: `${options.service}`,
-    });
+  const stackName = `${project}-${stage}`;
+
+  if (/prod/i.test(stage)) {
+    console.log("Error: Destruction of production stages is not allowed.");
+    process.exit(1);
   }
 
-  await destroyer.destroy(`${process.env.REGION_A}`, options.stage, {
-    wait: options.wait,
-    filters: filters,
-    verify: options.verify,
-  });
+  if (verify) await confirmDestroyCommand(stackName);
 
   await delete_topics(options);
 }
