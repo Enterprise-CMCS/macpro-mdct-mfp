@@ -472,9 +472,7 @@ yargs(process.argv.slice(2))
     "update-env",
     "update environment variables using 1Password",
     () => {},
-    () => {
-      updateEnvFiles();
-    }
+    updateEnvFiles
   )
   .scriptName("run")
   .strict()
