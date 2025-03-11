@@ -89,16 +89,12 @@ function updateEnvFiles() {
   }
 }
 
-// run_fe_locally runs the frontend and its dependencies locally
-// @ts-ignore
 async function run_fe_locally(runner: LabeledProcessRunner) {
   const apiUrl = await getCloudFormationStackOutputValue(
     "mfp-localstack",
     "ApiUrl"
   );
-
   await writeLocalUiEnvFile(apiUrl!);
-
   runner.run_command_and_output("ui", ["npm", "start"], "services/ui-src");
 }
 
