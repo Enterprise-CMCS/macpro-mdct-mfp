@@ -129,11 +129,10 @@ function isColimaRunning() {
 
 function isLocalStackRunning() {
   try {
-    const output = execSync("localstack status", {
+    return execSync("localstack status", {
       encoding: "utf-8",
       stdio: "pipe",
-    }).trim();
-    return output.includes("running");
+    }).includes("running");
   } catch {
     return false;
   }
