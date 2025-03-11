@@ -118,11 +118,10 @@ async function run_cdk_watch(
 
 function isColimaRunning() {
   try {
-    const output = execSync("colima status 2>&1", {
+    return execSync("colima status", {
       encoding: "utf-8",
       stdio: "pipe",
-    }).trim();
-    return output.includes("running");
+    }).includes("running");
   } catch {
     return false;
   }
