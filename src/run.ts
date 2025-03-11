@@ -422,19 +422,27 @@ async function list_topics(options: { stage: string | undefined }) {
  * All valid arguments to dev should be enumerated here, this is the entrypoint to the script
  */
 yargs(process.argv.slice(2))
-  .command("local", "run system locally", {}, run_all_locally)
   .command(
-    "test",
-    "run all tests",
+    "watch",
+    "run cdk watch and react together",
+    { stage: { type: "string", demandOption: true } },
+    run_watch
+  )
+  .command(
+    "local",
+    "run our app via cdk deployment to localstack locally and react locally together",
+    {},
+    run_local
+  )
+  .command(
+    "deploy-prerequisites",
+    "deploy the app's AWS account prerequisites with cdk to the cloud",
     () => {},
-    () => {
-      // eslint-disable-next-line no-console
-      console.log("Testing 1. 2. 3.");
-    }
+    deploy_prerequisites
   )
   .command(
     "deploy",
-    "deploy the app with serverless compose to the cloud",
+    "deploy the app with cdk to the cloud",
     {
       stage: { type: "string", demandOption: true },
     },
@@ -442,14 +450,14 @@ yargs(process.argv.slice(2))
   )
   .command(
     "destroy",
-    "destroy serverless stage",
+    "destroy a cdk stage in AWS",
     {
       stage: { type: "string", demandOption: true },
       service: { type: "string", demandOption: false },
       wait: { type: "boolean", demandOption: false, default: true },
       verify: { type: "boolean", demandOption: false, default: true },
     },
-    destroy_stage
+    destroy
   )
   .command(
     "delete-topics",
