@@ -102,16 +102,18 @@ async function run_cdk_watch(
   runner: LabeledProcessRunner,
   options: { stage: string }
 ) {
-  const stage = options.stage;
-  const watchCmd = [
-    "yarn",
-    "cdk",
-    "watch",
-    "--context",
-    `stage=${stage}`,
-    "--no-rollback",
-  ];
-  await runner.run_command_and_output("CDK watch", watchCmd, ".");
+  await runner.run_command_and_output(
+    "CDK watch",
+    [
+      "yarn",
+      "cdk",
+      "watch",
+      "--context",
+      `stage=${options.stage}`,
+      "--no-rollback",
+    ],
+    "."
+  );
 }
 
 function isColimaRunning() {
