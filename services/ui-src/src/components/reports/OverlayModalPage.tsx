@@ -175,7 +175,6 @@ export const OverlayModalPage = ({
               </Button>
             )}
         </Box>
-        <hr />
         {/* MODALS */}
         <AddEditOverlayEntityModal
           entityType={[entityType, stepType]}
