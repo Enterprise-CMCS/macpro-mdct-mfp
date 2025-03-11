@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import LabeledProcessRunner from "./runner.js";
 import { ServerlessStageDestroyer } from "@stratiformdigital/serverless-stage-destroyer";
 import { execSync } from "child_process";
+import { addSlsBucketPolicies } from "./slsV4BucketPolicies.js";
 
 // load .env
 dotenv.config();
@@ -142,6 +143,7 @@ async function deploy(options: { stage: string }) {
   await install_deps_for_services(runner);
   const deployCmd = ["sls", "deploy", "--stage", options.stage];
   await runner.run_command_and_output("SLS Deploy", deployCmd, ".");
+  await addSlsBucketPolicies();
 }
 
 async function destroy_stage(options: {
@@ -220,9 +222,7 @@ async function list_topics(options: { stage: string | undefined }) {
  * All valid arguments to dev should be enumerated here, this is the entrypoint to the script
  */
 yargs(process.argv.slice(2))
-  .command("local", "run system locally", {}, () => {
-    run_all_locally();
-  })
+  .command("local", "run system locally", {}, run_all_locally)
   .command(
     "test",
     "run all tests",

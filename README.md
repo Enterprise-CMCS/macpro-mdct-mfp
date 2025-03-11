@@ -4,7 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/maintainability)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/test_coverage)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/test_coverage)
 
-### Integration Environment Deploy Status:
+## Integration Environment Deploy Status:
 | Branch  | Build Status |
 | ------------- | ------------- |
 | main  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg)  |
@@ -130,7 +130,9 @@ yarn test --watch
 
 ### Integration Testing
 
-We use Cypress for integration tests. See additional info [here in the Cypress readme](./tests/cypress/README.md)
+We use Cypress for integration tests. See additional info in the [Cypress readme](./tests/cypress.md).
+
+We are in the process of migrating to Playwright for integration tests. See additional info in the [Playwright readme](./tests/playwright.md).
 
 ### Accessibility Testing
 

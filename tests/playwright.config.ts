@@ -5,13 +5,13 @@ import dotenv from "dotenv";
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-dotenv.config({ path: "./.env" });
+dotenv.config({ path: "../.env" });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: "./tests/e2e",
+  testDir: "playwright",
   testMatch: ["**/*.spec.js", "**/*.spec.ts"],
   /* Run tests in files in parallel */
   fullyParallel: false,
@@ -51,7 +51,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: process.env.CI ? "" : "./run local",
+    command: process.env.CI ? "" : "cd ../ && ./run local",
     url: process.env.BASE_URL || "http://localhost:3000",
     reuseExistingServer: !!process.env.CI,
     stdout: "pipe",
