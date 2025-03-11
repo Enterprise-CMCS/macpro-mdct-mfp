@@ -282,22 +282,24 @@ const stackExists = async (stackName: string): Promise<boolean> => {
 };
 
 async function deploy(options: { stage: string }) {
-  const stage = options.stage;
   const runner = new LabeledProcessRunner();
   await install_deps_for_services(runner);
   // TODO: the line above or below, not both
   await prepare_services(runner);
   if (await stackExists("mfp-prerequisites")) {
-    const deployCmd = [
-      "yarn",
-      "cdk",
-      "deploy",
-      "--context",
-      `stage=${stage}`,
-      "--method=direct",
-      "--all",
-    ];
-    await runner.run_command_and_output("CDK deploy", deployCmd, ".");
+    await runner.run_command_and_output(
+      "CDK deploy",
+      [
+        "yarn",
+        "cdk",
+        "deploy",
+        "--context",
+        `stage=${options.stage}`,
+        "--method=direct",
+        "--all",
+      ],
+      "."
+    );
   } else {
     console.error(
       "MISSING PREREQUISITE STACK! Must deploy it before attempting to deploy the application."
