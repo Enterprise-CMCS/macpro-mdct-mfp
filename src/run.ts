@@ -356,6 +356,7 @@ async function destroy({
   await delete_topics(options);
 }
 
+// TODO: update for not SLS
 async function delete_topics(options: { stage: string }) {
   const runner = new LabeledProcessRunner();
   await install_deps_for_services(runner);
@@ -377,6 +378,7 @@ async function delete_topics(options: { stage: string }) {
   );
 }
 
+// TODO: update for not SLS
 async function list_topics(options: { stage: string | undefined }) {
   const runner = new LabeledProcessRunner();
   await install_deps_for_services(runner);
