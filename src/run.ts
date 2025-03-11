@@ -175,30 +175,27 @@ async function run_local() {
   process.env.AWS_SECRET_ACCESS_KEY = "localstack";
   process.env.AWS_ENDPOINT_URL = "http://localhost:4566";
 
-  const cdklocalBootstrapCmd = [
-    "yarn",
-    "cdklocal",
-    "bootstrap",
-    "aws://000000000000/us-east-1",
-    "--context",
-    "stage=localstack",
-  ];
   await runner.run_command_and_output(
     "CDK local bootstrap",
-    cdklocalBootstrapCmd,
+    [
+      "yarn",
+      "cdklocal",
+      "bootstrap",
+      "aws://000000000000/us-east-1",
+      "--context",
+      "stage=localstack",
+    ],
     "."
   );
-
-  const deployLocalPrequisitesCmd = [
-    "yarn",
-    "cdklocal",
-    "deploy",
-    "--app",
-    '"npx tsx deployment/local/prerequisites.ts"',
-  ];
   await runner.run_command_and_output(
     "CDK local prerequisite deploy",
-    deployLocalPrequisitesCmd,
+    [
+      "yarn",
+      "cdklocal",
+      "deploy",
+      "--app",
+      '"npx tsx deployment/prerequisites.ts"',
+    ],
     "."
   );
 
