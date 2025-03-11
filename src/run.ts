@@ -446,7 +446,6 @@ yargs(process.argv.slice(2))
     "destroy a cdk stage in AWS",
     {
       stage: { type: "string", demandOption: true },
-      service: { type: "string", demandOption: false },
       wait: { type: "boolean", demandOption: false, default: true },
       verify: { type: "boolean", demandOption: false, default: true },
     },
