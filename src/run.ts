@@ -199,21 +199,18 @@ async function run_local() {
     "."
   );
   await runner.run_command_and_output(
-    "CDK prerequisite deploy",
-    deployPrequisitesCmd,
+    "CDK local deploy",
+    [
+      "yarn",
+      "cdklocal",
+      "deploy",
+      "--context",
+      "stage=localstack",
+      "--all",
+      "--no-rollback",
+    ],
     "."
   );
-
-  const deployCmd = [
-    "yarn",
-    "cdklocal",
-    "deploy",
-    "--context",
-    "stage=localstack",
-    "--all",
-    "--no-rollback",
-  ];
-  await runner.run_command_and_output("CDK deploy", deployCmd, ".");
 
   const watchCmd = [
     "yarn",
