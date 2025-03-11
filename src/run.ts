@@ -150,13 +150,10 @@ async function getCloudFormationStackOutputValue(
   stackName: string,
   outputName: string
 ) {
-  const cloudFormationClient = new CloudFormationClient({
-    region: "us-east-1",
-  });
+  const cloudFormationClient = new CloudFormationClient({ region });
   const command = new DescribeStacksCommand({ StackName: stackName });
-  const response = cloudFormationClient.send(command);
-
-  return (await response).Stacks?.[0]?.Outputs?.find(
+  const response = await cloudFormationClient.send(command);
+  return response.Stacks?.[0]?.Outputs?.find(
     (output) => output.OutputKey === outputName
   )?.OutputValue;
 }
