@@ -436,9 +436,7 @@ yargs(process.argv.slice(2))
   .command(
     "deploy",
     "deploy the app with cdk to the cloud",
-    {
-      stage: { type: "string", demandOption: true },
-    },
+    { stage: { type: "string", demandOption: true } },
     deploy
   )
   .command(
