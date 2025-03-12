@@ -1,4 +1,4 @@
-import { test as setup } from "@playwright/test";
+import { expect, test as setup } from "@playwright/test";
 
 import { adminPassword, adminUser, statePassword, stateUser } from "./consts";
 
@@ -13,12 +13,11 @@ setup("authenticate as admin", async ({ page }) => {
   await passwordInput.fill(adminPassword);
   await loginButton.click();
   await page.waitForURL("/");
-  await page
-    .getByRole("heading", {
+  await expect(
+    page.getByRole("heading", {
       name: "View State/Territory Reports",
     })
-    .isVisible();
-  await page.waitForTimeout(1000);
+  ).toBeVisible();
   await page.context().storageState({ path: adminFile });
 });
 
@@ -33,11 +32,10 @@ setup("authenticate as user", async ({ page }) => {
   await passwordInput.fill(statePassword);
   await loginButton.click();
   await page.waitForURL("/");
-  await page
-    .getByRole("heading", {
+  await expect(
+    page.getByRole("heading", {
       name: "Money Follows the Person (MFP) Portal",
     })
-    .isVisible();
-  await page.waitForTimeout(1000);
+  ).toBeVisible();
   await page.context().storageState({ path: userFile });
 });
