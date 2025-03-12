@@ -7,6 +7,8 @@ import { WPTransitionBenchmarkProjectionsPage } from "../utils/pageObjects/wp/wp
 import { WPTransitionBenchmarkStrategyPage } from "../utils/pageObjects/wp/wpTransitionBenchmarkStrategy.page";
 import { WPInitiativesInstructionsPage } from "../utils/pageObjects/wp/wpInitiativesInstructions.page";
 import { WPInitiativesDashboardPage } from "../utils/pageObjects/wp/wpInitiativesDashboard.page";
+import { WPInitiativeOverlayPage } from "../utils/pageObjects/wp/wpInitiativeOverlay.page";
+import { WPReviewAndSubmitPage } from "../utils/pageObjects/wp/wpReviewAndSubmit.page";
 import AdminHomePage from "../utils/pageObjects/adminHome.page";
 
 let userPage: Page;
@@ -20,6 +22,7 @@ let wpTransitionBenchmarkProjections: WPTransitionBenchmarkProjectionsPage;
 let wpTransitionBenchmarkStrategy: WPTransitionBenchmarkStrategyPage;
 let wpInitiativesInstructions: WPInitiativesInstructionsPage;
 let wpInitiativesDashboard: WPInitiativesDashboardPage;
+let wpReviewAndSubmit: WPReviewAndSubmitPage;
 let adminHomePage: AdminHomePage;
 let adminWpDashboard: WPDashboardPage;
 
@@ -45,6 +48,7 @@ test.describe("Creating a new Work Plan", () => {
     );
     wpInitiativesInstructions = new WPInitiativesInstructionsPage(userPage);
     wpInitiativesDashboard = new WPInitiativesDashboardPage(userPage);
+    wpReviewAndSubmit = new WPReviewAndSubmitPage(userPage);
     adminHomePage = new AdminHomePage(adminPage);
     adminWpDashboard = new WPDashboardPage(adminPage);
   });
@@ -144,5 +148,50 @@ test.describe("Creating a new Work Plan", () => {
     }
 
     await expect(wpInitiativesDashboard.alert).not.toBeVisible();
+
+    // Initiatives Overlays
+    const initiatives = await wpInitiativesDashboard.page
+      .getByRole("row", {
+        name: "Edit",
+      })
+      .all();
+
+    for (const initiative of initiatives) {
+      await initiative.getByRole("button", { name: "edit button" }).click();
+      const overlayPage = new WPInitiativeOverlayPage(userPage);
+      await overlayPage.isReady();
+
+      await overlayPage.completeDefineInitiative(userPage);
+      await overlayPage.completeEvaluationPlan(userPage);
+      await overlayPage.completeFundingSources(userPage);
+      await overlayPage.isReady();
+      const errorIcons = await wpReviewAndSubmit.page
+        .getByAltText("warning icon")
+        .all();
+      await expect(errorIcons.length).toBe(0);
+
+      await overlayPage.backButton.click();
+    }
+
+    await wpInitiativesDashboard.isReady();
+
+    // Review and Submit
+    await wpInitiativesDashboard.continueButton.click();
+    await wpReviewAndSubmit.isReady();
+    const errorIcons = await wpReviewAndSubmit.page
+      .getByAltText("Error notification")
+      .all();
+    await expect(errorIcons.length).toBe(0);
+
+    await wpReviewAndSubmit.submitButton.click();
+    await wpReviewAndSubmit.confirmSubmit();
+
+    // Confirmation
+    await wpReviewAndSubmit.isReady();
+    await expect(
+      wpReviewAndSubmit.page.getByRole("heading", {
+        name: "Successfully Submitted",
+      })
+    ).toBeVisible();
   });
 });
