@@ -207,7 +207,7 @@ jobs:
     name: E2E Integration Tests
     needs:
       - deploy
-      - register-runner
+      # - register-runner
     if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' }}
     runs-on: ubuntu-latest
     steps:
@@ -243,7 +243,7 @@ jobs:
     name: E2E A11y Tests
     needs:
       - deploy
-      - register-runner
+      # - register-runner
     if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' }}
     runs-on: ubuntu-latest
     steps:
@@ -276,9 +276,9 @@ jobs:
     name: Playwright Tests
     needs:
       - deploy
-      - register-runner
-      - e2e-test
-      - a11y-tests
+      # - register-runner
+      # - e2e-test
+      # - a11y-tests
     if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
