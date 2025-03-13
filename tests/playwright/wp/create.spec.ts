@@ -199,4 +199,32 @@ test.describe("Creating a new Work Plan", () => {
       })
     ).toBeVisible();
   });
+
+  test("Admin user can deny a work plan", async () => {
+    const page = adminWpDashboard.page;
+    const unlockButton = page.getByRole("button", { name: "Unlock" }).first();
+    const modal = page.getByRole("dialog");
+
+    await adminWpDashboard.goto();
+    await unlockButton.click();
+    await modal
+      .getByRole("heading", { name: "You unlocked this Work Plan" })
+      .isVisible();
+    await modal.getByRole("button", { name: "Return to dashboard" }).click();
+    await expect(unlockButton).toBeDisabled();
+  });
+
+  test("State user can resubmit a work plan", async () => {
+    await wpDashboard.goto();
+    await wpDashboard.firstReport.getByRole("button", { name: "Edit" }).click();
+    await wpGeneralInformation.isReady();
+    await wpReviewAndSubmit.goto();
+    await expect(wpReviewAndSubmit.submitButton).toBeEnabled();
+    await wpReviewAndSubmit.submitButton.click();
+    await wpReviewAndSubmit.confirmSubmit();
+    await adminWpDashboard.goto();
+    await expect(
+      adminWpDashboard.page.getByTestId("dashboard-submission-count").first()
+    ).toContainText("2");
+  });
 });
