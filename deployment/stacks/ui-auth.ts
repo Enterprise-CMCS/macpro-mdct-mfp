@@ -90,37 +90,63 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
   let supportedIdentityProviders:
     | cognito.UserPoolClientIdentityProvider[]
     | undefined = undefined;
-  let oktaIdp: cognito.CfnUserPoolIdentityProvider | undefined = undefined;
 
   const providerName = "Okta";
-
-  oktaIdp = new cognito.CfnUserPoolIdentityProvider(
-    scope,
-    "CognitoUserPoolIdentityProvider",
-    {
-      providerName,
-      providerType: "SAML",
-      userPoolId: userPool.userPoolId,
-      providerDetails: {
-        MetadataURL: oktaMetadataUrl,
-      },
-      attributeMapping: {
-        email:
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-        family_name:
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
-        given_name:
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
-        "custom:cms_roles": "cmsRoles",
-        "custom:cms_state": "state",
-      },
-      idpIdentifiers: ["IdpIdentifier"],
-    }
-  );
 
   supportedIdentityProviders = [
     cognito.UserPoolClientIdentityProvider.custom(providerName),
   ];
+
+  if (oktaMetadataUrl) {
+    new cognito.CfnUserPoolIdentityProvider(
+      scope,
+      "OktaUserPoolIdentityProviderSAML",
+      {
+        providerName,
+        providerType: "SAML",
+        userPoolId: userPool.userPoolId,
+        providerDetails: {
+          MetadataURL: oktaMetadataUrl,
+        },
+        attributeMapping: {
+          email:
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+          given_name:
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
+          family_name:
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
+          "custom:cms_roles": "cmsRoles",
+          "custom:cms_state": "state",
+        },
+        idpIdentifiers: ["IdpIdentifier"],
+      }
+    );
+  } else if (oktaOidcClientId && oktaOidcClientSecret && oktaOidcIssuer) {
+    new cognito.CfnUserPoolIdentityProvider(
+      scope,
+      "OktaUserPoolIdentityProviderOIDC",
+      {
+        providerName,
+        providerType: "OIDC",
+        userPoolId: userPool.userPoolId,
+        providerDetails: {
+          client_id: oktaOidcClientId,
+          client_secret: oktaOidcClientSecret,
+          oidc_issuer: oktaOidcIssuer,
+          attributes_request_method: "GET",
+          authorize_scopes: "email openid profile",
+        },
+        attributeMapping: {
+          email: "email",
+          given_name: "given_name",
+          family_name: "family_name",
+          "custom:cms_roles": "cms-roles",
+          "custom:cms_state": "state",
+        },
+        idpIdentifiers: ["IdpIdentifierOIDC"],
+      }
+    );
+  }
 
   const appUrl =
     secureCloudfrontDomainName ||
@@ -147,8 +173,6 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     idTokenValidity: Duration.minutes(30),
     refreshTokenValidity: Duration.hours(24),
   });
-
-  userPoolClient.node.addDependency(oktaIdp);
 
   (
     userPoolClient.node.defaultChild as cognito.CfnUserPoolClient
