@@ -132,9 +132,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     userPool,
     authFlows: { adminUserPassword: true },
     oAuth: {
-      flows: {
-        implicitCodeGrant: true,
-      },
+      flows: { authorizationCodeGrant: true },
       scopes: [
         cognito.OAuthScope.EMAIL,
         cognito.OAuthScope.OPENID,
