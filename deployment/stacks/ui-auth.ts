@@ -26,9 +26,13 @@ interface CreateUiAuthComponentsProps {
   iamPath: string;
   iamPermissionsBoundary: IManagedPolicy;
   oktaMetadataUrl: string;
+  oktaOidcClientId?: string;
+  oktaOidcClientSecret?: string;
+  oktaOidcIssuer?: string;
   bootstrapUsersPassword?: string;
   secureCloudfrontDomainName?: string;
   userPoolDomainPrefix?: string;
+  sesSourceEmailAddress?: string;
 }
 
 export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
@@ -43,9 +47,13 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     iamPath,
     iamPermissionsBoundary,
     oktaMetadataUrl,
+    oktaOidcClientId,
+    oktaOidcClientSecret,
+    oktaOidcIssuer,
     bootstrapUsersPassword,
     secureCloudfrontDomainName,
     userPoolDomainPrefix,
+    sesSourceEmailAddress,
   } = props;
 
   const userPool = new cognito.UserPool(scope, "UserPool", {
@@ -59,15 +67,11 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     selfSignUpEnabled: false,
     standardAttributes: {
       givenName: {
-        required: false,
+        required: true,
         mutable: true,
       },
       familyName: {
-        required: false,
-        mutable: true,
-      },
-      phoneNumber: {
-        required: false,
+        required: true,
         mutable: true,
       },
     },
