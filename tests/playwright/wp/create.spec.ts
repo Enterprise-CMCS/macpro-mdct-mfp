@@ -162,18 +162,23 @@ test.describe("Creating a new Work Plan", () => {
       await overlayPage.isReady();
 
       await overlayPage.completeDefineInitiative(userPage);
+      await overlayPage.isReady();
+      await expect(overlayPage.defineInitiative.getByAltText("warning icon"))
+        .toBeFalsy;
+
       await overlayPage.completeEvaluationPlan(userPage);
+      await overlayPage.isReady();
+      await expect(overlayPage.evaluationPlan.getByAltText("warning icon"))
+        .toBeFalsy;
+
       await overlayPage.completeFundingSources(userPage);
       await overlayPage.isReady();
-      const errorIcons = await wpReviewAndSubmit.page
-        .getByAltText("warning icon")
-        .all();
-      await expect(errorIcons.length).toBe(0);
+      await expect(overlayPage.fundingSources.getByAltText("warning icon"))
+        .toBeFalsy;
 
       await overlayPage.backButton.click();
+      await wpInitiativesDashboard.isReady();
     }
-
-    await wpInitiativesDashboard.isReady();
 
     // Review and Submit
     await wpInitiativesDashboard.continueButton.click();
