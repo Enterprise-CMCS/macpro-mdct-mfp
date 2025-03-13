@@ -38,14 +38,14 @@ export function deployFrontend(props: DeployFrontendProps) {
     userPoolClientId,
     userPoolClientDomain,
     iamPermissionsBoundary,
-    iamPath
+    iamPath,
   } = props;
 
   const reactAppPath = "./services/ui-src/";
   const buildOutputPath = path.join(reactAppPath, "build");
   const fullPath = path.resolve(reactAppPath);
 
-  execSync("yarn run build", {
+  execSync("SKIP_PREFLIGHT_CHECK=true yarn run build", {
     cwd: fullPath,
     stdio: "inherit",
   });
@@ -97,6 +97,22 @@ export function deployFrontend(props: DeployFrontendProps) {
     }
   );
 
+
+  // TODO: update the below for these additional variables
+  // export APPLICATION_ENDPOINT=${self:custom.application_endpoint}
+  // export COGNITO_IDP_NAME=${self:custom.cognito_idp_name}
+  // export COGNITO_IDP=${self:custom.cognito_idp}
+
+  // export COGNITO_REDIRECT_SIGNOUT=${self:custom.application_signout_url}
+  // export POST_SIGNOUT_REDIRECT=${self:custom.signout_redirect_url}
+  // export REACT_APP_LD_SDK_CLIENT=${self:custom.ldSdkClient}
+  // export S3_ATTACHMENTS_BUCKET_REGION=${self:custom.s3_attachments_bucket_region}
+  // export S3_ATTACHMENTS_BUCKET_NAME=${self:custom.s3_attachments_bucket_name}
+
+  // export LOCAL_LOGIN=false
+  // ./scripts/configure-env.sh
+  // cp public/env-config.js build/env-config.js
+
   const deployTimeConfig = new s3_deployment.DeployTimeSubstitutedFile(
     scope,
     "DeployTimeConfig",
@@ -138,7 +154,9 @@ export function deployFrontend(props: DeployFrontendProps) {
             CallerReference: new Date().toISOString(),
           },
         },
-        physicalResourceId: cr.PhysicalResourceId.of(`InvalidateCloudfront-${stage}`),
+        physicalResourceId: cr.PhysicalResourceId.of(
+          `InvalidateCloudfront-${stage}`
+        ),
       },
       role: deploymentRole,
     }
