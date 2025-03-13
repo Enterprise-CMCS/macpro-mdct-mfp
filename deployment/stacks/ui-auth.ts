@@ -139,11 +139,13 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
         cognito.OAuthScope.PROFILE,
       ],
       callbackUrls: [appUrl],
-      defaultRedirectUri: appUrl,
-      logoutUrls: [appUrl],
+      logoutUrls: [appUrl, `${appUrl}/postLogout`],
     },
     supportedIdentityProviders,
     generateSecret: false,
+    accessTokenValidity: Duration.minutes(30),
+    idTokenValidity: Duration.minutes(30),
+    refreshTokenValidity: Duration.hours(24),
   });
 
   userPoolClient.node.addDependency(oktaIdp);
@@ -157,7 +159,9 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
 
   const userPoolDomain = new cognito.UserPoolDomain(scope, "UserPoolDomain", {
     userPool,
-    cognitoDomain: { domainPrefix: userPoolDomainPrefix || `${stage}-login-user-pool-client` },
+    cognitoDomain: {
+      domainPrefix: userPoolDomainPrefix || `${stage}-login-user-pool-client`,
+    },
   });
 
   const identityPool = new cognito.CfnIdentityPool(
