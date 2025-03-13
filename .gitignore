@@ -26,6 +26,5 @@ tests/playwright-report/
 /blob-report/
 tests/playwright/.cache/
 tests/playwright/.auth
- /.cdk
- cdk.context.json
- 
+/.cdk
+cdk.context.json
