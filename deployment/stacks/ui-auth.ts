@@ -76,7 +76,12 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       },
     },
     customAttributes: {
-      ismemberof: new cognito.StringAttribute({ mutable: true }),
+      cms_roles: new cognito.StringAttribute({ mutable: true }),
+      cms_state: new cognito.StringAttribute({
+        mutable: true,
+        minLen: 0,
+        maxLen: 256,
+      }),
     },
     // advancedSecurityMode: cognito.AdvancedSecurityMode.ENFORCED, DEPRECATED WE NEED FEATURE_PLAN.plus if we want to use StandardThreatProtectionMode.FULL_FUNCTION which I think is the new way to do this
     removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
@@ -85,9 +90,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
   let supportedIdentityProviders:
     | cognito.UserPoolClientIdentityProvider[]
     | undefined = undefined;
-  let oktaIdp:
-    | cognito.CfnUserPoolIdentityProvider
-    | undefined = undefined;
+  let oktaIdp: cognito.CfnUserPoolIdentityProvider | undefined = undefined;
 
   const providerName = "Okta";
 
@@ -108,7 +111,8 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
           "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
         given_name:
           "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
-        "custom:ismemberof": "ismemberof",
+        "custom:cms_roles": "cmsRoles",
+        "custom:cms_state": "state",
       },
       idpIdentifiers: ["IdpIdentifier"],
     }
@@ -119,13 +123,14 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
   ];
 
   const appUrl =
-  secureCloudfrontDomainName || applicationEndpointUrl || "https://localhost:3000/";
+    secureCloudfrontDomainName ||
+    applicationEndpointUrl ||
+    "http://localhost:3000/";
+
   const userPoolClient = new cognito.UserPoolClient(scope, "UserPoolClient", {
     userPoolClientName: `${stage}-user-pool-client`,
     userPool,
-    authFlows: {
-      userPassword: true,
-    },
+    authFlows: { adminUserPassword: true },
     oAuth: {
       flows: {
         implicitCodeGrant: true,
