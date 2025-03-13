@@ -53,9 +53,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     brokerString,
     iamPermissionsBoundary,
     iamPath,
-    wpFormBucket,
-    sarFormBucket,
-    templateBucket,
+    // wpFormBucket, // TODO
+    // sarFormBucket, // TODO
+    // templateBucket, // TODO
   } = props;
 
   const service = "app-api";
@@ -112,9 +112,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   const environment = {
     BOOTSTRAP_BROKER_STRING_TLS: brokerString,
     stage,
-    TEMPLATE_BUCKET: templateBucket.bucketName,
-    WP_FORM_BUCKET: wpFormBucket.bucketName,
-    SAR_FORM_BUCKET: sarFormBucket.bucketName,
+    // TEMPLATE_BUCKET: templateBucket.bucketName,
+    // WP_FORM_BUCKET: wpFormBucket.bucketName,
+    // SAR_FORM_BUCKET: sarFormBucket.bucketName,
     ...Object.fromEntries(
       tables.map((table) => [`${table.id}Table`, table.name])
     ),
@@ -145,17 +145,17 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       ],
       resources: tables.map((table) => table.streamArn).filter(isDefined),
     }),
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
-      resources: [
-        templateBucket.bucketArn,
-        wpFormBucket.bucketArn,
-        sarFormBucket.bucketArn,
-        `${wpFormBucket.bucketArn}/fieldData/*`,
-        `${sarFormBucket.bucketArn}/fieldData/*`,
-      ],
-    }),
+    // new iam.PolicyStatement({
+    //   effect: iam.Effect.ALLOW,
+    //   actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+    //   resources: [
+    //     templateBucket.bucketArn,
+    //     wpFormBucket.bucketArn,
+    //     sarFormBucket.bucketArn,
+    //     `${wpFormBucket.bucketArn}/fieldData/*`,
+    //     `${sarFormBucket.bucketArn}/fieldData/*`,
+    //   ],
+    // }),
   ];
 
   const commonProps = {
@@ -169,7 +169,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   };
 
   new Lambda(scope, "createBanner", {
-    entry: "services/app-api/handlers/banners/create.js",
+    entry: "services/app-api/handlers/banners/create.ts",
     handler: "createBanner",
     path: "/banners/{bannerId}",
     method: "POST",
@@ -177,7 +177,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "deleteBanner", {
-    entry: "services/app-api/handlers/banners/delete.js",
+    entry: "services/app-api/handlers/banners/delete.ts",
     handler: "deleteBanner",
     path: "/banners/{bannerId}",
     method: "DELETE",
@@ -185,7 +185,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "fetchBanner", {
-    entry: "services/app-api/handlers/banners/fetch.js",
+    entry: "services/app-api/handlers/banners/fetch.ts",
     handler: "fetchBanner",
     path: "/banners/{bannerId}",
     method: "GET",
@@ -193,7 +193,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "fetchTemplate", {
-    entry: "services/app-api/handlers/templates/fetch.js",
+    entry: "services/app-api/handlers/templates/fetch.ts",
     handler: "fetchTemplate",
     path: "/templates/{templateName}",
     method: "GET",
@@ -201,7 +201,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "archiveReport", {
-    entry: "services/app-api/handlers/reports/archive.js",
+    entry: "services/app-api/handlers/reports/archive.ts",
     handler: "archiveReport",
     path: "/reports/archive/{reportType}/{state}/{id}",
     method: "PUT",
@@ -209,7 +209,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "createReport", {
-    entry: "services/app-api/handlers/reports/create.js",
+    entry: "services/app-api/handlers/reports/create.ts",
     handler: "createReport",
     path: "/reports/{reportType}/{state}",
     method: "POST",
@@ -217,7 +217,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "fetchReport", {
-    entry: "services/app-api/handlers/reports/fetch.js",
+    entry: "services/app-api/handlers/reports/fetch.ts",
     handler: "fetchReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "GET",
@@ -225,7 +225,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "fetchReportsByState", {
-    entry: "services/app-api/handlers/reports/fetch.js",
+    entry: "services/app-api/handlers/reports/fetch.ts",
     handler: "fetchReportsByState",
     path: "/reports/{reportType}/{state}",
     method: "GET",
@@ -233,7 +233,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "releaseReport", {
-    entry: "services/app-api/handlers/reports/release.js",
+    entry: "services/app-api/handlers/reports/release.ts",
     handler: "releaseReport",
     path: "/reports/release/{reportType}/{state}/{id}",
     method: "PUT",
@@ -241,7 +241,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "submitReport", {
-    entry: "services/app-api/handlers/reports/submit.js",
+    entry: "services/app-api/handlers/reports/submit.ts",
     handler: "submitReport",
     path: "/reports/submit/{reportType}/{state}/{id}",
     method: "POST",
@@ -249,7 +249,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "updateReport", {
-    entry: "services/app-api/handlers/reports/update.js",
+    entry: "services/app-api/handlers/reports/update.ts",
     handler: "updateReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "PUT",
@@ -257,7 +257,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new Lambda(scope, "approveReport", {
-    entry: "services/app-api/handlers/reports/approve.js",
+    entry: "services/app-api/handlers/reports/approve.ts",
     handler: "approveReport",
     path: "/reports/approve/{reportType}/{state}/{id}",
     method: "PUT",
@@ -265,7 +265,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new LambdaDynamoEventSource(scope, "postKafkaData", {
-    entry: "services/app-api/handlers/kafka/post/postKafkaData.js",
+    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     timeout: Duration.seconds(120),
     memorySize: 2048,
@@ -288,51 +288,51 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   };
 
   const postWpBucketDataLambda = new Lambda(scope, "postWpBucketData", {
-    entry: "services/app-api/handlers/kafka/post/postKafkaData.js",
+    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
   }).lambda;
 
-  wpFormBucket.addEventNotification(
-    s3.EventType.OBJECT_CREATED,
-    new s3notifications.LambdaDestination(postWpBucketDataLambda),
-    {
-      prefix: "fieldData/",
-      suffix: ".json",
-    }
-  );
-  wpFormBucket.addEventNotification(
-    s3.EventType.OBJECT_TAGGING_PUT,
-    new s3notifications.LambdaDestination(postWpBucketDataLambda),
-    {
-      prefix: "fieldData/",
-      suffix: ".json",
-    }
-  );
+  // wpFormBucket.addEventNotification(
+  //   s3.EventType.OBJECT_CREATED,
+  //   new s3notifications.LambdaDestination(postWpBucketDataLambda),
+  //   {
+  //     prefix: "fieldData/",
+  //     suffix: ".json",
+  //   }
+  // );
+  // wpFormBucket.addEventNotification(
+  //   s3.EventType.OBJECT_TAGGING_PUT,
+  //   new s3notifications.LambdaDestination(postWpBucketDataLambda),
+  //   {
+  //     prefix: "fieldData/",
+  //     suffix: ".json",
+  //   }
+  // );
 
   const postSarBucketDataLambda = new Lambda(scope, "postSarBucketData", {
-    entry: "services/app-api/handlers/kafka/post/postKafkaData.js",
+    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
   }).lambda;
 
-  sarFormBucket.addEventNotification(
-    s3.EventType.OBJECT_CREATED,
-    new s3notifications.LambdaDestination(postSarBucketDataLambda),
-    {
-      prefix: "fieldData/",
-      suffix: ".json",
-    }
-  );
+  // sarFormBucket.addEventNotification(
+  //   s3.EventType.OBJECT_CREATED,
+  //   new s3notifications.LambdaDestination(postSarBucketDataLambda),
+  //   {
+  //     prefix: "fieldData/",
+  //     suffix: ".json",
+  //   }
+  // );
 
-  sarFormBucket.addEventNotification(
-    s3.EventType.OBJECT_TAGGING_PUT,
-    new s3notifications.LambdaDestination(postSarBucketDataLambda),
-    {
-      prefix: "fieldData/",
-      suffix: ".json",
-    }
-  );
+  // sarFormBucket.addEventNotification(
+  //   s3.EventType.OBJECT_TAGGING_PUT,
+  //   new s3notifications.LambdaDestination(postSarBucketDataLambda),
+  //   {
+  //     prefix: "fieldData/",
+  //     suffix: ".json",
+  //   }
+  // );
 
   if (!isLocalStack) {
     const waf = new WafConstruct(
