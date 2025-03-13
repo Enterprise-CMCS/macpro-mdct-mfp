@@ -9,13 +9,13 @@ import {
 } from "aws-cdk-lib";
 import { DeploymentConfigProperties } from "../deployment-config";
 import { createDataComponents } from "./data";
-// import { createUiAuthComponents } from "./ui-auth";
-// import { createUiComponents } from "./ui";
+import { createUiAuthComponents } from "./ui-auth";
+import { createUiComponents } from "./ui";
 import { createApiComponents } from "./api";
 import { sortSubnets } from "../utils/vpc";
-// import { deployFrontend } from "./deployFrontend";
+import { deployFrontend } from "./deployFrontend";
 import { createCustomResourceRole } from "./customResourceRole";
-// import { isLocalStack } from "../local/util";
+import { isLocalStack } from "../local/util";
 
 export class ParentStack extends Stack {
   constructor(
@@ -61,42 +61,40 @@ export class ParentStack extends Stack {
       tables,
     });
 
-    // if (!isLocalStack) {
-    //   const {
-    //     applicationEndpointUrl,
-    //     distribution,
-    //     uiBucket,
-    //   } = createUiComponents({ ...commonProps });
+    if (!isLocalStack) {
+      const { applicationEndpointUrl, distribution, uiBucket } =
+        createUiComponents({ ...commonProps });
 
-    //   const {
-    //     userPoolDomainName,
-    //     identityPoolId,
-    //     userPoolId,
-    //     userPoolClientId,
-    //   } = createUiAuthComponents({
-    //     ...commonProps,
-    //     applicationEndpointUrl,
-    //     restApiId,
-    //     customResourceRole
-    //   });
+      const {
+        userPoolDomainName,
+        identityPoolId,
+        userPoolId,
+        userPoolClientId,
+      } = createUiAuthComponents({
+        ...commonProps,
+        applicationEndpointUrl,
+        restApiId,
+        customResourceRole,
+      });
 
-    //   deployFrontend({
-    //     ...commonProps,
-    //     uiBucket,
-    //     distribution,
-    //     apiGatewayRestApiUrl,
-    //     applicationEndpointUrl: props.secureCloudfrontDomainName || applicationEndpointUrl,
-    //     identityPoolId,
-    //     userPoolId,
-    //     userPoolClientId,
-    //     userPoolClientDomain: `${userPoolDomainName}.auth.${this.region}.amazoncognito.com`,
-    //     customResourceRole,
-    //   });
+      deployFrontend({
+        ...commonProps,
+        uiBucket,
+        distribution,
+        apiGatewayRestApiUrl,
+        applicationEndpointUrl:
+          props.secureCloudfrontDomainName || applicationEndpointUrl,
+        identityPoolId,
+        userPoolId,
+        userPoolClientId,
+        userPoolClientDomain: `${userPoolDomainName}.auth.${this.region}.amazoncognito.com`,
+        customResourceRole,
+      });
 
-    //   new CfnOutput(this, "CloudFrontUrl", {
-    //     value: applicationEndpointUrl,
-    //   });
-    // }
+      new CfnOutput(this, "CloudFrontUrl", {
+        value: applicationEndpointUrl,
+      });
+    }
     new CfnOutput(this, "ApiUrl", {
       value: apiGatewayRestApiUrl,
     });
