@@ -53,7 +53,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     bootstrapUsersPassword,
     secureCloudfrontDomainName,
     userPoolDomainPrefix,
-    sesSourceEmailAddress,
+    sesSourceEmailAddress, // TODO: fix this not being used.  reference serverless.yml conditional CreateEmailConfiguration
   } = props;
 
   const userPool = new cognito.UserPool(scope, "UserPool", {
@@ -64,6 +64,9 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     autoVerify: {
       email: true,
     },
+    // email: {
+
+    // }
     selfSignUpEnabled: false,
     standardAttributes: {
       givenName: {
