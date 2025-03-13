@@ -36,9 +36,9 @@ interface CreateApiComponentsProps {
   brokerString: string;
   iamPermissionsBoundary: iam.IManagedPolicy;
   iamPath: string;
-  wpFormBucket: s3.IBucket;
-  sarFormBucket: s3.IBucket;
-  templateBucket: s3.IBucket;
+  // wpFormBucket: s3.IBucket;
+  // sarFormBucket: s3.IBucket;
+  // templateBucket: s3.IBucket;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
