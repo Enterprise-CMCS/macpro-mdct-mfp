@@ -9,7 +9,7 @@ import {
   DescribeStacksCommand,
   waitUntilStackDeleteComplete,
 } from "@aws-sdk/client-cloudformation";
-import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
+// import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
 
 // load .env
@@ -118,10 +118,11 @@ async function run_cdk_watch(
 
 function isColimaRunning() {
   try {
-    return execSync("colima status", {
+    const output = execSync("colima status 2>&1", {
       encoding: "utf-8",
       stdio: "pipe",
-    }).includes("running");
+    }).trim();
+    return output.includes("running");
   } catch {
     return false;
   }
@@ -227,11 +228,13 @@ async function run_local() {
 
 // TODO: may not be needed anymore.
 async function install_deps_for_services(runner: LabeledProcessRunner) {
-  await runner.run_command_and_output(
-    "Installing Dependencies",
-    ["yarn", "install", "--frozen-lockfile"],
-    `services/${service}`
-  );
+  for (const service of deployedServices) {
+    await runner.run_command_and_output(
+      "Installing Dependencies",
+      ["yarn", "install", "--frozen-lockfile"],
+      `services/${service}`
+    );
+  }
 }
 
 async function install_deps(runner: LabeledProcessRunner, service: string) {
@@ -353,7 +356,7 @@ async function destroy({
     );
   }
 
-  await delete_topics(options);
+  await delete_topics({ stage });
 }
 
 // TODO: update for not SLS
