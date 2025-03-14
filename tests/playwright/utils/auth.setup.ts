@@ -1,8 +1,13 @@
 import { expect, test as setup } from "@playwright/test";
 
-import { adminPassword, adminUser, statePassword, stateUser } from "./consts";
-
-const adminFile = "playwright/.auth/admin.json";
+import {
+  adminAuthPath,
+  adminPassword,
+  adminUser,
+  statePassword,
+  stateUser,
+  stateUserAuthPath,
+} from "./consts";
 
 setup("authenticate as admin", async ({ page }) => {
   await page.goto("/");
@@ -18,10 +23,8 @@ setup("authenticate as admin", async ({ page }) => {
       name: "View State/Territory Reports",
     })
   ).toBeVisible();
-  await page.context().storageState({ path: adminFile });
+  await page.context().storageState({ path: adminAuthPath });
 });
-
-const userFile = "playwright/.auth/user.json";
 
 setup("authenticate as user", async ({ page }) => {
   await page.goto("/");
@@ -37,5 +40,5 @@ setup("authenticate as user", async ({ page }) => {
       name: "Money Follows the Person (MFP) Portal",
     })
   ).toBeVisible();
-  await page.context().storageState({ path: userFile });
+  await page.context().storageState({ path: stateUserAuthPath });
 });

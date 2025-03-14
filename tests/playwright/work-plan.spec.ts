@@ -10,6 +10,7 @@ import { WPInitiativesDashboardPage } from "./utils/pageObjects/wp/wpInitiatives
 import { WPInitiativeOverlayPage } from "./utils/pageObjects/wp/wpInitiativeOverlay.page";
 import { WPReviewAndSubmitPage } from "./utils/pageObjects/wp/wpReviewAndSubmit.page";
 import AdminHomePage from "./utils/pageObjects/adminHome.page";
+import { adminAuthPath, stateUserAuthPath } from "./utils";
 
 let userPage: Page;
 let userContext: BrowserContext;
@@ -29,10 +30,10 @@ let adminWpDashboard: WPDashboardPage;
 test.describe("Creating a new Work Plan", () => {
   test.beforeAll(async ({ browser }) => {
     userContext = await browser.newContext({
-      storageState: "playwright/.auth/user.json",
+      storageState: stateUserAuthPath,
     });
     adminContext = await browser.newContext({
-      storageState: "playwright/.auth/admin.json",
+      storageState: adminAuthPath,
     });
     userPage = await userContext.newPage();
     adminPage = await adminContext.newPage();

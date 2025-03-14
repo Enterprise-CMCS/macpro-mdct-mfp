@@ -2,6 +2,7 @@ import { expect, test } from "../utils/fixtures/base";
 import { BrowserContext, Page } from "@playwright/test";
 import ProfilePage from "../utils/pageObjects/profile.page";
 import BannerEditorPage from "../utils/pageObjects/banner.page";
+import { adminAuthPath, stateUserAuthPath } from "../utils";
 
 let adminPage: Page;
 let userPage: Page;
@@ -9,12 +10,12 @@ let adminContext: BrowserContext;
 let userContext: BrowserContext;
 test.beforeAll(async ({ browser }) => {
   adminContext = await browser.newContext({
-    storageState: "playwright/.auth/admin.json",
+    storageState: adminAuthPath,
   });
   adminPage = await adminContext.newPage();
 
   userContext = await browser.newContext({
-    storageState: "playwright/.auth/user.json",
+    storageState: stateUserAuthPath,
   });
   userPage = await userContext.newPage();
 });
