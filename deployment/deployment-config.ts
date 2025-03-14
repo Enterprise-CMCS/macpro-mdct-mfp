@@ -22,10 +22,13 @@ export const determineDeploymentConfig = async (stage: string) => {
   const isDev =
     isLocalStack ||
     !["master", "main", "val", "production", "jon-cdk"].includes(stage); // TODO: remove jon-cdk after main is deployed
-  const secretConfigOptions = {
-    ...(await loadDefaultSecret(project)),
-    ...(await loadStageSecret(project, stage)),
-  };
+  const isBootstrap = stage === "bootstrap";
+  const secretConfigOptions = isBootstrap
+    ? {}
+    : {
+        ...(await loadDefaultSecret(project, stage)),
+        ...(await loadStageSecret(project, stage)),
+      };
 
   const config = {
     project,
@@ -37,7 +40,7 @@ export const determineDeploymentConfig = async (stage: string) => {
     config.secureCloudfrontDomainName = `https://${config.cloudfrontDomainName}/`;
   }
 
-  if (!isLocalStack) {
+  if (!isLocalStack && !isBootstrap) {
     validateConfig(config);
   }
 
