@@ -16,6 +16,7 @@ import { sortSubnets } from "../utils/vpc";
 import { deployFrontend } from "./deployFrontend";
 import { createCustomResourceRole } from "./customResourceRole";
 import { isLocalStack } from "../local/util";
+import { createTopicsComponents } from "./topics";
 
 export class ParentStack extends Stack {
   constructor(
@@ -95,6 +96,13 @@ export class ParentStack extends Stack {
         value: applicationEndpointUrl,
       });
     }
+
+    createTopicsComponents({
+      ...commonProps,
+      vpc,
+      privateSubnets,
+    });
+
     new CfnOutput(this, "ApiUrl", {
       value: apiGatewayRestApiUrl,
     });
