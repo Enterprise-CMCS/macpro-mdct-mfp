@@ -11,6 +11,11 @@ import {
 } from "@aws-sdk/client-cloudformation";
 // import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
+import fs from "fs";
+import { pipeline } from "stream";
+import { promisify } from "util";
+
+const streamPipeline = promisify(pipeline);
 
 // load .env
 dotenv.config();
@@ -290,6 +295,7 @@ async function deploy(options: { stage: string }) {
   // TODO: the line above or below, not both
   await prepare_services(runner);
   if (await stackExists("mfp-prerequisites")) {
+    await downloadClamAvLayer();
     await runner.run_command_and_output(
       "CDK deploy",
       [
@@ -401,6 +407,26 @@ async function list_topics(options: { stage: string | undefined }) {
     "List topics",
     deployCmd,
     "services/topics"
+  );
+}
+
+async function downloadClamAvLayer() {
+  const url =
+    "https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip";
+  const outputPath = "services/uploads/lambda_layer.zip";
+
+  if (fs.existsSync(outputPath)) return;
+
+  const res = await fetch(url);
+
+  if (!res.ok) throw new Error(`Failed to download, status: ${res.status}`);
+
+  if (!res.body)
+    throw new Error("Response body is null, cannot download file.");
+
+  await streamPipeline(
+    res.body as unknown as NodeJS.ReadableStream,
+    fs.createWriteStream(outputPath)
   );
 }
 
