@@ -1,15 +1,15 @@
 import { BrowserContext, Page } from "@playwright/test";
-import { test, expect } from "../utils/fixtures/base";
-import StateHomePage from "../utils/pageObjects/stateHome.page";
-import { WPDashboardPage } from "../utils/pageObjects/wp/wpDashboard.page";
-import { WPGeneralInformationPage } from "../utils/pageObjects/wp/wpGeneral.page";
-import { WPTransitionBenchmarkProjectionsPage } from "../utils/pageObjects/wp/wpTransitionBenchmarkProjections.page";
-import { WPTransitionBenchmarkStrategyPage } from "../utils/pageObjects/wp/wpTransitionBenchmarkStrategy.page";
-import { WPInitiativesInstructionsPage } from "../utils/pageObjects/wp/wpInitiativesInstructions.page";
-import { WPInitiativesDashboardPage } from "../utils/pageObjects/wp/wpInitiativesDashboard.page";
-import { WPInitiativeOverlayPage } from "../utils/pageObjects/wp/wpInitiativeOverlay.page";
-import { WPReviewAndSubmitPage } from "../utils/pageObjects/wp/wpReviewAndSubmit.page";
-import AdminHomePage from "../utils/pageObjects/adminHome.page";
+import { test, expect } from "./utils/fixtures/base";
+import StateHomePage from "./utils/pageObjects/stateHome.page";
+import { WPDashboardPage } from "./utils/pageObjects/wp/wpDashboard.page";
+import { WPGeneralInformationPage } from "./utils/pageObjects/wp/wpGeneral.page";
+import { WPTransitionBenchmarkProjectionsPage } from "./utils/pageObjects/wp/wpTransitionBenchmarkProjections.page";
+import { WPTransitionBenchmarkStrategyPage } from "./utils/pageObjects/wp/wpTransitionBenchmarkStrategy.page";
+import { WPInitiativesInstructionsPage } from "./utils/pageObjects/wp/wpInitiativesInstructions.page";
+import { WPInitiativesDashboardPage } from "./utils/pageObjects/wp/wpInitiativesDashboard.page";
+import { WPInitiativeOverlayPage } from "./utils/pageObjects/wp/wpInitiativeOverlay.page";
+import { WPReviewAndSubmitPage } from "./utils/pageObjects/wp/wpReviewAndSubmit.page";
+import AdminHomePage from "./utils/pageObjects/adminHome.page";
 
 let userPage: Page;
 let userContext: BrowserContext;
