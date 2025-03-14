@@ -43,7 +43,7 @@ test.describe("Admin profile", () => {
   );
 
   test(
-    "Is accessible on all device types for admin user",
+    "Profile page is accessible on all device types for admin user",
     { tag: "@admin" },
     async () => {
       const profilePage = new ProfilePage(adminPage);
@@ -69,7 +69,7 @@ test.describe("State user profile", { tag: "@user" }, () => {
     await profilePage.isReady();
   });
 
-  test("Is accessible on all device types for state user", async () => {
+  test("Profile page is accessible on all device types for state user", async () => {
     const profilePage = new ProfilePage(userPage);
     await profilePage.goto();
     await profilePage.e2eA11y();
