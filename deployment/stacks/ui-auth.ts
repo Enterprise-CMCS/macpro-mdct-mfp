@@ -93,15 +93,12 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
   let supportedIdentityProviders:
     | cognito.UserPoolClientIdentityProvider[]
     | undefined = undefined;
+  let oktaIdp: cognito.CfnUserPoolIdentityProvider | undefined = undefined;
 
   const providerName = "Okta";
 
-  supportedIdentityProviders = [
-    cognito.UserPoolClientIdentityProvider.custom(providerName),
-  ];
-
   if (oktaMetadataUrl) {
-    new cognito.CfnUserPoolIdentityProvider(
+    oktaIdp = new cognito.CfnUserPoolIdentityProvider(
       scope,
       "OktaUserPoolIdentityProviderSAML",
       {
@@ -124,8 +121,12 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
         idpIdentifiers: ["IdpIdentifier"],
       }
     );
+    supportedIdentityProviders = [
+      cognito.UserPoolClientIdentityProvider.custom(providerName),
+    ];
   } else if (oktaOidcClientId && oktaOidcClientSecret && oktaOidcIssuer) {
-    new cognito.CfnUserPoolIdentityProvider(
+    // TODO: This appears to never be used in any environment.
+    oktaIdp = new cognito.CfnUserPoolIdentityProvider(
       scope,
       "OktaUserPoolIdentityProviderOIDC",
       {
@@ -149,6 +150,9 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
         idpIdentifiers: ["IdpIdentifierOIDC"],
       }
     );
+    supportedIdentityProviders = [
+      cognito.UserPoolClientIdentityProvider.custom(providerName),
+    ];
   }
 
   const appUrl =
@@ -177,12 +181,13 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     refreshTokenValidity: Duration.hours(24),
   });
 
+  if (oktaIdp) {
+    userPoolClient.node.addDependency(oktaIdp);
+  }
+
   (
     userPoolClient.node.defaultChild as cognito.CfnUserPoolClient
-  ).addPropertyOverride("ExplicitAuthFlows", [
-    "ADMIN_NO_SRP_AUTH",
-    "USER_PASSWORD_AUTH",
-  ]);
+  ).addPropertyOverride("ExplicitAuthFlows", ["ADMIN_NO_SRP_AUTH"]);
 
   const userPoolDomain = new cognito.UserPoolDomain(scope, "UserPoolDomain", {
     userPool,
