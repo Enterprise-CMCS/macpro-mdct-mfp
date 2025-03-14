@@ -17,6 +17,7 @@ import { deployFrontend } from "./deployFrontend";
 import { createCustomResourceRole } from "./customResourceRole";
 import { isLocalStack } from "../local/util";
 import { createTopicsComponents } from "./topics";
+import { createUploadsComponents } from "./uploads";
 
 export class ParentStack extends Stack {
   constructor(
@@ -101,6 +102,10 @@ export class ParentStack extends Stack {
       ...commonProps,
       vpc,
       privateSubnets,
+    });
+
+    createUploadsComponents({
+      ...commonProps,
     });
 
     new CfnOutput(this, "ApiUrl", {
