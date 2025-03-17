@@ -311,6 +311,7 @@ async function deploy(options: { stage: string }) {
     );
   } else {
     // TODO: FYI, I got this error when my internet connection was down, so we could improve the logic here.
+    // TODO: FYI, I got this error when my AWS credentials were expired, so we could improve the logic here.
     console.error(
       "MISSING PREREQUISITE STACK! Must deploy it before attempting to deploy the application."
     );
