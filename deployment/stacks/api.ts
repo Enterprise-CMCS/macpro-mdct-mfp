@@ -168,6 +168,13 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     iamPath,
   };
 
+  const requestValidator = new apigateway.RequestValidator(scope, `Validator`, {
+    requestValidatorName: `${commonProps.stackName} | Validate request body and querystring parameters`,
+    restApi: api,
+    validateRequestParameters: true,
+    validateRequestBody: true,
+  });
+
   new Lambda(scope, "createBanner", {
     entry: "services/app-api/handlers/banners/create.ts",
     handler: "createBanner",
@@ -197,6 +204,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "fetchTemplate",
     path: "/templates/{templateName}",
     method: "GET",
+    requestValidator,
     ...commonProps,
   });
 
