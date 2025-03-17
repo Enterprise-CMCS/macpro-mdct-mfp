@@ -73,6 +73,10 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
         ],
       }),
     ],
+    environment: {
+      CLAMAV_BUCKET_NAME: clamDefsBucket.bucketName,
+      PATH_TO_AV_DEFINITIONS: "lambda/s3-antivirus/av-definitions",
+    },
     iamPermissionsBoundary,
     iamPath,
   };
@@ -88,10 +92,6 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
     memorySize: 3008,
     timeout: Duration.seconds(300),
     layers: [clamAvLayer],
-    environment: {
-      CLAMAV_BUCKET_NAME: clamDefsBucket.bucketName,
-      PATH_TO_AV_DEFINITIONS: "lambda/s3-antivirus/av-definitions",
-    },
     ...commonProps,
   }).lambda;
 
@@ -116,10 +116,6 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
       memorySize: 3072,
       timeout: Duration.seconds(300),
       layers: [clamAvLayer],
-      environment: {
-        CLAMAV_BUCKET_NAME: clamDefsBucket.bucketName,
-        PATH_TO_AV_DEFINITIONS: "lambda/s3-antivirus/av-definitions",
-      },
       ...commonProps,
     }
   ).lambda;
