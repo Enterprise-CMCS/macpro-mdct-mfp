@@ -204,6 +204,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "fetchTemplate",
     path: "/templates/{templateName}",
     method: "GET",
+    requestParameters: ["templateName"],
     requestValidator,
     ...commonProps,
   });
