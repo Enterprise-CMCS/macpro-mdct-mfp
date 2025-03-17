@@ -5,6 +5,8 @@ import {
   aws_lambda_event_sources as lambdaEventSources,
   aws_s3_notifications as s3notifications,
   aws_iam as iam,
+  aws_events as events,
+  aws_events_targets as eventstargets,
   Duration,
   RemovalPolicy,
   Tags,
@@ -104,4 +106,37 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
     iamPermissionsBoundary.managedPolicyArn,
     iamPath
   );
+
+  const avDownloadDefinitionsLambda = new Lambda(
+    scope,
+    "AvDownloadDefinitionsLambda",
+    {
+      entry: "services/uploads/src/download-definitions.js",
+      handler: "lambdaHandleEvent",
+      memorySize: 3072,
+      timeout: Duration.seconds(300),
+      layers: [clamAvLayer],
+      environment: {
+        CLAMAV_BUCKET_NAME: clamDefsBucket.bucketName,
+        PATH_TO_AV_DEFINITIONS: "lambda/s3-antivirus/av-definitions",
+      },
+      ...commonProps,
+    }
+  ).lambda;
+
+  new events.Rule(scope, `schedule-av-download-definitions`, {
+    schedule: events.Schedule.cron({ minute: "15", hour: "1" }),
+    targets: [
+      new eventstargets.LambdaFunction(avDownloadDefinitionsLambda, {
+        retryAttempts: 2,
+      }),
+    ],
+  });
+
+  return {
+    attachmentsBucketArn: attachmentsBucket.bucketArn,
+    attachmentsBucketName: attachmentsBucket.bucketName,
+    clamDefsBucketArn: clamDefsBucket.bucketArn,
+    clamDefsBucketName: clamDefsBucket.bucketName,
+  };
 }
