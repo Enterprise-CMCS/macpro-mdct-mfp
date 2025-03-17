@@ -9,7 +9,7 @@ import {
   aws_certificatemanager as acm,
 } from "aws-cdk-lib";
 import { WafConstruct } from "../constructs/waf";
-import { addIamPropertiesToBucketAutoDeleteRole } from "../utils/s3";
+import { addIamPropertiesToBucketRole } from "../utils/s3";
 import { IManagedPolicy } from "aws-cdk-lib/aws-iam";
 import { isLocalStack } from "../local/util";
 
@@ -150,8 +150,9 @@ export function createUiComponents(props: CreateUiComponentsProps) {
 
   const applicationEndpointUrl = `https://${distribution.distributionDomainName}/`;
 
-  addIamPropertiesToBucketAutoDeleteRole(
+  addIamPropertiesToBucketRole(
     scope,
+    "Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
     iamPermissionsBoundary.managedPolicyArn,
     iamPath
   );
