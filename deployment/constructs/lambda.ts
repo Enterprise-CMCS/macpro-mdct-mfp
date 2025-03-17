@@ -29,6 +29,8 @@ interface LambdaProps extends Partial<NodejsFunctionProps> {
   additionalPolicies?: PolicyStatement[];
   iamPermissionsBoundary: IManagedPolicy;
   iamPath: string;
+  requestParameters?: string[];
+  requestValidator?: apigateway.IRequestValidator;
 }
 
 export class Lambda extends Construct {
@@ -50,6 +52,8 @@ export class Lambda extends Construct {
       iamPath,
       iamPermissionsBoundary,
       stackName,
+      requestParameters,
+      requestValidator,
       ...restProps
     } = props;
 
@@ -105,11 +109,29 @@ export class Lambda extends Construct {
       const resource = api.root.resourceForPath(path);
       resource.addMethod(
         method,
-        new apigateway.LambdaIntegration(this.lambda),
+        new apigateway.LambdaIntegration(this.lambda, {
+          requestParameters: requestParameters
+            ? Object.fromEntries(
+                requestParameters.map((item) => [
+                  `integration.request.path.${item}`,
+                  `method.request.path.${item}`,
+                ])
+              )
+            : undefined,
+        }),
         {
           authorizationType: isLocalStack
             ? undefined
             : apigateway.AuthorizationType.IAM,
+          requestParameters: requestParameters
+            ? Object.fromEntries(
+                requestParameters.map((item) => [
+                  `method.request.path.${item}`,
+                  true,
+                ])
+              )
+            : {},
+          requestValidator,
         }
       );
     }
