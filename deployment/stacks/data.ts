@@ -75,18 +75,20 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     }).identifiers,
   ];
 
-  const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
-    bucketName: `${stage}-sar-forms`,
-    encryption: s3.BucketEncryption.S3_MANAGED,
-    versioned: true,
-    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-  });
-
   const loggingBucket = s3.Bucket.fromBucketName(
     scope,
     "LoggingBucket",
     `cms-cloud-${Aws.ACCOUNT_ID}-us-east-1`
   );
+
+  const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
+    bucketName: `database-${stage}-sar`,
+    encryption: s3.BucketEncryption.S3_MANAGED,
+    versioned: true,
+    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+    serverAccessLogsBucket: loggingBucket,
+    serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
+  });
 
   const wpFormBucket = new s3.Bucket(scope, "WpFormBucket", {
     bucketName: `database-${stage}-wp`,
