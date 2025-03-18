@@ -110,14 +110,6 @@ export class Lambda extends Construct {
       resource.addMethod(
         method,
         new apigateway.LambdaIntegration(this.lambda, {
-          requestParameters: requestParameters
-            ? Object.fromEntries(
-                requestParameters.map((item) => [
-                  `integration.request.path.${item}`,
-                  `method.request.path.${item}`,
-                ])
-              )
-            : undefined,
         }),
         {
           authorizationType: isLocalStack
