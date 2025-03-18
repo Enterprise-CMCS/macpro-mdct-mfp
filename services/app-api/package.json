@@ -23,6 +23,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/jwt-encode": "^1.0.0",
     "@types/md5": "^2.3.2",
+    "@types/node": "*",
     "@types/object-hash": "^3.0.2",
     "@types/prompts": "^2.4.9",
     "amazon-user-pool-srp-client": "^1.0.4",
