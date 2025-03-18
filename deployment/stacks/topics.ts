@@ -15,7 +15,7 @@ interface CreateTopicsComponentsProps {
   stage: string;
   project: string;
   vpc: ec2.IVpc;
-  privateSubnets: ec2.ISubnet[];
+  kafkaAuthorizedSubnets: ec2.ISubnet[];
   iamPermissionsBoundary: iam.IManagedPolicy;
   iamPath: string;
   brokerString: string;
@@ -27,7 +27,7 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     stage,
     project,
     vpc,
-    privateSubnets,
+    kafkaAuthorizedSubnets,
     iamPermissionsBoundary,
     iamPath,
     brokerString,
@@ -68,7 +68,7 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     iamPermissionsBoundary,
     iamPath,
     vpc,
-    vpcSubnets: { subnets: privateSubnets },
+    vpcSubnets: { subnets: kafkaAuthorizedSubnets },
     securityGroups: [lambdaSecurityGroup],
   };
 
