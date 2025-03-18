@@ -31,8 +31,8 @@ interface CreateApiComponentsProps {
   stage: string;
   project: string;
   isDev: boolean;
-  vpcName: string;
-  kafkaAuthorizedSubnetIds: string;
+  vpc: ec2.IVpc;
+  kafkaAuthorizedSubnets: ec2.ISubnet[];
   tables: DynamoDBTableIdentifiers[];
   brokerString: string;
   iamPermissionsBoundary: iam.IManagedPolicy;
@@ -48,8 +48,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     stage,
     project,
     isDev,
-    vpcName,
-    kafkaAuthorizedSubnetIds,
+    vpc,
+    kafkaAuthorizedSubnets,
     tables,
     brokerString,
     iamPermissionsBoundary,
@@ -61,12 +61,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   const service = "app-api";
   Tags.of(scope).add("SERVICE", service);
-
-  const vpc = ec2.Vpc.fromLookup(scope, "Vpc", { vpcName });
-  const kafkaAuthorizedSubnets = getSubnets(
-    scope,
-    kafkaAuthorizedSubnetIds ?? ""
-  );
 
   const kafkaSecurityGroup = new ec2.SecurityGroup(
     scope,
@@ -228,6 +222,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     entry: "services/app-api/handlers/reports/create.ts",
     handler: "createReport",
     path: "/reports/{reportType}/{state}",
+    requestParameters: ["reportType", "state"],
+    requestValidator,
     method: "POST",
     ...commonProps,
   });
@@ -287,10 +283,12 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     memorySize: 2048,
     retryAttempts: 2,
     vpc,
-    vpcSubnets: { subnets: privateSubnets },
+    vpcSubnets: { subnets: kafkaAuthorizedSubnets },
     securityGroups: [kafkaSecurityGroup],
     ...commonProps,
-    tables,
+    tables: tables.filter(
+      (table) => table.id === "SarReports" || table.id === "WpReports"
+    ),
   });
   // TODO: confirm only attached to the streams wpReport and sarReport
 
@@ -298,7 +296,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     timeout: Duration.seconds(120),
     memorySize: 2048,
     vpc,
-    vpcSubnets: { subnets: privateSubnets },
+    vpcSubnets: { subnets: kafkaAuthorizedSubnets },
     securityGroups: [kafkaSecurityGroup],
     ...commonProps,
   };
@@ -355,7 +353,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       scope,
       "ApiWafConstruct",
       {
-        name: `${project}-${stage}-${service}`,
+        name: `${project}-${service}-${stage}-webacl-waf`,
         blockRequestBodyOver8KB: false,
       },
       "REGIONAL"
