@@ -4,6 +4,7 @@ import {
   aws_iam as iam,
   aws_s3 as s3,
   CfnOutput,
+  Aws,
 } from "aws-cdk-lib";
 import { DynamoDBTable } from "../constructs/dynamodb-table";
 import { IManagedPolicy } from "aws-cdk-lib/aws-iam";
@@ -81,11 +82,19 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
   });
 
+  const loggingBucket = s3.Bucket.fromBucketName(
+    scope,
+    "LoggingBucket",
+    `cms-cloud-${Aws.ACCOUNT_ID}-us-east-1`
+  );
+
   const wpFormBucket = new s3.Bucket(scope, "WpFormBucket", {
-    bucketName: `${stage}-wp-forms`,
+    bucketName: `database-${stage}-wp`,
     encryption: s3.BucketEncryption.S3_MANAGED,
     versioned: true,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+    serverAccessLogsBucket: loggingBucket,
+    serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
   });
 
   new CfnOutput(scope, "SarFormBucketName", {
