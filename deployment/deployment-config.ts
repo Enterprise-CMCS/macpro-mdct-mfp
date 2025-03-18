@@ -15,6 +15,7 @@ export interface DeploymentConfigProperties {
   vpnIpSetArn?: string;
   vpnIpv6SetArn?: string;
   brokerString: string;
+  kafkaAuthorizedSubnetIds: string;
 }
 
 export const determineDeploymentConfig = async (stage: string) => {
@@ -22,13 +23,10 @@ export const determineDeploymentConfig = async (stage: string) => {
   const isDev =
     isLocalStack ||
     !["master", "main", "val", "production", "jon-cdk"].includes(stage); // TODO: remove jon-cdk after main is deployed
-  const isBootstrap = stage === "bootstrap";
-  const secretConfigOptions = isBootstrap
-    ? {}
-    : {
-        ...(await loadDefaultSecret(project, stage)),
-        ...(await loadStageSecret(project, stage)),
-      };
+  const secretConfigOptions = {
+    ...(await loadDefaultSecret(project, stage)),
+    ...(await loadStageSecret(project, stage)),
+  };
 
   const config = {
     project,
@@ -40,16 +38,19 @@ export const determineDeploymentConfig = async (stage: string) => {
     config.secureCloudfrontDomainName = `https://${config.cloudfrontDomainName}/`;
   }
 
-  if (!isLocalStack && !isBootstrap) {
+  if (!isLocalStack) {
     validateConfig(config);
   }
 
   return config;
 };
 
-export const loadDefaultSecret = async (project: string) => {
-  if (isLocalStack) {
-    return { brokerString: "localstack" };
+export const loadDefaultSecret = async (
+  project: string,
+  stage: string = "bootstrap"
+) => {
+  if (stage === "bootstrap") {
+    return {};
   } else {
     return JSON.parse((await getSecret(`${project}-default`))!);
   }
@@ -76,6 +77,7 @@ function validateConfig(config: {
     "vpcName",
     "oktaMetadataUrl",
     "brokerString",
+    "kafkaAuthorizedSubnetIds",
   ];
 
   const invalidKeys = expectedKeys.filter(

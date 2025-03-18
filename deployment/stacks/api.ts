@@ -15,6 +15,7 @@ import {
 } from "aws-cdk-lib";
 import { Lambda } from "../constructs/lambda";
 import { WafConstruct } from "../constructs/waf";
+import { getSubnets } from "../utils/vpc";
 import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
 import { DynamoDBTableIdentifiers } from "../constructs/dynamodb-table";
 import { isDefined } from "../utils/misc";
@@ -30,8 +31,8 @@ interface CreateApiComponentsProps {
   stage: string;
   project: string;
   isDev: boolean;
-  vpc: ec2.IVpc;
-  privateSubnets: ec2.ISubnet[];
+  vpcName: string;
+  kafkaAuthorizedSubnetIds: string;
   tables: DynamoDBTableIdentifiers[];
   brokerString: string;
   iamPermissionsBoundary: iam.IManagedPolicy;
@@ -47,8 +48,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     stage,
     project,
     isDev,
-    vpc,
-    privateSubnets,
+    vpcName,
+    kafkaAuthorizedSubnetIds,
     tables,
     brokerString,
     iamPermissionsBoundary,
@@ -60,6 +61,12 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   const service = "app-api";
   Tags.of(scope).add("SERVICE", service);
+
+  const vpc = ec2.Vpc.fromLookup(scope, "Vpc", { vpcName });
+  const kafkaAuthorizedSubnets = getSubnets(
+    scope,
+    kafkaAuthorizedSubnetIds ?? ""
+  );
 
   const kafkaSecurityGroup = new ec2.SecurityGroup(
     scope,
