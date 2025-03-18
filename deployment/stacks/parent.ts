@@ -1,5 +1,12 @@
 import { Construct } from "constructs";
-import { Aws, aws_iam as iam, CfnOutput, Stack, StackProps } from "aws-cdk-lib";
+import {
+  Aws,
+  aws_ec2 as ec2,
+  aws_iam as iam,
+  CfnOutput,
+  Stack,
+  StackProps,
+} from "aws-cdk-lib";
 import { DeploymentConfigProperties } from "../deployment-config";
 import { createDataComponents } from "./data";
 import { createUiAuthComponents } from "./ui-auth";
@@ -10,6 +17,7 @@ import { createCustomResourceRole } from "./customResourceRole";
 import { isLocalStack } from "../local/util";
 import { createTopicsComponents } from "./topics";
 import { createUploadsComponents } from "./uploads";
+import { getSubnets } from "../utils/vpc";
 
 export class ParentStack extends Stack {
   constructor(
@@ -17,7 +25,7 @@ export class ParentStack extends Stack {
     id: string,
     props: StackProps & DeploymentConfigProperties
   ) {
-    const { isDev } = props;
+    const { isDev, vpcName, kafkaAuthorizedSubnetIds } = props;
 
     super(scope, id, {
       ...props,
@@ -38,6 +46,12 @@ export class ParentStack extends Stack {
       iamPath,
     };
 
+    const vpc = ec2.Vpc.fromLookup(this, "Vpc", { vpcName });
+    const kafkaAuthorizedSubnets = getSubnets(
+      this,
+      kafkaAuthorizedSubnetIds ?? ""
+    );
+
     const { customResourceRole } = createCustomResourceRole({ ...commonProps });
 
     const { tables } = createDataComponents({
@@ -48,6 +62,8 @@ export class ParentStack extends Stack {
     const { apiGatewayRestApiUrl, restApiId } = createApiComponents({
       ...commonProps,
       tables,
+      vpc,
+      kafkaAuthorizedSubnets,
     });
 
     if (!isLocalStack) {
@@ -88,7 +104,7 @@ export class ParentStack extends Stack {
     createTopicsComponents({
       ...commonProps,
       vpc,
-      privateSubnets,
+      kafkaAuthorizedSubnets,
     });
 
     createUploadsComponents({
