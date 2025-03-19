@@ -27,6 +27,7 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
 
   Tags.of(scope).add("SERVICE", service);
 
+  // TODO: confirm how end-users upload to this bucket and test with this deployed version
   const attachmentsBucket = new s3.Bucket(scope, "AttachmentsBucket", {
     bucketName: `${service}-${stage}-attachments`,
     encryption: s3.BucketEncryption.S3_MANAGED,
@@ -56,6 +57,7 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
     versioned: true,
     removalPolicy: RemovalPolicy.RETAIN,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+    enforceSSL: true,
   });
 
   const commonProps = {
@@ -130,9 +132,6 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
   });
 
   return {
-    attachmentsBucketArn: attachmentsBucket.bucketArn,
-    attachmentsBucketName: attachmentsBucket.bucketName,
-    clamDefsBucketArn: clamDefsBucket.bucketArn,
-    clamDefsBucketName: clamDefsBucket.bucketName,
+    attachmentsBucket,
   };
 }

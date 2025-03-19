@@ -37,9 +37,9 @@ interface CreateApiComponentsProps {
   brokerString: string;
   iamPermissionsBoundary: iam.IManagedPolicy;
   iamPath: string;
-  // wpFormBucket: s3.IBucket;
-  // sarFormBucket: s3.IBucket;
-  // templateBucket: s3.IBucket;
+  wpFormBucket: s3.IBucket;
+  sarFormBucket: s3.IBucket;
+  templateBucket: s3.IBucket;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
@@ -54,9 +54,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     brokerString,
     iamPermissionsBoundary,
     iamPath,
-    // wpFormBucket, // TODO
-    // sarFormBucket, // TODO
-    // templateBucket, // TODO
+    wpFormBucket,
+    sarFormBucket,
+    templateBucket,
   } = props;
 
   const service = "app-api";
@@ -111,11 +111,12 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   const environment = {
+    NODE_OPTIONS: "--enable-source-maps",
     BOOTSTRAP_BROKER_STRING_TLS: brokerString,
     stage,
-    // TEMPLATE_BUCKET: templateBucket.bucketName,
-    // WP_FORM_BUCKET: wpFormBucket.bucketName,
-    // SAR_FORM_BUCKET: sarFormBucket.bucketName,
+    TEMPLATE_BUCKET: templateBucket.bucketName,
+    WP_FORM_BUCKET: wpFormBucket.bucketName,
+    SAR_FORM_BUCKET: sarFormBucket.bucketName,
     ...Object.fromEntries(
       tables.map((table) => [`${table.id}Table`, table.name])
     ),
@@ -146,17 +147,17 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       ],
       resources: tables.map((table) => table.streamArn).filter(isDefined),
     }),
-    // new iam.PolicyStatement({
-    //   effect: iam.Effect.ALLOW,
-    //   actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
-    //   resources: [
-    //     templateBucket.bucketArn,
-    //     wpFormBucket.bucketArn,
-    //     sarFormBucket.bucketArn,
-    //     `${wpFormBucket.bucketArn}/fieldData/*`,
-    //     `${sarFormBucket.bucketArn}/fieldData/*`,
-    //   ],
-    // }),
+    new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+      resources: [
+        templateBucket.bucketArn,
+        wpFormBucket.bucketArn,
+        sarFormBucket.bucketArn,
+        `${wpFormBucket.bucketArn}/fieldData/*`,
+        `${sarFormBucket.bucketArn}/fieldData/*`,
+      ],
+    }),
   ];
 
   const commonProps = {
@@ -181,6 +182,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "createBanner",
     path: "/banners/{bannerId}",
     method: "POST",
+    requestParameters: ["bannerId"],
+    requestValidator,
     ...commonProps,
   });
 
@@ -189,6 +192,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "deleteBanner",
     path: "/banners/{bannerId}",
     method: "DELETE",
+    requestParameters: ["bannerId"],
+    requestValidator,
     ...commonProps,
   });
 
@@ -197,6 +202,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "fetchBanner",
     path: "/banners/{bannerId}",
     method: "GET",
+    requestParameters: ["bannerId"],
+    requestValidator,
     ...commonProps,
   });
 
@@ -215,6 +222,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "archiveReport",
     path: "/reports/archive/{reportType}/{state}/{id}",
     method: "PUT",
+    requestParameters: ["reportType", "state", "id"],
+    requestValidator,
     ...commonProps,
   });
 
@@ -233,6 +242,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "fetchReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "GET",
+    requestParameters: ["reportType", "state", "id"],
+    requestValidator,
     ...commonProps,
   });
 
@@ -241,6 +252,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "fetchReportsByState",
     path: "/reports/{reportType}/{state}",
     method: "GET",
+    requestParameters: ["reportType", "state"],
+    requestValidator,
     ...commonProps,
   });
 
@@ -249,6 +262,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "releaseReport",
     path: "/reports/release/{reportType}/{state}/{id}",
     method: "PUT",
+    requestParameters: ["state", "id"], // TODO: should reportType be here? It wasn't in SLS.
+    requestValidator,
     ...commonProps,
   });
 
@@ -257,6 +272,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "submitReport",
     path: "/reports/submit/{reportType}/{state}/{id}",
     method: "POST",
+    requestParameters: ["reportType", "state", "id"],
+    requestValidator,
+    memorySize: 2048,
+    timeout: Duration.seconds(30),
     ...commonProps,
   });
 
@@ -265,6 +284,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "updateReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "PUT",
+    requestParameters: ["reportType", "state", "id"],
+    requestValidator,
+    memorySize: 2048,
+    timeout: Duration.seconds(30),
     ...commonProps,
   });
 
@@ -273,6 +296,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "approveReport",
     path: "/reports/approve/{reportType}/{state}/{id}",
     method: "PUT",
+    memorySize: 2048,
+    timeout: Duration.seconds(30),
+    requestParameters: ["reportType", "state", "id"],
+    requestValidator,
     ...commonProps,
   });
 
@@ -286,6 +313,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     vpcSubnets: { subnets: kafkaAuthorizedSubnets },
     securityGroups: [kafkaSecurityGroup],
     ...commonProps,
+    environment: { topicNamespace: "", ...commonProps.environment },
     tables: tables.filter(
       (table) => table.id === "SarReports" || table.id === "WpReports"
     ),
@@ -299,6 +327,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     vpcSubnets: { subnets: kafkaAuthorizedSubnets },
     securityGroups: [kafkaSecurityGroup],
     ...commonProps,
+    environment: { topicNamespace: "", ...commonProps.environment },
   };
 
   const postWpBucketDataLambda = new Lambda(scope, "postWpBucketData", {
@@ -307,22 +336,23 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...bucketLambdaProps,
   }).lambda;
 
-  // wpFormBucket.addEventNotification(
-  //   s3.EventType.OBJECT_CREATED,
-  //   new s3notifications.LambdaDestination(postWpBucketDataLambda),
-  //   {
-  //     prefix: "fieldData/",
-  //     suffix: ".json",
-  //   }
-  // );
-  // wpFormBucket.addEventNotification(
-  //   s3.EventType.OBJECT_TAGGING_PUT,
-  //   new s3notifications.LambdaDestination(postWpBucketDataLambda),
-  //   {
-  //     prefix: "fieldData/",
-  //     suffix: ".json",
-  //   }
-  // );
+  wpFormBucket.addEventNotification(
+    s3.EventType.OBJECT_CREATED,
+    new s3notifications.LambdaDestination(postWpBucketDataLambda),
+    {
+      prefix: "fieldData/",
+      suffix: ".json",
+    }
+  );
+
+  wpFormBucket.addEventNotification(
+    s3.EventType.OBJECT_TAGGING_PUT,
+    new s3notifications.LambdaDestination(postWpBucketDataLambda),
+    {
+      prefix: "fieldData/",
+      suffix: ".json",
+    }
+  );
 
   const postSarBucketDataLambda = new Lambda(scope, "postSarBucketData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
@@ -330,23 +360,23 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...bucketLambdaProps,
   }).lambda;
 
-  // sarFormBucket.addEventNotification(
-  //   s3.EventType.OBJECT_CREATED,
-  //   new s3notifications.LambdaDestination(postSarBucketDataLambda),
-  //   {
-  //     prefix: "fieldData/",
-  //     suffix: ".json",
-  //   }
-  // );
+  sarFormBucket.addEventNotification(
+    s3.EventType.OBJECT_CREATED,
+    new s3notifications.LambdaDestination(postSarBucketDataLambda),
+    {
+      prefix: "fieldData/",
+      suffix: ".json",
+    }
+  );
 
-  // sarFormBucket.addEventNotification(
-  //   s3.EventType.OBJECT_TAGGING_PUT,
-  //   new s3notifications.LambdaDestination(postSarBucketDataLambda),
-  //   {
-  //     prefix: "fieldData/",
-  //     suffix: ".json",
-  //   }
-  // );
+  sarFormBucket.addEventNotification(
+    s3.EventType.OBJECT_TAGGING_PUT,
+    new s3notifications.LambdaDestination(postSarBucketDataLambda),
+    {
+      prefix: "fieldData/",
+      suffix: ".json",
+    }
+  );
 
   if (!isLocalStack) {
     const waf = new WafConstruct(

@@ -54,9 +54,13 @@ export class ParentStack extends Stack {
 
     const { customResourceRole } = createCustomResourceRole({ ...commonProps });
 
-    const { tables } = createDataComponents({
+    const { tables, wpFormBucket, sarFormBucket } = createDataComponents({
       ...commonProps,
       customResourceRole,
+    });
+
+    const { attachmentsBucket } = createUploadsComponents({
+      ...commonProps,
     });
 
     const { apiGatewayRestApiUrl, restApiId } = createApiComponents({
@@ -64,6 +68,9 @@ export class ParentStack extends Stack {
       tables,
       vpc,
       kafkaAuthorizedSubnets,
+      wpFormBucket,
+      sarFormBucket,
+      templateBucket: attachmentsBucket,
     });
 
     if (!isLocalStack) {
@@ -105,10 +112,6 @@ export class ParentStack extends Stack {
       ...commonProps,
       vpc,
       kafkaAuthorizedSubnets,
-    });
-
-    createUploadsComponents({
-      ...commonProps,
     });
 
     new CfnOutput(this, "ApiUrl", {

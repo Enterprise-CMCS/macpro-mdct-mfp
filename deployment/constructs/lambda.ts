@@ -109,8 +109,7 @@ export class Lambda extends Construct {
       const resource = api.root.resourceForPath(path);
       resource.addMethod(
         method,
-        new apigateway.LambdaIntegration(this.lambda, {
-        }),
+        new apigateway.LambdaIntegration(this.lambda),
         {
           authorizationType: isLocalStack
             ? undefined
@@ -129,3 +128,6 @@ export class Lambda extends Construct {
     }
   }
 }
+
+// TODO: the options calls previously included "X-Amzn-Trace-Id" in Access-Control-Allow-Headers as well
+// TODO: the options calls previously returned a 200 instead of a 204

@@ -1,21 +1,21 @@
 API_URL=http://localhost:3030/local
-BANNER_TABLE_NAME=local-banners
+BannerTable=local-banners
 COGNITO_USER_POOL_CLIENT_ID=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_CLIENT_ID
 COGNITO_USER_POOL_ID=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_ID
 POST_SIGNOUT_REDIRECT=http://localhost:3000/
 DISABLE_ESLINT_PLUGIN=true
-FORM_TEMPLATE_TABLE_NAME=local-form-template-versions
+FormTemplateVersionsTable=local-form-template-versions
 IAM_PATH=/
 IAM_PERMISSIONS_BOUNDARY="bound"
 LOCAL_LOGIN=true
 LOGGING_BUCKET=log-bucket
 S3_LOCAL_ENDPOINT=http://localhost:4569
 SAR_FORM_BUCKET=op://mdct_devs/mfp_secrets/SAR_FORM_BUCKET
-SAR_REPORT_TABLE_NAME=local-sar-reports
+SarReportsTable=local-sar-reports
 SKIP_PREFLIGHT_CHECK=true
 TEMPLATE_BUCKET=op://mdct_devs/mfp_secrets/TEMPLATE_BUCKET
 WP_FORM_BUCKET=op://mdct_devs/mfp_secrets/WP_FORM_BUCKET
-WP_REPORT_TABLE_NAME=local-wp-reports
+WpReportsTable=local-wp-reports
 
 # Values used for short-circuiting ssm: lookups, most likely won't need locally
 WP_REPORT_TABLE_STREAM_ARN=local-nonsense

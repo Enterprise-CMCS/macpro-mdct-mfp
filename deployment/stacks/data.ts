@@ -32,7 +32,7 @@ export function createDataComponents(props: CreateDataComponentsProps) {
   } = props;
 
   const tables = [
-    new DynamoDBTable(scope, "BannerTable", {
+    new DynamoDBTable(scope, "Banner", {
       stage,
       isDev,
       name: "banners",
@@ -81,6 +81,7 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     `cms-cloud-${Aws.ACCOUNT_ID}-us-east-1`
   );
 
+  // TODO: confirm how end-users upload to this bucket and test with this deployed version
   const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
     bucketName: `database-${stage}-sar`,
     encryption: s3.BucketEncryption.S3_MANAGED,
@@ -88,8 +89,10 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     serverAccessLogsBucket: loggingBucket,
     serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
+    enforceSSL: true,
   });
 
+  // TODO: confirm how end-users upload to this bucket and test with this deployed version
   const wpFormBucket = new s3.Bucket(scope, "WpFormBucket", {
     bucketName: `database-${stage}-wp`,
     encryption: s3.BucketEncryption.S3_MANAGED,
@@ -97,6 +100,7 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     serverAccessLogsBucket: loggingBucket,
     serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
+    enforceSSL: true,
   });
 
   new CfnOutput(scope, "SarFormBucketName", {
