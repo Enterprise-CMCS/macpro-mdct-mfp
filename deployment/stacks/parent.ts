@@ -3,6 +3,7 @@ import {
   Aws,
   aws_ec2 as ec2,
   aws_iam as iam,
+  aws_s3 as s3,
   CfnOutput,
   Stack,
   StackProps,
@@ -54,7 +55,14 @@ export class ParentStack extends Stack {
 
     const { customResourceRole } = createCustomResourceRole({ ...commonProps });
 
+    const loggingBucket = s3.Bucket.fromBucketName(
+      this,
+      "LoggingBucket",
+      `cms-cloud-${Aws.ACCOUNT_ID}-${Aws.REGION}`
+    );
+
     const { tables, wpFormBucket, sarFormBucket } = createDataComponents({
+      loggingBucket,
       ...commonProps,
       customResourceRole,
     });
@@ -75,7 +83,7 @@ export class ParentStack extends Stack {
 
     if (!isLocalStack) {
       const { applicationEndpointUrl, distribution, uiBucket } =
-        createUiComponents({ ...commonProps });
+        createUiComponents({ loggingBucket, ...commonProps });
 
       const {
         userPoolDomainName,
@@ -87,6 +95,7 @@ export class ParentStack extends Stack {
         applicationEndpointUrl,
         restApiId,
         customResourceRole,
+        attachmentsBucketArn: attachmentsBucket.bucketArn,
       });
 
       deployFrontend({

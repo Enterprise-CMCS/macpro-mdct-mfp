@@ -7,29 +7,16 @@ import {
   Aws,
 } from "aws-cdk-lib";
 import { DynamoDBTable } from "../constructs/dynamodb-table";
-import { IManagedPolicy } from "aws-cdk-lib/aws-iam";
 
 interface CreateDataComponentsProps {
   scope: Construct;
   stage: string;
   isDev: boolean;
-  iamPermissionsBoundary: IManagedPolicy;
-  iamPath: string;
-  customResourceRole: iam.Role;
+  loggingBucket: s3.IBucket;
 }
 
-// TODO: check table configs
-// TODO: check bucket logging configs
-
 export function createDataComponents(props: CreateDataComponentsProps) {
-  const {
-    scope,
-    stage,
-    isDev,
-    iamPermissionsBoundary,
-    iamPath,
-    customResourceRole,
-  } = props;
+  const { scope, stage, isDev, loggingBucket } = props;
 
   const tables = [
     new DynamoDBTable(scope, "Banner", {
@@ -74,12 +61,6 @@ export function createDataComponents(props: CreateDataComponentsProps) {
       sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
     }).identifiers,
   ];
-
-  const loggingBucket = s3.Bucket.fromBucketName(
-    scope,
-    "LoggingBucket",
-    `cms-cloud-${Aws.ACCOUNT_ID}-us-east-1`
-  );
 
   // TODO: confirm how end-users upload to this bucket and test with this deployed version
   const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {

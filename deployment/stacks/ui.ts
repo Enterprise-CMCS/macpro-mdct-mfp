@@ -7,6 +7,7 @@ import {
   Duration,
   RemovalPolicy,
   aws_certificatemanager as acm,
+  Aws,
 } from "aws-cdk-lib";
 import { WafConstruct } from "../constructs/waf";
 import { addIamPropertiesToBucketRole } from "../utils/s3";
@@ -24,6 +25,7 @@ interface CreateUiComponentsProps {
   cloudfrontDomainName?: string;
   vpnIpSetArn?: string;
   vpnIpv6SetArn?: string;
+  loggingBucket: s3.IBucket;
 }
 
 export function createUiComponents(props: CreateUiComponentsProps) {
@@ -38,14 +40,18 @@ export function createUiComponents(props: CreateUiComponentsProps) {
     cloudfrontDomainName,
     // vpnIpSetArn,
     // vpnIpv6SetArn,
+    loggingBucket,
   } = props;
 
-  // S3 Bucket for UI hosting
   const uiBucket = new s3.Bucket(scope, "uiBucket", {
     encryption: s3.BucketEncryption.S3_MANAGED,
     removalPolicy: RemovalPolicy.DESTROY,
     autoDeleteObjects: true,
     enforceSSL: true,
+    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+    versioned: true,
+    serverAccessLogsBucket: loggingBucket,
+    serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
   });
 
   const logBucket = new s3.Bucket(scope, "CloudfrontLogBucket", {
@@ -56,9 +62,11 @@ export function createUiComponents(props: CreateUiComponentsProps) {
     removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
     autoDeleteObjects: isDev,
     enforceSSL: true,
+    versioned: true,
+    serverAccessLogsBucket: loggingBucket,
+    serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
   });
 
-  // Add bucket policy to allow CloudFront to write logs
   logBucket.addToResourcePolicy(
     new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -104,6 +112,11 @@ export function createUiComponents(props: CreateUiComponentsProps) {
     isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN
   );
 
+  const cachePolicy = new cloudfront.CachePolicy(scope, "CustomCachePolicy", {
+    queryStringBehavior: cloudfront.CacheQueryStringBehavior.all(),
+    cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+  });
+
   const distribution = new cloudfront.Distribution(
     scope,
     "CloudFrontDistribution",
@@ -121,13 +134,14 @@ export function createUiComponents(props: CreateUiComponentsProps) {
           cloudfrontOrigins.S3BucketOrigin.withOriginAccessControl(uiBucket),
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        cachePolicy,
         compress: true,
         responseHeadersPolicy: securityHeadersPolicy,
       },
       defaultRootObject: "index.html",
       enableLogging: true,
-      logBucket: logBucket,
+      logBucket,
+      logFilePrefix: `AWSLogs/CLOUDFRONT/${stage}/`,
       httpVersion: cloudfront.HttpVersion.HTTP2,
       errorResponses: [
         {

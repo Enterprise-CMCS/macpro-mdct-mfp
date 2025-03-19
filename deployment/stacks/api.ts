@@ -22,9 +22,6 @@ import { isDefined } from "../utils/misc";
 import { isLocalStack } from "../local/util";
 
 // TODO: does this need to point to the tsconfig.json file in services/app-api?
-// TODO: with seds, table names and streams came from the database stack, confirm that is still happening here.
-// TODO: add topicNamespace
-// TODO: check function timeouts and memory sizes and environment variables
 
 interface CreateApiComponentsProps {
   scope: Construct;

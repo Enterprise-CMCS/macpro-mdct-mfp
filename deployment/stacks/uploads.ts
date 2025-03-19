@@ -10,6 +10,7 @@ import {
   Duration,
   RemovalPolicy,
   Tags,
+  Aws,
 } from "aws-cdk-lib";
 import { Lambda } from "../constructs/lambda";
 import { addIamPropertiesToBucketRole } from "../utils/s3";
@@ -28,8 +29,9 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
   Tags.of(scope).add("SERVICE", service);
 
   // TODO: confirm how end-users upload to this bucket and test with this deployed version
+  // TODO: this bucket doesn't have logging unlike most other buckets, is that right?
   const attachmentsBucket = new s3.Bucket(scope, "AttachmentsBucket", {
-    bucketName: `${service}-${stage}-attachments`,
+    bucketName: `${service}-${stage}-attachments-${Aws.ACCOUNT_ID}`,
     encryption: s3.BucketEncryption.S3_MANAGED,
     versioned: true,
     removalPolicy: RemovalPolicy.RETAIN,
@@ -49,16 +51,50 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
         maxAge: 3000,
       },
     ],
+    enforceSSL: true,
   });
 
+  attachmentsBucket.addToResourcePolicy(
+    new iam.PolicyStatement({
+      actions: ["s3:PutObject"],
+      effect: iam.Effect.DENY,
+      principals: [new iam.ArnPrincipal("*")],
+      notResources: [
+        `${attachmentsBucket.bucketArn}/*.jpg`,
+        `${attachmentsBucket.bucketArn}/*.png`,
+        `${attachmentsBucket.bucketArn}/*.gif`,
+        `${attachmentsBucket.bucketArn}/*.jpeg`,
+        `${attachmentsBucket.bucketArn}/*.bmp`,
+        `${attachmentsBucket.bucketArn}/*.csv`,
+        `${attachmentsBucket.bucketArn}/*.doc`,
+        `${attachmentsBucket.bucketArn}/*.docx`,
+        `${attachmentsBucket.bucketArn}/*.odp`,
+        `${attachmentsBucket.bucketArn}/*.ods`,
+        `${attachmentsBucket.bucketArn}/*.odt`,
+        `${attachmentsBucket.bucketArn}/*.pdf`,
+        `${attachmentsBucket.bucketArn}/*.ppt`,
+        `${attachmentsBucket.bucketArn}/*.pptx`,
+        `${attachmentsBucket.bucketArn}/*.rtf`,
+        `${attachmentsBucket.bucketArn}/*.tif`,
+        `${attachmentsBucket.bucketArn}/*.tiff`,
+        `${attachmentsBucket.bucketArn}/*.txt`,
+        `${attachmentsBucket.bucketArn}/*.xls`,
+        `${attachmentsBucket.bucketArn}/*.xlsx`,
+        `${attachmentsBucket.bucketArn}/*.json`,
+      ],
+    })
+  );
+
   const clamDefsBucket = new s3.Bucket(scope, "ClamDefsBucket", {
-    bucketName: `${service}-${stage}-avscan`,
+    bucketName: `${service}-${stage}-avscan-${Aws.ACCOUNT_ID}`,
     encryption: s3.BucketEncryption.S3_MANAGED,
     versioned: true,
     removalPolicy: RemovalPolicy.RETAIN,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     enforceSSL: true,
+    accessControl: s3.BucketAccessControl.PRIVATE,
   });
+  // TODO: this bucket doesn't have logging unlike most other buckets, is that right?
 
   const commonProps = {
     stackName: `${service}-${stage}`,
@@ -84,10 +120,12 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
   };
 
   const clamAvLayer = new lambda.LayerVersion(scope, "ClamAvLayer", {
+    layerVersionName: `${service}-${stage}-clamDefs`,
     code: lambda.Code.fromAsset("services/uploads/lambda_layer.zip"),
     compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
   });
 
+  // TODO: confirm permission to function
   const avScanLambda = new Lambda(scope, "AvScanLambda", {
     entry: "services/uploads/src/antivirus.js",
     handler: "lambdaHandleEvent",
@@ -102,6 +140,21 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
     new s3notifications.LambdaDestination(avScanLambda)
   );
 
+  attachmentsBucket.addToResourcePolicy(
+    new iam.PolicyStatement({
+      actions: ["s3:GetObject"],
+      effect: iam.Effect.DENY,
+      resources: [`${attachmentsBucket.bucketArn}/*`],
+      principals: [new iam.ArnPrincipal("*")],
+      conditions: {
+        StringNotEquals: {
+          "s3:ExistingObjectTag/virusScanStatus": "CLEAN",
+          "aws:PrincipalArn": avScanLambda.role?.roleArn,
+        },
+      },
+    })
+  );
+
   addIamPropertiesToBucketRole(
     scope,
     "BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource",
@@ -109,6 +162,7 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
     iamPath
   );
 
+  // TODO: confirm permission to function
   const avDownloadDefinitionsLambda = new Lambda(
     scope,
     "AvDownloadDefinitionsLambda",

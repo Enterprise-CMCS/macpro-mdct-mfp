@@ -77,6 +77,7 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     handler: "handler",
     timeout: Duration.seconds(60),
     ...commonProps,
+    environment: { topicNamespace: "", ...commonProps.environment },
   });
 
   const deleteTopicsLambda = new Lambda(scope, "DeleteTopics", {

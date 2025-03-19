@@ -33,6 +33,7 @@ interface CreateUiAuthComponentsProps {
   secureCloudfrontDomainName?: string;
   userPoolDomainPrefix?: string;
   sesSourceEmailAddress?: string;
+  attachmentsBucketArn: string;
 }
 
 export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
@@ -54,7 +55,15 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     secureCloudfrontDomainName,
     userPoolDomainPrefix,
     sesSourceEmailAddress, // TODO: fix this not being used.  reference serverless.yml conditional CreateEmailConfiguration
+    attachmentsBucketArn,
   } = props;
+
+  // TODO: SES email
+  // EmailConfiguration: !If
+  // - CreateEmailConfiguration
+  // - EmailSendingAccount: DEVELOPER
+  //   SourceArn: !Sub arn:aws:ses:us-east-1:${AWS::AccountId}:identity/
+  // - !Ref AWS::NoValue
 
   const userPool = new cognito.UserPool(scope, "UserPool", {
     userPoolName: `${stage}-user-pool`,
@@ -200,7 +209,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     scope,
     "CognitoIdentityPool",
     {
-      identityPoolName: `${stage}IdentityPool`,
+      identityPoolName: `${stage}-IdentityPool`,
       allowUnauthenticatedIdentities: false,
       cognitoIdentityProviders: [
         {
@@ -242,6 +251,14 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
             actions: ["execute-api:Invoke"],
             resources: [
               `arn:aws:execute-api:${Aws.REGION}:${Aws.ACCOUNT_ID}:${restApiId}/*`,
+            ],
+            effect: iam.Effect.ALLOW,
+          }),
+          new iam.PolicyStatement({
+            actions: ["s3:*"],
+            resources: [
+              attachmentsBucketArn +
+                "/protected/${cognito-identity.amazonaws.com:sub}/*",
             ],
             effect: iam.Effect.ALLOW,
           }),
@@ -289,7 +306,6 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       },
     });
 
-    // TODO: test deploy and watch performance with scope using lambda.Function vs lambda_nodejs.NodejsFunction
     bootstrapUsersFunction = new lambda_nodejs.NodejsFunction(
       scope,
       "bootstrapUsers",
@@ -297,6 +313,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
         entry: "services/ui-auth/handlers/createUsers.js",
         handler: "handler",
         runtime: lambda.Runtime.NODEJS_20_X,
+        memorySize: 1024,
         timeout: Duration.seconds(60),
         role: lambdaApiRole,
         environment: {
@@ -314,6 +331,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       { name: `${project}-${stage}-ui-auth` },
       "REGIONAL"
     );
+    // TODO: do we need the size exclusion for this WAF?
 
     new wafv2.CfnWebACLAssociation(scope, "CognitoUserPoolWAFAssociation", {
       resourceArn: userPool.userPoolArn,
