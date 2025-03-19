@@ -3,6 +3,7 @@ import { test as sarTest } from "./sar.ts";
 import { test as wpTest } from "./wp.ts";
 import StateHomePage from "../pageObjects/stateHome.page";
 import AdminHomePage from "../pageObjects/adminHome.page";
+import { adminAuthPath, stateUserAuthPath } from "../consts.ts";
 
 type CustomFixtures = {
   stateHomePage: StateHomePage;
@@ -12,7 +13,7 @@ type CustomFixtures = {
 export const baseTest = base.extend<CustomFixtures>({
   stateHomePage: async ({ browser }, use) => {
     const context = await browser.newContext({
-      storageState: "playwright/.auth/user.json",
+      storageState: stateUserAuthPath,
     });
     const stateHomePage = new StateHomePage(await context.newPage());
     await use(stateHomePage);
@@ -20,7 +21,7 @@ export const baseTest = base.extend<CustomFixtures>({
   },
   adminHomePage: async ({ browser }, use) => {
     const context = await browser.newContext({
-      storageState: "playwright/.auth/admin.json",
+      storageState: adminAuthPath,
     });
     const adminHomePage = new AdminHomePage(await context.newPage());
     await use(adminHomePage);
