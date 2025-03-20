@@ -181,7 +181,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
         cognito.OAuthScope.PROFILE,
       ],
       callbackUrls: [appUrl],
-      logoutUrls: [appUrl, `${appUrl}/postLogout`],
+      logoutUrls: [appUrl, `${appUrl}postLogout`],
     },
     supportedIdentityProviders,
     generateSecret: false,
