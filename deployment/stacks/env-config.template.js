@@ -11,7 +11,7 @@ window._env_ = {
   COGNITO_USER_POOL_CLIENT_DOMAIN: "{{userPoolClientDomain}}",
   COGNITO_USER_POOL_ID: "{{userPoolId}}",
   LOCAL_LOGIN: "false",
-  POST_SIGNOUT_REDIRECT: "{{applicationEndpointUrl}}",
+  POST_SIGNOUT_REDIRECT: "{{redirectSignout}}",
   REACT_APP_LD_SDK_CLIENT: "{{launchDarklyClient}}",
   S3_ATTACHMENTS_BUCKET_NAME: "{{s3AttachmentsBucketName}}",
   S3_ATTACHMENTS_BUCKET_REGION: "us-east-1",
