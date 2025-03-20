@@ -21,7 +21,7 @@ const loadCognitoValues = async () => {
     };
   } else {
     const ssmClient = new SSMClient({ logger });
-    const stage = process.env.STAGE!;
+    const stage = process.env.stage!;
     const getParam = async (identifier: string) => {
       const command = new GetParameterCommand({
         Name: `/${stage}/ui-auth/${identifier}`,
