@@ -197,17 +197,35 @@ async function run_local() {
     ],
     "."
   );
+
+  await runner.run_command_and_output(
+    "CDK local local-prerequisite deploy",
+    [
+      "yarn",
+      "cdklocal",
+      "deploy",
+      "--context",
+      "stage=prerequisites",
+      "--app",
+      '"npx tsx deployment/local/prerequisites.ts"',
+    ],
+    "."
+  );
+
   await runner.run_command_and_output(
     "CDK local prerequisite deploy",
     [
       "yarn",
       "cdklocal",
       "deploy",
+      "--context",
+      "stage=prerequisites",
       "--app",
       '"npx tsx deployment/prerequisites.ts"',
     ],
     "."
   );
+
   await runner.run_command_and_output(
     "CDK local deploy",
     [
@@ -222,16 +240,18 @@ async function run_local() {
     "."
   );
 
-  const watchCmd = [
-    "yarn",
-    "cdklocal",
-    "watch",
-    "--context",
-    "stage=localstack",
-    "--no-rollback",
-  ];
-
-  runner.run_command_and_output("CDK watch", watchCmd, ".");
+  runner.run_command_and_output(
+    "CDK local watch",
+    [
+      "yarn",
+      "cdklocal",
+      "watch",
+      "--context",
+      "stage=localstack",
+      "--no-rollback",
+    ],
+    "."
+  );
   run_fe_locally(runner);
 }
 

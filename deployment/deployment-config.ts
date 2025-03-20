@@ -7,7 +7,7 @@ export interface DeploymentConfigProperties {
   isDev: boolean;
   vpcName: string;
   oktaMetadataUrl: string;
-  bootstrapUsersPassword?: string;
+  bootstrapUsersPassword?: string; // TODO: Should this be an ARN?
   launchDarklyClient: string;
   redirectSignout: string;
   cloudfrontCertificateArn?: string;
@@ -51,7 +51,7 @@ export const loadDefaultSecret = async (
   project: string,
   stage: string = "bootstrap"
 ) => {
-  if (stage === "bootstrap") {
+  if (["bootstrap", "prerequisites"].includes(stage)) {
     return {};
   } else {
     return JSON.parse((await getSecret(`${project}-default`))!);
