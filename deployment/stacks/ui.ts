@@ -63,8 +63,6 @@ export function createUiComponents(props: CreateUiComponentsProps) {
     autoDeleteObjects: isDev,
     enforceSSL: true,
     versioned: true,
-    serverAccessLogsBucket: loggingBucket,
-    serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
   });
 
   logBucket.addToResourcePolicy(
