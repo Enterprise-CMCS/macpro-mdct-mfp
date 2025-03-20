@@ -15,6 +15,5 @@ window._env_ = {
   REACT_APP_LD_SDK_CLIENT: "{{launchDarklyClient}}",
   S3_ATTACHMENTS_BUCKET_NAME: "{{s3AttachmentsBucketName}}",
   S3_ATTACHMENTS_BUCKET_REGION: "us-east-1",
-  STAGE: "{{stage}}",
   TIMESTAMP: "{{timestamp}}",
 };
