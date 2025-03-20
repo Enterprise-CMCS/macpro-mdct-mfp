@@ -11,6 +11,7 @@ import {
   RemovalPolicy,
   Tags,
   Aws,
+  CfnOutput,
 } from "aws-cdk-lib";
 import { Lambda } from "../constructs/lambda";
 import { addIamPropertiesToBucketRole } from "../utils/s3";
@@ -183,6 +184,10 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
         retryAttempts: 2,
       }),
     ],
+  });
+
+  new CfnOutput(scope, "AttachmentsBucketName", {
+    value: attachmentsBucket.bucketName,
   });
 
   return {

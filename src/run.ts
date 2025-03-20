@@ -99,7 +99,11 @@ async function run_fe_locally(runner: LabeledProcessRunner) {
     "mfp-localstack",
     "ApiUrl"
   );
-  await writeLocalUiEnvFile(apiUrl!);
+  const s3AttachmentsBucketName = await getCloudFormationStackOutputValue(
+    "mfp-localstack",
+    "AttachmentsBucketName"
+  );
+  await writeLocalUiEnvFile(apiUrl!, s3AttachmentsBucketName!);
   runner.run_command_and_output("ui", ["npm", "start"], "services/ui-src");
 }
 

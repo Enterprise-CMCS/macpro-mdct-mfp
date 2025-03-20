@@ -17,23 +17,28 @@ const region = "us-east-1";
 // export S3_ATTACHMENTS_BUCKET_REGION=${self:custom.s3_attachments_bucket_region}
 // export S3_ATTACHMENTS_BUCKET_NAME=${self:custom.s3_attachments_bucket_name}
 
-export async function writeLocalUiEnvFile(apiUrl: string) {
+export async function writeLocalUiEnvFile(
+  apiUrl: string,
+  s3AttachmentsBucketName: string
+) {
   const envVariables = {
-    LOCAL_LOGIN: "false",
-    SKIP_PREFLIGHT_CHECK: "true",
     API_REGION: region,
     API_URL: apiUrl.replace("https", "http"),
-    COGNITO_REGION: process.env.COGNITO_REGION,
+    APPLICATION_ENDPOINT: "http://localhost:3000/",
+    COGNITO_IDP_NAME: "Okta",
     COGNITO_IDENTITY_POOL_ID: process.env.COGNITO_IDENTITY_POOL_ID,
-    COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
+    COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
+    COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
+    COGNITO_REGION: process.env.COGNITO_REGION,
     COGNITO_USER_POOL_CLIENT_ID: process.env.COGNITO_USER_POOL_CLIENT_ID,
     COGNITO_USER_POOL_CLIENT_DOMAIN:
       process.env.COGNITO_USER_POOL_CLIENT_DOMAIN,
-    COGNITO_IDP_NAME: "Okta",
-    COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
-    COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
+    COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
+    LOCAL_LOGIN: "false",
     POST_SIGNOUT_REDIRECT: "http://localhost:3000/",
     REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT,
+    S3_ATTACHMENTS_BUCKET_NAME: s3AttachmentsBucketName,
+    S3_ATTACHMENTS_BUCKET_REGION: "us-east-1",
   };
 
   await fs.rm(configFilePath, { force: true });
