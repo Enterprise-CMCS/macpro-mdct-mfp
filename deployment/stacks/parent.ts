@@ -53,7 +53,7 @@ export class ParentStack extends Stack {
       kafkaAuthorizedSubnetIds ?? ""
     );
 
-    const { customResourceRole } = createCustomResourceRole({ ...commonProps });
+    const customResourceRole = createCustomResourceRole({ ...commonProps });
 
     const loggingBucket = s3.Bucket.fromBucketName(
       this,
