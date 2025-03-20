@@ -99,6 +99,7 @@ export class Lambda extends Construct {
       bundling: {
         minify: true,
         sourceMap: true,
+        nodeModules: ["jsdom"],
       },
       environment,
       ...restProps,
