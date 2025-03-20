@@ -1,7 +1,6 @@
-import path from "path";
+import path, { dirname } from "path";
 import { promises as fs } from "fs";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,8 +30,11 @@ export async function writeLocalUiEnvFile(apiUrl: string) {
     COGNITO_USER_POOL_CLIENT_ID: process.env.COGNITO_USER_POOL_CLIENT_ID,
     COGNITO_USER_POOL_CLIENT_DOMAIN:
       process.env.COGNITO_USER_POOL_CLIENT_DOMAIN,
+    COGNITO_IDP_NAME: "Okta",
     COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
     COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
+    POST_SIGNOUT_REDIRECT: "http://localhost:3000/",
+    REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT,
   };
 
   await fs.rm(configFilePath, { force: true });
