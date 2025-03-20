@@ -8,6 +8,7 @@ export interface DeploymentConfigProperties {
   vpcName: string;
   oktaMetadataUrl: string;
   bootstrapUsersPassword?: string;
+  launchDarklyClient: string;
   cloudfrontCertificateArn?: string;
   cloudfrontDomainName?: string;
   secureCloudfrontDomainName?: string;
@@ -78,6 +79,7 @@ function validateConfig(config: {
     "oktaMetadataUrl",
     "brokerString",
     "kafkaAuthorizedSubnetIds",
+    "launchDarklyClient",
   ];
 
   const invalidKeys = expectedKeys.filter(
