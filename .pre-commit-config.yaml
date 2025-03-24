@@ -50,20 +50,20 @@ repos:
       - id: gitleaks
   - repo: local
     hooks:
-      # - id: branch-name-validation
-      #   name: branch-name-validation
-      #   entry: .github/branch-name-validation.sh
-      #   language: script
-      #   pass_filenames: false
+      - id: branch-name-validation
+        name: branch-name-validation
+        entry: .github/branch-name-validation.sh
+        language: script
+        pass_filenames: false
       - id: track-flags
         name: track-flags
         entry: yarn track-flags
         language: system
         files: '\.tsx?$'
         pass_filenames: false
-      # - id: track-todos
-      #   name: track-todos
-      #   entry: yarn track-todos
-      #   language: system
-      #   exclude: 'logs/.*'
-      #   pass_filenames: false
+      - id: track-todos
+        name: track-todos
+        entry: yarn track-todos
+        language: system
+        exclude: "logs/.*"
+        pass_filenames: false
