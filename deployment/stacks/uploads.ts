@@ -190,7 +190,5 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
     value: attachmentsBucket.bucketName,
   });
 
-  return {
-    attachmentsBucket,
-  };
+  return attachmentsBucket;
 }

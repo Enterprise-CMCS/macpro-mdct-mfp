@@ -67,9 +67,12 @@ export class ParentStack extends Stack {
       customResourceRole,
     });
 
-    const { attachmentsBucket } = createUploadsComponents({
-      ...commonProps,
-    });
+    let attachmentsBucket: s3.IBucket | undefined;
+    if (!isLocalStack) {
+      attachmentsBucket = createUploadsComponents({
+        ...commonProps,
+      });
+    }
 
     const { apiGatewayRestApiUrl, restApiId } = createApiComponents({
       ...commonProps,

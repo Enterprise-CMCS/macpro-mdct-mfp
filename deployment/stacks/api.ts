@@ -36,7 +36,7 @@ interface CreateApiComponentsProps {
   iamPath: string;
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
-  templateBucket: s3.IBucket;
+  templateBucket: s3.IBucket | undefined;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
@@ -111,7 +111,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     NODE_OPTIONS: "--enable-source-maps",
     BOOTSTRAP_BROKER_STRING_TLS: brokerString,
     stage,
-    TEMPLATE_BUCKET: templateBucket.bucketName,
+    TEMPLATE_BUCKET: templateBucket ? templateBucket.bucketName : undefined,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     ...Object.fromEntries(
@@ -148,11 +148,13 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       effect: iam.Effect.ALLOW,
       actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
       resources: [
-        templateBucket.bucketArn,
-        wpFormBucket.bucketArn,
-        sarFormBucket.bucketArn,
-        `${wpFormBucket.bucketArn}/fieldData/*`,
-        `${sarFormBucket.bucketArn}/fieldData/*`,
+        ...(templateBucket ? [templateBucket.bucketArn] : []),
+        ...[
+          wpFormBucket.bucketArn,
+          sarFormBucket.bucketArn,
+          `${wpFormBucket.bucketArn}/fieldData/*`,
+          `${sarFormBucket.bucketArn}/fieldData/*`,
+        ],
       ],
     }),
   ];
