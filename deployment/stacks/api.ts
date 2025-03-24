@@ -315,7 +315,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       (table) => table.id === "SarReports" || table.id === "WpReports"
     ),
   });
-  // TODO: confirm only attached to the streams wpReport and sarReport
 
   const bucketLambdaProps = {
     timeout: Duration.seconds(120),

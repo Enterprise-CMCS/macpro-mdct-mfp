@@ -7,7 +7,7 @@ export interface DeploymentConfigProperties {
   isDev: boolean;
   vpcName: string;
   oktaMetadataUrl: string;
-  bootstrapUsersPassword?: string; // TODO: Should this be an ARN?
+  bootstrapUsersPassword?: string;
   launchDarklyClient: string;
   redirectSignout: string;
   cloudfrontCertificateArn?: string;
