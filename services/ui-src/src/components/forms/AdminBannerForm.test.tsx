@@ -1,13 +1,39 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 // components
 import { AdminBannerForm } from "components";
 // utils
 import { RouterWrappedComponent } from "utils/testing/mockRouter";
-import userEvent from "@testing-library/user-event";
 import { testA11y } from "utils/testing/commonTests";
+import { convertDateTimeEtToUtc, useStore } from "utils";
+import { mockBannerData } from "utils/testing/mockBanner";
+import { mockBannerStore } from "utils/testing/setupJest";
 
 const mockWriteAdminBanner = jest.fn();
-window.HTMLElement.prototype.scrollIntoView = jest.fn();
+const mockWriteAdminBannerWithError = jest.fn(() => {
+  throw new Error();
+});
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
+const mockBannerOverlappingDates = {
+  ...mockBannerData,
+  startDate: 1609477200000, // 1/1/2021 00:00:00 UTC
+  endDate: 1641013199000, // 12/31/2021 23:59:59 UTC
+};
+
+const emptyBannerStore = {
+  ...mockBannerStore,
+  allBanners: undefined,
+  bannerData: undefined,
+};
+
+const mockStoreWithConflictingBanner = {
+  ...mockBannerStore,
+  allBanners: [mockBannerOverlappingDates],
+  bannerData: mockBannerOverlappingDates,
+};
 
 const adminBannerFormComponent = (writeAdminBanner: Function) => (
   <RouterWrappedComponent>
@@ -18,76 +44,103 @@ const adminBannerFormComponent = (writeAdminBanner: Function) => (
   </RouterWrappedComponent>
 );
 
+const fillOutForm = async (form: any) => {
+  // selectors for all the required fields
+  const titleInput = form.querySelector("[name='bannerTitle']");
+  const descriptionInput = form.querySelector("[name='bannerDescription']");
+  const startDateInput = form.querySelector("[name='bannerStartDate']");
+  const endDateInput = form.querySelector("[name='bannerEndDate']");
+  // fill out form fields
+  await userEvent.type(titleInput, "this is the title text");
+  await userEvent.type(descriptionInput, "this is the description text");
+  await userEvent.type(startDateInput, "07/11/2021");
+  await userEvent.type(endDateInput, "08/12/2021");
+  await userEvent.tab();
+};
+
 describe("<AdminBannerForm />", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   test("AdminBannerForm is visible", () => {
+    mockedUseStore.mockReturnValue(emptyBannerStore);
     render(adminBannerFormComponent(mockWriteAdminBanner));
     const form = screen.getByTestId("test-form");
     expect(form).toBeVisible();
   });
 
-  test("AdminBannerForm can be filled and submitted without error", async () => {
-    render(adminBannerFormComponent(mockWriteAdminBanner));
-
-    const titleInput = screen.getByLabelText("Title text");
-    await userEvent.type(titleInput, "mock title");
-
-    const descriptionInput = screen.getByLabelText("Description text");
-    await userEvent.type(descriptionInput, "mock description");
-
-    const linkInput = screen.getByLabelText("Link", { exact: false });
-    await userEvent.type(linkInput, "http://example.com");
-
-    const startDateInput = screen.getByLabelText("Start date");
-    await userEvent.type(startDateInput, "01/01/1970");
-
-    const endDateInput = screen.getByLabelText("End date");
-    await userEvent.type(endDateInput, "01/01/1970");
-
-    const submitButton = screen.getByText("Replace Current Banner");
+  test("Form submits correctly", async () => {
+    mockedUseStore.mockReturnValue(emptyBannerStore);
+    const result = render(adminBannerFormComponent(mockWriteAdminBanner));
+    const form = result.container;
+    await fillOutForm(form);
+    const submitButton = screen.getByRole("button");
     await userEvent.click(submitButton);
-
-    const HOURS = 60 * 60 * 1000;
-
-    expect(mockWriteAdminBanner).toHaveBeenCalledWith({
-      key: "admin-banner-id",
-      title: "mock title",
-      description: "mock description",
-      link: "http://example.com",
-      startDate: 5 * HOURS, // midnight UTC, in New York
-      endDate: 29 * HOURS - 1000, // 1 second before midnight of the next day
+    await expect(mockWriteAdminBanner).toHaveBeenCalledWith({
+      title: "this is the title text",
+      description: "this is the description text",
+      link: undefined,
+      startDate: convertDateTimeEtToUtc(
+        { year: 2021, month: 7, day: 11 },
+        { hour: 0, minute: 0, second: 0 }
+      ),
+      endDate: convertDateTimeEtToUtc(
+        { year: 2021, month: 8, day: 12 },
+        { hour: 23, minute: 59, second: 59 }
+      ),
     });
   });
 
-  test("AdminBannerForm shows an error when submit fails", async () => {
-    mockWriteAdminBanner.mockImplementationOnce(() => {
-      throw new Error("FAILURE");
-    });
-
-    render(adminBannerFormComponent(mockWriteAdminBanner));
-
-    const titleInput = screen.getByLabelText("Title text");
-    await userEvent.type(titleInput, "mock title");
-
-    const descriptionInput = screen.getByLabelText("Description text");
-    await userEvent.type(descriptionInput, "mock description");
-
-    const linkInput = screen.getByLabelText("Link", { exact: false });
-    await userEvent.type(linkInput, "http://example.com");
-
-    const startDateInput = screen.getByLabelText("Start date");
-    await userEvent.type(startDateInput, "01/01/1970");
-
-    const endDateInput = screen.getByLabelText("End date");
-    await userEvent.type(endDateInput, "01/01/1970");
-
-    const submitButton = screen.getByText("Replace Current Banner");
+  test("Form submits correctly with existing banners that don't overlap", async () => {
+    mockedUseStore.mockReturnValue(mockBannerStore);
+    const result = render(adminBannerFormComponent(mockWriteAdminBanner));
+    const form = result.container;
+    await fillOutForm(form);
+    const submitButton = screen.getByRole("button");
     await userEvent.click(submitButton);
+    await expect(mockWriteAdminBanner).toHaveBeenCalledWith({
+      title: "this is the title text",
+      description: "this is the description text",
+      link: undefined,
+      startDate: convertDateTimeEtToUtc(
+        { year: 2021, month: 7, day: 11 },
+        { hour: 0, minute: 0, second: 0 }
+      ),
+      endDate: convertDateTimeEtToUtc(
+        { year: 2021, month: 8, day: 12 },
+        { hour: 23, minute: 59, second: 59 }
+      ),
+    });
+  });
 
-    const errorMessage = screen.getByText(
-      "Current banner could not be replaced",
-      { exact: false }
+  test("Form does not submit and displays error if dates overlap with existing banner", async () => {
+    mockedUseStore.mockReturnValue(mockStoreWithConflictingBanner);
+    window.HTMLElement.prototype.scrollIntoView = jest.fn();
+    const result = render(adminBannerFormComponent(mockWriteAdminBanner));
+    const form = result.container;
+    await fillOutForm(form);
+    const submitButton = screen.getByRole("button");
+    await userEvent.click(submitButton);
+    await expect(mockWriteAdminBanner).not.toHaveBeenCalled();
+    expect(
+      screen.getByText("Banners cannot have overlapping dates.")
+    ).toBeVisible();
+    expect(
+      screen.getByText("Please adjust the new banner dates and try again.")
+    ).toBeVisible();
+  });
+
+  test("Shows error if writeBanner throws error", async () => {
+    mockedUseStore.mockReturnValue(emptyBannerStore);
+    window.HTMLElement.prototype.scrollIntoView = jest.fn();
+    const result = render(
+      adminBannerFormComponent(mockWriteAdminBannerWithError)
     );
-    expect(errorMessage).toBeVisible();
+    const form = result.container;
+    await fillOutForm(form);
+    const submitButton = screen.getByRole("button");
+    await userEvent.click(submitButton);
+    expect(screen.getByText(/Something went wrong on our end/)).toBeVisible();
   });
 
   testA11y(adminBannerFormComponent(mockWriteAdminBanner));
