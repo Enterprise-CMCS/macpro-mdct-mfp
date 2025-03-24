@@ -42,6 +42,11 @@ const loadCognitoValues = async () => {
 };
 
 export const isAuthenticated = async (event: APIGatewayProxyEvent) => {
+  const isLocalStack = event.requestContext.accountId === "000000000000";
+  if (isLocalStack) {
+    return true;
+  }
+
   const cognitoValues = await loadCognitoValues();
 
   // Verifier that expects valid access tokens:
