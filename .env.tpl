@@ -1,13 +1,14 @@
-API_URL=http://localhost:3030/local
 BannerTable=local-banners
 COGNITO_USER_POOL_CLIENT_ID=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_CLIENT_ID
 COGNITO_USER_POOL_ID=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_ID
+COGNITO_USER_POOL_CLIENT_DOMAIN=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_CLIENT_DOMAIN
+COGNITO_IDENTITY_POOL_ID=op://mdct_devs/mfp_secrets/COGNITO_IDENTITY_POOL_ID
 POST_SIGNOUT_REDIRECT=http://localhost:3000/
+REACT_APP_LD_SDK_CLIENT=op://mdct_devs/mfp_secrets/REACT_APP_LD_SDK_CLIENT
 DISABLE_ESLINT_PLUGIN=true
 FormTemplateVersionsTable=local-form-template-versions
 IAM_PATH=/
 IAM_PERMISSIONS_BOUNDARY="bound"
-LOCAL_LOGIN=true
 LOGGING_BUCKET=log-bucket
 S3_LOCAL_ENDPOINT=http://localhost:4569
 SAR_FORM_BUCKET=op://mdct_devs/mfp_secrets/SAR_FORM_BUCKET

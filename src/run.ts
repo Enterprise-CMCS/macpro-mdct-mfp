@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-undef */
 import yargs from "yargs";
 import * as dotenv from "dotenv";
 import LabeledProcessRunner from "./runner.js";
@@ -79,14 +81,7 @@ function updateEnvFiles() {
     execSync("op inject --in-file .env.tpl --out-file .env --force", {
       stdio: "inherit",
     });
-    execSync(
-      "op inject --in-file services/ui-src/.env.tpl --out-file services/ui-src/.env --force",
-      { stdio: "inherit" }
-    );
     execSync("sed -i '' -e 's/# pragma: allowlist secret//g' .env");
-    execSync(
-      "sed -i '' -e 's/# pragma: allowlist secret//g' services/ui-src/.env"
-    );
   } catch {
     // eslint-disable-next-line no-console
     console.error("Failed to update .env files using 1Password CLI.");
@@ -182,7 +177,7 @@ async function run_local() {
 
   process.env.AWS_DEFAULT_REGION = "us-east-1";
   process.env.AWS_ACCESS_KEY_ID = "localstack";
-  process.env.AWS_SECRET_ACCESS_KEY = "localstack";
+  process.env.AWS_SECRET_ACCESS_KEY = "localstack"; // pragma: allowlist secret
   process.env.AWS_ENDPOINT_URL = "http://localhost:4566";
 
   await runner.run_command_and_output(
@@ -335,6 +330,7 @@ async function deploy(options: { stage: string }) {
     );
   } else {
     // TODO: FYI, I got this error when my internet connection was down, so we could improve the logic here.
+
     // TODO: FYI, I got this error when my AWS credentials were expired, so we could improve the logic here.
     console.error(
       "MISSING PREREQUISITE STACK! Must deploy it before attempting to deploy the application."

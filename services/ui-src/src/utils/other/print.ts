@@ -1,4 +1,3 @@
-import config from "config";
 import { post } from "utils";
 
 export const printPdf = async () => {
@@ -8,10 +7,6 @@ export const printPdf = async () => {
   }
   const path = "/print_pdf";
   let apiName;
-
-  if (config.DEV_API_URL) {
-    apiName = "mfpDev";
-  }
 
   const htmlString = document!
     .querySelector("html")!

@@ -21,16 +21,6 @@ let apiRestConfig: any = {
   },
 };
 
-if (config.DEV_API_URL) {
-  apiRestConfig = {
-    ...apiRestConfig,
-    mfpDev: {
-      endpoint: config.DEV_API_URL,
-      region: "us-east-1",
-    },
-  };
-}
-
 Amplify.configure({
   Storage: {
     S3: {
