@@ -62,7 +62,6 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     }).identifiers,
   ];
 
-  // TODO: confirm how end-users upload to this bucket and test with this deployed version
   const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
     bucketName: `database-${stage}-sar`,
     encryption: s3.BucketEncryption.S3_MANAGED,
@@ -73,7 +72,6 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     enforceSSL: true,
   });
 
-  // TODO: confirm how end-users upload to this bucket and test with this deployed version
   const wpFormBucket = new s3.Bucket(scope, "WpFormBucket", {
     bucketName: `database-${stage}-wp`,
     encryption: s3.BucketEncryption.S3_MANAGED,
