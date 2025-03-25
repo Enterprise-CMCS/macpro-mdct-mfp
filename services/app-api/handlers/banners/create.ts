@@ -1,4 +1,5 @@
 import handler from "../handler-lib";
+import { randomUUID } from "crypto";
 // types
 import { UserRoles } from "../../utils/types";
 import { number, object, string } from "yup";
@@ -15,7 +16,6 @@ import {
 } from "../../utils/responses/response-lib";
 
 const validationSchema = object().shape({
-  key: string().required(),
   title: string().required(),
   description: string().required(),
   link: string().url().notRequired(),
@@ -26,9 +26,6 @@ const validationSchema = object().shape({
 export const createBanner = handler(async (event, _context) => {
   if (!hasPermissions(event, [UserRoles.ADMIN])) {
     return forbidden(error.UNAUTHORIZED);
-  }
-  if (!event?.pathParameters?.bannerId!) {
-    return badRequest(error.NO_KEY);
   }
   const unvalidatedPayload = JSON.parse(event.body!);
 
@@ -43,7 +40,7 @@ export const createBanner = handler(async (event, _context) => {
   const currentTime = Date.now();
 
   const newBanner = {
-    key: event.pathParameters.bannerId,
+    key: randomUUID(),
     createdAt: currentTime,
     lastAltered: currentTime,
     lastAlteredBy: event?.headers["cognito-identity-id"],
