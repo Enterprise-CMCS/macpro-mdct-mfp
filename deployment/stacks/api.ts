@@ -131,7 +131,31 @@ export function createApiComponents(props: CreateApiComponentsProps) {
         "dynamodb:UpdateItem",
         "dynamodb:DeleteItem",
       ],
-      resources: tables.map((table) => table.arn),
+      resources: [
+        ...tables.map((table) => table.arn),
+        ...tables.map((table) => `${table.arn}/index/*`),
+      ],
+    }),
+    new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["s3:GetObject", "s3:ListBucket", "s3:PutObject"],
+      resources: [
+        ...(templateBucket
+          ? [
+              templateBucket.bucketArn,
+              `${templateBucket.bucketArn}/templates/*`,
+            ]
+          : []),
+        ...[
+          `${wpFormBucket.bucketArn}/formTemplates/*`,
+          wpFormBucket.bucketArn,
+          `${wpFormBucket.bucketArn}/formTemplates/*`,
+          `${wpFormBucket.bucketArn}/fieldData/*`,
+          sarFormBucket.bucketArn,
+          `${sarFormBucket.bucketArn}/formTemplates/*`,
+          `${sarFormBucket.bucketArn}/fieldData/*`,
+        ],
+      ],
     }),
     new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
