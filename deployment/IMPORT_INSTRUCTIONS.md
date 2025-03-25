@@ -18,6 +18,8 @@ yarn install
   # ui-src-<YOUR_BRANCH_NAME>
   # app-api-<YOUR_BRANCH_NAME>
   # database-<YOUR_BRANCH_NAME>
+  # topics-<YOUR_BRANCH_NAME>
+  # uploads-<YOUR_BRANCH_NAME>
 # manually dissassociate web acl in app-api-<YOUR_BRANCH_NAME>
 ./run destroy --stage <YOUR_BRANCH_NAME>
 ```
@@ -28,10 +30,10 @@ yarn install
 rm -rf node_modules
 yarn install
 ./run update-env
-IMPORT_VARIANT=empty ./run deploy --stage pete-dunlap-tester
-IMPORT_VARIANT=imports_included PROJECT=mfp cdk import --context stage=pete-dunlap-tester --force
-IMPORT_VARIANT=imports_included ./run deploy --stage pete-dunlap-tester
-./run deploy --stage pete-dunlap-tester
+IMPORT_VARIANT=empty ./run deploy --stage jon-holman-tester
+IMPORT_VARIANT=imports_included PROJECT=mfp cdk import --context stage=jon-holman-tester --force
+IMPORT_VARIANT=imports_included ./run deploy --stage jon-holman-tester
+./run deploy --stage jon-holman-tester
 ```
 
 Log into app using all options (Cognito and/or IDM) and follow instructions that app lead has provided to ensure app is working.
