@@ -111,7 +111,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     NODE_OPTIONS: "--enable-source-maps",
     BOOTSTRAP_BROKER_STRING_TLS: brokerString,
     stage,
-    TEMPLATE_BUCKET: templateBucket ? templateBucket.bucketName : undefined,
+    TEMPLATE_BUCKET: templateBucket ? templateBucket.bucketName : "",
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     ...Object.fromEntries(
