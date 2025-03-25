@@ -250,17 +250,6 @@ async function run_local() {
   run_fe_locally(runner);
 }
 
-// TODO: may not be needed anymore.
-async function install_deps_for_services(runner: LabeledProcessRunner) {
-  for (const service of deployedServices) {
-    await runner.run_command_and_output(
-      "Installing Dependencies",
-      ["yarn", "install", "--frozen-lockfile"],
-      `services/${service}`
-    );
-  }
-}
-
 async function install_deps(runner: LabeledProcessRunner, service: string) {
   await runner.run_command_and_output(
     "Installing dependencies",
@@ -272,12 +261,6 @@ async function install_deps(runner: LabeledProcessRunner, service: string) {
 async function prepare_services(runner: LabeledProcessRunner) {
   for (const service of deployedServices) {
     await install_deps(runner, service);
-    // TODO: may not need the below? or the above?
-    await runner.run_command_and_output(
-      "Installing Dependencies",
-      ["yarn", "install", "--frozen-lockfile"],
-      `services/${service}`
-    );
   }
 }
 
@@ -310,8 +293,6 @@ const stackExists = async (stackName: string): Promise<boolean> => {
 
 async function deploy(options: { stage: string }) {
   const runner = new LabeledProcessRunner();
-  await install_deps_for_services(runner);
-  // TODO: the line above or below, not both
   await prepare_services(runner);
   if (await stackExists("mfp-prerequisites")) {
     await downloadClamAvLayer();
@@ -390,7 +371,7 @@ async function destroy({
 // TODO: update for not SLS
 async function delete_topics(options: { stage: string }) {
   const runner = new LabeledProcessRunner();
-  await install_deps_for_services(runner);
+  await prepare_services(runner);
   let data = { project: "mfp", stage: options.stage };
   const deployCmd = [
     "sls",
@@ -412,7 +393,7 @@ async function delete_topics(options: { stage: string }) {
 // TODO: update for not SLS
 async function list_topics(options: { stage: string | undefined }) {
   const runner = new LabeledProcessRunner();
-  await install_deps_for_services(runner);
+  await prepare_services(runner);
   let data = { stage: options.stage };
   const deployCmd = [
     "sls",
