@@ -91,6 +91,7 @@ resources:
   Resources:
     AttachmentsBucket:
       Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
       Properties:
         BucketName: !Sub ${self:service}-${self:custom.stage}-attachments-${AWS::AccountId}
         BucketEncryption:

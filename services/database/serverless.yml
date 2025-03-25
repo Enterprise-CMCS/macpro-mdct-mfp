@@ -64,6 +64,7 @@ resources:
   Resources:
     BannerTable:
       Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
       Properties:
         TableName: ${self:custom.bannerTableName}
         PointInTimeRecoverySpecification:
@@ -79,6 +80,7 @@ resources:
         BillingMode: PAY_PER_REQUEST # Set the capacity to auto-scale
     FormTemplateVersionsTable:
       Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
       Properties:
         TableName: ${self:custom.formTemplateTableName}
         PointInTimeRecoverySpecification:
@@ -129,6 +131,7 @@ resources:
             AttributeType: S
     SarReportTable:
       Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
       Properties:
         TableName: ${self:custom.sarReportTableName}
         PointInTimeRecoverySpecification:
@@ -148,6 +151,7 @@ resources:
         BillingMode: PAY_PER_REQUEST # Set the capacity to auto-scale
     SarFormBucket:
       Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
       Properties:
         BucketName: !Sub ${self:custom.sarFormBucket}
         BucketEncryption:
@@ -166,6 +170,7 @@ resources:
           LogFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
     WpReportTable:
       Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
       Properties:
         TableName: ${self:custom.wpReportTableName}
         PointInTimeRecoverySpecification:
@@ -185,6 +190,7 @@ resources:
         BillingMode: PAY_PER_REQUEST # Set the capacity to auto-scale
     WpFormBucket:
       Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
       Properties:
         BucketName: !Sub ${self:custom.wpFormBucket}
         BucketEncryption:

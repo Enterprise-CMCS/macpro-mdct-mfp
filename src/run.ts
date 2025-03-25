@@ -1,7 +1,12 @@
 import yargs from "yargs";
 import * as dotenv from "dotenv";
 import LabeledProcessRunner from "./runner.js";
-import { ServerlessStageDestroyer } from "@stratiformdigital/serverless-stage-destroyer";
+// import { ServerlessStageDestroyer } from "@stratiformdigital/serverless-stage-destroyer";
+import { ServerlessStageDestroyer } from "./serverless-stage-destroyer.js";
+import {
+  getAllStacksForStage,
+  getCloudFormationTemplatesForStage,
+} from "./getCloudFormationTemplateForStage.js";
 import { execSync } from "child_process";
 import { addSlsBucketPolicies } from "./slsV4BucketPolicies.js";
 
@@ -146,6 +151,48 @@ async function deploy(options: { stage: string }) {
   await addSlsBucketPolicies();
 }
 
+async function getNotRetainedResources(
+  stage: string,
+  filters: { Key: string; Value: string }[] | undefined
+) {
+  const templates = await getCloudFormationTemplatesForStage(
+    `${process.env.REGION_A}`,
+    stage,
+    filters
+  );
+
+  const resourcesToCheck = {
+    [`database-${stage}`]: [
+      "BannerTable",
+      "FormTemplateVersionsTable",
+      "SarReportTable",
+      "SarFormBucket",
+      "WpReportTable",
+      "WpFormBucket",
+    ],
+    [`ui-${stage}`]: [
+      "CloudFrontDistribution",
+      "LoggingBucket",
+      "WaflogsUploadBucket",
+    ],
+    [`ui-auth-${stage}`]: ["CognitoUserPool"],
+    [`uploads-${stage}`]: ["AttachmentsBucket"],
+  };
+
+  const notRetained: { templateKey: string; resourceKey: string }[] = [];
+  for (const [templateKey, resourceKeys] of Object.entries(resourcesToCheck)) {
+    resourceKeys.forEach((resourceKey) => {
+      const policy =
+        templates?.[templateKey]?.Resources?.[resourceKey]?.DeletionPolicy;
+      if (policy !== "Retain") {
+        notRetained.push({ templateKey, resourceKey });
+      }
+    });
+  }
+
+  return notRetained;
+}
+
 async function destroy_stage(options: {
   stage: string;
   service: string | undefined;
@@ -164,6 +211,44 @@ async function destroy_stage(options: {
       Key: "SERVICE",
       Value: `${options.service}`,
     });
+  }
+
+  const stacks = await getAllStacksForStage(
+    `${process.env.REGION_A}`,
+    options.stage,
+    filters
+  );
+
+  const protectedStacks = stacks
+    .filter((i: any) => i.EnableTerminationProtection)
+    .map((i: any) => i.StackName);
+
+  if (protectedStacks.length > 0) {
+    console.log(
+      `We cannot proceed with the destroy because the following stacks have termination protection enabled:\n${protectedStacks.join(
+        "\n"
+      )}`
+    );
+    return;
+  } else {
+    console.log(
+      "No stacks have termination protection enabled. Proceeding with the destroy."
+    );
+  }
+
+  let notRetained: { templateKey: string; resourceKey: string }[] = [];
+  if (["master", "val", "production"].includes(options.stage)) {
+    notRetained = await getNotRetainedResources(options.stage, filters);
+  }
+
+  if (notRetained.length > 0) {
+    console.log(
+      "Will not destroy the stage because it's an important stage and some important resources are not yet set to be retained:"
+    );
+    notRetained.forEach(({ templateKey, resourceKey }) =>
+      console.log(` - ${templateKey}/${resourceKey}`)
+    );
+    return;
   }
 
   await destroyer.destroy(`${process.env.REGION_A}`, options.stage, {

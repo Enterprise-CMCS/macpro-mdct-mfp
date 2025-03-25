@@ -171,6 +171,7 @@ resources:
 
     LoggingBucket:
       Type: "AWS::S3::Bucket"
+      DeletionPolicy: Retain
       Properties:
         BucketName: !Sub ${self:service}-${self:custom.stage}-cloudfront-logs-${AWS::AccountId}
         PublicAccessBlockConfiguration:
@@ -190,7 +191,6 @@ resources:
         LoggingConfiguration:
           DestinationBucketName: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsBucket, ssm:/configuration/default/s3/accessLogsBucket}
           LogFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
-      DeletionPolicy: Delete
     LoggingBucketPolicy:
       Type: "AWS::S3::BucketPolicy"
       Properties:
@@ -220,49 +220,65 @@ resources:
           Comment: OAI to prevent direct public access to the bucket
     CloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
+      DeletionPolicy: Retain
       Properties:
         DistributionConfig:
-          Comment: CloudFront Distro for the static website hosted in S3
-          Aliases:
-            Fn::If:
-              - CreateCustomCloudFrontDomain
-              - - ${self:custom.cloudfrontDomainName}
-              - !Ref AWS::NoValue
-          Origins:
-            - DomainName: !GetAtt S3Bucket.DomainName
-              Id: S3Origin
-              S3OriginConfig:
-                OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
+          CustomOrigin:
+            DNSName: www.example.com
+            OriginProtocolPolicy: http-only
+            OriginSSLProtocols:
+              - TLSv1
           Enabled: true
-          HttpVersion: "http2"
-          DefaultRootObject: index.html
           DefaultCacheBehavior:
-            AllowedMethods:
-              - GET
-              - HEAD
-            Compress: true
-            TargetOriginId: S3Origin
-            ForwardedValues:
-              QueryString: true
-              Cookies:
-                Forward: none
-            ViewerProtocolPolicy: redirect-to-https
-            ResponseHeadersPolicyId: !GetAtt CloudFormationHeadersPolicy.Id
-          ViewerCertificate:
-            Fn::If:
-              - CreateCustomCloudFrontDomain
-              - AcmCertificateArn: ${self:custom.cloudfrontCertificateArn}
-                MinimumProtocolVersion: TLSv1.2_2021
-                SslSupportMethod: sni-only
-              - CloudFrontDefaultCertificate: true
-          CustomErrorResponses:
-            - ErrorCode: 403
-              ResponseCode: 200
-              ResponsePagePath: /index.html
-          WebACLId: !GetAtt WafPluginAcl.Arn
-          Logging:
-            Bucket: !Sub "${LoggingBucket}.s3.amazonaws.com"
-            Prefix: AWSLogs/CLOUDFRONT/${self:custom.stage}/
+            CachePolicyId: Managed-CachingDisabled
+            TargetOriginId: some_target_origin_id
+            ViewerProtocolPolicy: allow-all
+    # CloudFrontDistribution:
+    #   Type: AWS::CloudFront::Distribution
+    #   DeletionPolicy: Retain
+    #   Properties:
+    #     DistributionConfig:
+    #       Comment: CloudFront Distro for the static website hosted in S3
+    #       Aliases:
+    #         Fn::If:
+    #           - CreateCustomCloudFrontDomain
+    #           - - ${self:custom.cloudfrontDomainName}
+    #           - !Ref AWS::NoValue
+    #       Origins:
+    #         - DomainName: !GetAtt S3Bucket.DomainName
+    #           Id: S3Origin
+    #           S3OriginConfig:
+    #             OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
+    #       Enabled: true
+    #       HttpVersion: "http2"
+    #       DefaultRootObject: index.html
+    #       DefaultCacheBehavior:
+    #         AllowedMethods:
+    #           - GET
+    #           - HEAD
+    #         Compress: true
+    #         TargetOriginId: S3Origin
+    #         ForwardedValues:
+    #           QueryString: true
+    #           Cookies:
+    #             Forward: none
+    #         ViewerProtocolPolicy: redirect-to-https
+    #         ResponseHeadersPolicyId: !GetAtt CloudFormationHeadersPolicy.Id
+    #       ViewerCertificate:
+    #         Fn::If:
+    #           - CreateCustomCloudFrontDomain
+    #           - AcmCertificateArn: ${self:custom.cloudfrontCertificateArn}
+    #             MinimumProtocolVersion: TLSv1.2_2021
+    #             SslSupportMethod: sni-only
+    #           - CloudFrontDefaultCertificate: true
+    #       CustomErrorResponses:
+    #         - ErrorCode: 403
+    #           ResponseCode: 200
+    #           ResponsePagePath: /index.html
+    #       WebACLId: !GetAtt WafPluginAcl.Arn
+    #       Logging:
+    #         Bucket: !Sub "${LoggingBucket}.s3.amazonaws.com"
+    #         Prefix: AWSLogs/CLOUDFRONT/${self:custom.stage}/
     Route53DnsRecord:
       Type: AWS::Route53::RecordSet
       Condition: CreateDnsRecord
@@ -300,6 +316,7 @@ resources:
     ###############This code block enables logging on waf and sends all logs to s3.##################################
     WaflogsUploadBucket:
       Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
       Properties:
         BucketName: !Sub ${AWS::AccountId}-${self:service}-${self:custom.stage}-waflogs
         BucketEncryption:
