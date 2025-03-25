@@ -26,6 +26,7 @@ export interface AdminBannerState {
   bannerLoading: boolean;
   bannerErrorMessage: ErrorVerbiage | undefined;
   bannerDeleting: boolean;
+  editable: boolean;
   // ACTIONS
   setAllBanners: (allBanners: AdminBannerData[] | undefined) => void;
   setBannerData: (newBannerData: AdminBannerData | undefined) => void;
