@@ -54,16 +54,9 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     bootstrapUsersPassword,
     secureCloudfrontDomainName,
     userPoolDomainPrefix,
-    sesSourceEmailAddress, // TODO: fix this not being used.  reference serverless.yml conditional CreateEmailConfiguration
+    // TODO: note that sesSourceEmailAddress - CreateEmailConfiguration in SLS was being configured based on SSM parameters sesSourceEmailAddress which was not set in any environment.
     attachmentsBucketArn,
   } = props;
-
-  // TODO: SES email
-  // EmailConfiguration: !If
-  // - CreateEmailConfiguration
-  // - EmailSendingAccount: DEVELOPER
-  //   SourceArn: !Sub arn:aws:ses:us-east-1:${AWS::AccountId}:identity/
-  // - !Ref AWS::NoValue
 
   const userPool = new cognito.UserPool(scope, "UserPool", {
     userPoolName: `${stage}-user-pool`,
