@@ -9,6 +9,10 @@ import {
 } from "./getCloudFormationTemplateForStage.js";
 import { execSync } from "child_process";
 import { addSlsBucketPolicies } from "./slsV4BucketPolicies.js";
+import {
+  CloudFormationClient,
+  DescribeStackResourceCommand,
+} from "@aws-sdk/client-cloudformation";
 
 // load .env
 dotenv.config();
@@ -152,10 +156,12 @@ async function deploy(options: { stage: string }) {
   await addSlsBucketPolicies();
 }
 
-async function getNotRetainedResources(
+async function checkRetainedResources(
   stage: string,
   filters: { Key: string; Value: string }[] | undefined
 ) {
+  const cfnClient = new CloudFormationClient({ region: process.env.REGION_A });
+
   const templates = await getCloudFormationTemplatesForStage(
     `${process.env.REGION_A}`,
     stage,
@@ -181,18 +187,34 @@ async function getNotRetainedResources(
   };
 
   const notRetained: { templateKey: string; resourceKey: string }[] = [];
+  const retained: {
+    templateKey: string;
+    resourceKey: string;
+    physicalResourceId: string;
+  }[] = [];
+
   for (const [templateKey, resourceKeys] of Object.entries(resourcesToCheck)) {
-    resourceKeys.forEach((resourceKey) => {
+    for (const resourceKey of resourceKeys) {
       const policy =
         templates?.[templateKey]?.Resources?.[resourceKey]?.DeletionPolicy;
-      if (policy !== "Retain") {
+      if (policy === "Retain") {
+        const describeCmd = new DescribeStackResourceCommand({
+          StackName: templateKey,
+          LogicalResourceId: resourceKey,
+        });
+        const response = await cfnClient.send(describeCmd);
+        const physicalResourceId =
+          response.StackResourceDetail!.PhysicalResourceId!;
+        retained.push({ templateKey, resourceKey, physicalResourceId });
+      } else {
         notRetained.push({ templateKey, resourceKey });
       }
-    });
+    }
   }
 
-  return notRetained;
+  return { retained, notRetained };
 }
+
 function checkEnvVars() {
   const envVarsToCheck = [
     "LOGGING_BUCKET",
@@ -267,8 +289,19 @@ async function destroy_stage(options: {
   }
 
   let notRetained: { templateKey: string; resourceKey: string }[] = [];
+  let retained;
   if (["master", "val", "production"].includes(options.stage)) {
-    notRetained = await getNotRetainedResources(options.stage, filters);
+    ({ retained, notRetained } = await checkRetainedResources(
+      options.stage,
+      filters
+    ));
+  }
+
+  if (retained) {
+    console.log("Information to use for import to CDK:");
+    retained.forEach(({ templateKey, resourceKey, physicalResourceId }) => {
+      console.log(`${templateKey} - ${resourceKey} - ${physicalResourceId}`);
+    });
   }
 
   if (notRetained.length > 0) {
