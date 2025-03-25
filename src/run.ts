@@ -144,6 +144,7 @@ async function install_deps_for_services(runner: LabeledProcessRunner) {
 }
 
 async function deploy(options: { stage: string }) {
+  checkEnvVars();
   const runner = new LabeledProcessRunner();
   await install_deps_for_services(runner);
   const deployCmd = ["sls", "deploy", "--stage", options.stage];
@@ -192,18 +193,19 @@ async function getNotRetainedResources(
 
   return notRetained;
 }
-
-async function destroy_stage(options: {
-  stage: string;
-  service: string | undefined;
-  wait: boolean;
-  verify: boolean;
-}) {
+function checkEnvVars() {
   const envVarsToCheck = [
     "LOGGING_BUCKET",
     "TEMPLATE_BUCKET",
     "WP_FORM_BUCKET",
     "SAR_FORM_BUCKET",
+    "WP_REPORT_TABLE_STREAM_ARN",
+    "SAR_REPORT_TABLE_STREAM_ARN",
+    "VPC_ID",
+    "VPC_SUBNET_A",
+    "VPC_SUBNET_B",
+    "VPC_SUBNET_C",
+    "BROKER_STRINGS",
   ];
 
   const setVars = envVarsToCheck.filter(
@@ -211,13 +213,21 @@ async function destroy_stage(options: {
   );
 
   if (setVars.length > 0) {
-    console.error(
-      `Will not proceed because these environment variables are set: ${setVars.join(
-        ", "
-      )}`
-    );
-    return;
+    const message = `Will not proceed because these environment variables are set:\n${setVars.join(
+      ", "
+    )}\ncheck your .env file`;
+
+    throw message;
   }
+}
+
+async function destroy_stage(options: {
+  stage: string;
+  service: string | undefined;
+  wait: boolean;
+  verify: boolean;
+}) {
+  checkEnvVars();
 
   let destroyer = new ServerlessStageDestroyer();
   let filters = [
