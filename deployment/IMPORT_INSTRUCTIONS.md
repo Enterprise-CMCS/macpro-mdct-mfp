@@ -6,7 +6,7 @@
 rm -rf node_modules
 yarn install
 ./run update-env
-# COMMENT OUT LOGGING_BUCKET, TEMPLATE_BUCKET, WP_FORM_BUCKET, and SAR_FORM_BUCKET in .env file
+# COMMENT OUT LOGGING_BUCKET, TEMPLATE_BUCKET, WP_FORM_BUCKET, SAR_FORM_BUCKET and values for short-circuiting SSM in .env file
 ./run deploy --stage <YOUR_BRANCH_NAME>
 
 # cloudfront.Distribution -
@@ -29,7 +29,7 @@ rm -rf node_modules
 yarn install
 ./run update-env
 IMPORT_VARIANT=empty ./run deploy --stage pete-dunlap-tester
-IMPORT_VARIANT=imports_included PROJECT=hcbs cdk import --context stage=pete-dunlap-tester --force
+IMPORT_VARIANT=imports_included PROJECT=mfp cdk import --context stage=pete-dunlap-tester --force
 IMPORT_VARIANT=imports_included ./run deploy --stage pete-dunlap-tester
 ./run deploy --stage pete-dunlap-tester
 ```
