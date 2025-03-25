@@ -111,6 +111,14 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
           `${clamDefsBucket.bucketArn}/*`,
         ],
       }),
+      new iam.PolicyStatement({
+        actions: ["s3:ListBucket"],
+        resources: [attachmentsBucket.bucketArn, clamDefsBucket.bucketArn],
+      }),
+      new iam.PolicyStatement({
+        actions: ["s3:PutObject"],
+        resources: [`${clamDefsBucket.bucketArn}/*`],
+      }),
     ],
     environment: {
       CLAMAV_BUCKET_NAME: clamDefsBucket.bucketName,
