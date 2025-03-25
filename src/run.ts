@@ -199,6 +199,26 @@ async function destroy_stage(options: {
   wait: boolean;
   verify: boolean;
 }) {
+  const envVarsToCheck = [
+    "LOGGING_BUCKET",
+    "TEMPLATE_BUCKET",
+    "WP_FORM_BUCKET",
+    "SAR_FORM_BUCKET",
+  ];
+
+  const setVars = envVarsToCheck.filter(
+    (name) => process.env[name] !== undefined
+  );
+
+  if (setVars.length > 0) {
+    console.error(
+      `Will not proceed because these environment variables are set: ${setVars.join(
+        ", "
+      )}`
+    );
+    return;
+  }
+
   let destroyer = new ServerlessStageDestroyer();
   let filters = [
     {
