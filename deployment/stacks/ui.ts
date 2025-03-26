@@ -106,9 +106,6 @@ export function createUiComponents(props: CreateUiComponentsProps) {
       },
     }
   );
-  securityHeadersPolicy.applyRemovalPolicy(
-    isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN
-  );
 
   const cachePolicy = new cloudfront.CachePolicy(scope, "CustomCachePolicy", {
     queryStringBehavior: cloudfront.CacheQueryStringBehavior.all(),

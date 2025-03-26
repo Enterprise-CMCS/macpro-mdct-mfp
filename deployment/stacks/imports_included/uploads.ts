@@ -1,15 +1,16 @@
 import { Construct } from "constructs";
-import { aws_s3 as s3, RemovalPolicy, Tags } from "aws-cdk-lib";
+import { aws_s3 as s3, RemovalPolicy, Tags, Aws } from "aws-cdk-lib";
 
 interface createUploadsComponentsProps {
   scope: Construct;
+  stage: string;
 }
 
 export function createUploadsComponents(props: createUploadsComponentsProps) {
-  const { scope } = props;
+  const { scope, stage } = props;
 
   const attachmentsBucket = new s3.Bucket(scope, "AttachmentsBucket", {
-    bucketName: "uploads-jon6-attachments-671853096380", // `${service}-${stage}-attachments-${Aws.ACCOUNT_ID}`,
+    bucketName: `uploads-${stage}-attachments-${Aws.ACCOUNT_ID}`,
     encryption: s3.BucketEncryption.S3_MANAGED,
     versioned: true,
     removalPolicy: RemovalPolicy.RETAIN,

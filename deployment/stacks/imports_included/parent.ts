@@ -23,13 +23,14 @@ export class ImportsIncludedParentStack extends Stack {
       stage,
       isDev,
     });
-    createUiComponents({ scope: this });
+    createUiComponents({ scope: this, stage });
     createUiAuthComponents({
       scope: this,
       stage,
     });
     createUploadsComponents({
       scope: this,
+      stage,
     });
   }
 }

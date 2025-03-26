@@ -5,17 +5,19 @@ import {
   aws_s3 as s3,
   RemovalPolicy,
   Tags,
+  Aws,
 } from "aws-cdk-lib";
 
 interface CreateUiComponentsProps {
   scope: Construct;
+  stage: string;
 }
 
 export function createUiComponents(props: CreateUiComponentsProps) {
-  const { scope } = props;
+  const { scope, stage } = props;
 
   const logBucket = new s3.Bucket(scope, "CloudfrontLogBucket", {
-    bucketName: "ui-jon6-cloudfront-logs-671853096380",
+    bucketName: `ui-${stage}-cloudfront-logs-${Aws.ACCOUNT_ID}`,
     encryption: s3.BucketEncryption.S3_MANAGED,
     publicReadAccess: false,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
