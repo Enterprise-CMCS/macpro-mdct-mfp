@@ -29,11 +29,6 @@ custom:
   wafExcludeRules:
     awsCommon:
       - "SizeRestrictions_BODY"
-  serverlessTerminationProtection:
-    stages:
-      - main
-      - val
-      - production
   dotenv:
     path: ../../.env
   bannerTableName: ${env:BANNER_TABLE_NAME, param:BannerTableName}
