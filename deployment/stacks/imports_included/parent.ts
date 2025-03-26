@@ -1,12 +1,10 @@
 import { Construct } from "constructs";
-import {
-  Stack,
-  StackProps,
-} from "aws-cdk-lib";
+import { Stack, StackProps } from "aws-cdk-lib";
 import { DeploymentConfigProperties } from "../../deployment-config";
 import { createDataComponents } from "./data";
 import { createUiComponents } from "./ui";
 import { createUiAuthComponents } from "./ui-auth";
+import { createUploadsComponents } from "./uploads";
 
 export class ImportsIncludedParentStack extends Stack {
   constructor(
@@ -16,21 +14,22 @@ export class ImportsIncludedParentStack extends Stack {
   ) {
     super(scope, id, props);
 
-    const {
-      stage,
-      isDev,
-    } = props;
+    const { stage } = props;
+
+    const isDev = false; // imports are only being done on persistent environments.
 
     createDataComponents({
       scope: this,
       stage,
       isDev,
     });
-    createUiComponents({scope: this});
+    createUiComponents({ scope: this });
     createUiAuthComponents({
       scope: this,
       stage,
-      isDev,
+    });
+    createUploadsComponents({
+      scope: this,
     });
   }
 }

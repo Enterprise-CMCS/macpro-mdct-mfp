@@ -1,23 +1,15 @@
 import { Construct } from "constructs";
-import {
-  aws_cognito as cognito,
-  RemovalPolicy,
-} from "aws-cdk-lib";
+import { aws_cognito as cognito, RemovalPolicy, Tags } from "aws-cdk-lib";
 
 interface CreateUiAuthComponentsProps {
   scope: Construct;
   stage: string;
-  isDev: boolean;
 }
 
 export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
-  const {
-    scope,
-    stage,
-    isDev,
-  } = props;
+  const { scope, stage } = props;
 
-  new cognito.UserPool(scope, "UserPool", {
+  const userPool = new cognito.UserPool(scope, "UserPool", {
     userPoolName: `${stage}-user-pool`,
     signInAliases: {
       email: true,
@@ -28,22 +20,25 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     selfSignUpEnabled: false,
     standardAttributes: {
       givenName: {
-        required: false,
+        required: true,
         mutable: true,
       },
       familyName: {
-        required: false,
-        mutable: true,
-      },
-      phoneNumber: {
-        required: false,
+        required: true,
         mutable: true,
       },
     },
     customAttributes: {
-      ismemberof: new cognito.StringAttribute({ mutable: true }),
+      cms_roles: new cognito.StringAttribute({ mutable: true }),
+      cms_state: new cognito.StringAttribute({
+        mutable: true,
+        minLen: 0,
+        maxLen: 256,
+      }),
     },
-    removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN
     // advancedSecurityMode: cognito.AdvancedSecurityMode.ENFORCED, DEPRECATED WE NEED FEATURE_PLAN.plus if we want to use StandardThreatProtectionMode.FULL_FUNCTION which I think is the new way to do this
+    removalPolicy: RemovalPolicy.RETAIN,
   });
+
+  Tags.of(userPool).add("SERVICE", "ui-auth");
 }

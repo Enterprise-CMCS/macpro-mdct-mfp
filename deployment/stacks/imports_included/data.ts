@@ -1,5 +1,12 @@
 import { Construct } from "constructs";
-import { aws_dynamodb as dynamodb } from "aws-cdk-lib";
+import {
+  aws_dynamodb as dynamodb,
+  aws_iam as iam,
+  aws_s3 as s3,
+  CfnOutput,
+  Aws,
+  Tags,
+} from "aws-cdk-lib";
 import { DynamoDBTable } from "../../constructs/dynamodb-table";
 
 interface CreateDataComponentsProps {
@@ -11,59 +18,76 @@ interface CreateDataComponentsProps {
 export function createDataComponents(props: CreateDataComponentsProps) {
   const { scope, stage, isDev } = props;
 
-  new DynamoDBTable(scope, "FormAnswers", {
-    stage,
-    isDev,
-    name: "form-answers",
-    partitionKey: {
-      name: "answer_entry",
-      type: dynamodb.AttributeType.STRING,
-    },
-    gsi: {
-      indexName: "state-form-index",
-      partitionKey: {
-        name: "state_form",
-        type: dynamodb.AttributeType.STRING,
-      },
-    },
-  })
-  new DynamoDBTable(scope, "FormQuestions", {
-    stage,
-    isDev,
-    name: "form-questions",
-    partitionKey: { name: "question", type: dynamodb.AttributeType.STRING },
-  })
-  new DynamoDBTable(scope, "FormTemplates", {
-    stage,
-    isDev,
-    name: "form-templates",
-    partitionKey: { name: "year", type: dynamodb.AttributeType.NUMBER },
-  })
-  new DynamoDBTable(scope, "Forms", {
-    stage,
-    isDev,
-    name: "forms",
-    partitionKey: { name: "form", type: dynamodb.AttributeType.STRING },
-  })
-  new DynamoDBTable(scope, "StateForms", {
-    stage,
-    isDev,
-    name: "state-forms",
-    partitionKey: {
-      name: "state_form",
-      type: dynamodb.AttributeType.STRING,
-    },
-  })
-  new DynamoDBTable(scope, "States", {
-    stage,
-    isDev,
-    name: "states",
-    partitionKey: { name: "state_id", type: dynamodb.AttributeType.STRING },
-  })
-  new DynamoDBTable(scope, "AuthUser", {
-    stage,
-    isDev,
-    name: "auth-user",
-    partitionKey: { name: "userId", type: dynamodb.AttributeType.STRING },
-  })
+  const service = "database";
+  const tables = [
+    new DynamoDBTable(scope, "Banner", {
+      stage,
+      isDev,
+      name: "banners",
+      partitionKey: { name: "key", type: dynamodb.AttributeType.STRING },
+    }),
+    new DynamoDBTable(scope, "FormTemplateVersions", {
+      stage,
+      isDev,
+      name: "form-template-versions",
+      partitionKey: { name: "reportType", type: dynamodb.AttributeType.STRING },
+      sortKey: { name: "versionNumber", type: dynamodb.AttributeType.NUMBER },
+      lsi: [
+        {
+          indexName: "LastAlteredIndex",
+          sortKey: { name: "lastAltered", type: dynamodb.AttributeType.STRING },
+        },
+        {
+          indexName: "IdIndex",
+          sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
+        },
+        {
+          indexName: "HashIndex",
+          sortKey: { name: "md5Hash", type: dynamodb.AttributeType.STRING },
+        },
+      ],
+    }),
+    new DynamoDBTable(scope, "SarReports", {
+      stage,
+      isDev,
+      name: "sar-reports",
+      partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
+      sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    }),
+    new DynamoDBTable(scope, "WpReports", {
+      stage,
+      isDev,
+      name: "wp-reports",
+      partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
+      sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    }),
+  ];
+  tables.forEach((table) => Tags.of(table).add("SERVICE", service));
+
+  const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
+    bucketName: `database-${stage}-sar`,
+    encryption: s3.BucketEncryption.S3_MANAGED,
+    versioned: true,
+    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+  });
+  Tags.of(sarFormBucket).add("SERVICE", service);
+
+  const wpFormBucket = new s3.Bucket(scope, "WpFormBucket", {
+    bucketName: `database-${stage}-wp`,
+    encryption: s3.BucketEncryption.S3_MANAGED,
+    versioned: true,
+    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+  });
+  Tags.of(wpFormBucket).add("SERVICE", service);
+
+  new CfnOutput(scope, "SarFormBucketName", {
+    value: sarFormBucket.bucketName,
+  });
+  new CfnOutput(scope, "WpFormBucketName", { value: wpFormBucket.bucketName });
+
+  return {
+    tables: tables.map((table) => table.identifiers),
+    sarFormBucket,
+    wpFormBucket,
+  };
 }
