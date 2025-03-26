@@ -242,4 +242,5 @@ function setupWaf(
   //     },
   //   });
   // }
+  distribution.applyRemovalPolicy(RemovalPolicy.RETAIN);
 }
