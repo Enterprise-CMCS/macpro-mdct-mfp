@@ -300,7 +300,10 @@ async function destroy_stage(options: {
   if (retained) {
     console.log("Information to use for import to CDK:");
     retained.forEach(({ templateKey, resourceKey, physicalResourceId }) => {
-      console.log(`${templateKey} - ${resourceKey} - ${physicalResourceId}`);
+      // WaflogsUploadBucket is being retained but not being imported into CDK.
+      if (resourceKey !== "WaflogsUploadBucket") {
+        console.log(`${templateKey} - ${resourceKey} - ${physicalResourceId}`);
+      }
     });
   }
 
