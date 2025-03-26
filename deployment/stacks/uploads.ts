@@ -29,7 +29,6 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
 
   Tags.of(scope).add("SERVICE", service);
 
-  // TODO: confirm how end-users upload to this bucket and test with this deployed version
   // TODO: this bucket doesn't have logging unlike most other buckets, is that right?
   const attachmentsBucket = new s3.Bucket(scope, "AttachmentsBucket", {
     bucketName: `${service}-${stage}-attachments-${Aws.ACCOUNT_ID}`,
