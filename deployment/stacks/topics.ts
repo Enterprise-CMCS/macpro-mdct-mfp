@@ -34,7 +34,6 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
   } = props;
 
   const service = "topics";
-  Tags.of(scope).add("SERVICE", service);
 
   const deleteTopicsEnabled =
     stage === "main" || stage === "val" || stage === "production";

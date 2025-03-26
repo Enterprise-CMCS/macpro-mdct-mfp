@@ -57,7 +57,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   } = props;
 
   const service = "app-api";
-  Tags.of(scope).add("SERVICE", service);
 
   const kafkaSecurityGroup = new ec2.SecurityGroup(
     scope,
