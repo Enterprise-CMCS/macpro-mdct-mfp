@@ -20,6 +20,9 @@ custom:
   project: "mfp"
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
+  serverlessTerminationProtection:
+    stages:
+      - nonsense
   api_region: ${param:ApiRegion}
   api_url: ${param:ApiGatewayRestApiUrl}
   application_endpoint: ${env:APPLICATION_ENDPOINT, ssm:/${self:custom.stage}/ui/application_endpoint, ssm:/default/ui/application_endpoint}
@@ -79,4 +82,4 @@ resources:
       Type: AWS::SSM::Parameter
       Properties:
         Type: String
-        Value: 'honk'
+        Value: "honk"

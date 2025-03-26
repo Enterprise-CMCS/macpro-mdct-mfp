@@ -34,6 +34,9 @@ custom:
   project: "mfp"
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
+  serverlessTerminationProtection:
+    stages:
+      - nonsense
   scripts:
     hooks:
       # This script is run locally when running 'serverless deploy'

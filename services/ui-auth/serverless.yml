@@ -38,6 +38,9 @@ custom:
   wafExcludeRules:
     awsCommon:
       - "SizeRestrictions_BODY"
+  serverlessTerminationProtection:
+    stages:
+      - nonsense
   sesSourceEmailAddress: ${ssm:/configuration/${self:custom.stage}/sesSourceEmailAddress, ssm:/configuration/default/sesSourceEmailAddress, ""}
   attachments_bucket_arn: ${param:AttachmentsBucketArn}
   api_gateway_rest_api_name: ${param:ApiGatewayRestApiName}

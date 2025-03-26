@@ -32,6 +32,9 @@ provider:
 custom:
   project: "mfp"
   stage: ${opt:stage, self:provider.stage}
+  serverlessTerminationProtection:
+    stages: # Apply CloudFormation termination protection for these stages
+      - nonsense
   brokerString: ${ssm:/configuration/${self:custom.stage}/bigmac/bootstrapBrokerStringTls, ssm:/configuration/default/bigmac/bootstrapBrokerStringTls}
   vpcId: ${ssm:/configuration/${self:custom.stage}/vpc/id, ssm:/configuration/default/vpc/id}
   privateSubnets:
