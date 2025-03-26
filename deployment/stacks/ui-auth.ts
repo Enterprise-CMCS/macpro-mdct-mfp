@@ -66,9 +66,6 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     autoVerify: {
       email: true,
     },
-    // email: {
-
-    // }
     selfSignUpEnabled: false,
     standardAttributes: {
       givenName: {
