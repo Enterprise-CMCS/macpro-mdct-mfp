@@ -12,14 +12,6 @@ yarn install
 # cloudfront.Distribution -
 # cognito.UserPool -
 
-# manually remove termination protection for sls stacks:
-  # ui-<YOUR_BRANCH_NAME>
-  # ui-auth-<YOUR_BRANCH_NAME>
-  # ui-src-<YOUR_BRANCH_NAME>
-  # app-api-<YOUR_BRANCH_NAME>
-  # database-<YOUR_BRANCH_NAME>
-  # topics-<YOUR_BRANCH_NAME>
-  # uploads-<YOUR_BRANCH_NAME>
 # manually dissassociate web acl in app-api-<YOUR_BRANCH_NAME>
 ./run destroy --stage <YOUR_BRANCH_NAME>
 ```
