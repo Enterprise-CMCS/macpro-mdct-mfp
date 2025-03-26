@@ -133,7 +133,6 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
     compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
   });
 
-  // TODO: confirm permission to function
   const avScanLambda = new Lambda(scope, "AvScanLambda", {
     entry: "services/uploads/src/antivirus.js",
     handler: "lambdaHandleEvent",
@@ -170,7 +169,6 @@ export function createUploadsComponents(props: createUploadsComponentsProps) {
     iamPath
   );
 
-  // TODO: confirm permission to function
   const avDownloadDefinitionsLambda = new Lambda(
     scope,
     "AvDownloadDefinitionsLambda",
