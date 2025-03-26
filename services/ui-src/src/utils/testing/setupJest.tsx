@@ -351,7 +351,9 @@ export const mockUseObjectiveProgressEntityStore: MfpUserState &
 // ROUTER
 
 export const RouterWrappedComponent: React.FC = ({ children }) => (
-  <Router>{children}</Router>
+  <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    {children}
+  </Router>
 );
 
 // ASSET
