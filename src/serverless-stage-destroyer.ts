@@ -30,12 +30,15 @@ export class ServerlessStageDestroyer {
       filters: Tag[];
       verify: boolean;
       wait: boolean;
+      bucketsToSkip?: string[];
     }
   ) {
     const filters = options.filters || [];
     const verify = options.verify !== false;
     const wait = options.wait !== false;
     // First, check if a protected stage name has been passed, and fail if so.
+    const bucketsToSkip = options.bucketsToSkip || [];
+
     this.checkForProtectedStage(stage);
 
     // Second, find all stacks that match the stage and any additional tag filters.
@@ -64,7 +67,7 @@ export class ServerlessStageDestroyer {
 
     // Fourth, destroy each stack.
     for (let i of stacksToDestroy || []) {
-      await this.destroyStack(region, `${i.StackName}`);
+      await this.destroyStack(region, `${i.StackName}`, bucketsToSkip);
     }
 
     // Fifth, wait for stacks to be deleted.
@@ -244,7 +247,11 @@ export class ServerlessStageDestroyer {
     }
   }
 
-  public async destroyStack(region: string, stack: string) {
+  public async destroyStack(
+    region: string,
+    stack: string,
+    bucketsToSkip: string[] = []
+  ) {
     console.log(`Destroying stack:  ${stack}...`);
 
     // Find buckets belonging to the stack
@@ -253,6 +260,13 @@ export class ServerlessStageDestroyer {
 
     // For each bucket to destroy
     for (let bucket of bucketsToEmpty) {
+      if (bucketsToSkip.includes(bucket)) {
+        console.log(
+          `    Skipping emptying bucket ${bucket} as it is in the skip list.`
+        );
+        continue;
+      }
+
       console.log(`    Emptying bucket ${bucket}`);
 
       // Check if the bucket was removed outside of CloudFormation's knowledge.
