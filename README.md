@@ -61,7 +61,7 @@ Before starting the project we're going to install some tools. We recommend havi
 
 ### Running the project locally
 
-In the root of the project run `./run local --update-env` to pull in values from 1Password and run the project. Alternatively, if you do not have a 1Password account you will need to reach out to an MDCT team member for values for your `.env `. Then you can run `./run local` to use a static manually populated `.env` file.
+In the root of the project run `./run update-env && ./run local` to pull in values from 1Password and run the project. Alternatively, if you do not have a 1Password account you will need to reach out to an MDCT team member for values for your `.env `. Then you can run `./run local` to use a static manually populated `.env` file.
 
 ### Logging in
 
