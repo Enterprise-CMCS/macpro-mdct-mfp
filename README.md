@@ -71,25 +71,6 @@ Once you've run `./run local` you'll find yourself on a login page at localhost:
 
 For a password to that user, please ask a fellow developer.
 
-### Running DynamoDB locally
-
-In order to run DynamoDB locally you will need to have java installed on your system. The MDCT Workspace Setup script installs that for you.
-
-If you cannot run the MDCT Workspace setup script see below for manual instructions:
-
-M1 Mac users can download [java from azul](https://www.azul.com/downloads/?version=java-18-sts&os=macos&architecture=x86-64-bit&package=jdk). _Note that you'll need the x86 architecture Java for this to work_. You can verify the installation with `java --version`. Otherwise [install java from here](https://java.com/en/download/).
-
-To view your database after the application is up and running you can install the [dynamodb-admin tool](https://www.npmjs.com/package/dynamodb-admin).
-
-- Install and run `DYNAMO_ENDPOINT=http://localhost:8000 dynamodb-admin` in a new terminal window
-
-#### DynamoDB Local failed to start with code 1
-
-If you're getting an error such as `inaccessible host: 'localhost' at port '8000'`, some steps to try:
-
-- confirm that you're on the right Java version -- if you have an M1 mac, you need an [x86 install](https://www.azul.com/downloads/?version=java-18-sts&os=macos&architecture=x86-64-bit&package=jdk#zulu)
-- delete your `services/database/.dynamodb` directory and then run `dev local` in your terminal
-
 ### Local Development Additional Info
 
 Local dev is configured as a TypeScript project. The entry point is [`./src/run.ts`](./src/run.ts), which orchestrates the local API, database, filestore, and frontend services.
