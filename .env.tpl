@@ -18,15 +18,6 @@ TEMPLATE_BUCKET=op://mdct_devs/mfp_secrets/TEMPLATE_BUCKET
 WP_FORM_BUCKET=op://mdct_devs/mfp_secrets/WP_FORM_BUCKET
 WpReportsTable=local-wp-reports
 
-# Values used for short-circuiting ssm: lookups, most likely won't need locally
-WP_REPORT_TABLE_STREAM_ARN=local-nonsense
-SAR_REPORT_TABLE_STREAM_ARN=local-nonsense
-VPC_ID=local-nonsense
-VPC_SUBNET_A=local-nonsense
-VPC_SUBNET_B=local-nonsense
-VPC_SUBNET_C=local-nonsense
-BROKER_STRINGS=local-nonsense
-
 # needed for e2e tests
 CYPRESS_ADMIN_USER_EMAIL=op://mdct_devs/mfp_secrets/CYPRESS_ADMIN_USER_EMAIL
 CYPRESS_ADMIN_USER_PASSWORD=op://mdct_devs/mfp_secrets/CYPRESS_ADMIN_USER_PASSWORD # pragma: allowlist secret
