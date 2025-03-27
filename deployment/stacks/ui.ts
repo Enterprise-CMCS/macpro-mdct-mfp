@@ -55,6 +55,7 @@ export function createUiComponents(props: CreateUiComponentsProps) {
   });
 
   const logBucket = new s3.Bucket(scope, "CloudfrontLogBucket", {
+    bucketName: `ui-${stage}-cloudfront-logs-${Aws.ACCOUNT_ID}`,
     encryption: s3.BucketEncryption.S3_MANAGED,
     publicReadAccess: false,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
