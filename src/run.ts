@@ -286,7 +286,7 @@ const stackExists = async (stackName: string): Promise<boolean> => {
   try {
     await client.send(new DescribeStacksCommand({ StackName: stackName }));
     return true;
-  } catch (error: any) {
+  } catch {
     return false;
   }
 };
