@@ -7,7 +7,6 @@ testcafe_results
 .DS_Store
 build_dev
 tsconfig.tsbuildinfo
-services/uploads/local_buckets
 /.env
 tests_output
 *.log
@@ -20,7 +19,6 @@ tests/cypress/package-lock.json
 package-lock.json
 .vscode/
 *._S3rver_cors.xml
-services/database/local_buckets
 tests/test-results/
 tests/playwright-report/
 /blob-report/
