@@ -260,7 +260,7 @@ export class ServerlessStageDestroyer {
 
     // For each bucket to destroy
     for (let bucket of bucketsToEmpty) {
-      if (bucketsToSkip.includes(bucket)) {
+      if (bucketsToSkip.includes(bucket!)) {
         console.log(
           `    Skipping emptying bucket ${bucket} as it is in the skip list.`
         );
