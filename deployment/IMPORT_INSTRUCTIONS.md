@@ -14,6 +14,11 @@ yarn install
 
 # manually dissassociate web acl in app-api-<YOUR_BRANCH_NAME>
 ./run destroy --stage <YOUR_BRANCH_NAME>
+
+# manually remove bucket policy from database-<stage>-wp
+# manually remove bucket uploads-<stage>-avscan-671853096380
+# manually remove bucket policy from database-<stage>-sar
+
 ```
 
 ## From `jon-cdk` branch:
