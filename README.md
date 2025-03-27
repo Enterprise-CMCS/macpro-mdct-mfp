@@ -92,11 +92,11 @@ If you're getting an error such as `inaccessible host: 'localhost' at port '8000
 
 ### Local Development Additional Info
 
-Local dev is configured as a Typescript project. The entrypoint in `./src/run.ts` manages running the moving pieces locally: the API, database, filestore, and frontend.
+Local dev is configured as a TypeScript project. The entry point is [`./src/run.ts`](./src/run.ts), which orchestrates the local API, database, filestore, and frontend services.
 
-Local dev is built around the Serverless plugin [serverless-offline](https://github.com/dherault/serverless-offline). `serverless-offline` runs an API Gateway locally configured by `./services/app-api/serverless.yml` and hot reloads your Lambdas on every save. The plugins [serverless-dynamodb-local](https://github.com/99x/serverless-dynamodb-local) and [serverless-s3-local](https://github.com/ar90n/serverless-s3-local) stand up the local database and s3 in a similar fashion.
+The local environment is powered by [LocalStack](https://localstack.cloud/). For more details, see the [Local Deployment README](./deployment/local/README.md).
 
-Local authorization bypasses Cognito. The frontend mimics login in local storage with a mock user and sends an id in the `cognito-identity-id` header on every request. `serverless-offline` expects that and sets it as the cognitoId in the requestContext for your lambdas, just like Cognito would in AWS.
+Authentication during local development uses the Cognito user pool deployed to AWS from the `dev` (main) branch.
 
 ## Testing
 
