@@ -26,7 +26,12 @@ export class ParentStack extends Stack {
     id: string,
     props: StackProps & DeploymentConfigProperties
   ) {
-    const { isDev, vpcName, kafkaAuthorizedSubnetIds } = props;
+    const {
+      isDev,
+      secureCloudfrontDomainName,
+      vpcName,
+      kafkaAuthorizedSubnetIds,
+    } = props;
 
     super(scope, id, {
       ...props,
@@ -107,7 +112,7 @@ export class ParentStack extends Stack {
         distribution,
         apiGatewayRestApiUrl,
         applicationEndpointUrl:
-          props.secureCloudfrontDomainName || applicationEndpointUrl,
+          secureCloudfrontDomainName || applicationEndpointUrl,
         identityPoolId,
         userPoolId,
         userPoolClientId,
