@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 export const createdLog = (obj: any, action: string, type: string): void => {
-  const { id, submissionName } = obj;
-  if (id) {
-    console.log(`${action} ${type} created: ${submissionName} (${id})`);
+  const { id, key, submissionName, title } = obj;
+  if (id || key) {
+    console.log(
+      `${action} ${type} created: ${submissionName || title} (${id || key})`
+    );
   } else {
     console.log(`ℹ️ ${obj}`);
     console.log(
