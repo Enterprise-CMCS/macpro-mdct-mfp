@@ -13,6 +13,7 @@ import {
   CloudFormationClient,
   DescribeStackResourceCommand,
 } from "@aws-sdk/client-cloudformation";
+import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts";
 
 // load .env
 dotenv.config();
@@ -317,13 +318,26 @@ async function destroy_stage(options: {
     return;
   }
 
+  const accountId = await getAccountId();
   await destroyer.destroy(`${process.env.REGION_A}`, options.stage, {
     wait: options.wait,
     filters: filters,
     verify: options.verify,
+    bucketsToSkip: [
+      `database-${options.stage}-sar`,
+      `database-${options.stage}-wp`,
+      `uploads-${options.stage}-attachments-${accountId}`,
+      `ui-${options.stage}-cloudfront-logs-${accountId}`,
+    ],
   });
 
-  await delete_topics(options);
+  // await delete_topics(options);
+}
+
+async function getAccountId() {
+  const client = new STSClient({ region: process.env.REGION_A });
+  const identity = await client.send(new GetCallerIdentityCommand({}));
+  return identity.Account;
 }
 
 async function delete_topics(options: { stage: string }) {
