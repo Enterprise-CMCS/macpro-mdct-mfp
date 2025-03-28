@@ -191,6 +191,7 @@ resources:
           LogFilePrefix: ${env:LOGGING_BUCKET, ssm:/configuration/${self:custom.stage}/s3/accessLogsPrefix, ssm:/configuration/default/s3/accessLogsPrefix}
     LoggingBucketPolicy:
       Type: "AWS::S3::BucketPolicy"
+      DeletionPolicy: Retain
       Properties:
         PolicyDocument:
           Version: "2012-10-17"
