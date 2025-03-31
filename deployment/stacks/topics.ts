@@ -1,42 +1,35 @@
 import { Construct } from "constructs";
-import {
-  aws_lambda as lambda,
-  aws_iam as iam,
-  aws_ec2 as ec2,
-  aws_ssm as ssm,
-  Duration,
-  Tags,
-  Aws,
-} from "aws-cdk-lib";
+import { aws_iam as iam, aws_ec2 as ec2, Duration, Aws } from "aws-cdk-lib";
 import { Lambda } from "../constructs/lambda";
 
 interface CreateTopicsComponentsProps {
+  brokerString: string;
+  iamPath: string;
+  iamPermissionsBoundary: iam.IManagedPolicy;
+  isDev: boolean;
+  kafkaAuthorizedSubnets: ec2.ISubnet[];
+  project: string;
   scope: Construct;
   stage: string;
-  project: string;
   vpc: ec2.IVpc;
-  kafkaAuthorizedSubnets: ec2.ISubnet[];
-  iamPermissionsBoundary: iam.IManagedPolicy;
-  iamPath: string;
-  brokerString: string;
 }
 
 export function createTopicsComponents(props: CreateTopicsComponentsProps) {
   const {
+    brokerString,
+    iamPath,
+    iamPermissionsBoundary,
+    isDev,
+    kafkaAuthorizedSubnets,
+    project,
     scope,
     stage,
-    project,
     vpc,
-    kafkaAuthorizedSubnets,
-    iamPermissionsBoundary,
-    iamPath,
-    brokerString,
   } = props;
 
   const service = "topics";
 
-  const deleteTopicsEnabled =
-    stage === "main" || stage === "val" || stage === "production";
+  const deleteTopicsEnabled = !isDev;
 
   const lambdaSecurityGroup = new ec2.SecurityGroup(
     scope,
@@ -79,28 +72,21 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     environment: { topicNamespace: "", ...commonProps.environment },
   });
 
-  const deleteTopicsLambda = new Lambda(scope, "DeleteTopics", {
-    entry: "services/topics/handlers/deleteTopics.js",
-    handler: "handler",
-    timeout: Duration.seconds(300),
-    ...commonProps,
-  });
-
   if (!deleteTopicsEnabled) {
+    const deleteTopicsLambda = new Lambda(scope, "DeleteTopics", {
+      entry: "services/topics/handlers/deleteTopics.js",
+      handler: "handler",
+      timeout: Duration.seconds(300),
+      ...commonProps,
+    });
+
     deleteTopicsLambda.node.addDependency(createTopicsLambda);
   }
 
-  const listTopicsLambda = new Lambda(scope, "ListTopics", {
+  new Lambda(scope, "ListTopics", {
     entry: "services/topics/handlers/listTopics.js",
     handler: "handler",
     timeout: Duration.seconds(300),
     ...commonProps,
   });
-
-  return {
-    createTopicsLambda,
-    deleteTopicsLambda,
-    listTopicsLambda,
-    lambdaSecurityGroup,
-  };
 }

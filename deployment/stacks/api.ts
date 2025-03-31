@@ -9,13 +9,12 @@ import {
   aws_s3 as s3,
   aws_s3_notifications as s3notifications,
   aws_wafv2 as wafv2,
+  CfnOutput,
   Duration,
   RemovalPolicy,
-  Tags,
 } from "aws-cdk-lib";
 import { Lambda } from "../constructs/lambda";
 import { WafConstruct } from "../constructs/waf";
-import { getSubnets } from "../utils/vpc";
 import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
 import { DynamoDBTableIdentifiers } from "../constructs/dynamodb-table";
 import { isDefined } from "../utils/misc";
@@ -110,7 +109,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     NODE_OPTIONS: "--enable-source-maps",
     BOOTSTRAP_BROKER_STRING_TLS: brokerString,
     stage,
-    TEMPLATE_BUCKET: templateBucket ? templateBucket.bucketName : "",
+    TEMPLATE_BUCKET: templateBucket?.bucketName ?? "",
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     ...Object.fromEntries(
@@ -284,7 +283,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "releaseReport",
     path: "/reports/release/{reportType}/{state}/{id}",
     method: "PUT",
-    requestParameters: ["state", "id"], // TODO: should reportType be here? It wasn't in SLS.
+    requestParameters: ["reportType", "state", "id"],
     requestValidator,
     ...commonProps,
   });
@@ -416,8 +415,14 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     });
   }
 
+  const apiGatewayRestApiUrl = api.url.slice(0, -1);
+
+  new CfnOutput(scope, "ApiUrl", {
+    value: apiGatewayRestApiUrl,
+  });
+
   return {
     restApiId: api.restApiId,
-    apiGatewayRestApiUrl: api.url.slice(0, -1),
+    apiGatewayRestApiUrl,
   };
 }

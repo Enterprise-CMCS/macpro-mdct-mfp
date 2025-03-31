@@ -48,13 +48,9 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     iamPath,
     iamPermissionsBoundary,
     oktaMetadataUrl,
-    oktaOidcClientId,
-    oktaOidcClientSecret,
-    oktaOidcIssuer,
     bootstrapUsersPassword,
     secureCloudfrontDomainName,
     userPoolDomainPrefix,
-    // TODO: note that sesSourceEmailAddress - CreateEmailConfiguration in SLS was being configured based on SSM parameters sesSourceEmailAddress which was not set in any environment.
     attachmentsBucketArn,
   } = props;
 
@@ -118,35 +114,6 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
           "custom:cms_state": "state",
         },
         idpIdentifiers: ["IdpIdentifier"],
-      }
-    );
-    supportedIdentityProviders = [
-      cognito.UserPoolClientIdentityProvider.custom(providerName),
-    ];
-  } else if (oktaOidcClientId && oktaOidcClientSecret && oktaOidcIssuer) {
-    // TODO: This appears to never be used in any environment.
-    oktaIdp = new cognito.CfnUserPoolIdentityProvider(
-      scope,
-      "OktaUserPoolIdentityProviderOIDC",
-      {
-        providerName,
-        providerType: "OIDC",
-        userPoolId: userPool.userPoolId,
-        providerDetails: {
-          client_id: oktaOidcClientId,
-          client_secret: oktaOidcClientSecret,
-          oidc_issuer: oktaOidcIssuer,
-          attributes_request_method: "GET",
-          authorize_scopes: "email openid profile",
-        },
-        attributeMapping: {
-          email: "email",
-          given_name: "given_name",
-          family_name: "family_name",
-          "custom:cms_roles": "cms-roles",
-          "custom:cms_state": "state",
-        },
-        idpIdentifiers: ["IdpIdentifierOIDC"],
       }
     );
     supportedIdentityProviders = [

@@ -50,6 +50,7 @@ export class ParentStack extends Stack {
         iamPermissionsBoundaryArn
       ),
       iamPath,
+      isDev,
     };
 
     const vpc = ec2.Vpc.fromLookup(this, "Vpc", { vpcName });
@@ -102,7 +103,7 @@ export class ParentStack extends Stack {
         applicationEndpointUrl,
         restApiId,
         customResourceRole,
-        attachmentsBucketArn: attachmentsBucket.bucketArn,
+        attachmentsBucketArn: attachmentsBucket!.bucketArn,
       });
 
       deployFrontend({
@@ -117,7 +118,7 @@ export class ParentStack extends Stack {
         userPoolClientId,
         userPoolClientDomain: `${userPoolDomainName}.auth.${this.region}.amazoncognito.com`,
         customResourceRole,
-        s3AttachmentsBucketName: attachmentsBucket.bucketName,
+        s3AttachmentsBucketName: attachmentsBucket!.bucketName,
       });
 
       new CfnOutput(this, "CloudFrontUrl", {
@@ -129,10 +130,6 @@ export class ParentStack extends Stack {
       ...commonProps,
       vpc,
       kafkaAuthorizedSubnets,
-    });
-
-    new CfnOutput(this, "ApiUrl", {
-      value: apiGatewayRestApiUrl,
     });
   }
 }

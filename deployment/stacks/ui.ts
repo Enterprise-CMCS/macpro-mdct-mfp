@@ -168,10 +168,8 @@ export function createUiComponents(props: CreateUiComponentsProps) {
   );
 
   return {
-    cloudfrontDistributionId: distribution.distributionId,
     distribution,
     applicationEndpointUrl,
-    s3BucketName: uiBucket.bucketName,
     uiBucket,
   };
 }
@@ -240,5 +238,4 @@ function setupWaf(
   //     },
   //   });
   // }
-  distribution.applyRemovalPolicy(RemovalPolicy.RETAIN);
 }
