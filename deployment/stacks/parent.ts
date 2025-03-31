@@ -69,7 +69,6 @@ export class ParentStack extends Stack {
     const { tables, wpFormBucket, sarFormBucket } = createDataComponents({
       loggingBucket,
       ...commonProps,
-      customResourceRole,
     });
 
     let attachmentsBucket: s3.IBucket | undefined;
