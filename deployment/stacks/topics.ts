@@ -1,5 +1,11 @@
 import { Construct } from "constructs";
-import { aws_iam as iam, aws_ec2 as ec2, Duration, Aws } from "aws-cdk-lib";
+import {
+  aws_ec2 as ec2,
+  aws_iam as iam,
+  Aws,
+  CfnOutput,
+  Duration,
+} from "aws-cdk-lib";
 import { Lambda } from "../constructs/lambda";
 
 interface CreateTopicsComponentsProps {
@@ -81,12 +87,20 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     });
 
     deleteTopicsLambda.node.addDependency(createTopicsLambda);
+
+    new CfnOutput(scope, "DeleteTopicsFunctionName", {
+      value: deleteTopicsLambda.lambda.functionName,
+    });
   }
 
-  new Lambda(scope, "ListTopics", {
+  const listTopicsLambda = new Lambda(scope, "ListTopics", {
     entry: "services/topics/handlers/listTopics.js",
     handler: "handler",
     timeout: Duration.seconds(300),
     ...commonProps,
+  });
+
+  new CfnOutput(scope, "ListTopicsFunctionName", {
+    value: listTopicsLambda.lambda.functionName,
   });
 }

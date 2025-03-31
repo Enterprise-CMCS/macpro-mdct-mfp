@@ -11,7 +11,7 @@ import {
   DescribeStacksCommand,
   waitUntilStackDeleteComplete,
 } from "@aws-sdk/client-cloudformation";
-// import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
+import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
 import fs from "fs";
 import { pipeline } from "stream";
@@ -368,48 +368,48 @@ async function destroy({
   await delete_topics({ stage });
 }
 
-// TODO: update for not SLS
 async function delete_topics(options: { stage: string }) {
   const runner = new LabeledProcessRunner();
   await prepare_services(runner);
-  let data = { project: "mfp", stage: options.stage };
-  const deployCmd = [
-    "sls",
-    "invoke",
-    "--stage",
-    "main",
-    "--function",
-    "deleteTopics",
-    "--data",
-    JSON.stringify(data),
-  ];
-  await runner.run_command_and_output(
-    "Remove topics",
-    deployCmd,
-    "services/topics"
+
+  const lambdaClient = new LambdaClient({ region });
+  const functionName = await getCloudFormationStackOutputValue(
+    `${project}-${options.stage}`,
+    "DeleteTopicsFunctionName"
   );
+
+  const payload = JSON.stringify({ project, stage: options.stage });
+
+  const command = new InvokeCommand({
+    FunctionName: functionName,
+    Payload: Buffer.from(payload),
+  });
+
+  const response = await lambdaClient.send(command);
+  const result = Buffer.from(response.Payload || []).toString();
+  console.log("deleteTopics response:", result);
 }
 
-// TODO: update for not SLS
 async function list_topics(options: { stage: string | undefined }) {
   const runner = new LabeledProcessRunner();
   await prepare_services(runner);
-  let data = { stage: options.stage };
-  const deployCmd = [
-    "sls",
-    "invoke",
-    "--stage",
-    "main",
-    "--function",
-    "listTopics",
-    "--data",
-    JSON.stringify(data),
-  ];
-  await runner.run_command_and_output(
-    "List topics",
-    deployCmd,
-    "services/topics"
+
+  const lambdaClient = new LambdaClient({ region });
+  const functionName = await getCloudFormationStackOutputValue(
+    `${project}-${options.stage}`,
+    "ListTopicsFunctionName"
   );
+
+  const payload = JSON.stringify({ stage: options.stage });
+
+  const command = new InvokeCommand({
+    FunctionName: functionName,
+    Payload: Buffer.from(payload),
+  });
+
+  const response = await lambdaClient.send(command);
+  const result = Buffer.from(response.Payload || []).toString();
+  console.log("listTopics response:", result);
 }
 
 async function downloadClamAvLayer() {
@@ -483,7 +483,7 @@ yargs(process.argv.slice(2))
     "list-topics",
     "list topics for the project or for the stage",
     {
-      stage: { type: "string", demandOption: false },
+      stage: { type: "string", demandOption: true },
     },
     list_topics
   )
