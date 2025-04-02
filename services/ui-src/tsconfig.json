@@ -16,7 +16,7 @@
     "module": "esnext",
     "baseUrl": "src",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "alwaysStrict": true,
     "noImplicitReturns": true,

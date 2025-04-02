@@ -1,8 +1,5 @@
 import { Construct } from "constructs";
-import {
-  Stack,
-  StackProps,
-} from "aws-cdk-lib";
+import { Stack, StackProps } from "aws-cdk-lib";
 import { DeploymentConfigProperties } from "../../deployment-config";
 
 export class EmptyParentStack extends Stack {

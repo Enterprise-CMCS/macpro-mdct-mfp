@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* eslint-disable no-undef */
 import yargs from "yargs";
 import * as dotenv from "dotenv";
 import LabeledProcessRunner from "./runner.js";
@@ -433,7 +432,7 @@ async function downloadClamAvLayer() {
 }
 
 /*
- * The command definitons in yargs
+ * The command definitions in yargs
  * All valid arguments to dev should be enumerated here, this is the entrypoint to the script
  */
 yargs(process.argv.slice(2))
