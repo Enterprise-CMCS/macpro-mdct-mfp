@@ -11,8 +11,12 @@ import nextIcon from "assets/icons/icon_next_white.png";
 import spreadsheetIcon from "assets/icons/icon_spreadsheet.png";
 
 const downloadTemplate = (templateName: string) => {
-  console.log("Downloading template:", templateName);
-  const pdfUrl = `/templates/${templateName}.pdf`;
+  const helpFiles: { [key: string]: string } = {
+    WP: "MFP-Semi-Annual-Rprt-Help-File",
+    SAR: "MFP-Work-Plan-Help-File",
+  };
+  console.log("Downloading template:", templateName, helpFiles[templateName]);
+  const pdfUrl = `/templates/${helpFiles[templateName]}.pdf`;
   const link = document.createElement("a");
   link.setAttribute("target", "_blank");
   link.setAttribute("href", pdfUrl);
