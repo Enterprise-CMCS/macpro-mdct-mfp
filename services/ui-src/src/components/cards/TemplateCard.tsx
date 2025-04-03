@@ -12,8 +12,8 @@ import spreadsheetIcon from "assets/icons/icon_spreadsheet.png";
 
 const downloadTemplate = (templateName: string) => {
   const helpFiles: { [key: string]: string } = {
-    WP: "MFP-Semi-Annual-Rprt-Help-File",
-    SAR: "MFP-Work-Plan-Help-File",
+    WP: "MFP-Work-Plan-Help-File",
+    SAR: "MFP-Semi-Annual-Rprt-Help-File",
   };
   const pdfUrl = `/templates/${helpFiles[templateName]}.pdf`;
   const link = document.createElement("a");
