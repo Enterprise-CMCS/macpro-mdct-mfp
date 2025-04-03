@@ -15,7 +15,6 @@ const downloadTemplate = (templateName: string) => {
     WP: "MFP-Semi-Annual-Rprt-Help-File",
     SAR: "MFP-Work-Plan-Help-File",
   };
-  console.log("Downloading template:", templateName, helpFiles[templateName]);
   const pdfUrl = `/templates/${helpFiles[templateName]}.pdf`;
   const link = document.createElement("a");
   link.setAttribute("target", "_blank");
