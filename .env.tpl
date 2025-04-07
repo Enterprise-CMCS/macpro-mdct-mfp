@@ -14,7 +14,6 @@ S3_LOCAL_ENDPOINT=http://localhost:4569
 SAR_FORM_BUCKET=op://mdct_devs/mfp_secrets/SAR_FORM_BUCKET
 SAR_REPORT_TABLE_NAME=local-sar-reports
 SKIP_PREFLIGHT_CHECK=true
-TEMPLATE_BUCKET=op://mdct_devs/mfp_secrets/TEMPLATE_BUCKET
 WP_FORM_BUCKET=op://mdct_devs/mfp_secrets/WP_FORM_BUCKET
 WP_REPORT_TABLE_NAME=local-wp-reports
 
