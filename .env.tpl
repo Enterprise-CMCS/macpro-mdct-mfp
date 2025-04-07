@@ -10,7 +10,6 @@ FormTemplateVersionsTable=local-form-template-versions
 SAR_FORM_BUCKET=op://mdct_devs/mfp_secrets/SAR_FORM_BUCKET
 SarReportsTable=local-sar-reports
 SKIP_PREFLIGHT_CHECK=true
-TEMPLATE_BUCKET=op://mdct_devs/mfp_secrets/TEMPLATE_BUCKET
 WP_FORM_BUCKET=op://mdct_devs/mfp_secrets/WP_FORM_BUCKET
 WpReportsTable=local-wp-reports
 

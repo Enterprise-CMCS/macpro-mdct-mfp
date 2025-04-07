@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 // components
 import { Box, Collapse, Heading, Link, Text } from "@chakra-ui/react";
 import {
@@ -7,9 +8,9 @@ import {
   TemplateCard,
 } from "components";
 // utils
-import verbiage from "verbiage/pages/home";
-import { useEffect } from "react";
 import { checkDateRangeStatus, useStore } from "utils";
+// verbiage
+import verbiage from "verbiage/pages/home";
 
 export const HomePage = () => {
   const { bannerData, bannerActive, setBannerActive } = useStore();

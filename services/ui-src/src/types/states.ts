@@ -20,12 +20,15 @@ export interface MfpUserState {
 // initial admin banner state
 export interface AdminBannerState {
   // INITIAL STATE
+  allBanners: AdminBannerData[] | undefined;
   bannerData: AdminBannerData | undefined;
   bannerActive: boolean;
   bannerLoading: boolean;
   bannerErrorMessage: ErrorVerbiage | undefined;
   bannerDeleting: boolean;
+  editable: boolean;
   // ACTIONS
+  setAllBanners: (allBanners: AdminBannerData[] | undefined) => void;
   setBannerData: (newBannerData: AdminBannerData | undefined) => void;
   clearAdminBanner: () => void;
   setBannerActive: (bannerStatus: boolean) => void;

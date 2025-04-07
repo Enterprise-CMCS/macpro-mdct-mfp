@@ -2,11 +2,8 @@
 
 const config = {
   MAX_ATTACHMENT_SIZE: 5000000,
-  s3: {
-    LOCAL_ENDPOINT: window._env_.S3_LOCAL_ENDPOINT,
-    REGION: window._env_.S3_ATTACHMENTS_BUCKET_REGION,
-    BUCKET: window._env_.S3_ATTACHMENTS_BUCKET_NAME,
-  },
+  LOCAL_LOGIN: window._env_.LOCAL_LOGIN,
+  IS_FEATURE_BRANCH: window._env_.IS_FEATURE_BRANCH,
   apiGateway: {
     REGION: window._env_.API_REGION,
     URL: window._env_.API_URL,
