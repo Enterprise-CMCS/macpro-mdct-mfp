@@ -9,10 +9,7 @@ const configFilePath = path.resolve(outputPath, "env-config.js");
 
 const region = "us-east-1";
 
-export async function writeLocalUiEnvFile(
-  apiUrl: string,
-  s3AttachmentsBucketName: string
-) {
+export async function writeLocalUiEnvFile(apiUrl: string) {
   const envVariables = {
     API_REGION: region,
     API_URL: apiUrl.replace("https", "http"),
@@ -27,8 +24,6 @@ export async function writeLocalUiEnvFile(
     COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
     POST_SIGNOUT_REDIRECT: "http://localhost:3000/",
     REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT,
-    S3_ATTACHMENTS_BUCKET_NAME: s3AttachmentsBucketName,
-    S3_ATTACHMENTS_BUCKET_REGION: "us-east-1",
   };
 
   await fs.rm(configFilePath, { force: true });

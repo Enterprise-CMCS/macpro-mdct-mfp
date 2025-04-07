@@ -35,7 +35,6 @@ interface CreateApiComponentsProps {
   iamPath: string;
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
-  templateBucket: s3.IBucket | undefined;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
@@ -52,7 +51,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     iamPath,
     wpFormBucket,
     sarFormBucket,
-    templateBucket,
   } = props;
 
   const service = "app-api";
@@ -109,7 +107,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     NODE_OPTIONS: "--enable-source-maps",
     BOOTSTRAP_BROKER_STRING_TLS: brokerString,
     stage,
-    TEMPLATE_BUCKET: templateBucket?.bucketName ?? "",
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     ...Object.fromEntries(
@@ -138,21 +135,13 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       effect: iam.Effect.ALLOW,
       actions: ["s3:GetObject", "s3:ListBucket", "s3:PutObject"],
       resources: [
-        ...(templateBucket
-          ? [
-              templateBucket.bucketArn,
-              `${templateBucket.bucketArn}/templates/*`,
-            ]
-          : []),
-        ...[
-          `${wpFormBucket.bucketArn}/formTemplates/*`,
-          wpFormBucket.bucketArn,
-          `${wpFormBucket.bucketArn}/formTemplates/*`,
-          `${wpFormBucket.bucketArn}/fieldData/*`,
-          sarFormBucket.bucketArn,
-          `${sarFormBucket.bucketArn}/formTemplates/*`,
-          `${sarFormBucket.bucketArn}/fieldData/*`,
-        ],
+        `${wpFormBucket.bucketArn}/formTemplates/*`,
+        wpFormBucket.bucketArn,
+        `${wpFormBucket.bucketArn}/formTemplates/*`,
+        `${wpFormBucket.bucketArn}/fieldData/*`,
+        sarFormBucket.bucketArn,
+        `${sarFormBucket.bucketArn}/formTemplates/*`,
+        `${sarFormBucket.bucketArn}/fieldData/*`,
       ],
     }),
     new iam.PolicyStatement({
@@ -170,13 +159,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       effect: iam.Effect.ALLOW,
       actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
       resources: [
-        ...(templateBucket ? [templateBucket.bucketArn] : []),
-        ...[
-          wpFormBucket.bucketArn,
-          sarFormBucket.bucketArn,
-          `${wpFormBucket.bucketArn}/fieldData/*`,
-          `${sarFormBucket.bucketArn}/fieldData/*`,
-        ],
+        wpFormBucket.bucketArn,
+        sarFormBucket.bucketArn,
+        `${wpFormBucket.bucketArn}/fieldData/*`,
+        `${sarFormBucket.bucketArn}/fieldData/*`,
       ],
     }),
   ];
@@ -224,16 +210,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     path: "/banners/{bannerId}",
     method: "GET",
     requestParameters: ["bannerId"],
-    requestValidator,
-    ...commonProps,
-  });
-
-  new Lambda(scope, "fetchTemplate", {
-    entry: "services/app-api/handlers/templates/fetch.ts",
-    handler: "fetchTemplate",
-    path: "/templates/{templateName}",
-    method: "GET",
-    requestParameters: ["templateName"],
     requestValidator,
     ...commonProps,
   });

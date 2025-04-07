@@ -17,7 +17,6 @@ import { deployFrontend } from "./deployFrontend";
 import { createCustomResourceRole } from "./customResourceRole";
 import { isLocalStack } from "../local/util";
 import { createTopicsComponents } from "./topics";
-import { createUploadsComponents } from "./uploads";
 import { getSubnets } from "../utils/vpc";
 
 export class ParentStack extends Stack {
@@ -72,13 +71,6 @@ export class ParentStack extends Stack {
       ...commonProps,
     });
 
-    let attachmentsBucket: s3.IBucket | undefined;
-    if (!isLocalStack) {
-      attachmentsBucket = createUploadsComponents({
-        ...commonProps,
-      });
-    }
-
     const { apiGatewayRestApiUrl, restApiId } = createApiComponents({
       ...commonProps,
       tables,
@@ -86,7 +78,6 @@ export class ParentStack extends Stack {
       kafkaAuthorizedSubnets,
       wpFormBucket,
       sarFormBucket,
-      templateBucket: attachmentsBucket,
     });
 
     if (!isLocalStack) {
@@ -103,7 +94,6 @@ export class ParentStack extends Stack {
         applicationEndpointUrl,
         restApiId,
         customResourceRole,
-        attachmentsBucketArn: attachmentsBucket!.bucketArn,
       });
 
       deployFrontend({
@@ -118,7 +108,6 @@ export class ParentStack extends Stack {
         userPoolClientId,
         userPoolClientDomain: `${userPoolDomainName}.auth.${this.region}.amazoncognito.com`,
         customResourceRole,
-        s3AttachmentsBucketName: attachmentsBucket!.bucketName,
       });
 
       new CfnOutput(this, "CloudFrontUrl", {

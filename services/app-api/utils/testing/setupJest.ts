@@ -7,8 +7,8 @@ process.env.WpReportsTable = "local-wp-reports";
 process.env.SarReportsTable = "local-sar-reports";
 process.env.WP_FORM_BUCKET = "database-local-wp";
 process.env.SAR_FORM_BUCKET = "database-local-sar";
-process.env.FORM_TEMPLATE_TABLE_NAME = "local-form-template-versions";
-process.env.BANNER_TABLE_NAME = "local-banners";
+process.env.FormTemplateVersionsTable = "local-form-template-versions";
+process.env.BannerTable = "local-banners";
 
 export const mockReportFieldData = {
   text: "text-input",

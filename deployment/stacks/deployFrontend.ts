@@ -25,7 +25,6 @@ interface DeployFrontendProps {
   iamPath: string;
   customResourceRole: iam.Role;
   launchDarklyClient: string;
-  s3AttachmentsBucketName: string;
   redirectSignout: string;
 }
 
@@ -44,7 +43,6 @@ export function deployFrontend(props: DeployFrontendProps) {
     iamPath,
     uiBucket,
     launchDarklyClient,
-    s3AttachmentsBucketName,
     redirectSignout,
   } = props;
 
@@ -120,7 +118,6 @@ export function deployFrontend(props: DeployFrontendProps) {
         userPoolClientDomain,
         timestamp: new Date().toISOString(),
         launchDarklyClient,
-        s3AttachmentsBucketName,
         redirectSignout,
       },
     }

@@ -12,11 +12,6 @@ import {
 } from "@aws-sdk/client-cloudformation";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
-import fs from "fs";
-import { pipeline } from "stream";
-import { promisify } from "util";
-
-const streamPipeline = promisify(pipeline);
 
 // load .env
 dotenv.config();
@@ -92,11 +87,7 @@ async function run_fe_locally(runner: LabeledProcessRunner) {
     "mfp-localstack",
     "ApiUrl"
   );
-  const s3AttachmentsBucketName = await getCloudFormationStackOutputValue(
-    "mfp-localstack",
-    "AttachmentsBucketName"
-  );
-  await writeLocalUiEnvFile(apiUrl!, s3AttachmentsBucketName!);
+  await writeLocalUiEnvFile(apiUrl!);
   runner.run_command_and_output("ui", ["npm", "start"], "services/ui-src");
 }
 
@@ -293,7 +284,6 @@ async function deploy(options: { stage: string }) {
   const runner = new LabeledProcessRunner();
   await prepare_services(runner);
   if (await stackExists("mfp-prerequisites")) {
-    await downloadClamAvLayer();
     await runner.run_command_and_output(
       "CDK deploy",
       [
@@ -408,26 +398,6 @@ async function list_topics(options: { stage: string | undefined }) {
   const response = await lambdaClient.send(command);
   const result = Buffer.from(response.Payload || []).toString();
   console.log("listTopics response:", result);
-}
-
-async function downloadClamAvLayer() {
-  const url =
-    "https://github.com/CMSgov/lambda-clamav-layer/releases/download/0.7/lambda_layer.zip";
-  const outputPath = "services/uploads/lambda_layer.zip";
-
-  if (fs.existsSync(outputPath)) return;
-
-  const res = await fetch(url);
-
-  if (!res.ok) throw new Error(`Failed to download, status: ${res.status}`);
-
-  if (!res.body)
-    throw new Error("Response body is null, cannot download file.");
-
-  await streamPipeline(
-    res.body as unknown as NodeJS.ReadableStream,
-    fs.createWriteStream(outputPath)
-  );
 }
 
 /*

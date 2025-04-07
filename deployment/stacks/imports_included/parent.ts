@@ -4,7 +4,6 @@ import { DeploymentConfigProperties } from "../../deployment-config";
 import { createDataComponents } from "./data";
 import { createUiComponents } from "./ui";
 import { createUiAuthComponents } from "./ui-auth";
-import { createUploadsComponents } from "./uploads";
 
 export class ImportsIncludedParentStack extends Stack {
   constructor(
@@ -25,10 +24,6 @@ export class ImportsIncludedParentStack extends Stack {
     });
     createUiComponents({ scope: this, stage });
     createUiAuthComponents({
-      scope: this,
-      stage,
-    });
-    createUploadsComponents({
       scope: this,
       stage,
     });

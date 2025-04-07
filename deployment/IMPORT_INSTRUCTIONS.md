@@ -6,7 +6,7 @@
 rm -rf node_modules
 yarn install
 ./run update-env
-# COMMENT OUT LOGGING_BUCKET, TEMPLATE_BUCKET, WP_FORM_BUCKET, SAR_FORM_BUCKET and values for short-circuiting SSM in .env file
+# COMMENT OUT LOGGING_BUCKET, WP_FORM_BUCKET, SAR_FORM_BUCKET and values for short-circuiting SSM in .env file
 ./run deploy --stage <YOUR_BRANCH_NAME>
 
 # cloudfront.Distribution -
