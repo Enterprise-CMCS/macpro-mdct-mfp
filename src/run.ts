@@ -309,6 +309,7 @@ async function destroy_stage(options: {
       `database-${options.stage}-sar`,
       `database-${options.stage}-wp`,
       `ui-${options.stage}-cloudfront-logs-${accountId}`,
+      `${accountId}-ui-${options.stage}-waflogs`,
     ],
   });
 
