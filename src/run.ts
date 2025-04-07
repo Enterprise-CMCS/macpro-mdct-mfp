@@ -168,7 +168,6 @@ async function checkRetainedResources(
       "WaflogsUploadBucket",
     ],
     [`ui-auth-${stage}`]: ["CognitoUserPool"],
-    [`uploads-${stage}`]: ["AttachmentsBucket"],
   };
 
   const notRetained: { templateKey: string; resourceKey: string }[] = [];
@@ -203,7 +202,6 @@ async function checkRetainedResources(
 function checkEnvVars() {
   const envVarsToCheck = [
     "LOGGING_BUCKET",
-    "TEMPLATE_BUCKET",
     "WP_FORM_BUCKET",
     "SAR_FORM_BUCKET",
     "WP_REPORT_TABLE_STREAM_ARN",
@@ -310,7 +308,6 @@ async function destroy_stage(options: {
     bucketsToSkip: [
       `database-${options.stage}-sar`,
       `database-${options.stage}-wp`,
-      `uploads-${options.stage}-attachments-${accountId}`,
       `ui-${options.stage}-cloudfront-logs-${accountId}`,
     ],
   });
