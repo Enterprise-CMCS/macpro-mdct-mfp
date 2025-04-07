@@ -42,7 +42,6 @@ custom:
     stages:
       - nonsense
   sesSourceEmailAddress: ${ssm:/configuration/${self:custom.stage}/sesSourceEmailAddress, ssm:/configuration/default/sesSourceEmailAddress, ""}
-  attachments_bucket_arn: ${param:AttachmentsBucketArn}
   api_gateway_rest_api_name: ${param:ApiGatewayRestApiName}
   application_endpoint_url: ${param:ApplicationEndpointUrl}
   bootstrapUsersEnabled: ${ssm:/configuration/${self:custom.stage}/cognito/bootstrapUsers/enabled, ssm:/configuration/default/cognito/bootstrapUsers/enabled, ""}
@@ -279,17 +278,6 @@ resources:
                   Action:
                     - "execute-api:Invoke"
                   Resource: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${self:custom.api_gateway_rest_api_name}/*
-                - Effect: "Allow"
-                  Action:
-                    - "s3:*"
-                  Resource:
-                    # Must use Join here.  See: https://github.com/serverless/serverless/issues/3565
-                    - Fn::Join:
-                        - ""
-                        - - ${self:custom.attachments_bucket_arn}
-                          - "/protected/"
-                          - "$"
-                          - "{cognito-identity.amazonaws.com:sub}/*"
     CognitoUserPoolIdParameter:
       Type: AWS::SSM::Parameter
       Properties:
