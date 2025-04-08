@@ -1,3 +1,4 @@
+/* eslint-disable multiline-comment-style */
 import { Construct } from "constructs";
 import {
   aws_cloudfront as cloudfront,
