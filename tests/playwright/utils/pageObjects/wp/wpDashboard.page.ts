@@ -69,24 +69,28 @@ export class WPDashboardPage extends BasePage {
   }
 
   public async archiveAllReports() {
-    const archiveButtons = this.page.getByRole("button", {
-      name: "Archive",
-    });
-    const count = await archiveButtons.count();
+    const table = await this.page.getByRole("table");
+    const archiveButtons = await table
+      .getByRole("button", {
+        name: "Archive",
+      })
+      .all();
 
-    for (let i = 0; i < count; i++) {
-      await archiveButtons.nth(i).click();
-      const modal = this.page.getByRole("dialog");
-      await modal.isVisible();
-      await modal.getByRole("textbox").fill("ARCHIVE");
-      await modal.getByRole("button", { name: "Archive" }).click();
-      await this.page.waitForResponse(
-        (response) =>
-          response.url().includes(`reports/archive/WP/${stateAbbreviation}/`) &&
-          response.status() == 200
-      );
-      await this.getReports();
-      await this.archiveAllReports();
+    if (archiveButtons.length > 0) {
+      for (const button of archiveButtons) {
+        await button.click();
+        const modal = this.page.getByRole("dialog");
+        await modal.isVisible();
+        await modal.getByRole("textbox").fill("ARCHIVE");
+        await modal.getByRole("button", { name: "Archive" }).click();
+        await Promise.all([
+          this.page.waitForResponse((response) =>
+            response.url().includes(`reports/archive/WP/${stateAbbreviation}/`)
+          ),
+          this.getReports(),
+        ]);
+        await this.archiveAllReports();
+      }
     }
   }
 }

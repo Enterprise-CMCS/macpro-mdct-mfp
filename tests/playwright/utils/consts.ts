@@ -10,3 +10,6 @@ export const firstPeriod: number = 1;
 export const secondPeriod: number = 2;
 
 export const currentYear: number = new Date().getFullYear();
+
+export const adminAuthPath: string = "playwright/.auth/admin.json";
+export const stateUserAuthPath: string = "playwright/.auth/user.json";

@@ -1,15 +1,16 @@
 import { BrowserContext, Page } from "@playwright/test";
-import { test, expect } from "../utils/fixtures/base";
-import { WPInitiativeOverlayPage } from "../utils/pageObjects/wp/wpInitiativeOverlay.page";
-import StateHomePage from "../utils/pageObjects/stateHome.page";
-import { WPDashboardPage } from "../utils/pageObjects/wp/wpDashboard.page";
-import { WPGeneralInformationPage } from "../utils/pageObjects/wp/wpGeneral.page";
-import { WPTransitionBenchmarkProjectionsPage } from "../utils/pageObjects/wp/wpTransitionBenchmarkProjections.page";
-import { WPTransitionBenchmarkStrategyPage } from "../utils/pageObjects/wp/wpTransitionBenchmarkStrategy.page";
-import { WPInitiativesInstructionsPage } from "../utils/pageObjects/wp/wpInitiativesInstructions.page";
-import { WPInitiativesDashboardPage } from "../utils/pageObjects/wp/wpInitiativesDashboard.page";
-import { WPReviewAndSubmitPage } from "../utils/pageObjects/wp/wpReviewAndSubmit.page";
-import AdminHomePage from "../utils/pageObjects/adminHome.page";
+import { test, expect } from "./utils/fixtures/base";
+import StateHomePage from "./utils/pageObjects/stateHome.page";
+import { WPDashboardPage } from "./utils/pageObjects/wp/wpDashboard.page";
+import { WPGeneralInformationPage } from "./utils/pageObjects/wp/wpGeneral.page";
+import { WPTransitionBenchmarkProjectionsPage } from "./utils/pageObjects/wp/wpTransitionBenchmarkProjections.page";
+import { WPTransitionBenchmarkStrategyPage } from "./utils/pageObjects/wp/wpTransitionBenchmarkStrategy.page";
+import { WPInitiativesInstructionsPage } from "./utils/pageObjects/wp/wpInitiativesInstructions.page";
+import { WPInitiativesDashboardPage } from "./utils/pageObjects/wp/wpInitiativesDashboard.page";
+import { WPInitiativeOverlayPage } from "./utils/pageObjects/wp/wpInitiativeOverlay.page";
+import { WPReviewAndSubmitPage } from "./utils/pageObjects/wp/wpReviewAndSubmit.page";
+import AdminHomePage from "./utils/pageObjects/adminHome.page";
+import { adminAuthPath, stateUserAuthPath } from "./utils";
 
 let userPage: Page;
 let userContext: BrowserContext;
@@ -26,37 +27,37 @@ let wpReviewAndSubmit: WPReviewAndSubmitPage;
 let adminHomePage: AdminHomePage;
 let adminWpDashboard: WPDashboardPage;
 
-test.beforeAll(async ({ browser }) => {
-  userContext = await browser.newContext({
-    storageState: "playwright/.auth/user.json",
-  });
-  adminContext = await browser.newContext({
-    storageState: "playwright/.auth/admin.json",
-  });
-  userPage = await userContext.newPage();
-  adminPage = await adminContext.newPage();
-
-  homePage = new StateHomePage(userPage);
-  wpDashboard = new WPDashboardPage(userPage);
-  wpGeneralInformation = new WPGeneralInformationPage(userPage);
-  wpTransitionBenchmarkProjections = new WPTransitionBenchmarkProjectionsPage(
-    userPage
-  );
-  wpTransitionBenchmarkStrategy = new WPTransitionBenchmarkStrategyPage(
-    userPage
-  );
-  wpInitiativesInstructions = new WPInitiativesInstructionsPage(userPage);
-  wpInitiativesDashboard = new WPInitiativesDashboardPage(userPage);
-  wpReviewAndSubmit = new WPReviewAndSubmitPage(userPage);
-  adminHomePage = new AdminHomePage(adminPage);
-  adminWpDashboard = new WPDashboardPage(adminPage);
-});
-
-test.afterAll(async () => {
-  await userContext.close();
-});
-
 test.describe("Creating a new Work Plan", () => {
+  test.beforeAll(async ({ browser }) => {
+    userContext = await browser.newContext({
+      storageState: stateUserAuthPath,
+    });
+    adminContext = await browser.newContext({
+      storageState: adminAuthPath,
+    });
+    userPage = await userContext.newPage();
+    adminPage = await adminContext.newPage();
+
+    homePage = new StateHomePage(userPage);
+    wpDashboard = new WPDashboardPage(userPage);
+    wpGeneralInformation = new WPGeneralInformationPage(userPage);
+    wpTransitionBenchmarkProjections = new WPTransitionBenchmarkProjectionsPage(
+      userPage
+    );
+    wpTransitionBenchmarkStrategy = new WPTransitionBenchmarkStrategyPage(
+      userPage
+    );
+    wpInitiativesInstructions = new WPInitiativesInstructionsPage(userPage);
+    wpInitiativesDashboard = new WPInitiativesDashboardPage(userPage);
+    wpReviewAndSubmit = new WPReviewAndSubmitPage(userPage);
+    adminHomePage = new AdminHomePage(adminPage);
+    adminWpDashboard = new WPDashboardPage(adminPage);
+  });
+
+  test.afterAll(async () => {
+    await userContext.close();
+  });
+
   test("State user can create a Work Plan", async () => {
     await adminHomePage.goto();
     await adminHomePage.selectWP("PR");
@@ -162,18 +163,23 @@ test.describe("Creating a new Work Plan", () => {
       await overlayPage.isReady();
 
       await overlayPage.completeDefineInitiative(userPage);
+      await overlayPage.isReady();
+      await expect(overlayPage.defineInitiative.getByAltText("warning icon"))
+        .toBeFalsy;
+
       await overlayPage.completeEvaluationPlan(userPage);
+      await overlayPage.isReady();
+      await expect(overlayPage.evaluationPlan.getByAltText("warning icon"))
+        .toBeFalsy;
+
       await overlayPage.completeFundingSources(userPage);
       await overlayPage.isReady();
-      const errorIcons = await wpReviewAndSubmit.page
-        .getByAltText("warning icon")
-        .all();
-      await expect(errorIcons.length).toBe(0);
+      await expect(overlayPage.fundingSources.getByAltText("warning icon"))
+        .toBeFalsy;
 
       await overlayPage.backButton.click();
+      await wpInitiativesDashboard.isReady();
     }
-
-    await wpInitiativesDashboard.isReady();
 
     // Review and Submit
     await wpInitiativesDashboard.continueButton.click();
@@ -193,8 +199,6 @@ test.describe("Creating a new Work Plan", () => {
         name: "Successfully Submitted",
       })
     ).toBeVisible();
-
-    await wpDashboard.goto();
   });
 
   test("Admin user can deny a work plan", async () => {
@@ -221,7 +225,7 @@ test.describe("Creating a new Work Plan", () => {
     await wpReviewAndSubmit.confirmSubmit();
     await adminWpDashboard.goto();
     await expect(
-      adminWpDashboard.page.getByTestId("dashboard-submission-count")
+      adminWpDashboard.page.getByTestId("dashboard-submission-count").first()
     ).toContainText("2");
   });
 });

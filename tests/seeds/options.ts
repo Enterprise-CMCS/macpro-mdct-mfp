@@ -318,26 +318,22 @@ export const getSemiAnnualReportsByState = async (): Promise<
 };
 
 // Banner
-export const bannerKey: string = "admin-banner-id";
-
-export const createBanner = async (): Promise<SeedBannerShape> => {
-  const banner = await postApi(
-    `/banners/${bannerKey}`,
-    adminHeaders,
-    newBanner(bannerKey)
-  );
+export const createBanner = async (
+  status: string
+): Promise<SeedBannerShape> => {
+  const banner = await postApi(`/banners`, adminHeaders, newBanner(status));
   return banner;
 };
 
-export const getBannerById = async (): Promise<SeedBannerShape> => {
-  try {
-    const banner = await getApi(`/banners/${bannerKey}`, adminHeaders);
-    return banner;
-  } catch {
-    return {} as SeedBannerShape;
-  }
+export const getBanners = async (): Promise<SeedBannerShape[]> => {
+  const banners = await getApi(`/banners`, adminHeaders);
+  return banners;
 };
 
-export const deleteBannerById = async (): Promise<void> => {
-  await deleteApi(`/banners/${bannerKey}`, adminHeaders);
+export const deleteBanners = async (): Promise<void> => {
+  const banners = await getBanners();
+
+  banners.map(async (banner: SeedBannerShape) => {
+    await deleteApi(`/banners/${banner.key}`, adminHeaders);
+  });
 };

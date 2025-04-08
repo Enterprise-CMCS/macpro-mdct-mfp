@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { TemplateCard } from "components";
@@ -72,6 +72,27 @@ describe("<TemplateCard />", () => {
     test("WP TemplateCard image is visible on desktop", () => {
       const imageAltText = "Spreadsheet icon";
       expect(screen.getByAltText(imageAltText)).toBeVisible();
+    });
+
+    test("WP TemplateCard help file link is correct", async () => {
+      const wpHeading = screen.getAllByRole("heading", {
+        name: wpTemplateVerbiage.title,
+      })[0];
+      const wpCard = wpHeading.closest("div")!;
+
+      const downloadButton = within(wpCard).getByRole("button", {
+        name: wpTemplateVerbiage.downloadText,
+      });
+
+      await userEvent.click(downloadButton);
+
+      const downloadLink = wpCard.querySelector("a[href]") as HTMLAnchorElement;
+
+      expect(downloadLink).toBeVisible();
+      expect(downloadLink).toHaveAttribute(
+        "href",
+        wpTemplateVerbiage.linkLocation
+      );
     });
 
     test("WP TemplateCard link is visible on desktop", () => {

@@ -7,12 +7,12 @@ testcafe_results
 .DS_Store
 build_dev
 tsconfig.tsbuildinfo
-services/uploads/local_buckets
 /.env
 tests_output
 *.log
 !launchdarkly-flags.log
 !todos.log
+test-results/
 tests/cypress/videos
 tests/cypress/screenshots
 tests/cypress/downloads

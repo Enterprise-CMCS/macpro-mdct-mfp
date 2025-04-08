@@ -24,7 +24,10 @@ global.structuredClone = jest.fn((val) => {
 });
 
 const appRoutesComponent = (route: string) => (
-  <MemoryRouter initialEntries={[route]}>
+  <MemoryRouter
+    initialEntries={[route]}
+    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+  >
     <UserProvider>
       <AppRoutes />
     </UserProvider>
