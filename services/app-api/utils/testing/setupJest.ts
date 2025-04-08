@@ -9,7 +9,6 @@ process.env.WP_FORM_BUCKET = "database-local-wp";
 process.env.SAR_FORM_BUCKET = "database-local-sar";
 process.env.FORM_TEMPLATE_TABLE_NAME = "local-form-template-versions";
 process.env.BANNER_TABLE_NAME = "local-banners";
-process.env.TEMPLATE_BUCKET = "local-templates";
 
 export const mockReportFieldData = {
   text: "text-input",
