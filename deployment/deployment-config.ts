@@ -64,6 +64,7 @@ const loadStageSecret = async (project: string, stage: string) => {
     return JSON.parse((await getSecret(secretName))!);
   } catch (error: any) {
     console.warn(
+      // eslint-disable-line no-console
       `Optional stage secret "${secretName}" not found: ${error.message}`
     );
     return {};

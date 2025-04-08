@@ -1,10 +1,8 @@
 import { Construct } from "constructs";
 import {
   aws_dynamodb as dynamodb,
-  aws_iam as iam,
   aws_s3 as s3,
   CfnOutput,
-  Aws,
   Tags,
 } from "aws-cdk-lib";
 import { DynamoDBTable } from "../../constructs/dynamodb-table";

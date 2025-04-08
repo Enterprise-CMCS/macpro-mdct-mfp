@@ -43,7 +43,6 @@ export class Lambda extends Construct {
       handler,
       timeout = Duration.seconds(6),
       memorySize = 1024,
-      brokerString = "",
       environment = {},
       api,
       path,
@@ -129,5 +128,7 @@ export class Lambda extends Construct {
   }
 }
 
-// TODO: the options calls previously included "X-Amzn-Trace-Id" in Access-Control-Allow-Headers as well
-// TODO: the options calls previously returned a 200 instead of a 204
+/*
+ * TODO: the options calls previously included "X-Amzn-Trace-Id" in Access-Control-Allow-Headers as well
+ * TODO: the options calls previously returned a 200 instead of a 204
+ */
