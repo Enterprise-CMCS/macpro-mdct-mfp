@@ -4,7 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/maintainability)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/test_coverage)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/test_coverage)
 
-## Integration Environment Deploy Status:
+## Integration Environment Deploy Status
 
 | Branch     | Build Status                                                                                                           |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -61,7 +61,7 @@ Before starting the project we're going to install some tools. We recommend havi
 
 ### Running the project locally
 
-In the root of the project run `./run update-env && ./run local` to pull in values from 1Password and run the project. Alternatively, if you do not have a 1Password account you will need to reach out to an MDCT team member for values for your `.env `. Then you can run `./run local` to use a static manually populated `.env` file.
+In the root of the project run `./run update-env && ./run local` to pull in values from 1Password and run the project. Alternatively, if you do not have a 1Password account you will need to reach out to an MDCT team member for values for your `.env`. Then you can run `./run local` to use a static manually populated `.env` file.
 
 ### Logging in
 

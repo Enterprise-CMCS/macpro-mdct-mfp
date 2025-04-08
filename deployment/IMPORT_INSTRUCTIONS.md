@@ -1,6 +1,6 @@
 # Import Instructions
 
-## From `pete-sls` branch:
+## From `pete-sls` branch
 
 ```sh
 rm -rf node_modules
@@ -21,7 +21,7 @@ yarn install
 
 ```
 
-## From `jon-cdk` branch:
+## From `jon-cdk` branch
 
 ```sh
 rm -rf node_modules

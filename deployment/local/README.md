@@ -14,8 +14,8 @@ _The install is handled by the run script._
 
 Links for the curious:
 
-- Docker - https://www.docker.com/get-started
-- Colima - https://github.com/abiosoft/colima
+- Docker - <https://www.docker.com/get-started>
+- Colima - <https://github.com/abiosoft/colima>
 
 2. **LocalStack** - Provides a local AWS emulating environment.
 
