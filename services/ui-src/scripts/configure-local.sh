@@ -1,4 +1,3 @@
-
 set -e
 
 echo """
@@ -14,13 +13,13 @@ stage=${1:-dev}
 
 echo "Fetching information for stage $stage..."
 
-api_region=`sh ../output.sh ../app-api Region $stage`
-api_url=`sh ../output.sh ../app-api ApiGatewayRestApiUrl $stage`
-cognito_region=`sh ../output.sh ../ui-auth Region $stage`
-cognito_identity_pool_id=`sh ../output.sh ../ui-auth IdentityPoolId $stage`
-cognito_user_pool_id=`sh ../output.sh ../ui-auth UserPoolId $stage`
-cognito_user_pool_client_id=`sh ../output.sh ../ui-auth UserPoolClientId $stage`
-cognito_user_pool_client_domain=`sh ../output.sh ../ui-auth UserPoolClientDomain $stage`
+api_region=$(sh ../output.sh ../app-api Region $stage)
+api_url=$(sh ../output.sh ../app-api ApiGatewayRestApiUrl $stage)
+cognito_region=$(sh ../output.sh ../ui-auth Region $stage)
+cognito_identity_pool_id=$(sh ../output.sh ../ui-auth IdentityPoolId $stage)
+cognito_user_pool_id=$(sh ../output.sh ../ui-auth UserPoolId $stage)
+cognito_user_pool_client_id=$(sh ../output.sh ../ui-auth UserPoolClientId $stage)
+cognito_user_pool_client_domain=$(sh ../output.sh ../ui-auth UserPoolClientDomain $stage)
 
 echo $stage
 echo $api_region
@@ -28,8 +27,8 @@ echo $api_url
 echo $cognito_region
 echo $cognito_identity_pool_id
 echo $cognito_user_pool_id
-echo $cognito_user_pool_client_id
-echo $cognito_user_pool_client_domain
+echo "$cognito_user_pool_client_id"
+echo "$cognito_user_pool_client_domain"
 
 export API_REGION=$api_region
 export API_URL=$api_url
