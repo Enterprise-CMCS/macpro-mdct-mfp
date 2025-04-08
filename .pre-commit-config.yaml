@@ -65,5 +65,5 @@ repos:
         name: track-todos
         entry: yarn track-todos
         language: system
-        exclude: "logs/.*|services/ui-src/build/.*"
+        exclude: 'logs/.*'
         pass_filenames: false
