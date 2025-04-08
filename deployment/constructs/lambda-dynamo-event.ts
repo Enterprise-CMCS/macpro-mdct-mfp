@@ -25,7 +25,6 @@ export class LambdaDynamoEventSource extends Construct {
 
     const {
       additionalPolicies = [],
-      brokerString = "",
       environment = {},
       handler,
       memorySize = 1024,

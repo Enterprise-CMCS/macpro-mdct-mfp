@@ -2,8 +2,6 @@ import { Construct } from "constructs";
 import {
   aws_apigateway as apigateway,
   aws_ec2 as ec2,
-  aws_events as events,
-  aws_events_targets as targets,
   aws_iam as iam,
   aws_logs as logs,
   aws_s3 as s3,
