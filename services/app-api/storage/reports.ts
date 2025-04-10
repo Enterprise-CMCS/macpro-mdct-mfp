@@ -23,7 +23,7 @@ import { reportBuckets, reportTables } from "../utils/constants/constants";
 const dynamoClient = createDynamoClient();
 const s3Client = createS3Client();
 
-const formTemplateVersionTable = process.env.FORM_TEMPLATE_TABLE_NAME!;
+const formTemplateVersionTable = process.env.FormTemplateVersionsTable!;
 
 /* METADATA (dynamo) */
 

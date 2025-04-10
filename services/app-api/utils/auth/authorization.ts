@@ -21,7 +21,7 @@ const loadCognitoValues = async () => {
     };
   } else {
     const ssmClient = new SSMClient({ logger });
-    const stage = process.env.STAGE!;
+    const stage = process.env.stage!;
     const getParam = async (identifier: string) => {
       const command = new GetParameterCommand({
         Name: `/${stage}/ui-auth/${identifier}`,
@@ -42,6 +42,11 @@ const loadCognitoValues = async () => {
 };
 
 export const isAuthenticated = async (event: APIGatewayProxyEvent) => {
+  const isLocalStack = event.requestContext.accountId === "000000000000";
+  if (isLocalStack) {
+    return true;
+  }
+
   const cognitoValues = await loadCognitoValues();
 
   // Verifier that expects valid access tokens:
