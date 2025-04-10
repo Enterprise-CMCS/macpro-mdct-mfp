@@ -58,9 +58,7 @@ for arg in "$@"; do
     ARGS+=("$arg")
 done
 
-# Inject secrets to .env if the flag is set
 if [ "$UPDATE_ENV" = true ]; then
-    # Check if 1Password CLI is installed
     if ! which op > /dev/null; then
         echo "The MDCT team uses 1Password to store and retrieve development credentials. On macOS, you can install it with 'brew install --cask 1password-cli'"
         exit 1

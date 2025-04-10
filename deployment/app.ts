@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 import { App, DefaultStackSynthesizer, Stack, Tags } from "aws-cdk-lib";
+import { EmptyParentStack } from "./stacks/empty/parent";
+import { ImportsIncludedParentStack } from "./stacks/imports_included/parent";
 import { ParentStack } from "./stacks/parent";
 import { determineDeploymentConfig } from "./deployment-config";
 
@@ -29,6 +31,14 @@ async function main() {
 
   if (stage == "bootstrap") {
     new Stack(app, `${config.project}-${stage}`, {});
+    return;
+  }
+
+  let correctParentStack;
+  if (process.env.IMPORT_VARIANT == "empty") {
+    correctParentStack = EmptyParentStack;
+  } else if (process.env.IMPORT_VARIANT == "imports_included") {
+    correctParentStack = ImportsIncludedParentStack;
   } else {
     new ParentStack(app, `${config.project}-${stage}`, {
       ...config,
@@ -37,6 +47,7 @@ async function main() {
         region: "us-east-1",
       },
     });
+    correctParentStack = ParentStack;
   }
 }
 
