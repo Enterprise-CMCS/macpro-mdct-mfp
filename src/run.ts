@@ -4,6 +4,15 @@ import LabeledProcessRunner from "./runner.js";
 import { ServerlessStageDestroyer } from "@stratiformdigital/serverless-stage-destroyer";
 import { execSync } from "child_process";
 import { addSlsBucketPolicies } from "./slsV4BucketPolicies.js";
+import readline from "node:readline";
+import {
+  CloudFormationClient,
+  DeleteStackCommand,
+  DescribeStacksCommand,
+  waitUntilStackDeleteComplete,
+} from "@aws-sdk/client-cloudformation";
+import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
+import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
 
 // load .env
 dotenv.config();
@@ -17,10 +26,56 @@ const deployedServices = [
   "ui-src",
 ];
 
+const project = process.env.PROJECT;
+const region = process.env.REGION_A;
+
+async function confirmDestroyCommand(stack: string) {
+  const orange = "\x1b[38;5;208m";
+  const reset = "\x1b[0m";
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  const question = async (message: string) => {
+    return new Promise((resolve) => {
+      rl.question(message, (answer) => {
+        resolve(answer);
+        rl.close();
+      });
+    });
+  };
+
+  const confirmation = await question(`
+${orange}********************************* STOP *******************************
+You've requested a destroy for:
+
+    ${stack}
+
+Continuing will irreversibly delete all data and infrastructure
+associated with ${stack} and its nested stacks.
+
+Do you really want to destroy it?
+Re-enter the stack name (${stack}) to continue:
+**********************************************************************${reset}
+`);
+
+  if (confirmation !== stack) {
+    throw new Error(`
+${orange}**********************************************************************
+The destroy operation has been aborted.
+**********************************************************************${reset}
+`);
+  }
+}
+
 // Function to update .env files using 1Password CLI
 function updateEnvFiles() {
   try {
-    execSync("op inject -i .env.tpl -o .env -f", { stdio: "inherit" });
+    execSync("op inject --in-file .env.tpl --out-file .env --force", {
+      stdio: "inherit",
+    });
+
     execSync(
       "op inject -i services/ui-src/.env.tpl -o services/ui-src/.env -f",
       { stdio: "inherit" }
@@ -88,6 +143,7 @@ async function run_api_locally(runner: LabeledProcessRunner) {
 }
 
 // run_fe_locally runs the frontend and its dependencies locally
+// @ts-ignore
 async function run_fe_locally(runner: LabeledProcessRunner) {
   await runner.run_command_and_output(
     "ui deps",
@@ -99,6 +155,12 @@ async function run_fe_locally(runner: LabeledProcessRunner) {
     ["./scripts/configure-env.sh", "local"],
     "services/ui-src"
   );
+  const apiUrl = await getCloudFormationStackOutputValue(
+    "mfp-localstack",
+    "ApiUrl"
+  );
+
+  await writeLocalUiEnvFile(apiUrl!);
 
   runner.run_command_and_output("ui", ["npm", "start"], "services/ui-src");
 }
@@ -201,10 +263,275 @@ async function list_topics(options: { stage: string | undefined }) {
   );
 }
 
-/*
- * The command definitons in yargs
- * All valid arguments to dev should be enumerated here, this is the entrypoint to the script
- */
+async function run_cdk_watch(
+  runner: LabeledProcessRunner,
+  options: { stage: string }
+) {
+  const stage = options.stage;
+  const watchCmd = [
+    "yarn",
+    "cdk",
+    "watch",
+    "--context",
+    `stage=${stage}`,
+    "--no-rollback",
+  ];
+  await runner.run_command_and_output("CDK watch", watchCmd, ".");
+}
+
+function isColimaRunning() {
+  try {
+    const output = execSync("colima status 2>&1", {
+      encoding: "utf-8",
+      stdio: "pipe",
+    }).trim();
+    return output.includes("running");
+  } catch {
+    return false;
+  }
+}
+
+function isLocalStackRunning() {
+  try {
+    const output = execSync("localstack status", {
+      encoding: "utf-8",
+      stdio: "pipe",
+    }).trim();
+    return output.includes("running");
+  } catch {
+    return false;
+  }
+}
+
+async function run_watch_cdk(options: { stage: string }) {
+  const runner = new LabeledProcessRunner();
+  await prepare_services(runner);
+
+  run_cdk_watch(runner, options);
+  run_fe_locally(runner);
+}
+
+async function getCloudFormationStackOutputValue(
+  stackName: string,
+  outputName: string
+) {
+  const cloudFormationClient = new CloudFormationClient({
+    region: "us-east-1",
+  });
+  const command = new DescribeStacksCommand({ StackName: stackName });
+  const response = cloudFormationClient.send(command);
+
+  return (await response).Stacks?.[0]?.Outputs?.find(
+    (output) => output.OutputKey === outputName
+  )?.OutputValue;
+}
+
+async function run_local_cdk() {
+  const runner = new LabeledProcessRunner();
+  await prepare_services(runner);
+
+  if (!isColimaRunning()) {
+    throw "Colima needs to be running.";
+  }
+
+  if (!isLocalStackRunning()) {
+    throw "LocalStack needs to be running.";
+  }
+
+  process.env.AWS_DEFAULT_REGION = "us-east-1";
+  process.env.AWS_ACCESS_KEY_ID = "localstack";
+  process.env.AWS_SECRET_ACCESS_KEY = "localstack";
+  process.env.AWS_ENDPOINT_URL = "http://localhost:4566";
+
+  const cdklocalBootstrapCmd = [
+    "yarn",
+    "cdklocal",
+    "bootstrap",
+    "aws://000000000000/us-east-1",
+    "--context",
+    "stage=bootstrap",
+  ];
+  await runner.run_command_and_output(
+    "CDK local bootstrap",
+    cdklocalBootstrapCmd,
+    "."
+  );
+
+  const deployLocalPrequisitesCmd = [
+    "yarn",
+    "cdklocal",
+    "deploy",
+    "--app",
+    '"npx tsx deployment/local/prerequisites.ts"',
+  ];
+  await runner.run_command_and_output(
+    "CDK local prerequisite deploy",
+    deployLocalPrequisitesCmd,
+    "."
+  );
+
+  const deployPrequisitesCmd = [
+    "yarn",
+    "cdklocal",
+    "deploy",
+    "--app",
+    '"npx tsx deployment/prerequisites.ts"',
+  ];
+  await runner.run_command_and_output(
+    "CDK prerequisite deploy",
+    deployPrequisitesCmd,
+    "."
+  );
+
+  const deployCmd = [
+    "yarn",
+    "cdklocal",
+    "deploy",
+    "--context",
+    "stage=localstack",
+    "--all",
+    "--no-rollback",
+  ];
+  await runner.run_command_and_output("CDK deploy", deployCmd, ".");
+
+  const seedDataFunctionName = await getCloudFormationStackOutputValue(
+    "mfp-localstack",
+    "SeedDataFunctionName"
+  );
+
+  const lambdaClient = new LambdaClient({ region: "us-east-1" });
+  const lambdaCommand = new InvokeCommand({
+    FunctionName: seedDataFunctionName,
+    InvocationType: "Event",
+    Payload: Buffer.from(JSON.stringify({})),
+  });
+  await lambdaClient.send(lambdaCommand);
+
+  const watchCmd = [
+    "yarn",
+    "cdklocal",
+    "watch",
+    "--context",
+    "stage=localstack",
+    "--no-rollback",
+  ];
+
+  runner.run_command_and_output("CDK watch", watchCmd, ".");
+  run_fe_locally(runner);
+}
+
+async function install_deps(runner: LabeledProcessRunner, service: string) {
+  await runner.run_command_and_output(
+    "Installing dependencies",
+    ["yarn", "install", "--frozen-lockfile"],
+    `services/${service}`
+  );
+}
+
+async function prepare_services(runner: LabeledProcessRunner) {
+  for (const service of deployedServices) {
+    await install_deps(runner, service);
+  }
+}
+
+async function deploy_cdk_prerequisites() {
+  const runner = new LabeledProcessRunner();
+  await prepare_services(runner);
+  const deployPrequisitesCmd = [
+    "yarn",
+    "cdk",
+    "deploy",
+    "--app",
+    '"npx tsx deployment/prerequisites.ts"',
+  ];
+  await runner.run_command_and_output(
+    "CDK prerequisite deploy",
+    deployPrequisitesCmd,
+    "."
+  );
+}
+
+const stackExists = async (stackName: string): Promise<boolean> => {
+  const client = new CloudFormationClient({ region });
+  try {
+    await client.send(new DescribeStacksCommand({ StackName: stackName }));
+    return true;
+  } catch (error: any) {
+    return false;
+  }
+};
+
+async function deploy_cdk(options: { stage: string }) {
+  const stage = options.stage;
+  const runner = new LabeledProcessRunner();
+  await prepare_services(runner);
+  if (await stackExists("seds-prerequisites")) {
+    const deployCmd = [
+      "yarn",
+      "cdk",
+      "deploy",
+      "--context",
+      `stage=${stage}`,
+      "--method=direct",
+      "--all",
+    ];
+    await runner.run_command_and_output("CDK deploy", deployCmd, ".");
+  } else {
+    console.error(
+      "MISSING PREREQUISITE STACK! Must deploy it before attempting to deploy the application."
+    );
+  }
+}
+
+const waitForStackDeleteComplete = async (
+  client: CloudFormationClient,
+  stackName: string
+) => {
+  return waitUntilStackDeleteComplete(
+    { client, maxWaitTime: 3600 },
+    { StackName: stackName }
+  );
+};
+
+async function destroy_cdk({
+  stage,
+  wait,
+  verify,
+}: {
+  stage: string;
+  wait: boolean;
+  verify: boolean;
+}) {
+  const stackName = `${project}-${stage}`;
+
+  if (/prod/i.test(stage)) {
+    console.log("Error: Destruction of production stages is not allowed.");
+    process.exit(1);
+  }
+
+  if (verify) await confirmDestroyCommand(stackName);
+
+  const client = new CloudFormationClient({ region });
+  await client.send(new DeleteStackCommand({ StackName: stackName }));
+  console.log(`Stack ${stackName} delete initiated.`);
+
+  if (wait) {
+    console.log(`Waiting for stack ${stackName} to be deleted...`);
+    const result = await waitForStackDeleteComplete(client, stackName);
+    console.log(
+      result.state === "SUCCESS"
+        ? `Stack ${stackName} deleted successfully.`
+        : `Error: Stack ${stackName} deletion failed.`
+    );
+  } else {
+    console.log(
+      `Stack ${stackName} delete initiated. Not waiting for completion as --wait is set to false.`
+    );
+  }
+}
+
+// The command definitons in yargs
+// All valid arguments to dev should be enumerated here, this is the entrypoint to the script
 yargs(process.argv.slice(2))
   .command("local", "run system locally", {}, run_all_locally)
   .command(
@@ -215,6 +542,24 @@ yargs(process.argv.slice(2))
       // eslint-disable-next-line no-console
       console.log("Testing 1. 2. 3.");
     }
+  )
+  .command(
+    "watch-cdk",
+    "run cdk watch and react together",
+    { stage: { type: "string", demandOption: true } },
+    run_watch_cdk
+  )
+  .command(
+    "local-cdk",
+    "run our app via cdk deployment to localstack locally and react locally together",
+    {},
+    run_local_cdk
+  )
+  .command(
+    "deploy-cdk-prerequisites",
+    "deploy the app's AWS account prerequisites with cdk to the cloud",
+    () => {},
+    deploy_cdk_prerequisites
   )
   .command(
     "deploy",
@@ -234,6 +579,30 @@ yargs(process.argv.slice(2))
       verify: { type: "boolean", demandOption: false, default: true },
     },
     destroy_stage
+  )
+  .command(
+    "local_cdk",
+    "run our app via cdk deployment to localstack locally and react locally together",
+    {},
+    run_local_cdk
+  )
+  .command(
+    "deploy_cdk",
+    "deploy the app with cdk to the cloud",
+    {
+      stage: { type: "string", demandOption: true },
+    },
+    deploy_cdk
+  )
+  .command(
+    "destroy_cdk",
+    "destroy a cdk stage in AWS",
+    {
+      stage: { type: "string", demandOption: true },
+      wait: { type: "boolean", demandOption: false, default: true },
+      verify: { type: "boolean", demandOption: false, default: true },
+    },
+    destroy_cdk
   )
   .command(
     "delete-topics",
