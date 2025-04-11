@@ -77,15 +77,4 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
   });
   Tags.of(wpFormBucket).add("SERVICE", service);
-
-  new CfnOutput(scope, "SarFormBucketName", {
-    value: sarFormBucket.bucketName,
-  });
-  new CfnOutput(scope, "WpFormBucketName", { value: wpFormBucket.bucketName });
-
-  return {
-    tables: tables.map((table) => table.identifiers),
-    sarFormBucket,
-    wpFormBucket,
-  };
 }

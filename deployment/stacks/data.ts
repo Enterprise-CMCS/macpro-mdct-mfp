@@ -81,10 +81,5 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     enforceSSL: true,
   });
 
-  new CfnOutput(scope, "SarFormBucketName", {
-    value: sarFormBucket.bucketName,
-  });
-  new CfnOutput(scope, "WpFormBucketName", { value: wpFormBucket.bucketName });
-
   return { tables, sarFormBucket, wpFormBucket };
 }
