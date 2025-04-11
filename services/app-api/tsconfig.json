@@ -12,12 +12,10 @@
     "resolveJsonModule": true,
     "lib": ["ES2022"],
     "module": "node16",
-    "target": "ES2022",
+    "target": "ES2022"
   },
   "ts-node": {
     "files": true
   },
-  "files": [
-    "db/custom.d.ts"
-  ],
+  "files": ["db/custom.d.ts"]
 }
