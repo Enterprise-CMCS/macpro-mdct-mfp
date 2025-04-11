@@ -1,9 +1,19 @@
 import yargs from "yargs";
 import * as dotenv from "dotenv";
 import LabeledProcessRunner from "./runner.js";
-import { ServerlessStageDestroyer } from "@stratiformdigital/serverless-stage-destroyer";
+// import { ServerlessStageDestroyer } from "@stratiformdigital/serverless-stage-destroyer";
+import { ServerlessStageDestroyer } from "./serverless-stage-destroyer.js";
+import {
+  getAllStacksForStage,
+  getCloudFormationTemplatesForStage,
+} from "./getCloudFormationTemplateForStage.js";
 import { execSync } from "child_process";
 import { addSlsBucketPolicies } from "./slsV4BucketPolicies.js";
+import {
+  CloudFormationClient,
+  DescribeStackResourceCommand,
+} from "@aws-sdk/client-cloudformation";
+import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts";
 
 // load .env
 dotenv.config();
@@ -138,11 +148,97 @@ async function install_deps_for_services(runner: LabeledProcessRunner) {
 }
 
 async function deploy(options: { stage: string }) {
+  checkEnvVars();
   const runner = new LabeledProcessRunner();
   await install_deps_for_services(runner);
   const deployCmd = ["sls", "deploy", "--stage", options.stage];
   await runner.run_command_and_output("SLS Deploy", deployCmd, ".");
   await addSlsBucketPolicies();
+}
+
+async function checkRetainedResources(
+  stage: string,
+  filters: { Key: string; Value: string }[] | undefined
+) {
+  const cfnClient = new CloudFormationClient({ region: process.env.REGION_A });
+
+  const templates = await getCloudFormationTemplatesForStage(
+    `${process.env.REGION_A}`,
+    stage,
+    filters
+  );
+
+  const resourcesToCheck = {
+    [`database-${stage}`]: [
+      "BannerTable",
+      "FormTemplateVersionsTable",
+      "SarReportTable",
+      "SarFormBucket",
+      "WpReportTable",
+      "WpFormBucket",
+    ],
+    [`ui-${stage}`]: [
+      "CloudFrontDistribution",
+      "LoggingBucket",
+      "WaflogsUploadBucket",
+    ],
+    [`ui-auth-${stage}`]: ["CognitoUserPool"],
+  };
+
+  const notRetained: { templateKey: string; resourceKey: string }[] = [];
+  const retained: {
+    templateKey: string;
+    resourceKey: string;
+    physicalResourceId: string;
+  }[] = [];
+
+  for (const [templateKey, resourceKeys] of Object.entries(resourcesToCheck)) {
+    for (const resourceKey of resourceKeys) {
+      const policy =
+        templates?.[templateKey]?.Resources?.[resourceKey]?.DeletionPolicy;
+      if (policy === "Retain") {
+        const describeCmd = new DescribeStackResourceCommand({
+          StackName: templateKey,
+          LogicalResourceId: resourceKey,
+        });
+        const response = await cfnClient.send(describeCmd);
+        const physicalResourceId =
+          response.StackResourceDetail!.PhysicalResourceId!;
+        retained.push({ templateKey, resourceKey, physicalResourceId });
+      } else {
+        notRetained.push({ templateKey, resourceKey });
+      }
+    }
+  }
+
+  return { retained, notRetained };
+}
+
+function checkEnvVars() {
+  const envVarsToCheck = [
+    "LOGGING_BUCKET",
+    "WP_FORM_BUCKET",
+    "SAR_FORM_BUCKET",
+    "WP_REPORT_TABLE_STREAM_ARN",
+    "SAR_REPORT_TABLE_STREAM_ARN",
+    "VPC_ID",
+    "VPC_SUBNET_A",
+    "VPC_SUBNET_B",
+    "VPC_SUBNET_C",
+    "BROKER_STRINGS",
+  ];
+
+  const setVars = envVarsToCheck.filter(
+    (name) => process.env[name] !== undefined
+  );
+
+  if (setVars.length > 0) {
+    const message = `Will not proceed because these environment variables are set:\n${setVars.join(
+      ", "
+    )}\ncheck your .env file`;
+
+    throw message;
+  }
 }
 
 async function destroy_stage(options: {
@@ -151,6 +247,8 @@ async function destroy_stage(options: {
   wait: boolean;
   verify: boolean;
 }) {
+  checkEnvVars();
+
   let destroyer = new ServerlessStageDestroyer();
   let filters = [
     {
@@ -165,13 +263,78 @@ async function destroy_stage(options: {
     });
   }
 
+  const stacks = await getAllStacksForStage(
+    `${process.env.REGION_A}`,
+    options.stage,
+    filters
+  );
+
+  const protectedStacks = stacks
+    .filter((i: any) => i.EnableTerminationProtection)
+    .map((i: any) => i.StackName);
+
+  if (protectedStacks.length > 0) {
+    console.log(
+      `We cannot proceed with the destroy because the following stacks have termination protection enabled:\n${protectedStacks.join(
+        "\n"
+      )}`
+    );
+    return;
+  } else {
+    console.log(
+      "No stacks have termination protection enabled. Proceeding with the destroy."
+    );
+  }
+
+  let notRetained: { templateKey: string; resourceKey: string }[] = [];
+  let retained;
+  if (["master", "val", "production"].includes(options.stage)) {
+    ({ retained, notRetained } = await checkRetainedResources(
+      options.stage,
+      filters
+    ));
+  }
+
+  if (retained) {
+    console.log("Information to use for import to CDK:");
+    retained.forEach(({ templateKey, resourceKey, physicalResourceId }) => {
+      // WaflogsUploadBucket is being retained but not being imported into CDK.
+      if (resourceKey !== "WaflogsUploadBucket") {
+        console.log(`${templateKey} - ${resourceKey} - ${physicalResourceId}`);
+      }
+    });
+  }
+
+  if (notRetained.length > 0) {
+    console.log(
+      "Will not destroy the stage because it's an important stage and some important resources are not yet set to be retained:"
+    );
+    notRetained.forEach(({ templateKey, resourceKey }) =>
+      console.log(` - ${templateKey}/${resourceKey}`)
+    );
+    return;
+  }
+
+  const accountId = await getAccountId();
   await destroyer.destroy(`${process.env.REGION_A}`, options.stage, {
     wait: options.wait,
     filters: filters,
     verify: options.verify,
+    bucketsToSkip: [
+      `database-${options.stage}-sar`,
+      `database-${options.stage}-wp`,
+      `ui-${options.stage}-cloudfront-logs-${accountId}`,
+      `${accountId}-ui-${options.stage}-waflogs`,
+    ],
   });
 
-  await delete_topics(options);
+  // await delete_topics(options);
+}
+
+async function getAccountId() {
+  const client = new STSClient({ region: process.env.REGION_A });
+  const identity = await client.send(new GetCallerIdentityCommand({}));
+  return identity.Account;
 }
 
 async function delete_topics(options: { stage: string }) {
