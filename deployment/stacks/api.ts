@@ -2,8 +2,6 @@ import { Construct } from "constructs";
 import {
   aws_apigateway as apigateway,
   aws_ec2 as ec2,
-  aws_events as events,
-  aws_events_targets as targets,
   aws_iam as iam,
   aws_logs as logs,
   aws_wafv2 as wafv2,
@@ -11,11 +9,11 @@ import {
   Duration,
   RemovalPolicy,
 } from "aws-cdk-lib";
-import { Lambda } from "../constructs/lambda";
+// import { Lambda } from "../constructs/lambda";
 import { WafConstruct } from "../constructs/waf";
 import { addIamPropertiesToBucketAutoDeleteRole } from "../utils/s3";
 import { getSubnets } from "../utils/vpc";
-import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
+// import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
 import { DynamoDBTableIdentifiers } from "../constructs/dynamodb-table";
 import { isDefined } from "../utils/misc";
 import { isLocalStack } from "../local/util";
@@ -54,21 +52,21 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   const service = "app-api";
 
   const vpc = ec2.Vpc.fromLookup(scope, "Vpc", { vpcName });
-  const kafkaAuthorizedSubnets = getSubnets(
-    scope,
-    kafkaAuthorizedSubnetIds ?? ""
-  );
+  // const kafkaAuthorizedSubnets = getSubnets(
+  //   scope,
+  //   kafkaAuthorizedSubnetIds ?? ""
+  // );
 
-  const kafkaSecurityGroup = new ec2.SecurityGroup(
-    scope,
-    "KafkaSecurityGroup",
-    {
-      vpc,
-      description:
-        "Security Group for streaming functions. Egress all is set by default.",
-      allowAllOutbound: true,
-    }
-  );
+  // const kafkaSecurityGroup = new ec2.SecurityGroup(
+  //   scope,
+  //   "KafkaSecurityGroup",
+  //   {
+  //     vpc,
+  //     description:
+  //       "Security Group for streaming functions. Egress all is set by default.",
+  //     allowAllOutbound: true,
+  //   }
+  // );
 
   const logGroup = new logs.LogGroup(scope, "ApiAccessLogs", {
     removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
@@ -174,15 +172,15 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     }),
   ];
 
-  const commonProps = {
-    brokerString,
-    stackName: `${service}-${stage}`,
-    api,
-    environment,
-    additionalPolicies,
-    iamPermissionsBoundary,
-    iamPath,
-  };
+  // const commonProps = {
+  //   brokerString,
+  //   stackName: `${service}-${stage}`,
+  //   api,
+  //   environment,
+  //   additionalPolicies,
+  //   iamPermissionsBoundary,
+  //   iamPath,
+  // };
 
   if (!isLocalStack) {
     const waf = new WafConstruct(

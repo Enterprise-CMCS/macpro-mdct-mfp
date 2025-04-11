@@ -41,7 +41,7 @@ export class Lambda extends Construct {
       handler,
       timeout = Duration.seconds(6),
       memorySize = 1024,
-      brokerString = "",
+      // brokerString = "",
       environment = {},
       api,
       path,

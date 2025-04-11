@@ -11,7 +11,7 @@ interface CreateUiComponentsProps {
 }
 
 export function createUiComponents(props: CreateUiComponentsProps) {
-  const { scope, stage } = props;
+  const { scope } = props;
 
   const distribution = new cloudfront.Distribution(
     scope,

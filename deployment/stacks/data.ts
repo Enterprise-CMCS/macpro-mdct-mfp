@@ -8,7 +8,7 @@ import {
   CfnOutput,
   Duration,
 } from "aws-cdk-lib";
-import { DynamoDBTable } from "../constructs/dynamodb-table";
+// import { DynamoDBTable } from "../constructs/dynamodb-table";
 import { IManagedPolicy } from "aws-cdk-lib/aws-iam";
 
 interface CreateDataComponentsProps {
