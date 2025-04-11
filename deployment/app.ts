@@ -34,11 +34,10 @@ async function main() {
     return;
   }
 
-  let correctParentStack;
   if (process.env.IMPORT_VARIANT == "empty") {
-    correctParentStack = EmptyParentStack;
+    EmptyParentStack;
   } else if (process.env.IMPORT_VARIANT == "imports_included") {
-    correctParentStack = ImportsIncludedParentStack;
+    ImportsIncludedParentStack;
   } else {
     new ParentStack(app, `${config.project}-${stage}`, {
       ...config,
@@ -47,7 +46,6 @@ async function main() {
         region: "us-east-1",
       },
     });
-    correctParentStack = ParentStack;
   }
 }
 
