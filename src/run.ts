@@ -12,8 +12,8 @@ import {
   DescribeStacksCommand,
   waitUntilStackDeleteComplete,
 } from "@aws-sdk/client-cloudformation";
-import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
-import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
+// import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
+// import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
 
 // load .env
 dotenv.config();
@@ -156,12 +156,12 @@ async function run_fe_locally(runner: LabeledProcessRunner) {
     ["./scripts/configure-env.sh", "local"],
     "services/ui-src"
   );
-  const apiUrl = await getCloudFormationStackOutputValue(
-    "mfp-localstack",
-    "ApiUrl"
-  );
+  // const apiUrl = await getCloudFormationStackOutputValue(
+  //   "mfp-localstack",
+  //   "ApiUrl"
+  // );
 
-  await writeLocalUiEnvFile(apiUrl!);
+  // await writeLocalUiEnvFile(apiUrl!);
 
   runner.run_command_and_output("ui", ["npm", "start"], "services/ui-src");
 }
@@ -313,17 +313,17 @@ async function run_watch_cdk(options: { stage: string }) {
   run_fe_locally(runner);
 }
 
-async function getCloudFormationStackOutputValue(
-  stackName: string,
-  outputName: string
-) {
-  const cloudFormationClient = new CloudFormationClient({ region });
-  const command = new DescribeStacksCommand({ StackName: stackName });
-  const response = await cloudFormationClient.send(command);
-  return response.Stacks?.[0]?.Outputs?.find(
-    (output) => output.OutputKey === outputName
-  )?.OutputValue;
-}
+// async function getCloudFormationStackOutputValue(
+//   stackName: string,
+//   outputName: string
+// ) {
+//   const cloudFormationClient = new CloudFormationClient({ region });
+//   const command = new DescribeStacksCommand({ StackName: stackName });
+//   const response = await cloudFormationClient.send(command);
+//   return response.Stacks?.[0]?.Outputs?.find(
+//     (output) => output.OutputKey === outputName
+//   )?.OutputValue;
+// }
 
 async function run_local_cdk() {
   const runner = new LabeledProcessRunner();
@@ -397,18 +397,18 @@ async function run_local_cdk() {
     "."
   );
 
-  const seedDataFunctionName = await getCloudFormationStackOutputValue(
-    "mfp-localstack",
-    "SeedDataFunctionName"
-  );
+  // const seedDataFunctionName = await getCloudFormationStackOutputValue(
+  //   "mfp-localstack",
+  //   "SeedDataFunctionName"
+  // );
 
-  const lambdaClient = new LambdaClient({ region: "us-east-1" });
-  const lambdaCommand = new InvokeCommand({
-    FunctionName: seedDataFunctionName,
-    InvocationType: "Event",
-    Payload: Buffer.from(JSON.stringify({})),
-  });
-  await lambdaClient.send(lambdaCommand);
+  // const lambdaClient = new LambdaClient({ region: "us-east-1" });
+  // const lambdaCommand = new InvokeCommand({
+  //   FunctionName: seedDataFunctionName,
+  //   InvocationType: "Event",
+  //   Payload: Buffer.from(JSON.stringify({})),
+  // });
+  // await lambdaClient.send(lambdaCommand);
 
   runner.run_command_and_output(
     "CDK local watch",
@@ -467,7 +467,6 @@ const stackExists = async (stackName: string): Promise<boolean> => {
 };
 
 async function deploy_cdk(options: { stage: string }) {
-  const stage = options.stage;
   const runner = new LabeledProcessRunner();
   await prepare_services(runner);
   if (await stackExists("mfp-prerequisites")) {
