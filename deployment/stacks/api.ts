@@ -1,7 +1,7 @@
 import { Construct } from "constructs";
 import {
   aws_apigateway as apigateway,
-  aws_ec2 as ec2,
+  // aws_ec2 as ec2,
   aws_iam as iam,
   aws_logs as logs,
   aws_wafv2 as wafv2,
@@ -12,10 +12,12 @@ import {
 // import { Lambda } from "../constructs/lambda";
 import { WafConstruct } from "../constructs/waf";
 import { addIamPropertiesToBucketAutoDeleteRole } from "../utils/s3";
-import { getSubnets } from "../utils/vpc";
-// import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
+/*
+ * import { getSubnets } from "../utils/vpc";
+ * import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
+ */
 import { DynamoDBTableIdentifiers } from "../constructs/dynamodb-table";
-import { isDefined } from "../utils/misc";
+// import { isDefined } from "../utils/misc";
 import { isLocalStack } from "../local/util";
 
 interface CreateApiComponentsProps {
@@ -39,34 +41,44 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     stage,
     project,
     isDev,
-    userPoolId,
-    userPoolClientId,
-    vpcName,
-    kafkaAuthorizedSubnetIds,
-    tables,
-    brokerString,
+    /*
+     * userPoolId,
+     * userPoolClientId,
+     */
+    /*
+     * vpcName,
+     * kafkaAuthorizedSubnetIds,
+     */
+    /*
+     * tables,
+     * brokerString,
+     */
     iamPermissionsBoundary,
     iamPath,
   } = props;
 
   const service = "app-api";
 
-  const vpc = ec2.Vpc.fromLookup(scope, "Vpc", { vpcName });
-  // const kafkaAuthorizedSubnets = getSubnets(
-  //   scope,
-  //   kafkaAuthorizedSubnetIds ?? ""
-  // );
+  /*
+   * const vpc = ec2.Vpc.fromLookup(scope, "Vpc", { vpcName });
+   * const kafkaAuthorizedSubnets = getSubnets(
+   *   scope,
+   *   kafkaAuthorizedSubnetIds ?? ""
+   * );
+   */
 
-  // const kafkaSecurityGroup = new ec2.SecurityGroup(
-  //   scope,
-  //   "KafkaSecurityGroup",
-  //   {
-  //     vpc,
-  //     description:
-  //       "Security Group for streaming functions. Egress all is set by default.",
-  //     allowAllOutbound: true,
-  //   }
-  // );
+  /*
+   * const kafkaSecurityGroup = new ec2.SecurityGroup(
+   *   scope,
+   *   "KafkaSecurityGroup",
+   *   {
+   *     vpc,
+   *     description:
+   *       "Security Group for streaming functions. Egress all is set by default.",
+   *     allowAllOutbound: true,
+   *   }
+   * );
+   */
 
   const logGroup = new logs.LogGroup(scope, "ApiAccessLogs", {
     removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
@@ -118,69 +130,77 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     },
   });
 
-  const environment = {
-    BOOTSTRAP_BROKER_STRING_TLS: brokerString,
-    COGNITO_USER_POOL_ID: userPoolId ?? process.env.COGNITO_USER_POOL_ID!,
-    COGNITO_USER_POOL_CLIENT_ID:
-      userPoolClientId ?? process.env.COGNITO_USER_POOL_CLIENT_ID!,
-    stage,
-    ...Object.fromEntries(
-      tables.map((table) => [`${table.id}Table`, table.name])
-    ),
-  };
+  /*
+   * const environment = {
+   *   BOOTSTRAP_BROKER_STRING_TLS: brokerString,
+   *   COGNITO_USER_POOL_ID: userPoolId ?? process.env.COGNITO_USER_POOL_ID!,
+   *   COGNITO_USER_POOL_CLIENT_ID:
+   *     userPoolClientId ?? process.env.COGNITO_USER_POOL_CLIENT_ID!,
+   *   stage,
+   *   ...Object.fromEntries(
+   *     tables.map((table) => [`${table.id}Table`, table.name])
+   *   ),
+   * };
+   */
 
-  const additionalPolicies = [
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "dynamodb:BatchWriteItem",
-        "dynamodb:DeleteItem",
-        "dynamodb:GetItem",
-        "dynamodb:PutItem",
-        "dynamodb:Query",
-        "dynamodb:Scan",
-        "dynamodb:UpdateItem",
-      ],
-      resources: tables.map((table) => table.arn),
-    }),
+  /*
+   * const additionalPolicies = [
+   *   new iam.PolicyStatement({
+   *     effect: iam.Effect.ALLOW,
+   *     actions: [
+   *       "dynamodb:BatchWriteItem",
+   *       "dynamodb:DeleteItem",
+   *       "dynamodb:GetItem",
+   *       "dynamodb:PutItem",
+   *       "dynamodb:Query",
+   *       "dynamodb:Scan",
+   *       "dynamodb:UpdateItem",
+   *     ],
+   *     resources: tables.map((table) => table.arn),
+   *   }),
+   */
 
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "dynamodb:DescribeStream",
-        "dynamodb:GetRecords",
-        "dynamodb:GetShardIterator",
-        "dynamodb:ListShards",
-        "dynamodb:ListStreams",
-      ],
-      resources: tables.map((table) => table.streamArn).filter(isDefined),
-    }),
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["dynamodb:Query", "dynamodb:Scan"],
-      resources: tables.map((table) => `${table.arn}/index/*`),
-    }),
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "cognito-idp:AdminGetUser",
-        "ses:SendEmail",
-        "ses:SendRawEmail",
-        "lambda:InvokeFunction",
-      ],
-      resources: ["*"],
-    }),
-  ];
+  /*
+   *   new iam.PolicyStatement({
+   *     effect: iam.Effect.ALLOW,
+   *     actions: [
+   *       "dynamodb:DescribeStream",
+   *       "dynamodb:GetRecords",
+   *       "dynamodb:GetShardIterator",
+   *       "dynamodb:ListShards",
+   *       "dynamodb:ListStreams",
+   *     ],
+   *     resources: tables.map((table) => table.streamArn).filter(isDefined),
+   *   }),
+   *   new iam.PolicyStatement({
+   *     effect: iam.Effect.ALLOW,
+   *     actions: ["dynamodb:Query", "dynamodb:Scan"],
+   *     resources: tables.map((table) => `${table.arn}/index/*`),
+   *   }),
+   *   new iam.PolicyStatement({
+   *     effect: iam.Effect.ALLOW,
+   *     actions: [
+   *       "cognito-idp:AdminGetUser",
+   *       "ses:SendEmail",
+   *       "ses:SendRawEmail",
+   *       "lambda:InvokeFunction",
+   *     ],
+   *     resources: ["*"],
+   *   }),
+   * ];
+   */
 
-  // const commonProps = {
-  //   brokerString,
-  //   stackName: `${service}-${stage}`,
-  //   api,
-  //   environment,
-  //   additionalPolicies,
-  //   iamPermissionsBoundary,
-  //   iamPath,
-  // };
+  /*
+   * const commonProps = {
+   *   brokerString,
+   *   stackName: `${service}-${stage}`,
+   *   api,
+   *   environment,
+   *   additionalPolicies,
+   *   iamPermissionsBoundary,
+   *   iamPath,
+   * };
+   */
 
   if (!isLocalStack) {
     const waf = new WafConstruct(

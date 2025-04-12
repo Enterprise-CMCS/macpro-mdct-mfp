@@ -1,6 +1,6 @@
 import { Construct } from "constructs";
 import {
-  aws_dynamodb as dynamodb,
+  // aws_dynamodb as dynamodb,
   aws_iam as iam,
   aws_lambda as lambda,
   aws_lambda_nodejs as lambda_nodejs,

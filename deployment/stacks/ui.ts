@@ -37,8 +37,10 @@ export function createUiComponents(props: CreateUiComponentsProps) {
     iamPath,
     cloudfrontCertificateArn,
     cloudfrontDomainName,
-    // vpnIpSetArn,
-    // vpnIpv6SetArn,
+    /*
+     * vpnIpSetArn,
+     * vpnIpv6SetArn,
+     */
   } = props;
 
   const uiBucket = new s3.Bucket(scope, "uiBucket", {
@@ -165,8 +167,10 @@ function setupWaf(
   scope: Construct,
   stage: string,
   project: string
-  // vpnIpSetArn?: string,
-  // vpnIpv6SetArn?: string,
+  /*
+   * vpnIpSetArn?: string,
+   * vpnIpv6SetArn?: string,
+   */
 ) {
   return new WafConstruct(
     scope,
@@ -177,52 +181,64 @@ function setupWaf(
     },
     "CLOUDFRONT"
   );
-  // Additional Rules for this WAF only if CMS asks to have the application made vpn only
-  // const wafRules: wafv2.CfnWebACL.RuleProperty[] = [];
+  /*
+   * Additional Rules for this WAF only if CMS asks to have the application made vpn only
+   * const wafRules: wafv2.CfnWebACL.RuleProperty[] = [];
+   */
 
-  // const defaultAction = vpnIpSetArn
-  //   ? { block: {} }
-  //   : { allow: {} };
+  /*
+   * const defaultAction = vpnIpSetArn
+   *   ? { block: {} }
+   *   : { allow: {} };
+   */
 
-  // if (vpnIpSetArn) {
-  //   const githubIpSet = new wafv2.CfnIPSet(scope, "GitHubIPSet", {
-  //     name: `${stage}-gh-ipset`,
-  //     scope: "CLOUDFRONT",
-  //     addresses: [],
-  //     ipAddressVersion: "IPV4",
-  //   });
+  /*
+   * if (vpnIpSetArn) {
+   *   const githubIpSet = new wafv2.CfnIPSet(scope, "GitHubIPSet", {
+   *     name: `${stage}-gh-ipset`,
+   *     scope: "CLOUDFRONT",
+   *     addresses: [],
+   *     ipAddressVersion: "IPV4",
+   *   });
+   */
 
-  //   const statements = [
-  //     {
-  //       ipSetReferenceStatement: { arn: vpnIpSetArn },
-  //     },
-  //     {
-  //       ipSetReferenceStatement: { arn: githubIpSet.attrArn },
-  //     },
-  //   ];
+  /*
+   *   const statements = [
+   *     {
+   *       ipSetReferenceStatement: { arn: vpnIpSetArn },
+   *     },
+   *     {
+   *       ipSetReferenceStatement: { arn: githubIpSet.attrArn },
+   *     },
+   *   ];
+   */
 
-  //   if (vpnIpv6SetArn) {
-  //     statements.push({
-  //       ipSetReferenceStatement: {
-  //         arn: vpnIpv6SetArn,
-  //       },
-  //     });
-  //   }
+  /*
+   *   if (vpnIpv6SetArn) {
+   *     statements.push({
+   *       ipSetReferenceStatement: {
+   *         arn: vpnIpv6SetArn,
+   *       },
+   *     });
+   *   }
+   */
 
-  //   wafRules.push({
-  //     name: "vpn-only",
-  //     priority: 0,
-  //     action: { allow: {} },
-  //     visibilityConfig: {
-  //       cloudWatchMetricsEnabled: true,
-  //       metricName: `${project}-${stage}-webacl-vpn-only`,
-  //       sampledRequestsEnabled: true,
-  //     },
-  //     statement: {
-  //       orStatement: {
-  //         statements,
-  //       },
-  //     },
-  //   });
-  // }
+  /*
+   *   wafRules.push({
+   *     name: "vpn-only",
+   *     priority: 0,
+   *     action: { allow: {} },
+   *     visibilityConfig: {
+   *       cloudWatchMetricsEnabled: true,
+   *       metricName: `${project}-${stage}-webacl-vpn-only`,
+   *       sampledRequestsEnabled: true,
+   *     },
+   *     statement: {
+   *       orStatement: {
+   *         statements,
+   *       },
+   *     },
+   *   });
+   * }
+   */
 }
