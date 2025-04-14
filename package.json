@@ -27,7 +27,15 @@
   },
   "homepage": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp#readme",
   "dependencies": {
-    "@enterprise-cmcs/serverless-waf-plugin": "^1.4.0"
+    "@enterprise-cmcs/serverless-waf-plugin": "^1.4.0",
+    "@aws-sdk/client-cloudformation": "^3.758.0",
+    "@aws-sdk/client-cloudfront": "^3.758.0",
+    "@aws-sdk/client-lambda": "^3.758.0",
+    "@aws-sdk/client-s3": "^3.758.0",
+    "@aws-sdk/client-secrets-manager": "^3.758.0",
+    "aws-cdk-lib": "^2.185.0",
+    "constructs": "^10.3.0",
+    "source-map-support": "^0.5.21"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -40,6 +48,9 @@
     "@typescript-eslint/eslint-plugin": "5.18.0",
     "@typescript-eslint/parser": "5.18.0",
     "amazon-user-pool-srp-client": "^1.0.4",
+    "aws-cdk": "^2.1002.0",
+    "aws-cdk-local": "^2.19.2",
+    "chromedriver": ">=88.0.0",
     "dotenv": "^8.2.0",
     "eslint": "^8.33.0",
     "eslint-config-airbnb": "^19.0.4",
