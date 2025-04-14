@@ -175,7 +175,7 @@ async function run_local() {
       "yarn",
       "cdklocal",
       "bootstrap",
-      "aws://000000000000/us-east-1",
+      "aws://000000000000/us-east-1", // LocalStack uses the default dummy account ID 000000000000
       "--context",
       "stage=bootstrap",
     ],
