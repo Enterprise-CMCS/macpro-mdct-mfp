@@ -10,6 +10,6 @@ interface CreateDataComponentsProps {
   isDev: boolean;
 }
 
-export function createDataComponents(props: CreateDataComponentsProps) {
+export function createDataComponents(_props: CreateDataComponentsProps) {
   // const { scope, stage, isDev } = props;
 }
