@@ -11,17 +11,18 @@ const region = "us-east-1";
 
 export async function writeLocalUiEnvFile(apiUrl: string) {
   const envVariables = {
+    SKIP_PREFLIGHT_CHECK: "true",
     API_REGION: region,
     API_URL: apiUrl.replace("https", "http"),
+    COGNITO_REGION: region,
     COGNITO_IDP_NAME: "Okta",
     COGNITO_IDENTITY_POOL_ID: process.env.COGNITO_IDENTITY_POOL_ID,
-    COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
-    COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
-    COGNITO_REGION: region,
+    COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
     COGNITO_USER_POOL_CLIENT_ID: process.env.COGNITO_USER_POOL_CLIENT_ID,
     COGNITO_USER_POOL_CLIENT_DOMAIN:
       process.env.COGNITO_USER_POOL_CLIENT_DOMAIN,
-    COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
+    COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
+    COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
     POST_SIGNOUT_REDIRECT: "http://localhost:3000/",
     REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT,
   };

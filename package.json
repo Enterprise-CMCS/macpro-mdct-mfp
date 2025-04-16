@@ -28,6 +28,17 @@
     "url": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp/issues"
   },
   "homepage": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp#readme",
+  "dependencies": {
+    "@aws-sdk/client-cloudformation": "^3.787.0",
+    "@aws-sdk/client-cloudfront": "^3.787.0",
+    "@aws-sdk/client-lambda": "^3.787.0",
+    "@aws-sdk/client-s3": "^3.787.0",
+    "@aws-sdk/client-secrets-manager": "^3.787.0",
+    "aws-cdk-lib": "^2.189.0",
+    "constructs": "^10.4.2",
+    "jsdom": "^26.1.0",
+    "source-map-support": "^0.5.21"
+  },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "@types/flat": "^5.0.5",
@@ -53,16 +64,5 @@
     "typescript": "^5.8.3",
     "util": "^0.12.5",
     "yargs": "^17.7.2"
-  },
-  "dependencies": {
-    "@aws-sdk/client-cloudformation": "^3.787.0",
-    "@aws-sdk/client-cloudfront": "^3.787.0",
-    "@aws-sdk/client-lambda": "^3.787.0",
-    "@aws-sdk/client-s3": "^3.787.0",
-    "@aws-sdk/client-secrets-manager": "^3.787.0",
-    "aws-cdk-lib": "^2.189.0",
-    "constructs": "^10.4.2",
-    "jsdom": "^26.1.0",
-    "source-map-support": "^0.5.21"
   }
 }
