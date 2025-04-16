@@ -145,9 +145,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     refreshTokenValidity: Duration.hours(24),
   });
 
-  if (oktaIdp) {
-    userPoolClient.node.addDependency(oktaIdp);
-  }
+ userPoolClient.node.addDependency(oktaIdp);
 
   (
     userPoolClient.node.defaultChild as cognito.CfnUserPoolClient
