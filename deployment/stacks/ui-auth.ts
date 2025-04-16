@@ -21,7 +21,6 @@ interface CreateUiAuthComponentsProps {
   stage: string;
   isDev: boolean;
   applicationEndpointUrl: string;
-  restApiId: string;
   customResourceRole: iam.Role;
   iamPath: string;
   iamPermissionsBoundary: IManagedPolicy;
@@ -42,7 +41,6 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     stage,
     isDev,
     applicationEndpointUrl,
-    restApiId,
     customResourceRole,
     iamPath,
     iamPermissionsBoundary,
@@ -83,45 +81,39 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
   });
 
-  let supportedIdentityProviders:
-    | cognito.UserPoolClientIdentityProvider[]
-    | undefined = undefined;
-  let oktaIdp: cognito.CfnUserPoolIdentityProvider | undefined = undefined;
-
   const providerName = "Okta";
 
-  if (oktaMetadataUrl) {
-    oktaIdp = new cognito.CfnUserPoolIdentityProvider(
-      scope,
-      "OktaUserPoolIdentityProviderSAML",
-      {
-        providerName,
-        providerType: "SAML",
-        userPoolId: userPool.userPoolId,
-        providerDetails: {
-          MetadataURL: oktaMetadataUrl,
-        },
-        attributeMapping: {
-          email:
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-          given_name:
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
-          family_name:
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
-          "custom:cms_roles": "cmsRoles",
-          "custom:cms_state": "state",
-        },
-        idpIdentifiers: ["IdpIdentifier"],
-      }
-    );
-    supportedIdentityProviders = [
-      cognito.UserPoolClientIdentityProvider.custom(providerName),
-    ];
-  }
+  const oktaIdp = new cognito.CfnUserPoolIdentityProvider(
+    scope,
+    "CognitoUserPoolIdentityProvider",
+    {
+      providerName,
+      providerType: "SAML",
+      userPoolId: userPool.userPoolId,
+      providerDetails: {
+        MetadataURL: oktaMetadataUrl,
+      },
+      attributeMapping: {
+        email:
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+        given_name:
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
+        family_name:
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
+        "custom:cms_roles": "cmsRoles",
+        "custom:cms_state": "state",
+      },
+      idpIdentifiers: ["IdpIdentifier"],
+    }
+  );
+
+  const supportedIdentityProviders = [
+    cognito.UserPoolClientIdentityProvider.custom(providerName),
+  ];
 
   const appUrl =
-    secureCloudfrontDomainName ||
-    applicationEndpointUrl ||
+    secureCloudfrontDomainName ??
+    applicationEndpointUrl ??
     "http://localhost:3000/";
 
   const userPoolClient = new cognito.UserPoolClient(scope, "UserPoolClient", {
@@ -145,7 +137,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     refreshTokenValidity: Duration.hours(24),
   });
 
- userPoolClient.node.addDependency(oktaIdp);
+  userPoolClient.node.addDependency(oktaIdp);
 
   (
     userPoolClient.node.defaultChild as cognito.CfnUserPoolClient
@@ -172,50 +164,6 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       ],
     }
   );
-
-  const cognitoAuthRole = new iam.Role(scope, "CognitoAuthRole", {
-    permissionsBoundary: iamPermissionsBoundary,
-    path: iamPath,
-    assumedBy: new iam.FederatedPrincipal(
-      "cognito-identity.amazonaws.com",
-      {
-        StringEquals: {
-          "cognito-identity.amazonaws.com:aud": identityPool.ref,
-        },
-        "ForAnyValue:StringLike": {
-          "cognito-identity.amazonaws.com:amr": "authenticated",
-        },
-      },
-      "sts:AssumeRoleWithWebIdentity"
-    ),
-    inlinePolicies: {
-      CognitoAuthorizedPolicy: new iam.PolicyDocument({
-        statements: [
-          new iam.PolicyStatement({
-            actions: [
-              "mobileanalytics:PutEvents",
-              "cognito-sync:*",
-              "cognito-identity:*",
-            ],
-            resources: ["*"],
-            effect: iam.Effect.ALLOW,
-          }),
-          new iam.PolicyStatement({
-            actions: ["execute-api:Invoke"],
-            resources: [
-              `arn:aws:execute-api:${Aws.REGION}:${Aws.ACCOUNT_ID}:${restApiId}/*`,
-            ],
-            effect: iam.Effect.ALLOW,
-          }),
-        ],
-      }),
-    },
-  });
-
-  new cognito.CfnIdentityPoolRoleAttachment(scope, "CognitoIdentityPoolRoles", {
-    identityPoolId: identityPool.ref,
-    roles: { authenticated: cognitoAuthRole.roleArn },
-  });
 
   let bootstrapUsersFunction;
 
@@ -326,10 +274,61 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     bootstrapUsersInvoke.node.addDependency(bootstrapUsersFunction);
   }
 
+  function createAuthRole(restApiId: string) {
+    const cognitoAuthRole = new iam.Role(scope, "CognitoAuthRole", {
+      permissionsBoundary: iamPermissionsBoundary,
+      path: iamPath,
+      assumedBy: new iam.FederatedPrincipal(
+        "cognito-identity.amazonaws.com",
+        {
+          StringEquals: {
+            "cognito-identity.amazonaws.com:aud": identityPool.ref,
+          },
+          "ForAnyValue:StringLike": {
+            "cognito-identity.amazonaws.com:amr": "authenticated",
+          },
+        },
+        "sts:AssumeRoleWithWebIdentity"
+      ),
+      inlinePolicies: {
+        CognitoAuthorizedPolicy: new iam.PolicyDocument({
+          statements: [
+            new iam.PolicyStatement({
+              actions: [
+                "mobileanalytics:PutEvents",
+                "cognito-sync:*",
+                "cognito-identity:*",
+              ],
+              resources: ["*"],
+              effect: iam.Effect.ALLOW,
+            }),
+            new iam.PolicyStatement({
+              actions: ["execute-api:Invoke"],
+              resources: [
+                `arn:aws:execute-api:${Aws.REGION}:${Aws.ACCOUNT_ID}:${restApiId}/*`,
+              ],
+              effect: iam.Effect.ALLOW,
+            }),
+          ],
+        }),
+      },
+    });
+
+    new cognito.CfnIdentityPoolRoleAttachment(
+      scope,
+      "CognitoIdentityPoolRoles",
+      {
+        identityPoolId: identityPool.ref,
+        roles: { authenticated: cognitoAuthRole.roleArn },
+      }
+    );
+  }
+
   return {
     userPoolDomainName: userPoolDomain.domainName,
     identityPoolId: identityPool.ref,
     userPoolId: userPool.userPoolId,
     userPoolClientId: userPoolClient.userPoolClientId,
+    createAuthRole,
   };
 }

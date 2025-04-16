@@ -47,11 +47,8 @@ export const determineDeploymentConfig = async (stage: string) => {
   return config;
 };
 
-export const loadDefaultSecret = async (
-  project: string,
-  stage: string = "bootstrap"
-) => {
-  if (["bootstrap", "prerequisites"].includes(stage)) {
+export const loadDefaultSecret = async (project: string, stage?: string) => {
+  if (stage === "bootstrap") {
     return {};
   } else {
     return JSON.parse((await getSecret(`${project}-default`))!);

@@ -53,10 +53,7 @@ export class ParentStack extends Stack {
     };
 
     const vpc = ec2.Vpc.fromLookup(this, "Vpc", { vpcName });
-    const kafkaAuthorizedSubnets = getSubnets(
-      this,
-      kafkaAuthorizedSubnetIds ?? ""
-    );
+    const kafkaAuthorizedSubnets = getSubnets(this, kafkaAuthorizedSubnetIds);
 
     const customResourceRole = createCustomResourceRole({ ...commonProps });
 
@@ -71,8 +68,43 @@ export class ParentStack extends Stack {
       ...commonProps,
     });
 
+    if (isLocalStack) {
+      createApiComponents({
+        ...commonProps,
+        tables,
+        vpc,
+        kafkaAuthorizedSubnets,
+        wpFormBucket,
+        sarFormBucket,
+      });
+      /*
+       * For local dev, the LocalStack container will host the database and API.
+       * The UI will self-host, so we don't need to tell CDK anything about it.
+       * Also, we skip authorization locally. So we don't set up Cognito,
+       * or configure the API to interact with it. Therefore, we're done.
+       */
+      return;
+    }
+
+    const { applicationEndpointUrl, distribution, uiBucket } =
+      createUiComponents({ loggingBucket, ...commonProps });
+
+    const {
+      userPoolDomainName,
+      identityPoolId,
+      userPoolId,
+      userPoolClientId,
+      createAuthRole,
+    } = createUiAuthComponents({
+      ...commonProps,
+      applicationEndpointUrl,
+      customResourceRole,
+    });
+
     const { apiGatewayRestApiUrl, restApiId } = createApiComponents({
       ...commonProps,
+      userPoolId,
+      userPoolClientId,
       tables,
       vpc,
       kafkaAuthorizedSubnets,
@@ -80,40 +112,25 @@ export class ParentStack extends Stack {
       sarFormBucket,
     });
 
-    if (!isLocalStack) {
-      const { applicationEndpointUrl, distribution, uiBucket } =
-        createUiComponents({ loggingBucket, ...commonProps });
+    createAuthRole(restApiId);
 
-      const {
-        userPoolDomainName,
-        identityPoolId,
-        userPoolId,
-        userPoolClientId,
-      } = createUiAuthComponents({
-        ...commonProps,
-        applicationEndpointUrl,
-        restApiId,
-        customResourceRole,
-      });
+    deployFrontend({
+      ...commonProps,
+      uiBucket,
+      distribution,
+      apiGatewayRestApiUrl,
+      applicationEndpointUrl:
+        secureCloudfrontDomainName ?? applicationEndpointUrl,
+      identityPoolId,
+      userPoolId,
+      userPoolClientId,
+      userPoolClientDomain: `${userPoolDomainName}.auth.${Aws.REGION}.amazoncognito.com`,
+      customResourceRole,
+    });
 
-      deployFrontend({
-        ...commonProps,
-        uiBucket,
-        distribution,
-        apiGatewayRestApiUrl,
-        applicationEndpointUrl:
-          secureCloudfrontDomainName || applicationEndpointUrl,
-        identityPoolId,
-        userPoolId,
-        userPoolClientId,
-        userPoolClientDomain: `${userPoolDomainName}.auth.${this.region}.amazoncognito.com`,
-        customResourceRole,
-      });
-
-      new CfnOutput(this, "CloudFrontUrl", {
-        value: applicationEndpointUrl,
-      });
-    }
+    new CfnOutput(this, "CloudFrontUrl", {
+      value: applicationEndpointUrl,
+    });
 
     createTopicsComponents({
       ...commonProps,

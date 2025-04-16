@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import "source-map-support/register";
-import { App, DefaultStackSynthesizer, Tags } from "aws-cdk-lib";
+import { App, DefaultStackSynthesizer, Stack, Tags } from "aws-cdk-lib";
 import { EmptyParentStack } from "./stacks/empty/parent";
 import { ImportsIncludedParentStack } from "./stacks/imports_included/parent";
 import { ParentStack } from "./stacks/parent";
@@ -28,6 +28,11 @@ async function main() {
 
   Tags.of(app).add("STAGE", stage);
   Tags.of(app).add("PROJECT", config.project);
+
+  if (stage == "bootstrap") {
+    new Stack(app, `${config.project}-${stage}`, {});
+    return;
+  }
 
   let correctParentStack;
   if (process.env.IMPORT_VARIANT == "empty") {
