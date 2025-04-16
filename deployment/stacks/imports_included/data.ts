@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { aws_dynamodb as dynamodb, aws_s3 as s3, Tags } from "aws-cdk-lib";
+import { aws_dynamodb as dynamodb, aws_s3 as s3 } from "aws-cdk-lib";
 import { DynamoDBTable } from "../../constructs/dynamodb-table";
 
 interface CreateDataComponentsProps {
@@ -55,7 +55,6 @@ export function createDataComponents(props: CreateDataComponentsProps) {
       sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
     }),
   ];
-  tables.forEach((table) => Tags.of(table).add("SERVICE", service));
 
   const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
     bucketName: `database-${stage}-sar`,
@@ -63,7 +62,6 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     versioned: true,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
   });
-  Tags.of(sarFormBucket).add("SERVICE", service);
 
   const wpFormBucket = new s3.Bucket(scope, "WpFormBucket", {
     bucketName: `database-${stage}-wp`,
@@ -71,5 +69,4 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     versioned: true,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
   });
-  Tags.of(wpFormBucket).add("SERVICE", service);
 }

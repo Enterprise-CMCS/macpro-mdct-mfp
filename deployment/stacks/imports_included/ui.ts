@@ -4,7 +4,6 @@ import {
   aws_cloudfront_origins as cloudfrontOrigins,
   aws_s3 as s3,
   RemovalPolicy,
-  Tags,
   Aws,
 } from "aws-cdk-lib";
 
@@ -41,6 +40,4 @@ export function createUiComponents(props: CreateUiComponentsProps) {
   );
 
   distribution.applyRemovalPolicy(RemovalPolicy.RETAIN);
-  Tags.of(logBucket).add("SERVICE", "ui");
-  Tags.of(distribution).add("SERVICE", "ui");
 }
