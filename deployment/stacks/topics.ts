@@ -2,7 +2,6 @@ import { Construct } from "constructs";
 import {
   aws_ec2 as ec2,
   aws_iam as iam,
-  Aws,
   CfnOutput,
   Duration,
 } from "aws-cdk-lib";
