@@ -24,9 +24,6 @@ interface CreateUiAuthComponentsProps {
   iamPath: string;
   iamPermissionsBoundary: IManagedPolicy;
   oktaMetadataUrl: string;
-  oktaOidcClientId?: string;
-  oktaOidcClientSecret?: string;
-  oktaOidcIssuer?: string;
   bootstrapUsersPassword?: string;
   secureCloudfrontDomainName?: string;
   userPoolDomainPrefix?: string;
