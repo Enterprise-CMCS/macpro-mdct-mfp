@@ -27,6 +27,8 @@ interface CreateApiComponentsProps {
   isDev: boolean;
   vpc: ec2.IVpc;
   kafkaAuthorizedSubnets: ec2.ISubnet[];
+  userPoolId?: string;
+  userPoolClientId?: string;
   tables: DynamoDBTableIdentifiers[];
   brokerString: string;
   iamPermissionsBoundary: iam.IManagedPolicy;
@@ -43,6 +45,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     isDev,
     vpc,
     kafkaAuthorizedSubnets,
+    userPoolId,
+    userPoolClientId,
     tables,
     brokerString,
     iamPermissionsBoundary,
@@ -104,6 +108,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   const environment = {
     NODE_OPTIONS: "--enable-source-maps",
     BOOTSTRAP_BROKER_STRING_TLS: brokerString,
+    COGNITO_USER_POOL_ID: userPoolId ?? process.env.COGNITO_USER_POOL_ID!,
+    COGNITO_USER_POOL_CLIENT_ID:
+      userPoolClientId ?? process.env.COGNITO_USER_POOL_CLIENT_ID!,
     stage,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
@@ -142,6 +149,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
         `${sarFormBucket.bucketArn}/fieldData/*`,
       ],
     }),
+
     new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
