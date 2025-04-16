@@ -54,15 +54,6 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
       brokerString,
       project,
     },
-    additionalPolicies: [
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["ssm:GetParameter"],
-        resources: [
-          `arn:aws:ssm:${Aws.REGION}:${Aws.ACCOUNT_ID}:parameter/configuration/${stage}/*`,
-        ],
-      }),
-    ],
     iamPermissionsBoundary,
     iamPath,
     vpc,

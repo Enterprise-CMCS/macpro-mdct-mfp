@@ -5,7 +5,6 @@ import {
   aws_lambda as lambda,
   aws_lambda_nodejs as lambda_nodejs,
   aws_wafv2 as wafv2,
-  aws_ssm as ssm,
   Aws,
   Duration,
   custom_resources as cr,
@@ -231,15 +230,6 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       webAclArn: waf.webAcl.attrArn,
     });
   }
-
-  new ssm.StringParameter(scope, "CognitoUserPoolIdParameter", {
-    parameterName: `/${stage}/ui-auth/cognito_user_pool_id`,
-    stringValue: userPool.userPoolId,
-  });
-  new ssm.StringParameter(scope, "CognitoUserPoolClientIdParameter", {
-    parameterName: `/${stage}/ui-auth/cognito_user_pool_client_id`,
-    stringValue: userPoolClient.userPoolClientId,
-  });
 
   if (bootstrapUsersFunction) {
     const bootstrapUsersInvoke = new cr.AwsCustomResource(
