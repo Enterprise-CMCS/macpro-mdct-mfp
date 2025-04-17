@@ -9,7 +9,7 @@ interface CreateUiAuthComponentsProps {
 export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
   const { scope, stage } = props;
 
-  const userPool = new cognito.UserPool(scope, "UserPool", {
+  new cognito.UserPool(scope, "UserPool", {
     userPoolName: `${stage}-user-pool`,
     signInAliases: {
       email: true,
