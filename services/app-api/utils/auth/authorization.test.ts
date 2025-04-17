@@ -19,6 +19,10 @@ jest.mock("aws-jwt-verify", () => ({
 
 const noApiKeyEvent = { ...proxyEvent };
 const apiKeyEvent = { ...proxyEvent, headers: { "x-api-key": "test" } };
+const localKeyEvent = {
+  ...proxyEvent,
+  requestContext: { accountId: "000000000000" },
+};
 
 describe("Test authorization with api key and environment variables", () => {
   beforeEach(() => {
@@ -48,6 +52,10 @@ describe("Test authorization with api key and environment variables", () => {
     mockVerifier.mockReturnValue(true);
     const authStatus = await isAuthenticated(apiKeyEvent);
     expect(authStatus).toBeTruthy();
+  });
+  test("is local environment", async () => {
+    const authStatus = await isAuthenticated(localKeyEvent);
+    expect(authStatus).toBe(true);
   });
 });
 

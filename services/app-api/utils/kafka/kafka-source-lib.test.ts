@@ -253,4 +253,21 @@ describe("Test Kafka Lib", () => {
       ],
     });
   });
+
+  test("Skips handler in local environment", async () => {
+    process.env.BOOTSTRAP_BROKER_STRING_TLS = "localstack";
+
+    const sourceLib = new KafkaSourceLib("mfp", "v0", [table], [bucket]);
+    await sourceLib.handler(dynamoEvent);
+    expect(consoleSpy.log).not.toHaveBeenCalled();
+    expect(mockSendBatch).not.toHaveBeenCalled();
+  });
+
+  test("Throws error for missing broker string", () => {
+    delete process.env.BOOTSTRAP_BROKER_STRING_TLS;
+
+    expect(() => {
+      new KafkaSourceLib("mfp", "v0", [table], [bucket]);
+    }).toThrow("Missing Broker Config.");
+  });
 });
