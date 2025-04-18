@@ -8,11 +8,6 @@
   },
   "author": "",
   "license": "CC0-1.0",
-  "devDependencies": {
-    "aws-dynamodb-local": "^0.0.10",
-    "dynamodb-localhost": "https://github.com/99x/dynamodb-localhost#db30898f8c40932c7177be7b2f1a81360d12876d",
-    "serverless-dynamodb": "^0.2.53"
-  },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.758.0",
     "@aws-sdk/client-s3": "^3.758.0",
