@@ -2,6 +2,7 @@ import { Construct } from "constructs";
 import {
   aws_ec2 as ec2,
   aws_iam as iam,
+  custom_resources as cr,
   CfnOutput,
   Duration,
 } from "aws-cdk-lib";
@@ -11,6 +12,7 @@ interface CreateTopicsComponentsProps {
   brokerString: string;
   iamPath: string;
   iamPermissionsBoundary: iam.IManagedPolicy;
+  customResourceRole: iam.Role;
   isDev: boolean;
   kafkaAuthorizedSubnets: ec2.ISubnet[];
   project: string;
@@ -26,6 +28,7 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     iamPermissionsBoundary,
     isDev,
     kafkaAuthorizedSubnets,
+    customResourceRole,
     project,
     scope,
     stage,
@@ -65,7 +68,10 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     handler: "handler",
     timeout: Duration.seconds(60),
     ...commonProps,
-    environment: { topicNamespace: "", ...commonProps.environment },
+    environment: {
+      topicNamespace: isDev ? `--${project}--${stage}--` : "",
+      ...commonProps.environment,
+    },
   });
 
   if (!deleteTopicsEnabled) {
@@ -93,4 +99,46 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
   new CfnOutput(scope, "ListTopicsFunctionName", {
     value: listTopicsLambda.lambda.functionName,
   });
+
+  const createTopicsInvoke = new cr.AwsCustomResource(
+    scope,
+    "InvokeCreateTopicsFunction",
+    {
+      onCreate: {
+        service: "Lambda",
+        action: "invoke",
+        parameters: {
+          FunctionName: createTopicsLambda.lambda.functionName,
+          InvocationType: "Event",
+          Payload: JSON.stringify({}),
+        },
+        physicalResourceId: cr.PhysicalResourceId.of(
+          `InvokeCreateTopicsFunction-${stage}`
+        ),
+      },
+      onUpdate: {
+        service: "Lambda",
+        action: "invoke",
+        parameters: {
+          FunctionName: createTopicsLambda.lambda.functionName,
+          InvocationType: "Event",
+          Payload: JSON.stringify({}),
+        },
+        physicalResourceId: cr.PhysicalResourceId.of(
+          `InvokeCreateTopicsFunction-${stage}`
+        ),
+      },
+      onDelete: undefined,
+      policy: cr.AwsCustomResourcePolicy.fromStatements([
+        new iam.PolicyStatement({
+          actions: ["lambda:InvokeFunction"],
+          resources: [createTopicsLambda.lambda.functionArn],
+        }),
+      ]),
+      role: customResourceRole,
+      resourceType: "Custom::InvokeCreateTopicsFunction",
+    }
+  );
+
+  createTopicsInvoke.node.addDependency(createTopicsLambda);
 }
