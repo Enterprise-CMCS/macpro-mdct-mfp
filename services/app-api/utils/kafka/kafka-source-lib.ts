@@ -54,7 +54,7 @@ class KafkaSourceLib {
       throw new Error("Missing Broker Config. ");
     }
     // Setup vars
-    this.stage = process.env.STAGE ? process.env.STAGE : "";
+    this.stage = process.env.stage ?? "";
     this.topicNamespace = process.env.topicNamespace
       ? process.env.topicNamespace
       : "";
@@ -219,6 +219,10 @@ class KafkaSourceLib {
   }
 
   async handler(event: any) {
+    if (process.env.BOOTSTRAP_BROKER_STRING_TLS === "localstack") {
+      return;
+    }
+
     if (!this.connected) {
       await producer.connect();
       this.connected = true;
