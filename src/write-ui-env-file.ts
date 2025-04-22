@@ -15,6 +15,7 @@ export async function writeLocalUiEnvFile(apiUrl: string) {
     API_REGION: region,
     API_URL: apiUrl.replace("https", "http"),
     COGNITO_REGION: region,
+    COGNITO_IDP_NAME: "Okta",
     COGNITO_IDENTITY_POOL_ID: process.env.COGNITO_IDENTITY_POOL_ID,
     COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
     COGNITO_USER_POOL_CLIENT_ID: process.env.COGNITO_USER_POOL_CLIENT_ID,
@@ -22,6 +23,8 @@ export async function writeLocalUiEnvFile(apiUrl: string) {
       process.env.COGNITO_USER_POOL_CLIENT_DOMAIN,
     COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
     COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
+    POST_SIGNOUT_REDIRECT: "http://localhost:3000/",
+    REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT,
   };
 
   await fs.rm(configFilePath, { force: true });
