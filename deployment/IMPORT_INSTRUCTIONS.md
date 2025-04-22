@@ -16,6 +16,11 @@ yarn install
 
 ```
 
+delete bucket policies from:
+cloudfront logs bucket
+sar bucket
+wp bucket
+
 ## From `jon-cdk` branch:
 
 ```sh
