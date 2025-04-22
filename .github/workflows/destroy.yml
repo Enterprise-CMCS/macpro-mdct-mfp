@@ -61,11 +61,7 @@ jobs:
         run: |
           echo "PATH=$(pwd)/node_modules/.bin/:$PATH" >> $GITHUB_ENV
       - name: Destroy
-        # destroy app-api first due to a dependency between it and database
-        run: |
-          ./run destroy --stage $branch_name --verify false --service app-api
-          ./run destroy --stage $branch_name --verify false
-          serverless reconcile
+        run: ./run destroy --stage $branch_name --verify false
 
   # Notify the integrations channel when a destroy action fails
   notify_on_destroy_failure:
