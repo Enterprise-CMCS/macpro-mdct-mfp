@@ -5,18 +5,19 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/test_coverage)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/test_coverage)
 
 ## Integration Environment Deploy Status:
-| Branch  | Build Status |
-| ------------- | ------------- |
-| main  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg)  |
-| val  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=val)  |
-| production  | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=production)  |
 
+| Branch     | Build Status                                                                                                           |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| main       | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg)                   |
+| val        | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=val)        |
+| production | ![deploy](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/deploy.yml/badge.svg?branch=production) |
 
 MFP is the CMCS MDCT application for collecting state data related to the [Money Follows the Person (MFP)](https://www.medicaid.gov/medicaid/long-term-services-supports/money-follows-person/index.html) program. The collected data assists CMCS in monitoring and managing grantee progress and identifying challenges and improvement opportunities.
 
 The MFP demonstration supports state efforts for rebalancing their long-term services and supports system so that individuals have a choice of where they live and receive services. From the start of the program in 2008 through the end of 2020, states have transitioned over 107,000 people to community living under MFP.
 
 Project Goals:
+
 - Increase the use of home and community-based services (HCBS) in the Medicaid program
 - Eliminate barriers or mechanisms that prevent or restrict the flexible use of Medicaid funds to enable Medicaid-eligible individuals to receive support for appropriate and necessary long-term services and supports in the settings of their choice
 - Increase the ability of state Medicaid programs to assure continued provision of HCBS to eligible individuals who choose to transition from an institutional to a community setting
@@ -33,7 +34,8 @@ Project Goals:
 ## Quick Start
 
 ### Running MDCT Workspace Setup
-Team members are encouraged to setup all MDCT Products using the script located in the [MDCT Tools Repository](https://github.com/Enterprise-CMCS/macpro-mdct-tools). Please refer to the README for instructions running the MDCT Workspace Setup. After Running workspace setup team members can refer to the Running the project locally section below to proceed with running the application. 
+
+Team members are encouraged to setup all MDCT Products using the script located in the [MDCT Tools Repository](https://github.com/Enterprise-CMCS/macpro-mdct-tools). Please refer to the README for instructions running the MDCT Workspace Setup. After Running workspace setup team members can refer to the Running the project locally section below to proceed with running the application.
 
 ### One time only
 
@@ -59,7 +61,7 @@ Before starting the project we're going to install some tools. We recommend havi
 
 ### Running the project locally
 
-In the root of the project run `./run local --update-env` to pull in values from 1Password and run the project. Alternatively, if you do not have a 1Password account you will need to reach out to an MDCT team member for values for your `.env `. Then you can run `./run local` to use a static manually populated `.env` file.
+In the root of the project run `./run update-env && ./run local` to pull in values from 1Password and run the project. Alternatively, if you do not have a 1Password account you will need to reach out to an MDCT team member for values for your `.env `. Then you can run `./run local` to use a static manually populated `.env` file.
 
 ### Logging in
 
@@ -69,32 +71,13 @@ Once you've run `./run local` you'll find yourself on a login page at localhost:
 
 For a password to that user, please ask a fellow developer.
 
-### Running DynamoDB locally
-
-In order to run DynamoDB locally you will need to have java installed on your system. The MDCT Workspace Setup script installs that for you.
-
-If you cannot run the MDCT Workspace setup script see below for manual instructions:
-
-M1 Mac users can download [java from azul](https://www.azul.com/downloads/?version=java-18-sts&os=macos&architecture=x86-64-bit&package=jdk). _Note that you'll need the x86 architecture Java for this to work_. You can verify the installation with `java --version`. Otherwise [install java from here](https://java.com/en/download/).
-
-To view your database after the application is up and running you can install the [dynamodb-admin tool](https://www.npmjs.com/package/dynamodb-admin).
-
-- Install and run `DYNAMO_ENDPOINT=http://localhost:8000 dynamodb-admin` in a new terminal window
-
-#### DynamoDB Local failed to start with code 1
-
-If you're getting an error such as `inaccessible host: 'localhost' at port '8000'`, some steps to try:
-
-- confirm that you're on the right Java version -- if you have an M1 mac, you need an [x86 install](https://www.azul.com/downloads/?version=java-18-sts&os=macos&architecture=x86-64-bit&package=jdk#zulu)
-- delete your `services/database/.dynamodb` directory and then run `dev local` in your terminal
-
 ### Local Development Additional Info
 
-Local dev is configured as a Typescript project. The entrypoint in `./src/run.ts` manages running the moving pieces locally: the API, database, filestore, and frontend.
+Local dev is configured as a TypeScript project. The entry point is [`./src/run.ts`](./src/run.ts), which orchestrates the local API, database, filestore, and frontend services.
 
-Local dev is built around the Serverless plugin [serverless-offline](https://github.com/dherault/serverless-offline). `serverless-offline` runs an API Gateway locally configured by `./services/app-api/serverless.yml` and hot reloads your Lambdas on every save. The plugins [serverless-dynamodb-local](https://github.com/99x/serverless-dynamodb-local) and [serverless-s3-local](https://github.com/ar90n/serverless-s3-local) stand up the local database and s3 in a similar fashion.
+The local environment is powered by [LocalStack](https://localstack.cloud/). For more details, see the [Local Deployment README](./deployment/local/README.md).
 
-Local authorization bypasses Cognito. The frontend mimics login in local storage with a mock user and sends an id in the `cognito-identity-id` header on every request. `serverless-offline` expects that and sets it as the cognitoId in the requestContext for your lambdas, just like Cognito would in AWS.
+Authentication during local development uses the Cognito user pool deployed to AWS from the `dev` (main) branch.
 
 ## Testing
 
@@ -286,7 +269,7 @@ Dropdown and dynamic fields are not currently supported as nested child fields. 
 
 ## Slack Webhooks
 
-This repository uses 3 webhooks to publish to  3 different channels all in CMS Slack.
+This repository uses 3 webhooks to publish to 3 different channels all in CMS Slack.
 
 - SLACK_WEBHOOK: This pubishes to the `macpro-mdct-mfp-alerts` channel. Alerts published there are for deploy or test failures to the `main`, `val`, or `production` branches.
 
@@ -294,11 +277,22 @@ This repository uses 3 webhooks to publish to  3 different channels all in CMS S
 
 - PROD_RELEASE_SLACK_WEBHOOK: This is used to publish to the `mdct-prod-releases` channel upon successful release of MFP to production.
 
-    - Webhooks are created by CMS tickets, populated into GitHub Secrets
+  - Webhooks are created by CMS tickets, populated into GitHub Secrets
 
 ## GitHub Actions Secret Management
-- Secrets are added to GitHub secrets by GitHub Admins 
+
+- Secrets are added to GitHub secrets by GitHub Admins
 - Development secrets are maintained in a 1Password vault
+
+## Deployment
+
+While application deployment is generally handled by Github Actions, when you initially set up a new AWS account to host this application, you'll need to deploy a prerequisite stack like so:
+
+```bash
+./run deploy-prerequisites
+```
+
+That will create a stack called `mfp-prerequisites` which will contain resources needed by any application stacks.
 
 ## Copyright and license
 
