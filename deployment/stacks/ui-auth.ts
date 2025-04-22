@@ -27,6 +27,7 @@ interface CreateUiAuthComponentsProps {
   bootstrapUsersPassword?: string;
   secureCloudfrontDomainName?: string;
   userPoolDomainPrefix?: string;
+  sesSourceEmailAddress?: string;
 }
 
 export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
@@ -56,20 +57,21 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
     selfSignUpEnabled: false,
     standardAttributes: {
       givenName: {
-        required: false,
+        required: true,
         mutable: true,
       },
       familyName: {
-        required: false,
-        mutable: true,
-      },
-      phoneNumber: {
-        required: false,
+        required: true,
         mutable: true,
       },
     },
     customAttributes: {
-      ismemberof: new cognito.StringAttribute({ mutable: true }),
+      cms_roles: new cognito.StringAttribute({ mutable: true }),
+      cms_state: new cognito.StringAttribute({
+        mutable: true,
+        minLen: 0,
+        maxLen: 256,
+      }),
     },
     // advancedSecurityMode: cognito.AdvancedSecurityMode.ENFORCED, DEPRECATED WE NEED FEATURE_PLAN.plus if we want to use StandardThreatProtectionMode.FULL_FUNCTION which I think is the new way to do this
     removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
@@ -90,11 +92,12 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       attributeMapping: {
         email:
           "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-        family_name:
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
         given_name:
           "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
-        "custom:ismemberof": "ismemberof",
+        family_name:
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
+        "custom:cms_roles": "cmsRoles",
+        "custom:cms_state": "state",
       },
       idpIdentifiers: ["IdpIdentifier"],
     }
@@ -107,38 +110,34 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
   const appUrl =
     secureCloudfrontDomainName ??
     applicationEndpointUrl ??
-    "https://localhost:3000/";
+    "http://localhost:3000/";
+
   const userPoolClient = new cognito.UserPoolClient(scope, "UserPoolClient", {
     userPoolClientName: `${stage}-user-pool-client`,
     userPool,
-    authFlows: {
-      userPassword: true,
-    },
+    authFlows: { adminUserPassword: true },
     oAuth: {
-      flows: {
-        implicitCodeGrant: true,
-      },
+      flows: { authorizationCodeGrant: true },
       scopes: [
         cognito.OAuthScope.EMAIL,
         cognito.OAuthScope.OPENID,
         cognito.OAuthScope.PROFILE,
       ],
       callbackUrls: [appUrl],
-      defaultRedirectUri: appUrl,
-      logoutUrls: [appUrl],
+      logoutUrls: [appUrl, `${appUrl}postLogout`],
     },
     supportedIdentityProviders,
     generateSecret: false,
+    accessTokenValidity: Duration.minutes(30),
+    idTokenValidity: Duration.minutes(30),
+    refreshTokenValidity: Duration.hours(24),
   });
 
   userPoolClient.node.addDependency(oktaIdp);
 
   (
     userPoolClient.node.defaultChild as cognito.CfnUserPoolClient
-  ).addPropertyOverride("ExplicitAuthFlows", [
-    "ADMIN_NO_SRP_AUTH",
-    "USER_PASSWORD_AUTH",
-  ]);
+  ).addPropertyOverride("ExplicitAuthFlows", ["ADMIN_NO_SRP_AUTH"]);
 
   const userPoolDomain = new cognito.UserPoolDomain(scope, "UserPoolDomain", {
     userPool,
@@ -203,6 +202,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
         entry: "services/ui-auth/handlers/createUsers.js",
         handler: "handler",
         runtime: lambda.Runtime.NODEJS_20_X,
+        memorySize: 1024,
         timeout: Duration.seconds(60),
         role: lambdaApiRole,
         environment: {
@@ -220,6 +220,7 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       { name: `${project}-${stage}-ui-auth` },
       "REGIONAL"
     );
+    // TODO: do we need the size exclusion for this WAF?
 
     new wafv2.CfnWebACLAssociation(scope, "CognitoUserPoolWAFAssociation", {
       resourceArn: userPool.userPoolArn,

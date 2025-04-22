@@ -8,6 +8,8 @@ export interface DeploymentConfigProperties {
   vpcName: string;
   oktaMetadataUrl: string;
   bootstrapUsersPassword?: string;
+  launchDarklyClient: string;
+  redirectSignout: string;
   cloudfrontCertificateArn?: string;
   cloudfrontDomainName?: string;
   secureCloudfrontDomainName?: string;
@@ -21,7 +23,8 @@ export interface DeploymentConfigProperties {
 export const determineDeploymentConfig = async (stage: string) => {
   const project = process.env.PROJECT!;
   const isDev =
-    isLocalStack || !["master", "main", "val", "production"].includes(stage);
+    isLocalStack ||
+    !["master", "main", "val", "production", "jon-cdk"].includes(stage); // TODO: remove jon-cdk after main is deployed
   const secretConfigOptions = {
     ...(await loadDefaultSecret(project, stage)),
     ...(await loadStageSecret(project, stage)),
@@ -75,6 +78,8 @@ function validateConfig(config: {
     "oktaMetadataUrl",
     "brokerString",
     "kafkaAuthorizedSubnetIds",
+    "launchDarklyClient",
+    "redirectSignout",
   ];
 
   const invalidKeys = expectedKeys.filter(
