@@ -75,21 +75,3 @@ enabled = false
 
 [smells.return_statements]
 enabled = false
-
-[[source]]
-name = "default"
-default = true
-
-[[plugin]]
-name = "eslint"
-version = "8.56.0"
-package_file = "package.json"
-package_filters = ["eslint", "jest"]
-
-[[plugin]]
-name = "gitleaks"
-version = "8.12.0"
-
-[[plugin]]
-name = "prettier"
-version = "2.3.1"
