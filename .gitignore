@@ -28,5 +28,5 @@ tests/playwright/.cache/
 tests/playwright/.auth
 /.cdk
 cdk.context.json
-.qlty
-!qlty.toml
+.qlty/*
+!.qlty/qlty.toml
