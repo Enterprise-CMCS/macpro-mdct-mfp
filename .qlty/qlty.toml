@@ -68,6 +68,7 @@ enabled = false
 enabled = false
 
 [smells.function_complexity]
+enabled = true
 threshold = 20
 
 [smells.function_parameters]
