@@ -479,7 +479,7 @@ describe("Completion Status Tests", () => {
         isRequired: true,
         transitionBenchmarks_applicableToMfpDemonstration: [
           {
-            key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist-secret
+            key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist secret
             value: "No",
           },
         ],
@@ -504,7 +504,7 @@ describe("Completion Status Tests", () => {
         isRequired: true,
         transitionBenchmarks_applicableToMfpDemonstration: [
           {
-            key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist-secret
+            key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist secret
             value: "No",
           },
         ],
@@ -529,7 +529,7 @@ describe("Completion Status Tests", () => {
         isRequired: true,
         transitionBenchmarks_applicableToMfpDemonstration: [
           {
-            key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist-secret
+            key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist secret
             value: "No",
           },
         ],
@@ -554,7 +554,7 @@ describe("Completion Status Tests", () => {
         isRequired: true,
         transitionBenchmarks_applicableToMfpDemonstration: [
           {
-            key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd", // pragma: allowlist-secret
+            key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd", // pragma: allowlist secret
             value: "Yes",
           },
         ],
@@ -680,7 +680,7 @@ describe("Completion Status Tests", () => {
                           parentFieldName:
                             "transitionBenchmarks_applicableToMfpDemonstration",
                           parentOptionId:
-                            "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd", // pragma: allowlist-secret
+                            "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd", // pragma: allowlist secret
                           nested: true,
                         },
                         transformation: {
@@ -726,7 +726,7 @@ describe("Completion Status Tests", () => {
       isRequired: true,
       transitionBenchmarks_applicableToMfpDemonstration: [
         {
-          key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist-secret
+          key: "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v", // pragma: allowlist secret
           value: "No",
         },
       ],
