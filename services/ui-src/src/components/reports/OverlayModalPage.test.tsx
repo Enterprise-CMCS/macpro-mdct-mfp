@@ -30,8 +30,6 @@ jest.mock("react-router-dom", () => ({
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
-window.HTMLElement.prototype.scrollIntoView = jest.fn();
-
 const {
   addEntityButtonText,
   editEntityButtonText,
