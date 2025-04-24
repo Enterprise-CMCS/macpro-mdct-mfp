@@ -38,10 +38,6 @@ window.HTMLElement.prototype.scrollIntoView = jest.fn();
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const {
   addEntityButtonText,
   editEntityButtonText,
