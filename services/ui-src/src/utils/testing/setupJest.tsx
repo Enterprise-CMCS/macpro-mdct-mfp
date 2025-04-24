@@ -29,6 +29,8 @@ import {
 // GLOBALS
 
 global.React = React;
+global.structuredClone = (val: any) =>
+  val ? JSON.parse(JSON.stringify(val)) : val;
 
 /* Mocks window.matchMedia (https://bit.ly/3Qs4ZrV) */
 Object.defineProperty(window, "matchMedia", {

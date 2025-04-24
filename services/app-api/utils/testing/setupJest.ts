@@ -10,6 +10,13 @@ process.env.SAR_FORM_BUCKET = "database-local-sar";
 process.env.FormTemplateVersionsTable = "local-form-template-versions";
 process.env.BannerTable = "local-banners";
 
+// GLOBALS
+
+global.structuredClone = (val: any) =>
+  val ? JSON.parse(JSON.stringify(val)) : val;
+
+// Mock data
+
 export const mockReportFieldData = {
   text: "text-input",
   number: 0,
