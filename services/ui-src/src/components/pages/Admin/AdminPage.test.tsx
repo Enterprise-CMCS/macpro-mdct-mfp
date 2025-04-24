@@ -36,7 +36,6 @@ const deleteButtonText = "Delete banner";
 describe("<AdminPage />", () => {
   describe("Test AdminPage banner manipulation functionality", () => {
     test("Deletes current banner on delete button click", async () => {
-      window.HTMLElement.prototype.scrollIntoView = jest.fn();
       await act(async () => {
         mockedUseStore.mockReturnValue(mockBannerStore);
         await render(adminView(mockBannerMethods));
@@ -163,7 +162,6 @@ describe("<AdminPage />", () => {
 
   describe("Test AdminPage displays banner error when state has set an error", () => {
     test("Displays error if deleteBanner throws error", async () => {
-      window.HTMLElement.prototype.scrollIntoView = jest.fn();
       mockedUseStore.mockReturnValue({
         ...mockBannerStore,
         bannerErrorMessage: bannerErrors.DELETE_BANNER_FAILED,
