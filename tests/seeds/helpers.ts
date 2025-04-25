@@ -10,6 +10,7 @@ import { ReportFieldData } from "../../services/app-api/utils/types";
 import { AwsHeaders } from "./types";
 
 dotenv.config({ path: "../../.env" });
+dotenv.config({ path: "../../.env.seed" });
 
 const apiUrl: string | undefined = process.env.API_URL;
 const clientId: string | undefined = process.env.COGNITO_USER_POOL_CLIENT_ID;
