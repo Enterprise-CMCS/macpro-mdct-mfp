@@ -207,7 +207,6 @@ export const calculateCompletionStatus = async (
                   if (nestedFormTemplate?.objectiveId !== stepFields?.id) {
                     continue;
                   }
-
                   const isEntityComplete = await calculateFormCompletion(
                     nestedFormTemplate,
                     stepFields

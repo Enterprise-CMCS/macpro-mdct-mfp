@@ -839,8 +839,6 @@ describe("Completion Status Tests", () => {
           {
             ...route,
             entitySteps: [
-              { stepType: "overlayModal" },
-              { stepType: "closeOutInformation" },
               {
                 stepType: "other",
                 objectiveCards,
