@@ -12,6 +12,7 @@ import {
 } from "@aws-sdk/client-cloudformation";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
+import { writeSeedEnvFile } from "./write-seed-env-file.js";
 
 // load .env
 dotenv.config();
@@ -88,6 +89,7 @@ async function run_fe_locally(runner: LabeledProcessRunner) {
     "ApiUrl"
   );
   await writeLocalUiEnvFile(apiUrl!);
+  await writeSeedEnvFile(apiUrl!);
   runner.run_command_and_output("ui", ["npm", "start"], "services/ui-src");
 }
 
