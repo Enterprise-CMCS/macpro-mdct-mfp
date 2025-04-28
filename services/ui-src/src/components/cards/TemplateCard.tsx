@@ -3,18 +3,22 @@ import { Button, Flex, Heading, Image, Text, Link } from "@chakra-ui/react";
 import { Card, TemplateCardAccordion } from "components";
 // utils
 import { useNavigate } from "react-router-dom";
-import { useBreakpoint, getSignedTemplateUrl } from "utils";
+import { useBreakpoint } from "utils";
 import { AnyObject } from "types";
 // assets
 import downloadIcon from "assets/icons/icon_download.png";
 import nextIcon from "assets/icons/icon_next_white.png";
 import spreadsheetIcon from "assets/icons/icon_spreadsheet.png";
 
-const downloadTemplate = async (templateName: string) => {
-  const signedUrl = await getSignedTemplateUrl(templateName);
+const downloadTemplate = (templateName: string) => {
+  const helpFiles: { [key: string]: string } = {
+    WP: "MFP-Work-Plan-Help-File",
+    SAR: "MFP-Semi-Annual-Rprt-Help-File",
+  };
+  const pdfUrl = `/templates/${helpFiles[templateName]}.pdf`;
   const link = document.createElement("a");
   link.setAttribute("target", "_blank");
-  link.setAttribute("href", signedUrl);
+  link.setAttribute("href", pdfUrl);
   link.click();
   link.remove();
 };

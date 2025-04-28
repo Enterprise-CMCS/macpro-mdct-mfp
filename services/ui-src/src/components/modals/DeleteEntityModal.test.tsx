@@ -136,10 +136,6 @@ const modalComponentWithNestedEntity = (
   </RouterWrappedComponent>
 );
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const { deleteModalTitle, deleteModalConfirmButtonText } =
   mockModalDrawerReportPageVerbiage;
 

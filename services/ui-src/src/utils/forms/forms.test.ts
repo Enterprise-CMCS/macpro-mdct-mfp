@@ -32,10 +32,6 @@ import {
 } from "utils/testing/setupJest";
 import { AnyObject } from "yup/lib/types";
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const mockFormData = {
   fundingSources_quarters2024Q3: "8.00",
   fundingSources_quarters2024Q4: "8.00",

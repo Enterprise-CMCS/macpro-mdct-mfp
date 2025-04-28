@@ -1,5 +1,5 @@
 describe("Home Page - Accessibility Test", () => {
-  it("Is assessible when not logged in", () => {
+  it("Is accessible when not logged in", () => {
     cy.visit("/");
     cy.get("h1"); // ensure page loaded
     cy.testPageAccessibility();

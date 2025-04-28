@@ -28,14 +28,6 @@ import { useStore } from "utils";
 
 jest.mock("utils/state/useStore");
 
-global.structuredClone = jest.fn((val) => {
-  if (!val) {
-    return;
-  }
-
-  return JSON.parse(JSON.stringify(val));
-});
-
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const mockReport = mockUseStore.report;

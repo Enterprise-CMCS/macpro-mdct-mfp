@@ -1,6 +1,5 @@
-import { getBanner, writeBanner, deleteBanner } from "./banner";
+import { getBanners, writeBanner, deleteBanner } from "./banner";
 // utils
-import { bannerId } from "../../../constants";
 import { mockBannerData } from "utils/testing/setupJest";
 
 const mockDelete = jest.fn();
@@ -13,13 +12,15 @@ jest.mock("utils", () => ({
   post: () => mockPost(),
 }));
 
+const mockBannerKey = mockBannerData.key;
+
 describe("utils/requestMethods/banner", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   test("getBanner()", async () => {
-    await getBanner(bannerId);
+    await getBanners();
     expect(mockGet).toHaveBeenCalledTimes(1);
   });
 
@@ -29,7 +30,7 @@ describe("utils/requestMethods/banner", () => {
   });
 
   test("deleteBanner()", async () => {
-    await deleteBanner(bannerId);
+    await deleteBanner(mockBannerKey);
     expect(mockDelete).toHaveBeenCalledTimes(1);
   });
 });

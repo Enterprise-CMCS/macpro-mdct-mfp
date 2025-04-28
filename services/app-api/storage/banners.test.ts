@@ -1,10 +1,10 @@
-import { putBanner, getBanner, deleteBanner } from "./banners";
+import { putBanner, getBanners, deleteBanner } from "./banners";
 import { mockClient } from "aws-sdk-client-mock";
 import {
   DeleteCommand,
   DynamoDBDocumentClient,
-  GetCommand,
   PutCommand,
+  ScanCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 const mockDynamo = mockClient(DynamoDBDocumentClient);
@@ -39,16 +39,18 @@ describe("Banner storage methods", () => {
   });
 
   it("should call Dynamo to fetch a banner", async () => {
-    const mockFetch = jest.fn().mockResolvedValue({ Item: mockBanner });
-    mockDynamo.on(GetCommand).callsFakeOnce(mockFetch);
+    const mockScan = jest.fn().mockResolvedValue({
+      Items: [mockBanner],
+      LastEvaluatedKey: undefined,
+    });
+    mockDynamo.on(ScanCommand).callsFakeOnce(mockScan);
 
-    const banner = await getBanner("mock-key");
+    const banner = await getBanners();
 
-    expect(banner).toBe(mockBanner);
-    expect(mockFetch).toHaveBeenCalledWith(
+    expect(banner).toEqual([mockBanner]);
+    expect(mockScan).toHaveBeenCalledWith(
       {
         TableName: "local-banners",
-        Key: { key: "mock-key" },
       },
       expect.any(Function)
     );

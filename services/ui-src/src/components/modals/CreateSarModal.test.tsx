@@ -9,8 +9,6 @@ import userEvent from "@testing-library/user-event";
 import { act } from "react-dom/test-utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
-window.HTMLElement.prototype.scrollIntoView = jest.fn();
-
 const mockCreateReport = jest.fn();
 const mockUpdateReport = jest.fn();
 const mockFetchReportsByState = jest.fn();

@@ -163,12 +163,7 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.12.0.tgz#ce1c9d143389679e253b314241ea9aa5cec980d3"
   integrity sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==
 
-axe-core@^4.8.4:
-  version "4.8.4"
-  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.8.4.tgz#90db39a2b316f963f00196434d964e6e23648643"
-  integrity sha512-CZLSKisu/bhJ2awW4kJndluz2HLZYIHh5Uy1+ZwDRkJi69811xgIXXfdU9HSLX0Th+ILrHj8qfL/5wzamsFtQg==
-
-axe-core@~4.10.2:
+axe-core@^4.8.4, axe-core@~4.10.2:
   version "4.10.2"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.10.2.tgz#85228e3e1d8b8532a27659b332e39b7fa0e022df"
   integrity sha512-RE3mdQ7P3FRSe7eqCWoeQ/Z9QXrtniSjp1wUjt5nRC3WIpz5rSCve6o3fsZ2aCpJtrZjSZgjwXAoTO5k4tEI0w==
@@ -1011,7 +1006,7 @@ pify@^2.2.0:
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
   integrity sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==
 
-playwright-core@1.50.1:
+playwright-core@1.50.1, "playwright-core@>= 1.0.0":
   version "1.50.1"
   resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.50.1.tgz#6a0484f1f1c939168f40f0ab3828c4a1592c4504"
   integrity sha512-ra9fsNWayuYumt+NiM069M6OkcRb1FZSK8bgi66AtpFoWkg2+y0bJSNmkFrWhMbEBbVKC/EruAHH3g0zmtwGmQ==

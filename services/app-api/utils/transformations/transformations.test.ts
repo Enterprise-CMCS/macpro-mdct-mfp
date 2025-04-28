@@ -19,10 +19,6 @@ import {
   transformFormTemplate,
 } from "./transformations";
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 describe("transformFormTemplate", () => {
   it("should remove showOnlyInPeriod2 routes in period 1", () => {
     const formTemplate = {

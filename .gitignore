@@ -9,10 +9,11 @@ build_dev
 tsconfig.tsbuildinfo
 services/uploads/local_buckets
 /.env
+/.env.seed
 tests_output
 *.log
 !launchdarkly-flags.log
-!todos.log
+test-results/
 tests/cypress/videos
 tests/cypress/screenshots
 tests/cypress/downloads
@@ -20,9 +21,12 @@ tests/cypress/package-lock.json
 package-lock.json
 .vscode/
 *._S3rver_cors.xml
-services/database/local_buckets
 tests/test-results/
 tests/playwright-report/
 /blob-report/
 tests/playwright/.cache/
 tests/playwright/.auth
+/.cdk
+cdk.context.json
+.qlty/*
+!.qlty/qlty.toml

@@ -15,6 +15,7 @@ import { testA11yAct } from "utils/testing/commonTests";
 
 const mockBannerMethods = {
   fetchAdminBanner: jest.fn(() => {}),
+  fetchAllBanners: jest.fn(() => {}),
   writeAdminBanner: jest.fn(() => {}),
   deleteAdminBanner: jest.fn(() => {}),
 };
@@ -30,6 +31,8 @@ const adminView = (context: any) => (
   </RouterWrappedComponent>
 );
 
+const deleteButtonText = "Delete banner";
+
 describe("<AdminPage />", () => {
   describe("Test AdminPage banner manipulation functionality", () => {
     test("Deletes current banner on delete button click", async () => {
@@ -37,11 +40,11 @@ describe("<AdminPage />", () => {
         mockedUseStore.mockReturnValue(mockBannerStore);
         await render(adminView(mockBannerMethods));
       });
-      const deleteButton = screen.getByText("Delete Current Banner");
-      await userEvent.click(deleteButton);
-      await waitFor(() =>
-        expect(mockBannerMethods.deleteAdminBanner).toHaveBeenCalled()
-      );
+      const deleteButton = screen.getByText(deleteButtonText);
+      await waitFor(async () => {
+        await userEvent.click(deleteButton);
+        expect(mockBannerMethods.deleteAdminBanner).toHaveBeenCalled();
+      });
     });
   });
 
@@ -51,6 +54,7 @@ describe("<AdminPage />", () => {
         mockedUseStore.mockReturnValue({
           ...mockBannerStore,
           bannerData: undefined,
+          allBanners: undefined,
         });
         await render(adminView(mockBannerMethods));
       });
@@ -65,8 +69,8 @@ describe("<AdminPage />", () => {
       expect(currentBannerStatus).not.toBeInTheDocument();
     });
 
-    test("Check that 'no current banner' text shows", async () => {
-      expect(screen.getByText("There is no current banner")).toBeVisible();
+    test("Check that 'no existing banners' text shows", async () => {
+      expect(screen.getByText("There are no existing banners")).toBeVisible();
     });
   });
 
@@ -86,18 +90,18 @@ describe("<AdminPage />", () => {
       const currentBannerStatus = screen.queryByText("Status:");
       expect(currentBannerStatus).toBeVisible();
 
-      const deleteButton = screen.getByText("Delete Current Banner");
+      const deleteButton = screen.getByText(deleteButtonText);
       expect(deleteButton).toBeVisible();
     });
 
-    test("Check that 'no current banner' text does not show", () => {
+    test("Check that 'no existing banners' text does not show", () => {
       expect(
-        screen.queryByText("There is no current banner")
+        screen.queryByText("There are no existing banners")
       ).not.toBeInTheDocument();
     });
   });
 
-  describe("Test AdminPage with active/inactive banner", () => {
+  describe("Test AdminPage with active/inactive/scheduled banner", () => {
     const currentTime = Date.now(); // 'current' time in ms since unix epoch
     const oneDay = 1000 * 60 * 60 * 24; // 1000ms * 60s * 60m * 24h = 86,400,000ms
     const context = mockBannerMethods;
@@ -113,8 +117,7 @@ describe("<AdminPage />", () => {
       await act(async () => {
         mockedUseStore.mockReturnValue({
           ...mockBannerStore,
-          bannerData: activeBannerData,
-          bannerActive: true,
+          allBanners: [activeBannerData],
         });
         await render(adminView(context));
       });
@@ -125,18 +128,35 @@ describe("<AdminPage />", () => {
     test("Inactive banner shows 'inactive' status", async () => {
       const inactiveBannerData = {
         ...mockBannerData,
+        startDate: currentTime - oneDay - oneDay,
+        endDate: currentTime - oneDay,
+      };
+      await act(async () => {
+        mockedUseStore.mockReturnValue({
+          ...mockBannerStore,
+          allBanners: [inactiveBannerData],
+        });
+        await render(adminView(context));
+      });
+      const currentBannerStatus = screen.getByText("Status:");
+      expect(currentBannerStatus.textContent).toEqual("Status: Expired");
+    });
+
+    test("Future banner shows 'Scheduled' status", async () => {
+      const futureBannerData = {
+        ...mockBannerData,
         startDate: currentTime + oneDay,
         endDate: currentTime + oneDay + oneDay,
       };
       await act(async () => {
         mockedUseStore.mockReturnValue({
           ...mockBannerStore,
-          bannerData: inactiveBannerData,
+          allBanners: [futureBannerData],
         });
         await render(adminView(context));
       });
       const currentBannerStatus = screen.getByText("Status:");
-      expect(currentBannerStatus.textContent).toEqual("Status: Inactive");
+      expect(currentBannerStatus.textContent).toEqual("Status: Scheduled");
     });
   });
 
@@ -151,6 +171,8 @@ describe("<AdminPage />", () => {
         await render(adminView(mockBannerMethods));
       });
 
+      const deleteButton = screen.getByText(deleteButtonText);
+      await userEvent.click(deleteButton);
       expect(
         screen.getByText("Current banner could not be deleted")
       ).toBeVisible();

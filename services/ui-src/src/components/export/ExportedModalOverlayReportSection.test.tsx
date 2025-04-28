@@ -21,8 +21,6 @@ import {
 } from "./ExportedModalOverlayReportSection";
 import { testA11y } from "utils/testing/commonTests";
 
-global.structuredClone = (x: any) => JSON.parse(JSON.stringify(x));
-
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 

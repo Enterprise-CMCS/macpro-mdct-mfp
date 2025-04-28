@@ -11,7 +11,7 @@ test.describe("state user home page", () => {
     await expect(stateHomePage.sarButton).toBeVisible();
   });
 
-  test("Is accessible on all device types for state user", async ({
+  test("Home page is accessible on all device types for state user", async ({
     stateHomePage,
   }) => {
     await stateHomePage.goto();
@@ -28,7 +28,7 @@ test.describe("admin user home page", () => {
     await expect(adminHomePage.dropdown).toBeVisible();
   });
 
-  test("Is accessible on all device types for admin user", async ({
+  test("Home page is accessible on all device types for admin user", async ({
     adminHomePage,
   }) => {
     await adminHomePage.goto();
@@ -37,7 +37,7 @@ test.describe("admin user home page", () => {
 });
 
 test.describe("not logged in home page", () => {
-  test("Is assessible when not logged in", async ({ browser }) => {
+  test("Is accessible when not logged in", async ({ browser }) => {
     const userContext = await browser.newContext({
       storageState: {
         cookies: [],

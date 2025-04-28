@@ -27,10 +27,6 @@ jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseStore);
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const mockLocations = {
   standard: { pathname: mockReportJson.flatRoutes[0].path },
   drawer: { pathname: mockReportJson.flatRoutes[1].path },
