@@ -756,4 +756,229 @@ describe("Completion Status Tests", () => {
       "/wp/transition-benchmarks": false,
     });
   });
+
+  describe("completion status for initiatives", () => {
+    const completedInitiatives = (val: number | string) => [
+      {
+        id: "mockInitiative1",
+        other: [
+          {
+            id: "mockInitiative1_other",
+            mockFieldId1: val,
+          },
+        ],
+      },
+      {
+        id: "mockInitiative2",
+        other: [
+          {
+            id: "mockInitiative2_other",
+            mockFieldId2: val,
+          },
+        ],
+      },
+    ];
+
+    const objectiveCards = [
+      {
+        modalForm: {
+          fields: [
+            {
+              id: "mockFieldId1",
+              validation: "number",
+            },
+          ],
+          objectiveId: "mockInitiative1_other",
+        },
+      },
+      {
+        modalForm: {
+          fields: [
+            {
+              id: "mockFieldId2",
+              validation: "number",
+            },
+          ],
+          objectiveId: "mockInitiative2_other",
+        },
+      },
+    ];
+
+    const route = {
+      entitySteps: [],
+      entityType: "initiative",
+      modalForm: { fields: [] },
+      name: "Mock Initiatives",
+      pageType: "modalOverlay",
+      path: "/mock-initiatives",
+    };
+
+    const validationJson = {
+      mockFieldId1: "number",
+      mockFieldId2: "number",
+    };
+
+    test("no initiatives return false status", async () => {
+      const testData = {};
+      const formTemplate = {
+        routes: [{ ...route }],
+      };
+      const result = await calculateCompletionStatus(testData, formTemplate);
+
+      expect(result).toStrictEqual({
+        "/mock-initiatives": false,
+      });
+    });
+
+    test("completed initiatives return true status", async () => {
+      const testData = {
+        initiative: [...completedInitiatives(1)],
+      };
+      const formTemplate = {
+        routes: [
+          {
+            ...route,
+            entitySteps: [
+              {
+                stepType: "other",
+                objectiveCards,
+              },
+            ],
+          },
+        ],
+        validationJson,
+      };
+      const result = await calculateCompletionStatus(testData, formTemplate);
+
+      expect(result).toStrictEqual({
+        "/mock-initiatives": true,
+      });
+    });
+
+    test("incomplete initiatives return false status", async () => {
+      const testData = {
+        initiative: [...completedInitiatives("")],
+      };
+      const formTemplate = {
+        routes: [
+          {
+            ...route,
+            entitySteps: [
+              { stepType: "overlayModal" },
+              { stepType: "closeOutInformation" },
+              {
+                stepType: "other",
+                objectiveCards,
+              },
+            ],
+          },
+        ],
+        validationJson,
+      };
+      const result = await calculateCompletionStatus(testData, formTemplate);
+
+      expect(result).toStrictEqual({
+        "/mock-initiatives": false,
+      });
+    });
+
+    test("completed and closed initiatives return true status", async () => {
+      const testData = {
+        initiative: [
+          ...completedInitiatives(1),
+          {
+            id: "mockInitiativeClosed",
+            isInitiativeClosed: true,
+            other: [
+              {
+                id: "mockInitiativeClosed_other",
+                mockFieldIdClosed: "",
+              },
+            ],
+          },
+        ],
+      };
+      const formTemplate = {
+        routes: [
+          {
+            ...route,
+            entitySteps: [
+              {
+                stepType: "other",
+                objectiveCards: [
+                  ...objectiveCards,
+                  {
+                    modalForm: {
+                      fields: [
+                        {
+                          id: "mockFieldIdClosed",
+                          validation: "number",
+                        },
+                      ],
+                      objectiveId: "mockInitiativeClosed_other",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        validationJson: {
+          ...validationJson,
+          mockFieldIdClosed: "number",
+        },
+      };
+      const result = await calculateCompletionStatus(testData, formTemplate);
+
+      expect(result).toStrictEqual({
+        "/mock-initiatives": true,
+      });
+    });
+
+    test("SAR uses initiativeId", async () => {
+      const testData = {
+        initiative: [...completedInitiatives(1)],
+      };
+      const formTemplate = {
+        type: "SAR",
+        routes: [
+          {
+            ...route,
+            entitySteps: [
+              {
+                stepType: "other",
+                form: {
+                  fields: [
+                    {
+                      id: "mockFieldId1",
+                      validation: "number",
+                    },
+                  ],
+                  initiativeId: "mockInitiative1_other",
+                },
+              },
+              {
+                stepType: "other",
+                modalForm: {
+                  fields: [
+                    {
+                      id: "mockFieldId2",
+                      validation: "number",
+                    },
+                  ],
+                  initiativeId: "mockInitiative2_other",
+                },
+              },
+            ],
+          },
+        ],
+        validationJson,
+      };
+      const result = await calculateCompletionStatus(testData, formTemplate);
+
+      expect(result).toStrictEqual({
+        "/mock-initiatives": true,
+      });
+    });
+  });
 });
