@@ -9,10 +9,10 @@ build_dev
 tsconfig.tsbuildinfo
 services/uploads/local_buckets
 /.env
+/.env.seed
 tests_output
 *.log
 !launchdarkly-flags.log
-!todos.log
 test-results/
 tests/cypress/videos
 tests/cypress/screenshots
@@ -28,3 +28,5 @@ tests/playwright/.cache/
 tests/playwright/.auth
 /.cdk
 cdk.context.json
+.qlty/*
+!.qlty/qlty.toml

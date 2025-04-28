@@ -19,10 +19,6 @@ mockedUseStore.mockReturnValue({
   ...mockReportStore,
 });
 
-global.structuredClone = jest.fn((val) => {
-  return val ? JSON.parse(JSON.stringify(val)) : val;
-});
-
 const appRoutesComponent = (route: string) => (
   <MemoryRouter
     initialEntries={[route]}

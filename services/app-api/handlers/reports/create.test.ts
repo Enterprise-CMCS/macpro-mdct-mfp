@@ -52,10 +52,6 @@ jest.mock("../../utils/auth/authorization", () => ({
   isAuthorizedToFetchState: jest.fn().mockReturnValue(true),
 }));
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const wpMockProxyEvent = {
   ...proxyEvent,
   headers: { "cognito-identity-id": "test" },
