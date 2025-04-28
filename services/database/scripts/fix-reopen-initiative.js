@@ -15,15 +15,15 @@ const reportId = process.argv[2];
 
 const wpTableName = isLocal
   ? "localstack-wp-reports"
-  : process.env.branchPrefix + "-wp-reports";
+  : `${process.env.branchPrefix}-wp-reports`;
 
 const wpBucketName = isLocal
   ? "database-localstack-wp"
-  : "database-" + process.env.branchPrefix + "-wp";
+  : `database-${process.env.branchPrefix}-wp`;
 
 async function handler() {
   try {
-    console.log("Fetching report");
+    console.log("\n== Fetching report ==\n");
 
     const report = await getDbItem(reportId);
 
@@ -76,7 +76,7 @@ async function updateS3Item(state, fieldDataId) {
   if (fieldDataObject) {
     await transformS3Object(wpBucketName, fieldDataObject.Key);
   } else {
-    console.log(`\n== No S3 object found for ${fieldDataObject.Key} ==\n`);
+    console.log(`\n== No S3 object found for ${fieldDataId} ==\n`);
   }
 }
 
@@ -107,7 +107,7 @@ async function transformS3Object(bucketName, objectKey) {
 }
 
 function reopenInitiatives(data) {
-  const initiatives = data["initiative"];
+  const initiatives = data.initiative;
   const closedInitiatives = initiatives.filter(
     (item) => item.isInitiativeClosed
   );
