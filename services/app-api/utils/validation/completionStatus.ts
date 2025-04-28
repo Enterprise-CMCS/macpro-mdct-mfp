@@ -174,31 +174,33 @@ export const calculateCompletionStatus = async (
     stepFormTemplates: any[],
     entityType: string
   ) => {
-    if (!fieldData[entityType] || fieldData[entityType].length <= 0)
-      return false;
+    const entityData = fieldData[entityType];
+    if (!entityData || entityData.length === 0) return false;
 
-    var areAllFormsComplete = true;
-    for (let i = 0; i < stepFormTemplates.length; i++) {
-      let stepForm = stepFormTemplates[i];
-      for (var entityFields of fieldData[entityType]) {
+    let areAllFormsComplete = true;
+    for (const stepForm of stepFormTemplates) {
+      for (const entityFields of entityData) {
+        // if initiative is closed, skip checking other values
+        if (entityFields?.isInitiativeClosed) continue;
+
+        const stepData = entityFields[stepForm.stepType];
+
         //modal overlay pages should have an array of key stepType in fieldData, automatic false if it doesn't exist or array is empty
         if (
           stepForm.pageType === "overlayModal" &&
-          (!entityFields[stepForm.stepType] ||
-            entityFields[stepForm.stepType].length <= 0)
+          (!stepData || stepData.length === 0)
         ) {
           areAllFormsComplete &&= false;
         } else if (stepForm.stepType === "closeOutInformation") {
-          //skip over closeOut at the moment until we can make WP copies
+          // TODO: skip over closeOut at the moment until we can make WP copies
         } else {
-          //detemine which fieldData to match to the stepForm
-          const entityFieldsList = entityFields[stepForm.stepType]
-            ? entityFields[stepForm.stepType]
-            : [entityFields];
+          //determine which fieldData to match to the stepForm
+          const entityFieldsList = stepData ?? [entityFields];
+
           //loop through all children that belong to that entity and validate the values
-          for (var stepFields of entityFieldsList) {
+          for (const stepFields of entityFieldsList) {
             if (stepForm?.objectiveCards) {
-              for (let card of stepForm.objectiveCards) {
+              for (const card of stepForm.objectiveCards) {
                 if (card?.modalForm) {
                   const nestedFormTemplate = card.modalForm;
 
@@ -213,9 +215,7 @@ export const calculateCompletionStatus = async (
                 }
               }
             } else {
-              const nestedFormTemplate = stepForm.form
-                ? stepForm.form
-                : stepForm.modalForm;
+              const nestedFormTemplate = stepForm.form ?? stepForm.modalForm;
 
               //WP uses modaloverlay so it doesn't have an initiativeId, only SAR does
               if (
