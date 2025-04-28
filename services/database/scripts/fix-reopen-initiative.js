@@ -10,16 +10,10 @@ const { buildDynamoClient, scan } = require("./utils/dynamodb.js");
 const { buildS3Client, getObject, putObject, list } = require("./utils/s3.js");
 
 const isLocal = !!process.env.DYNAMODB_URL;
-
+const branch = isLocal ? "localstack" : process.env.branchPrefix;
 const reportId = process.argv[2];
-
-const wpTableName = isLocal
-  ? "localstack-wp-reports"
-  : `${process.env.branchPrefix}-wp-reports`;
-
-const wpBucketName = isLocal
-  ? "database-localstack-wp"
-  : `database-${process.env.branchPrefix}-wp`;
+const wpTableName = `${branch}-wp-reports`;
+const wpBucketName = `database-${branch}-wp`;
 
 async function handler() {
   try {
