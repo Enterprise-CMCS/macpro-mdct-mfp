@@ -117,7 +117,7 @@ function reopenInitiatives(data) {
   closedInitiatives.forEach((item) => {
     if (item.isInitiativeClosed === true) {
       console.log(
-        `\n== Reopening initiatve ${item.id}: ${item.initiative_name} ==\n`
+        `\n== Reopening initiative ${item.id}: ${item.initiative_name} ==\n`
       );
 
       delete item.isInitiativeClosed;
