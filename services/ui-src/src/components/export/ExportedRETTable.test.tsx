@@ -12,10 +12,6 @@ import { useStore } from "utils";
 import { notAnsweredText } from "../../constants";
 import { testA11y } from "utils/testing/commonTests";
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const section = {
   form: {
     id: "ret-mtrp",

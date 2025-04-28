@@ -12,6 +12,7 @@ import {
 } from "@aws-sdk/client-cloudformation";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
+import { writeSeedEnvFile } from "./write-seed-env-file.js";
 
 // load .env
 dotenv.config();
@@ -88,6 +89,7 @@ async function run_fe_locally(runner: LabeledProcessRunner) {
     "ApiUrl"
   );
   await writeLocalUiEnvFile(apiUrl!);
+  await writeSeedEnvFile(apiUrl!);
   runner.run_command_and_output("ui", ["npm", "start"], "services/ui-src");
 }
 
@@ -331,6 +333,8 @@ async function destroy({
 
   if (verify) await confirmDestroyCommand(stackName);
 
+  await delete_topics({ stage });
+
   const client = new CloudFormationClient({ region });
   await client.send(new DeleteStackCommand({ StackName: stackName }));
   console.log(`Stack ${stackName} delete initiated.`);
@@ -348,8 +352,6 @@ async function destroy({
       `Stack ${stackName} delete initiated. Not waiting for completion as --wait is set to false.`
     );
   }
-
-  await delete_topics({ stage });
 }
 
 async function delete_topics(options: { stage: string }) {
