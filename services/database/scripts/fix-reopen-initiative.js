@@ -103,19 +103,17 @@ async function transformS3Object(bucketName, objectKey) {
 function reopenInitiatives(data) {
   const initiatives = data.initiative;
   const closedInitiatives = initiatives.filter(
-    (item) => item.isInitiativeClosed
+    (item) => item.isInitiativeClosed === true
   );
 
   if (closedInitiatives.length === 0) return;
 
   closedInitiatives.forEach((item) => {
-    if (item.isInitiativeClosed === true) {
-      console.log(
-        `\n== Reopening initiative ${item.id}: ${item.initiative_name} ==\n`
-      );
+    console.log(
+      `\n== Reopening initiative ${item.id}: ${item.initiative_name} ==\n`
+    );
 
-      delete item.isInitiativeClosed;
-    }
+    delete item.isInitiativeClosed;
   });
 
   return {
