@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 /*
  * Local:
- *    DYNAMODB_URL="http://localhost:4566" S3_LOCAL_ENDPOINT="http://localhost:4566" node services/database/scripts/fix-closed-initiative.js {{reportId}}
+ *   DYNAMODB_URL="http://localhost:4566" S3_LOCAL_ENDPOINT="http://localhost:4566" node services/database/scripts/fix-closed-initiative.js {{reportId}}
  * Branch:
- *    branchPrefix="YOUR BRANCH NAME" node services/database/scripts/fix-reopen-initiative.js {{reportId}}
+ *   branchPrefix="YOUR BRANCH NAME" node services/database/scripts/fix-reopen-initiative.js {{reportId}}
  */
 
 const { buildDynamoClient, scan } = require("./utils/dynamodb.js");
