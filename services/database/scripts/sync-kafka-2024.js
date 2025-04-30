@@ -1,33 +1,23 @@
 /* eslint-disable no-console */
 /*
  * Local:
- *    `DYNAMODB_URL="http://localhost:8000" S3_LOCAL_ENDPOINT="http://localhost:4569" node services/database/scripts/sync-kafka-2024.js`
- *  Branch:
+ *    DYNAMODB_URL="http://localhost:4566" S3_LOCAL_ENDPOINT="http://localhost:4566" node services/database/scripts/sync-kafka-2024.js
+ * Branch:
  *    branchPrefix="YOUR BRANCH NAME" node services/database/scripts/sync-kafka-2024.js
- *
- * THE LOCAL OPTION IS NOW MORE COMPLICATED IT YOU NEED TO RUN THIS SCRIPT IN A LOCAL CONTEXT HERE'S A SPOT TO LOOK FOR SUGGESTIONS:
- * https://stackoverflow.com/questions/73294767/how-do-i-execute-a-shell-script-against-my-localstack-docker-container-after-it
  */
 
 const { buildDynamoClient, scan, update } = require("./utils/dynamodb.js");
 const { buildS3Client, list, putObjectTag } = require("./utils/s3.js");
 
 const isLocal = !!process.env.DYNAMODB_URL;
+const branch = isLocal ? "localstack" : process.env.branchPrefix;
 
-const wpTableName = isLocal
-  ? "local-wp-reports"
-  : process.env.branchPrefix + "-wp-reports";
-const sarTableName = isLocal
-  ? "local-sar-reports"
-  : process.env.branchPrefix + "-sar-reports";
+const wpTableName = `${branch}-wp-reports`;
+const sarTableName = `${branch}-sar-reports`;
 const tables = [wpTableName, sarTableName];
 
-const wpBucketName = isLocal
-  ? "local-wp-form"
-  : "database-" + process.env.branchPrefix + "-wp";
-const sarBucketName = isLocal
-  ? "local-sar-form"
-  : "database-" + process.env.branchPrefix + "-sar";
+const wpBucketName = `database-${branch}-wp`;
+const sarBucketName = `database-${branch}-sar`;
 const buckets = [wpBucketName, sarBucketName];
 
 // Maintaining consistency with the `lastAltered` field in the DB
