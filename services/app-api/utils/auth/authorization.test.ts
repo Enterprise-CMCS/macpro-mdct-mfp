@@ -17,6 +17,14 @@ jest.mock("aws-jwt-verify", () => ({
   },
 }));
 
+jest.mock("aws-jwt-verify/jwk", () => ({ SimpleJwksCache: jest.fn() }), {
+  virtual: true,
+});
+
+jest.mock("aws-jwt-verify/https", () => ({ SimpleFetcher: jest.fn() }), {
+  virtual: true,
+});
+
 const noApiKeyEvent = { ...proxyEvent };
 const apiKeyEvent = { ...proxyEvent, headers: { "x-api-key": "test" } };
 const localKeyEvent = {
