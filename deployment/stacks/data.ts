@@ -1,5 +1,10 @@
 import { Construct } from "constructs";
-import { aws_dynamodb as dynamodb, aws_s3 as s3, Aws } from "aws-cdk-lib";
+import {
+  aws_dynamodb as dynamodb,
+  aws_s3 as s3,
+  Aws,
+  RemovalPolicy,
+} from "aws-cdk-lib";
 import { DynamoDBTable } from "../constructs/dynamodb-table";
 
 interface CreateDataComponentsProps {
@@ -59,21 +64,25 @@ export function createDataComponents(props: CreateDataComponentsProps) {
   const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
     bucketName: `database-${stage}-sar`,
     encryption: s3.BucketEncryption.S3_MANAGED,
-    versioned: true,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     serverAccessLogsBucket: loggingBucket,
     serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
+    versioned: true,
     enforceSSL: true,
+    removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+    autoDeleteObjects: isDev,
   });
 
   const wpFormBucket = new s3.Bucket(scope, "WpFormBucket", {
     bucketName: `database-${stage}-wp`,
     encryption: s3.BucketEncryption.S3_MANAGED,
-    versioned: true,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     serverAccessLogsBucket: loggingBucket,
     serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
+    versioned: true,
     enforceSSL: true,
+    removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+    autoDeleteObjects: isDev,
   });
 
   return { tables, sarFormBucket, wpFormBucket };
