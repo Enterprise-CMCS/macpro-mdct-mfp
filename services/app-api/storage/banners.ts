@@ -1,8 +1,9 @@
-import { DeleteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { DeleteCommand, paginateScan, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { createClient } from "./dynamodb-lib";
 import { AdminBannerData } from "../utils/types/banner";
+import { AnyObject } from "../utils/types";
 
-const bannerTableName = process.env.BANNER_TABLE_NAME!;
+const bannerTableName = process.env.BannerTable!;
 const client = createClient();
 
 export const putBanner = async (banner: AdminBannerData) => {
@@ -14,16 +15,17 @@ export const putBanner = async (banner: AdminBannerData) => {
   );
 };
 
-export const getBanner = async (bannerId: string) => {
-  const response = await client.send(
-    new GetCommand({
-      TableName: bannerTableName,
-      Key: {
-        key: bannerId,
-      },
-    })
-  );
-  return response.Item as AdminBannerData | undefined;
+export const getBanners = async () => {
+  let items: AnyObject[] = [];
+  const params = {
+    TableName: bannerTableName,
+  };
+
+  for await (const page of paginateScan({ client }, params)) {
+    items = items.concat(page.Items ?? []);
+  }
+
+  return items as AdminBannerData[] | undefined;
 };
 
 export const deleteBanner = async (bannerId: string) => {

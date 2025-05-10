@@ -16,9 +16,6 @@ permissions:
   contents: read
   actions: read
 
-env:
-  SERVERLESS_LICENSE_KEY: ${{ secrets.SERVERLESS_LICENSE_KEY }}
-
 jobs:
   destroy:
     # Protected branches should be designated as such in the GitHub UI.
@@ -64,10 +61,7 @@ jobs:
         run: |
           echo "PATH=$(pwd)/node_modules/.bin/:$PATH" >> $GITHUB_ENV
       - name: Destroy
-        # destroy app-api first due to a dependency between it and database
-        run: |
-          ./run destroy --stage $branch_name --verify false --service app-api
-          ./run destroy --stage $branch_name --verify false
+        run: ./run destroy --stage $branch_name --verify false
 
   # Notify the integrations channel when a destroy action fails
   notify_on_destroy_failure:

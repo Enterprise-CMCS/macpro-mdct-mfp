@@ -9,7 +9,6 @@ import {
 } from "./options";
 import { currentYear } from "../../../tests/seeds/helpers";
 import {
-  bannerKey,
   createApprovedWorkPlan,
   createArchivedSemiAnnualReport,
   createArchivedWorkPlan,
@@ -22,8 +21,8 @@ import {
   createSubmittedSemiAnnualReport,
   createSubmittedWorkPlan,
   createWorkPlan,
-  deleteBannerById,
-  getBannerById,
+  deleteBanners,
+  getBanners,
   getSemiAnnualReportById,
   getSemiAnnualReportsByState,
   getWorkPlanById,
@@ -42,7 +41,7 @@ const seed = async (
   const entityChoices: Choice[] = [
     { title: "Work Plan (WP)", value: "WP" },
     { title: "Semi-Annual Report (SAR)", value: "SAR" },
-    { title: "Banner", value: "banner" },
+    { title: "Banners", value: "banners" },
   ];
 
   let reportYear = chosenYear || currentYear;
@@ -108,18 +107,26 @@ const seed = async (
       },
     },
     {
-      type: (prev: string) => (prev === "banner" ? "select" : null),
+      type: (prev: string) => (prev === "banners" ? "select" : null),
       name: "bannerTask",
       message: "Task",
       choices: [
         {
-          title: `Create Banner: ${bannerKey}`,
-          value: "createBanner",
+          title: "Create Active Banner",
+          value: "createBannerActive",
         },
-        { title: `Get Banner: ${bannerKey}`, value: "getBanner" },
         {
-          title: `Delete Banner: ${bannerKey}`,
-          value: "deleteBanner",
+          title: "Create Inactive Banner",
+          value: "createBannerInactive",
+        },
+        {
+          title: "Create Scheduled Banner",
+          value: "createBannerScheduled",
+        },
+        { title: "Get Banners", value: "getBanners" },
+        {
+          title: "Delete Banners",
+          value: "deleteBanners",
         },
         backToMenu,
       ],
@@ -282,17 +289,24 @@ const seed = async (
       case "getSARsByState":
         expandedLog(await getSemiAnnualReportsByState());
         break;
-      case "createBanner": {
-        await createBanner();
-        console.log("Banner created.");
+      case "createBannerActive": {
+        createdLog(await createBanner("active"), "Active", "Banner");
         break;
       }
-      case "getBanner":
-        expandedLog(await getBannerById());
+      case "createBannerInactive": {
+        createdLog(await createBanner("inactive"), "Inactive", "Banner");
         break;
-      case "deleteBanner": {
-        await deleteBannerById();
-        console.log("Banner deleted.");
+      }
+      case "createBannerScheduled": {
+        createdLog(await createBanner("scheduled"), "Scheduled", "Banner");
+        break;
+      }
+      case "getBanners":
+        expandedLog(await getBanners());
+        break;
+      case "deleteBanners": {
+        await deleteBanners();
+        console.log("Banners deleted.");
         break;
       }
       default:

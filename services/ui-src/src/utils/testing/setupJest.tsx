@@ -29,6 +29,8 @@ import {
 // GLOBALS
 
 global.React = React;
+global.structuredClone = (val: any) =>
+  val ? JSON.parse(JSON.stringify(val)) : val;
 
 /* Mocks window.matchMedia (https://bit.ly/3Qs4ZrV) */
 Object.defineProperty(window, "matchMedia", {
@@ -45,6 +47,7 @@ Object.defineProperty(window, "matchMedia", {
 
 window.scrollBy = jest.fn();
 window.scrollTo = jest.fn();
+window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
 /* From Chakra UI Accordion test file (https://bit.ly/3MFtwXq) */
 jest.mock("@chakra-ui/transition", () => ({
@@ -178,13 +181,16 @@ export const mockAdminUserStore: MfpUserState = {
 //  BANNER STATES / STORE
 
 export const mockBannerStore: AdminBannerState = {
+  allBanners: [mockBannerData],
   bannerData: mockBannerData,
   bannerActive: false,
   bannerLoading: false,
   bannerErrorMessage: { title: "", description: "" },
   bannerDeleting: false,
+  editable: true,
   setBannerData: () => {},
   clearAdminBanner: () => {},
+  setAllBanners: () => {},
   setBannerActive: () => {},
   setBannerLoading: () => {},
   setBannerErrorMessage: () => {},
@@ -348,7 +354,9 @@ export const mockUseObjectiveProgressEntityStore: MfpUserState &
 // ROUTER
 
 export const RouterWrappedComponent: React.FC = ({ children }) => (
-  <Router>{children}</Router>
+  <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    {children}
+  </Router>
 );
 
 // ASSET

@@ -70,10 +70,19 @@ const transparentVariant = {
   },
 };
 
+const dangerVariant = {
+  backgroundColor: "palette.error_dark",
+  color: "palette.white",
+  "&:hover": {
+    backgroundColor: "palette.error_darker",
+  },
+};
+
 const variants = {
   primary: primaryVariant,
   outline: outlineVariant,
   transparent: transparentVariant,
+  danger: dangerVariant,
 };
 
 const sizes = {

@@ -6,8 +6,6 @@ services:
     path: services/topics
   ui:
     path: services/ui
-  uploads:
-    path: services/uploads
 
   # wave 2: depends on database
   app-api:
@@ -21,13 +19,11 @@ services:
       SarFormBucketName: ${database.SarFormBucketName}
       SarReportTableName: ${database.SarReportTableName}
       SarReportTableStreamArn: ${database.SarReportTableStreamArn}
-      AttachmentsBucketName: ${uploads.AttachmentsBucketName}
       
   # wave 3: depends on many
   ui-auth:
     path: services/ui-auth
     params:
-      AttachmentsBucketArn: ${uploads.AttachmentsBucketArn}
       ApiGatewayRestApiName: ${app-api.ApiGatewayRestApiName}
       ApplicationEndpointUrl: ${ui.ApplicationEndpointUrl}
       
@@ -43,8 +39,6 @@ services:
       UserPoolClientId: ${ui-auth.UserPoolClientId}
       UserPoolClientDomain: ${ui-auth.UserPoolClientDomain}
       IdentityProvider: ${ui-auth.IdentityProvider}
-      AttachmentsBucketRegion: ${uploads.Region}
-      AttachmentsBucketName: ${uploads.AttachmentsBucketName}
       S3BucketName: ${ui.S3BucketName}
       CloudFrontDistributionId: ${ui.CloudFrontDistributionId}
       ApplicationEndpointUrl: ${ui.ApplicationEndpointUrl}

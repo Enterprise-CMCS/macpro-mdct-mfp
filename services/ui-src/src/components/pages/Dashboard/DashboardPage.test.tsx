@@ -29,8 +29,6 @@ import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 import userEvent from "@testing-library/user-event";
 import { testA11y } from "utils/testing/commonTests";
 
-window.HTMLElement.prototype.scrollIntoView = jest.fn();
-
 jest.mock("utils/auth/useUser");
 const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
 
