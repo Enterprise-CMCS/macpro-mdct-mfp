@@ -7,11 +7,11 @@
 ./services/ui-src/src/components/pages/Export/ExportedReportPage.tsx:89:useFlags()?.translateReport;
 
 # LaunchDarkly flags in tests
-./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:143:mockLDFlags.set({ translateReport: true });
-./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:160:mockLDFlags.set({ translateReport: false });
-./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:291:mockLDFlags.set({ translateReport: true });
-./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:303:mockLDFlags.set({ translateReport: false });
-./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:316:mockLDFlags.set({ translateReport: true });
-./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:339:mockLDFlags.set({ translateReport: false });
-./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:351:mockLDFlags.set({ translateReport: true });
-./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:43:mockLDFlags.setDefault({ translateReport: false });
+./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:135:mockLDFlags.set({ translateReport: true });
+./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:152:mockLDFlags.set({ translateReport: false });
+./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:283:mockLDFlags.set({ translateReport: true });
+./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:295:mockLDFlags.set({ translateReport: false });
+./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:308:mockLDFlags.set({ translateReport: true });
+./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:331:mockLDFlags.set({ translateReport: false });
+./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:343:mockLDFlags.set({ translateReport: true });
+./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:35:mockLDFlags.setDefault({ translateReport: false });

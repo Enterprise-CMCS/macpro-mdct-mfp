@@ -34,17 +34,12 @@ export class WPInitiativeOverlayPage extends BasePage {
     });
   }
 
-  public async isTitleReady(topic: string) {
-    return this.page.getByRole("heading", { name: topic }).isVisible();
-  }
-
   public async completeDefineInitiative(page: Page) {
     await this.defineInitiative.getByRole("button", { name: "Edit" }).click();
     const definePage = new WPDefineInitiativePage(page);
     await definePage.isReady();
     await definePage.fillFields();
     await definePage.saveButton.click();
-    await this.defineInitiative.isVisible();
   }
 
   public async completeEvaluationPlan(page: Page) {
@@ -59,7 +54,6 @@ export class WPInitiativeOverlayPage extends BasePage {
       await evaluationPage.fillFields();
     }
     await evaluationPage.backButton.click();
-    await this.evaluationPlan.isVisible();
   }
 
   public async completeFundingSources(page: Page) {
@@ -73,6 +67,5 @@ export class WPInitiativeOverlayPage extends BasePage {
       await fundingPage.fillFields();
     }
     await fundingPage.backButton.click();
-    await this.fundingSources.isVisible();
   }
 }

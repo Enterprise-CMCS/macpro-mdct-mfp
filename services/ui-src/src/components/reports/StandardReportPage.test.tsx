@@ -37,10 +37,6 @@ const standardPageSectionComponent = (
   </RouterWrappedComponent>
 );
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 describe("<StandardReportPage />", () => {
   test("StandardReportPage view renders", () => {
     mockedUseStore.mockReturnValue(mockReportStore);

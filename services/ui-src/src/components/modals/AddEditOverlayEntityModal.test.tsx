@@ -125,10 +125,6 @@ const mockedSarReportContext = {
   report: sarReport,
 };
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const modalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>

@@ -46,10 +46,6 @@ const mockWorkPlanFieldData = mockWPMetadata.fieldData;
 const reportPeriod = 2;
 const reportYear = 2023;
 
-global.structuredClone = jest.fn((val) => {
-  return JSON.parse(JSON.stringify(val));
-});
-
 const generateReportHash = (
   report: AnyObject,
   reportYear: number,
