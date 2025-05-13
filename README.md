@@ -1,8 +1,8 @@
 # MDCT-MFP
 
 [![CodeQL](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/codeql-analysis.yml/badge.svg?branch=production)](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/codeql-analysis.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/maintainability)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/test_coverage)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/test_coverage)
+[![Maintainability](https://qlty.sh/badges/c776aaca-472f-446e-96df-7230593cc8d1/test_coverage.svg)](https://qlty.sh/gh/Enterprise-CMCS/projects/macpro-mdct-mfp)
+[![Code Coverage](https://qlty.sh/badges/c776aaca-472f-446e-96df-7230593cc8d1/maintainability.svg)](https://qlty.sh/gh/Enterprise-CMCS/projects/macpro-mdct-mfp)
 
 ## Integration Environment Deploy Status:
 
