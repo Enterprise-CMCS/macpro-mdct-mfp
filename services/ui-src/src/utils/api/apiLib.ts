@@ -66,7 +66,6 @@ export async function apiRequest<T>(
   request: any,
   path: string,
   opts?: RequestOptions,
-  customApiName?: string,
   hasResponseBody?: Boolean
 ): Promise<T> {
   const requestHeaders = await getRequestHeaders();
@@ -74,12 +73,11 @@ export async function apiRequest<T>(
     headers: { ...requestHeaders },
     ...opts,
   };
-  const name = customApiName || apiName;
 
   try {
     await updateTimeout();
 
-    const { body, statusCode } = await request({ apiName: name, path, options })
+    const { body, statusCode } = await request({ apiName, path, options })
       .response;
 
     if (hasResponseBody === false || statusCode === 204) {
@@ -103,12 +101,8 @@ export async function get<T>(path: string, opts?: RequestOptions): Promise<T> {
   return apiRequest<T>(ampGet, path, opts);
 }
 
-export async function post<T>(
-  path: string,
-  opts?: RequestOptions,
-  customApiName?: string
-): Promise<T> {
-  return apiRequest<T>(ampPost, path, opts, customApiName);
+export async function post<T>(path: string, opts?: RequestOptions): Promise<T> {
+  return apiRequest<T>(ampPost, path, opts);
 }
 
 export async function put<T>(path: string, opts?: RequestOptions): Promise<T> {
