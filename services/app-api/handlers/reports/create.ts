@@ -98,9 +98,7 @@ export const createReport = handler(
 
     const currentDate = Date.now();
 
-    const overrideCopyOver =
-      unvalidatedMetadata?.copyReport &&
-      unvalidatedMetadata?.copyReport?.isCopyOverTest;
+    const isCopyOver = unvalidatedMetadata?.copyReport;
 
     /**
      * If the report is a WP, determine reportYear from the unvalidated metadata. Otherwise, a SAR will use the workplan metadata.
@@ -108,8 +106,8 @@ export const createReport = handler(
     let reportData =
       reportType === ReportType.WP ? unvalidatedMetadata : workPlanMetadata;
 
-    const reportYear = getReportYear(reportData, overrideCopyOver);
-    const reportPeriod = getReportPeriod(reportData, overrideCopyOver);
+    const reportYear = getReportYear(reportData, isCopyOver);
+    const reportPeriod = getReportPeriod(reportData, isCopyOver);
 
     // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;
@@ -166,14 +164,14 @@ export const createReport = handler(
       generalInformation_resubmissionInformation: "N/A",
     };
 
-    if (unvalidatedMetadata.copyReport) {
+    if (isCopyOver) {
       const reportPeriod = calculatePeriod(Date.now(), workPlanMetadata);
       const isCurrentPeriod =
         calculateCurrentYear() === unvalidatedMetadata.copyReport.reportYear &&
         reportPeriod === unvalidatedMetadata.copyReport.reportPeriod;
 
       //do not allow user to create a copy if it's the same period
-      if (isCurrentPeriod && !overrideCopyOver) {
+      if (isCurrentPeriod && !isCopyOver) {
         return badRequest(error.UNABLE_TO_COPY);
       }
 
@@ -254,7 +252,7 @@ export const createReport = handler(
       ),
       reportYear,
       reportPeriod,
-      isCopied: overrideCopyOver ? true : false,
+      isCopied: isCopyOver ? true : false,
       dueDate: calculateDueDate(reportYear, reportPeriod, reportType),
       associatedWorkPlan: workPlanMetadata?.id,
     };
