@@ -170,8 +170,8 @@ export const createReport = handler(
         calculateCurrentYear() === unvalidatedMetadata.copyReport.reportYear &&
         reportPeriod === unvalidatedMetadata.copyReport.reportPeriod;
 
-      //do not allow user to create a copy if it's the same period
-      if (isCurrentPeriod && !isCopyOver) {
+      // do not allow user to create a copy if it's the same period
+      if (isCurrentPeriod) {
         return badRequest(error.UNABLE_TO_COPY);
       }
 
