@@ -25,7 +25,7 @@ export default function handler(lambda: LambdaFunction) {
       pathParameters: event.pathParameters,
       queryStringParameters: event.queryStringParameters,
     });
-    if (await isAuthenticated(event)) {
+    if (isAuthenticated(event)) {
       try {
         if (event.body) {
           const newEventBody = sanitizeObject(JSON.parse(event.body));

@@ -94,7 +94,7 @@ export async function apiRequest<T>(
 }
 
 export async function del<T>(path: string, opts?: RequestOptions): Promise<T> {
-  return apiRequest<T>(ampDel, path, opts, undefined, false);
+  return apiRequest<T>(ampDel, path, opts, false);
 }
 
 export async function get<T>(path: string, opts?: RequestOptions): Promise<T> {

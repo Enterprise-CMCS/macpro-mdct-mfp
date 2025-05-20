@@ -48,7 +48,7 @@ jest.mock("../../utils/formTemplates/formTemplates", () => ({
 
 jest.mock("../../utils/auth/authorization", () => ({
   hasPermissions: jest.fn().mockReturnValue(true),
-  isAuthenticated: jest.fn().mockResolvedValue(true),
+  isAuthenticated: jest.fn().mockReturnValue(true),
   isAuthorizedToFetchState: jest.fn().mockReturnValue(true),
 }));
 
@@ -156,7 +156,7 @@ describe("Test createReport API method", () => {
   });
 
   test("Test unauthorized report creation throws 401 error", async () => {
-    jest.spyOn(authFunctions, "isAuthenticated").mockResolvedValueOnce(false);
+    jest.spyOn(authFunctions, "isAuthenticated").mockReturnValueOnce(false);
     const res = await createReport(wpCreationEvent, null);
     expect(res.statusCode).toBe(StatusCodes.Unauthenticated);
     expect(res.body).toContain(error.UNAUTHORIZED);
