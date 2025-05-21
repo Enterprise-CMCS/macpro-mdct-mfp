@@ -32,7 +32,6 @@ jest.mock("../../storage/reports", () => ({
 (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
 
 jest.mock("../../utils/auth/authorization", () => ({
-  isAuthenticated: jest.fn().mockReturnValue(true),
   hasPermissions: jest.fn().mockReturnValue(true),
 }));
 

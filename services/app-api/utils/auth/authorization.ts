@@ -7,14 +7,6 @@ interface DecodedToken {
   "custom:cms_state": string | undefined;
 }
 
-export const isAuthenticated = (event: APIGatewayProxyEvent) => {
-  let authed;
-  if (event?.headers?.["x-api-key"]) {
-    authed = jwt_decode(event.headers["x-api-key"]) as DecodedToken;
-  }
-  return !!authed;
-};
-
 export const hasPermissions = (
   event: APIGatewayProxyEvent,
   allowedRoles: UserRoles[],

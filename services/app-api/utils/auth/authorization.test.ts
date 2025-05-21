@@ -1,9 +1,5 @@
 import { proxyEvent } from "../testing/proxyEvent";
-import {
-  hasPermissions,
-  isAuthenticated,
-  isAuthorizedToFetchState,
-} from "./authorization";
+import { hasPermissions, isAuthorizedToFetchState } from "./authorization";
 import { UserRoles } from "../types";
 
 const noApiKeyEvent = { ...proxyEvent };
@@ -17,27 +13,6 @@ jest.mock("jwt-decode", () => ({
     return mockedDecode();
   },
 }));
-
-describe("Test authorization with api key", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  test("is not authorized when no api key is passed", () => {
-    const authStatus = isAuthenticated(noApiKeyEvent);
-    expect(authStatus).toBeFalsy();
-  });
-  test("is not authorized when token is invalid", async () => {
-    const authStatus = isAuthenticated(apiKeyEvent);
-    expect(authStatus).toBeFalsy();
-  });
-  test("is authorized when api key is passed", async () => {
-    mockedDecode.mockReturnValue({
-      "custom:cms_roles": UserRoles.ADMIN,
-    });
-    const authStatus = isAuthenticated(apiKeyEvent);
-    expect(authStatus).toBeTruthy();
-  });
-});
 
 describe("Check user has permissions", () => {
   beforeEach(() => {
