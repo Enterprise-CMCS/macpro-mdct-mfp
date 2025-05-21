@@ -9,11 +9,7 @@ import {
 } from "../../utils/validation/validation";
 import { metadataValidationSchema } from "../../utils/validation/schemas";
 import { error, reportNames } from "../../utils/constants/constants";
-import {
-  calculateDueDate,
-  calculatePeriod,
-  calculateCurrentYear,
-} from "../../utils/time/time";
+import { calculateDueDate } from "../../utils/time/time";
 import {
   createReportName,
   getEligibleWorkPlan,
@@ -165,16 +161,6 @@ export const createReport = handler(
     };
 
     if (isCopyOver) {
-      const reportPeriod = calculatePeriod(Date.now(), workPlanMetadata);
-      const isCurrentPeriod =
-        calculateCurrentYear() === unvalidatedMetadata.copyReport.reportYear &&
-        reportPeriod === unvalidatedMetadata.copyReport.reportPeriod;
-
-      // do not allow user to create a copy if it's the same period
-      if (isCurrentPeriod) {
-        return badRequest(error.UNABLE_TO_COPY);
-      }
-
       newFieldData = await copyFieldDataFromSource(
         state,
         unvalidatedMetadata.copyReport?.fieldDataId,

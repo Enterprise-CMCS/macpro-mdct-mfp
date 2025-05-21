@@ -192,13 +192,6 @@ describe("Test createReport API method", () => {
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
   });
 
-  test("Test report creation throws a 400 when copying a report of the same period", async () => {
-    jest.useFakeTimers().setSystemTime(new Date(2021, 11, 1));
-    const res = await createReport(wpCopyCreationEvent, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.BadRequest);
-  });
-
   test("Test successful run of work plan report creation, not copied", async () => {
     (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
       { reportYear: 2020, reportPeriod: 1, archived: true },
