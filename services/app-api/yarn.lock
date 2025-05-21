@@ -2084,11 +2084,6 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-aws-jwt-verify@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/aws-jwt-verify/-/aws-jwt-verify-5.0.0.tgz#95a70a59dc8cc6c0e7155a8b6500bab4c82d52bc"
-  integrity sha512-FQM5EYEm7AnVJ3oeTpvBZQm7hYnpI067Em1oopHBs7cCNAcw8Aw8NFbojFjkNXifsOzyYe1ks+bg7Q9fMsTZSA==
-
 aws-lambda@^1.0.7:
   version "1.0.7"
   resolved "https://registry.npmjs.org/aws-lambda/-/aws-lambda-1.0.7.tgz"
@@ -4038,13 +4033,6 @@ semver@^6.0.0, semver@^6.3.0:
   version "6.3.1"
   resolved "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
-
-serverless-associate-waf@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmjs.org/serverless-associate-waf/-/serverless-associate-waf-1.2.1.tgz"
-  integrity sha512-84FIjRsNJ4im+Q1rmlwc+7ofyZXB6D0AZr9tfbBCfh25/qwv/8Q9h78/aDrR7LZT5XAZzrM6qAbwHFyUD5wd+A==
-  dependencies:
-    chalk "^2.4.2"
 
 set-function-length@^1.2.1:
   version "1.2.2"
