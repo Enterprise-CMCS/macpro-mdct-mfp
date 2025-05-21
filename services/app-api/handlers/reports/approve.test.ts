@@ -14,7 +14,6 @@ jest.mock("../../storage/reports", () => ({
 }));
 
 jest.mock("../../utils/auth/authorization", () => ({
-  isAuthenticated: jest.fn().mockResolvedValue(true),
   hasPermissions: jest.fn(() => {}),
 }));
 

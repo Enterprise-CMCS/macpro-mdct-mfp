@@ -1,4 +1,3 @@
-import config from "config";
 import { post } from "utils";
 
 export const printPdf = async () => {
@@ -7,11 +6,6 @@ export const printPdf = async () => {
     noscriptTag.remove();
   }
   const path = "/print_pdf";
-  let apiName;
-
-  if (config.DEV_API_URL) {
-    apiName = "mfpDev";
-  }
 
   const htmlString = document!
     .querySelector("html")!
@@ -30,7 +24,7 @@ export const printPdf = async () => {
   const options = {
     body: { encodedHtml: base64String },
   };
-  const response = await post<string>(path, options, apiName);
+  const response = await post<string>(path, options);
   openPdf(response);
 };
 
