@@ -259,8 +259,8 @@ describe("<DashboardPage />", () => {
     });
 
     test("Can still view all WPs", async () => {
-      const viewButtons = screen.getAllByRole("button", { name: "View" });
-      viewButtons.forEach((button) => expect(button).not.toBeDisabled());
+      const enterReportButtons = screen.getAllByTestId("enter-report");
+      enterReportButtons.forEach((button) => expect(button).not.toBeDisabled());
     });
 
     testA11y(wpDashboardViewWithReports, () => {

@@ -12,7 +12,6 @@ import { hasPermissions } from "../../utils/auth/authorization";
 const dynamoClientMock = mockClient(DynamoDBDocumentClient);
 
 jest.mock("../../utils/auth/authorization", () => ({
-  isAuthenticated: jest.fn().mockReturnValue(true),
   hasPermissions: jest.fn().mockReturnValue(true),
 }));
 
