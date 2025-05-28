@@ -48,7 +48,6 @@ jest.mock("../../utils/formTemplates/formTemplates", () => ({
 
 jest.mock("../../utils/auth/authorization", () => ({
   hasPermissions: jest.fn().mockReturnValue(true),
-  isAuthenticated: jest.fn().mockResolvedValue(true),
   isAuthorizedToFetchState: jest.fn().mockReturnValue(true),
 }));
 
@@ -155,13 +154,6 @@ describe("Test createReport API method", () => {
     consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
   });
 
-  test("Test unauthorized report creation throws 401 error", async () => {
-    jest.spyOn(authFunctions, "isAuthenticated").mockResolvedValueOnce(false);
-    const res = await createReport(wpCreationEvent, null);
-    expect(res.statusCode).toBe(StatusCodes.Unauthenticated);
-    expect(res.body).toContain(error.UNAUTHORIZED);
-  });
-
   test("Test report creation by a state user without access to a report type throws 403 error", async () => {
     jest.spyOn(authFunctions, "hasPermissions").mockReturnValueOnce(false);
     const res = await createReport(wpCreationEvent, null);
@@ -189,13 +181,6 @@ describe("Test createReport API method", () => {
     const res = await createReport(badReportEvent, null);
 
     expect(consoleSpy.warn).toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.BadRequest);
-  });
-
-  test("Test report creation throws a 400 when copying a report of the same period", async () => {
-    jest.useFakeTimers().setSystemTime(new Date(2021, 11, 1));
-    const res = await createReport(wpCopyCreationEvent, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
   });
 

@@ -3,6 +3,3 @@ node_modules
 jspm_packages
 
 *.zip
-
-# Serverless directories
-.serverless

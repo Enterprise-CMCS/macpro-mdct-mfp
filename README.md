@@ -1,8 +1,8 @@
 # MDCT-MFP
 
 [![CodeQL](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/codeql-analysis.yml/badge.svg?branch=production)](https://github.com/Enterprise-CMCS/macpro-mdct-mfp/actions/workflows/codeql-analysis.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/maintainability)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/bf62c53c054266abb34c/test_coverage)](https://codeclimate.com/repos/64e8f98369802654e2ec3636/test_coverage)
+[![Maintainability](https://qlty.sh/badges/c776aaca-472f-446e-96df-7230593cc8d1/test_coverage.svg)](https://qlty.sh/gh/Enterprise-CMCS/projects/macpro-mdct-mfp)
+[![Code Coverage](https://qlty.sh/badges/c776aaca-472f-446e-96df-7230593cc8d1/maintainability.svg)](https://qlty.sh/gh/Enterprise-CMCS/projects/macpro-mdct-mfp)
 
 ## Integration Environment Deploy Status:
 
@@ -47,7 +47,6 @@ Before starting the project we're going to install some tools. We recommend havi
 
 - Install nvm: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash`
 - Install specified version of node. We enforce using a specific version of node, specified in the file `.nvmrc`. This version matches the Lambda runtime. We recommend managing node versions using [NVM](https://github.com/nvm-sh/nvm#installing-and-updating): `nvm install`, then `nvm use`
-- Install [Serverless](https://www.serverless.com/framework/docs/providers/aws/guide/installation/): `npm install -g serverless`
 - Install [yarn](https://classic.yarnpkg.com/en/docs/install/): `brew install yarn`
 - Install pre-commit on your machine with either: `pip install pre-commit` or `brew install pre-commit`
 
@@ -177,15 +176,27 @@ If you have a PR that needs Product/Design input, the easiest way to get it to t
 
 MFP pipes updates from fieldData and the report object tables to BigMac for downstream consumption. To add a topic for a new report type, update the following locations:
 
-- `services/app-api/serverless.yaml`
-  - Add table streams to postKafkaData's event triggers
-  - Declare another lambda to listen to events from the relevant s3 buckets. The same handler file can be used, but serverless has a limitation of 1 existing bucket per lambda.
+- `deployment/stacks/api.ts`
+  - Add table streams to postKafkaData's event triggers listed in the definition for the LambdaDynamoEventSource
+  - Declare another lambda to listen to events from the relevant s3 buckets. The same handler file can be used.
 - `services/app-api/handlers/kafka/post/postKafkaData.ts` - Add the bucket and table names into the appropriate arrays. They will be parsed with their event types accordingly.
 - `services/topics/createTopics.js` - Declare the new topic names. Both the stream name for the bucket and table should be added here.
 
 ## Architecture
 
 ![Architecture Diagram](./.images/architecture.svg?raw=true)
+
+### CDK
+
+This project is built as a series of micro-services using the [CDK](https://aws.amazon.com/cdk/). CDK allows you to write typescript that compiles into CloudFormation Templates.
+
+### Configuration AWS Secrets Manager
+
+---
+
+Look in `deployment/deployment-config.ts` and look at the `DeploymentConfigProperties` interface which should give you a sense of which values are being injected into the app. The values must either be in `mfp-default` secret or `mfp-STAGE` to be picked up. The secrets are json objects so they contain multiple values each.
+
+No values should be specified in both secrets. Just don't do it. Ok if that did ever happen the stage value would supercede. But really I promise you don't need it.
 
 **General Structure** - React frontend that renders a form for a user to fill out, Node backend that uses S3 and Dynamo to store and validate forms.
 
