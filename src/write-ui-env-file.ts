@@ -11,7 +11,6 @@ const region = "us-east-1";
 
 export async function writeLocalUiEnvFile(apiUrl: string) {
   const envVariables = {
-    SKIP_PREFLIGHT_CHECK: "true",
     API_REGION: region,
     API_URL: apiUrl.replace("https", "http"),
     COGNITO_REGION: region,

@@ -26,16 +26,6 @@ export const badRequest = (body?: Object) =>
   new HttpResponse(StatusCodes.BadRequest, body);
 
 /**
- * The response for a client without any authorization.
- * Typically indicates an issue with the request's headers or token.
- *
- * Note: The usual name for HTTP 401 is "Unauthorized", but that's misleading.
- * Authentication is for identity; authorization is for permissions.
- */
-export const unauthenticated = (body?: Object) =>
-  new HttpResponse(StatusCodes.Unauthenticated, body);
-
-/**
  * The response for a client without sufficient permissions.
  * This is specific to the requested operation.
  * For example, a regular user requesting an admin-only endpoint.

@@ -8,6 +8,9 @@ let adminPage: Page;
 let userPage: Page;
 let adminContext: BrowserContext;
 let userContext: BrowserContext;
+let profilePage: ProfilePage;
+let bannerEditorPage: BannerEditorPage;
+
 test.beforeAll(async ({ browser }) => {
   adminContext = await browser.newContext({
     storageState: adminAuthPath,
@@ -24,15 +27,19 @@ test.afterAll(async () => {
   await adminContext.close();
   await userContext.close();
 });
+
 test.describe("Admin profile", () => {
+  test.beforeEach(async () => {
+    profilePage = new ProfilePage(adminPage);
+    bannerEditorPage = new BannerEditorPage(adminPage);
+    await profilePage.goto();
+    await profilePage.isReady();
+  });
+
   test(
     "Admin user can navigate to /admin",
     { tag: "@admin" },
     async ({ adminHomePage }) => {
-      const profilePage = new ProfilePage(adminPage);
-      const bannerEditorPage = new BannerEditorPage(adminPage);
-      await adminHomePage.goto();
-      await adminHomePage.isReady();
       await adminHomePage.manageAccount();
       await profilePage.goto();
       await expect(profilePage.bannerEditorButton).toBeVisible();
@@ -47,20 +54,20 @@ test.describe("Admin profile", () => {
     "Profile page is accessible on all device types for admin user",
     { tag: "@admin" },
     async () => {
-      const profilePage = new ProfilePage(adminPage);
-      await profilePage.goto();
       await profilePage.e2eA11y();
     }
   );
 });
 
 test.describe("State user profile", { tag: "@user" }, () => {
-  test("State user cannot navigate to /admin", async ({ stateHomePage }) => {
-    const profilePage = new ProfilePage(userPage);
-    const bannerEditorPage = new BannerEditorPage(userPage);
+  test.beforeEach(async () => {
+    profilePage = new ProfilePage(userPage);
+    bannerEditorPage = new BannerEditorPage(userPage);
+    await profilePage.goto();
+    await profilePage.isReady();
+  });
 
-    await stateHomePage.goto();
-    await stateHomePage.isReady();
+  test("State user cannot navigate to /admin", async ({ stateHomePage }) => {
     await stateHomePage.manageAccount();
     await profilePage.goto();
     await expect(profilePage.bannerEditorButton).not.toBeVisible();
@@ -71,8 +78,6 @@ test.describe("State user profile", { tag: "@user" }, () => {
   });
 
   test("Profile page is accessible on all device types for state user", async () => {
-    const profilePage = new ProfilePage(userPage);
-    await profilePage.goto();
     await profilePage.e2eA11y();
   });
 });

@@ -10,8 +10,6 @@ import { Lambda } from "../constructs/lambda";
 
 interface CreateTopicsComponentsProps {
   brokerString: string;
-  iamPath: string;
-  iamPermissionsBoundary: iam.IManagedPolicy;
   customResourceRole: iam.Role;
   isDev: boolean;
   kafkaAuthorizedSubnets: ec2.ISubnet[];
@@ -24,8 +22,6 @@ interface CreateTopicsComponentsProps {
 export function createTopicsComponents(props: CreateTopicsComponentsProps) {
   const {
     brokerString,
-    iamPath,
-    iamPermissionsBoundary,
     isDev,
     kafkaAuthorizedSubnets,
     customResourceRole,
@@ -56,8 +52,6 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
       brokerString,
       project,
     },
-    iamPermissionsBoundary,
-    iamPath,
     vpc,
     vpcSubnets: { subnets: kafkaAuthorizedSubnets },
     securityGroups: [lambdaSecurityGroup],
@@ -82,7 +76,7 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
       ...commonProps,
     });
 
-    deleteTopicsLambda.node.addDependency(createTopicsLambda);
+    deleteTopicsLambda.lambda.node.addDependency(createTopicsLambda);
 
     new CfnOutput(scope, "DeleteTopicsFunctionName", {
       value: deleteTopicsLambda.lambda.functionName,
