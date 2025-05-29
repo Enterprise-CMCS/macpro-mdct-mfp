@@ -1,4 +1,10 @@
-import { AnyObject, EntityShape, FormField, ReportShape } from "types";
+import {
+  AnyObject,
+  EntityDetailsStepTypes,
+  EntityShape,
+  FormField,
+  ReportShape,
+} from "types";
 // components
 import { Box } from "@chakra-ui/react";
 import { Table } from "components";
@@ -48,42 +54,85 @@ export const generateTableBody = (rows: AnyObject) => {
   return bodyRow;
 };
 
-export const formatColumns = (rows: AnyObject, type: string) => {
-  if (type === "expenditures") {
-    const cols = Object.values(rows);
-    cols.forEach((col) => {
-      col.sort((a: any, b: any) => a.label.localeCompare(b.label));
-    });
-
-    cols.forEach((col: any[]) => {
-      const totalActual: number | string =
-        Number(col?.[0].value) + Number(col?.[1].value);
-      const totalProjected: number | string =
-        Number(col?.[2].value) + Number(col?.[3].value);
-      col.map((data) => {
-        if (!isNaN(Number(data.value)))
-          data.value =
-            "$" + convertToThousandsSeparatedString(data.value, 2).maskedValue;
-        return data;
-      });
-
-      const perTotalProjected: number | string =
-        (totalActual / totalProjected) * 100;
-      const formattedTotal = convertToThousandsSeparatedString(
-        totalActual.toString(),
-        2
-      ).maskedValue;
-      col.splice(2, 0, {
-        label: "Total actual spending",
-        value: totalActual ? `$${formattedTotal}` : "-",
-      });
-      col.push({
-        label: "% of total projected spending",
-        value: perTotalProjected ? `${perTotalProjected.toFixed(2)}%` : "-",
-      });
-    });
+export const formatColumns = (rows: AnyObject, type?: string) => {
+  if (type === EntityDetailsStepTypes.EXPENDITURES) {
+    sortExpenditureColumns(rows);
+    insertTotalsColumns(rows);
   }
   return rows;
+};
+
+export const sortExpenditureColumns = (rows: AnyObject) => {
+  const colRows = Object.values(rows);
+  const quartersInOrder = ["First", "Second", "Third", "Fourth"];
+
+  colRows.forEach((colRow: { label: string; value: string }[]) => {
+    colRow.sort((a: any, b: any) => {
+      const actualLabel = (label: string) => label.startsWith("Actual");
+      const projectedLabel = (label: string) => label.startsWith("Projected");
+
+      // Sort actual vs projected
+      if (actualLabel(a.label) && projectedLabel(b.label)) return -1;
+      if (actualLabel(b.label) && projectedLabel(a.label)) return 1;
+
+      const quarter = (label: string) => {
+        return quartersInOrder.findIndex((name) => label.includes(name));
+      };
+
+      // Sort by quarter
+      return quarter(a.label) - quarter(b.label);
+    });
+  });
+};
+
+export const insertTotalsColumns = (rows: AnyObject) => {
+  const colRows = Object.values(rows);
+
+  colRows.forEach((colRow: { label: string; value: string }[]) => {
+    let totalActual = 0;
+    let totalProjected = 0;
+
+    colRow.forEach((col) => {
+      const val = Number(col.value);
+      // Sum actuals and projecteds based on labels
+      if (col.label.startsWith("Actual")) totalActual += val;
+      if (col.label.startsWith("Projected")) totalProjected += val;
+
+      if (Number.isFinite(val)) {
+        const valueFormatted = convertToThousandsSeparatedString(
+          col.value,
+          2
+        ).maskedValue;
+        col.value = `$${valueFormatted}`;
+      }
+    });
+
+    // Find the first "Projected" column
+    const projectedIndex = colRow.findIndex((col) =>
+      col.label.startsWith("Projected")
+    );
+    const insertIndex = projectedIndex > -1 ? projectedIndex : colRow.length;
+    // Insert total actual column between actual and projected columns
+    const totalActualFormatted = convertToThousandsSeparatedString(
+      totalActual.toString(),
+      2
+    ).maskedValue;
+    const totalActualColumn = {
+      label: "Total actual spending",
+      value: isNaN(totalActual) ? "-" : `$${totalActualFormatted}`,
+    };
+    colRow.splice(insertIndex, 0, totalActualColumn);
+
+    // Insert total projected column at end
+    const perTotalProjected = (totalActual / totalProjected) * 100;
+    const totalProjectedColumn = {
+      label: "% of total projected spending",
+      value: isNaN(perTotalProjected)
+        ? "-"
+        : `${perTotalProjected.toFixed(2)}%`,
+    };
+    colRow.push(totalProjectedColumn);
+  });
 };
 
 export const formatHeaderLabel = (

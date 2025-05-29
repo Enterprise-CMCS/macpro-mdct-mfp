@@ -79,23 +79,110 @@ describe("<ExportEntityDetailsTable />", () => {
       ]);
     });
 
-    test("Test formatColumns functionality", () => {
-      formatColumns(expenditureRows, "expenditures");
-      expect(expenditureRows["row 1"][2]).toStrictEqual({
-        label: "Total actual spending",
-        value: "$4.00",
+    describe("formatColumns()", () => {
+      test("format columns for expenditures", () => {
+        const newTest = structuredClone(expenditureRows);
+        formatColumns(newTest, "expenditures");
+        expect(newTest).toStrictEqual({
+          "row 1": [
+            {
+              label: "Actual spending (First quarter: Mock)",
+              value: "$2.00",
+            },
+            {
+              label: "Actual spending (Second quarter: Mock)",
+              value: "$2.00",
+            },
+            {
+              label: "Total actual spending",
+              value: "$4.00",
+            },
+            {
+              label: "Projected spending (First quarter: Mock)",
+              value: "$6.00",
+            },
+            {
+              label: "Projected spending (Second quarter: Mock)",
+              value: "$6.00",
+            },
+            {
+              label: "% of total projected spending",
+              value: "33.33%",
+            },
+          ],
+          "row 2": [
+            {
+              label: "Actual spending (First quarter: Mock)",
+              value: "$4,000.00",
+            },
+            {
+              label: "Actual spending (Second quarter: Mock)",
+              value: "$4,000.00",
+            },
+            {
+              label: "Total actual spending",
+              value: "$8,000.00",
+            },
+            {
+              label: "Projected spending (First quarter: Mock)",
+              value: "$8,000.00",
+            },
+            {
+              label: "Projected spending (Second quarter: Mock)",
+              value: "$12,000.00",
+            },
+            {
+              label: "% of total projected spending",
+              value: "40.00%",
+            },
+          ],
+        });
       });
-      expect(expenditureRows["row 1"][5]).toStrictEqual({
-        label: "% of total projected spending",
-        value: "33.33%",
+
+      test("don't format columns for other step types", () => {
+        const newTest = structuredClone(expenditureRows);
+        formatColumns(newTest, "other");
+        expect(newTest).toStrictEqual(expenditureRows);
       });
-      expect(expenditureRows["row 2"][2]).toStrictEqual({
-        label: "Total actual spending",
-        value: "$8,000.00",
+
+      test("test Q1/Q2 column order", () => {
+        const q1q2 = {
+          row: [
+            { label: "Actual spending (Second quarter: Mock)" },
+            { label: "Projected spending (Second quarter: Mock)" },
+            { label: "Actual spending (First quarter: Mock)" },
+            { label: "Projected spending (First quarter: Mock)" },
+          ],
+        };
+        formatColumns(q1q2, "expenditures");
+        expect(q1q2["row"]).toStrictEqual([
+          { label: "Actual spending (First quarter: Mock)" },
+          { label: "Actual spending (Second quarter: Mock)" },
+          { label: "Total actual spending", value: "-" },
+          { label: "Projected spending (First quarter: Mock)" },
+          { label: "Projected spending (Second quarter: Mock)" },
+          { label: "% of total projected spending", value: "-" },
+        ]);
       });
-      expect(expenditureRows["row 2"][5]).toStrictEqual({
-        label: "% of total projected spending",
-        value: "40.00%",
+
+      test("test Q3/Q4 column order", () => {
+        const q3q4 = {
+          row: [
+            { label: "Actual spending (Fourth quarter: Mock)" },
+            { label: "Projected spending (Fourth quarter: Mock)" },
+            { label: "Actual spending (Third quarter: Mock)" },
+            { label: "Projected spending (Third quarter: Mock)" },
+          ],
+        };
+        formatColumns(q3q4, "expenditures");
+        expect(q3q4["row"]).toStrictEqual([
+          { label: "Actual spending (Third quarter: Mock)" },
+          { label: "Actual spending (Fourth quarter: Mock)" },
+          { label: "Total actual spending", value: "-" },
+          { label: "Projected spending (Third quarter: Mock)" },
+          { label: "Projected spending (Fourth quarter: Mock)" },
+          { label: "% of total projected spending", value: "-" },
+        ]);
       });
     });
   });
