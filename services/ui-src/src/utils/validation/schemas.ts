@@ -21,6 +21,7 @@ export const text = () =>
     });
 export const textOptional = () =>
   string()
+    .nullable()
     .transform((curr, orig) => (orig === "" ? null : curr))
     .typeError(error.INVALID_GENERIC);
 
@@ -141,12 +142,16 @@ export const date = () =>
 export const dateOptional = () =>
   string()
     .typeError(error.INVALID_GENERIC)
+    .nullable()
+    .transform((curr, orig) => (orig === "" ? null : curr))
     .test({
       message: error.INVALID_DATE,
-      test: (value) => dateFormatRegex.test(value!),
-    })
-    .nullable()
-    .transform((curr, orig) => (orig === "" ? null : curr));
+      test: (value) => {
+        if (value) {
+          return dateFormatRegex.test(value!);
+        } else return true;
+      },
+    });
 
 export const endDate = (startDateField: string) =>
   date()
