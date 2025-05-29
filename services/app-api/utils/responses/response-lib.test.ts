@@ -3,7 +3,6 @@ import {
   created,
   noContent,
   badRequest,
-  unauthenticated,
   forbidden,
   notFound,
   conflict,
@@ -16,7 +15,6 @@ describe("HTTP Response helper functions", () => {
     expect(created({}).statusCode).toBe(201);
     expect(noContent({}).statusCode).toBe(204);
     expect(badRequest({}).statusCode).toBe(400);
-    expect(unauthenticated({}).statusCode).toBe(401);
     expect(forbidden({}).statusCode).toBe(403);
     expect(notFound({}).statusCode).toBe(404);
     expect(conflict({}).statusCode).toBe(409);

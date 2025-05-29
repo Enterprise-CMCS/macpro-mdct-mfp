@@ -55,7 +55,7 @@ describe("API utility functions", () => {
     it("should return the report year for a copied work plan", () => {
       const reportData = {
         ...mockUnvalidatedMetadata,
-        copyReport: { reportYear: 2020, reportPeriod: 1, isCopyOverTest: true },
+        copyReport: { reportYear: 2020, reportPeriod: 1 },
       };
 
       const response = getReportYear(reportData, true);
@@ -66,7 +66,7 @@ describe("API utility functions", () => {
     it("should return the report year for a copied work plan with reportPeriod 2", () => {
       const reportData = {
         ...mockWPData,
-        copyReport: { isCopyOverTest: true, reportPeriod: 2, reportYear: 2020 },
+        copyReport: { reportPeriod: 2, reportYear: 2020 },
       };
 
       const response = getReportYear(reportData, true);
@@ -110,7 +110,7 @@ describe("API utility functions", () => {
     it("should return the report period for a copied work plan", () => {
       const reportData = {
         ...mockWPData,
-        copyReport: { isCopyOverTest: true, reportPeriod: 1, reportYear: 2020 },
+        copyReport: { reportPeriod: 1, reportYear: 2020 },
       };
       const response = getReportPeriod(reportData, true);
 
@@ -120,7 +120,7 @@ describe("API utility functions", () => {
     it("should return the report period for a copied work plan with reportPeriod 2", () => {
       const reportData = {
         ...mockWPData,
-        copyReport: { isCopyOverTest: true, reportPeriod: 2, reportYear: 2020 },
+        copyReport: { reportPeriod: 2, reportYear: 2020 },
       };
       const responsePeriod = getReportPeriod(reportData, true);
 
