@@ -63,17 +63,17 @@ export const formatColumns = (rows: AnyObject, type?: string) => {
 };
 
 export const insertTotalsColumns = (rows: AnyObject) => {
-  function formatValue(num: number | string, type: string = "") {
-    const val = Number(num);
+  function formatValue(val: number | string, type: string = "") {
+    const num = Number(val);
 
-    if (isNaN(val)) {
-      return ["masked", "pct"].includes(type) ? "-" : num;
+    if (isNaN(num)) {
+      return ["masked", "pct"].includes(type) ? "-" : val;
     }
 
-    if (type === "pct") return `${val.toFixed(2)}%`;
+    if (type === "pct") return `${num.toFixed(2)}%`;
 
     const currency = convertToThousandsSeparatedString(
-      val.toString(),
+      num.toString(),
       2
     ).maskedValue;
     return `$${currency}`;
@@ -83,12 +83,14 @@ export const insertTotalsColumns = (rows: AnyObject) => {
     (columnRow: { label: string; value: number | string }[]) => {
       let totalActual = 0;
       let totalProjected = 0;
+      let hasActualSpending = false;
 
       columnRow.forEach((col) => {
         const val = Number(col.value);
         // Sum actuals and projecteds based on labels
         if (col.label.startsWith("Actual spending")) {
           totalActual += val;
+          hasActualSpending = true;
         } else if (col.label.startsWith("Projected spending")) {
           totalProjected += val;
         }
@@ -98,7 +100,7 @@ export const insertTotalsColumns = (rows: AnyObject) => {
       const perTotalProjected = (totalActual / totalProjected) * 100;
       columnRow.push({
         label: "Total actual spending",
-        value: formatValue(totalActual, "masked"),
+        value: formatValue(hasActualSpending ? totalActual : NaN, "masked"),
       });
       columnRow.push({
         label: "% of total projected spending",

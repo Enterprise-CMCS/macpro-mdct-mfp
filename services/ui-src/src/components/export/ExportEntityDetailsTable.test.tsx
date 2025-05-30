@@ -196,6 +196,26 @@ describe("<ExportEntityDetailsTable />", () => {
           { label: "% of total projected spending", value: "-" },
         ]);
       });
+
+      test("test random column order", () => {
+        const random = {
+          row: [
+            { label: "B Mock" },
+            { label: "A Mock" },
+            { label: "D Mock" },
+            { label: "C Mock" },
+          ],
+        };
+        formatColumns(random, "expenditures");
+        expect(random["row"]).toStrictEqual([
+          { label: "A Mock", value: undefined },
+          { label: "B Mock", value: undefined },
+          { label: "C Mock", value: undefined },
+          { label: "D Mock", value: undefined },
+          { label: "Total actual spending", value: "-" },
+          { label: "% of total projected spending", value: "-" },
+        ]);
+      });
     });
   });
 
