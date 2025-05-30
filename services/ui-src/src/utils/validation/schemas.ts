@@ -9,6 +9,8 @@ import {
 
 // TEXT - Helpers
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
+const transformEmptyStringToNull = (curr: string, orig: string) =>
+  orig === "" ? null : curr;
 
 // TEXT
 export const text = () =>
@@ -22,7 +24,7 @@ export const text = () =>
 export const textOptional = () =>
   string()
     .nullable()
-    .transform((curr, orig) => (orig === "" ? null : curr))
+    .transform(transformEmptyStringToNull)
     .typeError(error.INVALID_GENERIC);
 
 // NUMBER - Helpers
@@ -62,10 +64,7 @@ export const number = () =>
     });
 
 export const numberOptional = () =>
-  numberSchema()
-    .notRequired()
-    .nullable()
-    .transform((curr, orig) => (orig === "" ? null : curr));
+  numberSchema().notRequired().nullable().transform(transformEmptyStringToNull);
 
 // Integer or Valid Strings
 export const validIntegerSchema = () =>
@@ -96,7 +95,7 @@ export const validIntegerOptional = () =>
   validIntegerSchema()
     .notRequired()
     .nullable()
-    .transform((curr, orig) => (orig === "" ? null : curr));
+    .transform(transformEmptyStringToNull);
 
 // Number - Ratio
 export const ratio = () =>
@@ -116,18 +115,12 @@ export const ratio = () =>
 // EMAIL
 export const email = () => text().email(error.INVALID_EMAIL);
 export const emailOptional = () =>
-  email()
-    .notRequired()
-    .nullable()
-    .transform((curr, orig) => (orig === "" ? null : curr));
+  email().notRequired().nullable().transform(transformEmptyStringToNull);
 
 // URL
 export const url = () => text().url(error.INVALID_URL);
 export const urlOptional = () =>
-  url()
-    .notRequired()
-    .nullable()
-    .transform((curr, orig) => (orig === "" ? null : curr));
+  url().notRequired().nullable().transform(transformEmptyStringToNull);
 
 // DATE
 export const date = () =>
@@ -143,13 +136,14 @@ export const dateOptional = () =>
   string()
     .typeError(error.INVALID_GENERIC)
     .nullable()
-    .transform((curr, orig) => (orig === "" ? null : curr))
+    .transform(transformEmptyStringToNull)
     .test({
       message: error.INVALID_DATE,
       test: (value) => {
         if (value) {
-          return dateFormatRegex.test(value!);
-        } else return true;
+          return dateFormatRegex.test(value);
+        }
+        return true;
       },
     });
 
