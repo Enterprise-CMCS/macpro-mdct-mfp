@@ -62,6 +62,47 @@ export const formatColumns = (rows: AnyObject, type?: string) => {
   return rows;
 };
 
+export const insertTotalsColumns = (rows: AnyObject) => {
+  const columnRows = Object.values(rows);
+
+  columnRows.forEach((columnRow: { label: string; value: string }[]) => {
+    let totalActual = 0;
+    let totalProjected = 0;
+
+    columnRow.forEach((col) => {
+      const val = Number(col.value);
+      // Sum actuals and projecteds based on labels
+      if (col.label.startsWith("Actual spending")) totalActual += val;
+      if (col.label.startsWith("Projected spending")) totalProjected += val;
+
+      if (Number.isFinite(val)) {
+        const valFormatted = convertToThousandsSeparatedString(
+          col.value,
+          2
+        ).maskedValue;
+        col.value = `$${valFormatted}`;
+      }
+    });
+
+    const totalActualFormatted = convertToThousandsSeparatedString(
+      totalActual.toString(),
+      2
+    ).maskedValue;
+    const perTotalProjected = (totalActual / totalProjected) * 100;
+
+    columnRow.push({
+      label: "Total actual spending",
+      value: isNaN(totalActual) ? "-" : `$${totalActualFormatted}`,
+    });
+    columnRow.push({
+      label: "% of total projected spending",
+      value: isNaN(perTotalProjected)
+        ? "-"
+        : `${perTotalProjected.toFixed(2)}%`,
+    });
+  });
+};
+
 export const sortExpenditureColumns = (rows: AnyObject) => {
   const columnRows = Object.values(rows);
   const columnTypeOrder = [
@@ -99,51 +140,6 @@ export const sortExpenditureColumns = (rows: AnyObject) => {
       // Fallback sort for columns not defined in columnTypeOrder
       return a.label.localeCompare(b.label);
     });
-  });
-};
-
-export const insertTotalsColumns = (rows: AnyObject) => {
-  const columnRows = Object.values(rows);
-
-  columnRows.forEach((columnRow: { label: string; value: string }[]) => {
-    let totalActual = 0;
-    let totalProjected = 0;
-
-    columnRow.forEach((col) => {
-      const val = Number(col.value);
-      // Sum actuals and projecteds based on labels
-      if (col.label.startsWith("Actual spending")) totalActual += val;
-      if (col.label.startsWith("Projected spending")) totalProjected += val;
-
-      if (Number.isFinite(val)) {
-        const valFormatted = convertToThousandsSeparatedString(
-          col.value,
-          2
-        ).maskedValue;
-        col.value = `$${valFormatted}`;
-      }
-    });
-
-    // Insert total actual column
-    const totalActualFormatted = convertToThousandsSeparatedString(
-      totalActual.toString(),
-      2
-    ).maskedValue;
-    const totalActualColumn = {
-      label: "Total actual spending",
-      value: isNaN(totalActual) ? "-" : `$${totalActualFormatted}`,
-    };
-    columnRow.push(totalActualColumn);
-
-    // Insert total projected column
-    const perTotalProjected = (totalActual / totalProjected) * 100;
-    const totalProjectedColumn = {
-      label: "% of total projected spending",
-      value: isNaN(perTotalProjected)
-        ? "-"
-        : `${perTotalProjected.toFixed(2)}%`,
-    };
-    columnRow.push(totalProjectedColumn);
   });
 };
 
