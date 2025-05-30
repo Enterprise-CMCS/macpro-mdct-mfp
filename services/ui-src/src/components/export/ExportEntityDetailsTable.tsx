@@ -63,11 +63,11 @@ export const formatColumns = (rows: AnyObject, type?: string) => {
 };
 
 export const insertTotalsColumns = (rows: AnyObject) => {
-  function formatValue(num: number | string, type?: string) {
+  function formatValue(num: number | string, type: string = "") {
     const val = Number(num);
 
     if (isNaN(val)) {
-      return type === "masked" || type === "pct" ? "-" : num;
+      return ["masked", "pct"].includes(type) ? "-" : num;
     }
 
     if (type === "pct") return `${val.toFixed(2)}%`;

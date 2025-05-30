@@ -81,9 +81,9 @@ describe("<ExportEntityDetailsTable />", () => {
 
     describe("formatColumns()", () => {
       test("format columns for expenditures", () => {
-        const newTest = structuredClone(expenditureRows);
-        formatColumns(newTest, "expenditures");
-        expect(newTest).toStrictEqual({
+        const rows = structuredClone(expenditureRows);
+        formatColumns(rows, "expenditures");
+        expect(rows).toStrictEqual({
           "row 1": [
             {
               label: "Actual spending (First quarter: Mock)",
@@ -140,9 +140,9 @@ describe("<ExportEntityDetailsTable />", () => {
       });
 
       test("don't format columns for other step types", () => {
-        const newTest = structuredClone(expenditureRows);
-        formatColumns(newTest, "other");
-        expect(newTest).toStrictEqual(expenditureRows);
+        const rows = structuredClone(expenditureRows);
+        formatColumns(rows, "other");
+        expect(rows).toStrictEqual(expenditureRows);
       });
 
       test("test Q1/Q2 column order", () => {
