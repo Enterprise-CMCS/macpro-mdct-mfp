@@ -264,7 +264,7 @@ const sarMockProps = {
                   type: "number",
                   validation: "number",
                   props: {
-                    label: "Actual W",
+                    label: "Actual spending W",
                   },
                 },
                 {
@@ -272,7 +272,7 @@ const sarMockProps = {
                   type: "number",
                   validation: "number",
                   props: {
-                    label: "Actual X",
+                    label: "Actual spending X",
                   },
                 },
                 {
@@ -280,7 +280,7 @@ const sarMockProps = {
                   type: "number",
                   validation: "number",
                   props: {
-                    label: "Projected Y",
+                    label: "Projected spending Y",
                   },
                 },
                 {
@@ -288,7 +288,7 @@ const sarMockProps = {
                   type: "number",
                   validation: "number",
                   props: {
-                    label: "Projected Z",
+                    label: "Projected spending Z",
                   },
                 },
                 {
