@@ -156,11 +156,17 @@ describe("<ExportEntityDetailsTable />", () => {
         };
         formatColumns(q1q2, "expenditures");
         expect(q1q2["row"]).toStrictEqual([
-          { label: "Actual spending (First quarter: Mock)" },
-          { label: "Actual spending (Second quarter: Mock)" },
+          { label: "Actual spending (First quarter: Mock)", value: undefined },
+          { label: "Actual spending (Second quarter: Mock)", value: undefined },
           { label: "Total actual spending", value: "-" },
-          { label: "Projected spending (First quarter: Mock)" },
-          { label: "Projected spending (Second quarter: Mock)" },
+          {
+            label: "Projected spending (First quarter: Mock)",
+            value: undefined,
+          },
+          {
+            label: "Projected spending (Second quarter: Mock)",
+            value: undefined,
+          },
           { label: "% of total projected spending", value: "-" },
         ]);
       });
@@ -176,11 +182,17 @@ describe("<ExportEntityDetailsTable />", () => {
         };
         formatColumns(q3q4, "expenditures");
         expect(q3q4["row"]).toStrictEqual([
-          { label: "Actual spending (Third quarter: Mock)" },
-          { label: "Actual spending (Fourth quarter: Mock)" },
+          { label: "Actual spending (Third quarter: Mock)", value: undefined },
+          { label: "Actual spending (Fourth quarter: Mock)", value: undefined },
           { label: "Total actual spending", value: "-" },
-          { label: "Projected spending (Third quarter: Mock)" },
-          { label: "Projected spending (Fourth quarter: Mock)" },
+          {
+            label: "Projected spending (Third quarter: Mock)",
+            value: undefined,
+          },
+          {
+            label: "Projected spending (Fourth quarter: Mock)",
+            value: undefined,
+          },
           { label: "% of total projected spending", value: "-" },
         ]);
       });

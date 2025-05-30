@@ -63,44 +63,52 @@ export const formatColumns = (rows: AnyObject, type?: string) => {
 };
 
 export const insertTotalsColumns = (rows: AnyObject) => {
-  const columnRows = Object.values(rows);
+  function formatValue(num: number | string, type?: string) {
+    const val = Number(num);
 
-  columnRows.forEach((columnRow: { label: string; value: string }[]) => {
-    let totalActual = 0;
-    let totalProjected = 0;
+    if (isNaN(val)) {
+      return type === "masked" || type === "pct" ? "-" : num;
+    }
 
-    columnRow.forEach((col) => {
-      const val = Number(col.value);
-      // Sum actuals and projecteds based on labels
-      if (col.label.startsWith("Actual spending")) totalActual += val;
-      if (col.label.startsWith("Projected spending")) totalProjected += val;
+    if (type === "pct") return `${val.toFixed(2)}%`;
 
-      if (Number.isFinite(val)) {
-        const valFormatted = convertToThousandsSeparatedString(
-          col.value,
-          2
-        ).maskedValue;
-        col.value = `$${valFormatted}`;
-      }
-    });
-
-    const totalActualFormatted = convertToThousandsSeparatedString(
-      totalActual.toString(),
+    const formatted = convertToThousandsSeparatedString(
+      val.toString(),
       2
     ).maskedValue;
-    const perTotalProjected = (totalActual / totalProjected) * 100;
+    return `$${formatted}`;
+  }
+  const columnRows = Object.values(rows);
 
-    columnRow.push({
-      label: "Total actual spending",
-      value: isNaN(totalActual) ? "-" : `$${totalActualFormatted}`,
-    });
-    columnRow.push({
-      label: "% of total projected spending",
-      value: isNaN(perTotalProjected)
-        ? "-"
-        : `${perTotalProjected.toFixed(2)}%`,
-    });
-  });
+  columnRows.forEach(
+    (columnRow: { label: string; value: number | string }[]) => {
+      let totalActual = 0;
+      let totalProjected = 0;
+
+      columnRow.forEach((col) => {
+        const val = Number(col.value);
+        // Sum actuals and projecteds based on labels
+        if (col.label.startsWith("Actual spending")) {
+          totalActual += val;
+        } else if (col.label.startsWith("Projected spending")) {
+          totalProjected += val;
+        }
+
+        col.value = formatValue(col.value);
+      });
+
+      const perTotalProjected = (totalActual / totalProjected) * 100;
+
+      columnRow.push({
+        label: "Total actual spending",
+        value: formatValue(totalActual, "masked"),
+      });
+      columnRow.push({
+        label: "% of total projected spending",
+        value: formatValue(perTotalProjected, "pct"),
+      });
+    }
+  );
 };
 
 export const sortExpenditureColumns = (rows: AnyObject) => {
@@ -113,34 +121,36 @@ export const sortExpenditureColumns = (rows: AnyObject) => {
   ];
   const quarterOrder = ["First", "Second", "Third", "Fourth"];
 
-  columnRows.forEach((columnRow: { label: string; value: string }[]) => {
-    columnRow.sort((a: any, b: any) => {
-      const columnTypeIndex = (label: string) => {
-        return columnTypeOrder.findIndex((group) => label.startsWith(group));
-      };
-
-      const typeA = columnTypeIndex(a.label);
-      const typeB = columnTypeIndex(b.label);
-
-      // Sort by columnTypeOrder
-      if (typeA !== typeB) return typeA - typeB;
-
-      if (
-        ["Actual spending", "Projected spending"].includes(
-          columnTypeOrder[typeA]
-        )
-      ) {
-        const quarterIndex = (label: string) => {
-          return quarterOrder.findIndex((q) => label.includes(q));
+  columnRows.forEach(
+    (columnRow: { label: string; value: number | string }[]) => {
+      columnRow.sort((a: any, b: any) => {
+        const columnTypeIndex = (label: string) => {
+          return columnTypeOrder.findIndex((group) => label.startsWith(group));
         };
-        // Sort by quarterOrder
-        return quarterIndex(a.label) - quarterIndex(b.label);
-      }
 
-      // Fallback sort for columns not defined in columnTypeOrder
-      return a.label.localeCompare(b.label);
-    });
-  });
+        const typeA = columnTypeIndex(a.label);
+        const typeB = columnTypeIndex(b.label);
+
+        // Sort by columnTypeOrder
+        if (typeA !== typeB) return typeA - typeB;
+
+        if (
+          ["Actual spending", "Projected spending"].includes(
+            columnTypeOrder[typeA]
+          )
+        ) {
+          const quarterIndex = (label: string) => {
+            return quarterOrder.findIndex((q) => label.includes(q));
+          };
+          // Sort by quarterOrder
+          return quarterIndex(a.label) - quarterIndex(b.label);
+        }
+
+        // Fallback sort for columns not defined in columnTypeOrder
+        return a.label.localeCompare(b.label);
+      });
+    }
+  );
 };
 
 export const formatHeaderLabel = (
