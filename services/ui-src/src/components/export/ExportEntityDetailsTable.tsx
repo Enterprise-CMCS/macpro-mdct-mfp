@@ -56,63 +56,75 @@ export const generateTableBody = (rows: AnyObject) => {
 
 export const formatColumns = (rows: AnyObject, type?: string) => {
   if (type === EntityDetailsStepTypes.EXPENDITURES) {
-    sortExpenditureColumns(rows);
     insertTotalsColumns(rows);
+    sortExpenditureColumns(rows);
   }
   return rows;
 };
 
 export const sortExpenditureColumns = (rows: AnyObject) => {
-  const colRows = Object.values(rows);
-  const quartersInOrder = ["First", "Second", "Third", "Fourth"];
+  const columnRows = Object.values(rows);
+  const columnTypeOrder = [
+    "Actual spending",
+    "Total actual spending",
+    "Projected spending",
+    "% of total projected spending",
+  ];
+  const quarterOrder = ["First", "Second", "Third", "Fourth"];
 
-  colRows.forEach((colRow: { label: string; value: string }[]) => {
-    colRow.sort((a: any, b: any) => {
-      const actualLabel = (label: string) => label.startsWith("Actual");
-      const projectedLabel = (label: string) => label.startsWith("Projected");
-
-      // Sort actual vs projected
-      if (actualLabel(a.label) && projectedLabel(b.label)) return -1;
-      if (actualLabel(b.label) && projectedLabel(a.label)) return 1;
-
-      const quarter = (label: string) => {
-        return quartersInOrder.findIndex((name) => label.includes(name));
+  columnRows.forEach((columnRow: { label: string; value: string }[]) => {
+    columnRow.sort((a: any, b: any) => {
+      const columnTypeIndex = (label: string) => {
+        return columnTypeOrder.findIndex((group) => label.startsWith(group));
       };
 
-      // Sort by quarter
-      return quarter(a.label) - quarter(b.label);
+      const typeA = columnTypeIndex(a.label);
+      const typeB = columnTypeIndex(b.label);
+
+      // Sort by columnTypeOrder
+      if (typeA !== typeB) return typeA - typeB;
+
+      if (
+        ["Actual spending", "Projected spending"].includes(
+          columnTypeOrder[typeA]
+        )
+      ) {
+        const quarterIndex = (label: string) => {
+          return quarterOrder.findIndex((q) => label.includes(q));
+        };
+        // Sort by quarterOrder
+        return quarterIndex(a.label) - quarterIndex(b.label);
+      }
+
+      // Fallback sort for columns not defined in columnTypeOrder
+      return a.label.localeCompare(b.label);
     });
   });
 };
 
 export const insertTotalsColumns = (rows: AnyObject) => {
-  const colRows = Object.values(rows);
+  const columnRows = Object.values(rows);
 
-  colRows.forEach((colRow: { label: string; value: string }[]) => {
+  columnRows.forEach((columnRow: { label: string; value: string }[]) => {
     let totalActual = 0;
     let totalProjected = 0;
 
-    colRow.forEach((col) => {
+    columnRow.forEach((col) => {
       const val = Number(col.value);
       // Sum actuals and projecteds based on labels
-      if (col.label.startsWith("Actual")) totalActual += val;
-      if (col.label.startsWith("Projected")) totalProjected += val;
+      if (col.label.startsWith("Actual spending")) totalActual += val;
+      if (col.label.startsWith("Projected spending")) totalProjected += val;
 
       if (Number.isFinite(val)) {
-        const valueFormatted = convertToThousandsSeparatedString(
+        const valFormatted = convertToThousandsSeparatedString(
           col.value,
           2
         ).maskedValue;
-        col.value = `$${valueFormatted}`;
+        col.value = `$${valFormatted}`;
       }
     });
 
-    // Find the first "Projected" column
-    const projectedIndex = colRow.findIndex((col) =>
-      col.label.startsWith("Projected")
-    );
-    const insertIndex = projectedIndex > -1 ? projectedIndex : colRow.length;
-    // Insert total actual column between actual and projected columns
+    // Insert total actual column
     const totalActualFormatted = convertToThousandsSeparatedString(
       totalActual.toString(),
       2
@@ -121,9 +133,9 @@ export const insertTotalsColumns = (rows: AnyObject) => {
       label: "Total actual spending",
       value: isNaN(totalActual) ? "-" : `$${totalActualFormatted}`,
     };
-    colRow.splice(insertIndex, 0, totalActualColumn);
+    columnRow.push(totalActualColumn);
 
-    // Insert total projected column at end
+    // Insert total projected column
     const perTotalProjected = (totalActual / totalProjected) * 100;
     const totalProjectedColumn = {
       label: "% of total projected spending",
@@ -131,7 +143,7 @@ export const insertTotalsColumns = (rows: AnyObject) => {
         ? "-"
         : `${perTotalProjected.toFixed(2)}%`,
     };
-    colRow.push(totalProjectedColumn);
+    columnRow.push(totalProjectedColumn);
   });
 };
 
