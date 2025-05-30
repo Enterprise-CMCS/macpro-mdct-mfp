@@ -9,6 +9,8 @@ import {
 
 // TEXT - Helpers
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
+const transformEmptyStringToNull = (curr: string, orig: string) =>
+  orig === "" ? null : curr;
 
 // TEXT
 export const text = () =>
@@ -19,7 +21,11 @@ export const text = () =>
       test: (value) => !isWhitespaceString(value),
       message: error.REQUIRED_GENERIC,
     });
-export const textOptional = () => string().typeError(error.INVALID_GENERIC);
+export const textOptional = () =>
+  string()
+    .nullable()
+    .transform(transformEmptyStringToNull)
+    .typeError(error.INVALID_GENERIC);
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];
@@ -57,7 +63,8 @@ export const number = () =>
       message: error.REQUIRED_GENERIC,
     });
 
-export const numberOptional = () => numberSchema().notRequired().nullable();
+export const numberOptional = () =>
+  numberSchema().notRequired().nullable().transform(transformEmptyStringToNull);
 
 // Integer or Valid Strings
 export const validIntegerSchema = () =>
@@ -85,7 +92,10 @@ export const validInteger = () =>
   validIntegerSchema().required(error.REQUIRED_GENERIC);
 
 export const validIntegerOptional = () =>
-  validIntegerSchema().notRequired().nullable();
+  validIntegerSchema()
+    .notRequired()
+    .nullable()
+    .transform(transformEmptyStringToNull);
 
 // Number - Ratio
 export const ratio = () =>
@@ -104,11 +114,13 @@ export const ratio = () =>
 
 // EMAIL
 export const email = () => text().email(error.INVALID_EMAIL);
-export const emailOptional = () => email().notRequired();
+export const emailOptional = () =>
+  email().notRequired().nullable().transform(transformEmptyStringToNull);
 
 // URL
 export const url = () => text().url(error.INVALID_URL);
-export const urlOptional = () => url().notRequired();
+export const urlOptional = () =>
+  url().notRequired().nullable().transform(transformEmptyStringToNull);
 
 // DATE
 export const date = () =>
@@ -123,9 +135,16 @@ export const date = () =>
 export const dateOptional = () =>
   string()
     .typeError(error.INVALID_GENERIC)
+    .nullable()
+    .transform(transformEmptyStringToNull)
     .test({
       message: error.INVALID_DATE,
-      test: (value) => dateFormatRegex.test(value!),
+      test: (value) => {
+        if (value) {
+          return dateFormatRegex.test(value);
+        }
+        return true;
+      },
     });
 
 export const endDate = (startDateField: string) =>
