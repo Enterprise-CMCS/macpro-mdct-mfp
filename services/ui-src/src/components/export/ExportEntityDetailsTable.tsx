@@ -72,15 +72,14 @@ export const insertTotalsColumns = (rows: AnyObject) => {
 
     if (type === "pct") return `${val.toFixed(2)}%`;
 
-    const formatted = convertToThousandsSeparatedString(
+    const currency = convertToThousandsSeparatedString(
       val.toString(),
       2
     ).maskedValue;
-    return `$${formatted}`;
+    return `$${currency}`;
   }
-  const columnRows = Object.values(rows);
 
-  columnRows.forEach(
+  Object.values(rows).forEach(
     (columnRow: { label: string; value: number | string }[]) => {
       let totalActual = 0;
       let totalProjected = 0;
@@ -93,12 +92,10 @@ export const insertTotalsColumns = (rows: AnyObject) => {
         } else if (col.label.startsWith("Projected spending")) {
           totalProjected += val;
         }
-
         col.value = formatValue(col.value);
       });
 
       const perTotalProjected = (totalActual / totalProjected) * 100;
-
       columnRow.push({
         label: "Total actual spending",
         value: formatValue(totalActual, "masked"),
@@ -112,7 +109,6 @@ export const insertTotalsColumns = (rows: AnyObject) => {
 };
 
 export const sortExpenditureColumns = (rows: AnyObject) => {
-  const columnRows = Object.values(rows);
   const columnTypeOrder = [
     "Actual spending",
     "Total actual spending",
@@ -121,7 +117,7 @@ export const sortExpenditureColumns = (rows: AnyObject) => {
   ];
   const quarterOrder = ["First", "Second", "Third", "Fourth"];
 
-  columnRows.forEach(
+  Object.values(rows).forEach(
     (columnRow: { label: string; value: number | string }[]) => {
       columnRow.sort((a: any, b: any) => {
         const columnTypeIndex = (label: string) => {
