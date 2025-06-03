@@ -1,5 +1,15 @@
 import { MixedSchema } from "yup/lib/mixed";
-import { number, ratio, validInteger } from "./schemas";
+import {
+  dateOptional,
+  emailOptional,
+  number,
+  numberOptional,
+  ratio,
+  textOptional,
+  urlOptional,
+  validInteger,
+  validIntegerOptional,
+} from "./schemas";
 
 describe("utils/schemas", () => {
   const goodNumberTestCases = [
@@ -77,5 +87,14 @@ describe("utils/schemas", () => {
   test("Evaluate Number Schema using ratio scheme", () => {
     testNumberSchema(ratio(), goodRatioTestCases, true);
     testNumberSchema(ratio(), badRatioTestCases, false);
+  });
+
+  test("Verify optional schemas convert empty string to null", () => {
+    testNumberSchema(textOptional(), [""], true);
+    testNumberSchema(numberOptional(), [""], true);
+    testNumberSchema(validIntegerOptional(), [""], true);
+    testNumberSchema(emailOptional(), [""], true);
+    testNumberSchema(urlOptional(), [""], true);
+    testNumberSchema(dateOptional(), [""], true);
   });
 });
