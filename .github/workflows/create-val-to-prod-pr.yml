@@ -1,0 +1,158 @@
+name: Create val to prod PR
+
+on:
+  schedule:
+    - cron: "0 11 * * 2"  # Every Tuesday at 11:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: ".nvmrc"
+    - name: Fetch prod branch
+      run: git fetch origin prod
+    - name: Generate commit log and PR body
+      id: pr_body
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        TEMPLATE=$(cat .github/PULL_REQUEST_TEMPLATE/val-to-prod-deployment.md)
+
+        echo "Generating commit log from val → prod..."
+        COMMIT_LOG=""
+
+        for sha in $(git log origin/prod..origin/val --pretty=format:"%H"); do
+          msg=$(git log -1 --pretty=format:"%s" "$sha")
+          # Get branch name from merged PR using gh CLI, or empty if not found
+          branch=$(gh pr list --search "$sha" --state merged --json headRefName -q '.[0].headRefName' 2>/dev/null || echo "")
+
+          if [[ "$branch" =~ ^[cC][mM][dD][cC][tT] ]]; then
+            prefix="CMDCT"
+            rest="${branch:5}"
+            branch_fixed="${prefix}${rest}"
+            COMMIT_LOG+="- $msg ($branch_fixed)\n"
+          else
+            COMMIT_LOG+="- $msg\n"
+          fi
+        done
+
+        echo "commit_log<<EOF" >> $GITHUB_OUTPUT
+        echo -e "$COMMIT_LOG" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: Detect yarn.lock changes and generate updates table
+      id: yarn_diff
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git fetch origin prod
+
+        if git diff --name-only origin/prod origin/val | grep -q '^yarn.lock$'; then
+          echo "yarn.lock changed — generating package updates table..."
+
+          git show origin/prod:yarn.lock > yarn.lock.old
+          git show origin/val:yarn.lock > yarn.lock.new
+
+          cp yarn.lock.new yarn.lock
+          yarn install --frozen-lockfile --ignore-scripts --production
+          yarn list --json > yarn-list-new.json
+
+          cp yarn.lock.old yarn.lock
+          yarn install --frozen-lockfile --ignore-scripts --production
+          yarn list --json > yarn-list-old.json
+
+          cp yarn.lock.new yarn.lock
+
+          node -e "
+            const oldList = require('./yarn-list-old.json');
+            const newList = require('./yarn-list-new.json');
+
+            const flatten = (list) => {
+              const deps = {};
+              list.data.trees.forEach(t => {
+                const nameVer = t.name;
+                const idx = nameVer.lastIndexOf('@');
+                if (idx > 0) {
+                  const name = nameVer.substring(0, idx);
+                  const version = nameVer.substring(idx + 1);
+                  deps[name] = version;
+                }
+              });
+              return deps;
+            }
+
+            const oldDeps = flatten(oldList);
+            const newDeps = flatten(newList);
+
+            const changes = [];
+            for (const pkg in newDeps) {
+              if (oldDeps[pkg] && oldDeps[pkg] !== newDeps[pkg]) {
+                changes.push([pkg, oldDeps[pkg], newDeps[pkg]]);
+              }
+            }
+
+            if (changes.length === 0) {
+              process.exit(0);
+            }
+
+            console.log('| package | prior version | upgraded version |');
+            console.log('| - | - | - |');
+            changes.forEach(([pkg, oldV, newV]) => {
+              console.log(`| \`${pkg}\` | ${oldV} | ${newV} |`);
+            });
+          " > yarn_changes.md || true
+
+          if [ -s yarn_changes.md ]; then
+            echo "table<<EOF" >> $GITHUB_OUTPUT
+            cat yarn_changes.md >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "table=" >> $GITHUB_OUTPUT
+          fi
+
+          rm yarn_changes.md
+        else
+          echo "No yarn.lock changes detected."
+          echo "table=" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Finalize PR body with replacements
+      id: finalize
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        TEMPLATE=$(cat .github/PULL_REQUEST_TEMPLATE/sync_template.md)
+        COMMIT_LOG="${{ steps.pr_body.outputs.commit_log }}"
+        TABLE="${{ steps.yarn_diff.outputs.table }}"
+
+        # Replace the placeholder for description of work with commit log
+        BODY="${TEMPLATE//- Description of work (CMDCT-)/$COMMIT_LOG}"
+
+        # Remove entire Dependency updates section and everything after if no table
+        if [ -z "$TABLE" ]; then
+          BODY=$(echo "$BODY" | perl -0777 -pe 's/### Dependency updates:.*\z//s')
+        else
+          REPLACEMENT=$(printf '%s\n%s\n' "### Dependency updates:" "$TABLE" | sed 's/[&/\]/\\&/g')
+          BODY=$(echo "$BODY" | perl -0777 -pe 's/### Dependency updates:.*\z/'"$REPLACEMENT"'/s')
+        fi
+
+        echo "body<<EOF" >> $GITHUB_OUTPUT
+        echo -e "$BODY" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+    - name: Create PR
+      run: |
+        gh pr create \
+          --base prod \
+          --head val \
+          --title "val → prod" \
+          --body "${{ steps.pr_body.outputs.body }}"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
