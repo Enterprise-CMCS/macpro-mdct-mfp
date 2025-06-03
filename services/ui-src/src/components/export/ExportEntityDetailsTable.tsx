@@ -1,4 +1,10 @@
-import { AnyObject, EntityShape, FormField, ReportShape } from "types";
+import {
+  AnyObject,
+  EntityDetailsStepTypes,
+  EntityShape,
+  FormField,
+  ReportShape,
+} from "types";
 // components
 import { Box } from "@chakra-ui/react";
 import { Table } from "components";
@@ -48,42 +54,101 @@ export const generateTableBody = (rows: AnyObject) => {
   return bodyRow;
 };
 
-export const formatColumns = (rows: AnyObject, type: string) => {
-  if (type === "expenditures") {
-    const cols = Object.values(rows);
-    cols.forEach((col) => {
-      col.sort((a: any, b: any) => a.label.localeCompare(b.label));
-    });
-
-    cols.forEach((col: any[]) => {
-      const totalActual: number | string =
-        Number(col?.[0].value) + Number(col?.[1].value);
-      const totalProjected: number | string =
-        Number(col?.[2].value) + Number(col?.[3].value);
-      col.map((data) => {
-        if (!isNaN(Number(data.value)))
-          data.value =
-            "$" + convertToThousandsSeparatedString(data.value, 2).maskedValue;
-        return data;
-      });
-
-      const perTotalProjected: number | string =
-        (totalActual / totalProjected) * 100;
-      const formattedTotal = convertToThousandsSeparatedString(
-        totalActual.toString(),
-        2
-      ).maskedValue;
-      col.splice(2, 0, {
-        label: "Total actual spending",
-        value: totalActual ? `$${formattedTotal}` : "-",
-      });
-      col.push({
-        label: "% of total projected spending",
-        value: perTotalProjected ? `${perTotalProjected.toFixed(2)}%` : "-",
-      });
-    });
+export const formatColumns = (rows: AnyObject, type?: string) => {
+  if (type === EntityDetailsStepTypes.EXPENDITURES) {
+    insertTotalsColumns(rows);
+    sortExpenditureColumns(rows);
   }
   return rows;
+};
+
+export const insertTotalsColumns = (rows: AnyObject) => {
+  function formatValue(val: number | string, type: string = "") {
+    const num = Number(val);
+
+    if (isNaN(num)) {
+      return ["masked", "pct"].includes(type) ? "-" : val;
+    }
+
+    if (type === "pct") return `${num.toFixed(2)}%`;
+
+    const currency = convertToThousandsSeparatedString(
+      num.toString(),
+      2
+    ).maskedValue;
+    return `$${currency}`;
+  }
+
+  Object.values(rows).forEach(
+    (columnRow: { label: string; value: number | string }[]) => {
+      let totalActual = 0;
+      let totalProjected = 0;
+      let hasActualSpending = false;
+
+      columnRow.forEach((col) => {
+        const val = Number(col.value);
+        // Sum actuals and projecteds based on labels
+        if (col.label.startsWith("Actual spending")) {
+          totalActual += val;
+          hasActualSpending = true;
+        } else if (col.label.startsWith("Projected spending")) {
+          totalProjected += val;
+        }
+        col.value = formatValue(col.value);
+      });
+
+      const perTotalProjected = (totalActual / totalProjected) * 100;
+      columnRow.push({
+        label: "Total actual spending",
+        value: formatValue(hasActualSpending ? totalActual : NaN, "masked"),
+      });
+      columnRow.push({
+        label: "% of total projected spending",
+        value: formatValue(perTotalProjected, "pct"),
+      });
+    }
+  );
+};
+
+export const sortExpenditureColumns = (rows: AnyObject) => {
+  const columnTypeOrder = [
+    "Actual spending",
+    "Total actual spending",
+    "Projected spending",
+    "% of total projected spending",
+  ];
+  const quarterOrder = ["First", "Second", "Third", "Fourth"];
+
+  Object.values(rows).forEach(
+    (columnRow: { label: string; value: number | string }[]) => {
+      columnRow.sort((a: any, b: any) => {
+        const columnTypeIndex = (label: string) => {
+          return columnTypeOrder.findIndex((group) => label.startsWith(group));
+        };
+
+        const typeA = columnTypeIndex(a.label);
+        const typeB = columnTypeIndex(b.label);
+
+        // Sort by columnTypeOrder
+        if (typeA !== typeB) return typeA - typeB;
+
+        if (
+          ["Actual spending", "Projected spending"].includes(
+            columnTypeOrder[typeA]
+          )
+        ) {
+          const quarterIndex = (label: string) => {
+            return quarterOrder.findIndex((q) => label.includes(q));
+          };
+          // Sort by quarterOrder
+          return quarterIndex(a.label) - quarterIndex(b.label);
+        }
+
+        // Fallback sort for columns not defined in columnTypeOrder
+        return a.label.localeCompare(b.label);
+      });
+    }
+  );
 };
 
 export const formatHeaderLabel = (

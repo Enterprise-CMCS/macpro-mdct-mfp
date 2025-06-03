@@ -1,10 +1,9 @@
-import { useFlags } from "launchdarkly-react-client-sdk";
 // assets
 import pdfIcon from "assets/icons/icon_pdf_white.png";
 // components
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 // utils
-import { printPdf, useStore } from "utils";
+import { useStore } from "utils";
 // types
 import { ReportType } from "types";
 // verbiage
@@ -24,12 +23,8 @@ export const ExportedReportBanner = () => {
   const verbiage = verbiageMap[reportType];
   const { reportBanner } = verbiage;
 
-  // LaunchDarkly
-  const printExperience = useFlags()?.printExperience;
-
   const onClickHandler = () => {
-    if (printExperience === "prince") printPdf();
-    else window?.print();
+    window?.print();
   };
 
   return (
