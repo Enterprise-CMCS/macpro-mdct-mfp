@@ -132,7 +132,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        TEMPLATE=$(cat .github/PULL_REQUEST_TEMPLATE/sync_template.md)
+        TEMPLATE=$(cat .github/PULL_REQUEST_TEMPLATE/main-to-val-deployment.md)
         COMMIT_LOG="${{ steps.pr_body.outputs.commit_log }}"
         TABLE="${{ steps.yarn_diff.outputs.table }}"
 
