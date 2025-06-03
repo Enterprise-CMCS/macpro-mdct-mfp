@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: "0 11 * * 2"  # Every Tuesday at 11:00 UTC
   workflow_dispatch:
+  push:
+    branches:
+      - bs-auto-prs
 
 permissions:
   contents: write
@@ -22,7 +25,7 @@ jobs:
     - name: Generate commit log and PR body
       id: pr_body
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         TEMPLATE=$(cat .github/PULL_REQUEST_TEMPLATE/val-to-prod-deployment.md)
 
@@ -51,7 +54,7 @@ jobs:
     - name: Detect yarn.lock changes and generate updates table
       id: yarn_diff
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git fetch origin prod
 
@@ -127,7 +130,7 @@ jobs:
     - name: Finalize PR body with replacements
       id: finalize
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         TEMPLATE=$(cat .github/PULL_REQUEST_TEMPLATE/sync_template.md)
         COMMIT_LOG="${{ steps.pr_body.outputs.commit_log }}"
@@ -155,4 +158,4 @@ jobs:
           --title "val → prod" \
           --body "${{ steps.pr_body.outputs.body }}"
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
