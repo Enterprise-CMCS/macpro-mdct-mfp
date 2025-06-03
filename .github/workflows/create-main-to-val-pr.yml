@@ -1,12 +1,9 @@
 name: Create main to val PR
 
 on:
-  schedule:
-    - cron: "0 11 * * 1"  # Every Monday at 11:00 UTC
+  # schedule:
+  #   - cron: "0 11 * * 1"  # Every Monday at 11:00 UTC
   workflow_dispatch:
-  push:
-    branches:
-      - bs-auto-prs
 
 permissions:
   contents: write
@@ -156,6 +153,7 @@ jobs:
           --base val \
           --head main \
           --title "main → val" \
-          --body "${{ steps.pr_body.outputs.body }}"
+          --body "${{ steps.pr_body.outputs.body }}" \
+          --draft
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
