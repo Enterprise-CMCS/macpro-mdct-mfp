@@ -1,8 +1,8 @@
-name: Create main to val PR
+name: Create val to prod PR
 
 on:
   # schedule:
-  #   - cron: "0 11 * * 1"  # Every Monday at 11:00 UTC
+  #   - cron: "0 11 * * 2"  # Every Tuesday at 11:00 UTC
   workflow_dispatch:
   # push:
   #   branches:
@@ -23,7 +23,7 @@ jobs:
     - name: Generate PR body
       id: pr_body
       run: |
-        BODY=$(.github/commit-log.sh main val) || exit_code=$?
+        BODY=$(.github/commit-log.sh val production) || exit_code=$?
         if [ "$exit_code" == "1" ]; then
           echo "No commits. Skipping PR."
           echo "skip=true" >> $GITHUB_OUTPUT
@@ -38,7 +38,7 @@ jobs:
     - name: Check if PR already exists
       id: check_pr
       run: |
-        PR_NUM=$(gh pr list --base val --head main --json number --jq '.[0].number')
+        PR_NUM=$(gh pr list --base production --head val --json number --jq '.[0].number')
         if [ -n "$PR_NUM" ]; then
           echo "PR already exists: #$PR_NUM"
           echo "exists=true" >> $GITHUB_OUTPUT
@@ -58,9 +58,9 @@ jobs:
         else
           echo "Creating new PR"
           gh pr create \
-            --base val \
-            --head main \
-            --title "main → val" \
+            --base production \
+            --head val \
+            --title "val → prod" \
             --body "${{ steps.pr_body.outputs.body }}" \
             --draft
         fi
