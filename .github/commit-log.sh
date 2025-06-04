@@ -12,14 +12,14 @@ BASE_NORMALIZED=$BASE
 git fetch origin $HEAD >/dev/null 2>&1
 git fetch origin $BASE >/dev/null 2>&1
 
-COMMIT_LOG=$(git log origin/$BASE..origin/$HEAD --pretty=format:"%s" | \
-  sed -E 's/ *\(#?[0-9]+\)*//g' | \
+COMMIT_LOG=$(git log origin/$BASE..origin/$HEAD --no-merges --pretty=format:"%s" | \
+  sed -E 's/ *\(#[0-9]+\)*//g' | \
   awk '{
     orig_line = $0;
     line = tolower($0);
 
     # Find if ticket is in commit, case-insensitive
-    match(line, /cmdct-[0-9]+/);
+    match(line, /cmdct[- ]?[0-9]+/);
 
     if (RSTART > 0) {
       ref = substr(line, RSTART, RLENGTH);
