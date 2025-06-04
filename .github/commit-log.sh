@@ -72,7 +72,7 @@ for FILE in $YARN_LOCK_FILES; do
     function print_diff() {
       # Before overwriting pkg, if previous pkg and versions differ, print
       if (pkg != "" && old != "" && new != "" && old != new) {
-        printf "| `%s` | %s | %s |\n", pkg, old, new;
+        printf "| %s | %s | %s |\n", pkg, old, new;
       }
     }
 
