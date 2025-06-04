@@ -2,27 +2,42 @@
 
 BASE="${1}"
 HEAD="${2}"
+BASE_NORMALIZED=$BASE
+HEAD_NORMALIZED=$HEAD
+
+# Normalize "production" to "prod"
+[ "$BASE" = "production" ] && BASE_NORMALIZED="prod"
+[ "$HEAD" = "production" ] && HEAD_NORMALIZED="prod"
 
 git fetch origin $BASE
 git fetch origin $HEAD
 
-echo "Generating commit log for $BASE → $HEAD..."
-COMMIT_LOG=$(git log origin/$HEAD..origin/$BASE --pretty=format:"- %s")
+echo "Generating commit log for $BASE_NORMALIZED → $HEAD_NORMALIZED..."
+COMMIT_LOG=$(git log origin/$HEAD..origin/$BASE --pretty=format:"- %s (CMDCT-)")
 
 if [ -z "$COMMIT_LOG" ]; then
   echo "No commits found between $BASE and $HEAD. Exiting."
   exit 1
 fi
 
-TEMPLATE_PATH=".github/PULL_REQUEST_TEMPLATE/${BASE}-to-${HEAD}-deployment.md"
+TEMPLATE_PATH=".github/PULL_REQUEST_TEMPLATE/${BASE_NORMALIZED}-to-${HEAD_NORMALIZED}-deployment.md"
 DEFAULT_TEMPLATE=".github/PULL_REQUEST_TEMPLATE/main-to-val-deployment.md"
 
 if [ -f "$TEMPLATE_PATH" ]; then
   TEMPLATE=$(cat "$TEMPLATE_PATH")
 else
   TEMPLATE=$(cat "$DEFAULT_TEMPLATE")
+  # Replace PR heading
+  SEARCH="## main → val"
+  REPLACEMENT="## ${BASE_NORMALIZED} → ${HEAD_NORMALIZED}"
+
+  # Escape slashes and other special characters for sed
+  ESCAPED_REPLACEMENT=$(printf '%s\n' "$REPLACEMENT" | sed 's/[\/&]/\\&/g')
+
+  TEMPLATE=$(echo "$TEMPLATE" | sed "s|^$SEARCH|$ESCAPED_REPLACEMENT|")
 fi
 
+# Replace commits placeholder
 BODY="${TEMPLATE//- Description of work (CMDCT-)/$COMMIT_LOG}"
 
 # Generate dependency upgrade table
