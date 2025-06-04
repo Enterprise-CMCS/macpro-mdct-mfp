@@ -7,7 +7,7 @@ git fetch origin $BASE
 git fetch origin $HEAD
 
 echo "Generating commit log for $BASE → $HEAD..."
-COMMIT_LOG=$(git log origin/$HEAD..origin/$BASE --pretty=format:"- %s" | sed -E 's/ *\(#?[0-9]+\) *$//')
+COMMIT_LOG=$(git log origin/$HEAD..origin/$BASE --pretty=format:"- %s")
 
 if [ -z "$COMMIT_LOG" ]; then
   echo "No commits found between $BASE and $HEAD. Exiting."
@@ -88,10 +88,10 @@ for FILE in $YARN_LOCK_FILES; do
 done
 
 if [ -z "$TABLE_BODY" ]; then
-  BODY=$(echo "$BODY" | perl -0777 -pe 's/### Dependency updates:.*\z//s')
+  BODY=$(echo "$BODY" | perl -0777 -pe 's/### Dependency updates.*\z//s')
 else
-  REPLACEMENT=$(printf '%s\n%s\n' "### Dependency updates:" "$TABLE_HEAD$TABLE_BODY" | sed 's/[&/\]/\\&/g')
-  BODY=$(echo "$BODY" | perl -0777 -pe 's/### Dependency updates:.*\z/'"$REPLACEMENT"'/s')
+  REPLACEMENT=$(printf '%s\n%s\n' "### Dependency updates" "$TABLE_HEAD$TABLE_BODY" | sed 's/[&/\]/\\&/g')
+  BODY=$(echo "$BODY" | perl -0777 -pe 's/### Dependency updates.*\z/'"$REPLACEMENT"'/s')
 fi
 
 echo "$BODY"
