@@ -48,23 +48,21 @@ jobs:
         fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Create or update PR
-      if: steps.pr_body.outputs.skip != 'true'
-      run: |
-        echo "Updating existing PR #${{ steps.pr_body.outputs.body }}"
-        # if [ "${{ steps.check_pr.outputs.exists }}" == "true" ]; then
-        #   echo "Updating existing PR #${{ steps.check_pr.outputs.number }}"
-        #   gh pr edit ${{ steps.check_pr.outputs.number }} \
-        #     --body "${{ steps.pr_body.outputs.body }}"
-        # else
-        #   echo "Creating new PR"
-        #   gh pr create \
-        #     --base val \
-        #     --head main \
-        #     --title "main → val" \
-        #     --body "${{ steps.pr_body.outputs.body }}" \
-        #     --draft
-        # fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+    # - name: Create or update PR
+    #   if: steps.pr_body.outputs.skip != 'true'
+    #   run: |
+    #     if [ "${{ steps.check_pr.outputs.exists }}" == "true" ]; then
+    #       echo "Updating existing PR #${{ steps.check_pr.outputs.number }}"
+    #       gh pr edit ${{ steps.check_pr.outputs.number }} \
+    #         --body "${{ steps.pr_body.outputs.body }}"
+    #     else
+    #       echo "Creating new PR"
+    #       gh pr create \
+    #         --base val \
+    #         --head main \
+    #         --title "main → val" \
+    #         --body "${{ steps.pr_body.outputs.body }}" \
+    #         --draft
+    #     fi
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
