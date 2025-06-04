@@ -36,6 +36,7 @@ jobs:
         echo "body=$BODY" >> $GITHUB_OUTPUT
         echo "skip=false" >> $GITHUB_OUTPUT
     - name: Check if PR already exists
+      if: steps.pr_body.outputs.skip != 'true'
       id: check_pr
       run: |
         PR_NUM=$(gh pr list --base val --head main --json number --jq '.[0].number')
