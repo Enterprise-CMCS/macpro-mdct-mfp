@@ -1,8 +1,9 @@
 name: Create main to val PR
 
 on:
-  schedule:
-    - cron: "0 11 * * 1" # Every Monday at 11:00 UTC
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:

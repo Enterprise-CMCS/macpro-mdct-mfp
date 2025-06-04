@@ -1,8 +1,9 @@
 name: Create val to prod PR
 
 on:
-  schedule:
-    - cron: "0 11 * * 2" # Every Tuesday at 11:00 UTC
+  push:
+    branches:
+      - val
   workflow_dispatch:
 
 permissions:
