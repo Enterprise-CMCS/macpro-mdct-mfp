@@ -19,13 +19,14 @@ COMMIT_LOG=$(git log origin/$BASE..origin/$HEAD --no-merges --pretty=format:"%s"
     line = tolower($0);
 
     # Find if ticket is in commit, case-insensitive
-    match(line, /cmdct[- ]?[0-9]+/);
+    match(line, /cmdct[ -]?[0-9]+/);
 
     if (RSTART > 0) {
       ref = substr(line, RSTART, RLENGTH);
 
-      # Extract number after "cmdct-"
-      num = substr(ref, 7);
+      # Extract number after "cmdct"
+      gsub(/[^0-9]/, "", ref);
+      num = ref;
       printf "- %s (CMDCT-%s)\n", orig_line, num;
     } else {
       printf "- %s (CMDCT-)\n", orig_line;
