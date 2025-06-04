@@ -4,9 +4,9 @@ on:
   # schedule:
   #   - cron: "0 11 * * 1"  # Every Monday at 11:00 UTC
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - bs-auto-prs
+  push:
+    branches:
+      - bs-auto-prs
 
 permissions:
   contents: write
@@ -51,19 +51,20 @@ jobs:
     - name: Create or update PR
       if: steps.pr_body.outputs.skip != 'true'
       run: |
-        if [ "${{ steps.check_pr.outputs.exists }}" == "true" ]; then
-          echo "Updating existing PR #${{ steps.check_pr.outputs.number }}"
-          gh pr edit ${{ steps.check_pr.outputs.number }} \
-            --body "${{ steps.pr_body.outputs.body }}"
-        else
-          echo "Creating new PR"
-          gh pr create \
-            --base val \
-            --head main \
-            --title "main → val" \
-            --body "${{ steps.pr_body.outputs.body }}" \
-            --draft
-        fi
+        echo "Updating existing PR #${{ steps.pr_body.outputs.body }}"
+        # if [ "${{ steps.check_pr.outputs.exists }}" == "true" ]; then
+        #   echo "Updating existing PR #${{ steps.check_pr.outputs.number }}"
+        #   gh pr edit ${{ steps.check_pr.outputs.number }} \
+        #     --body "${{ steps.pr_body.outputs.body }}"
+        # else
+        #   echo "Creating new PR"
+        #   gh pr create \
+        #     --base val \
+        #     --head main \
+        #     --title "main → val" \
+        #     --body "${{ steps.pr_body.outputs.body }}" \
+        #     --draft
+        # fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
