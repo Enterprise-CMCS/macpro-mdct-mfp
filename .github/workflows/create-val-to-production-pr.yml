@@ -1,8 +1,8 @@
-name: Create main to val PR
+name: Create val to production PR
 
 on:
   # schedule:
-  #   - cron: "0 11 * * 1"  # Every Monday at 11:00 UTC
+  #   - cron: "0 11 * * 2"  # Every Tuesday at 11:00 UTC
   workflow_dispatch:
   # push:
   #   branches:
@@ -23,7 +23,7 @@ jobs:
     - name: Generate PR body
       id: pr_body
       run: |
-        BODY=$(.github/commit-log.sh main val) || exit_code=$?
+        BODY=$(.github/commit-log.sh val production) || exit_code=$?
         if [ "$exit_code" == "1" ]; then
           echo "No commits. Skipping PR."
           echo "skip=true" >> $GITHUB_OUTPUT
@@ -41,7 +41,7 @@ jobs:
         gh pr create \
           --base val \
           --head main \
-          --title "main → val" \
+          --title "val → prod" \
           --body "${{ steps.pr_body.outputs.body }}" \
           --draft
       env:
