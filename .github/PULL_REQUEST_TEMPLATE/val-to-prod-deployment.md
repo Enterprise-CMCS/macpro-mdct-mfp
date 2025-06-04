@@ -1,6 +1,4 @@
-## val → prod
-
----
+## val → production
 
 ### In this deployment
 <!-- List all work that is part of this deployment -->

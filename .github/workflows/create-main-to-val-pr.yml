@@ -1,8 +1,8 @@
 name: Create main to val PR
 
 on:
-  # schedule:
-  #   - cron: "0 11 * * 1"  # Every Monday at 11:00 UTC
+  schedule:
+    - cron: "0 11 * * 1" # Every Monday at 11:00 UTC
   workflow_dispatch:
   push:
     branches:
@@ -20,10 +20,15 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
+    - name: Set branch variables
+      id: set-vars
+      run: |
+        echo "HEAD_BRANCH=main" >> $GITHUB_ENV
+        echo "BASE_BRANCH=val" >> $GITHUB_ENV
     - name: Generate PR body
       id: pr_body
       run: |
-        BODY=$(.github/commit-log.sh main val) || exit_code=$?
+        BODY=$(.github/commit-log.sh "$HEAD_BRANCH" "$BASE_BRANCH") || exit_code=$?
         if [ "$exit_code" == "1" ]; then
           echo "No commits. Skipping PR."
           echo "skip=true" >> $GITHUB_OUTPUT
@@ -39,7 +44,7 @@ jobs:
       if: steps.pr_body.outputs.skip != 'true'
       id: check_pr
       run: |
-        PR_NUM=$(gh pr list --base val --head main --json number --jq '.[0].number')
+        PR_NUM=$(gh pr list --head "$HEAD_BRANCH" --base "$BASE_BRANCH" --json number --jq '.[0].number')
         if [ -n "$PR_NUM" ]; then
           echo "PR already exists: #$PR_NUM"
           echo "exists=true" >> $GITHUB_OUTPUT
@@ -49,21 +54,25 @@ jobs:
         fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    # - name: Create or update PR
-    #   if: steps.pr_body.outputs.skip != 'true'
-    #   run: |
-    #     if [ "${{ steps.check_pr.outputs.exists }}" == "true" ]; then
-    #       echo "Updating existing PR #${{ steps.check_pr.outputs.number }}"
-    #       gh pr edit ${{ steps.check_pr.outputs.number }} \
-    #         --body "${{ steps.pr_body.outputs.body }}"
-    #     else
-    #       echo "Creating new PR"
-    #       gh pr create \
-    #         --base val \
-    #         --head main \
-    #         --title "main → val" \
-    #         --body "${{ steps.pr_body.outputs.body }}" \
-    #         --draft
-    #     fi
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create or update PR
+      if: steps.pr_body.outputs.skip != 'true'
+      run: |
+        current_date=$(date '+%-d %B %Y')
+        title="${HEAD_BRANCH} → ${BASE_BRANCH} (${current_date})"
+
+        if [ "${{ steps.check_pr.outputs.exists }}" == "true" ]; then
+          echo "Updating existing PR #${{ steps.check_pr.outputs.number }}"
+          gh pr edit ${{ steps.check_pr.outputs.number }} \
+            --title "$title" \
+            --body "${{ steps.pr_body.outputs.body }}"
+        else
+          echo "Creating new PR"
+          gh pr create \
+            --head "$HEAD_BRANCH" \
+            --base "$BASE_BRANCH" \
+            --title "$title" \
+            --body "${{ steps.pr_body.outputs.body }}" \
+            --draft
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
