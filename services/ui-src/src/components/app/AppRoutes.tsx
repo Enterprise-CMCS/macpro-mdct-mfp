@@ -1,5 +1,7 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { useContext } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 // components
+import { Box } from "@chakra-ui/react";
 import {
   AdminBannerProvider,
   AdminPage,
@@ -11,6 +13,7 @@ import {
   ReportPageWrapper,
   ReviewSubmitPage,
   ExportedReportPage,
+  ReportContext,
 } from "components";
 // utils
 import { ScrollToTopComponent, useStore } from "utils";
@@ -20,9 +23,20 @@ import { ReportRoute, ReportType } from "types";
 export const AppRoutes = () => {
   const { userIsAdmin } = useStore().user ?? {};
   const { report } = useStore();
+  const { isReportPage } = useContext(ReportContext);
+
+  const { pathname } = useLocation();
+  const isExportPage = pathname.includes("/export");
+  const hasNav = isReportPage && !isExportPage;
+  const boxElement = hasNav ? "div" : "main";
 
   return (
-    <main id="main-content" tabIndex={-1}>
+    <Box
+      as={boxElement}
+      id="main-content"
+      data-testid="main-content"
+      tabIndex={-1}
+    >
       <ScrollToTopComponent />
       <AdminBannerProvider>
         <Routes>
@@ -63,6 +77,6 @@ export const AppRoutes = () => {
           <Route path="/reviewSubmit" element={<ReviewSubmitPage />} />
         </Routes>
       </AdminBannerProvider>
-    </main>
+    </Box>
   );
 };
