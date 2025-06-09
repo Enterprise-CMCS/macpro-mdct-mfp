@@ -2,13 +2,14 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
 // components
-import { AppRoutes } from "components";
+import { AppRoutes, ReportContext } from "components";
 // utils
 import { useStore, UserProvider } from "utils";
 import {
   mockStateUserStore,
   mockBannerStore,
   mockReportStore,
+  mockWpReportContext,
 } from "utils/testing/setupJest";
 
 jest.mock("utils/state/useStore");
@@ -19,15 +20,22 @@ mockedUseStore.mockReturnValue({
   ...mockReportStore,
 });
 
-const appRoutesComponent = (route: string) => (
-  <MemoryRouter
-    initialEntries={[route]}
-    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+const appRoutesComponent = (route: string, isReportPage: boolean = false) => (
+  <ReportContext.Provider
+    value={{
+      ...mockWpReportContext,
+      isReportPage,
+    }}
   >
-    <UserProvider>
-      <AppRoutes />
-    </UserProvider>
-  </MemoryRouter>
+    <MemoryRouter
+      initialEntries={[route]}
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
+      <UserProvider>
+        <AppRoutes />
+      </UserProvider>
+    </MemoryRouter>
+  </ReportContext.Provider>
 );
 
 describe("<AppRoutes />", () => {
@@ -53,5 +61,19 @@ describe("<AppRoutes />", () => {
     render(appRoutesComponent("/wp/export"));
 
     expect(screen.getByTestId("exportedReportMetadataTable")).toBeVisible();
+  });
+
+  describe("Test AppRoutes box container", () => {
+    test("container should be main element for non-report page", () => {
+      render(appRoutesComponent("/wp/export"));
+      expect(screen.getByTestId("main-content").tagName).toBe("MAIN");
+      expect(screen.getByRole("main").id).toBe("main-content");
+    });
+
+    test("container should be div element for report page", () => {
+      render(appRoutesComponent("/mock/mock-route-1", true));
+      expect(screen.getByTestId("main-content").tagName).toBe("DIV");
+      expect(screen.getByRole("main").id).toBe("report-content");
+    });
   });
 });
