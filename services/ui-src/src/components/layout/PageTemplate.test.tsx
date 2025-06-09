@@ -1,15 +1,15 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { PageTemplate } from "components";
 import { testA11y } from "utils/testing/commonTests";
 
 const standardPageComponent = (
-  <PageTemplate data-testid="page-template">
+  <PageTemplate>
     <p>Test text</p>
   </PageTemplate>
 );
 
 const reportPageComponent = (
-  <PageTemplate type="standard" data-testid="page-template">
+  <PageTemplate section={false} type="report">
     <p>Test text</p>
   </PageTemplate>
 );
@@ -17,8 +17,10 @@ const reportPageComponent = (
 describe("<PageTemplate />", () => {
   describe("standard", () => {
     test("Check that PageTemplate (standard) renders", () => {
-      const { getByTestId } = render(standardPageComponent);
-      expect(getByTestId("page-template")).toBeVisible();
+      const { container } = render(standardPageComponent);
+      const firstElement = container.firstElementChild as Element;
+      expect(firstElement.tagName).toBe("SECTION");
+      expect(screen.getByText("Test text")).toBeVisible();
     });
 
     testA11y(standardPageComponent);
@@ -26,8 +28,10 @@ describe("<PageTemplate />", () => {
 
   describe("report", () => {
     test("Check that PageTemplate (report) renders", () => {
-      const { getByTestId } = render(reportPageComponent);
-      expect(getByTestId("page-template")).toBeVisible();
+      const { container } = render(reportPageComponent);
+      const firstElement = container.firstElementChild as Element;
+      expect(firstElement.tagName).toBe("DIV");
+      expect(screen.getByText("Test text")).toBeVisible();
     });
 
     testA11y(reportPageComponent);
