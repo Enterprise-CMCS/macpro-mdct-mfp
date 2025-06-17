@@ -78,7 +78,7 @@
     "@smithy/util-utf8" "^2.0.0"
     tslib "^2.6.2"
 
-"@aws-sdk/client-dynamodb@^3.758.0":
+"@aws-sdk/client-dynamodb@^3.767.0":
   version "3.767.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-dynamodb/-/client-dynamodb-3.767.0.tgz#93674371e48c32706838750b96fba71d3acd33cf"
   integrity sha512-uoZFUnQr9jhxPdhPz0o4/1osstDXdteOIw8tNRTe3JKK9eIWAG3YrVv9wfJPxEFUGvntUe+anvdiy+8ycKmsYQ==
@@ -360,7 +360,7 @@
     mnemonist "0.38.3"
     tslib "^2.6.2"
 
-"@aws-sdk/lib-dynamodb@^3.758.0":
+"@aws-sdk/lib-dynamodb@^3.767.0":
   version "3.767.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/lib-dynamodb/-/lib-dynamodb-3.767.0.tgz#007c6b806614b1a390c66120960017b9d881011f"
   integrity sha512-Vl93kIcntUzVdnJZf1VgHhtkue8Xk6pVK3L5hoc90z2RUlqLyl279+LiK8lE5xYaiRTxoCu+BI0dxSp0F1G8YQ==
@@ -1751,7 +1751,7 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/dompurify@^2.3.4":
+"@types/dompurify@^2.4.0":
   version "2.4.0"
   resolved "https://registry.npmjs.org/@types/dompurify/-/dompurify-2.4.0.tgz"
   integrity sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==
@@ -1821,7 +1821,7 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-18.15.13.tgz"
   integrity sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==
 
-"@types/object-hash@^3.0.2":
+"@types/object-hash@^3.0.3":
   version "3.0.3"
   resolved "https://registry.npmjs.org/@types/object-hash/-/object-hash-3.0.3.tgz"
   integrity sha512-Mb0SDIhjhBAz4/rDNU0cYcQR4lSJIwy+kFlm0whXLkx+o0pXwEszwyrWD6gXWumxVbAS6XZ9gXK82LR+Uk+cKQ==
@@ -3280,7 +3280,7 @@ jwt-encode@^1.0.1:
   dependencies:
     ts.cryptojs256 "^1.0.1"
 
-kafkajs@^2.2.3:
+kafkajs@^2.2.4:
   version "2.2.4"
   resolved "https://registry.npmjs.org/kafkajs/-/kafkajs-2.2.4.tgz"
   integrity sha512-j/YeapB1vfPT2iOIUn/vxdyKEuhuY2PxMBvf5JWux6iSaukAccrMtXEY/Lb7OvavDhOWME589bpLrEdnVHjfjA==
@@ -3960,7 +3960,7 @@ type-fest@^4.41.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.41.0.tgz#6ae1c8e5731273c2bf1f58ad39cbae2c91a46c58"
   integrity sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==
 
-typescript@^4.5.4:
+typescript@^4.9.5:
   version "4.9.5"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.9.5.tgz"
   integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
