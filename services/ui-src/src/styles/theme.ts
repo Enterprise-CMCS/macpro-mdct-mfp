@@ -14,6 +14,9 @@ const theme = extendTheme({
   ...foundations,
   components,
   styles,
+  config: {
+    cssVarPrefix: "mdct",
+  },
 });
 
 export default theme;
