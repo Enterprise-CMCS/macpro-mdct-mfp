@@ -76,15 +76,13 @@ export const DashboardTable = ({
         )}
         {/* Action Buttons */}
         <Td sx={sxOverride.editReportButtonCell}>
-          <Button variant="outline" onClick={() => enterSelectedReport(report)}>
-            {entering && reportId == report.id ? (
-              <Spinner size="md" />
-            ) : isStateLevelUser && !report?.locked ? (
-              "Edit"
-            ) : (
-              "View"
-            )}
-          </Button>
+          <ActionButton
+            report={report}
+            reportId={reportId}
+            isStateLevelUser={isStateLevelUser}
+            entering={entering}
+            enterSelectedReport={enterSelectedReport}
+          />
         </Td>
         {isAdmin && (
           <>
@@ -137,8 +135,8 @@ interface DashboardTableProps {
   openCreateReportModal: Function;
   enterSelectedReport: Function;
   archive: Function;
+  entering: boolean;
   archiving?: boolean;
-  entering?: boolean;
   isAdmin: boolean;
   isStateLevelUser: boolean;
   releaseReport?: Function | undefined;
@@ -193,7 +191,10 @@ const EditReportButton = ({
   return (
     <Td sx={sxOverride.editReport}>
       <button onClick={() => openCreateReportModal(report)}>
-        <Image src={editIcon} alt="Edit Report" />
+        <Image
+          src={editIcon}
+          alt={`Edit ${report.reportYear} Period ${report.reportPeriod} report submission set-up information`}
+        />
       </button>
     </Td>
   );
@@ -203,6 +204,35 @@ interface EditReportProps {
   report: ReportMetadataShape;
   openCreateReportModal: Function;
   sxOverride: AnyObject;
+}
+
+export const ActionButton = ({
+  report,
+  reportId,
+  isStateLevelUser,
+  entering,
+  enterSelectedReport,
+}: ActionButtonProps) => {
+  const editOrView = isStateLevelUser && !report?.locked ? "Edit" : "View";
+
+  return (
+    <Button
+      variant="outline"
+      aria-label={`${editOrView} ${report.reportYear} Period ${report.reportPeriod} report submission set-up information`}
+      onClick={() => enterSelectedReport(report)}
+      data-testid="enter-report"
+    >
+      {entering && reportId == report.id ? <Spinner size="md" /> : editOrView}
+    </Button>
+  );
+};
+
+export interface ActionButtonProps {
+  report: ReportMetadataShape;
+  reportId: string | undefined;
+  isStateLevelUser: boolean;
+  entering: boolean;
+  enterSelectedReport: Function;
 }
 
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {

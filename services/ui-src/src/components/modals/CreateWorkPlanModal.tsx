@@ -16,7 +16,6 @@ import {
 } from "types";
 import { useStore } from "utils";
 import { States, DEFAULT_TARGET_POPULATIONS } from "../../constants";
-import { useFlags } from "launchdarkly-react-client-sdk";
 
 const reportType = ReportType.WP;
 
@@ -57,9 +56,6 @@ export const CreateWorkPlanModal = ({
   const [formYearValue, setFormYearValue] = useState<number>();
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
-
-  // LaunchDarkly - temporary flag for testing copyover
-  const isCopyOverTest = useFlags()?.isCopyOverTest;
 
   const form: FormJson = !previousReport
     ? newWPFormJson
@@ -138,11 +134,7 @@ export const CreateWorkPlanModal = ({
         reportPeriod: formattedReportPeriod,
       };
     } else {
-      previousReport.isCopyOverTest = isCopyOverTest;
-      wpPayload.metadata = {
-        ...wpPayload.metadata,
-        copyReport: previousReport,
-      };
+      wpPayload.metadata.copyReport = previousReport;
     }
 
     return wpPayload;
