@@ -12,6 +12,9 @@ import { components } from "./components";
 
 const theme = extendTheme({
   ...foundations,
+  config: {
+    cssVarPrefix: "mdct",
+  },
   components,
   styles,
 });
