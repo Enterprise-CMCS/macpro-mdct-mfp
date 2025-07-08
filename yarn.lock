@@ -1395,13 +1395,6 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/quickjs-emscripten/-/quickjs-emscripten-0.23.0.tgz#db4ecfd499a9765ab24002c3b696d02e6d32a12c"
   integrity sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==
 
-"@types/dotenv@^8.2.3":
-  version "8.2.3"
-  resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-8.2.3.tgz#c97b3c5b2e97ff3873793a000999e86cd66ff354"
-  integrity sha512-g2FXjlDX/cYuc5CiQvyU/6kkbP1JtmGzh0obW50zD7OKeILVL0NSpPWLXVfqoAGQjom2/SLLx9zHq0KXvD6mbw==
-  dependencies:
-    dotenv "*"
-
 "@types/flat@^5.0.5":
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/@types/flat/-/flat-5.0.5.tgz#2304df0b2b1e6dde50d81f029593e0a1bc2474d3"
@@ -2150,11 +2143,6 @@ doctrine@^3.0.0:
   integrity sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==
   dependencies:
     esutils "^2.0.2"
-
-dotenv@*:
-  version "17.0.1"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-17.0.1.tgz#79bc4d232fadb42a4092685ff1206d31b2a43f95"
-  integrity sha512-GLjkduuAL7IMJg/ZnOPm9AnWKJ82mSE2tzXLaJ/6hD6DhwGfZaXG77oB8qbReyiczNxnbxQKyh0OE5mXq0bAHA==
 
 dotenv@^8.6.0:
   version "8.6.0"
