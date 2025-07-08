@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
-import { faker } from "@faker-js/faker";
 import {
   SRPClient,
   calculateSignature,
   getNowString,
 } from "amazon-user-pool-srp-client";
 import * as dotenv from "dotenv";
+import { faker } from "@faker-js/faker";
 import { ReportFieldData } from "../../services/app-api/utils/types";
 import { AwsHeaders } from "./types";
 
