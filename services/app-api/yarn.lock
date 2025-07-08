@@ -908,11 +908,6 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@faker-js/faker@^8.4.1":
-  version "8.4.1"
-  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-8.4.1.tgz#5d5e8aee8fce48f5e189bf730ebd1f758f491451"
-  integrity sha512-XQ3cU+Q8Uqmrbf2e0cIC/QN43sTBSC8KF12u29Mb47tWrt2hAgBXSgpZMj4Ao8Uk0iJcU99QsOCaIL8934obCg==
-
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz"
@@ -1894,13 +1889,6 @@ agent-base@^7.0.2, agent-base@^7.1.0:
   integrity sha512-H0TSyFNDMomMNJQBn8wFV5YC/2eJ+VXECwOadZJT554xP6cODZHPX3H9QMQECxvrgiSOP1pHjy1sMWQVYJOUOA==
   dependencies:
     debug "^4.3.4"
-
-amazon-user-pool-srp-client@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/amazon-user-pool-srp-client/-/amazon-user-pool-srp-client-1.0.4.tgz#41b3cd927ce3c1a4b88bc5dbe2053a5ad2c51267"
-  integrity sha512-N+AYTuq8453pONVeoGhGaHaJ4CDRwlhsfoqZKzBXDLNVz9aHRVVfvEZ0O3HInAK+Ei5xdkE0X2dSzrv5ahL6tA==
-  dependencies:
-    sjcl-aws "^1.0.8"
 
 ansi-escapes@^4.2.1:
   version "4.3.2"
@@ -3753,11 +3741,6 @@ sisteransi@^1.0.5:
   version "1.0.5"
   resolved "https://registry.npmjs.org/sisteransi/-/sisteransi-1.0.5.tgz"
   integrity sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==
-
-sjcl-aws@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/sjcl-aws/-/sjcl-aws-1.0.8.tgz#3ea17c8289c5e6be841779ab4d2cf98409eccd59"
-  integrity sha512-n80Oa+JiH/eIVUyiiSAi8zukQFt/XdZwvx1WcbDbfT5JWIaBp4K5suSMSr6ny1M9bu2MGs7R6Ae24UpTZGk/Ag==
 
 slash@^3.0.0:
   version "3.0.0"
