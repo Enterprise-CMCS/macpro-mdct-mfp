@@ -9,18 +9,13 @@ import {
 } from "./options";
 import { currentYear } from "../../../tests/seeds/helpers";
 import {
-  createApprovedWorkPlan,
-  createArchivedSemiAnnualReport,
-  createArchivedWorkPlan,
+  createApprovedReport,
+  createArchivedReport,
   createBanner,
-  createFilledSemiAnnualReport,
-  createFilledWorkPlan,
-  createLockedSemiAnnualReport,
-  createLockedWorkPlan,
-  createSemiAnnualReport,
-  createSubmittedSemiAnnualReport,
-  createSubmittedWorkPlan,
-  createWorkPlan,
+  createFilledReport,
+  createLockedReport,
+  createReport,
+  createSubmittedReport,
   deleteBanners,
   getBanners,
   getSemiAnnualReportById,
@@ -78,6 +73,7 @@ const seed = async (
       message: "Reporting Year",
       choices: () => {
         return [
+          { title: `${currentYear - 1}`, value: `${currentYear - 1}` },
           { title: `${currentYear}`, value: `${currentYear}` },
           { title: `${currentYear + 1}`, value: `${currentYear + 1}` },
           { title: `${currentYear + 2}`, value: `${currentYear + 2}` },
@@ -195,97 +191,67 @@ const seed = async (
       case "back":
         seed(reportYear, reportPeriod);
         break;
-      case "createFilledWP": {
-        createdLog(
-          await createFilledWorkPlan(reportYear, reportPeriod),
-          "Filled",
-          "WP"
-        );
-        break;
-      }
+      case "createSAR":
       case "createWP": {
+        const reportType = answer.replace("create", "");
         createdLog(
-          await createWorkPlan(reportYear, reportPeriod),
+          await createReport(reportType, reportYear, reportPeriod),
           "Base",
-          "WP"
+          reportType
         );
         break;
       }
-      case "createSubmittedWP": {
+      case "createFilledSAR":
+      case "createFilledWP": {
+        const reportType = answer.replace("createFilled", "");
         createdLog(
-          await createSubmittedWorkPlan(reportYear, reportPeriod),
+          await createFilledReport(reportType, reportYear, reportPeriod),
+          "Filled",
+          reportType
+        );
+        break;
+      }
+      case "createSubmittedSAR":
+      case "createSubmittedWP": {
+        const reportType = answer.replace("createSubmitted", "");
+        createdLog(
+          await createSubmittedReport(reportType, reportYear, reportPeriod),
           "Submitted",
-          "WP"
+          reportType
         );
         break;
       }
       case "createApprovedWP": {
+        const reportType = answer.replace("createApproved", "");
         createdLog(
-          await createApprovedWorkPlan(reportYear, reportPeriod),
+          await createApprovedReport(reportType, reportYear, reportPeriod),
           "Approved",
-          "WP"
+          reportType
         );
         break;
       }
-      case "createLockedWP": {
+      case "createLockedWP":
+      case "createLockedSAR": {
+        const reportType = answer.replace("createLocked", "");
         createdLog(
-          await createLockedWorkPlan(reportYear, reportPeriod),
+          await createLockedReport(reportType, reportYear, reportPeriod),
           "Locked",
-          "WP"
+          reportType
         );
         break;
       }
       case "createArchivedWP": {
+        const reportType = answer.replace("createArchived", "");
         createdLog(
-          await createArchivedWorkPlan(reportYear, reportPeriod),
+          await createArchivedReport(reportType, reportYear, reportPeriod),
           "Archived",
-          "WP"
+          reportType
         );
         break;
       }
       case "getWPsByState":
         expandedLog(await getWorkPlansByState());
         break;
-      case "createSAR": {
-        createdLog(
-          await createSemiAnnualReport(reportYear, reportPeriod),
-          "Base",
-          "SAR"
-        );
-        break;
-      }
-      case "createFilledSAR": {
-        createdLog(
-          await createFilledSemiAnnualReport(reportYear, reportPeriod),
-          "Filled",
-          "SAR"
-        );
-        break;
-      }
-      case "createSubmittedSAR": {
-        createdLog(
-          await createSubmittedSemiAnnualReport(reportYear, reportPeriod),
-          "Submitted",
-          "SAR"
-        );
-        break;
-      }
-      case "createLockedSAR": {
-        createdLog(
-          await createLockedSemiAnnualReport(reportYear, reportPeriod),
-          "Locked",
-          "SAR"
-        );
-        break;
-      }
-      case "createArchivedSAR": {
-        createdLog(
-          await createArchivedSemiAnnualReport(reportYear, reportPeriod),
-          "Archived",
-          "SAR"
-        );
-        break;
-      }
       case "getSARsByState":
         expandedLog(await getSemiAnnualReportsByState());
         break;
