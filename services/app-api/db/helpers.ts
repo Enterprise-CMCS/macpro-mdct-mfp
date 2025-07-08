@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
 export const createdLog = (obj: any, action: string, type: string): void => {
-  const { id, key, submissionName, title } = obj;
-  if (id || key) {
+  const { id, key, submissionName, title, Item } = obj;
+  if (id || key || Item) {
     console.log(
-      `${action} ${type} created: ${submissionName || title} (${id || key})`
+      `${action} ${type} created: ${submissionName || title || Item.title} (${
+        id || key || Item.key
+      })`
     );
   } else {
     console.log(`ℹ️ ${obj}`);
-    console.log(
-      `⚠️ Could not create ${action.toLowerCase()} ${type} for reporting period.`
-    );
+    console.log(`⚠️ Could not create ${action.toLowerCase()} ${type}.`);
   }
 };
 
