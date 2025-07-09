@@ -47,7 +47,6 @@ import {
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
-import abcdVerbiage from "verbiage/pages/abcd/abcd-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
@@ -98,7 +97,6 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiageMap: any = {
     WP: wpVerbiage,
     SAR: sarVerbiage,
-    ABCD: abcdVerbiage,
   };
 
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
