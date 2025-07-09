@@ -64,10 +64,13 @@ export const AppRoutes = () => {
           />
           <Route path="/sar/export" element={<ExportedReportPage />} />
           {abcdReport && (
-            <Route
-              path="/abcd"
-              element={<DashboardPage reportType={ReportType.ABCD} />}
-            />
+            <>
+              <Route
+                path="/abcd"
+                element={<DashboardPage reportType={ReportType.ABCD} />}
+              />
+              <Route path="/abcd/export" element={<ExportedReportPage />} />
+            </>
           )}
           {/* General Report Routes */}
           {report && (
