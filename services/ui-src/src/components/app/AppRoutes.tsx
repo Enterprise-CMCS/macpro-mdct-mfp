@@ -19,6 +19,7 @@ import {
 import { ScrollToTopComponent, useStore } from "utils";
 // types
 import { ReportRoute, ReportType } from "types";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const AppRoutes = () => {
   const { userIsAdmin } = useStore().user ?? {};
@@ -29,6 +30,8 @@ export const AppRoutes = () => {
   const isExportPage = pathname.includes("/export");
   const hasNav = isReportPage && !isExportPage;
   const boxElement = hasNav ? "div" : "main";
+
+  const abcdReport = useFlags()?.abcdReport;
 
   return (
     <Box
@@ -60,6 +63,12 @@ export const AppRoutes = () => {
             element={<DashboardPage reportType={ReportType.SAR} />}
           />
           <Route path="/sar/export" element={<ExportedReportPage />} />
+          {abcdReport && (
+            <Route
+              path="/abcd"
+              element={<DashboardPage reportType={ReportType.ABCD} />}
+            />
+          )}
           {/* General Report Routes */}
           {report && (
             <>

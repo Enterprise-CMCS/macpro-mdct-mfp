@@ -22,6 +22,7 @@ import {
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
+import abcdVerbiage from "verbiage/pages/abcd/abcd-export";
 import { useFlags } from "launchdarkly-react-client-sdk";
 import { translate } from "utils/text/translate";
 
@@ -43,6 +44,7 @@ export const ExportedReportPage = () => {
   const exportVerbiageMap: { [key in ReportType]: any } = {
     WP: wpVerbiage,
     SAR: sarVerbiage,
+    ABCD: abcdVerbiage,
   };
 
   const exportVerbiage = exportVerbiageMap[reportType];
