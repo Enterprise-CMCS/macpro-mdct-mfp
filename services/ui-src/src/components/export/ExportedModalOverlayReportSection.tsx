@@ -325,6 +325,10 @@ export function renderModalOverlayTableBody(
           </Box>
         );
       });
+    case ReportType.ABCD:
+      return entities.map((entity, idx) => {
+        return <Box key={`${reportType}${idx}`}></Box>;
+      });
     default:
       assertExhaustive(reportType);
       throw new Error(

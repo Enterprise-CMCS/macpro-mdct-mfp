@@ -48,6 +48,14 @@ export const headerRowLabels = (
         verbiage.metadataTableHeaders.status,
         verbiage.metadataTableHeaders.editedBy,
       ];
+    case ReportType.ABCD:
+      return [
+        verbiage.metadataTableHeaders.submissionName,
+        verbiage.metadataTableHeaders.dueDate,
+        verbiage.metadataTableHeaders.lastEdited,
+        verbiage.metadataTableHeaders.status,
+        verbiage.metadataTableHeaders.editedBy,
+      ];
     default:
       assertExhaustive(reportType);
       throw new Error(
@@ -75,6 +83,16 @@ export const bodyRowContent = (
         ],
       ];
     case ReportType.SAR:
+      return [
+        [
+          report?.submissionName ?? "",
+          convertDateUtcToEt(report.dueDate),
+          convertDateUtcToEt(report.lastAltered),
+          report.status,
+          report.lastAlteredBy,
+        ],
+      ];
+    case ReportType.ABCD:
       return [
         [
           report?.submissionName ?? "",
