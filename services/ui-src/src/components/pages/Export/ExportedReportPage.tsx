@@ -115,6 +115,15 @@ export const reportTitle = (
 
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
     }
+    case ReportType.ABCD: {
+      if (translateReport) {
+        return translate(abcdVerbiage.reportPage.reportTitle, {
+          stateName,
+        });
+      }
+
+      return `${stateName} ${reportPage.heading}`;
+    }
     default:
       assertExhaustive(reportType);
       throw new Error(

@@ -2,7 +2,7 @@
 
 # LaunchDarkly flags in components
 ./services/ui-src/src/components/app/AppRoutes.tsx:34:useFlags()?.abcdReport;
-./services/ui-src/src/components/pages/Export/ExportedReportPage.tsx:164:useFlags()?.translateReport;
+./services/ui-src/src/components/pages/Export/ExportedReportPage.tsx:173:useFlags()?.translateReport;
 ./services/ui-src/src/components/pages/Export/ExportedReportPage.tsx:91:useFlags()?.translateReport;
 ./services/ui-src/src/components/pages/Home/HomePage.tsx:19:useFlags()?.abcdReport;
 
