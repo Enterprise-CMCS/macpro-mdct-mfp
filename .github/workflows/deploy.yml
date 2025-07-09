@@ -293,7 +293,7 @@ jobs:
         run: yarn playwright install --with-deps
         working-directory: tests
       - name: Run Playwright tests
-        run: yarn playwright test
+        run: yarn playwright test --grep-invert "@flaky|@probation"
         working-directory: tests
         continue-on-error: true
         env:

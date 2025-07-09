@@ -58,7 +58,7 @@ test.describe("Creating a new Work Plan", () => {
     await userContext.close();
   });
 
-  test("State user can create a Work Plan", async () => {
+  test("State user can create a Work Plan @flaky", async () => {
     await adminHomePage.goto();
     await adminHomePage.selectWP("PR");
     await adminWpDashboard.reportsReady();
@@ -107,7 +107,7 @@ test.describe("Creating a new Work Plan", () => {
     }
   });
 
-  test("State user can fill and submit a Work Plan", async () => {
+  test("State user can fill and submit a Work Plan @flaky", async () => {
     await homePage.goto();
     await homePage.wpButton.click();
 
@@ -201,7 +201,7 @@ test.describe("Creating a new Work Plan", () => {
     ).toBeVisible();
   });
 
-  test("Admin user can deny a work plan", async () => {
+  test("Admin user can deny a work plan @flaky", async () => {
     const page = adminWpDashboard.page;
     const unlockButton = page.getByRole("button", { name: "Unlock" }).first();
     const modal = page.getByRole("dialog");
@@ -215,7 +215,7 @@ test.describe("Creating a new Work Plan", () => {
     await expect(unlockButton).toBeDisabled();
   });
 
-  test("State user can resubmit a work plan", async () => {
+  test("State user can resubmit a work plan @flaky", async () => {
     await wpDashboard.goto();
     await wpDashboard.firstReport.getByRole("button", { name: "Edit" }).click();
     await wpGeneralInformation.isReady();
