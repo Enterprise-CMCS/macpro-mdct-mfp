@@ -3,6 +3,7 @@
 # LaunchDarkly flags in components
 ./services/ui-src/src/components/pages/Export/ExportedReportPage.tsx:162:useFlags()?.translateReport;
 ./services/ui-src/src/components/pages/Export/ExportedReportPage.tsx:89:useFlags()?.translateReport;
+./services/ui-src/src/components/pages/Home/HomePage.tsx:19:useFlags()?.abcdReport;
 
 # LaunchDarkly flags in tests
 ./services/ui-src/src/components/pages/Export/ExportedReportPage.test.tsx:135:mockLDFlags.set({ translateReport: true });
