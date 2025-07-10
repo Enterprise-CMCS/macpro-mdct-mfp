@@ -1,5 +1,6 @@
 import wpForm from "../../forms/wp.json";
 import sarForm from "../../forms/sar.json";
+import abcdForm from "../../forms/abcd.json";
 import KSUID from "ksuid";
 import {
   AnyObject,
@@ -27,6 +28,7 @@ export const formTemplateForReportType = (reportType: ReportType) => {
   const map: { [key in ReportType]: ReportJson } = {
     [ReportType.WP]: wpForm as ReportJson,
     [ReportType.SAR]: sarForm as ReportJson,
+    [ReportType.ABCD]: abcdForm as ReportJson,
   };
   // Clone to prevent accidental changes to the originals
   return structuredClone(map[reportType]);
