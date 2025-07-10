@@ -21,7 +21,6 @@ import {
 } from "types";
 // utils
 import { parseCustomHtml, updateRenderFields, useStore } from "utils";
-import { assertExhaustive } from "utils/other/typing";
 
 export const ExportedEntityDetailsOverlaySection = ({
   entity,
@@ -165,7 +164,7 @@ export function renderEntityDetailTables(
         headingLevel
       );
     default:
-      assertExhaustive(reportType);
+      reportType as never;
       throw new Error(
         `The entity detail table for report type '${reportType}' have not been implemented.`
       );

@@ -1,7 +1,6 @@
 import { Helmet } from "react-helmet";
 // utils
 import { useStore, displayLongformPeriod } from "utils";
-import { assertExhaustive } from "utils/other/typing";
 // components
 import { Box, Center, Heading, Spinner } from "@chakra-ui/react";
 import {
@@ -40,7 +39,7 @@ export const ExportedReportPage = () => {
   const reportType = (report?.reportType ||
     localStorage.getItem("selectedReportType")) as ReportType;
 
-  const exportVerbiageMap: { [key in ReportType]: any } = {
+  const exportVerbiageMap: { [key in ReportType]?: any } = {
     WP: wpVerbiage,
     SAR: sarVerbiage,
   };
@@ -114,7 +113,7 @@ export const reportTitle = (
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
     }
     default:
-      assertExhaustive(reportType);
+      reportType as never;
       throw new Error(
         `The title for report type ${reportType} has not been implemented.`
       );
