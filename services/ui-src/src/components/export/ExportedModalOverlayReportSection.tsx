@@ -25,7 +25,6 @@ import {
   ReportShape,
   ReportType,
 } from "types";
-import { assertExhaustive } from "utils/other/typing";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // assets
@@ -326,7 +325,7 @@ export function renderModalOverlayTableBody(
         );
       });
     default:
-      assertExhaustive(reportType);
+      reportType as never;
       throw new Error(
         `The modal overlay table headers for report type '${reportType}' have not been implemented.`
       );
