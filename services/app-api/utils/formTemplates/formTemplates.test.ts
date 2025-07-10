@@ -27,6 +27,7 @@ import {
   EntityDetailsOverlayShape,
   FormField,
   FormJson,
+  FormLayoutElement,
   ModalOverlayReportPageVerbiage,
   OverlayModalPageShape,
   ReportJson,
@@ -283,13 +284,14 @@ describe("Test form contents", () => {
         for (let field of form.fields) {
           const isField = isFieldElement(field);
           const isLayout = isLayoutElement(field);
+          const baseField = field as FormField | FormLayoutElement;
           if (isField && isLayout) {
             throw new Error(
-              `Field '${field.id}' of type ${field.type} has confused the field type guards! Update them.`
+              `Field '${baseField.id}' of type ${baseField.type} has confused the field type guards! Update them.`
             );
           } else if (!isField && !isLayout) {
             throw new Error(
-              `Field '${field.id}' of type ${field.type} has confused the field type guards! Update them.`
+              `Field '${baseField.id}' of type ${baseField.type} has confused the field type guards! Update them.`
             );
           }
         }
