@@ -11,10 +11,12 @@ import {
 import { checkDateRangeStatus, useStore } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/home";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const HomePage = () => {
   const { bannerData, bannerActive, setBannerActive } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
+  const abcdReport = useFlags()?.abcdReport;
 
   useEffect(() => {
     let bannerActivity = false;
@@ -61,6 +63,13 @@ export const HomePage = () => {
               verbiage={cards.SAR}
               cardprops={sx.card}
             />
+            {abcdReport && (
+              <TemplateCard
+                templateName="ABCD"
+                verbiage={cards.ABCD}
+                cardprops={sx.card}
+              />
+            )}
           </>
         ) : (
           <AdminDashSelector verbiage={verbiage.readOnly} />
