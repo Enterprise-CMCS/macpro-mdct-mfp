@@ -10,6 +10,7 @@ import {
   mockBannerStore,
   mockReportStore,
   mockWpReportContext,
+  mockLDFlags,
 } from "utils/testing/setupJest";
 
 jest.mock("utils/state/useStore");
@@ -74,6 +75,26 @@ describe("<AppRoutes />", () => {
       render(appRoutesComponent("/mock/mock-route-1", true));
       expect(screen.getByTestId("main-content").tagName).toBe("DIV");
       expect(screen.getByRole("main").id).toBe("report-content");
+    });
+  });
+
+  describe("Test ABCD route behind flag", () => {
+    test("renders /abcd route when abcdReport flag is true", () => {
+      mockLDFlags.set({ abcdReport: true });
+
+      render(appRoutesComponent("/abcd"));
+
+      const heading = screen.getByRole("heading", { level: 1 });
+      expect(heading.textContent).toContain("MFP ABCD");
+    });
+
+    test("does not render /abcd route when abcdReport flag is false", () => {
+      mockLDFlags.set({ abcdReport: false });
+
+      render(appRoutesComponent("/abcd"));
+
+      // Should not find the dashboard for ABCD report
+      expect(screen.queryByText("MFP ABCD")).not.toBeInTheDocument();
     });
   });
 });
