@@ -4,11 +4,13 @@ import abcdForm from "../../forms/abcd.json";
 import KSUID from "ksuid";
 import {
   AnyObject,
+  EntityDetailsOverlayShape,
   FieldChoice,
   FormField,
   FormJson,
   FormLayoutElement,
   FormTemplateVersion,
+  OverlayModalPageShape,
   ReportJson,
   ReportRoute,
   ReportType,
@@ -209,8 +211,11 @@ export const compileValidationJsonFromRoutes = (
           if (stepForm) {
             addValidationToAccumulator(stepForm);
           } else {
-            if (step.objectiveCards) {
-              for (let objectiveCard of step.objectiveCards) {
+            const { objectiveCards } = step as
+              | OverlayModalPageShape
+              | EntityDetailsOverlayShape;
+            if (objectiveCards) {
+              for (let objectiveCard of objectiveCards) {
                 if (objectiveCard.modalForm) {
                   addValidationToAccumulator(objectiveCard.modalForm);
                 }
