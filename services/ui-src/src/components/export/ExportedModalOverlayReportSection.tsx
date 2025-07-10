@@ -33,6 +33,7 @@ import finishedIcon from "assets/icons/icon_check_circle.png";
 // utils
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
+import { assertExhaustive } from "utils/other/typing";
 
 export const ExportedModalOverlayReportSection = ({
   section,
@@ -325,7 +326,7 @@ export function renderModalOverlayTableBody(
         );
       });
     default:
-      reportType as never;
+      assertExhaustive(reportType as never);
       throw new Error(
         `The modal overlay table headers for report type '${reportType}' have not been implemented.`
       );

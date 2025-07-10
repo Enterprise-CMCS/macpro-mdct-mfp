@@ -23,6 +23,7 @@ import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
 import { useFlags } from "launchdarkly-react-client-sdk";
 import { translate } from "utils/text/translate";
+import { assertExhaustive } from "utils/other/typing";
 
 export const SAR_RET = "Recruitment, Enrollment, and Transitions";
 export const WP_SAR_STATE_TERRITORY_INITIATIVES =
@@ -113,7 +114,7 @@ export const reportTitle = (
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
     }
     default:
-      reportType as never;
+      assertExhaustive(reportType as never);
       throw new Error(
         `The title for report type ${reportType} has not been implemented.`
       );
