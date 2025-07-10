@@ -46,6 +46,9 @@ export const ExportedModalOverlayReportSection = ({
 
   const showAlert =
     report && errorMessage ? getWPAlertStatus(report, entityType) : false;
+
+  const entities = report?.fieldData?.[entityType];
+
   return (
     <>
       {showAlert && (
@@ -56,17 +59,15 @@ export const ExportedModalOverlayReportSection = ({
         />
       )}
       <Box sx={sx.container} data-testid="exportTable">
-        {report?.fieldData[entityType] &&
-          renderModalOverlayTableBody(
-            section,
-            report,
-            report?.fieldData[entityType],
-            headingLevel
-          )}
+        {entities &&
+          renderModalOverlayTableBody(section, report, entities, headingLevel)}
       </Box>
-      {(!report?.fieldData[entityType] ||
-        report?.fieldData[entityType].length === 0) && (
-        <Text sx={sx.emptyState}> No entities found.</Text>
+
+      {(!entities || entities.length === 0) && (
+        <>
+          {/* @ts-ignore Throws TS2590: expression too complex */}
+          <Text sx={sx.emptyState}>No entities found.</Text>
+        </>
       )}
     </>
   );
@@ -149,6 +150,9 @@ export function renderModalOverlayTableBody(
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
+        const headingText = entity.initiative_name
+          ? `${idx + 1}. ${entity.initiative_name}`
+          : "Not entered";
         return (
           <Box key={`${reportType}${idx}`}>
             <Flex sx={sx.entityHeading}>
@@ -161,7 +165,7 @@ export function renderModalOverlayTableBody(
               </Box>
               <Box>
                 <Heading as={headingLevel} sx={sx.heading}>
-                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
+                  {headingText}
                 </Heading>
                 <Text sx={sx.headingSubtitle}>
                   {entity.initiative_wp_otherTopic ||
