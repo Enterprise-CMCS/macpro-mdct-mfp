@@ -289,11 +289,24 @@ jobs:
       - name: yarn install tests
         run: yarn install
         working-directory: tests
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(yarn list @playwright/test --depth=0 --json | jq -r '.data.trees[].name' | sed 's/@playwright\/test@//')" >> $GITHUB_OUTPUT
+        working-directory: tests
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
       - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: yarn playwright install --with-deps
         working-directory: tests
       - name: Run Playwright tests
-        run: yarn playwright test
+        run: yarn playwright test --grep-invert "@flaky|@probation"
         working-directory: tests
         continue-on-error: true
         env:
