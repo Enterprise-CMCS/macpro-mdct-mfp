@@ -4,7 +4,7 @@ export default {
     notApplicable: "Not applicable",
   },
   reportBanner: {
-    intro: "Click below to export or print MFP ABCD shown here",
+    intro: "Click below to export or print ABCD shown here",
     pdfButton: "Download PDF",
   },
   metadata: {
