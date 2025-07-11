@@ -12,25 +12,28 @@ import minusIcon from "assets/icons/icon_minus.png";
 
 export const AccordionItem = ({ label, children, ...props }: Props) => {
   return (
-    <AccordionItemRoot sx={sx.root} {...props}>
-      {({ isExpanded }) => (
-        <>
-          <AccordionButton
-            sx={sx.accordionButton}
-            aria-label={label}
-            title="accordion-button"
-          >
-            {label}
-            <Image
-              src={isExpanded ? minusIcon : plusIcon}
-              alt={isExpanded ? "Collapse" : "Expand"}
-              sx={sx.accordionIcon}
-            />
-          </AccordionButton>
-          <AccordionPanel sx={sx.accordionPanel}>{children}</AccordionPanel>
-        </>
-      )}
-    </AccordionItemRoot>
+    <>
+      {/* @ts-ignore Throws TS2590: expression too complex */}
+      <AccordionItemRoot sx={sx.root} {...props}>
+        {({ isExpanded }) => (
+          <>
+            <AccordionButton
+              sx={sx.accordionButton}
+              aria-label={label}
+              title="accordion-button"
+            >
+              {label}
+              <Image
+                src={isExpanded ? minusIcon : plusIcon}
+                alt={isExpanded ? "Collapse" : "Expand"}
+                sx={sx.accordionIcon}
+              />
+            </AccordionButton>
+            <AccordionPanel sx={sx.accordionPanel}>{children}</AccordionPanel>
+          </>
+        )}
+      </AccordionItemRoot>
+    </>
   );
 };
 
