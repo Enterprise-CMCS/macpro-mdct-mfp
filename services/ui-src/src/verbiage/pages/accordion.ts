@@ -126,4 +126,24 @@ export default {
       text: "",
     },
   },
+  ABCD: {
+    adminDashboard: {
+      buttonLabel: "Instructions",
+      intro: [],
+      list: [],
+      text: "",
+    },
+    stateUserDashboard: {
+      buttonLabel: "Instructions",
+      intro: [],
+      list: [],
+      text: "",
+    },
+    formIntro: {
+      buttonLabel: "Instructions",
+      intro: "",
+      list: [],
+      text: "",
+    },
+  },
 };

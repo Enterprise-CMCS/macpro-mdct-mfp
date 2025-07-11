@@ -5,6 +5,7 @@ import { ReportContext, ExportedReportMetadataTable } from "components";
 import { ReportShape, ReportStatus, ReportType } from "types";
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
+import abcdVerbiage from "verbiage/pages/abcd/abcd-export";
 import { bodyRowContent, headerRowLabels } from "./ExportedReportMetadataTable";
 import { useStore } from "../../utils";
 import { mockUseStore } from "../../utils/testing/setupJest";
@@ -36,6 +37,18 @@ const mockSARContext = {
   },
   reportType: ReportType.SAR,
   verbiage: sarVerbiage.reportPage,
+};
+
+const mockABCDContext = {
+  report: {
+    submissionName: "Mock submit",
+    dueDate: 1712505600000,
+    lastAltered: 1712305600000,
+    status: ReportStatus.SUBMITTED,
+    lastAlteredBy: "Mock editor",
+  },
+  reportType: ReportType.ABCD,
+  verbiage: abcdVerbiage.reportPage,
 };
 
 const metadataTableWithContext = (context: any) => {
@@ -71,6 +84,17 @@ describe("<ExportedReportMetadataTable />", () => {
     render(metadataTableWithContext(mockSARContext));
     const headerTexts = Object.values(
       sarVerbiage.reportPage.metadataTableHeaders
+    );
+    for (let headerText of headerTexts) {
+      const headerCell = screen.getByText(headerText);
+      expect(headerCell).toBeVisible();
+    }
+  });
+
+  test("Should show the correct headers for ABCD", () => {
+    render(metadataTableWithContext(mockABCDContext));
+    const headerTexts = Object.values(
+      abcdVerbiage.reportPage.metadataTableHeaders
     );
     for (let headerText of headerTexts) {
       const headerCell = screen.getByText(headerText);

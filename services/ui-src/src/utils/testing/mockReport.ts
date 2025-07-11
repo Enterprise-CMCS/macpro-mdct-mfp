@@ -210,6 +210,11 @@ export const mockSARReportFieldData = {
   ],
 };
 
+export const mockABCDReportFieldData = {
+  text: "text-input",
+  "mock-number-field": 0,
+};
+
 export const mockWPReport = {
   ...mockReportKeys,
   metadata: {
@@ -357,6 +362,33 @@ export const mockSARFullReport = {
   reportYear: mockReportYear,
 };
 
+export const mockABCDFullReport = {
+  ...mockReportKeys,
+  id: "mock-abcd-full-report-id",
+  reportType: "ABCD",
+  formTemplate: mockReportJson,
+  submissionName: "2023 - Alabama 1",
+  status: ReportStatus.NOT_STARTED,
+  dueDate: 168515200000,
+  createdAt: 162515200000,
+  lastAltered: 162515200000,
+  lastAlteredBy: "Thelonious States",
+  submittedOnDate: Date.now(),
+  fieldData: mockABCDReportFieldData,
+  completionStatus: {
+    "/mock/mock-route-1": true,
+    "/mock/mock-route-2": {
+      "/mock/mock-route-2a": false,
+      "/mock/mock-route-2b": true,
+      "/mock/mock-route-2c": true,
+    },
+  },
+  isComplete: false,
+  reportPeriod: mockReportPeriod,
+  locked: false,
+  reportYear: mockReportYear,
+};
+
 export const mockWPSubmittedReport = {
   ...mockReportKeys,
   id: "mock-wp-submitted-report-id",
@@ -456,6 +488,18 @@ export const mockWpReportContext = {
 };
 
 export const mockSARReportContext = {
+  ...mockReportMethods,
+  report: mockSARFullReport,
+  reportsByState: mockSARReportsByState,
+  copyEligibleReportsByState: mockReportsByState,
+  errorMessage: {
+    title: "We've run into a problem",
+    description: genericErrorContent,
+  },
+  lastSavedTime: "2:00 PM",
+};
+
+export const mockABCDReportContext = {
   ...mockReportMethods,
   report: mockSARFullReport,
   reportsByState: mockSARReportsByState,

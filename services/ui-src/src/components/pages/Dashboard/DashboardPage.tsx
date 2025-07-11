@@ -15,8 +15,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import {
+  ArchiveReportModal,
   CreateWorkPlanModal,
   CreateSarModal,
+  CreateAbcdModal,
   Modal,
   DashboardTable,
   InstructionsAccordion,
@@ -47,11 +49,11 @@ import {
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
+import abcdVerbiage from "verbiage/pages/abcd/abcd-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 import alertIcon from "assets/icons/icon_alert_circle.png";
-import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
 
 export const DashboardPage = ({ reportType }: Props) => {
   const {
@@ -97,6 +99,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiageMap: any = {
     WP: wpVerbiage,
     SAR: sarVerbiage,
+    ABCD: abcdVerbiage,
   };
 
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
@@ -134,8 +137,10 @@ export const DashboardPage = ({ reportType }: Props) => {
     if (reportType == ReportType.WP) {
       fetchReportsByState(reportType, activeState);
       clearReportSelection();
-    } else {
+    } else if (reportType === ReportType.SAR) {
       fetchReportForSarCreation(activeState);
+      clearReportSelection();
+    } else {
       clearReportSelection();
     }
   }, []);
@@ -218,15 +223,28 @@ export const DashboardPage = ({ reportType }: Props) => {
           ),
         },
       };
+    } else if (report && reportType === ReportType.ABCD) {
+      // We are creating a new ABCD submission
+      formData = {
+        formData: {},
+      };
     }
 
     setSelectedReport(formData);
 
     // use disclosure to open modal
-    if (reportType === ReportType.WP) {
-      createWorkPlanModalOnOpenHandler();
-    } else {
-      createSarModalOnOpenHandler();
+    switch (reportType) {
+      case ReportType.WP:
+        createWorkPlanModalOnOpenHandler();
+        break;
+      case ReportType.SAR:
+        createSarModalOnOpenHandler();
+        break;
+      case ReportType.ABCD:
+        createAbcdModalOnOpenHandler();
+        break;
+      default:
+        return;
     }
   };
 
@@ -269,6 +287,8 @@ export const DashboardPage = ({ reportType }: Props) => {
         } else {
           return previousReport.status !== ReportStatus.APPROVED;
         }
+      case ReportType.ABCD:
+        return false;
       default:
         return true;
     }
@@ -291,6 +311,13 @@ export const DashboardPage = ({ reportType }: Props) => {
     isOpen: createSarModalIsOpen,
     onOpen: createSarModalOnOpenHandler,
     onClose: createSarModalOnCloseHandler,
+  } = useDisclosure();
+
+  // new ABCD modal disclosure
+  const {
+    isOpen: createAbcdModalIsOpen,
+    onOpen: createAbcdModalOnOpenHandler,
+    onClose: createAbcdModalOnCloseHandler,
   } = useDisclosure();
 
   //unlock modal disclosure
@@ -430,6 +457,14 @@ export const DashboardPage = ({ reportType }: Props) => {
         modalDisclosure={{
           isOpen: createSarModalIsOpen,
           onClose: createSarModalOnCloseHandler,
+        }}
+      />
+      <CreateAbcdModal
+        activeState={activeState!}
+        selectedReport={selectedReport!}
+        modalDisclosure={{
+          isOpen: createAbcdModalIsOpen,
+          onClose: createAbcdModalOnCloseHandler,
         }}
       />
       <Modal
