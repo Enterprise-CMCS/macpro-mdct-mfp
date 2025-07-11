@@ -325,6 +325,8 @@ export function renderModalOverlayTableBody(
           </Box>
         );
       });
+    case ReportType.ABCD:
+      return;
     default:
       assertExhaustive(reportType);
       throw new Error(

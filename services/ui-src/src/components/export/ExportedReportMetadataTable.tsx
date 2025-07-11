@@ -48,6 +48,8 @@ export const headerRowLabels = (
         verbiage.metadataTableHeaders.status,
         verbiage.metadataTableHeaders.editedBy,
       ];
+    case ReportType.ABCD:
+      return [];
     default:
       assertExhaustive(reportType);
       throw new Error(
@@ -84,6 +86,8 @@ export const bodyRowContent = (
           report.lastAlteredBy,
         ],
       ];
+    case ReportType.ABCD:
+      return [];
     default:
       assertExhaustive(reportType);
       throw new Error(

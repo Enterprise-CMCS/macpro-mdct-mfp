@@ -164,6 +164,8 @@ export function renderEntityDetailTables(
         tableSection,
         headingLevel
       );
+    case ReportType.ABCD:
+      return;
     default:
       assertExhaustive(reportType);
       throw new Error(

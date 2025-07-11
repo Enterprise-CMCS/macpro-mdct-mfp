@@ -9,6 +9,7 @@ import { ReportType } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
+import abcdVerbiage from "verbiage/pages/abcd/abcd-export";
 
 export const ExportedReportBanner = () => {
   const { report } = useStore() ?? {};
@@ -18,6 +19,7 @@ export const ExportedReportBanner = () => {
   const verbiageMap: { [key in ReportType]: any } = {
     WP: wpVerbiage,
     SAR: sarVerbiage,
+    ABCD: abcdVerbiage,
   };
 
   const verbiage = verbiageMap[reportType];
