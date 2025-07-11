@@ -1,0 +1,20 @@
+{
+  "id": "aea",
+  "options": {
+    "mode": "onChange"
+  },
+  "heading": {
+    "add": "Placeholder",
+    "edit": "Placeholder"
+  },
+  "fields": [
+    {
+      "id": "",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "label": ""
+      }
+    }
+  ]
+}

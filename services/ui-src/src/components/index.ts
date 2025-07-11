@@ -85,7 +85,9 @@ export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";
 export { CreateSarModal } from "./modals/CreateSarModal";
 export { CreateWorkPlanModal } from "./modals/CreateWorkPlanModal";
+export { CreateAbcdModal } from "./modals/CreateAbcdModal";
 export { DeleteEntityModal } from "./modals/DeleteEntityModal";
+export { ArchiveReportModal } from "./modals/ArchiveReportModal";
 // pages
 export { AdminPage } from "./pages/Admin/AdminPage";
 export { HomePage } from "./pages/Home/HomePage";

@@ -49,17 +49,24 @@ export const AppRoutes = () => {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="*" element={<NotFoundPage />} />
-          {/* MFP Report Routes */}
+          {/* WP Report Routes */}
           <Route
             path="/wp"
             element={<DashboardPage reportType={ReportType.WP} />}
           />
           <Route path="/wp/export" element={<ExportedReportPage />} />
+          {/* SAR Report Routes */}
           <Route
             path="/sar"
             element={<DashboardPage reportType={ReportType.SAR} />}
           />
           <Route path="/sar/export" element={<ExportedReportPage />} />
+          {/* ABCD Report Routes */}
+          <Route
+            path="/abcd"
+            element={<DashboardPage reportType={ReportType.ABCD} />}
+          />
+          <Route path="/abcd/export" element={<ExportedReportPage />} />
           {/* General Report Routes */}
           {report && (
             <>
