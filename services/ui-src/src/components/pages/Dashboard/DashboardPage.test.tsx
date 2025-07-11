@@ -26,6 +26,7 @@ import { MfpReportState, ReportShape, ReportType } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
+import abcdVerbiage from "verbiage/pages/abcd/abcd-dashboard";
 import userEvent from "@testing-library/user-event";
 import { testA11y } from "utils/testing/commonTests";
 
@@ -79,6 +80,22 @@ const sarDashboardViewWithReports = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockDashboardReportContext}>
       <DashboardPage reportType={ReportType.SAR} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const abcdDashboardWithNoReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockReportContextNoReports}>
+      <DashboardPage reportType={ReportType.ABCD} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const abcdDashboardViewWithReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockDashboardReportContext}>
+      <DashboardPage reportType={ReportType.ABCD} />
     </ReportContext.Provider>
   </RouterWrappedComponent>
 );
@@ -156,6 +173,19 @@ describe("<DashboardPage />", () => {
       ).not.toBeInTheDocument();
       expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
     });
+
+    test("Check that the ABCD Dashboard view renders", () => {
+      mockedUseStore.mockReturnValue(mockReportStore);
+      render(abcdDashboardViewWithReports);
+      expect(screen.getByText(abcdVerbiage.intro.header)).toBeVisible();
+      expect(
+        screen.queryByText(abcdVerbiage.body.table.caption)
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText(abcdVerbiage.body.empty)
+      ).not.toBeInTheDocument();
+      expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+    });
   });
 
   describe("Test Report Dashboard with no reports", () => {
@@ -180,6 +210,12 @@ describe("<DashboardPage />", () => {
     test("SAR Dashboard renders table with empty text", () => {
       mockedUseStore.mockReturnValue(mockStateUser);
       render(sarDashboardWithNoReports);
+      expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
+    });
+
+    test("ABCD Dashboard renders table with empty text", () => {
+      mockedUseStore.mockReturnValue(mockStateUser);
+      render(abcdDashboardWithNoReports);
       expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
     });
   });

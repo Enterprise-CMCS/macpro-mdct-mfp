@@ -30,6 +30,12 @@ const sarContext = {
   },
 };
 
+const abcdContext = {
+  report: {
+    reportType: "ABCD",
+  },
+};
+
 const bannerWithContext = (context: any) => {
   return (
     <ReportContext.Provider value={context}>
@@ -85,6 +91,12 @@ describe("<ExportedReportBanner />", () => {
 
     render(bannerWithContext(sarContext));
     const introText = screen.getByText(/SAR/);
+    expect(introText).toBeVisible();
+  });
+
+  test("Does ABCD export banner have ABCD-specific verbiage", async () => {
+    render(bannerWithContext(abcdContext));
+    const introText = screen.getByText(/ABCD/);
     expect(introText).toBeVisible();
   });
 

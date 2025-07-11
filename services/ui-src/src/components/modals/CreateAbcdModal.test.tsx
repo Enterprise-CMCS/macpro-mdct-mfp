@@ -41,6 +41,21 @@ const modalComponent = (
   </RouterWrappedComponent>
 );
 
+const modalComponentWithSelectedABCD = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockedABCDReportContext}>
+      <CreateAbcdModal
+        activeState="CA"
+        selectedReport={mockSelectedABCDReport}
+        modalDisclosure={{
+          isOpen: true,
+          onClose: mockCloseHandler,
+        }}
+      />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
 describe("<CreateAbcdModal />", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -53,5 +68,14 @@ describe("<CreateAbcdModal />", () => {
       });
     });
     testA11yAct(modalComponent);
+  });
+
+  describe("Existing ABCD", () => {
+    test("Editing an existing report", async () => {
+      await act(async () => {
+        await render(modalComponentWithSelectedABCD);
+      });
+    });
+    testA11yAct(modalComponentWithSelectedABCD);
   });
 });

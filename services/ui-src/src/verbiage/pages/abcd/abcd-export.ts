@@ -14,24 +14,22 @@ export default {
   },
   reportPage: {
     heading: "Placeholder",
-    metadataTableHeaders: {},
+    metadataTableHeaders: {
+      submissionName: "Submission Name",
+      dueDate: "Due date",
+      lastEdited: "Last edited",
+      editedBy: "Edited by",
+      status: "Status",
+    },
     combinedDataTable: {
       title: "",
       subtitle: "",
-    },
-    sarDetailsTable: {
-      headers: {
-        indicator: "Indicator",
-        response: "Response",
-      },
-      indicators: [],
     },
     reportTitle: "Placeholder",
   },
   generalInformationTable: {
     headings: [],
   },
-  modalOverlayTableHeaders: {},
   tableHeaders: {
     number: "Number",
     indicator: "Indicator",
