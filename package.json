@@ -18,6 +18,8 @@
     "test:e2e-ui": "cd tests && yarn run test:e2e-ui",
     "test:e2e-stable": "cd tests && yarn run test:e2e-stable",
     "test:e2e-stable-ui": "cd tests && yarn run test:e2e-stable-ui",
+    "test:e2e-regression": "cd tests && yarn run test:e2e-regression",
+    "test:e2e-regression-ui": "cd tests && yarn run test:e2e-regression-ui",
     "track-flags": "./scripts/track-flags.sh"
   },
   "repository": {
