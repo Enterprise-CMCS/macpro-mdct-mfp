@@ -87,7 +87,15 @@ export const bodyRowContent = (
         ],
       ];
     case ReportType.ABCD:
-      return [];
+      return [
+        [
+          report.submissionName,
+          convertDateUtcToEt(report.dueDate),
+          convertDateUtcToEt(report.lastAltered),
+          report.status,
+          report.lastAlteredBy,
+        ],
+      ];
     default:
       assertExhaustive(reportType);
       throw new Error(

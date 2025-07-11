@@ -22,13 +22,19 @@ export default {
       status: "Status",
     },
     combinedDataTable: {
-      title: "",
-      subtitle: "",
+      title: "Placeholder",
+      subtitle: "Placeholder",
     },
     reportTitle: "Placeholder",
   },
   generalInformationTable: {
-    headings: [],
+    headings: [
+      "Resubmission Information",
+      "Organization Information",
+      "Authorized Organizational Representative (AOR)",
+      "Project Director",
+      "CMS Project Officer",
+    ],
   },
   tableHeaders: {
     number: "Number",

@@ -137,8 +137,10 @@ export const DashboardPage = ({ reportType }: Props) => {
     if (reportType == ReportType.WP) {
       fetchReportsByState(reportType, activeState);
       clearReportSelection();
-    } else {
+    } else if (reportType === ReportType.SAR) {
       fetchReportForSarCreation(activeState);
+      clearReportSelection();
+    } else {
       clearReportSelection();
     }
   }, []);
@@ -223,6 +225,9 @@ export const DashboardPage = ({ reportType }: Props) => {
       };
     } else if (report && reportType === ReportType.ABCD) {
       // We are creating a new ABCD submission
+      formData = {
+        formData: {},
+      };
     }
 
     setSelectedReport(formData);
