@@ -19,153 +19,32 @@ permissions:
 jobs:
   regression-tests:
     name: Playwright Regression Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials for GitHub Actions
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ".nvmrc"
-
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            **/node_modules
-            ~/.cache/yarn
-          key: ${{ runner.os }}-regression-deps-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-regression-deps-
-            ${{ runner.os }}-modules-
-
-      - name: Install root dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Install test dependencies
-        run: yarn install --frozen-lockfile
-        working-directory: tests
-
-      - name: Get Playwright version
-        id: playwright-version
-        run: |
-          VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test'] || require('./package.json').dependencies['@playwright/test']")
-          echo "Detected Playwright version: $VERSION"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-        working-directory: tests
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-
-      - name: Install Playwright Browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: yarn playwright install --with-deps
-        working-directory: tests
-
-      - name: Run Playwright regression tests
-        run: yarn playwright test --grep-invert "@flaky"
-        working-directory: tests
-        continue-on-error: true
-        env:
-          BASE_URL: https://mfp-val.mdctdemo.com
-          CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
-          CYPRESS_STATE_USER_PASSWORD: ${{ secrets.CYPRESS_STATE_USER_PASSWORD }}
-          CYPRESS_ADMIN_USER_EMAIL: ${{ secrets.CYPRESS_ADMIN_USER_EMAIL }}
-          CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
-          SEED_ADMIN_USER_EMAIL: ${{ secrets.SEED_ADMIN_USER_EMAIL }}
-          SEED_ADMIN_USER_PASSWORD: ${{ secrets.SEED_ADMIN_USER_PASSWORD }}
-          SEED_STATE_USER_EMAIL: ${{ secrets.SEED_STATE_USER_EMAIL }}
-          SEED_STATE_USER_PASSWORD: ${{ secrets.SEED_STATE_USER_PASSWORD }}
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: regression-test-results-${{ github.run_number }}
-          path: tests/playwright-report
-          retention-days: 30
-
-      - name: Upload test videos and screenshots
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: regression-test-artifacts-${{ github.run_number }}
-          path: |
-            tests/test-results/
-            tests/screenshots/
-          retention-days: 14
-
-  upload-regression-reports:
-    name: Upload Regression Reports
-    needs: regression-tests
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    outputs:
-      timestamp: ${{ steps.timestampid.outputs.timestamp }}
-      report-url: ${{ steps.report-url.outputs.url }}
-    steps:
-      - name: Set timestamp
-        id: timestampid
-        run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ".nvmrc"
-
-      - name: Download test reports
-        uses: actions/download-artifact@v4
-        with:
-          name: regression-test-results-${{ github.run_number }}
-          path: regression-report
-
-      - name: Publish reports to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./regression-report
-          destination_dir: regression/${{ steps.timestampid.outputs.timestamp }}
-
-      - name: Generate report URL
-        id: report-url
-        run: |
-          ORG_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
-          REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-          URL="https://${ORG_NAME}.github.io/${REPO_NAME}/regression/${{ steps.timestampid.outputs.timestamp }}/"
-          echo "url=$URL" >> $GITHUB_OUTPUT
-          echo "## 📊 Regression Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "Test results are available at: [$URL]($URL)" >> $GITHUB_STEP_SUMMARY
+    uses: ./.github/workflows/e2e-tests.yml
+    with:
+      base-url: 'https://mfp-val.mdctdemo.com'
+      test-filter: '--grep-invert "@flaky"'
+      timeout-minutes: 90
+      artifact-name-prefix: 'regression'
+      continue-on-error: true
+      aws-role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+      aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      upload-to-pages: true
+      pages-destination-dir: 'regression'
+    secrets: inherit
 
   notify-results:
     name: Notify Stakeholders
-    needs: [regression-tests, upload-regression-reports]
+    needs: regression-tests
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Determine test status
         id: test-status
         run: |
-          if [[ "${{ needs.regression-tests.result }}" == "success" ]]; then
+          if [[ "${{ needs.regression-tests.outputs.test-result }}" == "success" ]]; then
             echo "status=✅ PASSED" >> $GITHUB_OUTPUT
             echo "color=good" >> $GITHUB_OUTPUT
-          elif [[ "${{ needs.regression-tests.result }}" == "failure" ]]; then
+          elif [[ "${{ needs.regression-tests.outputs.test-result }}" == "failure" ]]; then
             echo "status=❌ FAILED" >> $GITHUB_OUTPUT
             echo "color=danger" >> $GITHUB_OUTPUT
           else
@@ -179,7 +58,7 @@ jobs:
           echo "**Status:** ${{ steps.test-status.outputs.status }}" >> $GITHUB_STEP_SUMMARY
           echo "**Environment:** https://mfp-val.mdctdemo.com" >> $GITHUB_STEP_SUMMARY
           echo "**Timestamp:** $(date --utc)" >> $GITHUB_STEP_SUMMARY
-          echo "**Report:** ${{ needs.upload-regression-reports.outputs.report-url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Report:** ${{ needs.regression-tests.outputs.report-url }}" >> $GITHUB_STEP_SUMMARY
 
       # Uncomment and configure this step when Slack integration is ready
       # - name: Notify Slack
@@ -201,7 +80,7 @@ jobs:
       #               },
       #               {
       #                 "title": "Results",
-      #                 "value": "<${{ needs.upload-regression-reports.outputs.report-url }}|View Report>",
+      #                 "value": "<${{ needs.regression-tests.outputs.report-url }}|View Report>",
       #                 "short": true
       #               }
       #             ]
