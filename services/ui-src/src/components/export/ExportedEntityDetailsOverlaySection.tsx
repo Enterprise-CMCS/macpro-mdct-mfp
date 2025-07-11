@@ -165,7 +165,7 @@ export function renderEntityDetailTables(
         headingLevel
       );
     default:
-      assertExhaustive(reportType);
+      assertExhaustive(reportType as never);
       throw new Error(
         `The entity detail table for report type '${reportType}' have not been implemented.`
       );
