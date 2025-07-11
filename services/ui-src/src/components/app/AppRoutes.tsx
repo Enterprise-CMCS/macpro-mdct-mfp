@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { Fragment, useContext } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import { Box } from "@chakra-ui/react";
 import {
@@ -29,6 +30,9 @@ export const AppRoutes = () => {
   const isExportPage = pathname.includes("/export");
   const hasNav = isReportPage && !isExportPage;
   const boxElement = hasNav ? "div" : "main";
+
+  // LaunchDarkly
+  const abcdReport = useFlags()?.abcdReport;
 
   return (
     <Box
@@ -62,11 +66,15 @@ export const AppRoutes = () => {
           />
           <Route path="/sar/export" element={<ExportedReportPage />} />
           {/* ABCD Report Routes */}
-          <Route
-            path="/abcd"
-            element={<DashboardPage reportType={ReportType.ABCD} />}
-          />
-          <Route path="/abcd/export" element={<ExportedReportPage />} />
+          {abcdReport && (
+            <Fragment>
+              <Route
+                path="/abcd"
+                element={<DashboardPage reportType={ReportType.ABCD} />}
+              />
+              <Route path="/abcd/export" element={<ExportedReportPage />} />
+            </Fragment>
+          )}
           {/* General Report Routes */}
           {report && (
             <>

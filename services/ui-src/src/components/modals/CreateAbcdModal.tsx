@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import { Form, Modal, ReportContext } from "components";
 import { Spinner } from "@chakra-ui/react";
@@ -23,6 +24,9 @@ export const CreateAbcdModal = ({
 
   const viewOnly = userIsAdmin;
 
+  // LaunchDarkly
+  const abcdReport = useFlags()?.abcdReport;
+
   const form: FormJson = abcdFormJson;
 
   // ABCD report payload
@@ -34,6 +38,7 @@ export const CreateAbcdModal = ({
         lastAlteredBy: full_name,
         locked: false,
         previousRevisions: [],
+        abcdReport,
       },
       fieldData: {
         submissionName,
