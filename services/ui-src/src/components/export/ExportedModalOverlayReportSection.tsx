@@ -7,7 +7,7 @@ import {
   ExportedOverlayModalReportSection,
   Table,
 } from "components";
-import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 // types
 import {
   AlertTypes,
@@ -28,9 +28,6 @@ import {
 import { assertExhaustive } from "utils/other/typing";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
-// assets
-import unfinishedIcon from "assets/icons/icon_error_circle.png";
-import finishedIcon from "assets/icons/icon_check_circle.png";
 // utils
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
@@ -76,13 +73,6 @@ export const ExportedModalOverlayReportSection = ({
 export interface Props {
   section: ModalOverlayReportPageShape;
   headingLevel?: HeadingLevel;
-}
-
-export function renderStatusIcon(status: boolean) {
-  if (status) {
-    return <Image src={finishedIcon} alt="success icon" boxSize="xl" />;
-  }
-  return <Image src={unfinishedIcon} alt="warning icon" boxSize="xl" />;
 }
 
 /**
