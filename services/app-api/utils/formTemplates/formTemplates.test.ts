@@ -353,6 +353,16 @@ describe("Test compileValidationJsonFromRoutes", () => {
                 fields: [] as FormField[],
               },
             } as OverlayModalPageShape,
+            {
+              stepName: "mock entity 1 3",
+              objectiveCards: [
+                {
+                  modalForm: {
+                    fields: [] as FormField[],
+                  },
+                },
+              ],
+            } as OverlayModalPageShape,
           ],
         },
         {
@@ -391,7 +401,7 @@ describe("Test compileValidationJsonFromRoutes", () => {
     const result = compileValidationJsonFromRoutes([dynamicModalOverlayRoute]);
 
     expect(result).toEqual({
-      "initiative": "objectArray", // prettier-ignore
+      initiative: "objectArray",
       "text-field-1-1": "text",
       "number-field-1-1": "number",
       "email-field-2-2": "email",

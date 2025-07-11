@@ -7,7 +7,7 @@ import {
   ExportedOverlayModalReportSection,
   Table,
 } from "components";
-import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 // types
 import {
   AlertTypes,
@@ -27,9 +27,6 @@ import {
 } from "types";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
-// assets
-import unfinishedIcon from "assets/icons/icon_error_circle.png";
-import finishedIcon from "assets/icons/icon_check_circle.png";
 // utils
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
@@ -46,6 +43,9 @@ export const ExportedModalOverlayReportSection = ({
 
   const showAlert =
     report && errorMessage ? getWPAlertStatus(report, entityType) : false;
+
+  const entities = report?.fieldData?.[entityType];
+
   return (
     <>
       {showAlert && (
@@ -56,17 +56,15 @@ export const ExportedModalOverlayReportSection = ({
         />
       )}
       <Box sx={sx.container} data-testid="exportTable">
-        {report?.fieldData[entityType] &&
-          renderModalOverlayTableBody(
-            section,
-            report,
-            report?.fieldData[entityType],
-            headingLevel
-          )}
+        {entities &&
+          renderModalOverlayTableBody(section, report, entities, headingLevel)}
       </Box>
-      {(!report?.fieldData[entityType] ||
-        report?.fieldData[entityType].length === 0) && (
-        <Text sx={sx.emptyState}> No entities found.</Text>
+
+      {(!entities || entities.length === 0) && (
+        <>
+          {/* @ts-ignore Throws TS2590: expression too complex */}
+          <Text sx={sx.emptyState}>No entities found.</Text>
+        </>
       )}
     </>
   );
@@ -75,13 +73,6 @@ export const ExportedModalOverlayReportSection = ({
 export interface Props {
   section: ModalOverlayReportPageShape;
   headingLevel?: HeadingLevel;
-}
-
-export function renderStatusIcon(status: boolean) {
-  if (status) {
-    return <Image src={finishedIcon} alt="success icon" boxSize="xl" />;
-  }
-  return <Image src={unfinishedIcon} alt="warning icon" boxSize="xl" />;
 }
 
 /**
@@ -149,6 +140,9 @@ export function renderModalOverlayTableBody(
   switch (reportType) {
     case ReportType.WP:
       return entities.map((entity, idx) => {
+        const headingText = entity.initiative_name
+          ? `${idx + 1}. ${entity.initiative_name}`
+          : "Not entered";
         return (
           <Box key={`${reportType}${idx}`}>
             <Flex sx={sx.entityHeading}>
@@ -161,7 +155,7 @@ export function renderModalOverlayTableBody(
               </Box>
               <Box>
                 <Heading as={headingLevel} sx={sx.heading}>
-                  {`${idx + 1}. ${entity.initiative_name}` ?? "Not entered"}
+                  {headingText}
                 </Heading>
                 <Text sx={sx.headingSubtitle}>
                   {entity.initiative_wp_otherTopic ||
