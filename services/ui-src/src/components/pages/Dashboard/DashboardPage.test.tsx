@@ -105,7 +105,6 @@ describe("<DashboardPage />", () => {
       });
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
     });
-
     test("Check that WP Dashboard view renders", () => {
       mockedUseStore.mockReturnValue(mockReportStore);
       render(wpDashboardViewWithReports);
@@ -196,6 +195,17 @@ describe("<DashboardPage />", () => {
       mockedUseStore.mockReturnValue(mockStateUser);
       render(abcdDashboardWithNoReports);
       expect(screen.getByText(abcdVerbiage.body.empty)).toBeVisible();
+    });
+
+    test("Create button is enabled on empty abcd dashboard", async () => {
+      mockedUseStore.mockReturnValue(mockStateUser);
+      render(abcdDashboardWithNoReports);
+      const callToActionButton = screen.getByText(
+        abcdVerbiage.body.callToAction
+      );
+      expect(callToActionButton).toBeVisible();
+      await userEvent.click(callToActionButton);
+      expect(screen.getByText("Add new MFP ABCD submission")).toBeEnabled();
     });
   });
 
