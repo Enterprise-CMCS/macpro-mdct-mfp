@@ -70,11 +70,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure AWS credentials for GitHub Actions
-        if: ${{ inputs.aws-role-to-assume && inputs.aws-region }}
+        if: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME && secrets.AWS_DEFAULT_REGION }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ inputs.aws-role-to-assume }}
-          aws-region: ${{ inputs.aws-region }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

@@ -26,8 +26,6 @@ jobs:
       timeout-minutes: 90
       artifact-name-prefix: 'regression'
       continue-on-error: true
-      aws-role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
-      aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       upload-to-pages: true
       pages-destination-dir: 'regression'
     secrets: inherit

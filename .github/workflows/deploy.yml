@@ -279,8 +279,6 @@ jobs:
       timeout-minutes: 60
       artifact-name-prefix: 'playwright'
       continue-on-error: true
-      aws-role-to-assume: ${{ secrets[env.BRANCH_SPECIFIC_VARNAME_AWS_OIDC_ROLE_TO_ASSUME] || secrets.AWS_OIDC_ROLE_TO_ASSUME }}
-      aws-region: ${{ secrets[env.BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION] || secrets.AWS_DEFAULT_REGION }}
       upload-to-pages: true
       pages-destination-dir: ''
     secrets: inherit
