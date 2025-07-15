@@ -177,5 +177,5 @@ export default {
       list: [],
       text: "",
     },
-  }, // qlty-ignore: qlty:similar-code,
+  },
 };
