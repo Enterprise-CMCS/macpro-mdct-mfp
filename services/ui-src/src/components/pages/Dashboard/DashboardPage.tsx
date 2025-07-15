@@ -134,19 +134,13 @@ export const DashboardPage = ({ reportType }: Props) => {
       navigate("/");
     }
     switch (reportType) {
-      case ReportType.WP:
-        fetchReportsByState(reportType, activeState);
-        clearReportSelection();
-        break;
       case ReportType.SAR:
         fetchReportForSarCreation(activeState);
         clearReportSelection();
         break;
-      case ReportType.ABCD:
+      default:
         fetchReportsByState(reportType, activeState);
         clearReportSelection();
-        break;
-      default:
         break;
     }
   }, []);
