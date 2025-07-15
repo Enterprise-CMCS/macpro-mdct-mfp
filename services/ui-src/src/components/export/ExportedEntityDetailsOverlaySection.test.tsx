@@ -39,7 +39,7 @@ describe("<ExportedEntityDetailsOverlaySection />", () => {
           headingLevel
         )
       ).toThrow(
-        "The entity detail table for report type 'UNKNOWN_TYPE' have not been implemented."
+        "The entity detail table for report type 'UNKNOWN_TYPE' has not been implemented."
       );
     });
   });

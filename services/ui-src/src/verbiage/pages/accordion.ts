@@ -126,7 +126,6 @@ export default {
       text: "",
     },
   },
-  // qlty-ignore: qlty:similar-code
   ABCD: {
     adminDashboard: {
       buttonLabel: "Instructions",
@@ -178,5 +177,5 @@ export default {
       list: [],
       text: "",
     },
-  },
+  }, // qlty-ignore: qlty:similar-code,
 };

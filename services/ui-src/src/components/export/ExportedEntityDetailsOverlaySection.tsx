@@ -168,7 +168,7 @@ export function renderEntityDetailTables(
     default:
       assertExhaustive(reportType as never);
       throw new Error(
-        `The entity detail table for report type '${reportType}' have not been implemented.`
+        `The entity detail table for report type '${reportType}' has not been implemented.`
       );
   }
 }
