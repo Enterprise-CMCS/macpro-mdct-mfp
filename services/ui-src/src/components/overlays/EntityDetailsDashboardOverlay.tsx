@@ -186,7 +186,7 @@ const sx = {
   },
   footerBox: {
     marginTop: "2rem",
-    borderTop: "1.5px solid var(--chakra-colors-palette-gray_light)",
+    borderTop: "1.5px solid var(--mdct-colors-palette-gray_light)",
   },
   buttonFlex: {
     justifyContent: "end",
