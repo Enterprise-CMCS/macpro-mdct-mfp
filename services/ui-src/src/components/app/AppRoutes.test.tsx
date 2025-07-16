@@ -94,7 +94,8 @@ describe("<AppRoutes />", () => {
       render(appRoutesComponent("/abcd"));
 
       // Should not find the dashboard for ABCD report
-      expect(screen.queryByText("MFP ABCD")).not.toBeInTheDocument();
+      const heading = screen.getByRole("heading", { level: 1 });
+      expect(heading.textContent).toContain("Page not found");
     });
   });
 });
