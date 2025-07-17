@@ -25,12 +25,12 @@ import {
   ReportShape,
   ReportType,
 } from "types";
-import { assertExhaustive } from "utils/other/typing";
 // verbiage
 import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // utils
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
+import { assertExhaustive } from "utils/other/typing";
 
 export const ExportedModalOverlayReportSection = ({
   section,
@@ -320,7 +320,7 @@ export function renderModalOverlayTableBody(
         );
       });
     default:
-      assertExhaustive(reportType);
+      assertExhaustive(reportType as never);
       throw new Error(
         `The modal overlay table headers for report type '${reportType}' have not been implemented.`
       );

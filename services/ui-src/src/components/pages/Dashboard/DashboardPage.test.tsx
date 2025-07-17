@@ -26,6 +26,7 @@ import { MfpReportState, ReportShape, ReportType } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
+import abcdVerbiage from "verbiage/pages/abcd/abcd-dashboard";
 import userEvent from "@testing-library/user-event";
 import { testA11y } from "utils/testing/commonTests";
 
@@ -83,6 +84,14 @@ const sarDashboardViewWithReports = (
   </RouterWrappedComponent>
 );
 
+const abcdDashboardWithNoReports = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider value={mockReportContextNoReports}>
+      <DashboardPage reportType={ReportType.ABCD} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
 describe("<DashboardPage />", () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -96,7 +105,6 @@ describe("<DashboardPage />", () => {
       });
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
     });
-
     test("Check that WP Dashboard view renders", () => {
       mockedUseStore.mockReturnValue(mockReportStore);
       render(wpDashboardViewWithReports);
@@ -181,6 +189,12 @@ describe("<DashboardPage />", () => {
       mockedUseStore.mockReturnValue(mockStateUser);
       render(sarDashboardWithNoReports);
       expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
+    });
+
+    test("ABCD Dashboard renders table with empty text", () => {
+      mockedUseStore.mockReturnValue(mockStateUser);
+      render(abcdDashboardWithNoReports);
+      expect(screen.getByText(abcdVerbiage.body.empty)).toBeVisible();
     });
   });
 
