@@ -49,7 +49,7 @@ export const headerRowLabels = (
         verbiage.metadataTableHeaders.editedBy,
       ];
     default:
-      assertExhaustive(reportType);
+      assertExhaustive(reportType as never);
       throw new Error(
         `The metadata table headers for report type '${reportType}' have not been implemented.`
       );
@@ -85,7 +85,7 @@ export const bodyRowContent = (
         ],
       ];
     default:
-      assertExhaustive(reportType);
+      assertExhaustive(reportType as never);
       throw new Error(
         `The metadata table body for report type '${reportType}' has not been implemented.`
       );

@@ -15,7 +15,7 @@ export const ExportedReportBanner = () => {
   const reportType = (report?.reportType ||
     localStorage.getItem("selectedReportType")) as ReportType;
 
-  const verbiageMap: { [key in ReportType]: any } = {
+  const verbiageMap: { [key in ReportType]?: any } = {
     WP: wpVerbiage,
     SAR: sarVerbiage,
   };

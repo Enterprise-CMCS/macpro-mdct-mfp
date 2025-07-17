@@ -90,6 +90,7 @@ export function getEntityTableComponents(
   return (
     <Box key={uuid()}>
       <Box>
+        {/* @ts-ignore Throws TS2590: expression too complex */}
         <Heading as={headingLevel} sx={sx.stepName}>
           {title}
         </Heading>
@@ -165,9 +166,9 @@ export function renderEntityDetailTables(
         headingLevel
       );
     default:
-      assertExhaustive(reportType);
+      assertExhaustive(reportType as never);
       throw new Error(
-        `The entity detail table for report type '${reportType}' have not been implemented.`
+        `The entity detail table for report type '${reportType}' has not been implemented.`
       );
   }
 }

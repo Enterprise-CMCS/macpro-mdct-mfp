@@ -31,6 +31,7 @@ interface CreateApiComponentsProps {
   brokerString: string;
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
+  abcdFormBucket: s3.IBucket;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
@@ -45,6 +46,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     brokerString,
     wpFormBucket,
     sarFormBucket,
+    abcdFormBucket,
   } = props;
 
   const service = "app-api";
@@ -103,6 +105,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     stage,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
+    ABCD_FORM_BUCKET: abcdFormBucket.bucketName,
     ...Object.fromEntries(
       tables.map((table) => [`${table.id}Table`, table.name])
     ),
@@ -136,6 +139,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
         sarFormBucket.bucketArn,
         `${sarFormBucket.bucketArn}/formTemplates/*`,
         `${sarFormBucket.bucketArn}/fieldData/*`,
+        abcdFormBucket.bucketArn,
+        `${abcdFormBucket.bucketArn}/formTemplates/*`,
+        `${abcdFormBucket.bucketArn}/fieldData/*`,
       ],
     }),
 
@@ -156,8 +162,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       resources: [
         wpFormBucket.bucketArn,
         sarFormBucket.bucketArn,
+        abcdFormBucket.bucketArn,
         `${wpFormBucket.bucketArn}/fieldData/*`,
         `${sarFormBucket.bucketArn}/fieldData/*`,
+        `${abcdFormBucket.bucketArn}/fieldData/*`,
       ],
     }),
   ];
@@ -360,6 +368,30 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   sarFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
     new s3notifications.LambdaDestination(postSarBucketDataLambda),
+    {
+      prefix: "fieldData/",
+      suffix: ".json",
+    }
+  );
+
+  const postAbcdBucketDataLambda = new Lambda(scope, "postAbcdBucketData", {
+    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
+    handler: "handler",
+    ...bucketLambdaProps,
+  }).lambda;
+
+  abcdFormBucket.addEventNotification(
+    s3.EventType.OBJECT_CREATED,
+    new s3notifications.LambdaDestination(postAbcdBucketDataLambda),
+    {
+      prefix: "fieldData/",
+      suffix: ".json",
+    }
+  );
+
+  abcdFormBucket.addEventNotification(
+    s3.EventType.OBJECT_TAGGING_PUT,
+    new s3notifications.LambdaDestination(postAbcdBucketDataLambda),
     {
       prefix: "fieldData/",
       suffix: ".json",

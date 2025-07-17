@@ -140,6 +140,7 @@ export const mockReportFieldData = {
       name: "entity-name",
       entityType_one: "hello",
       transitionBenchmarks_targetPopulationName: "mock benchmark name",
+      type: "mock-type",
     },
   ],
   initiative: [
