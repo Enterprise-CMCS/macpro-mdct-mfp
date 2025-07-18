@@ -25,6 +25,7 @@ import {
   PageTemplate,
   ReportContext,
   Alert,
+  CreateAbcdModal,
 } from "components";
 // types
 import {
@@ -134,13 +135,19 @@ export const DashboardPage = ({ reportType }: Props) => {
       navigate("/");
     }
     switch (reportType) {
+      case ReportType.WP:
+        fetchReportsByState(reportType, activeState);
+        clearReportSelection();
+        break;
       case ReportType.SAR:
         fetchReportForSarCreation(activeState);
         clearReportSelection();
         break;
-      default:
+      case ReportType.ABCD:
         fetchReportsByState(reportType, activeState);
         clearReportSelection();
+        break;
+      default:
         break;
     }
   }, []);
@@ -230,6 +237,8 @@ export const DashboardPage = ({ reportType }: Props) => {
     // use disclosure to open modal
     if (reportType === ReportType.WP) {
       createWorkPlanModalOnOpenHandler();
+    } else if (reportType === ReportType.ABCD) {
+      createAbcdModalOnOpenHandler();
     } else {
       createSarModalOnOpenHandler();
     }
@@ -298,6 +307,13 @@ export const DashboardPage = ({ reportType }: Props) => {
     isOpen: createSarModalIsOpen,
     onOpen: createSarModalOnOpenHandler,
     onClose: createSarModalOnCloseHandler,
+  } = useDisclosure();
+
+  // add/edit program modal disclosure
+  const {
+    isOpen: createAbcdModalIsOpen,
+    onOpen: createAbcdModalOnOpenHandler,
+    onClose: createAbcdModalOnCloseHandler,
   } = useDisclosure();
 
   //unlock modal disclosure
@@ -437,6 +453,14 @@ export const DashboardPage = ({ reportType }: Props) => {
         modalDisclosure={{
           isOpen: createSarModalIsOpen,
           onClose: createSarModalOnCloseHandler,
+        }}
+      />
+      <CreateAbcdModal
+        activeState={activeState!}
+        selectedReport={selectedReport!}
+        modalDisclosure={{
+          isOpen: createAbcdModalIsOpen,
+          onClose: createAbcdModalOnCloseHandler,
         }}
       />
       <Modal

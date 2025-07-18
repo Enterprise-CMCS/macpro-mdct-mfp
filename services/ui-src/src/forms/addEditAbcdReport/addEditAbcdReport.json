@@ -1,0 +1,32 @@
+{
+  "id": "aea",
+  "options": {
+    "mode": "onChange"
+  },
+  "heading": {
+    "add": "Add new MFP ABCD submission",
+    "edit": "Edit MFP ABCD submission"
+  },
+  "fields": [
+    {
+      "id": "stateOrTerritory",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "disabled": true,
+        "label": "State or Territory",
+        "hint": "Auto-populates from your account profile."
+      }
+    },
+    {
+      "id": "reportPeriod",
+      "type": "text",
+      "validation": "text",
+      "props": {
+        "disabled": true,
+        "label": "Reporting period",
+        "hint": "Auto-populates from your last approved MFP Work Plan.<br/>(1) First reporting period (January-June)<br/>(2) Second reporting period (July-December)"
+      }
+    }
+  ]
+}
