@@ -59,6 +59,13 @@ export function createDataComponents(props: CreateDataComponentsProps) {
       partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
     }).identifiers,
+    new DynamoDBTable(scope, "AbcdReports", {
+      stage,
+      isDev,
+      name: "abcd-reports",
+      partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
+      sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    }).identifiers,
   ];
 
   const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
@@ -85,5 +92,17 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     autoDeleteObjects: isDev,
   });
 
-  return { tables, sarFormBucket, wpFormBucket };
+  const abcdFormBucket = new s3.Bucket(scope, "AbcdFormBucket", {
+    bucketName: `database-${stage}-abcd`,
+    encryption: s3.BucketEncryption.S3_MANAGED,
+    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+    serverAccessLogsBucket: loggingBucket,
+    serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
+    versioned: true,
+    enforceSSL: true,
+    removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+    autoDeleteObjects: isDev,
+  });
+
+  return { tables, sarFormBucket, wpFormBucket, abcdFormBucket };
 }

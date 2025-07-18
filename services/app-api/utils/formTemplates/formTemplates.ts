@@ -1,13 +1,16 @@
 import wpForm from "../../forms/wp.json";
 import sarForm from "../../forms/sar.json";
+import abcdForm from "../../forms/abcd.json";
 import KSUID from "ksuid";
 import {
   AnyObject,
+  EntityDetailsOverlayShape,
   FieldChoice,
   FormField,
   FormJson,
   FormLayoutElement,
   FormTemplateVersion,
+  OverlayModalPageShape,
   ReportJson,
   ReportRoute,
   ReportType,
@@ -27,6 +30,7 @@ export const formTemplateForReportType = (reportType: ReportType) => {
   const map: { [key in ReportType]: ReportJson } = {
     [ReportType.WP]: wpForm as ReportJson,
     [ReportType.SAR]: sarForm as ReportJson,
+    [ReportType.ABCD]: abcdForm as ReportJson,
   };
   // Clone to prevent accidental changes to the originals
   return structuredClone(map[reportType]);
@@ -207,8 +211,11 @@ export const compileValidationJsonFromRoutes = (
           if (stepForm) {
             addValidationToAccumulator(stepForm);
           } else {
-            if (step.objectiveCards) {
-              for (let objectiveCard of step.objectiveCards) {
+            const { objectiveCards } = step as
+              | OverlayModalPageShape
+              | EntityDetailsOverlayShape;
+            if (objectiveCards) {
+              for (let objectiveCard of objectiveCards) {
                 if (objectiveCard.modalForm) {
                   addValidationToAccumulator(objectiveCard.modalForm);
                 }
