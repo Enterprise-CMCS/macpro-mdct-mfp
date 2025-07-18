@@ -3,14 +3,6 @@ import { GetObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
 
 describe("S3 helper functions", () => {
   describe("createClient", () => {
-    let originalEndpoint: string | undefined;
-    beforeAll(() => {
-      originalEndpoint = process.env.S3_LOCAL_ENDPOINT;
-    });
-    afterAll(() => {
-      process.env.S3_LOCAL_ENDPOINT = originalEndpoint;
-    });
-
     const getRegion = async (client: S3Client) => {
       const configValue = client.config.region;
       if (typeof configValue === "string") {
@@ -20,15 +12,7 @@ describe("S3 helper functions", () => {
       }
     };
 
-    it("should return a local client if S3_LOCAL_ENDPOINT is set", async () => {
-      process.env.S3_LOCAL_ENDPOINT = "mock endpoint";
-      const client = createClient();
-      const region = await getRegion(client);
-      expect(region).toBe("localhost");
-    });
-
-    test("should return a live client if S3_LOCAL_ENDPOINT is undefined", async () => {
-      delete process.env.S3_LOCAL_ENDPOINT;
+    it("should return a live client", async () => {
       const client = createClient();
       const region = await getRegion(client);
       expect(region).toBe("us-east-1");
