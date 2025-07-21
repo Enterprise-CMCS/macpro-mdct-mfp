@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 // components
 import { Alert, Form, Modal, ReportContext } from "components";
-import { Button } from "@chakra-ui/react";
 // form
 import abcdFormJson from "forms/addEditAbcdReport/addEditAbcdReport.json";
 // utils
@@ -154,11 +153,6 @@ export const CreateAbcdModal = ({
     setSubmitting(false);
   };
 
-  const isCopyDisabled = () => {
-    //if no previous report or the previous report is not approve, disable copy button
-    return notCopyingReport || previousReport?.status !== "Approved";
-  };
-
   return (
     <Modal
       data-testid="create-abcd-modal"
@@ -167,12 +161,10 @@ export const CreateAbcdModal = ({
       submitting={submitting}
       submitButtonDisabled={submitting || showAlert}
       content={{
-        heading: !isCopyDisabled() ? form.heading?.edit : form.heading?.add,
-        subheading: !isCopyDisabled()
-          ? form.heading?.subheadingEdit
-          : form.heading?.subheading,
-        actionButtonText: notCopyingReport ? "Start new" : "",
-        closeButtonText: notCopyingReport ? "Cancel" : "",
+        heading: form.heading?.add,
+        subheading: form.heading?.subheading,
+        actionButtonText: "Start new",
+        closeButtonText: "Cancel",
       }}
     >
       <Form
@@ -192,16 +184,6 @@ export const CreateAbcdModal = ({
           description={resetAlertText.description}
         />
       )}
-      {!notCopyingReport && (
-        <Button
-          sx={sx.copyBtn}
-          disabled={isCopyDisabled() || submitting}
-          onClick={writeReport}
-          type="submit"
-        >
-          Continue from previous period
-        </Button>
-      )}
     </Modal>
   );
 };
@@ -215,22 +197,3 @@ interface Props {
   previousReport?: AnyObject;
   selectedReport?: AnyObject;
 }
-
-const sx = {
-  copyBtn: {
-    justifyContent: "center",
-    marginTop: "1rem",
-    marginRight: "1rem",
-    minWidth: "7.5rem",
-    span: {
-      marginLeft: "1rem",
-      marginRight: "-0.25rem",
-      "&.ds-c-spinner": {
-        marginLeft: 0,
-      },
-    },
-    ".mobile &": {
-      fontSize: "sm",
-    },
-  },
-};

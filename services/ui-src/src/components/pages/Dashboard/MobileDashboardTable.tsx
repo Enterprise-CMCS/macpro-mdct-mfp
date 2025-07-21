@@ -159,6 +159,12 @@ const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
           <Text>{convertDateUtcToEt(report.dueDate)}</Text>
         </Box>
       )}
+      {reportType === "ABCD" && !isAdmin && (
+        <Box sx={sx.editDate}>
+          <Text sx={sx.label}>Due date</Text>
+          <Text>{convertDateUtcToEt(report.createdAt)}</Text>
+        </Box>
+      )}
       <Box>
         <Text sx={sx.label}>Last edited</Text>
         <Text>{convertDateUtcToEt(report.lastAltered)}</Text>

@@ -424,7 +424,7 @@ export const DashboardPage = ({ reportType }: Props) => {
                 ? body.callToAction
                 : body.callToActionAdditions}
             </Button>
-            {previousReport && (
+            {!ReportType.ABCD && previousReport && (
               <Button
                 sx={sx.resetBtn}
                 onClick={openResetWorkPlanModal}
