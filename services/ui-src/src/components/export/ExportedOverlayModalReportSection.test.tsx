@@ -1,12 +1,17 @@
 import { render, screen } from "@testing-library/react";
 // components
 import { ReportContext } from "components";
+import { renderModalOverlayTableBody } from "./ExportedModalOverlayReportSection";
 // utils
 import { useStore } from "../../utils";
 import { mockUseStore } from "../../utils/testing/setupJest";
 import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
-import { mockWpReportContext } from "../../utils/testing/mockReport";
-import { entityTypes } from "types";
+import {
+  mockReportFieldData,
+  mockWPFullReport,
+  mockWpReportContext,
+} from "../../utils/testing/mockReport";
+import { EntityShape, entityTypes, OverlayModalPageShape } from "types";
 import { mockOverlayModalPageJson } from "utils/testing/setupJest";
 
 jest.mock("utils/state/useStore");
@@ -87,5 +92,22 @@ describe("<ExportedOverlayModalReportSection />", () => {
   test("ExportedOverlayModalReportComponent returns entity step card", () => {
     render(exportedOverlayModalReportComponentEntityStep);
     expect(screen.getByTestId("exportedOverlayModalPage")).toBeInTheDocument();
+  });
+
+  describe("renderModalOverlayTableBody()", () => {
+    test("Returns error for unknown reportType", () => {
+      const section = mockOverlayModalPageJson as OverlayModalPageShape;
+      const report = {
+        ...mockWPFullReport,
+        reportType: "UNKNOWN_TYPE",
+      };
+      const entities = mockReportFieldData.entityType as EntityShape[];
+      const headingLevel = "h2";
+      expect(() =>
+        renderModalOverlayTableBody(section, report, entities, headingLevel)
+      ).toThrow(
+        "The modal overlay table headers for report type 'UNKNOWN_TYPE' have not been implemented."
+      );
+    });
   });
 });

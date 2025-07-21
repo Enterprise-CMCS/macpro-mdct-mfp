@@ -47,6 +47,7 @@ import {
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
+import abcdVerbiage from "verbiage/pages/abcd/abcd-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
@@ -97,6 +98,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiageMap: any = {
     WP: wpVerbiage,
     SAR: sarVerbiage,
+    ABCD: abcdVerbiage,
   };
 
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
@@ -131,12 +133,15 @@ export const DashboardPage = ({ reportType }: Props) => {
     if (!activeState) {
       navigate("/");
     }
-    if (reportType == ReportType.WP) {
-      fetchReportsByState(reportType, activeState);
-      clearReportSelection();
-    } else {
-      fetchReportForSarCreation(activeState);
-      clearReportSelection();
+    switch (reportType) {
+      case ReportType.SAR:
+        fetchReportForSarCreation(activeState);
+        clearReportSelection();
+        break;
+      default:
+        fetchReportsByState(reportType, activeState);
+        clearReportSelection();
+        break;
     }
   }, []);
 
@@ -269,6 +274,8 @@ export const DashboardPage = ({ reportType }: Props) => {
         } else {
           return previousReport.status !== ReportStatus.APPROVED;
         }
+      case ReportType.ABCD:
+        return false;
       default:
         return true;
     }

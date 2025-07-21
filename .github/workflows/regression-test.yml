@@ -1,0 +1,91 @@
+name: Regression Tests
+
+on:
+  schedule:
+    # Every Monday at 7 AM UTC
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: regression-${{ github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+  actions: read
+  pages: write
+
+jobs:
+  regression-tests:
+    name: Playwright Regression Tests
+    uses: ./.github/workflows/e2e-test.yml
+    with:
+      base-url: 'https://mfp-val.mdctdemo.com'
+      test-filter: '--grep-invert "@flaky"'
+      timeout-minutes: 90
+      artifact-name-prefix: 'regression'
+      continue-on-error: true
+      upload-to-pages: true
+      pages-destination-dir: 'regression'
+      aws-role-varname: 'AWS_OIDC_ROLE_TO_ASSUME'
+      aws-region-varname: 'AWS_DEFAULT_REGION'
+    secrets: inherit #pragma: allowlist secret
+
+  notify-results:
+    name: Notify Stakeholders
+    needs: regression-tests
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine test status
+        id: test-status
+        run: |
+          if [[ "${{ needs.regression-tests.outputs.test-result }}" == "success" ]]; then
+            echo "status=✅ PASSED" >> $GITHUB_OUTPUT
+            echo "color=good" >> $GITHUB_OUTPUT
+          elif [[ "${{ needs.regression-tests.outputs.test-result }}" == "failure" ]]; then
+            echo "status=❌ FAILED" >> $GITHUB_OUTPUT
+            echo "color=danger" >> $GITHUB_OUTPUT
+          else
+            echo "status=⚠️ CANCELLED/SKIPPED" >> $GITHUB_OUTPUT
+            echo "color=warning" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create summary
+        run: |
+          echo "## 🔄 Regression Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ steps.test-status.outputs.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** https://mfp-val.mdctdemo.com" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date --utc)" >> $GITHUB_STEP_SUMMARY
+          echo "**Report:** ${{ needs.regression-tests.outputs.report-url }}" >> $GITHUB_STEP_SUMMARY
+
+      # Uncomment and configure this step when Slack integration is ready
+      # - name: Notify Slack
+      #   if: ${{ always() }}
+      #   uses: 8398a7/action-slack@v3
+      #   with:
+      #     status: custom
+      #     custom_payload: |
+      #       {
+      #         "text": "MFP Regression Tests ${{ steps.test-status.outputs.status }}",
+      #         "attachments": [
+      #           {
+      #             "color": "${{ steps.test-status.outputs.color }}",
+      #             "fields": [
+      #               {
+      #                 "title": "Environment",
+      #                 "value": "https://mfp-val.mdctdemo.com",
+      #                 "short": true
+      #               },
+      #               {
+      #                 "title": "Results",
+      #                 "value": "<${{ needs.regression-tests.outputs.report-url }}|View Report>",
+      #                 "short": true
+      #               }
+      #             ]
+      #           }
+      #         ]
+      #       }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
