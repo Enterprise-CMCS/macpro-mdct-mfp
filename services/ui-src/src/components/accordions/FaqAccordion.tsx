@@ -6,18 +6,15 @@ import { AnyObject } from "types";
 
 export const FaqAccordion = ({ accordionItems, ...props }: Props) => {
   return (
-    <>
-      {/* @ts-ignore Throws TS2590: expression too complex */}
-      <Accordion allowToggle={true} allowMultiple={true} {...props}>
-        {accordionItems.map((item: AnyObject, index: number) => (
-          <AccordionItem key={index} label={item.question} sx={sx.item}>
-            <Box sx={sx.answerBox}>
-              <Text>{item.answer}</Text>
-            </Box>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </>
+    <Accordion allowToggle={true} allowMultiple={true} {...props}>
+      {accordionItems.map((item: AnyObject, index: number) => (
+        <AccordionItem key={index} label={item.question} sx={sx.item}>
+          <Box sx={sx.answerBox}>
+            <Text>{item.answer}</Text>
+          </Box>
+        </AccordionItem>
+      ))}
+    </Accordion>
   );
 };
 
