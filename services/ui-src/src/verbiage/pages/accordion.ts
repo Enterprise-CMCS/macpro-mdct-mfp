@@ -126,4 +126,56 @@ export default {
       text: "",
     },
   },
+  ABCD: {
+    adminDashboard: {
+      buttonLabel: "Instructions",
+      intro: [
+        {
+          type: "text",
+          as: "p",
+          content: "<b>State or Territory User instructions</b>",
+        },
+        {
+          type: "text",
+          as: "p",
+          content:
+            "Click “Add new MFP ABCD submission” below to begin reporting for the current reporting period.",
+        },
+        {
+          type: "text",
+          as: "p",
+          content: "<b>Admin instructions</b>",
+        },
+      ],
+      list: [
+        "To allow a state to make corrections or edits to a submission use “Unlock” to release the submission. The status will change to “In revision”.",
+        "Submission count is shown in the # column. Submissions started and submitted once have a count of 1. When a state resubmits a previous submission, the count increases by 1.",
+      ],
+      text: "",
+    },
+    stateUserDashboard: {
+      buttonLabel: "Instructions",
+      intro: [
+        {
+          type: "text",
+          as: "p",
+          content: "<b>State or Territory User instructions</b>",
+        },
+        {
+          type: "text",
+          as: "p",
+          content:
+            "Click “Add new MFP ABCD submission” below to begin reporting for the current reporting period.",
+        },
+      ],
+      list: [],
+      text: "",
+    },
+    formIntro: {
+      buttonLabel: "Instructions",
+      intro: "",
+      list: [],
+      text: "",
+    },
+  },
 };

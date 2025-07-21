@@ -27,6 +27,7 @@ import {
   EntityDetailsOverlayShape,
   FormField,
   FormJson,
+  FormLayoutElement,
   ModalOverlayReportPageVerbiage,
   OverlayModalPageShape,
   ReportJson,
@@ -283,13 +284,14 @@ describe("Test form contents", () => {
         for (let field of form.fields) {
           const isField = isFieldElement(field);
           const isLayout = isLayoutElement(field);
+          const baseField = field as FormField | FormLayoutElement;
           if (isField && isLayout) {
             throw new Error(
-              `Field '${field.id}' of type ${field.type} has confused the field type guards! Update them.`
+              `Field '${baseField.id}' of type ${baseField.type} has confused the field type guards! Update them.`
             );
           } else if (!isField && !isLayout) {
             throw new Error(
-              `Field '${field.id}' of type ${field.type} has confused the field type guards! Update them.`
+              `Field '${baseField.id}' of type ${baseField.type} has confused the field type guards! Update them.`
             );
           }
         }
@@ -351,6 +353,16 @@ describe("Test compileValidationJsonFromRoutes", () => {
                 fields: [] as FormField[],
               },
             } as OverlayModalPageShape,
+            {
+              stepName: "mock entity 1 3",
+              objectiveCards: [
+                {
+                  modalForm: {
+                    fields: [] as FormField[],
+                  },
+                },
+              ],
+            } as OverlayModalPageShape,
           ],
         },
         {
@@ -389,7 +401,7 @@ describe("Test compileValidationJsonFromRoutes", () => {
     const result = compileValidationJsonFromRoutes([dynamicModalOverlayRoute]);
 
     expect(result).toEqual({
-      "initiative": "objectArray", // prettier-ignore
+      initiative: "objectArray",
       "text-field-1-1": "text",
       "number-field-1-1": "number",
       "email-field-2-2": "email",
