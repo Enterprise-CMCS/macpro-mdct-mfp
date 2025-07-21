@@ -61,10 +61,7 @@ export const ExportedModalOverlayReportSection = ({
       </Box>
 
       {(!entities || entities.length === 0) && (
-        <>
-          {/* @ts-ignore Throws TS2590: expression too complex */}
-          <Text sx={sx.emptyState}>No entities found.</Text>
-        </>
+        <Text sx={sx.emptyState}>No entities found.</Text>
       )}
     </>
   );

@@ -90,7 +90,6 @@ export function getEntityTableComponents(
   return (
     <Box key={uuid()}>
       <Box>
-        {/* @ts-ignore Throws TS2590: expression too complex */}
         <Heading as={headingLevel} sx={sx.stepName}>
           {title}
         </Heading>
