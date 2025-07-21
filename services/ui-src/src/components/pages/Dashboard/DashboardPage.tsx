@@ -18,10 +18,8 @@ import {
   CreateWorkPlanModal,
   CreateSarModal,
   Modal,
-  DashboardTable,
   InstructionsAccordion,
   ErrorAlert,
-  MobileDashboardTable,
   PageTemplate,
   ReportContext,
   Alert,
@@ -42,7 +40,6 @@ import {
   convertTargetPopulationsFromWPToSAREntity,
   parseCustomHtml,
   getApplicablePopulations,
-  useBreakpoint,
   useStore,
 } from "utils";
 // verbiage
@@ -54,6 +51,7 @@ import accordion from "verbiage/pages/accordion";
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 import alertIcon from "assets/icons/icon_alert_circle.png";
 import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
+import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
 
 export const DashboardPage = ({ reportType }: Props) => {
   const {
@@ -79,7 +77,6 @@ export const DashboardPage = ({ reportType }: Props) => {
     userIsReadOnly,
     userIsAdmin,
   } = useStore().user ?? {};
-  const { isTablet, isMobile } = useBreakpoint();
   const [reportsToDisplay, setReportsToDisplay] = useState<
     ReportMetadataShape[] | undefined
   >(undefined);
@@ -234,14 +231,13 @@ export const DashboardPage = ({ reportType }: Props) => {
 
     setSelectedReport(formData);
 
-    // use disclosure to open modal
-    if (reportType === ReportType.WP) {
-      createWorkPlanModalOnOpenHandler();
-    } else if (reportType === ReportType.ABCD) {
-      createAbcdModalOnOpenHandler();
-    } else {
-      createSarModalOnOpenHandler();
-    }
+    const openHandlerMap: any = {
+      WP: createWorkPlanModalOnOpenHandler,
+      SAR: createSarModalOnOpenHandler,
+      ABCD: createAbcdModalOnOpenHandler,
+    };
+
+    openHandlerMap[reportType]();
   };
 
   const openResetWorkPlanModal = () => {
@@ -277,14 +273,12 @@ export const DashboardPage = ({ reportType }: Props) => {
     switch (reportType) {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
-      case ReportType.WP:
+      case ReportType.WP || ReportType.ABCD:
         if (!previousReport) {
           return false;
         } else {
           return previousReport.status !== ReportStatus.APPROVED;
         }
-      case ReportType.ABCD:
-        return false;
       default:
         return true;
     }
@@ -369,38 +363,21 @@ export const DashboardPage = ({ reportType }: Props) => {
       </Box>
       <Box sx={sx.bodyBox}>
         {reportsToDisplay ? (
-          isTablet || isMobile ? (
-            <MobileDashboardTable
-              reportsByState={reportsToDisplay}
-              reportType={reportType}
-              reportId={reportId}
-              openCreateReportModal={openCreateReportModal}
-              enterSelectedReport={enterSelectedReport}
-              archive={openArchiveModal}
-              entering={entering}
-              releaseReport={toggleReportLockStatus}
-              releasing={releasing}
-              isStateLevelUser={userIsEndUser!}
-              isAdmin={userIsAdmin!}
-              sxOverride={sxChildStyles}
-            />
-          ) : (
-            <DashboardTable
-              reportsByState={reportsToDisplay}
-              reportType={reportType}
-              reportId={reportId}
-              body={body}
-              openCreateReportModal={openCreateReportModal}
-              enterSelectedReport={enterSelectedReport}
-              archive={openArchiveModal}
-              entering={entering}
-              releaseReport={toggleReportLockStatus}
-              releasing={releasing}
-              isStateLevelUser={userIsEndUser!}
-              isAdmin={userIsAdmin!}
-              sxOverride={sxChildStyles}
-            />
-          )
+          <ResponsiveDashboardTable
+            reportsByState={reportsToDisplay}
+            reportType={reportType}
+            reportId={reportId}
+            body={body}
+            openCreateReportModal={openCreateReportModal}
+            enterSelectedReport={enterSelectedReport}
+            archive={openArchiveModal}
+            entering={entering}
+            releaseReport={toggleReportLockStatus}
+            releasing={releasing}
+            isStateLevelUser={userIsEndUser!}
+            isAdmin={userIsAdmin!}
+            sxOverride={sxChildStyles}
+          />
         ) : (
           !errorMessage && (
             <Flex sx={sx.spinnerContainer}>

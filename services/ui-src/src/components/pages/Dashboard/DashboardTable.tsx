@@ -39,7 +39,7 @@ export const DashboardTable = ({
           />
         )}
         {/* Report Name */}
-        {reportType === (ReportType.WP || ReportType.ABCD) ? (
+        {reportType === ReportType.WP || reportType === ReportType.ABCD ? (
           <>
             <Td sx={sxOverride.wpSubmissionNameText}>
               {report.submissionName}
@@ -127,7 +127,7 @@ export const copyOverSubText = (
     }`}</Text>
   );
 
-interface DashboardTableProps {
+export interface DashboardTableProps {
   reportsByState: ReportMetadataShape[];
   body: { table: AnyObject };
   reportType: string;
