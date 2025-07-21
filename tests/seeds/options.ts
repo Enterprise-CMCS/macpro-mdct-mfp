@@ -27,121 +27,177 @@ export const loginSeedUsers = async (): Promise<void> => {
   adminHeaders["x-api-key"] = adminLogin.IdToken;
 };
 
-// Work Plan (WP)
-export const createWorkPlan = async (
+// Reports
+export const createReport = async (
+  reportType: string,
   year: number,
   period: number
+): Promise<SeedReportShape> => {
+  if (reportType === "SAR") {
+    const report = createSemiAnnualReport(year, period);
+    return report;
+  }
+
+  const data = newWorkPlan(stateName, year, period);
+  const report = await postApi(
+    `/reports/${reportType}/${state}`,
+    headers,
+    data
+  );
+  return report;
+};
+
+export const createFilledReport = async (
+  reportType: string,
+  year: number,
+  period: number
+): Promise<SeedReportShape> => {
+  const response = await createReport(reportType, year, period);
+
+  if (response.id) {
+    const report = await updateFillReport(
+      response.id,
+      reportType,
+      year,
+      period
+    );
+    return report;
+  }
+
+  // Error message
+  return response;
+};
+
+export const updateFillReport = async (
+  id: string,
+  reportType: string,
+  year: number,
+  period: number
+): Promise<SeedReportShape> => {
+  let data = {};
+
+  if (reportType === "SAR") {
+    const sar = await getSemiAnnualReportById(id);
+    data = fillSemiAnnualReport(sar);
+  } else {
+    data = fillWorkPlan(year, period);
+  }
+
+  const report = await putApi(
+    `/reports/${reportType}/${state}/${id}`,
+    headers,
+    data
+  );
+  return report;
+};
+
+export const createSubmittedReport = async (
+  reportType: string,
+  year: number,
+  period: number
+): Promise<SeedReportShape> => {
+  const response = await createFilledReport(reportType, year, period);
+
+  if (response.id) {
+    const report = await updateSubmitReport(response.id, reportType);
+    return report;
+  }
+
+  // Error message
+  return response;
+};
+
+export const updateSubmitReport = async (
+  id: string,
+  reportType: string
 ): Promise<SeedReportShape> => {
   const report = await postApi(
-    `/reports/WP/${state}`,
-    headers,
-    newWorkPlan(stateName, year, period)
-  );
-  return report;
-};
-
-export const createFilledWorkPlan = async (
-  year: number,
-  period: number
-): Promise<SeedReportShape> => {
-  const { id } = await createWorkPlan(year, period);
-  const report = await updateFillWorkPlan(id);
-  return report;
-};
-
-export const updateFillWorkPlan = async (
-  id: string
-): Promise<SeedReportShape> => {
-  const { reportYear, reportPeriod } = await getWorkPlanById(id);
-
-  const report = await putApi(
-    `/reports/WP/${state}/${id}`,
-    headers,
-    fillWorkPlan(reportYear, reportPeriod)
-  );
-  return report;
-};
-
-export const createSubmittedWorkPlan = async (
-  year: number,
-  period: number
-): Promise<SeedReportShape> => {
-  const { id } = await createFilledWorkPlan(year, period);
-  const report = await updateSubmitWorkPlan(id);
-  return report;
-};
-
-export const updateSubmitWorkPlan = async (
-  id: string
-): Promise<SeedReportShape> => {
-  const report = await postApi(
-    `/reports/submit/WP/${state}/${id}`,
+    `/reports/submit/${reportType}/${state}/${id}`,
     headers,
     {}
   );
   return report;
 };
 
-export const createApprovedWorkPlan = async (
+export const createApprovedReport = async (
+  reportType: string,
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const { id } = await createSubmittedWorkPlan(year, period);
-  const report = await updateApproveWorkPlan(id);
+  const { id } = await createSubmittedReport(reportType, year, period);
+  const report = await updateApprovedReport(id, reportType);
   return report;
 };
 
-export const updateApproveWorkPlan = async (
-  id: string
+export const updateApprovedReport = async (
+  id: string,
+  reportType: string
 ): Promise<SeedReportShape> => {
   const report = await putApi(
-    `/reports/approve/WP/${state}/${id}`,
+    `/reports/approve/${reportType}/${state}/${id}`,
     adminHeaders,
     {}
   );
   return report;
 };
 
-export const createLockedWorkPlan = async (
+export const createLockedReport = async (
+  reportType: string,
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const { id } = await createApprovedWorkPlan(year, period);
-  const report = await updateLockWorkPlan(id);
-  return report;
+  const response = await createApprovedReport(reportType, year, period);
+
+  if (response.id) {
+    const report = await updateLockedReport(response.id, reportType);
+    return report;
+  }
+
+  // Error message
+  return response;
 };
 
-export const updateLockWorkPlan = async (
-  id: string
+export const updateLockedReport = async (
+  id: string,
+  reportType: string
 ): Promise<SeedReportShape> => {
   const report = await putApi(
-    `/reports/release/WP/${state}/${id}`,
+    `/reports/release/${reportType}/${state}/${id}`,
     adminHeaders,
     {}
   );
   return report;
 };
 
-export const createArchivedWorkPlan = async (
+export const createArchivedReport = async (
+  reportType: string,
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const { id } = await createApprovedWorkPlan(year, period);
-  const report = await updateArchiveWorkPlan(id);
-  return report;
+  const response = await createSubmittedReport(reportType, year, period);
+
+  if (response.id) {
+    const report = await updateArchivedReport(response.id, reportType);
+    return report;
+  }
+
+  // Error message
+  return response;
 };
 
-export const updateArchiveWorkPlan = async (
-  id: string
+export const updateArchivedReport = async (
+  id: string,
+  reportType: string
 ): Promise<SeedReportShape> => {
   const report = await putApi(
-    `/reports/archive/WP/${state}/${id}`,
+    `/reports/archive/${reportType}/${state}/${id}`,
     adminHeaders,
     {}
   );
   return report;
 };
 
+// Work Plans (WP)
 export const getWorkPlansByReportingPeriod = async (
   year: number,
   period: number
@@ -163,14 +219,14 @@ export const getWorkPlansByState = async (): Promise<SeedReportShape[]> => {
   return reports;
 };
 
-// Semi-Annual Report (SAR)
+// Semi-Annual Reports (SAR)
 export const createSemiAnnualReport = async (
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  let id;
+  let id = "";
 
-  const newWP = await createApprovedWorkPlan(year, period);
+  const newWP = await createApprovedReport("WP", year, period);
 
   if (newWP.id) {
     id = newWP.id;
@@ -198,111 +254,6 @@ export const createSemiAnnualReport = async (
   return report;
 };
 
-export const createFilledSemiAnnualReport = async (
-  year: number,
-  period: number
-): Promise<SeedReportShape> => {
-  const sar = await createSemiAnnualReport(year, period);
-
-  if (sar.id) {
-    const report = await updateFillSemiAnnualReport(sar.id);
-    return report;
-  }
-
-  // Error message
-  return sar;
-};
-
-export const updateFillSemiAnnualReport = async (
-  id: string
-): Promise<SeedReportShape> => {
-  const sar = await getSemiAnnualReportById(id);
-  const report = await putApi(
-    `/reports/SAR/${state}/${id}`,
-    headers,
-    fillSemiAnnualReport(sar)
-  );
-  return report;
-};
-
-export const createSubmittedSemiAnnualReport = async (
-  year: number,
-  period: number
-): Promise<SeedReportShape> => {
-  const sar = await createFilledSemiAnnualReport(year, period);
-
-  if (sar.id) {
-    const report = await updateSubmitSemiAnnualReport(sar.id);
-    return report;
-  }
-
-  // Error message
-  return sar;
-};
-
-export const updateSubmitSemiAnnualReport = async (
-  id: string
-): Promise<SeedReportShape> => {
-  const report = await postApi(
-    `/reports/submit/SAR/${state}/${id}`,
-    headers,
-    {}
-  );
-  return report;
-};
-
-export const createLockedSemiAnnualReport = async (
-  year: number,
-  period: number
-): Promise<SeedReportShape> => {
-  const sar = await createFilledSemiAnnualReport(year, period);
-
-  if (sar.id) {
-    const report = await updateLockSemiAnnualReport(sar.id);
-    return report;
-  }
-
-  // Error message
-  return sar;
-};
-
-export const updateLockSemiAnnualReport = async (
-  id: string
-): Promise<SeedReportShape> => {
-  const report = await putApi(
-    `/reports/release/SAR/${state}/${id}`,
-    adminHeaders,
-    {}
-  );
-  return report;
-};
-
-export const createArchivedSemiAnnualReport = async (
-  year: number,
-  period: number
-): Promise<SeedReportShape> => {
-  const sar = await createFilledSemiAnnualReport(year, period);
-
-  if (sar.id) {
-    const report = await updateArchiveSemiAnnualReport(sar.id);
-    return report;
-  }
-
-  // Error message
-  return sar;
-};
-
-export const updateArchiveSemiAnnualReport = async (
-  id: string
-): Promise<SeedReportShape> => {
-  const report = await putApi(
-    `/reports/archive/SAR/${state}/${id}`,
-    adminHeaders,
-    {}
-  );
-  return report;
-};
-
 export const getSemiAnnualReportById = async (
   id: string
 ): Promise<SeedReportShape> => {
@@ -317,7 +268,7 @@ export const getSemiAnnualReportsByState = async (): Promise<
   return reports;
 };
 
-// Banner
+// Banners
 export const createBanner = async (
   status: string
 ): Promise<SeedBannerShape> => {
