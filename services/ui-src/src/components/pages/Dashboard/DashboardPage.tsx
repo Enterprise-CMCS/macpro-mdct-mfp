@@ -269,11 +269,13 @@ export const DashboardPage = ({ reportType }: Props) => {
       confirmUnlockModalOnOpenHandler();
     }
   };
+
   const isAddSubmissionDisabled = (): boolean => {
     switch (reportType) {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
-      case ReportType.WP || ReportType.ABCD:
+      case ReportType.WP:
+      case ReportType.ABCD:
         if (!previousReport) {
           return false;
         } else {
