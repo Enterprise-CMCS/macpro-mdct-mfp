@@ -237,13 +237,7 @@ export interface ActionButtonProps {
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {reportType === "WP" && !isAdmin && (
-        <Td>{convertDateUtcToEt(report.dueDate)}</Td>
-      )}
-      {reportType === "SAR" && !isAdmin && (
-        <Td>{convertDateUtcToEt(report.dueDate)}</Td>
-      )}
-      {reportType === "ABCD" && !isAdmin && (
+      {!!reportType && !isAdmin && (
         <Td>{convertDateUtcToEt(report.dueDate)}</Td>
       )}
       <Td>{convertDateUtcToEt(report.lastAltered)}</Td>

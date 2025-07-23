@@ -393,8 +393,7 @@ export const mockWPSubmittedReport = {
 export const mockAbcdFullReport = {
   ...mockReportKeys,
   id: "mock-abcd-full-report-id",
-  reportType: "WP",
-  formTemplate: mockReportJson,
+  reportType: "ABCD",
   submissionName: "2023 - Alabama 1",
   status: ReportStatus.NOT_STARTED,
   dueDate: 168515200000,

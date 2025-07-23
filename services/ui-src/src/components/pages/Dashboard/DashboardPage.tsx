@@ -133,15 +133,12 @@ export const DashboardPage = ({ reportType }: Props) => {
     }
     switch (reportType) {
       case ReportType.WP:
+      case ReportType.ABCD:
         fetchReportsByState(reportType, activeState);
         clearReportSelection();
         break;
       case ReportType.SAR:
         fetchReportForSarCreation(activeState);
-        clearReportSelection();
-        break;
-      case ReportType.ABCD:
-        fetchReportsByState(reportType, activeState);
         clearReportSelection();
         break;
       default:
@@ -403,7 +400,7 @@ export const DashboardPage = ({ reportType }: Props) => {
                 ? body.callToAction
                 : body.callToActionAdditions}
             </Button>
-            {!ReportType.ABCD && previousReport && (
+            {reportType === ReportType.WP && previousReport && (
               <Button
                 sx={sx.resetBtn}
                 onClick={openResetWorkPlanModal}

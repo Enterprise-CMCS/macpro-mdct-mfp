@@ -4,6 +4,8 @@ import { Alert, Form, Modal, ReportContext } from "components";
 // form
 import abcdFormJson from "forms/addEditAbcdReport/addEditAbcdReport.json";
 // utils
+import { useStore } from "utils";
+// types
 import {
   AlertTypes,
   AnyObject,
@@ -11,22 +13,16 @@ import {
   ReportStatus,
   ReportType,
 } from "types";
+// constants
 import { DEFAULT_TARGET_POPULATIONS, States } from "../../constants";
-import { useStore } from "utils";
 
 const reportType = ReportType.ABCD;
 
-const resetAlertText = {
-  title: "A MFP Work Plan for this Reporting Period already exists",
-  description:
-    "To avoid duplication, select a different Year or Reporting Period; or select “Cancel” and select “Continue MFP Work Plan for next Period”.",
-};
-
 const generateReportYearChoices = () => {
-  const WP_LAUNCH_YEAR = 2025;
+  const ABCD_LAUNCH_YEAR = 2025;
   const currentYear = new Date(Date.now()).getFullYear();
   return [currentYear - 1, currentYear, currentYear + 1]
-    .filter((year) => year >= WP_LAUNCH_YEAR)
+    .filter((year) => year >= ABCD_LAUNCH_YEAR)
     .map((year) => ({
       id: `reportYear-${year}`,
       label: `${year}`,
@@ -37,7 +33,7 @@ const generateReportYearChoices = () => {
 
 export const CreateAbcdModal = ({
   activeState,
-  previousReport,
+  selectedReport,
   modalDisclosure,
 }: Props) => {
   const { createReport, fetchReportsByState } = useContext(ReportContext);
@@ -50,16 +46,12 @@ export const CreateAbcdModal = ({
 
   const form: FormJson = abcdFormJson;
 
-  const notCopyingReport = !previousReport;
-
-  if (notCopyingReport) {
-    for (let field of form.fields) {
-      if (field.id.match("reportPeriodYear")) {
-        field.props = {
-          ...field.props,
-          choices: generateReportYearChoices(),
-        };
-      }
+  for (let field of form.fields) {
+    if (field.id.match("reportPeriodYear")) {
+      field.props = {
+        ...field.props,
+        choices: generateReportYearChoices(),
+      };
     }
   }
 
@@ -111,18 +103,14 @@ export const CreateAbcdModal = ({
       },
     };
 
-    if (notCopyingReport) {
-      const formattedReportYear = Number(formData.reportPeriodYear[0].value);
-      const formattedReportPeriod =
-        formData.reportPeriod[0].key === "reportPeriod-1" ? 1 : 2;
-      abcdPayload.metadata = {
-        ...abcdPayload.metadata,
-        reportYear: formattedReportYear,
-        reportPeriod: formattedReportPeriod,
-      };
-    } else {
-      abcdPayload.metadata.copyReport = previousReport;
-    }
+    const formattedReportYear = Number(formData.reportPeriodYear[0].value);
+    const formattedReportPeriod =
+      formData.reportPeriod[0].key === "reportPeriod-1" ? 1 : 2;
+    abcdPayload.metadata = {
+      ...abcdPayload.metadata,
+      reportYear: formattedReportYear,
+      reportPeriod: formattedReportPeriod,
+    };
 
     return abcdPayload;
   };
@@ -171,7 +159,7 @@ export const CreateAbcdModal = ({
         data-testid="create-abcd-form"
         id={form.id}
         formJson={form}
-        formData={previousReport}
+        formData={selectedReport}
         onSubmit={writeReport}
         validateOnRender={false}
         dontReset={true}
@@ -179,9 +167,9 @@ export const CreateAbcdModal = ({
       />
       {showAlert && (
         <Alert
-          title={resetAlertText.title}
+          title="Alert title"
           status={AlertTypes.ERROR}
-          description={resetAlertText.description}
+          description="Alert description"
         />
       )}
     </Modal>
@@ -194,6 +182,5 @@ interface Props {
     onClose: any;
   };
   activeState?: string;
-  previousReport?: AnyObject;
   selectedReport?: AnyObject;
 }
