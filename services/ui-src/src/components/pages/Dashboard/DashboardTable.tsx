@@ -39,7 +39,7 @@ export const DashboardTable = ({
           />
         )}
         {/* Report Name */}
-        {reportType === ReportType.WP ? (
+        {reportType === ReportType.WP || reportType === ReportType.ABCD ? (
           <>
             <Td sx={sxOverride.wpSubmissionNameText}>
               {report.submissionName}
@@ -127,7 +127,7 @@ export const copyOverSubText = (
     }`}</Text>
   );
 
-interface DashboardTableProps {
+export interface DashboardTableProps {
   reportsByState: ReportMetadataShape[];
   body: { table: AnyObject };
   reportType: string;
@@ -179,7 +179,6 @@ export const tableBody = (body: TableContentShape, isAdmin: boolean) => {
   } else {
     tableContent.headRow = tableContent.headRow.filter((e) => e !== "#");
   }
-
   return tableContent;
 };
 
@@ -238,10 +237,7 @@ export interface ActionButtonProps {
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {reportType === "WP" && !isAdmin && (
-        <Td>{convertDateUtcToEt(report.dueDate)}</Td>
-      )}
-      {reportType === "SAR" && !isAdmin && (
+      {!!reportType && !isAdmin && (
         <Td>{convertDateUtcToEt(report.dueDate)}</Td>
       )}
       <Td>{convertDateUtcToEt(report.lastAltered)}</Td>
