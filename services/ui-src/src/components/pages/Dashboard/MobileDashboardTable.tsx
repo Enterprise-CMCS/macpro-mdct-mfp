@@ -147,13 +147,7 @@ interface MobileDashboardTableProps {
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {reportType === "WP" && !isAdmin && (
-        <Box sx={sx.editDate}>
-          <Text sx={sx.label}>Due date</Text>
-          <Text>{convertDateUtcToEt(report.createdAt)}</Text>
-        </Box>
-      )}
-      {reportType === "SAR" && !isAdmin && (
+      {!!reportType && !isAdmin && (
         <Box sx={sx.editDate}>
           <Text sx={sx.label}>Due date</Text>
           <Text>{convertDateUtcToEt(report.dueDate)}</Text>
