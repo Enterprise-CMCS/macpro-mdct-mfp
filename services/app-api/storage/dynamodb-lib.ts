@@ -7,27 +7,14 @@ import { DynamoDBDocumentClient, Paginator } from "@aws-sdk/lib-dynamodb";
 // utils
 import { logger } from "../utils/debugging/debug-lib";
 
-const localConfig = {
-  endpoint: process.env.DYNAMODB_URL,
-  region: "localhost",
-  credentials: {
-    accessKeyId: "LOCALFAKEKEY", // pragma: allowlist secret
-    secretAccessKey: "LOCALFAKESECRET", // pragma: allowlist secret
-  },
-  logger,
-};
-
 const awsConfig = {
   region: "us-east-1",
   logger,
-};
-
-const getConfig = () => {
-  return process.env.DYNAMODB_URL ? localConfig : awsConfig;
+  endpoint: process.env.AWS_ENDPOINT_URL,
 };
 
 export const createClient = () => {
-  return DynamoDBDocumentClient.from(new DynamoDBClient(getConfig()));
+  return DynamoDBDocumentClient.from(new DynamoDBClient(awsConfig));
 };
 
 export const collectPageItems = async <
