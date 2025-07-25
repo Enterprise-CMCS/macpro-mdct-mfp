@@ -53,10 +53,11 @@ export class ParentStack extends Stack {
       `cms-cloud-${Aws.ACCOUNT_ID}-${Aws.REGION}`
     );
 
-    const { tables, wpFormBucket, sarFormBucket } = createDataComponents({
-      loggingBucket,
-      ...commonProps,
-    });
+    const { tables, wpFormBucket, sarFormBucket, abcdFormBucket } =
+      createDataComponents({
+        loggingBucket,
+        ...commonProps,
+      });
 
     const { apiGatewayRestApiUrl, restApiId } = createApiComponents({
       ...commonProps,
@@ -65,6 +66,7 @@ export class ParentStack extends Stack {
       kafkaAuthorizedSubnets,
       wpFormBucket,
       sarFormBucket,
+      abcdFormBucket,
     });
 
     /*

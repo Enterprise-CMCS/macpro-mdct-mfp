@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Creates mmdl topics in CMS Bigmac.",
   "author": "",
+  "license": "CC0-1.0",
   "devDependencies": {},
   "dependencies": {
     "kafkajs": "^2.2.4"

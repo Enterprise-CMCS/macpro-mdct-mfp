@@ -1,7 +1,6 @@
 import { Helmet } from "react-helmet";
 // utils
 import { useStore, displayLongformPeriod } from "utils";
-import { assertExhaustive } from "utils/other/typing";
 // components
 import { Box, Center, Heading, Spinner } from "@chakra-ui/react";
 import {
@@ -24,6 +23,7 @@ import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
 import { useFlags } from "launchdarkly-react-client-sdk";
 import { translate } from "utils/text/translate";
+import { assertExhaustive } from "utils/other/typing";
 
 export const SAR_RET = "Recruitment, Enrollment, and Transitions";
 export const WP_SAR_STATE_TERRITORY_INITIATIVES =
@@ -40,7 +40,7 @@ export const ExportedReportPage = () => {
   const reportType = (report?.reportType ||
     localStorage.getItem("selectedReportType")) as ReportType;
 
-  const exportVerbiageMap: { [key in ReportType]: any } = {
+  const exportVerbiageMap: { [key in ReportType]?: any } = {
     WP: wpVerbiage,
     SAR: sarVerbiage,
   };
@@ -114,7 +114,7 @@ export const reportTitle = (
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
     }
     default:
-      assertExhaustive(reportType);
+      assertExhaustive(reportType as never);
       throw new Error(
         `The title for report type ${reportType} has not been implemented.`
       );
