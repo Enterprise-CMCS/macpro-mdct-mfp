@@ -260,7 +260,6 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       { name: `${project}-${stage}-ui-auth` },
       "REGIONAL"
     );
-    // TODO: do we need the size exclusion for this WAF?
 
     new wafv2.CfnWebACLAssociation(scope, "CognitoUserPoolWAFAssociation", {
       resourceArn: userPool.userPoolArn,
