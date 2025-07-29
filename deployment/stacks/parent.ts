@@ -55,8 +55,8 @@ export class ParentStack extends Stack {
 
     const { tables, wpFormBucket, sarFormBucket, abcdFormBucket } =
       createDataComponents({
-        loggingBucket,
         ...commonProps,
+        loggingBucket,
       });
 
     const { apiGatewayRestApiUrl, restApiId } = createApiComponents({
@@ -78,7 +78,7 @@ export class ParentStack extends Stack {
     if (isLocalStack) return;
 
     const { applicationEndpointUrl, distribution, uiBucket } =
-      createUiComponents({ loggingBucket, ...commonProps });
+      createUiComponents({ ...commonProps, loggingBucket });
 
     const { userPoolDomainName, identityPoolId, userPoolId, userPoolClientId } =
       createUiAuthComponents({
