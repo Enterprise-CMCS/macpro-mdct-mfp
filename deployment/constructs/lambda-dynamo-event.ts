@@ -26,7 +26,6 @@ export class LambdaDynamoEventSource extends Construct {
     const {
       additionalPolicies = [],
       environment = {},
-      handler,
       memorySize = 1024,
       tables,
       stackName,
@@ -62,7 +61,6 @@ export class LambdaDynamoEventSource extends Construct {
 
     this.lambda = new lambda_nodejs.NodejsFunction(this, id, {
       functionName: `${stackName}-${id}`,
-      handler,
       runtime: lambda.Runtime.NODEJS_20_X,
       timeout,
       memorySize,
