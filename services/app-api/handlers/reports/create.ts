@@ -100,8 +100,9 @@ export const createReport = handler(
      * If the report is a WP, determine reportYear from the unvalidated metadata. Otherwise, a SAR will use the workplan metadata.
      */
     let reportData =
-      reportType === ReportType.WP ? unvalidatedMetadata : workPlanMetadata;
-
+      reportType === ReportType.WP || reportType === ReportType.ABCD
+        ? unvalidatedMetadata
+        : workPlanMetadata;
     const reportYear = getReportYear(reportData, isCopyOver);
     const reportPeriod = getReportPeriod(reportData, isCopyOver);
 

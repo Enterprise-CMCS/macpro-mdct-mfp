@@ -20,7 +20,7 @@
     "@playwright/test": "^1.50.1",
     "axe-core": "^4.10.2",
     "concurrently": "^8.2.2",
-    "cypress": "^13.8.0",
+    "cypress": "^13.17.0",
     "cypress-axe": "^1.5.0",
     "dotenv": "^16.4.5",
     "playwright-core": ">= 1.0.0"

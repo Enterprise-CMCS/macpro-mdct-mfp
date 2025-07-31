@@ -12,7 +12,7 @@
     "watch": "tsc -w",
     "cdk": "cdk",
     "db:seed": "cd services/app-api && yarn run db:seed",
-    "test": "cd tests/cypress && npm test && cd -",
+    "test": "cd tests/cypress && yarn test && cd -",
     "test:ci": "cd tests/cypress && yarn run test:ci",
     "test:e2e": "cd tests && yarn run test:e2e",
     "test:e2e-ui": "cd tests && yarn run test:e2e-ui",
