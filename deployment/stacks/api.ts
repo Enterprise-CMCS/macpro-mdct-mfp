@@ -171,19 +171,12 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   ];
 
   const commonProps = {
-    brokerString,
     stackName: `${service}-${stage}`,
     api,
     environment,
     additionalPolicies,
+    isDev,
   };
-
-  const requestValidator = new apigateway.RequestValidator(scope, `Validator`, {
-    requestValidatorName: `${commonProps.stackName} | Validate request body and querystring parameters`,
-    restApi: api,
-    validateRequestParameters: true,
-    validateRequestBody: true,
-  });
 
   new Lambda(scope, "createBanner", {
     entry: "services/app-api/handlers/banners/create.ts",
@@ -198,8 +191,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "deleteBanner",
     path: "/banners/{bannerId}",
     method: "DELETE",
-    requestParameters: ["bannerId"],
-    requestValidator,
     ...commonProps,
   });
 
@@ -216,8 +207,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "archiveReport",
     path: "/reports/archive/{reportType}/{state}/{id}",
     method: "PUT",
-    requestParameters: ["reportType", "state", "id"],
-    requestValidator,
     ...commonProps,
   });
 
@@ -225,8 +214,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     entry: "services/app-api/handlers/reports/create.ts",
     handler: "createReport",
     path: "/reports/{reportType}/{state}",
-    requestParameters: ["reportType", "state"],
-    requestValidator,
     method: "POST",
     ...commonProps,
   });
@@ -236,8 +223,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "fetchReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "GET",
-    requestParameters: ["reportType", "state", "id"],
-    requestValidator,
     ...commonProps,
   });
 
@@ -246,8 +231,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "fetchReportsByState",
     path: "/reports/{reportType}/{state}",
     method: "GET",
-    requestParameters: ["reportType", "state"],
-    requestValidator,
     ...commonProps,
   });
 
@@ -256,8 +239,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "releaseReport",
     path: "/reports/release/{reportType}/{state}/{id}",
     method: "PUT",
-    requestParameters: ["reportType", "state", "id"],
-    requestValidator,
     ...commonProps,
   });
 
@@ -266,8 +247,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "submitReport",
     path: "/reports/submit/{reportType}/{state}/{id}",
     method: "POST",
-    requestParameters: ["reportType", "state", "id"],
-    requestValidator,
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
@@ -278,8 +257,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "updateReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "PUT",
-    requestParameters: ["reportType", "state", "id"],
-    requestValidator,
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
@@ -292,8 +269,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     method: "PUT",
     memorySize: 2048,
     timeout: Duration.seconds(30),
-    requestParameters: ["reportType", "state", "id"],
-    requestValidator,
     ...commonProps,
   });
 
@@ -308,8 +283,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     securityGroups: [kafkaSecurityGroup],
     ...commonProps,
     environment: {
-      topicNamespace: isDev ? `--${project}--${stage}--` : "",
       ...commonProps.environment,
+      topicNamespace: isDev ? `--${project}--${stage}--` : "",
     },
     tables: tables.filter(
       (table) => table.id === "SarReports" || table.id === "WpReports"
@@ -323,7 +298,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     vpcSubnets: { subnets: kafkaAuthorizedSubnets },
     securityGroups: [kafkaSecurityGroup],
     ...commonProps,
-    environment: { topicNamespace: "", ...commonProps.environment },
+    environment: { ...commonProps.environment, topicNamespace: "" },
   };
 
   const postWpBucketDataLambda = new Lambda(scope, "postWpBucketData", {
