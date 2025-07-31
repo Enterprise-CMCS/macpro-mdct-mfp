@@ -178,13 +178,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     isDev,
   };
 
-  const requestValidator = new apigateway.RequestValidator(scope, `Validator`, {
-    requestValidatorName: `${commonProps.stackName} | Validate request body and querystring parameters`,
-    restApi: api,
-    validateRequestParameters: true,
-    validateRequestBody: true,
-  });
-
   new Lambda(scope, "createBanner", {
     entry: "services/app-api/handlers/banners/create.ts",
     handler: "createBanner",
@@ -198,7 +191,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "deleteBanner",
     path: "/banners/{bannerId}",
     method: "DELETE",
-    requestValidator,
     ...commonProps,
   });
 
@@ -215,7 +207,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "archiveReport",
     path: "/reports/archive/{reportType}/{state}/{id}",
     method: "PUT",
-    requestValidator,
     ...commonProps,
   });
 
@@ -223,7 +214,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     entry: "services/app-api/handlers/reports/create.ts",
     handler: "createReport",
     path: "/reports/{reportType}/{state}",
-    requestValidator,
     method: "POST",
     ...commonProps,
   });
@@ -233,7 +223,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "fetchReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "GET",
-    requestValidator,
     ...commonProps,
   });
 
@@ -242,7 +231,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "fetchReportsByState",
     path: "/reports/{reportType}/{state}",
     method: "GET",
-    requestValidator,
     ...commonProps,
   });
 
@@ -251,7 +239,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "releaseReport",
     path: "/reports/release/{reportType}/{state}/{id}",
     method: "PUT",
-    requestValidator,
     ...commonProps,
   });
 
@@ -260,7 +247,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "submitReport",
     path: "/reports/submit/{reportType}/{state}/{id}",
     method: "POST",
-    requestValidator,
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
@@ -271,7 +257,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "updateReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "PUT",
-    requestValidator,
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
@@ -284,7 +269,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     method: "PUT",
     memorySize: 2048,
     timeout: Duration.seconds(30),
-    requestValidator,
     ...commonProps,
   });
 
