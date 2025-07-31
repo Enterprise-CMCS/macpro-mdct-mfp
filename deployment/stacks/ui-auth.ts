@@ -2,8 +2,6 @@ import { Construct } from "constructs";
 import {
   aws_cognito as cognito,
   aws_iam as iam,
-  aws_lambda as lambda,
-  aws_lambda_nodejs as lambda_nodejs,
   aws_wafv2 as wafv2,
   Aws,
   Duration,
@@ -12,6 +10,7 @@ import {
 } from "aws-cdk-lib";
 import { WafConstruct } from "../constructs/waf";
 import { isLocalStack } from "../local/util";
+import { Lambda } from "../constructs/lambda";
 
 interface CreateUiAuthComponentsProps {
   scope: Construct;
@@ -25,7 +24,6 @@ interface CreateUiAuthComponentsProps {
   bootstrapUsersPassword?: string;
   secureCloudfrontDomainName?: string;
   userPoolDomainPrefix?: string;
-  sesSourceEmailAddress?: string;
 }
 
 export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
@@ -89,10 +87,10 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       attributeMapping: {
         email:
           "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-        given_name:
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
         family_name:
           "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
+        given_name:
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
         "custom:cms_roles": "cmsRoles",
         "custom:cms_state": "state",
       },
@@ -112,9 +110,13 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
   const userPoolClient = new cognito.UserPoolClient(scope, "UserPoolClient", {
     userPoolClientName: `${stage}-user-pool-client`,
     userPool,
-    authFlows: { adminUserPassword: true },
+    authFlows: {
+      userPassword: true,
+    },
     oAuth: {
-      flows: { authorizationCodeGrant: true },
+      flows: {
+        authorizationCodeGrant: true,
+      },
       scopes: [
         cognito.OAuthScope.EMAIL,
         cognito.OAuthScope.OPENID,
@@ -204,51 +206,26 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
   let bootstrapUsersFunction;
 
   if (bootstrapUsersPassword) {
-    const lambdaApiRole = new iam.Role(scope, "BootstrapUsersLambdaApiRole", {
-      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaVPCAccessExecutionRole"
-        ),
-      ],
-      inlinePolicies: {
-        LambdaApiRolePolicy: new iam.PolicyDocument({
-          statements: [
-            new iam.PolicyStatement({
-              actions: [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              resources: ["arn:aws:logs:*:*:*"],
-              effect: iam.Effect.ALLOW,
-            }),
-            new iam.PolicyStatement({
-              actions: ["*"],
-              resources: [userPool.userPoolArn],
-              effect: iam.Effect.ALLOW,
-            }),
-          ],
+    const service = "ui-auth";
+    bootstrapUsersFunction = new Lambda(scope, "bootstrapUsers", {
+      stackName: `${service}-${stage}`,
+      entry: "services/ui-auth/handlers/createUsers.js",
+      handler: "handler",
+      memorySize: 1024,
+      timeout: Duration.seconds(60),
+      additionalPolicies: [
+        new iam.PolicyStatement({
+          actions: ["*"],
+          resources: [userPool.userPoolArn],
+          effect: iam.Effect.ALLOW,
         }),
+      ],
+      environment: {
+        userPoolId: userPool.userPoolId,
+        bootstrapUsersPassword,
       },
-    });
-
-    bootstrapUsersFunction = new lambda_nodejs.NodejsFunction(
-      scope,
-      "bootstrapUsers",
-      {
-        entry: "services/ui-auth/handlers/createUsers.js",
-        handler: "handler",
-        runtime: lambda.Runtime.NODEJS_20_X,
-        memorySize: 1024,
-        timeout: Duration.seconds(60),
-        role: lambdaApiRole,
-        environment: {
-          userPoolId: userPool.userPoolId,
-          bootstrapUsersPassword,
-        },
-      }
-    );
+      isDev,
+    }).lambda;
   }
 
   if (!isLocalStack) {
@@ -258,7 +235,6 @@ export function createUiAuthComponents(props: CreateUiAuthComponentsProps) {
       { name: `${project}-${stage}-ui-auth` },
       "REGIONAL"
     );
-    // TODO: do we need the size exclusion for this WAF?
 
     new wafv2.CfnWebACLAssociation(scope, "CognitoUserPoolWAFAssociation", {
       resourceArn: userPool.userPoolArn,
