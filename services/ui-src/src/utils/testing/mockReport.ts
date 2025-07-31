@@ -55,6 +55,12 @@ export const mockReportKeys = {
   id: "mock-report-id",
 };
 
+export const mockAbcdReportKeys = {
+  reportType: "ABCD",
+  state: "NJ" as const,
+  id: "mock-report-id",
+};
+
 export const mockEvaluationPlan = [
   {
     id: "mock-eval-plan-1",
@@ -384,6 +390,34 @@ export const mockWPSubmittedReport = {
   reportYear: mockReportYear,
 };
 
+export const mockAbcdFullReport = {
+  ...mockReportKeys,
+  id: "mock-abcd-full-report-id",
+  reportType: "ABCD",
+  submissionName: "2023 - Alabama 1",
+  status: ReportStatus.NOT_STARTED,
+  dueDate: 168515200000,
+  createdAt: 162515200000,
+  lastAltered: 162515200000,
+  lastAlteredBy: "Thelonious States",
+  submittedOnDate: Date.now(),
+  fieldData: mockReportFieldData,
+  completionStatus: {
+    "/mock/mock-route-1": true,
+    "/mock/mock-route-2": {
+      "/mock/mock-route-2a": false,
+      "/mock/mock-route-2b": true,
+      "/mock/mock-route-2c": true,
+    },
+  },
+  isComplete: false,
+  reportPeriod: mockReportPeriod,
+  locked: false,
+  reportYear: mockReportYear,
+  versionNumber: 1,
+  archived: false,
+};
+
 export const mockWPApprovedFullReport = {
   ...mockReportKeys,
   id: "mock-wp-approved-full-report-id",
@@ -460,6 +494,18 @@ export const mockSARReportContext = {
   ...mockReportMethods,
   report: mockSARFullReport,
   reportsByState: mockSARReportsByState,
+  copyEligibleReportsByState: mockReportsByState,
+  errorMessage: {
+    title: "We've run into a problem",
+    description: genericErrorContent,
+  },
+  lastSavedTime: "2:00 PM",
+};
+
+export const mockAbcdReportContext = {
+  ...mockReportMethods,
+  report: mockAbcdFullReport,
+  reportsByState: mockReportsByState,
   copyEligibleReportsByState: mockReportsByState,
   errorMessage: {
     title: "We've run into a problem",
