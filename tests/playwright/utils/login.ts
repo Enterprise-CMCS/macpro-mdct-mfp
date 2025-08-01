@@ -1,5 +1,12 @@
 import { Page } from "@playwright/test";
-import { adminPassword, adminUser, statePassword, stateUser } from "./consts";
+import {
+  adminPassword,
+  adminUser,
+  statePassword,
+  stateUser,
+  expectedAdminHeading,
+  expectedStateUserHeading,
+} from "./consts";
 
 export async function logInUser(page: Page, email: string, password: string) {
   await page.goto("/");
@@ -27,10 +34,10 @@ export async function logOutUser(page: Page) {
 
 export async function logInStateUser(page: Page) {
   await logInUser(page, stateUser, statePassword);
-  await page.getByText("Money Follows the Person (MFP) Portal").isVisible();
+  await page.getByText(expectedStateUserHeading).isVisible();
 }
 
 export async function logInAdminUser(page: Page) {
   await logInUser(page, adminUser, adminPassword);
-  await page.getByText("View State/Territory Reports").isVisible();
+  await page.getByText(expectedAdminHeading).isVisible();
 }

@@ -53,7 +53,7 @@ export default defineConfig({
   webServer: {
     command: process.env.CI ? "" : "cd ../ && ./run local",
     url: process.env.BASE_URL || "http://localhost:3000",
-    timeout: 180 * 1000,
+    timeout: 240 * 1000,
     reuseExistingServer: !!process.env.CI,
     stdout: "pipe",
   },

@@ -32,3 +32,9 @@ rules:
   multiline-comment-style:
     - error
     - starred-block
+
+overrides:
+    - files:
+        - "tests/**/*"
+      rules:
+        no-console: off
