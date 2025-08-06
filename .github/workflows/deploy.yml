@@ -278,7 +278,7 @@ jobs:
       test-filter: '--grep-invert "@flaky|@probation"'
       timeout-minutes: 60
       artifact-name-prefix: "playwright"
-      continue-on-error: true
+      continue-on-error: false
       upload-to-pages: true
       pages-destination-dir: ""
       aws-role-varname: "BRANCH_SPECIFIC_VARNAME_AWS_OIDC_ROLE_TO_ASSUME"
