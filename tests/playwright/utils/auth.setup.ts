@@ -16,16 +16,23 @@ import {
   expectedAdminHeading,
   expectedStateUserHeading,
 } from "./consts";
-
-interface CognitoConfig {
-  UserPoolId: string;
-  ClientId: string;
-}
+import AWS from "aws-sdk";
 
 interface AuthTokens {
   accessToken: string;
   idToken: string;
   refreshToken: string;
+  awsCredentials?: {
+    accessKeyId: string;
+    secretAccessKey: string;
+    sessionToken: string;
+  };
+}
+
+interface CognitoConfig {
+  UserPoolId: string;
+  ClientId: string;
+  IdentityPoolId?: string;
 }
 
 // Extract Cognito configuration from the deployed apps env-config.js
@@ -39,11 +46,13 @@ async function getCognitoConfig(page: Page): Promise<CognitoConfig | null> {
 
       const userPoolId = env.COGNITO_USER_POOL_ID;
       const clientId = env.COGNITO_USER_POOL_CLIENT_ID;
+      const identityPoolId = env.COGNITO_IDENTITY_POOL_ID; // Add this
 
       if (userPoolId && clientId) {
         return {
           UserPoolId: userPoolId,
           ClientId: clientId,
+          IdentityPoolId: identityPoolId, // Include identity pool
           source: "window._env_",
         };
       }
@@ -60,14 +69,76 @@ async function getCognitoConfig(page: Page): Promise<CognitoConfig | null> {
   return {
     UserPoolId: config.UserPoolId,
     ClientId: config.ClientId,
+    IdentityPoolId: config.IdentityPoolId,
   };
+}
+
+// Get AWS credentials from Identity Pool
+async function getAwsCredentials(
+  idToken: string,
+  cognitoConfig: CognitoConfig
+): Promise<AuthTokens["awsCredentials"]> {
+  if (!cognitoConfig.IdentityPoolId) {
+    console.log("⚠️ No Identity Pool ID - skipping AWS credentials");
+    return undefined;
+  }
+
+  try {
+    // Configure AWS SDK
+    AWS.config.region = "us-east-1"; // Adjust to your region
+
+    const cognitoIdentity = new AWS.CognitoIdentity();
+
+    // Get Identity ID
+    const identityParams = {
+      IdentityPoolId: cognitoConfig.IdentityPoolId,
+      Logins: {
+        [`cognito-idp.us-east-1.amazonaws.com/${cognitoConfig.UserPoolId}`]:
+          idToken,
+      },
+    };
+
+    const identityResult = await cognitoIdentity
+      .getId(identityParams)
+      .promise();
+
+    if (!identityResult.IdentityId) {
+      throw new Error("Failed to get Identity ID");
+    }
+
+    // Get credentials for the identity
+    const credentialsParams = {
+      IdentityId: identityResult.IdentityId,
+      Logins: {
+        [`cognito-idp.us-east-1.amazonaws.com/${cognitoConfig.UserPoolId}`]:
+          idToken,
+      },
+    };
+
+    const credentialsResult = await cognitoIdentity
+      .getCredentialsForIdentity(credentialsParams)
+      .promise();
+
+    if (!credentialsResult.Credentials) {
+      throw new Error("Failed to get AWS credentials");
+    }
+
+    return {
+      accessKeyId: credentialsResult.Credentials.AccessKeyId!,
+      secretAccessKey: credentialsResult.Credentials.SecretKey!,
+      sessionToken: credentialsResult.Credentials.SessionToken!,
+    };
+  } catch (error) {
+    console.log(`❌ Failed to get AWS credentials: ${error.message}`);
+    throw error;
+  }
 }
 
 // Authenticate using SRP (Secure Remote Password) protocol
 async function authenticateWithSRP(
   username: string,
   password: string,
-  cognitoConfig: { UserPoolId: string; ClientId: string },
+  cognitoConfig: CognitoConfig,
   userType: string
 ): Promise<AuthTokens> {
   return new Promise<AuthTokens>((resolve, reject) => {
@@ -84,18 +155,37 @@ async function authenticateWithSRP(
 
     // Callback object to handle authentication responses
     const authenticationCallbacks: IAuthenticationCallback = {
-      onSuccess: (session: CognitoUserSession) => {
+      onSuccess: async (session: CognitoUserSession) => {
         console.log(
           `✅ Headless SRP authentication successful for ${userType}`
         );
 
-        const tokens: AuthTokens = {
+        const basicTokens = {
           accessToken: session.getAccessToken().getJwtToken(),
           idToken: session.getIdToken().getJwtToken(),
           refreshToken: session.getRefreshToken().getToken(),
         };
 
-        resolve(tokens);
+        try {
+          // Get AWS credentials using the ID token
+          const awsCredentials = await getAwsCredentials(
+            basicTokens.idToken,
+            cognitoConfig
+          );
+
+          const tokens: AuthTokens = {
+            ...basicTokens,
+            awsCredentials,
+          };
+
+          resolve(tokens);
+        } catch (error) {
+          console.log(
+            `⚠️ Got JWT tokens but failed to get AWS credentials: ${error.message}`
+          );
+          // Still resolve with basic tokens
+          resolve(basicTokens);
+        }
       },
 
       onFailure: (error: Error) => {
@@ -120,7 +210,7 @@ async function setAuthTokensInBrowser(
   page: any,
   tokens: AuthTokens,
   username: string,
-  cognitoConfig: { UserPoolId: string; ClientId: string },
+  cognitoConfig: CognitoConfig,
   userType: string
 ): Promise<void> {
   await page.goto("/");
@@ -135,6 +225,22 @@ async function setAuthTokensInBrowser(
       localStorage.setItem("accessToken", tokens.accessToken);
       localStorage.setItem("idToken", tokens.idToken);
       localStorage.setItem("refreshToken", tokens.refreshToken);
+
+      // Store AWS credentials if available
+      if (tokens.awsCredentials) {
+        localStorage.setItem(
+          "aws_access_key_id",
+          tokens.awsCredentials.accessKeyId
+        );
+        localStorage.setItem(
+          "aws_secret_access_key",
+          tokens.awsCredentials.secretAccessKey
+        );
+        localStorage.setItem(
+          "aws_session_token",
+          tokens.awsCredentials.sessionToken
+        );
+      }
 
       // AWS Cognito standard storage pattern
       const keyPrefix = `CognitoIdentityServiceProvider.${clientId}`;
