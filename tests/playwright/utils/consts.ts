@@ -13,3 +13,6 @@ export const currentYear: number = new Date().getFullYear();
 
 export const adminAuthPath: string = "playwright/.auth/admin.json";
 export const stateUserAuthPath: string = "playwright/.auth/user.json";
+
+export const expectedAdminHeading = "View State/Territory Reports";
+export const expectedStateUserHeading = "Money Follows the Person (MFP) Portal";

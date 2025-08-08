@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import BasePage from "./base.page";
+import { expectedAdminHeading } from "../consts";
 
 export default class AdminHomePage extends BasePage {
   public path = "/";
@@ -12,7 +13,7 @@ export default class AdminHomePage extends BasePage {
     super(page);
     this.page = page;
     this.title = page.getByRole("heading", {
-      name: "View State/Territory Reports",
+      name: expectedAdminHeading,
     });
     this.dropdown = page.getByRole("combobox", {
       name: "List of states, including District of Columbia and Puerto Rico",

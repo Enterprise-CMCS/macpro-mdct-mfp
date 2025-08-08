@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import BasePage from "./base.page";
+import { expectedStateUserHeading } from "../consts";
 
 export default class StateHomePage extends BasePage {
   public path = "/";
@@ -13,7 +14,7 @@ export default class StateHomePage extends BasePage {
     super(page);
     this.page = page;
     this.title = page.getByRole("heading", {
-      name: "Money Follows the Person (MFP) Portal",
+      name: expectedStateUserHeading,
     });
     this.wpButton = page.getByRole("button", {
       name: "Enter Work Plan online",
