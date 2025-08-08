@@ -34,7 +34,7 @@ jobs:
         id: getendpoint
         run: |
           set +e
-          application_endpoint_url=$(aws cloudformation describe-stacks --stack-name ui-${{ env.branch_name }} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue")
+          application_endpoint_url=$(aws cloudformation describe-stacks --stack-name mfp-${{ env.branch_name }} --output text --query "Stacks[0].Outputs[?OutputKey=='ApplicationEndpointUrl'].OutputValue")
           set -e
           if [[ -z $application_endpoint_url || ! $application_endpoint_url == http* ]]; then
               application_endpoint_url="endpoint not found"
