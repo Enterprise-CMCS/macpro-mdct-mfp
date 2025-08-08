@@ -59,7 +59,8 @@ test.describe("Creating a new Work Plan", () => {
     await userContext.close();
   });
 
-  test("State user can create a Work Plan @flaky", async () => {
+  // TODO: Add back the @flaky tag before merging
+  test("State user can create a Work Plan", async () => {
     /*
      * await adminHomePage.goto();
      * await adminHomePage.selectWP("PR");
