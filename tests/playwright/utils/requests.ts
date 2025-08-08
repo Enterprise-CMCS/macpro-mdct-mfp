@@ -28,33 +28,6 @@ interface Report {
 }
 
 /**
- * Get API URL from environment or page context
- */
-async function getApiUrl(context: BrowserContext): Promise<string> {
-  // Try environment variable first
-  if (process.env.API_URL) {
-    return process.env.API_URL;
-  }
-
-  // Fallback to extracting from page context
-  const page = await context.newPage();
-  try {
-    await page.goto("/");
-    const apiUrl = await page.evaluate(() => {
-      return (window as any)._env_?.API_URL;
-    });
-
-    if (!apiUrl) {
-      throw new Error("API_URL not found in environment or window._env_");
-    }
-
-    return apiUrl;
-  } finally {
-    await page.close();
-  }
-}
-
-/**
  * Fetch reports for a specific state using Work Plan (WP) report type
  * @param state - The state code (e.g., "AL", "CA", "TX", "PR")
  * @param context - Playwright browser context with authentication
@@ -68,7 +41,7 @@ export async function getReportsByState(
 
   try {
     const apiContext: APIRequestContext = context.request;
-    const apiUrl = await getApiUrl(context);
+    const apiUrl = process.env.API_URL;
     const endpoint = `${apiUrl}/reports/WP/${state}`;
 
     const response = await apiContext.get(endpoint, {
@@ -80,7 +53,7 @@ export async function getReportsByState(
 
     if (!response.ok()) {
       throw new Error(
-        `API request failed: ${response.status()} ${response.statusText()}`
+        `API request failed: ${response.status()} ${response.statusText()} Endpoint: ${endpoint}`
       );
     }
 
@@ -124,7 +97,7 @@ export async function putToArchiveReport(
 
   try {
     const apiContext: APIRequestContext = context.request;
-    const apiUrl = await getApiUrl(context);
+    const apiUrl = process.env.API_URL;
     const endpoint = `${apiUrl}/reports/archive/WP/${state}/${reportId}`;
 
     const response = await apiContext.put(endpoint, {
@@ -193,7 +166,7 @@ export async function deleteReport(
 
   try {
     const apiContext: APIRequestContext = context.request;
-    const apiUrl = await getApiUrl(context);
+    const apiUrl = process.env.API_URL;
     const endpoint = `${apiUrl}/reports/WP/${state}/${reportId}`;
 
     const response = await apiContext.delete(endpoint, {
