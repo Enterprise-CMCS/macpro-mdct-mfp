@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // components
-import { Box, Button, Heading, Input, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Stack } from "@chakra-ui/react";
+import { TextField } from "@cmsgov/design-system";
 import { ErrorAlert } from "components";
 import { ErrorVerbiage } from "types";
 import { loginUser } from "utils";
@@ -51,30 +52,26 @@ export const LoginCognito = () => {
       <ErrorAlert error={error} sx={sx.error} />
       <form onSubmit={(event) => handleLogin(event)}>
         <Box sx={sx.label}>
-          <label>
-            <Text sx={sx.labelDescription}>Email</Text>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={fields.email}
-              onChange={handleFieldChange}
-              className="field"
-            />
-          </label>
+          <TextField
+            id="email"
+            name="email"
+            type="email"
+            label="Email"
+            value={fields.email}
+            onChange={handleFieldChange}
+            className="field"
+          />
         </Box>
         <Box sx={sx.label}>
-          <label>
-            <Text sx={sx.labelDescription}>Password</Text>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              value={fields.password}
-              onChange={handleFieldChange}
-              className="field"
-            />
-          </label>
+          <TextField
+            id="password"
+            name="password"
+            type="password"
+            label="Password"
+            value={fields.password}
+            onChange={handleFieldChange}
+            className="field"
+          />
         </Box>
         <Button
           sx={sx.button}
@@ -99,9 +96,6 @@ const sx = {
   },
   label: {
     marginBottom: "1rem",
-  },
-  labelDescription: {
-    marginBottom: "0.5rem",
   },
   button: {
     marginTop: "1rem",
