@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // components
-import { Box, Button, Heading, Stack } from "@chakra-ui/react";
+import { Button, Heading, Stack } from "@chakra-ui/react";
 import { TextField } from "@cmsgov/design-system";
 import { ErrorAlert } from "components";
 // utils
@@ -53,26 +53,22 @@ export const LoginCognito = () => {
       </Heading>
       <ErrorAlert error={error} sx={sx.error} />
       <form onSubmit={(event) => handleLogin(event)}>
-        <Box sx={sx.label}>
-          <TextField
-            id="email"
-            name="email"
-            type="email"
-            label="Email"
-            value={fields.email}
-            onChange={handleFieldChange}
-          />
-        </Box>
-        <Box sx={sx.label}>
-          <TextField
-            id="password"
-            name="password"
-            type="password"
-            label="Password"
-            value={fields.password}
-            onChange={handleFieldChange}
-          />
-        </Box>
+        <TextField
+          id="email"
+          name="email"
+          type="email"
+          label="Email"
+          value={fields.email}
+          onChange={handleFieldChange}
+        />
+        <TextField
+          id="password"
+          name="password"
+          type="password"
+          label="Password"
+          value={fields.password}
+          onChange={handleFieldChange}
+        />
         <Button
           sx={sx.button}
           onClick={handleLogin}
@@ -94,11 +90,8 @@ const sx = {
   error: {
     marginY: "1rem",
   },
-  label: {
-    marginBottom: "1rem",
-  },
   button: {
-    marginTop: "1rem",
+    marginTop: "2rem",
     width: "100%",
   },
 };
