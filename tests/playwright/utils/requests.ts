@@ -55,6 +55,8 @@ interface Banner {
 function getAuthDataFromEnv(userType: "ADMIN" | "STATE"): AuthData {
   const prefix = userType;
 
+  console.log(`🔍 Looking for ${prefix} auth data in environment...`);
+
   const idToken = process.env[`${prefix}_ID_TOKEN`] || "";
   const awsAccessKeyId = process.env[`${prefix}_AWS_ACCESS_KEY_ID`] || "";
   const awsSecretAccessKey =
@@ -63,9 +65,30 @@ function getAuthDataFromEnv(userType: "ADMIN" | "STATE"): AuthData {
   const origin = process.env[`${prefix}_ORIGIN`] || "";
   const href = process.env[`${prefix}_HREF`] || "";
 
+  // Debug logging
+  console.log(`📋 ${prefix} Auth Status:`);
+  console.log(
+    `- ID Token: ${idToken ? `${idToken.substring(0, 20)}...` : "MISSING"}`
+  );
+  console.log(
+    `- AWS Session Token: ${
+      awsSessionToken ? `${awsSessionToken.substring(0, 20)}...` : "MISSING"
+    }`
+  );
+  console.log(`- Origin: ${origin || "MISSING"}`);
+  console.log(
+    `- Available env vars: ${Object.keys(process.env)
+      .filter((key) => key.includes(prefix))
+      .join(", ")}`
+  );
+
   if (!idToken || !awsSessionToken) {
     throw new Error(
-      `Missing required auth data for ${userType} user. Make sure env.setup.ts has run properly.`
+      `Missing required auth data for ${userType} user. Make sure env.setup.ts has run properly. Found env vars: ${Object.keys(
+        process.env
+      )
+        .filter((key) => key.includes(prefix))
+        .join(", ")}`
     );
   }
 
