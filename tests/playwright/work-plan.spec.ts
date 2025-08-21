@@ -9,7 +9,6 @@ import { WPInitiativesInstructionsPage } from "./utils/pageObjects/wp/wpInitiati
 import { WPInitiativesDashboardPage } from "./utils/pageObjects/wp/wpInitiativesDashboard.page";
 import { WPInitiativeOverlayPage } from "./utils/pageObjects/wp/wpInitiativeOverlay.page";
 import { WPReviewAndSubmitPage } from "./utils/pageObjects/wp/wpReviewAndSubmit.page";
-// import AdminHomePage from "./utils/pageObjects/adminHome.page";
 import { adminAuthPath, stateAbbreviation, stateUserAuthPath } from "./utils";
 import { archiveAllReportsForState } from "./utils/requests";
 
@@ -25,7 +24,6 @@ let wpTransitionBenchmarkStrategy: WPTransitionBenchmarkStrategyPage;
 let wpInitiativesInstructions: WPInitiativesInstructionsPage;
 let wpInitiativesDashboard: WPInitiativesDashboardPage;
 let wpReviewAndSubmit: WPReviewAndSubmitPage;
-// let adminHomePage: AdminHomePage;
 let adminWpDashboard: WPDashboardPage;
 
 test.describe("Creating a new Work Plan", () => {
@@ -51,7 +49,6 @@ test.describe("Creating a new Work Plan", () => {
     wpInitiativesInstructions = new WPInitiativesInstructionsPage(userPage);
     wpInitiativesDashboard = new WPInitiativesDashboardPage(userPage);
     wpReviewAndSubmit = new WPReviewAndSubmitPage(userPage);
-    // adminHomePage = new AdminHomePage(adminPage);
     adminWpDashboard = new WPDashboardPage(adminPage);
   });
 
@@ -59,14 +56,7 @@ test.describe("Creating a new Work Plan", () => {
     await userContext.close();
   });
 
-  // TODO: Add back the @flaky tag before merging
-  test("State user can create a Work Plan", async () => {
-    /*
-     * await adminHomePage.goto();
-     * await adminHomePage.selectWP("PR");
-     * await adminWpDashboard.reportsReady();
-     * await adminWpDashboard.archiveAllReports();
-     */
+  test("State user can create a Work Plan @flaky", async () => {
     await archiveAllReportsForState(stateAbbreviation, adminContext);
 
     // View WPs

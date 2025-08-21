@@ -1,4 +1,3 @@
-import { Page, expect, test as setup } from "@playwright/test";
 import {
   CognitoUserPool,
   CognitoUser,
@@ -6,19 +5,11 @@ import {
   CognitoUserSession,
   IAuthenticationCallback,
 } from "amazon-cognito-identity-js";
-import {
-  adminAuthPath,
-  adminPassword,
-  adminUser,
-  statePassword,
-  stateUser,
-  stateUserAuthPath,
-  expectedAdminHeading,
-  expectedStateUserHeading,
-} from "./consts";
+import { Page, expect } from "@playwright/test";
 import AWS from "aws-sdk";
+import { EnvironmentConfig } from "./env"; // Import from env.ts
 
-interface AuthTokens {
+export interface AuthTokens {
   accessToken: string;
   idToken: string;
   refreshToken: string;
@@ -29,89 +20,44 @@ interface AuthTokens {
   };
 }
 
-interface CognitoConfig {
-  UserPoolId: string;
-  ClientId: string;
-  IdentityPoolId?: string;
-}
-
-// Extract Cognito configuration from the deployed apps env-config.js
-async function getCognitoConfig(page: Page): Promise<CognitoConfig | null> {
-  await page.goto("/");
-
-  const config = await page.evaluate(() => {
-    // Check if window._env_ exists (from env-config.js)
-    if ((window as any)._env_) {
-      const env = (window as any)._env_;
-
-      const userPoolId = env.COGNITO_USER_POOL_ID;
-      const clientId = env.COGNITO_USER_POOL_CLIENT_ID;
-      const identityPoolId = env.COGNITO_IDENTITY_POOL_ID; // Add this
-
-      if (userPoolId && clientId) {
-        return {
-          UserPoolId: userPoolId,
-          ClientId: clientId,
-          IdentityPoolId: identityPoolId, // Include identity pool
-          source: "window._env_",
-        };
-      }
-    }
-
-    return { error: "❌ Cognito config not found in window._env_" };
-  });
-
-  if (config.error) {
-    console.log(`${config.error} - skipping headless authentication`);
-    return null;
-  }
-
-  return {
-    UserPoolId: config.UserPoolId,
-    ClientId: config.ClientId,
-    IdentityPoolId: config.IdentityPoolId,
-  };
-}
-
-// Get AWS credentials from Identity Pool
-async function getAwsCredentials(
+/**
+ * Get AWS credentials from Cognito Identity Pool
+ * @param idToken
+ * @param config
+ * @returns
+ */
+export async function getAwsCredentials(
   idToken: string,
-  cognitoConfig: CognitoConfig
+  config: EnvironmentConfig
 ): Promise<AuthTokens["awsCredentials"]> {
-  if (!cognitoConfig.IdentityPoolId) {
+  if (!config.identityPoolId) {
     console.log("⚠️ No Identity Pool ID - skipping AWS credentials");
     return undefined;
   }
 
   try {
-    // Configure AWS SDK
-    AWS.config.region = "us-east-1"; // Adjust to your region
-
+    const region = config.cognitoRegion || "us-east-1";
+    AWS.config.region = region;
     const cognitoIdentity = new AWS.CognitoIdentity();
 
-    // Get Identity ID
     const identityParams = {
-      IdentityPoolId: cognitoConfig.IdentityPoolId,
+      IdentityPoolId: config.identityPoolId,
       Logins: {
-        [`cognito-idp.us-east-1.amazonaws.com/${cognitoConfig.UserPoolId}`]:
-          idToken,
+        [`cognito-idp.${region}.amazonaws.com/${config.userPoolId}`]: idToken,
       },
     };
 
     const identityResult = await cognitoIdentity
       .getId(identityParams)
       .promise();
-
     if (!identityResult.IdentityId) {
       throw new Error("Failed to get Identity ID");
     }
 
-    // Get credentials for the identity
     const credentialsParams = {
       IdentityId: identityResult.IdentityId,
       Logins: {
-        [`cognito-idp.us-east-1.amazonaws.com/${cognitoConfig.UserPoolId}`]:
-          idToken,
+        [`cognito-idp.${region}.amazonaws.com/${config.userPoolId}`]: idToken,
       },
     };
 
@@ -122,6 +68,8 @@ async function getAwsCredentials(
     if (!credentialsResult.Credentials) {
       throw new Error("Failed to get AWS credentials");
     }
+
+    console.log(`✅ AWS credentials retrieved for Cognito region: ${region}`);
 
     return {
       accessKeyId: credentialsResult.Credentials.AccessKeyId!,
@@ -134,15 +82,26 @@ async function getAwsCredentials(
   }
 }
 
-// Authenticate using SRP (Secure Remote Password) protocol
-async function authenticateWithSRP(
+/**
+ * Authenticate using SRP Protocol
+ * @param username
+ * @param password
+ * @param config
+ * @param userType
+ * @returns
+ */
+export async function authenticateWithSRP(
   username: string,
   password: string,
-  cognitoConfig: CognitoConfig,
+  config: EnvironmentConfig,
   userType: string
 ): Promise<AuthTokens> {
   return new Promise<AuthTokens>((resolve, reject) => {
-    const userPool = new CognitoUserPool(cognitoConfig);
+    const userPool = new CognitoUserPool({
+      UserPoolId: config.userPoolId,
+      ClientId: config.clientId,
+    });
+
     const cognitoUser = new CognitoUser({
       Username: username,
       Pool: userPool,
@@ -153,7 +112,6 @@ async function authenticateWithSRP(
       Password: password,
     });
 
-    // Callback object to handle authentication responses
     const authenticationCallbacks: IAuthenticationCallback = {
       onSuccess: async (session: CognitoUserSession) => {
         console.log(
@@ -167,23 +125,16 @@ async function authenticateWithSRP(
         };
 
         try {
-          // Get AWS credentials using the ID token
           const awsCredentials = await getAwsCredentials(
             basicTokens.idToken,
-            cognitoConfig
+            config
           );
-
-          const tokens: AuthTokens = {
-            ...basicTokens,
-            awsCredentials,
-          };
-
+          const tokens: AuthTokens = { ...basicTokens, awsCredentials };
           resolve(tokens);
         } catch (error) {
           console.log(
             `⚠️ Got JWT tokens but failed to get AWS credentials: ${error.message}`
           );
-          // Still resolve with basic tokens
           resolve(basicTokens);
         }
       },
@@ -197,7 +148,6 @@ async function authenticateWithSRP(
       },
     };
 
-    // Start the SRP authentication
     cognitoUser.authenticateUser(
       authenticationDetails,
       authenticationCallbacks
@@ -205,28 +155,32 @@ async function authenticateWithSRP(
   });
 }
 
-// Set authentication tokens in browser storage
-async function setAuthTokensInBrowser(
-  page: any,
+/**
+ * Set authentication tokens in browser storage
+ * @param page
+ * @param tokens
+ * @param username
+ * @param config
+ * @param userType
+ */
+export async function setAuthTokensInBrowser(
+  page: Page,
   tokens: AuthTokens,
   username: string,
-  cognitoConfig: CognitoConfig,
+  config: EnvironmentConfig,
   userType: string
 ): Promise<void> {
   await page.goto("/");
 
   await page.evaluate(
     ({ tokens, username, clientId, userType }) => {
-      // Clear any existing auth data
       localStorage.clear();
       sessionStorage.clear();
 
-      // Standard token storage patterns
       localStorage.setItem("accessToken", tokens.accessToken);
       localStorage.setItem("idToken", tokens.idToken);
       localStorage.setItem("refreshToken", tokens.refreshToken);
 
-      // Store AWS credentials if available
       if (tokens.awsCredentials) {
         localStorage.setItem(
           "aws_access_key_id",
@@ -242,7 +196,6 @@ async function setAuthTokensInBrowser(
         );
       }
 
-      // AWS Cognito standard storage pattern
       const keyPrefix = `CognitoIdentityServiceProvider.${clientId}`;
       localStorage.setItem(`${keyPrefix}.LastAuthUser`, username);
       localStorage.setItem(
@@ -256,7 +209,6 @@ async function setAuthTokensInBrowser(
       );
       localStorage.setItem(`${keyPrefix}.${username}.clockDrift`, "0");
 
-      // Set appropriate token scopes based on user type
       const tokenScopes =
         userType === "admin"
           ? "aws.cognito.signin.user.admin"
@@ -266,7 +218,6 @@ async function setAuthTokensInBrowser(
         `${keyPrefix}.${username}.tokenScopesString`,
         tokenScopes
       );
-
       localStorage.setItem(
         `${keyPrefix}.${username}.userData`,
         JSON.stringify({
@@ -275,7 +226,6 @@ async function setAuthTokensInBrowser(
         })
       );
 
-      // Set expiration timestamp
       const expirationTime = Date.now() + 60 * 60 * 1000;
       localStorage.setItem(
         `${keyPrefix}.${username}.idTokenExpiry`,
@@ -286,13 +236,20 @@ async function setAuthTokensInBrowser(
         expirationTime.toString()
       );
     },
-    { tokens, username, clientId: cognitoConfig.ClientId, userType }
+    { tokens, username, clientId: config.clientId, userType }
   );
 }
 
-// UI authentication fallback
-async function authenticateWithUI(
-  page: any,
+/**
+ * Fallback to UI authentication
+ * @param page
+ * @param username
+ * @param password
+ * @param expectedHeading
+ * @param userType
+ */
+export async function authenticateWithUI(
+  page: Page,
   username: string,
   password: string,
   expectedHeading: string,
@@ -310,7 +267,6 @@ async function authenticateWithUI(
   await passwordInput.fill(password);
   await loginButton.click();
 
-  // Wait for redirect and verify login success
   await page.waitForURL("/");
   await expect(
     page.getByRole("heading", { name: expectedHeading })
@@ -319,8 +275,8 @@ async function authenticateWithUI(
 }
 
 // Verify authentication by checking protected page heading
-async function verifyAuthentication(
-  page: any,
+export async function verifyAuthentication(
+  page: Page,
   expectedHeading: string
 ): Promise<boolean> {
   try {
@@ -330,99 +286,58 @@ async function verifyAuthentication(
     ).toBeVisible({ timeout: 10000 });
     return true;
   } catch (error) {
-    console.log(`❌ Authentication verification failed: ${error}`);
     return false;
   }
 }
 
-// Authentication function that attempts to get cognito config and authenticate otherwise falls back to UI
-async function authenticateUser(
+/**
+ * Main authentication function that tries SRP first, then falls back to UI
+ * @param page
+ * @param username
+ * @param password
+ * @param expectedHeading
+ * @param userType
+ * @param config
+ */
+export async function authenticateUser(
   page: Page,
   username: string,
   password: string,
   expectedHeading: string,
-  userType: string
+  userType: string,
+  config: EnvironmentConfig | null
 ): Promise<void> {
-  let authSuccessful = false;
+  console.log(`🔐 Starting authentication for ${userType}`);
 
-  // Attempt to get Cognito config from the application under test
-  const cognitoConfig = await getCognitoConfig(page);
-
-  // Only attempt headless auth if we successfully retrieved Cognito config
-  if (cognitoConfig) {
+  // Try SRP authentication if config is available
+  if (config) {
     try {
-      console.log(
-        `🔄 Cognito config found - attempting headless authentication for ${userType}`
-      );
-
+      console.log(`🔑 Attempting headless SRP authentication for ${userType}`);
       const tokens = await authenticateWithSRP(
         username,
         password,
-        cognitoConfig,
+        config,
         userType
       );
-      await setAuthTokensInBrowser(
-        page,
-        tokens,
-        username,
-        cognitoConfig,
-        userType
-      );
+      await setAuthTokensInBrowser(page, tokens, username, config, userType);
 
-      authSuccessful = await verifyAuthentication(page, expectedHeading);
-
-      if (authSuccessful) {
-        console.log(`🚀 Headless authentication verified for ${userType}`);
+      // Verify authentication worked
+      const isAuthenticated = await verifyAuthentication(page, expectedHeading);
+      if (isAuthenticated) {
+        console.log(`✅ SRP authentication successful for ${userType}`);
+        return;
       } else {
         console.log(
-          `⚠️ Headless auth tokens set but verification failed for ${userType}, trying UI fallback`
+          `⚠️ SRP authentication tokens set but verification failed for ${userType}`
         );
       }
     } catch (error) {
       console.log(
-        `⚠️ Headless authentication failed for ${userType}: ${error.message}`
+        `⚠️ SRP authentication failed for ${userType}: ${error.message}`
       );
     }
-  } else {
-    console.log(
-      `⚠️ No Cognito config available - skipping headless authentication for ${userType}`
-    );
   }
 
-  // Fallback to UI authentication if headless failed or was skipped
-  if (!authSuccessful) {
-    await authenticateWithUI(
-      page,
-      username,
-      password,
-      expectedHeading,
-      userType
-    );
-  }
+  // Fallback to UI authentication
+  await authenticateWithUI(page, username, password, expectedHeading, userType);
 }
-
-// Admin authentication setup
-setup("authenticate as admin", async ({ page }) => {
-  await authenticateUser(
-    page,
-    adminUser,
-    adminPassword,
-    expectedAdminHeading,
-    "admin"
-  );
-
-  await page.context().storageState({ path: adminAuthPath });
-});
-
-// State user authentication setup
-setup("authenticate as user", async ({ page }) => {
-  await authenticateUser(
-    page,
-    stateUser,
-    statePassword,
-    expectedStateUserHeading,
-    "state user"
-  );
-
-  await page.context().storageState({ path: stateUserAuthPath });
-});
