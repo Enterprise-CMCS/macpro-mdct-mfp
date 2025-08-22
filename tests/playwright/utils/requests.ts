@@ -1,5 +1,6 @@
 // TODO: Consider creating a requests directory and breaking this file into smaller modules
 import { BrowserContext, APIRequestContext } from "@playwright/test";
+import * as aws4 from "aws4";
 
 interface CompletionStatus {
   [key: string]: boolean | CompletionStatus;
@@ -103,15 +104,31 @@ function getAuthDataFromEnv(userType: "ADMIN" | "STATE"): AuthData {
 }
 
 /**
- * Generate common headers for AWS API requests
- * @param authData - Authentication data from browser
- * @returns Object containing common headers
+ * Detect if we need AWS SigV4 signing based on environment
  */
-function generateAPIHeaders(authData: AuthData): Record<string, string> {
+function needsSigV4Signing(): boolean {
+  const apiUrl = process.env.API_URL || "";
+  const isCI =
+    process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
+  const isProdLikeEnv =
+    apiUrl.includes("execute-api") && apiUrl.includes("amazonaws.com");
+
+  return isCI && isProdLikeEnv;
+}
+
+/**
+ * Generate AWS SigV4 signed headers using aws4 library
+ */
+function generateAPIHeaders(
+  authData: AuthData,
+  method?: string,
+  endpoint?: string,
+  body?: string
+): Record<string, string> {
   const now = new Date();
   const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, "");
 
-  return {
+  const baseHeaders = {
     Accept: "*/*",
     "Accept-Language": "en-US,en;q=0.9",
     Origin: authData.origin,
@@ -120,6 +137,44 @@ function generateAPIHeaders(authData: AuthData): Record<string, string> {
     "x-amz-security-token": authData.awsSessionToken,
     "x-amz-date": amzDate,
   };
+
+  if (!needsSigV4Signing() || !method || !endpoint) {
+    console.log(`🔑 Using simple token auth`);
+    return baseHeaders;
+  }
+
+  console.log(`🔑 Using aws4 library SigV4 signing`);
+
+  try {
+    const urlParts = new URL(endpoint);
+
+    const requestOptions = {
+      service: "execute-api",
+      region: "us-east-1",
+      method: method,
+      host: urlParts.host,
+      path: urlParts.pathname + urlParts.search,
+      headers: {
+        ...baseHeaders,
+        Host: urlParts.host,
+      },
+      body: body || "",
+    };
+
+    // Sign the request using aws4
+    const signedRequest = aws4.sign(requestOptions, {
+      accessKeyId: authData.awsAccessKeyId,
+      secretAccessKey: authData.awsSecretAccessKey,
+      sessionToken: authData.awsSessionToken,
+    });
+
+    return signedRequest.headers;
+  } catch (error) {
+    console.log(
+      `❌ SigV4 signing failed: ${error.message}, falling back to simple auth`
+    );
+    return baseHeaders;
+  }
 }
 
 /**
@@ -143,19 +198,30 @@ async function makeAuthenticatedRequest(
   const authData = getAuthDataFromEnv(userType);
   const apiContext: APIRequestContext = context.request;
 
+  const bodyString =
+    (method === "POST" || method === "PUT") && body !== undefined
+      ? JSON.stringify(body)
+      : undefined;
+
   const headers = {
-    ...generateAPIHeaders(authData),
+    ...generateAPIHeaders(authData, method, endpoint, bodyString),
     ...additionalHeaders,
   };
 
   const requestOptions: any = { headers };
 
-  if ((method === "POST" || method === "PUT") && body !== undefined) {
-    requestOptions.data = JSON.stringify(body);
+  if (bodyString) {
+    requestOptions.data = bodyString;
     if (!headers["Content-Type"] && !headers["content-type"]) {
       headers["Content-Type"] = "application/json";
     }
   }
+
+  console.log(
+    `🔄 Making ${
+      needsSigV4Signing() ? "signed" : "simple"
+    } ${method} request to: ${endpoint}`
+  );
 
   let response;
   switch (method) {
@@ -174,8 +240,13 @@ async function makeAuthenticatedRequest(
   }
 
   if (!response.ok()) {
+    const responseText = await response.text();
+    console.log(
+      `❌ Request failed: ${response.status()} ${response.statusText()}`
+    );
+    console.log(`📄 Response body: ${responseText}`);
     throw new Error(
-      `API request failed: ${response.status()} ${response.statusText()} Endpoint: ${endpoint}`
+      `API request failed: ${response.status()} ${response.statusText()} Endpoint: ${endpoint} Response: ${responseText}`
     );
   }
 
