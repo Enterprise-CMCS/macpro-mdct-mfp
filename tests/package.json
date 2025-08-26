@@ -18,7 +18,11 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
     "@playwright/test": "^1.50.1",
+    "@types/aws-sdk": "^2.7.4",
+    "@types/aws4": "^1.11.6",
     "amazon-cognito-identity-js": "^6.3.15",
+    "aws-sdk": "^2.1692.0",
+    "aws4": "^1.13.2",
     "axe-core": "^4.10.2",
     "concurrently": "^8.2.2",
     "cypress": "^13.17.0",
