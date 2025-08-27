@@ -1,11 +1,27 @@
 import { stateUserAuthPath } from "../utils";
 import { expect, test } from "../utils/fixtures/base";
 import BannerPage from "../utils/pageObjects/banner.page";
+import { deleteAllBanners, postBanner } from "../utils/requests";
+import { testBanner } from "../utils/consts";
+
+const testBannerAPI = {
+  title: testBanner.title,
+  description: testBanner.description,
+  startDate: new Date(testBanner.startDate).getTime(),
+  endDate: new Date(testBanner.endDate).getTime(),
+};
 
 test.describe("admin user banner page", () => {
   test.beforeEach(async ({ bannerPage }) => {
+    try {
+      await deleteAllBanners(bannerPage.page.context());
+    } catch (error) {
+      console.log(
+        `⚠️ API banner deletion failed, falling back to UI: ${error.message}`
+      );
+      await bannerPage.deleteExistingBanners();
+    }
     await bannerPage.goto();
-    await bannerPage.deleteExistingBanners();
   });
   test("Should see the correct banner page as an admin user", async ({
     bannerPage,
@@ -23,7 +39,7 @@ test.describe("admin user banner page", () => {
   test("Should be able to delete banner as an admin user", async ({
     bannerPage,
   }) => {
-    await bannerPage.createAdminBanner();
+    await postBanner(testBannerAPI, bannerPage.page.context());
     await bannerPage.deleteAdminBanner();
     await expect(bannerPage.deleteBannerButton).not.toBeVisible();
   });

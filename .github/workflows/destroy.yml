@@ -35,8 +35,6 @@ jobs:
         (!contains(fromJson('["main", "val", "production"]'), inputs.environment))
       )
     runs-on: ubuntu-latest
-    env:
-      SLS_DEPRECATION_DISABLE: "*" # Turn off deprecation warnings in the pipeline
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
