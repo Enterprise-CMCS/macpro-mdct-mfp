@@ -14,7 +14,6 @@ permissions:
 jobs:
   unit-tests:
     name: Unit Tests
-    if: ${{ !startsWith(github.ref_name, 'skipci') && !startsWith(github.ref_name, 'code-json-') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
