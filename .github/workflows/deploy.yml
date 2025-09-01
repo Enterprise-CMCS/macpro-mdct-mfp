@@ -193,10 +193,10 @@ jobs:
 
   e2e-test:
     name: E2E Integration Tests
+    if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') && !startsWith(github.ref_name, 'code-json-') }}
     needs:
       - deploy
       # - register-runner
-    if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') && !startsWith(github.ref_name, 'code-json-') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -229,10 +229,10 @@ jobs:
 
   a11y-tests:
     name: E2E A11y Tests
+    if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') && !startsWith(github.ref_name, 'code-json-') }}
     needs:
       - deploy
       # - register-runner
-    if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') && !startsWith(github.ref_name, 'code-json-') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -262,12 +262,12 @@ jobs:
 
   test:
     name: Playwright Tests
+    if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') && !startsWith(github.ref_name, 'code-json-') }}
     needs:
       - deploy
       # - register-runner
       # - e2e-test
       # - a11y-tests
-    if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') && !startsWith(github.ref_name, 'code-json-') }}
     uses: ./.github/workflows/e2e-test.yml
     with:
       base-url: ${{ needs.deploy.outputs.application_endpoint }}
