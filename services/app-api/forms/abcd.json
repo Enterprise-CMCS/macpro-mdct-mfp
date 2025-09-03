@@ -4,7 +4,7 @@
   "basePath": "/abcd",
   "version": "ABCD_2025-07-10",
   "entities": {
-    "": { "required": true }
+    "services": { "required": true }
   },
   "routes": [
     {
@@ -60,7 +60,14 @@
           "subsection": ""
         }
       },
-      "form": { "id": "state-plan-services", "fields": []}
+      "form": { "id": "state-plan-services", "fields": [{
+        "id": "services",
+        "type": "dynamic",
+        "validation": "dynamic",
+        "props": {
+          "label": ""
+        }
+      }]}
     }
   ]
 }
