@@ -6,5 +6,61 @@
   "entities": {
     "": { "required": true }
   },
-  "routes": []
+  "routes": [
+    {
+      "name": "Form A/B FMAP Percentages",
+      "path": "/abcd/fmap-percentages",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": "[Instructions]"
+        }
+      },
+      "form": { "id": "abcd-fmap-percentages", "fields": [
+        {
+            "id": "eFmap_qualified_hcbs",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "Enhanced FMAP: Qualified HCBS",
+              "hint": "Enter percentage.",
+              "mask": "percentage"
+            }
+          },
+          {
+            "id": "eFmap_demo_services",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "Enhanced FMAP: Demonstration Services",
+              "hint": "Enter percentage.",
+              "mask": "percentage"
+            }
+          },
+          {
+            "id": "supplemental_services",
+            "type": "text",
+            "validation": "textOptional",
+            "props": {
+              "label": "MFP Grant Funded (up to 100%): Supplemental Services (optional)",
+              "hint": "Enter percentage.",
+              "mask": "percentage"
+            }
+          }
+      ] }
+    },
+    {
+      "name": "State Plan Services",
+      "path": "/abcd/state-plan-services",
+      "pageType": "prettyExcel",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": ""
+        }
+      },
+      "form": { "id": "state-plan-services", "fields": []}
+    }
+  ]
 }

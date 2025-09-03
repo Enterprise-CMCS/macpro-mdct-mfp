@@ -23,6 +23,7 @@ import {
 } from "types";
 // utils
 import { useStore } from "utils";
+import { PrettyExcelPage } from "./PrettyExcelPage";
 
 export const ReportPageWrapper = () => {
   const { report } = useStore();
@@ -59,6 +60,8 @@ export const ReportPageWrapper = () => {
         );
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
+      case PageTypes.PRETTY_EXCEL:
+        return <PrettyExcelPage />;
       default:
         showSidebar();
         return <StandardReportPage route={route as StandardReportPageShape} />;
