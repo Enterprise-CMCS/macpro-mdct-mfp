@@ -19,6 +19,7 @@ import { isLocalStack } from "./local/util";
 interface PrerequisiteConfigProps {
   project: string;
   vpcName: string;
+  branchFilter: string;
 }
 
 export class PrerequisiteStack extends Stack {
@@ -29,7 +30,7 @@ export class PrerequisiteStack extends Stack {
   ) {
     super(scope, id, props);
 
-    const { project, vpcName } = props;
+    const { project, vpcName, branchFilter } = props;
 
     if (!isLocalStack) {
       const vpc = ec2.Vpc.fromLookup(this, "Vpc", { vpcName });
@@ -63,6 +64,50 @@ export class PrerequisiteStack extends Stack {
 
     new apigateway.CfnAccount(this, "ApiGatewayRestApiAccount", {
       cloudWatchRoleArn: cloudWatchRole.roleArn,
+    });
+
+    const githubProvider = new iam.CfnOIDCProvider(
+      this,
+      "GitHubIdentityProvider",
+      {
+        url: "https://token.actions.githubusercontent.com",
+        thumbprintList: ["6938fd4d98bab03faadb97b34396831e3780aea1"], // pragma: allowlist secret
+        clientIdList: ["sts.amazonaws.com"],
+      }
+    );
+
+    new iam.CfnRole(this, "GitHubActionsServiceRole", {
+      description: "Service Role for use in GitHub Actions",
+      assumeRolePolicyDocument: {
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Sid: "RoleForGitHubActions",
+            Effect: "Allow",
+            Principal: {
+              Federated: githubProvider.attrArn,
+            },
+            Action: ["sts:AssumeRoleWithWebIdentity"],
+            Condition: {
+              StringEquals: {
+                "token.actions.githubusercontent.com:aud": [
+                  "sts.amazonaws.com",
+                ],
+              },
+              StringLike: {
+                "token.actions.githubusercontent.com:sub": [
+                  `repo:Enterprise-CMCS/macpro-mdct-mfp:${branchFilter}`,
+                ],
+              },
+            },
+          },
+        ],
+      },
+      managedPolicyArns: [
+        `arn:aws:iam::${Aws.ACCOUNT_ID}:policy/ADO-Restriction-Policy`,
+        `arn:aws:iam::${Aws.ACCOUNT_ID}:policy/CMSApprovedAWSServices`,
+        "arn:aws:iam::aws:policy/AdministratorAccess",
+      ],
     });
   }
 }
