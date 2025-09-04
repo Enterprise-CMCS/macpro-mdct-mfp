@@ -50,11 +50,13 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: process.env.CI ? "" : "cd ../ && ./run local",
-    url: process.env.BASE_URL || "http://localhost:3000",
-    timeout: 240 * 1000,
-    reuseExistingServer: !!process.env.CI,
-    stdout: "pipe",
-  },
+  webServer: process.env.CI
+    ? undefined
+    : {
+        command: "cd ../ && ./run local",
+        url: process.env.BASE_URL || "http://localhost:3000",
+        timeout: 240 * 1000,
+        reuseExistingServer: false,
+        stdout: "pipe",
+      },
 });

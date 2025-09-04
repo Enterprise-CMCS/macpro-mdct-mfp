@@ -16,3 +16,10 @@ export const stateUserAuthPath: string = "playwright/.auth/user.json";
 
 export const expectedAdminHeading = "View State/Territory Reports";
 export const expectedStateUserHeading = "Money Follows the Person (MFP) Portal";
+
+export const testBanner = {
+  title: "Newly Created Banner",
+  description: "Banner Description Text",
+  startDate: "10/10/2025",
+  endDate: "10/20/2025",
+};

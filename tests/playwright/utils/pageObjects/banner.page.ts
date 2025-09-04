@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import BasePage from "./base.page";
+import { testBanner } from "../consts";
 
 export default class BannerPage extends BasePage {
   public path = "/admin";
@@ -36,10 +37,10 @@ export default class BannerPage extends BasePage {
   }
 
   public async createAdminBanner() {
-    await this.newBannerTitleInput.fill("Newly Created Banner");
-    await this.newBannerDescriptionInput.fill("Banner Description Text");
-    await this.newBannerStartDateInput.fill("10/10/2024");
-    await this.newBannerEndDateInput.fill("12/10/2024");
+    await this.newBannerTitleInput.fill(testBanner.title);
+    await this.newBannerDescriptionInput.fill(testBanner.description);
+    await this.newBannerStartDateInput.fill(testBanner.startDate);
+    await this.newBannerEndDateInput.fill(testBanner.endDate);
     await this.createBannerButton.click();
     await this.page.waitForResponse(
       (response) =>
