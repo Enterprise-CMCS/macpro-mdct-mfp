@@ -61,13 +61,56 @@
         }
       },
       "form": { "id": "state-plan-services", "fields": [{
-        "id": "services",
-        "type": "dynamic",
-        "validation": "dynamic",
+        "id": "service-1",
+        "type": "number",
+        "validation": "number",
         "props": {
-          "label": ""
+          "label": "Clinic Services"
         }
-      }]}
+      },
+      {
+        "id": "fmap-checkbox-1",
+        "type": "checkbox",
+        "validation": "checkboxOptional",
+        "props": {
+          "label": "",
+          "choices": [
+            {
+              "id": "applicable",
+              "label": "Qualified HCBS"
+            }
+          ]
+        }
+      },
+      {
+        "id": "fmap-checkbox-2",
+        "type": "checkbox",
+        "validation": "checkboxOptional",
+        "props": {
+          "label": "",
+          "choices": [
+            {
+              "id": "applicable",
+              "label": "Demo Services"
+            }
+          ]
+        }
+      },
+      {
+        "id": "fmap-checkbox-3",
+        "type": "checkbox",
+        "validation": "checkboxOptional",
+        "props": {
+          "label": "",
+          "choices": [
+            {
+              "id": "applicable",
+              "label": "Supplemental Services"
+            }
+          ]
+        }
+      }
+      ]}
     }
   ]
 }

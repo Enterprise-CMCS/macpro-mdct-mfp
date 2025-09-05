@@ -1,8 +1,9 @@
 import { useContext, useState } from "react";
 import { Table, Tbody, Td, Thead, Tr } from "@chakra-ui/react";
 import { ReportContext } from "./ReportProvider";
-import { ReportStatus } from "types";
+import { AnyObject, ReportStatus } from "types";
 import { useStore } from "utils";
+import { Form } from "components/forms/Form";
 
 /*
  * current limitations:
@@ -24,7 +25,8 @@ const serviceRow = (
   service: string,
   fmap1: number,
   fmap2: number,
-  fmap3: number
+  fmap3: number,
+  route: any
 ) => {
   const { full_name, state } = useStore()?.user || {};
   const { report } = useStore();
@@ -37,11 +39,20 @@ const serviceRow = (
   const [suppServicesVal, setSuppServicesVal] = useState(0);
   const [federalShareVal, setFederalShareVal] = useState(0);
 
-  const onChangeHandler = (event: any) => {
-    const val = event.target.value;
-    const qualHcbs = fmap1 > 0 ? (val * fmap1) / 100 : 0;
-    const demoServices = fmap2 > 0 ? (val * fmap2) / 100 : 0;
-    const suppServices = fmap3 > 0 ? (val * fmap3) / 100 : 0;
+  const onChangeHandler = (formProvider: AnyObject) => {
+    //pulling the fields needed to build the entity to check the status of
+    let fields = route.form.fields.flatMap((field: any) => {
+      return { id: field.id, value: formProvider.getValues(field.id) };
+    });
+    
+    // if fmap-checkbox-1, 2, 3 has non empty array then apply calc'
+    const val = fields[0].value ?? fieldData?.["service-1"];
+    
+    const checkedFields = fields.map((field: AnyObject) => (field.value?.length > 0 && field.id.includes("fmap")) ? field.id.split("-")[2] : undefined);
+
+    const qualHcbs = (checkedFields.includes("1") && fmap1 > 0) ? (val * fmap1) / 100 : 0;
+    const demoServices = (checkedFields.includes("2") && fmap2 > 0) > 0 ? (val * fmap2) / 100 : 0;
+    const suppServices = (checkedFields.includes("3") && fmap3 > 0) > 0 ? (val * fmap3) / 100 : 0;
     setNumberVal(val);
     setQualHcbsVal(qualHcbs);
     setDemoServicesVal(demoServices);
@@ -77,18 +88,32 @@ const serviceRow = (
     // autosave dataSet
   };
 
+  const onSubmit = () => {};
+  const onError = () => {};
+
   return (
     <Tr>
       <Td>{service}</Td>
       <Td>
-        <input
+        <Form
+          id={route.form.id}
+          formJson={route.form}
+          onSubmit={onSubmit}
+          onFormChange={onChangeHandler}
+          onError={onError}
+          formData={report?.fieldData}
+          autosave
+          validateOnRender={false}
+          dontReset={false}
+        />
+        {/* <input
           type="number"
           id="text 1"
           name={`${service}_value`}
           style={{ border: "1px solid black" }}
           onChange={onChangeHandler}
           onBlur={onBlurHandler}
-        />
+        /> */}
       </Td>
       <Td>{stateTerritoryShareVal}</Td>
       <Td>{qualHcbsVal}</Td>
@@ -99,7 +124,7 @@ const serviceRow = (
   );
 };
 
-export const PrettyExcelPage = () => {
+export const PrettyExcelPage = (route: any) => {
   const { report } = useStore();
 
   const data = report?.fieldData;
@@ -109,7 +134,7 @@ export const PrettyExcelPage = () => {
   const fmap3 = Number(data?.supplemental_services || 0);
 
   return (
-    <form>
+    // <form>
       <Table>
         <Thead>
           <Tr>
@@ -124,10 +149,10 @@ export const PrettyExcelPage = () => {
         </Thead>
         <Tbody>
           {services.map((service: string) =>
-            serviceRow(service, fmap1, fmap2, fmap3)
+            serviceRow(service, fmap1, fmap2, fmap3, route.route)
           )}
         </Tbody>
       </Table>
-    </form>
+    // </form>
   );
 };
