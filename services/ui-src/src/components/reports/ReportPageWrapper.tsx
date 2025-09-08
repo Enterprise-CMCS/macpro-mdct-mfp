@@ -61,7 +61,7 @@ export const ReportPageWrapper = () => {
       case PageTypes.REVIEW_SUBMIT:
         return <ReviewSubmitPage />;
       case PageTypes.PRETTY_EXCEL:
-        return <PrettyExcelPage route={route} />;
+        return <PrettyExcelPage route={route as StandardReportPageShape} />;
       default:
         showSidebar();
         return <StandardReportPage route={route as StandardReportPageShape} />;

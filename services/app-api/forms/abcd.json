@@ -61,7 +61,7 @@
         }
       },
       "form": { "id": "state-plan-services", "fields": [{
-        "id": "service-1",
+        "id": "service-clinic-services",
         "type": "number",
         "validation": "number",
         "props": {
@@ -69,42 +69,82 @@
         }
       },
       {
-        "id": "fmap-checkbox-1",
+        "id": "fmap-clinic-services",
         "type": "checkbox",
         "validation": "checkboxOptional",
         "props": {
           "label": "",
           "choices": [
             {
-              "id": "applicable",
+              "id": "qualHcbs",
               "label": "Qualified HCBS"
-            }
-          ]
-        }
-      },
-      {
-        "id": "fmap-checkbox-2",
-        "type": "checkbox",
-        "validation": "checkboxOptional",
-        "props": {
-          "label": "",
-          "choices": [
+            },
             {
-              "id": "applicable",
+              "id": "demoServices",
               "label": "Demo Services"
+            },
+            {
+              "id": "suppServices",
+              "label": "Supplemental Services"
             }
           ]
         }
       },
       {
-        "id": "fmap-checkbox-3",
+        "id": "service-targeted-case-management",
+        "type": "number",
+        "validation": "number",
+        "props": {
+          "label": "Targeted Case Management"
+        }
+      },
+      {
+        "id": "fmap-targeted-case-management",
         "type": "checkbox",
         "validation": "checkboxOptional",
         "props": {
           "label": "",
           "choices": [
             {
-              "id": "applicable",
+              "id": "qualHcbs",
+              "label": "Qualified HCBS"
+            },
+            {
+              "id": "demoServices",
+              "label": "Demo Services"
+            },
+            {
+              "id": "suppServices",
+              "label": "Supplemental Services"
+            }
+          ]
+        }
+      },
+      {
+        "id": "service-pace",
+        "type": "number",
+        "validation": "number",
+        "props": {
+          "label": "PACE"
+        }
+      },
+      {
+        "id": "fmap-pace",
+        "type": "checkbox",
+        "validation": "checkboxOptional",
+        "props": {
+          "label": "",
+          "choices": [
+            {
+              "id": "qualHcbs",
+              "label": "Qualified HCBS"
+            },
+            {
+              "id": "demoServices",
+              "label": "Demo Services"
+            },
+            {
+              "id": "suppServices",
               "label": "Supplemental Services"
             }
           ]
