@@ -64,6 +64,12 @@ export function createUiComponents(props: CreateUiComponentsProps) {
       removalPolicy: RemovalPolicy.RETAIN,
       enforceSSL: true,
       versioned: true,
+      lifecycleRules: [
+        {
+          expiration: Duration.days(1095),
+          noncurrentVersionExpiration: Duration.days(1095),
+        },
+      ],
     });
 
     logBucket.addToResourcePolicy(
@@ -184,7 +190,6 @@ function setupWaf(
     "CloudfrontWafConstruct",
     {
       name: `${project}-${stage}-ui`,
-      blockByDefault: false,
     },
     "CLOUDFRONT"
   );
