@@ -13,13 +13,15 @@
   <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
   <!-- Tealium Analytics Tag Manager -->
   <script>
-    var tealiumEnvMap = {
+    window.utag_cfg_ovrd = { noview: true };
+    const tealiumEnvMap = {
       "mdctmfp.cms.gov": "prod",
       "mdctmfpval.cms.gov": "qa",
     };
-    var tealiumEnv = tealiumEnvMap[window.location.hostname] || "dev";
-    var tealiumUrl = `https://tags.tiqcdn.com/utag/cmsgov/cms-general/${tealiumEnv}/utag.sync.js`;
-    document.write(`<script src="${tealiumUrl}" async><\/script>`);
+    const tealiumEnv = tealiumEnvMap[window.location.hostname] || "dev";
+    const tealiumPath = `https://tealium-tags.cms.gov/cms-general/${tealiumEnv}`;
+    document.write(`<script src="${tealiumPath}/utag.js" async><\/script>`);
+    document.write(`<script src="${tealiumPath}/utag.sync.js"><\/script>`);
   </script>
 </head>
 
