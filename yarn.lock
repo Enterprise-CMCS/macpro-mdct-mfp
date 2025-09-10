@@ -1792,7 +1792,7 @@ aws-cdk-local@^2.19.2:
   dependencies:
     diff "^5.0.0"
 
-aws-cdk@^2.1028.0:
+aws-cdk@^2.1029.0:
   version "2.1029.0"
   resolved "https://registry.yarnpkg.com/aws-cdk/-/aws-cdk-2.1029.0.tgz#8338bf992c2f7a819fe6e6b3421d3578ab074ec5"
   integrity sha512-TYJGMs1QVYgOTqt0MnbykZvKXMThevjg/m16MuERlWK3fQErhKcUkMmJ8uUY0SBf70FvT7tQdBq9dnsa34TM2A==
