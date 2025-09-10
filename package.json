@@ -50,7 +50,7 @@
     "@typescript-eslint/parser": "5.18.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "amazon-user-pool-srp-client": "^1.0.4",
-    "aws-cdk": "^2.1028.0",
+    "aws-cdk": "^2.1029.0",
     "aws-cdk-local": "^2.19.2",
     "chromedriver": ">=135.0.1",
     "core-js": "^3.41.0",
