@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import BasePage from "./base.page";
+import BannerPage from "./banner.page";
 
 export default class ProfilePage extends BasePage {
   public path = "/profile";
@@ -17,5 +18,11 @@ export default class ProfilePage extends BasePage {
     this.bannerEditorButton = page.getByRole("button", {
       name: "Banner Editor",
     });
+  }
+
+  public async navigateToBannerEditor() {
+    await this.bannerEditorButton.click();
+    await this.page.waitForURL("**/admin");
+    return new BannerPage(this.page);
   }
 }

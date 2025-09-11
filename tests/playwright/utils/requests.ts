@@ -1,5 +1,5 @@
 // TODO: Create a requests directory and break this file into smaller modules
-import { BrowserContext, APIRequestContext } from "@playwright/test";
+import { request } from "@playwright/test";
 import * as aws4 from "aws4";
 
 interface CompletionStatus {
@@ -171,7 +171,6 @@ function generateAPIHeaders(
 
 /**
  * Make an authenticated API request
- * @param context - Browser context with authentication
  * @param method - HTTP method (GET, PUT, POST, DELETE)
  * @param endpoint - API endpoint URL
  * @param additionalHeaders - Additional headers specific to the request
@@ -180,7 +179,6 @@ function generateAPIHeaders(
  * @returns Promise<any> - API response data
  */
 async function makeAuthenticatedRequest(
-  context: BrowserContext,
   method: "GET" | "PUT" | "POST" | "DELETE",
   endpoint: string,
   additionalHeaders: Record<string, string> = {},
@@ -188,57 +186,60 @@ async function makeAuthenticatedRequest(
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<any> {
   const authData = getAuthDataFromEnv(userType);
-  const apiContext: APIRequestContext = context.request;
+  const apiContext = await request.newContext();
 
-  const bodyString =
-    (method === "POST" || method === "PUT") && body !== undefined
-      ? JSON.stringify(body)
-      : undefined;
+  try {
+    const bodyString =
+      (method === "POST" || method === "PUT") && body !== undefined
+        ? JSON.stringify(body)
+        : undefined;
 
-  // Get signed headers (Content-Type is already included if needed)
-  const headers = {
-    ...generateAPIHeaders(authData, method, endpoint, bodyString),
-    ...additionalHeaders,
-  };
+    const headers = {
+      ...generateAPIHeaders(authData, method, endpoint, bodyString),
+      ...additionalHeaders,
+    };
 
-  const requestOptions: any = { headers };
+    const requestOptions: any = { headers };
 
-  if (bodyString) {
-    requestOptions.data = bodyString;
+    if (bodyString) {
+      requestOptions.data = bodyString;
+    }
+
+    let response;
+    switch (method) {
+      case "GET":
+        response = await apiContext.get(endpoint, { headers });
+        break;
+      case "PUT":
+        response = await apiContext.put(endpoint, requestOptions);
+        break;
+      case "POST":
+        response = await apiContext.post(endpoint, requestOptions);
+        break;
+      case "DELETE":
+        response = await apiContext.delete(endpoint, { headers });
+        break;
+    }
+
+    if (!response.ok()) {
+      const responseText = await response.text();
+      console.log(
+        `❌ Request failed: ${response.status()} ${response.statusText()}`
+      );
+      console.log(`📄 Response body: ${responseText}`);
+      throw new Error(
+        `API request failed: ${response.status()} ${response.statusText()} Endpoint: ${endpoint} Response: ${responseText}`
+      );
+    }
+
+    if (method === "DELETE") {
+      return null;
+    }
+
+    return await response.json();
+  } finally {
+    await apiContext.dispose();
   }
-
-  let response;
-  switch (method) {
-    case "GET":
-      response = await apiContext.get(endpoint, { headers });
-      break;
-    case "PUT":
-      response = await apiContext.put(endpoint, requestOptions);
-      break;
-    case "POST":
-      response = await apiContext.post(endpoint, requestOptions);
-      break;
-    case "DELETE":
-      response = await apiContext.delete(endpoint, { headers });
-      break;
-  }
-
-  if (!response.ok()) {
-    const responseText = await response.text();
-    console.log(
-      `❌ Request failed: ${response.status()} ${response.statusText()}`
-    );
-    console.log(`📄 Response body: ${responseText}`);
-    throw new Error(
-      `API request failed: ${response.status()} ${response.statusText()} Endpoint: ${endpoint} Response: ${responseText}`
-    );
-  }
-
-  if (method === "DELETE") {
-    return null;
-  }
-
-  return await response.json();
 }
 
 /**
@@ -250,14 +251,12 @@ async function makeAuthenticatedRequest(
  */
 export async function getReportsByState(
   state: string,
-  context: BrowserContext,
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<Report[]> {
   const apiUrl = process.env.API_URL;
   const endpoint = `${apiUrl}/reports/WP/${state}`;
 
   const reports: Report[] = await makeAuthenticatedRequest(
-    context,
     "GET",
     endpoint,
     {},
@@ -278,7 +277,6 @@ export async function getReportsByState(
 export async function archiveReport(
   state: string,
   reportId: string,
-  context: BrowserContext,
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<void> {
   const apiUrl = process.env.API_URL;
@@ -286,7 +284,6 @@ export async function archiveReport(
 
   try {
     await makeAuthenticatedRequest(
-      context,
       "PUT",
       endpoint,
       {
@@ -309,15 +306,14 @@ export async function archiveReport(
  */
 export async function archiveAllReportsForState(
   state: string,
-  context: BrowserContext,
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<void> {
-  const allReports = await getReportsByState(state, context, userType);
+  const allReports = await getReportsByState(state, userType);
   const unarchivedReports = allReports.filter((report) => !report.archived);
 
   for (const report of unarchivedReports) {
     try {
-      await archiveReport(state, report.id, context, userType);
+      await archiveReport(state, report.id, userType);
     } catch (error) {
       console.log(
         `⚠️ Skipping report ${report.id} due to error: ${error.message}`
@@ -335,14 +331,12 @@ export async function archiveAllReportsForState(
  */
 export async function postBanner(
   banner: Omit<Banner, "key" | "createdAt" | "lastAltered">,
-  context: BrowserContext,
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<Banner> {
   const apiUrl = process.env.API_URL;
   const endpoint = `${apiUrl}/banners`;
 
   const createdBanner: Banner = await makeAuthenticatedRequest(
-    context,
     "POST",
     endpoint,
     {},
@@ -360,14 +354,12 @@ export async function postBanner(
  * @returns Promise<Banner[]> - Array of banners
  */
 export async function getBanners(
-  context: BrowserContext,
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<Banner[]> {
   const apiUrl = process.env.API_URL;
   const endpoint = `${apiUrl}/banners`;
 
   const banners: Banner[] = await makeAuthenticatedRequest(
-    context,
     "GET",
     endpoint,
     {},
@@ -386,21 +378,13 @@ export async function getBanners(
  */
 export async function deleteBanner(
   bannerId: string,
-  context: BrowserContext,
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<void> {
   const apiUrl = process.env.API_URL;
   const endpoint = `${apiUrl}/banners/${bannerId}`;
 
   try {
-    await makeAuthenticatedRequest(
-      context,
-      "DELETE",
-      endpoint,
-      {},
-      undefined,
-      userType
-    );
+    await makeAuthenticatedRequest("DELETE", endpoint, {}, undefined, userType);
   } catch (error) {
     console.log(`❌ Failed to delete banner ${bannerId}: ${error.message}`);
     throw error;
@@ -413,21 +397,18 @@ export async function deleteBanner(
  * @param userType - 'ADMIN' or 'STATE' to specify which user's auth data to use (defaults to 'ADMIN')
  */
 export async function deleteAllBanners(
-  context: BrowserContext,
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<void> {
   try {
-    // First, get all existing banners
-    const banners = await getBanners(context, userType);
+    const banners = await getBanners(userType);
 
     if (banners.length === 0) {
       return;
     }
 
-    // Delete each banner individually using the deleteBanner function
     for (const banner of banners) {
       try {
-        await deleteBanner(banner.key, context, userType);
+        await deleteBanner(banner.key, userType);
       } catch (error) {
         console.log(
           `⚠️ Skipping banner ${banner.key} (${banner.title}) due to error: ${error.message}`

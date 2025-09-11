@@ -21,7 +21,7 @@ jobs:
     name: Playwright Regression Tests
     uses: ./.github/workflows/e2e-test.yml
     with:
-      base-url: 'https://mfp-val.mdctdemo.com'
+      base-url: 'https://mdctmfpval.cms.gov'
       test-filter: '--grep-invert "@flaky"'
       timeout-minutes: 90
       artifact-name-prefix: 'regression'
