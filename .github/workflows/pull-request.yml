@@ -30,7 +30,7 @@ jobs:
 
   assignAuthor:
     name: Assign author
-    if: github.event.pull_request.user.type != 'Bot'
+    if: github.event.pull_request.user.type != 'Bot' && github.event.action != 'synchronize'
     runs-on: ubuntu-latest
     steps:
       - name: Assign PR to creator
