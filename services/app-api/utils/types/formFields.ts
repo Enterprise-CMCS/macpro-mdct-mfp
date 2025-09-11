@@ -129,5 +129,6 @@ export enum PageTypes {
   MODAL_DRAWER = "modalDrawer",
   DYNAMIC_MODAL_OVERLAY = "dynamicModalOverlay",
   PRETTY_EXCEL = "prettyExcel",
+  FORM_TABLE = "formTable",
   REVIEW_SUBMIT = "reviewSubmit",
 }

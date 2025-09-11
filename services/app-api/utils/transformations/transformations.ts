@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import { statePlanServiceNames } from "../constants/constants";
 import {
   AnyObject,
   DynamicModalOverlayReportPageShape,
@@ -198,6 +199,76 @@ export const transformFormTemplate = (
 
   return formTemplate;
 };
+
+const makeServiceField = (serviceName: string) => {
+  return {
+    id: `service-${serviceName.replace(/\s+/g, '-').toLowerCase()}`,
+    type: "number",
+    validation: "number",
+    props: {
+      label: serviceName
+    }
+  }
+};
+
+const makeFmapFields = (serviceName: string) => {
+  return [{
+    id: `fmap-hcbs-${serviceName.replace(/\s+/g, '-').toLowerCase()}`,
+    type: "checkbox",
+    validation: "checkboxOptional",
+    props: {
+      label: "",
+      choices: [
+        {
+          id: "qualHcbs",
+          label: ""
+        }
+      ]
+    }
+  },
+{
+    id: `fmap-demoServices-${serviceName.replace(/\s+/g, '-').toLowerCase()}`,
+    type: "checkbox",
+    validation: "checkboxOptional",
+    props: {
+      label: "",
+      choices: [
+        {
+          id: "demoServices",
+          label: ""
+        }
+      ]
+    }
+  },
+{
+    id: `fmap-suppServices-${serviceName.replace(/\s+/g, '-').toLowerCase()}`,
+    type: "checkbox",
+    validation: "checkboxOptional",
+    props: {
+      label: "",
+      choices: [
+        {
+          id: "suppServices",
+          label: ""
+        }
+      ]
+    }
+  }]
+}
+
+export const transformAbcdTemplate = (formTemplate: ReportJson) => {
+  const spsIndex = formTemplate.routes.findIndex((route) => route.name === "State Plan Services v2");
+
+  let generatedFields = [];
+  for (const serviceName of statePlanServiceNames) {
+    generatedFields.push(makeServiceField(serviceName));
+    generatedFields.push(...makeFmapFields(serviceName));
+  }
+
+  formTemplate.routes[spsIndex].form!.fields = generatedFields;
+
+  return formTemplate;
+}
 
 /**
  * Given a field and a reporting period, create 12 copies of that field:

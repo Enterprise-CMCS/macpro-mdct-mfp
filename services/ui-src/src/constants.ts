@@ -106,7 +106,22 @@ export function getDefaultTargetPopulationNames() {
   return DEFAULT_TARGET_POPULATIONS.map(
     (population) => population.transitionBenchmarks_targetPopulationName
   );
-}
+};
+
+export const statePlanServiceNames = [
+  "Clinic Services",
+  "Targeted Case Management",
+  "PACE",
+  "Rehabilitative services",
+  "Home health services",
+  "Hospice",
+  "Personal Care Services",
+  "Physical Therapy Services",
+  "Occupational Therapy Services",
+  "Services for Speech",
+  "Self-Directed"
+  // etc.
+];
 
 // TIMEOUT PARAMS
 export const IDLE_WINDOW = 30 * 60 * 1000; // ms

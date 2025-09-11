@@ -151,6 +151,19 @@
         }
       }
       ]}
+    },
+    {
+      "name": "State Plan Services v2",
+      "path": "/abcd/state-plan-services-v2",
+      "pageType": "formTable",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": ""
+        }
+      },
+      "form": { "id": "state-plan-services-v2", "fields": []
     }
+  }
   ]
 }

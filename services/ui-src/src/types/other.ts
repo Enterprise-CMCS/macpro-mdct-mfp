@@ -63,6 +63,7 @@ export enum PageTypes {
   OVERLAY_MODAL = "overlayModal",
   REVIEW_SUBMIT = "reviewSubmit",
   PRETTY_EXCEL = "prettyExcel",
+  FORM_TABLE = "formTable",
 }
 
 export enum EntityStatuses {
