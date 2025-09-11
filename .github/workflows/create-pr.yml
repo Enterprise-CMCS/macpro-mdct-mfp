@@ -17,29 +17,35 @@ on:
         type: string
 
 concurrency:
-  group: ${{ github.ref_name }}
+  group: ${{ github.workflow }}-${{ github.ref_name || github.run_id }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
+  issues: write
   pull-requests: write
 
 jobs:
   create-pr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js for yarn-lock-diff
+        uses: actions/setup-node@v5
         with:
           node-version-file: ".nvmrc"
-      - name: Prepare for yarn-lock-diff
+
+      - name: Install modules for yarn-lock-diff
         run: yarn install --frozen-lockfile
+
       - name: Set branch variables
         run: |
           echo "HEAD_BRANCH=${{ inputs.head_branch }}" >> $GITHUB_ENV
           echo "BASE_BRANCH=${{ inputs.base_branch }}" >> $GITHUB_ENV
           echo "PR_LABEL=${{ inputs.pr_label || '' }}" >> $GITHUB_ENV
+
       - name: Generate PR body
         id: pr_body
         run: |
@@ -77,6 +83,7 @@ jobs:
           # Send escaped body to be used in a future step
           echo "body=$body" >> $GITHUB_OUTPUT
           echo "skip=false" >> $GITHUB_OUTPUT
+
       - name: Generate PR title
         if: steps.pr_body.outputs.skip != 'true'
         id: pr_title
@@ -89,6 +96,7 @@ jobs:
 
           # Send title to be used in a future step
           echo "title=$title" >> $GITHUB_OUTPUT
+
       - name: Check if PR already exists
         if: steps.pr_body.outputs.skip != 'true'
         id: check_pr
@@ -111,6 +119,7 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create or update PR
         if: steps.pr_body.outputs.skip != 'true'
         run: |
@@ -155,6 +164,7 @@ jobs:
           PR_NUMBER: ${{ steps.check_pr.outputs.number }}
           PR_TITLE: ${{ steps.pr_title.outputs.title }}
           RAW_BODY: ${{ steps.pr_body.outputs.body }}
+
       - name: Add label to PR
         if: steps.pr_body.outputs.skip != 'true' && inputs.pr_label != ''
         run: |

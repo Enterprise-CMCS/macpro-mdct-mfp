@@ -2,19 +2,25 @@ name: Create main to val PR
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: write
+  issues: write
   pull-requests: write
 
 jobs:
+  setup:
+    name: Checkout repo
+    uses: ./.github/workflows/checkout-repo.yml
+
   call-create-pr:
+    name: Create PR
+    needs: setup
     uses: ./.github/workflows/create-pr.yml
     with:
       head_branch: main
       base_branch: val
       pr_label: "val release"
-      pr_title: "MFP val release"
+      pr_title: "${{ needs.setup.outputs.app_name_uppercase }} val release"
