@@ -2,19 +2,25 @@ name: Create val to prod PR
 
 on:
   push:
-    branches:
-      - val
+    branches: [val]
   workflow_dispatch:
 
 permissions:
   contents: write
+  issues: write
   pull-requests: write
 
 jobs:
+  setup:
+    name: Checkout repo
+    uses: ./.github/workflows/checkout-repo.yml
+
   call-create-pr:
+    name: Create PR
+    needs: setup
     uses: ./.github/workflows/create-pr.yml
     with:
       head_branch: val
       base_branch: production
       pr_label: "prod release"
-      pr_title: "MFP production release"
+      pr_title: "${{ needs.setup.outputs.app_name_uppercase }} production release"
