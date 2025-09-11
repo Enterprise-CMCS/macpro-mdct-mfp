@@ -23,7 +23,7 @@ jobs:
     uses: ./.github/workflows/checkout-repo.yml
 
   analyze:
-    name: Analyze CodeQL
+    name: CodeQL analyze
     needs: setup
     runs-on: ubuntu-latest
     steps:
