@@ -2,12 +2,13 @@
 name: CodeQL
 
 on:
-  push:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
     branches:
       - main
       - val
       - production
-  pull_request:
+  push:
     branches:
       - main
       - val

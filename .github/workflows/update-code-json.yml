@@ -1,10 +1,10 @@
 # This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
 name: Update Code.json
 on:
-  workflow_dispatch:
   schedule:
     # monthly on day 1
     - cron: "0 0 1 * *"
+  workflow_dispatch:
 
 permissions:
   contents: write

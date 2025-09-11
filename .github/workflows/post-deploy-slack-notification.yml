@@ -25,8 +25,8 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           MSG_MINIMAL: true
-          SLACK_TITLE: ":boom: The latest ${{ github.repository }} build on branch '${{ github.event.workflow_run.head_branch }}' has failed"
           SLACK_MESSAGE: "${{ github.event.workflow_run.html_url }}"
+          SLACK_TITLE: ":boom: The latest ${{ github.repository }} build on branch '${{ github.event.workflow_run.head_branch }}' has failed"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
   # Sends a slack message to the mdct-prod-releases channel in CMS slack

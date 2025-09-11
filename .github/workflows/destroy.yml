@@ -10,7 +10,7 @@ on:
         required: true
 
 concurrency:
-  group: ${{ inputs.environment || github.event.ref }}
+  group: ${{ github.workflow }}-${{ inputs.environment || github.event.ref }}
 
 permissions:
   actions: read
@@ -40,8 +40,8 @@ jobs:
       - name: Configure AWS credentials for GitHub Actions
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ env.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          role-to-assume: ${{ env.AWS_OIDC_ROLE_TO_ASSUME }}
 
       - name: Destroy
         run: ./run destroy --stage $BRANCH_NAME --verify false
@@ -56,6 +56,6 @@ jobs:
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_TITLE: ":boom: A destroy action has failed on ${{ github.repository }}."
           MSG_MINIMAL: true
+          SLACK_TITLE: ":boom: A destroy action has failed on ${{ github.repository }}."
           SLACK_WEBHOOK: ${{ secrets.INTEGRATIONS_SLACK_WEBHOOK }}
