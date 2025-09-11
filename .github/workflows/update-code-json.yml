@@ -3,7 +3,8 @@ name: Update Code.json
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 1 * *" # monthly on day 1
+    # monthly on day 1
+    - cron: "0 0 1 * *"
 
 permissions:
   contents: write
@@ -13,18 +14,14 @@ jobs:
   update-code-json:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.2.2
+      - name: Checkout repo (full history) and setup Node.js
+        uses: ./.github/actions/checkout-repo.yml
         with:
           fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4.3.0
-        with:
-          node-version: "20"
+          setup-node: true
 
       - name: Setup Go
-        uses: actions/setup-go@v5.4.0
+        uses: actions/setup-go@v6.0.0
         with:
           go-version: "1.22"
 
@@ -34,5 +31,5 @@ jobs:
       - name: Update code.json
         uses: DSACMS/automated-codejson-generator@main
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: "main"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,3 +1,4 @@
+# This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
 name: Pull Request
 
 on:
@@ -8,23 +9,32 @@ jobs:
   prchecks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout repo
+        id: checkout-repo
+        uses: ./.github/actions/checkout-repo.yml
+
+      - name: Setup Python for pre-commit
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      - name: Configure pre-commit to skip branch name validation
+
+      - name: Configure pre-commit to skip some validations
         run: |
           echo "SKIP=branch-name-validation,typescript-check,typescript-check-api,typescript-check-ui" >> $GITHUB_ENV
       - uses: pre-commit/action@v3.0.1
+
   assignAuthor:
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.user.type != 'Bot' }}
+    if: github.event.pull_request.user.type != 'Bot'
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        id: checkout-repo
+        uses: ./.github/actions/checkout-repo.yml
+
       - name: Assign PR to Creator
         run: |
-          gh pr edit $PRNUM --add-assignee $PR_AUTHOR
+          gh pr edit $PR_NUM --add-assignee $PR_AUTHOR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PRNUM: ${{ github.event.pull_request.number }}
+          PR_NUM: ${{ github.event.pull_request.number }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}

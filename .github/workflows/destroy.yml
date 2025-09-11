@@ -13,42 +13,38 @@ concurrency:
   group: ${{ inputs.environment || github.event.ref }}
 
 permissions:
-  id-token: write
-  contents: read
   actions: read
+  contents: read
+  id-token: write
 
 jobs:
   destroy:
-    if: |
-      (
-        github.event.ref_type == 'branch' &&
-        (!startsWith(github.event.ref, 'skipci')) &&
-        (!startsWith(github.event.ref, 'code-json-'))
-      )
     runs-on: ubuntu-latest
+    if: github.event.ref_type == 'branch' && !contains('skipci,code-json-', github.event.ref)
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repo and setup Node.js
+        id: checkout-repo
+        uses: ./.github/actions/checkout-repo.yml
         with:
-          node-version-file: ".nvmrc"
-      - name: set branch_name
-        run: |
-          BRANCH_NAME=$(./.github/setBranchName.sh ${{ inputs.environment || github.event.ref }})
-          echo "branch_name=${BRANCH_NAME}" >> $GITHUB_ENV
-      - name: set branch specific variable names
-        run: ./.github/buildVars.sh set_names
-      - name: set variable values
+          build-vars-names: true
+          setup-node: true
+
+      - name: Set branch-specific variable values
         run: ./.github/buildVars.sh set_values
         env:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_OIDC_ROLE_TO_ASSUME: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+
       - name: Configure AWS credentials for GitHub Actions
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
       - name: Destroy
-        run: ./run destroy --stage $branch_name --verify false
+        run: ./run destroy --stage $BRANCH_NAME --verify false
+        env:
+          BRANCH_NAME: ${{ steps.checkout-repo.outputs.branch_name }}
 
   notify_on_destroy_failure:
     runs-on: ubuntu-latest

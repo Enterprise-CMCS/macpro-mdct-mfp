@@ -1,0 +1,83 @@
+# This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
+name: Checkout repository and other common setups
+
+on:
+  workflow_call:
+    inputs:
+      build-vars:
+        required: false
+        type: boolean
+        default: false
+      build-vars-names:
+        required: false
+        type: boolean
+        default: false
+      build-vars-values:
+        required: false
+        type: boolean
+        default: false
+      fetch-depth:
+        required: false
+        type: number
+        default: 1
+      setup-node:
+        required: false
+        type: boolean
+        default: false
+    outputs:
+      app_name:
+        value: ${{ jobs.checkout-repo.outputs.app_name }}
+      app_name_uppercase:
+        value: ${{ jobs.checkout-repo.outputs.app_name_uppercase }}
+      branch_name:
+        value: ${{ jobs.checkout-repo.outputs.branch_name }}
+
+jobs:
+  checkout-repo:
+    runs-on: ubuntu-latest
+    outputs:
+      app_name: ${{ steps.extract-app-step.outputs.app_name }}
+      app_name_uppercase: ${{ steps.extract-app-step.outputs.app_name_uppercase }}
+      branch_name: ${{ steps.extract-branch-step.outputs.branch_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5.0.0
+        with:
+          fetch-depth: ${{ inputs.fetch-depth }}
+
+      - name: Setup Node.js
+        if: inputs.setup-node
+        uses: actions/setup-node@v5.0.0
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Extract app name
+        id: extract-app-step
+        run: |
+          repo="${GITHUB_REPOSITORY##*/}"
+          app="${repo##*-}"
+          echo "app_name=$app" >> $GITHUB_ENV
+          echo "app_name=$app" >> $GITHUB_OUTPUT
+          echo "app_name_uppercase=${app^^}" >> $GITHUB_ENV
+          echo "app_name_uppercase=${app^^}" >> $GITHUB_OUTPUT
+
+      - name: Extract branch name
+        id: extract-branch-step
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            SOURCE_BRANCH="${GITHUB_HEAD_REF}"
+          else
+            SOURCE_BRANCH="${GITHUB_REF##*/}"
+          fi
+
+          BRANCH_NAME="$("./.github/setBranchName.sh" "$SOURCE_BRANCH")"
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+      - name: Set branch-specific variable names
+        if: inputs.build-vars || inputs.build-vars-names
+        run: ./.github/buildVars.sh set_names
+
+      - name: Set branch-specific variable values
+        if: inputs.build-vars || inputs.build-vars-values
+        run: ./.github/buildVars.sh set_values
