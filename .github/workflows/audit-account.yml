@@ -15,17 +15,18 @@ permissions:
   id-token: write
 
 jobs:
-  setup:
-    name: Checkout repo and setup Node.js
-    uses: ./.github/workflows/checkout-repo.yml
-    with:
-      setup-node: true
-
   audit:
     name: Audit Account
-    needs: setup
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5.0.0
+
+      - name: Setup Node.js for pre-commit
+        uses: actions/setup-node@v5.0.0
+        with:
+          node-version-file: ".nvmrc"
+
       - name: Set branch-specifc variable values
         run: ./.github/buildVars.sh set_values
         env:

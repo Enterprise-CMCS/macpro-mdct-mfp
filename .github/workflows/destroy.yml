@@ -19,18 +19,26 @@ permissions:
 
 jobs:
   setup:
-    name: Checkout repo, build vars, and setup Node.js
+    name: Checkout repo
     if: github.event.ref_type == 'branch' && !contains('skipci,code-json-', github.event.ref)
     uses: ./.github/workflows/checkout-repo.yml
-    with:
-      build-vars-names: true
-      setup-node: true
 
   destroy:
     runs-on: ubuntu-latest
     if: github.event.ref_type == 'branch' && !contains('skipci,code-json-', github.event.ref)
     needs: setup
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5.0.0
+
+      - name: Setup Node.js for pre-commit
+        uses: actions/setup-node@v5.0.0
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Set branch-specific variable names
+        run: ./.github/buildVars.sh set_names
+
       - name: Set branch-specific variable values
         run: ./.github/buildVars.sh set_values
         env:

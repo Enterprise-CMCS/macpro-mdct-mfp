@@ -2,12 +2,6 @@
 name: CodeQL
 
 on:
-  pull_request:
-    types: [opened, reopened, ready_for_review, synchronize]
-    branches:
-      - main
-      - val
-      - production
   push:
     branches:
       - main
@@ -18,41 +12,19 @@ on:
     - cron: "00 4 * * 1"
 
 jobs:
-  setup:
-    name: Checkout repo
-    uses: ./.github/workflows/checkout-repo.yml
-
   analyze:
-    name: CodeQL analyze
-    needs: setup
+    name: Analyze CodeQL
     runs-on: ubuntu-latest
     steps:
-      - name: Check for JS files
-        id: check-files-step
-        run: |
-          case "${{ matrix.language }}" in
-            javascript)
-              FILES=$(git ls-files '*.js' '*.jsx')
-              ;;
-            typescript)
-              FILES=$(git ls-files '*.ts' '*.tsx')
-              ;;
-          esac
+      - name: Checkout repository
+        uses: actions/checkout@v5.0.0
 
-          if [ -z "$FILES" ]; then
-            echo "has_js=false" >> $GITHUB_OUTPUT
-          else
-            echo "has_js=true" >> $GITHUB_OUTPUT
-          fi
-  
       - name: Initialize CodeQL
-        if: steps.check-files-step.outputs.has_js
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
 
       - name: Perform CodeQL analysis
-        if: steps.check-files-step.outputs.has_js
         uses: github/codeql-action/analyze@v3
     strategy:
       fail-fast: false

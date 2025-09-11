@@ -4,26 +4,10 @@ name: Checkout repository and other common setups
 on:
   workflow_call:
     inputs:
-      build-vars:
-        required: false
-        type: boolean
-        default: false
-      build-vars-names:
-        required: false
-        type: boolean
-        default: false
-      build-vars-values:
-        required: false
-        type: boolean
-        default: false
       fetch-depth:
         required: false
         type: number
         default: 1
-      setup-node:
-        required: false
-        type: boolean
-        default: false
     outputs:
       app_name:
         value: ${{ jobs.checkout-repo.outputs.app_name }}
@@ -44,12 +28,6 @@ jobs:
         uses: actions/checkout@v5.0.0
         with:
           fetch-depth: ${{ inputs.fetch-depth }}
-
-      - name: Setup Node.js
-        if: inputs.setup-node
-        uses: actions/setup-node@v5.0.0
-        with:
-          node-version-file: ".nvmrc"
 
       - name: Extract app name
         id: extract-app-step
@@ -73,11 +51,3 @@ jobs:
           BRANCH_NAME="$("./.github/setBranchName.sh" "$SOURCE_BRANCH")"
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
-
-      - name: Set branch-specific variable names
-        if: inputs.build-vars || inputs.build-vars-names
-        run: ./.github/buildVars.sh set_names
-
-      - name: Set branch-specific variable values
-        if: inputs.build-vars || inputs.build-vars-values
-        run: ./.github/buildVars.sh set_values

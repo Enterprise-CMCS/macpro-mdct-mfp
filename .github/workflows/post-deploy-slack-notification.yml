@@ -3,12 +3,12 @@ name: Post Deploy
 
 on:
   workflow_run:
-    workflows: [Deploy]
-    types: [completed]
     branches:
       - main
       - val
       - production
+    types: [completed]
+    workflows: [Deploy]
 
 jobs:
   # Sends alert to macpro-mdct-<product name>-alerts channel in CMS slack when any integration environment fails to deploy or run tests

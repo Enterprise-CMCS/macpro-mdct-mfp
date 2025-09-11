@@ -17,10 +17,8 @@ permissions:
 
 jobs:
   setup:
-    name: Checkout repo and build vars
+    name: Checkout repo
     uses: ./.github/workflows/checkout-repo.yml
-    with:
-      build-vars: true
 
   endpoint:
     name: Endpoint
