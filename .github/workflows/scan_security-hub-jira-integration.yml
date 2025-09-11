@@ -1,46 +1,65 @@
-name: Scan and Open Jira Tickets (AWS Security Hub)
+name: Scan and Open Jira Tickets (Snyk)
 
 on:
-  workflow_dispatch: # for testing and manual runs
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, ready_for_review, synchronize]
   schedule:
-    - cron: "0 6 * * *" # daily at 0600 UTC
+    # daily at 0600 UTC
+    - cron: "0 6 * * *"
 
 permissions:
   id-token: write
-  actions: write
 
 jobs:
-  # Hack which is used just to redirect the "scheduled" triggers to deploy/production, since we can't just tell Github (for now) to do a scheduled action on a branch different from the default branch
-  trigger-action-on-deploy-production:
-    if: github.refs != 'refs/head/production'
+  snyk_run:
+    name: Snyk Run (for PR and push)
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Trigger production workflow
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh workflow run .github/workflows/scan_security-hub-jira-integration.yml \
-            --ref production
+      - name: Checkout repository (full history)
+        uses: actions/checkout@v5.0.0
 
-  sync:
-    if: github.refs == 'refs/heads/production'
-    name: Run sync
+      - name: Install Snyk and Run Snyk test
+        run: |
+          npm install -g snyk
+          snyk test --all-projects --json > snyk_output.txt || true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  snyk_nightly_run:
+    name: Snyk Nightly Run (for nightly cron with JIRA)
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
     steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-          role-to-assume: ${{ secrets.PRODUCTION_AWS_OIDC_ROLE_TO_ASSUME }}
-      - name: Sync Security Hub and Jira
-        uses: Enterprise-CMCS/mac-fc-security-hub-visibility@v2.0.9
+      - name: Checkout repository (full history)
+        uses: actions/checkout@v5.0.0
+
+      - name: Install Snyk and Run Snyk test
+        run: |
+          npm install -g snyk
+          snyk test --all-projects --json > snyk_output.txt || true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: check snyk json output nightly
+        run: |
+          echo '[' $(cat snyk_output.txt) ']' > snyk_output.txt
+          cat snyk_output.txt
+
+      - name: use the custom github  action to parse Snyk output
+        uses: Enterprise-CMCS/mac-fc-security-scan-report@v2.8.4.3
         with:
           jira-username: "mdct_github_service_account"
           jira-token: ${{ secrets.JIRA_ENT_USER_TOKEN }}
-          jira-project-key: CMDCT
-          jira-ignore-statuses: Done, Closed, Canceled
-          jira-custom-fields: '{ "customfield_10100": "CMDCT-2280", "customfield_26700" : [{"id": "40105", "value": "MFP"}] }'
-          aws-severities: CRITICAL, HIGH, MEDIUM
-          jira-assignee: "MWTW"
+          jira-host: "jiraent.cms.gov"
+          jira-project-key: "CMDCT"
+          jira-issue-type: "Task"
+          jira-custom-field-key-value: '{ "customfield_10100": "CMDCT-2280", "customfield_26700" : [{"id": "40100", "value": "mdct-core"}] }'
+          jira-labels: "Core,snyk"
+          jira-title-prefix: "[Core] - Snyk :"
+          is_jira_enterprise: true
+          assign-jira-ticket-to: "MWTW"
+          scan-output-path: "snyk_output.txt"
+          scan-type: "snyk"
+          major-version-only: true
