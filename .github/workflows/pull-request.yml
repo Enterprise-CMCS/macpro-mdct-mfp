@@ -6,13 +6,15 @@ on:
     types: [opened, reopened, ready_for_review, synchronize]
 
 jobs:
+  setup:
+    name: Checkout repo
+    uses: ./.github/workflows/checkout-repo.yml
+
   prchecks:
+    name: PR checks
+    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        id: checkout-repo
-        uses: ./.github/actions/checkout-repo.yml
-
       - name: Setup Python for pre-commit
         uses: actions/setup-python@v5
         with:
@@ -24,14 +26,12 @@ jobs:
       - uses: pre-commit/action@v3.0.1
 
   assignAuthor:
-    runs-on: ubuntu-latest
+    name: Assign author
     if: github.event.pull_request.user.type != 'Bot'
+    needs: setup
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        id: checkout-repo
-        uses: ./.github/actions/checkout-repo.yml
-
-      - name: Assign PR to Creator
+      - name: Assign PR to creator
         run: |
           gh pr edit $PR_NUM --add-assignee $PR_AUTHOR
         env:

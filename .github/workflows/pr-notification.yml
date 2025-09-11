@@ -16,17 +16,19 @@ permissions:
   pull-requests: write
 
 jobs:
+  setup:
+    name: Checkout repo and build vars
+    uses: ./.github/workflows/checkout-repo.yml
+    with:
+      build-vars: true
+
   endpoint:
-    runs-on: ubuntu-latest
+    name: Endpoint
+    needs: setup
     outputs:
       application_endpoint_url: ${{ steps.cloudfront-endpoint.outputs.application_endpoint_url || 'N/A' }}
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo and extract branch name
-        id: checkout-repo-step
-        uses: ./.github/actions/checkout-repo.yml
-        with:
-          build-vars: true
-
       - name: Configure AWS credentials for GitHub Actions
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -35,7 +37,7 @@ jobs:
 
       - name: Get CloudFront endpoint
         id: cloudfront-endpoint
-        if: steps.checkout-repo-step.outputs.app_name != 'core'
+        if: needs.setup.outputs.app_name != 'core'
         run: |
           set -eo pipefail
           application_endpoint_url=$(
@@ -49,16 +51,17 @@ jobs:
           fi
           echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_OUTPUT
         env:
-          STACK_NAME: "${{ steps.checkout-repo-step.outputs.app_name }}-${{ steps.checkout-repo-step.outputs.branch_name }}"
+          STACK_NAME: "${{ needs.setup.outputs.app_name }}-${{ needs.setup.outputs.branch_name }}"
 
   notify_integrations_channel:
-    runs-on: ubuntu-latest
-    needs: [endpoint]
+    name: Notify integrations channel
     if: >
       github.actor != 'dependabot[bot]' &&
       github.actor != 'github-actions[bot]' &&
       github.actor != 'mdct-github-service-account' &&
       !github.event.pull_request.draft
+    needs: endpoint
+    runs-on: ubuntu-latest
     steps:
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2

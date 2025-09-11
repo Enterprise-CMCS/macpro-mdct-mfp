@@ -15,15 +15,17 @@ permissions:
   id-token: write
 
 jobs:
+  setup:
+    name: Checkout repo and setup Node.js
+    uses: ./.github/workflows/checkout-repo.yml
+    with:
+      setup-node: true
+
   audit:
+    name: Audit Account
+    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo and setup Node.js
-        id: checkout-repo-step
-        uses: ./.github/actions/checkout-repo.yml
-        with:
-          setup-node: true
-
       - name: Set branch-specifc variable values
         run: ./.github/buildVars.sh set_values
         env:
@@ -53,7 +55,7 @@ jobs:
           # Executing the run command is required to assemble all the dependencies in the topics service
           ./run list-topics --stage $BRANCH_NAME
         env:
-          BRANCH_NAME: ${{ steps.checkout-repo-step.outputs.branch_name }}
+          BRANCH_NAME: ${{ needs.setup.outputs.branch_name  }}
 
       - name: Collect resources from account
         run: pushd .github && aws resourcegroupstaggingapi get-resources > resources.json

@@ -17,23 +17,23 @@ on:
     - cron: "00 4 * * 1"
 
 jobs:
+  setup:
+    name: Checkout repo
+    uses: ./.github/workflows/checkout-repo.yml
+
   analyze:
-    name: Analyze
+    name: Analyze CodeQL
+    needs: setup
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ["javascript"]
-
     steps:
-      - name: Checkout repo
-        uses: ./.github/actions/checkout-repo.yml
-
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
 
-      - name: Perform CodeQL Analysis
+      - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript"]

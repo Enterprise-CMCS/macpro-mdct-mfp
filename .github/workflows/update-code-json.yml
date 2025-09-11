@@ -11,15 +11,18 @@ permissions:
   pull-requests: write
 
 jobs:
+  setup:
+    name: Checkout repo (full history) and setup Node.js
+    uses: ./.github/workflows/checkout-repo.yml
+    with:
+      fetch-depth: 0
+      setup-node: true
+
   update-code-json:
+    name: Update code.json
+    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo (full history) and setup Node.js
-        uses: ./.github/actions/checkout-repo.yml
-        with:
-          fetch-depth: 0
-          setup-node: true
-
       - name: Setup Go
         uses: actions/setup-go@v6.0.0
         with:
