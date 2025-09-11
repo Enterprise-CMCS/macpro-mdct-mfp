@@ -11,7 +11,7 @@ permissions:
   contents: write
   pull-requests: write
 
-jobs:   
+jobs:
   update-code-json:
     name: Update code.json
     runs-on: ubuntu-latest
