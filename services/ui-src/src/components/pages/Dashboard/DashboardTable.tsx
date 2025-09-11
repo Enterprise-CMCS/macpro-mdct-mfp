@@ -96,7 +96,7 @@ export const DashboardTable = ({
                 sxOverride={sxOverride}
               />
             }
-            {(reportType === ReportType.WP && !report?.associatedSar) || reportType === ReportType.ABCD && (
+            {!(reportType === ReportType.SAR || report?.associatedSar) && (
               // archive button is available only for WP without an assoc SAR
               <AdminArchiveButton
                 report={report}
