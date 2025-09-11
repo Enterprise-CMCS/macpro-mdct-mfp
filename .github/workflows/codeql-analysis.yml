@@ -27,12 +27,32 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
+      - name: Check for JS files
+        id: check-files-step
+        run: |
+          case "${{ matrix.language }}" in
+            javascript)
+              FILES=$(git ls-files '*.js' '*.jsx')
+              ;;
+            typescript)
+              FILES=$(git ls-files '*.ts' '*.tsx')
+              ;;
+          esac
+
+          if [ -z "$FILES" ]; then
+            echo "has_js=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_js=true" >> $GITHUB_OUTPUT
+          fi
+  
       - name: Initialize CodeQL
+        if: steps.check-files-step.outputs.has_js
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
 
       - name: Perform CodeQL analysis
+        if: steps.check-files-step.outputs.has_js
         uses: github/codeql-action/analyze@v3
     strategy:
       fail-fast: false
