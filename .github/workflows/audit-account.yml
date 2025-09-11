@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   audit:
-    name: Audit Account
+    name: Audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

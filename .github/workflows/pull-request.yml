@@ -7,7 +7,7 @@ on:
 
 jobs:
   prchecks:
-    name: prchecks
+    name: prchecks 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

@@ -18,6 +18,7 @@ on:
 
 jobs:
   checkout-repo:
+    name: Checkout repo
     runs-on: ubuntu-latest
     outputs:
       app_name: ${{ steps.extract-app-step.outputs.app_name }}
