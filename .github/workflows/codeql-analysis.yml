@@ -3,11 +3,8 @@ name: "CodeQL"
 
 on:
   pull_request:
-    branches:
-      - main
-      - val
-      - production
     types: [opened, reopened, ready_for_review, synchronize]
+  push:
   schedule:
     # run every Monday against main
     - cron: "0 4 * * 1"
@@ -15,6 +12,10 @@ on:
 jobs:
   analyze:
     name: Analyze
+    if: >
+      github.ref_name == 'main' ||
+      github.ref_name == 'val' ||
+      github.ref_name == 'production'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
