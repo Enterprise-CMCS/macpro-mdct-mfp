@@ -1,5 +1,5 @@
 # This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
-name: "CodeQL"  # Leave in quotes to avoid needing to update branch rules
+name: "CodeQL"  # Quotes needed to avoid updating branch rules
 
 on:
   pull_request:

@@ -7,7 +7,7 @@ on:
 
 jobs:
   prchecks:
-    name: prchecks  # Keep this name to avoid needing to update branch rules
+    name: prchecks  # Name needs to be unchanged to avoid updating branch rules
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -29,7 +29,7 @@ jobs:
       - uses: pre-commit/action@v3.0.1
 
   assignAuthor:
-    name: assignAuthor  # Keep this name to avoid needing to update branch rules
+    name: assignAuthor  # Name needs to be unchanged to avoid updating branch rules
     if: github.event.pull_request.user.type != 'Bot' && github.event.action != 'synchronize'
     runs-on: ubuntu-latest
     steps:
