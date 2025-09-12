@@ -5,6 +5,7 @@ import {
 import { writeLocalUiEnvFile } from "./write-ui-env-file";
 import { runCommand } from "../lib/runner";
 import { region } from "./consts";
+import { writeSeedEnvFile } from "./write-seed-env-file.js";
 
 export const getCloudFormationStackOutputValues = async (
   stackName: string
