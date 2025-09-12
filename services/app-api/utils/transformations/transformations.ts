@@ -265,7 +265,9 @@ export const transformAbcdTemplate = (formTemplate: ReportJson) => {
     generatedFields.push(...makeFmapFields(serviceName));
   }
 
+  // do for v2 and v3
   formTemplate.routes[spsIndex].form!.fields = generatedFields;
+  formTemplate.routes[spsIndex + 1].form!.fields = generatedFields;
 
   return formTemplate;
 }

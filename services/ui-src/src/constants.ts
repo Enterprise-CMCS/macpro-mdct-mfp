@@ -106,7 +106,7 @@ export function getDefaultTargetPopulationNames() {
   return DEFAULT_TARGET_POPULATIONS.map(
     (population) => population.transitionBenchmarks_targetPopulationName
   );
-};
+}
 
 export const statePlanServiceNames = [
   "Clinic Services",

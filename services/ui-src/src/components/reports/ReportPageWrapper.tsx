@@ -25,6 +25,7 @@ import {
 import { useStore } from "utils";
 import { PrettyExcelPage } from "./PrettyExcelPage";
 import { FormTablePage } from "./FormTablePage";
+import { FormTable2Page } from "./FormTable2Page";
 
 export const ReportPageWrapper = () => {
   const { report } = useStore();
@@ -65,6 +66,8 @@ export const ReportPageWrapper = () => {
         return <PrettyExcelPage route={route as StandardReportPageShape} />;
       case PageTypes.FORM_TABLE:
         return <FormTablePage route={route as StandardReportPageShape} />;
+      case PageTypes.FORM_TABLE_2:
+        return <FormTable2Page route={route as StandardReportPageShape} />;
       default:
         showSidebar();
         return <StandardReportPage route={route as StandardReportPageShape} />;

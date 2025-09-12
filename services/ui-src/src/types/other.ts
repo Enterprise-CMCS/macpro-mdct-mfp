@@ -64,6 +64,7 @@ export enum PageTypes {
   REVIEW_SUBMIT = "reviewSubmit",
   PRETTY_EXCEL = "prettyExcel",
   FORM_TABLE = "formTable",
+  FORM_TABLE_2 = "formTable2",
 }
 
 export enum EntityStatuses {

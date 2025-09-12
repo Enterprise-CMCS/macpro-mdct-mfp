@@ -130,5 +130,6 @@ export enum PageTypes {
   DYNAMIC_MODAL_OVERLAY = "dynamicModalOverlay",
   PRETTY_EXCEL = "prettyExcel",
   FORM_TABLE = "formTable",
+  FORM_TABLE_2 = "formTable2",
   REVIEW_SUBMIT = "reviewSubmit",
 }

@@ -164,6 +164,19 @@
       },
       "form": { "id": "state-plan-services-v2", "fields": []
     }
+  },
+    {
+      "name": "State Plan Services v3 (dev change)",
+      "path": "/abcd/state-plan-services-v3",
+      "pageType": "formTable2",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": ""
+        }
+      },
+      "form": { "id": "state-plan-services-v3", "fields": []
+    }
   }
   ]
 }
