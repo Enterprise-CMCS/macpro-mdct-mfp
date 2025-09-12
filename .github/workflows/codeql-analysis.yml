@@ -1,20 +1,20 @@
 # This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
-name: "CodeQL"
+name: "CodeQL"  # Leave in quotes to avoid needing to update branch rules
 
 on:
-  push:
+  pull_request:
     branches:
       - main
       - val
       - production
-  pull_request:
+  push:
     branches:
       - main
       - val
       - production
   schedule:
     # run every Monday against main
-    - cron: "00 4 * * 1"
+    - cron: "0 4 * * 1"
 
 jobs:
   analyze:
@@ -35,5 +35,5 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
-      - name: Perform CodeQL Analysis
+      - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
