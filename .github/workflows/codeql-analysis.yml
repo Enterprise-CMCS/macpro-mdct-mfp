@@ -2,25 +2,30 @@
 name: "CodeQL"
 
 on:
-  pull_request:
-    types: [opened, reopened, ready_for_review, synchronize]
   push:
+    branches:
+      - main
+      - val
+      - production
+  pull_request:
+    branches:
+      - main
+      - val
+      - production
   schedule:
     # run every Monday against main
-    - cron: "0 4 * * 1"
+    - cron: "00 4 * * 1"
 
 jobs:
   analyze:
     name: Analyze
-    if: >
-      github.ref_name == 'main' ||
-      github.ref_name == 'val' ||
-      github.ref_name == 'production'
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
         language: ["javascript"]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5.0.0
@@ -30,5 +35,5 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
-      - name: Perform CodeQL analysis
+      - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
