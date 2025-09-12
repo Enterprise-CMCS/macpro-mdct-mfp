@@ -103,18 +103,6 @@ export const local = {
       "."
     );
 
-    const SeedDataFunctionName = (
-      await getCloudFormationStackOutputValues("mfp-localstack")
-    )["SeedDataFunctionName"];
-
-    const lambdaClient = new LambdaClient({ region });
-    const lambdaCommand = new InvokeCommand({
-      FunctionName: SeedDataFunctionName,
-      InvocationType: "Event",
-      Payload: Buffer.from(JSON.stringify({})),
-    });
-    await lambdaClient.send(lambdaCommand);
-
     await Promise.all([
       runCommand(
         "CDK local watch",
