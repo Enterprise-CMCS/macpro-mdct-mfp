@@ -15,7 +15,7 @@ export const writeSeedEnvFile = async (
   await fs.rm(configFilePath, { force: true });
 
   const envConfigContent = [
-    `API_URL=${envVariables.apiUrl.replace("https", "http")}`,
+    `API_URL=${envVariables["API_URL"].replace("https", "http")}`,
   ].join("\n");
 
   await fs.writeFile(configFilePath, envConfigContent);
