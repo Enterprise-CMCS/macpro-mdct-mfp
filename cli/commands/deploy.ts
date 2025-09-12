@@ -26,7 +26,7 @@ export const deploy = {
   handler: async (options: { stage: string }) => {
     await checkIfAuthenticated();
 
-    if (await stackExists("seds-prerequisites")) {
+    if (await stackExists("mfp-prerequisites")) {
       await runCommand(
         "CDK deploy",
         [
@@ -41,6 +41,9 @@ export const deploy = {
         "."
       );
     } else {
+      // TODO: FYI, I got this error when my internet connection was down, so we could improve the logic here.
+
+      // TODO: FYI, I got this error when my AWS credentials were expired, so we could improve the logic here.
       console.error(
         "MISSING PREREQUISITE STACK! Must deploy it before attempting to deploy the application."
       );

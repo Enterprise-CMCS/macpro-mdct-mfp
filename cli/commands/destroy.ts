@@ -7,6 +7,7 @@ import {
 import { checkIfAuthenticated } from "../lib/sts.js";
 import { project, region } from "../lib/consts.js";
 import { createInterface } from "node:readline/promises";
+import { delete_topics } from "./delete-topics";
 
 const confirmDestroyCommand = async (stack: string) => {
   const orange = "\x1b[38;5;208m";
@@ -79,6 +80,8 @@ export const destroy = {
     }
 
     if (verify) await confirmDestroyCommand(stackName);
+
+    await delete_topics({ stage });
 
     const client = new CloudFormationClient({ region });
 

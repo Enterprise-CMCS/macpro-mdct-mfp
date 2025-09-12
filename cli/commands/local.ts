@@ -54,7 +54,7 @@ export const local = {
         "yarn",
         "cdklocal",
         "bootstrap",
-        `aws://000000000000/${region}`,
+        `aws://000000000000/${region}`, // LocalStack uses the default dummy account ID 000000000000
         "--context",
         "stage=bootstrap",
       ],
@@ -104,7 +104,7 @@ export const local = {
     );
 
     const SeedDataFunctionName = (
-      await getCloudFormationStackOutputValues("seds-localstack")
+      await getCloudFormationStackOutputValues("mfp-localstack")
     )["SeedDataFunctionName"];
 
     const lambdaClient = new LambdaClient({ region });
@@ -117,7 +117,7 @@ export const local = {
 
     await Promise.all([
       runCommand(
-        "CDK local deploy",
+        "CDK local watch",
         [
           "yarn",
           "cdklocal",

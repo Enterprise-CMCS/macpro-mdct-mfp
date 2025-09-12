@@ -25,7 +25,7 @@ export const getCloudFormationStackOutputValues = async (
   );
 };
 
-export const buildUiEnvObject = (
+const buildUiEnvObject = (
   stage: string,
   cfnOutputs: Record<string, string | undefined>
 ): Record<string, string> => {
@@ -60,9 +60,10 @@ export const buildUiEnvObject = (
 };
 
 export const runFrontendLocally = async (stage: string) => {
-  const outputs = await getCloudFormationStackOutputValues(`seds-${stage}`);
+  const outputs = await getCloudFormationStackOutputValues(`mfp-${stage}`);
   const envVars = buildUiEnvObject(stage, outputs);
   await writeLocalUiEnvFile(envVars);
+  await writeSeedEnvFile(envVars);
 
   runCommand("ui", ["yarn", "start"], "services/ui-src");
 };

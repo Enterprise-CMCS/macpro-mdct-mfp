@@ -7,6 +7,8 @@ import { install, installDeps } from "./commands/install";
 import { local } from "./commands/local";
 import { updateEnv } from "./commands/update-env";
 import { watch } from "./commands/watch";
+import { deleteTopics } from "./commands/delete-topics.js";
+import { listTopics } from "./commands/list-topics.js";
 
 await yargs(process.argv.slice(2))
   .middleware(async (argv) => {
@@ -21,6 +23,8 @@ await yargs(process.argv.slice(2))
   .command(local)
   .command(updateEnv)
   .command(watch)
+  .command(deleteTopics)
+  .command(listTopics)
   .strict()
   .scriptName("run")
   .demandCommand(1, "")
