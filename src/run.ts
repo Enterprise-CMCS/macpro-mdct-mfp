@@ -1,34 +1,6 @@
-/* eslint-disable no-console */
-import yargs from "yargs";
-import * as dotenv from "dotenv";
-import LabeledProcessRunner from "./runner.js";
-import { execSync } from "child_process";
-import readline from "node:readline";
-import {
-  CloudFormationClient,
-  DeleteStackCommand,
-  DescribeStacksCommand,
-  waitUntilStackDeleteComplete,
-} from "@aws-sdk/client-cloudformation";
-import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
-import { writeLocalUiEnvFile } from "./write-ui-env-file.js";
-import { writeSeedEnvFile } from "./write-seed-env-file.js";
 
-// load .env
-dotenv.config();
 
-const deployedServices = [
-  "database",
-  "topics",
-  "app-api",
-  "ui",
-  "ui-auth",
-  "ui-src",
-  "uploads",
-];
 
-const project = process.env.PROJECT;
-const region = process.env.REGION_A;
 
 async function confirmDestroyCommand(stack: string) {
   const orange = "\x1b[38;5;208m";
