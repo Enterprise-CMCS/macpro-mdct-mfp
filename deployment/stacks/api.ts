@@ -14,8 +14,7 @@ import {
 import { Lambda } from "../constructs/lambda";
 import { WafConstruct } from "../constructs/waf";
 import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
-import { DynamoDBTableIdentifiers } from "../constructs/dynamodb-table";
-import { isDefined } from "../utils/misc";
+import { DynamoDBTable } from "../constructs/dynamodb-table";
 import { isLocalStack } from "../local/util";
 
 // TODO: does this need to point to the tsconfig.json file in services/app-api?
@@ -27,7 +26,7 @@ interface CreateApiComponentsProps {
   isDev: boolean;
   vpc: ec2.IVpc;
   kafkaAuthorizedSubnets: ec2.ISubnet[];
-  tables: DynamoDBTableIdentifiers[];
+  tables: DynamoDBTable[];
   brokerString: string;
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
@@ -107,27 +106,11 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     ABCD_FORM_BUCKET: abcdFormBucket.bucketName,
     ...Object.fromEntries(
-      tables.map((table) => [`${table.id}Table`, table.name])
+      tables.map((table) => [`${table.node.id}Table`, table.table.tableName])
     ),
   };
 
   const additionalPolicies = [
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "dynamodb:DescribeTable",
-        "dynamodb:Query",
-        "dynamodb:Scan",
-        "dynamodb:GetItem",
-        "dynamodb:PutItem",
-        "dynamodb:UpdateItem",
-        "dynamodb:DeleteItem",
-      ],
-      resources: [
-        ...tables.map((table) => table.arn),
-        ...tables.map((table) => `${table.arn}/index/*`),
-      ],
-    }),
     new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ["s3:GetObject", "s3:ListBucket", "s3:PutObject"],
@@ -143,18 +126,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
         `${abcdFormBucket.bucketArn}/formTemplates/*`,
         `${abcdFormBucket.bucketArn}/fieldData/*`,
       ],
-    }),
-
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "dynamodb:DescribeStream",
-        "dynamodb:GetRecords",
-        "dynamodb:GetShardIterator",
-        "dynamodb:ListShards",
-        "dynamodb:ListStreams",
-      ],
-      resources: tables.map((table) => table.streamArn).filter(isDefined),
     }),
     new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -175,6 +146,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     api,
     environment,
     additionalPolicies,
+    tables,
     isDev,
   };
 
@@ -287,7 +259,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       topicNamespace: isDev ? `--${project}--${stage}--` : "",
     },
     tables: tables.filter(
-      (table) => table.id === "SarReports" || table.id === "WpReports"
+      (table) => table.node.id === "SarReports" || table.node.id === "WpReports"
     ),
   });
 

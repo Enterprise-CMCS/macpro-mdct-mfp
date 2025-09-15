@@ -10,7 +10,6 @@ import { Lambda } from "../constructs/lambda";
 
 interface CreateTopicsComponentsProps {
   brokerString: string;
-  customResourceRole: iam.Role;
   isDev: boolean;
   kafkaAuthorizedSubnets: ec2.ISubnet[];
   project: string;
@@ -24,7 +23,6 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     brokerString,
     isDev,
     kafkaAuthorizedSubnets,
-    customResourceRole,
     project,
     scope,
     stage,
@@ -123,17 +121,14 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
           `InvokeCreateTopicsFunction-${stage}`
         ),
       },
-      onDelete: undefined,
-      policy: cr.AwsCustomResourcePolicy.fromStatements([
-        new iam.PolicyStatement({
-          actions: ["lambda:InvokeFunction"],
-          resources: [createTopicsLambda.lambda.functionArn],
-        }),
-      ]),
-      role: customResourceRole,
+      policy: cr.AwsCustomResourcePolicy.fromSdkCalls({
+        resources: [createTopicsLambda.lambda.functionArn],
+      }),
       resourceType: "Custom::InvokeCreateTopicsFunction",
     }
   );
+
+  createTopicsLambda.lambda.grantInvoke(createTopicsInvoke.grantPrincipal);
 
   createTopicsInvoke.node.addDependency(createTopicsLambda);
 }

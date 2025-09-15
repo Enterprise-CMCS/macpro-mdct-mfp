@@ -46,17 +46,9 @@ export class PrerequisiteStack extends Stack {
       "ApiGatewayRestApiCloudWatchRole",
       {
         assumedBy: new iam.ServicePrincipal("apigateway.amazonaws.com"),
-        permissionsBoundary: isLocalStack
-          ? undefined
-          : iam.ManagedPolicy.fromManagedPolicyArn(
-              this,
-              "iamPermissionsBoundary",
-              `arn:aws:iam::${Aws.ACCOUNT_ID}:policy/cms-cloud-admin/developer-boundary-policy`
-            ),
-        path: "/delegatedadmin/developer/",
         managedPolicies: [
           iam.ManagedPolicy.fromAwsManagedPolicyName(
-            "service-role/AmazonAPIGatewayPushToCloudWatchLogs" // pragma: allowlist secret
+            "service-role/AmazonAPIGatewayPushToCloudWatchLogs"
           ),
         ],
       }
