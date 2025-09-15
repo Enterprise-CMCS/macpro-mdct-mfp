@@ -37,7 +37,7 @@ const outlineVariant = {
   color: "palette.primary",
   textDecoration: "none",
   "&:hover": {
-    backgroundColor: "transparent",
+    backgroundColor: "palette.gray_lightest",
     color: "palette.primary_darker",
   },
   "&:visited, &:visited:hover": {
