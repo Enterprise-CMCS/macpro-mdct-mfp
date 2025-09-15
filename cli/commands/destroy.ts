@@ -7,7 +7,7 @@ import {
 import { checkIfAuthenticated } from "../lib/sts.js";
 import { project, region } from "../lib/consts.js";
 import { createInterface } from "node:readline/promises";
-import { delete_topics } from "./delete-topics";
+import { delete_topics } from "./delete-topics.js";
 
 const confirmDestroyCommand = async (stack: string) => {
   const orange = "\x1b[38;5;208m";
