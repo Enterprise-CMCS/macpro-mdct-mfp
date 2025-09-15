@@ -1,7 +1,6 @@
 import { Construct } from "constructs";
 import {
   aws_ec2 as ec2,
-  aws_iam as iam,
   custom_resources as cr,
   CfnOutput,
   Duration,

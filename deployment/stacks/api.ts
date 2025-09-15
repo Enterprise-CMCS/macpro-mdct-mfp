@@ -14,8 +14,8 @@ import {
 import { Lambda } from "../constructs/lambda";
 import { WafConstruct } from "../constructs/waf";
 import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
-import { DynamoDBTable } from "../constructs/dynamodb-table";
 import { isLocalStack } from "../local/util";
+import { DynamoDBTable } from "../constructs/dynamodb-table";
 
 // TODO: does this need to point to the tsconfig.json file in services/app-api?
 
@@ -49,6 +49,17 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   } = props;
 
   const service = "app-api";
+
+  type Access = "read" | "write" | "readwrite";
+
+  const grantFormBucketsAccess = (grantee: iam.IGrantable, access: Access) => {
+    const buckets: s3.IBucket[] = [wpFormBucket, sarFormBucket, abcdFormBucket];
+    for (const bucket of buckets) {
+      if (access === "read") bucket.grantRead(grantee);
+      else if (access === "write") bucket.grantWrite(grantee);
+      else bucket.grantReadWrite(grantee);
+    }
+  };
 
   const kafkaSecurityGroup = new ec2.SecurityGroup(
     scope,
@@ -110,42 +121,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ),
   };
 
-  const additionalPolicies = [
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["s3:GetObject", "s3:ListBucket", "s3:PutObject"],
-      resources: [
-        `${wpFormBucket.bucketArn}/formTemplates/*`,
-        wpFormBucket.bucketArn,
-        `${wpFormBucket.bucketArn}/formTemplates/*`,
-        `${wpFormBucket.bucketArn}/fieldData/*`,
-        sarFormBucket.bucketArn,
-        `${sarFormBucket.bucketArn}/formTemplates/*`,
-        `${sarFormBucket.bucketArn}/fieldData/*`,
-        abcdFormBucket.bucketArn,
-        `${abcdFormBucket.bucketArn}/formTemplates/*`,
-        `${abcdFormBucket.bucketArn}/fieldData/*`,
-      ],
-    }),
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
-      resources: [
-        wpFormBucket.bucketArn,
-        sarFormBucket.bucketArn,
-        abcdFormBucket.bucketArn,
-        `${wpFormBucket.bucketArn}/fieldData/*`,
-        `${sarFormBucket.bucketArn}/fieldData/*`,
-        `${abcdFormBucket.bucketArn}/fieldData/*`,
-      ],
-    }),
-  ];
-
   const commonProps = {
     stackName: `${service}-${stage}`,
     api,
     environment,
-    additionalPolicies,
     tables,
     isDev,
   };
@@ -174,29 +153,32 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
   });
 
-  new Lambda(scope, "archiveReport", {
+  const archiveReport = new Lambda(scope, "archiveReport", {
     entry: "services/app-api/handlers/reports/archive.ts",
     handler: "archiveReport",
     path: "/reports/archive/{reportType}/{state}/{id}",
     method: "PUT",
     ...commonProps,
-  });
+  }).lambda;
+  grantFormBucketsAccess(archiveReport, "readwrite");
 
-  new Lambda(scope, "createReport", {
+  const createReport = new Lambda(scope, "createReport", {
     entry: "services/app-api/handlers/reports/create.ts",
     handler: "createReport",
     path: "/reports/{reportType}/{state}",
     method: "POST",
     ...commonProps,
-  });
+  }).lambda;
+  grantFormBucketsAccess(createReport, "readwrite");
 
-  new Lambda(scope, "fetchReport", {
+  const fetchReport = new Lambda(scope, "fetchReport", {
     entry: "services/app-api/handlers/reports/fetch.ts",
     handler: "fetchReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "GET",
     ...commonProps,
-  });
+  }).lambda;
+  grantFormBucketsAccess(fetchReport, "read");
 
   new Lambda(scope, "fetchReportsByState", {
     entry: "services/app-api/handlers/reports/fetch.ts",
@@ -206,15 +188,16 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
   });
 
-  new Lambda(scope, "releaseReport", {
+  const releaseReport = new Lambda(scope, "releaseReport", {
     entry: "services/app-api/handlers/reports/release.ts",
     handler: "releaseReport",
     path: "/reports/release/{reportType}/{state}/{id}",
     method: "PUT",
     ...commonProps,
-  });
+  }).lambda;
+  grantFormBucketsAccess(releaseReport, "readwrite");
 
-  new Lambda(scope, "submitReport", {
+  const submitReport = new Lambda(scope, "submitReport", {
     entry: "services/app-api/handlers/reports/submit.ts",
     handler: "submitReport",
     path: "/reports/submit/{reportType}/{state}/{id}",
@@ -222,9 +205,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
-  });
+  }).lambda;
+  grantFormBucketsAccess(submitReport, "readwrite");
 
-  new Lambda(scope, "updateReport", {
+  const updateReport = new Lambda(scope, "updateReport", {
     entry: "services/app-api/handlers/reports/update.ts",
     handler: "updateReport",
     path: "/reports/{reportType}/{state}/{id}",
@@ -232,9 +216,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
-  });
+  }).lambda;
+  grantFormBucketsAccess(updateReport, "readwrite");
 
-  new Lambda(scope, "approveReport", {
+  const approveReport = new Lambda(scope, "approveReport", {
     entry: "services/app-api/handlers/reports/approve.ts",
     handler: "approveReport",
     path: "/reports/approve/{reportType}/{state}/{id}",
@@ -242,7 +227,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
-  });
+  }).lambda;
+  grantFormBucketsAccess(approveReport, "readwrite");
 
   new LambdaDynamoEventSource(scope, "postKafkaData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
@@ -278,6 +264,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "handler",
     ...bucketLambdaProps,
   }).lambda;
+  wpFormBucket.grantRead(postWpBucketDataLambda);
 
   wpFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
@@ -302,6 +289,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "handler",
     ...bucketLambdaProps,
   }).lambda;
+  sarFormBucket.grantRead(postSarBucketDataLambda);
 
   sarFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
@@ -326,6 +314,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "handler",
     ...bucketLambdaProps,
   }).lambda;
+  abcdFormBucket.grantRead(postAbcdBucketDataLambda);
 
   abcdFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,

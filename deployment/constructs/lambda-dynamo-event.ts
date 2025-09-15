@@ -1,6 +1,5 @@
 import { Construct } from "constructs";
 import {
-  aws_dynamodb as dynamodb,
   aws_iam as iam,
   aws_lambda as lambda,
   aws_lambda_nodejs as lambda_nodejs,
@@ -59,7 +58,6 @@ export class LambdaDynamoEventSource extends Construct {
     });
 
     for (const ddbTable of tables) {
-      ddbTable.table.grantStreamRead(this.lambda);
       new lambda.CfnEventSourceMapping(
         scope,
         `${id}${ddbTable.node.id}DynamoDBStreamEventSourceMapping`,

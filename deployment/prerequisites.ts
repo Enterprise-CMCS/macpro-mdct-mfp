@@ -2,7 +2,6 @@
 import "source-map-support/register";
 import {
   App,
-  Aws,
   aws_apigateway as apigateway,
   aws_ec2 as ec2,
   aws_iam as iam,
