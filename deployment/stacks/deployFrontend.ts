@@ -119,6 +119,7 @@ export function deployFrontend(props: DeployFrontendProps) {
           `InvalidateCloudfront-${stage}`
         ),
       },
+      role: deploymentRole,
     }
   );
 
