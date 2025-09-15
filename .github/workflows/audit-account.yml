@@ -27,7 +27,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
 
-      - name: Set branch-specifc variable values
+      - name: Set branch-specific variable values
         run: ./.github/buildVars.sh set_values
         env:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}

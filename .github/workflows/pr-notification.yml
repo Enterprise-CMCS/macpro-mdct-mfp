@@ -24,18 +24,16 @@ jobs:
     name: Endpoint
     needs: setup
     outputs:
-      application_endpoint_url: ${{ steps.cloudfront-endpoint.outputs.application_endpoint_url || 'N/A' }}
+      application_endpoint_url: ${{ steps.cloudfront-endpoint.outputs.application_endpoint_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials for GitHub Actions
-        if: needs.setup.outputs.app_name != 'core'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Get CloudFront endpoint
-        if: needs.setup.outputs.app_name != 'core'
         id: cloudfront-endpoint
         run: |
           set -eo pipefail
