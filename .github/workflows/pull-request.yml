@@ -1,83 +1,30 @@
-# This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
 name: Pull Request
 
 on:
   pull_request:
-    types: [opened, ready_for_review, synchronize]
+    types: [opened, reopened, ready_for_review, synchronize]
 
 jobs:
   prchecks:
-    name: prchecks  # Name needs to be unchanged to avoid updating branch rules
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup Node.js for pre-commit
-        uses: actions/setup-node@v5
-        with:
-          node-version-file: ".nvmrc"
-
-      - name: Setup Python for pre-commit
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-
-      - name: Configure pre-commit to skip some validations
+      - name: Configure pre-commit to skip branch name validation
         run: |
           echo "SKIP=branch-name-validation,typescript-check,typescript-check-api,typescript-check-ui" >> $GITHUB_ENV
       - uses: pre-commit/action@v3.0.1
-
   assignAuthor:
-    name: assignAuthor  # Name needs to be unchanged to avoid updating branch rules
-    if: github.event.pull_request.user.type != 'Bot' && github.event.action != 'synchronize'
     runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.user.type != 'Bot' }}
     steps:
-      - name: Assign PR to creator
-        run: gh pr edit $PR_URL --add-assignee $PR_AUTHOR
+      - uses: actions/checkout@v4
+      - name: Assign PR to Creator
+        run: |
+          gh pr edit $PRNUM --add-assignee $PR_AUTHOR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRNUM: ${{ github.event.pull_request.number }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
-          PR_URL: ${{github.event.pull_request.html_url}}
-
-  # Required CARTS jobs in branch rules
-  linting:
-    name: linting
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip linting
-        run: echo "Skipping - linting is run with pre-commit"
-  jest-frontend:
-    name: jest-frontend
-    runs-on: ubuntu-latest
-    steps:
-      - name: jest-frontend
-        run: echo "Skipping - jest-frontend is run in deploy workflow"
-  jest-backend:
-    name: jest-backend
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip jest-backend
-        run: echo "Skipping - jest-backend is run in deploy workflow"
-
-  # Required QMR jobs in branch rules
-  unit-tests:
-    name: Unit Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip Unit Tests
-        run: echo "Skipping - Unit Tests are run in deploy workflow"
-
-  # Required SEDS jobs in branch rules
-  prettier:
-    name: prettier has been run on compatible files
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip prettier
-        run: echo "Skipping - prettier is run with pre-commit"
-  eslint:
-    name: frontend linting
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip eslint
-        run: echo "Skipping - eslint is run with pre-commit"
