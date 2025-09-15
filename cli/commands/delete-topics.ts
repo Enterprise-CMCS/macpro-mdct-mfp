@@ -36,4 +36,3 @@ export const deleteTopics = {
     yargs.option("stage", { type: "string", demandOption: true }),
   handler: delete_topics,
 };
-
