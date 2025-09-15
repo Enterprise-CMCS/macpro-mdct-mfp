@@ -48,7 +48,7 @@ jobs:
           fi
           echo "application_endpoint_url=$application_endpoint_url" >> $GITHUB_OUTPUT
         env:
-          STACK_NAME: ${{ needs.setup.outputs.app_name }}-${{ needs.setup.outputs.branch_name }}
+          STACK_NAME: ${{ vars.APP_NAME_LOWER || needs.setup.outputs.app_name_lower }}-${{ needs.setup.outputs.branch_name }}
 
   notify_integrations_channel:
     name: Notify integrations channel

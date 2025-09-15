@@ -35,8 +35,8 @@ jobs:
         run: |
           repo="${GITHUB_REPOSITORY##*/}"
           app="${repo##*-}"
-          echo "app_name=$app" >> $GITHUB_OUTPUT
-          echo "app_name_uppercase=${app^^}" >> $GITHUB_OUTPUT
+          echo "app_name_lower=$app" >> $GITHUB_OUTPUT
+          echo "app_name_upper=${app^^}" >> $GITHUB_OUTPUT
 
       - name: Extract branch name
         id: extract-branch-step

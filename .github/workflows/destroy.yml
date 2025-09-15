@@ -10,7 +10,8 @@ on:
         required: true
 
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.environment || github.event.ref }}
+  # Same group as deploy.yml to prevent simultaneous deploy/destroy
+  group: ${{ inputs.environment || github.event.ref }}
 
 permissions:
   actions: read

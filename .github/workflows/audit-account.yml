@@ -15,6 +15,11 @@ permissions:
   id-token: write
 
 jobs:
+  setup:
+    name: Checkout repo
+    if: github.event.ref_type == 'branch' && !contains('skipci,code-json-', github.event.ref)
+    uses: ./.github/workflows/checkout-repo.yml
+
   audit:
     name: Audit
     runs-on: ubuntu-latest
