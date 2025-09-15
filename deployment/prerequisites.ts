@@ -48,7 +48,7 @@ export class PrerequisiteStack extends Stack {
         assumedBy: new iam.ServicePrincipal("apigateway.amazonaws.com"),
         managedPolicies: [
           iam.ManagedPolicy.fromAwsManagedPolicyName(
-            "service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+            "service-role/AmazonAPIGatewayPushToCloudWatchLogs" // pragma: allowlist secret
           ),
         ],
       }
