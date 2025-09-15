@@ -1,11 +1,7 @@
 import { runCommand } from "../lib/runner";
 import { execSync } from "child_process";
-import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { region } from "../lib/consts";
-import {
-  getCloudFormationStackOutputValues,
-  runFrontendLocally,
-} from "../lib/utils";
+import { runFrontendLocally } from "../lib/utils";
 
 const isColimaRunning = () => {
   try {
