@@ -9,10 +9,10 @@ on:
         type: number
         default: 1
     outputs:
-      app_name:
-        value: ${{ jobs.checkout-repo.outputs.app_name }}
-      app_name_uppercase:
-        value: ${{ jobs.checkout-repo.outputs.app_name_uppercase }}
+      app_name_lower:
+        value: ${{ jobs.checkout-repo.outputs.app_name_lower }}
+      app_name_upper:
+        value: ${{ jobs.checkout-repo.outputs.app_name_upper }}
       branch_name:
         value: ${{ jobs.checkout-repo.outputs.branch_name }}
 
@@ -21,8 +21,8 @@ jobs:
     name: Checkout repo
     runs-on: ubuntu-latest
     outputs:
-      app_name: ${{ steps.extract-app-step.outputs.app_name }}
-      app_name_uppercase: ${{ steps.extract-app-step.outputs.app_name_uppercase }}
+      app_name_lower: ${{ steps.extract-app-step.outputs.app_name_lower }}
+      app_name_upper: ${{ steps.extract-app-step.outputs.app_name_upper }}
       branch_name: ${{ steps.extract-branch-step.outputs.branch_name }}
     steps:
       - name: Checkout repository
