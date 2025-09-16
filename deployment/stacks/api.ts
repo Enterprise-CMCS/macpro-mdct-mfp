@@ -63,9 +63,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   const grantTablesAccess = (grantee: iam.IGrantable, access: Access) => {
     for (const table of tables) {
-      if (access === "read") table.grantReadData(grantee);
-      else if (access === "write") table.grantWriteData(grantee);
-      else if (access === "readwrite") table.grantReadWriteData(grantee);
+      if (access === "read") table.table.grantReadData(grantee);
+      else if (access === "write") table.table.grantWriteData(grantee);
+      else if (access === "readwrite") table.table.grantReadWriteData(grantee);
     }
   };
 
@@ -334,7 +334,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   abcdFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
-    new s3notifications.LambdaDestination(postAbcdBucketDataLambda),
+    new s3notifications.LambdaDestination(postAbcdBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
