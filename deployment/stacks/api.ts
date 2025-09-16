@@ -180,6 +180,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
   });
   grantBucketsAccess(archiveReport.lambda, "readwrite");
+  grantTablesAccess(archiveReport.lambda, "readwrite");
 
   const createReport = new Lambda(scope, "createReport", {
     entry: "services/app-api/handlers/reports/create.ts",
@@ -189,6 +190,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
   });
   grantBucketsAccess(createReport.lambda, "readwrite");
+  grantTablesAccess(createReport.lambda, "readwrite");
 
   const fetchReport = new Lambda(scope, "fetchReport", {
     entry: "services/app-api/handlers/reports/fetch.ts",
@@ -198,6 +200,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
   });
   grantBucketsAccess(fetchReport.lambda, "read");
+  grantTablesAccess(fetchReport.lambda, "read");
 
   const fetchReportsByState = new Lambda(scope, "fetchReportsByState", {
     entry: "services/app-api/handlers/reports/fetch.ts",
@@ -217,6 +220,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
   });
   grantBucketsAccess(releaseReport.lambda, "readwrite");
+  grantTablesAccess(releaseReport.lambda, "readwrite");
 
   const submitReport = new Lambda(scope, "submitReport", {
     entry: "services/app-api/handlers/reports/submit.ts",
@@ -228,6 +232,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
   });
   grantBucketsAccess(submitReport.lambda, "readwrite");
+  grantTablesAccess(submitReport.lambda, "readwrite");
 
   const updateReport = new Lambda(scope, "updateReport", {
     entry: "services/app-api/handlers/reports/update.ts",
@@ -239,6 +244,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
   });
   grantBucketsAccess(updateReport.lambda, "readwrite");
+  grantTablesAccess(updateReport.lambda, "readwrite");
 
   const approveReport = new Lambda(scope, "approveReport", {
     entry: "services/app-api/handlers/reports/approve.ts",
@@ -250,8 +256,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...commonProps,
   });
   grantBucketsAccess(approveReport.lambda, "readwrite");
+  grantTablesAccess(approveReport.lambda, "readwrite");
 
-  new LambdaDynamoEventSource(scope, "postKafkaData", {
+  const postKafkaData = new LambdaDynamoEventSource(scope, "postKafkaData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     timeout: Duration.seconds(120),
@@ -269,6 +276,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       (table) => table.node.id === "SarReports" || table.node.id === "WpReports"
     ),
   });
+  grantTablesAccess(postKafkaData.lambda, "read");
 
   const bucketLambdaProps = {
     timeout: Duration.seconds(120),
