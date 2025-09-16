@@ -1,5 +1,5 @@
-import { runCommand } from "../lib/runner";
-import { checkIfAuthenticated } from "../lib/sts";
+import { runCommand } from "../lib/runner.js";
+import { checkIfAuthenticated } from "../lib/sts.js";
 
 export const deployPrerequisites = {
   command: "deploy-prerequisites",
