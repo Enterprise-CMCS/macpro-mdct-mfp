@@ -75,12 +75,5 @@ export class LambdaDynamoEventSource extends Construct {
     for (const stmt of additionalPolicies) {
       this.lambda.addToRolePolicy(stmt);
     }
-
-    for (const ddbTable of tables) {
-      ddbTable.table.grantReadWriteData(this.lambda);
-      if (ddbTable.table.tableStreamArn) {
-        ddbTable.table.grantStreamRead(this.lambda);
-      }
-    }
   }
 }

@@ -62,10 +62,15 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   };
 
   const grantTablesAccess = (grantee: iam.IGrantable, access: Access) => {
-    for (const table of tables) {
-      if (access === "read") table.table.grantReadData(grantee);
-      else if (access === "write") table.table.grantWriteData(grantee);
-      else if (access === "readwrite") table.table.grantReadWriteData(grantee);
+    for (const ddbTable of tables) {
+      if (access === "read") ddbTable.table.grantReadData(grantee);
+      else if (access === "write") ddbTable.table.grantWriteData(grantee);
+      else if (access === "readwrite")
+        ddbTable.table.grantReadWriteData(grantee);
+
+      if (ddbTable.table.tableStreamArn) {
+        ddbTable.table.grantStreamRead(grantee);
+      }
     }
   };
 
