@@ -52,12 +52,20 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   type Access = "read" | "write" | "readwrite";
 
-  const grantFormBucketsAccess = (grantee: iam.IGrantable, access: Access) => {
+  const grantBucketsAccess = (grantee: iam.IGrantable, access: Access) => {
     const buckets: s3.IBucket[] = [wpFormBucket, sarFormBucket, abcdFormBucket];
     for (const bucket of buckets) {
       if (access === "read") bucket.grantRead(grantee);
       else if (access === "write") bucket.grantWrite(grantee);
-      else bucket.grantReadWrite(grantee);
+      else if (access === "readwrite") bucket.grantReadWrite(grantee);
+    }
+  };
+
+  const grantTablesAccess = (grantee: iam.IGrantable, access: Access) => {
+    for (const table of tables) {
+      if (access === "read") table.grantReadData(grantee);
+      else if (access === "write") table.grantWriteData(grantee);
+      else if (access === "readwrite") table.grantReadWriteData(grantee);
     }
   };
 
@@ -129,29 +137,35 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     isDev,
   };
 
-  new Lambda(scope, "createBanner", {
+  const createBanner = new Lambda(scope, "createBanner", {
     entry: "services/app-api/handlers/banners/create.ts",
     handler: "createBanner",
     path: "/banners",
     method: "POST",
     ...commonProps,
   });
+  grantTablesAccess(createBanner.lambda, "readwrite");
+  grantBucketsAccess(createBanner.lambda, "readwrite");
 
-  new Lambda(scope, "deleteBanner", {
+  const deleteBanner = new Lambda(scope, "deleteBanner", {
     entry: "services/app-api/handlers/banners/delete.ts",
     handler: "deleteBanner",
     path: "/banners/{bannerId}",
     method: "DELETE",
     ...commonProps,
   });
+  grantTablesAccess(deleteBanner.lambda, "readwrite");
+  grantBucketsAccess(deleteBanner.lambda, "readwrite");
 
-  new Lambda(scope, "fetchBanner", {
+  const fetchBanner = new Lambda(scope, "fetchBanner", {
     entry: "services/app-api/handlers/banners/fetch.ts",
     handler: "fetchBanner",
     path: "/banners",
     method: "GET",
     ...commonProps,
   });
+  grantTablesAccess(fetchBanner.lambda, "read");
+  grantBucketsAccess(fetchBanner.lambda, "read");
 
   const archiveReport = new Lambda(scope, "archiveReport", {
     entry: "services/app-api/handlers/reports/archive.ts",
@@ -159,8 +173,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     path: "/reports/archive/{reportType}/{state}/{id}",
     method: "PUT",
     ...commonProps,
-  }).lambda;
-  grantFormBucketsAccess(archiveReport, "readwrite");
+  });
+  grantBucketsAccess(archiveReport.lambda, "readwrite");
 
   const createReport = new Lambda(scope, "createReport", {
     entry: "services/app-api/handlers/reports/create.ts",
@@ -168,8 +182,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     path: "/reports/{reportType}/{state}",
     method: "POST",
     ...commonProps,
-  }).lambda;
-  grantFormBucketsAccess(createReport, "readwrite");
+  });
+  grantBucketsAccess(createReport.lambda, "readwrite");
 
   const fetchReport = new Lambda(scope, "fetchReport", {
     entry: "services/app-api/handlers/reports/fetch.ts",
@@ -177,16 +191,18 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     path: "/reports/{reportType}/{state}/{id}",
     method: "GET",
     ...commonProps,
-  }).lambda;
-  grantFormBucketsAccess(fetchReport, "read");
+  });
+  grantBucketsAccess(fetchReport.lambda, "read");
 
-  new Lambda(scope, "fetchReportsByState", {
+  const fetchReportsByState = new Lambda(scope, "fetchReportsByState", {
     entry: "services/app-api/handlers/reports/fetch.ts",
     handler: "fetchReportsByState",
     path: "/reports/{reportType}/{state}",
     method: "GET",
     ...commonProps,
   });
+  grantTablesAccess(fetchReportsByState.lambda, "read");
+  grantBucketsAccess(fetchReportsByState.lambda, "read");
 
   const releaseReport = new Lambda(scope, "releaseReport", {
     entry: "services/app-api/handlers/reports/release.ts",
@@ -194,8 +210,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     path: "/reports/release/{reportType}/{state}/{id}",
     method: "PUT",
     ...commonProps,
-  }).lambda;
-  grantFormBucketsAccess(releaseReport, "readwrite");
+  });
+  grantBucketsAccess(releaseReport.lambda, "readwrite");
 
   const submitReport = new Lambda(scope, "submitReport", {
     entry: "services/app-api/handlers/reports/submit.ts",
@@ -205,8 +221,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
-  }).lambda;
-  grantFormBucketsAccess(submitReport, "readwrite");
+  });
+  grantBucketsAccess(submitReport.lambda, "readwrite");
 
   const updateReport = new Lambda(scope, "updateReport", {
     entry: "services/app-api/handlers/reports/update.ts",
@@ -216,8 +232,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
-  }).lambda;
-  grantFormBucketsAccess(updateReport, "readwrite");
+  });
+  grantBucketsAccess(updateReport.lambda, "readwrite");
 
   const approveReport = new Lambda(scope, "approveReport", {
     entry: "services/app-api/handlers/reports/approve.ts",
@@ -227,8 +243,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     memorySize: 2048,
     timeout: Duration.seconds(30),
     ...commonProps,
-  }).lambda;
-  grantFormBucketsAccess(approveReport, "readwrite");
+  });
+  grantBucketsAccess(approveReport.lambda, "readwrite");
 
   new LambdaDynamoEventSource(scope, "postKafkaData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
@@ -259,16 +275,16 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     environment: { ...commonProps.environment, topicNamespace: "" },
   };
 
-  const postWpBucketDataLambda = new Lambda(scope, "postWpBucketData", {
+  const postWpBucketData = new Lambda(scope, "postWpBucketData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
-  }).lambda;
-  wpFormBucket.grantRead(postWpBucketDataLambda);
+  });
+  wpFormBucket.grantRead(postWpBucketData.lambda);
 
   wpFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
-    new s3notifications.LambdaDestination(postWpBucketDataLambda),
+    new s3notifications.LambdaDestination(postWpBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
@@ -277,23 +293,23 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   wpFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
-    new s3notifications.LambdaDestination(postWpBucketDataLambda),
+    new s3notifications.LambdaDestination(postWpBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
     }
   );
 
-  const postSarBucketDataLambda = new Lambda(scope, "postSarBucketData", {
+  const postSarBucketData = new Lambda(scope, "postSarBucketData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
-  }).lambda;
-  sarFormBucket.grantRead(postSarBucketDataLambda);
+  });
+  sarFormBucket.grantRead(postSarBucketData.lambda);
 
   sarFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
-    new s3notifications.LambdaDestination(postSarBucketDataLambda),
+    new s3notifications.LambdaDestination(postSarBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
@@ -302,19 +318,19 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   sarFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
-    new s3notifications.LambdaDestination(postSarBucketDataLambda),
+    new s3notifications.LambdaDestination(postSarBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
     }
   );
 
-  const postAbcdBucketDataLambda = new Lambda(scope, "postAbcdBucketData", {
+  const postAbcdBucketData = new Lambda(scope, "postAbcdBucketData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
-  }).lambda;
-  abcdFormBucket.grantRead(postAbcdBucketDataLambda);
+  });
+  abcdFormBucket.grantRead(postAbcdBucketData.lambda);
 
   abcdFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
@@ -327,7 +343,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   abcdFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
-    new s3notifications.LambdaDestination(postAbcdBucketDataLambda),
+    new s3notifications.LambdaDestination(postAbcdBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
