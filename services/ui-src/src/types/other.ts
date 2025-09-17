@@ -1,3 +1,4 @@
+import { SystemStyleObject } from "@chakra-ui/react";
 import React from "react";
 
 // ALERTS
@@ -94,4 +95,8 @@ export interface CustomHtmlElement {
 export interface ErrorVerbiage {
   title: string;
   description: string | CustomHtmlElement[];
+}
+
+export interface sxObject {
+  [key: string]: SystemStyleObject;
 }

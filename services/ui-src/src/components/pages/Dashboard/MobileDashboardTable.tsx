@@ -8,8 +8,9 @@ import {
   Spinner,
   SystemStyleObject,
 } from "@chakra-ui/react";
+// types
+import { ReportMetadataShape, ReportType, sxObject } from "types";
 // utils
-import { ReportMetadataShape, ReportType } from "types";
 import { convertDateUtcToEt, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
@@ -149,9 +150,7 @@ interface MobileDashboardTableProps {
   releasing?: boolean | undefined;
   isAdmin: boolean;
   isStateLevelUser: boolean;
-  sxOverride: {
-    [key: string]: SystemStyleObject;
-  };
+  sxOverride: sxObject;
 }
 
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {

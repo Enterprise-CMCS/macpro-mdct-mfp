@@ -9,14 +9,16 @@ import {
   SystemStyleObject,
 } from "@chakra-ui/react";
 import { Table } from "components";
-// utils
-import { convertDateUtcToEt, prettifyChoices } from "utils";
+// types
 import {
   AnyObject,
   ReportMetadataShape,
   ReportType,
+  sxObject,
   TableContentShape,
 } from "types";
+// utils
+import { convertDateUtcToEt, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 
@@ -335,9 +337,7 @@ interface AdminReleaseButtonProps {
   reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: {
-    [key: string]: SystemStyleObject;
-  };
+  sxOverride: sxObject;
 }
 
 const sx = {
