@@ -8,8 +8,6 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
     "cdk": "cdk",
     "db:seed": "cd services/app-api && yarn run db:seed",
     "test": "cd tests/cypress && yarn test && cd -",
