@@ -1,10 +1,10 @@
 import { Construct } from "constructs";
 import {
-  aws_dynamodb as dynamodb,
   aws_iam as iam,
   aws_lambda as lambda,
   aws_lambda_nodejs as lambda_nodejs,
   aws_logs as logs,
+  aws_s3 as s3,
   Duration,
   RemovalPolicy,
 } from "aws-cdk-lib";
@@ -16,6 +16,7 @@ interface LambdaDynamoEventProps
   additionalPolicies?: iam.PolicyStatement[];
   stackName: string;
   tables: DynamoDBTable[];
+  buckets?: s3.IBucket[];
   isDev: boolean;
 }
 
@@ -29,6 +30,7 @@ export class LambdaDynamoEventSource extends Construct {
       additionalPolicies = [],
       memorySize = 1024,
       tables,
+      buckets = [],
       stackName,
       timeout = Duration.seconds(6),
       isDev,
@@ -82,6 +84,10 @@ export class LambdaDynamoEventSource extends Construct {
       if (ddbTable.table.tableStreamArn) {
         ddbTable.table.grantStreamRead(this.lambda);
       }
+    }
+
+    for (const bucket of buckets) {
+      bucket.grantReadWrite(this.lambda);
     }
   }
 }

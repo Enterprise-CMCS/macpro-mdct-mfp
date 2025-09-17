@@ -2,7 +2,6 @@ import { Construct } from "constructs";
 import {
   aws_apigateway as apigateway,
   aws_ec2 as ec2,
-  aws_iam as iam,
   aws_logs as logs,
   aws_s3 as s3,
   aws_s3_notifications as s3notifications,
@@ -49,30 +48,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   } = props;
 
   const service = "app-api";
-
-  type Access = "read" | "write" | "readwrite";
-
-  const grantBucketsAccess = (grantee: iam.IGrantable, access: Access) => {
-    const buckets: s3.IBucket[] = [wpFormBucket, sarFormBucket, abcdFormBucket];
-    for (const bucket of buckets) {
-      if (access === "read") bucket.grantRead(grantee);
-      else if (access === "write") bucket.grantWrite(grantee);
-      else if (access === "readwrite") bucket.grantReadWrite(grantee);
-    }
-  };
-
-  const grantTablesAccess = (grantee: iam.IGrantable, access: Access) => {
-    for (const ddbTable of tables) {
-      if (access === "read") ddbTable.table.grantReadData(grantee);
-      else if (access === "write") ddbTable.table.grantWriteData(grantee);
-      else if (access === "readwrite")
-        ddbTable.table.grantReadWriteData(grantee);
-
-      if (ddbTable.table.tableStreamArn) {
-        ddbTable.table.grantStreamRead(grantee);
-      }
-    }
-  };
 
   const kafkaSecurityGroup = new ec2.SecurityGroup(
     scope,
@@ -139,90 +114,75 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     api,
     environment,
     tables,
+    buckets: [wpFormBucket, sarFormBucket, abcdFormBucket],
     isDev,
   };
 
-  const createBanner = new Lambda(scope, "createBanner", {
+  new Lambda(scope, "createBanner", {
     entry: "services/app-api/handlers/banners/create.ts",
     handler: "createBanner",
     path: "/banners",
     method: "POST",
     ...commonProps,
   });
-  grantTablesAccess(createBanner.lambda, "readwrite");
-  grantBucketsAccess(createBanner.lambda, "readwrite");
 
-  const deleteBanner = new Lambda(scope, "deleteBanner", {
+  new Lambda(scope, "deleteBanner", {
     entry: "services/app-api/handlers/banners/delete.ts",
     handler: "deleteBanner",
     path: "/banners/{bannerId}",
     method: "DELETE",
     ...commonProps,
   });
-  grantTablesAccess(deleteBanner.lambda, "readwrite");
-  grantBucketsAccess(deleteBanner.lambda, "readwrite");
 
-  const fetchBanner = new Lambda(scope, "fetchBanner", {
+  new Lambda(scope, "fetchBanner", {
     entry: "services/app-api/handlers/banners/fetch.ts",
     handler: "fetchBanner",
     path: "/banners",
     method: "GET",
     ...commonProps,
   });
-  grantTablesAccess(fetchBanner.lambda, "read");
-  grantBucketsAccess(fetchBanner.lambda, "read");
 
-  const archiveReport = new Lambda(scope, "archiveReport", {
+  new Lambda(scope, "archiveReport", {
     entry: "services/app-api/handlers/reports/archive.ts",
     handler: "archiveReport",
     path: "/reports/archive/{reportType}/{state}/{id}",
     method: "PUT",
     ...commonProps,
   });
-  grantBucketsAccess(archiveReport.lambda, "readwrite");
-  grantTablesAccess(archiveReport.lambda, "readwrite");
 
-  const createReport = new Lambda(scope, "createReport", {
+  new Lambda(scope, "createReport", {
     entry: "services/app-api/handlers/reports/create.ts",
     handler: "createReport",
     path: "/reports/{reportType}/{state}",
     method: "POST",
     ...commonProps,
   });
-  grantBucketsAccess(createReport.lambda, "readwrite");
-  grantTablesAccess(createReport.lambda, "readwrite");
 
-  const fetchReport = new Lambda(scope, "fetchReport", {
+  new Lambda(scope, "fetchReport", {
     entry: "services/app-api/handlers/reports/fetch.ts",
     handler: "fetchReport",
     path: "/reports/{reportType}/{state}/{id}",
     method: "GET",
     ...commonProps,
   });
-  grantBucketsAccess(fetchReport.lambda, "read");
-  grantTablesAccess(fetchReport.lambda, "read");
 
-  const fetchReportsByState = new Lambda(scope, "fetchReportsByState", {
+  new Lambda(scope, "fetchReportsByState", {
     entry: "services/app-api/handlers/reports/fetch.ts",
     handler: "fetchReportsByState",
     path: "/reports/{reportType}/{state}",
     method: "GET",
     ...commonProps,
   });
-  grantTablesAccess(fetchReportsByState.lambda, "read");
-  grantBucketsAccess(fetchReportsByState.lambda, "read");
 
-  const releaseReport = new Lambda(scope, "releaseReport", {
+  new Lambda(scope, "releaseReport", {
     entry: "services/app-api/handlers/reports/release.ts",
     handler: "releaseReport",
     path: "/reports/release/{reportType}/{state}/{id}",
     method: "PUT",
     ...commonProps,
   });
-  grantBucketsAccess(releaseReport.lambda, "readwrite");
-  grantTablesAccess(releaseReport.lambda, "readwrite");
 
-  const submitReport = new Lambda(scope, "submitReport", {
+  new Lambda(scope, "submitReport", {
     entry: "services/app-api/handlers/reports/submit.ts",
     handler: "submitReport",
     path: "/reports/submit/{reportType}/{state}/{id}",
@@ -231,10 +191,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     timeout: Duration.seconds(30),
     ...commonProps,
   });
-  grantBucketsAccess(submitReport.lambda, "readwrite");
-  grantTablesAccess(submitReport.lambda, "readwrite");
 
-  const updateReport = new Lambda(scope, "updateReport", {
+  new Lambda(scope, "updateReport", {
     entry: "services/app-api/handlers/reports/update.ts",
     handler: "updateReport",
     path: "/reports/{reportType}/{state}/{id}",
@@ -243,10 +201,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     timeout: Duration.seconds(30),
     ...commonProps,
   });
-  grantBucketsAccess(updateReport.lambda, "readwrite");
-  grantTablesAccess(updateReport.lambda, "readwrite");
 
-  const approveReport = new Lambda(scope, "approveReport", {
+  new Lambda(scope, "approveReport", {
     entry: "services/app-api/handlers/reports/approve.ts",
     handler: "approveReport",
     path: "/reports/approve/{reportType}/{state}/{id}",
@@ -255,10 +211,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     timeout: Duration.seconds(30),
     ...commonProps,
   });
-  grantBucketsAccess(approveReport.lambda, "readwrite");
-  grantTablesAccess(approveReport.lambda, "readwrite");
 
-  const postKafkaData = new LambdaDynamoEventSource(scope, "postKafkaData", {
+  new LambdaDynamoEventSource(scope, "postKafkaData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     timeout: Duration.seconds(120),
@@ -276,7 +230,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       (table) => table.node.id === "SarReports" || table.node.id === "WpReports"
     ),
   });
-  grantTablesAccess(postKafkaData.lambda, "read");
 
   const bucketLambdaProps = {
     timeout: Duration.seconds(120),
@@ -293,7 +246,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "handler",
     ...bucketLambdaProps,
   });
-  wpFormBucket.grantRead(postWpBucketData.lambda);
 
   wpFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
@@ -318,7 +270,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "handler",
     ...bucketLambdaProps,
   });
-  sarFormBucket.grantRead(postSarBucketData.lambda);
 
   sarFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
@@ -343,7 +294,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     handler: "handler",
     ...bucketLambdaProps,
   });
-  abcdFormBucket.grantRead(postAbcdBucketData.lambda);
 
   abcdFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
