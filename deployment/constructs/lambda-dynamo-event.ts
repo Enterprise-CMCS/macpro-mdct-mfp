@@ -1,5 +1,6 @@
 import { Construct } from "constructs";
 import {
+  aws_dynamodb as dynamodb,
   aws_iam as iam,
   aws_lambda as lambda,
   aws_lambda_nodejs as lambda_nodejs,
@@ -74,6 +75,13 @@ export class LambdaDynamoEventSource extends Construct {
 
     for (const stmt of additionalPolicies) {
       this.lambda.addToRolePolicy(stmt);
+    }
+
+    for (const ddbTable of tables) {
+      ddbTable.table.grantReadWriteData(this.lambda);
+      if (ddbTable.table.tableStreamArn) {
+        ddbTable.table.grantStreamRead(this.lambda);
+      }
     }
   }
 }

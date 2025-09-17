@@ -10,6 +10,7 @@ import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import { isLocalStack } from "../local/util";
 import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
 import { createHash } from "crypto";
+import { DynamoDBTable } from "./dynamodb-table";
 
 interface LambdaProps extends Partial<NodejsFunctionProps> {
   path?: string;
@@ -17,6 +18,7 @@ interface LambdaProps extends Partial<NodejsFunctionProps> {
   stackName: string;
   api?: apigateway.RestApi;
   additionalPolicies?: PolicyStatement[];
+  tables?: DynamoDBTable[];
   isDev: boolean;
 }
 
@@ -33,6 +35,7 @@ export class Lambda extends Construct {
       path,
       method,
       additionalPolicies = [],
+      tables = [],
       stackName,
       isDev,
       ...restProps
@@ -76,6 +79,13 @@ export class Lambda extends Construct {
             : apigateway.AuthorizationType.IAM,
         }
       );
+    }
+
+    for (const ddbTable of tables) {
+      ddbTable.table.grantReadWriteData(this.lambda);
+      if (ddbTable.table.tableStreamArn) {
+        ddbTable.table.grantStreamRead(this.lambda);
+      }
     }
   }
 }
