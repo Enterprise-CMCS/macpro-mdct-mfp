@@ -1,13 +1,5 @@
 // components
-import {
-  Box,
-  Button,
-  Flex,
-  Image,
-  Text,
-  Spinner,
-  SystemStyleObject,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text, Spinner } from "@chakra-ui/react";
 // types
 import { ReportMetadataShape, ReportType, sxObject } from "types";
 // utils
@@ -236,9 +228,7 @@ interface AdminArchiveButtonProps {
   archive: Function;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: {
-    [key: string]: SystemStyleObject;
-  };
+  sxOverride: sxObject;
 }
 
 interface AdminReleaseButtonProps {
@@ -247,9 +237,7 @@ interface AdminReleaseButtonProps {
   reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: {
-    [key: string]: SystemStyleObject;
-  };
+  sxOverride: sxObject;
 }
 
 const sx = {

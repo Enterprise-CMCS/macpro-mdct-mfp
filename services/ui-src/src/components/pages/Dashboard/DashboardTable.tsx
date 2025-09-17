@@ -1,13 +1,5 @@
 // components
-import {
-  Button,
-  Image,
-  Td,
-  Tr,
-  Spinner,
-  Text,
-  SystemStyleObject,
-} from "@chakra-ui/react";
+import { Button, Image, Td, Tr, Spinner, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // types
 import {
@@ -151,9 +143,7 @@ export interface DashboardTableProps {
   isStateLevelUser: boolean;
   releaseReport?: Function | undefined;
   releasing?: boolean | undefined;
-  sxOverride: {
-    [key: string]: SystemStyleObject;
-  };
+  sxOverride: sxObject;
 }
 
 export const getStatus = (
@@ -214,9 +204,7 @@ const EditReportButton = ({
 interface EditReportProps {
   report: ReportMetadataShape;
   openCreateReportModal: Function;
-  sxOverride: {
-    [key: string]: SystemStyleObject;
-  };
+  sxOverride: sxObject;
 }
 
 export const ActionButton = ({
@@ -326,9 +314,7 @@ interface AdminArchiveButtonProps {
   archive: Function;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: {
-    [key: string]: SystemStyleObject;
-  };
+  sxOverride: sxObject;
 }
 
 interface AdminReleaseButtonProps {
