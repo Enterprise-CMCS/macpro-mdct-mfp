@@ -23,7 +23,7 @@ export function createDataComponents(props: CreateDataComponentsProps) {
       isDev,
       name: "banners",
       partitionKey: { name: "key", type: dynamodb.AttributeType.STRING },
-    }).identifiers,
+    }),
     new DynamoDBTable(scope, "FormTemplateVersions", {
       stage,
       isDev,
@@ -44,28 +44,28 @@ export function createDataComponents(props: CreateDataComponentsProps) {
           sortKey: { name: "md5Hash", type: dynamodb.AttributeType.STRING },
         },
       ],
-    }).identifiers,
+    }),
     new DynamoDBTable(scope, "SarReports", {
       stage,
       isDev,
       name: "sar-reports",
       partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    }).identifiers,
+    }),
     new DynamoDBTable(scope, "WpReports", {
       stage,
       isDev,
       name: "wp-reports",
       partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    }).identifiers,
+    }),
     new DynamoDBTable(scope, "AbcdReports", {
       stage,
       isDev,
       name: "abcd-reports",
       partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    }).identifiers,
+    }),
   ];
 
   const sarFormBucket = new s3.Bucket(scope, "SarFormBucket", {
