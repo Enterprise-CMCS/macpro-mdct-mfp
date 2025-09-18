@@ -97,6 +97,6 @@ export interface ErrorVerbiage {
   description: string | CustomHtmlElement[];
 }
 
-export interface sxObject {
+export interface SxObject {
   [key: string]: SystemStyleObject;
 }

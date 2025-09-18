@@ -6,7 +6,7 @@ import {
   AnyObject,
   ReportMetadataShape,
   ReportType,
-  sxObject,
+  SxObject,
   TableContentShape,
 } from "types";
 // utils
@@ -143,7 +143,7 @@ export interface DashboardTableProps {
   isStateLevelUser: boolean;
   releaseReport?: Function | undefined;
   releasing?: boolean | undefined;
-  sxOverride: sxObject;
+  sxOverride: SxObject;
 }
 
 export const getStatus = (
@@ -204,7 +204,7 @@ const EditReportButton = ({
 interface EditReportProps {
   report: ReportMetadataShape;
   openCreateReportModal: Function;
-  sxOverride: sxObject;
+  sxOverride: SxObject;
 }
 
 export const ActionButton = ({
@@ -314,7 +314,7 @@ interface AdminArchiveButtonProps {
   archive: Function;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: sxObject;
+  sxOverride: SxObject;
 }
 
 interface AdminReleaseButtonProps {
@@ -323,7 +323,7 @@ interface AdminReleaseButtonProps {
   reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: sxObject;
+  sxOverride: SxObject;
 }
 
 const sx = {

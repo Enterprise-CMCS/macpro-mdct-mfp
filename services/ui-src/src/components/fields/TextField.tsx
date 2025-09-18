@@ -2,7 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, SystemStyleObject } from "@chakra-ui/react";
+import { ReportContext } from "components";
+import { EntityContext } from "components/reports/EntityProvider";
 // utils
 import {
   autosaveFieldData,
@@ -11,9 +13,8 @@ import {
   parseCustomHtml,
   useStore,
 } from "utils";
-import { InputChangeEvent, AnyObject, CustomHtmlElement } from "types";
-import { ReportContext } from "components";
-import { EntityContext } from "components/reports/EntityProvider";
+// types
+import { InputChangeEvent, CustomHtmlElement } from "types";
 
 export const TextField = ({
   name,
@@ -149,7 +150,7 @@ interface Props {
   label?: string;
   hint?: CustomHtmlElement[];
   placeholder?: string;
-  sxOverride?: AnyObject;
+  sxOverride?: SystemStyleObject;
   nested?: boolean;
   autosave?: boolean;
   styleAsOptional?: boolean;
