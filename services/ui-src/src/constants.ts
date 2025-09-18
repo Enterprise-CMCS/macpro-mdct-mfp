@@ -108,6 +108,21 @@ export function getDefaultTargetPopulationNames() {
   );
 }
 
+export const statePlanServiceNames = [
+  "Clinic Services",
+  "Targeted Case Management",
+  "PACE",
+  "Rehabilitative services",
+  "Home health services",
+  "Hospice",
+  "Personal Care Services",
+  "Physical Therapy Services",
+  "Occupational Therapy Services",
+  "Services for Speech",
+  "Self-Directed"
+  // etc.
+];
+
 // TIMEOUT PARAMS
 export const IDLE_WINDOW = 30 * 60 * 1000; // ms
 export const PROMPT_AT = 29 * 60 * 1000; //ms
