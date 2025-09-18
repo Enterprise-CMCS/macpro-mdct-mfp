@@ -13,7 +13,6 @@ import { createUiAuthComponents } from "./ui-auth";
 import { createUiComponents } from "./ui";
 import { createApiComponents } from "./api";
 import { deployFrontend } from "./deployFrontend";
-import { createCustomResourceRole } from "./customResourceRole";
 import { isLocalStack } from "../local/util";
 import { createTopicsComponents } from "./topics";
 import { getSubnets } from "../utils/vpc";
@@ -44,8 +43,6 @@ export class ParentStack extends Stack {
 
     const vpc = ec2.Vpc.fromLookup(this, "Vpc", { vpcName });
     const kafkaAuthorizedSubnets = getSubnets(this, kafkaAuthorizedSubnetIds);
-
-    const customResourceRole = createCustomResourceRole({ ...commonProps });
 
     const loggingBucket = s3.Bucket.fromBucketName(
       this,
@@ -84,7 +81,6 @@ export class ParentStack extends Stack {
       createUiAuthComponents({
         ...commonProps,
         applicationEndpointUrl,
-        customResourceRole,
         restApiId,
       });
 
@@ -99,7 +95,6 @@ export class ParentStack extends Stack {
       userPoolId,
       userPoolClientId,
       userPoolClientDomain: `${userPoolDomainName}.auth.${Aws.REGION}.amazoncognito.com`,
-      customResourceRole,
     });
 
     new CfnOutput(this, "CloudFrontUrl", {
@@ -108,7 +103,6 @@ export class ParentStack extends Stack {
 
     createTopicsComponents({
       ...commonProps,
-      customResourceRole,
       vpc,
       kafkaAuthorizedSubnets,
     });
