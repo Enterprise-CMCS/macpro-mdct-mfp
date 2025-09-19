@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Box } from "@chakra-ui/react";
+import { Box, SystemStyleObject } from "@chakra-ui/react";
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
+// components
+import { ReportContext, EntityContext } from "components";
 // utils
 import {
   autosaveFieldData,
@@ -11,10 +13,10 @@ import {
   parseCustomHtml,
   useStore,
 } from "utils";
-import { InputChangeEvent, AnyObject } from "types";
-import { applyMask, maskMap } from "utils/other/mask";
 import { makeStringParseableForDatabase } from "utils/other/clean";
-import { ReportContext, EntityContext } from "components";
+import { applyMask, maskMap } from "utils/other/mask";
+// types
+import { InputChangeEvent, AnyObject } from "types";
 
 export const NumberField = ({
   name,
@@ -184,7 +186,7 @@ interface Props {
   placeholder?: string;
   mask?: keyof typeof maskMap | null;
   nested?: boolean;
-  sxOverride?: AnyObject;
+  sxOverride?: SystemStyleObject;
   autosave?: boolean;
   validateOnRender?: boolean;
   clear?: boolean;

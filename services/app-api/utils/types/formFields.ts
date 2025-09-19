@@ -106,13 +106,6 @@ export interface FieldChoice {
   checkedChildren?: any;
 }
 
-export interface ChoiceFieldProps {
-  name: string;
-  label: string;
-  choices: FieldChoice[];
-  sxOverride?: AnyObject;
-  [key: string]: any;
-}
 export interface Choice {
   key: string; // choice.name
   value: string; // choice.value

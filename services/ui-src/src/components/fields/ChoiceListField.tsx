@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { FieldValues, useFormContext, UseFormReturn } from "react-hook-form";
 // components
 import { ChoiceList as CmsdsChoiceList } from "@cmsgov/design-system";
-import { Box } from "@chakra-ui/react";
+import { Box, SystemStyleObject } from "@chakra-ui/react";
 // utils
 import {
   autosaveFieldData,
@@ -12,8 +12,8 @@ import {
   parseCustomHtml,
   useStore,
 } from "utils";
+// types
 import {
-  AnyObject,
   AutosaveField,
   Choice,
   CustomHtmlElement,
@@ -274,7 +274,7 @@ interface Props {
   choices: FieldChoice[];
   hint?: CustomHtmlElement[];
   nested?: boolean;
-  sxOverride?: AnyObject;
+  sxOverride?: SystemStyleObject;
   styleAsOptional?: boolean;
   [key: string]: any;
 }

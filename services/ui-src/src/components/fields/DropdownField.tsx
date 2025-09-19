@@ -6,16 +6,13 @@ import {
   InlineError,
   Label,
 } from "@cmsgov/design-system";
-import { Box } from "@chakra-ui/react";
+import { Box, SystemStyleObject } from "@chakra-ui/react";
 import uuid from "react-uuid";
 // utils
 import { labelTextWithOptional, parseCustomHtml } from "utils";
-import {
-  AnyObject,
-  DropdownChoice,
-  DropdownOptions,
-  SelectedOption,
-} from "types";
+// types
+import { DropdownChoice, DropdownOptions, SelectedOption } from "types";
+// constants
 import { dropdownDefaultOptionText } from "../../constants";
 
 export const DropdownField = ({
@@ -143,7 +140,7 @@ interface Props {
   nested?: boolean;
   autosave?: boolean;
   validateOnRender?: boolean;
-  sxOverride?: AnyObject;
+  sxOverride?: SystemStyleObject;
   styleAsOptional?: boolean;
   [key: string]: any;
 }

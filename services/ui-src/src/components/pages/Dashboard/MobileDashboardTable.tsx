@@ -1,7 +1,8 @@
 // components
 import { Box, Button, Flex, Image, Text, Spinner } from "@chakra-ui/react";
+// types
+import { ReportMetadataShape, ReportType, SxObject } from "types";
 // utils
-import { AnyObject, ReportMetadataShape, ReportType } from "types";
 import { convertDateUtcToEt, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
@@ -141,7 +142,7 @@ interface MobileDashboardTableProps {
   releasing?: boolean | undefined;
   isAdmin: boolean;
   isStateLevelUser: boolean;
-  sxOverride: AnyObject;
+  sxOverride: SxObject;
 }
 
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
@@ -227,7 +228,7 @@ interface AdminArchiveButtonProps {
   archive: Function;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: AnyObject;
+  sxOverride: SxObject;
 }
 
 interface AdminReleaseButtonProps {
@@ -236,7 +237,7 @@ interface AdminReleaseButtonProps {
   reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: AnyObject;
+  sxOverride: SxObject;
 }
 
 const sx = {

@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 // components
 import {
+  SystemStyleObject,
   Table as TableRoot,
   TableCaption,
   Tbody,
@@ -14,7 +15,8 @@ import {
 // utils
 import { sanitizeAndParseHtml } from "utils";
 // types
-import { AnyObject, TableContentShape } from "types";
+import { TableContentShape } from "types";
+// constants
 import { notAnsweredText } from "../../constants";
 
 export const Table = ({
@@ -53,7 +55,7 @@ export const Table = ({
           </Tr>
         </Thead>
       )}
-      <Tbody sx={sxOverride?.container}>
+      <Tbody sx={{ ...sxOverride }}>
         {/* if children prop is passed, just render the children */}
         {children && children}
         {/* if content prop is passed, parse and render rows and cells */}
@@ -105,7 +107,7 @@ interface Props {
   content: TableContentShape;
   variant?: string;
   border?: boolean;
-  sxOverride?: AnyObject;
+  sxOverride?: SystemStyleObject;
   ariaOverride?: TableContentShape;
   children?: ReactNode;
   [key: string]: any;
