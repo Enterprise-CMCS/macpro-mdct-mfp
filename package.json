@@ -8,8 +8,6 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
     "cdk": "cdk",
     "db:seed": "cd services/app-api && yarn run db:seed",
     "test": "cd tests/cypress && yarn test && cd -",
@@ -36,7 +34,7 @@
     "@aws-sdk/client-lambda": "^3.787.0",
     "@aws-sdk/client-s3": "^3.787.0",
     "@aws-sdk/client-secrets-manager": "^3.787.0",
-    "aws-cdk-lib": "^2.189.1",
+    "aws-cdk-lib": "^2.214.0",
     "constructs": "^10.4.2",
     "jsdom": "^26.1.0",
     "source-map-support": "^0.5.21"
@@ -50,7 +48,7 @@
     "@typescript-eslint/parser": "5.18.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "amazon-user-pool-srp-client": "^1.0.4",
-    "aws-cdk": "^2.1007.0",
+    "aws-cdk": "^2.1029.0",
     "aws-cdk-local": "^2.19.2",
     "chromedriver": ">=135.0.1",
     "core-js": "^3.41.0",
@@ -64,6 +62,7 @@
     "eslint-plugin-playwright": "^2.2.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "tsx": "^4.20.5",
     "typescript": "^4.9.5",
     "util": "^0.12.5",
     "yargs": "^17.7.2"

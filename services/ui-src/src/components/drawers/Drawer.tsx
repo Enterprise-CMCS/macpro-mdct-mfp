@@ -35,12 +35,6 @@ export const Drawer = ({
       <DrawerOverlay />
       <DrawerContent sx={sx.drawerContent} className={mqClasses}>
         <DrawerHeader sx={sx.drawerHeader}>
-          <Text sx={sx.drawerHeaderText}>{verbiage.drawerTitle}</Text>
-          {verbiage.drawerInfo && (
-            <Box sx={sx.infoTextBox}>
-              {parseCustomHtml(verbiage.drawerInfo)}
-            </Box>
-          )}
           <Button
             sx={sx.drawerCloseButton}
             leftIcon={<CloseIcon />}
@@ -50,7 +44,15 @@ export const Drawer = ({
             Close
           </Button>
         </DrawerHeader>
-        <DrawerBody sx={sx.drawerBody}>{children}</DrawerBody>
+        <DrawerBody sx={sx.drawerBody}>
+          <Text sx={sx.drawerHeaderText}>{verbiage.drawerTitle}</Text>
+          {verbiage.drawerInfo && (
+            <Box sx={sx.infoTextBox}>
+              {parseCustomHtml(verbiage.drawerInfo)}
+            </Box>
+          )}
+          {children}
+        </DrawerBody>
       </DrawerContent>
     </ChakraDrawer>
   );

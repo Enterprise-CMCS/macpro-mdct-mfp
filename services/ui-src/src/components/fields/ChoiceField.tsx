@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { Choice as CmsdsChoice } from "@cmsgov/design-system";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, SystemStyleObject, Text } from "@chakra-ui/react";
 // utils
-import { AnyObject } from "types";
 import { labelTextWithOptional } from "utils";
 
 export const ChoiceField = ({
@@ -69,7 +68,7 @@ interface Props {
   name: string;
   label?: string;
   hint: string;
-  sxOverride?: AnyObject;
+  sxOverride?: SystemStyleObject;
   styleAsOptional?: boolean;
   [key: string]: any;
 }
