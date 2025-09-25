@@ -23,7 +23,7 @@ rules:
   no-duplicate-imports: error
   no-unreachable: error
   no-unused-vars: off
-  '@typescript-eslint/no-unused-vars': 
+  '@typescript-eslint/no-unused-vars':
     - error
     - argsIgnorePattern: "^_"
   no-console: error
@@ -34,7 +34,9 @@ rules:
     - starred-block
 
 overrides:
-    - files:
-        - "tests/**/*"
-      rules:
-        no-console: off
+  - files:
+      - "tests/**/*"
+      - "cli/**"
+      - "deployment/**"
+    rules:
+      no-console: off
