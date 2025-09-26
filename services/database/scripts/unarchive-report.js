@@ -67,10 +67,9 @@ async function updateDbItems(tableName, reportId, reports) {
 }
 
 function unarchiveReport(report) {
-  delete report.archived;
-
   return {
     ...report,
+    archived: false,
   };
 }
 
