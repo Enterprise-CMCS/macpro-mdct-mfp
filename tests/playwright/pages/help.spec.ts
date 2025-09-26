@@ -1,12 +1,21 @@
-import { test } from "@playwright/test";
-import { e2eA11y, logInAdminUser, logInStateUser } from "../utils";
+import { test } from "../utils/fixtures/base";
 
-test("Is accessible on all device types for state user", async ({ page }) => {
-  await logInStateUser(page);
-  await e2eA11y(page, "/help");
-});
+test.describe("Help Page", () => {
+  test("should be accessible on all device types for state user", async ({
+    statePage,
+    runA11yScan,
+  }) => {
+    await statePage.help.goto();
+    await statePage.help.isReady();
+    await runA11yScan(statePage.help.page);
+  });
 
-test("Is accessible on all device types for admin user", async ({ page }) => {
-  await logInAdminUser(page);
-  await e2eA11y(page, "/help");
+  test("should be accessible on all device types for admin user", async ({
+    adminPage,
+    runA11yScan,
+  }) => {
+    await adminPage.help.goto();
+    await adminPage.help.isReady();
+    await runA11yScan(adminPage.help.page);
+  });
 });

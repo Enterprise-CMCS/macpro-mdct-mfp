@@ -10,50 +10,59 @@ const testBannerBody = {
 };
 
 test.describe("admin user banner page", () => {
-  test.beforeEach(async ({ adminBannerPage }) => {
+  test.beforeEach(async ({ adminPage }) => {
     try {
       await deleteAllBanners();
     } catch (error) {
-      console.log(
-        `⚠️ API banner deletion failed, falling back to UI: ${error.message}`
-      );
-      await adminBannerPage.deleteExistingBanners();
+      // TODO: UI fallback should reside in deleteAllBanners function
+      if (error instanceof Error) {
+        console.log(
+          `⚠️ API banner deletion failed, falling back to UI: ${error.message}`
+        );
+      } else {
+        console.log(
+          "⚠️ API banner deletion failed, falling back to UI: Unknown error"
+        );
+      }
+      await adminPage.banner.deleteExistingBanners();
     }
-    await adminBannerPage.goto();
-  });
-  test("Should see the correct banner page as an admin user", async ({
-    adminBannerPage,
-  }) => {
-    await expect(adminBannerPage.title).toBeVisible();
+    await adminPage.banner.goto();
   });
 
-  test("Should be able to create banner as an admin user", async ({
-    adminBannerPage,
+  test("should see the correct banner page as an admin user", async ({
+    adminPage,
   }) => {
-    await adminBannerPage.createAdminBanner();
-    await expect(adminBannerPage.deleteBannerButton).toBeVisible();
+    await expect(adminPage.banner.title).toBeVisible();
   });
 
-  test("Should be able to delete banner as an admin user", async ({
-    adminBannerPage,
+  test("should be able to create banner as an admin user", async ({
+    adminPage,
+  }) => {
+    await adminPage.banner.createAdminBanner();
+    await expect(adminPage.banner.deleteBannerButton).toBeVisible();
+  });
+
+  test("should be able to delete banner as an admin user", async ({
+    adminPage,
   }) => {
     await postBanner(testBannerBody);
-    await adminBannerPage.page.reload();
-    await adminBannerPage.deleteAdminBanner();
-    await expect(adminBannerPage.deleteBannerButton).not.toBeVisible();
+    await adminPage.banner.page.reload();
+    await adminPage.banner.deleteAdminBanner();
+    await expect(adminPage.banner.deleteBannerButton).not.toBeVisible();
   });
 
-  test("Is accessible on all device types for admin user", async ({
-    adminBannerPage,
+  test("should be accessible on all device types", async ({
+    adminPage,
+    runA11yScan,
   }) => {
-    await adminBannerPage.e2eA11y();
+    await runA11yScan(adminPage.banner.page);
   });
 });
 
 test("State User should not be able to edit a banner", async ({
-  stateProfilePage,
+  statePage,
 }) => {
-  await stateProfilePage.goto("/admin");
-  await expect(stateProfilePage.title).toBeVisible();
-  await expect(stateProfilePage.bannerEditorButton).not.toBeVisible();
+  await statePage.profile.goto("/admin");
+  await expect(statePage.profile.title).toBeVisible();
+  await expect(statePage.profile.bannerEditorButton).not.toBeVisible();
 });

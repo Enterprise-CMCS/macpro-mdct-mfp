@@ -17,9 +17,31 @@ export const stateUserAuthPath: string = "playwright/.auth/user.json";
 export const expectedAdminHeading = "View State/Territory Reports";
 export const expectedStateUserHeading = "Money Follows the Person (MFP) Portal";
 
+export const testWorkPlan = {
+  reportingYear: currentYear,
+  reportingPeriod: "First reporting period",
+  expName: `Puerto Rico MFP Work Plan ${currentYear} - Period 1`,
+  expStatus: "Not started",
+};
+
 export const testBanner = {
   title: "Newly Created Banner",
   description: "Banner Description Text",
   startDate: "10/10/2025",
   endDate: "10/20/2025",
 };
+
+export const a11yViewports = {
+  mobile: { width: 560, height: 800 },
+  tablet: { width: 880, height: 1000 },
+  desktop: { width: 1200, height: 1200 },
+};
+
+export const a11yTags = [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21a",
+  "wcag21aa",
+  "section508",
+  "best-practice",
+];
