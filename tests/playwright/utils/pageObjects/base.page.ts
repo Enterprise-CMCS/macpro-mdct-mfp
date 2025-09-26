@@ -1,5 +1,4 @@
 import { expect, Locator, Page } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
 
 export default class BasePage {
   public path = "/";
@@ -51,30 +50,5 @@ export default class BasePage {
     await this.myAccountButton.click();
     await this.accountMenu.isVisible();
     await this.logoutButton.click();
-  }
-
-  public async e2eA11y() {
-    const breakpoints = {
-      mobile: [560, 800],
-      tablet: [880, 1000],
-      desktop: [1200, 1200],
-    };
-
-    for (const size of Object.values(breakpoints)) {
-      await this.page.setViewportSize({ width: size[0], height: size[1] });
-      await this.title.waitFor({ state: "visible" });
-      const results = await new AxeBuilder({ page: this.page })
-        .withTags([
-          "wcag2a",
-          "wcag2aa",
-          "wcag21a",
-          "wcag21aa",
-          "wcag22aa",
-          "best-practice",
-        ])
-        .disableRules(["duplicate-id"])
-        .analyze();
-      expect(results.violations).toEqual([]);
-    }
   }
 }

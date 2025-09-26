@@ -2,55 +2,60 @@ import { test, expect } from "../utils/fixtures/base";
 import BasePage from "../utils/pageObjects/base.page";
 
 test.describe("state user home page", () => {
-  test.beforeEach(async ({ stateHomePage }) => {
-    await stateHomePage.goto();
-    await stateHomePage.isReady();
+  test.beforeEach(async ({ statePage }) => {
+    await statePage.home.goto();
+    await statePage.home.isReady();
   });
 
-  test("Should see the correct home page as a state user", async ({
-    stateHomePage,
+  test("should render a visible work plan button and sar button", async ({
+    statePage,
   }) => {
-    await expect(stateHomePage.wpButton).toBeVisible();
-    await expect(stateHomePage.sarButton).toBeVisible();
+    await expect(statePage.home.state.workPlanButton).toBeVisible();
+    await expect(statePage.home.state.sarButton).toBeVisible();
   });
 
-  test("Home page is accessible on all device types for state user", async ({
-    stateHomePage,
+  test("should be accessible across all device viewports", async ({
+    statePage,
+    runA11yScan,
   }) => {
-    await stateHomePage.e2eA11y();
+    await runA11yScan(statePage.home.state.page);
   });
 });
 
 test.describe("admin user home page", () => {
-  test.beforeEach(async ({ adminHomePage }) => {
-    await adminHomePage.goto();
-    await adminHomePage.isReady();
+  test.beforeEach(async ({ adminPage }) => {
+    await adminPage.home.goto();
+    await adminPage.home.isReady();
   });
 
-  test("Should see the correct home page as an admin user", async ({
-    adminHomePage,
-  }) => {
-    await expect(adminHomePage.dropdown).toBeVisible();
+  test("should render a visible state dropdown", async ({ adminPage }) => {
+    await expect(adminPage.home.admin.stateDropdown).toBeVisible();
   });
 
-  test("Home page is accessible on all device types for admin user", async ({
-    adminHomePage,
+  test("should be accessible across all device viewports", async ({
+    adminPage,
+    runA11yScan,
   }) => {
-    await adminHomePage.e2eA11y();
+    await runA11yScan(adminPage.home.admin.page);
   });
 });
 
-test.describe("not logged in home page", () => {
-  test("Is accessible when not logged in", async ({ browser }) => {
+test.describe("unauthenticated home page", () => {
+  test("should be accessible across all device viewports", async ({
+    browser,
+    runA11yScan,
+  }) => {
     const userContext = await browser.newContext({
       storageState: {
         cookies: [],
         origins: [],
       },
     });
-    const homePage = new BasePage(await userContext.newPage());
+    const page = await userContext.newPage();
+    const homePage = new BasePage(page);
     await homePage.goto();
-    await homePage.e2eA11y();
+    await homePage.isReady();
+    await runA11yScan(page);
     await userContext.close();
   });
 });
