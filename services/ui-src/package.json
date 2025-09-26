@@ -68,12 +68,12 @@
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
     "react-helmet": "^6.1.0",
+    "tar-fs": "3.1.1",
     "typescript": "^4.9.5"
   },
   "resolutions": {
     "@types/react": "17.0.45",
-    "@types/react-dom": "17.0.17",
-    "tar-fs": "3.1.1"
+    "@types/react-dom": "17.0.17"
   },
   "jest": {
     "coverageReporters": [
