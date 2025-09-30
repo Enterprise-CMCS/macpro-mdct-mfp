@@ -1,4 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+import { a11yTags, a11yViewports } from "../consts";
 
 export default class BasePage {
   public path = "/";
@@ -50,5 +52,24 @@ export default class BasePage {
     await this.myAccountButton.click();
     await this.accountMenu.isVisible();
     await this.logoutButton.click();
+  }
+
+  async runA11yScan(): Promise<void> {
+    const accessibilityErrors: any[] = [];
+    for (const [device, viewport] of Object.entries(a11yViewports)) {
+      await this.page.setViewportSize(viewport);
+      await this.page.locator("h1").first().waitFor({ state: "visible" });
+      const axeBuilder = new AxeBuilder({ page: this.page })
+        .withTags(a11yTags)
+        .disableRules(["duplicate-id"]);
+      const results = await axeBuilder.analyze();
+      if (results.violations.length > 0) {
+        accessibilityErrors.push({
+          device,
+          violations: results.violations,
+        });
+      }
+    }
+    expect(accessibilityErrors).toEqual([]);
   }
 }

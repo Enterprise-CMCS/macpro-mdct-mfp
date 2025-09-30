@@ -16,9 +16,8 @@ test.describe("state user home page", () => {
 
   test("should be accessible across all device viewports", async ({
     statePage,
-    runA11yScan,
   }) => {
-    await runA11yScan(statePage.home.state.page);
+    await statePage.home.runA11yScan();
   });
 });
 
@@ -34,16 +33,14 @@ test.describe("admin user home page", () => {
 
   test("should be accessible across all device viewports", async ({
     adminPage,
-    runA11yScan,
   }) => {
-    await runA11yScan(adminPage.home.admin.page);
+    await adminPage.home.runA11yScan();
   });
 });
 
 test.describe("unauthenticated home page", () => {
   test("should be accessible across all device viewports", async ({
     browser,
-    runA11yScan,
   }) => {
     const userContext = await browser.newContext({
       storageState: {
@@ -55,7 +52,7 @@ test.describe("unauthenticated home page", () => {
     const homePage = new BasePage(page);
     await homePage.goto();
     await homePage.isReady();
-    await runA11yScan(page);
+    await homePage.runA11yScan();
     await userContext.close();
   });
 });

@@ -1,16 +1,10 @@
-import { test as base, BrowserContext, Page, expect } from "@playwright/test";
+import { test as base, BrowserContext, Page } from "@playwright/test";
 import HomePage from "../pageObjects/home.page";
-import {
-  adminAuthPath,
-  stateUserAuthPath,
-  a11yTags,
-  a11yViewports,
-} from "../consts";
+import { adminAuthPath, stateUserAuthPath } from "../consts";
 import BannerPage from "../pageObjects/banner.page";
 import ProfilePage from "../pageObjects/profile.page";
 import WorkPlanPage from "../pageObjects/workPlan.page";
 import HelpPage from "../pageObjects/help.page";
-import AxeBuilder from "@axe-core/playwright";
 
 class StatePagesWrapper {
   public readonly home: HomePage;
@@ -45,7 +39,6 @@ type CustomFixtures = {
   adminContext: BrowserContext;
   statePage: StatePagesWrapper;
   adminPage: AdminPagesWrapper;
-  runA11yScan: (page: Page) => Promise<void>;
 };
 
 export const test = base.extend<CustomFixtures>({
@@ -77,28 +70,6 @@ export const test = base.extend<CustomFixtures>({
     const wrapper = new AdminPagesWrapper(page);
     await use(wrapper);
     await page.close();
-  },
-
-  runA11yScan: async (_, use) => {
-    const runA11yScan = async (page: Page) => {
-      const accessibilityErrors: any[] = [];
-      for (const [device, viewport] of Object.entries(a11yViewports)) {
-        await page.setViewportSize(viewport);
-        await page.locator("h1").first().waitFor({ state: "visible" });
-        const axeBuilder = new AxeBuilder({ page })
-          .withTags(a11yTags)
-          .disableRules(["duplicate-id"]);
-        const results = await axeBuilder.analyze();
-        if (results.violations.length > 0) {
-          accessibilityErrors.push({
-            device,
-            violations: results.violations,
-          });
-        }
-      }
-      expect(accessibilityErrors).toEqual([]);
-    };
-    await use(runA11yScan);
   },
 });
 

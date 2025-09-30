@@ -19,8 +19,8 @@ test.describe("Admin profile", () => {
   test(
     "Profile page is accessible on all device types for admin user",
     { tag: "@admin" },
-    async ({ adminPage, runA11yScan }) => {
-      await runA11yScan(adminPage.profile.page);
+    async ({ adminPage }) => {
+      await adminPage.profile.runA11yScan();
     }
   );
 });
@@ -39,8 +39,7 @@ test.describe("State user profile", { tag: "@user" }, () => {
 
   test("Profile page is accessible on all device types for state user", async ({
     statePage,
-    runA11yScan,
   }) => {
-    await runA11yScan(statePage.profile.page);
+    await statePage.profile.runA11yScan();
   });
 });

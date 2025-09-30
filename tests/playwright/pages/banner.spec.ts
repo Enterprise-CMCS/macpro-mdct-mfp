@@ -51,11 +51,8 @@ test.describe("admin user banner page", () => {
     await expect(adminPage.banner.deleteBannerButton).not.toBeVisible();
   });
 
-  test("should be accessible on all device types", async ({
-    adminPage,
-    runA11yScan,
-  }) => {
-    await runA11yScan(adminPage.banner.page);
+  test("should be accessible on all device types", async ({ adminPage }) => {
+    await adminPage.banner.runA11yScan();
   });
 });
 
