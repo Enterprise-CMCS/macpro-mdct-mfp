@@ -1,3 +1,4 @@
+// This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
 import { Argv } from "yargs";
 import {
   CloudFormationClient,
@@ -31,6 +32,7 @@ Do you really want to destroy it?
 Re-enter the stack name (${stack}) to continue:
 **********************************************************************${reset}
 `);
+
   readline.close();
 
   if (confirmation !== stack) {
@@ -85,13 +87,11 @@ export const destroy = {
     await delete_topics({ stage });
 
     const client = new CloudFormationClient({ region });
-
     await client.send(new DeleteStackCommand({ StackName: stackName }));
     console.log(`Stack ${stackName} delete initiated.`);
 
     if (wait) {
       console.log(`Waiting for stack ${stackName} to be deleted...`);
-
       const result = await waitForStackDeleteComplete(client, stackName);
       console.log(
         result.state === "SUCCESS"
