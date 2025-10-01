@@ -97,7 +97,7 @@ const sx = {
     margin: "2rem auto 1.5rem",
     fontSize: "md",
     fontWeight: "bold",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
   stepName: {
     fontSize: "lg",

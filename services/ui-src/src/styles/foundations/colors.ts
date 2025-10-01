@@ -42,8 +42,5 @@ export const colors = {
     focus_dark: "#BD13B8",
     // custom
     visited: "#4C2C92",
-    gray_medium: "#71767a",
-    spreadsheet: "#1d6f42",
-    spreadsheet_dark: "#174320",
   },
 };

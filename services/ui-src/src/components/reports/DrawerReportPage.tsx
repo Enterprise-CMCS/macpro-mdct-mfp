@@ -180,7 +180,7 @@ const sx = {
   dashboardTitle: {
     paddingBottom: "0.75rem",
     borderBottom: "1.5px solid var(--mdct-colors-palette-gray_lighter)",
-    color: "palette.gray_medium",
+    color: "palette.gray",
     fontSize: "lg",
     fontWeight: "bold",
   },

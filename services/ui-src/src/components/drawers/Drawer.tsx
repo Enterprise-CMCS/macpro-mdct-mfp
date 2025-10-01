@@ -113,7 +113,7 @@ const sx = {
     marginBottom: ".5rem",
     fontSize: "md",
     fontWeight: "bold",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
   detailDescription: {
     marginBottom: ".5rem",

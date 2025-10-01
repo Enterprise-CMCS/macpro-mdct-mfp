@@ -252,7 +252,7 @@ const sx = {
   label: {
     fontSize: "sm",
     fontWeight: "bold",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
   editDate: {
     marginRight: "3rem",
