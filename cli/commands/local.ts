@@ -1,7 +1,10 @@
+// This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
 import { runCommand } from "../lib/runner.js";
 import { execSync } from "child_process";
 import { region } from "../lib/consts.js";
 import { runFrontendLocally } from "../lib/utils.js";
+import downloadClamAvLayer from "../lib/clam.js";
+import { seedData } from "../lib/seedData.js";
 
 const isColimaRunning = () => {
   try {
@@ -81,6 +84,8 @@ export const local = {
       "."
     );
 
+    await downloadClamAvLayer();
+
     await runCommand(
       "CDK local deploy",
       [
@@ -94,6 +99,8 @@ export const local = {
       ],
       "."
     );
+
+    await seedData();
 
     await Promise.all([
       runCommand(
