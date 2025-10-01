@@ -106,7 +106,7 @@ const sx = {
   stepHint: {
     fontSize: "md",
     fontWeight: "normal",
-    color: "palette.gray_medium_dark",
+    color: "palette.gray_dark",
     lineHeight: "1.5rem",
   },
 };

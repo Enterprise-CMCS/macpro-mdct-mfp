@@ -175,7 +175,7 @@ const sx = {
   subsectionHeading: {
     fontSize: "md",
     fontWeight: "normal",
-    color: "palette.gray_medium_dark",
+    color: "palette.gray_dark",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
