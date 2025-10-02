@@ -97,7 +97,7 @@ const sx = {
     margin: "2rem auto 1.5rem",
     fontSize: "md",
     fontWeight: "bold",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
   stepName: {
     fontSize: "lg",
@@ -106,7 +106,7 @@ const sx = {
   stepHint: {
     fontSize: "md",
     fontWeight: "normal",
-    color: "palette.gray_medium_dark",
+    color: "palette.gray_dark",
     lineHeight: "1.5rem",
   },
 };

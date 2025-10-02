@@ -112,7 +112,7 @@ const sx = {
       fontWeight: "bold",
       textAlign: "left",
       paddingBottom: "0rem",
-      color: "palette.gray_medium",
+      color: "palette.gray",
     },
   },
 };

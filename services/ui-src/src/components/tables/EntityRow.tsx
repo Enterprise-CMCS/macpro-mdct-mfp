@@ -310,7 +310,7 @@ const sx = {
       paddingLeft: "0rem",
       border: "none",
       fontWeight: "bold",
-      color: "palette.gray_medium",
+      color: "palette.gray",
       width: "2rem",
     },
   },

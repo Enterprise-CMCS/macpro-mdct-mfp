@@ -159,7 +159,7 @@ const sx = {
   table: {
     th: {
       fontWeight: "bold",
-      color: "palette.gray_medium",
+      color: "palette.gray",
       paddingLeft: "1rem",
       paddingRight: "0",
       borderBottom: "1px solid",

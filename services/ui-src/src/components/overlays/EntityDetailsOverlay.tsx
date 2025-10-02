@@ -395,7 +395,7 @@ const sx = {
   reviewPdfHint: {
     paddingTop: "2rem",
     paddingBottom: "2rem",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
   reviewPdfButton: { marginBottom: "2rem" },
 };
