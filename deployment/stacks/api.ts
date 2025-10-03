@@ -99,7 +99,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   const environment = {
     NODE_OPTIONS: "--enable-source-maps",
-    brokerString: brokerString,
+    brokerString,
     stage,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
