@@ -50,7 +50,7 @@ class KafkaSourceLib {
     tables: SourceTopicMapping[],
     buckets: SourceTopicMapping[]
   ) {
-    if (!process.env.BOOTSTRAP_BROKER_STRING_TLS) {
+    if (!process.env.brokerString) {
       throw new Error("Missing Broker Config. ");
     }
     // Setup vars
@@ -63,7 +63,7 @@ class KafkaSourceLib {
     this.tables = tables;
     this.buckets = buckets;
 
-    const brokerStrings = process.env.BOOTSTRAP_BROKER_STRING_TLS;
+    const brokerStrings = process.env.brokerString;
     kafka = new Kafka({
       clientId: `mfp-${this.stage}`,
       brokers: brokerStrings!.split(","),
@@ -219,7 +219,7 @@ class KafkaSourceLib {
   }
 
   async handler(event: any) {
-    if (process.env.BOOTSTRAP_BROKER_STRING_TLS === "localstack") {
+    if (process.env.brokerString === "localstack") {
       return;
     }
 
