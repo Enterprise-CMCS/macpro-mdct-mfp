@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     topicPrefix: "aws.mdct.mfp",
     version: ".v0",
