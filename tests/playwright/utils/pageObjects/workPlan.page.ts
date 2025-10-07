@@ -1,5 +1,6 @@
 import { Page, Locator } from "@playwright/test";
 import BasePage from "./base.page";
+import BaseDialog from "./dialogs/baseDialog.page";
 
 export default class WorkPlanPage extends BasePage {
   public path = "/wp";
@@ -50,6 +51,9 @@ export class StateWorkPlanElements {
   readonly startWorkPlanButton: Locator;
   readonly addNewWorkPlanModal: Locator;
   readonly startNewButton: Locator;
+  readonly editButton: Locator;
+  readonly continueButton: Locator;
+  readonly transitionBenchmarkDialog: BaseDialog;
 
   constructor(page: Page) {
     this.page = page;
@@ -61,6 +65,14 @@ export class StateWorkPlanElements {
     });
     this.startNewButton = this.addNewWorkPlanModal.getByRole("button", {
       name: "Start new",
+    });
+    this.transitionBenchmarkDialog = new BaseDialog(
+      page,
+      'div[id="wp-tbp-dialog"]'
+    );
+    this.editButton = page.getByRole("button", { name: "Edit" });
+    this.continueButton = page.getByRole("button", {
+      name: "Continue",
     });
   }
 

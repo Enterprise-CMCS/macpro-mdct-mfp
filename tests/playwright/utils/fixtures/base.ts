@@ -5,18 +5,35 @@ import BannerPage from "../pageObjects/banner.page";
 import ProfilePage from "../pageObjects/profile.page";
 import WorkPlanPage from "../pageObjects/workPlan.page";
 import HelpPage from "../pageObjects/help.page";
+import TransitionBenchmarksPage from "../pageObjects/workPlan/transitionBenchmarks.page";
+import TransitionBenchmarkStrategyPage from "../pageObjects/workPlan/transitionBenchmarkStrategy.page";
+import InitiativesInstructionsPage from "../pageObjects/workPlan/initiativesInstructions.page";
+import InitiativesSpecificPage from "../pageObjects/workPlan/initiativesSpecific.page";
+import InitiativesSpecificEditPage from "../pageObjects/workPlan/initiativesSpecificEdit.page";
 
 class StatePagesWrapper {
   public readonly home: HomePage;
   public readonly profile: ProfilePage;
   public readonly workPlan: WorkPlanPage;
   public readonly help: HelpPage;
+  public readonly transitionBenchmarks: TransitionBenchmarksPage;
+  public readonly transitionBenchmarkStrategy: TransitionBenchmarkStrategyPage;
+  public readonly initiativesInstructions: InitiativesInstructionsPage;
+  public readonly initiativesSpecific: InitiativesSpecificPage;
+  public readonly initiativesSpecificEdit: InitiativesSpecificEditPage;
 
   constructor(page: Page) {
     this.home = new HomePage(page);
     this.profile = new ProfilePage(page);
     this.workPlan = new WorkPlanPage(page);
     this.help = new HelpPage(page);
+    this.transitionBenchmarks = new TransitionBenchmarksPage(page);
+    this.transitionBenchmarkStrategy = new TransitionBenchmarkStrategyPage(
+      page
+    );
+    this.initiativesInstructions = new InitiativesInstructionsPage(page);
+    this.initiativesSpecific = new InitiativesSpecificPage(page);
+    this.initiativesSpecificEdit = new InitiativesSpecificEditPage(page);
   }
 }
 

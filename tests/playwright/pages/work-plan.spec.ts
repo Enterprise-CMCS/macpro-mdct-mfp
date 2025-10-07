@@ -1,6 +1,12 @@
 import { expect, test } from "../utils/fixtures/base";
 import { archiveAllReportsForState } from "../utils/requests";
-import { currentYear, stateAbbreviation, testWorkPlan } from "../utils/consts";
+import {
+  currentYear,
+  requiredWorkPlanTopics,
+  stateAbbreviation,
+  testWorkPlan,
+  wpTransitionBenchmarkTestData,
+} from "../utils/consts";
 
 test.describe("State User", () => {
   test.beforeEach(async ({ statePage }) => {
@@ -24,5 +30,47 @@ test.describe("State User", () => {
     await expect(statePage.workPlan.wpDataRows).toContainText(
       testWorkPlan.expStatus
     );
+  });
+
+  test("should be able to fill and submit a Work Plan @wp", async ({
+    statePage,
+  }) => {
+    await statePage.workPlan.state.startNewWorkPlan(
+      currentYear,
+      testWorkPlan.reportingPeriod
+    );
+    await statePage.workPlan.state.editButton.click();
+    await statePage.workPlan.state.continueButton.click();
+    await statePage.transitionBenchmarks.completeTransitionBenchmarks(
+      wpTransitionBenchmarkTestData
+    );
+    await statePage.transitionBenchmarkStrategy.completeTransitionBenchmarkStrategy(
+      "test",
+      "test"
+    );
+    await statePage.initiativesInstructions.completeInitiativesInstructions(
+      false,
+      false
+    );
+    await statePage.initiativesSpecific.addInititives(requiredWorkPlanTopics);
+    await statePage.initiativesSpecific.clickEditInitiative(
+      requiredWorkPlanTopics[0].name
+    );
+    await statePage.initiativesSpecific.editDefineInitiativeSection(
+      "Test",
+      ["Older adults"],
+      "01/01/2024",
+      false
+    );
+    await statePage.initiativesSpecific.editEvaluationPlanSection(
+      "Test Objective",
+      "Test Description",
+      "Test Targets",
+      false,
+      "Test Additional Details"
+    );
+    // Edit funding sources section
+    await statePage.initiativesSpecific.editPage.fundingSourcesEditButton.click();
+    // End edit funding sources
   });
 });
