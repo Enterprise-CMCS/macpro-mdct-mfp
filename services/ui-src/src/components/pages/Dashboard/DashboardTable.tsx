@@ -333,7 +333,7 @@ const sx = {
       padding: "0.5rem 0",
       borderBottom: "1px solid",
       borderColor: "palette.gray_light",
-      color: "palette.gray_medium",
+      color: "palette.gray",
       fontWeight: "bold",
     },
     tr: {
@@ -359,7 +359,7 @@ const sx = {
   copyOverText: {
     fontSize: "xs",
     fontWeight: "300",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
   archivedText: {
     paddingLeft: 3,

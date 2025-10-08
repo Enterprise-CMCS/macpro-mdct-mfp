@@ -1,3 +1,4 @@
+// This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
 import { Construct } from "constructs";
 import {
   aws_ec2 as ec2,
@@ -30,7 +31,7 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
 
   const service = "topics";
 
-  const deleteTopicsEnabled = !isDev;
+  const deleteTopicsEnabled = isDev;
 
   const lambdaSecurityGroup = new ec2.SecurityGroup(
     scope,
@@ -48,6 +49,7 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     environment: {
       brokerString,
       project,
+      topicNamespace: isDev ? `--${project}--${stage}--` : "",
     },
     vpc,
     vpcSubnets: { subnets: kafkaAuthorizedSubnets },
@@ -59,18 +61,15 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
     entry: "services/topics/handlers/createTopics.js",
     handler: "handler",
     timeout: Duration.seconds(60),
+    retryAttempts: 0,
     ...commonProps,
-    environment: {
-      topicNamespace: isDev ? `--${project}--${stage}--` : "",
-      ...commonProps.environment,
-    },
   });
 
-  if (!deleteTopicsEnabled) {
+  if (deleteTopicsEnabled) {
     const deleteTopicsLambda = new Lambda(scope, "DeleteTopics", {
       entry: "services/topics/handlers/deleteTopics.js",
       handler: "handler",
-      timeout: Duration.seconds(300),
+      timeout: Duration.minutes(5),
       ...commonProps,
     });
 
@@ -84,7 +83,8 @@ export function createTopicsComponents(props: CreateTopicsComponentsProps) {
   const listTopicsLambda = new Lambda(scope, "ListTopics", {
     entry: "services/topics/handlers/listTopics.js",
     handler: "handler",
-    timeout: Duration.seconds(300),
+    timeout: Duration.minutes(5),
+    retryAttempts: 0,
     ...commonProps,
   });
 

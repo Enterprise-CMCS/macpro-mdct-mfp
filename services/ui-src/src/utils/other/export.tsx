@@ -244,6 +244,6 @@ const sx = {
     color: "palette.error_darker",
   },
   notApplicable: {
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
 };

@@ -256,7 +256,7 @@ const sx = {
     paddingTop: "1rem",
     marginBottom: "1rem",
     fontWeight: "bold",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
   addEntityButton: {
     marginTop: "1.5rem",
@@ -272,7 +272,7 @@ const sx = {
   reviewPdfHint: {
     paddingTop: "2rem",
     paddingBottom: "2rem",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
   reviewPdfButton: { marginBottom: "2rem" },
 };
