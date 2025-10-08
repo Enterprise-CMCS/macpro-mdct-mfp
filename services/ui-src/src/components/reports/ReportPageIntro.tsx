@@ -81,7 +81,7 @@ const sx = {
       textTransform: "capitalize",
       fontSize: "sm",
       fontWeight: "600",
-      color: "palette.gray_medium",
+      color: "palette.gray",
     },
     ".mdct-smalltext": {
       fontSize: "xs",

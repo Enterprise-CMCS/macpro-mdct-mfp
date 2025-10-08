@@ -1,11 +1,9 @@
 import { Link as RouterLink } from "react-router-dom";
 // components
-import { Button, Image } from "@chakra-ui/react";
+import { Button, Image, SystemStyleObject } from "@chakra-ui/react";
 // assets
 import iconSearch from "assets/icons/icon_search_blue.png";
 import iconPDF from "assets/icons/icon_pdf_white.png";
-// types
-import { AnyObject } from "types";
 // utils
 import { useStore } from "utils";
 
@@ -37,7 +35,7 @@ export const PrintButton = ({ sxOverride }: Props) => {
 };
 
 export interface Props {
-  sxOverride?: AnyObject;
+  sxOverride?: SystemStyleObject;
 }
 
 const sx = {

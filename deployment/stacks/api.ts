@@ -2,7 +2,6 @@ import { Construct } from "constructs";
 import {
   aws_apigateway as apigateway,
   aws_ec2 as ec2,
-  aws_iam as iam,
   aws_logs as logs,
   aws_s3 as s3,
   aws_s3_notifications as s3notifications,
@@ -14,9 +13,8 @@ import {
 import { Lambda } from "../constructs/lambda";
 import { WafConstruct } from "../constructs/waf";
 import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
-import { DynamoDBTableIdentifiers } from "../constructs/dynamodb-table";
-import { isDefined } from "../utils/misc";
 import { isLocalStack } from "../local/util";
+import { DynamoDBTable } from "../constructs/dynamodb-table";
 
 // TODO: does this need to point to the tsconfig.json file in services/app-api?
 
@@ -27,7 +25,7 @@ interface CreateApiComponentsProps {
   isDev: boolean;
   vpc: ec2.IVpc;
   kafkaAuthorizedSubnets: ec2.ISubnet[];
-  tables: DynamoDBTableIdentifiers[];
+  tables: DynamoDBTable[];
   brokerString: string;
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
@@ -101,80 +99,22 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   const environment = {
     NODE_OPTIONS: "--enable-source-maps",
-    BOOTSTRAP_BROKER_STRING_TLS: brokerString,
+    brokerString,
     stage,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     ABCD_FORM_BUCKET: abcdFormBucket.bucketName,
     ...Object.fromEntries(
-      tables.map((table) => [`${table.id}Table`, table.name])
+      tables.map((table) => [`${table.node.id}Table`, table.table.tableName])
     ),
   };
-
-  const additionalPolicies = [
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "dynamodb:DescribeTable",
-        "dynamodb:Query",
-        "dynamodb:Scan",
-        "dynamodb:GetItem",
-        "dynamodb:PutItem",
-        "dynamodb:UpdateItem",
-        "dynamodb:DeleteItem",
-      ],
-      resources: [
-        ...tables.map((table) => table.arn),
-        ...tables.map((table) => `${table.arn}/index/*`),
-      ],
-    }),
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["s3:GetObject", "s3:ListBucket", "s3:PutObject"],
-      resources: [
-        `${wpFormBucket.bucketArn}/formTemplates/*`,
-        wpFormBucket.bucketArn,
-        `${wpFormBucket.bucketArn}/formTemplates/*`,
-        `${wpFormBucket.bucketArn}/fieldData/*`,
-        sarFormBucket.bucketArn,
-        `${sarFormBucket.bucketArn}/formTemplates/*`,
-        `${sarFormBucket.bucketArn}/fieldData/*`,
-        abcdFormBucket.bucketArn,
-        `${abcdFormBucket.bucketArn}/formTemplates/*`,
-        `${abcdFormBucket.bucketArn}/fieldData/*`,
-      ],
-    }),
-
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        "dynamodb:DescribeStream",
-        "dynamodb:GetRecords",
-        "dynamodb:GetShardIterator",
-        "dynamodb:ListShards",
-        "dynamodb:ListStreams",
-      ],
-      resources: tables.map((table) => table.streamArn).filter(isDefined),
-    }),
-    new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
-      resources: [
-        wpFormBucket.bucketArn,
-        sarFormBucket.bucketArn,
-        abcdFormBucket.bucketArn,
-        `${wpFormBucket.bucketArn}/fieldData/*`,
-        `${sarFormBucket.bucketArn}/fieldData/*`,
-        `${abcdFormBucket.bucketArn}/fieldData/*`,
-      ],
-    }),
-  ];
 
   const commonProps = {
     stackName: `${service}-${stage}`,
     api,
     environment,
-    additionalPolicies,
+    tables,
+    buckets: [wpFormBucket, sarFormBucket, abcdFormBucket],
     isDev,
   };
 
@@ -287,7 +227,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       topicNamespace: isDev ? `--${project}--${stage}--` : "",
     },
     tables: tables.filter(
-      (table) => table.id === "SarReports" || table.id === "WpReports"
+      (table) => table.node.id === "SarReports" || table.node.id === "WpReports"
     ),
   });
 
@@ -301,15 +241,15 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     environment: { ...commonProps.environment, topicNamespace: "" },
   };
 
-  const postWpBucketDataLambda = new Lambda(scope, "postWpBucketData", {
+  const postWpBucketData = new Lambda(scope, "postWpBucketData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
-  }).lambda;
+  });
 
   wpFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
-    new s3notifications.LambdaDestination(postWpBucketDataLambda),
+    new s3notifications.LambdaDestination(postWpBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
@@ -318,22 +258,22 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   wpFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
-    new s3notifications.LambdaDestination(postWpBucketDataLambda),
+    new s3notifications.LambdaDestination(postWpBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
     }
   );
 
-  const postSarBucketDataLambda = new Lambda(scope, "postSarBucketData", {
+  const postSarBucketData = new Lambda(scope, "postSarBucketData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
-  }).lambda;
+  });
 
   sarFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
-    new s3notifications.LambdaDestination(postSarBucketDataLambda),
+    new s3notifications.LambdaDestination(postSarBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
@@ -342,22 +282,22 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   sarFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
-    new s3notifications.LambdaDestination(postSarBucketDataLambda),
+    new s3notifications.LambdaDestination(postSarBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
     }
   );
 
-  const postAbcdBucketDataLambda = new Lambda(scope, "postAbcdBucketData", {
+  const postAbcdBucketData = new Lambda(scope, "postAbcdBucketData", {
     entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
-  }).lambda;
+  });
 
   abcdFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
-    new s3notifications.LambdaDestination(postAbcdBucketDataLambda),
+    new s3notifications.LambdaDestination(postAbcdBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",
@@ -366,7 +306,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   abcdFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
-    new s3notifications.LambdaDestination(postAbcdBucketDataLambda),
+    new s3notifications.LambdaDestination(postAbcdBucketData.lambda),
     {
       prefix: "fieldData/",
       suffix: ".json",

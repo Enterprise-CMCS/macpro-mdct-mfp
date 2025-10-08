@@ -41,7 +41,7 @@ const sx = {
       padding: "1rem 0 1rem 1rem",
       borderBottom: "1px solid",
       borderColor: "palette.gray_lighter",
-      color: "palette.gray_medium",
+      color: "palette.gray",
       fontWeight: "600",
       fontSize: "sm",
       lineHeight: "1.125rem",

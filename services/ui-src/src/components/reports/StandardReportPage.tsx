@@ -132,6 +132,6 @@ const sx = {
   reviewPdfHint: {
     paddingTop: "2.5rem",
     paddingBottom: "2.5rem",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
 };

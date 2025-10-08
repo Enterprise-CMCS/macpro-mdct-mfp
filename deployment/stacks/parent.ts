@@ -3,6 +3,7 @@ import {
   Aws,
   aws_ec2 as ec2,
   aws_s3 as s3,
+  aws_iam as iam,
   CfnOutput,
   Stack,
   StackProps,
@@ -13,7 +14,6 @@ import { createUiAuthComponents } from "./ui-auth";
 import { createUiComponents } from "./ui";
 import { createApiComponents } from "./api";
 import { deployFrontend } from "./deployFrontend";
-import { createCustomResourceRole } from "./customResourceRole";
 import { isLocalStack } from "../local/util";
 import { createTopicsComponents } from "./topics";
 import { getSubnets } from "../utils/vpc";
@@ -45,8 +45,6 @@ export class ParentStack extends Stack {
     const vpc = ec2.Vpc.fromLookup(this, "Vpc", { vpcName });
     const kafkaAuthorizedSubnets = getSubnets(this, kafkaAuthorizedSubnetIds);
 
-    const customResourceRole = createCustomResourceRole({ ...commonProps });
-
     const loggingBucket = s3.Bucket.fromBucketName(
       this,
       "LoggingBucket",
@@ -69,13 +67,15 @@ export class ParentStack extends Stack {
       abcdFormBucket,
     });
 
-    /*
-     * For local dev, the LocalStack container will host the database and API.
-     * The UI will self-host, so we don't need to tell CDK anything about it.
-     * Also, we skip authorization locally. So we don't set up Cognito,
-     * or configure the API to interact with it. Therefore, we're done.
-     */
-    if (isLocalStack) return;
+    if (isLocalStack) {
+      /*
+       * For local dev, the LocalStack container will host the database and API.
+       * The UI will self-host, so we don't need to tell CDK anything about it.
+       * Also, we skip authorization locally. So we don't set up Cognito,
+       * or configure the API to interact with it. Therefore, we're done.
+       */
+      return;
+    }
 
     const { applicationEndpointUrl, distribution, uiBucket } =
       createUiComponents({ ...commonProps, loggingBucket });
@@ -84,7 +84,6 @@ export class ParentStack extends Stack {
       createUiAuthComponents({
         ...commonProps,
         applicationEndpointUrl,
-        customResourceRole,
         restApiId,
       });
 
@@ -99,7 +98,6 @@ export class ParentStack extends Stack {
       userPoolId,
       userPoolClientId,
       userPoolClientDomain: `${userPoolDomainName}.auth.${Aws.REGION}.amazoncognito.com`,
-      customResourceRole,
     });
 
     new CfnOutput(this, "CloudFrontUrl", {
@@ -108,9 +106,46 @@ export class ParentStack extends Stack {
 
     createTopicsComponents({
       ...commonProps,
-      customResourceRole,
       vpc,
       kafkaAuthorizedSubnets,
     });
+
+    if (isDev) {
+      applyDenyCreateLogGroupPolicy(this);
+    }
   }
+}
+
+function applyDenyCreateLogGroupPolicy(stack: Stack) {
+  const denyCreateLogGroupPolicy = {
+    PolicyName: "DenyCreateLogGroup",
+    PolicyDocument: {
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Effect: "Deny",
+          Action: "logs:CreateLogGroup",
+          Resource: "*",
+        },
+      ],
+    },
+  };
+
+  const provider = stack.node.tryFindChild(
+    "Custom::S3AutoDeleteObjectsCustomResourceProvider"
+  );
+  const role = provider?.node.tryFindChild("Role") as iam.CfnRole;
+  if (role) {
+    role.addPropertyOverride("Policies", [denyCreateLogGroupPolicy]);
+  }
+
+  stack.node.findAll().forEach((c) => {
+    if (!c.node.id.startsWith("BucketNotificationsHandler")) return;
+
+    const role = c.node.tryFindChild("Role");
+    const cfnRole = role?.node.tryFindChild("Resource") as iam.CfnRole;
+    if (cfnRole) {
+      cfnRole.addPropertyOverride("Policies", [denyCreateLogGroupPolicy]);
+    }
+  });
 }

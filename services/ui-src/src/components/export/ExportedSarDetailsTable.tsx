@@ -59,7 +59,7 @@ const sx = {
     th: {
       fontWeight: "bold",
       textAlign: "left",
-      color: "palette.gray_medium",
+      color: "palette.gray",
     },
   },
 };

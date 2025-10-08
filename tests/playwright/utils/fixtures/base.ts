@@ -1,6 +1,4 @@
-import { Browser, mergeTests, test as base } from "@playwright/test";
-import { test as sarTest } from "./sar";
-import { test as wpTest } from "./wp";
+import { test as base, BrowserContext } from "@playwright/test";
 import StateHomePage from "../pageObjects/stateHome.page";
 import AdminHomePage from "../pageObjects/adminHome.page";
 import { adminAuthPath, stateUserAuthPath } from "../consts";
@@ -8,49 +6,56 @@ import BannerPage from "../pageObjects/banner.page";
 import ProfilePage from "../pageObjects/profile.page";
 
 type CustomFixtures = {
+  stateContext: BrowserContext;
+  adminContext: BrowserContext;
   stateHomePage: StateHomePage;
   adminHomePage: AdminHomePage;
-  bannerPage: BannerPage;
-  profilePage: ProfilePage;
+  adminBannerPage: BannerPage;
+  stateProfilePage: ProfilePage;
+  adminProfilePage: ProfilePage;
 };
 
-async function addPageObject(
-  PageObject: any,
-  browser: Browser,
-  use: any,
-  storageState: string
-) {
-  const context = await browser.newContext({ storageState });
-  const page = new PageObject(await context.newPage());
-  // Init page
-  await page.goto();
-  await use(page);
-  await context.close();
-}
-
-async function adminPage(PageObject: any, browser: Browser, use: any) {
-  await addPageObject(PageObject, browser, use, adminAuthPath);
-}
-
-async function statePage(PageObject: any, browser: Browser, use: any) {
-  await addPageObject(PageObject, browser, use, stateUserAuthPath);
-}
-
-export const baseTest = base.extend<CustomFixtures>({
-  stateHomePage: async ({ browser }, use) => {
-    await statePage(StateHomePage, browser, use);
+export const test = base.extend<CustomFixtures>({
+  stateContext: async ({ browser }, use) => {
+    const context = await browser.newContext({
+      storageState: stateUserAuthPath,
+    });
+    await use(context);
+    await context.close();
   },
-  adminHomePage: async ({ browser }, use) => {
-    await adminPage(AdminHomePage, browser, use);
+
+  adminContext: async ({ browser }, use) => {
+    const context = await browser.newContext({
+      storageState: adminAuthPath,
+    });
+    await use(context);
+    await context.close();
   },
-  bannerPage: async ({ browser }, use) => {
-    await adminPage(BannerPage, browser, use);
+
+  stateHomePage: async ({ stateContext }, use) => {
+    const page = new StateHomePage(await stateContext.newPage());
+    await use(page);
   },
-  profilePage: async ({ browser }, use) => {
-    await statePage(ProfilePage, browser, use);
+
+  adminHomePage: async ({ adminContext }, use) => {
+    const page = new AdminHomePage(await adminContext.newPage());
+    await use(page);
+  },
+
+  adminBannerPage: async ({ adminContext }, use) => {
+    const page = new BannerPage(await adminContext.newPage());
+    await use(page);
+  },
+
+  stateProfilePage: async ({ stateContext }, use) => {
+    const page = new ProfilePage(await stateContext.newPage());
+    await use(page);
+  },
+
+  adminProfilePage: async ({ adminContext }, use) => {
+    const page = new ProfilePage(await adminContext.newPage());
+    await use(page);
   },
 });
 
-export const test = mergeTests(baseTest, sarTest, wpTest);
-
-export { expect } from "@playwright/test";
+export * from "@playwright/test";

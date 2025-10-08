@@ -1,14 +1,16 @@
 // components
 import { Button, Image, Td, Tr, Spinner, Text } from "@chakra-ui/react";
 import { Table } from "components";
-// utils
-import { convertDateUtcToEt, prettifyChoices } from "utils";
+// types
 import {
   AnyObject,
   ReportMetadataShape,
   ReportType,
+  SxObject,
   TableContentShape,
 } from "types";
+// utils
+import { convertDateUtcToEt, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 
@@ -141,7 +143,7 @@ export interface DashboardTableProps {
   isStateLevelUser: boolean;
   releaseReport?: Function | undefined;
   releasing?: boolean | undefined;
-  sxOverride: AnyObject;
+  sxOverride: SxObject;
 }
 
 export const getStatus = (
@@ -202,7 +204,7 @@ const EditReportButton = ({
 interface EditReportProps {
   report: ReportMetadataShape;
   openCreateReportModal: Function;
-  sxOverride: AnyObject;
+  sxOverride: SxObject;
 }
 
 export const ActionButton = ({
@@ -312,7 +314,7 @@ interface AdminArchiveButtonProps {
   archive: Function;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: AnyObject;
+  sxOverride: SxObject;
 }
 
 interface AdminReleaseButtonProps {
@@ -321,7 +323,7 @@ interface AdminReleaseButtonProps {
   reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
-  sxOverride: AnyObject;
+  sxOverride: SxObject;
 }
 
 const sx = {
@@ -331,7 +333,7 @@ const sx = {
       padding: "0.5rem 0",
       borderBottom: "1px solid",
       borderColor: "palette.gray_light",
-      color: "palette.gray_medium",
+      color: "palette.gray",
       fontWeight: "bold",
     },
     tr: {
@@ -357,7 +359,7 @@ const sx = {
   copyOverText: {
     fontSize: "xs",
     fontWeight: "300",
-    color: "palette.gray_medium",
+    color: "palette.gray",
   },
   archivedText: {
     paddingLeft: 3,
