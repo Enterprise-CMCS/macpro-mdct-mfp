@@ -170,20 +170,11 @@
         "id": "tbs",
         "fields": [
           {
-            "id": "strategy_explaination",
+            "id": "strategy_explanation",
             "type": "textarea",
             "validation": "text",
             "props": {
-              "label": "Explain how you formulated your projected numbers, which should include descriptions of the data sources used, the time period for the analysis, and the methods used to project the number of transitions."
-            }
-          },
-          {
-            "id": "strategy_additionalDetails",
-            "type": "textarea",
-            "validation": "text",
-            "props": {
-              "label": "Provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory-specific initiative.",
-              "className": "tbs-bottom-margin"
+              "label": "Explain how you formulated your projected numbers, which should include descriptions of the data sources used, the time period for the analysis, and the methods used to project the number of transitions. For new/restarting programs or when adding a new target population(s), explain the baseline period used to establish projections. For existing programs, summarize the trend from previous reporting periods and how these inform your updated benchmarks."
             }
           }
         ]
