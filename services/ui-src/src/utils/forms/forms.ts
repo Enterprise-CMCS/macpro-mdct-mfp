@@ -6,6 +6,7 @@ import {
   TextField,
   TextAreaField,
   ChoiceField,
+  DynamicField,
 } from "components";
 import { DateField } from "components/fields/DateField";
 import { DropdownField } from "components/fields/DropdownField";
@@ -49,6 +50,7 @@ export const formFieldFactory = (
     checkbox: CheckboxField,
     date: DateField,
     dropdown: DropdownField,
+    dynamic: DynamicField,
     number: NumberField,
     radio: RadioField,
     text: TextField,
