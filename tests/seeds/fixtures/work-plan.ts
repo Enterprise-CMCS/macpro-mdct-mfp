@@ -54,8 +54,7 @@ export const fillWorkPlan = (
       },
     ],
     initiative: addInitiative(year, period),
-    strategy_additionalDetails: faker.lorem.sentence(),
-    strategy_explaination: faker.lorem.sentence(),
+    strategy_explanation: faker.lorem.sentence(),
     targetPopulations: updateTargetPopulations(year, period),
   },
 });
