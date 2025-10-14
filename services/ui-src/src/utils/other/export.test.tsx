@@ -7,7 +7,11 @@ import {
   renderDefaultFieldResponse,
   renderDataCell,
 } from "./export";
-import { mockFormField, mockNestedFormField } from "utils/testing/setupJest";
+import {
+  mockFormField,
+  mockNestedFormField,
+  mockDynamicField,
+} from "utils/testing/setupJest";
 import { render, screen } from "@testing-library/react";
 
 const emailInput: FormField = {
@@ -77,6 +81,15 @@ describe("utils/export", () => {
     test("Correctly renders a link or url field", () => {
       const result = renderResponseData(mockFormField, emailInput);
       expect(result.props.children.id).toEqual("email-field-id");
+    });
+
+    test("Correctly renders a dynamic field", () => {
+      const result = renderResponseData(mockDynamicField, [
+        { id: "123", name: "abc" },
+        { id: "456", name: "def" },
+      ]);
+      expect(result[0].key).toEqual("123");
+      expect(result[1].key).toEqual("456");
     });
   });
 

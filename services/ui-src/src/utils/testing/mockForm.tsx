@@ -23,12 +23,12 @@ export const mockNumberField = {
   },
 };
 
-export const mockPlanField = {
-  id: "plans",
+export const mockDynamicField = {
+  id: "dynamic-field",
   type: "dynamic",
   validation: "dynamic",
   props: {
-    label: "Plan name",
+    label: "Field name",
   },
 };
 
