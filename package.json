@@ -8,6 +8,7 @@
     "test": "tests"
   },
   "scripts": {
+    "build:json": "cd services/app-api && yarn run build:json",
     "cdk": "cdk",
     "db:seed": "cd services/app-api && yarn run db:seed",
     "test": "cd tests/cypress && yarn test && cd -",
