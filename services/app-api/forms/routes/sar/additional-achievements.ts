@@ -1,6 +1,6 @@
-import { ReportRoute } from "../../utils/types";
+import { FormRoute } from "../../utils/types";
 
-export const additionalAchievementsRoute: ReportRoute = {
+export const additionalAchievementsRoute: FormRoute = {
   name: "Additional Achievements",
   path: "/sar/additional-achievements",
   pageType: "standard",

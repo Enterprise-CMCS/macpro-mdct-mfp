@@ -1,6 +1,6 @@
-import { ReportRoute } from "../../utils/types";
+import { FormRoute } from "../../utils/types";
 
-export const organizationAndAdministrationRoute: ReportRoute = {
+export const organizationAndAdministrationRoute: FormRoute = {
   name: "Organization & Administration",
   path: "/sar/organization-and-administration",
   pageType: "standard",

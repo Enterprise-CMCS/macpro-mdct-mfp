@@ -1,6 +1,6 @@
-import { ParentRoute, ReportRoute } from "../../utils/types";
+import { FormRoute, ParentRoute } from "../../utils/types";
 
-const informedConsentFormRoute: ReportRoute = {
+const informedConsentFormRoute: FormRoute = {
   name: "Number of people who signed an MFP informed consent form in the reporting period",
   path: "/sar/recruitment-enrollment-transitions/number-of-people-signed-informed-consent-form",
   pageType: "standard",
@@ -45,7 +45,7 @@ const informedConsentFormRoute: ReportRoute = {
   },
 };
 
-const numberOfMfpTransitionsRoute: ReportRoute = {
+const numberOfMfpTransitionsRoute: FormRoute = {
   name: "Number of MFP transitions in the reporting period",
   path: "/sar/recruitment-enrollment-transitions/number-of-mfp-transitions",
   pageType: "standard",
@@ -113,7 +113,7 @@ const numberOfMfpTransitionsRoute: ReportRoute = {
   },
 };
 
-const qualifiedInstitutionsRoute: ReportRoute = {
+const qualifiedInstitutionsRoute: FormRoute = {
   name: "Number of MFP transitions from qualified institutions in the reporting period",
   path: "/sar/recruitment-enrollment-transitions/number-of-mfp-transitions-from-qualified-institutions",
   pageType: "standard",
@@ -238,7 +238,7 @@ const qualifiedInstitutionsRoute: ReportRoute = {
   },
 };
 
-const qualifiedResidencesRoute: ReportRoute = {
+const qualifiedResidencesRoute: FormRoute = {
   name: "Number of MFP transitions to qualified residences in the reporting period",
   path: "/sar/recruitment-enrollment-transitions/number-of-mfp-transitions-to-qualified-residences",
   pageType: "standard",
@@ -345,7 +345,7 @@ const qualifiedResidencesRoute: ReportRoute = {
   },
 };
 
-const currentMfpParticipantsRoute: ReportRoute = {
+const currentMfpParticipantsRoute: FormRoute = {
   name: "Total number of active MFP participants in the reporting period",
   path: "/sar/recruitment-enrollment-transitions/total-number-of-current-mfp-participants",
   pageType: "standard",
@@ -390,7 +390,7 @@ const currentMfpParticipantsRoute: ReportRoute = {
   },
 };
 
-const completingProgramRoute: ReportRoute = {
+const completingProgramRoute: FormRoute = {
   name: "Number of MFP participants completing the program in the reporting period",
   path: "/sar/recruitment-enrollment-transitions/number-of-mfp-participants-completing-program",
   pageType: "standard",
@@ -435,7 +435,7 @@ const completingProgramRoute: ReportRoute = {
   },
 };
 
-const reenrolledInMfpRoute: ReportRoute = {
+const reenrolledInMfpRoute: FormRoute = {
   name: "Number of people re-enrolled in MFP during the reporting period",
   path: "/sar/recruitment-enrollment-transitions/number-of-people-reenrolled-in-mfp",
   pageType: "standard",
@@ -480,7 +480,7 @@ const reenrolledInMfpRoute: ReportRoute = {
   },
 };
 
-const disenrolledFromProgramRoute: ReportRoute = {
+const disenrolledFromProgramRoute: FormRoute = {
   name: "Number of MFP participants disenrolled from the program during the reporting period",
   path: "/sar/recruitment-enrollment-transitions/number-of-people-disenrolled-from-program",
   pageType: "standard",
@@ -684,7 +684,7 @@ const disenrolledFromProgramRoute: ReportRoute = {
   },
 };
 
-const admittedToFacilityFromCommunityRoute: ReportRoute = {
+const admittedToFacilityFromCommunityRoute: FormRoute = {
   name: "Number of HCBS participants admitted to a facility from the community, by length of stay and age group",
   path: "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
   pageType: "standard",

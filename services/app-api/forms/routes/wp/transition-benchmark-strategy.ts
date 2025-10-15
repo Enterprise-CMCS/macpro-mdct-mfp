@@ -1,6 +1,6 @@
-import { ReportRoute } from "../../utils/types";
+import { FormRoute } from "../../utils/types";
 
-export const transitionBenchmarkStrategyRoute: ReportRoute = {
+export const transitionBenchmarkStrategyRoute: FormRoute = {
   name: "Transition Benchmark Strategy",
   path: "/wp/transition-benchmark-strategy",
   pageType: "standard",

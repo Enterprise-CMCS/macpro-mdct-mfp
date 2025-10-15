@@ -1,10 +1,10 @@
 import {
+  FormRoute,
   ParentRoute,
-  ReportRoute,
   WPStateOrTerritorySpecificInitiativesRoute,
 } from "../../utils/types";
 
-const instructionsRoute: ReportRoute = {
+const instructionsRoute: FormRoute = {
   name: "State or Territory-Specific Initiatives Instructions",
   path: "/wp/state-or-territory-specific-initiatives/instructions",
   pageType: "standard",
