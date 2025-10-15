@@ -4,7 +4,179 @@
   "basePath": "/abcd",
   "version": "ABCD_2025-07-10",
   "entities": {
-    "": { "required": true }
+    "services": { "required": true }
   },
-  "routes": []
+  "routes": [
+    {
+      "name": "Form A/B FMAP Percentages",
+      "path": "/abcd/fmap-percentages",
+      "pageType": "standard",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": "[Instructions]"
+        }
+      },
+      "form": { "id": "abcd-fmap-percentages", "fields": [
+        {
+            "id": "eFmap_qualified_hcbs",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "Enhanced FMAP: Qualified HCBS",
+              "hint": "Enter percentage.",
+              "mask": "percentage"
+            }
+          },
+          {
+            "id": "eFmap_demo_services",
+            "type": "text",
+            "validation": "text",
+            "props": {
+              "label": "Enhanced FMAP: Demonstration Services",
+              "hint": "Enter percentage.",
+              "mask": "percentage"
+            }
+          },
+          {
+            "id": "supplemental_services",
+            "type": "text",
+            "validation": "textOptional",
+            "props": {
+              "label": "MFP Grant Funded (up to 100%): Supplemental Services (optional)",
+              "hint": "Enter percentage.",
+              "mask": "percentage"
+            }
+          }
+      ] }
+    },
+    {
+      "name": "State Plan Services",
+      "path": "/abcd/state-plan-services",
+      "pageType": "prettyExcel",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": ""
+        }
+      },
+      "form": { "id": "state-plan-services", "fields": [{
+        "id": "service-clinic-services",
+        "type": "number",
+        "validation": "number",
+        "props": {
+          "label": "Clinic Services"
+        }
+      },
+      {
+        "id": "fmap-clinic-services",
+        "type": "checkbox",
+        "validation": "checkboxOptional",
+        "props": {
+          "label": "",
+          "choices": [
+            {
+              "id": "qualHcbs",
+              "label": "Qualified HCBS"
+            },
+            {
+              "id": "demoServices",
+              "label": "Demo Services"
+            },
+            {
+              "id": "suppServices",
+              "label": "Supplemental Services"
+            }
+          ]
+        }
+      },
+      {
+        "id": "service-targeted-case-management",
+        "type": "number",
+        "validation": "number",
+        "props": {
+          "label": "Targeted Case Management"
+        }
+      },
+      {
+        "id": "fmap-targeted-case-management",
+        "type": "checkbox",
+        "validation": "checkboxOptional",
+        "props": {
+          "label": "",
+          "choices": [
+            {
+              "id": "qualHcbs",
+              "label": "Qualified HCBS"
+            },
+            {
+              "id": "demoServices",
+              "label": "Demo Services"
+            },
+            {
+              "id": "suppServices",
+              "label": "Supplemental Services"
+            }
+          ]
+        }
+      },
+      {
+        "id": "service-pace",
+        "type": "number",
+        "validation": "number",
+        "props": {
+          "label": "PACE"
+        }
+      },
+      {
+        "id": "fmap-pace",
+        "type": "checkbox",
+        "validation": "checkboxOptional",
+        "props": {
+          "label": "",
+          "choices": [
+            {
+              "id": "qualHcbs",
+              "label": "Qualified HCBS"
+            },
+            {
+              "id": "demoServices",
+              "label": "Demo Services"
+            },
+            {
+              "id": "suppServices",
+              "label": "Supplemental Services"
+            }
+          ]
+        }
+      }
+      ]}
+    },
+    {
+      "name": "State Plan Services v2",
+      "path": "/abcd/state-plan-services-v2",
+      "pageType": "formTable",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": ""
+        }
+      },
+      "form": { "id": "state-plan-services-v2", "fields": []
+    }
+  },
+    {
+      "name": "State Plan Services v3 (dev change)",
+      "path": "/abcd/state-plan-services-v3",
+      "pageType": "formTable2",
+      "verbiage": {
+        "intro": {
+          "section": "",
+          "subsection": ""
+        }
+      },
+      "form": { "id": "state-plan-services-v3", "fields": []
+    }
+  }
+  ]
 }

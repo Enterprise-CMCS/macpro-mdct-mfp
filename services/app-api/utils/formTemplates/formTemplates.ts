@@ -16,7 +16,7 @@ import {
   ReportType,
 } from "../types";
 import { createHash } from "crypto";
-import { transformFormTemplate } from "../transformations/transformations";
+import { transformAbcdTemplate, transformFormTemplate } from "../transformations/transformations";
 import {
   getReportFormTemplate,
   putFormTemplateVersion,
@@ -51,6 +51,10 @@ export async function getOrCreateFormTemplate(
       reportYear,
       workPlanFieldData
     );
+
+    if(reportType === ReportType.ABCD) {
+      currentFormTemplate = transformAbcdTemplate(currentFormTemplate);
+    }
   }
 
   const stringifiedTemplate = JSON.stringify(currentFormTemplate);

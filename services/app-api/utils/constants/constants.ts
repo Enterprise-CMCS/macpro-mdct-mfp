@@ -137,3 +137,18 @@ export const DEFAULT_TARGET_POPULATION_NAMES = [
   "Individuals with mental health and substance use disorders (MH/SUD)",
   "HCBS infrastructure/system-level development",
 ];
+
+export const statePlanServiceNames = [
+  "Clinic Services",
+  "Targeted Case Management",
+  "PACE",
+  "Rehabilitative services",
+  "Home health services",
+  "Hospice",
+  "Personal Care Services",
+  "Physical Therapy Services",
+  "Occupational Therapy Services",
+  "Services for Speech",
+  "Self-Directed"
+  // etc.
+];
