@@ -27,6 +27,7 @@ export const TextField = ({
   validateOnRender,
   styleAsOptional,
   heading,
+  maxLength,
   ...props
 }: Props) => {
   const defaultValue = "";
@@ -139,6 +140,7 @@ export const TextField = ({
         onBlur={(e) => onBlurHandler(e)}
         errorMessage={errorMessage}
         value={displayValue}
+        maxLength={maxLength}
         {...additionalProps}
       />
     </Box>
@@ -156,6 +158,7 @@ interface Props {
   styleAsOptional?: boolean;
   heading?: string;
   clear?: boolean;
+  maxLength?: number;
   [key: string]: any;
 }
 

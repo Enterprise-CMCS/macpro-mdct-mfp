@@ -29,6 +29,7 @@ export const NumberField = ({
   validateOnRender,
   nested,
   styleAsOptional,
+  maxLength,
   ...props
 }: Props) => {
   const defaultValue = "";
@@ -168,6 +169,7 @@ export const NumberField = ({
           onBlur={onBlurHandler}
           value={displayValue}
           errorMessage={errorMessage}
+          maxLength={maxLength}
           {...additionalProps}
         />
         <SymbolOverlay
@@ -190,6 +192,7 @@ interface Props {
   autosave?: boolean;
   validateOnRender?: boolean;
   clear?: boolean;
+  maxLength?: number;
   [key: string]: any;
 }
 
