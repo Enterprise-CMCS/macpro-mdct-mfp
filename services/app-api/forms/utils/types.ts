@@ -2,7 +2,13 @@ export interface ReportJsonFile {
   basePath: string;
   entities: Record<string, { required: boolean }>;
   name: string;
-  routes: (ReportRoute | ParentRoute)[];
+  routes: (
+    | FormRoute
+    | PageRoute
+    | ParentRoute
+    | SARStateOrTerritorySpecificInitiativesRoute
+    | WPStateOrTerritorySpecificInitiativesRoute
+  )[];
   type: string;
   version: string;
 }
@@ -32,16 +38,21 @@ export interface BaseRoute {
 }
 
 export interface ParentRoute extends BaseRoute {
-  children: ReportRoute[];
+  children: (FormRoute | WPStateOrTerritorySpecificInitiativesRoute)[];
 }
 
-export interface ReportRoute extends BaseRoute {
-  form?: ReportForm;
+export interface PageRoute extends BaseRoute {
   pageType: string;
 }
 
-export interface ModalRoute extends ReportRoute {
+export interface FormRoute extends BaseRoute {
+  form: ReportForm;
+  pageType: string;
+}
+
+export interface ModalRoute extends BaseRoute {
   modalForm: ReportForm;
+  pageType: string;
 }
 
 // WP routes
@@ -59,11 +70,11 @@ export interface WPTransitionBenchmarksRoute extends ModalRoute {
 }
 
 // SAR routes
-export interface SARStateOrTerritorySpecificInitiativesRoute
-  extends ReportRoute {
+export interface SARStateOrTerritorySpecificInitiativesRoute extends BaseRoute {
   entityInfo: string[];
   entityType: string;
   initiatives: string[];
+  pageType: string;
   template: {
     dashboard: Dashboard;
     entitySteps: SAREntityStep[];
@@ -98,9 +109,7 @@ export interface WPEntityStep extends EntityStep {
 }
 
 export interface SAREntityStep extends EntityStep {
-  path?: string;
   objectiveCardTemplate?: {
     modalForm: ReportForm;
   };
-  stepName?: string;
 }
