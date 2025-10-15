@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
 import userEvent from "@testing-library/user-event";
 import { FormProvider, useForm } from "react-hook-form";
 // components
@@ -81,50 +80,59 @@ describe("<DynamicField />", () => {
     jest.clearAllMocks();
   });
   describe("Test DynamicField component", () => {
-    beforeEach(async () => {
-      await act(async () => {
-        await render(<DynamicFieldComponent />);
-      });
+    beforeEach(() => {
+      render(<DynamicFieldComponent />);
     });
 
     test("DynamicField is visible", () => {
-      const inputBoxLabel = screen.getByText(mockFieldLabel);
+      const inputBoxLabel = screen.getByRole("textbox", {
+        name: mockFieldLabel,
+      });
       expect(inputBoxLabel).toBeVisible();
     });
 
     test("DynamicField append button is visible", () => {
-      const appendButton = screen.getByText("Add a row");
+      const appendButton = screen.getByRole("button", { name: "Add a row" });
       expect(appendButton).toBeVisible();
     });
 
     test("DynamicField append button adds a field", async () => {
       // click append
-      const appendButton = screen.getByText("Add a row");
+      const appendButton = screen.getByRole("button", { name: "Add a row" });
       await userEvent.click(appendButton);
 
       // verify there are now two text boxes
-      const inputBoxLabel = screen.getAllByText(mockFieldLabel);
+      const inputBoxLabel = screen.getAllByRole("textbox", {
+        name: mockFieldLabel,
+      });
       expect(inputBoxLabel).toHaveLength(2);
       expect(appendButton).toBeVisible();
     });
 
     test("DynamicField remove button removes a field", async () => {
       // click append
-      const appendButton = screen.getByText("Add a row");
+      const appendButton = screen.getByRole("button", { name: "Add a row" });
       await userEvent.click(appendButton);
 
       // verify there are now two text boxes
-      const inputBoxLabel = screen.getAllByText(mockFieldLabel);
+      const inputBoxLabel = screen.getAllByRole("textbox", {
+        name: mockFieldLabel,
+      });
       expect(inputBoxLabel).toHaveLength(2);
       expect(appendButton).toBeVisible();
 
       // click remove
-      const removeButton = screen.queryAllByTestId("removeButton")[1];
+      const removeButtons = screen.getAllByRole("button", { name: "Delete" });
+      const removeButton = removeButtons[1];
+      expect(removeButtons).toHaveLength(2);
+
       await userEvent.click(removeButton);
       expect(mockUpdateReport).toHaveBeenCalledTimes(1);
 
       // verify that the field is removed
-      const inputBoxLabelAfterRemove = screen.getAllByText(mockFieldLabel);
+      const inputBoxLabelAfterRemove = screen.getAllByRole("textbox", {
+        name: mockFieldLabel,
+      });
       expect(removeButton).not.toBeVisible();
       expect(appendButton).toBeVisible();
       expect(inputBoxLabelAfterRemove).toHaveLength(1);
@@ -132,7 +140,9 @@ describe("<DynamicField />", () => {
 
     test("Removing all dynamic fields still leaves 1 open", async () => {
       // verify there is one input
-      const inputBoxLabel = screen.getAllByText(mockFieldLabel);
+      const inputBoxLabel = screen.getAllByRole("textbox", {
+        name: mockFieldLabel,
+      });
       expect(inputBoxLabel).toHaveLength(1);
 
       // click remove
@@ -141,29 +151,25 @@ describe("<DynamicField />", () => {
       expect(mockUpdateReport).toHaveBeenCalledTimes(1);
 
       // verify that there is still one field available
-      const inputBoxLabelAfterRemove = screen.getAllByText(mockFieldLabel);
+      const inputBoxLabelAfterRemove = screen.getAllByRole("textbox", {
+        name: mockFieldLabel,
+      });
       expect(inputBoxLabelAfterRemove).toHaveLength(1);
       expect(removeButton).not.toBeVisible();
     });
-  });
 
-  describe("Test typing into DynamicField component", () => {
     test("DynamicField accepts input", async () => {
-      const result = render(<DynamicFieldComponent />);
-      const firstDynamicField: HTMLInputElement =
-        result.container.querySelector("[name='mock-dynamic-field[0]']")!;
-      expect(firstDynamicField).toBeVisible();
+      const firstDynamicField = screen.getByRole("textbox", {
+        name: mockFieldLabel,
+      });
       await userEvent.type(firstDynamicField, "123");
-      expect(firstDynamicField.value).toEqual("123");
+      expect(firstDynamicField).toHaveValue("123");
     });
-  });
 
-  describe("Test DynamicField Autosave Functionality", () => {
-    test("Autosaves when state user", async () => {
-      const result = render(<DynamicFieldComponent />);
-      const firstDynamicField: HTMLInputElement =
-        result.container.querySelector("[name='mock-dynamic-field[0]']")!;
-      expect(firstDynamicField).toBeVisible();
+    test("Autosaves for state user", async () => {
+      const firstDynamicField = screen.getByRole("textbox", {
+        name: mockFieldLabel,
+      });
       await userEvent.type(firstDynamicField, "test user input");
       await userEvent.tab();
       expect(mockUpdateReport).toHaveBeenCalledTimes(1);
@@ -184,11 +190,11 @@ describe("<DynamicField />", () => {
           }),
         })
       );
-      expect(firstDynamicField.value).toBe("test user input");
+      expect(firstDynamicField).toHaveValue("test user input");
     });
   });
 
-  describe("Test DynamicField hydration Functionality", () => {
+  describe("Test DynamicField hydration functionality", () => {
     const testHydrationValue = [
       {
         id: "123456",
@@ -200,16 +206,14 @@ describe("<DynamicField />", () => {
       },
     ];
 
-    test("Autosaves when state user", async () => {
-      const result = render(
-        <DynamicFieldComponent hydrationValue={testHydrationValue} />
-      );
-      const firstDynamicField: HTMLInputElement =
-        result.container.querySelector("[name='mock-dynamic-field[0]']")!;
-      const secondDynamicField: HTMLInputElement =
-        result.container.querySelector("[name='mock-dynamic-field[1]']")!;
-      expect(firstDynamicField).toBeVisible();
-      expect(secondDynamicField).toBeVisible();
+    test("hydrates correctly", async () => {
+      render(<DynamicFieldComponent hydrationValue={testHydrationValue} />);
+      const dynamicFields = screen.getAllByRole("textbox", {
+        name: mockFieldLabel,
+      });
+      expect(dynamicFields).toHaveLength(2);
+      expect(dynamicFields[0]).toHaveValue("hydrated value 1");
+      expect(dynamicFields[1]).toHaveValue("hydrated value 2");
     });
   });
 

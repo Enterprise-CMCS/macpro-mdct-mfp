@@ -18,11 +18,15 @@ import { autosaveFieldData, getAutosaveFields, useStore } from "utils";
 // assets
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
-export const DynamicField = ({ name, label, ...props }: Props) => {
-  // state management
+export const DynamicField = ({
+  label,
+  name,
+  disabled,
+  hint,
+  hydrate,
+}: Props) => {
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
   const { report, selectedEntity } = useStore();
-
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
   const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>([]);
@@ -31,6 +35,8 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
   // get form context and register field
   const form = useFormContext();
   form.register(name);
+  const fieldErrorState: AnyObject | undefined =
+    form?.formState?.errors?.[name];
 
   // make formfield dynamic array with config options
   const { append, remove } = useFieldArray({
@@ -48,7 +54,27 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
     }
   }, [report]);
 
-  // update display value and form field data on change
+  // on displayValue change, set field array value to match
+  useEffect(() => {
+    form.setValue(name, displayValues, { shouldValidate: true });
+  }, [displayValues]);
+
+  // modify fieldData for update and delete operations
+  const modifyFieldData = (newValues: DynamicFieldShape[]) => {
+    const fieldData = report?.fieldData;
+    if (
+      selectedEntity &&
+      fieldData?.[selectedEntity.type][selectedEntityIndex]
+    ) {
+      fieldData[selectedEntity.type][selectedEntityIndex] = {
+        ...fieldData[selectedEntity.type][selectedEntityIndex],
+        [name]: newValues,
+      };
+    }
+    return fieldData;
+  };
+
+  // update display value on change
   const onChangeHandler = async (event: InputChangeEvent) => {
     const { id, value } = event.target;
     const currentEntity = displayValues.find((entity) => entity.id === id);
@@ -69,19 +95,10 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
       value: displayValues,
       defaultValue: undefined,
       overrideCheck: true,
-      hydrationValue,
+      hydrationValue: hydrate,
     });
 
-    const fieldData = report?.fieldData;
-    if (
-      selectedEntity &&
-      fieldData?.[selectedEntity.type][selectedEntityIndex]
-    ) {
-      fieldData[selectedEntity.type][selectedEntityIndex] = {
-        ...fieldData[selectedEntity.type][selectedEntityIndex],
-        [name]: displayValues,
-      };
-    }
+    const fieldData = modifyFieldData(displayValues);
 
     const reportArgs = {
       id: report?.id,
@@ -90,7 +107,6 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
       fieldData,
     };
     const user = { userName: full_name, state };
-    // no need to check "autosave" prop; dynamic fields should always autosave
     await autosaveFieldData({
       form,
       fields,
@@ -125,16 +141,7 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
         (entity: AnyObject) => entity.id !== selectedRecord.id
       );
 
-      const fieldData = report?.fieldData;
-      if (
-        selectedEntity &&
-        fieldData?.[selectedEntity.type][selectedEntityIndex]
-      ) {
-        fieldData[selectedEntity.type][selectedEntityIndex] = {
-          ...fieldData[selectedEntity.type][selectedEntityIndex],
-          [name]: filteredEntities,
-        };
-      }
+      const fieldData = modifyFieldData(filteredEntities);
 
       const dataToWrite = {
         metadata: {
@@ -166,8 +173,8 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
   };
 
   // set initial value to form field value or hydration value
-  const hydrationValue = props?.hydrate;
   useEffect(() => {
+    const hydrationValue = hydrate;
     if (hydrationValue?.length) {
       // guard against autosave refresh error where user can change input values while save operation is still in progress (https://bit.ly/3kiE2eE)
       const newInputAdded = displayValues?.length > hydrationValue?.length;
@@ -183,14 +190,6 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
     }
   }, []); // only runs on hydrationValue fetch/update
 
-  // on displayValue change, set field array value to match
-  useEffect(() => {
-    form.setValue(name, displayValues, { shouldValidate: true });
-  }, [displayValues]);
-
-  const fieldErrorState: AnyObject | undefined =
-    form?.formState?.errors?.[name];
-
   return (
     <Box>
       {displayValues.map((field: DynamicFieldShape, index: number) => {
@@ -199,32 +198,32 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
             <CmsdsTextField
               id={field.id}
               name={`${name}[${index}]`}
+              hint={hint}
               label={label}
               errorMessage={fieldErrorState?.[index]?.name?.message}
               onChange={onChangeHandler}
               onBlur={onBlurHandler}
               value={field.name}
-              {...props}
             />
-            <Box sx={sx.removeBox}>
-              <button
-                type="button"
-                onClick={() => deleteRecord(field)}
-                data-testid="removeButton"
-              >
-                {!props?.disabled && (
+            {!disabled && (
+              <Box sx={sx.removeBox}>
+                <button
+                  type="button"
+                  onClick={() => deleteRecord(field)}
+                  data-testid="removeButton"
+                >
                   <Image
                     sx={sx.removeImage}
                     src={cancelIcon}
                     alt={`Delete ${field.name}`}
                   />
-                )}
-              </button>
-            </Box>
+                </button>
+              </Box>
+            )}
           </Flex>
         );
       })}
-      {!props.disabled && (
+      {!disabled && (
         <Button
           variant="outline"
           sx={sx.appendButton}
@@ -240,8 +239,9 @@ export const DynamicField = ({ name, label, ...props }: Props) => {
 interface Props {
   name: string;
   label: string;
-  isRequired?: boolean;
-  [key: string]: any;
+  disabled?: boolean;
+  hint?: string;
+  hydrate?: DynamicFieldShape[];
 }
 
 const sx = {
@@ -271,12 +271,6 @@ const sx = {
     },
     "&:not(:first-of-type)": {
       paddingTop: "2rem",
-    },
-  },
-  textField: {
-    width: "100%",
-    label: {
-      marginTop: "0",
     },
   },
 };
