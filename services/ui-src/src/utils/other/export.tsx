@@ -1,6 +1,13 @@
 import { Box, Link, Text } from "@chakra-ui/react";
 // types
-import { AnyObject, Choice, EntityShape, FieldChoice, FormField } from "types";
+import {
+  AnyObject,
+  Choice,
+  DynamicFieldShape,
+  EntityShape,
+  FieldChoice,
+  FormField,
+} from "types";
 // utils
 import { maskResponseData } from "utils";
 // verbiage
@@ -95,9 +102,9 @@ export const renderDrawerDataCell = (
   }) ?? <Text sx={sx.noResponse}>{verbiage.missingEntry.noResponse}</Text>;
 
 export const renderDynamicDataCell = (fieldResponseData: AnyObject) =>
-  fieldResponseData?.map((entity: EntityShape) => (
-    <Text key={entity.id} sx={sx.dynamicItem}>
-      {entity.name}
+  fieldResponseData?.map((field: DynamicFieldShape) => (
+    <Text key={field.id} sx={sx.dynamicItem}>
+      {field.name}
     </Text>
   )) ?? <Text sx={sx.noResponse}>{verbiage.missingEntry.noResponse}</Text>;
 
@@ -124,6 +131,10 @@ export const renderResponseData = (
   // check for and handle link fields (email, url)
   const { isLink, isEmail } = checkLinkTypes(formField);
   if (isLink) return renderLinkFieldResponse(fieldResponseData, isEmail);
+
+  if (formField.type === "dynamic") {
+    return renderDynamicDataCell(fieldResponseData);
+  }
   // handle all other field types
   return renderDefaultFieldResponse(formField, fieldResponseData);
 };
