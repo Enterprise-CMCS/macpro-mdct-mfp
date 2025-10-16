@@ -61,6 +61,7 @@ export { DateField } from "./fields/DateField";
 export { DropdownField } from "./fields/DropdownField";
 export { DynamicField } from "./fields/DynamicField";
 export { NumberField } from "./fields/NumberField";
+export { CharacterCounter } from "./fields/CharacterCounter";
 
 // forms
 export { AdminBannerForm } from "./forms/AdminBannerForm";
