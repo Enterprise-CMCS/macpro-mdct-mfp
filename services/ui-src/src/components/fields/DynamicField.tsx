@@ -207,11 +207,7 @@ export const DynamicField = ({
             />
             {!disabled && (
               <Box sx={sx.removeBox}>
-                <button
-                  type="button"
-                  onClick={() => deleteRecord(field)}
-                  data-testid="removeButton"
-                >
+                <button type="button" onClick={() => deleteRecord(field)}>
                   <Image
                     sx={sx.removeImage}
                     src={cancelIcon}

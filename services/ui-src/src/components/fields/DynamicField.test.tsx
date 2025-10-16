@@ -146,7 +146,7 @@ describe("<DynamicField />", () => {
       expect(inputBoxLabel).toHaveLength(1);
 
       // click remove
-      const removeButton = screen.queryAllByTestId("removeButton")[0];
+      const removeButton = screen.getAllByRole("button", { name: "Delete" })[0];
       await userEvent.click(removeButton);
       expect(mockUpdateReport).toHaveBeenCalledTimes(1);
 
