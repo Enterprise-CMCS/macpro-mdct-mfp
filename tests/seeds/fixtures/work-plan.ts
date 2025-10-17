@@ -99,7 +99,19 @@ const addInitiative = (year: number, period: number): ReportFieldData[] => [
   {
     id: crypto.randomUUID(),
     defineInitiative_describeInitiative: faker.lorem.sentence(),
+    defineInitiative_keyActivities: [
+      {
+        id: crypto.randomUUID(),
+        name: faker.word.noun(),
+      },
+    ],
     defineInitiative_projectedStartDate: dateFormat.format(faker.date.past()),
+    defineInitiative_startDateExpectedOrActual: [
+      {
+        key: "defineInitiative_startDateExpectedOrActual_gEZeX7wqIBgNECJWohPPGJ", // pragma: allowlist secret
+        value: "Actual",
+      },
+    ],
     defineInitiative_projectedEndDate_value: "",
     defineInitiative_projectedEndDate: [
       {
@@ -142,7 +154,19 @@ const addInitiative = (year: number, period: number): ReportFieldData[] => [
   {
     id: crypto.randomUUID(),
     defineInitiative_describeInitiative: faker.lorem.sentence(),
+    defineInitiative_keyActivities: [
+      {
+        id: crypto.randomUUID(),
+        name: faker.word.noun(),
+      },
+    ],
     defineInitiative_projectedStartDate: dateFormat.format(faker.date.past()),
+    defineInitiative_startDateExpectedOrActual: [
+      {
+        key: "defineInitiative_startDateExpectedOrActual_gEZeX7wqIBgNECJWohPPGJ", // pragma: allowlist secret
+        value: "Actual",
+      },
+    ],
     defineInitiative_projectedEndDate: [
       {
         key: "defineInitiative_projectedEndDate-WNsSaAHeDvRD2Pjkz6DcOE", // pragma: allowlist secret
@@ -204,8 +228,20 @@ const addInitiative = (year: number, period: number): ReportFieldData[] => [
   {
     id: crypto.randomUUID(),
     defineInitiative_describeInitiative: faker.lorem.sentence(),
+    defineInitiative_keyActivities: [
+      {
+        id: crypto.randomUUID(),
+        name: faker.word.noun(),
+      },
+    ],
     defineInitiative_projectedEndDate_value: "",
     defineInitiative_projectedStartDate: dateFormat.format(faker.date.future()),
+    defineInitiative_startDateExpectedOrActual: [
+      {
+        key: "defineInitiative_startDateExpectedOrActual_gEZeX7wqIBgNECJWohPPGJ", // pragma: allowlist secret
+        value: "Actual",
+      },
+    ],
     defineInitiative_targetPopulations: initiativeTargetPopulations,
     defineInitiative_projectedEndDate: [
       {
