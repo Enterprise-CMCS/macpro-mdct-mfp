@@ -229,7 +229,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
         },
         {
           name: "Initiative progress",
-          pageType:  PageTypes.ENTITY_OVERLAY,
+          pageType: PageTypes.ENTITY_OVERLAY,
           entityType: EntityTypes.INITIATIVE,
           stepType: StepTypes.INITIATIVE_PROGRESS,
           stepInfo: ["name", "hint"],
@@ -297,7 +297,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
         },
         {
           name: "Expenditures",
-          pageType:  PageTypes.ENTITY_OVERLAY,
+          pageType: PageTypes.ENTITY_OVERLAY,
           entityType: EntityTypes.INITIATIVE,
           stepType: StepTypes.EXPENDITURES,
           stepInfo: ["name", "hint"],

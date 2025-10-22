@@ -471,7 +471,7 @@ const instructionsRoute: FormRoute = {
 const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
   name: "State or Territory-Specific Initiatives",
   path: "/wp/state-or-territory-specific-initiatives/initiatives",
-  pageType:  PageTypes.MODAL_OVERLAY,
+  pageType: PageTypes.MODAL_OVERLAY,
   entityType: EntityTypes.INITIATIVE,
   entityInfo: ["initiative_name", "initiative_wpTopic"],
   verbiage: {
@@ -641,7 +641,7 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     {
       name: "State or Territory-Specific Initiatives: I. Define initiative",
       path: "/wp/state-or-territory-specific-initiatives/define-initiative",
-      pageType:  PageTypes.ENTITY_OVERLAY,
+      pageType: PageTypes.ENTITY_OVERLAY,
       entityType: EntityTypes.INITIATIVE,
       stepType: StepTypes.DEFINE_INITIATIVE,
       stepInfo: ["stepName", "hint"],
@@ -1034,7 +1034,7 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     {
       name: "State or Territory-Specific Initiatives: IV. Initiative close-out information",
       path: "/wp/state-or-territory-specific-initiatives/close-out-information",
-      pageType:  PageTypes.ENTITY_OVERLAY,
+      pageType: PageTypes.ENTITY_OVERLAY,
       entityType: EntityTypes.INITIATIVE,
       stepType: StepTypes.CLOSE_OUT_INFORMATION,
       stepInfo: ["stepName", "hint"],
