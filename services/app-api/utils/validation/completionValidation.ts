@@ -21,7 +21,7 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
           validationSchema[key] = correspondingSchema;
         }
       }
-      // else if standard validation type with options
+      // else if custom validation type with options
       else if (fieldValidation.options) {
         const correspondingSchema = schemaMap[fieldValidation.type];
         if (correspondingSchema) {
