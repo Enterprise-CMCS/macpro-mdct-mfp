@@ -1,11 +1,11 @@
-import { SARStateOrTerritorySpecificInitiativesRoute } from "../../utils/types";
+import { EntityTypes, PageTypes, SARStateOrTerritorySpecificInitiativesRoute, StepTypes } from "../../../utils/types";
 
 export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecificInitiativesRoute =
   {
     name: "State or Territory-Specific Initiatives",
     path: "/sar/state-or-territory-specific-initiatives",
-    pageType: "dynamicModalOverlay",
-    entityType: "initiative",
+    pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
+    entityType: EntityTypes.INITIATIVE,
     entityInfo: ["initiative_name", "initiative_wpTopic"],
     verbiage: {
       intro: {
@@ -89,9 +89,9 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
       entitySteps: [
         {
           name: "Objectives progress",
-          pageType: "overlayModal",
-          entityType: "initiative",
-          stepType: "objectiveProgress",
+          pageType: PageTypes.OVERLAY_MODAL,
+          entityType: EntityTypes.INITIATIVE,
+          stepType: StepTypes.OBJECTIVE_PROGRESS,
           stepInfo: ["name", "hint"],
           hint: "Report progress for each objective",
           isRequired: true,
@@ -229,9 +229,9 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
         },
         {
           name: "Initiative progress",
-          pageType: "entityOverlay",
-          entityType: "initiative",
-          stepType: "initiativeProgress",
+          pageType:  PageTypes.ENTITY_OVERLAY,
+          entityType: EntityTypes.INITIATIVE,
+          stepType: StepTypes.INITIATIVE_PROGRESS,
           stepInfo: ["name", "hint"],
           hint: "Report overall progress for the initiative",
           isRequired: true,
@@ -297,9 +297,9 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
         },
         {
           name: "Expenditures",
-          pageType: "entityOverlay",
-          entityType: "initiative",
-          stepType: "expenditures",
+          pageType:  PageTypes.ENTITY_OVERLAY,
+          entityType: EntityTypes.INITIATIVE,
+          stepType: StepTypes.EXPENDITURES,
           stepInfo: ["name", "hint"],
           hint: "Report actual quarterly expenditures by funding source",
           isRequired: true,

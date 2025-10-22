@@ -1,9 +1,9 @@
-import { FormRoute } from "../../utils/types";
+import { FormRoute, PageTypes } from "../../../utils/types";
 
 export const additionalAchievementsRoute: FormRoute = {
   name: "Additional Achievements",
   path: "/sar/additional-achievements",
-  pageType: "standard",
+  pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {
       section: "",

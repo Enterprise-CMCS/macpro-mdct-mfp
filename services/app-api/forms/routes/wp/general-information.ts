@@ -1,9 +1,9 @@
-import { FormRoute } from "../../utils/types";
+import { FormRoute, PageTypes } from "../../../utils/types";
 
 export const generalInformationRoute: FormRoute = {
   name: "General Information",
   path: "/wp/general-information",
-  pageType: "standard",
+  pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {
       section: "",

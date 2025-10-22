@@ -1,5 +1,5 @@
 // types
-import { ReportJsonFile } from "../../utils/types";
+import { ReportJsonFile } from "../../../utils/types";
 // routes
 import { additionalAchievementsRoute } from "./additional-achievements";
 import { generalInformationRoute } from "./general-information";

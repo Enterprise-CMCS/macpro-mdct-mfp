@@ -1,5 +1,5 @@
 // types
-import { ReportJsonFile } from "../../utils/types";
+import { ReportJsonFile } from "../../../utils/types";
 
 export const ReportJson: ReportJsonFile = {
   type: "ABCD",

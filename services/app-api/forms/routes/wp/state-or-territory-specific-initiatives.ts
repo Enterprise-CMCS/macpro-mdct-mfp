@@ -1,13 +1,16 @@
 import {
+  EntityTypes,
   FormRoute,
+  PageTypes,
   ParentRoute,
+  StepTypes,
   WPStateOrTerritorySpecificInitiativesRoute,
-} from "../../utils/types";
+} from "../../../utils/types";
 
 const instructionsRoute: FormRoute = {
   name: "State or Territory-Specific Initiatives Instructions",
   path: "/wp/state-or-territory-specific-initiatives/instructions",
-  pageType: "standard",
+  pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {
       section: "",
@@ -468,8 +471,8 @@ const instructionsRoute: FormRoute = {
 const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
   name: "State or Territory-Specific Initiatives",
   path: "/wp/state-or-territory-specific-initiatives/initiatives",
-  pageType: "modalOverlay",
-  entityType: "initiative",
+  pageType:  PageTypes.MODAL_OVERLAY,
+  entityType: EntityTypes.INITIATIVE,
   entityInfo: ["initiative_name", "initiative_wpTopic"],
   verbiage: {
     intro: {
@@ -638,9 +641,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     {
       name: "State or Territory-Specific Initiatives: I. Define initiative",
       path: "/wp/state-or-territory-specific-initiatives/define-initiative",
-      pageType: "entityOverlay",
-      entityType: "initiative",
-      stepType: "defineInitiative",
+      pageType:  PageTypes.ENTITY_OVERLAY,
+      entityType: EntityTypes.INITIATIVE,
+      stepType: StepTypes.DEFINE_INITIATIVE,
       stepInfo: ["stepName", "hint"],
       stepName: "I. Define initiative",
       hint: "Provide initiative description, including target populations and timeframe",
@@ -754,9 +757,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     {
       name: "State or Territory-Specific Initiatives: II. Evaluation Plan",
       path: "/wp/state-or-territory-specific-initiatives/evaluation-plan",
-      pageType: "overlayModal",
-      entityType: "initiative",
-      stepType: "evaluationPlan",
+      pageType: PageTypes.OVERLAY_MODAL,
+      entityType: EntityTypes.INITIATIVE,
+      stepType: StepTypes.EVALUATION_PLAN,
       stepInfo: ["stepName", "hint"],
       stepName: "II. Evaluation plan",
       hint: "Add evaluation plan, including measurable objectives",
@@ -916,9 +919,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     {
       name: "State or Territory-Specific Initiatives: III. Funding sources",
       path: "/wp/state-or-territory-specific-initiatives/funding-sources",
-      pageType: "overlayModal",
-      entityType: "initiative",
-      stepType: "fundingSources",
+      pageType: PageTypes.OVERLAY_MODAL,
+      entityType: EntityTypes.INITIATIVE,
+      stepType: StepTypes.FUNDING_SOURCES,
       stepInfo: ["stepName", "hint"],
       stepName: "III. Funding sources",
       hint: "Add funding sources with projected quarterly expenditures",
@@ -1031,9 +1034,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     {
       name: "State or Territory-Specific Initiatives: IV. Initiative close-out information",
       path: "/wp/state-or-territory-specific-initiatives/close-out-information",
-      pageType: "entityOverlay",
-      entityType: "initiative",
-      stepType: "closeOutInformation",
+      pageType:  PageTypes.ENTITY_OVERLAY,
+      entityType: EntityTypes.INITIATIVE,
+      stepType: StepTypes.CLOSE_OUT_INFORMATION,
       stepInfo: ["stepName", "hint"],
       stepName: "IV. Initiative close-out information (if applicable)",
       hint: "To be completed as appropriate during MFP Work Plan revisions",

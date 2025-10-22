@@ -1,9 +1,9 @@
-import { FormRoute } from "../../utils/types";
+import { FormRoute, PageTypes } from "../../../utils/types";
 
 export const transitionBenchmarkStrategyRoute: FormRoute = {
   name: "Transition Benchmark Strategy",
   path: "/wp/transition-benchmark-strategy",
-  pageType: "standard",
+  pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {
       section: "",

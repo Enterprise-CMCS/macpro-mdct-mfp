@@ -1,9 +1,9 @@
-import { FormRoute } from "../../utils/types";
+import { FormRoute, PageTypes } from "../../../utils/types";
 
 export const organizationAndAdministrationRoute: FormRoute = {
   name: "Organization & Administration",
   path: "/sar/organization-and-administration",
-  pageType: "standard",
+  pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {
       section: "",

@@ -1,10 +1,10 @@
-import { WPTransitionBenchmarksRoute } from "../../utils/types";
+import { EntityTypes, PageTypes, WPTransitionBenchmarksRoute } from "../../../utils/types";
 
 export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
   name: "Transition Benchmarks",
   path: "/wp/transition-benchmarks",
-  pageType: "modalDrawer",
-  entityType: "targetPopulations",
+  pageType: PageTypes.MODAL_DRAWER,
+  entityType: EntityTypes.TARGET_POPULATIONS,
   entityInfo: ["transitionBenchmarks_targetPopulationName"],
   verbiage: {
     accordion: {

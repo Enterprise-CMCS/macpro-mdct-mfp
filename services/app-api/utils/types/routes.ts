@@ -1,3 +1,5 @@
+import { PageTypes } from "./formFields";
+
 export interface ReportJsonFile {
   basePath: string;
   entities: Record<string, { required: boolean }>;
@@ -42,17 +44,17 @@ export interface ParentRoute extends BaseRoute {
 }
 
 export interface PageRoute extends BaseRoute {
-  pageType: string;
+  pageType: PageTypes;
 }
 
 export interface FormRoute extends BaseRoute {
   form: ReportForm;
-  pageType: string;
+  pageType: PageTypes;
 }
 
 export interface ModalRoute extends BaseRoute {
   modalForm: ReportForm;
-  pageType: string;
+  pageType: PageTypes;
 }
 
 // WP routes
@@ -60,19 +62,19 @@ export interface WPStateOrTerritorySpecificInitiativesRoute extends ModalRoute {
   dashboard: Dashboard;
   entityInfo: string[];
   entitySteps: WPEntityStep[];
-  entityType: string;
+  entityType: EntityTypes;
 }
 
 export interface WPTransitionBenchmarksRoute extends ModalRoute {
   drawerForm: ReportForm;
   entityInfo: string[];
-  entityType: string;
+  entityType: EntityTypes;
 }
 
 // SAR routes
 export interface SARStateOrTerritorySpecificInitiativesRoute extends BaseRoute {
   entityInfo: string[];
-  entityType: string;
+  entityType: EntityTypes;
   initiatives: string[];
   pageType: string;
   template: {
@@ -87,15 +89,31 @@ export interface Dashboard {
   verbiage?: any;
 }
 
+export enum EntityTypes {
+  INITIATIVE = "initiative",
+  TARGET_POPULATIONS = "targetPopulations",
+}
+
+export enum StepTypes {
+  CLOSE_OUT_INFORMATION = "closeOutInformation",
+  DEFINE_INITIATIVE = "defineInitiative",
+  EVALUATION_PLAN = "evaluationPlan",
+  EXPENDITURES = "expenditures",
+  FUNDING_SOURCES = "fundingSources",
+  INITIATIVE_PROGRESS = "initiativeProgress",
+  OBJECTIVE_PROGRESS = "objectiveProgress",
+  TARGET_POPULATIONS = "targetPopulations",
+}
+
 export interface EntityStep {
-  entityType: string;
+  entityType: EntityTypes;
   form?: ReportForm;
   hint: string;
   isRequired: boolean;
   name: string;
-  pageType: string;
+  pageType: PageTypes;
   stepInfo: string[];
-  stepType: string;
+  stepType: StepTypes;
   transformation?: {
     rule: string;
   };

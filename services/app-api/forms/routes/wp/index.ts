@@ -1,5 +1,5 @@
 // types
-import { ReportJsonFile } from "../../utils/types";
+import { ReportJsonFile } from "../../../utils/types";
 // routes
 import { generalInformationRoute } from "./general-information";
 import { reviewAndSubmitRoute } from "./review-and-submit";
