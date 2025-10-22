@@ -1,4 +1,8 @@
-import { EntityTypes, PageTypes, WPTransitionBenchmarksRoute } from "../../../utils/types";
+import {
+  EntityTypes,
+  PageTypes,
+  WPTransitionBenchmarksRoute,
+} from "../../../utils/types";
 
 export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
   name: "Transition Benchmarks",

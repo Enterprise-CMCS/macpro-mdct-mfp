@@ -1,4 +1,9 @@
-import { EntityTypes, PageTypes, SARStateOrTerritorySpecificInitiativesRoute, StepTypes } from "../../../utils/types";
+import {
+  EntityTypes,
+  PageTypes,
+  SARStateOrTerritorySpecificInitiativesRoute,
+  StepTypes,
+} from "../../../utils/types";
 
 export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecificInitiativesRoute =
   {
