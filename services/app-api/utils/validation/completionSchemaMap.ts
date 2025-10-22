@@ -1,8 +1,10 @@
+import { AnyObject } from "../types";
 import * as schema from "./completionSchemas";
 
 export const completionSchemaMap: any = {
   text: schema.text(),
   textOptional: schema.textOptional(),
+  textCustom: (options?: AnyObject) => schema.textCustom(options),
   number: schema.number(),
   numberOptional: schema.numberOptional(),
   ratio: schema.ratio(),

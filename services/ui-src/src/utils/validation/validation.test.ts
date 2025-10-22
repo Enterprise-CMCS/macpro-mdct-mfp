@@ -8,6 +8,14 @@ const mockStandardValidationType = {
   key: "text",
 };
 
+const mockCustomValidationType = {
+  key: {
+    type: "textCustom",
+    options: {
+      maxLength: 10,
+    }
+  }
+};
 const mockNestedValidationType = {
   key: {
     type: "text",
@@ -40,6 +48,13 @@ describe("utils/validation", () => {
       const result = mapValidationTypesToSchema(mockStandardValidationType);
       expect(JSON.stringify(result)).toEqual(
         JSON.stringify({ key: schema.text() })
+      );
+    });
+
+    test("Returns custom validation schema if passed custom validation type", () => {
+      const result = mapValidationTypesToSchema(mockCustomValidationType);
+      expect(JSON.stringify(result)).toEqual(
+        JSON.stringify({ key: schema.textCustom() })
       );
     });
 
