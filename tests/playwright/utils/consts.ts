@@ -168,7 +168,6 @@ export type WorkPlan = {
   }>;
   transitionBenchmarkStrategy: {
     explanation: string;
-    additionalDetails: string;
   };
   initiativesInstructions: {
     selfDirected: boolean;

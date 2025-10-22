@@ -656,7 +656,7 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
             {
               type: "html",
               content:
-                "Provide initiative description, including target populations and timeframe.",
+                "Describe the initiative (approximately 300 words max or 1800 characters), including the gap, challenge, or opportunity it will address; key activities to achieve goals; target population; and timeframe for starting and completing the initiative.",
             },
           ],
           exportSectionHeader: "exportSectionHeader",
@@ -673,7 +673,16 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
             type: "textarea",
             validation: "text",
             props: {
-              label: "Describe the initiative, including key activities:",
+              label: "Describe the initiative, including the gap, challenge, or opportunity it will address:",
+            },
+          },
+          {
+           id: "defineInitiative_keyActivities",
+           type: "dynamic",
+           validation: "dynamic",
+           props: {
+             label: "Key Activities",
+             hint: "List the key activities to implement the initiative.",
             },
           },
           {
@@ -710,9 +719,27 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
             validation: "date",
             props: {
               label: "Start date",
-              hint: "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in process.",
+              hint: "Enter the expected or actual start month/year for the initiative. Aim for a 1-2 year period for implementation, testing, and evaluation. Explain in the initiative description if it will take longer than 2 years.",
             },
           },
+            {
+              id: "defineInitiative_startDateExpectedOrActual",
+              type: "radio",
+              validation: "radio",
+              props: {
+                label: "Is this date expected or actual?",
+                choices: [
+                  {
+                    id: "gEZeX7wqIBgNECJWohPPGJ",
+                    label: "Expected"
+                  },
+                  {
+                    id: "ROMVn1xYW2vHyTZPoHreYd",
+                    label: "Actual"
+                  }
+                ]
+              }
+            },
           {
             id: "defineInitiative_projectedEndDate",
             type: "radio",
@@ -739,7 +766,7 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                       },
                       props: {
                         label: "Projected end date",
-                        hint: "Enter projected end date.",
+                        hint: "Enter the date for when the initiative will be or has been completed. A completed initiative means the initiative has been implemented, tested, and evaluated.",
                       },
                     },
                   ],
