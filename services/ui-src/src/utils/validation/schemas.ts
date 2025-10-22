@@ -12,7 +12,7 @@ const isWhitespaceString = (value?: string) => value?.trim().length === 0;
 const transformEmptyStringToNull = (curr: string, orig: string) =>
   orig === "" ? null : curr;
 const isWithinMaxLength = (value: string | null = "", maxLength?: number) => {
-  return maxLength && value ? value.length <= maxLength : true
+  return maxLength && value ? value.length <= maxLength : true;
 };
 
 // TEXT
