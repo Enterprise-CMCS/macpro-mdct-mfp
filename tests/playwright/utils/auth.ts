@@ -270,7 +270,7 @@ export async function authenticateWithUI(
   await page.waitForURL("/");
   await expect(
     page.getByRole("heading", { name: expectedHeading })
-  ).toBeVisible({ timeout: 10000 });
+  ).toBeVisible();
   console.log(`✅ UI authentication successful for ${userType}`);
 }
 
