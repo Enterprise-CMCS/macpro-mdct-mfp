@@ -1,5 +1,5 @@
 // types
-import { ReportJsonFile } from "../../../utils/types";
+import { ReportJsonFile, ReportType } from "../../../utils/types";
 // routes
 import { additionalAchievementsRoute } from "./additional-achievements";
 import { generalInformationRoute } from "./general-information";
@@ -9,7 +9,7 @@ import { reviewAndSubmitRoute } from "./review-and-submit";
 import { stateOrTerritorySpecificInitiativesRoute } from "./state-or-territory-specific-initiatives";
 
 export const ReportJson: ReportJsonFile = {
-  type: "SAR",
+  type: ReportType.SAR,
   name: "MFP Semi-Annual Progress Report (SAR)",
   basePath: "/sar",
   version: "SAR_2023-08-21",

@@ -1,5 +1,5 @@
 // types
-import { ReportJsonFile } from "../../../utils/types";
+import { ReportJsonFile, ReportType } from "../../../utils/types";
 // routes
 import { generalInformationRoute } from "./general-information";
 import { reviewAndSubmitRoute } from "./review-and-submit";
@@ -8,7 +8,7 @@ import { transitionBenchmarkStrategyRoute } from "./transition-benchmark-strateg
 import { transitionBenchmarksRoute } from "./transition-benchmarks";
 
 export const ReportJson: ReportJsonFile = {
-  type: "WP",
+  type: ReportType.WP,
   name: "MFP Work Plan",
   basePath: "/wp",
   version: "WP_2023-08-21",

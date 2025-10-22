@@ -1,4 +1,5 @@
 import { PageTypes } from "./formFields";
+import { ReportType } from "./reports";
 
 export interface ReportJsonFile {
   basePath: string;
@@ -11,7 +12,7 @@ export interface ReportJsonFile {
     | SARStateOrTerritorySpecificInitiativesRoute
     | WPStateOrTerritorySpecificInitiativesRoute
   )[];
-  type: string;
+  type: ReportType;
   version: string;
 }
 
