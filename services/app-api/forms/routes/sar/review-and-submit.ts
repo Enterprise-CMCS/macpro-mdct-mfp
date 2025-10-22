@@ -1,6 +1,6 @@
-import { ReportRoute } from "../../utils/types";
+import { PageRoute } from "../../utils/types";
 
-export const reviewAndSubmitRoute: ReportRoute = {
+export const reviewAndSubmitRoute: PageRoute = {
   name: "Review & Submit",
   path: "/sar/review-and-submit",
   pageType: "reviewSubmit",
