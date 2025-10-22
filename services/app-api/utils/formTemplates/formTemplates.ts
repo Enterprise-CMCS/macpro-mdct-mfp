@@ -1,4 +1,5 @@
 import wpForm from "../../forms/wp.json";
+import wpForm2025 from "../../forms/wp-2025.json";
 import sarForm from "../../forms/sar.json";
 import abcdForm from "../../forms/abcd.json";
 import KSUID from "ksuid";
@@ -27,8 +28,11 @@ import {
 import assert from "node:assert";
 
 export const formTemplateForReportType = (reportType: ReportType) => {
+  const wpSarRelease2025 = true;
   const map: { [key in ReportType]: ReportJson } = {
-    [ReportType.WP]: wpForm as ReportJson,
+    [ReportType.WP]: wpSarRelease2025
+      ? (wpForm2025 as ReportJson)
+      : (wpForm as ReportJson),
     [ReportType.SAR]: sarForm as ReportJson,
     [ReportType.ABCD]: abcdForm as ReportJson,
   };
