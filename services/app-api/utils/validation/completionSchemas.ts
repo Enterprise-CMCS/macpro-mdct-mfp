@@ -6,7 +6,7 @@ import {
   string,
   number as yupNumber,
 } from "yup";
-import { AnyObject, Choice, TextOptions } from "../types";
+import { Choice, TextOptions } from "../types";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -30,7 +30,7 @@ const isWithinMaxLength = (value: string = "", maxLength?: number) => {
 };
 
 // TEXT
-const textSchema = (options?: AnyObject) =>
+const textSchema = (options?: TextOptions) =>
   string()
     .typeError(error.INVALID_GENERIC)
     .test({
