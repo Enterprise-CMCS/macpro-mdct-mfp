@@ -26,7 +26,7 @@ export const error = {
 // TEXT - Helpers
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
 const isWithinMaxLength = (value: string = "", maxLength?: number) => {
-  return maxLength ? value.length <= maxLength : true
+  return maxLength ? value.length <= maxLength : true;
 };
 
 // TEXT
@@ -44,7 +44,8 @@ const textSchema = (options?: AnyObject) =>
 
 export const text = () => textSchema().required();
 export const textOptional = () => textSchema().notRequired().nullable();
-export const textCustom = (options?: AnyObject) => textSchema(options).required();
+export const textCustom = (options?: AnyObject) =>
+  textSchema(options).required();
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];

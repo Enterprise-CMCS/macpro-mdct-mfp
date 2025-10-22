@@ -10,8 +10,8 @@ const mockCustomValidationType = {
     type: "textCustom",
     options: {
       maxLength: 10,
-    }
-  }
+    },
+  },
 };
 
 const mockNestedValidationType = {

@@ -24,7 +24,7 @@ const error = {
 // TEXT - Helpers
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
 const isWithinMaxLength = (value: string = "", maxLength?: number) => {
-  return maxLength ? value.length <= maxLength : true
+  return maxLength ? value.length <= maxLength : true;
 };
 
 // TEXT
