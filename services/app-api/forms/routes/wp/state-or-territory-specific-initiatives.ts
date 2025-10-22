@@ -732,11 +732,11 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
               choices: [
                 {
                   id: "gEZeX7wqIBgNECJWohPPGJ",
-                  label: "Expected"
+                  label: "Expected",
                 },
                 {
                   id: "ROMVn1xYW2vHyTZPoHreYd",
-                  label: "Actual"
+                  label: "Actual",
                 },
               ],
             },
