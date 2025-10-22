@@ -1,10 +1,10 @@
-import { AnyObject } from "types";
+import { TextOptions } from "types";
 import * as schema from "./schemas";
 
 export const schemaMap: any = {
   text: schema.text(),
   textOptional: schema.textOptional(),
-  textCustom: (options?: AnyObject) => schema.textCustom(options),
+  textCustom: (options?: TextOptions) => schema.textCustom(options),
   number: schema.number(),
   numberOptional: schema.numberOptional(),
   ratio: schema.ratio(),

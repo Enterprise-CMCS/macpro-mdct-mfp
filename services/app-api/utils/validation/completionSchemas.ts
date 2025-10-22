@@ -6,7 +6,7 @@ import {
   string,
   number as yupNumber,
 } from "yup";
-import { AnyObject, Choice } from "../types";
+import { AnyObject, Choice, TextOptions } from "../types";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -44,7 +44,7 @@ const textSchema = (options?: AnyObject) =>
 
 export const text = () => textSchema().required();
 export const textOptional = () => textSchema().notRequired().nullable();
-export const textCustom = (options?: AnyObject) =>
+export const textCustom = (options?: TextOptions) =>
   textSchema(options).required();
 
 // NUMBER - Helpers

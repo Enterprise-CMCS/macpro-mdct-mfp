@@ -1,5 +1,5 @@
 import { array, boolean, mixed, object, string } from "yup";
-import { AnyObject, Choice } from "../types/index";
+import { Choice, TextOptions } from "../types";
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
@@ -38,7 +38,7 @@ export const text = () =>
     });
 export const textOptional = () => string().typeError(error.INVALID_GENERIC);
 
-export const textCustom = (options?: AnyObject) =>
+export const textCustom = (options?: TextOptions) =>
   string()
     .typeError(error.INVALID_GENERIC)
     .required(error.REQUIRED_GENERIC)
@@ -265,7 +265,7 @@ export const schemaMap: any = {
   ratio: ratio(),
   text: text(),
   textOptional: textOptional(),
-  textCustom: (options?: AnyObject) => textCustom(options),
+  textCustom: (options?: TextOptions) => textCustom(options),
   url: url(),
   urlOptional: urlOptional(),
   validInteger: validInteger(),
