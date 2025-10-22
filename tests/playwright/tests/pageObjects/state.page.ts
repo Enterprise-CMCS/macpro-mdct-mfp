@@ -130,9 +130,7 @@ export class StatePage {
   }
 
   // Transition Benchmark Strategy page functionality
-  async completeTransitionBenchmarkStrategy(
-    explanation: string,
-  ) {
+  async completeTransitionBenchmarkStrategy(explanation: string) {
     await this.page.locator("#strategy_explanation").fill(explanation);
     await this.page.getByRole("button", { name: "Continue" }).click();
     await this.waitForReportUpdate();
@@ -347,7 +345,7 @@ export class StatePage {
       workPlan.transitionBenchmarkProjections
     );
     await this.completeTransitionBenchmarkStrategy(
-      workPlan.transitionBenchmarkStrategy.explanation,
+      workPlan.transitionBenchmarkStrategy.explanation
     );
     await this.completeInitiativesInstructions(
       workPlan.initiativesInstructions.selfDirected,
