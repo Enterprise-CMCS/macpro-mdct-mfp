@@ -51,7 +51,7 @@ describe("Test mapValidationTypesToSchema", () => {
   it("Returns custom validation schema if passed custom validation type", () => {
     const result = mapValidationTypesToSchema(mockCustomValidationType);
     expect(JSON.stringify(result)).toEqual(
-      JSON.stringify({ key: schema.textCustom() })
+      JSON.stringify({ key: schema.textCustom({}) })
     );
   });
 
