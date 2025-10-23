@@ -38,7 +38,7 @@ export const text = () =>
     });
 export const textOptional = () => string().typeError(error.INVALID_GENERIC);
 
-export const textCustom = (options?: TextOptions) =>
+export const textCustom = (options: TextOptions) =>
   string()
     .typeError(error.INVALID_GENERIC)
     .required(error.REQUIRED_GENERIC)
@@ -265,7 +265,7 @@ export const schemaMap: any = {
   ratio: ratio(),
   text: text(),
   textOptional: textOptional(),
-  textCustom: (options?: TextOptions) => textCustom(options),
+  textCustom: (options: TextOptions) => textCustom(options),
   url: url(),
   urlOptional: urlOptional(),
   validInteger: validInteger(),

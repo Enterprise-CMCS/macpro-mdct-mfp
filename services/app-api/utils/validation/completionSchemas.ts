@@ -30,7 +30,7 @@ const isWithinMaxLength = (value: string = "", maxLength?: number) => {
 };
 
 // TEXT
-const textSchema = (options?: TextOptions) =>
+const textSchema = (options: TextOptions = {}) =>
   string()
     .typeError(error.INVALID_GENERIC)
     .test({
@@ -44,7 +44,7 @@ const textSchema = (options?: TextOptions) =>
 
 export const text = () => textSchema().required();
 export const textOptional = () => textSchema().notRequired().nullable();
-export const textCustom = (options?: TextOptions) =>
+export const textCustom = (options: TextOptions) =>
   textSchema(options).required();
 
 // NUMBER - Helpers
