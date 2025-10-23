@@ -4,7 +4,7 @@ export const CharacterCounter = ({ id, input = "", maxLength }: Props) => {
   const remainingCharacters = maxLength - input.length;
 
   return (
-    <Text as="span" id={id}>
+    <Text id={id}>
       {input
         ? `${remainingCharacters} characters left`
         : `${maxLength} characters allowed`}
