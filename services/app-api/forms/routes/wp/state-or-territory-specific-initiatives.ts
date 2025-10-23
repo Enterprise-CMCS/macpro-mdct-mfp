@@ -20,7 +20,7 @@ const instructionsRoute: FormRoute = {
         {
           type: "html",
           content:
-            "State or territory-specific initiatives are a distinct set of activities designed to increase the use of home and community-based services (HCBS) rather than institutional long-term services and supports. These initiatives can be funded using one or more of these funding sources:<br>",
+            "A state or territory-specific initiative is a plan or process designed to improve MFP Demonstration program performance and advance MFP statutory goals, which include increasing the use of home and community-based services (HCBS) over institutional long-term services and supports (LTSS), removing barriers that prevent individuals from receiving support in their preferred settings, improving the quality of life for MFP participants, and ensuring continued access to HCBS and quality assurance. Each initiative includes a defined set of activities designed to address gaps, challenges, or opportunities in state or territory MFP programs and is associated with an MFP grant funding source. Initiatives can be funded using one or more of these funding sources:<br>",
         },
         {
           type: "ul",
@@ -84,12 +84,13 @@ const instructionsRoute: FormRoute = {
                 },
               ],
             },
-            {
-              type: "li",
-              content:
-                "State or territory equivalent funds attributable to the MFP-enhanced match",
-            },
           ],
+        },
+        {
+          type: "p",
+          content:
+            "State or territory equivalent funds attributable to the MFP-enhanced Federal Medical Assistance Percentage (FMAP) Approval to use MFP cooperative agreement funding or state or territory funds equivalent to the MFP-enhanced FMAP related to planning or implementing an initiative must be obtained through a state or territory’s Operational Protocol (OP), budget amendment request, capacity building proposal, or rebalancing funding proposal as appropriate.",
+          paddingBottom: "1rem",
         },
         {
           type: "p",
@@ -115,11 +116,11 @@ const instructionsRoute: FormRoute = {
                     {
                       type: "th",
                       content:
-                        "<span aria-label='Required by Program Terms and Conditions'>Required* Initiatives</span>",
+                        "<span aria-label='Required by Program Terms and Conditions'>REQUIRED* INITIATIVES</span>",
                     },
                     {
                       type: "th",
-                      content: "Optional Initiatives",
+                      content: "OPTIONAL INITIATIVES",
                     },
                   ],
                 },
@@ -295,17 +296,7 @@ const instructionsRoute: FormRoute = {
                             },
                             {
                               type: "li",
-                              content: "Stakeholder engagement",
-                              props: {
-                                style: {
-                                  paddingBottom: ".5rem",
-                                },
-                              },
-                            },
-                            {
-                              type: "li",
-                              content:
-                                "Equity and social determinants of health (SDOH)",
+                              content: "External engagement",
                               props: {
                                 style: {
                                   paddingBottom: ".5rem",
@@ -356,7 +347,7 @@ const instructionsRoute: FormRoute = {
             {
               type: "li",
               content:
-                "Initiative description, including target populations and timeframe",
+                "Initiative description (approximately 300 word max or 1800 characters)",
               props: {
                 style: {
                   padding: ".5rem",
@@ -374,7 +365,7 @@ const instructionsRoute: FormRoute = {
             },
             {
               type: "li",
-              content: "Funding sources, with projected quarterly expenditures",
+              content: "Funding sources",
               props: {
                 style: {
                   padding: ".5rem",
@@ -396,17 +387,17 @@ const instructionsRoute: FormRoute = {
         {
           type: "html",
           content:
-            "<br>The MFP Work Plan should establish one or more demonstrable objectives for each initiative, set associated performance measures or indicators to monitor progress, and clearly articulate the actions necessary to achieve the objectives. Progress towards meeting these objectives indicates a state’s or territory’s increased capacity to provide HCBS, rather than institutional, long-term care services.<br>",
+            "<br>The MFP Work Plan should establish one or more demonstrable objectives for each initiative, set associated performance measures or indicators to monitor progress, and clearly articulate the actions necessary to achieve the objectives. Progress towards meeting these objectives indicates a state’s or territory’s increased capacity to provide HCBS, rather than institutional LTSS.<br>",
         },
         {
           type: "html",
           content:
-            "<br>The recipient must identify the MFP funding source(s) for each initiative and provide quarterly projected spending by funding source. Funding sources for initiatives include state or territory funds equivalent to the MFP-enhanced Federal Medical Assistance Percentage (FMAP); MFP capacity building funding; MFP funding for qualified HCBS, demonstration services, and supplemental services; or MFP administrative cooperative agreement funding.<br>",
+            "<br>The recipient must identify the MFP funding source(s) for each initiative. Funding sources for initiatives include MFP administrative cooperative agreement funding; MFP funding for qualified HCBS, demonstration services, and supplemental services; state or territory funds equivalent to the MFP-enhanced FMAP; or MFP capacity building funding.<br>",
         },
         {
           type: "html",
           content:
-            "<br>If a recipient updates the MFP Work Plan to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>",
+            "<br>If the initiative will not be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>",
         },
         {
           type: "text",
@@ -656,7 +647,7 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
             {
               type: "html",
               content:
-                "Provide initiative description, including target populations and timeframe.",
+                "Describe the initiative (approximately 300 words max or 1800 characters), including the gap, challenge, or opportunity it will address; key activities to achieve goals; target population; and timeframe for starting and completing the initiative.",
             },
           ],
           exportSectionHeader: "exportSectionHeader",
@@ -673,7 +664,17 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
             type: "textarea",
             validation: "text",
             props: {
-              label: "Describe the initiative, including key activities:",
+              label:
+                "Describe the initiative, including the gap, challenge, or opportunity it will address:",
+            },
+          },
+          {
+            id: "defineInitiative_keyActivities",
+            type: "dynamic",
+            validation: "dynamic",
+            props: {
+              label: "Key Activities",
+              hint: "List the key activities to implement the initiative.",
             },
           },
           {
@@ -710,7 +711,25 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
             validation: "date",
             props: {
               label: "Start date",
-              hint: "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in process.",
+              hint: "Enter the expected or actual start month/year for the initiative. Aim for a 1-2 year period for implementation, testing, and evaluation. Explain in the initiative description if it will take longer than 2 years.",
+            },
+          },
+          {
+            id: "defineInitiative_startDateExpectedOrActual",
+            type: "radio",
+            validation: "radio",
+            props: {
+              label: "Is this date expected or actual?",
+              choices: [
+                {
+                  id: "gEZeX7wqIBgNECJWohPPGJ",
+                  label: "Expected",
+                },
+                {
+                  id: "ROMVn1xYW2vHyTZPoHreYd",
+                  label: "Actual",
+                },
+              ],
             },
           },
           {
@@ -739,7 +758,7 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                       },
                       props: {
                         label: "Projected end date",
-                        hint: "Enter projected end date.",
+                        hint: "Enter the date for when the initiative will be or has been completed. A completed initiative means the initiative has been implemented, tested, and evaluated.",
                       },
                     },
                   ],
