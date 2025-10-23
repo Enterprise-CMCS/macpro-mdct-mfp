@@ -1,6 +1,6 @@
 import { array, boolean, mixed, object, string } from "yup";
 import { validationErrors as error } from "verbiage/errors";
-import { AnyObject, Choice } from "types";
+import { Choice, TextOptions } from "types";
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
@@ -29,7 +29,7 @@ export const textOptional = () =>
     .nullable()
     .transform(transformEmptyStringToNull)
     .typeError(error.INVALID_GENERIC);
-export const textCustom = (options?: AnyObject) =>
+export const textCustom = (options: TextOptions) =>
   string()
     .typeError(error.INVALID_GENERIC)
     .required(error.REQUIRED_GENERIC)
@@ -38,7 +38,7 @@ export const textCustom = (options?: AnyObject) =>
       message: error.REQUIRED_GENERIC,
     })
     .test({
-      test: (value) => isWithinMaxLength(value, options?.maxLength),
+      test: (value) => isWithinMaxLength(value, options.maxLength),
       message: error.INVALID_LENGTH,
     });
 
