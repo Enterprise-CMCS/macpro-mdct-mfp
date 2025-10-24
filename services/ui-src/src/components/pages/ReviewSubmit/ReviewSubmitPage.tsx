@@ -320,7 +320,7 @@ const sx = {
     },
   },
   headerText: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontSize: "4xl",
     fontWeight: "normal",
   },
@@ -336,16 +336,16 @@ const sx = {
     marginBottom: "spacer1",
   },
   infoParagraph: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   headerImage: {
     display: "inline-block",
-    marginRight: "1rem",
+    marginRight: "spacer2",
     height: "27px",
   },
   list: {
     color: "palette.gray",
-    paddingLeft: "1rem",
+    paddingLeft: "spacer2",
     margin: "spacer_half",
   },
   additionalInfoHeader: {
@@ -380,7 +380,7 @@ const sx = {
   },
   submitButton: {
     minHeight: "3rem",
-    paddingRight: "1rem",
+    paddingRight: "spacer2",
     marginTop: {
       base: "1.5rem",
       sm: "0",

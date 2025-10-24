@@ -192,7 +192,7 @@ const sx = {
   },
   description: {
     marginTop: "spacer_half",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontSize: "sm",
   },
   grid: {
@@ -220,7 +220,7 @@ const sx = {
     marginRight: "spacer_half",
   },
   subtitle: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     fontSize: "xs",
     fontWeight: "bold",
   },
@@ -242,12 +242,12 @@ const sx = {
   box: {
     backgroundColor: "#EEFBFF",
     padding: "0.5rem 1rem",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   notAnsweredBox: {
     backgroundColor: "#FCE8EC",
     padding: "0.5rem 1rem",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   notAnsweredDescription: {
     marginTop: "spacer_half",

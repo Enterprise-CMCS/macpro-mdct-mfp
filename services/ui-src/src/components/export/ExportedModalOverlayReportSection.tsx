@@ -329,7 +329,7 @@ const sx = {
     "@media print": {
       pageBreakInside: "avoid",
     },
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     "tr, th": {
       verticalAlign: "bottom",
       lineHeight: "base",
@@ -383,7 +383,7 @@ const sx = {
   },
   statusIcon: {
     paddingLeft: "spacer_half",
-    paddingRight: "1rem",
+    paddingRight: "spacer2",
     img: {
       maxWidth: "fit-content",
     },

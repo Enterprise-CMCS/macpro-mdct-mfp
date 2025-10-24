@@ -157,7 +157,7 @@ const sx = {
     },
   },
   leaveFormLink: {
-    marginLeft: "1rem",
+    marginLeft: "spacer2",
   },
   closeIcon: {
     width: "2rem",

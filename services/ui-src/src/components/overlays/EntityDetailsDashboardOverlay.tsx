@@ -160,7 +160,7 @@ const sx = {
     th: {
       fontWeight: "bold",
       color: "palette.gray",
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
       paddingRight: "0",
       borderBottom: "1px solid",
       borderColor: "palette.gray_light",

@@ -42,7 +42,7 @@ const sx = {
     width: "1.5rem",
     height: "1.5rem",
     marginTop: ".2rem",
-    marginRight: "1rem",
+    marginRight: "spacer2",
     background: "#333",
     borderRadius: "100%",
     color: "palette.white",
@@ -53,7 +53,7 @@ const sx = {
     fontWeight: "bold",
   },
   header: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     color: "palette.gray",
     fontSize: "2xl",
   },

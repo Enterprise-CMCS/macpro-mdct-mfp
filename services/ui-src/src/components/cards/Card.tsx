@@ -20,7 +20,7 @@ const sx = {
     width: "100%",
     padding: "2rem",
     ".mobile &": {
-      padding: "1rem",
+      padding: "spacer2",
     },
   },
 };

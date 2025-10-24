@@ -241,7 +241,7 @@ const sx = {
     },
   },
   editButton: {
-    marginY: "1rem",
+    marginY: "spacer2",
     fontWeight: "normal",
     borderColor: "palette.gray_light",
   },
@@ -249,7 +249,7 @@ const sx = {
     fontWeight: "bold",
   },
   openDrawerButton: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     fontWeight: "normal",
   },
   entitiesCount: {
@@ -263,7 +263,7 @@ const sx = {
     },
   },
   unfinishedMessage: {
-    marginY: "1rem",
+    marginY: "spacer2",
     fontSize: "xs",
     color: "palette.error_dark",
   },

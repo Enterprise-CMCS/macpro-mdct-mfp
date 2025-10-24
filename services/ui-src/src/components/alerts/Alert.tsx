@@ -72,7 +72,7 @@ const sx = {
     borderInlineStartWidth: "0.5rem",
     marginTop: "1.25rem",
     marginBottom: "1.25rem",
-    padding: "1rem",
+    padding: "spacer2",
     "&.info": {
       backgroundColor: "palette.secondary_lightest",
       borderInlineStartColor: "palette.secondary",
@@ -96,7 +96,7 @@ const sx = {
       marginY: "spacer1",
     },
     ul: {
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
     },
   },
   linkText: {

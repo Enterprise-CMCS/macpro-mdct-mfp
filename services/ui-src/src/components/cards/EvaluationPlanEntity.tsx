@@ -80,7 +80,7 @@ const sx = {
   },
   description: {
     marginTop: "spacer_half",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontSize: "sm",
   },
   grid: {
@@ -103,7 +103,7 @@ const sx = {
     marginRight: "spacer_half",
   },
   subtitle: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     fontSize: "xs",
     fontWeight: "bold",
   },
@@ -123,7 +123,7 @@ const sx = {
     },
   },
   unfinishedMessage: {
-    marginY: "1rem",
+    marginY: "spacer2",
     fontSize: "xs",
     color: "palette.error_dark",
   },

@@ -148,7 +148,7 @@ const sx = {
   },
   modalBody: {
     paddingX: "0",
-    paddingY: "1rem",
+    paddingY: "spacer2",
   },
   modalFooter: {
     justifyContent: "flex-start",
@@ -157,7 +157,7 @@ const sx = {
   },
   action: {
     justifyContent: "center",
-    marginTop: "1rem",
+    marginTop: "spacer2",
     marginRight: "2rem",
     minWidth: "10rem",
     span: {
@@ -173,8 +173,8 @@ const sx = {
   },
   close: {
     justifyContent: "start",
-    padding: ".5rem 1rem",
-    marginTop: "1rem",
+    padding: "0.5rem 1rem",
+    marginTop: "spacer2",
     span: {
       marginLeft: "0rem",
       marginRight: "spacer1",

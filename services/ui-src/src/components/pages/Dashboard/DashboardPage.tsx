@@ -470,7 +470,7 @@ const sx = {
   layout: {
     ".contentFlex": {
       maxWidth: "appMax",
-      marginTop: "1rem",
+      marginTop: "spacer2",
       marginBottom: "3.5rem",
     },
   },
@@ -504,7 +504,7 @@ const sx = {
     },
   },
   headerText: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontSize: "4xl",
     fontWeight: "normal",
     ".tablet &, .mobile &": {
@@ -558,11 +558,11 @@ const sx = {
     },
   },
   errorMessage: {
-    paddingTop: "1rem",
+    paddingTop: "spacer2",
   },
   resetBtn: {
     border: "none",
-    marginTop: "1rem",
+    marginTop: "spacer2",
     fontWeight: "none",
     textDecoration: "underline",
     fontSize: "0.875rem",

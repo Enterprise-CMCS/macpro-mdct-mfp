@@ -29,7 +29,7 @@ const sx = {
   },
   answerBox: {
     ".mobile &": {
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
     },
   },
 };

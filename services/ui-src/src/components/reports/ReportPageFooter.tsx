@@ -102,6 +102,6 @@ const sx = {
   },
   praStatement: {
     fontSize: "0.875rem",
-    marginTop: "1rem",
+    marginTop: "spacer2",
   },
 };

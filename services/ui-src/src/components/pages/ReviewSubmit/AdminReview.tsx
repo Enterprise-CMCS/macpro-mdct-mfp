@@ -201,7 +201,7 @@ const sx = {
     maxWidth: "reportPageWidth",
   },
   unlockModalBody: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   adminLeadTextBox: {
     marginTop: "2rem",
@@ -221,7 +221,7 @@ const sx = {
     marginBottom: ".5rem",
   },
   list: {
-    paddingLeft: "1rem",
+    paddingLeft: "spacer2",
     margin: "1.5rem",
     li: {
       marginBottom: "spacer1",
@@ -237,20 +237,20 @@ const sx = {
   },
   submitButton: {
     minHeight: "3rem",
-    paddingRight: "1rem",
+    paddingRight: "spacer2",
   },
   modalFooter: {
     paddingStart: 0,
     justifyContent: "start",
   },
   modalCancel: {
-    marginRight: "1rem",
+    marginRight: "spacer2",
   },
   unlockModalButton: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
   },
   adminUnlockBtn: {
-    marginRight: "1rem",
+    marginRight: "spacer2",
     "&disabled": {
       opacity: 1,
       background: "white",
@@ -267,7 +267,7 @@ const sx = {
   },
   action: {
     justifyContent: "center",
-    marginTop: "1rem",
+    marginTop: "spacer2",
     marginRight: "2rem",
     minWidth: "10rem",
     span: {

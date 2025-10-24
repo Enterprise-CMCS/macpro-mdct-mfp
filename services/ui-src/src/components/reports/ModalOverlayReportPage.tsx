@@ -233,7 +233,7 @@ const sx = {
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
-    paddingBottom: "1rem",
+    paddingBottom: "spacer2",
   },
   table: {
     tableLayout: "fixed",
@@ -243,7 +243,7 @@ const sx = {
     th: {
       fontWeight: "bold",
       color: "palette.gray",
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
       paddingRight: "0",
       borderBottom: "1px solid",
       borderColor: "palette.gray_light",

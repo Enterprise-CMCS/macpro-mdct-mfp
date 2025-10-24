@@ -137,7 +137,7 @@ const sx = {
     },
   },
   headerText: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontSize: "2rem",
     fontWeight: "normal",
   },

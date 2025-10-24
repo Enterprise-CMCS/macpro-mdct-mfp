@@ -120,7 +120,7 @@ const sx = {
   },
   actionsFlex: {
     flexFlow: "wrap",
-    gridGap: "1rem",
+    gridGap: "spacer2",
     justifyContent: "space-between",
     margin: "1rem 0 0 1rem",
     ".mobile &": {
@@ -129,7 +129,7 @@ const sx = {
   },
   templateDownloadButton: {
     justifyContent: "start",
-    marginRight: "1rem",
+    marginRight: "spacer2",
     padding: "0",
     span: {
       marginLeft: "0rem",

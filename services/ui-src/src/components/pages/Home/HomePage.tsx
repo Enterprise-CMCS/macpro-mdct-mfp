@@ -90,7 +90,7 @@ const sx = {
     marginBottom: "2.25rem",
   },
   headerText: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontSize: "2rem",
     fontWeight: "normal",
   },

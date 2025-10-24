@@ -49,7 +49,7 @@ const sx = {
   },
   textBox: {
     ".mobile &": {
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
     },
     a: {
       color: "palette.primary",
@@ -63,10 +63,10 @@ const sx = {
     },
   },
   text: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   list: {
-    paddingLeft: "1rem",
+    paddingLeft: "spacer2",
     margin: "1.5rem",
     li: {
       marginBottom: "1.25rem",

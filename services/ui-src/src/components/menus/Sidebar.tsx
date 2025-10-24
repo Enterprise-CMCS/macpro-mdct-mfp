@@ -280,7 +280,7 @@ const sx = {
     marginY: "10px",
     textAlign: "left",
     "&.level-1": {
-      marginLeft: "1rem",
+      marginLeft: "spacer2",
       ".desktop &": {
         marginLeft: "2rem",
       },

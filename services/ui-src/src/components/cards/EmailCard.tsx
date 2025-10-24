@@ -65,7 +65,7 @@ const sx = {
     ".mobile &": {
       alignSelf: "center",
       marginRight: "0",
-      marginBottom: "1rem",
+      marginBottom: "spacer2",
     },
   },
   cardContentFlex: {
@@ -74,7 +74,7 @@ const sx = {
     justifyContent: "center",
   },
   bodyText: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   emailText: {
     fontWeight: "bold",

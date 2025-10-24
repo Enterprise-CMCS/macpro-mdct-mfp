@@ -38,7 +38,7 @@ const sx = {
   },
   text: {
     p: {
-      marginBottom: "1rem",
+      marginBottom: "spacer2",
     },
   },
   table: {
@@ -47,7 +47,7 @@ const sx = {
     },
   },
   list: {
-    paddingLeft: "1rem",
+    paddingLeft: "spacer2",
     "li:last-of-type": {
       fontWeight: "bold",
     },

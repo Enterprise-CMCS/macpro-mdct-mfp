@@ -380,7 +380,7 @@ const sx = {
     },
     "p, span": {
       color: "palette.gray",
-      marginTop: "1rem",
+      marginTop: "spacer2",
     },
     a: {
       color: "palette.primary",

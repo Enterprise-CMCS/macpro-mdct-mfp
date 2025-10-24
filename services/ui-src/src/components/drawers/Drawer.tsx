@@ -75,7 +75,7 @@ interface Props {
 const sx = {
   drawerContent: {
     maxWidth: "90vw",
-    padding: "1rem",
+    padding: "spacer2",
     "&.tablet": {
       maxWidth: "32rem",
     },
@@ -84,7 +84,7 @@ const sx = {
     },
   },
   drawerHeader: {
-    padding: "1rem",
+    padding: "spacer2",
   },
   drawerHeaderText: {
     paddingRight: "4rem",
@@ -126,7 +126,7 @@ const sx = {
     color: "palette.gray",
     paddingBottom: "0",
     p: {
-      marginTop: "1rem",
+      marginTop: "spacer2",
     },
     a: {
       color: "palette.primary",

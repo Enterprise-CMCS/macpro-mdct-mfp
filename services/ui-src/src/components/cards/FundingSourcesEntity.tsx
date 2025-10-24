@@ -65,7 +65,7 @@ const sx = {
     marginRight: "spacer_half",
   },
   subtitle: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     fontSize: "xs",
     fontWeight: "bold",
   },

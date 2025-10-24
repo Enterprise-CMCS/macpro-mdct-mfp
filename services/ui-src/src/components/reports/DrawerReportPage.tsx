@@ -199,7 +199,7 @@ const sx = {
     marginLeft: "2.25rem",
   },
   missingEntityMessage: {
-    paddingTop: "1rem",
+    paddingTop: "spacer2",
     fontWeight: "bold",
     a: {
       color: "palette.primary",

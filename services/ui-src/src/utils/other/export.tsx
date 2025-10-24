@@ -210,14 +210,14 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
 // style object for rendered elements
 const sx = {
   fieldChoice: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   dynamicItem: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   entityBox: {
     verticalAlign: "top",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     ul: {
       listStyle: "none",
       ".entityResponse": {
@@ -237,7 +237,7 @@ const sx = {
     },
   },
   entityName: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontWeight: "bold",
   },
   noResponse: {

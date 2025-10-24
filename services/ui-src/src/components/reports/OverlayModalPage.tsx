@@ -253,14 +253,14 @@ const sx = {
     height: "1rem",
   },
   dashboardTitle: {
-    paddingTop: "1rem",
-    marginBottom: "1rem",
+    paddingTop: "spacer2",
+    marginBottom: "spacer2",
     fontWeight: "bold",
     color: "palette.gray",
   },
   addEntityButton: {
     marginTop: "1.5rem",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   buttonFlex: {
     justifyContent: "end",

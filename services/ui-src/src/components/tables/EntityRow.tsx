@@ -293,7 +293,7 @@ const sx = {
     width: "1.5rem",
     minWidth: "1.5rem",
     padding: 0,
-    marginLeft: "1rem",
+    marginLeft: "spacer2",
     marginRight: "0.4rem",
     marginBottom: "spacer_half",
     background: "white",

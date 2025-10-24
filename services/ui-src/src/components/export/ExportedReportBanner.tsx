@@ -58,7 +58,7 @@ const sx = {
       display: "none",
     },
     p: {
-      marginBottom: "1rem",
+      marginBottom: "spacer2",
       fontSize: "xl",
       fontWeight: "bold",
       ".mobile &": {

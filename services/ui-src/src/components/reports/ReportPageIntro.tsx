@@ -71,10 +71,10 @@ interface Props {
 
 const sx = {
   introBox: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
 
     p: {
-      marginBottom: "1rem",
+      marginBottom: "spacer2",
       marginTop: "0",
     },
     ".mdct-table th": {
@@ -108,7 +108,7 @@ const sx = {
     margin: "1.5rem 0 -0.75rem 0",
   },
   infoTextBox: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     h3: {
       marginBottom: "-0.75rem",
     },

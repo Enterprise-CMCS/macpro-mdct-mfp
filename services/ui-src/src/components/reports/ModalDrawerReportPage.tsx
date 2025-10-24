@@ -323,7 +323,7 @@ const sx = {
       marginBottom: "spacer_half",
     },
     th: {
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
       paddingRight: "0",
       borderBottom: "1px solid",
       borderColor: "palette.gray_light",

@@ -256,7 +256,7 @@ const sx = {
     // makes the blue line continuous
     marginTop: 0,
     ".ds-c-fieldset, label": {
-      marginTop: "1rem",
+      marginTop: "spacer2",
     },
   },
   // optional text
@@ -266,7 +266,7 @@ const sx = {
   // RE&T warning message
   retAlert: {
     color: "palette.error_dark",
-    paddingTop: "1rem",
+    paddingTop: "spacer2",
   },
   // dividers for R,E,T pages
   ".sectionHeader": {
