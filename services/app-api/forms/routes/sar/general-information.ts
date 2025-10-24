@@ -1,4 +1,9 @@
-import { FormRoute, PageTypes } from "../../../utils/types";
+import {
+  FormRoute,
+  PageTypes,
+  ReportFormFieldType,
+  ValidationType,
+} from "../../../utils/types";
 
 export const generalInformationRoute: FormRoute = {
   name: "General Information",
@@ -26,8 +31,8 @@ export const generalInformationRoute: FormRoute = {
     fields: [
       {
         id: "generalInformation_resubmissionInformation",
-        type: "textarea",
-        validation: "text",
+        type: ReportFormFieldType.TEXTAREA,
+        validation: ValidationType.TEXT,
         props: {
           label:
             "Briefly describe the questions you plan to revise and the reason(s) for the revision(s):",
@@ -36,8 +41,8 @@ export const generalInformationRoute: FormRoute = {
       },
       {
         id: "generalInformation_MfpOperatingOrganizationName",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "Name of MFP operating organization",
           heading: "Organization Information",
@@ -45,40 +50,40 @@ export const generalInformationRoute: FormRoute = {
       },
       {
         id: "generalInformation_stateTerritoryMedicaidAgency",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "State or territory Medicaid agency",
         },
       },
       {
         id: "generalInformation_stateTerritoryMedicaidDirector",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "State or territory Medicaid director",
         },
       },
       {
         id: "generalInformation_mfpProgramPublicName",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "MFP program's public name",
         },
       },
       {
         id: "generalInformation_mfpProgramWebsite",
-        type: "text",
-        validation: "url",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.URL,
         props: {
           label: "MFP program's website",
         },
       },
       {
         id: "generalInformation_aorName",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "AOR name",
           heading: "Authorized Organizational Representative (AOR)",
@@ -86,24 +91,24 @@ export const generalInformationRoute: FormRoute = {
       },
       {
         id: "generalInformation_aorTitleAgency",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "AOR title/agency",
         },
       },
       {
         id: "generalInformation_aorEmail",
-        type: "text",
-        validation: "email",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.EMAIL,
         props: {
           label: "AOR email",
         },
       },
       {
         id: "generalInformation_hasAorChangedSinceLastReport",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label: "Has the AOR changed since last report?",
           choices: [
@@ -120,8 +125,8 @@ export const generalInformationRoute: FormRoute = {
       },
       {
         id: "generalInformation_projectDirectorName",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "Project director name",
           heading: "Project Director",
@@ -129,24 +134,24 @@ export const generalInformationRoute: FormRoute = {
       },
       {
         id: "generalInformation_projectDirectorTitle",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "Project director title",
         },
       },
       {
         id: "generalInformation_projectDirectorEmail",
-        type: "text",
-        validation: "email",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.EMAIL,
         props: {
           label: "Project director email",
         },
       },
       {
         id: "generalInformation_cmsProjectOfficerName",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "CMS project officer name",
           heading: "CMS Project Officer",
