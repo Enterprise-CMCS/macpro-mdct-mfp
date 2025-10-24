@@ -271,7 +271,7 @@ const sx = {
   // dividers for R,E,T pages
   ".sectionHeader": {
     borderTop: "1px solid #A6A6A6",
-    marginTop: "3rem",
+    marginTop: "spacer6",
     "&:first-of-type": {
       margin: "0",
       borderTop: "none",

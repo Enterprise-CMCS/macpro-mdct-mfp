@@ -288,11 +288,11 @@ const sx = {
     "&.level-2": {
       marginLeft: "spacer4",
       ".desktop &": {
-        marginLeft: "3rem",
+        marginLeft: "spacer6",
       },
     },
     "&.level-3": {
-      marginLeft: "3rem",
+      marginLeft: "spacer6",
       ".desktop &": {
         marginLeft: "4rem",
       },

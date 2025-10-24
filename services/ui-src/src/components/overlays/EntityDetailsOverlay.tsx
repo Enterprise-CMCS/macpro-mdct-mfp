@@ -330,7 +330,7 @@ const sx = {
     position: "relative",
     right: 0,
     ".tablet &": {
-      right: "3rem",
+      right: "spacer6",
     },
     marginBottom: "spacer4",
     marginTop: "-2rem",

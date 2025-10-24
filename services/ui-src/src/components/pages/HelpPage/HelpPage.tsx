@@ -45,7 +45,7 @@ const sx = {
   },
   emailCardBox: {
     width: "100%",
-    marginBottom: "3rem",
+    marginBottom: "spacer6",
   },
   card: {
     marginBottom: "spacer3",

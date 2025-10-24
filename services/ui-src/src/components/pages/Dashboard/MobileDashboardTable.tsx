@@ -255,7 +255,7 @@ const sx = {
     color: "palette.gray",
   },
   editDate: {
-    marginRight: "3rem",
+    marginRight: "spacer6",
   },
   archivedText: {
     fontSize: "sm",

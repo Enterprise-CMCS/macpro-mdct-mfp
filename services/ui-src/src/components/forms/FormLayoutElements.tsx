@@ -10,7 +10,7 @@ export const SectionHeader = ({
       marginTop: "spacer4",
     },
     label: {
-      marginTop: "3rem",
+      marginTop: "spacer6",
     },
   };
   return (
