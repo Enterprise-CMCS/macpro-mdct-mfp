@@ -849,9 +849,15 @@
                   {
                     "id": "defineInitiative_describeInitiative",
                     "type": "textarea",
-                    "validation": "text",
+                    "validation": {
+                      "type": "textCustom",
+                      "options": {
+                        "maxLength": 1800
+                      }
+                    },
                     "props": {
-                      "label": "Describe the initiative, including key activities:"
+                      "label": "Describe the initiative, including key activities:",
+                      "maxLength": 1800
                     }
                   },
                   {

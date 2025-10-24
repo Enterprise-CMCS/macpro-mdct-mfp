@@ -1,6 +1,10 @@
 import { PageTypes, Transformation } from "./formFields";
 import { ReportType } from "./reports";
-import { NestedValidation, ValidationType } from "./validations";
+import {
+  CustomValidation,
+  NestedValidation,
+  ValidationType,
+} from "./validations";
 
 export interface ReportJsonFile {
   basePath: string;
@@ -41,7 +45,7 @@ export interface ReportFormField {
   props?: ReportFormFieldProps;
   type: ReportFormFieldType;
   transformation?: Transformation;
-  validation?: ValidationType;
+  validation?: ValidationType | CustomValidation;
 }
 
 export interface ReportFormFieldProps {
