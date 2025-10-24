@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const configFilePath = path.resolve(
-  path.join(__dirname, "../../../"),
+  path.join(__dirname, "../../"),
   ".env.seed"
 );
 
