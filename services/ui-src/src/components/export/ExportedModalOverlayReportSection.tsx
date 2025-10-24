@@ -358,7 +358,7 @@ const sx = {
       paddingBottom: "0.375rem",
       fontWeight: "bold",
       lineHeight: "lg",
-      color: "palette.gray",
+      color: "gray",
       ".shrink &": {
         padding: "0.375rem 0rem",
       },
@@ -375,7 +375,7 @@ const sx = {
     wordBreak: "break-word",
   },
   tableIndex: {
-    color: "palette.gray",
+    color: "gray",
     fontWeight: "bold",
   },
   entityHeading: {

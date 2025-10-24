@@ -311,7 +311,7 @@ const sx = {
   dashboardTitle: {
     paddingBottom: "0",
     fontWeight: "bold",
-    color: "palette.gray",
+    color: "gray",
   },
   addEntityButton: {
     marginTop: "1.5rem",
@@ -326,7 +326,7 @@ const sx = {
       paddingLeft: "1rem",
       paddingRight: "0",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_light",
+      borderColor: "gray_light",
       "&:nth-of-type(1)": {
         width: "2.5rem",
       },
@@ -339,7 +339,7 @@ const sx = {
     marginBottom: "1.5rem",
   },
   reviewPdfHint: {
-    color: "palette.gray",
+    color: "gray",
   },
   reviewPdfButton: { marginTop: "1.5rem" },
 };

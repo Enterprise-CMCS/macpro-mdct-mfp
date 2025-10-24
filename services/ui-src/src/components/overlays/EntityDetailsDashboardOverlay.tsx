@@ -153,23 +153,23 @@ interface Props {
 
 const sx = {
   overlayContainer: {
-    backgroundColor: "palette.white",
+    backgroundColor: "white",
     width: "100%",
   },
   table: {
     th: {
       fontWeight: "bold",
-      color: "palette.gray",
+      color: "gray",
       paddingLeft: "1rem",
       paddingRight: "0",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_light",
+      borderColor: "gray_light",
     },
   },
   backButton: {
     padding: 0,
     fontWeight: "normal",
-    color: "palette.primary",
+    color: "primary",
     display: "flex",
     position: "relative",
     right: 0,
@@ -180,13 +180,13 @@ const sx = {
     marginTop: "-2rem",
   },
   backIcon: {
-    color: "palette.primary",
+    color: "primary",
     height: "1rem",
     marginRight: "0.5rem",
   },
   footerBox: {
     marginTop: "2rem",
-    borderTop: "1.5px solid var(--mdct-colors-palette-gray_light)",
+    borderTop: "1.5px solid var(--mdct-colors-gray_light)",
   },
   buttonFlex: {
     justifyContent: "end",

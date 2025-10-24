@@ -38,7 +38,7 @@ const sx = {
     marginTop: "2rem",
     fontSize: "2xl",
     fontWeight: "bold",
-    color: "palette.black",
+    color: "black",
   },
   info: {
     paddingTop: "1.5rem",

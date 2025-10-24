@@ -1,11 +1,10 @@
 // necessary to render the UsaBanner correctly
 $image-path: "~@cmsgov/design-system/dist/images";
 @use "@cmsgov/design-system/dist/css/index";
-@use '@cmsgov/design-system/dist/css/core-theme';
+@use "@cmsgov/design-system/dist/css/core-theme";
 
 @mixin tabbed-focus {
-  box-shadow: 0 0 0 3px #fff,
-    0 0 4px 6px var(--mdct-colors-palette-focus_dark) !important;
+  box-shadow: 0 0 0 3px #fff, 0 0 4px 6px var(--mdct-colors-focus_dark) !important;
   // Add support for Windows High Contrast Mode (WHCM)
   // The transparent color only shows when WHCM is triggered
   outline: 3px solid transparent;
@@ -36,10 +35,10 @@ li::marker {
 }
 
 a {
-  color: var(--mdct-colors-palette-white);
+  color: var(--mdct-colors-white);
   transition: all 0.3s ease !important;
   &:hover {
-    color: var(--mdct-colors-palette-gray_light);
+    color: var(--mdct-colors-gray_light);
   }
   &:visited {
     color: inherit;
@@ -61,14 +60,14 @@ a {
   }
 }
 
-// DROPDOWN 
+// DROPDOWN
 
 select.ds-c-field {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   background-color: #fff;
-  background-image: url('/src/assets/icons/icon_dropdown_arrow.svg');
+  background-image: url("/src/assets/icons/icon_dropdown_arrow.svg");
   background-position: right 8px center;
   background-repeat: no-repeat;
   background-size: 10px;
@@ -153,6 +152,6 @@ button {
     @include tabbed-focus;
   }
   &:disabled::before {
-    box-shadow: inset 0 0 4em 1em var(--mdct-colors-palette-gray_light);
+    box-shadow: inset 0 0 4em 1em var(--mdct-colors-gray_light);
   }
 }

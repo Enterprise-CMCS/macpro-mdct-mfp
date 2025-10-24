@@ -75,7 +75,7 @@ const sx = {
   },
   error: {
     fontSize: "sm",
-    color: "palette.error_dark",
+    color: "error_dark",
   },
   gridItems: {
     alignItems: "end",
