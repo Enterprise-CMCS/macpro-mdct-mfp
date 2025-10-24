@@ -102,14 +102,14 @@ interface Props {
 
 const sx = {
   archiveModalBody: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   modalFooter: {
     paddingStart: 0,
     justifyContent: "start",
   },
   modalCancel: {
-    marginRight: "1rem",
+    marginRight: "spacer2",
   },
   ".mobile &": {
     fontSize: "sm",

@@ -40,7 +40,7 @@ const unstyledVariant = {
 const unstyledButtonVariant = {
   color: "palette.primary",
   border: "1px solid",
-  padding: ".5rem 1rem",
+  padding: "0.5rem 1rem",
   borderRadius: "5px",
   fontWeight: "bold",
   textDecoration: "none",

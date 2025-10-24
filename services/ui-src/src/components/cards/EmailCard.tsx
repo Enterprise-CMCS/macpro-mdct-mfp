@@ -60,12 +60,12 @@ const sx = {
     },
   },
   icon: {
-    marginRight: "2rem",
+    marginRight: "spacer4",
     boxSize: "78px",
     ".mobile &": {
       alignSelf: "center",
       marginRight: "0",
-      marginBottom: "1rem",
+      marginBottom: "spacer2",
     },
   },
   cardContentFlex: {
@@ -74,7 +74,7 @@ const sx = {
     justifyContent: "center",
   },
   bodyText: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   emailText: {
     fontWeight: "bold",

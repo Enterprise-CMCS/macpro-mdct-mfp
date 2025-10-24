@@ -140,10 +140,10 @@ const sx = {
   },
   subnavFlexRight: {
     alignItems: "center",
-    paddingRight: ".5rem",
+    paddingRight: "spacer1",
   },
   checkIcon: {
-    marginRight: "0.5rem",
+    marginRight: "spacer1",
     boxSize: "1rem",
     ".mobile &": {
       display: "none",
@@ -157,7 +157,7 @@ const sx = {
     },
   },
   leaveFormLink: {
-    marginLeft: "1rem",
+    marginLeft: "spacer2",
   },
   closeIcon: {
     width: "2rem",

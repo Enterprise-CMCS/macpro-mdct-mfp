@@ -50,7 +50,7 @@ const sx = {
     td: {
       verticalAlign: "middle",
       textAlign: "left",
-      padding: "8px",
+      padding: "spacer1",
     },
     "td:nth-of-type(1)": {
       fontWeight: "bold",

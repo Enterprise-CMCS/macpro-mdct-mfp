@@ -391,7 +391,7 @@ const sx = {
     tableLayout: "fixed",
     marginBottom: "2.25rem",
     br: {
-      marginBottom: "0.25rem",
+      marginBottom: "spacer_half",
     },
     thead: {
       height: "100px",

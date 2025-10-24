@@ -33,6 +33,6 @@ export const CheckboxField = ({
 
 const sx = {
   fieldHeading: {
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
   },
 };

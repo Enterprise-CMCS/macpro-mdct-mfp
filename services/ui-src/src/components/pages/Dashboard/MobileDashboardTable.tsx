@@ -247,7 +247,7 @@ const sx = {
     borderColor: "palette.gray_light",
   },
   labelGroup: {
-    marginBottom: "0.5rem",
+    marginBottom: "spacer1",
   },
   label: {
     fontSize: "sm",
@@ -255,7 +255,7 @@ const sx = {
     color: "palette.gray",
   },
   editDate: {
-    marginRight: "3rem",
+    marginRight: "spacer6",
   },
   archivedText: {
     fontSize: "sm",

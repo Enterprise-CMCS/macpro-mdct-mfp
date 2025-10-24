@@ -231,11 +231,11 @@ interface Props {
 const sx = {
   copyBtn: {
     justifyContent: "center",
-    marginTop: "1rem",
-    marginRight: "1rem",
+    marginTop: "spacer2",
+    marginRight: "spacer2",
     minWidth: "7.5rem",
     span: {
-      marginLeft: "1rem",
+      marginLeft: "spacer2",
       marginRight: "-0.25rem",
       "&.ds-c-spinner": {
         marginLeft: 0,

@@ -115,7 +115,7 @@ const sx = {
     borderRadius: "0",
     maxWidth: "33rem",
     marginX: "4rem",
-    padding: "2rem",
+    padding: "spacer4",
   },
   modalHeader: {
     padding: "0",
@@ -133,8 +133,8 @@ const sx = {
     justifyContent: "center",
     flexShrink: "0",
     position: "absolute",
-    top: "2rem",
-    right: "2rem",
+    top: "spacer4",
+    right: "spacer4",
   },
   modalClose: {
     span: {
@@ -148,20 +148,20 @@ const sx = {
   },
   modalBody: {
     paddingX: "0",
-    paddingY: "1rem",
+    paddingY: "spacer2",
   },
   modalFooter: {
     justifyContent: "flex-start",
     padding: "0",
-    paddingTop: "2rem",
+    paddingTop: "spacer4",
   },
   action: {
     justifyContent: "center",
-    marginTop: "1rem",
-    marginRight: "2rem",
+    marginTop: "spacer2",
+    marginRight: "spacer4",
     minWidth: "10rem",
     span: {
-      marginLeft: "0.5rem",
+      marginLeft: "spacer1",
       marginRight: "-0.25rem",
       "&.ds-c-spinner": {
         marginLeft: 0,
@@ -173,11 +173,11 @@ const sx = {
   },
   close: {
     justifyContent: "start",
-    padding: ".5rem 1rem",
-    marginTop: "1rem",
+    padding: "0.5rem 1rem",
+    marginTop: "spacer2",
     span: {
       marginLeft: "0rem",
-      marginRight: "0.5rem",
+      marginRight: "spacer1",
     },
     ".mobile &": {
       fontSize: "sm",
