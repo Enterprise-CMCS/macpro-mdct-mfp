@@ -341,7 +341,7 @@ export const mockFullReportJSON: ReportJson = {
                                         "Transitions and transition coordination services",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -350,7 +350,7 @@ export const mockFullReportJSON: ReportJson = {
                                       content: "Housing-related supports",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -360,7 +360,7 @@ export const mockFullReportJSON: ReportJson = {
                                         "Quality measurement and improvement",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -369,7 +369,7 @@ export const mockFullReportJSON: ReportJson = {
                                       content: "Self-direction (if applicable)",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -379,7 +379,7 @@ export const mockFullReportJSON: ReportJson = {
                                         "Tribal initiative (if applicable)",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -400,7 +400,7 @@ export const mockFullReportJSON: ReportJson = {
                                       content: "Recruitment and enrollment",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -410,7 +410,7 @@ export const mockFullReportJSON: ReportJson = {
                                         "Person-centered planning and services",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -419,7 +419,7 @@ export const mockFullReportJSON: ReportJson = {
                                       content: "No Wrong Door systems",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -428,7 +428,7 @@ export const mockFullReportJSON: ReportJson = {
                                       content: "Community transition support",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -438,7 +438,7 @@ export const mockFullReportJSON: ReportJson = {
                                         "Direct service workforce and caregivers",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -447,7 +447,7 @@ export const mockFullReportJSON: ReportJson = {
                                       content: "Employment support",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -457,7 +457,7 @@ export const mockFullReportJSON: ReportJson = {
                                         "Convenient and accessible transportation options",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -466,7 +466,7 @@ export const mockFullReportJSON: ReportJson = {
                                       content: "Data-based decision-making",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -475,7 +475,7 @@ export const mockFullReportJSON: ReportJson = {
                                       content: "Financing approaches",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -484,7 +484,7 @@ export const mockFullReportJSON: ReportJson = {
                                       content: "Stakeholder engagement",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -494,7 +494,7 @@ export const mockFullReportJSON: ReportJson = {
                                         "Equity and social determinants of health (SDOH)",
                                       props: {
                                         style: {
-                                          paddingBottom: ".5rem",
+                                          paddingBottom: "0.5rem",
                                         },
                                       },
                                     },
@@ -548,7 +548,7 @@ export const mockFullReportJSON: ReportJson = {
                         "Initiative description, including target populations and timeframe",
                       props: {
                         style: {
-                          padding: ".5rem",
+                          padding: "0.5rem",
                         },
                       },
                     },
@@ -558,7 +558,7 @@ export const mockFullReportJSON: ReportJson = {
                         "An evaluation plan, including measurable objectives",
                       props: {
                         style: {
-                          padding: ".5rem",
+                          padding: "0.5rem",
                         },
                       },
                     },
@@ -568,7 +568,7 @@ export const mockFullReportJSON: ReportJson = {
                         "Funding sources, with projected quarterly expenditures",
                       props: {
                         style: {
-                          padding: ".5rem",
+                          padding: "0.5rem",
                         },
                       },
                     },
@@ -578,7 +578,7 @@ export const mockFullReportJSON: ReportJson = {
                         "Initiative close-out information, to be completed as appropriate during WP revisions",
                       props: {
                         style: {
-                          paddingTop: ".5rem",
+                          paddingTop: "0.5rem",
                         },
                       },
                     },

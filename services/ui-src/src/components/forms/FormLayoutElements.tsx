@@ -27,7 +27,7 @@ export const SectionHeader = ({
 
 export const SectionContent = ({ content }: SectionContentProps) => {
   const sx = {
-    paddingTop: "0.5rem",
+    paddingTop: "spacer1",
   };
   return <Text sx={sx}>{content}</Text>;
 };

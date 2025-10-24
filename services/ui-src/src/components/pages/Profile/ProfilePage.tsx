@@ -71,7 +71,7 @@ const sx = {
       fontWeight: "semibold",
     },
     td: {
-      padding: "0.5rem",
+      padding: "spacer1",
     },
   },
   adminButton: {

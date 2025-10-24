@@ -93,7 +93,7 @@ const sx = {
   descriptionText: {
     marginTop: "spacer_half",
     p: {
-      marginY: "0.5rem",
+      marginY: "spacer1",
     },
     ul: {
       paddingLeft: "1rem",

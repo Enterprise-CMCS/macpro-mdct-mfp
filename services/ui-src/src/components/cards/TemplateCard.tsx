@@ -113,7 +113,7 @@ const sx = {
     flexDirection: "column",
   },
   cardTitleText: {
-    marginBottom: "0.5rem",
+    marginBottom: "spacer1",
     fontSize: "lg",
     fontWeight: "bold",
     lineHeight: "1.5",
@@ -133,7 +133,7 @@ const sx = {
     padding: "0",
     span: {
       marginLeft: "0rem",
-      marginRight: "0.5rem",
+      marginRight: "spacer1",
     },
     ".mobile &": {
       marginRight: "0",
@@ -142,7 +142,7 @@ const sx = {
   formLink: {
     justifyContent: "start",
     span: {
-      marginLeft: "0.5rem",
+      marginLeft: "spacer1",
       marginRight: "-0.25rem",
     },
   },

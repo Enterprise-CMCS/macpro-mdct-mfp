@@ -69,7 +69,7 @@ const sx = {
       },
       "&:last-of-type": {
         textAlign: "right",
-        paddingRight: ".5rem",
+        paddingRight: "spacer1",
       },
     },
   },

@@ -242,7 +242,7 @@ const sx = {
     },
     ol: {
       margin: "0.25rem 0.5rem",
-      padding: "0.5rem",
+      padding: "spacer1",
     },
     a: {
       color: "palette.primary",

@@ -333,7 +333,7 @@ const sx = {
   },
   infoHeading: {
     fontWeight: "bold",
-    marginBottom: ".5rem",
+    marginBottom: "spacer1",
   },
   infoParagraph: {
     marginBottom: "1rem",
@@ -354,14 +354,14 @@ const sx = {
   },
   additionalInfo: {
     paddingTop: "1.5rem",
-    marginTop: "0.5rem",
+    marginTop: "spacer1",
     borderTop: "1px solid",
     borderColor: "palette.gray_light",
     p: {
       color: "palette.gray",
     },
     "p + p": {
-      marginY: "0.5rem",
+      marginY: "spacer1",
     },
   },
   alert: {

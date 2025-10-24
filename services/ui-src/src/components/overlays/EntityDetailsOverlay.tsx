@@ -336,7 +336,7 @@ const sx = {
     marginTop: "-2rem",
   },
   backBox: {
-    marginRight: "0.5rem",
+    marginRight: "spacer1",
     width: "1.0rem",
   },
   backIcon: {
@@ -370,7 +370,7 @@ const sx = {
   subsectionHeading: {
     fontWeight: "normal",
     fontSize: "4xl",
-    marginTop: "0.5rem",
+    marginTop: "spacer1",
   },
   infoTextBox: {
     marginTop: "1.5rem",

@@ -238,7 +238,7 @@ const sx = {
   errorText: {
     color: "palette.error_dark",
     fontSize: "0.75rem",
-    marginBottom: "0.5rem",
+    marginBottom: "spacer1",
   },
   entityName: {
     maxWidth: "18.75rem",

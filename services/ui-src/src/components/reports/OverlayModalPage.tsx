@@ -247,7 +247,7 @@ const sx = {
   backIcon: {
     color: "palette.primary",
     height: "1rem",
-    marginRight: "0.5rem",
+    marginRight: "spacer1",
   },
   buttonIcons: {
     height: "1rem",

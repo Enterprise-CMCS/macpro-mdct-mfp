@@ -224,7 +224,7 @@ const sx = {
     paddingLeft: "1rem",
     margin: "1.5rem",
     li: {
-      marginBottom: "0.5rem",
+      marginBottom: "spacer1",
     },
   },
   adminApprove: {
@@ -271,7 +271,7 @@ const sx = {
     marginRight: "2rem",
     minWidth: "10rem",
     span: {
-      marginLeft: "0.5rem",
+      marginLeft: "spacer1",
       marginRight: "-0.25rem",
       "&.ds-c-spinner": {
         marginLeft: 0,

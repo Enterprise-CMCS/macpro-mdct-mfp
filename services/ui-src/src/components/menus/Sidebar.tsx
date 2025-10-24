@@ -245,7 +245,7 @@ const sx = {
     ".ds-c-icon--arrow": {
       position: "absolute",
       top: "10px",
-      right: "0.5rem",
+      right: "spacer1",
       fontSize: "13px",
       color: "palette.gray",
     },

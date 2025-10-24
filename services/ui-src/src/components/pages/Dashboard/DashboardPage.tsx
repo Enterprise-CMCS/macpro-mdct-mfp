@@ -477,7 +477,7 @@ const sx = {
   returnLink: {
     display: "flex",
     width: "8.5rem",
-    paddingTop: "0.5rem",
+    paddingTop: "spacer1",
     svg: {
       height: "1.375rem",
       width: "1.375rem",
@@ -492,7 +492,7 @@ const sx = {
       width: "1.25rem",
       height: "1.25rem",
       marginTop: "spacer_half",
-      marginRight: "0.5rem",
+      marginRight: "spacer1",
     },
   },
   leadTextBox: {

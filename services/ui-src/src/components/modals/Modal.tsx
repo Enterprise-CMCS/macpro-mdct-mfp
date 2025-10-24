@@ -161,7 +161,7 @@ const sx = {
     marginRight: "2rem",
     minWidth: "10rem",
     span: {
-      marginLeft: "0.5rem",
+      marginLeft: "spacer1",
       marginRight: "-0.25rem",
       "&.ds-c-spinner": {
         marginLeft: 0,
@@ -177,7 +177,7 @@ const sx = {
     marginTop: "1rem",
     span: {
       marginLeft: "0rem",
-      marginRight: "0.5rem",
+      marginRight: "spacer1",
     },
     ".mobile &": {
       fontSize: "sm",

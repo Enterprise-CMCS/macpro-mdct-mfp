@@ -155,7 +155,7 @@ const sx = {
   },
   currentBannerStatus: {
     span: {
-      marginLeft: "0.5rem",
+      marginLeft: "spacer1",
       "&.active": {
         color: "palette.success",
       },
@@ -166,14 +166,14 @@ const sx = {
   },
   currentBannerDate: {
     span: {
-      marginLeft: "0.5rem",
+      marginLeft: "spacer1",
     },
   },
   currentBannerFlex: {
     flexDirection: "column",
   },
   spinnerContainer: {
-    marginTop: "0.5rem",
+    marginTop: "spacer1",
     ".ds-c-spinner": {
       "&:before": {
         borderColor: "palette.black",

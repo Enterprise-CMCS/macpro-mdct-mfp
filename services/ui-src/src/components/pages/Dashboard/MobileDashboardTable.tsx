@@ -247,7 +247,7 @@ const sx = {
     borderColor: "palette.gray_light",
   },
   labelGroup: {
-    marginBottom: "0.5rem",
+    marginBottom: "spacer1",
   },
   label: {
     fontSize: "sm",

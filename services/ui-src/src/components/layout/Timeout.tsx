@@ -156,11 +156,11 @@ const sx = {
   },
   close: {
     justifyContent: "start",
-    padding: ".5rem 1rem",
+    padding: "0.5rem 1rem",
     marginTop: "1rem",
     span: {
       marginLeft: "0rem",
-      marginRight: "0.5rem",
+      marginRight: "spacer1",
     },
     ".mobile &": {
       fontSize: "sm",

@@ -96,7 +96,7 @@ const sx = {
   largeHeading: {
     fontWeight: "normal",
     fontSize: "4xl",
-    marginTop: "0.5rem",
+    marginTop: "spacer1",
   },
   hintTextBox: {
     color: "#5B616B",

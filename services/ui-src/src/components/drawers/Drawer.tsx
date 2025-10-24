@@ -110,13 +110,13 @@ const sx = {
     color: "palette.base",
   },
   detailHeader: {
-    marginBottom: ".5rem",
+    marginBottom: "spacer1",
     fontSize: "md",
     fontWeight: "bold",
     color: "palette.gray",
   },
   detailDescription: {
-    marginBottom: ".5rem",
+    marginBottom: "spacer1",
     fontSize: "md",
   },
   infoTextBox: {
