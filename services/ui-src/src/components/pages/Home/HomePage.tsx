@@ -82,7 +82,7 @@ export const HomePage = () => {
 const sx = {
   layout: {
     ".contentFlex": {
-      marginTop: "3.5rem",
+      marginTop: "spacer7",
     },
   },
   introTextBox: {

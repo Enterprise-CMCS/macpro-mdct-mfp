@@ -359,7 +359,7 @@ const sx = {
     width: "8.25rem",
   },
   warningBanner: {
-    marginTop: "3.5rem",
+    marginTop: "spacer7",
     marginBottom: "spacer4",
     bgColor: "palette.warn_lightest",
     borderInlineStartColor: "palette.warn",

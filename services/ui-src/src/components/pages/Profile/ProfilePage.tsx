@@ -54,7 +54,7 @@ export const ProfilePage = () => {
 const sx = {
   layout: {
     ".contentFlex": {
-      marginTop: "3.5rem",
+      marginTop: "spacer7",
       marginBottom: "5rem !important",
     },
   },

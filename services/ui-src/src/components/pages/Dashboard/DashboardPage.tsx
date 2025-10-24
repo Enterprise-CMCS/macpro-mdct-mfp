@@ -471,7 +471,7 @@ const sx = {
     ".contentFlex": {
       maxWidth: "appMax",
       marginTop: "spacer2",
-      marginBottom: "3.5rem",
+      marginBottom: "spacer7",
     },
   },
   returnLink: {
