@@ -1,9 +1,6 @@
 import { PageTypes, Transformation } from "./formFields";
 import { ReportType } from "./reports";
-import {
-  NestedValidation,
-  ValidationType,
-} from "./validations";
+import { NestedValidation, ValidationType } from "./validations";
 
 export interface ReportJsonFile {
   basePath: string;
