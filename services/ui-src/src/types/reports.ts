@@ -268,12 +268,18 @@ export interface SelectedOption {
   value: string;
 }
 
+export interface DynamicFieldShape {
+  id: string;
+  name: string;
+}
+
 /**
  * All (most) of the possible field value types.
  */
 export type FieldValue =
   | string
   | number
+  | DynamicFieldShape[]
   | EntityShape
   | EntityShape[]
   | Choice
