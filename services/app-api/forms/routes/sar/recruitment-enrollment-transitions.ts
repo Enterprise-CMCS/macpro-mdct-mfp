@@ -1,4 +1,11 @@
-import { FormRoute, PageTypes, ParentRoute } from "../../../utils/types";
+import {
+  FormRoute,
+  PageTypes,
+  ParentRoute,
+  ReportFormFieldType,
+  TransformationRule,
+  ValidationType,
+} from "../../../utils/types";
 
 const informedConsentFormRoute: FormRoute = {
   name: "Number of people who signed an MFP informed consent form in the reporting period",
@@ -13,12 +20,12 @@ const informedConsentFormRoute: FormRoute = {
         "Number of people who signed an MFP informed consent form in the {{reportingPeriod}}",
       info: [
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "In this section, provide information for the specified period.",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "Number of institutional residents who have signed an informed consent form indicating their desire to transition to the community and enroll in the state or territory’s MFP program.",
         },
@@ -32,13 +39,13 @@ const informedConsentFormRoute: FormRoute = {
     fields: [
       {
         id: "ret_psmicf_target_populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
     ],
@@ -56,12 +63,12 @@ const numberOfMfpTransitionsRoute: FormRoute = {
       subsectionTitle: "Number of MFP transitions in the {{reportingPeriod}}",
       info: [
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "In this section, provide information for the specified period.",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "Number of qualified institutional residents who enrolled in MFP and were discharged from an institution to a qualified residence during the reporting period in the quarter.",
         },
@@ -75,38 +82,38 @@ const numberOfMfpTransitionsRoute: FormRoute = {
     fields: [
       {
         id: "ret_mtrp_quarter_header_1",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         transformation: {
-          rule: "firstQuarterOfThePeriod",
+          rule: TransformationRule.FIRST_QUARTER_OF_THE_PERIOD,
         },
       },
       {
         id: "ret_mtrp_quarter_1_populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret_mtrp_quarter_header_2",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         transformation: {
-          rule: "secondQuarterOfThePeriod",
+          rule: TransformationRule.SECOND_QUARTER_OF_THE_PERIOD,
         },
       },
       {
         id: "ret_mtrp_quarter_2_populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
     ],
@@ -126,12 +133,12 @@ const qualifiedInstitutionsRoute: FormRoute = {
         "Number of MFP transitions from qualified institutions in the {{reportingPeriod}}",
       info: [
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "In this section, provide information for the specified period.",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             'Of the total transitions reported in "Number of MFP transitions", provide the number of transitions from each qualified inpatient facility type during the reporting period.',
         },
@@ -145,25 +152,25 @@ const qualifiedInstitutionsRoute: FormRoute = {
     fields: [
       {
         id: "ret-mtfqi-header-1",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Nursing facility",
         },
       },
       {
         id: "ret-mtfqi-1-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mtfqi-header-2",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content:
             "Intermediate care facility for individuals with intellectual disabilities (ICF/IID)",
@@ -171,67 +178,67 @@ const qualifiedInstitutionsRoute: FormRoute = {
       },
       {
         id: "ret-mtfqi-2-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mtfqi-header-3",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Institution for mental diseases (IMD)",
         },
       },
       {
         id: "ret-mtfqi-3-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mtfqi-header-4",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Hospital",
         },
       },
       {
         id: "ret-mtfqi-4-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mtfqi-header-5",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Other",
         },
       },
       {
         id: "ret-mtfqi-5-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
     ],
@@ -251,12 +258,12 @@ const qualifiedResidencesRoute: FormRoute = {
         "Number of MFP transitions to qualified residences in the {{reportingPeriod}}",
       info: [
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "In this section, provide information for the specified period.",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             'Of the total transitions reported in "Number of MFP transitions", provide the number of transitions to each qualified residence type during the reporting period.',
         },
@@ -270,43 +277,43 @@ const qualifiedResidencesRoute: FormRoute = {
     fields: [
       {
         id: "ret-mtfqr-header-1",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Home (owned or leased by individual or family)",
         },
       },
       {
         id: "ret-mtfqr-1-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mtfqr-header-2",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Apartment (individual lease, lockable access, etc.)",
         },
       },
       {
         id: "ret-mtfqr-2-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mtfqr-header-3",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content:
             "Group home or other residence in which four or fewer unrelated individuals live",
@@ -314,31 +321,31 @@ const qualifiedResidencesRoute: FormRoute = {
       },
       {
         id: "ret-mtfqr-3-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mtfqr-header-4",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Apartment in qualified assisted living",
         },
       },
       {
         id: "ret-mtfqr-4-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
     ],
@@ -358,12 +365,12 @@ const currentMfpParticipantsRoute: FormRoute = {
         "Total number of active MFP participants in the {{reportingPeriod}}",
       info: [
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "In this section, provide information for the specified period.",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "Active MFP participants excludes individuals whose enrollment in the MFP Demonstration ended because they completed their 365 days of MFP eligibility, died before they exhausted their 365-day enrollment period, were institutionalized for 30 days or more and did not subsequently re-enroll in the MFP program, or otherwise disenrolled from the program.",
         },
@@ -377,13 +384,13 @@ const currentMfpParticipantsRoute: FormRoute = {
     fields: [
       {
         id: "ret-tnamprp-1-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
     ],
@@ -403,12 +410,12 @@ const completingProgramRoute: FormRoute = {
         "Number of MFP participants completing the program in the {{reportingPeriod}}",
       info: [
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "In this section, provide information for the specified period.",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "Number of MFP participants who completed the 365-day enrollment period during the reporting period.",
         },
@@ -422,13 +429,13 @@ const completingProgramRoute: FormRoute = {
     fields: [
       {
         id: "ret-nmpcprp-1-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
     ],
@@ -448,12 +455,12 @@ const reenrolledInMfpRoute: FormRoute = {
         "Number of people re-enrolled in MFP during the {{reportingPeriod}}",
       info: [
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "In this section, provide information for the specified period.",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "Number of people who were disenrolled from the MFP program at any point (during this reporting period or a prior period) and re-enrolled during this reporting period.",
         },
@@ -467,13 +474,13 @@ const reenrolledInMfpRoute: FormRoute = {
     fields: [
       {
         id: "ret-npremrp-1-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
     ],
@@ -493,12 +500,12 @@ const disenrolledFromProgramRoute: FormRoute = {
         "Number of MFP participants disenrolled from the program during the {{reportingPeriod}}",
       info: [
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "In this section, provide information for the specified period.",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "Provide the number of MFP participants for each target population (if applicable for this reporting period), by reason for disenrollment. If more than one reason applies to an individual’s disenrollment, include the individual in the total for one reason only. Include the individual under the primary reason or, if indeterminate, the first reason listed. Enter the number of participants disenrolled for the selected “other” cause in the new fields. An additional “other” reason may be specified, if one or more participants disenrolled for reasons other than those listed.",
         },
@@ -512,69 +519,69 @@ const disenrolledFromProgramRoute: FormRoute = {
     fields: [
       {
         id: "ret-mpdprp-header-1",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Re-institutionalization",
         },
       },
       {
         id: "ret-mpdprp-1-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mpdprp-header-2",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Death",
         },
       },
       {
         id: "ret-mpdprp-2-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mpdprp-header-3",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Voluntary disenrollment",
         },
       },
       {
         id: "ret-mpdprp-3-populations",
-        type: "number",
-        validation: "validInteger",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER,
         props: {
           decimalPlacesToRoundTo: 0,
         },
         transformation: {
-          rule: "targetPopulations",
+          rule: TransformationRule.TARGET_POPULATIONS,
         },
       },
       {
         id: "ret-mpdprp-header-4",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Other",
         },
       },
       {
         id: "ret_otherReasons",
-        type: "checkbox",
-        validation: "checkboxOptional",
+        type: ReportFormFieldType.CHECKBOX,
+        validation: ValidationType.CHECKBOX_OPTIONAL,
         props: {
           label: "Other reasons",
           hint: "Check all that apply.",
@@ -585,9 +592,9 @@ const disenrolledFromProgramRoute: FormRoute = {
               children: [
                 {
                   id: "ret-movedout-populations",
-                  type: "number",
+                  type: ReportFormFieldType.NUMBER,
                   validation: {
-                    type: "validInteger",
+                    type: ValidationType.VALID_INTEGER,
                     nested: true,
                     parentFieldName: "ret_otherReasons",
                     parentOptionId: "2VffASWS2XRfAlc3uLzxCVAC",
@@ -596,7 +603,7 @@ const disenrolledFromProgramRoute: FormRoute = {
                     decimalPlacesToRoundTo: 0,
                   },
                   transformation: {
-                    rule: "targetPopulations",
+                    rule: TransformationRule.TARGET_POPULATIONS,
                   },
                 },
               ],
@@ -607,9 +614,9 @@ const disenrolledFromProgramRoute: FormRoute = {
               children: [
                 {
                   id: "ret-incarceration-populations",
-                  type: "number",
+                  type: ReportFormFieldType.NUMBER,
                   validation: {
-                    type: "validInteger",
+                    type: ValidationType.VALID_INTEGER,
                     nested: true,
                     parentFieldName: "ret_otherReasons",
                     parentOptionId: "2VfqAGi1lgxX3uXc98cl6q4u",
@@ -618,7 +625,7 @@ const disenrolledFromProgramRoute: FormRoute = {
                     decimalPlacesToRoundTo: 0,
                   },
                   transformation: {
-                    rule: "targetPopulations",
+                    rule: TransformationRule.TARGET_POPULATIONS,
                   },
                 },
               ],
@@ -629,9 +636,9 @@ const disenrolledFromProgramRoute: FormRoute = {
               children: [
                 {
                   id: "ret-moved-populations",
-                  type: "number",
+                  type: ReportFormFieldType.NUMBER,
                   validation: {
-                    type: "validInteger",
+                    type: ValidationType.VALID_INTEGER,
                     nested: true,
                     parentFieldName: "ret_otherReasons",
                     parentOptionId: "2VfqSwWMAr9xOE2zOhpLHtYQ",
@@ -640,7 +647,7 @@ const disenrolledFromProgramRoute: FormRoute = {
                     decimalPlacesToRoundTo: 0,
                   },
                   transformation: {
-                    rule: "targetPopulations",
+                    rule: TransformationRule.TARGET_POPULATIONS,
                   },
                 },
               ],
@@ -651,9 +658,9 @@ const disenrolledFromProgramRoute: FormRoute = {
               children: [
                 {
                   id: "otherReasons-otherText",
-                  type: "text",
+                  type: ReportFormFieldType.TEXT,
                   validation: {
-                    type: "text",
+                    type: ValidationType.TEXT,
                     nested: true,
                     parentFieldName: "ret_otherReasons",
                     parentOptionId: "2Vfqd9gpWs2J3Wef5CAuqGx9",
@@ -661,9 +668,9 @@ const disenrolledFromProgramRoute: FormRoute = {
                 },
                 {
                   id: "ret-other-specify-populations",
-                  type: "number",
+                  type: ReportFormFieldType.NUMBER,
                   validation: {
-                    type: "validInteger",
+                    type: ValidationType.VALID_INTEGER,
                     nested: true,
                     parentFieldName: "ret_otherReasons",
                     parentOptionId: "2Vfqd9gpWs2J3Wef5CAuqGx9",
@@ -672,7 +679,7 @@ const disenrolledFromProgramRoute: FormRoute = {
                     decimalPlacesToRoundTo: 0,
                   },
                   transformation: {
-                    rule: "targetPopulations",
+                    rule: TransformationRule.TARGET_POPULATIONS,
                   },
                 },
               ],
@@ -696,12 +703,12 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
         "Number of HCBS participants (including MFP participants) admitted to a facility from the community, by length of stay and age group",
       info: [
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "In this section, provide information for the specified period.",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "Inpatient facilities include hospitals, nursing homes, ICF/IID, or IMD. Provide data for readmissions occurring between July 31 of the current reporting period and August 1 of the prior year.",
         },
@@ -716,15 +723,15 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
     fields: [
       {
         id: "ret_sectionHeader_shortTermStay",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Short-term stay: 1 to 20 days",
         },
       },
       {
         id: "ret_shortTermStayAges18to64",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 18-64",
           styleAsOptional: true,
@@ -733,8 +740,8 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_shortTermStayAges65to74",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 65-74",
           styleAsOptional: true,
@@ -743,8 +750,8 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_shortTermStayAges75to84",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 75-84",
           styleAsOptional: true,
@@ -753,8 +760,8 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_shortTermStayAges85AndOlder",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 85 and older",
           styleAsOptional: true,
@@ -763,15 +770,15 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_sectionHeader_mediumTermStay",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Medium-term stay: 21-100 days",
         },
       },
       {
         id: "ret_mediumTermStayAges18to64",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 18-64",
           styleAsOptional: true,
@@ -780,8 +787,8 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_mediumTermStayAges65to74",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 65-74",
           styleAsOptional: true,
@@ -790,8 +797,8 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_mediumTermStayAges75to84",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 75-84",
           styleAsOptional: true,
@@ -800,8 +807,8 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_mediumTermStayAges85AndOlder",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 85 and older",
           styleAsOptional: true,
@@ -810,15 +817,15 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_sectionHeader_longTermStay",
-        type: "sectionHeader",
+        type: ReportFormFieldType.SECTION_HEADER,
         props: {
           content: "Long-term stay: 101 days or more",
         },
       },
       {
         id: "ret_longTermStayAges18to64",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 18-64",
           styleAsOptional: true,
@@ -827,8 +834,8 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_longTermStayAges65to74",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 65-74",
           styleAsOptional: true,
@@ -837,8 +844,8 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_longTermStayAges75to84",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 75-84",
           styleAsOptional: true,
@@ -847,8 +854,8 @@ const admittedToFacilityFromCommunityRoute: FormRoute = {
       },
       {
         id: "ret_longTermStayAges85AndOlder",
-        type: "number",
-        validation: "validIntegerOptional",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.VALID_INTEGER_OPTIONAL,
         props: {
           label: "Ages 85 and older",
           styleAsOptional: true,

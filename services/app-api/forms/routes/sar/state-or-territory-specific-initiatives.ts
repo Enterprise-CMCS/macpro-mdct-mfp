@@ -1,8 +1,11 @@
 import {
-  EntityTypes,
   PageTypes,
+  ReportFormFieldType,
   SARStateOrTerritorySpecificInitiativesRoute,
-  StepTypes,
+  StepEntityType,
+  StepType,
+  TransformationRule,
+  ValidationType,
 } from "../../../utils/types";
 
 export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecificInitiativesRoute =
@@ -10,7 +13,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
     name: "State or Territory-Specific Initiatives",
     path: "/sar/state-or-territory-specific-initiatives",
     pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
-    entityType: EntityTypes.INITIATIVE,
+    entityType: StepEntityType.INITIATIVE,
     entityInfo: ["initiative_name", "initiative_wpTopic"],
     verbiage: {
       intro: {
@@ -95,8 +98,8 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
         {
           name: "Objectives progress",
           pageType: PageTypes.OVERLAY_MODAL,
-          entityType: EntityTypes.INITIATIVE,
-          stepType: StepTypes.OBJECTIVE_PROGRESS,
+          entityType: StepEntityType.INITIATIVE,
+          stepType: StepType.OBJECTIVE_PROGRESS,
           stepInfo: ["name", "hint"],
           hint: "Report progress for each objective",
           isRequired: true,
@@ -169,7 +172,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
               "Report objective progress to complete this section.",
           },
           transformation: {
-            rule: "objectives",
+            rule: TransformationRule.OBJECTIVES,
           },
           objectiveCardTemplate: {
             modalForm: {
@@ -177,8 +180,8 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
               fields: [
                 {
                   id: "objectivesProgress_performanceMeasuresIndicators",
-                  type: "textarea",
-                  validation: "text",
+                  type: ReportFormFieldType.TEXTAREA,
+                  validation: ValidationType.TEXT,
                   props: {
                     label:
                       "Provide data on performance measures or indicators used for monitoring progress toward the objective during the current reporting period. Include progress toward milestones and key deliverables.",
@@ -186,15 +189,15 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
                 },
                 {
                   id: "objectivesProgress_quantitative",
-                  type: "",
+                  type: ReportFormFieldType.NO_TYPE,
                   transformation: {
-                    rule: "quantitativeQuarters",
+                    rule: TransformationRule.QUANTITATIVE_QUARTERS,
                   },
                 },
                 {
                   id: "objectivesProgress_deliverablesMet",
-                  type: "radio",
-                  validation: "radio",
+                  type: ReportFormFieldType.RADIO,
+                  validation: ValidationType.RADIO,
                   props: {
                     label:
                       "Were targets for performance measures or expected time frames for deliverables met?",
@@ -213,9 +216,9 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
                               label:
                                 "Describe progress toward reaching the target/milestone during the reporting period. How close are you to meeting the target? How do you plan to address any obstacle(s) to meeting the target?",
                             },
-                            type: "textarea",
+                            type: ReportFormFieldType.TEXTAREA,
                             validation: {
-                              type: "text",
+                              type: ValidationType.TEXT,
                               parentFieldName:
                                 "objectivesProgress_deliverablesMet",
                               parentOptionId:
@@ -235,8 +238,8 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
         {
           name: "Initiative progress",
           pageType: PageTypes.ENTITY_OVERLAY,
-          entityType: EntityTypes.INITIATIVE,
-          stepType: StepTypes.INITIATIVE_PROGRESS,
+          entityType: StepEntityType.INITIATIVE,
+          stepType: StepType.INITIATIVE_PROGRESS,
           stepInfo: ["name", "hint"],
           hint: "Report overall progress for the initiative",
           isRequired: true,
@@ -271,8 +274,8 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
             fields: [
               {
                 id: "initiativeProgress_describeProgress",
-                type: "textarea",
-                validation: "text",
+                type: ReportFormFieldType.TEXTAREA,
+                validation: ValidationType.TEXT,
                 props: {
                   label:
                     "Describe any progress made under this initiative during the reporting period not otherwise mentioned under the objective(s).",
@@ -280,8 +283,8 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
               },
               {
                 id: "initiativeProgress_describeIssuesChallenges",
-                type: "textarea",
-                validation: "text",
+                type: ReportFormFieldType.TEXTAREA,
+                validation: ValidationType.TEXT,
                 props: {
                   label:
                     "Describe any issues or challenges that have impacted the development and implementation of the initiative during the reporting period that are not otherwise mentioned under the objective(s).",
@@ -290,8 +293,8 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
               },
               {
                 id: "initiativeProgress_describeCollaborationsWithExternalParties",
-                type: "textarea",
-                validation: "text",
+                type: ReportFormFieldType.TEXTAREA,
+                validation: ValidationType.TEXT,
                 props: {
                   label:
                     "List and describe any collaborations you have with any external parties to run the initiative tasks or to achieve initiative goals.",
@@ -303,8 +306,8 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
         {
           name: "Expenditures",
           pageType: PageTypes.ENTITY_OVERLAY,
-          entityType: EntityTypes.INITIATIVE,
-          stepType: StepTypes.EXPENDITURES,
+          entityType: StepEntityType.INITIATIVE,
+          stepType: StepType.EXPENDITURES,
           stepInfo: ["name", "hint"],
           hint: "Report actual quarterly expenditures by funding source",
           isRequired: true,
@@ -339,10 +342,10 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
             fields: [
               {
                 id: "fundingSources",
-                type: "number",
-                validation: "number",
+                type: ReportFormFieldType.NUMBER,
+                validation: ValidationType.NUMBER,
                 transformation: {
-                  rule: "fundingSources",
+                  rule: TransformationRule.FUNDING_SOURCES,
                 },
                 props: {
                   mask: "currency",
@@ -350,8 +353,8 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
               },
               {
                 id: "expenditures_onTrackToFullExpendFunds",
-                type: "radio",
-                validation: "radio",
+                type: ReportFormFieldType.RADIO,
+                validation: ValidationType.RADIO,
                 props: {
                   label:
                     "Taking the lag time for reporting expenditures into account, is the state or territory on track to fully expend funds within the projected time frame for this initiative?",
@@ -367,9 +370,9 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
                       children: [
                         {
                           id: "expenditures_onTrackToFullExpendFunds-otherText",
-                          type: "textarea",
+                          type: ReportFormFieldType.TEXTAREA,
                           validation: {
-                            type: "text",
+                            type: ValidationType.TEXT,
                             parentFieldName:
                               "expenditures_onTrackToFullExpendFunds",
                             parentOptionId: "2WaUKNbCmetqXVFsKnaHqeK",

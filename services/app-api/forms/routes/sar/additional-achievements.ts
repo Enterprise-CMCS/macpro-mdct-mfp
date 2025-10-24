@@ -1,4 +1,9 @@
-import { FormRoute, PageTypes } from "../../../utils/types";
+import {
+  FormRoute,
+  PageTypes,
+  ReportFormFieldType,
+  ValidationType,
+} from "../../../utils/types";
 
 export const additionalAchievementsRoute: FormRoute = {
   name: "Additional Achievements",
@@ -86,8 +91,8 @@ export const additionalAchievementsRoute: FormRoute = {
     fields: [
       {
         id: "aa_notableAchievementsPromisingPractices",
-        type: "textarea",
-        validation: "text",
+        type: ReportFormFieldType.TEXTAREA,
+        validation: ValidationType.TEXT,
         props: {
           label:
             "Describe any notable achievements and identify any promising practices by your MFP program that have not been captured elsewhere.",
@@ -95,8 +100,8 @@ export const additionalAchievementsRoute: FormRoute = {
       },
       {
         id: "aa_changesMfpProgramAdministration",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label:
             "Indicate whether your state or territory has made any changes to operations, objectives, or other aspects of MFP program administration that will require amendments to the Operational Protocol.",
@@ -111,9 +116,9 @@ export const additionalAchievementsRoute: FormRoute = {
               children: [
                 {
                   id: "oa_describeDevelopmentsChanges",
-                  type: "textarea",
+                  type: ReportFormFieldType.TEXTAREA,
                   validation: {
-                    type: "text",
+                    type: ValidationType.TEXT,
                     nested: true,
                     parentFieldName: "aa_changesMfpProgramAdministration",
                     parentOptionId: "2Vfw3X48qEyKOAxXt7HPlMMg",

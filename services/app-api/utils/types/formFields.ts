@@ -74,8 +74,18 @@ export interface FormField {
   isRequired?: boolean;
 }
 
+export enum TransformationRule {
+  FIRST_QUARTER_OF_THE_PERIOD = "firstQuarterOfThePeriod",
+  FUNDING_SOURCES = "fundingSources",
+  NEXT_TWELVE_QUARTERS = "nextTwelveQuarters",
+  OBJECTIVES = "objectives",
+  QUANTITATIVE_QUARTERS = "quantitativeQuarters",
+  SECOND_QUARTER_OF_THE_PERIOD = "secondQuarterOfThePeriod",
+  TARGET_POPULATIONS = "targetPopulations",
+}
+
 export interface Transformation {
-  rule: string;
+  rule: TransformationRule;
 }
 
 export interface TargetPopulationKeys {

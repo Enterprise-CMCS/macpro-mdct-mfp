@@ -1,4 +1,9 @@
-import { FormRoute, PageTypes } from "../../../utils/types";
+import {
+  FormRoute,
+  PageTypes,
+  ReportFormFieldType,
+  ValidationType,
+} from "../../../utils/types";
 
 export const organizationAndAdministrationRoute: FormRoute = {
   name: "Organization & Administration",
@@ -15,8 +20,8 @@ export const organizationAndAdministrationRoute: FormRoute = {
     fields: [
       {
         id: "oa_changesOrganizationAdministration",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label:
             "Were there any changes in the organization or administration of the MFP program during this reporting period? For example, did your Medicaid agency undergo a reorganization that altered the reporting relationship of the MFP Project Director?",
@@ -31,9 +36,9 @@ export const organizationAndAdministrationRoute: FormRoute = {
               children: [
                 {
                   id: "oa_describeOAChanges",
-                  type: "textarea",
+                  type: ReportFormFieldType.TEXTAREA,
                   validation: {
-                    type: "text",
+                    type: ValidationType.TEXT,
                     nested: true,
                     parentFieldName: "oa_changesOrganizationAdministration",
                     parentOptionId: "2VfuG4GRc4ApcknSSgbMvvHg",
@@ -49,8 +54,8 @@ export const organizationAndAdministrationRoute: FormRoute = {
       },
       {
         id: "oa_projectDirectorEmployment",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label:
             "Is the Project Director an employee of the recipient agency or state/territory Medicaid agency?",
@@ -61,9 +66,9 @@ export const organizationAndAdministrationRoute: FormRoute = {
               children: [
                 {
                   id: "oa_provideNameOfEmployerAndReportingRelationship",
-                  type: "textarea",
+                  type: ReportFormFieldType.TEXTAREA,
                   validation: {
-                    type: "text",
+                    type: ValidationType.TEXT,
                     nested: true,
                     parentFieldName: "oa_projectDirectorEmployment",
                     parentOptionId: "2VfuG2OUicDROyaE5RmbtqWM",
@@ -84,8 +89,8 @@ export const organizationAndAdministrationRoute: FormRoute = {
       },
       {
         id: "oa_hiringRetentionChallengesMfpStaff",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label:
             "Are there hiring or retention challenges for MFP staff, including the MFP Project Director and MFP Data and Quality Analyst?",
@@ -100,9 +105,9 @@ export const organizationAndAdministrationRoute: FormRoute = {
               children: [
                 {
                   id: "oa_describeHiringRetentionChallenges",
-                  type: "textarea",
+                  type: ReportFormFieldType.TEXTAREA,
                   validation: {
-                    type: "text",
+                    type: ValidationType.TEXT,
                     nested: true,
                     parentFieldName: "oa_hiringRetentionChallengesMfpStaff",
                     parentOptionId: "2VfuyVGyPc6ePgAicM69ayDqTpX",
@@ -118,8 +123,8 @@ export const organizationAndAdministrationRoute: FormRoute = {
       },
       {
         id: "oa_describeTechnicalAssitanceActivities",
-        type: "textarea",
-        validation: "text",
+        type: ReportFormFieldType.TEXTAREA,
+        validation: ValidationType.TEXT,
         props: {
           label:
             "Describe the technical assistance activities MFP staff have engaged in during the reporting period (e.g., participation in a learning collaborative or other training session).",
@@ -127,8 +132,8 @@ export const organizationAndAdministrationRoute: FormRoute = {
       },
       {
         id: "oa_additionalTechnicalResourcesSupports",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label:
             "Are there additional technical assistance resources or supports that your state or territory would benefit from?",
@@ -143,9 +148,9 @@ export const organizationAndAdministrationRoute: FormRoute = {
               children: [
                 {
                   id: "oa_describeAdditionalTechnicalResourcesSupports",
-                  type: "textarea",
+                  type: ReportFormFieldType.TEXTAREA,
                   validation: {
-                    type: "text",
+                    type: ValidationType.TEXT,
                     nested: true,
                     parentFieldName: "oa_additionalTechnicalResourcesSupports",
                     parentOptionId: "2VfvDSkVxhYZwQ8AMXqR5QX8",
