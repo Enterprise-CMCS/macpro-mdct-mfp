@@ -366,10 +366,10 @@ const sx = {
   },
   alert: {
     marginBottom: "spacer4",
-    marginRight: "2.5rem",
+    marginRight: "spacer5",
   },
   footerBox: {
-    marginTop: "2.5rem",
+    marginTop: "spacer5",
     paddingTop: "spacer3",
     borderTop: "1px solid",
     borderColor: "palette.gray_light",

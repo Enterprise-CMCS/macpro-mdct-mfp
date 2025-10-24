@@ -211,7 +211,7 @@ interface Props {
 
 const sx = {
   ".tbs-bottom-margin": {
-    marginBottom: "2.5rem",
+    marginBottom: "spacer5",
   },
   // default
   ".ds-c-field, .ds-c-label": {

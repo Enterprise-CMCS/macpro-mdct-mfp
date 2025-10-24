@@ -36,7 +36,7 @@ const sx = {
     },
   },
   table: {
-    marginBottom: "2.5rem",
+    marginBottom: "spacer5",
     th: {
       padding: "1rem 0 1rem 1rem",
       borderBottom: "1px solid",

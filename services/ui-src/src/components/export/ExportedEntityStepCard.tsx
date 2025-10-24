@@ -139,7 +139,7 @@ const sx = {
     position: "relative",
     marginX: "1.25rem",
     "&.export-version": {
-      paddingLeft: "2.5rem",
+      paddingLeft: "spacer5",
     },
     ".delete-entity-button": {
       position: "absolute",

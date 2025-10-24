@@ -275,7 +275,7 @@ const sx = {
     },
   },
   navItemTitle: {
-    marginRight: "2.5rem",
+    marginRight: "spacer5",
     fontSize: "14px",
     marginY: "10px",
     textAlign: "left",

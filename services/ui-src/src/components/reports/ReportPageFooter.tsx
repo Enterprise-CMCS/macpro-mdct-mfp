@@ -88,7 +88,7 @@ interface Props {
 
 const sx = {
   footerBox: {
-    marginTop: "2.5rem",
+    marginTop: "spacer5",
     paddingTop: "spacer3",
     borderTop: "1px solid",
     borderColor: "palette.gray_light",
