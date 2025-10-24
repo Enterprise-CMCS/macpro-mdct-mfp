@@ -832,9 +832,15 @@
                   {
                     "id": "defineInitiative_describeInitiative",
                     "type": "textarea",
-                    "validation": "text",
+                    "validation": {
+                      "type": "textCustom",
+                      "options": {
+                        "maxLength": 1800
+                      }
+                    },
                     "props": {
-                      "label": "Describe the initiative, including the gap, challenge, or opportunity it will address:"
+                      "label": "Describe the initiative, including the gap, challenge, or opportunity it will address:",
+                      "maxLength": 1800
                     }
                   },
                   {

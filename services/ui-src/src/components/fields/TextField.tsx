@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 import { Box, Heading, SystemStyleObject } from "@chakra-ui/react";
-import { ReportContext } from "components";
+import { CharacterCounter, ReportContext } from "components";
 import { EntityContext } from "components/reports/EntityProvider";
 // utils
 import {
@@ -27,6 +27,7 @@ export const TextField = ({
   validateOnRender,
   styleAsOptional,
   heading,
+  maxLength,
   ...props
 }: Props) => {
   const defaultValue = "";
@@ -124,6 +125,7 @@ export const TextField = ({
 
   const { autoComplete, disabled, multiline, rows } = props ?? {};
   const additionalProps = { autoComplete, disabled, multiline, rows };
+  const ariaProps = maxLength ? { "aria-describedby": `${name}-counter` } : {};
 
   return (
     <Box sx={sxOverride} className={`${nestedChildClasses} ${labelClass}`}>
@@ -139,8 +141,17 @@ export const TextField = ({
         onBlur={(e) => onBlurHandler(e)}
         errorMessage={errorMessage}
         value={displayValue}
+        maxLength={maxLength}
         {...additionalProps}
+        {...ariaProps}
       />
+      {maxLength && (
+        <CharacterCounter
+          id={`${name}-counter`}
+          input={displayValue}
+          maxLength={maxLength}
+        />
+      )}
     </Box>
   );
 };
@@ -156,6 +167,7 @@ interface Props {
   styleAsOptional?: boolean;
   heading?: string;
   clear?: boolean;
+  maxLength?: number;
   [key: string]: any;
 }
 
