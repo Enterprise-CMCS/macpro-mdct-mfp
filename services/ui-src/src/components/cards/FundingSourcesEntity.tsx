@@ -62,7 +62,7 @@ const sx = {
   gridSubtitle: {
     fontWeight: "bold",
     fontSize: "sm",
-    marginRight: ".25rem",
+    marginRight: "spacer_half",
   },
   subtitle: {
     marginTop: "1rem",
@@ -70,7 +70,7 @@ const sx = {
     fontWeight: "bold",
   },
   subtext: {
-    marginTop: "0.25rem",
+    marginTop: "spacer_half",
     fontSize: "sm",
   },
   error: {

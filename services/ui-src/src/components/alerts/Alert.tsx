@@ -91,17 +91,17 @@ const sx = {
     },
   },
   descriptionText: {
-    marginTop: ".25rem",
+    marginTop: "spacer_half",
     p: {
-      marginY: ".5rem",
+      marginY: "0.5rem",
     },
     ul: {
       paddingLeft: "1rem",
     },
   },
   linkText: {
-    marginTop: ".25rem",
-    marginBottom: ".25rem",
+    marginTop: "spacer_half",
+    marginBottom: "spacer_half",
   },
   icon: {
     position: "absolute",

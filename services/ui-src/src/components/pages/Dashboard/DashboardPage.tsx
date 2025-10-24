@@ -491,7 +491,7 @@ const sx = {
     ".returnIcon": {
       width: "1.25rem",
       height: "1.25rem",
-      marginTop: "0.25rem",
+      marginTop: "spacer_half",
       marginRight: "0.5rem",
     },
   },

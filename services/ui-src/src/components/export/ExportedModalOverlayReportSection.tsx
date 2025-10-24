@@ -382,7 +382,7 @@ const sx = {
     marginTop: "4rem",
   },
   statusIcon: {
-    paddingLeft: "0.25rem",
+    paddingLeft: "spacer_half",
     paddingRight: "1rem",
     img: {
       maxWidth: "fit-content",

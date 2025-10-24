@@ -346,7 +346,7 @@ const sx = {
   list: {
     color: "palette.gray",
     paddingLeft: "1rem",
-    margin: "0.25rem",
+    margin: "spacer_half",
   },
   additionalInfoHeader: {
     color: "palette.gray",

@@ -320,7 +320,7 @@ const sx = {
   table: {
     tableLayout: "fixed",
     br: {
-      marginBottom: "0.25rem",
+      marginBottom: "spacer_half",
     },
     th: {
       paddingLeft: "1rem",

@@ -190,7 +190,7 @@ const sx = {
   medicaidLogo: {
     flex: "0 0 75%",
     maxWidth: "75%",
-    marginTop: ".25rem",
+    marginTop: "spacer_half",
     ".desktop &": {
       maxWidth: "25rem",
     },

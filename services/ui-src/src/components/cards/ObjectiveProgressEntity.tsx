@@ -191,7 +191,7 @@ const sx = {
     fontSize: "sm",
   },
   description: {
-    marginTop: "0.25rem",
+    marginTop: "spacer_half",
     marginBottom: "1rem",
     fontSize: "sm",
   },
@@ -212,12 +212,12 @@ const sx = {
   sarGridSubtitle: {
     fontWeight: "bold",
     fontSize: "xs",
-    marginRight: ".25rem",
+    marginRight: "spacer_half",
   },
   gridSubtitle: {
     fontWeight: "bold",
     fontSize: "sm",
-    marginRight: ".25rem",
+    marginRight: "spacer_half",
   },
   subtitle: {
     marginTop: "1rem",
@@ -225,7 +225,7 @@ const sx = {
     fontWeight: "bold",
   },
   subtext: {
-    marginTop: "0.25rem",
+    marginTop: "spacer_half",
     fontSize: "sm",
   },
   error: {
@@ -250,7 +250,7 @@ const sx = {
     marginBottom: "1rem",
   },
   notAnsweredDescription: {
-    marginTop: "0.25rem",
+    marginTop: "spacer_half",
     marginBottom: "1.25rem",
     fontSize: "sm",
     color: "palette.error_darker",

@@ -232,7 +232,7 @@ const sx = {
   },
   // field hint
   ".ds-c-field__hint": {
-    marginBottom: "0.25rem",
+    marginBottom: "spacer_half",
   },
   // field hint and error message
   ".ds-c-field__hint, .ds-c-field__error-message ": {
@@ -251,7 +251,7 @@ const sx = {
   },
   // nested child fields
   ".ds-c-choice__checkedChild.nested": {
-    paddingY: "0.25rem",
+    paddingY: "spacer_half",
     paddingTop: 0,
     // makes the blue line continuous
     marginTop: 0,

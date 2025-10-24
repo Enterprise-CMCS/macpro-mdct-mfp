@@ -83,7 +83,7 @@ const sx = {
     marginTop: "1.5rem",
   },
   ".ds-c-field__hint": {
-    marginTop: "-.5rem",
-    marginLeft: ".25rem",
+    marginTop: "-0.5rem",
+    marginLeft: "spacer_half",
   },
 };

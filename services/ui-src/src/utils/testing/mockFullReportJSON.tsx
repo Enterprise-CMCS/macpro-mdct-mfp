@@ -522,7 +522,7 @@ export const mockFullReportJSON: ReportJson = {
                     "<sup>*Required by Program Terms and Conditions</sup>",
                   props: {
                     style: {
-                      paddingTop: ".25rem",
+                      paddingTop: "0.25rem",
                     },
                   },
                 },

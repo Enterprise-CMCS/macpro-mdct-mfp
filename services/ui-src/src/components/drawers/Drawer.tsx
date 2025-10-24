@@ -96,7 +96,7 @@ const sx = {
     top: "2rem",
     right: "2rem",
     span: {
-      margin: "0 .25rem",
+      margin: "0 0.25rem",
       svg: {
         fontSize: "xs",
         width: "xs",

@@ -152,7 +152,7 @@ const sx = {
     },
     ".icon-div-complete": {
       position: "absolute",
-      top: "0.25rem",
+      top: "spacer_half",
       left: "-1.5rem",
       marginLeft: "-0.75rem",
       ".mobile &": {
@@ -161,7 +161,7 @@ const sx = {
     },
     ".icon-div-incomplete": {
       position: "absolute",
-      top: "0.25rem",
+      top: "spacer_half",
       left: "-1.5rem",
       marginLeft: "-0.25rem",
       ".mobile &": {
