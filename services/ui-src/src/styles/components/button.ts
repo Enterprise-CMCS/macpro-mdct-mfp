@@ -8,73 +8,73 @@ const baseStyles = {
   fontWeight: "bold",
   width: "fit-content",
   "&:disabled, &:disabled:hover": {
-    color: "palette.gray",
-    backgroundColor: "palette.gray_lighter",
+    color: "gray",
+    backgroundColor: "gray_lighter",
     opacity: "1",
   },
 };
 
 const primaryVariant = {
-  backgroundColor: "palette.primary",
-  color: "palette.white",
+  backgroundColor: "primary",
+  color: "white",
   "&:hover": {
-    backgroundColor: "palette.primary_darker",
+    backgroundColor: "primary_darker",
   },
   "&:visited, &:visited:hover": {
-    backgroundColor: "palette.primary",
-    color: "palette.white",
+    backgroundColor: "primary",
+    color: "white",
   },
   "&:disabled, &:disabled:hover": {
-    color: "palette.gray",
-    backgroundColor: "palette.gray_lighter",
+    color: "gray",
+    backgroundColor: "gray_lighter",
   },
 };
 
 const outlineVariant = {
   backgroundColor: "transparent",
   border: "1px solid",
-  borderColor: "palette.primary",
-  color: "palette.primary",
+  borderColor: "primary",
+  color: "primary",
   textDecoration: "none",
   "&:hover": {
-    backgroundColor: "palette.gray_lightest",
-    color: "palette.primary_darker",
+    backgroundColor: "gray_lightest",
+    color: "primary_darker",
   },
   "&:visited, &:visited:hover": {
     backgroundColor: "transparent",
-    color: "palette.primary",
+    color: "primary",
   },
   "&:disabled, &:disabled:hover": {
-    color: "palette.gray_lighter",
-    borderColor: "palette.gray_lighter",
+    color: "gray_lighter",
+    borderColor: "gray_lighter",
     backgroundColor: "transparent",
   },
 };
 
 const transparentVariant = {
   backgroundColor: "transparent",
-  color: "palette.primary",
+  color: "primary",
   textDecoration: "underline",
   padding: "0",
   "&:hover": {
     backgroundColor: "transparent",
-    color: "palette.primary_darker",
+    color: "primary_darker",
   },
   "&:visited, &:visited:hover": {
     backgroundColor: "transparent",
-    color: "palette.primary",
+    color: "primary",
   },
   "&:disabled, &:disabled:hover": {
-    color: "palette.gray_light",
+    color: "gray_light",
     backgroundColor: "transparent",
   },
 };
 
 const dangerVariant = {
-  backgroundColor: "palette.error_dark",
-  color: "palette.white",
+  backgroundColor: "error_dark",
+  color: "white",
   "&:hover": {
-    backgroundColor: "palette.error_darker",
+    backgroundColor: "error_darker",
   },
 };
 

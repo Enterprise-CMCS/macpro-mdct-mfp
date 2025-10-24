@@ -107,13 +107,13 @@ const sx = {
   detailBox: {
     marginTop: "2rem",
     fontWeight: "normal",
-    color: "palette.base",
+    color: "base",
   },
   detailHeader: {
     marginBottom: ".5rem",
     fontSize: "md",
     fontWeight: "bold",
-    color: "palette.gray",
+    color: "gray",
   },
   detailDescription: {
     marginBottom: ".5rem",
@@ -123,15 +123,15 @@ const sx = {
     marginTop: "2rem",
     fontSize: "md",
     fontWeight: "light",
-    color: "palette.gray",
+    color: "gray",
     paddingBottom: "0",
     p: {
       marginTop: "1rem",
     },
     a: {
-      color: "palette.primary",
+      color: "primary",
       "&:hover": {
-        color: "palette.primary_darker",
+        color: "primary_darker",
       },
     },
   },

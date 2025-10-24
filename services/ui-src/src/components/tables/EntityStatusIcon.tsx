@@ -73,12 +73,12 @@ const sx = {
     fontSize: "0.667rem",
   },
   successText: {
-    color: "palette.success_darker",
+    color: "success_darker",
   },
   closeText: {
-    color: "palette.gray",
+    color: "gray",
   },
   errorText: {
-    color: "palette.error_darker",
+    color: "error_darker",
   },
 };

@@ -234,7 +234,7 @@ const sx = {
   backButton: {
     padding: 0,
     fontWeight: "normal",
-    color: "palette.primary",
+    color: "primary",
     display: "flex",
     position: "relative",
     right: 0,
@@ -245,7 +245,7 @@ const sx = {
     marginTop: "-2rem",
   },
   backIcon: {
-    color: "palette.primary",
+    color: "primary",
     height: "1rem",
     marginRight: "0.5rem",
   },
@@ -256,7 +256,7 @@ const sx = {
     paddingTop: "1rem",
     marginBottom: "1rem",
     fontWeight: "bold",
-    color: "palette.gray",
+    color: "gray",
   },
   addEntityButton: {
     marginTop: "1.5rem",
@@ -272,7 +272,7 @@ const sx = {
   reviewPdfHint: {
     paddingTop: "2rem",
     paddingBottom: "2rem",
-    color: "palette.gray",
+    color: "gray",
   },
   reviewPdfButton: { marginBottom: "2rem" },
 };
