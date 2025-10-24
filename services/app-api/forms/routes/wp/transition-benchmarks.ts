@@ -1,6 +1,9 @@
 import {
-  EntityTypes,
   PageTypes,
+  ReportFormFieldType,
+  StepEntityType,
+  TransformationRule,
+  ValidationType,
   WPTransitionBenchmarksRoute,
 } from "../../../utils/types";
 
@@ -8,7 +11,7 @@ export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
   name: "Transition Benchmarks",
   path: "/wp/transition-benchmarks",
   pageType: PageTypes.MODAL_DRAWER,
-  entityType: EntityTypes.TARGET_POPULATIONS,
+  entityType: StepEntityType.TARGET_POPULATIONS,
   entityInfo: ["transitionBenchmarks_targetPopulationName"],
   verbiage: {
     accordion: {
@@ -70,8 +73,8 @@ export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
     fields: [
       {
         id: "transitionBenchmarks_targetPopulationName",
-        type: "text",
-        validation: "text",
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
         props: {
           label: "Target population name",
           hint: 'Specify an "other" target population applicable to your MFP Demonstration project. (e.g., HIV/AIDS, brain injury).',
@@ -84,8 +87,8 @@ export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
     fields: [
       {
         id: "transitionBenchmarks_applicableToMfpDemonstration",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label:
             "Is this target population applicable to your MFP Demonstration?",
@@ -101,9 +104,9 @@ export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
               children: [
                 {
                   id: "quarterlyProjections",
-                  type: "number",
+                  type: ReportFormFieldType.NUMBER,
                   validation: {
-                    type: "validInteger",
+                    type: ValidationType.VALID_INTEGER,
                     parentFieldName:
                       "transitionBenchmarks_applicableToMfpDemonstration",
                     parentOptionId:
@@ -111,7 +114,7 @@ export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
                     nested: true,
                   },
                   transformation: {
-                    rule: "nextTwelveQuarters",
+                    rule: TransformationRule.NEXT_TWELVE_QUARTERS,
                   },
                 },
               ],
