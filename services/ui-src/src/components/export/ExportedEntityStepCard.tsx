@@ -89,7 +89,7 @@ export const ExportedEntityStepCard = ({
   return (
     <Card
       {...props}
-      marginTop="2rem"
+      marginTop="spacer4"
       boxShadow={boxShadow}
       border={border}
       borderColor={borderColor}

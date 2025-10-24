@@ -540,7 +540,7 @@ const sx = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: "2rem",
+    marginTop: "spacer4",
   },
   spinnerContainer: {
     alignItems: "center",
@@ -549,7 +549,7 @@ const sx = {
     padding: "10",
   },
   alertBanner: {
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     borderInlineStartWidth: "7.5px",
     bgColor: "palette.error_lightest",
     fontSize: "18px",

@@ -325,7 +325,7 @@ const sx = {
     fontWeight: "normal",
   },
   infoTextBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     a: {
       color: "palette.primary",
       textDecoration: "underline",
@@ -365,7 +365,7 @@ const sx = {
     },
   },
   alert: {
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     marginRight: "2.5rem",
   },
   footerBox: {

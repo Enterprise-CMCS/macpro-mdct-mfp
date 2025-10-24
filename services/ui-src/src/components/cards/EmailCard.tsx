@@ -60,7 +60,7 @@ const sx = {
     },
   },
   icon: {
-    marginRight: "2rem",
+    marginRight: "spacer4",
     boxSize: "78px",
     ".mobile &": {
       alignSelf: "center",

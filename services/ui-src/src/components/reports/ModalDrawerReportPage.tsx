@@ -315,7 +315,7 @@ const sx = {
   },
   addEntityButton: {
     marginTop: "spacer3",
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
   },
   table: {
     tableLayout: "fixed",

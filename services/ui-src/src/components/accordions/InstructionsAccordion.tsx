@@ -40,7 +40,7 @@ interface Props {
 
 const sx = {
   root: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     color: "palette.base",
   },
   item: {

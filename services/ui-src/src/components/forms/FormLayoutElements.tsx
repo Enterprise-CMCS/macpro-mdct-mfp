@@ -7,7 +7,7 @@ export const SectionHeader = ({
 }: SectionHeaderProps) => {
   const sx = {
     h3: {
-      marginTop: "2rem",
+      marginTop: "spacer4",
     },
     label: {
       marginTop: "3rem",

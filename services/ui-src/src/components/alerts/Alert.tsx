@@ -110,7 +110,7 @@ const sx = {
     width: "1.375rem",
   },
   contentBox: {
-    marginLeft: "2rem",
+    marginLeft: "spacer4",
     "&.no-icon": {
       marginLeft: 0,
     },

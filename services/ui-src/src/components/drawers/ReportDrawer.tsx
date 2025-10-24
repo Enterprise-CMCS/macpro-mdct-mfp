@@ -96,7 +96,7 @@ const sx = {
     color: "palette.error_darker",
   },
   footerBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     borderTop: "1.5px solid var(--mdct-colors-palette-gray_lighter)",
   },
   buttonFlex: {

@@ -91,7 +91,7 @@ const sx = {
     marginY: "spacer2",
   },
   button: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     width: "100%",
   },
 };

@@ -105,7 +105,7 @@ const sx = {
     flexDirection: "row",
   },
   spreadsheetIcon: {
-    marginRight: "2rem",
+    marginRight: "spacer4",
     boxSize: "5.5rem",
   },
   cardContentFlex: {

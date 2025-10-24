@@ -263,7 +263,7 @@ const sx = {
     },
   },
   addEntityButton: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     ".tablet &, .mobile &": {
       wordBreak: "break-word",
       whiteSpace: "break-spaces",

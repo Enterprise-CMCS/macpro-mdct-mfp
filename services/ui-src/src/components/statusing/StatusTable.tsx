@@ -28,7 +28,7 @@ export const StatusTable = () => {
 
 const sx = {
   container: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     table: {
       td: {
         borderBottom: "none",

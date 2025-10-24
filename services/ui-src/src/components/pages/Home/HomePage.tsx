@@ -95,6 +95,6 @@ const sx = {
     fontWeight: "normal",
   },
   card: {
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
   },
 };

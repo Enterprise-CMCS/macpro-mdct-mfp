@@ -105,7 +105,7 @@ const sx = {
     },
   },
   detailBox: {
-    marginTop: "2rem",
+    marginTop: "2respacer4m",
     fontWeight: "normal",
     color: "palette.base",
   },
@@ -120,7 +120,7 @@ const sx = {
     fontSize: "md",
   },
   infoTextBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     fontSize: "md",
     fontWeight: "light",
     color: "palette.gray",

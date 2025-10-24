@@ -33,15 +33,15 @@ interface Props {
 
 const sx = {
   sectionContainer: {
-    paddingBottom: "2rem",
+    paddingBottom: "spacer4",
     borderBottom: "1px solid grey",
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
   },
   numberContainer: {
     display: "flex",
     width: "1.5rem",
     height: "1.5rem",
-    marginTop: ".2rem",
+    marginTop: "0.2rem",
     marginRight: "spacer2",
     background: "#333",
     borderRadius: "100%",

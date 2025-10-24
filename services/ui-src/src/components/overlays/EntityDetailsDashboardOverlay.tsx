@@ -176,7 +176,7 @@ const sx = {
     ".tablet &": {
       right: "3rem",
     },
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     marginTop: "-2rem",
   },
   backIcon: {
@@ -185,7 +185,7 @@ const sx = {
     marginRight: "spacer1",
   },
   footerBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     borderTop: "1.5px solid var(--mdct-colors-palette-gray_light)",
   },
   buttonFlex: {

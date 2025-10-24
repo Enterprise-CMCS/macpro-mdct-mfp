@@ -332,12 +332,12 @@ const sx = {
     ".tablet &": {
       right: "3rem",
     },
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     marginTop: "-2rem",
   },
   backBox: {
     marginRight: "spacer1",
-    width: "1.0rem",
+    width: "1rem",
   },
   backIcon: {
     color: "palette.primary",
@@ -348,7 +348,7 @@ const sx = {
     width: "0.85rem",
   },
   footerBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     borderTop: "1.5px solid var(--mdct-colors-palette-gray_light)",
   },
   buttonFlex: {
@@ -360,7 +360,7 @@ const sx = {
   },
   warningBanner: {
     marginTop: "3.5rem",
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     bgColor: "palette.warn_lightest",
     borderInlineStartColor: "palette.warn",
   },
@@ -393,9 +393,9 @@ const sx = {
     },
   },
   reviewPdfHint: {
-    paddingTop: "2rem",
-    paddingBottom: "2rem",
+    paddingTop: "spacer4",
+    paddingBottom: "spacer4",
     color: "palette.gray",
   },
-  reviewPdfButton: { marginBottom: "2rem" },
+  reviewPdfButton: { marginBottom: "spacer4" },
 };

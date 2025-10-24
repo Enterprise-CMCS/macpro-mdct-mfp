@@ -59,12 +59,12 @@ const sx = {
     },
   },
   headerText: {
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     fontSize: "2rem",
     fontWeight: "normal",
   },
   table: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     maxWidth: "100%",
     "tr td:first-of-type": {
       width: "8rem",
@@ -75,6 +75,6 @@ const sx = {
     },
   },
   adminButton: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
   },
 };

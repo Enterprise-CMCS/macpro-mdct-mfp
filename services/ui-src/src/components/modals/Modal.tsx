@@ -115,7 +115,7 @@ const sx = {
     borderRadius: "0",
     maxWidth: "33rem",
     marginX: "4rem",
-    padding: "2rem",
+    padding: "spacer4",
   },
   modalHeader: {
     padding: "0",
@@ -133,8 +133,8 @@ const sx = {
     justifyContent: "center",
     flexShrink: "0",
     position: "absolute",
-    top: "2rem",
-    right: "2rem",
+    top: "spacer4",
+    right: "spacer4",
   },
   modalClose: {
     span: {
@@ -153,12 +153,12 @@ const sx = {
   modalFooter: {
     justifyContent: "flex-start",
     padding: "0",
-    paddingTop: "2rem",
+    paddingTop: "spacer4",
   },
   action: {
     justifyContent: "center",
     marginTop: "spacer2",
-    marginRight: "2rem",
+    marginRight: "spacer4",
     minWidth: "10rem",
     span: {
       marginLeft: "spacer1",

@@ -204,13 +204,13 @@ const sx = {
     marginBottom: "spacer2",
   },
   adminLeadTextBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     ul: {
-      marginLeft: "2rem",
+      marginLeft: "spacer4",
     },
   },
   infoTextBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     a: {
       color: "palette.primary",
       textDecoration: "underline",
@@ -233,7 +233,7 @@ const sx = {
   adminSubmitContainer: {
     width: "100%",
     justifyContent: "start",
-    marginTop: "2rem",
+    marginTop: "spacer4",
   },
   submitButton: {
     minHeight: "3rem",
@@ -268,7 +268,7 @@ const sx = {
   action: {
     justifyContent: "center",
     marginTop: "spacer2",
-    marginRight: "2rem",
+    marginRight: "spacer4",
     minWidth: "10rem",
     span: {
       marginLeft: "spacer1",

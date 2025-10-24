@@ -241,7 +241,7 @@ const sx = {
     ".tablet &": {
       right: "3rem",
     },
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     marginTop: "-2rem",
   },
   backIcon: {
@@ -270,9 +270,9 @@ const sx = {
     width: "8.25rem",
   },
   reviewPdfHint: {
-    paddingTop: "2rem",
-    paddingBottom: "2rem",
+    paddingTop: "spacer4",
+    paddingBottom: "spacer4",
     color: "palette.gray",
   },
-  reviewPdfButton: { marginBottom: "2rem" },
+  reviewPdfButton: { marginBottom: "spacer4" },
 };

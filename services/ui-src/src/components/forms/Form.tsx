@@ -238,7 +238,7 @@ const sx = {
   ".ds-c-field__hint, .ds-c-field__error-message ": {
     fontSize: "sm",
     ul: {
-      paddingLeft: "2rem",
+      paddingLeft: "spacer4",
     },
     ol: {
       margin: "0.25rem 0.5rem",
