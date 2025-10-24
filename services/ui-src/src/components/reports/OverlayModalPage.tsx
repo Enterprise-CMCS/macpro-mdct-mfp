@@ -259,12 +259,12 @@ const sx = {
     color: "palette.gray",
   },
   addEntityButton: {
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
     marginBottom: "spacer2",
   },
   buttonFlex: {
     justifyContent: "end",
-    marginY: "1.5rem",
+    marginY: "spacer3",
   },
   saveButton: {
     width: "8.25rem",

@@ -132,7 +132,7 @@ const sx = {
   introInstructions: {
     p: {
       "&:first-of-type": {
-        marginBottom: "1.5rem",
+        marginBottom: "spacer3",
       },
     },
   },

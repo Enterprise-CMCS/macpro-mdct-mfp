@@ -80,7 +80,7 @@ const sx = {
   label: {
     fontWeight: "bold",
     fontSize: "md",
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
   },
   ".ds-c-field__hint": {
     marginTop: "-0.5rem",

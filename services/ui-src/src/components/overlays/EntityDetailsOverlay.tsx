@@ -353,7 +353,7 @@ const sx = {
   },
   buttonFlex: {
     justifyContent: "end",
-    marginY: "1.5rem",
+    marginY: "spacer3",
   },
   saveButton: {
     width: "8.25rem",
@@ -373,7 +373,7 @@ const sx = {
     marginTop: "spacer1",
   },
   infoTextBox: {
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
     color: "palette.gray",
     h3: {
       marginBottom: "-0.75rem",

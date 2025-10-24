@@ -44,7 +44,7 @@ const sx = {
     color: "palette.base",
   },
   item: {
-    marginBottom: "1.5rem",
+    marginBottom: "spacer3",
     borderStyle: "none",
   },
   textBox: {
@@ -56,10 +56,10 @@ const sx = {
       textDecoration: "underline",
     },
     header: {
-      marginBottom: "1.5rem",
+      marginBottom: "spacer3",
     },
     p: {
-      marginBottom: "1.5rem",
+      marginBottom: "spacer3",
     },
   },
   text: {
@@ -67,7 +67,7 @@ const sx = {
   },
   list: {
     paddingLeft: "spacer2",
-    margin: "1.5rem",
+    margin: "spacer3",
     li: {
       marginBottom: "1.25rem",
     },

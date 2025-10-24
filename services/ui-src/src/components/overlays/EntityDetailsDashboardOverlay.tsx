@@ -190,7 +190,7 @@ const sx = {
   },
   buttonFlex: {
     justifyContent: "end",
-    marginY: "1.5rem",
+    marginY: "spacer3",
   },
   saveButton: {
     width: "8.25rem",

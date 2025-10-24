@@ -73,8 +73,8 @@ const sx = {
     paddingTop: "spacer2",
     paddingBottom: "spacer2",
     ".mobile &": {
-      paddingTop: "1.5rem",
-      paddingBottom: "1.5rem",
+      paddingTop: "spacer3",
+      paddingBottom: "spacer3",
     },
   },
   subparent: {

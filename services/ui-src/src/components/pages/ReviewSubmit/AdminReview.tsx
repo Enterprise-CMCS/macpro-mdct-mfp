@@ -222,7 +222,7 @@ const sx = {
   },
   list: {
     paddingLeft: "spacer2",
-    margin: "1.5rem",
+    margin: "spacer3",
     li: {
       marginBottom: "spacer1",
     },

@@ -353,7 +353,7 @@ const sx = {
     fontWeight: "bold",
   },
   additionalInfo: {
-    paddingTop: "1.5rem",
+    paddingTop: "spacer3",
     marginTop: "spacer1",
     borderTop: "1px solid",
     borderColor: "palette.gray_light",
@@ -370,7 +370,7 @@ const sx = {
   },
   footerBox: {
     marginTop: "2.5rem",
-    paddingTop: "1.5rem",
+    paddingTop: "spacer3",
     borderTop: "1px solid",
     borderColor: "palette.gray_light",
     flexDirection: {

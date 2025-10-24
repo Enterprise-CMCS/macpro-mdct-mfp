@@ -100,7 +100,7 @@ const sx = {
   },
   hintTextBox: {
     color: "#5B616B",
-    paddingTop: "1.5rem",
+    paddingTop: "spacer3",
   },
   subTitle: {
     color: "palette.gray",
@@ -120,7 +120,7 @@ const sx = {
     },
   },
   periodText: {
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
     fontSize: "2xl",
   },
 };

@@ -260,11 +260,11 @@ const sx = {
       },
     },
     ".mobile &": {
-      paddingY: "1.5rem",
+      paddingY: "spacer3",
     },
   },
   actionContainer: {
-    paddingLeft: "1.5rem",
+    paddingLeft: "spacer3",
     alignItems: "center",
     display: "flex",
     ".mobile &": {

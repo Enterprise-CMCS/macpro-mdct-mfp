@@ -34,7 +34,7 @@ export const NotFoundPage = () => {
 
 const sx = {
   layout: {
-    marginBottom: "1.5rem",
+    marginBottom: "spacer3",
     ".contentFlex": {
       maxWidth: "35rem",
     },
@@ -62,7 +62,7 @@ const sx = {
     fontWeight: "bold",
     marginBottom: "spacer2",
     ".mobile &": {
-      marginBottom: "1.5rem",
+      marginBottom: "spacer3",
     },
   },
   descriptionText: {

@@ -400,7 +400,7 @@ const sx = {
   headingSubtitle: {
     fontSize: "xl",
     fontWeight: "normal",
-    marginLeft: "1.5rem",
+    marginLeft: "spacer3",
   },
   container: {
     marginTop: "-3rem",

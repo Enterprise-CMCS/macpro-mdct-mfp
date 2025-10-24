@@ -35,7 +35,7 @@ export const Error = () => {
 
 const sx = {
   layout: {
-    marginBottom: "1.5rem",
+    marginBottom: "spacer3",
   },
   heading: {
     gap: "12px",
@@ -60,7 +60,7 @@ const sx = {
     fontWeight: "bold",
     marginBottom: "spacer2",
     ".mobile &": {
-      marginBottom: "1.5rem",
+      marginBottom: "spacer3",
     },
   },
   descriptionText: {

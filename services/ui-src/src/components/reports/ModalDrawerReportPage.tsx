@@ -314,7 +314,7 @@ const sx = {
     color: "palette.gray",
   },
   addEntityButton: {
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
     marginBottom: "2rem",
   },
   table: {
@@ -336,10 +336,10 @@ const sx = {
     },
   },
   pageErrorAlert: {
-    marginBottom: "1.5rem",
+    marginBottom: "spacer3",
   },
   reviewPdfHint: {
     color: "palette.gray",
   },
-  reviewPdfButton: { marginTop: "1.5rem" },
+  reviewPdfButton: { marginTop: "spacer3" },
 };

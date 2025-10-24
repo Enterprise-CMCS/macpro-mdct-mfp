@@ -101,7 +101,7 @@ const sx = {
   },
   buttonFlex: {
     justifyContent: "space-between",
-    marginY: "1.5rem",
+    marginY: "spacer3",
   },
   saveButton: {
     width: "8.25rem",

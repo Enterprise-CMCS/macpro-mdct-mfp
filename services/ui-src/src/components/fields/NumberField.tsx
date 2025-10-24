@@ -229,7 +229,7 @@ const sx = {
     position: "relative",
     "&.currency": {
       ".ds-c-field": {
-        paddingLeft: "1.5rem",
+        paddingLeft: "spacer3",
       },
     },
     "&.percentage": {

@@ -41,12 +41,12 @@ const sx = {
     color: "palette.black",
   },
   info: {
-    paddingTop: "1.5rem",
+    paddingTop: "spacer3",
     p: {
       margin: "1.5rem 0",
     },
     li: {
-      marginBottom: "1.5rem",
+      marginBottom: "spacer3",
     },
   },
   hintTextBox: {

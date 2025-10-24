@@ -48,7 +48,7 @@ const sx = {
     marginBottom: "3rem",
   },
   card: {
-    marginBottom: "1.5rem",
+    marginBottom: "spacer3",
   },
   faqAccordionBox: {
     width: "100%",
