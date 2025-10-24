@@ -674,9 +674,15 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           {
             id: "defineInitiative_describeInitiative",
             type: ReportFormFieldType.TEXTAREA,
-            validation: ValidationType.TEXT,
+            validation: {
+              type: ValidationType.TEXT_CUSTOM,
+              options: {
+                maxLength: 1800,
+              },
+            },
             props: {
               label: "Describe the initiative, including key activities:",
+              maxLength: 1800,
             },
           },
           {
