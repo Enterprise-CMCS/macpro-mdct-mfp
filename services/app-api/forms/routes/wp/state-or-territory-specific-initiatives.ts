@@ -156,7 +156,7 @@ const instructionsRoute: FormRoute = {
                                 "Transitions and transition coordination services",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -165,7 +165,7 @@ const instructionsRoute: FormRoute = {
                               content: "Housing-related supports",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -174,7 +174,7 @@ const instructionsRoute: FormRoute = {
                               content: "Quality measurement and improvement",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -183,7 +183,7 @@ const instructionsRoute: FormRoute = {
                               content: "Self-direction (if applicable)",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -192,7 +192,7 @@ const instructionsRoute: FormRoute = {
                               content: "Tribal initiative (if applicable)",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -218,7 +218,7 @@ const instructionsRoute: FormRoute = {
                               content: "Recruitment and enrollment",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -227,7 +227,7 @@ const instructionsRoute: FormRoute = {
                               content: "Person-centered planning and services",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -236,7 +236,7 @@ const instructionsRoute: FormRoute = {
                               content: "No Wrong Door systems",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -245,7 +245,7 @@ const instructionsRoute: FormRoute = {
                               content: "Community transition support",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -255,7 +255,7 @@ const instructionsRoute: FormRoute = {
                                 "Direct service workforce and caregivers",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -264,7 +264,7 @@ const instructionsRoute: FormRoute = {
                               content: "Employment support",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -274,7 +274,7 @@ const instructionsRoute: FormRoute = {
                                 "Convenient and accessible transportation options",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -283,7 +283,7 @@ const instructionsRoute: FormRoute = {
                               content: "Data-based decision-making",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -292,7 +292,7 @@ const instructionsRoute: FormRoute = {
                               content: "Financing approaches",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -301,7 +301,7 @@ const instructionsRoute: FormRoute = {
                               content: "Stakeholder engagement",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -311,7 +311,7 @@ const instructionsRoute: FormRoute = {
                                 "Equity and social determinants of health (SDOH)",
                               props: {
                                 style: {
-                                  paddingBottom: "0.5rem",
+                                  paddingBottom: ".5rem",
                                 },
                               },
                             },
@@ -362,7 +362,7 @@ const instructionsRoute: FormRoute = {
                 "Initiative description, including target populations and timeframe",
               props: {
                 style: {
-                  padding: "0.5rem",
+                  padding: ".5rem",
                 },
               },
             },
@@ -371,7 +371,7 @@ const instructionsRoute: FormRoute = {
               content: "An evaluation plan, including measurable objectives",
               props: {
                 style: {
-                  padding: "0.5rem",
+                  padding: ".5rem",
                 },
               },
             },
@@ -380,7 +380,7 @@ const instructionsRoute: FormRoute = {
               content: "Funding sources, with projected quarterly expenditures",
               props: {
                 style: {
-                  padding: "0.5rem",
+                  padding: ".5rem",
                 },
               },
             },
@@ -390,7 +390,7 @@ const instructionsRoute: FormRoute = {
                 "Initiative close-out information, to be completed as appropriate during MFP Work Plan revisions",
               props: {
                 style: {
-                  padding: "0.5rem",
+                  padding: ".5rem",
                 },
               },
             },

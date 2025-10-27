@@ -344,7 +344,7 @@
                                       "content": "Transitions and transition coordination services",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -353,7 +353,7 @@
                                       "content": "Housing-related supports",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -362,7 +362,7 @@
                                       "content": "Quality measurement and improvement",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -371,7 +371,7 @@
                                       "content": "Self-direction (if applicable)",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -380,7 +380,7 @@
                                       "content": "Tribal initiative (if applicable)",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     }
@@ -406,7 +406,7 @@
                                       "content": "Recruitment and enrollment",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -415,7 +415,7 @@
                                       "content": "Person-centered planning and services",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -424,7 +424,7 @@
                                       "content": "No Wrong Door systems",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -433,7 +433,7 @@
                                       "content": "Community transition support",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -442,7 +442,7 @@
                                       "content": "Direct service workforce and caregivers",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -451,7 +451,7 @@
                                       "content": "Employment support",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -460,7 +460,7 @@
                                       "content": "Convenient and accessible transportation options",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -469,7 +469,7 @@
                                       "content": "Data-based decision-making",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -478,7 +478,7 @@
                                       "content": "Financing approaches",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -487,7 +487,7 @@
                                       "content": "Stakeholder engagement",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -496,7 +496,7 @@
                                       "content": "Equity and social determinants of health (SDOH)",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": "0.5rem"
+                                          "paddingBottom": ".5rem"
                                         }
                                       }
                                     },
@@ -545,7 +545,7 @@
                       "content": "Initiative description, including target populations and timeframe",
                       "props": {
                         "style": {
-                          "padding": "0.5rem"
+                          "padding": ".5rem"
                         }
                       }
                     },
@@ -554,7 +554,7 @@
                       "content": "An evaluation plan, including measurable objectives",
                       "props": {
                         "style": {
-                          "padding": "0.5rem"
+                          "padding": ".5rem"
                         }
                       }
                     },
@@ -563,7 +563,7 @@
                       "content": "Funding sources, with projected quarterly expenditures",
                       "props": {
                         "style": {
-                          "padding": "0.5rem"
+                          "padding": ".5rem"
                         }
                       }
                     },
@@ -572,7 +572,7 @@
                       "content": "Initiative close-out information, to be completed as appropriate during MFP Work Plan revisions",
                       "props": {
                         "style": {
-                          "padding": "0.5rem"
+                          "padding": ".5rem"
                         }
                       }
                     }
