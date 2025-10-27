@@ -62,7 +62,7 @@ export function deployFrontend(props: DeployFrontendProps) {
       ],
     });
 
-  const deployTimeConfig = new s3_deployment.DeployTimeSubstitutedFile(
+  new s3_deployment.DeployTimeSubstitutedFile(
     scope,
     "DeployTimeConfig",
     {
@@ -82,6 +82,4 @@ export function deployFrontend(props: DeployFrontendProps) {
       },
     }
   );
-
-  deployWebsite.node.addDependency(deployTimeConfig);
 }
