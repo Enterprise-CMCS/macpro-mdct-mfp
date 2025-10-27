@@ -25,7 +25,7 @@ export const additionalAchievementsRoute: FormRoute = {
             style: {
               columns: "2",
               "column-gap": "2.5rem",
-              paddingLeft: "spacer2",
+              paddingLeft: "1rem",
               color: "#5A5A5A",
               "li::before": {
                 color: "#5A5A5A",
