@@ -22,6 +22,8 @@ export const stateUserAuthPath: string = "playwright/.auth/user.json";
 export const expectedAdminHeading = "View State/Territory Reports";
 export const expectedStateUserHeading = "Money Follows the Person (MFP) Portal";
 
+export const cognitoIdentityRoute = "https://cognito-identity.*.amazonaws.com/";
+
 export const testWorkPlan = {
   reportingYear: currentYear,
   reportingPeriod: "First reporting period",

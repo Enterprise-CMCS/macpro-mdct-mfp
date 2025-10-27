@@ -13,11 +13,11 @@ dotenv.config({ path: "../.env" });
 export default defineConfig({
   testDir: "playwright",
   testMatch: ["**/*.spec.js", "**/*.spec.ts"],
-  /* Timeout for each test (including beforeEach and such). 120000ms = 2 minutes */
-  timeout: 120000,
+  /* Timeout for each test (including beforeEach and such). 60000ms = 1 minute */
+  timeout: 60000,
   expect: {
-    /* Timeout for each `expect()` call. 10000ms = 10 seconds */
-    timeout: 10000,
+    /* Timeout for each `expect()` call. 15000ms = 15 seconds */
+    timeout: 15000,
   },
   /* Run tests in files in parallel */
   fullyParallel: false,
