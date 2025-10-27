@@ -51,7 +51,22 @@ export class StatePage {
     await this.addNewWorkPlanModal
       .getByRole("button", { name: "Start new" })
       .click();
-    return this;
+    await this.page.waitForResponse(
+      (response) =>
+        response.url().includes("/reports/WP/") &&
+        response.request().method() === "POST" &&
+        response.status() === 201
+    );
+    await this.waitForWorkPlansToLoad();
+  }
+
+  async waitForWorkPlansToLoad() {
+    await this.page.waitForResponse(
+      (response) =>
+        response.url().includes("/reports/WP/") &&
+        response.request().method() === "GET" &&
+        response.status() === 200
+    );
   }
 
   // Transition Benchmarks page functionality
