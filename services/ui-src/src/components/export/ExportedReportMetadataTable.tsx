@@ -107,6 +107,7 @@ const sx = {
       textAlign: "left",
       paddingTop: "0rem",
       padding: "8px",
+      borderColor: "gray_lightest",
     },
     th: {
       fontWeight: "bold",

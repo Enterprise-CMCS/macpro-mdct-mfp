@@ -37,6 +37,7 @@ const sx = {
     marginTop: "2rem",
   },
   text: {
+    borderColor: "gray_lightest",
     p: {
       marginBottom: "1rem",
     },

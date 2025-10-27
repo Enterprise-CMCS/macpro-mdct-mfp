@@ -82,6 +82,7 @@ const sx = {
       fontSize: "sm",
       fontWeight: "600",
       color: "gray",
+      borderColor: "gray_lighter",
     },
     ".mdct-smalltext": {
       fontSize: "xs",
