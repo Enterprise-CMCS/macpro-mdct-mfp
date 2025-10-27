@@ -62,7 +62,9 @@
       "path": "/wp/transition-benchmarks",
       "pageType": "modalDrawer",
       "entityType": "targetPopulations",
-      "entityInfo": ["transitionBenchmarks_targetPopulationName"],
+      "entityInfo": [
+        "transitionBenchmarks_targetPopulationName"
+      ],
       "verbiage": {
         "accordion": {
           "buttonLabel": "Considerations around target populations",
@@ -649,7 +651,10 @@
           "path": "/wp/state-or-territory-specific-initiatives/initiatives",
           "pageType": "modalOverlay",
           "entityType": "initiative",
-          "entityInfo": ["initiative_name", "initiative_wpTopic"],
+          "entityInfo": [
+            "initiative_name",
+            "initiative_wpTopic"
+          ],
           "verbiage": {
             "intro": {
               "section": "",
@@ -816,7 +821,10 @@
               "pageType": "entityOverlay",
               "entityType": "initiative",
               "stepType": "defineInitiative",
-              "stepInfo": ["stepName", "hint"],
+              "stepInfo": [
+                "stepName",
+                "hint"
+              ],
               "stepName": "I. Define initiative",
               "hint": "Provide initiative description, including target populations and timeframe",
               "isRequired": true,
@@ -926,7 +934,10 @@
               "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "evaluationPlan",
-              "stepInfo": ["stepName", "hint"],
+              "stepInfo": [
+                "stepName",
+                "hint"
+              ],
               "stepName": "II. Evaluation plan",
               "hint": "Add evaluation plan, including measurable objectives",
               "isRequired": true,
@@ -1074,7 +1085,10 @@
               "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "fundingSources",
-              "stepInfo": ["stepName", "hint"],
+              "stepInfo": [
+                "stepName",
+                "hint"
+              ],
               "stepName": "III. Funding sources",
               "hint": "Add funding sources with projected quarterly expenditures",
               "isRequired": true,
@@ -1176,7 +1190,10 @@
               "pageType": "entityOverlay",
               "entityType": "initiative",
               "stepType": "closeOutInformation",
-              "stepInfo": ["stepName", "hint"],
+              "stepInfo": [
+                "stepName",
+                "hint"
+              ],
               "stepName": "IV. Initiative close-out information (if applicable)",
               "hint": "To be completed as appropriate during MFP Work Plan revisions",
               "isRequired": true,
