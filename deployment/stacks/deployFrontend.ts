@@ -60,9 +60,10 @@ export function deployFrontend(props: DeployFrontendProps) {
         s3_deployment.CacheControl.setPublic(),
         s3_deployment.CacheControl.maxAge(Duration.days(365)),
       ],
-    });
+    }
+  );
 
-  new s3_deployment.DeployTimeSubstitutedFile(
+  const deployTimeConfig = new s3_deployment.DeployTimeSubstitutedFile(
     scope,
     "DeployTimeConfig",
     {
@@ -82,4 +83,6 @@ export function deployFrontend(props: DeployFrontendProps) {
       },
     }
   );
+
+  deployTimeConfig.node.addDependency(deployWebsite);
 }
