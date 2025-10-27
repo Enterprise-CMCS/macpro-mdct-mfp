@@ -105,7 +105,7 @@ const sx = {
     },
   },
   detailBox: {
-    marginTop: "2respacer4m",
+    marginTop: "spacer4",
     fontWeight: "normal",
     color: "palette.base",
   },
