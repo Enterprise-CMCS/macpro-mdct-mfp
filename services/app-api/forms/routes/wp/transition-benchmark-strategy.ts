@@ -1,4 +1,9 @@
-import { FormRoute, PageTypes } from "../../../utils/types";
+import {
+  FormRoute,
+  PageTypes,
+  ReportFormFieldType,
+  ValidationType,
+} from "../../../utils/types";
 
 export const transitionBenchmarkStrategyRoute: FormRoute = {
   name: "Transition Benchmark Strategy",
@@ -15,8 +20,8 @@ export const transitionBenchmarkStrategyRoute: FormRoute = {
     fields: [
       {
         id: "strategy_explaination",
-        type: "textarea",
-        validation: "text",
+        type: ReportFormFieldType.TEXTAREA,
+        validation: ValidationType.TEXT,
         props: {
           label:
             "Explain how you formulated your projected numbers, which should include descriptions of the data sources used, the time period for the analysis, and the methods used to project the number of transitions.",
@@ -24,8 +29,8 @@ export const transitionBenchmarkStrategyRoute: FormRoute = {
       },
       {
         id: "strategy_additionalDetails",
-        type: "textarea",
-        validation: "text",
+        type: ReportFormFieldType.TEXTAREA,
+        validation: ValidationType.TEXT,
         props: {
           label:
             "Provide additional detail on strategies or approaches the state or territory will use to achieve transition targets here and through a required state or territory-specific initiative.",

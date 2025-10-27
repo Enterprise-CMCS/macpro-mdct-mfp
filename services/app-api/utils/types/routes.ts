@@ -1,5 +1,6 @@
-import { PageTypes } from "./formFields";
+import { PageTypes, Transformation } from "./formFields";
 import { ReportType } from "./reports";
+import { NestedValidation, ValidationType } from "./validations";
 
 export interface ReportJsonFile {
   basePath: string;
@@ -22,14 +23,54 @@ export interface ReportForm {
   fields: ReportFormField[];
   optional?: boolean;
 }
+
+export enum ReportFormFieldType {
+  CHECKBOX = "checkbox",
+  DATE = "date",
+  DYNAMIC = "dynamic",
+  NO_TYPE = "",
+  NUMBER = "number",
+  RADIO = "radio",
+  SECTION_HEADER = "sectionHeader",
+  TEXT = "text",
+  TEXTAREA = "textarea",
+}
+
 export interface ReportFormField {
   id: string;
-  props?: any;
-  type: string;
-  transformation?: {
-    rule: string;
-  };
-  validation?: string;
+  props?: ReportFormFieldProps;
+  type: ReportFormFieldType;
+  transformation?: Transformation;
+  validation?: ValidationType;
+}
+
+export interface ReportFormFieldProps {
+  choices?: {
+    id: string;
+    label: string;
+    children?: {
+      id: string;
+      transformation?: Transformation;
+      props?: {
+        className?: string;
+        decimalPlacesToRoundTo?: number;
+        hint?: string;
+        label?: string;
+      };
+      type: ReportFormFieldType;
+      validation?: NestedValidation;
+    }[];
+  }[];
+  className?: string;
+  content?: string;
+  decimalPlacesToRoundTo?: number;
+  disabled?: boolean;
+  heading?: string;
+  hint?: any;
+  label?: string;
+  mask?: string;
+  maxLength?: number;
+  styleAsOptional?: boolean;
 }
 
 // Routes
@@ -63,19 +104,19 @@ export interface WPStateOrTerritorySpecificInitiativesRoute extends ModalRoute {
   dashboard: Dashboard;
   entityInfo: string[];
   entitySteps: WPEntityStep[];
-  entityType: EntityTypes;
+  entityType: StepEntityType;
 }
 
 export interface WPTransitionBenchmarksRoute extends ModalRoute {
   drawerForm: ReportForm;
   entityInfo: string[];
-  entityType: EntityTypes;
+  entityType: StepEntityType;
 }
 
 // SAR routes
 export interface SARStateOrTerritorySpecificInitiativesRoute extends BaseRoute {
   entityInfo: string[];
-  entityType: EntityTypes;
+  entityType: StepEntityType;
   initiatives: string[];
   pageType: string;
   template: {
@@ -90,12 +131,12 @@ export interface Dashboard {
   verbiage?: any;
 }
 
-export enum EntityTypes {
+export enum StepEntityType {
   INITIATIVE = "initiative",
   TARGET_POPULATIONS = "targetPopulations",
 }
 
-export enum StepTypes {
+export enum StepType {
   CLOSE_OUT_INFORMATION = "closeOutInformation",
   DEFINE_INITIATIVE = "defineInitiative",
   EVALUATION_PLAN = "evaluationPlan",
@@ -107,17 +148,15 @@ export enum StepTypes {
 }
 
 export interface EntityStep {
-  entityType: EntityTypes;
+  entityType: StepEntityType;
   form?: ReportForm;
   hint: string;
   isRequired: boolean;
   name: string;
   pageType: PageTypes;
   stepInfo: string[];
-  stepType: StepTypes;
-  transformation?: {
-    rule: string;
-  };
+  stepType: StepType;
+  transformation?: Transformation;
   verbiage: any;
 }
 

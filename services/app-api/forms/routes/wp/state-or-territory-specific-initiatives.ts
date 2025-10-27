@@ -1,9 +1,12 @@
 import {
-  EntityTypes,
   FormRoute,
   PageTypes,
   ParentRoute,
-  StepTypes,
+  ReportFormFieldType,
+  StepEntityType,
+  StepType,
+  TransformationRule,
+  ValidationType,
   WPStateOrTerritorySpecificInitiativesRoute,
 } from "../../../utils/types";
 
@@ -331,7 +334,7 @@ const instructionsRoute: FormRoute = {
           ],
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content: "*Required by Program Terms and Conditions",
           props: {
             className: "mdct-smalltext",
@@ -409,7 +412,7 @@ const instructionsRoute: FormRoute = {
             "<br>If a recipient updates the MFP Work Plan to indicate that an initiative will no longer be sustained with MFP funding or state or territory-equivalent funding, the recipient must explain whether the initiative will be terminated or sustained through another funding source.<br><br>",
         },
         {
-          type: "text",
+          type: ReportFormFieldType.TEXT,
           content:
             "Answer the following questions regarding required initiative topics. This is necessary in order to track completion of required data.",
           props: {
@@ -428,8 +431,8 @@ const instructionsRoute: FormRoute = {
     fields: [
       {
         id: "instructions_selfDirectedInitiatives",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label:
             "Are self-directed initiatives applicable to your state or territory?",
@@ -447,8 +450,8 @@ const instructionsRoute: FormRoute = {
       },
       {
         id: "instructions_tribalInitiatives",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label:
             "Are Tribal Initiatives applicable to your state or territory?",
@@ -472,7 +475,7 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
   name: "State or Territory-Specific Initiatives",
   path: "/wp/state-or-territory-specific-initiatives/initiatives",
   pageType: PageTypes.MODAL_OVERLAY,
-  entityType: EntityTypes.INITIATIVE,
+  entityType: StepEntityType.INITIATIVE,
   entityInfo: ["initiative_name", "initiative_wpTopic"],
   verbiage: {
     intro: {
@@ -523,16 +526,16 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     fields: [
       {
         id: "initiative_name",
-        type: "textarea",
-        validation: "text",
+        type: ReportFormFieldType.TEXTAREA,
+        validation: ValidationType.TEXT,
         props: {
           label: "Initiative name",
         },
       },
       {
         id: "initiative_wpTopic",
-        type: "radio",
-        validation: "radio",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           label: "MFP Work Plan topic:",
           hint: "Note: Initiative topics with <span aria-label='asterisk'>*</span> are required and must be selected at least once across all initiatives.",
@@ -607,9 +610,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
               children: [
                 {
                   id: "initiative_wp_otherTopic",
-                  type: "text",
+                  type: ReportFormFieldType.TEXT,
                   validation: {
-                    type: "text",
+                    type: ValidationType.TEXT,
                     nested: true,
                     parentFieldName: "initiative_wpTopic",
                   },
@@ -642,8 +645,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
       name: "State or Territory-Specific Initiatives: I. Define initiative",
       path: "/wp/state-or-territory-specific-initiatives/define-initiative",
       pageType: PageTypes.ENTITY_OVERLAY,
-      entityType: EntityTypes.INITIATIVE,
-      stepType: StepTypes.DEFINE_INITIATIVE,
+      entityType: StepEntityType.INITIATIVE,
+      stepType: StepType.DEFINE_INITIATIVE,
       stepInfo: ["stepName", "hint"],
       stepName: "I. Define initiative",
       hint: "Provide initiative description, including target populations and timeframe",
@@ -670,16 +673,16 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
         fields: [
           {
             id: "defineInitiative_describeInitiative",
-            type: "textarea",
-            validation: "text",
+            type: ReportFormFieldType.TEXTAREA,
+            validation: ValidationType.TEXT,
             props: {
               label: "Describe the initiative, including key activities:",
             },
           },
           {
             id: "defineInitiative_targetPopulations",
-            type: "checkbox",
-            validation: "checkbox",
+            type: ReportFormFieldType.CHECKBOX,
+            validation: ValidationType.CHECKBOX,
             props: {
               label: "Target population(s):",
               hint: [
@@ -706,8 +709,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           },
           {
             id: "defineInitiative_projectedStartDate",
-            type: "date",
-            validation: "date",
+            type: ReportFormFieldType.DATE,
+            validation: ValidationType.DATE,
             props: {
               label: "Start date",
               hint: "Enter projected start month/year for future initiatives or enter past start month/year for initiatives in process.",
@@ -715,8 +718,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           },
           {
             id: "defineInitiative_projectedEndDate",
-            type: "radio",
-            validation: "radio",
+            type: ReportFormFieldType.RADIO,
+            validation: ValidationType.RADIO,
             props: {
               label: "Does the initiative have a projected end date?",
               hint: "Select 'No' if the initiative will be ongoing without a set end point.",
@@ -727,9 +730,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                   children: [
                     {
                       id: "defineInitiative_projectedEndDate_value",
-                      type: "date",
+                      type: ReportFormFieldType.DATE,
                       validation: {
-                        type: "endDate",
+                        type: ValidationType.END_DATE,
                         parentOptionId:
                           "defineInitiative_projectedEndDate-WNsSaAHeDvRD2Pjkz6DcOE", // pragma: allowlist secret
                         parentFieldName: "defineInitiative_projectedEndDate",
@@ -758,8 +761,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
       name: "State or Territory-Specific Initiatives: II. Evaluation Plan",
       path: "/wp/state-or-territory-specific-initiatives/evaluation-plan",
       pageType: PageTypes.OVERLAY_MODAL,
-      entityType: EntityTypes.INITIATIVE,
-      stepType: StepTypes.EVALUATION_PLAN,
+      entityType: StepEntityType.INITIATIVE,
+      stepType: StepType.EVALUATION_PLAN,
       stepInfo: ["stepName", "hint"],
       stepName: "II. Evaluation plan",
       hint: "Add evaluation plan, including measurable objectives",
@@ -838,16 +841,16 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
         fields: [
           {
             id: "evaluationPlan_objectiveName",
-            type: "textarea",
-            validation: "text",
+            type: ReportFormFieldType.TEXTAREA,
+            validation: ValidationType.TEXT,
             props: {
               label: "Objective",
             },
           },
           {
             id: "evaluationPlan_description",
-            type: "textarea",
-            validation: "text",
+            type: ReportFormFieldType.TEXTAREA,
+            validation: ValidationType.TEXT,
             props: {
               label:
                 "Describe the performance measures or indicators your state or territory will use to monitor progress toward achieving this objective, including details on the calculation of measures if relevant. Describe any key deliverables.",
@@ -856,8 +859,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           },
           {
             id: "evaluationPlan_targets",
-            type: "textarea",
-            validation: "text",
+            type: ReportFormFieldType.TEXTAREA,
+            validation: ValidationType.TEXT,
             props: {
               label:
                 "Provide targets for the performance measures or indicators listed above. Include milestones and expected time frames for key deliverables.",
@@ -866,8 +869,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           },
           {
             id: "evaluationPlan_includesTargets",
-            type: "radio",
-            validation: "radio",
+            type: ReportFormFieldType.RADIO,
+            validation: ValidationType.RADIO,
             props: {
               label:
                 "Does the performance measure include quantitative targets?",
@@ -883,9 +886,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                   children: [
                     {
                       id: "quarterlyProjections",
-                      type: "text",
+                      type: ReportFormFieldType.TEXT,
                       validation: {
-                        type: "text",
+                        type: ValidationType.TEXT,
                         parentFieldName: "evaluationPlan_includesTargets",
                         parentOptionId:
                           "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ", // pragma: allowlist secret
@@ -895,7 +898,7 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                         className: "number-field",
                       },
                       transformation: {
-                        rule: "nextTwelveQuarters",
+                        rule: TransformationRule.NEXT_TWELVE_QUARTERS,
                       },
                     },
                   ],
@@ -905,8 +908,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           },
           {
             id: "evaluationPlan_additionalDetails",
-            type: "textarea",
-            validation: "text",
+            type: ReportFormFieldType.TEXTAREA,
+            validation: ValidationType.TEXT,
             props: {
               label:
                 "Provide additional detail on strategies/approaches to the state or territory will use to achieve targets and/or milestones (building on the initiative description).",
@@ -920,8 +923,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
       name: "State or Territory-Specific Initiatives: III. Funding sources",
       path: "/wp/state-or-territory-specific-initiatives/funding-sources",
       pageType: PageTypes.OVERLAY_MODAL,
-      entityType: EntityTypes.INITIATIVE,
-      stepType: StepTypes.FUNDING_SOURCES,
+      entityType: StepEntityType.INITIATIVE,
+      stepType: StepType.FUNDING_SOURCES,
       stepInfo: ["stepName", "hint"],
       stepName: "III. Funding sources",
       hint: "Add funding sources with projected quarterly expenditures",
@@ -968,8 +971,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
         fields: [
           {
             id: "fundingSources_wpTopic",
-            type: "radio",
-            validation: "radio",
+            type: ReportFormFieldType.RADIO,
+            validation: ValidationType.RADIO,
             props: {
               label: "Funding source:",
               hint: "Enter a dollar amount. Enter 0 for quarters with no projected expenditures. Enter N/A for quarters you do not expect to report.",
@@ -1005,9 +1008,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                   children: [
                     {
                       id: "initiative_wp_otherTopic",
-                      type: "textarea",
+                      type: ReportFormFieldType.TEXTAREA,
                       validation: {
-                        type: "text",
+                        type: ValidationType.TEXT,
                         nested: true,
                         parentFieldName: "fundingSources_wpTopic",
                       },
@@ -1019,10 +1022,10 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           },
           {
             id: "fundingSources_quarters",
-            type: "number",
-            validation: "number",
+            type: ReportFormFieldType.NUMBER,
+            validation: ValidationType.NUMBER,
             transformation: {
-              rule: "nextTwelveQuarters",
+              rule: TransformationRule.NEXT_TWELVE_QUARTERS,
             },
             props: {
               mask: "currency",
@@ -1035,8 +1038,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
       name: "State or Territory-Specific Initiatives: IV. Initiative close-out information",
       path: "/wp/state-or-territory-specific-initiatives/close-out-information",
       pageType: PageTypes.ENTITY_OVERLAY,
-      entityType: EntityTypes.INITIATIVE,
-      stepType: StepTypes.CLOSE_OUT_INFORMATION,
+      entityType: StepEntityType.INITIATIVE,
+      stepType: StepType.CLOSE_OUT_INFORMATION,
       stepInfo: ["stepName", "hint"],
       stepName: "IV. Initiative close-out information (if applicable)",
       hint: "To be completed as appropriate during MFP Work Plan revisions",
@@ -1073,8 +1076,8 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
         fields: [
           {
             id: "defineInitiative_projectedEndDate_value",
-            type: "date",
-            validation: "textOptional",
+            type: ReportFormFieldType.DATE,
+            validation: ValidationType.TEXT_OPTIONAL,
             props: {
               label: "Projected end date",
               hint: "Auto-populates from “I. Define initiative”.",
@@ -1083,16 +1086,16 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           },
           {
             id: "closeOutInformation_actualEndDate",
-            type: "date",
-            validation: "date",
+            type: ReportFormFieldType.DATE,
+            validation: ValidationType.DATE,
             props: {
               label: "Actual end date",
             },
           },
           {
             id: "closeOutInformation_initiativeStatus",
-            type: "checkbox",
-            validation: "checkbox",
+            type: ReportFormFieldType.CHECKBOX,
+            validation: ValidationType.CHECKBOX,
             props: {
               label:
                 "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, indicate the status below:",
@@ -1111,9 +1114,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                       props: {
                         label: "Indicate reason for termination",
                       },
-                      type: "textarea",
+                      type: ReportFormFieldType.TEXTAREA,
                       validation: {
-                        type: "text",
+                        type: ValidationType.TEXT,
                         nested: true,
                         parentFieldName: "closeOutInformation_initiativeStatus",
                       },
@@ -1129,9 +1132,9 @@ const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                       props: {
                         label: "Indicate alternative funding source",
                       },
-                      type: "textarea",
+                      type: ReportFormFieldType.TEXTAREA,
                       validation: {
-                        type: "text",
+                        type: ValidationType.TEXT,
                         nested: true,
                         parentFieldName: "closeOutInformation_initiativeStatus",
                       },
