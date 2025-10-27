@@ -12,5 +12,4 @@ window._env_ = {
   POST_SIGNOUT_REDIRECT: "{{redirectSignout}}",
   REACT_APP_LD_SDK_CLIENT: "{{launchDarklyClient}}",
   TIMESTAMP: "{{timestamp}}",
-  TEST: "test",
 };
