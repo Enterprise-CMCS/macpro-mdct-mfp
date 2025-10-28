@@ -91,7 +91,7 @@ const sx = {
     marginTop: "spacer5",
     paddingTop: "spacer3",
     borderTop: "1px solid",
-    borderColor: "palette.gray_light",
+    borderColor: "gray_light",
   },
   nextButton: {
     minWidth: "8.25rem",

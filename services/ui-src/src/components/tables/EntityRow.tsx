@@ -231,12 +231,12 @@ interface Props {
 const sx = {
   content: {
     td: {
-      borderColor: "palette.gray_light",
+      borderColor: "gray_light",
       paddingRight: 0,
     },
   },
   errorText: {
-    color: "palette.error_dark",
+    color: "error_dark",
     fontSize: "0.75rem",
     marginBottom: "spacer1",
   },
@@ -274,7 +274,7 @@ const sx = {
   editNameButton: {
     fontWeight: "normal",
     textDecoration: "underline",
-    color: "palette.primary",
+    color: "primary",
   },
   editEntityButton: {
     padding: 0,
@@ -310,7 +310,7 @@ const sx = {
       paddingLeft: "0rem",
       border: "none",
       fontWeight: "bold",
-      color: "palette.gray",
+      color: "gray",
       width: "2rem",
     },
   },

@@ -216,7 +216,7 @@ const sx = {
       verticalAlign: "top",
       lineHeight: "base",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_lighter",
+      borderColor: "gray_lighter",
       paddingLeft: "0",
     },
     thead: {
@@ -230,7 +230,7 @@ const sx = {
       padding: "0.75rem 0.5rem 0.75rem 0",
       borderStyle: "none",
       fontWeight: "normal",
-      color: "palette.base",
+      color: "base",
       ".shrink &": {
         padding: "0.375rem 0rem",
       },
@@ -242,7 +242,7 @@ const sx = {
       paddingBottom: "0.375rem",
       fontWeight: "bold",
       lineHeight: "lg",
-      color: "palette.gray",
+      color: "gray",
       ".shrink &": {
         padding: "0.375rem 0rem",
       },
@@ -261,6 +261,6 @@ const sx = {
   heading: {
     fontSize: "xl",
     fontWeight: "bold",
-    color: "palette.black",
+    color: "black",
   },
 };

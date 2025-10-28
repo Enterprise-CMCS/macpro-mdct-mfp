@@ -38,7 +38,7 @@ const sx = {
     marginTop: "spacer4",
     fontSize: "2xl",
     fontWeight: "bold",
-    color: "palette.black",
+    color: "black",
   },
   info: {
     paddingTop: "spacer3",

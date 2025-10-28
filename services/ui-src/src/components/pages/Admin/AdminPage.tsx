@@ -157,10 +157,10 @@ const sx = {
     span: {
       marginLeft: "spacer1",
       "&.active": {
-        color: "palette.success",
+        color: "success",
       },
       "&.inactive": {
-        color: "palette.error",
+        color: "error",
       },
     },
   },
@@ -176,10 +176,10 @@ const sx = {
     marginTop: "spacer1",
     ".ds-c-spinner": {
       "&:before": {
-        borderColor: "palette.black",
+        borderColor: "black",
       },
       "&:after": {
-        borderLeftColor: "palette.black",
+        borderLeftColor: "black",
       },
     },
   },

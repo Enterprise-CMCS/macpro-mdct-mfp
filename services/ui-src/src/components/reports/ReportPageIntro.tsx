@@ -81,16 +81,17 @@ const sx = {
       textTransform: "capitalize",
       fontSize: "sm",
       fontWeight: "600",
-      color: "palette.gray",
+      color: "gray",
+      borderColor: "gray_lighter",
     },
     ".mdct-smalltext": {
       fontSize: "xs",
       marginTop: "0.625rem",
-      color: "palette.gray",
+      color: "gray",
     },
   },
   smallHeading: {
-    color: "palette.gray",
+    color: "gray",
     fontSize: "md",
   },
   largeHeading: {
@@ -103,7 +104,7 @@ const sx = {
     paddingTop: "spacer3",
   },
   subTitle: {
-    color: "palette.gray",
+    color: "gray",
     fontSize: "md",
     margin: "1.5rem 0 -0.75rem 0",
   },
@@ -113,9 +114,9 @@ const sx = {
       marginBottom: "-0.75rem",
     },
     a: {
-      color: "palette.primary",
+      color: "primary",
       "&:hover": {
-        color: "palette.primary_darker",
+        color: "primary_darker",
       },
     },
   },

@@ -228,7 +228,7 @@ const sx = {
   },
   // disabled field
   ".ds-c-field[disabled]": {
-    color: "palette.base",
+    color: "base",
   },
   // field hint
   ".ds-c-field__hint": {
@@ -245,7 +245,7 @@ const sx = {
       padding: "spacer1",
     },
     a: {
-      color: "palette.primary",
+      color: "primary",
       textDecoration: "underline",
     },
   },
@@ -265,7 +265,7 @@ const sx = {
   },
   // RE&T warning message
   retAlert: {
-    color: "palette.error_dark",
+    color: "error_dark",
     paddingTop: "spacer2",
   },
   // dividers for R,E,T pages

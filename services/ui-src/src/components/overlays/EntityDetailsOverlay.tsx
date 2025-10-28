@@ -325,7 +325,7 @@ const sx = {
   backButton: {
     padding: 0,
     fontWeight: "normal",
-    color: "palette.primary",
+    color: "primary",
     display: "flex",
     position: "relative",
     right: 0,
@@ -340,7 +340,7 @@ const sx = {
     width: "1rem",
   },
   backIcon: {
-    color: "palette.primary",
+    color: "primary",
     height: "1.5rem",
     width: "1.5rem",
   },
@@ -349,7 +349,7 @@ const sx = {
   },
   footerBox: {
     marginTop: "spacer4",
-    borderTop: "1.5px solid var(--mdct-colors-palette-gray_light)",
+    borderTop: "1.5px solid var(--mdct-colors-gray_light)",
   },
   buttonFlex: {
     justifyContent: "end",
@@ -361,8 +361,8 @@ const sx = {
   warningBanner: {
     marginTop: "spacer7",
     marginBottom: "spacer4",
-    bgColor: "palette.warn_lightest",
-    borderInlineStartColor: "palette.warn",
+    bgColor: "warn_lightest",
+    borderInlineStartColor: "warn",
   },
   warningIcon: {
     width: "1.375rem",
@@ -374,28 +374,28 @@ const sx = {
   },
   infoTextBox: {
     marginTop: "spacer3",
-    color: "palette.gray",
+    color: "gray",
     h3: {
       marginBottom: "-0.75rem",
     },
     "p, span": {
-      color: "palette.gray",
+      color: "gray",
       marginTop: "spacer2",
     },
     a: {
-      color: "palette.primary",
+      color: "primary",
       "&:hover": {
-        color: "palette.primary_darker",
+        color: "primary_darker",
       },
     },
     b: {
-      color: "palette.base",
+      color: "base",
     },
   },
   reviewPdfHint: {
     paddingTop: "spacer4",
     paddingBottom: "spacer4",
-    color: "palette.gray",
+    color: "gray",
   },
   reviewPdfButton: { marginBottom: "spacer4" },
 };

@@ -230,7 +230,7 @@ const sx = {
   },
   error: {
     fontSize: "sm",
-    color: "palette.error_dark",
+    color: "error_dark",
   },
   gridItems: {
     alignItems: "end",
@@ -253,6 +253,6 @@ const sx = {
     marginTop: "spacer_half",
     marginBottom: "1.25rem",
     fontSize: "sm",
-    color: "palette.error_darker",
+    color: "error_darker",
   },
 };

@@ -107,12 +107,13 @@ const sx = {
       textAlign: "left",
       paddingTop: "0rem",
       padding: "spacer1",
+      borderColor: "gray_lightest",
     },
     th: {
       fontWeight: "bold",
       textAlign: "left",
       paddingBottom: "0rem",
-      color: "palette.gray",
+      color: "gray",
     },
   },
 };

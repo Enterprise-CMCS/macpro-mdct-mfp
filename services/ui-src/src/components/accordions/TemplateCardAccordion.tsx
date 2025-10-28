@@ -37,6 +37,7 @@ const sx = {
     marginTop: "spacer4",
   },
   text: {
+    borderColor: "gray_lightest",
     p: {
       marginBottom: "spacer2",
     },

@@ -166,7 +166,7 @@ const sx = {
   dashboardTitle: {
     fontSize: "md",
     fontWeight: "bold",
-    color: "palette.gray",
+    color: "gray",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
@@ -175,7 +175,7 @@ const sx = {
   subsectionHeading: {
     fontSize: "md",
     fontWeight: "normal",
-    color: "palette.gray_dark",
+    color: "gray_dark",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
@@ -189,11 +189,11 @@ const sx = {
     },
     th: {
       fontWeight: "bold",
-      color: "palette.gray",
+      color: "gray",
       paddingLeft: "spacer2",
       paddingRight: "0",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_light",
+      borderColor: "gray_light",
       "&:nth-of-type(1)": {
         width: "2.5rem",
       },
