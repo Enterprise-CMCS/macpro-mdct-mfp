@@ -90,8 +90,8 @@ const sx = {
     flexDirection: "column",
     width: "100%",
     maxWidth: "reportPageWidth",
-    marginY: "3.5rem",
-    marginLeft: "3.5rem",
+    marginY: "spacer7",
+    marginLeft: "spacer7",
     ".mobile &": {
       marginX: "0rem",
     },

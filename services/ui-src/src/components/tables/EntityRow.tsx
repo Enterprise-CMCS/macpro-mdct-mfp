@@ -125,7 +125,7 @@ export const EntityRow = ({
   return (
     <Tr sx={sx.content}>
       <Td
-        pt={isMobile ? "1.5rem" : ".5rem"}
+        pt={isMobile ? "1.5rem" : "0.5rem"}
         verticalAlign={isMobile ? "baseline" : "middle"}
       >
         <EntityStatusIcon entityStatus={entityStatus} />
@@ -238,7 +238,7 @@ const sx = {
   errorText: {
     color: "error_dark",
     fontSize: "0.75rem",
-    marginBottom: "0.5rem",
+    marginBottom: "spacer1",
   },
   entityName: {
     maxWidth: "18.75rem",
@@ -260,11 +260,11 @@ const sx = {
       },
     },
     ".mobile &": {
-      paddingY: "1.5rem",
+      paddingY: "spacer3",
     },
   },
   actionContainer: {
-    paddingLeft: "1.5rem",
+    paddingLeft: "spacer3",
     alignItems: "center",
     display: "flex",
     ".mobile &": {
@@ -293,9 +293,9 @@ const sx = {
     width: "1.5rem",
     minWidth: "1.5rem",
     padding: 0,
-    marginLeft: "1rem",
+    marginLeft: "spacer2",
     marginRight: "0.4rem",
-    marginBottom: "0.25rem",
+    marginBottom: "spacer_half",
     background: "white",
     "&:hover, &:hover:disabled, :disabled": {
       background: "white",

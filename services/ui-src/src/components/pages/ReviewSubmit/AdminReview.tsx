@@ -201,16 +201,16 @@ const sx = {
     maxWidth: "reportPageWidth",
   },
   unlockModalBody: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   adminLeadTextBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     ul: {
-      marginLeft: "2rem",
+      marginLeft: "spacer4",
     },
   },
   infoTextBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     a: {
       color: "primary",
       textDecoration: "underline",
@@ -218,13 +218,13 @@ const sx = {
   },
   infoHeading: {
     fontWeight: "bold",
-    marginBottom: ".5rem",
+    marginBottom: "spacer1",
   },
   list: {
-    paddingLeft: "1rem",
-    margin: "1.5rem",
+    paddingLeft: "spacer2",
+    margin: "spacer3",
     li: {
-      marginBottom: "0.5rem",
+      marginBottom: "spacer1",
     },
   },
   adminApprove: {
@@ -233,24 +233,24 @@ const sx = {
   adminSubmitContainer: {
     width: "100%",
     justifyContent: "start",
-    marginTop: "2rem",
+    marginTop: "spacer4",
   },
   submitButton: {
     minHeight: "3rem",
-    paddingRight: "1rem",
+    paddingRight: "spacer2",
   },
   modalFooter: {
     paddingStart: 0,
     justifyContent: "start",
   },
   modalCancel: {
-    marginRight: "1rem",
+    marginRight: "spacer2",
   },
   unlockModalButton: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
   },
   adminUnlockBtn: {
-    marginRight: "1rem",
+    marginRight: "spacer2",
     "&disabled": {
       opacity: 1,
       background: "white",
@@ -267,11 +267,11 @@ const sx = {
   },
   action: {
     justifyContent: "center",
-    marginTop: "1rem",
-    marginRight: "2rem",
+    marginTop: "spacer2",
+    marginRight: "spacer4",
     minWidth: "10rem",
     span: {
-      marginLeft: "0.5rem",
+      marginLeft: "spacer1",
       marginRight: "-0.25rem",
       "&.ds-c-spinner": {
         marginLeft: 0,

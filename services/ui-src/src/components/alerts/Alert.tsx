@@ -72,7 +72,7 @@ const sx = {
     borderInlineStartWidth: "0.5rem",
     marginTop: "1.25rem",
     marginBottom: "1.25rem",
-    padding: "1rem",
+    padding: "spacer2",
     "&.info": {
       backgroundColor: "secondary_lightest",
       borderInlineStartColor: "secondary",
@@ -91,17 +91,17 @@ const sx = {
     },
   },
   descriptionText: {
-    marginTop: ".25rem",
+    marginTop: "spacer_half",
     p: {
-      marginY: ".5rem",
+      marginY: "spacer1",
     },
     ul: {
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
     },
   },
   linkText: {
-    marginTop: ".25rem",
-    marginBottom: ".25rem",
+    marginTop: "spacer_half",
+    marginBottom: "spacer_half",
   },
   icon: {
     position: "absolute",
@@ -110,7 +110,7 @@ const sx = {
     width: "1.375rem",
   },
   contentBox: {
-    marginLeft: "2rem",
+    marginLeft: "spacer4",
     "&.no-icon": {
       marginLeft: 0,
     },

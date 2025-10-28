@@ -89,7 +89,7 @@ export const ExportedEntityStepCard = ({
   return (
     <Card
       {...props}
-      marginTop="2rem"
+      marginTop="spacer4"
       boxShadow={boxShadow}
       border={border}
       borderColor={borderColor}
@@ -139,7 +139,7 @@ const sx = {
     position: "relative",
     marginX: "1.25rem",
     "&.export-version": {
-      paddingLeft: "2.5rem",
+      paddingLeft: "spacer5",
     },
     ".delete-entity-button": {
       position: "absolute",
@@ -152,7 +152,7 @@ const sx = {
     },
     ".icon-div-complete": {
       position: "absolute",
-      top: "0.25rem",
+      top: "spacer_half",
       left: "-1.5rem",
       marginLeft: "-0.75rem",
       ".mobile &": {
@@ -161,7 +161,7 @@ const sx = {
     },
     ".icon-div-incomplete": {
       position: "absolute",
-      top: "0.25rem",
+      top: "spacer_half",
       left: "-1.5rem",
       marginLeft: "-0.25rem",
       ".mobile &": {

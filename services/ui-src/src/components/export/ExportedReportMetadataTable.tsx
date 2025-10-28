@@ -106,7 +106,7 @@ const sx = {
       verticalAlign: "middle",
       textAlign: "left",
       paddingTop: "0rem",
-      padding: "8px",
+      padding: "spacer1",
       borderColor: "gray_lightest",
     },
     th: {

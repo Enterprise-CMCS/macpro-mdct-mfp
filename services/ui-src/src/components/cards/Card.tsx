@@ -18,9 +18,9 @@ interface Props {
 const sx = {
   root: {
     width: "100%",
-    padding: "2rem",
+    padding: "spacer4",
     ".mobile &": {
-      padding: "1rem",
+      padding: "spacer2",
     },
   },
 };

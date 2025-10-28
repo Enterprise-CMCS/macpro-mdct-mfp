@@ -131,7 +131,7 @@ const sx = {
       pageBreakInside: "avoid",
     },
     tableLayout: "fixed",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     "tr, th": {
       verticalAlign: "top",
       lineHeight: "base",

@@ -105,7 +105,7 @@ const sx = {
     flexDirection: "row",
   },
   spreadsheetIcon: {
-    marginRight: "2rem",
+    marginRight: "spacer4",
     boxSize: "5.5rem",
   },
   cardContentFlex: {
@@ -113,14 +113,14 @@ const sx = {
     flexDirection: "column",
   },
   cardTitleText: {
-    marginBottom: "0.5rem",
+    marginBottom: "spacer1",
     fontSize: "lg",
     fontWeight: "bold",
     lineHeight: "1.5",
   },
   actionsFlex: {
     flexFlow: "wrap",
-    gridGap: "1rem",
+    gridGap: "spacer2",
     justifyContent: "space-between",
     margin: "1rem 0 0 1rem",
     ".mobile &": {
@@ -129,11 +129,11 @@ const sx = {
   },
   templateDownloadButton: {
     justifyContent: "start",
-    marginRight: "1rem",
+    marginRight: "spacer2",
     padding: "0",
     span: {
       marginLeft: "0rem",
-      marginRight: "0.5rem",
+      marginRight: "spacer1",
     },
     ".mobile &": {
       marginRight: "0",
@@ -142,7 +142,7 @@ const sx = {
   formLink: {
     justifyContent: "start",
     span: {
-      marginLeft: "0.5rem",
+      marginLeft: "spacer1",
       marginRight: "-0.25rem",
     },
   },

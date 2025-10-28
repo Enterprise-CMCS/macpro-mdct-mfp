@@ -75,7 +75,7 @@ interface Props {
 const sx = {
   drawerContent: {
     maxWidth: "90vw",
-    padding: "1rem",
+    padding: "spacer2",
     "&.tablet": {
       maxWidth: "32rem",
     },
@@ -84,7 +84,7 @@ const sx = {
     },
   },
   drawerHeader: {
-    padding: "1rem",
+    padding: "spacer2",
   },
   drawerHeaderText: {
     paddingRight: "4rem",
@@ -96,7 +96,7 @@ const sx = {
     top: "2rem",
     right: "2rem",
     span: {
-      margin: "0 .25rem",
+      margin: "0 0.25rem",
       svg: {
         fontSize: "xs",
         width: "xs",
@@ -105,28 +105,28 @@ const sx = {
     },
   },
   detailBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     fontWeight: "normal",
     color: "base",
   },
   detailHeader: {
-    marginBottom: ".5rem",
+    marginBottom: "spacer1",
     fontSize: "md",
     fontWeight: "bold",
     color: "gray",
   },
   detailDescription: {
-    marginBottom: ".5rem",
+    marginBottom: "spacer1",
     fontSize: "md",
   },
   infoTextBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     fontSize: "md",
     fontWeight: "light",
     color: "gray",
     paddingBottom: "0",
     p: {
-      marginTop: "1rem",
+      marginTop: "spacer2",
     },
     a: {
       color: "primary",

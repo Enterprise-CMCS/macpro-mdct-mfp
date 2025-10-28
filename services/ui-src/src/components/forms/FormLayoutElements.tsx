@@ -7,10 +7,10 @@ export const SectionHeader = ({
 }: SectionHeaderProps) => {
   const sx = {
     h3: {
-      marginTop: "2rem",
+      marginTop: "spacer4",
     },
     label: {
-      marginTop: "3rem",
+      marginTop: "spacer6",
     },
   };
   return (
@@ -27,7 +27,7 @@ export const SectionHeader = ({
 
 export const SectionContent = ({ content }: SectionContentProps) => {
   const sx = {
-    paddingTop: "0.5rem",
+    paddingTop: "spacer1",
   };
   return <Text sx={sx}>{content}</Text>;
 };

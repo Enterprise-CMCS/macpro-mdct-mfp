@@ -71,10 +71,10 @@ interface Props {
 
 const sx = {
   introBox: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
 
     p: {
-      marginBottom: "1rem",
+      marginBottom: "spacer2",
       marginTop: "0",
     },
     ".mdct-table th": {
@@ -97,11 +97,11 @@ const sx = {
   largeHeading: {
     fontWeight: "normal",
     fontSize: "4xl",
-    marginTop: "0.5rem",
+    marginTop: "spacer1",
   },
   hintTextBox: {
     color: "#5B616B",
-    paddingTop: "1.5rem",
+    paddingTop: "spacer3",
   },
   subTitle: {
     color: "gray",
@@ -109,7 +109,7 @@ const sx = {
     margin: "1.5rem 0 -0.75rem 0",
   },
   infoTextBox: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     h3: {
       marginBottom: "-0.75rem",
     },
@@ -121,7 +121,7 @@ const sx = {
     },
   },
   periodText: {
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
     fontSize: "2xl",
   },
 };

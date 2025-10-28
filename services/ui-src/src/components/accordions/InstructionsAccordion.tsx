@@ -40,34 +40,34 @@ interface Props {
 
 const sx = {
   root: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     color: "base",
   },
   item: {
-    marginBottom: "1.5rem",
+    marginBottom: "spacer3",
     borderStyle: "none",
   },
   textBox: {
     ".mobile &": {
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
     },
     a: {
       color: "primary",
       textDecoration: "underline",
     },
     header: {
-      marginBottom: "1.5rem",
+      marginBottom: "spacer3",
     },
     p: {
-      marginBottom: "1.5rem",
+      marginBottom: "spacer3",
     },
   },
   text: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   list: {
-    paddingLeft: "1rem",
-    margin: "1.5rem",
+    paddingLeft: "spacer2",
+    margin: "spacer3",
     li: {
       marginBottom: "1.25rem",
     },
