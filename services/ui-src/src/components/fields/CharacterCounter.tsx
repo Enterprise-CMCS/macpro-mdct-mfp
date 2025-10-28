@@ -45,11 +45,11 @@ const sx = {
     display: "flex",
   },
   overLimit: {
-    color: "palette.error",
+    color: "error",
   },
   errorIcon: {
     boxSize: "1rem",
     display: "inline",
-    marginRight: "0.25rem",
+    marginRight: "spacer_half",
   },
 };
