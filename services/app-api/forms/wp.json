@@ -62,9 +62,7 @@
       "path": "/wp/transition-benchmarks",
       "pageType": "modalDrawer",
       "entityType": "targetPopulations",
-      "entityInfo": [
-        "transitionBenchmarks_targetPopulationName"
-      ],
+      "entityInfo": ["transitionBenchmarks_targetPopulationName"],
       "verbiage": {
         "accordion": {
           "buttonLabel": "Considerations around target populations",
@@ -344,7 +342,7 @@
                                       "content": "Transitions and transition coordination services",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -353,7 +351,7 @@
                                       "content": "Housing-related supports",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -362,7 +360,7 @@
                                       "content": "Quality measurement and improvement",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -371,7 +369,7 @@
                                       "content": "Self-direction (if applicable)",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -380,7 +378,7 @@
                                       "content": "Tribal initiative (if applicable)",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     }
@@ -406,7 +404,7 @@
                                       "content": "Recruitment and enrollment",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -415,7 +413,7 @@
                                       "content": "Person-centered planning and services",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -424,7 +422,7 @@
                                       "content": "No Wrong Door systems",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -433,7 +431,7 @@
                                       "content": "Community transition support",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -442,7 +440,7 @@
                                       "content": "Direct service workforce and caregivers",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -451,7 +449,7 @@
                                       "content": "Employment support",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -460,7 +458,7 @@
                                       "content": "Convenient and accessible transportation options",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -469,7 +467,7 @@
                                       "content": "Data-based decision-making",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -478,7 +476,7 @@
                                       "content": "Financing approaches",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -487,7 +485,7 @@
                                       "content": "Stakeholder engagement",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -496,7 +494,7 @@
                                       "content": "Equity and social determinants of health (SDOH)",
                                       "props": {
                                         "style": {
-                                          "paddingBottom": ".5rem"
+                                          "paddingBottom": "0.5rem"
                                         }
                                       }
                                     },
@@ -545,7 +543,7 @@
                       "content": "Initiative description, including target populations and timeframe",
                       "props": {
                         "style": {
-                          "padding": ".5rem"
+                          "padding": "0.5rem"
                         }
                       }
                     },
@@ -554,7 +552,7 @@
                       "content": "An evaluation plan, including measurable objectives",
                       "props": {
                         "style": {
-                          "padding": ".5rem"
+                          "padding": "0.5rem"
                         }
                       }
                     },
@@ -563,7 +561,7 @@
                       "content": "Funding sources, with projected quarterly expenditures",
                       "props": {
                         "style": {
-                          "padding": ".5rem"
+                          "padding": "0.5rem"
                         }
                       }
                     },
@@ -572,7 +570,7 @@
                       "content": "Initiative close-out information, to be completed as appropriate during MFP Work Plan revisions",
                       "props": {
                         "style": {
-                          "padding": ".5rem"
+                          "padding": "0.5rem"
                         }
                       }
                     }
@@ -651,10 +649,7 @@
           "path": "/wp/state-or-territory-specific-initiatives/initiatives",
           "pageType": "modalOverlay",
           "entityType": "initiative",
-          "entityInfo": [
-            "initiative_name",
-            "initiative_wpTopic"
-          ],
+          "entityInfo": ["initiative_name", "initiative_wpTopic"],
           "verbiage": {
             "intro": {
               "section": "",
@@ -821,10 +816,7 @@
               "pageType": "entityOverlay",
               "entityType": "initiative",
               "stepType": "defineInitiative",
-              "stepInfo": [
-                "stepName",
-                "hint"
-              ],
+              "stepInfo": ["stepName", "hint"],
               "stepName": "I. Define initiative",
               "hint": "Provide initiative description, including target populations and timeframe",
               "isRequired": true,
@@ -934,10 +926,7 @@
               "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "evaluationPlan",
-              "stepInfo": [
-                "stepName",
-                "hint"
-              ],
+              "stepInfo": ["stepName", "hint"],
               "stepName": "II. Evaluation plan",
               "hint": "Add evaluation plan, including measurable objectives",
               "isRequired": true,
@@ -1085,10 +1074,7 @@
               "pageType": "overlayModal",
               "entityType": "initiative",
               "stepType": "fundingSources",
-              "stepInfo": [
-                "stepName",
-                "hint"
-              ],
+              "stepInfo": ["stepName", "hint"],
               "stepName": "III. Funding sources",
               "hint": "Add funding sources with projected quarterly expenditures",
               "isRequired": true,
@@ -1190,10 +1176,7 @@
               "pageType": "entityOverlay",
               "entityType": "initiative",
               "stepType": "closeOutInformation",
-              "stepInfo": [
-                "stepName",
-                "hint"
-              ],
+              "stepInfo": ["stepName", "hint"],
               "stepName": "IV. Initiative close-out information (if applicable)",
               "hint": "To be completed as appropriate during MFP Work Plan revisions",
               "isRequired": true,

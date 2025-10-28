@@ -223,8 +223,8 @@ const sx = {
   },
   ".number-field .ds-c-field": {
     maxWidth: "15rem",
-    paddingLeft: ".5rem",
-    paddingRight: ".5rem",
+    paddingLeft: "spacer1",
+    paddingRight: "spacer1",
   },
   // disabled field
   ".ds-c-field[disabled]": {

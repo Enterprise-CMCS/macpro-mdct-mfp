@@ -482,7 +482,7 @@ const sx = {
       height: "1.375rem",
       width: "1.375rem",
       marginTop: "-0.125rem",
-      marginRight: ".5rem",
+      marginRight: "spacer1",
     },
     textDecoration: "none",
     _hover: {

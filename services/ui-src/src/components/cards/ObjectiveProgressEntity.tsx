@@ -199,7 +199,7 @@ const sx = {
     display: "grid",
     gridTemplateRows: "1fr 1fr 1fr 1fr",
     gridAutoFlow: "column",
-    gridGap: ".5rem",
+    gridGap: "spacer1",
     marginBottom: "1.25rem",
   },
   sarGrid: {
@@ -236,7 +236,7 @@ const sx = {
     alignItems: "end",
     flexWrap: "wrap",
     ".subtitle": {
-      marginRight: ".5rem",
+      marginRight: "spacer1",
     },
   },
   box: {

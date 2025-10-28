@@ -238,12 +238,12 @@ const sx = {
     margin: "0.5rem 0",
     ".desktop &": {
       "&:first-of-type": {
-        paddingRight: ".5rem",
+        paddingRight: "spacer1",
         borderRight: "1px solid",
         borderColor: "white",
       },
       "&:last-child": {
-        paddingLeft: ".5rem",
+        paddingLeft: "spacer1",
       },
     },
   },

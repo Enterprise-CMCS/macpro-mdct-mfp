@@ -218,7 +218,7 @@ const sx = {
   },
   infoHeading: {
     fontWeight: "bold",
-    marginBottom: ".5rem",
+    marginBottom: "spacer1",
   },
   list: {
     paddingLeft: "spacer2",

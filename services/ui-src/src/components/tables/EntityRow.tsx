@@ -125,7 +125,7 @@ export const EntityRow = ({
   return (
     <Tr sx={sx.content}>
       <Td
-        pt={isMobile ? "1.5rem" : ".5rem"}
+        pt={isMobile ? "1.5rem" : "0.5rem"}
         verticalAlign={isMobile ? "baseline" : "middle"}
       >
         <EntityStatusIcon entityStatus={entityStatus} />
