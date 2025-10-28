@@ -1,5 +1,5 @@
 import { MixedSchema } from "yup/lib/mixed";
-import { number, ratio, validInteger } from "./completionSchemas";
+import { number, ratio, textCustom, validInteger } from "./completionSchemas";
 
 describe("Schemas", () => {
   const goodNumberTestCases = [
@@ -55,7 +55,7 @@ describe("Schemas", () => {
     "%@#$!ASDF",
   ];
 
-  const testNumberSchema = (
+  const testSchema = (
     schemaToUse: MixedSchema,
     testCases: Array<string>,
     expectedReturn: boolean
@@ -67,17 +67,22 @@ describe("Schemas", () => {
   };
 
   test("Evaluate Number Schema using number scheme", () => {
-    testNumberSchema(number(), goodNumberTestCases, true);
-    testNumberSchema(number(), badNumberTestCases, false);
+    testSchema(number(), goodNumberTestCases, true);
+    testSchema(number(), badNumberTestCases, false);
   });
 
   test("Evaluate Number Schema using integer scheme", () => {
-    testNumberSchema(validInteger(), goodIntegerTestCases, true);
-    testNumberSchema(validInteger(), badIntegerTestCases, false);
+    testSchema(validInteger(), goodIntegerTestCases, true);
+    testSchema(validInteger(), badIntegerTestCases, false);
   });
 
   test("Evaluate Number Schema using ratio scheme", () => {
-    testNumberSchema(ratio(), goodRatioTestCases, true);
-    testNumberSchema(ratio(), badRatioTestCases, false);
+    testSchema(ratio(), goodRatioTestCases, true);
+    testSchema(ratio(), badRatioTestCases, false);
+  });
+
+  test("Evaluate Text Schema using textCustom scheme", () => {
+    testSchema(textCustom({ maxLength: 10 }), ["0123456789"], true);
+    testSchema(textCustom({ maxLength: 10 }), ["textistoolong", ""], false);
   });
 });
