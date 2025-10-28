@@ -327,7 +327,7 @@ const sx = {
   infoTextBox: {
     marginTop: "2rem",
     a: {
-      color: "palette.primary",
+      color: "primary",
       textDecoration: "underline",
     },
   },
@@ -344,21 +344,21 @@ const sx = {
     height: "27px",
   },
   list: {
-    color: "palette.gray",
+    color: "gray",
     paddingLeft: "1rem",
     margin: "0.25rem",
   },
   additionalInfoHeader: {
-    color: "palette.gray",
+    color: "gray",
     fontWeight: "bold",
   },
   additionalInfo: {
     paddingTop: "1.5rem",
     marginTop: "0.5rem",
     borderTop: "1px solid",
-    borderColor: "palette.gray_light",
+    borderColor: "gray_light",
     p: {
-      color: "palette.gray",
+      color: "gray",
     },
     "p + p": {
       marginY: "0.5rem",
@@ -372,7 +372,7 @@ const sx = {
     marginTop: "2.5rem",
     paddingTop: "1.5rem",
     borderTop: "1px solid",
-    borderColor: "palette.gray_light",
+    borderColor: "gray_light",
     flexDirection: {
       base: "column",
       sm: "row",
@@ -390,10 +390,10 @@ const sx = {
     },
     "&:disabled": {
       opacity: 1,
-      background: "palette.gray_lighter",
-      color: "palette.gray",
+      background: "gray_lighter",
+      color: "gray",
       "&:hover": {
-        background: "palette.gray_lighter",
+        background: "gray_lighter",
       },
     },
   },

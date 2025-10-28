@@ -6,26 +6,26 @@ const baseStyles = {
 };
 
 const primaryVariant = {
-  color: "palette.primary",
+  color: "primary",
   _visited: {
-    color: "palette.primary",
-    textDecorationColor: "palette.primary",
+    color: "primary",
+    textDecorationColor: "primary",
   },
   ":hover, :visited:hover": {
-    color: "palette.primary_darker",
-    textDecorationColor: "palette.primary_darker",
+    color: "primary_darker",
+    textDecorationColor: "primary_darker",
   },
 };
 
 const inverseVariant = {
-  color: "palette.white",
+  color: "white",
   _visited: {
-    color: "palette.white",
-    textDecorationColor: "palette.white",
+    color: "white",
+    textDecorationColor: "white",
   },
   ":hover, :visited:hover": {
-    color: "palette.gray_lighter",
-    textDecorationColor: "palette.gray_lighter",
+    color: "gray_lighter",
+    textDecorationColor: "gray_lighter",
   },
 };
 
@@ -33,20 +33,20 @@ const unstyledVariant = {
   textDecoration: "none",
   ":focus, :focus-visible, :hover, :visited, :visited:hover": {
     textDecoration: "none",
-    color: "palette.base",
+    color: "base",
   },
 };
 
 const unstyledButtonVariant = {
-  color: "palette.primary",
+  color: "primary",
   border: "1px solid",
   padding: ".5rem 1rem",
   borderRadius: "5px",
   fontWeight: "bold",
   textDecoration: "none",
-  _visited: { color: "palette.primary" },
+  _visited: { color: "primary" },
   ":hover, :visited:hover": {
-    color: "palette.primary_darker",
+    color: "primary_darker",
     textDecoration: "none",
   },
   ".mobile &": {

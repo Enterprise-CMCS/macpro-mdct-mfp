@@ -41,7 +41,7 @@ interface Props {
 const sx = {
   root: {
     marginTop: "2rem",
-    color: "palette.base",
+    color: "base",
   },
   item: {
     marginBottom: "1.5rem",
@@ -52,7 +52,7 @@ const sx = {
       paddingLeft: "1rem",
     },
     a: {
-      color: "palette.primary",
+      color: "primary",
       textDecoration: "underline",
     },
     header: {

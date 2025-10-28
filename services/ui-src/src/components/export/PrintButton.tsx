@@ -54,7 +54,7 @@ const sx = {
     color: "white !important",
     textDecoration: "none !important",
     "&:hover, &:focus": {
-      backgroundColor: "palette.primary",
+      backgroundColor: "primary",
       color: "white",
     },
   },

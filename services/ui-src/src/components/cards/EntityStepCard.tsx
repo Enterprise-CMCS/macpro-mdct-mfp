@@ -83,7 +83,7 @@ export const EntityStepCard = ({
 
   const boxShadow = hasBoxShadow ? "0px 3px 9px rgba(0, 0, 0, 0.2)" : "none";
   const border = hasBorder ? "1px" : "none";
-  const borderColor = hasBorder ? "palette.gray_light" : "none";
+  const borderColor = hasBorder ? "gray_light" : "none";
   const addEditEntitybutton = () => {
     if (
       (openAddEditEntityModal && report?.reportType === ReportType.WP) ||
@@ -215,7 +215,7 @@ const sx = {
       },
     },
     ".error-text": {
-      color: "palette.error_darker",
+      color: "error_darker",
       fontSize: ".75rem",
       textAlign: "center",
       fontWeight: "bold",
@@ -243,7 +243,7 @@ const sx = {
   editButton: {
     marginY: "1rem",
     fontWeight: "normal",
-    borderColor: "palette.gray_light",
+    borderColor: "gray_light",
   },
   reportButton: {
     fontWeight: "bold",
@@ -265,6 +265,6 @@ const sx = {
   unfinishedMessage: {
     marginY: "1rem",
     fontSize: "xs",
-    color: "palette.error_dark",
+    color: "error_dark",
   },
 };

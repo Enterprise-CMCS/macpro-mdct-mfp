@@ -353,7 +353,7 @@ const sx = {
     fontSize: "21px",
     lineHeight: "130%",
     fontWeight: "bold",
-    color: "palette.gray_darkest",
+    color: "gray_darkest",
   },
   table: {
     marginTop: "1.25rem",
@@ -366,7 +366,7 @@ const sx = {
       marginBottom: "0.25rem",
     },
     tr: {
-      background: "palette.gray_lightest",
+      background: "gray_lightest",
       border: "1px solid",
     },
     thead: {
@@ -379,15 +379,15 @@ const sx = {
       border: "1px solid",
     },
     "td:first-of-type": {
-      background: "palette.gray_lightest",
+      background: "gray_lightest",
       fontWeight: "bold",
     },
     th: {
       borderBottom: "1px solid",
       borderRight: "1px solid",
       border: "1px solid",
-      borderColor: "palette.black",
-      color: "palette.black",
+      borderColor: "black",
+      color: "black",
       lineHeight: "normal",
       fontWeight: "bold",
       width: "100px",
@@ -397,10 +397,10 @@ const sx = {
       },
     },
     "tbody tr": {
-      background: "palette.white",
+      background: "white",
     },
     "tbody tr td:last-child, tfoot": {
-      background: "palette.secondary_lightest",
+      background: "secondary_lightest",
       fontWeight: "bold",
     },
     "tbody tr td": {
@@ -408,13 +408,13 @@ const sx = {
       borderBottom: "1px solid black",
     },
     "tfoot th:last-child": {
-      background: "palette.gray",
-      color: "palette.white",
+      background: "gray",
+      color: "white",
     },
   },
   overflowStyles: {
     "table:first-of-type tfoot th:last-child": {
-      background: "palette.secondary_lightest",
+      background: "secondary_lightest",
       color: "black",
     },
     "table:first-of-type tbody tr td:last-child": {

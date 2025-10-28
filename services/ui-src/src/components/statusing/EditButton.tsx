@@ -40,11 +40,11 @@ const sx = {
     fontSize: "md",
     fontWeight: "normal",
     border: "1px solid",
-    borderColor: "palette.gray_lighter",
-    color: "palette.primary",
+    borderColor: "gray_lighter",
+    color: "primary",
     ".mobile &": {
       width: "6rem",
-      borderColor: "palette.primary",
+      borderColor: "primary",
       marginTop: ".5rem",
     },
     img: {
