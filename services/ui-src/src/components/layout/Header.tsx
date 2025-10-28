@@ -103,7 +103,7 @@ const sx = {
   headerBar: {
     minHeight: "4rem",
     alignItems: "center",
-    bg: "palette.primary_darkest",
+    bg: "primary_darkest",
   },
   headerContainer: {
     maxW: "appMax",
@@ -122,7 +122,7 @@ const sx = {
     maxWidth: "200px",
   },
   subnavBar: {
-    bg: "palette.secondary_lightest",
+    bg: "secondary_lightest",
   },
   subnavContainer: {
     maxW: "appMax",

@@ -67,8 +67,7 @@ export const Table = ({
                   key={`${cell}${rowIndex}-body-cell`}
                   sx={{
                     tableCell: border ? sx.tableCellBorder : sx.tableCell,
-                    color:
-                      cell == notAnsweredText ? "palette.error_darker" : "",
+                    color: cell == notAnsweredText ? "error_darker" : "",
                   }}
                   aria-label={ariaOverride?.bodyRows?.[index][rowIndex]}
                 >
@@ -126,7 +125,7 @@ const sx = {
     padding: "0.75rem 0.5rem",
     fontSize: "sm",
     fontWeight: "semibold",
-    borderColor: "palette.gray_lighter",
+    borderColor: "gray_lighter",
     textTransform: "none",
     letterSpacing: "normal",
     ".mobile &": {
@@ -144,7 +143,7 @@ const sx = {
   tableCellBorder: {
     padding: "0.75rem 0.5rem",
     borderBottom: "1px solid",
-    borderColor: "palette.gray_lighter",
+    borderColor: "gray_lighter",
     fontWeight: "normal",
     ".mobile &": {
       fontSize: "xs",
@@ -152,6 +151,6 @@ const sx = {
   },
   ".two-column &": {}, // TODO: add additional styling for two-column dynamic field tables if needed
   notAnswered: {
-    color: "palette.error_darker",
+    color: "error_darker",
   },
 };

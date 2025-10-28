@@ -212,7 +212,7 @@ const sx = {
   infoTextBox: {
     marginTop: "2rem",
     a: {
-      color: "palette.primary",
+      color: "primary",
       textDecoration: "underline",
     },
   },
@@ -254,15 +254,15 @@ const sx = {
     "&disabled": {
       opacity: 1,
       background: "white",
-      color: "palette.gray_lighter",
-      borderColor: "palette.gray_lighter",
+      color: "gray_lighter",
+      borderColor: "gray_lighter",
     },
   },
   adminApproveBtn: {
     "&:disabled": {
       opacity: 1,
-      background: "palette.gray_lighter",
-      color: "palette.gray",
+      background: "gray_lighter",
+      color: "gray",
     },
   },
   action: {

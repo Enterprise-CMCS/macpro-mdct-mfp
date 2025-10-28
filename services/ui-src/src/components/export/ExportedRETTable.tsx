@@ -398,10 +398,10 @@ const sx = {
       border: "1px solid",
     },
     "thead tr:first-of-type th": {
-      background: "palette.gray_lightest",
+      background: "gray_lightest",
       border: "1px solid",
-      borderColor: "palette.black",
-      color: "palette.black",
+      borderColor: "black",
+      color: "black",
       lineHeight: "normal",
       fontWeight: "bold",
       minWidth: "100px",
@@ -420,20 +420,20 @@ const sx = {
       fontWeight: "normal",
     },
     "td:first-of-type, tfoot th:first-of-type": {
-      background: "palette.gray_lightest",
+      background: "gray_lightest",
       fontWeight: "bold",
-      color: "palette.black",
+      color: "black",
     },
     "tbody tr": {
-      background: "palette.white",
+      background: "white",
     },
     ":last-of-type tbody tr td:last-child, tfoot th": {
-      background: "palette.secondary_lightest",
+      background: "secondary_lightest",
       fontWeight: "bold",
     },
   },
   // RE&T warning message
   retAlert: {
-    color: "palette.error_dark",
+    color: "error_dark",
   },
 };

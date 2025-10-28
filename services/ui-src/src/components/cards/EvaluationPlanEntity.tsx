@@ -113,7 +113,7 @@ const sx = {
   },
   error: {
     fontSize: "sm",
-    color: "palette.error_dark",
+    color: "error_dark",
   },
   gridItems: {
     alignItems: "end",
@@ -125,6 +125,6 @@ const sx = {
   unfinishedMessage: {
     marginY: "1rem",
     fontSize: "xs",
-    color: "palette.error_dark",
+    color: "error_dark",
   },
 };

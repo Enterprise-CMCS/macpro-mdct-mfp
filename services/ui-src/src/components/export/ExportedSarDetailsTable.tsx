@@ -54,12 +54,12 @@ const sx = {
     },
     "td:nth-of-type(1)": {
       fontWeight: "bold",
-      color: "palette.base",
+      color: "base",
     },
     th: {
       fontWeight: "bold",
       textAlign: "left",
-      color: "palette.gray",
+      color: "gray",
     },
   },
 };

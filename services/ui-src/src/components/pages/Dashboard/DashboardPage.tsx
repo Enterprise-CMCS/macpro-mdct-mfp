@@ -524,10 +524,10 @@ const sx = {
     },
     ".ds-c-spinner": {
       "&:before": {
-        borderColor: "palette.black",
+        borderColor: "black",
       },
       "&:after": {
-        borderLeftColor: "palette.black",
+        borderLeftColor: "black",
       },
     },
   },
@@ -551,7 +551,7 @@ const sx = {
   alertBanner: {
     marginBottom: "2rem",
     borderInlineStartWidth: "7.5px",
-    bgColor: "palette.error_lightest",
+    bgColor: "error_lightest",
     fontSize: "18px",
     p: {
       fontSize: "16px",
@@ -580,7 +580,7 @@ const sxChildStyles = {
       textAlign: "center",
       fontSize: "sm",
       fontWeight: "normal",
-      color: "palette.primary",
+      color: "primary",
     },
   },
   editReport: {
