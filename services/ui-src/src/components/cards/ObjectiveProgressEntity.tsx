@@ -191,15 +191,15 @@ const sx = {
     fontSize: "sm",
   },
   description: {
-    marginTop: "0.25rem",
-    marginBottom: "1rem",
+    marginTop: "spacer_half",
+    marginBottom: "spacer2",
     fontSize: "sm",
   },
   grid: {
     display: "grid",
     gridTemplateRows: "1fr 1fr 1fr 1fr",
     gridAutoFlow: "column",
-    gridGap: ".5rem",
+    gridGap: "spacer1",
     marginBottom: "1.25rem",
   },
   sarGrid: {
@@ -212,20 +212,20 @@ const sx = {
   sarGridSubtitle: {
     fontWeight: "bold",
     fontSize: "xs",
-    marginRight: ".25rem",
+    marginRight: "spacer_half",
   },
   gridSubtitle: {
     fontWeight: "bold",
     fontSize: "sm",
-    marginRight: ".25rem",
+    marginRight: "spacer_half",
   },
   subtitle: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     fontSize: "xs",
     fontWeight: "bold",
   },
   subtext: {
-    marginTop: "0.25rem",
+    marginTop: "spacer_half",
     fontSize: "sm",
   },
   error: {
@@ -236,21 +236,21 @@ const sx = {
     alignItems: "end",
     flexWrap: "wrap",
     ".subtitle": {
-      marginRight: ".5rem",
+      marginRight: "spacer1",
     },
   },
   box: {
     backgroundColor: "#EEFBFF",
     padding: "0.5rem 1rem",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   notAnsweredBox: {
     backgroundColor: "#FCE8EC",
     padding: "0.5rem 1rem",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   notAnsweredDescription: {
-    marginTop: "0.25rem",
+    marginTop: "spacer_half",
     marginBottom: "1.25rem",
     fontSize: "sm",
     color: "error_darker",

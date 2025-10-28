@@ -180,17 +180,17 @@ const sx = {
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
-    paddingBottom: "1rem",
+    paddingBottom: "spacer2",
   },
   table: {
     tableLayout: "fixed",
     br: {
-      marginBottom: "0.25rem",
+      marginBottom: "spacer_half",
     },
     th: {
       fontWeight: "bold",
       color: "gray",
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
       paddingRight: "0",
       borderBottom: "1px solid",
       borderColor: "gray_light",

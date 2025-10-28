@@ -177,7 +177,7 @@ const sx = {
     "@media print": {
       pageBreakInside: "avoid",
     },
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     width: "100%",
     "tr, th": {
       verticalAlign: "bottom",
@@ -231,7 +231,7 @@ const sx = {
     fontWeight: "bold",
   },
   statusIcon: {
-    paddingLeft: "1rem",
+    paddingLeft: "spacer2",
     img: {
       maxWidth: "fit-content",
     },
@@ -259,7 +259,7 @@ const sx = {
     p: {
       color: "base",
       "&:first-of-type": {
-        marginTop: "1rem",
+        marginTop: "spacer2",
       },
     },
   },

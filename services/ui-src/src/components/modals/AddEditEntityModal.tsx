@@ -187,7 +187,7 @@ const sx = {
   bottomModalMessage: {
     fontSize: "xs",
     color: "primary_darker",
-    marginTop: "1rem",
+    marginTop: "spacer2",
     marginBottom: "-1rem",
   },
 };

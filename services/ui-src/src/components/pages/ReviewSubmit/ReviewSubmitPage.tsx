@@ -320,12 +320,12 @@ const sx = {
     },
   },
   headerText: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontSize: "4xl",
     fontWeight: "normal",
   },
   infoTextBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     a: {
       color: "primary",
       textDecoration: "underline",
@@ -333,44 +333,44 @@ const sx = {
   },
   infoHeading: {
     fontWeight: "bold",
-    marginBottom: ".5rem",
+    marginBottom: "spacer1",
   },
   infoParagraph: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   headerImage: {
     display: "inline-block",
-    marginRight: "1rem",
+    marginRight: "spacer2",
     height: "27px",
   },
   list: {
     color: "gray",
-    paddingLeft: "1rem",
-    margin: "0.25rem",
+    paddingLeft: "spacer2",
+    margin: "spacer_half",
   },
   additionalInfoHeader: {
     color: "gray",
     fontWeight: "bold",
   },
   additionalInfo: {
-    paddingTop: "1.5rem",
-    marginTop: "0.5rem",
+    paddingTop: "spacer3",
+    marginTop: "spacer1",
     borderTop: "1px solid",
     borderColor: "gray_light",
     p: {
       color: "gray",
     },
     "p + p": {
-      marginY: "0.5rem",
+      marginY: "spacer1",
     },
   },
   alert: {
-    marginBottom: "2rem",
-    marginRight: "2.5rem",
+    marginBottom: "spacer4",
+    marginRight: "spacer5",
   },
   footerBox: {
-    marginTop: "2.5rem",
-    paddingTop: "1.5rem",
+    marginTop: "spacer5",
+    paddingTop: "spacer3",
     borderTop: "1px solid",
     borderColor: "gray_light",
     flexDirection: {
@@ -380,7 +380,7 @@ const sx = {
   },
   submitButton: {
     minHeight: "3rem",
-    paddingRight: "1rem",
+    paddingRight: "spacer2",
     marginTop: {
       base: "1.5rem",
       sm: "0",

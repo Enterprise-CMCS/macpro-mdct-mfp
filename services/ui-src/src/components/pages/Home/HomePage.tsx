@@ -82,7 +82,7 @@ export const HomePage = () => {
 const sx = {
   layout: {
     ".contentFlex": {
-      marginTop: "3.5rem",
+      marginTop: "spacer7",
     },
   },
   introTextBox: {
@@ -90,11 +90,11 @@ const sx = {
     marginBottom: "2.25rem",
   },
   headerText: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontSize: "2rem",
     fontWeight: "normal",
   },
   card: {
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
   },
 };

@@ -45,11 +45,11 @@ const sx = {
     ".mobile &": {
       width: "6rem",
       borderColor: "primary",
-      marginTop: ".5rem",
+      marginTop: "spacer1",
     },
     img: {
       width: "1rem",
-      marginRight: "0.5rem",
+      marginRight: "spacer1",
     },
   },
 };

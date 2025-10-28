@@ -328,7 +328,7 @@ interface AdminReleaseButtonProps {
 
 const sx = {
   table: {
-    marginBottom: "2.5rem",
+    marginBottom: "spacer5",
     th: {
       padding: "0.5rem 0",
       borderBottom: "1px solid",

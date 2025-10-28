@@ -188,7 +188,7 @@ const sx = {
     justifyContent: "space-between",
     alignItems: "center",
     height: "3.25rem",
-    padding: "0.5rem",
+    padding: "spacer1",
     paddingLeft: "0.75rem",
     borderBottom: "1.5px solid var(--mdct-colors-gray_lighter)",
   },
@@ -199,7 +199,7 @@ const sx = {
     marginLeft: "2.25rem",
   },
   missingEntityMessage: {
-    paddingTop: "1rem",
+    paddingTop: "spacer2",
     fontWeight: "bold",
     a: {
       color: "primary",

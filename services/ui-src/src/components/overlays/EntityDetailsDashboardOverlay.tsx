@@ -160,7 +160,7 @@ const sx = {
     th: {
       fontWeight: "bold",
       color: "gray",
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
       paddingRight: "0",
       borderBottom: "1px solid",
       borderColor: "gray_light",
@@ -174,23 +174,23 @@ const sx = {
     position: "relative",
     right: 0,
     ".tablet &": {
-      right: "3rem",
+      right: "spacer6",
     },
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     marginTop: "-2rem",
   },
   backIcon: {
     color: "primary",
     height: "1rem",
-    marginRight: "0.5rem",
+    marginRight: "spacer1",
   },
   footerBox: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     borderTop: "1.5px solid var(--mdct-colors-gray_light)",
   },
   buttonFlex: {
     justifyContent: "end",
-    marginY: "1.5rem",
+    marginY: "spacer3",
   },
   saveButton: {
     width: "8.25rem",

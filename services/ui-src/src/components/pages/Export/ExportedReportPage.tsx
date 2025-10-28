@@ -285,7 +285,7 @@ export const sx = {
     tableLayout: "fixed",
     ".combined-data-title": {
       display: "inline-block",
-      marginBottom: "0.5rem",
+      marginBottom: "spacer1",
       fontSize: "md",
       fontWeight: "bold",
     },
@@ -294,7 +294,7 @@ export const sx = {
       lineHeight: "base",
       borderBottom: "1px solid",
       borderColor: "gray_lighter",
-      paddingLeft: "0.5rem",
+      paddingLeft: "spacer1",
     },
     tr: {
       "th, td": {

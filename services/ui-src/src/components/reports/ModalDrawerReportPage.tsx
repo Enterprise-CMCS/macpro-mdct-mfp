@@ -314,16 +314,16 @@ const sx = {
     color: "gray",
   },
   addEntityButton: {
-    marginTop: "1.5rem",
-    marginBottom: "2rem",
+    marginTop: "spacer3",
+    marginBottom: "spacer4",
   },
   table: {
     tableLayout: "fixed",
     br: {
-      marginBottom: "0.25rem",
+      marginBottom: "spacer_half",
     },
     th: {
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
       paddingRight: "0",
       borderBottom: "1px solid",
       borderColor: "gray_light",
@@ -336,10 +336,10 @@ const sx = {
     },
   },
   pageErrorAlert: {
-    marginBottom: "1.5rem",
+    marginBottom: "spacer3",
   },
   reviewPdfHint: {
     color: "gray",
   },
-  reviewPdfButton: { marginTop: "1.5rem" },
+  reviewPdfButton: { marginTop: "spacer3" },
 };

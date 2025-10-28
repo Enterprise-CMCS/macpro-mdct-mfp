@@ -211,7 +211,7 @@ interface Props {
 
 const sx = {
   ".tbs-bottom-margin": {
-    marginBottom: "2.5rem",
+    marginBottom: "spacer5",
   },
   // default
   ".ds-c-field, .ds-c-label": {
@@ -223,8 +223,8 @@ const sx = {
   },
   ".number-field .ds-c-field": {
     maxWidth: "15rem",
-    paddingLeft: ".5rem",
-    paddingRight: ".5rem",
+    paddingLeft: "spacer1",
+    paddingRight: "spacer1",
   },
   // disabled field
   ".ds-c-field[disabled]": {
@@ -232,17 +232,17 @@ const sx = {
   },
   // field hint
   ".ds-c-field__hint": {
-    marginBottom: "0.25rem",
+    marginBottom: "spacer_half",
   },
   // field hint and error message
   ".ds-c-field__hint, .ds-c-field__error-message ": {
     fontSize: "sm",
     ul: {
-      paddingLeft: "2rem",
+      paddingLeft: "spacer4",
     },
     ol: {
       margin: "0.25rem 0.5rem",
-      padding: "0.5rem",
+      padding: "spacer1",
     },
     a: {
       color: "primary",
@@ -251,12 +251,12 @@ const sx = {
   },
   // nested child fields
   ".ds-c-choice__checkedChild.nested": {
-    paddingY: "0.25rem",
+    paddingY: "spacer_half",
     paddingTop: 0,
     // makes the blue line continuous
     marginTop: 0,
     ".ds-c-fieldset, label": {
-      marginTop: "1rem",
+      marginTop: "spacer2",
     },
   },
   // optional text
@@ -266,12 +266,12 @@ const sx = {
   // RE&T warning message
   retAlert: {
     color: "error_dark",
-    paddingTop: "1rem",
+    paddingTop: "spacer2",
   },
   // dividers for R,E,T pages
   ".sectionHeader": {
     borderTop: "1px solid #A6A6A6",
-    marginTop: "3rem",
+    marginTop: "spacer6",
     "&:first-of-type": {
       margin: "0",
       borderTop: "none",

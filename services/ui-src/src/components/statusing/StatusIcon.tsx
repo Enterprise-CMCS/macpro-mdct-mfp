@@ -26,7 +26,7 @@ export const StatusIcon = ({ status }: { status?: boolean }) => {
 
 const sx = {
   status: {
-    gap: "0.5rem",
+    gap: "spacer1",
     alignItems: "center",
     img: {
       width: "1.25rem",
