@@ -28,24 +28,18 @@ const mockGetValues = (returnValue: any) =>
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const maxLength = 1000;
 
 const textFieldComponent = (
-  <TextField
-    name="testTextField"
-    label="test-label"
-    placeholder="test-placeholder"
-    data-testid="test-text-field"
-  />
+  <TextField name="testTextField" label="test-label" />
+);
+
+const textFieldComponentWithMaxLength = (
+  <TextField name="testTextField" label="test-label" maxLength={maxLength} />
 );
 
 const textFieldComponentValidateOnRender = (
-  <TextField
-    name="testTextField"
-    label="test-label"
-    placeholder="test-placeholder"
-    data-testid="test-text-field"
-    validateOnRender={true}
-  />
+  <TextField name="testTextField" label="test-label" validateOnRender={true} />
 );
 
 const mockHydrationValue = "abcdefg";
@@ -55,6 +49,7 @@ const textFieldComponentHydration = (
     name="testTextFieldWithHydrationValue"
     label="test-label-hydration-value"
     hydrate={mockHydrationValue}
+    maxLength={maxLength}
   />
 );
 
@@ -69,52 +64,57 @@ const textFieldComponentClearValue = (
 
 describe("<TextField />", () => {
   describe("Test TextField component", () => {
-    test("TextField is visible", () => {
+    beforeEach(() => {
       mockedUseStore.mockReturnValue(mockStateUserStore);
       mockGetValues("");
-      render(textFieldComponent);
-      const textField = screen.getByRole("textbox");
-      expect(textField).toBeVisible();
+    });
+
+    afterEach(() => {
       jest.clearAllMocks();
     });
 
+    test("TextField is visible", () => {
+      render(textFieldComponent);
+      expect(screen.getByRole("textbox")).toBeVisible();
+    });
+
+    test("TextField has character counter", () => {
+      render(textFieldComponentWithMaxLength);
+      const textFieldInput = screen.getByRole("textbox");
+      const characterCounter = screen.getByText(
+        `${maxLength} characters allowed`
+      );
+      expect(characterCounter).toBeVisible();
+
+      const counterId = characterCounter.getAttribute("id");
+      const describedBy = textFieldInput.getAttribute("aria-describedby");
+      expect(describedBy).toBe(counterId);
+    });
+
     test("Component with validateOnRender passed should validate on initial render", () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
-      mockGetValues("");
       render(textFieldComponentValidateOnRender);
       expect(mockTrigger).toHaveBeenCalled();
     });
 
     test("Component with hydration value should hydrate field", () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
-      mockGetValues("");
-      const result = render(textFieldComponentHydration);
-      const textFieldInput: HTMLInputElement = result.container.querySelector(
-        "[name='testTextFieldWithHydrationValue']"
-      )!;
-      const displayValue = textFieldInput.value;
-      expect(displayValue).toEqual(mockHydrationValue);
+      render(textFieldComponentHydration);
+      expect(screen.getByRole("textbox")).toHaveValue(mockHydrationValue);
+
+      const remainingCharacters = maxLength - mockHydrationValue.length;
+      const characterCounter = screen.getByText(
+        `${remainingCharacters} characters left`
+      );
+      expect(characterCounter).toBeVisible();
     });
 
     test("Component with hydration value and clear value should reset value to default", () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
-      mockGetValues("");
-      const result = render(textFieldComponentClearValue);
-      const textFieldInput: HTMLInputElement = result.container.querySelector(
-        "[name='testTextFieldWithHydrationValue']"
-      )!;
-      const displayValue = textFieldInput.value;
-      expect(displayValue).toEqual("");
+      render(textFieldComponentClearValue);
+      expect(screen.getByRole("textbox")).toHaveValue("");
     });
-  });
 
-  describe("Test TextField where validateOnRender is true", () => {
     test("validateOnRender triggers form.trigger", () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
-      mockGetValues("");
       render(textFieldComponentValidateOnRender);
       expect(mockRhfMethods.trigger).toHaveBeenCalled();
-      jest.clearAllMocks();
     });
   });
 

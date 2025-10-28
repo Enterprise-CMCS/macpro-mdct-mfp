@@ -1,6 +1,6 @@
 import { array, boolean, mixed, object, string } from "yup";
 import { validationErrors as error } from "verbiage/errors";
-import { Choice } from "types";
+import { Choice, TextOptions } from "types";
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
@@ -11,6 +11,9 @@ import {
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
 const transformEmptyStringToNull = (curr: string, orig: string) =>
   orig === "" ? null : curr;
+const isWithinMaxLength = (value: string | null = "", maxLength?: number) => {
+  return maxLength && value ? value.length <= maxLength : true;
+};
 
 // TEXT
 export const text = () =>
@@ -26,6 +29,18 @@ export const textOptional = () =>
     .nullable()
     .transform(transformEmptyStringToNull)
     .typeError(error.INVALID_GENERIC);
+export const textCustom = (options: TextOptions) =>
+  string()
+    .typeError(error.INVALID_GENERIC)
+    .required(error.REQUIRED_GENERIC)
+    .test({
+      test: (value) => !isWhitespaceString(value),
+      message: error.REQUIRED_GENERIC,
+    })
+    .test({
+      test: (value) => isWithinMaxLength(value, options.maxLength),
+      message: error.INVALID_LENGTH,
+    });
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];

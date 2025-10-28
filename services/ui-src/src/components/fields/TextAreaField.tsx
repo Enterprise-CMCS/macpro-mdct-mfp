@@ -6,6 +6,7 @@ export const TextAreaField = ({
   label,
   placeholder,
   rows = 3,
+  maxLength,
   ...props
 }: Props) => {
   return (
@@ -15,6 +16,7 @@ export const TextAreaField = ({
       placeholder={placeholder}
       multiline
       rows={rows}
+      maxLength={maxLength}
       {...props}
     />
   );
@@ -26,5 +28,6 @@ interface Props {
   placeholder?: string;
   rows?: number;
   clear?: boolean;
+  maxLength?: number;
   [key: string]: any;
 }
