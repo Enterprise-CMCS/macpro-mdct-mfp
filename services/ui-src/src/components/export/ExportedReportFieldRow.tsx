@@ -91,10 +91,10 @@ const sx = {
   fieldLabel: {
     fontSize: "sm",
     fontWeight: "bold",
-    marginBottom: "0.5rem",
+    marginBottom: "spacer1",
   },
   fieldHint: {
     lineHeight: "lg",
-    color: "palette.gray",
+    color: "gray",
   },
 };

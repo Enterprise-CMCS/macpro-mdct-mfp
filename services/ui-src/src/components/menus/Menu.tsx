@@ -72,13 +72,13 @@ export const Menu = () => {
 const sx = {
   menuButton: {
     padding: 0,
-    paddingRight: ".5rem",
-    marginLeft: ".5rem",
+    paddingRight: "spacer1",
+    marginLeft: "spacer1",
     borderRadius: 0,
     background: "none",
-    color: "palette.white",
+    color: "white",
     fontWeight: "bold",
-    _hover: { color: "palette.secondary", background: "none !important" },
+    _hover: { color: "secondary", background: "none !important" },
     _active: { background: "none" },
     _focus: {
       boxShadow: "none",
@@ -94,13 +94,13 @@ const sx = {
   menuList: {
     padding: "0",
     border: "none",
-    background: "palette.primary_darkest",
+    background: "primary_darkest",
     boxShadow: "0px 5px 16px rgba(0, 0, 0, 0.14)",
   },
   menuItem: {
     borderRadius: ".375rem",
-    _focus: { background: "palette.primary_darker" },
-    _hover: { background: "palette.primary_darker" },
+    _focus: { background: "primary_darker" },
+    _hover: { background: "primary_darker" },
   },
   menuIcon: {
     width: "0.75rem",

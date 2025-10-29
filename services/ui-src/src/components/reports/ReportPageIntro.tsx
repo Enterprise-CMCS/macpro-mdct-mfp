@@ -71,56 +71,57 @@ interface Props {
 
 const sx = {
   introBox: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
 
     p: {
-      marginBottom: "1rem",
+      marginBottom: "spacer2",
       marginTop: "0",
     },
     ".mdct-table th": {
       textTransform: "capitalize",
       fontSize: "sm",
       fontWeight: "600",
-      color: "palette.gray",
+      color: "gray",
+      borderColor: "gray_lighter",
     },
     ".mdct-smalltext": {
       fontSize: "xs",
       marginTop: "0.625rem",
-      color: "palette.gray",
+      color: "gray",
     },
   },
   smallHeading: {
-    color: "palette.gray",
+    color: "gray",
     fontSize: "md",
   },
   largeHeading: {
     fontWeight: "normal",
     fontSize: "4xl",
-    marginTop: "0.5rem",
+    marginTop: "spacer1",
   },
   hintTextBox: {
     color: "#5B616B",
-    paddingTop: "1.5rem",
+    paddingTop: "spacer3",
   },
   subTitle: {
-    color: "palette.gray",
+    color: "gray",
     fontSize: "md",
     margin: "1.5rem 0 -0.75rem 0",
   },
   infoTextBox: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     h3: {
       marginBottom: "-0.75rem",
     },
     a: {
-      color: "palette.primary",
+      color: "primary",
       "&:hover": {
-        color: "palette.primary_darker",
+        color: "primary_darker",
       },
     },
   },
   periodText: {
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
     fontSize: "2xl",
   },
 };

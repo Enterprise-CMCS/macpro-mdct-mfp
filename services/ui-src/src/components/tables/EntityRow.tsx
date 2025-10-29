@@ -125,7 +125,7 @@ export const EntityRow = ({
   return (
     <Tr sx={sx.content}>
       <Td
-        pt={isMobile ? "1.5rem" : ".5rem"}
+        pt={isMobile ? "1.5rem" : "0.5rem"}
         verticalAlign={isMobile ? "baseline" : "middle"}
       >
         <EntityStatusIcon entityStatus={entityStatus} />
@@ -231,14 +231,14 @@ interface Props {
 const sx = {
   content: {
     td: {
-      borderColor: "palette.gray_light",
+      borderColor: "gray_light",
       paddingRight: 0,
     },
   },
   errorText: {
-    color: "palette.error_dark",
+    color: "error_dark",
     fontSize: "0.75rem",
-    marginBottom: "0.5rem",
+    marginBottom: "spacer1",
   },
   entityName: {
     maxWidth: "18.75rem",
@@ -260,11 +260,11 @@ const sx = {
       },
     },
     ".mobile &": {
-      paddingY: "1.5rem",
+      paddingY: "spacer3",
     },
   },
   actionContainer: {
-    paddingLeft: "1.5rem",
+    paddingLeft: "spacer3",
     alignItems: "center",
     display: "flex",
     ".mobile &": {
@@ -274,7 +274,7 @@ const sx = {
   editNameButton: {
     fontWeight: "normal",
     textDecoration: "underline",
-    color: "palette.primary",
+    color: "primary",
   },
   editEntityButton: {
     padding: 0,
@@ -293,9 +293,9 @@ const sx = {
     width: "1.5rem",
     minWidth: "1.5rem",
     padding: 0,
-    marginLeft: "1rem",
+    marginLeft: "spacer2",
     marginRight: "0.4rem",
-    marginBottom: "0.25rem",
+    marginBottom: "spacer_half",
     background: "white",
     "&:hover, &:hover:disabled, :disabled": {
       background: "white",
@@ -310,7 +310,7 @@ const sx = {
       paddingLeft: "0rem",
       border: "none",
       fontWeight: "bold",
-      color: "palette.gray",
+      color: "gray",
       width: "2rem",
     },
   },

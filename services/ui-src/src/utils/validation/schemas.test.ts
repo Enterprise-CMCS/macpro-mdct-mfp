@@ -5,6 +5,7 @@ import {
   number,
   numberOptional,
   ratio,
+  textCustom,
   textOptional,
   urlOptional,
   validInteger,
@@ -63,7 +64,7 @@ describe("utils/schemas", () => {
     "%@#$!ASDF",
   ];
 
-  const testNumberSchema = (
+  const testSchema = (
     schemaToUse: MixedSchema,
     testCases: Array<string>,
     expectedReturn: boolean
@@ -75,26 +76,31 @@ describe("utils/schemas", () => {
   };
 
   test("Evaluate Number Schema using number scheme", () => {
-    testNumberSchema(number(), goodNumberTestCases, true);
-    testNumberSchema(number(), badNumberTestCases, false);
+    testSchema(number(), goodNumberTestCases, true);
+    testSchema(number(), badNumberTestCases, false);
   });
 
   test("Evaluate Number Schema using integer scheme", () => {
-    testNumberSchema(validInteger(), goodIntegerTestCases, true);
-    testNumberSchema(validInteger(), badIntegerTestCases, false);
+    testSchema(validInteger(), goodIntegerTestCases, true);
+    testSchema(validInteger(), badIntegerTestCases, false);
   });
 
   test("Evaluate Number Schema using ratio scheme", () => {
-    testNumberSchema(ratio(), goodRatioTestCases, true);
-    testNumberSchema(ratio(), badRatioTestCases, false);
+    testSchema(ratio(), goodRatioTestCases, true);
+    testSchema(ratio(), badRatioTestCases, false);
   });
 
   test("Verify optional schemas convert empty string to null", () => {
-    testNumberSchema(textOptional(), [""], true);
-    testNumberSchema(numberOptional(), [""], true);
-    testNumberSchema(validIntegerOptional(), [""], true);
-    testNumberSchema(emailOptional(), [""], true);
-    testNumberSchema(urlOptional(), [""], true);
-    testNumberSchema(dateOptional(), [""], true);
+    testSchema(textOptional(), [""], true);
+    testSchema(numberOptional(), [""], true);
+    testSchema(validIntegerOptional(), [""], true);
+    testSchema(emailOptional(), [""], true);
+    testSchema(urlOptional(), [""], true);
+    testSchema(dateOptional(), [""], true);
+  });
+
+  test("Evaluate Text Schema using textCustom scheme", () => {
+    testSchema(textCustom({ maxLength: 10 }), ["0123456789"], true);
+    testSchema(textCustom({ maxLength: 10 }), ["textistoolong", ""], false);
   });
 });

@@ -56,32 +56,32 @@ const sx = {
     display: "grid",
     gridTemplateRows: "1fr 1fr 1fr 1fr",
     gridAutoFlow: "column",
-    gridGap: ".5rem",
+    gridGap: "spacer1",
     marginBottom: "1.25rem",
   },
   gridSubtitle: {
     fontWeight: "bold",
     fontSize: "sm",
-    marginRight: ".25rem",
+    marginRight: "spacer_half",
   },
   subtitle: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     fontSize: "xs",
     fontWeight: "bold",
   },
   subtext: {
-    marginTop: "0.25rem",
+    marginTop: "spacer_half",
     fontSize: "sm",
   },
   error: {
     fontSize: "sm",
-    color: "palette.error_dark",
+    color: "error_dark",
   },
   gridItems: {
     alignItems: "end",
     flexWrap: "wrap",
     ".subtitle": {
-      marginRight: ".5rem",
+      marginRight: "spacer1",
     },
   },
 };

@@ -72,45 +72,45 @@ const sx = {
     borderInlineStartWidth: "0.5rem",
     marginTop: "1.25rem",
     marginBottom: "1.25rem",
-    padding: "1rem",
+    padding: "spacer2",
     "&.info": {
-      backgroundColor: "palette.secondary_lightest",
-      borderInlineStartColor: "palette.secondary",
+      backgroundColor: "secondary_lightest",
+      borderInlineStartColor: "secondary",
     },
     "&.success": {
-      bgColor: "palette.success_lightest",
-      borderInlineStartColor: "palette.success",
+      bgColor: "success_lightest",
+      borderInlineStartColor: "success",
     },
     "&.warning": {
-      bgColor: "palette.warn_lightest",
-      borderInlineStartColor: "palette.warn",
+      bgColor: "warn_lightest",
+      borderInlineStartColor: "warn",
     },
     "&.error": {
-      bgColor: "palette.error_lightest",
-      borderInlineStartColor: "palette.error",
+      bgColor: "error_lightest",
+      borderInlineStartColor: "error",
     },
   },
   descriptionText: {
-    marginTop: ".25rem",
+    marginTop: "spacer_half",
     p: {
-      marginY: ".5rem",
+      marginY: "spacer1",
     },
     ul: {
-      paddingLeft: "1rem",
+      paddingLeft: "spacer2",
     },
   },
   linkText: {
-    marginTop: ".25rem",
-    marginBottom: ".25rem",
+    marginTop: "spacer_half",
+    marginBottom: "spacer_half",
   },
   icon: {
     position: "absolute",
-    color: "palette.base",
+    color: "base",
     marginBottom: "1.75rem",
     width: "1.375rem",
   },
   contentBox: {
-    marginLeft: "2rem",
+    marginLeft: "spacer4",
     "&.no-icon": {
       marginLeft: 0,
     },

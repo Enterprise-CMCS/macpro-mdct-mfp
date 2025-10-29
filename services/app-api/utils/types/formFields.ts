@@ -74,8 +74,18 @@ export interface FormField {
   isRequired?: boolean;
 }
 
+export enum TransformationRule {
+  FIRST_QUARTER_OF_THE_PERIOD = "firstQuarterOfThePeriod",
+  FUNDING_SOURCES = "fundingSources",
+  NEXT_TWELVE_QUARTERS = "nextTwelveQuarters",
+  OBJECTIVES = "objectives",
+  QUANTITATIVE_QUARTERS = "quantitativeQuarters",
+  SECOND_QUARTER_OF_THE_PERIOD = "secondQuarterOfThePeriod",
+  TARGET_POPULATIONS = "targetPopulations",
+}
+
 export interface Transformation {
-  rule: string;
+  rule: TransformationRule;
 }
 
 export interface TargetPopulationKeys {
@@ -117,9 +127,12 @@ export interface DropdownChoice {
 }
 
 export enum PageTypes {
-  STANDARD = "standard",
   DRAWER = "drawer",
-  MODAL_DRAWER = "modalDrawer",
   DYNAMIC_MODAL_OVERLAY = "dynamicModalOverlay",
+  ENTITY_OVERLAY = "entityOverlay",
+  MODAL_DRAWER = "modalDrawer",
+  MODAL_OVERLAY = "modalOverlay",
+  OVERLAY_MODAL = "overlayModal",
   REVIEW_SUBMIT = "reviewSubmit",
+  STANDARD = "standard",
 }

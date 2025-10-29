@@ -470,19 +470,19 @@ const sx = {
   layout: {
     ".contentFlex": {
       maxWidth: "appMax",
-      marginTop: "1rem",
-      marginBottom: "3.5rem",
+      marginTop: "spacer2",
+      marginBottom: "spacer7",
     },
   },
   returnLink: {
     display: "flex",
     width: "8.5rem",
-    paddingTop: "0.5rem",
+    paddingTop: "spacer1",
     svg: {
       height: "1.375rem",
       width: "1.375rem",
       marginTop: "-0.125rem",
-      marginRight: ".5rem",
+      marginRight: "spacer1",
     },
     textDecoration: "none",
     _hover: {
@@ -491,8 +491,8 @@ const sx = {
     ".returnIcon": {
       width: "1.25rem",
       height: "1.25rem",
-      marginTop: "0.25rem",
-      marginRight: "0.5rem",
+      marginTop: "spacer_half",
+      marginRight: "spacer1",
     },
   },
   leadTextBox: {
@@ -504,7 +504,7 @@ const sx = {
     },
   },
   headerText: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontSize: "4xl",
     fontWeight: "normal",
     ".tablet &, .mobile &": {
@@ -524,10 +524,10 @@ const sx = {
     },
     ".ds-c-spinner": {
       "&:before": {
-        borderColor: "palette.black",
+        borderColor: "black",
       },
       "&:after": {
-        borderLeftColor: "palette.black",
+        borderLeftColor: "black",
       },
     },
   },
@@ -540,7 +540,7 @@ const sx = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: "2rem",
+    marginTop: "spacer4",
   },
   spinnerContainer: {
     alignItems: "center",
@@ -549,20 +549,20 @@ const sx = {
     padding: "10",
   },
   alertBanner: {
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     borderInlineStartWidth: "7.5px",
-    bgColor: "palette.error_lightest",
+    bgColor: "error_lightest",
     fontSize: "18px",
     p: {
       fontSize: "16px",
     },
   },
   errorMessage: {
-    paddingTop: "1rem",
+    paddingTop: "spacer2",
   },
   resetBtn: {
     border: "none",
-    marginTop: "1rem",
+    marginTop: "spacer2",
     fontWeight: "none",
     textDecoration: "underline",
     fontSize: "0.875rem",
@@ -580,7 +580,7 @@ const sxChildStyles = {
       textAlign: "center",
       fontSize: "sm",
       fontWeight: "normal",
-      color: "palette.primary",
+      color: "primary",
     },
   },
   editReport: {

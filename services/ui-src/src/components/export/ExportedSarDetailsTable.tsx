@@ -50,16 +50,16 @@ const sx = {
     td: {
       verticalAlign: "middle",
       textAlign: "left",
-      padding: "8px",
+      padding: "spacer1",
     },
     "td:nth-of-type(1)": {
       fontWeight: "bold",
-      color: "palette.base",
+      color: "base",
     },
     th: {
       fontWeight: "bold",
       textAlign: "left",
-      color: "palette.gray",
+      color: "gray",
     },
   },
 };

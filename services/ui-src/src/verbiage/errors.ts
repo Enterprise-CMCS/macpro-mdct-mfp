@@ -51,6 +51,7 @@ export const validationErrors = {
   INVALID_NUMBER: "Response must be a valid number",
   INVALID_NUMBER_OR_NA: 'Response must be a valid number or "N/A"',
   INVALID_RATIO: "Response must be a valid ratio",
+  INVALID_LENGTH: "Response is too long",
 };
 
 export const reportErrors = {

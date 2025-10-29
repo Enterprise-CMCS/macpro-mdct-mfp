@@ -186,8 +186,8 @@ interface Props {
 const sx = {
   bottomModalMessage: {
     fontSize: "xs",
-    color: "palette.primary_darker",
-    marginTop: "1rem",
+    color: "primary_darker",
+    marginTop: "spacer2",
     marginBottom: "-1rem",
   },
 };

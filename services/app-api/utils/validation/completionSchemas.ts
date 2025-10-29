@@ -6,7 +6,7 @@ import {
   string,
   number as yupNumber,
 } from "yup";
-import { Choice } from "../types";
+import { Choice, TextOptions } from "../types";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -20,22 +20,32 @@ export const error = {
   INVALID_NUMBER: "Response must be a valid number",
   INVALID_NUMBER_OR_NA: 'Response must be a valid number or "N/A"',
   INVALID_RATIO: "Response must be a valid ratio",
+  INVALID_LENGTH: "Response is too long",
 };
 
 // TEXT - Helpers
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
+const isWithinMaxLength = (value: string = "", maxLength?: number) => {
+  return maxLength ? value.length <= maxLength : true;
+};
 
 // TEXT
-const textSchema = () =>
+const textSchema = (options: TextOptions = {}) =>
   string()
     .typeError(error.INVALID_GENERIC)
     .test({
       test: (value) => !isWhitespaceString(value),
       message: error.REQUIRED_GENERIC,
+    })
+    .test({
+      test: (value) => isWithinMaxLength(value, options?.maxLength),
+      message: error.INVALID_LENGTH,
     });
 
 export const text = () => textSchema().required();
 export const textOptional = () => textSchema().notRequired().nullable();
+export const textCustom = (options: TextOptions) =>
+  textSchema(options).required();
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];

@@ -46,21 +46,21 @@ interface Props {
 
 const sx = {
   root: {
-    background: "palette.error_lightest",
-    borderLeft: "palette.error",
+    background: "error_lightest",
+    borderLeft: "error",
     minHeight: 0,
-    marginY: "1rem",
+    marginY: "spacer2",
     maxWidth: "55.25rem",
     margin: "auto",
     borderInlineStartWidth: "0.5rem",
-    borderInlineStartColor: "palette.error",
+    borderInlineStartColor: "error",
     boxShadow: "0px 4px 3px rgba(0, 0, 0, 0.2)",
     "&.toast": {
       position: "absolute",
       right: 0,
       width: "90%",
       maxWidth: "500px",
-      margin: "1rem",
+      margin: "spacer2",
       boxShadow: "0px 3px 9px rgba(0, 0, 0, 0.2)",
     },
   },

@@ -35,14 +35,14 @@ interface Props {
 
 const sx = {
   container: {
-    paddingLeft: "1rem",
+    paddingLeft: "spacer2",
     borderLeft: "4px solid",
-    borderColor: "palette.success_dark",
+    borderColor: "success_dark",
   },
   iconContainer: {
     maxWidth: "3rem",
     maxHeight: "3rem",
-    marginRight: "1rem",
+    marginRight: "spacer2",
   },
   icon: {
     maxWidth: "2.5rem",
@@ -50,10 +50,10 @@ const sx = {
     margin: "auto",
   },
   title: {
-    color: "palette.success_darkest",
+    color: "success_darkest",
   },
   description: {
     fontWeight: "bold",
-    color: "palette.success_darkest",
+    color: "success_darkest",
   },
 };
