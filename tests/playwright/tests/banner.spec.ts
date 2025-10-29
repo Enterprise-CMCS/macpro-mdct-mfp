@@ -15,7 +15,6 @@ test.describe("admin user banner page", () => {
     try {
       await deleteAllBanners();
     } catch (error) {
-      // TODO: UI fallback should reside in deleteAllBanners function
       if (error instanceof Error) {
         console.log(
           `⚠️ API banner deletion failed, falling back to UI: ${error.message}`

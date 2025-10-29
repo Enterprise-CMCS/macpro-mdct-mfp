@@ -15,6 +15,7 @@ test.describe("Work Plan Page", () => {
     await statePage.page
       .getByRole("button", { name: "Enter Work Plan online" })
       .click();
+    await statePage.waitForWorkPlansToLoad();
   });
 
   test.describe("State User", () => {
