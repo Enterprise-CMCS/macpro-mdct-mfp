@@ -60,6 +60,12 @@ repos:
       - id: gitleaks
   - repo: local
     hooks:
+      - id: install-dependencies
+        name: install-dependencies
+        entry: bash -c "source ~/.nvm/nvm.sh && nvm use && ./run install"
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: branch-name-validation
         name: branch-name-validation
         entry: .github/branchNameValidation.sh
