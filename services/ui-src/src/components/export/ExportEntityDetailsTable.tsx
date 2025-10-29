@@ -231,17 +231,17 @@ const sx = {
       tableLayout: "fixed",
       marginBottom: "2.25rem",
       br: {
-        marginBottom: "0.25rem",
+        marginBottom: "spacer_half",
       },
       thead: {
         height: "100px",
         border: "1px solid",
       },
       "thead tr:first-of-type th": {
-        background: "palette.gray_lightest",
+        background: "gray_lightest",
         border: "1px solid",
-        borderColor: "palette.black",
-        color: "palette.black",
+        borderColor: "black",
+        color: "black",
         lineHeight: "normal",
         fontWeight: "bold",
         minWidth: "100px",
@@ -261,22 +261,22 @@ const sx = {
         fontWeight: "normal",
       },
       "td:first-of-type, tfoot th:first-of-type": {
-        background: "palette.gray_lightest",
+        background: "gray_lightest",
         fontWeight: "bold",
-        color: "palette.black",
+        color: "black",
       },
       "tbody tr": {
-        background: "palette.white",
+        background: "white",
       },
       "tfoot th": {
-        background: "palette.secondary_lightest",
+        background: "secondary_lightest",
         fontWeight: "bold",
       },
     },
     ".expenditures": {
       "tbody tr": {
         "td:nth-of-type(n+4)": {
-          background: "palette.secondary_lightest",
+          background: "secondary_lightest",
         },
         "td:nth-of-type(4), td:nth-of-type(7)": {
           fontWeight: "bold",

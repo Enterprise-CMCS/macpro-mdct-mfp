@@ -103,7 +103,7 @@ const sx = {
   headerBar: {
     minHeight: "4rem",
     alignItems: "center",
-    bg: "palette.primary_darkest",
+    bg: "primary_darkest",
   },
   headerContainer: {
     maxW: "appMax",
@@ -122,7 +122,7 @@ const sx = {
     maxWidth: "200px",
   },
   subnavBar: {
-    bg: "palette.secondary_lightest",
+    bg: "secondary_lightest",
   },
   subnavContainer: {
     maxW: "appMax",
@@ -140,10 +140,10 @@ const sx = {
   },
   subnavFlexRight: {
     alignItems: "center",
-    paddingRight: ".5rem",
+    paddingRight: "spacer1",
   },
   checkIcon: {
-    marginRight: "0.5rem",
+    marginRight: "spacer1",
     boxSize: "1rem",
     ".mobile &": {
       display: "none",
@@ -157,7 +157,7 @@ const sx = {
     },
   },
   leaveFormLink: {
-    marginLeft: "1rem",
+    marginLeft: "spacer2",
   },
   closeIcon: {
     width: "2rem",

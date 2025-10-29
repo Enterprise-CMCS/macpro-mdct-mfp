@@ -210,18 +210,18 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
 // style object for rendered elements
 const sx = {
   fieldChoice: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   dynamicItem: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
   },
   entityBox: {
     verticalAlign: "top",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     ul: {
       listStyle: "none",
       ".entityResponse": {
-        paddingBottom: "0.5rem",
+        paddingBottom: "spacer1",
         p: {
           lineHeight: "1.25rem",
           fontSize: "sm",
@@ -229,7 +229,7 @@ const sx = {
       },
       p: {
         lineHeight: "1.25rem",
-        marginBottom: "0.5rem",
+        marginBottom: "spacer1",
       },
     },
     "&:last-of-type": {
@@ -237,13 +237,13 @@ const sx = {
     },
   },
   entityName: {
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     fontWeight: "bold",
   },
   noResponse: {
-    color: "palette.error_darker",
+    color: "error_darker",
   },
   notApplicable: {
-    color: "palette.gray",
+    color: "gray",
   },
 };

@@ -40,16 +40,16 @@ const sx = {
     fontSize: "md",
     fontWeight: "normal",
     border: "1px solid",
-    borderColor: "palette.gray_lighter",
-    color: "palette.primary",
+    borderColor: "gray_lighter",
+    color: "primary",
     ".mobile &": {
       width: "6rem",
-      borderColor: "palette.primary",
-      marginTop: ".5rem",
+      borderColor: "primary",
+      marginTop: "spacer1",
     },
     img: {
       width: "1rem",
-      marginRight: "0.5rem",
+      marginRight: "spacer1",
     },
   },
 };

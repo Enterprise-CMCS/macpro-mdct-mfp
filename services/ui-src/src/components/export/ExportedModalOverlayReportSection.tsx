@@ -329,7 +329,7 @@ const sx = {
     "@media print": {
       pageBreakInside: "avoid",
     },
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     "tr, th": {
       verticalAlign: "bottom",
       lineHeight: "base",
@@ -358,7 +358,7 @@ const sx = {
       paddingBottom: "0.375rem",
       fontWeight: "bold",
       lineHeight: "lg",
-      color: "palette.gray",
+      color: "gray",
       ".shrink &": {
         padding: "0.375rem 0rem",
       },
@@ -375,15 +375,15 @@ const sx = {
     wordBreak: "break-word",
   },
   tableIndex: {
-    color: "palette.gray",
+    color: "gray",
     fontWeight: "bold",
   },
   entityHeading: {
     marginTop: "4rem",
   },
   statusIcon: {
-    paddingLeft: "0.25rem",
-    paddingRight: "1rem",
+    paddingLeft: "spacer_half",
+    paddingRight: "spacer2",
     img: {
       maxWidth: "fit-content",
     },
@@ -400,7 +400,7 @@ const sx = {
   headingSubtitle: {
     fontSize: "xl",
     fontWeight: "normal",
-    marginLeft: "1.5rem",
+    marginLeft: "spacer3",
   },
   container: {
     marginTop: "-3rem",

@@ -106,13 +106,14 @@ const sx = {
       verticalAlign: "middle",
       textAlign: "left",
       paddingTop: "0rem",
-      padding: "8px",
+      padding: "spacer1",
+      borderColor: "gray_lightest",
     },
     th: {
       fontWeight: "bold",
       textAlign: "left",
       paddingBottom: "0rem",
-      color: "palette.gray",
+      color: "gray",
     },
   },
 };

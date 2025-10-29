@@ -219,7 +219,7 @@ const sx = {
   dashboardTitle: {
     fontSize: "md",
     fontWeight: "bold",
-    color: "palette.gray",
+    color: "gray",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
@@ -228,25 +228,25 @@ const sx = {
   subsectionHeading: {
     fontSize: "md",
     fontWeight: "normal",
-    color: "palette.gray_dark",
+    color: "gray_dark",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
-    paddingBottom: "1rem",
+    paddingBottom: "spacer2",
   },
   table: {
     tableLayout: "fixed",
     br: {
-      marginBottom: "0.25rem",
+      marginBottom: "spacer_half",
     },
     th: {
       fontWeight: "bold",
-      color: "palette.gray",
-      paddingLeft: "1rem",
+      color: "gray",
+      paddingLeft: "spacer2",
       paddingRight: "0",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_light",
+      borderColor: "gray_light",
       ".tablet &, .mobile &": {
         border: "none",
       },
@@ -259,11 +259,11 @@ const sx = {
     },
     tr: {
       borderBottom: "1px solid",
-      borderColor: "palette.gray_light",
+      borderColor: "gray_light",
     },
   },
   addEntityButton: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     ".tablet &, .mobile &": {
       wordBreak: "break-word",
       whiteSpace: "break-spaces",

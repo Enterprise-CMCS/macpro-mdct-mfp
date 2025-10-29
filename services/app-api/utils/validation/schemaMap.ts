@@ -1,5 +1,5 @@
 import { array, boolean, mixed, object, string } from "yup";
-import { Choice } from "../types/index";
+import { Choice, TextOptions } from "../types";
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
@@ -18,10 +18,14 @@ const error = {
   INVALID_NUMBER: "Response must be a valid number",
   INVALID_NUMBER_OR_NA: 'Response must be a valid number or "N/A"',
   INVALID_RATIO: "Response must be a valid ratio",
+  INVALID_LENGTH: "Response is too long",
 };
 
 // TEXT - Helpers
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
+const isWithinMaxLength = (value: string = "", maxLength?: number) => {
+  return maxLength ? value.length <= maxLength : true;
+};
 
 // TEXT
 export const text = () =>
@@ -33,6 +37,19 @@ export const text = () =>
       message: error.REQUIRED_GENERIC,
     });
 export const textOptional = () => string().typeError(error.INVALID_GENERIC);
+
+export const textCustom = (options: TextOptions) =>
+  string()
+    .typeError(error.INVALID_GENERIC)
+    .required(error.REQUIRED_GENERIC)
+    .test({
+      test: (value) => !isWhitespaceString(value),
+      message: error.REQUIRED_GENERIC,
+    })
+    .test({
+      test: (value) => isWithinMaxLength(value, options?.maxLength),
+      message: error.INVALID_LENGTH,
+    });
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];
@@ -248,6 +265,7 @@ export const schemaMap: any = {
   ratio: ratio(),
   text: text(),
   textOptional: textOptional(),
+  textCustom: (options: TextOptions) => textCustom(options),
   url: url(),
   urlOptional: urlOptional(),
   validInteger: validInteger(),

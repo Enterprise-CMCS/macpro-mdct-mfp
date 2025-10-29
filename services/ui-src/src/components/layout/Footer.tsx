@@ -99,7 +99,7 @@ const sx = {
     },
   },
   footerTop: {
-    bg: "palette.gray_lightest",
+    bg: "gray_lightest",
     minHeight: "7rem",
     padding: "2rem 0",
   },
@@ -147,7 +147,7 @@ const sx = {
     maxWidth: "100%",
     padding: "0 1rem",
     minWidth: "100%",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     ".desktop &": {
       marginBottom: 0,
       display: "block",
@@ -190,7 +190,7 @@ const sx = {
   medicaidLogo: {
     flex: "0 0 75%",
     maxWidth: "75%",
-    marginTop: ".25rem",
+    marginTop: "spacer_half",
     ".desktop &": {
       maxWidth: "25rem",
     },
@@ -201,12 +201,12 @@ const sx = {
     fontSize: "0.875rem",
     ".mobile &": {
       maxW: "100%",
-      marginX: "1rem",
+      marginX: "spacer2",
     },
   },
   footerBottom: {
     minHeight: "3rem",
-    bg: "palette.primary_darkest",
+    bg: "primary_darkest",
     fontSize: 14,
   },
   footerBottomContainer: {
@@ -216,7 +216,7 @@ const sx = {
     },
   },
   footerBottomFlex: {
-    paddingY: "1rem",
+    paddingY: "spacer2",
     justifyContent: "space-between",
     alignItems: "normal",
     flexDirection: "column",
@@ -238,17 +238,17 @@ const sx = {
     margin: "0.5rem 0",
     ".desktop &": {
       "&:first-of-type": {
-        paddingRight: ".5rem",
+        paddingRight: "spacer1",
         borderRight: "1px solid",
-        borderColor: "palette.white",
+        borderColor: "white",
       },
       "&:last-child": {
-        paddingLeft: ".5rem",
+        paddingLeft: "spacer1",
       },
     },
   },
   address: {
-    color: "palette.white",
+    color: "white",
     fontWeight: "bold",
     alignSelf: "center",
     margin: "2.25rem 0 0",

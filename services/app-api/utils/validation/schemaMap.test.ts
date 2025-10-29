@@ -1,11 +1,12 @@
 import { MixedSchema } from "yup/lib/mixed";
 import { AnyObject } from "yup/lib/types";
 import {
-  number,
-  ratio,
   date,
   isEndDateAfterStartDate,
   nested,
+  number,
+  ratio,
+  textCustom,
   validInteger,
 } from "./schemaMap";
 
@@ -122,5 +123,10 @@ describe("Schemas", () => {
       ["string"],
       true
     );
+  });
+
+  test("Evaluate Text Schema using textCustom scheme", () => {
+    testSchema(textCustom({ maxLength: 10 }), ["0123456789"], true);
+    testSchema(textCustom({ maxLength: 10 }), ["textistoolong", ""], false);
   });
 });

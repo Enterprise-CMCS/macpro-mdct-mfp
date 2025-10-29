@@ -34,11 +34,12 @@ interface Props {
 
 const sx = {
   root: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
   },
   text: {
+    borderColor: "gray_lightest",
     p: {
-      marginBottom: "1rem",
+      marginBottom: "spacer2",
     },
   },
   table: {
@@ -47,7 +48,7 @@ const sx = {
     },
   },
   list: {
-    paddingLeft: "1rem",
+    paddingLeft: "spacer2",
     "li:last-of-type": {
       fontWeight: "bold",
     },

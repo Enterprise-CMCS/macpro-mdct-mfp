@@ -131,12 +131,12 @@ const sx = {
       pageBreakInside: "avoid",
     },
     tableLayout: "fixed",
-    marginBottom: "1rem",
+    marginBottom: "spacer2",
     "tr, th": {
       verticalAlign: "top",
       lineHeight: "base",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_lighter",
+      borderColor: "gray_lighter",
     },
     thead: {
       //this will prevent generating a new header whenever the table spills over in another page
@@ -149,7 +149,7 @@ const sx = {
       padding: "0.75rem 0.5rem",
       borderStyle: "none",
       fontWeight: "normal",
-      color: "palette.base",
+      color: "base",
       ".shrink &": {
         padding: "0.375rem 0rem",
       },
@@ -161,7 +161,7 @@ const sx = {
       paddingBottom: "0.375rem",
       fontWeight: "bold",
       lineHeight: "lg",
-      color: "palette.gray",
+      color: "gray",
       ".shrink &": {
         padding: "0.375rem 0rem",
       },

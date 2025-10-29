@@ -79,15 +79,15 @@ const sx = {
     fontSize: "sm",
   },
   description: {
-    marginTop: "0.25rem",
-    marginBottom: "1rem",
+    marginTop: "spacer_half",
+    marginBottom: "spacer2",
     fontSize: "sm",
   },
   grid: {
     display: "grid",
     gridTemplateRows: "1fr 1fr 1fr 1fr",
     gridAutoFlow: "column",
-    gridGap: ".5rem",
+    gridGap: "spacer1",
     marginBottom: "1.25rem",
   },
   sarGrid: {
@@ -100,31 +100,31 @@ const sx = {
   gridSubtitle: {
     fontWeight: "bold",
     fontSize: "sm",
-    marginRight: ".25rem",
+    marginRight: "spacer_half",
   },
   subtitle: {
-    marginTop: "1rem",
+    marginTop: "spacer2",
     fontSize: "xs",
     fontWeight: "bold",
   },
   subtext: {
-    marginTop: "0.25rem",
+    marginTop: "spacer_half",
     fontSize: "sm",
   },
   error: {
     fontSize: "sm",
-    color: "palette.error_dark",
+    color: "error_dark",
   },
   gridItems: {
     alignItems: "end",
     flexWrap: "wrap",
     ".subtitle": {
-      marginRight: ".5rem",
+      marginRight: "spacer1",
     },
   },
   unfinishedMessage: {
-    marginY: "1rem",
+    marginY: "spacer2",
     fontSize: "xs",
-    color: "palette.error_dark",
+    color: "error_dark",
   },
 };

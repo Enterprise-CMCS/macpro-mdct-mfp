@@ -325,22 +325,22 @@ const sx = {
   backButton: {
     padding: 0,
     fontWeight: "normal",
-    color: "palette.primary",
+    color: "primary",
     display: "flex",
     position: "relative",
     right: 0,
     ".tablet &": {
-      right: "3rem",
+      right: "spacer6",
     },
-    marginBottom: "2rem",
+    marginBottom: "spacer4",
     marginTop: "-2rem",
   },
   backBox: {
-    marginRight: "0.5rem",
-    width: "1.0rem",
+    marginRight: "spacer1",
+    width: "1rem",
   },
   backIcon: {
-    color: "palette.primary",
+    color: "primary",
     height: "1.5rem",
     width: "1.5rem",
   },
@@ -348,21 +348,21 @@ const sx = {
     width: "0.85rem",
   },
   footerBox: {
-    marginTop: "2rem",
-    borderTop: "1.5px solid var(--mdct-colors-palette-gray_light)",
+    marginTop: "spacer4",
+    borderTop: "1.5px solid var(--mdct-colors-gray_light)",
   },
   buttonFlex: {
     justifyContent: "end",
-    marginY: "1.5rem",
+    marginY: "spacer3",
   },
   saveButton: {
     width: "8.25rem",
   },
   warningBanner: {
-    marginTop: "3.5rem",
-    marginBottom: "2rem",
-    bgColor: "palette.warn_lightest",
-    borderInlineStartColor: "palette.warn",
+    marginTop: "spacer7",
+    marginBottom: "spacer4",
+    bgColor: "warn_lightest",
+    borderInlineStartColor: "warn",
   },
   warningIcon: {
     width: "1.375rem",
@@ -370,32 +370,32 @@ const sx = {
   subsectionHeading: {
     fontWeight: "normal",
     fontSize: "4xl",
-    marginTop: "0.5rem",
+    marginTop: "spacer1",
   },
   infoTextBox: {
-    marginTop: "1.5rem",
-    color: "palette.gray",
+    marginTop: "spacer3",
+    color: "gray",
     h3: {
       marginBottom: "-0.75rem",
     },
     "p, span": {
-      color: "palette.gray",
-      marginTop: "1rem",
+      color: "gray",
+      marginTop: "spacer2",
     },
     a: {
-      color: "palette.primary",
+      color: "primary",
       "&:hover": {
-        color: "palette.primary_darker",
+        color: "primary_darker",
       },
     },
     b: {
-      color: "palette.base",
+      color: "base",
     },
   },
   reviewPdfHint: {
-    paddingTop: "2rem",
-    paddingBottom: "2rem",
-    color: "palette.gray",
+    paddingTop: "spacer4",
+    paddingBottom: "spacer4",
+    color: "gray",
   },
-  reviewPdfButton: { marginBottom: "2rem" },
+  reviewPdfButton: { marginBottom: "spacer4" },
 };

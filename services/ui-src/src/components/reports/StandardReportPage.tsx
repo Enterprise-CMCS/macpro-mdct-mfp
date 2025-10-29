@@ -130,8 +130,8 @@ interface Props {
 
 const sx = {
   reviewPdfHint: {
-    paddingTop: "2.5rem",
-    paddingBottom: "2.5rem",
-    color: "palette.gray",
+    paddingTop: "spacer5",
+    paddingBottom: "spacer5",
+    color: "gray",
   },
 };

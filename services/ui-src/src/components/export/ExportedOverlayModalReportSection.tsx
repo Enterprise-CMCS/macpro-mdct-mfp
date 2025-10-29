@@ -90,14 +90,14 @@ const sx = {
     display: "block",
     fontSize: "md",
     fontWeight: "bold",
-    color: "palette.error_darker",
-    marginTop: "0.5rem",
+    color: "error_darker",
+    marginTop: "spacer1",
   },
   dashboardTitle: {
     margin: "2rem auto 1.5rem",
     fontSize: "md",
     fontWeight: "bold",
-    color: "palette.gray",
+    color: "gray",
   },
   stepName: {
     fontSize: "lg",
@@ -106,7 +106,7 @@ const sx = {
   stepHint: {
     fontSize: "md",
     fontWeight: "normal",
-    color: "palette.gray_dark",
+    color: "gray_dark",
     lineHeight: "1.5rem",
   },
 };

@@ -28,7 +28,7 @@ export const StatusTable = () => {
 
 const sx = {
   container: {
-    marginTop: "2rem",
+    marginTop: "spacer4",
     table: {
       td: {
         borderBottom: "none",
@@ -36,12 +36,12 @@ const sx = {
     },
   },
   table: {
-    marginBottom: "2.5rem",
+    marginBottom: "spacer5",
     th: {
       padding: "1rem 0 1rem 1rem",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_lighter",
-      color: "palette.gray",
+      borderColor: "gray_lighter",
+      color: "gray",
       fontWeight: "600",
       fontSize: "sm",
       lineHeight: "1.125rem",
@@ -51,8 +51,8 @@ const sx = {
     },
     tr: {
       borderBottom: "1px solid",
-      borderColor: "palette.gray_lighter",
-      color: "palette.base",
+      borderColor: "gray_lighter",
+      color: "base",
       "&:last-child": {
         borderBottom: 0,
       },
@@ -61,15 +61,15 @@ const sx = {
       minWidth: "6rem",
       borderTop: "1px solid",
       borderBottom: "1px solid",
-      borderColor: "palette.gray_lighter",
+      borderColor: "gray_lighter",
       textAlign: "left",
-      color: "palette.base",
+      color: "base",
       "&:nth-of-type(1)": {
         width: "20rem",
       },
       "&:last-of-type": {
         textAlign: "right",
-        paddingRight: ".5rem",
+        paddingRight: "spacer1",
       },
     },
   },
