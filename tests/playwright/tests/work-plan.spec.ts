@@ -19,7 +19,9 @@ test.describe("Work Plan Page", () => {
   });
 
   test.describe("State User", () => {
-    test("should be able to start a new Work Plan", async ({ statePage }) => {
+    test("should be able to start a new Work Plan @probation", async ({
+      statePage,
+    }) => {
       await statePage.startNewWorkPlan(
         currentYear,
         testWorkPlan.reportingPeriod
