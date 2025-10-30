@@ -8,10 +8,10 @@ on:
         required: true
         type: string
       test-filter:
-        description: 'Test filter pattern (e.g., --grep-invert "@flaky|@probation")'
+        description: 'Test filter pattern (e.g., --grep-invert "@flaky")'
         required: false
         type: string
-        default: '--grep-invert "@flaky|@probation"'
+        default: '--grep-invert "@flaky"'
       timeout-minutes:
         description: 'Timeout for the test job in minutes'
         required: false

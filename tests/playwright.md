@@ -32,12 +32,12 @@ There are four options for running tests locally. You can execute these commands
   - Runs all the tests
 
 3. `yarn test:e2e-stable`
-  - Starts the app locally and runs tests in the terminal without the @flaky or @probation tags
+  - Starts the app locally and runs tests in the terminal without the @flaky tag
 
 4. `yarn test:e2e-stable-ui`
   - Starts the app locally
   - Launches Playwright UI
-  - Runs tests without the @flaky or @probation tags
+  - Runs tests without the @flaky tag
 
 ## Troubleshooting
 
