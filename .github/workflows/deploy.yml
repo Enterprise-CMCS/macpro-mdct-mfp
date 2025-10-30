@@ -272,7 +272,7 @@ jobs:
     uses: ./.github/workflows/e2e-test.yml
     with:
       base-url: ${{ needs.deploy.outputs.application_endpoint }}
-      test-filter: '--grep-invert "@flaky|@probation"'
+      test-filter: '--grep-invert "@flaky"'
       timeout-minutes: 60
       artifact-name-prefix: "playwright"
       continue-on-error: false
