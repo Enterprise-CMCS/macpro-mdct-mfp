@@ -19,7 +19,7 @@ test.describe("Work Plan Page", () => {
   });
 
   test.describe("State User", () => {
-    test("should be able to start a new Work Plan @probation", async ({
+    test("should be able to start a new Work Plan @flaky", async ({
       statePage,
     }) => {
       await statePage.startNewWorkPlan(
@@ -32,7 +32,7 @@ test.describe("Work Plan Page", () => {
       await expect(statePage.wpDataRows).toContainText(testWorkPlan.expStatus);
     });
 
-    test("should be able to fill and submit a Work Plan @probation", async ({
+    test("should be able to fill and submit a Work Plan @flaky", async ({
       statePage,
     }) => {
       await statePage.startNewWorkPlan(
@@ -48,7 +48,7 @@ test.describe("Work Plan Page", () => {
   });
 
   test.describe("Admin User", () => {
-    test("should be able to deny a Work Plan by unlocking it @probation", async ({
+    test("should be able to deny a Work Plan by unlocking it @flaky", async ({
       adminPage,
       statePage,
     }) => {
