@@ -114,10 +114,6 @@ jobs:
         continue-on-error: ${{ inputs.continue-on-error }}
         env:
           BASE_URL: ${{ inputs.base-url }}
-          CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
-          CYPRESS_STATE_USER_PASSWORD: ${{ secrets.CYPRESS_STATE_USER_PASSWORD }}
-          CYPRESS_ADMIN_USER_EMAIL: ${{ secrets.CYPRESS_ADMIN_USER_EMAIL }}
-          CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
           SEED_ADMIN_USER_EMAIL: ${{ secrets.SEED_ADMIN_USER_EMAIL }}
           SEED_ADMIN_USER_PASSWORD: ${{ secrets.SEED_ADMIN_USER_PASSWORD }}
           SEED_STATE_USER_EMAIL: ${{ secrets.SEED_STATE_USER_EMAIL }}
