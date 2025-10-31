@@ -1,5 +1,8 @@
 import { expect, test } from "./fixtures/base";
-import { archiveAllReportsForState } from "../utils/requests";
+import {
+  archiveAllReportsForState,
+  hasActiveReportsWithSars,
+} from "../utils/requests";
 import {
   currentYear,
   fillWorkPlanTestData,
@@ -9,6 +12,19 @@ import {
 } from "../utils/consts";
 
 test.describe("Work Plan Page", () => {
+  test.beforeAll(async () => {
+    const hasActiveSarReports = await hasActiveReportsWithSars(
+      stateAbbreviation
+    );
+
+    if (hasActiveSarReports) {
+      test.skip(
+        true,
+        "Skipping Work Plan tests: Active reports with associated SARs found that cannot be archived"
+      );
+    }
+  });
+
   test.beforeEach(async ({ statePage }) => {
     await archiveAllReportsForState(stateAbbreviation);
     await statePage.page.goto("/");
@@ -19,9 +35,7 @@ test.describe("Work Plan Page", () => {
   });
 
   test.describe("State User", () => {
-    test("should be able to start a new Work Plan @flaky", async ({
-      statePage,
-    }) => {
+    test("should be able to start a new Work Plan", async ({ statePage }) => {
       await statePage.startNewWorkPlan(
         currentYear,
         testWorkPlan.reportingPeriod
