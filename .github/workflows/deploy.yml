@@ -265,7 +265,7 @@ jobs:
     if: ${{ needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') }}
     needs:
       - deploy
-    uses: ./.github/workflows/playwright.yml
+    uses: ./.github/workflows/e2e-test.yml
     with:
       base-url: ${{ needs.deploy.outputs.application_endpoint }}
       test-filter: '--grep-invert "@flaky"'

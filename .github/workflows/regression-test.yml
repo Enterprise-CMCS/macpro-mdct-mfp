@@ -16,7 +16,7 @@ permissions:
 jobs:
   regression-tests:
     name: Playwright Regression Tests
-    uses: ./.github/workflows/playwright.yml
+    uses: ./.github/workflows/e2e-test.yml
     with:
       base-url: 'https://mdctmfpval.cms.gov'
       test-filter: ''
