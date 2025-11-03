@@ -12,22 +12,15 @@ concurrency:
 
 permissions:
   id-token: write
-  contents: write
-  actions: read
-  pages: write
 
 jobs:
   regression-tests:
     name: Playwright Regression Tests
-    uses: ./.github/workflows/e2e-test.yml
+    uses: ./.github/workflows/playwright.yml
     with:
       base-url: 'https://mdctmfpval.cms.gov'
       test-filter: ''
       timeout-minutes: 90
       artifact-name-prefix: 'regression'
       continue-on-error: false
-      upload-to-pages: true
-      pages-destination-dir: 'regression'
-      aws-role-varname: 'AWS_OIDC_ROLE_TO_ASSUME'
-      aws-region-varname: 'AWS_DEFAULT_REGION'
     secrets: inherit #pragma: allowlist secret

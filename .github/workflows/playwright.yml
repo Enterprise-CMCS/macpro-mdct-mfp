@@ -1,0 +1,102 @@
+name: E2E Tests
+
+on:
+  workflow_call:
+    inputs:
+      base-url:
+        description: 'Base URL for testing'
+        required: true
+        type: string
+      test-filter:
+        description: 'Test filter pattern (e.g., --grep-invert "@flaky")'
+        required: false
+        type: string
+        default: '--grep-invert "@flaky"'
+      timeout-minutes:
+        description: 'Timeout for the test job in minutes'
+        required: false
+        type: number
+        default: 60
+      artifact-name-prefix:
+        description: 'Prefix for artifact names'
+        required: false
+        type: string
+        default: 'playwright'
+      continue-on-error:
+        description: 'Whether to continue on test failure'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  id-token: write
+
+jobs:
+  playwright-tests:
+    name: Playwright Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: tests
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(yarn list @playwright/test --depth=0 --json | jq -r '.data.trees[].name' | sed 's/@playwright\/test@//')" >> $GITHUB_OUTPUT
+        working-directory: tests
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: yarn playwright install --with-deps
+        working-directory: tests
+
+      - name: Run Playwright tests
+        run: yarn playwright test ${{ inputs.test-filter }} --reporter=github,html
+        working-directory: tests
+        continue-on-error: ${{ inputs.continue-on-error }}
+        env:
+          BASE_URL: ${{ inputs.base-url }}
+          SEED_ADMIN_USER_EMAIL: ${{ secrets.SEED_ADMIN_USER_EMAIL }}
+          SEED_ADMIN_USER_PASSWORD: ${{ secrets.SEED_ADMIN_USER_PASSWORD }}
+          SEED_STATE_USER_EMAIL: ${{ secrets.SEED_STATE_USER_EMAIL }}
+          SEED_STATE_USER_PASSWORD: ${{ secrets.SEED_STATE_USER_PASSWORD }}
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: ${{ inputs.artifact-name-prefix }}-html-report-${{ github.run_number }}
+          path: tests/playwright-report
+          retention-days: 30
+
+  notify-slack-on-failure:
+    name: Notify Slack on Test Failure
+    needs: playwright-tests
+    if: ${{ always() && needs.playwright-tests.result == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          MSG_MINIMAL: true
+          SLACK_COLOR: danger
+          SLACK_TITLE: "🚨 E2E Tests Failed on ${{ github.ref_name }} against ${{ inputs.base-url }}"
+          SLACK_MESSAGE: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow>${{ needs.upload-reports.outputs.report-url && format(' • <{0}|View Report>', needs.upload-reports.outputs.report-url) || '' }}
+          SLACK_FOOTER: ${{ github.repository }}
