@@ -61,7 +61,7 @@ export default defineConfig({
     : {
         command: "cd ../ && ./run local",
         url: process.env.BASE_URL || "http://localhost:3000",
-        timeout: 240 * 1000,
+        timeout: 4 * 60 * 1000, // 4 minutes
         reuseExistingServer: false,
         stdout: "pipe",
       },
