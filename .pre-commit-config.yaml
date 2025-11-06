@@ -26,7 +26,6 @@ repos:
           - "@typescript-eslint/parser@6.21.0"
           - "@typescript-eslint/eslint-plugin@6.21.0"
           - "eslint-plugin-jest"
-          - "eslint-plugin-cypress@2.15.2"
           - "eslint-plugin-playwright"
           - "eslint-config-react-app@7.0.1"
           - "eslint-config-prettier@8.10.0"

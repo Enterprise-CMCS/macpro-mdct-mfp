@@ -9,7 +9,6 @@ permissions:
   id-token: write
   contents: write
   actions: read
-  pages: write
 
 jobs:
   unit-tests:
@@ -28,7 +27,6 @@ jobs:
         with:
           path: |
             **/node_modules
-            ~/.cache/Cypress
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock', 'plugins/**') }}
       - name: set path
         run: |
@@ -84,7 +82,6 @@ jobs:
         with:
           path: |
             **/node_modules
-            ~/.cache/Cypress
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock', 'plugins/**') }}
       - name: set path
         run: |
@@ -192,94 +189,18 @@ jobs:
   #     ipset_name: ${{ steps.fetch-ip-set-info.outputs.IPSET_NAME }}
   #     ipset_id: ${{ steps.fetch-ip-set-info.outputs.IPSET_ID }}
 
-  e2e-test:
-    name: E2E Integration Tests
-    if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') }}
-    needs:
-      - deploy
-      # - register-runner
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Cypress Tests
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: tests
-          spec: |
-            cypress/e2e/wp/*.cy.js
-            cypress/e2e/sar/*.cy.js
-            cypress/e2e/*.cy.js
-          browser: chrome
-          config: baseUrl=${{ needs.deploy.outputs.application_endpoint }}
-          wait-on: ${{ needs.deploy.outputs.application_endpoint }}
-          env: true
-        env:
-          CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
-          CYPRESS_STATE_USER_PASSWORD: ${{ secrets.CYPRESS_STATE_USER_PASSWORD }}
-          CYPRESS_ADMIN_USER_EMAIL: ${{ secrets.CYPRESS_ADMIN_USER_EMAIL }}
-          CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
-      - name: Upload screenshots
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: cypress-test-results
-          path: |
-            ${{github.workspace}}/tests/screenshots/
-            ${{github.workspace}}/tests/videos/
-          retention-days: 14
-
-  a11y-tests:
-    name: E2E A11y Tests
-    if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') }}
-    needs:
-      - deploy
-      # - register-runner
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check Project A11y
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: tests
-          spec: cypress/e2e/accessibility/*.cy.js
-          browser: chrome
-          config: baseUrl=${{ needs.deploy.outputs.application_endpoint }}
-          wait-on: ${{ needs.deploy.outputs.application_endpoint }}
-          env: true
-        env:
-          CYPRESS_STATE_USER_EMAIL: ${{ secrets.CYPRESS_STATE_USER_EMAIL }}
-          CYPRESS_STATE_USER_PASSWORD: ${{ secrets.CYPRESS_STATE_USER_PASSWORD }}
-          CYPRESS_ADMIN_USER_EMAIL: ${{ secrets.CYPRESS_ADMIN_USER_EMAIL }}
-          CYPRESS_ADMIN_USER_PASSWORD: ${{ secrets.CYPRESS_ADMIN_USER_PASSWORD }}
-      - name: Upload screenshots
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: a11y-test-results
-          path: |
-            ${{github.workspace}}/tests/screenshots/
-            ${{github.workspace}}/tests/videos/
-          retention-days: 14
-
   test:
     name: Playwright Tests
-    if: ${{ always() && !cancelled() && needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') }}
+    if: ${{ needs.deploy.result == 'success' && github.ref_name != 'production' && !startsWith(github.ref_name, 'skipci') }}
     needs:
       - deploy
-      # - register-runner
-      # - e2e-test
-      # - a11y-tests
     uses: ./.github/workflows/e2e-test.yml
     with:
       base-url: ${{ needs.deploy.outputs.application_endpoint }}
-      test-filter: '--grep-invert "@flaky|@probation"'
+      test-filter: '--grep-invert "@flaky"'
       timeout-minutes: 60
       artifact-name-prefix: "playwright"
       continue-on-error: false
-      upload-to-pages: true
-      pages-destination-dir: ""
-      aws-role-varname: "BRANCH_SPECIFIC_VARNAME_AWS_OIDC_ROLE_TO_ASSUME"
-      aws-region-varname: "BRANCH_SPECIFIC_VARNAME_AWS_DEFAULT_REGION"
     secrets: inherit #pragma: allowlist secret
 
 

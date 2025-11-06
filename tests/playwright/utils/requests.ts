@@ -27,6 +27,7 @@ interface Report {
   lastSynced: number;
   completionStatus: CompletionStatus;
   previousRevisions: any[];
+  associatedSar?: string;
 }
 
 interface AuthData {
@@ -309,9 +310,12 @@ export async function archiveAllReportsForState(
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<void> {
   const allReports = await getReportsByState(state, userType);
-  const unarchivedReports = allReports.filter((report) => !report.archived);
+  // Filter out archived reports AND reports with associated SARs (which cannot be archived)
+  const archivableReports = allReports.filter(
+    (report) => !report.archived && !report.associatedSar
+  );
 
-  for (const report of unarchivedReports) {
+  for (const report of archivableReports) {
     try {
       await archiveReport(state, report.id, userType);
     } catch (error) {
@@ -419,4 +423,23 @@ export async function deleteAllBanners(
     console.log(`❌ Failed to delete all banners: ${error.message}`);
     throw error;
   }
+}
+
+/**
+ * Check if there are any active reports with associated SARs for a specific state
+ * @param state - The state code (e.g., "AL", "CA", "TX", "PR")
+ * @param userType - 'ADMIN' or 'STATE' to specify which user's auth data to use (defaults to 'ADMIN')
+ * @returns Promise<boolean> - True if there are active reports with SARs, false otherwise
+ */
+export async function hasActiveReportsWithSars(
+  state: string,
+  userType: "ADMIN" | "STATE" = "ADMIN"
+): Promise<boolean> {
+  const allReports = await getReportsByState(state, userType);
+  // Check for active (non-archived) reports that have associated SARs
+  const activeReportsWithSars = allReports.filter(
+    (report) => !report.archived && report.associatedSar
+  );
+
+  return activeReportsWithSars.length > 0;
 }
