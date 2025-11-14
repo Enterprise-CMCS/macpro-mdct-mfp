@@ -13,7 +13,6 @@ import {
 import {
   mockEmptyReportStore,
   mockForm,
-  mockLDFlags,
   mockReportJson,
   mockReportPeriod,
   mockReportStore,
@@ -32,8 +31,6 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const mockReport = mockUseStore.report;
 
-mockLDFlags.setDefault({ translateReport: false });
-
 const createRoutes = (routes: string[], withChildren: boolean) =>
   routes.map((name, index) => ({
     name,
@@ -46,7 +43,6 @@ const createRoutes = (routes: string[], withChildren: boolean) =>
         info: `${name} - Info`,
         section: name,
         subsection: name,
-        subsectionTitle: `${name} - Translate`,
       },
       dashboardSubtitle: `${name} - Dashboard Subtitle`,
     },
@@ -60,7 +56,6 @@ const createRoutes = (routes: string[], withChildren: boolean) =>
           intro: {
             section: "",
             subsection: `${name} - Child Subsection Intro`,
-            subsectionTitle: `${name} - Child Subsection Intro Translate`,
           },
         },
       },
@@ -131,26 +126,7 @@ describe("<ExportedReportPage />", () => {
       expect(childHeading2).toBeVisible();
     });
 
-    test("loads WP with children with translate()", async () => {
-      mockLDFlags.set({ translateReport: true });
-
-      mockWpReportContext.report.formTemplate.routes = createRoutes(
-        wpRoutes,
-        true
-      );
-
-      const page = render(exportedReportPage(mockReportJson));
-      const childHeading = page.getByRole("heading", {
-        level: 3,
-        name: `${WP_SAR_GENERAL_INFORMATION} - Child Subsection Intro Translate`,
-      });
-
-      expect(childHeading).toBeVisible();
-    });
-
     test("loads WP initiatives with correct heading level", async () => {
-      mockLDFlags.set({ translateReport: false });
-
       const initiativeRoute = {
         name: "WP",
         path: "/mock/mock-route",
@@ -279,37 +255,11 @@ describe("<ExportedReportPage />", () => {
         );
       });
 
-      test("generates the correct title for WP report type using translate()", () => {
-        mockLDFlags.set({ translateReport: true });
-
-        const reportType = ReportType.WP;
-        const report: ReportShape = mockReport!;
-        const result = reportTitle(reportType, report);
-
-        expect(result).toBe(
-          `${mockStateName} MFP Work Plan for ${mockReportYear} - Period ${mockReportPeriod}`
-        );
-      });
-
       test("generates the correct title for SAR report type", () => {
-        mockLDFlags.set({ translateReport: false });
-
         const reportType = ReportType.SAR;
         const reportPage = { heading: "Semi-Annual Progress Report (SAR) for" };
         const report: ReportShape = mockReport!;
         const result = reportTitle(reportType, report, reportPage);
-
-        expect(result).toBe(
-          `${mockStateName} Semi-Annual Progress Report (SAR) for ${mockReportYear} - Period ${mockReportPeriod}`
-        );
-      });
-
-      test("generates the correct title for SAR report type using translate()", () => {
-        mockLDFlags.set({ translateReport: true });
-
-        const reportType = ReportType.SAR;
-        const report: ReportShape = mockReport!;
-        const result = reportTitle(reportType, report);
 
         expect(result).toBe(
           `${mockStateName} Semi-Annual Progress Report (SAR) for ${mockReportYear} - Period ${mockReportPeriod}`
@@ -328,23 +278,9 @@ describe("<ExportedReportPage />", () => {
 
     describe("formatSectionHeader()", () => {
       test("generates the correct header", () => {
-        mockLDFlags.set({ translateReport: false });
-
         const header = "Test reporting period";
         const report: ReportShape = mockReport!;
-        const result = formatSectionHeader(report, header, false);
-
-        expect(result).toBe(
-          `Test January 1 to June 30, ${mockReportYear} reporting period`
-        );
-      });
-
-      test("generates the correct header with translate()", () => {
-        mockLDFlags.set({ translateReport: true });
-
-        const header = "Test {{reportingPeriod}}";
-        const report: ReportShape = mockReport!;
-        const result = formatSectionHeader(report, header, true);
+        const result = formatSectionHeader(report, header);
 
         expect(result).toBe(
           `Test January 1 to June 30, ${mockReportYear} reporting period`

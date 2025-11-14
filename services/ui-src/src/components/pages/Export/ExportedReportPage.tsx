@@ -21,8 +21,6 @@ import {
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
-import { useFlags } from "launchdarkly-react-client-sdk";
-import { translate } from "utils/text/translate";
 import { assertExhaustive } from "utils/other/typing";
 
 export const SAR_RET = "Recruitment, Enrollment, and Transitions";
@@ -85,32 +83,13 @@ export const reportTitle = (
   report: ReportShape,
   reportPage?: any
 ): string => {
-  // LaunchDarkly
-  const translateReport = useFlags()?.translateReport;
-
   const { fieldData, reportYear, reportPeriod } = report;
   const { stateName } = fieldData;
   switch (reportType) {
     case ReportType.WP: {
-      if (translateReport) {
-        return translate(wpVerbiage.reportPage.reportTitle, {
-          stateName,
-          reportYear,
-          reportPeriod,
-        });
-      }
-
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
     }
     case ReportType.SAR: {
-      if (translateReport) {
-        return translate(sarVerbiage.reportPage.reportTitle, {
-          stateName,
-          reportYear,
-          reportPeriod,
-        });
-      }
-
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
     }
     default:
@@ -121,19 +100,11 @@ export const reportTitle = (
   }
 };
 
-export const formatSectionHeader = (
-  report: ReportShape,
-  header: string,
-  translateReport: boolean
-) => {
+export const formatSectionHeader = (report: ReportShape, header: string) => {
   const newPeriod = `${displayLongformPeriod(
     report.reportPeriod,
     report.reportYear
   )}`;
-
-  if (translateReport) {
-    return translate(header, { reportingPeriod: newPeriod });
-  }
 
   const newHeader = header.replace("reporting period", newPeriod);
   return newHeader;
@@ -158,25 +129,15 @@ export const renderReportSections = (
   reportRoutes: ReportRoute[],
   report: ReportShape
 ) => {
-  // LaunchDarkly
-  let translateReport = useFlags()?.translateReport;
-
   const { reportType } = report;
   // recursively render sections
   const renderSection = (section: ReportRoute, headingLevel: HeadingLevel) => {
     //because R,E & T section needs numbers added, switch from shallow copy to deep copy
     const childSections = structuredClone(section.children) || [];
-    let subsection;
-
-    if (translateReport && section.verbiage?.intro.subsectionTitle) {
-      subsection = section.verbiage.intro.subsectionTitle;
-    } else {
-      subsection = section.verbiage?.intro.subsection;
-      translateReport = false;
-    }
+    const subsection = section.verbiage?.intro.subsection;
 
     const heading = subsection
-      ? formatSectionHeader(report, subsection, translateReport)
+      ? formatSectionHeader(report, subsection)
       : section.name;
     const sectionHeading =
       section.verbiage?.intro.exportSectionHeader || heading;
