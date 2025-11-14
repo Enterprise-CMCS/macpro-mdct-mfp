@@ -16,8 +16,6 @@ const informedConsentFormRoute: FormRoute = {
       section: "Recruitment, Enrollment, and Transitions",
       subsection:
         "Number of people who signed an MFP informed consent form in the reporting period",
-      subsectionTitle:
-        "Number of people who signed an MFP informed consent form in the {{reportingPeriod}}",
       info: [
         {
           type: ReportFormFieldType.TEXT,
@@ -60,7 +58,6 @@ const numberOfMfpTransitionsRoute: FormRoute = {
     intro: {
       section: "Recruitment, Enrollment, and Transitions",
       subsection: "Number of MFP transitions in the reporting period",
-      subsectionTitle: "Number of MFP transitions in the {{reportingPeriod}}",
       info: [
         {
           type: ReportFormFieldType.TEXT,
@@ -129,8 +126,6 @@ const qualifiedInstitutionsRoute: FormRoute = {
       section: "Recruitment, Enrollment, and Transitions",
       subsection:
         "Number of MFP transitions from qualified institutions in the reporting period",
-      subsectionTitle:
-        "Number of MFP transitions from qualified institutions in the {{reportingPeriod}}",
       info: [
         {
           type: ReportFormFieldType.TEXT,
@@ -254,8 +249,6 @@ const qualifiedResidencesRoute: FormRoute = {
       section: "Recruitment, Enrollment, and Transitions",
       subsection:
         "Number of MFP transitions to qualified residences in the reporting period",
-      subsectionTitle:
-        "Number of MFP transitions to qualified residences in the {{reportingPeriod}}",
       info: [
         {
           type: ReportFormFieldType.TEXT,
@@ -361,8 +354,6 @@ const currentMfpParticipantsRoute: FormRoute = {
       section: "Recruitment, Enrollment, and Transitions",
       subsection:
         "Total number of active MFP participants in the reporting period",
-      subsectionTitle:
-        "Total number of active MFP participants in the {{reportingPeriod}}",
       info: [
         {
           type: ReportFormFieldType.TEXT,
@@ -406,8 +397,6 @@ const completingProgramRoute: FormRoute = {
       section: "Recruitment, Enrollment, and Transitions",
       subsection:
         "Number of MFP participants completing the program in the reporting period",
-      subsectionTitle:
-        "Number of MFP participants completing the program in the {{reportingPeriod}}",
       info: [
         {
           type: ReportFormFieldType.TEXT,
@@ -451,8 +440,6 @@ const reenrolledInMfpRoute: FormRoute = {
       section: "Recruitment, Enrollment, and Transitions",
       subsection:
         "Number of people re-enrolled in MFP during the reporting period",
-      subsectionTitle:
-        "Number of people re-enrolled in MFP during the {{reportingPeriod}}",
       info: [
         {
           type: ReportFormFieldType.TEXT,
@@ -496,8 +483,6 @@ const disenrolledFromProgramRoute: FormRoute = {
       section: "Recruitment, Enrollment, and Transitions",
       subsection:
         "Number of MFP participants disenrolled from the program during the reporting period",
-      subsectionTitle:
-        "Number of MFP participants disenrolled from the program during the {{reportingPeriod}}",
       info: [
         {
           type: ReportFormFieldType.TEXT,
