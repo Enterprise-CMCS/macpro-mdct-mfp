@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 import path from "path";
-import crypto from "crypto";
-import fsSync from "fs";
 
 const fs = require("fs").promises;
 const FORMS_DIR = path.resolve("forms");
@@ -11,28 +9,6 @@ function getJsonData(indexFile: string) {
   const mod = require(indexFile);
   const form = mod.ReportJson;
   return form;
-}
-
-function hashRoutes(rootDir: string) {
-  const entries: string[] = [];
-
-  function walk(dir: string) {
-    for (const name of fsSync.readdirSync(dir)) {
-      const full = path.join(dir, name);
-      const rel = path.relative(rootDir, full);
-      const stat = fsSync.statSync(full);
-
-      if (stat.isDirectory()) {
-        walk(full);
-      } else {
-        entries.push(`${rel}|${stat.size}|${stat.mtimeMs}`);
-      }
-    }
-  }
-  walk(rootDir);
-  entries.sort();
-
-  return crypto.createHash("sha256").update(entries.join("\n")).digest("hex");
 }
 
 async function getRoutesFolders() {
@@ -60,28 +36,11 @@ async function buildJson() {
     const formName = path.basename(form);
     const indexFile = path.join(form, "index.ts");
 
-    // Get hash to determine if form routes were updated
-    const hashPath = path.join(FORMS_DIR, `.${formName}.json.hash`);
-    const currentHash = hashRoutes(form);
-    let previousHash = null;
-
-    try {
-      previousHash = await fs.readFile(hashPath, "utf8");
-    } catch {
-      console.log(`Created ${hashPath}`);
-    }
-
-    // No updates found, skip writing to JSON file
-    if (previousHash === currentHash) continue;
-
     try {
       const routes = getJsonData(indexFile);
       const jsonPath = path.join(FORMS_DIR, `${formName}.json`);
 
-      // Write new JSON file
       await writeJsonFile(jsonPath, routes);
-      // Write new hash file
-      await fs.writeFile(hashPath, currentHash, "utf8");
 
       console.log(`Updated ${jsonPath}`);
     } catch (error) {
