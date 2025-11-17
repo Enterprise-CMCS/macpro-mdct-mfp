@@ -18,7 +18,6 @@ export interface ReportPageVerbiage {
   intro: {
     section: string;
     subsection?: string;
-    subsectionTitle?: string;
     hint?: string;
     info?: string | CustomHtmlElement[];
     title?: string;
