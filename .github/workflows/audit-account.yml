@@ -17,6 +17,7 @@ permissions:
 jobs:
   audit:
     name: Audit
+    environment: dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -42,7 +43,7 @@ jobs:
         run: ./.github/buildVars.sh set_values
         env:
           AWS_DEFAULT_REGION: us-east-1
-          AWS_OIDC_ROLE_TO_ASSUME: ${{ secrets[env.BRANCH_SPECIFIC_VARNAME_AWS_OIDC_ROLE_TO_ASSUME] || secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          AWS_OIDC_ROLE_TO_ASSUME: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
 
       - name: Configure AWS credentials for GitHub Actions
         uses: aws-actions/configure-aws-credentials@v4
@@ -50,11 +51,12 @@ jobs:
           role-to-assume: ${{ env.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-east-1
 
-      - name: Cache Node modules
+      - name: Cache Node modules and Cypress folder
         uses: actions/cache@v4
         with:
           path: |
             **/node_modules
+            ~/.cache/Cypress
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock', 'plugins/**') }}
 
       - name: Set path
