@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router";
 import "@testing-library/jest-dom";
 import "jest-axe/extend-expect";
 // types
@@ -347,11 +347,7 @@ export const mockUseObjectiveProgressEntityStore: MfpUserState &
 
 export const RouterWrappedComponent: React.FC<{ children: any }> = ({
   children,
-}) => (
-  <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-    {children}
-  </Router>
-);
+}) => <Router>{children}</Router>;
 
 // ASSET
 export * from "./mockAsset";
