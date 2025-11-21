@@ -1,6 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 // components
 import { CloseEntityModal, ReportContext } from "components";
 // utils
@@ -10,7 +9,7 @@ import {
   mockWPFullReport,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -95,5 +94,5 @@ describe("<CloseEntityModal />", () => {
     });
   });
 
-  testA11y(modalComponent);
+  testA11yAct(modalComponent);
 });

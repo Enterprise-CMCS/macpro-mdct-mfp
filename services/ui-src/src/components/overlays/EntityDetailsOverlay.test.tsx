@@ -1,4 +1,4 @@
-import { RenderResult, render, screen } from "@testing-library/react";
+import { RenderResult, render, screen, act } from "@testing-library/react";
 // components
 import { EntityDetailsOverlay, ReportContext } from "components";
 // utils
@@ -10,7 +10,7 @@ import {
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -86,22 +86,30 @@ describe("<EntityDetailsOverlayPage />", () => {
     test("Test onSubmit Function", async () => {
       //fill out form
       const textbox = component.container.querySelector("#mock-text-field");
-      await userEvent.type(textbox!, "mock text");
+      await act(async () => {
+        await userEvent.type(textbox!, "mock text");
+      });
       expect(textbox).toHaveValue("mock text");
 
       const dateField = component.container.querySelector(
         '[name="mock-date-field"]'
       );
-      await userEvent.type(dateField!, "2/2/2022");
+      await act(async () => {
+        await userEvent.type(dateField!, "2/2/2022");
+      });
       expect(dateField).toHaveValue("2/2/2022");
 
       const number = component.container.querySelector("#mock-number-field");
-      await userEvent.type(number!, "3");
+      await act(async () => {
+        await userEvent.type(number!, "3");
+      });
       expect(number).toHaveValue("3");
 
-      //trigger onSubmit
+      // trigger onSubmit
       const saveButton = screen.getByText("Save & return");
-      await userEvent.click(saveButton);
+      await act(async () => {
+        await userEvent.click(saveButton);
+      });
       expect(mockCloseEntityDetailsOverlay).toHaveBeenCalled();
     });
 
@@ -109,15 +117,19 @@ describe("<EntityDetailsOverlayPage />", () => {
       const closeoutBtn = screen.getByText(
         closeOutModal.closeOutModalButtonText
       );
-      await userEvent.click(closeoutBtn);
+      await act(async () => {
+        await userEvent.click(closeoutBtn);
+      });
 
       const modal = screen.getByText("This is a modal");
       expect(modal).toBeVisible();
 
       const modalCloseBtn = screen.getByText("Cancel");
-      await userEvent.click(modalCloseBtn);
+      await act(async () => {
+        await userEvent.click(modalCloseBtn);
+      });
     });
   });
 
-  testA11y(entityDetailsOverlayComponent);
+  testA11yAct(entityDetailsOverlayComponent);
 });

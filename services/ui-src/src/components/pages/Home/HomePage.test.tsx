@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { HomePage } from "components";
 // utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const homeView = (
   <RouterWrappedComponent>
@@ -17,5 +17,5 @@ describe("<HomePage />", () => {
     expect(screen.getByTestId("home-view")).toBeVisible();
   });
 
-  testA11y(homeView);
+  testA11yAct(homeView);
 });

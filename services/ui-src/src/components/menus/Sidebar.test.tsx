@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   RouterWrappedComponent,
@@ -7,7 +7,7 @@ import {
 //components
 import { Sidebar } from "components";
 import { useStore } from "utils";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/reports/routing", () => ({
   isReportFormPage: jest.fn(() => true),
@@ -48,7 +48,9 @@ describe("<Sidebar />", () => {
       expect(sidebarNav).toHaveClass("closed");
 
       const sidebarButton = screen.getByLabelText("Open/Close sidebar menu");
-      await userEvent.click(sidebarButton);
+      await act(async () => {
+        await userEvent.click(sidebarButton);
+      });
       expect(sidebarNav).toHaveClass("open");
     });
 
@@ -60,12 +62,20 @@ describe("<Sidebar />", () => {
       expect(childSection).not.toBeVisible();
 
       // click parent section open. now child is visible.
-      await userEvent.click(parentSection);
-      await expect(childSection).toBeVisible();
+      await act(async () => {
+        await userEvent.click(parentSection);
+      });
+      await waitFor(() => {
+        expect(childSection).toBeVisible();
+      });
 
       // click parent section closed. now child is not visible.
-      await userEvent.click(parentSection);
-      await expect(childSection).not.toBeVisible();
+      await act(async () => {
+        await userEvent.click(parentSection);
+      });
+      await waitFor(() => {
+        expect(childSection).not.toBeVisible();
+      });
     });
   });
 
@@ -82,5 +92,5 @@ describe("<Sidebar />", () => {
     });
   });
 
-  testA11y(sidebarComponent);
+  testA11yAct(sidebarComponent);
 });

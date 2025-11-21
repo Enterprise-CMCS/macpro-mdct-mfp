@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { useStore } from "utils";
 import {
   mockReportMethods,
@@ -62,15 +62,21 @@ describe("<ArchiveReportModal />", () => {
     test("after correct user input, archive button is enabled", async () => {
       expect(screen.getByRole("button", { name: "Archive" })).not.toBeEnabled();
       const inputTextbox = screen.getByTestId("modal-input");
-      await userEvent.type(inputTextbox, "ARCHIVE");
+      await act(async () => {
+        await userEvent.type(inputTextbox, "ARCHIVE");
+      });
       expect(screen.getByRole("button", { name: "Archive" })).toBeEnabled();
     });
 
     test("Archive button successfully archives the program", async () => {
       const inputTextbox = screen.getByTestId("modal-input");
-      await userEvent.type(inputTextbox, "ARCHIVE");
+      await act(async () => {
+        await userEvent.type(inputTextbox, "ARCHIVE");
+      });
       const archiveButton = screen.getByTestId("modal-archive-button");
-      await userEvent.click(archiveButton);
+      await act(async () => {
+        await userEvent.click(archiveButton);
+      });
       await expect(mockReportMethods.archiveReport).toHaveBeenCalledTimes(1);
     });
   });

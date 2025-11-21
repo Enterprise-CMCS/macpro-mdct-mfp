@@ -99,6 +99,7 @@ const sx = {
   },
   menuItem: {
     borderRadius: ".375rem",
+    background: "primary_darkest",
     _focus: { background: "primary_darker" },
     _hover: { background: "primary_darker" },
   },

@@ -1,12 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import {
   mockSARReportContext,
   RouterWrappedComponent,
 } from "../../utils/testing/setupJest";
 import { ReportContext } from "../reports/ReportProvider";
 import { CreateSarModal } from "./CreateSarModal";
-import userEvent from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const mockCreateReport = jest.fn();
@@ -77,11 +76,15 @@ const modalComponentWithSelectedSAR = (
 
 const fillForm = async (option: string) => {
   const firstRadio = screen.getByLabelText(option) as HTMLInputElement;
-  await userEvent.click(firstRadio);
+  await act(async () => {
+    await userEvent.click(firstRadio);
+  });
   const submitButton = screen.getByRole("button", {
     name: "Save",
   });
-  await userEvent.click(submitButton);
+  await act(async () => {
+    await userEvent.click(submitButton);
+  });
 };
 
 describe("<CreateSarModal />", () => {
