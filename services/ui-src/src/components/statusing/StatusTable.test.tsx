@@ -10,7 +10,7 @@ import {
 } from "utils/testing/setupJest";
 import { makeMediaQueryClasses, useBreakpoint, useStore } from "utils";
 import userEvent from "@testing-library/user-event";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
 
@@ -164,7 +164,7 @@ describe("<StatusTable />", () => {
     );
   });
 
-  testA11y(StatusTableComponent, () => {
+  testA11yAct(StatusTableComponent, () => {
     mockUseBreakpoint.mockReturnValue({
       isMobile: false,
     });

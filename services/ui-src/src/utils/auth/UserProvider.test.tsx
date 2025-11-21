@@ -1,7 +1,6 @@
 import { useContext } from "react";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 // utils
 import { UserContext, UserProvider, useStore } from "utils";
 import { mockUseStore, RouterWrappedComponent } from "utils/testing/setupJest";

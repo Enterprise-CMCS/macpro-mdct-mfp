@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { StatusIcon } from "./StatusIcon";
 // types
 import { RouterWrappedComponent } from "utils/testing/setupJest";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const statusIconComponent = (
   <RouterWrappedComponent>
@@ -48,5 +48,5 @@ describe("<StatusIcon />", () => {
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
   });
 
-  testA11y(statusIconComponent);
+  testA11yAct(statusIconComponent);
 });

@@ -74,9 +74,11 @@ describe("<CreateAbcdModal />", () => {
       const secondRadio = screen.getByLabelText(
         "First reporting period (January 1 - June 30)"
       ) as HTMLInputElement;
-      await userEvent.click(firstRadio);
-      await userEvent.click(secondRadio);
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(firstRadio);
+        await userEvent.click(secondRadio);
+        await userEvent.click(submitButton);
+      });
     };
 
     test("Adding a new report", async () => {
@@ -87,9 +89,11 @@ describe("<CreateAbcdModal />", () => {
       const header = screen.getByRole("heading", { level: 1 });
       expect(header.textContent).toEqual("Add new MFP ABCD Report");
       await fillForm();
-      await expect(mockCreateReport).toHaveBeenCalledTimes(1);
-      await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
-      await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+      await act(async () => {
+        await expect(mockCreateReport).toHaveBeenCalledTimes(1);
+        await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
+        await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+      });
     });
 
     test("The metadata reportYear and reportPeriod should reflect the choices in the modal", async () => {
@@ -104,9 +108,11 @@ describe("<CreateAbcdModal />", () => {
         "Second reporting period (July 1 - December 31)"
       ) as HTMLInputElement;
 
-      await userEvent.click(firstChoice);
-      await userEvent.click(secondChoice);
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(firstChoice);
+        await userEvent.click(secondChoice);
+        await userEvent.click(submitButton);
+      });
 
       const newData = { reportYear: 2026, reportPeriod: 2 };
 

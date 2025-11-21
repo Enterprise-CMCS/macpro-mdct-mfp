@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { ChoiceListField, ReportContext } from "components";
 import { mockWpReportContext } from "../../utils/testing/mockReport";
 import { ReportStatus } from "../../types";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn().mockReturnValue(true);
 const mockSetValue = jest.fn();
@@ -892,28 +892,28 @@ describe("<ChoiceListField />", () => {
   });
 
   describe("CheckboxField", () => {
-    testA11y(CheckboxComponent, () => {
+    testA11yAct(CheckboxComponent, () => {
       jest.clearAllMocks();
       mockGetValues(undefined);
     });
   });
 
   describe("CheckboxField with children", () => {
-    testA11y(CheckboxComponentWithNestedChildren, () => {
+    testA11yAct(CheckboxComponentWithNestedChildren, () => {
       jest.clearAllMocks();
       mockGetValues(undefined);
     });
   });
 
   describe("RadioField", () => {
-    testA11y(RadioComponent, () => {
+    testA11yAct(RadioComponent, () => {
       jest.clearAllMocks();
       mockGetValues(undefined);
     });
   });
 
   describe("RadioField with children", () => {
-    testA11y(RadioComponentWithNestedChildren, () => {
+    testA11yAct(RadioComponentWithNestedChildren, () => {
       jest.clearAllMocks();
       mockGetValues(undefined);
     });

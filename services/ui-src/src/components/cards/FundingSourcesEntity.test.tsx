@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 import {
   mockFundingSourcesFormattedEntityData,
   mockFundingSourcesFormattedEntityDataNoQuarters,
@@ -36,7 +36,7 @@ describe("<FundingSourcesEntity />", () => {
     expect(screen.queryByText("Projected quarterly expenditures")).toBeNull();
   });
 
-  testA11y(
+  testA11yAct(
     <FundingSourcesEntity
       formattedEntityData={mockFundingSourcesFormattedEntityData}
     />

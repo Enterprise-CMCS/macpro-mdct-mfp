@@ -19,7 +19,7 @@ import {
   ExportedModalOverlayReportSection,
   Props,
 } from "./ExportedModalOverlayReportSection";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -352,7 +352,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
     expect(screen.getByText("42.86%")).toBeInTheDocument(); // (5+10)/(15+20)
   });
 
-  testA11y(testComponent(wpMockProps), () => {
+  testA11yAct(testComponent(wpMockProps), () => {
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,

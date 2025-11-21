@@ -4,7 +4,7 @@ import { ReportContext, ExportedSectionHeading } from "components";
 // utils
 import { mockWpReportContext } from "utils/testing/setupJest";
 import { CustomHtmlElement, HeadingLevel } from "types";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const exportedReportSectionHeadingComponent = (
   heading: string,
@@ -76,7 +76,7 @@ describe("<ExportedSectionHeading />", () => {
     expect(info).toBeVisible();
   });
 
-  testA11y(
+  testA11yAct(
     exportedReportSectionHeadingComponent(
       "Test Heading",
       "h2",

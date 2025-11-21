@@ -3,7 +3,7 @@ import { ExportedReportFieldRow } from "./ExportedReportFieldRow";
 import { mockWpReportContext } from "utils/testing/setupJest";
 import { ReportContext } from "components";
 import { Table } from "@chakra-ui/react";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const field = {
   id: "test",
@@ -105,5 +105,5 @@ describe("<ExportedReportFieldRow />", () => {
     expect(box).toBeNull();
   });
 
-  testA11y(exportRow);
+  testA11yAct(exportRow);
 });

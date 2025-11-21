@@ -1,4 +1,5 @@
 import { Box, Link, Text } from "@chakra-ui/react";
+import { ReactNode } from "react";
 // types
 import { AnyObject, Choice, EntityShape, FieldChoice, FormField } from "types";
 // utils
@@ -152,7 +153,7 @@ export const renderChoiceListFieldResponse = (
 };
 
 export const renderLinkFieldResponse = (
-  fieldResponseData: AnyObject,
+  fieldResponseData: ReactNode,
   isEmail: boolean
 ) => (
   <Link href={(isEmail ? "mailto:" : "") + fieldResponseData} target="_blank">
@@ -162,7 +163,7 @@ export const renderLinkFieldResponse = (
 
 export const renderDefaultFieldResponse = (
   formField: FormField,
-  fieldResponseData: AnyObject
+  fieldResponseData: ReactNode
 ) => {
   // check and handle fields that need a mask applied
   const fieldMask = formField.props?.mask;

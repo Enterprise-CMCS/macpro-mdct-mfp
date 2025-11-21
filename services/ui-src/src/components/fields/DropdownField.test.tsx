@@ -6,7 +6,7 @@ import { DropdownField } from "components";
 import { mockStateUserStore } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import { mockDropdownOptions } from "utils/testing/fields/mockDropdownChoices";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -99,7 +99,7 @@ describe("<DropdownField />", () => {
     });
   });
 
-  testA11y(dropdownComponentWithOptions, () => {
+  testA11yAct(dropdownComponentWithOptions, () => {
     mockedUseStore.mockReturnValue(mockStateUserStore);
     mockGetValues(undefined);
   });

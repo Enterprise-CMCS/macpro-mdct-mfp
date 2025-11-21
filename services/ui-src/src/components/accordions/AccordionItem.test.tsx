@@ -4,7 +4,7 @@ import { RouterWrappedComponent } from "utils/testing/setupJest";
 // components
 import { Accordion } from "@chakra-ui/react";
 import { AccordionItem } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const accordionItemComponent = (
   <RouterWrappedComponent>
@@ -23,5 +23,5 @@ describe("<AccordionItem />", () => {
     expect(screen.getByTestId("accordion-item")).toBeVisible();
   });
 
-  testA11y(accordionItemComponent);
+  testA11yAct(accordionItemComponent);
 });

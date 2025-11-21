@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 // // utils
 import { ScrollToTopComponent } from "./scrollToTop";
 
@@ -18,5 +18,5 @@ describe("<ScrollToTopComponent />", () => {
     expect(screen.getByTestId("test-scroll-comp")).toBeVisible;
   });
 
-  testA11y(scrollToTopComponent);
+  testA11yAct(scrollToTopComponent);
 });

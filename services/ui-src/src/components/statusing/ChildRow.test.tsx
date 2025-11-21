@@ -10,7 +10,7 @@ import {
   mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -36,12 +36,12 @@ describe("<ChildRow />", () => {
     });
 
     test("Check that childrow renders", () => {
-      const row = screen.getByRole("gridcell", {
+      const row = screen.getByRole("cell", {
         name: "State or Territory-Specific Initiatives",
       });
       expect(row).toBeVisible();
     });
   });
 
-  testA11y(childRowComponent);
+  testA11yAct(childRowComponent);
 });

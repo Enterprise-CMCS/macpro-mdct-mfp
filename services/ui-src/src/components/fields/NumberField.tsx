@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useContext, useEffect, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
@@ -145,7 +145,7 @@ export const NumberField = ({
 
   // prepare error message, hint, and classes
   const formErrorState = form?.formState?.errors;
-  const errorMessage = formErrorState?.[name]?.message;
+  const errorMessage = formErrorState?.[name]?.message as ReactNode;
   const parsedHint = hint && parseCustomHtml(hint);
   const maskClass = mask || "";
   const labelText =
