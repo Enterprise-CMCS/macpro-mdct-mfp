@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router";
 import { testA11yAct } from "utils/testing/commonTests";
 // // utils
 import { ScrollToTopComponent } from "./scrollToTop";
 
 const scrollToTopComponent = (
-  <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+  <Router>
     <div data-testid="test-scroll-comp">
       <ScrollToTopComponent />
     </div>
