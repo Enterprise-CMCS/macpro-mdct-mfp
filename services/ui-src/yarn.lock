@@ -5033,6 +5033,23 @@
   dependencies:
     "@zag-js/dom-query" "0.31.1"
 
+"@zag-js/dom-query@0.31.1":
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/@zag-js/dom-query/-/dom-query-0.31.1.tgz#f40be43d0eb1eabdf51538abeeccad46c5b88ed6"
+  integrity sha512-oiuohEXAXhBxpzzNm9k2VHGEOLC1SXlXSbRPcfBZ9so5NRQUA++zCE7cyQJqGLTZR0t3itFLlZqDbYEXRrefwg==
+
+"@zag-js/element-size@0.31.1":
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/@zag-js/element-size/-/element-size-0.31.1.tgz#1b3d237618d12b00c0a7dd8e33e29fb8f8cd4f0c"
+  integrity sha512-4T3yvn5NqqAjhlP326Fv+w9RqMIBbNN9H72g5q2ohwzhSgSfZzrKtjL4rs9axY/cw9UfMfXjRjEE98e5CMq7WQ==
+
+"@zag-js/focus-visible@^0.31.1":
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/@zag-js/focus-visible/-/focus-visible-0.31.1.tgz#bd6b94e48eff0566c047b55a3c9ccd9890f5eaaa"
+  integrity sha512-dbLksz7FEwyFoANbpIlNnd3bVm0clQSUsnP8yUVQucStZPsuWjCrhL2jlAbGNrTrahX96ntUMXHb/sM68TibFg==
+  dependencies:
+    "@zag-js/dom-query" "0.31.1"
+
 abab@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.6.tgz#41b80f2c871d19686216b82309231cfd3cb3d291"
