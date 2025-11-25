@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router";
 // components
 import { Box } from "@chakra-ui/react";
 import {

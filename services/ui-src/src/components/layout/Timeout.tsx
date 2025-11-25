@@ -9,7 +9,7 @@ import {
   ModalContent,
   Text,
 } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import {
   calculateRemainingSeconds,
   refreshCredentials,
