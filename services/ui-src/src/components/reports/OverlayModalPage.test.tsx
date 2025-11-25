@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { OverlayModalPage } from "./OverlayModalPage";
@@ -75,7 +75,9 @@ describe("<OverlayModalPage />", () => {
       await act(async () => {
         await userEvent.click(addEntityButton[0]);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
 
       const closeButton = screen.getByText("Close");
       await act(async () => {
@@ -89,7 +91,9 @@ describe("<OverlayModalPage />", () => {
       await act(async () => {
         await userEvent.click(editEntityButtons[0]);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
       expect(
         screen.getByText(
           `${addEditModalEditTitle} ${mockEntityStore.selectedEntity?.initiative_name}`
@@ -107,7 +111,9 @@ describe("<OverlayModalPage />", () => {
       await act(async () => {
         await userEvent.click(deleteEntityButton[0]);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
       expect(screen.getByText(`${deleteModalTitle}`)).toBeVisible();
       const closeButton = screen.getByText("Cancel");
       await act(async () => {
@@ -169,7 +175,9 @@ describe("<OverlayModalPage />", () => {
       await act(async () => {
         await userEvent.click(reportProgressButton[0]);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
       const textField = screen.getByRole("textbox", {
         name: "mock-performance-indicators",
       });

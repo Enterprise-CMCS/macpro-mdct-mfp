@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ReportContext, DrawerReportPage } from "components";
@@ -85,7 +85,9 @@ describe("<DrawerReportPage />", () => {
       await act(async () => {
         await userEvent.click(launchDrawerButton);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
     });
 
     test("Submit sidedrawer opens and saves for state user", async () => {
@@ -96,7 +98,9 @@ describe("<DrawerReportPage />", () => {
       await act(async () => {
         await userEvent.click(launchDrawerButton);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
       const textField = await screen.getByLabelText("mock drawer text field");
       expect(textField).toBeVisible();
       await act(async () => {
@@ -117,7 +121,9 @@ describe("<DrawerReportPage />", () => {
       await act(async () => {
         await userEvent.click(launchDrawerButton);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
       const textField = await screen.getByLabelText("mock drawer text field");
       expect(textField).toBeVisible();
       const saveAndCloseButton = screen.getByText(saveAndCloseText);

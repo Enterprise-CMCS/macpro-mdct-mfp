@@ -1,4 +1,10 @@
-import { RenderResult, render, screen, act } from "@testing-library/react";
+import {
+  RenderResult,
+  render,
+  screen,
+  act,
+  waitFor,
+} from "@testing-library/react";
 // components
 import { EntityDetailsOverlay, ReportContext } from "components";
 // utils
@@ -122,7 +128,9 @@ describe("<EntityDetailsOverlayPage />", () => {
       });
 
       const modal = screen.getByText("This is a modal");
-      expect(modal).toBeVisible();
+      await waitFor(() => {
+        expect(modal).toBeVisible();
+      });
 
       const modalCloseBtn = screen.getByText("Cancel");
       await act(async () => {
