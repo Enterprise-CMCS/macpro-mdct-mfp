@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 //components
 import { SpreadsheetWidget } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const SpreadsheetWidgetComponent = (
   <SpreadsheetWidget
@@ -16,5 +16,5 @@ describe("<SpreadsheetWidget />", () => {
     expect(screen.getByTestId("spreadsheet-widget")).toBeVisible();
   });
 
-  testA11y(SpreadsheetWidgetComponent);
+  testA11yAct(SpreadsheetWidgetComponent);
 });

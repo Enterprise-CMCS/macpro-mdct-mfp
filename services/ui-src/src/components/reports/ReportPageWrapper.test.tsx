@@ -14,7 +14,7 @@ import {
   mockDynamicModalOverlayReportPageJson,
 } from "utils/testing/setupJest";
 import { useStore } from "utils/state/useStore";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
 const mockUseLocation = jest.fn();
@@ -124,37 +124,37 @@ describe("<ReportPageWrapper />", () => {
   });
 
   describe("standard", () => {
-    testA11y(ReportPageWrapperComponent, () => {
+    testA11yAct(ReportPageWrapperComponent, () => {
       mockUseLocation.mockReturnValue(mockLocations.standard);
     });
   });
 
   describe("drawer", () => {
-    testA11y(ReportPageWrapperComponent, () => {
+    testA11yAct(ReportPageWrapperComponent, () => {
       mockUseLocation.mockReturnValue(mockLocations.drawer);
     });
   });
 
   describe("modalDrawer", () => {
-    testA11y(ReportPageWrapperComponent, () => {
+    testA11yAct(ReportPageWrapperComponent, () => {
       mockUseLocation.mockReturnValue(mockLocations.modalDrawer);
     });
   });
 
   describe("modalOverlay", () => {
-    testA11y(ReportPageWrapperComponent, () => {
+    testA11yAct(ReportPageWrapperComponent, () => {
       mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
     });
   });
 
   describe("dynamicModalOverlay", () => {
-    testA11y(ReportPageWrapperComponent, () => {
+    testA11yAct(ReportPageWrapperComponent, () => {
       mockUseLocation.mockReturnValue(mockLocations.dynamicModalOverlay);
     });
   });
 
   describe("reviewSubmit", () => {
-    testA11y(ReportPageWrapperComponent, () => {
+    testA11yAct(ReportPageWrapperComponent, () => {
       mockUseLocation.mockReturnValue(mockLocations.reviewSubmit);
     });
   });

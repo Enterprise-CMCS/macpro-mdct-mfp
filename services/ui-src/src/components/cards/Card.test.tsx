@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 //components
 import { Card } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const cardComponent = (
   <Card {...{ "data-testid": "card" }}>
@@ -15,5 +15,5 @@ describe("<Card />", () => {
     expect(screen.getByTestId("card")).toBeVisible();
   });
 
-  testA11y(cardComponent);
+  testA11yAct(cardComponent);
 });

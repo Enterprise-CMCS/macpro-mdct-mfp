@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { EmailCard } from "components";
 import { createEmailLink } from "utils/other/email";
 import verbiage from "verbiage/pages/help";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const emailCardComponent = (
   <EmailCard
@@ -38,5 +38,5 @@ describe("<EmailCard />", () => {
     });
   });
 
-  testA11y(emailCardComponent);
+  testA11yAct(emailCardComponent);
 });

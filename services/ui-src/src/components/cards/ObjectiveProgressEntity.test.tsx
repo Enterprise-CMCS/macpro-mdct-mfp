@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { mockObjectiveProgressFormattedEntityData } from "utils/testing/setupJest";
 import { ObjectiveProgressEntity } from "./ObjectiveProgressEntity";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const objectiveProgressEntityComponent = (
   <ObjectiveProgressEntity
@@ -31,7 +31,7 @@ describe("<ObjectiveProgressEntity />", () => {
     );
   });
 
-  testA11y(
+  testA11yAct(
     <ObjectiveProgressEntity
       formattedEntityData={mockObjectiveProgressFormattedEntityData}
       entityCompleted={true}

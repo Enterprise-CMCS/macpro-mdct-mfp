@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 // components
 import { ReportContext, DashboardPage } from "components";
 // utils
@@ -28,7 +28,7 @@ import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 import abcdVerbiage from "verbiage/pages/abcd/abcd-dashboard";
 import userEvent from "@testing-library/user-event";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/auth/useUser");
 const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
@@ -140,7 +140,9 @@ describe("<DashboardPage />", () => {
       mockedUseStore.mockReturnValue(mockUseEntityStore);
       render(wpDashboardViewWithReports);
       const editButtons = screen.getAllByText("Edit");
-      await userEvent.click(editButtons[0]);
+      await act(async () => {
+        await userEvent.click(editButtons[0]);
+      });
     });
 
     test("Clicking Call To Action text open add/edit modal", async () => {
@@ -148,7 +150,9 @@ describe("<DashboardPage />", () => {
       render(wpDashboardWithNoReports);
       const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
       expect(callToActionButton).toBeVisible();
-      await userEvent.click(callToActionButton);
+      await act(async () => {
+        await userEvent.click(callToActionButton);
+      });
       expect(screen.queryByText("Start new")).toBeVisible();
     });
 
@@ -211,7 +215,9 @@ describe("<DashboardPage />", () => {
     test("Clicking Call To Action text open add/edit modal", async () => {
       const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
       expect(callToActionButton).toBeVisible();
-      await userEvent.click(callToActionButton);
+      await act(async () => {
+        await userEvent.click(callToActionButton);
+      });
       expect(screen.queryByText("Start new")).toBeVisible();
     });
   });
@@ -238,7 +244,9 @@ describe("<DashboardPage />", () => {
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
       const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[3];
       expect(unlockButton).toBeEnabled();
-      await userEvent.click(unlockButton);
+      await act(async () => {
+        await userEvent.click(unlockButton);
+      });
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
       // once for render, once for release
       await expect(
@@ -249,7 +257,9 @@ describe("<DashboardPage />", () => {
     test("Clicking a disabled 'Unlock' button no modal opens", async () => {
       const unlockButton = screen.getAllByText("Unlock")[0];
       expect(unlockButton).toBeVisible();
-      await userEvent.click(unlockButton);
+      await act(async () => {
+        await userEvent.click(unlockButton);
+      });
 
       expect(
         screen.queryByText(wpVerbiage.modalUnlock.actionButtonText)
@@ -261,14 +271,16 @@ describe("<DashboardPage />", () => {
         name: "Archive",
       })[0];
       expect(archiveButton).toBeVisible();
-      await userEvent.click(archiveButton);
+      await act(async () => {
+        await userEvent.click(archiveButton);
+      });
       await expect(
         screen.getByText(wpVerbiage.modalArchive.heading)
       ).toBeVisible();
     });
 
     test("Cannot unarchive a WP", async () => {
-      const lastCell = screen.getAllByRole("gridcell").pop();
+      const lastCell = screen.getAllByRole("cell").pop();
       expect(lastCell).toHaveTextContent("Archived");
     });
 
@@ -277,7 +289,7 @@ describe("<DashboardPage />", () => {
       enterReportButtons.forEach((button) => expect(button).not.toBeDisabled());
     });
 
-    testA11y(wpDashboardViewWithReports, () => {
+    testA11yAct(wpDashboardViewWithReports, () => {
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
     });
   });
@@ -295,7 +307,9 @@ describe("<DashboardPage />", () => {
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
       const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[1];
       expect(unlockButton).toBeEnabled();
-      await userEvent.click(unlockButton);
+      await act(async () => {
+        await userEvent.click(unlockButton);
+      });
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
       // once for render, once for release
       await expect(
@@ -308,7 +322,9 @@ describe("<DashboardPage />", () => {
         name: "Archive",
       })[1];
       expect(archiveButton).toBeVisible();
-      await userEvent.click(archiveButton);
+      await act(async () => {
+        await userEvent.click(archiveButton);
+      });
       expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
     });
 
@@ -322,7 +338,7 @@ describe("<DashboardPage />", () => {
       viewButtons.forEach((button) => expect(button).not.toBeDisabled());
     });
 
-    testA11y(wpDashboardViewWithReports, () => {
+    testA11yAct(wpDashboardViewWithReports, () => {
       mockMakeMediaQueryClasses.mockReturnValue("mobile");
     });
   });
