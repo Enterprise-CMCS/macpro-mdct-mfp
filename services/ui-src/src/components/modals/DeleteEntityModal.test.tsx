@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 // components
 import { DeleteEntityModal, ReportContext } from "components";
 // utils
@@ -13,7 +13,7 @@ import {
 import { MfpReportState, MfpUserState, entityTypes } from "types";
 import { useStore } from "../../utils";
 import userEvent from "@testing-library/user-event";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
@@ -172,7 +172,9 @@ describe("<DeleteEntityModal />", () => {
       const confirmButton = screen.getByRole("button", {
         name: deleteModalConfirmButtonText,
       });
-      await userEvent.click(confirmButton);
+      await act(async () => {
+        await userEvent.click(confirmButton);
+      });
     };
 
     beforeEach(() => {
@@ -244,5 +246,5 @@ describe("<DeleteEntityModal />", () => {
     });
   });
 
-  testA11y(modalComponent);
+  testA11yAct(modalComponent);
 });

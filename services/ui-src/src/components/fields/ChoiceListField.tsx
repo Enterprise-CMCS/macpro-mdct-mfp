@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, ReactNode } from "react";
 import { FieldValues, useFormContext, UseFormReturn } from "react-hook-form";
 // components
 import { ChoiceList as CmsdsChoiceList } from "@cmsgov/design-system";
@@ -240,7 +240,7 @@ export const ChoiceListField = ({
 
   // prepare error message, hint, and classes
   const formErrorState = form?.formState?.errors;
-  const errorMessage = formErrorState?.[name]?.message;
+  const errorMessage = formErrorState?.[name]?.message as ReactNode;
   const parsedHint = hint && parseCustomHtml(hint);
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
   const labelClass = !label ? "no-label" : "";
@@ -256,7 +256,7 @@ export const ChoiceListField = ({
         name={name}
         type={type}
         label={labelText || ""}
-        choices={formatChoices(choices)}
+        choices={formatChoices(choices) as any[]}
         hint={parsedHint}
         errorMessage={errorMessage}
         onChange={onChangeHandler}

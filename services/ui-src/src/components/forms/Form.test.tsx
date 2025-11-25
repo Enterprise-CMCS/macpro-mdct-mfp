@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { Form } from "components";
 import { mockForm, RouterWrappedComponent } from "utils/testing/setupJest";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockOnSubmit = jest.fn();
 
@@ -27,5 +27,5 @@ describe("<Form />", () => {
     expect(form).toBeVisible();
   });
 
-  testA11y(formComponent);
+  testA11yAct(formComponent);
 });

@@ -9,7 +9,7 @@ import {
 //utils
 import { mockSARFullReport } from "utils/testing/setupJest";
 import { AnyObject, EntityShape } from "types";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const expenditureRows = {
   ["row 1"]: [
@@ -238,7 +238,7 @@ describe("<ExportEntityDetailsTable />", () => {
     });
   });
 
-  testA11y(
+  testA11yAct(
     <ExportEntityDetailsTable
       report={mockSARFullReport}
       section={section as any}

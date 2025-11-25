@@ -10,7 +10,7 @@ import {
   mockWPApprovedFullReport,
   mockWPFullReport,
 } from "utils/testing/mockReport";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 
@@ -62,7 +62,7 @@ describe("<PrintButton />", () => {
     expect(screen.getByText("Download PDF")).toBeVisible();
   });
 
-  testA11y(PrintButtonComponent(), () => {
+  testA11yAct(PrintButtonComponent(), () => {
     mockedUseStore.mockReturnValue(mockUseStore);
   });
 });

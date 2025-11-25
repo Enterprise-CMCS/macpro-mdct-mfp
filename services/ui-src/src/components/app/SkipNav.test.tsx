@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 //components
 import { SkipNav } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const skipNavComponent = (
   <SkipNav
@@ -23,5 +23,5 @@ describe("<SkipNav />", () => {
     await expect(skipNavLink).toBeVisible();
   });
 
-  testA11y(skipNavComponent);
+  testA11yAct(skipNavComponent);
 });

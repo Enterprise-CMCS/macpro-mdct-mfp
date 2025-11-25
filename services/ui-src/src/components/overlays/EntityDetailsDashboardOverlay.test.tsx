@@ -13,7 +13,7 @@ import { EntityDetailsDashboardOverlay } from "./EntityDetailsDashboardOverlay";
 import { useStore } from "utils";
 import { entityTypes } from "../../types";
 import userEvent from "@testing-library/user-event";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockCloseEntityDetailsOverlay = jest.fn();
 
@@ -109,5 +109,5 @@ describe("<EntityDetailsDashboardOverlay />", () => {
     });
   });
 
-  testA11y(entityDetailsDashboardOverlayComponent);
+  testA11yAct(entityDetailsDashboardOverlayComponent);
 });

@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { EditButton } from "./EditButton";
 
@@ -42,5 +42,5 @@ describe("<EditButton />", () => {
     expect(editIcon).toHaveAttribute("alt", "Edit Program");
   });
 
-  testA11y(EditButtonComponent);
+  testA11yAct(EditButtonComponent);
 });

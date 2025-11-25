@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { ReportPageIntro } from "components";
 // verbiage
 import { mockVerbiageIntro } from "utils/testing/setupJest";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const reportPageComponent = <ReportPageIntro text={mockVerbiageIntro} />;
 
@@ -13,5 +13,5 @@ describe("<ReportPageIntro />", () => {
     expect(screen.getByText(mockVerbiageIntro.section)).toBeVisible();
   });
 
-  testA11y(reportPageComponent);
+  testA11yAct(reportPageComponent);
 });

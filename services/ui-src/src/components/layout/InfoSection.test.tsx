@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { InfoSection } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const content = {
   sectionNumber: 1,
@@ -27,5 +27,5 @@ describe("<InfoSection />", () => {
     await expect(sectionHeader).toBeVisible();
   });
 
-  testA11y(InfoSectionComponent);
+  testA11yAct(InfoSectionComponent);
 });

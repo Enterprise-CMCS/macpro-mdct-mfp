@@ -26,6 +26,11 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
   const { report } = useStore();
   const reportJson = report?.formTemplate;
 
+  //TODO: temporary fix, for some reason isDesktop sometimes returns false so it messes with the sidebar on load
+  useEffect(() => {
+    toggleSidebar(isDesktop);
+  }, [isDesktop]);
+
   return (
     <>
       {reportJson && (

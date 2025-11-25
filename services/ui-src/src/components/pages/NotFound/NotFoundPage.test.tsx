@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 // components
 import { NotFoundPage } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const notFoundView = <NotFoundPage />;
 
@@ -11,5 +11,5 @@ describe("<NotFoundPage />", () => {
     expect(getByTestId("404-view")).toBeVisible();
   });
 
-  testA11y(notFoundView);
+  testA11yAct(notFoundView);
 });

@@ -4,7 +4,7 @@ import { useStore } from "utils";
 import { useContext } from "react";
 import { EntityProvider, EntityContext } from "./EntityProvider";
 import userEvent from "@testing-library/user-event";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -58,5 +58,5 @@ describe("<EntityProvider />", () => {
     ).toMatch(JSON.stringify(mockEntityStore.selectedEntity));
   });
 
-  testA11y(testComponent);
+  testA11yAct(testComponent);
 });

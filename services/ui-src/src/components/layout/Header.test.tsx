@@ -8,7 +8,7 @@ import {
 //components
 import { Header, ReportContext } from "components";
 import { useStore } from "utils";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -68,5 +68,5 @@ describe("<Header />", () => {
     });
   });
 
-  testA11y(headerComponent);
+  testA11yAct(headerComponent);
 });

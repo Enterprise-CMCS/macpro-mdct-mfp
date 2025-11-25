@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { FormProvider, useForm } from "react-hook-form";
 // components
@@ -12,7 +12,7 @@ import {
   mockWPReport,
   mockWpReportContext,
 } from "utils/testing/setupJest";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockEntityType = "mock-entity-type";
 const mockDynamicField = "mock-dynamic-field";
@@ -99,7 +99,9 @@ describe("<DynamicField />", () => {
     test("DynamicField append button adds a field", async () => {
       // click append
       const appendButton = screen.getByRole("button", { name: "Add a row" });
-      await userEvent.click(appendButton);
+      await act(async () => {
+        await userEvent.click(appendButton);
+      });
 
       // verify there are now two text boxes
       const inputBoxLabel = screen.getAllByRole("textbox", {
@@ -112,7 +114,9 @@ describe("<DynamicField />", () => {
     test("DynamicField remove button removes a field", async () => {
       // click append
       const appendButton = screen.getByRole("button", { name: "Add a row" });
-      await userEvent.click(appendButton);
+      await act(async () => {
+        await userEvent.click(appendButton);
+      });
 
       // verify there are now two text boxes
       const inputBoxLabel = screen.getAllByRole("textbox", {
@@ -126,7 +130,9 @@ describe("<DynamicField />", () => {
       const removeButton = removeButtons[1];
       expect(removeButtons).toHaveLength(2);
 
-      await userEvent.click(removeButton);
+      await act(async () => {
+        await userEvent.click(removeButton);
+      });
       expect(mockUpdateReport).toHaveBeenCalledTimes(1);
 
       // verify that the field is removed
@@ -147,7 +153,9 @@ describe("<DynamicField />", () => {
 
       // click remove
       const removeButton = screen.getAllByRole("button", { name: "Delete" })[0];
-      await userEvent.click(removeButton);
+      await act(async () => {
+        await userEvent.click(removeButton);
+      });
       expect(mockUpdateReport).toHaveBeenCalledTimes(1);
 
       // verify that there is still one field available
@@ -162,7 +170,9 @@ describe("<DynamicField />", () => {
       const firstDynamicField = screen.getByRole("textbox", {
         name: mockFieldLabel,
       });
-      await userEvent.type(firstDynamicField, "123");
+      await act(async () => {
+        await userEvent.type(firstDynamicField, "123");
+      });
       expect(firstDynamicField).toHaveValue("123");
     });
 
@@ -170,8 +180,10 @@ describe("<DynamicField />", () => {
       const firstDynamicField = screen.getByRole("textbox", {
         name: mockFieldLabel,
       });
-      await userEvent.type(firstDynamicField, "test user input");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.type(firstDynamicField, "test user input");
+        await userEvent.tab();
+      });
       expect(mockUpdateReport).toHaveBeenCalledTimes(1);
       expect(mockUpdateReport).toHaveBeenCalledWith(
         expect.any(Object),
@@ -217,5 +229,5 @@ describe("<DynamicField />", () => {
     });
   });
 
-  testA11y(<DynamicFieldComponent />);
+  testA11yAct(<DynamicFieldComponent />);
 });

@@ -244,6 +244,7 @@ const sx = {
     maxWidth: "18.75rem",
     ul: {
       margin: "0.3rem auto",
+      padding: 0,
       listStyleType: "none",
       lineHeight: "1.3rem",
       ".mobile &": {

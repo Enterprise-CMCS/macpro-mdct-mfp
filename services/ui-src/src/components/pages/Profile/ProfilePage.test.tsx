@@ -8,7 +8,7 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const ProfilePageComponent = (
   <RouterWrappedComponent>
@@ -69,7 +69,7 @@ describe("<ProfilePage />", () => {
     });
   });
 
-  testA11y(ProfilePageComponent, () => {
+  testA11yAct(ProfilePageComponent, () => {
     mockedUseStore.mockReturnValue(mockAdminUserStore);
   });
 });

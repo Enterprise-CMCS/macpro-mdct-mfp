@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ReportContext, DrawerReportPage } from "components";
@@ -14,7 +14,7 @@ import { useStore } from "utils/state/useStore";
 import { ReportShape } from "types";
 // constants
 import { saveAndCloseText } from "../../constants";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -82,7 +82,9 @@ describe("<DrawerReportPage />", () => {
         mockWpReportContext.report.fieldData.entityType[0].name;
       expect(screen.getByText(visibleEntityText)).toBeVisible();
       const launchDrawerButton = screen.getAllByText("Enter")[0];
-      await userEvent.click(launchDrawerButton);
+      await act(async () => {
+        await userEvent.click(launchDrawerButton);
+      });
       expect(screen.getByRole("dialog")).toBeVisible();
     });
 
@@ -91,13 +93,19 @@ describe("<DrawerReportPage />", () => {
         mockWpReportContext.report.fieldData.entityType[0].name;
       expect(screen.getByText(visibleEntityText)).toBeVisible();
       const launchDrawerButton = screen.getAllByText("Enter")[0];
-      await userEvent.click(launchDrawerButton);
+      await act(async () => {
+        await userEvent.click(launchDrawerButton);
+      });
       expect(screen.getByRole("dialog")).toBeVisible();
       const textField = await screen.getByLabelText("mock drawer text field");
       expect(textField).toBeVisible();
-      await userEvent.type(textField, "test");
+      await act(async () => {
+        await userEvent.type(textField, "test");
+      });
       const saveAndCloseButton = screen.getByText(saveAndCloseText);
-      await userEvent.click(saveAndCloseButton);
+      await act(async () => {
+        await userEvent.click(saveAndCloseButton);
+      });
       expect(mockWpReportContext.updateReport).toHaveBeenCalledTimes(1);
     });
 
@@ -106,17 +114,21 @@ describe("<DrawerReportPage />", () => {
         mockWpReportContext.report.fieldData.entityType[0].name;
       expect(screen.getByText(visibleEntityText)).toBeVisible();
       const launchDrawerButton = screen.getAllByText("Enter")[0];
-      await userEvent.click(launchDrawerButton);
+      await act(async () => {
+        await userEvent.click(launchDrawerButton);
+      });
       expect(screen.getByRole("dialog")).toBeVisible();
       const textField = await screen.getByLabelText("mock drawer text field");
       expect(textField).toBeVisible();
       const saveAndCloseButton = screen.getByText(saveAndCloseText);
-      await userEvent.click(saveAndCloseButton);
+      await act(async () => {
+        await userEvent.click(saveAndCloseButton);
+      });
       expect(mockWpReportContext.updateReport).toHaveBeenCalledTimes(0);
     });
   });
 
-  testA11y(drawerReportPage, () => {
+  testA11yAct(drawerReportPage, () => {
     mockedUseStore.mockReturnValue(mockUseStore);
   });
 });

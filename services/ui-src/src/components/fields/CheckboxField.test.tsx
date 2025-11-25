@@ -1,9 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 //components
 import { CheckboxField } from "components";
 import userEvent from "@testing-library/user-event";
 import { useFormContext } from "react-hook-form";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
 const mockSetValue = jest.fn();
@@ -52,7 +52,9 @@ describe("<CheckboxField />", () => {
     mockGetValues(undefined);
     render(CheckboxFieldComponent);
     const firstCheckbox = screen.getByLabelText("Choice 1") as HTMLInputElement;
-    await userEvent.click(firstCheckbox);
+    await act(async () => {
+      await userEvent.click(firstCheckbox);
+    });
     expect(mockSetValue).toHaveBeenCalledWith(
       "checkbox_choices",
       [{ key: "Choice 1", value: "A" }],
@@ -62,7 +64,7 @@ describe("<CheckboxField />", () => {
     );
   });
 
-  testA11y(CheckboxFieldComponent, () => {
+  testA11yAct(CheckboxFieldComponent, () => {
     mockGetValues(undefined);
   });
 });

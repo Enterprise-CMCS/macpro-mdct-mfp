@@ -1,10 +1,16 @@
-import { act } from "react-dom/test-utils";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+// components
+import { ReportContext } from "components";
+import { AddEditOverlayEntityModal } from "./AddEditOverlayEntityModal";
+// types
 import {
   EntityShape,
   MfpReportState,
   MfpUserState,
   entityTypes,
 } from "../../types";
+// utils
 import { RouterWrappedComponent } from "../../utils/testing/mockRouter";
 import {
   mockEntityStore,
@@ -18,12 +24,8 @@ import {
   mockWPFullReport,
   mockWpReportContext,
 } from "../../utils/testing/setupJest";
-import { ReportContext } from "components";
-import { AddEditOverlayEntityModal } from "./AddEditOverlayEntityModal";
-import { fireEvent, render, screen } from "@testing-library/react";
 import { useStore } from "utils";
-import userEvent from "@testing-library/user-event";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -248,10 +250,14 @@ describe("<AddEditOverlayEntityModal />", () => {
 
     const fillAndSubmitForm = async (form: any) => {
       const textField = form.querySelector("[name='mock-modal-text-field']")!;
-      await userEvent.clear(textField);
-      await userEvent.type(textField, "mock input 2");
+      await act(async () => {
+        await userEvent.clear(textField);
+        await userEvent.type(textField, "mock input 2");
+      });
       const submitButton = screen.getByRole("button", { name: "Save" });
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(submitButton);
+      });
     };
 
     test("Successfully adds new entity, even with existing entities", async () => {
@@ -319,5 +325,5 @@ describe("<AddEditOverlayEntityModal />", () => {
     });
   });
 
-  testA11y(modalComponent);
+  testA11yAct(modalComponent);
 });

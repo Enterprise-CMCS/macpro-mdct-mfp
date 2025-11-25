@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { OverlayModalStepTypes } from "types";
 import { useStore } from "utils";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 import {
   mockCompletedGenericFormattedEntityData,
   mockEvaluationPlanFormattedEntityData,
@@ -58,7 +58,7 @@ describe("<ExportedEntityStepCard />", () => {
     expect(element).toBeVisible();
   });
 
-  testA11y(
+  testA11yAct(
     <ExportedEntityStepCard
       entity={mockGenericEntity}
       entityIndex={0}
