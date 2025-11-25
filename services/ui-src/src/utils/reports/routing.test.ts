@@ -7,7 +7,7 @@ import {
 const mockFallbackRoute = mockReportJson.basePath;
 const mockFlatRoutesArray = mockFlattenedReportRoutes;
 
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useLocation: jest
     .fn()
     .mockReturnValueOnce({ pathname: "/mock/mock-route-1" }) // first path

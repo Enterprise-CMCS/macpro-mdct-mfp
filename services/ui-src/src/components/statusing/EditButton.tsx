@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import editIcon from "assets/icons/icon_edit.png";
 import iconSearch from "assets/icons/icon_search_blue.png";
 import { Button, Image } from "@chakra-ui/react";

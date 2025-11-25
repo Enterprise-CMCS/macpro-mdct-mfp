@@ -2,7 +2,7 @@
 import { Button, Flex, Heading, Image, Text, Link } from "@chakra-ui/react";
 import { Card, TemplateCardAccordion } from "components";
 // utils
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useBreakpoint } from "utils";
 import { AnyObject } from "types";
 // assets

@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 
 // components
 import { AppRoutes, ReportContext } from "components";
@@ -28,10 +28,7 @@ const appRoutesComponent = (route: string, isReportPage: boolean = false) => (
       isReportPage,
     }}
   >
-    <MemoryRouter
-      initialEntries={[route]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={[route]}>
       <UserProvider>
         <AppRoutes />
       </UserProvider>

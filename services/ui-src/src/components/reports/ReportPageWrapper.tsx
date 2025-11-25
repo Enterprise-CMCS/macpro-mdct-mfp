@@ -11,7 +11,7 @@ import {
   Sidebar,
   StandardReportPage,
 } from "components";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import {
   DrawerReportPageShape,
   ModalDrawerReportPageShape,

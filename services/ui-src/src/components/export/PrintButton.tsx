@@ -1,4 +1,4 @@
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router";
 // components
 import { Button, Image, SystemStyleObject } from "@chakra-ui/react";
 // assets
