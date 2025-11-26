@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
@@ -6,7 +6,7 @@ import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { TemplateCardAccordion } from "components";
 import verbiage from "verbiage/pages/home";
 import { AnyObject } from "types";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const accordionComponent = (mockProps?: AnyObject) => {
   const props = {
@@ -40,9 +40,13 @@ describe("<TemplateCardAccordion />", () => {
     const accordionQuestion = screen.getByText(accordionButtonLabel);
     expect(accordionQuestion).toBeVisible();
     expect(screen.getByText(accordionContent)).not.toBeVisible();
-    await userEvent.click(accordionQuestion);
+    await act(async () => {
+      await userEvent.click(accordionQuestion);
+    });
     expect(accordionQuestion).toBeVisible();
-    expect(screen.getByText(accordionContent)).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByText(accordionContent)).toBeVisible();
+    });
   });
 
   test("Accordion should render a list when given one", async () => {
@@ -55,11 +59,15 @@ describe("<TemplateCardAccordion />", () => {
 
     render(accordionComponent(mockProps));
     const button = screen.getByText("expand");
-    await userEvent.click(button);
+    await act(async () => {
+      await userEvent.click(button);
+    });
 
-    expect(screen.getByText("item one")).toBeVisible();
-    expect(screen.getByText("item two")).toBeVisible();
-    expect(screen.getByText("item three")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByText("item one")).toBeVisible();
+      expect(screen.getByText("item two")).toBeVisible();
+      expect(screen.getByText("item three")).toBeVisible();
+    });
   });
 
   test("Accordion should render a table when given one", async () => {
@@ -74,10 +82,14 @@ describe("<TemplateCardAccordion />", () => {
 
     render(accordionComponent(mockProps));
     const button = screen.getByText("expand");
-    await userEvent.click(button);
+    await act(async () => {
+      await userEvent.click(button);
+    });
 
-    expect(screen.getByText("mock column header")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByText("mock column header")).toBeVisible();
+    });
   });
 
-  testA11y(accordionComponent());
+  testA11yAct(accordionComponent());
 });

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router";
 import { States } from "../../../constants";
 
 // components
@@ -356,7 +356,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               : accordion[reportType as keyof typeof ReportType]
                   .stateUserDashboard
           }
-          defaultIndex={0} // sets the accordion to open by default
+          defaultIndex={[0]} // sets the accordion to open by default
         />
         {parseCustomHtml(intro.body)}
       </Box>

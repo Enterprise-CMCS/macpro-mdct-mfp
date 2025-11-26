@@ -1,5 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 //components
 import { AddEditEntityModal, ReportContext } from "components";
 import {
@@ -16,7 +15,7 @@ import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
 import { MfpReportState, MfpUserState, entityTypes } from "../../types";
 import { alertVerbiage } from "./AddEditEntityModal";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
@@ -177,8 +176,10 @@ describe("<AddEditEntityModal />", () => {
     test("User cannot add duplicate 'Other' target populations", async () => {
       const form = screen.queryByTestId("add-edit-entity-form");
       const textField = form!.querySelector("input")!;
-      await userEvent.clear(textField);
-      await userEvent.type(textField, "mock input 1");
+      await act(async () => {
+        await userEvent.clear(textField);
+        await userEvent.type(textField, "mock input 1");
+      });
       const submitButton = screen.getByRole("button", { name: "Save" });
       expect(submitButton).toBeDisabled;
     });
@@ -198,10 +199,14 @@ describe("<AddEditEntityModal />", () => {
     const fillAndSubmitForm = async (form: any) => {
       // fill and submit form
       const textField = form.querySelector("[name='mock-modal-text-field']")!;
-      await userEvent.clear(textField);
-      await userEvent.type(textField, "mock input 2");
+      await act(async () => {
+        await userEvent.clear(textField);
+        await userEvent.type(textField, "mock input 2");
+      });
       const submitButton = screen.getByRole("button", { name: "Save" });
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(submitButton);
+      });
     };
 
     test("Successfully adds new entity, even with existing entities", async () => {
@@ -262,7 +267,9 @@ describe("<AddEditEntityModal />", () => {
     test("Doesn't edit an existing entity if no update was made", async () => {
       render(modalComponentWithSelectedEntity);
       const submitButton = screen.getByRole("button", { name: "Save" });
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(submitButton);
+      });
       expect(mockUpdateReport).toHaveBeenCalledTimes(0);
       expect(mockCloseHandler).toHaveBeenCalledTimes(1);
     });
@@ -281,10 +288,14 @@ describe("<AddEditEntityModal />", () => {
       const textField = form.querySelector(
         "[name='transitionBenchmarks_targetPopulationName']"
       )!;
-      await userEvent.clear(textField);
-      await userEvent.type(textField, "mock input 2");
+      await act(async () => {
+        await userEvent.clear(textField);
+        await userEvent.type(textField, "mock input 2");
+      });
       const submitButton = screen.getByRole("button", { name: "Save" });
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(submitButton);
+      });
 
       const expectedUpdateCallPayload = {
         fieldData: mockTransitionBenchmarkContext.report.fieldData,
@@ -306,12 +317,14 @@ describe("<AddEditEntityModal />", () => {
       );
       expect(mockCloseHandler).toHaveBeenCalledTimes(1);
 
-      await userEvent.clear(textField);
-      await userEvent.type(textField, "mock input 2");
+      await act(async () => {
+        await userEvent.clear(textField);
+        await userEvent.type(textField, "mock input 2");
+      });
 
       expect(mockSetError).toHaveBeenCalledWith(alertVerbiage);
     });
   });
 
-  testA11y(modalComponent);
+  testA11yAct(modalComponent);
 });

@@ -16,11 +16,29 @@ permissions:
 jobs:
   regression-tests:
     name: Playwright Regression Tests
-    uses: ./.github/workflows/e2e-test.yml
-    with:
-      base-url: 'https://mdctmfpval.cms.gov'
-      test-filter: ''
-      timeout-minutes: 90
-      artifact-name-prefix: 'regression'
-      continue-on-error: false
-    secrets: inherit #pragma: allowlist secret
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+      - name: Run Playwright tests
+        run: |
+          yarn install
+          yarn playwright install
+          yarn playwright test --reporter=github,html
+        working-directory: tests
+        env:
+          BASE_URL: 'https://mdctmfpval.cms.gov'
+          SEED_ADMIN_USER_EMAIL: ${{ secrets.SEED_ADMIN_USER_EMAIL }}
+          SEED_ADMIN_USER_PASSWORD: ${{ secrets.SEED_ADMIN_USER_PASSWORD }}
+          SEED_STATE_USER_EMAIL: ${{ secrets.SEED_STATE_USER_EMAIL }}
+          SEED_STATE_USER_PASSWORD: ${{ secrets.SEED_STATE_USER_PASSWORD }}
+      - name: Upload playwright results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: regression-playwright-html-report-${{ github.run_number }}
+          path: tests/playwright-report
+          retention-days: 30

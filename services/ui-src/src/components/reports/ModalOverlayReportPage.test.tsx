@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ModalOverlayReportPage } from "components";
@@ -10,7 +10,7 @@ import {
   mockUseEntityStore,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -50,12 +50,18 @@ describe("<ModalOverlayReportPage />", () => {
     render(modalOverlayReportPageComponent);
     // Get the Edit button and click it
     const editEntityButton = screen.getByText(verbiage.editEntityButtonText);
-    await userEvent.click(editEntityButton);
-    expect(screen.getByRole("dialog")).toBeVisible();
+    await act(async () => {
+      await userEvent.click(editEntityButton);
+    });
+    await waitFor(() => {
+      expect(screen.getByRole("dialog")).toBeVisible();
+    });
 
     // Close out of the modal it created
     const closeButton = screen.getByText("Close");
-    await userEvent.click(closeButton);
+    await act(async () => {
+      await userEvent.click(closeButton);
+    });
 
     // And make sure they can still add entities
     const addEntityButton = screen.getByText(verbiage.addEntityButtonText);
@@ -66,16 +72,22 @@ describe("<ModalOverlayReportPage />", () => {
     mockedUseStore.mockReturnValue(mockUseEntityStore);
     render(modalOverlayReportPageComponent);
     const editEntityButton = screen.getByText(editEntityButtonText);
-    await userEvent.click(editEntityButton);
-    expect(screen.getByRole("dialog")).toBeVisible();
+    await act(async () => {
+      await userEvent.click(editEntityButton);
+    });
+    await waitFor(() => {
+      expect(screen.getByRole("dialog")).toBeVisible();
+    });
 
     const closeButton = screen.getByText("Close");
-    await userEvent.click(closeButton);
+    await act(async () => {
+      await userEvent.click(closeButton);
+    });
   });
 
   // TODO: test delete modal + functionality
 
-  testA11y(modalOverlayReportPageComponent, () => {
+  testA11yAct(modalOverlayReportPageComponent, () => {
     mockedUseStore.mockReturnValue(mockReportStore);
   });
 });

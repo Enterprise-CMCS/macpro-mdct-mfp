@@ -6,7 +6,7 @@ import { AnyObject } from "types";
 
 export const FaqAccordion = ({ accordionItems, ...props }: Props) => {
   return (
-    <Accordion allowToggle={true} allowMultiple={true} {...props}>
+    <Accordion allowMultiple={true} {...props}>
       {accordionItems.map((item: AnyObject, index: number) => (
         <AccordionItem key={index} label={item.question} sx={sx.item}>
           <Box sx={sx.answerBox}>

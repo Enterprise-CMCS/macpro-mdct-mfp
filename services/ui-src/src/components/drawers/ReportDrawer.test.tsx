@@ -14,7 +14,7 @@ import { useStore } from "utils";
 // constants
 import { saveAndCloseText } from "../../constants";
 import { ReportDrawer } from "./ReportDrawer";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockOnClose = jest.fn();
 const mockOnSubmit = jest.fn();
@@ -75,7 +75,7 @@ describe("<ReportDrawer />", () => {
     ).toBeVisible();
   });
 
-  testA11y(drawerComponent, () => {
+  testA11yAct(drawerComponent, () => {
     mockedUseStore.mockReturnValue(mockStateUserStore);
   });
 });

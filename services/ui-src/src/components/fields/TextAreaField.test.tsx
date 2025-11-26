@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 //components
 import { TextAreaField } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("react-hook-form", () => ({
   useFormContext: () => ({
@@ -27,5 +27,5 @@ describe("<TextAreaField />", () => {
     expect(textAreaField).toBeVisible();
   });
 
-  testA11y(textAreaFieldComponent);
+  testA11yAct(textAreaFieldComponent);
 });

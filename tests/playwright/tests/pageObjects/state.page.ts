@@ -17,7 +17,7 @@ export class StatePage {
       .getByRole("table")
       .getByRole("row")
       .filter({
-        has: this.page.getByRole("gridcell"),
+        has: this.page.getByRole("cell"),
       });
     this.startDateInput = this.page.getByRole("textbox", {
       name: "Start date",
