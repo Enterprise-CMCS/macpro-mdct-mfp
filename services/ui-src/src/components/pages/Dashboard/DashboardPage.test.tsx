@@ -129,6 +129,27 @@ describe("<DashboardPage />", () => {
       expect(callToActionButton).toBeDisabled();
     });
 
+    test("Check that WP Dashboard continue button is disabled if latest WP is from period 1 and year 2026 and approved", () => {
+      const mockStoreWith2026Q1Approved = {
+        ...mockUseStore,
+        reportsByState: [
+          {
+            ...mockWPApprovedFullReport,
+            reportPeriod: 1,
+            reportYear: 2026,
+            status: "Approved",
+          },
+        ],
+      };
+      mockedUseStore.mockReturnValue(mockStoreWith2026Q1Approved);
+      render(wpDashboardViewWithReports);
+
+      const callToActionButton = screen.getByText(
+        wpVerbiage.body.callToActionAdditions
+      );
+      expect(callToActionButton).toBeDisabled();
+    });
+
     test("Show copied from verbiage on report versions 2 or higher", () => {
       mockedUseStore.mockReturnValue(mockUseStore);
       render(wpDashboardViewWithReports);
