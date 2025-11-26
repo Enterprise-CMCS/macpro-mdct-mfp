@@ -48,16 +48,17 @@ const releaseEvent: APIGatewayProxyEvent = {
   ...mockProxyEvent,
 };
 
-let consoleSpy: {
+const consoleSpy: {
   debug: jest.SpyInstance<void>;
+  warn: jest.SpyInstance<void>;
 } = {
-  debug: jest.fn() as jest.SpyInstance,
+  debug: jest.spyOn(console, "debug").mockImplementation(),
+  warn: jest.spyOn(console, "warn").mockImplementation(),
 };
 
 describe("Test releaseReport method", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
   });
 
   test("Test release report passes with valid data", async () => {
@@ -136,6 +137,7 @@ describe("Test releaseReport method", () => {
       },
     };
     const res = await releaseReport(event, null);
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
