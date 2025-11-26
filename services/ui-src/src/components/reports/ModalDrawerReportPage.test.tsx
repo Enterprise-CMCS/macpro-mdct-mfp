@@ -191,7 +191,9 @@ describe("<ModelDrawerReportPage />", () => {
       await act(async () => {
         await userEvent.click(addEntityButton);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
 
       const closeButton = screen.getByText("Cancel");
       await act(async () => {
@@ -204,7 +206,9 @@ describe("<ModelDrawerReportPage />", () => {
       await act(async () => {
         await userEvent.click(editEntityButton);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
 
       const closeButton = screen.getByText("Cancel");
       await act(async () => {
@@ -235,7 +239,9 @@ describe("<ModelDrawerReportPage />", () => {
       await act(async () => {
         await userEvent.click(enterDetailsButton);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
     });
 
     test("ModalDrawerReportPage sidedrawer opens and saves for state user", async () => {
@@ -243,7 +249,9 @@ describe("<ModelDrawerReportPage />", () => {
       await act(async () => {
         await userEvent.click(launchDrawerButton);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
 
       const textField = await screen.getByLabelText("mock drawer text field");
       await act(async () => {
@@ -261,7 +269,9 @@ describe("<ModelDrawerReportPage />", () => {
       await act(async () => {
         await userEvent.click(launchDrawerButton);
       });
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
       const saveAndCloseButton = screen.getByText(saveAndCloseText);
       await act(async () => {
         await userEvent.click(saveAndCloseButton);

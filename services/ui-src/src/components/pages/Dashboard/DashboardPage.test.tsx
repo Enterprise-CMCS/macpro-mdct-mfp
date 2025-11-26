@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 // components
 import { ReportContext, DashboardPage } from "components";
 // utils
@@ -153,7 +153,9 @@ describe("<DashboardPage />", () => {
       await act(async () => {
         await userEvent.click(callToActionButton);
       });
-      expect(screen.queryByText("Start new")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.queryByText("Start new")).toBeVisible();
+      });
     });
 
     test("Check that the SAR Dashboard view renders", () => {
@@ -218,7 +220,9 @@ describe("<DashboardPage />", () => {
       await act(async () => {
         await userEvent.click(callToActionButton);
       });
-      expect(screen.queryByText("Start new")).toBeVisible();
+      await waitFor(() => {
+        expect(screen.queryByText("Start new")).toBeVisible();
+      });
     });
   });
 
@@ -274,9 +278,9 @@ describe("<DashboardPage />", () => {
       await act(async () => {
         await userEvent.click(archiveButton);
       });
-      await expect(
-        screen.getByText(wpVerbiage.modalArchive.heading)
-      ).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
+      });
     });
 
     test("Cannot unarchive a WP", async () => {
@@ -325,7 +329,9 @@ describe("<DashboardPage />", () => {
       await act(async () => {
         await userEvent.click(archiveButton);
       });
-      expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
+      });
     });
 
     test("Cannot unarchive a WP", async () => {

@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 // components
 import { ReportContext, ReviewSubmitPage } from "components";
 import { SuccessMessageGenerator } from "./ReviewSubmitPage";
@@ -148,7 +148,9 @@ describe("<ReviewSubmitPage />", () => {
           await userEvent.click(submitCheckButton);
         });
         const modalTitle = screen.getByText(modal.structure.heading)!;
-        expect(modalTitle).toBeVisible();
+        await waitFor(() => {
+          expect(modalTitle).toBeVisible();
+        });
       });
 
       test("WpReviewSubmitPage updates report status on submit confirmation", async () => {
