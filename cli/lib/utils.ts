@@ -43,6 +43,7 @@ const buildUiEnvObject = (
         process.env.COGNITO_USER_POOL_CLIENT_DOMAIN!,
       COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
       COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
+      REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT!,
     };
   }
 
@@ -57,6 +58,7 @@ const buildUiEnvObject = (
     COGNITO_USER_POOL_CLIENT_DOMAIN: `${cfnOutputs.CognitoUserPoolClientDomain}.auth.${region}.amazoncognito.com`,
     COGNITO_REDIRECT_SIGNIN: cfnOutputs.CloudFrontUrl,
     COGNITO_REDIRECT_SIGNOUT: cfnOutputs.CloudFrontUrl,
+    REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT!,
   };
 };
 
