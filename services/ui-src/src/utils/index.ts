@@ -33,3 +33,4 @@ export * from "./other/useBreakpoint";
 export * from "./other/parsing";
 export * from "./other/export";
 export * from "./other/calculations";
+export * from "./other/shim";
