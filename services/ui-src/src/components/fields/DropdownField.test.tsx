@@ -48,14 +48,19 @@ const mockErrors = (name: string, message: string) =>
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
-const dropdownComponentWithOptions = (
-  options: any = mockDropdownOptions,
-  validateOnRender: boolean = false
-) => (
+const dropdownComponentWithOptions = ({
+  hint = "Dropdown hint",
+  hydrate,
+  name = "testDropdown",
+  label = "test-dropdown-label",
+  options = mockDropdownOptions,
+  validateOnRender = false,
+}: any = {}) => (
   <DropdownField
-    hint="Dropdown hint"
-    name="testDropdown"
-    label="test-dropdown-label"
+    hint={hint}
+    hydrate={hydrate}
+    label={label}
+    name={name}
     options={options}
     validateOnRender={validateOnRender}
   />
@@ -65,6 +70,7 @@ describe("<DropdownField />", () => {
   describe("Test DropdownField basic functionality", () => {
     beforeEach(() => {
       mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
     });
 
     afterEach(() => {
@@ -72,7 +78,6 @@ describe("<DropdownField />", () => {
     });
 
     test("Dropdown renders", () => {
-      mockGetValues(undefined);
       render(dropdownComponentWithOptions());
       const dropdown = screen.getByLabelText("test-dropdown-label");
       expect(dropdown).toBeVisible();
@@ -92,29 +97,28 @@ describe("<DropdownField />", () => {
     });
 
     test("renders empty options for copyEligibleReports", () => {
-      mockGetValues(undefined);
-      render(dropdownComponentWithOptions("copyEligibleReports"));
-
+      const opts = { options: "copyEligibleReports" };
+      render(dropdownComponentWithOptions(opts));
       const options = screen.getAllByRole("option");
       expect(options).toHaveLength(1);
     });
 
-    test("renders empty options for string value", () => {
-      mockGetValues(undefined);
-      render(dropdownComponentWithOptions("mock"));
-
+    test("renders empty options for string value and calls form register", () => {
+      const opts = { options: "mock" };
+      render(dropdownComponentWithOptions(opts));
       const options = screen.getAllByRole("option");
       expect(options).toHaveLength(1);
-    });
 
-    test("calls form register without validateOnRender", () => {
-      mockGetValues(mockFormFieldValue);
-      render(dropdownComponentWithOptions("mock"));
       expect(mockRegister).toHaveBeenCalled();
     });
 
+    test("calls form trigger with validateOnRender", () => {
+      const opts = { options: "mock", validateOnRender: true };
+      render(dropdownComponentWithOptions(opts));
+      expect(mockTrigger).toHaveBeenCalled();
+    });
+
     test("calls change and blur events", async () => {
-      mockGetValues(undefined);
       render(dropdownComponentWithOptions());
       const dropDown = screen.getByLabelText("test-dropdown-label");
       await act(async () => {
@@ -129,56 +133,44 @@ describe("<DropdownField />", () => {
 
       expect(mockTrigger).toHaveBeenCalled();
     });
-
-    test("calls form trigger with validateOnRender", () => {
-      mockGetValues(undefined);
-      render(dropdownComponentWithOptions("mock", true));
-      expect(mockTrigger).toHaveBeenCalled();
-    });
   });
 
   describe("Test DropdownField hydration functionality", () => {
-    const dropdownComponentWithHydrationValue = (
-      <DropdownField
-        name="testDropdown"
-        label="test-dropdown-field-to-hydrate"
-        hydrate={mockHydrationValue}
-        options={mockDropdownOptions}
-      />
-    );
-
     beforeEach(() => {
       mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
     });
 
     test("If only formFieldValue exists, displayValue is set to it", () => {
       mockGetValues(mockFormFieldValue);
       render(dropdownComponentWithOptions());
-      const dropdownField: HTMLSelectElement = screen.getByLabelText(
-        "test-dropdown-label"
-      );
-      const displayValue = dropdownField.value;
-      expect(displayValue).toEqual(mockFormFieldValue.value);
+      const dropdownField = screen.getByLabelText("test-dropdown-label");
+      expect(dropdownField).toHaveValue(mockFormFieldValue.value);
     });
 
     test("If only hydrationValue exists, displayValue is set to it", () => {
-      mockGetValues(undefined);
-      render(dropdownComponentWithHydrationValue);
-      const dropdownField: HTMLSelectElement = screen.getByLabelText(
-        "test-dropdown-field-to-hydrate"
-      );
-      const displayValue = dropdownField.value;
-      expect(displayValue).toEqual(mockHydrationValue.value);
+      const opts = {
+        label: "test-dropdown-field-to-hydrate",
+        hydrate: mockHydrationValue,
+      };
+      render(dropdownComponentWithOptions(opts));
+      const dropdownField = screen.getByLabelText(opts.label);
+      expect(dropdownField).toHaveValue(mockHydrationValue.value);
     });
 
     test("If both formFieldValue and hydrationValue exist, displayValue is set to formFieldValue", () => {
       mockGetValues(mockFormFieldValue);
-      render(dropdownComponentWithHydrationValue);
-      const dropdownField: HTMLSelectElement = screen.getByLabelText(
-        "test-dropdown-field-to-hydrate"
-      );
-      const displayValue = dropdownField.value;
-      expect(displayValue).toEqual(mockFormFieldValue.value);
+      const opts = {
+        label: "test-dropdown-field-to-hydrate",
+        hydrate: mockHydrationValue,
+      };
+      render(dropdownComponentWithOptions(opts));
+      const dropdownField = screen.getByLabelText(opts.label);
+      expect(dropdownField).toHaveValue(mockFormFieldValue.value);
     });
   });
 
