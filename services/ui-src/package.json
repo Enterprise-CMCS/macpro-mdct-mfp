@@ -64,7 +64,7 @@
     "jest-launchdarkly-mock": "^2.0.3",
     "pa11y": "^9.0.0",
     "react-helmet": "^6.1.0",
-    "typescript": "^4.9.5"
+    "typescript": "^5.9.3"
   },
   "jest": {
     "coverageReporters": [
