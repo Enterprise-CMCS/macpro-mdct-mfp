@@ -25,8 +25,11 @@ const drawerComponent = (
 describe("<Drawer />", () => {
   test("Drawer can be closed with close button", async () => {
     render(drawerComponent);
-    const closeButton = screen.getByText(closeText);
-    expect(closeButton).toBeVisible();
+
+    const closeButton = screen.getByRole("button", { name: closeText });
+    const svg = closeButton.querySelector("svg");
+    expect(svg).toHaveClass("ds-c-icon--close");
+
     await userEvent.click(closeButton);
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });

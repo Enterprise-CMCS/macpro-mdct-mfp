@@ -272,6 +272,35 @@ export const DashboardPage = ({ reportType }: Props) => {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
       case ReportType.WP:
+        if (!previousReport) {
+          return false;
+        } else {
+          // Prevent creating a new WP if the previous WP is for Q1 2026 and approved
+          if (
+            previousReport.reportPeriod === 1 &&
+            previousReport.reportYear === 2026 &&
+            previousReport.status === ReportStatus.APPROVED
+          )
+            return true;
+          // Allow creating a new WP only if the previous WP is approved
+          return previousReport.status !== ReportStatus.APPROVED;
+        }
+      case ReportType.ABCD:
+        if (!previousReport) {
+          return false;
+        } else {
+          return previousReport.status !== ReportStatus.APPROVED;
+        }
+      default:
+        return true;
+    }
+  };
+
+  const isResetDisabled = (): boolean => {
+    switch (reportType) {
+      case ReportType.SAR:
+        return !workPlanToCopyFrom;
+      case ReportType.WP:
       case ReportType.ABCD:
         if (!previousReport) {
           return false;
@@ -404,7 +433,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               <Button
                 sx={sx.resetBtn}
                 onClick={openResetWorkPlanModal}
-                disabled={isAddSubmissionDisabled()}
+                disabled={isResetDisabled()}
                 type="submit"
                 variant="transparent"
               >

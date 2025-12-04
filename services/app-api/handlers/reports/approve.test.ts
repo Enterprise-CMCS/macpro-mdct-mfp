@@ -36,8 +36,10 @@ const approveEvent: APIGatewayProxyEvent = {
 
 const consoleSpy: {
   debug: jest.SpyInstance<void>;
+  warn: jest.SpyInstance<void>;
 } = {
   debug: jest.spyOn(console, "debug").mockImplementation(),
+  warn: jest.spyOn(console, "warn").mockImplementation(),
 };
 
 describe("Test approveReport method", () => {
@@ -66,7 +68,7 @@ describe("Test approveReport method", () => {
     };
 
     const res = await approveReport(event, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
+    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
