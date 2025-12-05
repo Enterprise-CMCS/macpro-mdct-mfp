@@ -1,7 +1,7 @@
 // This file is managed by macpro-mdct-core so if you'd like to change it let's do it there
 import { Octokit } from "@octokit/rest";
 import { createActionAuth } from "@octokit/auth-action";
-import { commitList } from "./commit-list";
+import { createPrBody } from "./commit-list";
 
 const [owner, repo] = process.env.GITHUB_REPO!.split("/");
 const targetBranch = process.env.TARGET_BRANCH!;
@@ -46,11 +46,7 @@ async function run() {
     per_page: 100,
   });
 
-  const commitBody = await commitList({ commits, octokit, owner, repo });
-
-  let body = `## ${prLabel}\n\n`;
-  body += "### In this deployment:\n\n";
-  body += commitBody;
+  const body = await createPrBody({ commits, octokit, owner, prLabel, repo });
 
   octokit.rest.pulls.update({
     owner,

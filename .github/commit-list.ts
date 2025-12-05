@@ -62,6 +62,22 @@ async function fetchPrBody({ octokit, owner, prNumber, repo }: any) {
   }
 }
 
+export async function createPrBody({
+  commits,
+  octokit,
+  owner,
+  prLabel,
+  repo,
+}: any) {
+  const commitBody = await commitList({ commits, octokit, owner, repo });
+
+  let body = `## ${prLabel}\n\n`;
+  body += "### In this deployment:\n\n";
+  body += commitBody;
+
+  return body;
+}
+
 export async function commitList({ commits, octokit, owner, repo }: any) {
   const lines = [];
   // Filter merge commits
