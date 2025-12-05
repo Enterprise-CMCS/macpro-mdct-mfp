@@ -66,12 +66,12 @@ export async function createPrBody({
   commits,
   octokit,
   owner,
-  prLabel,
+  prTitle,
   repo,
 }: any) {
   const commitBody = await commitList({ commits, octokit, owner, repo });
 
-  let body = `## ${prLabel}\n\n`;
+  let body = `## ${prTitle}\n\n`;
   body += "### In this deployment:\n\n";
   body += commitBody;
 

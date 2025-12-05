@@ -46,7 +46,7 @@ async function run() {
     per_page: 100,
   });
 
-  const body = await createPrBody({ commits, octokit, owner, prLabel, repo });
+  const body = await createPrBody({ commits, octokit, owner, prTitle, repo });
 
   octokit.rest.pulls.update({
     owner,

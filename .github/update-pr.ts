@@ -3,8 +3,8 @@ import { createActionAuth } from "@octokit/auth-action";
 import { createPrBody } from "./commit-list";
 
 const [owner, repo] = process.env.GITHUB_REPO!.split("/");
-const prLabel = process.env.PR_LABEL!;
 const prNumber = process.env.PR_NUMBER!;
+const prTitle = process.env.PR_TITLE!;
 
 async function run() {
   const authentication = await createActionAuth()();
@@ -17,7 +17,7 @@ async function run() {
     per_page: 100,
   });
 
-  const body = await createPrBody({ commits, octokit, owner, prLabel, repo });
+  const body = await createPrBody({ commits, octokit, owner, prTitle, repo });
 
   octokit.rest.pulls.update({
     owner,
