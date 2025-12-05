@@ -57,7 +57,9 @@ test.describe("admin user banner page", () => {
     ).not.toBeVisible();
   });
 
-  test("should be accessible on all device types", async ({ adminPage }) => {
+  test("should be accessible on all device types @a11y", async ({
+    adminPage,
+  }) => {
     const accessibilityErrors = await checkAccessbilityAcrossViewports(
       adminPage.page,
       "/admin"

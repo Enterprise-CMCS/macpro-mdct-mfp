@@ -39,6 +39,16 @@ There are four options for running tests locally. You can execute these commands
   - Launches Playwright UI
   - Runs tests without the @flaky tag
 
+## Test Tags and Workflow Execution
+
+Tests can be tagged with `@flaky`, `@regression`, or `@a11y` to control when they run:
+
+- **Deploy Workflow (`deploy.yml`)**: Tests tagged with `@flaky`, `@regression`, or `@a11y` are excluded from the deployment pipeline. Only untagged tests run during deployments to ensure fast, reliable builds.
+
+- **Regression Test Workflow (`regression-test.yml`)**: All tests run on a scheduled cron job, regardless of how they're tagged. This ensures comprehensive test coverage during regular regression testing cycles.
+
+When writing new tests, avoid adding these tags unless the test is specifically intended to be excluded from deployment checks.
+
 ## Troubleshooting
 
 If you run into errors after trying to run the playwright test command:

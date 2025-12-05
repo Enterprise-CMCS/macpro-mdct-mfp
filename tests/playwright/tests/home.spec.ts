@@ -17,7 +17,7 @@ test.describe("state user home page", () => {
     ).toBeVisible();
   });
 
-  test("should be accessible across all device viewports", async ({
+  test("should be accessible across all device viewports @a11y", async ({
     statePage,
   }) => {
     const accessibilityErrors = await checkAccessbilityAcrossViewports(
@@ -37,7 +37,7 @@ test.describe("admin user home page", () => {
     await expect(adminPage.page.locator('select[name="state"]')).toBeVisible();
   });
 
-  test("should be accessible across all device viewports", async ({
+  test("should be accessible across all device viewports @a11y", async ({
     adminPage,
   }) => {
     const accessibilityErrors = await checkAccessbilityAcrossViewports(
@@ -49,7 +49,7 @@ test.describe("admin user home page", () => {
 });
 
 test.describe("unauthenticated home page", () => {
-  test("should be accessible across all device viewports", async ({
+  test("should be accessible across all device viewports @a11y", async ({
     browser,
   }) => {
     const userContext = await browser.newContext({

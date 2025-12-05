@@ -2,7 +2,7 @@ import { checkAccessbilityAcrossViewports } from "../utils/a11y";
 import { test, expect } from "./fixtures/base";
 
 test.describe("Help Page", () => {
-  test("should be accessible on all device types for state user", async ({
+  test("should be accessible on all device types for state user @a11y", async ({
     statePage,
   }) => {
     const accessibilityErrors = await checkAccessbilityAcrossViewports(
@@ -12,7 +12,7 @@ test.describe("Help Page", () => {
     expect(accessibilityErrors).toEqual([]);
   });
 
-  test("should be accessible on all device types for admin user", async ({
+  test("should be accessible on all device types for admin user @a11y", async ({
     adminPage,
   }) => {
     const accessibilityErrors = await checkAccessbilityAcrossViewports(
