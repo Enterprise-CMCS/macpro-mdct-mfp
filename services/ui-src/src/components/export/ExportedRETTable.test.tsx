@@ -10,7 +10,7 @@ import {
 //utils
 import { useStore } from "utils";
 import { notAnsweredText } from "../../constants";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const section = {
   form: {
@@ -262,5 +262,5 @@ describe("<ExportRETTable />", () => {
     });
   });
 
-  testA11y(<ExportRETTable section={section as any} />);
+  testA11yAct(<ExportRETTable section={section as any} />);
 });

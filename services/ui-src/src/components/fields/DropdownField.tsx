@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   DropdownChangeObject,
@@ -9,24 +9,24 @@ import {
 import { Box, SystemStyleObject } from "@chakra-ui/react";
 import uuid from "react-uuid";
 // utils
-import { labelTextWithOptional, parseCustomHtml } from "utils";
+import { labelTextWithOptional, parseCustomHtml, shimComponent } from "utils";
 // types
 import { DropdownChoice, DropdownOptions, SelectedOption } from "types";
 // constants
 import { dropdownDefaultOptionText } from "../../constants";
 
 export const DropdownField = ({
+  ariaLabel,
   name,
   label,
   options,
   hint,
+  hydrate,
   nested,
   validateOnRender,
   sxOverride,
   styleAsOptional,
-  ...props
 }: Props) => {
-  const { ariaLabel } = props;
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {
     let dropdownOptions: any[] = [];
@@ -66,7 +66,7 @@ export const DropdownField = ({
   }, []);
 
   // set initial display value to form state field value or hydration value
-  const hydrationValue = props?.hydrate || defaultValue;
+  const hydrationValue = hydrate || defaultValue;
   useEffect(() => {
     // if form state has value for field, set as display value
     const fieldValue = form.getValues(name);
@@ -93,28 +93,32 @@ export const DropdownField = ({
   // update form field data & database data on blur
   const onBlurHandler = async () => {
     // if blanking field, trigger client-side field validation error
-    if (displayValue === defaultValue) form.trigger(name);
+    if (displayValue?.value === defaultValue?.value) form.trigger(name);
   };
 
   // prepare error message, hint, and classes
   const formErrorState = form?.formState?.errors;
-  const errorMessage = formErrorState?.[name]?.message;
-  const parsedHint = hint && parseCustomHtml(hint);
+  const errorMessage = formErrorState?.[name]?.message as ReactNode;
+  const parsedHint = hint ? parseCustomHtml(hint) : undefined;
+  const ariaDescribedBy = parsedHint ? `${name}-hint` : undefined;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
   const labelClass = !label ? "no-label" : "";
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
+
+  const InlineErrorShim = shimComponent(InlineError);
 
   return (
     <Box sx={sxOverride} className={`${nestedChildClasses} ${labelClass}`}>
       <Label htmlFor={name} id={`${name}-label`}>
         {labelText || ""}
       </Label>
-      {parsedHint && <Hint id={name}>{parsedHint}</Hint>}
-      {errorMessage && <InlineError>{errorMessage}</InlineError>}
+      {parsedHint && <Hint id={`${name}-hint`}>{parsedHint}</Hint>}
+      {errorMessage && <InlineErrorShim>{errorMessage}</InlineErrorShim>}
       <select
         name={name}
         id={name}
+        aria-describedby={ariaDescribedBy}
         aria-label={ariaLabel}
         aria-invalid="false"
         onChange={onChangeHandler}

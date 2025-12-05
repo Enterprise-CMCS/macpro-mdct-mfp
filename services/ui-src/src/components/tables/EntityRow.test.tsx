@@ -14,10 +14,10 @@ import { useStore } from "utils";
 import { EntityRow } from "./EntityRow";
 import { Table } from "components";
 import { ModalDrawerEntityTypes } from "types";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: () => mockUseNavigate,
   useLocation: jest.fn(() => ({
     pathname: "/mock-route",
@@ -201,7 +201,7 @@ describe("<EntityRow />", () => {
     });
   });
 
-  testA11y(entityRowWithEntities, () => {
+  testA11yAct(entityRowWithEntities, () => {
     mockedUseStore.mockReturnValue(mockReportStore);
   });
 });

@@ -11,7 +11,7 @@ import {
 import { mockWpReportContext } from "../../utils/testing/mockReport";
 
 import { ReportContext, ExportedReportWrapper } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -66,7 +66,7 @@ describe("<ExportedReportWrapper />", () => {
       ).toBeInTheDocument();
     });
 
-    testA11y(exportedStandardReportWrapperComponent);
+    testA11yAct(exportedStandardReportWrapperComponent);
   });
 
   describe("Drawer", () => {
@@ -77,7 +77,7 @@ describe("<ExportedReportWrapper />", () => {
       ).toBeInTheDocument();
     });
 
-    testA11y(exportedDrawerReportPageWrapperComponent);
+    testA11yAct(exportedDrawerReportPageWrapperComponent);
   });
 
   describe("Modal", () => {
@@ -88,6 +88,6 @@ describe("<ExportedReportWrapper />", () => {
       ).toBeInTheDocument();
     });
 
-    testA11y(exportedModalDrawerReportWrapperComponent);
+    testA11yAct(exportedModalDrawerReportWrapperComponent);
   });
 });

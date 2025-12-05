@@ -10,7 +10,7 @@ import {
 import { useStore } from "../../utils";
 import { ExportedReportFieldTable } from "./ExportedReportFieldTable";
 import { DrawerReportPageShape } from "types";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -138,7 +138,7 @@ describe("<ExportedReportFieldTable />", () => {
     ).not.toBeInTheDocument();
   });
 
-  testA11y(exportedStandardTableComponent, () => {
+  testA11yAct(exportedStandardTableComponent, () => {
     mockedUseStore.mockReturnValue(mockUseStore);
   });
 });

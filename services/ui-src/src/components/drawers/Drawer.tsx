@@ -13,7 +13,7 @@ import {
 import { CloseIcon } from "@cmsgov/design-system";
 // utils
 import { AnyObject, CustomHtmlElement } from "types";
-import { makeMediaQueryClasses, parseCustomHtml } from "utils";
+import { makeMediaQueryClasses, parseCustomHtml, shimComponent } from "utils";
 
 export const Drawer = ({
   verbiage,
@@ -23,6 +23,8 @@ export const Drawer = ({
 }: Props) => {
   const mqClasses = makeMediaQueryClasses();
   const { isOpen, onClose } = drawerDisclosure;
+
+  const CloseIconShim = shimComponent(CloseIcon);
 
   return (
     <ChakraDrawer
@@ -37,7 +39,7 @@ export const Drawer = ({
         <DrawerHeader sx={sx.drawerHeader}>
           <Button
             sx={sx.drawerCloseButton}
-            leftIcon={<CloseIcon />}
+            leftIcon={<CloseIconShim />}
             variant="transparent"
             onClick={onClose as MouseEventHandler}
           >

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 //components
 import { Alert } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const alertComponent = (
   <Alert
@@ -18,5 +18,5 @@ describe("<Alert />", () => {
     expect(screen.getByTestId("test-alert")).toBeVisible();
   });
 
-  testA11y(alertComponent);
+  testA11yAct(alertComponent);
 });

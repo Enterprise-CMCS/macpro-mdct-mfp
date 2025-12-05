@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 //components
 import { Table } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const tableContent = {
   caption: "mock caption",
@@ -23,5 +23,5 @@ describe("<Table />", () => {
     expect(screen.getByRole("table")).toBeVisible();
   });
 
-  testA11y(tableComponent);
+  testA11yAct(tableComponent);
 });

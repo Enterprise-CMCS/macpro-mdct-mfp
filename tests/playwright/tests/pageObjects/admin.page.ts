@@ -75,7 +75,7 @@ export class AdminPage {
   async findSubmittedReport() {
     const rows = this.page.locator('table[role="table"] tbody tr');
     const firstSubmitted = rows
-      .filter({ has: this.page.getByRole("gridcell", { name: "Submitted" }) })
+      .filter({ has: this.page.getByRole("cell", { name: "Submitted" }) })
       .first();
     return firstSubmitted;
   }

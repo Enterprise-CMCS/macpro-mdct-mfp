@@ -10,7 +10,7 @@ import {
   mockUseStore,
 } from "../../utils/testing/setupJest";
 import { MfpReportState, MfpUserState, ReportShape } from "../../types";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 
@@ -95,7 +95,7 @@ describe("<ExportedReportBanner />", () => {
     await userEvent.click(printButton);
   });
 
-  testA11y(bannerWithContext(wpContext), () => {
+  testA11yAct(bannerWithContext(wpContext), () => {
     mockedUseStore.mockReturnValue(mockUseStore);
   });
 });

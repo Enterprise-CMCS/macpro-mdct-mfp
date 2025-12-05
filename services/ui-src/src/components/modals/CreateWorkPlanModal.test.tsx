@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import {
   RouterWrappedComponent,
   mockWpReportContext,
@@ -89,8 +89,10 @@ describe("<CreateWorkPlanModal />", () => {
       expect(screen.getByText("Start new")).toBeTruthy();
     });
 
-    test("CreateWorkPlanModal top close button can be clicked", () => {
-      fireEvent.click(screen.getByText("Close"));
+    test("CreateWorkPlanModal top close button can be clicked", async () => {
+      await act(async () => {
+        await userEvent.click(screen.getByText("Close"));
+      });
       expect(mockCloseHandler).toHaveBeenCalledTimes(1);
     });
   });
@@ -108,9 +110,11 @@ describe("<CreateWorkPlanModal />", () => {
       const secondRadio = screen.getByLabelText(
         "First reporting period (January 1 - June 30)"
       ) as HTMLInputElement;
-      await userEvent.click(firstRadio);
-      await userEvent.click(secondRadio);
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(firstRadio);
+        await userEvent.click(secondRadio);
+        await userEvent.click(submitButton);
+      });
     };
 
     test("Adding a new report", async () => {
@@ -160,9 +164,11 @@ describe("<CreateWorkPlanModal />", () => {
         "Second reporting period (July 1 - December 31)"
       ) as HTMLInputElement;
 
-      await userEvent.click(firstChoice);
-      await userEvent.click(secondChoice);
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(firstChoice);
+        await userEvent.click(secondChoice);
+        await userEvent.click(submitButton);
+      });
 
       const newData = { reportYear: 2026, reportPeriod: 2 };
 
@@ -185,7 +191,9 @@ describe("<CreateWorkPlanModal />", () => {
       const submitButton = screen.getByRole("button", {
         name: "Continue from previous period",
       });
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(submitButton);
+      });
     };
 
     test("Adding a new report", async () => {
@@ -214,9 +222,11 @@ describe("<CreateWorkPlanModal />", () => {
       const secondRadio = screen.getByLabelText(
         "First reporting period (January 1 - June 30)"
       ) as HTMLInputElement;
-      await userEvent.click(firstRadio);
-      await userEvent.click(secondRadio);
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(firstRadio);
+        await userEvent.click(secondRadio);
+        await userEvent.click(submitButton);
+      });
     };
 
     test("Error shows when selected data matches existing report", async () => {
@@ -231,15 +241,19 @@ describe("<CreateWorkPlanModal />", () => {
       const secondRadio = screen.getByLabelText(
         "First reporting period (January 1 - June 30)"
       ) as HTMLInputElement;
-      await userEvent.click(firstRadio);
-      await userEvent.click(secondRadio);
+      await act(async () => {
+        await userEvent.click(firstRadio);
+        await userEvent.click(secondRadio);
+      });
       expect(
         screen.getByText(
           "A MFP Work Plan for this Reporting Period already exists"
         )
       ).toBeVisible();
       const nextYearRadio = screen.getByLabelText("2025") as HTMLInputElement;
-      await userEvent.click(nextYearRadio);
+      await act(async () => {
+        await userEvent.click(nextYearRadio);
+      });
       expect(
         screen.queryByText(
           "A MFP Work Plan for this Reporting Period already exists"

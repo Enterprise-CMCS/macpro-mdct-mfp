@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { Error } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const errorView = <Error />;
 
@@ -10,5 +10,5 @@ describe("<Error />", () => {
     expect(getByTestId("error-view")).toBeVisible();
   });
 
-  testA11y(errorView);
+  testA11yAct(errorView);
 });

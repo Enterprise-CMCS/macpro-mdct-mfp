@@ -1,8 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 //components
 import { LoginCognito } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 // utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 
@@ -15,7 +15,7 @@ jest.mock("utils", () => ({
 
 const mockUseNavigate = jest.fn();
 
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: () => mockUseNavigate,
 }));
 
@@ -31,12 +31,14 @@ describe("<LoginCognito />", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const submitButton = screen.getByRole("button");
-    await userEvent.type(emailInput, "email@address.com");
-    await userEvent.type(passwordInput, "test");
-    await userEvent.click(submitButton);
+    await act(async () => {
+      await userEvent.type(emailInput, "email@address.com");
+      await userEvent.type(passwordInput, "test");
+      await userEvent.click(submitButton);
+    });
     expect(mockLoginUser).toHaveBeenCalledWith("email@address.com", "test");
     expect(mockUseNavigate).toHaveBeenCalledWith("/");
   });
 
-  testA11y(loginCognitoComponent);
+  testA11yAct(loginCognitoComponent);
 });

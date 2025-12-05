@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router";
 // components
 import { Box, Collapse, Flex, Image, Link, Text } from "@chakra-ui/react";
 import { SkipNav } from "components";
@@ -25,6 +25,11 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
   const [isOpen, toggleSidebar] = useState(isDesktop);
   const { report } = useStore();
   const reportJson = report?.formTemplate;
+
+  //TODO: temporary fix, for some reason isDesktop sometimes returns false so it messes with the sidebar on load
+  useEffect(() => {
+    toggleSidebar(isDesktop);
+  }, [isDesktop]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 // components
 import { ReportContext, ReviewSubmitPage } from "components";
 import { SuccessMessageGenerator } from "./ReviewSubmitPage";
@@ -15,7 +15,7 @@ import userEvent from "@testing-library/user-event";
 import { useStore } from "utils";
 // verbiage
 import reviewVerbiage from "verbiage/pages/wp/wp-review-and-submit";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -144,9 +144,13 @@ describe("<ReviewSubmitPage />", () => {
         const { review } = reviewVerbiage;
         const { modal, pageLink } = review;
         const submitCheckButton = screen.getByText(pageLink.text)!;
-        await userEvent.click(submitCheckButton);
+        await act(async () => {
+          await userEvent.click(submitCheckButton);
+        });
         const modalTitle = screen.getByText(modal.structure.heading)!;
-        expect(modalTitle).toBeVisible();
+        await waitFor(() => {
+          expect(modalTitle).toBeVisible();
+        });
       });
 
       test("WpReviewSubmitPage updates report status on submit confirmation", async () => {
@@ -156,9 +160,13 @@ describe("<ReviewSubmitPage />", () => {
         });
         render(WpReviewSubmitPage);
         const reviewSubmitButton = screen.getByText("Submit MFP Work Plan")!;
-        await userEvent.click(reviewSubmitButton);
+        await act(async () => {
+          await userEvent.click(reviewSubmitButton);
+        });
         const modalSubmitButton = screen.getByTestId("modal-submit-button")!;
-        await userEvent.click(modalSubmitButton);
+        await act(async () => {
+          await userEvent.click(modalSubmitButton);
+        });
         await expect(mockReportMethods.submitReport).toHaveBeenCalledTimes(1);
       });
 
@@ -247,13 +255,13 @@ describe("<ReviewSubmitPage />", () => {
   });
 
   describe("Report not started", () => {
-    testA11y(WpReviewSubmitPage, () => {
+    testA11yAct(WpReviewSubmitPage, () => {
       mockedUseStore.mockReturnValue(mockUseStore);
     });
   });
 
   describe("Report in progress", () => {
-    testA11y(WpReviewSubmitPage, () => {
+    testA11yAct(WpReviewSubmitPage, () => {
       mockedUseStore.mockReturnValue({
         ...mockUseStore,
         report: { ...mockUseStore.report, status: ReportStatus.IN_PROGRESS },
@@ -262,7 +270,7 @@ describe("<ReviewSubmitPage />", () => {
   });
 
   describe("Report submitted", () => {
-    testA11y(WpReviewSubmitPage, () => {
+    testA11yAct(WpReviewSubmitPage, () => {
       mockedUseStore.mockReturnValue({
         ...mockUseStore,
         report: mockSubmittedReport,

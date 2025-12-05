@@ -1,4 +1,5 @@
-import { Helmet } from "react-helmet";
+import { ComponentClass } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // utils
 import { useStore, displayLongformPeriod } from "utils";
 // components
@@ -45,6 +46,8 @@ export const ExportedReportPage = () => {
 
   const exportVerbiage = exportVerbiageMap[reportType];
   const { metadata, reportPage } = exportVerbiage;
+
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
   return (
     <Box sx={sx.container}>

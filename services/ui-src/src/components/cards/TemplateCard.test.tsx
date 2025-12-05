@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { TemplateCard } from "components";
@@ -12,7 +12,7 @@ import { useStore } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/home";
 import { MfpReportState, MfpUserState } from "../../types";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/other/useBreakpoint", () => ({
   useBreakpoint: jest.fn(() => ({
@@ -27,7 +27,7 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const mockUseNavigate = jest.fn();
 
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: () => mockUseNavigate,
 }));
 
@@ -84,7 +84,9 @@ describe("<TemplateCard />", () => {
         name: wpTemplateVerbiage.downloadText,
       });
 
-      await userEvent.click(downloadButton);
+      await act(async () => {
+        await userEvent.click(downloadButton);
+      });
 
       const downloadLink = wpCard.querySelector("a[href]") as HTMLAnchorElement;
 
@@ -103,7 +105,9 @@ describe("<TemplateCard />", () => {
     test("WP TemplateCard navigates to next route on link click", async () => {
       mockedUseStore.mockReturnValue(mockUseStore);
       const templateCardLink = screen.getByText(wpTemplateVerbiage.link.text)!;
-      await userEvent.click(templateCardLink);
+      await act(async () => {
+        await userEvent.click(templateCardLink);
+      });
       const expectedRoute = wpTemplateVerbiage.link.route;
       await expect(mockUseNavigate).toHaveBeenCalledWith(expectedRoute);
     });
@@ -115,5 +119,5 @@ describe("<TemplateCard />", () => {
     });
   });
 
-  testA11y(wpTemplateCardComponent);
+  testA11yAct(wpTemplateCardComponent);
 });
