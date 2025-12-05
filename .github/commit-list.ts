@@ -3,13 +3,11 @@ function cleanMessage(msg: string) {
   // Remove PR number
   m = m.replace(/\(#\d+\)$/, "");
   // Remove CMDCT tickets
-  m = m.replace(/cmdct[ -]?\d+/gi, "");
-  // Remove brackets
-  m = m.replace(/\[[^\]]+\]/g, "");
-  // Remove non-alphanumeric characters
-  m = m.replace(/^[^a-zA-Z0-9()"]+|[^a-zA-Z0-9()"]+$/g, "");
+  m = m.replace(/[\[\(]?cmdct[ -]?\d+[\])]?:?/gi, "");
   // Remove leading/trailing whitespaces
-  return m.trim();
+  m = m.trim();
+  // Capitalize first letter
+  return m.charAt(0).toUpperCase() + m.slice(1);
 }
 
 // Extract PR number from the end of the commit message. e.g. (#12345)
