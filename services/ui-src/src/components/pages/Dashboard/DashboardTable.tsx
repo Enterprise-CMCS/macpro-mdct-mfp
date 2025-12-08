@@ -55,6 +55,10 @@ export const DashboardTable = ({
         {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Td>{prettifyChoices(report?.populations)}</Td>
         )}
+        {/* Report Year */}
+        {reportType === ReportType.ABCD && <Td>{report.reportYear}</Td>}
+        {/* Report Period */}
+        {reportType === ReportType.ABCD && <Td>{report.reportPeriod}</Td>}
         {/* Date Fields */}
         <DateFields report={report} reportType={reportType} isAdmin={isAdmin} />
         {/* Last Altered By */}
@@ -239,7 +243,7 @@ export interface ActionButtonProps {
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {!!reportType && !isAdmin && (
+      {!!reportType && !isAdmin && reportType !== ReportType.ABCD && (
         <Td>{convertDateUtcToEt(report.dueDate)}</Td>
       )}
       <Td>{convertDateUtcToEt(report.lastAltered)}</Td>

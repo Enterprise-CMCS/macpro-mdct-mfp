@@ -44,12 +44,14 @@ const mockMakeMediaQueryClasses = makeMediaQueryClasses as jest.MockedFunction<
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
+const mockSetSearchParams = jest.fn();
 const mockUseNavigate = jest.fn();
 jest.mock("react-router", () => ({
   useNavigate: () => mockUseNavigate,
   useLocation: jest.fn(() => ({
     pathname: "/mock-dashboard",
   })),
+  useSearchParams: jest.fn(() => [new URLSearchParams(), mockSetSearchParams]),
 }));
 
 const wpDashboardViewWithReports = (
@@ -86,7 +88,17 @@ const sarDashboardViewWithReports = (
 
 const abcdDashboardWithNoReports = (
   <RouterWrappedComponent>
+    //TODO: Update when ABCD report context is settled
     <ReportContext.Provider value={mockReportContextNoReports}>
+      <DashboardPage reportType={ReportType.ABCD} />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
+const abcdDashboardViewWithReports = (
+  <RouterWrappedComponent>
+    //TODO: Update when ABCD report context is settled
+    <ReportContext.Provider value={mockDashboardReportContext}>
       <DashboardPage reportType={ReportType.ABCD} />
     </ReportContext.Provider>
   </RouterWrappedComponent>
@@ -105,91 +117,165 @@ describe("<DashboardPage />", () => {
       });
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
     });
-    test("Check that WP Dashboard view renders", () => {
-      mockedUseStore.mockReturnValue(mockReportStore);
-      render(wpDashboardViewWithReports);
-      expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
-      expect(
-        screen.queryByText(wpVerbiage.body.table.caption)
-      ).toBeInTheDocument();
-      expect(screen.queryByText(wpVerbiage.body.empty)).not.toBeInTheDocument();
-      expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
-    });
 
-    test("Check that WP Dashboard continue button is disabled if latest WP is not approved", () => {
-      mockedUseStore.mockReturnValue(mockUseStore);
-      render(wpDashboardViewWithReports);
-      const reportByRows = screen.getAllByRole("row");
-      expect(reportByRows[1].querySelectorAll("td")[5]).not.toHaveTextContent(
-        "Approved"
-      );
-      const callToActionButton = screen.getByText(
-        wpVerbiage.body.callToActionAdditions
-      );
-      expect(callToActionButton).toBeDisabled();
-    });
+    describe("Test WP Reports", () => {
+      test("Check that WP Dashboard view renders", () => {
+        mockedUseStore.mockReturnValue(mockReportStore);
+        render(wpDashboardViewWithReports);
+        expect(screen.getByText(wpVerbiage.intro.header)).toBeVisible();
+        expect(
+          screen.queryByText(wpVerbiage.body.table.caption)
+        ).toBeInTheDocument();
+        expect(
+          screen.queryByText(wpVerbiage.body.empty)
+        ).not.toBeInTheDocument();
+        expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+      });
 
-    test("Check that WP Dashboard continue button is disabled if latest WP is from period 1 and year 2026 and approved", () => {
-      const mockStoreWith2026Q1Approved = {
-        ...mockUseStore,
-        reportsByState: [
-          {
-            ...mockWPApprovedFullReport,
-            reportPeriod: 1,
-            reportYear: 2026,
-            status: "Approved",
-          },
-        ],
-      };
-      mockedUseStore.mockReturnValue(mockStoreWith2026Q1Approved);
-      render(wpDashboardViewWithReports);
+      test("Check that WP Dashboard continue button is disabled if latest WP is not approved", () => {
+        mockedUseStore.mockReturnValue(mockUseStore);
+        render(wpDashboardViewWithReports);
+        const reportByRows = screen.getAllByRole("row");
+        expect(reportByRows[1].querySelectorAll("td")[5]).not.toHaveTextContent(
+          "Approved"
+        );
+        const callToActionButton = screen.getByText(
+          wpVerbiage.body.callToActionAdditions
+        );
+        expect(callToActionButton).toBeDisabled();
+      });
 
-      const callToActionButton = screen.getByText(
-        wpVerbiage.body.callToActionAdditions
-      );
-      expect(callToActionButton).toBeDisabled();
-    });
+      test("Check that WP Dashboard continue button is disabled if latest WP is from period 1 and year 2026 and approved", () => {
+        const mockStoreWith2026Q1Approved = {
+          ...mockUseStore,
+          reportsByState: [
+            {
+              ...mockWPApprovedFullReport,
+              reportPeriod: 1,
+              reportYear: 2026,
+              status: "Approved",
+            },
+          ],
+        };
+        mockedUseStore.mockReturnValue(mockStoreWith2026Q1Approved);
+        render(wpDashboardViewWithReports);
 
-    test("Show copied from verbiage on report versions 2 or higher", () => {
-      mockedUseStore.mockReturnValue(mockUseStore);
-      render(wpDashboardViewWithReports);
-      const subText = screen.getByText("copied from 2024 - Period 1");
-      expect(subText).toBeInTheDocument();
-    });
+        const callToActionButton = screen.getByText(
+          wpVerbiage.body.callToActionAdditions
+        );
+        expect(callToActionButton).toBeDisabled();
+      });
 
-    test("Check that you can enter a WP", async () => {
-      mockedUseStore.mockReturnValue(mockUseEntityStore);
-      render(wpDashboardViewWithReports);
-      const editButtons = screen.getAllByText("Edit");
-      await act(async () => {
-        await userEvent.click(editButtons[0]);
+      test("Show copied from verbiage on report versions 2 or higher", () => {
+        mockedUseStore.mockReturnValue(mockUseStore);
+        render(wpDashboardViewWithReports);
+        const subText = screen.getByText("copied from 2024 - Period 1");
+        expect(subText).toBeInTheDocument();
+      });
+
+      test("Check that you can enter a WP", async () => {
+        mockedUseStore.mockReturnValue(mockUseEntityStore);
+        render(wpDashboardViewWithReports);
+        const editButtons = screen.getAllByText("Edit");
+        await act(async () => {
+          await userEvent.click(editButtons[0]);
+        });
+      });
+
+      test("Clicking Call To Action text open add/edit modal", async () => {
+        mockedUseStore.mockReturnValue(mockUseEmptyReportStore);
+        render(wpDashboardWithNoReports);
+        const callToActionButton = screen.getByText(
+          wpVerbiage.body.callToAction
+        );
+        expect(callToActionButton).toBeVisible();
+        await act(async () => {
+          await userEvent.click(callToActionButton);
+        });
+        await waitFor(() => {
+          expect(screen.queryByText("Start new")).toBeVisible();
+        });
       });
     });
 
-    test("Clicking Call To Action text open add/edit modal", async () => {
-      mockedUseStore.mockReturnValue(mockUseEmptyReportStore);
-      render(wpDashboardWithNoReports);
-      const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
-      expect(callToActionButton).toBeVisible();
-      await act(async () => {
-        await userEvent.click(callToActionButton);
-      });
-      await waitFor(() => {
-        expect(screen.queryByText("Start new")).toBeVisible();
+    describe("Test SAR Reports", () => {
+      test("Check that the SAR Dashboard view renders", () => {
+        mockedUseStore.mockReturnValue(mockReportStore);
+        render(sarDashboardViewWithReports);
+        expect(screen.getByText(sarVerbiage.intro.header)).toBeVisible();
+        expect(
+          screen.queryByText(sarVerbiage.body.table.caption)
+        ).toBeInTheDocument();
+        expect(
+          screen.queryByText(sarVerbiage.body.empty)
+        ).not.toBeInTheDocument();
+        expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
       });
     });
 
-    test("Check that the SAR Dashboard view renders", () => {
-      mockedUseStore.mockReturnValue(mockReportStore);
-      render(sarDashboardViewWithReports);
-      expect(screen.getByText(sarVerbiage.intro.header)).toBeVisible();
-      expect(
-        screen.queryByText(sarVerbiage.body.table.caption)
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByText(sarVerbiage.body.empty)
-      ).not.toBeInTheDocument();
-      expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+    describe("Test ABCD Reports", () => {
+      test("Check that ABCD Dashboard view renders", () => {
+        mockedUseStore.mockReturnValue(mockReportStore);
+        render(abcdDashboardViewWithReports);
+        expect(screen.getByText(abcdVerbiage.intro.header)).toBeVisible();
+        expect(
+          screen.queryByText(abcdVerbiage.body.table.caption)
+        ).toBeInTheDocument();
+        expect(
+          screen.queryByText(abcdVerbiage.body.empty)
+        ).not.toBeInTheDocument();
+        expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+      });
+
+      test("Check that ABCD Dashboard filter functionality works", async () => {
+        mockedUseStore.mockReturnValue(mockReportStore);
+
+        render(abcdDashboardViewWithReports);
+
+        const yearDropdown = screen.queryAllByLabelText("Filter by Year")[0];
+        const quarterDropdown =
+          screen.queryAllByLabelText("Filter by Quarter")[0];
+        const filterButton = screen.getByRole("button", { name: "Filter" });
+
+        expect(yearDropdown).toBeInTheDocument();
+        expect(quarterDropdown).toBeInTheDocument();
+        expect(filterButton).toBeInTheDocument();
+
+        await act(async () => {
+          await userEvent.selectOptions(yearDropdown, "2025");
+          await userEvent.selectOptions(quarterDropdown, "2");
+          await userEvent.click(filterButton);
+        });
+
+        expect(mockSetSearchParams).toHaveBeenCalledWith({
+          year: "2025",
+          quarter: "2",
+        });
+      });
+
+      test("Check that WP Dashboard does not show filter options", () => {
+        mockedUseStore.mockReturnValue(mockReportStore);
+        render(wpDashboardViewWithReports);
+
+        expect(
+          screen.queryByTestId("year-filter-dropdown")
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByTestId("quarter-filter-dropdown")
+        ).not.toBeInTheDocument();
+      });
+
+      test("Check that SAR Dashboard does not show filter options", () => {
+        mockedUseStore.mockReturnValue(mockReportStore);
+        render(sarDashboardViewWithReports);
+
+        expect(
+          screen.queryByTestId("year-filter-dropdown")
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByTestId("quarter-filter-dropdown")
+        ).not.toBeInTheDocument();
+      });
     });
   });
 

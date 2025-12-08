@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router";
+import { Link as RouterLink, useNavigate, useSearchParams } from "react-router";
 import { States } from "../../../constants";
 
 // components
@@ -25,6 +25,7 @@ import {
   Alert,
   CreateAbcdModal,
 } from "components";
+import { Dropdown } from "@cmsgov/design-system";
 // types
 import {
   AnyObject,
@@ -84,6 +85,27 @@ export const DashboardPage = ({ reportType }: Props) => {
     ReportMetadataShape | undefined
   >(undefined);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [yearDropdownValue, setYearDropdownValue] = useState(
+    searchParams.get("year") || "All"
+  );
+  const [quarterDropdownValue, setQuarterDropdownValue] = useState(
+    searchParams.get("quarter") || "All"
+  );
+  const filterYear = searchParams.get("year") || "All";
+  const filterQuarter = searchParams.get("quarter") || "All";
+  const filterYearOptions = [
+    { label: "All", value: "All" },
+    { label: "2026", value: "2026" },
+    { label: "2025", value: "2025" },
+  ];
+  const filterQuarterOptions = [
+    { label: "All", value: "All" },
+    { label: "1", value: "1" },
+    { label: "2", value: "2" },
+    { label: "3", value: "3" },
+    { label: "4", value: "4" },
+  ];
   const [reportId, setReportId] = useState<string | undefined>(undefined);
   const [entering, setEntering] = useState<boolean>(false);
   const [releasing, setReleasing] = useState<boolean>(false);
@@ -155,10 +177,53 @@ export const DashboardPage = ({ reportType }: Props) => {
         (report: ReportMetadataShape) => !report?.archived
       );
     }
-    setReportsToDisplay(newReportsToDisplay);
+
+    // Filtering is only being used in ABCD reports at this time
+    if (reportType !== ReportType.ABCD) {
+      setReportsToDisplay(newReportsToDisplay);
+    } else {
+      if (filterYear === "All" && filterQuarter === "All") {
+        setReportsToDisplay(newReportsToDisplay || []);
+      } else if (filterYear === "All") {
+        setReportsToDisplay(
+          newReportsToDisplay?.filter(
+            (report) => String(report.reportPeriod) === filterQuarter
+          ) || []
+        );
+      } else if (filterQuarter === "All") {
+        setReportsToDisplay(
+          newReportsToDisplay?.filter(
+            (report) => String(report.reportYear) === filterYear
+          ) || []
+        );
+      } else {
+        setReportsToDisplay(
+          newReportsToDisplay?.filter(
+            (report) =>
+              String(report.reportYear) === filterYear &&
+              String(report.reportPeriod) === filterQuarter
+          ) || []
+        );
+      }
+    }
     //grab the last report added, which is now the first report displayed
     setPreviousReport(newReportsToDisplay?.[0]);
-  }, [reportsByState]);
+  }, [reportsByState, filterYear, filterQuarter]);
+
+  const handleYearChange = (evt: { target: { value: string } }) => {
+    setYearDropdownValue(evt.target.value);
+  };
+
+  const handleQuarterChange = (evt: { target: { value: string } }) => {
+    setQuarterDropdownValue(evt.target.value);
+  };
+
+  const handleFilter = () => {
+    setSearchParams({
+      year: yearDropdownValue,
+      quarter: quarterDropdownValue,
+    });
+  };
 
   const isReportEditable = (selectedReport: ReportShape) => {
     //the wp is only editable only when the user is a state user and the form has not been submitted or approved, all over users are in view mode
@@ -390,6 +455,35 @@ export const DashboardPage = ({ reportType }: Props) => {
         {parseCustomHtml(intro.body)}
       </Box>
       <Box sx={sx.bodyBox}>
+        {
+          // Filtering is only being used in ABCD reports at this time
+          reportType === ReportType.ABCD && (
+            <Flex sx={sx.filterContainer}>
+              {/* @ts-expect-error - Dropdown type incompatibility with React version */}
+              <Dropdown
+                name="yearFilter"
+                label="Filter by Year"
+                value={yearDropdownValue}
+                onChange={handleYearChange}
+                data-testid="year-filter-dropdown"
+                options={filterYearOptions}
+              />
+              {/* @ts-expect-error - Dropdown type incompatibility with React version */}
+              <Dropdown
+                name="quarterFilter"
+                label="Filter by Quarter"
+                value={quarterDropdownValue}
+                onChange={handleQuarterChange}
+                data-testid="quarter-filter-dropdown"
+                options={filterQuarterOptions}
+              />
+              <Button onClick={handleFilter} variant="outline">
+                Filter
+              </Button>
+            </Flex>
+          )
+        }
+
         {reportsToDisplay ? (
           <ResponsiveDashboardTable
             reportsByState={reportsToDisplay}
@@ -558,6 +652,19 @@ const sx = {
       "&:after": {
         borderLeftColor: "black",
       },
+    },
+  },
+  filterContainer: {
+    margin: "0 0 1.5rem 0",
+    alignItems: "flex-end",
+    gap: "spacer3",
+
+    ".ds-c-dropdown": {
+      width: "9.5rem",
+    },
+
+    ".ds-c-dropdown__label": {
+      marginBlock: 0,
     },
   },
   emptyTableContainer: {
