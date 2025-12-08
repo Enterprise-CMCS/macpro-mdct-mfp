@@ -13,6 +13,8 @@ import {
   Text,
   Spinner,
   useDisclosure,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import {
   CreateWorkPlanModal,
@@ -458,29 +460,35 @@ export const DashboardPage = ({ reportType }: Props) => {
         {
           // Filtering is only being used in ABCD reports at this time
           reportType === ReportType.ABCD && (
-            <Flex sx={sx.filterContainer}>
-              {/* @ts-expect-error - Dropdown type incompatibility with React version */}
-              <Dropdown
-                name="yearFilter"
-                label="Filter by Year"
-                value={yearDropdownValue}
-                onChange={handleYearChange}
-                data-testid="year-filter-dropdown"
-                options={filterYearOptions}
-              />
-              {/* @ts-expect-error - Dropdown type incompatibility with React version */}
-              <Dropdown
-                name="quarterFilter"
-                label="Filter by Quarter"
-                value={quarterDropdownValue}
-                onChange={handleQuarterChange}
-                data-testid="quarter-filter-dropdown"
-                options={filterQuarterOptions}
-              />
-              <Button onClick={handleFilter} variant="outline">
-                Filter
-              </Button>
-            </Flex>
+            <Grid sx={sx.filterContainer}>
+              <GridItem>
+                {/* @ts-expect-error - Dropdown type incompatibility with React version */}
+                <Dropdown
+                  name="yearFilter"
+                  label="Filter by Year"
+                  value={yearDropdownValue}
+                  onChange={handleYearChange}
+                  data-testid="year-filter-dropdown"
+                  options={filterYearOptions}
+                />
+              </GridItem>
+              <GridItem>
+                {/* @ts-expect-error - Dropdown type incompatibility with React version */}
+                <Dropdown
+                  name="quarterFilter"
+                  label="Filter by Quarter"
+                  value={quarterDropdownValue}
+                  onChange={handleQuarterChange}
+                  data-testid="quarter-filter-dropdown"
+                  options={filterQuarterOptions}
+                />
+              </GridItem>
+              <GridItem>
+                <Button onClick={handleFilter} variant="outline">
+                  Filter
+                </Button>
+              </GridItem>
+            </Grid>
           )
         }
 
@@ -659,8 +667,9 @@ const sx = {
     alignItems: "flex-end",
     gap: "spacer3",
 
-    ".ds-c-dropdown": {
-      width: "9.5rem",
+    gridTemplateColumns: "9.5rem 9.5rem auto",
+    ".mobile &": {
+      gridTemplateColumns: "auto",
     },
 
     ".ds-c-dropdown__label": {
