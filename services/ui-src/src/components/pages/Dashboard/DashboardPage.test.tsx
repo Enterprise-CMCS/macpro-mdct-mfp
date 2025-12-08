@@ -196,6 +196,18 @@ describe("<DashboardPage />", () => {
           expect(screen.queryByText("Start new")).toBeVisible();
         });
       });
+
+      test("Check that WP Dashboard does not show filter options", () => {
+        mockedUseStore.mockReturnValue(mockReportStore);
+        render(wpDashboardViewWithReports);
+
+        expect(
+          screen.queryByTestId("year-filter-dropdown")
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByTestId("quarter-filter-dropdown")
+        ).not.toBeInTheDocument();
+      });
     });
 
     describe("Test SAR Reports", () => {
@@ -210,6 +222,18 @@ describe("<DashboardPage />", () => {
           screen.queryByText(sarVerbiage.body.empty)
         ).not.toBeInTheDocument();
         expect(screen.queryByText("Leave form")).not.toBeInTheDocument();
+      });
+
+      test("Check that SAR Dashboard does not show filter options", () => {
+        mockedUseStore.mockReturnValue(mockReportStore);
+        render(sarDashboardViewWithReports);
+
+        expect(
+          screen.queryByTestId("year-filter-dropdown")
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByTestId("quarter-filter-dropdown")
+        ).not.toBeInTheDocument();
       });
     });
 
@@ -251,30 +275,6 @@ describe("<DashboardPage />", () => {
           year: "2025",
           quarter: "2",
         });
-      });
-
-      test("Check that WP Dashboard does not show filter options", () => {
-        mockedUseStore.mockReturnValue(mockReportStore);
-        render(wpDashboardViewWithReports);
-
-        expect(
-          screen.queryByTestId("year-filter-dropdown")
-        ).not.toBeInTheDocument();
-        expect(
-          screen.queryByTestId("quarter-filter-dropdown")
-        ).not.toBeInTheDocument();
-      });
-
-      test("Check that SAR Dashboard does not show filter options", () => {
-        mockedUseStore.mockReturnValue(mockReportStore);
-        render(sarDashboardViewWithReports);
-
-        expect(
-          screen.queryByTestId("year-filter-dropdown")
-        ).not.toBeInTheDocument();
-        expect(
-          screen.queryByTestId("quarter-filter-dropdown")
-        ).not.toBeInTheDocument();
       });
     });
   });
