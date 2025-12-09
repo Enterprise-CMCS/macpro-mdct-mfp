@@ -25,7 +25,7 @@ export const AppRoutes = () => {
   const { userIsAdmin } = useStore().user ?? {};
   const { report } = useStore();
   const { isReportPage } = useContext(ReportContext);
-  const abcdReport = useFlags()?.abcdReport;
+  const expenditureReport = useFlags()?.abcdReport;
 
   const { pathname } = useLocation();
   const isExportPage = pathname.includes("/export");
@@ -62,10 +62,10 @@ export const AppRoutes = () => {
             element={<DashboardPage reportType={ReportType.SAR} />}
           />
           <Route path="/sar/export" element={<ExportedReportPage />} />
-          {abcdReport && (
+          {expenditureReport && (
             <Route
-              path="/abcd"
-              element={<DashboardPage reportType={ReportType.ABCD} />}
+              path="/expenditure"
+              element={<DashboardPage reportType={ReportType.EXPENDITURE} />}
             />
           )}
 

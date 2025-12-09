@@ -235,7 +235,7 @@ export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
 export enum ReportType {
   WP = "WP",
   SAR = "SAR",
-  ABCD = "ABCD",
+  EXPENDITURE = "EXPENDITURE",
 }
 /**
  * Check if unknown value is a report type

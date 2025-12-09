@@ -62,18 +62,18 @@ export default {
         text: "The MFP Semi-Annual Progress Report will need to be reviewed and submitted twice a year, within 60 days following the end of each second and fourth calendar year quarter. For example, the SAR Reporting Period 1 represents January-June and MFP recipients must submit their data within 60 days following June 30. The recipient must submit the progress report through the final reporting period of the recipient’s Demonstration period of performance, even if the recipient has not operated for a complete reporting period.",
       },
     },
-    ABCD: {
-      title: "MFP ABCD",
+    EXPENDITURE: {
+      title: "MFP Expenditure",
       body: {
         available: "body text",
       },
       downloadText: "User Guide and Help File",
       link: {
-        text: "Enter ABCD online",
-        route: "abcd",
+        text: "Enter Expenditure online",
+        route: "expenditure",
       },
       accordion: {
-        buttonLabel: "When is the MFP ABCD due?",
+        buttonLabel: "When is the MFP Expenditure due?",
         text: "accordion text",
       },
     },
