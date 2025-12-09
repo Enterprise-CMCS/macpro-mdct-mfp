@@ -26,7 +26,7 @@ import { MfpReportState, ReportShape, ReportType } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
-import abcdVerbiage from "verbiage/pages/abcd/abcd-dashboard";
+import expenditureVerbiage from "verbiage/pages/expenditure/expenditure-dashboard";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 
@@ -84,10 +84,10 @@ const sarDashboardViewWithReports = (
   </RouterWrappedComponent>
 );
 
-const abcdDashboardWithNoReports = (
+const expenditureDashboardWithNoReports = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockReportContextNoReports}>
-      <DashboardPage reportType={ReportType.ABCD} />
+      <DashboardPage reportType={ReportType.EXPENDITURE} />
     </ReportContext.Provider>
   </RouterWrappedComponent>
 );
@@ -218,10 +218,10 @@ describe("<DashboardPage />", () => {
       expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
     });
 
-    test("ABCD Dashboard renders table with empty text", () => {
+    test("Expenditure Dashboard renders table with empty text", () => {
       mockedUseStore.mockReturnValue(mockStateUser);
-      render(abcdDashboardWithNoReports);
-      expect(screen.getByText(abcdVerbiage.body.empty)).toBeVisible();
+      render(expenditureDashboardWithNoReports);
+      expect(screen.getByText(expenditureVerbiage.body.empty)).toBeVisible();
     });
   });
 

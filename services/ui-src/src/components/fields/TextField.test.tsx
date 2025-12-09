@@ -42,7 +42,7 @@ const textFieldComponentValidateOnRender = (
   <TextField name="testTextField" label="test-label" validateOnRender={true} />
 );
 
-const mockHydrationValue = "abcdefg";
+const mockHydrationValue = "expenditureefg";
 
 const textFieldComponentHydration = (
   <TextField

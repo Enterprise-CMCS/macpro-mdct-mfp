@@ -16,7 +16,7 @@ import { useFlags } from "launchdarkly-react-client-sdk";
 export const HomePage = () => {
   const { bannerData, bannerActive, setBannerActive } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
-  const abcdReport = useFlags()?.abcdReport;
+  const expenditureReport = useFlags()?.abcdReport;
 
   useEffect(() => {
     let bannerActivity = false;
@@ -63,10 +63,10 @@ export const HomePage = () => {
               verbiage={cards.SAR}
               cardprops={sx.card}
             />
-            {abcdReport && (
+            {expenditureReport && (
               <TemplateCard
-                templateName="ABCD"
-                verbiage={cards.ABCD}
+                templateName="EXPENDITURE"
+                verbiage={cards.EXPENDITURE}
                 cardprops={sx.card}
               />
             )}

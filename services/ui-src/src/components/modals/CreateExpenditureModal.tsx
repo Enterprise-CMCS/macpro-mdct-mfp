@@ -2,27 +2,21 @@ import { useContext, useEffect, useState } from "react";
 // components
 import { Alert, Form, Modal, ReportContext } from "components";
 // form
-import abcdFormJson from "forms/addEditAbcdReport/addEditAbcdReport.json";
+import { addEditExpenditureReport } from "forms/addEditExpenditureReport/addEditExpenditureReport";
 // utils
 import { useStore } from "utils";
 // types
-import {
-  AlertTypes,
-  AnyObject,
-  FormJson,
-  ReportStatus,
-  ReportType,
-} from "types";
+import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
 // constants
 import { DEFAULT_TARGET_POPULATIONS, States } from "../../constants";
 
-const reportType = ReportType.ABCD;
+const reportType = ReportType.EXPENDITURE;
 
 const generateReportYearChoices = () => {
-  const ABCD_LAUNCH_YEAR = 2025;
+  const EXPENDITURE_LAUNCH_YEAR = 2025;
   const currentYear = new Date(Date.now()).getFullYear();
   return [currentYear - 1, currentYear, currentYear + 1]
-    .filter((year) => year >= ABCD_LAUNCH_YEAR)
+    .filter((year) => year >= EXPENDITURE_LAUNCH_YEAR)
     .map((year) => ({
       id: `reportYear-${year}`,
       label: `${year}`,
@@ -31,7 +25,7 @@ const generateReportYearChoices = () => {
     }));
 };
 
-export const CreateAbcdModal = ({
+export const CreateExpenditureModal = ({
   activeState,
   selectedReport,
   modalDisclosure,
@@ -44,7 +38,7 @@ export const CreateAbcdModal = ({
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  const form: FormJson = abcdFormJson;
+  const form = addEditExpenditureReport;
 
   for (let field of form.fields) {
     if (field.id.match("reportPeriodYear")) {
@@ -87,10 +81,10 @@ export const CreateAbcdModal = ({
     setShowAlert(false);
   };
 
-  const prepareAbcdPayload = (formData: AnyObject) => {
-    const submissionName = "ABCD Report";
+  const prepareExpenditurePayload = (formData: AnyObject) => {
+    const submissionName = "Expenditure Report";
 
-    const abcdPayload: AnyObject = {
+    const expenditurePayload: AnyObject = {
       metadata: {
         submissionName,
         lastAlteredBy: full_name,
@@ -106,20 +100,20 @@ export const CreateAbcdModal = ({
     const formattedReportYear = Number(formData.reportPeriodYear[0].value);
     const formattedReportPeriod =
       formData.reportPeriod[0].key === "reportPeriod-1" ? 1 : 2;
-    abcdPayload.metadata = {
-      ...abcdPayload.metadata,
+    expenditurePayload.metadata = {
+      ...expenditurePayload.metadata,
       reportYear: formattedReportYear,
       reportPeriod: formattedReportPeriod,
     };
 
-    return abcdPayload;
+    return expenditurePayload;
   };
 
   const writeReport = async (formData: AnyObject) => {
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
-    const dataToWrite = prepareAbcdPayload(formData);
+    const dataToWrite = prepareExpenditurePayload(formData);
 
     await createReport(reportType, activeState, {
       ...dataToWrite,
@@ -143,7 +137,7 @@ export const CreateAbcdModal = ({
 
   return (
     <Modal
-      data-testid="create-abcd-modal"
+      data-testid="create-expenditure-modal"
       formId={form.id}
       modalDisclosure={modalDisclosure}
       submitting={submitting}
@@ -156,7 +150,7 @@ export const CreateAbcdModal = ({
       }}
     >
       <Form
-        data-testid="create-abcd-form"
+        data-testid="create-expenditure-form"
         id={form.id}
         formJson={form}
         formData={selectedReport}

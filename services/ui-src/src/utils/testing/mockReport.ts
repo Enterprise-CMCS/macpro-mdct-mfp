@@ -55,8 +55,8 @@ export const mockReportKeys = {
   id: "mock-report-id",
 };
 
-export const mockAbcdReportKeys = {
-  reportType: "ABCD",
+export const mockExpenditureReportKeys = {
+  reportType: "Expenditure",
   state: "NJ" as const,
   id: "mock-report-id",
 };
@@ -390,10 +390,10 @@ export const mockWPSubmittedReport = {
   reportYear: mockReportYear,
 };
 
-export const mockAbcdFullReport = {
+export const mockExpenditureFullReport = {
   ...mockReportKeys,
-  id: "mock-abcd-full-report-id",
-  reportType: "ABCD",
+  id: "mock-expenditure-full-report-id",
+  reportType: "Expenditure",
   submissionName: "2023 - Alabama 1",
   status: ReportStatus.NOT_STARTED,
   dueDate: 168515200000,
@@ -502,9 +502,9 @@ export const mockSARReportContext = {
   lastSavedTime: "2:00 PM",
 };
 
-export const mockAbcdReportContext = {
+export const mockExpenditureReportContext = {
   ...mockReportMethods,
-  report: mockAbcdFullReport,
+  report: mockExpenditureFullReport,
   reportsByState: mockReportsByState,
   copyEligibleReportsByState: mockReportsByState,
   errorMessage: {

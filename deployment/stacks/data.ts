@@ -59,10 +59,10 @@ export function createDataComponents(props: CreateDataComponentsProps) {
       partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
     }),
-    new DynamoDBTable(scope, "AbcdReports", {
+    new DynamoDBTable(scope, "ExpenditureReports", {
       stage,
       isDev,
-      name: "abcd-reports",
+      name: "expenditure-reports",
       partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
     }),
@@ -92,8 +92,8 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     autoDeleteObjects: isDev,
   });
 
-  const abcdFormBucket = new s3.Bucket(scope, "AbcdFormBucket", {
-    bucketName: `database-${stage}-abcd`,
+  const expenditureFormBucket = new s3.Bucket(scope, "ExpenditureFormBucket", {
+    bucketName: `database-${stage}-expenditure`,
     encryption: s3.BucketEncryption.S3_MANAGED,
     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     serverAccessLogsBucket: loggingBucket,
@@ -104,5 +104,5 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     autoDeleteObjects: isDev,
   });
 
-  return { tables, sarFormBucket, wpFormBucket, abcdFormBucket };
+  return { tables, sarFormBucket, wpFormBucket, expenditureFormBucket };
 }

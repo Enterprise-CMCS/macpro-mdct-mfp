@@ -1,6 +1,6 @@
 export default {
   intro: {
-    header: "MFP ABCD",
+    header: "MFP Expenditure",
     body: [],
   },
   body: {
@@ -16,9 +16,9 @@ export default {
         "",
       ],
     },
-    empty: "Once you start a ABCD submission, you can access it here.",
-    callToAction: "Add new MFP ABCD submission",
-    callToActionAdditions: "Add new MFP ABCD submission",
+    empty: "Once you start a Expenditure submission, you can access it here.",
+    callToAction: "Add new MFP Expenditure submission",
+    callToActionAdditions: "Add new MFP Expenditure submission",
   },
   alertBanner: {
     title: "Title",
