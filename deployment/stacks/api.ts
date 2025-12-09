@@ -101,6 +101,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     NODE_OPTIONS: "--enable-source-maps",
     brokerString,
     STAGE: stage,
+    LD_SDK_KEY: process.env.LD_SDK_KEY!,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     EXPENDITURE_FORM_BUCKET: expenditureFormBucket.bucketName,

@@ -1,0 +1,71 @@
+import {
+  getFlagValue,
+  getLaunchDarklyClient,
+  isFeaturedFlagEnabled,
+} from "./featureFlags";
+import * as LD from "@launchdarkly/node-server-sdk";
+
+jest.mock("@launchdarkly/node-server-sdk", () => ({
+  init: jest.fn(),
+}));
+
+const waitForInitialization = jest.fn().mockResolvedValue(undefined);
+const variation = jest.fn().mockResolvedValue(true);
+
+const consoleSpy: {
+  error: jest.SpyInstance<void>;
+  log: jest.SpyInstance<void>;
+} = {
+  error: jest.spyOn(console, "error").mockImplementation(),
+  log: jest.spyOn(console, "log").mockImplementation(),
+};
+
+describe("utils/featureFlags", () => {
+  describe("getLaunchDarklyClient()", () => {
+    test("creates LD client", async () => {
+      (LD.init as jest.Mock).mockReturnValue({
+        variation,
+        waitForInitialization,
+      });
+
+      await getLaunchDarklyClient();
+      expect(LD.init).toHaveBeenCalled();
+      expect(waitForInitialization).toHaveBeenCalled();
+
+      const expectedResult = await getFlagValue("mockFlag");
+      expect(variation).toHaveBeenCalled();
+      expect(expectedResult).toBe(true);
+    });
+
+    test("creates fallback client", async () => {
+      (LD.init as jest.Mock).mockImplementation(() => {
+        throw new Error();
+      });
+      await getLaunchDarklyClient();
+
+      const expectedResult = await getFlagValue("mockFlag");
+      expect(consoleSpy.error).toHaveBeenCalled();
+      expect(expectedResult).toBe(false);
+    });
+  });
+
+  describe("isFeaturedFlagEnabled()", () => {
+    test("returns true", async () => {
+      jest
+        .spyOn(require("./featureFlags"), "getFlagValue")
+        .mockResolvedValue(true);
+      const expectedResult = await isFeaturedFlagEnabled("mockFlag");
+      expect(consoleSpy.log).toHaveBeenCalled();
+      expect(expectedResult).toBe(true);
+    });
+
+    test("returns false", async () => {
+      jest
+        .spyOn(require("./featureFlags"), "getFlagValue")
+        .mockResolvedValue(false);
+      const expectedResult = await isFeaturedFlagEnabled("mockFlag");
+      expect(consoleSpy.log).toHaveBeenCalled();
+      expect(expectedResult).toBe(false);
+    });
+  });
+});
