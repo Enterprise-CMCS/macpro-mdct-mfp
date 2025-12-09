@@ -41,7 +41,8 @@ export const DashboardTable = ({
           />
         )}
         {/* Report Name */}
-        {reportType === ReportType.WP || reportType === ReportType.ABCD ? (
+        {reportType === ReportType.WP ||
+        reportType === ReportType.EXPENDITURE ? (
           <>
             <Td sx={sxOverride.wpSubmissionNameText}>
               {report.submissionName}
