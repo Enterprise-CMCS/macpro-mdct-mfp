@@ -1,6 +1,6 @@
 import { SystemStyleObject } from "@chakra-ui/react";
 import React from "react";
-import { AnyObject, ReportRoute } from "types";
+import { AnyObject, ReportRoute, ValidationType } from "types";
 
 // FORM & FIELD STRUCTURE
 
@@ -71,8 +71,10 @@ export type FieldValidationObject =
 
 export interface FormField {
   id: string;
-  type: string;
-  validation: string | FieldValidationObject;
+  // TODO: Convert string to ReportFormFieldType
+  type: string | ReportFormFieldType;
+  // TODO: Convert string to ValidationType
+  validation: string | FieldValidationObject | ValidationType;
   hydrate?: string;
   props?: AnyObject;
   choices?: FieldChoice[];
@@ -134,4 +136,16 @@ export interface Choice {
 export interface DropdownChoice {
   label: string;
   value: string;
+}
+
+export enum ReportFormFieldType {
+  CHECKBOX = "checkbox",
+  DATE = "date",
+  DYNAMIC = "dynamic",
+  NO_TYPE = "",
+  NUMBER = "number",
+  RADIO = "radio",
+  SECTION_HEADER = "sectionHeader",
+  TEXT = "text",
+  TEXTAREA = "textarea",
 }

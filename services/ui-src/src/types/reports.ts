@@ -10,7 +10,7 @@ import {
 export enum ReportType {
   WP = "WP",
   SAR = "SAR",
-  ABCD = "ABCD",
+  EXPENDITURE = "EXPENDITURE",
 }
 
 // REPORT STRUCTURE
