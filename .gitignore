@@ -12,7 +12,6 @@ services/uploads/local_buckets
 /.env.seed
 tests_output
 *.log
-!launchdarkly-flags.log
 test-results/
 package-lock.json
 .vscode/

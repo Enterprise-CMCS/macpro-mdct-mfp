@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
@@ -6,7 +6,7 @@ import { NumberField } from "components";
 // utils
 import { useStore } from "utils";
 import { mockStateUserStore } from "utils/testing/setupJest";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -82,9 +82,13 @@ describe("<NumberField />", () => {
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
       )!;
-      await userEvent.type(numberFieldInput, "123");
+      await act(async () => {
+        await userEvent.type(numberFieldInput, "123");
+      });
       expect(numberFieldInput.value).toEqual("123");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("123");
     });
   });
@@ -99,25 +103,37 @@ describe("<NumberField />", () => {
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
       )!;
-      await userEvent.type(numberFieldInput, "123");
+      await act(async () => {
+        await userEvent.type(numberFieldInput, "123");
+      });
       expect(numberFieldInput.value).toEqual("123");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("123");
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(numberFieldInput, "12055");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(numberFieldInput, "12055");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("12,055");
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(numberFieldInput, "12055.99");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(numberFieldInput, "12055.99");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("12,055.99");
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(numberFieldInput, "-1234");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(numberFieldInput, "-1234");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("-1,234");
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(numberFieldInput, "$$1234567890.10");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(numberFieldInput, "$$1234567890.10");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("$$1234567890.10");
     });
 
@@ -127,16 +143,22 @@ describe("<NumberField />", () => {
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
       )!;
-      await userEvent.type(numberFieldInput, "123");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.type(numberFieldInput, "123");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("123.00");
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(numberFieldInput, "5.99");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(numberFieldInput, "5.99");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("5.99");
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(numberFieldInput, "1234.00");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(numberFieldInput, "1234.00");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("1,234.00");
     });
 
@@ -146,17 +168,25 @@ describe("<NumberField />", () => {
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
       )!;
-      await userEvent.type(numberFieldInput, "123");
+      await act(async () => {
+        await userEvent.type(numberFieldInput, "123");
+      });
       expect(numberFieldInput.value).toEqual("123");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("123");
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(numberFieldInput, "12055");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(numberFieldInput, "12055");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("12,055");
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(numberFieldInput, "12055.99");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(numberFieldInput, "12055.99");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("12,055.99");
     });
 
@@ -166,31 +196,41 @@ describe("<NumberField />", () => {
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
       )!;
-      await userEvent.type(numberFieldInput, "123:123");
+      await act(async () => {
+        await userEvent.type(numberFieldInput, "123:123");
+      });
       expect(numberFieldInput.value).toEqual("123:123");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual("123:123");
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(
-        numberFieldInput,
-        "123,,,4567.1234567.1234:12,3456,7.1"
-      );
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(
+          numberFieldInput,
+          "123,,,4567.1234567.1234:12,3456,7.1"
+        );
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual(
         "123,,,4567.1234567.1234:12,3456,7.1"
       );
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(
-        numberFieldInput,
-        "123,,,4567.12345671234:12,3456,7.1"
-      );
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(
+          numberFieldInput,
+          "123,,,4567.12345671234:12,3456,7.1"
+        );
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual(
         "1,234,567.1234567123:1,234,567.1"
       );
-      await userEvent.clear(numberFieldInput);
-      await userEvent.type(numberFieldInput, ":");
-      await userEvent.tab();
+      await act(async () => {
+        await userEvent.clear(numberFieldInput);
+        await userEvent.type(numberFieldInput, ":");
+        await userEvent.tab();
+      });
       expect(numberFieldInput.value).toEqual(":");
     });
   });
@@ -287,7 +327,7 @@ describe("<NumberField />", () => {
     });
   });
 
-  testA11y(numberFieldComponent, () => {
+  testA11yAct(numberFieldComponent, () => {
     mockGetValues(undefined);
   });
 });

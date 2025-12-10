@@ -126,7 +126,7 @@ export default {
       text: "",
     },
   },
-  ABCD: {
+  EXPENDITURE: {
     adminDashboard: {
       buttonLabel: "Instructions",
       intro: [
@@ -139,7 +139,7 @@ export default {
           type: "text",
           as: "p",
           content:
-            "Click “Add new MFP ABCD submission” below to begin reporting for the current reporting period.",
+            "Click “Add new MFP Expenditure submission” below to begin reporting for the current reporting period.",
         },
         {
           type: "text",
@@ -162,7 +162,7 @@ export default {
           type: "text",
           as: "p",
           content:
-            "Click “Add new MFP ABCD submission” below to begin reporting for the current reporting period.",
+            "Click “Add new MFP Expenditure submission” below to begin reporting for the current reporting period.",
         },
       ],
       list: [],

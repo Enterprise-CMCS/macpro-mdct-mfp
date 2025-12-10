@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 import {
   mockEvaluationPlanFormattedEntityData,
   mockEvaluationPlanFormattedEntityDataNoQuarters,
@@ -64,7 +64,7 @@ describe("<EvaluationPlanEntity />", () => {
     expect(screen.getByText("2024 Q1:")).toBeVisible();
   });
 
-  testA11y(
+  testA11yAct(
     <EvaluationPlanEntity
       formattedEntityData={mockEvaluationPlanFormattedEntityData}
     />

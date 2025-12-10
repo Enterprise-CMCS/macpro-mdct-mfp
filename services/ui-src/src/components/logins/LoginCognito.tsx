@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 // components
 import { Button, Heading, Stack } from "@chakra-ui/react";
 import { TextField } from "@cmsgov/design-system";
@@ -51,7 +51,7 @@ export const LoginCognito = () => {
       <Heading size="md" as="h2" sx={sx.heading}>
         Log In with Cognito
       </Heading>
-      <ErrorAlert error={error} sx={sx.error} />
+      {error && <ErrorAlert error={error} sx={sx.error} />}
       <form onSubmit={(event) => handleLogin(event)}>
         <TextField
           id="email"
@@ -72,7 +72,6 @@ export const LoginCognito = () => {
         <Button
           sx={sx.button}
           onClick={handleLogin}
-          isFullWidth
           type="submit"
           data-testid="cognito-login-button"
         >

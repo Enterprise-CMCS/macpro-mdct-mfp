@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 
 // components
 import { AppRoutes, ReportContext } from "components";
@@ -28,10 +28,7 @@ const appRoutesComponent = (route: string, isReportPage: boolean = false) => (
       isReportPage,
     }}
   >
-    <MemoryRouter
-      initialEntries={[route]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={[route]}>
       <UserProvider>
         <AppRoutes />
       </UserProvider>
@@ -78,22 +75,22 @@ describe("<AppRoutes />", () => {
     });
   });
 
-  describe("Test ABCD route behind flag", () => {
-    test("renders /abcd route when abcdReport flag is true", () => {
+  describe("Test Expenditure route behind flag", () => {
+    test("renders /expenditure route when abcdReport flag is true", () => {
       mockLDFlags.set({ abcdReport: true });
 
-      render(appRoutesComponent("/abcd"));
+      render(appRoutesComponent("/expenditure"));
 
       const heading = screen.getByRole("heading", { level: 1 });
-      expect(heading.textContent).toContain("MFP ABCD");
+      expect(heading.textContent).toContain("MFP Expenditure");
     });
 
-    test("does not render /abcd route when abcdReport flag is false", () => {
+    test("does not render /expenditure route when abcdReport flag is false", () => {
       mockLDFlags.set({ abcdReport: false });
 
-      render(appRoutesComponent("/abcd"));
+      render(appRoutesComponent("/expenditure"));
 
-      // Should not find the dashboard for ABCD report
+      // Should not find the dashboard for Expenditure report
       const heading = screen.getByRole("heading", { level: 1 });
       expect(heading.textContent).toContain("Page not found");
     });

@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { Drawer } from "components";
 // constants
 import { closeText } from "../../constants";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockOnClose = jest.fn();
 
@@ -25,11 +25,14 @@ const drawerComponent = (
 describe("<Drawer />", () => {
   test("Drawer can be closed with close button", async () => {
     render(drawerComponent);
-    const closeButton = screen.getByText(closeText);
-    expect(closeButton).toBeVisible();
+
+    const closeButton = screen.getByRole("button", { name: closeText });
+    const svg = closeButton.querySelector("svg");
+    expect(svg).toHaveClass("ds-c-icon--close");
+
     await userEvent.click(closeButton);
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
-  testA11y(drawerComponent);
+  testA11yAct(drawerComponent);
 });

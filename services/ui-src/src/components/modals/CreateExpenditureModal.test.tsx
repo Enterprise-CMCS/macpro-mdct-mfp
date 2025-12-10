@@ -2,20 +2,20 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import {
   RouterWrappedComponent,
   mockUseStore,
-  mockAbcdReportContext,
+  mockExpenditureReportContext,
 } from "../../utils/testing/setupJest";
 import { ReportContext } from "../reports/ReportProvider";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 import { useStore } from "../../utils";
-import { CreateAbcdModal } from "./CreateAbcdModal";
+import { CreateExpenditureModal } from "./CreateExpenditureModal";
 
 const mockCreateReport = jest.fn();
 const mockFetchReportsByState = jest.fn();
 const mockCloseHandler = jest.fn();
 
 const mockedReportContext = {
-  ...mockAbcdReportContext,
+  ...mockExpenditureReportContext,
   createReport: mockCreateReport,
   fetchReportsByState: mockFetchReportsByState,
   isReportPage: true,
@@ -28,7 +28,7 @@ mockedUseStore.mockReturnValue(mockUseStore);
 const modalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
-      <CreateAbcdModal
+      <CreateExpenditureModal
         activeState="CA"
         modalDisclosure={{
           isOpen: true,
@@ -39,8 +39,8 @@ const modalComponent = (
   </RouterWrappedComponent>
 );
 
-describe("<CreateAbcdModal />", () => {
-  describe("Test CreateAbcdModal", () => {
+describe("<CreateExpenditureModal />", () => {
+  describe("Test CreateExpenditureModal", () => {
     beforeEach(async () => {
       await act(async () => {
         await render(modalComponent);
@@ -51,17 +51,17 @@ describe("<CreateAbcdModal />", () => {
       jest.clearAllMocks();
     });
 
-    test("CreateAbcdModal shows the content", () => {
+    test("CreateExpenditureModal shows the content", () => {
       expect(screen.getByText("Start new")).toBeTruthy();
     });
 
-    test("CreateAbcdModal top close button can be clicked", () => {
+    test("CreateExpenditureModal top close button can be clicked", () => {
       fireEvent.click(screen.getByText("Close"));
       expect(mockCloseHandler).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe("Test CreateAbcdModal functionality for new ABCD Report", () => {
+  describe("Test CreateExpenditureModal functionality for new Expenditure Report", () => {
     const mockedDateNow = jest.spyOn(Date, "now");
 
     afterEach(() => {
@@ -74,9 +74,11 @@ describe("<CreateAbcdModal />", () => {
       const secondRadio = screen.getByLabelText(
         "First reporting period (January 1 - June 30)"
       ) as HTMLInputElement;
-      await userEvent.click(firstRadio);
-      await userEvent.click(secondRadio);
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(firstRadio);
+        await userEvent.click(secondRadio);
+        await userEvent.click(submitButton);
+      });
     };
 
     test("Adding a new report", async () => {
@@ -85,11 +87,13 @@ describe("<CreateAbcdModal />", () => {
 
       await render(modalComponent);
       const header = screen.getByRole("heading", { level: 1 });
-      expect(header.textContent).toEqual("Add new MFP ABCD Report");
+      expect(header.textContent).toEqual("Add new MFP Expenditure Report");
       await fillForm();
-      await expect(mockCreateReport).toHaveBeenCalledTimes(1);
-      await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
-      await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+      await act(async () => {
+        await expect(mockCreateReport).toHaveBeenCalledTimes(1);
+        await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
+        await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+      });
     });
 
     test("The metadata reportYear and reportPeriod should reflect the choices in the modal", async () => {
@@ -104,14 +108,16 @@ describe("<CreateAbcdModal />", () => {
         "Second reporting period (July 1 - December 31)"
       ) as HTMLInputElement;
 
-      await userEvent.click(firstChoice);
-      await userEvent.click(secondChoice);
-      await userEvent.click(submitButton);
+      await act(async () => {
+        await userEvent.click(firstChoice);
+        await userEvent.click(secondChoice);
+        await userEvent.click(submitButton);
+      });
 
       const newData = { reportYear: 2026, reportPeriod: 2 };
 
       expect(mockCreateReport).toHaveBeenCalledWith(
-        "ABCD",
+        "EXPENDITURE",
         "CA",
         expect.objectContaining({ metadata: expect.objectContaining(newData) })
       );

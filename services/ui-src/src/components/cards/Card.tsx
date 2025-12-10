@@ -1,4 +1,4 @@
-import { ReactChild } from "react";
+import { ReactNode } from "react";
 // components
 import { Box } from "@chakra-ui/react";
 
@@ -11,7 +11,7 @@ export const Card = ({ children, ...props }: Props) => {
 };
 
 interface Props {
-  children?: ReactChild | ReactChild[];
+  children?: ReactNode | ReactNode[];
   [key: string]: any;
 }
 

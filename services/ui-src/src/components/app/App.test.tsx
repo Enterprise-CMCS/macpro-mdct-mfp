@@ -1,5 +1,4 @@
-import { render, screen } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
+import { act, render, screen } from "@testing-library/react";
 // utils
 import {
   RouterWrappedComponent,
@@ -9,7 +8,7 @@ import {
 import { useStore, UserProvider } from "utils";
 //components
 import { App } from "components";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -40,5 +39,5 @@ describe("<App />", () => {
     expect(screen.getByTestId("login-container")).toBeVisible();
   });
 
-  testA11y(appComponent);
+  testA11yAct(appComponent);
 });

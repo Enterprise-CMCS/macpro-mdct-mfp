@@ -5,7 +5,7 @@ import { TextField } from "components";
 // utils
 import { mockStateUserStore } from "utils/testing/setupJest";
 import { useStore } from "utils";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -42,7 +42,7 @@ const textFieldComponentValidateOnRender = (
   <TextField name="testTextField" label="test-label" validateOnRender={true} />
 );
 
-const mockHydrationValue = "abcdefg";
+const mockHydrationValue = "expenditureefg";
 
 const textFieldComponentHydration = (
   <TextField
@@ -118,7 +118,7 @@ describe("<TextField />", () => {
     });
   });
 
-  testA11y(
+  testA11yAct(
     textFieldComponent,
     () => {
       mockedUseStore.mockReturnValue(mockStateUserStore);

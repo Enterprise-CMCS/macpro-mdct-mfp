@@ -12,7 +12,7 @@ import {
 import { EntityStepCard } from "./EntityStepCard";
 import { OverlayModalStepTypes } from "types";
 import { useStore } from "utils";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const openAddEditEntityModal = jest.fn();
 const openDeleteEntityModal = jest.fn();
@@ -185,7 +185,7 @@ describe("<EntityCard />", () => {
       });
     });
 
-    testA11y(GenericEntityTypeEntityCardComponent);
+    testA11yAct(GenericEntityTypeEntityCardComponent);
   });
 
   describe("Unfinished EntityCard", () => {
@@ -217,7 +217,7 @@ describe("<EntityCard />", () => {
       });
     });
 
-    testA11y(UnfinishedGenericEntityCardComponent);
+    testA11yAct(UnfinishedGenericEntityCardComponent);
   });
 
   describe("EntityCard with specific step types", () => {

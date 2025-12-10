@@ -18,7 +18,7 @@ test.describe("Admin profile", () => {
   );
 
   test(
-    "Profile page is accessible on all device types for admin user",
+    "Profile page is accessible on all device types for admin user @a11y",
     { tag: "@admin" },
     async ({ adminPage }) => {
       const accessibilityErrors = await checkAccessbilityAcrossViewports(
@@ -45,7 +45,7 @@ test.describe("State user profile", { tag: "@user" }, () => {
     await expect(statePage.page).toHaveURL("/profile");
   });
 
-  test("Profile page is accessible on all device types for state user", async ({
+  test("Profile page is accessible on all device types for state user @a11y", async ({
     statePage,
   }) => {
     const accessibilityErrors = await checkAccessbilityAcrossViewports(

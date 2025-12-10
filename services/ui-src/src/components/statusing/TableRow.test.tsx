@@ -12,7 +12,7 @@ import {
   mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -79,5 +79,5 @@ describe("<TableRow />", () => {
     expect(screen.queryByAltText("Success notification")).toBeNull();
   });
 
-  testA11y(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));
+  testA11yAct(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));
 });

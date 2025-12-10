@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router";
 import { States } from "../../../constants";
 
 // components
@@ -23,7 +23,7 @@ import {
   PageTemplate,
   ReportContext,
   Alert,
-  CreateAbcdModal,
+  CreateExpenditureModal,
 } from "components";
 // types
 import {
@@ -45,7 +45,7 @@ import {
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
-import abcdVerbiage from "verbiage/pages/abcd/abcd-dashboard";
+import expenditureVerbiage from "verbiage/pages/expenditure/expenditure-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
@@ -96,7 +96,7 @@ export const DashboardPage = ({ reportType }: Props) => {
   const dashboardVerbiageMap: any = {
     WP: wpVerbiage,
     SAR: sarVerbiage,
-    ABCD: abcdVerbiage,
+    EXPENDITURE: expenditureVerbiage,
   };
 
   const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
@@ -133,7 +133,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     }
     switch (reportType) {
       case ReportType.WP:
-      case ReportType.ABCD:
+      case ReportType.EXPENDITURE:
         fetchReportsByState(reportType, activeState);
         clearReportSelection();
         break;
@@ -231,7 +231,7 @@ export const DashboardPage = ({ reportType }: Props) => {
     const openHandlerMap: any = {
       WP: createWorkPlanModalOnOpenHandler,
       SAR: createSarModalOnOpenHandler,
-      ABCD: createAbcdModalOnOpenHandler,
+      EXPENDITURE: createExpenditureModalOnOpenHandler,
     };
 
     openHandlerMap[reportType]();
@@ -272,7 +272,36 @@ export const DashboardPage = ({ reportType }: Props) => {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
       case ReportType.WP:
-      case ReportType.ABCD:
+        if (!previousReport) {
+          return false;
+        } else {
+          // Prevent creating a new WP if the previous WP is for Q1 2026 and approved
+          if (
+            previousReport.reportPeriod === 1 &&
+            previousReport.reportYear === 2026 &&
+            previousReport.status === ReportStatus.APPROVED
+          )
+            return true;
+          // Allow creating a new WP only if the previous WP is approved
+          return previousReport.status !== ReportStatus.APPROVED;
+        }
+      case ReportType.EXPENDITURE:
+        if (!previousReport) {
+          return false;
+        } else {
+          return previousReport.status !== ReportStatus.APPROVED;
+        }
+      default:
+        return true;
+    }
+  };
+
+  const isResetDisabled = (): boolean => {
+    switch (reportType) {
+      case ReportType.SAR:
+        return !workPlanToCopyFrom;
+      case ReportType.WP:
+      case ReportType.EXPENDITURE:
         if (!previousReport) {
           return false;
         } else {
@@ -304,9 +333,9 @@ export const DashboardPage = ({ reportType }: Props) => {
 
   // add/edit program modal disclosure
   const {
-    isOpen: createAbcdModalIsOpen,
-    onOpen: createAbcdModalOnOpenHandler,
-    onClose: createAbcdModalOnCloseHandler,
+    isOpen: createExpenditureModalIsOpen,
+    onOpen: createExpenditureModalOnOpenHandler,
+    onClose: createExpenditureModalOnCloseHandler,
   } = useDisclosure();
 
   //unlock modal disclosure
@@ -356,7 +385,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               : accordion[reportType as keyof typeof ReportType]
                   .stateUserDashboard
           }
-          defaultIndex={0} // sets the accordion to open by default
+          defaultIndex={[0]} // sets the accordion to open by default
         />
         {parseCustomHtml(intro.body)}
       </Box>
@@ -404,7 +433,7 @@ export const DashboardPage = ({ reportType }: Props) => {
               <Button
                 sx={sx.resetBtn}
                 onClick={openResetWorkPlanModal}
-                disabled={isAddSubmissionDisabled()}
+                disabled={isResetDisabled()}
                 type="submit"
                 variant="transparent"
               >
@@ -431,12 +460,12 @@ export const DashboardPage = ({ reportType }: Props) => {
           onClose: createSarModalOnCloseHandler,
         }}
       />
-      <CreateAbcdModal
+      <CreateExpenditureModal
         activeState={activeState!}
         selectedReport={selectedReport!}
         modalDisclosure={{
-          isOpen: createAbcdModalIsOpen,
-          onClose: createAbcdModalOnCloseHandler,
+          isOpen: createExpenditureModalIsOpen,
+          onClose: createExpenditureModalOnCloseHandler,
         }}
       />
       <Modal

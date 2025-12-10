@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { OverlayModalPage } from "./OverlayModalPage";
@@ -17,10 +17,10 @@ import {
   mockUseSARStore,
   mockObjectiveProgressEntityStore,
 } from "utils/testing/setupJest";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: () => mockUseNavigate,
   useLocation: jest.fn(() => ({
     pathname: "/mock-route",
@@ -72,35 +72,53 @@ describe("<OverlayModalPage />", () => {
 
     test("overlayModalPage opens the add edit modal correctly", async () => {
       const addEntityButton = screen.getAllByText(addEntityButtonText);
-      await userEvent.click(addEntityButton[0]);
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await act(async () => {
+        await userEvent.click(addEntityButton[0]);
+      });
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
 
       const closeButton = screen.getByText("Close");
-      await userEvent.click(closeButton);
+      await act(async () => {
+        await userEvent.click(closeButton);
+      });
     });
 
     test("overlayModalPage opens the edit modal and loads the data for the selectedEntity", async () => {
       const editEntityButtons = screen.getAllByText(editEntityButtonText);
       expect(editEntityButtons.length).toEqual(2);
-      await userEvent.click(editEntityButtons[0]);
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await act(async () => {
+        await userEvent.click(editEntityButtons[0]);
+      });
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
       expect(
         screen.getByText(
           `${addEditModalEditTitle} ${mockEntityStore.selectedEntity?.initiative_name}`
         )
       ).toBeVisible;
       const closeButton = screen.getByText("Close");
-      await userEvent.click(closeButton);
+      await act(async () => {
+        await userEvent.click(closeButton);
+      });
     });
 
     test("overlayModalPage opens the delete modal and close the delete modal", async () => {
       const deleteEntityButton = screen.getAllByTestId("delete-entity-button");
       expect(deleteEntityButton.length).toEqual(2);
-      await userEvent.click(deleteEntityButton[0]);
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await act(async () => {
+        await userEvent.click(deleteEntityButton[0]);
+      });
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
       expect(screen.getByText(`${deleteModalTitle}`)).toBeVisible();
       const closeButton = screen.getByText("Cancel");
-      await userEvent.click(closeButton);
+      await act(async () => {
+        await userEvent.click(closeButton);
+      });
       expect(deleteEntityButton.length).toEqual(2);
     });
   });
@@ -154,19 +172,25 @@ describe("<OverlayModalPage />", () => {
       const reportProgressButton = screen.getAllByText(
         reportProgressButtonText
       );
-      await userEvent.click(reportProgressButton[0]);
-      expect(screen.getByRole("dialog")).toBeVisible();
+      await act(async () => {
+        await userEvent.click(reportProgressButton[0]);
+      });
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
       const textField = screen.getByRole("textbox", {
         name: "mock-performance-indicators",
       });
       expect(textField).toBeVisible();
-      await userEvent.type(textField, "test");
+      await act(async () => {
+        await userEvent.type(textField, "test");
+      });
       const submitButton = screen.getByRole("button", { name: "Save" });
       expect(submitButton).not.toBeDisabled();
     });
   });
 
-  testA11y(overlayModalPageComponentWithEntities, () => {
+  testA11yAct(overlayModalPageComponentWithEntities, () => {
     mockedUseStore.mockReturnValue(mockReportStore);
     mockedUseStore.mockReturnValue(mockEntityStore);
   });

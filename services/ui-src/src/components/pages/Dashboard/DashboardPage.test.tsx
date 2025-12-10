@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 // components
 import { ReportContext, DashboardPage } from "components";
 // utils
@@ -26,9 +26,9 @@ import { MfpReportState, ReportShape, ReportType } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
-import abcdVerbiage from "verbiage/pages/abcd/abcd-dashboard";
+import expenditureVerbiage from "verbiage/pages/expenditure/expenditure-dashboard";
 import userEvent from "@testing-library/user-event";
-import { testA11y } from "utils/testing/commonTests";
+import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/auth/useUser");
 const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
@@ -45,7 +45,7 @@ jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const mockUseNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: () => mockUseNavigate,
   useLocation: jest.fn(() => ({
     pathname: "/mock-dashboard",
@@ -84,10 +84,10 @@ const sarDashboardViewWithReports = (
   </RouterWrappedComponent>
 );
 
-const abcdDashboardWithNoReports = (
+const expenditureDashboardWithNoReports = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockReportContextNoReports}>
-      <DashboardPage reportType={ReportType.ABCD} />
+      <DashboardPage reportType={ReportType.EXPENDITURE} />
     </ReportContext.Provider>
   </RouterWrappedComponent>
 );
@@ -129,6 +129,27 @@ describe("<DashboardPage />", () => {
       expect(callToActionButton).toBeDisabled();
     });
 
+    test("Check that WP Dashboard continue button is disabled if latest WP is from period 1 and year 2026 and approved", () => {
+      const mockStoreWith2026Q1Approved = {
+        ...mockUseStore,
+        reportsByState: [
+          {
+            ...mockWPApprovedFullReport,
+            reportPeriod: 1,
+            reportYear: 2026,
+            status: "Approved",
+          },
+        ],
+      };
+      mockedUseStore.mockReturnValue(mockStoreWith2026Q1Approved);
+      render(wpDashboardViewWithReports);
+
+      const callToActionButton = screen.getByText(
+        wpVerbiage.body.callToActionAdditions
+      );
+      expect(callToActionButton).toBeDisabled();
+    });
+
     test("Show copied from verbiage on report versions 2 or higher", () => {
       mockedUseStore.mockReturnValue(mockUseStore);
       render(wpDashboardViewWithReports);
@@ -140,7 +161,9 @@ describe("<DashboardPage />", () => {
       mockedUseStore.mockReturnValue(mockUseEntityStore);
       render(wpDashboardViewWithReports);
       const editButtons = screen.getAllByText("Edit");
-      await userEvent.click(editButtons[0]);
+      await act(async () => {
+        await userEvent.click(editButtons[0]);
+      });
     });
 
     test("Clicking Call To Action text open add/edit modal", async () => {
@@ -148,8 +171,12 @@ describe("<DashboardPage />", () => {
       render(wpDashboardWithNoReports);
       const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
       expect(callToActionButton).toBeVisible();
-      await userEvent.click(callToActionButton);
-      expect(screen.queryByText("Start new")).toBeVisible();
+      await act(async () => {
+        await userEvent.click(callToActionButton);
+      });
+      await waitFor(() => {
+        expect(screen.queryByText("Start new")).toBeVisible();
+      });
     });
 
     test("Check that the SAR Dashboard view renders", () => {
@@ -191,10 +218,10 @@ describe("<DashboardPage />", () => {
       expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
     });
 
-    test("ABCD Dashboard renders table with empty text", () => {
+    test("Expenditure Dashboard renders table with empty text", () => {
       mockedUseStore.mockReturnValue(mockStateUser);
-      render(abcdDashboardWithNoReports);
-      expect(screen.getByText(abcdVerbiage.body.empty)).toBeVisible();
+      render(expenditureDashboardWithNoReports);
+      expect(screen.getByText(expenditureVerbiage.body.empty)).toBeVisible();
     });
   });
 
@@ -211,8 +238,12 @@ describe("<DashboardPage />", () => {
     test("Clicking Call To Action text open add/edit modal", async () => {
       const callToActionButton = screen.getByText(wpVerbiage.body.callToAction);
       expect(callToActionButton).toBeVisible();
-      await userEvent.click(callToActionButton);
-      expect(screen.queryByText("Start new")).toBeVisible();
+      await act(async () => {
+        await userEvent.click(callToActionButton);
+      });
+      await waitFor(() => {
+        expect(screen.queryByText("Start new")).toBeVisible();
+      });
     });
   });
 
@@ -238,7 +269,9 @@ describe("<DashboardPage />", () => {
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
       const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[3];
       expect(unlockButton).toBeEnabled();
-      await userEvent.click(unlockButton);
+      await act(async () => {
+        await userEvent.click(unlockButton);
+      });
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
       // once for render, once for release
       await expect(
@@ -249,7 +282,9 @@ describe("<DashboardPage />", () => {
     test("Clicking a disabled 'Unlock' button no modal opens", async () => {
       const unlockButton = screen.getAllByText("Unlock")[0];
       expect(unlockButton).toBeVisible();
-      await userEvent.click(unlockButton);
+      await act(async () => {
+        await userEvent.click(unlockButton);
+      });
 
       expect(
         screen.queryByText(wpVerbiage.modalUnlock.actionButtonText)
@@ -261,14 +296,16 @@ describe("<DashboardPage />", () => {
         name: "Archive",
       })[0];
       expect(archiveButton).toBeVisible();
-      await userEvent.click(archiveButton);
-      await expect(
-        screen.getByText(wpVerbiage.modalArchive.heading)
-      ).toBeVisible();
+      await act(async () => {
+        await userEvent.click(archiveButton);
+      });
+      await waitFor(() => {
+        expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
+      });
     });
 
     test("Cannot unarchive a WP", async () => {
-      const lastCell = screen.getAllByRole("gridcell").pop();
+      const lastCell = screen.getAllByRole("cell").pop();
       expect(lastCell).toHaveTextContent("Archived");
     });
 
@@ -277,7 +314,7 @@ describe("<DashboardPage />", () => {
       enterReportButtons.forEach((button) => expect(button).not.toBeDisabled());
     });
 
-    testA11y(wpDashboardViewWithReports, () => {
+    testA11yAct(wpDashboardViewWithReports, () => {
       mockMakeMediaQueryClasses.mockReturnValue("desktop");
     });
   });
@@ -295,7 +332,9 @@ describe("<DashboardPage />", () => {
     test("Clicking 'Unlock' button opens the unlock modal", async () => {
       const unlockButton = screen.getAllByRole("button", { name: "Unlock" })[1];
       expect(unlockButton).toBeEnabled();
-      await userEvent.click(unlockButton);
+      await act(async () => {
+        await userEvent.click(unlockButton);
+      });
       await expect(mockWpReportContext.releaseReport).toHaveBeenCalledTimes(1);
       // once for render, once for release
       await expect(
@@ -308,8 +347,12 @@ describe("<DashboardPage />", () => {
         name: "Archive",
       })[1];
       expect(archiveButton).toBeVisible();
-      await userEvent.click(archiveButton);
-      expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
+      await act(async () => {
+        await userEvent.click(archiveButton);
+      });
+      await waitFor(() => {
+        expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
+      });
     });
 
     test("Cannot unarchive a WP", async () => {
@@ -322,7 +365,7 @@ describe("<DashboardPage />", () => {
       viewButtons.forEach((button) => expect(button).not.toBeDisabled());
     });
 
-    testA11y(wpDashboardViewWithReports, () => {
+    testA11yAct(wpDashboardViewWithReports, () => {
       mockMakeMediaQueryClasses.mockReturnValue("mobile");
     });
   });
