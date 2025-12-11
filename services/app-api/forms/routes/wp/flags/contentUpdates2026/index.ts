@@ -5,7 +5,7 @@ import { generalInformationRoute } from "../../general-information";
 import { reviewAndSubmitRoute } from "../../review-and-submit";
 import { stateOrTerritorySpecificInitiativesRoute } from "./state-or-territory-specific-initiatives";
 import { transitionBenchmarkStrategyRoute } from "./transition-benchmark-strategy";
-import { transitionBenchmarksRoute } from "../../transition-benchmarks";
+import { transitionBenchmarksRoute } from "./transition-benchmarks";
 
 // Use with LaunchDarkly flag: contentUpdates2026
 export const wpReportJson: ReportJsonFile = {
