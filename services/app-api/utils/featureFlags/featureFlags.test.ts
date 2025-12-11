@@ -22,6 +22,10 @@ const consoleSpy: {
 
 describe("utils/featureFlags", () => {
   describe("getLaunchDarklyClient()", () => {
+    beforeEach(() => {
+      process.env.launchDarklyServer = "mock-sdk-key";
+    });
+
     test("creates LD client", async () => {
       (LD.init as jest.Mock).mockReturnValue({
         variation,
@@ -37,7 +41,16 @@ describe("utils/featureFlags", () => {
       expect(expectedResult).toBe(true);
     });
 
-    test("creates fallback client", async () => {
+    test("uses fallback client for missing SDK key", async () => {
+      delete process.env.launchDarklyServer;
+      await getLaunchDarklyClient();
+
+      const expectedResult = await getFlagValue("mockFlag");
+      expect(consoleSpy.error).toHaveBeenCalled();
+      expect(expectedResult).toBe(false);
+    });
+
+    test("uses fallback client for bad SDK key", async () => {
       (LD.init as jest.Mock).mockImplementation(() => {
         throw new Error();
       });
