@@ -1,6 +1,9 @@
 // types
-import { ReportJsonFile, ReportType } from "../../../utils/types";
+import { ReportJsonFile, ReportType } from "../../../../../utils/types";
+// routes
+import { reviewAndSubmitRoute } from "./review-and-submit";
 
+// Use with LaunchDarkly flag: abcdReport
 export const expenditureReportJson: ReportJsonFile = {
   type: ReportType.EXPENDITURE,
   name: "MFP Expenditure Report",
@@ -9,5 +12,5 @@ export const expenditureReportJson: ReportJsonFile = {
   entities: {
     "": { required: true },
   },
-  routes: [],
+  routes: [reviewAndSubmitRoute],
 };
