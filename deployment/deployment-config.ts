@@ -9,6 +9,7 @@ export interface DeploymentConfigProperties {
   oktaMetadataUrl: string;
   bootstrapUsersPassword?: string;
   launchDarklyClient: string;
+  launchDarklyServer: string;
   redirectSignout: string;
   cloudfrontCertificateArn?: string;
   cloudfrontDomainName?: string;
@@ -77,6 +78,7 @@ function validateConfig(config: {
     "brokerString",
     "kafkaAuthorizedSubnetIds",
     "launchDarklyClient",
+    "launchDarklyServer",
     "redirectSignout",
   ];
 

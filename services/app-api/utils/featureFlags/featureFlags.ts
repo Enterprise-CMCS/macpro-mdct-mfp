@@ -1,8 +1,21 @@
+/* eslint-disable no-console */
 import * as LD from "@launchdarkly/node-server-sdk";
 
 export const getLaunchDarklyClient = async () => {
+  const fallback = {
+    variation: (_key: string, _context: any, defaultValue: Promise<any>) =>
+      defaultValue,
+  } as LD.LDClient;
+
+  if (!process.env.launchDarklyServer) {
+    console.error(
+      "Missing LaunchDarkly SDK server key. Soft failing to fallback client."
+    );
+    return fallback;
+  }
+
   try {
-    const client = LD.init(process.env.LD_SDK_KEY!, {
+    const client = LD.init(process.env.launchDarklyServer, {
       baseUri: "https://clientsdk.launchdarkly.us",
       streamUri: "https://clientstream.launchdarkly.us",
       eventsUri: "https://events.launchdarkly.us",
@@ -10,14 +23,7 @@ export const getLaunchDarklyClient = async () => {
     await client.waitForInitialization({ timeout: 60 });
     return client;
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error(err);
-
-    // Build a fallback client
-    const fallback = {
-      variation: (_key: string, _context: any, defaultValue: Promise<any>) =>
-        defaultValue,
-    } as LD.LDClient;
     return fallback;
   }
 };
@@ -29,10 +35,8 @@ export const getFlagValue = async (flagName: string) => {
 };
 
 export const isFeaturedFlagEnabled = async (flagName: string) => {
-  // const flagValue = true;
   const flagValue = await getFlagValue(flagName);
 
-  // eslint-disable-next-line no-console
   console.log(`FEATURE FLAG: ${flagName}, enabled: ${flagValue}`);
   return flagValue;
 };

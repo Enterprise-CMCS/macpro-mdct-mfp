@@ -30,6 +30,7 @@ interface CreateApiComponentsProps {
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
   expenditureFormBucket: s3.IBucket;
+  launchDarklyServer: string;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
@@ -45,6 +46,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     wpFormBucket,
     sarFormBucket,
     expenditureFormBucket,
+    launchDarklyServer,
   } = props;
 
   const service = "app-api";
@@ -101,7 +103,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     NODE_OPTIONS: "--enable-source-maps",
     brokerString,
     STAGE: stage,
-    LD_SDK_KEY: process.env.LD_SDK_KEY!,
+    launchDarklyServer,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     EXPENDITURE_FORM_BUCKET: expenditureFormBucket.bucketName,
