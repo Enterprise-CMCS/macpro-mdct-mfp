@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Link as RouterLink, useNavigate, useSearchParams } from "react-router";
 import { States } from "../../../constants";
 
@@ -97,7 +97,6 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
     undefined
   );
-  const [showSarAlert, setShowSarAlert] = useState<boolean>(false);
 
   const dashboardVerbiageMap: any = {
     WP: wpVerbiage,
@@ -115,8 +114,7 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
   const activeState =
     userIsAdmin || userIsReadOnly ? adminSelectedState : userState;
 
-  useEffect(() => {
-    let showAlert = false;
+  const showSarAlert = useMemo(() => {
     if (reportType === ReportType.SAR) {
       const activeSarList = reportsToDisplay?.filter(
         (report: ReportMetadataShape) => {
@@ -127,9 +125,9 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
           );
         }
       );
-      showAlert = !workPlanToCopyFrom && activeSarList?.length === 0;
+      return !workPlanToCopyFrom && activeSarList?.length === 0;
     }
-    setShowSarAlert(showAlert);
+    return false;
   }, [reportsToDisplay, workPlanToCopyFrom]);
 
   useEffect(() => {
@@ -166,9 +164,13 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
       //grab the last report added, which is now the first report displayed
       setPreviousReport(newReportsToDisplay?.[0]);
     } else {
-      setReportsToDisplay(
-        handleExpendituresFilter(filterYear, filterQuarter, newReportsToDisplay)
+      const filteredReports = handleExpendituresFilter(
+        filterYear,
+        filterQuarter,
+        newReportsToDisplay
       );
+      setReportsToDisplay(filteredReports);
+      setPreviousReport(filteredReports?.[0]);
     }
   }, [reportsByState, searchParams]);
 
