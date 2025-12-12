@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router";
+import { Link as RouterLink, useNavigate, useSearchParams } from "react-router";
 import { States } from "../../../constants";
 
 // components
@@ -24,6 +24,8 @@ import {
   ReportContext,
   Alert,
   CreateExpenditureModal,
+  DashboardFilter,
+  handleExpendituresFilter,
 } from "components";
 // types
 import {
@@ -53,7 +55,7 @@ import alertIcon from "assets/icons/icon_alert_circle.png";
 import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
 import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
 
-export const DashboardPage = ({ reportType }: Props) => {
+export const DashboardPage = ({ reportType, showFilter }: Props) => {
   const {
     errorMessage,
     fetchReportsByState,
@@ -83,6 +85,10 @@ export const DashboardPage = ({ reportType }: Props) => {
   const [previousReport, setPreviousReport] = useState<
     ReportMetadataShape | undefined
   >(undefined);
+
+  const [searchParams] = useSearchParams();
+  const filterYear = searchParams.get("year") || "All";
+  const filterQuarter = searchParams.get("quarter") || "All";
 
   const [reportId, setReportId] = useState<string | undefined>(undefined);
   const [entering, setEntering] = useState<boolean>(false);
@@ -155,10 +161,16 @@ export const DashboardPage = ({ reportType }: Props) => {
         (report: ReportMetadataShape) => !report?.archived
       );
     }
-    setReportsToDisplay(newReportsToDisplay);
-    //grab the last report added, which is now the first report displayed
-    setPreviousReport(newReportsToDisplay?.[0]);
-  }, [reportsByState]);
+    if (!showFilter) {
+      setReportsToDisplay(newReportsToDisplay);
+      //grab the last report added, which is now the first report displayed
+      setPreviousReport(newReportsToDisplay?.[0]);
+    } else {
+      setReportsToDisplay(
+        handleExpendituresFilter(filterYear, filterQuarter, newReportsToDisplay)
+      );
+    }
+  }, [reportsByState, searchParams]);
 
   const isReportEditable = (selectedReport: ReportShape) => {
     //the wp is only editable only when the user is a state user and the form has not been submitted or approved, all over users are in view mode
@@ -353,7 +365,6 @@ export const DashboardPage = ({ reportType }: Props) => {
   } = useDisclosure();
 
   const fullStateName = States[activeState as keyof typeof States];
-
   return (
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
@@ -390,6 +401,8 @@ export const DashboardPage = ({ reportType }: Props) => {
         {parseCustomHtml(intro.body)}
       </Box>
       <Box sx={sx.bodyBox}>
+        {showFilter && <DashboardFilter />}
+
         {reportsToDisplay ? (
           <ResponsiveDashboardTable
             reportsByState={reportsToDisplay}
@@ -493,6 +506,7 @@ export const DashboardPage = ({ reportType }: Props) => {
 
 interface Props {
   reportType: string;
+  showFilter?: boolean;
 }
 
 const sx = {

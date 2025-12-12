@@ -14,6 +14,7 @@ import {
   ReviewSubmitPage,
   ExportedReportPage,
   ReportContext,
+  ExpendituresDashboardPage,
 } from "components";
 // utils
 import { ScrollToTopComponent, useStore } from "utils";
@@ -65,7 +66,7 @@ export const AppRoutes = () => {
           {expenditureReport && (
             <Route
               path="/expenditure"
-              element={<DashboardPage reportType={ReportType.EXPENDITURE} />}
+              element={<ExpendituresDashboardPage />}
             />
           )}
 
