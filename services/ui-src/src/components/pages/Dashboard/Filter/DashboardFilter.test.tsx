@@ -1,6 +1,12 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  act,
+  waitFor,
+} from "@testing-library/react";
 import { DashboardFilter } from "./DashboardFilter";
 import { useSearchParams } from "react-router";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("react-router", () => ({
   useSearchParams: jest.fn(),
@@ -31,11 +37,9 @@ describe("DashboardFilter", () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
 
-    expect(screen.getByTestId("year-filter-dropdown")).toHaveTextContent("All");
+    expect(screen.getByTestId("year-filter-dropdown")).toHaveValue("All");
 
-    expect(screen.getByTestId("quarter-filter-dropdown")).toHaveTextContent(
-      "All"
-    );
+    expect(screen.getByTestId("quarter-filter-dropdown")).toHaveValue("All");
   });
 
   it("initializes with search params from URL", () => {
@@ -47,65 +51,76 @@ describe("DashboardFilter", () => {
 
     render(<DashboardFilter />);
 
-    expect(screen.getByTestId("year-filter-dropdown")).toHaveTextContent(
-      "2025"
-    );
-    expect(screen.getByTestId("quarter-filter-dropdown")).toHaveTextContent(
-      "1"
-    );
+    expect(screen.getByTestId("year-filter-dropdown")).toHaveValue("2025");
+    expect(screen.getByTestId("quarter-filter-dropdown")).toHaveValue("1");
   });
 
-  it("updates year dropdown value on change", () => {
+  it("updates year dropdown value on change", async () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
 
     const yearDropdown = screen.getByTestId("year-filter-dropdown");
-    fireEvent.change(yearDropdown, { target: { value: "2024" } });
 
-    expect(yearDropdown).toHaveValue("2024");
+    await act(async () => {
+      userEvent.selectOptions(yearDropdown, "2025");
+    });
+
+    waitFor(() => {
+      expect(yearDropdown).toHaveValue("2025");
+    });
   });
 
-  it("updates quarter dropdown value on change", () => {
+  it("updates quarter dropdown value on change", async () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
 
     const quarterDropdown = screen.getByTestId("quarter-filter-dropdown");
-    fireEvent.change(quarterDropdown, { target: { value: "Q2" } });
 
-    expect(quarterDropdown).toHaveValue("Q2");
+    await act(async () => {
+      userEvent.selectOptions(quarterDropdown, "2");
+    });
+
+    waitFor(() => {
+      expect(quarterDropdown).toHaveValue("2");
+    });
   });
 
-  // This test is commented out due to issues with dropdown interaction.
+  it("calls setSearchParams with selected values when Filter button is clicked", async () => {
+    mockGetSearchParams.mockReturnValue(null);
+    render(<DashboardFilter />);
+    const yearDropdown = screen.getByTestId("year-filter-dropdown");
+    const quarterDropdown = screen.getByTestId("quarter-filter-dropdown");
+    const filterButton = screen.getByTestId("dash-filter-button");
 
-  /*
-   * it('calls setSearchParams with selected values when Filter button is clicked', () => {
-   *  mockGetSearchParams.mockReturnValue(null);
-   *   render(<DashboardFilter />);
-   *   const yearDropdown = screen.getByTestId('year-filter-dropdown');
-   *   const quarterDropdown = screen.getByTestId('quarter-filter-dropdown');
-   *   const filterButton = screen.getByTestId('dash-filter-button')
-   *   fireEvent.change(yearDropdown, { target: { value: '2026' } });
-   *   fireEvent.change(quarterDropdown, { target: { value: '4' } });
-   *   expect(yearDropdown).toHaveValue('2026');
-   *   expect(quarterDropdown).toHaveValue('4');
-   *   userEvent.click(filterButton);
-   *   expect(mockSetSearchParams).toHaveBeenCalledWith({
-   *     year: '2026',
-   *     quarter: '4',
-   *   });
-   *});
-   */
+    await act(async () => {
+      userEvent.selectOptions(yearDropdown, "2026");
+      userEvent.selectOptions(quarterDropdown, "4");
+      await userEvent.click(filterButton);
+    });
 
-  it("applies filters with default values when Filter button clicked without changes", () => {
+    waitFor(() => {
+      expect(mockSetSearchParams).toHaveBeenCalledWith({
+        year: "2026",
+        quarter: "4",
+      });
+    });
+  });
+
+  it("applies filters with default values when Filter button clicked without changes", async () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
 
     const filterButton = screen.getByText("Filter");
-    fireEvent.click(filterButton);
 
-    expect(mockSetSearchParams).toHaveBeenCalledWith({
-      year: "All",
-      quarter: "All",
+    await act(async () => {
+      await userEvent.click(filterButton);
+    });
+
+    waitFor(() => {
+      expect(mockSetSearchParams).toHaveBeenCalledWith({
+        year: "All",
+        quarter: "All",
+      });
     });
   });
 });

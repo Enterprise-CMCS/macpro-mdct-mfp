@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useSearchParams } from "react-router";
 
-import { Button, Grid, GridItem } from "@chakra-ui/react";
-import { Dropdown } from "@cmsgov/design-system";
+import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
+import { Label } from "@cmsgov/design-system";
 import {
   filterQuarterOptions,
   filterYearOptions,
@@ -35,26 +35,54 @@ export const DashboardFilter = () => {
   return (
     <Grid sx={sx.filterContainer}>
       <GridItem>
-        {/* @ts-expect-error - Dropdown type incompatibility with React version */}
-        <Dropdown
-          name="yearFilter"
-          label="Filter by Year"
-          value={yearDropdownValue}
-          onChange={handleYearChange}
-          data-testid="year-filter-dropdown"
-          options={filterYearOptions}
-        />
+        <Box>
+          <Label htmlFor="yearFilter" id="yearFilter-label">
+            Filter by Year
+          </Label>
+          <select
+            name="yearFilter"
+            id="yearFilter"
+            value={yearDropdownValue}
+            onChange={handleYearChange}
+            data-testid="year-filter-dropdown"
+            aria-invalid="false"
+            className="ds-c-field"
+          >
+            {filterYearOptions.map((option) => (
+              <option
+                key={`year-filter-dropdown-${option.value}`}
+                value={option.value}
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </Box>
       </GridItem>
       <GridItem>
-        {/* @ts-expect-error - Dropdown type incompatibility with React version */}
-        <Dropdown
-          name="quarterFilter"
-          label="Filter by Quarter"
-          value={quarterDropdownValue}
-          onChange={handleQuarterChange}
-          data-testid="quarter-filter-dropdown"
-          options={filterQuarterOptions}
-        />
+        <Box>
+          <Label htmlFor="quarterFilter" id="quarterFilter-label">
+            Filter by Quarter
+          </Label>
+          <select
+            name="quarterFilter"
+            id="quarterFilter"
+            value={quarterDropdownValue}
+            onChange={handleQuarterChange}
+            data-testid="quarter-filter-dropdown"
+            aria-invalid="false"
+            className="ds-c-field"
+          >
+            {filterQuarterOptions.map((option) => (
+              <option
+                key={`quarter-filter-dropdown-${option.value}`}
+                value={option.value}
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </Box>
       </GridItem>
       <GridItem>
         <Button
