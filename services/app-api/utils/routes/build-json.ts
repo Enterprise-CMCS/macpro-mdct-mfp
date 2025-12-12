@@ -5,9 +5,9 @@ const fs = require("fs").promises;
 const FORMS_DIR = path.resolve("forms");
 const ROUTES_DIR = path.resolve(FORMS_DIR, "routes");
 
-function getJsonData(indexFile: string) {
+function getJsonData(indexFile: string, formName: string) {
   const mod = require(indexFile);
-  const form = mod.ReportJson;
+  const form = mod[`${formName}ReportJson`];
   return form;
 }
 
@@ -37,7 +37,7 @@ async function buildJson() {
     const indexFile = path.join(form, "index.ts");
 
     try {
-      const routes = getJsonData(indexFile);
+      const routes = getJsonData(indexFile, formName);
       const jsonPath = path.join(FORMS_DIR, `${formName}.json`);
 
       await writeJsonFile(jsonPath, routes);
