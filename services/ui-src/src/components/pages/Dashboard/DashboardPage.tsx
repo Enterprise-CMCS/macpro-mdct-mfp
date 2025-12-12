@@ -286,11 +286,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           return previousReport.status !== ReportStatus.APPROVED;
         }
       case ReportType.EXPENDITURE:
-        if (!previousReport) {
-          return false;
-        } else {
-          return previousReport.status !== ReportStatus.APPROVED;
-        }
+        return false;
       default:
         return true;
     }

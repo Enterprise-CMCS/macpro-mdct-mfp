@@ -12,7 +12,8 @@
     "resolveJsonModule": true,
     "lib": ["ES2022"],
     "module": "node16",
-    "target": "ES2022"
+    "target": "ES2022",
+    "isolatedModules": true
   },
   "ts-node": {
     "files": true
