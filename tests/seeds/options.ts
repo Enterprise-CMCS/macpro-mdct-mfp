@@ -29,13 +29,13 @@ export const loginSeedUsers = async (): Promise<void> => {
 
 // Reports
 export const createReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
-  period: number,
-  flags: { [key: string]: true }
+  period: number
 ): Promise<SeedReportShape> => {
   if (reportType === "SAR") {
-    const report = createSemiAnnualReport(year, period, flags);
+    const report = createSemiAnnualReport(flags, year, period);
     return report;
   }
 
@@ -49,20 +49,20 @@ export const createReport = async (
 };
 
 export const createFilledReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
-  period: number,
-  flags: { [key: string]: true }
+  period: number
 ): Promise<SeedReportShape> => {
-  const response = await createReport(reportType, year, period, flags);
+  const response = await createReport(flags, reportType, year, period);
 
   if (response.id) {
     const report = await updateFillReport(
+      flags,
       response.id,
       reportType,
       year,
-      period,
-      flags
+      period
     );
     return report;
   }
@@ -72,11 +72,11 @@ export const createFilledReport = async (
 };
 
 export const updateFillReport = async (
+  flags: { [key: string]: true },
   id: string,
   reportType: string,
   year: number,
-  period: number,
-  flags: { [key: string]: true }
+  period: number
 ): Promise<SeedReportShape> => {
   let data = {};
 
@@ -96,12 +96,12 @@ export const updateFillReport = async (
 };
 
 export const createSubmittedReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
-  period: number,
-  flags: { [key: string]: true }
+  period: number
 ): Promise<SeedReportShape> => {
-  const response = await createFilledReport(reportType, year, period, flags);
+  const response = await createFilledReport(flags, reportType, year, period);
 
   if (response.id) {
     const report = await updateSubmitReport(response.id, reportType);
@@ -125,12 +125,12 @@ export const updateSubmitReport = async (
 };
 
 export const createApprovedReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
-  period: number,
-  flags: { [key: string]: true }
+  period: number
 ): Promise<SeedReportShape> => {
-  const { id } = await createSubmittedReport(reportType, year, period, flags);
+  const { id } = await createSubmittedReport(flags, reportType, year, period);
   const report = await updateApprovedReport(id, reportType);
   return report;
 };
@@ -148,12 +148,12 @@ export const updateApprovedReport = async (
 };
 
 export const createLockedReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
-  period: number,
-  flags: { [key: string]: true }
+  period: number
 ): Promise<SeedReportShape> => {
-  const response = await createApprovedReport(reportType, year, period, flags);
+  const response = await createApprovedReport(flags, reportType, year, period);
 
   if (response.id) {
     const report = await updateLockedReport(response.id, reportType);
@@ -177,12 +177,12 @@ export const updateLockedReport = async (
 };
 
 export const createArchivedReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
-  period: number,
-  flags: { [key: string]: true }
+  period: number
 ): Promise<SeedReportShape> => {
-  const response = await createSubmittedReport(reportType, year, period, flags);
+  const response = await createSubmittedReport(flags, reportType, year, period);
 
   if (response.id) {
     const report = await updateArchivedReport(response.id, reportType);
@@ -229,13 +229,13 @@ export const getWorkPlansByState = async (): Promise<SeedReportShape[]> => {
 
 // Semi-Annual Reports (SAR)
 export const createSemiAnnualReport = async (
+  flags: { [key: string]: true },
   year: number,
-  period: number,
-  flags: { [key: string]: true }
+  period: number
 ): Promise<SeedReportShape> => {
   let id = "";
 
-  const newWP = await createApprovedReport("WP", year, period, flags);
+  const newWP = await createApprovedReport(flags, "WP", year, period);
 
   if (newWP.id) {
     id = newWP.id;
@@ -246,10 +246,9 @@ export const createSemiAnnualReport = async (
     );
 
     if (approvedWPs.length === 0) {
+      id = approvedWPs[0].id;
       return "No approved WP available for this SAR." as unknown as SeedReportShape;
     }
-
-    id = approvedWPs[0].id;
   }
 
   const wp = await getWorkPlanById(id);
