@@ -232,7 +232,7 @@ const seed = async (
         const reportType = answer.replace("create", "");
         const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
-          await createReport(reportType, reportYear, reportPeriod, flags),
+          await createReport(flags, reportType, reportYear, reportPeriod),
           "Base",
           reportType
         );
@@ -243,7 +243,7 @@ const seed = async (
         const reportType = answer.replace("createFilled", "");
         const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
-          await createFilledReport(reportType, reportYear, reportPeriod, flags),
+          await createFilledReport(flags, reportType, reportYear, reportPeriod),
           "Filled",
           reportType
         );
@@ -255,10 +255,10 @@ const seed = async (
         const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
           await createSubmittedReport(
+            flags,
             reportType,
             reportYear,
-            reportPeriod,
-            flags
+            reportPeriod
           ),
           "Submitted",
           reportType
@@ -270,10 +270,10 @@ const seed = async (
         const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
           await createApprovedReport(
+            flags,
             reportType,
             reportYear,
-            reportPeriod,
-            flags
+            reportPeriod
           ),
           "Approved",
           reportType
@@ -285,7 +285,7 @@ const seed = async (
         const reportType = answer.replace("createLocked", "");
         const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
-          await createLockedReport(reportType, reportYear, reportPeriod, flags),
+          await createLockedReport(flags, reportType, reportYear, reportPeriod),
           "Locked",
           reportType
         );
@@ -296,10 +296,10 @@ const seed = async (
         const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
           await createArchivedReport(
+            flags,
             reportType,
             reportYear,
-            reportPeriod,
-            flags
+            reportPeriod
           ),
           "Archived",
           reportType
