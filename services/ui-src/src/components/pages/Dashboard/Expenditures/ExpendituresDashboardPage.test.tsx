@@ -9,8 +9,8 @@ import {
   mockExpenditureOneNotStartedReportContext,
   mockNoExpenditureStore,
   mockNotStartedExpenditureStore,
-  RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/expenditure/mockExpenditure";
+import { RouterWrappedComponent } from "utils/testing/setupJest";
 // verbiage
 import expenditureVerbiage from "verbiage/pages/expenditure/expenditure-dashboard";
 

@@ -361,6 +361,5 @@ export * from "./mockForm";
 export * from "./mockLaunchDarkly";
 // REPORT
 export * from "./mockReport";
-export * from "./expenditure/mockExpenditure";
 // ROUTER
 export * from "./mockRouter";
