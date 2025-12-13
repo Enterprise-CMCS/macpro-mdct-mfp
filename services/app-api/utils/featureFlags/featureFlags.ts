@@ -6,7 +6,6 @@ export const getLaunchDarklyClient = async () => {
     variation: (_key: string, _context: any, defaultValue: Promise<any>) =>
       defaultValue,
   } as LD.LDClient;
-  console.log(process.env.launchDarklyServer);
   if (!process.env.launchDarklyServer) {
     console.error(
       "Missing LaunchDarkly SDK server key. Soft failing to fallback client."
