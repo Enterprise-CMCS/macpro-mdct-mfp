@@ -1,9 +1,4 @@
-import {
-  render,
-  screen,
-  act,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import { DashboardFilter } from "./DashboardFilter";
 import { useSearchParams } from "react-router";
 import userEvent from "@testing-library/user-event";
