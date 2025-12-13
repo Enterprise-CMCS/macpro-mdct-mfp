@@ -246,9 +246,10 @@ export const createSemiAnnualReport = async (
     );
 
     if (approvedWPs.length === 0) {
-      id = approvedWPs[0].id;
       return "No approved WP available for this SAR." as unknown as SeedReportShape;
     }
+
+    id = approvedWPs[0].id;
   }
 
   const wp = await getWorkPlanById(id);
