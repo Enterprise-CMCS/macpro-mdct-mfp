@@ -12,7 +12,7 @@ import {
 } from "../types";
 
 export const newSemiAnnualReport = (
-  flags: string[],
+  flags: { [key: string]: true },
   {
     lastAlteredBy,
     reportPeriod,
@@ -22,7 +22,7 @@ export const newSemiAnnualReport = (
     fieldData,
   }: SeedReportShape
 ): SeedNewReportShape => {
-  if (flags.length > 0) {
+  if (Object.keys(flags).length > 0) {
     // Add data mods by flag
   }
 
@@ -55,10 +55,10 @@ export const newSemiAnnualReport = (
   };
 };
 export const fillSemiAnnualReport = (
-  flags: string[],
+  flags: { [key: string]: true },
   { fieldData, populations, reportPeriod, reportYear }: SeedReportShape
 ): SeedFillReportShape => {
-  if (flags.length > 0) {
+  if (Object.keys(flags).length > 0) {
     // Add data mods by flag
   }
 
