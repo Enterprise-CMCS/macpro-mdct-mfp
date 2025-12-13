@@ -32,7 +32,7 @@ export const createReport = async (
   reportType: string,
   year: number,
   period: number,
-  flags: string[]
+  flags: { [key: string]: true }
 ): Promise<SeedReportShape> => {
   if (reportType === "SAR") {
     const report = createSemiAnnualReport(year, period, flags);
@@ -52,7 +52,7 @@ export const createFilledReport = async (
   reportType: string,
   year: number,
   period: number,
-  flags: string[]
+  flags: { [key: string]: true }
 ): Promise<SeedReportShape> => {
   const response = await createReport(reportType, year, period, flags);
 
@@ -76,7 +76,7 @@ export const updateFillReport = async (
   reportType: string,
   year: number,
   period: number,
-  flags: string[]
+  flags: { [key: string]: true }
 ): Promise<SeedReportShape> => {
   let data = {};
 
@@ -99,7 +99,7 @@ export const createSubmittedReport = async (
   reportType: string,
   year: number,
   period: number,
-  flags: string[]
+  flags: { [key: string]: true }
 ): Promise<SeedReportShape> => {
   const response = await createFilledReport(reportType, year, period, flags);
 
@@ -128,7 +128,7 @@ export const createApprovedReport = async (
   reportType: string,
   year: number,
   period: number,
-  flags: string[]
+  flags: { [key: string]: true }
 ): Promise<SeedReportShape> => {
   const { id } = await createSubmittedReport(reportType, year, period, flags);
   const report = await updateApprovedReport(id, reportType);
@@ -151,7 +151,7 @@ export const createLockedReport = async (
   reportType: string,
   year: number,
   period: number,
-  flags: string[]
+  flags: { [key: string]: true }
 ): Promise<SeedReportShape> => {
   const response = await createApprovedReport(reportType, year, period, flags);
 
@@ -180,7 +180,7 @@ export const createArchivedReport = async (
   reportType: string,
   year: number,
   period: number,
-  flags: string[]
+  flags: { [key: string]: true }
 ): Promise<SeedReportShape> => {
   const response = await createSubmittedReport(reportType, year, period, flags);
 
@@ -231,7 +231,7 @@ export const getWorkPlansByState = async (): Promise<SeedReportShape[]> => {
 export const createSemiAnnualReport = async (
   year: number,
   period: number,
-  flags: string[]
+  flags: { [key: string]: true }
 ): Promise<SeedReportShape> => {
   let id = "";
 

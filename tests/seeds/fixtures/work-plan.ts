@@ -9,12 +9,12 @@ import { dateFormat, quarterlyKeyValueGenerator } from "../helpers";
 import { SeedFillReportShape, SeedNewReportShape } from "../types";
 
 export const newWorkPlan = (
-  flags: string[],
+  flags: { [key: string]: true },
   stateName: string,
   reportYear: number,
   reportPeriod: number
 ): SeedNewReportShape => {
-  if (flags.length > 0) {
+  if (Object.keys(flags).length > 0) {
     // Add data mods by flag
   }
 
@@ -40,7 +40,7 @@ export const newWorkPlan = (
 };
 
 export const fillWorkPlan = (
-  flags: string[],
+  flags: { [key: string]: true },
   year: number,
   period: number
 ): SeedFillReportShape => {
@@ -69,7 +69,7 @@ export const fillWorkPlan = (
     },
   };
 
-  if (flags.includes("contentUpdates2026")) {
+  if (flags.contentUpdates2026) {
     // Removed fields
     const {
       strategy_additionalDetails, // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -126,7 +126,7 @@ const addEvaluationPlan = (
 };
 
 const addInitiative = (
-  flags: string[],
+  flags: { [key: string]: true },
   year: number,
   period: number
 ): ReportFieldData[] => {
@@ -148,7 +148,7 @@ const addInitiative = (
 
   let flaggedData = {};
 
-  if (flags.includes("contentUpdates2026")) {
+  if (flags.contentUpdates2026) {
     flaggedData = {
       defineInitiative_keyActivities: [
         {
