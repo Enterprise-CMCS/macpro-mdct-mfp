@@ -5,6 +5,7 @@ import {
   isEndDateAfterStartDate,
   nested,
   number,
+  numberLessThan90,
   ratio,
   textCustom,
   validInteger,
@@ -95,6 +96,22 @@ describe("Schemas", () => {
   test("Evaluate Number Schema using number scheme", () => {
     testSchema(number(), goodNumberTestCases, true);
     testSchema(number(), badNumberTestCases, false);
+  });
+
+  test("Evaluate Number less than 90 scheme", () => {
+    const goodNumberLessThan90 = [
+      "90",
+      "89",
+      "88.00",
+      "1",
+      "0",
+      "N/A",
+      "Data not available",
+    ];
+
+    const badNumberLessThan90 = ["91", "90.01", "1202"];
+    testSchema(numberLessThan90(), goodNumberLessThan90, true);
+    testSchema(numberLessThan90(), badNumberLessThan90, false);
   });
 
   test("Evaluate Number Schema using integer scheme", () => {

@@ -15,6 +15,7 @@ const error = {
   INVALID_DATE: "Response must be a valid date",
   INVALID_END_DATE: "End date can't be before start date",
   NUMBER_LESS_THAN_ZERO: "Response must be greater than or equal to zero",
+  NUMBER_LESS_THAN_90: "Percentage cannot exceed 90%",
   INVALID_NUMBER: "Response must be a valid number",
   INVALID_NUMBER_OR_NA: 'Response must be a valid number or "N/A"',
   INVALID_RATIO: "Response must be a valid ratio",
@@ -88,6 +89,16 @@ export const number = () =>
     });
 
 export const numberOptional = () => numberSchema().notRequired().nullable();
+export const numberLessThan90 = () =>
+  number().test({
+    test: (value) => {
+      if (value) {
+        const isValidStringValue = validNAValues.includes(value);
+        return isValidStringValue || Number(value) <= 90;
+      } else return true;
+    },
+    message: error.NUMBER_LESS_THAN_90,
+  });
 
 // Integer or Valid Strings
 export const validIntegerSchema = () =>
@@ -260,6 +271,7 @@ export const schemaMap: any = {
   number: number(),
   numberOptional: numberOptional(),
   objectArray: objectArray(),
+  numberLessThan90: numberLessThan90(),
   radio: radio(),
   radioOptional: radioOptional(),
   ratio: ratio(),

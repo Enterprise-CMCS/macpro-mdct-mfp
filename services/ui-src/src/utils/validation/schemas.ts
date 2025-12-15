@@ -80,6 +80,16 @@ export const number = () =>
 
 export const numberOptional = () =>
   numberSchema().notRequired().nullable().transform(transformEmptyStringToNull);
+export const numberLessThan90 = () =>
+  number().test({
+    test: (value) => {
+      if (value) {
+        const isValidStringValue = validNAValues.includes(value);
+        return isValidStringValue || Number(value) <= 90;
+      } else return true;
+    },
+    message: error.NUMBER_LESS_THAN_90,
+  });
 
 // Integer or Valid Strings
 export const validIntegerSchema = () =>

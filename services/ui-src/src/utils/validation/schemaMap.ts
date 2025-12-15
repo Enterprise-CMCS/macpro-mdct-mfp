@@ -7,6 +7,7 @@ export const schemaMap: any = {
   textCustom: (options: TextOptions) => schema.textCustom(options),
   number: schema.number(),
   numberOptional: schema.numberOptional(),
+  numberLessThan90: schema.numberLessThan90(),
   ratio: schema.ratio(),
   email: schema.email(),
   emailOptional: schema.emailOptional(),
