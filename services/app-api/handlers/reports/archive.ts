@@ -29,8 +29,8 @@ export const archiveReport = handler(async (event) => {
   const currentReport = await getReportMetadata(reportType, state, id);
   const hasAssociatedSar = currentReport?.associatedSar;
 
-  // WP with associated SAR cannot be archived
-  if (reportType !== ReportType.WP || hasAssociatedSar) {
+  // SAR or WP with associated SAR cannot be archived
+  if (reportType === ReportType.SAR || hasAssociatedSar) {
     return badRequest(error.INVALID_DATA);
   }
 
