@@ -2,6 +2,7 @@ import {
   FormRoute,
   PageTypes,
   ReportFormFieldType,
+  ValidationComparator,
   ValidationType,
 } from "../../../../../utils/types";
 
@@ -37,7 +38,13 @@ export const fmapPercentagesRoute: FormRoute = {
       {
         id: "fmap_qualifiedHcbsPercentage",
         type: ReportFormFieldType.NUMBER,
-        validation: ValidationType.NUMBER_LESS_THAN_90,
+        validation: {
+          type: ValidationType.NUMBER_COMPARISON,
+          options: {
+            boundary: 90,
+            comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+          },
+        },
         props: {
           label: "Enhanced FMAP: Qualified HCBS",
           hint: "Enter percentage.",
@@ -47,7 +54,13 @@ export const fmapPercentagesRoute: FormRoute = {
       {
         id: "fmap_demonstrationServicesPercentage",
         type: ReportFormFieldType.NUMBER,
-        validation: ValidationType.NUMBER_LESS_THAN_90,
+        validation: {
+          type: ValidationType.NUMBER_COMPARISON,
+          options: {
+            boundary: 90,
+            comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+          },
+        },
         props: {
           label: "Enhanced FMAP: Demonstration Services",
           hint: "Enter percentage.",

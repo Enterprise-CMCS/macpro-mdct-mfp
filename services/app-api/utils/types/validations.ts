@@ -6,7 +6,7 @@ export enum ValidationType {
   DYNAMIC = "dynamic",
   EMAIL = "email",
   NUMBER = "number",
-  NUMBER_LESS_THAN_90 = "numberLessThan90",
+  NUMBER_COMPARISON = "numberComparison",
   RADIO = "radio",
   TEXT = "text",
   TEXT_CUSTOM = "textCustom",
@@ -16,9 +16,20 @@ export enum ValidationType {
   VALID_INTEGER_OPTIONAL = "validIntegerOptional",
 }
 
+export interface ComparatorMap {
+  [key: string]: {
+    compare: Function;
+    error: Function;
+  };
+}
+
+export enum ValidationComparator {
+  LESS_THAN_OR_EQUAL_PERCENTAGE = "lessThanOrEqualPercentage",
+}
+
 export interface CustomValidation {
-  type: ValidationType.TEXT_CUSTOM;
-  options: TextOptions;
+  type: ValidationType;
+  options: TextOptions | NumberOptions;
 }
 
 export interface NestedValidation {
@@ -31,4 +42,9 @@ export interface NestedValidation {
 
 export interface TextOptions {
   maxLength?: number;
+}
+
+export interface NumberOptions {
+  boundary: number;
+  comparator: ValidationComparator;
 }

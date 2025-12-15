@@ -1,5 +1,5 @@
 import { array, boolean, mixed, object, string } from "yup";
-import { Choice, TextOptions } from "../types";
+import { Choice, ComparatorMap, NumberOptions, TextOptions } from "../types";
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
@@ -15,7 +15,6 @@ const error = {
   INVALID_DATE: "Response must be a valid date",
   INVALID_END_DATE: "End date can't be before start date",
   NUMBER_LESS_THAN_ZERO: "Response must be greater than or equal to zero",
-  NUMBER_LESS_THAN_90: "Percentage cannot exceed 90%",
   INVALID_NUMBER: "Response must be a valid number",
   INVALID_NUMBER_OR_NA: 'Response must be a valid number or "N/A"',
   INVALID_RATIO: "Response must be a valid ratio",
@@ -57,6 +56,13 @@ const validNAValues = ["N/A", "Data not available"];
 // const validNumberRegex = /^\.$|[0-9]/;
 const validIntegerRegex = /^[0-9\s,$%]+$/;
 
+const comparatorMap: ComparatorMap = {
+  lessThanOrEqualPercentage: {
+    compare: (value: number, max: number) => value <= max,
+    error: (max: number) => `Percentage cannot exceed ${max}%`,
+  },
+};
+
 // NUMBER - Number or Valid Strings
 export const numberSchema = () =>
   string()
@@ -89,15 +95,20 @@ export const number = () =>
     });
 
 export const numberOptional = () => numberSchema().notRequired().nullable();
-export const numberLessThan90 = () =>
+export const numberComparison = (options: NumberOptions) =>
   number().test({
     test: (value) => {
+      const { boundary, comparator } = options;
+      const { compare } = comparatorMap[comparator];
       if (value) {
         const isValidStringValue = validNAValues.includes(value);
-        return isValidStringValue || Number(value) <= 90;
+        return isValidStringValue || compare(Number(value), boundary);
       } else return true;
     },
-    message: error.NUMBER_LESS_THAN_90,
+    message: () => {
+      const { error: comparisonError } = comparatorMap[options.comparator];
+      return comparisonError(options.boundary);
+    },
   });
 
 // Integer or Valid Strings
@@ -271,7 +282,7 @@ export const schemaMap: any = {
   number: number(),
   numberOptional: numberOptional(),
   objectArray: objectArray(),
-  numberLessThan90: numberLessThan90(),
+  numberComparison: (options: NumberOptions) => numberComparison(options),
   radio: radio(),
   radioOptional: radioOptional(),
   ratio: ratio(),

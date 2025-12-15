@@ -1,6 +1,6 @@
 import { array, boolean, mixed, object, string } from "yup";
 import { validationErrors as error } from "verbiage/errors";
-import { Choice, TextOptions } from "types";
+import { Choice, ComparatorMap, NumberOptions, TextOptions } from "types";
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
@@ -47,6 +47,13 @@ const validNAValues = ["N/A", "Data not available"];
 // const validNumberRegex = /^\.$|[0-9]/;
 const validIntegerRegex = /^[0-9\s,$%]+$/;
 
+const comparatorMap: ComparatorMap = {
+  lessThanOrEqualPercentage: {
+    compare: (value: number, max: number) => value <= max,
+    error: (max: number) => `Percentage cannot exceed ${max}%`,
+  },
+};
+
 // NUMBER - Number or Valid Strings
 export const numberSchema = () =>
   string()
@@ -80,15 +87,20 @@ export const number = () =>
 
 export const numberOptional = () =>
   numberSchema().notRequired().nullable().transform(transformEmptyStringToNull);
-export const numberLessThan90 = () =>
+export const numberComparison = (options: NumberOptions) =>
   number().test({
     test: (value) => {
+      const { boundary, comparator } = options;
+      const { compare } = comparatorMap[comparator];
       if (value) {
         const isValidStringValue = validNAValues.includes(value);
-        return isValidStringValue || Number(value) <= 90;
+        return isValidStringValue || compare(Number(value), boundary);
       } else return true;
     },
-    message: error.NUMBER_LESS_THAN_90,
+    message: () => {
+      const { error: comparisonError } = comparatorMap[options.comparator];
+      return comparisonError(options.boundary);
+    },
   });
 
 // Integer or Valid Strings

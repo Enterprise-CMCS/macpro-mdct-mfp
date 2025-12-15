@@ -5,11 +5,12 @@ import {
   isEndDateAfterStartDate,
   nested,
   number,
-  numberLessThan90,
+  numberComparison,
   ratio,
   textCustom,
   validInteger,
 } from "./schemaMap";
+import { NumberOptions, ValidationComparator } from "../types";
 
 describe("Schemas", () => {
   const goodNumberTestCases = [
@@ -98,20 +99,21 @@ describe("Schemas", () => {
     testSchema(number(), badNumberTestCases, false);
   });
 
-  test("Evaluate Number less than 90 scheme", () => {
-    const goodNumberLessThan90 = [
-      "90",
-      "89",
-      "88.00",
-      "1",
-      "0",
-      "N/A",
-      "Data not available",
-    ];
-
-    const badNumberLessThan90 = ["91", "90.01", "1202"];
-    testSchema(numberLessThan90(), goodNumberLessThan90, true);
-    testSchema(numberLessThan90(), badNumberLessThan90, false);
+  test("Evaluate numberComparison scheme", () => {
+    const numberOptions: NumberOptions = {
+      boundary: 10,
+      comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+    };
+    testSchema(
+      numberComparison(numberOptions),
+      ["0", "1", "10", "9.99", "N/A"],
+      true
+    );
+    testSchema(
+      numberComparison(numberOptions),
+      ["-1", "", "11", "10.01"],
+      false
+    );
   });
 
   test("Evaluate Number Schema using integer scheme", () => {
