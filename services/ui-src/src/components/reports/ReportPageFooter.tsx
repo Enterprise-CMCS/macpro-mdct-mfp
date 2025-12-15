@@ -15,7 +15,7 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
     report?.formTemplate.flatRoutes,
     report?.formTemplate?.basePath
   );
-  const hidePrevious = previousRoute === "/wp" || previousRoute === "/sar";
+  const hidePrevious = previousRoute === report?.formTemplate?.basePath;
 
   /*
    * By default, the Continue button submits the form AND navigates.
