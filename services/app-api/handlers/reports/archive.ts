@@ -5,7 +5,7 @@ import { hasPermissions } from "../../utils/auth/authorization";
 import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
-import { ReportType, UserRoles } from "../../utils/types";
+import { UserRoles } from "../../utils/types";
 import {
   badRequest,
   forbidden,
@@ -30,7 +30,7 @@ export const archiveReport = handler(async (event) => {
   const hasAssociatedSar = currentReport?.associatedSar;
 
   // WP with associated SAR cannot be archived
-  if (reportType !== ReportType.WP || hasAssociatedSar) {
+  if (hasAssociatedSar) {
     return badRequest(error.INVALID_DATA);
   }
 
