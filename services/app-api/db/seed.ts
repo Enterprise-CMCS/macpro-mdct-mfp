@@ -25,7 +25,7 @@ import {
   loginSeedUsers,
 } from "../../../tests/seeds/options";
 // utils
-import { isFeaturedFlagEnabled } from "../utils/featureFlags/featureFlags";
+import { isFeatureFlagEnabled } from "../utils/featureFlags/featureFlags";
 // flagged routes
 import * as wpFlags from "../forms/routes/wp/flags";
 import * as sarFlags from "../forms/routes/sar/flags";
@@ -45,7 +45,7 @@ const getEnabledFlagsByReportType = async (reportType: string) => {
   // Get status of each flag from LaunchDarkly
   const evaluations = await Promise.all(
     flagNames.map(async (flagName) => {
-      const enabled = await isFeaturedFlagEnabled(flagName);
+      const enabled = await isFeatureFlagEnabled(flagName);
       return { flagName, enabled };
     })
   );
