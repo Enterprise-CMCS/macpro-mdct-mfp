@@ -6,7 +6,6 @@ export const getLaunchDarklyClient = async () => {
     variation: (_key: string, _context: any, defaultValue: Promise<any>) =>
       defaultValue,
   } as LD.LDClient;
-
   const sdkKey = process.env.LD_SDK_KEY || process.env.launchDarklyServer;
 
   if (!sdkKey) {

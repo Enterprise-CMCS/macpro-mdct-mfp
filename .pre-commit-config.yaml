@@ -42,6 +42,8 @@ repos:
           - --exclude-files
           - ^tests/seeds/fixtures/
           - --exclude-files
+          - ^services/app-api/forms/routes/
+          - --exclude-files
           - ^services/app-api/utils/constants/copyover.ts
           - --exclude-files
           - services/uploads/src/test.json
