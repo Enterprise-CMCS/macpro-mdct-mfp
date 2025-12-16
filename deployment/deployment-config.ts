@@ -1,5 +1,5 @@
-import { isLocalStack } from "./local/util";
-import { getSecret } from "./utils/secrets-manager";
+import { isLocalStack } from "./local/util.js";
+import { getSecret } from "./utils/secrets-manager.js";
 
 export interface DeploymentConfigProperties {
   project: string;
@@ -9,6 +9,7 @@ export interface DeploymentConfigProperties {
   oktaMetadataUrl: string;
   bootstrapUsersPassword?: string;
   launchDarklyClient: string;
+  launchDarklyServer: string;
   redirectSignout: string;
   cloudfrontCertificateArn?: string;
   cloudfrontDomainName?: string;
@@ -77,6 +78,7 @@ function validateConfig(config: {
     "brokerString",
     "kafkaAuthorizedSubnetIds",
     "launchDarklyClient",
+    "launchDarklyServer",
     "redirectSignout",
   ];
 

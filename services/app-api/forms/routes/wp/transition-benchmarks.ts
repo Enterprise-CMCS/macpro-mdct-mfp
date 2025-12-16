@@ -20,7 +20,7 @@ export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
         {
           type: "html",
           content:
-            "An approach for defining target populations should be outlined in your Operational Protocol. Those definitions should be used to report the transition benchmarks. You may need to track some populations outside of these categories to see utilization to address questions from stakeholders and those circumstances should be discussed with your CMS MFP Project Officer. <br><br> In the next section, you will be asked to describe your state or territory-specific initiatives, which may inform which target populations you include here when you think about who is being served by your different planned initiatives. <br><br>Additional information on strategies to achieve transition targets will be included in the state or territory-specific initiative on transitions and transition coordination services in the next section.",
+            "An approach for defining target populations should be outlined in your Operational Protocol. Those definitions should be used to report the transition benchmarks. You may need to track some populations outside of these categories to see utilization to address questions from stakeholders and those circumstances should be discussed with your CMS MFP Project Officer. <br><br> In the next section, you will be asked to describe your state or territory-specific initiatives, which may inform which target populations you include here when you think about who is being served by your different planned initiatives. <br><br>Additional information on strategies to achieve transition targets will be included in the state or territory-specific initiative on transitions and transition coordination services in the next section.",
         },
       ],
     },
@@ -110,7 +110,7 @@ export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
                     parentFieldName:
                       "transitionBenchmarks_applicableToMfpDemonstration",
                     parentOptionId:
-                      "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd", // pragma: allowlist secret
+                      "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd",
                     nested: true,
                   },
                   transformation: {

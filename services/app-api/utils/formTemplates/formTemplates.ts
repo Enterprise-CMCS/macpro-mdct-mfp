@@ -1,7 +1,7 @@
-import wpForm from "../../forms/wp.json";
-import sarForm from "../../forms/sar.json";
-import expenditureForm from "../../forms/expenditure.json";
 import KSUID from "ksuid";
+import assert from "node:assert";
+import { createHash } from "crypto";
+// types
 import {
   AnyObject,
   EntityDetailsOverlayShape,
@@ -12,11 +12,11 @@ import {
   FormTemplateVersion,
   OverlayModalPageShape,
   ReportJson,
+  ReportJsonFile,
   ReportRoute,
   ReportType,
 } from "../types";
-import { createHash } from "crypto";
-import { transformFormTemplate } from "../transformations/transformations";
+// utils
 import {
   getReportFormTemplate,
   putFormTemplateVersion,
@@ -24,16 +24,47 @@ import {
   queryFormTemplateVersionByHash,
   queryLatestFormTemplateVersionNumber,
 } from "../../storage/reports";
-import assert from "node:assert";
+import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
+import { transformFormTemplate } from "../transformations/transformations";
+// routes
+import {
+  wpReportJson,
+  sarReportJson,
+  expenditureReportJson,
+} from "../../forms";
+// flagged routes
+import * as wpFlags from "../../forms/routes/wp/flags";
+import * as sarFlags from "../../forms/routes/sar/flags";
+import * as expenditureFlags from "../../forms/routes/expenditure/flags";
 
-export const formTemplateForReportType = (reportType: ReportType) => {
-  const map: { [key in ReportType]: ReportJson } = {
-    [ReportType.WP]: wpForm as ReportJson,
-    [ReportType.SAR]: sarForm as ReportJson,
-    [ReportType.EXPENDITURE]: expenditureForm as ReportJson,
+export const formTemplateForReportType = async (reportType: ReportType) => {
+  const routeMap: Record<ReportType, ReportJsonFile> = {
+    [ReportType.WP]: wpReportJson,
+    [ReportType.SAR]: sarReportJson,
+    [ReportType.EXPENDITURE]: expenditureReportJson,
   };
+  // Get LaunchDarkly flags from folder names in forms/routes/[reportType]/flags
+  const flagMap: Record<ReportType, any> = {
+    [ReportType.WP]: wpFlags,
+    [ReportType.SAR]: sarFlags,
+    [ReportType.EXPENDITURE]: expenditureFlags,
+  };
+
+  const flagsByReportType = flagMap[reportType];
+  const flagNames = Object.keys(flagsByReportType);
+
+  // Loop through flags and replace routes if flag is enabled
+  for (const flagName of flagNames) {
+    const enabled = await isFeatureFlagEnabled(flagName);
+
+    if (enabled) {
+      routeMap[reportType] = flagsByReportType[flagName];
+      break;
+    }
+  }
+
   // Clone to prevent accidental changes to the originals
-  return structuredClone(map[reportType]);
+  return structuredClone(routeMap[reportType] as ReportJson);
 };
 
 export async function getOrCreateFormTemplate(
@@ -42,7 +73,7 @@ export async function getOrCreateFormTemplate(
   reportYear: number,
   workPlanFieldData?: AnyObject
 ) {
-  let currentFormTemplate = formTemplateForReportType(reportType);
+  let currentFormTemplate = await formTemplateForReportType(reportType);
 
   if (currentFormTemplate?.routes) {
     currentFormTemplate = transformFormTemplate(

@@ -56,6 +56,12 @@ export const DashboardTable = ({
         {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Td>{prettifyChoices(report?.populations)}</Td>
         )}
+        {/* Report Year */}
+        {reportType === ReportType.EXPENDITURE && <Td>{report.reportYear}</Td>}
+        {/* Report Period */}
+        {reportType === ReportType.EXPENDITURE && (
+          <Td>{report.reportPeriod}</Td>
+        )}
         {/* Date Fields */}
         <DateFields report={report} reportType={reportType} isAdmin={isAdmin} />
         {/* Last Altered By */}
@@ -99,8 +105,7 @@ export const DashboardTable = ({
                 sxOverride={sxOverride}
               />
             }
-            {reportType === ReportType.WP && !report?.associatedSar && (
-              // archive button is available only for WP without an assoc SAR
+            {reportType !== ReportType.SAR && !report?.associatedSar && (
               <AdminArchiveButton
                 report={report}
                 reportType={reportType}
@@ -240,7 +245,7 @@ export interface ActionButtonProps {
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {!!reportType && !isAdmin && (
+      {!!reportType && !isAdmin && reportType !== ReportType.EXPENDITURE && (
         <Td>{convertDateUtcToEt(report.dueDate)}</Td>
       )}
       <Td>{convertDateUtcToEt(report.lastAltered)}</Td>

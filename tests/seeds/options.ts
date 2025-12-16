@@ -29,16 +29,17 @@ export const loginSeedUsers = async (): Promise<void> => {
 
 // Reports
 export const createReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
   if (reportType === "SAR") {
-    const report = createSemiAnnualReport(year, period);
+    const report = createSemiAnnualReport(flags, year, period);
     return report;
   }
 
-  const data = newWorkPlan(stateName, year, period);
+  const data = newWorkPlan(flags, stateName, year, period);
   const report = await postApi(
     `/reports/${reportType}/${state}`,
     headers,
@@ -48,14 +49,16 @@ export const createReport = async (
 };
 
 export const createFilledReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const response = await createReport(reportType, year, period);
+  const response = await createReport(flags, reportType, year, period);
 
   if (response.id) {
     const report = await updateFillReport(
+      flags,
       response.id,
       reportType,
       year,
@@ -69,6 +72,7 @@ export const createFilledReport = async (
 };
 
 export const updateFillReport = async (
+  flags: { [key: string]: true },
   id: string,
   reportType: string,
   year: number,
@@ -78,9 +82,9 @@ export const updateFillReport = async (
 
   if (reportType === "SAR") {
     const sar = await getSemiAnnualReportById(id);
-    data = fillSemiAnnualReport(sar);
+    data = fillSemiAnnualReport(flags, sar);
   } else {
-    data = fillWorkPlan(year, period);
+    data = fillWorkPlan(flags, year, period);
   }
 
   const report = await putApi(
@@ -92,11 +96,12 @@ export const updateFillReport = async (
 };
 
 export const createSubmittedReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const response = await createFilledReport(reportType, year, period);
+  const response = await createFilledReport(flags, reportType, year, period);
 
   if (response.id) {
     const report = await updateSubmitReport(response.id, reportType);
@@ -120,11 +125,12 @@ export const updateSubmitReport = async (
 };
 
 export const createApprovedReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const { id } = await createSubmittedReport(reportType, year, period);
+  const { id } = await createSubmittedReport(flags, reportType, year, period);
   const report = await updateApprovedReport(id, reportType);
   return report;
 };
@@ -142,11 +148,12 @@ export const updateApprovedReport = async (
 };
 
 export const createLockedReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const response = await createApprovedReport(reportType, year, period);
+  const response = await createApprovedReport(flags, reportType, year, period);
 
   if (response.id) {
     const report = await updateLockedReport(response.id, reportType);
@@ -170,11 +177,12 @@ export const updateLockedReport = async (
 };
 
 export const createArchivedReport = async (
+  flags: { [key: string]: true },
   reportType: string,
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
-  const response = await createSubmittedReport(reportType, year, period);
+  const response = await createSubmittedReport(flags, reportType, year, period);
 
   if (response.id) {
     const report = await updateArchivedReport(response.id, reportType);
@@ -221,12 +229,13 @@ export const getWorkPlansByState = async (): Promise<SeedReportShape[]> => {
 
 // Semi-Annual Reports (SAR)
 export const createSemiAnnualReport = async (
+  flags: { [key: string]: true },
   year: number,
   period: number
 ): Promise<SeedReportShape> => {
   let id = "";
 
-  const newWP = await createApprovedReport("WP", year, period);
+  const newWP = await createApprovedReport(flags, "WP", year, period);
 
   if (newWP.id) {
     id = newWP.id;
@@ -248,7 +257,7 @@ export const createSemiAnnualReport = async (
   const report = await postApi(
     `/reports/SAR/${state}`,
     headers,
-    newSemiAnnualReport(wp)
+    newSemiAnnualReport(flags, wp)
   );
 
   return report;

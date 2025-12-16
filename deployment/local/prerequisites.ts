@@ -35,6 +35,9 @@ export class LocalPrerequisiteStack extends Stack {
         vpcName: SecretValue.unsafePlainText("localstack-dev"),
         brokerString: SecretValue.unsafePlainText("localstack"),
         kafkaAuthorizedSubnetIds: SecretValue.unsafePlainText(subnet1.subnetId),
+        launchDarklyServer: SecretValue.unsafePlainText(
+          process.env.LD_SDK_KEY!
+        ),
       },
     });
 

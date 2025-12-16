@@ -8,7 +8,6 @@
     "test": "tests"
   },
   "scripts": {
-    "build:json": "cd services/app-api && yarn run build:json",
     "cdk": "cdk",
     "db:seed": "cd services/app-api && yarn run db:seed",
     "test:e2e": "cd tests && yarn run test:e2e",
@@ -27,10 +26,10 @@
   },
   "homepage": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp#readme",
   "dependencies": {
-    "@aws-sdk/client-cloudfront": "^3.921.0",
-    "@aws-sdk/client-lambda": "^3.921.0",
-    "@aws-sdk/client-s3": "^3.921.0",
-    "@aws-sdk/client-secrets-manager": "^3.921.0",
+    "@aws-sdk/client-cloudfront": "^3.946.0",
+    "@aws-sdk/client-lambda": "^3.946.0",
+    "@aws-sdk/client-s3": "^3.946.0",
+    "@aws-sdk/client-secrets-manager": "^3.946.0",
     "aws-cdk-lib": "^2.214.0",
     "constructs": "^10.4.2",
     "jsdom": "^26.1.0",
@@ -48,7 +47,6 @@
     "amazon-user-pool-srp-client": "^1.0.4",
     "aws-cdk": "^2.1029.0",
     "aws-cdk-local": "^2.19.2",
-    "chromedriver": ">=135.0.1",
     "core-js": "^3.41.0",
     "dotenv": "^16.6.1",
     "eslint": "^8.57.1",

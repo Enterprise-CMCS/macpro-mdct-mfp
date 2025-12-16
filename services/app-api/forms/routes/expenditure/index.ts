@@ -1,7 +1,7 @@
 // types
 import { ReportJsonFile, ReportType } from "../../../utils/types";
 
-export const ReportJson: ReportJsonFile = {
+export const expenditureReportJson: ReportJsonFile = {
   type: ReportType.EXPENDITURE,
   name: "MFP Expenditure Report",
   basePath: "/expenditure",

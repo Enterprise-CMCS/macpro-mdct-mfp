@@ -222,7 +222,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
                               parentFieldName:
                                 "objectivesProgress_deliverablesMet",
                               parentOptionId:
-                                "objectivesProgress_deliverablesMet-2WaO1K5umgZcZV4bAW5sPu", // pragma: allowlist secret
+                                "objectivesProgress_deliverablesMet-2WaO1K5umgZcZV4bAW5sPu",
                               nested: true,
                             },
                           },
