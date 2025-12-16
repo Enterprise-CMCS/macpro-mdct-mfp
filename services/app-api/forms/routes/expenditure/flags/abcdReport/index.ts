@@ -2,6 +2,7 @@
 import { ReportJsonFile, ReportType } from "../../../../../utils/types";
 // routes
 import { generalInformationRoute } from "./general-information";
+import { fmapPercentagesRoute } from "./fmap-percentages";
 import { reviewAndSubmitRoute } from "./review-and-submit";
 
 // Use with LaunchDarkly flag: abcdReport
@@ -13,5 +14,5 @@ export const expenditureReportJson: ReportJsonFile = {
   entities: {
     "": { required: true },
   },
-  routes: [generalInformationRoute, reviewAndSubmitRoute],
+  routes: [generalInformationRoute, fmapPercentagesRoute, reviewAndSubmitRoute],
 };

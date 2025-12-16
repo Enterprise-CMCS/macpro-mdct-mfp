@@ -3,6 +3,7 @@ import {
   dateOptional,
   emailOptional,
   number,
+  numberComparison,
   numberOptional,
   ratio,
   textCustom,
@@ -11,6 +12,7 @@ import {
   validInteger,
   validIntegerOptional,
 } from "./schemas";
+import { NumberOptions, ValidationComparator } from "types";
 
 describe("utils/schemas", () => {
   const goodNumberTestCases = [
@@ -78,6 +80,23 @@ describe("utils/schemas", () => {
   test("Evaluate Number Schema using number scheme", () => {
     testSchema(number(), goodNumberTestCases, true);
     testSchema(number(), badNumberTestCases, false);
+  });
+
+  test("Evaluate numberComparison scheme", () => {
+    const numberOptions: NumberOptions = {
+      boundary: 10,
+      comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+    };
+    testSchema(
+      numberComparison(numberOptions),
+      ["0", "1", "10", "9.99", "N/A"],
+      true
+    );
+    testSchema(
+      numberComparison(numberOptions),
+      ["-1", "", "11", "10.01"],
+      false
+    );
   });
 
   test("Evaluate Number Schema using integer scheme", () => {
