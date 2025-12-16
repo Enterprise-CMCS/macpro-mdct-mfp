@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useSearchParams } from "react-router";
-
+// components
 import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
 import { Label } from "@cmsgov/design-system";
+// utils
 import {
   filterQuarterOptions,
   filterYearOptions,
@@ -30,6 +31,12 @@ export const DashboardFilter = () => {
       year: yearDropdownValue,
       quarter: quarterDropdownValue,
     });
+  };
+
+  const handleClear = () => {
+    setYearDropdownValue("All");
+    setQuarterDropdownValue("All");
+    setSearchParams({});
   };
 
   return (
@@ -84,13 +91,21 @@ export const DashboardFilter = () => {
           </select>
         </Box>
       </GridItem>
-      <GridItem>
+      <GridItem sx={sx.filterActions}>
         <Button
           data-testid="dash-filter-button"
           onClick={handleFilter}
           variant="outline"
         >
           Filter
+        </Button>
+
+        <Button
+          data-testid="dash-filter-clear-button"
+          onClick={handleClear}
+          variant="outline"
+        >
+          Clear
         </Button>
       </GridItem>
     </Grid>
@@ -99,17 +114,34 @@ export const DashboardFilter = () => {
 
 const sx = {
   filterContainer: {
-    margin: "0 0 1.5rem 0",
+    margin: "0 0 2rem 0",
     alignItems: "flex-end",
-    gap: "spacer3",
+    gap: "spacer4",
 
-    gridTemplateColumns: "9.5rem 9.5rem auto",
     ".mobile &": {
-      gridTemplateColumns: "auto",
+      gridTemplateColumns: "1fr",
+      div: {
+        gridColumn: "span 2",
+      },
+    },
+    ".tablet &": {
+      gridTemplateColumns: "1fr 1fr",
+    },
+    gridTemplateColumns: "12em 12rem 1fr",
+
+    ".ds-c-label": {
+      marginBlock: 0,
+    },
+  },
+
+  filterActions: {
+    ".mobile &, .tablet &": {
+      gridColumn: "span 2",
+      textAlign: "center",
     },
 
-    ".ds-c-dropdown__label": {
-      marginBlock: 0,
+    "button:first-of-type": {
+      marginRight: "spacer4",
     },
   },
 };

@@ -118,4 +118,47 @@ describe("DashboardFilter", () => {
       });
     });
   });
+
+  it("clears both dropdown values when Clear button is clicked", async () => {
+    mockGetSearchParams.mockImplementation((key: string) => {
+      if (key === "year") return "2025";
+      if (key === "quarter") return "3";
+      return null;
+    });
+
+    render(<DashboardFilter />);
+
+    const clearButton = screen.getByTestId("dash-filter-clear-button");
+
+    await act(async () => {
+      await userEvent.click(clearButton);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("year-filter-dropdown")).toHaveValue("All");
+      expect(screen.getByTestId("quarter-filter-dropdown")).toHaveValue("All");
+      expect(mockSetSearchParams).toHaveBeenCalledWith({});
+    });
+  });
+
+  it("clears filters after user has made selections but not applied them", async () => {
+    mockGetSearchParams.mockReturnValue(null);
+    render(<DashboardFilter />);
+
+    const yearDropdown = screen.getByTestId("year-filter-dropdown");
+    const quarterDropdown = screen.getByTestId("quarter-filter-dropdown");
+    const clearButton = screen.getByTestId("dash-filter-clear-button");
+
+    await act(async () => {
+      userEvent.selectOptions(yearDropdown, "2025");
+      userEvent.selectOptions(quarterDropdown, "3");
+      await userEvent.click(clearButton);
+    });
+
+    await waitFor(() => {
+      expect(yearDropdown).toHaveValue("All");
+      expect(quarterDropdown).toHaveValue("All");
+      expect(mockSetSearchParams).toHaveBeenCalledWith({});
+    });
+  });
 });
