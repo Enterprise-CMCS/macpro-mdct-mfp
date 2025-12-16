@@ -1,4 +1,4 @@
-import { TextOptions } from "types";
+import { NumberOptions, TextOptions } from "types";
 import * as schema from "./schemas";
 
 export const schemaMap: any = {
@@ -7,6 +7,8 @@ export const schemaMap: any = {
   textCustom: (options: TextOptions) => schema.textCustom(options),
   number: schema.number(),
   numberOptional: schema.numberOptional(),
+  numberComparison: (options: NumberOptions) =>
+    schema.numberComparison(options),
   ratio: schema.ratio(),
   email: schema.email(),
   emailOptional: schema.emailOptional(),
