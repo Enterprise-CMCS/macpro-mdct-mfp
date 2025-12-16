@@ -11,19 +11,26 @@ import {
   SeedReportShape,
 } from "../types";
 
-export const newSemiAnnualReport = ({
-  lastAlteredBy,
-  reportPeriod,
-  reportYear,
-  submissionName,
-  state,
-  fieldData,
-}: SeedReportShape): SeedNewReportShape => {
+export const newSemiAnnualReport = (
+  flags: { [key: string]: true },
+  {
+    lastAlteredBy,
+    reportPeriod,
+    reportYear,
+    submissionName,
+    state,
+    fieldData,
+  }: SeedReportShape
+): SeedNewReportShape => {
+  if (Object.keys(flags).length > 0) {
+    // Add data mods by flag
+  }
+
   return {
     metadata: {
       finalSar: [
         {
-          key: "finalSar-nrRmirBoVQv0ysWnEejNZD", // pragma: allowlist secret
+          key: "finalSar-nrRmirBoVQv0ysWnEejNZD",
           value: "Yes",
         },
       ],
@@ -47,12 +54,14 @@ export const newSemiAnnualReport = ({
     },
   };
 };
-export const fillSemiAnnualReport = ({
-  fieldData,
-  populations,
-  reportPeriod,
-  reportYear,
-}: SeedReportShape): SeedFillReportShape => {
+export const fillSemiAnnualReport = (
+  flags: { [key: string]: true },
+  { fieldData, populations, reportPeriod, reportYear }: SeedReportShape
+): SeedFillReportShape => {
+  if (Object.keys(flags).length > 0) {
+    // Add data mods by flag
+  }
+
   return {
     metadata: {
       lastAlteredBy: faker.person.fullName(),
@@ -61,7 +70,7 @@ export const fillSemiAnnualReport = ({
     fieldData: {
       aa_changesMfpProgramAdministration: [
         {
-          key: "aa_changesMfpProgramAdministration-2Vfw3X48qEyKOAxXt7HPlMMg", // pragma: allowlist secret
+          key: "aa_changesMfpProgramAdministration-2Vfw3X48qEyKOAxXt7HPlMMg",
           value: "Yes",
         },
       ],
@@ -72,7 +81,7 @@ export const fillSemiAnnualReport = ({
       generalInformation_cmsProjectOfficerName: faker.person.fullName(),
       generalInformation_hasAorChangedSinceLastReport: [
         {
-          key: "generalInformation_hasAorChangedSinceLastReport-2VffASWS2XRfAlc3uLzxCVAC", // pragma: allowlist secret
+          key: "generalInformation_hasAorChangedSinceLastReport-2VffASWS2XRfAlc3uLzxCVAC",
           value: "No",
         },
       ],
@@ -95,13 +104,13 @@ export const fillSemiAnnualReport = ({
       instructions_tribalInitiatives: fieldData.instructions_tribalInitiatives,
       oa_additionalTechnicalResourcesSupports: [
         {
-          key: "oa_additionalTechnicalResourcesSupports-2VfvDSkVxhYZwQ8AMXqR5QX8", // pragma: allowlist secret
+          key: "oa_additionalTechnicalResourcesSupports-2VfvDSkVxhYZwQ8AMXqR5QX8",
           value: "Yes",
         },
       ],
       oa_changesOrganizationAdministration: [
         {
-          key: "oa_changesOrganizationAdministration-2VfuG4GRc4ApcknSSgbMvvHg", // pragma: allowlist secret
+          key: "oa_changesOrganizationAdministration-2VfuG4GRc4ApcknSSgbMvvHg",
           value: "Yes",
         },
       ],
@@ -112,13 +121,13 @@ export const fillSemiAnnualReport = ({
       oa_describeTechnicalAssitanceActivities: faker.lorem.sentence(),
       oa_hiringRetentionChallengesMfpStaff: [
         {
-          key: "oa_hiringRetentionChallengesMfpStaff-2VfuyVGyPc6ePgAicM69ayDqTpX", // pragma: allowlist secret
+          key: "oa_hiringRetentionChallengesMfpStaff-2VfuyVGyPc6ePgAicM69ayDqTpX",
           value: "Yes",
         },
       ],
       oa_projectDirectorEmployment: [
         {
-          key: "oa_projectDirectorEmployment-2VfuG2OUicDROyaE5RmbtqWM", // pragma: allowlist secret
+          key: "oa_projectDirectorEmployment-2VfuG2OUicDROyaE5RmbtqWM",
           value: "No",
         },
       ],
@@ -126,7 +135,7 @@ export const fillSemiAnnualReport = ({
       "otherReasons-otherText": "",
       ret_otherReasons: [
         {
-          key: "ret_otherReasons-2VffASWS2XRfAlc3uLzxCVAC", // pragma: allowlist secret
+          key: "ret_otherReasons-2VffASWS2XRfAlc3uLzxCVAC",
           value: "Moved out of MFP jurisdiction/state/territory",
         },
       ],
@@ -228,7 +237,7 @@ function updateInitiative(
       ...initiative,
       expenditures_onTrackToFullExpendFunds: [
         {
-          key: "expenditures_onTrackToFullExpendFunds-2WaUKOjwgUvHO6CMAqE8aOC", // pragma: allowlist secret
+          key: "expenditures_onTrackToFullExpendFunds-2WaUKOjwgUvHO6CMAqE8aOC",
           value: "Yes",
         },
       ],
@@ -264,13 +273,13 @@ function updateObjectiveProgress(
       objectivesProgress_deliverablesMet_otherText: "",
       objectivesProgress_deliverablesMet: [
         {
-          key: "objectivesProgress_deliverablesMet-2WaO1Jj3pyUN0j9KjeOqR", // pragma: allowlist secret
+          key: "objectivesProgress_deliverablesMet-2WaO1Jj3pyUN0j9KjeOqR",
           value: "Yes",
         },
       ],
       objectiveProgress_includesTargets: [
         {
-          key: "evaluationPlan_includesTargets-UL4dAeyyvCFAXttxZioacR", // pragma: allowlist secret
+          key: "evaluationPlan_includesTargets-UL4dAeyyvCFAXttxZioacR",
           value: "No",
         },
       ],

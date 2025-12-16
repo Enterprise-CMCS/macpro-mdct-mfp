@@ -24,7 +24,7 @@ import {
   queryFormTemplateVersionByHash,
   queryLatestFormTemplateVersionNumber,
 } from "../../storage/reports";
-import { isFeaturedFlagEnabled } from "../featureFlags/featureFlags";
+import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 import { transformFormTemplate } from "../transformations/transformations";
 // routes
 import {
@@ -55,7 +55,7 @@ export const formTemplateForReportType = async (reportType: ReportType) => {
 
   // Loop through flags and replace routes if flag is enabled
   for (const flagName of flagNames) {
-    const enabled = await isFeaturedFlagEnabled(flagName);
+    const enabled = await isFeatureFlagEnabled(flagName);
 
     if (enabled) {
       routeMap[reportType] = flagsByReportType[flagName];

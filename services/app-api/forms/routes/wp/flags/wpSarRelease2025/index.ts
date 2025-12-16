@@ -7,7 +7,7 @@ import { stateOrTerritorySpecificInitiativesRoute } from "./state-or-territory-s
 import { transitionBenchmarkStrategyRoute } from "./transition-benchmark-strategy";
 import { transitionBenchmarksRoute } from "../../transition-benchmarks";
 
-// Use with LaunchDarkly flag: contentUpdates2026
+// Use with LaunchDarkly flag: wpSarRelease2025
 export const wpReportJson: ReportJsonFile = {
   type: ReportType.WP,
   name: "MFP Work Plan",

@@ -6,8 +6,9 @@ export const getLaunchDarklyClient = async () => {
     variation: (_key: string, _context: any, defaultValue: Promise<any>) =>
       defaultValue,
   } as LD.LDClient;
-  console.log(process.env.launchDarklyServer);
-  if (!process.env.launchDarklyServer) {
+  const sdkKey = process.env.LD_SDK_KEY || process.env.launchDarklyServer;
+
+  if (!sdkKey) {
     console.error(
       "Missing LaunchDarkly SDK server key. Soft failing to fallback client."
     );
@@ -15,7 +16,7 @@ export const getLaunchDarklyClient = async () => {
   }
 
   try {
-    const client = LD.init(process.env.launchDarklyServer, {
+    const client = LD.init(sdkKey, {
       baseUri: "https://clientsdk.launchdarkly.us",
       streamUri: "https://clientstream.launchdarkly.us",
       eventsUri: "https://events.launchdarkly.us",
@@ -34,7 +35,7 @@ export const getFlagValue = async (flagName: string) => {
   return client.variation(flagName, context, false);
 };
 
-export const isFeaturedFlagEnabled = async (flagName: string) => {
+export const isFeatureFlagEnabled = async (flagName: string) => {
   const flagValue = await getFlagValue(flagName);
 
   console.log(`FEATURE FLAG: ${flagName}, enabled: ${flagValue}`);

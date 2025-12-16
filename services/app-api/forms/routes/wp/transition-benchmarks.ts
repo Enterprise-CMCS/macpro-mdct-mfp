@@ -110,7 +110,7 @@ export const transitionBenchmarksRoute: WPTransitionBenchmarksRoute = {
                     parentFieldName:
                       "transitionBenchmarks_applicableToMfpDemonstration",
                     parentOptionId:
-                      "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd", // pragma: allowlist secret
+                      "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd",
                     nested: true,
                   },
                   transformation: {

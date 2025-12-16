@@ -24,6 +24,42 @@ import {
   getWorkPlansByState,
   loginSeedUsers,
 } from "../../../tests/seeds/options";
+// utils
+import { isFeatureFlagEnabled } from "../utils/featureFlags/featureFlags";
+// flagged routes
+import * as wpFlags from "../forms/routes/wp/flags";
+import * as sarFlags from "../forms/routes/sar/flags";
+import * as expenditureFlags from "../forms/routes/expenditure/flags";
+
+const getEnabledFlagsByReportType = async (reportType: string) => {
+  // Get LaunchDarkly flags from folder names in forms/routes/[reportType]/flags
+  const flagMap: Record<string, any> = {
+    WP: wpFlags,
+    SAR: sarFlags,
+    EXPENDITURE: expenditureFlags,
+  };
+
+  const flagsByReportType = flagMap[reportType];
+  const flagNames = Object.keys(flagsByReportType);
+
+  // Get status of each flag from LaunchDarkly
+  const evaluations = await Promise.all(
+    flagNames.map(async (flagName) => {
+      const enabled = await isFeatureFlagEnabled(flagName);
+      return { flagName, enabled };
+    })
+  );
+
+  return evaluations.reduce<Record<string, true>>(
+    (enabledFlags, { flagName, enabled }) => {
+      if (enabled) {
+        enabledFlags[flagName] = true;
+      }
+      return enabledFlags;
+    },
+    {}
+  );
+};
 
 const seed = async (
   chosenYear?: number,
@@ -194,8 +230,9 @@ const seed = async (
       case "createSAR":
       case "createWP": {
         const reportType = answer.replace("create", "");
+        const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
-          await createReport(reportType, reportYear, reportPeriod),
+          await createReport(flags, reportType, reportYear, reportPeriod),
           "Base",
           reportType
         );
@@ -204,8 +241,9 @@ const seed = async (
       case "createFilledSAR":
       case "createFilledWP": {
         const reportType = answer.replace("createFilled", "");
+        const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
-          await createFilledReport(reportType, reportYear, reportPeriod),
+          await createFilledReport(flags, reportType, reportYear, reportPeriod),
           "Filled",
           reportType
         );
@@ -214,8 +252,14 @@ const seed = async (
       case "createSubmittedSAR":
       case "createSubmittedWP": {
         const reportType = answer.replace("createSubmitted", "");
+        const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
-          await createSubmittedReport(reportType, reportYear, reportPeriod),
+          await createSubmittedReport(
+            flags,
+            reportType,
+            reportYear,
+            reportPeriod
+          ),
           "Submitted",
           reportType
         );
@@ -223,8 +267,14 @@ const seed = async (
       }
       case "createApprovedWP": {
         const reportType = answer.replace("createApproved", "");
+        const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
-          await createApprovedReport(reportType, reportYear, reportPeriod),
+          await createApprovedReport(
+            flags,
+            reportType,
+            reportYear,
+            reportPeriod
+          ),
           "Approved",
           reportType
         );
@@ -233,8 +283,9 @@ const seed = async (
       case "createLockedWP":
       case "createLockedSAR": {
         const reportType = answer.replace("createLocked", "");
+        const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
-          await createLockedReport(reportType, reportYear, reportPeriod),
+          await createLockedReport(flags, reportType, reportYear, reportPeriod),
           "Locked",
           reportType
         );
@@ -242,8 +293,14 @@ const seed = async (
       }
       case "createArchivedWP": {
         const reportType = answer.replace("createArchived", "");
+        const flags = await getEnabledFlagsByReportType(reportType);
         createdLog(
-          await createArchivedReport(reportType, reportYear, reportPeriod),
+          await createArchivedReport(
+            flags,
+            reportType,
+            reportYear,
+            reportPeriod
+          ),
           "Archived",
           reportType
         );

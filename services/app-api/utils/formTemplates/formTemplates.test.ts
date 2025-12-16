@@ -42,7 +42,7 @@ import {
   queryFormTemplateVersionByHash,
   queryLatestFormTemplateVersionNumber,
 } from "../../storage/reports";
-import { isFeaturedFlagEnabled } from "../featureFlags/featureFlags";
+import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 
 jest.mock("../../storage/reports", () => ({
   getReportFormTemplate: jest.fn(),
@@ -53,7 +53,7 @@ jest.mock("../../storage/reports", () => ({
 }));
 
 jest.mock("../featureFlags/featureFlags", () => ({
-  isFeaturedFlagEnabled: jest.fn(),
+  isFeatureFlagEnabled: jest.fn(),
 }));
 
 const mockWorkPlanFieldData = mockWPMetadata.fieldData;
@@ -315,7 +315,7 @@ describe("Test form contents", () => {
   });
 
   test("returns flagged routes", async () => {
-    (isFeaturedFlagEnabled as jest.Mock).mockResolvedValue(true);
+    (isFeatureFlagEnabled as jest.Mock).mockResolvedValue(true);
     const template = await formTemplateForReportType(ReportType.WP);
     expect(wpFlags).toEqual({ default: { mockFlag }, mockFlag });
     expect(template).toEqual(mockFlag);
