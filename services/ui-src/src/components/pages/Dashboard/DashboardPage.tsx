@@ -25,7 +25,7 @@ import {
   Alert,
   CreateExpenditureModal,
   DashboardFilter,
-  handleExpendituresFilter,
+  handleExpenditureFilter,
 } from "components";
 // types
 import {
@@ -164,7 +164,7 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
       //grab the last report added, which is now the first report displayed
       setPreviousReport(newReportsToDisplay?.[0]);
     } else {
-      const filteredReports = handleExpendituresFilter(
+      const filteredReports = handleExpenditureFilter(
         filterYear,
         filterQuarter,
         newReportsToDisplay

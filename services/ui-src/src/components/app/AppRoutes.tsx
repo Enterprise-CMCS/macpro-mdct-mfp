@@ -14,7 +14,7 @@ import {
   ReviewSubmitPage,
   ExportedReportPage,
   ReportContext,
-  ExpendituresDashboardPage,
+  ExpenditureDashboardPage,
 } from "components";
 // utils
 import { ScrollToTopComponent, useStore } from "utils";
@@ -64,10 +64,7 @@ export const AppRoutes = () => {
           />
           <Route path="/sar/export" element={<ExportedReportPage />} />
           {expenditureReport && (
-            <Route
-              path="/expenditure"
-              element={<ExpendituresDashboardPage />}
-            />
+            <Route path="/expenditure" element={<ExpenditureDashboardPage />} />
           )}
 
           {/* General Report Routes */}

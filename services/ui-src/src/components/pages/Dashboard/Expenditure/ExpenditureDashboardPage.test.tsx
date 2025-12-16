@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { useSearchParams } from "react-router";
 // components
-import { ExpendituresDashboardPage, ReportContext } from "components";
+import { ExpenditureDashboardPage, ReportContext } from "components";
 // utils
 import { useStore } from "utils";
 import {
@@ -29,7 +29,7 @@ jest.mock("react-router", () => ({
 const expenditureDashboardWithNoReports = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockExpenditureNoReportContext}>
-      <ExpendituresDashboardPage />
+      <ExpenditureDashboardPage />
     </ReportContext.Provider>
   </RouterWrappedComponent>
 );
@@ -37,7 +37,7 @@ const expenditureDashboardWithNoReports = (
 const expenditureDashboardViewWithReports = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockExpenditureOneNotStartedReportContext}>
-      <ExpendituresDashboardPage />
+      <ExpenditureDashboardPage />
     </ReportContext.Provider>
   </RouterWrappedComponent>
 );
