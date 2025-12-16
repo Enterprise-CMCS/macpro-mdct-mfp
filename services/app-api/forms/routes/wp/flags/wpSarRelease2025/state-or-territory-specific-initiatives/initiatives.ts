@@ -305,7 +305,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                       validation: {
                         type: ValidationType.END_DATE,
                         parentOptionId:
-                          "defineInitiative_projectedEndDate-WNsSaAHeDvRD2Pjkz6DcOE", // pragma: allowlist secret
+                          "defineInitiative_projectedEndDate-WNsSaAHeDvRD2Pjkz6DcOE",
                         parentFieldName: "defineInitiative_projectedEndDate",
                         dependentFieldName:
                           "defineInitiative_projectedStartDate",
@@ -462,7 +462,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                         type: ValidationType.TEXT,
                         parentFieldName: "evaluationPlan_includesTargets",
                         parentOptionId:
-                          "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ", // pragma: allowlist secret
+                          "evaluationPlan_includesTargets-7FP4jcg4jK7Ssqp3cCW5vQ",
                         nested: true,
                       },
                       props: {
