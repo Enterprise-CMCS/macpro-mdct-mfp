@@ -25,3 +25,4 @@ tests/playwright/.auth
 cdk.context.json
 .qlty/*
 !.qlty/qlty.toml
+services/app-api/forms/*.json

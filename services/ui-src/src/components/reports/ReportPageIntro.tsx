@@ -1,10 +1,11 @@
 // components
 import { Box, Heading } from "@chakra-ui/react";
 import { InstructionsAccordion } from "components";
+import { ReportPeriod } from "./ReportPeriod";
+// types
+import { AnyObject } from "types";
 // utils
 import { parseCustomHtml } from "utils";
-import { AnyObject } from "types";
-import { ReportPeriod } from "./ReportPeriod";
 
 export const ReportPageIntro = ({
   text,
@@ -12,7 +13,6 @@ export const ReportPageIntro = ({
   initiativeName,
   reportPeriod,
   reportYear,
-  ...props
 }: Props) => {
   const { section, subsection, info, introAccordion } = text;
 
@@ -40,7 +40,7 @@ export const ReportPageIntro = ({
   };
 
   return (
-    <Box sx={sx.introBox} {...props}>
+    <Box sx={sx.introBox}>
       {isSubsectionPage ? headerSubsection() : header()}
 
       {/* accordion specifically nested in the intro verbiage */}
@@ -64,7 +64,6 @@ interface Props {
   text: AnyObject;
   accordion?: AnyObject;
   initiativeName?: string;
-  [key: string]: any;
   reportPeriod?: number;
   reportYear?: number;
 }
@@ -99,16 +98,8 @@ const sx = {
     fontSize: "4xl",
     marginTop: "spacer1",
   },
-  hintTextBox: {
-    color: "#5B616B",
-    paddingTop: "spacer3",
-  },
-  subTitle: {
-    color: "gray",
-    fontSize: "md",
-    margin: "1.5rem 0 -0.75rem 0",
-  },
   infoTextBox: {
+    color: "gray_dark",
     marginTop: "spacer2",
     h3: {
       marginBottom: "-0.75rem",
@@ -119,9 +110,5 @@ const sx = {
         color: "primary_darker",
       },
     },
-  },
-  periodText: {
-    marginTop: "spacer3",
-    fontSize: "2xl",
   },
 };

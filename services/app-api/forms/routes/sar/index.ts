@@ -8,7 +8,7 @@ import { recruitmentEnrollmentAndTransitionsRoute } from "./recruitment-enrollme
 import { reviewAndSubmitRoute } from "./review-and-submit";
 import { stateOrTerritorySpecificInitiativesRoute } from "./state-or-territory-specific-initiatives";
 
-export const ReportJson: ReportJsonFile = {
+export const sarReportJson: ReportJsonFile = {
   type: ReportType.SAR,
   name: "MFP Semi-Annual Progress Report (SAR)",
   basePath: "/sar",

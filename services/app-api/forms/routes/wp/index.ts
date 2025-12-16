@@ -7,7 +7,7 @@ import { stateOrTerritorySpecificInitiativesRoute } from "./state-or-territory-s
 import { transitionBenchmarkStrategyRoute } from "./transition-benchmark-strategy";
 import { transitionBenchmarksRoute } from "./transition-benchmarks";
 
-export const ReportJson: ReportJsonFile = {
+export const wpReportJson: ReportJsonFile = {
   type: ReportType.WP,
   name: "MFP Work Plan",
   basePath: "/wp",

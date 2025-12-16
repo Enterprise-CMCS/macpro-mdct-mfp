@@ -10,11 +10,11 @@ import {
   Duration,
   RemovalPolicy,
 } from "aws-cdk-lib";
-import { Lambda } from "../constructs/lambda";
-import { WafConstruct } from "../constructs/waf";
-import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event";
-import { isLocalStack } from "../local/util";
-import { DynamoDBTable } from "../constructs/dynamodb-table";
+import { Lambda } from "../constructs/lambda.js";
+import { WafConstruct } from "../constructs/waf.js";
+import { LambdaDynamoEventSource } from "../constructs/lambda-dynamo-event.js";
+import { isLocalStack } from "../local/util.js";
+import { DynamoDBTable } from "../constructs/dynamodb-table.js";
 
 // TODO: does this need to point to the tsconfig.json file in services/app-api?
 
@@ -30,6 +30,7 @@ interface CreateApiComponentsProps {
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
   expenditureFormBucket: s3.IBucket;
+  launchDarklyServer: string;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
@@ -45,6 +46,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     wpFormBucket,
     sarFormBucket,
     expenditureFormBucket,
+    launchDarklyServer,
   } = props;
 
   const service = "app-api";
@@ -101,6 +103,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     NODE_OPTIONS: "--enable-source-maps",
     brokerString,
     STAGE: stage,
+    launchDarklyServer,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     EXPENDITURE_FORM_BUCKET: expenditureFormBucket.bucketName,

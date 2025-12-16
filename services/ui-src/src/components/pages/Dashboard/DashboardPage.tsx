@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { Link as RouterLink, useNavigate, useSearchParams } from "react-router";
 import { States } from "../../../constants";
 
 // components
@@ -24,6 +24,8 @@ import {
   ReportContext,
   Alert,
   CreateExpenditureModal,
+  DashboardFilter,
+  handleExpenditureFilter,
 } from "components";
 // types
 import {
@@ -53,7 +55,7 @@ import alertIcon from "assets/icons/icon_alert_circle.png";
 import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
 import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
 
-export const DashboardPage = ({ reportType }: Props) => {
+export const DashboardPage = ({ reportType, showFilter }: Props) => {
   const {
     errorMessage,
     fetchReportsByState,
@@ -84,6 +86,10 @@ export const DashboardPage = ({ reportType }: Props) => {
     ReportMetadataShape | undefined
   >(undefined);
 
+  const [searchParams] = useSearchParams();
+  const filterYear = searchParams.get("year") || "All";
+  const filterQuarter = searchParams.get("quarter") || "All";
+
   const [reportId, setReportId] = useState<string | undefined>(undefined);
   const [entering, setEntering] = useState<boolean>(false);
   const [releasing, setReleasing] = useState<boolean>(false);
@@ -91,7 +97,6 @@ export const DashboardPage = ({ reportType }: Props) => {
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
     undefined
   );
-  const [showSarAlert, setShowSarAlert] = useState<boolean>(false);
 
   const dashboardVerbiageMap: any = {
     WP: wpVerbiage,
@@ -109,21 +114,18 @@ export const DashboardPage = ({ reportType }: Props) => {
   const activeState =
     userIsAdmin || userIsReadOnly ? adminSelectedState : userState;
 
-  useEffect(() => {
-    let showAlert = false;
-    if (reportType === ReportType.SAR) {
-      const activeSarList = reportsToDisplay?.filter(
-        (report: ReportMetadataShape) => {
-          return (
-            report.reportType === ReportType.SAR &&
-            report.status !== ReportStatus.SUBMITTED &&
-            report?.archived !== true
-          );
-        }
-      );
-      showAlert = !workPlanToCopyFrom && activeSarList?.length === 0;
-    }
-    setShowSarAlert(showAlert);
+  const showSarAlert = useMemo(() => {
+    if (reportType !== ReportType.SAR) return false;
+    const activeSarList = reportsToDisplay?.filter(
+      (report: ReportMetadataShape) => {
+        return (
+          report.reportType === ReportType.SAR &&
+          report.status !== ReportStatus.SUBMITTED &&
+          report?.archived !== true
+        );
+      }
+    );
+    return !workPlanToCopyFrom && activeSarList?.length === 0;
   }, [reportsToDisplay, workPlanToCopyFrom]);
 
   useEffect(() => {
@@ -155,10 +157,20 @@ export const DashboardPage = ({ reportType }: Props) => {
         (report: ReportMetadataShape) => !report?.archived
       );
     }
-    setReportsToDisplay(newReportsToDisplay);
-    //grab the last report added, which is now the first report displayed
-    setPreviousReport(newReportsToDisplay?.[0]);
-  }, [reportsByState]);
+    if (showFilter) {
+      const filteredReports = handleExpenditureFilter(
+        filterYear,
+        filterQuarter,
+        newReportsToDisplay
+      );
+      setReportsToDisplay(filteredReports);
+      setPreviousReport(filteredReports?.[0]);
+    } else {
+      setReportsToDisplay(newReportsToDisplay);
+      //grab the last report added, which is now the first report displayed
+      setPreviousReport(newReportsToDisplay?.[0]);
+    }
+  }, [reportsByState, searchParams]);
 
   const isReportEditable = (selectedReport: ReportShape) => {
     //the wp is only editable only when the user is a state user and the form has not been submitted or approved, all over users are in view mode
@@ -286,11 +298,7 @@ export const DashboardPage = ({ reportType }: Props) => {
           return previousReport.status !== ReportStatus.APPROVED;
         }
       case ReportType.EXPENDITURE:
-        if (!previousReport) {
-          return false;
-        } else {
-          return previousReport.status !== ReportStatus.APPROVED;
-        }
+        return false;
       default:
         return true;
     }
@@ -353,7 +361,6 @@ export const DashboardPage = ({ reportType }: Props) => {
   } = useDisclosure();
 
   const fullStateName = States[activeState as keyof typeof States];
-
   return (
     <PageTemplate type="report" sx={sx.layout}>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
@@ -390,6 +397,8 @@ export const DashboardPage = ({ reportType }: Props) => {
         {parseCustomHtml(intro.body)}
       </Box>
       <Box sx={sx.bodyBox}>
+        {showFilter && <DashboardFilter />}
+
         {reportsToDisplay ? (
           <ResponsiveDashboardTable
             reportsByState={reportsToDisplay}
@@ -493,6 +502,7 @@ export const DashboardPage = ({ reportType }: Props) => {
 
 interface Props {
   reportType: string;
+  showFilter?: boolean;
 }
 
 const sx = {
