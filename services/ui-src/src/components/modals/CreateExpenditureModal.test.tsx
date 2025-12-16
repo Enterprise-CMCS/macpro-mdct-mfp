@@ -2,12 +2,12 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import {
   RouterWrappedComponent,
   mockUseStore,
-  mockExpenditureReportContext,
 } from "../../utils/testing/setupJest";
 import { ReportContext } from "../reports/ReportProvider";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 import { useStore } from "../../utils";
+import { mockExpenditureOneNotStartedReportContext } from "utils/testing/expenditure/mockExpenditure";
 import { CreateExpenditureModal } from "./CreateExpenditureModal";
 
 const mockCreateReport = jest.fn();
@@ -15,7 +15,7 @@ const mockFetchReportsByState = jest.fn();
 const mockCloseHandler = jest.fn();
 
 const mockedReportContext = {
-  ...mockExpenditureReportContext,
+  ...mockExpenditureOneNotStartedReportContext,
   createReport: mockCreateReport,
   fetchReportsByState: mockFetchReportsByState,
   isReportPage: true,

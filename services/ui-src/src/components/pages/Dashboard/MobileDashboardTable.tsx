@@ -47,6 +47,20 @@ export const MobileDashboardTable = ({
             <Text>{prettifyChoices(report?.populations)}</Text>
           </Box>
         )}
+        {/* Report Year */}
+        {reportType === ReportType.EXPENDITURE && (
+          <Box sx={sx.labelGroup}>
+            <Text sx={sx.label}>Report Year</Text>
+            <Text>{report.reportYear}</Text>
+          </Box>
+        )}
+        {/* Report Period */}
+        {reportType === ReportType.EXPENDITURE && (
+          <Box sx={sx.labelGroup}>
+            <Text sx={sx.label}>Report Period</Text>
+            <Text>{report.reportPeriod}</Text>
+          </Box>
+        )}
         <Box sx={sx.labelGroup}>
           <Flex alignContent="flex-start">
             <DateFields
@@ -147,7 +161,7 @@ interface MobileDashboardTableProps {
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {!!reportType && !isAdmin && (
+      {!!reportType && !isAdmin && reportType !== ReportType.EXPENDITURE && (
         <Box sx={sx.editDate}>
           <Text sx={sx.label}>Due date</Text>
           <Text>{convertDateUtcToEt(report.dueDate)}</Text>
