@@ -69,7 +69,7 @@ export const fillWorkPlan = (
     },
   };
 
-  if (flags.contentUpdates2026) {
+  if (flags.wpSarRelease2025) {
     // Removed fields
     const {
       strategy_additionalDetails, // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -148,7 +148,7 @@ const addInitiative = (
 
   let flaggedData = {};
 
-  if (flags.contentUpdates2026) {
+  if (flags.wpSarRelease2025) {
     flaggedData = {
       defineInitiative_keyActivities: [
         {

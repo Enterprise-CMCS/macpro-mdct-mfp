@@ -1,2 +1,2 @@
 // flagged routes
-export { wpReportJson as contentUpdates2026 } from "./contentUpdates2026";
+export { wpReportJson as wpSarRelease2025 } from "./wpSarRelease2025";
