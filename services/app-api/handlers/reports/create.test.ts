@@ -193,8 +193,8 @@ describe("Test createReport API method", () => {
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Created);
     expect(body.status).toContain("Not started");
-    expect(body.fieldDataId).toBeDefined;
-    expect(body.formTemplateId).toBeDefined;
+    expect(body.fieldDataId).toBeDefined();
+    expect(body.formTemplateId).toBeDefined();
     expect(body.formTemplateId).not.toEqual(
       mockWPReport.metadata.formTemplateId
     );
@@ -225,8 +225,8 @@ describe("Test createReport API method", () => {
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Created);
     expect(body.status).toContain("Not started");
-    expect(body.fieldDataId).toBeDefined;
-    expect(body.formTemplateId).toBeDefined;
+    expect(body.fieldDataId).toBeDefined();
+    expect(body.formTemplateId).toBeDefined();
     expect(body.formTemplateId).not.toEqual(
       mockWPReport.metadata.formTemplateId
     );
@@ -254,8 +254,8 @@ describe("Test createReport API method", () => {
     expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Created);
     expect(body.status).toContain("Not started");
-    expect(body.fieldDataId).toBeDefined;
-    expect(body.formTemplateId).toBeDefined;
+    expect(body.fieldDataId).toBeDefined();
+    expect(body.formTemplateId).toBeDefined();
     expect(putReportMetadata).toHaveBeenCalled();
   });
 
