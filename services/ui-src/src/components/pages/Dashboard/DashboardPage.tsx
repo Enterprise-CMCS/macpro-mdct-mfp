@@ -115,19 +115,17 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
     userIsAdmin || userIsReadOnly ? adminSelectedState : userState;
 
   const showSarAlert = useMemo(() => {
-    if (reportType === ReportType.SAR) {
-      const activeSarList = reportsToDisplay?.filter(
-        (report: ReportMetadataShape) => {
-          return (
-            report.reportType === ReportType.SAR &&
-            report.status !== ReportStatus.SUBMITTED &&
-            report?.archived !== true
-          );
-        }
-      );
-      return !workPlanToCopyFrom && activeSarList?.length === 0;
-    }
-    return false;
+    if (reportType !== ReportType.SAR) return false;
+    const activeSarList = reportsToDisplay?.filter(
+      (report: ReportMetadataShape) => {
+        return (
+          report.reportType === ReportType.SAR &&
+          report.status !== ReportStatus.SUBMITTED &&
+          report?.archived !== true
+        );
+      }
+    );
+    return !workPlanToCopyFrom && activeSarList?.length === 0;
   }, [reportsToDisplay, workPlanToCopyFrom]);
 
   useEffect(() => {
@@ -159,11 +157,7 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
         (report: ReportMetadataShape) => !report?.archived
       );
     }
-    if (!showFilter) {
-      setReportsToDisplay(newReportsToDisplay);
-      //grab the last report added, which is now the first report displayed
-      setPreviousReport(newReportsToDisplay?.[0]);
-    } else {
+    if (showFilter) {
       const filteredReports = handleExpenditureFilter(
         filterYear,
         filterQuarter,
@@ -171,6 +165,10 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
       );
       setReportsToDisplay(filteredReports);
       setPreviousReport(filteredReports?.[0]);
+    } else {
+      setReportsToDisplay(newReportsToDisplay);
+      //grab the last report added, which is now the first report displayed
+      setPreviousReport(newReportsToDisplay?.[0]);
     }
   }, [reportsByState, searchParams]);
 
