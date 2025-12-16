@@ -1,4 +1,6 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { useSearchParams } from "react-router";
 // components
 import { ReportContext, DashboardPage } from "components";
 // utils
@@ -19,6 +21,7 @@ import {
   mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
+import { testA11yAct } from "utils/testing/commonTests";
 
 import { useBreakpoint, useStore, makeMediaQueryClasses } from "utils";
 import { useUser } from "utils/auth/useUser";
@@ -26,9 +29,6 @@ import { MfpReportState, ReportShape, ReportType } from "types";
 // verbiage
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
-import expenditureVerbiage from "verbiage/pages/expenditure/expenditure-dashboard";
-import userEvent from "@testing-library/user-event";
-import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/auth/useUser");
 const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
@@ -50,6 +50,7 @@ jest.mock("react-router", () => ({
   useLocation: jest.fn(() => ({
     pathname: "/mock-dashboard",
   })),
+  useSearchParams: jest.fn(),
 }));
 
 const wpDashboardViewWithReports = (
@@ -84,15 +85,18 @@ const sarDashboardViewWithReports = (
   </RouterWrappedComponent>
 );
 
-const expenditureDashboardWithNoReports = (
-  <RouterWrappedComponent>
-    <ReportContext.Provider value={mockReportContextNoReports}>
-      <DashboardPage reportType={ReportType.EXPENDITURE} />
-    </ReportContext.Provider>
-  </RouterWrappedComponent>
-);
+const mockSetSearchParams = jest.fn();
+const mockGetSearchParams = jest.fn();
 
 describe("<DashboardPage />", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (useSearchParams as jest.Mock).mockReturnValue([
+      { get: mockGetSearchParams },
+      mockSetSearchParams,
+    ]);
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -216,12 +220,6 @@ describe("<DashboardPage />", () => {
       mockedUseStore.mockReturnValue(mockStateUser);
       render(sarDashboardWithNoReports);
       expect(screen.getByText(sarVerbiage.body.empty)).toBeVisible();
-    });
-
-    test("Expenditure Dashboard renders table with empty text", () => {
-      mockedUseStore.mockReturnValue(mockStateUser);
-      render(expenditureDashboardWithNoReports);
-      expect(screen.getByText(expenditureVerbiage.body.empty)).toBeVisible();
     });
   });
 

@@ -8,7 +8,8 @@ export default {
       caption: "Caption",
       headRow: [
         "Submission name",
-        "Due date",
+        "Reporting year",
+        "Reporting period",
         "Last edited",
         "Edited by",
         "Status",
