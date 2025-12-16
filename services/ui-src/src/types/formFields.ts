@@ -140,6 +140,7 @@ export interface DropdownChoice {
 
 export enum ReportFormFieldType {
   CHECKBOX = "checkbox",
+  DROPDOWN = "dropdown",
   DATE = "date",
   DYNAMIC = "dynamic",
   NO_TYPE = "",

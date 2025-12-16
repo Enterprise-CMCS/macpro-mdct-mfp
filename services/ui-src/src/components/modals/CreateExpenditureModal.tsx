@@ -8,11 +8,11 @@ import { useStore } from "utils";
 // types
 import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
 // constants
-import { DEFAULT_TARGET_POPULATIONS, States } from "../../constants";
+import { States } from "../../constants";
 
 const reportType = ReportType.EXPENDITURE;
 
-const generateReportYearChoices = () => {
+const generateReportYearOptions = () => {
   const EXPENDITURE_LAUNCH_YEAR = 2025;
   const currentYear = new Date(Date.now()).getFullYear();
   return [currentYear - 1, currentYear, currentYear + 1]
@@ -22,7 +22,8 @@ const generateReportYearChoices = () => {
       label: `${year}`,
       name: `${year}`,
       value: `${year}`,
-    }));
+    }))
+    .reverse();
 };
 
 export const CreateExpenditureModal = ({
@@ -41,10 +42,10 @@ export const CreateExpenditureModal = ({
   const form = addEditExpenditureReport;
 
   for (let field of form.fields) {
-    if (field.id.match("reportPeriodYear")) {
+    if (field.id.match("reportYear")) {
       field.props = {
         ...field.props,
-        choices: generateReportYearChoices(),
+        options: generateReportYearOptions(),
       };
     }
   }
@@ -75,35 +76,25 @@ export const CreateExpenditureModal = ({
   // used to get the form values to enable/disable alert and submit button
   const onChange = (formProvider: AnyObject) => {
     if (formProvider.target.name === "reportPeriod")
-      setFormPeriodValue(formProvider.target.id === "reportPeriod-1" ? 1 : 2);
-    if (formProvider.target.name === "reportPeriodYear")
+      setFormPeriodValue(Number(formProvider.target.value));
+    if (formProvider.target.name === "reportYear")
       setFormYearValue(Number(formProvider.target.value));
     setShowAlert(false);
   };
 
   const prepareExpenditurePayload = (formData: AnyObject) => {
-    const submissionName = "Expenditure Report";
+    const formattedReportYear = Number(formData.reportYear.value);
+    const formattedReportPeriod = Number(formData.reportPeriod.value);
 
     const expenditurePayload: AnyObject = {
       metadata: {
-        submissionName,
         lastAlteredBy: full_name,
         locked: false,
         previousRevisions: [],
+        reportYear: formattedReportYear,
+        reportPeriod: formattedReportPeriod,
       },
-      fieldData: {
-        submissionName,
-        ["targetPopulations"]: DEFAULT_TARGET_POPULATIONS,
-      },
-    };
-
-    const formattedReportYear = Number(formData.reportPeriodYear[0].value);
-    const formattedReportPeriod =
-      formData.reportPeriod[0].key === "reportPeriod-1" ? 1 : 2;
-    expenditurePayload.metadata = {
-      ...expenditurePayload.metadata,
-      reportYear: formattedReportYear,
-      reportPeriod: formattedReportPeriod,
+      fieldData: {},
     };
 
     return expenditurePayload;

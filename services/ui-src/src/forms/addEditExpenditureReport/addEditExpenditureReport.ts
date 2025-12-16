@@ -7,42 +7,45 @@ export const addEditExpenditureReport: FormJson = {
   },
   heading: {
     edit: "Continue MFP Expenditure Report",
-    add: "Add new MFP Expenditure Report",
+    add: "Add new MFP Expenditure Report submission",
     subheading:
-      "Start a new MFP Expenditure Report for the reporting period. Once you complete this MFP Expenditure Report and CMS approves it, you’ll be able to continue updating it by selecting “Continue from previous period” or completely reset your MFP report information and start from a blank form. You will be able to view all MFP Expenditure Reports from previous periods.",
-    subheadingEdit:
-      "Update your MFP Work Plan for the next period, starting from the information in your last approved MFP Work Plan by selecting “Continue from previous period”. “Cancel” and use “Reset MFP Work Plan” only when you want to completely reset your MFP program information and start from a blank form. You will still be able to view the MFP Work Plans from all previous periods.",
+      "Add a new report to start a blank report or copy an existing report.",
+    subheadingEdit: "[hint text]",
   },
   fields: [
     {
-      id: "reportPeriodYear",
-      type: ReportFormFieldType.RADIO,
-      validation: ValidationType.RADIO,
+      id: "reportYear",
+      type: ReportFormFieldType.DROPDOWN,
+      validation: ValidationType.DROPDOWN,
       props: {
-        label: "Reporting Period Year",
-        hint: "Select the reporting period year.",
-        choices: [],
+        label: "Reporting Year",
+        hint: "",
+        options: [],
       },
     },
     {
       id: "reportPeriod",
-      type: ReportFormFieldType.RADIO,
-      validation: ValidationType.RADIO,
+      type: ReportFormFieldType.DROPDOWN,
+      validation: ValidationType.DROPDOWN,
       props: {
         label: "Reporting Period",
-        hint: "Select the reporting period.",
-        choices: [
+        hint: "",
+        options: [
           {
-            id: "reportPeriod-1",
-            label: "First reporting period (January 1 - June 30)",
-            name: "1",
+            label: "Q1: January 1st to March 31st",
             value: "1",
           },
           {
-            id: "reportPeriod-2",
-            label: "Second reporting period (July 1 - December 31)",
-            name: "2",
+            label: "Q2: April 1 to June 30",
             value: "2",
+          },
+          {
+            label: "Q3: July 1 to September 30",
+            value: "3",
+          },
+          {
+            label: "Q4: October 1 to December 31",
+            value: "4",
           },
         ],
       },

@@ -23,7 +23,6 @@ import {
   PageTemplate,
   ReportContext,
   Alert,
-  CreateExpenditureModal,
   DashboardFilter,
   handleExpenditureFilter,
 } from "components";
@@ -54,8 +53,9 @@ import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 import alertIcon from "assets/icons/icon_alert_circle.png";
 import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
 import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
+import { ModalBundle } from "./Expenditure/ExpenditureDashboardPage";
 
-export const DashboardPage = ({ reportType, showFilter }: Props) => {
+export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   const {
     errorMessage,
     fetchReportsByState,
@@ -203,6 +203,11 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
     navigate(firstReportPagePath);
   };
   const openCreateReportModal = (report?: ReportShape) => {
+    if (reportType === ReportType.EXPENDITURE) {
+      setSelectedReport(undefined);
+      modal!!.openModal();
+      return;
+    }
     let formData = undefined;
     //
     if (report && reportType == ReportType.SAR) {
@@ -243,7 +248,6 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
     const openHandlerMap: any = {
       WP: createWorkPlanModalOnOpenHandler,
       SAR: createSarModalOnOpenHandler,
-      EXPENDITURE: createExpenditureModalOnOpenHandler,
     };
 
     openHandlerMap[reportType]();
@@ -337,13 +341,6 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
     isOpen: createSarModalIsOpen,
     onOpen: createSarModalOnOpenHandler,
     onClose: createSarModalOnCloseHandler,
-  } = useDisclosure();
-
-  // add/edit program modal disclosure
-  const {
-    isOpen: createExpenditureModalIsOpen,
-    onOpen: createExpenditureModalOnOpenHandler,
-    onClose: createExpenditureModalOnCloseHandler,
   } = useDisclosure();
 
   //unlock modal disclosure
@@ -469,14 +466,7 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
           onClose: createSarModalOnCloseHandler,
         }}
       />
-      <CreateExpenditureModal
-        activeState={activeState!}
-        selectedReport={selectedReport!}
-        modalDisclosure={{
-          isOpen: createExpenditureModalIsOpen,
-          onClose: createExpenditureModalOnCloseHandler,
-        }}
-      />
+      {modal?.modal && modal.modal}
       <Modal
         modalDisclosure={{
           isOpen: confirmUnlockModalIsOpen,
@@ -503,6 +493,7 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
 interface Props {
   reportType: string;
   showFilter?: boolean;
+  modal?: ModalBundle;
 }
 
 const sx = {
