@@ -131,12 +131,19 @@ function applyDenyCreateLogGroupPolicy(stack: Stack) {
     },
   };
 
-  const provider = stack.node.tryFindChild(
-    "Custom::S3AutoDeleteObjectsCustomResourceProvider"
-  );
-  const role = provider?.node.tryFindChild("Role") as iam.CfnRole;
-  if (role) {
-    role.addPropertyOverride("Policies", [denyCreateLogGroupPolicy]);
+  const cdkArtifactPatterns = [
+    "Custom::S3AutoDeleteObjectsCustomResourceProvider",
+    "Custom::CDKBucketDeployment",
+    "AWSCDKTriggerCustomResourceProvider",
+    "AWS679f53fac002430cb0da5b7982bd2287",
+  ];
+
+  for (const pattern of cdkArtifactPatterns) {
+    const provider = stack.node.tryFindChild(pattern);
+    const role = provider?.node.tryFindChild("Role") as iam.CfnRole;
+    if (role) {
+      role.addPropertyOverride("Policies", [denyCreateLogGroupPolicy]);
+    }
   }
 
   stack.node.findAll().forEach((c) => {
