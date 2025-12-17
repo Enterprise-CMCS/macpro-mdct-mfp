@@ -43,7 +43,9 @@ jest.mock("../../utils/formTemplates/formTemplates", () => ({
 }));
 (getOrCreateFormTemplate as jest.Mock).mockResolvedValue({
   formTemplate: mockReportJson,
-  formTemplateVersion: 1,
+  formTemplateVersion: {
+    id: 1,
+  },
 });
 
 jest.mock("../../utils/auth/authorization", () => ({
