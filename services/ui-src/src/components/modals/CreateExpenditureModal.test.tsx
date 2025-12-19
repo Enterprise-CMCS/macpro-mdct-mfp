@@ -13,6 +13,7 @@ import { CreateExpenditureModal } from "./CreateExpenditureModal";
 const mockCreateReport = jest.fn();
 const mockFetchReportsByState = jest.fn();
 const mockCloseHandler = jest.fn();
+const mockUpdateReport = jest.fn();
 
 const mockedReportContext = {
   ...mockExpenditureOneNotStartedReportContext,
@@ -39,6 +40,31 @@ const modalComponent = (
   </RouterWrappedComponent>
 );
 
+const existingReport = {
+  id: "existing-report-id",
+  fieldData: { existingField: "value" },
+};
+
+const modalWithExistingReport = (
+  <RouterWrappedComponent>
+    <ReportContext.Provider
+      value={{
+        ...mockedReportContext,
+        updateReport: mockUpdateReport,
+      }}
+    >
+      <CreateExpenditureModal
+        activeState="CA"
+        selectedReport={existingReport}
+        modalDisclosure={{
+          isOpen: true,
+          onClose: mockCloseHandler,
+        }}
+      />
+    </ReportContext.Provider>
+  </RouterWrappedComponent>
+);
+
 describe("<CreateExpenditureModal />", () => {
   describe("Test CreateExpenditureModal", () => {
     beforeEach(async () => {
@@ -52,7 +78,7 @@ describe("<CreateExpenditureModal />", () => {
     });
 
     test("CreateExpenditureModal shows the content", () => {
-      expect(screen.getByText("Start new")).toBeTruthy();
+      expect(screen.getByText("Update submission")).toBeTruthy();
     });
 
     test("CreateExpenditureModal top close button can be clicked", () => {
@@ -62,55 +88,57 @@ describe("<CreateExpenditureModal />", () => {
   });
 
   describe("Test CreateExpenditureModal functionality for new Expenditure Report", () => {
-    const mockedDateNow = jest.spyOn(Date, "now");
-
     afterEach(() => {
       jest.clearAllMocks();
     });
 
     const fillForm = async () => {
-      const submitButton = screen.getByRole("button", { name: "Start new" });
-      const firstRadio = screen.getByLabelText("2025") as HTMLInputElement;
-      const secondRadio = screen.getByLabelText(
-        "First reporting period (January 1 - June 30)"
+      const submitButton = screen.getByRole("button", {
+        name: "Update submission",
+      });
+      const yearDropdown = screen.getByLabelText(
+        "Reporting Year"
+      ) as HTMLInputElement;
+      const periodDropdown = screen.getByLabelText(
+        "Reporting Period"
       ) as HTMLInputElement;
       await act(async () => {
-        await userEvent.click(firstRadio);
-        await userEvent.click(secondRadio);
+        await userEvent.selectOptions(yearDropdown, "2025");
+        await userEvent.selectOptions(periodDropdown, "2");
         await userEvent.click(submitButton);
       });
     };
 
     test("Adding a new report", async () => {
-      const mockDate = new Date(2025, 5, 1).getTime();
-      mockedDateNow.mockImplementation(() => mockDate);
-
-      await render(modalComponent);
+      render(modalComponent);
       const header = screen.getByRole("heading", { level: 1 });
-      expect(header.textContent).toEqual("Add new MFP Expenditure Report");
+      expect(header.textContent).toEqual(
+        "Add new MFP Expenditure Report submission"
+      );
       await fillForm();
       await act(async () => {
-        await expect(mockCreateReport).toHaveBeenCalledTimes(1);
-        await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
-        await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+        expect(mockCreateReport).toHaveBeenCalledTimes(1);
+        expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
+        expect(mockCloseHandler).toHaveBeenCalledTimes(1);
       });
     });
 
     test("The metadata reportYear and reportPeriod should reflect the choices in the modal", async () => {
-      const mockDate = new Date(2025, 5, 1).getTime();
-      mockedDateNow.mockImplementation(() => mockDate);
+      render(modalComponent);
 
-      await render(modalComponent);
-
-      const submitButton = screen.getByRole("button", { name: "Start new" });
-      const firstChoice = screen.getByLabelText("2026") as HTMLInputElement;
-      const secondChoice = screen.getByLabelText(
-        "Second reporting period (July 1 - December 31)"
+      const submitButton = screen.getByRole("button", {
+        name: "Update submission",
+      });
+      const yearDropdown = screen.getByLabelText(
+        "Reporting Year"
+      ) as HTMLInputElement;
+      const periodDropdown = screen.getByLabelText(
+        "Reporting Period"
       ) as HTMLInputElement;
 
       await act(async () => {
-        await userEvent.click(firstChoice);
-        await userEvent.click(secondChoice);
+        await userEvent.selectOptions(yearDropdown, "2026");
+        await userEvent.selectOptions(periodDropdown, "2");
         await userEvent.click(submitButton);
       });
 
@@ -121,6 +149,101 @@ describe("<CreateExpenditureModal />", () => {
         "CA",
         expect.objectContaining({ metadata: expect.objectContaining(newData) })
       );
+    });
+
+    test("Submit button is disabled while submitting", async () => {
+      render(modalComponent);
+
+      const submitButton = screen.getByRole("button", {
+        name: "Update submission",
+      });
+      const yearDropdown = screen.getByLabelText(
+        "Reporting Year"
+      ) as HTMLInputElement;
+      const periodDropdown = screen.getByLabelText(
+        "Reporting Period"
+      ) as HTMLInputElement;
+
+      await act(async () => {
+        await userEvent.selectOptions(yearDropdown, "2025");
+        await userEvent.selectOptions(periodDropdown, "2");
+        await userEvent.click(submitButton);
+      });
+
+      expect(submitButton).toBeDisabled();
+    });
+    describe("Test writeReport function", () => {
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      test("writeReport disables submit button during submission", async () => {
+        render(modalComponent);
+
+        const submitButton = screen.getByRole("button", {
+          name: "Update submission",
+        });
+        const yearDropdown = screen.getByLabelText(
+          "Reporting Year"
+        ) as HTMLInputElement;
+        const periodDropdown = screen.getByLabelText(
+          "Reporting Period"
+        ) as HTMLInputElement;
+
+        await act(async () => {
+          await userEvent.selectOptions(yearDropdown, "2025");
+          await userEvent.selectOptions(periodDropdown, "2");
+        });
+
+        expect(submitButton).not.toBeDisabled();
+
+        await act(async () => {
+          await userEvent.click(submitButton);
+        });
+
+        expect(submitButton).toBeDisabled();
+      });
+
+      test("writeReport calls updateReport when selectedReport.id exists", async () => {
+        render(modalWithExistingReport);
+
+        const submitButton = screen.getByRole("button", {
+          name: "Update submission",
+        });
+        const yearDropdown = screen.getByLabelText(
+          "Reporting Year"
+        ) as HTMLInputElement;
+        const periodDropdown = screen.getByLabelText(
+          "Reporting Period"
+        ) as HTMLInputElement;
+
+        await act(async () => {
+          await userEvent.selectOptions(yearDropdown, "2025");
+          await userEvent.selectOptions(periodDropdown, "2");
+          await userEvent.click(submitButton);
+        });
+
+        expect(mockUpdateReport).toHaveBeenCalledWith(
+          {
+            reportType: "EXPENDITURE",
+            state: "CA",
+            id: "existing-report-id",
+          },
+          expect.objectContaining({
+            metadata: expect.objectContaining({
+              reportYear: 2025,
+              reportPeriod: 2,
+            }),
+            fieldData: { existingField: "value" },
+          })
+        );
+        expect(mockCreateReport).not.toHaveBeenCalled();
+        expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+        expect(mockFetchReportsByState).toHaveBeenCalledWith(
+          "EXPENDITURE",
+          "CA"
+        );
+      });
     });
 
     testA11yAct(modalComponent);
