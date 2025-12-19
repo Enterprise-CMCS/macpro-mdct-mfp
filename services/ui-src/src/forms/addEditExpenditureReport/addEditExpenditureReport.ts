@@ -36,15 +36,15 @@ export const addEditExpenditureReport: FormJson = {
             value: "1",
           },
           {
-            label: "Q2: April 1 to June 30",
+            label: "Q2: April 1st to June 30th",
             value: "2",
           },
           {
-            label: "Q3: July 1 to September 30",
+            label: "Q3: July 1st to September 30th",
             value: "3",
           },
           {
-            label: "Q4: October 1 to December 31",
+            label: "Q4: October 1st to December 31st",
             value: "4",
           },
         ],

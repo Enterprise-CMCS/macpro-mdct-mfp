@@ -108,11 +108,11 @@ export const fullExpenditureReportPeriod = (period: number): string => {
     case 1:
       return "Q1: January 1st to March 31st";
     case 2:
-      return "Q2: April 1 to June 30";
+      return "Q2: April 1st to June 30th";
     case 3:
-      return "Q3: July 1 to September 30";
+      return "Q3: July 1st to September 30th";
     case 4:
-      return "Q4: October 1 to December 31";
+      return "Q4: October 1st to December 31st";
     default:
       throw new Error("Invalid report period");
   }
