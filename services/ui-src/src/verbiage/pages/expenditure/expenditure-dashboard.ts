@@ -7,6 +7,7 @@ export default {
     table: {
       caption: "Caption",
       headRow: [
+        "",
         "Submission name",
         "Reporting year",
         "Reporting period",
