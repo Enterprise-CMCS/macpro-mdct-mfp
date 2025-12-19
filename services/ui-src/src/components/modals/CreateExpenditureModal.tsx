@@ -1,6 +1,10 @@
 import { useContext, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
+import {
+  generateReportYearOptions,
+  prepareExpenditurePayload,
+} from "components/pages/Dashboard/Expenditure/expenditureLogic";
 // form
 import { addEditExpenditureReport } from "forms/addEditExpenditureReport/addEditExpenditureReport";
 // types
@@ -9,20 +13,6 @@ import { AnyObject, ReportStatus, ReportType } from "types";
 import { States } from "../../constants";
 
 const reportType = ReportType.EXPENDITURE;
-
-const generateReportYearOptions = () => {
-  const EXPENDITURE_LAUNCH_YEAR = 2025;
-  const currentYear = new Date(Date.now()).getFullYear();
-  return [currentYear - 1, currentYear, currentYear + 1]
-    .filter((year) => year >= EXPENDITURE_LAUNCH_YEAR)
-    .map((year) => ({
-      id: `reportYear-${year}`,
-      label: `${year}`,
-      name: `${year}`,
-      value: `${year}`,
-    }))
-    .reverse();
-};
 
 export const CreateExpenditureModal = ({
   activeState,
@@ -44,27 +34,11 @@ export const CreateExpenditureModal = ({
     }
   }
 
-  const prepareExpenditurePayload = (formData: AnyObject) => {
-    const formattedReportYear = Number(formData.reportYear.value);
-    const formattedReportPeriod = Number(formData.reportPeriod.value);
-    const submissionName = `${activeState}: ${formattedReportYear} - ${formData.reportPeriod.label}`;
-
-    const expenditurePayload: AnyObject = {
-      metadata: {
-        reportYear: formattedReportYear,
-        reportPeriod: formattedReportPeriod,
-        submissionName: submissionName,
-      },
-    };
-
-    return expenditurePayload;
-  };
-
   const writeReport = async (formData: AnyObject) => {
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
-    const dataToWrite = prepareExpenditurePayload(formData);
+    const dataToWrite = prepareExpenditurePayload(activeState, formData);
 
     if (selectedReport?.id) {
       const reportKeys = {
