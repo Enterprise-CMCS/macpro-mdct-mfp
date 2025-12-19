@@ -6,7 +6,7 @@ export const addEditExpenditureReport: FormJson = {
     mode: "onChange",
   },
   heading: {
-    edit: "Continue MFP Expenditure Report",
+    edit: "Edit MFP Expenditure Report submission",
     add: "Add new MFP Expenditure Report submission",
     subheading:
       "Add a new report to start a blank report or copy an existing report.",

@@ -82,7 +82,7 @@ export const CreateExpenditureModal = ({
       submitting={submitting}
       submitButtonDisabled={submitting}
       content={{
-        heading: form.heading?.add,
+        heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
         subheading: form.heading?.subheading,
         actionButtonText: "Update submission",
         closeButtonText: "Cancel",

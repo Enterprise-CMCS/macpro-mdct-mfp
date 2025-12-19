@@ -21,11 +21,11 @@ describe("expenditureLogic", () => {
   });
 
   describe("generateReportYearOptions", () => {
-    beforeEach(() => {
+    beforeAll(() => {
       jest.useFakeTimers();
     });
 
-    afterEach(() => {
+    afterAll(() => {
       jest.useRealTimers();
     });
 
