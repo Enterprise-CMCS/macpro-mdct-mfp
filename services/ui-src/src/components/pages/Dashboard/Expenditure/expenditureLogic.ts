@@ -27,7 +27,11 @@ export const prepareExpenditurePayload = (
 ) => {
   const formattedReportYear = Number(formData.reportYear.value);
   const formattedReportPeriod = Number(formData.reportPeriod.value);
-  const submissionName = `${activeState}: ${formattedReportYear} - ${formData.reportPeriod.label}`;
+  const submissionName = `${activeState}: ${formattedReportYear} - ${
+    expenditureReportPeriodsMap[
+      formattedReportPeriod as keyof typeof expenditureReportPeriodsMap
+    ]
+  }`;
 
   const expenditurePayload: AnyObject = {
     metadata: {
