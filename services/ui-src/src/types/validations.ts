@@ -16,6 +16,22 @@ export enum ValidationType {
   VALID_INTEGER_OPTIONAL = "validIntegerOptional",
 }
 
+export interface ComparatorMap {
+  [key: string]: {
+    compare: Function;
+    error: Function;
+  };
+}
+
+export enum ValidationComparator {
+  LESS_THAN_OR_EQUAL_PERCENTAGE = "lessThanOrEqualPercentage",
+}
+
 export interface TextOptions {
   maxLength?: number;
+}
+
+export interface NumberOptions {
+  boundary: number;
+  comparator: ValidationComparator;
 }
