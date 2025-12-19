@@ -5,6 +5,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import { AnyObject, ReportType } from "types";
 // utils
 import { useStore } from "utils";
+import { expenditureReportPeriodsMap } from "./expenditureLogic";
 
 export const ExpenditureDashboardPage = () => {
   const {
@@ -19,7 +20,9 @@ export const ExpenditureDashboardPage = () => {
   const activeState =
     userIsAdmin || userIsReadOnly ? adminSelectedState : userState;
 
-  const [selectedReport] = useState<AnyObject | undefined>(undefined);
+  const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
+    undefined
+  );
 
   // add/edit program modal disclosure
   const {
@@ -39,9 +42,33 @@ export const ExpenditureDashboardPage = () => {
     />
   );
 
+  const setModalReport = (report: AnyObject | undefined) => {
+    if (report) {
+      const formData = {
+        ...report,
+        formData: {
+          reportYear: { label: report.reportYear, value: report.reportYear },
+          reportPeriod: {
+            label:
+              expenditureReportPeriodsMap[
+                report.reportPeriod as keyof typeof expenditureReportPeriodsMap
+              ],
+            value: report.reportPeriod,
+          },
+        },
+      };
+      setSelectedReport(formData);
+      openCreateModal();
+      return;
+    } else {
+      setSelectedReport(undefined);
+      openCreateModal();
+    }
+  };
+
   const modalBundle: ModalBundle = {
-    openModal: openCreateModal,
     modal: expenditureModal,
+    setModalReport: setModalReport,
   };
 
   return (
@@ -54,6 +81,6 @@ export const ExpenditureDashboardPage = () => {
 };
 
 export interface ModalBundle {
-  openModal: () => void;
   modal: React.JSX.Element;
+  setModalReport: (report: AnyObject | undefined) => void;
 }

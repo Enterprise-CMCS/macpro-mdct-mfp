@@ -203,11 +203,6 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
     navigate(firstReportPagePath);
   };
   const openCreateReportModal = (report?: ReportShape) => {
-    if (reportType === ReportType.EXPENDITURE) {
-      setSelectedReport(undefined);
-      modal!!.openModal();
-      return;
-    }
     let formData = undefined;
     //
     if (report && reportType == ReportType.SAR) {
@@ -402,7 +397,11 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
             reportType={reportType}
             reportId={reportId}
             body={body}
-            openCreateReportModal={openCreateReportModal}
+            openCreateReportModal={
+              reportType === ReportType.EXPENDITURE
+                ? modal!!.setModalReport
+                : openCreateReportModal
+            }
             enterSelectedReport={enterSelectedReport}
             archive={openArchiveModal}
             entering={entering}
@@ -429,7 +428,11 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
               type="submit"
               variant="primary"
               disabled={isAddSubmissionDisabled()}
-              onClick={() => openCreateReportModal()}
+              onClick={() =>
+                reportType === ReportType.EXPENDITURE
+                  ? modal?.setModalReport(undefined)
+                  : openCreateReportModal()
+              }
             >
               {!previousReport || reportType === ReportType.SAR
                 ? body.callToAction
@@ -449,6 +452,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
           </Box>
         )}
       </Box>
+      {modal?.modal && modal.modal}
       <CreateWorkPlanModal
         isResetting={isResetting}
         activeState={activeState!}
@@ -466,7 +470,6 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
           onClose: createSarModalOnCloseHandler,
         }}
       />
-      {modal?.modal && modal.modal}
       <Modal
         modalDisclosure={{
           isOpen: confirmUnlockModalIsOpen,
