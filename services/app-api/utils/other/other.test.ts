@@ -1,9 +1,14 @@
-import { getReportPeriod, getReportYear, getEligibleWorkPlan } from "./other";
+import {
+  getReportPeriod,
+  getReportYear,
+  getEligibleWorkPlan,
+  createReportName,
+} from "./other";
 import {
   getReportFieldData,
   queryReportMetadatasForState,
 } from "../../storage/reports";
-import { ReportStatus } from "../types";
+import { ReportMetadataShape, ReportStatus, ReportType } from "../types";
 
 jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
@@ -11,25 +16,25 @@ jest.mock("../../storage/reports", () => ({
 }));
 
 const mockWPData = {
-  reportType: "WP",
+  reportType: ReportType.WP,
   state: "NJ",
   id: "some id",
   submissionName: "submissionName",
-  status: "Approved",
+  status: ReportStatus.APPROVED,
   createdAt: 1699496172798,
   lastAltered: 1699496172798,
   lastAlteredBy: "Anthony Soprano",
-  dueDate: 1699496172798,
+  dueDate: "1699496172798",
   locked: false,
 };
 
 const mockUnvalidatedMetadata = {
-  reportType: "WP",
+  reportType: ReportType.WP,
   state: "NJ",
   id: "some id",
   submissionName: "submissionName",
-  status: "Not started",
-  createdAt: 1699496172798,
+  status: ReportStatus.NOT_STARTED,
+  createdAt: "1699496172798",
   lastAlteredBy: "Anthony Soprano",
   locked: false,
 };
@@ -210,6 +215,68 @@ describe("API utility functions", () => {
 
       expect(result.workPlanMetadata).toBeUndefined();
       expect(result.workPlanFieldData).toBeUndefined();
+    });
+  });
+
+  describe("createReportName", () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it("should create a work plan report name", () => {
+      const result = createReportName(ReportType.WP, 1, "NJ", 2024);
+
+      expect(result).toBe("New Jersey MFP Work Plan 2024 - Period 1");
+    });
+
+    it("should create a SAR report name using work plan period", () => {
+      const mockWorkPlan = {
+        ...mockWPData,
+        reportPeriod: 2,
+        fieldDataId: "",
+        formTemplateId: "",
+        reportYear: 0,
+      } as ReportMetadataShape;
+
+      const result = createReportName(
+        ReportType.SAR,
+        1,
+        "NJ",
+        2024,
+        mockWorkPlan
+      );
+
+      expect(result).toBe("New Jersey MFP SAR 2024 - Period 2");
+    });
+
+    it("should create an expenditure report name for Q1", () => {
+      const result = createReportName(ReportType.EXPENDITURE, 1, "CO", 2024);
+
+      expect(result).toBe("CO: 2024 - Q1: January 1st to March 31st");
+    });
+
+    it("should create an expenditure report name for Q2", () => {
+      const result = createReportName(ReportType.EXPENDITURE, 2, "CO", 2024);
+
+      expect(result).toBe("CO: 2024 - Q2: April 1st to June 30th");
+    });
+
+    it("should create an expenditure report name for Q3", () => {
+      const result = createReportName(ReportType.EXPENDITURE, 3, "CO", 2024);
+
+      expect(result).toBe("CO: 2024 - Q3: July 1st to September 30th");
+    });
+
+    it("should create an expenditure report name for Q4", () => {
+      const result = createReportName(ReportType.EXPENDITURE, 4, "CO", 2024);
+
+      expect(result).toBe("CO: 2024 - Q4: October 1st to December 31st");
+    });
+
+    it("should throw an error for unsupported report type", () => {
+      expect(() =>
+        createReportName("INVALID_TYPE" as ReportType, 1, "NJ", 2024)
+      ).toThrow("Unsupported report type for naming convention");
     });
   });
 });
