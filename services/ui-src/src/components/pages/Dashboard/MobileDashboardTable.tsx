@@ -41,7 +41,7 @@ export const MobileDashboardTable = ({
             {copyOverSubText(report, reportsByState)}
           </Flex>
         </Box>
-        {!isAdmin && ReportType.SAR && report?.populations && (
+        {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Box sx={sx.labelGroup}>
             <Text sx={sx.label}>Target populations</Text>
             <Text>{prettifyChoices(report?.populations)}</Text>
