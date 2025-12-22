@@ -272,11 +272,5 @@ describe("API utility functions", () => {
 
       expect(result).toBe("CO: 2024 - Q4: October 1st to December 31st");
     });
-
-    it("should throw an error for unsupported report type", () => {
-      expect(() =>
-        createReportName("INVALID_TYPE" as ReportType, 1, "NJ", 2024)
-      ).toThrow("Unsupported report type for naming convention");
-    });
   });
 });

@@ -27,9 +27,11 @@ export const createReportName = (
 
   switch (reportType) {
     case ReportType.EXPENDITURE:
-      return `${state}: ${reportYear} - ${fullExpenditureReportPeriod(
-        Number(reportPeriod)
-      )}`;
+      return `${state}: ${reportYear} - ${
+        expenditureReportPeriodsMap[
+          Number(reportPeriod) as keyof typeof expenditureReportPeriodsMap
+        ]
+      }`;
     case ReportType.SAR:
     case ReportType.WP:
       return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
@@ -103,17 +105,9 @@ export const getReportPeriod = (
   return reportData?.reportPeriod;
 };
 
-export const fullExpenditureReportPeriod = (period: number): string => {
-  switch (period) {
-    case 1:
-      return "Q1: January 1st to March 31st";
-    case 2:
-      return "Q2: April 1st to June 30th";
-    case 3:
-      return "Q3: July 1st to September 30th";
-    case 4:
-      return "Q4: October 1st to December 31st";
-    default:
-      throw new Error("Invalid report period");
-  }
+export const expenditureReportPeriodsMap = {
+  1: "Q1: January 1st to March 31st",
+  2: "Q2: April 1st to June 30th",
+  3: "Q3: July 1st to September 30th",
+  4: "Q4: October 1st to December 31st",
 };
