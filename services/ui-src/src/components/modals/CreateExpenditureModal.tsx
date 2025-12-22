@@ -84,7 +84,7 @@ export const CreateExpenditureModal = ({
       content={{
         heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
         subheading: form.heading?.subheading,
-        actionButtonText: "Update submission",
+        actionButtonText: selectedReport?.id ? "Update submission" : "Save",
         closeButtonText: "Cancel",
       }}
     >
