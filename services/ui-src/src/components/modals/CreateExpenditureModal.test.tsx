@@ -78,7 +78,7 @@ describe("<CreateExpenditureModal />", () => {
     });
 
     test("CreateExpenditureModal shows the content", () => {
-      expect(screen.getByText("Update submission")).toBeTruthy();
+      expect(screen.getByText("Save")).toBeTruthy();
     });
 
     test("CreateExpenditureModal top close button can be clicked", () => {
@@ -94,7 +94,7 @@ describe("<CreateExpenditureModal />", () => {
 
     const fillForm = async () => {
       const submitButton = screen.getByRole("button", {
-        name: "Update submission",
+        name: "Save",
       });
       const yearDropdown = screen.getByLabelText(
         "Reporting Year"
@@ -127,7 +127,7 @@ describe("<CreateExpenditureModal />", () => {
       render(modalComponent);
 
       const submitButton = screen.getByRole("button", {
-        name: "Update submission",
+        name: "Save",
       });
       const yearDropdown = screen.getByLabelText(
         "Reporting Year"
@@ -155,7 +155,7 @@ describe("<CreateExpenditureModal />", () => {
       render(modalComponent);
 
       const submitButton = screen.getByRole("button", {
-        name: "Update submission",
+        name: "Save",
       });
       const yearDropdown = screen.getByLabelText(
         "Reporting Year"
@@ -181,7 +181,7 @@ describe("<CreateExpenditureModal />", () => {
         render(modalComponent);
 
         const submitButton = screen.getByRole("button", {
-          name: "Update submission",
+          name: "Save",
         });
         const yearDropdown = screen.getByLabelText(
           "Reporting Year"
