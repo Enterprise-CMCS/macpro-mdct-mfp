@@ -23,8 +23,8 @@ describe("DashboardFilter", () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
 
-    expect(screen.getByTestId("year-filter-dropdown")).toBeInTheDocument();
-    expect(screen.getByTestId("quarter-filter-dropdown")).toBeInTheDocument();
+    expect(screen.getByLabelText(/year/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/quarter/i)).toBeInTheDocument();
     expect(screen.getByText("Filter")).toBeInTheDocument();
   });
 
@@ -32,9 +32,9 @@ describe("DashboardFilter", () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
 
-    expect(screen.getByTestId("year-filter-dropdown")).toHaveValue("All");
+    expect(screen.getByLabelText(/year/i)).toHaveValue("All");
 
-    expect(screen.getByTestId("quarter-filter-dropdown")).toHaveValue("All");
+    expect(screen.getByLabelText(/quarter/i)).toHaveValue("All");
   });
 
   it("initializes with search params from URL", () => {
@@ -46,15 +46,15 @@ describe("DashboardFilter", () => {
 
     render(<DashboardFilter />);
 
-    expect(screen.getByTestId("year-filter-dropdown")).toHaveValue("2025");
-    expect(screen.getByTestId("quarter-filter-dropdown")).toHaveValue("1");
+    expect(screen.getByLabelText(/year/i)).toHaveValue("2025");
+    expect(screen.getByLabelText(/quarter/i)).toHaveValue("1");
   });
 
   it("updates year dropdown value on change", async () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
 
-    const yearDropdown = screen.getByTestId("year-filter-dropdown");
+    const yearDropdown = screen.getByLabelText(/year/i);
 
     await act(async () => {
       userEvent.selectOptions(yearDropdown, "2025");
@@ -69,7 +69,7 @@ describe("DashboardFilter", () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
 
-    const quarterDropdown = screen.getByTestId("quarter-filter-dropdown");
+    const quarterDropdown = screen.getByLabelText(/quarter/i);
 
     await act(async () => {
       userEvent.selectOptions(quarterDropdown, "2");
@@ -83,9 +83,9 @@ describe("DashboardFilter", () => {
   it("calls setSearchParams with selected values when Filter button is clicked", async () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
-    const yearDropdown = screen.getByTestId("year-filter-dropdown");
-    const quarterDropdown = screen.getByTestId("quarter-filter-dropdown");
-    const filterButton = screen.getByTestId("dash-filter-button");
+    const yearDropdown = screen.getByLabelText(/year/i);
+    const quarterDropdown = screen.getByLabelText(/quarter/i);
+    const filterButton = screen.getByRole("button", { name: "Filter" });
 
     await act(async () => {
       userEvent.selectOptions(yearDropdown, "2026");
@@ -128,15 +128,15 @@ describe("DashboardFilter", () => {
 
     render(<DashboardFilter />);
 
-    const clearButton = screen.getByTestId("dash-filter-clear-button");
+    const clearButton = screen.getByRole("button", { name: "Clear" });
 
     await act(async () => {
       await userEvent.click(clearButton);
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId("year-filter-dropdown")).toHaveValue("All");
-      expect(screen.getByTestId("quarter-filter-dropdown")).toHaveValue("All");
+      expect(screen.getByLabelText(/year/i)).toHaveValue("All");
+      expect(screen.getByLabelText(/quarter/i)).toHaveValue("All");
       expect(mockSetSearchParams).toHaveBeenCalledWith({});
     });
   });
@@ -145,9 +145,9 @@ describe("DashboardFilter", () => {
     mockGetSearchParams.mockReturnValue(null);
     render(<DashboardFilter />);
 
-    const yearDropdown = screen.getByTestId("year-filter-dropdown");
-    const quarterDropdown = screen.getByTestId("quarter-filter-dropdown");
-    const clearButton = screen.getByTestId("dash-filter-clear-button");
+    const yearDropdown = screen.getByLabelText(/year/i);
+    const quarterDropdown = screen.getByLabelText(/quarter/i);
+    const clearButton = screen.getByRole("button", { name: "Clear" });
 
     await act(async () => {
       userEvent.selectOptions(yearDropdown, "2025");

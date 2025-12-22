@@ -51,7 +51,6 @@ export const DashboardFilter = () => {
             id="yearFilter"
             value={yearDropdownValue}
             onChange={handleYearChange}
-            data-testid="year-filter-dropdown"
             aria-invalid="false"
             className="ds-c-field"
           >
@@ -76,7 +75,6 @@ export const DashboardFilter = () => {
             id="quarterFilter"
             value={quarterDropdownValue}
             onChange={handleQuarterChange}
-            data-testid="quarter-filter-dropdown"
             aria-invalid="false"
             className="ds-c-field"
           >
@@ -92,19 +90,11 @@ export const DashboardFilter = () => {
         </Box>
       </GridItem>
       <GridItem sx={sx.filterActions}>
-        <Button
-          data-testid="dash-filter-button"
-          onClick={handleFilter}
-          variant="outline"
-        >
+        <Button onClick={handleFilter} variant="outline">
           Filter
         </Button>
 
-        <Button
-          data-testid="dash-filter-clear-button"
-          onClick={handleClear}
-          variant="outline"
-        >
+        <Button onClick={handleClear} variant="outline">
           Clear
         </Button>
       </GridItem>
