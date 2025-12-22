@@ -28,7 +28,7 @@ export const MobileDashboardTable = ({
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>{"Submission name"}</Text>
           <Flex alignContent="flex-start">
-            {reportType === "SAR" && (
+            {reportType !== ReportType.WP && (
               <Box sx={sxOverride.editReport}>
                 <button onClick={() => openCreateReportModal(report)}>
                   <Image src={editIcon} alt="Edit Report" />
@@ -41,7 +41,7 @@ export const MobileDashboardTable = ({
             {copyOverSubText(report, reportsByState)}
           </Flex>
         </Box>
-        {!isAdmin && reportType === "SAR" && report?.populations && (
+        {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Box sx={sx.labelGroup}>
             <Text sx={sx.label}>Target populations</Text>
             <Text>{prettifyChoices(report?.populations)}</Text>

@@ -33,7 +33,7 @@ export const DashboardTable = ({
     {reportsByState.map((report: ReportMetadataShape) => (
       <Tr key={report.id}>
         {/* Edit Button */}
-        {reportType === ReportType.SAR && (
+        {reportType !== ReportType.WP && (
           <EditReportButton
             report={report}
             openCreateReportModal={openCreateReportModal}
@@ -336,7 +336,7 @@ const sx = {
   table: {
     marginBottom: "spacer5",
     th: {
-      padding: "0.5rem 0",
+      padding: "0.5rem 0.5rem 0.5rem 0",
       borderBottom: "1px solid",
       borderColor: "gray_light",
       color: "gray",
