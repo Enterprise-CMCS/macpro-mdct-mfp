@@ -58,6 +58,8 @@ jobs:
     needs: deploy
     steps:
       - uses: actions/checkout@v4
+      - name: Enable Corepack
+        run: corepack enable
       - name: Run Playwright tests
         run: |
           yarn install
