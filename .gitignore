@@ -26,11 +26,4 @@ cdk.context.json
 .qlty/*
 !.qlty/qlty.toml
 services/app-api/forms/*.json
-
-# Yarn 4
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+**/.yarn/*
