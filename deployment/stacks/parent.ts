@@ -131,13 +131,16 @@ function applyDenyCreateLogGroupPolicy(stack: Stack) {
     },
   };
 
-  const provider = stack.node.tryFindChild(
+  const findRole = (id: string) =>
+    stack.node.tryFindChild(id)?.node.tryFindChild("Role") as iam.CfnRole;
+
+  findRole(
     "Custom::S3AutoDeleteObjectsCustomResourceProvider"
-  );
-  const role = provider?.node.tryFindChild("Role") as iam.CfnRole;
-  if (role) {
-    role.addPropertyOverride("Policies", [denyCreateLogGroupPolicy]);
-  }
+  )?.addPropertyOverride("Policies", [denyCreateLogGroupPolicy]);
+
+  findRole(
+    "AWSCDK.TriggerCustomResourceProviderCustomResourceProvider"
+  )?.addPropertyOverride("Policies.1", denyCreateLogGroupPolicy);
 
   stack.node
     .findAll()
