@@ -1,6 +1,7 @@
 {
   "name": "mdct-mfp",
   "version": "1.0.0",
+  "packageManager": "yarn@4.12.0",
   "type": "module",
   "description": "",
   "main": "index.js",
@@ -50,6 +51,7 @@
     "aws-cdk-local": "^2.19.2",
     "core-js": "^3.41.0",
     "dotenv": "^16.6.1",
+    "esbuild": "^0.27.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.32.0",
