@@ -2,7 +2,7 @@ import {
   getReportFieldData,
   queryReportMetadatasForState,
 } from "../../storage/reports";
-import { States } from "../constants/constants";
+import { reportNames, States } from "../constants/constants";
 import {
   AnyObject,
   ReportFieldData,
@@ -13,18 +13,31 @@ import {
 } from "../types";
 
 export const createReportName = (
-  reportType: string,
+  reportType: ReportType,
   reportPeriod: number,
   state: State,
   reportYear?: number,
   workPlan?: ReportMetadataShape
 ) => {
-  const reportName = reportType;
+  const reportName = reportNames[reportType];
   const period =
     reportType === ReportType.SAR ? workPlan?.reportPeriod : reportPeriod;
 
   const fullStateName = States[state];
-  return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
+
+  switch (reportType) {
+    case ReportType.EXPENDITURE:
+      return `${state}: ${reportYear} - ${
+        expenditureReportPeriodsMap[
+          Number(reportPeriod) as keyof typeof expenditureReportPeriodsMap
+        ]
+      }`;
+    case ReportType.SAR:
+    case ReportType.WP:
+      return `${fullStateName} MFP ${reportName} ${reportYear} - Period ${period}`;
+    default:
+      throw new Error("Unsupported report type for naming convention");
+  }
 };
 
 export const getEligibleWorkPlan = async (
@@ -90,4 +103,11 @@ export const getReportPeriod = (
   }
 
   return reportData?.reportPeriod;
+};
+
+export const expenditureReportPeriodsMap = {
+  1: "Q1: January 1st to March 31st",
+  2: "Q2: April 1st to June 30th",
+  3: "Q3: July 1st to September 30th",
+  4: "Q4: October 1st to December 31st",
 };

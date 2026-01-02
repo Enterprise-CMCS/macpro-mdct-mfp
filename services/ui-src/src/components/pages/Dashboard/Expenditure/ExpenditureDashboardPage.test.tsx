@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { useSearchParams } from "react-router";
 // components
 import { ExpenditureDashboardPage, ReportContext } from "components";
@@ -95,5 +96,58 @@ describe("Test Expenditure Report Dashboard", () => {
     expect(
       screen.queryByText(expenditureVerbiage.body.empty)
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("Test ExpenditureDashboardPage modal functionality", () => {
+  const mockSetSearchParams = jest.fn();
+  const mockGetSearchParams = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (useSearchParams as jest.Mock).mockReturnValue([
+      { get: mockGetSearchParams },
+      mockSetSearchParams,
+    ]);
+    mockedUseStore.mockReturnValue(mockNotStartedExpenditureStore);
+  });
+
+  test("Check that modal opens when setModalReport is called with undefined", async () => {
+    render(expenditureDashboardViewWithReports);
+
+    const callToAction = expenditureVerbiage.body.callToAction;
+    const addButton = screen.getByRole("button", { name: callToAction });
+    expect(addButton).toBeInTheDocument();
+
+    await act(async () => {
+      await userEvent.click(addButton);
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", {
+          name: /Add new MFP Expenditure Report submission/i,
+        })
+      ).toBeInTheDocument();
+    });
+  });
+
+  test("Check that modal opens when setModalReport is called with a report", async () => {
+    render(expenditureDashboardViewWithReports);
+
+    const editModalButton = screen.getByRole("img", { name: /edit/i });
+    expect(editModalButton).toBeInTheDocument();
+
+    await act(async () => {
+      await userEvent.click(editModalButton);
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", {
+          name: /Edit MFP Expenditure Report submission/i,
+        })
+      ).toBeInTheDocument();
+    });
   });
 });

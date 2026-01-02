@@ -8,7 +8,7 @@ import {
   validateFieldData,
 } from "../../utils/validation/validation";
 import { metadataValidationSchema } from "../../utils/validation/schemas";
-import { error, reportNames } from "../../utils/constants/constants";
+import { error } from "../../utils/constants/constants";
 import { calculateDueDate } from "../../utils/time/time";
 import {
   createReportName,
@@ -53,8 +53,6 @@ export const createReport = handler(
     if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
       return forbidden(error.UNAUTHORIZED);
     }
-
-    const reportTypeExpanded = reportNames[reportType];
 
     /*
      * Begin Section - If creating a SAR Submission, find the oldest Work Plan created that hasn't been used
@@ -231,7 +229,7 @@ export const createReport = handler(
       lastAltered: currentDate,
       versionNumber: formTemplateVersion?.versionNumber,
       submissionName: createReportName(
-        reportTypeExpanded,
+        reportType,
         reportPeriod,
         state,
         reportYear,

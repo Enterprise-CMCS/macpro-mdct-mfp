@@ -123,9 +123,9 @@ export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
 // Redirects
 export { PostLogoutRedirect } from "./PostLogoutRedirect/index";
 // dashboard
-export { ExpenditureDashboardPage } from "./pages/Dashboard/Expenditure/ExpenditureDashboardPage";
 export { DashboardPage } from "./pages/Dashboard/DashboardPage";
 export { DashboardTable } from "./pages/Dashboard/DashboardTable";
 export { MobileDashboardTable } from "./pages/Dashboard/MobileDashboardTable";
+export { ExpenditureDashboardPage } from "./pages/Dashboard/Expenditure/ExpenditureDashboardPage";
 export { DashboardFilter } from "./pages/Dashboard/Filter/DashboardFilter";
 export { handleExpenditureFilter } from "./pages/Dashboard/Filter/dashboardFilterLogic";
