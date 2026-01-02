@@ -23,7 +23,6 @@ import {
   PageTemplate,
   ReportContext,
   Alert,
-  CreateExpenditureModal,
   DashboardFilter,
   handleExpenditureFilter,
 } from "components";
@@ -54,8 +53,9 @@ import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 import alertIcon from "assets/icons/icon_alert_circle.png";
 import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
 import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
+import { ModalBundle } from "./Expenditure/ExpenditureDashboardPage";
 
-export const DashboardPage = ({ reportType, showFilter }: Props) => {
+export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   const {
     errorMessage,
     fetchReportsByState,
@@ -243,7 +243,6 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
     const openHandlerMap: any = {
       WP: createWorkPlanModalOnOpenHandler,
       SAR: createSarModalOnOpenHandler,
-      EXPENDITURE: createExpenditureModalOnOpenHandler,
     };
 
     openHandlerMap[reportType]();
@@ -339,13 +338,6 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
     onClose: createSarModalOnCloseHandler,
   } = useDisclosure();
 
-  // add/edit program modal disclosure
-  const {
-    isOpen: createExpenditureModalIsOpen,
-    onOpen: createExpenditureModalOnOpenHandler,
-    onClose: createExpenditureModalOnCloseHandler,
-  } = useDisclosure();
-
   //unlock modal disclosure
   const {
     isOpen: confirmUnlockModalIsOpen,
@@ -405,7 +397,11 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
             reportType={reportType}
             reportId={reportId}
             body={body}
-            openCreateReportModal={openCreateReportModal}
+            openCreateReportModal={
+              reportType === ReportType.EXPENDITURE
+                ? modal!!.setModalReport
+                : openCreateReportModal
+            }
             enterSelectedReport={enterSelectedReport}
             archive={openArchiveModal}
             entering={entering}
@@ -432,7 +428,11 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
               type="submit"
               variant="primary"
               disabled={isAddSubmissionDisabled()}
-              onClick={() => openCreateReportModal()}
+              onClick={() =>
+                reportType === ReportType.EXPENDITURE
+                  ? modal?.setModalReport(undefined)
+                  : openCreateReportModal()
+              }
             >
               {!previousReport || reportType === ReportType.SAR
                 ? body.callToAction
@@ -452,6 +452,7 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
           </Box>
         )}
       </Box>
+      {modal?.modal && modal.modal}
       <CreateWorkPlanModal
         isResetting={isResetting}
         activeState={activeState!}
@@ -467,14 +468,6 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
         modalDisclosure={{
           isOpen: createSarModalIsOpen,
           onClose: createSarModalOnCloseHandler,
-        }}
-      />
-      <CreateExpenditureModal
-        activeState={activeState!}
-        selectedReport={selectedReport!}
-        modalDisclosure={{
-          isOpen: createExpenditureModalIsOpen,
-          onClose: createExpenditureModalOnCloseHandler,
         }}
       />
       <Modal
@@ -503,6 +496,7 @@ export const DashboardPage = ({ reportType, showFilter }: Props) => {
 interface Props {
   reportType: string;
   showFilter?: boolean;
+  modal?: ModalBundle;
 }
 
 const sx = {
