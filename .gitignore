@@ -27,3 +27,4 @@ cdk.context.json
 !.qlty/qlty.toml
 services/app-api/forms/*.json
 **/.yarn/*
+services/ui-src/public/env-config.ts
