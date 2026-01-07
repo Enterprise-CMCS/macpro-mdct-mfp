@@ -138,7 +138,7 @@ export const EntityRow = ({
           minHeight={"3.5rem"}
         >
           <Box display={"inline-block"} marginY={"auto"}>
-            <ul>
+            <ul id={`entity-${entity.id}`}>
               {programInfo.map((field, index) => (
                 <li key={index}>
                   {index === 0 && appendToEntityName()}
@@ -174,9 +174,10 @@ export const EntityRow = ({
             {!isRequired && !isCopied && openAddEditEntityModal && (
               <Button
                 sx={sx.editNameButton}
+                id={`edit-entity-name-${entity.id}`}
                 variant="none"
                 onClick={() => openAddEditEntityModal(entity)}
-                aria-label="edit entity button"
+                aria-labelledby={`edit-entity-name-${entity.id} entity-${entity.id}`}
                 pl={isMobile ? "0" : "1rem"}
                 pr={isMobile ? "1.5rem" : "2.5rem"}
               >
@@ -191,10 +192,11 @@ export const EntityRow = ({
                   ? sx.editOtherEntityButton
                   : sx.editEntityButton
               }
+              id={`edit-entity-${entity.id}`}
               onClick={() => openOverlayOrDrawer(entity)}
               variant="outline"
               disabled={entityStatus === EntityStatuses.DISABLED}
-              aria-label="edit button"
+              aria-labelledby={`edit-entity-${entity.id} entity-${entity.id}`}
             >
               {!editable || (!isSAR && isInitiativeClosed)
                 ? verbiage.readOnlyEntityDetailsButtonText
@@ -203,11 +205,12 @@ export const EntityRow = ({
             {!isRequired && !isCopied && openDeleteEntityModal && (
               <Button
                 sx={sx.deleteButton}
+                id={`delete-entity-${entity.id}`}
                 data-testid="delete-entity"
                 onClick={() => openDeleteEntityModal(entity)}
-                aria-label="delete button"
+                aria-labelledby={`delete-entity-${entity.id} entity-${entity.id}`}
               >
-                <Image src={deleteIcon} alt="delete icon" boxSize="3x3" />
+                <Image src={deleteIcon} alt="Delete" boxSize="3x3" />
               </Button>
             )}
           </Box>
