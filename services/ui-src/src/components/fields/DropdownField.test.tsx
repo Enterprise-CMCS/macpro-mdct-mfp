@@ -55,6 +55,7 @@ const dropdownComponentWithOptions = ({
   label = "test-dropdown-label",
   options = mockDropdownOptions,
   validateOnRender = false,
+  disabled = false,
 }: any = {}) => (
   <DropdownField
     hint={hint}
@@ -63,6 +64,7 @@ const dropdownComponentWithOptions = ({
     name={name}
     options={options}
     validateOnRender={validateOnRender}
+    disabled={disabled}
   />
 );
 
@@ -132,6 +134,13 @@ describe("<DropdownField />", () => {
       });
 
       expect(mockTrigger).toHaveBeenCalled();
+    });
+
+    test("renders disabled dropdown when disabled prop is true", () => {
+      const opts = { disabled: true };
+      render(dropdownComponentWithOptions(opts));
+      const dropdown = screen.getByLabelText("test-dropdown-label");
+      expect(dropdown).toBeDisabled();
     });
   });
 

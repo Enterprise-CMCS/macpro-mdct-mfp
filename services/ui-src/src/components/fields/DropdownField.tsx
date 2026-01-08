@@ -26,6 +26,7 @@ export const DropdownField = ({
   validateOnRender,
   sxOverride,
   styleAsOptional,
+  disabled,
 }: Props) => {
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {
@@ -125,6 +126,7 @@ export const DropdownField = ({
         onBlur={onBlurHandler}
         value={displayValue?.value}
         className="ds-c-field"
+        disabled={disabled}
       >
         {formattedOptions.map((option) => (
           <option key={uuid()} value={option.value}>
@@ -146,5 +148,6 @@ interface Props {
   validateOnRender?: boolean;
   sxOverride?: SystemStyleObject;
   styleAsOptional?: boolean;
+  disabled?: boolean;
   [key: string]: any;
 }

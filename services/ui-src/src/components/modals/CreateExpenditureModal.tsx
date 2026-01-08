@@ -7,6 +7,8 @@ import {
 } from "components/pages/Dashboard/Expenditure/expenditureLogic";
 // form
 import { addEditExpenditureReport } from "forms/addEditExpenditureReport/addEditExpenditureReport";
+// utils
+import { actionButtonText } from "./modalLogic";
 // types
 import { AnyObject, ReportStatus, ReportType } from "types";
 // constants
@@ -18,6 +20,7 @@ export const CreateExpenditureModal = ({
   activeState,
   selectedReport,
   modalDisclosure,
+  userIsAdmin,
 }: Props) => {
   const { createReport, fetchReportsByState, updateReport } =
     useContext(ReportContext);
@@ -33,6 +36,15 @@ export const CreateExpenditureModal = ({
       };
     }
   }
+
+  /**
+   * edit modal will be in view-only mode for admins all the time,
+   * and for state users after a SAR has been submitted
+   */
+  const expenditureReportWithSubmittedStatus =
+    selectedReport?.status === ReportStatus.SUBMITTED;
+
+  const viewOnly = userIsAdmin || expenditureReportWithSubmittedStatus;
 
   const writeReport = async (formData: AnyObject) => {
     setSubmitting(true);
@@ -84,7 +96,11 @@ export const CreateExpenditureModal = ({
       content={{
         heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
         subheading: form.heading?.subheading,
-        actionButtonText: selectedReport?.id ? "Update submission" : "Save",
+        actionButtonText: actionButtonText(
+          submitting,
+          viewOnly,
+          selectedReport?.id
+        ),
         closeButtonText: "Cancel",
       }}
     >
@@ -93,7 +109,8 @@ export const CreateExpenditureModal = ({
         id={form.id}
         formJson={form}
         formData={selectedReport?.formData}
-        onSubmit={writeReport}
+        onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
+        reportStatus={selectedReport?.status}
         validateOnRender={false}
         dontReset={true}
       />
@@ -108,4 +125,5 @@ interface Props {
   };
   activeState?: string;
   selectedReport?: AnyObject;
+  userIsAdmin?: boolean;
 }

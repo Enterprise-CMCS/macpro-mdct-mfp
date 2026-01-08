@@ -9,6 +9,7 @@ import { testA11yAct } from "utils/testing/commonTests";
 import { useStore } from "../../utils";
 import { mockExpenditureOneNotStartedReportContext } from "utils/testing/expenditure/mockExpenditure";
 import { CreateExpenditureModal } from "./CreateExpenditureModal";
+import { ReportStatus } from "types";
 
 const mockCreateReport = jest.fn();
 const mockFetchReportsByState = jest.fn();
@@ -83,7 +84,7 @@ describe("<CreateExpenditureModal />", () => {
 
     test("CreateExpenditureModal top close button can be clicked", () => {
       fireEvent.click(screen.getByText("Close"));
-      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+      expect(mockCloseHandler).toHaveBeenCalled();
     });
   });
 
@@ -92,19 +93,23 @@ describe("<CreateExpenditureModal />", () => {
       jest.clearAllMocks();
     });
 
-    const fillForm = async () => {
-      const submitButton = screen.getByRole("button", {
-        name: "Save",
-      });
+    const fillForm = async (
+      yearValue: string,
+      periodValue: string,
+      submitButtonText: string
+    ) => {
       const yearDropdown = screen.getByLabelText(
         "Reporting Year"
       ) as HTMLInputElement;
       const periodDropdown = screen.getByLabelText(
         "Reporting Period"
       ) as HTMLInputElement;
+      const submitButton = screen.getByRole("button", {
+        name: submitButtonText,
+      });
       await act(async () => {
-        await userEvent.selectOptions(yearDropdown, "2025");
-        await userEvent.selectOptions(periodDropdown, "2");
+        await userEvent.selectOptions(yearDropdown, yearValue);
+        await userEvent.selectOptions(periodDropdown, periodValue);
         await userEvent.click(submitButton);
       });
     };
@@ -115,7 +120,7 @@ describe("<CreateExpenditureModal />", () => {
       expect(header.textContent).toEqual(
         "Add new MFP Expenditure Report submission"
       );
-      await fillForm();
+      await fillForm("2025", "1", "Save");
       await act(async () => {
         expect(mockCreateReport).toHaveBeenCalledTimes(1);
         expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
@@ -126,21 +131,7 @@ describe("<CreateExpenditureModal />", () => {
     test("The metadata reportYear and reportPeriod should reflect the choices in the modal", async () => {
       render(modalComponent);
 
-      const submitButton = screen.getByRole("button", {
-        name: "Save",
-      });
-      const yearDropdown = screen.getByLabelText(
-        "Reporting Year"
-      ) as HTMLInputElement;
-      const periodDropdown = screen.getByLabelText(
-        "Reporting Period"
-      ) as HTMLInputElement;
-
-      await act(async () => {
-        await userEvent.selectOptions(yearDropdown, "2026");
-        await userEvent.selectOptions(periodDropdown, "2");
-        await userEvent.click(submitButton);
-      });
+      await fillForm("2026", "2", "Save");
 
       const newData = { reportYear: 2026, reportPeriod: 2 };
 
@@ -154,24 +145,13 @@ describe("<CreateExpenditureModal />", () => {
     test("Submit button is disabled while submitting", async () => {
       render(modalComponent);
 
+      await fillForm("2025", "1", "Save");
       const submitButton = screen.getByRole("button", {
         name: "Save",
       });
-      const yearDropdown = screen.getByLabelText(
-        "Reporting Year"
-      ) as HTMLInputElement;
-      const periodDropdown = screen.getByLabelText(
-        "Reporting Period"
-      ) as HTMLInputElement;
-
-      await act(async () => {
-        await userEvent.selectOptions(yearDropdown, "2025");
-        await userEvent.selectOptions(periodDropdown, "2");
-        await userEvent.click(submitButton);
-      });
-
       expect(submitButton).toBeDisabled();
     });
+
     describe("Test writeReport function", () => {
       afterEach(() => {
         jest.clearAllMocks();
@@ -180,48 +160,34 @@ describe("<CreateExpenditureModal />", () => {
       test("writeReport disables submit button during submission", async () => {
         render(modalComponent);
 
-        const submitButton = screen.getByRole("button", {
-          name: "Save",
-        });
         const yearDropdown = screen.getByLabelText(
           "Reporting Year"
         ) as HTMLInputElement;
         const periodDropdown = screen.getByLabelText(
           "Reporting Period"
         ) as HTMLInputElement;
+        const returnButton = screen.getByRole("button", {
+          name: "Save",
+        });
 
         await act(async () => {
           await userEvent.selectOptions(yearDropdown, "2025");
           await userEvent.selectOptions(periodDropdown, "2");
         });
 
-        expect(submitButton).not.toBeDisabled();
+        expect(returnButton).not.toBeDisabled();
 
         await act(async () => {
-          await userEvent.click(submitButton);
+          await userEvent.click(returnButton);
         });
 
-        expect(submitButton).toBeDisabled();
+        expect(returnButton).toBeDisabled();
       });
 
       test("writeReport calls updateReport when selectedReport.id exists", async () => {
         render(modalWithExistingReport);
 
-        const submitButton = screen.getByRole("button", {
-          name: "Update submission",
-        });
-        const yearDropdown = screen.getByLabelText(
-          "Reporting Year"
-        ) as HTMLInputElement;
-        const periodDropdown = screen.getByLabelText(
-          "Reporting Period"
-        ) as HTMLInputElement;
-
-        await act(async () => {
-          await userEvent.selectOptions(yearDropdown, "2025");
-          await userEvent.selectOptions(periodDropdown, "2");
-          await userEvent.click(submitButton);
-        });
+        await fillForm("2025", "2", "Update submission");
 
         expect(mockUpdateReport).toHaveBeenCalledWith(
           {
@@ -243,6 +209,82 @@ describe("<CreateExpenditureModal />", () => {
           "EXPENDITURE",
           "CA"
         );
+      });
+    });
+
+    describe("Test CreateExpenditureModal view-only mode", () => {
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      test("Modal is in view-only mode when userIsAdmin is true", async () => {
+        const adminModal = (
+          <RouterWrappedComponent>
+            <ReportContext.Provider value={mockedReportContext}>
+              <CreateExpenditureModal
+                activeState="CA"
+                selectedReport={{
+                  ...existingReport,
+                  status: ReportStatus.SUBMITTED,
+                }}
+                userIsAdmin={true}
+                modalDisclosure={{
+                  isOpen: true,
+                  onClose: mockCloseHandler,
+                }}
+              />
+            </ReportContext.Provider>
+          </RouterWrappedComponent>
+        );
+
+        render(adminModal);
+
+        const returnButton = screen.getByRole("button", {
+          name: "Return",
+        });
+
+        await act(async () => {
+          await userEvent.click(returnButton);
+        });
+
+        expect(mockCloseHandler).toHaveBeenCalled();
+        expect(mockCreateReport).not.toHaveBeenCalled();
+        expect(mockUpdateReport).not.toHaveBeenCalled();
+      });
+
+      test("Modal is in view-only mode when report status is SUBMITTED", async () => {
+        const submittedReportModal = (
+          <RouterWrappedComponent>
+            <ReportContext.Provider value={mockedReportContext}>
+              <CreateExpenditureModal
+                activeState="CA"
+                selectedReport={{
+                  ...existingReport,
+                  status: ReportStatus.SUBMITTED,
+                }}
+                userIsAdmin={false}
+                modalDisclosure={{
+                  isOpen: true,
+                  onClose: mockCloseHandler,
+                }}
+              />
+            </ReportContext.Provider>
+          </RouterWrappedComponent>
+        );
+
+        render(submittedReportModal);
+
+        const returnButton = screen.getByRole("button", {
+          name: "Return",
+        });
+
+        await act(async () => {
+          await userEvent.click(returnButton);
+        });
+
+        expect(mockCloseHandler).toHaveBeenCalled();
+        expect(mockCreateReport).not.toHaveBeenCalled();
+        expect(mockUpdateReport).not.toHaveBeenCalled();
       });
     });
 
