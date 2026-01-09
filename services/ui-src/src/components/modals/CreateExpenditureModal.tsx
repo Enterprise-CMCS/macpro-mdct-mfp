@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
-import { Form, Modal, ReportContext } from "components";
+import { Alert, Form, Modal, ReportContext } from "components";
 import {
   generateReportYearOptions,
   prepareExpenditurePayload,
@@ -10,9 +10,10 @@ import { addEditExpenditureReport } from "forms/addEditExpenditureReport/addEdit
 // utils
 import { actionButtonText } from "./modalLogic";
 // types
-import { AnyObject, ReportStatus, ReportType } from "types";
+import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
 // constants
 import { States } from "../../constants";
+import { useStore } from "utils/state/useStore";
 
 const reportType = ReportType.EXPENDITURE;
 
@@ -24,9 +25,18 @@ export const CreateExpenditureModal = ({
 }: Props) => {
   const { createReport, fetchReportsByState, updateReport } =
     useContext(ReportContext);
+  const { reportsByState } = useStore();
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [formPeriodValue, setFormPeriodValue] = useState<number>();
+  const [formYearValue, setFormYearValue] = useState<number>();
 
   const form = addEditExpenditureReport;
+  const resetAlertText = {
+    title: "An MFP Expenditure for this Reporting Period already exists",
+    description:
+      "To avoid duplication, please select a different Reporting Year or Reporting Period.",
+  };
 
   for (let field of form.fields) {
     if (field.id.match("reportYear")) {
@@ -36,6 +46,36 @@ export const CreateExpenditureModal = ({
       };
     }
   }
+
+  useEffect(() => {
+    if (!modalDisclosure.isOpen) {
+      setFormPeriodValue(undefined);
+      setFormYearValue(undefined);
+      setShowAlert(false);
+    }
+  }, [modalDisclosure.isOpen]);
+
+  useEffect(() => {
+    if (!reportsByState) return;
+    for (const report of reportsByState) {
+      if (
+        report.reportPeriod === formPeriodValue &&
+        report.reportYear === formYearValue &&
+        !report.archived
+      ) {
+        setShowAlert(true);
+      }
+    }
+  }, [formPeriodValue, formYearValue]);
+
+  // used to get the form values to enable/disable alert and submit button
+  const onChange = (formProvider: AnyObject) => {
+    if (formProvider.target.name === "reportPeriod")
+      setFormPeriodValue(Number(formProvider.target.value));
+    if (formProvider.target.name === "reportYear")
+      setFormYearValue(Number(formProvider.target.value));
+    setShowAlert(false);
+  };
 
   /**
    * edit modal will be in view-only mode for admins all the time,
@@ -92,7 +132,7 @@ export const CreateExpenditureModal = ({
       formId={form.id}
       modalDisclosure={modalDisclosure}
       submitting={submitting}
-      submitButtonDisabled={submitting}
+      submitButtonDisabled={submitting || showAlert}
       content={{
         heading: selectedReport?.id ? form.heading?.edit : form.heading?.add,
         subheading: form.heading?.subheading,
@@ -104,6 +144,13 @@ export const CreateExpenditureModal = ({
         closeButtonText: "Cancel",
       }}
     >
+      {showAlert && (
+        <Alert
+          title={resetAlertText.title}
+          status={AlertTypes.ERROR}
+          description={resetAlertText.description}
+        />
+      )}
       <Form
         data-testid="create-expenditure-form"
         id={form.id}
@@ -113,6 +160,7 @@ export const CreateExpenditureModal = ({
         reportStatus={selectedReport?.status}
         validateOnRender={false}
         dontReset={true}
+        onChange={onChange}
       />
     </Modal>
   );
