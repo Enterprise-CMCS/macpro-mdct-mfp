@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /*
  * Local:
- *    `DYNAMODB_URL="http://localhost:4566" S3_LOCAL_ENDPOINT="http://localhost:4566" node services/database/scripts/update-templates.js`
+ *    DYNAMODB_URL="http://localhost:4566" S3_LOCAL_ENDPOINT="http://localhost:4566" node services/database/scripts/update-templates.js
  *  Branch:
  *    branchPrefix="YOUR BRANCH NAME" node services/database/scripts/update-templates.js
  */
@@ -9,13 +9,10 @@
 const { buildS3Client, list, putObjectTag } = require("./utils/s3.js");
 
 const isLocal = !!process.env.DYNAMODB_URL;
+const branch = isLocal ? "localstack" : process.env.branchPrefix;
 
-const wpBucketName = isLocal
-  ? "database-localstack-wp"
-  : "database-" + process.env.branchPrefix + "-wp";
-const sarBucketName = isLocal
-  ? "database-localstack-sar"
-  : "database-" + process.env.branchPrefix + "-sar";
+const wpBucketName = `database-${branch}-wp`;
+const sarBucketName = `database-${branch}-sar`;
 const buckets = [wpBucketName, sarBucketName];
 
 // Using a human readable format for easier debugging in the future
