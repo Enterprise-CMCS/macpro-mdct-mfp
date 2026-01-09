@@ -243,7 +243,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     vpcSubnets: { subnets: kafkaAuthorizedSubnets },
     securityGroups: [kafkaSecurityGroup],
     ...commonProps,
-    environment: { ...commonProps.environment, topicNamespace: "" },
+    environment: {
+      ...commonProps.environment,
+      topicNamespace: isDev ? `--${project}--${stage}--` : "",
+    },
   };
 
   const postWpBucketData = new Lambda(scope, "postWpBucketData", {
