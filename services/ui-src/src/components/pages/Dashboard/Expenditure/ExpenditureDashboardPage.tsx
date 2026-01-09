@@ -39,6 +39,7 @@ export const ExpenditureDashboardPage = () => {
         isOpen: createExpenditureModalIsOpen,
         onClose: createExpenditureModalOnCloseHandler,
       }}
+      userIsAdmin={userIsAdmin}
     />
   );
 
