@@ -41,6 +41,7 @@ const verbiage = {
   deleteEntityButtonAltText: "Delete other target population",
   enterEntityDetailsButtonText: "Edit",
   readOnlyEntityDetailsButtonText: "View",
+  deleteEntityDetailsButtonText: "Delete",
   drawerTitle: "Report transition benchmarks for ",
 };
 
@@ -136,9 +137,9 @@ describe("<EntityRow />", () => {
     });
 
     test("Opens the drawer correctly", async () => {
-      const launchDrawerButton = screen.getByText(
-        verbiage.enterEntityDetailsButtonText
-      );
+      const launchDrawerButton = screen.getByRole("button", {
+        name: `${verbiage.enterEntityDetailsButtonText} Older Adults`,
+      });
       await userEvent.click(launchDrawerButton);
       expect(mockOpenDrawer).toBeCalledTimes(1);
     });
@@ -152,18 +153,18 @@ describe("<EntityRow />", () => {
     test("should render the correct button text in a work plan", () => {
       mockedUseStore.mockReturnValue(mockReportStore);
       render(entityRowWithClosedEntities);
-      const viewButton = screen.getByText(
-        verbiage.readOnlyEntityDetailsButtonText
-      );
+      const viewButton = screen.getByRole("button", {
+        name: `${verbiage.readOnlyEntityDetailsButtonText} Other:`,
+      });
       expect(viewButton).toBeVisible();
     });
 
     test("should render the correct button text in a SAR", () => {
       mockedUseStore.mockReturnValue(mockSARReportStore);
       render(entityRowWithClosedEntities);
-      const editButton = screen.getByText(
-        verbiage.enterEntityDetailsButtonText
-      );
+      const editButton = screen.getByRole("button", {
+        name: `${verbiage.enterEntityDetailsButtonText} Other:`,
+      });
       expect(editButton).toBeVisible();
     });
 
@@ -189,13 +190,17 @@ describe("<EntityRow />", () => {
     });
 
     test("includes an edit name button in the row", async () => {
-      const editNameButton = screen.getByText(verbiage.editEntityButtonText);
+      const editNameButton = screen.getByRole("button", {
+        name: `${verbiage.editEntityButtonText}`,
+      });
       await userEvent.click(editNameButton);
       expect(mockOpenAddEditEntityModal).toBeCalledTimes(1);
     });
 
     test("includes a delete button that removes the new other target population", async () => {
-      const deleteButton = screen.getByTestId("delete-entity");
+      const deleteButton = screen.getByRole("button", {
+        name: `${verbiage.deleteEntityDetailsButtonText}`,
+      });
       await userEvent.click(deleteButton);
       expect(mockOpenDeleteEntityModal).toBeCalledTimes(1);
     });
