@@ -296,16 +296,18 @@ describe("<CreateExpenditureModal />", () => {
       jest.clearAllMocks();
     });
 
+    const existingReport2025Period1 = {
+      id: "existing-report-1",
+      reportYear: 2025,
+      reportPeriod: 1,
+      archived: false,
+    };
+
     test("Alert shows when selecting a year and period that matches an existing non-archived report", async () => {
       const mockStoreWithReports = {
         ...mockUseStore,
         reportsByState: [
-          {
-            id: "existing-report-1",
-            reportYear: 2025,
-            reportPeriod: 1,
-            archived: false,
-          },
+          existingReport2025Period1,
           {
             id: "existing-report-2",
             reportYear: 2024,
@@ -382,14 +384,7 @@ describe("<CreateExpenditureModal />", () => {
     test("Alert does not show when selecting a unique year and period combination", async () => {
       const mockStoreWithReports = {
         ...mockUseStore,
-        reportsByState: [
-          {
-            id: "existing-report-1",
-            reportYear: 2025,
-            reportPeriod: 1,
-            archived: false,
-          },
-        ],
+        reportsByState: [existingReport2025Period1],
       };
 
       mockedUseStore.mockReturnValue(mockStoreWithReports);
@@ -418,14 +413,7 @@ describe("<CreateExpenditureModal />", () => {
     test("Submit button is disabled when alert is shown", async () => {
       const mockStoreWithReports = {
         ...mockUseStore,
-        reportsByState: [
-          {
-            id: "existing-report-1",
-            reportYear: 2025,
-            reportPeriod: 1,
-            archived: false,
-          },
-        ],
+        reportsByState: [existingReport2025Period1],
       };
 
       mockedUseStore.mockReturnValue(mockStoreWithReports);
@@ -453,14 +441,7 @@ describe("<CreateExpenditureModal />", () => {
     test("Alert is hidden when user changes form values after seeing duplicate alert", async () => {
       const mockStoreWithReports = {
         ...mockUseStore,
-        reportsByState: [
-          {
-            id: "existing-report-1",
-            reportYear: 2025,
-            reportPeriod: 1,
-            archived: false,
-          },
-        ],
+        reportsByState: [existingReport2025Period1],
       };
 
       mockedUseStore.mockReturnValue(mockStoreWithReports);

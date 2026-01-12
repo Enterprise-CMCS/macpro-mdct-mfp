@@ -8,12 +8,13 @@ import {
 // form
 import { addEditExpenditureReport } from "forms/addEditExpenditureReport/addEditExpenditureReport";
 // utils
-import { actionButtonText } from "./modalLogic";
+import { actionButtonText, checkForExistingReport } from "./modalLogic";
 // types
 import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
 // constants
 import { States } from "../../constants";
 import { useStore } from "utils/state/useStore";
+import { check } from "yargs";
 
 const reportType = ReportType.EXPENDITURE;
 
@@ -56,16 +57,9 @@ export const CreateExpenditureModal = ({
   }, [modalDisclosure.isOpen]);
 
   useEffect(() => {
-    if (!reportsByState) return;
-    for (const report of reportsByState) {
-      if (
-        report.reportPeriod === formPeriodValue &&
-        report.reportYear === formYearValue &&
-        !report.archived
-      ) {
-        setShowAlert(true);
-      }
-    }
+    setShowAlert(
+      checkForExistingReport(formYearValue, formPeriodValue, reportsByState)
+    );
   }, [formPeriodValue, formYearValue]);
 
   // used to get the form values to enable/disable alert and submit button
@@ -74,7 +68,6 @@ export const CreateExpenditureModal = ({
       setFormPeriodValue(Number(formProvider.target.value));
     if (formProvider.target.name === "reportYear")
       setFormYearValue(Number(formProvider.target.value));
-    setShowAlert(false);
   };
 
   /**
