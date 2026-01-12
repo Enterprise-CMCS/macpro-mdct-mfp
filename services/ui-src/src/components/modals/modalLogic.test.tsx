@@ -1,6 +1,6 @@
-import { ReportMetadataShape } from "types";
-import { actionButtonText, checkForExistingReport } from "./modalLogic";
 import { Spinner } from "@chakra-ui/react";
+import { actionButtonText, checkForExistingReport } from "./modalLogic";
+import { ReportMetadataShape } from "types";
 
 describe("actionButtonText", () => {
   test("returns Spinner when submitting is true", () => {

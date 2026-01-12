@@ -9,12 +9,11 @@ import {
 import { addEditExpenditureReport } from "forms/addEditExpenditureReport/addEditExpenditureReport";
 // utils
 import { actionButtonText, checkForExistingReport } from "./modalLogic";
+import { useStore } from "utils/state/useStore";
 // types
 import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
 // constants
 import { States } from "../../constants";
-import { useStore } from "utils/state/useStore";
-import { check } from "yargs";
 
 const reportType = ReportType.EXPENDITURE;
 
