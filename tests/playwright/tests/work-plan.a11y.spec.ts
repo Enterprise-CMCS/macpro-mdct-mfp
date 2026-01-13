@@ -13,9 +13,8 @@ import { checkPageAccessibility } from "../utils/a11y";
 
 test.describe("Work plan a11y", { tag: "@a11y" }, () => {
   test.beforeAll("check for active SAR reports", async () => {
-    const hasActiveSarReports = await hasActiveReportsWithSars(
-      stateAbbreviation
-    );
+    const hasActiveSarReports =
+      await hasActiveReportsWithSars(stateAbbreviation);
 
     if (hasActiveSarReports) {
       test.skip(
@@ -86,15 +85,10 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
       await statePage.page.getByText("Report transition benchmarks").waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/transition-benchmarks older adults drawer",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/transition-benchmarks older adults drawer", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
     await test.step("Navigate to physical drawer", async () => {
       await statePage.page
@@ -112,15 +106,10 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
       await statePage.page.getByText("Report transition benchmarks").waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/transition-benchmarks individuals with physical drawer",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/transition-benchmarks individuals with physical drawer", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
     await test.step("Navigate to intellectual drawer", async () => {
       await statePage.page
@@ -138,15 +127,10 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
       await statePage.page.getByText("Report transition benchmarks").waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/transition-benchmarks individuals with physical drawer",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/transition-benchmarks individuals with physical drawer", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
     await test.step("Navigate to mental drawer", async () => {
       await statePage.page
@@ -164,15 +148,10 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
       await statePage.page.getByText("Report transition benchmarks").waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/transition-benchmarks Individuals with mental drawer",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/transition-benchmarks Individuals with mental drawer", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
     await test.step("Navigate to other target population modal", async () => {
       await statePage.page
@@ -192,77 +171,48 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         .getByRole("heading", { name: "Add other target population" })
         .waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/transition-benchmarks Add other target population modal",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/transition-benchmarks Add other target population modal", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
-    await test.step(
-      "Navigate to transition /wp/transition-benchmark-strategy",
-      async () => {
-        await statePage.page.getByRole("button", { name: "Cancel" }).click();
-        await statePage.page.getByRole("button", { name: "Continue" }).click();
-        await statePage.page
-          .getByRole("heading", { name: "Transition Benchmark Strategy" })
-          .waitFor();
-      }
-    );
-    await test.step(
-      "WCAG checks on /wp/transition-benchmark-strategy",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("Navigate to transition /wp/transition-benchmark-strategy", async () => {
+      await statePage.page.getByRole("button", { name: "Cancel" }).click();
+      await statePage.page.getByRole("button", { name: "Continue" }).click();
+      await statePage.page
+        .getByRole("heading", { name: "Transition Benchmark Strategy" })
+        .waitFor();
+    });
+    await test.step("WCAG checks on /wp/transition-benchmark-strategy", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
-    await test.step(
-      "Navigate to /wp/state-or-territory-specific-initiatives/instructions",
-      async () => {
-        await statePage.page.getByRole("button", { name: "Continue" }).click();
-        await statePage.page
-          .getByRole("heading", {
-            name: "State or Territory-Specific Initiatives Instructions",
-          })
-          .waitFor();
-      }
-    );
-    await test.step(
-      "WCAG checks on /wp/state-or-territory-specific-initiatives/instructions",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("Navigate to /wp/state-or-territory-specific-initiatives/instructions", async () => {
+      await statePage.page.getByRole("button", { name: "Continue" }).click();
+      await statePage.page
+        .getByRole("heading", {
+          name: "State or Territory-Specific Initiatives Instructions",
+        })
+        .waitFor();
+    });
+    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/instructions", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
-    await test.step(
-      "Navigate to /wp/state-or-territory-specific-initiatives/initiatives",
-      async () => {
-        await statePage.page.getByRole("button", { name: "Continue" }).click();
-        await statePage.page
-          .getByRole("heading", {
-            name: "State or Territory-Specific Initiatives",
-          })
-          .waitFor();
-      }
-    );
-    await test.step(
-      "WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("Navigate to /wp/state-or-territory-specific-initiatives/initiatives", async () => {
+      await statePage.page.getByRole("button", { name: "Continue" }).click();
+      await statePage.page
+        .getByRole("heading", {
+          name: "State or Territory-Specific Initiatives",
+        })
+        .waitFor();
+    });
+    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
     await test.step("Navigate to add initiative modal", async () => {
       await statePage.page
@@ -278,15 +228,10 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         })
         .waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives add initiative modal",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives add initiative modal", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
     await test.step("Navigate to delete initiative modal", async () => {
       await statePage.page.getByRole("button", { name: "Close" }).click();
@@ -309,15 +254,10 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         })
         .waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives delete initiative modal",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives delete initiative modal", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
     await test.step("Navigate to Initiative01", async () => {
       await statePage.page.getByRole("button", { name: "Close" }).click();
@@ -336,103 +276,74 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         })
         .waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
-    await test.step(
-      "Navigate to Initiative01 I. Define initiative",
-      async () => {
-        await statePage.page
-          .getByRole("row", { name: "I. Define" })
-          .getByLabel("edit button")
-          .click();
-        await statePage.page
-          .getByRole("heading", {
-            name: "State or Territory-Specific Initiatives: I. Define initiative",
-          })
-          .waitFor();
-      }
-    );
-    await test.step(
-      "WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 I. Define initiative",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("Navigate to Initiative01 I. Define initiative", async () => {
+      await statePage.page
+        .getByRole("row", { name: "I. Define" })
+        .getByLabel("edit button")
+        .click();
+      await statePage.page
+        .getByRole("heading", {
+          name: "State or Territory-Specific Initiatives: I. Define initiative",
+        })
+        .waitFor();
+    });
+    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 I. Define initiative", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
-    await test.step(
-      "Navigate to Initiative01 II. Evaluation plan",
-      async () => {
-        await statePage.page
-          .getByRole("button", { name: "Save & return" })
-          .click();
-        await statePage.page
-          .getByRole("heading", {
-            name: "State or Territory-Specific Initiatives",
-          })
-          .waitFor();
-        await statePage.page
-          .getByRole("row", { name: "II. Evaluation plan" })
-          .getByLabel("edit button")
-          .click();
-        await statePage.page
-          .getByRole("heading", {
-            name: "State or Territory-Specific Initiatives: II. Evaluation Plan",
-          })
-          .waitFor();
-      }
-    );
-    await test.step(
-      "WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 II. Evaluation plan",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("Navigate to Initiative01 II. Evaluation plan", async () => {
+      await statePage.page
+        .getByRole("button", { name: "Save & return" })
+        .click();
+      await statePage.page
+        .getByRole("heading", {
+          name: "State or Territory-Specific Initiatives",
+        })
+        .waitFor();
+      await statePage.page
+        .getByRole("row", { name: "II. Evaluation plan" })
+        .getByLabel("edit button")
+        .click();
+      await statePage.page
+        .getByRole("heading", {
+          name: "State or Territory-Specific Initiatives: II. Evaluation Plan",
+        })
+        .waitFor();
+    });
+    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 II. Evaluation plan", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
-    await test.step(
-      "Navigate to Initiative01 III. Funding sources",
-      async () => {
-        await statePage.page
-          .getByRole("button", { name: "Save & return" })
-          .click();
-        await statePage.page
-          .getByRole("heading", {
-            name: "State or Territory-Specific Initiatives",
-          })
-          .waitFor();
-        await statePage.page
-          .getByRole("row", { name: "III. Funding sources" })
-          .getByLabel("edit button")
-          .click();
-        await statePage.page
-          .getByRole("heading", {
-            name: "State or Territory-Specific Initiatives: III. Funding sources",
-          })
-          .waitFor();
-      }
-    );
-    await test.step(
-      "WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 III. Funding sources",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("Navigate to Initiative01 III. Funding sources", async () => {
+      await statePage.page
+        .getByRole("button", { name: "Save & return" })
+        .click();
+      await statePage.page
+        .getByRole("heading", {
+          name: "State or Territory-Specific Initiatives",
+        })
+        .waitFor();
+      await statePage.page
+        .getByRole("row", { name: "III. Funding sources" })
+        .getByLabel("edit button")
+        .click();
+      await statePage.page
+        .getByRole("heading", {
+          name: "State or Territory-Specific Initiatives: III. Funding sources",
+        })
+        .waitFor();
+    });
+    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 III. Funding sources", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
     await test.step("Navigate to Review & Submit", async () => {
       await statePage.page
@@ -491,15 +402,10 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         })
         .waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/review-and-submit submit modal",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/review-and-submit submit modal", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
 
     await test.step("Navigate to submitted page", async () => {
       await statePage.page
@@ -511,14 +417,9 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         })
         .waitFor();
     });
-    await test.step(
-      "WCAG checks on /wp/review-and-submit successfully submitted",
-      async () => {
-        const accessibilityErrors = await checkPageAccessibility(
-          statePage.page
-        );
-        expect.soft(accessibilityErrors).toEqual([]);
-      }
-    );
+    await test.step("WCAG checks on /wp/review-and-submit successfully submitted", async () => {
+      const accessibilityErrors = await checkPageAccessibility(statePage.page);
+      expect.soft(accessibilityErrors).toEqual([]);
+    });
   });
 });
