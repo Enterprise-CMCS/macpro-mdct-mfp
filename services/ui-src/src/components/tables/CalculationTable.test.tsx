@@ -115,7 +115,6 @@ const mockProps = {
   formData: {},
   headRows: [["Heading 1", "Heading 2", "Heading 3", "Heading 4"]],
   id: "qualifiedHcbs_statePlanServices",
-  order: 0,
   report: {
     fieldData: {},
   } as unknown as ReportShape,

@@ -11,7 +11,7 @@ export const updatedNumberFields = (
   if (!field?.name) return fields;
 
   const [fieldId, fieldType] = field.name.split("-");
-  const fieldValue = Number(field.value || 0);
+  const fieldValue = field.value;
   const fieldData = report.fieldData || {};
 
   switch (fieldType) {

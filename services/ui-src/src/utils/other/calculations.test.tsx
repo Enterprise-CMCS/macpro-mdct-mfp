@@ -59,7 +59,7 @@ describe("utils/calculations", () => {
     const fieldData = {
       [`${startsWithId}-${endsWithId}`]: 10,
       [`${startsWithId}_mockId-${endsWithId}`]: 10,
-      [`${startsWithId}_mockId2-${endsWithId}`]: null,
+      [`${startsWithId}_mockId2-${endsWithId}`]: "N/A",
 
       [`${startsWithId}-noMatch`]: 10,
       [`${startsWithId}_mockId-noMatch`]: 10,
@@ -116,6 +116,52 @@ describe("utils/calculations", () => {
           totalComputable: 123,
           totalFederalShare: 107.01,
           totalStateTerritoryShare: 15.99,
+        },
+      });
+    });
+
+    test("skips empty value", () => {
+      const totals = fieldTableTotals({
+        fieldValue: "",
+        percentage,
+        fieldId,
+        tableId,
+        fieldData,
+      });
+
+      expect(totals).toEqual({
+        field: {
+          totalComputable: "",
+          totalFederalShare: 0,
+          totalStateTerritoryShare: 0,
+        },
+        table: {
+          totalComputable: 0,
+          totalFederalShare: 0,
+          totalStateTerritoryShare: 0,
+        },
+      });
+    });
+
+    test("skips N/A value", () => {
+      const totals = fieldTableTotals({
+        fieldValue: "N/A",
+        percentage,
+        fieldId,
+        tableId,
+        fieldData,
+      });
+
+      expect(totals).toEqual({
+        field: {
+          totalComputable: "N/A",
+          totalFederalShare: 0,
+          totalStateTerritoryShare: 0,
+        },
+        table: {
+          totalComputable: 0,
+          totalFederalShare: 0,
+          totalStateTerritoryShare: 0,
         },
       });
     });

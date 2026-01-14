@@ -96,9 +96,8 @@ export const CalculationTable = ({
     });
   };
 
-  const updatedFieldsForDisplay = (name: string, value: string) => {
+  const updatedFieldsForDisplay = (name: string, fieldValue: string) => {
     const [fieldId, fieldType] = name.split("-");
-    const fieldValue = Number(value || 0);
 
     if (fieldType === "totalComputable") {
       const options = {

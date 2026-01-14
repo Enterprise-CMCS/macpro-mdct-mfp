@@ -66,17 +66,23 @@ export const sumFields = (
         key.endsWith(endsWithId) &&
         !exclusions.includes(key)
     )
-    .reduce((sum, [, val]) => sum + Number(val || 0), 0);
+    .reduce((sum, [, val]) => {
+      const num = Number(val);
+      return sum + (Number.isNaN(num) ? 0 : num);
+    }, 0);
 };
 
 // Recalculate sums in expenditure table when a field value changes
 export const fieldTableTotals = ({
   fieldData,
   fieldId,
-  fieldValue: fieldTotalComputable,
+  fieldValue,
   percentage,
   tableId,
 }: FieldTableTotalsType) => {
+  const isEmptyOrNA = fieldValue === "" || Number.isNaN(Number(fieldValue));
+  const fieldTotalComputable = isEmptyOrNA ? 0 : Number(fieldValue);
+
   const {
     totalFederalShare: fieldTotalFederalShare,
     totalStateTerritoryShare: fieldTotalStateTerritoryShare,
@@ -106,7 +112,7 @@ export const fieldTableTotals = ({
 
   return {
     field: {
-      totalComputable: fieldTotalComputable,
+      totalComputable: isEmptyOrNA ? fieldValue : fieldTotalComputable,
       totalFederalShare: fieldTotalFederalShare,
       totalStateTerritoryShare: fieldTotalStateTerritoryShare,
     },
@@ -121,7 +127,7 @@ export const fieldTableTotals = ({
 interface FieldTableTotalsType {
   fieldData: AnyObject;
   fieldId: string;
-  fieldValue: number;
+  fieldValue: number | string;
   percentage: number;
   tableId: string;
 }
