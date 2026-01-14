@@ -71,11 +71,11 @@ export const sumFields = (
 
 // Recalculate sums in expenditure table when a field value changes
 export const fieldTableTotals = ({
+  fieldData,
+  fieldId,
   fieldValue: fieldTotalComputable,
   percentage,
-  fieldId,
   tableId,
-  fieldData,
 }: FieldTableTotalsType) => {
   const {
     totalFederalShare: fieldTotalFederalShare,
@@ -115,9 +115,9 @@ export const fieldTableTotals = ({
 };
 
 interface FieldTableTotalsType {
+  fieldData: AnyObject;
+  fieldId: string;
   fieldValue: number;
   percentage: number;
-  fieldId: string;
   tableId: string;
-  fieldData: AnyObject;
 }

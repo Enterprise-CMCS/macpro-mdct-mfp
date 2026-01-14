@@ -102,11 +102,11 @@ export const CalculationTable = ({
 
     if (fieldType === "totalComputable") {
       const options = {
+        fieldData: localReport.fieldData,
+        fieldId,
         fieldValue,
         percentage,
-        fieldId,
         tableId,
-        fieldData: localReport.fieldData,
       };
 
       const {

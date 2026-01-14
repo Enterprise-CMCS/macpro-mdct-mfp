@@ -22,11 +22,11 @@ export const updatedNumberFields = (
       const percentage = fieldData[percentageField] || 100;
 
       const options = {
+        fieldData,
+        fieldId,
         fieldValue,
         percentage,
-        fieldId,
         tableId,
-        fieldData,
       };
 
       const {
