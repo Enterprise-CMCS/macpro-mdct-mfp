@@ -44,7 +44,7 @@ describe("utils/calculations", () => {
   });
 
   describe("calculateShares()", () => {
-    test("returns sum fo field values", () => {
+    test("returns object of share values", () => {
       const shares = calculateShares(123, 87);
       expect(shares).toEqual({
         totalFederalShare: 107.01,
@@ -67,7 +67,7 @@ describe("utils/calculations", () => {
     };
     const exclusions: any[] = [`${startsWithId}-${endsWithId}`];
 
-    test("returns sum fo field values", () => {
+    test("returns sum of field values", () => {
       const sum = sumFields(fieldData, startsWithId, endsWithId);
       expect(sum).toEqual(20);
     });

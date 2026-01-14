@@ -33,6 +33,7 @@ export const perOfTwoRows = (row1: string[], row2: string[]) => {
     .splice(1, row1.length);
 };
 
+// Calculate shares for expenditure tables
 export const calculateShares = (computable: number, percentage: number) => {
   // Convert to cents to avoid rounding errors
   const totalComputableCents = Math.round(computable * 100);
@@ -68,6 +69,7 @@ export const sumFields = (
     .reduce((sum, [, val]) => sum + Number(val || 0), 0);
 };
 
+// Recalculate sums in expenditure table when a field value changes
 export const fieldTableTotals = ({
   fieldValue: fieldTotalComputable,
   percentage,
