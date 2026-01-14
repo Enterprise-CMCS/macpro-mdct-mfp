@@ -90,9 +90,10 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
     <Box>
       {route.verbiage?.intro && (
         <ReportPageIntro
-          text={route.verbiage.intro}
+          accordion={route.verbiage.accordion}
           reportPeriod={report?.reportPeriod}
           reportYear={report?.reportYear}
+          text={route.verbiage.intro}
         />
       )}
       <Form
