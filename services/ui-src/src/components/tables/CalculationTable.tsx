@@ -111,7 +111,7 @@ export const CalculationTable = ({
 
       const { field, table } = fieldTableTotals(options);
 
-      const updatedFieldData = (id: string, totals: AnyObject) => ({
+      const updatedFieldData = (id: string, totals: typeof field) => ({
         [`${id}-totalComputable`]: totals.totalComputable,
         [`${id}-totalFederalShare`]: totals.totalFederalShare,
         [`${id}-totalStateTerritoryShare`]: totals.totalStateTerritoryShare,
