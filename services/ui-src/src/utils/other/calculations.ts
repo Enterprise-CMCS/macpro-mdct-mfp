@@ -80,8 +80,8 @@ export const fieldTableTotals = ({
   percentage,
   tableId,
 }: FieldTableTotalsType) => {
-  const isEmptyOrNA = fieldValue === "" || Number.isNaN(Number(fieldValue));
-  const fieldTotalComputable = isEmptyOrNA ? 0 : Number(fieldValue);
+  const isEmptyOrNaN = fieldValue === "" || Number.isNaN(Number(fieldValue));
+  const fieldTotalComputable = isEmptyOrNaN ? 0 : Number(fieldValue);
 
   const {
     totalFederalShare: fieldTotalFederalShare,
@@ -112,7 +112,7 @@ export const fieldTableTotals = ({
 
   return {
     field: {
-      totalComputable: isEmptyOrNA ? fieldValue : fieldTotalComputable,
+      totalComputable: isEmptyOrNaN ? fieldValue : fieldTotalComputable,
       totalFederalShare: fieldTotalFederalShare,
       totalStateTerritoryShare: fieldTotalStateTerritoryShare,
     },
