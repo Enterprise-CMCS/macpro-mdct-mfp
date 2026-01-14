@@ -109,27 +109,20 @@ export const CalculationTable = ({
         tableId,
       };
 
-      const {
-        fieldTotalComputable,
-        fieldTotalFederalShare,
-        fieldTotalStateTerritoryShare,
-        tableTotalComputable,
-        tableTotalFederalShare,
-        tableTotalStateTerritoryShare,
-      } = fieldTableTotals(options);
+      const { field, table } = fieldTableTotals(options);
+
+      const updatedFieldData = (id: string, totals: AnyObject) => ({
+        [`${id}-totalComputable`]: totals.totalComputable,
+        [`${id}-totalFederalShare`]: totals.totalFederalShare,
+        [`${id}-totalStateTerritoryShare`]: totals.totalStateTerritoryShare,
+      });
 
       const updatedReport = {
         ...localReport,
         fieldData: {
           ...localReport.fieldData,
-          [`${fieldId}-totalComputable`]: fieldTotalComputable,
-          [`${fieldId}-totalFederalShare`]: fieldTotalFederalShare,
-          [`${fieldId}-totalStateTerritoryShare`]:
-            fieldTotalStateTerritoryShare,
-          [`${tableId}-totalComputable`]: tableTotalComputable,
-          [`${tableId}-totalFederalShare`]: tableTotalFederalShare,
-          [`${tableId}-totalStateTerritoryShare`]:
-            tableTotalStateTerritoryShare,
+          ...updatedFieldData(fieldId, field),
+          ...updatedFieldData(tableId, table),
         },
       };
       setLocalReport(updatedReport);

@@ -105,12 +105,16 @@ export const fieldTableTotals = ({
     sumFields(fieldData, tableId, "totalStateTerritoryShare", exclusions);
 
   return {
-    fieldTotalComputable,
-    fieldTotalFederalShare,
-    fieldTotalStateTerritoryShare,
-    tableTotalComputable,
-    tableTotalFederalShare,
-    tableTotalStateTerritoryShare,
+    field: {
+      totalComputable: fieldTotalComputable,
+      totalFederalShare: fieldTotalFederalShare,
+      totalStateTerritoryShare: fieldTotalStateTerritoryShare,
+    },
+    table: {
+      totalComputable: tableTotalComputable,
+      totalFederalShare: tableTotalFederalShare,
+      totalStateTerritoryShare: tableTotalStateTerritoryShare,
+    },
   };
 };
 

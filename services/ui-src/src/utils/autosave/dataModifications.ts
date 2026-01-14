@@ -29,47 +29,27 @@ export const updatedNumberFields = (
         tableId,
       };
 
-      const {
-        fieldTotalComputable,
-        fieldTotalFederalShare,
-        fieldTotalStateTerritoryShare,
-        tableTotalComputable,
-        tableTotalFederalShare,
-        tableTotalStateTerritoryShare,
-      } = fieldTableTotals(options);
+      const { field, table } = fieldTableTotals(options);
 
-      return [
+      const totalsFields = (id: string, totals: typeof field) => [
         {
-          name: `${fieldId}-totalComputable`,
+          name: `${id}-totalComputable`,
           type: ReportFormFieldType.NUMBER,
-          value: fieldTotalComputable,
+          value: totals.totalComputable,
         },
         {
-          name: `${fieldId}-totalFederalShare`,
+          name: `${id}-totalFederalShare`,
           type: ReportFormFieldType.NUMBER,
-          value: fieldTotalFederalShare,
+          value: totals.totalFederalShare,
         },
         {
-          name: `${fieldId}-totalStateTerritoryShare`,
+          name: `${id}-totalStateTerritoryShare`,
           type: ReportFormFieldType.NUMBER,
-          value: fieldTotalStateTerritoryShare,
-        },
-        {
-          name: `${tableId}-totalComputable`,
-          type: ReportFormFieldType.NUMBER,
-          value: tableTotalComputable,
-        },
-        {
-          name: `${tableId}-totalFederalShare`,
-          type: ReportFormFieldType.NUMBER,
-          value: tableTotalFederalShare,
-        },
-        {
-          name: `${tableId}-totalStateTerritoryShare`,
-          type: ReportFormFieldType.NUMBER,
-          value: tableTotalStateTerritoryShare,
+          value: totals.totalStateTerritoryShare,
         },
       ];
+
+      return [...totalsFields(fieldId, field), ...totalsFields(tableId, table)];
     }
     default:
       // If no match, fall through to next switch

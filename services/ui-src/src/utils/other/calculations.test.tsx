@@ -107,12 +107,16 @@ describe("utils/calculations", () => {
       });
 
       expect(totals).toEqual({
-        fieldTotalComputable: 123,
-        fieldTotalFederalShare: 107.01,
-        fieldTotalStateTerritoryShare: 15.99,
-        tableTotalComputable: 123,
-        tableTotalFederalShare: 107.01,
-        tableTotalStateTerritoryShare: 15.99,
+        field: {
+          totalComputable: 123,
+          totalFederalShare: 107.01,
+          totalStateTerritoryShare: 15.99,
+        },
+        table: {
+          totalComputable: 123,
+          totalFederalShare: 107.01,
+          totalStateTerritoryShare: 15.99,
+        },
       });
     });
   });
