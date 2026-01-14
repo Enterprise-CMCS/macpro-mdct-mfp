@@ -7,6 +7,7 @@ export enum ValidationType {
   DYNAMIC = "dynamic",
   EMAIL = "email",
   NUMBER = "number",
+  NUMBER_OPTIONAL = "number",
   RADIO = "radio",
   TEXT = "text",
   TEXT_CUSTOM = "textCustom",
