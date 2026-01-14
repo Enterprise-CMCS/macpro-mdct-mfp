@@ -4,6 +4,7 @@ import {
   Box,
   Heading,
   Table,
+  TableCaption,
   Tbody,
   Td,
   Text,
@@ -11,6 +12,7 @@ import {
   Th,
   Thead,
   Tr,
+  VisuallyHidden,
 } from "@chakra-ui/react";
 // types
 import { AnyObject, FormField, FormTable, ReportShape } from "types";
@@ -145,7 +147,7 @@ export const CalculationTable = ({
         <Text sx={sx.error}>{parseCustomHtml(verbiage.errorMessage)}</Text>
       )}
 
-      <Heading as="h3">{verbiage?.title}</Heading>
+      <Heading as="h2">{verbiage?.title}</Heading>
       {verbiage?.percentage && (
         <Text sx={sx.text}>
           {translate(verbiage.percentage, { percentage: percentageDisplay })}
@@ -153,6 +155,9 @@ export const CalculationTable = ({
       )}
 
       <Table id={tableId} sx={sx.table}>
+        <TableCaption placement="top" sx={sx.captionBox}>
+          <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
+        </TableCaption>
         <Thead>
           {headRows.map((row, rowIndex: number) => (
             <Tr key={`thead-row-${rowIndex}`}>
@@ -219,9 +224,11 @@ interface CustomCellOptions {
 
 const sx = {
   box: {
-    h3: {
+    h2: {
       fontSize: "2xl",
+      marginBottom: "spacer1",
       marginTop: "spacer4",
+      paddingBottom: 0,
     },
   },
   calculated: {
@@ -240,6 +247,11 @@ const sx = {
     color: "gray_dark",
     fontWeight: "bold",
     marginBottom: "spacer3",
+  },
+  captionBox: {
+    margin: 0,
+    padding: 0,
+    height: 0,
   },
   table: {
     marginBottom: "spacer5",

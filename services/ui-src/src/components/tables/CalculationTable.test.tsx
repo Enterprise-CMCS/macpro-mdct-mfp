@@ -144,7 +144,7 @@ describe("<CalculationTable />", () => {
     expect(table).toHaveAttribute("id", "qualifiedHcbs_statePlanServices");
 
     const tableHeading = screen.getByRole("heading", {
-      level: 3,
+      level: 2,
       name: "Mock table title",
     });
     expect(tableHeading).toBeVisible();
