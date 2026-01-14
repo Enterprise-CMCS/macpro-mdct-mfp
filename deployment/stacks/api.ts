@@ -243,7 +243,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     vpcSubnets: { subnets: kafkaAuthorizedSubnets },
     securityGroups: [kafkaSecurityGroup],
     ...commonProps,
-    environment: { ...commonProps.environment, topicNamespace: "" },
+    environment: {
+      ...commonProps.environment,
+      topicNamespace: isDev ? `--${project}--${stage}--` : "",
+    },
   };
 
   const postWpBucketData = new Lambda(scope, "postWpBucketData", {
@@ -256,7 +259,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     s3.EventType.OBJECT_CREATED,
     new s3notifications.LambdaDestination(postWpBucketData.lambda),
     {
-      prefix: "fieldData/",
       suffix: ".json",
     }
   );
@@ -265,7 +267,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     s3.EventType.OBJECT_TAGGING_PUT,
     new s3notifications.LambdaDestination(postWpBucketData.lambda),
     {
-      prefix: "fieldData/",
       suffix: ".json",
     }
   );
@@ -280,7 +281,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     s3.EventType.OBJECT_CREATED,
     new s3notifications.LambdaDestination(postSarBucketData.lambda),
     {
-      prefix: "fieldData/",
       suffix: ".json",
     }
   );
@@ -289,7 +289,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     s3.EventType.OBJECT_TAGGING_PUT,
     new s3notifications.LambdaDestination(postSarBucketData.lambda),
     {
-      prefix: "fieldData/",
       suffix: ".json",
     }
   );
@@ -308,7 +307,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     s3.EventType.OBJECT_CREATED,
     new s3notifications.LambdaDestination(postExpenditureBucketData.lambda),
     {
-      prefix: "fieldData/",
       suffix: ".json",
     }
   );
@@ -317,7 +315,6 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     s3.EventType.OBJECT_TAGGING_PUT,
     new s3notifications.LambdaDestination(postExpenditureBucketData.lambda),
     {
-      prefix: "fieldData/",
       suffix: ".json",
     }
   );

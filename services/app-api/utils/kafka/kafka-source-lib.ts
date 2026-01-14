@@ -18,6 +18,7 @@ type KafkaPayload = {
 type SourceTopicMapping = {
   sourceName: string;
   topicName: string;
+  s3Prefix?: string;
 };
 
 let kafka: Kafka;
@@ -109,11 +110,16 @@ class KafkaSourceLib {
   /**
    * Checks if a bucketArn is a valid topic. Returns undefined otherwise.
    * @param bucketArn - ARN formatted like 'arn:aws:s3:::{stack}-{stage}-{bucket}' e.g. arn:aws:s3:::database-main-mcpar
+   * @param prefix - string that indicates which s3 folder to target for tagging (e.g., "/fieldData" or "/formTemplates")
    * @returns A formatted topic name with "-form" specified
    */
-  determineS3TopicName(bucketArn: string) {
+  determineS3TopicName(bucketArn: string, prefix: string) {
     for (const bucket of this.buckets) {
-      if (bucketArn.includes(bucket.sourceName)) {
+      if (
+        bucketArn.includes(bucket.sourceName) &&
+        bucket.s3Prefix !== undefined &&
+        prefix.startsWith(bucket.s3Prefix)
+      ) {
         return this.topic(bucket.topicName);
       }
     }
@@ -185,14 +191,10 @@ class KafkaSourceLib {
         // Handle any S3 events
         const s3Record = record as S3EventRecord;
         const key: string = s3Record.s3.object.key;
-        topicName = this.determineS3TopicName(s3Record.s3.bucket.arn);
+        topicName = this.determineS3TopicName(s3Record.s3.bucket.arn, key);
 
         // Filter for only the response info
-        if (
-          !topicName ||
-          !key.startsWith("fieldData/") ||
-          !key.includes(".json")
-        ) {
+        if (!topicName || !key.includes(".json")) {
           continue;
         }
         payload = await this.createS3Payload(record);
