@@ -202,7 +202,7 @@ describe("<CalculationTable />", () => {
     expect(footRowUpdated).toBeVisible();
   });
 
-  test("error message and disabled field", async () => {
+  test("error message and disabled field", () => {
     mockGetValues(undefined);
     const updatedProps = {
       ...mockProps,

@@ -21,15 +21,13 @@ export const updatedNumberFields = (
       const percentageField = `fmap_${formId}Percentage`;
       const percentage = fieldData[percentageField] || 100;
 
-      const options = {
+      const { field, table } = fieldTableTotals({
         fieldData,
         fieldId,
         fieldValue,
         percentage,
         tableId,
-      };
-
-      const { field, table } = fieldTableTotals(options);
+      });
 
       const totalsFields = (id: string, totals: typeof field) => [
         {

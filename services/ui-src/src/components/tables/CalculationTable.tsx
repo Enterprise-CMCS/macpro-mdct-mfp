@@ -100,15 +100,13 @@ export const CalculationTable = ({
     const [fieldId, fieldType] = name.split("-");
 
     if (fieldType === "totalComputable") {
-      const options = {
+      const { field, table } = fieldTableTotals({
         fieldData: localReport.fieldData,
         fieldId,
         fieldValue,
         percentage,
         tableId,
-      };
-
-      const { field, table } = fieldTableTotals(options);
+      });
 
       const updatedFieldData = (id: string, totals: typeof field) => ({
         [`${id}-totalComputable`]: totals.totalComputable,
