@@ -10,7 +10,7 @@ describe("utils/autosave/dataModifications", () => {
     const tableId = "demonstrationServices_mockTableId";
     const fieldId = "demonstrationServices_mockTableId_mockFieldId";
     const fieldData = (value = 0) => ({
-      [`fmap_${formId}Percentage`]: 10,
+      [`fmap_${formId}Percentage`]: 87,
       [`${fieldId}-totalComputable`]: value,
       [`${fieldId}-totalFederalShare`]: value,
       [`${fieldId}-totalStateTerritoryShare`]: value,
@@ -44,12 +44,12 @@ describe("utils/autosave/dataModifications", () => {
         {
           name: "demonstrationServices_mockTableId_mockFieldId-totalFederalShare",
           type: "number",
-          value: 12.3,
+          value: 107.01,
         },
         {
           name: "demonstrationServices_mockTableId_mockFieldId-totalStateTerritoryShare",
           type: "number",
-          value: 110.7,
+          value: 15.99,
         },
         {
           name: "demonstrationServices_mockTableId-totalComputable",
@@ -59,12 +59,12 @@ describe("utils/autosave/dataModifications", () => {
         {
           name: "demonstrationServices_mockTableId-totalFederalShare",
           type: "number",
-          value: 12.3,
+          value: 107.01,
         },
         {
           name: "demonstrationServices_mockTableId-totalStateTerritoryShare",
           type: "number",
-          value: 110.7,
+          value: 15.99,
         },
       ]);
     });

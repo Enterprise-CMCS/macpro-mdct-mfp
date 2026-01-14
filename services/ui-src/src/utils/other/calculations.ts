@@ -33,6 +33,24 @@ export const perOfTwoRows = (row1: string[], row2: string[]) => {
     .splice(1, row1.length);
 };
 
+export const calculateShares = (computable: number, percentage: number) => {
+  // Convert to cents to avoid rounding errors
+  const totalComputableCents = Math.round(computable * 100);
+  const totalFederalShareCents = Math.round(
+    totalComputableCents * (percentage / 100)
+  );
+  const totalStateTerritoryShareCents =
+    totalComputableCents - totalFederalShareCents;
+
+  const totalFederalShare = totalFederalShareCents / 100;
+  const totalStateTerritoryShare = totalStateTerritoryShareCents / 100;
+
+  return {
+    totalFederalShare,
+    totalStateTerritoryShare,
+  };
+};
+
 // Sum fields based on matching keys
 export const sumFields = (
   fieldData: AnyObject,
@@ -57,9 +75,10 @@ export const fieldTableTotals = ({
   tableId,
   fieldData,
 }: FieldTableTotalsType) => {
-  const fieldTotalFederalShare = fieldTotalComputable * (percentage / 100);
-  const fieldTotalStateTerritoryShare =
-    fieldTotalComputable - fieldTotalFederalShare;
+  const {
+    totalFederalShare: fieldTotalFederalShare,
+    totalStateTerritoryShare: fieldTotalStateTerritoryShare,
+  } = calculateShares(fieldTotalComputable, percentage);
 
   // Skip current and totals fields
   const exclusions = [

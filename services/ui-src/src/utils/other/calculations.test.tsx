@@ -1,10 +1,11 @@
 // utils
 import {
-  sumOfRow,
-  sumOfTwoRows,
+  calculateShares,
+  fieldTableTotals,
   perOfTwoRows,
   sumFields,
-  fieldTableTotals,
+  sumOfRow,
+  sumOfTwoRows,
 } from "./calculations";
 
 const row1 = ["1", "label", "2", "3", "4", "5"];
@@ -42,6 +43,16 @@ describe("utils/calculations", () => {
     });
   });
 
+  describe("calculateShares()", () => {
+    test("returns sum fo field values", () => {
+      const shares = calculateShares(123, 87);
+      expect(shares).toEqual({
+        totalFederalShare: 107.01,
+        totalStateTerritoryShare: 15.99,
+      });
+    });
+  });
+
   describe("sumFields()", () => {
     const startsWithId = "mockFieldId";
     const endsWithId = "mockId";
@@ -69,7 +80,7 @@ describe("utils/calculations", () => {
 
   describe("fieldTableTotals()", () => {
     const fieldValue = 123;
-    const percentage = 10;
+    const percentage = 87;
     const fieldId = "mockTableId_mockFieldId";
     const tableId = "mockTableId";
     const fieldData = {
@@ -97,11 +108,11 @@ describe("utils/calculations", () => {
 
       expect(totals).toEqual({
         fieldTotalComputable: 123,
-        fieldTotalFederalShare: 12.3,
-        fieldTotalStateTerritoryShare: 110.7,
+        fieldTotalFederalShare: 107.01,
+        fieldTotalStateTerritoryShare: 15.99,
         tableTotalComputable: 123,
-        tableTotalFederalShare: 12.3,
-        tableTotalStateTerritoryShare: 110.7,
+        tableTotalFederalShare: 107.01,
+        tableTotalStateTerritoryShare: 15.99,
       });
     });
   });

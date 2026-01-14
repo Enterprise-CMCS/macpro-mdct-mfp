@@ -1,7 +1,7 @@
 // types
 import { ReportFormFieldType, ReportShape } from "types";
 // utils
-import { FieldInfo, fieldTableTotals } from "utils";
+import { calculateShares, FieldInfo, fieldTableTotals } from "utils";
 
 export const updatedNumberFields = (
   fields: FieldInfo[],
@@ -88,8 +88,9 @@ export const updatedNumberFields = (
         .flatMap((key) => {
           const totalComputable = fieldData[key];
           const [keyFieldId] = key.split("-");
-          const totalFederalShare = totalComputable * (fieldValue / 100);
-          const totalStateTerritoryShare = totalComputable - totalFederalShare;
+
+          const { totalFederalShare, totalStateTerritoryShare } =
+            calculateShares(totalComputable, fieldValue);
 
           return [
             {

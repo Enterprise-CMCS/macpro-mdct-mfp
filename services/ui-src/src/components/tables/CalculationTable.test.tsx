@@ -159,7 +159,7 @@ describe("<CalculationTable />", () => {
       ...mockProps,
       report: {
         fieldData: {
-          fmap_qualifiedHcbsPercentage: "10",
+          fmap_qualifiedHcbsPercentage: 87,
         },
       } as unknown as ReportShape,
       options: {
@@ -169,7 +169,7 @@ describe("<CalculationTable />", () => {
 
     render(tableComponent(updatedProps));
 
-    const pct = screen.getByText("Mock Percentage: 10%");
+    const pct = screen.getByText("Mock Percentage: 87%");
     expect(pct).toBeVisible();
 
     const headRow = screen.getByRole("row", {
@@ -193,12 +193,12 @@ describe("<CalculationTable />", () => {
     });
 
     const bodyRowUpdated = screen.getByRole("row", {
-      name: "Mock text Heading 2 $ $110.70 $12.30",
+      name: "Mock text Heading 2 $ $15.99 $107.01",
     });
     expect(bodyRowUpdated).toBeVisible();
 
     const footRowUpdated = screen.getByRole("row", {
-      name: "Mock footer $123 $110.70 $12.30",
+      name: "Mock footer $123 $15.99 $107.01",
     });
     expect(footRowUpdated).toBeVisible();
   });
