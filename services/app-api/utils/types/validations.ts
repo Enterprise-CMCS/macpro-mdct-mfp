@@ -7,6 +7,7 @@ export enum ValidationType {
   EMAIL = "email",
   NUMBER = "number",
   NUMBER_COMPARISON = "numberComparison",
+  NUMBER_OPTIONAL = "numberOptional",
   RADIO = "radio",
   TEXT = "text",
   TEXT_CUSTOM = "textCustom",

@@ -1,4 +1,5 @@
 import { PageTypes, Transformation } from "./formFields";
+import { AnyObject, CustomHtmlElement } from "./other";
 import { ReportType } from "./reports";
 import {
   CustomValidation,
@@ -42,6 +43,7 @@ export enum ReportFormFieldType {
 
 export interface ReportFormField {
   id: string;
+  forTableOnly?: boolean;
   props?: ReportFormFieldProps;
   type: ReportFormFieldType;
   transformation?: Transformation;
@@ -77,6 +79,34 @@ export interface ReportFormFieldProps {
   styleAsOptional?: boolean;
 }
 
+// Form Tables
+export interface ReportFormWithTables {
+  id: string;
+  fields: ReportFormField[];
+  tables: FormTable[];
+  verbiage?: {
+    [key: string]: any;
+  };
+}
+
+export interface FormTable {
+  id: string;
+  bodyRows: (string | ReportFormField)[][];
+  footRows: (string | ReportFormField)[][];
+  headRows: string[][];
+  options?: AnyObject;
+  tableType: FormTableType;
+  verbiage?: {
+    errorMessage?: string | CustomHtmlElement[];
+    percentage?: string;
+    title: string;
+  };
+}
+
+export enum FormTableType {
+  CALCULATION = "Calculation",
+}
+
 // Routes
 export interface BaseRoute {
   conditionallyRender?: string;
@@ -95,6 +125,11 @@ export interface PageRoute extends BaseRoute {
 
 export interface FormRoute extends BaseRoute {
   form: ReportForm;
+  pageType: PageTypes;
+}
+
+export interface FormTablesRoute extends BaseRoute {
+  form: ReportFormWithTables;
   pageType: PageTypes;
 }
 
