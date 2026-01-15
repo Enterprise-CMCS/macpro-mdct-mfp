@@ -41,9 +41,9 @@ export const calculateShares = (
   const totalNumber = getNumberValue(total);
 
   // Convert currency to cents to avoid rounding errors
-  const inputCents = Math.round(totalNumber * 100);
-  const percentageShareCents = Math.round(inputCents * (percentage / 100));
-  const remainingShareCents = inputCents - percentageShareCents;
+  const totalCents = Math.round(totalNumber * 100);
+  const percentageShareCents = Math.round(totalCents * (percentage / 100));
+  const remainingShareCents = totalCents - percentageShareCents;
 
   const percentageShare = percentageShareCents / 100;
   const remainingShare = remainingShareCents / 100;
