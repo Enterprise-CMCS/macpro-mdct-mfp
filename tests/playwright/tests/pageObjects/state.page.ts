@@ -75,7 +75,7 @@ export class StatePage {
       hasText: new RegExp(targetPopulation),
     });
     await row.waitFor({ state: "visible" });
-    await row.getByRole("button", { name: "edit button" }).click();
+    await row.getByRole("button", { name: `Edit ${targetPopulation}` }).click();
   }
 
   async editTransitionBenchmarkProjection(
@@ -213,7 +213,7 @@ export class StatePage {
 
   async clickEditInitiative(initiativeName: string) {
     const row = this.page.locator("tr").filter({ hasText: initiativeName });
-    await row.getByRole("button", { name: "edit button" }).click();
+    await row.getByRole("button", { name: `Edit ${initiativeName}` }).click();
   }
 
   async selectTargetPopulations(populations: string[]) {
