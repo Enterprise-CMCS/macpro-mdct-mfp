@@ -78,8 +78,7 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
 
     await test.step("Navigate to older adults drawer", async () => {
       await statePage.page
-        .getByRole("row", { name: "Older adults" })
-        .getByLabel("edit button")
+        .getByRole("button", { name: "Edit Older adults" })
         .click();
       await expect
         .soft(statePage.page.getByRole("dialog"))
@@ -96,22 +95,28 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
       }
     );
 
-    await test.step("Navigate to physical drawer", async () => {
-      await statePage.page
-        .getByRole("button", { name: "Save & close" })
-        .click();
-      await statePage.page
-        .getByRole("heading", { name: "Transition Benchmark Projections" })
-        .waitFor();
-      await statePage.page
-        .getByRole("row", { name: "Individuals with physical" })
-        .getByLabel("edit button")
-        .click();
-      await expect
-        .soft(statePage.page.getByRole("dialog"))
-        .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
-      await statePage.page.getByText("Report transition benchmarks").waitFor();
-    });
+    await test.step(
+      "Navigate to Individuals with physical disabilities (PD) drawer",
+      async () => {
+        await statePage.page
+          .getByRole("button", { name: "Save & close" })
+          .click();
+        await statePage.page
+          .getByRole("heading", { name: "Transition Benchmark Projections" })
+          .waitFor();
+        await statePage.page
+          .getByRole("button", {
+            name: "Edit Individuals with physical disabilities (PD)",
+          })
+          .click();
+        await expect
+          .soft(statePage.page.getByRole("dialog"))
+          .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
+        await statePage.page
+          .getByText("Report transition benchmarks")
+          .waitFor();
+      }
+    );
     await test.step(
       "WCAG checks on /wp/transition-benchmarks individuals with physical drawer",
       async () => {
@@ -122,22 +127,28 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
       }
     );
 
-    await test.step("Navigate to intellectual drawer", async () => {
-      await statePage.page
-        .getByRole("button", { name: "Save & close" })
-        .click();
-      await statePage.page
-        .getByRole("heading", { name: "Transition Benchmark Projections" })
-        .waitFor();
-      await statePage.page
-        .getByRole("row", { name: "Individuals with intellectual" })
-        .getByLabel("edit button")
-        .click();
-      await expect
-        .soft(statePage.page.getByRole("dialog"))
-        .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
-      await statePage.page.getByText("Report transition benchmarks").waitFor();
-    });
+    await test.step(
+      "Navigate to Individuals with intellectual and developmental disabilities (I/DD) drawer",
+      async () => {
+        await statePage.page
+          .getByRole("button", { name: "Save & close" })
+          .click();
+        await statePage.page
+          .getByRole("heading", { name: "Transition Benchmark Projections" })
+          .waitFor();
+        await statePage.page
+          .getByRole("button", {
+            name: "Edit Individuals with intellectual and developmental disabilities (I/DD)",
+          })
+          .click();
+        await expect
+          .soft(statePage.page.getByRole("dialog"))
+          .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
+        await statePage.page
+          .getByText("Report transition benchmarks")
+          .waitFor();
+      }
+    );
     await test.step(
       "WCAG checks on /wp/transition-benchmarks individuals with physical drawer",
       async () => {
@@ -148,22 +159,28 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
       }
     );
 
-    await test.step("Navigate to mental drawer", async () => {
-      await statePage.page
-        .getByRole("button", { name: "Save & close" })
-        .click();
-      await statePage.page
-        .getByRole("heading", { name: "Transition Benchmark Projections" })
-        .waitFor();
-      await statePage.page
-        .getByRole("row", { name: "Individuals with mental" })
-        .getByLabel("edit button")
-        .click();
-      await expect
-        .soft(statePage.page.getByRole("dialog"))
-        .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
-      await statePage.page.getByText("Report transition benchmarks").waitFor();
-    });
+    await test.step(
+      "Navigate to Individuals with mental health and substance use disorders (MH/SUD) drawer",
+      async () => {
+        await statePage.page
+          .getByRole("button", { name: "Save & close" })
+          .click();
+        await statePage.page
+          .getByRole("heading", { name: "Transition Benchmark Projections" })
+          .waitFor();
+        await statePage.page
+          .getByRole("button", {
+            name: "Edit Individuals with mental health and substance use disorders (MH/SUD)",
+          })
+          .click();
+        await expect
+          .soft(statePage.page.getByRole("dialog"))
+          .toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
+        await statePage.page
+          .getByText("Report transition benchmarks")
+          .waitFor();
+      }
+    );
     await test.step(
       "WCAG checks on /wp/transition-benchmarks Individuals with mental drawer",
       async () => {
@@ -327,8 +344,7 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         })
         .waitFor();
       await statePage.page
-        .getByRole("row", { name: "Initiative01" })
-        .getByLabel("edit button")
+        .getByRole("button", { name: "Edit Initiative01" })
         .click();
       await statePage.page
         .getByRole("heading", {
@@ -350,8 +366,9 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
       "Navigate to Initiative01 I. Define initiative",
       async () => {
         await statePage.page
-          .getByRole("row", { name: "I. Define" })
-          .getByLabel("edit button")
+          .getByRole("button", {
+            name: "Edit I. Define initiative",
+          })
           .click();
         await statePage.page
           .getByRole("heading", {
@@ -382,8 +399,9 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
           })
           .waitFor();
         await statePage.page
-          .getByRole("row", { name: "II. Evaluation plan" })
-          .getByLabel("edit button")
+          .getByRole("button", {
+            name: "Edit II. Evaluation plan",
+          })
           .click();
         await statePage.page
           .getByRole("heading", {
@@ -414,8 +432,9 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
           })
           .waitFor();
         await statePage.page
-          .getByRole("row", { name: "III. Funding sources" })
-          .getByLabel("edit button")
+          .getByRole("button", {
+            name: "Edit III. Funding sources",
+          })
           .click();
         await statePage.page
           .getByRole("heading", {
