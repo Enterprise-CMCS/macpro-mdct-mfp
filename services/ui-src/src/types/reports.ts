@@ -15,6 +15,7 @@ export enum ReportType {
 
 // REPORT STRUCTURE
 export interface ReportPageVerbiage {
+  accordion?: AnyObject;
   intro: {
     section: string;
     subsection?: string;
