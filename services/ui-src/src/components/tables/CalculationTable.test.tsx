@@ -3,11 +3,12 @@ import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
 import { CalculationTable } from "components";
+// types
+import { ReportFormFieldType, ReportShape, ValidationType } from "types";
 // utils
 import { useStore } from "utils";
 import { mockStateUserStore } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
-import { ReportFormFieldType, ReportShape, ValidationType } from "types";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {

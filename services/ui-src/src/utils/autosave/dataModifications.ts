@@ -21,8 +21,12 @@ export const updatedNumberFields = (
 
   switch (fieldType) {
     case "totalComputable": {
-      const [formId, tableFormId] = fieldId.split("_");
-      const tableId = [formId, tableFormId].join("_");
+      // fieldId expected format: formId_formTableId_formFieldId
+      const [formId, formTableId] = fieldId.split("_");
+
+      // tableId expected format: formId_formTableId
+      const tableId = [formId, formTableId].join("_");
+
       const percentageField = `fmap_${formId}Percentage`;
       const percentage = fieldData[percentageField] || 100;
 
@@ -93,6 +97,7 @@ export const updatedNumberFields = (
       return [...fields, ...updatedFields];
     }
     default:
+      // Nothing changed, return original fields
       return fields;
   }
 };
