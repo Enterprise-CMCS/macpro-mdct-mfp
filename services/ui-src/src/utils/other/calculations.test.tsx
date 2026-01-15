@@ -2,6 +2,8 @@
 import {
   calculateShares,
   fieldTableTotals,
+  getNumberValue,
+  isEmptyOrNaN,
   perOfTwoRows,
   sumFields,
   sumOfRow,
@@ -75,6 +77,34 @@ describe("utils/calculations", () => {
     test("returns sum with exclusions", () => {
       const sum = sumFields(fieldData, startsWithId, endsWithId, exclusions);
       expect(sum).toEqual(10);
+    });
+  });
+
+  describe("isEmptyOrNaN()", () => {
+    test("returns true for N/A", () => {
+      expect(isEmptyOrNaN("N/A")).toBe(true);
+    });
+
+    test("returns true for empty value", () => {
+      expect(isEmptyOrNaN("")).toBe(true);
+    });
+
+    test("returns false for number", () => {
+      expect(isEmptyOrNaN("123")).toBe(false);
+    });
+  });
+
+  describe("getNumberValue()", () => {
+    test("returns number", () => {
+      expect(getNumberValue("123")).toBe(123);
+    });
+
+    test("returns zero", () => {
+      expect(getNumberValue("N/A")).toBe(0);
+    });
+
+    test("returns default value", () => {
+      expect(getNumberValue("", 12345)).toBe(12345);
     });
   });
 

@@ -67,10 +67,17 @@ export const sumFields = (
         !exclusions.includes(key)
     )
     .reduce((sum, [, val]) => {
-      const num = Number(val);
-      return sum + (Number.isNaN(num) ? 0 : num);
+      const n = Number(val);
+      return sum + (Number.isNaN(n) ? 0 : n);
     }, 0);
 };
+
+export const isEmptyOrNaN = (value: number | string) =>
+  value === "" || Number.isNaN(Number(value));
+
+// Return number or default value for empty or NaN
+export const getNumberValue = (value: number | string, defaultValue = 0) =>
+  isEmptyOrNaN(value) ? defaultValue : Number(value);
 
 // Recalculate sums in expenditure table when a field value changes
 export const fieldTableTotals = ({
@@ -80,8 +87,7 @@ export const fieldTableTotals = ({
   percentage,
   tableId,
 }: FieldTableTotalsType) => {
-  const isEmptyOrNaN = fieldValue === "" || Number.isNaN(Number(fieldValue));
-  const fieldTotalComputable = isEmptyOrNaN ? 0 : Number(fieldValue);
+  const fieldTotalComputable = getNumberValue(fieldValue);
 
   const {
     totalFederalShare: fieldTotalFederalShare,
@@ -112,7 +118,9 @@ export const fieldTableTotals = ({
 
   return {
     field: {
-      totalComputable: isEmptyOrNaN ? fieldValue : fieldTotalComputable,
+      totalComputable: isEmptyOrNaN(fieldValue)
+        ? fieldValue
+        : fieldTotalComputable,
       totalFederalShare: fieldTotalFederalShare,
       totalStateTerritoryShare: fieldTotalStateTerritoryShare,
     },
