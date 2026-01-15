@@ -10,23 +10,24 @@ import {
   sumOfTwoRows,
 } from "./calculations";
 
-const row1 = ["1", "label", "2", "3", "4", "5"];
+const row1 = ["label", "1", "2", "3", "4", "5"];
 const row2 = ["label", "2", "3", "4", "5", "6"];
+const rowWithNaN = ["label", "abc", "3", "4", "5", "6"];
 
 describe("utils/calculations", () => {
   describe("sumOfRow()", () => {
-    test("returns sum of array", () => {
-      const sum = sumOfRow(row1);
+    test("returns sum of array with start index of 1", () => {
+      const sum = sumOfRow(row1, 1);
       expect(sum).toBe("15");
     });
 
     test("returns NaN for array that includes non-number", () => {
-      const sum = sumOfRow(row1, 1);
+      const sum = sumOfRow(rowWithNaN, 1);
       expect(sum).toBe("NaN");
     });
 
     test("returns dash for empty array", () => {
-      const sum = sumOfRow([], 0);
+      const sum = sumOfRow([]);
       expect(sum).toBe("-");
     });
   });
@@ -34,14 +35,34 @@ describe("utils/calculations", () => {
   describe("sumOfTwoRows()", () => {
     test("returns array of sums of two rows", () => {
       const sum = sumOfTwoRows(row1, row2);
+      expect(sum).toEqual(["3", "5", "7", "9", "11"]);
+    });
+
+    test("returns dash for NaN", () => {
+      const sum = sumOfTwoRows(row1, rowWithNaN);
       expect(sum).toEqual(["-", "5", "7", "9", "11"]);
+    });
+
+    test("returns dashes for empty array", () => {
+      const sum = sumOfTwoRows(row1, []);
+      expect(sum).toEqual(["-", "-", "-", "-", "-"]);
     });
   });
 
   describe("perOfTwoRows()", () => {
     test("returns array of percentages of two rows", () => {
       const per = perOfTwoRows(row1, row2);
-      expect(per).toEqual(["-", "66.67%", "75.00%", "80.00%", "83.33%"]);
+      expect(per).toEqual(["50.00%", "66.67%", "75.00%", "80.00%", "83.33%"]);
+    });
+
+    test("returns dash for NaN", () => {
+      const sum = perOfTwoRows(row1, rowWithNaN);
+      expect(sum).toEqual(["-", "66.67%", "75.00%", "80.00%", "83.33%"]);
+    });
+
+    test("returns dashes for empty array", () => {
+      const sum = perOfTwoRows(row1, []);
+      expect(sum).toEqual(["-", "-", "-", "-", "-"]);
     });
   });
 

@@ -193,7 +193,7 @@ export const Form = ({
    * Exclude forTableOnly fields in renderFormFields,
    * they'll be rendered with renderTable
    */
-  const regularFields = fields.filter((field) => field.forTableOnly !== true);
+  const regularFields = fields.filter(({ forTableOnly }) => !forTableOnly);
 
   return (
     <FormProvider {...form}>
