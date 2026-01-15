@@ -34,21 +34,24 @@ export const perOfTwoRows = (row1: string[], row2: string[]) => {
 };
 
 // Calculate shares for expenditure tables
-export const calculateShares = (computable: number, percentage: number) => {
-  // Convert to cents to avoid rounding errors
-  const totalComputableCents = Math.round(computable * 100);
-  const totalFederalShareCents = Math.round(
-    totalComputableCents * (percentage / 100)
-  );
-  const totalStateTerritoryShareCents =
-    totalComputableCents - totalFederalShareCents;
+export const calculateShares = (
+  total: number | string,
+  percentage: number
+): CalculatedSharesType => {
+  const totalNumber = getNumberValue(total);
 
-  const totalFederalShare = totalFederalShareCents / 100;
-  const totalStateTerritoryShare = totalStateTerritoryShareCents / 100;
+  // Convert currency to cents to avoid rounding errors
+  const inputCents = Math.round(totalNumber * 100);
+  const percentageShareCents = Math.round(inputCents * (percentage / 100));
+  const remainingShareCents = inputCents - percentageShareCents;
+
+  const percentageShare = percentageShareCents / 100;
+  const remainingShare = remainingShareCents / 100;
 
   return {
-    totalFederalShare,
-    totalStateTerritoryShare,
+    percentageShare,
+    remainingShare,
+    total,
   };
 };
 
@@ -83,59 +86,47 @@ export const getNumberValue = (value: number | string, defaultValue = 0) =>
 export const fieldTableTotals = ({
   fieldData,
   fieldId,
+  fieldType,
   fieldValue,
+  fieldSuffixesToCalculate,
   percentage,
   tableId,
-}: FieldTableTotalsType) => {
-  const fieldTotalComputable = getNumberValue(fieldValue);
-
-  const {
-    totalFederalShare: fieldTotalFederalShare,
-    totalStateTerritoryShare: fieldTotalStateTerritoryShare,
-  } = calculateShares(fieldTotalComputable, percentage);
+}: FieldTableTotalsType): {
+  field: CalculatedSharesType;
+  table: CalculatedSharesType;
+} => {
+  const updatedFieldValue = getNumberValue(fieldValue);
 
   // Skip current and totals fields
-  const exclusions = [
-    `${fieldId}-totalComputable`,
-    `${fieldId}-totalFederalShare`,
-    `${fieldId}-totalStateTerritoryShare`,
+  const exclusions = Object.values(fieldSuffixesToCalculate).flatMap(
+    (suffix) => [`${fieldId}-${suffix}`, `${tableId}-${suffix}`]
+  );
 
-    `${tableId}-totalComputable`,
-    `${tableId}-totalFederalShare`,
-    `${tableId}-totalStateTerritoryShare`,
-  ];
-  const tableTotalComputable =
-    fieldTotalComputable +
-    sumFields(fieldData, tableId, "totalComputable", exclusions);
-
-  const tableTotalFederalShare =
-    fieldTotalFederalShare +
-    sumFields(fieldData, tableId, "totalFederalShare", exclusions);
-
-  const tableTotalStateTerritoryShare =
-    fieldTotalStateTerritoryShare +
-    sumFields(fieldData, tableId, "totalStateTerritoryShare", exclusions);
+  const updatedSumFields =
+    updatedFieldValue + sumFields(fieldData, tableId, fieldType, exclusions);
 
   return {
-    field: {
-      totalComputable: isEmptyOrNaN(fieldValue)
-        ? fieldValue
-        : fieldTotalComputable,
-      totalFederalShare: fieldTotalFederalShare,
-      totalStateTerritoryShare: fieldTotalStateTerritoryShare,
-    },
-    table: {
-      totalComputable: tableTotalComputable,
-      totalFederalShare: tableTotalFederalShare,
-      totalStateTerritoryShare: tableTotalStateTerritoryShare,
-    },
+    field: calculateShares(fieldValue, percentage),
+    table: calculateShares(updatedSumFields, percentage),
   };
 };
 
 interface FieldTableTotalsType {
   fieldData: AnyObject;
   fieldId: string;
+  fieldSuffixesToCalculate: {
+    percentageShare: string;
+    remainingShare: string;
+    total: string;
+  };
+  fieldType: string;
   fieldValue: number | string;
   percentage: number;
   tableId: string;
+}
+
+export interface CalculatedSharesType {
+  percentageShare: number;
+  remainingShare: number;
+  total: number | string;
 }

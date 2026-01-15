@@ -7,48 +7,47 @@ export const buildServiceFields = (service: {
   id: string;
   label: string;
   readOnly?: boolean;
-}) =>
-  [
-    {
-      id: `${service.id}-totalComputable`,
-      type: ReportFormFieldType.NUMBER,
-      validation: ValidationType.NUMBER_OPTIONAL,
-      forTableOnly: true,
-      props: {
-        decimalPlacesToRoundTo: 2,
-        initialValue: service.readOnly ? "0" : "",
-        label: `${service.label} Total Computable`,
-        mask: "currency",
-        readOnly: service.readOnly,
-      },
+}) => [
+  {
+    id: `${service.id}-totalComputable`,
+    type: ReportFormFieldType.NUMBER,
+    validation: ValidationType.NUMBER_OPTIONAL,
+    forTableOnly: true,
+    props: {
+      decimalPlacesToRoundTo: 2,
+      initialValue: service.readOnly ? "0" : "",
+      label: `${service.label} Total Computable`,
+      mask: "currency",
+      readOnly: service.readOnly,
     },
-    {
-      id: `${service.id}-totalStateTerritoryShare`,
-      type: ReportFormFieldType.NUMBER,
-      validation: ValidationType.NUMBER_OPTIONAL,
-      forTableOnly: true,
-      props: {
-        decimalPlacesToRoundTo: 2,
-        initialValue: "0",
-        label: `${service.label} Total State / Territory Share`,
-        mask: "currency",
-        readOnly: true,
-      },
+  },
+  {
+    id: `${service.id}-totalStateTerritoryShare`,
+    type: ReportFormFieldType.NUMBER,
+    validation: ValidationType.NUMBER_OPTIONAL,
+    forTableOnly: true,
+    props: {
+      decimalPlacesToRoundTo: 2,
+      initialValue: "0",
+      label: `${service.label} Total State / Territory Share`,
+      mask: "currency",
+      readOnly: true,
     },
-    {
-      id: `${service.id}-totalFederalShare`,
-      type: ReportFormFieldType.NUMBER,
-      validation: ValidationType.NUMBER_OPTIONAL,
-      forTableOnly: true,
-      props: {
-        decimalPlacesToRoundTo: 2,
-        initialValue: "0",
-        label: `${service.label} Total Federal Share`,
-        mask: "currency",
-        readOnly: true,
-      },
+  },
+  {
+    id: `${service.id}-totalFederalShare`,
+    type: ReportFormFieldType.NUMBER,
+    validation: ValidationType.NUMBER_OPTIONAL,
+    forTableOnly: true,
+    props: {
+      decimalPlacesToRoundTo: 2,
+      initialValue: "0",
+      label: `${service.label} Total Federal Share`,
+      mask: "currency",
+      readOnly: true,
     },
-  ] as const;
+  },
+];
 
 export const statePlanServicesHeaders = [
   "Services",

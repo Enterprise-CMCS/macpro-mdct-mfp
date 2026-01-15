@@ -70,8 +70,9 @@ describe("utils/calculations", () => {
     test("returns object of share values", () => {
       const shares = calculateShares(123, 87);
       expect(shares).toEqual({
-        totalFederalShare: 107.01,
-        totalStateTerritoryShare: 15.99,
+        percentageShare: 107.01,
+        remainingShare: 15.99,
+        total: 123,
       });
     });
   });
@@ -81,12 +82,12 @@ describe("utils/calculations", () => {
     const endsWithId = "mockId";
     const fieldData = {
       [`${startsWithId}-${endsWithId}`]: 10,
-      [`${startsWithId}_mockId-${endsWithId}`]: 10,
-      [`${startsWithId}_mockId2-${endsWithId}`]: "N/A",
+      [`${startsWithId}_v1-${endsWithId}`]: 10,
+      [`${startsWithId}_v2-${endsWithId}`]: "N/A",
 
       [`${startsWithId}-noMatch`]: 10,
-      [`${startsWithId}_mockId-noMatch`]: 10,
-      [`${startsWithId}_mockId2-noMatch`]: 10,
+      [`${startsWithId}_v1-noMatch`]: 10,
+      [`${startsWithId}_v2-noMatch`]: 10,
     };
     const exclusions: any[] = [`${startsWithId}-${endsWithId}`];
 
@@ -132,87 +133,100 @@ describe("utils/calculations", () => {
   describe("fieldTableTotals()", () => {
     const fieldValue = 123;
     const percentage = 87;
-    const fieldId = "mockTableId_mockFieldId";
     const tableId = "mockTableId";
+    const fieldId = `${tableId}_mockFieldId`;
+    const fieldSuffixesToCalculate = {
+      percentageShare: "mockPercentageShare",
+      remainingShare: "mockRemainingShare",
+      total: "mockTotal",
+    };
+    const fieldType = "mockTotal";
+
     const fieldData = {
-      [`${fieldId}-totalComputable`]: 0,
-      [`${fieldId}-totalFederalShare`]: 0,
-      [`${fieldId}-totalStateTerritoryShare`]: 0,
+      [`${fieldId}-mockTotal`]: 0,
+      [`${fieldId}-mockPercentageShare`]: 0,
+      [`${fieldId}-mockRemainingShare`]: 0,
 
-      [`${fieldId}_mockId-totalComputable`]: 0,
-      [`${fieldId}_mockId-totalFederalShare`]: 0,
-      [`${fieldId}_mockId-totalStateTerritoryShare`]: 0,
+      [`${fieldId}2-mockTotal`]: 123,
+      [`${fieldId}2-mockPercentageShare`]: 107.01,
+      [`${fieldId}2-mockRemainingShare`]: 15.99,
 
-      [`${tableId}-totalComputable`]: 0,
-      [`${tableId}-totalFederalShare`]: 0,
-      [`${tableId}-totalStateTerritoryShare`]: 0,
+      [`${tableId}-mockTotal`]: 123,
+      [`${tableId}-mockPercentageShare`]: 107.01,
+      [`${tableId}-mockRemainingShare`]: 15.99,
     };
 
     test("returns object with sum totals for fields", () => {
       const totals = fieldTableTotals({
+        fieldData,
+        fieldId,
+        fieldSuffixesToCalculate,
+        fieldType,
         fieldValue,
         percentage,
-        fieldId,
         tableId,
-        fieldData,
       });
 
       expect(totals).toEqual({
         field: {
-          totalComputable: 123,
-          totalFederalShare: 107.01,
-          totalStateTerritoryShare: 15.99,
+          total: 123,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
         },
         table: {
-          totalComputable: 123,
-          totalFederalShare: 107.01,
-          totalStateTerritoryShare: 15.99,
+          total: 246,
+          percentageShare: 214.02,
+          remainingShare: 31.98,
         },
       });
     });
 
     test("skips empty value", () => {
       const totals = fieldTableTotals({
+        fieldData,
+        fieldId,
+        fieldSuffixesToCalculate,
+        fieldType,
         fieldValue: "",
         percentage,
-        fieldId,
         tableId,
-        fieldData,
       });
 
       expect(totals).toEqual({
         field: {
-          totalComputable: "",
-          totalFederalShare: 0,
-          totalStateTerritoryShare: 0,
+          total: "",
+          percentageShare: 0,
+          remainingShare: 0,
         },
         table: {
-          totalComputable: 0,
-          totalFederalShare: 0,
-          totalStateTerritoryShare: 0,
+          total: 123,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
         },
       });
     });
 
     test("skips N/A value", () => {
       const totals = fieldTableTotals({
+        fieldData,
+        fieldId,
+        fieldSuffixesToCalculate,
+        fieldType,
         fieldValue: "N/A",
         percentage,
-        fieldId,
         tableId,
-        fieldData,
       });
 
       expect(totals).toEqual({
         field: {
-          totalComputable: "N/A",
-          totalFederalShare: 0,
-          totalStateTerritoryShare: 0,
+          total: "N/A",
+          percentageShare: 0,
+          remainingShare: 0,
         },
         table: {
-          totalComputable: 0,
-          totalFederalShare: 0,
-          totalStateTerritoryShare: 0,
+          total: 123,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
         },
       });
     });

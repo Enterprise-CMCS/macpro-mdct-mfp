@@ -19,12 +19,12 @@ import { AnyObject, FormField, FormTable, ReportShape } from "types";
 // utils
 import {
   formFieldFactory,
-  fieldTableTotals,
   hydrateFormFields,
   maskResponseData,
   parseCustomHtml,
   translate,
   updateRenderFields,
+  updatedReportOnFieldChange,
 } from "utils";
 
 export const CalculationTable = ({
@@ -96,34 +96,15 @@ export const CalculationTable = ({
     });
   };
 
-  const updatedFieldsForDisplay = (name: string, fieldValue: string) => {
-    const [fieldId, fieldType] = name.split("-");
-
-    if (fieldType === "totalComputable") {
-      const { field, table } = fieldTableTotals({
-        fieldData: localReport.fieldData,
-        fieldId,
-        fieldValue,
-        percentage,
-        tableId,
-      });
-
-      const updatedFieldData = (id: string, totals: typeof field) => ({
-        [`${id}-totalComputable`]: totals.totalComputable,
-        [`${id}-totalFederalShare`]: totals.totalFederalShare,
-        [`${id}-totalStateTerritoryShare`]: totals.totalStateTerritoryShare,
-      });
-
-      const updatedReport = {
-        ...localReport,
-        fieldData: {
-          ...localReport.fieldData,
-          ...updatedFieldData(fieldId, field),
-          ...updatedFieldData(tableId, table),
-        },
-      };
-      setLocalReport(updatedReport);
-    }
+  const updatedFieldsForDisplay = (fieldName: string, fieldValue: string) => {
+    const updatedReport = updatedReportOnFieldChange({
+      fieldName,
+      fieldValue,
+      report: localReport,
+      percentage,
+      tableId,
+    });
+    setLocalReport(updatedReport);
   };
 
   useEffect(() => {

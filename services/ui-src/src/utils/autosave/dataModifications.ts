@@ -2,6 +2,7 @@
 import { ReportFormFieldType, ReportShape } from "types";
 // utils
 import {
+  CalculatedSharesType,
   calculateShares,
   FieldInfo,
   fieldTableTotals,
@@ -30,42 +31,48 @@ export const updatedNumberFields = (
       const percentageField = `fmap_${formId}Percentage`;
       const percentage = fieldData[percentageField] || 100;
 
+      const fieldSuffixesToCalculate = {
+        total: "totalComputable",
+        percentageShare: "totalFederalShare",
+        remainingShare: "totalStateTerritoryShare",
+      };
+
       const { field, table } = fieldTableTotals({
         fieldData,
         fieldId,
+        fieldSuffixesToCalculate,
+        fieldType,
         fieldValue,
         percentage,
         tableId,
       });
 
-      const totalsFields = (id: string, totals: typeof field) => [
-        {
-          name: `${id}-totalComputable`,
-          type: ReportFormFieldType.NUMBER,
-          value: totals.totalComputable,
-        },
-        {
-          name: `${id}-totalFederalShare`,
-          type: ReportFormFieldType.NUMBER,
-          value: totals.totalFederalShare,
-        },
-        {
-          name: `${id}-totalStateTerritoryShare`,
-          type: ReportFormFieldType.NUMBER,
-          value: totals.totalStateTerritoryShare,
-        },
-      ];
+      const fieldsToMap = Object.entries(fieldSuffixesToCalculate) as Array<
+        [keyof typeof fieldSuffixesToCalculate, string]
+      >;
 
-      return [...totalsFields(fieldId, field), ...totalsFields(tableId, table)];
+      const updatedFields = (
+        fieldOrTableId: string,
+        totals: CalculatedSharesType
+      ) =>
+        fieldsToMap.map(([key, fieldSuffix]) => ({
+          name: `${fieldOrTableId}-${fieldSuffix}`,
+          type: ReportFormFieldType.NUMBER,
+          value: totals[key],
+        }));
+
+      return [
+        ...updatedFields(fieldId, field),
+        ...updatedFields(tableId, table),
+      ];
     }
     default:
       // If no match, fall through to next switch
       break;
   }
 
-  switch (fieldId) {
-    case "fmap_demonstrationServicesPercentage":
-    case "fmap_qualifiedHcbsPercentage": {
+  switch (true) {
+    case fieldId.startsWith("fmap_") && fieldId.endsWith("Percentage"): {
       /*
        * Get totalComputable fields and update corresponding
        * totalFederalShare and totalStateTerritoryShare fields
@@ -73,23 +80,25 @@ export const updatedNumberFields = (
       const updatedFields = Object.keys(fieldData)
         .filter((key) => key.endsWith("totalComputable"))
         .flatMap((key) => {
-          const totalComputable = getNumberValue(fieldData[key]);
+          const total = getNumberValue(fieldData[key]);
           const percentage = getNumberValue(fieldValue);
           const [keyFieldId] = key.split("-");
 
-          const { totalFederalShare, totalStateTerritoryShare } =
-            calculateShares(totalComputable, percentage);
+          const { percentageShare, remainingShare } = calculateShares(
+            total,
+            percentage
+          );
 
           return [
             {
               name: `${keyFieldId}-totalFederalShare`,
               type: ReportFormFieldType.NUMBER,
-              value: totalFederalShare,
+              value: percentageShare,
             },
             {
               name: `${keyFieldId}-totalStateTerritoryShare`,
               type: ReportFormFieldType.NUMBER,
-              value: totalStateTerritoryShare,
+              value: remainingShare,
             },
           ];
         });
@@ -101,3 +110,62 @@ export const updatedNumberFields = (
       return fields;
   }
 };
+
+export const updatedReportOnFieldChange = ({
+  fieldName,
+  fieldValue,
+  report,
+  percentage,
+  tableId,
+}: UpdatedReportFields) => {
+  const [fieldId, fieldType] = fieldName.split("-");
+
+  switch (fieldType) {
+    case "totalComputable": {
+      const fieldSuffixesToCalculate = {
+        total: "totalComputable",
+        percentageShare: "totalFederalShare",
+        remainingShare: "totalStateTerritoryShare",
+      };
+
+      const { field, table } = fieldTableTotals({
+        fieldData: report.fieldData,
+        fieldId,
+        fieldSuffixesToCalculate,
+        fieldType,
+        fieldValue,
+        percentage,
+        tableId,
+      });
+
+      const fieldsToMap = Object.entries(fieldSuffixesToCalculate) as Array<
+        [keyof typeof fieldSuffixesToCalculate, string]
+      >;
+
+      const updatedFieldData = (id: string, totals: CalculatedSharesType) =>
+        Object.fromEntries(
+          fieldsToMap.map(([key, suffix]) => [`${id}-${suffix}`, totals[key]])
+        );
+
+      return {
+        ...report,
+        fieldData: {
+          ...report.fieldData,
+          ...updatedFieldData(fieldId, field),
+          ...updatedFieldData(tableId, table),
+        },
+      };
+    }
+    default:
+      // Nothing changed, return original report
+      return report;
+  }
+};
+
+interface UpdatedReportFields {
+  fieldName: string;
+  fieldValue: number | string;
+  report: ReportShape;
+  percentage: number;
+  tableId: string;
+}
