@@ -49,6 +49,7 @@ export const calculateShares = (
   const remainingShare = remainingShareCents / 100;
 
   return {
+    percentage,
     percentageShare,
     remainingShare,
     total,
@@ -86,7 +87,6 @@ export const getNumberValue = (value: number | string, defaultValue = 0) =>
 export const fieldTableTotals = ({
   fieldData,
   fieldId,
-  fieldType,
   fieldValue,
   fieldSuffixesToCalculate,
   percentage,
@@ -95,19 +95,29 @@ export const fieldTableTotals = ({
   field: CalculatedSharesType;
   table: CalculatedSharesType;
 } => {
-  const updatedFieldValue = getNumberValue(fieldValue);
-
   // Skip current and totals fields
   const exclusions = Object.values(fieldSuffixesToCalculate).flatMap(
     (suffix) => [`${fieldId}-${suffix}`, `${tableId}-${suffix}`]
   );
 
-  const updatedSumFields =
-    updatedFieldValue + sumFields(fieldData, tableId, fieldType, exclusions);
+  const keys = Object.keys(fieldSuffixesToCalculate) as Array<
+    keyof typeof fieldSuffixesToCalculate
+  >;
+  const fieldShares = calculateShares(fieldValue, percentage);
+  const tableShares = keys.reduce((sum, key) => {
+    const suffix = fieldSuffixesToCalculate[key];
+
+    sum[key] =
+      // Add updated current value to sum of fields with the same suffix
+      getNumberValue(fieldShares[key]) +
+      sumFields(fieldData, tableId, suffix, exclusions);
+
+    return sum;
+  }, {} as CalculatedSharesType);
 
   return {
-    field: calculateShares(fieldValue, percentage),
-    table: calculateShares(updatedSumFields, percentage),
+    field: fieldShares,
+    table: tableShares,
   };
 };
 
@@ -119,13 +129,13 @@ interface FieldTableTotalsType {
     remainingShare: string;
     total: string;
   };
-  fieldType: string;
   fieldValue: number | string;
   percentage: number;
   tableId: string;
 }
 
 export interface CalculatedSharesType {
+  percentage: number;
   percentageShare: number;
   remainingShare: number;
   total: number | string;

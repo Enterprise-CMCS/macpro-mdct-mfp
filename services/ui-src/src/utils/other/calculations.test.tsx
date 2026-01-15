@@ -70,6 +70,7 @@ describe("utils/calculations", () => {
     test("returns object of share values", () => {
       const shares = calculateShares(123, 87);
       expect(shares).toEqual({
+        percentage: 87,
         percentageShare: 107.01,
         remainingShare: 15.99,
         total: 123,
@@ -140,7 +141,6 @@ describe("utils/calculations", () => {
       remainingShare: "mockRemainingShare",
       total: "mockTotal",
     };
-    const fieldType = "mockTotal";
 
     const fieldData = {
       [`${fieldId}-mockTotal`]: 0,
@@ -161,7 +161,6 @@ describe("utils/calculations", () => {
         fieldData,
         fieldId,
         fieldSuffixesToCalculate,
-        fieldType,
         fieldValue,
         percentage,
         tableId,
@@ -169,14 +168,15 @@ describe("utils/calculations", () => {
 
       expect(totals).toEqual({
         field: {
-          total: 123,
+          percentage: 87,
           percentageShare: 107.01,
           remainingShare: 15.99,
+          total: 123,
         },
         table: {
-          total: 246,
           percentageShare: 214.02,
           remainingShare: 31.98,
+          total: 246,
         },
       });
     });
@@ -186,7 +186,6 @@ describe("utils/calculations", () => {
         fieldData,
         fieldId,
         fieldSuffixesToCalculate,
-        fieldType,
         fieldValue: "",
         percentage,
         tableId,
@@ -195,13 +194,14 @@ describe("utils/calculations", () => {
       expect(totals).toEqual({
         field: {
           total: "",
+          percentage: 87,
           percentageShare: 0,
           remainingShare: 0,
         },
         table: {
-          total: 123,
           percentageShare: 107.01,
           remainingShare: 15.99,
+          total: 123,
         },
       });
     });
@@ -211,7 +211,6 @@ describe("utils/calculations", () => {
         fieldData,
         fieldId,
         fieldSuffixesToCalculate,
-        fieldType,
         fieldValue: "N/A",
         percentage,
         tableId,
@@ -219,14 +218,15 @@ describe("utils/calculations", () => {
 
       expect(totals).toEqual({
         field: {
-          total: "N/A",
+          percentage: 87,
           percentageShare: 0,
           remainingShare: 0,
+          total: "N/A",
         },
         table: {
-          total: 123,
           percentageShare: 107.01,
           remainingShare: 15.99,
+          total: 123,
         },
       });
     });

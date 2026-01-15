@@ -28,6 +28,7 @@ export const updatedNumberFields = (
       // tableId expected format: formId_formTableId
       const tableId = [formId, formTableId].join("_");
 
+      // TODO: Use form percentage or field percentage
       const percentageField = `fmap_${formId}Percentage`;
       const percentage = fieldData[percentageField] || 100;
 
@@ -41,7 +42,6 @@ export const updatedNumberFields = (
         fieldData,
         fieldId,
         fieldSuffixesToCalculate,
-        fieldType,
         fieldValue,
         percentage,
         tableId,
@@ -132,7 +132,6 @@ export const updatedReportOnFieldChange = ({
         fieldData: report.fieldData,
         fieldId,
         fieldSuffixesToCalculate,
-        fieldType,
         fieldValue,
         percentage,
         tableId,

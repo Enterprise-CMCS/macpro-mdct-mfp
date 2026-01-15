@@ -101,6 +101,7 @@ export const CalculationTable = ({
       fieldName,
       fieldValue,
       report: localReport,
+      // TODO: Use form percentage or field percentage
       percentage,
       tableId,
     });
