@@ -56,7 +56,7 @@ export const CalculationTable = ({
   const firstRow = headRows[0];
   const thWidth = `${100 / firstRow.length}%`;
 
-  const displayCell = ({ cell, columnId, rowId }: CustomCellOptions) => {
+  const displayCell = ({ cell, columnId, rowId }: DisplayCellOptions) => {
     if (typeof cell === "string") return cell;
 
     // If input is readonly, display text instead of input
@@ -187,7 +187,7 @@ interface Props extends Omit<FormTable, "tableType"> {
   report?: ReportShape;
 }
 
-interface CustomCellOptions {
+interface DisplayCellOptions {
   cell: string | FormField;
   columnId?: string;
   rowId?: string;
