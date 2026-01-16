@@ -4,12 +4,14 @@ import { Button, Image, SystemStyleObject } from "@chakra-ui/react";
 // assets
 import iconSearch from "assets/icons/icon_search_blue.png";
 import iconPDF from "assets/icons/icon_pdf_white.png";
+// types
+import { ReportType } from "types";
 // utils
 import { useStore } from "utils";
 
 export const PrintButton = ({ sxOverride }: Props) => {
   const report = useStore().report;
-  const reportType = report?.reportType === "WP" ? "wp" : "sar";
+  const reportType = (report?.reportType as ReportType).toLowerCase();
 
   const isNonEditable =
     report?.status === "Submitted" || report?.status === "Approved";

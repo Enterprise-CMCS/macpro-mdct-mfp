@@ -2,8 +2,7 @@ import { ReactElement } from "react";
 // components
 import { Box, Heading } from "@chakra-ui/react";
 import { ExportedReportFieldRow, Table } from "components";
-// types, utils
-import { useStore } from "utils";
+// types
 import {
   FormField,
   StandardReportPageShape,
@@ -15,9 +14,8 @@ import {
   ReportStatus,
   HeadingLevel,
 } from "types";
-// verbiage
-import wpVerbiage from "verbiage/pages/wp/wp-export";
-import sarVerbiage from "verbiage/pages/sar/sar-export";
+// utils
+import { getReportVerbiage, useStore } from "utils";
 
 export const ExportedReportFieldTable = ({
   section,
@@ -25,7 +23,8 @@ export const ExportedReportFieldTable = ({
 }: Props) => {
   const { report } = useStore() ?? {};
 
-  const { tableHeaders } = wpVerbiage;
+  const { exportVerbiage } = getReportVerbiage(report?.reportType);
+  const { tableHeaders } = exportVerbiage;
   const pageType = section.pageType;
   const formFields =
     pageType === "drawer" ? section.drawerForm?.fields : section.form?.fields;
@@ -50,7 +49,7 @@ export const ExportedReportFieldTable = ({
     // SAR "General Information" section layout is a unique case with multiple section headings within the same page
     section.name === "General Information" ? (
       renderGeneralInformation(
-        sarVerbiage,
+        exportVerbiage,
         formFields!,
         pageType!,
         entityType,

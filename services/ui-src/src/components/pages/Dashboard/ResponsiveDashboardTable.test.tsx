@@ -4,6 +4,7 @@ import { render } from "@testing-library/react";
 import { DashboardTable } from "./DashboardTable";
 import { mockReportsByState } from "utils/testing/mockReport";
 import { MobileDashboardTable } from "./MobileDashboardTable";
+import { ReportType } from "types";
 
 jest.mock("./DashboardTable", () => ({
   DashboardTable: jest.fn(() => <></>),
@@ -23,7 +24,7 @@ const mockUseBreakpoint = useBreakpoint as jest.MockedFunction<
 
 const defaultProps = {
   reportsByState: mockReportsByState,
-  reportType: "WP",
+  reportType: ReportType.WP,
   reportId: "r1",
   body: { table: {} },
   openCreateReportModal: jest.fn(),

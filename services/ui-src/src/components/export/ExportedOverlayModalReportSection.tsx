@@ -1,7 +1,7 @@
 // components
 import { Box, Heading, Text } from "@chakra-ui/react";
-// utils
-import { getFormattedEntityData } from "utils";
+import { ExportedEntityStepCard } from "./ExportedEntityStepCard";
+// types
 import {
   AnyObject,
   EntityShape,
@@ -10,9 +10,8 @@ import {
   HeadingLevel,
   OverlayModalPageShape,
 } from "types";
-// verbiage
-import exportVerbiage from "verbiage/pages/wp/wp-export";
-import { ExportedEntityStepCard } from "./ExportedEntityStepCard";
+// utils
+import { getFormattedEntityData, getReportVerbiage } from "utils";
 
 export const ExportedOverlayModalReportSection = ({
   section: { verbiage },
@@ -20,6 +19,7 @@ export const ExportedOverlayModalReportSection = ({
   entityStep,
   headingLevel = "h4",
 }: Props) => {
+  const { exportVerbiage } = getReportVerbiage();
   const { emptyEntityMessage, dashboardTitle } = exportVerbiage;
 
   const type = (entityStep as any)?.stepType || (entityStep![0] as string);
