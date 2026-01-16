@@ -11,8 +11,6 @@ const formId = "mockFormId";
 const tableId = `${formId}_mockTableId`;
 const fieldId = `${tableId}_mockFieldId`;
 
-const unrelated = "unrelated";
-
 const fieldValue = 123;
 const percentageShare = 107.01;
 const remainingShare = 15.99;
@@ -32,9 +30,9 @@ const fieldData = {
   [`${tableId}-totalFederalShare`]: percentageShare * mocks.length,
   [`${tableId}-totalStateTerritoryShare`]: remainingShare * mocks.length,
   // Adding these fields to test filtering
-  [`${unrelated}-totalComputable`]: 12345,
-  [`${unrelated}-totalFederalShare`]: 12345,
-  [`${unrelated}-totalStateTerritoryShare`]: 12345,
+  "unrelated-totalComputable": 12345,
+  "unrelated-totalFederalShare": 12345,
+  "unrelated-totalStateTerritoryShare": 12345,
 };
 
 describe("utils/autosave/dataModifications", () => {

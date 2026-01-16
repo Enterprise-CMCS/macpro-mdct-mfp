@@ -33,6 +33,9 @@ export const perOfTwoRows = (row1: string[], row2: string[]) => {
     .splice(1, row1.length);
 };
 
+const toCents = (num: number) => Math.round(num * 100);
+const toDecimal = (num: number) => num / 100;
+
 // Calculate shares for expenditure tables
 export const calculateShares = (
   total: number | string,
@@ -41,12 +44,12 @@ export const calculateShares = (
   const totalNumber = getNumberValue(total);
 
   // Convert currency to cents to avoid rounding errors
-  const totalCents = Math.round(totalNumber * 100);
-  const percentageShareCents = Math.round(totalCents * (percentage / 100));
+  const totalCents = toCents(totalNumber);
+  const percentageShareCents = totalCents * toDecimal(percentage);
   const remainingShareCents = totalCents - percentageShareCents;
 
-  const percentageShare = percentageShareCents / 100;
-  const remainingShare = remainingShareCents / 100;
+  const percentageShare = toDecimal(percentageShareCents);
+  const remainingShare = toDecimal(remainingShareCents);
 
   return {
     percentage,
@@ -112,8 +115,8 @@ export const fieldTableTotals = ({
     const currentSum = sumFields(fieldData, tableId, suffix, exclusions);
 
     // Convert currency to cents to avoid rounding errors
-    const cents = Math.round(currentValue * 100) + Math.round(currentSum * 100);
-    sum[key] = cents / 100;
+    const totalCents = toCents(currentValue) + toCents(currentSum);
+    sum[key] = toDecimal(totalCents);
 
     return sum;
   }, {} as CalculatedSharesType);
