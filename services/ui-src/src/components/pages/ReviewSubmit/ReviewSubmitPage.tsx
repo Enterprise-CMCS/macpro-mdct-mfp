@@ -25,12 +25,14 @@ import {
   StatusTable,
 } from "components";
 // types
-import { AlertTypes, AnyObject, ReportStatus } from "types";
+import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
 // utils
-import { parseCustomHtml, useStore, utcDateToReadableDate } from "utils";
-// verbiage
-import WPVerbiage from "verbiage/pages/wp/wp-review-and-submit";
-import SARVerbiage from "verbiage/pages/sar/sar-review-and-submit";
+import {
+  getReportVerbiage,
+  parseCustomHtml,
+  useStore,
+  utcDateToReadableDate,
+} from "utils";
 // assets
 import checkIcon from "assets/icons/icon_check_circle.png";
 
@@ -47,8 +49,8 @@ export const ReviewSubmitPage = () => {
   const { state, userIsEndUser, userIsAdmin } = useStore().user ?? {};
 
   // get report type, state, and id from context or storage
-  const reportType =
-    report?.reportType || localStorage.getItem("selectedReportType");
+  const reportType = (report?.reportType ||
+    localStorage.getItem("selectedReportType")) as ReportType;
   const reportId = report?.id || localStorage.getItem("selectedReport");
   const reportState = state || localStorage.getItem("selectedState");
 
@@ -58,8 +60,8 @@ export const ReviewSubmitPage = () => {
     id: reportId,
   };
 
-  const reviewVerbiage = reportType === "WP" ? WPVerbiage : SARVerbiage;
-  const { alertBox } = reviewVerbiage;
+  const { reviewAndSubmitVerbiage } = getReportVerbiage(reportType);
+  const { alertBox } = reviewAndSubmitVerbiage;
 
   useEffect(() => {
     if (report?.id) {
@@ -111,7 +113,7 @@ export const ReviewSubmitPage = () => {
             name={report.submissionName}
             date={report?.submittedOnDate}
             submittedBy={report?.submittedBy}
-            reviewVerbiage={reviewVerbiage}
+            reviewVerbiage={reviewAndSubmitVerbiage}
           />
         ) : (
           <div>
@@ -122,14 +124,14 @@ export const ReviewSubmitPage = () => {
               onClose={onClose}
               submitting={submitting}
               isPermittedToSubmit={isPermittedToSubmit}
-              reviewVerbiage={reviewVerbiage}
+              reviewVerbiage={reviewAndSubmitVerbiage}
             />
             {userIsAdmin && (
               <AdminReview
                 submitForm={submitForm}
                 submitting={submitting}
                 isPermittedToSubmit={isPermittedToSubmit}
-                reviewVerbiage={reviewVerbiage}
+                reviewVerbiage={reviewAndSubmitVerbiage}
               />
             )}
           </div>
@@ -216,14 +218,20 @@ export const SuccessMessageGenerator = (
   submissionDate?: number,
   submittedBy?: string
 ) => {
-  const fullReportType = reportType === "WP" ? "Work Plan" : "SAR";
+  const fullReportType =
+    reportType === "WP"
+      ? "Work Plan"
+      : reportType === "SAR"
+        ? "SAR"
+        : "Expenditure Report";
 
   if (submissionDate && submittedBy) {
     const readableDate = utcDateToReadableDate(submissionDate, "full");
     const submittedDate = `was submitted on ${readableDate}`;
     const submittersName = `${submittedBy}`;
 
-    const reportTitle = <b>{`${name}`}</b>;
+    const reportTitle =
+      reportType !== ReportType.EXPENDITURE ? <b>{`${name}`}</b> : "state";
     const preSubmissionMessage = `MFP ${fullReportType} submission for `;
     const postSubmissionMessage = ` ${submittedDate} by ${submittersName}.`;
     return [preSubmissionMessage, reportTitle, postSubmissionMessage];
