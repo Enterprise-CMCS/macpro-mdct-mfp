@@ -26,6 +26,7 @@ import {
 } from "components";
 // types
 import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
+import { States } from "../../../constants";
 // utils
 import {
   getReportVerbiage,
@@ -52,7 +53,8 @@ export const ReviewSubmitPage = () => {
   const reportType = (report?.reportType ||
     localStorage.getItem("selectedReportType")) as ReportType;
   const reportId = report?.id || localStorage.getItem("selectedReport");
-  const reportState = state || localStorage.getItem("selectedState");
+  const reportState = (state ||
+    localStorage.getItem("selectedState")) as keyof typeof States;
 
   const reportKeys = {
     reportType: reportType,
@@ -114,6 +116,7 @@ export const ReviewSubmitPage = () => {
             date={report?.submittedOnDate}
             submittedBy={report?.submittedBy}
             reviewVerbiage={reviewAndSubmitVerbiage}
+            stateName={States[reportState]}
           />
         ) : (
           <div>
@@ -216,7 +219,8 @@ export const SuccessMessageGenerator = (
   reportType: string,
   name: string,
   submissionDate?: number,
-  submittedBy?: string
+  submittedBy?: string,
+  stateName?: string
 ) => {
   const fullReportType =
     reportType === "WP"
@@ -231,7 +235,7 @@ export const SuccessMessageGenerator = (
     const submittersName = `${submittedBy}`;
 
     const reportTitle =
-      reportType !== ReportType.EXPENDITURE ? <b>{`${name}`}</b> : "state";
+      reportType !== ReportType.EXPENDITURE ? <b>{`${name}`}</b> : stateName;
     const preSubmissionMessage = `MFP ${fullReportType} submission for `;
     const postSubmissionMessage = ` ${submittedDate} by ${submittersName}.`;
     return [preSubmissionMessage, reportTitle, postSubmissionMessage];
@@ -245,6 +249,7 @@ export const SuccessMessage = ({
   date,
   submittedBy,
   reviewVerbiage,
+  stateName,
 }: SuccessMessageProps) => {
   const { submitted } = reviewVerbiage;
   const { intro } = submitted;
@@ -252,7 +257,8 @@ export const SuccessMessage = ({
     reportType,
     name,
     date,
-    submittedBy
+    submittedBy,
+    stateName
   );
 
   return (
