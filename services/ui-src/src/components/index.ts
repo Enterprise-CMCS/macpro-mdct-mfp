@@ -115,9 +115,10 @@ export { DynamicModalOverlayReportPage } from "./reports/DynamicModalOverlayRepo
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables
+export { CalculationTable } from "./tables/CalculationTable";
 export { EntityRow } from "./tables/EntityRow";
-export { Table } from "./tables/Table";
 export { EntityStatusIcon } from "./tables/EntityStatusIcon";
+export { Table } from "./tables/Table";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
 // Redirects
