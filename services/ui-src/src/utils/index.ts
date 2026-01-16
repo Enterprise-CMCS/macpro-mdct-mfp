@@ -10,6 +10,7 @@ export * from "./auth/authLifecycle";
 export * from "./state/useStore";
 // autosave
 export * from "./autosave/autosave";
+export * from "./autosave/dataModifications";
 // forms
 export * from "./forms/forms";
 // reports
@@ -18,6 +19,8 @@ export * from "./reports/reports";
 export * from "./reports/routing";
 // statusing
 export * from "./statusing/getRouteStatus";
+// text
+export * from "./text/translate";
 // tracking
 export * from "./tracking/tealium";
 // validation

@@ -1,3 +1,5 @@
+import { AnyObject } from "types";
+
 //summation of a row in a table, adjust the startIndex if you want to skip the first column
 export const sumOfRow = (row: string[], startIndex: number = 0) => {
   if (row.length === 0) return "-";
@@ -30,3 +32,117 @@ export const perOfTwoRows = (row1: string[], row2: string[]) => {
     })
     .splice(1, row1.length);
 };
+
+const toCents = (num: number) => Math.round(num * 100);
+const toDecimal = (num: number) => num / 100;
+
+// Calculate shares for expenditure tables
+export const calculateShares = (
+  total: number | string,
+  percentage: number
+): CalculatedSharesType => {
+  const totalNumber = getNumberValue(total);
+
+  // Convert currency to cents to avoid rounding errors
+  const totalCents = toCents(totalNumber);
+  const percentageShareCents = totalCents * toDecimal(percentage);
+  const remainingShareCents = totalCents - percentageShareCents;
+
+  const percentageShare = toDecimal(percentageShareCents);
+  const remainingShare = toDecimal(remainingShareCents);
+
+  return {
+    percentage,
+    percentageShare,
+    remainingShare,
+    total,
+  };
+};
+
+// Sum fields based on matching keys
+export const sumFields = (
+  fieldData: AnyObject,
+  startsWithId: string,
+  endsWithId: string,
+  exclusions: string[] = []
+) => {
+  return Object.entries(fieldData)
+    .filter(
+      ([key]) =>
+        key.startsWith(startsWithId) &&
+        key.endsWith(endsWithId) &&
+        !exclusions.includes(key)
+    )
+    .reduce((sum, [, val]) => {
+      const n = Number(val);
+      return sum + (Number.isNaN(n) ? 0 : n);
+    }, 0);
+};
+
+export const isEmptyOrNaN = (value: number | string) =>
+  value === "" || Number.isNaN(Number(value));
+
+// Return number or default value for empty or NaN
+export const getNumberValue = (value: number | string, defaultValue = 0) =>
+  isEmptyOrNaN(value) ? defaultValue : Number(value);
+
+// Recalculate sums in expenditure table when a field value changes
+export const fieldTableTotals = ({
+  fieldData,
+  fieldId,
+  fieldValue,
+  fieldSuffixesToCalculate,
+  percentage,
+  tableId,
+}: FieldTableTotalsType): {
+  field: CalculatedSharesType;
+  table: CalculatedSharesType;
+} => {
+  // Skip current and totals fields
+  const exclusions = Object.values(fieldSuffixesToCalculate).flatMap(
+    (suffix) => [`${fieldId}-${suffix}`, `${tableId}-${suffix}`]
+  );
+
+  const keys = Object.keys(fieldSuffixesToCalculate) as Array<
+    keyof typeof fieldSuffixesToCalculate
+  >;
+  const fieldShares = calculateShares(fieldValue, percentage);
+  const tableShares = keys.reduce((sum, key) => {
+    const suffix = fieldSuffixesToCalculate[key];
+
+    // Add updated current value to sum of fields with the same suffix
+    const currentValue = getNumberValue(fieldShares[key]);
+    const currentSum = sumFields(fieldData, tableId, suffix, exclusions);
+
+    // Convert currency to cents to avoid rounding errors
+    const totalCents = toCents(currentValue) + toCents(currentSum);
+    sum[key] = toDecimal(totalCents);
+
+    return sum;
+  }, {} as CalculatedSharesType);
+
+  return {
+    field: fieldShares,
+    table: tableShares,
+  };
+};
+
+interface FieldTableTotalsType {
+  fieldData: AnyObject;
+  fieldId: string;
+  fieldSuffixesToCalculate: {
+    percentageShare: string;
+    remainingShare: string;
+    total: string;
+  };
+  fieldValue: number | string;
+  percentage: number;
+  tableId: string;
+}
+
+export interface CalculatedSharesType {
+  percentage: number;
+  percentageShare: number;
+  remainingShare: number;
+  total: number | string;
+}
