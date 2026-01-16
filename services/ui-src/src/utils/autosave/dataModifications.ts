@@ -73,12 +73,16 @@ export const updatedNumberFields = (
 
   switch (true) {
     case fieldId.startsWith("fmap_") && fieldId.endsWith("Percentage"): {
+      const formId = fieldId.replace("fmap_", "").replace("Percentage", "");
+
       /*
        * Get totalComputable fields and update corresponding
        * totalFederalShare and totalStateTerritoryShare fields
        */
       const updatedFields = Object.keys(fieldData)
-        .filter((key) => key.endsWith("totalComputable"))
+        .filter(
+          (key) => key.startsWith(formId) && key.endsWith("totalComputable")
+        )
         .flatMap((key) => {
           const total = getNumberValue(fieldData[key]);
           const percentage = getNumberValue(fieldValue);
