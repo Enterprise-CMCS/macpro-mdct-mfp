@@ -25,12 +25,15 @@ import {
   StatusTable,
 } from "components";
 // types
-import { AlertTypes, AnyObject, ReportStatus } from "types";
+import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
+import { States } from "../../../constants";
 // utils
-import { parseCustomHtml, useStore, utcDateToReadableDate } from "utils";
-// verbiage
-import WPVerbiage from "verbiage/pages/wp/wp-review-and-submit";
-import SARVerbiage from "verbiage/pages/sar/sar-review-and-submit";
+import {
+  getReportVerbiage,
+  parseCustomHtml,
+  useStore,
+  utcDateToReadableDate,
+} from "utils";
 // assets
 import checkIcon from "assets/icons/icon_check_circle.png";
 
@@ -47,10 +50,11 @@ export const ReviewSubmitPage = () => {
   const { state, userIsEndUser, userIsAdmin } = useStore().user ?? {};
 
   // get report type, state, and id from context or storage
-  const reportType =
-    report?.reportType || localStorage.getItem("selectedReportType");
+  const reportType = (report?.reportType ||
+    localStorage.getItem("selectedReportType")) as ReportType;
   const reportId = report?.id || localStorage.getItem("selectedReport");
-  const reportState = state || localStorage.getItem("selectedState");
+  const reportState = (state ||
+    localStorage.getItem("selectedState")) as keyof typeof States;
 
   const reportKeys = {
     reportType: reportType,
@@ -58,8 +62,8 @@ export const ReviewSubmitPage = () => {
     id: reportId,
   };
 
-  const reviewVerbiage = reportType === "WP" ? WPVerbiage : SARVerbiage;
-  const { alertBox } = reviewVerbiage;
+  const { reviewAndSubmitVerbiage } = getReportVerbiage(reportType);
+  const { alertBox } = reviewAndSubmitVerbiage;
 
   useEffect(() => {
     if (report?.id) {
@@ -107,11 +111,12 @@ export const ReviewSubmitPage = () => {
       <Flex sx={sx.pageContainer} data-testid="review-submit-page">
         {report?.status == ReportStatus.SUBMITTED && userIsEndUser ? (
           <SuccessMessage
-            reportType={report.reportType}
+            reportType={reportType}
             name={report.submissionName}
             date={report?.submittedOnDate}
             submittedBy={report?.submittedBy}
-            reviewVerbiage={reviewVerbiage}
+            reviewVerbiage={reviewAndSubmitVerbiage}
+            stateName={States[reportState]}
           />
         ) : (
           <div>
@@ -122,14 +127,14 @@ export const ReviewSubmitPage = () => {
               onClose={onClose}
               submitting={submitting}
               isPermittedToSubmit={isPermittedToSubmit}
-              reviewVerbiage={reviewVerbiage}
+              reviewVerbiage={reviewAndSubmitVerbiage}
             />
             {userIsAdmin && (
               <AdminReview
                 submitForm={submitForm}
                 submitting={submitting}
                 isPermittedToSubmit={isPermittedToSubmit}
-                reviewVerbiage={reviewVerbiage}
+                reviewVerbiage={reviewAndSubmitVerbiage}
               />
             )}
           </div>
@@ -211,24 +216,31 @@ interface ReadyToSubmitProps {
   reviewVerbiage: AnyObject;
 }
 export const SuccessMessageGenerator = (
-  reportType: string,
+  reportType: ReportType,
   name: string,
   submissionDate?: number,
-  submittedBy?: string
+  submittedBy?: string,
+  stateName?: string
 ) => {
-  const fullReportType = reportType === "WP" ? "Work Plan" : "SAR";
+  const reportDisplayNameMap: { [key in ReportType]: string } = {
+    WP: "Work Plan",
+    SAR: "SAR",
+    EXPENDITURE: "Expenditure Report",
+  };
+  const reportDisplayName = reportDisplayNameMap[reportType];
 
   if (submissionDate && submittedBy) {
     const readableDate = utcDateToReadableDate(submissionDate, "full");
     const submittedDate = `was submitted on ${readableDate}`;
     const submittersName = `${submittedBy}`;
 
-    const reportTitle = <b>{`${name}`}</b>;
-    const preSubmissionMessage = `MFP ${fullReportType} submission for `;
+    const reportTitle =
+      reportType !== ReportType.EXPENDITURE ? <b>{`${name}`}</b> : stateName;
+    const preSubmissionMessage = `MFP ${reportDisplayName} submission for `;
     const postSubmissionMessage = ` ${submittedDate} by ${submittersName}.`;
     return [preSubmissionMessage, reportTitle, postSubmissionMessage];
   }
-  return `${fullReportType} report for ${name} was submitted.`;
+  return `${reportDisplayName} report for ${name} was submitted.`;
 };
 
 export const SuccessMessage = ({
@@ -237,6 +249,7 @@ export const SuccessMessage = ({
   date,
   submittedBy,
   reviewVerbiage,
+  stateName,
 }: SuccessMessageProps) => {
   const { submitted } = reviewVerbiage;
   const { intro } = submitted;
@@ -244,7 +257,8 @@ export const SuccessMessage = ({
     reportType,
     name,
     date,
-    submittedBy
+    submittedBy,
+    stateName
   );
 
   return (
@@ -295,7 +309,7 @@ export const SuccessMessage = ({
 };
 
 interface SuccessMessageProps {
-  reportType: string;
+  reportType: ReportType;
   name: string;
   reviewVerbiage: AnyObject;
   date?: number;

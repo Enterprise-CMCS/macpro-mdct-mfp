@@ -6,6 +6,7 @@ import {
   ReportRoute,
   ReportStatus,
   ReportMetadataShape,
+  ReportType,
 } from "types";
 
 export const sortReportsOldestToNewest = (
@@ -81,4 +82,15 @@ export const getEligibleWorkPlan = (
   return eligibleWorkPlans.reduce((mostRecent, wp) =>
     mostRecent.createdAt < wp.createdAt ? mostRecent : wp
   );
+};
+
+export const isArchivable = (reportType: ReportType) => {
+  switch (reportType) {
+    case ReportType.WP:
+    case ReportType.EXPENDITURE:
+      return true;
+    case ReportType.SAR:
+    default:
+      return false;
+  }
 };

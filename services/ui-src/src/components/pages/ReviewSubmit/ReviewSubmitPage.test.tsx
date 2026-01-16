@@ -3,7 +3,7 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import { ReportContext, ReviewSubmitPage } from "components";
 import { SuccessMessageGenerator } from "./ReviewSubmitPage";
 // types
-import { ReportStatus } from "types";
+import { ReportStatus, ReportType } from "types";
 // utils
 import {
   mockAdminUserStore,
@@ -217,11 +217,10 @@ describe("<ReviewSubmitPage />", () => {
   describe("When loading a sucessfully submitted report (Success Message Generator)", () => {
     test("should give the full success date if given all params", () => {
       const submissionName = "test-program";
-      const reportType = "WP";
+      const reportType = ReportType.WP;
       const submittedDate = 1663163109045;
       const submittersName = "Carol California";
-      const fullReportType =
-        reportType === "WP" ? "Work Plan" : "Semi-Annual Progress Report";
+      const fullReportType = "Work Plan";
       expect(
         SuccessMessageGenerator(
           reportType,
@@ -238,7 +237,7 @@ describe("<ReviewSubmitPage />", () => {
 
     test("should give a reduced version if not given all params", () => {
       const submissionName = "test-program";
-      const reportType = "SAR";
+      const reportType = ReportType.SAR;
       const submittedDate = undefined;
       const submittersName = "Carol California";
       const fullReportType = "SAR";

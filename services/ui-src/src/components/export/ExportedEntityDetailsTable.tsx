@@ -1,7 +1,8 @@
 import { ReactElement } from "react";
 // components
 import { Table } from "components";
-// types, utils
+import { ExportedEntityDetailsTableRow } from "./ExportedEntityDetailsTableRow";
+// types
 import {
   EntityShape,
   FieldChoice,
@@ -10,11 +11,8 @@ import {
   FormLayoutElement,
   isFieldElement,
 } from "types";
-import { useStore } from "utils";
-// verbiage
-import verbiage from "verbiage/pages/wp/wp-export";
-
-import { ExportedEntityDetailsTableRow } from "./ExportedEntityDetailsTableRow";
+// utils
+import { getReportVerbiage, useStore } from "utils";
 
 export const ExportedEntityDetailsTable = ({
   fields,
@@ -22,7 +20,8 @@ export const ExportedEntityDetailsTable = ({
   showHintText,
 }: Props) => {
   const { report } = useStore() ?? {};
-  const { tableHeaders } = verbiage;
+  const { exportVerbiage } = getReportVerbiage(report?.reportType);
+  const { tableHeaders } = exportVerbiage;
 
   const entityType = entity.type;
 

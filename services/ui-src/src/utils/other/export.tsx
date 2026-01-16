@@ -1,11 +1,10 @@
-import { Box, Link, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
+// components
+import { Box, Link, Text } from "@chakra-ui/react";
 // types
 import { AnyObject, Choice, EntityShape, FieldChoice, FormField } from "types";
 // utils
-import { maskResponseData } from "utils";
-// verbiage
-import verbiage from "verbiage/pages/wp/wp-export";
+import { getReportVerbiage, maskResponseData } from "utils";
 
 // checks for type of data cell to be render and calls the appropriate renderer
 export const renderDataCell = (
@@ -21,7 +20,6 @@ export const renderDataCell = (
     return renderDrawerDataCell(
       formField,
       entityResponseData,
-      pageType,
       parentFieldCheckedChoiceIds
     );
   }
@@ -42,6 +40,10 @@ export const renderOverlayEntityDataCell = (
   parentFieldCheckedChoiceIds?: string[]
 ) => {
   const entity = entityResponseData.find((ent) => ent.id === entityId);
+  const { exportVerbiage } = getReportVerbiage();
+  const {
+    missingEntry: { noResponse },
+  } = exportVerbiage;
 
   if (!entity || !entity[formField.id]) {
     const validationType =
@@ -50,13 +52,9 @@ export const renderOverlayEntityDataCell = (
         : formField.validation;
 
     if (validationType.includes("Optional")) {
-      return <Text>{verbiage.missingEntry.noResponse}, optional</Text>;
+      return <Text>{noResponse}, optional</Text>;
     } else {
-      return (
-        <Text sx={sx.noResponse}>
-          {verbiage.missingEntry.noResponse}; required
-        </Text>
-      );
+      return <Text sx={sx.noResponse}>{noResponse}; required</Text>;
     }
   }
 
@@ -73,34 +71,45 @@ export const renderOverlayEntityDataCell = (
 export const renderDrawerDataCell = (
   formField: FormField,
   entityResponseData: AnyObject | undefined,
-  pageType: string,
   parentFieldCheckedChoiceIds?: string[]
-) =>
-  entityResponseData?.map((entity: EntityShape) => {
-    const notApplicable =
-      parentFieldCheckedChoiceIds &&
-      !parentFieldCheckedChoiceIds?.includes(entity.id);
-    const fieldResponseData = entity[formField.id];
-    return (
-      <Box key={entity.id + formField.id} sx={sx.entityBox}>
-        <ul>
-          <li>
-            <Text sx={sx.entityName}>{entity.name}</Text>
-          </li>
-          <li className="entityResponse">
-            {renderResponseData(formField, fieldResponseData, notApplicable)}
-          </li>
-        </ul>
-      </Box>
-    );
-  }) ?? <Text sx={sx.noResponse}>{verbiage.missingEntry.noResponse}</Text>;
+) => {
+  const { exportVerbiage } = getReportVerbiage();
+  return (
+    entityResponseData?.map((entity: EntityShape) => {
+      const notApplicable =
+        parentFieldCheckedChoiceIds &&
+        !parentFieldCheckedChoiceIds?.includes(entity.id);
+      const fieldResponseData = entity[formField.id];
+      return (
+        <Box key={entity.id + formField.id} sx={sx.entityBox}>
+          <ul>
+            <li>
+              <Text sx={sx.entityName}>{entity.name}</Text>
+            </li>
+            <li className="entityResponse">
+              {renderResponseData(formField, fieldResponseData, notApplicable)}
+            </li>
+          </ul>
+        </Box>
+      );
+    }) ?? (
+      <Text sx={sx.noResponse}>{exportVerbiage.missingEntry.noResponse}</Text>
+    )
+  );
+};
 
-export const renderDynamicDataCell = (fieldResponseData: AnyObject) =>
-  fieldResponseData?.map((entity: EntityShape) => (
-    <Text key={entity.id} sx={sx.dynamicItem}>
-      {entity.name}
-    </Text>
-  )) ?? <Text sx={sx.noResponse}>{verbiage.missingEntry.noResponse}</Text>;
+export const renderDynamicDataCell = (fieldResponseData: AnyObject) => {
+  const { exportVerbiage } = getReportVerbiage();
+  return (
+    fieldResponseData?.map((entity: EntityShape) => (
+      <Text key={entity.id} sx={sx.dynamicItem}>
+        {entity.name}
+      </Text>
+    )) ?? (
+      <Text sx={sx.noResponse}>{exportVerbiage.missingEntry.noResponse}</Text>
+    )
+  );
+};
 
 export const renderResponseData = (
   formField: FormField,
@@ -108,13 +117,14 @@ export const renderResponseData = (
   notApplicable?: boolean
 ) => {
   const isChoiceListField = ["checkbox", "radio"].includes(formField.type);
+  const { exportVerbiage } = getReportVerbiage();
   // check for and handle no response
   const hasResponse: boolean = isChoiceListField
     ? fieldResponseData?.length
     : fieldResponseData;
   const missingEntryVerbiage = notApplicable
-    ? verbiage.missingEntry.notApplicable
-    : verbiage.missingEntry.noResponse;
+    ? exportVerbiage.missingEntry.notApplicable
+    : exportVerbiage.missingEntry.noResponse;
   const missingEntryStyle = notApplicable ? sx.notApplicable : sx.noResponse;
   if (!hasResponse)
     return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;

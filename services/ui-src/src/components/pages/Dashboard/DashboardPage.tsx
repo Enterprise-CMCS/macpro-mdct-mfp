@@ -1,7 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Link as RouterLink, useNavigate, useSearchParams } from "react-router";
-import { States } from "../../../constants";
-
 // components
 import {
   Box,
@@ -26,6 +24,11 @@ import {
   DashboardFilter,
   handleExpenditureFilter,
 } from "components";
+import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
+import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
+import { ModalBundle } from "./Expenditure/ExpenditureDashboardPage";
+// constants
+import { States } from "../../../constants";
 // types
 import {
   AnyObject,
@@ -42,18 +45,14 @@ import {
   parseCustomHtml,
   getApplicablePopulations,
   useStore,
+  getReportVerbiage,
+  isArchivable,
 } from "utils";
 // verbiage
-import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
-import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
-import expenditureVerbiage from "verbiage/pages/expenditure/expenditure-dashboard";
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 import alertIcon from "assets/icons/icon_alert_circle.png";
-import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
-import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
-import { ModalBundle } from "./Expenditure/ExpenditureDashboardPage";
 
 export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   const {
@@ -98,13 +97,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
     undefined
   );
 
-  const dashboardVerbiageMap: any = {
-    WP: wpVerbiage,
-    SAR: sarVerbiage,
-    EXPENDITURE: expenditureVerbiage,
-  };
-
-  const dashboardVerbiage = dashboardVerbiageMap[reportType]!;
+  const { dashboardVerbiage } = getReportVerbiage(reportType);
   const { intro, body } = dashboardVerbiage;
 
   // if an admin or a read-only user has selected a state, retrieve it from local storage
@@ -366,11 +359,11 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
       <Box sx={sx.leadTextBox}>
         {showSarAlert && (
           <Alert
-            title={sarVerbiage.alertBanner.title}
+            title={dashboardVerbiage.alertBanner.title}
             showIcon={true}
             icon={alertIcon}
             status={AlertTypes.ERROR}
-            description={sarVerbiage.alertBanner.body}
+            description={dashboardVerbiage.alertBanner.body}
             sx={sx.alertBanner}
           />
         )}
@@ -476,25 +469,27 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
           onClose: confirmUnlockModalOnCloseHandler,
         }}
         onConfirmHandler={confirmUnlockModalOnCloseHandler}
-        content={wpVerbiage.modalUnlock}
+        content={dashboardVerbiage.modalUnlock}
       />
-      <ArchiveReportModal
-        adminState={adminSelectedState}
-        archiveReport={archiveReport}
-        fetchReportsByState={fetchReportsByState}
-        modalDisclosure={{
-          isOpen: confirmArchiveModalIsOpen,
-          onClose: confirmArchiveModalOnCloseHandler,
-        }}
-        reportId={reportId}
-        reportType={reportType}
-      />
+      {isArchivable(reportType) && (
+        <ArchiveReportModal
+          adminState={adminSelectedState}
+          archiveReport={archiveReport}
+          fetchReportsByState={fetchReportsByState}
+          modalDisclosure={{
+            isOpen: confirmArchiveModalIsOpen,
+            onClose: confirmArchiveModalOnCloseHandler,
+          }}
+          reportId={reportId}
+          reportType={reportType}
+        />
+      )}
     </PageTemplate>
   );
 };
 
 interface Props {
-  reportType: string;
+  reportType: ReportType;
   showFilter?: boolean;
   modal?: ModalBundle;
 }
