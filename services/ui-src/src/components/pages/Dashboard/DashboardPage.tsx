@@ -46,6 +46,7 @@ import {
   getApplicablePopulations,
   useStore,
   getReportVerbiage,
+  isArchivable,
 } from "utils";
 // verbiage
 import accordion from "verbiage/pages/accordion";
@@ -470,7 +471,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
         onConfirmHandler={confirmUnlockModalOnCloseHandler}
         content={dashboardVerbiage.modalUnlock}
       />
-      {reportType !== ReportType.SAR && (
+      {isArchivable(reportType) && (
         <ArchiveReportModal
           adminState={adminSelectedState}
           archiveReport={archiveReport}
@@ -488,7 +489,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
 };
 
 interface Props {
-  reportType: string;
+  reportType: ReportType;
   showFilter?: boolean;
   modal?: ModalBundle;
 }

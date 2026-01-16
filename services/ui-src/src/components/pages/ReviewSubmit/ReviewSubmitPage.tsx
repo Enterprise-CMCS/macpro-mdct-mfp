@@ -111,7 +111,7 @@ export const ReviewSubmitPage = () => {
       <Flex sx={sx.pageContainer} data-testid="review-submit-page">
         {report?.status == ReportStatus.SUBMITTED && userIsEndUser ? (
           <SuccessMessage
-            reportType={report.reportType}
+            reportType={reportType}
             name={report.submissionName}
             date={report?.submittedOnDate}
             submittedBy={report?.submittedBy}
@@ -216,18 +216,18 @@ interface ReadyToSubmitProps {
   reviewVerbiage: AnyObject;
 }
 export const SuccessMessageGenerator = (
-  reportType: string,
+  reportType: ReportType,
   name: string,
   submissionDate?: number,
   submittedBy?: string,
   stateName?: string
 ) => {
-  const fullReportType =
-    reportType === "WP"
-      ? "Work Plan"
-      : reportType === "SAR"
-        ? "SAR"
-        : "Expenditure Report";
+  const reportDisplayNameMap: { [key in ReportType]: string } = {
+    WP: "Work Plan",
+    SAR: "SAR",
+    EXPENDITURE: "Expenditure Report",
+  };
+  const reportDisplayName = reportDisplayNameMap[reportType];
 
   if (submissionDate && submittedBy) {
     const readableDate = utcDateToReadableDate(submissionDate, "full");
@@ -236,11 +236,11 @@ export const SuccessMessageGenerator = (
 
     const reportTitle =
       reportType !== ReportType.EXPENDITURE ? <b>{`${name}`}</b> : stateName;
-    const preSubmissionMessage = `MFP ${fullReportType} submission for `;
+    const preSubmissionMessage = `MFP ${reportDisplayName} submission for `;
     const postSubmissionMessage = ` ${submittedDate} by ${submittersName}.`;
     return [preSubmissionMessage, reportTitle, postSubmissionMessage];
   }
-  return `${fullReportType} report for ${name} was submitted.`;
+  return `${reportDisplayName} report for ${name} was submitted.`;
 };
 
 export const SuccessMessage = ({
@@ -309,7 +309,7 @@ export const SuccessMessage = ({
 };
 
 interface SuccessMessageProps {
-  reportType: string;
+  reportType: ReportType;
   name: string;
   reviewVerbiage: AnyObject;
   date?: number;
