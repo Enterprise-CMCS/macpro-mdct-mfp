@@ -11,12 +11,13 @@ import {
   getAutosaveFields,
   labelTextWithOptional,
   parseCustomHtml,
+  updatedNumberFields,
   useStore,
 } from "utils";
 import { makeStringParseableForDatabase } from "utils/other/clean";
 import { applyMask, maskMap } from "utils/other/mask";
 // types
-import { InputChangeEvent, AnyObject } from "types";
+import { InputChangeEvent, ReportFormFieldType } from "types";
 
 export const NumberField = ({
   name,
@@ -29,9 +30,11 @@ export const NumberField = ({
   validateOnRender,
   nested,
   styleAsOptional,
+  handleOnChange,
+  initialValue = "",
   ...props
 }: Props) => {
-  const defaultValue = "";
+  const defaultValue = initialValue;
   const [displayValue, setDisplayValue] = useState(defaultValue);
 
   // get form context and register field
@@ -91,6 +94,8 @@ export const NumberField = ({
     const { name, value } = e.target;
     setDisplayValue(value);
     form.setValue(name, value, { shouldValidate: true });
+
+    if (handleOnChange) handleOnChange(e);
   };
 
   // update display value with masked value; if should autosave, submit field data to database on blur
@@ -117,11 +122,12 @@ export const NumberField = ({
     if (autosave) {
       const fields = getAutosaveFields({
         name,
-        type: "number",
+        type: ReportFormFieldType.NUMBER,
         value: cleanedFieldValue,
         defaultValue,
         hydrationValue,
       });
+      const fieldsToSave = updatedNumberFields(fields, report);
 
       const reportArgs = {
         id: report?.id,
@@ -132,7 +138,7 @@ export const NumberField = ({
 
       await autosaveFieldData({
         form,
-        fields,
+        fields: fieldsToSave,
         report: reportArgs,
         user,
         entityContext: {
@@ -152,9 +158,11 @@ export const NumberField = ({
     label && styleAsOptional ? labelTextWithOptional(label) : label;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
 
-  const { autoComplete, disabled } = props ?? {};
-  const additionalProps = { autoComplete, disabled };
-
+  const { ariaLabelledby, autoComplete, disabled, readOnly } = props ?? {};
+  const additionalProps = { autoComplete, disabled, readOnly };
+  const ariaProps = {
+    "aria-labelledby": ariaLabelledby,
+  };
   return (
     <Box sx={{ ...sx, ...sxOverride }} className={`${nestedChildClasses}`}>
       <Box sx={sx.numberFieldContainer} className={maskClass}>
@@ -169,6 +177,7 @@ export const NumberField = ({
           value={displayValue}
           errorMessage={errorMessage}
           {...additionalProps}
+          {...ariaProps}
         />
         <SymbolOverlay
           fieldMask={mask}
@@ -190,6 +199,7 @@ interface Props {
   autosave?: boolean;
   validateOnRender?: boolean;
   clear?: boolean;
+  initialValue?: string;
   [key: string]: any;
 }
 

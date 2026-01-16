@@ -5,7 +5,7 @@ type FieldValue = any;
 
 type FieldDataTuple = [string, FieldValue];
 
-interface FieldInfo {
+export interface FieldInfo {
   name: string;
   type: string;
   value?: FieldValue;
