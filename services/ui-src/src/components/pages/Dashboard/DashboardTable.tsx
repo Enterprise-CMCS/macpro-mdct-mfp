@@ -10,7 +10,7 @@ import {
   TableContentShape,
 } from "types";
 // utils
-import { convertDateUtcToEt, prettifyChoices } from "utils";
+import { convertDateUtcToEt, isArchivable, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 
@@ -105,7 +105,7 @@ export const DashboardTable = ({
                 sxOverride={sxOverride}
               />
             }
-            {reportType !== ReportType.SAR && !report?.associatedSar && (
+            {isArchivable(reportType) && !report?.associatedSar && (
               <AdminArchiveButton
                 report={report}
                 reportType={reportType}
@@ -138,7 +138,7 @@ export const copyOverSubText = (
 export interface DashboardTableProps {
   reportsByState: ReportMetadataShape[];
   body: { table: AnyObject };
-  reportType: string;
+  reportType: ReportType;
   reportId: string | undefined;
   openCreateReportModal: Function;
   enterSelectedReport: Function;

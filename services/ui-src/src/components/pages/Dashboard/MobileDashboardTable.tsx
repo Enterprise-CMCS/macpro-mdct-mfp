@@ -3,7 +3,7 @@ import { Box, Button, Flex, Image, Text, Spinner } from "@chakra-ui/react";
 // types
 import { ReportMetadataShape, ReportType, SxObject } from "types";
 // utils
-import { convertDateUtcToEt, prettifyChoices } from "utils";
+import { convertDateUtcToEt, isArchivable, prettifyChoices } from "utils";
 // assets
 import editIcon from "assets/icons/icon_edit_square_gray.png";
 import { getStatus, copyOverSubText } from "./DashboardTable";
@@ -122,7 +122,7 @@ export const MobileDashboardTable = ({
                   releasing={releasing}
                   sxOverride={sxOverride}
                 />
-                {reportType !== ReportType.SAR && !report?.associatedSar && (
+                {isArchivable(reportType) && !report?.associatedSar && (
                   <AdminArchiveButton
                     report={report}
                     reportType={reportType}
@@ -145,7 +145,7 @@ export const MobileDashboardTable = ({
 interface MobileDashboardTableProps {
   reportsByState: ReportMetadataShape[];
   reportId: string | undefined;
-  reportType: string;
+  reportType: ReportType;
   openCreateReportModal: Function;
   enterSelectedReport: Function;
   archive: Function;

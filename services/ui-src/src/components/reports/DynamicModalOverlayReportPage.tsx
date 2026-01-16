@@ -13,17 +13,21 @@ import {
 // types
 import {
   AlertTypes,
+  AnyObject,
   EntityShape,
   ErrorVerbiage,
   DynamicModalOverlayReportPageShape,
   ReportType,
 } from "types";
 // utils
-import { parseCustomHtml, useBreakpoint, useStore } from "utils";
+import {
+  getReportVerbiage,
+  parseCustomHtml,
+  useBreakpoint,
+  useStore,
+} from "utils";
 // verbiage
-import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
-import { AnyObject } from "yup/lib/types";
 
 export const DynamicModalOverlayReportPage = ({
   route,
@@ -57,8 +61,9 @@ export const DynamicModalOverlayReportPage = ({
     }
   }
 
+  const { alertsVerbiage } = getReportVerbiage(report.reportType);
   const errorMessage: ErrorVerbiage =
-    alertVerbiage[entityType as keyof typeof alertVerbiage];
+    alertsVerbiage[entityType as keyof typeof alertsVerbiage];
 
   const showAlert =
     report && errorMessage ? getWPAlertStatus(report, entityType) : false;

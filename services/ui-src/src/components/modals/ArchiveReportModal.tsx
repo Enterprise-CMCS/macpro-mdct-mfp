@@ -1,8 +1,9 @@
+import { useEffect, useState } from "react";
 // components
 import { Button, Input, ModalFooter, Text } from "@chakra-ui/react";
 import { Modal } from "components";
-import { useEffect, useState } from "react";
-import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
+// utils
+import { getReportVerbiage } from "utils";
 
 export const ArchiveReportModal = ({
   adminState,
@@ -15,7 +16,8 @@ export const ArchiveReportModal = ({
   const [archiveInput, setArchiveInput] = useState<string>("");
   const [isArchivable, setIsArchivable] = useState(false);
   const [archiving, setArchiving] = useState(false);
-  const { modalArchive } = wpVerbiage;
+  const { dashboardVerbiage } = getReportVerbiage(reportType);
+  const { modalArchive } = dashboardVerbiage;
 
   const handleInputVerification = (e: any) => {
     setArchiveInput(e.target.value);

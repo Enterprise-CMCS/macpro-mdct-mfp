@@ -1,27 +1,19 @@
-// assets
-import pdfIcon from "assets/icons/icon_pdf_white.png";
 // components
 import { Box, Button, Image, Text } from "@chakra-ui/react";
-// utils
-import { useStore } from "utils";
+// assets
+import pdfIcon from "assets/icons/icon_pdf_white.png";
 // types
 import { ReportType } from "types";
-// verbiage
-import wpVerbiage from "verbiage/pages/wp/wp-export";
-import sarVerbiage from "verbiage/pages/sar/sar-export";
+// utils
+import { getReportVerbiage, useStore } from "utils";
 
 export const ExportedReportBanner = () => {
   const { report } = useStore() ?? {};
   const reportType = (report?.reportType ||
     localStorage.getItem("selectedReportType")) as ReportType;
 
-  const verbiageMap: { [key in ReportType]?: any } = {
-    WP: wpVerbiage,
-    SAR: sarVerbiage,
-  };
-
-  const verbiage = verbiageMap[reportType];
-  const { reportBanner } = verbiage;
+  const { exportVerbiage } = getReportVerbiage(reportType);
+  const { reportBanner } = exportVerbiage;
 
   const onClickHandler = () => {
     window?.print();

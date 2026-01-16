@@ -26,4 +26,10 @@ export default {
       "You must have an approved MFP Work Plan not previously used in a MFP Semi-Annual Progress Report (SAR) in order to add a new MFP SAR",
     body: 'Access your MFP Work Plan by selecting "Return home" above.',
   },
+  modalUnlock: {
+    heading: "You unlocked this SAR",
+    subheading:
+      "Email the state or territory contact and let them know it requires edits.",
+    actionButtonText: "Return to dashboard",
+  },
 };
