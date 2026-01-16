@@ -1,13 +1,22 @@
 {
   "name": "mdct-mfp",
   "version": "1.0.0",
-  "packageManager": "yarn@4.12.0",
-  "type": "module",
   "description": "",
-  "main": "index.js",
+  "homepage": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp#readme",
+  "bugs": {
+    "url": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp/issues"
+  },
+  "license": "CC0-1.0",
+  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp.git"
+  },
   "directories": {
     "test": "tests"
   },
+  "type": "module",
+  "main": "index.js",
   "scripts": {
     "cdk": "cdk",
     "db:seed": "cd services/app-api && yarn run db:seed",
@@ -16,16 +25,6 @@
     "test:e2e-stable": "cd tests && yarn run test:e2e-stable",
     "test:e2e-stable-ui": "cd tests && yarn run test:e2e-stable-ui"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp.git"
-  },
-  "author": "",
-  "license": "CC0-1.0",
-  "bugs": {
-    "url": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp/issues"
-  },
-  "homepage": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp#readme",
   "dependencies": {
     "@aws-sdk/client-cloudformation": "^3.946.0",
     "@aws-sdk/client-cloudfront": "^3.946.0",
@@ -65,5 +64,6 @@
     "typescript": "^5.9.3",
     "util": "^0.12.5",
     "yargs": "^17.7.2"
-  }
+  },
+  "packageManager": "yarn@4.12.0"
 }
