@@ -60,8 +60,8 @@ export const CreateWorkPlanModal = ({
   const form: FormJson = !previousReport
     ? newWPFormJson
     : isResetting
-    ? resetWPFormJson
-    : copyWPFormJson;
+      ? resetWPFormJson
+      : copyWPFormJson;
 
   const notCopyingReport = !previousReport || isResetting;
 
