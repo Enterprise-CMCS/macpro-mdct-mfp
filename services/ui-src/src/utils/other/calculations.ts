@@ -107,10 +107,13 @@ export const fieldTableTotals = ({
   const tableShares = keys.reduce((sum, key) => {
     const suffix = fieldSuffixesToCalculate[key];
 
-    sum[key] =
-      // Add updated current value to sum of fields with the same suffix
-      getNumberValue(fieldShares[key]) +
-      sumFields(fieldData, tableId, suffix, exclusions);
+    // Add updated current value to sum of fields with the same suffix
+    const currentValue = getNumberValue(fieldShares[key]);
+    const currentSum = sumFields(fieldData, tableId, suffix, exclusions);
+
+    // Convert currency to cents to avoid rounding errors
+    const cents = Math.round(currentValue * 100) + Math.round(currentSum * 100);
+    sum[key] = cents / 100;
 
     return sum;
   }, {} as CalculatedSharesType);

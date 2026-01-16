@@ -11,6 +11,8 @@ const formId = "mockFormId";
 const tableId = `${formId}_mockTableId`;
 const fieldId = `${tableId}_mockFieldId`;
 
+const unrelated = "unrelated";
+
 const fieldValue = 123;
 const percentageShare = 107.01;
 const remainingShare = 15.99;
@@ -29,6 +31,10 @@ const fieldData = {
   [`${tableId}-totalComputable`]: fieldValue * mocks.length,
   [`${tableId}-totalFederalShare`]: percentageShare * mocks.length,
   [`${tableId}-totalStateTerritoryShare`]: remainingShare * mocks.length,
+  // Adding these fields to test filtering
+  [`${unrelated}-totalComputable`]: 12345,
+  [`${unrelated}-totalFederalShare`]: 12345,
+  [`${unrelated}-totalStateTerritoryShare`]: 12345,
 };
 
 describe("utils/autosave/dataModifications", () => {
@@ -48,32 +54,32 @@ describe("utils/autosave/dataModifications", () => {
       const updatedFields = updatedNumberFields(fields, report);
       expect(updatedFields).toEqual([
         {
-          name: "mockFormId_mockTableId_mockFieldId-totalComputable",
+          name: `${fieldId}-totalComputable`,
           type: "number",
           value: 123,
         },
         {
-          name: "mockFormId_mockTableId_mockFieldId-totalFederalShare",
+          name: `${fieldId}-totalFederalShare`,
           type: "number",
           value: 107.01,
         },
         {
-          name: "mockFormId_mockTableId_mockFieldId-totalStateTerritoryShare",
+          name: `${fieldId}-totalStateTerritoryShare`,
           type: "number",
           value: 15.99,
         },
         {
-          name: "mockFormId_mockTableId-totalComputable",
+          name: `${tableId}-totalComputable`,
           type: "number",
           value: 246,
         },
         {
-          name: "mockFormId_mockTableId-totalFederalShare",
+          name: `${tableId}-totalFederalShare`,
           type: "number",
           value: 214.02,
         },
         {
-          name: "mockFormId_mockTableId-totalStateTerritoryShare",
+          name: `${tableId}-totalStateTerritoryShare`,
           type: "number",
           value: 31.98,
         },
@@ -99,32 +105,32 @@ describe("utils/autosave/dataModifications", () => {
       const updatedFields = updatedNumberFields(fields, report);
       expect(updatedFields).toEqual([
         {
-          name: "mockFormId_mockTableId_mockFieldId-totalComputable",
+          name: `${fieldId}-totalComputable`,
           type: "number",
           value: 100,
         },
         {
-          name: "mockFormId_mockTableId_mockFieldId-totalFederalShare",
+          name: `${fieldId}-totalFederalShare`,
           type: "number",
           value: 100,
         },
         {
-          name: "mockFormId_mockTableId_mockFieldId-totalStateTerritoryShare",
+          name: `${fieldId}-totalStateTerritoryShare`,
           type: "number",
           value: 0,
         },
         {
-          name: "mockFormId_mockTableId-totalComputable",
+          name: `${tableId}-totalComputable`,
           type: "number",
           value: 223,
         },
         {
-          name: "mockFormId_mockTableId-totalFederalShare",
+          name: `${tableId}-totalFederalShare`,
           type: "number",
           value: 207.01,
         },
         {
-          name: "mockFormId_mockTableId-totalStateTerritoryShare",
+          name: `${tableId}-totalStateTerritoryShare`,
           type: "number",
           value: 15.99,
         },
@@ -152,32 +158,32 @@ describe("utils/autosave/dataModifications", () => {
           value: 30,
         },
         {
-          name: "mockFormId_mockTableId_mockFieldId-totalFederalShare",
+          name: `${fieldId}-totalFederalShare`,
           type: "number",
           value: 36.9,
         },
         {
-          name: "mockFormId_mockTableId_mockFieldId-totalStateTerritoryShare",
+          name: `${fieldId}-totalStateTerritoryShare`,
           type: "number",
           value: 86.1,
         },
         {
-          name: "mockFormId_mockTableId_mockFieldId2-totalFederalShare",
+          name: `${fieldId}2-totalFederalShare`,
           type: "number",
           value: 36.9,
         },
         {
-          name: "mockFormId_mockTableId_mockFieldId2-totalStateTerritoryShare",
+          name: `${fieldId}2-totalStateTerritoryShare`,
           type: "number",
           value: 86.1,
         },
         {
-          name: "mockFormId_mockTableId-totalFederalShare",
+          name: `${tableId}-totalFederalShare`,
           type: "number",
           value: 73.8,
         },
         {
-          name: "mockFormId_mockTableId-totalStateTerritoryShare",
+          name: `${tableId}-totalStateTerritoryShare`,
           type: "number",
           value: 172.2,
         },
@@ -197,21 +203,19 @@ describe("utils/autosave/dataModifications", () => {
         fieldName,
         fieldValue: 100,
         report,
-        percentage: 100,
+        percentage: 89,
         tableId,
       });
+
       expect(updatedFields).toEqual({
         fieldData: {
-          "mockFormId_mockTableId_mockFieldId-totalComputable": 100,
-          "mockFormId_mockTableId_mockFieldId-totalFederalShare": 100,
-          "mockFormId_mockTableId_mockFieldId-totalStateTerritoryShare": 0,
-          "mockFormId_mockTableId_mockFieldId2-totalComputable": 123,
-          "mockFormId_mockTableId_mockFieldId2-totalFederalShare": 107.01,
-          "mockFormId_mockTableId_mockFieldId2-totalStateTerritoryShare": 15.99,
-          "mockFormId_mockTableId-totalComputable": 223,
-          "mockFormId_mockTableId-totalFederalShare": 207.01,
-          "mockFormId_mockTableId-totalStateTerritoryShare": 15.99,
-          fmap_mockFormIdPercentage: 87,
+          ...fieldData,
+          [`${fieldId}-totalComputable`]: 100,
+          [`${fieldId}-totalFederalShare`]: 89,
+          [`${fieldId}-totalStateTerritoryShare`]: 11,
+          [`${tableId}-totalComputable`]: 223,
+          [`${tableId}-totalFederalShare`]: 196.01,
+          [`${tableId}-totalStateTerritoryShare`]: 26.99,
         },
       });
     });
