@@ -68,12 +68,32 @@ describe("utils/calculations", () => {
 
   describe("calculateShares()", () => {
     test("returns object of share values", () => {
+      const shares = calculateShares(100, 10);
+      expect(shares).toEqual({
+        percentage: 10,
+        percentageShare: 10,
+        remainingShare: 90,
+        total: 100,
+      });
+    });
+
+    test("returns object of share values with decimals", () => {
       const shares = calculateShares(123, 87);
       expect(shares).toEqual({
         percentage: 87,
         percentageShare: 107.01,
         remainingShare: 15.99,
         total: 123,
+      });
+    });
+
+    test("returns object of share values for decimal input", () => {
+      const shares = calculateShares(123.45, 87);
+      expect(shares).toEqual({
+        percentage: 87,
+        percentageShare: 107.4,
+        remainingShare: 16.05,
+        total: 123.45,
       });
     });
   });
