@@ -8,14 +8,14 @@ const alertComponent = (
     title="Test alert!"
     description="This is for testing."
     link="test-link"
-    data-testid="test-alert"
   />
 );
 
 describe("<Alert />", () => {
   test("Alert is visible", () => {
     render(alertComponent);
-    expect(screen.getByTestId("test-alert")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Test alert!" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "test-link" })).toBeVisible();
   });
 
   testA11yAct(alertComponent);

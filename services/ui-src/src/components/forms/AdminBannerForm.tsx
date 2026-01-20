@@ -117,7 +117,6 @@ const sx = {
   },
   replaceBannerButton: {
     width: "10rem",
-    marginTop: "1rem !important",
     alignSelf: "end",
   },
 };
