@@ -71,7 +71,7 @@ const comparatorMap: ComparatorMap = {
 };
 
 // NUMBER - Number or Valid Strings
-export const numberSchema = () =>
+const numberSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,
@@ -119,7 +119,7 @@ export const numberComparison = (options: NumberOptions) =>
   });
 
 // Integer or Valid Strings
-export const validIntegerSchema = () =>
+const validIntegerSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,
@@ -288,15 +288,15 @@ export const schemaMap: any = {
   email: email(),
   emailOptional: emailOptional(),
   number: number(),
+  numberComparison: (options: NumberOptions) => numberComparison(options),
   numberOptional: numberOptional(),
   objectArray: objectArray(),
-  numberComparison: (options: NumberOptions) => numberComparison(options),
   radio: radio(),
   radioOptional: radioOptional(),
   ratio: ratio(),
   text: text(),
-  textOptional: textOptional(),
   textCustom: (options: TextOptions) => textCustom(options),
+  textOptional: textOptional(),
   url: url(),
   urlOptional: urlOptional(),
   validInteger: validInteger(),

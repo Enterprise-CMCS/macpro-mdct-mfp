@@ -1,5 +1,10 @@
 import { MixedSchema } from "yup/lib/mixed";
-import { number, ratio, textCustom, validInteger } from "./completionSchemas";
+import {
+  completionSchemaMap,
+  isEndDateAfterStartDate,
+  nested,
+} from "./completionSchemas";
+import { AnyObject } from "../types";
 
 describe("Schemas", () => {
   const goodNumberTestCases = [
@@ -55,9 +60,22 @@ describe("Schemas", () => {
     "%@#$!ASDF",
   ];
 
+  const goodDateTestCases = ["01/01/1990", "12/31/2020", "01012000"];
+  const badDateTestCases = ["01-01-1990", "13/13/1990", "12/32/1990"];
+
+  // nested
+  const fieldValidationObject = {
+    type: "text",
+    nested: true,
+    parentFieldName: "mock-parent-field-name",
+  };
+  const validationSchema = {
+    type: "string",
+  };
+
   const testSchema = (
     schemaToUse: MixedSchema,
-    testCases: Array<string>,
+    testCases: Array<string | AnyObject>,
     expectedReturn: boolean
   ) => {
     for (let testCase of testCases) {
@@ -66,23 +84,113 @@ describe("Schemas", () => {
     }
   };
 
-  test("Evaluate Number Schema using number scheme", () => {
-    testSchema(number(), goodNumberTestCases, true);
-    testSchema(number(), badNumberTestCases, false);
+  describe("date", () => {
+    test("returns true", () => {
+      testSchema(completionSchemaMap.date, goodDateTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(completionSchemaMap.date, badDateTestCases, false);
+    });
   });
 
-  test("Evaluate Number Schema using integer scheme", () => {
-    testSchema(validInteger(), goodIntegerTestCases, true);
-    testSchema(validInteger(), badIntegerTestCases, false);
+  describe("dynamic", () => {
+    test("returns true", () => {
+      testSchema(
+        completionSchemaMap.dynamic(),
+        [[{ id: "mockId", name: "0123456789" }]],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(completionSchemaMap.dynamic(), [], false);
+    });
   });
 
-  test("Evaluate Number Schema using ratio scheme", () => {
-    testSchema(ratio(), goodRatioTestCases, true);
-    testSchema(ratio(), badRatioTestCases, false);
+  describe("dynamicOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        completionSchemaMap.dynamicOptional(),
+        [[{ id: "mockId", name: "0123456789" }]],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(completionSchemaMap.dynamicOptional(), [], true);
+    });
   });
 
-  test("Evaluate Text Schema using textCustom scheme", () => {
-    testSchema(textCustom({ maxLength: 10 }), ["0123456789"], true);
-    testSchema(textCustom({ maxLength: 10 }), ["textistoolong", ""], false);
+  describe("isEndDateAfterStartDate", () => {
+    test("returns true", () => {
+      expect(isEndDateAfterStartDate("01/01/1989", "01/01/1990")).toBe(true);
+    });
+
+    test("returns false", () => {
+      expect(isEndDateAfterStartDate("01/01/1990", "01/01/1989")).toBe(false);
+    });
+  });
+
+  describe("nested", () => {
+    test("returns true", () => {
+      testSchema(
+        nested(
+          () => validationSchema,
+          fieldValidationObject.parentFieldName,
+          ""
+        ),
+        ["string"],
+        true
+      );
+    });
+  });
+
+  describe("number", () => {
+    test("returns true", () => {
+      testSchema(completionSchemaMap.number, goodNumberTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(completionSchemaMap.number, badNumberTestCases, false);
+    });
+  });
+
+  describe("ratio", () => {
+    test("returns true", () => {
+      testSchema(completionSchemaMap.ratio, goodRatioTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(completionSchemaMap.ratio, badRatioTestCases, false);
+    });
+  });
+
+  describe("textCustom", () => {
+    test("returns true", () => {
+      testSchema(
+        completionSchemaMap.textCustom({ maxLength: 10 }),
+        ["0123456789"],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        completionSchemaMap.textCustom({ maxLength: 10 }),
+        ["textistoolong"],
+        false
+      );
+    });
+  });
+
+  describe("validInteger", () => {
+    test("returns true", () => {
+      testSchema(completionSchemaMap.validInteger, goodIntegerTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(completionSchemaMap.validInteger, badIntegerTestCases, false);
+    });
   });
 });

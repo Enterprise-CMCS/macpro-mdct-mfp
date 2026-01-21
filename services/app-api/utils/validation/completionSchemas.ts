@@ -91,7 +91,7 @@ export const number = () => numberSchema().required();
 export const numberOptional = () => numberSchema().notRequired().nullable();
 
 // Integer or Valid Strings
-export const validIntegerSchema = () =>
+const validIntegerSchema = () =>
   string().test({
     message: error.INVALID_NUMBER_OR_NA,
     test: (value) => {
@@ -207,7 +207,7 @@ export const dropdown = () =>
   );
 
 // CHECKBOX
-export const checkboxSchema = () =>
+const checkboxSchema = () =>
   array()
     .of(object({ key: text(), value: text() }))
     .required(error.REQUIRED_GENERIC);
@@ -220,7 +220,7 @@ export const checkboxOptional = () =>
 export const checkboxSingle = () => boolean();
 
 // RADIO
-export const radioSchema = () =>
+const radioSchema = () =>
   array()
     .of(object({ key: textSchema(), value: textSchema() }))
     .min(0);
@@ -236,7 +236,7 @@ export const dynamic = (options?: DynamicOptions) =>
     .of(
       object().shape({
         id: textSchema(),
-        name: schemaMap[options?.type || ValidationType.TEXT],
+        name: completionSchemaMap[options?.type || ValidationType.TEXT],
       })
     )
     .required(error.REQUIRED_GENERIC);
@@ -271,7 +271,7 @@ export const dateFormatRegex =
   /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})$/;
 
 // SCHEMA MAP
-export const schemaMap: any = {
+export const completionSchemaMap: any = {
   checkbox: checkbox(),
   checkboxOptional: checkboxOptional(),
   checkboxSingle: checkboxSingle(),
@@ -284,12 +284,12 @@ export const schemaMap: any = {
   emailOptional: emailOptional(),
   number: number(),
   numberOptional: numberOptional(),
-  radio: radio(),
-  radioOptional: radioOptional(),
   ratio: ratio(),
   text: text(),
-  textOptional: textOptional(),
   textCustom: (options: TextOptions) => textCustom(options),
+  textOptional: textOptional(),
+  radio: radio(),
+  radioOptional: radioOptional(),
   url: url(),
   urlOptional: urlOptional(),
   validInteger: validInteger(),

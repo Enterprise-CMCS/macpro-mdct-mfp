@@ -1,15 +1,6 @@
 import { MixedSchema } from "yup/lib/mixed";
 import { AnyObject } from "yup/lib/types";
-import {
-  date,
-  isEndDateAfterStartDate,
-  nested,
-  number,
-  numberComparison,
-  ratio,
-  textCustom,
-  validInteger,
-} from "./schemaMap";
+import { isEndDateAfterStartDate, nested, schemaMap } from "./schemaMap";
 import { NumberOptions, ValidationComparator } from "../types";
 
 describe("Schemas", () => {
@@ -89,63 +80,137 @@ describe("Schemas", () => {
       } else {
         expect(() => {
           schemaToUse.validateSync(testCase);
-        }).toThrowError();
+        }).toThrow();
       }
     }
   };
 
-  test("Evaluate Number Schema using number scheme", () => {
-    testSchema(number(), goodNumberTestCases, true);
-    testSchema(number(), badNumberTestCases, false);
+  describe("date", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.date, goodDateTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.date, badDateTestCases, false);
+    });
   });
 
-  test("Evaluate numberComparison scheme", () => {
+  describe("dynamic", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.dynamic(),
+        [[{ id: "mockId", name: "0123456789" }]],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.dynamic(), [], false);
+    });
+  });
+
+  describe("dynamicOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.dynamicOptional(),
+        [[{ id: "mockId", name: "0123456789" }]],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.dynamicOptional(), [], true);
+    });
+  });
+
+  describe("isEndDateAfterStartDate", () => {
+    test("returns true", () => {
+      expect(isEndDateAfterStartDate("01/01/1989", "01/01/1990")).toBe(true);
+    });
+
+    test("returns false", () => {
+      expect(isEndDateAfterStartDate("01/01/1990", "01/01/1989")).toBe(false);
+    });
+  });
+
+  describe("nested", () => {
+    test("returns true", () => {
+      testSchema(
+        nested(
+          () => validationSchema,
+          fieldValidationObject.parentFieldName,
+          ""
+        ),
+        ["string"],
+        true
+      );
+    });
+  });
+
+  describe("number", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.number, goodNumberTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.number, badNumberTestCases, false);
+    });
+  });
+
+  describe("numberComparison", () => {
     const numberOptions: NumberOptions = {
       boundary: 10,
       comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
     };
-    testSchema(
-      numberComparison(numberOptions),
-      ["0", "1", "10", "9.99", "N/A"],
-      true
-    );
-    testSchema(
-      numberComparison(numberOptions),
-      ["-1", "", "11", "10.01"],
-      false
-    );
+
+    test("returns true", () => {
+      testSchema(
+        schemaMap.numberComparison(numberOptions),
+        ["0", "1", "10", "9.99", "N/A"],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.numberComparison(numberOptions),
+        ["-1", "", "11", "10.01"],
+        false
+      );
+    });
   });
 
-  test("Evaluate Number Schema using integer scheme", () => {
-    testSchema(validInteger(), goodIntegerTestCases, true);
-    testSchema(validInteger(), badIntegerTestCases, false);
+  describe("ratio", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.ratio, goodRatioTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.ratio, badRatioTestCases, false);
+    });
   });
 
-  test("Evaluate Number Schema using ratio scheme", () => {
-    testSchema(ratio(), goodRatioTestCases, true);
-    testSchema(ratio(), badRatioTestCases, false);
+  describe("textCustom", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.textCustom({ maxLength: 10 }), ["0123456789"], true);
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.textCustom({ maxLength: 10 }),
+        ["textistoolong", ""],
+        false
+      );
+    });
   });
 
-  test("Evaluate Date Schema using date scheme", () => {
-    testSchema(date(), goodDateTestCases, true);
-    testSchema(date(), badDateTestCases, false);
-  });
+  describe("validInteger", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.validInteger, goodIntegerTestCases, true);
+    });
 
-  test("Evaluate End Date Schema using date scheme", () => {
-    expect(isEndDateAfterStartDate("01/01/1989", "01/01/1990")).toBeTruthy();
-    expect(isEndDateAfterStartDate("01/01/1990", "01/01/1989")).toBeFalsy();
-  });
-
-  test("Test Nested Schema using nested scheme", () => {
-    testSchema(
-      nested(() => validationSchema, fieldValidationObject.parentFieldName, ""),
-      ["string"],
-      true
-    );
-  });
-
-  test("Evaluate Text Schema using textCustom scheme", () => {
-    testSchema(textCustom({ maxLength: 10 }), ["0123456789"], true);
-    testSchema(textCustom({ maxLength: 10 }), ["textistoolong", ""], false);
+    test("returns false", () => {
+      testSchema(schemaMap.validInteger, badIntegerTestCases, false);
+    });
   });
 });
