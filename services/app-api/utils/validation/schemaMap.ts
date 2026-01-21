@@ -1,5 +1,12 @@
 import { array, boolean, mixed, object, string } from "yup";
-import { Choice, ComparatorMap, NumberOptions, TextOptions } from "../types";
+import {
+  Choice,
+  ComparatorMap,
+  DynamicOptions,
+  NumberOptions,
+  TextOptions,
+  ValidationType,
+} from "../types";
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
@@ -225,17 +232,18 @@ export const radio = () =>
 export const radioOptional = () => radio().notRequired();
 
 // DYNAMIC
-export const dynamic = () =>
+export const dynamic = (options?: DynamicOptions) =>
   array()
     .min(1)
     .of(
       object().shape({
         id: text(),
-        name: text(),
+        name: schemaMap[options?.type || ValidationType.TEXT],
       })
     )
     .required(error.REQUIRED_GENERIC);
-export const dynamicOptional = () => dynamic().notRequired();
+export const dynamicOptional = (options?: DynamicOptions) =>
+  dynamic(options).notRequired();
 
 // NESTED
 export const nested = (
@@ -275,8 +283,8 @@ export const schemaMap: any = {
   date: date(),
   dateOptional: dateOptional(),
   dropdown: dropdown(),
-  dynamic: dynamic(),
-  dynamicOptional: dynamicOptional(),
+  dynamic: (options?: DynamicOptions) => dynamic(options),
+  dynamicOptional: (options?: DynamicOptions) => dynamicOptional(options),
   email: email(),
   emailOptional: emailOptional(),
   number: number(),

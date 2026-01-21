@@ -1,11 +1,21 @@
 import { array, boolean, mixed, object, string } from "yup";
-import { validationErrors as error } from "verbiage/errors";
-import { Choice, ComparatorMap, NumberOptions, TextOptions } from "types";
+// utils
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
   checkStandardNumberInputAgainstRegexes,
 } from "utils/other/checkInputValidity";
+// types
+import {
+  Choice,
+  ComparatorMap,
+  DynamicOptions,
+  NumberOptions,
+  TextOptions,
+  ValidationType,
+} from "types";
+// verbiage
+import { validationErrors as error } from "verbiage/errors";
 
 // TEXT - Helpers
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
@@ -229,17 +239,18 @@ export const radio = () =>
 export const radioOptional = () => radio().notRequired();
 
 // DYNAMIC
-export const dynamic = () =>
+export const dynamic = (options?: DynamicOptions) =>
   array()
     .min(1)
     .of(
       object().shape({
         id: text(),
-        name: text(),
+        name: schemaMap[options?.type || ValidationType.TEXT],
       })
     )
     .required(error.REQUIRED_GENERIC);
-export const dynamicOptional = () => dynamic().notRequired();
+export const dynamicOptional = (options?: DynamicOptions) =>
+  dynamic(options).notRequired();
 
 // NESTED
 export const nested = (
@@ -267,3 +278,29 @@ export const nested = (
 // REGEX
 export const dateFormatRegex =
   /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})$/;
+
+export const schemaMap: any = {
+  text: text(),
+  textOptional: textOptional(),
+  textCustom: (options: TextOptions) => textCustom(options),
+  number: number(),
+  numberOptional: numberOptional(),
+  numberComparison: (options: NumberOptions) => numberComparison(options),
+  ratio: ratio(),
+  email: email(),
+  emailOptional: emailOptional(),
+  url: url(),
+  urlOptional: urlOptional(),
+  date: date(),
+  dateOptional: dateOptional(),
+  dropdown: dropdown(),
+  checkbox: checkbox(),
+  checkboxOptional: checkboxOptional(),
+  checkboxSingle: checkboxSingle(),
+  radio: radio(),
+  radioOptional: radioOptional(),
+  dynamic: (options?: DynamicOptions) => dynamic(options),
+  dynamicOptional: (options?: DynamicOptions) => dynamicOptional(options),
+  validInteger: validInteger(),
+  validIntegerOptional: validIntegerOptional(),
+};

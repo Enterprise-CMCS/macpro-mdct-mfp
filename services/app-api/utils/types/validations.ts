@@ -1,3 +1,10 @@
+export enum DynamicValidationType {
+  NUMBER = "number",
+  NUMBER_OPTIONAL = "number",
+  TEXT = "text",
+  TEXT_OPTIONAL = "textOptional",
+}
+
 export enum ValidationType {
   CHECKBOX = "checkbox",
   CHECKBOX_OPTIONAL = "checkboxOptional",
@@ -30,7 +37,7 @@ export enum ValidationComparator {
 
 export interface CustomValidation {
   type: ValidationType;
-  options: TextOptions | NumberOptions;
+  options: TextOptions | NumberOptions | DynamicOptions;
 }
 
 export interface NestedValidation {
@@ -48,4 +55,8 @@ export interface TextOptions {
 export interface NumberOptions {
   boundary: number;
   comparator: ValidationComparator;
+}
+
+export interface DynamicOptions {
+  type?: DynamicValidationType;
 }

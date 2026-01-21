@@ -18,7 +18,10 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
       if (typeof fieldValidation === "string") {
         const correspondingSchema = schemaMap[fieldValidation];
         if (correspondingSchema) {
-          validationSchema[key] = correspondingSchema;
+          validationSchema[key] =
+            typeof correspondingSchema === "function"
+              ? correspondingSchema()
+              : correspondingSchema;
         }
       }
       // else if custom validation type with options

@@ -1,4 +1,4 @@
-import { TextOptions } from "../types";
+import { DynamicOptions, TextOptions } from "../types";
 import * as schema from "./completionSchemas";
 
 export const completionSchemaMap: any = {
@@ -20,8 +20,9 @@ export const completionSchemaMap: any = {
   checkboxSingle: schema.checkboxSingle(),
   radio: schema.radio(),
   radioOptional: schema.radioOptional(),
-  dynamic: schema.dynamic(),
-  dynamicOptional: schema.dynamicOptional(),
+  dynamic: (options?: DynamicOptions) => schema.dynamic(options),
+  dynamicOptional: (options?: DynamicOptions) =>
+    schema.dynamicOptional(options),
   validInteger: schema.validInteger(),
   validIntegerOptional: schema.validIntegerOptional(),
 };

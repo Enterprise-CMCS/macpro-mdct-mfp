@@ -6,7 +6,7 @@ import {
   string,
   number as yupNumber,
 } from "yup";
-import { Choice, TextOptions } from "../types";
+import { Choice, DynamicOptions, TextOptions, ValidationType } from "../types";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -230,17 +230,18 @@ export const radio = () =>
 export const radioOptional = () => radioSchema().notRequired().nullable();
 
 // DYNAMIC
-export const dynamic = () =>
+export const dynamic = (options?: DynamicOptions) =>
   array()
     .min(1)
     .of(
       object().shape({
         id: textSchema(),
-        name: textSchema(),
+        name: schemaMap[options?.type || ValidationType.TEXT],
       })
     )
     .required(error.REQUIRED_GENERIC);
-export const dynamicOptional = () => dynamic().notRequired();
+export const dynamicOptional = (options?: DynamicOptions) =>
+  dynamic(options).notRequired();
 
 // NESTED
 export const nested = (
@@ -268,3 +269,29 @@ export const nested = (
 // REGEX
 export const dateFormatRegex =
   /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})$/;
+
+// SCHEMA MAP
+export const schemaMap: any = {
+  checkbox: checkbox(),
+  checkboxOptional: checkboxOptional(),
+  checkboxSingle: checkboxSingle(),
+  date: date(),
+  dateOptional: dateOptional(),
+  dropdown: dropdown(),
+  dynamic: (options?: DynamicOptions) => dynamic(options),
+  dynamicOptional: (options?: DynamicOptions) => dynamicOptional(options),
+  email: email(),
+  emailOptional: emailOptional(),
+  number: number(),
+  numberOptional: numberOptional(),
+  radio: radio(),
+  radioOptional: radioOptional(),
+  ratio: ratio(),
+  text: text(),
+  textOptional: textOptional(),
+  textCustom: (options: TextOptions) => textCustom(options),
+  url: url(),
+  urlOptional: urlOptional(),
+  validInteger: validInteger(),
+  validIntegerOptional: validIntegerOptional(),
+};
