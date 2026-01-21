@@ -155,6 +155,7 @@ describe("utils/validation/schemas", () => {
       );
     });
   });
+
   describe("isEndDateAfterStartDate", () => {
     test("returns true", () => {
       expect(isEndDateAfterStartDate("01/01/1989", "01/01/1990")).toBe(true);

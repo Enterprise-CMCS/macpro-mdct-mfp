@@ -1,15 +1,22 @@
 import { MixedSchema } from "yup/lib/mixed";
 import {
-  completionSchemaMap,
+  completionSchemaMap as schemaMap,
   isEndDateAfterStartDate,
   nested,
 } from "./completionSchemas";
 import { AnyObject, DynamicValidationType } from "../types";
 
 describe("utils/validation/completionSchemas", () => {
-  const goodNumberTestCases = [
+  /*
+   * There are outliers from services/app-api/utils/validation/schemaMap.test.ts and
+   * services/ui-src/src/utils/validation/schemas.test.ts, otherwise test cases are the same
+   */
+  const completionSchemaGoodNumberTestCases = [
     "123..00",
     "123450123..,,,.123123123123",
+  ];
+  const goodNumberTestCases = [
+    ...completionSchemaGoodNumberTestCases,
     "123",
     "123.00",
     "1,230",
@@ -87,32 +94,26 @@ describe("utils/validation/completionSchemas", () => {
 
   describe("date", () => {
     test("returns true", () => {
-      testSchema(completionSchemaMap.date, goodDateTestCases, true);
+      testSchema(schemaMap.date, goodDateTestCases, true);
     });
 
     test("returns false", () => {
-      testSchema(completionSchemaMap.date, badDateTestCases, false);
+      testSchema(schemaMap.date, badDateTestCases, false);
     });
   });
 
   describe("dynamic", () => {
     test("returns true for text validation", () => {
-      testSchema(
-        completionSchemaMap.dynamic(),
-        [[{ id: "mockId", name: "text" }]],
-        true
-      );
+      testSchema(schemaMap.dynamic(), [[{ id: "mockId", name: "text" }]], true);
     });
 
     test("returns false for empty text", () => {
-      testSchema(completionSchemaMap.dynamic(), [], false);
+      testSchema(schemaMap.dynamic(), [], false);
     });
 
     test("returns true for number validation", () => {
       testSchema(
-        completionSchemaMap.dynamic({
-          validationType: DynamicValidationType.NUMBER,
-        }),
+        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
         [[{ id: "mockId", name: "123" }]],
         true
       );
@@ -120,9 +121,7 @@ describe("utils/validation/completionSchemas", () => {
 
     test("returns false for text with number validation", () => {
       testSchema(
-        completionSchemaMap.dynamic({
-          validationType: DynamicValidationType.NUMBER,
-        }),
+        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
         [[{ id: "mockId", name: "text" }]],
         false
       );
@@ -132,7 +131,7 @@ describe("utils/validation/completionSchemas", () => {
   describe("dynamicOptional", () => {
     test("returns true for text validation", () => {
       testSchema(
-        completionSchemaMap.dynamicOptional({
+        schemaMap.dynamicOptional({
           validationType: DynamicValidationType.TEXT_OPTIONAL,
         }),
         [[{ id: "mockId", name: "text" }]],
@@ -141,12 +140,12 @@ describe("utils/validation/completionSchemas", () => {
     });
 
     test("returns true for empty text", () => {
-      testSchema(completionSchemaMap.dynamicOptional(), [], true);
+      testSchema(schemaMap.dynamicOptional(), [], true);
     });
 
     test("returns true for number validation", () => {
       testSchema(
-        completionSchemaMap.dynamicOptional({
+        schemaMap.dynamicOptional({
           validationType: DynamicValidationType.NUMBER,
         }),
         [[{ id: "mockId", name: "123" }]],
@@ -156,7 +155,7 @@ describe("utils/validation/completionSchemas", () => {
 
     test("returns true for empty number", () => {
       testSchema(
-        completionSchemaMap.dynamicOptional({
+        schemaMap.dynamicOptional({
           validationType: DynamicValidationType.NUMBER,
         }),
         [],
@@ -191,37 +190,33 @@ describe("utils/validation/completionSchemas", () => {
 
   describe("number", () => {
     test("returns true", () => {
-      testSchema(completionSchemaMap.number, goodNumberTestCases, true);
+      testSchema(schemaMap.number, goodNumberTestCases, true);
     });
 
     test("returns false", () => {
-      testSchema(completionSchemaMap.number, badNumberTestCases, false);
+      testSchema(schemaMap.number, badNumberTestCases, false);
     });
   });
 
   describe("ratio", () => {
     test("returns true", () => {
-      testSchema(completionSchemaMap.ratio, goodRatioTestCases, true);
+      testSchema(schemaMap.ratio, goodRatioTestCases, true);
     });
 
     test("returns false", () => {
-      testSchema(completionSchemaMap.ratio, badRatioTestCases, false);
+      testSchema(schemaMap.ratio, badRatioTestCases, false);
     });
   });
 
   describe("textCustom", () => {
     test("returns true", () => {
-      testSchema(
-        completionSchemaMap.textCustom({ maxLength: 10 }),
-        ["0123456789"],
-        true
-      );
+      testSchema(schemaMap.textCustom({ maxLength: 10 }), ["0123456789"], true);
     });
 
     test("returns false", () => {
       testSchema(
-        completionSchemaMap.textCustom({ maxLength: 10 }),
-        ["textistoolong"],
+        schemaMap.textCustom({ maxLength: 10 }),
+        ["textistoolong", ""],
         false
       );
     });
@@ -229,11 +224,11 @@ describe("utils/validation/completionSchemas", () => {
 
   describe("validInteger", () => {
     test("returns true", () => {
-      testSchema(completionSchemaMap.validInteger, goodIntegerTestCases, true);
+      testSchema(schemaMap.validInteger, goodIntegerTestCases, true);
     });
 
     test("returns false", () => {
-      testSchema(completionSchemaMap.validInteger, badIntegerTestCases, false);
+      testSchema(schemaMap.validInteger, badIntegerTestCases, false);
     });
   });
 });
