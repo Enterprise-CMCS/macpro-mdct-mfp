@@ -6,7 +6,7 @@ import {
 } from "./completionSchemas";
 import { AnyObject } from "../types";
 
-describe("Schemas", () => {
+describe("utils/validation/completionSchemas", () => {
   const goodNumberTestCases = [
     "123",
     "123.00",

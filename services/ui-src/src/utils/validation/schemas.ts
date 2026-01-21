@@ -65,7 +65,7 @@ const comparatorMap: ComparatorMap = {
 };
 
 // NUMBER - Number or Valid Strings
-export const numberSchema = () =>
+const numberSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,
@@ -114,7 +114,7 @@ export const numberComparison = (options: NumberOptions) =>
   });
 
 // Integer or Valid Strings
-export const validIntegerSchema = () =>
+const validIntegerSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,

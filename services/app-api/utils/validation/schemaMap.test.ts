@@ -3,7 +3,7 @@ import { AnyObject } from "yup/lib/types";
 import { isEndDateAfterStartDate, nested, schemaMap } from "./schemaMap";
 import { NumberOptions, ValidationComparator } from "../types";
 
-describe("Schemas", () => {
+describe("utils/validation/schemaMap", () => {
   const goodNumberTestCases = [
     "123",
     "123.00",
