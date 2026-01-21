@@ -1,4 +1,4 @@
-import { useStore } from "utils";
+import { getReportVerbiage, useStore } from "utils";
 // components
 import {
   EntityStatusIcon,
@@ -25,8 +25,6 @@ import {
   ReportShape,
   ReportType,
 } from "types";
-// verbiage
-import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
 // utils
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
@@ -38,8 +36,9 @@ export const ExportedModalOverlayReportSection = ({
 }: Props) => {
   const { report } = useStore() ?? {};
   const entityType = section.entityType;
+  const { alertsVerbiage } = getReportVerbiage(report?.reportType);
   const errorMessage: ErrorVerbiage =
-    alertVerbiage[entityType as keyof typeof alertVerbiage];
+    alertsVerbiage[entityType as keyof typeof alertsVerbiage];
 
   const showAlert =
     report && errorMessage ? getWPAlertStatus(report, entityType) : false;

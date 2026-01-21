@@ -1,7 +1,5 @@
 import { ComponentClass } from "react";
 import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
-// utils
-import { useStore, displayLongformPeriod } from "utils";
 // components
 import { Box, Center, Heading, Spinner } from "@chakra-ui/react";
 import {
@@ -19,9 +17,8 @@ import {
   ReportShape,
   ReportType,
 } from "types";
-// verbiage
-import wpVerbiage from "verbiage/pages/wp/wp-export";
-import sarVerbiage from "verbiage/pages/sar/sar-export";
+// utils
+import { useStore, displayLongformPeriod, getReportVerbiage } from "utils";
 import { assertExhaustive } from "utils/other/typing";
 
 export const SAR_RET = "Recruitment, Enrollment, and Transitions";
@@ -39,12 +36,7 @@ export const ExportedReportPage = () => {
   const reportType = (report?.reportType ||
     localStorage.getItem("selectedReportType")) as ReportType;
 
-  const exportVerbiageMap: { [key in ReportType]?: any } = {
-    WP: wpVerbiage,
-    SAR: sarVerbiage,
-  };
-
-  const exportVerbiage = exportVerbiageMap[reportType];
+  const { exportVerbiage } = getReportVerbiage(reportType);
   const { metadata, reportPage } = exportVerbiage;
 
   const Helmet = HelmetImport as ComponentClass<HelmetProps>;

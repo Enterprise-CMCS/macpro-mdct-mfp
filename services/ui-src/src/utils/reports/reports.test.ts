@@ -1,6 +1,15 @@
-import { flattenReportRoutesArray, getEligibleWorkPlan } from "./reports";
+import {
+  flattenReportRoutesArray,
+  getEligibleWorkPlan,
+  isArchivable,
+} from "./reports";
 //types
-import { ReportMetadataShape, ReportRoute, ReportStatus } from "types";
+import {
+  ReportMetadataShape,
+  ReportRoute,
+  ReportStatus,
+  ReportType,
+} from "types";
 import { convertDateEtToUtc } from "utils/other/time";
 
 describe("flattenReportRoutesArray", () => {
@@ -125,6 +134,21 @@ describe("utils/reports", () => {
         },
       ];
       expect(getEligibleWorkPlan(submissions)).toBe(undefined);
+    });
+  });
+
+  describe("isArchivable()", () => {
+    test("returns true for WP", () => {
+      expect(isArchivable(ReportType.WP)).toEqual(true);
+    });
+    test("returns true for Expenditure", () => {
+      expect(isArchivable(ReportType.EXPENDITURE)).toEqual(true);
+    });
+    test("returns false for SAR", () => {
+      expect(isArchivable(ReportType.SAR)).toEqual(false);
+    });
+    test("returns false by default", () => {
+      expect(isArchivable("" as ReportType)).toEqual(false);
     });
   });
 });

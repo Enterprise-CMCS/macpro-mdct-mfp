@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useLayoutEffect } from "react";
 import {
   FieldValues,
   FormProvider,
@@ -9,7 +9,8 @@ import { useLocation } from "react-router";
 import { object as yupSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 // components
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
+import { CalculationTable } from "components";
 // utils
 import {
   compileValidationJsonFromFields,
@@ -25,6 +26,8 @@ import {
   AnyObject,
   FormJson,
   FormField,
+  FormTable,
+  FormTableType,
   isFieldElement,
   FormLayoutElement,
   ReportStatus,
@@ -45,7 +48,7 @@ export const Form = ({
   reportStatus,
   ...props
 }: Props) => {
-  const { fields, options } = formJson;
+  const { editableByAdmins, fields, options, tables = [], verbiage } = formJson;
 
   let location = useLocation();
 
@@ -66,14 +69,14 @@ export const Form = ({
    * edit report modal should be view only for state users after SAR submission
    */
   const fieldInputDisabled =
-    (userIsAdmin && !formJson.editableByAdmins) ||
+    (userIsAdmin && !editableByAdmins) ||
     (userIsEndUser && reportWithSubmittedStatus) ||
     !editable ||
     userDisabled;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
-    formJson.fields.filter(isFieldElement)
+    fields.filter(isFieldElement)
   );
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
   const formResolverSchema = yupSchema(formValidationSchema || {});
@@ -156,7 +159,32 @@ export const Form = ({
     );
   };
 
-  useEffect(() => {
+  const renderTable = (table: FormTable, index: number) => {
+    const { id, tableType, ...props } = table;
+
+    if (tableType === FormTableType.CALCULATION) {
+      return (
+        <CalculationTable
+          formData={formData}
+          id={id}
+          key={id}
+          order={index}
+          report={report}
+          {...props}
+        />
+      );
+    }
+    return <></>;
+  };
+
+  /*
+   * useLayoutEffect fires before the browser repaints the screen
+   *
+   * Fixes an issue where some fields registered before the reset and some after.
+   * We want a fresh form state before form fields render and
+   * for every field on the page to register into the form.
+   */
+  useLayoutEffect(() => {
     if (!dontReset && !validateOnRender) {
       form?.reset();
     }
@@ -167,6 +195,12 @@ export const Form = ({
       onFormChange(form);
     }
   };
+
+  /*
+   * Exclude forTableOnly fields in renderFormFields,
+   * they'll be rendered with renderTable
+   */
+  const regularFields = fields.filter(({ forTableOnly }) => !forTableOnly);
 
   return (
     <FormProvider {...form}>
@@ -184,7 +218,15 @@ export const Form = ({
               populations.
             </Text>
           ) : (
-            renderFormFields(fields)
+            <>
+              {tables.map((table, index) => renderTable(table, index))}
+              {verbiage?.title && (
+                <Heading as="h3" className="verbiage-title">
+                  {verbiage.title}
+                </Heading>
+              )}
+              {renderFormFields(regularFields)}
+            </>
           )}
         </Box>
         {children}
@@ -280,5 +322,10 @@ const sx = {
       margin: "0",
       borderTop: "none",
     },
+  },
+  // verbiage
+  ".verbiage-title": {
+    fontSize: "xl",
+    paddingBottom: 0,
   },
 };

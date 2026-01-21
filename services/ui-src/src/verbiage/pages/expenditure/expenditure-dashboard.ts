@@ -26,4 +26,16 @@ export default {
     title: "Title",
     body: "Body",
   },
+  modalUnlock: {
+    heading: "You unlocked this Expenditure Report",
+    subheading:
+      "Email the state or territory contact and let them know it requires edits.",
+    actionButtonText: "Return to dashboard",
+  },
+  modalArchive: {
+    heading: "Are you sure you want to archive this MFP Expenditure Report?",
+    closeButtonText: "Cancel",
+    actionButtonText: "Archive",
+    body: "This action can’t be undone. Once the MFP Expenditure Report is archived, this Report can’t be unarchived or accessed by the state or territory.",
+  },
 };
