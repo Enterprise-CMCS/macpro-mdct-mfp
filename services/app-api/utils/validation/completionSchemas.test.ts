@@ -4,7 +4,7 @@ import {
   isEndDateAfterStartDate,
   nested,
 } from "./completionSchemas";
-import { AnyObject } from "../types";
+import { AnyObject, DynamicValidationType } from "../types";
 
 describe("utils/validation/completionSchemas", () => {
   const goodNumberTestCases = [
@@ -95,30 +95,68 @@ describe("utils/validation/completionSchemas", () => {
   });
 
   describe("dynamic", () => {
-    test("returns true", () => {
+    test("returns true for text validation", () => {
       testSchema(
         completionSchemaMap.dynamic(),
-        [[{ id: "mockId", name: "0123456789" }]],
+        [[{ id: "mockId", name: "text" }]],
         true
       );
     });
 
-    test("returns false", () => {
+    test("returns false for empty text", () => {
       testSchema(completionSchemaMap.dynamic(), [], false);
+    });
+
+    test("returns true for number validation", () => {
+      testSchema(
+        completionSchemaMap.dynamic({ type: DynamicValidationType.NUMBER }),
+        [[{ id: "mockId", name: "123" }]],
+        true
+      );
+    });
+
+    test("returns false for text with number validation", () => {
+      testSchema(
+        completionSchemaMap.dynamic({ type: DynamicValidationType.NUMBER }),
+        [[{ id: "mockId", name: "text" }]],
+        false
+      );
     });
   });
 
   describe("dynamicOptional", () => {
-    test("returns true", () => {
+    test("returns true for text validation", () => {
       testSchema(
-        completionSchemaMap.dynamicOptional(),
-        [[{ id: "mockId", name: "0123456789" }]],
+        completionSchemaMap.dynamicOptional({
+          type: DynamicValidationType.TEXT_OPTIONAL,
+        }),
+        [[{ id: "mockId", name: "text" }]],
         true
       );
     });
 
-    test("returns false", () => {
+    test("returns true for empty text", () => {
       testSchema(completionSchemaMap.dynamicOptional(), [], true);
+    });
+
+    test("returns true for number validation", () => {
+      testSchema(
+        completionSchemaMap.dynamicOptional({
+          type: DynamicValidationType.NUMBER,
+        }),
+        [[{ id: "mockId", name: "123" }]],
+        true
+      );
+    });
+
+    test("returns true for empty number", () => {
+      testSchema(
+        completionSchemaMap.dynamicOptional({
+          type: DynamicValidationType.NUMBER,
+        }),
+        [],
+        true
+      );
     });
   });
 
