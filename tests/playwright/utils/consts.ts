@@ -86,20 +86,12 @@ export const requiredWorkPlanTopics = [
   { topic: workPlanTopics[2], name: "Initiative03" },
 ];
 
-export const quarters = [
-  "2025Q1",
-  "2025Q2",
-  "2025Q3",
-  "2025Q4",
-  "2026Q1",
-  "2026Q2",
-  "2026Q3",
-  "2026Q4",
-  "2027Q1",
-  "2027Q2",
-  "2027Q3",
-  "2027Q4",
-];
+// 12 quarters starting from the current year
+export const quarters = Array.from({ length: 12 }, (_, i) => {
+  const year = new Date().getFullYear() + Math.floor(i / 4);
+  const quarter = (i % 4) + 1;
+  return `${year}Q${quarter}`;
+});
 
 // Valid data can be a dollar amount including zero or N/A
 export const transitionBenchmarkQuarterValues = [
