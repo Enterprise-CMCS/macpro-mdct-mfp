@@ -13,9 +13,8 @@ import {
 
 test.describe("Work Plan Page", () => {
   test.beforeAll(async () => {
-    const hasActiveSarReports = await hasActiveReportsWithSars(
-      stateAbbreviation
-    );
+    const hasActiveSarReports =
+      await hasActiveReportsWithSars(stateAbbreviation);
 
     if (hasActiveSarReports) {
       test.skip(

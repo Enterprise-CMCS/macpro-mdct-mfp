@@ -1,4 +1,5 @@
 import { Spinner } from "@chakra-ui/react";
+import { ReportMetadataShape } from "types";
 
 export const actionButtonText = (
   submitting: boolean,
@@ -19,4 +20,22 @@ export const actionButtonText = (
   }
   //Occurs when a state user is creating a new report
   return "Save";
+};
+
+export const checkForExistingReport = (
+  reportYear?: number,
+  reportPeriod?: number,
+  reportsByState?: ReportMetadataShape[]
+) => {
+  if (!reportsByState) return false;
+  for (const report of reportsByState) {
+    if (
+      report.reportPeriod === reportPeriod &&
+      report.reportYear === reportYear &&
+      !report.archived
+    ) {
+      return true;
+    }
+  }
+  return false;
 };

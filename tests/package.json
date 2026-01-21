@@ -1,8 +1,9 @@
 {
   "name": "e2e-tests",
   "version": "1.0.0",
-  "packageManager": "yarn@4.12.0",
   "description": "End-to-end tests using Playwright",
+  "license": "ISC",
+  "author": "",
   "main": "index.js",
   "scripts": {
     "start": "cd ../ && ./run local && cd -",
@@ -11,8 +12,6 @@
     "test:e2e-stable": "playwright test --grep-invert \"@flaky\"",
     "test:e2e-stable-ui": "playwright test --ui --grep-invert \"@flaky\""
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
     "@playwright/test": "^1.56.1",
@@ -21,5 +20,6 @@
     "aws4": "^1.13.2",
     "axe-core": "^4.10.2",
     "dotenv": "^16.4.5"
-  }
+  },
+  "packageManager": "yarn@4.12.0"
 }

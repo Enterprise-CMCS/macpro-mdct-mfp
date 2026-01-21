@@ -15,19 +15,22 @@ import {
 // types
 import {
   AlertTypes,
+  AnyObject,
   EntityShape,
   ErrorVerbiage,
   ModalOverlayReportPageShape,
   ReportType,
 } from "types";
 // utils
-import { resetClearProp, useBreakpoint, useStore } from "utils";
-// verbiage
-import alertVerbiage from "../../verbiage/pages/wp/wp-alerts";
+import {
+  getReportVerbiage,
+  resetClearProp,
+  useBreakpoint,
+  useStore,
+} from "utils";
+import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
-import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
-import { AnyObject } from "yup/lib/types";
 
 export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   // Route Information
@@ -51,8 +54,9 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
     );
   }
 
+  const { alertsVerbiage } = getReportVerbiage(report?.reportType);
   const errorMessage: ErrorVerbiage =
-    alertVerbiage[entityType as keyof typeof alertVerbiage];
+    alertsVerbiage[entityType as keyof typeof alertsVerbiage];
   const showAlert =
     report && errorMessage ? getWPAlertStatus(report, entityType) : false;
   const dashTitle = `${verbiage.dashboardTitle} ${

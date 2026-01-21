@@ -1,6 +1,7 @@
 import {
   DynamicModalOverlayReportPageShape,
   FormJson,
+  FormTableType,
   OverlayModalPageShape,
   ReportPageProgress,
 } from "types";
@@ -124,6 +125,16 @@ export const mockSectionHeaderField = {
   },
 };
 
+export const mockTablesField = {
+  id: "mock-number-field",
+  type: "number",
+  validation: "number",
+  forTableOnly: true,
+  props: {
+    label: "mock number field",
+  },
+};
+
 export const mockForm = {
   id: "mock-form-id",
   fields: [mockFormField, mockDateField, mockNumberField],
@@ -147,6 +158,37 @@ export const mockDrawerForm = {
 export const mockEmptyDrawerForm = {
   id: "mock-drawer-form-id",
   fields: [],
+};
+
+export const mockTablesForm = {
+  id: "mock-tables-form-id",
+  tables: [
+    {
+      id: "mock-table-id",
+      bodyRows: [["Mock text", mockTablesField]],
+      footRows: [["Footer 1", "Footer 2"]],
+      headRows: [["Heading 1", "Heading 2"]],
+      tableType: FormTableType.CALCULATION,
+      verbiage: {
+        errorMessage: "Mock error",
+        percentage: "Mock Percentage: {{percentage}}",
+        title: "Mock table title",
+      },
+    },
+  ],
+  fields: [mockTablesField, mockFormField],
+  verbiage: {
+    title: "Mock verbiage title",
+  },
+};
+
+export const mockBadTablesForm = {
+  ...mockTablesForm,
+  tables: [
+    {
+      tableType: "badType",
+    },
+  ],
 };
 
 export const mockAccordion = {

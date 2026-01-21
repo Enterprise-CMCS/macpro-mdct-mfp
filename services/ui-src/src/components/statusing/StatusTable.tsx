@@ -5,13 +5,12 @@ import { ChildRow } from "./ChildRow";
 // types
 import { ReportPageProgress } from "types";
 // utils
-import { getRouteStatus, useStore } from "utils";
-// verbiage
-import verbiage from "verbiage/pages/wp/wp-review-and-submit";
+import { getReportVerbiage, getRouteStatus, useStore } from "utils";
 
 export const StatusTable = () => {
   const { report } = useStore();
-  const { review } = verbiage;
+  const { reviewAndSubmitVerbiage } = getReportVerbiage(report?.reportType);
+  const { review } = reviewAndSubmitVerbiage;
   const rowDepth = 1;
   return report ? (
     <Box sx={sx.container}>

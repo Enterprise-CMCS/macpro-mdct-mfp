@@ -93,8 +93,7 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   objectiveCards?: never;
 }
 
-export interface DynamicModalOverlayReportPageShape
-  extends ReportPageShapeBase {
+export interface DynamicModalOverlayReportPageShape extends ReportPageShapeBase {
   entityType: string;
   entityInfo: string[];
   verbiage: ModalOverlayReportPageVerbiage;
@@ -149,8 +148,7 @@ export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   }[];
 }
 
-export interface EntityDetailsDashboardOverlayShape
-  extends ReportPageShapeBase {
+export interface EntityDetailsDashboardOverlayShape extends ReportPageShapeBase {
   dashboard?: never;
   template?: never;
   initiatives?: never;
@@ -191,8 +189,7 @@ export interface DrawerReportPageVerbiage extends ReportPageVerbiage {
   missingEntityMessage?: CustomHtmlElement[];
 }
 
-export interface ModalDrawerReportPageVerbiage
-  extends DrawerReportPageVerbiage {
+export interface ModalDrawerReportPageVerbiage extends DrawerReportPageVerbiage {
   addEntityButtonText: string;
   editEntityButtonText: string;
   readOnlyEntityButtonText: string;
@@ -209,8 +206,7 @@ export interface ModalDrawerReportPageVerbiage
   editEntityDetailsButtonText: string;
 }
 
-export interface ModalOverlayReportPageVerbiage
-  extends EntityOverlayPageVerbiage {
+export interface ModalOverlayReportPageVerbiage extends EntityOverlayPageVerbiage {
   addEntityButtonText: string;
   dashboardTitle: string;
   countEntitiesInTitle: boolean;
