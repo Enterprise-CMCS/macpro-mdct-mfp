@@ -1,5 +1,5 @@
 import { MixedSchema } from "yup/lib/mixed";
-import { schemaMap } from "./schemas";
+import { isEndDateAfterStartDate, nested, schemaMap } from "./schemas";
 import {
   AnyObject,
   DynamicValidationType,
@@ -21,6 +21,7 @@ describe("utils/validation/schemas", () => {
   const badNumberTestCases = ["abc", "N", "", "!@#!@%", "-1"];
 
   const goodIntegerTestCases = [
+    "1",
     "123",
     "12300",
     "1,230",
@@ -29,9 +30,9 @@ describe("utils/validation/schemas", () => {
     "Data not available",
   ];
   const badIntegerTestCases = [
+    "",
     "abc",
     "N",
-    "",
     "!@#!@%",
     "-1",
     "1.23",
@@ -59,8 +60,21 @@ describe("utils/validation/schemas", () => {
     "%@#$!ASDF",
   ];
 
+  const goodDateTestCases = ["01/01/1990", "12/31/2020", "01012000"];
+  const badDateTestCases = ["01-01-1990", "13/13/1990", "12/32/1990"];
+
+  // nested
+  const fieldValidationObject = {
+    type: "text",
+    nested: true,
+    parentFieldName: "mock-parent-field-name",
+  };
+  const validationSchema = {
+    type: "string",
+  };
+
   const testSchema = (
-    schemaToUse: MixedSchema,
+    schemaToUse: MixedSchema<any, AnyObject, any>,
     testCases: Array<string | AnyObject>,
     expectedReturn: boolean
   ) => {
@@ -69,6 +83,16 @@ describe("utils/validation/schemas", () => {
       expect(test).toEqual(expectedReturn);
     }
   };
+
+  describe("date", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.date, goodDateTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.date, badDateTestCases, false);
+    });
+  });
 
   describe("dynamic", () => {
     test("returns true for text validation", () => {
@@ -81,7 +105,7 @@ describe("utils/validation/schemas", () => {
 
     test("returns true for number validation", () => {
       testSchema(
-        schemaMap.dynamic({ type: DynamicValidationType.NUMBER }),
+        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
         [[{ id: "mockId", name: "123" }]],
         true
       );
@@ -89,7 +113,7 @@ describe("utils/validation/schemas", () => {
 
     test("returns false for text with number validation", () => {
       testSchema(
-        schemaMap.dynamic({ type: DynamicValidationType.NUMBER }),
+        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
         [[{ id: "mockId", name: "text" }]],
         false
       );
@@ -100,7 +124,7 @@ describe("utils/validation/schemas", () => {
     test("returns true for text validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          type: DynamicValidationType.TEXT_OPTIONAL,
+          validationType: DynamicValidationType.TEXT_OPTIONAL,
         }),
         [[{ id: "mockId", name: "text" }]],
         true
@@ -114,7 +138,7 @@ describe("utils/validation/schemas", () => {
     test("returns true for number validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          type: DynamicValidationType.NUMBER,
+          validationType: DynamicValidationType.NUMBER,
         }),
         [[{ id: "mockId", name: "123" }]],
         true
@@ -124,9 +148,32 @@ describe("utils/validation/schemas", () => {
     test("returns true for empty number", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          type: DynamicValidationType.NUMBER,
+          validationType: DynamicValidationType.NUMBER,
         }),
         [],
+        true
+      );
+    });
+  });
+  describe("isEndDateAfterStartDate", () => {
+    test("returns true", () => {
+      expect(isEndDateAfterStartDate("01/01/1989", "01/01/1990")).toBe(true);
+    });
+
+    test("returns false", () => {
+      expect(isEndDateAfterStartDate("01/01/1990", "01/01/1989")).toBe(false);
+    });
+  });
+
+  describe("nested", () => {
+    test("returns true", () => {
+      testSchema(
+        nested(
+          () => validationSchema,
+          fieldValidationObject.parentFieldName,
+          ""
+        ),
+        ["string"],
         true
       );
     });

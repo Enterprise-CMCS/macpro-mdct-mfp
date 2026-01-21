@@ -45,5 +45,5 @@ export interface NumberOptions {
 }
 
 export interface DynamicOptions {
-  type: DynamicValidationType;
+  validationType: DynamicValidationType;
 }

@@ -245,7 +245,7 @@ export const dynamic = (options?: DynamicOptions) =>
     .of(
       object().shape({
         id: text(),
-        name: schemaMap[options?.type || DynamicValidationType.TEXT],
+        name: schemaMap[options?.validationType || DynamicValidationType.TEXT],
       })
     )
     .required(error.REQUIRED_GENERIC);

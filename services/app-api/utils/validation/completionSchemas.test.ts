@@ -8,19 +8,21 @@ import { AnyObject, DynamicValidationType } from "../types";
 
 describe("utils/validation/completionSchemas", () => {
   const goodNumberTestCases = [
+    "123..00",
+    "123450123..,,,.123123123123",
     "123",
     "123.00",
-    "123..00",
     "1,230",
     "1,2,30",
     "1230",
-    "123450123..,,,.123123123123",
+    "123450123,,,.123123123123",
     "N/A",
     "Data not available",
   ];
   const badNumberTestCases = ["abc", "N", "", "!@#!@%", "-1"];
 
   const goodIntegerTestCases = [
+    "1",
     "123",
     "12300",
     "1,230",
@@ -29,9 +31,9 @@ describe("utils/validation/completionSchemas", () => {
     "Data not available",
   ];
   const badIntegerTestCases = [
+    "",
     "abc",
     "N",
-    "",
     "!@#!@%",
     "-1",
     "1.23",
@@ -45,7 +47,6 @@ describe("utils/validation/completionSchemas", () => {
     "0:1",
     "1:10,000",
   ];
-
   const badRatioTestCases = [
     ":",
     ":1",
@@ -74,7 +75,7 @@ describe("utils/validation/completionSchemas", () => {
   };
 
   const testSchema = (
-    schemaToUse: MixedSchema,
+    schemaToUse: MixedSchema<any, AnyObject, any>,
     testCases: Array<string | AnyObject>,
     expectedReturn: boolean
   ) => {
@@ -109,7 +110,9 @@ describe("utils/validation/completionSchemas", () => {
 
     test("returns true for number validation", () => {
       testSchema(
-        completionSchemaMap.dynamic({ type: DynamicValidationType.NUMBER }),
+        completionSchemaMap.dynamic({
+          validationType: DynamicValidationType.NUMBER,
+        }),
         [[{ id: "mockId", name: "123" }]],
         true
       );
@@ -117,7 +120,9 @@ describe("utils/validation/completionSchemas", () => {
 
     test("returns false for text with number validation", () => {
       testSchema(
-        completionSchemaMap.dynamic({ type: DynamicValidationType.NUMBER }),
+        completionSchemaMap.dynamic({
+          validationType: DynamicValidationType.NUMBER,
+        }),
         [[{ id: "mockId", name: "text" }]],
         false
       );
@@ -128,7 +133,7 @@ describe("utils/validation/completionSchemas", () => {
     test("returns true for text validation", () => {
       testSchema(
         completionSchemaMap.dynamicOptional({
-          type: DynamicValidationType.TEXT_OPTIONAL,
+          validationType: DynamicValidationType.TEXT_OPTIONAL,
         }),
         [[{ id: "mockId", name: "text" }]],
         true
@@ -142,7 +147,7 @@ describe("utils/validation/completionSchemas", () => {
     test("returns true for number validation", () => {
       testSchema(
         completionSchemaMap.dynamicOptional({
-          type: DynamicValidationType.NUMBER,
+          validationType: DynamicValidationType.NUMBER,
         }),
         [[{ id: "mockId", name: "123" }]],
         true
@@ -152,7 +157,7 @@ describe("utils/validation/completionSchemas", () => {
     test("returns true for empty number", () => {
       testSchema(
         completionSchemaMap.dynamicOptional({
-          type: DynamicValidationType.NUMBER,
+          validationType: DynamicValidationType.NUMBER,
         }),
         [],
         true
