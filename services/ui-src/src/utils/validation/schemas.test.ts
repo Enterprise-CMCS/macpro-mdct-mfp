@@ -65,6 +65,34 @@ describe("utils/validation/schemas", () => {
     }
   };
 
+  describe("dynamic", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.dynamic(),
+        [[{ id: "mockId", name: "0123456789" }]],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.dynamic(), [], false);
+    });
+  });
+
+  describe("dynamicOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.dynamicOptional(),
+        [[{ id: "mockId", name: "0123456789" }]],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.dynamicOptional(), [], true);
+    });
+  });
+
   describe("number", () => {
     test("returns true", () => {
       testSchema(schemaMap.number, goodNumberTestCases, true);
