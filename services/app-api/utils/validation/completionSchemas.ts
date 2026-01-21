@@ -6,7 +6,12 @@ import {
   string,
   number as yupNumber,
 } from "yup";
-import { Choice, DynamicOptions, TextOptions, ValidationType } from "../types";
+import {
+  Choice,
+  DynamicOptions,
+  DynamicValidationType,
+  TextOptions,
+} from "../types";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -236,7 +241,7 @@ export const dynamic = (options?: DynamicOptions) =>
     .of(
       object().shape({
         id: textSchema(),
-        name: completionSchemaMap[options?.type || ValidationType.TEXT],
+        name: completionSchemaMap[options?.type || DynamicValidationType.TEXT],
       })
     )
     .required(error.REQUIRED_GENERIC);

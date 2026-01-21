@@ -10,9 +10,9 @@ import {
   Choice,
   ComparatorMap,
   DynamicOptions,
+  DynamicValidationType,
   NumberOptions,
   TextOptions,
-  ValidationType,
 } from "types";
 // verbiage
 import { validationErrors as error } from "verbiage/errors";
@@ -245,7 +245,7 @@ export const dynamic = (options?: DynamicOptions) =>
     .of(
       object().shape({
         id: text(),
-        name: schemaMap[options?.type || ValidationType.TEXT],
+        name: schemaMap[options?.type || DynamicValidationType.TEXT],
       })
     )
     .required(error.REQUIRED_GENERIC);
