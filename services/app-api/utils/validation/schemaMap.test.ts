@@ -137,13 +137,19 @@ describe("utils/validation/schemaMap", () => {
     });
 
     test("returns true for empty text", () => {
-      testSchema(schemaMap.dynamicOptional(), [], true);
+      testSchema(
+        schemaMap.dynamicOptional({
+          validationType: DynamicValidationType.TEXT_OPTIONAL,
+        }),
+        [],
+        true
+      );
     });
 
     test("returns true for number validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.NUMBER,
+          validationType: DynamicValidationType.NUMBER_OPTIONAL,
         }),
         [[{ id: "mockId", name: "123" }]],
         true
@@ -153,7 +159,7 @@ describe("utils/validation/schemaMap", () => {
     test("returns true for empty number", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.NUMBER,
+          validationType: DynamicValidationType.NUMBER_OPTIONAL,
         }),
         [],
         true

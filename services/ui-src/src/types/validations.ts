@@ -1,6 +1,6 @@
 export enum DynamicValidationType {
   NUMBER = "number",
-  NUMBER_OPTIONAL = "number",
+  NUMBER_OPTIONAL = "numberOptional",
   TEXT = "text",
   TEXT_OPTIONAL = "textOptional",
 }
@@ -10,11 +10,11 @@ export enum ValidationType {
   CHECKBOX_OPTIONAL = "checkboxOptional",
   DATE = "date",
   DROPDOWN = "dropdown",
-  END_DATE = "endDate",
   DYNAMIC = "dynamic",
   EMAIL = "email",
+  END_DATE = "endDate",
   NUMBER = "number",
-  NUMBER_OPTIONAL = "number",
+  NUMBER_OPTIONAL = "numberOptional",
   RADIO = "radio",
   TEXT = "text",
   TEXT_CUSTOM = "textCustom",
