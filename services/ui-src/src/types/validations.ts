@@ -11,6 +11,7 @@ export enum ValidationType {
   DATE = "date",
   DROPDOWN = "dropdown",
   DYNAMIC = "dynamic",
+  DYNAMIC_OPTIONAL = "dynamicOptional",
   EMAIL = "email",
   END_DATE = "endDate",
   NUMBER = "number",
