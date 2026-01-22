@@ -89,11 +89,13 @@ export interface ReportFormWithTables {
   };
 }
 
-export interface FormTable {
+export type FormTableRow = (string | ReportFormField)[];
+export type FormTableRows = FormTableRow[];
+
+export interface BaseFormTable {
   id: string;
-  bodyRows: (string | ReportFormField)[][];
-  footRows: (string | ReportFormField)[][];
-  headRows: string[][];
+  footRows: FormTableRows;
+  headRows: FormTableRows;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
@@ -101,6 +103,10 @@ export interface FormTable {
     percentage?: string;
     title: string;
   };
+}
+
+export interface FormTable extends BaseFormTable {
+  bodyRows: FormTableRows;
 }
 
 export enum FormTableType {

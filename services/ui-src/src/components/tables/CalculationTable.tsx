@@ -28,7 +28,7 @@ import {
 } from "utils";
 
 export const CalculationTable = ({
-  bodyRows,
+  bodyRows = [],
   footRows,
   formData,
   headRows,
