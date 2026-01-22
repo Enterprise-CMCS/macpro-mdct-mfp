@@ -2,7 +2,7 @@ import { useFormContext } from "react-hook-form";
 // components
 import { Banner } from "components";
 
-export const PreviewBanner = ({ ...props }: Props) => {
+export const PreviewBanner = () => {
   // get the form context
   const form = useFormContext();
 
@@ -14,9 +14,5 @@ export const PreviewBanner = ({ ...props }: Props) => {
     link: formData["bannerLink"] || "",
   };
 
-  return <Banner bannerData={bannerData} {...props} />;
+  return <Banner bannerData={bannerData} />;
 };
-
-interface Props {
-  [key: string]: any;
-}
