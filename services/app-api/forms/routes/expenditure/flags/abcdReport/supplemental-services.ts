@@ -9,7 +9,6 @@ import {
 // utils
 import {
   buildServiceFields,
-  errorMessageWithFmapLink,
   supplementalServices,
   supplementalServicesHeaders,
 } from "./utils";
@@ -62,7 +61,6 @@ export const supplementalServicesRoute: FormTablesRoute = {
         headRows: [supplementalServicesHeaders],
         tableType: FormTableType.CALCULATION,
         verbiage: {
-          errorMessage: errorMessageWithFmapLink,
           percentage: "Supplemental Services Percentage: {{percentage}}",
           title: "Supplemental Services",
         },
