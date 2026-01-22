@@ -10,14 +10,12 @@ const error: ErrorVerbiage = {
   description: genericErrorContent,
 };
 
-const errorAlertComponent = (
-  <ErrorAlert error={error} data-testid="test-error-alert" />
-);
+const errorAlertComponent = <ErrorAlert error={error} />;
 
 describe("<ErrorAlert />", () => {
   test("ErrorAlert is visible", () => {
     render(errorAlertComponent);
-    expect(screen.getByTestId("test-error-alert")).toBeVisible();
+    expect(screen.getByRole("heading", { name: error.title })).toBeVisible();
   });
 
   testA11yAct(errorAlertComponent);

@@ -52,7 +52,6 @@ import {
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
-import alertIcon from "assets/icons/icon_alert_circle.png";
 
 export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   const {
@@ -352,19 +351,14 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
         <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
         Return home
       </Link>
-      <Box sx={sx.errorMessage}>
-        {errorMessage && <ErrorAlert error={errorMessage} />}
-      </Box>
+      {errorMessage && <ErrorAlert error={errorMessage} />}
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
         {showSarAlert && (
           <Alert
             title={dashboardVerbiage.alertBanner.title}
-            showIcon={true}
-            icon={alertIcon}
             status={AlertTypes.ERROR}
             description={dashboardVerbiage.alertBanner.body}
-            sx={sx.alertBanner}
           />
         )}
         <Heading as="h1" sx={sx.headerText}>
@@ -575,18 +569,6 @@ const sx = {
     width: "100%",
     justifyContent: "center",
     padding: "10",
-  },
-  alertBanner: {
-    marginBottom: "spacer4",
-    borderInlineStartWidth: "7.5px",
-    bgColor: "error_lightest",
-    fontSize: "18px",
-    p: {
-      fontSize: "16px",
-    },
-  },
-  errorMessage: {
-    paddingTop: "spacer2",
   },
   resetBtn: {
     border: "none",
