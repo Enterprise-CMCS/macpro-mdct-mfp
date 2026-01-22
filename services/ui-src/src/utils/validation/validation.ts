@@ -1,6 +1,5 @@
-import { nested, endDate } from "./schemas";
+import { nested, endDate, schemaMap } from "./schemas";
 import { AnyObject } from "types";
-import { schemaMap } from "./schemaMap";
 
 // map field validation types to validation schema
 export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
@@ -13,7 +12,10 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
       if (typeof fieldValidation === "string") {
         const correspondingSchema = schemaMap[fieldValidation];
         if (correspondingSchema) {
-          validationSchema[key] = correspondingSchema;
+          validationSchema[key] =
+            typeof correspondingSchema === "function"
+              ? correspondingSchema()
+              : correspondingSchema;
         }
       }
       // else if custom validation type with options

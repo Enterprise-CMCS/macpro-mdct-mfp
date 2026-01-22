@@ -1,5 +1,12 @@
 import { array, boolean, mixed, object, string } from "yup";
-import { Choice, ComparatorMap, NumberOptions, TextOptions } from "../types";
+import {
+  Choice,
+  ComparatorMap,
+  DynamicOptions,
+  DynamicValidationType,
+  NumberOptions,
+  TextOptions,
+} from "../types";
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
@@ -64,7 +71,7 @@ const comparatorMap: ComparatorMap = {
 };
 
 // NUMBER - Number or Valid Strings
-export const numberSchema = () =>
+const numberSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,
@@ -112,7 +119,7 @@ export const numberComparison = (options: NumberOptions) =>
   });
 
 // Integer or Valid Strings
-export const validIntegerSchema = () =>
+const validIntegerSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,
@@ -225,17 +232,18 @@ export const radio = () =>
 export const radioOptional = () => radio().notRequired();
 
 // DYNAMIC
-export const dynamic = () =>
+export const dynamic = (options?: DynamicOptions) =>
   array()
     .min(1)
     .of(
       object().shape({
         id: text(),
-        name: text(),
+        name: schemaMap[options?.validationType || DynamicValidationType.TEXT],
       })
     )
     .required(error.REQUIRED_GENERIC);
-export const dynamicOptional = () => dynamic().notRequired();
+export const dynamicOptional = (options?: DynamicOptions) =>
+  dynamic(options).notRequired();
 
 // NESTED
 export const nested = (
@@ -275,20 +283,20 @@ export const schemaMap: any = {
   date: date(),
   dateOptional: dateOptional(),
   dropdown: dropdown(),
-  dynamic: dynamic(),
-  dynamicOptional: dynamicOptional(),
+  dynamic: (options?: DynamicOptions) => dynamic(options),
+  dynamicOptional: (options?: DynamicOptions) => dynamicOptional(options),
   email: email(),
   emailOptional: emailOptional(),
   number: number(),
+  numberComparison: (options: NumberOptions) => numberComparison(options),
   numberOptional: numberOptional(),
   objectArray: objectArray(),
-  numberComparison: (options: NumberOptions) => numberComparison(options),
   radio: radio(),
   radioOptional: radioOptional(),
   ratio: ratio(),
   text: text(),
-  textOptional: textOptional(),
   textCustom: (options: TextOptions) => textCustom(options),
+  textOptional: textOptional(),
   url: url(),
   urlOptional: urlOptional(),
   validInteger: validInteger(),
