@@ -32,7 +32,6 @@ import {
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import closeGrayIcon from "assets/icons/icon_cancel_x_gray.png";
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
-import warningIcon from "assets/icons/icon_warning.png";
 // utils
 import {
   entityWasUpdated,
@@ -255,11 +254,8 @@ export const EntityDetailsOverlay = ({
         {verbiage.closeOutWarning && (
           <Alert
             title={verbiage.closeOutWarning.title}
-            showIcon={true}
-            icon={warningIcon}
             status={AlertTypes.WARNING}
             description={verbiage.closeOutWarning.description}
-            sx={sx.warningBanner}
           />
         )}
       </Box>
@@ -357,12 +353,6 @@ const sx = {
   },
   saveButton: {
     width: "8.25rem",
-  },
-  warningBanner: {
-    marginTop: "spacer7",
-    marginBottom: "spacer4",
-    bgColor: "warn_lightest",
-    borderInlineStartColor: "warn",
   },
   warningIcon: {
     width: "1.375rem",

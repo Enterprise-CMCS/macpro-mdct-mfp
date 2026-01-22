@@ -35,15 +35,6 @@ export interface APIGatewayProxyEvent {
   resource: string;
 }
 
-// ALERTS
-
-export enum AlertTypes {
-  ERROR = "error",
-  INFO = "info",
-  SUCCESS = "success",
-  WARNING = "warning",
-}
-
 // TIME
 
 export interface DateShape {

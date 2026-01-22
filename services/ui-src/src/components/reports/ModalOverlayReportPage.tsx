@@ -221,6 +221,7 @@ const sx = {
     },
   },
   dashboardTitle: {
+    marginTop: "spacer2",
     fontSize: "md",
     fontWeight: "bold",
     color: "gray",

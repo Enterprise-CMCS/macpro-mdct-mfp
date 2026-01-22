@@ -1,16 +1,11 @@
+import { useRef } from "react";
 // components
 import { Box, Collapse, SystemStyleObject } from "@chakra-ui/react";
 import { Alert } from "components";
-import { useRef } from "react";
-// utils
+// types
 import { AlertTypes, ErrorVerbiage } from "types";
 
-export const ErrorAlert = ({
-  error,
-  variant = "inline",
-  sxOverride,
-  ...props
-}: Props) => {
+export const ErrorAlert = ({ error, sxOverride }: Props) => {
   // Focus the alert when an error is given
   const ref = useRef<HTMLDivElement>(null);
   if (error && ref.current) {
@@ -27,9 +22,6 @@ export const ErrorAlert = ({
             title={error.title}
             description={error.description}
             showIcon={false}
-            className={variant}
-            sx={sx.root}
-            {...props}
           />
         )}
       </Collapse>
@@ -39,29 +31,5 @@ export const ErrorAlert = ({
 
 interface Props {
   error?: ErrorVerbiage;
-  variant?: "inline" | "toast";
   sxOverride?: SystemStyleObject;
-  [key: string]: any;
 }
-
-const sx = {
-  root: {
-    background: "error_lightest",
-    borderLeft: "error",
-    minHeight: 0,
-    marginY: "spacer2",
-    maxWidth: "55.25rem",
-    margin: "auto",
-    borderInlineStartWidth: "0.5rem",
-    borderInlineStartColor: "error",
-    boxShadow: "0px 4px 3px rgba(0, 0, 0, 0.2)",
-    "&.toast": {
-      position: "absolute",
-      right: 0,
-      width: "90%",
-      maxWidth: "500px",
-      margin: "spacer2",
-      boxShadow: "0px 3px 9px rgba(0, 0, 0, 0.2)",
-    },
-  },
-};

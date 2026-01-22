@@ -5,9 +5,7 @@ import React from "react";
 
 export enum AlertTypes {
   ERROR = "error",
-  INFO = "info",
-  SUCCESS = "success",
-  WARNING = "warning",
+  WARNING = "warn",
 }
 
 // TIME
