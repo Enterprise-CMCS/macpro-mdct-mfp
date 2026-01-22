@@ -3,8 +3,11 @@ import { error } from "../constants/constants";
 // types
 import { AnyObject } from "../types";
 // utils
-import { nested, endDate } from "./completionSchemas";
-import { completionSchemaMap as schemaMap } from "./completionSchemaMap";
+import {
+  nested,
+  endDate,
+  completionSchemaMap as schemaMap,
+} from "./completionSchemas";
 
 // map field validation types to validation schema
 export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
@@ -18,7 +21,10 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
       if (typeof fieldValidation === "string") {
         const correspondingSchema = schemaMap[fieldValidation];
         if (correspondingSchema) {
-          validationSchema[key] = correspondingSchema;
+          validationSchema[key] =
+            typeof correspondingSchema === "function"
+              ? correspondingSchema()
+              : correspondingSchema;
         }
       }
       // else if custom validation type with options

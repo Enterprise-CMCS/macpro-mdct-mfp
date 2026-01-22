@@ -6,7 +6,12 @@ import {
   string,
   number as yupNumber,
 } from "yup";
-import { Choice, TextOptions } from "../types";
+import {
+  Choice,
+  DynamicOptions,
+  DynamicValidationType,
+  TextOptions,
+} from "../types";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -91,7 +96,7 @@ export const number = () => numberSchema().required();
 export const numberOptional = () => numberSchema().notRequired().nullable();
 
 // Integer or Valid Strings
-export const validIntegerSchema = () =>
+const validIntegerSchema = () =>
   string().test({
     message: error.INVALID_NUMBER_OR_NA,
     test: (value) => {
@@ -207,7 +212,7 @@ export const dropdown = () =>
   );
 
 // CHECKBOX
-export const checkboxSchema = () =>
+const checkboxSchema = () =>
   array()
     .of(object({ key: text(), value: text() }))
     .required(error.REQUIRED_GENERIC);
@@ -220,7 +225,7 @@ export const checkboxOptional = () =>
 export const checkboxSingle = () => boolean();
 
 // RADIO
-export const radioSchema = () =>
+const radioSchema = () =>
   array()
     .of(object({ key: textSchema(), value: textSchema() }))
     .min(0);
@@ -230,17 +235,20 @@ export const radio = () =>
 export const radioOptional = () => radioSchema().notRequired().nullable();
 
 // DYNAMIC
-export const dynamic = () =>
+export const dynamic = (options?: DynamicOptions) =>
   array()
     .min(1)
     .of(
       object().shape({
         id: textSchema(),
-        name: textSchema(),
+        name: completionSchemaMap[
+          options?.validationType || DynamicValidationType.TEXT
+        ],
       })
     )
     .required(error.REQUIRED_GENERIC);
-export const dynamicOptional = () => dynamic().notRequired();
+export const dynamicOptional = (options?: DynamicOptions) =>
+  dynamic(options).notRequired();
 
 // NESTED
 export const nested = (
@@ -268,3 +276,29 @@ export const nested = (
 // REGEX
 export const dateFormatRegex =
   /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})$/;
+
+// SCHEMA MAP
+export const completionSchemaMap: any = {
+  checkbox: checkbox(),
+  checkboxOptional: checkboxOptional(),
+  checkboxSingle: checkboxSingle(),
+  date: date(),
+  dateOptional: dateOptional(),
+  dropdown: dropdown(),
+  dynamic: (options?: DynamicOptions) => dynamic(options),
+  dynamicOptional: (options?: DynamicOptions) => dynamicOptional(options),
+  email: email(),
+  emailOptional: emailOptional(),
+  number: number(),
+  numberOptional: numberOptional(),
+  ratio: ratio(),
+  text: text(),
+  textCustom: (options: TextOptions) => textCustom(options),
+  textOptional: textOptional(),
+  radio: radio(),
+  radioOptional: radioOptional(),
+  url: url(),
+  urlOptional: urlOptional(),
+  validInteger: validInteger(),
+  validIntegerOptional: validIntegerOptional(),
+};
