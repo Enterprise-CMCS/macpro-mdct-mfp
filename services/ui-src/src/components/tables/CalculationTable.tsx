@@ -15,7 +15,13 @@ import {
   VisuallyHidden,
 } from "@chakra-ui/react";
 // types
-import { AnyObject, FormField, FormTable, ReportShape } from "types";
+import {
+  AnyObject,
+  FormField,
+  FormTable,
+  InputChangeEvent,
+  ReportShape,
+} from "types";
 // utils
 import {
   formFieldFactory,
@@ -28,7 +34,7 @@ import {
 } from "utils";
 
 export const CalculationTable = ({
-  bodyRows = [],
+  bodyRows,
   footRows,
   formData,
   headRows,
@@ -79,8 +85,8 @@ export const CalculationTable = ({
         ariaLabelledby: `${rowId} ${columnId}`,
         // Use ariaLabelledby in lieu of label
         label: undefined,
-        handleOnChange: (e: { target: { id: string; value: string } }) =>
-          updatedFieldsForDisplay(e.target.id, e.target.value),
+        handleOnChange: (e: InputChangeEvent) =>
+          updatedFieldsForDisplay(e.target.id, e.target.name, e.target.value),
       },
     };
 
@@ -96,14 +102,15 @@ export const CalculationTable = ({
     });
   };
 
-  const updatedFieldsForDisplay = (fieldName: string, fieldValue: string) => {
+  const updatedFieldsForDisplay = (id: string, name: string, value: string) => {
     const updatedReport = updatedReportOnFieldChange({
-      fieldName,
-      fieldValue,
+      id,
+      name,
       report: localReport,
       // TODO: Use form percentage or field percentage
       percentage,
       tableId,
+      value,
     });
     setLocalReport(updatedReport);
   };

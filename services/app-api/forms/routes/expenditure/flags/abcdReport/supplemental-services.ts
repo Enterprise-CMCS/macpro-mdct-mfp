@@ -8,6 +8,7 @@ import {
 } from "../../../../../utils/types";
 // utils
 import {
+  buildDynamicFields,
   buildServiceFields,
   supplementalServices,
   supplementalServicesHeaders,
@@ -22,6 +23,12 @@ const supplementalServicesTableId = "supplementalServices_supplementalServices";
 const supplementalServicesBodyList = supplementalServices(
   supplementalServicesTableId
 );
+const supplementalServicesDynamicBodyList = [
+  {
+    id: `${supplementalServicesTableId}_other`,
+    label: "Other",
+  },
+];
 const supplementalServicesFootList = [
   {
     id: supplementalServicesTableId,
@@ -55,6 +62,10 @@ export const supplementalServicesRoute: FormTablesRoute = {
           const bodyFields = buildServiceFields(service);
           return [service.label, ...bodyFields];
         }),
+        dynamicRows: supplementalServicesDynamicBodyList.map((service) => {
+          const bodyFields = buildDynamicFields(service);
+          return [...bodyFields];
+        }),
         footRows: supplementalServicesFootList.map((service) => {
           const footFields = buildServiceFields(service);
           return ["Totals", ...footFields];
@@ -62,6 +73,11 @@ export const supplementalServicesRoute: FormTablesRoute = {
         headRows: [supplementalServicesHeaders],
         tableType: FormTableType.CALCULATION,
         verbiage: {
+          dynamicField: {
+            buttonText: "Add other category",
+            hint: "To add an additional category, click the “Add other category” button below.",
+            label: "Other:",
+          },
           percentage: "Supplemental Services Percentage: {{percentage}}",
           title: "Supplemental Services",
         },
@@ -71,6 +87,9 @@ export const supplementalServicesRoute: FormTablesRoute = {
       // Add table fields here only for validation
       ...supplementalServicesBodyList.flatMap((service) =>
         buildServiceFields(service)
+      ),
+      ...supplementalServicesDynamicBodyList.flatMap((service) =>
+        buildDynamicFields(service)
       ),
       ...supplementalServicesFootList.flatMap((service) =>
         buildServiceFields(service)

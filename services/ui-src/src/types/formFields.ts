@@ -52,21 +52,24 @@ export interface FormJson {
 export type FormTableRow = (string | FormField)[];
 export type FormTableRows = FormTableRow[];
 
-export interface BaseFormTable {
+export interface FormTable {
   id: string;
+  bodyRows: FormTableRows;
+  dynamicRows?: FormTableRows;
   footRows: FormTableRows;
   headRows: FormTableRows;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
+    dynamicField?: {
+      buttonText: string;
+      label: string;
+      hint: string;
+    };
     errorMessage?: string | CustomHtmlElement[];
     percentage?: string;
     title: string;
   };
-}
-
-export interface FormTable extends BaseFormTable {
-  bodyRows: FormTableRows;
 }
 
 export enum FormTableType {

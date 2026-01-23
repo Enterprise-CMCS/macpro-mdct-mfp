@@ -1,10 +1,116 @@
 import {
   AnyObject,
+  DynamicValidationType,
   ReportFormFieldType,
   ServiceField,
   ServiceFieldType,
   ValidationType,
 } from "../../../../../../utils/types";
+
+export const buildDynamicFields = (
+  service: ServiceField,
+  fieldsToReturn: ServiceFieldType[] = [
+    ServiceFieldType.CATEGORY,
+    ServiceFieldType.TOTAL_COMPUTABLE,
+    ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+    ServiceFieldType.TOTAL_FEDERAL_SHARE,
+  ]
+) => {
+  const buildDynamicField = (
+    suffix: string,
+    label: string,
+    options: AnyObject,
+    props: AnyObject = {}
+  ) => ({
+    id: `${service.id}-${suffix}`,
+    type: ReportFormFieldType.DYNAMIC,
+    ...options,
+    forTableOnly: true,
+    props: {
+      label: `${service.label} ${label}`,
+      ...props,
+    },
+  });
+
+  const currencyProps = {
+    decimalPlacesToRoundTo: 2,
+    initialValue: "0",
+    mask: "currency",
+    readOnly: true,
+    subType: ReportFormFieldType.NUMBER,
+  };
+
+  const dynamicNumberOptions = {
+    validation: {
+      type: ValidationType.DYNAMIC_OPTIONAL,
+      options: {
+        validationType: DynamicValidationType.NUMBER_OPTIONAL,
+      },
+    },
+  };
+
+  const fields = [];
+
+  for (const fieldType of fieldsToReturn) {
+    switch (fieldType) {
+      case ServiceFieldType.CATEGORY:
+        fields.push(
+          buildDynamicField(
+            "category",
+            "Category",
+            {
+              validation: ValidationType.DYNAMIC_OPTIONAL,
+            },
+            {
+              subType: ReportFormFieldType.TEXT,
+            }
+          )
+        );
+        break;
+
+      case ServiceFieldType.TOTAL_COMPUTABLE:
+        fields.push(
+          buildDynamicField(
+            "totalComputable",
+            "Total Computable",
+            dynamicNumberOptions,
+            {
+              ...currencyProps,
+              initialValue: service.readOnly ? "0" : "",
+              readOnly: service.readOnly,
+            }
+          )
+        );
+        break;
+
+      case ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE:
+        fields.push(
+          buildDynamicField(
+            "totalStateTerritoryShare",
+            "Total State / Territory Share",
+            dynamicNumberOptions,
+            currencyProps
+          )
+        );
+        break;
+
+      case ServiceFieldType.TOTAL_FEDERAL_SHARE:
+        fields.push(
+          buildDynamicField(
+            "totalFederalShare",
+            "Total Federal Share",
+            dynamicNumberOptions,
+            currencyProps
+          )
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  return fields;
+};
 
 export const buildServiceFields = (
   service: ServiceField,
