@@ -27,10 +27,16 @@ test.describe("Work Plan Page", () => {
   test.beforeEach(async ({ statePage }) => {
     await archiveAllReportsForState(stateAbbreviation);
     await statePage.page.goto("/");
+    const getReportsResp = statePage.page.waitForResponse(
+      (response) =>
+        response.url().includes("/reports/WP/") &&
+        response.request().method() === "GET" &&
+        response.status() === 200
+    );
     await statePage.page
       .getByRole("button", { name: "Enter Work Plan online" })
       .click();
-    await statePage.waitForWorkPlansToLoad();
+    await getReportsResp;
   });
 
   test.describe("State User", () => {
