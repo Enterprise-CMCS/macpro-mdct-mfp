@@ -103,10 +103,18 @@ export const qualifiedHcbsRoute: FormTablesRoute = {
     ],
     fields: [
       // Add table fields here only for validation
-      ...statePlanServicesBodyList.flatMap(buildServiceFields),
-      ...statePlanServicesFootList.flatMap(buildServiceFields),
-      ...c1915WaiverServicesBodyList.flatMap(buildServiceFields),
-      ...c1915WaiverServicesFootList.flatMap(buildServiceFields),
+      ...statePlanServicesBodyList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      ...statePlanServicesFootList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      ...c1915WaiverServicesBodyList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      ...c1915WaiverServicesFootList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
       {
         id: "qualifiedHcbs_narrative",
         type: ReportFormFieldType.TEXTAREA,

@@ -67,6 +67,8 @@ export { CharacterCounter } from "./fields/CharacterCounter";
 export { AdminBannerForm } from "./forms/AdminBannerForm";
 export { Form } from "./forms/Form";
 export { AdminDashSelector } from "./forms/AdminDashSelector";
+export { SectionContent, SectionHeader } from "./forms/FormLayoutElements";
+
 // layout
 export { Footer } from "./layout/Footer";
 export { Header } from "./layout/Header";
