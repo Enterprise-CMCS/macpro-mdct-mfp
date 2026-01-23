@@ -1,20 +1,20 @@
 import {
   AnyObject,
   ReportFormFieldType,
+  ServiceField,
+  ServiceFieldType,
   ValidationType,
 } from "../../../../../../utils/types";
 
-export const buildServiceFields = (service: {
-  id: string;
-  label: string;
-  readOnly?: boolean;
-}) => {
+export const buildServiceFields = (
+  service: ServiceField,
+  fieldsToReturn: ServiceFieldType[] = [
+    ServiceFieldType.TOTAL_COMPUTABLE,
+    ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+    ServiceFieldType.TOTAL_FEDERAL_SHARE,
+  ]
+) => {
   const buildServiceField = (
-    service: {
-      id: string;
-      label: string;
-      readOnly?: boolean;
-    },
     suffix: string,
     label: string,
     props: AnyObject
@@ -36,25 +36,45 @@ export const buildServiceFields = (service: {
     readOnly: true,
   };
 
-  return [
-    buildServiceField(service, "totalComputable", "Total Computable", {
-      ...currencyProps,
-      initialValue: service.readOnly ? "0" : "",
-      readOnly: service.readOnly,
-    }),
-    buildServiceField(
-      service,
-      "totalStateTerritoryShare",
-      "Total State / Territory Share",
-      currencyProps
-    ),
-    buildServiceField(
-      service,
-      "totalFederalShare",
-      "Total Federal Share",
-      currencyProps
-    ),
-  ];
+  const fields = [];
+
+  for (const fieldType of fieldsToReturn) {
+    switch (fieldType) {
+      case ServiceFieldType.TOTAL_COMPUTABLE:
+        fields.push(
+          buildServiceField("totalComputable", "Total Computable", {
+            ...currencyProps,
+            initialValue: service.readOnly ? "0" : "",
+            readOnly: service.readOnly,
+          })
+        );
+        break;
+
+      case ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE:
+        fields.push(
+          buildServiceField(
+            "totalStateTerritoryShare",
+            "Total State / Territory Share",
+            currencyProps
+          )
+        );
+        break;
+
+      case ServiceFieldType.TOTAL_FEDERAL_SHARE:
+        fields.push(
+          buildServiceField(
+            "totalFederalShare",
+            "Total Federal Share",
+            currencyProps
+          )
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  return fields;
 };
 
 export const statePlanServicesHeaders = [

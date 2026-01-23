@@ -113,6 +113,18 @@ export enum FormTableType {
   CALCULATION = "Calculation",
 }
 
+export interface ServiceField {
+  id: string;
+  label: string;
+  readOnly?: boolean;
+}
+
+export enum ServiceFieldType {
+  TOTAL_COMPUTABLE = "totalComputable",
+  TOTAL_FEDERAL_SHARE = "totalFederalShare",
+  TOTAL_STATE_TERRITORY_SHARE = "totalStateTerritoryShare",
+}
+
 // Routes
 export interface BaseRoute {
   conditionallyRender?: string;

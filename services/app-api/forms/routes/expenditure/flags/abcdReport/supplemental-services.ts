@@ -29,6 +29,7 @@ const supplementalServicesFootList = [
     readOnly: true,
   },
 ];
+
 export const supplementalServicesRoute: FormTablesRoute = {
   name: "Supplemental Services",
   path: "/expenditure/supplemental-services",
@@ -68,8 +69,12 @@ export const supplementalServicesRoute: FormTablesRoute = {
     ],
     fields: [
       // Add table fields here only for validation
-      ...supplementalServicesBodyList.flatMap(buildServiceFields),
-      ...supplementalServicesFootList.flatMap(buildServiceFields),
+      ...supplementalServicesBodyList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      ...supplementalServicesFootList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
       {
         id: "supplementalServices_narrative",
         type: ReportFormFieldType.TEXTAREA,
