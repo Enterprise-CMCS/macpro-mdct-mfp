@@ -2,19 +2,17 @@ import React from "react";
 // components
 import {
   CheckboxField,
-  RadioField,
-  TextField,
-  TextAreaField,
   ChoiceField,
+  DateField,
+  DropdownField,
   DynamicField,
-} from "components";
-import { DateField } from "components/fields/DateField";
-import { DropdownField } from "components/fields/DropdownField";
-import { NumberField } from "components/fields/NumberField";
-import {
+  NumberField,
+  RadioField,
   SectionContent,
   SectionHeader,
-} from "components/forms/FormLayoutElements";
+  TextAreaField,
+  TextField,
+} from "components";
 // types
 import {
   AnyObject,
