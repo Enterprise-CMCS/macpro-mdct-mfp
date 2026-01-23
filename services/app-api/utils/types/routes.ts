@@ -89,11 +89,13 @@ export interface ReportFormWithTables {
   };
 }
 
-export interface FormTable {
+export type FormTableRow = (string | ReportFormField)[];
+export type FormTableRows = FormTableRow[];
+
+export interface BaseFormTable {
   id: string;
-  bodyRows: (string | ReportFormField)[][];
-  footRows: (string | ReportFormField)[][];
-  headRows: string[][];
+  footRows: FormTableRows;
+  headRows: FormTableRows;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
@@ -103,8 +105,24 @@ export interface FormTable {
   };
 }
 
+export interface FormTable extends BaseFormTable {
+  bodyRows: FormTableRows;
+}
+
 export enum FormTableType {
   CALCULATION = "Calculation",
+}
+
+export interface ServiceField {
+  id: string;
+  label: string;
+  readOnly?: boolean;
+}
+
+export enum ServiceFieldType {
+  TOTAL_COMPUTABLE = "totalComputable",
+  TOTAL_FEDERAL_SHARE = "totalFederalShare",
+  TOTAL_STATE_TERRITORY_SHARE = "totalStateTerritoryShare",
 }
 
 // Routes
