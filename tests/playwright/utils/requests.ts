@@ -174,7 +174,6 @@ function generateAPIHeaders(
  * Make an authenticated API request
  * @param method - HTTP method (GET, PUT, POST, DELETE)
  * @param endpoint - API endpoint URL
- * @param additionalHeaders - Additional headers specific to the request
  * @param body - Request body (optional, used for POST/PUT requests)
  * @param userType - 'ADMIN' or 'STATE' to specify which user's auth data to use (defaults to 'ADMIN')
  * @returns Promise<any> - API response data
@@ -182,7 +181,6 @@ function generateAPIHeaders(
 async function makeAuthenticatedRequest(
   method: "GET" | "PUT" | "POST" | "DELETE",
   endpoint: string,
-  additionalHeaders: Record<string, string> = {},
   body?: any,
   userType: "ADMIN" | "STATE" = "ADMIN"
 ): Promise<any> {
@@ -195,10 +193,7 @@ async function makeAuthenticatedRequest(
         ? JSON.stringify(body)
         : undefined;
 
-    const headers = {
-      ...generateAPIHeaders(authData, method, endpoint, bodyString),
-      ...additionalHeaders,
-    };
+    const headers = generateAPIHeaders(authData, method, endpoint, bodyString);
 
     const requestOptions: any = { headers };
 
@@ -260,7 +255,6 @@ export async function getReportsByState(
   const reports: Report[] = await makeAuthenticatedRequest(
     "GET",
     endpoint,
-    {},
     undefined,
     userType
   );
@@ -284,15 +278,7 @@ export async function archiveReport(
   const endpoint = `${apiUrl}/reports/archive/WP/${state}/${reportId}`;
 
   try {
-    await makeAuthenticatedRequest(
-      "PUT",
-      endpoint,
-      {
-        "Content-Type": "application/json",
-      },
-      undefined,
-      userType
-    );
+    await makeAuthenticatedRequest("PUT", endpoint, undefined, userType);
   } catch (error) {
     console.log(`❌ Failed to archive report ${reportId}: ${error.message}`);
     throw error;
@@ -343,7 +329,6 @@ export async function postBanner(
   const createdBanner: Banner = await makeAuthenticatedRequest(
     "POST",
     endpoint,
-    {},
     banner,
     userType
   );
@@ -366,7 +351,6 @@ export async function getBanners(
   const banners: Banner[] = await makeAuthenticatedRequest(
     "GET",
     endpoint,
-    {},
     undefined,
     userType
   );
@@ -388,7 +372,7 @@ export async function deleteBanner(
   const endpoint = `${apiUrl}/banners/${bannerId}`;
 
   try {
-    await makeAuthenticatedRequest("DELETE", endpoint, {}, undefined, userType);
+    await makeAuthenticatedRequest("DELETE", endpoint, undefined, userType);
   } catch (error) {
     console.log(`❌ Failed to delete banner ${bannerId}: ${error.message}`);
     throw error;
@@ -442,4 +426,82 @@ export async function hasActiveReportsWithSars(
   );
 
   return activeReportsWithSars.length > 0;
+}
+
+/**
+ * Post a report for a specific state
+ * @param report - The report data to post
+ * @param state - The state abbreviation (e.g., "AL", "CA", "TX", "PR")
+ * @param userType - 'ADMIN' or 'STATE' to specify which user's auth data to use (defaults to 'STATE')
+ */
+export async function postReport(
+  report: any,
+  state: string,
+  userType: "ADMIN" | "STATE" = "STATE"
+): Promise<string> {
+  const response = await makeAuthenticatedRequest(
+    "POST",
+    `${process.env.API_URL}/reports/${report.metadata.reportType}/${state}`,
+    report,
+    userType
+  );
+  return response.id;
+}
+
+async function putReport(
+  id: string,
+  report: any,
+  reportType: string,
+  state: string,
+  userType: "ADMIN" | "STATE" = "STATE"
+): Promise<void> {
+  await makeAuthenticatedRequest(
+    "PUT",
+    `${process.env.API_URL}/reports/${reportType}/${state}/${id}`,
+    report,
+    userType
+  );
+}
+
+export async function submitReport(
+  id: string,
+  reportType: string,
+  state: string,
+  userType: "ADMIN" | "STATE" = "STATE"
+): Promise<void> {
+  await makeAuthenticatedRequest(
+    "POST",
+    `${process.env.API_URL}/reports/submit/${reportType}/${state}/${id}`,
+    undefined,
+    userType
+  );
+}
+
+export async function updateReport(
+  id: string,
+  report: any,
+  reportType: string,
+  state: string
+): Promise<void> {
+  // Update any of the date data in the report
+  const updatedReport = await updateReportData(report);
+  await putReport(id, updatedReport, reportType, state);
+}
+
+async function updateReportData(report: any): Promise<any> {
+  const currentYear = new Date().getFullYear();
+  const reportString = JSON.stringify(report);
+
+  // Replace years in date strings (MM/DD/YYYY format) with current year
+  let updatedString = reportString.replace(
+    /(\d{2}\/\d{2}\/)\d{4}/g,
+    `$1${currentYear}`
+  );
+
+  // Replace quarter field years (2026 -> current, 2027 -> current+1, 2028 -> current+2)
+  updatedString = updatedString.replace(/2026/g, currentYear.toString());
+  updatedString = updatedString.replace(/2027/g, (currentYear + 1).toString());
+  updatedString = updatedString.replace(/2028/g, (currentYear + 2).toString());
+
+  return JSON.parse(updatedString);
 }

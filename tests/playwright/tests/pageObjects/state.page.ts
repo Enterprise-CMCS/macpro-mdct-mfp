@@ -380,7 +380,14 @@ export class StatePage {
 
   async fillWorkPlan(workPlan: WorkPlan) {
     await this.page.getByRole("button", { name: "Edit" }).click();
+    const putResponse = this.page.waitForResponse(
+      (response) =>
+        response.url().includes("/reports/") &&
+        response.request().method() === "PUT" &&
+        response.status() === 200
+    );
     await this.page.getByRole("button", { name: "Continue" }).click();
+    await putResponse;
     await this.completeTransitionBenchmarkProjections(
       workPlan.transitionBenchmarkProjections
     );

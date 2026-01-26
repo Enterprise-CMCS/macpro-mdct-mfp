@@ -2,14 +2,20 @@ import { expect, test } from "./fixtures/base";
 import {
   archiveAllReportsForState,
   hasActiveReportsWithSars,
+  postReport,
+  submitReport,
+  updateReport,
 } from "../utils/requests";
 import {
   currentYear,
   fillWorkPlanTestData,
+  reportType,
   stateAbbreviation,
   stateName,
   testWorkPlan,
 } from "../utils/consts";
+import wpReport from "../data/wpReport.json";
+import updatedWpReport from "../data/updatedWpReport.json";
 
 test.describe("Work Plan Page", () => {
   test.beforeAll(async () => {
@@ -54,10 +60,9 @@ test.describe("Work Plan Page", () => {
     test("should be able to fill and submit a Work Plan @flaky", async ({
       statePage,
     }) => {
-      await statePage.startNewWorkPlan(
-        currentYear,
-        testWorkPlan.reportingPeriod
-      );
+      wpReport.metadata.reportYear = currentYear;
+      await postReport(wpReport, stateAbbreviation);
+      await statePage.page.reload();
       await statePage.fillWorkPlan(fillWorkPlanTestData);
       await statePage.submitWorkPlan();
       await expect(
@@ -69,14 +74,16 @@ test.describe("Work Plan Page", () => {
   test.describe("Admin User", () => {
     test("should be able to deny a Work Plan by unlocking it @flaky", async ({
       adminPage,
-      statePage,
     }) => {
-      await statePage.startNewWorkPlan(
-        currentYear,
-        testWorkPlan.reportingPeriod
+      wpReport.metadata.reportYear = currentYear;
+      const reportId = await postReport(wpReport, stateAbbreviation);
+      await updateReport(
+        reportId,
+        updatedWpReport,
+        reportType,
+        stateAbbreviation
       );
-      await statePage.fillWorkPlan(fillWorkPlanTestData);
-      await statePage.submitWorkPlan();
+      await submitReport(reportId, reportType, stateAbbreviation);
       await adminPage.page.goto("/");
       await adminPage.goToReportDashboard(stateName, "MFP Work Plan");
       await adminPage.unlockFirstSubmittedReport();
