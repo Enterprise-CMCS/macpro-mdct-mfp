@@ -212,6 +212,120 @@ describe("<CreateExpenditureModal />", () => {
       });
     });
 
+    describe("Test copyReport functionality", () => {
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      test("copyReport dropdown is disabled when no eligible reports exist", async () => {
+        const mockStoreWithNoEligibleReports = {
+          ...mockUseStore,
+          reportsByState: [
+            {
+              id: "report-1",
+              submissionName: "CA: 2024 - Q1",
+              status: ReportStatus.NOT_STARTED,
+            },
+          ],
+        };
+
+        mockedUseStore.mockReturnValue(mockStoreWithNoEligibleReports);
+
+        render(modalComponent);
+
+        const copyReportDropdown = screen.getByLabelText(
+          "If you want to copy an existing report, select one (optional)"
+        ) as HTMLSelectElement;
+
+        expect(copyReportDropdown).toBeDisabled();
+        // Check that the "No reports eligible for copy" option exists
+        const noEligibleOption = Array.from(copyReportDropdown.options).find(
+          (option) => option.text === "No reports eligble for copy"
+        );
+        expect(noEligibleOption).toBeDefined();
+      });
+
+      test("copyReport dropdown has options when eligible reports exist", async () => {
+        const mockStoreWithEligibleReports = {
+          ...mockUseStore,
+          reportsByState: [
+            {
+              id: "report-1",
+              submissionName: "CA: 2024 - Q1: January 1st to March 31st",
+              status: ReportStatus.SUBMITTED,
+            },
+            {
+              id: "report-2",
+              submissionName: "CA: 2024 - Q2: April 1st to June 30th",
+              status: ReportStatus.APPROVED,
+            },
+          ],
+        };
+
+        mockedUseStore.mockReturnValue(mockStoreWithEligibleReports);
+
+        render(modalComponent);
+
+        const copyReportDropdown = screen.getByLabelText(
+          "If you want to copy an existing report, select one (optional)"
+        ) as HTMLSelectElement;
+
+        expect(copyReportDropdown).not.toBeDisabled();
+        expect(copyReportDropdown.options.length).toBeGreaterThan(2);
+      });
+
+      test("writeReport includes copyReport in payload when selected", async () => {
+        const reportToCopy = {
+          id: "report-to-copy",
+          submissionName: "CA: 2024 - Q1: January 1st to March 31st",
+          status: ReportStatus.SUBMITTED,
+          reportYear: 2024,
+          reportPeriod: 1,
+        };
+
+        const mockStoreWithEligibleReports = {
+          ...mockUseStore,
+          reportsByState: [reportToCopy],
+        };
+
+        mockedUseStore.mockReturnValue(mockStoreWithEligibleReports);
+
+        await act(async () => {
+          render(modalComponent);
+        });
+
+        const yearDropdown = screen.getByLabelText(
+          "Reporting Year"
+        ) as HTMLSelectElement;
+        const periodDropdown = screen.getByLabelText(
+          "Reporting Period"
+        ) as HTMLSelectElement;
+        const copyReportDropdown = screen.getByLabelText(
+          "If you want to copy an existing report, select one (optional)"
+        ) as HTMLSelectElement;
+        const submitButton = screen.getByRole("button", {
+          name: "Save",
+        });
+
+        await act(async () => {
+          await userEvent.selectOptions(copyReportDropdown, "report-to-copy");
+          await userEvent.selectOptions(yearDropdown, "2025");
+          await userEvent.selectOptions(periodDropdown, "2");
+          await userEvent.click(submitButton);
+        });
+
+        expect(mockCreateReport).toHaveBeenCalledWith(
+          "EXPENDITURE",
+          "CA",
+          expect.objectContaining({
+            metadata: expect.objectContaining({
+              copyReport: reportToCopy,
+            }),
+          })
+        );
+      });
+    });
+
     describe("Test CreateExpenditureModal view-only mode", () => {
       afterEach(() => {
         jest.clearAllMocks();

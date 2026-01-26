@@ -1,4 +1,4 @@
-import { AnyObject } from "types";
+import { AnyObject, ReportMetadataShape, ReportStatus } from "types";
 
 export const expenditureReportPeriodsMap = {
   1: "Q1: January 1st to March 31st",
@@ -21,9 +21,43 @@ export const generateReportYearOptions = () => {
     .reverse();
 };
 
+export const generateCopyReportOptions = (
+  reportsByState?: ReportMetadataShape[]
+) => {
+  const noEligbleOption = {
+    id: "copyReport-none",
+    label: "No reports eligble for copy",
+    name: "No reports eligble for copy",
+    value: "",
+  };
+  if (!reportsByState || reportsByState.length === 0) {
+    return [noEligbleOption];
+  }
+
+  let reportOptions = [];
+  for (const report of reportsByState) {
+    if (
+      report.status === ReportStatus.SUBMITTED ||
+      report.status === ReportStatus.APPROVED
+    ) {
+      reportOptions.push({
+        id: `copyReport-${report.id}`,
+        label: `${report.submissionName}`,
+        name: `${report.submissionName}`,
+        value: `${report.id}`,
+      });
+    }
+  }
+  if (reportOptions.length === 0) {
+    return [noEligbleOption];
+  }
+  return reportOptions;
+};
+
 export const prepareExpenditurePayload = (
-  activeState: string | undefined,
-  formData: AnyObject
+  activeState: string,
+  formData: AnyObject,
+  reportsByState?: ReportMetadataShape[]
 ) => {
   const formattedReportYear = Number(formData.reportYear.value);
   const formattedReportPeriod = Number(formData.reportPeriod.value);
@@ -32,12 +66,19 @@ export const prepareExpenditurePayload = (
       formattedReportPeriod as keyof typeof expenditureReportPeriodsMap
     ]
   }`;
+  const copiedReportsID = formData.copyReport?.value;
+  let copiedReport: ReportMetadataShape | false = false;
 
+  if (copiedReportsID) {
+    copiedReport =
+      reportsByState?.find((report) => report.id === copiedReportsID) || false;
+  }
   const expenditurePayload: AnyObject = {
     metadata: {
       reportYear: formattedReportYear,
       reportPeriod: formattedReportPeriod,
       submissionName: submissionName,
+      copyReport: copiedReport,
     },
   };
 

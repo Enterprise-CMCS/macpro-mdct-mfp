@@ -14,6 +14,16 @@ export const addEditExpenditureReport: FormJson = {
   },
   fields: [
     {
+      id: "copyReport",
+      type: ReportFormFieldType.DROPDOWN,
+      validation: ValidationType.DROPDOWN_OPTIONAL,
+      props: {
+        label: "If you want to copy an existing report, select one (optional)",
+        hint: "",
+        options: [],
+      },
+    },
+    {
       id: "reportYear",
       type: ReportFormFieldType.DROPDOWN,
       validation: ValidationType.DROPDOWN,

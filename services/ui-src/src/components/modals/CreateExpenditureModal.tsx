@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 // components
 import { Alert, Form, Modal, ReportContext } from "components";
 import {
+  generateCopyReportOptions,
   generateReportYearOptions,
   prepareExpenditurePayload,
 } from "components/pages/Dashboard/Expenditure/expenditureLogic";
@@ -37,12 +38,20 @@ export const CreateExpenditureModal = ({
     description:
       "To avoid duplication, please select a different Reporting Year or Reporting Period.",
   };
+  const copyOverOptions = generateCopyReportOptions(reportsByState);
 
   for (let field of form.fields) {
     if (field.id.match("reportYear")) {
       field.props = {
         ...field.props,
         options: generateReportYearOptions(),
+      };
+    }
+    if (field.id.match("copyReport")) {
+      field.props = {
+        ...field.props,
+        options: copyOverOptions,
+        disabled: copyOverOptions[0]?.label === "No reports eligble for copy",
       };
     }
   }
@@ -82,7 +91,11 @@ export const CreateExpenditureModal = ({
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
-    const dataToWrite = prepareExpenditurePayload(activeState, formData);
+    const dataToWrite = prepareExpenditurePayload(
+      activeState,
+      formData,
+      reportsByState
+    );
 
     if (selectedReport?.id) {
       const reportKeys = {
@@ -163,7 +176,7 @@ interface Props {
     isOpen: boolean;
     onClose: any;
   };
-  activeState?: string;
+  activeState: string;
   selectedReport?: AnyObject;
   userIsAdmin?: boolean;
 }

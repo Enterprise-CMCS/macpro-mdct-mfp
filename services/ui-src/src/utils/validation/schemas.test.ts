@@ -1,6 +1,7 @@
 import { MixedSchema } from "yup/lib/mixed";
 import {
   dateOptional,
+  dropdownOptional,
   emailOptional,
   number,
   numberComparison,
@@ -66,9 +67,16 @@ describe("utils/schemas", () => {
     "%@#$!ASDF",
   ];
 
+  const goodDropdownOptionalTestCases = [
+    { label: "Option 1", value: "option1" },
+    { label: "", value: "" },
+    { label: undefined, value: undefined },
+  ];
+  const badDropdownOptionalTestCases = ["Not an object", 123, []];
+
   const testSchema = (
     schemaToUse: MixedSchema,
-    testCases: Array<string>,
+    testCases: Array<any>,
     expectedReturn: boolean
   ) => {
     for (let testCase of testCases) {
@@ -121,5 +129,10 @@ describe("utils/schemas", () => {
   test("Evaluate Text Schema using textCustom scheme", () => {
     testSchema(textCustom({ maxLength: 10 }), ["0123456789"], true);
     testSchema(textCustom({ maxLength: 10 }), ["textistoolong", ""], false);
+  });
+
+  test("Evaluate dropdownOptional schema", () => {
+    testSchema(dropdownOptional(), goodDropdownOptionalTestCases, true);
+    testSchema(dropdownOptional(), badDropdownOptionalTestCases, false);
   });
 });

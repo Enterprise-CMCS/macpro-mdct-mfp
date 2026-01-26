@@ -34,7 +34,7 @@ export const ExpenditureDashboardPage = () => {
   const expenditureModal = (
     <CreateExpenditureModal
       activeState={activeState!}
-      selectedReport={selectedReport!}
+      selectedReport={selectedReport}
       modalDisclosure={{
         isOpen: createExpenditureModalIsOpen,
         onClose: createExpenditureModalOnCloseHandler,

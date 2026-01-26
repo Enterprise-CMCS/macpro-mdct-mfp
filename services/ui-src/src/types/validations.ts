@@ -3,6 +3,7 @@ export enum ValidationType {
   CHECKBOX_OPTIONAL = "checkboxOptional",
   DATE = "date",
   DROPDOWN = "dropdown",
+  DROPDOWN_OPTIONAL = "dropdownOptional",
   END_DATE = "endDate",
   DYNAMIC = "dynamic",
   EMAIL = "email",
