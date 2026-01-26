@@ -2,6 +2,8 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ReportContext, StandardReportPage } from "components";
+// types
+import { ReportShape } from "types";
 // utils
 import {
   mockForm,
@@ -13,8 +15,8 @@ import {
   mockReportStore,
 } from "utils/testing/setupJest";
 import { useStore } from "utils/state/useStore";
-import { ReportShape } from "types";
 import { testA11yAct } from "utils/testing/commonTests";
+import { mockStateUser } from "utils/testing/mockUsers";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -47,10 +49,13 @@ describe("<StandardReportPage />", () => {
   });
 
   test("StandardReportPage correctly submits a valid form", async () => {
-    mockedUseStore.mockReturnValue(mockReportStore);
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      ...mockStateUser,
+    });
     const result = render(standardPageSectionComponent);
     const textFieldInput: HTMLInputElement = result.container.querySelector(
-      "[id='mock-text-field'"
+      "[id='mock-text-field']"
     )!;
     await act(async () => {
       await userEvent.type(textFieldInput, "ABC");
