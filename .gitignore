@@ -14,7 +14,6 @@ tests_output
 *.log
 test-results/
 package-lock.json
-.vscode/
 *._S3rver_cors.xml
 tests/test-results/
 tests/playwright-report/
