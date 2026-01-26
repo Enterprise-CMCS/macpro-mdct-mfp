@@ -49,11 +49,13 @@ export interface FormJson {
   tables?: FormTable[];
 }
 
-export interface FormTable {
+export type FormTableRow = (string | FormField)[];
+export type FormTableRows = FormTableRow[];
+
+export interface BaseFormTable {
   id: string;
-  bodyRows: (string | FormField)[][];
-  footRows: (string | FormField)[][];
-  headRows: string[][];
+  footRows: FormTableRows;
+  headRows: FormTableRows;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
@@ -61,6 +63,10 @@ export interface FormTable {
     percentage?: string;
     title: string;
   };
+}
+
+export interface FormTable extends BaseFormTable {
+  bodyRows: FormTableRows;
 }
 
 export enum FormTableType {

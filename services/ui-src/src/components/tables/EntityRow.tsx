@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useId } from "react";
 // components
 import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
 import { EntityStatusIcon, Table } from "components";
@@ -35,6 +35,10 @@ export const EntityRow = ({
   openDeleteEntityModal,
   openOverlayOrDrawer,
 }: Props) => {
+  const rowId = useId();
+  const editNameButtonId = useId();
+  const editButtonId = useId();
+  const deleteButtonId = useId();
   const { report, editable } = useStore();
   const { isMobile } = useBreakpoint();
 
@@ -138,9 +142,9 @@ export const EntityRow = ({
           minHeight={"3.5rem"}
         >
           <Box display={"inline-block"} marginY={"auto"}>
-            <ul id={`entity-${entity.id}`}>
+            <ul>
               {programInfo.map((field, index) => (
-                <li key={index}>
+                <li key={index} id={index === 0 ? rowId : undefined}>
                   {index === 0 && appendToEntityName()}
                   {field}
                 </li>
@@ -174,10 +178,10 @@ export const EntityRow = ({
             {!isRequired && !isCopied && openAddEditEntityModal && (
               <Button
                 sx={sx.editNameButton}
-                id={`edit-entity-name-${entity.id}`}
+                id={editNameButtonId}
                 variant="none"
                 onClick={() => openAddEditEntityModal(entity)}
-                aria-labelledby={`edit-entity-name-${entity.id} entity-${entity.id}`}
+                aria-labelledby={`${editNameButtonId} ${rowId}`}
                 pl={isMobile ? "0" : "1rem"}
                 pr={isMobile ? "1.5rem" : "2.5rem"}
               >
@@ -192,11 +196,11 @@ export const EntityRow = ({
                   ? sx.editOtherEntityButton
                   : sx.editEntityButton
               }
-              id={`edit-entity-${entity.id}`}
+              id={editButtonId}
               onClick={() => openOverlayOrDrawer(entity)}
               variant="outline"
               disabled={entityStatus === EntityStatuses.DISABLED}
-              aria-labelledby={`edit-entity-${entity.id} entity-${entity.id}`}
+              aria-labelledby={`${editButtonId} ${rowId}`}
             >
               {!editable || (!isSAR && isInitiativeClosed)
                 ? verbiage.readOnlyEntityDetailsButtonText
@@ -205,10 +209,10 @@ export const EntityRow = ({
             {!isRequired && !isCopied && openDeleteEntityModal && (
               <Button
                 sx={sx.deleteButton}
-                id={`delete-entity-${entity.id}`}
+                id={deleteButtonId}
                 data-testid="delete-entity"
                 onClick={() => openDeleteEntityModal(entity)}
-                aria-labelledby={`delete-entity-${entity.id} entity-${entity.id}`}
+                aria-labelledby={`${deleteButtonId} ${rowId}`}
               >
                 <Image src={deleteIcon} alt="Delete" boxSize="3x3" />
               </Button>

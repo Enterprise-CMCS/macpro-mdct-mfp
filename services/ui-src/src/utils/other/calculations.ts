@@ -66,7 +66,7 @@ export const sumFields = (
   endsWithId: string,
   exclusions: string[] = []
 ) => {
-  return Object.entries(fieldData)
+  const totalCents = Object.entries(fieldData)
     .filter(
       ([key]) =>
         key.startsWith(startsWithId) &&
@@ -74,9 +74,21 @@ export const sumFields = (
         !exclusions.includes(key)
     )
     .reduce((sum, [, val]) => {
+      if (Array.isArray(val)) {
+        return (
+          sum +
+          val.reduce((innerSum: number, item: AnyObject) => {
+            const n = Number(item.name);
+            return innerSum + (Number.isNaN(n) ? 0 : toCents(n));
+          }, 0)
+        );
+      }
+
       const n = Number(val);
-      return sum + (Number.isNaN(n) ? 0 : n);
+      return sum + (Number.isNaN(n) ? 0 : toCents(n));
     }, 0);
+
+  return toDecimal(totalCents);
 };
 
 export const isEmptyOrNaN = (value: number | string) =>
