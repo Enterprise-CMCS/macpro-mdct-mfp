@@ -76,15 +76,24 @@ export enum FormTableType {
   CALCULATION = "Calculation",
 }
 
+export interface CustomFieldValidation {
+  type: ValidationType;
+  dependentFieldName?: never;
+  options?: AnyObject;
+  parentOptionId?: never;
+}
+
 export interface DependentFieldValidation {
   type: string;
   dependentFieldName: string;
+  options?: never;
   parentOptionId?: never;
 }
 
 export interface NestedFieldValidation {
   type: string;
   nested: true;
+  options?: never;
   parentFieldName: string;
   parentOptionId: string;
 }
@@ -92,12 +101,14 @@ export interface NestedFieldValidation {
 export interface NestedDependentFieldValidation {
   type: string;
   dependentFieldName: string;
+  options?: never;
   nested: true;
   parentFieldName: string;
   parentOptionId: string;
 }
 
 export type FieldValidationObject =
+  | CustomFieldValidation
   | DependentFieldValidation
   | NestedFieldValidation
   | NestedDependentFieldValidation;
