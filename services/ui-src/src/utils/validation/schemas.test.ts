@@ -271,8 +271,21 @@ describe("utils/validation/schemas", () => {
     });
   });
 
-  test("Evaluate dropdownOptional schema", () => {
-    testSchema(schemaMap.dropdownOptional, goodDropdownOptionalTestCases, true);
-    testSchema(schemaMap.dropdownOptional, badDropdownOptionalTestCases, false);
+  describe("dropdownOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.dropdownOptional,
+        goodDropdownOptionalTestCases,
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.dropdownOptional,
+        badDropdownOptionalTestCases,
+        false
+      );
+    });
   });
 });
