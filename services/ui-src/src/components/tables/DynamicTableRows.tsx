@@ -19,6 +19,7 @@ export const DynamicTableRows = ({ tableId }: Props) => {
     shouldUnregister: true,
   });
 
+  // TODO: Set up
   const onChangeHandler = () => {};
   const onBlurHandler = () => {};
 
@@ -41,6 +42,7 @@ export const DynamicTableRows = ({ tableId }: Props) => {
       );
     }
 
+    // TODO: Return field with errors and masks
     return (
       <CmsdsTextField
         id={cell.props?.idOverride}
@@ -66,10 +68,12 @@ export const DynamicTableRows = ({ tableId }: Props) => {
   }, [focusedRowIndex]);
 
   useEffect(() => {
+    // TODO: Add new row to fieldArray
     append({});
   }, [localDynamicRows]);
 
   useEffect(() => {
+    // TODO: Set values
     form.setValue(name, [], { shouldValidate: true });
   }, []);
 

@@ -7,13 +7,18 @@ import {
   DynamicTableProvider,
 } from "./DynamicTableProvider";
 // types
-import { AnyObject } from "types";
+import { AnyObject, FormField } from "types";
 // utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 
+jest.mock("react-uuid", () => jest.fn(() => "mock-uuid"));
+
 const mocks = {
-  addDynamicRow: ["addDynamicRow test"],
+  addDynamicRow: [
+    { id: "dynamicRowId-category[0]", props: {} },
+    "addDynamicRow test",
+  ],
   focusedRowIndex: 1,
   localDynamicRows: [["localDynamicRows test"]],
   localReport: { id: "mockReportId" },
@@ -32,23 +37,27 @@ const TestComponent = () => {
   } = useContext(DynamicTableContext);
 
   const buttons = [
-    "addDynamicRow",
+    "addDynamicRowObject",
+    "addDynamicRowString",
     "focusedRowIndex",
     "localDynamicRows",
     "localReport",
   ];
 
   const methods: AnyObject = {
-    addDynamicRow: () => addDynamicRow(mocks["addDynamicRow"]),
+    addDynamicRowObject: () => addDynamicRow(mocks["addDynamicRow"]),
+    addDynamicRowString: () => addDynamicRow(mocks["addDynamicRow"]),
     focusedRowIndex: () => setFocusedRowIndex(mocks["focusedRowIndex"]),
     localDynamicRows: () => setLocalDynamicRows(mocks["localDynamicRows"]),
     localReport: () => setLocalReport(mocks["localReport"]),
   };
 
   const values: AnyObject = {
-    addDynamicRow: localDynamicRows[0],
+    addDynamicRowObject: (localDynamicRows[0]?.[0] as FormField)?.props
+      ?.idOverride,
+    addDynamicRowString: localDynamicRows[0]?.[1],
     focusedRowIndex,
-    localDynamicRows: localDynamicRows[0],
+    localDynamicRows: localDynamicRows.length,
     localReport: localReport?.id,
   };
 
@@ -81,9 +90,20 @@ describe("<DynamicTableProvider />", () => {
     render(testComponent);
   });
 
-  test("addDynamicRow()", async () => {
-    const button = screen.getByRole("button", { name: "addDynamicRow" });
-    const text = `addDynamicRow: ${mocks["addDynamicRow"][0]}`;
+  test("addDynamicRow() - object", async () => {
+    const button = screen.getByRole("button", { name: "addDynamicRowObject" });
+    const text = "addDynamicRowObject: mock-uuid-category";
+    expect(screen.queryByText(text)).toBeNull();
+
+    await act(async () => {
+      await userEvent.click(button);
+    });
+    expect(screen.getByText(text)).toBeVisible();
+  });
+
+  test("addDynamicRow() - string", async () => {
+    const button = screen.getByRole("button", { name: "addDynamicRowString" });
+    const text = "addDynamicRowString: addDynamicRow test";
     expect(screen.queryByText(text)).toBeNull();
 
     await act(async () => {
@@ -94,7 +114,7 @@ describe("<DynamicTableProvider />", () => {
 
   test("setFocusedRowIndex()", async () => {
     const button = screen.getByRole("button", { name: "focusedRowIndex" });
-    const text = `focusedRowIndex: ${mocks["focusedRowIndex"]}`;
+    const text = "focusedRowIndex: 1";
     expect(screen.queryByText(text)).toBeNull();
 
     await act(async () => {
@@ -105,7 +125,7 @@ describe("<DynamicTableProvider />", () => {
 
   test("setLocalDynamicRows()", async () => {
     const button = screen.getByRole("button", { name: "localDynamicRows" });
-    const text = `localDynamicRows: ${mocks["localDynamicRows"][0]}`;
+    const text = "localDynamicRows: 1";
     expect(screen.queryByText(text)).toBeNull();
 
     await act(async () => {
@@ -116,7 +136,7 @@ describe("<DynamicTableProvider />", () => {
 
   test("setLocalReport()", async () => {
     const button = screen.getByRole("button", { name: "localReport" });
-    const text = `localReport: ${mocks["localReport"].id}`;
+    const text = "localReport: mockReportId";
     expect(screen.queryByText(text)).toBeNull();
 
     await act(async () => {
