@@ -5,6 +5,7 @@ import {
   prepareExpenditurePayload,
 } from "./expenditureLogic";
 import { ReportStatus } from "types";
+import { noEligibleReportsForCopy } from "../../../../constants";
 
 describe("expenditureLogic", () => {
   describe("expenditureReportPeriodsMap", () => {
@@ -64,8 +65,8 @@ describe("expenditureLogic", () => {
   describe("generateCopyReportOptions", () => {
     const noEligibleOption = {
       id: "copyReport-none",
-      label: "No reports eligble for copy",
-      name: "No reports eligble for copy",
+      label: noEligibleReportsForCopy,
+      name: noEligibleReportsForCopy,
       value: "",
     };
 
@@ -186,7 +187,7 @@ describe("expenditureLogic", () => {
 
       expect(result).toEqual({
         metadata: {
-          copyReport: false,
+          copyReport: undefined,
           reportYear: 2025,
           reportPeriod: 1,
           submissionName: "CA: 2025 - Q1: January 1st to March 31st",
@@ -235,7 +236,7 @@ describe("expenditureLogic", () => {
       expect(result.metadata.copyReport).toEqual(reportsByState[0]);
     });
 
-    it("should set copyReport to false when report ID is not found in reportsByState", () => {
+    it("should set copyReport to undefined when report ID is not found in reportsByState", () => {
       const activeState = "FL";
       const formData = {
         reportYear: { value: "2025" },
@@ -256,10 +257,10 @@ describe("expenditureLogic", () => {
         reportsByState as any
       );
 
-      expect(result.metadata.copyReport).toBe(false);
+      expect(result.metadata.copyReport).toBe(undefined);
     });
 
-    it("should set copyReport to false when reportsByState is undefined", () => {
+    it("should set copyReport to undefined when reportsByState is undefined", () => {
       const activeState = "AZ";
       const formData = {
         reportYear: { value: "2026" },
@@ -273,7 +274,7 @@ describe("expenditureLogic", () => {
         undefined
       );
 
-      expect(result.metadata.copyReport).toBe(false);
+      expect(result.metadata.copyReport).toBe(undefined);
     });
   });
 });

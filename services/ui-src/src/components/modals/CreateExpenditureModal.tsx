@@ -14,7 +14,7 @@ import { useStore } from "utils/state/useStore";
 // types
 import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
 // constants
-import { States } from "../../constants";
+import { noEligibleReportsForCopy, States } from "../../constants";
 
 const reportType = ReportType.EXPENDITURE;
 
@@ -51,7 +51,7 @@ export const CreateExpenditureModal = ({
       field.props = {
         ...field.props,
         options: copyOverOptions,
-        disabled: copyOverOptions[0]?.label === "No reports eligble for copy",
+        disabled: copyOverOptions[0]?.label === noEligibleReportsForCopy,
       };
     }
   }

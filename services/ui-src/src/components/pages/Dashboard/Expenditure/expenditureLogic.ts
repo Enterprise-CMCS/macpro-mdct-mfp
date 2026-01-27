@@ -1,4 +1,5 @@
 import { AnyObject, ReportMetadataShape, ReportStatus } from "types";
+import { noEligibleReportsForCopy } from "../../../../constants";
 
 export const expenditureReportPeriodsMap = {
   1: "Q1: January 1st to March 31st",
@@ -22,36 +23,32 @@ export const generateReportYearOptions = () => {
 };
 
 export const generateCopyReportOptions = (
-  reportsByState?: ReportMetadataShape[]
+  reportsByState: ReportMetadataShape[] = []
 ) => {
-  const noEligbleOption = {
+  const noEligibleOption = {
     id: "copyReport-none",
-    label: "No reports eligble for copy",
-    name: "No reports eligble for copy",
+    label: noEligibleReportsForCopy,
+    name: noEligibleReportsForCopy,
     value: "",
   };
-  if (!reportsByState || reportsByState.length === 0) {
-    return [noEligbleOption];
+  if (reportsByState.length === 0) {
+    return [noEligibleOption];
   }
 
-  let reportOptions = [];
-  for (const report of reportsByState) {
-    if (
-      report.status === ReportStatus.SUBMITTED ||
-      report.status === ReportStatus.APPROVED
-    ) {
-      reportOptions.push({
-        id: `copyReport-${report.id}`,
-        label: `${report.submissionName}`,
-        name: `${report.submissionName}`,
-        value: `${report.id}`,
-      });
-    }
-  }
-  if (reportOptions.length === 0) {
-    return [noEligbleOption];
-  }
-  return reportOptions;
+  const reportOptions = reportsByState
+    .filter(
+      (r) =>
+        r.status === ReportStatus.SUBMITTED ||
+        r.status === ReportStatus.APPROVED
+    )
+    .map((r) => ({
+      id: `copyReport-${r.id}`,
+      label: r.submissionName,
+      name: r.submissionName,
+      value: `${r.id}`,
+    }));
+
+  return reportOptions.length > 0 ? reportOptions : [noEligibleOption];
 };
 
 export const prepareExpenditurePayload = (
@@ -67,11 +64,12 @@ export const prepareExpenditurePayload = (
     ]
   }`;
   const copiedReportsID = formData.copyReport?.value;
-  let copiedReport: ReportMetadataShape | false = false;
+  let copiedReport: ReportMetadataShape | undefined;
 
   if (copiedReportsID) {
-    copiedReport =
-      reportsByState?.find((report) => report.id === copiedReportsID) || false;
+    copiedReport = reportsByState?.find(
+      (report) => report.id === copiedReportsID
+    );
   }
   const expenditurePayload: AnyObject = {
     metadata: {

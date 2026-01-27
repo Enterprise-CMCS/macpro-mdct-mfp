@@ -10,6 +10,7 @@ import { useStore } from "../../utils";
 import { mockExpenditureOneNotStartedReportContext } from "utils/testing/expenditure/mockExpenditure";
 import { CreateExpenditureModal } from "./CreateExpenditureModal";
 import { ReportStatus } from "types";
+import { noEligibleReportsForCopy } from "../../constants";
 
 const mockCreateReport = jest.fn();
 const mockFetchReportsByState = jest.fn();
@@ -240,7 +241,7 @@ describe("<CreateExpenditureModal />", () => {
         expect(copyReportDropdown).toBeDisabled();
         // Check that the "No reports eligible for copy" option exists
         const noEligibleOption = Array.from(copyReportDropdown.options).find(
-          (option) => option.text === "No reports eligble for copy"
+          (option) => option.text === noEligibleReportsForCopy
         );
         expect(noEligibleOption).toBeDefined();
       });
