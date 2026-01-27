@@ -102,7 +102,7 @@ export interface FormTable {
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
-    dynamicField?: {
+    dynamicRows?: {
       buttonText: string;
       label: string;
       hint: string;

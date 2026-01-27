@@ -73,7 +73,7 @@ export const supplementalServicesRoute: FormTablesRoute = {
         headRows: [supplementalServicesHeaders],
         tableType: FormTableType.CALCULATION,
         verbiage: {
-          dynamicField: {
+          dynamicRows: {
             buttonText: "Add other category",
             hint: "To add an additional category, click the “Add other category” button below.",
             label: "Other:",

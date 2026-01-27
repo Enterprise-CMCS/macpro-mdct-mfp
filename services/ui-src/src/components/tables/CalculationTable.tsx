@@ -83,18 +83,18 @@ export const CalculationTable = ({
           {translate(verbiage.percentage, { percentage: percentageDisplay })}
         </Text>
       )}
-      {verbiage?.dynamicField?.hint && (
-        <Text sx={sx.dynamicFieldHint}>{verbiage?.dynamicField?.hint}</Text>
+      {verbiage?.dynamicRows?.hint && (
+        <Text sx={sx.dynamicRowsHint}>{verbiage?.dynamicRows?.hint}</Text>
       )}
 
       {hasDynamicRows && (
         <Button
           leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="" />}
           onClick={() => addDynamicRow(dynamicRows[0])}
-          sx={sx.dynamicButton}
+          sx={sx.dynamicRowsButton}
           variant="outline"
         >
-          {verbiage?.dynamicField?.buttonText}
+          {verbiage?.dynamicRows?.buttonText}
         </Button>
       )}
 
@@ -196,10 +196,10 @@ const sx = {
     fontWeight: "bold",
     paddingBottom: "spacer2",
   },
-  dynamicFieldHint: {
+  dynamicRowsHint: {
     marginBottom: "spacer2",
   },
-  dynamicButton: {
+  dynamicRowsButton: {
     marginBottom: "spacer2",
   },
   buttonIcons: {
