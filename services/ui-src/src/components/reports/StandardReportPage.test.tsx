@@ -53,29 +53,29 @@ describe("<StandardReportPage />", () => {
       ...mockReportStore,
       ...mockStateUser,
     });
-    const result = render(standardPageSectionComponent);
-    const textFieldInput: HTMLInputElement = result.container.querySelector(
-      "[id='mock-text-field']"
-    )!;
+    render(standardPageSectionComponent);
+    const textFieldInput: HTMLInputElement = screen.getByRole("textbox", {
+      name: "mock text field",
+    });
     await act(async () => {
       await userEvent.type(textFieldInput, "ABC");
     });
     expect(textFieldInput.value).toEqual("ABC");
-    const dateFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='mock-date-field'"
-    )!;
+    const dateFieldInput: HTMLInputElement = screen.getByRole("textbox", {
+      name: "mock date field",
+    });
     await act(async () => {
       await userEvent.type(dateFieldInput, "01012024");
     });
     expect(dateFieldInput.value).toEqual("01012024");
-    const numberFieldInput: HTMLInputElement = result.container.querySelector(
-      "[id='mock-number-field'"
-    )!;
+    const numberFieldInput: HTMLInputElement = screen.getByRole("textbox", {
+      name: "mock number field",
+    });
     await act(async () => {
       await userEvent.type(numberFieldInput, "1");
     });
     expect(numberFieldInput.value).toEqual("1");
-    const continueButton = screen.getByText("Continue")!;
+    const continueButton = screen.getByRole("button", { name: "Continue" });
     await act(async () => {
       await userEvent.click(continueButton);
     });
@@ -86,7 +86,7 @@ describe("<StandardReportPage />", () => {
   test("StandardReportPage navigates to next route onError", async () => {
     mockedUseStore.mockReturnValue(mockReportStoreWithoutData);
     render(standardPageSectionComponent);
-    const continueButton = screen.getByText("Continue")!;
+    const continueButton = screen.getByRole("button", { name: "Continue" });
     await act(async () => {
       await userEvent.click(continueButton);
     });

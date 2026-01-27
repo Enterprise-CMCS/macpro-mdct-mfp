@@ -67,6 +67,7 @@ describe("<AdminBannerForm />", () => {
     const formInputs = screen.getAllByRole("textbox");
     formInputs.forEach((input) => {
       expect(input).toBeVisible();
+      expect(input).toBeEnabled();
     });
   });
 
