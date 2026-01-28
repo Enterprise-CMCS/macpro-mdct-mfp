@@ -1,11 +1,10 @@
 import { Page, expect } from "@playwright/test";
 import { testBanner } from "../../utils/consts";
+import { BasePage } from "./base.page";
 
-export class AdminPage {
-  readonly page: Page;
-
+export class AdminPage extends BasePage {
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   async goToReportDashboard(state: string, reportType: string) {
@@ -13,9 +12,16 @@ export class AdminPage {
     await this.page
       .locator(`input[name="report"][value="${reportType}"]`)
       .click();
+    const getReportsResp = this.waitForReportResponse("GET", 200);
     await this.page
       .getByRole("button", { name: "Go to Report Dashboard" })
       .click();
+    await getReportsResp;
+    await this.page
+      .locator("div")
+      .filter({ hasText: /^Loading\.\.\.$/ })
+      .nth(2)
+      .waitFor({ state: "detached" });
   }
 
   // Profile page functionality
@@ -33,19 +39,15 @@ export class AdminPage {
       .fill(testBanner.description);
     await this.page.getByLabel("Start date").fill(testBanner.startDate);
     await this.page.getByLabel("End date").fill(testBanner.endDate);
+    const postResp = this.waitForApiResponse("POST", 201);
     await this.page.getByRole("button", { name: "Create banner" }).click();
-    await this.page.waitForResponse(
-      (response) =>
-        response.status() == 201 && response.request().method() === "POST"
-    );
+    await postResp;
   }
 
   async deleteAdminBanner() {
+    const deleteResp = this.waitForApiResponse("DELETE", 200);
     await this.page.getByRole("button", { name: "Delete banner" }).click();
-    await this.page.waitForResponse(
-      (response) =>
-        response.status() == 200 && response.request().method() === "DELETE"
-    );
+    await deleteResp;
   }
 
   async deleteExistingBanners() {
@@ -61,13 +63,9 @@ export class AdminPage {
 
     if (deleteButtons.length > 0) {
       for (const button of deleteButtons) {
+        const deleteResp = this.waitForApiResponse("DELETE", 200, "banners");
         await button.click();
-        await this.page.waitForResponse(
-          (response) =>
-            response.url().includes(`banners`) &&
-            response.request().method() === "DELETE" &&
-            response.status() == 200
-        );
+        await deleteResp;
       }
     }
   }
@@ -81,13 +79,13 @@ export class AdminPage {
   }
 
   async unlockFirstSubmittedReport() {
-    const report = await this.findSubmittedReport();
-    await report.getByRole("button", { name: "Unlock" }).click();
-    this.page.waitForResponse(
-      (response) =>
-        response.request().method() === "PUT" &&
-        response.url().includes("/reports/release/") &&
-        response.status() === 200
+    const putReportResp = this.waitForApiResponse(
+      "PUT",
+      200,
+      "/reports/release/"
     );
+    const getReportsResp = this.waitForReportResponse("GET", 200);
+    await this.page.getByRole("button", { name: "Unlock" }).first().click();
+    await Promise.all([putReportResp, getReportsResp]);
   }
 }

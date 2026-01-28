@@ -1,0 +1,316 @@
+{
+  "metadata": {
+    "lastAlteredBy": "Pedro Navaja",
+    "status": "In progress"
+  },
+  "fieldData": {
+    "initiative": [
+      {
+        "id": "383dc-0f5b-6065-b3a5-e5ad6c8e1fb0",
+        "type": "initiative",
+        "initiative_name": "Initiative01",
+        "initiative_wpTopic": [
+          {
+            "key": "initiative_wpTopic-VjQ0OFqior9Dxu5RRNiZ5u",
+            "value": "Transitions and transition coordination services "
+          }
+        ],
+        "isOtherEntity": true,
+        "defineInitiative_describeInitiative": "Test",
+        "defineInitiative_targetPopulations": [
+          {
+            "key": "targetPopulations-2Vd02CVUtKgBETwqzDXpSIhi",
+            "value": "Older adults"
+          }
+        ],
+        "defineInitiative_projectedStartDate": "01/26/2026",
+        "defineInitiative_projectedEndDate": [
+          {
+            "key": "defineInitiative_projectedEndDate-TR6HoXF3Unf2QX0zzDg2Kp",
+            "value": "No"
+          }
+        ],
+        "defineInitiative_projectedEndDate_value": "",
+        "evaluationPlan": [
+          {
+            "id": "fabef0-d6ca-5554-0f52-5043142c7ecd",
+            "evaluationPlan_objectiveName": "Test Objective",
+            "evaluationPlan_description": "Test Description",
+            "evaluationPlan_targets": "Test Targets",
+            "evaluationPlan_includesTargets": [
+              {
+                "key": "evaluationPlan_includesTargets-UL4dAeyyvCFAXttxZioacR",
+                "value": "No"
+              }
+            ],
+            "evaluationPlan_additionalDetails": "Test Additional Details"
+          }
+        ],
+        "fundingSources": [
+          {
+            "id": "ea83a6-fd16-c072-d74b-1161173ca72",
+            "fundingSources_wpTopic": [
+              {
+                "key": "fundingSources_wpTopic-2VLpZ9A92OivbZhKvY8pE4hB65c",
+                "value": "MFP cooperative agreement funds for qualified HCBS and demonstration services"
+              }
+            ],
+            "fundingSources_quarters2026Q1": "1000.00",
+            "fundingSources_quarters2026Q2": "100.00",
+            "fundingSources_quarters2026Q3": "0.00",
+            "fundingSources_quarters2026Q4": "0.00",
+            "fundingSources_quarters2027Q1": "500.00",
+            "fundingSources_quarters2027Q2": "600.00",
+            "fundingSources_quarters2027Q3": "N/A",
+            "fundingSources_quarters2027Q4": "750.00",
+            "fundingSources_quarters2028Q1": "900.00",
+            "fundingSources_quarters2028Q2": "0.00",
+            "fundingSources_quarters2028Q3": "1100.00",
+            "fundingSources_quarters2028Q4": "1200.00"
+          }
+        ]
+      },
+      {
+        "id": "d040e7-44fd-c786-f50-28f324c5c1c",
+        "type": "initiative",
+        "initiative_name": "Initiative02",
+        "initiative_wpTopic": [
+          {
+            "key": "initiative_wpTopic-wbUsMMqVP7q1n10szK5h5S",
+            "value": "Housing-related supports "
+          }
+        ],
+        "isOtherEntity": true,
+        "defineInitiative_describeInitiative": "Test",
+        "defineInitiative_targetPopulations": [
+          {
+            "key": "targetPopulations-2Vd02CVUtKgBETwqzDXpSIhi",
+            "value": "Older adults"
+          }
+        ],
+        "defineInitiative_projectedStartDate": "01/26/2026",
+        "defineInitiative_projectedEndDate": [
+          {
+            "key": "defineInitiative_projectedEndDate-TR6HoXF3Unf2QX0zzDg2Kp",
+            "value": "No"
+          }
+        ],
+        "defineInitiative_projectedEndDate_value": "",
+        "evaluationPlan": [
+          {
+            "id": "2b25f54-fa83-763-fbde-f6fd00e1620e",
+            "evaluationPlan_objectiveName": "Test Objective",
+            "evaluationPlan_description": "Test Description",
+            "evaluationPlan_targets": "Test Targets",
+            "evaluationPlan_includesTargets": [
+              {
+                "key": "evaluationPlan_includesTargets-UL4dAeyyvCFAXttxZioacR",
+                "value": "No"
+              }
+            ],
+            "evaluationPlan_additionalDetails": "Test Additional Details"
+          }
+        ],
+        "fundingSources": [
+          {
+            "id": "ae7d3e0-c5ba-3355-868-4513475fb077",
+            "fundingSources_wpTopic": [
+              {
+                "key": "fundingSources_wpTopic-2VLpZ9A92OivbZhKvY8pE4hB65c",
+                "value": "MFP cooperative agreement funds for qualified HCBS and demonstration services"
+              }
+            ],
+            "fundingSources_quarters2026Q1": "1000.00",
+            "fundingSources_quarters2026Q2": "100.00",
+            "fundingSources_quarters2026Q3": "0.00",
+            "fundingSources_quarters2026Q4": "0.00",
+            "fundingSources_quarters2027Q1": "500.00",
+            "fundingSources_quarters2027Q2": "600.00",
+            "fundingSources_quarters2027Q3": "N/A",
+            "fundingSources_quarters2027Q4": "750.00",
+            "fundingSources_quarters2028Q1": "900.00",
+            "fundingSources_quarters2028Q2": "0.00",
+            "fundingSources_quarters2028Q3": "1100.00",
+            "fundingSources_quarters2028Q4": "1200.00"
+          }
+        ]
+      },
+      {
+        "id": "df6d3-f32c-101e-784f-f048820d2f1",
+        "type": "initiative",
+        "initiative_name": "Initiative03",
+        "initiative_wpTopic": [
+          {
+            "key": "initiative_wpTopic-SdaFlF3DJyzKcHCCu3Zylm",
+            "value": "Quality measurement and improvement "
+          }
+        ],
+        "isOtherEntity": true,
+        "defineInitiative_describeInitiative": "Test",
+        "defineInitiative_targetPopulations": [
+          {
+            "key": "targetPopulations-2Vd02CVUtKgBETwqzDXpSIhi",
+            "value": "Older adults"
+          }
+        ],
+        "defineInitiative_projectedStartDate": "01/26/2026",
+        "defineInitiative_projectedEndDate": [
+          {
+            "key": "defineInitiative_projectedEndDate-TR6HoXF3Unf2QX0zzDg2Kp",
+            "value": "No"
+          }
+        ],
+        "defineInitiative_projectedEndDate_value": "",
+        "evaluationPlan": [
+          {
+            "id": "4c6a665-4f63-3c8b-f6-d34aef484f3",
+            "evaluationPlan_objectiveName": "Test Objective",
+            "evaluationPlan_description": "Test Description",
+            "evaluationPlan_targets": "Test Targets",
+            "evaluationPlan_includesTargets": [
+              {
+                "key": "evaluationPlan_includesTargets-UL4dAeyyvCFAXttxZioacR",
+                "value": "No"
+              }
+            ],
+            "evaluationPlan_additionalDetails": "Test Additional Details"
+          }
+        ],
+        "fundingSources": [
+          {
+            "id": "7ab23e0-fd42-10c-b742-70e3f788be14",
+            "fundingSources_wpTopic": [
+              {
+                "key": "fundingSources_wpTopic-2VLpZ9A92OivbZhKvY8pE4hB65c",
+                "value": "MFP cooperative agreement funds for qualified HCBS and demonstration services"
+              }
+            ],
+            "fundingSources_quarters2026Q1": "1000.00",
+            "fundingSources_quarters2026Q2": "100.00",
+            "fundingSources_quarters2026Q3": "0.00",
+            "fundingSources_quarters2026Q4": "0.00",
+            "fundingSources_quarters2027Q1": "500.00",
+            "fundingSources_quarters2027Q2": "600.00",
+            "fundingSources_quarters2027Q3": "N/A",
+            "fundingSources_quarters2027Q4": "750.00",
+            "fundingSources_quarters2028Q1": "900.00",
+            "fundingSources_quarters2028Q2": "0.00",
+            "fundingSources_quarters2028Q3": "1100.00",
+            "fundingSources_quarters2028Q4": "1200.00"
+          }
+        ]
+      }
+    ],
+    "instructions_selfDirectedInitiatives": [
+      {
+        "key": "instructions_selfDirectedInitiatives-3DGAqqnOBE2kwKVFMxUt3A",
+        "value": "No"
+      }
+    ],
+    "instructions_tribalInitiatives": [
+      {
+        "key": "instructions_tribalInitiatives-3DGAqqnOBE2kwKVFMxUt3A",
+        "value": "No"
+      }
+    ],
+    "strategy_explaination": "Test explanation",
+    "strategy_additionalDetails": "Test additional details",
+    "targetPopulations": [
+      {
+        "id": "2Vd02CVUtKgBETwqzDXpSIhi",
+        "transitionBenchmarks_targetPopulationName": "Older adults",
+        "isRequired": true,
+        "transitionBenchmarks_applicableToMfpDemonstration": [
+          {
+            "key": "transitionBenchmarks_applicableToMfpDemonstration-2UObIuHjl15upf6tLcgcWd",
+            "value": "Yes"
+          }
+        ],
+        "quarterlyProjections2026Q1": "75",
+        "quarterlyProjections2026Q2": "N/A",
+        "quarterlyProjections2026Q3": "0",
+        "quarterlyProjections2026Q4": "0",
+        "quarterlyProjections2027Q1": "0",
+        "quarterlyProjections2027Q2": "0",
+        "quarterlyProjections2027Q3": "100",
+        "quarterlyProjections2027Q4": "0",
+        "quarterlyProjections2028Q1": "0",
+        "quarterlyProjections2028Q2": "750",
+        "quarterlyProjections2028Q3": "0",
+        "quarterlyProjections2028Q4": "0"
+      },
+      {
+        "id": "2Vd02HAezQkxNu2ShmlQONHa",
+        "transitionBenchmarks_targetPopulationName": "Individuals with physical disabilities (PD)",
+        "transitionBenchmarks_targetPopulationName_short": "PD",
+        "isRequired": true,
+        "transitionBenchmarks_applicableToMfpDemonstration": [
+          {
+            "key": "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v",
+            "value": "No"
+          }
+        ],
+        "quarterlyProjections2026Q1": "",
+        "quarterlyProjections2026Q2": "",
+        "quarterlyProjections2026Q3": "",
+        "quarterlyProjections2026Q4": "",
+        "quarterlyProjections2027Q1": "",
+        "quarterlyProjections2027Q2": "",
+        "quarterlyProjections2027Q3": "",
+        "quarterlyProjections2027Q4": "",
+        "quarterlyProjections2028Q1": "",
+        "quarterlyProjections2028Q2": "",
+        "quarterlyProjections2028Q3": "",
+        "quarterlyProjections2028Q4": ""
+      },
+      {
+        "id": "2Vd02IvLwE59ebYAjfiU7H66",
+        "transitionBenchmarks_targetPopulationName": "Individuals with intellectual and developmental disabilities (I/DD)",
+        "transitionBenchmarks_targetPopulationName_short": "I/DD",
+        "isRequired": true,
+        "transitionBenchmarks_applicableToMfpDemonstration": [
+          {
+            "key": "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v",
+            "value": "No"
+          }
+        ],
+        "quarterlyProjections2026Q1": "",
+        "quarterlyProjections2026Q2": "",
+        "quarterlyProjections2026Q3": "",
+        "quarterlyProjections2026Q4": "",
+        "quarterlyProjections2027Q1": "",
+        "quarterlyProjections2027Q2": "",
+        "quarterlyProjections2027Q3": "",
+        "quarterlyProjections2027Q4": "",
+        "quarterlyProjections2028Q1": "",
+        "quarterlyProjections2028Q2": "",
+        "quarterlyProjections2028Q3": "",
+        "quarterlyProjections2028Q4": ""
+      },
+      {
+        "id": "2Vd02J1FHl3Ka1DbtU5FMSDh",
+        "transitionBenchmarks_targetPopulationName": "Individuals with mental health and substance use disorders (MH/SUD)",
+        "transitionBenchmarks_targetPopulationName_short": "MH/SUD",
+        "isRequired": true,
+        "transitionBenchmarks_applicableToMfpDemonstration": [
+          {
+            "key": "transitionBenchmarks_applicableToMfpDemonstration-2UObIwERkSKEGVUU1g8E1v",
+            "value": "No"
+          }
+        ],
+        "quarterlyProjections2026Q1": "",
+        "quarterlyProjections2026Q2": "",
+        "quarterlyProjections2026Q3": "",
+        "quarterlyProjections2026Q4": "",
+        "quarterlyProjections2027Q1": "",
+        "quarterlyProjections2027Q2": "",
+        "quarterlyProjections2027Q3": "",
+        "quarterlyProjections2027Q4": "",
+        "quarterlyProjections2028Q1": "",
+        "quarterlyProjections2028Q2": "",
+        "quarterlyProjections2028Q3": "",
+        "quarterlyProjections2028Q4": ""
+      }
+    ]
+  }
+}

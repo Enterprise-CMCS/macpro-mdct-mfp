@@ -5,6 +5,7 @@ export const statePassword = process.env.SEED_STATE_USER_PASSWORD!; // pragma: a
 
 export const stateAbbreviation = process.env.SEED_STATE || "PR";
 export const stateName = process.env.SEED_STATE_NAME || "Puerto Rico";
+export const reportType = "WP";
 
 export const firstPeriod: number = 1;
 export const secondPeriod: number = 2;
