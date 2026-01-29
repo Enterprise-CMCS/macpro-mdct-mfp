@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 // components
 import {
   Box,
+  Button,
   Heading,
+  Image,
   Table,
   TableCaption,
   Tbody,
@@ -14,21 +16,17 @@ import {
   Tr,
   VisuallyHidden,
 } from "@chakra-ui/react";
+import { DynamicTableContext, DynamicTableRows } from "components";
+// assets
+import addIcon from "assets/icons/icon_add.png";
 // types
-import { AnyObject, FormField, FormTable, ReportShape } from "types";
+import { AnyObject, FormTable, ReportShape } from "types";
 // utils
-import {
-  formFieldFactory,
-  hydrateFormFields,
-  maskResponseData,
-  parseCustomHtml,
-  translate,
-  updateRenderFields,
-  updatedReportOnFieldChange,
-} from "utils";
+import { parseCustomHtml, translate } from "utils";
 
 export const CalculationTable = ({
-  bodyRows = [],
+  bodyRows,
+  dynamicRows = [],
   footRows,
   formData,
   headRows,
@@ -38,8 +36,12 @@ export const CalculationTable = ({
   report = {} as ReportShape,
   verbiage,
 }: Props) => {
-  const [localReport, setLocalReport] = useState({} as ReportShape);
+  // Dynamic rows
+  const { addDynamicRow, displayCell, localReport, setLocalReport } =
+    useContext(DynamicTableContext);
+  const hasDynamicRows = dynamicRows.length > 0;
 
+  // Percentage field
   const percentageField = options?.percentageField;
   const percentage = percentageField
     ? localReport.fieldData?.[percentageField]
@@ -56,56 +58,12 @@ export const CalculationTable = ({
   const firstRow = headRows[0];
   const thWidth = `${100 / firstRow.length}%`;
 
-  const displayCell = ({ cell, columnId, rowId }: DisplayCellOptions) => {
-    if (typeof cell === "string") return cell;
-
-    // If input is readonly, display text instead of input
-    if (cell.props?.readOnly) {
-      const readOnlyValue =
-        localReport.fieldData?.[cell.id] || cell.props?.initialValue;
-      const mask = cell.props?.mask;
-
-      return (
-        <Text as="span" sx={sx.calculated}>
-          {maskResponseData(readOnlyValue, mask)}
-        </Text>
-      );
-    }
-
-    const field = {
-      ...cell,
-      props: {
-        ...cell.props,
-        ariaLabelledby: `${rowId} ${columnId}`,
-        // Use ariaLabelledby in lieu of label
-        label: undefined,
-        handleOnChange: (e: { target: { id: string; value: string } }) =>
-          updatedFieldsForDisplay(e.target.id, e.target.value),
-      },
-    };
-
-    const fieldsToRender = hydrateFormFields(
-      updateRenderFields(localReport, [field], formData),
-      formData
-    );
-
-    return formFieldFactory(fieldsToRender, {
-      disabled,
-      autosave: true,
-      validateOnRender: false,
-    });
-  };
-
-  const updatedFieldsForDisplay = (fieldName: string, fieldValue: string) => {
-    const updatedReport = updatedReportOnFieldChange({
-      fieldName,
-      fieldValue,
-      report: localReport,
-      // TODO: Use form percentage or field percentage
-      percentage,
-      tableId,
-    });
-    setLocalReport(updatedReport);
+  const cellProps = {
+    // TODO: Update for submitted/admin
+    disabled,
+    formData,
+    percentage,
+    tableId,
   };
 
   useEffect(() => {
@@ -121,9 +79,23 @@ export const CalculationTable = ({
 
       <Heading as="h2">{verbiage?.title}</Heading>
       {verbiage?.percentage && (
-        <Text sx={sx.text}>
+        <Text sx={sx.percentageText}>
           {translate(verbiage.percentage, { percentage: percentageDisplay })}
         </Text>
+      )}
+      {verbiage?.dynamicRows?.hint && (
+        <Text sx={sx.dynamicRowsHint}>{verbiage?.dynamicRows?.hint}</Text>
+      )}
+
+      {hasDynamicRows && (
+        <Button
+          leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="" />}
+          onClick={() => addDynamicRow(dynamicRows[0])}
+          sx={sx.dynamicRowsButton}
+          variant="outline"
+        >
+          {verbiage?.dynamicRows?.buttonText}
+        </Button>
       )}
 
       <Table id={tableId} sx={sx.table}>
@@ -139,7 +111,13 @@ export const CalculationTable = ({
                   key={`thead-row-${rowIndex}-cell-${cellIndex}`}
                   sx={{ width: thWidth }}
                 >
-                  {displayCell({ cell })}
+                  {displayCell({
+                    cell,
+                    columnId: `thead-row-${rowIndex}-cell-0`,
+                    index: rowIndex,
+                    rowId: `thead-row-0-cell-${cellIndex}`,
+                    ...cellProps,
+                  })}
                 </Th>
               ))}
             </Tr>
@@ -156,12 +134,15 @@ export const CalculationTable = ({
                   {displayCell({
                     cell,
                     columnId: `tbody-row-${rowIndex}-cell-0`,
+                    index: rowIndex,
                     rowId: `thead-row-0-cell-${cellIndex}`,
+                    ...cellProps,
                   })}
                 </Td>
               ))}
             </Tr>
           ))}
+          <DynamicTableRows tableId={tableId} />
         </Tbody>
         <Tfoot>
           {footRows.map((row, rowIndex: number) => (
@@ -171,7 +152,13 @@ export const CalculationTable = ({
                   id={`tfoot-row-${rowIndex}-cell-${cellIndex}`}
                   key={`tfoot-row-${rowIndex}-cell-${cellIndex}`}
                 >
-                  {displayCell({ cell })}
+                  {displayCell({
+                    cell,
+                    columnId: `tfoot-row-${rowIndex}-cell-0`,
+                    index: rowIndex,
+                    rowId: `tfoot-row-0-cell-${cellIndex}`,
+                    ...cellProps,
+                  })}
                 </Td>
               ))}
             </Tr>
@@ -188,26 +175,7 @@ interface Props extends Omit<FormTable, "tableType"> {
   report?: ReportShape;
 }
 
-interface DisplayCellOptions {
-  cell: string | FormField;
-  columnId?: string;
-  rowId?: string;
-}
-
 const sx = {
-  box: {
-    h2: {
-      fontSize: "2xl",
-      marginBottom: "spacer1",
-      marginTop: "spacer4",
-      paddingBottom: 0,
-    },
-  },
-  calculated: {
-    display: "block",
-    fontWeight: "bold",
-    textAlign: "right",
-  },
   error: {
     fontWeight: "bold",
     marginBottom: "spacer4",
@@ -215,10 +183,27 @@ const sx = {
       color: "primary",
     },
   },
-  text: {
+  box: {
+    h2: {
+      fontSize: "2xl",
+      marginBottom: "spacer2",
+      marginTop: "spacer4",
+      paddingBottom: 0,
+    },
+  },
+  percentageText: {
     color: "gray_dark",
     fontWeight: "bold",
-    marginBottom: "spacer3",
+    paddingBottom: "spacer2",
+  },
+  dynamicRowsHint: {
+    marginBottom: "spacer2",
+  },
+  dynamicRowsButton: {
+    marginBottom: "spacer2",
+  },
+  buttonIcons: {
+    height: "1rem",
   },
   captionBox: {
     margin: 0,
@@ -227,6 +212,7 @@ const sx = {
   },
   table: {
     marginBottom: "spacer5",
+    marginTop: "spacer1",
     tbody: {
       "tr:nth-of-type(even)": {
         td: {
