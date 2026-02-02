@@ -44,35 +44,24 @@ export const Form = ({
   autosave,
   dontReset,
   children,
-  userDisabled,
   reportStatus,
   ...props
 }: Props) => {
   const { editableByAdmins, fields, options, tables = [], verbiage } = formJson;
 
   let location = useLocation();
+  const { report } = useStore();
+  const { userIsEndUser } = useStore().user ?? {};
 
   // determine if fields should be disabled (based on admin roles)
-  const { userIsAdmin, userIsEndUser } = useStore().user ?? {};
-
-  const { report, editable } = useStore();
-
-  const reportWithSubmittedStatus = reportStatus === ReportStatus.SUBMITTED;
+  const submittedReport = reportStatus === ReportStatus.SUBMITTED;
+  const fieldInputDisabled =
+    !editableByAdmins && (!userIsEndUser || submittedReport);
 
   // For the SAR RE&T sections, display an alert if the MFP WP does not contain any target populations
   const displayRetError =
     report?.populations?.length === 0 &&
     location.pathname.startsWith("/sar/recruitment-enrollment-transitions");
-
-  /**
-   * edit report modal should always be view only admins
-   * edit report modal should be view only for state users after SAR submission
-   */
-  const fieldInputDisabled =
-    (userIsAdmin && !editableByAdmins) ||
-    (userIsEndUser && reportWithSubmittedStatus) ||
-    !editable ||
-    userDisabled;
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
@@ -245,10 +234,9 @@ interface Props {
   formData?: AnyObject;
   autosave?: boolean;
   children?: ReactNode;
-  userDisabled?: boolean;
   onFormChange?: Function;
-  [key: string]: any;
   reportStatus?: ReportStatus;
+  [key: string]: any;
 }
 
 const sx = {

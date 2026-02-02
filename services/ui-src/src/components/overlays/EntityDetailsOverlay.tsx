@@ -26,7 +26,6 @@ import {
   isFieldElement,
   EntityShape,
   ReportStatus,
-  ReportType,
 } from "types";
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
@@ -55,7 +54,6 @@ export const EntityDetailsOverlay = ({
   const { full_name, state } = useStore().user ?? {};
   const { updateReport } = useContext(ReportContext);
   const [spinner, setSpinner] = useState<Boolean>();
-  const isSAR = report?.reportType === ReportType.SAR;
 
   const reportPageTitle = selectedEntity?.isInitiativeClosed
     ? `[Closed] ${selectedEntity?.initiative_name}`
@@ -248,7 +246,6 @@ export const EntityDetailsOverlay = ({
         dontReset={true}
         onFormChange={onChange}
         validateOnRender={false}
-        userDisabled={!isSAR && selectedEntity?.isInitiativeClosed}
       />
       <Box>
         {verbiage.closeOutWarning && (
