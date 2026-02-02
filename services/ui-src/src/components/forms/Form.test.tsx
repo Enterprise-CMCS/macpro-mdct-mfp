@@ -7,6 +7,11 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
+import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
+import { useStore } from "utils";
+
+jest.mock("utils/state/useStore");
+const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const mockOnSubmit = jest.fn();
 
@@ -26,12 +31,41 @@ const formComponent = (form = mockForm) => (
 );
 
 describe("<Form />", () => {
-  test("Form is visible", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+  test("Form is visible and disabled by default", () => {
+    mockedUseStore.mockReturnValue({});
     render(formComponent());
     const form = screen.getByRole("textbox", {
       name: mockForm.fields[0].props.label,
     });
     expect(form).toBeVisible();
+    expect(form).toBeDisabled();
+  });
+
+  test("Form is enabled for state users", () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
+    render(formComponent());
+    const form = screen.getByRole("textbox", {
+      name: mockForm.fields[0].props.label,
+    });
+    expect(form).toBeVisible();
+    expect(form).toBeEnabled();
+  });
+
+  test("Form is enabled for admin users when specified", () => {
+    mockedUseStore.mockReturnValue(mockAdminUser);
+    const mockFormEditableByAdmins = {
+      ...mockForm,
+      editableByAdmins: true,
+    };
+    render(formComponent(mockFormEditableByAdmins));
+    const form = screen.getByRole("textbox", {
+      name: mockForm.fields[0].props.label,
+    });
+    expect(form).toBeVisible();
+    expect(form).toBeEnabled();
   });
 
   test("form table is visible", () => {

@@ -1,8 +1,11 @@
 import {
   expenditureReportPeriodsMap,
+  generateCopyReportOptions,
   generateReportYearOptions,
   prepareExpenditurePayload,
 } from "./expenditureLogic";
+import { ReportStatus } from "types";
+import { noEligibleReportsForCopy } from "../../../../constants";
 
 describe("expenditureLogic", () => {
   describe("expenditureReportPeriodsMap", () => {
@@ -59,8 +62,121 @@ describe("expenditureLogic", () => {
     });
   });
 
+  describe("generateCopyReportOptions", () => {
+    const noEligibleOption = {
+      id: "copyReport-none",
+      label: noEligibleReportsForCopy,
+      name: noEligibleReportsForCopy,
+      value: "",
+    };
+
+    it("should return no eligible option when reportsByState is undefined", () => {
+      const result = generateCopyReportOptions(undefined);
+
+      expect(result).toEqual([noEligibleOption]);
+    });
+
+    it("should return no eligible option when reportsByState is empty", () => {
+      const result = generateCopyReportOptions([]);
+
+      expect(result).toEqual([noEligibleOption]);
+    });
+
+    it("should return no eligible option when no reports have SUBMITTED or APPROVED status", () => {
+      const reports = [
+        {
+          id: "report-1",
+          submissionName: "CA: 2025 - Q1",
+          status: ReportStatus.NOT_STARTED,
+        },
+        {
+          id: "report-2",
+          submissionName: "CA: 2025 - Q2",
+          status: ReportStatus.IN_PROGRESS,
+        },
+      ];
+
+      const result = generateCopyReportOptions(reports as any);
+
+      expect(result).toEqual([noEligibleOption]);
+    });
+
+    it("should return options for SUBMITTED reports", () => {
+      const reports = [
+        {
+          id: "report-1",
+          submissionName: "CA: 2025 - Q1: January 1st to March 31st",
+          status: ReportStatus.SUBMITTED,
+        },
+      ];
+
+      const result = generateCopyReportOptions(reports as any);
+
+      expect(result).toEqual([
+        {
+          id: "copyReport-report-1",
+          label: "CA: 2025 - Q1: January 1st to March 31st",
+          name: "CA: 2025 - Q1: January 1st to March 31st",
+          value: "report-1",
+        },
+      ]);
+    });
+
+    it("should return options for APPROVED reports", () => {
+      const reports = [
+        {
+          id: "report-2",
+          submissionName: "CA: 2025 - Q2: April 1st to June 30th",
+          status: ReportStatus.APPROVED,
+        },
+      ];
+
+      const result = generateCopyReportOptions(reports as any);
+
+      expect(result).toEqual([
+        {
+          id: "copyReport-report-2",
+          label: "CA: 2025 - Q2: April 1st to June 30th",
+          name: "CA: 2025 - Q2: April 1st to June 30th",
+          value: "report-2",
+        },
+      ]);
+    });
+
+    it("should return only SUBMITTED and APPROVED reports when mixed statuses exist", () => {
+      const reports = [
+        {
+          id: "report-1",
+          submissionName: "CA: 2025 - Q1",
+          status: ReportStatus.NOT_STARTED,
+        },
+        {
+          id: "report-2",
+          submissionName: "CA: 2025 - Q2",
+          status: ReportStatus.SUBMITTED,
+        },
+        {
+          id: "report-3",
+          submissionName: "CA: 2025 - Q3",
+          status: ReportStatus.IN_PROGRESS,
+        },
+        {
+          id: "report-4",
+          submissionName: "CA: 2025 - Q4",
+          status: ReportStatus.APPROVED,
+        },
+      ];
+
+      const result = generateCopyReportOptions(reports as any);
+
+      expect(result).toHaveLength(2);
+      expect(result[0].value).toBe("report-2");
+      expect(result[1].value).toBe("report-4");
+    });
+  });
+
   describe("prepareExpenditurePayload", () => {
-    it("should format payload with correct metadata structure", () => {
+    it("should format payload with correct metadata structure without copyReport", () => {
       const activeState = "CA";
       const formData = {
         reportYear: { value: "2025" },
@@ -71,6 +187,7 @@ describe("expenditureLogic", () => {
 
       expect(result).toEqual({
         metadata: {
+          copyReport: undefined,
           reportYear: 2025,
           reportPeriod: 1,
           submissionName: "CA: 2025 - Q1: January 1st to March 31st",
@@ -78,17 +195,86 @@ describe("expenditureLogic", () => {
       });
     });
 
-    it("should handle undefined activeState", () => {
+    it("should format payload for different report periods", () => {
+      const activeState = "TX";
       const formData = {
-        reportYear: { value: "2025" },
-        reportPeriod: { value: "2", label: "Q2: April 1st to June 30th" },
+        reportYear: { value: "2026" },
+        reportPeriod: { value: "3" },
       };
 
-      const result = prepareExpenditurePayload(undefined, formData);
+      const result = prepareExpenditurePayload(activeState, formData);
 
       expect(result.metadata.submissionName).toBe(
-        "undefined: 2025 - Q2: April 1st to June 30th"
+        "TX: 2026 - Q3: July 1st to September 30th"
       );
+      expect(result.metadata.reportPeriod).toBe(3);
+    });
+
+    it("should include copyReport when valid report ID is provided", () => {
+      const activeState = "NY";
+      const formData = {
+        reportYear: { value: "2025" },
+        reportPeriod: { value: "2" },
+        copyReport: { value: "report-123" },
+      };
+      const reportsByState = [
+        {
+          id: "report-123",
+          submissionName: "NY: 2024 - Q4",
+          status: ReportStatus.SUBMITTED,
+          reportYear: 2024,
+          reportPeriod: 4,
+        },
+      ];
+
+      const result = prepareExpenditurePayload(
+        activeState,
+        formData,
+        reportsByState as any
+      );
+
+      expect(result.metadata.copyReport).toEqual(reportsByState[0]);
+    });
+
+    it("should set copyReport to undefined when report ID is not found in reportsByState", () => {
+      const activeState = "FL";
+      const formData = {
+        reportYear: { value: "2025" },
+        reportPeriod: { value: "4" },
+        copyReport: { value: "nonexistent-id" },
+      };
+      const reportsByState = [
+        {
+          id: "report-456",
+          submissionName: "FL: 2024 - Q1",
+          status: ReportStatus.APPROVED,
+        },
+      ];
+
+      const result = prepareExpenditurePayload(
+        activeState,
+        formData,
+        reportsByState as any
+      );
+
+      expect(result.metadata.copyReport).toBe(undefined);
+    });
+
+    it("should set copyReport to undefined when reportsByState is undefined", () => {
+      const activeState = "AZ";
+      const formData = {
+        reportYear: { value: "2026" },
+        reportPeriod: { value: "1" },
+        copyReport: { value: "report-789" },
+      };
+
+      const result = prepareExpenditurePayload(
+        activeState,
+        formData,
+        undefined
+      );
+
+      expect(result.metadata.copyReport).toBe(undefined);
     });
   });
 });

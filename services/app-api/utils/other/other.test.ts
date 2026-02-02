@@ -52,7 +52,7 @@ describe("API utility functions", () => {
         reportYear: 2020,
       };
 
-      const response = getReportYear(reportData, false);
+      const response = getReportYear(reportData, ReportType.WP, false);
 
       expect(response).toEqual(2020);
     });
@@ -63,7 +63,7 @@ describe("API utility functions", () => {
         copyReport: { reportYear: 2020, reportPeriod: 1 },
       };
 
-      const response = getReportYear(reportData, true);
+      const response = getReportYear(reportData, ReportType.WP, true);
 
       expect(response).toEqual(2020);
     });
@@ -74,14 +74,14 @@ describe("API utility functions", () => {
         copyReport: { reportPeriod: 2, reportYear: 2020 },
       };
 
-      const response = getReportYear(reportData, true);
+      const response = getReportYear(reportData, ReportType.WP, true);
 
       expect(response).toEqual(2021);
     });
 
     it("should return the report year for a SAR", () => {
       const reportData = { ...mockWPData, reportPeriod: 1, reportYear: 2020 };
-      const response = getReportYear(reportData, false);
+      const response = getReportYear(reportData, ReportType.WP, false);
 
       expect(response).toEqual(2020);
     });
@@ -89,9 +89,21 @@ describe("API utility functions", () => {
     it("should throw an error if the report year is not a number", () => {
       const reportData = { ...mockUnvalidatedMetadata, reportYear: "2020" };
 
-      expect(() => getReportYear(reportData, false)).toThrow(
+      expect(() => getReportYear(reportData, ReportType.WP, false)).toThrow(
         "Invalid value for reportYear"
       );
+    });
+
+    it("should not apply report year logic for expenditure reports", () => {
+      const reportData = {
+        ...mockUnvalidatedMetadata,
+        reportYear: 2023,
+        copyReport: { reportYear: 2020, reportPeriod: 2 },
+      };
+
+      const response = getReportYear(reportData, ReportType.EXPENDITURE, true);
+
+      expect(response).toEqual(2023);
     });
   });
 
@@ -107,7 +119,7 @@ describe("API utility functions", () => {
         reportYear: 2020,
       };
 
-      const response = getReportPeriod(reportData, false);
+      const response = getReportPeriod(reportData, ReportType.WP, false);
 
       expect(response).toEqual(1);
     });
@@ -117,7 +129,7 @@ describe("API utility functions", () => {
         ...mockWPData,
         copyReport: { reportPeriod: 1, reportYear: 2020 },
       };
-      const response = getReportPeriod(reportData, true);
+      const response = getReportPeriod(reportData, ReportType.WP, true);
 
       expect(response).toEqual(2);
     });
@@ -127,9 +139,9 @@ describe("API utility functions", () => {
         ...mockWPData,
         copyReport: { reportPeriod: 2, reportYear: 2020 },
       };
-      const responsePeriod = getReportPeriod(reportData, true);
+      const responsePeriod = getReportPeriod(reportData, ReportType.WP, true);
 
-      const responseYear = getReportYear(reportData, true);
+      const responseYear = getReportYear(reportData, ReportType.WP, true);
 
       expect(responsePeriod).toEqual(1);
       expect(responseYear).toEqual(2021);
@@ -137,7 +149,7 @@ describe("API utility functions", () => {
 
     it("should return the report period for a SAR", () => {
       const reportData = { ...mockWPData, reportPeriod: 1, reportYear: 2020 };
-      const response = getReportPeriod(reportData, false);
+      const response = getReportPeriod(reportData, ReportType.WP, false);
 
       expect(response).toEqual(1);
     });
@@ -145,9 +157,25 @@ describe("API utility functions", () => {
     it("should throw an error if the report period is not a number", () => {
       const reportData = { ...mockUnvalidatedMetadata, reportPeriod: "2" };
 
-      expect(() => getReportPeriod(reportData, false)).toThrow(
+      expect(() => getReportPeriod(reportData, ReportType.WP, false)).toThrow(
         "Invalid value for reportPeriod"
       );
+    });
+
+    it("should not apply report period logic for expenditure reports", () => {
+      const reportData = {
+        ...mockUnvalidatedMetadata,
+        reportPeriod: 3,
+        copyReport: { reportYear: 2020, reportPeriod: 1 },
+      };
+
+      const response = getReportPeriod(
+        reportData,
+        ReportType.EXPENDITURE,
+        true
+      );
+
+      expect(response).toEqual(3);
     });
   });
 

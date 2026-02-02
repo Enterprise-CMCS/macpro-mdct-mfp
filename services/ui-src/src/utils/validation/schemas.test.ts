@@ -60,6 +60,13 @@ describe("utils/validation/schemas", () => {
     "%@#$!ASDF",
   ];
 
+  const goodDropdownOptionalTestCases = [
+    { label: "Option 1", value: "option1" },
+    { label: "", value: "" },
+    { label: undefined, value: undefined },
+  ];
+  const badDropdownOptionalTestCases = ["Not an object", []];
+
   const goodDateTestCases = ["01/01/1990", "12/31/2020", "01012000"];
   const badDateTestCases = ["01-01-1990", "13/13/1990", "12/32/1990"];
 
@@ -261,6 +268,24 @@ describe("utils/validation/schemas", () => {
 
     test("returns false", () => {
       testSchema(schemaMap.validInteger, badIntegerTestCases, false);
+    });
+  });
+
+  describe("dropdownOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.dropdownOptional,
+        goodDropdownOptionalTestCases,
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.dropdownOptional,
+        badDropdownOptionalTestCases,
+        false
+      );
     });
   });
 });
