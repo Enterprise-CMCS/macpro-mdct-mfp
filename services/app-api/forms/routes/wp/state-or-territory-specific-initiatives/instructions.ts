@@ -35,50 +35,61 @@ export const instructionsRoute: FormRoute = {
               content: "MFP cooperative agreement funds for:",
             },
             {
+              type: "li",
               content: "",
-              type: "ul",
               props: {
                 style: {
-                  marginLeft: "1rem",
-                  paddingTop: "1rem",
+                  listStyle: "none",
                 },
               },
               children: [
                 {
-                  type: "li",
+                  content: "",
+                  type: "ul",
                   props: {
                     style: {
-                      paddingBottom: "1rem",
+                      marginLeft: "1rem",
+                      paddingTop: "1rem",
                     },
                   },
-                  content: "Qualified HCBS and demonstration services",
-                },
-                {
-                  type: "li",
-                  props: {
-                    style: {
-                      paddingBottom: "1rem",
+                  children: [
+                    {
+                      type: "li",
+                      props: {
+                        style: {
+                          paddingBottom: "1rem",
+                        },
+                      },
+                      content: "Qualified HCBS and demonstration services",
                     },
-                  },
-                  content: "Supplemental services",
-                },
-                {
-                  type: "li",
-                  props: {
-                    style: {
-                      paddingBottom: "1rem",
+                    {
+                      type: "li",
+                      props: {
+                        style: {
+                          paddingBottom: "1rem",
+                        },
+                      },
+                      content: "Supplemental services",
                     },
-                  },
-                  content: "Administrative activities",
-                },
-                {
-                  type: "li",
-                  props: {
-                    style: {
-                      paddingBottom: "1rem",
+                    {
+                      type: "li",
+                      props: {
+                        style: {
+                          paddingBottom: "1rem",
+                        },
+                      },
+                      content: "Administrative activities",
                     },
-                  },
-                  content: "Capacity building initiatives",
+                    {
+                      type: "li",
+                      props: {
+                        style: {
+                          paddingBottom: "1rem",
+                        },
+                      },
+                      content: "Capacity building initiatives",
+                    },
+                  ],
                 },
               ],
             },
