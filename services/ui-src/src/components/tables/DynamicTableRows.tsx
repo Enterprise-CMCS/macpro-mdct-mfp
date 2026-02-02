@@ -4,6 +4,9 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 import { Td, Text, Tr } from "@chakra-ui/react";
 import { DynamicTableContext } from "components";
+// types
+import { InputChangeEvent } from "types";
+// utils
 import { maskResponseData } from "utils";
 
 export const DynamicTableRows = ({ tableId }: Props) => {
@@ -14,13 +17,16 @@ export const DynamicTableRows = ({ tableId }: Props) => {
   const form = useFormContext();
   form.register(name);
 
-  const { append } = useFieldArray({
+  const { append, fields } = useFieldArray({
     name,
     shouldUnregister: true,
   });
 
   // TODO: Set up
-  const onChangeHandler = () => {};
+  const onChangeHandler = (event: InputChangeEvent) => {
+    const { id, value } = event.target;
+    form.setValue(id, value, { shouldValidate: true });
+  };
   const onBlurHandler = () => {};
 
   const displayCell = ({ cell, rowIndex }: any) => {
@@ -51,7 +57,7 @@ export const DynamicTableRows = ({ tableId }: Props) => {
         label={undefined}
         onChange={onChangeHandler}
         onBlur={onBlurHandler}
-        value={""}
+        value={form.getValues(cell.id)}
       />
     );
   };
@@ -68,9 +74,13 @@ export const DynamicTableRows = ({ tableId }: Props) => {
   }, [focusedRowIndex]);
 
   useEffect(() => {
-    // TODO: Add new row to fieldArray
-    append({});
-  }, [localDynamicRows]);
+    const existingNumberOfFields = fields.length;
+    const newNumberOfFields = localDynamicRows.length;
+    if (newNumberOfFields > existingNumberOfFields) {
+      const newRow = localDynamicRows.pop();
+      append(newRow);
+    }
+  }, [localDynamicRows, fields]);
 
   useEffect(() => {
     // TODO: Set values
