@@ -101,8 +101,8 @@ export const createReport = handler(
       reportType === ReportType.WP || reportType === ReportType.EXPENDITURE
         ? unvalidatedMetadata
         : workPlanMetadata;
-    const reportYear = getReportYear(reportData, isCopyOver);
-    const reportPeriod = getReportPeriod(reportData, isCopyOver);
+    const reportYear = getReportYear(reportData, reportType, isCopyOver);
+    const reportPeriod = getReportPeriod(reportData, reportType, isCopyOver);
 
     // Begin Section - Getting/Creating newest Form Template based on reportType
     let formTemplate, formTemplateVersion;

@@ -78,7 +78,7 @@ export const getEligibleWorkPlan = (
     // There were no eligible work plans to treat as a base for this SAR
     return undefined;
   }
-  //Return the oldest eligble workplan
+  //Return the oldest eligible workplan
   return eligibleWorkPlans.reduce((mostRecent, wp) =>
     mostRecent.createdAt < wp.createdAt ? mostRecent : wp
   );
