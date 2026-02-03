@@ -70,6 +70,7 @@ export const ExportedModalDrawerReportSection = ({
     const firstQuarterIndex = reportPeriod === 1 ? 0 : 2;
 
     // returns array of labels like ["2024 Q1", "2024 Q2", ...]
+    // oxlint-disable-next-line no-useless-spread
     return [...new Array(12)]
       .map((_, index) => ({
         year: reportYear + Math.floor((firstQuarterIndex + index) / 4),

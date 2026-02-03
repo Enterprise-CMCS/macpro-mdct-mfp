@@ -386,7 +386,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
             body={body}
             openCreateReportModal={
               reportType === ReportType.EXPENDITURE
-                ? modal!!.setModalReport
+                ? modal!!.setModalReport // oxlint-disable-line no-extra-non-null-assertion
                 : openCreateReportModal
             }
             enterSelectedReport={enterSelectedReport}
@@ -439,7 +439,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
           </Box>
         )}
       </Box>
-      {modal?.modal && modal.modal}
+      {modal?.modal}
       <CreateWorkPlanModal
         isResetting={isResetting}
         activeState={activeState!}

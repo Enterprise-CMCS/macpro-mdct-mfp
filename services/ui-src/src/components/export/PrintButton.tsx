@@ -11,6 +11,7 @@ import { useStore } from "utils";
 
 export const PrintButton = ({ sxOverride }: Props) => {
   const report = useStore().report;
+  // oxlint-disable-next-line no-unsafe-optional-chaining
   const reportType = (report?.reportType as ReportType).toLowerCase();
 
   const isNonEditable =
