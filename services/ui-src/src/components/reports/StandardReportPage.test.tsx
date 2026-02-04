@@ -2,6 +2,8 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ReportContext, StandardReportPage } from "components";
+// types
+import { ReportShape } from "types";
 // utils
 import {
   mockForm,
@@ -13,8 +15,8 @@ import {
   mockReportStore,
 } from "utils/testing/setupJest";
 import { useStore } from "utils/state/useStore";
-import { ReportShape } from "types";
 import { testA11yAct } from "utils/testing/commonTests";
+import { mockStateUser } from "utils/testing/mockUsers";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -47,30 +49,33 @@ describe("<StandardReportPage />", () => {
   });
 
   test("StandardReportPage correctly submits a valid form", async () => {
-    mockedUseStore.mockReturnValue(mockReportStore);
-    const result = render(standardPageSectionComponent);
-    const textFieldInput: HTMLInputElement = result.container.querySelector(
-      "[id='mock-text-field'"
-    )!;
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      ...mockStateUser,
+    });
+    render(standardPageSectionComponent);
+    const textFieldInput: HTMLInputElement = screen.getByRole("textbox", {
+      name: "mock text field",
+    });
     await act(async () => {
       await userEvent.type(textFieldInput, "ABC");
     });
     expect(textFieldInput.value).toEqual("ABC");
-    const dateFieldInput: HTMLInputElement = result.container.querySelector(
-      "[name='mock-date-field'"
-    )!;
+    const dateFieldInput: HTMLInputElement = screen.getByRole("textbox", {
+      name: "mock date field",
+    });
     await act(async () => {
       await userEvent.type(dateFieldInput, "01012024");
     });
     expect(dateFieldInput.value).toEqual("01012024");
-    const numberFieldInput: HTMLInputElement = result.container.querySelector(
-      "[id='mock-number-field'"
-    )!;
+    const numberFieldInput: HTMLInputElement = screen.getByRole("textbox", {
+      name: "mock number field",
+    });
     await act(async () => {
       await userEvent.type(numberFieldInput, "1");
     });
     expect(numberFieldInput.value).toEqual("1");
-    const continueButton = screen.getByText("Continue")!;
+    const continueButton = screen.getByRole("button", { name: "Continue" });
     await act(async () => {
       await userEvent.click(continueButton);
     });
@@ -81,7 +86,7 @@ describe("<StandardReportPage />", () => {
   test("StandardReportPage navigates to next route onError", async () => {
     mockedUseStore.mockReturnValue(mockReportStoreWithoutData);
     render(standardPageSectionComponent);
-    const continueButton = screen.getByText("Continue")!;
+    const continueButton = screen.getByRole("button", { name: "Continue" });
     await act(async () => {
       await userEvent.click(continueButton);
     });

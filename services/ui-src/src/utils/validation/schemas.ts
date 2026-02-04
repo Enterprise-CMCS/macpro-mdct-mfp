@@ -1,11 +1,21 @@
 import { array, boolean, mixed, object, string } from "yup";
-import { validationErrors as error } from "verbiage/errors";
-import { Choice, ComparatorMap, NumberOptions, TextOptions } from "types";
+// utils
 import {
   checkRatioInputAgainstRegexes,
   checkStandardIntegerInputAgainstRegexes,
   checkStandardNumberInputAgainstRegexes,
 } from "utils/other/checkInputValidity";
+// types
+import {
+  Choice,
+  ComparatorMap,
+  DynamicOptions,
+  DynamicValidationType,
+  NumberOptions,
+  TextOptions,
+} from "types";
+// verbiage
+import { validationErrors as error } from "verbiage/errors";
 
 // TEXT - Helpers
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
@@ -55,7 +65,7 @@ const comparatorMap: ComparatorMap = {
 };
 
 // NUMBER - Number or Valid Strings
-export const numberSchema = () =>
+const numberSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,
@@ -104,7 +114,7 @@ export const numberComparison = (options: NumberOptions) =>
   });
 
 // Integer or Valid Strings
-export const validIntegerSchema = () =>
+const validIntegerSchema = () =>
   string()
     .test({
       message: error.INVALID_NUMBER_OR_NA,
@@ -209,6 +219,8 @@ export const isEndDateAfterStartDate = (
 // DROPDOWN
 export const dropdown = () =>
   object({ label: text(), value: text() }).required(error.REQUIRED_GENERIC);
+export const dropdownOptional = () =>
+  object({ label: textOptional(), value: textOptional() }).notRequired();
 
 // CHECKBOX
 export const checkbox = () =>
@@ -229,17 +241,18 @@ export const radio = () =>
 export const radioOptional = () => radio().notRequired();
 
 // DYNAMIC
-export const dynamic = () =>
+export const dynamic = (options?: DynamicOptions) =>
   array()
     .min(1)
     .of(
       object().shape({
         id: text(),
-        name: text(),
+        name: schemaMap[options?.validationType || DynamicValidationType.TEXT],
       })
     )
     .required(error.REQUIRED_GENERIC);
-export const dynamicOptional = () => dynamic().notRequired();
+export const dynamicOptional = (options?: DynamicOptions) =>
+  dynamic(options).notRequired();
 
 // NESTED
 export const nested = (
@@ -267,3 +280,30 @@ export const nested = (
 // REGEX
 export const dateFormatRegex =
   /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})$/;
+
+export const schemaMap: any = {
+  checkbox: checkbox(),
+  checkboxOptional: checkboxOptional(),
+  checkboxSingle: checkboxSingle(),
+  date: date(),
+  dateOptional: dateOptional(),
+  dropdown: dropdown(),
+  dropdownOptional: dropdownOptional(),
+  dynamic: (options?: DynamicOptions) => dynamic(options),
+  dynamicOptional: (options?: DynamicOptions) => dynamicOptional(options),
+  email: email(),
+  emailOptional: emailOptional(),
+  number: number(),
+  numberComparison: (options: NumberOptions) => numberComparison(options),
+  numberOptional: numberOptional(),
+  radio: radio(),
+  radioOptional: radioOptional(),
+  ratio: ratio(),
+  text: text(),
+  textCustom: (options: TextOptions) => textCustom(options),
+  textOptional: textOptional(),
+  url: url(),
+  urlOptional: urlOptional(),
+  validInteger: validInteger(),
+  validIntegerOptional: validIntegerOptional(),
+};

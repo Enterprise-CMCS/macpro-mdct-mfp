@@ -65,15 +65,15 @@ export const getEligibleWorkPlan = async (
 
 export const getReportYear = (
   reportData: AnyObject,
+  reportType: ReportType,
   isCopyOver: boolean = false
 ): number => {
-  if (isCopyOver) {
+  if (isCopyOver && reportType !== ReportType.EXPENDITURE) {
     if (typeof reportData?.copyReport?.reportYear !== "number") {
       throw new Error("Invalid value for reportYear");
     }
     const prevReportYear = reportData?.copyReport?.reportYear;
     const prevReportPeriod = reportData?.copyReport?.reportPeriod;
-
     return prevReportPeriod === 2 ? prevReportYear + 1 : prevReportYear;
   }
 
@@ -86,9 +86,10 @@ export const getReportYear = (
 
 export const getReportPeriod = (
   reportData: AnyObject,
+  reportType: ReportType,
   isCopyOver: boolean = false
 ): number => {
-  if (isCopyOver) {
+  if (isCopyOver && reportType !== ReportType.EXPENDITURE) {
     if (typeof reportData?.copyReport?.reportPeriod !== "number") {
       throw new Error("Invalid value for reportPeriod");
     }

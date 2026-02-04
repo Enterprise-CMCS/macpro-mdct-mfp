@@ -1,20 +1,13 @@
 import { MixedSchema } from "yup/lib/mixed";
+import { isEndDateAfterStartDate, nested, schemaMap } from "./schemas";
 import {
-  dateOptional,
-  emailOptional,
-  number,
-  numberComparison,
-  numberOptional,
-  ratio,
-  textCustom,
-  textOptional,
-  urlOptional,
-  validInteger,
-  validIntegerOptional,
-} from "./schemas";
-import { NumberOptions, ValidationComparator } from "types";
+  AnyObject,
+  DynamicValidationType,
+  NumberOptions,
+  ValidationComparator,
+} from "types";
 
-describe("utils/schemas", () => {
+describe("utils/validation/schemas", () => {
   const goodNumberTestCases = [
     "123",
     "123.00",
@@ -28,6 +21,7 @@ describe("utils/schemas", () => {
   const badNumberTestCases = ["abc", "N", "", "!@#!@%", "-1"];
 
   const goodIntegerTestCases = [
+    "1",
     "123",
     "12300",
     "1,230",
@@ -36,9 +30,9 @@ describe("utils/schemas", () => {
     "Data not available",
   ];
   const badIntegerTestCases = [
+    "",
     "abc",
     "N",
-    "",
     "!@#!@%",
     "-1",
     "1.23",
@@ -66,9 +60,29 @@ describe("utils/schemas", () => {
     "%@#$!ASDF",
   ];
 
+  const goodDropdownOptionalTestCases = [
+    { label: "Option 1", value: "option1" },
+    { label: "", value: "" },
+    { label: undefined, value: undefined },
+  ];
+  const badDropdownOptionalTestCases = ["Not an object", []];
+
+  const goodDateTestCases = ["01/01/1990", "12/31/2020", "01012000"];
+  const badDateTestCases = ["01-01-1990", "13/13/1990", "12/32/1990"];
+
+  // nested
+  const fieldValidationObject = {
+    type: "text",
+    nested: true,
+    parentFieldName: "mock-parent-field-name",
+  };
+  const validationSchema = {
+    type: "string",
+  };
+
   const testSchema = (
-    schemaToUse: MixedSchema,
-    testCases: Array<string>,
+    schemaToUse: MixedSchema<any, AnyObject, any>,
+    testCases: Array<string | AnyObject>,
     expectedReturn: boolean
   ) => {
     for (let testCase of testCases) {
@@ -77,49 +91,201 @@ describe("utils/schemas", () => {
     }
   };
 
-  test("Evaluate Number Schema using number scheme", () => {
-    testSchema(number(), goodNumberTestCases, true);
-    testSchema(number(), badNumberTestCases, false);
+  describe("date", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.date, goodDateTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.date, badDateTestCases, false);
+    });
   });
 
-  test("Evaluate numberComparison scheme", () => {
+  describe("dynamic", () => {
+    test("returns true for text validation", () => {
+      testSchema(schemaMap.dynamic(), [[{ id: "mockId", name: "text" }]], true);
+    });
+
+    test("returns false for empty text", () => {
+      testSchema(schemaMap.dynamic(), [], false);
+    });
+
+    test("returns true for number validation", () => {
+      testSchema(
+        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
+        [[{ id: "mockId", name: "123" }]],
+        true
+      );
+    });
+
+    test("returns false for text with number validation", () => {
+      testSchema(
+        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
+        [[{ id: "mockId", name: "text" }]],
+        false
+      );
+    });
+  });
+
+  describe("dynamicOptional", () => {
+    test("returns true for text validation", () => {
+      testSchema(
+        schemaMap.dynamicOptional({
+          validationType: DynamicValidationType.TEXT_OPTIONAL,
+        }),
+        [[{ id: "mockId", name: "text" }]],
+        true
+      );
+    });
+
+    test("returns true for empty text", () => {
+      testSchema(
+        schemaMap.dynamicOptional({
+          validationType: DynamicValidationType.TEXT_OPTIONAL,
+        }),
+        [],
+        true
+      );
+    });
+
+    test("returns true for number validation", () => {
+      testSchema(
+        schemaMap.dynamicOptional({
+          validationType: DynamicValidationType.NUMBER_OPTIONAL,
+        }),
+        [[{ id: "mockId", name: "123" }]],
+        true
+      );
+    });
+
+    test("returns true for empty number", () => {
+      testSchema(
+        schemaMap.dynamicOptional({
+          validationType: DynamicValidationType.NUMBER_OPTIONAL,
+        }),
+        [],
+        true
+      );
+    });
+  });
+
+  describe("isEndDateAfterStartDate", () => {
+    test("returns true", () => {
+      expect(isEndDateAfterStartDate("01/01/1989", "01/01/1990")).toBe(true);
+    });
+
+    test("returns false", () => {
+      expect(isEndDateAfterStartDate("01/01/1990", "01/01/1989")).toBe(false);
+    });
+  });
+
+  describe("nested", () => {
+    test("returns true", () => {
+      testSchema(
+        nested(
+          () => validationSchema,
+          fieldValidationObject.parentFieldName,
+          ""
+        ),
+        ["string"],
+        true
+      );
+    });
+  });
+
+  describe("number", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.number, goodNumberTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.number, badNumberTestCases, false);
+    });
+  });
+
+  describe("numberComparison", () => {
     const numberOptions: NumberOptions = {
       boundary: 10,
       comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
     };
-    testSchema(
-      numberComparison(numberOptions),
-      ["0", "1", "10", "9.99", "N/A"],
-      true
-    );
-    testSchema(
-      numberComparison(numberOptions),
-      ["-1", "", "11", "10.01"],
-      false
-    );
+
+    test("returns true", () => {
+      testSchema(
+        schemaMap.numberComparison(numberOptions),
+        ["0", "1", "10", "9.99", "N/A"],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.numberComparison(numberOptions),
+        ["-1", "", "11", "10.01"],
+        false
+      );
+    });
   });
 
-  test("Evaluate Number Schema using integer scheme", () => {
-    testSchema(validInteger(), goodIntegerTestCases, true);
-    testSchema(validInteger(), badIntegerTestCases, false);
+  describe("optional schemas", () => {
+    test("Verify optional schemas convert empty string to null", () => {
+      testSchema(schemaMap.textOptional, [""], true);
+      testSchema(schemaMap.numberOptional, [""], true);
+      testSchema(schemaMap.validIntegerOptional, [""], true);
+      testSchema(schemaMap.emailOptional, [""], true);
+      testSchema(schemaMap.urlOptional, [""], true);
+      testSchema(schemaMap.dateOptional, [""], true);
+    });
   });
 
-  test("Evaluate Number Schema using ratio scheme", () => {
-    testSchema(ratio(), goodRatioTestCases, true);
-    testSchema(ratio(), badRatioTestCases, false);
+  describe("ratio", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.ratio, goodRatioTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.ratio, badRatioTestCases, false);
+    });
   });
 
-  test("Verify optional schemas convert empty string to null", () => {
-    testSchema(textOptional(), [""], true);
-    testSchema(numberOptional(), [""], true);
-    testSchema(validIntegerOptional(), [""], true);
-    testSchema(emailOptional(), [""], true);
-    testSchema(urlOptional(), [""], true);
-    testSchema(dateOptional(), [""], true);
+  describe("textCustom", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.textCustom({ maxLength: 10 }), ["0123456789"], true);
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.textCustom({ maxLength: 10 }),
+        ["textistoolong", ""],
+        false
+      );
+    });
   });
 
-  test("Evaluate Text Schema using textCustom scheme", () => {
-    testSchema(textCustom({ maxLength: 10 }), ["0123456789"], true);
-    testSchema(textCustom({ maxLength: 10 }), ["textistoolong", ""], false);
+  describe("validInteger", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.validInteger, goodIntegerTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.validInteger, badIntegerTestCases, false);
+    });
+  });
+
+  describe("dropdownOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.dropdownOptional,
+        goodDropdownOptionalTestCases,
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.dropdownOptional,
+        badDropdownOptionalTestCases,
+        false
+      );
+    });
   });
 });

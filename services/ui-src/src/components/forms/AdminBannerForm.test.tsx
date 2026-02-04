@@ -37,10 +37,7 @@ const mockStoreWithConflictingBanner = {
 
 const adminBannerFormComponent = (writeAdminBanner: Function) => (
   <RouterWrappedComponent>
-    <AdminBannerForm
-      writeAdminBanner={writeAdminBanner}
-      data-testid="test-form"
-    />
+    <AdminBannerForm writeAdminBanner={writeAdminBanner} />
   </RouterWrappedComponent>
 );
 
@@ -67,8 +64,11 @@ describe("<AdminBannerForm />", () => {
   test("AdminBannerForm is visible", () => {
     mockedUseStore.mockReturnValue(emptyBannerStore);
     render(adminBannerFormComponent(mockWriteAdminBanner));
-    const form = screen.getByTestId("test-form");
-    expect(form).toBeVisible();
+    const formInputs = screen.getAllByRole("textbox");
+    formInputs.forEach((input) => {
+      expect(input).toBeVisible();
+      expect(input).toBeEnabled();
+    });
   });
 
   test("Form submits correctly", async () => {

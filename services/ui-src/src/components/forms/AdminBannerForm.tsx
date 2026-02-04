@@ -20,7 +20,7 @@ const dateOverlapErrorMessage = {
   description: "Please adjust the new banner dates and try again.",
 };
 
-export const AdminBannerForm = ({ writeAdminBanner, ...props }: Props) => {
+export const AdminBannerForm = ({ writeAdminBanner }: Props) => {
   const [error, setError] = useState<ErrorVerbiage>();
   const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -90,7 +90,6 @@ export const AdminBannerForm = ({ writeAdminBanner, ...props }: Props) => {
         onSubmit={onSubmit}
         validateOnRender={false}
         dontReset={false}
-        {...props}
       >
         <PreviewBanner />
       </Form>
@@ -105,7 +104,6 @@ export const AdminBannerForm = ({ writeAdminBanner, ...props }: Props) => {
 
 interface Props {
   writeAdminBanner: Function;
-  [key: string]: any;
 }
 
 const sx = {
@@ -117,7 +115,6 @@ const sx = {
   },
   replaceBannerButton: {
     width: "10rem",
-    marginTop: "1rem !important",
     alignSelf: "end",
   },
 };

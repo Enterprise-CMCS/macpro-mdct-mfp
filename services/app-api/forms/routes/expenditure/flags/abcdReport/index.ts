@@ -6,6 +6,7 @@ import { fmapPercentagesRoute } from "./fmap-percentages";
 import { generalInformationRoute } from "./general-information";
 import { qualifiedHcbsRoute } from "./qualified-hcbs";
 import { reviewAndSubmitRoute } from "./review-and-submit";
+import { supplementalServicesRoute } from "./supplemental-services";
 
 // Use with LaunchDarkly flag: abcdReport
 export const expenditureReportJson: ReportJsonFile = {
@@ -21,6 +22,7 @@ export const expenditureReportJson: ReportJsonFile = {
     fmapPercentagesRoute,
     qualifiedHcbsRoute,
     demonstrationServicesRoute,
+    supplementalServicesRoute,
     reviewAndSubmitRoute,
   ],
 };
