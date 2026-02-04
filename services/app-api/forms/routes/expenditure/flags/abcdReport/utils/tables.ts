@@ -1,56 +1,91 @@
 import {
+  AnyObject,
   ReportFormFieldType,
+  ServiceField,
+  ServiceFieldType,
   ValidationType,
 } from "../../../../../../utils/types";
 
-export const buildServiceFields = (service: {
-  id: string;
-  label: string;
-  readOnly?: boolean;
-}) => [
-  {
-    id: `${service.id}-totalComputable`,
+export const buildServiceFields = (
+  service: ServiceField,
+  fieldsToReturn: ServiceFieldType[] = [
+    ServiceFieldType.TOTAL_COMPUTABLE,
+    ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+    ServiceFieldType.TOTAL_FEDERAL_SHARE,
+  ]
+) => {
+  const buildServiceField = (
+    suffix: string,
+    label: string,
+    props: AnyObject
+  ) => ({
+    id: `${service.id}-${suffix}`,
     type: ReportFormFieldType.NUMBER,
     validation: ValidationType.NUMBER_OPTIONAL,
     forTableOnly: true,
     props: {
-      decimalPlacesToRoundTo: 2,
-      initialValue: service.readOnly ? "0" : "",
-      label: `${service.label} Total Computable`,
-      mask: "currency",
-      readOnly: service.readOnly,
+      label: `${service.label} ${label}`,
+      ...props,
     },
-  },
-  {
-    id: `${service.id}-totalStateTerritoryShare`,
-    type: ReportFormFieldType.NUMBER,
-    validation: ValidationType.NUMBER_OPTIONAL,
-    forTableOnly: true,
-    props: {
-      decimalPlacesToRoundTo: 2,
-      initialValue: "0",
-      label: `${service.label} Total State / Territory Share`,
-      mask: "currency",
-      readOnly: true,
-    },
-  },
-  {
-    id: `${service.id}-totalFederalShare`,
-    type: ReportFormFieldType.NUMBER,
-    validation: ValidationType.NUMBER_OPTIONAL,
-    forTableOnly: true,
-    props: {
-      decimalPlacesToRoundTo: 2,
-      initialValue: "0",
-      label: `${service.label} Total Federal Share`,
-      mask: "currency",
-      readOnly: true,
-    },
-  },
-];
+  });
+
+  const currencyProps = {
+    decimalPlacesToRoundTo: 2,
+    initialValue: "0",
+    mask: "currency",
+    readOnly: true,
+  };
+
+  const fields = [];
+
+  for (const fieldType of fieldsToReturn) {
+    switch (fieldType) {
+      case ServiceFieldType.TOTAL_COMPUTABLE:
+        fields.push(
+          buildServiceField("totalComputable", "Total Computable", {
+            ...currencyProps,
+            initialValue: service.readOnly ? "0" : "",
+            readOnly: service.readOnly,
+          })
+        );
+        break;
+
+      case ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE:
+        fields.push(
+          buildServiceField(
+            "totalStateTerritoryShare",
+            "Total State / Territory Share",
+            currencyProps
+          )
+        );
+        break;
+
+      case ServiceFieldType.TOTAL_FEDERAL_SHARE:
+        fields.push(
+          buildServiceField(
+            "totalFederalShare",
+            "Total Federal Share",
+            currencyProps
+          )
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  return fields;
+};
 
 export const statePlanServicesHeaders = [
-  "Services",
+  "Service",
+  "Total Computable",
+  "Total State / Territory Share",
+  "Total Federal Share",
+];
+
+export const supplementalServicesHeaders = [
+  "Category",
   "Total Computable",
   "Total State / Territory Share",
   "Total Federal Share",
@@ -189,5 +224,24 @@ export const c1915WaiverServices = (prefix: string) => [
   {
     id: `${prefix}_captivatedPaymentsForLongTermCareServices`,
     label: "Captivated Payments for Long Term Care Services",
+  },
+];
+
+export const supplementalServices = (prefix: string) => [
+  {
+    id: `${prefix}_shortTermHousingAssistance`,
+    label: "Short-Term Housing Assistance",
+  },
+  {
+    id: `${prefix}_foodSecurity`,
+    label: "Food Security",
+  },
+  {
+    id: `${prefix}_paymentForActivitiesPriorToTransitioning`,
+    label: "Payment for Activities Prior to Transitioning",
+  },
+  {
+    id: `${prefix}_paymentForSecuringACommunityBasedHome`,
+    label: "Payment for Securing a Community-Based Home",
   },
 ];

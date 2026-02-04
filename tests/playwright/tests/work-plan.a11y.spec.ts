@@ -27,10 +27,16 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
   test.beforeEach("reset work plans", async ({ statePage }) => {
     await archiveAllReportsForState(stateAbbreviation);
     await statePage.page.goto("/");
+    const getReportsResp = statePage.page.waitForResponse(
+      (response) =>
+        response.url().includes("/reports/WP/") &&
+        response.request().method() === "GET" &&
+        response.status() === 200
+    );
     await statePage.page
       .getByRole("button", { name: "Enter Work Plan online" })
       .click();
-    await statePage.waitForWorkPlansToLoad();
+    await getReportsResp;
   });
 
   test("fill out work plan then run WCAG checks", async ({ statePage }) => {
@@ -43,7 +49,14 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
     });
 
     await test.step("Navigate to /wp", async () => {
+      const getReportsResp = statePage.page.waitForResponse(
+        (response) =>
+          response.url().includes("/reports/WP/") &&
+          response.request().method() === "GET" &&
+          response.status() === 200
+      );
       await statePage.page.goto("/wp");
+      await getReportsResp;
       await statePage.page
         .getByRole("heading", { name: "Puerto Rico MFP Work Plan" })
         .waitFor();

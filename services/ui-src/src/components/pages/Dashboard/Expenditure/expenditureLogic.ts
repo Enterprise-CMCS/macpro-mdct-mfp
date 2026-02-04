@@ -1,4 +1,5 @@
-import { AnyObject } from "types";
+import { AnyObject, ReportMetadataShape, ReportStatus } from "types";
+import { noEligibleReportsForCopy } from "../../../../constants";
 
 export const expenditureReportPeriodsMap = {
   1: "Q1: January 1st to March 31st",
@@ -21,9 +22,39 @@ export const generateReportYearOptions = () => {
     .reverse();
 };
 
+export const generateCopyReportOptions = (
+  reportsByState: ReportMetadataShape[] = []
+) => {
+  const noEligibleOption = {
+    id: "copyReport-none",
+    label: noEligibleReportsForCopy,
+    name: noEligibleReportsForCopy,
+    value: "",
+  };
+  if (reportsByState.length === 0) {
+    return [noEligibleOption];
+  }
+
+  const reportOptions = reportsByState
+    .filter(
+      (r) =>
+        r.status === ReportStatus.SUBMITTED ||
+        r.status === ReportStatus.APPROVED
+    )
+    .map((r) => ({
+      id: `copyReport-${r.id}`,
+      label: r.submissionName,
+      name: r.submissionName,
+      value: `${r.id}`,
+    }));
+
+  return reportOptions.length > 0 ? reportOptions : [noEligibleOption];
+};
+
 export const prepareExpenditurePayload = (
-  activeState: string | undefined,
-  formData: AnyObject
+  activeState: string,
+  formData: AnyObject,
+  reportsByState?: ReportMetadataShape[]
 ) => {
   const formattedReportYear = Number(formData.reportYear.value);
   const formattedReportPeriod = Number(formData.reportPeriod.value);
@@ -32,12 +63,20 @@ export const prepareExpenditurePayload = (
       formattedReportPeriod as keyof typeof expenditureReportPeriodsMap
     ]
   }`;
+  const copiedReportsID = formData.copyReport?.value;
+  let copiedReport: ReportMetadataShape | undefined;
 
+  if (copiedReportsID) {
+    copiedReport = reportsByState?.find(
+      (report) => report.id === copiedReportsID
+    );
+  }
   const expenditurePayload: AnyObject = {
     metadata: {
       reportYear: formattedReportYear,
       reportPeriod: formattedReportPeriod,
       submissionName: submissionName,
+      copyReport: copiedReport,
     },
   };
 

@@ -207,7 +207,6 @@ export const AddEditOverlayEntityModal = ({
         validateOnRender={false}
         dontReset={true}
         disabled={true}
-        userDisabled={userDisabled}
       />
       {objectiveProgressWithTargets && (
         <Text sx={sx.bottomModalMessage}>{verbiage.addEditModalMessage}</Text>

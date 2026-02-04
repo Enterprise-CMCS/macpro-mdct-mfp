@@ -102,24 +102,36 @@ describe("utils/calculations", () => {
     const startsWithId = "mockFieldId";
     const endsWithId = "mockId";
     const fieldData = {
-      [`${startsWithId}-${endsWithId}`]: 10,
-      [`${startsWithId}_v1-${endsWithId}`]: 10,
+      [`${startsWithId}-${endsWithId}`]: 12.34,
+      [`${startsWithId}_v1-${endsWithId}`]: 3.14,
       [`${startsWithId}_v2-${endsWithId}`]: "N/A",
+      [`${startsWithId}_v3-${endsWithId}`]: [
+        {
+          id: "mock1",
+          name: "10",
+        },
+        {
+          id: "mock2",
+          name: "10",
+        },
+      ],
 
       [`${startsWithId}-noMatch`]: 10,
       [`${startsWithId}_v1-noMatch`]: 10,
       [`${startsWithId}_v2-noMatch`]: 10,
     };
-    const exclusions: any[] = [`${startsWithId}-${endsWithId}`];
 
     test("returns sum of field values", () => {
       const sum = sumFields(fieldData, startsWithId, endsWithId);
-      expect(sum).toEqual(20);
+      expect(sum).toEqual(35.48);
     });
 
     test("returns sum with exclusions", () => {
-      const sum = sumFields(fieldData, startsWithId, endsWithId, exclusions);
-      expect(sum).toEqual(10);
+      const sum = sumFields(fieldData, startsWithId, endsWithId, [
+        `${startsWithId}-${endsWithId}`,
+        `${startsWithId}_v1-${endsWithId}`,
+      ]);
+      expect(sum).toEqual(20);
     });
   });
 

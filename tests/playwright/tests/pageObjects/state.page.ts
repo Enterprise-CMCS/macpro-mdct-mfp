@@ -1,15 +1,15 @@
 import { Locator, Page } from "@playwright/test";
 import { requiredWorkPlanTopics, quarters, WorkPlan } from "../../utils/consts";
+import { BasePage } from "./base.page";
 
-export class StatePage {
-  readonly page: Page;
+export class StatePage extends BasePage {
   readonly addNewWorkPlanModal: Locator;
   readonly wpDataRows: Locator;
   readonly startDateInput: Locator;
   readonly saveAndReturnButton: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.addNewWorkPlanModal = this.page.getByRole("dialog", {
       name: "Add new MFP Work Plan",
     });
@@ -25,6 +25,15 @@ export class StatePage {
     this.saveAndReturnButton = this.page.getByRole("button", {
       name: "Save & return",
     });
+  }
+
+  async navigateToWorkPlanDashboard() {
+    await this.page.goto("/");
+    const getReportsResp = this.waitForReportResponse("GET", 200);
+    await this.page
+      .getByRole("button", { name: "Enter Work Plan online" })
+      .click();
+    await getReportsResp;
   }
 
   async selectReportYear(year: number | string) {
@@ -48,25 +57,10 @@ export class StatePage {
       .waitFor();
     await this.selectReportYear(year);
     await this.selectReportingPeriod(period);
-    await this.addNewWorkPlanModal
-      .getByRole("button", { name: "Start new" })
-      .click();
-    await this.page.waitForResponse(
-      (response) =>
-        response.url().includes("/reports/WP/") &&
-        response.request().method() === "POST" &&
-        response.status() === 201
-    );
-    await this.waitForWorkPlansToLoad();
-  }
-
-  async waitForWorkPlansToLoad() {
-    await this.page.waitForResponse(
-      (response) =>
-        response.url().includes("/reports/WP/") &&
-        response.request().method() === "GET" &&
-        response.status() === 200
-    );
+    const postResp = this.waitForReportResponse("POST", 201);
+    const getResp = this.waitForReportResponse("GET", 200);
+    this.addNewWorkPlanModal.getByRole("button", { name: "Start new" }).click();
+    await Promise.all([postResp, getResp]);
   }
 
   // Transition Benchmarks page functionality
@@ -97,8 +91,9 @@ export class StatePage {
     } else {
       await benchmarkDialog.getByRole("radio", { name: "No" }).click();
     }
+    const putResp = this.waitForReportResponse("PUT", 200);
     await benchmarkDialog.getByRole("button", { name: "Save & close" }).click();
-    await this.waitForReportUpdate();
+    await putResp;
     await benchmarkDialog.waitFor({ state: "detached" });
     await this.page
       .locator(".chakra-modal__overlay")
@@ -153,8 +148,9 @@ export class StatePage {
     await this.page
       .locator("#strategy_additionalDetails")
       .fill(additionalDetails);
+    const putResp = this.waitForReportResponse("PUT", 200);
     await this.page.getByRole("button", { name: "Continue" }).click();
-    await this.waitForReportUpdate();
+    await putResp;
     await this.page.waitForURL(
       "**/wp/state-or-territory-specific-initiatives/instructions"
     );
@@ -200,8 +196,9 @@ export class StatePage {
       .filter({ hasText: topic })
       .first()
       .click();
+    const putResp = this.waitForReportResponse("PUT", 200);
     await addInitiativeDialog.getByRole("button", { name: "Save" }).click();
-    await this.waitForReportUpdate();
+    await putResp;
     await addInitiativeDialog.waitFor({ state: "detached" });
   }
 
@@ -339,8 +336,9 @@ export class StatePage {
     for (let i = 0; i < fundingSourcesData.length && i < quarters.length; i++) {
       await this.fillQuarterFundingSources(fundingSourcesData[i], quarters[i]);
     }
+    const putResp = this.waitForReportResponse("PUT", 200);
     await addFundingSourceDialog.getByRole("button", { name: "Save" }).click();
-    await this.waitForReportUpdate();
+    await putResp;
   }
 
   async fillQuarterFundingSources(value: string, quarter: string) {
@@ -361,7 +359,9 @@ export class StatePage {
 
   async fillWorkPlan(workPlan: WorkPlan) {
     await this.page.getByRole("button", { name: "Edit" }).click();
+    const putResponse = this.waitForReportResponse("PUT", 200);
     await this.page.getByRole("button", { name: "Continue" }).click();
+    await putResponse;
     await this.completeTransitionBenchmarkProjections(
       workPlan.transitionBenchmarkProjections
     );
@@ -388,17 +388,10 @@ export class StatePage {
       name: "Are you sure you want to submit MFP Work Plan?",
     });
     await submitDialog.waitFor({ state: "visible" });
+    const postResp = this.waitForReportResponse("POST", 200);
     await submitDialog
       .getByRole("button", { name: "Submit MFP Work Plan" })
       .click();
-  }
-
-  private async waitForReportUpdate() {
-    await this.page.waitForResponse(
-      (response) =>
-        response.url().includes("/reports/") &&
-        response.request().method() === "PUT" &&
-        response.status() === 200
-    );
+    await postResp;
   }
 }
