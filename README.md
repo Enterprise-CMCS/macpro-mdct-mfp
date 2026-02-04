@@ -128,7 +128,7 @@ Integration tests use [@axe-core/playwright](https://github.com/dequelabs/axe-co
 
 This repo uses the code formatter [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html). The formatter is run automatically in a pre-commit hook. Additionally, oxfmt can be run on file save in many IDEs or run ad hoc from the command line.
 
-#### oxfmt with VS Code
+#### oxc with VS Code
 
 ---
 
@@ -145,14 +145,18 @@ VS Code is used almost ubiquitously across the current development team, general
 Using this command, or a variant of it, will format all matching files in the codebase and write the changes. oxfmt has complete [CLI documentation](https://oxc.rs/docs/guide/usage/formatter.html) on their website.
 
 ```bash
-npx yarn oxfmt
+yarn oxfmt
 ```
 
-### ESLint
+### oxlint CLI
 
 All changed files will also be checked for formatting via the pre-commit hook.
 
-ESLint works in a similar manner to oxfmt for all code linting.
+oxlint works in a similar manner to oxfmt for all code linting.
+
+```bash
+yarn oxlint --deny-warnings
+```
 
 ### Github Action Script Checks
 
