@@ -230,6 +230,7 @@ describe("<ReviewSubmitPage />", () => {
         )
       ).toEqual([
         `MFP ${fullReportType} submission for `,
+        // oxlint-disable-next-line jsx-key
         <b>{`${submissionName}`}</b>,
         ` was submitted on Wednesday, September 14, 2022 by ${submittersName}.`,
       ]);

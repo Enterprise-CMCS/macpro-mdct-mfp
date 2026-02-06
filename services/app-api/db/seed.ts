@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import prompts, { Choice, PromptObject } from "prompts";
 import { createdLog, expandedLog, generateReportingPeriod } from "./helpers";
 import {

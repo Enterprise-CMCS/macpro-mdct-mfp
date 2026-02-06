@@ -43,7 +43,7 @@ export const UserProvider = ({ children }: Props) => {
       await logoutUser();
       localStorage.clear();
     } catch (error) {
-      console.log(error); // eslint-disable-line no-console
+      console.log(error);
     }
   };
 

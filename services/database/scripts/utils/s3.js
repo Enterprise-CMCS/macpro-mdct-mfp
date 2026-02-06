@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const {
   GetObjectCommand,
   ListObjectsV2Command,

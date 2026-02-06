@@ -386,7 +386,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
             body={body}
             openCreateReportModal={
               reportType === ReportType.EXPENDITURE
-                ? modal!!.setModalReport
+                ? modal!.setModalReport
                 : openCreateReportModal
             }
             enterSelectedReport={enterSelectedReport}
@@ -439,7 +439,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
           </Box>
         )}
       </Box>
-      {modal?.modal && modal.modal}
+      {modal?.modal}
       <CreateWorkPlanModal
         isResetting={isResetting}
         activeState={activeState!}

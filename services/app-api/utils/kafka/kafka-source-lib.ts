@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { Kafka, Producer } from "kafkajs";
