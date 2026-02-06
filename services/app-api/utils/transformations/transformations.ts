@@ -215,8 +215,7 @@ const nextTwelveQuarters = (
   // No point in keeping this around in the clones
   delete field.transformation;
 
-  // oxlint-disable-next-line no-useless-spread
-  return [...new Array(12)]
+  return Array.from({ length: 12 })
     .map((_, index) => ({
       year: reportYear + Math.floor((firstQuarterIndex + index) / 4),
       quarter: `Q${1 + ((firstQuarterIndex + index) % 4)}`,

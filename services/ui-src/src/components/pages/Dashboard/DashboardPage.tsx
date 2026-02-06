@@ -386,7 +386,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
             body={body}
             openCreateReportModal={
               reportType === ReportType.EXPENDITURE
-                ? modal!!.setModalReport // oxlint-disable-line no-extra-non-null-assertion
+                ? modal!.setModalReport
                 : openCreateReportModal
             }
             enterSelectedReport={enterSelectedReport}
