@@ -2,7 +2,7 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
-import { CalculationTable } from "components";
+import { CalculationTable, DynamicTableProvider } from "components";
 // types
 import { ReportFormFieldType, ReportShape, ValidationType } from "types";
 // utils
@@ -11,21 +11,25 @@ import { mockStateUserStore } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
-const mockRhfMethods = {
+const mockFormContextMethods = {
   register: () => {},
   setValue: () => {},
   getValues: jest.fn(),
   trigger: mockTrigger,
 };
+const mockFieldArrayMethods = {
+  append: jest.fn(),
+};
 const mockUseFormContext = useFormContext as unknown as jest.Mock<
   typeof useFormContext
 >;
 jest.mock("react-hook-form", () => ({
-  useFormContext: jest.fn(() => mockRhfMethods),
+  useFormContext: jest.fn(() => mockFormContextMethods),
+  useFieldArray: jest.fn(() => mockFieldArrayMethods),
 }));
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
+    ...mockFormContextMethods,
     getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
@@ -126,7 +130,11 @@ const mockProps = {
   },
 };
 
-const tableComponent = (props = mockProps) => <CalculationTable {...props} />;
+const tableComponent = (props = mockProps) => (
+  <DynamicTableProvider>
+    <CalculationTable {...props} />
+  </DynamicTableProvider>
+);
 
 describe("<CalculationTable />", () => {
   beforeEach(() => {
