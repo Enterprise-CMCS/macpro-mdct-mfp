@@ -70,7 +70,7 @@ export const ExportedModalDrawerReportSection = ({
     const firstQuarterIndex = reportPeriod === 1 ? 0 : 2;
 
     // returns array of labels like ["2024 Q1", "2024 Q2", ...]
-    return [...new Array(12)]
+    return Array.from({ length: 12 })
       .map((_, index) => ({
         year: reportYear + Math.floor((firstQuarterIndex + index) / 4),
         quarter: `Q${1 + ((firstQuarterIndex + index) % 4)}`,
