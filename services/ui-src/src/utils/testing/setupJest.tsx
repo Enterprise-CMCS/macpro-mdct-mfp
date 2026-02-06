@@ -1,7 +1,24 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router";
+import { configure } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import "jest-axe/extend-expect";
+
+(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+
+// Keep IS_REACT_ACT_ENVIRONMENT enabled during RTL async polling (React 19).
+configure({
+  asyncWrapper: async (cb) => {
+    const prev = (globalThis as any).IS_REACT_ACT_ENVIRONMENT;
+    (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+    try {
+      return await cb();
+    } finally {
+      (globalThis as any).IS_REACT_ACT_ENVIRONMENT = prev;
+    }
+  },
+});
+
 // types
 import {
   UserRoles,
