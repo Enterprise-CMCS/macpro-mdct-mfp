@@ -17,7 +17,7 @@ export const DynamicTableRows = ({ tableId }: Props) => {
   const form = useFormContext();
   form.register(name);
 
-  const { append, fields } = useFieldArray({
+  const { append, fields = [] } = useFieldArray({
     name,
     shouldUnregister: true,
   });
