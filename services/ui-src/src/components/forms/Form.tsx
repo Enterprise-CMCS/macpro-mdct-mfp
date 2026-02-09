@@ -155,6 +155,7 @@ export const Form = ({
       return (
         <DynamicTableProvider key={id}>
           <CalculationTable
+            disabled={!!fieldInputDisabled}
             formData={formData}
             id={id}
             order={index}
@@ -164,7 +165,7 @@ export const Form = ({
         </DynamicTableProvider>
       );
     }
-    return <></>;
+    return null;
   };
 
   /*

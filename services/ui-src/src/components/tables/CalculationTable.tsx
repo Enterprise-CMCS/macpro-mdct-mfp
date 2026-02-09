@@ -26,6 +26,7 @@ import { parseCustomHtml, translate } from "utils";
 
 export const CalculationTable = ({
   bodyRows,
+  disabled,
   dynamicRows = [],
   footRows,
   formData,
@@ -47,20 +48,23 @@ export const CalculationTable = ({
     ? localReport.fieldData?.[percentageField]
     : 100;
 
-  // Fields are disabled if no percentage is set
-  const disabled = Boolean(!percentage);
-  const percentageDisplay = disabled ? "[auto-populated]%" : `${percentage}%`;
+  const missingPercentage = Boolean(!percentage);
+  const percentageDisplay = missingPercentage
+    ? "[auto-populated]%"
+    : `${percentage}%`;
 
   // Show error once if in a loop
-  const showError = disabled && order === 0;
+  const showError = missingPercentage && order === 0;
 
   // Set cell width based on number of columns
   const firstRow = headRows[0];
   const thWidth = `${100 / firstRow.length}%`;
 
+  // Diabled fields if no percentage is set or report is submitted
+  const isDisabled = missingPercentage || disabled;
+
   const cellProps = {
-    // TODO: Update for submitted/admin
-    disabled,
+    disabled: isDisabled,
     formData,
     percentage,
     tableId,
@@ -170,6 +174,7 @@ export const CalculationTable = ({
 };
 
 interface Props extends Omit<FormTable, "tableType"> {
+  disabled: boolean;
   formData?: AnyObject;
   order?: number;
   report?: ReportShape;

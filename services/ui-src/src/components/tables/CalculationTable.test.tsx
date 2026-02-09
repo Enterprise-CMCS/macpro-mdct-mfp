@@ -41,7 +41,7 @@ const mockProps = {
     [
       "Mock text",
       {
-        id: "qualifiedHcbs_statePlanServices_mockId1-totalComputable",
+        id: "mockTable_statePlanServices_mockId1-totalComputable",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -51,7 +51,7 @@ const mockProps = {
         },
       },
       {
-        id: "qualifiedHcbs_statePlanServices_mockId1-totalStateTerritoryShare",
+        id: "mockTable_statePlanServices_mockId1-totalStateTerritoryShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -63,7 +63,7 @@ const mockProps = {
         },
       },
       {
-        id: "qualifiedHcbs_statePlanServices_mockId1-totalFederalShare",
+        id: "mockTable_statePlanServices_mockId1-totalFederalShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -76,11 +76,60 @@ const mockProps = {
       },
     ],
   ],
+  disabled: false,
+  dynamicRows: [
+    [
+      {
+        id: "mockTable_statePlanServices_other-category",
+        type: ReportFormFieldType.DYNAMIC,
+        validation: ValidationType.DYNAMIC_OPTIONAL,
+        forTableOnly: true,
+        props: {
+          label: "Mock other text Category",
+        },
+      },
+      {
+        id: "mockTable_statePlanServices_other-totalComputable",
+        type: ReportFormFieldType.DYNAMIC,
+        validation: ValidationType.DYNAMIC_OPTIONAL,
+        forTableOnly: true,
+        props: {
+          label: "Mock other text Total Computable",
+          mask: "currency",
+          readOnly: true,
+        },
+      },
+      {
+        id: "mockTable_statePlanServices_other-totalStateTerritoryShare",
+        type: ReportFormFieldType.DYNAMIC,
+        validation: ValidationType.DYNAMIC_OPTIONAL,
+        forTableOnly: true,
+        props: {
+          initialValue: "0",
+          label: "Mock other text Total State / Territory Share",
+          mask: "currency",
+          readOnly: true,
+        },
+      },
+      {
+        id: "mockTable_statePlanServices_other-totalFederalShare",
+        type: ReportFormFieldType.DYNAMIC,
+        validation: ValidationType.DYNAMIC_OPTIONAL,
+        forTableOnly: true,
+        props: {
+          initialValue: "0",
+          label: "Mock other text Total Federal Share",
+          mask: "currency",
+          readOnly: true,
+        },
+      },
+    ],
+  ],
   footRows: [
     [
       "Mock footer",
       {
-        id: "qualifiedHcbs_statePlanServices-totalComputable",
+        id: "mockTable_statePlanServices-totalComputable",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -92,7 +141,7 @@ const mockProps = {
         },
       },
       {
-        id: "qualifiedHcbs_statePlanServices-totalStateTerritoryShare",
+        id: "mockTable_statePlanServices-totalStateTerritoryShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -104,7 +153,7 @@ const mockProps = {
         },
       },
       {
-        id: "qualifiedHcbs_statePlanServices-totalFederalShare",
+        id: "mockTable_statePlanServices-totalFederalShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -119,11 +168,16 @@ const mockProps = {
   ],
   formData: {},
   headRows: [["Heading 1", "Heading 2", "Heading 3", "Heading 4"]],
-  id: "qualifiedHcbs_statePlanServices",
+  id: "mockTable_statePlanServices",
   report: {
     fieldData: {},
   } as unknown as ReportShape,
   verbiage: {
+    dynamicRows: {
+      buttonText: "Mock dynamic row button",
+      hint: "Mock dynamic row hint",
+      label: "Mock dynamic row label:",
+    },
     errorMessage: "Mock error",
     percentage: "Mock Percentage: {{percentage}}",
     title: "Mock table title",
@@ -149,7 +203,7 @@ describe("<CalculationTable />", () => {
     render(tableComponent());
 
     const table = screen.getByRole("table");
-    expect(table).toHaveAttribute("id", "qualifiedHcbs_statePlanServices");
+    expect(table).toHaveAttribute("id", "mockTable_statePlanServices");
 
     const tableHeading = screen.getByRole("heading", {
       level: 2,
@@ -167,11 +221,11 @@ describe("<CalculationTable />", () => {
       ...mockProps,
       report: {
         fieldData: {
-          fmap_qualifiedHcbsPercentage: 87,
+          fmap_mockTablePercentage: 87,
         },
       } as unknown as ReportShape,
       options: {
-        percentageField: "fmap_qualifiedHcbsPercentage",
+        percentageField: "fmap_mockTablePercentage",
       },
     };
 
@@ -216,7 +270,7 @@ describe("<CalculationTable />", () => {
     const updatedProps = {
       ...mockProps,
       options: {
-        percentageField: "fmap_qualifiedHcbsPercentage",
+        percentageField: "fmap_mockTablePercentage",
       },
     };
 
@@ -230,6 +284,27 @@ describe("<CalculationTable />", () => {
 
     const input = screen.getByRole("textbox", { name: "Heading 2 Mock text" });
     expect(input).toBeDisabled();
+  });
+
+  test("dynamic rows", async () => {
+    mockGetValues(undefined);
+    render(tableComponent(mockProps));
+
+    const hint = screen.getByText("Mock dynamic row hint");
+    expect(hint).toBeVisible();
+
+    const bodyRows = screen.getAllByRole("row");
+    expect(bodyRows).toHaveLength(3);
+
+    const button = screen.getByRole("button", {
+      name: "Mock dynamic row button",
+    });
+    await act(async () => {
+      await userEvent.click(button);
+    });
+
+    const bodyRowUpdated = screen.getAllByRole("row");
+    expect(bodyRowUpdated).toHaveLength(4);
   });
 
   testA11yAct(tableComponent());
