@@ -97,7 +97,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-dynamodb@npm:^3.965.0":
+"@aws-sdk/client-dynamodb@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-dynamodb@npm:3.985.0"
   dependencies:
@@ -147,7 +147,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:^3.965.0":
+"@aws-sdk/client-s3@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-s3@npm:3.985.0"
   dependencies:
@@ -445,7 +445,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/lib-dynamodb@npm:^3.965.0":
+"@aws-sdk/lib-dynamodb@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/lib-dynamodb@npm:3.985.0"
   dependencies:
@@ -2542,9 +2542,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app-api@workspace:."
   dependencies:
-    "@aws-sdk/client-dynamodb": "npm:^3.965.0"
-    "@aws-sdk/client-s3": "npm:^3.965.0"
-    "@aws-sdk/lib-dynamodb": "npm:^3.965.0"
+    "@aws-sdk/client-dynamodb": "npm:^3.985.0"
+    "@aws-sdk/client-s3": "npm:^3.985.0"
+    "@aws-sdk/lib-dynamodb": "npm:^3.985.0"
     "@launchdarkly/node-server-sdk": "npm:^9.10.4"
     "@types/dompurify": "npm:^2.4.0"
     "@types/jest": "npm:^29.5.14"

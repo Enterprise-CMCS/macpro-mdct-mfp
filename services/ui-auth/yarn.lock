@@ -51,7 +51,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-cognito-identity-provider@npm:^3.965.0":
+"@aws-sdk/client-cognito-identity-provider@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-cognito-identity-provider@npm:3.985.0"
   dependencies:
@@ -1048,6 +1048,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ui-auth@workspace:."
   dependencies:
-    "@aws-sdk/client-cognito-identity-provider": "npm:^3.965.0"
+    "@aws-sdk/client-cognito-identity-provider": "npm:^3.985.0"
   languageName: unknown
   linkType: soft

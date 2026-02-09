@@ -87,7 +87,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-dynamodb@npm:^3.965.0":
+"@aws-sdk/client-dynamodb@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-dynamodb@npm:3.985.0"
   dependencies:
@@ -137,7 +137,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:^3.965.0":
+"@aws-sdk/client-s3@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-s3@npm:3.985.0"
   dependencies:
@@ -435,7 +435,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/lib-dynamodb@npm:^3.965.0":
+"@aws-sdk/lib-dynamodb@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/lib-dynamodb@npm:3.985.0"
   dependencies:
@@ -1435,9 +1435,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "database@workspace:."
   dependencies:
-    "@aws-sdk/client-dynamodb": "npm:^3.965.0"
-    "@aws-sdk/client-s3": "npm:^3.965.0"
-    "@aws-sdk/lib-dynamodb": "npm:^3.965.0"
+    "@aws-sdk/client-dynamodb": "npm:^3.985.0"
+    "@aws-sdk/client-s3": "npm:^3.985.0"
+    "@aws-sdk/lib-dynamodb": "npm:^3.985.0"
   languageName: unknown
   linkType: soft
 

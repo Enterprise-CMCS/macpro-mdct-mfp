@@ -62,7 +62,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-cloudformation@npm:^3.965.0":
+"@aws-sdk/client-cloudformation@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-cloudformation@npm:3.985.0"
   dependencies:
@@ -110,7 +110,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-lambda@npm:^3.965.0":
+"@aws-sdk/client-lambda@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-lambda@npm:3.985.0"
   dependencies:
@@ -208,7 +208,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-sts@npm:^3.965.0":
+"@aws-sdk/client-sts@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-sts@npm:3.985.0"
   dependencies:
@@ -1239,9 +1239,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cli@workspace:."
   dependencies:
-    "@aws-sdk/client-cloudformation": "npm:^3.965.0"
-    "@aws-sdk/client-lambda": "npm:^3.965.0"
-    "@aws-sdk/client-sts": "npm:^3.965.0"
+    "@aws-sdk/client-cloudformation": "npm:^3.985.0"
+    "@aws-sdk/client-lambda": "npm:^3.985.0"
+    "@aws-sdk/client-sts": "npm:^3.985.0"
     "@types/node": "npm:^24.10.1"
     "@types/yargs": "npm:^17.0.35"
     dotenv: "npm:^17.2.3"

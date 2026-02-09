@@ -124,7 +124,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-cloudformation@npm:^3.965.0":
+"@aws-sdk/client-cloudformation@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-cloudformation@npm:3.985.0"
   dependencies:
@@ -172,7 +172,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-lambda@npm:^3.965.0":
+"@aws-sdk/client-lambda@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-lambda@npm:3.985.0"
   dependencies:
@@ -224,7 +224,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:^3.965.0":
+"@aws-sdk/client-s3@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-s3@npm:3.985.0"
   dependencies:
@@ -287,7 +287,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-secrets-manager@npm:^3.965.0":
+"@aws-sdk/client-secrets-manager@npm:^3.985.0":
   version: 3.985.0
   resolution: "@aws-sdk/client-secrets-manager@npm:3.985.0"
   dependencies:
@@ -3328,10 +3328,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "mdct-mfp@workspace:."
   dependencies:
-    "@aws-sdk/client-cloudformation": "npm:^3.965.0"
-    "@aws-sdk/client-lambda": "npm:^3.965.0"
-    "@aws-sdk/client-s3": "npm:^3.965.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.965.0"
+    "@aws-sdk/client-cloudformation": "npm:^3.985.0"
+    "@aws-sdk/client-lambda": "npm:^3.985.0"
+    "@aws-sdk/client-s3": "npm:^3.985.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.985.0"
     "@faker-js/faker": "npm:^9.9.0"
     "@octokit/auth-action": "npm:^6.0.1"
     "@octokit/rest": "npm:^22.0.0"
