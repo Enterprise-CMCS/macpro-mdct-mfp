@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { AdminPage, AdminBannerContext } from "components";
@@ -33,6 +33,12 @@ const adminView = (context: any) => (
 const deleteButtonText = "Delete banner";
 
 describe("<AdminPage />", () => {
+  afterEach(async () => {
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+  });
+
   describe("Test AdminPage banner manipulation functionality", () => {
     test("Deletes current banner on delete button click", async () => {
       await act(async () => {
@@ -40,10 +46,10 @@ describe("<AdminPage />", () => {
         await render(adminView(mockBannerMethods));
       });
       const deleteButton = screen.getByText(deleteButtonText);
-      await waitFor(async () => {
+      await act(async () => {
         await userEvent.click(deleteButton);
-        expect(mockBannerMethods.deleteAdminBanner).toHaveBeenCalled();
       });
+      expect(mockBannerMethods.deleteAdminBanner).toHaveBeenCalled();
     });
   });
 
