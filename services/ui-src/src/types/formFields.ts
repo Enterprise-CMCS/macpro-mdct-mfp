@@ -49,7 +49,8 @@ export interface FormJson {
   tables?: FormTable[];
 }
 
-export type FormTableRow = (string | FormField)[];
+export type FormTableCell = string | FormField;
+export type FormTableRow = FormTableCell[];
 export type FormTableRows = FormTableRow[];
 
 export interface FormTable {

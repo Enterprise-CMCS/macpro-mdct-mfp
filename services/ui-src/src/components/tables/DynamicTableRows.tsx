@@ -9,7 +9,7 @@ import { InputChangeEvent } from "types";
 // utils
 import { maskResponseData } from "utils";
 
-export const DynamicTableRows = ({ tableId }: Props) => {
+export const DynamicTableRows = ({ label, tableId }: Props) => {
   const { focusedRowIndex, localDynamicRows, localReport } =
     useContext(DynamicTableContext);
 
@@ -48,17 +48,22 @@ export const DynamicTableRows = ({ tableId }: Props) => {
       );
     }
 
+    const hasLabel = cell.id.includes("category");
+
     // TODO: Return field with errors and masks
     return (
-      <CmsdsTextField
-        id={cell.props?.idOverride}
-        name={`${cell.id}[${rowIndex}]`}
-        hint={undefined}
-        label={undefined}
-        onChange={onChangeHandler}
-        onBlur={onBlurHandler}
-        value={form.getValues(cell.id)}
-      />
+      <>
+        {hasLabel && <label>{label}</label>}
+        <CmsdsTextField
+          id={cell.props?.idOverride}
+          name={`${cell.id}[${rowIndex}]`}
+          hint={undefined}
+          label={undefined}
+          onChange={onChangeHandler}
+          onBlur={onBlurHandler}
+          value={form.getValues(cell.id)}
+        />
+      </>
     );
   };
 
@@ -112,6 +117,7 @@ export const DynamicTableRows = ({ tableId }: Props) => {
 };
 
 interface Props {
+  label?: string;
   tableId: string;
 }
 

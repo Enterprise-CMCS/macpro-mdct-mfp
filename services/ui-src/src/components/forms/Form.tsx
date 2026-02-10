@@ -141,7 +141,7 @@ export const Form = ({
     return formFieldFactory(
       updateFieldsToRenderWithAriaLabels(fieldsToRender),
       {
-        disabled: !!fieldInputDisabled,
+        disabled: fieldInputDisabled,
         autosave,
         validateOnRender,
       }
@@ -155,7 +155,7 @@ export const Form = ({
       return (
         <DynamicTableProvider key={id}>
           <CalculationTable
-            disabled={!!fieldInputDisabled}
+            disabled={fieldInputDisabled}
             formData={formData}
             id={id}
             order={index}

@@ -90,7 +90,8 @@ export interface ReportFormWithTables {
   };
 }
 
-export type FormTableRow = (string | ReportFormField)[];
+export type FormTableCell = string | ReportFormField;
+export type FormTableRow = FormTableCell[];
 export type FormTableRows = FormTableRow[];
 
 export interface FormTable {

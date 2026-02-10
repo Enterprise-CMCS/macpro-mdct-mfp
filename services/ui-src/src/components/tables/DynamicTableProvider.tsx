@@ -69,7 +69,6 @@ export const DynamicTableProvider = ({ children }: any) => {
       const updatedReport = updatedReportOnFieldChange({
         id,
         name,
-        // TODO: Use form percentage or field percentage
         percentage,
         report: localReport,
         tableId,

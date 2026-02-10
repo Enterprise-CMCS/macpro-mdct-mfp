@@ -20,7 +20,7 @@ import { DynamicTableContext, DynamicTableRows } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 // types
-import { AnyObject, FormTable, ReportShape } from "types";
+import { AnyObject, FormTable, FormTableCell, ReportShape } from "types";
 // utils
 import { parseCustomHtml, translate } from "utils";
 
@@ -44,14 +44,14 @@ export const CalculationTable = ({
 
   // Percentage field
   const percentageField = options?.percentageField;
-  const percentage = percentageField
+  const formPercentage = percentageField
     ? localReport.fieldData?.[percentageField]
     : 100;
 
-  const missingPercentage = Boolean(!percentage);
+  const missingPercentage = Boolean(!formPercentage);
   const percentageDisplay = missingPercentage
     ? "[auto-populated]%"
-    : `${percentage}%`;
+    : `${formPercentage}%`;
 
   // Show error once if in a loop
   const showError = missingPercentage && order === 0;
@@ -60,15 +60,24 @@ export const CalculationTable = ({
   const firstRow = headRows[0];
   const thWidth = `${100 / firstRow.length}%`;
 
-  // Diabled fields if no percentage is set or report is submitted
+  // Disable fields if no percentage is set or report is submitted
   const isDisabled = missingPercentage || disabled;
 
-  const cellProps = {
+  // Use field-level percentage or formPercentage
+  const getPercentage = (cell: FormTableCell) => {
+    if (typeof cell == "string") return formPercentage;
+
+    const [keyFieldId] = cell.id.split("-");
+    const fieldPercentageField = `${keyFieldId}-percentage`;
+    return localReport.fieldData?.[fieldPercentageField] || formPercentage;
+  };
+
+  const cellProps = (cell: FormTableCell) => ({
     disabled: isDisabled,
     formData,
-    percentage,
+    percentage: getPercentage(cell),
     tableId,
-  };
+  });
 
   useEffect(() => {
     // Use local state to speed up UI
@@ -120,7 +129,7 @@ export const CalculationTable = ({
                     columnId: `thead-row-${rowIndex}-cell-0`,
                     index: rowIndex,
                     rowId: `thead-row-0-cell-${cellIndex}`,
-                    ...cellProps,
+                    ...cellProps(cell),
                   })}
                 </Th>
               ))}
@@ -140,13 +149,16 @@ export const CalculationTable = ({
                     columnId: `tbody-row-${rowIndex}-cell-0`,
                     index: rowIndex,
                     rowId: `thead-row-0-cell-${cellIndex}`,
-                    ...cellProps,
+                    ...cellProps(cell),
                   })}
                 </Td>
               ))}
             </Tr>
           ))}
-          <DynamicTableRows tableId={tableId} />
+          <DynamicTableRows
+            label={verbiage?.dynamicRows?.label}
+            tableId={tableId}
+          />
         </Tbody>
         <Tfoot>
           {footRows.map((row, rowIndex: number) => (
@@ -161,7 +173,7 @@ export const CalculationTable = ({
                     columnId: `tfoot-row-${rowIndex}-cell-0`,
                     index: rowIndex,
                     rowId: `tfoot-row-0-cell-${cellIndex}`,
-                    ...cellProps,
+                    ...cellProps(cell),
                   })}
                 </Td>
               ))}
