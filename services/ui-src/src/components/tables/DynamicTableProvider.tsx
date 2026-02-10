@@ -95,8 +95,8 @@ export const DynamicTableProvider = ({ children }: any) => {
     );
 
     return formFieldFactory(fieldsToRender, {
-      disabled,
       autosave: true,
+      disabled,
       validateOnRender: false,
     });
   };
@@ -123,6 +123,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     setFocusedRowIndex(updatedRows.length - 1);
   };
 
+  // TODO: Remove with confirmation
   const removeDynamicRow = () => {};
 
   const providerValue = {

@@ -18,6 +18,7 @@ import { makeStringParseableForDatabase } from "utils/other/clean";
 import { applyMask, maskMap } from "utils/other/mask";
 // types
 import { InputChangeEvent, ReportFormFieldType } from "types";
+import { TableV2 } from "aws-cdk-lib/aws-dynamodb";
 
 export const NumberField = ({
   name,
@@ -136,9 +137,73 @@ export const NumberField = ({
       };
       const user = { userName: full_name, state };
 
+      // TODO: Remove
+      const [f1, f2] = fields[0].name.split("_");
+      const devFieldId = [f1, f2, "other"].join("_");
+      const devOnly = [
+        ...fieldsToSave,
+        {
+          name: `${devFieldId}-category`,
+          type: "dynamic",
+          value: [
+            {
+              id: "t1-category",
+              name: "Test 1",
+            },
+            {
+              id: "t2-category",
+              name: "Test 2",
+            },
+          ],
+        },
+        {
+          name: `${devFieldId}-totalComputable`,
+          type: "dynamic",
+          value: [
+            {
+              id: "t1-totalComputable",
+              name: "123",
+            },
+            {
+              id: "t2-totalComputable",
+              name: "55",
+            },
+          ],
+        },
+        {
+          name: `${devFieldId}-totalFederalShare`,
+          type: "dynamic",
+          value: [
+            {
+              id: "t1-totalFederalShare",
+              name: "123",
+            },
+            {
+              id: "t2-totalFederalShare",
+              name: "55",
+            },
+          ],
+        },
+        {
+          name: `${devFieldId}-totalStateTerritoryShare`,
+          type: "dynamic",
+          value: [
+            {
+              id: "t1-totalStateTerritoryShare",
+              name: "0",
+            },
+            {
+              id: "t2-totalStateTerritoryShare",
+              name: "0",
+            },
+          ],
+        },
+      ];
+
       await autosaveFieldData({
         form,
-        fields: fieldsToSave,
+        // fields: fieldsToSave,
+        fields: devOnly,
         report: reportArgs,
         user,
         entityContext: {

@@ -38,8 +38,13 @@ export const CalculationTable = ({
   verbiage,
 }: Props) => {
   // Dynamic rows
-  const { addDynamicRow, displayCell, localReport, setLocalReport } =
-    useContext(DynamicTableContext);
+  const {
+    addDynamicRow,
+    displayCell,
+    localReport,
+    setLocalDynamicRows,
+    setLocalReport,
+  } = useContext(DynamicTableContext);
 
   // Percentage field
   const percentageField = options?.percentageField;
@@ -82,6 +87,40 @@ export const CalculationTable = ({
     // Use local state to speed up UI
     setLocalReport(report);
   }, []);
+
+  useEffect(() => {
+    // Add rows for saved dynamic values
+    const rows = dynamicRows.flatMap((columns) => {
+      const columnIds = columns.map((c) => (typeof c === "string" ? c : c.id));
+
+      // Assuming first field is category
+      const baseFieldId = columnIds[0];
+      const baseValues = report.fieldData?.[baseFieldId] ?? [];
+
+      // TODO: Dynamic field
+      return Array.from({ length: baseValues.length }, (_, rowIndex) =>
+        columnIds.map((id) => {
+          const columnValues = report.fieldData?.[id];
+
+          return {
+            id,
+            type: "text",
+            validation: "textOptional",
+            forTableOnly: true,
+            props: {
+              label: "Test",
+              idOverride: columnValues?.[rowIndex]?.id,
+              readOnly:
+                id.includes("totalStateTerritoryShare") ||
+                id.includes("totalFederalShare"),
+            },
+          };
+        })
+      );
+    });
+
+    setLocalDynamicRows(rows);
+  }, [localReport]);
 
   return (
     <Box sx={sx.box}>
