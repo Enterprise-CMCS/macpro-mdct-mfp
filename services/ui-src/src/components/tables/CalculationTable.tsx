@@ -40,7 +40,6 @@ export const CalculationTable = ({
   // Dynamic rows
   const { addDynamicRow, displayCell, localReport, setLocalReport } =
     useContext(DynamicTableContext);
-  const hasDynamicRows = dynamicRows.length > 0;
 
   // Percentage field
   const percentageField = options?.percentageField;
@@ -97,19 +96,20 @@ export const CalculationTable = ({
         </Text>
       )}
       {verbiage?.dynamicRows?.hint && (
-        <Text sx={sx.dynamicRowsHint}>{verbiage?.dynamicRows?.hint}</Text>
+        <Text sx={sx.dynamicRowsHint}>{verbiage.dynamicRows.hint}</Text>
       )}
 
-      {hasDynamicRows && (
+      {dynamicRows.map((dynamicRow, index) => (
         <Button
+          key={`dynamic-button-${index}`}
           leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="" />}
-          onClick={() => addDynamicRow(dynamicRows[0])}
+          onClick={() => addDynamicRow(dynamicRow)}
           sx={sx.dynamicRowsButton}
           variant="outline"
         >
           {verbiage?.dynamicRows?.buttonText}
         </Button>
-      )}
+      ))}
 
       <Table id={tableId} sx={sx.table}>
         <TableCaption placement="top" sx={sx.captionBox}>
