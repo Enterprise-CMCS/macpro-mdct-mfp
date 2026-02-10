@@ -41,7 +41,7 @@ const mockProps = {
     [
       "Mock text 1",
       {
-        id: "mockTable_statePlanServices_mockId1-totalComputable",
+        id: "mockTable_mockServices_mockId1-totalComputable",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -51,7 +51,7 @@ const mockProps = {
         },
       },
       {
-        id: "mockTable_statePlanServices_mockId1-percentage",
+        id: "mockTable_mockServices_mockId1-percentage",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -61,7 +61,7 @@ const mockProps = {
         },
       },
       {
-        id: "mockTable_statePlanServices_mockId1-totalStateTerritoryShare",
+        id: "mockTable_mockServices_mockId1-totalStateTerritoryShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -73,7 +73,7 @@ const mockProps = {
         },
       },
       {
-        id: "mockTable_statePlanServices_mockId1-totalFederalShare",
+        id: "mockTable_mockServices_mockId1-totalFederalShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -88,7 +88,7 @@ const mockProps = {
     [
       "Mock text 2",
       {
-        id: "mockTable_statePlanServices_mockId2-totalComputable",
+        id: "mockTable_mockServices_mockId2-totalComputable",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -98,7 +98,7 @@ const mockProps = {
         },
       },
       {
-        id: "mockTable_statePlanServices_mockId2-percentage",
+        id: "mockTable_mockServices_mockId2-percentage",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -108,7 +108,7 @@ const mockProps = {
         },
       },
       {
-        id: "mockTable_statePlanServices_mockId2-totalStateTerritoryShare",
+        id: "mockTable_mockServices_mockId2-totalStateTerritoryShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -120,7 +120,7 @@ const mockProps = {
         },
       },
       {
-        id: "mockTable_statePlanServices_mockId2-totalFederalShare",
+        id: "mockTable_mockServices_mockId2-totalFederalShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -138,7 +138,7 @@ const mockProps = {
     [
       "Mock footer",
       {
-        id: "mockTable_statePlanServices-totalComputable",
+        id: "mockTable_mockServices-totalComputable",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -151,7 +151,7 @@ const mockProps = {
       },
       "",
       {
-        id: "mockTable_statePlanServices-totalStateTerritoryShare",
+        id: "mockTable_mockServices-totalStateTerritoryShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -163,7 +163,7 @@ const mockProps = {
         },
       },
       {
-        id: "mockTable_statePlanServices-totalFederalShare",
+        id: "mockTable_mockServices-totalFederalShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -178,7 +178,7 @@ const mockProps = {
   ],
   formData: {},
   headRows: [["Heading 1", "Heading 2", "Heading 3", "Heading 4", "Heading 5"]],
-  id: "mockTable_statePlanServices",
+  id: "mockTable_mockServices",
   verbiage: {
     dynamicRows: {
       buttonText: "Mock dynamic row button",
@@ -210,7 +210,7 @@ describe("<CalculationTable />", () => {
     render(tableComponent());
 
     const table = screen.getByRole("table");
-    expect(table).toHaveAttribute("id", "mockTable_statePlanServices");
+    expect(table).toHaveAttribute("id", "mockTable_mockServices");
 
     const tableHeading = screen.getByRole("heading", {
       level: 2,
@@ -229,7 +229,7 @@ describe("<CalculationTable />", () => {
       report: {
         fieldData: {
           fmap_mockTablePercentage: 78,
-          "mockTable_statePlanServices_mockId1-percentage": 87,
+          "mockTable_mockServices_mockId1-percentage": 87,
         },
       } as unknown as ReportShape,
       options: {
@@ -298,7 +298,7 @@ describe("<CalculationTable />", () => {
       dynamicRows: [
         [
           {
-            id: "mockTable_statePlanServices_other-category",
+            id: "mockTable_mockServices_other-category",
             type: ReportFormFieldType.DYNAMIC,
             validation: ValidationType.DYNAMIC_OPTIONAL,
             forTableOnly: true,
@@ -307,7 +307,7 @@ describe("<CalculationTable />", () => {
             },
           },
           {
-            id: "mockTable_statePlanServices_other-totalComputable",
+            id: "mockTable_mockServices_other-totalComputable",
             type: ReportFormFieldType.DYNAMIC,
             validation: ValidationType.DYNAMIC_OPTIONAL,
             forTableOnly: true,
@@ -318,7 +318,7 @@ describe("<CalculationTable />", () => {
             },
           },
           {
-            id: "mockTable_statePlanServices_other-percentage",
+            id: "mockTable_mockServices_other-percentage",
             type: ReportFormFieldType.DYNAMIC,
             validation: ValidationType.DYNAMIC_OPTIONAL,
             forTableOnly: true,
@@ -329,7 +329,7 @@ describe("<CalculationTable />", () => {
             },
           },
           {
-            id: "mockTable_statePlanServices_other-totalStateTerritoryShare",
+            id: "mockTable_mockServices_other-totalStateTerritoryShare",
             type: ReportFormFieldType.DYNAMIC,
             validation: ValidationType.DYNAMIC_OPTIONAL,
             forTableOnly: true,
@@ -341,7 +341,7 @@ describe("<CalculationTable />", () => {
             },
           },
           {
-            id: "mockTable_statePlanServices_other-totalFederalShare",
+            id: "mockTable_mockServices_other-totalFederalShare",
             type: ReportFormFieldType.DYNAMIC,
             validation: ValidationType.DYNAMIC_OPTIONAL,
             forTableOnly: true,
