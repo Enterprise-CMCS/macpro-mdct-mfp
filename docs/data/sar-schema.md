@@ -9,16 +9,16 @@ The SAR (Semi-Annual Progress Report) is a form schema used for MFP (Money Follo
 1. [Schema Metadata](#schema-metadata)
 2. [Dynamic Content Relationship with Work Plan](#dynamic-content-relationship-with-work-plan)
 3. [Static SAR Sections](#static-sections)
-   - [General Information](#static-general)
-   - [Organization & Administration](#static-oa)
-   - [Additional Achievements](#static-aa)
+   - [1. General Information](#1-general-information-sargeneral-information)
+   - [2. Organization & Administration](#2-organization--administration-sarorganization-and-administration)
+   - [3. Additional Achievements](#3-additional-achievements-saradditional-achievements)
 4. [Dynamic SAR Sections](#dynamic-sections)
-   - [Retirement, Enrollment, and Transitions](#dynamic-ret)
-   - [State or Territory-Specific Initiatives](#dynamic-initiatives)
-5. [Appendix: Validation Types](#appendix-validation)
-6. [Appendix: Common Target Populations](#appendix-populations)
-7. [Appendix: Common Initiative Topics](#appendix-topics)
-8. [Appendix: RET Index Mapping](#appendix-ret)
+   - [1. Recruitment, Enrollment, and Transitions (RET)](#1-recruitment-enrollment-and-transitions-ret)
+   - [2. State or Territory-Specific Initiatives](#2-state-or-territory-specific-initiatives)
+5. [Appendix: Validation Types](#appendix-validation-types)
+6. [Appendix: Common Target Populations](#appendix-common-target-populations)
+7. [Appendix: Common Initiative Topics](#appendix-common-initiative-topics)
+8. [Appendix: RET Index Mapping](#appendix-ret-index-mapping)
 
 ---
 
@@ -198,63 +198,23 @@ Where `{AgeRange}` is one of:
 - `75to84`
 - `85AndOlder`
 
-#### Institution Types (ret-mtfqi index mapping)
-
-| Index | Institution Type |
-| ----- | ---------------- |
-| 1     | Nursing facility |
-| 2     | ICF/IID          |
-| 3     | IMD              |
-| 4     | Hospital         |
-| 5     | Other            |
-
-#### Residence Types (ret-mtfqr index mapping)
-
-| Index | Residence Type            |
-| ----- | ------------------------- |
-| 1     | Home (owned/leased)       |
-| 2     | Apartment                 |
-| 3     | Group home (≤4 unrelated) |
-| 4     | Qualified assisted living |
-
-#### Disenrollment Reasons (ret-mpdprp index mapping)
-
-| Index | Reason                               |
-| ----- | ------------------------------------ |
-| 1     | Re-institutionalization              |
-| 2     | Death                                |
-| 3     | Voluntary disenrollment              |
-| 4     | Other (checkbox with nested options) |
-
 ### 2. State or Territory-Specific Initiatives
 
-This is the most complex dynamic section. Initiatives are entirely imported from the Work Plan.
+This is the most complex dynamic section. Initiatives are entirely imported from the Work Plan. Each initiative has three required steps:
 
-#### Initiative Structure
-
-```typescript
-interface Initiative {
-  initiativeId: string; // UUID from Work Plan
-  name: string; // Initiative name
-  topic: string; // MFP Work Plan topic category
-  dashboard: DashboardConfig;
-  entitySteps: EntityStep[]; // Always 3 steps: Objectives Progress, Initiative Progress, Expenditures
-}
-```
-
-#### Initiative Entity Steps
-
-##### Step 1: Objectives Progress
+#### Step 1: Objectives Progress
 
 | Subsection          | Field ID                                           | Type       | Validation      |
 | ------------------- | -------------------------------------------------- | ---------- | --------------- |
 | Objectives Progress | `objectivesProgress_performanceMeasuresIndicators` | `textarea` | `text`          |
 | Objectives Progress | `objectivesProgress_deliverablesMet`               | `radio`    | `radio`         |
 | Objectives Progress | `objectivesProgress_deliverablesMet_otherText`     | `textarea` | `text` (nested) |
-| Objectives Progress | `objectiveTargets_actual_{Quarter}`                | `text`     | `text`          |
-| Objectives Progress | `objectiveTargets_projections_{Quarter}`           | `text`     | `text`          |
+| Objectives Progress | `objectiveTargets_actual_{Quarter}` ✱              | `text`     | `text`          |
+| Objectives Progress | `objectiveTargets_projections_{Quarter}` ✱         | `text`     | `text`          |
 
-##### Step 2: Initiative Progress
+✱ Only for objectives that have quantitative targets
+
+#### Step 2: Initiative Progress
 
 | Subsection          | Field ID                                                       | Type       | Validation |
 | ------------------- | -------------------------------------------------------------- | ---------- | ---------- |
@@ -262,86 +222,49 @@ interface Initiative {
 | Initiative Progress | `initiativeProgress_describeIssuesChallenges`                  | `textarea` | `text`     |
 | Initiative Progress | `initiativeProgress_describeCollaborationsWithExternalParties` | `textarea` | `text`     |
 
-##### Step 3: Expenditures
+#### Step 3: Expenditures
 
 This section contains information about the expenditures and funding sources. This section's fields are **entirely dynamic** based on funding sources from the Work Plan.
 
-**Field ID Patterns for funding sources:**
-
-```
-fundingSources_actual_{Quarter}_{FundingSourceUUID}
-fundingSources_projected_{Quarter}_{FundingSourceUUID}
-```
-
-**Example:**
-
-```
-fundingSources_projected_2025Q1_3500b73-1db-ead3-3c0b-a0c0e48d486
-fundingSources_actual_2025Q1_3500b73-1db-ead3-3c0b-a0c0e48d486
-```
-
-**Common fields across all initiatives:**
-
-| Field ID                                          | Type       | Validation      |
-| ------------------------------------------------- | ---------- | --------------- |
-| `expenditures_onTrackToFullExpendFunds`           | `radio`    | `radio`         |
-| `expenditures_onTrackToFullExpendFunds-otherText` | `textarea` | `text` (nested) |
+| Subsection   | Field ID                                                 | Type       | Validation      |
+| ------------ | -------------------------------------------------------- | ---------- | --------------- |
+| Expenditures | `fundingSources_actual_{Quarter}_{FundingSourceUUID}`    | `number`   | `number`        |
+| Expenditures | `fundingSources_projected_{Quarter}_{FundingSourceUUID}` | `number`   | `number`        |
+| Expenditures | `expenditures_onTrackToFullExpendFunds`                  | `radio`    | `radio`         |
+| Expenditures | `expenditures_onTrackToFullExpendFunds-otherText`        | `textarea` | `text` (nested) |
 
 ---
 
-## Generalized Field Schema
-
-### Field Types
-
-| Type       | Description            | Example Use                |
-| ---------- | ---------------------- | -------------------------- |
-| `text`     | Single-line text input | Names, titles              |
-| `textarea` | Multi-line text input  | Descriptions, explanations |
-| `number`   | Numeric input          | Counts, amounts            |
-| `radio`    | Single selection       | Yes/No questions           |
-| `checkbox` | Multiple selection     | "Other reasons" options    |
-
-### Nested/Conditional Field Validation
-
-When a field is conditionally shown based on a parent selection:
-
-```typescript
-interface NestedValidation {
-  type: ValidationType;
-  nested: true;
-  parentFieldName: string; // ID of parent field
-  parentOptionId: string; // ID of parent choice that triggers visibility
-}
-```
-
-The validation type for these fields only applies if the field with the associated `parentOptionId` is truthy (for example, if the parent field is a checkbox and is checked). These fields may appear in the form data but have empty values, if the field with the associated `parentOptionId` returns false.
-
----
-
-## Validation Types
+## Appendix: Validation Types
 
 The validation types are defined in `services/app-api/utils/types/validations.ts`. The table below lists all available validation types and indicates which are used in the SAR schema.
 
-| Type                   | Description                               | Use Case                                       | Used in SAR |
-| ---------------------- | ----------------------------------------- | ---------------------------------------------- | ----------- |
-| `checkbox`             | Checkbox selection required               | Required multi-select fields                   |             |
-| `checkboxOptional`     | Checkbox (optional)                       | Optional multi-select options                  | ✅          |
-| `date`                 | Valid date format                         | Date picker fields                             |             |
-| `dynamic`              | Dynamic validation based on field context | Fields with context-dependent rules            |             |
-| `dynamicOptional`      | Optional dynamic validation               | Optional context-dependent fields              |             |
-| `email`                | Valid email format                        | Email address fields                           | ✅          |
-| `endDate`              | Valid end date (must be after start date) | Date range end fields                          |             |
-| `number`               | Numeric value required                    | Currency amounts, funding sources              | ✅          |
-| `numberComparison`     | Number with comparison validation         | Fields requiring comparison to other values    |             |
-| `numberOptional`       | Numeric value (optional)                  | Optional numeric fields                        |             |
-| `objectArray`          | Array of entity objects                   | Initiative collection (dynamic from Work Plan) | ✅          |
-| `radio`                | Radio selection required                  | Yes/No questions, single-choice fields         | ✅          |
-| `text`                 | Non-empty text required                   | Names, titles, descriptions                    | ✅          |
-| `textCustom`           | Text with custom validation rules         | Fields with specific text requirements         |             |
-| `textOptional`         | Text (optional)                           | Optional text fields                           |             |
-| `url`                  | Valid URL format                          | Website fields                                 | ✅          |
-| `validInteger`         | Non-negative integer required             | Population counts, transition numbers          | ✅          |
-| `validIntegerOptional` | Non-negative integer or empty             | Optional counts (e.g., HCBS age-based fields)  | ✅          |
+| Type                   | Description                               | Used in SAR |
+| ---------------------- | ----------------------------------------- | ----------- |
+| `checkbox`             | Checkbox selection required               |             |
+| `checkboxOptional`     | Checkbox (optional)                       | ✅          |
+| `date`                 | Valid date format                         |             |
+| `dynamic`              | Dynamic validation based on field context |             |
+| `dynamicOptional`      | Optional dynamic validation               |             |
+| `email`                | Valid email format                        | ✅          |
+| `endDate`              | Valid end date (must be after start date) |             |
+| `number`               | Numeric value required                    | ✅          |
+| `numberComparison`     | Number with comparison validation         |             |
+| `numberOptional`       | Numeric value (optional)                  |             |
+| `objectArray`          | Array of entity objects                   | ✅          |
+| `radio`                | Radio selection required                  | ✅          |
+| `text`                 | Non-empty text required                   | ✅          |
+| `textCustom`           | Text with custom validation rules         |             |
+| `textOptional`         | Text (optional)                           |             |
+| `url`                  | Valid URL format                          | ✅          |
+| `validInteger`         | Non-negative integer required             | ✅          |
+| `validIntegerOptional` | Non-negative integer or empty             | ✅          |
+
+### Nested/Conditional Field Validation
+
+When a field is conditionally shown based on a parent selection, the field is marked as nested.
+
+The validation type for these fields only applies if the field with the associated parentOptionId is truthy (for example, if the parent field is a checkbox and is checked). These fields may appear in the form data but have empty values, if the field with the associated parentOptionId returns false.
 
 ---
 
@@ -372,3 +295,37 @@ Initiatives are categorized by MFP Work Plan topic:
 - Stakeholder engagement
 - Financing approaches
 - SDOH and equity
+
+---
+
+## Appendix: RET Index Mapping
+
+The numerical indexes that appear in the [RET section](#1-recruitment-enrollment-and-transitions-ret) field IDs map to specific facility or institution types. This section describes the mapping of index and facility type for each subsection of the RET section.
+
+### Institution Types (ret-mtfqi index mapping)
+
+| Index | Institution Type |
+| ----- | ---------------- |
+| 1     | Nursing facility |
+| 2     | ICF/IID          |
+| 3     | IMD              |
+| 4     | Hospital         |
+| 5     | Other            |
+
+### Residence Types (ret-mtfqr index mapping)
+
+| Index | Residence Type            |
+| ----- | ------------------------- |
+| 1     | Home (owned/leased)       |
+| 2     | Apartment                 |
+| 3     | Group home (≤4 unrelated) |
+| 4     | Qualified assisted living |
+
+### Disenrollment Reasons (ret-mpdprp index mapping)
+
+| Index | Reason                               |
+| ----- | ------------------------------------ |
+| 1     | Re-institutionalization              |
+| 2     | Death                                |
+| 3     | Voluntary disenrollment              |
+| 4     | Other (checkbox with nested options) |
