@@ -136,7 +136,7 @@ export const NumberField = ({
       const user = { userName: full_name, state };
 
       // TODO: Remove
-      /* eslint-disable multiline-comment-style */
+      /* oxlint-disable multiline-comment-style */
 
       // const [f1, f2] = fields[0].name.split("_");
       // const devFieldId = [f1, f2, "other"].join("_");
@@ -200,7 +200,7 @@ export const NumberField = ({
       //   },
       // ];
 
-      /* eslint-enable multiline-comment-style */
+      /* oxlint-enable multiline-comment-style */
 
       await autosaveFieldData({
         form,
