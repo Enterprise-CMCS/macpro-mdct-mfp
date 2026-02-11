@@ -48,11 +48,12 @@ export const DynamicTableProvider = ({ children }: any) => {
   }: DisplayCellOptions) => {
     if (typeof cell === "string") return cell;
 
+    const props = cell.props || {};
+    const { initialValue, mask, readOnly } = props;
+
     // If input is readonly, display text instead of input
-    if (cell.props?.readOnly) {
-      const readOnlyValue =
-        localReport.fieldData?.[cell.id] || cell.props?.initialValue;
-      const mask = cell.props?.mask;
+    if (readOnly) {
+      const readOnlyValue = localReport.fieldData?.[cell.id] || initialValue;
 
       return (
         <Text as="span" sx={sx.calculated}>
@@ -80,7 +81,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     const field = {
       ...cell,
       props: {
-        ...cell.props,
+        ...props,
         ariaLabelledby: `${rowId} ${columnId}`,
         // Use ariaLabelledby in lieu of label
         label: undefined,
@@ -114,7 +115,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         ...templateRow,
         props: {
           ...templateRow.props,
-          idOverride: `${newId}-${fieldType}`,
+          dynamicId: `${newId}-${fieldType}`,
         },
       };
     });

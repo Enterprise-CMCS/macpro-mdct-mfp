@@ -1,9 +1,8 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Box, SystemStyleObject } from "@chakra-ui/react";
-import { TextField as CmsdsTextField } from "@cmsgov/design-system";
+import { SystemStyleObject } from "@chakra-ui/react";
 // components
-import { ReportContext, EntityContext } from "components";
+import { EntityContext, NumberFieldDisplay, ReportContext } from "components";
 // utils
 import {
   autosaveFieldData,
@@ -19,19 +18,25 @@ import { applyMask, maskMap } from "utils/other/mask";
 import { InputChangeEvent, ReportFormFieldType } from "types";
 
 export const NumberField = ({
-  name,
-  label,
-  hint,
-  placeholder,
-  mask,
-  sxOverride,
+  ariaLabelledby,
+  autoComplete,
   autosave,
-  validateOnRender,
-  nested,
-  styleAsOptional,
+  clear,
+  decimalPlacesToRoundTo,
+  disabled,
   handleOnChange,
+  hint,
+  hydrate,
   initialValue = "",
-  ...props
+  label,
+  mask,
+  name,
+  nested,
+  placeholder,
+  readOnly,
+  styleAsOptional,
+  sxOverride,
+  validateOnRender,
 }: Props) => {
   const defaultValue = initialValue;
   const [displayValue, setDisplayValue] = useState(defaultValue);
@@ -53,7 +58,7 @@ export const NumberField = ({
   }, []);
 
   // set initial display value to form state field value or hydration value
-  const hydrationValue = props?.hydrate || defaultValue;
+  const hydrationValue = hydrate || defaultValue;
   useEffect(() => {
     // if form state has value for field, set as display value
     const fieldValue = form.getValues(name);
@@ -61,20 +66,20 @@ export const NumberField = ({
       const maskedFieldValue = applyMask(
         fieldValue,
         mask,
-        props?.decimalPlacesToRoundTo
+        decimalPlacesToRoundTo
       ).maskedValue;
       setDisplayValue(maskedFieldValue);
     }
     // else set hydrationValue or defaultValue display value
     else if (hydrationValue) {
-      if (props.clear) {
+      if (clear) {
         setDisplayValue(defaultValue);
         form.setValue(name, defaultValue);
       } else {
         const formattedHydrationValue = applyMask(
           hydrationValue,
           mask,
-          props?.decimalPlacesToRoundTo
+          decimalPlacesToRoundTo
         );
         const maskedHydrationValue = formattedHydrationValue.maskedValue;
         setDisplayValue(maskedHydrationValue);
@@ -103,11 +108,7 @@ export const NumberField = ({
     // if field is blank, trigger client-side field validation error
     if (!value.trim()) form.trigger(name);
     // mask value and set as display value
-    const formattedFieldValue = applyMask(
-      value,
-      mask,
-      props?.decimalPlacesToRoundTo
-    );
+    const formattedFieldValue = applyMask(value, mask, decimalPlacesToRoundTo);
     const maskedFieldValue = formattedFieldValue.maskedValue;
 
     // this value eventually gets sent to the database, so we need to make it parseable as a number again
@@ -135,77 +136,9 @@ export const NumberField = ({
       };
       const user = { userName: full_name, state };
 
-      // TODO: Remove
-      /* oxlint-disable multiline-comment-style */
-
-      // const [f1, f2] = fields[0].name.split("_");
-      // const devFieldId = [f1, f2, "other"].join("_");
-      // const devOnly = [
-      //   ...fieldsToSave,
-      //   {
-      //     name: `${devFieldId}-category`,
-      //     type: "dynamic",
-      //     value: [
-      //       {
-      //         id: "t1-category",
-      //         name: "Test 1",
-      //       },
-      //       {
-      //         id: "t2-category",
-      //         name: "Test 2",
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     name: `${devFieldId}-totalComputable`,
-      //     type: "dynamic",
-      //     value: [
-      //       {
-      //         id: "t1-totalComputable",
-      //         name: "123",
-      //       },
-      //       {
-      //         id: "t2-totalComputable",
-      //         name: "55",
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     name: `${devFieldId}-totalFederalShare`,
-      //     type: "dynamic",
-      //     value: [
-      //       {
-      //         id: "t1-totalFederalShare",
-      //         name: "123",
-      //       },
-      //       {
-      //         id: "t2-totalFederalShare",
-      //         name: "55",
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     name: `${devFieldId}-totalStateTerritoryShare`,
-      //     type: "dynamic",
-      //     value: [
-      //       {
-      //         id: "t1-totalStateTerritoryShare",
-      //         name: "0",
-      //       },
-      //       {
-      //         id: "t2-totalStateTerritoryShare",
-      //         name: "0",
-      //       },
-      //     ],
-      //   },
-      // ];
-
-      /* oxlint-enable multiline-comment-style */
-
       await autosaveFieldData({
         form,
         fields: fieldsToSave,
-        // fields: devOnly,
         report: reportArgs,
         user,
         entityContext: {
@@ -219,118 +152,42 @@ export const NumberField = ({
   // prepare error message, hint, and classes
   const formErrorState = form?.formState?.errors;
   const errorMessage = formErrorState?.[name]?.message as ReactNode;
-  const parsedHint = hint && parseCustomHtml(hint);
-  const maskClass = mask || "";
+  const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
-  const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
 
-  const { ariaLabelledby, autoComplete, disabled, readOnly } = props ?? {};
-  const additionalProps = { autoComplete, disabled, readOnly };
-  const ariaProps = {
-    "aria-labelledby": ariaLabelledby,
-  };
   return (
-    <Box sx={{ ...sx, ...sxOverride }} className={`${nestedChildClasses}`}>
-      <Box sx={sx.numberFieldContainer} className={maskClass}>
-        <CmsdsTextField
-          id={name}
-          name={name}
-          label={labelText || ""}
-          hint={parsedHint}
-          placeholder={placeholder}
-          onChange={onChangeHandler}
-          onBlur={onBlurHandler}
-          value={displayValue}
-          errorMessage={errorMessage}
-          {...additionalProps}
-          {...ariaProps}
-        />
-        <SymbolOverlay
-          fieldMask={mask}
-          nested={nested}
-          disabled={props?.disabled}
-        />
-      </Box>
-    </Box>
+    <NumberFieldDisplay
+      ariaLabelledby={ariaLabelledby}
+      autoComplete={autoComplete}
+      disabled={disabled}
+      errorMessage={errorMessage}
+      hint={parsedHint}
+      id={name}
+      label={labelText}
+      mask={mask}
+      name={name}
+      nested={nested}
+      onBlur={onBlurHandler}
+      onChange={onChangeHandler}
+      placeholder={placeholder}
+      readOnly={readOnly}
+      sxOverride={sxOverride}
+      value={displayValue}
+    />
   );
 };
 
 interface Props {
-  name: string;
-  label?: string;
-  placeholder?: string;
-  mask?: keyof typeof maskMap | null;
-  nested?: boolean;
-  sxOverride?: SystemStyleObject;
   autosave?: boolean;
-  validateOnRender?: boolean;
   clear?: boolean;
   initialValue?: string;
+  label?: string;
+  mask?: keyof typeof maskMap | null;
+  name: string;
+  nested?: boolean;
+  placeholder?: string;
+  sxOverride?: SystemStyleObject;
+  validateOnRender?: boolean;
   [key: string]: any;
 }
-
-export const SymbolOverlay = ({
-  fieldMask,
-  nested,
-  disabled,
-}: SymbolOverlayProps) => {
-  const symbolMap = { percentage: "%", currency: "$" };
-  const symbol = fieldMask
-    ? symbolMap[fieldMask as keyof typeof symbolMap]
-    : undefined;
-  const disabledClass = disabled ? "disabled" : "";
-  const nestedClass = nested ? "nested" : "";
-  return symbol ? (
-    <Box
-      className={`${disabledClass} ${nestedClass} `}
-      sx={sx.symbolOverlay}
-    >{` ${symbol} `}</Box>
-  ) : (
-    <></>
-  );
-};
-interface SymbolOverlayProps {
-  fieldMask?: keyof typeof maskMap | null;
-  nested?: boolean;
-  disabled?: boolean;
-}
-
-const sx = {
-  ".ds-c-field": {
-    maxWidth: "15rem",
-    paddingLeft: "spacer1",
-    paddingRight: "spacer1",
-  },
-  numberFieldContainer: {
-    position: "relative",
-    "&.currency": {
-      ".ds-c-field": {
-        paddingLeft: "spacer3",
-      },
-    },
-    "&.percentage": {
-      ".ds-c-field": {
-        paddingRight: "1.75rem",
-      },
-    },
-  },
-  symbolOverlay: {
-    position: "absolute",
-    paddingTop: "1px",
-    fontSize: "lg",
-    fontWeight: "700",
-    "&.nested": {
-      bottom: "15px",
-      left: "245px",
-    },
-    ".percentage &": {
-      bottom: "11px",
-      left: "213px",
-    },
-    ".currency &": {
-      bottom: "11px",
-      left: "10px",
-    },
-  },
-};

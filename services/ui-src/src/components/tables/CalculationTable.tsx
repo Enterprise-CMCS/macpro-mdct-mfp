@@ -20,7 +20,13 @@ import { DynamicTableContext, DynamicTableRows } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 // types
-import { AnyObject, FormTable, FormTableCell, ReportShape } from "types";
+import {
+  AnyObject,
+  FormTable,
+  FormTableCell,
+  FormTableRow,
+  ReportShape,
+} from "types";
 // utils
 import { parseCustomHtml, translate } from "utils";
 
@@ -91,28 +97,29 @@ export const CalculationTable = ({
   useEffect(() => {
     // Add rows for saved dynamic values
     const rows = dynamicRows.flatMap((columns) => {
-      const columnIds = columns.map((c) => (typeof c === "string" ? c : c.id));
+      let rowCount = 0;
 
-      // Assuming first field is category
-      const baseFieldId = columnIds[0];
-      const baseValues = report.fieldData?.[baseFieldId] ?? [];
+      // Set rowCount to the largest set of values
+      for (let i = 0; i < columns.length; i++) {
+        const cell = columns[i];
+        const id = typeof cell === "string" ? cell : cell.id;
+        const len = localReport.fieldData?.[id].length || 0;
+        if (len > rowCount) rowCount = len;
+      }
 
-      // TODO: Dynamic field
-      return Array.from({ length: baseValues.length }, (_, rowIndex) =>
-        columnIds.map((id) => {
-          const columnValues = report.fieldData?.[id];
+      return Array.from({ length: rowCount }, (_, rowIndex) =>
+        columns.map((cell) => {
+          if (typeof cell === "string") return cell;
+
+          const fieldObject = localReport.fieldData?.[cell.id]?.[rowIndex];
+          if (!fieldObject) return cell;
 
           return {
-            id,
-            type: "text",
-            validation: "textOptional",
-            forTableOnly: true,
+            ...cell,
             props: {
-              label: "Test",
-              idOverride: columnValues?.[rowIndex]?.id,
-              readOnly:
-                id.includes("totalStateTerritoryShare") ||
-                id.includes("totalFederalShare"),
+              ...cell.props,
+              hydrate: fieldObject.name,
+              dynamicId: fieldObject.id,
             },
           };
         })
@@ -121,6 +128,34 @@ export const CalculationTable = ({
 
     setLocalDynamicRows(rows);
   }, [localReport]);
+
+  const generateRows = (
+    section: string,
+    row: FormTableRow,
+    rowIndex: number
+  ) => {
+    const Cell = section === "thead" ? Th : Td;
+
+    return (
+      <Tr key={`${section}-row-${rowIndex}`}>
+        {row.map((cell, cellIndex: number) => (
+          <Cell
+            id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
+            key={`${section}-row-${rowIndex}-cell-${cellIndex}`}
+            sx={{ width: thWidth }}
+          >
+            {displayCell({
+              cell,
+              columnId: `${section}-row-${rowIndex}-cell-0`,
+              index: rowIndex,
+              rowId: `${section}-row-0-cell-${cellIndex}`,
+              ...cellProps(cell),
+            })}
+          </Cell>
+        ))}
+      </Tr>
+    );
+  };
 
   return (
     <Box sx={sx.box}>
@@ -155,69 +190,23 @@ export const CalculationTable = ({
           <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
         </TableCaption>
         <Thead>
-          {headRows.map((row, rowIndex: number) => (
-            <Tr key={`thead-row-${rowIndex}`}>
-              {row.map((cell, cellIndex: number) => (
-                <Th
-                  id={`thead-row-${rowIndex}-cell-${cellIndex}`}
-                  key={`thead-row-${rowIndex}-cell-${cellIndex}`}
-                  sx={{ width: thWidth }}
-                >
-                  {displayCell({
-                    cell,
-                    columnId: `thead-row-${rowIndex}-cell-0`,
-                    index: rowIndex,
-                    rowId: `thead-row-0-cell-${cellIndex}`,
-                    ...cellProps(cell),
-                  })}
-                </Th>
-              ))}
-            </Tr>
-          ))}
+          {headRows.map((row, rowIndex: number) =>
+            generateRows("thead", row, rowIndex)
+          )}
         </Thead>
         <Tbody>
-          {bodyRows.map((row, rowIndex: number) => (
-            <Tr key={`tbody-row-${rowIndex}`}>
-              {row.map((cell, cellIndex: number) => (
-                <Td
-                  id={`tbody-row-${rowIndex}-cell-${cellIndex}`}
-                  key={`tbody-row-${rowIndex}-cell-${cellIndex}`}
-                >
-                  {displayCell({
-                    cell,
-                    columnId: `tbody-row-${rowIndex}-cell-0`,
-                    index: rowIndex,
-                    rowId: `thead-row-0-cell-${cellIndex}`,
-                    ...cellProps(cell),
-                  })}
-                </Td>
-              ))}
-            </Tr>
-          ))}
+          {bodyRows.map((row, rowIndex: number) =>
+            generateRows("tbody", row, rowIndex)
+          )}
           <DynamicTableRows
             label={verbiage?.dynamicRows?.label}
             tableId={tableId}
           />
         </Tbody>
         <Tfoot>
-          {footRows.map((row, rowIndex: number) => (
-            <Tr key={`tfoot-row-${rowIndex}`}>
-              {row.map((cell, cellIndex: number) => (
-                <Td
-                  id={`tfoot-row-${rowIndex}-cell-${cellIndex}`}
-                  key={`tfoot-row-${rowIndex}-cell-${cellIndex}`}
-                >
-                  {displayCell({
-                    cell,
-                    columnId: `tfoot-row-${rowIndex}-cell-0`,
-                    index: rowIndex,
-                    rowId: `tfoot-row-0-cell-${cellIndex}`,
-                    ...cellProps(cell),
-                  })}
-                </Td>
-              ))}
-            </Tr>
-          ))}
+          {footRows.map((row, rowIndex: number) =>
+            generateRows("tfoot", row, rowIndex)
+          )}
         </Tfoot>
       </Table>
     </Box>

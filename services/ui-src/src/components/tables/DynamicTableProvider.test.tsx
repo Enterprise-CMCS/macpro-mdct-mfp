@@ -54,7 +54,7 @@ const TestComponent = () => {
 
   const values: AnyObject = {
     addDynamicRowObject: (localDynamicRows[0]?.[0] as FormField)?.props
-      ?.idOverride,
+      ?.dynamicId,
     addDynamicRowString: localDynamicRows[0]?.[1],
     focusedRowIndex,
     localDynamicRows: localDynamicRows.length,

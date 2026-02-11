@@ -1,40 +1,60 @@
-import { useContext, useEffect, useRef } from "react";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-import { Td, Text, Tr } from "@chakra-ui/react";
-import { DynamicTableContext } from "components";
+import { Box, Flex, Td, Text, Tr } from "@chakra-ui/react";
+import { DynamicTableContext, NumberFieldDisplay } from "components";
 // types
-import { InputChangeEvent } from "types";
+import {
+  AnyObject,
+  DynamicFieldShape,
+  InputChangeEvent,
+  ReportFormFieldType,
+} from "types";
 // utils
 import { maskResponseData } from "utils";
 
 export const DynamicTableRows = ({ label, tableId }: Props) => {
   const { focusedRowIndex, localDynamicRows, localReport } =
     useContext(DynamicTableContext);
+  const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>([]);
 
+  // Get form context and register field
   const name = `${tableId}-dynamicRows`;
   const form = useFormContext();
   form.register(name);
 
-  const { append, fields = [] } = useFieldArray({
+  const fieldErrorState: AnyObject | undefined =
+    form?.formState?.errors?.[name];
+  const errorMessage = fieldErrorState?.[name]?.message as ReactNode;
+
+  // Make formfield dynamic array with config options
+  // oxlint-disable-next-line no-unused-vars
+  const { append } = useFieldArray({
     name,
     shouldUnregister: true,
   });
 
   // TODO: Set up
   const onChangeHandler = (event: InputChangeEvent) => {
-    const { id, value } = event.target;
-    form.setValue(id, value, { shouldValidate: true });
+    // oxlint-disable-next-line no-unused-vars
+    const { name, id, value } = event.target;
+    const newDisplayValues = [...displayValues];
+    setDisplayValues(newDisplayValues);
   };
-  const onBlurHandler = () => {};
+
+  const onBlurHandler = async () => {
+    form.trigger(name);
+  };
 
   const displayCell = ({ cell, rowIndex }: any) => {
     if (typeof cell === "string") return cell;
 
+    const props = cell.props || {};
+    const { dynamicId, hydrate, initialValue, mask, readOnly, subType } = props;
+
     // If input is readonly, display text instead of input
-    if (cell.props?.readOnly) {
-      const { initialValue, mask } = cell.props;
+    if (readOnly) {
       const cellValue = localReport.fieldData?.[cell.id] ?? initialValue;
 
       const readOnlyValue = Array.isArray(cellValue)
@@ -48,27 +68,49 @@ export const DynamicTableRows = ({ label, tableId }: Props) => {
       );
     }
 
-    const hasLabel = cell.id.includes("category");
-
-    // TODO: Return field with errors and masks
-    return (
-      <>
-        {hasLabel && <label>{label}</label>}
-        <CmsdsTextField
-          id={cell.props?.idOverride}
-          name={`${cell.id}[${rowIndex}]`}
+    if (subType === ReportFormFieldType.NUMBER) {
+      return (
+        <NumberFieldDisplay
+          ariaLabelledby={""}
+          disabled={false}
+          errorMessage={errorMessage}
           hint={undefined}
+          id={dynamicId}
           label={undefined}
+          mask={mask}
+          name={name}
+          nested={false}
+          onBlur={onBlurHandler}
+          onChange={onChangeHandler}
+          placeholder={undefined}
+          readOnly={readOnly}
+          value={hydrate}
+        />
+      );
+    }
+
+    return (
+      <Flex>
+        <Box sx={sx.label}>
+          <label htmlFor={dynamicId}>{label}</label>
+        </Box>
+        <CmsdsTextField
+          errorMessage={errorMessage}
+          hint={undefined}
+          id={dynamicId}
+          label={undefined}
+          name={`${cell.id}[${rowIndex}]`}
           onChange={onChangeHandler}
           onBlur={onBlurHandler}
-          value={form.getValues(cell.id)}
+          value={hydrate}
         />
-      </>
+      </Flex>
     );
   };
 
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
 
+  // Scroll to row when newly added
   useEffect(() => {
     if (focusedRowIndex !== null) {
       rowRefs.current[focusedRowIndex]?.scrollIntoView({
@@ -78,26 +120,21 @@ export const DynamicTableRows = ({ label, tableId }: Props) => {
     }
   }, [focusedRowIndex]);
 
+  // On displayValue change, set field array value to match
   useEffect(() => {
-    const existingNumberOfFields = fields.length;
-    const newNumberOfFields = localDynamicRows.length;
-    if (newNumberOfFields > existingNumberOfFields) {
-      const newRow = localDynamicRows.pop();
-      append(newRow);
-    }
-  }, [localDynamicRows, fields]);
+    form.setValue(name, displayValues, { shouldValidate: true });
+  }, displayValues);
 
-  useEffect(() => {
-    // TODO: Set values
-    form.setValue(name, [], { shouldValidate: true });
-  }, []);
+  useEffect(() => {}, [localDynamicRows]);
 
   return (
     <>
       {localDynamicRows.map((row, rowIndex: number) => (
         <Tr
           key={`tbody-dynamicRow-${rowIndex}`}
-          ref={(el) => (rowRefs.current[rowIndex] = el)}
+          ref={(el) => {
+            rowRefs.current[rowIndex] = el;
+          }}
         >
           {row.map((cell, cellIndex: number) => (
             <Td
@@ -126,5 +163,9 @@ const sx = {
     display: "block",
     fontWeight: "bold",
     textAlign: "right",
+  },
+  label: {
+    marginRight: "spacer1",
+    marginTop: "spacer2",
   },
 };
