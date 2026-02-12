@@ -22,7 +22,6 @@ const mocks = {
   focusedRowIndex: 1,
   localDynamicRows: [["localDynamicRows test"]],
   localReport: { id: "mockReportId" },
-  removeDynamicRow: "",
 };
 
 const TestComponent = () => {

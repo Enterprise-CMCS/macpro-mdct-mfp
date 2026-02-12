@@ -31,7 +31,6 @@ export const DynamicTableContext = createContext<DynamicTableMethods>({
   focusedRowIndex: null,
   localDynamicRows: [],
   localReport: {} as ReportShape,
-  removeDynamicRow: Function,
   setFocusedRowIndex: Function,
   setLocalDynamicRows: Function,
   setLocalReport: Function,
@@ -69,6 +68,12 @@ export const DynamicTableProvider = ({ children }: any) => {
     [updatedFieldsForDisplay]
   );
 
+  const displayReadOnlyCell = (mask: string, readOnlyValue: string) => (
+    <Text as="span" sx={sx.calculated}>
+      {maskResponseData(readOnlyValue, mask)}
+    </Text>
+  );
+
   const displayCell = ({
     cell,
     columnId,
@@ -86,12 +91,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     // If input is readonly, display text instead of input
     if (readOnly) {
       const readOnlyValue = localReport.fieldData?.[cell.id] || initialValue;
-
-      return (
-        <Text as="span" sx={sx.calculated}>
-          {maskResponseData(readOnlyValue, mask)}
-        </Text>
-      );
+      return displayReadOnlyCell(mask, readOnlyValue);
     }
 
     const field = {
@@ -142,16 +142,11 @@ export const DynamicTableProvider = ({ children }: any) => {
     // If input is readonly, display text instead of input
     if (readOnly) {
       const cellValue = localReport.fieldData?.[cell.id] || initialValue;
-
       const readOnlyValue = Array.isArray(cellValue)
         ? cellValue?.[rowIndex]?.name || initialValue
         : cellValue;
 
-      return (
-        <Text as="span" sx={sx.calculated}>
-          {maskResponseData(readOnlyValue, mask)}
-        </Text>
-      );
+      return displayReadOnlyCell(mask, readOnlyValue);
     }
 
     const name = `${cell.id}[${rowIndex}]`;
@@ -223,7 +218,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         props: {
           ...templateRow.props,
           dynamicId: `${newId}-${fieldType}`,
-          dynamicRowId: `${newId}`,
+          dynamicRowId: newId,
         },
       };
     });
@@ -232,9 +227,6 @@ export const DynamicTableProvider = ({ children }: any) => {
     setFocusedRowIndex(updatedRows.length - 1);
   };
 
-  // TODO: Remove with confirmation
-  const removeDynamicRow = () => {};
-
   const providerValue = {
     addDynamicRow,
     displayCell,
@@ -242,7 +234,6 @@ export const DynamicTableProvider = ({ children }: any) => {
     focusedRowIndex,
     localDynamicRows,
     localReport,
-    removeDynamicRow,
     setFocusedRowIndex,
     setLocalDynamicRows,
     setLocalReport,
@@ -262,7 +253,6 @@ interface DynamicTableMethods {
   focusedRowIndex: number | null;
   localDynamicRows: FormTableRows;
   localReport: ReportShape;
-  removeDynamicRow: Function;
   setFocusedRowIndex: Function;
   setLocalDynamicRows: Function;
   setLocalReport: Function;
