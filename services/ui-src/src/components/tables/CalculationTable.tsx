@@ -95,6 +95,8 @@ export const CalculationTable = ({
     rowIndex: number
   ) => {
     const Cell = section === "thead" ? Th : Td;
+    const content =
+      section === "thead" ? <VisuallyHidden>Options</VisuallyHidden> : null;
     const rowId = section === "tbody" ? "thead" : section;
 
     return (
@@ -114,6 +116,7 @@ export const CalculationTable = ({
             })}
           </Cell>
         ))}
+        {dynamicRows.length > 0 && <Cell>{content}</Cell>}
       </Tr>
     );
   };
@@ -160,6 +163,7 @@ export const CalculationTable = ({
             generateRows("tbody", row, rowIndex)
           )}
           <DynamicTableRows
+            disabled={isDisabled}
             label={verbiage?.dynamicRows?.label}
             dynamicRows={dynamicRows}
           />
@@ -253,7 +257,7 @@ const sx = {
         letterSpacing: "normal",
         lineHeight: "normal",
         paddingBottom: "spacer1",
-        paddingInlineEnd: "spacer2",
+        paddingInlineEnd: "spacer1",
         paddingInlineStart: "spacer2",
         paddingTop: "spacer1",
         textTransform: "none",

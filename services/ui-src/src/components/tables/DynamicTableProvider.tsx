@@ -134,6 +134,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         props: {
           ...templateRow.props,
           dynamicId: `${newId}-${fieldType}`,
+          dynamicRowId: `${newId}`,
         },
       };
     });

@@ -2,14 +2,16 @@ import { useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-import { Box, Flex, Td, Text, Tr } from "@chakra-ui/react";
+import { Box, Flex, Image, Td, Text, Tr } from "@chakra-ui/react";
 import { DynamicTableContext, NumberFieldDisplay } from "components";
 // types
 import { FormTableRows, InputChangeEvent, ReportFormFieldType } from "types";
 // utils
 import { maskResponseData } from "utils";
+// assets
+import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
-export const DynamicTableRows = ({ dynamicRows, label }: Props) => {
+export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
   const {
     focusedRowIndex,
     localDynamicRows,
@@ -20,7 +22,7 @@ export const DynamicTableRows = ({ dynamicRows, label }: Props) => {
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const form = useFormContext();
 
-  const displayCell = ({ cell, rowIndex }: any) => {
+  const displayCell = ({ cell, rowId, rowIndex, columnId }: any) => {
     if (typeof cell === "string") return cell;
 
     const props = cell.props || {};
@@ -28,7 +30,7 @@ export const DynamicTableRows = ({ dynamicRows, label }: Props) => {
 
     // If input is readonly, display text instead of input
     if (readOnly) {
-      const cellValue = localReport.fieldData?.[cell.id] ?? initialValue;
+      const cellValue = localReport.fieldData?.[cell.id] || initialValue;
 
       const readOnlyValue = Array.isArray(cellValue)
         ? (cellValue?.[rowIndex]?.name ?? initialValue)
@@ -47,8 +49,8 @@ export const DynamicTableRows = ({ dynamicRows, label }: Props) => {
     if (subType === ReportFormFieldType.NUMBER) {
       return (
         <NumberFieldDisplay
-          ariaLabelledby={""}
-          disabled={false}
+          ariaLabelledby={`${rowId} ${columnId}`}
+          disabled={disabled}
           errorMessage={errorMessage}
           hint={undefined}
           id={dynamicId}
@@ -65,20 +67,31 @@ export const DynamicTableRows = ({ dynamicRows, label }: Props) => {
       );
     }
 
+    const dynamicLabel = `${dynamicId}_dynamic-label`;
+    const ariaProps = {
+      "aria-labelledby": `${dynamicLabel} ${columnId}`,
+    };
+
     return (
       <Flex>
         <Box sx={sx.label}>
-          <label htmlFor={dynamicId}>{label}</label>
+          <label htmlFor={dynamicId} id={dynamicLabel}>
+            {label}
+          </label>
         </Box>
         <CmsdsTextField
+          disabled={disabled}
           errorMessage={errorMessage}
           hint={undefined}
           id={dynamicId}
           label={undefined}
           name={name}
-          onChange={onChangeHandler}
           onBlur={onBlurHandler}
+          onChange={onChangeHandler}
+          placeholder={undefined}
+          readOnly={readOnly}
           value={hydrate}
+          {...ariaProps}
         />
       </Flex>
     );
@@ -106,6 +119,11 @@ export const DynamicTableRows = ({ dynamicRows, label }: Props) => {
 
   // TODO: Autosave
   const onBlurHandler = async () => {};
+
+  // TODO
+  const removeRow = (rowId: string) => {
+    console.log(rowId);
+  };
 
   // Register form fields, set values
   useEffect(() => {
@@ -148,11 +166,14 @@ export const DynamicTableRows = ({ dynamicRows, label }: Props) => {
           const fieldObject = localReport.fieldData?.[cell.id]?.[rowIndex];
           if (!fieldObject) return cell;
 
+          const dynamicRowId = fieldObject.id.split("-").slice(0, -1).join("-");
+
           return {
             ...cell,
             props: {
               ...cell.props,
               dynamicId: fieldObject.id,
+              dynamicRowId,
               hydrate: fieldObject.name,
             },
           };
@@ -214,31 +235,49 @@ export const DynamicTableRows = ({ dynamicRows, label }: Props) => {
 
   return (
     <>
-      {localDynamicRows.map((row, rowIndex: number) => (
-        <Tr
-          key={`tbody-dynamicRow-${rowIndex}`}
-          ref={(el) => {
-            rowRefs.current[rowIndex] = el;
-          }}
-        >
-          {row.map((cell, cellIndex: number) => (
-            <Td
-              id={`tbody-dynamicRow-${rowIndex}-cell-${cellIndex}`}
-              key={`tbody-dynamicRow-${rowIndex}-cell-${cellIndex}`}
-            >
-              {displayCell({
-                cell,
-                rowIndex,
-              })}
+      {localDynamicRows.map((row, rowIndex: number) => {
+        const firstInput = row.find((cell) => typeof cell !== "string");
+        const dynamicRowId = firstInput?.props?.dynamicRowId;
+
+        return (
+          <Tr
+            key={`tbody-dynamicRow-${rowIndex}`}
+            id={dynamicRowId}
+            ref={(el) => {
+              rowRefs.current[rowIndex] = el;
+            }}
+          >
+            {row.map((cell, cellIndex: number) => (
+              <Td
+                id={`tbody-dynamicRow-${rowIndex}-cell-${cellIndex}`}
+                key={`tbody-dynamicRow-${rowIndex}-cell-${cellIndex}`}
+              >
+                {displayCell({
+                  cell,
+                  columnId: `tbody-dynamicRow-${rowIndex}-cell-0`,
+                  rowIndex,
+                  rowId: `thead-row-0-cell-${cellIndex}`,
+                })}
+              </Td>
+            ))}
+            <Td>
+              {!disabled && (
+                <Box sx={sx.removeBox}>
+                  <button type="button" onClick={() => removeRow(dynamicRowId)}>
+                    <Image src={cancelIcon} alt={`Delete ${dynamicRowId}`} />
+                  </button>
+                </Box>
+              )}
             </Td>
-          ))}
-        </Tr>
-      ))}
+          </Tr>
+        );
+      })}
     </>
   );
 };
 
 interface Props {
+  disabled: boolean;
   dynamicRows: FormTableRows;
   label?: string;
 }
@@ -252,5 +291,9 @@ const sx = {
   label: {
     marginRight: "spacer1",
     marginTop: "spacer2",
+  },
+  removeBox: {
+    width: "1.5rem",
+    height: "1.5rem",
   },
 };
