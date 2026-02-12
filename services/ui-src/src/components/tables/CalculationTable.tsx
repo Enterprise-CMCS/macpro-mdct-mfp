@@ -44,13 +44,8 @@ export const CalculationTable = ({
   verbiage,
 }: Props) => {
   // Dynamic rows
-  const {
-    addDynamicRow,
-    displayCell,
-    localReport,
-    setLocalDynamicRows,
-    setLocalReport,
-  } = useContext(DynamicTableContext);
+  const { addDynamicRow, displayCell, localReport, setLocalReport } =
+    useContext(DynamicTableContext);
 
   // Percentage field
   const percentageField = options?.percentageField;
@@ -93,41 +88,6 @@ export const CalculationTable = ({
     // Use local state to speed up UI
     setLocalReport(report);
   }, []);
-
-  useEffect(() => {
-    // Add rows for saved dynamic values
-    const rows = dynamicRows.flatMap((columns) => {
-      let rowCount = 0;
-
-      // Set rowCount to the largest set of values
-      for (let i = 0; i < columns.length; i++) {
-        const cell = columns[i];
-        const id = typeof cell === "string" ? cell : cell.id;
-        const len = localReport.fieldData?.[id].length || 0;
-        if (len > rowCount) rowCount = len;
-      }
-
-      return Array.from({ length: rowCount }, (_, rowIndex) =>
-        columns.map((cell) => {
-          if (typeof cell === "string") return cell;
-
-          const fieldObject = localReport.fieldData?.[cell.id]?.[rowIndex];
-          if (!fieldObject) return cell;
-
-          return {
-            ...cell,
-            props: {
-              ...cell.props,
-              hydrate: fieldObject.name,
-              dynamicId: fieldObject.id,
-            },
-          };
-        })
-      );
-    });
-
-    setLocalDynamicRows(rows);
-  }, [localReport]);
 
   const generateRows = (
     section: string,
@@ -200,7 +160,7 @@ export const CalculationTable = ({
           )}
           <DynamicTableRows
             label={verbiage?.dynamicRows?.label}
-            tableId={tableId}
+            dynamicRows={dynamicRows}
           />
         </Tbody>
         <Tfoot>

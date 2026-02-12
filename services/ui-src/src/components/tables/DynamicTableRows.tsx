@@ -1,51 +1,24 @@
-import { ReactNode, useContext, useEffect, useRef, useState } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useContext, useEffect, useRef } from "react";
+import { useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 import { Box, Flex, Td, Text, Tr } from "@chakra-ui/react";
 import { DynamicTableContext, NumberFieldDisplay } from "components";
 // types
-import {
-  AnyObject,
-  DynamicFieldShape,
-  InputChangeEvent,
-  ReportFormFieldType,
-} from "types";
+import { FormTableRows, InputChangeEvent, ReportFormFieldType } from "types";
 // utils
 import { maskResponseData } from "utils";
 
-export const DynamicTableRows = ({ label, tableId }: Props) => {
-  const { focusedRowIndex, localDynamicRows, localReport } =
-    useContext(DynamicTableContext);
-  const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>([]);
-
-  // Get form context and register field
-  const name = `${tableId}-dynamicRows`;
+export const DynamicTableRows = ({ dynamicRows, label }: Props) => {
+  const {
+    focusedRowIndex,
+    localDynamicRows,
+    localReport,
+    setLocalDynamicRows,
+  } = useContext(DynamicTableContext);
+  const prevLenRef = useRef<number>(0);
+  const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const form = useFormContext();
-  form.register(name);
-
-  const fieldErrorState: AnyObject | undefined =
-    form?.formState?.errors?.[name];
-  const errorMessage = fieldErrorState?.[name]?.message as ReactNode;
-
-  // Make formfield dynamic array with config options
-  // oxlint-disable-next-line no-unused-vars
-  const { append } = useFieldArray({
-    name,
-    shouldUnregister: true,
-  });
-
-  // TODO: Set up
-  const onChangeHandler = (event: InputChangeEvent) => {
-    // oxlint-disable-next-line no-unused-vars
-    const { name, id, value } = event.target;
-    const newDisplayValues = [...displayValues];
-    setDisplayValues(newDisplayValues);
-  };
-
-  const onBlurHandler = async () => {
-    form.trigger(name);
-  };
 
   const displayCell = ({ cell, rowIndex }: any) => {
     if (typeof cell === "string") return cell;
@@ -67,6 +40,9 @@ export const DynamicTableRows = ({ label, tableId }: Props) => {
         </Text>
       );
     }
+
+    const name = `${cell.id}[${rowIndex}]`;
+    const errorMessage = "";
 
     if (subType === ReportFormFieldType.NUMBER) {
       return (
@@ -99,7 +75,7 @@ export const DynamicTableRows = ({ label, tableId }: Props) => {
           hint={undefined}
           id={dynamicId}
           label={undefined}
-          name={`${cell.id}[${rowIndex}]`}
+          name={name}
           onChange={onChangeHandler}
           onBlur={onBlurHandler}
           value={hydrate}
@@ -108,9 +84,86 @@ export const DynamicTableRows = ({ label, tableId }: Props) => {
     );
   };
 
-  const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
+  const onChangeHandler = (event: InputChangeEvent) => {
+    const { name, value } = event.target;
+    const match = name.match(/^(.*)\[(\d+)\]$/);
+    if (!match) return;
 
-  // Scroll to row when newly added
+    const fieldKey = match[1];
+    const rowIndex = Number(match[2]);
+
+    const current: any[] = form.getValues(fieldKey) ?? [];
+    const updated = current.slice();
+
+    const existing = updated[rowIndex] ?? {};
+    updated[rowIndex] = { id: existing.id, name: value };
+
+    form.setValue(fieldKey, updated, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  // TODO: Autosave
+  const onBlurHandler = async () => {};
+
+  // Register form fields, set values
+  useEffect(() => {
+    const values = form.getValues();
+
+    for (const columns of dynamicRows) {
+      for (const cell of columns) {
+        if (typeof cell === "string") continue;
+
+        const name = cell.id;
+
+        if (!(name in values)) {
+          form.register(name);
+        }
+
+        form.setValue(name, localReport.fieldData?.[name] || [], {
+          shouldValidate: true,
+        });
+      }
+    }
+  }, [dynamicRows, localReport.fieldData]);
+
+  // Add rows for saved dynamic values
+  useEffect(() => {
+    const rows = dynamicRows.flatMap((columns) => {
+      let rowCount = 0;
+
+      // Set rowCount to the largest set of values
+      for (let i = 0; i < columns.length; i++) {
+        const cell = columns[i];
+        const id = typeof cell === "string" ? cell : cell.id;
+        const len = localReport.fieldData?.[id]?.length || 0;
+        if (len > rowCount) rowCount = len;
+      }
+
+      return Array.from({ length: rowCount }, (_, rowIndex) =>
+        columns.map((cell) => {
+          if (typeof cell === "string") return cell;
+
+          const fieldObject = localReport.fieldData?.[cell.id]?.[rowIndex];
+          if (!fieldObject) return cell;
+
+          return {
+            ...cell,
+            props: {
+              ...cell.props,
+              dynamicId: fieldObject.id,
+              hydrate: fieldObject.name,
+            },
+          };
+        })
+      );
+    });
+
+    setLocalDynamicRows(rows);
+  }, [localReport.fieldData]);
+
+  // Scroll to newly added row
   useEffect(() => {
     if (focusedRowIndex !== null) {
       rowRefs.current[focusedRowIndex]?.scrollIntoView({
@@ -120,12 +173,44 @@ export const DynamicTableRows = ({ label, tableId }: Props) => {
     }
   }, [focusedRowIndex]);
 
-  // On displayValue change, set field array value to match
+  // Update form values with new row
   useEffect(() => {
-    form.setValue(name, displayValues, { shouldValidate: true });
-  }, displayValues);
+    const prevLen = prevLenRef.current;
+    const nextLen = localDynamicRows?.length || 0;
 
-  useEffect(() => {}, [localDynamicRows]);
+    if (nextLen > prevLen) {
+      for (let rowIndex = prevLen; rowIndex < nextLen; rowIndex++) {
+        const row = localDynamicRows[rowIndex];
+
+        for (const cell of row) {
+          if (typeof cell === "string") continue;
+
+          const fieldKey = cell.id;
+          const dynamicId = cell.props?.dynamicId;
+          const nameValue =
+            cell.props?.hydrate ?? cell.props?.initialValue ?? "";
+
+          const current: any[] = form.getValues(fieldKey) ?? [];
+          const updated = current.slice();
+
+          // ensure length up to rowIndex
+          while (updated.length < rowIndex) updated.push(undefined);
+
+          updated[rowIndex] = {
+            id: dynamicId ?? updated[rowIndex]?.id,
+            name: nameValue,
+          };
+
+          form.setValue(fieldKey, updated, {
+            shouldDirty: true,
+            shouldValidate: true,
+          });
+        }
+      }
+    }
+
+    prevLenRef.current = nextLen;
+  }, [localDynamicRows]);
 
   return (
     <>
@@ -154,8 +239,8 @@ export const DynamicTableRows = ({ label, tableId }: Props) => {
 };
 
 interface Props {
+  dynamicRows: FormTableRows;
   label?: string;
-  tableId: string;
 }
 
 const sx = {
