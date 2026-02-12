@@ -1,4 +1,9 @@
-import { HTMLInputAutoCompleteAttribute, ReactNode } from "react";
+import {
+  ChangeEventHandler,
+  FocusEventHandler,
+  HTMLInputAutoCompleteAttribute,
+  ReactNode,
+} from "react";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 // utils
@@ -64,8 +69,8 @@ interface Props {
   mask?: keyof typeof maskMap | null;
   name: string;
   nested?: boolean;
-  onBlur: React.FocusEventHandler<HTMLInputElement>;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onBlur: FocusEventHandler<HTMLInputElement>;
+  onChange: ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
   readOnly?: boolean;
   sxOverride?: SystemStyleObject;

@@ -112,6 +112,7 @@ export const CalculationTable = ({
               columnId: `${section}-row-${rowIndex}-cell-0`,
               index: rowIndex,
               rowId: `${rowId}-row-0-cell-${cellIndex}`,
+              rowIndex,
               ...cellProps(cell),
             })}
           </Cell>

@@ -7,7 +7,7 @@ import {
   DynamicTableProvider,
 } from "./DynamicTableProvider";
 // types
-import { AnyObject, FormField } from "types";
+import { AnyObject, FormField, ReportFormFieldType } from "types";
 // utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
@@ -18,6 +18,13 @@ const mocks = {
   addDynamicRow: [
     { id: "dynamicRowId-category[0]", props: {} },
     "addDynamicRow test",
+    {
+      id: "dynamicRowId-number[0]",
+      props: {
+        mask: "currency",
+        subType: ReportFormFieldType.NUMBER,
+      },
+    },
   ],
   focusedRowIndex: 1,
   localDynamicRows: [["localDynamicRows test"]],
@@ -36,7 +43,8 @@ const TestComponent = () => {
   } = useContext(DynamicTableContext);
 
   const buttons = [
-    "addDynamicRowObject",
+    "addDynamicRowTextField",
+    "addDynamicRowNumberField",
     "addDynamicRowString",
     "focusedRowIndex",
     "localDynamicRows",
@@ -44,7 +52,8 @@ const TestComponent = () => {
   ];
 
   const methods: AnyObject = {
-    addDynamicRowObject: () => addDynamicRow(mocks["addDynamicRow"]),
+    addDynamicRowTextField: () => addDynamicRow(mocks["addDynamicRow"]),
+    addDynamicRowNumberField: () => addDynamicRow(mocks["addDynamicRow"]),
     addDynamicRowString: () => addDynamicRow(mocks["addDynamicRow"]),
     focusedRowIndex: () => setFocusedRowIndex(mocks["focusedRowIndex"]),
     localDynamicRows: () => setLocalDynamicRows(mocks["localDynamicRows"]),
@@ -52,7 +61,9 @@ const TestComponent = () => {
   };
 
   const values: AnyObject = {
-    addDynamicRowObject: (localDynamicRows[0]?.[0] as FormField)?.props
+    addDynamicRowTextField: (localDynamicRows[0]?.[0] as FormField)?.props
+      ?.dynamicId,
+    addDynamicRowNumberField: (localDynamicRows[0]?.[2] as FormField)?.props
       ?.dynamicId,
     addDynamicRowString: localDynamicRows[0]?.[1],
     focusedRowIndex,
@@ -89,14 +100,31 @@ describe("<DynamicTableProvider />", () => {
     render(testComponent);
   });
 
-  test("addDynamicRow() - object", async () => {
-    const button = screen.getByRole("button", { name: "addDynamicRowObject" });
-    const text = "addDynamicRowObject: mock-uuid-category";
+  test("addDynamicRow() - TextField", async () => {
+    const button = screen.getByRole("button", {
+      name: "addDynamicRowTextField",
+    });
+    const text = "addDynamicRowTextField: mock-uuid-category";
     expect(screen.queryByText(text)).toBeNull();
 
     await act(async () => {
       await userEvent.click(button);
     });
+    screen.debug();
+    expect(screen.getByText(text)).toBeVisible();
+  });
+
+  test("addDynamicRow() - NumberField", async () => {
+    const button = screen.getByRole("button", {
+      name: "addDynamicRowNumberField",
+    });
+    const text = "addDynamicRowNumberField: mock-uuid-number";
+    expect(screen.queryByText(text)).toBeNull();
+
+    await act(async () => {
+      await userEvent.click(button);
+    });
+    screen.debug();
     expect(screen.getByText(text)).toBeVisible();
   });
 

@@ -295,6 +295,41 @@ describe("<CalculationTable />", () => {
     mockGetValues(undefined);
     const updatedProps = {
       ...mockProps,
+      report: {
+        fieldData: {
+          fmap_mockTablePercentage: 78,
+          "mockTable_mockServices_other-category": [
+            {
+              id: "mockId-category",
+              name: "Mock Dynamic Catogory",
+            },
+          ],
+          "mockTable_mockServices_other-totalComputable": [
+            {
+              id: "mockId-totalComputable",
+              name: "123",
+            },
+          ],
+          "mockTable_mockServices_other-percentage": [
+            {
+              id: "mockId-totalComputable",
+              name: "100",
+            },
+          ],
+          "mockTable_mockServices_other-totalStateTerritoryShare": [
+            {
+              id: "mockId-totalStateTerritoryShare",
+              name: "0",
+            },
+          ],
+          "mockTable_mockServices_other-totalFederalShare": [
+            {
+              id: "mockId-totalFederalShare",
+              name: "123",
+            },
+          ],
+        },
+      },
       dynamicRows: [
         [
           {
@@ -314,20 +349,10 @@ describe("<CalculationTable />", () => {
             props: {
               label: "Mock other text Total Computable",
               mask: "currency",
-              readOnly: true,
+              subType: ReportFormFieldType.NUMBER,
             },
           },
-          {
-            id: "mockTable_mockServices_other-percentage",
-            type: ReportFormFieldType.DYNAMIC,
-            validation: ValidationType.DYNAMIC_OPTIONAL,
-            forTableOnly: true,
-            props: {
-              label: "Mock other text Percentage",
-              mask: "percentage",
-              readOnly: true,
-            },
-          },
+          "Mock text",
           {
             id: "mockTable_mockServices_other-totalStateTerritoryShare",
             type: ReportFormFieldType.DYNAMIC,
@@ -338,6 +363,7 @@ describe("<CalculationTable />", () => {
               label: "Mock other text Total State / Territory Share",
               mask: "currency",
               readOnly: true,
+              subType: ReportFormFieldType.NUMBER,
             },
           },
           {
@@ -350,6 +376,7 @@ describe("<CalculationTable />", () => {
               label: "Mock other text Total Federal Share",
               mask: "currency",
               readOnly: true,
+              subType: ReportFormFieldType.NUMBER,
             },
           },
         ],
@@ -357,12 +384,14 @@ describe("<CalculationTable />", () => {
     };
 
     render(tableComponent(updatedProps));
-
     const hint = screen.getByText("Mock dynamic row hint");
     expect(hint).toBeVisible();
 
     const bodyRows = screen.getAllByRole("row");
-    expect(bodyRows).toHaveLength(4);
+    expect(bodyRows).toHaveLength(5);
+
+    const dynamicRow = screen.getByText("Mock dynamic row label:");
+    expect(dynamicRow).toBeVisible();
 
     const button = screen.getByRole("button", {
       name: "Mock dynamic row button",
@@ -372,7 +401,10 @@ describe("<CalculationTable />", () => {
     });
 
     const bodyRowsUpdated = screen.getAllByRole("row");
-    expect(bodyRowsUpdated).toHaveLength(5);
+    expect(bodyRowsUpdated).toHaveLength(6);
+
+    const dynamicRowsUpdated = screen.getAllByText("Mock dynamic row label:");
+    expect(dynamicRowsUpdated).toHaveLength(2);
   });
 
   testA11yAct(tableComponent());

@@ -1,4 +1,11 @@
-import { createContext, useCallback, useMemo, useState } from "react";
+import {
+  ChangeEventHandler,
+  createContext,
+  FocusEventHandler,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import uuid from "react-uuid";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
@@ -68,11 +75,23 @@ export const DynamicTableProvider = ({ children }: any) => {
     [updatedFieldsForDisplay]
   );
 
-  const displayReadOnlyCell = (mask: string, readOnlyValue: string) => (
-    <Text as="span" sx={sx.calculated}>
-      {maskResponseData(readOnlyValue, mask)}
-    </Text>
-  );
+  const displayReadOnlyCell = ({
+    id,
+    initialValue,
+    mask,
+    rowIndex,
+  }: DisplayReadOnlyCellOptions) => {
+    const cellValue = localReport.fieldData?.[id] || initialValue;
+    const readOnlyValue = Array.isArray(cellValue)
+      ? cellValue?.[rowIndex]?.name || initialValue
+      : cellValue;
+
+    return (
+      <Text as="span" sx={sx.calculated}>
+        {maskResponseData(readOnlyValue, mask)}
+      </Text>
+    );
+  };
 
   const displayCell = ({
     cell,
@@ -81,6 +100,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     formData,
     percentage,
     rowId,
+    rowIndex,
     tableId,
   }: DisplayCellOptions) => {
     if (typeof cell === "string") return cell;
@@ -90,8 +110,12 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     // If input is readonly, display text instead of input
     if (readOnly) {
-      const readOnlyValue = localReport.fieldData?.[cell.id] || initialValue;
-      return displayReadOnlyCell(mask, readOnlyValue);
+      return displayReadOnlyCell({
+        id: cell.id,
+        initialValue,
+        mask,
+        rowIndex,
+      });
     }
 
     const field = {
@@ -133,7 +157,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     onChangeHandler,
     rowId,
     rowIndex,
-  }: any) => {
+  }: DisplayDynamicCellOptions) => {
     if (typeof cell === "string") return cell;
 
     const props = cell.props || {};
@@ -141,12 +165,7 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     // If input is readonly, display text instead of input
     if (readOnly) {
-      const cellValue = localReport.fieldData?.[cell.id] || initialValue;
-      const readOnlyValue = Array.isArray(cellValue)
-        ? cellValue?.[rowIndex]?.name || initialValue
-        : cellValue;
-
-      return displayReadOnlyCell(mask, readOnlyValue);
+      return displayReadOnlyCell({ id: cell.id, initialValue, mask, rowIndex });
     }
 
     const name = `${cell.id}[${rowIndex}]`;
@@ -266,7 +285,21 @@ interface DisplayCellOptions {
   index: number;
   percentage: number;
   rowId: string;
+  rowIndex: number;
   tableId: string;
+}
+
+interface DisplayDynamicCellOptions extends DisplayCellOptions {
+  label: string;
+  onBlurHandler: FocusEventHandler<HTMLInputElement>;
+  onChangeHandler: ChangeEventHandler<HTMLInputElement>;
+}
+
+interface DisplayReadOnlyCellOptions {
+  id: string;
+  initialValue: string;
+  mask: string;
+  rowIndex: number;
 }
 
 const sx = {
