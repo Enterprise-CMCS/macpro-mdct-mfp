@@ -95,6 +95,7 @@ export const CalculationTable = ({
     rowIndex: number
   ) => {
     const Cell = section === "thead" ? Th : Td;
+    const rowId = section === "tbody" ? "thead" : section;
 
     return (
       <Tr key={`${section}-row-${rowIndex}`}>
@@ -108,7 +109,7 @@ export const CalculationTable = ({
               cell,
               columnId: `${section}-row-${rowIndex}-cell-0`,
               index: rowIndex,
-              rowId: `${section}-row-0-cell-${cellIndex}`,
+              rowId: `${rowId}-row-0-cell-${cellIndex}`,
               ...cellProps(cell),
             })}
           </Cell>

@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useMemo, useState } from "react";
 import uuid from "react-uuid";
 // components
 import { Text } from "@chakra-ui/react";
@@ -13,6 +13,7 @@ import {
 } from "types";
 // utils
 import {
+  debounce,
   formFieldFactory,
   hydrateFormFields,
   maskResponseData,
@@ -36,6 +37,33 @@ export const DynamicTableProvider = ({ children }: any) => {
   const [localReport, setLocalReport] = useState({} as ReportShape);
   const [localDynamicRows, setLocalDynamicRows] = useState([] as FormTableRows);
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | null>(null);
+
+  const updatedFieldsForDisplay = useCallback(
+    (
+      id: string,
+      name: string,
+      value: string,
+      percentage: number,
+      tableId: string
+    ) => {
+      setLocalReport((prev) =>
+        updatedReportOnFieldChange({
+          id,
+          name,
+          percentage,
+          report: prev,
+          tableId,
+          value,
+        })
+      );
+    },
+    []
+  );
+
+  const debouncedUpdateReport = useMemo(
+    () => debounce(updatedFieldsForDisplay, 1),
+    [updatedFieldsForDisplay]
+  );
 
   const displayCell = ({
     cell,
@@ -62,22 +90,6 @@ export const DynamicTableProvider = ({ children }: any) => {
       );
     }
 
-    const updatedFieldsForDisplay = (
-      id: string,
-      name: string,
-      value: string
-    ) => {
-      const updatedReport = updatedReportOnFieldChange({
-        id,
-        name,
-        percentage,
-        report: localReport,
-        tableId,
-        value,
-      });
-      setLocalReport(updatedReport);
-    };
-
     const field = {
       ...cell,
       props: {
@@ -86,7 +98,13 @@ export const DynamicTableProvider = ({ children }: any) => {
         // Use ariaLabelledby in lieu of label
         label: undefined,
         handleOnChange: (e: InputChangeEvent) =>
-          updatedFieldsForDisplay(e.target.id, e.target.name, e.target.value),
+          debouncedUpdateReport(
+            e.target.id,
+            e.target.name,
+            e.target.value,
+            percentage,
+            tableId
+          ),
       },
     };
 
