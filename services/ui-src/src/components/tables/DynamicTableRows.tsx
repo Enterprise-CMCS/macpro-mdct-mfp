@@ -1,18 +1,16 @@
 import { useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 // components
-import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-import { Box, Flex, Image, Td, Text, Tr } from "@chakra-ui/react";
-import { DynamicTableContext, NumberFieldDisplay } from "components";
+import { Button, Image, Td, Tr } from "@chakra-ui/react";
+import { DynamicTableContext } from "components";
 // types
-import { FormTableRows, InputChangeEvent, ReportFormFieldType } from "types";
-// utils
-import { maskResponseData } from "utils";
+import { FormTableRows, InputChangeEvent } from "types";
 // assets
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
 export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
   const {
+    displayDynamicCell,
     focusedRowIndex,
     localDynamicRows,
     localReport,
@@ -21,81 +19,6 @@ export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
   const prevLenRef = useRef<number>(0);
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const form = useFormContext();
-
-  const displayCell = ({ cell, rowId, rowIndex, columnId }: any) => {
-    if (typeof cell === "string") return cell;
-
-    const props = cell.props || {};
-    const { dynamicId, hydrate, initialValue, mask, readOnly, subType } = props;
-
-    // If input is readonly, display text instead of input
-    if (readOnly) {
-      const cellValue = localReport.fieldData?.[cell.id] || initialValue;
-
-      const readOnlyValue = Array.isArray(cellValue)
-        ? (cellValue?.[rowIndex]?.name ?? initialValue)
-        : cellValue;
-
-      return (
-        <Text as="span" sx={sx.calculated}>
-          {maskResponseData(readOnlyValue, mask)}
-        </Text>
-      );
-    }
-
-    const name = `${cell.id}[${rowIndex}]`;
-    const errorMessage = "";
-
-    if (subType === ReportFormFieldType.NUMBER) {
-      return (
-        <NumberFieldDisplay
-          ariaLabelledby={`${rowId} ${columnId}`}
-          disabled={disabled}
-          errorMessage={errorMessage}
-          hint={undefined}
-          id={dynamicId}
-          label={undefined}
-          mask={mask}
-          name={name}
-          nested={false}
-          onBlur={onBlurHandler}
-          onChange={onChangeHandler}
-          placeholder={undefined}
-          readOnly={readOnly}
-          value={hydrate}
-        />
-      );
-    }
-
-    const dynamicLabel = `${dynamicId}_dynamic-label`;
-    const ariaProps = {
-      "aria-labelledby": `${dynamicLabel} ${columnId}`,
-    };
-
-    return (
-      <Flex>
-        <Box sx={sx.label}>
-          <label htmlFor={dynamicId} id={dynamicLabel}>
-            {label}
-          </label>
-        </Box>
-        <CmsdsTextField
-          disabled={disabled}
-          errorMessage={errorMessage}
-          hint={undefined}
-          id={dynamicId}
-          label={undefined}
-          name={name}
-          onBlur={onBlurHandler}
-          onChange={onChangeHandler}
-          placeholder={undefined}
-          readOnly={readOnly}
-          value={hydrate}
-          {...ariaProps}
-        />
-      </Flex>
-    );
-  };
 
   const onChangeHandler = (event: InputChangeEvent) => {
     const { name, value } = event.target;
@@ -120,7 +43,6 @@ export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
   // TODO: Autosave
   const onBlurHandler = async () => {};
 
-  // TODO
   const removeRow = (rowId: string) => {
     console.log(rowId);
   };
@@ -186,12 +108,12 @@ export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
 
   // Scroll to newly added row
   useEffect(() => {
-    if (focusedRowIndex !== null) {
-      rowRefs.current[focusedRowIndex]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
+    if (focusedRowIndex === null) return;
+
+    rowRefs.current[focusedRowIndex]?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
   }, [focusedRowIndex]);
 
   // Update form values with new row
@@ -252,9 +174,13 @@ export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
                 id={`tbody-dynamicRow-${rowIndex}-cell-${cellIndex}`}
                 key={`tbody-dynamicRow-${rowIndex}-cell-${cellIndex}`}
               >
-                {displayCell({
+                {displayDynamicCell({
                   cell,
                   columnId: `tbody-dynamicRow-${rowIndex}-cell-0`,
+                  disabled,
+                  label,
+                  onBlurHandler,
+                  onChangeHandler,
                   rowIndex,
                   rowId: `thead-row-0-cell-${cellIndex}`,
                 })}
@@ -262,11 +188,14 @@ export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
             ))}
             <Td>
               {!disabled && (
-                <Box sx={sx.removeBox}>
-                  <button type="button" onClick={() => removeRow(dynamicRowId)}>
-                    <Image src={cancelIcon} alt={`Delete ${dynamicRowId}`} />
-                  </button>
-                </Box>
+                <Button
+                  onClick={() => removeRow(dynamicRowId)}
+                  sx={sx.removeButton}
+                  type="button"
+                  variant={"unstyled"}
+                >
+                  <Image src={cancelIcon} alt={`Delete ${dynamicRowId}`} />
+                </Button>
               )}
             </Td>
           </Tr>
@@ -288,12 +217,7 @@ const sx = {
     fontWeight: "bold",
     textAlign: "right",
   },
-  label: {
-    marginRight: "spacer1",
-    marginTop: "spacer2",
-  },
-  removeBox: {
-    width: "1.5rem",
-    height: "1.5rem",
+  removeButton: {
+    minWidth: "1.5rem",
   },
 };

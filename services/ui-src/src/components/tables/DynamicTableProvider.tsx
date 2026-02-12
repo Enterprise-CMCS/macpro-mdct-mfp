@@ -1,7 +1,9 @@
 import { createContext, useCallback, useMemo, useState } from "react";
 import uuid from "react-uuid";
 // components
-import { Text } from "@chakra-ui/react";
+import { TextField as CmsdsTextField } from "@cmsgov/design-system";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { NumberFieldDisplay } from "components";
 // types
 import {
   AnyObject,
@@ -9,6 +11,7 @@ import {
   FormTableRow,
   FormTableRows,
   InputChangeEvent,
+  ReportFormFieldType,
   ReportShape,
 } from "types";
 // utils
@@ -24,6 +27,7 @@ import {
 export const DynamicTableContext = createContext<DynamicTableMethods>({
   addDynamicRow: Function,
   displayCell: Function,
+  displayDynamicCell: Function,
   focusedRowIndex: null,
   localDynamicRows: [],
   localReport: {} as ReportShape,
@@ -120,6 +124,91 @@ export const DynamicTableProvider = ({ children }: any) => {
     });
   };
 
+  const displayDynamicCell = ({
+    cell,
+    columnId,
+    disabled,
+    label,
+    onBlurHandler,
+    onChangeHandler,
+    rowId,
+    rowIndex,
+  }: any) => {
+    if (typeof cell === "string") return cell;
+
+    const props = cell.props || {};
+    const { dynamicId, hydrate, initialValue, mask, readOnly, subType } = props;
+
+    // If input is readonly, display text instead of input
+    if (readOnly) {
+      const cellValue = localReport.fieldData?.[cell.id] || initialValue;
+
+      const readOnlyValue = Array.isArray(cellValue)
+        ? cellValue?.[rowIndex]?.name || initialValue
+        : cellValue;
+
+      return (
+        <Text as="span" sx={sx.calculated}>
+          {maskResponseData(readOnlyValue, mask)}
+        </Text>
+      );
+    }
+
+    const name = `${cell.id}[${rowIndex}]`;
+    // TODO: Get error from form state
+    const errorMessage = "";
+
+    if (subType === ReportFormFieldType.NUMBER) {
+      return (
+        <NumberFieldDisplay
+          ariaLabelledby={`${rowId} ${columnId}`}
+          disabled={disabled}
+          errorMessage={errorMessage}
+          hint={undefined}
+          id={dynamicId}
+          label={undefined}
+          mask={mask}
+          name={name}
+          nested={false}
+          onBlur={onBlurHandler}
+          onChange={onChangeHandler}
+          placeholder={undefined}
+          readOnly={readOnly}
+          value={hydrate}
+        />
+      );
+    }
+
+    const dynamicLabel = `${dynamicId}_dynamic-label`;
+    const ariaProps = {
+      "aria-labelledby": `${rowId} ${dynamicLabel}`,
+    };
+
+    return (
+      <Flex>
+        <Box sx={sx.label}>
+          <label htmlFor={dynamicId} id={dynamicLabel}>
+            {label}
+          </label>
+        </Box>
+        <CmsdsTextField
+          disabled={disabled}
+          errorMessage={errorMessage}
+          hint={undefined}
+          id={dynamicId}
+          label={undefined}
+          name={name}
+          onBlur={onBlurHandler}
+          onChange={onChangeHandler}
+          placeholder={undefined}
+          readOnly={readOnly}
+          value={hydrate}
+          {...ariaProps}
+        />
+      </Flex>
+    );
+  };
+
   const addDynamicRow = (dynamicRowTemplate: FormTableRow) => {
     const newId = uuid();
     const newRow = dynamicRowTemplate.map((templateRow: string | FormField) => {
@@ -149,6 +238,7 @@ export const DynamicTableProvider = ({ children }: any) => {
   const providerValue = {
     addDynamicRow,
     displayCell,
+    displayDynamicCell,
     focusedRowIndex,
     localDynamicRows,
     localReport,
@@ -168,6 +258,7 @@ export const DynamicTableProvider = ({ children }: any) => {
 interface DynamicTableMethods {
   addDynamicRow: Function;
   displayCell: Function;
+  displayDynamicCell: Function;
   focusedRowIndex: number | null;
   localDynamicRows: FormTableRows;
   localReport: ReportShape;
@@ -193,5 +284,9 @@ const sx = {
     display: "block",
     fontWeight: "bold",
     textAlign: "right",
+  },
+  label: {
+    marginRight: "spacer1",
+    marginTop: "spacer2",
   },
 };
