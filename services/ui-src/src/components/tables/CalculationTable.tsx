@@ -29,6 +29,7 @@ import {
 
 export const CalculationTable = ({
   bodyRows = [],
+  disabled,
   footRows,
   formData,
   headRows,
@@ -46,15 +47,20 @@ export const CalculationTable = ({
     : 100;
 
   // Fields are disabled if no percentage is set
-  const disabled = Boolean(!percentage);
-  const percentageDisplay = disabled ? "[auto-populated]%" : `${percentage}%`;
+  const missingPercentage = Boolean(!percentage);
+  const percentageDisplay = missingPercentage
+    ? "[auto-populated]%"
+    : `${percentage}%`;
 
   // Show error once if in a loop
-  const showError = disabled && order === 0;
+  const showError = missingPercentage && order === 0;
 
   // Set cell width based on number of columns
   const firstRow = headRows[0];
   const thWidth = `${100 / firstRow.length}%`;
+
+  // Disable fields if no percentage is set or report is submitted
+  const isDisabled = disabled || missingPercentage;
 
   const displayCell = ({ cell, columnId, rowId }: DisplayCellOptions) => {
     if (typeof cell === "string") return cell;
@@ -90,20 +96,20 @@ export const CalculationTable = ({
     );
 
     return formFieldFactory(fieldsToRender, {
-      disabled,
+      disabled: isDisabled,
       autosave: true,
       validateOnRender: false,
     });
   };
 
-  const updatedFieldsForDisplay = (fieldName: string, fieldValue: string) => {
+  const updatedFieldsForDisplay = (name: string, value: string) => {
     const updatedReport = updatedReportOnFieldChange({
-      fieldName,
-      fieldValue,
-      report: localReport,
-      // TODO: Use form percentage or field percentage
+      id: name,
+      name,
       percentage,
+      report: localReport,
       tableId,
+      value,
     });
     setLocalReport(updatedReport);
   };
@@ -183,6 +189,7 @@ export const CalculationTable = ({
 };
 
 interface Props extends Omit<FormTable, "tableType"> {
+  disabled: boolean;
   formData?: AnyObject;
   order?: number;
   report?: ReportShape;
