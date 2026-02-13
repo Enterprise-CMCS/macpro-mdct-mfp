@@ -1,38 +1,72 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { Button, Image, Td, Tr } from "@chakra-ui/react";
 import { DynamicTableContext } from "components";
 // types
-import { FormTableRows, InputChangeEvent } from "types";
+import {
+  AnyObject,
+  DynamicFieldShape,
+  FormTableRows,
+  InputChangeEvent,
+} from "types";
 // assets
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
+import { updatedReportOnFieldChange } from "utils";
 
-export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
+export const DynamicTableRows = ({
+  disabled,
+  dynamicRows,
+  label,
+  tableId,
+}: Props) => {
   const {
     displayDynamicCell,
     focusedRowIndex,
     localDynamicRows,
     localReport,
     setLocalDynamicRows,
+    // setLocalReport,
   } = useContext(DynamicTableContext);
   const prevLenRef = useRef<number>(0);
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const form = useFormContext();
+  const [displayValue, setDisplayValue] = useState({} as AnyObject);
 
   const onChangeHandler = (event: InputChangeEvent) => {
-    const { name, value } = event.target;
+    const { id, name, value } = event.target;
+
+    const updatedDisplayValue = {
+      ...displayValue,
+      [id]: value,
+    };
+
+    setDisplayValue(updatedDisplayValue);
+
+    // TODO: Percentage
+    const updatedReport = updatedReportOnFieldChange({
+      id,
+      name,
+      percentage: 100,
+      report: localReport,
+      tableId,
+      value,
+    });
+    console.log(updatedReport);
+    // setLocalReport(updatedReport);
+
     const match = name.match(/^(.*)\[(\d+)\]$/);
     if (!match) return;
 
     const fieldKey = match[1];
-    const rowIndex = Number(match[2]);
-
-    const current: any[] = form.getValues(fieldKey) ?? [];
-    const updated = current.slice();
-
-    const existing = updated[rowIndex] ?? {};
-    updated[rowIndex] = { id: existing.id, name: value };
+    const current = form.getValues(fieldKey) ?? [];
+    const idx = current.findIndex((r: DynamicFieldShape) => r.id === id);
+    const updated =
+      idx > -1
+        ? current.map((r: DynamicFieldShape, i: number) =>
+            i === idx ? { ...r, name: value } : r
+          )
+        : [...current, { id, name: value }];
 
     form.setValue(fieldKey, updated, {
       shouldDirty: true,
@@ -81,6 +115,10 @@ export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
         if (len > rowCount) rowCount = len;
       }
 
+      const updatedDisplayValue = {
+        ...displayValue,
+      };
+
       return Array.from({ length: rowCount }, (_, rowIndex) =>
         columns.map((cell) => {
           if (typeof cell === "string") return cell;
@@ -89,6 +127,9 @@ export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
           if (!fieldObject) return cell;
 
           const dynamicRowId = fieldObject.id.split("-").slice(0, -1).join("-");
+
+          updatedDisplayValue[fieldObject.id] = fieldObject.name;
+          setDisplayValue(updatedDisplayValue);
 
           return {
             ...cell,
@@ -183,6 +224,7 @@ export const DynamicTableRows = ({ disabled, dynamicRows, label }: Props) => {
                   onChangeHandler,
                   rowIndex,
                   rowId: `thead-row-0-cell-${cellIndex}`,
+                  value: displayValue,
                 })}
               </Td>
             ))}
@@ -209,6 +251,7 @@ interface Props {
   disabled: boolean;
   dynamicRows: FormTableRows;
   label?: string;
+  tableId: string;
 }
 
 const sx = {

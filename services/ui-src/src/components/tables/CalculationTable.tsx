@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 // components
 import {
   Box,
@@ -69,20 +69,25 @@ export const CalculationTable = ({
   const isDisabled = missingPercentage || disabled;
 
   // Use field-level percentage or formPercentage
-  const getPercentage = (cell: FormTableCell) => {
-    if (typeof cell == "string") return formPercentage;
+  const getPercentage = useCallback(
+    (cell: FormTableCell) => {
+      if (typeof cell === "string") return formPercentage;
+      const [keyFieldId] = cell.id.split("-");
+      const fieldPercentageField = `${keyFieldId}-percentage`;
+      return localReport.fieldData?.[fieldPercentageField] ?? formPercentage;
+    },
+    [formPercentage, localReport.fieldData]
+  );
 
-    const [keyFieldId] = cell.id.split("-");
-    const fieldPercentageField = `${keyFieldId}-percentage`;
-    return localReport.fieldData?.[fieldPercentageField] || formPercentage;
-  };
-
-  const cellProps = (cell: FormTableCell) => ({
-    disabled: isDisabled,
-    formData,
-    percentage: getPercentage(cell),
-    tableId,
-  });
+  const cellProps = useCallback(
+    (cell: FormTableCell) => ({
+      disabled: isDisabled,
+      formData,
+      percentage: getPercentage(cell),
+      tableId,
+    }),
+    [isDisabled, formData, tableId, getPercentage]
+  );
 
   useEffect(() => {
     // Use local state to speed up UI
@@ -165,8 +170,9 @@ export const CalculationTable = ({
           )}
           <DynamicTableRows
             disabled={isDisabled}
-            label={verbiage?.dynamicRows?.label}
             dynamicRows={dynamicRows}
+            label={verbiage?.dynamicRows?.label}
+            tableId={tableId}
           />
         </Tbody>
         <Tfoot>

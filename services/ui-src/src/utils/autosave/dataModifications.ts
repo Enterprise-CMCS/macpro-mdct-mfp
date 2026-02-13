@@ -125,6 +125,8 @@ export const updatedReportOnFieldChange = ({
   const [fieldId, fieldType] = name.split("-");
 
   switch (fieldType) {
+    // TODO: Regex match
+    case "totalComputable[0]":
     case "totalComputable": {
       const fieldSuffixesToCalculate = {
         total: "totalComputable",

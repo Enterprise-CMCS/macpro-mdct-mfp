@@ -118,6 +118,7 @@ export const fieldTableTotals = ({
   const keys = Object.keys(fieldSuffixesToCalculate) as Array<
     keyof typeof fieldSuffixesToCalculate
   >;
+  // TODO: Return array for dynamic fields
   const fieldShares = calculateShares(fieldValue, percentage);
   const tableShares = keys.reduce((sum, key) => {
     const suffix = fieldSuffixesToCalculate[key];

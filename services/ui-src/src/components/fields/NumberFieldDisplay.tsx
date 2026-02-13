@@ -74,7 +74,7 @@ interface Props {
   placeholder?: string;
   readOnly?: boolean;
   sxOverride?: SystemStyleObject;
-  value: string;
+  value?: string;
 }
 
 export const SymbolOverlay = ({

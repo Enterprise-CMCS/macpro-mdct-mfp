@@ -8,9 +8,8 @@ import {
 } from "react";
 import uuid from "react-uuid";
 // components
-import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 import { Box, Flex, Text } from "@chakra-ui/react";
-import { NumberFieldDisplay } from "components";
+import { NumberFieldDisplay, TextFieldDisplay } from "components";
 // types
 import {
   AnyObject,
@@ -81,9 +80,9 @@ export const DynamicTableProvider = ({ children }: any) => {
     mask,
     rowIndex,
   }: DisplayReadOnlyCellOptions) => {
-    const cellValue = localReport.fieldData?.[id] || initialValue;
+    const cellValue = localReport.fieldData?.[id] ?? initialValue;
     const readOnlyValue = Array.isArray(cellValue)
-      ? cellValue?.[rowIndex]?.name || initialValue
+      ? (cellValue?.[rowIndex]?.name ?? initialValue)
       : cellValue;
 
     return (
@@ -108,7 +107,6 @@ export const DynamicTableProvider = ({ children }: any) => {
     const props = cell.props || {};
     const { initialValue, mask, readOnly } = props;
 
-    // If input is readonly, display text instead of input
     if (readOnly) {
       return displayReadOnlyCell({
         id: cell.id,
@@ -157,18 +155,19 @@ export const DynamicTableProvider = ({ children }: any) => {
     onChangeHandler,
     rowId,
     rowIndex,
+    value: displayValue,
   }: DisplayDynamicCellOptions) => {
     if (typeof cell === "string") return cell;
 
     const props = cell.props || {};
-    const { dynamicId, hydrate, initialValue, mask, readOnly, subType } = props;
+    const { dynamicId, initialValue, mask, readOnly, subType } = props;
 
-    // If input is readonly, display text instead of input
     if (readOnly) {
       return displayReadOnlyCell({ id: cell.id, initialValue, mask, rowIndex });
     }
 
     const name = `${cell.id}[${rowIndex}]`;
+    const value = displayValue?.[dynamicId];
     // TODO: Get error from form state
     const errorMessage = "";
 
@@ -178,25 +177,18 @@ export const DynamicTableProvider = ({ children }: any) => {
           ariaLabelledby={`${rowId} ${columnId}`}
           disabled={disabled}
           errorMessage={errorMessage}
-          hint={undefined}
           id={dynamicId}
-          label={undefined}
           mask={mask}
           name={name}
-          nested={false}
           onBlur={onBlurHandler}
           onChange={onChangeHandler}
-          placeholder={undefined}
           readOnly={readOnly}
-          value={hydrate}
+          value={value}
         />
       );
     }
 
     const dynamicLabel = `${dynamicId}_dynamic-label`;
-    const ariaProps = {
-      "aria-labelledby": `${rowId} ${dynamicLabel}`,
-    };
 
     return (
       <Flex>
@@ -205,19 +197,16 @@ export const DynamicTableProvider = ({ children }: any) => {
             {label}
           </label>
         </Box>
-        <CmsdsTextField
+        <TextFieldDisplay
+          ariaLabelledby={`${rowId} ${dynamicLabel}`}
           disabled={disabled}
           errorMessage={errorMessage}
-          hint={undefined}
           id={dynamicId}
-          label={undefined}
           name={name}
           onBlur={onBlurHandler}
           onChange={onChangeHandler}
-          placeholder={undefined}
           readOnly={readOnly}
-          value={hydrate}
-          {...ariaProps}
+          value={value}
         />
       </Flex>
     );
@@ -287,6 +276,7 @@ interface DisplayCellOptions {
   rowId: string;
   rowIndex: number;
   tableId: string;
+  value?: string;
 }
 
 interface DisplayDynamicCellOptions extends DisplayCellOptions {

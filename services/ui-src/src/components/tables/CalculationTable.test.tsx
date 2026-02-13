@@ -310,12 +310,6 @@ describe("<CalculationTable />", () => {
               name: "123",
             },
           ],
-          "mockTable_mockServices_other-percentage": [
-            {
-              id: "mockId-totalComputable",
-              name: "100",
-            },
-          ],
           "mockTable_mockServices_other-totalStateTerritoryShare": [
             {
               id: "mockId-totalStateTerritoryShare",
