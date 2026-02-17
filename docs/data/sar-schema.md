@@ -1,4 +1,4 @@
-# Semi-Annual Progress Report (SAR) Schema Documentation
+# Semi-Annual Progress Report (SAR) Schema
 
 ## Overview
 
@@ -65,35 +65,35 @@ This creates a **ripple effect** where field IDs throughout the SAR contain embe
 When a SAR is created:
 
 1. The system determines the approved Work Plan (WP) based on reporting period and year
-2. Static sections are generated from the SAR form template
-3. Target populations and initiatives are extracted from the WP
-4. These entities are used to transform template fields into actual SAR form fields
+2. Target populations and initiatives are extracted from the WP
+3. These entities are used to transform template fields into actual SAR form fields
+4. The resulting schema is unique to each state/territory's specific configuration
 
-- The WP target populations are used to generate the SAR's RET fields
-- The WP initiatives are used to generate the initiative sections of the SAR
-- For each WP initiative, the system iterates over its funding sources and objectives to generate form fields within the initiative section
+### Form Templates (source code)
 
-5. The resulting schema is unique to each state/territory's specific configuration
+- **WP Template**: `services/app-api/forms/routes/wp/` (source of populations and initiatives)
+- **SAR Template**: `services/app-api/forms/routes/sar/`
 
-### How Dynamic Field IDs Are Constructed
+### How Dynamic Fields Are Constructed
 
-#### Target Population Fields
+The SAR form template uses transformation rules defined in the API; these rules are applied to fields in the schema with a `transformation` key. ([Example](/services/app-api/forms/routes/sar/state-or-territory-specific-initiatives.ts#L347))
 
-For fields that require per-population data, the field ID follows this pattern:
+#### 1. `targetPopulations` Transformation
 
-```
-{section}_{subsection}_populations_{Period}_{POPULATION_NAME}
-```
+- **Applied to**: RET section fields marked with `"transformation": { "rule": "targetPopulations" }`
+- **Logic**: Creates one field per applicable target population
+- **Field ID Pattern**: `{section}_{subsection}_populations_{period}_{populationName}`
+- **Label Generation**: "Number of `{populationName}`" or "Other: `{populationName}`"
 
-Where `{POPULATION_NAME}` comes from the Work Plan and could be any of:
+Where `{populationName}` comes from the Work Plan and could be any of:
 
 - `Older adults`
 - `Individuals with physical disabilities (PD)`
 - `Individuals with intellectual or developmental disabilities (I/DD)`
 - `Individuals with mental health and substance use disorders (MH/SUD)`
-- Custom population names defined in the Work Plan _(this is free text that will be unique to every state's submission)_
+- Custom population names defined in the Work Plan (Prefixed with "Other: " followed by free text)
 
-**Example:**
+**Examples:**
 
 ```
 ret_psmicf_target_populations_Period2_Older adults
@@ -101,20 +101,41 @@ ret_psmicf_target_populations_Period2_Individuals with physical disabilities (PD
 ret_psmicf_target_populations_Period2_Individuals with mental health and substance use disorders (MH/SUD)
 ```
 
-#### Initiative Fields
+#### 2. `firstQuarterOfThePeriod` / `secondQuarterOfThePeriod` Transformation
 
-Initiative-related fields embed the initiative UUID:
+- **Applied to**: Section headers in RET (no fieldData impact)
+- **Logic**: Changes header text based on report period (1 or 2)
+- Period 1: Q1 (Jan-Mar) and Q2 (Apr-Jun)
+- Period 2: Q3 (Jul-Sep) and Q4 (Oct-Dec)
+
+This transformation only impacts the UI, and not the underlying data structure. It is documented here because it appears in the schema.
+
+#### 3. `fundingSources` Transformation
+
+- **Applied to**: Expenditures section within initiatives
+- **Logic**: Generates funding source fields for each funding source in the WP initiative
+- **ID Generation**: `fundingSources_{actual|projected}_{year}Q{quarter}_{fundingSourceId}`
+
+Where `{fundingSourceId}` is the UUID of the funding source from the WP.
+
+**Examples:**
 
 ```
-fundingSources_actual_{QUARTER}_{FUNDING_SOURCE_UUID}
-fundingSources_projected_{QUARTER}_{FUNDING_SOURCE_UUID}
+fundingSources_projected_2025Q4_a84f33-b382-5671-8c42-5bf844ad8c37
+fundingSources_actual_2025Q3_4771e55-7e8-7a18-a867-d3e3a5cd5e
 ```
+
+#### 4. `quantitativeQuarters` Transformation
+
+- **Applied to**: Objectives with quantitative targets within initiatives
+- **Logic**: Creates target/actual fields for each quarter in the reporting period
+- **ID Generation**: `objectiveTargets_{actual|projections}_{year}Q{quarter}`
 
 **Example:**
 
 ```
-fundingSources_actual_2025Q3_4771e55-7e8-7a18-a867-d3e3a5cd5e
-fundingSources_projected_2025Q4_a84f33-b382-5671-8c42-5bf844ad8c37
+objectiveTargets_projections_2024Q2
+objectiveTargets_actual_2024Q2
 ```
 
 ---
