@@ -252,7 +252,7 @@ export const dynamic = (options?: DynamicOptions) =>
     )
     .required(error.REQUIRED_GENERIC);
 export const dynamicOptional = (options?: DynamicOptions) =>
-  dynamic(options).notRequired();
+  dynamic(options).notRequired().nullable();
 
 // NESTED
 export const nested = (
