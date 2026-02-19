@@ -45,8 +45,8 @@ export interface ReportFormField {
   id: string;
   forTableOnly?: boolean;
   props?: ReportFormFieldProps;
-  type: ReportFormFieldType;
   transformation?: Transformation;
+  type: ReportFormFieldType;
   validation?: ValidationType | CustomValidation;
 }
 
@@ -77,6 +77,7 @@ export interface ReportFormFieldProps {
   mask?: string;
   maxLength?: number;
   styleAsOptional?: boolean;
+  subType?: ReportFormFieldType;
 }
 
 // Form Tables
@@ -89,24 +90,28 @@ export interface ReportFormWithTables {
   };
 }
 
-export type FormTableRow = (string | ReportFormField)[];
+export type FormTableCell = string | ReportFormField;
+export type FormTableRow = FormTableCell[];
 export type FormTableRows = FormTableRow[];
 
-export interface BaseFormTable {
+export interface FormTable {
   id: string;
+  bodyRows: FormTableRows;
+  dynamicRows?: FormTableRows;
   footRows: FormTableRows;
   headRows: FormTableRows;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
+    dynamicRows?: {
+      buttonText: string;
+      hint: string;
+      label: string;
+    };
     errorMessage?: string | CustomHtmlElement[];
     percentage?: string;
     title: string;
   };
-}
-
-export interface FormTable extends BaseFormTable {
-  bodyRows: FormTableRows;
 }
 
 export enum FormTableType {
@@ -120,6 +125,7 @@ export interface ServiceField {
 }
 
 export enum ServiceFieldType {
+  CATEGORY = "category",
   TOTAL_COMPUTABLE = "totalComputable",
   TOTAL_FEDERAL_SHARE = "totalFederalShare",
   TOTAL_STATE_TERRITORY_SHARE = "totalStateTerritoryShare",

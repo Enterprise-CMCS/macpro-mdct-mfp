@@ -195,14 +195,15 @@ describe("utils/autosave/dataModifications", () => {
         fieldData,
       } as unknown as ReportShape;
 
-      const fieldName = `${fieldId}-totalComputable`;
+      const name = `${fieldId}-totalComputable`;
 
       const updatedFields = updatedReportOnFieldChange({
-        fieldName,
-        fieldValue: 100,
+        id: name,
+        name,
         report,
         percentage: 89,
         tableId,
+        value: 100,
       });
 
       expect(updatedFields).toEqual({
