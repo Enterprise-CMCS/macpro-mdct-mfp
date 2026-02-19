@@ -116,13 +116,13 @@ export const updatedNumberFields = (
 };
 
 export const updatedReportOnFieldChange = ({
-  fieldName,
-  fieldValue,
+  name,
   report,
   percentage,
   tableId,
+  value,
 }: UpdatedReportFields) => {
-  const [fieldId, fieldType] = fieldName.split("-");
+  const [fieldId, fieldType] = name.split("-");
 
   switch (fieldType) {
     case "totalComputable": {
@@ -136,7 +136,7 @@ export const updatedReportOnFieldChange = ({
         fieldData: report.fieldData,
         fieldId,
         fieldSuffixesToCalculate,
-        fieldValue,
+        fieldValue: value,
         percentage,
         tableId,
       });
@@ -166,9 +166,10 @@ export const updatedReportOnFieldChange = ({
 };
 
 interface UpdatedReportFields {
-  fieldName: string;
-  fieldValue: number | string;
-  report: ReportShape;
+  id: string;
+  name: string;
   percentage: number;
+  report: ReportShape;
   tableId: string;
+  value: number | string;
 }

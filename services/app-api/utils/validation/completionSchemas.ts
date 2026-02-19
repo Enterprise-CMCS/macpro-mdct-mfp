@@ -6,12 +6,15 @@ import {
   string,
   number as yupNumber,
 } from "yup";
+// types
 import {
   Choice,
   DynamicOptions,
   DynamicValidationType,
   TextOptions,
 } from "../types";
+// utils
+import { schemaMap } from "./schemaMap";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -247,8 +250,6 @@ export const dynamic = (options?: DynamicOptions) =>
       })
     )
     .required(error.REQUIRED_GENERIC);
-export const dynamicOptional = (options?: DynamicOptions) =>
-  dynamic(options).notRequired();
 
 // NESTED
 export const nested = (
@@ -287,10 +288,11 @@ export const completionSchemaMap: any = {
   dateOptional: dateOptional(),
   dropdown: dropdown(),
   dynamic: (options?: DynamicOptions) => dynamic(options),
-  dynamicOptional: (options?: DynamicOptions) => dynamicOptional(options),
+  dynamicOptional: schemaMap.dynamicOptional,
   email: email(),
   emailOptional: emailOptional(),
   number: number(),
+  numberComparison: schemaMap.numberComparison,
   numberOptional: numberOptional(),
   ratio: ratio(),
   text: text(),

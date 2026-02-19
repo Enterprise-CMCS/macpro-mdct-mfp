@@ -49,39 +49,52 @@ export interface FormJson {
   tables?: FormTable[];
 }
 
-export type FormTableRow = (string | FormField)[];
+export type FormTableCell = string | FormField;
+export type FormTableRow = FormTableCell[];
 export type FormTableRows = FormTableRow[];
 
-export interface BaseFormTable {
+export interface FormTable {
   id: string;
+  bodyRows: FormTableRows;
+  dynamicRows?: FormTableRows;
   footRows: FormTableRows;
   headRows: FormTableRows;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
+    dynamicRows?: {
+      buttonText: string;
+      hint: string;
+      label: string;
+    };
     errorMessage?: string | CustomHtmlElement[];
     percentage?: string;
     title: string;
   };
 }
 
-export interface FormTable extends BaseFormTable {
-  bodyRows: FormTableRows;
-}
-
 export enum FormTableType {
   CALCULATION = "Calculation",
+}
+
+export interface CustomFieldValidation {
+  type: ValidationType;
+  dependentFieldName?: never;
+  options?: AnyObject;
+  parentOptionId?: never;
 }
 
 export interface DependentFieldValidation {
   type: string;
   dependentFieldName: string;
+  options?: never;
   parentOptionId?: never;
 }
 
 export interface NestedFieldValidation {
   type: string;
   nested: true;
+  options?: never;
   parentFieldName: string;
   parentOptionId: string;
 }
@@ -89,12 +102,14 @@ export interface NestedFieldValidation {
 export interface NestedDependentFieldValidation {
   type: string;
   dependentFieldName: string;
+  options?: never;
   nested: true;
   parentFieldName: string;
   parentOptionId: string;
 }
 
 export type FieldValidationObject =
+  | CustomFieldValidation
   | DependentFieldValidation
   | NestedFieldValidation
   | NestedDependentFieldValidation;
