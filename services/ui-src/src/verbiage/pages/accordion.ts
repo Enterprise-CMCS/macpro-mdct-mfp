@@ -139,7 +139,7 @@ export default {
           type: "text",
           as: "p",
           content:
-            "Click “Add new MFP Expenditure submission” below to begin reporting for the current reporting period.",
+            "MFP recipients will use the MFP Financial Reporting Form (commonly referred to as the “ABCD” financial reporting forms) to comply with general financial reporting requirements and provide a mechanism for tracking expenditures under the MFP demonstration.",
         },
         {
           type: "text",
@@ -162,7 +162,7 @@ export default {
           type: "text",
           as: "p",
           content:
-            "Click “Add new MFP Expenditure submission” below to begin reporting for the current reporting period.",
+            "MFP recipients will use the MFP Financial Reporting Form (commonly referred to as the “ABCD” financial reporting forms) to comply with general financial reporting requirements and provide a mechanism for tracking expenditures under the MFP demonstration. <br><br> MFP recipients will use this form to report on MFP qualified HCBS expenditures for state plan services and HCBS waiver programs on a calendar year (CY) quarterly basis. Additionally, MFP recipients will report CY quarterly expenditures for demonstration services, supplemental services, and administrative activities. <br><br> Click “Start MFP Financial Report” below to begin reporting for the current reporting period. <br><br> If you are amending a previously submitted report, ask your CMS MFP Project Officer to unlock it. Then make the updates, complete the resubmission question at the top of the “General Information” section, resubmit, and notify your CMS Project Officer it’s ready for their review.",
         },
       ],
       list: [],

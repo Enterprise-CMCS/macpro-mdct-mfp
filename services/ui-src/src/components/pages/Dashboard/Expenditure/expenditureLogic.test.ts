@@ -11,7 +11,7 @@ describe("expenditureLogic", () => {
   describe("expenditureReportPeriodsMap", () => {
     it("should have correct quarter mappings", () => {
       expect(expenditureReportPeriodsMap[1]).toBe(
-        "Q1: January 1st to March 31st"
+        "Q1 (Quarter 1): January 1st to March 31st"
       );
       expect(expenditureReportPeriodsMap[2]).toBe("Q2: April 1st to June 30th");
       expect(expenditureReportPeriodsMap[3]).toBe(

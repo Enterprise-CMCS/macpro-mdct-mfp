@@ -126,7 +126,7 @@ describe("Test ExpenditureDashboardPage modal functionality", () => {
     await waitFor(() => {
       expect(
         screen.getByRole("heading", {
-          name: /Add new MFP Expenditure Report submission/i,
+          name: /Add new MFP Financial Reporting Form submission/i,
         })
       ).toBeInTheDocument();
     });
@@ -145,7 +145,7 @@ describe("Test ExpenditureDashboardPage modal functionality", () => {
     await waitFor(() => {
       expect(
         screen.getByRole("heading", {
-          name: /Edit MFP Expenditure Report submission/i,
+          name: /Edit MFP Financial Reporting Form submission/i,
         })
       ).toBeInTheDocument();
     });

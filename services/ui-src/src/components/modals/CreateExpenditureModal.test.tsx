@@ -119,7 +119,7 @@ describe("<CreateExpenditureModal />", () => {
       render(modalComponent);
       const header = screen.getByRole("heading", { level: 1 });
       expect(header.textContent).toEqual(
-        "Add new MFP Expenditure Report submission"
+        "Add new MFP Financial Reporting Form submission"
       );
       await fillForm("2025", "1", "Save");
       await act(async () => {
