@@ -66,6 +66,12 @@ export const AppRoutes = () => {
           {expenditureReport && (
             <Route path="/expenditure" element={<ExpenditureDashboardPage />} />
           )}
+          {expenditureReport && (
+            <Route
+              path="/expenditure/export"
+              element={<ExportedReportPage />}
+            />
+          )}
 
           {/* General Report Routes */}
           {report && (
