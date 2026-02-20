@@ -71,11 +71,9 @@ export const fillWorkPlan = (
 
   if (flags.wpSarRelease2025) {
     // Removed fields
-    const {
-      strategy_additionalDetails, // eslint-disable-line @typescript-eslint/no-unused-vars
-      strategy_explaination, // eslint-disable-line @typescript-eslint/no-unused-vars
-      ...rest
-    } = data.fieldData;
+    // oxlint-disable-next-line no-unused-vars
+    const { strategy_additionalDetails, strategy_explaination, ...rest } =
+      data.fieldData;
 
     data = {
       ...data,

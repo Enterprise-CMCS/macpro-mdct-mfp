@@ -1,9 +1,8 @@
 import { useState, useEffect, useContext, ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 // components
-import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-import { Box, Heading, SystemStyleObject } from "@chakra-ui/react";
-import { CharacterCounter, ReportContext } from "components";
+import { SystemStyleObject } from "@chakra-ui/react";
+import { ReportContext, TextFieldDisplay } from "components";
 import { EntityContext } from "components/reports/EntityProvider";
 // utils
 import {
@@ -17,18 +16,24 @@ import {
 import { InputChangeEvent, CustomHtmlElement } from "types";
 
 export const TextField = ({
-  name,
-  label,
-  hint,
-  placeholder,
-  sxOverride,
-  nested,
+  ariaLabelledby,
+  autoComplete,
   autosave,
-  validateOnRender,
-  styleAsOptional,
+  clear,
+  disabled,
   heading,
+  hint,
+  hydrate,
+  label,
   maxLength,
-  ...props
+  multiline,
+  name,
+  nested,
+  placeholder,
+  rows,
+  styleAsOptional,
+  sxOverride,
+  validateOnRender,
 }: Props) => {
   const defaultValue = "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
@@ -50,7 +55,7 @@ export const TextField = ({
   }, []);
 
   // set initial display value to form state field value or hydration value
-  const hydrationValue = props?.hydrate || defaultValue;
+  const hydrationValue = hydrate || defaultValue;
 
   useEffect(() => {
     // if form state has value for field, set as display value
@@ -60,7 +65,7 @@ export const TextField = ({
     }
     // else set hydrationValue or defaultValue as display value
     else if (hydrationValue) {
-      if (props.clear) {
+      if (clear) {
         setDisplayValue(defaultValue);
         form.setValue(name, defaultValue);
       } else {
@@ -117,62 +122,47 @@ export const TextField = ({
   // prepare error message, hint, and classes
   const formErrorState = form?.formState?.errors;
   const errorMessage = formErrorState?.[name]?.message as ReactNode;
-  const parsedHint = hint && parseCustomHtml(hint);
-  const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
-  const labelClass = !label ? "no-label" : "";
+  const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
 
-  const { autoComplete, disabled, multiline, rows } = props ?? {};
-  const additionalProps = { autoComplete, disabled, multiline, rows };
-  const ariaProps = maxLength ? { "aria-describedby": `${name}-counter` } : {};
-
   return (
-    <Box sx={sxOverride} className={`${nestedChildClasses} ${labelClass}`}>
-      {/* SAR field sections */}
-      {heading && <Heading sx={sx.fieldHeading}>{heading}</Heading>}
-      <CmsdsTextField
-        id={name}
-        name={name}
-        label={labelText || ""}
-        hint={parsedHint}
-        placeholder={placeholder}
-        onChange={(e) => onChangeHandler(e)}
-        onBlur={(e) => onBlurHandler(e)}
-        errorMessage={errorMessage}
-        value={displayValue}
-        {...additionalProps}
-        {...ariaProps}
-      />
-      {maxLength && (
-        <CharacterCounter
-          id={`${name}-counter`}
-          input={displayValue}
-          maxLength={maxLength}
-        />
-      )}
-    </Box>
+    <TextFieldDisplay
+      ariaLabelledby={ariaLabelledby}
+      autoComplete={autoComplete}
+      disabled={disabled}
+      errorMessage={errorMessage}
+      heading={heading}
+      hint={parsedHint}
+      id={name}
+      label={labelText || ""}
+      maxLength={maxLength}
+      multiline={multiline}
+      name={name}
+      nested={nested}
+      onBlur={onBlurHandler}
+      onChange={onChangeHandler}
+      placeholder={placeholder}
+      rows={rows}
+      sxOverride={sxOverride}
+      value={displayValue}
+    />
   );
 };
 
 interface Props {
-  name: string;
-  label?: string;
-  hint?: CustomHtmlElement[];
-  placeholder?: string;
-  sxOverride?: SystemStyleObject;
-  nested?: boolean;
   autosave?: boolean;
-  styleAsOptional?: boolean;
-  heading?: string;
   clear?: boolean;
+  heading?: string;
+  hint?: CustomHtmlElement[];
+  label?: string;
   maxLength?: number;
+  multiline?: boolean;
+  name: string;
+  nested?: boolean;
+  placeholder?: string;
+  rows?: number;
+  styleAsOptional?: boolean;
+  sxOverride?: SystemStyleObject;
   [key: string]: any;
 }
-
-const sx = {
-  fieldHeading: {
-    fontSize: "28px",
-    paddingTop: "spacer3",
-  },
-};

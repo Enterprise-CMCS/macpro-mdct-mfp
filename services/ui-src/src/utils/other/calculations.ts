@@ -61,7 +61,7 @@ export const calculateShares = (
 
 // Sum fields based on matching keys
 export const sumFields = (
-  fieldData: AnyObject,
+  fieldData: AnyObject = {},
   startsWithId: string,
   endsWithId: string,
   exclusions: string[] = []

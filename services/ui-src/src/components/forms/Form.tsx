@@ -54,7 +54,8 @@ export const Form = ({
   const { userIsEndUser } = useStore().user ?? {};
 
   // determine if fields should be disabled (based on admin roles)
-  const submittedReport = reportStatus === ReportStatus.SUBMITTED;
+  const status = reportStatus || report?.status;
+  const submittedReport = status === ReportStatus.SUBMITTED;
   const fieldInputDisabled =
     !editableByAdmins && (!userIsEndUser || submittedReport);
 
@@ -141,7 +142,7 @@ export const Form = ({
     return formFieldFactory(
       updateFieldsToRenderWithAriaLabels(fieldsToRender),
       {
-        disabled: !!fieldInputDisabled,
+        disabled: fieldInputDisabled,
         autosave,
         validateOnRender,
       }
@@ -154,6 +155,7 @@ export const Form = ({
     if (tableType === FormTableType.CALCULATION) {
       return (
         <CalculationTable
+          disabled={fieldInputDisabled}
           formData={formData}
           id={id}
           key={id}
@@ -163,7 +165,7 @@ export const Form = ({
         />
       );
     }
-    return <></>;
+    return null;
   };
 
   /*
