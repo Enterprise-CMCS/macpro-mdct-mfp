@@ -87,6 +87,9 @@ export const reportTitle = (
     case ReportType.SAR: {
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
     }
+    case ReportType.EXPENDITURE: {
+      return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
+    }
     default:
       assertExhaustive(reportType as never);
       throw new Error(
@@ -177,7 +180,8 @@ export const renderReportSections = (
     return (
       <Box key={section.path}>
         {/* if section does not have children and has content to render, render it */}
-        {showSection && (
+        {/* temporary block expenediture sections till PDF ready. */}
+        {showSection && reportType !== ReportType.EXPENDITURE && (
           <Box>
             <ExportedSectionHeading
               heading={sectionHeading}
