@@ -61,7 +61,7 @@ describe("Test Expenditure Report Dashboard", () => {
 
     //Check if the header and table are present
     expect(
-      screen.getByRole("heading", { name: /MFP Expenditure/i })
+      screen.getByRole("heading", { name: /MFP Financial Reporting Form/i })
     ).toBeVisible();
     expect(
       screen.queryByText(expenditureVerbiage.body.table.caption)
@@ -79,7 +79,7 @@ describe("Test Expenditure Report Dashboard", () => {
 
     //Check if the header and table are present
     expect(
-      screen.getByRole("heading", { name: /MFP Expenditure/i })
+      screen.getByRole("heading", { name: /MFP Financial Reporting Form/i })
     ).toBeVisible();
     expect(
       screen.queryByText(expenditureVerbiage.body.table.caption)
