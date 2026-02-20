@@ -154,13 +154,11 @@ export default {
       buttonLabel: "Instructions",
       intro: [
         {
-          type: "text",
-          as: "p",
+          type: "p",
           content: "<b>State or Territory User instructions</b>",
         },
         {
-          type: "text",
-          as: "p",
+          type: "p",
           content:
             "MFP recipients will use the MFP Financial Reporting Form (commonly referred to as the “ABCD” financial reporting forms) to comply with general financial reporting requirements and provide a mechanism for tracking expenditures under the MFP demonstration.",
         },

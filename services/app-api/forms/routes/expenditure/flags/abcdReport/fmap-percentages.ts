@@ -66,12 +66,12 @@ export const fmapPercentagesRoute: FormRoute = {
               content:
                 ". Additional information about the MFP-Enhanced FMAP can be found in the MFP Program Terms and Conditions (PTC), specifically PTC 22.",
             },
-            {
-              type: "p",
-              content:
-                "In the sections that follow, your state or territory’s share for each service will be calculated using the Enhanced FMAP that you provide here.",
-            },
           ],
+        },
+        {
+          type: "p",
+          content:
+            "In the sections that follow, your state or territory’s share for each service will be calculated using the Enhanced FMAP that you provide here.",
         },
       ],
     },
