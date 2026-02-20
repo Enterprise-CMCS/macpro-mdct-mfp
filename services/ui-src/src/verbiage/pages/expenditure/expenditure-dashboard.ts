@@ -1,6 +1,6 @@
 export default {
   intro: {
-    header: "MFP Expenditure",
+    header: "MFP Financial Reporting Form",
     body: [],
   },
   body: {
@@ -8,7 +8,7 @@ export default {
       caption: "Caption",
       headRow: [
         "",
-        "Submission name",
+        "Report name",
         "Reporting year",
         "Reporting period",
         "Last edited",
@@ -18,9 +18,10 @@ export default {
         "",
       ],
     },
-    empty: "Once you start a Expenditure submission, you can access it here.",
-    callToAction: "Add new MFP Expenditure submission",
-    callToActionAdditions: "Add new MFP Expenditure submission",
+    empty:
+      "All MFP Financial Reporting Forms that are in progress or were previously submitted can be found here.",
+    callToAction: "Add new MFP Financial Reporting Form submission",
+    callToActionAdditions: "Add new MFP Financial Reporting Form submission",
   },
   alertBanner: {
     title: "Title",
@@ -33,9 +34,10 @@ export default {
     actionButtonText: "Return to dashboard",
   },
   modalArchive: {
-    heading: "Are you sure you want to archive this MFP Expenditure Report?",
+    heading:
+      "Are you sure you want to archive this MFP Financial Reporting Form?",
     closeButtonText: "Cancel",
     actionButtonText: "Archive",
-    body: "This action can’t be undone. Once the MFP Expenditure Report is archived, this Report can’t be unarchived or accessed by the state or territory.",
+    body: "This action can’t be undone. Once the MFP Financial Reporting Form is archived, this Report can’t be unarchived or accessed by the state or territory.",
   },
 };
