@@ -180,8 +180,7 @@ export const renderReportSections = (
     return (
       <Box key={section.path}>
         {/* if section does not have children and has content to render, render it */}
-        {/* temporary block expenediture sections till PDF ready. */}
-        {showSection && reportType !== ReportType.EXPENDITURE && (
+        {showSection && (
           <Box>
             <ExportedSectionHeading
               heading={sectionHeading}

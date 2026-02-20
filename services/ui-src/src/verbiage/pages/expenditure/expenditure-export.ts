@@ -23,4 +23,12 @@ export default {
     reportTitle:
       "{{stateName}} MFP Financial Reporting Form for {{reportYear}} - Period {{reportPeriod}}",
   },
+  generalInformationTable: {
+    headings: [],
+  },
+  missingEntry: {
+    noResponse: "",
+    notApplicable: "",
+  },
+  tableHeaders: {},
 };
