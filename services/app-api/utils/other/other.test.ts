@@ -280,7 +280,9 @@ describe("API utility functions", () => {
     it("should create an expenditure report name for Q1", () => {
       const result = createReportName(ReportType.EXPENDITURE, 1, "CO", 2024);
 
-      expect(result).toBe("CO: 2024 - Q1: January 1st to March 31st");
+      expect(result).toBe(
+        "CO: 2024 - Q1 (Quarter 1): January 1st to March 31st"
+      );
     });
 
     it("should create an expenditure report name for Q2", () => {
