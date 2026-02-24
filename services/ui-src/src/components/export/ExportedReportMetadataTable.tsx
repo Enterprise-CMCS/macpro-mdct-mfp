@@ -48,6 +48,15 @@ export const headerRowLabels = (
         verbiage.metadataTableHeaders.status,
         verbiage.metadataTableHeaders.editedBy,
       ];
+    case ReportType.EXPENDITURE:
+      return [
+        verbiage.metadataTableHeaders.reportName,
+        verbiage.metadataTableHeaders.reportingYear,
+        verbiage.metadataTableHeaders.reportingPeriod,
+        verbiage.metadataTableHeaders.lastEdited,
+        verbiage.metadataTableHeaders.editedBy,
+        verbiage.metadataTableHeaders.status,
+      ];
     default:
       assertExhaustive(reportType as never);
       throw new Error(
@@ -82,6 +91,17 @@ export const bodyRowContent = (
           convertDateUtcToEt(report.lastAltered),
           report.status,
           report.lastAlteredBy,
+        ],
+      ];
+    case ReportType.EXPENDITURE:
+      return [
+        [
+          report?.submissionName ?? "",
+          report.reportYear.toString(),
+          report.reportPeriod.toString(),
+          convertDateUtcToEt(report.lastAltered),
+          report.lastAlteredBy,
+          convertDateUtcToEt(report.dueDate),
         ],
       ];
     default:
