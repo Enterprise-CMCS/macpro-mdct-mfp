@@ -82,7 +82,7 @@ describe("<AppRoutes />", () => {
       render(appRoutesComponent("/expenditure"));
 
       const heading = screen.getByRole("heading", { level: 1 });
-      expect(heading.textContent).toContain("MFP Expenditure");
+      expect(heading.textContent).toContain("MFP Financial Reporting Form");
     });
 
     test("does not render /expenditure route when abcdReport flag is false", () => {

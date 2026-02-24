@@ -6,10 +6,10 @@ export const addEditExpenditureReport: FormJson = {
     mode: "onChange",
   },
   heading: {
-    edit: "Edit MFP Expenditure Report submission",
-    add: "Add new MFP Expenditure Report submission",
+    edit: "Edit MFP Financial Reporting Form submission",
+    add: "Add new MFP Financial Reporting Form submission",
     subheading:
-      "Add a new report to start a blank report or copy an existing report.",
+      "Add a new report to start a blank report, or to copy an existing one.",
     subheadingEdit: "[hint text]",
   },
   fields: [
@@ -19,7 +19,7 @@ export const addEditExpenditureReport: FormJson = {
       validation: ValidationType.DROPDOWN_OPTIONAL,
       props: {
         label: "If you want to copy an existing report, select one (optional)",
-        hint: "",
+        hint: "This will pre-populate any fields you’ve added and settings you’ve applied, but will not copy quarterly financial data.",
         options: [],
       },
     },
@@ -28,7 +28,7 @@ export const addEditExpenditureReport: FormJson = {
       type: ReportFormFieldType.DROPDOWN,
       validation: ValidationType.DROPDOWN,
       props: {
-        label: "Reporting Year",
+        label: "Reporting year",
         hint: "",
         options: [],
       },
@@ -38,23 +38,23 @@ export const addEditExpenditureReport: FormJson = {
       type: ReportFormFieldType.DROPDOWN,
       validation: ValidationType.DROPDOWN,
       props: {
-        label: "Reporting Period",
+        label: "Reporting period",
         hint: "",
         options: [
           {
-            label: "Q1: January 1st to March 31st",
+            label: "Q1 (Quarter 1): January 1st to March 31st",
             value: "1",
           },
           {
-            label: "Q2: April 1st to June 30th",
+            label: "Q2 (Quarter 2): April 1st to June 30th",
             value: "2",
           },
           {
-            label: "Q3: July 1st to September 30th",
+            label: "Q3 (Quarter 3): July 1st to September 30th",
             value: "3",
           },
           {
-            label: "Q4: October 1st to December 31st",
+            label: "Q4 (Quarter 4): October 1st to December 31st",
             value: "4",
           },
         ],
