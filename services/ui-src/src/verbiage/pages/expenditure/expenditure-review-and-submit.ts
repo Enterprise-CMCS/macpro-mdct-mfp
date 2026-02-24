@@ -13,7 +13,7 @@ export default {
           sectionHeader: "Ready to Submit?",
           type: "text",
           content:
-            "Double check that everything in your MFP Expenditure Report is accurate. You will be able to make edits after submitting if you contact your Project Officer to unlock your report while it is in “Submitted” status.",
+            "Double check that everything in your MFP Financial Reporting Form is accurate. You will be able to make edits after submitting if you contact your Project Officer to unlock your report while it is in “Submitted” status.",
         },
         {
           sectionHeader: "Compliance review",
@@ -32,7 +32,7 @@ export default {
         actionButtonText: "Submit Report",
         closeButtonText: "Cancel",
       },
-      body: "You won’t be able to make edits after submitting unless you send a request to CMS to unlock your submission. After review, your Project Officer will contact you if there are corrections to be made and your report status will change to “In revision” in the MFP Expenditure Report dashboard.",
+      body: "You won’t be able to make edits after submitting unless you send a request to CMS to unlock your submission. After review, your Project Officer will contact you if there are corrections to be made and your report status will change to “In revision” in the MFP Financial Reporting Form Report dashboard.",
     },
     pageLink: {
       text: "Submit Report",
@@ -47,7 +47,7 @@ export default {
       ],
       modal: {
         unlockModal: {
-          heading: "You unlocked this MFP Expenditure",
+          heading: "You unlocked this MFP Financial Reporting Form",
           actionButtonText: "Return to dashboard",
           body: "Email the state contact and let them know it requires edits.",
         },
@@ -73,7 +73,7 @@ export default {
           type: "text",
           as: "p",
           content:
-            "<b>Email your Project Officer to inform them you submitted the MFP Expenditure Report and it is ready for their review.</b>",
+            "<b>Email your Project Officer to inform them you submitted the MFP Financial Reporting Form Report and it is ready for their review.</b>",
         },
       ],
     },
@@ -81,6 +81,6 @@ export default {
   alertBox: {
     title: "Your form is not ready for submission",
     description:
-      "Some sections of the MFP Expenditure Report have errors or have not been started.",
+      "Some sections of the MFP Financial Reporting Form Report have errors or have not been started.",
   },
 };

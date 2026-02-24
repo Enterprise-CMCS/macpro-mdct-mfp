@@ -34,7 +34,8 @@ export const CreateExpenditureModal = ({
 
   const form = addEditExpenditureReport;
   const resetAlertText = {
-    title: "An MFP Expenditure for this Reporting Period already exists",
+    title:
+      "An MFP Financial Reporting Form for this Reporting Period already exists",
     description:
       "To avoid duplication, please select a different Reporting Year or Reporting Period.",
   };

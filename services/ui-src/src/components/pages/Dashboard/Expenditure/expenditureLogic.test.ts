@@ -11,14 +11,16 @@ describe("expenditureLogic", () => {
   describe("expenditureReportPeriodsMap", () => {
     it("should have correct quarter mappings", () => {
       expect(expenditureReportPeriodsMap[1]).toBe(
-        "Q1: January 1st to March 31st"
+        "Q1 (Quarter 1): January 1st to March 31st"
       );
-      expect(expenditureReportPeriodsMap[2]).toBe("Q2: April 1st to June 30th");
+      expect(expenditureReportPeriodsMap[2]).toBe(
+        "Q2 (Quarter 2): April 1st to June 30th"
+      );
       expect(expenditureReportPeriodsMap[3]).toBe(
-        "Q3: July 1st to September 30th"
+        "Q3 (Quarter 3): July 1st to September 30th"
       );
       expect(expenditureReportPeriodsMap[4]).toBe(
-        "Q4: October 1st to December 31st"
+        "Q4 (Quarter 4): October 1st to December 31st"
       );
     });
   });
@@ -105,7 +107,8 @@ describe("expenditureLogic", () => {
       const reports = [
         {
           id: "report-1",
-          submissionName: "CA: 2025 - Q1: January 1st to March 31st",
+          submissionName:
+            "CA: 2025 - Q1 (Quarter 1): January 1st to March 31st",
           status: ReportStatus.SUBMITTED,
         },
       ];
@@ -115,8 +118,8 @@ describe("expenditureLogic", () => {
       expect(result).toEqual([
         {
           id: "copyReport-report-1",
-          label: "CA: 2025 - Q1: January 1st to March 31st",
-          name: "CA: 2025 - Q1: January 1st to March 31st",
+          label: "CA: 2025 - Q1 (Quarter 1): January 1st to March 31st",
+          name: "CA: 2025 - Q1 (Quarter 1): January 1st to March 31st",
           value: "report-1",
         },
       ]);
@@ -126,7 +129,7 @@ describe("expenditureLogic", () => {
       const reports = [
         {
           id: "report-2",
-          submissionName: "CA: 2025 - Q2: April 1st to June 30th",
+          submissionName: "CA: 2025 - Q2 (Quarter 2): April 1st to June 30th",
           status: ReportStatus.APPROVED,
         },
       ];
@@ -136,8 +139,8 @@ describe("expenditureLogic", () => {
       expect(result).toEqual([
         {
           id: "copyReport-report-2",
-          label: "CA: 2025 - Q2: April 1st to June 30th",
-          name: "CA: 2025 - Q2: April 1st to June 30th",
+          label: "CA: 2025 - Q2 (Quarter 2): April 1st to June 30th",
+          name: "CA: 2025 - Q2 (Quarter 2): April 1st to June 30th",
           value: "report-2",
         },
       ]);
@@ -190,7 +193,8 @@ describe("expenditureLogic", () => {
           copyReport: undefined,
           reportYear: 2025,
           reportPeriod: 1,
-          submissionName: "CA: 2025 - Q1: January 1st to March 31st",
+          submissionName:
+            "CA: 2025 - Q1 (Quarter 1): January 1st to March 31st",
         },
       });
     });
@@ -205,7 +209,7 @@ describe("expenditureLogic", () => {
       const result = prepareExpenditurePayload(activeState, formData);
 
       expect(result.metadata.submissionName).toBe(
-        "TX: 2026 - Q3: July 1st to September 30th"
+        "TX: 2026 - Q3 (Quarter 3): July 1st to September 30th"
       );
       expect(result.metadata.reportPeriod).toBe(3);
     });

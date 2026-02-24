@@ -13,7 +13,7 @@ export const generalInformationRoute: FormRoute = {
     intro: {
       section: "",
       subsection: "General Information",
-      info: "Please contact your Project Officer with questions regarding the MFP Expenditure Report. CMS will also contact the user listed here if there are questions regarding the report.",
+      info: "Enter the name of the staff member who is responsible for the accuracy of this form. CMS will contact the person listed here if there are questions regarding the report. If you have any questions regarding this report, please contact your CMS Project Officer.",
     },
     praDisclosure: [
       {
@@ -45,7 +45,7 @@ export const generalInformationRoute: FormRoute = {
         validation: ValidationType.EMAIL,
         props: {
           label: "Contact email address",
-          hint: "Enter email address. Department or program-wide email addresses ok.",
+          hint: "Enter email address. Department or program-wide email addresses are acceptable.",
         },
       },
     ],
