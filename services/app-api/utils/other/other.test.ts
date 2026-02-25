@@ -280,25 +280,31 @@ describe("API utility functions", () => {
     it("should create an expenditure report name for Q1", () => {
       const result = createReportName(ReportType.EXPENDITURE, 1, "CO", 2024);
 
-      expect(result).toBe("CO: 2024 - Q1: January 1st to March 31st");
+      expect(result).toBe(
+        "CO: 2024 - Q1 (Quarter 1): January 1st to March 31st"
+      );
     });
 
     it("should create an expenditure report name for Q2", () => {
       const result = createReportName(ReportType.EXPENDITURE, 2, "CO", 2024);
 
-      expect(result).toBe("CO: 2024 - Q2: April 1st to June 30th");
+      expect(result).toBe("CO: 2024 - Q2 (Quarter 2): April 1st to June 30th");
     });
 
     it("should create an expenditure report name for Q3", () => {
       const result = createReportName(ReportType.EXPENDITURE, 3, "CO", 2024);
 
-      expect(result).toBe("CO: 2024 - Q3: July 1st to September 30th");
+      expect(result).toBe(
+        "CO: 2024 - Q3 (Quarter 3): July 1st to September 30th"
+      );
     });
 
     it("should create an expenditure report name for Q4", () => {
       const result = createReportName(ReportType.EXPENDITURE, 4, "CO", 2024);
 
-      expect(result).toBe("CO: 2024 - Q4: October 1st to December 31st");
+      expect(result).toBe(
+        "CO: 2024 - Q4 (Quarter 4): October 1st to December 31st"
+      );
     });
   });
 });

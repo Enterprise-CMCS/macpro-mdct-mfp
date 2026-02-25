@@ -11,7 +11,7 @@ import { supplementalServicesRoute } from "./supplemental-services";
 // Use with LaunchDarkly flag: abcdReport
 export const expenditureReportJson: ReportJsonFile = {
   type: ReportType.EXPENDITURE,
-  name: "MFP Expenditure Report",
+  name: "MFP Financial Reporting Form",
   basePath: "/expenditure",
   version: "EXPENDITURE_2025-07-10",
   entities: {

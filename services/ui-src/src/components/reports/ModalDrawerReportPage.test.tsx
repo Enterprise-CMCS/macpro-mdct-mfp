@@ -114,6 +114,13 @@ const mockReportStoreGivenFieldData = (fieldData: AnyObject) => {
 };
 
 describe("<ModelDrawerReportPage />", () => {
+  afterEach(async () => {
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    jest.clearAllMocks();
+  });
+
   describe("Test ModalDrawerReportPage without entities", () => {
     beforeEach(() => {
       mockedUseStore.mockReturnValue(mockReportStoreGivenFieldData({}));
@@ -131,9 +138,6 @@ describe("<ModelDrawerReportPage />", () => {
   });
 
   describe("Test ModalDrawerReportPage with target populations", () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
     const alertText =
       "You must have at least one default target population applicable to your MFP Demonstration";
     test("should render the view", () => {
@@ -176,10 +180,6 @@ describe("<ModelDrawerReportPage />", () => {
           mockModalDrawerReportPageJson
         )
       );
-    });
-
-    afterEach(() => {
-      jest.clearAllMocks();
     });
 
     test("ModalDrawerReportPage should render the view", () => {

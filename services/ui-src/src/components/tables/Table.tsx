@@ -57,7 +57,7 @@ export const Table = ({
       )}
       <Tbody sx={{ ...sxOverride }}>
         {/* if children prop is passed, just render the children */}
-        {children && children}
+        {children}
         {/* if content prop is passed, parse and render rows and cells */}
         {content.bodyRows &&
           content.bodyRows!.map((row: string[], index: number) => (
