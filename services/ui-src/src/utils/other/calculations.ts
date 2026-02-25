@@ -1,4 +1,4 @@
-import { AnyObject } from "types";
+import { AnyObject, DynamicFieldShape } from "types";
 
 //summation of a row in a table, adjust the startIndex if you want to skip the first column
 export const sumOfRow = (row: string[], startIndex: number = 0) => {
@@ -91,6 +91,15 @@ export const sumFields = (
   return toDecimal(totalCents);
 };
 
+export const sumDynamicFields = (values: DynamicFieldShape[], key: string) => {
+  const totalCents = values.reduce((sum, value) => {
+    const n = Number(value[key]);
+    return sum + (Number.isNaN(n) ? 0 : toCents(n));
+  }, 0);
+
+  return toDecimal(totalCents);
+};
+
 export const isEmptyOrNaN = (value: number | string) =>
   value === "" || Number.isNaN(Number(value));
 
@@ -138,6 +147,75 @@ export const fieldTableTotals = ({
     table: tableShares,
   };
 };
+
+export const dynamicFieldTableTotals = ({
+  fieldData,
+  dynamicFieldId,
+  dynamicTemplateId,
+  fieldValue,
+  fieldSuffixesToCalculate,
+  percentage,
+  tableId,
+}: DynamicFieldTableTotalsType): {
+  field: CalculatedSharesType;
+  table: CalculatedSharesType;
+  template: CalculatedSharesType;
+} => {
+  // Skip current and totals fields
+  const exclusions = Object.values(fieldSuffixesToCalculate).flatMap(
+    (suffix) => [`${dynamicTemplateId}-${suffix}`, `${tableId}-${suffix}`]
+  );
+
+  const keys = Object.keys(fieldSuffixesToCalculate) as Array<
+    keyof typeof fieldSuffixesToCalculate
+  >;
+  const fieldShares = calculateShares(fieldValue, percentage);
+
+  const rows = fieldData?.[dynamicTemplateId] || [];
+  const rowsToCalculate = rows.filter(
+    (row: DynamicFieldShape) => row.id !== dynamicFieldId
+  );
+
+  const templateShares = keys.reduce((sum, key) => {
+    const suffix = fieldSuffixesToCalculate[key];
+    const currentValue = getNumberValue(fieldShares[key]);
+    const currentSum = sumDynamicFields(rowsToCalculate, suffix);
+    const totalCents = toCents(currentValue) + toCents(currentSum);
+    sum[key] = toDecimal(totalCents);
+
+    return sum;
+  }, {} as CalculatedSharesType);
+
+  const tableShares = keys.reduce((sum, key) => {
+    const suffix = fieldSuffixesToCalculate[key];
+    const currentValue = getNumberValue(templateShares[key]);
+    const currentSum = sumFields(fieldData, tableId, suffix, exclusions);
+    const totalCents = toCents(currentValue) + toCents(currentSum);
+    sum[key] = toDecimal(totalCents);
+
+    return sum;
+  }, {} as CalculatedSharesType);
+
+  return {
+    field: fieldShares,
+    table: tableShares,
+    template: templateShares,
+  };
+};
+
+interface DynamicFieldTableTotalsType {
+  fieldData: AnyObject;
+  dynamicFieldId: string;
+  dynamicTemplateId: string;
+  fieldSuffixesToCalculate: {
+    percentageShare: string;
+    remainingShare: string;
+    total: string;
+  };
+  fieldValue: number | string;
+  percentage: number;
+  tableId: string;
+}
 
 interface FieldTableTotalsType {
   fieldData: AnyObject;

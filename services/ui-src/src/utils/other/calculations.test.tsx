@@ -1,4 +1,5 @@
 // utils
+import { DynamicFieldShape } from "types";
 import {
   calculateShares,
   fieldTableTotals,
@@ -6,19 +7,33 @@ import {
   isEmptyOrNaN,
   perOfTwoRows,
   sumFields,
+  sumDynamicFields,
   sumOfRow,
   sumOfTwoRows,
+  dynamicFieldTableTotals,
 } from "./calculations";
+import {
+  mockDynamicFieldId,
+  mockDynamicTemplateId,
+  mockFieldId,
+  mockTableId,
+} from "utils/testing/mockForm";
 
 const row1 = ["label", "1", "2", "3", "4", "5"];
 const row2 = ["label", "2", "3", "4", "5", "6"];
 const rowWithNaN = ["label", "abc", "3", "4", "5", "6"];
+const rowWithNaNAboveStartIndex = ["1", "abc", "3", "4", "5", "6"];
 
 describe("utils/calculations", () => {
   describe("sumOfRow()", () => {
     test("returns sum of array with start index of 1", () => {
       const sum = sumOfRow(row1, 1);
       expect(sum).toBe("15");
+    });
+
+    test("returns sum of array, skipping NaN above start index", () => {
+      const sum = sumOfRow(rowWithNaNAboveStartIndex, 0);
+      expect(sum).toBe("19");
     });
 
     test("returns NaN for array that includes non-number", () => {
@@ -114,6 +129,10 @@ describe("utils/calculations", () => {
           id: "mock2",
           name: "10",
         },
+        {
+          id: "mock3",
+          name: "N/A",
+        },
       ],
 
       [`${startsWithId}-noMatch`]: 10,
@@ -132,6 +151,37 @@ describe("utils/calculations", () => {
         `${startsWithId}_v1-${endsWithId}`,
       ]);
       expect(sum).toEqual(20);
+    });
+
+    test("returns zero for missing fieldData", () => {
+      const sum = sumFields(undefined, startsWithId, endsWithId);
+      expect(sum).toEqual(0);
+    });
+  });
+
+  describe("sumDynamicFields()", () => {
+    const key = "mockCalculationId";
+    const values: DynamicFieldShape[] = [
+      {
+        id: "mock1",
+        name: "mock1",
+        [key]: "12.34",
+      },
+      {
+        id: "mock2",
+        name: "mock2",
+        [key]: "3.14",
+      },
+      {
+        id: "mock2",
+        name: "mock2",
+        noMatch: "10",
+      },
+    ];
+
+    test("returns sum of field values by key", () => {
+      const sum = sumDynamicFields(values, key);
+      expect(sum).toBe(15.48);
     });
   });
 
@@ -166,8 +216,8 @@ describe("utils/calculations", () => {
   describe("fieldTableTotals()", () => {
     const fieldValue = 123;
     const percentage = 87;
-    const tableId = "mockTableId";
-    const fieldId = `${tableId}_mockFieldId`;
+    const mockTableId = "mockTableId";
+    const mockFieldId = `${mockTableId}_mockFieldId`;
     const fieldSuffixesToCalculate = {
       percentageShare: "mockPercentageShare",
       remainingShare: "mockRemainingShare",
@@ -175,27 +225,27 @@ describe("utils/calculations", () => {
     };
 
     const fieldData = {
-      [`${fieldId}-mockTotal`]: 0,
-      [`${fieldId}-mockPercentageShare`]: 0,
-      [`${fieldId}-mockRemainingShare`]: 0,
+      [`${mockFieldId}-mockTotal`]: 0,
+      [`${mockFieldId}-mockPercentageShare`]: 0,
+      [`${mockFieldId}-mockRemainingShare`]: 0,
 
-      [`${fieldId}2-mockTotal`]: 123,
-      [`${fieldId}2-mockPercentageShare`]: 107.01,
-      [`${fieldId}2-mockRemainingShare`]: 15.99,
+      [`${mockFieldId}2-mockTotal`]: 123,
+      [`${mockFieldId}2-mockPercentageShare`]: 107.01,
+      [`${mockFieldId}2-mockRemainingShare`]: 15.99,
 
-      [`${tableId}-mockTotal`]: 123,
-      [`${tableId}-mockPercentageShare`]: 107.01,
-      [`${tableId}-mockRemainingShare`]: 15.99,
+      [`${mockTableId}-mockTotal`]: 123,
+      [`${mockTableId}-mockPercentageShare`]: 107.01,
+      [`${mockTableId}-mockRemainingShare`]: 15.99,
     };
 
     test("returns object with sum totals for fields", () => {
       const totals = fieldTableTotals({
         fieldData,
-        fieldId,
+        fieldId: mockFieldId,
         fieldSuffixesToCalculate,
         fieldValue,
         percentage,
-        tableId,
+        tableId: mockTableId,
       });
 
       expect(totals).toEqual({
@@ -216,11 +266,11 @@ describe("utils/calculations", () => {
     test("skips empty value", () => {
       const totals = fieldTableTotals({
         fieldData,
-        fieldId,
+        fieldId: mockFieldId,
         fieldSuffixesToCalculate,
         fieldValue: "",
         percentage,
-        tableId,
+        tableId: mockTableId,
       });
 
       expect(totals).toEqual({
@@ -241,11 +291,11 @@ describe("utils/calculations", () => {
     test("skips N/A value", () => {
       const totals = fieldTableTotals({
         fieldData,
-        fieldId,
+        fieldId: mockFieldId,
         fieldSuffixesToCalculate,
         fieldValue: "N/A",
         percentage,
-        tableId,
+        tableId: mockTableId,
       });
 
       expect(totals).toEqual({
@@ -254,6 +304,166 @@ describe("utils/calculations", () => {
           percentageShare: 0,
           remainingShare: 0,
           total: "N/A",
+        },
+        table: {
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
+        },
+      });
+    });
+  });
+
+  describe("dynamicFieldTableTotals()", () => {
+    const fieldValue = 123;
+    const percentage = 87;
+    const fieldSuffixesToCalculate = {
+      percentageShare: "mockPercentageShare",
+      remainingShare: "mockRemainingShare",
+      total: "mockTotal",
+    };
+
+    const fieldData = {
+      [mockDynamicTemplateId]: [
+        {
+          id: mockDynamicFieldId,
+          mockTotal: 123.45,
+          mockPercentageShare: 123.45,
+          mockRemainingShare: 0,
+        },
+      ],
+      [`${mockDynamicTemplateId}-mockTotal`]: 123.45,
+      [`${mockDynamicTemplateId}-mockPercentageShare`]: 123.45,
+      [`${mockDynamicTemplateId}-mockRemainingShare`]: 0,
+
+      [`${mockFieldId}-mockTotal`]: 123,
+      [`${mockFieldId}-mockPercentageShare`]: 107.01,
+      [`${mockFieldId}-mockRemainingShare`]: 15.99,
+
+      [`${mockTableId}-mockTotal`]: 123,
+      [`${mockTableId}-mockPercentageShare`]: 107.01,
+      [`${mockTableId}-mockRemainingShare`]: 15.99,
+    };
+
+    test("returns object with sum totals for fields", () => {
+      const totals = dynamicFieldTableTotals({
+        dynamicFieldId: mockDynamicFieldId,
+        dynamicTemplateId: mockDynamicTemplateId,
+        fieldData,
+        fieldSuffixesToCalculate,
+        fieldValue,
+        percentage,
+        tableId: mockTableId,
+      });
+
+      expect(totals).toEqual({
+        field: {
+          percentage: 87,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
+        },
+        template: {
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
+        },
+        table: {
+          percentageShare: 214.02,
+          remainingShare: 31.98,
+          total: 246,
+        },
+      });
+    });
+
+    test("skips empty value", () => {
+      const totals = dynamicFieldTableTotals({
+        dynamicFieldId: mockDynamicFieldId,
+        dynamicTemplateId: mockDynamicTemplateId,
+        fieldData,
+        fieldSuffixesToCalculate,
+        fieldValue: "",
+        percentage,
+        tableId: mockTableId,
+      });
+
+      expect(totals).toEqual({
+        field: {
+          total: "",
+          percentage: 87,
+          percentageShare: 0,
+          remainingShare: 0,
+        },
+        template: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
+        table: {
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
+        },
+      });
+    });
+
+    test("skips N/A value", () => {
+      const totals = dynamicFieldTableTotals({
+        dynamicFieldId: mockDynamicFieldId,
+        dynamicTemplateId: mockDynamicTemplateId,
+        fieldData,
+        fieldSuffixesToCalculate,
+        fieldValue: "N/A",
+        percentage,
+        tableId: mockTableId,
+      });
+
+      expect(totals).toEqual({
+        field: {
+          percentage: 87,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: "N/A",
+        },
+        template: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
+        table: {
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
+        },
+      });
+    });
+
+    test("skips empty dynamic data", () => {
+      const updatedFieldData = {
+        ...fieldData,
+        [mockDynamicTemplateId]: undefined,
+      };
+      const totals = dynamicFieldTableTotals({
+        dynamicFieldId: mockDynamicFieldId,
+        dynamicTemplateId: mockDynamicTemplateId,
+        fieldData: updatedFieldData,
+        fieldSuffixesToCalculate,
+        fieldValue: "N/A",
+        percentage,
+        tableId: mockTableId,
+      });
+
+      expect(totals).toEqual({
+        field: {
+          percentage: 87,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: "N/A",
+        },
+        template: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         table: {
           percentageShare: 107.01,

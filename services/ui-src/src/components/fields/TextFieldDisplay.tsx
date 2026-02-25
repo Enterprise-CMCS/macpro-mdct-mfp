@@ -13,18 +13,18 @@ import { CharacterCounter } from "components";
 export const TextFieldDisplay = ({
   ariaLabelledby,
   autoComplete,
-  disabled,
+  disabled = false,
   errorMessage,
   hint,
   heading,
   id,
   label,
   maxLength,
-  multiline,
+  multiline = false,
   name,
   onChange,
   onBlur,
-  nested,
+  nested = false,
   placeholder,
   rows,
   sxOverride,
@@ -81,16 +81,16 @@ interface Props {
   id: string;
   label?: ReactNode;
   maxLength?: number;
+  multiline?: boolean;
   name: string;
   nested?: boolean;
   onBlur: FocusEventHandler<HTMLInputElement>;
   onChange: ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
   readOnly?: boolean;
+  rows?: number;
   sxOverride?: SystemStyleObject;
   value?: string;
-  multiline?: boolean;
-  rows?: number;
 }
 
 const sx = {

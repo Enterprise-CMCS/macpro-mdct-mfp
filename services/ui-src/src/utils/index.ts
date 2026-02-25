@@ -29,13 +29,14 @@ export * from "./validation/validation";
 // verbiage
 export * from "./verbiage/verbiage";
 // other
+export * from "./other/calculations";
+export * from "./other/clean";
 export * from "./other/email";
+export * from "./other/export";
 export * from "./other/mask";
+export * from "./other/parsing";
 export * from "./other/rendering";
 export * from "./other/scrollToTop";
+export * from "./other/shim";
 export * from "./other/time";
 export * from "./other/useBreakpoint";
-export * from "./other/parsing";
-export * from "./other/export";
-export * from "./other/calculations";
-export * from "./other/shim";

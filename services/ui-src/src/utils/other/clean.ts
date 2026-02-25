@@ -2,7 +2,7 @@ import {
   checkRatioInputAgainstRegexes,
   checkStandardNumberInputAgainstRegexes,
 } from "./checkInputValidity";
-import { maskMap } from "./mask";
+import { applyMask, maskMap } from "./mask";
 
 interface CleanedValue {
   isValid: boolean;
@@ -63,3 +63,28 @@ export const makeStringParseableForDatabase = (
   // convert to parseable float
   return value.replace(/[^\d.-]/g, "");
 };
+
+export const cleanAndMaskNumberValues = ({
+  decimalPlacesToRoundTo,
+  mask,
+  value,
+}: CleanedFieldProps) => {
+  // mask value and set as display value
+  const formattedFieldValue = applyMask(value, mask, decimalPlacesToRoundTo);
+  const maskedFieldValue = formattedFieldValue.maskedValue;
+  // this value eventually gets sent to the database, so we need to make it parseable as a number again
+  const cleanedFieldValue = formattedFieldValue.isValid
+    ? makeStringParseableForDatabase(maskedFieldValue, mask)
+    : maskedFieldValue;
+
+  return {
+    cleanedFieldValue,
+    maskedFieldValue,
+  };
+};
+
+interface CleanedFieldProps {
+  decimalPlacesToRoundTo?: number;
+  mask?: keyof typeof maskMap | null;
+  value: string;
+}
