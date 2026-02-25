@@ -17,12 +17,14 @@ export const buildServiceFields = (
   const buildServiceField = (
     suffix: string,
     label: string,
-    props: AnyObject
+    props: AnyObject = {},
+    options: AnyObject = {}
   ) => ({
+    forTableOnly: true,
     id: `${service.id}-${suffix}`,
     type: ReportFormFieldType.NUMBER,
     validation: ValidationType.NUMBER_OPTIONAL,
-    forTableOnly: true,
+    ...options,
     props: {
       label: `${service.label} ${label}`,
       ...props,
@@ -40,6 +42,22 @@ export const buildServiceFields = (
 
   for (const fieldType of fieldsToReturn) {
     switch (fieldType) {
+      case ServiceFieldType.CATEGORY:
+        fields.push(
+          buildServiceField(
+            "category",
+            "Category",
+            {
+              dynamicLabel: "Other:",
+            },
+            {
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT_OPTIONAL,
+            }
+          )
+        );
+        break;
+
       case ServiceFieldType.TOTAL_COMPUTABLE:
         fields.push(
           buildServiceField("totalComputable", "Total Computable", {

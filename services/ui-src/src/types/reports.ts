@@ -267,6 +267,7 @@ export interface SelectedOption {
 export interface DynamicFieldShape {
   id: string;
   name: string;
+  [key: string]: string;
 }
 
 /**

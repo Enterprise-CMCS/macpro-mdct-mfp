@@ -1,9 +1,11 @@
 // types
 import {
+  DynamicValidationType,
   FormTableType,
   FormTablesRoute,
   PageTypes,
   ReportFormFieldType,
+  ServiceFieldType,
   ValidationType,
 } from "../../../../../utils/types";
 // utils
@@ -30,6 +32,50 @@ const supplementalServicesFootList = [
   },
 ];
 
+// Dynamic rows
+const dynamicRowId = `${supplementalServicesTableId}_otherCategories`;
+const supplementalServicesDynamicBodyList = [
+  {
+    id: dynamicRowId,
+    label: "Other Categories",
+  },
+];
+
+const dynamicRowsTemplate = {
+  forTableOnly: true,
+  id: dynamicRowId,
+  props: {
+    label: "Other Categories",
+    dynamicFields: supplementalServicesDynamicBodyList.flatMap((service) =>
+      buildServiceFields(service, [
+        ServiceFieldType.CATEGORY,
+        ServiceFieldType.TOTAL_COMPUTABLE,
+        ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+        ServiceFieldType.TOTAL_FEDERAL_SHARE,
+      ])
+    ),
+  },
+  type: ReportFormFieldType.DYNAMIC_OBJECT,
+  validation: {
+    type: ValidationType.DYNAMIC_OPTIONAL,
+    options: {
+      dynamicFields: {
+        [ServiceFieldType.CATEGORY]: DynamicValidationType.TEXT_OPTIONAL,
+        [ServiceFieldType.TOTAL_COMPUTABLE]:
+          DynamicValidationType.NUMBER_OPTIONAL,
+        [ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE]:
+          DynamicValidationType.NUMBER_OPTIONAL,
+        [ServiceFieldType.TOTAL_FEDERAL_SHARE]:
+          DynamicValidationType.NUMBER_OPTIONAL,
+      },
+    },
+  },
+  verbiage: {
+    buttonText: "Add other category",
+    hint: "To add an additional category, click the “Add other category” button below.",
+  },
+};
+
 export const supplementalServicesRoute: FormTablesRoute = {
   name: "Supplemental Services",
   path: "/expenditure/supplemental-services",
@@ -55,6 +101,7 @@ export const supplementalServicesRoute: FormTablesRoute = {
           const bodyFields = buildServiceFields(service);
           return [service.label, ...bodyFields];
         }),
+        dynamicRowsTemplate,
         footRows: supplementalServicesFootList.map((service) => {
           const footFields = buildServiceFields(service);
           return ["Totals", ...footFields];
@@ -73,6 +120,10 @@ export const supplementalServicesRoute: FormTablesRoute = {
         buildServiceFields(service)
       ),
       ...supplementalServicesFootList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      dynamicRowsTemplate,
+      ...supplementalServicesDynamicBodyList.flatMap((service) =>
         buildServiceFields(service)
       ),
       {

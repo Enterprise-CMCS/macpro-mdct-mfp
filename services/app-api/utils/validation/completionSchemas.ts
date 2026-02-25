@@ -7,12 +7,7 @@ import {
   number as yupNumber,
 } from "yup";
 // types
-import {
-  Choice,
-  DynamicOptions,
-  DynamicValidationType,
-  TextOptions,
-} from "../types";
+import { Choice, TextOptions } from "../types";
 // utils
 import { schemaMap } from "./schemaMap";
 
@@ -237,20 +232,6 @@ export const radio = () =>
   radioSchema().min(1, error.REQUIRED_GENERIC).required();
 export const radioOptional = () => radioSchema().notRequired().nullable();
 
-// DYNAMIC
-export const dynamic = (options?: DynamicOptions) =>
-  array()
-    .min(1)
-    .of(
-      object().shape({
-        id: textSchema(),
-        name: completionSchemaMap[
-          options?.validationType || DynamicValidationType.TEXT
-        ],
-      })
-    )
-    .required(error.REQUIRED_GENERIC);
-
 // NESTED
 export const nested = (
   fieldSchema: Function,
@@ -287,7 +268,7 @@ export const completionSchemaMap: any = {
   date: date(),
   dateOptional: dateOptional(),
   dropdown: dropdown(),
-  dynamic: (options?: DynamicOptions) => dynamic(options),
+  dynamic: schemaMap.dynamic,
   dynamicOptional: schemaMap.dynamicOptional,
   email: email(),
   emailOptional: emailOptional(),

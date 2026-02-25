@@ -3,9 +3,9 @@ import {
   Choice,
   ComparatorMap,
   DynamicOptions,
-  DynamicValidationType,
   NumberOptions,
   TextOptions,
+  ValidationType,
 } from "../types";
 import {
   checkRatioInputAgainstRegexes,
@@ -232,18 +232,24 @@ export const radio = () =>
 export const radioOptional = () => radio().notRequired();
 
 // DYNAMIC
-export const dynamic = (options?: DynamicOptions) =>
+export const dynamic = (options?: DynamicOptions, min = 1) =>
   array()
-    .min(1)
+    .min(min)
     .of(
       object().shape({
-        id: text(),
-        name: schemaMap[options?.validationType || DynamicValidationType.TEXT],
+        id: schemaMap[ValidationType.TEXT],
+        name: schemaMap[ValidationType.TEXT],
+        ...Object.fromEntries(
+          Object.entries(options?.dynamicFields || {}).map(([key, value]) => [
+            key,
+            schemaMap[value],
+          ])
+        ),
       })
     )
     .required(error.REQUIRED_GENERIC);
 export const dynamicOptional = (options?: DynamicOptions) =>
-  dynamic(options).notRequired().nullable();
+  dynamic(options, 0).notRequired().nullable();
 
 // NESTED
 export const nested = (
