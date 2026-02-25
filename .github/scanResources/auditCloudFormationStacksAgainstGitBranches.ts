@@ -1,5 +1,6 @@
 #!/usr/bin/env -S tsx
 import fs from "node:fs";
+import path from "node:path";
 import { StackStatus } from "@aws-sdk/client-cloudformation";
 import { Octokit } from "@octokit/rest";
 import { getAccountIdentifier } from "./utils";
@@ -74,10 +75,13 @@ async function main() {
     process.exit(1);
   }
 
-  const repoEnding = repoName.replace(/^macpro-mdct-/, "");
+  const repoEnding = repoName
+    .replace(/^macpro-mdct-/, "")
+    .replace(/[^a-zA-Z]/g, "");
   const accountIdentifier = await getAccountIdentifier();
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const outputFile = `orphaned-stacks-${repoEnding}-${accountIdentifier}-${timestamp}.txt`;
+  const outputFileName = `orphaned-stacks-${repoEnding}-${accountIdentifier}-${timestamp}.txt`;
+  const outputFile = path.join(process.cwd(), outputFileName);
 
   const log = (line: string = "") => {
     console.log(line);
