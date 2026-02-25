@@ -64,7 +64,7 @@ class AuthManager {
 }
 
 // We're using a debounce because this can fire a lot...
-const debounce = (func: Function, timeout = 2000) => {
+export const debounce = (func: Function, timeout = 2000) => {
   let timer: any;
   return (...args: any[]) => {
     clearTimeout(timer);

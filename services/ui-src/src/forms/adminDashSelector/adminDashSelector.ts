@@ -21,7 +21,7 @@ const reportChoices = [
   },
   {
     id: "Expenditure",
-    label: "MFP Expenditure",
+    label: "MFP Financial Reporting Form",
   },
 ];
 

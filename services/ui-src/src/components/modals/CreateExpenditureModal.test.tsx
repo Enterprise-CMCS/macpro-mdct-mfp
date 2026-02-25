@@ -100,10 +100,10 @@ describe("<CreateExpenditureModal />", () => {
       submitButtonText: string
     ) => {
       const yearDropdown = screen.getByLabelText(
-        "Reporting Year"
+        "Reporting year"
       ) as HTMLInputElement;
       const periodDropdown = screen.getByLabelText(
-        "Reporting Period"
+        "Reporting period"
       ) as HTMLInputElement;
       const submitButton = screen.getByRole("button", {
         name: submitButtonText,
@@ -119,7 +119,7 @@ describe("<CreateExpenditureModal />", () => {
       render(modalComponent);
       const header = screen.getByRole("heading", { level: 1 });
       expect(header.textContent).toEqual(
-        "Add new MFP Expenditure Report submission"
+        "Add new MFP Financial Reporting Form submission"
       );
       await fillForm("2025", "1", "Save");
       await act(async () => {
@@ -162,10 +162,10 @@ describe("<CreateExpenditureModal />", () => {
         render(modalComponent);
 
         const yearDropdown = screen.getByLabelText(
-          "Reporting Year"
+          "Reporting year"
         ) as HTMLInputElement;
         const periodDropdown = screen.getByLabelText(
-          "Reporting Period"
+          "Reporting period"
         ) as HTMLInputElement;
         const returnButton = screen.getByRole("button", {
           name: "Save",
@@ -257,7 +257,8 @@ describe("<CreateExpenditureModal />", () => {
             },
             {
               id: "report-2",
-              submissionName: "CA: 2024 - Q2: April 1st to June 30th",
+              submissionName:
+                "CA: 2024 - Q2 (Quarter 2): April 1st to June 30th",
               status: ReportStatus.APPROVED,
             },
           ],
@@ -296,10 +297,10 @@ describe("<CreateExpenditureModal />", () => {
         });
 
         const yearDropdown = screen.getByLabelText(
-          "Reporting Year"
+          "Reporting year"
         ) as HTMLSelectElement;
         const periodDropdown = screen.getByLabelText(
-          "Reporting Period"
+          "Reporting period"
         ) as HTMLSelectElement;
         const copyReportDropdown = screen.getByLabelText(
           "If you want to copy an existing report, select one (optional)"
@@ -437,10 +438,10 @@ describe("<CreateExpenditureModal />", () => {
       render(modalComponent);
 
       const yearDropdown = screen.getByLabelText(
-        "Reporting Year"
+        "Reporting year"
       ) as HTMLInputElement;
       const periodDropdown = screen.getByLabelText(
-        "Reporting Period"
+        "Reporting period"
       ) as HTMLInputElement;
 
       await act(async () => {
@@ -450,7 +451,7 @@ describe("<CreateExpenditureModal />", () => {
 
       expect(
         screen.getByText(
-          "An MFP Expenditure for this Reporting Period already exists"
+          "An MFP Financial Reporting Form for this Reporting Period already exists"
         )
       ).toBeInTheDocument();
       expect(
@@ -478,10 +479,10 @@ describe("<CreateExpenditureModal />", () => {
       render(modalComponent);
 
       const yearDropdown = screen.getByLabelText(
-        "Reporting Year"
+        "Reporting year"
       ) as HTMLInputElement;
       const periodDropdown = screen.getByLabelText(
-        "Reporting Period"
+        "Reporting period"
       ) as HTMLInputElement;
 
       await act(async () => {
@@ -491,7 +492,7 @@ describe("<CreateExpenditureModal />", () => {
 
       expect(
         screen.queryByText(
-          "An MFP Expenditure for this Reporting Period already exists"
+          "An MFP Financial Reporting Form for this Reporting Period already exists"
         )
       ).not.toBeInTheDocument();
     });
@@ -507,10 +508,10 @@ describe("<CreateExpenditureModal />", () => {
       render(modalComponent);
 
       const yearDropdown = screen.getByLabelText(
-        "Reporting Year"
+        "Reporting year"
       ) as HTMLInputElement;
       const periodDropdown = screen.getByLabelText(
-        "Reporting Period"
+        "Reporting period"
       ) as HTMLInputElement;
 
       await act(async () => {
@@ -520,7 +521,7 @@ describe("<CreateExpenditureModal />", () => {
 
       expect(
         screen.queryByText(
-          "An MFP Expenditure for this Reporting Period already exists"
+          "An MFP Financial Reporting Form for this Reporting Period already exists"
         )
       ).not.toBeInTheDocument();
     });
@@ -536,10 +537,10 @@ describe("<CreateExpenditureModal />", () => {
       render(modalComponent);
 
       const yearDropdown = screen.getByLabelText(
-        "Reporting Year"
+        "Reporting year"
       ) as HTMLInputElement;
       const periodDropdown = screen.getByLabelText(
-        "Reporting Period"
+        "Reporting period"
       ) as HTMLInputElement;
       const submitButton = screen.getByRole("button", {
         name: "Save",
@@ -564,10 +565,10 @@ describe("<CreateExpenditureModal />", () => {
       render(modalComponent);
 
       const yearDropdown = screen.getByLabelText(
-        "Reporting Year"
+        "Reporting year"
       ) as HTMLInputElement;
       const periodDropdown = screen.getByLabelText(
-        "Reporting Period"
+        "Reporting period"
       ) as HTMLInputElement;
 
       // First select values that trigger the alert
@@ -578,7 +579,7 @@ describe("<CreateExpenditureModal />", () => {
 
       expect(
         screen.getByText(
-          "An MFP Expenditure for this Reporting Period already exists"
+          "An MFP Financial Reporting Form for this Reporting Period already exists"
         )
       ).toBeInTheDocument();
 
@@ -589,7 +590,7 @@ describe("<CreateExpenditureModal />", () => {
 
       expect(
         screen.queryByText(
-          "An MFP Expenditure for this Reporting Period already exists"
+          "An MFP Financial Reporting Form for this Reporting Period already exists"
         )
       ).not.toBeInTheDocument();
     });

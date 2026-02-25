@@ -63,7 +63,7 @@ export default {
       },
     },
     EXPENDITURE: {
-      title: "MFP Expenditure",
+      title: "MFP Financial Reporting Form",
       body: {
         available: "body text",
       },
@@ -73,7 +73,7 @@ export default {
         route: "expenditure",
       },
       accordion: {
-        buttonLabel: "When is the MFP Expenditure due?",
+        buttonLabel: "When is the MFP Financial Reporting Form due?",
         text: "accordion text",
       },
     },
