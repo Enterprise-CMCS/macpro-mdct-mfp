@@ -39,6 +39,10 @@ import {
   mockWPCopiedReport,
   mockFundingSourceFormField,
   mockDynamicFieldId,
+  mockFormId,
+  mockFieldId,
+  mockDynamicTemplateId,
+  mockTempDynamicFieldId,
 } from "utils/testing/setupJest";
 import { AnyObject } from "yup/lib/types";
 
@@ -502,7 +506,7 @@ describe("utils/forms", () => {
         validation: ValidationType.TEXT,
       },
       {
-        id: "mockFieldId",
+        id: mockFieldId,
         type: ReportFormFieldType.TEXT,
         validation: ValidationType.TEXT,
       },
@@ -510,7 +514,7 @@ describe("utils/forms", () => {
 
     const filteredFields = [fields[1]];
 
-    const form = { id: "mockFormId", fields };
+    const form = { id: mockFormId, fields };
     test("filters SAR with no submission count", () => {
       const report = {
         status: ReportStatus.IN_PROGRESS,
@@ -519,7 +523,7 @@ describe("utils/forms", () => {
       } as unknown as ReportShape;
       const result = filterResubmissionData(form, report);
 
-      expect(result).toEqual({ id: "mockFormId", fields: filteredFields });
+      expect(result).toEqual({ id: mockFormId, fields: filteredFields });
     });
 
     test("filters submitted report", () => {
@@ -531,7 +535,7 @@ describe("utils/forms", () => {
       } as unknown as ReportShape;
       const result = filterResubmissionData(form, report);
 
-      expect(result).toEqual({ id: "mockFormId", fields: filteredFields });
+      expect(result).toEqual({ id: mockFormId, fields: filteredFields });
     });
 
     test("does not filter SAR with submission count", () => {
@@ -542,7 +546,7 @@ describe("utils/forms", () => {
       } as unknown as ReportShape;
       const result = filterResubmissionData(form, report);
 
-      expect(result).toEqual({ id: "mockFormId", fields });
+      expect(result).toEqual({ id: mockFormId, fields });
     });
 
     test("does not filter unlocked report", () => {
@@ -554,7 +558,7 @@ describe("utils/forms", () => {
       } as unknown as ReportShape;
       const result = filterResubmissionData(form, report);
 
-      expect(result).toEqual({ id: "mockFormId", fields });
+      expect(result).toEqual({ id: mockFormId, fields });
     });
 
     test("does not resubmitted report", () => {
@@ -566,27 +570,27 @@ describe("utils/forms", () => {
       } as unknown as ReportShape;
       const result = filterResubmissionData(form, report);
 
-      expect(result).toEqual({ id: "mockFormId", fields });
+      expect(result).toEqual({ id: mockFormId, fields });
     });
   });
 
   describe("addDynamicTableRowsValidation()", () => {
     const form = {
-      id: "mockFormId",
+      id: mockFormId,
       fields: [
         {
-          id: "mockFieldId",
+          id: mockFieldId,
           type: ReportFormFieldType.TEXT,
           validation: ValidationType.TEXT,
         },
         {
-          id: "mockForm_mockDynamicField",
+          id: mockDynamicTemplateId,
           type: ReportFormFieldType.DYNAMIC_OBJECT,
           validation: ValidationType.DYNAMIC,
           props: {
             dynamicFields: [
               {
-                id: "mockForm_mockDynamicField-mockId",
+                id: `${mockDynamicTemplateId}-mockId`,
                 type: ReportFormFieldType.TEXT,
                 validation: ValidationType.TEXT,
               },
@@ -598,7 +602,7 @@ describe("utils/forms", () => {
 
     test("adds dynamic validation fields to form", () => {
       const formData = {
-        mockForm_mockDynamicField: [
+        [mockDynamicTemplateId]: [
           {
             id: mockDynamicFieldId,
             mockId: "Mock text",
@@ -607,31 +611,13 @@ describe("utils/forms", () => {
       };
       const result = addDynamicTableRowsValidation(form, formData);
       expect(result).toEqual({
-        id: "mockFormId",
+        id: mockFormId,
         fields: [
+          ...form.fields,
           {
-            id: "mockFieldId",
-            type: "text",
-            validation: "text",
-          },
-          {
-            id: "mockForm_mockDynamicField",
-            props: {
-              dynamicFields: [
-                {
-                  id: "mockForm_mockDynamicField-mockId",
-                  type: "text",
-                  validation: "text",
-                },
-              ],
-            },
-            type: "dynamicObject",
-            validation: "dynamic",
-          },
-          {
-            id: "tempDynamicField_mockForm_mockDynamicField_123a-456b-789c-mockId",
-            type: "text",
-            validation: "text",
+            id: `${mockTempDynamicFieldId}-mockId`,
+            type: ReportFormFieldType.TEXT,
+            validation: ValidationType.TEXT,
           },
         ],
       });
@@ -640,28 +626,8 @@ describe("utils/forms", () => {
     test("ignores dynamic validation if no dynamic data", () => {
       const result = addDynamicTableRowsValidation(form, {});
       expect(result).toEqual({
-        id: "mockFormId",
-        fields: [
-          {
-            id: "mockFieldId",
-            type: "text",
-            validation: "text",
-          },
-          {
-            id: "mockForm_mockDynamicField",
-            props: {
-              dynamicFields: [
-                {
-                  id: "mockForm_mockDynamicField-mockId",
-                  type: "text",
-                  validation: "text",
-                },
-              ],
-            },
-            type: "dynamicObject",
-            validation: "dynamic",
-          },
-        ],
+        id: mockFormId,
+        fields: [...form.fields],
       });
     });
   });

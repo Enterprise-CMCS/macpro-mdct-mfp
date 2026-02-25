@@ -216,8 +216,6 @@ describe("utils/calculations", () => {
   describe("fieldTableTotals()", () => {
     const fieldValue = 123;
     const percentage = 87;
-    const mockTableId = "mockTableId";
-    const mockFieldId = `${mockTableId}_mockFieldId`;
     const fieldSuffixesToCalculate = {
       percentageShare: "mockPercentageShare",
       remainingShare: "mockRemainingShare",

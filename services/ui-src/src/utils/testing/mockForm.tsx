@@ -724,6 +724,7 @@ export const mockTableId = `${mockFormId}_mockTableId`;
 export const mockFieldId = `${mockTableId}_mockFieldId`;
 export const mockDynamicFieldId = "123a-456b-789c";
 export const mockDynamicTemplateId = `${mockTableId}_mockDynamicFieldId`;
+export const mockTempDynamicFieldId = `tempDynamicField_${mockDynamicTemplateId}_${mockDynamicFieldId}`;
 
 export const mockDynamicRowsTemplate = {
   id: mockDynamicTemplateId,
