@@ -16,20 +16,29 @@ import {
   isFieldElement,
   ReportStatus,
   ReportShape,
-  FormJson,
 } from "types";
 // utils
-import { filterFormData, parseCustomHtml, useFindRoute, useStore } from "utils";
+import {
+  addDynamicTableRowsValidation,
+  filterFormData,
+  filterResubmissionData,
+  parseCustomHtml,
+  useFindRoute,
+  useStore,
+} from "utils";
 
-export const StandardReportPage = ({ route, validateOnRender }: Props) => {
+export const StandardReportPage = ({
+  route,
+  validateOnRender = false,
+}: Props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const { report } = useStore();
+  const { report = {} as ReportShape } = useStore();
   const { updateReport } = useContext(ReportContext);
   const navigate = useNavigate();
   const { full_name, state } = useStore().user ?? {};
   const { nextRoute } = useFindRoute(
-    report?.formTemplate.flatRoutes!,
-    report?.formTemplate.basePath
+    report.formTemplate?.flatRoutes,
+    report.formTemplate?.basePath
   );
 
   const onError = () => {
@@ -39,9 +48,9 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
   const onSubmit = async (enteredData: AnyObject) => {
     setSubmitting(true);
     const reportKeys = {
-      reportType: report?.reportType,
+      reportType: report.reportType,
       state: state,
-      id: report?.id,
+      id: report.id,
     };
     const filteredFormData = filterFormData(
       enteredData,
@@ -60,50 +69,28 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
     navigate(nextRoute);
   };
 
-  const filterResubmissionData = (formData: FormJson) => {
-    //make deep copies of formData
-    const formDataCopy = structuredClone(formData);
-    const formDataFields = structuredClone(formData?.fields);
+  const formData = report.fieldData;
+  let form = filterResubmissionData(route.form, report);
+  form = addDynamicTableRowsValidation(form, formData);
 
-    const hideResubmissionField = () => {
-      const removeResubmissionDataFields: any[] = formDataFields.filter(
-        (data: AnyObject) =>
-          data.id !== "generalInformation_resubmissionInformation"
-      );
-      formDataCopy.fields = [...removeResubmissionDataFields];
-
-      return formDataCopy;
-    };
-
-    if (
-      (report?.reportType === "SAR" && !report?.submissionCount) ||
-      (report?.status === ReportStatus.SUBMITTED &&
-        report?.submissionCount! === 1 &&
-        report.locked)
-    ) {
-      return hideResubmissionField();
-    } else {
-      return formDataCopy;
-    }
-  };
   return (
     <Box>
-      {route.verbiage?.intro && (
+      {route.verbiage.intro && (
         <ReportPageIntro
           accordion={route.verbiage.accordion}
-          reportPeriod={report?.reportPeriod}
-          reportYear={report?.reportYear}
+          reportPeriod={report.reportPeriod}
+          reportYear={report.reportYear}
           text={route.verbiage.intro}
         />
       )}
       <Form
         id={route.form.id}
-        formJson={filterResubmissionData(route.form)}
+        formJson={form}
         onSubmit={onSubmit}
         onError={onError}
-        formData={report?.fieldData}
+        formData={formData}
         autosave
-        validateOnRender={validateOnRender || false}
+        validateOnRender={validateOnRender}
         dontReset={false}
       />
       {route.verbiage.reviewPdfHint && (
@@ -126,7 +113,6 @@ export const StandardReportPage = ({ route, validateOnRender }: Props) => {
 interface Props {
   route: StandardReportPageShape;
   validateOnRender?: boolean;
-  report?: ReportShape;
 }
 
 const sx = {
