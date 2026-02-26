@@ -50,6 +50,7 @@ export const qualifiedHcbsRoute: FormTablesRoute = {
     intro: {
       section: "",
       subsection: "Qualified HCBS",
+      info: "Qualified HCBS are any Medicaid home and community-based state plan and waiver program services as listed in Attachment A of the MFP Program Terms and Conditions (PTC 16).",
     },
     accordion: accordionWithFmapLink,
   },

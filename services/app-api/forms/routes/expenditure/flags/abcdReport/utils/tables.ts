@@ -102,7 +102,7 @@ export const statePlanServices = (prefix: string) => [
   },
   {
     id: `${prefix}_pace`,
-    label: "PACE (Program for all includes care for the elderly)",
+    label: "PACE (Program of All-Inclusive Care for the Elderly)",
   },
   {
     id: `${prefix}_rehabilitativeServices`,
