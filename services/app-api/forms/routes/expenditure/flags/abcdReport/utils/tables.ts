@@ -245,3 +245,26 @@ export const supplementalServices = (prefix: string) => [
     label: "Payment for Securing a Community-Based Home",
   },
 ];
+
+export const capacityBuildingHeaders = [
+  "Budget Category",
+  "Total Computable",
+  "Override %",
+  "Total State / Territory Share",
+  "Total Federal Share",
+];
+
+export const personnelHeaders = [
+  "Position Title",
+  "# of Budget FTEs",
+  "# of Filled FTEs",
+];
+
+export const subRecipientsHeaders = [
+  "Sub Recipient",
+  "Describe SOW",
+  "Expenditures",
+  "Override %",
+  "Total State / Territory Share",
+  "Total Federal Share",
+];
