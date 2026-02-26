@@ -87,6 +87,9 @@ export const reportTitle = (
     case ReportType.SAR: {
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
     }
+    case ReportType.EXPENDITURE: {
+      return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
+    }
     default:
       assertExhaustive(reportType as never);
       throw new Error(

@@ -51,17 +51,19 @@ export { ExportEntityDetailsTable } from "./export/ExportEntityDetailsTable";
 export { ExportedEntityStepCard } from "./export/ExportedEntityStepCard";
 
 // fields
+export { CharacterCounter } from "./fields/CharacterCounter";
 export { CheckboxField } from "./fields/CheckboxField";
 export { ChoiceField } from "./fields/ChoiceField";
 export { ChoiceListField } from "./fields/ChoiceListField";
-export { RadioField } from "./fields/RadioField";
-export { TextField } from "./fields/TextField";
-export { TextAreaField } from "./fields/TextAreaField";
 export { DateField } from "./fields/DateField";
 export { DropdownField } from "./fields/DropdownField";
 export { DynamicField } from "./fields/DynamicField";
 export { NumberField } from "./fields/NumberField";
-export { CharacterCounter } from "./fields/CharacterCounter";
+export { NumberFieldDisplay } from "./fields/NumberFieldDisplay";
+export { RadioField } from "./fields/RadioField";
+export { TextAreaField } from "./fields/TextAreaField";
+export { TextField } from "./fields/TextField";
+export { TextFieldDisplay } from "./fields/TextFieldDisplay";
 
 // forms
 export { AdminBannerForm } from "./forms/AdminBannerForm";

@@ -72,6 +72,7 @@ const mockProps = {
       },
     ],
   ],
+  disabled: false,
   footRows: [
     [
       "Mock footer",

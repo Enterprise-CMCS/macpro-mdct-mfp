@@ -10,6 +10,7 @@ import expenditureDashboardVerbiage from "verbiage/pages/expenditure/expenditure
 // export verbiage
 import wpExportVerbiage from "verbiage/pages/wp/wp-export";
 import sarExportVerbiage from "verbiage/pages/sar/sar-export";
+import expenditureExportVerbiage from "verbiage/pages/expenditure/expenditure-export";
 // review and submit verbiage
 import wpReviewAndSubmitVerbiage from "verbiage/pages/wp/wp-review-and-submit";
 import sarReviewAndSubmitVerbiage from "verbiage/pages/sar/sar-review-and-submit";
@@ -31,6 +32,7 @@ const sarVerbiage = {
 
 const expenditureVerbiage = {
   dashboardVerbiage: expenditureDashboardVerbiage,
+  exportVerbiage: expenditureExportVerbiage,
   reviewAndSubmitVerbiage: expenditureReviewAndSubmitVerbiage,
 };
 
