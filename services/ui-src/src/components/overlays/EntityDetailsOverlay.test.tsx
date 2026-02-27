@@ -29,7 +29,12 @@ let component: RenderResult;
 //bypass autosave call when simulating type inputs
 jest.mock("utils/autosave/autosave", () => ({
   getAutosaveFields: jest.fn().mockImplementation(() => {
-    return {};
+    return [
+      {
+        id: "mockId",
+        name: "Mock name",
+      },
+    ];
   }),
   autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
 }));

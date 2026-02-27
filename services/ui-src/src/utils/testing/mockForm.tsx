@@ -1,9 +1,12 @@
 import {
   DynamicModalOverlayReportPageShape,
+  DynamicValidationType,
   FormJson,
   FormTableType,
   OverlayModalPageShape,
+  ReportFormFieldType,
   ReportPageProgress,
+  ValidationType,
 } from "types";
 
 export const mockFormField = {
@@ -715,3 +718,41 @@ export const mockInitiativesSpecificDynamicModalOverlayReportPageJson = {
     },
   ],
 } as DynamicModalOverlayReportPageShape;
+
+export const mockFormId = "mockFormId";
+export const mockTableId = `${mockFormId}_mockTableId`;
+export const mockFieldId = `${mockTableId}_mockFieldId`;
+export const mockDynamicFieldId = "123a-456b-789c";
+export const mockDynamicTemplateId = `${mockTableId}_mockDynamicFieldId`;
+export const mockTempDynamicFieldId = `tempDynamicField_${mockDynamicTemplateId}_${mockDynamicFieldId}`;
+
+export const mockDynamicRowsTemplate = {
+  id: mockDynamicTemplateId,
+  type: ReportFormFieldType.DYNAMIC_OBJECT,
+  validation: {
+    type: ValidationType.DYNAMIC_OPTIONAL,
+    options: {
+      dynamicFields: {
+        category: DynamicValidationType.TEXT_OPTIONAL,
+        number: DynamicValidationType.NUMBER_OPTIONAL,
+      },
+    },
+  },
+  props: {
+    dynamicFields: [
+      {
+        id: `${mockDynamicTemplateId}-totalComputable`,
+        type: ReportFormFieldType.NUMBER,
+        validation: DynamicValidationType.NUMBER_OPTIONAL,
+        props: {
+          mask: "currency",
+          dynamicLabel: "Other:",
+        },
+      },
+    ],
+  },
+  verbiage: {
+    buttonText: "Mock dynamic row button",
+    hint: "Mock dynamic row hint",
+  },
+};

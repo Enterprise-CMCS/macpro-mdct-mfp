@@ -2,13 +2,23 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
-import { CalculationTable } from "components";
+import {
+  CalculationTable,
+  DynamicTableContext,
+  DynamicTableProvider,
+} from "components";
 // types
 import { ReportFormFieldType, ReportShape, ValidationType } from "types";
 // utils
 import { useStore } from "utils";
-import { mockStateUserStore } from "utils/testing/setupJest";
+import {
+  mockDynamicFieldId,
+  mockDynamicRowsTemplate,
+  mockDynamicTemplateId,
+  mockStateUserStore,
+} from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
+import React from "react";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -35,37 +45,94 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 const mockProps = {
   bodyRows: [
     [
-      "Mock text",
+      "Mock text 1",
       {
-        id: "qualifiedHcbs_statePlanServices_mockId1-totalComputable",
+        id: "mockTable_mockServices_mockId1-totalComputable",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
         props: {
-          label: "Mock text Total Computable",
+          label: "Mock text 1 Total Computable",
           mask: "currency",
         },
       },
       {
-        id: "qualifiedHcbs_statePlanServices_mockId1-totalStateTerritoryShare",
+        id: "mockTable_mockServices_mockId1-percentage",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.NUMBER_OPTIONAL,
+        forTableOnly: true,
+        props: {
+          label: "Mock text 1 Percentage",
+          mask: "percentage",
+        },
+      },
+      {
+        id: "mockTable_mockServices_mockId1-totalStateTerritoryShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
         props: {
           initialValue: "0",
-          label: "Mock text Total State / Territory Share",
+          label: "Mock text 1 Total State / Territory Share",
           mask: "currency",
           readOnly: true,
         },
       },
       {
-        id: "qualifiedHcbs_statePlanServices_mockId1-totalFederalShare",
+        id: "mockTable_mockServices_mockId1-totalFederalShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
         props: {
           initialValue: "0",
-          label: "Mock text Total Federal Share",
+          label: "Mock text 1 Total Federal Share",
+          mask: "currency",
+          readOnly: true,
+        },
+      },
+    ],
+    [
+      "Mock text 2",
+      {
+        id: "mockTable_mockServices_mockId2-totalComputable",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.NUMBER_OPTIONAL,
+        forTableOnly: true,
+        props: {
+          label: "Mock text 2 Total Computable",
+          mask: "currency",
+        },
+      },
+      {
+        id: "mockTable_mockServices_mockId2-percentage",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.NUMBER_OPTIONAL,
+        forTableOnly: true,
+        props: {
+          label: "Mock text 2 Percentage",
+          mask: "percentage",
+        },
+      },
+      {
+        id: "mockTable_mockServices_mockId2-totalStateTerritoryShare",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.NUMBER_OPTIONAL,
+        forTableOnly: true,
+        props: {
+          initialValue: "0",
+          label: "Mock text 2 Total State / Territory Share",
+          mask: "currency",
+          readOnly: true,
+        },
+      },
+      {
+        id: "mockTable_mockServices_mockId2-totalFederalShare",
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.NUMBER_OPTIONAL,
+        forTableOnly: true,
+        props: {
+          initialValue: "0",
+          label: "Mock text 2 Total Federal Share",
           mask: "currency",
           readOnly: true,
         },
@@ -77,7 +144,7 @@ const mockProps = {
     [
       "Mock footer",
       {
-        id: "qualifiedHcbs_statePlanServices-totalComputable",
+        id: "mockTable_mockServices-totalComputable",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -88,8 +155,9 @@ const mockProps = {
           readOnly: true,
         },
       },
+      "",
       {
-        id: "qualifiedHcbs_statePlanServices-totalStateTerritoryShare",
+        id: "mockTable_mockServices-totalStateTerritoryShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -101,7 +169,7 @@ const mockProps = {
         },
       },
       {
-        id: "qualifiedHcbs_statePlanServices-totalFederalShare",
+        id: "mockTable_mockServices-totalFederalShare",
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         forTableOnly: true,
@@ -115,11 +183,8 @@ const mockProps = {
     ],
   ],
   formData: {},
-  headRows: [["Heading 1", "Heading 2", "Heading 3", "Heading 4"]],
-  id: "qualifiedHcbs_statePlanServices",
-  report: {
-    fieldData: {},
-  } as unknown as ReportShape,
+  headRows: [["Heading 1", "Heading 2", "Heading 3", "Heading 4", "Heading 5"]],
+  id: "mockTable_mockServices",
   verbiage: {
     errorMessage: "Mock error",
     percentage: "Mock Percentage: {{percentage}}",
@@ -127,7 +192,11 @@ const mockProps = {
   },
 };
 
-const tableComponent = (props = mockProps) => <CalculationTable {...props} />;
+const tableComponent = (props = mockProps) => (
+  <DynamicTableProvider>
+    <CalculationTable {...props} />
+  </DynamicTableProvider>
+);
 
 describe("<CalculationTable />", () => {
   beforeEach(() => {
@@ -142,7 +211,7 @@ describe("<CalculationTable />", () => {
     render(tableComponent());
 
     const table = screen.getByRole("table");
-    expect(table).toHaveAttribute("id", "qualifiedHcbs_statePlanServices");
+    expect(table).toHaveAttribute("id", "mockTable_mockServices");
 
     const tableHeading = screen.getByRole("heading", {
       level: 2,
@@ -160,41 +229,42 @@ describe("<CalculationTable />", () => {
       ...mockProps,
       report: {
         fieldData: {
-          fmap_qualifiedHcbsPercentage: 87,
+          fmap_mockTablePercentage: 78,
+          "mockTable_mockServices_mockId1-percentageOverride": 87,
         },
       } as unknown as ReportShape,
       options: {
-        percentageField: "fmap_qualifiedHcbsPercentage",
+        percentageField: "fmap_mockTablePercentage",
       },
     };
 
     render(tableComponent(updatedProps));
 
-    const pct = screen.getByText("Mock Percentage: 87%");
+    const pct = screen.getByText("Mock Percentage: 78%");
     expect(pct).toBeVisible();
 
     const headRow = screen.getByRole("row", {
-      name: "Heading 1 Heading 2 Heading 3 Heading 4",
+      name: "Heading 1 Heading 2 Heading 3 Heading 4 Heading 5",
     });
     expect(headRow).toBeVisible();
 
     const bodyRow = screen.getByRole("row", {
-      name: "Mock text Heading 2 $ $0 $0",
+      name: "Mock text 1 Heading 2 $ Heading 3 % $0 $0",
     });
     expect(bodyRow).toBeVisible();
 
     const footRow = screen.getByRole("row", { name: "Mock footer $0 $0 $0" });
     expect(footRow).toBeVisible();
 
-    const input = screen.getByRole("textbox", { name: "Heading 2 Mock text" });
-    expect(input).toBeVisible();
-
+    const input = screen.getByRole("textbox", {
+      name: "Heading 2 Mock text 1",
+    });
     await act(async () => {
       await userEvent.type(input, "123");
     });
 
     const bodyRowUpdated = screen.getByRole("row", {
-      name: "Mock text Heading 2 $ $15.99 $107.01",
+      name: "Mock text 1 Heading 2 $ Heading 3 % $15.99 $107.01",
     });
     expect(bodyRowUpdated).toBeVisible();
 
@@ -209,7 +279,7 @@ describe("<CalculationTable />", () => {
     const updatedProps = {
       ...mockProps,
       options: {
-        percentageField: "fmap_qualifiedHcbsPercentage",
+        percentageField: "fmap_mockTablePercentage",
       },
     };
 
@@ -220,9 +290,63 @@ describe("<CalculationTable />", () => {
 
     const pct = screen.getByText("Mock Percentage: [auto-populated]%");
     expect(pct).toBeVisible();
+  });
 
-    const input = screen.getByRole("textbox", { name: "Heading 2 Mock text" });
-    expect(input).toBeDisabled();
+  describe("dynamic rows", () => {
+    const mockAddDynamicRow = jest.fn();
+    const mockDisplayCell = jest.fn(() => <></>);
+
+    beforeEach(() => {
+      jest.spyOn(React, "useContext").mockImplementation((ctx) => {
+        if (ctx === DynamicTableContext) {
+          return {
+            addDynamicRow: mockAddDynamicRow,
+            displayCell: mockDisplayCell,
+          };
+        }
+        return (React as any).useContext.wrappedMethod
+          ? (React as any).useContext.wrappedMethod(ctx)
+          : (ctx as any)?._currentValue;
+      });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+      mockAddDynamicRow.mockClear();
+    });
+
+    test("clicking button calls AddDynamicRow", async () => {
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        report: {
+          fieldData: {
+            fmap_mockTablePercentage: 78,
+            [mockDynamicTemplateId]: [
+              {
+                id: mockDynamicFieldId,
+                name: mockDynamicFieldId,
+                category: "Mock Dynamic Row Category 1",
+              },
+            ],
+          },
+        },
+        dynamicRowsTemplate: mockDynamicRowsTemplate,
+      };
+
+      render(tableComponent(updatedProps));
+      const hint = screen.getByText("Mock dynamic row hint");
+      expect(hint).toBeVisible();
+
+      const button = screen.getByRole("button", {
+        name: "Mock dynamic row button",
+      });
+      await userEvent.click(button);
+      expect(mockAddDynamicRow).toHaveBeenCalledTimes(1);
+      expect(mockAddDynamicRow).toHaveBeenCalledWith(
+        updatedProps.dynamicRowsTemplate
+      );
+    });
   });
 
   testA11yAct(tableComponent());

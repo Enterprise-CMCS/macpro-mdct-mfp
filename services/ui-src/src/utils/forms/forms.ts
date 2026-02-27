@@ -17,16 +17,19 @@ import {
 import {
   AnyObject,
   Choice,
+  DynamicFieldShape,
   EntityShape,
   FieldChoice,
   FormField,
   FormJson,
   FormLayoutElement,
   isFieldElement,
+  ReportFormFieldType,
   ReportShape,
+  ReportStatus,
 } from "types";
 // utils
-import { calculateNextQuarter } from "utils";
+import { calculateNextQuarter, createTempDynamicId } from "utils";
 import {
   getDefaultTargetPopulationNames,
   notAnsweredText,
@@ -49,6 +52,7 @@ export const formFieldFactory = (
     date: DateField,
     dropdown: DropdownField,
     dynamic: DynamicField,
+    dynamicObject: null,
     number: NumberField,
     radio: RadioField,
     text: TextField,
@@ -59,6 +63,8 @@ export const formFieldFactory = (
   fields = initializeChoiceListFields(fields);
   return fields.map((field) => {
     const componentFieldType = fieldToComponentMap[field.type];
+    if (!componentFieldType) return null;
+
     const fieldProps = {
       key: field.id,
       name: field.id,
@@ -466,4 +472,57 @@ export const fillEmptyQuarters = (quarters: AnyObject[]) => {
     });
   }
   return quarters;
+};
+
+export const filterResubmissionData = (form: FormJson, report: ReportShape) => {
+  //make deep copies of formData
+  const formCopy = structuredClone(form);
+  const formDataFields = structuredClone(form.fields);
+
+  const hideResubmissionField = () => {
+    const removeResubmissionDataFields: any[] = formDataFields.filter(
+      (data: AnyObject) =>
+        data.id !== "generalInformation_resubmissionInformation"
+    );
+    formCopy.fields = [...removeResubmissionDataFields];
+
+    return formCopy;
+  };
+
+  if (
+    (report.reportType === "SAR" && !report.submissionCount) ||
+    (report.status === ReportStatus.SUBMITTED &&
+      report.submissionCount === 1 &&
+      report.locked)
+  ) {
+    return hideResubmissionField();
+  } else {
+    return formCopy;
+  }
+};
+
+export const addDynamicTableRowsValidation = (
+  form: FormJson,
+  formData: AnyObject
+) => {
+  const newFields = form.fields
+    .filter((field) => field.type === ReportFormFieldType.DYNAMIC_OBJECT)
+    .flatMap((field) => {
+      const templates = field.props?.dynamicFields ?? [];
+      const rows = formData?.[field.id];
+
+      if (!templates.length || !Array.isArray(rows) || rows.length === 0)
+        return [];
+
+      return rows.flatMap((row: { id: string }) =>
+        templates.map((template: DynamicFieldShape) => ({
+          ...template,
+          id: createTempDynamicId(template.id, row.id),
+        }))
+      );
+    });
+
+  return newFields.length > 0
+    ? { ...form, fields: [...form.fields, ...newFields] }
+    : form;
 };

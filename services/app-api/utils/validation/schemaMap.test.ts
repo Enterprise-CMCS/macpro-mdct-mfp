@@ -110,7 +110,9 @@ describe("utils/validation/schemaMap", () => {
 
     test("returns true for number validation", () => {
       testSchema(
-        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
+        schemaMap.dynamic({
+          dynamicFields: { name: DynamicValidationType.NUMBER },
+        }),
         [[{ id: "mockId", name: "123" }]],
         true
       );
@@ -118,7 +120,9 @@ describe("utils/validation/schemaMap", () => {
 
     test("returns false for text with number validation", () => {
       testSchema(
-        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
+        schemaMap.dynamic({
+          dynamicFields: { name: DynamicValidationType.NUMBER },
+        }),
         [[{ id: "mockId", name: "text" }]],
         false
       );
