@@ -6,6 +6,22 @@ import {
   ValidationType,
 } from "../../../../../../utils/types";
 
+const buildServiceField = (
+  service: ServiceField,
+  suffix: string,
+  label: string,
+  props: AnyObject
+) => ({
+  id: `${service.id}-${suffix}`,
+  type: ReportFormFieldType.NUMBER,
+  validation: ValidationType.NUMBER_OPTIONAL,
+  forTableOnly: true,
+  props: {
+    label: `${service.label} ${label}`,
+    ...props,
+  },
+});
+
 export const buildServiceFields = (
   service: ServiceField,
   fieldsToReturn: ServiceFieldType[] = [
@@ -14,21 +30,6 @@ export const buildServiceFields = (
     ServiceFieldType.TOTAL_FEDERAL_SHARE,
   ]
 ) => {
-  const buildServiceField = (
-    suffix: string,
-    label: string,
-    props: AnyObject
-  ) => ({
-    id: `${service.id}-${suffix}`,
-    type: ReportFormFieldType.NUMBER,
-    validation: ValidationType.NUMBER_OPTIONAL,
-    forTableOnly: true,
-    props: {
-      label: `${service.label} ${label}`,
-      ...props,
-    },
-  });
-
   const currencyProps = {
     decimalPlacesToRoundTo: 2,
     initialValue: "0",
@@ -42,7 +43,7 @@ export const buildServiceFields = (
     switch (fieldType) {
       case ServiceFieldType.TOTAL_COMPUTABLE:
         fields.push(
-          buildServiceField("totalComputable", "Total Computable", {
+          buildServiceField(service, "totalComputable", "Total Computable", {
             ...currencyProps,
             initialValue: service.readOnly ? "0" : "",
             readOnly: service.readOnly,
@@ -53,6 +54,7 @@ export const buildServiceFields = (
       case ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE:
         fields.push(
           buildServiceField(
+            service,
             "totalStateTerritoryShare",
             "Total State / Territory Share",
             currencyProps
@@ -63,6 +65,79 @@ export const buildServiceFields = (
       case ServiceFieldType.TOTAL_FEDERAL_SHARE:
         fields.push(
           buildServiceField(
+            service,
+            "totalFederalShare",
+            "Total Federal Share",
+            currencyProps
+          )
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  return fields;
+};
+
+export const buildCapacityBudgetFields = (
+  service: ServiceField,
+  fieldsToReturn: ServiceFieldType[] = [
+    ServiceFieldType.TOTAL_COMPUTABLE,
+    ServiceFieldType.OVERRIDE_PERCENTAGE,
+    ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+    ServiceFieldType.TOTAL_FEDERAL_SHARE,
+  ]
+) => {
+  const currencyProps = {
+    decimalPlacesToRoundTo: 2,
+    initialValue: "0",
+    mask: "currency",
+    readOnly: true,
+  };
+
+  const percentageProps = {
+    mask: "percentage",
+  };
+
+  const fields = [];
+
+  for (const fieldType of fieldsToReturn) {
+    switch (fieldType) {
+      case ServiceFieldType.TOTAL_COMPUTABLE:
+        fields.push(
+          buildServiceField(service, "totalComputable", "Total Computable", {
+            ...currencyProps,
+            initialValue: service.readOnly ? "0" : "",
+            readOnly: service.readOnly,
+          })
+        );
+        break;
+
+      case ServiceFieldType.OVERRIDE_PERCENTAGE:
+        fields.push(
+          buildServiceField(service, "overridePercentage", "Override %", {
+            ...percentageProps,
+            readOnly: service.readOnly,
+          })
+        );
+        break;
+
+      case ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE:
+        fields.push(
+          buildServiceField(
+            service,
+            "totalStateTerritoryShare",
+            "Total State / Territory Share",
+            currencyProps
+          )
+        );
+        break;
+
+      case ServiceFieldType.TOTAL_FEDERAL_SHARE:
+        fields.push(
+          buildServiceField(
+            service,
             "totalFederalShare",
             "Total Federal Share",
             currencyProps
@@ -246,7 +321,7 @@ export const supplementalServices = (prefix: string) => [
   },
 ];
 
-export const capacityBuildingBudget = (prefix: string) => [
+export const capacityBuildingServices = (prefix: string) => [
   {
     id: `${prefix}_capacityBuilding`,
     label: "Capacity Building",

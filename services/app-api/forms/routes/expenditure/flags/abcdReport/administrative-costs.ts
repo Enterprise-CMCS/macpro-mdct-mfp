@@ -9,12 +9,13 @@ import {
 // utils
 import {
   buildServiceFields,
-  capacityBuildingBudget,
+  capacityBuildingServices,
   capacityBuildingHeaders,
   personnelHeaders,
   subRecipientsHeaders,
   supplementalServices,
   supplementalServicesHeaders,
+  buildCapacityBudgetFields,
 } from "./utils";
 
 const administrativeCostsTableId = "administrativeCosts_administrativeCosts";
@@ -37,7 +38,7 @@ const administrativeCostsFootList = [
   },
 ];
 
-const capacityBuildingBodyList = capacityBuildingBudget(
+const capacityBuildingBodyList = capacityBuildingServices(
   capacityBuildingTableId
 );
 
@@ -88,11 +89,11 @@ export const administrativeCostsRoute: FormTablesRoute = {
       {
         id: capacityBuildingTableId,
         bodyRows: capacityBuildingBodyList.map((service) => {
-          const bodyFields = buildServiceFields(service);
+          const bodyFields = buildCapacityBudgetFields(service);
           return [service.label, ...bodyFields];
         }),
         footRows: capacityBuildingFootList.map((service) => {
-          const footFields = buildServiceFields(service);
+          const footFields = buildCapacityBudgetFields(service);
           return ["Totals", ...footFields];
         }),
         headRows: [capacityBuildingHeaders],

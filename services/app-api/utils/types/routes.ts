@@ -129,6 +129,7 @@ export enum ServiceFieldType {
   CATEGORY = "category",
   TOTAL_COMPUTABLE = "totalComputable",
   TOTAL_FEDERAL_SHARE = "totalFederalShare",
+  OVERRIDE_PERCENTAGE = "overridePercentage",
   TOTAL_STATE_TERRITORY_SHARE = "totalStateTerritoryShare",
 }
 
