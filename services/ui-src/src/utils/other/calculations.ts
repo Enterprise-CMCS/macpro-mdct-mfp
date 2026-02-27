@@ -107,6 +107,22 @@ export const isEmptyOrNaN = (value: number | string) =>
 export const getNumberValue = (value: number | string, defaultValue = 0) =>
   isEmptyOrNaN(value) ? defaultValue : Number(value);
 
+const sumSharesBySuffix = (
+  keys: Array<keyof FieldSuffixesToCalculateType>,
+  fieldShares: CalculatedSharesType,
+  getCurrentSum: (key: keyof FieldSuffixesToCalculateType) => number
+): CalculatedSharesType => {
+  return keys.reduce((sum, key) => {
+    const currentValue = getNumberValue(fieldShares[key]);
+    const currentSum = getCurrentSum(key);
+
+    const totalCents = toCents(currentValue) + toCents(currentSum);
+    sum[key] = toDecimal(totalCents);
+
+    return sum;
+  }, {} as CalculatedSharesType);
+};
+
 // Recalculate sums in expenditure table when a field value changes
 export const fieldTableTotals = ({
   fieldData,
@@ -128,19 +144,9 @@ export const fieldTableTotals = ({
     keyof typeof fieldSuffixesToCalculate
   >;
   const fieldShares = calculateShares(fieldValue, percentage);
-  const tableShares = keys.reduce((sum, key) => {
-    const suffix = fieldSuffixesToCalculate[key];
-
-    // Add updated current value to sum of fields with the same suffix
-    const currentValue = getNumberValue(fieldShares[key]);
-    const currentSum = sumFields(fieldData, tableId, suffix, exclusions);
-
-    // Convert currency to cents to avoid rounding errors
-    const totalCents = toCents(currentValue) + toCents(currentSum);
-    sum[key] = toDecimal(totalCents);
-
-    return sum;
-  }, {} as CalculatedSharesType);
+  const tableShares = sumSharesBySuffix(keys, fieldShares, (key) =>
+    sumFields(fieldData, tableId, fieldSuffixesToCalculate[key], exclusions)
+  );
 
   return {
     field: fieldShares,
@@ -167,7 +173,7 @@ export const dynamicFieldTableTotals = ({
   );
 
   const keys = Object.keys(fieldSuffixesToCalculate) as Array<
-    keyof typeof fieldSuffixesToCalculate
+    keyof FieldSuffixesToCalculateType
   >;
   const fieldShares = calculateShares(fieldValue, percentage);
 
@@ -176,25 +182,13 @@ export const dynamicFieldTableTotals = ({
     (row: DynamicFieldShape) => row.id !== dynamicFieldId
   );
 
-  const templateShares = keys.reduce((sum, key) => {
-    const suffix = fieldSuffixesToCalculate[key];
-    const currentValue = getNumberValue(fieldShares[key]);
-    const currentSum = sumDynamicFields(rowsToCalculate, suffix);
-    const totalCents = toCents(currentValue) + toCents(currentSum);
-    sum[key] = toDecimal(totalCents);
+  const templateShares = sumSharesBySuffix(keys, fieldShares, (key) =>
+    sumDynamicFields(rowsToCalculate, fieldSuffixesToCalculate[key])
+  );
 
-    return sum;
-  }, {} as CalculatedSharesType);
-
-  const tableShares = keys.reduce((sum, key) => {
-    const suffix = fieldSuffixesToCalculate[key];
-    const currentValue = getNumberValue(templateShares[key]);
-    const currentSum = sumFields(fieldData, tableId, suffix, exclusions);
-    const totalCents = toCents(currentValue) + toCents(currentSum);
-    sum[key] = toDecimal(totalCents);
-
-    return sum;
-  }, {} as CalculatedSharesType);
+  const tableShares = sumSharesBySuffix(keys, templateShares, (key) =>
+    sumFields(fieldData, tableId, fieldSuffixesToCalculate[key], exclusions)
+  );
 
   return {
     field: fieldShares,
@@ -207,11 +201,7 @@ interface DynamicFieldTableTotalsType {
   fieldData: AnyObject;
   dynamicFieldId: string;
   dynamicTemplateId: string;
-  fieldSuffixesToCalculate: {
-    percentageShare: string;
-    remainingShare: string;
-    total: string;
-  };
+  fieldSuffixesToCalculate: FieldSuffixesToCalculateType;
   fieldValue: number | string;
   percentage: number;
   tableId: string;
@@ -220,19 +210,21 @@ interface DynamicFieldTableTotalsType {
 interface FieldTableTotalsType {
   fieldData: AnyObject;
   fieldId: string;
-  fieldSuffixesToCalculate: {
-    percentageShare: string;
-    remainingShare: string;
-    total: string;
-  };
+  fieldSuffixesToCalculate: FieldSuffixesToCalculateType;
   fieldValue: number | string;
   percentage: number;
   tableId: string;
 }
 
+interface FieldSuffixesToCalculateType {
+  percentageShare: string;
+  remainingShare: string;
+  total: string;
+}
+
 export interface CalculatedSharesType {
   percentage: number;
-  percentageShare: number;
-  remainingShare: number;
+  percentageShare: number | string;
+  remainingShare: number | string;
   total: number | string;
 }
