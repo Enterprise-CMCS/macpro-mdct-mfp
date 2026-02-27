@@ -164,12 +164,13 @@ export const DynamicTableProvider = ({ children }: any) => {
       fieldData: localFieldData,
     };
 
-    let fieldsToRender = hydrateFormFields(
+    const [hydratedField] = hydrateFormFields(
       updateRenderFields(updatedReport, [field], formData),
       formData
     );
 
-    const hydratedField = fieldsToRender[0];
+    let hydrateValue;
+    let hydratedProps;
 
     if (isTempDynamicField(hydratedField.id)) {
       const { dynamicFieldId, dynamicTemplateId, fieldType } = getFieldParts(
@@ -180,22 +181,21 @@ export const DynamicTableProvider = ({ children }: any) => {
         (f: DynamicFieldShape) => f.id === dynamicFieldId
       );
 
-      const hydrateValue = dynField?.[fieldType];
-
-      if (readOnly) return renderReadOnly(hydrateValue);
-
-      fieldsToRender = [
-        {
-          ...hydratedField,
-          props: {
-            ...hydratedField.props,
-            hydrate: hydrateValue,
-          },
-        },
-      ];
+      hydrateValue = dynField?.[fieldType];
+      hydratedProps = {
+        ...hydratedField.props,
+        hydrate: hydrateValue,
+      };
     }
 
-    if (readOnly) return renderReadOnly();
+    if (readOnly) return renderReadOnly(hydrateValue);
+
+    const fieldsToRender = [
+      {
+        ...hydratedField,
+        ...hydratedProps,
+      },
+    ];
 
     return formFieldFactory(fieldsToRender, {
       autosave: true,
