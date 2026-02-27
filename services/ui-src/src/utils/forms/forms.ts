@@ -17,6 +17,7 @@ import {
 import {
   AnyObject,
   Choice,
+  DynamicFieldShape,
   EntityShape,
   FieldChoice,
   FormField,
@@ -504,26 +505,22 @@ export const addDynamicTableRowsValidation = (
   form: FormJson,
   formData: AnyObject
 ) => {
-  const newFields: FormField[] = [];
+  const newFields = form.fields
+    .filter((field) => field.type === ReportFormFieldType.DYNAMIC_OBJECT)
+    .flatMap((field) => {
+      const templates = field.props?.dynamicFields ?? [];
+      const rows = formData?.[field.id];
 
-  for (const field of form.fields) {
-    if (field.type !== ReportFormFieldType.DYNAMIC_OBJECT) continue;
+      if (!templates.length || !Array.isArray(rows) || rows.length === 0)
+        return [];
 
-    const templates = field.props?.dynamicFields;
-    const rows = formData?.[field.id];
-
-    if (!templates?.length || !Array.isArray(rows) || rows.length === 0)
-      continue;
-
-    for (const row of rows) {
-      for (const t of templates) {
-        newFields.push({
-          ...t,
-          id: createTempDynamicId(t.id, row.id),
-        });
-      }
-    }
-  }
+      return rows.flatMap((row: { id: string }) =>
+        templates.map((template: DynamicFieldShape) => ({
+          ...template,
+          id: createTempDynamicId(template.id, row.id),
+        }))
+      );
+    });
 
   return newFields.length > 0
     ? { ...form, fields: [...form.fields, ...newFields] }
