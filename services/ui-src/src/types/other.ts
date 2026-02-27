@@ -84,10 +84,10 @@ export interface TableContentShape {
 
 export interface CustomHtmlElement {
   type: string;
-  content: string | any;
+  content?: string | any;
   as?: string;
   props?: AnyObject;
-  children?: CustomHtmlElement[];
+  children?: any[];
 }
 
 export interface ErrorVerbiage {

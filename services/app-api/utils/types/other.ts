@@ -53,9 +53,10 @@ export interface TimeShape {
 
 export interface CustomHtmlElement {
   type: string;
-  content: string | any;
+  content?: string | any;
   as?: string;
   props?: AnyObject;
+  children?: any[];
 }
 
 export interface ErrorVerbiage {

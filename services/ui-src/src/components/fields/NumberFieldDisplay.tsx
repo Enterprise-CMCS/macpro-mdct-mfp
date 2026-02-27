@@ -118,6 +118,7 @@ const sx = {
       },
     },
     "&.percentage": {
+      maxWidth: "15em",
       ".ds-c-field": {
         paddingRight: "1.75rem",
       },
@@ -134,7 +135,7 @@ const sx = {
     ".percentage &": {
       bottom: "20.5px",
       transform: "translateY(50%)",
-      left: "213px",
+      right: "10px",
     },
     ".currency &": {
       bottom: "20.5px",
