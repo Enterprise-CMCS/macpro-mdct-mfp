@@ -243,6 +243,9 @@ const sx = {
         color: "primary_darker",
       },
     },
+    p: {
+      marginBottom: "spacer2",
+    },
   },
   captionBox: {
     margin: 0,

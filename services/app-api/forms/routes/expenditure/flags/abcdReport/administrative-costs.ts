@@ -43,7 +43,7 @@ const capacityBuildingBodyList = capacityBuildingBudget(
 
 const capacityBuildingFootList = [
   {
-    id: administrativeCostsTableId,
+    id: capacityBuildingTableId,
     label: "Capacity Building",
     readOnly: true,
   },
@@ -107,7 +107,7 @@ export const administrativeCostsRoute: FormTablesRoute = {
                 {
                   type: "p",
                   content:
-                    "Only MFP recipients who received capacity building grants should complete this section. Under this supplemental funding opportunity, up to $5 million in MFP grant funds were made available to each eligible MFP recipient for planning and capacity building activities to accelerate LTSS system transformation design and implementation and to expand HCBS capacity. Eligible MFP recipients submitted supplemental budget requests and funds were made available to MFP recipients for the year in which the award was received and four additional fiscal years. <br/><br/>",
+                    "Only MFP recipients who received capacity building grants should complete this section. Under this supplemental funding opportunity, up to $5 million in MFP grant funds were made available to each eligible MFP recipient for planning and capacity building activities to accelerate LTSS system transformation design and implementation and to expand HCBS capacity. Eligible MFP recipients submitted supplemental budget requests and funds were made available to MFP recipients for the year in which the award was received and four additional fiscal years.",
                 },
                 {
                   type: "p",
