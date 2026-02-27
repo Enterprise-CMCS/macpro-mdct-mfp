@@ -9,6 +9,7 @@ import {
 // utils
 import {
   buildServiceFields,
+  capacityBuildingBudget,
   capacityBuildingHeaders,
   personnelHeaders,
   subRecipientsHeaders,
@@ -18,8 +19,8 @@ import {
 
 const administrativeCostsTableId = "administrativeCosts_administrativeCosts";
 const capacityBuildingTableId = "administrativeCosts_capacityBuilding";
-const personnelTableId = "administrativeCosts_personnel";
 const subRecipientsTableId = "administrativeCosts_subRecipients";
+const personnelTableId = "administrativeCosts_personnel";
 
 /*
  * These lists will be mapped to buildServiceFields to create
@@ -32,6 +33,18 @@ const administrativeCostsFootList = [
   {
     id: administrativeCostsTableId,
     label: "Administrative Costs",
+    readOnly: true,
+  },
+];
+
+const capacityBuildingBodyList = capacityBuildingBudget(
+  capacityBuildingTableId
+);
+
+const capacityBuildingFootList = [
+  {
+    id: administrativeCostsTableId,
+    label: "Capacity Building",
     readOnly: true,
   },
 ];
@@ -74,13 +87,36 @@ export const administrativeCostsRoute: FormTablesRoute = {
       },
       {
         id: capacityBuildingTableId,
-        bodyRows: [],
-        footRows: [],
+        bodyRows: capacityBuildingBodyList.map((service) => {
+          const bodyFields = buildServiceFields(service);
+          return [service.label, ...bodyFields];
+        }),
+        footRows: capacityBuildingFootList.map((service) => {
+          const footFields = buildServiceFields(service);
+          return ["Totals", ...footFields];
+        }),
         headRows: [capacityBuildingHeaders],
         tableType: FormTableType.CALCULATION,
         verbiage: {
           percentage: "Capacity Building Percentage: {{percentage}}",
           title: "Capacity Building",
+          hint: [
+            {
+              type: "html",
+              children: [
+                {
+                  type: "p",
+                  content:
+                    "Only MFP recipients who received capacity building grants should complete this section. Under this supplemental funding opportunity, up to $5 million in MFP grant funds were made available to each eligible MFP recipient for planning and capacity building activities to accelerate LTSS system transformation design and implementation and to expand HCBS capacity. Eligible MFP recipients submitted supplemental budget requests and funds were made available to MFP recipients for the year in which the award was received and four additional fiscal years. <br/><br/>",
+                },
+                {
+                  type: "p",
+                  content:
+                    "In the table below, include the amount of capacity building funds that your state or territory spent during this reporting period. Do not include funds that have not been spent, even if the MFP recipient has plans and received CMS approval to spend the funds on specific initiatives or activities. CMS expects that MFP recipients will claim 100% of MFP funding for capacity building; however, if an MFP recipient is claiming less than 100%, enter the relevant rate in the Override % column and provide further explanation in the Narrative field.",
+                },
+              ],
+            },
+          ],
         },
       },
       {
@@ -112,6 +148,12 @@ export const administrativeCostsRoute: FormTablesRoute = {
         buildServiceFields(service)
       ),
       ...administrativeCostsFootList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      ...capacityBuildingBodyList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      ...capacityBuildingFootList.flatMap((service) =>
         buildServiceFields(service)
       ),
       {

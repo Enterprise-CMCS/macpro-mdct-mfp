@@ -70,6 +70,7 @@ export interface FormTable {
     errorMessage?: string | CustomHtmlElement[];
     percentage?: string;
     title: string;
+    hint?: string | CustomHtmlElement[];
   };
 }
 

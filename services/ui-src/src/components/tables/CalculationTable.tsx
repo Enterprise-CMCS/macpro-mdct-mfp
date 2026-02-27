@@ -126,12 +126,16 @@ export const CalculationTable = ({
       )}
 
       <Heading as="h2">{verbiage?.title}</Heading>
-      {verbiage?.percentage && (
-        <Text sx={sx.text}>
-          {translate(verbiage.percentage, { percentage: percentageDisplay })}
-        </Text>
-      )}
-
+      <>
+        {verbiage?.percentage && (
+          <Text sx={sx.text}>
+            {translate(verbiage.percentage, { percentage: percentageDisplay })}
+          </Text>
+        )}
+        {verbiage?.hint && (
+          <Text sx={sx.hintText}>{parseCustomHtml(verbiage.hint)}</Text>
+        )}
+      </>
       <Table id={tableId} sx={sx.table}>
         <TableCaption placement="top" sx={sx.captionBox}>
           <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
@@ -226,6 +230,19 @@ const sx = {
     color: "gray_dark",
     fontWeight: "bold",
     marginBottom: "spacer3",
+  },
+  hintText: {
+    color: "gray_dark",
+    marginTop: "spacer2",
+    h3: {
+      marginBottom: "-0.75rem",
+    },
+    a: {
+      color: "primary",
+      "&:hover": {
+        color: "primary_darker",
+      },
+    },
   },
   captionBox: {
     margin: 0,

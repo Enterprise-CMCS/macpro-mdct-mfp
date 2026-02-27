@@ -246,6 +246,13 @@ export const supplementalServices = (prefix: string) => [
   },
 ];
 
+export const capacityBuildingBudget = (prefix: string) => [
+  {
+    id: `${prefix}_capacityBuilding`,
+    label: "Capacity Building",
+  },
+];
+
 export const capacityBuildingHeaders = [
   "Budget Category",
   "Total Computable",
