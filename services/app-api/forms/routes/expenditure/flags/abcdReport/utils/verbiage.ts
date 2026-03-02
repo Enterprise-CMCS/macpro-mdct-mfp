@@ -2,7 +2,7 @@ export const accordionWithFmapLink = {
   buttonLabel: "Instructions",
   intro: [
     {
-      type: "html",
+      type: "p",
       content:
         "Enter your total computable costs for each service during the reporting period. Of note,",
     },
@@ -35,17 +35,9 @@ export const accordionWithFmapLink = {
         "Your state or territory’s share for each service will be calculated using the Enhanced FMAP that you provided. If you have entered the wrong rate, return to the FMAP Percentages section of the report to revise it.",
     },
     {
-      type: "html",
-      content: "Unlike previous years, you ",
-    },
-    {
-      type: "html",
-      content: "<b>do not need</b>",
-    },
-    {
-      type: "html",
+      type: "p",
       content:
-        " to report prior period adjustments as separate line items. Incorporate all prior period adjustments directly into the total computable value for each specific service.",
+        "Unlike previous years, you <b>do not need</b> to report prior period adjustments as separate line items. Incorporate all prior period adjustments directly into the total computable value for each specific service.",
     },
   ],
 };
