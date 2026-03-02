@@ -307,10 +307,10 @@ export const DynamicTableProvider = ({ children }: any) => {
       dynamicFieldId,
       dynamicTemplateId: dynamicTemplateId,
       fieldData: localFieldData,
+      // Set row to be deleted value to 0
+      fieldValue: 0,
       formId,
       tableId,
-      // Set row to be deleted value to 0
-      value: 0,
     });
 
     const rows = localFieldData?.[dynamicTemplateId] || [];

@@ -15,25 +15,23 @@ import {
   supplementalServicesHeaders,
 } from "./utils";
 
-const supplementalServicesTableId = "supplementalServices_supplementalServices";
+const categoryTableId = "supplementalServices_category";
 
 /*
  * These lists will be mapped to buildServiceFields to create
  * totalComputable, totalStateTerritoryShare, and totalFederalShare fields
  */
-const supplementalServicesBodyList = supplementalServices(
-  supplementalServicesTableId
-);
+const supplementalServicesBodyList = supplementalServices(categoryTableId);
 const supplementalServicesFootList = [
   {
-    id: supplementalServicesTableId,
+    id: categoryTableId,
     label: "Supplemental Services",
     readOnly: true,
   },
 ];
 
 // Dynamic rows
-const dynamicRowId = `${supplementalServicesTableId}_otherCategories`;
+const dynamicRowId = `${categoryTableId}_otherCategories`;
 const supplementalServicesDynamicBodyList = [
   {
     id: dynamicRowId,
@@ -95,7 +93,7 @@ export const supplementalServicesRoute: FormTablesRoute = {
     id: "exp-supplementalServices",
     tables: [
       {
-        id: supplementalServicesTableId,
+        id: categoryTableId,
         // Display table fields in rows
         bodyRows: supplementalServicesBodyList.map((service) => {
           const bodyFields = buildServiceFields(service);

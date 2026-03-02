@@ -454,8 +454,8 @@ describe("utils/autosave/dataModifications", () => {
           {
             id: mockDynamicFieldId,
             name: mockDynamicFieldId,
-            percentageShare: 11,
             totalFederalShare: 89,
+            totalStateTerritoryShare: 11,
           },
         ],
         [`${mockDynamicTemplateId}-totalComputable`]: 100,
@@ -487,8 +487,8 @@ describe("utils/autosave/dataModifications", () => {
         [mockDynamicTemplateId]: [
           {
             ...fieldData?.[mockDynamicTemplateId][0],
-            percentageShare: 11,
             totalFederalShare: 89,
+            totalStateTerritoryShare: 11,
           },
         ],
         [`${mockDynamicTemplateId}-totalComputable`]: 100,
@@ -617,8 +617,8 @@ describe("utils/autosave/dataModifications", () => {
         dynamicTemplateId: mockDynamicTemplateId,
         formId: mockFormId,
         fieldData: updatedFieldData,
+        fieldValue: 100,
         tableId: mockTableId,
-        value: 100,
       });
       expect(updatedFields).toEqual([
         {

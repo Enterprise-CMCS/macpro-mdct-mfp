@@ -44,9 +44,9 @@ export const updatedNumberFields = (
         dynamicFieldId,
         dynamicTemplateId,
         fieldData,
+        fieldValue: value,
         formId,
         tableId,
-        value,
       });
     }
     case isFieldType(fieldType, "totalComputable"): {
@@ -196,8 +196,8 @@ export const updatedFieldDataOnFieldChange = ({
         id: dynamicFieldId,
         name: dynamicFieldId,
         // Update just the calculations on change, totalComputable will update on blur
-        percentageShare: field.remainingShare,
         totalFederalShare: field.percentageShare,
+        totalStateTerritoryShare: field.remainingShare,
       };
 
       if (currentFieldIndex > -1) {
@@ -314,9 +314,9 @@ export const recalculateDynamicFields = ({
   dynamicTemplateId,
   formId,
   fieldData,
+  fieldValue,
   tableId,
-  value,
-}: any) => {
+}: RecalculateDynamicFields) => {
   const percentageField = `fmap_${formId}Percentage`;
   const formPercentage = fieldData?.[percentageField] || 100;
   const templateFieldData = fieldData?.[dynamicTemplateId] || [];
@@ -332,7 +332,7 @@ export const recalculateDynamicFields = ({
     dynamicTemplateId,
     fieldData,
     fieldSuffixesToCalculate,
-    fieldValue: value,
+    fieldValue,
     percentage,
     tableId,
   });
@@ -387,4 +387,13 @@ interface UpdatedReportFields {
   fieldData: AnyObject;
   tableId: string;
   value: number | string;
+}
+
+interface RecalculateDynamicFields {
+  dynamicFieldId: string;
+  dynamicTemplateId: string;
+  formId: string;
+  fieldData: AnyObject;
+  fieldValue: number | string;
+  tableId: string;
 }
