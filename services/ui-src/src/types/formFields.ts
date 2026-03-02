@@ -59,6 +59,7 @@ export interface FormTable {
   dynamicRows?: FormTableRows;
   footRows: FormTableRows;
   headRows: FormTableRows;
+  modal?: boolean;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
@@ -68,6 +69,7 @@ export interface FormTable {
       label: string;
     };
     errorMessage?: string | CustomHtmlElement[];
+    modal?: string;
     percentage?: string;
     title: string;
   };
@@ -75,6 +77,7 @@ export interface FormTable {
 
 export enum FormTableType {
   CALCULATION = "Calculation",
+  MODAL_CALCULATION = "ModalCalculation",
 }
 
 export interface CustomFieldValidation {

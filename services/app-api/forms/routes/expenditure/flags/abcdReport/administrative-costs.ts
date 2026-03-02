@@ -88,8 +88,10 @@ export const administrativeCostsRoute: FormTablesRoute = {
         bodyRows: [],
         footRows: [],
         headRows: [subRecipientsHeaders],
-        tableType: FormTableType.CALCULATION,
+        tableType: FormTableType.MODAL_CALCULATION,
+        modal: true,
         verbiage: {
+          modal: "Add sub recipient",
           percentage: "Administrative Costs Percentage: {{percentage}}",
           title: "Sub Recipients",
         },

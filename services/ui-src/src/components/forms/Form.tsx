@@ -10,7 +10,7 @@ import { object as yupSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 // components
 import { Box, Heading, Text } from "@chakra-ui/react";
-import { CalculationTable } from "components";
+import { CalculationTable, ModalCalculationTable } from "components";
 // utils
 import {
   compileValidationJsonFromFields,
@@ -152,20 +152,26 @@ export const Form = ({
   const renderTable = (table: FormTable, index: number) => {
     const { id, tableType, ...props } = table;
 
-    if (tableType === FormTableType.CALCULATION) {
-      return (
-        <CalculationTable
-          disabled={fieldInputDisabled}
-          formData={formData}
-          id={id}
-          key={id}
-          order={index}
-          report={report}
-          {...props}
-        />
-      );
+    switch (tableType) {
+      case FormTableType.CALCULATION:
+        return (
+          <CalculationTable
+            disabled={fieldInputDisabled}
+            formData={formData}
+            id={id}
+            key={id}
+            order={index}
+            report={report}
+            {...props}
+          />
+        );
+
+      case FormTableType.MODAL_CALCULATION:
+        return <ModalCalculationTable></ModalCalculationTable>;
+
+      default:
+        return null;
     }
-    return null;
   };
 
   /*

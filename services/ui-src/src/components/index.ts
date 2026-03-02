@@ -122,6 +122,7 @@ export { StatusTable } from "./statusing/StatusTable";
 export { CalculationTable } from "./tables/CalculationTable";
 export { EntityRow } from "./tables/EntityRow";
 export { EntityStatusIcon } from "./tables/EntityStatusIcon";
+export { ModalCalculationTable } from "./tables/ModalCalculationTable";
 export { Table } from "./tables/Table";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";
