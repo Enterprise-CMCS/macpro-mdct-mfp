@@ -86,6 +86,7 @@ export { MenuOption } from "./menus/MenuOption";
 export { Sidebar } from "./menus/Sidebar";
 // modals
 export { Modal } from "./modals/Modal";
+export { AddCalculationModal } from "./modals/AddCalculationModal";
 export { AddEditEntityModal } from "./modals/AddEditEntityModal";
 export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";

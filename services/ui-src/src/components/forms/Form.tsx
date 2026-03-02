@@ -167,7 +167,17 @@ export const Form = ({
         );
 
       case FormTableType.MODAL_CALCULATION:
-        return <ModalCalculationTable></ModalCalculationTable>;
+        return (
+          <ModalCalculationTable
+            disabled={fieldInputDisabled}
+            formData={formData}
+            id={id}
+            key={id}
+            order={index}
+            report={report}
+            {...props}
+          />
+        );
 
       default:
         return null;
