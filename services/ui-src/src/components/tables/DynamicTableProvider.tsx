@@ -193,7 +193,10 @@ export const DynamicTableProvider = ({ children }: any) => {
     const fieldsToRender = [
       {
         ...hydratedField,
-        ...hydratedProps,
+        props: {
+          ...hydratedField.props,
+          ...hydratedProps,
+        },
       },
     ];
 
