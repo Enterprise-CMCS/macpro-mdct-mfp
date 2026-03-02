@@ -37,6 +37,38 @@ export const updatedNumberFields = (
     formId,
     tableId,
   } = getFieldParts(name);
+
+  const recalculateFieldTotalsOnSave = (
+    fieldValue: string | number,
+    percentage: number
+  ) => {
+    const { field, table } = fieldTableTotals({
+      fieldData,
+      fieldId,
+      fieldSuffixesToCalculate,
+      fieldValue,
+      percentage,
+      tableId,
+    });
+
+    const updatedFields = (
+      fieldOrTableId: string,
+      totals: CalculatedSharesType
+    ) =>
+      fieldsToMap.map(([key, fieldSuffix]) => ({
+        name: `${fieldOrTableId}-${fieldSuffix}`,
+        type: ReportFormFieldType.NUMBER,
+        value: totals[key],
+      }));
+
+    const fieldsToSave = [
+      ...updatedFields(fieldId, field),
+      ...updatedFields(tableId, table),
+    ];
+
+    return fieldsToSave;
+  };
+
   switch (true) {
     case isTempDynamicField(name) &&
       isFieldType(fieldType, "totalComputable"): {
@@ -50,34 +82,13 @@ export const updatedNumberFields = (
       });
     }
     case isFieldType(fieldType, "totalComputable"): {
+      const fieldValue = value;
       const percentageField = `fmap_${formId}Percentage`;
       const formPercentage = fieldData[percentageField] || 100;
       const fieldPercentageField = `${fieldId}-percentageOverride`;
       const percentage = fieldData?.[fieldPercentageField] || formPercentage;
 
-      const { field, table } = fieldTableTotals({
-        fieldData,
-        fieldId,
-        fieldSuffixesToCalculate,
-        fieldValue: value,
-        percentage,
-        tableId,
-      });
-
-      const updatedFields = (
-        fieldOrTableId: string,
-        totals: CalculatedSharesType
-      ) =>
-        fieldsToMap.map(([key, fieldSuffix]) => ({
-          name: `${fieldOrTableId}-${fieldSuffix}`,
-          type: ReportFormFieldType.NUMBER,
-          value: totals[key],
-        }));
-
-      return [
-        ...updatedFields(fieldId, field),
-        ...updatedFields(tableId, table),
-      ];
+      return recalculateFieldTotalsOnSave(fieldValue, percentage);
     }
     case isFmapPct(fieldId): {
       const formId = getFmapForm(fieldId);
@@ -174,70 +185,87 @@ export const updatedFieldDataOnFieldChange = ({
 }: UpdatedReportFields) => {
   const { dynamicFieldId, dynamicTemplateId, fieldId, fieldType } =
     getFieldParts(name);
+  const recalculateDynamicFieldTotalsOnChange = (
+    fieldValue: string | number,
+    percentage: number
+  ) => {
+    const { field, table, template } = dynamicFieldTableTotals({
+      dynamicFieldId,
+      dynamicTemplateId,
+      fieldData,
+      fieldSuffixesToCalculate,
+      fieldValue: fieldValue,
+      percentage,
+      tableId,
+    });
+    const templateFieldData = [...(fieldData?.[dynamicTemplateId] ?? [])];
+    const currentFieldIndex = templateFieldData.findIndex(
+      (field: DynamicFieldShape) => field.id === dynamicFieldId
+    );
+    const currentField = templateFieldData[currentFieldIndex] || {};
+    const updatedField = {
+      ...currentField,
+      id: dynamicFieldId,
+      name: dynamicFieldId,
+      // Update just the calculations on change, totalComputable will update on blur
+      totalFederalShare: field.percentageShare,
+      totalStateTerritoryShare: field.remainingShare,
+    };
+
+    if (currentFieldIndex > -1) {
+      templateFieldData[currentFieldIndex] = updatedField;
+    } else {
+      templateFieldData.push(updatedField);
+    }
+    const updatedFieldData = (id: string, totals: CalculatedSharesType) =>
+      Object.fromEntries(
+        fieldsToMap.map(([key, suffix]) => [`${id}-${suffix}`, totals[key]])
+      );
+
+    const fieldsToSave = {
+      ...fieldData,
+      [dynamicTemplateId]: templateFieldData,
+      ...updatedFieldData(dynamicTemplateId, template),
+      ...updatedFieldData(tableId, table),
+    };
+
+    return fieldsToSave;
+  };
+
+  const recalculateFieldTotalsOnChange = (
+    fieldValue: string | number,
+    percentage: number
+  ) => {
+    const { field, table } = fieldTableTotals({
+      fieldData,
+      fieldId,
+      fieldSuffixesToCalculate,
+      fieldValue,
+      percentage,
+      tableId,
+    });
+
+    const updatedFieldData = (id: string, totals: CalculatedSharesType) =>
+      Object.fromEntries(
+        fieldsToMap.map(([key, suffix]) => [`${id}-${suffix}`, totals[key]])
+      );
+
+    const fieldsToSave = {
+      ...fieldData,
+      ...updatedFieldData(fieldId, field),
+      ...updatedFieldData(tableId, table),
+    };
+
+    return fieldsToSave;
+  };
+
   switch (true) {
     case isTempDynamicField(name) &&
       isFieldType(fieldType, "totalComputable"): {
-      const { field, table, template } = dynamicFieldTableTotals({
-        dynamicFieldId,
-        dynamicTemplateId,
-        fieldData,
-        fieldSuffixesToCalculate,
-        fieldValue: value,
-        percentage,
-        tableId,
-      });
-      const templateFieldData = [...(fieldData?.[dynamicTemplateId] ?? [])];
-      const currentFieldIndex = templateFieldData.findIndex(
-        (field: DynamicFieldShape) => field.id === dynamicFieldId
-      );
-      const currentField = templateFieldData[currentFieldIndex] || {};
-      const updatedField = {
-        ...currentField,
-        id: dynamicFieldId,
-        name: dynamicFieldId,
-        // Update just the calculations on change, totalComputable will update on blur
-        totalFederalShare: field.percentageShare,
-        totalStateTerritoryShare: field.remainingShare,
-      };
-
-      if (currentFieldIndex > -1) {
-        templateFieldData[currentFieldIndex] = updatedField;
-      } else {
-        templateFieldData.push(updatedField);
-      }
-
-      const updatedFieldData = (id: string, totals: CalculatedSharesType) =>
-        Object.fromEntries(
-          fieldsToMap.map(([key, suffix]) => [`${id}-${suffix}`, totals[key]])
-        );
-
-      return {
-        ...fieldData,
-        [dynamicTemplateId]: templateFieldData,
-        ...updatedFieldData(dynamicTemplateId, template),
-        ...updatedFieldData(tableId, table),
-      };
+      return recalculateDynamicFieldTotalsOnChange(value, percentage);
     }
     case isFieldType(fieldType, "totalComputable"): {
-      const { field, table } = fieldTableTotals({
-        fieldData,
-        fieldId,
-        fieldSuffixesToCalculate,
-        fieldValue: value,
-        percentage,
-        tableId,
-      });
-
-      const updatedFieldData = (id: string, totals: CalculatedSharesType) =>
-        Object.fromEntries(
-          fieldsToMap.map(([key, suffix]) => [`${id}-${suffix}`, totals[key]])
-        );
-
-      return {
-        ...fieldData,
-        ...updatedFieldData(fieldId, field),
-        ...updatedFieldData(tableId, table),
-      };
+      return recalculateFieldTotalsOnChange(value, percentage);
     }
     default:
       // Nothing changed, return original fieldData
@@ -317,15 +345,16 @@ export const recalculateDynamicFields = ({
   fieldValue,
   tableId,
 }: RecalculateDynamicFields) => {
+  let percentage;
   const percentageField = `fmap_${formId}Percentage`;
   const formPercentage = fieldData?.[percentageField] || 100;
   const templateFieldData = fieldData?.[dynamicTemplateId] || [];
   const currentFieldIndex = templateFieldData.findIndex(
     (field: DynamicFieldShape) => field.id === dynamicFieldId
   );
-  const fieldPercentageField =
+  const fieldPercentage =
     templateFieldData[currentFieldIndex]?.percentageOverride;
-  const percentage = fieldData?.[fieldPercentageField] || formPercentage;
+  percentage = fieldPercentage || formPercentage;
 
   const { field, table, template } = dynamicFieldTableTotals({
     dynamicFieldId,
@@ -348,6 +377,7 @@ export const recalculateDynamicFields = ({
     ...currentField,
     id: dynamicFieldId,
     name: dynamicFieldId,
+    totalComputable: fieldValue,
     ...updatedCurrentFieldData(field),
   };
 
@@ -373,11 +403,13 @@ export const recalculateDynamicFields = ({
       value: totals[key],
     }));
 
-  return [
+  const fieldsToSave = [
     dynamicTemplateField,
     ...updatedFields(dynamicTemplateId, template),
     ...updatedFields(tableId, table),
   ];
+
+  return fieldsToSave;
 };
 
 interface UpdatedReportFields {

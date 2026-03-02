@@ -29,28 +29,31 @@ const categoryFootList = [
     readOnly: true,
   },
 ];
+const categoryFieldsToReturn = [
+  ServiceFieldType.TOTAL_COMPUTABLE,
+  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+];
 
-// Dynamic rows
-const dynamicRowId = `${categoryTableId}_otherCategories`;
+// Category table dynamic rows
+const categoryDynamicRowId = `${categoryTableId}_otherCategories`;
 const categoryDynamicBodyList = [
   {
-    id: dynamicRowId,
+    id: categoryDynamicRowId,
     label: "Other Categories",
   },
 ];
-
-const dynamicRowsTemplate = {
+const categoryDynamicFieldsToReturn = [
+  ServiceFieldType.CATEGORY,
+  ...categoryFieldsToReturn,
+];
+const categoryDynamicRowsTemplate = {
   forTableOnly: true,
-  id: dynamicRowId,
+  id: categoryDynamicRowId,
   props: {
     label: "Other Categories",
     dynamicFields: categoryDynamicBodyList.flatMap((service) =>
-      buildServiceFields(service, [
-        ServiceFieldType.CATEGORY,
-        ServiceFieldType.TOTAL_COMPUTABLE,
-        ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
-        ServiceFieldType.TOTAL_FEDERAL_SHARE,
-      ])
+      buildServiceFields(service, categoryDynamicFieldsToReturn)
     ),
   },
   type: ReportFormFieldType.DYNAMIC_OBJECT,
@@ -58,13 +61,10 @@ const dynamicRowsTemplate = {
     type: ValidationType.DYNAMIC_OPTIONAL,
     options: {
       dynamicFields: {
-        [ServiceFieldType.CATEGORY]: DynamicValidationType.TEXT_OPTIONAL,
-        [ServiceFieldType.TOTAL_COMPUTABLE]:
-          DynamicValidationType.NUMBER_OPTIONAL,
-        [ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE]:
-          DynamicValidationType.NUMBER_OPTIONAL,
-        [ServiceFieldType.TOTAL_FEDERAL_SHARE]:
-          DynamicValidationType.NUMBER_OPTIONAL,
+        category: DynamicValidationType.TEXT_OPTIONAL,
+        totalComputable: DynamicValidationType.NUMBER_OPTIONAL,
+        totalStateTerritoryShare: DynamicValidationType.NUMBER_OPTIONAL,
+        totalFederalShare: DynamicValidationType.NUMBER_OPTIONAL,
       },
     },
   },
@@ -96,12 +96,18 @@ export const supplementalServicesRoute: FormTablesRoute = {
         id: categoryTableId,
         // Display table fields in rows
         bodyRows: categoryBodyList.map((service) => {
-          const bodyFields = buildServiceFields(service);
+          const bodyFields = buildServiceFields(
+            service,
+            categoryFieldsToReturn
+          );
           return [service.label, ...bodyFields];
         }),
-        dynamicRowsTemplate,
+        dynamicRowsTemplate: categoryDynamicRowsTemplate,
         footRows: categoryFootList.map((service) => {
-          const footFields = buildServiceFields(service);
+          const footFields = buildServiceFields(
+            service,
+            categoryFieldsToReturn
+          );
           return ["Totals", ...footFields];
         }),
         headRows: [supplementalServicesHeaders],
@@ -114,11 +120,15 @@ export const supplementalServicesRoute: FormTablesRoute = {
     ],
     fields: [
       // Add table fields here only for validation
-      ...categoryBodyList.flatMap((service) => buildServiceFields(service)),
-      ...categoryFootList.flatMap((service) => buildServiceFields(service)),
-      dynamicRowsTemplate,
+      ...categoryBodyList.flatMap((service) =>
+        buildServiceFields(service, categoryFieldsToReturn)
+      ),
+      ...categoryFootList.flatMap((service) =>
+        buildServiceFields(service, categoryFieldsToReturn)
+      ),
+      categoryDynamicRowsTemplate,
       ...categoryDynamicBodyList.flatMap((service) =>
-        buildServiceFields(service)
+        buildServiceFields(service, categoryFieldsToReturn)
       ),
       {
         id: "supplementalServices_narrative",

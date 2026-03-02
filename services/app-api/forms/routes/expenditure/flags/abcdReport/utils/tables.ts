@@ -12,7 +12,8 @@ export const buildServiceFields = (
     ServiceFieldType.TOTAL_COMPUTABLE,
     ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
     ServiceFieldType.TOTAL_FEDERAL_SHARE,
-  ]
+  ],
+  dynamicLabel: string = "Other:"
 ) => {
   const buildServiceField = (
     suffix: string,
@@ -48,7 +49,7 @@ export const buildServiceFields = (
             "category",
             "Category",
             {
-              dynamicLabel: "Other:",
+              dynamicLabel,
             },
             {
               type: ReportFormFieldType.TEXT,
@@ -95,15 +96,9 @@ export const buildServiceFields = (
   return fields;
 };
 
+// Qualified HCBS & Demonstration Services pages
 export const statePlanServicesHeaders = [
   "Service",
-  "Total Computable",
-  "Total State / Territory Share",
-  "Total Federal Share",
-];
-
-export const supplementalServicesHeaders = [
-  "Category",
   "Total Computable",
   "Total State / Territory Share",
   "Total Federal Share",
@@ -245,6 +240,14 @@ export const c1915WaiverServices = (prefix: string) => [
   },
 ];
 
+// Supplemental Services page
+export const supplementalServicesHeaders = [
+  "Category",
+  "Total Computable",
+  "Total State / Territory Share",
+  "Total Federal Share",
+];
+
 export const supplementalServices = (prefix: string) => [
   {
     id: `${prefix}_shortTermHousingAssistance`,
@@ -264,7 +267,8 @@ export const supplementalServices = (prefix: string) => [
   },
 ];
 
-export const capacityBuildingHeaders = [
+// Administrative Costs page
+export const administrativeCostsHeaders = [
   "Budget Category",
   "Total Computable",
   "Override %",
