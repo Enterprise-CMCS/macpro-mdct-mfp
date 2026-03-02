@@ -21,8 +21,8 @@ const categoryTableId = "supplementalServices_category";
  * These lists will be mapped to buildServiceFields to create
  * totalComputable, totalStateTerritoryShare, and totalFederalShare fields
  */
-const supplementalServicesBodyList = supplementalServices(categoryTableId);
-const supplementalServicesFootList = [
+const categoryBodyList = supplementalServices(categoryTableId);
+const categoryFootList = [
   {
     id: categoryTableId,
     label: "Supplemental Services",
@@ -32,7 +32,7 @@ const supplementalServicesFootList = [
 
 // Dynamic rows
 const dynamicRowId = `${categoryTableId}_otherCategories`;
-const supplementalServicesDynamicBodyList = [
+const categoryDynamicBodyList = [
   {
     id: dynamicRowId,
     label: "Other Categories",
@@ -44,7 +44,7 @@ const dynamicRowsTemplate = {
   id: dynamicRowId,
   props: {
     label: "Other Categories",
-    dynamicFields: supplementalServicesDynamicBodyList.flatMap((service) =>
+    dynamicFields: categoryDynamicBodyList.flatMap((service) =>
       buildServiceFields(service, [
         ServiceFieldType.CATEGORY,
         ServiceFieldType.TOTAL_COMPUTABLE,
@@ -95,12 +95,12 @@ export const supplementalServicesRoute: FormTablesRoute = {
       {
         id: categoryTableId,
         // Display table fields in rows
-        bodyRows: supplementalServicesBodyList.map((service) => {
+        bodyRows: categoryBodyList.map((service) => {
           const bodyFields = buildServiceFields(service);
           return [service.label, ...bodyFields];
         }),
         dynamicRowsTemplate,
-        footRows: supplementalServicesFootList.map((service) => {
+        footRows: categoryFootList.map((service) => {
           const footFields = buildServiceFields(service);
           return ["Totals", ...footFields];
         }),
@@ -114,14 +114,10 @@ export const supplementalServicesRoute: FormTablesRoute = {
     ],
     fields: [
       // Add table fields here only for validation
-      ...supplementalServicesBodyList.flatMap((service) =>
-        buildServiceFields(service)
-      ),
-      ...supplementalServicesFootList.flatMap((service) =>
-        buildServiceFields(service)
-      ),
+      ...categoryBodyList.flatMap((service) => buildServiceFields(service)),
+      ...categoryFootList.flatMap((service) => buildServiceFields(service)),
       dynamicRowsTemplate,
-      ...supplementalServicesDynamicBodyList.flatMap((service) =>
+      ...categoryDynamicBodyList.flatMap((service) =>
         buildServiceFields(service)
       ),
       {
