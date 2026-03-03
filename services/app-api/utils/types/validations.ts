@@ -53,7 +53,7 @@ export interface NumberOptions {
 }
 
 export interface DynamicOptions {
-  dynamicFields?: {
+  dynamicFieldValidations?: {
     [key: string]: ValidationType | CustomValidation;
   };
 }

@@ -269,7 +269,7 @@ export const dynamic = (options?: DynamicOptions, min = 1) =>
         id: schemaMap[ValidationType.TEXT],
         name: schemaMap[ValidationType.TEXT],
         ...Object.fromEntries(
-          Object.entries(options?.dynamicFields || {}).map(
+          Object.entries(options?.dynamicFieldValidations || {}).map(
             ([key, validation]) => [key, resolveSchema(validation)]
           )
         ),

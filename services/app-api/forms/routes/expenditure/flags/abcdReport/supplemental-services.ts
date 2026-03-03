@@ -59,7 +59,7 @@ const categoryDynamicRowsTemplate = {
   validation: {
     type: ValidationType.DYNAMIC_OPTIONAL,
     options: {
-      dynamicFields: {
+      dynamicFieldValidations: {
         category: ValidationType.TEXT_OPTIONAL,
         totalComputable: ValidationType.NUMBER_OPTIONAL,
         totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
