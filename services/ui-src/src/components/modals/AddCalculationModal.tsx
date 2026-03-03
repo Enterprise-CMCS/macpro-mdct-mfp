@@ -1,13 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 // components
 import { Form, Modal } from "components";
 // form
-import { addEditExpenditureReport } from "forms/addEditExpenditureReport/addEditExpenditureReport";
+import { addSubRecipientForm } from "forms/addSubRecipient/addSubRecipient";
 // utils
 import { actionButtonText } from "./modalLogic";
-import { useStore } from "utils/state/useStore";
 // types
-import { AnyObject, FormJson, ReportType } from "types";
+import { AnyObject, FormJson } from "types";
 
 export const AddCalculationModal = ({
   modalDisclosure,
@@ -15,16 +14,14 @@ export const AddCalculationModal = ({
 }: Props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  const form: FormJson = {
-    id: "add-calculation-form",
-    fields: [],
-  };
+  const form: FormJson = addSubRecipientForm;
 
   const viewOnly = userIsAdmin || false;
 
   const writeReport = async (formData: AnyObject) => {
     setSubmitting(true);
-
+    // eslint-disable-next-line no-console
+    console.log("formData", formData);
     modalDisclosure.onClose();
     setSubmitting(false);
   };
@@ -47,7 +44,7 @@ export const AddCalculationModal = ({
         data-testid="add-calculation-form"
         id={form.id}
         formJson={form}
-        onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
+        onSubmit={writeReport}
         validateOnRender={false}
         dontReset={true}
       />
