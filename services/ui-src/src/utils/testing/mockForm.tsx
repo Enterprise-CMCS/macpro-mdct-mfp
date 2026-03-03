@@ -733,7 +733,8 @@ export const mockDynamicRowsTemplate = {
     options: {
       dynamicFieldValidations: {
         category: ValidationType.TEXT_OPTIONAL,
-        number: ValidationType.NUMBER_OPTIONAL,
+        percentageOverride: ValidationType.NUMBER_OPTIONAL,
+        totalComputable: ValidationType.NUMBER_OPTIONAL,
       },
     },
   },
@@ -746,6 +747,14 @@ export const mockDynamicRowsTemplate = {
         props: {
           mask: "currency",
           dynamicLabel: "Other:",
+        },
+      },
+      {
+        id: `${mockDynamicTemplateId}-percentageOverride`,
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.NUMBER_OPTIONAL,
+        props: {
+          mask: "percentage",
         },
       },
     ],

@@ -92,7 +92,7 @@ describe("<DynamicTableRows />", () => {
     render(dynamicTableRowsComponent());
 
     const row = screen.getByRole("row", {
-      name: `Other: $ Delete ${mockDynamicFieldId}`,
+      name: `Other: $ % Delete ${mockDynamicFieldId}`,
     });
     expect(row).toBeVisible();
 
@@ -126,16 +126,23 @@ describe("<DynamicTableRows />", () => {
     render(dynamicTableRowsComponent());
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
+    const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
+
+    await act(async () => {
+      await userEvent.clear(inputs[0]);
+      await userEvent.clear(pctInputs[0]);
+      await userEvent.tab();
+    });
+    expect(inputs[0]).toHaveValue("");
+    expect(pctInputs[0]).toHaveValue("");
 
     await act(async () => {
       await userEvent.type(inputs[0], "123");
-    });
-    expect(inputs[0]).toHaveValue("123");
-
-    await act(async () => {
+      await userEvent.type(pctInputs[0], "10.00");
       await userEvent.tab();
     });
     expect(inputs[0]).toHaveValue("123.00");
+    expect(pctInputs[0]).toHaveValue("10");
   });
 
   test("no dynamic rows", async () => {

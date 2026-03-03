@@ -29,7 +29,7 @@ const remainingShare = 15.99;
 const percentage = 87;
 const mocks = ["", "2"];
 
-const fieldData = {
+const baseFieldData = {
   [`fmap_${mockFormId}Percentage`]: percentage,
   ...Object.fromEntries(
     mocks.flatMap((mockId) => [
@@ -63,6 +63,7 @@ const fieldData = {
 describe("utils/autosave/dataModifications", () => {
   describe("updatedNumberFields()", () => {
     test("returns fields for updated totalComputable", () => {
+      const fieldData = structuredClone(baseFieldData);
       const fields: FieldInfo[] = [
         {
           name: `${mockFieldId}-totalComputable`,
@@ -106,8 +107,8 @@ describe("utils/autosave/dataModifications", () => {
     });
 
     test("returns fields for updated totalComputable with percentageOverride", () => {
-      const updatedFieldData = {
-        ...fieldData,
+      const fieldData = {
+        ...baseFieldData,
         [`${mockFieldId}-percentageOverride`]: 60,
       };
       const fields: FieldInfo[] = [
@@ -117,7 +118,7 @@ describe("utils/autosave/dataModifications", () => {
           value: 123,
         },
       ];
-      const updatedFields = updatedNumberFields(fields, updatedFieldData);
+      const updatedFields = updatedNumberFields(fields, fieldData);
       expect(updatedFields).toEqual([
         {
           name: `${mockFieldId}-totalComputable`,
@@ -153,6 +154,7 @@ describe("utils/autosave/dataModifications", () => {
     });
 
     test("returns fields for updated dynamic totalComputable", () => {
+      const fieldData = structuredClone(baseFieldData);
       const fields: FieldInfo[] = [
         {
           name: `${mockTempDynamicFieldId}-totalComputable`,
@@ -208,9 +210,116 @@ describe("utils/autosave/dataModifications", () => {
       ]);
     });
 
+    test("returns fields for updated percentageOverride", () => {
+      const fieldData = structuredClone(baseFieldData);
+      const fields: FieldInfo[] = [
+        {
+          name: `${mockFieldId}-percentageOverride`,
+          type: ReportFormFieldType.NUMBER,
+          value: 50,
+        },
+      ];
+      const updatedFields = updatedNumberFields(fields, fieldData);
+      expect(updatedFields).toEqual([
+        {
+          name: `${mockFieldId}-percentageOverride`,
+          type: ReportFormFieldType.NUMBER,
+          value: 50,
+        },
+        {
+          name: `${mockFieldId}-totalComputable`,
+          type: ReportFormFieldType.NUMBER,
+          value: 123,
+        },
+        {
+          name: `${mockFieldId}-totalFederalShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 61.5,
+        },
+        {
+          name: `${mockFieldId}-totalStateTerritoryShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 61.5,
+        },
+        {
+          name: `${mockTableId}-totalComputable`,
+          type: ReportFormFieldType.NUMBER,
+          value: 369.45,
+        },
+        {
+          name: `${mockTableId}-totalFederalShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 291.96,
+        },
+        {
+          name: `${mockTableId}-totalStateTerritoryShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 77.49,
+        },
+      ]);
+    });
+
+    test("returns fields for updated dynamic percentageOverride", () => {
+      const fieldData = structuredClone(baseFieldData);
+      const fields: FieldInfo[] = [
+        {
+          name: `${mockTempDynamicFieldId}-percentageOverride`,
+          type: ReportFormFieldType.NUMBER,
+          value: 50,
+        },
+      ];
+      const updatedFields = updatedNumberFields(fields, fieldData);
+      expect(updatedFields).toEqual([
+        {
+          name: mockDynamicTemplateId,
+          type: ReportFormFieldType.DYNAMIC_OBJECT,
+          value: [
+            {
+              id: mockDynamicFieldId,
+              name: mockDynamicFieldId,
+              percentageOverride: 50,
+              totalComputable: 123.45,
+              totalFederalShare: 61.73,
+              totalStateTerritoryShare: 61.72,
+            },
+          ],
+        },
+        {
+          name: `${mockDynamicTemplateId}-totalComputable`,
+          type: ReportFormFieldType.NUMBER,
+          value: 123.45,
+        },
+        {
+          name: `${mockDynamicTemplateId}-totalFederalShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 61.73,
+        },
+        {
+          name: `${mockDynamicTemplateId}-totalStateTerritoryShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 61.72,
+        },
+        {
+          name: `${mockTableId}-totalComputable`,
+          type: ReportFormFieldType.NUMBER,
+          value: 369.45,
+        },
+        {
+          name: `${mockTableId}-totalFederalShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 275.75,
+        },
+        {
+          name: `${mockTableId}-totalStateTerritoryShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 93.7,
+        },
+      ]);
+    });
+
     test("returns fields for no matching fmap percentage (defaults to 100%)", () => {
-      const updatedFieldData = {
-        ...fieldData,
+      const fieldData = {
+        ...baseFieldData,
         [`fmap_${mockFormId}Percentage`]: undefined,
       };
       const fields: FieldInfo[] = [
@@ -221,7 +330,7 @@ describe("utils/autosave/dataModifications", () => {
         },
       ];
 
-      const updatedFields = updatedNumberFields(fields, updatedFieldData);
+      const updatedFields = updatedNumberFields(fields, fieldData);
       expect(updatedFields).toEqual([
         {
           name: `${mockFieldId}-totalComputable`,
@@ -257,6 +366,7 @@ describe("utils/autosave/dataModifications", () => {
     });
 
     test("returns fields for updated percentage", () => {
+      const fieldData = structuredClone(baseFieldData);
       const fields: FieldInfo[] = [
         {
           name: `fmap_${mockFormId}Percentage`,
@@ -336,6 +446,7 @@ describe("utils/autosave/dataModifications", () => {
 
   describe("updatedTextFields()", () => {
     test("updates existing values for dynamic text", () => {
+      const fieldData = structuredClone(baseFieldData);
       const fields: FieldInfo[] = [
         {
           name: `${mockTempDynamicFieldId}-category`,
@@ -353,9 +464,9 @@ describe("utils/autosave/dataModifications", () => {
               category: "Mock text",
               id: mockDynamicFieldId,
               name: mockDynamicFieldId,
-              totalComputable: 123,
-              totalFederalShare: 107.01,
-              totalStateTerritoryShare: 15.99,
+              totalComputable: 123.45,
+              totalFederalShare: 123.45,
+              totalStateTerritoryShare: 0,
             },
           ],
         },
@@ -363,6 +474,10 @@ describe("utils/autosave/dataModifications", () => {
     });
 
     test("adds new values for dynamic text", () => {
+      const fieldData = {
+        ...baseFieldData,
+        [mockDynamicTemplateId]: undefined,
+      };
       const fields: FieldInfo[] = [
         {
           name: `${mockTempDynamicFieldId}-category`,
@@ -370,11 +485,7 @@ describe("utils/autosave/dataModifications", () => {
           value: "Mock text",
         },
       ];
-      const updatedFieldData = {
-        ...fieldData,
-        [mockDynamicTemplateId]: undefined,
-      };
-      const updatedFields = updatedTextFields(fields, updatedFieldData);
+      const updatedFields = updatedTextFields(fields, fieldData);
       expect(updatedFields).toEqual([
         {
           name: mockDynamicTemplateId,
@@ -411,6 +522,7 @@ describe("utils/autosave/dataModifications", () => {
 
   describe("updatedFieldDataOnFieldChange()", () => {
     test("returns fieldData on totalComputable change", () => {
+      const fieldData = structuredClone(baseFieldData);
       const name = `${mockFieldId}-totalComputable`;
 
       const updatedFields = updatedFieldDataOnFieldChange({
@@ -435,12 +547,12 @@ describe("utils/autosave/dataModifications", () => {
 
     test("returns fieldData on dynamic totalComputable update", () => {
       const name = `${mockTempDynamicFieldId}-totalComputable`;
-      const updatedFieldData = {
-        ...fieldData,
+      const fieldData = {
+        ...baseFieldData,
         [mockDynamicTemplateId]: undefined,
       };
       const updatedFields = updatedFieldDataOnFieldChange({
-        fieldData: updatedFieldData,
+        fieldData,
         id: name,
         name,
         percentage: 89,
@@ -472,6 +584,7 @@ describe("utils/autosave/dataModifications", () => {
 
     test("returns fieldData on dynamic totalComputable addition", () => {
       const name = `${mockTempDynamicFieldId}-totalComputable`;
+      const fieldData = structuredClone(baseFieldData);
 
       const updatedFields = updatedFieldDataOnFieldChange({
         fieldData,
@@ -487,6 +600,72 @@ describe("utils/autosave/dataModifications", () => {
         [mockDynamicTemplateId]: [
           {
             ...fieldData?.[mockDynamicTemplateId][0],
+            name: mockDynamicFieldId,
+            totalFederalShare: 89,
+            totalStateTerritoryShare: 11,
+          },
+        ],
+        [`${mockDynamicTemplateId}-totalComputable`]: 100,
+        [`${mockDynamicTemplateId}-totalFederalShare`]: 89,
+        [`${mockDynamicTemplateId}-totalStateTerritoryShare`]: 11,
+        [`${mockFieldId}-totalComputable`]: 123,
+        [`${mockFieldId}-totalFederalShare`]: 107.01,
+        [`${mockFieldId}-totalStateTerritoryShare`]: 15.99,
+        [`${mockTableId}-totalComputable`]: 346,
+        [`${mockTableId}-totalFederalShare`]: 303.02,
+        [`${mockTableId}-totalStateTerritoryShare`]: 42.98,
+      });
+    });
+
+    test("returns fieldData on percentageOverride change", () => {
+      const fieldData = structuredClone(baseFieldData);
+      const name = `${mockFieldId}-percentageOverride`;
+
+      const updatedFields = updatedFieldDataOnFieldChange({
+        fieldData,
+        id: name,
+        name,
+        percentage: 89,
+        percentageOverride: 89,
+        tableId: mockTableId,
+        value: 100,
+      });
+
+      expect(updatedFields).toEqual({
+        ...fieldData,
+        [`${mockFieldId}-percentageOverride`]: 89,
+        [`${mockFieldId}-totalComputable`]: 100,
+        [`${mockFieldId}-totalFederalShare`]: 89,
+        [`${mockFieldId}-totalStateTerritoryShare`]: 11,
+        [`${mockTableId}-totalComputable`]: 346.45,
+        [`${mockTableId}-totalFederalShare`]: 319.46,
+        [`${mockTableId}-totalStateTerritoryShare`]: 26.99,
+      });
+    });
+
+    test("returns fieldData on dynamic percentageOverride update", () => {
+      const name = `${mockTempDynamicFieldId}-percentageOverride`;
+      const fieldData = {
+        ...baseFieldData,
+        [mockDynamicTemplateId]: undefined,
+      };
+      const updatedFields = updatedFieldDataOnFieldChange({
+        fieldData,
+        id: name,
+        name,
+        percentage: 89,
+        percentageOverride: 89,
+        tableId: mockTableId,
+        value: 100,
+      });
+
+      expect(updatedFields).toEqual({
+        ...fieldData,
+        [mockDynamicTemplateId]: [
+          {
+            id: mockDynamicFieldId,
+            name: mockDynamicFieldId,
+            percentageOverride: 89,
             totalFederalShare: 89,
             totalStateTerritoryShare: 11,
           },
@@ -505,11 +684,11 @@ describe("utils/autosave/dataModifications", () => {
 
     test("returns fieldData for no matching case", () => {
       const name = "other";
-      const updatedFieldData = {
+      const fieldData = {
         mockField: "Mock text",
       };
       const updatedFields = updatedFieldDataOnFieldChange({
-        fieldData: updatedFieldData,
+        fieldData,
         id: name,
         name,
         percentage: 89,
@@ -517,7 +696,7 @@ describe("utils/autosave/dataModifications", () => {
         value: 100,
       });
 
-      expect(updatedFields).toEqual(updatedFieldData);
+      expect(updatedFields).toEqual(fieldData);
     });
   });
 
@@ -607,8 +786,8 @@ describe("utils/autosave/dataModifications", () => {
 
   describe("recalculateDynamicFields()", () => {
     test("returns calculations for dynamic fields", () => {
-      const updatedFieldData = {
-        ...fieldData,
+      const fieldData = {
+        ...baseFieldData,
         [`fmap_${mockFormId}Percentage`]: undefined,
         [mockDynamicTemplateId]: undefined,
       };
@@ -616,7 +795,7 @@ describe("utils/autosave/dataModifications", () => {
         dynamicFieldId: mockDynamicFieldId,
         dynamicTemplateId: mockDynamicTemplateId,
         formId: mockFormId,
-        fieldData: updatedFieldData,
+        fieldData,
         fieldValue: 100,
         tableId: mockTableId,
       });

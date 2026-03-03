@@ -70,7 +70,8 @@ export const CalculationTable = ({
     : otherColumnsWidth;
   const thWidth = (index: number) =>
     index === 0 ? `${firstColumnWidth}%` : `${remainingWidth / columnCount}%`;
-  const thAlign = (index: number) => (index > 1 ? "right" : "left");
+  const thAlign = (index: number) =>
+    index > columnCount / 2 ? "right" : "left";
 
   // Disable fields if no percentage is set or report is submitted
   const isDisabled = disabled || missingPercentage;
@@ -80,8 +81,9 @@ export const CalculationTable = ({
     (cell: FormTableCell) => {
       if (typeof cell === "string") return formPercentage;
       const { fieldId } = getFieldParts(cell.id);
-      const fieldPercentageField = `${fieldId}-percentageOverride`;
-      return report?.fieldData?.[fieldPercentageField] ?? formPercentage;
+      const fieldPercentage =
+        report?.fieldData?.[`${fieldId}-percentageOverride`];
+      return fieldPercentage || formPercentage;
     },
     [formPercentage, report?.fieldData]
   );

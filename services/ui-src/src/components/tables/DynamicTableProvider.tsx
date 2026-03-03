@@ -74,6 +74,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       name,
       value,
       percentage,
+      percentageOverride,
       tableId,
     }: UpdatedFieldsForDisplay) => {
       const updatedFieldData = updatedFieldDataOnFieldChange({
@@ -81,6 +82,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         id,
         name,
         percentage,
+        percentageOverride,
         tableId,
         value,
       });
@@ -101,9 +103,9 @@ export const DynamicTableProvider = ({ children }: any) => {
     mask,
     rowIndex,
   }: DisplayReadOnlyCellOptions) => {
-    const cellValue = localFieldData?.[id] ?? hydrate ?? initialValue;
+    const cellValue = localFieldData?.[id] || hydrate || initialValue;
     const readOnlyValue = Array.isArray(cellValue)
-      ? (cellValue?.[rowIndex]?.name ?? initialValue)
+      ? cellValue?.[rowIndex]?.name || initialValue
       : cellValue;
 
     return (
@@ -120,7 +122,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     disabled,
     formData,
     id,
-    percentage,
+    percentage: formPercentage,
     rowId,
     rowIndex,
     tableId,
@@ -129,7 +131,7 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     const props = cell.props || {};
     const { initialValue, mask, readOnly } = props;
-    const cellId = id ?? cell.id;
+    const cellId = id || cell.id;
 
     const renderReadOnly = (hydrate?: string) =>
       displayReadOnlyCell({
@@ -147,15 +149,48 @@ export const DynamicTableProvider = ({ children }: any) => {
         ...props,
         ariaLabelledby: ariaLabelledby || `${rowId} ${columnId}`,
         label: undefined,
-        handleOnChange: (e: InputChangeEvent) =>
-          debouncedUpdateReport({
+        handleOnChange: (e: InputChangeEvent) => {
+          const { id, name, value: inputValue } = e.target;
+          const { dynamicFieldId, dynamicTemplateId, fieldId, fieldType } =
+            getFieldParts(name);
+
+          let percentage;
+          // For totalComputable, use value from input
+          let value = inputValue;
+          let totalComputable = localFieldData?.[`${fieldId}-totalComputable`];
+          let percentageOverride =
+            localFieldData?.[`${fieldId}-percentageOverride`];
+
+          if (isTempDynamicField(name)) {
+            const templateFieldData = localFieldData?.[dynamicTemplateId] || [];
+            const currentField = templateFieldData.find(
+              (field: DynamicFieldShape) => field.id === dynamicFieldId
+            );
+
+            totalComputable = currentField?.totalComputable;
+            percentageOverride = currentField?.percentageOverride;
+          }
+          // For totalComputable, use percentageOverride from fieldData
+          percentage = percentageOverride || formPercentage;
+
+          if (fieldType === "percentageOverride") {
+            // For percentageOverride, use totalComputable from fieldData
+            value = totalComputable;
+            // For percentageOverride, use value from input
+            percentage = inputValue ? Number(inputValue) : formPercentage;
+            percentageOverride = inputValue;
+          }
+
+          return debouncedUpdateReport({
             fieldData: localFieldData,
-            id: e.target.id,
-            name: e.target.name,
-            value: e.target.value,
+            id,
+            name,
+            value,
             percentage,
+            percentageOverride,
             tableId,
-          }),
+          });
+        },
       },
     };
 
@@ -176,12 +211,12 @@ export const DynamicTableProvider = ({ children }: any) => {
       const { dynamicFieldId, dynamicTemplateId, fieldType } = getFieldParts(
         hydratedField.id
       );
-      const dynFieldData = localFieldData?.[dynamicTemplateId] || [];
-      const dynField = dynFieldData.find(
-        (f: DynamicFieldShape) => f.id === dynamicFieldId
+      const templateFieldData = localFieldData?.[dynamicTemplateId] || [];
+      const currentField = templateFieldData.find(
+        (field: DynamicFieldShape) => field.id === dynamicFieldId
       );
 
-      hydrateValue = dynField?.[fieldType];
+      hydrateValue = currentField?.[fieldType];
       hydratedProps = {
         ...hydratedField.props,
         hydrate: hydrateValue,
@@ -245,7 +280,8 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     const dynamicKeys = props?.dynamicFields.map((field: FormField) => {
       const { fieldType } = getFieldParts(field.id);
-      return [fieldType, field.props?.initialValue ?? ""];
+      const initialValue = field.props?.initialValue || "";
+      return [fieldType, initialValue];
     });
     const rows = localFieldData?.[dynamicRowsTemplate.id] || [];
 
@@ -420,6 +456,7 @@ interface UpdatedFieldsForDisplay {
   name: string;
   value: string;
   percentage: number;
+  percentageOverride?: number;
   tableId: string;
 }
 
