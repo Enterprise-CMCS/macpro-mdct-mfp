@@ -3,8 +3,6 @@ import { useState } from "react";
 import { Form, Modal } from "components";
 // form
 import { addSubRecipientForm } from "forms/addSubRecipient/addSubRecipient";
-// utils
-import { actionButtonText } from "./modalLogic";
 // types
 import { FormJson } from "types";
 import { Button, ModalFooter } from "@chakra-ui/react";
@@ -55,6 +53,7 @@ export const AddCalculationModal = ({
         data-testid="add-calculation-form"
         id={form.id}
         formJson={form}
+        disabled={viewOnly}
         onSubmit={() => {}}
         validateOnRender={false}
         dontReset={true}

@@ -170,11 +170,8 @@ export const Form = ({
         return (
           <ModalCalculationTable
             disabled={fieldInputDisabled}
-            formData={formData}
             id={id}
             key={id}
-            order={index}
-            report={report}
             {...props}
           />
         );
