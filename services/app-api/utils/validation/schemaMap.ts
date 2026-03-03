@@ -60,7 +60,7 @@ export const textCustom = (options: TextOptions) =>
     });
 
 // NUMBER - Helpers
-const validNAValues = ["N/A", "Data not available"];
+const validNAValues: (string | undefined)[] = ["N/A", "Data not available"];
 // const validNumberRegex = /^\.$|[0-9]/;
 const validIntegerRegex = /^[0-9\s,$%]+$/;
 
@@ -108,10 +108,8 @@ export const numberComparison = (options: NumberOptions) =>
     test: (value) => {
       const { boundary, comparator } = options;
       const { compare } = comparatorMap[comparator];
-      if (value) {
-        const isValidStringValue = validNAValues.includes(value);
-        return isValidStringValue || compare(Number(value), boundary);
-      } else return true;
+      const isValidStringValue = validNAValues.includes(value);
+      return isValidStringValue || compare(Number(value), boundary);
     },
     message: () => {
       const { error: comparisonError } = comparatorMap[options.comparator];
@@ -119,7 +117,21 @@ export const numberComparison = (options: NumberOptions) =>
     },
   });
 export const numberComparisonOptional = (options: NumberOptions) =>
-  numberComparison(options).notRequired().nullable();
+  numberOptional().test({
+    test: (value) => {
+      const { boundary, comparator } = options;
+      const { compare } = comparatorMap[comparator];
+      if (value) {
+        const isValidStringValue = validNAValues.includes(value);
+        return isValidStringValue || compare(Number(value), boundary);
+      }
+      return true;
+    },
+    message: () => {
+      const { error: comparisonError } = comparatorMap[options.comparator];
+      return comparisonError(options.boundary);
+    },
+  });
 
 // Integer or Valid Strings
 const validIntegerSchema = () =>
