@@ -731,7 +731,7 @@ export const mockDynamicRowsTemplate = {
   validation: {
     type: ValidationType.DYNAMIC_OPTIONAL,
     options: {
-      dynamicFields: {
+      dynamicFieldValidations: {
         category: ValidationType.TEXT_OPTIONAL,
         number: ValidationType.NUMBER_OPTIONAL,
       },

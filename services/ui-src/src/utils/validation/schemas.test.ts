@@ -118,7 +118,7 @@ describe("utils/validation/schemas", () => {
     test("returns true for number validation", () => {
       testSchema(
         schemaMap.dynamic({
-          dynamicFields: { name: ValidationType.NUMBER },
+          dynamicFieldValidations: { name: ValidationType.NUMBER },
         }),
         [[{ id: "mockId", name: "123" }]],
         true
@@ -128,7 +128,7 @@ describe("utils/validation/schemas", () => {
     test("returns false for text with number validation", () => {
       testSchema(
         schemaMap.dynamic({
-          dynamicFields: { name: ValidationType.NUMBER },
+          dynamicFieldValidations: { name: ValidationType.NUMBER },
         }),
         [[{ id: "mockId", name: "text" }]],
         false
@@ -152,7 +152,7 @@ describe("utils/validation/schemas", () => {
     test("returns true for number validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          dynamicFields: {
+          dynamicFieldValidations: {
             name: ValidationType.NUMBER_OPTIONAL,
           },
         }),
@@ -164,7 +164,7 @@ describe("utils/validation/schemas", () => {
     test("returns false for number validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          dynamicFields: {
+          dynamicFieldValidations: {
             name: ValidationType.NUMBER_OPTIONAL,
           },
         }),
@@ -176,7 +176,7 @@ describe("utils/validation/schemas", () => {
     test("returns true for number comparison validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          dynamicFields: {
+          dynamicFieldValidations: {
             name: {
               type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
               options: numberOptions,
@@ -191,7 +191,7 @@ describe("utils/validation/schemas", () => {
     test("returns false for number comparison validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          dynamicFields: {
+          dynamicFieldValidations: {
             name: {
               type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
               options: numberOptions,
