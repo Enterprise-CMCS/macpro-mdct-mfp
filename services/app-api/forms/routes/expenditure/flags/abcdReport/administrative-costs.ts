@@ -8,12 +8,11 @@ import {
 } from "../../../../../utils/types";
 // utils
 import {
+  administrativeCostsHeaders,
   buildServiceFields,
-  capacityBuildingHeaders,
   personnelHeaders,
   subRecipientsHeaders,
   supplementalServices,
-  supplementalServicesHeaders,
 } from "./utils";
 
 const administrativeCostsTableId = "administrativeCosts_administrativeCosts";
@@ -65,7 +64,7 @@ export const administrativeCostsRoute: FormTablesRoute = {
           const footFields = buildServiceFields(service);
           return ["Totals", ...footFields];
         }),
-        headRows: [supplementalServicesHeaders],
+        headRows: [administrativeCostsHeaders],
         tableType: FormTableType.CALCULATION,
         verbiage: {
           percentage: "Administrative Costs Percentage: {{percentage}}",
@@ -76,7 +75,7 @@ export const administrativeCostsRoute: FormTablesRoute = {
         id: capacityBuildingTableId,
         bodyRows: [],
         footRows: [],
-        headRows: [capacityBuildingHeaders],
+        headRows: [administrativeCostsHeaders],
         tableType: FormTableType.CALCULATION,
         verbiage: {
           percentage: "Capacity Building Percentage: {{percentage}}",

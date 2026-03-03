@@ -4,6 +4,7 @@ import {
   FormTablesRoute,
   PageTypes,
   ReportFormFieldType,
+  ServiceFieldType,
   ValidationType,
 } from "../../../../../utils/types";
 // utils
@@ -13,22 +14,64 @@ import {
   supplementalServicesHeaders,
 } from "./utils";
 
-const supplementalServicesTableId = "supplementalServices_supplementalServices";
+const categoryTableId = "supplementalServices_category";
 
 /*
  * These lists will be mapped to buildServiceFields to create
  * totalComputable, totalStateTerritoryShare, and totalFederalShare fields
  */
-const supplementalServicesBodyList = supplementalServices(
-  supplementalServicesTableId
-);
-const supplementalServicesFootList = [
+const categoryBodyList = supplementalServices(categoryTableId);
+const categoryFootList = [
   {
-    id: supplementalServicesTableId,
+    id: categoryTableId,
     label: "Supplemental Services",
     readOnly: true,
   },
 ];
+const categoryFieldsToReturn = [
+  ServiceFieldType.TOTAL_COMPUTABLE,
+  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+];
+
+// Category table dynamic rows
+const categoryDynamicRowId = `${categoryTableId}_otherCategories`;
+const categoryDynamicBodyList = [
+  {
+    id: categoryDynamicRowId,
+    label: "Other Categories",
+  },
+];
+const categoryDynamicFieldsToReturn = [
+  ServiceFieldType.CATEGORY,
+  ...categoryFieldsToReturn,
+];
+const categoryDynamicRowsTemplate = {
+  forTableOnly: true,
+  id: categoryDynamicRowId,
+  props: {
+    label: "Other Categories",
+    dynamicFields: categoryDynamicBodyList.flatMap((service) =>
+      buildServiceFields(service, categoryDynamicFieldsToReturn)
+    ),
+  },
+  type: ReportFormFieldType.DYNAMIC_OBJECT,
+  validation: {
+    type: ValidationType.DYNAMIC_OPTIONAL,
+    options: {
+      dynamicFieldValidations: {
+        category: ValidationType.TEXT_OPTIONAL,
+        totalComputable: ValidationType.NUMBER_OPTIONAL,
+        totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+        totalFederalShare: ValidationType.NUMBER_OPTIONAL,
+      },
+    },
+  },
+  verbiage: {
+    buttonText: "Add other category",
+    hint: "To add an additional category, click the “Add other category” button below.",
+  },
+};
 
 export const supplementalServicesRoute: FormTablesRoute = {
   name: "Supplemental Services",
@@ -49,14 +92,21 @@ export const supplementalServicesRoute: FormTablesRoute = {
     id: "exp-supplementalServices",
     tables: [
       {
-        id: supplementalServicesTableId,
+        id: categoryTableId,
         // Display table fields in rows
-        bodyRows: supplementalServicesBodyList.map((service) => {
-          const bodyFields = buildServiceFields(service);
+        bodyRows: categoryBodyList.map((service) => {
+          const bodyFields = buildServiceFields(
+            service,
+            categoryFieldsToReturn
+          );
           return [service.label, ...bodyFields];
         }),
-        footRows: supplementalServicesFootList.map((service) => {
-          const footFields = buildServiceFields(service);
+        dynamicRowsTemplate: categoryDynamicRowsTemplate,
+        footRows: categoryFootList.map((service) => {
+          const footFields = buildServiceFields(
+            service,
+            categoryFieldsToReturn
+          );
           return ["Totals", ...footFields];
         }),
         headRows: [supplementalServicesHeaders],
@@ -69,11 +119,15 @@ export const supplementalServicesRoute: FormTablesRoute = {
     ],
     fields: [
       // Add table fields here only for validation
-      ...supplementalServicesBodyList.flatMap((service) =>
-        buildServiceFields(service)
+      ...categoryBodyList.flatMap((service) =>
+        buildServiceFields(service, categoryFieldsToReturn)
       ),
-      ...supplementalServicesFootList.flatMap((service) =>
-        buildServiceFields(service)
+      ...categoryFootList.flatMap((service) =>
+        buildServiceFields(service, categoryFieldsToReturn)
+      ),
+      categoryDynamicRowsTemplate,
+      ...categoryDynamicBodyList.flatMap((service) =>
+        buildServiceFields(service, categoryFieldsToReturn)
       ),
       {
         id: "supplementalServices_narrative",
