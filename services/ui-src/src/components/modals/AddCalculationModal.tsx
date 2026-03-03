@@ -65,7 +65,7 @@ export const AddCalculationModal = ({
           data-testid="modal-submit-button"
           onClick={writeReport}
         >
-          {actionButtonText(submitting, viewOnly, "Add Calculation")}
+          Add Sub Recipient
         </Button>
       </ModalFooter>
     </Modal>
