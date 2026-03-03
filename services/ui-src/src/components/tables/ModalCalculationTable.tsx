@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 // components
 import {
   Box,
@@ -8,42 +7,25 @@ import {
   TableCaption,
   Tbody,
   Td,
-  Text,
   Tfoot,
-  Th,
   Thead,
   Tr,
   useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
 // types
-import { AnyObject, FormField, FormTable, ReportShape } from "types";
+import { AnyObject, FormTable, ReportShape } from "types";
 // utils
-import {
-  formFieldFactory,
-  hydrateFormFields,
-  maskResponseData,
-  parseCustomHtml,
-  translate,
-  updateRenderFields,
-  updatedReportOnFieldChange,
-} from "utils";
 import { AddCalculationModal } from "components/modals/AddCalculationModal";
 
 export const ModalCalculationTable = ({
   bodyRows = [],
   disabled,
   footRows,
-  formData,
   headRows,
   id: tableId,
-  options,
-  order = 0,
-  report = {} as ReportShape,
   verbiage,
 }: Props) => {
-  const [localReport, setLocalReport] = useState({} as ReportShape);
-
   const {
     isOpen: calculationModalIsOpen,
     onOpen: calculationModalOnOpenHandler,
@@ -70,7 +52,6 @@ export const ModalCalculationTable = ({
         disabled={disabled}
         onClick={openModal}
       >
-        {" "}
         {verbiage?.modal}
       </Button>
       {calculationModal}
@@ -117,12 +98,6 @@ interface Props extends Omit<FormTable, "tableType"> {
   formData?: AnyObject;
   order?: number;
   report?: ReportShape;
-}
-
-interface DisplayCellOptions {
-  cell: string | FormField;
-  columnId?: string;
-  rowId?: string;
 }
 
 const sx = {
