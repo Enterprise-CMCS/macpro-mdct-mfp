@@ -21,13 +21,17 @@ const ModalCalcTable = (
   <RouterWrappedComponent>
     <ModalCalculationTable {...defaultProps} />
   </RouterWrappedComponent>
-)
+);
 
 describe("ModalCalculationTable", () => {
   it("renders the heading and button", () => {
     render(ModalCalcTable);
-    expect(screen.getByRole("heading", { name: verbiage.title })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: verbiage.modal })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: verbiage.title })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: verbiage.modal })
+    ).toBeInTheDocument();
   });
 
   it("disables the button when disabled prop is true", () => {
