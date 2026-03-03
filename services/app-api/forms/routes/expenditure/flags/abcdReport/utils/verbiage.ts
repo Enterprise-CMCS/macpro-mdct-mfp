@@ -3,6 +3,11 @@ export const accordionWithFmapLink = {
   intro: [
     {
       type: "p",
+      props: {
+        style: {
+          marginBottom: "0",
+        },
+      },
       content:
         "Enter your total computable costs for each service during the reporting period. Of note,",
     },
