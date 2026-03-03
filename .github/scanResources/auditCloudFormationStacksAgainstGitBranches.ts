@@ -80,9 +80,10 @@ async function main() {
     .replace(/[^a-zA-Z]/g, "");
   const accountIdentifier = await getAccountIdentifier();
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const outputFilename = `orphaned-stacks-${repoEnding}-${accountIdentifier}-${timestamp}.txt`;
-  const outputFilenameBasename = path.basename(outputFilename);
-  const outputFile = path.join(process.cwd(), outputFilenameBasename);
+  const filename = `orphaned-stacks-${repoEnding}-${accountIdentifier}-${timestamp}.txt`;
+  // Prevent path traversal
+  const basename = path.basename(filename);
+  const outputFile = path.join(process.cwd(), basename);
 
   const log = (line: string = "") => {
     console.log(line);
