@@ -2,10 +2,11 @@ import { array, boolean, mixed, object, string } from "yup";
 import {
   Choice,
   ComparatorMap,
+  CustomValidation,
   DynamicOptions,
-  DynamicValidationType,
   NumberOptions,
   TextOptions,
+  ValidationType,
 } from "../types";
 import {
   checkRatioInputAgainstRegexes,
@@ -59,7 +60,7 @@ export const textCustom = (options: TextOptions) =>
     });
 
 // NUMBER - Helpers
-const validNAValues = ["N/A", "Data not available"];
+const validNAValues: (string | undefined)[] = ["N/A", "Data not available"];
 // const validNumberRegex = /^\.$|[0-9]/;
 const validIntegerRegex = /^[0-9\s,$%]+$/;
 
@@ -107,10 +108,24 @@ export const numberComparison = (options: NumberOptions) =>
     test: (value) => {
       const { boundary, comparator } = options;
       const { compare } = comparatorMap[comparator];
+      const isValidStringValue = validNAValues.includes(value);
+      return isValidStringValue || compare(Number(value), boundary);
+    },
+    message: () => {
+      const { error: comparisonError } = comparatorMap[options.comparator];
+      return comparisonError(options.boundary);
+    },
+  });
+export const numberComparisonOptional = (options: NumberOptions) =>
+  numberOptional().test({
+    test: (value) => {
+      const { boundary, comparator } = options;
+      const { compare } = comparatorMap[comparator];
       if (value) {
         const isValidStringValue = validNAValues.includes(value);
         return isValidStringValue || compare(Number(value), boundary);
-      } else return true;
+      }
+      return true;
     },
     message: () => {
       const { error: comparisonError } = comparatorMap[options.comparator];
@@ -232,18 +247,28 @@ export const radio = () =>
 export const radioOptional = () => radio().notRequired();
 
 // DYNAMIC
-export const dynamic = (options?: DynamicOptions) =>
+const resolveSchema = (validation: string | CustomValidation) => {
+  if (typeof validation === "string") return schemaMap[validation];
+
+  return schemaMap[validation.type](validation.options);
+};
+export const dynamic = (options?: DynamicOptions, min = 1) =>
   array()
-    .min(1)
+    .min(min)
     .of(
       object().shape({
-        id: text(),
-        name: schemaMap[options?.validationType || DynamicValidationType.TEXT],
+        id: schemaMap[ValidationType.TEXT],
+        name: schemaMap[ValidationType.TEXT],
+        ...Object.fromEntries(
+          Object.entries(options?.dynamicFieldValidations || {}).map(
+            ([key, validation]) => [key, resolveSchema(validation)]
+          )
+        ),
       })
     )
     .required(error.REQUIRED_GENERIC);
 export const dynamicOptional = (options?: DynamicOptions) =>
-  dynamic(options).notRequired().nullable();
+  dynamic(options, 0).notRequired().nullable();
 
 // NESTED
 export const nested = (
@@ -290,6 +315,8 @@ export const schemaMap: any = {
   emailOptional: emailOptional(),
   number: number(),
   numberComparison: (options: NumberOptions) => numberComparison(options),
+  numberComparisonOptional: (options: NumberOptions) =>
+    numberComparisonOptional(options),
   numberOptional: numberOptional(),
   objectArray: objectArray(),
   radio: radio(),
