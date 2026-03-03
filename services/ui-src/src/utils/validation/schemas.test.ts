@@ -183,7 +183,7 @@ describe("utils/validation/schemas", () => {
             },
           },
         }),
-        [[{ id: "mockId", name: "9" }]],
+        [[{ id: "mockId", name: "9" }], [{ id: "mockId", name: "" }]],
         true
       );
     });
@@ -198,7 +198,12 @@ describe("utils/validation/schemas", () => {
             },
           },
         }),
-        [[{ id: "mockId", name: "11" }]],
+        [
+          [
+            { id: "mockId", name: "11" },
+            { id: "mockId", name: "10.01" },
+          ],
+        ],
         false
       );
     });
