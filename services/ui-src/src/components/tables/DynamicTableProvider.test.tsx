@@ -7,11 +7,7 @@ import {
   DynamicTableProvider,
 } from "./DynamicTableProvider";
 // types
-import {
-  DynamicValidationType,
-  ReportFormFieldType,
-  ValidationType,
-} from "types";
+import { ReportFormFieldType, ValidationType } from "types";
 // utils
 import {
   mockDynamicFieldId,
@@ -74,7 +70,7 @@ const TestComponent = () => {
   const dynamicField = {
     id: `${mockDynamicTemplateId}-mockNumberFieldId`,
     type: ReportFormFieldType.NUMBER,
-    validation: DynamicValidationType.NUMBER_OPTIONAL,
+    validation: ValidationType.NUMBER_OPTIONAL,
     props: {
       mask: "currency",
     },

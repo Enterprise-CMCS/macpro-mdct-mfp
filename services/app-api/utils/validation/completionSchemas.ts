@@ -274,6 +274,7 @@ export const completionSchemaMap: any = {
   emailOptional: emailOptional(),
   number: number(),
   numberComparison: schemaMap.numberComparison,
+  numberComparisonOptional: schemaMap.numberComparisonOptional,
   numberOptional: numberOptional(),
   ratio: ratio(),
   text: text(),

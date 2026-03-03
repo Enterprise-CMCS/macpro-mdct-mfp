@@ -4,7 +4,7 @@ import {
   isEndDateAfterStartDate,
   nested,
 } from "./completionSchemas";
-import { AnyObject, DynamicValidationType } from "../types";
+import { AnyObject, ValidationType } from "../types";
 
 describe("utils/validation/completionSchemas", () => {
   /*
@@ -114,7 +114,7 @@ describe("utils/validation/completionSchemas", () => {
     test("returns true for number validation", () => {
       testSchema(
         schemaMap.dynamic({
-          dynamicFields: { name: DynamicValidationType.NUMBER },
+          dynamicFields: { name: ValidationType.NUMBER },
         }),
         [[{ id: "mockId", name: "123" }]],
         true
@@ -124,7 +124,7 @@ describe("utils/validation/completionSchemas", () => {
     test("returns false for text with number validation", () => {
       testSchema(
         schemaMap.dynamic({
-          dynamicFields: { name: DynamicValidationType.NUMBER },
+          dynamicFields: { name: ValidationType.NUMBER },
         }),
         [[{ id: "mockId", name: "text" }]],
         false
@@ -136,7 +136,7 @@ describe("utils/validation/completionSchemas", () => {
     test("returns true for text validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.TEXT_OPTIONAL,
+          validationType: ValidationType.TEXT_OPTIONAL,
         }),
         [[{ id: "mockId", name: "text" }]],
         true
@@ -146,7 +146,7 @@ describe("utils/validation/completionSchemas", () => {
     test("returns true for empty text", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.TEXT_OPTIONAL,
+          validationType: ValidationType.TEXT_OPTIONAL,
         }),
         [],
         true
@@ -156,7 +156,7 @@ describe("utils/validation/completionSchemas", () => {
     test("returns true for number validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.NUMBER_OPTIONAL,
+          validationType: ValidationType.NUMBER_OPTIONAL,
         }),
         [[{ id: "mockId", name: "123" }]],
         true
@@ -166,7 +166,7 @@ describe("utils/validation/completionSchemas", () => {
     test("returns true for empty number", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.NUMBER_OPTIONAL,
+          validationType: ValidationType.NUMBER_OPTIONAL,
         }),
         [],
         true

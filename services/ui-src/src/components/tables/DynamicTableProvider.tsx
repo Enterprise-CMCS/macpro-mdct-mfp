@@ -10,7 +10,7 @@ import {
 } from "react";
 import { useFormContext } from "react-hook-form";
 // components
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { EntityContext, ReportContext } from "components";
 // types
 import {
@@ -220,11 +220,11 @@ export const DynamicTableProvider = ({ children }: any) => {
 
       return (
         <Flex>
-          <Box sx={sx.label}>
+          <Flex sx={sx.label}>
             <label htmlFor={tempDynamicId} id={dynamicLabelId}>
               {cell.props?.dynamicLabel}
             </label>
-          </Box>
+          </Flex>
           {displayCell({
             ...props,
             ariaLabelledby: `${rowId} ${dynamicLabelId}`,
@@ -430,7 +430,7 @@ const sx = {
     textAlign: "right",
   },
   label: {
+    alignItems: "center",
     marginRight: "spacer1",
-    marginTop: "spacer2",
   },
 };

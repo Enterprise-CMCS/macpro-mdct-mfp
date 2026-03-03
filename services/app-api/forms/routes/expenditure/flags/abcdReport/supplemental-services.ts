@@ -1,6 +1,5 @@
 // types
 import {
-  DynamicValidationType,
   FormTableType,
   FormTablesRoute,
   PageTypes,
@@ -61,10 +60,10 @@ const categoryDynamicRowsTemplate = {
     type: ValidationType.DYNAMIC_OPTIONAL,
     options: {
       dynamicFields: {
-        category: DynamicValidationType.TEXT_OPTIONAL,
-        totalComputable: DynamicValidationType.NUMBER_OPTIONAL,
-        totalStateTerritoryShare: DynamicValidationType.NUMBER_OPTIONAL,
-        totalFederalShare: DynamicValidationType.NUMBER_OPTIONAL,
+        category: ValidationType.TEXT_OPTIONAL,
+        totalComputable: ValidationType.NUMBER_OPTIONAL,
+        totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+        totalFederalShare: ValidationType.NUMBER_OPTIONAL,
       },
     },
   },

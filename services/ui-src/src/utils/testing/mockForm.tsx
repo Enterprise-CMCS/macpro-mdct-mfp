@@ -1,6 +1,5 @@
 import {
   DynamicModalOverlayReportPageShape,
-  DynamicValidationType,
   FormJson,
   FormTableType,
   OverlayModalPageShape,
@@ -733,8 +732,8 @@ export const mockDynamicRowsTemplate = {
     type: ValidationType.DYNAMIC_OPTIONAL,
     options: {
       dynamicFields: {
-        category: DynamicValidationType.TEXT_OPTIONAL,
-        number: DynamicValidationType.NUMBER_OPTIONAL,
+        category: ValidationType.TEXT_OPTIONAL,
+        number: ValidationType.NUMBER_OPTIONAL,
       },
     },
   },
@@ -743,7 +742,7 @@ export const mockDynamicRowsTemplate = {
       {
         id: `${mockDynamicTemplateId}-totalComputable`,
         type: ReportFormFieldType.NUMBER,
-        validation: DynamicValidationType.NUMBER_OPTIONAL,
+        validation: ValidationType.NUMBER_OPTIONAL,
         props: {
           mask: "currency",
           dynamicLabel: "Other:",

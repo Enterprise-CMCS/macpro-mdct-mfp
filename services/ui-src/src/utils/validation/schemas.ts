@@ -9,6 +9,7 @@ import {
 import {
   Choice,
   ComparatorMap,
+  CustomValidation,
   DynamicOptions,
   NumberOptions,
   TextOptions,
@@ -112,6 +113,11 @@ export const numberComparison = (options: NumberOptions) =>
       return comparisonError(options.boundary);
     },
   });
+export const numberComparisonOptional = (options: NumberOptions) =>
+  numberComparison(options)
+    .notRequired()
+    .nullable()
+    .transform(transformEmptyStringToNull);
 
 // Integer or Valid Strings
 const validIntegerSchema = () =>
@@ -241,6 +247,11 @@ export const radio = () =>
 export const radioOptional = () => radio().notRequired();
 
 // DYNAMIC
+const resolveSchema = (validation: string | CustomValidation) => {
+  if (typeof validation === "string") return schemaMap[validation];
+
+  return schemaMap[validation.type](validation.options);
+};
 export const dynamic = (options?: DynamicOptions, min = 1) =>
   array()
     .min(min)
@@ -249,10 +260,9 @@ export const dynamic = (options?: DynamicOptions, min = 1) =>
         id: schemaMap[ValidationType.TEXT],
         name: schemaMap[ValidationType.TEXT],
         ...Object.fromEntries(
-          Object.entries(options?.dynamicFields || {}).map(([key, value]) => [
-            key,
-            schemaMap[value],
-          ])
+          Object.entries(options?.dynamicFields || {}).map(
+            ([key, validation]) => [key, resolveSchema(validation)]
+          )
         ),
       })
     )
@@ -302,6 +312,8 @@ export const schemaMap: any = {
   emailOptional: emailOptional(),
   number: number(),
   numberComparison: (options: NumberOptions) => numberComparison(options),
+  numberComparisonOptional: (options: NumberOptions) =>
+    numberComparisonOptional(options),
   numberOptional: numberOptional(),
   radio: radio(),
   radioOptional: radioOptional(),
