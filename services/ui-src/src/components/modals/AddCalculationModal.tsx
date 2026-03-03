@@ -6,7 +6,8 @@ import { addSubRecipientForm } from "forms/addSubRecipient/addSubRecipient";
 // utils
 import { actionButtonText } from "./modalLogic";
 // types
-import { AnyObject, FormJson } from "types";
+import { FormJson } from "types";
+import { Button, ModalFooter } from "@chakra-ui/react";
 
 export const AddCalculationModal = ({
   modalDisclosure,
@@ -18,10 +19,20 @@ export const AddCalculationModal = ({
 
   const viewOnly = userIsAdmin || false;
 
-  const writeReport = async (formData: AnyObject) => {
+  /*
+   *  This function is actually intercepting the form submission. This form lives inside
+   * another form, and thus we need to handle the submission manually here. We can replace this
+   * with a proper onSubmit handler in the future when we refactor the modal forms to not live
+   * inside the main form.
+   */
+  const writeReport = async () => {
     setSubmitting(true);
-    // eslint-disable-next-line no-console
-    console.log("formData", formData);
+    var modalForm = document.getElementById(form.id);
+    var data = new FormData(modalForm as HTMLFormElement);
+    for (var [key, value] of data) {
+      // eslint-disable-next-line no-console
+      console.log(key, value);
+    }
     modalDisclosure.onClose();
     setSubmitting(false);
   };
@@ -36,7 +47,7 @@ export const AddCalculationModal = ({
       content={{
         heading: form.heading?.add,
         subheading: form.heading?.subheading,
-        actionButtonText: actionButtonText(submitting, viewOnly, undefined),
+        actionButtonText: "",
         closeButtonText: "Cancel",
       }}
     >
@@ -44,10 +55,19 @@ export const AddCalculationModal = ({
         data-testid="add-calculation-form"
         id={form.id}
         formJson={form}
-        onSubmit={writeReport}
+        onSubmit={() => {}}
         validateOnRender={false}
         dontReset={true}
       />
+      <ModalFooter sx={sx.modalFooter}>
+        <Button
+          type="submit"
+          data-testid="modal-submit-button"
+          onClick={writeReport}
+        >
+          {actionButtonText(submitting, viewOnly, "Add Calculation")}
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };
@@ -59,3 +79,10 @@ interface Props {
   };
   userIsAdmin?: boolean;
 }
+
+const sx = {
+  modalFooter: {
+    paddingStart: 0,
+    justifyContent: "start",
+  },
+};
