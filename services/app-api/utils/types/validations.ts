@@ -1,10 +1,3 @@
-export enum DynamicValidationType {
-  NUMBER = "number",
-  NUMBER_OPTIONAL = "numberOptional",
-  TEXT = "text",
-  TEXT_OPTIONAL = "textOptional",
-}
-
 export enum ValidationType {
   CHECKBOX = "checkbox",
   CHECKBOX_OPTIONAL = "checkboxOptional",
@@ -15,6 +8,7 @@ export enum ValidationType {
   END_DATE = "endDate",
   NUMBER = "number",
   NUMBER_COMPARISON = "numberComparison",
+  NUMBER_COMPARISON_OPTIONAL = "numberComparisonOptional",
   NUMBER_OPTIONAL = "numberOptional",
   RADIO = "radio",
   TEXT = "text",
@@ -59,5 +53,7 @@ export interface NumberOptions {
 }
 
 export interface DynamicOptions {
-  validationType?: DynamicValidationType;
+  dynamicFieldValidations?: {
+    [key: string]: ValidationType | CustomValidation;
+  };
 }
