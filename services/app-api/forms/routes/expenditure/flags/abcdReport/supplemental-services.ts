@@ -52,7 +52,9 @@ const categoryDynamicRowsTemplate = {
   props: {
     label: "Other Categories",
     dynamicFields: categoryDynamicBodyList.flatMap((service) =>
-      buildServiceFields(service, categoryDynamicFieldsToReturn)
+      buildServiceFields(service, categoryDynamicFieldsToReturn, {
+        dynamicLabel: "Other:",
+      })
     ),
   },
   type: ReportFormFieldType.DYNAMIC_OBJECT,

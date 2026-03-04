@@ -3,6 +3,7 @@ import {
   ReportFormFieldType,
   ServiceField,
   ServiceFieldType,
+  ValidationComparator,
   ValidationType,
 } from "../../../../../../utils/types";
 
@@ -13,7 +14,7 @@ export const buildServiceFields = (
     ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
     ServiceFieldType.TOTAL_FEDERAL_SHARE,
   ],
-  dynamicLabel: string = "Other:"
+  settings?: AnyObject
 ) => {
   const buildServiceField = (
     suffix: string,
@@ -49,7 +50,7 @@ export const buildServiceFields = (
             "category",
             "Category",
             {
-              dynamicLabel,
+              dynamicLabel: settings?.dynamicLabel,
             },
             {
               type: ReportFormFieldType.TEXT,
@@ -66,6 +67,29 @@ export const buildServiceFields = (
             initialValue: service.readOnly ? "0" : "",
             readOnly: service.readOnly,
           })
+        );
+        break;
+
+      case ServiceFieldType.PERCENTAGE_OVERRIDE:
+        fields.push(
+          buildServiceField(
+            "percentageOverride",
+            "Override %",
+            {
+              decimalPlacesToRoundTo: 0,
+              mask: "percentage",
+            },
+            {
+              validation: {
+                type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+                options: {
+                  boundary: 100,
+                  comparator:
+                    ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+                },
+              },
+            }
+          )
         );
         break;
 
@@ -274,6 +298,33 @@ export const administrativeCostsHeaders = [
   "Override %",
   "Total State / Territory Share",
   "Total Federal Share",
+];
+
+export const administrativeCosts = (prefix: string) => [
+  {
+    id: `${prefix}_personnel`,
+    label: "Personnel",
+  },
+  {
+    id: `${prefix}_fringeBenefits`,
+    label: "Fringe Benefits",
+  },
+  {
+    id: `${prefix}_travel`,
+    label: "Travel",
+  },
+  {
+    id: `${prefix}_equipment`,
+    label: "Equipment",
+  },
+  {
+    id: `${prefix}_supplies`,
+    label: "Supplies",
+  },
+  {
+    id: `${prefix}_indirectCosts`,
+    label: "Indirect Costs",
+  },
 ];
 
 export const personnelHeaders = [
