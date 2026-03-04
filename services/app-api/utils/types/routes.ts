@@ -131,6 +131,7 @@ export interface ServiceField {
 
 export enum ServiceFieldType {
   CATEGORY = "category",
+  PERCENTAGE_OVERRIDE = "percentageOverride",
   TOTAL_COMPUTABLE = "totalComputable",
   TOTAL_FEDERAL_SHARE = "totalFederalShare",
   TOTAL_STATE_TERRITORY_SHARE = "totalStateTerritoryShare",
