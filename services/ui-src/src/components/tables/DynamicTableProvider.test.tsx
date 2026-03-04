@@ -89,6 +89,7 @@ const TestComponent = () => {
       {
         id: mockDynamicFieldId,
         mockNumberFieldId: "12.34",
+        mockPercentageFieldId: "10",
       },
     ],
   };
