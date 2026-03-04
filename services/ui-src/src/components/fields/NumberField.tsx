@@ -1,29 +1,41 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react";
+import {
+  HTMLInputAutoCompleteAttribute,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useFormContext } from "react-hook-form";
-import { SystemStyleObject } from "@chakra-ui/react";
 // components
 import { EntityContext, NumberFieldDisplay, ReportContext } from "components";
 // utils
 import {
+  applyMask,
   autosaveFieldData,
+  cleanAndMaskNumberValues,
   getAutosaveFields,
   labelTextWithOptional,
+  makeStringParseableForDatabase,
+  maskMap,
   parseCustomHtml,
   updatedNumberFields,
   useStore,
 } from "utils";
-import { makeStringParseableForDatabase } from "utils/other/clean";
-import { applyMask, maskMap } from "utils/other/mask";
 // types
-import { InputChangeEvent, ReportFormFieldType } from "types";
+import { SystemStyleObject } from "@chakra-ui/react";
+import {
+  CustomHtmlElement,
+  InputChangeEvent,
+  ReportFormFieldType,
+} from "types";
 
 export const NumberField = ({
   ariaLabelledby,
   autoComplete,
-  autosave,
-  clear,
+  autosave = false,
+  clear = false,
   decimalPlacesToRoundTo,
-  disabled,
+  disabled = false,
   handleOnChange,
   hint,
   hydrate,
@@ -31,21 +43,21 @@ export const NumberField = ({
   label,
   mask,
   name,
-  nested,
+  nested = false,
   placeholder,
-  readOnly,
-  styleAsOptional,
+  readOnly = false,
+  styleAsOptional = false,
   sxOverride,
-  validateOnRender,
+  validateOnRender = false,
 }: Props) => {
   const defaultValue = initialValue;
-  const [displayValue, setDisplayValue] = useState(defaultValue);
+  const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
   // get form context and register field
   const form = useFormContext();
   const fieldIsRegistered = name in form.getValues();
   const { full_name, state } = useStore().user ?? {};
-  const { report, selectedEntity } = useStore();
+  const { report, selectedEntity, setAutosaveState } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
@@ -59,6 +71,7 @@ export const NumberField = ({
 
   // set initial display value to form state field value or hydration value
   const hydrationValue = hydrate || defaultValue;
+
   useEffect(() => {
     // if form state has value for field, set as display value
     const fieldValue = form.getValues(name);
@@ -94,32 +107,34 @@ export const NumberField = ({
   }, [hydrationValue]); // only runs on hydrationValue fetch/update
 
   // update form data on change, but do not mask
-  const onChangeHandler = async (e: InputChangeEvent) => {
-    const { name, value } = e.target;
+  const onChangeHandler = async (event: InputChangeEvent) => {
+    const { name, value } = event.target;
     setDisplayValue(value);
     form.setValue(name, value, { shouldValidate: true });
 
-    if (handleOnChange) handleOnChange(e);
+    if (handleOnChange) handleOnChange(event);
   };
 
-  // update display value with masked value; if should autosave, submit field data to database on blur
-  const onBlurHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  // if should autosave, submit field data to database on blur
+  const onBlurHandler = async (event: InputChangeEvent) => {
+    const { name, value } = event.target;
     // if field is blank, trigger client-side field validation error
     if (!value.trim()) form.trigger(name);
-    // mask value and set as display value
-    const formattedFieldValue = applyMask(value, mask, decimalPlacesToRoundTo);
-    const maskedFieldValue = formattedFieldValue.maskedValue;
 
-    // this value eventually gets sent to the database, so we need to make it parseable as a number again
-    const cleanedFieldValue = formattedFieldValue.isValid
-      ? makeStringParseableForDatabase(maskedFieldValue, mask)
-      : maskedFieldValue;
+    // update display value with masked value
+    const { cleanedFieldValue, maskedFieldValue } = cleanAndMaskNumberValues({
+      decimalPlacesToRoundTo,
+      mask,
+      value,
+    });
+
     form.setValue(name, cleanedFieldValue, { shouldValidate: true });
     setDisplayValue(maskedFieldValue);
 
-    //submit field data to database (inline validation is run prior to API call)
+    // submit field data to database (inline validation is run prior to API call)
     if (autosave) {
+      // track the state of autosave in state management
+      setAutosaveState(true);
       const fields = getAutosaveFields({
         name,
         type: ReportFormFieldType.NUMBER,
@@ -127,7 +142,7 @@ export const NumberField = ({
         defaultValue,
         hydrationValue,
       });
-      const fieldsToSave = updatedNumberFields(fields, report);
+      const fieldsToSave = updatedNumberFields(fields, report?.fieldData);
 
       const reportArgs = {
         id: report?.id,
@@ -145,6 +160,8 @@ export const NumberField = ({
           selectedEntity,
           prepareEntityPayload,
         },
+      }).then(() => {
+        setAutosaveState(false);
       });
     }
   };
@@ -179,15 +196,23 @@ export const NumberField = ({
 };
 
 interface Props {
+  ariaLabelledby?: string;
+  autoComplete?: HTMLInputAutoCompleteAttribute;
   autosave?: boolean;
   clear?: boolean;
+  decimalPlacesToRoundTo?: number;
+  disabled?: boolean;
+  handleOnChange?: Function;
+  hint?: CustomHtmlElement[];
+  hydrate?: string;
   initialValue?: string;
   label?: string;
   mask?: keyof typeof maskMap | null;
   name: string;
   nested?: boolean;
   placeholder?: string;
+  readOnly?: boolean;
+  styleAsOptional?: boolean;
   sxOverride?: SystemStyleObject;
   validateOnRender?: boolean;
-  [key: string]: any;
 }
