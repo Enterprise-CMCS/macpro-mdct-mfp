@@ -1,4 +1,10 @@
-import { useState, useEffect, useContext, ReactNode } from "react";
+import {
+  HTMLInputAutoCompleteAttribute,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useFormContext } from "react-hook-form";
 // components
 import { SystemStyleObject } from "@chakra-ui/react";
@@ -10,30 +16,35 @@ import {
   getAutosaveFields,
   labelTextWithOptional,
   parseCustomHtml,
+  updatedTextFields,
   useStore,
 } from "utils";
 // types
-import { InputChangeEvent, CustomHtmlElement } from "types";
+import {
+  InputChangeEvent,
+  CustomHtmlElement,
+  ReportFormFieldType,
+} from "types";
 
 export const TextField = ({
   ariaLabelledby,
   autoComplete,
-  autosave,
-  clear,
-  disabled,
+  autosave = false,
+  clear = false,
+  disabled = false,
   heading,
   hint,
   hydrate,
   label,
   maxLength,
-  multiline,
+  multiline = false,
   name,
-  nested,
+  nested = false,
   placeholder,
   rows,
-  styleAsOptional,
+  styleAsOptional = false,
   sxOverride,
-  validateOnRender,
+  validateOnRender = false,
 }: Props) => {
   const defaultValue = "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
@@ -87,26 +98,30 @@ export const TextField = ({
     const { value } = event.target;
     // if field is blank, trigger client-side field validation error
     if (!value.trim()) form.trigger(name);
-    // submit field data to database
+
+    // submit field data to database (inline validation is run prior to API call)
     if (autosave) {
-      //track the state of autosave in state management
+      // track the state of autosave in state management
       setAutosaveState(true);
       const fields = getAutosaveFields({
         name,
-        type: "text",
+        type: ReportFormFieldType.TEXT,
         value,
         defaultValue,
         hydrationValue,
       });
+      const fieldsToSave = updatedTextFields(fields, report?.fieldData);
+
       const reportArgs = {
         id: report?.id,
         reportType: report?.reportType,
         updateReport,
       };
       const user = { userName: full_name, state };
+
       await autosaveFieldData({
         form,
-        fields,
+        fields: fieldsToSave,
         report: reportArgs,
         user,
         entityContext: {
@@ -151,10 +166,14 @@ export const TextField = ({
 };
 
 interface Props {
+  ariaLabelledby?: string;
+  autoComplete?: HTMLInputAutoCompleteAttribute;
   autosave?: boolean;
   clear?: boolean;
+  disabled?: boolean;
   heading?: string;
   hint?: CustomHtmlElement[];
+  hydrate?: string;
   label?: string;
   maxLength?: number;
   multiline?: boolean;
@@ -164,5 +183,5 @@ interface Props {
   rows?: number;
   styleAsOptional?: boolean;
   sxOverride?: SystemStyleObject;
-  [key: string]: any;
+  validateOnRender?: boolean;
 }
