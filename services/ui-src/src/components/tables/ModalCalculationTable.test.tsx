@@ -48,12 +48,12 @@ describe("ModalCalculationTable", () => {
     ).toBeDisabled();
   });
 
-  it("opens the modal when button is clicked", () => {
+  it("opens the modal when button is clicked", async () => {
     render(ModalCalcTable);
     const button = screen.getByRole("button", {
       name: verbiage.modalButtonText,
     });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByTestId("modal-submit-button")).toBeVisible();
   });
 
