@@ -2,9 +2,9 @@ import { MixedSchema } from "yup/lib/mixed";
 import { isEndDateAfterStartDate, nested, schemaMap } from "./schemas";
 import {
   AnyObject,
-  DynamicValidationType,
   NumberOptions,
   ValidationComparator,
+  ValidationType,
 } from "types";
 
 describe("utils/validation/schemas", () => {
@@ -80,6 +80,11 @@ describe("utils/validation/schemas", () => {
     type: "string",
   };
 
+  const numberOptions: NumberOptions = {
+    boundary: 10,
+    comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+  };
+
   const testSchema = (
     schemaToUse: MixedSchema<any, AnyObject, any>,
     testCases: Array<string | AnyObject>,
@@ -112,7 +117,9 @@ describe("utils/validation/schemas", () => {
 
     test("returns true for number validation", () => {
       testSchema(
-        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
+        schemaMap.dynamic({
+          dynamicFieldValidations: { name: ValidationType.NUMBER },
+        }),
         [[{ id: "mockId", name: "123" }]],
         true
       );
@@ -120,7 +127,9 @@ describe("utils/validation/schemas", () => {
 
     test("returns false for text with number validation", () => {
       testSchema(
-        schemaMap.dynamic({ validationType: DynamicValidationType.NUMBER }),
+        schemaMap.dynamic({
+          dynamicFieldValidations: { name: ValidationType.NUMBER },
+        }),
         [[{ id: "mockId", name: "text" }]],
         false
       );
@@ -130,41 +139,72 @@ describe("utils/validation/schemas", () => {
   describe("dynamicOptional", () => {
     test("returns true for text validation", () => {
       testSchema(
-        schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.TEXT_OPTIONAL,
-        }),
+        schemaMap.dynamicOptional(),
         [[{ id: "mockId", name: "text" }]],
         true
       );
     });
 
     test("returns true for empty text", () => {
-      testSchema(
-        schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.TEXT_OPTIONAL,
-        }),
-        [],
-        true
-      );
+      testSchema(schemaMap.dynamicOptional(), [], true);
     });
 
     test("returns true for number validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.NUMBER_OPTIONAL,
+          dynamicFieldValidations: {
+            name: ValidationType.NUMBER_OPTIONAL,
+          },
         }),
         [[{ id: "mockId", name: "123" }]],
         true
       );
     });
 
-    test("returns true for empty number", () => {
+    test("returns false for number validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: DynamicValidationType.NUMBER_OPTIONAL,
+          dynamicFieldValidations: {
+            name: ValidationType.NUMBER_OPTIONAL,
+          },
         }),
-        [],
+        [[{ id: "mockId", name: "text" }]],
+        false
+      );
+    });
+
+    test("returns true for number comparison validation", () => {
+      testSchema(
+        schemaMap.dynamicOptional({
+          dynamicFieldValidations: {
+            name: {
+              type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+              options: numberOptions,
+            },
+          },
+        }),
+        [[{ id: "mockId", name: "9" }], [{ id: "mockId", name: "" }]],
         true
+      );
+    });
+
+    test("returns false for number comparison validation", () => {
+      testSchema(
+        schemaMap.dynamicOptional({
+          dynamicFieldValidations: {
+            name: {
+              type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+              options: numberOptions,
+            },
+          },
+        }),
+        [
+          [
+            { id: "mockId", name: "11" },
+            { id: "mockId", name: "10.01" },
+          ],
+        ],
+        false
       );
     });
   });

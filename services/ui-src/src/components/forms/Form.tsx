@@ -10,7 +10,11 @@ import { object as yupSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 // components
 import { Box, Heading, Text } from "@chakra-ui/react";
-import { CalculationTable, ModalCalculationTable } from "components";
+import {
+  CalculationTable,
+  DynamicTableProvider,
+  ModalCalculationTable,
+} from "components";
 // utils
 import {
   compileValidationJsonFromFields,
@@ -155,15 +159,16 @@ export const Form = ({
     switch (tableType) {
       case FormTableType.CALCULATION:
         return (
-          <CalculationTable
-            disabled={fieldInputDisabled}
-            formData={formData}
-            id={id}
-            key={id}
-            order={index}
-            report={report}
-            {...props}
-          />
+          <DynamicTableProvider key={id}>
+            <CalculationTable
+              disabled={fieldInputDisabled}
+              formData={formData}
+              id={id}
+              order={index}
+              report={report}
+              {...props}
+            />
+          </DynamicTableProvider>
         );
 
       case FormTableType.MODAL_CALCULATION:
