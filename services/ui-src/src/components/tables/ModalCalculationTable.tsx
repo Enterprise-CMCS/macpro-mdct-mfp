@@ -32,7 +32,7 @@ export const ModalCalculationTable = ({ disabled, verbiage }: Props) => {
         disabled={disabled}
         onClick={openModal}
       >
-        {verbiage?.modal}
+        {verbiage?.modalButtonText}
       </Button>
 
       {calculationModal}

@@ -1,11 +1,14 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+//components
 import { ModalCalculationTable } from "./ModalCalculationTable";
+// utils
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 
 const verbiage = {
   title: "Test Table Title",
-  modal: "Open Modal",
+  modalButtonText: "Open Modal",
 };
 
 const defaultProps = {
@@ -30,7 +33,7 @@ describe("ModalCalculationTable", () => {
       screen.getByRole("heading", { name: verbiage.title })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: verbiage.modal })
+      screen.getByRole("button", { name: verbiage.modalButtonText })
     ).toBeInTheDocument();
   });
 
@@ -40,14 +43,18 @@ describe("ModalCalculationTable", () => {
         <ModalCalculationTable {...defaultProps} disabled={true} />
       </RouterWrappedComponent>
     );
-    expect(screen.getByRole("button", { name: verbiage.modal })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: verbiage.modalButtonText })
+    ).toBeDisabled();
   });
 
   it("opens the modal when button is clicked", () => {
     render(ModalCalcTable);
-    const button = screen.getByRole("button", { name: verbiage.modal });
-    fireEvent.click(button);
-    expect(screen.getByTestId("modal-submit-button")).toBeInTheDocument();
+    const button = screen.getByRole("button", {
+      name: verbiage.modalButtonText,
+    });
+    userEvent.click(button);
+    expect(screen.getByTestId("modal-submit-button")).toBeVisible();
   });
 
   it("does not render the modal initially", () => {

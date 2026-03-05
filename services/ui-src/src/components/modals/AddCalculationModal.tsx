@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 // components
 import { Form, Modal } from "components";
 // form
@@ -9,13 +9,14 @@ import { Button, ModalFooter } from "@chakra-ui/react";
 
 export const AddCalculationModal = ({
   modalDisclosure,
-  userIsAdmin,
+  userIsAdmin = false,
 }: Props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const modalForm = useRef<HTMLFormElement>(null);
 
   const form: FormJson = addSubRecipientForm;
 
-  const viewOnly = userIsAdmin || false;
+  const viewOnly = userIsAdmin;
 
   /*
    *  This function is actually intercepting the form submission. This form lives inside
@@ -25,8 +26,7 @@ export const AddCalculationModal = ({
    */
   const writeReport = async () => {
     setSubmitting(true);
-    var modalForm = document.getElementById(form.id);
-    var data = new FormData(modalForm as HTMLFormElement);
+    var data = new FormData(modalForm.current as HTMLFormElement);
     for (var [key, value] of data) {
       // eslint-disable-next-line no-console
       console.log(key, value);
@@ -52,6 +52,7 @@ export const AddCalculationModal = ({
       <Form
         data-testid="add-calculation-form"
         id={form.id}
+        ref={modalForm}
         formJson={form}
         disabled={viewOnly}
         onSubmit={() => {}}

@@ -66,12 +66,11 @@ export interface FormTable {
   dynamicRowsTemplate?: DynamicRowsTemplate;
   footRows: FormTableRows;
   headRows: FormTableRows;
-  modal?: boolean;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
     errorMessage?: string | CustomHtmlElement[];
-    modal?: string;
+    modalButtonText?: string;
     percentage?: string;
     title: string;
   };
