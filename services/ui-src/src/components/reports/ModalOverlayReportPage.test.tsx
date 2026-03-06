@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ModalOverlayReportPage } from "components";
@@ -53,9 +53,7 @@ describe("<ModalOverlayReportPage />", () => {
     await act(async () => {
       await userEvent.click(editEntityButton);
     });
-    await waitFor(() => {
-      expect(screen.getByRole("dialog")).toBeVisible();
-    });
+    expect(screen.getByRole("dialog")).toBeVisible();
 
     // Close out of the modal it created
     const closeButton = screen.getByText("Close");
@@ -75,9 +73,7 @@ describe("<ModalOverlayReportPage />", () => {
     await act(async () => {
       await userEvent.click(editEntityButton);
     });
-    await waitFor(() => {
-      expect(screen.getByRole("dialog")).toBeVisible();
-    });
+    expect(screen.getByRole("dialog")).toBeVisible();
 
     const closeButton = screen.getByText("Close");
     await act(async () => {
