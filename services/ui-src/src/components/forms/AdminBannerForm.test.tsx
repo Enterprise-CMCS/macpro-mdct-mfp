@@ -11,7 +11,7 @@ import { mockBannerStore } from "utils/testing/setupJest";
 
 const mockWriteAdminBanner = jest.fn();
 const mockWriteAdminBannerWithError = jest.fn(() => {
-  throw new Error();
+  throw new Error("Some error message");
 });
 
 jest.mock("utils/state/useStore");

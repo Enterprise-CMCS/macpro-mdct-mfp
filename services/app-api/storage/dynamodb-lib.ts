@@ -22,9 +22,9 @@ export const collectPageItems = async <
 >(
   paginator: Paginator<T>
 ) => {
-  let items: Record<string, any>[] = [];
+  const items: Record<string, any>[] = [];
   for await (let page of paginator) {
-    items = items.concat(page.Items ?? []);
+    items.push(...(page.Items ?? []));
   }
   return items;
 };

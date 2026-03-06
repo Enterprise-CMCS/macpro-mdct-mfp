@@ -108,7 +108,7 @@ function generateAPIHeaders(
   body?: string
 ): Record<string, string> {
   const now = new Date();
-  const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, "");
+  const amzDate = now.toISOString().replaceAll(/[:-]|\.\d{3}/g, "");
 
   const baseHeaders = {
     Accept: "*/*",
@@ -493,15 +493,21 @@ async function updateReportData(report: any): Promise<any> {
   const reportString = JSON.stringify(report);
 
   // Replace years in date strings (MM/DD/YYYY format) with current year
-  let updatedString = reportString.replace(
+  let updatedString = reportString.replaceAll(
     /(\d{2}\/\d{2}\/)\d{4}/g,
     `$1${currentYear}`
   );
 
   // Replace quarter field years (2026 -> current, 2027 -> current+1, 2028 -> current+2)
-  updatedString = updatedString.replace(/2026/g, currentYear.toString());
-  updatedString = updatedString.replace(/2027/g, (currentYear + 1).toString());
-  updatedString = updatedString.replace(/2028/g, (currentYear + 2).toString());
+  updatedString = updatedString.replaceAll("2026", currentYear.toString());
+  updatedString = updatedString.replaceAll(
+    "2027",
+    (currentYear + 1).toString()
+  );
+  updatedString = updatedString.replaceAll(
+    "2028",
+    (currentYear + 2).toString()
+  );
 
   return JSON.parse(updatedString);
 }

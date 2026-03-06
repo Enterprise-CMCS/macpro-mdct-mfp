@@ -58,7 +58,7 @@ const ldClientId = config.REACT_APP_LD_SDK_CLIENT;
     deferInitialization: false,
   });
 
-  const container = document.getElementById("root");
+  const container = document.querySelector("#root");
   const root = createRoot(container!);
 
   root.render(
@@ -76,6 +76,6 @@ const ldClientId = config.REACT_APP_LD_SDK_CLIENT;
       </Router>
     </ErrorBoundary>
   );
-})().catch((e) => {
-  throw e;
+})().catch((error) => {
+  throw error;
 });
