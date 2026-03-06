@@ -131,10 +131,8 @@ export const Form = ({
               )}</span>${choice?.label.slice(asteriskIndex + 1)}`
             );
             choice.label = newOption;
-            return choice;
-          } else {
-            return choice;
           }
+          return choice;
         });
       return fieldsToRenderWithAriaLabels;
     };

@@ -212,12 +212,12 @@ const seed = async (
       case "semiAnnualReportId":
         expandedLog(await getSemiAnnualReportById(answer as string));
         break;
-      case "exit": {
+      case "exit":
         if (answer === false) {
           seed(reportYear, reportPeriod);
         }
         break;
-      }
+
       default:
         break;
     }
@@ -311,26 +311,26 @@ const seed = async (
       case "getSARsByState":
         expandedLog(await getSemiAnnualReportsByState());
         break;
-      case "createBannerActive": {
+      case "createBannerActive":
         createdLog(await createBanner("active"), "Active", "Banner");
         break;
-      }
-      case "createBannerInactive": {
+
+      case "createBannerInactive":
         createdLog(await createBanner("inactive"), "Inactive", "Banner");
         break;
-      }
-      case "createBannerScheduled": {
+
+      case "createBannerScheduled":
         createdLog(await createBanner("scheduled"), "Scheduled", "Banner");
         break;
-      }
+
       case "getBanners":
         expandedLog(await getBanners());
         break;
-      case "deleteBanners": {
+      case "deleteBanners":
         await deleteBanners();
         console.log("Banners deleted.");
         break;
-      }
+
       default:
         break;
     }

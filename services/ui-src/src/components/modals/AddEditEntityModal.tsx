@@ -145,9 +145,7 @@ export const AddEditEntityModal = ({
       modalDisclosure={modalDisclosure}
       content={{
         heading: modalTitle(),
-        subheading: verbiage.addEditModalHint
-          ? verbiage.addEditModalHint
-          : undefined,
+        subheading: verbiage.addEditModalHint,
         actionButtonText: submitting ? <Spinner size="md" /> : "Save",
         closeButtonText: "Cancel",
       }}

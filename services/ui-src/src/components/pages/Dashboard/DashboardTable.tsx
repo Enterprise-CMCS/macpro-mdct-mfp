@@ -161,14 +161,13 @@ export const getStatus = (
   if (archived) {
     return `Archived`;
   }
-  if (reportType === "WP") {
-    if (
-      submissionCount &&
-      submissionCount >= 1 &&
-      !status.includes("Submitted")
-    ) {
-      return status;
-    }
+  if (
+    reportType === "WP" &&
+    submissionCount &&
+    submissionCount >= 1 &&
+    !status.includes("Submitted")
+  ) {
+    return status;
   }
   return status;
 };

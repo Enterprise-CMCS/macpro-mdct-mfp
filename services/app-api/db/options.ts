@@ -8,27 +8,19 @@ import { SeedReportShape } from "../../../tests/seeds/types";
 import { generateReportingPeriod } from "./helpers";
 
 export const workPlanChoices = async (): Promise<Choice[]> => {
-  try {
-    const reports: SeedReportShape[] = await getWorkPlansByState();
-    return reports.map(({ submissionName, id }) => ({
-      title: `${submissionName} (${id})`,
-      value: id,
-    }));
-  } catch {
-    process.exit();
-  }
+  const reports: SeedReportShape[] = await getWorkPlansByState();
+  return reports.map(({ submissionName, id }) => ({
+    title: `${submissionName} (${id})`,
+    value: id,
+  }));
 };
 
 export const semiAnnualReportChoices = async (): Promise<Choice[]> => {
-  try {
-    const reports = await getSemiAnnualReportsByState();
-    return reports.map((report) => ({
-      title: `${report.submissionName} (${report.id})`,
-      value: report.id,
-    }));
-  } catch {
-    process.exit();
-  }
+  const reports = await getSemiAnnualReportsByState();
+  return reports.map((report) => ({
+    title: `${report.submissionName} (${report.id})`,
+    value: report.id,
+  }));
 };
 
 export const backToMenu = {
