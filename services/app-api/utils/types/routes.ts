@@ -114,6 +114,7 @@ export interface FormTable {
   tableType: FormTableType;
   verbiage?: {
     errorMessage?: string | CustomHtmlElement[];
+    modalButtonText?: string;
     percentage?: string;
     title: string;
   };
@@ -121,6 +122,7 @@ export interface FormTable {
 
 export enum FormTableType {
   CALCULATION = "Calculation",
+  MODAL_CALCULATION = "ModalCalculation",
 }
 
 export interface ServiceField {
