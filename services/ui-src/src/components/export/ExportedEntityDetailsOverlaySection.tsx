@@ -143,7 +143,7 @@ export function renderEntityDetailTables(
 ) {
   const reportType: ReportType = report?.reportType as ReportType;
   switch (reportType) {
-    case ReportType.WP: {
+    case ReportType.WP:
       return getEntityTableComponents(
         report!,
         entity,
@@ -153,7 +153,7 @@ export function renderEntityDetailTables(
         undefined,
         headingLevel
       );
-    }
+
     case ReportType.SAR:
       return getEntityTableComponents(
         report!,

@@ -23,7 +23,7 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
         return field.props.choices;
       }
     })
-    .filter((field) => field);
+    .filter(Boolean);
 
   //Loop through the user entered entity to see which nested id the user had selected
   const entityNestedSelection: AnyObject[] = [];
@@ -39,7 +39,7 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
     .map((entity) => {
       return entity.key;
     })
-    .filter((key) => key);
+    .filter(Boolean);
 
   //look for the relevant child id for the selected nested values in the formTemplate data
   entityNestedKeys.forEach((key) => {
@@ -108,7 +108,7 @@ export const getInitiativeStatus = (
 
   let reportChild;
   switch (report.reportType) {
-    case "WP": {
+    case "WP":
       // Direct pull of the initiative formTemplate json chunk
       reportRoute = report.formTemplate
         .routes[3] as ModalOverlayReportPageShape;
@@ -122,8 +122,8 @@ export const getInitiativeStatus = (
         return EntityStatuses.CLOSE;
       }
       break;
-    }
-    case "SAR": {
+
+    case "SAR":
       // Direct pull of the initiative formTemplate json chunk
       reportRoute = report.formTemplate
         .routes[2] as DynamicModalOverlayReportPageShape;
@@ -132,7 +132,6 @@ export const getInitiativeStatus = (
         "initiatives"
       ].find((child) => child.name === entity.initiative_name);
       break;
-    }
   }
 
   if (reportChild?.entitySteps) {
@@ -239,7 +238,7 @@ export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
         }
         return !validationType.includes("Optional") ? field.id : "";
       })
-      .filter((field) => field);
+      .filter(Boolean);
     const isFilled = fieldIds.map((id) => {
       return entity[id];
     });

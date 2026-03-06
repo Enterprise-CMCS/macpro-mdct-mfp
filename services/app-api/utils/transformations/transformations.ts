@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import {
   AnyObject,
   DynamicModalOverlayReportPageShape,
@@ -582,19 +582,19 @@ export const extractWorkPlanData = (
     }
 
     for (let evaluationPlan of initiative.evaluationPlan) {
-      const objectiveProgress: any = {};
-      //Transfering Blanket Data
-      objectiveProgress["id"] = evaluationPlan["id"];
-      objectiveProgress["objectiveProgress_objectiveName"] =
-        evaluationPlan["evaluationPlan_objectiveName"];
-      objectiveProgress["objectiveProgress_description"] =
-        evaluationPlan["evaluationPlan_description"];
-      objectiveProgress["objectiveProgress_targets"] =
-        evaluationPlan["evaluationPlan_targets"];
-      objectiveProgress["objectiveProgress_includesTargets"] =
-        evaluationPlan["evaluationPlan_includesTargets"];
-      objectiveProgress["objectiveProgress_additionalDetails"] =
-        evaluationPlan["evaluationPlan_additionalDetails"];
+      // Transferring Blanket Data
+      const objectiveProgress: any = {
+        id: evaluationPlan["id"],
+        objectiveProgress_objectiveName:
+          evaluationPlan["evaluationPlan_objectiveName"],
+        objectiveProgress_description:
+          evaluationPlan["evaluationPlan_description"],
+        objectiveProgress_targets: evaluationPlan["evaluationPlan_targets"],
+        objectiveProgress_includesTargets:
+          evaluationPlan["evaluationPlan_includesTargets"],
+        objectiveProgress_additionalDetails:
+          evaluationPlan["evaluationPlan_additionalDetails"],
+      };
 
       //Transfering Evaluation Plan Quarters Data
       for (let quarter of quarters) {

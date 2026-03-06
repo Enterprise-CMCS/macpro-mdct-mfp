@@ -1,6 +1,6 @@
 import KSUID from "ksuid";
 import assert from "node:assert";
-import { createHash } from "crypto";
+import { createHash } from "node:crypto";
 // types
 import {
   AnyObject,
@@ -101,7 +101,7 @@ export async function getOrCreateFormTemplate(
       reportType,
       formTemplateId: matchTemplateVersion.id,
     });
-    assert(
+    assert.ok(
       matchingTemplate !== undefined,
       "Found version info matching form template hash, but no matching document exists in S3"
     );

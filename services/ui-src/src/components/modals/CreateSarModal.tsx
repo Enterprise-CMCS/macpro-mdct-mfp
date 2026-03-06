@@ -115,6 +115,7 @@ export const CreateSarModal = ({
   };
 
   const actionButtonText = () => {
+    // oxlint-disable-next-line no-nested-ternary
     return submitting ? <Spinner size="md" /> : viewOnly ? "Return" : "Save";
   };
 

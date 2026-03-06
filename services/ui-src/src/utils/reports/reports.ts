@@ -89,7 +89,6 @@ export const isArchivable = (reportType: ReportType) => {
     case ReportType.WP:
     case ReportType.EXPENDITURE:
       return true;
-    case ReportType.SAR:
     default:
       return false;
   }
