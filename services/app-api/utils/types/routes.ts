@@ -116,6 +116,7 @@ export interface FormTable {
     errorMessage?: string | CustomHtmlElement[];
     percentage?: string;
     title: string;
+    subtitle?: string | CustomHtmlElement[];
   };
 }
 

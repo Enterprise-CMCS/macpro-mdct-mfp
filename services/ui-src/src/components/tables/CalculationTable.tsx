@@ -144,6 +144,9 @@ export const CalculationTable = ({
           {translate(verbiage.percentage, { percentage: percentageDisplay })}
         </Text>
       )}
+      {verbiage?.subtitle && (
+        <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
+      )}
 
       {dynamicRowsTemplate && (
         <>
@@ -221,6 +224,12 @@ const sx = {
     color: "gray_dark",
     fontWeight: "bold",
     paddingBottom: "spacer2",
+  },
+  subtitle: {
+    color: "gray_dark",
+    p: {
+      marginBottom: "spacer2",
+    },
   },
   dynamicRowsHint: {
     marginBottom: "spacer2",
