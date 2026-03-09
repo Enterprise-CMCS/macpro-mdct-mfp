@@ -1,4 +1,5 @@
 import {
+  NumberMask,
   PageTypes,
   ReportFormFieldType,
   SARStateOrTerritorySpecificInitiativesRoute,
@@ -348,7 +349,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
                   rule: TransformationRule.FUNDING_SOURCES,
                 },
                 props: {
-                  mask: "currency",
+                  mask: NumberMask.CURRENCY,
                 },
               },
               {

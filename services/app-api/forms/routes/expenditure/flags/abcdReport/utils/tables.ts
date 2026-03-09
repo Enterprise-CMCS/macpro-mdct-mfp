@@ -1,5 +1,6 @@
 import {
   AnyObject,
+  NumberMask,
   ReportFormFieldType,
   ServiceField,
   ServiceFieldType,
@@ -36,7 +37,7 @@ export const buildServiceFields = (
   const currencyProps = {
     decimalPlacesToRoundTo: 2,
     initialValue: "0",
-    mask: "currency",
+    mask: NumberMask.CURRENCY,
     readOnly: true,
   };
 
@@ -77,7 +78,7 @@ export const buildServiceFields = (
             "Override %",
             {
               decimalPlacesToRoundTo: 0,
-              mask: "percentage",
+              mask: NumberMask.PERCENTAGE,
             },
             {
               validation: {
@@ -112,6 +113,7 @@ export const buildServiceFields = (
           )
         );
         break;
+
       default:
         break;
     }

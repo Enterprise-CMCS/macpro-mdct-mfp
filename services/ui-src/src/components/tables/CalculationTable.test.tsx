@@ -8,7 +8,12 @@ import {
   DynamicTableProvider,
 } from "components";
 // types
-import { ReportFormFieldType, ReportShape, ValidationType } from "types";
+import {
+  NumberMask,
+  ReportFormFieldType,
+  ReportShape,
+  ValidationType,
+} from "types";
 // utils
 import { useStore } from "utils";
 import {
@@ -53,7 +58,7 @@ const mockProps = {
         forTableOnly: true,
         props: {
           label: "Mock text 1 Total Computable",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
         },
       },
       {
@@ -63,7 +68,7 @@ const mockProps = {
         forTableOnly: true,
         props: {
           label: "Mock text 1 Percentage",
-          mask: "percentage",
+          mask: NumberMask.PERCENTAGE,
         },
       },
       {
@@ -74,7 +79,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock text 1 Total State / Territory Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -86,7 +91,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock text 1 Total Federal Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -100,7 +105,7 @@ const mockProps = {
         forTableOnly: true,
         props: {
           label: "Mock text 2 Total Computable",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
         },
       },
       {
@@ -110,7 +115,7 @@ const mockProps = {
         forTableOnly: true,
         props: {
           label: "Mock text 2 Percentage",
-          mask: "percentage",
+          mask: NumberMask.PERCENTAGE,
         },
       },
       {
@@ -121,7 +126,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock text 2 Total State / Territory Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -133,7 +138,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock text 2 Total Federal Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -151,7 +156,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock footer Total Computable",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -164,7 +169,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock footer Total State / Territory Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -176,7 +181,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock footer Total Federal Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
