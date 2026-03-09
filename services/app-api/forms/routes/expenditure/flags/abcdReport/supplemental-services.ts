@@ -31,7 +31,6 @@ const categoryFootList = [
 const categoryFieldsToReturn = [
   ServiceFieldType.TOTAL_COMPUTABLE,
   ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
-  ServiceFieldType.TOTAL_FEDERAL_SHARE,
 ];
 
 // Category table dynamic rows
@@ -83,11 +82,68 @@ export const supplementalServicesRoute: FormTablesRoute = {
     intro: {
       section: "",
       subsection: "Supplemental Services",
+      info: [
+        {
+          type: "p",
+          content:
+            "Supplemental services are short-term services that are otherwise not coverable under the Medicaid program to support an MFP participant’s transition (PTC 24).",
+        },
+      ],
     },
     accordion: {
       buttonLabel: "Instructions",
-      intro:
-        "Enter your total computable costs for each service during the reporting period. If a service is used but you incurred no costs, enter “0”. For services that are not used, leave the field blank. If you incurred expenses for a qualified supplemental service that is not listed, use the “add other category” to add it to the table.",
+      intro: [
+        {
+          type: "p",
+          props: {
+            style: {
+              marginBottom: "0",
+            },
+          },
+          content:
+            "Enter your total computable costs for each service during the reporting period. Of note,",
+        },
+        {
+          type: "ul",
+          props: {
+            style: {
+              paddingLeft: "1rem",
+            },
+          },
+          children: [
+            {
+              type: "li",
+              content:
+                "If a service is used but you incurred no costs, enter ”0.”",
+            },
+            {
+              type: "li",
+              content:
+                "If you did not use that service, leave the field blank.",
+            },
+            {
+              type: "li",
+              content:
+                "If you incurred expenses for a qualified supplemental service that is not listed, use the “Add other category” to add it to the table.",
+            },
+          ],
+        },
+        {
+          type: "p",
+          content:
+            "Previously this information was reported in Form B (Opt&Other Detail) in the excel version of the MFP Financial Reporting Form.",
+        },
+        {
+          type: "p",
+          content:
+            "Any category you add can be copied over into future reports.",
+        },
+        {
+          type: "p",
+          content:
+            "Your state or territory’s share for each service will be calculated at 100%. If this is not the case for supplemental services in your state or territory, contact your CMS Project Officer.",
+        },
+      ],
     },
   },
   form: {
