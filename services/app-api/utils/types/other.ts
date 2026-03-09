@@ -138,12 +138,6 @@ export interface FormTemplateVersion {
   reportType: string;
 }
 
-// oxlint-disable-next-line no-const-enum
-export const enum TemplateKeys {
-  WP = "templates/MFP-Work-Plan-Help-File.pdf",
-  SAR = "templates/MFP-Semi-Annual-Rprt-Help-File.pdf",
-}
-
 /**
  * S3Create event
  * https://docs.aws.amazon.com/AmazonS3/latest/dev/notification-content-structure.html

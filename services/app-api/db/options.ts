@@ -8,19 +8,29 @@ import { SeedReportShape } from "../../../tests/seeds/types";
 import { generateReportingPeriod } from "./helpers";
 
 export const workPlanChoices = async (): Promise<Choice[]> => {
-  const reports: SeedReportShape[] = await getWorkPlansByState();
-  return reports.map(({ submissionName, id }) => ({
-    title: `${submissionName} (${id})`,
-    value: id,
-  }));
+  try {
+    const reports: SeedReportShape[] = await getWorkPlansByState();
+    return reports.map(({ submissionName, id }) => ({
+      title: `${submissionName} (${id})`,
+      value: id,
+    }));
+  } catch {
+    // oxlint-disable-next-line no-process-exit
+    process.exit();
+  }
 };
 
 export const semiAnnualReportChoices = async (): Promise<Choice[]> => {
-  const reports = await getSemiAnnualReportsByState();
-  return reports.map((report) => ({
-    title: `${report.submissionName} (${report.id})`,
-    value: report.id,
-  }));
+  try {
+    const reports = await getSemiAnnualReportsByState();
+    return reports.map((report) => ({
+      title: `${report.submissionName} (${report.id})`,
+      value: report.id,
+    }));
+  } catch {
+    // oxlint-disable-next-line no-process-exit
+    process.exit();
+  }
 };
 
 export const backToMenu = {
