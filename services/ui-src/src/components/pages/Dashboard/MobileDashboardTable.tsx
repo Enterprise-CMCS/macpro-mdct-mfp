@@ -104,7 +104,8 @@ export const MobileDashboardTable = ({
             >
               {entering && reportId == report.id ? (
                 <Spinner size="md" />
-              ) : isStateLevelUser && !report?.locked ? (
+              ) : // oxlint-disable-next-line no-nested-ternary
+              isStateLevelUser && !report?.locked ? (
                 "Edit"
               ) : (
                 "View"

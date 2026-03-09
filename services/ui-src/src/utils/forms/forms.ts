@@ -399,7 +399,7 @@ export const updateFieldChoicesByID = (
   fields: AnyObject[]
 ) => {
   return formFields.map((field) => {
-    return field.id.match(id)
+    return new RegExp(id).test(field.id)
       ? {
           ...field,
           props: { ...field?.props, choices: [...fields] },
@@ -511,7 +511,7 @@ export const addDynamicTableRowsValidation = (
       const templates = field.props?.dynamicFields ?? [];
       const rows = formData?.[field.id];
 
-      if (!templates.length || !Array.isArray(rows) || rows.length === 0)
+      if (templates.length === 0 || !Array.isArray(rows) || rows.length === 0)
         return [];
 
       return rows.flatMap((row: { id: string }) =>
