@@ -57,15 +57,15 @@ export const AdminBannerProvider = ({ children }: Props) => {
       const currentBanners = await getBanners();
       // Find the most recent currently-active banner
       const currentBanner = currentBanners
-        .sort((a, b) => b.createdAt - a.createdAt)
+        .toSorted((a, b) => b.createdAt - a.createdAt)
         .find((banner) =>
           checkDateRangeStatus(banner.startDate, banner.endDate)
         );
       setBannerData(currentBanner);
       setBannerErrorMessage(undefined);
-    } catch (e: any) {
+    } catch (error: any) {
       // 404 expected when no current banner exists
-      if (!e.toString().includes("404")) {
+      if (!error.toString().includes("404")) {
         setBannerErrorMessage(bannerErrors.GET_BANNER_FAILED);
       }
     }

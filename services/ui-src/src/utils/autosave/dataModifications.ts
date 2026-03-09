@@ -103,8 +103,7 @@ export const updatedNumberFields = (
         tableId,
       });
     }
-    case isTempDynamicField(name) &&
-      isFieldType(fieldType, "totalComputable"): {
+    case isTempDynamicField(name) && isFieldType(fieldType, "totalComputable"):
       return recalculateDynamicFields({
         dynamicFieldId,
         dynamicTemplateId,
@@ -113,7 +112,7 @@ export const updatedNumberFields = (
         formId,
         tableId,
       });
-    }
+
     case isFieldType(fieldType, "percentageOverride"): {
       const fieldValue = fieldData[`${fieldId}-totalComputable`];
       const percentageOverride = value;
@@ -202,7 +201,7 @@ export const updatedTextFields = (
         [fieldType]: value,
       };
 
-      if (currentFieldIndex > -1) {
+      if (currentFieldIndex !== -1) {
         templateFieldData[currentFieldIndex] = updatedField;
       } else {
         templateFieldData.push(updatedField);
@@ -267,7 +266,7 @@ export const updatedFieldDataOnFieldChange = ({
       updatedField.percentageOverride = percentageOverride;
     }
 
-    if (currentFieldIndex > -1) {
+    if (currentFieldIndex !== -1) {
       templateFieldData[currentFieldIndex] = updatedField;
     } else {
       templateFieldData.push(updatedField);
@@ -322,35 +321,34 @@ export const updatedFieldDataOnFieldChange = ({
 
   switch (true) {
     case isTempDynamicField(name) &&
-      isFieldType(fieldType, "percentageOverride"): {
+      isFieldType(fieldType, "percentageOverride"):
       return recalculateDynamicFieldTotalsOnChange({
         fieldValue: value,
         isPercentageOverrideUpdated: true,
         percentage,
         percentageOverride,
       });
-    }
-    case isTempDynamicField(name) &&
-      isFieldType(fieldType, "totalComputable"): {
+
+    case isTempDynamicField(name) && isFieldType(fieldType, "totalComputable"):
       return recalculateDynamicFieldTotalsOnChange({
         fieldValue: value,
         percentage,
       });
-    }
-    case isFieldType(fieldType, "percentageOverride"): {
+
+    case isFieldType(fieldType, "percentageOverride"):
       return recalculateFieldTotalsOnChange({
         fieldValue: value,
         isPercentageOverrideUpdated: true,
         percentage,
         percentageOverride,
       });
-    }
-    case isFieldType(fieldType, "totalComputable"): {
+
+    case isFieldType(fieldType, "totalComputable"):
       return recalculateFieldTotalsOnChange({
         fieldValue: value,
         percentage,
       });
-    }
+
     default:
       // Nothing changed, return original fieldData
       return fieldData;
@@ -373,7 +371,7 @@ export const getFieldParts = (fieldName: string) => {
   // fieldId expected format: formId_formTableId_formFieldId
   const parts = fieldId.split("_");
   const dynamicIdRegEx = /^[0-9a-fA-F]+(?:-[0-9a-fA-F]+)+$/;
-  const lastPart = parts[parts.length - 1];
+  const lastPart = parts.at(-1)!;
 
   let dynamicFieldId = "";
   let dynamicTemplateId = "";
@@ -404,7 +402,7 @@ export const getFieldParts = (fieldName: string) => {
 };
 
 export const getFmapForm = (name: string) => {
-  const formId = name.replace(/(fmap_|Percentage)/g, "");
+  const formId = name.replaceAll(/(fmap_|Percentage)/g, "");
   return formId;
 };
 
@@ -473,7 +471,7 @@ export const recalculateDynamicFields = ({
     updatedField.percentageOverride = percentageOverride;
   }
 
-  if (currentFieldIndex > -1) {
+  if (currentFieldIndex !== -1) {
     templateFieldData[currentFieldIndex] = updatedField;
   } else {
     templateFieldData.push(updatedField);

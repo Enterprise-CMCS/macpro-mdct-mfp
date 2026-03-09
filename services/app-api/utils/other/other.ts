@@ -70,7 +70,7 @@ export const getReportYear = (
 ): number => {
   if (isCopyOver && reportType !== ReportType.EXPENDITURE) {
     if (typeof reportData?.copyReport?.reportYear !== "number") {
-      throw new Error("Invalid value for reportYear");
+      throw new TypeError("Invalid value for reportYear");
     }
     const prevReportYear = reportData?.copyReport?.reportYear;
     const prevReportPeriod = reportData?.copyReport?.reportPeriod;
@@ -78,7 +78,7 @@ export const getReportYear = (
   }
 
   if (typeof reportData.reportYear !== "number") {
-    throw new Error("Invalid value for reportYear");
+    throw new TypeError("Invalid value for reportYear");
   }
 
   return reportData?.reportYear;
@@ -91,7 +91,7 @@ export const getReportPeriod = (
 ): number => {
   if (isCopyOver && reportType !== ReportType.EXPENDITURE) {
     if (typeof reportData?.copyReport?.reportPeriod !== "number") {
-      throw new Error("Invalid value for reportPeriod");
+      throw new TypeError("Invalid value for reportPeriod");
     }
 
     let prevReportPeriod = reportData?.copyReport?.reportPeriod;
@@ -100,7 +100,7 @@ export const getReportPeriod = (
   }
 
   if (typeof reportData.reportPeriod !== "number") {
-    throw new Error("Invalid value for reportPeriod");
+    throw new TypeError("Invalid value for reportPeriod");
   }
 
   return reportData?.reportPeriod;

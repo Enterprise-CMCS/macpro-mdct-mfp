@@ -47,7 +47,7 @@ export const DeleteEntityModal = ({
           (entity: EntityShape) => entity.id === keyId
         );
 
-        if (currentIndex >= 0) {
+        if (currentIndex !== -1) {
           data[matchedKey][currentIndex] = removeSelectedEntity(
             data[matchedKey][currentIndex],
             entityKey,
@@ -74,7 +74,7 @@ export const DeleteEntityModal = ({
     const entityName = entityTypes[0];
     const updatedEntities = removeSelectedEntity(
       structuredClone(report?.fieldData),
-      entityTypes[entityTypes.length - 1],
+      entityTypes.at(-1),
       selectedEntity?.id
     );
 

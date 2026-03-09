@@ -73,8 +73,7 @@ export const OverlayModalPage = ({
     }
   }, [report]);
 
-  let reportFieldDataEntities =
-    selectedEntity?.[stepType ? stepType : entityType] || [];
+  let reportFieldDataEntities = selectedEntity?.[stepType ?? entityType] || [];
 
   const dashTitle = `${verbiage.dashboardTitle}${
     verbiage.countEntitiesInTitle ? `: ${reportFieldDataEntities.length}` : ""

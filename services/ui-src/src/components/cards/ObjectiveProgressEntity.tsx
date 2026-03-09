@@ -12,7 +12,8 @@ const wereTargetsMetForObjectiveProgress = (formattedEntityData: AnyObject) => {
         <Box
           sx={
             formattedEntityData.quarterActuals?.length === 0
-              ? formattedEntityData.targetsMet
+              ? // oxlint-disable-next-line no-nested-ternary
+                formattedEntityData.targetsMet
                 ? sx.box
                 : sx.notAnsweredBox
               : undefined
