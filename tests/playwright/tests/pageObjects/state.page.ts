@@ -63,7 +63,6 @@ export class StatePage extends BasePage {
     await Promise.all([postResp, getResp]);
   }
 
-  // Transition Benchmarks page functionality
   async clickEditBenchmarkButton(targetPopulation: string) {
     const row = this.page.getByRole("row").filter({
       hasText: new RegExp(targetPopulation),
@@ -108,7 +107,7 @@ export class StatePage extends BasePage {
     await quarterField.fill(value);
   }
 
-  async fillAllQuarterProjections(
+  async completeTransitionBenchmarkProjections(
     transitionBenchmarks: {
       benchmarkName: string;
       isActive: boolean;
@@ -120,26 +119,39 @@ export class StatePage extends BasePage {
       isActive,
       quarterValues,
     } of transitionBenchmarks) {
-      await this.editTransitionBenchmarkProjection(
-        benchmarkName,
-        isActive,
-        quarterValues
-      );
-    }
-  }
+      // Edit target population
+      const benchmarkRow = this.page.getByRole("row").filter({
+        hasText: new RegExp(benchmarkName),
+      });
+      await benchmarkRow.waitFor({ state: "visible" });
+      await benchmarkRow
+        .getByRole("button", { name: `Edit ${benchmarkName}` })
+        .click();
+      const benchmarkDialog = this.page.getByRole("dialog");
+      const overlay = this.page.locator(".chakra-modal__overlay");
+      await benchmarkDialog.waitFor({ state: "visible" });
+      await overlay.waitFor({ state: "visible" });
 
-  async completeTransitionBenchmarkProjections(
-    transitionBenchmarks: {
-      benchmarkName: string;
-      isActive: boolean;
-      quarterValues: string[];
-    }[]
-  ) {
-    await this.fillAllQuarterProjections(transitionBenchmarks);
+      if (isActive) {
+        await benchmarkDialog.getByRole("radio", { name: "Yes" }).click();
+        for (let i = 0; i < quarterValues.length && i < quarters.length; i++) {
+          await this.fillQuarterProjection(quarterValues[i], quarters[i]);
+        }
+      } else {
+        await benchmarkDialog.getByRole("radio", { name: "No" }).click();
+      }
+      await Promise.all([
+        this.waitForReportResponse("PUT", 200),
+        benchmarkDialog.getByRole("button", { name: "Save & close" }).click(),
+        benchmarkDialog.waitFor({ state: "detached" }),
+        this.page
+          .locator(".chakra-modal__overlay")
+          .waitFor({ state: "detached" }),
+      ]);
+    }
     await this.page.getByRole("button", { name: "Continue" }).click();
   }
 
-  // Transition Benchmark Strategy page functionality
   async completeTransitionBenchmarkStrategy(
     explanation: string,
     additionalDetails: string
@@ -156,7 +168,6 @@ export class StatePage extends BasePage {
     );
   }
 
-  // Initiatives Instructions page functionality
   async selectSelfDirectedInitiatives(option: boolean) {
     if (option) {
       await this.page.getByRole("radio", { name: "Yes" }).first().click();
@@ -182,7 +193,6 @@ export class StatePage extends BasePage {
     await this.page.getByRole("button", { name: "Continue" }).click();
   }
 
-  // Initiatives Specific page functionality
   async addInitiative(initiativeName: string, topic: string) {
     await this.page.getByRole("button", { name: "Add initiative" }).click();
     const addInitiativeDialog = this.page.getByRole("dialog", {
@@ -291,7 +301,6 @@ export class StatePage extends BasePage {
       .click();
   }
 
-  // Evaluation Plan section
   async editEvaluationPlanSection(
     objective: string,
     description: string,
@@ -358,10 +367,17 @@ export class StatePage extends BasePage {
   }
 
   async fillWorkPlan(workPlan: WorkPlan) {
-    await this.page.getByRole("button", { name: "Edit" }).click();
-    const putResponse = this.waitForReportResponse("PUT", 200);
-    await this.page.getByRole("button", { name: "Continue" }).click();
-    await putResponse;
+    await Promise.all([
+      this.waitForReportResponse("GET", 200),
+      this.page.getByRole("button", { name: "Edit" }).click(),
+    ]);
+    await Promise.all([
+      this.waitForReportResponse("PUT", 200),
+      this.page.getByRole("button", { name: "Continue" }).click(),
+    ]);
+    await this.page
+      .getByRole("button", { name: "Loading..." })
+      .waitFor({ state: "hidden" });
     await this.completeTransitionBenchmarkProjections(
       workPlan.transitionBenchmarkProjections
     );
@@ -388,10 +404,11 @@ export class StatePage extends BasePage {
       name: "Are you sure you want to submit MFP Work Plan?",
     });
     await submitDialog.waitFor({ state: "visible" });
-    const postResp = this.waitForReportResponse("POST", 200);
-    await submitDialog
-      .getByRole("button", { name: "Submit MFP Work Plan" })
-      .click();
-    await postResp;
+    await Promise.all([
+      this.waitForReportResponse("POST", 200),
+      submitDialog
+        .getByRole("button", { name: "Submit MFP Work Plan" })
+        .click(),
+    ]);
   }
 }
