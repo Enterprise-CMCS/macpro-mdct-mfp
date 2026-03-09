@@ -15,6 +15,7 @@ export const workPlanChoices = async (): Promise<Choice[]> => {
       value: id,
     }));
   } catch {
+    // oxlint-disable-next-line no-process-exit
     process.exit();
   }
 };
@@ -27,6 +28,7 @@ export const semiAnnualReportChoices = async (): Promise<Choice[]> => {
       value: report.id,
     }));
   } catch {
+    // oxlint-disable-next-line no-process-exit
     process.exit();
   }
 };

@@ -113,9 +113,9 @@ export const createReport = handler(
         reportYear,
         workPlanFieldData
       ));
-    } catch (err) {
-      logger.error(err, "Error getting or creating template");
-      throw err;
+    } catch (error) {
+      logger.error(error, "Error getting or creating template");
+      throw error;
     }
     // End Section - Getting/Creating newest Form Template based on reportType
 
@@ -251,7 +251,7 @@ export const createReport = handler(
 
     // Begin Section - Let the Workplan know that its been tied to a SAR that was just created
     if (reportType === ReportType.SAR) {
-      assert(workPlanMetadata !== undefined);
+      assert.ok(workPlanMetadata !== undefined);
       const workPlanWithSarConnection = {
         ...workPlanMetadata,
         associatedSar: reportId,

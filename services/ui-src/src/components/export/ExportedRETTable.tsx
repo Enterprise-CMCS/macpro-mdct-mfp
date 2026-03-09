@@ -44,11 +44,7 @@ export const generateMainTable = (
 
 export const generateTableHeader = (rows: AnyObject, headerLabel: string) => {
   const row: AnyObject[] = Object.values(rows)[0];
-  const columnHeaders = row
-    .map((keys) => keys.label)
-    .filter((keys) => {
-      return keys;
-    });
+  const columnHeaders = row.map((keys) => keys.label).filter(Boolean);
   return [headerLabel, ...columnHeaders, "Total"];
 };
 
@@ -61,7 +57,7 @@ export const generateTableBody = (rows: AnyObject, fieldData?: AnyObject) => {
 
   bodyRow.forEach((row: string[]) => {
     const matchRow: [] = rows[row[0]];
-    const rowIds = matchRow.map((info: AnyObject) => info.id).flat();
+    const rowIds = matchRow.flatMap((info: AnyObject) => info.id);
     rowIds.forEach((id) => {
       const value = fieldData?.[id];
       const isOptional = fieldData?.optional;
@@ -114,11 +110,10 @@ export const formatHeaderForRET = (label: string) => {
       return "Pop.";
     case "Number of Older adults":
       return "Older Adults";
-    default: {
+    default:
       if (label.includes("("))
         return label.substring(label.indexOf("(") + 1, label.indexOf(")"));
       return label;
-    }
   }
 };
 
@@ -128,7 +123,7 @@ export const formatLabelForRET = (
   report: AnyObject
 ) => {
   switch (formId) {
-    case "ret-mtrp": {
+    case "ret-mtrp":
       if (label.includes("quarter")) {
         const quarterLabel: AnyObject = {
           "First quarter": "Q1",
@@ -140,14 +135,14 @@ export const formatLabelForRET = (
         return `${report?.reportYear} ${quarterLabel[quarter]}`;
       }
       break;
-    }
-    case "ret-mtfqi": {
+
+    case "ret-mtfqi":
       //ex. "I am (Label)" returns "Label"
       if (label.includes("("))
         return label.substring(label.indexOf("(") + 1, label.indexOf(")"));
       break;
-    }
-    case "ret-mtfqr": {
+
+    case "ret-mtfqr":
       //ex. "I am (Label)" returns "I am"
       if (label.includes("(")) return label.split(" (")[0];
       else {
@@ -157,12 +152,11 @@ export const formatLabelForRET = (
           return "Apt. in qualified assisted living";
       }
       break;
-    }
-    case "ret-mpdprp": {
+
+    case "ret-mpdprp":
       if (label === "Other, specify")
         return `Other: ${report?.fieldData["otherReasons-otherText"]}`;
       break;
-    }
   }
 
   return label;
@@ -201,7 +195,7 @@ export const formatFooterForRET = (
       //get the row values for this target transition from WP targetPopulations, unique to ret-mtrp
       quarterIds.forEach((id: string) => {
         const quarterList = filteredTargetPopulation?.map((target) => {
-          return target[id] ? target[id] : "-";
+          return target[id] ?? "-";
         });
         rows.push([
           `Transition targets ${year} ${id.split(year)[1]}`,
@@ -212,7 +206,7 @@ export const formatFooterForRET = (
       //extra row added to sum the transition targets, only unique to ret-mtrp section
       const totalTranstionTargets = [
         "Total transition targets",
-        ...sumOfTwoRows(rows[rows.length - 2], rows[rows.length - 1]),
+        ...sumOfTwoRows(rows.at(-2) as string[], rows.at(-1) as string[]),
       ];
       //extra row added to get the percentage of targets, only unique to ret-mtrp section
       const perTargetsAchieved = [
@@ -232,7 +226,7 @@ export const formatFooterForRET = (
       });
       const table5Row = ["Total", ...table5Values, sumOfRow(table5Values)];
 
-      const totalPopulation = rows[rows.length - 1];
+      const totalPopulation = rows.at(-1)!;
       const totalPer = [
         "Total as a % of all current MFP participate",
         ...perOfTwoRows(totalPopulation, table5Row),
@@ -298,14 +292,12 @@ export const ExportRETTable = ({ section }: Props) => {
       //get a list of all the selected checkboxes in this section
       const checkboxList = report?.fieldData[field.id] as [];
       //strip out the nested values in the selected checkboxes, we need the ids to find the inputted values
-      const childrens = checkboxList
-        ?.map(
-          (checkbox: AnyObject) =>
-            (field.props?.choices as AnyObject[])?.find(
-              (choice: AnyObject) => choice.id === checkbox.key.split("-")[1]
-            )?.children
-        )
-        .flat();
+      const childrens = checkboxList?.flatMap(
+        (checkbox: AnyObject) =>
+          (field.props?.choices as AnyObject[])?.find(
+            (choice: AnyObject) => choice.id === checkbox.key.split("-")[1]
+          )?.children
+      );
       //clean up the children value to a usable array for lookup
       const childIds = childrens?.map((child: AnyObject) => {
         return {

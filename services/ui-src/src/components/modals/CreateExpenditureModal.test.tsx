@@ -240,7 +240,7 @@ describe("<CreateExpenditureModal />", () => {
 
         expect(copyReportDropdown).toBeDisabled();
         // Check that the "No reports eligible for copy" option exists
-        const noEligibleOption = Array.from(copyReportDropdown.options).find(
+        const noEligibleOption = [...copyReportDropdown.options].find(
           (option) => option.text === noEligibleReportsForCopy
         );
         expect(noEligibleOption).toBeDefined();

@@ -714,9 +714,8 @@ describe("Completion Status Tests", () => {
   });
 
   test("Target populations are considered incomplete if all defaults are not applicable", async () => {
-    const targetPopulationsAllNo: any[] = new Array(
-      targetPopulationFieldDataOneYes.targetPopulations
-    );
+    const targetPopulationsAllNo: any[] =
+      targetPopulationFieldDataOneYes.targetPopulations;
     // last item is a yes. pop and replace with no.
     targetPopulationsAllNo[3] = {
       id: "2Vd02J1FHl3Ka1DbtU5FMSDh",

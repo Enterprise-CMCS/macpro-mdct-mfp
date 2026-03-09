@@ -44,7 +44,6 @@ export const getReportVerbiage = (reportType?: string): AnyObject => {
       return sarVerbiage;
     case ReportType.EXPENDITURE:
       return expenditureVerbiage;
-    case ReportType.WP:
     default:
       return wpVerbiage;
   }
