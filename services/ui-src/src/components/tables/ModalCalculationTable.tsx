@@ -55,21 +55,18 @@ export const ModalCalculationTable = ({
 
     return (
       <Tr key={`${section}-row-${rowIndex}`}>
-        {row.map((cell, cellIndex: number) => {
-          console.log("What the cell be", cell);
-          return (
-            <Cell
-              id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
-              key={`${section}-row-${rowIndex}-cell-${cellIndex}`}
-            >
-              {displayCell({
-                cell,
-                columnId: `${section}-row-${rowIndex}-cell-${cellIndex}`,
-                rowId: `${section}-row-${rowIndex}-cell-${cellIndex}`,
-              })}
-            </Cell>
-          );
-        })}
+        {row.map((cell, cellIndex: number) => (
+          <Cell
+            id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
+            key={`${section}-row-${rowIndex}-cell-${cellIndex}`}
+          >
+            {displayCell({
+              cell,
+              columnId: `${section}-row-${rowIndex}-cell-${cellIndex}`,
+              rowId: `${section}-row-${rowIndex}-cell-${cellIndex}`,
+            })}
+          </Cell>
+        ))}
       </Tr>
     );
   };
