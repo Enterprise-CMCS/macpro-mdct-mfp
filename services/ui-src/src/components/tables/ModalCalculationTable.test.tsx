@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 //components
 import { ModalCalculationTable } from "./ModalCalculationTable";
@@ -54,7 +54,9 @@ describe("ModalCalculationTable", () => {
       name: verbiage.modalButtonText,
     });
     await userEvent.click(button);
-    expect(screen.getByTestId("modal-submit-button")).toBeVisible();
+    await waitFor(() =>
+      expect(screen.getByTestId("modal-submit-button")).toBeVisible()
+    );
   });
 
   it("does not render the modal initially", () => {
