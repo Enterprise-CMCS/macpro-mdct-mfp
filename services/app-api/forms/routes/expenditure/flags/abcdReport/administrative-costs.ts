@@ -104,6 +104,11 @@ const subRecipientsFootList = [
   },
 ];
 
+const subRecipientsFooterFieldsToReturn = [
+  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+];
+
 export const administrativeCostsRoute: FormTablesRoute = {
   name: "Administrative Costs",
   path: "/expenditure/administrative-costs",
@@ -218,6 +223,9 @@ export const administrativeCostsRoute: FormTablesRoute = {
       budgetCategoryDynamicRowsTemplate,
       ...budgetCategoryDynamicBodyList.flatMap((service) =>
         buildServiceFields(service, budgetCategoryFooterFieldsToReturn)
+      ),
+      ...subRecipientsFootList.flatMap((service) =>
+        buildServiceFields(service, subRecipientsFooterFieldsToReturn)
       ),
       {
         id: "administrativeCosts_narrative",

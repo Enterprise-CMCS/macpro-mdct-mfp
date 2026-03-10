@@ -1,3 +1,4 @@
+import { useContext } from "react";
 // components
 import {
   Box,
@@ -13,10 +14,12 @@ import {
   Tr,
   useDisclosure,
   VisuallyHidden,
-} from "@chakra-ui/react"; // types
-import { FormTable, FormTableRow } from "types";
-// utils
+} from "@chakra-ui/react";
 import { AddCalculationModal } from "components/modals/AddCalculationModal";
+// types
+import { AnyObject, FormTable, FormTableRow } from "types";
+// utils
+import { DynamicTableContext } from "./DynamicTableProvider";
 
 export const ModalCalculationTable = ({
   bodyRows,
@@ -42,6 +45,7 @@ export const ModalCalculationTable = ({
     />
   );
 
+  const { displayCell } = useContext(DynamicTableContext);
   const generateRows = (
     section: string,
     row: FormTableRow,
@@ -58,7 +62,11 @@ export const ModalCalculationTable = ({
               id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
               key={`${section}-row-${rowIndex}-cell-${cellIndex}`}
             >
-              {cell.toString()}
+              {displayCell({
+                cell,
+                columnId: `${section}-row-${rowIndex}-cell-${cellIndex}`,
+                rowId: `${section}-row-${rowIndex}-cell-${cellIndex}`,
+              })}
             </Cell>
           );
         })}
@@ -107,6 +115,7 @@ export const ModalCalculationTable = ({
 
 interface Props extends Omit<FormTable, "tableType"> {
   disabled: boolean;
+  formData?: AnyObject;
 }
 
 const sx = {
