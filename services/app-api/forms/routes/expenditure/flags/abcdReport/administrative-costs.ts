@@ -95,6 +95,15 @@ const budgetCategoryDynamicRowsTemplate = {
   },
 };
 
+// Sub Recipients Table
+const subRecipientsFootList = [
+  {
+    id: subRecipientsTableId,
+    label: "Sub Recipients",
+    readOnly: true,
+  },
+];
+
 export const administrativeCostsRoute: FormTablesRoute = {
   name: "Administrative Costs",
   path: "/expenditure/administrative-costs",
@@ -166,7 +175,18 @@ export const administrativeCostsRoute: FormTablesRoute = {
       {
         id: subRecipientsTableId,
         bodyRows: [],
-        footRows: [],
+        footRows: subRecipientsFootList.map((service) => {
+          return [
+            "Totals",
+            "",
+            "",
+            "",
+            ...buildServiceFields(service, [
+              ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+              ServiceFieldType.TOTAL_FEDERAL_SHARE,
+            ]),
+          ];
+        }),
         headRows: [subRecipientsHeaders],
         tableType: FormTableType.MODAL_CALCULATION,
         verbiage: {
