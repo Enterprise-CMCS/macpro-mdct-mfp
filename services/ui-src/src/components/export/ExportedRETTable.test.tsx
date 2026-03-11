@@ -219,7 +219,7 @@ describe("<ExportRETTable />", () => {
     ];
     const footerRow = [["label", "2", "3"]];
     formatFooterForRET("ret-mpdprp", mockSARReport.report, footerRow);
-    expect(footerRow[footerRow.length - 1]).toStrictEqual(expectedResults);
+    expect(footerRow.at(-1)).toStrictEqual(expectedResults);
   });
 
   test("Test ExportRETTable render if section is empty", () => {

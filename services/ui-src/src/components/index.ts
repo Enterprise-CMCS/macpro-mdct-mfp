@@ -86,6 +86,7 @@ export { MenuOption } from "./menus/MenuOption";
 export { Sidebar } from "./menus/Sidebar";
 // modals
 export { Modal } from "./modals/Modal";
+export { AddCalculationModal } from "./modals/AddCalculationModal";
 export { AddEditEntityModal } from "./modals/AddEditEntityModal";
 export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";
@@ -120,8 +121,14 @@ export { DynamicModalOverlayReportPage } from "./reports/DynamicModalOverlayRepo
 export { StatusTable } from "./statusing/StatusTable";
 // tables
 export { CalculationTable } from "./tables/CalculationTable";
+export {
+  DynamicTableContext,
+  DynamicTableProvider,
+} from "./tables/DynamicTableProvider";
+export { DynamicTableRows } from "./tables/DynamicTableRows";
 export { EntityRow } from "./tables/EntityRow";
 export { EntityStatusIcon } from "./tables/EntityStatusIcon";
+export { ModalCalculationTable } from "./tables/ModalCalculationTable";
 export { Table } from "./tables/Table";
 // widgets
 export { SpreadsheetWidget } from "./widgets/SpreadsheetWidget";

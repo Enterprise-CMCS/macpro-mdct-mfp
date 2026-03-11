@@ -49,12 +49,12 @@ const getObject = async (params) => {
 
 const list = async (params) => {
   let ContinuationToken;
-  let contents = [];
+  const contents = [];
 
   do {
     const command = new ListObjectsV2Command({ ...params, ContinuationToken });
     const result = await s3Client.send(command);
-    contents = contents.concat(result.Contents ?? []);
+    contents.push(...(result.Contents ?? []));
     ContinuationToken = result.ContinuationToken;
   } while (ContinuationToken);
 

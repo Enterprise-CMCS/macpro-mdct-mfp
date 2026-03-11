@@ -33,6 +33,17 @@ jest.mock("react-router", () => ({
   })),
 }));
 
+// Prevent async animation timers in Chakra Collapse from triggering act warnings.
+jest.mock("@chakra-ui/react", () => {
+  const actual = jest.requireActual("@chakra-ui/react");
+
+  return {
+    ...actual,
+    Collapse: ({ in: isOpen, children }: any) =>
+      isOpen ? <div>{children}</div> : null,
+  };
+});
+
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 

@@ -87,7 +87,7 @@ export const ExportedModalDrawerReportSection = ({
 
     // if not applicable we populate the column with 12 "N/A" cells
     if (isNotApplicableToMfp) {
-      return Array(12).fill("N/A");
+      return Array.from({ length: 12 }).fill("N/A");
     }
 
     const quarterArray = Object.keys(entity)
@@ -163,7 +163,7 @@ export const ExportedModalDrawerReportSection = ({
 
   const generateMainTable = () => {
     // create new quarter value array
-    let newQuarterValueArray = new Array(...quarterValueArray);
+    let newQuarterValueArray = quarterValueArray;
 
     let tableHeadersArray = getTableHeaders().map((obj) => obj.displayName);
 
@@ -180,7 +180,7 @@ export const ExportedModalDrawerReportSection = ({
     const formatBodyRow = () => {
       let bodyRows = [];
 
-      const overflowBodyRows = newQuarterValueArray.filter((arr) => {
+      const overflowBodyRows = newQuarterValueArray.filter((arr: any[]) => {
         return newQuarterValueArray.indexOf(arr) <= 5 && arr;
       });
 
@@ -192,7 +192,7 @@ export const ExportedModalDrawerReportSection = ({
         // sum to be added up for each quarter row
         let sum = 0;
         rows.push(quarterLabels[index]);
-        valueArray.forEach((array) => {
+        valueArray.forEach((array: any[]) => {
           sum += convertToNum(array[index]);
           rows.push(commaMasking(array[index]));
         });
@@ -227,7 +227,7 @@ export const ExportedModalDrawerReportSection = ({
 
   const generateOverflowTable = () => {
     // create new quarter value array
-    let newQuarterValueArray = new Array(...quarterValueArray);
+    let newQuarterValueArray = quarterValueArray;
 
     let overflowQuarterValueArray = newQuarterValueArray.filter(
       (arr: string[]) => newQuarterValueArray.indexOf(arr) > 5
@@ -248,7 +248,7 @@ export const ExportedModalDrawerReportSection = ({
         // sum to be added up for each quarter row
         let sum = 0;
         rows.push(quarterLabels[index]);
-        overflowQuarterValueArray.forEach((array) => {
+        overflowQuarterValueArray.forEach((array: any[]) => {
           rows.push(commaMasking(array[index]));
         });
 
@@ -269,8 +269,7 @@ export const ExportedModalDrawerReportSection = ({
     };
 
     const formatOverflowTableHeaders = () => {
-      const overflowTableHeadersArray = [];
-      overflowTableHeadersArray.push(tableHeadersArray[0]);
+      const overflowTableHeadersArray = [tableHeadersArray[0]];
 
       tableHeadersArray.find((arr) => {
         if (tableHeadersArray.indexOf(arr) > 6) {
@@ -281,7 +280,7 @@ export const ExportedModalDrawerReportSection = ({
     };
 
     const formatFootRow = () => {
-      const newFootRowArray = new Array(...generateFootRow());
+      const newFootRowArray = generateFootRow();
       const mainFootRow = newFootRowArray.filter((item, index) => index >= 7);
       return ["Total by Pop.", ...mainFootRow];
     };

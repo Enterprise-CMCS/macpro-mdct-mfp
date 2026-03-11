@@ -62,7 +62,7 @@ function pruneEntityData(
   possibleFields: string[]
 ) {
   //adding fields to be copied over from entries
-  const concatEntityFields = possibleFields.concat(additionalFields);
+  const concatEntityFields = [...possibleFields, ...additionalFields];
   entityData.forEach((entity, index) => {
     // Delete any key existing in the source data not valid in our template, or any entity key that's not a name.
     if (!concatEntityFields.includes(key)) {
