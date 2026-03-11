@@ -31,6 +31,7 @@ const categoryFootList = [
 const categoryFieldsToReturn = [
   ServiceFieldType.TOTAL_COMPUTABLE,
   ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
 ];
 
 // Category table dynamic rows
