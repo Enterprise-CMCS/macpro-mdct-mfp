@@ -103,7 +103,7 @@ const capacityBuildingBodyList = capacityBuilding(capacityBuildingTableId);
 const capacityBuildingFootList = [
   {
     id: capacityBuildingTableId,
-    label: "Administrative Costs",
+    label: "Capacity Building",
     readOnly: true,
   },
 ];
@@ -115,7 +115,6 @@ const capacityBuildingFieldsToReturn = [
 ];
 const capacityBuildingFooterFieldsToReturn = [
   ServiceFieldType.TOTAL_COMPUTABLE,
-  ServiceFieldType.PERCENTAGE_OVERRIDE,
   ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
   ServiceFieldType.TOTAL_FEDERAL_SHARE,
 ];
@@ -191,12 +190,15 @@ export const administrativeCostsRoute: FormTablesRoute = {
         footRows: capacityBuildingFootList.map((service) => {
           return [
             "Totals",
-            ...buildServiceFields(service, [ServiceFieldType.TOTAL_COMPUTABLE]),
+            ...buildServiceFields(
+              service,
+              capacityBuildingFooterFieldsToReturn.slice(0, 1)
+            ),
             "",
-            ...buildServiceFields(service, [
-              ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
-              ServiceFieldType.TOTAL_FEDERAL_SHARE,
-            ]),
+            ...buildServiceFields(
+              service,
+              capacityBuildingFooterFieldsToReturn.slice(1)
+            ),
           ];
         }),
         headRows: [administrativeCostsHeaders],
