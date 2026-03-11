@@ -108,6 +108,7 @@ const sx = {
     maxWidth: "15rem",
     paddingLeft: "spacer1",
     paddingRight: "spacer1",
+    margin: "0",
   },
   numberFieldContainer: {
     position: "relative",
@@ -117,6 +118,7 @@ const sx = {
       },
     },
     "&.percentage": {
+      maxWidth: "15em",
       ".ds-c-field": {
         paddingRight: "1.75rem",
       },
@@ -124,7 +126,6 @@ const sx = {
   },
   symbolOverlay: {
     position: "absolute",
-    paddingTop: "1px",
     fontSize: "lg",
     fontWeight: "700",
     "&.nested": {
@@ -132,11 +133,13 @@ const sx = {
       left: "245px",
     },
     ".percentage &": {
-      bottom: "11px",
-      left: "213px",
+      bottom: "20.5px",
+      transform: "translateY(50%)",
+      right: "10px",
     },
     ".currency &": {
-      bottom: "11px",
+      bottom: "20.5px",
+      transform: "translateY(50%)",
       left: "10px",
     },
   },

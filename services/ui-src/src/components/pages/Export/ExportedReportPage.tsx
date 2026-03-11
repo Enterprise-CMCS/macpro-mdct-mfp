@@ -81,15 +81,15 @@ export const reportTitle = (
   const { fieldData, reportYear, reportPeriod } = report;
   const { stateName } = fieldData;
   switch (reportType) {
-    case ReportType.WP: {
+    case ReportType.WP:
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
-    }
-    case ReportType.SAR: {
+
+    case ReportType.SAR:
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
-    }
-    case ReportType.EXPENDITURE: {
+
+    case ReportType.EXPENDITURE:
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
-    }
+
     default:
       assertExhaustive(reportType as never);
       throw new Error(
@@ -148,7 +148,7 @@ export const renderReportSections = (
     }
 
     if (section.name === WP_SAR_STATE_TERRITORY_INITIATIVES) {
-      showSection = childSections.length == 0;
+      showSection = childSections.length === 0;
     }
 
     // Hide section info for initiatives

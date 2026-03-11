@@ -50,6 +50,18 @@ export const demonstrationServicesRoute: FormTablesRoute = {
     intro: {
       section: "",
       subsection: "Demonstration Services",
+      info: [
+        {
+          type: "p",
+          content:
+            "Demonstration services are optional HCBS Medicaid services as listed in Attachment A of the MFP Program Terms and Conditions that are not currently covered under the state or territory’s Medicaid state plan or HCBS waiver programs (PTC 17).",
+        },
+        {
+          type: "p",
+          content:
+            "Previously this information was reported in Form B (Opt&Other Detail) in the excel version of the MFP Financial Reporting Form.",
+        },
+      ],
     },
     accordion: accordionWithFmapLink,
   },

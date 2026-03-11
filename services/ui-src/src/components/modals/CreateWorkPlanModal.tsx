@@ -59,7 +59,8 @@ export const CreateWorkPlanModal = ({
 
   const form: FormJson = !previousReport
     ? newWPFormJson
-    : isResetting
+    : // oxlint-disable-next-line no-nested-ternary
+      isResetting
       ? resetWPFormJson
       : copyWPFormJson;
 

@@ -33,6 +33,7 @@ export enum ReportFormFieldType {
   CHECKBOX = "checkbox",
   DATE = "date",
   DYNAMIC = "dynamic",
+  DYNAMIC_OBJECT = "dynamicObject",
   NO_TYPE = "",
   NUMBER = "number",
   RADIO = "radio",
@@ -42,8 +43,8 @@ export enum ReportFormFieldType {
 }
 
 export interface ReportFormField {
-  id: string;
   forTableOnly?: boolean;
+  id: string;
   props?: ReportFormFieldProps;
   transformation?: Transformation;
   type: ReportFormFieldType;
@@ -71,6 +72,8 @@ export interface ReportFormFieldProps {
   content?: string;
   decimalPlacesToRoundTo?: number;
   disabled?: boolean;
+  dynamicFields?: ReportFormField[];
+  dynamicLabel?: string;
   heading?: string;
   hint?: any;
   label?: string;
@@ -94,21 +97,24 @@ export type FormTableCell = string | ReportFormField;
 export type FormTableRow = FormTableCell[];
 export type FormTableRows = FormTableRow[];
 
+export interface DynamicRowsTemplate extends ReportFormField {
+  verbiage: {
+    buttonText: string;
+    hint: string;
+  };
+}
+
 export interface FormTable {
   id: string;
   bodyRows: FormTableRows;
-  dynamicRows?: FormTableRows;
+  dynamicRowsTemplate?: DynamicRowsTemplate;
   footRows: FormTableRows;
   headRows: FormTableRows;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
-    dynamicRows?: {
-      buttonText: string;
-      hint: string;
-      label: string;
-    };
     errorMessage?: string | CustomHtmlElement[];
+    modalButtonText?: string;
     percentage?: string;
     title: string;
   };
@@ -116,6 +122,7 @@ export interface FormTable {
 
 export enum FormTableType {
   CALCULATION = "Calculation",
+  MODAL_CALCULATION = "ModalCalculation",
 }
 
 export interface ServiceField {
@@ -126,6 +133,7 @@ export interface ServiceField {
 
 export enum ServiceFieldType {
   CATEGORY = "category",
+  PERCENTAGE_OVERRIDE = "percentageOverride",
   TOTAL_COMPUTABLE = "totalComputable",
   TOTAL_FEDERAL_SHARE = "totalFederalShare",
   TOTAL_STATE_TERRITORY_SHARE = "totalStateTerritoryShare",

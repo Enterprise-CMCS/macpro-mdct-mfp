@@ -60,7 +60,7 @@ describe("expenditureLogic", () => {
       const options = generateReportYearOptions();
 
       const years = options.map((opt) => parseInt(opt.value));
-      expect(years).toEqual([...years].sort((a, b) => b - a));
+      expect(years).toEqual([...years].toSorted((a, b) => b - a));
     });
   });
 

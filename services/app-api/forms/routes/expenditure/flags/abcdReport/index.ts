@@ -1,6 +1,7 @@
 // types
 import { ReportJsonFile, ReportType } from "../../../../../utils/types";
 // routes
+import { administrativeCostsRoute } from "./administrative-costs";
 import { demonstrationServicesRoute } from "./demonstration-services";
 import { fmapPercentagesRoute } from "./fmap-percentages";
 import { generalInformationRoute } from "./general-information";
@@ -23,6 +24,7 @@ export const expenditureReportJson: ReportJsonFile = {
     qualifiedHcbsRoute,
     demonstrationServicesRoute,
     supplementalServicesRoute,
+    administrativeCostsRoute,
     reviewAndSubmitRoute,
   ],
 };

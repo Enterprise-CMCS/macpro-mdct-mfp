@@ -10,7 +10,11 @@ import { object as yupSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 // components
 import { Box, Heading, Text } from "@chakra-ui/react";
-import { CalculationTable } from "components";
+import {
+  CalculationTable,
+  DynamicTableProvider,
+  ModalCalculationTable,
+} from "components";
 // utils
 import {
   compileValidationJsonFromFields,
@@ -131,10 +135,8 @@ export const Form = ({
               )}</span>${choice?.label.slice(asteriskIndex + 1)}`
             );
             choice.label = newOption;
-            return choice;
-          } else {
-            return choice;
           }
+          return choice;
         });
       return fieldsToRenderWithAriaLabels;
     };
@@ -152,20 +154,34 @@ export const Form = ({
   const renderTable = (table: FormTable, index: number) => {
     const { id, tableType, ...props } = table;
 
-    if (tableType === FormTableType.CALCULATION) {
-      return (
-        <CalculationTable
-          disabled={fieldInputDisabled}
-          formData={formData}
-          id={id}
-          key={id}
-          order={index}
-          report={report}
-          {...props}
-        />
-      );
+    switch (tableType) {
+      case FormTableType.CALCULATION:
+        return (
+          <DynamicTableProvider key={id}>
+            <CalculationTable
+              disabled={fieldInputDisabled}
+              formData={formData}
+              id={id}
+              order={index}
+              report={report}
+              {...props}
+            />
+          </DynamicTableProvider>
+        );
+
+      case FormTableType.MODAL_CALCULATION:
+        return (
+          <ModalCalculationTable
+            disabled={fieldInputDisabled}
+            id={id}
+            key={id}
+            {...props}
+          />
+        );
+
+      default:
+        return null;
     }
-    return null;
   };
 
   /*

@@ -16,13 +16,13 @@ export const putBanner = async (banner: AdminBannerData) => {
 };
 
 export const getBanners = async () => {
-  let items: AnyObject[] = [];
+  const items: AnyObject[] = [];
   const params = {
     TableName: bannerTableName,
   };
 
   for await (const page of paginateScan({ client }, params)) {
-    items = items.concat(page.Items ?? []);
+    items.push(...(page.Items ?? []));
   }
 
   return items as AdminBannerData[] | undefined;

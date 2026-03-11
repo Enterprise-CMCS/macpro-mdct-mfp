@@ -77,9 +77,8 @@ export const EntityRow = ({
             EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
           ]);
         }
-      default: {
+      default:
         return report && getEntityStatus(report, entity, entityType);
-      }
     }
   };
 

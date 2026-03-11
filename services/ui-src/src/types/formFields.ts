@@ -53,21 +53,24 @@ export type FormTableCell = string | FormField;
 export type FormTableRow = FormTableCell[];
 export type FormTableRows = FormTableRow[];
 
+export interface DynamicRowsTemplate extends FormField {
+  verbiage: {
+    buttonText: string;
+    hint: string;
+  };
+}
+
 export interface FormTable {
   id: string;
   bodyRows: FormTableRows;
-  dynamicRows?: FormTableRows;
+  dynamicRowsTemplate?: DynamicRowsTemplate;
   footRows: FormTableRows;
   headRows: FormTableRows;
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
-    dynamicRows?: {
-      buttonText: string;
-      hint: string;
-      label: string;
-    };
     errorMessage?: string | CustomHtmlElement[];
+    modalButtonText?: string;
     percentage?: string;
     title: string;
   };
@@ -75,6 +78,7 @@ export interface FormTable {
 
 export enum FormTableType {
   CALCULATION = "Calculation",
+  MODAL_CALCULATION = "ModalCalculation",
 }
 
 export interface CustomFieldValidation {
@@ -190,6 +194,7 @@ export enum ReportFormFieldType {
   DROPDOWN = "dropdown",
   DATE = "date",
   DYNAMIC = "dynamic",
+  DYNAMIC_OBJECT = "dynamicObject",
   NO_TYPE = "",
   NUMBER = "number",
   RADIO = "radio",

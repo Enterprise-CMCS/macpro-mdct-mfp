@@ -102,15 +102,11 @@ export const calculateCompletionStatus = async (
           dataForObject[formField.id]
         );
         nestedFields?.forEach((nestedField: string) => {
-          fieldsToBeValidated[nestedField] = dataForObject[nestedField]
-            ? dataForObject[nestedField]
-            : null;
+          fieldsToBeValidated[nestedField] = dataForObject[nestedField] ?? null;
         });
       }
 
-      fieldsToBeValidated[formField.id] = dataForObject[formField.id]
-        ? dataForObject[formField.id]
-        : null;
+      fieldsToBeValidated[formField.id] = dataForObject[formField.id] ?? null;
     }
     // Validate all fields en masse, passing flag that uses required validation schema
     return repeatersValid && (await areFieldsValid(fieldsToBeValidated));
@@ -127,7 +123,7 @@ export const calculateCompletionStatus = async (
           ?.value === "Yes";
       return isDefault && isApplicable;
     });
-    return filteredPopulations.length >= 1;
+    return filteredPopulations.length > 0;
   };
 
   const calculateEntityCompletion = async (

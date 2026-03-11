@@ -3,6 +3,7 @@ import {
   ReportFormFieldType,
   ServiceField,
   ServiceFieldType,
+  ValidationComparator,
   ValidationType,
 } from "../../../../../../utils/types";
 
@@ -12,17 +13,20 @@ export const buildServiceFields = (
     ServiceFieldType.TOTAL_COMPUTABLE,
     ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
     ServiceFieldType.TOTAL_FEDERAL_SHARE,
-  ]
+  ],
+  settings?: AnyObject
 ) => {
   const buildServiceField = (
     suffix: string,
     label: string,
-    props: AnyObject
+    props: AnyObject = {},
+    options: AnyObject = {}
   ) => ({
+    forTableOnly: true,
     id: `${service.id}-${suffix}`,
     type: ReportFormFieldType.NUMBER,
     validation: ValidationType.NUMBER_OPTIONAL,
-    forTableOnly: true,
+    ...options,
     props: {
       label: `${service.label} ${label}`,
       ...props,
@@ -40,6 +44,22 @@ export const buildServiceFields = (
 
   for (const fieldType of fieldsToReturn) {
     switch (fieldType) {
+      case ServiceFieldType.CATEGORY:
+        fields.push(
+          buildServiceField(
+            "category",
+            "Category",
+            {
+              dynamicLabel: settings?.dynamicLabel,
+            },
+            {
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT_OPTIONAL,
+            }
+          )
+        );
+        break;
+
       case ServiceFieldType.TOTAL_COMPUTABLE:
         fields.push(
           buildServiceField("totalComputable", "Total Computable", {
@@ -47,6 +67,29 @@ export const buildServiceFields = (
             initialValue: service.readOnly ? "0" : "",
             readOnly: service.readOnly,
           })
+        );
+        break;
+
+      case ServiceFieldType.PERCENTAGE_OVERRIDE:
+        fields.push(
+          buildServiceField(
+            "percentageOverride",
+            "Override %",
+            {
+              decimalPlacesToRoundTo: 0,
+              mask: "percentage",
+            },
+            {
+              validation: {
+                type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+                options: {
+                  boundary: 100,
+                  comparator:
+                    ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+                },
+              },
+            }
+          )
         );
         break;
 
@@ -77,15 +120,9 @@ export const buildServiceFields = (
   return fields;
 };
 
+// Qualified HCBS & Demonstration Services pages
 export const statePlanServicesHeaders = [
   "Service",
-  "Total Computable",
-  "Total State / Territory Share",
-  "Total Federal Share",
-];
-
-export const supplementalServicesHeaders = [
-  "Category",
   "Total Computable",
   "Total State / Territory Share",
   "Total Federal Share",
@@ -102,7 +139,7 @@ export const statePlanServices = (prefix: string) => [
   },
   {
     id: `${prefix}_pace`,
-    label: "PACE (Program for all includes care for the elderly)",
+    label: "PACE (Program of All-Inclusive Care for the Elderly)",
   },
   {
     id: `${prefix}_rehabilitativeServices`,
@@ -227,6 +264,14 @@ export const c1915WaiverServices = (prefix: string) => [
   },
 ];
 
+// Supplemental Services page
+export const supplementalServicesHeaders = [
+  "Category",
+  "Total Computable",
+  "Total State / Territory Share",
+  "Total Federal Share",
+];
+
 export const supplementalServices = (prefix: string) => [
   {
     id: `${prefix}_shortTermHousingAssistance`,
@@ -244,4 +289,55 @@ export const supplementalServices = (prefix: string) => [
     id: `${prefix}_paymentForSecuringACommunityBasedHome`,
     label: "Payment for Securing a Community-Based Home",
   },
+];
+
+// Administrative Costs page
+export const administrativeCostsHeaders = [
+  "Budget Category",
+  "Total Computable",
+  "Override %",
+  "Total State / Territory Share",
+  "Total Federal Share",
+];
+
+export const administrativeCosts = (prefix: string) => [
+  {
+    id: `${prefix}_personnel`,
+    label: "Personnel",
+  },
+  {
+    id: `${prefix}_fringeBenefits`,
+    label: "Fringe Benefits",
+  },
+  {
+    id: `${prefix}_travel`,
+    label: "Travel",
+  },
+  {
+    id: `${prefix}_equipment`,
+    label: "Equipment",
+  },
+  {
+    id: `${prefix}_supplies`,
+    label: "Supplies",
+  },
+  {
+    id: `${prefix}_indirectCosts`,
+    label: "Indirect Costs",
+  },
+];
+
+export const personnelHeaders = [
+  "Position Title",
+  "# of Budget FTEs",
+  "# of Filled FTEs",
+];
+
+export const subRecipientsHeaders = [
+  "Sub Recipient",
+  "Describe SOW",
+  "Expenditures",
+  "Override %",
+  "Total State / Territory Share",
+  "Total Federal Share",
 ];

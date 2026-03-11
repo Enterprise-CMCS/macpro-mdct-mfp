@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { faker } from "@faker-js/faker";
 import {
   ReportFieldData,
@@ -92,7 +92,7 @@ const addEvaluationPlan = (
   period: number,
   numberOfPlans: number = 1
 ): ReportFieldData[] => {
-  return [...Array(numberOfPlans).keys()].map((i) => {
+  return [...Array.from({ length: numberOfPlans }).keys()].map((i) => {
     const numType = i === 0 ? null : "int";
     // Plans alternate between No for first plan, Yes for second plan, etc.
     const transition =
