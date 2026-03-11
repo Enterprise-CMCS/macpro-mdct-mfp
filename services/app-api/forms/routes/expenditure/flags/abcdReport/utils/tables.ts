@@ -269,6 +269,7 @@ export const supplementalServicesHeaders = [
   "Service",
   "Total Computable",
   "Total State / Territory Share",
+  "Total Federal Share",
 ];
 
 export const supplementalServices = (prefix: string) => [
