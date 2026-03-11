@@ -111,7 +111,7 @@ export class StatePage extends BasePage {
     transitionBenchmarks: {
       benchmarkName: string;
       isActive: boolean;
-      quarterValues: string[];
+      quarterValues: { quarter: string; value: string }[];
     }[]
   ) {
     for (const {
@@ -134,8 +134,8 @@ export class StatePage extends BasePage {
 
       if (isActive) {
         await benchmarkDialog.getByRole("radio", { name: "Yes" }).click();
-        for (let i = 0; i < quarterValues.length && i < quarters.length; i++) {
-          await this.fillQuarterProjection(quarterValues[i], quarters[i]);
+        for (const { value, quarter } of quarterValues) {
+          await this.fillQuarterProjection(value, quarter);
         }
       } else {
         await benchmarkDialog.getByRole("radio", { name: "No" }).click();
@@ -274,7 +274,10 @@ export class StatePage extends BasePage {
       quantitativeTargets: boolean;
       additionalDetails: string;
     };
-    fundingSources: { source: string; values: string[] };
+    fundingSources: {
+      source: string;
+      values: { quarter: string; value: string }[];
+    };
   }) {
     await this.clickEditInitiative(topic.name);
     await this.editDefineInitiativeSection(
@@ -331,7 +334,7 @@ export class StatePage extends BasePage {
 
   async editFundingSourcesSection(
     fundingSource: string,
-    fundingSourcesData: string[]
+    fundingSourcesData: { quarter: string; value: string }[]
   ) {
     await this.clickInitiativeSectionEditBtn("Funding sources");
     await this.page.getByRole("button", { name: "Add funding source" }).click();
@@ -342,8 +345,8 @@ export class StatePage extends BasePage {
     await addFundingSourceDialog
       .getByRole("radio", { name: new RegExp(fundingSource, "i") })
       .check();
-    for (let i = 0; i < fundingSourcesData.length && i < quarters.length; i++) {
-      await this.fillQuarterFundingSources(fundingSourcesData[i], quarters[i]);
+    for (const { value, quarter } of fundingSourcesData) {
+      await this.fillQuarterFundingSources(value, quarter);
     }
     const putResp = this.waitForReportResponse("PUT", 200);
     await addFundingSourceDialog.getByRole("button", { name: "Save" }).click();

@@ -333,9 +333,7 @@ const updateTargetPopulations = (
 ): ReportFieldData[] => {
   return BASE_TARGET_POPULATIONS.map((targetPopulation) => {
     const inactive = ["PD", "MH/SUD"].includes(
-      (targetPopulation.transitionBenchmarks_targetPopulationName_short as
-        | string
-        | undefined) || ""
+      targetPopulation.transitionBenchmarks_targetPopulationName_short as string
     );
 
     const numType = inactive ? null : "int";

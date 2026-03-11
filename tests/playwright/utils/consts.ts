@@ -106,28 +106,33 @@ export const quarters = Array.from({ length: 12 }, (_, i) => {
 });
 
 // Valid data can be a dollar amount including zero or N/A
-export function generateQuarterValues(length: number): string[] {
-  return Array.from({ length }, () => {
-    // Randomly choose between integer string or 'N/A'
-    return faker.datatype.boolean()
-      ? faker.string.numeric(4) // generates up to 4 digits, including leading zeros
-      : "N/A";
-  });
+export function generateQuarterValue(): string {
+  // Randomly choose between integer string or 'N/A'
+  return faker.datatype.boolean()
+    ? faker.string.numeric(4) // generates up to 4 digits, including leading zeros
+    : "N/A";
 }
 
-export const transitionBenchmarkQuarterValues = generateQuarterValues(12);
-export const initiativeFundingSourceQuarterValues = generateQuarterValues(12);
+export const transitionBenchmarkQuarterData = quarters.map((quarter) => ({
+  quarter,
+  value: generateQuarterValue(),
+}));
+
+export const initiativeFundingSourceQuarterData = quarters.map((quarter) => ({
+  quarter,
+  value: generateQuarterValue(),
+}));
 
 // Update dependent test data type to match string amounts
 export const wpTransitionBenchmarkTestData: Array<{
   benchmarkName: string;
   isActive: boolean;
-  quarterValues: string[];
+  quarterValues: { quarter: string; value: string }[];
 }> = [
   {
     benchmarkName: transitionBenchmarks[0],
     isActive: true,
-    quarterValues: transitionBenchmarkQuarterValues,
+    quarterValues: transitionBenchmarkQuarterData,
   },
   {
     benchmarkName: transitionBenchmarks[1],
@@ -152,7 +157,7 @@ export type WorkPlan = {
   transitionBenchmarkProjections: Array<{
     benchmarkName: string;
     isActive: boolean;
-    quarterValues: string[];
+    quarterValues: { quarter: string; value: string }[];
   }>;
   transitionBenchmarkStrategy: {
     explanation: string;
@@ -177,7 +182,7 @@ export type WorkPlan = {
     };
     fundingSources: {
       source: string;
-      values: string[];
+      values: { quarter: string; value: string }[];
     };
   }>;
 };
@@ -209,7 +214,7 @@ export const fillWorkPlanTestData: WorkPlan = {
     },
     fundingSources: {
       source: "qualified HCBS and demonstration services",
-      values: initiativeFundingSourceQuarterValues,
+      values: initiativeFundingSourceQuarterData,
     },
   })),
 };
