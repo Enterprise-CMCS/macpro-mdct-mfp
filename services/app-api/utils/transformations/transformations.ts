@@ -7,15 +7,16 @@ import {
   FormField,
   FormJson,
   FormLayoutElement,
+  FundingSource,
+  isUsableForTransforms,
+  NumberMask,
   OverlayModalPageShape,
   PageTypes,
   ReportJson,
   ReportRoute,
   SomeRequired,
-  isUsableForTransforms,
   TargetPopulation,
   WorkPlanFieldDataForTransforms,
-  FundingSource,
 } from "../types";
 
 export const removeConditionalRoutes = <T extends ReportRoute>(
@@ -386,7 +387,7 @@ export const fundingSources = (
         validation: "number",
         props: {
           label: `Actual spending (${quarter.name} quarter: ${quarter.range})`,
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
         },
       },
       {
@@ -396,7 +397,7 @@ export const fundingSources = (
         props: {
           label: `Projected spending (${quarter.name} quarter: ${quarter.range})`,
           disabled: true,
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
         },
       },
     ]),

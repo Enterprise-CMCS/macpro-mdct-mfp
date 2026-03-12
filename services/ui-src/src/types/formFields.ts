@@ -202,3 +202,11 @@ export enum ReportFormFieldType {
   TEXT = "text",
   TEXTAREA = "textarea",
 }
+
+export enum NumberMask {
+  CURRENCY = "currency",
+  COMMA_SEPARATED = "comma-separated",
+  FLOAT_OR_INTEGER = "floatOrInteger",
+  PERCENTAGE = "percentage",
+  RATIO = "ratio",
+}
