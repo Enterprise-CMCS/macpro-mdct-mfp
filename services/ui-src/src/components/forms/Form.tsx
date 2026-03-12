@@ -14,6 +14,7 @@ import {
   CalculationTable,
   DynamicTableProvider,
   ModalCalculationTable,
+  SummationTable,
 } from "components";
 // utils
 import {
@@ -176,6 +177,20 @@ export const Form = ({
               disabled={fieldInputDisabled}
               id={id}
               key={id}
+              {...props}
+            />
+          </DynamicTableProvider>
+        );
+
+      case FormTableType.SUMMATION:
+        return (
+          <DynamicTableProvider key={id}>
+            <SummationTable
+              disabled={fieldInputDisabled}
+              formData={formData}
+              id={id}
+              order={index}
+              report={report}
               {...props}
             />
           </DynamicTableProvider>
