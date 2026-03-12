@@ -171,12 +171,14 @@ export const Form = ({
 
       case FormTableType.MODAL_CALCULATION:
         return (
-          <ModalCalculationTable
-            disabled={fieldInputDisabled}
-            id={id}
-            key={id}
-            {...props}
-          />
+          <DynamicTableProvider key={id}>
+            <ModalCalculationTable
+              disabled={fieldInputDisabled}
+              id={id}
+              key={id}
+              {...props}
+            />
+          </DynamicTableProvider>
         );
 
       default:
