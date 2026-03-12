@@ -268,7 +268,7 @@ export const c1915WaiverServices = (prefix: string) => [
 
 // Supplemental Services page
 export const supplementalServicesHeaders = [
-  "Category",
+  "Service",
   "Total Computable",
   "Total State / Territory Share",
   "Total Federal Share",
