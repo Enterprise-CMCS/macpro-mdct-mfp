@@ -1,3 +1,6 @@
+// types
+import { NumberMask } from "types";
+// utils
 import {
   cleanAndMaskNumberValues,
   cleanRatioInput,
@@ -52,12 +55,15 @@ describe("utils/clean", () => {
 
   describe("makeStringParseableForDatabase()", () => {
     test("formats float", () => {
-      const result = makeStringParseableForDatabase("1:2.34", "currency");
+      const result = makeStringParseableForDatabase(
+        "1:2.34",
+        NumberMask.CURRENCY
+      );
       expect(result).toBe("12.34");
     });
 
     test("formats ratio", () => {
-      const result = makeStringParseableForDatabase("1:2", "ratio");
+      const result = makeStringParseableForDatabase("1:2", NumberMask.RATIO);
       expect(result).toBe("1:2");
     });
 
@@ -71,7 +77,7 @@ describe("utils/clean", () => {
     test("formats with mask", () => {
       const result = cleanAndMaskNumberValues({
         decimalPlacesToRoundTo: 2,
-        mask: "currency",
+        mask: NumberMask.CURRENCY,
         value: "12.3456",
       });
       expect(result).toEqual({
