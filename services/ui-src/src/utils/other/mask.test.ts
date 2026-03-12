@@ -1,145 +1,138 @@
-import { maskMap, applyMask } from "./mask";
+import {
+  applyMask,
+  convertToThousandsSeparatedFloatOrIntegerString,
+  convertToThousandsSeparatedRatioString,
+  convertToThousandsSeparatedString,
+  maskMap,
+  maskResponseData,
+} from "./mask";
 // types
 import { NumberMask } from "types";
-// utils
-import {
-  convertToThousandsSeparatedString,
-  convertToThousandsSeparatedRatioString,
-  maskResponseData,
-} from "utils";
-
-const thousandsSeparatedMaskAcceptableTestCases = [
-  // valid input, masked
-  { test: "000000123", expected: "123" },
-  { test: "123", expected: "123" },
-  { test: "123.00", expected: "123" },
-  { test: ".05000000000000", expected: "0.05" },
-  { test: ".05", expected: "0.05" },
-  { test: ".5", expected: "0.5" },
-  { test: "0.05", expected: "0.05" },
-  { test: "0.0", expected: "0" },
-  { test: "1,234.00", expected: "1,234" },
-  { test: "1,234", expected: "1,234" },
-  { test: "1234", expected: "1,234" },
-  { test: "100,000,000", expected: "100,000,000" },
-  { test: "100000000", expected: "100,000,000" },
-  { test: "-1234", expected: "-1,234" },
-  { test: "123%", expected: "123" },
-  { test: "$123", expected: "123" },
-  { test: "1234%", expected: "1,234" },
-  { test: "$1234", expected: "1,234" },
-
-  // invalid input, returned as is
-  { test: "0....0123", expected: "0....0123" },
-  { test: "123%%", expected: "123%%" },
-  { test: "--123", expected: "--123" },
-  { test: "$$123", expected: "$$123" },
-  { test: "1234%%", expected: "1234%%" },
-  { test: "--1234", expected: "--1234" },
-  { test: "$$1234", expected: "$$1234" },
-  { test: "$$1234567890.10", expected: "$$1234567890.10" },
-  { test: "$$$$$23453--123081", expected: "$$$$$23453--123081" },
-  { test: "!@#$%*^()_", expected: "!@#$%*^()_" },
-  { test: "abc123", expected: "abc123" },
-  { test: "123abc", expected: "123abc" },
-];
-
-const ratioMaskAcceptableTestCases = [
-  { test: "1:1", expected: "1:1" },
-  { test: "1,234:1.12", expected: "1,234:1.12" },
-  { test: "1234:1.12", expected: "1,234:1.12" },
-  { test: "1.23:1234.1", expected: "1.23:1,234.1" },
-  { test: "1,,,234,56....1234:1", expected: "1,,,234,56....1234:1" },
-  { test: "1:1,,,234,56....1234", expected: "1:1,,,234,56....1234" },
-  { test: "1:10,000", expected: "1:10,000" },
-  { test: "1:10,00:0", expected: "1:10,00:0" },
-  { test: "No colon here, m'lord", expected: "No colon here, m'lord" },
-  { test: " :1", expected: " :1" },
-  { test: "1: ", expected: "1: " },
-  { test: "1:::10,000 ", expected: "1:::10,000 " },
-  { test: "1000", expected: "1000" },
-  { test: "1,234", expected: "1,234" },
-  { test: "1234", expected: "1234" },
-  { test: ":1234", expected: ":1234" },
-  { test: "abc", expected: "abc" },
-  { test: "!@#123:123", expected: "!@#123:123" },
-  { test: "123:-123", expected: "123:-123" },
-  { test: "$123:-123", expected: "$123:-123" },
-  { test: "", expected: "" },
-];
 
 describe("utils/mask", () => {
-  describe("Test mask types", () => {
-    const nullTestCases = [
-      { test: "0....0123", expected: "0....0123" },
-      { test: "000000123", expected: "000000123" },
-      { test: "123", expected: "123" },
-      { test: "123456", expected: "123456" },
-      { test: "", expected: "" },
-      { test: "abc", expected: "abc" },
-      { test: "!@#", expected: "!@#" },
-    ];
+  describe("applyMask()", () => {
+    describe("null mask", () => {
+      const nullTestCases = [
+        { test: "0....0123", expected: "0....0123" },
+        { test: "000000123", expected: "000000123" },
+        { test: "123", expected: "123" },
+        { test: "123456", expected: "123456" },
+        { test: "", expected: "" },
+        { test: "abc", expected: "abc" },
+        { test: "!@#", expected: "!@#" },
+      ];
 
-    const undefinedTestCases = [
-      { test: "0....0123", expected: "0....0123" },
-      { test: "000000123", expected: "123" },
-      { test: "123", expected: "123" },
-      { test: "123456", expected: "123,456" },
-      { test: "", expected: "" },
-      { test: "abc", expected: "abc" },
-      { test: "!@#", expected: "!@#" },
-    ];
-
-    const currencyTestCases = [
-      { test: "0....0123", expected: "0....0123" },
-      { test: "000000123", expected: "123.00" },
-      { test: "123.00", expected: "123.00" },
-      { test: ".05000000000000", expected: "0.05" },
-      { test: "123", expected: "123.00" },
-      { test: "", expected: "" },
-      { test: "abc", expected: "abc" },
-      { test: "!@#", expected: "!@#" },
-    ];
-
-    const currencyTestCasesToInteger = [
-      { test: "0....0123", expected: "0....0123" },
-      { test: "000000123", expected: "123" },
-      { test: "123.00", expected: "123" },
-      { test: ".05000000000000", expected: "0" },
-      { test: "123", expected: "123" },
-      { test: "", expected: "" },
-      { test: "abc", expected: "abc" },
-      { test: "!@#", expected: "!@#" },
-    ];
-
-    test("Check if null passed for mask returns unmasked value", () => {
-      for (let testCase of nullTestCases) {
-        expect(applyMask(testCase.test, null).maskedValue).toEqual(
-          testCase.expected
-        );
-      }
+      test("Check if null passed for mask returns unmasked value", () => {
+        for (let testCase of nullTestCases) {
+          expect(applyMask(testCase.test, null).maskedValue).toEqual(
+            testCase.expected
+          );
+        }
+      });
     });
 
-    test("Check if undefined passed for mask returns thousands-separated value", () => {
-      for (let testCase of undefinedTestCases) {
-        expect(applyMask(testCase.test).maskedValue).toEqual(testCase.expected);
-      }
+    describe("undefined mask", () => {
+      const undefinedTestCases = [
+        { test: "0....0123", expected: "0....0123" },
+        { test: "000000123", expected: "123" },
+        { test: "123", expected: "123" },
+        { test: "123456", expected: "123,456" },
+        { test: "", expected: "" },
+        { test: "abc", expected: "abc" },
+        { test: "!@#", expected: "!@#" },
+      ];
+
+      test("Check if undefined passed for mask returns thousands-separated value", () => {
+        for (let testCase of undefinedTestCases) {
+          expect(applyMask(testCase.test).maskedValue).toEqual(
+            testCase.expected
+          );
+        }
+      });
     });
 
-    test("Check if currency passed for mask returns unmasked value rounded to 2 places", () => {
-      for (let testCase of currencyTestCases) {
-        expect(
-          applyMask(testCase.test, NumberMask.CURRENCY).maskedValue
-        ).toEqual(testCase.expected);
-      }
+    describe("currency mask", () => {
+      const currencyTestCases = [
+        { test: "0....0123", expected: "0....0123" },
+        { test: "000000123", expected: "123.00" },
+        { test: "123.00", expected: "123.00" },
+        { test: ".05000000000000", expected: "0.05" },
+        { test: "123", expected: "123.00" },
+        { test: "", expected: "" },
+        { test: "abc", expected: "abc" },
+        { test: "!@#", expected: "!@#" },
+      ];
+
+      const currencyTestCasesToInteger = [
+        { test: "0....0123", expected: "0....0123" },
+        { test: "000000123", expected: "123" },
+        { test: "123.00", expected: "123" },
+        { test: ".05000000000000", expected: "0" },
+        { test: "123", expected: "123" },
+        { test: "", expected: "" },
+        { test: "abc", expected: "abc" },
+        { test: "!@#", expected: "!@#" },
+      ];
+
+      test("Check if currency passed for mask returns unmasked value rounded to 2 places", () => {
+        for (let testCase of currencyTestCases) {
+          expect(
+            applyMask(testCase.test, NumberMask.CURRENCY).maskedValue
+          ).toEqual(testCase.expected);
+        }
+      });
+
+      test("Check if currency passed for mask returns unmasked value with specified number of rounding places", () => {
+        for (let testCase of currencyTestCasesToInteger) {
+          expect(
+            applyMask(testCase.test, NumberMask.CURRENCY, 0).maskedValue
+          ).toEqual(testCase.expected);
+        }
+      });
     });
 
-    test("Check if currency passed for mask returns unmasked value with specified number of rounding places", () => {
-      for (let testCase of currencyTestCasesToInteger) {
-        expect(
-          applyMask(testCase.test, NumberMask.CURRENCY, 0).maskedValue
-        ).toEqual(testCase.expected);
-      }
+    describe("float or integer mask", () => {
+      const floatOrIntegerTestCases = [
+        { test: "123.45", expected: "123.45" },
+        { test: "123.50", expected: "123.5" },
+        { test: "123.00", expected: "123" },
+        { test: "123", expected: "123" },
+        { test: "0....0123", expected: "0....0123" },
+        { test: "000000123", expected: "123" },
+        { test: ".05000000000000", expected: "0.05" },
+        { test: "", expected: "" },
+        { test: "abc", expected: "abc" },
+        { test: "!@#", expected: "!@#" },
+      ];
+
+      const floatOrIntegerTestCasesToInteger = [
+        { test: "123.45", expected: "123" },
+        { test: "123.50", expected: "124" },
+        { test: "123.00", expected: "123" },
+        { test: "123", expected: "123" },
+        { test: "0....0123", expected: "0....0123" },
+        { test: "000000123", expected: "123" },
+        { test: ".05000000000000", expected: "0" },
+        { test: "", expected: "" },
+        { test: "abc", expected: "abc" },
+        { test: "!@#", expected: "!@#" },
+      ];
+
+      test("masks float to at most 2 decimal places", () => {
+        for (let testCase of floatOrIntegerTestCases) {
+          expect(
+            applyMask(testCase.test, NumberMask.FLOAT_OR_INTEGER, 2).maskedValue
+          ).toEqual(testCase.expected);
+        }
+      });
+
+      test("masks float to integer", () => {
+        for (let testCase of floatOrIntegerTestCasesToInteger) {
+          expect(
+            applyMask(testCase.test, NumberMask.FLOAT_OR_INTEGER, 0).maskedValue
+          ).toEqual(testCase.expected);
+        }
+      });
     });
 
     test("Check if all masks have masking functions", () => {
@@ -150,6 +143,42 @@ describe("utils/mask", () => {
   });
 
   describe("convertToThousandsSeparatedString()", () => {
+    const thousandsSeparatedMaskAcceptableTestCases = [
+      // valid input, masked
+      { test: "000000123", expected: "123" },
+      { test: "123", expected: "123" },
+      { test: "123.00", expected: "123" },
+      { test: ".05000000000000", expected: "0.05" },
+      { test: ".05", expected: "0.05" },
+      { test: ".5", expected: "0.5" },
+      { test: "0.05", expected: "0.05" },
+      { test: "0.0", expected: "0" },
+      { test: "1,234.00", expected: "1,234" },
+      { test: "1,234", expected: "1,234" },
+      { test: "1234", expected: "1,234" },
+      { test: "100,000,000", expected: "100,000,000" },
+      { test: "100000000", expected: "100,000,000" },
+      { test: "-1234", expected: "-1,234" },
+      { test: "123%", expected: "123" },
+      { test: "$123", expected: "123" },
+      { test: "1234%", expected: "1,234" },
+      { test: "$1234", expected: "1,234" },
+
+      // invalid input, returned as is
+      { test: "0....0123", expected: "0....0123" },
+      { test: "123%%", expected: "123%%" },
+      { test: "--123", expected: "--123" },
+      { test: "$$123", expected: "$$123" },
+      { test: "1234%%", expected: "1234%%" },
+      { test: "--1234", expected: "--1234" },
+      { test: "$$1234", expected: "$$1234" },
+      { test: "$$1234567890.10", expected: "$$1234567890.10" },
+      { test: "$$$$$23453--123081", expected: "$$$$$23453--123081" },
+      { test: "!@#$%*^()_", expected: "!@#$%*^()_" },
+      { test: "abc123", expected: "abc123" },
+      { test: "123abc", expected: "123abc" },
+    ];
+
     test("Valid numerical string is correctly masked with thousands separators", () => {
       for (let testCase of thousandsSeparatedMaskAcceptableTestCases) {
         expect(
@@ -160,10 +189,82 @@ describe("utils/mask", () => {
   });
 
   describe("convertToCommaSeparatedRatioString()", () => {
+    const ratioMaskAcceptableTestCases = [
+      { test: "1:1", expected: "1:1" },
+      { test: "1,234:1.12", expected: "1,234:1.12" },
+      { test: "1234:1.12", expected: "1,234:1.12" },
+      { test: "1.23:1234.1", expected: "1.23:1,234.1" },
+      { test: "1,,,234,56....1234:1", expected: "1,,,234,56....1234:1" },
+      { test: "1:1,,,234,56....1234", expected: "1:1,,,234,56....1234" },
+      { test: "1:10,000", expected: "1:10,000" },
+      { test: "1:10,00:0", expected: "1:10,00:0" },
+      { test: "No colon here, m'lord", expected: "No colon here, m'lord" },
+      { test: " :1", expected: " :1" },
+      { test: "1: ", expected: "1: " },
+      { test: "1:::10,000 ", expected: "1:::10,000 " },
+      { test: "1000", expected: "1000" },
+      { test: "1,234", expected: "1,234" },
+      { test: "1234", expected: "1234" },
+      { test: ":1234", expected: ":1234" },
+      { test: "abc", expected: "abc" },
+      { test: "!@#123:123", expected: "!@#123:123" },
+      { test: "123:-123", expected: "123:-123" },
+      { test: "$123:-123", expected: "$123:-123" },
+      { test: "", expected: "" },
+    ];
+
     test("Valid ratio is split and masked on each side individually", () => {
       for (let testCase of ratioMaskAcceptableTestCases) {
         expect(
           convertToThousandsSeparatedRatioString(testCase.test).maskedValue
+        ).toEqual(testCase.expected);
+      }
+    });
+  });
+
+  describe("convertToThousandsSeparatedFloatOrIntegerString()", () => {
+    const thousandsSeparatedMaskAcceptableTestCases = [
+      // valid input, masked
+      { test: "000000123", expected: "123" },
+      { test: "123", expected: "123" },
+      { test: "123.00", expected: "123" },
+      { test: ".05000000000000", expected: "0.05" },
+      { test: ".05", expected: "0.05" },
+      { test: ".5", expected: "0.5" },
+      { test: "0.05", expected: "0.05" },
+      { test: "0.0", expected: "0" },
+      { test: "1,234.00", expected: "1,234" },
+      { test: "1,234", expected: "1,234" },
+      { test: "1234", expected: "1,234" },
+      { test: "100,000,000", expected: "100,000,000" },
+      { test: "100000000", expected: "100,000,000" },
+      { test: "-1234", expected: "-1,234" },
+      { test: "123%", expected: "123" },
+      { test: "$123", expected: "123" },
+      { test: "1234%", expected: "1,234" },
+      { test: "$1234", expected: "1,234" },
+      { test: ".50", expected: "0.5" },
+
+      // invalid input, returned as is
+      { test: "0....0123", expected: "0....0123" },
+      { test: "123%%", expected: "123%%" },
+      { test: "--123", expected: "--123" },
+      { test: "$$123", expected: "$$123" },
+      { test: "1234%%", expected: "1234%%" },
+      { test: "--1234", expected: "--1234" },
+      { test: "$$1234", expected: "$$1234" },
+      { test: "$$1234567890.10", expected: "$$1234567890.10" },
+      { test: "$$$$$23453--123081", expected: "$$$$$23453--123081" },
+      { test: "!@#$%*^()_", expected: "!@#$%*^()_" },
+      { test: "abc123", expected: "abc123" },
+      { test: "123abc", expected: "123abc" },
+    ];
+
+    test("Valid ratio is split and masked on each side individually", () => {
+      for (let testCase of thousandsSeparatedMaskAcceptableTestCases) {
+        expect(
+          convertToThousandsSeparatedFloatOrIntegerString(testCase.test)
+            .maskedValue
         ).toEqual(testCase.expected);
       }
     });
@@ -178,6 +279,11 @@ describe("utils/mask", () => {
     test("Currency mask works correctly", () => {
       const result = maskResponseData("12", NumberMask.CURRENCY);
       expect(result).toEqual("$12");
+    });
+
+    test("Currency mask for cents works correctly", () => {
+      const result = maskResponseData("12.34", NumberMask.CURRENCY);
+      expect(result).toEqual("$12.34");
     });
 
     test("Standard field is not masked", () => {
