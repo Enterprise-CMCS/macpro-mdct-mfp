@@ -1,3 +1,5 @@
+import { faker } from "@faker-js/faker";
+
 export const adminUser = process.env.SEED_ADMIN_USER_EMAIL!;
 export const adminPassword = process.env.SEED_ADMIN_USER_PASSWORD!; // pragma: allowlist secret
 export const stateUser = process.env.SEED_STATE_USER_EMAIL!;
@@ -32,11 +34,20 @@ export const testWorkPlan = {
   expStatus: "Not started",
 };
 
+const bannerStartDate = faker.date.soon({ days: 1 });
+const bannerEndDate = new Date(bannerStartDate);
+bannerEndDate.setDate(bannerEndDate.getDate() + 1);
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  month: "2-digit",
+  day: "2-digit",
+  year: "numeric",
+});
+
 export const testBanner = {
-  title: "Newly Created Banner",
-  description: "Banner Description Text",
-  startDate: "10/10/2025",
-  endDate: "10/20/2025",
+  title: faker.lorem.words(3),
+  description: faker.lorem.sentence(),
+  startDate: dateFormat.format(bannerStartDate),
+  endDate: dateFormat.format(bannerEndDate),
 };
 
 export const a11yViewports = {
@@ -95,46 +106,33 @@ export const quarters = Array.from({ length: 12 }, (_, i) => {
 });
 
 // Valid data can be a dollar amount including zero or N/A
-export const transitionBenchmarkQuarterValues = [
-  "75",
-  "N/A",
-  "0",
-  "0",
-  "0",
-  "0",
-  "100",
-  "0",
-  "0",
-  "750",
-  "0",
-  "0",
-];
+export function generateQuarterValue(): string {
+  // Randomly choose between integer string or 'N/A'
+  return faker.datatype.boolean()
+    ? faker.string.numeric(4) // generates up to 4 digits, including leading zeros
+    : "N/A";
+}
 
-export const initiativeFundingSourceQuarterValues = [
-  "1000",
-  "100",
-  "0",
-  "0",
-  "500",
-  "600",
-  "N/A",
-  "750",
-  "900",
-  "0",
-  "1100",
-  "1200",
-];
+export const transitionBenchmarkQuarterData = quarters.map((quarter) => ({
+  quarter,
+  value: generateQuarterValue(),
+}));
+
+export const initiativeFundingSourceQuarterData = quarters.map((quarter) => ({
+  quarter,
+  value: generateQuarterValue(),
+}));
 
 // Update dependent test data type to match string amounts
 export const wpTransitionBenchmarkTestData: Array<{
   benchmarkName: string;
   isActive: boolean;
-  quarterValues: string[];
+  quarterValues: { quarter: string; value: string }[];
 }> = [
   {
     benchmarkName: transitionBenchmarks[0],
     isActive: true,
-    quarterValues: transitionBenchmarkQuarterValues,
+    quarterValues: transitionBenchmarkQuarterData,
   },
   {
     benchmarkName: transitionBenchmarks[1],
@@ -159,7 +157,7 @@ export type WorkPlan = {
   transitionBenchmarkProjections: Array<{
     benchmarkName: string;
     isActive: boolean;
-    quarterValues: string[];
+    quarterValues: { quarter: string; value: string }[];
   }>;
   transitionBenchmarkStrategy: {
     explanation: string;
@@ -184,7 +182,7 @@ export type WorkPlan = {
     };
     fundingSources: {
       source: string;
-      values: string[];
+      values: { quarter: string; value: string }[];
     };
   }>;
 };
@@ -194,8 +192,8 @@ export const fillWorkPlanTestData: WorkPlan = {
   reportingPeriod: "First reporting period",
   transitionBenchmarkProjections: wpTransitionBenchmarkTestData,
   transitionBenchmarkStrategy: {
-    explanation: "Test explanation",
-    additionalDetails: "Test additional details",
+    explanation: faker.lorem.sentence(),
+    additionalDetails: faker.lorem.paragraph(),
   },
   initiativesInstructions: {
     selfDirected: false,
@@ -203,20 +201,20 @@ export const fillWorkPlanTestData: WorkPlan = {
   },
   initiatives: requiredWorkPlanTopics.map((topic) => ({
     name: topic.name,
-    description: "Test",
+    description: faker.lorem.sentence(),
     targetPopulations: ["Older adults"],
     startDate: currentDate,
     hasProjectedEndDate: false,
     evaluationPlan: {
-      objective: "Test Objective",
-      description: "Test Description",
-      targets: "Test Targets",
+      objective: faker.lorem.words(3),
+      description: faker.lorem.sentence(),
+      targets: faker.lorem.sentence(),
       quantitativeTargets: false,
-      additionalDetails: "Test Additional Details",
+      additionalDetails: faker.lorem.paragraph(),
     },
     fundingSources: {
       source: "qualified HCBS and demonstration services",
-      values: initiativeFundingSourceQuarterValues,
+      values: initiativeFundingSourceQuarterData,
     },
   })),
 };

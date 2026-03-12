@@ -16,6 +16,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^10.3.0":
+  version: 10.3.0
+  resolution: "@faker-js/faker@npm:10.3.0"
+  checksum: 10c0/5a4688f8a040366bda83e6c7f144f9db9bef1d44f7c5b43fcee15c8def07463fcdcb572458b0d14072aca58c14321f1195e11d8664ce094266e29eb4d2a70ac4
+  languageName: node
+  linkType: hard
+
 "@isaacs/fs-minipass@npm:^4.0.0":
   version: 4.0.1
   resolution: "@isaacs/fs-minipass@npm:4.0.1"
@@ -96,6 +103,15 @@ __metadata:
   version: 7.1.4
   resolution: "agent-base@npm:7.1.4"
   checksum: 10c0/c2c9ab7599692d594b6a161559ada307b7a624fa4c7b03e3afdb5a5e31cd0e53269115b620fcab024c5ac6a6f37fa5eb2e004f076ad30f5f7e6b8b671f7b35fe
+  languageName: node
+  linkType: hard
+
+"amazon-user-pool-srp-client@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "amazon-user-pool-srp-client@npm:1.0.4"
+  dependencies:
+    sjcl-aws: "npm:^1.0.8"
+  checksum: 10c0/438fec3b4b4e963b33e44c5188025f8b068c83676694b8b98b7bb95382621997ae170eb5abfa175792dea68842e015d6a077c88fc86530f7b6cd29473407bab4
   languageName: node
   linkType: hard
 
@@ -278,9 +294,11 @@ __metadata:
   resolution: "e2e-tests@workspace:."
   dependencies:
     "@axe-core/playwright": "npm:^4.10.1"
+    "@faker-js/faker": "npm:^10.3.0"
     "@playwright/test": "npm:^1.56.1"
     "@types/aws-sdk": "npm:^2.7.4"
     "@types/aws4": "npm:^1.11.6"
+    amazon-user-pool-srp-client: "npm:^1.0.4"
     aws4: "npm:^1.13.2"
     axe-core: "npm:^4.10.2"
     dotenv: "npm:^16.4.5"
@@ -947,6 +965,13 @@ __metadata:
     gopd: "npm:^1.0.1"
     has-property-descriptors: "npm:^1.0.2"
   checksum: 10c0/82850e62f412a258b71e123d4ed3873fa9377c216809551192bb6769329340176f109c2eeae8c22a8d386c76739855f78e8716515c818bcaef384b51110f0f3c
+  languageName: node
+  linkType: hard
+
+"sjcl-aws@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "sjcl-aws@npm:1.0.8"
+  checksum: 10c0/ded6e38bfb2de5724938261d25c4572c3720b863deca7a07ec52c427178211b02f81b199cd82aee0f3f1b82fbd3b7782471534f5c64b36a891d26605b0ee70b7
   languageName: node
   linkType: hard
 
