@@ -129,16 +129,6 @@ export const mockSectionHeaderField = {
   },
 };
 
-export const mockTablesField = {
-  id: "mock-number-field",
-  type: "number",
-  validation: "number",
-  forTableOnly: true,
-  props: {
-    label: "mock number field",
-  },
-};
-
 export const mockForm = {
   id: "mock-form-id",
   fields: [mockFormField, mockDateField, mockNumberField],
@@ -147,6 +137,10 @@ export const mockForm = {
 export const mockModalForm = {
   id: "mock-modal-form-id",
   fields: [mockModalFormField],
+  heading: {
+    add: "Add mock",
+    edit: "Edit mock",
+  },
 };
 
 export const mockTransitionBenchmarkModalForm = {
@@ -164,26 +158,48 @@ export const mockEmptyDrawerForm = {
   fields: [],
 };
 
+export const mockTablesField = (tableId: string) => ({
+  id: `${tableId}_mockNumberFieldId`,
+  type: "number",
+  validation: "number",
+  forTableOnly: true,
+  props: {
+    label: "mock number field",
+  },
+});
+
 export const mockTablesForm = {
   id: "mock-tables-form-id",
   tables: [
     {
-      id: "mock-table-id",
-      bodyRows: [["Mock text", mockTablesField]],
+      id: "mockFormId_mockCalculationTableId",
+      bodyRows: [
+        ["Mock text", mockTablesField("mockFormId_mockCalculationTableId")],
+      ],
       footRows: [["Footer 1", "Footer 2"]],
       headRows: [["Heading 1", "Heading 2"]],
       tableType: FormTableType.CALCULATION,
       verbiage: {
-        errorMessage: "Mock error",
+        errorMessage: "Mock calculation table error",
         percentage: "Mock Percentage: {{percentage}}",
-        title: "Mock table title",
+        title: "Mock calculation table title",
       },
     },
   ],
-  fields: [mockTablesField, mockFormField],
-  verbiage: {
-    title: "Mock verbiage title",
-  },
+  fields: [
+    mockTablesField("mockFormId_mockCalculationTableId"),
+    mockTablesField("mockFormId_mockSummationTableId"),
+    {
+      id: "mockFormId_narrative",
+      type: "text",
+      validation: "text",
+      props: {
+        label: "mock text field",
+        title: "Mock field title",
+      },
+    },
+  ],
+  verbiage: {},
 };
 
 export const mockBadTablesForm = {
