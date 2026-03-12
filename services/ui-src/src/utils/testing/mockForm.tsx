@@ -1,7 +1,9 @@
+// types
 import {
   DynamicModalOverlayReportPageShape,
   FormJson,
   FormTableType,
+  NumberMask,
   OverlayModalPageShape,
   ReportFormFieldType,
   ReportPageProgress,
@@ -745,7 +747,7 @@ export const mockDynamicRowsTemplate = {
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         props: {
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           dynamicLabel: "Other:",
         },
       },
@@ -754,7 +756,7 @@ export const mockDynamicRowsTemplate = {
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         props: {
-          mask: "percentage",
+          mask: NumberMask.PERCENTAGE,
         },
       },
     ],

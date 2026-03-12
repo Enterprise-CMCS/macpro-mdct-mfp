@@ -1,4 +1,4 @@
-import { PageTypes, Transformation } from "./formFields";
+import { NumberMask, PageTypes, Transformation } from "./formFields";
 import { AnyObject, CustomHtmlElement } from "./other";
 import { ReportType } from "./reports";
 import {
@@ -77,7 +77,7 @@ export interface ReportFormFieldProps {
   heading?: string;
   hint?: any;
   label?: string;
-  mask?: string;
+  mask?: NumberMask | null;
   maxLength?: number;
   styleAsOptional?: boolean;
   subType?: ReportFormFieldType;
@@ -117,6 +117,7 @@ export interface FormTable {
     modalButtonText?: string;
     percentage?: string;
     title: string;
+    subtitle?: string | CustomHtmlElement[];
   };
 }
 

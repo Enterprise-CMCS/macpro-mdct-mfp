@@ -73,6 +73,7 @@ export interface FormTable {
     modalButtonText?: string;
     percentage?: string;
     title: string;
+    subtitle?: string | CustomHtmlElement[];
   };
 }
 
@@ -201,4 +202,12 @@ export enum ReportFormFieldType {
   SECTION_HEADER = "sectionHeader",
   TEXT = "text",
   TEXTAREA = "textarea",
+}
+
+export enum NumberMask {
+  CURRENCY = "currency",
+  COMMA_SEPARATED = "comma-separated",
+  FLOAT_OR_INTEGER = "floatOrInteger",
+  PERCENTAGE = "percentage",
+  RATIO = "ratio",
 }

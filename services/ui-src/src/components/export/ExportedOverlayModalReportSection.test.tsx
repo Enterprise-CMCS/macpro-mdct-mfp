@@ -11,7 +11,12 @@ import {
   mockWPFullReport,
   mockWpReportContext,
 } from "../../utils/testing/mockReport";
-import { EntityShape, entityTypes, OverlayModalPageShape } from "types";
+import {
+  EntityShape,
+  entityTypes,
+  NumberMask,
+  OverlayModalPageShape,
+} from "types";
 import { mockOverlayModalPageJson } from "utils/testing/setupJest";
 
 jest.mock("utils/state/useStore");
@@ -45,7 +50,7 @@ const entityMockStep = [
     id: "fundingSources_wpTopic",
     props: {
       label: "2024 1",
-      mask: "currency",
+      mask: NumberMask.CURRENCY,
     },
     transformation: { rule: "" },
     type: "number",
@@ -55,7 +60,7 @@ const entityMockStep = [
     id: "fundingSources_quarters2024Q1",
     props: {
       label: "2024 1",
-      mask: "currency",
+      mask: NumberMask.CURRENCY,
     },
     transformation: { rule: "" },
     type: "number",

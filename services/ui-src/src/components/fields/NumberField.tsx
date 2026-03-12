@@ -16,7 +16,6 @@ import {
   getAutosaveFields,
   labelTextWithOptional,
   makeStringParseableForDatabase,
-  maskMap,
   parseCustomHtml,
   updatedNumberFields,
   useStore,
@@ -26,6 +25,7 @@ import { SystemStyleObject } from "@chakra-ui/react";
 import {
   CustomHtmlElement,
   InputChangeEvent,
+  NumberMask,
   ReportFormFieldType,
 } from "types";
 
@@ -207,7 +207,7 @@ interface Props {
   hydrate?: string;
   initialValue?: string;
   label?: string;
-  mask?: keyof typeof maskMap | null;
+  mask?: NumberMask | null;
   name: string;
   nested?: boolean;
   placeholder?: string;

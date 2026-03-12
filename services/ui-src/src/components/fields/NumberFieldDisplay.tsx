@@ -6,8 +6,8 @@ import {
 } from "react";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-// utils
-import { maskMap } from "utils/other/mask";
+// types
+import { NumberMask } from "types";
 
 export const NumberFieldDisplay = ({
   ariaLabelledby,
@@ -66,7 +66,7 @@ interface Props {
   hint?: ReactNode;
   id: string;
   label?: ReactNode;
-  mask?: keyof typeof maskMap | null;
+  mask?: NumberMask | null;
   name: string;
   nested?: boolean;
   onBlur: FocusEventHandler<HTMLInputElement>;
@@ -98,7 +98,7 @@ export const SymbolOverlay = ({
   );
 };
 interface SymbolOverlayProps {
-  fieldMask?: keyof typeof maskMap | null;
+  fieldMask?: NumberMask | null;
   nested: boolean;
   disabled: boolean;
 }
