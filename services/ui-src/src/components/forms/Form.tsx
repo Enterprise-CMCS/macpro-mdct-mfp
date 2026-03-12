@@ -1,4 +1,10 @@
-import { ReactNode, useLayoutEffect } from "react";
+import {
+  forwardRef,
+  Fragment,
+  ReactNode,
+  useImperativeHandle,
+  useLayoutEffect,
+} from "react";
 import {
   FieldValues,
   FormProvider,
@@ -19,12 +25,13 @@ import {
 import {
   compileValidationJsonFromFields,
   formFieldFactory,
+  getFieldParts,
   hydrateFormFields,
   mapValidationTypesToSchema,
+  sanitizeAndParseHtml,
   sortFormErrors,
   updateRenderFields,
   useStore,
-  sanitizeAndParseHtml,
 } from "utils";
 import {
   AnyObject,
@@ -37,21 +44,25 @@ import {
   ReportStatus,
 } from "types";
 
-export const Form = ({
-  id,
-  formJson,
-  onSubmit,
-  onFormChange,
-  onError,
-  formData,
-  validateOnRender,
-  autosave,
-  dontReset,
-  children,
-  reportStatus,
-  ...props
-}: Props) => {
-  const { editableByAdmins, fields, options, tables = [], verbiage } = formJson;
+export const Form = forwardRef<HTMLFormElement, Props>(function Form(
+  {
+    autosave,
+    children,
+    dontReset,
+    formData,
+    formJson,
+    id,
+    nestedForm,
+    onError,
+    onFormChange,
+    onSubmit,
+    reportStatus,
+    validateOnRender,
+    ...props
+  },
+  ref?
+) {
+  const { editableByAdmins, fields, options, tables = [] } = formJson;
 
   let location = useLocation();
   const { report } = useStore();
@@ -74,7 +85,7 @@ export const Form = ({
   );
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
   const formResolverSchema = yupSchema(formValidationSchema || {});
-  mapValidationTypesToSchema;
+
   // make form context
   const form = useForm({
     resolver: !fieldInputDisabled ? yupResolver(formResolverSchema) : undefined,
@@ -203,19 +214,61 @@ export const Form = ({
     }
   };
 
-  /*
-   * Exclude forTableOnly fields in renderFormFields,
-   * they'll be rendered with renderTable
-   */
-  const regularFields = fields.filter(({ forTableOnly }) => !forTableOnly);
+  const renderFieldOrTable = (
+    fields: (FormField | FormLayoutElement)[],
+    tables: FormTable[]
+  ) => {
+    const renderedTableIds = new Set<string>();
+    let tableIndex = 0;
+
+    const renderedFieldsAndTables = fields.map((field) => {
+      const { tableId } = getFieldParts(field.id);
+
+      if (field.forTableOnly) {
+        const table = tables.find((t) => t.id === tableId);
+        if (!table || renderedTableIds.has(tableId)) {
+          return null;
+        }
+
+        renderedTableIds.add(tableId);
+        return renderTable(table, tableIndex++);
+      }
+
+      return (
+        <Fragment key={field.id}>
+          {field.props?.title && (
+            <Heading as="h3" className="verbiage-title">
+              {field.props.title}
+            </Heading>
+          )}
+          {renderFormFields([field])}
+        </Fragment>
+      );
+    });
+
+    return renderedFieldsAndTables;
+  };
+
+  const FormTag = nestedForm ? "fieldset" : "form";
+
+  const submit = form.handleSubmit(onSubmit as any, onError || onErrorHandler);
+
+  // Submit fieldset ref like a form
+  useImperativeHandle(
+    ref,
+    () =>
+      ({
+        requestSubmit: submit,
+      }) as any
+  );
 
   return (
     <FormProvider {...form}>
-      <form
+      <FormTag
         id={id}
         autoComplete="off"
         onChange={onChange}
-        onSubmit={form.handleSubmit(onSubmit as any, onError || onErrorHandler)}
+        {...(!nestedForm && { onSubmit: submit })}
         {...props}
       >
         <Box sx={sx}>
@@ -225,35 +278,28 @@ export const Form = ({
               populations.
             </Text>
           ) : (
-            <>
-              {tables.map((table, index) => renderTable(table, index))}
-              {verbiage?.title && (
-                <Heading as="h3" className="verbiage-title">
-                  {verbiage.title}
-                </Heading>
-              )}
-              {renderFormFields(regularFields)}
-            </>
+            renderFieldOrTable(fields, tables)
           )}
         </Box>
         {children}
-      </form>
+      </FormTag>
     </FormProvider>
   );
-};
+});
 
 interface Props {
-  id: string;
-  formJson: FormJson;
-  onSubmit: Function;
-  validateOnRender: boolean;
-  dontReset: boolean;
-  onError?: SubmitErrorHandler<FieldValues>;
-  formData?: AnyObject;
   autosave?: boolean;
   children?: ReactNode;
+  dontReset: boolean;
+  formData?: AnyObject;
+  formJson: FormJson;
+  id: string;
+  nestedForm?: boolean;
+  onError?: SubmitErrorHandler<FieldValues>;
   onFormChange?: Function;
+  onSubmit: Function;
   reportStatus?: ReportStatus;
+  validateOnRender: boolean;
   [key: string]: any;
 }
 
