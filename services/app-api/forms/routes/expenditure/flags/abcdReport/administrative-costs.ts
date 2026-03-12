@@ -119,6 +119,20 @@ const capacityBuildingFooterFieldsToReturn = [
   ServiceFieldType.TOTAL_FEDERAL_SHARE,
 ];
 
+// Sub Recipients Table
+const subRecipientsFootList = [
+  {
+    id: subRecipientsTableId,
+    label: "Sub Recipients",
+    readOnly: true,
+  },
+];
+
+const subRecipientsFooterFieldsToReturn = [
+  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+];
+
 // Administrative Costs route
 export const administrativeCostsRoute: FormTablesRoute = {
   name: "Administrative Costs",
@@ -223,7 +237,15 @@ export const administrativeCostsRoute: FormTablesRoute = {
       {
         id: subRecipientsTableId,
         bodyRows: [],
-        footRows: [],
+        footRows: subRecipientsFootList.map((service) => {
+          return [
+            "Totals",
+            "",
+            "",
+            "",
+            ...buildServiceFields(service, subRecipientsFooterFieldsToReturn),
+          ];
+        }),
         headRows: [subRecipientsHeaders],
         tableType: FormTableType.MODAL_CALCULATION,
         verbiage: {
@@ -261,6 +283,9 @@ export const administrativeCostsRoute: FormTablesRoute = {
       ),
       ...capacityBuildingFootList.flatMap((service) =>
         buildServiceFields(service, capacityBuildingFooterFieldsToReturn)
+      ),
+      ...subRecipientsFootList.flatMap((service) =>
+        buildServiceFields(service, subRecipientsFooterFieldsToReturn)
       ),
       {
         id: "administrativeCosts_narrative",
