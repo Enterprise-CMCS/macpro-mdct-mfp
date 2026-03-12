@@ -14,8 +14,7 @@ import {
   stateName,
   testWorkPlan,
 } from "../utils/consts";
-import wpReport from "../data/wpReport.test.json";
-import updatedWpReport from "../data/updatedWpReport.test.json";
+import { fillWorkPlan, newWorkPlan } from "../../seeds/fixtures/work-plan";
 
 test.describe("Work Plan Page", () => {
   test.beforeAll(async () => {
@@ -50,7 +49,7 @@ test.describe("Work Plan Page", () => {
     test("should be able to fill and submit a Work Plan @flaky", async ({
       statePage,
     }) => {
-      wpReport.metadata.reportYear = currentYear;
+      const wpReport = newWorkPlan({}, stateName, currentYear, 1);
       await postReport(wpReport, stateAbbreviation);
       await statePage.page.reload();
       await statePage.fillWorkPlan(fillWorkPlanTestData);
@@ -65,14 +64,10 @@ test.describe("Work Plan Page", () => {
     test("should be able to deny a Work Plan by unlocking it @flaky", async ({
       adminPage,
     }) => {
-      wpReport.metadata.reportYear = currentYear;
+      const wpReport = newWorkPlan({}, stateName, currentYear, 1);
       const reportId = await postReport(wpReport, stateAbbreviation);
-      await updateReport(
-        reportId,
-        updatedWpReport,
-        reportType,
-        stateAbbreviation
-      );
+      const updatedData = fillWorkPlan({}, currentYear, 1);
+      await updateReport(reportId, updatedData, reportType, stateAbbreviation);
       await submitReport(reportId, reportType, stateAbbreviation);
       await adminPage.page.goto("/");
       await adminPage.goToReportDashboard(stateName, "MFP Work Plan");
