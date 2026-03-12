@@ -329,6 +329,13 @@ export const administrativeCosts = (prefix: string) => [
   },
 ];
 
+export const capacityBuilding = (prefix: string) => [
+  {
+    id: `${prefix}_capacityBuilding`,
+    label: "Capacity Building",
+  },
+];
+
 export const personnelHeaders = [
   "Position Title",
   "# of Budget FTEs",

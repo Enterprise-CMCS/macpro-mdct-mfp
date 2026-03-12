@@ -117,6 +117,7 @@ export interface FormTable {
     modalButtonText?: string;
     percentage?: string;
     title: string;
+    subtitle?: string | CustomHtmlElement[];
   };
 }
 
