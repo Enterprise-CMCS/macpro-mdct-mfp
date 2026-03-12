@@ -116,14 +116,15 @@ export interface FormTable {
     errorMessage?: string | CustomHtmlElement[];
     modalButtonText?: string;
     percentage?: string;
-    title: string;
     subtitle?: string | CustomHtmlElement[];
+    title: string;
   };
 }
 
 export enum FormTableType {
   CALCULATION = "Calculation",
   MODAL_CALCULATION = "ModalCalculation",
+  SUMMATION = "Summation",
 }
 
 export interface ServiceField {
@@ -133,11 +134,23 @@ export interface ServiceField {
 }
 
 export enum ServiceFieldType {
+  BUDGETED_FTES = "budgetedFullTimeEmployees",
   CATEGORY = "category",
+  DESCRIPTION = "description",
+  FILLED_FTES = "filledFullTimeEmployees",
+  NAME = "name",
   PERCENTAGE_OVERRIDE = "percentageOverride",
+  TITLE = "title",
   TOTAL_COMPUTABLE = "totalComputable",
   TOTAL_FEDERAL_SHARE = "totalFederalShare",
   TOTAL_STATE_TERRITORY_SHARE = "totalStateTerritoryShare",
+}
+
+export interface BuildServiceField {
+  suffix: string;
+  label: string;
+  props: ReportFormFieldProps;
+  options: AnyObject;
 }
 
 // Routes

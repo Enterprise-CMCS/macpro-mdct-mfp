@@ -1,12 +1,9 @@
+import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
-import {
-  CalculationTable,
-  DynamicTableContext,
-  DynamicTableProvider,
-} from "components";
+import { CalculationTable, DynamicTableProvider } from "components";
 // types
 import {
   NumberMask,
@@ -23,7 +20,6 @@ import {
   mockStateUserStore,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
-import React from "react";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -46,6 +42,20 @@ const mockGetValues = (returnValue: any) =>
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
+jest.mock("react-uuid", () => jest.fn(() => mockDynamicFieldId));
+
+jest.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: jest.fn().mockImplementation(() => {
+    return [
+      {
+        name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-category`,
+        value: "Test Category",
+      },
+    ];
+  }),
+  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
+}));
 
 const mockProps = {
   bodyRows: [
@@ -298,29 +308,7 @@ describe("<CalculationTable />", () => {
   });
 
   describe("dynamic rows", () => {
-    const mockAddDynamicRow = jest.fn();
-    const mockDisplayCell = jest.fn(() => <></>);
-
-    beforeEach(() => {
-      jest.spyOn(React, "useContext").mockImplementation((ctx) => {
-        if (ctx === DynamicTableContext) {
-          return {
-            addDynamicRow: mockAddDynamicRow,
-            displayCell: mockDisplayCell,
-          };
-        }
-        return (React as any).useContext.wrappedMethod
-          ? (React as any).useContext.wrappedMethod(ctx)
-          : (ctx as any)?._currentValue;
-      });
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks();
-      mockAddDynamicRow.mockClear();
-    });
-
-    test("clicking button calls AddDynamicRow", async () => {
+    test("clicking add button adds row", async () => {
       mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
@@ -339,7 +327,14 @@ describe("<CalculationTable />", () => {
         dynamicRowsTemplate: mockDynamicRowsTemplate,
       };
 
-      render(tableComponent(updatedProps));
+      const { container } = render(tableComponent(updatedProps));
+
+      // bodyRows are added on load
+      const tbody = container.querySelector("tbody");
+      const rows = tbody?.querySelectorAll("tr");
+
+      expect(rows).toHaveLength(2);
+
       const hint = screen.getByText("Mock dynamic row hint");
       expect(hint).toBeVisible();
 
@@ -347,10 +342,52 @@ describe("<CalculationTable />", () => {
         name: "Mock dynamic row button",
       });
       await userEvent.click(button);
-      expect(mockAddDynamicRow).toHaveBeenCalledTimes(1);
-      expect(mockAddDynamicRow).toHaveBeenCalledWith(
-        updatedProps.dynamicRowsTemplate
-      );
+      const updatedRows = tbody?.querySelectorAll("tr");
+
+      expect(updatedRows).toHaveLength(3);
+
+      const input = screen.getByRole("textbox", { name: "Heading 1 Other:" });
+      expect(input).toBeVisible();
+    });
+
+    test("clicking remove button removes row", async () => {
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        report: {
+          fieldData: {
+            [mockDynamicTemplateId]: [
+              {
+                id: mockDynamicFieldId,
+                name: mockDynamicFieldId,
+                category: "Mock Dynamic Row Category 1",
+              },
+            ],
+          },
+        },
+        dynamicRowsTemplate: mockDynamicRowsTemplate,
+      };
+
+      const { container } = render(tableComponent(updatedProps));
+
+      // bodyRows are added on load
+      const tbody = container.querySelector("tbody");
+      const rows = tbody?.querySelectorAll("tr");
+
+      expect(rows).toHaveLength(2);
+
+      const button = screen.getByRole("button", {
+        name: "Mock dynamic row button",
+      });
+      await userEvent.click(button);
+
+      const deleteButton = screen.getByRole("button", {
+        name: `Delete ${mockDynamicFieldId}`,
+      });
+      await userEvent.click(deleteButton);
+
+      const updatedRows = tbody?.querySelectorAll("tr");
+      expect(updatedRows).toHaveLength(2);
     });
   });
 
