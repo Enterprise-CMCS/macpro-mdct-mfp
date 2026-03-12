@@ -1,5 +1,5 @@
 // types
-import { FormField } from "types";
+import { FormField, NumberMask } from "types";
 // utils
 import {
   parseFormFieldInfo,
@@ -100,7 +100,7 @@ describe("utils/export", () => {
   describe("renderDefaultFieldResponse()", () => {
     test("Properly masks field data", () => {
       const textField = renderDefaultFieldResponse(
-        { props: { mask: "currency" } } as unknown as FormField,
+        { props: { mask: NumberMask.CURRENCY } } as unknown as FormField,
         "1234"
       );
       expect(textField.props.children).toBe("$1,234");
@@ -108,7 +108,7 @@ describe("utils/export", () => {
 
     test("Properly masks currency decimal data", () => {
       const textField = renderDefaultFieldResponse(
-        { props: { mask: "currency" } } as unknown as FormField,
+        { props: { mask: NumberMask.CURRENCY } } as unknown as FormField,
         "1.10"
       );
       expect(textField.props.children).toBe("$1.10");

@@ -3,6 +3,8 @@ import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
 import { NumberField } from "components";
+// types
+import { NumberMask } from "types";
 // utils
 import { useStore } from "utils";
 import { mockStateUserStore } from "utils/testing/setupJest";
@@ -42,20 +44,28 @@ const commaMaskedNumberFieldComponent = (
   <NumberField
     name="testNumberField"
     label="test-label"
-    mask="comma-separated"
+    mask={NumberMask.COMMA_SEPARATED}
   />
 );
 
 const currencyMaskedNumberFieldComponent = (
-  <NumberField name="testNumberField" label="" mask="currency" />
+  <NumberField name="testNumberField" label="" mask={NumberMask.CURRENCY} />
 );
 
 const percentageMaskedNumberFieldComponent = (
-  <NumberField name="testNumberField" label="test-label" mask="percentage" />
+  <NumberField
+    name="testNumberField"
+    label="test-label"
+    mask={NumberMask.PERCENTAGE}
+  />
 );
 
 const ratioMaskedNumberFieldComponent = (
-  <NumberField name="testNumberField" label="test-label" mask="ratio" />
+  <NumberField
+    name="testNumberField"
+    label="test-label"
+    mask={NumberMask.RATIO}
+  />
 );
 
 describe("<NumberField />", () => {
@@ -252,7 +262,7 @@ describe("<NumberField />", () => {
       <NumberField
         name="testNumberField"
         label=""
-        mask="currency"
+        mask={NumberMask.CURRENCY}
         hydrate={mockHydrationValue}
         clear
       />
@@ -262,7 +272,7 @@ describe("<NumberField />", () => {
       <NumberField
         name="testNumberField"
         label=""
-        mask="currency"
+        mask={NumberMask.CURRENCY}
         hydrate={mockHydrationValue}
         clear={false}
       />

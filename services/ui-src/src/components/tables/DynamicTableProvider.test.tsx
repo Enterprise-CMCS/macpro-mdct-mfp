@@ -7,7 +7,7 @@ import {
   DynamicTableProvider,
 } from "./DynamicTableProvider";
 // types
-import { ReportFormFieldType, ValidationType } from "types";
+import { NumberMask, ReportFormFieldType, ValidationType } from "types";
 // utils
 import {
   mockDynamicFieldId,
@@ -63,7 +63,7 @@ const TestComponent = () => {
     validation: ValidationType.NUMBER_OPTIONAL,
     props: {
       label: "Mock field label",
-      mask: "currency",
+      mask: NumberMask.CURRENCY,
     },
   };
 
@@ -72,7 +72,7 @@ const TestComponent = () => {
     type: ReportFormFieldType.NUMBER,
     validation: ValidationType.NUMBER_OPTIONAL,
     props: {
-      mask: "currency",
+      mask: NumberMask.CURRENCY,
     },
   };
 
@@ -178,7 +178,7 @@ const TestComponent = () => {
       },
     ],
     initialValue: "12.34",
-    mask: "currency",
+    mask: NumberMask.CURRENCY,
     rowIndex: 0,
   };
 

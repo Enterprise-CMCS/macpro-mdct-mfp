@@ -1,4 +1,9 @@
-import { FormJson, ReportFormFieldType, ValidationType } from "types";
+import {
+  FormJson,
+  NumberMask,
+  ReportFormFieldType,
+  ValidationType,
+} from "types";
 
 export const addSubRecipientForm: FormJson = {
   id: "add-sub-recipient-form",
@@ -32,7 +37,7 @@ export const addSubRecipientForm: FormJson = {
       validation: ValidationType.NUMBER,
       props: {
         label: "Expenditures",
-        mask: "currency",
+        mask: NumberMask.CURRENCY,
       },
     },
     {
@@ -41,7 +46,7 @@ export const addSubRecipientForm: FormJson = {
       validation: ValidationType.NUMBER_OPTIONAL,
       props: {
         label: "Override % (optional)",
-        mask: "percentage",
+        mask: NumberMask.PERCENTAGE,
       },
     },
   ],
