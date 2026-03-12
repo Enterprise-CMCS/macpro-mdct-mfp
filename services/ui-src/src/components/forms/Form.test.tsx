@@ -72,7 +72,7 @@ describe("<Form />", () => {
     render(formComponent(mockTablesForm));
 
     const tables = screen.getAllByRole("table");
-    expect(tables).toHaveLength(1);
+    expect(tables).toHaveLength(2);
 
     const calculationTable = tables[0];
     expect(calculationTable).toHaveAttribute(
@@ -93,6 +93,23 @@ describe("<Form />", () => {
       name: "Heading 2 Mock text",
     });
     expect(calculationInput).toBeVisible();
+
+    const summationTable = tables[1];
+    expect(summationTable).toHaveAttribute(
+      "id",
+      "mockFormId_mockSummationTableId"
+    );
+
+    const summationTableHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Mock summation table title",
+    });
+    expect(summationTableHeading).toBeVisible();
+
+    const summationInput = within(summationTable).getByRole("textbox", {
+      name: "Heading 2 Mock text",
+    });
+    expect(summationInput).toBeVisible();
 
     const fieldHeading = screen.getByRole("heading", {
       level: 3,

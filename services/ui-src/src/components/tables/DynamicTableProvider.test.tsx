@@ -7,7 +7,12 @@ import {
   DynamicTableProvider,
 } from "./DynamicTableProvider";
 // types
-import { NumberMask, ReportFormFieldType, ValidationType } from "types";
+import {
+  AnyObject,
+  NumberMask,
+  ReportFormFieldType,
+  ValidationType,
+} from "types";
 // utils
 import {
   mockDynamicFieldId,
@@ -19,6 +24,7 @@ import {
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 import { useFormContext } from "react-hook-form";
+import { calculationTableDynamicTotalsOnSave } from "utils";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -205,6 +211,20 @@ const TestComponent = () => {
     setLocalFieldData,
   } = useContext(DynamicTableContext);
 
+  const updatedFieldsCallback = (
+    dynamicId: string,
+    localFieldData: AnyObject
+  ) => {
+    return calculationTableDynamicTotalsOnSave({
+      dynamicFieldId: dynamicId,
+      dynamicTemplateId: dynamicRowsTemplate.id,
+      fieldData: localFieldData,
+      fieldValue: 0,
+      formId: "",
+      tableId: mockTableId,
+    });
+  };
+
   return (
     <div>
       <button onClick={() => setFocusedRowIndex(1)}>setFocusedRowIndex</button>
@@ -224,7 +244,11 @@ const TestComponent = () => {
 
       <button
         onClick={() =>
-          removeDynamicRow(mockDynamicTemplateId, mockDynamicFieldId)
+          removeDynamicRow(
+            mockDynamicTemplateId,
+            mockDynamicFieldId,
+            updatedFieldsCallback(mockDynamicFieldId, localFieldData)
+          )
         }
       >
         removeDynamicRow

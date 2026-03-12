@@ -10,7 +10,7 @@ import {
 } from "react";
 import { useFormContext } from "react-hook-form";
 // components
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Td, Text, Th, Tr, VisuallyHidden } from "@chakra-ui/react";
 import { EntityContext, ReportContext } from "components";
 // types
 import {
@@ -18,6 +18,8 @@ import {
   DynamicFieldShape,
   DynamicRowsTemplate,
   FormField,
+  FormTableCell,
+  FormTableRow,
   InputChangeEvent,
   ReportFormFieldType,
   ReportShape,
@@ -26,16 +28,18 @@ import {
 import uuid from "react-uuid";
 import {
   autosaveFieldData,
-  calculationTableDynamicTotalsOnSave,
   createTempDynamicId,
   debounce,
+  FieldInfo,
   formFieldFactory,
   getAutosaveFields,
   getFieldParts,
   hydrateFormFields,
   isTempDynamicField,
   maskResponseData,
+  setPercentageAndValue,
   updateRenderFields,
+  UpdatedFieldDataOnChange,
   updatedFieldDataOnFieldChange,
   useStore,
 } from "utils";
@@ -46,6 +50,7 @@ export const DynamicTableContext = createContext<DynamicTableMethods>({
   displayDynamicCell: Function,
   displayReadOnlyCell: Function,
   focusedRowIndex: null,
+  generateRows: Function,
   localFieldData: {},
   removeDynamicRow: Function,
   setFocusedRowIndex: Function,
@@ -73,9 +78,9 @@ export const DynamicTableProvider = ({ children }: any) => {
       fieldData,
       name,
       value,
-      percentage,
+      percentage = 0,
       percentageOverride,
-    }: UpdatedFieldsForDisplay) => {
+    }: UpdatedFieldDataOnChange) => {
       const updatedFieldData = updatedFieldDataOnFieldChange({
         fieldData,
         name,
@@ -131,7 +136,6 @@ export const DynamicTableProvider = ({ children }: any) => {
     percentage: formPercentage,
     rowId,
     rowIndex,
-    tableId,
   }: DisplayCellOptions) => {
     if (typeof cell === "string") return cell;
 
@@ -156,46 +160,16 @@ export const DynamicTableProvider = ({ children }: any) => {
         ...props,
         ariaLabelledby: ariaLabelledby || `${rowId} ${columnId}`,
         label: undefined,
-        handleOnChange: (e: InputChangeEvent) => {
-          const { id, name, value: inputValue } = e.target;
-          const { dynamicFieldId, dynamicTemplateId, fieldId, fieldType } =
-            getFieldParts(name);
-
-          let percentage;
-          // For totalComputable, use value from input
-          let value = inputValue;
-          let totalComputable = localFieldData?.[`${fieldId}-totalComputable`];
-          let percentageOverride =
-            localFieldData?.[`${fieldId}-percentageOverride`];
-
-          if (isTempDynamicField(name)) {
-            const templateFieldData = localFieldData?.[dynamicTemplateId] || [];
-            const currentField = templateFieldData.find(
-              (field: DynamicFieldShape) => field.id === dynamicFieldId
-            );
-
-            totalComputable = currentField?.totalComputable;
-            percentageOverride = currentField?.percentageOverride;
-          }
-          // For totalComputable, use percentageOverride from fieldData
-          percentage = percentageOverride || formPercentage;
-
-          if (fieldType === "percentageOverride") {
-            // For percentageOverride, use totalComputable from fieldData
-            value = totalComputable;
-            // For percentageOverride, use value from input
-            percentage = inputValue ? Number(inputValue) : formPercentage;
-            percentageOverride = inputValue;
-          }
+        handleOnChange: (event: InputChangeEvent) => {
+          const { name, percentage, percentageOverride, value } =
+            setPercentageAndValue(event, localFieldData, formPercentage);
 
           return debouncedUpdateReport({
             fieldData: localFieldData,
-            id,
             name,
-            value,
             percentage,
             percentageOverride,
-            tableId,
+            value,
           });
         },
       },
@@ -282,7 +256,89 @@ export const DynamicTableProvider = ({ children }: any) => {
     });
   };
 
-  const addDynamicRow = async (dynamicRowsTemplate: DynamicRowsTemplate) => {
+  const generateRows = ({
+    cellPropsCallback = () => {},
+    columnCount,
+    disabled,
+    dynamicRowsTemplate,
+    formData,
+    row,
+    rowIndex,
+    section,
+    tableId,
+  }: GenerateRows) => {
+    let firstColumnWidth = dynamicRowsTemplate ? 30 : 36;
+
+    if (columnCount === 3) {
+      firstColumnWidth = 50;
+    }
+
+    if (columnCount > 5) {
+      firstColumnWidth = 100 / columnCount;
+    }
+
+    const optionsWidth = 7;
+    const otherColumnsWidth = 100 - firstColumnWidth;
+    const otherColumnsCount = columnCount - 1;
+    const remainingWidth = dynamicRowsTemplate
+      ? otherColumnsWidth - optionsWidth
+      : otherColumnsWidth;
+
+    const thWidth = (index: number) =>
+      index === 0
+        ? `${firstColumnWidth}%`
+        : `${remainingWidth / otherColumnsCount}%`;
+
+    const thAlign = (cell: FormTableCell) => {
+      const rightAlignedCells: FormTableCell[] = [
+        "Total State / Territory Share",
+        "Total Federal Share",
+      ];
+
+      if (typeof cell === "string" && rightAlignedCells.includes(cell)) {
+        return "right";
+      }
+
+      return "left";
+    };
+
+    const Cell = section === "thead" ? Th : Td;
+    const content =
+      section === "thead" ? <VisuallyHidden>Options</VisuallyHidden> : null;
+    const rowId = section === "tbody" ? "thead" : section;
+
+    return (
+      <Tr key={`${section}-row-${rowIndex}`}>
+        {row.map((cell, cellIndex: number) => (
+          <Cell
+            id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
+            key={`${section}-row-${rowIndex}-cell-${cellIndex}`}
+            sx={{ textAlign: thAlign(cell), width: thWidth(cellIndex) }}
+          >
+            {displayCell({
+              cell,
+              columnId: `${section}-row-${rowIndex}-cell-0`,
+              disabled,
+              formData,
+              rowId: `${rowId}-row-0-cell-${cellIndex}`,
+              rowIndex,
+              tableId,
+              ...cellPropsCallback(cell),
+            })}
+          </Cell>
+        ))}
+        {dynamicRowsTemplate && (
+          <Cell sx={{ width: `${optionsWidth}%` }}>{content}</Cell>
+        )}
+      </Tr>
+    );
+  };
+
+  const addDynamicRow = async (
+    dynamicRowsTemplate: DynamicRowsTemplate,
+    initialData?: AnyObject,
+    scroll: boolean = true
+  ) => {
     const { id, type, props } = dynamicRowsTemplate;
 
     const dynamicKeys = props?.dynamicFields.map((field: FormField) => {
@@ -299,11 +355,12 @@ export const DynamicTableProvider = ({ children }: any) => {
         id: newId,
         name: newId,
         ...Object.fromEntries(dynamicKeys),
+        ...initialData,
       },
     ];
 
     const newRowIndex = updatedRows.length - 1;
-    setFocusedRowIndex(newRowIndex);
+    if (scroll) setFocusedRowIndex(newRowIndex);
 
     const updatedFieldData = {
       ...localFieldData,
@@ -346,19 +403,9 @@ export const DynamicTableProvider = ({ children }: any) => {
 
   const removeDynamicRow = async (
     dynamicTemplateId: string,
-    dynamicFieldId: string
+    dynamicFieldId: string,
+    updatedFields: FieldInfo[] = []
   ) => {
-    const { formId, tableId } = getFieldParts(dynamicTemplateId);
-    const updatedFields = calculationTableDynamicTotalsOnSave({
-      dynamicFieldId,
-      dynamicTemplateId: dynamicTemplateId,
-      fieldData: localFieldData,
-      // Set row to be deleted value to 0
-      fieldValue: 0,
-      formId,
-      tableId,
-    });
-
     const rows = localFieldData?.[dynamicTemplateId] || [];
     // Remove row to be deleted
     const updatedRows = rows.filter(
@@ -405,6 +452,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     displayDynamicCell,
     displayReadOnlyCell,
     focusedRowIndex,
+    generateRows,
     localFieldData,
     removeDynamicRow,
     setFocusedRowIndex,
@@ -424,6 +472,7 @@ interface DynamicTableMethods {
   displayDynamicCell: Function;
   displayReadOnlyCell: Function;
   focusedRowIndex: number | null;
+  generateRows: Function;
   localFieldData: AnyObject;
   removeDynamicRow: Function;
   setFocusedRowIndex: Function;
@@ -458,14 +507,18 @@ interface DisplayReadOnlyCellOptions {
   type: string | ReportFormFieldType;
 }
 
-interface UpdatedFieldsForDisplay {
-  fieldData: AnyObject;
-  id: string;
-  name: string;
-  value: string;
-  percentage: number;
-  percentageOverride?: number;
-  tableId: string;
+interface GenerateRows {
+  cellPropsCallback?: Function;
+  columnCount: number;
+  disabled?: boolean;
+  dynamicRowsTemplate?: DynamicRowsTemplate;
+  formData?: AnyObject;
+  headRows: FormTableRow[];
+  percentage?: number;
+  row: FormTableRow;
+  rowIndex: number;
+  section: string;
+  tableId?: string;
 }
 
 const sx = {
