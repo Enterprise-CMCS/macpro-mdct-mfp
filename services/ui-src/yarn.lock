@@ -165,19 +165,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-amplify/storage@npm:6.13.1":
-  version: 6.13.1
-  resolution: "@aws-amplify/storage@npm:6.13.1"
+"@aws-amplify/storage@npm:6.13.2":
+  version: 6.13.2
+  resolution: "@aws-amplify/storage@npm:6.13.2"
   dependencies:
     "@aws-sdk/types": "npm:3.973.1"
     "@smithy/md5-js": "npm:2.0.7"
     buffer: "npm:4.9.2"
     crc-32: "npm:1.2.2"
-    fast-xml-parser: "npm:^5.3.4"
+    fast-xml-parser: "npm:^5.3.6"
     tslib: "npm:^2.5.0"
   peerDependencies:
     "@aws-amplify/core": ^6.1.0
-  checksum: 10c0/3ed137c387bebcf10c45857e8eb1a3c9e4a090387cc22cf058786b6347624b0d93564eead793627b87b6af2720251fec1fc36f154dcfd65d71f97c0b362dcd10
+  checksum: 10c0/dcf9e94143a8532225b3801591f716fb92f4237f41694f3eceb6541c93246306fed9f3f1800e9072bd82d27bed07eca36f88b3e2c21a10961ba9a62f839f6607
   languageName: node
   linkType: hard
 
@@ -7057,9 +7057,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-amplify@npm:^6.16.2":
-  version: 6.16.2
-  resolution: "aws-amplify@npm:6.16.2"
+"aws-amplify@npm:^6.16.3":
+  version: 6.16.3
+  resolution: "aws-amplify@npm:6.16.3"
   dependencies:
     "@aws-amplify/analytics": "npm:7.0.93"
     "@aws-amplify/api": "npm:6.3.24"
@@ -7067,9 +7067,9 @@ __metadata:
     "@aws-amplify/core": "npm:6.16.1"
     "@aws-amplify/datastore": "npm:5.1.5"
     "@aws-amplify/notifications": "npm:2.0.93"
-    "@aws-amplify/storage": "npm:6.13.1"
+    "@aws-amplify/storage": "npm:6.13.2"
     tslib: "npm:^2.5.0"
-  checksum: 10c0/98b0f2902d256e61c759d9c78b4811672f279a644ac3e70009007bb7d582958049dfa1222bb793c7d79bea04df5288489e87807ccb7b3897bc2a894f0f2ea4be
+  checksum: 10c0/fe2428b88ebf16e785813c148d29287aba533b0f18079ff32726821500e7022b7c47edaccca9b26347f323e97f6423bcb5509599fe44b69f04d17989b420b5b4
   languageName: node
   linkType: hard
 
@@ -8545,7 +8545,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-xml-parser@npm:5.3.6, fast-xml-parser@npm:^5.3.4":
+"fast-xml-builder@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "fast-xml-builder@npm:1.1.3"
+  dependencies:
+    path-expression-matcher: "npm:^1.1.3"
+  checksum: 10c0/353a2b3695f66f2b0717fcb1a59d2c4108a3b29e7e4f125a51accaccade509dc6fb7e2777da62fb3b339487753ece01eaa270542b10a68dfd43f48d607a6b10e
+  languageName: node
+  linkType: hard
+
+"fast-xml-parser@npm:5.3.6":
   version: 5.3.6
   resolution: "fast-xml-parser@npm:5.3.6"
   dependencies:
@@ -8553,6 +8562,19 @@ __metadata:
   bin:
     fxparser: src/cli/cli.js
   checksum: 10c0/0150cc0566f327a76115de8b11628d717fb179010ed9bb77c52e579a7e6055a0f92f42f83678a6f1ec5b74411faec09713cb1f9b94bc687068ad86884a9199fa
+  languageName: node
+  linkType: hard
+
+"fast-xml-parser@npm:^5.3.6":
+  version: 5.5.5
+  resolution: "fast-xml-parser@npm:5.5.5"
+  dependencies:
+    fast-xml-builder: "npm:^1.1.3"
+    path-expression-matcher: "npm:^1.1.3"
+    strnum: "npm:^2.1.2"
+  bin:
+    fxparser: src/cli/cli.js
+  checksum: 10c0/d159b331e7c3ea27e388ece304988f8dc57e8cbd9d91f4ab824c78c1ed7915f10b77032ec72ed4a9ddb872db4261b5ee0699d2b6a4a80e06dfc95174dde35e93
   languageName: node
   linkType: hard
 
@@ -10817,6 +10839,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"path-expression-matcher@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "path-expression-matcher@npm:1.1.3"
+  checksum: 10c0/45c01471bc62c5f38d069418aec831763e6f45bb85f9520b08de441e6cd14f84b3098ecb66255e819c2af21102abcd2b45550dc1285996717ce9292802df2bc5
+  languageName: node
+  linkType: hard
+
 "path-is-absolute@npm:^1.0.0":
   version: 1.0.1
   resolution: "path-is-absolute@npm:1.0.1"
@@ -12408,7 +12437,7 @@ __metadata:
     "@types/react-dom": "npm:^19.2.3"
     "@types/react-helmet": "npm:^6.1.6"
     "@vitejs/plugin-react": "npm:^4.5.1"
-    aws-amplify: "npm:^6.16.2"
+    aws-amplify: "npm:^6.16.3"
     babel-jest: "npm:^29.7.0"
     date-fns: "npm:^4.1.0"
     date-fns-tz: "npm:^3.2.0"
