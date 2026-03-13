@@ -327,6 +327,63 @@ export const administrativeCosts = (prefix: string) => [
   },
 ];
 
+// Totals Summary page
+export const totalsSummaryHeaders = [
+  "Expenditures",
+  "Total Computable",
+  "Total State / Territory Share",
+  "Total Federal Share",
+];
+
+export const totalsSummary = (prefix: string) => [
+  {
+    id: `qualifiedHcbs_statePlanServices-${prefix}`,
+    label: "State Plan Services (Qualified HCBS)",
+    readOnly: true,
+  },
+  {
+    id: `${prefix}_waiverServicesQualifiedHCBS`,
+    label: "Waiver Services (Qualified HCBS)",
+    readOnly: true,
+  },
+  {
+    id: `${prefix}_statePlanServicesDemonstrationHCBS`,
+    label: "State Plan Services (Demonstration HCBS)",
+    readOnly: true,
+  },
+  {
+    id: `${prefix}_waiverSerivcesDemonstrationHCBS`,
+    label: "Waiver Services (Demonstration HCBS)",
+    readOnly: true,
+  },
+  {
+    id: `${prefix}_supplementalServices`,
+    label: "Supplemental Services",
+    readOnly: true,
+  },
+  {
+    id: `${prefix}_totals`,
+    label: "Totals - Waivers, State Plan & Supplmental Services",
+    readOnly: true,
+  },
+  {
+    id: `${prefix}_administrativeCosts`,
+    label: "Administrative Costs",
+    readOnly: true,
+  },
+  {
+    id: `${prefix}_capacityBuilding`,
+    label: "Capacity Building",
+    readOnly: true,
+  },
+  {
+    id: `${prefix}_totalsComprehensive`,
+    label:
+      "Totals - Waivers, State Plan & Supplmental Services, Administrative Costs, and Capacity Building",
+    readOnly: true,
+  },
+];
+
 export const personnelHeaders = [
   "Position Title",
   "# of Budget FTEs",
