@@ -1,3 +1,6 @@
+// types
+import { NumberMask } from "types";
+// utils
 import { cleanRatioInput, cleanStandardNumericalInput } from "./clean";
 
 export const maskMap = {
@@ -5,6 +8,7 @@ export const maskMap = {
   percentage: convertToThousandsSeparatedString,
   ratio: convertToThousandsSeparatedRatioString,
   currency: convertToThousandsSeparatedString,
+  floatOrInteger: convertToThousandsSeparatedString,
 };
 
 interface MaskedValue {
@@ -27,7 +31,7 @@ export function maskResponseData(
   const numericValue = Number(fieldResponseData);
 
   let minimumFractionDigits = 0;
-  if (fieldMask === "currency" && !Number.isInteger(numericValue)) {
+  if (fieldMask === NumberMask.CURRENCY && !Number.isInteger(numericValue)) {
     minimumFractionDigits = 2;
   }
 
@@ -38,11 +42,11 @@ export function maskResponseData(
   });
 
   switch (fieldMask) {
-    case "percentage":
+    case NumberMask.PERCENTAGE:
       return maskValue + "%";
-    case "currency":
+    case NumberMask.CURRENCY:
       return "$" + maskValue;
-    case "ratio": {
+    case NumberMask.RATIO: {
       let sidesOfRatio = fieldResponseData.split(":");
       return (
         maskResponseData(sidesOfRatio[0]) +
@@ -128,8 +132,8 @@ export function convertToThousandsSeparatedRatioString(
 // if valid custom mask, return masked value; else return value
 export const applyMask = (
   value: string,
-  maskName?: keyof typeof maskMap | null,
-  fixedDecimalPlaces?: number | undefined
+  maskName?: NumberMask | null,
+  fixedDecimalPlaces?: number
 ): MaskedValue => {
   // if maskName is specified as null, bypass all masking and return user-inputted value
   if (maskName === null) return { isValid: false, maskedValue: value };
@@ -140,7 +144,7 @@ export const applyMask = (
     : convertToThousandsSeparatedString;
 
   // currency field defaults to 2, all other fields default to undefined
-  if (typeof fixedDecimalPlaces === "undefined" && maskName === "currency") {
+  if (fixedDecimalPlaces === undefined && maskName === NumberMask.CURRENCY) {
     fixedDecimalPlaces = 2;
   }
 

@@ -28,11 +28,7 @@ export const generateMainTable = (rows: AnyObject, caption?: string) => {
 
 export const generateTableHeader = (rows: AnyObject, headerLabel: string) => {
   const row: AnyObject[] = Object.values(rows)[0];
-  const columnHeaders = row
-    .map((keys) => keys.label)
-    .filter((keys) => {
-      return keys;
-    });
+  const columnHeaders = row.map((keys) => keys.label).filter(Boolean);
 
   return [headerLabel, ...columnHeaders];
 };
@@ -46,7 +42,7 @@ export const generateTableBody = (rows: AnyObject) => {
 
   bodyRow.forEach((row: string[]) => {
     const matchRow: [] = rows[row[0]];
-    const rowValues = matchRow.map((info: AnyObject) => info.value).flat();
+    const rowValues = matchRow.flatMap((info: AnyObject) => info.value);
     rowValues.forEach((value) => {
       row.push(value);
     });
@@ -156,18 +152,16 @@ export const formatHeaderLabel = (
   label: string,
   report: ReportShape
 ) => {
-  if (type === "expenditures") {
-    if (label.includes("(")) {
-      let splitLabel = label.split(" (");
-      const quarterLabel: AnyObject = {
-        "First quarter": "Q1",
-        "Second quarter": "Q2",
-        "Third quarter": "Q3",
-        "Fourth quarter": "Q4",
-      };
-      const quarter = splitLabel[1].split(":")[0];
-      return `${splitLabel[0]} ${report.reportYear} ${quarterLabel[quarter]}`;
-    }
+  if (type === "expenditures" && label.includes("(")) {
+    let splitLabel = label.split(" (");
+    const quarterLabel: AnyObject = {
+      "First quarter": "Q1",
+      "Second quarter": "Q2",
+      "Third quarter": "Q3",
+      "Fourth quarter": "Q4",
+    };
+    const quarter = splitLabel[1].split(":")[0];
+    return `${splitLabel[0]} ${report.reportYear} ${quarterLabel[quarter]}`;
   }
   return label;
 };

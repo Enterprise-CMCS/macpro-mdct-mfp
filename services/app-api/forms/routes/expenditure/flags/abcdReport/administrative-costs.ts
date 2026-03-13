@@ -13,6 +13,7 @@ import {
   administrativeCosts,
   administrativeCostsHeaders,
   buildServiceFields,
+  capacityBuilding,
   personnelHeaders,
   subRecipientsHeaders,
 } from "./utils";
@@ -27,6 +28,8 @@ const subRecipientsTableId = "administrativeCosts_subRecipients";
  * totalComputable, percentageOverride, totalStateTerritoryShare,
  * and totalFederalShare fields
  */
+
+// Budget Category table
 const budgetCategoryBodyList = administrativeCosts(budgetCategoryTableId);
 const budgetCategoryFootList = [
   {
@@ -95,6 +98,42 @@ const budgetCategoryDynamicRowsTemplate = {
   },
 };
 
+// Capacity Building table
+const capacityBuildingBodyList = capacityBuilding(capacityBuildingTableId);
+const capacityBuildingFootList = [
+  {
+    id: capacityBuildingTableId,
+    label: "Capacity Building",
+    readOnly: true,
+  },
+];
+const capacityBuildingFieldsToReturn = [
+  ServiceFieldType.TOTAL_COMPUTABLE,
+  ServiceFieldType.PERCENTAGE_OVERRIDE,
+  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+];
+const capacityBuildingFooterFieldsToReturn = [
+  ServiceFieldType.TOTAL_COMPUTABLE,
+  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+];
+
+// Sub Recipients Table
+const subRecipientsFootList = [
+  {
+    id: subRecipientsTableId,
+    label: "Sub Recipients",
+    readOnly: true,
+  },
+];
+
+const subRecipientsFooterFieldsToReturn = [
+  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+];
+
+// Administrative Costs route
 export const administrativeCostsRoute: FormTablesRoute = {
   name: "Administrative Costs",
   path: "/expenditure/administrative-costs",
@@ -154,19 +193,59 @@ export const administrativeCostsRoute: FormTablesRoute = {
       },
       {
         id: capacityBuildingTableId,
-        bodyRows: [],
-        footRows: [],
+        // Display table fields in rows
+        bodyRows: capacityBuildingBodyList.map((service) => {
+          const bodyFields = buildServiceFields(
+            service,
+            capacityBuildingFieldsToReturn
+          );
+          return [service.label, ...bodyFields];
+        }),
+        footRows: capacityBuildingFootList.map((service) => {
+          return [
+            "Totals",
+            ...buildServiceFields(
+              service,
+              capacityBuildingFooterFieldsToReturn.slice(0, 1)
+            ),
+            "",
+            ...buildServiceFields(
+              service,
+              capacityBuildingFooterFieldsToReturn.slice(1)
+            ),
+          ];
+        }),
         headRows: [administrativeCostsHeaders],
         tableType: FormTableType.CALCULATION,
         verbiage: {
           percentage: "Capacity Building Percentage: {{percentage}}",
           title: "Capacity Building",
+          subtitle: [
+            {
+              type: "p",
+              content:
+                "Only MFP recipients who received capacity building grants should complete this section. Under this supplemental funding opportunity, up to $5 million in MFP grant funds were made available to each eligible MFP recipient for planning and capacity building activities to accelerate LTSS system transformation design and implementation and to expand HCBS capacity. Eligible MFP recipients submitted supplemental budget requests and funds were made available to MFP recipients for the year in which the award was received and four additional fiscal years.",
+            },
+            {
+              type: "p",
+              content:
+                "In the table below, include the amount of capacity building funds that your state or territory spent during this reporting period. Do not include funds that have not been spent, even if the MFP recipient has plans and received CMS approval to spend the funds on specific initiatives or activities. CMS expects that MFP recipients will claim 100% of MFP funding for capacity building; however, if an MFP recipient is claiming less than 100%, enter the relevant rate in the Override % column and provide further explanation in the Narrative field.",
+            },
+          ],
         },
       },
       {
         id: subRecipientsTableId,
         bodyRows: [],
-        footRows: [],
+        footRows: subRecipientsFootList.map((service) => {
+          return [
+            "Totals",
+            "",
+            "",
+            "",
+            ...buildServiceFields(service, subRecipientsFooterFieldsToReturn),
+          ];
+        }),
         headRows: [subRecipientsHeaders],
         tableType: FormTableType.MODAL_CALCULATION,
         verbiage: {
@@ -198,6 +277,15 @@ export const administrativeCostsRoute: FormTablesRoute = {
       budgetCategoryDynamicRowsTemplate,
       ...budgetCategoryDynamicBodyList.flatMap((service) =>
         buildServiceFields(service, budgetCategoryFooterFieldsToReturn)
+      ),
+      ...capacityBuildingBodyList.flatMap((service) =>
+        buildServiceFields(service, capacityBuildingFieldsToReturn)
+      ),
+      ...capacityBuildingFootList.flatMap((service) =>
+        buildServiceFields(service, capacityBuildingFooterFieldsToReturn)
+      ),
+      ...subRecipientsFootList.flatMap((service) =>
+        buildServiceFields(service, subRecipientsFooterFieldsToReturn)
       ),
       {
         id: "administrativeCosts_narrative",

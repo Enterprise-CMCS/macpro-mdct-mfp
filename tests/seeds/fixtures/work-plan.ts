@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { faker } from "@faker-js/faker";
 import {
   ReportFieldData,
@@ -7,6 +7,35 @@ import {
 } from "../../../services/app-api/utils/types";
 import { dateFormat, quarterlyKeyValueGenerator } from "../helpers";
 import { SeedFillReportShape, SeedNewReportShape } from "../types";
+
+const BASE_TARGET_POPULATIONS: ReportFieldData[] = [
+  {
+    id: "2Vd02CVUtKgBETwqzDXpSIhi",
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName: "Older adults",
+  },
+  {
+    id: "2Vd02HAezQkxNu2ShmlQONHa",
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName:
+      "Individuals with physical disabilities (PD)",
+    transitionBenchmarks_targetPopulationName_short: "PD",
+  },
+  {
+    id: "2Vd02IvLwE59ebYAjfiU7H66",
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName:
+      "Individuals with intellectual and developmental disabilities (I/DD)",
+    transitionBenchmarks_targetPopulationName_short: "I/DD",
+  },
+  {
+    id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName:
+      "Individuals with mental health and substance use disorders (MH/SUD)",
+    transitionBenchmarks_targetPopulationName_short: "MH/SUD",
+  },
+];
 
 export const newWorkPlan = (
   flags: { [key: string]: true },
@@ -34,7 +63,7 @@ export const newWorkPlan = (
     fieldData: {
       stateName,
       submissionName: "Work Plan",
-      targetPopulations: [],
+      targetPopulations: BASE_TARGET_POPULATIONS,
     },
   };
 };
@@ -92,7 +121,7 @@ const addEvaluationPlan = (
   period: number,
   numberOfPlans: number = 1
 ): ReportFieldData[] => {
-  return [...Array(numberOfPlans).keys()].map((i) => {
+  return [...Array.from({ length: numberOfPlans }).keys()].map((i) => {
     const numType = i === 0 ? null : "int";
     // Plans alternate between No for first plan, Yes for second plan, etc.
     const transition =
@@ -302,38 +331,9 @@ const updateTargetPopulations = (
   year: number,
   period: number
 ): ReportFieldData[] => {
-  const targetPopulations = [
-    {
-      id: "2Vd02CVUtKgBETwqzDXpSIhi",
-      isRequired: true,
-      transitionBenchmarks_targetPopulationName: "Older adults",
-    },
-    {
-      id: "2Vd02HAezQkxNu2ShmlQONHa",
-      isRequired: true,
-      transitionBenchmarks_targetPopulationName:
-        "Individuals with physical disabilities (PD)",
-      transitionBenchmarks_targetPopulationName_short: "PD",
-    },
-    {
-      id: "2Vd02IvLwE59ebYAjfiU7H66",
-      isRequired: true,
-      transitionBenchmarks_targetPopulationName:
-        "Individuals with intellectual and developmental disabilities (I/DD)",
-      transitionBenchmarks_targetPopulationName_short: "I/DD",
-    },
-    {
-      id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
-      isRequired: true,
-      transitionBenchmarks_targetPopulationName:
-        "Individuals with mental health and substance use disorders (MH/SUD)",
-      transitionBenchmarks_targetPopulationName_short: "MH/SUD",
-    },
-  ];
-
-  return targetPopulations.map((targetPopulation) => {
+  return BASE_TARGET_POPULATIONS.map((targetPopulation) => {
     const inactive = ["PD", "MH/SUD"].includes(
-      targetPopulation.transitionBenchmarks_targetPopulationName_short || ""
+      targetPopulation.transitionBenchmarks_targetPopulationName_short as string
     );
 
     const numType = inactive ? null : "int";

@@ -85,11 +85,12 @@ export function getEntityStepFields(
   const entityStepFields: (string | FormLayoutElement | FormField)[][] = [];
 
   for (let step of entitySteps) {
-    let currentStepFields = [];
     // store EntityStep name and hint for rendering
-    currentStepFields.push(step.stepType);
-    currentStepFields.push(step.stepName);
-    currentStepFields.push(step.hint);
+    let currentStepFields: (string | FormLayoutElement | FormField)[] = [
+      step.stepType,
+      step.stepName,
+      step.hint,
+    ];
 
     // handle Standard forms
     if (step.form) {

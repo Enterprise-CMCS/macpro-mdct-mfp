@@ -136,3 +136,11 @@ export enum PageTypes {
   REVIEW_SUBMIT = "reviewSubmit",
   STANDARD = "standard",
 }
+
+export enum NumberMask {
+  CURRENCY = "currency",
+  COMMA_SEPARATED = "comma-separated",
+  FLOAT_OR_INTEGER = "floatOrInteger",
+  PERCENTAGE = "percentage",
+  RATIO = "ratio",
+}

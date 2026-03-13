@@ -1,4 +1,5 @@
 import {
+  NumberMask,
   PageTypes,
   ReportFormFieldType,
   StepEntityType,
@@ -599,7 +600,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
               rule: TransformationRule.NEXT_TWELVE_QUARTERS,
             },
             props: {
-              mask: "currency",
+              mask: NumberMask.CURRENCY,
             },
           },
         ],

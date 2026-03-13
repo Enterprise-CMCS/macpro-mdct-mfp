@@ -1,5 +1,5 @@
 import handler from "../handler-lib";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 // types
 import { UserRoles } from "../../utils/types";
 import { number, object, string } from "yup";

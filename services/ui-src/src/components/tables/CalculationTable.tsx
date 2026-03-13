@@ -99,8 +99,8 @@ export const CalculationTable = ({
     [isDisabled, formData, tableId, getPercentage]
   );
 
-  const fieldData = report?.fieldData;
-  console.log("fieldData: ", fieldData);
+  //const fieldData = report?.fieldData;
+  //console.log("fieldData: ", fieldData);
   outputTotals(formData);
 
   const generateRows = (
@@ -130,8 +130,6 @@ export const CalculationTable = ({
               rowIndex,
               ...cellProps(cell),
             })}
-            {console.log("cell: ", cell)}
-            {console.log("row: ", row)}
           </Cell>
         ))}
         {dynamicRowsTemplate && (
@@ -152,6 +150,9 @@ export const CalculationTable = ({
         <Text sx={sx.percentageText}>
           {translate(verbiage.percentage, { percentage: percentageDisplay })}
         </Text>
+      )}
+      {verbiage?.subtitle && (
+        <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
       )}
 
       {dynamicRowsTemplate && (
@@ -230,6 +231,12 @@ const sx = {
     color: "gray_dark",
     fontWeight: "bold",
     paddingBottom: "spacer2",
+  },
+  subtitle: {
+    color: "gray_dark",
+    p: {
+      marginBottom: "spacer2",
+    },
   },
   dynamicRowsHint: {
     marginBottom: "spacer2",

@@ -1,9 +1,12 @@
+import { maskMap, applyMask } from "./mask";
+// types
+import { NumberMask } from "types";
+// utils
 import {
   convertToThousandsSeparatedString,
   convertToThousandsSeparatedRatioString,
   maskResponseData,
 } from "utils";
-import { maskMap, applyMask } from "./mask";
 
 const thousandsSeparatedMaskAcceptableTestCases = [
   // valid input, masked
@@ -125,17 +128,17 @@ describe("utils/mask", () => {
 
     test("Check if currency passed for mask returns unmasked value rounded to 2 places", () => {
       for (let testCase of currencyTestCases) {
-        expect(applyMask(testCase.test, "currency").maskedValue).toEqual(
-          testCase.expected
-        );
+        expect(
+          applyMask(testCase.test, NumberMask.CURRENCY).maskedValue
+        ).toEqual(testCase.expected);
       }
     });
 
     test("Check if currency passed for mask returns unmasked value with specified number of rounding places", () => {
       for (let testCase of currencyTestCasesToInteger) {
-        expect(applyMask(testCase.test, "currency", 0).maskedValue).toEqual(
-          testCase.expected
-        );
+        expect(
+          applyMask(testCase.test, NumberMask.CURRENCY, 0).maskedValue
+        ).toEqual(testCase.expected);
       }
     });
 
@@ -168,12 +171,12 @@ describe("utils/mask", () => {
 
   describe("maskResponseData()", () => {
     test("Percentage mask works correctly", () => {
-      const result = maskResponseData("12", "percentage");
+      const result = maskResponseData("12", NumberMask.PERCENTAGE);
       expect(result).toEqual("12%");
     });
 
     test("Currency mask works correctly", () => {
-      const result = maskResponseData("12", "currency");
+      const result = maskResponseData("12", NumberMask.CURRENCY);
       expect(result).toEqual("$12");
     });
 
@@ -183,12 +186,15 @@ describe("utils/mask", () => {
     });
 
     test("Data not available doesn't get masked", () => {
-      const result = maskResponseData("Data not available", "percentage");
+      const result = maskResponseData(
+        "Data not available",
+        NumberMask.PERCENTAGE
+      );
       expect(result).toEqual("Data not available");
     });
 
     test("Ratio gets masked appropriately", () => {
-      const result = maskResponseData("1234:25", "ratio");
+      const result = maskResponseData("1234:25", NumberMask.RATIO);
       expect(result).toEqual("1,234:25");
     });
   });

@@ -297,7 +297,8 @@ export const EntityDetailsOverlay = ({
           <Button type="submit" form={form.id} sx={sx.saveButton}>
             {submitting ? (
               <Spinner size="md" />
-            ) : editable && !selectedEntity?.isInitiativeClosed ? (
+            ) : // oxlint-disable-next-line no-nested-ternary
+            editable && !selectedEntity?.isInitiativeClosed ? (
               "Save & return"
             ) : (
               "Return"

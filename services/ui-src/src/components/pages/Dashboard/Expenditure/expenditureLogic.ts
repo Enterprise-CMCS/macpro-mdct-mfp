@@ -19,7 +19,7 @@ export const generateReportYearOptions = () => {
       name: `${year}`,
       value: `${year}`,
     }))
-    .reverse();
+    .toReversed();
 };
 
 export const generateCopyReportOptions = (

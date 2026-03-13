@@ -1,8 +1,11 @@
+// types
+import { NumberMask } from "types";
+// utils
 import {
   checkRatioInputAgainstRegexes,
   checkStandardNumberInputAgainstRegexes,
 } from "./checkInputValidity";
-import { applyMask, maskMap } from "./mask";
+import { applyMask } from "./mask";
 
 interface CleanedValue {
   isValid: boolean;
@@ -15,12 +18,12 @@ export const cleanStandardNumericalInput = (value: string): CleanedValue => {
   if (!isValidNumber) return { isValid: false, cleanedValue: value };
 
   // Remove all characters except 0123456789.-
-  value = value.replace(/[^\d.-]/g, "");
+  value = value.replaceAll(/[^\d.-]/g, "");
 
   // If entire value is greater than 1, or less than -1, remove all leading zeros
   const parsedFloat = parseFloat(value);
   if (parsedFloat >= 1 || parsedFloat <= -1) {
-    value = value.replace(/^0+/g, "");
+    value = value.replaceAll(/^0+/g, "");
   }
 
   return {
@@ -53,15 +56,15 @@ export const cleanRatioInput = (value: string): CleanedValue => {
 
 export const makeStringParseableForDatabase = (
   value: string,
-  maskName?: keyof typeof maskMap | null
+  maskName?: NumberMask | null
 ) => {
   if (maskName === null) return value;
 
   // convert to parseable ratio
-  if (maskName === "ratio") return value.replace(/[^\d.:-]/g, "");
+  if (maskName === NumberMask.RATIO) return value.replaceAll(/[^\d.:-]/g, "");
 
   // convert to parseable float
-  return value.replace(/[^\d.-]/g, "");
+  return value.replaceAll(/[^\d.-]/g, "");
 };
 
 export const cleanAndMaskNumberValues = ({
@@ -85,6 +88,6 @@ export const cleanAndMaskNumberValues = ({
 
 interface CleanedFieldProps {
   decimalPlacesToRoundTo?: number;
-  mask?: keyof typeof maskMap | null;
+  mask?: NumberMask | null;
   value: string;
 }

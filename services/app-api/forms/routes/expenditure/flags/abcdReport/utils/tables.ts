@@ -1,5 +1,6 @@
 import {
   AnyObject,
+  NumberMask,
   ReportFormFieldType,
   ServiceField,
   ServiceFieldType,
@@ -36,7 +37,7 @@ export const buildServiceFields = (
   const currencyProps = {
     decimalPlacesToRoundTo: 2,
     initialValue: "0",
-    mask: "currency",
+    mask: NumberMask.CURRENCY,
     readOnly: true,
   };
 
@@ -77,7 +78,7 @@ export const buildServiceFields = (
             "Override %",
             {
               decimalPlacesToRoundTo: 0,
-              mask: "percentage",
+              mask: NumberMask.PERCENTAGE,
             },
             {
               validation: {
@@ -112,6 +113,7 @@ export const buildServiceFields = (
           )
         );
         break;
+
       default:
         break;
     }
@@ -266,7 +268,7 @@ export const c1915WaiverServices = (prefix: string) => [
 
 // Supplemental Services page
 export const supplementalServicesHeaders = [
-  "Category",
+  "Service",
   "Total Computable",
   "Total State / Territory Share",
   "Total Federal Share",
@@ -381,6 +383,13 @@ export const totalsSummary = (prefix: string) => [
     label:
       "Totals - Waivers, State Plan & Supplmental Services, Administrative Costs, and Capacity Building",
     readOnly: true,
+  },
+];
+
+export const capacityBuilding = (prefix: string) => [
+  {
+    id: `${prefix}_capacityBuilding`,
+    label: "Capacity Building",
   },
 ];
 

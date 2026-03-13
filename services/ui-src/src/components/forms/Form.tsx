@@ -135,10 +135,8 @@ export const Form = ({
               )}</span>${choice?.label.slice(asteriskIndex + 1)}`
             );
             choice.label = newOption;
-            return choice;
-          } else {
-            return choice;
           }
+          return choice;
         });
       return fieldsToRenderWithAriaLabels;
     };
@@ -173,12 +171,14 @@ export const Form = ({
 
       case FormTableType.MODAL_CALCULATION:
         return (
-          <ModalCalculationTable
-            disabled={fieldInputDisabled}
-            id={id}
-            key={id}
-            {...props}
-          />
+          <DynamicTableProvider key={id}>
+            <ModalCalculationTable
+              disabled={fieldInputDisabled}
+              id={id}
+              key={id}
+              {...props}
+            />
+          </DynamicTableProvider>
         );
 
       default:
