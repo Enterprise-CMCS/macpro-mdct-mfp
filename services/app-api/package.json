@@ -46,9 +46,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
-  "resolutions": {
-    "ws": "^8.18.0"
-  },
   "jest": {
     "collectCoverageFrom": [
       "handlers/**/*.{ts,tsx}",
