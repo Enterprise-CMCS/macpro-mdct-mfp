@@ -26,11 +26,6 @@ export const AddCalculationModal = ({
    */
   const writeReport = async () => {
     setSubmitting(true);
-    var data = new FormData(modalForm.current as HTMLFormElement);
-    for (var [key, value] of data) {
-      // eslint-disable-next-line no-console
-      console.log(key, value);
-    }
     modalDisclosure.onClose();
     setSubmitting(false);
   };
