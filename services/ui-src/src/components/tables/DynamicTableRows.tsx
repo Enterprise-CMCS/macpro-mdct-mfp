@@ -18,6 +18,7 @@ export const DynamicTableRows = ({
   formData,
   formPercentage,
   tableId,
+  updatedFieldsCallback = () => [],
 }: Props) => {
   const {
     displayDynamicCell,
@@ -91,7 +92,11 @@ export const DynamicTableRows = ({
               {!disabled && (
                 <Button
                   onClick={() =>
-                    removeDynamicRow(dynamicRowsTemplate.id, dynamicId)
+                    removeDynamicRow(
+                      dynamicRowsTemplate.id,
+                      dynamicId,
+                      updatedFieldsCallback(dynamicId, localFieldData)
+                    )
                   }
                   sx={sx.removeButton}
                   type="button"
@@ -115,6 +120,7 @@ interface Props {
   formPercentage: number;
   label?: string;
   tableId: string;
+  updatedFieldsCallback?: Function;
 }
 
 const sx = {

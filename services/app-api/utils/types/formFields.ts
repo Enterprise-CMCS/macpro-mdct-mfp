@@ -138,8 +138,8 @@ export enum PageTypes {
 }
 
 export enum NumberMask {
-  CURRENCY = "currency",
   COMMA_SEPARATED = "comma-separated",
+  CURRENCY = "currency",
   FLOAT_OR_INTEGER = "floatOrInteger",
   PERCENTAGE = "percentage",
   RATIO = "ratio",

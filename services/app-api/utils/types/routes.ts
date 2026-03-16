@@ -117,14 +117,15 @@ export interface FormTable {
     errorMessage?: string | CustomHtmlElement[];
     modalButtonText?: string;
     percentage?: string;
-    title: string;
     subtitle?: string | CustomHtmlElement[];
+    title: string;
   };
 }
 
 export enum FormTableType {
   CALCULATION = "Calculation",
   MODAL_CALCULATION = "ModalCalculation",
+  SUMMATION = "Summation",
 }
 
 export interface ServiceField {
