@@ -29,7 +29,6 @@ import {
 } from "types";
 // utils
 import { getFieldParts, parseCustomHtml, translate } from "utils";
-import { outputTotals } from "./TotalsSummaryTableHelpers";
 
 export const CalculationTable = ({
   bodyRows,
@@ -98,10 +97,6 @@ export const CalculationTable = ({
     }),
     [isDisabled, formData, tableId, getPercentage]
   );
-
-  //const fieldData = report?.fieldData;
-  //console.log("fieldData: ", fieldData);
-  outputTotals(formData);
 
   const generateRows = (
     section: string,

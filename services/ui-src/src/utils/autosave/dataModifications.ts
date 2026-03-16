@@ -501,10 +501,6 @@ export const recalculateDynamicFields = ({
   return fieldsToSave;
 };
 
-export const updateTotalsSummaryTable = () => {
-  // test
-};
-
 interface RecalculateDynamicFields {
   dynamicFieldId: string;
   dynamicTemplateId: string;

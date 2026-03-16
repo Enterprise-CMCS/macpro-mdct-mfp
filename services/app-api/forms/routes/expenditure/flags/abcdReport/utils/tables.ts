@@ -337,51 +337,41 @@ export const totalsSummaryHeaders = [
   "Total Federal Share",
 ];
 
-export const totalsSummary = (prefix: string) => [
+// Totals summary just displays footer values from other tables using their field IDs
+export const totalsSummary = () => [
   {
-    id: `qualifiedHcbs_statePlanServices-${prefix}`,
+    id: "qualifiedHcbs_statePlanServices",
     label: "State Plan Services (Qualified HCBS)",
     readOnly: true,
   },
   {
-    id: `${prefix}_waiverServicesQualifiedHCBS`,
+    id: "qualifiedHcbs_1915cWaiverServices",
     label: "Waiver Services (Qualified HCBS)",
     readOnly: true,
   },
   {
-    id: `${prefix}_statePlanServicesDemonstrationHCBS`,
+    id: "demonstrationServices_statePlanServices",
     label: "State Plan Services (Demonstration HCBS)",
     readOnly: true,
   },
   {
-    id: `${prefix}_waiverSerivcesDemonstrationHCBS`,
+    id: "demonstrationServices_1915cWaiverServices",
     label: "Waiver Services (Demonstration HCBS)",
     readOnly: true,
   },
   {
-    id: `${prefix}_supplementalServices`,
+    id: "supplementalServices_category",
     label: "Supplemental Services",
     readOnly: true,
   },
   {
-    id: `${prefix}_totals`,
-    label: "Totals - Waivers, State Plan & Supplmental Services",
-    readOnly: true,
-  },
-  {
-    id: `${prefix}_administrativeCosts`,
+    id: "administrativeCosts_budgetCategory",
     label: "Administrative Costs",
     readOnly: true,
   },
   {
-    id: `${prefix}_capacityBuilding`,
+    id: "administrativeCosts_capacityBuilding",
     label: "Capacity Building",
-    readOnly: true,
-  },
-  {
-    id: `${prefix}_totalsComprehensive`,
-    label:
-      "Totals - Waivers, State Plan & Supplmental Services, Administrative Costs, and Capacity Building",
     readOnly: true,
   },
 ];
