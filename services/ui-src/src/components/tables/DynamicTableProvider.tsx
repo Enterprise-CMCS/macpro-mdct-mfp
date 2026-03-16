@@ -19,6 +19,7 @@ import {
   DynamicRowsTemplate,
   FormField,
   InputChangeEvent,
+  ReportFormFieldType,
   ReportShape,
 } from "types";
 // utils
@@ -98,15 +99,24 @@ export const DynamicTableProvider = ({ children }: any) => {
     initialValue,
     mask,
     rowIndex,
+    type,
   }: DisplayReadOnlyCellOptions) => {
     const cellValue = localFieldData?.[id] || hydrate || initialValue;
     const readOnlyValue = Array.isArray(cellValue)
       ? cellValue?.[rowIndex]?.name || initialValue
       : cellValue;
 
+    if (type === ReportFormFieldType.NUMBER) {
+      return (
+        <Text as="span" sx={sx.calculated}>
+          {maskResponseData(readOnlyValue, mask)}
+        </Text>
+      );
+    }
+
     return (
-      <Text as="span" sx={sx.calculated}>
-        {maskResponseData(readOnlyValue, mask)}
+      <Text as="span" sx={sx.readonly}>
+        {readOnlyValue}
       </Text>
     );
   };
@@ -136,6 +146,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         initialValue,
         mask,
         rowIndex,
+        type: cell.type,
       });
 
     const field = {
@@ -444,6 +455,7 @@ interface DisplayReadOnlyCellOptions {
   initialValue: string;
   mask: string;
   rowIndex: number;
+  type: string | ReportFormFieldType;
 }
 
 interface UpdatedFieldsForDisplay {
@@ -457,6 +469,9 @@ interface UpdatedFieldsForDisplay {
 }
 
 const sx = {
+  readonly: {
+    fontWeight: "bold",
+  },
   calculated: {
     display: "block",
     fontWeight: "bold",

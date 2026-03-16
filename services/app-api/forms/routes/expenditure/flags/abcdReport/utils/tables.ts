@@ -1,5 +1,6 @@
 import {
   AnyObject,
+  BuildServiceField,
   NumberMask,
   ReportFormFieldType,
   ServiceField,
@@ -17,12 +18,12 @@ export const buildServiceFields = (
   ],
   settings?: AnyObject
 ) => {
-  const buildServiceField = (
-    suffix: string,
-    label: string,
-    props: AnyObject = {},
-    options: AnyObject = {}
-  ) => ({
+  const buildServiceField = ({
+    suffix,
+    label,
+    props,
+    options,
+  }: BuildServiceField) => ({
     forTableOnly: true,
     id: `${service.id}-${suffix}`,
     type: ReportFormFieldType.NUMBER,
@@ -47,40 +48,88 @@ export const buildServiceFields = (
     switch (fieldType) {
       case ServiceFieldType.CATEGORY:
         fields.push(
-          buildServiceField(
-            "category",
-            "Category",
-            {
+          buildServiceField({
+            suffix: "category",
+            label: "Category",
+            props: {
               dynamicLabel: settings?.dynamicLabel,
+              ...settings?.[ServiceFieldType.CATEGORY]?.props,
             },
-            {
+            options: {
               type: ReportFormFieldType.TEXT,
               validation: ValidationType.TEXT_OPTIONAL,
-            }
-          )
+              ...settings?.[ServiceFieldType.CATEGORY]?.options,
+            },
+          })
+        );
+        break;
+
+      case ServiceFieldType.NAME:
+        fields.push(
+          buildServiceField({
+            suffix: "name",
+            label: "Name",
+            props: {
+              readOnly: service.readOnly,
+              ...settings?.[ServiceFieldType.NAME]?.props,
+            },
+            options: {
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
+              ...settings?.[ServiceFieldType.NAME]?.options,
+            },
+          })
+        );
+        break;
+
+      case ServiceFieldType.DESCRIPTION:
+        fields.push(
+          buildServiceField({
+            suffix: "description",
+            label: "Description",
+            props: {
+              readOnly: service.readOnly,
+              ...settings?.[ServiceFieldType.DESCRIPTION]?.props,
+            },
+            options: {
+              type: ReportFormFieldType.TEXTAREA,
+              validation: ValidationType.TEXT,
+              ...settings?.[ServiceFieldType.DESCRIPTION]?.options,
+            },
+          })
         );
         break;
 
       case ServiceFieldType.TOTAL_COMPUTABLE:
         fields.push(
-          buildServiceField("totalComputable", "Total Computable", {
-            ...currencyProps,
-            initialValue: service.readOnly ? "0" : "",
-            readOnly: service.readOnly,
+          buildServiceField({
+            suffix: "totalComputable",
+            label: "Total Computable",
+            props: {
+              ...currencyProps,
+              initialValue: service.readOnly ? "0" : "",
+              readOnly: service.readOnly,
+              ...settings?.[ServiceFieldType.TOTAL_COMPUTABLE]?.props,
+            },
+            options: {
+              ...settings?.[ServiceFieldType.TOTAL_COMPUTABLE]?.options,
+            },
           })
         );
         break;
 
       case ServiceFieldType.PERCENTAGE_OVERRIDE:
         fields.push(
-          buildServiceField(
-            "percentageOverride",
-            "Override %",
-            {
+          buildServiceField({
+            suffix: "percentageOverride",
+            label: "Override %",
+            props: {
               decimalPlacesToRoundTo: 0,
               mask: NumberMask.PERCENTAGE,
+              readOnly: service.readOnly,
+              ...settings?.[ServiceFieldType.PERCENTAGE_OVERRIDE]?.props,
             },
-            {
+            options: {
               validation: {
                 type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
                 options: {
@@ -89,28 +138,100 @@ export const buildServiceFields = (
                     ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
                 },
               },
-            }
-          )
+              ...settings?.[ServiceFieldType.PERCENTAGE_OVERRIDE]?.options,
+            },
+          })
         );
         break;
 
       case ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE:
         fields.push(
-          buildServiceField(
-            "totalStateTerritoryShare",
-            "Total State / Territory Share",
-            currencyProps
-          )
+          buildServiceField({
+            suffix: "totalStateTerritoryShare",
+            label: "Total State / Territory Share",
+            props: {
+              ...currencyProps,
+              ...settings?.[ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE]
+                ?.props,
+            },
+            options: {
+              ...settings?.[ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE]
+                ?.options,
+            },
+          })
         );
         break;
 
       case ServiceFieldType.TOTAL_FEDERAL_SHARE:
         fields.push(
-          buildServiceField(
-            "totalFederalShare",
-            "Total Federal Share",
-            currencyProps
-          )
+          buildServiceField({
+            suffix: "totalFederalShare",
+            label: "Total Federal Share",
+            props: {
+              ...currencyProps,
+              ...settings?.[ServiceFieldType.TOTAL_FEDERAL_SHARE]?.props,
+            },
+            options: {
+              ...settings?.[ServiceFieldType.TOTAL_FEDERAL_SHARE]?.options,
+            },
+          })
+        );
+        break;
+
+      case ServiceFieldType.TITLE:
+        fields.push(
+          buildServiceField({
+            suffix: "title",
+            label: "Position Title",
+            props: {
+              ...settings?.[ServiceFieldType.TITLE]?.props,
+            },
+            options: {
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
+              ...settings?.[ServiceFieldType.TITLE]?.options,
+            },
+          })
+        );
+        break;
+
+      case ServiceFieldType.BUDGETED_FTES:
+        fields.push(
+          buildServiceField({
+            suffix: "budgetedFullTimeEmployees",
+            label: "# of Budgeted FTEs",
+            props: {
+              decimalPlacesToRoundTo: 2,
+              initialValue: service.readOnly ? "0" : "",
+              mask: NumberMask.FLOAT_OR_INTEGER,
+              readOnly: service.readOnly,
+              ...settings?.[ServiceFieldType.BUDGETED_FTES]?.props,
+            },
+            options: {
+              validation: ValidationType.NUMBER,
+              ...settings?.[ServiceFieldType.BUDGETED_FTES]?.options,
+            },
+          })
+        );
+        break;
+
+      case ServiceFieldType.FILLED_FTES:
+        fields.push(
+          buildServiceField({
+            suffix: "filledFullTimeEmployees",
+            label: "# of Filled FTEs",
+            props: {
+              decimalPlacesToRoundTo: 2,
+              initialValue: service.readOnly ? "0" : "",
+              mask: NumberMask.FLOAT_OR_INTEGER,
+              readOnly: service.readOnly,
+              ...settings?.[ServiceFieldType.FILLED_FTES]?.props,
+            },
+            options: {
+              validation: ValidationType.NUMBER,
+              ...settings?.[ServiceFieldType.FILLED_FTES]?.options,
+            },
+          })
         );
         break;
 

@@ -81,6 +81,7 @@ export interface ReportFormFieldProps {
   maxLength?: number;
   styleAsOptional?: boolean;
   subType?: ReportFormFieldType;
+  title?: string;
 }
 
 // Form Tables
@@ -133,11 +134,23 @@ export interface ServiceField {
 }
 
 export enum ServiceFieldType {
+  BUDGETED_FTES = "budgetedFullTimeEmployees",
   CATEGORY = "category",
+  DESCRIPTION = "description",
+  FILLED_FTES = "filledFullTimeEmployees",
+  NAME = "name",
   PERCENTAGE_OVERRIDE = "percentageOverride",
+  TITLE = "title",
   TOTAL_COMPUTABLE = "totalComputable",
   TOTAL_FEDERAL_SHARE = "totalFederalShare",
   TOTAL_STATE_TERRITORY_SHARE = "totalStateTerritoryShare",
+}
+
+export interface BuildServiceField {
+  suffix: string;
+  label: string;
+  props: ReportFormFieldProps;
+  options: AnyObject;
 }
 
 // Routes
