@@ -67,7 +67,6 @@ export const totalsSummaryRoute: FormTablesRoute = {
           return [
             "Totals - Waivers, State Plan & Supplmental Services, Administrative Costs, and Capacity Building",
             ...buildServiceFields(service, [ServiceFieldType.TOTAL_COMPUTABLE]),
-            "",
             ...buildServiceFields(service, [
               ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
               ServiceFieldType.TOTAL_FEDERAL_SHARE,

@@ -37,7 +37,6 @@ export const updatedNumberFields = (
     formId,
     tableId,
   } = getFieldParts(name);
-
   const percentageField = `fmap_${formId}Percentage`;
   const formPercentage = fieldData[percentageField] || 100;
   const fieldPercentageField = `${fieldId}-percentageOverride`;
@@ -500,6 +499,10 @@ export const recalculateDynamicFields = ({
   ];
 
   return fieldsToSave;
+};
+
+export const updateTotalsSummaryTable = () => {
+  // test
 };
 
 interface RecalculateDynamicFields {
