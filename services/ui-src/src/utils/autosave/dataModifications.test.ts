@@ -3,13 +3,6 @@ import { ReportFormFieldType } from "types";
 import { FieldInfo } from "./autosave";
 // utils
 import {
-  createTempDynamicId,
-  getFieldParts,
-  getFmapForm,
-  isFieldType,
-  isFmapPct,
-  isTempDynamicField,
-  recalculateDynamicFields,
   updatedFieldDataOnFieldChange,
   updatedNumberFields,
   updatedTextFields,
@@ -48,11 +41,15 @@ const baseFieldData = {
       totalComputable: 123.45,
       totalFederalShare: 123.45,
       totalStateTerritoryShare: 0,
+      budgetedFullTimeEmployees: 0,
+      filledFullTimeEmployees: 0,
     },
   ],
   [`${mockDynamicTemplateId}-totalComputable`]: 123.45,
   [`${mockDynamicTemplateId}-totalFederalShare`]: 123.45,
   [`${mockDynamicTemplateId}-totalStateTerritoryShare`]: 0,
+  [`${mockDynamicTemplateId}-budgetedFullTimeEmployees`]: 0,
+  [`${mockDynamicTemplateId}-filledFullTimeEmployees`]: 0,
 
   // Adding these fields to test filtering
   "unrelated-totalComputable": 12345,
@@ -174,6 +171,8 @@ describe("utils/autosave/dataModifications", () => {
               totalComputable: 123,
               totalFederalShare: 107.01,
               totalStateTerritoryShare: 15.99,
+              budgetedFullTimeEmployees: 0,
+              filledFullTimeEmployees: 0,
             },
           ],
         },
@@ -259,6 +258,55 @@ describe("utils/autosave/dataModifications", () => {
       ]);
     });
 
+    test("returns fields for empty percentageOverride", () => {
+      const fieldData = structuredClone(baseFieldData);
+      const fields: FieldInfo[] = [
+        {
+          name: `${mockFieldId}-percentageOverride`,
+          type: ReportFormFieldType.NUMBER,
+          value: "",
+        },
+      ];
+      const updatedFields = updatedNumberFields(fields, fieldData);
+      expect(updatedFields).toEqual([
+        {
+          name: `${mockFieldId}-percentageOverride`,
+          type: ReportFormFieldType.NUMBER,
+          value: "",
+        },
+        {
+          name: `${mockFieldId}-totalComputable`,
+          type: ReportFormFieldType.NUMBER,
+          value: 123,
+        },
+        {
+          name: `${mockFieldId}-totalFederalShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 107.01,
+        },
+        {
+          name: `${mockFieldId}-totalStateTerritoryShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 15.99,
+        },
+        {
+          name: `${mockTableId}-totalComputable`,
+          type: ReportFormFieldType.NUMBER,
+          value: 369.45,
+        },
+        {
+          name: `${mockTableId}-totalFederalShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 337.47,
+        },
+        {
+          name: `${mockTableId}-totalStateTerritoryShare`,
+          type: ReportFormFieldType.NUMBER,
+          value: 31.98,
+        },
+      ]);
+    });
+
     test("returns fields for updated dynamic percentageOverride", () => {
       const fieldData = structuredClone(baseFieldData);
       const fields: FieldInfo[] = [
@@ -281,6 +329,8 @@ describe("utils/autosave/dataModifications", () => {
               totalComputable: 123.45,
               totalFederalShare: 61.73,
               totalStateTerritoryShare: 61.72,
+              budgetedFullTimeEmployees: 0,
+              filledFullTimeEmployees: 0,
             },
           ],
         },
@@ -313,6 +363,104 @@ describe("utils/autosave/dataModifications", () => {
           name: `${mockTableId}-totalStateTerritoryShare`,
           type: ReportFormFieldType.NUMBER,
           value: 93.7,
+        },
+      ]);
+    });
+
+    test("returns fields for updated dynamic budgetedFullTimeEmployees", () => {
+      const fieldData = structuredClone(baseFieldData);
+      const fields: FieldInfo[] = [
+        {
+          name: `${mockTempDynamicFieldId}-budgetedFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 100,
+        },
+      ];
+      const updatedFields = updatedNumberFields(fields, fieldData);
+      expect(updatedFields).toEqual([
+        {
+          name: mockDynamicTemplateId,
+          type: ReportFormFieldType.DYNAMIC_OBJECT,
+          value: [
+            {
+              id: mockDynamicFieldId,
+              name: mockDynamicFieldId,
+              totalComputable: 123.45,
+              totalFederalShare: 123.45,
+              totalStateTerritoryShare: 0,
+              budgetedFullTimeEmployees: 100,
+              filledFullTimeEmployees: 0,
+            },
+          ],
+        },
+        {
+          name: `${mockDynamicTemplateId}-budgetedFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 100,
+        },
+        {
+          name: `${mockDynamicTemplateId}-filledFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: `${mockTableId}-budgetedFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 100,
+        },
+        {
+          name: `${mockTableId}-filledFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+      ]);
+    });
+
+    test("returns fields for updated dynamic filledFullTimeEmployees", () => {
+      const fieldData = structuredClone(baseFieldData);
+      const fields: FieldInfo[] = [
+        {
+          name: `${mockTempDynamicFieldId}-filledFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 100,
+        },
+      ];
+      const updatedFields = updatedNumberFields(fields, fieldData);
+      expect(updatedFields).toEqual([
+        {
+          name: mockDynamicTemplateId,
+          type: ReportFormFieldType.DYNAMIC_OBJECT,
+          value: [
+            {
+              id: mockDynamicFieldId,
+              name: mockDynamicFieldId,
+              totalComputable: 123.45,
+              totalFederalShare: 123.45,
+              totalStateTerritoryShare: 0,
+              budgetedFullTimeEmployees: 0,
+              filledFullTimeEmployees: 100,
+            },
+          ],
+        },
+        {
+          name: `${mockDynamicTemplateId}-budgetedFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: `${mockDynamicTemplateId}-filledFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 100,
+        },
+        {
+          name: `${mockTableId}-budgetedFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: `${mockTableId}-filledFullTimeEmployees`,
+          type: ReportFormFieldType.NUMBER,
+          value: 100,
         },
       ]);
     });
@@ -467,6 +615,8 @@ describe("utils/autosave/dataModifications", () => {
               totalComputable: 123.45,
               totalFederalShare: 123.45,
               totalStateTerritoryShare: 0,
+              budgetedFullTimeEmployees: 0,
+              filledFullTimeEmployees: 0,
             },
           ],
         },
@@ -522,15 +672,13 @@ describe("utils/autosave/dataModifications", () => {
 
   describe("updatedFieldDataOnFieldChange()", () => {
     test("returns fieldData on totalComputable change", () => {
-      const fieldData = structuredClone(baseFieldData);
       const name = `${mockFieldId}-totalComputable`;
+      const fieldData = structuredClone(baseFieldData);
 
       const updatedFields = updatedFieldDataOnFieldChange({
         fieldData,
-        id: name,
         name,
         percentage: 89,
-        tableId: mockTableId,
         value: 100,
       });
 
@@ -539,6 +687,7 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockFieldId}-totalComputable`]: 100,
         [`${mockFieldId}-totalFederalShare`]: 89,
         [`${mockFieldId}-totalStateTerritoryShare`]: 11,
+
         [`${mockTableId}-totalComputable`]: 346.45,
         [`${mockTableId}-totalFederalShare`]: 319.46,
         [`${mockTableId}-totalStateTerritoryShare`]: 26.99,
@@ -553,10 +702,8 @@ describe("utils/autosave/dataModifications", () => {
       };
       const updatedFields = updatedFieldDataOnFieldChange({
         fieldData,
-        id: name,
         name,
         percentage: 89,
-        tableId: mockTableId,
         value: 100,
       });
 
@@ -576,6 +723,7 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockFieldId}-totalComputable`]: 123,
         [`${mockFieldId}-totalFederalShare`]: 107.01,
         [`${mockFieldId}-totalStateTerritoryShare`]: 15.99,
+
         [`${mockTableId}-totalComputable`]: 346,
         [`${mockTableId}-totalFederalShare`]: 303.02,
         [`${mockTableId}-totalStateTerritoryShare`]: 42.98,
@@ -588,10 +736,8 @@ describe("utils/autosave/dataModifications", () => {
 
       const updatedFields = updatedFieldDataOnFieldChange({
         fieldData,
-        id: name,
         name,
         percentage: 89,
-        tableId: mockTableId,
         value: 100,
       });
 
@@ -603,6 +749,8 @@ describe("utils/autosave/dataModifications", () => {
             name: mockDynamicFieldId,
             totalFederalShare: 89,
             totalStateTerritoryShare: 11,
+            budgetedFullTimeEmployees: 0,
+            filledFullTimeEmployees: 0,
           },
         ],
         [`${mockDynamicTemplateId}-totalComputable`]: 100,
@@ -611,6 +759,7 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockFieldId}-totalComputable`]: 123,
         [`${mockFieldId}-totalFederalShare`]: 107.01,
         [`${mockFieldId}-totalStateTerritoryShare`]: 15.99,
+
         [`${mockTableId}-totalComputable`]: 346,
         [`${mockTableId}-totalFederalShare`]: 303.02,
         [`${mockTableId}-totalStateTerritoryShare`]: 42.98,
@@ -618,16 +767,14 @@ describe("utils/autosave/dataModifications", () => {
     });
 
     test("returns fieldData on percentageOverride change", () => {
-      const fieldData = structuredClone(baseFieldData);
       const name = `${mockFieldId}-percentageOverride`;
+      const fieldData = structuredClone(baseFieldData);
 
       const updatedFields = updatedFieldDataOnFieldChange({
         fieldData,
-        id: name,
         name,
         percentage: 89,
         percentageOverride: 89,
-        tableId: mockTableId,
         value: 100,
       });
 
@@ -637,6 +784,7 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockFieldId}-totalComputable`]: 100,
         [`${mockFieldId}-totalFederalShare`]: 89,
         [`${mockFieldId}-totalStateTerritoryShare`]: 11,
+
         [`${mockTableId}-totalComputable`]: 346.45,
         [`${mockTableId}-totalFederalShare`]: 319.46,
         [`${mockTableId}-totalStateTerritoryShare`]: 26.99,
@@ -651,11 +799,9 @@ describe("utils/autosave/dataModifications", () => {
       };
       const updatedFields = updatedFieldDataOnFieldChange({
         fieldData,
-        id: name,
         name,
         percentage: 89,
         percentageOverride: 89,
-        tableId: mockTableId,
         value: 100,
       });
 
@@ -673,12 +819,166 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockDynamicTemplateId}-totalComputable`]: 100,
         [`${mockDynamicTemplateId}-totalFederalShare`]: 89,
         [`${mockDynamicTemplateId}-totalStateTerritoryShare`]: 11,
+
         [`${mockFieldId}-totalComputable`]: 123,
         [`${mockFieldId}-totalFederalShare`]: 107.01,
         [`${mockFieldId}-totalStateTerritoryShare`]: 15.99,
+
         [`${mockTableId}-totalComputable`]: 346,
         [`${mockTableId}-totalFederalShare`]: 303.02,
         [`${mockTableId}-totalStateTerritoryShare`]: 42.98,
+      });
+    });
+
+    test("returns fieldData on dynamic budgetedFullTimeEmployees addition", () => {
+      const name = `${mockTempDynamicFieldId}-budgetedFullTimeEmployees`;
+      const fieldData = structuredClone(baseFieldData);
+      const updatedFields = updatedFieldDataOnFieldChange({
+        fieldData,
+        name,
+        percentage: 0,
+        value: 100,
+      });
+
+      expect(updatedFields).toEqual({
+        ...fieldData,
+        [mockDynamicTemplateId]: [
+          {
+            id: mockDynamicFieldId,
+            totalComputable: 123.45,
+            totalFederalShare: 123.45,
+            totalStateTerritoryShare: 0,
+            budgetedFullTimeEmployees: 0,
+            filledFullTimeEmployees: 0,
+          },
+        ],
+        [`${mockDynamicTemplateId}-totalComputable`]: 123.45,
+        [`${mockDynamicTemplateId}-totalFederalShare`]: 123.45,
+        [`${mockDynamicTemplateId}-totalStateTerritoryShare`]: 0,
+        [`${mockDynamicTemplateId}-budgetedFullTimeEmployees`]: 100,
+        [`${mockDynamicTemplateId}-filledFullTimeEmployees`]: 0,
+
+        [`${mockFieldId}-totalComputable`]: 123,
+        [`${mockFieldId}-totalFederalShare`]: 107.01,
+        [`${mockFieldId}-totalStateTerritoryShare`]: 15.99,
+
+        [`${mockTableId}-totalComputable`]: 246,
+        [`${mockTableId}-totalFederalShare`]: 214.02,
+        [`${mockTableId}-totalStateTerritoryShare`]: 31.98,
+        [`${mockTableId}-budgetedFullTimeEmployees`]: 100,
+        [`${mockTableId}-filledFullTimeEmployees`]: 0,
+      });
+    });
+
+    test("returns fieldData on dynamic budgetedFullTimeEmployees update", () => {
+      const name = `${mockTempDynamicFieldId}-budgetedFullTimeEmployees`;
+      const fieldData = {
+        ...baseFieldData,
+        [mockDynamicTemplateId]: undefined,
+      };
+      const updatedFields = updatedFieldDataOnFieldChange({
+        fieldData,
+        name,
+        percentage: 0,
+        value: 100,
+      });
+
+      expect(updatedFields).toEqual({
+        ...fieldData,
+        [mockDynamicTemplateId]: [],
+        [`${mockDynamicTemplateId}-totalComputable`]: 123.45,
+        [`${mockDynamicTemplateId}-totalFederalShare`]: 123.45,
+        [`${mockDynamicTemplateId}-totalStateTerritoryShare`]: 0,
+
+        [`${mockDynamicTemplateId}-budgetedFullTimeEmployees`]: 100,
+        [`${mockDynamicTemplateId}-filledFullTimeEmployees`]: 0,
+
+        [`${mockFieldId}-totalComputable`]: 123,
+        [`${mockFieldId}-totalFederalShare`]: 107.01,
+        [`${mockFieldId}-totalStateTerritoryShare`]: 15.99,
+
+        [`${mockTableId}-totalComputable`]: 246,
+        [`${mockTableId}-totalFederalShare`]: 214.02,
+        [`${mockTableId}-totalStateTerritoryShare`]: 31.98,
+
+        [`${mockTableId}-budgetedFullTimeEmployees`]: 100,
+        [`${mockTableId}-filledFullTimeEmployees`]: 0,
+      });
+    });
+
+    test("returns fieldData on dynamic filledFullTimeEmployees addition", () => {
+      const name = `${mockTempDynamicFieldId}-filledFullTimeEmployees`;
+      const fieldData = structuredClone(baseFieldData);
+      const updatedFields = updatedFieldDataOnFieldChange({
+        fieldData,
+        name,
+        percentage: 0,
+        value: 100,
+      });
+
+      expect(updatedFields).toEqual({
+        ...fieldData,
+        [mockDynamicTemplateId]: [
+          {
+            id: mockDynamicFieldId,
+            totalComputable: 123.45,
+            totalFederalShare: 123.45,
+            totalStateTerritoryShare: 0,
+            budgetedFullTimeEmployees: 0,
+            filledFullTimeEmployees: 0,
+          },
+        ],
+        [`${mockDynamicTemplateId}-totalComputable`]: 123.45,
+        [`${mockDynamicTemplateId}-totalFederalShare`]: 123.45,
+        [`${mockDynamicTemplateId}-totalStateTerritoryShare`]: 0,
+        [`${mockDynamicTemplateId}-budgetedFullTimeEmployees`]: 0,
+        [`${mockDynamicTemplateId}-filledFullTimeEmployees`]: 100,
+
+        [`${mockFieldId}-totalComputable`]: 123,
+        [`${mockFieldId}-totalFederalShare`]: 107.01,
+        [`${mockFieldId}-totalStateTerritoryShare`]: 15.99,
+
+        [`${mockTableId}-totalComputable`]: 246,
+        [`${mockTableId}-totalFederalShare`]: 214.02,
+        [`${mockTableId}-totalStateTerritoryShare`]: 31.98,
+        [`${mockTableId}-budgetedFullTimeEmployees`]: 0,
+        [`${mockTableId}-filledFullTimeEmployees`]: 100,
+      });
+    });
+
+    test("returns fieldData on dynamic filledFullTimeEmployees update", () => {
+      const name = `${mockTempDynamicFieldId}-filledFullTimeEmployees`;
+      const fieldData = {
+        ...baseFieldData,
+        [mockDynamicTemplateId]: undefined,
+      };
+      const updatedFields = updatedFieldDataOnFieldChange({
+        fieldData,
+        name,
+        percentage: 0,
+        value: 100,
+      });
+
+      expect(updatedFields).toEqual({
+        ...fieldData,
+        [mockDynamicTemplateId]: [],
+        [`${mockDynamicTemplateId}-totalComputable`]: 123.45,
+        [`${mockDynamicTemplateId}-totalFederalShare`]: 123.45,
+        [`${mockDynamicTemplateId}-totalStateTerritoryShare`]: 0,
+
+        [`${mockDynamicTemplateId}-budgetedFullTimeEmployees`]: 0,
+        [`${mockDynamicTemplateId}-filledFullTimeEmployees`]: 100,
+
+        [`${mockFieldId}-totalComputable`]: 123,
+        [`${mockFieldId}-totalFederalShare`]: 107.01,
+        [`${mockFieldId}-totalStateTerritoryShare`]: 15.99,
+
+        [`${mockTableId}-totalComputable`]: 246,
+        [`${mockTableId}-totalFederalShare`]: 214.02,
+        [`${mockTableId}-totalStateTerritoryShare`]: 31.98,
+
+        [`${mockTableId}-budgetedFullTimeEmployees`]: 0,
+        [`${mockTableId}-filledFullTimeEmployees`]: 100,
       });
     });
 
@@ -689,161 +989,12 @@ describe("utils/autosave/dataModifications", () => {
       };
       const updatedFields = updatedFieldDataOnFieldChange({
         fieldData,
-        id: name,
         name,
         percentage: 89,
-        tableId: mockTableId,
         value: 100,
       });
 
       expect(updatedFields).toEqual(fieldData);
-    });
-  });
-
-  describe("createTempDynamicId()", () => {
-    test("returns new id", () => {
-      const input = createTempDynamicId(
-        `${mockDynamicTemplateId}-mockFieldType`,
-        mockDynamicFieldId
-      );
-      const expectedResult = `${mockTempDynamicFieldId}-mockFieldType`;
-      expect(input).toBe(expectedResult);
-    });
-  });
-
-  describe("getFieldParts()", () => {
-    test("splits field into parts", () => {
-      const input = getFieldParts(`${mockFieldId}-mockFieldType`);
-      const expectedResult = {
-        dynamicFieldId: "",
-        dynamicTemplateId: "",
-        fieldId: mockFieldId,
-        fieldType: "mockFieldType",
-        formId: mockFormId,
-        tableId: mockTableId,
-      };
-      expect(input).toEqual(expectedResult);
-    });
-
-    test("splits field into parts with dynamicId", () => {
-      const input = getFieldParts(`${mockTempDynamicFieldId}-mockFieldType`);
-      const expectedResult = {
-        dynamicFieldId: mockDynamicFieldId,
-        dynamicTemplateId: mockDynamicTemplateId,
-        fieldId: mockTempDynamicFieldId,
-        fieldType: "mockFieldType",
-        formId: mockFormId,
-        tableId: mockTableId,
-      };
-      expect(input).toEqual(expectedResult);
-    });
-  });
-
-  describe("getFmapForm()", () => {
-    test("returns table id", () => {
-      const input = getFmapForm("fmap_mockTablePercentage");
-      expect(input).toBe("mockTable");
-    });
-  });
-
-  describe("isFieldType()", () => {
-    test("returns true", () => {
-      const input = isFieldType("fieldType", "fieldType");
-      expect(input).toBe(true);
-    });
-
-    test("returns false", () => {
-      const input = isFieldType("fieldType", "other");
-      expect(input).toBe(false);
-    });
-  });
-
-  describe("isFmapPct()", () => {
-    test("returns true", () => {
-      const input = isFmapPct("fmap_mockTablePercentage");
-      expect(input).toBe(true);
-    });
-
-    test("returns false", () => {
-      const input = isFmapPct("other");
-      expect(input).toBe(false);
-    });
-  });
-
-  describe("isTempDynamicField()", () => {
-    test("returns true", () => {
-      const input = isTempDynamicField(
-        `${mockTempDynamicFieldId}-mockFieldType`
-      );
-      expect(input).toBe(true);
-    });
-
-    test("returns false", () => {
-      const input = isTempDynamicField("other");
-      expect(input).toBe(false);
-    });
-  });
-
-  describe("recalculateDynamicFields()", () => {
-    test("returns calculations for dynamic fields", () => {
-      const fieldData = {
-        ...baseFieldData,
-        [`fmap_${mockFormId}Percentage`]: undefined,
-        [mockDynamicTemplateId]: undefined,
-      };
-      const updatedFields = recalculateDynamicFields({
-        dynamicFieldId: mockDynamicFieldId,
-        dynamicTemplateId: mockDynamicTemplateId,
-        formId: mockFormId,
-        fieldData,
-        fieldValue: 100,
-        tableId: mockTableId,
-      });
-      expect(updatedFields).toEqual([
-        {
-          name: mockDynamicTemplateId,
-          type: ReportFormFieldType.DYNAMIC_OBJECT,
-          value: [
-            {
-              id: mockDynamicFieldId,
-              name: mockDynamicFieldId,
-              totalComputable: 100,
-              totalFederalShare: 100,
-              totalStateTerritoryShare: 0,
-            },
-          ],
-        },
-        {
-          name: `${mockDynamicTemplateId}-totalComputable`,
-          type: ReportFormFieldType.NUMBER,
-          value: 100,
-        },
-        {
-          name: `${mockDynamicTemplateId}-totalFederalShare`,
-          type: ReportFormFieldType.NUMBER,
-          value: 100,
-        },
-        {
-          name: `${mockDynamicTemplateId}-totalStateTerritoryShare`,
-          type: ReportFormFieldType.NUMBER,
-          value: 0,
-        },
-        {
-          name: `${mockTableId}-totalComputable`,
-          type: ReportFormFieldType.NUMBER,
-          value: 346,
-        },
-        {
-          name: `${mockTableId}-totalFederalShare`,
-          type: ReportFormFieldType.NUMBER,
-          value: 314.02,
-        },
-        {
-          name: `${mockTableId}-totalStateTerritoryShare`,
-          type: ReportFormFieldType.NUMBER,
-          value: 31.98,
-        },
-      ]);
     });
   });
 });
