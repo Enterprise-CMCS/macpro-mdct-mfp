@@ -180,6 +180,7 @@ const TestComponent = () => {
     initialValue: "12.34",
     mask: NumberMask.CURRENCY,
     rowIndex: 0,
+    type: ReportFormFieldType.NUMBER,
   };
 
   const displayReadOnlyCellHydrateProps = {

@@ -123,11 +123,9 @@ export const qualifiedHcbsRoute: FormTablesRoute = {
         props: {
           label: "Additional notes/comments (optional)",
           hint: "If applicable, add any notes or comments to provide additional explanation.",
+          title: "Narrative",
         },
       },
     ],
-    verbiage: {
-      title: "Narrative",
-    },
   },
 };

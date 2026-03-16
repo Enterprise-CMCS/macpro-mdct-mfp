@@ -19,12 +19,14 @@ import {
   DynamicRowsTemplate,
   FormField,
   InputChangeEvent,
+  ReportFormFieldType,
   ReportShape,
 } from "types";
 // utils
 import uuid from "react-uuid";
 import {
   autosaveFieldData,
+  calculationTableDynamicTotalsOnSave,
   createTempDynamicId,
   debounce,
   formFieldFactory,
@@ -33,7 +35,6 @@ import {
   hydrateFormFields,
   isTempDynamicField,
   maskResponseData,
-  recalculateDynamicFields,
   updateRenderFields,
   updatedFieldDataOnFieldChange,
   useStore,
@@ -70,20 +71,16 @@ export const DynamicTableProvider = ({ children }: any) => {
   const updatedFieldsForDisplay = useCallback(
     ({
       fieldData,
-      id,
       name,
       value,
       percentage,
       percentageOverride,
-      tableId,
     }: UpdatedFieldsForDisplay) => {
       const updatedFieldData = updatedFieldDataOnFieldChange({
         fieldData,
-        id,
         name,
         percentage,
         percentageOverride,
-        tableId,
         value,
       });
       setLocalFieldData(updatedFieldData);
@@ -102,15 +99,24 @@ export const DynamicTableProvider = ({ children }: any) => {
     initialValue,
     mask,
     rowIndex,
+    type,
   }: DisplayReadOnlyCellOptions) => {
     const cellValue = localFieldData?.[id] || hydrate || initialValue;
     const readOnlyValue = Array.isArray(cellValue)
       ? cellValue?.[rowIndex]?.name || initialValue
       : cellValue;
 
+    if (type === ReportFormFieldType.NUMBER) {
+      return (
+        <Text as="span" sx={sx.calculated}>
+          {maskResponseData(readOnlyValue, mask)}
+        </Text>
+      );
+    }
+
     return (
-      <Text as="span" sx={sx.calculated}>
-        {maskResponseData(readOnlyValue, mask)}
+      <Text as="span" sx={sx.readonly}>
+        {readOnlyValue}
       </Text>
     );
   };
@@ -140,6 +146,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         initialValue,
         mask,
         rowIndex,
+        type: cell.type,
       });
 
     const field = {
@@ -342,7 +349,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     dynamicFieldId: string
   ) => {
     const { formId, tableId } = getFieldParts(dynamicTemplateId);
-    const updatedFields = recalculateDynamicFields({
+    const updatedFields = calculationTableDynamicTotalsOnSave({
       dynamicFieldId,
       dynamicTemplateId: dynamicTemplateId,
       fieldData: localFieldData,
@@ -448,6 +455,7 @@ interface DisplayReadOnlyCellOptions {
   initialValue: string;
   mask: string;
   rowIndex: number;
+  type: string | ReportFormFieldType;
 }
 
 interface UpdatedFieldsForDisplay {
@@ -461,6 +469,9 @@ interface UpdatedFieldsForDisplay {
 }
 
 const sx = {
+  readonly: {
+    fontWeight: "bold",
+  },
   calculated: {
     display: "block",
     fontWeight: "bold",
