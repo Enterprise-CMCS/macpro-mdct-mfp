@@ -25,6 +25,7 @@ import {
 import uuid from "react-uuid";
 import {
   autosaveFieldData,
+  calculationTableDynamicTotalsOnSave,
   createTempDynamicId,
   debounce,
   formFieldFactory,
@@ -33,7 +34,6 @@ import {
   hydrateFormFields,
   isTempDynamicField,
   maskResponseData,
-  recalculateDynamicFields,
   updateRenderFields,
   updatedFieldDataOnFieldChange,
   useStore,
@@ -70,20 +70,16 @@ export const DynamicTableProvider = ({ children }: any) => {
   const updatedFieldsForDisplay = useCallback(
     ({
       fieldData,
-      id,
       name,
       value,
       percentage,
       percentageOverride,
-      tableId,
     }: UpdatedFieldsForDisplay) => {
       const updatedFieldData = updatedFieldDataOnFieldChange({
         fieldData,
-        id,
         name,
         percentage,
         percentageOverride,
-        tableId,
         value,
       });
       setLocalFieldData(updatedFieldData);
@@ -342,7 +338,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     dynamicFieldId: string
   ) => {
     const { formId, tableId } = getFieldParts(dynamicTemplateId);
-    const updatedFields = recalculateDynamicFields({
+    const updatedFields = calculationTableDynamicTotalsOnSave({
       dynamicFieldId,
       dynamicTemplateId: dynamicTemplateId,
       fieldData: localFieldData,
