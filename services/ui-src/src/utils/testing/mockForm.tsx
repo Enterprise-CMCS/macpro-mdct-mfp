@@ -185,6 +185,19 @@ export const mockTablesForm = {
         title: "Mock calculation table title",
       },
     },
+    {
+      id: "mockFormId_mockSummationTableId",
+      bodyRows: [
+        ["Mock text", mockTablesField("mockFormId_mockSummationTableId")],
+      ],
+      footRows: [["Footer 1", "Footer 2"]],
+      headRows: [["Heading 1", "Heading 2"]],
+      tableType: FormTableType.SUMMATION,
+      verbiage: {
+        errorMessage: "Mock summation table error",
+        title: "Mock summation table title",
+      },
+    },
   ],
   fields: [
     mockTablesField("mockFormId_mockCalculationTableId"),
