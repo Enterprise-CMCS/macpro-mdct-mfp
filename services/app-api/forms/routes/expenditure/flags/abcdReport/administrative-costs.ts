@@ -50,7 +50,7 @@ const budgetCategoryFooterFieldsToReturn = [
   ServiceFieldType.TOTAL_FEDERAL_SHARE,
 ];
 
-// Budget Category table Dynamic rows
+// Budget Category table - dynamic rows
 const budgetCategoryDynamicRowId = `${budgetCategoryTableId}_miscellaneousCosts`;
 const budgetCategoryDynamicBodyList = [
   {
@@ -133,6 +133,59 @@ const subRecipientsFooterFieldsToReturn = [
   ServiceFieldType.TOTAL_FEDERAL_SHARE,
 ];
 
+// Personnel table
+const personnelFootList = [
+  {
+    id: personnelTableId,
+    label: "Personnel",
+    readOnly: true,
+  },
+];
+const personnelFieldsToReturn = [
+  ServiceFieldType.BUDGETED_FTES,
+  ServiceFieldType.FILLED_FTES,
+];
+const personnelFooterFieldsToReturn = [...personnelFieldsToReturn];
+
+// Personnel table - dynamic rows
+const personnelDynamicRowId = `${personnelTableId}_positions`;
+const personnelDynamicBodyList = [
+  {
+    id: personnelDynamicRowId,
+    label: "Personnel",
+  },
+];
+const personnelDynamicFieldsToReturn = [
+  ServiceFieldType.TITLE,
+  ...personnelFieldsToReturn,
+];
+const personnelDynamicRowsTemplate = {
+  forTableOnly: true,
+  id: personnelDynamicRowId,
+  props: {
+    label: "Positions",
+    dynamicFields: personnelDynamicBodyList.flatMap((service) =>
+      buildServiceFields(service, personnelDynamicFieldsToReturn)
+    ),
+  },
+  type: ReportFormFieldType.DYNAMIC_OBJECT,
+  validation: {
+    type: ValidationType.DYNAMIC_OPTIONAL,
+    options: {
+      dynamicFieldValidations: {
+        name: ValidationType.TEXT_OPTIONAL,
+        title: ValidationType.TEXT_OPTIONAL,
+        budgetedFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
+        filledFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
+      },
+    },
+  },
+  verbiage: {
+    buttonText: "Add personnel",
+    hint: "To add more types of roles, click the “Add personnel” button below.",
+  },
+};
+
 // Administrative Costs route
 export const administrativeCostsRoute: FormTablesRoute = {
   name: "Administrative Costs",
@@ -176,12 +229,15 @@ export const administrativeCostsRoute: FormTablesRoute = {
         footRows: budgetCategoryFootList.map((service) => {
           return [
             "Totals (includes the Sub Recipient totals below)",
-            ...buildServiceFields(service, [ServiceFieldType.TOTAL_COMPUTABLE]),
+            ...buildServiceFields(
+              service,
+              budgetCategoryFooterFieldsToReturn.slice(0, 1)
+            ),
             "",
-            ...buildServiceFields(service, [
-              ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
-              ServiceFieldType.TOTAL_FEDERAL_SHARE,
-            ]),
+            ...buildServiceFields(
+              service,
+              budgetCategoryFooterFieldsToReturn.slice(1)
+            ),
           ];
         }),
         headRows: [administrativeCostsHeaders],
@@ -193,7 +249,6 @@ export const administrativeCostsRoute: FormTablesRoute = {
       },
       {
         id: capacityBuildingTableId,
-        // Display table fields in rows
         bodyRows: capacityBuildingBodyList.map((service) => {
           const bodyFields = buildServiceFields(
             service,
@@ -257,17 +312,45 @@ export const administrativeCostsRoute: FormTablesRoute = {
       {
         id: personnelTableId,
         bodyRows: [],
-        footRows: [],
+        dynamicRowsTemplate: personnelDynamicRowsTemplate,
+        footRows: personnelFootList.map((service) => {
+          return [
+            "Totals",
+            ...buildServiceFields(service, personnelFooterFieldsToReturn),
+          ];
+        }),
         headRows: [personnelHeaders],
-        tableType: FormTableType.CALCULATION,
+        tableType: FormTableType.SUMMATION,
         verbiage: {
-          percentage: "Administrative Costs Percentage: {{percentage}}",
+          subtitle: [
+            {
+              type: "p",
+              content:
+                "Add the position title, and the number of budgeted and filled full-time employees (FTEs) for each type of role in your MFP demonstration.",
+            },
+            {
+              type: "p",
+              content:
+                "CMS expects that each MFP recipient will have at least two FTE personnel reported, including an MFP project director and an MFP data and quality analyst, per PTC 26.",
+            },
+            {
+              type: "p",
+              content:
+                "If, for example, your demonstration has budgeted and hired 2 MFP data and quality analysts that are each 50% FTE, report 1 in both the # of budgeted FTEs and # of filled FTEs columns. Some MFP demonstrations might also have personnel including, but not limited to, care coordinators, systems specialists, and project coordinators.",
+            },
+            {
+              type: "p",
+              content:
+                "If a role is expected to be filled by the end of the quarter, count that role as filled.",
+            },
+          ],
           title: "Personnel",
         },
       },
     ],
+    // Add table fields here only for validation
     fields: [
-      // Add table fields here only for validation
+      // Budget Category table
       ...budgetCategoryBodyList.flatMap((service) =>
         buildServiceFields(service, budgetCategoryFieldsToReturn)
       ),
@@ -278,11 +361,22 @@ export const administrativeCostsRoute: FormTablesRoute = {
       ...budgetCategoryDynamicBodyList.flatMap((service) =>
         buildServiceFields(service, budgetCategoryFooterFieldsToReturn)
       ),
+
+      // Capacity Building table
       ...capacityBuildingBodyList.flatMap((service) =>
         buildServiceFields(service, capacityBuildingFieldsToReturn)
       ),
       ...capacityBuildingFootList.flatMap((service) =>
         buildServiceFields(service, capacityBuildingFooterFieldsToReturn)
+      ),
+
+      // Personnel table
+      ...personnelFootList.flatMap((service) =>
+        buildServiceFields(service, personnelFooterFieldsToReturn)
+      ),
+      personnelDynamicRowsTemplate,
+      ...personnelDynamicBodyList.flatMap((service) =>
+        buildServiceFields(service, personnelFooterFieldsToReturn)
       ),
       ...subRecipientsFootList.flatMap((service) =>
         buildServiceFields(service, subRecipientsFooterFieldsToReturn)

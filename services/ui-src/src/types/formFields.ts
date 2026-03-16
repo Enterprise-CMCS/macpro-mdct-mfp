@@ -72,14 +72,15 @@ export interface FormTable {
     errorMessage?: string | CustomHtmlElement[];
     modalButtonText?: string;
     percentage?: string;
-    title: string;
     subtitle?: string | CustomHtmlElement[];
+    title: string;
   };
 }
 
 export enum FormTableType {
   CALCULATION = "Calculation",
   MODAL_CALCULATION = "ModalCalculation",
+  SUMMATION = "Summation",
 }
 
 export interface CustomFieldValidation {
@@ -205,8 +206,8 @@ export enum ReportFormFieldType {
 }
 
 export enum NumberMask {
-  CURRENCY = "currency",
   COMMA_SEPARATED = "comma-separated",
+  CURRENCY = "currency",
   FLOAT_OR_INTEGER = "floatOrInteger",
   PERCENTAGE = "percentage",
   RATIO = "ratio",
