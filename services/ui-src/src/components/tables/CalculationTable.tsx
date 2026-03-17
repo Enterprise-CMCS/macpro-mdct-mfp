@@ -252,6 +252,15 @@ export const sx = {
           backgroundColor: "gray_lightest_highlight",
         },
       },
+      "tr.totals-row": {
+        td: {
+          backgroundColor: "gray_lighter",
+          border: "none",
+          fontWeight: "bold",
+          paddingInlineEnd: "spacer2",
+          paddingInlineStart: "spacer2",
+        },
+      },
       td: {
         border: "none",
         paddingBottom: "spacer1",
