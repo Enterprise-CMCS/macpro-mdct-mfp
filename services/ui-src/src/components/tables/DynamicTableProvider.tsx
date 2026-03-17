@@ -273,6 +273,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     disabled,
     dynamicRowsTemplate,
     formData,
+    isTotalsRow = false,
     row,
     rowIndex,
     section,
@@ -318,8 +319,20 @@ export const DynamicTableProvider = ({ children }: any) => {
       section === "thead" ? <VisuallyHidden>Options</VisuallyHidden> : null;
     const rowId = section === "tbody" ? "thead" : section;
 
+    const totalsRowStyle = isTotalsRow
+      ? {
+          td: {
+            backgroundColor: "gray_lighter",
+            border: "none",
+            fontWeight: "bold",
+            paddingInlineEnd: "spacer2",
+            paddingInlineStart: "spacer2",
+          },
+        }
+      : undefined;
+
     return (
-      <Tr key={`${section}-row-${rowIndex}`}>
+      <Tr key={`${section}-row-${rowIndex}`} sx={totalsRowStyle}>
         {row.map((cell, cellIndex: number) => (
           <Cell
             id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
@@ -525,6 +538,7 @@ interface GenerateRows {
   dynamicRowsTemplate?: DynamicRowsTemplate;
   formData?: AnyObject;
   headRows: FormTableRow[];
+  isTotalsRow?: boolean;
   percentage?: number;
   row: FormTableRow;
   rowIndex: number;

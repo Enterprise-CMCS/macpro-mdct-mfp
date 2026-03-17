@@ -14,9 +14,7 @@ import {
 } from "./utils";
 
 const totalsSummaryTableId = "totals_totalsSummary";
-const totalsSummaryServicesList = totalsSummary().slice(0, 5);
-const totalsSummaryServiceTotalRow = totalsSummary()[5];
-const totalsSummaryAdminList = totalsSummary().slice(6, 8);
+const totalsSummaryServicesList = totalsSummary();
 const totalsSummaryAllTotalsRow = [
   {
     id: "totalsSummary_allTotals",
@@ -52,26 +50,14 @@ export const totalsSummaryRoute: FormTablesRoute = {
       {
         id: totalsSummaryTableId,
         // Display table fields in rows using existing field IDs from source tables
-        bodyRows: [
-          ...totalsSummaryServicesList.map((service) => {
-            const bodyFields = buildServiceFields(service);
-            return [service.label, ...bodyFields];
-          }),
-          ...totalsSummaryAdminList.map((service) => {
-            const bodyFields = buildServiceFields(service);
-            return [service.label, ...bodyFields];
-          }),
-        ],
-        footRows: [
-          ...[totalsSummaryServiceTotalRow].map((service) => {
-            const footFields = buildServiceFields(service);
-            return [service.label, ...footFields];
-          }),
-          ...totalsSummaryAllTotalsRow.map((service) => {
-            const footFields = buildServiceFields(service);
-            return [service.label, ...footFields];
-          }),
-        ],
+        bodyRows: totalsSummaryServicesList.map((service) => {
+          const bodyFields = buildServiceFields(service);
+          return [service.label, ...bodyFields];
+        }),
+        footRows: totalsSummaryAllTotalsRow.map((service) => {
+          const footFields = buildServiceFields(service);
+          return [service.label, ...footFields];
+        }),
         headRows: [totalsSummaryHeaders],
         tableType: FormTableType.CALCULATION,
       },
@@ -88,12 +74,6 @@ export const totalsSummaryRoute: FormTablesRoute = {
         },
       },
       ...totalsSummaryServicesList.flatMap((service) =>
-        buildServiceFields(service)
-      ),
-      ...[totalsSummaryServiceTotalRow].flatMap((service) =>
-        buildServiceFields(service)
-      ),
-      ...totalsSummaryAdminList.flatMap((service) =>
         buildServiceFields(service)
       ),
       ...totalsSummaryAllTotalsRow.flatMap((service) =>
