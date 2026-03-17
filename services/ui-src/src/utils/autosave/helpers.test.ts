@@ -3,6 +3,8 @@ import {
   createTempDynamicId,
   getFieldParts,
   getFmapForm,
+  getValueToCombine,
+  isCombinedCalculationField,
   isFieldType,
   isFmapPct,
   isTempDynamicField,
@@ -98,6 +100,37 @@ describe("utils/autosave/helpers", () => {
     test("returns false", () => {
       const input = isTempDynamicField("other");
       expect(input).toBe(false);
+    });
+  });
+
+  describe("isCombinedCalculationField()", () => {
+    test("returns true", () => {
+      const input = isCombinedCalculationField(
+        "administrativeCosts_budgetCategory-totalComputable"
+      );
+      expect(input).toBe(true);
+    });
+
+    test("returns false", () => {
+      const input = isCombinedCalculationField("other");
+      expect(input).toBe(false);
+    });
+  });
+
+  describe("getValueToCombine()", () => {
+    test("returns value", () => {
+      const input = getValueToCombine(
+        "administrativeCosts_budgetCategory-totalComputable",
+        {
+          "administrativeCosts_subRecipients-totalComputable": "123.45",
+        }
+      );
+      expect(input).toBe(123.45);
+    });
+
+    test("returns zero for undefined", () => {
+      const input = getValueToCombine("other", {});
+      expect(input).toBe(0);
     });
   });
 });

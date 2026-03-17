@@ -129,8 +129,11 @@ export const SummationTable = ({
             <DynamicTableRows
               disabled={disabled}
               dynamicRowsTemplate={dynamicRowsTemplate}
+              emptyTableMessage={verbiage?.emptyTableMessage}
               formData={formData}
               formPercentage={0}
+              hasDynamicModalForm={false}
+              hasStaticRows={bodyRows.length > 0}
               tableId={tableId}
               updatedFieldsCallback={updatedFieldsCallback}
             />
