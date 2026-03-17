@@ -19,7 +19,6 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import {
   CalculationTable,
   DynamicTableProvider,
-  ModalCalculationTable,
   SummationTable,
 } from "components";
 // utils
@@ -176,18 +175,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
               id={id}
               order={index}
               report={report}
-              {...props}
-            />
-          </DynamicTableProvider>
-        );
-
-      case FormTableType.MODAL_CALCULATION:
-        return (
-          <DynamicTableProvider key={id}>
-            <ModalCalculationTable
-              disabled={fieldInputDisabled}
-              id={id}
-              key={id}
               {...props}
             />
           </DynamicTableProvider>
