@@ -1,3 +1,6 @@
+// types
+import { AnyObject } from "types";
+
 const DYNAMIC_FIELD_PREFIX = "tempDynamicField";
 
 export const createTempDynamicId = (name: string, dynamicId: string) => {
@@ -62,4 +65,21 @@ export const isFmapPct = (name: string) => {
 export const isTempDynamicField = (name: string) => {
   const { dynamicFieldId } = getFieldParts(name);
   return !!dynamicFieldId;
+};
+
+export const isCombinedCalculationField = (id: string) => {
+  const tableId = "administrativeCosts_budgetCategory";
+  return [
+    `${tableId}-totalComputable`,
+    `${tableId}-totalStateTerritoryShare`,
+    `${tableId}-totalFederalShare`,
+  ].includes(id);
+};
+
+export const getValueToCombine = (id: string, fieldData: AnyObject) => {
+  const tableId = "administrativeCosts_subRecipients";
+  const { fieldType } = getFieldParts(id);
+  const value = fieldData?.[`${tableId}-${fieldType}`] || 0;
+
+  return Number(value);
 };

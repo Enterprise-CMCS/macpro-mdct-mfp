@@ -66,6 +66,8 @@ const mockProps = {
     ],
   },
   formPercentage: 100,
+  hasDynamicModalForm: false,
+  hasStaticRows: false,
   tableId: mockTableId,
 };
 
