@@ -1,4 +1,4 @@
-import { NumberMask, PageTypes, Transformation } from "./formFields";
+import { FormJson, NumberMask, PageTypes, Transformation } from "./formFields";
 import { AnyObject, CustomHtmlElement } from "./other";
 import { ReportType } from "./reports";
 import {
@@ -74,6 +74,7 @@ export interface ReportFormFieldProps {
   disabled?: boolean;
   dynamicFields?: ReportFormField[];
   dynamicLabel?: string;
+  dynamicModalForm?: FormJson;
   heading?: string;
   hint?: any;
   label?: string;
@@ -114,8 +115,8 @@ export interface FormTable {
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
+    emptyTableMessage?: string;
     errorMessage?: string | CustomHtmlElement[];
-    modalButtonText?: string;
     percentage?: string;
     subtitle?: string | CustomHtmlElement[];
     title: string;
@@ -124,7 +125,6 @@ export interface FormTable {
 
 export enum FormTableType {
   CALCULATION = "Calculation",
-  MODAL_CALCULATION = "ModalCalculation",
   SUMMATION = "Summation",
 }
 
