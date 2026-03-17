@@ -167,7 +167,7 @@ describe("<AdminReview />", () => {
         expect(screen.getByRole("button", { name: "Unlock" })).toBeVisible();
       });
 
-      test("Disable unlock and approve buttons when report is unlocked", () => {
+      test("Disable unlock button when report is unlocked", () => {
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {
@@ -180,7 +180,7 @@ describe("<AdminReview />", () => {
         expect(screen.getByRole("button", { name: "Unlock" })).toBeDisabled();
       });
 
-      test("Enable unlock and approve buttons when report is locked", () => {
+      test("Enable unlock button when report is locked", () => {
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {
