@@ -3,7 +3,9 @@ import {
   FormTableType,
   FormTablesRoute,
   PageTypes,
+  ReportFormFieldType,
   ServiceFieldType,
+  ValidationType,
 } from "../../../../../utils/types";
 // utils
 import {
@@ -12,7 +14,7 @@ import {
   totalsSummaryHeaders,
 } from "./utils";
 
-const totalsSummaryTableId = "totals-summary-table";
+const totalsSummaryTableId = "totals_totalsSummary";
 const totalsSummaryBodyList = totalsSummary();
 const totalsSummaryFieldsToReturn = [
   ServiceFieldType.TOTAL_COMPUTABLE,
@@ -41,7 +43,7 @@ export const totalsSummaryRoute: FormTablesRoute = {
     },
   },
   form: {
-    id: "totals-summary",
+    id: "totalsSummary",
     tables: [
       {
         id: totalsSummaryTableId,
@@ -55,8 +57,20 @@ export const totalsSummaryRoute: FormTablesRoute = {
         tableType: FormTableType.CALCULATION,
       },
     ],
-    fields: totalsSummaryBodyList.flatMap((service) =>
-      buildServiceFields(service, totalsSummaryFieldsToReturn)
-    ),
+    fields: [
+      // hidden trigger field that enables rendering of the table
+      {
+        forTableOnly: true,
+        id: `${totalsSummaryTableId}-trigger`,
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT_OPTIONAL,
+        props: {
+          label: "Totals Summary Marker",
+        },
+      },
+      ...totalsSummaryBodyList.flatMap((service) =>
+        buildServiceFields(service, totalsSummaryFieldsToReturn)
+      ),
+    ],
   },
 };

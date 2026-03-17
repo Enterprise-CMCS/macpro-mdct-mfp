@@ -486,6 +486,11 @@ export const totalsSummary = () => [
     readOnly: true,
   },
   {
+    id: "totalsSummary_serviceTotals",
+    label: "Totals - Waivers, State Plan & Supplemental Services",
+    readOnly: true,
+  },
+  {
     id: "administrativeCosts_budgetCategory",
     label: "Administrative Costs",
     readOnly: true,
@@ -493,6 +498,12 @@ export const totalsSummary = () => [
   {
     id: "administrativeCosts_capacityBuilding",
     label: "Capacity Building",
+    readOnly: true,
+  },
+  {
+    id: "totalsSummary_allTotals",
+    label:
+      "Totals - Waivers, State Plan, & Supplemental Services,  Administrative Costs, and Capacity Building",
     readOnly: true,
   },
 ];

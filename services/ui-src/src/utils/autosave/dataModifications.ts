@@ -2,6 +2,7 @@
 import { AnyObject, DynamicFieldShape, ReportFormFieldType } from "types";
 // utils
 import {
+  calculateAggregateTotals,
   calculateShares,
   calculationTableDynamicTotalsOnChange,
   calculationTableDynamicTotalsOnSave,
@@ -148,7 +149,46 @@ export const updatedNumberFields = (
           ];
         });
 
-      return [...fields, ...updatedFields];
+      const { serviceTables, allTables } = calculateAggregateTotals(fieldData, {
+        total: "totalComputable",
+        percentageShare: "totalFederalShare",
+        remainingShare: "totalStateTerritoryShare",
+      });
+
+      const aggregateFields = [
+        {
+          name: "totalsSummary_serviceTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: serviceTables.total,
+        },
+        {
+          name: "totalsSummary_serviceTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: serviceTables.remainingShare,
+        },
+        {
+          name: "totalsSummary_serviceTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: serviceTables.percentageShare,
+        },
+        {
+          name: "totalsSummary_allTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: allTables.total,
+        },
+        {
+          name: "totalsSummary_allTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: allTables.remainingShare,
+        },
+        {
+          name: "totalsSummary_allTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: allTables.percentageShare,
+        },
+      ];
+
+      return [...fields, ...updatedFields, ...aggregateFields];
     }
 
     default:
