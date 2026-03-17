@@ -8,27 +8,23 @@ import {
   Table,
   TableCaption,
   Tbody,
-  Td,
   Text,
   Tfoot,
-  Th,
   Thead,
-  Tr,
   VisuallyHidden,
 } from "@chakra-ui/react";
 import { DynamicTableContext, DynamicTableRows } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 // types
-import {
-  AnyObject,
-  FormTable,
-  FormTableCell,
-  FormTableRow,
-  ReportShape,
-} from "types";
+import { AnyObject, FormTable, FormTableCell, ReportShape } from "types";
 // utils
-import { getFieldParts, parseCustomHtml, translate } from "utils";
+import {
+  calculationTableDynamicTotalsOnSave,
+  getFieldParts,
+  parseCustomHtml,
+  translate,
+} from "utils";
 
 export const CalculationTable = ({
   bodyRows,
@@ -44,7 +40,7 @@ export const CalculationTable = ({
   verbiage,
 }: Props) => {
   // Dynamic rows
-  const { addDynamicRow, displayCell } = useContext(DynamicTableContext);
+  const { addDynamicRow, generateRows } = useContext(DynamicTableContext);
 
   // Percentage field
   const percentageField = options?.percentageField;
@@ -58,20 +54,6 @@ export const CalculationTable = ({
 
   // Show error once if in a loop
   const showError = missingPercentage && order === 0;
-
-  // Set cell width based on number of columns
-  const firstRow = headRows[0];
-  const firstColumnWidth = dynamicRowsTemplate ? 30 : 36;
-  const optionsWidth = 7;
-  const otherColumnsWidth = 100 - firstColumnWidth;
-  const columnCount = firstRow.length - 1;
-  const remainingWidth = dynamicRowsTemplate
-    ? otherColumnsWidth - optionsWidth
-    : otherColumnsWidth;
-  const thWidth = (index: number) =>
-    index === 0 ? `${firstColumnWidth}%` : `${remainingWidth / columnCount}%`;
-  const thAlign = (index: number) =>
-    index > columnCount / 2 ? "right" : "left";
 
   // Disable fields if no percentage is set or report is submitted
   const isDisabled = disabled || missingPercentage;
@@ -88,50 +70,34 @@ export const CalculationTable = ({
     [formPercentage, report?.fieldData]
   );
 
-  const cellProps = useCallback(
+  // Use useCallback to reduce lookups
+  const cellPropsCallback = useCallback(
     (cell: FormTableCell) => ({
-      disabled: isDisabled,
-      formData,
       percentage: getPercentage(cell),
-      tableId,
     }),
-    [isDisabled, formData, tableId, getPercentage]
+    [formData, getPercentage]
   );
 
-  const generateRows = (
-    section: string,
-    row: FormTableRow,
-    rowIndex: number
-  ) => {
-    const Cell = section === "thead" ? Th : Td;
-    const content =
-      section === "thead" ? <VisuallyHidden>Options</VisuallyHidden> : null;
-    const rowId = section === "tbody" ? "thead" : section;
+  const sharedCellProps = {
+    columnCount: headRows?.[0].length || 0,
+    disabled: isDisabled,
+    dynamicRowsTemplate,
+    formData,
+    tableId,
+  };
 
-    //console.log("row: ", row);
-    //console.log("form data: ", formData);
-    return (
-      <Tr key={`${section}-row-${rowIndex}`}>
-        {row.map((cell, cellIndex: number) => (
-          <Cell
-            id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
-            key={`${section}-row-${rowIndex}-cell-${cellIndex}`}
-            sx={{ textAlign: thAlign(cellIndex), width: thWidth(cellIndex) }}
-          >
-            {displayCell({
-              cell,
-              columnId: `${section}-row-${rowIndex}-cell-0`,
-              rowId: `${rowId}-row-0-cell-${cellIndex}`,
-              rowIndex,
-              ...cellProps(cell),
-            })}
-          </Cell>
-        ))}
-        {dynamicRowsTemplate && (
-          <Cell sx={{ width: `${optionsWidth}%` }}>{content}</Cell>
-        )}
-      </Tr>
-    );
+  const updatedFieldsCallback = (
+    dynamicId: string,
+    localFieldData: AnyObject
+  ) => {
+    return calculationTableDynamicTotalsOnSave({
+      dynamicFieldId: dynamicId,
+      dynamicTemplateId: dynamicRowsTemplate?.id || "",
+      fieldData: localFieldData,
+      fieldValue: 0,
+      formId: "",
+      tableId,
+    });
   };
 
   return (
@@ -172,12 +138,24 @@ export const CalculationTable = ({
         </TableCaption>
         <Thead>
           {headRows.map((row, rowIndex: number) =>
-            generateRows("thead", row, rowIndex)
+            generateRows({
+              cellPropsCallback,
+              row,
+              rowIndex,
+              section: "thead",
+              ...sharedCellProps,
+            })
           )}
         </Thead>
         <Tbody>
           {bodyRows.map((row, rowIndex: number) =>
-            generateRows("tbody", row, rowIndex)
+            generateRows({
+              cellPropsCallback,
+              row,
+              rowIndex,
+              section: "tbody",
+              ...sharedCellProps,
+            })
           )}
           {dynamicRowsTemplate && (
             <DynamicTableRows
@@ -186,12 +164,19 @@ export const CalculationTable = ({
               formData={formData}
               formPercentage={formPercentage}
               tableId={tableId}
+              updatedFieldsCallback={updatedFieldsCallback}
             />
           )}
         </Tbody>
         <Tfoot>
           {footRows.map((row, rowIndex: number) =>
-            generateRows("tfoot", row, rowIndex)
+            generateRows({
+              cellPropsCallback,
+              row,
+              rowIndex,
+              section: "tfoot",
+              ...sharedCellProps,
+            })
           )}
         </Tfoot>
       </Table>
@@ -206,7 +191,7 @@ interface Props extends Omit<FormTable, "tableType"> {
   report?: ReportShape;
 }
 
-const sx = {
+export const sx = {
   error: {
     fontWeight: "bold",
     marginBottom: "spacer4",
@@ -234,6 +219,7 @@ const sx = {
     },
   },
   dynamicRowsHint: {
+    color: "gray_dark",
     marginBottom: "spacer2",
   },
   dynamicRowsButton: {
