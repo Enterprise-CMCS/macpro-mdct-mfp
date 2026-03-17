@@ -347,6 +347,13 @@ const sx = {
       textDecoration: "underline",
     },
   },
+  ".display-block": {
+    display: "block",
+    marginBottom: "spacer2",
+  },
+  ".display-block:last-of-type": {
+    marginBottom: 0,
+  },
   // nested child fields
   ".ds-c-choice__checkedChild.nested": {
     paddingY: "spacer_half",

@@ -167,7 +167,24 @@ const subRecipientsModalFieldsToReturn = [
 const subRecipientModalFieldsSettings = {
   [ServiceFieldType.NAME]: {
     props: {
-      hint: "Please use the same sub recipient name across multiple reports where possible. For example, if sub recipient “XYZ Company” conducts work for the MFP recipient for more than one quarter, use the same name “XYZ Company” across your MFP Financial Reporting Form.",
+      hint: [
+        {
+          type: "span",
+          content:
+            "Please use the same sub recipient name across multiple reports where possible. For example, if sub recipient “XYZ Company” conducts work for the MFP recipient for more than one quarter, use the same name “XYZ Company” across your MFP Financial Reporting Form.",
+          props: {
+            className: "display-block",
+          },
+        },
+        {
+          type: "span",
+          content:
+            "This will ensure that the data are helpful in supporting CMS and MFP recipient analysis of sub recipient information.",
+          props: {
+            className: "display-block",
+          },
+        },
+      ],
       label: "Sub Recipient",
     },
     options: {
