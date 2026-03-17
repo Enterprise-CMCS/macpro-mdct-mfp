@@ -127,6 +127,22 @@ export const calculateAggregateTotals = (
   fieldData: AnyObject,
   fieldSuffixesToCalculate: FieldSuffixesToCalculateType
 ) => {
+  // Return empty result if fieldData is not available
+  if (!fieldData) {
+    return {
+      serviceTables: {
+        percentageShare: 0,
+        remainingShare: 0,
+        total: 0,
+      } as CalculatedSharesType,
+      allTables: {
+        percentageShare: 0,
+        remainingShare: 0,
+        total: 0,
+      } as CalculatedSharesType,
+    };
+  }
+
   const serviceTableIds = [
     "qualifiedHcbs_statePlanServices",
     "qualifiedHcbs_1915cWaiverServices",

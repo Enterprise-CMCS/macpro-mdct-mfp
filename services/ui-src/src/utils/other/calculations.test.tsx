@@ -259,6 +259,16 @@ describe("utils/calculations", () => {
           remainingShare: 31.98,
           total: 246,
         },
+        serviceTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
+        allTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
       });
     });
 
@@ -284,6 +294,16 @@ describe("utils/calculations", () => {
           remainingShare: 15.99,
           total: 123,
         },
+        serviceTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
+        allTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
       });
     });
 
@@ -308,6 +328,16 @@ describe("utils/calculations", () => {
           percentageShare: 107.01,
           remainingShare: 15.99,
           total: 123,
+        },
+        serviceTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
+        allTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -372,6 +402,16 @@ describe("utils/calculations", () => {
           remainingShare: 31.98,
           total: 246,
         },
+        serviceTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
+        allTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
       });
     });
 
@@ -403,6 +443,16 @@ describe("utils/calculations", () => {
           remainingShare: 15.99,
           total: 123,
         },
+        serviceTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
+        allTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
       });
     });
 
@@ -433,6 +483,16 @@ describe("utils/calculations", () => {
           percentageShare: 107.01,
           remainingShare: 15.99,
           total: 123,
+        },
+        serviceTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
+        allTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -468,6 +528,16 @@ describe("utils/calculations", () => {
           percentageShare: 107.01,
           remainingShare: 15.99,
           total: 123,
+        },
+        serviceTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
+        },
+        allTables: {
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
