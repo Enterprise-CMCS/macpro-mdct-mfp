@@ -319,20 +319,11 @@ export const DynamicTableProvider = ({ children }: any) => {
       section === "thead" ? <VisuallyHidden>Options</VisuallyHidden> : null;
     const rowId = section === "tbody" ? "thead" : section;
 
-    const totalsRowStyle = isTotalsRow
-      ? {
-          td: {
-            backgroundColor: "gray_lighter",
-            border: "none",
-            fontWeight: "bold",
-            paddingInlineEnd: "spacer2",
-            paddingInlineStart: "spacer2",
-          },
-        }
-      : undefined;
-
     return (
-      <Tr key={`${section}-row-${rowIndex}`} sx={totalsRowStyle}>
+      <Tr
+        key={`${section}-row-${rowIndex}`}
+        className={isTotalsRow ? "totals-row" : ""}
+      >
         {row.map((cell, cellIndex: number) => (
           <Cell
             id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
