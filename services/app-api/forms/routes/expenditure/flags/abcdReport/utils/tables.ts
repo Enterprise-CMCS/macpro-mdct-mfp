@@ -500,12 +500,6 @@ export const totalsSummary = () => [
     label: "Capacity Building",
     readOnly: true,
   },
-  {
-    id: "totalsSummary_allTotals",
-    label:
-      "Totals - Waivers, State Plan, & Supplemental Services,  Administrative Costs, and Capacity Building",
-    readOnly: true,
-  },
 ];
 
 export const capacityBuilding = (prefix: string) => [
