@@ -196,6 +196,7 @@ const subRecipientModalFieldsSettings = {
     },
     options: {
       forTableOnly: false,
+      validation: ValidationType.NUMBER,
     },
   },
   [ServiceFieldType.PERCENTAGE_OVERRIDE]: {

@@ -121,7 +121,7 @@ export const AddEditCalculationModal = ({
     setFormData({});
     setIsEditing(false);
     setSubmitting(false);
-    
+
     modalDisclosure.onClose();
   };
 
