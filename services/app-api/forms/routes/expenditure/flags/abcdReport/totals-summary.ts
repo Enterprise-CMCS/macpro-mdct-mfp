@@ -4,7 +4,6 @@ import {
   FormTablesRoute,
   PageTypes,
   ReportFormFieldType,
-  ServiceFieldType,
   ValidationType,
 } from "../../../../../utils/types";
 // utils
@@ -15,11 +14,16 @@ import {
 } from "./utils";
 
 const totalsSummaryTableId = "totals_totalsSummary";
-const totalsSummaryBodyList = totalsSummary();
-const totalsSummaryFieldsToReturn = [
-  ServiceFieldType.TOTAL_COMPUTABLE,
-  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
-  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+const totalsSummaryServicesList = totalsSummary().slice(0, 5);
+const totalsSummaryServiceTotalRow = totalsSummary()[5];
+const totalsSummaryAdminList = totalsSummary().slice(6, 8);
+const totalsSummaryAllTotalsRow = [
+  {
+    id: "totalsSummary_allTotals",
+    label:
+      "Totals - Waivers, State Plan, & Supplemental Services,  Administrative Costs, and Capacity Building",
+    readOnly: true,
+  },
 ];
 
 export const totalsSummaryRoute: FormTablesRoute = {
@@ -48,11 +52,26 @@ export const totalsSummaryRoute: FormTablesRoute = {
       {
         id: totalsSummaryTableId,
         // Display table fields in rows using existing field IDs from source tables
-        bodyRows: totalsSummaryBodyList.map((service) => {
-          const bodyFields = buildServiceFields(service);
-          return [service.label, ...bodyFields];
-        }),
-        footRows: [],
+        bodyRows: [
+          ...totalsSummaryServicesList.map((service) => {
+            const bodyFields = buildServiceFields(service);
+            return [service.label, ...bodyFields];
+          }),
+          ...totalsSummaryAdminList.map((service) => {
+            const bodyFields = buildServiceFields(service);
+            return [service.label, ...bodyFields];
+          }),
+        ],
+        footRows: [
+          ...[totalsSummaryServiceTotalRow].map((service) => {
+            const footFields = buildServiceFields(service);
+            return [service.label, ...footFields];
+          }),
+          ...totalsSummaryAllTotalsRow.map((service) => {
+            const footFields = buildServiceFields(service);
+            return [service.label, ...footFields];
+          }),
+        ],
         headRows: [totalsSummaryHeaders],
         tableType: FormTableType.CALCULATION,
       },
@@ -68,8 +87,17 @@ export const totalsSummaryRoute: FormTablesRoute = {
           label: "Totals Summary Marker",
         },
       },
-      ...totalsSummaryBodyList.flatMap((service) =>
-        buildServiceFields(service, totalsSummaryFieldsToReturn)
+      ...totalsSummaryServicesList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      ...[totalsSummaryServiceTotalRow].flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      ...totalsSummaryAdminList.flatMap((service) =>
+        buildServiceFields(service)
+      ),
+      ...totalsSummaryAllTotalsRow.flatMap((service) =>
+        buildServiceFields(service)
       ),
     ],
   },
