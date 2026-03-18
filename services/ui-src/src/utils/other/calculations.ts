@@ -126,6 +126,7 @@ const sumSharesBySuffix = (
 export const calculateAggregateTotals = (
   fieldData: AnyObject,
   fieldSuffixesToCalculate: FieldSuffixesToCalculateType,
+  fieldId: string,
   tableId?: string,
   tableShares: CalculatedSharesType = {} as CalculatedSharesType
 ) => {
@@ -167,18 +168,27 @@ export const calculateAggregateTotals = (
   const calculateForTableIds = (tableIds: string[]) => {
     const result = {} as CalculatedSharesType;
 
-    for (const key of keys) {
-      const suffix = fieldSuffixesToCalculate[key];
-      const totalCents = tableIds
-        .filter((t) => t !== tableId)
-        .reduce(
-          (sum, tableId) =>
-            sum + toCents(getNumberValue(fieldData[`${tableId}-${suffix}`])),
-          0
+    const fieldIdPrefixIdx = fieldId.lastIndexOf("_");
+    const fieldIdPrefix = fieldId.substring(0, fieldIdPrefixIdx);
+    if (!tableIds.includes(fieldIdPrefix)) {
+      for (const key of keys) {
+        result[key] = toDecimal(toCents(getNumberValue(tableShares[key])));
+      }
+      return result;
+    } else {
+      for (const key of keys) {
+        const suffix = fieldSuffixesToCalculate[key];
+        const totalCents = tableIds
+          .filter((t) => t !== tableId)
+          .reduce(
+            (sum, tableId) =>
+              sum + toCents(getNumberValue(fieldData[`${tableId}-${suffix}`])),
+            0
+          );
+        result[key] = toDecimal(
+          totalCents + toCents(getNumberValue(tableShares[key]))
         );
-      result[key] = toDecimal(
-        totalCents + toCents(getNumberValue(tableShares[key]))
-      );
+      }
     }
 
     return result;
@@ -220,6 +230,7 @@ export const fieldTableTotals = ({
   const { serviceTables, allTables } = calculateAggregateTotals(
     fieldData,
     fieldSuffixesToCalculate,
+    fieldId,
     tableId,
     tableShares
   );
@@ -273,6 +284,7 @@ export const dynamicFieldTableTotals = ({
   const { serviceTables, allTables } = calculateAggregateTotals(
     fieldData,
     fieldSuffixesToCalculate,
+    dynamicFieldId,
     tableId,
     tableShares
   );

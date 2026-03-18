@@ -36,7 +36,6 @@ export const updatedNumberFields = (
     tableId,
   } = getFieldParts(name);
 
-  console.log("entered updated number fields");
   const percentageField = `fmap_${formId}Percentage`;
   const formPercentage = fieldData[percentageField] || 100;
   const fieldPercentageField = `${fieldId}-percentageOverride`;
@@ -163,7 +162,8 @@ export const updatedNumberFields = (
 
       const { serviceTables, allTables } = calculateAggregateTotals(
         updatedFieldData,
-        fieldMap
+        fieldMap,
+        fieldId
       );
 
       const aggregateFields = [
