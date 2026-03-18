@@ -42,12 +42,9 @@
     "dotenv": "^16.4.5",
     "jest": "30.3.0",
     "prompts": "^2.4.2",
-    "ts-jest": "29.2.3",
+    "ts-jest": "29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
-  },
-  "resolutions": {
-    "minimatch": "^10.2.4"
   },
   "jest": {
     "collectCoverageFrom": [
