@@ -3,8 +3,6 @@ import {
   FormTableType,
   FormTablesRoute,
   PageTypes,
-  ReportFormFieldType,
-  ValidationType,
 } from "../../../../../utils/types";
 // utils
 import {
@@ -14,10 +12,10 @@ import {
 } from "./utils";
 
 const totalsSummaryTableId = "totals_totalsSummary";
-const totalsSummaryServicesList = totalsSummary();
+const totalsSummaryServicesList = totalsSummary(totalsSummaryTableId);
 const totalsSummaryAllTotalsRow = [
   {
-    id: "totalsSummary_allTotals",
+    id: `${totalsSummaryTableId}_allTotals`,
     label:
       "Totals - Waivers, State Plan, & Supplemental Services,  Administrative Costs, and Capacity Building",
     readOnly: true,
@@ -45,7 +43,7 @@ export const totalsSummaryRoute: FormTablesRoute = {
     },
   },
   form: {
-    id: "totalsSummary",
+    id: "exp-totalsSummary",
     tables: [
       {
         id: totalsSummaryTableId,
@@ -63,16 +61,6 @@ export const totalsSummaryRoute: FormTablesRoute = {
       },
     ],
     fields: [
-      // hidden trigger field that enables rendering of the table
-      {
-        forTableOnly: true,
-        id: `${totalsSummaryTableId}-trigger`,
-        type: ReportFormFieldType.TEXT,
-        validation: ValidationType.TEXT_OPTIONAL,
-        props: {
-          label: "Totals Summary Marker",
-        },
-      },
       ...totalsSummaryServicesList.flatMap((service) =>
         buildServiceFields(service)
       ),
