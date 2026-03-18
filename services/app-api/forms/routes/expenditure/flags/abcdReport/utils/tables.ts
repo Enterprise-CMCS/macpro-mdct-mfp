@@ -500,6 +500,11 @@ export const totalsSummary = (prefix: string) => [
     label: "Capacity Building",
     readOnly: true,
   },
+  {
+    id: "administrativeCosts_subRecipients",
+    label: "Sub Recipients",
+    readOnly: true,
+  },
 ];
 
 export const capacityBuilding = (prefix: string) => [

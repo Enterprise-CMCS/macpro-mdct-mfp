@@ -170,7 +170,6 @@ export const updatedNumberFields = (
           value: tableValues[key as keyof typeof tableValues],
         }))
       );
-
       return [...fields, ...updatedFields, ...aggregateFields];
     }
 
