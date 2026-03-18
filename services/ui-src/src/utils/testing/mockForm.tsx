@@ -706,6 +706,11 @@ export const mockRETTableRowPage = {
   path: "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
 };
 
+export const mockFinancialReportingFormTableRowPage = {
+  name: "General Information",
+  path: "/expenditure/general-information",
+};
+
 export const mockChildRowPage = {
   name: "State or Territory-Specific Initiatives",
   path: "/wp/state-or-territory-specific-initiatives/initiatives",

@@ -1,5 +1,5 @@
 import { useLocation } from "react-router";
-import { ReportRoute, ReportType } from "types";
+import { ReportPageProgress, ReportRoute, ReportType } from "types";
 
 /**
  * WARNING: You probably want ReportContext.isReportPage instead.
@@ -50,3 +50,27 @@ export const useFindRoute = (
   }
   return calculatedRoutes;
 };
+
+const hasPath = (path: string) => (route: { path: string }) =>
+  route.path.includes(path);
+
+const isPath = (path: string) => (route: { path: string }) =>
+  route.path === path;
+
+export const routeChecker: RouteChecker = {
+  // Work Plan
+  isWorkPlanGeneralInformationPage: isPath("/wp/general-information"),
+  isWorkPlanInitiativesPage: isPath(
+    "/wp/state-or-territory-specific-initiatives/initiatives"
+  ),
+  // SAR
+  isSarRetParticipantsPage: isPath(
+    "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community"
+  ),
+  // Financial Reporting Form
+  isFinancialReportingFormPage: hasPath("expenditure"),
+};
+
+interface RouteChecker {
+  [key: string]: (route: ReportPageProgress | ReportRoute) => boolean;
+}
