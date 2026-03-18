@@ -152,7 +152,8 @@ export const calculateAggregateTotals = (
   ];
 
   const allTableIds = [
-    ...serviceTableIds,
+    //...serviceTableIds,
+    "totals_totalsSummary_serviceTotals",
     "administrativeCosts_budgetCategory",
     "administrativeCosts_capacityBuilding",
     "administrativeCosts_subRecipients",
@@ -163,6 +164,7 @@ export const calculateAggregateTotals = (
   >;
 
   const calculateForTableIds = (tableIds: string[]) => {
+    //console.log("table ids: ", tableIds);
     const result = {} as CalculatedSharesType;
 
     for (const key of keys) {
@@ -173,6 +175,7 @@ export const calculateAggregateTotals = (
         0
       );
       result[key] = toDecimal(totalCents);
+      //console.log("key, value ", key, result[key]);
     }
 
     return result;

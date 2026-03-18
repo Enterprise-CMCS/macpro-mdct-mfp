@@ -298,9 +298,9 @@ describe("utils/autosave/fields", () => {
         "totals_totalsSummary_serviceTotals-totalComputable": 0,
         "totals_totalsSummary_serviceTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalFederalShare": 0,
-        "totals_totals_totalsSummary_allTotals-totalComputable": 0,
-        "totals_totals_totalsSummary_allTotals-totalStateTerritoryShare": 0,
-        "totals_totals_totalsSummary_allTotals-totalFederalShare": 0,
+        "totals_totalsSummary_allTotals-totalComputable": 0,
+        "totals_totalsSummary_allTotals-totalStateTerritoryShare": 0,
+        "totals_totalsSummary_allTotals-totalFederalShare": 0,
       });
     });
   });
