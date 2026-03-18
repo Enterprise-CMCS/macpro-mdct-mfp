@@ -170,6 +170,7 @@ export const calculateAggregateTotals = (
 
     const fieldIdPrefixIdx = fieldId.lastIndexOf("_");
     const fieldIdPrefix = fieldId.substring(0, fieldIdPrefixIdx);
+    // if the changed field id is not part of the table ids, keep existing values
     if (!tableIds.includes(fieldIdPrefix)) {
       for (const key of keys) {
         result[key] = toDecimal(toCents(getNumberValue(tableShares[key])));
