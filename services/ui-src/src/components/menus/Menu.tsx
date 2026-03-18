@@ -1,11 +1,10 @@
-import { useContext } from "react";
+import { KeyboardEvent, useContext, useRef, useState } from "react";
 import { Link as RouterLink } from "react-router";
 // components
 import {
   Box,
   Button,
   Image,
-  Link,
   Menu as MenuRoot,
   MenuButton,
   MenuItem,
@@ -23,16 +22,47 @@ import logoutIcon from "assets/icons/icon_arrow_right_square.png";
 export const Menu = () => {
   const { logout } = useContext(UserContext);
   const { isMobile } = useBreakpoint();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  const closeMenuAndFocusTrigger = () => {
+    setIsMenuOpen(false);
+
+    // Defer focus until after Chakra completes its own close/focus handling.
+    setTimeout(() => {
+      menuButtonRef.current?.focus();
+    }, 0);
+  };
+
+  const handleMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    closeMenuAndFocusTrigger();
+  };
+
+  const handleLogOut = () => {
+    logout();
+    closeMenuAndFocusTrigger();
+  };
+
   return (
-    <MenuRoot offset={[8, 20]}>
+    <MenuRoot
+      offset={[8, 20]}
+      isOpen={isMenuOpen}
+      onOpen={() => setIsMenuOpen(true)}
+      onClose={closeMenuAndFocusTrigger}
+    >
       <Box role="group">
         <MenuButton
           as={Button}
+          ref={menuButtonRef}
           rightIcon={
             <Image src={chevronDownIcon} alt="Arrow down" sx={sx.menuIcon} />
           }
           sx={sx.menuButton}
           aria-label="my account"
+          aria-expanded={isMenuOpen}
+          aria-haspopup="menu"
           data-testid="header-menu-dropdown-button"
         >
           <MenuOption
@@ -43,11 +73,21 @@ export const Menu = () => {
           />
         </MenuButton>
       </Box>
-      <MenuList sx={sx.menuList} data-testid="header-menu-options-list">
-        <Link as={RouterLink} to="/profile" variant="unstyled">
+      <MenuList
+        as="ul"
+        role="menu"
+        sx={sx.menuList}
+        data-testid="header-menu-options-list"
+        onKeyDown={handleMenuKeyDown}
+      >
+        <Box as="li" role="none">
           <MenuItem
+            as={RouterLink}
+            to="/profile"
+            role="menuitem"
             sx={sx.menuItem}
             data-testid="header-menu-option-manage-account"
+            onClick={() => setIsMenuOpen(false)}
           >
             <MenuOption
               icon={editIcon}
@@ -55,15 +95,18 @@ export const Menu = () => {
               text="Manage Account"
             />
           </MenuItem>
-        </Link>
-        <MenuItem
-          onClick={logout}
-          sx={sx.menuItem}
-          tabIndex={0}
-          data-testid="header-menu-option-log-out"
-        >
-          <MenuOption icon={logoutIcon} text="Log Out" altText="Logout" />
-        </MenuItem>
+        </Box>
+        <Box as="li" role="none">
+          <MenuItem
+            onClick={handleLogOut}
+            role="menuitem"
+            sx={sx.menuItem}
+            tabIndex={0}
+            data-testid="header-menu-option-log-out"
+          >
+            <MenuOption icon={logoutIcon} text="Log Out" altText="Logout" />
+          </MenuItem>
+        </Box>
       </MenuList>
     </MenuRoot>
   );

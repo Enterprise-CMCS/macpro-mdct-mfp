@@ -64,7 +64,9 @@ Object.defineProperty(window, "matchMedia", {
 
 window.scrollBy = jest.fn();
 window.scrollTo = jest.fn();
-window.HTMLElement.prototype.scrollIntoView = jest.fn();
+const mockElementScrollIntoView = jest.fn();
+window.HTMLElement.prototype.scrollIntoView = mockElementScrollIntoView;
+window.HTMLElement.prototype.scrollTo = mockElementScrollIntoView;
 
 /* Mock Amplify */
 jest.mock("aws-amplify/api", () => ({
