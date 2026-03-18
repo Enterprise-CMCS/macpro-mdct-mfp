@@ -155,6 +155,7 @@ export const calculateAggregateTotals = (
     ...serviceTableIds,
     "administrativeCosts_budgetCategory",
     "administrativeCosts_capacityBuilding",
+    "administrativeCosts_subRecipients",
   ];
 
   const keys = Object.keys(fieldSuffixesToCalculate) as Array<

@@ -149,44 +149,27 @@ export const updatedNumberFields = (
           ];
         });
 
-      const { serviceTables, allTables } = calculateAggregateTotals(fieldData, {
+      const fieldMap = {
         total: "totalComputable",
         percentageShare: "totalFederalShare",
         remainingShare: "totalStateTerritoryShare",
-      });
+      };
+
+      const { serviceTables, allTables } = calculateAggregateTotals(
+        fieldData,
+        fieldMap
+      );
 
       const aggregateFields = [
-        {
-          name: "totalsSummary_serviceTotals-totalComputable",
+        ["serviceTotals", serviceTables],
+        ["allTotals", allTables],
+      ].flatMap(([tableName, tableValues]) =>
+        Object.entries(fieldMap).map(([key, fieldSuffix]) => ({
+          name: `totals_totalsSummary_${tableName}-${fieldSuffix}`,
           type: ReportFormFieldType.NUMBER,
-          value: serviceTables.total,
-        },
-        {
-          name: "totalsSummary_serviceTotals-totalFederalShare",
-          type: ReportFormFieldType.NUMBER,
-          value: serviceTables.percentageShare,
-        },
-        {
-          name: "totalsSummary_serviceTotals-totalStateTerritoryShare",
-          type: ReportFormFieldType.NUMBER,
-          value: serviceTables.remainingShare,
-        },
-        {
-          name: "totalsSummary_allTotals-totalComputable",
-          type: ReportFormFieldType.NUMBER,
-          value: allTables.total,
-        },
-        {
-          name: "totalsSummary_allTotals-totalFederalShare",
-          type: ReportFormFieldType.NUMBER,
-          value: allTables.percentageShare,
-        },
-        {
-          name: "totalsSummary_allTotals-totalStateTerritoryShare",
-          type: ReportFormFieldType.NUMBER,
-          value: allTables.remainingShare,
-        },
-      ];
+          value: tableValues[key as keyof typeof tableValues],
+        }))
+      );
 
       return [...fields, ...updatedFields, ...aggregateFields];
     }
