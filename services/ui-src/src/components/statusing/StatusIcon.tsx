@@ -3,9 +3,10 @@ import { Flex, Image, Text } from "@chakra-ui/react";
 import successIcon from "assets/icons/icon_check_circle.png";
 import errorIcon from "assets/icons/icon_error_circle.png";
 
-export const StatusIcon = ({ status }: { status?: boolean }) => {
+export const StatusIcon = ({ hideSuccess = false, status }: Props) => {
   switch (status) {
     case true:
+      if (hideSuccess) return <></>;
       return (
         <Flex sx={sx.status}>
           <Image src={successIcon} alt="Success notification" />
@@ -23,6 +24,11 @@ export const StatusIcon = ({ status }: { status?: boolean }) => {
       return <></>;
   }
 };
+
+interface Props {
+  hideSuccess?: boolean;
+  status?: boolean;
+}
 
 const sx = {
   status: {
