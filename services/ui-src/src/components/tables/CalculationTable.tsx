@@ -74,7 +74,7 @@ export const CalculationTable = ({
   const isTotalsRow = useCallback((row: FormTableCell[]) => {
     return row.some((cell) => {
       if (typeof cell === "string") return false;
-      return cell.id?.includes("totalsSummary_serviceTotals");
+      return cell.id?.includes("totals_totalsSummary_serviceTotals");
     });
   }, []);
 

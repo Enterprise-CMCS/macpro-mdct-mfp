@@ -121,12 +121,12 @@ export const calculationTableDynamicTotalsOnSave = ({
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
-      "totalsSummary_serviceTotals"
+      "totals_totalsSummary_serviceTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       allTables,
-      "totalsSummary_allTotals"
+      "totals_totals_totalsSummary_allTotals"
     ),
   ];
 
@@ -161,12 +161,12 @@ export const calculationTableTotalsOnSave = ({
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
-      "totalsSummary_serviceTotals"
+      "totals_totalsSummary_serviceTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       allTables,
-      "totalsSummary_allTotals"
+      "totals_totals_totalsSummary_allTotals"
     ),
   ];
 
@@ -241,12 +241,12 @@ export const calculationTableDynamicTotalsOnChange = ({
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
-      "totalsSummary_serviceTotals"
+      "totals_totalsSummary_serviceTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       allTables,
-      "totalsSummary_allTotals"
+      "totals_totals_totalsSummary_allTotals"
     ),
   };
 
@@ -282,12 +282,12 @@ export const calculationTableTotalsOnChange = ({
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
-      "totalsSummary_serviceTotals"
+      "totals_totalsSummary_serviceTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       allTables,
-      "totalsSummary_allTotals"
+      "totals_totals_totalsSummary_allTotals"
     ),
   };
 
