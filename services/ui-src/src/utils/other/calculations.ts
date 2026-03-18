@@ -125,7 +125,9 @@ const sumSharesBySuffix = (
 
 export const calculateAggregateTotals = (
   fieldData: AnyObject,
-  fieldSuffixesToCalculate: FieldSuffixesToCalculateType
+  fieldSuffixesToCalculate: FieldSuffixesToCalculateType,
+  tableId?: string,
+  tableShares: CalculatedSharesType = {} as CalculatedSharesType
 ) => {
   // Return empty result if fieldData is not available
   if (!fieldData) {
@@ -152,8 +154,7 @@ export const calculateAggregateTotals = (
   ];
 
   const allTableIds = [
-    //...serviceTableIds,
-    "totals_totalsSummary_serviceTotals",
+    ...serviceTableIds,
     "administrativeCosts_budgetCategory",
     "administrativeCosts_capacityBuilding",
     "administrativeCosts_subRecipients",
@@ -164,18 +165,20 @@ export const calculateAggregateTotals = (
   >;
 
   const calculateForTableIds = (tableIds: string[]) => {
-    //console.log("table ids: ", tableIds);
     const result = {} as CalculatedSharesType;
 
     for (const key of keys) {
       const suffix = fieldSuffixesToCalculate[key];
-      const totalCents = tableIds.reduce(
-        (sum, tableId) =>
-          sum + toCents(getNumberValue(fieldData[`${tableId}-${suffix}`])),
-        0
+      const totalCents = tableIds
+        .filter((t) => t !== tableId)
+        .reduce(
+          (sum, tableId) =>
+            sum + toCents(getNumberValue(fieldData[`${tableId}-${suffix}`])),
+          0
+        );
+      result[key] = toDecimal(
+        totalCents + toCents(getNumberValue(tableShares[key]))
       );
-      result[key] = toDecimal(totalCents);
-      //console.log("key, value ", key, result[key]);
     }
 
     return result;
@@ -216,7 +219,9 @@ export const fieldTableTotals = ({
 
   const { serviceTables, allTables } = calculateAggregateTotals(
     fieldData,
-    fieldSuffixesToCalculate
+    fieldSuffixesToCalculate,
+    tableId,
+    tableShares
   );
 
   return {
@@ -267,7 +272,9 @@ export const dynamicFieldTableTotals = ({
 
   const { serviceTables, allTables } = calculateAggregateTotals(
     fieldData,
-    fieldSuffixesToCalculate
+    fieldSuffixesToCalculate,
+    tableId,
+    tableShares
   );
 
   return {

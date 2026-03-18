@@ -35,6 +35,8 @@ export const updatedNumberFields = (
     formId,
     tableId,
   } = getFieldParts(name);
+
+  console.log("entered updated number fields");
   const percentageField = `fmap_${formId}Percentage`;
   const formPercentage = fieldData[percentageField] || 100;
   const fieldPercentageField = `${fieldId}-percentageOverride`;
@@ -117,6 +119,7 @@ export const updatedNumberFields = (
     case isFmapPct(fieldId): {
       const formId = getFmapForm(fieldId);
 
+      const updatedFieldData = structuredClone(fieldData);
       /*
        * Get totalComputable fields and update corresponding
        * totalFederalShare and totalStateTerritoryShare fields
@@ -135,6 +138,9 @@ export const updatedNumberFields = (
             percentage
           );
 
+          updatedFieldData[`${keyFieldId}-totalFederalShare`] = percentageShare;
+          updatedFieldData[`${keyFieldId}-totalStateTerritoryShare`] =
+            remainingShare;
           return [
             {
               name: `${keyFieldId}-totalFederalShare`,
@@ -156,7 +162,7 @@ export const updatedNumberFields = (
       };
 
       const { serviceTables, allTables } = calculateAggregateTotals(
-        fieldData,
+        updatedFieldData,
         fieldMap
       );
 

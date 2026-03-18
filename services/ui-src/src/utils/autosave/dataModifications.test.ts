@@ -282,7 +282,7 @@ describe("utils/autosave/dataModifications", () => {
           value: 0,
         },
         {
-          name: "totals_totalsSummary_allTotalstotalsSummary_allTotals-totalComputable",
+          name: "totals_totalsSummary_allTotals-totalComputable",
           type: ReportFormFieldType.NUMBER,
           value: 0,
         },
@@ -361,7 +361,7 @@ describe("utils/autosave/dataModifications", () => {
           value: 0,
         },
         {
-          name: "totals_totalsSummary_allTotalstotalsSummary_allTotals-totalComputable",
+          name: "totals_totalsSummary_allTotals-totalComputable",
           type: ReportFormFieldType.NUMBER,
           value: 0,
         },
@@ -440,7 +440,7 @@ describe("utils/autosave/dataModifications", () => {
           value: 0,
         },
         {
-          name: "totals_totalsSummary_allTotalstotalsSummary_allTotals-totalComputable",
+          name: "totals_totalsSummary_allTotals-totalComputable",
           type: ReportFormFieldType.NUMBER,
           value: 0,
         },
