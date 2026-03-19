@@ -1,4 +1,6 @@
-export default {
+import { SubmitReviewVerbiage } from "types";
+
+const submitReviewVerbiage: SubmitReviewVerbiage = {
   print: {
     printPageUrl: "/sar/export",
     printButtonText: "Review PDF",
@@ -11,13 +13,11 @@ export default {
       info: [
         {
           sectionHeader: "Ready to Submit?",
-          type: "text",
           content:
             "Double check that everything in your MFP SAR submission is accurate. You will be able to make edits after submitting if you contact your CMS MFP Project Officer to unlock your report while it is in “Submitted” status.",
         },
         {
           sectionHeader: "Compliance review",
-          type: "text",
           content:
             "Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made.",
         },
@@ -100,3 +100,5 @@ export default {
       "Some sections of the SAR submission have errors or are missing required responses. Ensure all required fields are completed with valid responses before submitting.",
   },
 };
+
+export default submitReviewVerbiage;

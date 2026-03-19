@@ -188,7 +188,7 @@ export const buildServiceFields = (
             },
             options: {
               type: ReportFormFieldType.TEXT,
-              validation: ValidationType.TEXT,
+              validation: ValidationType.TEXT_OPTIONAL,
               ...settings?.[ServiceFieldType.TITLE]?.options,
             },
           })
@@ -208,7 +208,6 @@ export const buildServiceFields = (
               ...settings?.[ServiceFieldType.BUDGETED_FTES]?.props,
             },
             options: {
-              validation: ValidationType.NUMBER,
               ...settings?.[ServiceFieldType.BUDGETED_FTES]?.options,
             },
           })
@@ -228,7 +227,6 @@ export const buildServiceFields = (
               ...settings?.[ServiceFieldType.FILLED_FTES]?.props,
             },
             options: {
-              validation: ValidationType.NUMBER,
               ...settings?.[ServiceFieldType.FILLED_FTES]?.options,
             },
           })

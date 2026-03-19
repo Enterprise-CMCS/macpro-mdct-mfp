@@ -4,21 +4,9 @@ import { StatusIcon } from "./StatusIcon";
 import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const statusIconComponent = (
+const statusIconComponent = (status?: boolean, hideSuccess?: boolean) => (
   <RouterWrappedComponent>
-    <StatusIcon status={true} />
-  </RouterWrappedComponent>
-);
-
-const statusIconComponentIncomplete = (
-  <RouterWrappedComponent>
-    <StatusIcon status={false} />
-  </RouterWrappedComponent>
-);
-
-const statusIconComponentTest = (
-  <RouterWrappedComponent>
-    <StatusIcon />
+    <StatusIcon status={status} hideSuccess={hideSuccess} />
   </RouterWrappedComponent>
 );
 
@@ -28,7 +16,7 @@ describe("<StatusIcon />", () => {
   });
 
   test("should render the correct status for complete rows", () => {
-    render(statusIconComponent);
+    render(statusIconComponent(true));
 
     const icon = screen.getByRole("img");
     expect(icon).not.toHaveAttribute("alt", "Error notification");
@@ -36,7 +24,7 @@ describe("<StatusIcon />", () => {
   });
 
   test("should render the correct status for incomplete rows", () => {
-    render(statusIconComponentIncomplete);
+    render(statusIconComponent(false));
 
     const icon = screen.getByRole("img");
     expect(icon).toHaveAttribute("alt", "Error notification");
@@ -44,9 +32,14 @@ describe("<StatusIcon />", () => {
   });
 
   test("should not render an image component if status is undefined", () => {
-    render(statusIconComponentTest);
+    render(statusIconComponent());
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
   });
 
-  testA11yAct(statusIconComponent);
+  test("should not render an image component if hideSuccess", () => {
+    render(statusIconComponent(true, true));
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+
+  testA11yAct(statusIconComponent(true));
 });
