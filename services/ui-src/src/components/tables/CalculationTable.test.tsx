@@ -1,5 +1,5 @@
 import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
@@ -16,24 +16,31 @@ import { useStore } from "utils";
 import {
   mockDynamicFieldId,
   mockDynamicRowsTemplate,
+  mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
   mockStateUserStore,
+  RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
-  register: () => {},
-  setValue: () => {},
+  register: jest.fn(),
+  setValue: jest.fn(),
   getValues: jest.fn(),
   trigger: mockTrigger,
 };
 const mockUseFormContext = useFormContext as unknown as jest.Mock<
   typeof useFormContext
 >;
-jest.mock("react-hook-form", () => ({
-  useFormContext: jest.fn(() => mockRhfMethods),
-}));
+jest.mock("react-hook-form", () => {
+  const actual = jest.requireActual("react-hook-form");
+  return {
+    __esModule: true,
+    ...actual,
+    useFormContext: jest.fn(() => mockRhfMethods),
+  };
+});
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
     ...mockRhfMethods,
@@ -203,14 +210,17 @@ const mockProps = {
   verbiage: {
     errorMessage: "Mock error",
     percentage: "Mock Percentage: {{percentage}}",
+    subtitle: "Mock table subtitle",
     title: "Mock table title",
   },
 };
 
 const tableComponent = (props = mockProps) => (
-  <DynamicTableProvider>
-    <CalculationTable {...props} />
-  </DynamicTableProvider>
+  <RouterWrappedComponent>
+    <DynamicTableProvider>
+      <CalculationTable {...props} />
+    </DynamicTableProvider>
+  </RouterWrappedComponent>
 );
 
 describe("<CalculationTable />", () => {
@@ -233,6 +243,9 @@ describe("<CalculationTable />", () => {
       name: "Mock table title",
     });
     expect(tableHeading).toBeVisible();
+
+    const subtitle = screen.getByText("Mock table subtitle");
+    expect(subtitle).toBeVisible();
 
     const pct = screen.getByText("Mock Percentage: 100%");
     expect(pct).toBeVisible();
@@ -388,6 +401,49 @@ describe("<CalculationTable />", () => {
 
       const updatedRows = tbody?.querySelectorAll("tr");
       expect(updatedRows).toHaveLength(2);
+    });
+
+    test("clicking add button opens modal", async () => {
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        report: {
+          fieldData: {
+            fmap_mockTablePercentage: 78,
+            [mockDynamicTemplateId]: [
+              {
+                id: mockDynamicFieldId,
+                name: mockDynamicFieldId,
+                category: "Mock Dynamic Row Category 1",
+              },
+            ],
+          },
+        },
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const button = screen.getByRole("button", {
+        name: "Mock dynamic row button",
+      });
+      await userEvent.click(button);
+
+      const modal = screen.getByRole("dialog", { name: "Add mock heading" });
+      expect(modal).toBeVisible();
+
+      const closeButton = screen.getByRole("button", {
+        name: "Close",
+      });
+      await userEvent.click(closeButton);
+      await waitFor(async () => {
+        const closedModal = screen.queryByRole("dialog", {
+          name: "Add mock heading",
+        });
+        await act(() => {
+          expect(closedModal).not.toBeVisible();
+        });
+      });
     });
   });
 
