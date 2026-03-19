@@ -11,6 +11,7 @@ import {
   sumOfRow,
   sumOfTwoRows,
   dynamicFieldTableTotals,
+  calculateAggregateTotals,
 } from "./calculations";
 import {
   mockDynamicFieldId,
@@ -259,14 +260,14 @@ describe("utils/calculations", () => {
           total: 246,
         },
         serviceTables: {
-          percentageShare: 214.02,
-          remainingShare: 31.98,
-          total: 246,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 214.02,
-          remainingShare: 31.98,
-          total: 246,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -294,14 +295,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -329,14 +330,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -402,14 +403,14 @@ describe("utils/calculations", () => {
           total: 246,
         },
         serviceTables: {
-          percentageShare: 214.02,
-          remainingShare: 31.98,
-          total: 246,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 214.02,
-          remainingShare: 31.98,
-          total: 246,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -443,14 +444,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -484,14 +485,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -529,16 +530,78 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
+    });
+  });
+
+  describe("calculateAggregateTotals()", () => {
+    const fieldSuffixesToCalculate = {
+      percentageShare: "percentageShare",
+      remainingShare: "remainingShare",
+      total: "total",
+    };
+    const qualifiedServicesTableId = "qualifiedHcbs_statePlanServices";
+    const qualifiedServicesFieldId1 =
+      "qualifiedHcbs_statePlanServices_rehabilitativeServices";
+    const qualifiedServicesFieldId2 =
+      "qualifiedHcbs_statePlanServices_homeHealthServices";
+    const tableShares = {
+      percentage: 0,
+      percentageShare: 107.01,
+      remainingShare: 15.99,
+      total: 123,
+    };
+
+    const fieldData = {
+      [`${qualifiedServicesFieldId1}-mockTotal`]: 0,
+      [`${qualifiedServicesFieldId1}-mockPercentageShare`]: 0,
+      [`${qualifiedServicesFieldId1}-mockRemainingShare`]: 0,
+
+      [`${qualifiedServicesFieldId2}-mockTotal`]: 123,
+      [`${qualifiedServicesFieldId2}-mockPercentageShare`]: 107.01,
+      [`${qualifiedServicesFieldId2}-mockRemainingShare`]: 15.99,
+
+      [`${qualifiedServicesTableId}-mockTotal`]: 123,
+      [`${qualifiedServicesTableId}-mockPercentageShare`]: 107.01,
+      [`${qualifiedServicesTableId}-mockRemainingShare`]: 15.99,
+    };
+
+    test("returns object with sum totals for fields", () => {
+      const { serviceTables, allTables } = calculateAggregateTotals(
+        fieldData,
+        fieldSuffixesToCalculate,
+        qualifiedServicesFieldId1,
+        qualifiedServicesTableId,
+        tableShares
+      );
+
+      expect(serviceTables).toEqual({
+        percentageShare: 107.01,
+        remainingShare: 15.99,
+        total: 123,
+      });
+      expect(allTables).toEqual({
+        percentageShare: 107.01,
+        remainingShare: 15.99,
+        total: 123,
+      });
+
+      /*
+      const updatedTableShares = {
+        percentage: 0,
+        percentageShare: 10,
+        remainingShare: 20,
+        total: 30,
+      }; */
     });
   });
 });

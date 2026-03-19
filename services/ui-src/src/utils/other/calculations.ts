@@ -168,17 +168,31 @@ export const calculateAggregateTotals = (
   const calculateForTableIds = (tableIds: string[]) => {
     const result = {} as CalculatedSharesType;
 
+    //console.log("table ids: ", tableIds);
+
+    //console.log("field id: ", fieldId);
     const fieldIdPrefixIdx = fieldId.lastIndexOf("_");
     const fieldIdPrefix = fieldId.substring(0, fieldIdPrefixIdx);
+
+    //console.log("field id prefix: ", fieldIdPrefix);
     // if the changed field id is not part of the table ids, keep existing values
     if (!tableIds.includes(fieldIdPrefix)) {
+      //console.log("entering");
       for (const key of keys) {
-        result[key] = toDecimal(toCents(getNumberValue(tableShares[key])));
+        const suffix = fieldSuffixesToCalculate[key];
+        const totalCents = tableIds.reduce(
+          (sum, tableId) =>
+            sum + toCents(getNumberValue(fieldData[`${tableId}-${suffix}`])),
+          0
+        );
+        result[key] = toDecimal(totalCents);
       }
+      //console.log("result: ", result);
       return result;
     } else {
       for (const key of keys) {
         const suffix = fieldSuffixesToCalculate[key];
+        //console.log("suffix: ", suffix);
         const totalCents = tableIds
           .filter((t) => t !== tableId)
           .reduce(
@@ -227,6 +241,12 @@ export const fieldTableTotals = ({
   const tableShares = sumSharesBySuffix(keys, fieldShares, (key) =>
     sumFields(fieldData, tableId, fieldSuffixesToCalculate[key], exclusions)
   );
+
+  //console.log("field data: ", fieldData);
+  //console.log("field id: ", fieldId);
+  //console.log("table id: ", tableId);
+  //console.log("table shares: ", tableShares);
+  //console.log("field suffixes: ", fieldSuffixesToCalculate);
 
   const { serviceTables, allTables } = calculateAggregateTotals(
     fieldData,
