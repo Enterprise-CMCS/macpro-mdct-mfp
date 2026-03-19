@@ -167,13 +167,13 @@ describe("<EntityCard />", () => {
       test("Clicking edit button opens the AddEditProgramModal", async () => {
         const editEntityButton = screen.getByText(editEntityButtonText);
         await userEvent.click(editEntityButton);
-        await expect(openAddEditEntityModal).toBeCalledTimes(1);
+        await expect(openAddEditEntityModal).toHaveBeenCalledTimes(1);
       });
 
       test("EntityCard opens the delete modal on remove click", async () => {
         const removeButton = screen.getByTestId("delete-entity-button");
         await userEvent.click(removeButton);
-        expect(openDeleteEntityModal).toBeCalledTimes(1);
+        expect(openDeleteEntityModal).toHaveBeenCalledTimes(1);
       });
 
       test("EntityCard opens the drawer on edit-details click", async () => {
@@ -181,7 +181,7 @@ describe("<EntityCard />", () => {
           enterEntityDetailsButtonText
         );
         await userEvent.click(editDetailsButton);
-        expect(mockOpenDrawer).toBeCalledTimes(1);
+        expect(mockOpenDrawer).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -205,7 +205,7 @@ describe("<EntityCard />", () => {
       test("EntityCard opens the delete modal on remove click", async () => {
         const removeButton = screen.getByTestId("delete-entity-button");
         await userEvent.click(removeButton);
-        expect(openDeleteEntityModal).toBeCalledTimes(1);
+        expect(openDeleteEntityModal).toHaveBeenCalledTimes(1);
       });
 
       test("EntityCard opens the drawer on enter-details click", async () => {
@@ -213,7 +213,7 @@ describe("<EntityCard />", () => {
           enterEntityDetailsButtonText
         );
         await userEvent.click(enterDetailsButton);
-        expect(mockOpenDrawer).toBeCalledTimes(1);
+        expect(mockOpenDrawer).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -262,7 +262,7 @@ describe("<EntityCard />", () => {
       const reportEntityButton = screen.getByTestId("report-button");
       expect(reportEntityButton).toBeVisible();
       await userEvent.click(reportEntityButton);
-      await expect(openAddEditEntityModal).toBeCalledTimes(1);
+      await expect(openAddEditEntityModal).toHaveBeenCalledTimes(1);
     });
 
     test("Completed evaluation plan card without OpenAddEditModal function doesn't show a button", async () => {
