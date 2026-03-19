@@ -29,7 +29,14 @@ export const checkInitiativeTopics = (fieldData: any, entities: any[]) => {
   //filter down to the values of the radio selection
   const values = filteredEntities?.flatMap((entity) =>
     entity?.initiative_wpTopic?.map((topic: AnyObject) => {
-      return topic?.value.trim();
+      return (
+        topic?.value
+          // Remove parentheses and content
+          ?.replaceAll(/\(.*?\)/g, "")
+          // Remove asterisks
+          .replaceAll("*", "")
+          .trim()
+      );
     })
   );
   //check if the values matches all the topics, if all topics is covered, return false
