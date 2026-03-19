@@ -270,7 +270,7 @@ describe("<ExportedReportPage />", () => {
         const reportType: any = "unknown report type";
         const report: ReportShape = mockReport!;
 
-        expect(() => reportTitle(reportType, report, undefined)).toThrowError(
+        expect(() => reportTitle(reportType, report, undefined)).toThrow(
           `The title for report type ${reportType} has not been implemented.`
         );
       });
