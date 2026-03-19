@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 // components
 import {
   Box,
@@ -11,9 +11,14 @@ import {
   Text,
   Tfoot,
   Thead,
+  useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import { DynamicTableContext, DynamicTableRows } from "components";
+import {
+  AddEditCalculationModal,
+  DynamicTableContext,
+  DynamicTableRows,
+} from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 // types
@@ -39,6 +44,23 @@ export const CalculationTable = ({
   report,
   verbiage,
 }: Props) => {
+  // Modal
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
+  const {
+    isOpen: calculationModalIsOpen,
+    onOpen: calculationModalOnOpenHandler,
+    onClose: calculationModalOnCloseHandler,
+  } = useDisclosure();
+  const openModal = (dynamicFieldId?: string) => {
+    setSelectedId(dynamicFieldId);
+    calculationModalOnOpenHandler();
+  };
+  const closeModal = () => {
+    setSelectedId(undefined);
+    calculationModalOnCloseHandler();
+  };
+  const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
+
   // Dynamic rows
   const { addDynamicRow, generateRows } = useContext(DynamicTableContext);
 
@@ -131,12 +153,31 @@ export const CalculationTable = ({
           </Text>
           <Button
             leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="" />}
-            onClick={() => addDynamicRow(dynamicRowsTemplate)}
+            onClick={
+              hasDynamicModalForm
+                ? () => openModal()
+                : () => addDynamicRow(dynamicRowsTemplate)
+            }
             sx={sx.dynamicRowsButton}
             variant="outline"
           >
             {dynamicRowsTemplate.verbiage.buttonText}
           </Button>
+
+          {hasDynamicModalForm && (
+            <AddEditCalculationModal
+              dynamicTemplateId={dynamicRowsTemplate.id}
+              form={dynamicRowsTemplate.props?.dynamicModalForm}
+              modalDisclosure={{
+                isOpen: calculationModalIsOpen,
+                onClose: closeModal,
+              }}
+              selectedId={selectedId}
+              report={report}
+              tableId={tableId}
+              userIsAdmin={false}
+            />
+          )}
         </>
       )}
 
@@ -170,8 +211,12 @@ export const CalculationTable = ({
             <DynamicTableRows
               disabled={isDisabled}
               dynamicRowsTemplate={dynamicRowsTemplate}
+              emptyTableMessage={verbiage?.emptyTableMessage}
               formData={formData}
               formPercentage={formPercentage}
+              hasDynamicModalForm={hasDynamicModalForm}
+              hasStaticRows={bodyRows.length > 0}
+              openModal={openModal}
               tableId={tableId}
               updatedFieldsCallback={updatedFieldsCallback}
             />

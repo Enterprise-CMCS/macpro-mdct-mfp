@@ -198,7 +198,7 @@ describe("<ChoiceListField />", () => {
       render(RadioComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
-      expect(mockTrigger).toBeCalled();
+      expect(mockTrigger).toHaveBeenCalled();
     });
 
     test("ChoiceList should render a normal Checkbox and triggers validation after first render if no value given", () => {
@@ -206,7 +206,7 @@ describe("<ChoiceListField />", () => {
       render(CheckboxComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
-      expect(mockTrigger).toBeCalled();
+      expect(mockTrigger).toHaveBeenCalled();
     });
 
     test("RadioField should render nested child fields for choices with children", () => {

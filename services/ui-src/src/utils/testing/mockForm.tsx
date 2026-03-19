@@ -800,3 +800,44 @@ export const mockDynamicRowsTemplate = {
     hint: "Mock dynamic row hint",
   },
 };
+
+export const mockDynamicRowsTemplateWithModalForm = {
+  ...mockDynamicRowsTemplate,
+  props: {
+    ...mockDynamicRowsTemplate.props,
+    dynamicModalForm: {
+      id: "mockDynamicModalFormId",
+      heading: {
+        add: "Add mock heading",
+        edit: "Edit mock heading",
+        subheading: "Add mock subheading",
+        subheadingEdit: "Edit mock subheading",
+      },
+      fields: [
+        {
+          id: `${mockDynamicTemplateId}-totalComputable`,
+          type: ReportFormFieldType.NUMBER,
+          validation: ValidationType.NUMBER_OPTIONAL,
+          props: {
+            label: "Mock modal total computable",
+            mask: NumberMask.CURRENCY,
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-percentageOverride`,
+          type: ReportFormFieldType.NUMBER,
+          validation: ValidationType.NUMBER_OPTIONAL,
+          props: {
+            label: "Mock modal percentage override",
+            mask: NumberMask.PERCENTAGE,
+          },
+        },
+      ],
+    },
+  },
+  verbiage: {
+    buttonText: "Mock dynamic row button",
+    emptyTableMessage: "Mock dynamic empty table message",
+    hint: "Mock dynamic row hint",
+  },
+};

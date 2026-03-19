@@ -16,17 +16,30 @@ import {
 } from "@chakra-ui/react";
 // assets
 import closeIcon from "assets/icons/icon_close.png";
+// types
+import { AnyObject } from "types";
+// utils
 import { renderHtml } from "utils";
 
 export const Modal = ({
-  modalDisclosure,
-  content,
-  onConfirmHandler,
-  submitting,
-  formId,
   children,
+  content,
+  formId,
+  handleSubmit,
+  modalDisclosure,
+  nestedForm = false,
+  onConfirmHandler,
   submitButtonDisabled,
+  submitting,
 }: Props) => {
+  const submitButtonProps: AnyObject = {};
+
+  if (nestedForm) {
+    submitButtonProps.onClick = handleSubmit;
+  } else {
+    submitButtonProps.form = formId;
+  }
+
   return (
     <ChakraModal
       isOpen={modalDisclosure.isOpen}
@@ -54,15 +67,15 @@ export const Modal = ({
           </Button>
         </Flex>
         <ModalBody sx={sx.modalBody}>{children}</ModalBody>
-        {content.actionButtonText && content.actionButtonText !== "" && (
+        {content.actionButtonText && (
           <ModalFooter sx={sx.modalFooter}>
-            {formId && content.actionButtonText !== "" && (
+            {formId && (
               <Button
                 sx={sx.action}
-                form={formId}
                 type="submit"
                 data-testid="modal-submit-button"
                 disabled={submitButtonDisabled}
+                {...submitButtonProps}
               >
                 {submitting ? <Spinner size="md" /> : content.actionButtonText}
               </Button>
@@ -92,20 +105,22 @@ export const Modal = ({
 };
 
 interface Props {
-  modalDisclosure: {
-    isOpen: boolean;
-    onClose: any;
-  };
+  children?: ReactNode;
   content: {
     heading: string;
     subheading?: string;
     actionButtonText: string | ReactNode;
     closeButtonText?: string;
   };
-  submitting?: boolean;
-  onConfirmHandler?: Function;
   formId?: string;
-  children?: ReactNode;
+  handleSubmit?: Function;
+  modalDisclosure: {
+    isOpen: boolean;
+    onClose: any;
+  };
+  nestedForm?: boolean;
+  onConfirmHandler?: Function;
+  submitting?: boolean;
   [key: string]: any;
 }
 

@@ -319,6 +319,15 @@ export const dynamicFieldTableTotals = ({
   };
 };
 
+export const combinedSum = (values: number[]) => {
+  const totalCents = values.reduce((sum, val) => {
+    const n = Number(val);
+    return sum + (Number.isNaN(n) ? 0 : toCents(n));
+  }, 0);
+
+  return toDecimal(totalCents);
+};
+
 interface DynamicFieldTableTotalsType {
   fieldData: AnyObject;
   dynamicFieldId: string;
