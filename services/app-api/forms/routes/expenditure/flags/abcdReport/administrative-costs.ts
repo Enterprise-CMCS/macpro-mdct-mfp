@@ -119,7 +119,7 @@ const capacityBuildingFooterFieldsToReturn = [
   ServiceFieldType.TOTAL_FEDERAL_SHARE,
 ];
 
-// Sub Recipients Table
+// Sub Recipients table
 const subRecipientsFootList = [
   {
     id: subRecipientsTableId,
@@ -127,11 +127,153 @@ const subRecipientsFootList = [
     readOnly: true,
   },
 ];
-
 const subRecipientsFooterFieldsToReturn = [
+  ServiceFieldType.TOTAL_COMPUTABLE,
   ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
   ServiceFieldType.TOTAL_FEDERAL_SHARE,
 ];
+
+// Sub Recipients table - dynamic rows
+const subRecipientsDynamicRowId = `${subRecipientsTableId}_subRecipients`;
+const subRecipientsDynamicBodyList = [
+  {
+    id: subRecipientsDynamicRowId,
+    label: "Sub Recipients",
+    readOnly: true,
+  },
+];
+const subRecipientsDynamicFieldsToReturn = [
+  ServiceFieldType.NAME,
+  ServiceFieldType.DESCRIPTION,
+  ServiceFieldType.TOTAL_COMPUTABLE,
+  ServiceFieldType.PERCENTAGE_OVERRIDE,
+  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+];
+
+// Sub Recipients table - modal
+const subRecipientsModalList = [
+  {
+    id: subRecipientsDynamicRowId,
+    label: "Sub Recipients",
+  },
+];
+const subRecipientsModalFieldsToReturn = [
+  ServiceFieldType.NAME,
+  ServiceFieldType.DESCRIPTION,
+  ServiceFieldType.TOTAL_COMPUTABLE,
+  ServiceFieldType.PERCENTAGE_OVERRIDE,
+];
+const subRecipientModalFieldsSettings = {
+  [ServiceFieldType.NAME]: {
+    props: {
+      hint: [
+        {
+          type: "span",
+          content:
+            "Please use the same sub recipient name across multiple reports where possible. For example, if sub recipient “XYZ Company” conducts work for the MFP recipient for more than one quarter, use the same name “XYZ Company” across your MFP Financial Reporting Form.",
+          props: {
+            className: "display-block",
+          },
+        },
+        {
+          type: "span",
+          content:
+            "This will ensure that the data are helpful in supporting CMS and MFP recipient analysis of sub recipient information.",
+          props: {
+            className: "display-block",
+          },
+        },
+      ],
+      label: "Sub Recipient",
+    },
+    options: {
+      forTableOnly: false,
+    },
+  },
+  [ServiceFieldType.DESCRIPTION]: {
+    props: {
+      hint: "Describe in 100 characters or less the type of work this sub recipient does for your state or territory. Include the scope of their work, including which MFP populations the sub recipient supports, and the activities and deliverables the sub recipient completes. Note how the sub recipient’s work supports the goals of the MFP program.",
+      label: "Describe Statement of Work (SOW)",
+      maxLength: 100,
+    },
+    options: {
+      forTableOnly: false,
+      validation: {
+        type: ValidationType.TEXT_CUSTOM,
+        options: {
+          maxLength: 100,
+        },
+      },
+    },
+  },
+  [ServiceFieldType.TOTAL_COMPUTABLE]: {
+    props: {
+      label: "Expenditures",
+    },
+    options: {
+      forTableOnly: false,
+      validation: ValidationType.NUMBER,
+    },
+  },
+  [ServiceFieldType.PERCENTAGE_OVERRIDE]: {
+    props: {
+      label: "Override % (optional)",
+    },
+    options: {
+      forTableOnly: false,
+    },
+  },
+};
+
+const subRecipientsDynamicRowsTemplate = {
+  forTableOnly: true,
+  id: subRecipientsDynamicRowId,
+  props: {
+    label: "Sub Recipients",
+    dynamicFields: subRecipientsDynamicBodyList.flatMap((service) =>
+      buildServiceFields(service, subRecipientsDynamicFieldsToReturn)
+    ),
+    dynamicModalForm: {
+      id: "add-sub-recipient-form",
+      heading: {
+        add: "Add Sub Recipient",
+        edit: "Edit Sub Recipient",
+      },
+      fields: subRecipientsModalList.flatMap((service) =>
+        buildServiceFields(
+          service,
+          subRecipientsModalFieldsToReturn,
+          subRecipientModalFieldsSettings
+        )
+      ),
+    },
+  },
+  type: ReportFormFieldType.DYNAMIC_OBJECT,
+  validation: {
+    type: ValidationType.DYNAMIC_OPTIONAL,
+    options: {
+      dynamicFieldValidations: {
+        name: ValidationType.TEXT_OPTIONAL,
+        description: ValidationType.TEXT_OPTIONAL,
+        totalComputable: ValidationType.NUMBER_OPTIONAL,
+        percentageOverride: {
+          type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+          options: {
+            boundary: 100,
+            comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+          },
+        },
+        totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+        totalFederalShare: ValidationType.NUMBER_OPTIONAL,
+      },
+    },
+  },
+  verbiage: {
+    buttonText: "Add sub recipient",
+    hint: "To add a sub recipient, click the “Add sub recipient” button below.",
+  },
+};
 
 // Personnel table
 const personnelFootList = [
@@ -292,20 +434,39 @@ export const administrativeCostsRoute: FormTablesRoute = {
       {
         id: subRecipientsTableId,
         bodyRows: [],
+        dynamicRowsTemplate: subRecipientsDynamicRowsTemplate,
         footRows: subRecipientsFootList.map((service) => {
           return [
             "Totals",
             "",
+            ...buildServiceFields(
+              service,
+              subRecipientsFooterFieldsToReturn.slice(0, 1)
+            ),
             "",
-            "",
-            ...buildServiceFields(service, subRecipientsFooterFieldsToReturn),
+            ...buildServiceFields(
+              service,
+              subRecipientsFooterFieldsToReturn.slice(1)
+            ),
           ];
         }),
         headRows: [subRecipientsHeaders],
-        tableType: FormTableType.MODAL_CALCULATION,
+        tableType: FormTableType.CALCULATION,
         verbiage: {
-          modalButtonText: "Add sub recipient",
           percentage: "Administrative Costs Percentage: {{percentage}}",
+          subtitle: [
+            {
+              type: "p",
+              content:
+                "Organizations that provide Medicaid MFP enrollees with qualified services (i.e., a community partner or home health agency) are considered “sub recipients,” as they receive payment directly from the state.",
+            },
+            {
+              type: "p",
+              content:
+                "While this section is optional, the information can help CMS better understand your state’s demonstration. This information was not previously reported in the Excel version of the MFP Financial Reporting Form and is new to reporting in the Medicaid Data Collection Tool. As noted above, if an MFP recipient is claiming less than 100%, enter the relevant rate in the <b>Override % column</b>.",
+            },
+          ],
+          emptyTableMessage: "No Sub Recipients added.",
           title: "Sub Recipients",
         },
       },
@@ -322,6 +483,7 @@ export const administrativeCostsRoute: FormTablesRoute = {
         headRows: [personnelHeaders],
         tableType: FormTableType.SUMMATION,
         verbiage: {
+          emptyTableMessage: "No Personnel added.",
           subtitle: [
             {
               type: "p",
@@ -370,6 +532,15 @@ export const administrativeCostsRoute: FormTablesRoute = {
         buildServiceFields(service, capacityBuildingFooterFieldsToReturn)
       ),
 
+      // Sub Recipients table
+      ...subRecipientsFootList.flatMap((service) =>
+        buildServiceFields(service, subRecipientsFooterFieldsToReturn)
+      ),
+      subRecipientsDynamicRowsTemplate,
+      ...subRecipientsDynamicBodyList.flatMap((service) =>
+        buildServiceFields(service, subRecipientsFooterFieldsToReturn)
+      ),
+
       // Personnel table
       ...personnelFootList.flatMap((service) =>
         buildServiceFields(service, personnelFooterFieldsToReturn)
@@ -377,9 +548,6 @@ export const administrativeCostsRoute: FormTablesRoute = {
       personnelDynamicRowsTemplate,
       ...personnelDynamicBodyList.flatMap((service) =>
         buildServiceFields(service, personnelFooterFieldsToReturn)
-      ),
-      ...subRecipientsFootList.flatMap((service) =>
-        buildServiceFields(service, subRecipientsFooterFieldsToReturn)
       ),
       {
         id: "administrativeCosts_narrative",
