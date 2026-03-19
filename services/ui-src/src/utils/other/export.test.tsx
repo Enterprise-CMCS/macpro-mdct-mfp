@@ -7,7 +7,11 @@ import {
   renderDefaultFieldResponse,
   renderDataCell,
 } from "./export";
-import { mockFormField, mockNestedFormField } from "utils/testing/setupJest";
+import {
+  mockFormField,
+  mockNestedFormField,
+  mockOptionalFormField,
+} from "utils/testing/setupJest";
 import { render, screen } from "@testing-library/react";
 
 const emailInput: FormField = {
@@ -77,6 +81,16 @@ describe("utils/export", () => {
     test("Correctly renders a link or url field", () => {
       const result = renderResponseData(mockFormField, emailInput);
       expect(result.props.children.id).toEqual("email-field-id");
+    });
+
+    test("renders required message", () => {
+      render(renderResponseData(mockFormField, null));
+      expect(screen.getByText("Not answered, required")).toBeVisible();
+    });
+
+    test("renders optional message", () => {
+      render(renderResponseData(mockOptionalFormField, null));
+      expect(screen.getByText("Not answered, optional")).toBeVisible();
     });
   });
 

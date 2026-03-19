@@ -114,27 +114,43 @@ export const renderDynamicDataCell = (fieldResponseData: AnyObject) => {
 export const renderResponseData = (
   formField: FormField,
   fieldResponseData: any,
-  notApplicable?: boolean
+  notApplicable: boolean = false
 ) => {
+  const fieldValidation =
+    typeof formField.validation === "object"
+      ? formField.validation.type
+      : formField.validation;
+  const isOptional = fieldValidation.toLowerCase().includes("optional");
+
+  const {
+    exportVerbiage: { missingEntry },
+  } = getReportVerbiage();
   const isChoiceListField = ["checkbox", "radio"].includes(formField.type);
-  const { exportVerbiage } = getReportVerbiage();
-  // check for and handle no response
-  const hasResponse: boolean = isChoiceListField
+  const hasResponse = isChoiceListField
     ? fieldResponseData?.length
     : fieldResponseData;
   const missingEntryVerbiage = notApplicable
-    ? exportVerbiage.missingEntry.notApplicable
-    : exportVerbiage.missingEntry.noResponse;
+    ? missingEntry.notApplicable
+    : missingEntry.noResponse;
   const missingEntryStyle = notApplicable ? sx.notApplicable : sx.noResponse;
-  if (!hasResponse)
-    return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;
+
+  // check for and handle no response
+  if (!hasResponse) {
+    if (isOptional) {
+      return <Text>{missingEntryVerbiage}, optional</Text>;
+    }
+    return <Text sx={missingEntryStyle}>{missingEntryVerbiage}, required</Text>;
+  }
+
   // handle choice list fields (checkbox, radio)
   if (isChoiceListField) {
     return renderChoiceListFieldResponse(formField, fieldResponseData);
   }
+
   // check for and handle link fields (email, url)
   const { isLink, isEmail } = checkLinkTypes(formField);
   if (isLink) return renderLinkFieldResponse(fieldResponseData, isEmail);
+
   // handle all other field types
   return renderDefaultFieldResponse(formField, fieldResponseData);
 };

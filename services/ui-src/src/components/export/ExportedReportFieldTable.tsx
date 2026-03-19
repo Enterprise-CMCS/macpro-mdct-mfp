@@ -13,6 +13,7 @@ import {
   FieldChoice,
   ReportStatus,
   HeadingLevel,
+  ReportShape,
 } from "types";
 // utils
 import { getReportVerbiage, useStore } from "utils";
@@ -21,15 +22,17 @@ export const ExportedReportFieldTable = ({
   section,
   headingLevel = "h3",
 }: Props) => {
-  const { report } = useStore() ?? {};
+  const { report = {} as ReportShape } = useStore();
 
-  const { exportVerbiage } = getReportVerbiage(report?.reportType);
+  const { exportVerbiage } = getReportVerbiage(report.reportType);
   const { tableHeaders } = exportVerbiage;
-  const pageType = section.pageType;
+  const pageType = section.pageType || "";
   const formFields =
-    pageType === "drawer" ? section.drawerForm?.fields : section.form?.fields;
+    (pageType === "drawer"
+      ? section.drawerForm?.fields
+      : section.form?.fields) || [];
 
-  const formHasOnlyDynamicFields = formFields?.every(
+  const formHasOnlyDynamicFields = formFields.every(
     (field: FormField | FormLayoutElement) => field.type === "dynamic"
   );
   const twoColumnHeaderItems = [tableHeaders.indicator, tableHeaders.response];
@@ -41,23 +44,35 @@ export const ExportedReportFieldTable = ({
     ? twoColumnHeaderItems
     : threeColumnHeaderItems;
 
-  const reportType = report?.reportType as ReportType;
+  const reportType = report.reportType as ReportType;
   const hideHintText = reportType === ReportType.WP;
   const entityType = section.entityType;
 
+  // SAR "General Information" section layout is a unique case with multiple section headings within the same page
+  if (reportType === ReportType.SAR && section.name === "General Information") {
+    return renderGeneralInformation(
+      exportVerbiage,
+      formFields,
+      pageType,
+      entityType,
+      headingLevel
+    );
+  }
+
+  const nonTableFields = formFields.filter((f) => !f.forTableOnly);
+  const currentLevel = parseInt(headingLevel.charAt(1), 10);
+  const nextLevel = currentLevel + 1;
+  const nextHeadingLevel = `h${nextLevel}`;
+
   return (
-    // SAR "General Information" section layout is a unique case with multiple section headings within the same page
-    section.name === "General Information" ? (
-      renderGeneralInformation(
-        exportVerbiage,
-        formFields!,
-        pageType!,
-        entityType,
-        headingLevel
-      )
-    ) : (
+    <>
+      {nonTableFields?.[0]?.props?.title && (
+        <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
+          {nonTableFields[0].props.title}
+        </Heading>
+      )}
       <Table
-        sx={sx.root}
+        sx={sx.table}
         className={formHasOnlyDynamicFields ? "two-column" : ""}
         content={{
           headRow: headRowItems,
@@ -65,13 +80,13 @@ export const ExportedReportFieldTable = ({
         data-testid="exportTable"
       >
         {renderFieldTableBody(
-          formFields!,
-          pageType!,
+          nonTableFields,
+          pageType,
           !hideHintText,
           entityType
         )}
       </Table>
-    )
+    </>
   );
 };
 
@@ -82,13 +97,13 @@ export const renderGeneralInformation = (
   entityType?: string,
   headingLevel?: HeadingLevel
 ) => {
-  const { report } = useStore();
+  const { report = {} as ReportShape } = useStore();
 
   // check if this was a resubmission
   const isNotResubmission =
-    (report?.reportType === "SAR" && !report?.submissionCount) ||
-    (report?.status === ReportStatus.SUBMITTED &&
-      report?.submissionCount! === 1 &&
+    (report.reportType === "SAR" && !report.submissionCount) ||
+    (report.status === ReportStatus.SUBMITTED &&
+      report.submissionCount === 1 &&
       report.locked);
 
   const headings = verbiage.generalInformationTable.headings;
@@ -123,13 +138,13 @@ export const renderGeneralInformation = (
     return (
       <Box key={idx}>
         {!isNotResubmission ||
-        (isNotResubmission && heading != "Resubmission Information") ? (
+        (isNotResubmission && heading !== "Resubmission Information") ? (
           <>
             <Heading as={headingLevel} sx={sx.heading}>
               {heading}
             </Heading>
             <Table
-              sx={sx.root}
+              sx={sx.table}
               content={{
                 headRow: [
                   verbiage.reportPage.sarDetailsTable.headers.indicator,
@@ -138,8 +153,8 @@ export const renderGeneralInformation = (
               }}
             >
               {renderFieldTableBody(
-                getSectionFormFields(idx, formFields!),
-                pageType!,
+                getSectionFormFields(idx, formFields),
+                pageType,
                 false,
                 entityType
               )}
@@ -191,7 +206,7 @@ export const renderFieldTableBody = (
   };
 
   // map through form fields and call renderer
-  formFields?.map((field: FormField | FormLayoutElement) => {
+  formFields.map((field: FormField | FormLayoutElement) => {
     if (isFieldElement(field)) {
       renderFieldRow(field);
     }
@@ -206,30 +221,31 @@ export interface Props {
 }
 
 const sx = {
-  root: {
+  table: {
     "@media print": {
       pageBreakInside: "avoid",
     },
-    margin: "2rem 0 2rem 0",
+    margin: 0,
+    marginTop: "spacer3",
     "tr, th": {
       verticalAlign: "top",
       lineHeight: "base",
       borderBottom: "1px solid",
       borderColor: "gray_lighter",
-      paddingLeft: "0",
     },
     thead: {
       //this will prevent generating a new header whenever the table spills over in another page
       display: "table-row-group",
     },
     td: {
+      border: 0,
+      color: "base",
+      fontWeight: "normal",
+      padding: "spacerhalf",
+      paddingLeft: 0,
       p: {
         lineHeight: "1.25rem",
       },
-      padding: "0.75rem 0.5rem 0.75rem 0",
-      borderStyle: "none",
-      fontWeight: "normal",
-      color: "base",
       ".shrink &": {
         padding: "0.375rem 0rem",
       },
@@ -238,10 +254,12 @@ const sx = {
       },
     },
     th: {
-      paddingBottom: "0.375rem",
+      color: "gray",
       fontWeight: "bold",
       lineHeight: "lg",
-      color: "gray",
+      padding: "spacerhalf",
+      paddingLeft: 0,
+      paddingTop: 0,
       ".shrink &": {
         padding: "0.375rem 0rem",
       },
@@ -261,5 +279,11 @@ const sx = {
     fontSize: "xl",
     fontWeight: "bold",
     color: "black",
+  },
+  subHeading: {
+    fontSize: "lg",
+    "& + table": {
+      marginTop: "spacer2",
+    },
   },
 };
