@@ -3277,7 +3277,7 @@ __metadata:
     "@types/node": "npm:^22.18.13"
     "@types/yargs": "npm:^17.0.33"
     amazon-user-pool-srp-client: "npm:^1.0.4"
-    aws-cdk: "npm:^2.1029.0"
+    aws-cdk: "npm:^2.1112.0"
     aws-cdk-lib: "npm:^2.243.0"
     aws-cdk-local: "npm:^2.19.2"
     constructs: "npm:^10.4.2"
