@@ -1,6 +1,7 @@
 {
   "name": "mdct-mfp",
   "version": "1.0.0",
+  "private": true,
   "description": "",
   "homepage": "https://github.com/Enterprise-CMCS/macpro-mdct-mfp#readme",
   "bugs": {
@@ -15,6 +16,17 @@
   "directories": {
     "test": "tests"
   },
+  "workspaces": [
+    "cli",
+    "deployment",
+    "services/app-api",
+    "services/database",
+    "services/topics",
+    "services/ui",
+    "services/ui-auth",
+    "services/ui-src",
+    "tests"
+  ],
   "type": "module",
   "main": "index.js",
   "scripts": {

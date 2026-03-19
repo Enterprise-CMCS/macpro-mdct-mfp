@@ -64,9 +64,6 @@
     "vite": "^6.4.1",
     "vite-tsconfig-paths": "^5.1.4"
   },
-  "resolutions": {
-    "@tootallnate/once": "^3.0.1"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -121,6 +118,5 @@
     ],
     "testEnvironment": "<rootDir>/src/utils/testing/testEnv.js",
     "verbose": true
-  },
-  "packageManager": "yarn@4.12.0"
+  }
 }

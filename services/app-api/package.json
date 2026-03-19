@@ -82,6 +82,5 @@
       "^.+\\.ts?$": "ts-jest"
     },
     "verbose": true
-  },
-  "packageManager": "yarn@4.12.0"
+  }
 }
