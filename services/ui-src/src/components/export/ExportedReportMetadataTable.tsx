@@ -34,28 +34,28 @@ export const headerRowLabels = (
   switch (reportType) {
     case ReportType.WP:
       return [
-        verbiage.metadataTableHeaders.submissionName,
-        verbiage.metadataTableHeaders.dueDate,
-        verbiage.metadataTableHeaders.lastEdited,
-        verbiage.metadataTableHeaders.status,
-        verbiage.metadataTableHeaders.editedBy,
+        verbiage.metadataTableHeaders?.submissionName,
+        verbiage.metadataTableHeaders?.dueDate,
+        verbiage.metadataTableHeaders?.lastEdited,
+        verbiage.metadataTableHeaders?.status,
+        verbiage.metadataTableHeaders?.editedBy,
       ];
     case ReportType.SAR:
       return [
-        verbiage.metadataTableHeaders.submissionName,
-        verbiage.metadataTableHeaders.dueDate,
-        verbiage.metadataTableHeaders.lastEdited,
-        verbiage.metadataTableHeaders.status,
-        verbiage.metadataTableHeaders.editedBy,
+        verbiage.metadataTableHeaders?.submissionName,
+        verbiage.metadataTableHeaders?.dueDate,
+        verbiage.metadataTableHeaders?.lastEdited,
+        verbiage.metadataTableHeaders?.status,
+        verbiage.metadataTableHeaders?.editedBy,
       ];
     case ReportType.EXPENDITURE:
       return [
-        verbiage.metadataTableHeaders.reportName,
-        verbiage.metadataTableHeaders.reportingYear,
-        verbiage.metadataTableHeaders.reportingPeriod,
-        verbiage.metadataTableHeaders.lastEdited,
-        verbiage.metadataTableHeaders.editedBy,
-        verbiage.metadataTableHeaders.status,
+        verbiage.metadataTableHeaders?.reportName,
+        verbiage.metadataTableHeaders?.reportingYear,
+        verbiage.metadataTableHeaders?.reportingPeriod,
+        verbiage.metadataTableHeaders?.lastEdited,
+        verbiage.metadataTableHeaders?.editedBy,
+        verbiage.metadataTableHeaders?.status,
       ];
     default:
       assertExhaustive(reportType as never);

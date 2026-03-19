@@ -141,8 +141,8 @@ export function renderModalOverlayTableBody(
           ? `${idx + 1}. ${entity.initiative_name}`
           : "Not entered";
         return (
-          <Box key={`${reportType}${idx}`}>
-            <Flex sx={sx.entityHeading}>
+          <Box key={`${reportType}${idx}`} sx={sx.entityHeading}>
+            <Flex>
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -227,8 +227,8 @@ export function renderModalOverlayTableBody(
     case ReportType.SAR:
       return entities.map((entity, idx) => {
         return (
-          <Box key={`${reportType}${idx}`}>
-            <Flex sx={sx.entityHeading}>
+          <Box key={`${reportType}${idx}`} sx={sx.entityHeading}>
+            <Flex>
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -379,7 +379,10 @@ const sx = {
     fontWeight: "bold",
   },
   entityHeading: {
-    marginTop: "4rem",
+    marginTop: "spacer4",
+    "&:first-of-type": {
+      marginTop: 0,
+    },
   },
   statusIcon: {
     paddingLeft: "spacer_half",
@@ -403,7 +406,6 @@ const sx = {
     marginLeft: "spacer3",
   },
   container: {
-    marginTop: "-3rem",
     display: "flex",
     flexDirection: "column",
   },

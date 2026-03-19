@@ -82,14 +82,9 @@ export const reportTitle = (
   const { stateName } = fieldData;
   switch (reportType) {
     case ReportType.WP:
-      return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
-
     case ReportType.SAR:
-      return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
-
     case ReportType.EXPENDITURE:
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
-
     default:
       assertExhaustive(reportType as never);
       throw new Error(
@@ -214,9 +209,7 @@ export const renderReportSections = (
   return reportRoutes
     .filter((section) => section.pageType !== PageTypes.REVIEW_SUBMIT)
     .map((section: ReportRoute) => (
-      <Box key={section.path} mt="3.5rem">
-        {renderSection(section, "h2")}
-      </Box>
+      <Box key={section.path}>{renderSection(section, "h2")}</Box>
     ));
 };
 

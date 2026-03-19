@@ -1,4 +1,10 @@
-export default {
+import { ExportPageVerbiage } from "types";
+
+const exportPageVerbiage: ExportPageVerbiage = {
+  missingEntry: {
+    noResponse: "Not answered",
+    notApplicable: "Not applicable",
+  },
   metadata: {
     author: "CMS",
     subject: "MFP Financial Reporting Form",
@@ -12,10 +18,8 @@ export default {
   reportPage: {
     heading: "MFP Financial Reporting Form for",
     metadataTableHeaders: {
-      reportName: "Report name",
       reportingYear: "Reporting year",
       reportingPeriod: "Reporting period",
-      dueDate: "Due date",
       lastEdited: "Last edited",
       editedBy: "Edited by",
       status: "Status",
@@ -23,12 +27,13 @@ export default {
     reportTitle:
       "{{stateName}} MFP Financial Reporting Form for {{reportYear}} - Period {{reportPeriod}}",
   },
+  tableHeaders: {
+    indicator: "Indicator",
+    response: "Response",
+  },
   generalInformationTable: {
     headings: [],
   },
-  missingEntry: {
-    noResponse: "",
-    notApplicable: "",
-  },
-  tableHeaders: {},
 };
+
+export default exportPageVerbiage;

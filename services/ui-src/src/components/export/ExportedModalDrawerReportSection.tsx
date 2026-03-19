@@ -304,11 +304,7 @@ export const ExportedModalDrawerReportSection = ({
   }, []);
 
   return (
-    <Box
-      mt="2rem"
-      data-testid="exportedModalDrawerReportSection"
-      sx={sx.container}
-    >
+    <Box data-testid="exportedModalDrawerReportSection" sx={sx.container}>
       {verbiage.pdfDashboardTitle && (
         <>
           <Heading
@@ -344,6 +340,7 @@ export interface Props {
 
 const sx = {
   container: {
+    marginTop: "spacer4",
     "@media print": {
       pageBreakInside: "avoid",
     },
@@ -352,7 +349,7 @@ const sx = {
     fontSize: "21px",
     lineHeight: "130%",
     fontWeight: "bold",
-    color: "gray_darkest",
+    color: "gray_darker",
   },
   table: {
     marginTop: "1.25rem",

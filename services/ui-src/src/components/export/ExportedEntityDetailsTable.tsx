@@ -129,8 +129,9 @@ const sx = {
     "@media print": {
       pageBreakInside: "avoid",
     },
+    margin: 0,
+    marginTop: "spacer3",
     tableLayout: "fixed",
-    marginBottom: "spacer2",
     "tr, th": {
       verticalAlign: "top",
       lineHeight: "base",
@@ -145,7 +146,8 @@ const sx = {
       p: {
         lineHeight: "1.25rem",
       },
-      padding: "0.75rem 0.5rem",
+      padding: "spacerhalf",
+      paddingLeft: 0,
       borderStyle: "none",
       fontWeight: "normal",
       color: "base",
@@ -157,7 +159,9 @@ const sx = {
       },
     },
     th: {
-      paddingBottom: "0.375rem",
+      padding: "spacerhalf",
+      paddingLeft: 0,
+      paddingTop: 0,
       fontWeight: "bold",
       lineHeight: "lg",
       color: "gray",
