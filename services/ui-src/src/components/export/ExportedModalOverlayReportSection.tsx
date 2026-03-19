@@ -141,8 +141,8 @@ export function renderModalOverlayTableBody(
           ? `${idx + 1}. ${entity.initiative_name}`
           : "Not entered";
         return (
-          <Box key={`${reportType}${idx}`}>
-            <Flex sx={sx.entityHeading}>
+          <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
+            <Flex>
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -227,8 +227,8 @@ export function renderModalOverlayTableBody(
     case ReportType.SAR:
       return entities.map((entity, idx) => {
         return (
-          <Box key={`${reportType}${idx}`}>
-            <Flex sx={sx.entityHeading}>
+          <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
+            <Flex>
               <Box sx={sx.statusIcon}>
                 <EntityStatusIcon
                   entity={entity}
@@ -325,50 +325,10 @@ export function renderModalOverlayTableBody(
 }
 
 const sx = {
-  root: {
-    "@media print": {
-      pageBreakInside: "avoid",
-    },
-    marginBottom: "spacer2",
-    "tr, th": {
-      verticalAlign: "bottom",
-      lineHeight: "base",
-    },
-    "th:nth-of-type(3)": {
-      width: "15rem",
-    },
-    thead: {
-      //this will prevent generating a new header whenever the table spills over in another page
-      display: "table-row-group",
-    },
-    td: {
-      padding: "0.75rem 0.5rem",
-      borderStyle: "none",
-      fontWeight: "normal",
-      ".shrink &": {
-        padding: "0.375rem 0rem",
-      },
-      ".mobile &": {
-        fontSize: "xs",
-      },
-      verticalAlign: "middle",
-    },
-    th: {
-      maxWidth: "100%",
-      paddingBottom: "0.375rem",
-      fontWeight: "bold",
-      lineHeight: "lg",
-      color: "gray",
-      ".shrink &": {
-        padding: "0.375rem 0rem",
-      },
-    },
-    ".desktop &": {
-      "&.two-column": {
-        "th:first-of-type": {
-          paddingLeft: "6rem",
-        },
-      },
+  entityContainer: {
+    marginTop: "spacer4",
+    "&:first-of-type": {
+      marginTop: 0,
     },
   },
   entityList: {
@@ -377,9 +337,6 @@ const sx = {
   tableIndex: {
     color: "gray",
     fontWeight: "bold",
-  },
-  entityHeading: {
-    marginTop: "4rem",
   },
   statusIcon: {
     paddingLeft: "spacer_half",
@@ -403,7 +360,6 @@ const sx = {
     marginLeft: "spacer3",
   },
   container: {
-    marginTop: "-3rem",
     display: "flex",
     flexDirection: "column",
   },

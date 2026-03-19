@@ -91,7 +91,6 @@ const sx = {
   fieldLabel: {
     fontSize: "sm",
     fontWeight: "bold",
-    marginBottom: "spacer1",
   },
   fieldHint: {
     lineHeight: "lg",

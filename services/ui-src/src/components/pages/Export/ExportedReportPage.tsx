@@ -209,13 +209,11 @@ export const renderReportSections = (
   return reportRoutes
     .filter((section) => section.pageType !== PageTypes.REVIEW_SUBMIT)
     .map((section: ReportRoute) => (
-      <Box key={section.path} mt="3.5rem">
-        {renderSection(section, "h2")}
-      </Box>
+      <Box key={section.path}>{renderSection(section, "h2")}</Box>
     ));
 };
 
-export const sx = {
+const sx = {
   container: {
     width: "100%",
     maxWidth: "55.25rem",
@@ -267,5 +265,72 @@ export const sx = {
     fontWeight: "bold",
     fontSize: "2xl",
     marginBottom: "2xl",
+  },
+};
+
+export const sxSharedExportStyles = {
+  table: {
+    margin: 0,
+    marginBottom: "spacer4",
+    marginTop: "spacer3",
+    tableLayout: "fixed",
+    "tr, th": {
+      borderBottom: "1px solid",
+      borderColor: "gray_lighter",
+      lineHeight: "base",
+      verticalAlign: "top",
+    },
+    thead: {
+      //this will prevent generating a new header whenever the table spills over in another page
+      display: "table-row-group",
+    },
+    td: {
+      border: 0,
+      color: "base",
+      fontWeight: "normal",
+      padding: "spacer",
+      paddingLeft: 0,
+      // indicator or response text
+      p: {
+        lineHeight: "1.25rem",
+        // hint text
+        "& + div": {
+          marginTop: "spacer_half",
+          lineHeight: "1.25rem",
+        },
+      },
+      ".shrink &": {
+        paddingX: 0,
+        paddingY: "spacer_half",
+      },
+      ".mobile &": {
+        fontSize: "xs",
+      },
+    },
+    th: {
+      color: "gray",
+      fontWeight: "bold",
+      lineHeight: "lg",
+      padding: 0,
+      paddingBottom: "spacer_half",
+      paddingRight: "spacer1",
+      "&:first-of-type": {
+        paddingLeft: 0,
+      },
+      ".shrink &": {
+        paddingX: 0,
+        paddingY: "spacer_half",
+      },
+    },
+    "@media print": {
+      pageBreakInside: "avoid",
+    },
+    ".desktop &": {
+      "&.two-column": {
+        "th:first-of-type": {
+          paddingLeft: "6rem",
+        },
+      },
+    },
   },
 };

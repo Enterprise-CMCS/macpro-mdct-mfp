@@ -173,59 +173,6 @@ export function renderEntityDetailTables(
 }
 
 const sx = {
-  root: {
-    "@media print": {
-      pageBreakInside: "avoid",
-    },
-    marginBottom: "spacer2",
-    width: "100%",
-    "tr, th": {
-      verticalAlign: "bottom",
-      lineHeight: "base",
-      borderBottom: "1px solid",
-      borderColor: "gray_lighter",
-    },
-    thead: {
-      //this will prevent generating a new header whenever the table spills over in another page
-      display: "table-row-group",
-    },
-    td: {
-      p: {
-        lineHeight: "1.25rem",
-      },
-      padding: "0.75rem 0.5rem",
-      borderStyle: "none",
-      fontWeight: "normal",
-      color: "base",
-      ".shrink &": {
-        padding: "0.375rem 0rem",
-      },
-      ".mobile &": {
-        fontSize: "xs",
-      },
-      verticalAlign: "top",
-    },
-    th: {
-      maxWidth: "100%",
-      paddingBottom: "0.375rem",
-      fontWeight: "bold",
-      lineHeight: "lg",
-      color: "gray",
-      ".shrink &": {
-        padding: "0.375rem 0rem",
-      },
-      "&:first-of-type": {
-        paddingLeft: 0,
-      },
-    },
-    ".desktop &": {
-      "&.two-column": {
-        "th:first-of-type": {
-          paddingLeft: "6rem",
-        },
-      },
-    },
-  },
   tableIndex: {
     color: "gray",
     fontWeight: "bold",
