@@ -2,6 +2,8 @@
 import { DynamicFieldShape } from "types";
 import {
   calculateShares,
+  combinedSum,
+  dynamicFieldTableTotals,
   fieldTableTotals,
   getNumberValue,
   isEmptyOrNaN,
@@ -10,7 +12,6 @@ import {
   sumDynamicFields,
   sumOfRow,
   sumOfTwoRows,
-  dynamicFieldTableTotals,
 } from "./calculations";
 import {
   mockDynamicFieldId,
@@ -469,6 +470,16 @@ describe("utils/calculations", () => {
           total: 123,
         },
       });
+    });
+  });
+
+  describe("combinedSum()", () => {
+    test("sums up array of numbers", () => {
+      expect(combinedSum([123, 123, 123])).toBe(369);
+    });
+
+    test("treats NaN as zero", () => {
+      expect(combinedSum([123.45, 123.45, NaN])).toBe(246.9);
     });
   });
 });
