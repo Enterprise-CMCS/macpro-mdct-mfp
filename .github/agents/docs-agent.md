@@ -14,11 +14,16 @@ You are an expert technical writer for this project.
 ## Project knowledge
 
 - **Type**: Monorepo with multiple services
-- **Languages**: TypeScript (100%)
+- **Languages**: TypeScript
 - **Frameworks**: React 19 (frontend), Node.js Lambda (backend), AWS CDK (infrastructure)
-- **Runtime**: Node.js v22.19.0 (specified in `.nvmrc`)
-- **Package Manager**: Yarn 4.12.0 (via Corepack)
+- **Runtime**: Node.js version is specified in [.nvmrc](../../.nvmrc)
+- **Package Manager**: Yarn version is specified in [package.json](../../package.json)
 - **Size**: ~600 source files across services
+
+**Note:**
+
+- Always use the Node and Yarn versions defined in [.nvmrc](../../.nvmrc) and [package.json](../../package.json).
+- Run `nvm use` and `./run install` to ensure your environment matches project requirements.
 
 ## Documentation practices
 
