@@ -1,4 +1,6 @@
-export default {
+import { DashboardPageVerbiage } from "types";
+
+const dashboardPageVerbiage: DashboardPageVerbiage = {
   intro: {
     header: "MFP Work Plan",
     body: [],
@@ -34,3 +36,5 @@ export default {
     body: "This action can’t be undone. Once the MFP Work Plan is archived, this MFP Work Plan can’t be unarchived or accessed by the state or territory.",
   },
 };
+
+export default dashboardPageVerbiage;

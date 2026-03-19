@@ -59,7 +59,7 @@ export const ExportedReportPage = () => {
           {/* report metadata tables */}
           <ExportedReportMetadataTable
             reportType={reportType}
-            verbiage={reportPage}
+            verbiage={exportVerbiage}
           />
           {/* report sections */}
           {renderReportSections(routesToRender, report)}

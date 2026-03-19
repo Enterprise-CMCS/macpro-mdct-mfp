@@ -1,4 +1,6 @@
-export default {
+import { DashboardPageVerbiage } from "types";
+
+const dashboardPageVerbiage: DashboardPageVerbiage = {
   intro: {
     header: "MFP Financial Reporting Form",
     body: [],
@@ -23,10 +25,6 @@ export default {
     callToAction: "Add new MFP Financial Reporting Form submission",
     callToActionAdditions: "Add new MFP Financial Reporting Form submission",
   },
-  alertBanner: {
-    title: "Title",
-    body: "Body",
-  },
   modalUnlock: {
     heading: "You unlocked this Expenditure Report",
     subheading:
@@ -41,3 +39,5 @@ export default {
     body: "This action can’t be undone. Once the MFP Financial Reporting Form is archived, this Report can’t be unarchived or accessed by the state or territory.",
   },
 };
+
+export default dashboardPageVerbiage;
