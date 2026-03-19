@@ -260,14 +260,14 @@ describe("utils/calculations", () => {
           total: 246,
         },
         serviceTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 214.02,
+          remainingShare: 31.98,
+          total: 246,
         },
         allTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 214.02,
+          remainingShare: 31.98,
+          total: 246,
         },
       });
     });
@@ -295,14 +295,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
         allTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
       });
     });
@@ -330,14 +330,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
         allTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
       });
     });
@@ -403,14 +403,14 @@ describe("utils/calculations", () => {
           total: 246,
         },
         serviceTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 214.02,
+          remainingShare: 31.98,
+          total: 246,
         },
         allTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 214.02,
+          remainingShare: 31.98,
+          total: 246,
         },
       });
     });
@@ -444,14 +444,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
         allTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
       });
     });
@@ -485,14 +485,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
         allTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
       });
     });
@@ -530,14 +530,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
         allTables: {
-          percentageShare: 0,
-          remainingShare: 0,
-          total: 0,
+          percentageShare: 107.01,
+          remainingShare: 15.99,
+          total: 123,
         },
       });
     });
