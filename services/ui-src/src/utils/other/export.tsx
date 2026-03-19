@@ -2,7 +2,14 @@ import { ReactNode } from "react";
 // components
 import { Box, Link, Text } from "@chakra-ui/react";
 // types
-import { AnyObject, Choice, EntityShape, FieldChoice, FormField } from "types";
+import {
+  AnyObject,
+  Choice,
+  EntityShape,
+  FieldChoice,
+  FormField,
+  ReportFormFieldType,
+} from "types";
 // utils
 import { getReportVerbiage, maskResponseData } from "utils";
 
@@ -24,7 +31,10 @@ export const renderDataCell = (
     );
   }
   // render dynamic field data cell (list dynamic field entities)
-  if (formField.type === "dynamic") {
+  if (
+    formField.type === ReportFormFieldType.DYNAMIC ||
+    formField.type === ReportFormFieldType.DYNAMIC_OBJECT
+  ) {
     const fieldResponseData = allResponseData[formField.id];
     return renderDynamicDataCell(fieldResponseData);
   }
@@ -102,7 +112,7 @@ export const renderDynamicDataCell = (fieldResponseData: AnyObject) => {
   const { exportVerbiage } = getReportVerbiage();
   return (
     fieldResponseData?.map((entity: EntityShape) => (
-      <Text key={entity.id} sx={sx.dynamicItem}>
+      <Text key={entity.id} sx={sx.fieldChoice}>
         {entity.name}
       </Text>
     )) ?? (
@@ -136,6 +146,14 @@ export const renderResponseData = (
   const { isLink, isEmail } = checkLinkTypes(formField);
   if (isLink) return renderLinkFieldResponse(fieldResponseData, isEmail);
   // handle all other field types
+
+  if (
+    formField.type === ReportFormFieldType.DYNAMIC ||
+    formField.type === ReportFormFieldType.DYNAMIC_OBJECT
+  ) {
+    return renderDynamicDataCell(fieldResponseData);
+  }
+
   return renderDefaultFieldResponse(formField, fieldResponseData);
 };
 
@@ -222,9 +240,9 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
 const sx = {
   fieldChoice: {
     marginBottom: "spacer2",
-  },
-  dynamicItem: {
-    marginBottom: "spacer2",
+    "&:last-of-type": {
+      marginBottom: 0,
+    },
   },
   entityBox: {
     verticalAlign: "top",

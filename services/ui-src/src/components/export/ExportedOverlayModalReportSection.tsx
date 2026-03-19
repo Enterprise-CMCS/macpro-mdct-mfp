@@ -20,7 +20,7 @@ export const ExportedOverlayModalReportSection = ({
   headingLevel = "h4",
 }: Props) => {
   const { exportVerbiage } = getReportVerbiage();
-  const { emptyEntityMessage, dashboardTitle } = exportVerbiage;
+  const { emptyEntityMessage, dashboardTitle = {} } = exportVerbiage;
 
   const type = (entityStep as any)?.stepType || (entityStep![0] as string);
   const title = (entityStep as any)?.name || (entityStep![1] as string);
@@ -34,7 +34,7 @@ export const ExportedOverlayModalReportSection = ({
     }
   );
   return (
-    <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
+    <Box data-testid="exportedOverlayModalPage" sx={sx.container}>
       <Heading as={headingLevel} sx={sx.stepName}>
         {title}
       </Heading>
@@ -46,7 +46,7 @@ export const ExportedOverlayModalReportSection = ({
           } ${entityCount}`
         ) : (
           <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
-            {emptyEntityMessage[type as keyof typeof emptyEntityMessage]}
+            {emptyEntityMessage?.[type as keyof typeof emptyEntityMessage]}
           </Text>
         )}
       </Box>
@@ -82,6 +82,7 @@ export interface Props {
 
 const sx = {
   container: {
+    marginTop: "spacer4",
     "@media print": {
       pageBreakInside: "avoid",
     },
@@ -94,7 +95,7 @@ const sx = {
     marginTop: "spacer1",
   },
   dashboardTitle: {
-    margin: "2rem auto 1.5rem",
+    marginTop: "spacer2",
     fontSize: "md",
     fontWeight: "bold",
     color: "gray",

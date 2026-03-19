@@ -50,7 +50,6 @@ export const headerRowLabels = (
       ];
     case ReportType.EXPENDITURE:
       return [
-        verbiage.metadataTableHeaders.reportName,
         verbiage.metadataTableHeaders.reportingYear,
         verbiage.metadataTableHeaders.reportingPeriod,
         verbiage.metadataTableHeaders.lastEdited,
@@ -96,7 +95,6 @@ export const bodyRowContent = (
     case ReportType.EXPENDITURE:
       return [
         [
-          report?.submissionName ?? "",
           report.reportYear.toString(),
           report.reportPeriod.toString(),
           convertDateUtcToEt(report.lastAltered),
@@ -119,21 +117,25 @@ export interface Props {
 
 const sx = {
   metadataTable: {
-    margin: "3rem 0",
+    marginBottom: "spacer4",
+    marginTop: "spacer3",
     maxWidth: "reportPageWidth",
     tableLayout: "fixed",
     td: {
-      verticalAlign: "middle",
+      border: 0,
+      padding: "spacerhalf",
+      paddingLeft: 0,
       textAlign: "left",
-      paddingTop: "0rem",
-      padding: "spacer1",
-      borderColor: "gray_lightest",
+      verticalAlign: "top",
     },
     th: {
-      fontWeight: "bold",
-      textAlign: "left",
-      paddingBottom: "0rem",
+      border: 0,
       color: "gray",
+      fontWeight: "bold",
+      padding: 0,
+      paddingRight: "spacer1",
+      textAlign: "left",
+      verticalAlign: "top",
     },
   },
 };
