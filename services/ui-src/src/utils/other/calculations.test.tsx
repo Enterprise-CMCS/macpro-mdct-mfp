@@ -12,6 +12,7 @@ import {
   sumDynamicFields,
   sumOfRow,
   sumOfTwoRows,
+  calculateAggregateTotals,
 } from "./calculations";
 import {
   mockDynamicFieldId,
@@ -260,14 +261,14 @@ describe("utils/calculations", () => {
           total: 246,
         },
         serviceTables: {
-          percentageShare: 214.02,
-          remainingShare: 31.98,
-          total: 246,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 214.02,
-          remainingShare: 31.98,
-          total: 246,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -295,14 +296,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -330,14 +331,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -403,14 +404,14 @@ describe("utils/calculations", () => {
           total: 246,
         },
         serviceTables: {
-          percentageShare: 214.02,
-          remainingShare: 31.98,
-          total: 246,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 214.02,
-          remainingShare: 31.98,
-          total: 246,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -444,14 +445,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -485,14 +486,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -530,14 +531,14 @@ describe("utils/calculations", () => {
           total: 123,
         },
         serviceTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
         allTables: {
-          percentageShare: 107.01,
-          remainingShare: 15.99,
-          total: 123,
+          percentageShare: 0,
+          remainingShare: 0,
+          total: 0,
         },
       });
     });
@@ -550,6 +551,134 @@ describe("utils/calculations", () => {
 
     test("treats NaN as zero", () => {
       expect(combinedSum([123.45, 123.45, NaN])).toBe(246.9);
+    });
+  });
+
+  describe("calculateAggregateTotals()", () => {
+    const fieldSuffixesToCalculate = {
+      percentageShare: "mockPercentageShare",
+      remainingShare: "mockRemainingShare",
+      total: "mockTotal",
+    };
+    const qualifiedServicesTableId = "qualifiedHcbs_statePlanServices";
+    const qualifiedServicesFieldId1 =
+      "qualifiedHcbs_statePlanServices_rehabilitativeServices";
+    const qualifiedServicesFieldId2 =
+      "qualifiedHcbs_statePlanServices_homeHealthServices";
+
+    const demonstrationServicesTableId =
+      "demonstrationServices_statePlanServices";
+    const demonstrationServicesFieldId1 =
+      "demonstrationServices_statePlanServices_clinicServices";
+    const demonstrationServicesFieldId2 =
+      "demonstrationServices_statePlanServices_homeHealthServices";
+
+    const administrativeCostsTableId = "administrativeCosts_budgetCategory";
+    const administrativeCostsFieldId1 =
+      "administrativeCosts_budgetCategory_personnel";
+    const administrativeCostsFieldId2 =
+      "administrativeCosts_budgetCategory_travel";
+    const tableShares = {
+      percentage: 0,
+      percentageShare: 167.01,
+      remainingShare: 40.74,
+      total: 173,
+    };
+
+    const fieldData = {
+      [`${qualifiedServicesFieldId1}-mockTotal`]: 0,
+      [`${qualifiedServicesFieldId1}-mockPercentageShare`]: 0,
+      [`${qualifiedServicesFieldId1}-mockRemainingShare`]: 0,
+
+      [`${qualifiedServicesFieldId2}-mockTotal`]: 0,
+      [`${qualifiedServicesFieldId2}-mockPercentageShare`]: 0,
+      [`${qualifiedServicesFieldId2}-mockRemainingShare`]: 0,
+
+      [`${qualifiedServicesTableId}-mockTotal`]: 0,
+      [`${qualifiedServicesTableId}-mockPercentageShare`]: 0,
+      [`${qualifiedServicesTableId}-mockRemainingShare`]: 0,
+
+      [`${demonstrationServicesFieldId1}-mockTotal`]: 0,
+      [`${demonstrationServicesFieldId1}-mockPercentageShare`]: 0,
+      [`${demonstrationServicesFieldId1}-mockRemainingShare`]: 0,
+
+      [`${demonstrationServicesFieldId2}-mockTotal`]: 50,
+      [`${demonstrationServicesFieldId2}-mockPercentageShare`]: 60,
+      [`${demonstrationServicesFieldId2}-mockRemainingShare`]: 24.75,
+
+      [`${demonstrationServicesTableId}-mockTotal`]: 50,
+      [`${demonstrationServicesTableId}-mockPercentageShare`]: 60,
+      [`${demonstrationServicesTableId}-mockRemainingShare`]: 24.75,
+
+      [`${administrativeCostsFieldId1}-mockTotal`]: 0,
+      [`${administrativeCostsFieldId1}-mockPercentageShare`]: 0,
+      [`${administrativeCostsFieldId1}-mockRemainingShare`]: 0,
+
+      [`${administrativeCostsFieldId2}-mockTotal`]: 0,
+      [`${administrativeCostsFieldId2}-mockPercentageShare`]: 0,
+      [`${administrativeCostsFieldId2}-mockRemainingShare`]: 0,
+
+      [`${administrativeCostsTableId}-mockTotal`]: 0,
+      [`${administrativeCostsTableId}-mockPercentageShare`]: 0,
+      [`${administrativeCostsTableId}-mockRemainingShare`]: 0,
+    };
+
+    let { serviceTables, allTables } = calculateAggregateTotals(
+      fieldData,
+      fieldSuffixesToCalculate,
+      qualifiedServicesFieldId1,
+      qualifiedServicesTableId,
+      tableShares
+    );
+
+    test("basic aggregate totals", () => {
+      expect(serviceTables).toEqual({
+        percentageShare: 227.01,
+        remainingShare: 65.49,
+        total: 223,
+      });
+      expect(allTables).toEqual({
+        percentageShare: 227.01,
+        remainingShare: 65.49,
+        total: 223,
+      });
+    });
+
+    test("aggregate totals for just allTotalsTable, not serviceTables", () => {
+      const updatedTableShares = {
+        percentage: 0,
+        percentageShare: 100,
+        remainingShare: 200,
+        total: 300,
+      };
+
+      serviceTables = calculateAggregateTotals(
+        fieldData,
+        fieldSuffixesToCalculate,
+        administrativeCostsFieldId1,
+        administrativeCostsTableId,
+        updatedTableShares
+      ).serviceTables;
+
+      allTables = calculateAggregateTotals(
+        fieldData,
+        fieldSuffixesToCalculate,
+        administrativeCostsFieldId1,
+        administrativeCostsTableId,
+        updatedTableShares
+      ).allTables;
+
+      expect(serviceTables).toEqual({
+        percentageShare: 60,
+        remainingShare: 24.75,
+        total: 50,
+      });
+
+      expect(allTables).toEqual({
+        percentageShare: 160,
+        remainingShare: 224.75,
+        total: 350,
+      });
     });
   });
 });

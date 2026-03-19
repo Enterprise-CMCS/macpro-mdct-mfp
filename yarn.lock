@@ -2297,12 +2297,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-cdk@npm:^2.1029.0":
-  version: 2.1106.1
-  resolution: "aws-cdk@npm:2.1106.1"
+"aws-cdk@npm:^2.1112.0":
+  version: 2.1112.0
+  resolution: "aws-cdk@npm:2.1112.0"
   bin:
     cdk: bin/cdk
-  checksum: 10c0/c88cae90a9794c724474ff8c485c7726287c55bb81ded5d4dbf163072bcc6845c113eaff8fab0497ae72673f367f85b0e9660d2a7e1fa059041df4fcc64e4666
+  checksum: 10c0/82eb0c205f6043063b0290625839a20c2683b1b645da02427834669461e46a5aa6517d6b63da3cf984ba032ccc02c4e06b189d7ec3bb3f34e116b433cf74c0cb
   languageName: node
   linkType: hard
 
@@ -3259,7 +3259,7 @@ __metadata:
     "@types/flat": "npm:^5.0.5"
     "@types/node": "npm:^22.18.13"
     "@types/yargs": "npm:^17.0.33"
-    aws-cdk: "npm:^2.1029.0"
+    aws-cdk: "npm:^2.1112.0"
     aws-cdk-lib: "npm:^2.243.0"
     aws-cdk-local: "npm:^2.19.2"
     constructs: "npm:^10.4.2"
