@@ -237,7 +237,7 @@ const addInitiative = (
       initiative_wpTopic: [
         {
           key: "initiative_wpTopic-VjQ0OFqior9Dxu5RRNiZ5u",
-          value: "Transitions and transition coordination services",
+          value: "Transitions and transition coordination services*",
         },
       ],
     },
@@ -292,7 +292,7 @@ const addInitiative = (
       initiative_wpTopic: [
         {
           key: "initiative_wpTopic-wbUsMMqVP7q1n10szK5h5S",
-          value: "Housing-related supports",
+          value: "Housing-related supports*",
         },
       ],
     },
@@ -320,7 +320,7 @@ const addInitiative = (
       initiative_wpTopic: [
         {
           key: "initiative_wpTopic-SdaFlF3DJyzKcHCCu3Zylm",
-          value: "Quality measurement and improvement",
+          value: "Quality measurement and improvement*",
         },
       ],
     },

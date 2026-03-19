@@ -134,7 +134,7 @@ export const mockReportFieldData = {
       initiative_wpTopic: [
         {
           key: "initiative_wpTopic",
-          value: "Transitions and transition coordination services ",
+          value: "Transitions and transition coordination services*",
         },
       ],
       name: "entity-name",
@@ -179,7 +179,7 @@ export const mockSARReportFieldData = {
       initiative_wpTopic: [
         {
           key: "initiative_wpTopic",
-          value: "Transitions and transition coordination services ",
+          value: "Transitions and transition coordination services*",
         },
       ],
       name: "entity-name",
