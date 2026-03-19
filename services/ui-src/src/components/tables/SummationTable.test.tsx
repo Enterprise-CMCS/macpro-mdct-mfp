@@ -18,8 +18,8 @@ import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
-  register: () => {},
-  setValue: () => {},
+  register: jest.fn(),
+  setValue: jest.fn(),
   getValues: jest.fn(),
   trigger: mockTrigger,
 };

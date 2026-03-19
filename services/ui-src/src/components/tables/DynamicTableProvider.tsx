@@ -42,6 +42,9 @@ import {
   UpdatedFieldDataOnChange,
   updatedFieldDataOnFieldChange,
   useStore,
+  isCombinedCalculationField,
+  combinedSum,
+  getValueToCombine,
 } from "utils";
 
 export const DynamicTableContext = createContext<DynamicTableMethods>({
@@ -107,9 +110,17 @@ export const DynamicTableProvider = ({ children }: any) => {
     type,
   }: DisplayReadOnlyCellOptions) => {
     const cellValue = localFieldData?.[id] || hydrate || initialValue;
-    const readOnlyValue = Array.isArray(cellValue)
+
+    let readOnlyValue = Array.isArray(cellValue)
       ? cellValue?.[rowIndex]?.name || initialValue
       : cellValue;
+
+    if (isCombinedCalculationField(id)) {
+      readOnlyValue = combinedSum([
+        readOnlyValue,
+        getValueToCombine(id, localFieldData),
+      ]);
+    }
 
     if (type === ReportFormFieldType.NUMBER) {
       return (
