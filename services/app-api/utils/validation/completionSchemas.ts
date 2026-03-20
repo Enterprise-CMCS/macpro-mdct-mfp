@@ -72,10 +72,6 @@ const numberSchema = () =>
       },
     })
     .test({
-      test: (value) => !isWhitespaceString(value),
-      message: error.REQUIRED_GENERIC,
-    })
-    .test({
       test: (value) => {
         if (validNumberRegex.test(value!)) {
           return parseFloat(value!) >= 0;
@@ -84,14 +80,21 @@ const numberSchema = () =>
       message: error.NUMBER_LESS_THAN_ZERO,
     });
 
+export const number = () =>
+  numberSchema()
+    .required(error.REQUIRED_GENERIC)
+    .test({
+      test: (value) => !isWhitespaceString(value),
+      message: error.REQUIRED_GENERIC,
+    });
+
+export const numberOptional = () => numberSchema().notRequired().nullable();
+
 const valueCleaningNumberSchema = (value: string, charsToReplace: RegExp) => {
   return yupNumber().transform((_value) => {
     return Number(value.replace(charsToReplace, ""));
   });
 };
-
-export const number = () => numberSchema().required();
-export const numberOptional = () => numberSchema().notRequired().nullable();
 
 // Integer or Valid Strings
 const validIntegerSchema = () =>
