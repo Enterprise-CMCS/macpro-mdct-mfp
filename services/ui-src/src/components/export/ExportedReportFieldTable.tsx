@@ -21,15 +21,17 @@ export const ExportedReportFieldTable = ({
   section,
   headingLevel = "h3",
 }: Props) => {
-  const { report } = useStore() ?? {};
+  const { report } = useStore();
 
   const { exportVerbiage } = getReportVerbiage(report?.reportType);
   const { tableHeaders } = exportVerbiage;
-  const pageType = section.pageType;
+  const pageType = section.pageType || "";
   const formFields =
-    pageType === "drawer" ? section.drawerForm?.fields : section.form?.fields;
+    (pageType === "drawer"
+      ? section.drawerForm?.fields
+      : section.form?.fields) || [];
 
-  const formHasOnlyDynamicFields = formFields?.every(
+  const formHasOnlyDynamicFields = formFields.every(
     (field: FormField | FormLayoutElement) => field.type === "dynamic"
   );
   const twoColumnHeaderItems = [tableHeaders.indicator, tableHeaders.response];
@@ -45,17 +47,29 @@ export const ExportedReportFieldTable = ({
   const hideHintText = reportType === ReportType.WP;
   const entityType = section.entityType;
 
+  // SAR "General Information" section layout is a unique case with multiple section headings within the same page
+  if (reportType === ReportType.SAR && section.name === "General Information") {
+    return renderGeneralInformation(
+      exportVerbiage,
+      formFields,
+      pageType,
+      entityType,
+      headingLevel
+    );
+  }
+
+  const nonTableFields = formFields.filter((f) => !f.forTableOnly);
+  const currentLevel = parseInt(headingLevel.charAt(1), 10);
+  const nextLevel = currentLevel + 1;
+  const nextHeadingLevel = `h${nextLevel}`;
+
   return (
-    // SAR "General Information" section layout is a unique case with multiple section headings within the same page
-    section.name === "General Information" ? (
-      renderGeneralInformation(
-        exportVerbiage,
-        formFields!,
-        pageType!,
-        entityType,
-        headingLevel
-      )
-    ) : (
+    <>
+      {nonTableFields?.[0]?.props?.title && (
+        <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
+          {nonTableFields[0].props.title}
+        </Heading>
+      )}
       <Table
         sx={sx.root}
         className={formHasOnlyDynamicFields ? "two-column" : ""}
@@ -65,13 +79,13 @@ export const ExportedReportFieldTable = ({
         data-testid="exportTable"
       >
         {renderFieldTableBody(
-          formFields!,
-          pageType!,
+          nonTableFields,
+          pageType,
           !hideHintText,
           entityType
         )}
       </Table>
-    )
+    </>
   );
 };
 
@@ -88,8 +102,8 @@ export const renderGeneralInformation = (
   const isNotResubmission =
     (report?.reportType === "SAR" && !report?.submissionCount) ||
     (report?.status === ReportStatus.SUBMITTED &&
-      report?.submissionCount! === 1 &&
-      report.locked);
+      report?.submissionCount === 1 &&
+      report?.locked);
 
   const headings = verbiage.generalInformationTable.headings;
 
@@ -123,7 +137,7 @@ export const renderGeneralInformation = (
     return (
       <Box key={idx}>
         {!isNotResubmission ||
-        (isNotResubmission && heading != "Resubmission Information") ? (
+        (isNotResubmission && heading !== "Resubmission Information") ? (
           <>
             <Heading as={headingLevel} sx={sx.heading}>
               {heading}
@@ -138,8 +152,8 @@ export const renderGeneralInformation = (
               }}
             >
               {renderFieldTableBody(
-                getSectionFormFields(idx, formFields!),
-                pageType!,
+                getSectionFormFields(idx, formFields),
+                pageType,
                 false,
                 entityType
               )}
@@ -191,7 +205,7 @@ export const renderFieldTableBody = (
   };
 
   // map through form fields and call renderer
-  formFields?.map((field: FormField | FormLayoutElement) => {
+  formFields.map((field: FormField | FormLayoutElement) => {
     if (isFieldElement(field)) {
       renderFieldRow(field);
     }
@@ -261,5 +275,11 @@ const sx = {
     fontSize: "xl",
     fontWeight: "bold",
     color: "black",
+  },
+  subHeading: {
+    fontSize: "lg",
+    "& + table": {
+      marginTop: "spacer2",
+    },
   },
 };
