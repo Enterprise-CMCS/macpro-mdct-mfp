@@ -1,6 +1,6 @@
-import { SubmitReviewVerbiage } from "types";
+import { ReviewSubmitPageVerbiage } from "types";
 
-const submitReviewVerbiage: SubmitReviewVerbiage = {
+const submitReviewVerbiage: ReviewSubmitPageVerbiage = {
   print: {
     printPageUrl: "/sar/export",
     printButtonText: "Review PDF",

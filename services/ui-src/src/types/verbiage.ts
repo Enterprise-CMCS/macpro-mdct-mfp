@@ -56,7 +56,7 @@ type SubmittedIntro = {
   list?: ReviewList;
 };
 
-export interface SubmitReviewVerbiage {
+export interface ReviewSubmitPageVerbiage {
   alertBox: {
     description: string;
     title: string;

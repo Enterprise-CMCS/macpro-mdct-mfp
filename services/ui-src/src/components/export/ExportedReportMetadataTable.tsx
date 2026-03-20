@@ -9,7 +9,7 @@ export const ExportedReportMetadataTable = ({
   reportType,
   verbiage,
 }: Props) => {
-  const { report } = useStore() ?? {};
+  const { report } = useStore();
   return (
     <>
       <Table
@@ -33,30 +33,9 @@ export const headerRowLabels = (
 ): string[] => {
   switch (reportType) {
     case ReportType.WP:
-      return [
-        verbiage.metadataTableHeaders.submissionName,
-        verbiage.metadataTableHeaders.dueDate,
-        verbiage.metadataTableHeaders.lastEdited,
-        verbiage.metadataTableHeaders.status,
-        verbiage.metadataTableHeaders.editedBy,
-      ];
     case ReportType.SAR:
-      return [
-        verbiage.metadataTableHeaders.submissionName,
-        verbiage.metadataTableHeaders.dueDate,
-        verbiage.metadataTableHeaders.lastEdited,
-        verbiage.metadataTableHeaders.status,
-        verbiage.metadataTableHeaders.editedBy,
-      ];
     case ReportType.EXPENDITURE:
-      return [
-        verbiage.metadataTableHeaders.reportName,
-        verbiage.metadataTableHeaders.reportingYear,
-        verbiage.metadataTableHeaders.reportingPeriod,
-        verbiage.metadataTableHeaders.lastEdited,
-        verbiage.metadataTableHeaders.editedBy,
-        verbiage.metadataTableHeaders.status,
-      ];
+      return Object.values(verbiage.metadataTableHeaders);
     default:
       assertExhaustive(reportType as never);
       throw new Error(
@@ -74,19 +53,10 @@ export const bodyRowContent = (
   }
   switch (reportType) {
     case ReportType.WP:
-      return [
-        [
-          report.submissionName,
-          convertDateUtcToEt(report.dueDate),
-          convertDateUtcToEt(report.lastAltered),
-          report.status,
-          report.lastAlteredBy,
-        ],
-      ];
     case ReportType.SAR:
       return [
         [
-          report?.submissionName ?? "",
+          report.submissionName || "",
           convertDateUtcToEt(report.dueDate),
           convertDateUtcToEt(report.lastAltered),
           report.status,
@@ -96,12 +66,11 @@ export const bodyRowContent = (
     case ReportType.EXPENDITURE:
       return [
         [
-          report?.submissionName ?? "",
-          report.reportYear.toString(),
-          report.reportPeriod.toString(),
+          `${report.reportYear}`,
+          `Q${report.reportPeriod}`,
           convertDateUtcToEt(report.lastAltered),
           report.lastAlteredBy,
-          convertDateUtcToEt(report.dueDate),
+          report.status,
         ],
       ];
     default:
@@ -119,21 +88,25 @@ export interface Props {
 
 const sx = {
   metadataTable: {
-    margin: "3rem 0",
+    marginBottom: "spacer4",
+    marginTop: "spacer3",
     maxWidth: "reportPageWidth",
     tableLayout: "fixed",
     td: {
-      verticalAlign: "middle",
+      border: 0,
+      padding: "spacerhalf",
+      paddingLeft: 0,
       textAlign: "left",
-      paddingTop: "0rem",
-      padding: "spacer1",
-      borderColor: "gray_lightest",
+      verticalAlign: "top",
     },
     th: {
-      fontWeight: "bold",
-      textAlign: "left",
-      paddingBottom: "0rem",
+      border: 0,
       color: "gray",
+      fontWeight: "bold",
+      padding: 0,
+      paddingRight: "spacer1",
+      textAlign: "left",
+      verticalAlign: "top",
     },
   },
 };

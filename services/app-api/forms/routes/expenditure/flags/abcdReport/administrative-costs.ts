@@ -294,7 +294,7 @@ const personnelDynamicRowId = `${personnelTableId}_positions`;
 const personnelDynamicBodyList = [
   {
     id: personnelDynamicRowId,
-    label: "Personnel",
+    label: "Positions",
   },
 ];
 const personnelDynamicFieldsToReturn = [
