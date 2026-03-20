@@ -430,7 +430,9 @@ describe("<CalculationTable />", () => {
       await userEvent.click(button);
 
       const modal = screen.getByRole("dialog", { name: "Add mock heading" });
-      expect(modal).toBeVisible();
+      await waitFor(() => {
+        expect(modal).toBeVisible();
+      });
 
       const closeButton = screen.getByRole("button", {
         name: "Close",
