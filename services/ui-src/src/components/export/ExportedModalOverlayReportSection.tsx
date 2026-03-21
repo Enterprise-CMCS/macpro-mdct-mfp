@@ -328,13 +328,6 @@ const sx = {
   entityContainer: {
     "& + &": { marginTop: "spacer4" },
   },
-  entityList: {
-    wordBreak: "break-word",
-  },
-  tableIndex: {
-    color: "gray",
-    fontWeight: "bold",
-  },
   statusIcon: {
     paddingLeft: "spacer_half",
     paddingRight: "spacer2",

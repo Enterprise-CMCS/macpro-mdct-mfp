@@ -418,9 +418,6 @@ const sx = {
       fontWeight: "normal",
     },
   },
-  border: {
-    marginTop: "1.25rem",
-  },
   text: {
     fontSize: "0.875rem",
   },

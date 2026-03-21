@@ -233,39 +233,6 @@ const sx = {
     lineHeight: "lineHeights.heading",
     fontSize: "4xl",
   },
-  combinedDataTable: {
-    tableLayout: "fixed",
-    ".combined-data-title": {
-      display: "inline-block",
-      marginBottom: "spacer1",
-      fontSize: "md",
-      fontWeight: "bold",
-    },
-    "th, td": {
-      verticalAlign: "top",
-      lineHeight: "base",
-      borderBottom: "1px solid",
-      borderColor: "gray_lighter",
-      paddingLeft: "spacer1",
-    },
-    tr: {
-      "th, td": {
-        "&:first-of-type": {
-          ".desktop &": {
-            paddingLeft: "6rem",
-          },
-        },
-        "&:nth-last-of-type(2)": {
-          width: "19.5rem",
-        },
-      },
-    },
-  },
-  sectionHeading: {
-    fontWeight: "bold",
-    fontSize: "2xl",
-    marginBottom: "2xl",
-  },
 };
 
 export const sxSharedExportStyles = {

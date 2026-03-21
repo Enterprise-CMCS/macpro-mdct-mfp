@@ -177,17 +177,6 @@ const sx = {
     color: "gray",
     fontWeight: "bold",
   },
-  statusIcon: {
-    paddingLeft: "spacer2",
-    img: {
-      maxWidth: "fit-content",
-    },
-  },
-  emptyState: {
-    margin: "0 auto",
-    textAlign: "center",
-    paddingBottom: "5rem",
-  },
   stepName: {
     fontSize: "18px",
     paddingBottom: "0.75rem",
@@ -198,17 +187,6 @@ const sx = {
     fontWeight: "normal",
     color: "gray_dark",
     lineHeight: "1.5rem",
-  },
-  entityHeading: {
-    padding: "2rem 0 0.5rem 0",
-    color: "gray",
-    width: "100%",
-    p: {
-      color: "base",
-      "&:first-of-type": {
-        marginTop: "spacer2",
-      },
-    },
   },
   sectionHeading: {
     padding: "1.5rem 0 0 0",

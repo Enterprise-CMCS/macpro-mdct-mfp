@@ -50,10 +50,4 @@ const sx = {
     color: "#5B616B",
     margin: "1.5rem 0",
   },
-  spreadsheet: {
-    margin: "1.5rem 0",
-    "@media print": {
-      pageBreakAfter: "avoid",
-    },
-  },
 };
