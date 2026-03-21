@@ -127,10 +127,5 @@ export interface Props {
 }
 
 const sx = {
-  table: {
-    ...sxSharedExportStyles.table,
-    "th:nth-of-type(3)": {
-      width: "15rem",
-    },
-  },
+  table: sxSharedExportStyles.table,
 };

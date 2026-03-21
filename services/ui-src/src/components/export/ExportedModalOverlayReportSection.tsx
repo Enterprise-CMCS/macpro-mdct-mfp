@@ -326,10 +326,7 @@ export function renderModalOverlayTableBody(
 
 const sx = {
   entityContainer: {
-    marginTop: "spacer4",
-    "&:first-of-type": {
-      marginTop: 0,
-    },
+    "& + &": { marginTop: "spacer4" },
   },
   entityList: {
     wordBreak: "break-word",
