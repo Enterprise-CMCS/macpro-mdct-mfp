@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
 // components
 import { Box, Text } from "@chakra-ui/react";
@@ -11,11 +11,12 @@ import {
 } from "components";
 // types
 import {
-  StandardReportPageShape,
   AnyObject,
+  FormJson,
   isFieldElement,
-  ReportStatus,
   ReportShape,
+  ReportStatus,
+  StandardReportPageShape,
 } from "types";
 // utils
 import {
@@ -31,6 +32,8 @@ export const StandardReportPage = ({
   route,
   validateOnRender = false,
 }: Props) => {
+  const [form, setForm] = useState<FormJson>({} as FormJson);
+  const [formData, setFormData] = useState<AnyObject>({});
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { report = {} as ReportShape } = useStore();
   const { updateReport } = useContext(ReportContext);
@@ -69,9 +72,14 @@ export const StandardReportPage = ({
     navigate(nextRoute);
   };
 
-  const formData = report.fieldData;
-  let form = filterResubmissionData(route.form, report);
-  form = addDynamicTableRowsValidation(form, formData);
+  useEffect(() => {
+    const fieldData = report.fieldData;
+    let formJson = filterResubmissionData(route.form, report);
+    formJson = addDynamicTableRowsValidation(formJson, fieldData);
+
+    setForm(formJson);
+    setFormData(fieldData);
+  }, [report, route]);
 
   return (
     <Box>
@@ -83,16 +91,18 @@ export const StandardReportPage = ({
           text={route.verbiage.intro}
         />
       )}
-      <Form
-        id={route.form.id}
-        formJson={form}
-        onSubmit={onSubmit}
-        onError={onError}
-        formData={formData}
-        autosave
-        validateOnRender={validateOnRender}
-        dontReset={false}
-      />
+      {form.fields && (
+        <Form
+          id={route.form.id}
+          formJson={form}
+          onSubmit={onSubmit}
+          onError={onError}
+          formData={formData}
+          autosave
+          validateOnRender={validateOnRender}
+          dontReset={false}
+        />
+      )}
       {route.verbiage.reviewPdfHint && (
         <Box>
           <Text sx={sx.reviewPdfHint}>

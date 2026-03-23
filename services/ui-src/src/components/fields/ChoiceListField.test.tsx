@@ -1,7 +1,8 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 //components
 import { useFormContext } from "react-hook-form";
-import { ChoiceListField, ReportContext } from "components";
+import { ChoiceListField, ReportContext, TextField } from "components";
 import { mockWpReportContext } from "../../utils/testing/mockReport";
 import { ReportStatus } from "../../types";
 import { testA11yAct } from "utils/testing/commonTests";
@@ -197,7 +198,7 @@ describe("<ChoiceListField />", () => {
       render(RadioComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
-      expect(mockTrigger).toBeCalled();
+      expect(mockTrigger).toHaveBeenCalled();
     });
 
     test("ChoiceList should render a normal Checkbox and triggers validation after first render if no value given", () => {
@@ -205,7 +206,7 @@ describe("<ChoiceListField />", () => {
       render(CheckboxComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
-      expect(mockTrigger).toBeCalled();
+      expect(mockTrigger).toHaveBeenCalled();
     });
 
     test("RadioField should render nested child fields for choices with children", () => {
@@ -397,15 +398,25 @@ describe("<ChoiceListField />", () => {
           type="checkbox"
           autosave
         />
+        <TextField name="mockTextField" />
       </ReportContext.Provider>
     );
 
     beforeEach(() => {
       jest.clearAllMocks();
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
     });
 
     test("Choicelist Checkbox autosaves with checked value when autosave true, and form is valid", async () => {
       mockGetValues(undefined);
+
+      const user = userEvent.setup({
+        advanceTimers: jest.advanceTimersByTime,
+      });
 
       // Create the Checkbox Component
       const wrapper = render(CheckboxWithAutosaveEnabledComponent);
@@ -414,11 +425,12 @@ describe("<ChoiceListField />", () => {
       const secondCheckbox = wrapper.getByRole("checkbox", {
         name: "Choice2",
       });
+      const otherFocusableField = wrapper.getByRole("textbox");
 
       // Select the first Checkbox and check it
       expect(firstCheckbox).not.toBeChecked();
       expect(secondCheckbox).not.toBeChecked();
-      fireEvent.click(firstCheckbox);
+      await user.click(firstCheckbox);
 
       // Confirm the checkboxes are checked correctly
       const checkedCheckboxes = wrapper.getAllByRole("checkbox", {
@@ -428,8 +440,8 @@ describe("<ChoiceListField />", () => {
       expect(firstCheckbox).toBeChecked();
       expect(secondCheckbox).not.toBeChecked();
 
-      // Tab away to trigger onComponentBlur()
-      fireEvent.blur(firstCheckbox);
+      // Focus on another field to trigger onComponentBlur()
+      otherFocusableField.focus();
 
       // Make sure the form value is set to what we've clicked (Which is only Choice1)
       const firstCheckboxData = [{ key: "Choice1", value: "Choice1" }];

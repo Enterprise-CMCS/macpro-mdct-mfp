@@ -1,4 +1,6 @@
-export default {
+import { ReviewSubmitPageVerbiage } from "types";
+
+const submitReviewVerbiage: ReviewSubmitPageVerbiage = {
   print: {
     printPageUrl: "/wp/export",
     printButtonText: "Review PDF",
@@ -11,13 +13,11 @@ export default {
       info: [
         {
           sectionHeader: "Ready to Submit?",
-          type: "text",
           content:
             "Double check that everything in your MFP Work Plan submission is accurate. You will only be able to make edits after submitting if you contact your CMS MFP Project Officer to unlock your report while it is still in “Submitted” status. ",
         },
         {
           sectionHeader: "Compliance review",
-          type: "text",
           content:
             "Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made. If there are no corrections to be made, your Project Officer will approve the report, its status will change to “Approved”, and it will no longer be editable because its information will be used in the MFP Semi-Annual Progress Report for the same reporting period.",
         },
@@ -118,3 +118,5 @@ export default {
       "Some sections of the MFP Work Plan submission have errors or are missing required responses. Ensure all required fields are completed with valid responses before submitting.",
   },
 };
+
+export default submitReviewVerbiage;

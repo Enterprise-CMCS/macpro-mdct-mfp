@@ -11,6 +11,8 @@ export * from "./state/useStore";
 // autosave
 export * from "./autosave/autosave";
 export * from "./autosave/dataModifications";
+export * from "./autosave/fields";
+export * from "./autosave/helpers";
 // forms
 export * from "./forms/forms";
 // reports

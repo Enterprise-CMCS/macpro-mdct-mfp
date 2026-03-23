@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { Form } from "components";
 import {
   mockBadTablesForm,
@@ -68,29 +68,54 @@ describe("<Form />", () => {
     expect(form).toBeEnabled();
   });
 
-  test("form table is visible", () => {
+  test("form tables are visible", () => {
     render(formComponent(mockTablesForm));
 
-    const table = screen.getByRole("table");
-    expect(table).toHaveAttribute("id", "mock-table-id");
+    const tables = screen.getAllByRole("table");
+    expect(tables).toHaveLength(2);
 
-    const tableHeading = screen.getByRole("heading", {
+    const calculationTable = tables[0];
+    expect(calculationTable).toHaveAttribute(
+      "id",
+      "mockFormId_mockCalculationTableId"
+    );
+
+    const calculationTableHeading = screen.getByRole("heading", {
       level: 2,
-      name: "Mock table title",
+      name: "Mock calculation table title",
     });
-    expect(tableHeading).toBeVisible();
+    expect(calculationTableHeading).toBeVisible();
 
-    const verbiageHeading = screen.getByRole("heading", {
+    const calculationPct = screen.getByText("Mock Percentage: 100%");
+    expect(calculationPct).toBeVisible();
+
+    const calculationInput = within(calculationTable).getByRole("textbox", {
+      name: "Heading 2 Mock text",
+    });
+    expect(calculationInput).toBeVisible();
+
+    const summationTable = tables[1];
+    expect(summationTable).toHaveAttribute(
+      "id",
+      "mockFormId_mockSummationTableId"
+    );
+
+    const summationTableHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Mock summation table title",
+    });
+    expect(summationTableHeading).toBeVisible();
+
+    const summationInput = within(summationTable).getByRole("textbox", {
+      name: "Heading 2 Mock text",
+    });
+    expect(summationInput).toBeVisible();
+
+    const fieldHeading = screen.getByRole("heading", {
       level: 3,
-      name: "Mock verbiage title",
+      name: "Mock field title",
     });
-    expect(verbiageHeading).toBeVisible();
-
-    const pct = screen.getByText("Mock Percentage: 100%");
-    expect(pct).toBeVisible();
-
-    const input = screen.getByRole("textbox", { name: "Heading 2 Mock text" });
-    expect(input).toBeVisible();
+    expect(fieldHeading).toBeVisible();
   });
 
   test("bad table type is skipped", () => {

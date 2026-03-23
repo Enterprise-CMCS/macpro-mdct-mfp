@@ -1,6 +1,14 @@
+// types
+import {
+  AnyObject,
+  PageTypes,
+  ReportPageProgress,
+  ReportRoute,
+  ReportShape,
+} from "types";
 // utils
-import { AnyObject, ReportPageProgress, ReportRoute, ReportShape } from "types";
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
+import { routeChecker } from "utils";
 
 /**
  * This function takes a report and returns an array of objects that represent the
@@ -15,7 +23,8 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
   // Filter out the reviewSubmit pageType
   const validRoutes = routes.filter(
     (r: ReportRoute) =>
-      r.pageType !== "reviewSubmit" && r.path !== "/wp/general-information"
+      r.pageType !== PageTypes.REVIEW_SUBMIT &&
+      !routeChecker.isWorkPlanGeneralInformationPage(r)
   );
 
   // Ensure there is a response from the API containing the completion status
@@ -38,17 +47,19 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
     return out;
   };
 
-  const checkForAlertOrUndefinedStatus = (path: string, status: boolean) => {
-    switch (path) {
-      case "/wp/state-or-territory-specific-initiatives/initiatives":
-        //if the alert is false (meaning no alert), default to the validation status check, else the task is not completed
-        return !getWPAlertStatus(report, "initiative") ? status : false;
-      // this section is optional and should not have a status
-      case "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community":
-        return;
-      default:
-        return status;
+  const checkForAlertOrUndefinedStatus = (
+    route: ReportPageProgress,
+    status: boolean
+  ) => {
+    if (routeChecker.isWorkPlanInitiativesPage(route)) {
+      //if the alert is false (meaning no alert), default to the validation status check, else the task is not completed
+      return !getWPAlertStatus(report, "initiative") ? status : false;
     }
+    // this section is optional and should not have a status
+    if (routeChecker.isSarRetParticipantsPage(route)) {
+      return;
+    }
+    return status;
   };
 
   // Flatten the completion status to get the pages under each section
@@ -77,7 +88,7 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
           name: route.name,
           path: route.path,
           status: checkForAlertOrUndefinedStatus(
-            route.path,
+            route,
             flattenedStatus[route.path]
           ),
         };

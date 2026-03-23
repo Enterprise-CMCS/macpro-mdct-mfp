@@ -225,7 +225,7 @@ export const SuccessMessageGenerator = (
   const reportDisplayNameMap: { [key in ReportType]: string } = {
     WP: "Work Plan",
     SAR: "SAR",
-    EXPENDITURE: "Expenditure Report",
+    EXPENDITURE: "Financial Reporting Form",
   };
   const reportDisplayName = reportDisplayNameMap[reportType];
 

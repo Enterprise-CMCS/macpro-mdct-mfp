@@ -1,4 +1,4 @@
-import { PageTypes, Transformation } from "./formFields";
+import { FormJson, NumberMask, PageTypes, Transformation } from "./formFields";
 import { AnyObject, CustomHtmlElement } from "./other";
 import { ReportType } from "./reports";
 import {
@@ -74,13 +74,15 @@ export interface ReportFormFieldProps {
   disabled?: boolean;
   dynamicFields?: ReportFormField[];
   dynamicLabel?: string;
+  dynamicModalForm?: FormJson;
   heading?: string;
   hint?: any;
   label?: string;
-  mask?: string;
+  mask?: NumberMask | null;
   maxLength?: number;
   styleAsOptional?: boolean;
   subType?: ReportFormFieldType;
+  title?: string;
 }
 
 // Form Tables
@@ -113,16 +115,17 @@ export interface FormTable {
   options?: AnyObject;
   tableType: FormTableType;
   verbiage?: {
+    emptyTableMessage?: string;
     errorMessage?: string | CustomHtmlElement[];
-    modalButtonText?: string;
     percentage?: string;
+    subtitle?: string | CustomHtmlElement[];
     title: string;
   };
 }
 
 export enum FormTableType {
   CALCULATION = "Calculation",
-  MODAL_CALCULATION = "ModalCalculation",
+  SUMMATION = "Summation",
 }
 
 export interface ServiceField {
@@ -132,11 +135,23 @@ export interface ServiceField {
 }
 
 export enum ServiceFieldType {
+  BUDGETED_FTES = "budgetedFullTimeEmployees",
   CATEGORY = "category",
+  DESCRIPTION = "description",
+  FILLED_FTES = "filledFullTimeEmployees",
+  NAME = "name",
   PERCENTAGE_OVERRIDE = "percentageOverride",
+  TITLE = "title",
   TOTAL_COMPUTABLE = "totalComputable",
   TOTAL_FEDERAL_SHARE = "totalFederalShare",
   TOTAL_STATE_TERRITORY_SHARE = "totalStateTerritoryShare",
+}
+
+export interface BuildServiceField {
+  suffix: string;
+  label: string;
+  props: ReportFormFieldProps;
+  options: AnyObject;
 }
 
 // Routes

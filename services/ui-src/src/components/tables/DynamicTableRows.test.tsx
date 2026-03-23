@@ -12,6 +12,7 @@ import {
   mockReportStore,
   mockStateUserStore,
   mockTableId,
+  mockDynamicRowsTemplateWithModalForm,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 import userEvent from "@testing-library/user-event";
@@ -66,6 +67,8 @@ const mockProps = {
     ],
   },
   formPercentage: 100,
+  hasDynamicModalForm: false,
+  hasStaticRows: true,
   tableId: mockTableId,
 };
 
@@ -160,6 +163,61 @@ describe("<DynamicTableRows />", () => {
 
     const rows = screen.queryAllByRole("row");
     expect(rows).toHaveLength(0);
+  });
+
+  describe("modal", () => {
+    const mockOpenModal = jest.fn();
+    const updatedProps = {
+      ...mockProps,
+      dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      emptyTableMessage:
+        mockDynamicRowsTemplateWithModalForm.verbiage.emptyTableMessage,
+      hasStaticRows: false,
+      hasDynamicModalForm: true,
+      openModal: mockOpenModal,
+    };
+
+    test("open modal", async () => {
+      mockedUseStore.mockReturnValue({
+        ...mockStateUserStore,
+        ...mockReportStore,
+        report: {
+          fieldData: mockProps.formData,
+        },
+      });
+      mockGetValues(undefined);
+
+      render(dynamicTableRowsComponent(updatedProps));
+
+      const editButton = screen.getByRole("button", {
+        name: `Edit ${mockDynamicFieldId}`,
+      });
+
+      await act(async () => {
+        await userEvent.click(editButton);
+      });
+
+      expect(mockOpenModal).toHaveBeenCalledTimes(1);
+    });
+
+    test("show empty table message", async () => {
+      mockedUseStore.mockReturnValue({
+        ...mockStateUserStore,
+        ...mockReportStore,
+        report: {
+          fieldData: {
+            [mockDynamicTemplateId]: [],
+          },
+        },
+      });
+      mockGetValues(undefined);
+
+      render(dynamicTableRowsComponent(updatedProps));
+
+      expect(
+        screen.getByText("Mock dynamic empty table message")
+      ).toBeVisible();
+    });
   });
 
   testA11yAct(dynamicTableRowsComponent());

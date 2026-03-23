@@ -82,14 +82,9 @@ export const reportTitle = (
   const { stateName } = fieldData;
   switch (reportType) {
     case ReportType.WP:
-      return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
-
     case ReportType.SAR:
-      return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
-
     case ReportType.EXPENDITURE:
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
-
     default:
       assertExhaustive(reportType as never);
       throw new Error(

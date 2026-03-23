@@ -14,9 +14,11 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
+    "@faker-js/faker": "^9.9.0",
     "@playwright/test": "^1.56.1",
     "@types/aws-sdk": "^2.7.4",
     "@types/aws4": "^1.11.6",
+    "amazon-user-pool-srp-client": "^1.0.4",
     "aws4": "^1.13.2",
     "axe-core": "^4.10.2",
     "dotenv": "^16.4.5"

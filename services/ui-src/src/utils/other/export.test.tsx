@@ -1,5 +1,5 @@
 // types
-import { FormField } from "types";
+import { FormField, NumberMask } from "types";
 // utils
 import {
   parseFormFieldInfo,
@@ -7,7 +7,12 @@ import {
   renderDefaultFieldResponse,
   renderDataCell,
 } from "./export";
-import { mockFormField, mockNestedFormField } from "utils/testing/setupJest";
+import {
+  mockFormField,
+  mockNestedFormField,
+  mockPlanField,
+  mockOptionalFormField,
+} from "utils/testing/setupJest";
 import { render, screen } from "@testing-library/react";
 
 const emailInput: FormField = {
@@ -51,6 +56,24 @@ describe("utils/export", () => {
       expect(emailLink).toBeInTheDocument();
       expect(emailLink).toHaveAttribute("href", "mailto:test@example.com");
     });
+
+    test("renders dynamic field", () => {
+      render(
+        renderDataCell(
+          mockPlanField,
+          {
+            [mockPlanField.id]: [
+              {
+                id: "mockId1",
+                name: "Mock dynamic value",
+              },
+            ],
+          },
+          "mockPageType"
+        )
+      );
+      expect(screen.getByText("Mock dynamic value")).toBeVisible();
+    });
   });
 
   describe("renderResponseData()", () => {
@@ -78,6 +101,28 @@ describe("utils/export", () => {
       const result = renderResponseData(mockFormField, emailInput);
       expect(result.props.children.id).toEqual("email-field-id");
     });
+
+    test("renders dynamic field", () => {
+      render(
+        renderResponseData(mockPlanField, [
+          {
+            id: "mockId1",
+            name: "Mock dynamic value",
+          },
+        ])
+      );
+      expect(screen.getByText("Mock dynamic value")).toBeVisible();
+    });
+
+    test("renders required message", () => {
+      render(renderResponseData(mockFormField, null));
+      expect(screen.getByText("Not answered; required")).toBeVisible();
+    });
+
+    test("renders optional message", () => {
+      render(renderResponseData(mockOptionalFormField, null));
+      expect(screen.getByText("Not answered, optional")).toBeVisible();
+    });
   });
 
   describe("parseFormFieldInfo()", () => {
@@ -100,7 +145,7 @@ describe("utils/export", () => {
   describe("renderDefaultFieldResponse()", () => {
     test("Properly masks field data", () => {
       const textField = renderDefaultFieldResponse(
-        { props: { mask: "currency" } } as unknown as FormField,
+        { props: { mask: NumberMask.CURRENCY } } as unknown as FormField,
         "1234"
       );
       expect(textField.props.children).toBe("$1,234");
@@ -108,7 +153,7 @@ describe("utils/export", () => {
 
     test("Properly masks currency decimal data", () => {
       const textField = renderDefaultFieldResponse(
-        { props: { mask: "currency" } } as unknown as FormField,
+        { props: { mask: NumberMask.CURRENCY } } as unknown as FormField,
         "1.10"
       );
       expect(textField.props.children).toBe("$1.10");

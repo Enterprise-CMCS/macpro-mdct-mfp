@@ -1,7 +1,9 @@
+// types
 import {
   DynamicModalOverlayReportPageShape,
   FormJson,
   FormTableType,
+  NumberMask,
   OverlayModalPageShape,
   ReportFormFieldType,
   ReportPageProgress,
@@ -127,16 +129,6 @@ export const mockSectionHeaderField = {
   },
 };
 
-export const mockTablesField = {
-  id: "mock-number-field",
-  type: "number",
-  validation: "number",
-  forTableOnly: true,
-  props: {
-    label: "mock number field",
-  },
-};
-
 export const mockForm = {
   id: "mock-form-id",
   fields: [mockFormField, mockDateField, mockNumberField],
@@ -145,6 +137,10 @@ export const mockForm = {
 export const mockModalForm = {
   id: "mock-modal-form-id",
   fields: [mockModalFormField],
+  heading: {
+    add: "Add mock",
+    edit: "Edit mock",
+  },
 };
 
 export const mockTransitionBenchmarkModalForm = {
@@ -162,26 +158,61 @@ export const mockEmptyDrawerForm = {
   fields: [],
 };
 
+export const mockTablesField = (tableId: string) => ({
+  id: `${tableId}_mockNumberFieldId`,
+  type: "number",
+  validation: "number",
+  forTableOnly: true,
+  props: {
+    label: "mock number field",
+  },
+});
+
 export const mockTablesForm = {
   id: "mock-tables-form-id",
   tables: [
     {
-      id: "mock-table-id",
-      bodyRows: [["Mock text", mockTablesField]],
+      id: "mockFormId_mockCalculationTableId",
+      bodyRows: [
+        ["Mock text", mockTablesField("mockFormId_mockCalculationTableId")],
+      ],
       footRows: [["Footer 1", "Footer 2"]],
       headRows: [["Heading 1", "Heading 2"]],
       tableType: FormTableType.CALCULATION,
       verbiage: {
-        errorMessage: "Mock error",
+        errorMessage: "Mock calculation table error",
         percentage: "Mock Percentage: {{percentage}}",
-        title: "Mock table title",
+        title: "Mock calculation table title",
+      },
+    },
+    {
+      id: "mockFormId_mockSummationTableId",
+      bodyRows: [
+        ["Mock text", mockTablesField("mockFormId_mockSummationTableId")],
+      ],
+      footRows: [["Footer 1", "Footer 2"]],
+      headRows: [["Heading 1", "Heading 2"]],
+      tableType: FormTableType.SUMMATION,
+      verbiage: {
+        errorMessage: "Mock summation table error",
+        title: "Mock summation table title",
       },
     },
   ],
-  fields: [mockTablesField, mockFormField],
-  verbiage: {
-    title: "Mock verbiage title",
-  },
+  fields: [
+    mockTablesField("mockFormId_mockCalculationTableId"),
+    mockTablesField("mockFormId_mockSummationTableId"),
+    {
+      id: "mockFormId_narrative",
+      type: "text",
+      validation: "text",
+      props: {
+        label: "mock text field",
+        title: "Mock field title",
+      },
+    },
+  ],
+  verbiage: {},
 };
 
 export const mockBadTablesForm = {
@@ -675,6 +706,11 @@ export const mockRETTableRowPage = {
   path: "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
 };
 
+export const mockFinancialReportingFormTableRowPage = {
+  name: "General Information",
+  path: "/expenditure/general-information",
+};
+
 export const mockChildRowPage = {
   name: "State or Territory-Specific Initiatives",
   path: "/wp/state-or-territory-specific-initiatives/initiatives",
@@ -745,7 +781,7 @@ export const mockDynamicRowsTemplate = {
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         props: {
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           dynamicLabel: "Other:",
         },
       },
@@ -754,13 +790,54 @@ export const mockDynamicRowsTemplate = {
         type: ReportFormFieldType.NUMBER,
         validation: ValidationType.NUMBER_OPTIONAL,
         props: {
-          mask: "percentage",
+          mask: NumberMask.PERCENTAGE,
         },
       },
     ],
   },
   verbiage: {
     buttonText: "Mock dynamic row button",
+    hint: "Mock dynamic row hint",
+  },
+};
+
+export const mockDynamicRowsTemplateWithModalForm = {
+  ...mockDynamicRowsTemplate,
+  props: {
+    ...mockDynamicRowsTemplate.props,
+    dynamicModalForm: {
+      id: "mockDynamicModalFormId",
+      heading: {
+        add: "Add mock heading",
+        edit: "Edit mock heading",
+        subheading: "Add mock subheading",
+        subheadingEdit: "Edit mock subheading",
+      },
+      fields: [
+        {
+          id: `${mockDynamicTemplateId}-totalComputable`,
+          type: ReportFormFieldType.NUMBER,
+          validation: ValidationType.NUMBER_OPTIONAL,
+          props: {
+            label: "Mock modal total computable",
+            mask: NumberMask.CURRENCY,
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-percentageOverride`,
+          type: ReportFormFieldType.NUMBER,
+          validation: ValidationType.NUMBER_OPTIONAL,
+          props: {
+            label: "Mock modal percentage override",
+            mask: NumberMask.PERCENTAGE,
+          },
+        },
+      ],
+    },
+  },
+  verbiage: {
+    buttonText: "Mock dynamic row button",
+    emptyTableMessage: "Mock dynamic empty table message",
     hint: "Mock dynamic row hint",
   },
 };

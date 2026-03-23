@@ -2,7 +2,14 @@ import { ReactNode } from "react";
 // components
 import { Box, Link, Text } from "@chakra-ui/react";
 // types
-import { AnyObject, Choice, EntityShape, FieldChoice, FormField } from "types";
+import {
+  AnyObject,
+  Choice,
+  EntityShape,
+  FieldChoice,
+  FormField,
+  ReportFormFieldType,
+} from "types";
 // utils
 import { getReportVerbiage, maskResponseData } from "utils";
 
@@ -14,6 +21,12 @@ export const renderDataCell = (
   entityType?: string,
   parentFieldCheckedChoiceIds?: string[]
 ) => {
+  const fieldType = formField.type as ReportFormFieldType;
+  const isDynamicField = [
+    ReportFormFieldType.DYNAMIC,
+    ReportFormFieldType.DYNAMIC_OBJECT,
+  ].includes(fieldType);
+
   // render drawer data cell (list entities & per-entity responses)
   if (pageType === "drawer") {
     const entityResponseData = allResponseData[entityType!];
@@ -24,7 +37,7 @@ export const renderDataCell = (
     );
   }
   // render dynamic field data cell (list dynamic field entities)
-  if (formField.type === "dynamic") {
+  if (isDynamicField) {
     const fieldResponseData = allResponseData[formField.id];
     return renderDynamicDataCell(fieldResponseData);
   }
@@ -102,7 +115,7 @@ export const renderDynamicDataCell = (fieldResponseData: AnyObject) => {
   const { exportVerbiage } = getReportVerbiage();
   return (
     fieldResponseData?.map((entity: EntityShape) => (
-      <Text key={entity.id} sx={sx.dynamicItem}>
+      <Text key={entity.id} sx={sx.fieldChoice}>
         {entity.name}
       </Text>
     )) ?? (
@@ -114,27 +127,56 @@ export const renderDynamicDataCell = (fieldResponseData: AnyObject) => {
 export const renderResponseData = (
   formField: FormField,
   fieldResponseData: any,
-  notApplicable?: boolean
+  notApplicable: boolean = false
 ) => {
-  const isChoiceListField = ["checkbox", "radio"].includes(formField.type);
-  const { exportVerbiage } = getReportVerbiage();
-  // check for and handle no response
-  const hasResponse: boolean = isChoiceListField
+  const fieldType = formField.type as ReportFormFieldType;
+  const fieldValidation =
+    typeof formField.validation === "object"
+      ? formField.validation.type
+      : formField.validation;
+  const isOptional = fieldValidation.includes("Optional");
+
+  const isDynamicField = [
+    ReportFormFieldType.DYNAMIC,
+    ReportFormFieldType.DYNAMIC_OBJECT,
+  ].includes(fieldType);
+  const isChoiceListField = [
+    ReportFormFieldType.CHECKBOX,
+    ReportFormFieldType.RADIO,
+  ].includes(fieldType);
+
+  const {
+    exportVerbiage: { missingEntry },
+  } = getReportVerbiage();
+  const hasResponse = isChoiceListField
     ? fieldResponseData?.length
     : fieldResponseData;
   const missingEntryVerbiage = notApplicable
-    ? exportVerbiage.missingEntry.notApplicable
-    : exportVerbiage.missingEntry.noResponse;
+    ? missingEntry.notApplicable
+    : missingEntry.noResponse;
   const missingEntryStyle = notApplicable ? sx.notApplicable : sx.noResponse;
-  if (!hasResponse)
+
+  // check for and handle no response
+  if (!hasResponse) {
+    if (isOptional) {
+      return <Text>{missingEntryVerbiage}, optional</Text>;
+    }
     return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;
+  }
+
+  if (isDynamicField) {
+    return renderDynamicDataCell(fieldResponseData);
+  }
+
   // handle choice list fields (checkbox, radio)
   if (isChoiceListField) {
     return renderChoiceListFieldResponse(formField, fieldResponseData);
   }
+
   // check for and handle link fields (email, url)
   const { isLink, isEmail } = checkLinkTypes(formField);
   if (isLink) return renderLinkFieldResponse(fieldResponseData, isEmail);
+
   // handle all other field types
   return renderDefaultFieldResponse(formField, fieldResponseData);
 };
@@ -222,9 +264,9 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
 const sx = {
   fieldChoice: {
     marginBottom: "spacer2",
-  },
-  dynamicItem: {
-    marginBottom: "spacer2",
+    "&:last-of-type": {
+      marginBottom: 0,
+    },
   },
   entityBox: {
     verticalAlign: "top",

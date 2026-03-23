@@ -8,6 +8,35 @@ import {
 import { dateFormat, quarterlyKeyValueGenerator } from "../helpers";
 import { SeedFillReportShape, SeedNewReportShape } from "../types";
 
+const BASE_TARGET_POPULATIONS: ReportFieldData[] = [
+  {
+    id: "2Vd02CVUtKgBETwqzDXpSIhi",
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName: "Older adults",
+  },
+  {
+    id: "2Vd02HAezQkxNu2ShmlQONHa",
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName:
+      "Individuals with physical disabilities (PD)",
+    transitionBenchmarks_targetPopulationName_short: "PD",
+  },
+  {
+    id: "2Vd02IvLwE59ebYAjfiU7H66",
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName:
+      "Individuals with intellectual and developmental disabilities (I/DD)",
+    transitionBenchmarks_targetPopulationName_short: "I/DD",
+  },
+  {
+    id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
+    isRequired: true,
+    transitionBenchmarks_targetPopulationName:
+      "Individuals with mental health and substance use disorders (MH/SUD)",
+    transitionBenchmarks_targetPopulationName_short: "MH/SUD",
+  },
+];
+
 export const newWorkPlan = (
   flags: { [key: string]: true },
   stateName: string,
@@ -34,7 +63,7 @@ export const newWorkPlan = (
     fieldData: {
       stateName,
       submissionName: "Work Plan",
-      targetPopulations: [],
+      targetPopulations: BASE_TARGET_POPULATIONS,
     },
   };
 };
@@ -208,7 +237,7 @@ const addInitiative = (
       initiative_wpTopic: [
         {
           key: "initiative_wpTopic-VjQ0OFqior9Dxu5RRNiZ5u",
-          value: "Transitions and transition coordination services",
+          value: "Transitions and transition coordination services*",
         },
       ],
     },
@@ -263,7 +292,7 @@ const addInitiative = (
       initiative_wpTopic: [
         {
           key: "initiative_wpTopic-wbUsMMqVP7q1n10szK5h5S",
-          value: "Housing-related supports",
+          value: "Housing-related supports*",
         },
       ],
     },
@@ -291,7 +320,7 @@ const addInitiative = (
       initiative_wpTopic: [
         {
           key: "initiative_wpTopic-SdaFlF3DJyzKcHCCu3Zylm",
-          value: "Quality measurement and improvement",
+          value: "Quality measurement and improvement*",
         },
       ],
     },
@@ -302,38 +331,9 @@ const updateTargetPopulations = (
   year: number,
   period: number
 ): ReportFieldData[] => {
-  const targetPopulations = [
-    {
-      id: "2Vd02CVUtKgBETwqzDXpSIhi",
-      isRequired: true,
-      transitionBenchmarks_targetPopulationName: "Older adults",
-    },
-    {
-      id: "2Vd02HAezQkxNu2ShmlQONHa",
-      isRequired: true,
-      transitionBenchmarks_targetPopulationName:
-        "Individuals with physical disabilities (PD)",
-      transitionBenchmarks_targetPopulationName_short: "PD",
-    },
-    {
-      id: "2Vd02IvLwE59ebYAjfiU7H66",
-      isRequired: true,
-      transitionBenchmarks_targetPopulationName:
-        "Individuals with intellectual and developmental disabilities (I/DD)",
-      transitionBenchmarks_targetPopulationName_short: "I/DD",
-    },
-    {
-      id: "2Vd02J1FHl3Ka1DbtU5FMSDh",
-      isRequired: true,
-      transitionBenchmarks_targetPopulationName:
-        "Individuals with mental health and substance use disorders (MH/SUD)",
-      transitionBenchmarks_targetPopulationName_short: "MH/SUD",
-    },
-  ];
-
-  return targetPopulations.map((targetPopulation) => {
+  return BASE_TARGET_POPULATIONS.map((targetPopulation) => {
     const inactive = ["PD", "MH/SUD"].includes(
-      targetPopulation.transitionBenchmarks_targetPopulationName_short || ""
+      targetPopulation.transitionBenchmarks_targetPopulationName_short as string
     );
 
     const numType = inactive ? null : "int";

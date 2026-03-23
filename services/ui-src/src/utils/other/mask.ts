@@ -1,3 +1,6 @@
+// types
+import { NumberMask } from "types";
+// utils
 import { cleanRatioInput, cleanStandardNumericalInput } from "./clean";
 
 export const maskMap = {
@@ -5,6 +8,7 @@ export const maskMap = {
   percentage: convertToThousandsSeparatedString,
   ratio: convertToThousandsSeparatedRatioString,
   currency: convertToThousandsSeparatedString,
+  floatOrInteger: convertToThousandsSeparatedFloatOrIntegerString,
 };
 
 interface MaskedValue {
@@ -27,7 +31,7 @@ export function maskResponseData(
   const numericValue = Number(fieldResponseData);
 
   let minimumFractionDigits = 0;
-  if (fieldMask === "currency" && !Number.isInteger(numericValue)) {
+  if (fieldMask === NumberMask.CURRENCY && !Number.isInteger(numericValue)) {
     minimumFractionDigits = 2;
   }
 
@@ -38,11 +42,11 @@ export function maskResponseData(
   });
 
   switch (fieldMask) {
-    case "percentage":
+    case NumberMask.PERCENTAGE:
       return maskValue + "%";
-    case "currency":
+    case NumberMask.CURRENCY:
       return "$" + maskValue;
-    case "ratio": {
+    case NumberMask.RATIO: {
       let sidesOfRatio = fieldResponseData.split(":");
       return (
         maskResponseData(sidesOfRatio[0]) +
@@ -62,7 +66,7 @@ export function maskResponseData(
  */
 export function convertToThousandsSeparatedString(
   value: string,
-  fixedDecimalPlaces?: number | undefined
+  fixedDecimalPlaces?: number
 ): MaskedValue {
   // Check value validity, and if invalid, bypass all masking and return user-inputted value
   const cleanedInput = cleanStandardNumericalInput(value);
@@ -100,7 +104,7 @@ export function convertToThousandsSeparatedString(
  */
 export function convertToThousandsSeparatedRatioString(
   value: string,
-  fixedDecimalPlaces?: number | undefined
+  fixedDecimalPlaces?: number
 ): MaskedValue {
   // Clean value
   const cleanedInput = cleanRatioInput(value);
@@ -122,27 +126,45 @@ export function convertToThousandsSeparatedRatioString(
   ).maskedValue;
 
   const maskedValue = values.join(":");
-  return { isValid: true, maskedValue: maskedValue };
+  return { isValid: true, maskedValue };
+}
+
+export function convertToThousandsSeparatedFloatOrIntegerString(
+  value: string,
+  fixedDecimalPlaces?: number
+): MaskedValue {
+  const cleanedInput = cleanStandardNumericalInput(value);
+  if (!cleanedInput.isValid) return { isValid: false, maskedValue: value };
+
+  const numericValue = Number(cleanedInput.cleanedValue);
+
+  const maskedValue = numericValue.toLocaleString("en", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: fixedDecimalPlaces,
+  });
+
+  return { isValid: true, maskedValue };
 }
 
 // if valid custom mask, return masked value; else return value
 export const applyMask = (
   value: string,
-  maskName?: keyof typeof maskMap | null,
-  fixedDecimalPlaces?: number | undefined
+  maskName?: NumberMask | null,
+  fixedDecimalPlaces?: number
 ): MaskedValue => {
-  // if maskName is specified as null, bypass all masking and return user-inputted value
-  if (maskName === null) return { isValid: false, maskedValue: value };
-
   // apply specified mask or default to comma-separated mask
   const maskToApply = maskName
     ? maskMap[maskName]
     : convertToThousandsSeparatedString;
 
   // currency field defaults to 2, all other fields default to undefined
-  if (fixedDecimalPlaces === undefined && maskName === "currency") {
-    fixedDecimalPlaces = 2;
+  switch (maskName) {
+    // if maskName is specified as null, bypass all masking and return user-inputted value
+    case null:
+      return { isValid: false, maskedValue: value };
+    case NumberMask.CURRENCY:
+      return maskToApply(value, fixedDecimalPlaces ?? 2);
+    default:
+      return maskToApply(value, fixedDecimalPlaces);
   }
-
-  return maskToApply(value, fixedDecimalPlaces);
 };

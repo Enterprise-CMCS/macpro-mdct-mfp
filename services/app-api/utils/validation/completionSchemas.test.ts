@@ -28,6 +28,10 @@ describe("utils/validation/completionSchemas", () => {
   ];
   const badNumberTestCases = ["abc", "N", "", "!@#!@%", "-1"];
 
+  const goodNumberOptionalTestCases = [...goodNumberTestCases, ""];
+
+  const badNumberOptionalTestCases = badNumberTestCases.filter((t) => t !== "");
+
   const goodIntegerTestCases = [
     "1",
     "123",
@@ -205,6 +209,16 @@ describe("utils/validation/completionSchemas", () => {
 
     test("returns false", () => {
       testSchema(schemaMap.number, badNumberTestCases, false);
+    });
+  });
+
+  describe("numberOptional", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.numberOptional, goodNumberOptionalTestCases, true);
+    });
+
+    test("returns false", () => {
+      testSchema(schemaMap.numberOptional, badNumberOptionalTestCases, false);
     });
   });
 

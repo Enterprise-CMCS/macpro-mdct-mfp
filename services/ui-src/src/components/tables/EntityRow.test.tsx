@@ -141,7 +141,7 @@ describe("<EntityRow />", () => {
         name: `${verbiage.enterEntityDetailsButtonText} Older Adults`,
       });
       await userEvent.click(launchDrawerButton);
-      expect(mockOpenDrawer).toBeCalledTimes(1);
+      expect(mockOpenDrawer).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -194,7 +194,7 @@ describe("<EntityRow />", () => {
         name: `${verbiage.editEntityButtonText}`,
       });
       await userEvent.click(editNameButton);
-      expect(mockOpenAddEditEntityModal).toBeCalledTimes(1);
+      expect(mockOpenAddEditEntityModal).toHaveBeenCalledTimes(1);
     });
 
     test("includes a delete button that removes the new other target population", async () => {
@@ -202,7 +202,7 @@ describe("<EntityRow />", () => {
         name: `${verbiage.deleteEntityDetailsButtonText}`,
       });
       await userEvent.click(deleteButton);
-      expect(mockOpenDeleteEntityModal).toBeCalledTimes(1);
+      expect(mockOpenDeleteEntityModal).toHaveBeenCalledTimes(1);
     });
   });
 
