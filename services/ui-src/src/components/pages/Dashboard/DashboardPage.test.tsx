@@ -128,7 +128,7 @@ describe("<DashboardPage />", () => {
         "Approved"
       );
       const callToActionButton = screen.getByText(
-        wpVerbiage.body.callToActionAdditions
+        wpVerbiage.body.callToActionAdditions!
       );
       expect(callToActionButton).toBeDisabled();
     });
@@ -149,7 +149,7 @@ describe("<DashboardPage />", () => {
       render(wpDashboardViewWithReports);
 
       const callToActionButton = screen.getByText(
-        wpVerbiage.body.callToActionAdditions
+        wpVerbiage.body.callToActionAdditions!
       );
       expect(callToActionButton).toBeDisabled();
     });
@@ -298,7 +298,9 @@ describe("<DashboardPage />", () => {
         await userEvent.click(archiveButton);
       });
       await waitFor(() => {
-        expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
+        expect(
+          screen.getByText(wpVerbiage.modalArchive!.heading)
+        ).toBeVisible();
       });
     });
 
@@ -349,7 +351,9 @@ describe("<DashboardPage />", () => {
         await userEvent.click(archiveButton);
       });
       await waitFor(() => {
-        expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeVisible();
+        expect(
+          screen.getByText(wpVerbiage.modalArchive!.heading)
+        ).toBeVisible();
       });
     });
 

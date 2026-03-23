@@ -13,10 +13,10 @@ export const ExportedSarDetailsTable = ({ verbiage }: Props) => {
       sx={sx.sarDetailsTable}
       content={{
         headRow: [
-          verbiage.sarDetailsTable.headers.indicator,
-          verbiage.sarDetailsTable.headers.response,
+          verbiage.reportPage.sarDetailsTable.headers.indicator,
+          verbiage.reportPage.sarDetailsTable.headers.response,
         ],
-        bodyRows: bodyRowContent(verbiage.sarDetailsTable, report),
+        bodyRows: bodyRowContent(verbiage.reportPage.sarDetailsTable, report),
       }}
     />
   );

@@ -1,4 +1,6 @@
-export default {
+import { AlertsVerbiage } from "types";
+
+const alertsVerbiage: AlertsVerbiage = {
   initiative: {
     title:
       "This alert will disappear once you add initiatives that meet the topic requirements",
@@ -42,3 +44,5 @@ export default {
     ],
   },
 };
+
+export default alertsVerbiage;

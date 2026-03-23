@@ -1,5 +1,11 @@
 // types
-import { AnyObject, ReportType } from "types";
+import {
+  AlertsVerbiage,
+  DashboardPageVerbiage,
+  ExportPageVerbiage,
+  ReportType,
+  ReviewSubmitPageVerbiage,
+} from "types";
 // alerts verbiage
 import wpAlertsVerbiage from "verbiage/pages/wp/wp-alerts";
 import sarAlertsVerbiage from "verbiage/pages/sar/sar-alerts";
@@ -31,12 +37,13 @@ const sarVerbiage = {
 };
 
 const expenditureVerbiage = {
+  alertsVerbiage: {} as AlertsVerbiage,
   dashboardVerbiage: expenditureDashboardVerbiage,
   exportVerbiage: expenditureExportVerbiage,
   reviewAndSubmitVerbiage: expenditureReviewAndSubmitVerbiage,
 };
 
-export const getReportVerbiage = (reportType?: string): AnyObject => {
+export const getReportVerbiage = (reportType?: string): ReportVerbiage => {
   const reportTypeSelector =
     reportType ?? localStorage.getItem("selectedReportType");
   switch (reportTypeSelector) {
@@ -48,3 +55,10 @@ export const getReportVerbiage = (reportType?: string): AnyObject => {
       return wpVerbiage;
   }
 };
+
+interface ReportVerbiage {
+  alertsVerbiage: AlertsVerbiage;
+  dashboardVerbiage: DashboardPageVerbiage;
+  exportVerbiage: ExportPageVerbiage;
+  reviewAndSubmitVerbiage: ReviewSubmitPageVerbiage;
+}
