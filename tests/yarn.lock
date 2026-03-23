@@ -16,6 +16,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^9.9.0":
+  version: 9.9.0
+  resolution: "@faker-js/faker@npm:9.9.0"
+  checksum: 10c0/02107cb6915217b4831fa4b261603165972eb7f09d2ab2e1d4b75807df2d425a2bac8621cddbfdcc158c2c447c2bce2e14939d51c4a63fbd832df55452e7f73c
+  languageName: node
+  linkType: hard
+
 "@isaacs/fs-minipass@npm:^4.0.0":
   version: 4.0.1
   resolution: "@isaacs/fs-minipass@npm:4.0.1"
@@ -96,6 +103,15 @@ __metadata:
   version: 7.1.4
   resolution: "agent-base@npm:7.1.4"
   checksum: 10c0/c2c9ab7599692d594b6a161559ada307b7a624fa4c7b03e3afdb5a5e31cd0e53269115b620fcab024c5ac6a6f37fa5eb2e004f076ad30f5f7e6b8b671f7b35fe
+  languageName: node
+  linkType: hard
+
+"amazon-user-pool-srp-client@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "amazon-user-pool-srp-client@npm:1.0.4"
+  dependencies:
+    sjcl-aws: "npm:^1.0.8"
+  checksum: 10c0/438fec3b4b4e963b33e44c5188025f8b068c83676694b8b98b7bb95382621997ae170eb5abfa175792dea68842e015d6a077c88fc86530f7b6cd29473407bab4
   languageName: node
   linkType: hard
 
@@ -278,9 +294,11 @@ __metadata:
   resolution: "e2e-tests@workspace:."
   dependencies:
     "@axe-core/playwright": "npm:^4.10.1"
+    "@faker-js/faker": "npm:^9.9.0"
     "@playwright/test": "npm:^1.56.1"
     "@types/aws-sdk": "npm:^2.7.4"
     "@types/aws4": "npm:^1.11.6"
+    amazon-user-pool-srp-client: "npm:^1.0.4"
     aws4: "npm:^1.13.2"
     axe-core: "npm:^4.10.2"
     dotenv: "npm:^16.4.5"
@@ -950,6 +968,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sjcl-aws@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "sjcl-aws@npm:1.0.8"
+  checksum: 10c0/ded6e38bfb2de5724938261d25c4572c3720b863deca7a07ec52c427178211b02f81b199cd82aee0f3f1b82fbd3b7782471534f5c64b36a891d26605b0ee70b7
+  languageName: node
+  linkType: hard
+
 "smart-buffer@npm:^4.2.0":
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
@@ -988,15 +1013,15 @@ __metadata:
   linkType: hard
 
 "tar@npm:^7.5.2":
-  version: 7.5.10
-  resolution: "tar@npm:7.5.10"
+  version: 7.5.11
+  resolution: "tar@npm:7.5.11"
   dependencies:
     "@isaacs/fs-minipass": "npm:^4.0.0"
     chownr: "npm:^3.0.0"
     minipass: "npm:^7.1.2"
     minizlib: "npm:^3.1.0"
     yallist: "npm:^5.0.0"
-  checksum: 10c0/ed905e4b33886377df6e9206e5d1bd34458c21666e27943f946799416f86348c938590d573d6a69312cb29c583b122647a64ec92782f2b7e24e68d985dd72531
+  checksum: 10c0/b6bb420550ef50ef23356018155e956cd83282c97b6128d8d5cfe5740c57582d806a244b2ef0bf686a74ce526babe8b8b9061527623e935e850008d86d838929
   languageName: node
   linkType: hard
 

@@ -29,7 +29,7 @@ const mockSelectedSARReport = {
     stateOrTerritory: "CA",
     populations: [
       {
-        id: "targetPopulations-2Vd02CVUtKgBETwqzDXpSIhi",
+        id: "targetPopulations-2Vd02CVUtKgBETwqzDXpSIhi", //pragma: allowlist secret
         label: "Older adults",
         name: "Older adults",
         value: "Older adults",

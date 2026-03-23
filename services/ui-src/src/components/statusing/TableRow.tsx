@@ -1,6 +1,6 @@
 import { Td, Text, Tr } from "@chakra-ui/react";
 import { ReportPageProgress } from "types";
-import { useBreakpoint, useStore } from "utils";
+import { routeChecker, useBreakpoint, useStore } from "utils";
 import { EditButton } from "./EditButton";
 import { StatusIcon } from "./StatusIcon";
 
@@ -25,6 +25,8 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
     ptRowDepthOver1 = "1rem";
   }
 
+  const hideSuccess = routeChecker.isFinancialReportingFormPage(page);
+
   return (
     <Tr>
       <Td
@@ -44,7 +46,7 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
         sx={sx.statusColumn}
         pt={rowDepth == 1 ? ptRowDepth1 : ptRowDepthOver1}
       >
-        <StatusIcon status={status} />
+        <StatusIcon status={status} hideSuccess={hideSuccess} />
       </Td>
       {displayDefaultEditButton && (
         <Td>

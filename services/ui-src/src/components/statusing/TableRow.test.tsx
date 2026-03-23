@@ -7,6 +7,7 @@ import { ReportPageProgress } from "types";
 // utils
 import { useStore } from "utils";
 import {
+  mockFinancialReportingFormTableRowPage,
   mockRETTableRowPage,
   mockTableRowPage,
   mockUseStore,
@@ -71,11 +72,23 @@ describe("<TableRow />", () => {
   });
 
   test("TableRow does not display status for RET HCBS", () => {
-    const sarHcbsText =
-      "Number of HCBS participants admitted to a facility from the community, by length of stay and age group";
     mockedUseStore.mockReturnValue(mockUseStore);
     render(tableRowComponent({ page: mockRETTableRowPage, rowDepth: 0 }));
-    expect(screen.getByText(sarHcbsText)).toBeVisible();
+    expect(screen.getByText(mockRETTableRowPage.name)).toBeVisible();
+    expect(screen.queryByAltText("Success notification")).toBeNull();
+  });
+
+  test("TableRow does not display success status for Financial Reporting Form page", () => {
+    mockedUseStore.mockReturnValue(mockUseStore);
+    render(
+      tableRowComponent({
+        page: mockFinancialReportingFormTableRowPage,
+        rowDepth: 0,
+      })
+    );
+    expect(
+      screen.getByText(mockFinancialReportingFormTableRowPage.name)
+    ).toBeVisible();
     expect(screen.queryByAltText("Success notification")).toBeNull();
   });
 

@@ -1,5 +1,6 @@
 import {
   FormRoute,
+  NumberMask,
   PageTypes,
   ReportFormFieldType,
   ValidationComparator,
@@ -92,7 +93,7 @@ export const fmapPercentagesRoute: FormRoute = {
         props: {
           label: "Enhanced FMAP: Qualified HCBS",
           hint: "Enter percentage.",
-          mask: "percentage",
+          mask: NumberMask.PERCENTAGE,
         },
       },
       {
@@ -108,7 +109,7 @@ export const fmapPercentagesRoute: FormRoute = {
         props: {
           label: "Enhanced FMAP: Demonstration Services",
           hint: "Enter percentage.",
-          mask: "percentage",
+          mask: NumberMask.PERCENTAGE,
         },
       },
     ],

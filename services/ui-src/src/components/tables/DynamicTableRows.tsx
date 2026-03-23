@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 // components
-import { Button, Image, Td, Tr } from "@chakra-ui/react";
+import { Button, Flex, Image, Td, Text, Tr } from "@chakra-ui/react";
 import { DynamicTableContext } from "components";
 // types
 import {
@@ -15,9 +15,14 @@ import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 export const DynamicTableRows = ({
   disabled,
   dynamicRowsTemplate,
+  emptyTableMessage,
   formData,
   formPercentage,
+  hasDynamicModalForm,
+  hasStaticRows,
+  openModal = () => {},
   tableId,
+  updatedFieldsCallback = () => [],
 }: Props) => {
   const {
     displayDynamicCell,
@@ -30,6 +35,9 @@ export const DynamicTableRows = ({
   const [localDynamicRows, setLocalDynamicRows] = useState<DynamicFieldShape[]>(
     []
   );
+  const [showEmptyRows, setShowEmptyRows] = useState<boolean>(false);
+  const emptyRowsColspan =
+    (dynamicRowsTemplate.props?.dynamicFields.length || 0) + 1;
 
   // Add rows from fieldData
   useEffect(() => {
@@ -54,10 +62,26 @@ export const DynamicTableRows = ({
     });
   }, [focusedRowIndex, localDynamicRows]);
 
+  useEffect(() => {
+    const hasEmptyRows =
+      !!emptyTableMessage && !hasStaticRows && localDynamicRows.length === 0;
+
+    setShowEmptyRows(hasEmptyRows);
+  }, [emptyTableMessage, hasStaticRows, localFieldData, localDynamicRows]);
+
   return (
     <>
+      {showEmptyRows && (
+        <Tr>
+          <Td colSpan={emptyRowsColspan}>
+            <Text sx={sx.emptyTableMessage}>{emptyTableMessage}</Text>
+          </Td>
+        </Tr>
+      )}
+
       {localDynamicRows.map((row, rowIndex: number) => {
         const dynamicId = row.id;
+        const name = row.name || dynamicId;
 
         return (
           <Tr
@@ -88,18 +112,35 @@ export const DynamicTableRows = ({
               )
             )}
             <Td>
-              {!disabled && (
-                <Button
-                  onClick={() =>
-                    removeDynamicRow(dynamicRowsTemplate.id, dynamicId)
-                  }
-                  sx={sx.removeButton}
-                  type="button"
-                  variant={"unstyled"}
-                >
-                  <Image src={cancelIcon} alt={`Delete ${dynamicId}`} />
-                </Button>
-              )}
+              <Flex>
+                {!disabled && hasDynamicModalForm && (
+                  <Button
+                    aria-label={`Edit ${name}`}
+                    onClick={() => openModal(dynamicId)}
+                    sx={sx.editButton}
+                    type="button"
+                    variant={"unstyled"}
+                  >
+                    Edit
+                  </Button>
+                )}
+                {!disabled && (
+                  <Button
+                    onClick={() =>
+                      removeDynamicRow(
+                        dynamicRowsTemplate.id,
+                        dynamicId,
+                        updatedFieldsCallback(dynamicId, localFieldData)
+                      )
+                    }
+                    sx={sx.removeButton}
+                    type="button"
+                    variant={"unstyled"}
+                  >
+                    <Image src={cancelIcon} alt={`Delete ${name}`} />
+                  </Button>
+                )}
+              </Flex>
             </Td>
           </Tr>
         );
@@ -111,10 +152,15 @@ export const DynamicTableRows = ({
 interface Props {
   disabled: boolean;
   dynamicRowsTemplate: DynamicRowsTemplate;
+  emptyTableMessage?: string;
   formData?: AnyObject;
   formPercentage: number;
+  hasDynamicModalForm: boolean;
+  hasStaticRows: boolean;
+  openModal?: Function;
   label?: string;
   tableId: string;
+  updatedFieldsCallback?: Function;
 }
 
 const sx = {
@@ -122,6 +168,17 @@ const sx = {
     display: "block",
     fontWeight: "bold",
     textAlign: "right",
+  },
+  editButton: {
+    color: "primary",
+    marginRight: "spacer4",
+    textDecoration: "underline",
+  },
+  emptyTableMessage: {
+    fontWeight: "bold",
+    paddingBottom: "spacer2",
+    paddingTop: "spacer2",
+    textAlign: "center",
   },
   removeButton: {
     minWidth: "0",

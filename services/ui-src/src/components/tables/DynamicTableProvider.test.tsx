@@ -1,13 +1,19 @@
 import { useContext } from "react";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
+import { Table, Tbody, Thead } from "@chakra-ui/react";
 import {
   DynamicTableContext,
   DynamicTableProvider,
 } from "./DynamicTableProvider";
 // types
-import { ReportFormFieldType, ValidationType } from "types";
+import {
+  AnyObject,
+  NumberMask,
+  ReportFormFieldType,
+  ValidationType,
+} from "types";
 // utils
 import {
   mockDynamicFieldId,
@@ -19,6 +25,7 @@ import {
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 import { useFormContext } from "react-hook-form";
+import { calculationTableDynamicTotalsOnSave } from "utils";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -63,7 +70,7 @@ const TestComponent = () => {
     validation: ValidationType.NUMBER_OPTIONAL,
     props: {
       label: "Mock field label",
-      mask: "currency",
+      mask: NumberMask.CURRENCY,
     },
   };
 
@@ -72,7 +79,7 @@ const TestComponent = () => {
     type: ReportFormFieldType.NUMBER,
     validation: ValidationType.NUMBER_OPTIONAL,
     props: {
-      mask: "currency",
+      mask: NumberMask.CURRENCY,
     },
   };
 
@@ -85,6 +92,8 @@ const TestComponent = () => {
   };
 
   const fieldData = {
+    "administrativeCosts_budgetCategory-totalComputable": 100,
+    "administrativeCosts_subRecipients-totalComputable": 100,
     [mockDynamicTemplateId]: [
       {
         id: mockDynamicFieldId,
@@ -178,8 +187,9 @@ const TestComponent = () => {
       },
     ],
     initialValue: "12.34",
-    mask: "currency",
+    mask: NumberMask.CURRENCY,
     rowIndex: 0,
+    type: ReportFormFieldType.NUMBER,
   };
 
   const displayReadOnlyCellHydrateProps = {
@@ -187,9 +197,15 @@ const TestComponent = () => {
     hydrate: [
       {
         id: "mockId",
-        name: "1234.56",
+        name: "Mock text",
       },
     ],
+    type: ReportFormFieldType.TEXT,
+  };
+
+  const displayReadOnlyCellAdministrativeCostsBudgetCategoryProps = {
+    ...displayReadOnlyCellProps,
+    id: "administrativeCosts_budgetCategory-totalComputable",
   };
 
   const {
@@ -198,11 +214,26 @@ const TestComponent = () => {
     displayDynamicCell,
     displayReadOnlyCell,
     focusedRowIndex,
+    generateRows,
     localFieldData,
     removeDynamicRow,
     setFocusedRowIndex,
     setLocalFieldData,
   } = useContext(DynamicTableContext);
+
+  const updatedFieldsCallback = (
+    dynamicId: string,
+    localFieldData: AnyObject
+  ) => {
+    return calculationTableDynamicTotalsOnSave({
+      dynamicFieldId: dynamicId,
+      dynamicTemplateId: dynamicRowsTemplate.id,
+      fieldData: localFieldData,
+      fieldValue: 0,
+      formId: "",
+      tableId: mockTableId,
+    });
+  };
 
   return (
     <div>
@@ -223,7 +254,11 @@ const TestComponent = () => {
 
       <button
         onClick={() =>
-          removeDynamicRow(mockDynamicTemplateId, mockDynamicFieldId)
+          removeDynamicRow(
+            mockDynamicTemplateId,
+            mockDynamicFieldId,
+            updatedFieldsCallback(mockDynamicFieldId, localFieldData)
+          )
         }
       >
         removeDynamicRow
@@ -250,7 +285,12 @@ const TestComponent = () => {
         displayReadOnlyCell hydrate:{" "}
         {displayReadOnlyCell(displayReadOnlyCellHydrateProps)}
       </h3>
-
+      <h3>
+        displayReadOnlyCell administrativeCosts_budgetCategory-totalComputable:{" "}
+        {displayReadOnlyCell(
+          displayReadOnlyCellAdministrativeCostsBudgetCategoryProps
+        )}
+      </h3>
       <div id="display-cell-label">displayCell label</div>
       <div id="dynamic-display-cell-label">displayDynamicCell label</div>
       <div id="rowId">Row 1</div>
@@ -260,6 +300,32 @@ const TestComponent = () => {
       {displayCell(displayCellNoProps)}
       {displayDynamicCell(dynamicDisplayCellProps)}
       {displayDynamicCell(dynamicDisplayCellLabelProps)}
+
+      <Table aria-label="Table 1">
+        <Thead>
+          {generateRows({
+            columnCount: 3,
+            row: [
+              "Total Computable",
+              "Total State / Territory Share",
+              "Total Federal Share",
+            ],
+            rowIndex: 0,
+            section: "thead",
+          })}
+        </Thead>
+      </Table>
+
+      <Table aria-label="Table 2">
+        <Tbody>
+          {generateRows({
+            columnCount: 6,
+            row: ["Mock 1", "Mock 2", "Mock 3", "Mock 4", "Mock 5", "Mock 6"],
+            rowIndex: 0,
+            section: "tbody",
+          })}
+        </Tbody>
+      </Table>
     </div>
   );
 };
@@ -334,7 +400,7 @@ describe("<DynamicTableProvider />", () => {
   describe("displayReadOnlyCell()", () => {
     test("hydrate", () => {
       const cell = screen.getByRole("heading", {
-        name: "displayReadOnlyCell hydrate: $1,234.56",
+        name: "displayReadOnlyCell hydrate: Mock text",
       });
       expect(cell).toBeVisible();
     });
@@ -342,6 +408,17 @@ describe("<DynamicTableProvider />", () => {
     test("initialValue", () => {
       const cell = screen.getByRole("heading", {
         name: "displayReadOnlyCell initialValue: $12.34",
+      });
+      expect(cell).toBeVisible();
+    });
+
+    test("administrativeCosts_budgetCategory-totalComputable", async () => {
+      const button = screen.getByRole("button", { name: "setLocalFieldData" });
+      await act(async () => {
+        await userEvent.click(button);
+      });
+      const cell = screen.getByRole("heading", {
+        name: "displayReadOnlyCell administrativeCosts_budgetCategory-totalComputable: $200",
       });
       expect(cell).toBeVisible();
     });
@@ -405,6 +482,36 @@ describe("<DynamicTableProvider />", () => {
       await userEvent.click(button);
     });
     expect(screen.getByRole("heading", { name: text })).toBeVisible();
+  });
+
+  test("generateRows() - thead", async () => {
+    const table = screen.getByRole("table", { name: "Table 1" });
+    const row = within(table).getByRole("row", {
+      name: "Total Computable Total State / Territory Share Total Federal Share",
+    });
+    expect(row).toBeVisible();
+
+    const columnheader = within(table).getByRole("columnheader", {
+      name: "Total Computable",
+    });
+    expect(columnheader.tagName).toBe("TH");
+
+    const rightAligned = within(table).getByRole("columnheader", {
+      name: "Total Federal Share",
+    });
+    const styles = getComputedStyle(rightAligned);
+    expect(styles.textAlign).toBe("right");
+  });
+
+  test("generateRows() - tbody", async () => {
+    const table = screen.getByRole("table", { name: "Table 2" });
+    const row = within(table).getByRole("row", {
+      name: "Mock 1 Mock 2 Mock 3 Mock 4 Mock 5 Mock 6",
+    });
+    expect(row).toBeVisible();
+
+    const cell = within(table).getByRole("cell", { name: "Mock 1" });
+    expect(cell.tagName).toBe("TD");
   });
 
   testA11yAct(testComponent);

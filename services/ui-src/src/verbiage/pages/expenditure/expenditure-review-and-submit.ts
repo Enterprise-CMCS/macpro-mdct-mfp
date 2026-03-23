@@ -1,4 +1,6 @@
-export default {
+import { ReviewSubmitPageVerbiage } from "types";
+
+const submitReviewVerbiage: ReviewSubmitPageVerbiage = {
   print: {
     printPageUrl: "/expenditure/export",
     printButtonText: "Review PDF",
@@ -10,16 +12,14 @@ export default {
       infoHeader: "Ready to Submit?",
       info: [
         {
-          sectionHeader: "Ready to Submit?",
-          type: "text",
+          sectionHeader: "Ready to submit?",
           content:
-            "Double check that everything in your MFP Financial Reporting Form is accurate. You will be able to make edits after submitting if you contact your Project Officer to unlock your report while it is in “Submitted” status.",
+            "Double check that everything in your MFP Financial Reporting Form is accurate. You will be able to make edits after submitting if you contact your CMS Project Officer to unlock your report while it is in “Submitted” status.",
         },
         {
-          sectionHeader: "Compliance review",
-          type: "text",
+          sectionHeader: "Compliance Review",
           content:
-            "Your Project Officer will review your report and may contact you and unlock your report for editing if there are corrections to be made.",
+            "Your CMS Project Officer will review your report, and may contact you and unlock your report for editing if there are corrections to be made.",
         },
       ],
     },
@@ -32,7 +32,7 @@ export default {
         actionButtonText: "Submit Report",
         closeButtonText: "Cancel",
       },
-      body: "You won’t be able to make edits after submitting unless you send a request to CMS to unlock your submission. After review, your Project Officer will contact you if there are corrections to be made and your report status will change to “In revision” in the MFP Financial Reporting Form Report dashboard.",
+      body: "You won’t be able to make edits after submitting unless you send a request to CMS to unlock your submission. After review, your CMS Project Officer will contact you if there are corrections to be made, and your report status will change to “In revision” in the MFP Financial Reporting Form dashboard.",
     },
     pageLink: {
       text: "Submit Report",
@@ -64,16 +64,14 @@ export default {
       additionalInfoHeader: "What happens now?",
       additionalInfo: [
         {
-          type: "text",
-          as: "p",
+          type: "p",
           content:
-            "Your dashboard will indicate the status of this report as “Submitted” and it is now locked from editing.",
+            "Your dashboard will indicate the status of this report as “submitted” and it is now locked from editing.",
         },
         {
-          type: "text",
-          as: "p",
+          type: "p",
           content:
-            "<b>Email your Project Officer to inform them you submitted the MFP Financial Reporting Form Report and it is ready for their review.</b>",
+            "Email your CMS Project Officer to inform them you submitted the MFP Financial Reporting Form and it is ready for their review.",
         },
       ],
     },
@@ -81,6 +79,8 @@ export default {
   alertBox: {
     title: "Your form is not ready for submission",
     description:
-      "Some sections of the MFP Financial Reporting Form Report have errors or have not been started.",
+      "Some sections of the MFP Financial Reporting Form have errors or have not been started.",
   },
 };
+
+export default submitReviewVerbiage;

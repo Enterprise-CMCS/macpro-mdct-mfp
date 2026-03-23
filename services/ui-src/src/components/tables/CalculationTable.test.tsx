@@ -1,38 +1,46 @@
-import { act, render, screen } from "@testing-library/react";
+import React from "react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
-import {
-  CalculationTable,
-  DynamicTableContext,
-  DynamicTableProvider,
-} from "components";
+import { CalculationTable, DynamicTableProvider } from "components";
 // types
-import { ReportFormFieldType, ReportShape, ValidationType } from "types";
+import {
+  NumberMask,
+  ReportFormFieldType,
+  ReportShape,
+  ValidationType,
+} from "types";
 // utils
 import { useStore } from "utils";
 import {
   mockDynamicFieldId,
   mockDynamicRowsTemplate,
+  mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
   mockStateUserStore,
+  RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
-import React from "react";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
-  register: () => {},
-  setValue: () => {},
+  register: jest.fn(),
+  setValue: jest.fn(),
   getValues: jest.fn(),
   trigger: mockTrigger,
 };
 const mockUseFormContext = useFormContext as unknown as jest.Mock<
   typeof useFormContext
 >;
-jest.mock("react-hook-form", () => ({
-  useFormContext: jest.fn(() => mockRhfMethods),
-}));
+jest.mock("react-hook-form", () => {
+  const actual = jest.requireActual("react-hook-form");
+  return {
+    __esModule: true,
+    ...actual,
+    useFormContext: jest.fn(() => mockRhfMethods),
+  };
+});
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
     ...mockRhfMethods,
@@ -41,6 +49,20 @@ const mockGetValues = (returnValue: any) =>
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
+jest.mock("react-uuid", () => jest.fn(() => mockDynamicFieldId));
+
+jest.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: jest.fn().mockImplementation(() => {
+    return [
+      {
+        name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-category`,
+        value: "Test Category",
+      },
+    ];
+  }),
+  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
+}));
 
 const mockProps = {
   bodyRows: [
@@ -53,7 +75,7 @@ const mockProps = {
         forTableOnly: true,
         props: {
           label: "Mock text 1 Total Computable",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
         },
       },
       {
@@ -63,7 +85,7 @@ const mockProps = {
         forTableOnly: true,
         props: {
           label: "Mock text 1 Percentage",
-          mask: "percentage",
+          mask: NumberMask.PERCENTAGE,
         },
       },
       {
@@ -74,7 +96,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock text 1 Total State / Territory Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -86,7 +108,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock text 1 Total Federal Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -100,7 +122,7 @@ const mockProps = {
         forTableOnly: true,
         props: {
           label: "Mock text 2 Total Computable",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
         },
       },
       {
@@ -110,7 +132,7 @@ const mockProps = {
         forTableOnly: true,
         props: {
           label: "Mock text 2 Percentage",
-          mask: "percentage",
+          mask: NumberMask.PERCENTAGE,
         },
       },
       {
@@ -121,7 +143,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock text 2 Total State / Territory Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -133,7 +155,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock text 2 Total Federal Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -151,7 +173,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock footer Total Computable",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -164,7 +186,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock footer Total State / Territory Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -176,7 +198,7 @@ const mockProps = {
         props: {
           initialValue: "0",
           label: "Mock footer Total Federal Share",
-          mask: "currency",
+          mask: NumberMask.CURRENCY,
           readOnly: true,
         },
       },
@@ -188,14 +210,17 @@ const mockProps = {
   verbiage: {
     errorMessage: "Mock error",
     percentage: "Mock Percentage: {{percentage}}",
+    subtitle: "Mock table subtitle",
     title: "Mock table title",
   },
 };
 
 const tableComponent = (props = mockProps) => (
-  <DynamicTableProvider>
-    <CalculationTable {...props} />
-  </DynamicTableProvider>
+  <RouterWrappedComponent>
+    <DynamicTableProvider>
+      <CalculationTable {...props} />
+    </DynamicTableProvider>
+  </RouterWrappedComponent>
 );
 
 describe("<CalculationTable />", () => {
@@ -218,6 +243,9 @@ describe("<CalculationTable />", () => {
       name: "Mock table title",
     });
     expect(tableHeading).toBeVisible();
+
+    const subtitle = screen.getByText("Mock table subtitle");
+    expect(subtitle).toBeVisible();
 
     const pct = screen.getByText("Mock Percentage: 100%");
     expect(pct).toBeVisible();
@@ -293,29 +321,7 @@ describe("<CalculationTable />", () => {
   });
 
   describe("dynamic rows", () => {
-    const mockAddDynamicRow = jest.fn();
-    const mockDisplayCell = jest.fn(() => <></>);
-
-    beforeEach(() => {
-      jest.spyOn(React, "useContext").mockImplementation((ctx) => {
-        if (ctx === DynamicTableContext) {
-          return {
-            addDynamicRow: mockAddDynamicRow,
-            displayCell: mockDisplayCell,
-          };
-        }
-        return (React as any).useContext.wrappedMethod
-          ? (React as any).useContext.wrappedMethod(ctx)
-          : (ctx as any)?._currentValue;
-      });
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks();
-      mockAddDynamicRow.mockClear();
-    });
-
-    test("clicking button calls AddDynamicRow", async () => {
+    test("clicking add button adds row", async () => {
       mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
@@ -334,7 +340,14 @@ describe("<CalculationTable />", () => {
         dynamicRowsTemplate: mockDynamicRowsTemplate,
       };
 
-      render(tableComponent(updatedProps));
+      const { container } = render(tableComponent(updatedProps));
+
+      // bodyRows are added on load
+      const tbody = container.querySelector("tbody");
+      const rows = tbody?.querySelectorAll("tr");
+
+      expect(rows).toHaveLength(2);
+
       const hint = screen.getByText("Mock dynamic row hint");
       expect(hint).toBeVisible();
 
@@ -342,10 +355,97 @@ describe("<CalculationTable />", () => {
         name: "Mock dynamic row button",
       });
       await userEvent.click(button);
-      expect(mockAddDynamicRow).toHaveBeenCalledTimes(1);
-      expect(mockAddDynamicRow).toHaveBeenCalledWith(
-        updatedProps.dynamicRowsTemplate
-      );
+      const updatedRows = tbody?.querySelectorAll("tr");
+
+      expect(updatedRows).toHaveLength(3);
+
+      const input = screen.getByRole("textbox", { name: "Heading 1 Other:" });
+      expect(input).toBeVisible();
+    });
+
+    test("clicking remove button removes row", async () => {
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        report: {
+          fieldData: {
+            [mockDynamicTemplateId]: [
+              {
+                id: mockDynamicFieldId,
+                name: mockDynamicFieldId,
+                category: "Mock Dynamic Row Category 1",
+              },
+            ],
+          },
+        },
+        dynamicRowsTemplate: mockDynamicRowsTemplate,
+      };
+
+      const { container } = render(tableComponent(updatedProps));
+
+      // bodyRows are added on load
+      const tbody = container.querySelector("tbody");
+      const rows = tbody?.querySelectorAll("tr");
+
+      expect(rows).toHaveLength(2);
+
+      const button = screen.getByRole("button", {
+        name: "Mock dynamic row button",
+      });
+      await userEvent.click(button);
+
+      const deleteButton = screen.getByRole("button", {
+        name: `Delete ${mockDynamicFieldId}`,
+      });
+      await userEvent.click(deleteButton);
+
+      const updatedRows = tbody?.querySelectorAll("tr");
+      expect(updatedRows).toHaveLength(2);
+    });
+
+    test("clicking add button opens modal", async () => {
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        report: {
+          fieldData: {
+            fmap_mockTablePercentage: 78,
+            [mockDynamicTemplateId]: [
+              {
+                id: mockDynamicFieldId,
+                name: mockDynamicFieldId,
+                category: "Mock Dynamic Row Category 1",
+              },
+            ],
+          },
+        },
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const button = screen.getByRole("button", {
+        name: "Mock dynamic row button",
+      });
+      await userEvent.click(button);
+
+      const modal = screen.getByRole("dialog", { name: "Add mock heading" });
+      await waitFor(() => {
+        expect(modal).toBeVisible();
+      });
+
+      const closeButton = screen.getByRole("button", {
+        name: "Close",
+      });
+      await userEvent.click(closeButton);
+      await waitFor(async () => {
+        const closedModal = screen.queryByRole("dialog", {
+          name: "Add mock heading",
+        });
+        await act(() => {
+          expect(closedModal).not.toBeVisible();
+        });
+      });
     });
   });
 
