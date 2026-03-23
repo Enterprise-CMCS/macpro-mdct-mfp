@@ -42,11 +42,11 @@ export const ExportedOverlayModalReportSection = ({
       <Box sx={sx.dashboardTitle} data-testid="headerCount">
         {entityCount > 0 ? (
           `${
-            dashboardTitle[type as keyof typeof dashboardTitle]
+            dashboardTitle?.[type as keyof typeof dashboardTitle]
           } ${entityCount}`
         ) : (
           <Text as="span" sx={sx.notAnswered} data-testid="entityMessage">
-            {emptyEntityMessage[type as keyof typeof emptyEntityMessage]}
+            {emptyEntityMessage?.[type as keyof typeof emptyEntityMessage]}
           </Text>
         )}
       </Box>
