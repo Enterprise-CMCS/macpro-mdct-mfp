@@ -71,14 +71,6 @@ export interface Props {
 }
 
 const sx = {
-  numberColumn: {
-    width: "5.5rem",
-    paddingLeft: 0,
-  },
-  fieldNumber: {
-    fontSize: "sm",
-    fontWeight: "bold",
-  },
   labelColumn: {
     width: "18rem",
     ".two-column &": {
@@ -91,7 +83,6 @@ const sx = {
   fieldLabel: {
     fontSize: "sm",
     fontWeight: "bold",
-    marginBottom: "spacer1",
   },
   fieldHint: {
     lineHeight: "lg",

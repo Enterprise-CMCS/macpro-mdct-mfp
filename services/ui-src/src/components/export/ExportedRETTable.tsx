@@ -346,7 +346,7 @@ export const ExportRETTable = ({ section }: Props) => {
   const tables: TableContentShape[] = truncateTable(table, 7);
 
   return (
-    <Box mt="1.5rem" data-testid="exportRETTable" sx={sx.container}>
+    <Box data-testid="exportRETTable" sx={sx.container}>
       {tables.length > 0 ? (
         tables?.map((table, index) => {
           return (
@@ -373,6 +373,7 @@ export interface Props {
 
 const sx = {
   container: {
+    marginTop: "spacer4",
     "@media print": {
       pageBreakInside: "avoid",
     },

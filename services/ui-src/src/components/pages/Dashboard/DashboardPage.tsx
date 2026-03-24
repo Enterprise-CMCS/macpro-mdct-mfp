@@ -356,9 +356,9 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
       <Box sx={sx.leadTextBox}>
         {showSarAlert && (
           <Alert
-            title={dashboardVerbiage.alertBanner.title}
+            title={dashboardVerbiage.alertBanner?.title}
             status={AlertTypes.ERROR}
-            description={dashboardVerbiage.alertBanner.body}
+            description={dashboardVerbiage.alertBanner?.body}
           />
         )}
         <Heading as="h1" sx={sx.headerText}>

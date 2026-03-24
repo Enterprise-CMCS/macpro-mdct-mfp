@@ -4,19 +4,21 @@ import { Table } from "components";
 import { Choice, ReportShape } from "types";
 // utils
 import { useStore } from "utils";
+// assets
+import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
 
 export const ExportedSarDetailsTable = ({ verbiage }: Props) => {
   const { report } = useStore() ?? {};
   return (
     <Table
       data-testid="exportedSarDetailsTable"
-      sx={sx.sarDetailsTable}
+      sx={sx.table}
       content={{
         headRow: [
-          verbiage.sarDetailsTable.headers.indicator,
-          verbiage.sarDetailsTable.headers.response,
+          verbiage.reportPage.sarDetailsTable.headers.indicator,
+          verbiage.reportPage.sarDetailsTable.headers.response,
         ],
-        bodyRows: bodyRowContent(verbiage.sarDetailsTable, report),
+        bodyRows: bodyRowContent(verbiage.reportPage.sarDetailsTable, report),
       }}
     />
   );
@@ -43,23 +45,10 @@ export interface Props {
 }
 
 const sx = {
-  sarDetailsTable: {
-    margin: "3rem 0",
-    maxWidth: "reportPageWidth",
-    tableLayout: "fixed",
-    td: {
-      verticalAlign: "middle",
-      textAlign: "left",
-      padding: "spacer1",
-    },
+  table: {
+    ...sxSharedExportStyles.table,
     "td:nth-of-type(1)": {
       fontWeight: "bold",
-      color: "base",
-    },
-    th: {
-      fontWeight: "bold",
-      textAlign: "left",
-      color: "gray",
     },
   },
 };

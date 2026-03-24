@@ -92,6 +92,14 @@ export const CalculationTable = ({
     [formPercentage, report?.fieldData]
   );
 
+  // Check if a row contains non-footer totals field
+  const isTotalsRow = useCallback((row: FormTableCell[]) => {
+    return row.some((cell) => {
+      if (typeof cell === "string") return false;
+      return cell.id.includes("totals_totalsSummary_serviceTotals");
+    });
+  }, []);
+
   // Use useCallback to reduce lookups
   const cellPropsCallback = useCallback(
     (cell: FormTableCell) => ({
@@ -192,6 +200,7 @@ export const CalculationTable = ({
           {bodyRows.map((row, rowIndex: number) =>
             generateRows({
               cellPropsCallback,
+              isTotalsRow: isTotalsRow(row),
               row,
               rowIndex,
               section: "tbody",
@@ -286,6 +295,15 @@ export const sx = {
       "tr:nth-of-type(even)": {
         td: {
           backgroundColor: "gray_lightest_highlight",
+        },
+      },
+      "tr.totals-row": {
+        td: {
+          backgroundColor: "gray_lightest",
+          border: "none",
+          fontWeight: "bold",
+          paddingInlineEnd: "spacer2",
+          paddingInlineStart: "spacer2",
         },
       },
       td: {

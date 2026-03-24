@@ -263,10 +263,7 @@ export const parseFormFieldInfo = (formFieldProps?: AnyObject) => {
 // style object for rendered elements
 const sx = {
   fieldChoice: {
-    marginBottom: "spacer2",
-    "&:last-of-type": {
-      marginBottom: 0,
-    },
+    "& + &": { marginBottom: "spacer2" },
   },
   entityBox: {
     verticalAlign: "top",

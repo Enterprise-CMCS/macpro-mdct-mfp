@@ -1,7 +1,7 @@
 // components
 import { ExportedSarDetailsTable, Table } from "components";
 // utils
-import { ReportShape, ReportType } from "types";
+import { ExportPageVerbiage, ReportShape, ReportType } from "types";
 import { convertDateUtcToEt, useStore } from "utils";
 import { assertExhaustive } from "utils/other/typing";
 
@@ -29,13 +29,13 @@ export const ExportedReportMetadataTable = ({
 
 export const headerRowLabels = (
   reportType: ReportType,
-  verbiage: any
+  { reportPage }: ExportPageVerbiage
 ): string[] => {
   switch (reportType) {
     case ReportType.WP:
     case ReportType.SAR:
     case ReportType.EXPENDITURE:
-      return Object.values(verbiage.metadataTableHeaders);
+      return Object.values(reportPage.metadataTableHeaders);
     default:
       assertExhaustive(reportType as never);
       throw new Error(
@@ -83,7 +83,7 @@ export const bodyRowContent = (
 
 export interface Props {
   reportType: ReportType;
-  verbiage: any;
+  verbiage: ExportPageVerbiage;
 }
 
 const sx = {

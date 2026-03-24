@@ -1,4 +1,6 @@
-export default {
+import { ExportPageVerbiage } from "types";
+
+const exportPageVerbiage: ExportPageVerbiage = {
   missingEntry: {
     noResponse: "Not answered",
     notApplicable: "Not applicable",
@@ -44,3 +46,5 @@ export default {
     objectiveProgress: "Objectives total count: ",
   },
 };
+
+export default exportPageVerbiage;

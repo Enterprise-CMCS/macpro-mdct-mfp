@@ -48,14 +48,14 @@ export const ArchiveReportModal = ({
     <Modal
       modalDisclosure={modalDisclosure}
       content={{
-        heading: modalArchive.heading,
+        heading: modalArchive?.heading || "",
         closeButtonText: "",
         actionButtonText: "",
       }}
       submitting={archiving}
       submitButtonDisabled={!isArchivable}
     >
-      <Text sx={sx.archiveModalBody}>{modalArchive.body}</Text>
+      <Text sx={sx.archiveModalBody}>{modalArchive?.body}</Text>
       <Text fontWeight="bold">Enter ARCHIVE to confirm.</Text>
       <Input
         id="archive"
@@ -74,7 +74,7 @@ export const ArchiveReportModal = ({
           sx={sx.modalCancel}
           onClick={() => modalDisclosure.onClose}
         >
-          {modalArchive.closeButtonText}
+          {modalArchive?.closeButtonText}
         </Button>
         <Button
           type="submit"
@@ -83,7 +83,7 @@ export const ArchiveReportModal = ({
           data-cy="modal-archive"
           onClick={onConfirmHandler}
         >
-          {modalArchive.actionButtonText}
+          {modalArchive?.actionButtonText}
         </Button>
       </ModalFooter>
     </Modal>
