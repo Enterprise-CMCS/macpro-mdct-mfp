@@ -2,6 +2,7 @@
 import { AnyObject, DynamicFieldShape, ReportFormFieldType } from "types";
 // utils
 import {
+  calculateAggregateTotals,
   calculateShares,
   calculationTableDynamicTotalsOnChange,
   calculationTableDynamicTotalsOnSave,
@@ -117,6 +118,7 @@ export const updatedNumberFields = (
     case isFmapPct(fieldId): {
       const formId = getFmapForm(fieldId);
 
+      const updatedFieldData = structuredClone(fieldData);
       /*
        * Get totalComputable fields and update corresponding
        * totalFederalShare and totalStateTerritoryShare fields
@@ -135,6 +137,9 @@ export const updatedNumberFields = (
             percentage
           );
 
+          updatedFieldData[`${keyFieldId}-totalFederalShare`] = percentageShare;
+          updatedFieldData[`${keyFieldId}-totalStateTerritoryShare`] =
+            remainingShare;
           return [
             {
               name: `${keyFieldId}-totalFederalShare`,
@@ -149,7 +154,29 @@ export const updatedNumberFields = (
           ];
         });
 
-      return [...fields, ...updatedFields];
+      const fieldMap = {
+        total: "totalComputable",
+        percentageShare: "totalFederalShare",
+        remainingShare: "totalStateTerritoryShare",
+      };
+
+      const { serviceTables, allTables } = calculateAggregateTotals(
+        updatedFieldData,
+        fieldMap,
+        fieldId
+      );
+
+      const aggregateFields = [
+        ["serviceTotals", serviceTables],
+        ["allTotals", allTables],
+      ].flatMap(([tableName, tableValues]) =>
+        Object.entries(fieldMap).map(([key, fieldSuffix]) => ({
+          name: `totals_totalsSummary_${tableName}-${fieldSuffix}`,
+          type: ReportFormFieldType.NUMBER,
+          value: tableValues[key as keyof typeof tableValues],
+        }))
+      );
+      return [...fields, ...updatedFields, ...aggregateFields];
     }
 
     default:

@@ -448,6 +448,58 @@ export const administrativeCosts = (prefix: string) => [
   },
 ];
 
+// Totals Summary page
+export const totalsSummaryHeaders = [
+  "Expenditures",
+  "Total Computable",
+  "Total State / Territory Share",
+  "Total Federal Share",
+];
+
+// Totals summary just displays footer values from other tables using their field IDs
+export const totalsSummary = (prefix: string) => [
+  {
+    id: "qualifiedHcbs_statePlanServices",
+    label: "State Plan Services (Qualified HCBS)",
+    readOnly: true,
+  },
+  {
+    id: "qualifiedHcbs_1915cWaiverServices",
+    label: "Waiver Services (Qualified HCBS)",
+    readOnly: true,
+  },
+  {
+    id: "demonstrationServices_statePlanServices",
+    label: "State Plan Services (Demonstration HCBS)",
+    readOnly: true,
+  },
+  {
+    id: "demonstrationServices_1915cWaiverServices",
+    label: "Waiver Services (Demonstration HCBS)",
+    readOnly: true,
+  },
+  {
+    id: "supplementalServices_category",
+    label: "Supplemental Services",
+    readOnly: true,
+  },
+  {
+    id: `${prefix}_serviceTotals`,
+    label: "Totals - Waivers, State Plan & Supplemental Services",
+    readOnly: true,
+  },
+  {
+    id: "administrativeCosts_budgetCategory",
+    label: "Administrative Costs",
+    readOnly: true,
+  },
+  {
+    id: "administrativeCosts_capacityBuilding",
+    label: "Capacity Building",
+    readOnly: true,
+  },
+];
+
 export const capacityBuilding = (prefix: string) => [
   {
     id: `${prefix}_capacityBuilding`,

@@ -8,6 +8,7 @@ import { generalInformationRoute } from "./general-information";
 import { qualifiedHcbsRoute } from "./qualified-hcbs";
 import { reviewAndSubmitRoute } from "./review-and-submit";
 import { supplementalServicesRoute } from "./supplemental-services";
+import { totalsSummaryRoute } from "./totals-summary";
 
 // Use with LaunchDarkly flag: abcdReport
 export const expenditureReportJson: ReportJsonFile = {
@@ -25,6 +26,7 @@ export const expenditureReportJson: ReportJsonFile = {
     demonstrationServicesRoute,
     supplementalServicesRoute,
     administrativeCostsRoute,
+    totalsSummaryRoute,
     reviewAndSubmitRoute,
   ],
 };
