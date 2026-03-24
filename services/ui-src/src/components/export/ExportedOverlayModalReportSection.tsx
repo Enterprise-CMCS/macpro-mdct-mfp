@@ -34,7 +34,7 @@ export const ExportedOverlayModalReportSection = ({
     }
   );
   return (
-    <Box mt="2rem" data-testid="exportedOverlayModalPage" sx={sx.container}>
+    <Box data-testid="exportedOverlayModalPage" sx={sx.container}>
       <Heading as={headingLevel} sx={sx.stepName}>
         {title}
       </Heading>
@@ -82,6 +82,7 @@ export interface Props {
 
 const sx = {
   container: {
+    marginTop: "spacer4",
     "@media print": {
       pageBreakInside: "avoid",
     },
@@ -94,7 +95,7 @@ const sx = {
     marginTop: "spacer1",
   },
   dashboardTitle: {
-    margin: "2rem auto 1.5rem",
+    marginTop: "spacer2",
     fontSize: "md",
     fontWeight: "bold",
     color: "gray",

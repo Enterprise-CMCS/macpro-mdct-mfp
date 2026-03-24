@@ -16,6 +16,8 @@ import {
 } from "types";
 // utils
 import { getReportVerbiage, useStore } from "utils";
+// assets
+import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
 
 export const ExportedReportFieldTable = ({
   section,
@@ -71,7 +73,7 @@ export const ExportedReportFieldTable = ({
         </Heading>
       )}
       <Table
-        sx={sx.root}
+        sx={sx.table}
         className={formHasOnlyDynamicFields ? "two-column" : ""}
         content={{
           headRow: headRowItems,
@@ -143,7 +145,7 @@ export const renderGeneralInformation = (
               {heading}
             </Heading>
             <Table
-              sx={sx.root}
+              sx={sx.table}
               content={{
                 headRow: [
                   verbiage.reportPage.sarDetailsTable.headers.indicator,
@@ -220,57 +222,7 @@ export interface Props {
 }
 
 const sx = {
-  root: {
-    "@media print": {
-      pageBreakInside: "avoid",
-    },
-    margin: "2rem 0 2rem 0",
-    "tr, th": {
-      verticalAlign: "top",
-      lineHeight: "base",
-      borderBottom: "1px solid",
-      borderColor: "gray_lighter",
-      paddingLeft: "0",
-    },
-    thead: {
-      //this will prevent generating a new header whenever the table spills over in another page
-      display: "table-row-group",
-    },
-    td: {
-      p: {
-        lineHeight: "1.25rem",
-      },
-      padding: "0.75rem 0.5rem 0.75rem 0",
-      borderStyle: "none",
-      fontWeight: "normal",
-      color: "base",
-      ".shrink &": {
-        padding: "0.375rem 0rem",
-      },
-      ".mobile &": {
-        fontSize: "xs",
-      },
-    },
-    th: {
-      paddingBottom: "0.375rem",
-      fontWeight: "bold",
-      lineHeight: "lg",
-      color: "gray",
-      ".shrink &": {
-        padding: "0.375rem 0rem",
-      },
-      "&:first-of-type": {
-        paddingLeft: 0,
-      },
-    },
-    ".desktop &": {
-      "&.two-column": {
-        "th:first-of-type": {
-          paddingLeft: "6rem",
-        },
-      },
-    },
-  },
+  table: sxSharedExportStyles.table,
   heading: {
     fontSize: "xl",
     fontWeight: "bold",

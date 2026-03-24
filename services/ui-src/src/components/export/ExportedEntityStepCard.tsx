@@ -185,17 +185,6 @@ const sx = {
     height: "1rem",
     margin: "0 auto",
   },
-  statusIcon: {
-    position: "absolute",
-    left: "-2rem",
-    height: "1rem",
-    ".mobile &": {
-      left: "-1.5rem",
-    },
-  },
-  reportButton: {
-    fontWeight: "bold",
-  },
   entitiesCount: {
     position: "absolute",
     right: "-2rem",
