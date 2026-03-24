@@ -4,6 +4,8 @@ COGNITO_USER_POOL_CLIENT_ID=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_CLIENT_
 COGNITO_USER_POOL_ID=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_ID
 COGNITO_USER_POOL_CLIENT_DOMAIN=op://mdct_devs/mfp_secrets/COGNITO_USER_POOL_CLIENT_DOMAIN
 COGNITO_IDENTITY_POOL_ID=op://mdct_devs/mfp_secrets/COGNITO_IDENTITY_POOL_ID
+LD_LOCAL=false
+LD_LOCAL_FLAGS='{"abcdReport": false, "wpSarRelease2025": false}'
 LD_SDK_KEY=op://mdct_devs/mfp_secrets/LD_SDK_KEY_DEV
 REACT_APP_LD_SDK_CLIENT=op://mdct_devs/mfp_secrets/REACT_APP_LD_SDK_CLIENT
 

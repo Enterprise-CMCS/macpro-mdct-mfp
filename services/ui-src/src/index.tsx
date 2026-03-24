@@ -6,7 +6,7 @@ import config from "config";
 import "aws-amplify/auth/enable-oauth-listener";
 // utils
 import { ApiProvider, UserProvider } from "utils";
-import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
+import { asyncWithLDProvider, LDOptions } from "launchdarkly-react-client-sdk";
 // components
 import { App, Error } from "components";
 // styles
@@ -47,14 +47,28 @@ Amplify.configure({
 
 // LaunchDarkly configuration
 const ldClientId = config.REACT_APP_LD_SDK_CLIENT;
+
+const useLocal = config.LD_LOCAL === "true";
+const flags = config.LD_LOCAL_FLAGS ? JSON.parse(config.LD_LOCAL_FLAGS) : null;
+
+const options: LDOptions =
+  useLocal && flags
+    ? {
+        baseUrl: "https://clientsdk.launchdarkly.us",
+        bootstrap: flags,
+        sendEvents: false,
+        streaming: false,
+      }
+    : {
+        baseUrl: "https://clientsdk.launchdarkly.us",
+        streamUrl: "https://clientstream.launchdarkly.us",
+        eventsUrl: "https://events.launchdarkly.us",
+      };
+
 (async () => {
   const LDProvider = await asyncWithLDProvider({
-    clientSideID: ldClientId!,
-    options: {
-      baseUrl: "https://clientsdk.launchdarkly.us",
-      streamUrl: "https://clientstream.launchdarkly.us",
-      eventsUrl: "https://events.launchdarkly.us",
-    },
+    clientSideID: ldClientId,
+    options,
     deferInitialization: false,
   });
 

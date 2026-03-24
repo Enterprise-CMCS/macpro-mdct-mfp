@@ -5,7 +5,11 @@ export const getLaunchDarklyClient = async () => {
     variation: (_key: string, _context: any, defaultValue: Promise<any>) =>
       defaultValue,
   } as LD.LDClient;
+  // process.env keys are for yarn db:seed
   const sdkKey = process.env.LD_SDK_KEY || process.env.launchDarklyServer;
+  const isLocal = process.env.LD_LOCAL || process.env.launchDarklyLocal;
+  const localFlags =
+    process.env.LD_LOCAL_FLAGS || process.env.launchDarklyLocalFlags;
 
   if (!sdkKey) {
     console.error(
@@ -15,6 +19,14 @@ export const getLaunchDarklyClient = async () => {
   }
 
   try {
+    const useLocal = isLocal === "true";
+    const flags = localFlags ? JSON.parse(localFlags) : null;
+    if (useLocal && flags) {
+      return {
+        variation: (flagName: string) => flags[flagName],
+      };
+    }
+
     const client = LD.init(sdkKey, {
       baseUri: "https://clientsdk.launchdarkly.us",
       streamUri: "https://clientstream.launchdarkly.us",

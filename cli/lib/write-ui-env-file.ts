@@ -18,7 +18,7 @@ export const writeLocalUiEnvFile = async (
   const envConfigContent = [
     "window._env_ = {",
     ...Object.entries(envVariables).map(
-      ([key, value]) => `  ${key}: "${value}",`
+      ([key, value]) => `  ${key}: ${JSON.stringify(value)},`
     ),
     "};",
   ].join("\n");

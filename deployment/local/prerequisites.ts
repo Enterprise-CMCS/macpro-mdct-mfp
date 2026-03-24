@@ -38,6 +38,12 @@ export class LocalPrerequisiteStack extends Stack {
         launchDarklyServer: SecretValue.unsafePlainText(
           process.env.LD_SDK_KEY!
         ),
+        launchDarklyLocal: SecretValue.unsafePlainText(
+          process.env.LD_LOCAL || "false"
+        ),
+        launchDarklyLocalFlags: SecretValue.unsafePlainText(
+          process.env.LD_LOCAL_FLAGS || ""
+        ),
       },
     });
 

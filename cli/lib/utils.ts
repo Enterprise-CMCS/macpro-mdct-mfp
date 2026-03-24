@@ -1,3 +1,5 @@
+import chokidar from "chokidar";
+import dotenv from "dotenv";
 import {
   CloudFormationClient,
   DescribeStacksCommand,
@@ -26,10 +28,10 @@ export const getCloudFormationStackOutputValues = async (
   );
 };
 
-const buildUiEnvObject = (
+const buildUiEnvObject = async (
   stage: string,
   cfnOutputs: Record<string, string>
-): Record<string, string> => {
+): Promise<Record<string, string>> => {
   if (stage === "localstack") {
     return {
       SKIP_PREFLIGHT_CHECK: "true",
@@ -44,6 +46,8 @@ const buildUiEnvObject = (
       COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
       COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
       REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT!,
+      LD_LOCAL: process.env.LD_LOCAL || "false",
+      LD_LOCAL_FLAGS: process.env.LD_LOCAL_FLAGS || "",
     };
   }
 
@@ -59,16 +63,35 @@ const buildUiEnvObject = (
     COGNITO_REDIRECT_SIGNIN: cfnOutputs.CloudFrontUrl,
     COGNITO_REDIRECT_SIGNOUT: cfnOutputs.CloudFrontUrl,
     REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT!,
+    LD_LOCAL: "false",
+    LD_LOCAL_FLAGS: "",
   };
+};
+
+export const watchLocalEnv = (stage: string) => {
+  const watcher = chokidar.watch([".env"]);
+
+  watcher.on("change", async () => {
+    console.log("Reloading .env and regenerating env-config.js");
+
+    dotenv.config({ override: true });
+
+    const outputs = await getCloudFormationStackOutputValues(
+      `${project}-${stage}`
+    );
+    const envVars = await buildUiEnvObject(stage, outputs);
+    await writeLocalUiEnvFile(envVars);
+  });
 };
 
 export const runFrontendLocally = async (stage: string) => {
   const outputs = await getCloudFormationStackOutputValues(
     `${project}-${stage}`
   );
-  const envVars = buildUiEnvObject(stage, outputs);
+  const envVars = await buildUiEnvObject(stage, outputs);
   await writeLocalUiEnvFile(envVars);
   await writeSeedEnvFile(envVars);
 
+  watchLocalEnv(stage);
   runCommand("ui", ["yarn", "start"], "services/ui-src");
 };
