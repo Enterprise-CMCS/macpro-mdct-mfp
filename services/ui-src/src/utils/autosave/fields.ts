@@ -75,15 +75,16 @@ export const calculationTableDynamicTotalsOnSave = ({
     percentage = percentageOverride || formPercentage;
   }
 
-  const { field, table, template } = dynamicFieldTableTotals({
-    dynamicFieldId,
-    dynamicTemplateId,
-    fieldData,
-    fieldSuffixesToCalculate: calculationTableSuffixes,
-    fieldValue,
-    percentage,
-    tableId,
-  });
+  const { field, table, template, serviceTables, allTables } =
+    dynamicFieldTableTotals({
+      dynamicFieldId,
+      dynamicTemplateId,
+      fieldData,
+      fieldSuffixesToCalculate: calculationTableSuffixes,
+      fieldValue,
+      percentage,
+      tableId,
+    });
 
   const updatedField = {
     id: dynamicFieldId,
@@ -117,6 +118,16 @@ export const calculationTableDynamicTotalsOnSave = ({
       dynamicTemplateId
     ),
     ...updatedFieldInfo<CalculatedSharesType>(fieldsToMap, table, tableId),
+    ...updatedFieldInfo<CalculatedSharesType>(
+      fieldsToMap,
+      serviceTables,
+      "totals_totalsSummary_serviceTotals"
+    ),
+    ...updatedFieldInfo<CalculatedSharesType>(
+      fieldsToMap,
+      allTables,
+      "totals_totalsSummary_allTotals"
+    ),
   ];
 
   return fieldsToSave;
@@ -135,7 +146,7 @@ export const calculationTableTotalsOnSave = ({
     calculationTableSuffixes
   );
 
-  const { field, table } = fieldTableTotals({
+  const { field, table, serviceTables, allTables } = fieldTableTotals({
     fieldData,
     fieldId,
     fieldSuffixesToCalculate: calculationTableSuffixes,
@@ -147,6 +158,16 @@ export const calculationTableTotalsOnSave = ({
   const fieldsToSave = [
     ...updatedFieldInfo<CalculatedSharesType>(fieldsToMap, field, fieldId),
     ...updatedFieldInfo<CalculatedSharesType>(fieldsToMap, table, tableId),
+    ...updatedFieldInfo<CalculatedSharesType>(
+      fieldsToMap,
+      serviceTables,
+      "totals_totalsSummary_serviceTotals"
+    ),
+    ...updatedFieldInfo<CalculatedSharesType>(
+      fieldsToMap,
+      allTables,
+      "totals_totalsSummary_allTotals"
+    ),
   ];
 
   if (isPercentageOverrideUpdated) {
@@ -174,15 +195,16 @@ export const calculationTableDynamicTotalsOnChange = ({
     calculationTableSuffixes
   );
 
-  const { field, table, template } = dynamicFieldTableTotals({
-    dynamicFieldId,
-    dynamicTemplateId,
-    fieldData,
-    fieldSuffixesToCalculate: calculationTableSuffixes,
-    fieldValue: fieldValue,
-    percentage,
-    tableId,
-  });
+  const { field, table, template, serviceTables, allTables } =
+    dynamicFieldTableTotals({
+      dynamicFieldId,
+      dynamicTemplateId,
+      fieldData,
+      fieldSuffixesToCalculate: calculationTableSuffixes,
+      fieldValue: fieldValue,
+      percentage,
+      tableId,
+    });
   const templateFieldData = [...(fieldData?.[dynamicTemplateId] || [])];
   const currentFieldIndex = templateFieldData.findIndex(
     (field: DynamicFieldShape) => field.id === dynamicFieldId
@@ -216,6 +238,16 @@ export const calculationTableDynamicTotalsOnChange = ({
       dynamicTemplateId
     ),
     ...updatedFieldData<CalculatedSharesType>(fieldsToMap, table, tableId),
+    ...updatedFieldData<CalculatedSharesType>(
+      fieldsToMap,
+      serviceTables,
+      "totals_totalsSummary_serviceTotals"
+    ),
+    ...updatedFieldData<CalculatedSharesType>(
+      fieldsToMap,
+      allTables,
+      "totals_totalsSummary_allTotals"
+    ),
   };
 
   return fieldDataToUpdate;
@@ -234,7 +266,7 @@ export const calculationTableTotalsOnChange = ({
     calculationTableSuffixes
   );
 
-  const { field, table } = fieldTableTotals({
+  const { field, table, serviceTables, allTables } = fieldTableTotals({
     fieldData,
     fieldId,
     fieldSuffixesToCalculate: calculationTableSuffixes,
@@ -247,6 +279,16 @@ export const calculationTableTotalsOnChange = ({
     ...fieldData,
     ...updatedFieldData<CalculatedSharesType>(fieldsToMap, field, fieldId),
     ...updatedFieldData<CalculatedSharesType>(fieldsToMap, table, tableId),
+    ...updatedFieldData<CalculatedSharesType>(
+      fieldsToMap,
+      serviceTables,
+      "totals_totalsSummary_serviceTotals"
+    ),
+    ...updatedFieldData<CalculatedSharesType>(
+      fieldsToMap,
+      allTables,
+      "totals_totalsSummary_allTotals"
+    ),
   };
 
   if (isPercentageOverrideUpdated) {
