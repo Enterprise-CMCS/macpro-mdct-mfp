@@ -37,6 +37,21 @@ const buildUiEnvObject = (
       return value.replaceAll('"', String.raw`\"`);
     };
 
+    function checkLocalFlagsFormat(value?: string) {
+      const defaultValue = '{"local": false, "flags": {}}';
+      if (!value) return defaultValue;
+
+      try {
+        const parsed = JSON.parse(value);
+        return JSON.stringify(parsed);
+      } catch {
+        console.error(
+          "Invalid local flags format. Soft failing to empty flags."
+        );
+        return defaultValue;
+      }
+    }
+
     return {
       SKIP_PREFLIGHT_CHECK: "true",
       API_REGION: region,
@@ -51,7 +66,7 @@ const buildUiEnvObject = (
       COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
       REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT!,
       LD_LOCAL_FLAGS: escapeDoubleQuotes(
-        process.env.LD_LOCAL_FLAGS || '{"local": false, "flags": {}}'
+        checkLocalFlagsFormat(process.env.LD_LOCAL_FLAGS)
       ),
       LD_SDK_KEY: process.env.LD_SDK_KEY!,
     };

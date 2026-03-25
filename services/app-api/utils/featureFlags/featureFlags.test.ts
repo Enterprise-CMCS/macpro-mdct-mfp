@@ -61,7 +61,7 @@ describe("utils/featureFlags", () => {
       expect(expectedResult).toBe(false);
     });
 
-    test("uses local flags", async () => {
+    test("uses local flags - returns true", async () => {
       process.env.launchDarklyLocalFlags =
         '{"local": true, "flags": {"mockLocalFlag": true}}';
       await getLaunchDarklyClient();
@@ -70,9 +70,37 @@ describe("utils/featureFlags", () => {
       expect(expectedResult).toBe(true);
     });
 
-    test("uses remote flags", async () => {
+    test("uses local flags - returns false", async () => {
+      process.env.launchDarklyLocalFlags =
+        '{"local": true, "flags": {"mockLocalFlag": false}}';
+      await getLaunchDarklyClient();
+
+      const expectedResult = await getFlagValue("mockLocalFlag");
+      expect(expectedResult).toBe(false);
+    });
+
+    test("uses LD client flags - returns true", async () => {
+      (LD.init as jest.Mock).mockReturnValue({
+        variation,
+        waitForInitialization,
+      });
+      process.env.launchDarklyLocalFlags =
+        '{"local": false, "flags": {"mockLocalFlag": false}}';
+
+      await getLaunchDarklyClient();
+
+      const expectedResult = await getFlagValue("mockLocalFlag");
+      expect(expectedResult).toBe(true);
+    });
+
+    test("uses LD client flags - returns false", async () => {
+      (LD.init as jest.Mock).mockReturnValue({
+        variation: jest.fn().mockResolvedValue(false),
+        waitForInitialization,
+      });
       process.env.launchDarklyLocalFlags =
         '{"local": false, "flags": {"mockLocalFlag": true}}';
+
       await getLaunchDarklyClient();
 
       const expectedResult = await getFlagValue("mockLocalFlag");
