@@ -5,11 +5,7 @@ export const getLaunchDarklyClient = async () => {
     variation: (_key: string, _context: any, defaultValue: Promise<any>) =>
       defaultValue,
   } as LD.LDClient;
-  // process.env keys are for yarn db:seed
-  const sdkKey = process.env.LD_SDK_KEY || process.env.launchDarklyServer;
-  const isLocal = process.env.LD_LOCAL || process.env.launchDarklyLocal;
-  const localFlags =
-    process.env.LD_LOCAL_FLAGS || process.env.launchDarklyLocalFlags;
+  const sdkKey = process.env.launchDarklyServer;
 
   if (!sdkKey) {
     console.error(
@@ -19,11 +15,15 @@ export const getLaunchDarklyClient = async () => {
   }
 
   try {
-    const useLocal = isLocal === "true";
-    const flags = localFlags ? JSON.parse(localFlags) : null;
-    if (useLocal && flags) {
+    const localFlags = process.env.launchDarklyLocalFlags
+      ? JSON.parse(process.env.launchDarklyLocalFlags)
+      : {};
+    const { local = false, flags = null } = localFlags;
+
+    if (local && flags) {
       return {
         variation: (flagName: string) => flags[flagName],
+        local: true,
       };
     }
 
@@ -47,8 +47,15 @@ export const getFlagValue = async (flagName: string) => {
 };
 
 export const isFeatureFlagEnabled = async (flagName: string) => {
+  const localFlags = process.env.launchDarklyLocalFlags
+    ? JSON.parse(process.env.launchDarklyLocalFlags)
+    : {};
+  const { local = false } = localFlags;
+
   const flagValue = await getFlagValue(flagName);
 
-  console.log(`FEATURE FLAG: ${flagName}, enabled: ${flagValue}`);
+  console.log(
+    `FEATURE FLAG: ${flagName}, enabled: ${flagValue}, local: ${local}`
+  );
   return flagValue;
 };

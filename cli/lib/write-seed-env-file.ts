@@ -16,6 +16,8 @@ export const writeSeedEnvFile = async (
 
   const envConfigContent = [
     `API_URL=${envVariables["API_URL"].replace("https", "http")}`,
+    `launchDarklyLocalFlags='${envVariables["LD_LOCAL_FLAGS"]}'`,
+    `launchDarklyServer=${envVariables["LD_SDK_KEY"]}`,
   ].join("\n");
 
   await fs.writeFile(configFilePath, envConfigContent);

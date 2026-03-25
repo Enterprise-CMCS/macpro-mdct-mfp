@@ -1,4 +1,4 @@
-import chokidar from "chokidar";
+import fs from "node:fs";
 import dotenv from "dotenv";
 import {
   CloudFormationClient,
@@ -46,8 +46,9 @@ const buildUiEnvObject = async (
       COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
       COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
       REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT!,
-      LD_LOCAL: process.env.LD_LOCAL || "false",
-      LD_LOCAL_FLAGS: process.env.LD_LOCAL_FLAGS || "",
+      LD_LOCAL_FLAGS:
+        process.env.LD_LOCAL_FLAGS || '{"local": false, "flags": {}}',
+      LD_SDK_KEY: process.env.LD_SDK_KEY!,
     };
   }
 
@@ -63,35 +64,36 @@ const buildUiEnvObject = async (
     COGNITO_REDIRECT_SIGNIN: cfnOutputs.CloudFrontUrl,
     COGNITO_REDIRECT_SIGNOUT: cfnOutputs.CloudFrontUrl,
     REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT!,
-    LD_LOCAL: "false",
-    LD_LOCAL_FLAGS: "",
+    LD_LOCAL_FLAGS: '{"local": false, "flags": {}}',
   };
 };
 
-export const watchLocalEnv = (stage: string) => {
-  const watcher = chokidar.watch([".env"]);
+export const buildEnvFiles = async (stage: string) => {
+  dotenv.config({ override: true });
 
-  watcher.on("change", async () => {
-    console.log("Reloading .env and regenerating env-config.js");
-
-    dotenv.config({ override: true });
-
-    const outputs = await getCloudFormationStackOutputValues(
-      `${project}-${stage}`
-    );
-    const envVars = await buildUiEnvObject(stage, outputs);
-    await writeLocalUiEnvFile(envVars);
-  });
-};
-
-export const runFrontendLocally = async (stage: string) => {
   const outputs = await getCloudFormationStackOutputValues(
     `${project}-${stage}`
   );
   const envVars = await buildUiEnvObject(stage, outputs);
   await writeLocalUiEnvFile(envVars);
   await writeSeedEnvFile(envVars);
+};
 
-  watchLocalEnv(stage);
+export const watchLocalEnv = async (stage: string) => {
+  let timeout: NodeJS.Timeout | null = null;
+
+  function updateEnvFiles() {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(async () => {
+      await buildEnvFiles(stage);
+    }, 100);
+  }
+  updateEnvFiles();
+
+  fs.watch(".env", updateEnvFiles);
+};
+
+export const runFrontendLocally = async (stage: string) => {
+  await watchLocalEnv(stage);
   runCommand("ui", ["yarn", "start"], "services/ui-src");
 };

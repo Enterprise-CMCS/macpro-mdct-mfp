@@ -10,7 +10,6 @@
     "@aws-sdk/client-cloudformation": "~3.1012.0",
     "@aws-sdk/client-lambda": "~3.1012.0",
     "@aws-sdk/client-sts": "~3.1012.0",
-    "chokidar": "^5.0.0",
     "dotenv": "^17.2.3",
     "yargs": "^18.0.0"
   },

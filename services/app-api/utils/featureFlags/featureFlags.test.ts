@@ -62,8 +62,8 @@ describe("utils/featureFlags", () => {
     });
 
     test("uses local flags", async () => {
-      process.env.launchDarklyLocal = "true";
-      process.env.launchDarklyLocalFlags = '{"mockLocalFlag": true}';
+      process.env.launchDarklyLocalFlags =
+        '{"local": true, "flags": {"mockLocalFlag": true}}';
       await getLaunchDarklyClient();
 
       const expectedResult = await getFlagValue("mockLocalFlag");
@@ -71,8 +71,8 @@ describe("utils/featureFlags", () => {
     });
 
     test("uses remote flags", async () => {
-      process.env.launchDarklyLocal = "false";
-      process.env.launchDarklyLocalFlags = '{"mockLocalFlag": true}';
+      process.env.launchDarklyLocalFlags =
+        '{"local": false, "flags": {"mockLocalFlag": true}}';
       await getLaunchDarklyClient();
 
       const expectedResult = await getFlagValue("mockLocalFlag");

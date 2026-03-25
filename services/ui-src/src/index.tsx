@@ -14,7 +14,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import theme from "styles/theme";
 import "./styles/index.scss";
 
-let apiRestConfig: any = {
+const apiRestConfig: any = {
   mfp: {
     endpoint: config.apiGateway.URL,
     region: config.apiGateway.REGION,
@@ -47,12 +47,13 @@ Amplify.configure({
 
 // LaunchDarkly configuration
 const ldClientId = config.REACT_APP_LD_SDK_CLIENT;
-
-const useLocal = config.LD_LOCAL === "true";
-const flags = config.LD_LOCAL_FLAGS ? JSON.parse(config.LD_LOCAL_FLAGS) : null;
+const localFlags = config.launchDarklyLocalFlags
+  ? JSON.parse(config.launchDarklyLocalFlags)
+  : {};
+const { local = false, flags = null } = localFlags;
 
 const options: LDOptions =
-  useLocal && flags
+  local && flags
     ? {
         baseUrl: "https://clientsdk.launchdarkly.us",
         bootstrap: flags,

@@ -18,8 +18,7 @@ const config = {
   },
   REACT_APP_LD_SDK_CLIENT: window._env_.REACT_APP_LD_SDK_CLIENT,
   POST_SIGNOUT_REDIRECT: window._env_.POST_SIGNOUT_REDIRECT,
-  LD_LOCAL: window._env_.LD_LOCAL,
-  LD_LOCAL_FLAGS: window._env_.LD_LOCAL_FLAGS,
+  launchDarklyLocalFlags: window._env_.LD_LOCAL_FLAGS,
 };
 
 export default config;
