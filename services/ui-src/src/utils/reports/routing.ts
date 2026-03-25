@@ -68,7 +68,7 @@ export const routeChecker: RouteChecker = {
     "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community"
   ),
   // Financial Reporting Form
-  isFinancialReportingFormPage: hasPath("expenditure"),
+  isFinancialReportingFormPage: hasPath("financial-report"),
 };
 
 interface RouteChecker {

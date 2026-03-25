@@ -1,6 +1,6 @@
 import { FormJson, ReportFormFieldType, ValidationType } from "types";
 
-export const addEditExpenditureReport: FormJson = {
+export const addEditFinancialReport: FormJson = {
   id: "aea",
   options: {
     mode: "onChange",

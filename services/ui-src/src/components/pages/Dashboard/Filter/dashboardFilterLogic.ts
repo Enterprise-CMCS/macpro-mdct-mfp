@@ -14,7 +14,7 @@ export const filterQuarterOptions = [
   { label: "4", value: "4" },
 ];
 
-export const handleExpenditureFilter = (
+export const handleFinancialReportFilter = (
   filterYear: string,
   filterQuarter: string,
   listOfReports?: ReportMetadataShape[]

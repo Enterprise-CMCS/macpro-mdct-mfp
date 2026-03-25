@@ -34,7 +34,7 @@ export const headerRowLabels = (
   switch (reportType) {
     case ReportType.WP:
     case ReportType.SAR:
-    case ReportType.EXPENDITURE:
+    case ReportType.FINANCIAL_REPORT:
       return Object.values(reportPage.metadataTableHeaders);
     default:
       assertExhaustive(reportType as never);
@@ -63,7 +63,7 @@ export const bodyRowContent = (
           report.lastAlteredBy,
         ],
       ];
-    case ReportType.EXPENDITURE:
+    case ReportType.FINANCIAL_REPORT:
       return [
         [
           `${report.reportYear}`,

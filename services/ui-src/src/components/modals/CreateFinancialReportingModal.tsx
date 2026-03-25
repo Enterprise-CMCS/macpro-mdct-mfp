@@ -4,10 +4,10 @@ import { Alert, Form, Modal, ReportContext } from "components";
 import {
   generateCopyReportOptions,
   generateReportYearOptions,
-  prepareExpenditurePayload,
-} from "components/pages/Dashboard/Expenditure/expenditureLogic";
+  prepareFinancialReportingPayload,
+} from "components/pages/Dashboard/FinancialReporting/financialReportingLogic";
 // form
-import { addEditExpenditureReport } from "forms/addEditExpenditureReport/addEditExpenditureReport";
+import { addEditFinancialReport } from "forms/addEditFinancialReport/addEditFinancialReport";
 // utils
 import { actionButtonText, checkForExistingReport } from "./modalLogic";
 import { useStore } from "utils/state/useStore";
@@ -16,9 +16,9 @@ import { AlertTypes, AnyObject, ReportStatus, ReportType } from "types";
 // constants
 import { noEligibleReportsForCopy, States } from "../../constants";
 
-const reportType = ReportType.EXPENDITURE;
+const reportType = ReportType.FINANCIAL_REPORT;
 
-export const CreateExpenditureModal = ({
+export const CreateFinancialReportingModal = ({
   activeState,
   selectedReport,
   modalDisclosure,
@@ -32,7 +32,7 @@ export const CreateExpenditureModal = ({
   const [formPeriodValue, setFormPeriodValue] = useState<number>();
   const [formYearValue, setFormYearValue] = useState<number>();
 
-  const form = addEditExpenditureReport;
+  const form = addEditFinancialReport;
   const resetAlertText = {
     title:
       "An MFP Financial Reporting Form for this Reporting Period already exists",
@@ -83,16 +83,16 @@ export const CreateExpenditureModal = ({
    * edit modal will be in view-only mode for admins all the time,
    * and for state users after a SAR has been submitted
    */
-  const expenditureReportWithSubmittedStatus =
+  const financialReportWithSubmittedStatus =
     selectedReport?.status === ReportStatus.SUBMITTED;
 
-  const viewOnly = userIsAdmin || expenditureReportWithSubmittedStatus;
+  const viewOnly = userIsAdmin || financialReportWithSubmittedStatus;
 
   const writeReport = async (formData: AnyObject) => {
     setSubmitting(true);
     const submitButton = document.querySelector("[form=" + form.id + "]");
     submitButton?.setAttribute("disabled", "true");
-    const dataToWrite = prepareExpenditurePayload(
+    const dataToWrite = prepareFinancialReportingPayload(
       activeState,
       formData,
       reportsByState
@@ -134,7 +134,7 @@ export const CreateExpenditureModal = ({
 
   return (
     <Modal
-      data-testid="create-expenditure-modal"
+      data-testid="create-financial-reporting-modal"
       formId={form.id}
       modalDisclosure={modalDisclosure}
       submitting={submitting}
@@ -158,7 +158,7 @@ export const CreateExpenditureModal = ({
         />
       )}
       <Form
-        data-testid="create-expenditure-form"
+        data-testid="create-financial-reporting-form"
         id={form.id}
         formJson={form}
         formData={selectedReport?.formData}

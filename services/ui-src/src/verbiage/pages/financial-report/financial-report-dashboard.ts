@@ -26,7 +26,7 @@ const dashboardPageVerbiage: DashboardPageVerbiage = {
     callToActionAdditions: "Add new MFP Financial Reporting Form submission",
   },
   modalUnlock: {
-    heading: "You unlocked this Expenditure Report",
+    heading: "You unlocked this Financial Report",
     subheading:
       "Email the state or territory contact and let them know it requires edits.",
     actionButtonText: "Return to dashboard",

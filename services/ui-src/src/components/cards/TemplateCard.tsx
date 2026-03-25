@@ -14,7 +14,7 @@ const downloadTemplate = (templateName: string) => {
   const helpFiles: { [key: string]: string } = {
     WP: "MFP-Work-Plan-Help-File",
     SAR: "MFP-Semi-Annual-Rprt-Help-File",
-    EXPENDITURE: "",
+    FINANCIAL_REPORT: "",
   };
   const pdfUrl = `/templates/${helpFiles[templateName]}.pdf`;
   const link = document.createElement("a");
