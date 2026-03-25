@@ -28,10 +28,10 @@ export const getCloudFormationStackOutputValues = async (
   );
 };
 
-const buildUiEnvObject = async (
+const buildUiEnvObject = (
   stage: string,
   cfnOutputs: Record<string, string>
-): Promise<Record<string, string>> => {
+): Record<string, string> => {
   if (stage === "localstack") {
     return {
       SKIP_PREFLIGHT_CHECK: "true",
@@ -74,12 +74,12 @@ export const buildEnvFiles = async (stage: string) => {
   const outputs = await getCloudFormationStackOutputValues(
     `${project}-${stage}`
   );
-  const envVars = await buildUiEnvObject(stage, outputs);
+  const envVars = buildUiEnvObject(stage, outputs);
   await writeLocalUiEnvFile(envVars);
   await writeSeedEnvFile(envVars);
 };
 
-export const watchLocalEnv = async (stage: string) => {
+export const watchLocalEnv = (stage: string) => {
   let timeout: NodeJS.Timeout | null = null;
 
   function updateEnvFiles() {
@@ -94,6 +94,6 @@ export const watchLocalEnv = async (stage: string) => {
 };
 
 export const runFrontendLocally = async (stage: string) => {
-  await watchLocalEnv(stage);
+  watchLocalEnv(stage);
   runCommand("ui", ["yarn", "start"], "services/ui-src");
 };
