@@ -60,6 +60,24 @@ describe("utils/featureFlags", () => {
       expect(consoleSpy.error).toHaveBeenCalled();
       expect(expectedResult).toBe(false);
     });
+
+    test("uses local flags", async () => {
+      process.env.launchDarklyLocal = "true";
+      process.env.launchDarklyLocalFlags = '{"mockLocalFlag": true}';
+      await getLaunchDarklyClient();
+
+      const expectedResult = await getFlagValue("mockLocalFlag");
+      expect(expectedResult).toBe(true);
+    });
+
+    test("uses remote flags", async () => {
+      process.env.launchDarklyLocal = "false";
+      process.env.launchDarklyLocalFlags = '{"mockLocalFlag": true}';
+      await getLaunchDarklyClient();
+
+      const expectedResult = await getFlagValue("mockLocalFlag");
+      expect(expectedResult).toBe(false);
+    });
   });
 
   describe("isFeatureFlagEnabled()", () => {
