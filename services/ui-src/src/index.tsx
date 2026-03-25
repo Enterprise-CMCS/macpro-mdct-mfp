@@ -50,21 +50,20 @@ const ldClientId = config.REACT_APP_LD_SDK_CLIENT;
 const localFlags = config.launchDarklyLocalFlags
   ? JSON.parse(config.launchDarklyLocalFlags)
   : {};
-const { local = false, flags = null } = localFlags;
+const { local = false, flags = {} } = localFlags;
 
-const options: LDOptions =
-  local && flags
-    ? {
-        baseUrl: "https://clientsdk.launchdarkly.us",
-        bootstrap: flags,
-        sendEvents: false,
-        streaming: false,
-      }
-    : {
-        baseUrl: "https://clientsdk.launchdarkly.us",
-        streamUrl: "https://clientstream.launchdarkly.us",
-        eventsUrl: "https://events.launchdarkly.us",
-      };
+const options: LDOptions = local
+  ? {
+      baseUrl: "https://clientsdk.launchdarkly.us",
+      bootstrap: flags,
+      sendEvents: false,
+      streaming: false,
+    }
+  : {
+      baseUrl: "https://clientsdk.launchdarkly.us",
+      streamUrl: "https://clientstream.launchdarkly.us",
+      eventsUrl: "https://events.launchdarkly.us",
+    };
 
 (async () => {
   const LDProvider = await asyncWithLDProvider({
