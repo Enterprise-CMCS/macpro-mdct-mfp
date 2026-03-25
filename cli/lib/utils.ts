@@ -64,7 +64,6 @@ const buildUiEnvObject = (
     COGNITO_REDIRECT_SIGNIN: cfnOutputs.CloudFrontUrl,
     COGNITO_REDIRECT_SIGNOUT: cfnOutputs.CloudFrontUrl,
     REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT!,
-    LD_LOCAL_FLAGS: '{"local": false, "flags": {}}',
   };
 };
 
