@@ -67,7 +67,7 @@ const buildUiEnvObject = (
   };
 };
 
-export const buildEnvFiles = async (stage: string) => {
+const buildEnvFiles = async (stage: string) => {
   dotenv.config({ override: true });
 
   const outputs = await getCloudFormationStackOutputValues(
@@ -78,7 +78,7 @@ export const buildEnvFiles = async (stage: string) => {
   await writeSeedEnvFile(envVars);
 };
 
-export const watchLocalEnv = (stage: string) => {
+const watchLocalEnv = (stage: string) => {
   let timeout: NodeJS.Timeout | null = null;
 
   function updateEnvFiles() {

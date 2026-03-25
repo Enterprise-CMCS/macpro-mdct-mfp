@@ -23,7 +23,6 @@ export const getLaunchDarklyClient = async () => {
     if (local && flags) {
       return {
         variation: (flagName: string) => flags[flagName],
-        local: true,
       };
     }
 
