@@ -14,9 +14,13 @@ export const writeSeedEnvFile = async (
 ) => {
   await fs.rm(configFilePath, { force: true });
 
+  const unescapeDoubleQuotes = (value: string) => {
+    return value.replaceAll(String.raw`\"`, '"');
+  };
+
   const envConfigContent = [
     `API_URL=${envVariables["API_URL"].replace("https", "http")}`,
-    `launchDarklyLocalFlags='${envVariables["LD_LOCAL_FLAGS"]}'`,
+    `launchDarklyLocalFlags='${unescapeDoubleQuotes(envVariables["LD_LOCAL_FLAGS"])}'`,
     `launchDarklyServer=${envVariables["LD_SDK_KEY"]}`,
   ].join("\n");
 

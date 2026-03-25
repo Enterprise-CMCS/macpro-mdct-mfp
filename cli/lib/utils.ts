@@ -33,6 +33,10 @@ const buildUiEnvObject = (
   cfnOutputs: Record<string, string>
 ): Record<string, string> => {
   if (stage === "localstack") {
+    const escapeDoubleQuotes = (value: string) => {
+      return value.replaceAll('"', String.raw`\"`);
+    };
+
     return {
       SKIP_PREFLIGHT_CHECK: "true",
       API_REGION: region,
@@ -46,8 +50,9 @@ const buildUiEnvObject = (
       COGNITO_REDIRECT_SIGNIN: "http://localhost:3000/",
       COGNITO_REDIRECT_SIGNOUT: "http://localhost:3000/",
       REACT_APP_LD_SDK_CLIENT: process.env.REACT_APP_LD_SDK_CLIENT!,
-      LD_LOCAL_FLAGS:
-        process.env.LD_LOCAL_FLAGS || '{"local": false, "flags": {}}',
+      LD_LOCAL_FLAGS: escapeDoubleQuotes(
+        process.env.LD_LOCAL_FLAGS || '{"local": false, "flags": {}}'
+      ),
       LD_SDK_KEY: process.env.LD_SDK_KEY!,
     };
   }
