@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ModalOverlayReportPage } from "components";
@@ -8,82 +8,261 @@ import {
   mockModalOverlayReportPageJson,
   mockReportStore,
   mockUseEntityStore,
+  mockVerbiageIntro,
 } from "utils/testing/setupJest";
-import { useStore } from "utils";
+import { useBreakpoint, useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
+import { ReportType } from "types";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
+jest.mock("utils/other/useBreakpoint");
+const mockUseBreakpoint = useBreakpoint as jest.MockedFunction<
+  typeof useBreakpoint
+>;
+
 const mockSetSidebarHidden = jest.fn();
 
 const {
+  addEditModalAddTitle,
+  addEditModalEditTitle,
   addEntityButtonText,
+  dashboardSubtitle,
+  dashboardTitle,
+  deleteModalConfirmButtonText,
+  deleteModalTitle,
   editEntityButtonText,
-  // deleteModalConfirmButtonText,
+  emptyDashboardText,
+  enterEntityDetailsButtonText,
 } = mockModalOverlayReportPageJson.verbiage;
 
+const cloneEntityStore = structuredClone(mockUseEntityStore);
+const emptyStore = {
+  ...cloneEntityStore,
+  report: {
+    ...cloneEntityStore.report,
+    fieldData: {},
+  },
+};
+
 const modalOverlayReportPageComponent = (
+  route = mockModalOverlayReportPageJson
+) => (
   <RouterWrappedComponent>
     <ModalOverlayReportPage
-      route={mockModalOverlayReportPageJson}
+      route={route}
       setSidebarHidden={mockSetSidebarHidden}
     />
   </RouterWrappedComponent>
 );
-
-const verbiage = mockModalOverlayReportPageJson.verbiage;
 
 describe("<ModalOverlayReportPage />", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test("modaloverlaypage should render the view", () => {
-    mockedUseStore.mockReturnValue(mockReportStore);
-    render(modalOverlayReportPageComponent);
-    expect(screen.getByText(addEntityButtonText)).toBeVisible();
+  test("renders desktop table", () => {
+    mockUseBreakpoint.mockReturnValue({ isMobile: false, isTablet: false });
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
+    render(modalOverlayReportPageComponent());
+
+    expect(screen.getAllByRole("columnheader")).toHaveLength(2);
+    expect(
+      screen.getByRole("columnheader", { name: "Mock table header" })
+    ).toBeVisible();
+
+    expect(
+      screen.getByRole("heading", { name: `${dashboardTitle} 1`, level: 3 })
+    );
+    expect(screen.getByRole("heading", { name: dashboardSubtitle, level: 2 }));
   });
 
-  test("should open the edit modal", async () => {
+  test("renders mobile table", () => {
+    mockUseBreakpoint.mockReturnValue({ isMobile: true, isTablet: true });
     mockedUseStore.mockReturnValue(mockUseEntityStore);
-    render(modalOverlayReportPageComponent);
-    // Get the Edit button and click it
-    const editEntityButton = screen.getByText(verbiage.editEntityButtonText);
-    await act(async () => {
-      await userEvent.click(editEntityButton);
-    });
-    expect(screen.getByRole("dialog")).toBeVisible();
+    render(modalOverlayReportPageComponent());
 
-    // Close out of the modal it created
-    const closeButton = screen.getByText("Close");
+    expect(screen.getAllByRole("columnheader")).toHaveLength(2);
+    expect(
+      screen.queryByRole("columnheader", { name: "Mock table header" })
+    ).not.toBeInTheDocument();
+  });
+
+  test("shows empty table message", async () => {
+    mockedUseStore.mockReturnValue(emptyStore);
+    render(modalOverlayReportPageComponent());
+
+    expect(screen.getByText(emptyDashboardText)).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: `${dashboardTitle} 0`, level: 3 })
+    );
+  });
+
+  test("shows alert", async () => {
+    mockedUseStore.mockReturnValue(emptyStore);
+    const route = {
+      ...mockModalOverlayReportPageJson,
+      entityType: "initiative",
+    };
+    render(modalOverlayReportPageComponent(route));
+
+    expect(screen.getByText("Alert:")).toBeVisible();
+  });
+
+  test("renders SAR table", () => {
+    const sarStore = {
+      ...cloneEntityStore,
+      report: {
+        ...cloneEntityStore.report,
+        reportType: ReportType.SAR,
+      },
+    };
+    mockedUseStore.mockReturnValue(sarStore);
+    render(modalOverlayReportPageComponent());
+
+    expect(screen.getAllByRole("columnheader")).toHaveLength(2);
+    const editButton = screen.queryByRole("button", {
+      name: editEntityButtonText,
+    });
+    expect(editButton).not.toBeInTheDocument();
+  });
+
+  test("opens and closes add modal", async () => {
+    const addStore = {
+      ...mockUseEntityStore,
+      selectedEntity: undefined,
+    };
+    mockedUseStore.mockReturnValue(addStore);
+    render(modalOverlayReportPageComponent());
+
+    const addButton = screen.getByRole("button", { name: addEntityButtonText });
+    await act(async () => {
+      await userEvent.click(addButton);
+    });
+    const modal = screen.getByRole("dialog", { name: addEditModalAddTitle });
+    await waitFor(() => {
+      expect(modal).toBeVisible();
+    });
+
+    const input = screen.getByRole("textbox", { name: "mock text field" });
+    await act(async () => {
+      await userEvent.type(input, "123");
+    });
+
+    const closeButton = screen.getByRole("button", { name: "Close" });
     await act(async () => {
       await userEvent.click(closeButton);
     });
 
-    // And make sure they can still add entities
-    const addEntityButton = screen.getByText(verbiage.addEntityButtonText);
-    expect(addEntityButton).toBeVisible();
+    await waitFor(async () => {
+      const closedModal = screen.queryByRole("dialog", {
+        name: addEditModalAddTitle,
+      });
+      await act(() => {
+        expect(closedModal).not.toBeVisible();
+      });
+    });
   });
 
-  test("overlayModal Modal edits open correctly", async () => {
+  test("opens and closes edit modal", async () => {
     mockedUseStore.mockReturnValue(mockUseEntityStore);
-    render(modalOverlayReportPageComponent);
-    const editEntityButton = screen.getByText(editEntityButtonText);
-    await act(async () => {
-      await userEvent.click(editEntityButton);
-    });
-    expect(screen.getByRole("dialog")).toBeVisible();
+    render(modalOverlayReportPageComponent());
 
-    const closeButton = screen.getByText("Close");
+    const editButton = screen.getByRole("button", {
+      name: editEntityButtonText,
+    });
+    await act(async () => {
+      await userEvent.click(editButton);
+    });
+    const modal = screen.getByRole("dialog", { name: addEditModalEditTitle });
+    await waitFor(() => {
+      expect(modal).toBeVisible();
+    });
+
+    const closeButton = screen.getByRole("button", { name: "Close" });
     await act(async () => {
       await userEvent.click(closeButton);
     });
+
+    await waitFor(async () => {
+      const closedModal = screen.queryByRole("dialog", {
+        name: addEditModalEditTitle,
+      });
+      await act(() => {
+        expect(closedModal).not.toBeVisible();
+      });
+    });
   });
 
-  // TODO: test delete modal + functionality
+  test("opens and closes delete modal", async () => {
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
+    render(modalOverlayReportPageComponent());
 
-  testA11yAct(modalOverlayReportPageComponent, () => {
+    const deleteButton = screen.getByRole("button", { name: "Delete" });
+    await act(async () => {
+      await userEvent.click(deleteButton);
+    });
+    const modal = screen.getByRole("dialog", { name: deleteModalTitle });
+    await waitFor(() => {
+      expect(modal).toBeVisible();
+    });
+
+    const deleteConfirmButton = screen.getByRole("button", {
+      name: deleteModalConfirmButtonText,
+    });
+    expect(deleteConfirmButton).toBeVisible();
+
+    const closeButton = screen.getByRole("button", { name: "Close" });
+    await act(async () => {
+      await userEvent.click(closeButton);
+    });
+
+    await waitFor(async () => {
+      const closedModal = screen.queryByRole("dialog", {
+        name: deleteModalTitle,
+      });
+      await act(() => {
+        expect(closedModal).not.toBeVisible();
+      });
+    });
+  });
+
+  test("opens and closes overlay", async () => {
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
+    const route = {
+      ...mockModalOverlayReportPageJson,
+      dashboard: {
+        verbiage: {
+          intro: mockVerbiageIntro,
+        },
+      },
+    };
+    render(modalOverlayReportPageComponent(route));
+    const enterDetailsButton = screen.getByRole("button", {
+      name: enterEntityDetailsButtonText,
+    });
+
+    await act(async () => {
+      await userEvent.click(enterDetailsButton);
+    });
+    expect(screen.getByRole("heading", { name: "mock section", level: 1 }));
+    expect(
+      screen.getByRole("heading", { name: "mock-initiative-name", level: 2 })
+    );
+
+    const backButton = screen.getAllByRole("button", {
+      name: "Return to all initiatives",
+    });
+    expect(backButton).toHaveLength(2);
+
+    await act(async () => {
+      await userEvent.click(backButton[0]);
+    });
+    expect(backButton[0]).not.toBeInTheDocument();
+  });
+
+  testA11yAct(modalOverlayReportPageComponent(), () => {
     mockedUseStore.mockReturnValue(mockReportStore);
   });
 });

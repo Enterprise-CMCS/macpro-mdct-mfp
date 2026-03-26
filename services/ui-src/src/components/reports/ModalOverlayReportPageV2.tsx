@@ -61,10 +61,7 @@ export const ModalOverlayReportPageV2 = ({
     report && errorMessage ? getWPAlertStatus(report, entityType) : false;
 
   const hasEntities = reportFieldDataEntities.length > 0;
-  let dashTitle = verbiage.dashboardTitle;
-  if (hasEntities) {
-    dashTitle += ` ${reportFieldDataEntities.length}`;
-  }
+  const dashTitle = `${verbiage.dashboardTitle} ${reportFieldDataEntities.length}`;
   const dashSubTitle = verbiage.dashboardSubtitle;
 
   const tableHeaders = () => {
@@ -123,68 +120,66 @@ export const ModalOverlayReportPageV2 = ({
   const TablePage = () => {
     return (
       <Box sx={sx.content}>
-        <ReportPageIntro text={verbiage.intro} accordion={verbiage.accordion} />
+        <ReportPageIntro accordion={verbiage.accordion} text={verbiage.intro} />
         {showAlert && (
           <Alert
-            title={errorMessage.title}
-            status={AlertTypes.ERROR}
             description={errorMessage.description}
+            status={AlertTypes.ERROR}
+            title={errorMessage.title}
           />
         )}
-        <Box>
-          <Heading as="h3" sx={sx.dashboardTitle}>
-            {dashTitle}
-          </Heading>
-          <Heading as="h2" sx={sx.subsectionHeading}>
-            {dashSubTitle}
-          </Heading>
-          {hasEntities ? (
-            <Table sx={sx.table} content={tableHeaders()}>
-              {reportFieldDataEntities.map((entity: EntityShape) => (
-                <EntityRow
-                  key={entity.id}
-                  entity={entity}
-                  entityType={entityType}
-                  entityInfo={entityInfo}
-                  verbiage={verbiage}
-                  showEntityCloseoutDetails={true}
-                  openOverlayOrDrawer={openEntityDetailsOverlay}
-                  openAddEditEntityModal={openAddEditEntityModal}
-                  openDeleteEntityModal={openDeleteEntityModal}
-                />
-              ))}
-            </Table>
-          ) : (
-            <Box>{verbiage.emptyDashboardText}</Box>
-          )}
-          <Button
-            sx={sx.addEntityButton}
-            onClick={() => openAddEditEntityModal()}
-            leftIcon={<Image src={addIcon} alt="Previous" sx={sx.addIcon} />}
-          >
-            {verbiage.addEntityButtonText}
-          </Button>
-        </Box>
+        <Heading as="h3" sx={sx.dashboardTitle}>
+          {dashTitle}
+        </Heading>
+        <Heading as="h2" sx={sx.subsectionHeading}>
+          {dashSubTitle}
+        </Heading>
+        {hasEntities ? (
+          <Table content={tableHeaders()} sx={sx.table}>
+            {reportFieldDataEntities.map((entity: EntityShape) => (
+              <EntityRow
+                entity={entity}
+                entityInfo={entityInfo}
+                entityType={entityType}
+                key={entity.id}
+                openAddEditEntityModal={openAddEditEntityModal}
+                openDeleteEntityModal={openDeleteEntityModal}
+                openOverlayOrDrawer={openEntityDetailsOverlay}
+                showEntityCloseoutDetails={true}
+                verbiage={verbiage}
+              />
+            ))}
+          </Table>
+        ) : (
+          <Box>{verbiage.emptyDashboardText}</Box>
+        )}
+        <Button
+          leftIcon={<Image src={addIcon} alt="Previous" sx={sx.addIcon} />}
+          onClick={() => openAddEditEntityModal()}
+          sx={sx.addEntityButton}
+        >
+          {verbiage.addEntityButtonText}
+        </Button>
         {/* Modals */}
         <AddEditEntityModal
           entityType={entityType}
-          selectedEntity={selectedEntity}
-          verbiage={verbiage}
           form={modalForm}
-          setError={() => {}}
           modalDisclosure={{
             isOpen: addEditEntityModalIsOpen,
             onClose: closeAddEditEntityModal,
           }}
+          selectedEntity={selectedEntity}
+          setError={() => {}}
+          verbiage={verbiage}
         />
         <DeleteEntityModal
           entityType={entityType}
-          selectedEntity={selectedEntity}
-          verbiage={verbiage}
           modalDisclosure={{
             isOpen: deleteEntityModalIsOpen,
             onClose: closeDeleteEntityModal,
           }}
+          selectedEntity={selectedEntity}
+          verbiage={verbiage}
         />
         <ReportPageFooter verbiage={verbiage} />
       </Box>
@@ -215,19 +210,19 @@ const sx = {
     },
   },
   dashboardTitle: {
-    marginTop: "spacer2",
+    color: "gray",
     fontSize: "md",
     fontWeight: "bold",
-    color: "gray",
+    marginTop: "spacer2",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
   },
   subsectionHeading: {
+    color: "gray_dark",
     fontSize: "md",
     fontWeight: "normal",
-    color: "gray_dark",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
@@ -240,14 +235,14 @@ const sx = {
       marginBottom: "spacer_half",
     },
     th: {
-      fontWeight: "bold",
-      color: "gray",
-      paddingLeft: "spacer2",
-      paddingRight: "0",
       borderBottom: "1px solid",
       borderColor: "gray_light",
+      color: "gray",
+      fontWeight: "bold",
+      paddingLeft: "spacer2",
+      paddingRight: "0",
       ".tablet &, .mobile &": {
-        border: "none",
+        border: "0",
       },
       "&:nth-of-type(1)": {
         width: "2.5rem",
@@ -264,8 +259,8 @@ const sx = {
   addEntityButton: {
     marginTop: "spacer4",
     ".tablet &, .mobile &": {
-      wordBreak: "break-word",
       whiteSpace: "break-spaces",
+      wordBreak: "break-word",
     },
   },
   addIcon: {

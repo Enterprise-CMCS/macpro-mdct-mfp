@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ModalOverlayReportPageV2 } from "components";
@@ -93,7 +93,9 @@ describe("<ModalOverlayReportPageV2 />", () => {
     render(modalOverlayReportPageComponent());
 
     expect(screen.getByText(emptyDashboardText)).toBeVisible();
-    expect(screen.getByRole("heading", { name: dashboardTitle, level: 3 }));
+    expect(
+      screen.getByRole("heading", { name: `${dashboardTitle} 0`, level: 3 })
+    );
   });
 
   test("shows alert", async () => {
@@ -124,6 +126,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
     });
     expect(editButton).not.toBeInTheDocument();
   });
+
   test("opens and closes add modal", async () => {
     const addStore = {
       ...mockUseEntityStore,
@@ -136,10 +139,10 @@ describe("<ModalOverlayReportPageV2 />", () => {
     await act(async () => {
       await userEvent.click(addButton);
     });
-    expect(screen.getByRole("dialog")).toBeVisible();
-    expect(
-      screen.getByRole("heading", { name: addEditModalAddTitle, level: 1 })
-    );
+    const modal = screen.getByRole("dialog", { name: addEditModalAddTitle });
+    await waitFor(() => {
+      expect(modal).toBeVisible();
+    });
 
     const input = screen.getByRole("textbox", { name: "mock text field" });
     await act(async () => {
@@ -150,7 +153,15 @@ describe("<ModalOverlayReportPageV2 />", () => {
     await act(async () => {
       await userEvent.click(closeButton);
     });
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await waitFor(async () => {
+      const closedModal = screen.queryByRole("dialog", {
+        name: addEditModalAddTitle,
+      });
+      await act(() => {
+        expect(closedModal).not.toBeInTheDocument();
+      });
+    });
   });
 
   test("opens and closes edit modal", async () => {
@@ -163,16 +174,24 @@ describe("<ModalOverlayReportPageV2 />", () => {
     await act(async () => {
       await userEvent.click(editButton);
     });
-    expect(screen.getByRole("dialog")).toBeVisible();
-    expect(
-      screen.getByRole("heading", { name: addEditModalEditTitle, level: 1 })
-    );
+    const modal = screen.getByRole("dialog", { name: addEditModalEditTitle });
+    await waitFor(() => {
+      expect(modal).toBeVisible();
+    });
 
     const closeButton = screen.getByRole("button", { name: "Close" });
     await act(async () => {
       await userEvent.click(closeButton);
     });
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await waitFor(async () => {
+      const closedModal = screen.queryByRole("dialog", {
+        name: addEditModalEditTitle,
+      });
+      await act(() => {
+        expect(closedModal).not.toBeInTheDocument();
+      });
+    });
   });
 
   test("opens and closes delete modal", async () => {
@@ -183,8 +202,10 @@ describe("<ModalOverlayReportPageV2 />", () => {
     await act(async () => {
       await userEvent.click(deleteButton);
     });
-    expect(screen.getByRole("dialog")).toBeVisible();
-    expect(screen.getByRole("heading", { name: deleteModalTitle, level: 1 }));
+    const modal = screen.getByRole("dialog", { name: deleteModalTitle });
+    await waitFor(() => {
+      expect(modal).toBeVisible();
+    });
 
     const deleteConfirmButton = screen.getByRole("button", {
       name: deleteModalConfirmButtonText,
@@ -195,7 +216,15 @@ describe("<ModalOverlayReportPageV2 />", () => {
     await act(async () => {
       await userEvent.click(closeButton);
     });
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await waitFor(async () => {
+      const closedModal = screen.queryByRole("dialog", {
+        name: deleteModalTitle,
+      });
+      await act(() => {
+        expect(closedModal).not.toBeInTheDocument();
+      });
+    });
   });
 
   test("opens and closes overlay", async () => {
