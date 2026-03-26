@@ -94,14 +94,18 @@ describe("API utility functions", () => {
       );
     });
 
-    it("should not apply report year logic for expenditure reports", () => {
+    it("should not apply report year logic for financial reports", () => {
       const reportData = {
         ...mockUnvalidatedMetadata,
         reportYear: 2023,
         copyReport: { reportYear: 2020, reportPeriod: 2 },
       };
 
-      const response = getReportYear(reportData, ReportType.EXPENDITURE, true);
+      const response = getReportYear(
+        reportData,
+        ReportType.FINANCIAL_REPORT,
+        true
+      );
 
       expect(response).toEqual(2023);
     });
@@ -162,7 +166,7 @@ describe("API utility functions", () => {
       );
     });
 
-    it("should not apply report period logic for expenditure reports", () => {
+    it("should not apply report period logic for financial reports", () => {
       const reportData = {
         ...mockUnvalidatedMetadata,
         reportPeriod: 3,
@@ -171,7 +175,7 @@ describe("API utility functions", () => {
 
       const response = getReportPeriod(
         reportData,
-        ReportType.EXPENDITURE,
+        ReportType.FINANCIAL_REPORT,
         true
       );
 
@@ -277,30 +281,50 @@ describe("API utility functions", () => {
       expect(result).toBe("New Jersey MFP SAR 2024 - Period 2");
     });
 
-    it("should create an expenditure report name for Q1", () => {
-      const result = createReportName(ReportType.EXPENDITURE, 1, "CO", 2024);
+    it("should create an financial report name for Q1", () => {
+      const result = createReportName(
+        ReportType.FINANCIAL_REPORT,
+        1,
+        "CO",
+        2024
+      );
 
       expect(result).toBe(
         "CO: 2024 - Q1 (Quarter 1): January 1st to March 31st"
       );
     });
 
-    it("should create an expenditure report name for Q2", () => {
-      const result = createReportName(ReportType.EXPENDITURE, 2, "CO", 2024);
+    it("should create an financial report name for Q2", () => {
+      const result = createReportName(
+        ReportType.FINANCIAL_REPORT,
+        2,
+        "CO",
+        2024
+      );
 
       expect(result).toBe("CO: 2024 - Q2 (Quarter 2): April 1st to June 30th");
     });
 
-    it("should create an expenditure report name for Q3", () => {
-      const result = createReportName(ReportType.EXPENDITURE, 3, "CO", 2024);
+    it("should create an financial report name for Q3", () => {
+      const result = createReportName(
+        ReportType.FINANCIAL_REPORT,
+        3,
+        "CO",
+        2024
+      );
 
       expect(result).toBe(
         "CO: 2024 - Q3 (Quarter 3): July 1st to September 30th"
       );
     });
 
-    it("should create an expenditure report name for Q4", () => {
-      const result = createReportName(ReportType.EXPENDITURE, 4, "CO", 2024);
+    it("should create an financial report name for Q4", () => {
+      const result = createReportName(
+        ReportType.FINANCIAL_REPORT,
+        4,
+        "CO",
+        2024
+      );
 
       expect(result).toBe(
         "CO: 2024 - Q4 (Quarter 4): October 1st to December 31st"

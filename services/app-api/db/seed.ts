@@ -28,14 +28,14 @@ import { isFeatureFlagEnabled } from "../utils/featureFlags/featureFlags";
 // flagged routes
 import * as wpFlags from "../forms/routes/wp/flags";
 import * as sarFlags from "../forms/routes/sar/flags";
-import * as expenditureFlags from "../forms/routes/expenditure/flags";
+import * as financialReportFlags from "../forms/routes/financial-report/flags";
 
 const getEnabledFlagsByReportType = async (reportType: string) => {
   // Get LaunchDarkly flags from folder names in forms/routes/[reportType]/flags
   const flagMap: Record<string, any> = {
     WP: wpFlags,
     SAR: sarFlags,
-    EXPENDITURE: expenditureFlags,
+    FINANCIAL_REPORT: financialReportFlags,
   };
 
   const flagsByReportType = flagMap[reportType];
