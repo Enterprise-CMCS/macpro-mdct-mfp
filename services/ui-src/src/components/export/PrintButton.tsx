@@ -11,6 +11,8 @@ import { ReportType } from "types";
 export const PrintButton = ({ sxOverride }: Props) => {
   const report = useStore().report;
   var reportType;
+
+  // handle financial report
   if (report?.reportType === ReportType.FINANCIAL_REPORT) {
     reportType = "financial-report";
   } else {

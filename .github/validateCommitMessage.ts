@@ -10,8 +10,10 @@ if (!commitMsgFile.startsWith(process.cwd() + path.sep)) {
   console.error("❌ Invalid commit path");
   process.exit(1);
 }
-const commitMsg = readFileSync(commitMsgFile, "utf8");
-console.log(`Validating commit message: ${commitMsg}`);
+const commitMsg = readFileSync(commitMsgFile, "utf8")
+  .split("\n")
+  .filter((line: string) => !line.trim().startsWith("#"))
+  .join("\n");
 
 if (!commitMsg.startsWith("Merge") && commitMsg.includes("cmdct-")) {
   console.error("❌ CMDCT must be upper case for CI/CD");
