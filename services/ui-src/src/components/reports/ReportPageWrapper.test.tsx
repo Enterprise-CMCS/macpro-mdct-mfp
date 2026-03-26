@@ -1,20 +1,22 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 // components
 import { ReportContext, ReportPageWrapper } from "components";
 // utils
 import {
   mockDrawerReportPageJson,
+  mockDynamicModalOverlayReportPageJson,
+  mockLDFlags,
   mockModalDrawerReportPageJson,
   mockModalOverlayReportPageJson,
   mockReportJson,
   mockStandardReportPageJson,
-  RouterWrappedComponent,
+  mockUseEntityStore,
   mockWpReportContext,
-  mockUseStore,
-  mockDynamicModalOverlayReportPageJson,
+  RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils/state/useStore";
 import { testA11yAct } from "utils/testing/commonTests";
+import userEvent from "@testing-library/user-event";
 
 const mockUseNavigate = jest.fn();
 const mockUseLocation = jest.fn();
@@ -25,7 +27,7 @@ jest.mock("react-router", () => ({
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-mockedUseStore.mockReturnValue(mockUseStore);
+mockedUseStore.mockReturnValue(mockUseEntityStore);
 
 const mockLocations = {
   standard: { pathname: mockReportJson.flatRoutes[0].path },
@@ -66,10 +68,50 @@ describe("<ReportPageWrapper />", () => {
       mockUseLocation.mockReturnValue(mockLocations.modalDrawer);
       render(ReportPageWrapperComponent);
       expect(
-        screen.getByText(
-          mockModalDrawerReportPageJson.verbiage.addEntityButtonText
-        )
+        screen.getByRole("button", {
+          name: mockModalDrawerReportPageJson.verbiage.addEntityButtonText,
+        })
       ).toBeVisible();
+    });
+
+    test("ReportPageWrapper loads ModalOverlayReportPageV2 with flag on", async () => {
+      mockLDFlags.set({ wpSarRelease2025: true });
+      mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
+      render(ReportPageWrapperComponent);
+
+      const enterDetailsButton = screen.getByRole("button", {
+        name: mockModalDrawerReportPageJson.verbiage
+          .enterEntityDetailsButtonText,
+      });
+
+      await act(async () => {
+        await userEvent.click(enterDetailsButton);
+      });
+
+      const backButton = screen.getByRole("button", {
+        name: "Return to all initiatives",
+      });
+      expect(backButton).toBeVisible();
+    });
+
+    test("ReportPageWrapper loads ModalOverlayReportPageV1 with flag off", async () => {
+      mockLDFlags.set({ wpSarRelease2025: false });
+      mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
+      render(ReportPageWrapperComponent);
+
+      const enterDetailsButton = screen.getByRole("button", {
+        name: mockModalDrawerReportPageJson.verbiage
+          .enterEntityDetailsButtonText,
+      });
+
+      await act(async () => {
+        await userEvent.click(enterDetailsButton);
+      });
+
+      const backButton = screen.queryByRole("button", {
+        name: "Return to all initiatives",
+      });
+      expect(backButton).not.toBeInTheDocument();
     });
 
     test("ReportPageWrapper ModalOverlayReportPage view renders", () => {

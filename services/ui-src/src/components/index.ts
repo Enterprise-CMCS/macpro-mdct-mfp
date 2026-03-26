@@ -116,6 +116,7 @@ export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
 export { OverlayModalPage } from "./reports/OverlayModalPage";
 export { ModalOverlayReportPage } from "./reports/ModalOverlayReportPage";
+export { ModalOverlayReportPageV2 } from "./reports/ModalOverlayReportPageV2";
 export { DynamicModalOverlayReportPage } from "./reports/DynamicModalOverlayReportPage";
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
