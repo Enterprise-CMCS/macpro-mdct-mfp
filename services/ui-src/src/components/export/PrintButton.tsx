@@ -6,10 +6,16 @@ import iconSearch from "assets/icons/icon_search_blue.png";
 import iconPDF from "assets/icons/icon_pdf_white.png";
 // utils
 import { useStore } from "utils";
+import { ReportType } from "types";
 
 export const PrintButton = ({ sxOverride }: Props) => {
   const report = useStore().report;
-  const reportType = report?.reportType?.toLowerCase();
+  var reportType;
+  if (report?.reportType === ReportType.FINANCIAL_REPORT) {
+    reportType = "financial-report";
+  } else {
+    reportType = report?.reportType?.toLowerCase();
+  }
 
   const isNonEditable =
     report?.status === "Submitted" || report?.status === "Approved";
