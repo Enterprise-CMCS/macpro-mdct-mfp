@@ -125,7 +125,12 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     api,
     environment,
     tables,
-    buckets: [wpFormBucket, sarFormBucket, expenditureFormBucket, financialFormBucket],
+    buckets: [
+      wpFormBucket,
+      sarFormBucket,
+      expenditureFormBucket,
+      financialFormBucket,
+    ],
     isDev,
   };
 
@@ -325,15 +330,11 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     }
   );
 
-    const postFinancialBucketData = new Lambda(
-    scope,
-    "postFinancialBucketData",
-    {
-      entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
-      handler: "handler",
-      ...bucketLambdaProps,
-    }
-  );
+  const postFinancialBucketData = new Lambda(scope, "postFinancialBucketData", {
+    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
+    handler: "handler",
+    ...bucketLambdaProps,
+  });
 
   financialFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
