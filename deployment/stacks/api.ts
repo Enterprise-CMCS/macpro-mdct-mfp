@@ -30,6 +30,7 @@ interface CreateApiComponentsProps {
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
   expenditureFormBucket: s3.IBucket;
+  financialFormBucket: s3.IBucket;
   launchDarklyServer: string;
   launchDarklyLocalFlags?: string;
 }
@@ -47,6 +48,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     wpFormBucket,
     sarFormBucket,
     expenditureFormBucket,
+    financialFormBucket,
     launchDarklyServer,
     launchDarklyLocalFlags = '{"local": false, "flags": {}}',
   } = props;
@@ -112,6 +114,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     EXPENDITURE_FORM_BUCKET: expenditureFormBucket.bucketName,
+    FINANCIAL_FORM_BUCKET: financialFormBucket.bucketName,
     ...Object.fromEntries(
       tables.map((table) => [`${table.node.id}Table`, table.table.tableName])
     ),
@@ -122,7 +125,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     api,
     environment,
     tables,
-    buckets: [wpFormBucket, sarFormBucket, expenditureFormBucket],
+    buckets: [wpFormBucket, sarFormBucket, expenditureFormBucket, financialFormBucket],
     isDev,
   };
 
@@ -317,6 +320,32 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   expenditureFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
     new s3notifications.LambdaDestination(postExpenditureBucketData.lambda),
+    {
+      suffix: ".json",
+    }
+  );
+
+    const postFinancialBucketData = new Lambda(
+    scope,
+    "postFinancialBucketData",
+    {
+      entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
+      handler: "handler",
+      ...bucketLambdaProps,
+    }
+  );
+
+  financialFormBucket.addEventNotification(
+    s3.EventType.OBJECT_CREATED,
+    new s3notifications.LambdaDestination(postFinancialBucketData.lambda),
+    {
+      suffix: ".json",
+    }
+  );
+
+  financialFormBucket.addEventNotification(
+    s3.EventType.OBJECT_TAGGING_PUT,
+    new s3notifications.LambdaDestination(postFinancialBucketData.lambda),
     {
       suffix: ".json",
     }

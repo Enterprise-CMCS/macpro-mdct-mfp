@@ -51,7 +51,7 @@ export class ParentStack extends Stack {
       `cms-cloud-${Aws.ACCOUNT_ID}-${Aws.REGION}`
     );
 
-    const { tables, wpFormBucket, sarFormBucket, expenditureFormBucket } =
+    const { tables, wpFormBucket, sarFormBucket, expenditureFormBucket, financialFormBucket } =
       createDataComponents({
         ...commonProps,
         loggingBucket,
@@ -65,6 +65,7 @@ export class ParentStack extends Stack {
       wpFormBucket,
       sarFormBucket,
       expenditureFormBucket,
+      financialFormBucket,
     });
 
     if (isLocalStack) {
