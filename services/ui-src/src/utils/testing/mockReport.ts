@@ -168,6 +168,7 @@ export const mockReportFieldData = {
   ],
   evaluationPlan: mockEvaluationPlan,
   stateName: mockStateName,
+  targetPopulations: [],
 };
 
 export const mockSARReportFieldData = {
