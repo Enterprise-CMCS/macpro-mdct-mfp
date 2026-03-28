@@ -31,6 +31,7 @@ interface CreateApiComponentsProps {
   sarFormBucket: s3.IBucket;
   expenditureFormBucket: s3.IBucket;
   launchDarklyServer: string;
+  launchDarklyLocalFlags?: string;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
@@ -47,6 +48,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     sarFormBucket,
     expenditureFormBucket,
     launchDarklyServer,
+    launchDarklyLocalFlags = '{"local": false, "flags": {}}',
   } = props;
 
   const service = "app-api";
@@ -106,6 +108,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     brokerString,
     STAGE: stage,
     launchDarklyServer,
+    launchDarklyLocalFlags,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
     EXPENDITURE_FORM_BUCKET: expenditureFormBucket.bucketName,
