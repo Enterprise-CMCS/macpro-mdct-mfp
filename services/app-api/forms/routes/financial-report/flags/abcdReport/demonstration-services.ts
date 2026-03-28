@@ -44,7 +44,7 @@ const c1915WaiverServicesFootList = [
 
 export const demonstrationServicesRoute: FormTablesRoute = {
   name: "Demonstration Services",
-  path: "/expenditure/demonstration-services",
+  path: "/financial-report/demonstration-services",
   pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {

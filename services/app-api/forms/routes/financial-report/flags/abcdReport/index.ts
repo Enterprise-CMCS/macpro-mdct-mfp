@@ -11,11 +11,11 @@ import { supplementalServicesRoute } from "./supplemental-services";
 import { totalsSummaryRoute } from "./totals-summary";
 
 // Use with LaunchDarkly flag: abcdReport
-export const expenditureReportJson: ReportJsonFile = {
-  type: ReportType.EXPENDITURE,
+export const financialReportJson: ReportJsonFile = {
+  type: ReportType.FINANCIAL_REPORT,
   name: "MFP Financial Reporting Form",
-  basePath: "/expenditure",
-  version: "EXPENDITURE_2025-07-10",
+  basePath: "/financial-report",
+  version: "FINANCIAL-REPORT_2025-07-10",
   entities: {
     "": { required: true },
   },

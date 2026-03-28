@@ -87,7 +87,7 @@ export const getEligibleWorkPlan = (
 export const isArchivable = (reportType: ReportType) => {
   switch (reportType) {
     case ReportType.WP:
-    case ReportType.EXPENDITURE:
+    case ReportType.FINANCIAL_REPORT:
       return true;
     default:
       return false;

@@ -1,25 +1,25 @@
 import {
-  expenditureReportPeriodsMap,
+  financialReportPeriodsMap,
   generateCopyReportOptions,
   generateReportYearOptions,
-  prepareExpenditurePayload,
-} from "./expenditureLogic";
+  prepareFinancialReportingPayload,
+} from "./financialReportingLogic";
 import { ReportStatus } from "types";
 import { noEligibleReportsForCopy } from "../../../../constants";
 
-describe("expenditureLogic", () => {
-  describe("expenditureReportPeriodsMap", () => {
+describe("financialReportingLogic", () => {
+  describe("financialReportPeriodsMap", () => {
     it("should have correct quarter mappings", () => {
-      expect(expenditureReportPeriodsMap[1]).toBe(
+      expect(financialReportPeriodsMap[1]).toBe(
         "Q1 (Quarter 1): January 1st to March 31st"
       );
-      expect(expenditureReportPeriodsMap[2]).toBe(
+      expect(financialReportPeriodsMap[2]).toBe(
         "Q2 (Quarter 2): April 1st to June 30th"
       );
-      expect(expenditureReportPeriodsMap[3]).toBe(
+      expect(financialReportPeriodsMap[3]).toBe(
         "Q3 (Quarter 3): July 1st to September 30th"
       );
-      expect(expenditureReportPeriodsMap[4]).toBe(
+      expect(financialReportPeriodsMap[4]).toBe(
         "Q4 (Quarter 4): October 1st to December 31st"
       );
     });
@@ -178,7 +178,7 @@ describe("expenditureLogic", () => {
     });
   });
 
-  describe("prepareExpenditurePayload", () => {
+  describe("prepareFinancialReportingPayload", () => {
     it("should format payload with correct metadata structure without copyReport", () => {
       const activeState = "CA";
       const formData = {
@@ -186,7 +186,7 @@ describe("expenditureLogic", () => {
         reportPeriod: { value: "1", label: "Q1: January 1st to March 31st" },
       };
 
-      const result = prepareExpenditurePayload(activeState, formData);
+      const result = prepareFinancialReportingPayload(activeState, formData);
 
       expect(result).toEqual({
         metadata: {
@@ -206,7 +206,7 @@ describe("expenditureLogic", () => {
         reportPeriod: { value: "3" },
       };
 
-      const result = prepareExpenditurePayload(activeState, formData);
+      const result = prepareFinancialReportingPayload(activeState, formData);
 
       expect(result.metadata.submissionName).toBe(
         "TX: 2026 - Q3 (Quarter 3): July 1st to September 30th"
@@ -231,7 +231,7 @@ describe("expenditureLogic", () => {
         },
       ];
 
-      const result = prepareExpenditurePayload(
+      const result = prepareFinancialReportingPayload(
         activeState,
         formData,
         reportsByState as any
@@ -255,7 +255,7 @@ describe("expenditureLogic", () => {
         },
       ];
 
-      const result = prepareExpenditurePayload(
+      const result = prepareFinancialReportingPayload(
         activeState,
         formData,
         reportsByState as any
@@ -272,7 +272,7 @@ describe("expenditureLogic", () => {
         copyReport: { value: "report-789" },
       };
 
-      const result = prepareExpenditurePayload(
+      const result = prepareFinancialReportingPayload(
         activeState,
         formData,
         undefined

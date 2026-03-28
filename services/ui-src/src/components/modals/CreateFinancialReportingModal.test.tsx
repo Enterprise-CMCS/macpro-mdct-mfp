@@ -7,8 +7,8 @@ import { ReportContext } from "../reports/ReportProvider";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 import { useStore } from "../../utils";
-import { mockExpenditureOneNotStartedReportContext } from "utils/testing/expenditure/mockExpenditure";
-import { CreateExpenditureModal } from "./CreateExpenditureModal";
+import { mockFinancialReportOneNotStartedReportContext } from "utils/testing/financial-report/mockFinancialReport";
+import { CreateFinancialReportingModal } from "./CreateFinancialReportingModal";
 import { ReportStatus } from "types";
 import { noEligibleReportsForCopy } from "../../constants";
 
@@ -18,7 +18,7 @@ const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
 
 const mockedReportContext = {
-  ...mockExpenditureOneNotStartedReportContext,
+  ...mockFinancialReportOneNotStartedReportContext,
   createReport: mockCreateReport,
   fetchReportsByState: mockFetchReportsByState,
   isReportPage: true,
@@ -31,7 +31,7 @@ mockedUseStore.mockReturnValue(mockUseStore);
 const modalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
-      <CreateExpenditureModal
+      <CreateFinancialReportingModal
         activeState="CA"
         modalDisclosure={{
           isOpen: true,
@@ -55,7 +55,7 @@ const modalWithExistingReport = (
         updateReport: mockUpdateReport,
       }}
     >
-      <CreateExpenditureModal
+      <CreateFinancialReportingModal
         activeState="CA"
         selectedReport={existingReport}
         modalDisclosure={{
@@ -67,8 +67,8 @@ const modalWithExistingReport = (
   </RouterWrappedComponent>
 );
 
-describe("<CreateExpenditureModal />", () => {
-  describe("Test CreateExpenditureModal", () => {
+describe("<CreateFinancialReportingModal />", () => {
+  describe("Test CreateFinancialReportingModal", () => {
     beforeEach(async () => {
       await act(async () => {
         await render(modalComponent);
@@ -79,17 +79,17 @@ describe("<CreateExpenditureModal />", () => {
       jest.clearAllMocks();
     });
 
-    test("CreateExpenditureModal shows the content", () => {
+    test("CreateFinancialReportingModal shows the content", () => {
       expect(screen.getByText("Save")).toBeTruthy();
     });
 
-    test("CreateExpenditureModal top close button can be clicked", () => {
+    test("CreateFinancialReportingModal top close button can be clicked", () => {
       fireEvent.click(screen.getByText("Close"));
       expect(mockCloseHandler).toHaveBeenCalled();
     });
   });
 
-  describe("Test CreateExpenditureModal functionality for new Expenditure Report", () => {
+  describe("Test CreateFinancialReportingModal functionality for new Financial Report", () => {
     afterEach(() => {
       jest.clearAllMocks();
     });
@@ -137,7 +137,7 @@ describe("<CreateExpenditureModal />", () => {
       const newData = { reportYear: 2026, reportPeriod: 2 };
 
       expect(mockCreateReport).toHaveBeenCalledWith(
-        "EXPENDITURE",
+        "FINANCIAL_REPORT",
         "CA",
         expect.objectContaining({ metadata: expect.objectContaining(newData) })
       );
@@ -192,7 +192,7 @@ describe("<CreateExpenditureModal />", () => {
 
         expect(mockUpdateReport).toHaveBeenCalledWith(
           {
-            reportType: "EXPENDITURE",
+            reportType: "FINANCIAL_REPORT",
             state: "CA",
             id: "existing-report-id",
           },
@@ -207,7 +207,7 @@ describe("<CreateExpenditureModal />", () => {
         expect(mockCreateReport).not.toHaveBeenCalled();
         expect(mockCloseHandler).toHaveBeenCalledTimes(1);
         expect(mockFetchReportsByState).toHaveBeenCalledWith(
-          "EXPENDITURE",
+          "FINANCIAL_REPORT",
           "CA"
         );
       });
@@ -317,7 +317,7 @@ describe("<CreateExpenditureModal />", () => {
         });
 
         expect(mockCreateReport).toHaveBeenCalledWith(
-          "EXPENDITURE",
+          "FINANCIAL_REPORT",
           "CA",
           expect.objectContaining({
             metadata: expect.objectContaining({
@@ -328,7 +328,7 @@ describe("<CreateExpenditureModal />", () => {
       });
     });
 
-    describe("Test CreateExpenditureModal view-only mode", () => {
+    describe("Test CreateFinancialReportingModal view-only mode", () => {
       afterEach(() => {
         jest.clearAllMocks();
       });
@@ -337,7 +337,7 @@ describe("<CreateExpenditureModal />", () => {
         const adminModal = (
           <RouterWrappedComponent>
             <ReportContext.Provider value={mockedReportContext}>
-              <CreateExpenditureModal
+              <CreateFinancialReportingModal
                 activeState="CA"
                 selectedReport={{
                   ...existingReport,
@@ -372,7 +372,7 @@ describe("<CreateExpenditureModal />", () => {
         const submittedReportModal = (
           <RouterWrappedComponent>
             <ReportContext.Provider value={mockedReportContext}>
-              <CreateExpenditureModal
+              <CreateFinancialReportingModal
                 activeState="CA"
                 selectedReport={{
                   ...existingReport,

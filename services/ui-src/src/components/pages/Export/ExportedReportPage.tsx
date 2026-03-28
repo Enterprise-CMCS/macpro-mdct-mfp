@@ -83,7 +83,7 @@ export const reportTitle = (
   switch (reportType) {
     case ReportType.WP:
     case ReportType.SAR:
-    case ReportType.EXPENDITURE:
+    case ReportType.FINANCIAL_REPORT:
       return `${stateName} ${reportPage.heading} ${reportYear} - Period ${reportPeriod}`;
     default:
       assertExhaustive(reportType as never);

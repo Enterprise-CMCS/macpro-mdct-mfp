@@ -92,7 +92,7 @@ export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";
 export { CreateSarModal } from "./modals/CreateSarModal";
 export { CreateWorkPlanModal } from "./modals/CreateWorkPlanModal";
-export { CreateExpenditureModal } from "./modals/CreateExpenditureModal";
+export { CreateFinancialReportingModal } from "./modals/CreateFinancialReportingModal";
 export { DeleteEntityModal } from "./modals/DeleteEntityModal";
 // pages
 export { AdminPage } from "./pages/Admin/AdminPage";
@@ -138,6 +138,6 @@ export { PostLogoutRedirect } from "./PostLogoutRedirect/index";
 export { DashboardPage } from "./pages/Dashboard/DashboardPage";
 export { DashboardTable } from "./pages/Dashboard/DashboardTable";
 export { MobileDashboardTable } from "./pages/Dashboard/MobileDashboardTable";
-export { ExpenditureDashboardPage } from "./pages/Dashboard/Expenditure/ExpenditureDashboardPage";
+export { FinancialReportingDashboardPage } from "./pages/Dashboard/FinancialReporting/FinancialReportingDashboardPage";
 export { DashboardFilter } from "./pages/Dashboard/Filter/DashboardFilter";
-export { handleExpenditureFilter } from "./pages/Dashboard/Filter/dashboardFilterLogic";
+export { handleFinancialReportFilter } from "./pages/Dashboard/Filter/dashboardFilterLogic";

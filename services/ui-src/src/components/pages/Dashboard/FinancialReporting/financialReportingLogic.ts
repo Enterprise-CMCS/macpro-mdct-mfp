@@ -1,7 +1,7 @@
 import { AnyObject, ReportMetadataShape, ReportStatus } from "types";
 import { noEligibleReportsForCopy } from "../../../../constants";
 
-export const expenditureReportPeriodsMap = {
+export const financialReportPeriodsMap = {
   1: "Q1 (Quarter 1): January 1st to March 31st",
   2: "Q2 (Quarter 2): April 1st to June 30th",
   3: "Q3 (Quarter 3): July 1st to September 30th",
@@ -9,10 +9,10 @@ export const expenditureReportPeriodsMap = {
 };
 
 export const generateReportYearOptions = () => {
-  const EXPENDITURE_LAUNCH_YEAR = 2025;
+  const FINANCIAL_REPORTING_LAUNCH_YEAR = 2025;
   const currentYear = new Date(Date.now()).getFullYear();
   return [currentYear - 1, currentYear, currentYear + 1]
-    .filter((year) => year >= EXPENDITURE_LAUNCH_YEAR)
+    .filter((year) => year >= FINANCIAL_REPORTING_LAUNCH_YEAR)
     .map((year) => ({
       id: `reportYear-${year}`,
       label: `${year}`,
@@ -51,7 +51,7 @@ export const generateCopyReportOptions = (
   return reportOptions.length > 0 ? reportOptions : [noEligibleOption];
 };
 
-export const prepareExpenditurePayload = (
+export const prepareFinancialReportingPayload = (
   activeState: string,
   formData: AnyObject,
   reportsByState?: ReportMetadataShape[]
@@ -59,8 +59,8 @@ export const prepareExpenditurePayload = (
   const formattedReportYear = Number(formData.reportYear.value);
   const formattedReportPeriod = Number(formData.reportPeriod.value);
   const submissionName = `${activeState}: ${formattedReportYear} - ${
-    expenditureReportPeriodsMap[
-      formattedReportPeriod as keyof typeof expenditureReportPeriodsMap
+    financialReportPeriodsMap[
+      formattedReportPeriod as keyof typeof financialReportPeriodsMap
     ]
   }`;
   const copiedReportsID = formData.copyReport?.value;
@@ -71,7 +71,7 @@ export const prepareExpenditurePayload = (
       (report) => report.id === copiedReportsID
     );
   }
-  const expenditurePayload: AnyObject = {
+  const financialReportingPayload: AnyObject = {
     metadata: {
       reportYear: formattedReportYear,
       reportPeriod: formattedReportPeriod,
@@ -80,5 +80,5 @@ export const prepareExpenditurePayload = (
     },
   };
 
-  return expenditurePayload;
+  return financialReportingPayload;
 };

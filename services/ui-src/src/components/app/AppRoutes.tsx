@@ -14,7 +14,7 @@ import {
   ReviewSubmitPage,
   ExportedReportPage,
   ReportContext,
-  ExpenditureDashboardPage,
+  FinancialReportingDashboardPage,
 } from "components";
 // utils
 import { ScrollToTopComponent, useStore } from "utils";
@@ -26,7 +26,7 @@ export const AppRoutes = () => {
   const { userIsAdmin } = useStore().user ?? {};
   const { report } = useStore();
   const { isReportPage } = useContext(ReportContext);
-  const expenditureReport = useFlags()?.abcdReport;
+  const financialReport = useFlags()?.abcdReport;
 
   const { pathname } = useLocation();
   const isExportPage = pathname.includes("/export");
@@ -63,12 +63,15 @@ export const AppRoutes = () => {
             element={<DashboardPage reportType={ReportType.SAR} />}
           />
           <Route path="/sar/export" element={<ExportedReportPage />} />
-          {expenditureReport && (
-            <Route path="/expenditure" element={<ExpenditureDashboardPage />} />
-          )}
-          {expenditureReport && (
+          {financialReport && (
             <Route
-              path="/expenditure/export"
+              path="/financial-report"
+              element={<FinancialReportingDashboardPage />}
+            />
+          )}
+          {financialReport && (
+            <Route
+              path="/financial-report/export"
               element={<ExportedReportPage />}
             />
           )}

@@ -22,11 +22,11 @@ import {
   ReportContext,
   Alert,
   DashboardFilter,
-  handleExpenditureFilter,
+  handleFinancialReportFilter,
 } from "components";
 import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
 import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
-import { ModalBundle } from "./Expenditure/ExpenditureDashboardPage";
+import { ModalBundle } from "./FinancialReporting/FinancialReportingDashboardPage";
 // constants
 import { States } from "../../../constants";
 // types
@@ -127,7 +127,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
     }
     switch (reportType) {
       case ReportType.WP:
-      case ReportType.EXPENDITURE:
+      case ReportType.FINANCIAL_REPORT:
         fetchReportsByState(reportType, activeState);
         clearReportSelection();
         break;
@@ -150,7 +150,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
       );
     }
     if (showFilter) {
-      const filteredReports = handleExpenditureFilter(
+      const filteredReports = handleFinancialReportFilter(
         filterYear,
         filterQuarter,
         newReportsToDisplay
@@ -288,7 +288,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
           // Allow creating a new WP only if the previous WP is approved
           return previousReport.status !== ReportStatus.APPROVED;
         }
-      case ReportType.EXPENDITURE:
+      case ReportType.FINANCIAL_REPORT:
         return false;
       default:
         return true;
@@ -300,7 +300,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
       case ReportType.WP:
-      case ReportType.EXPENDITURE:
+      case ReportType.FINANCIAL_REPORT:
         if (!previousReport) {
           return false;
         } else {
@@ -385,7 +385,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
             reportId={reportId}
             body={body}
             openCreateReportModal={
-              reportType === ReportType.EXPENDITURE
+              reportType === ReportType.FINANCIAL_REPORT
                 ? modal!.setModalReport
                 : openCreateReportModal
             }
@@ -416,7 +416,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
               variant="primary"
               disabled={isAddSubmissionDisabled()}
               onClick={() =>
-                reportType === ReportType.EXPENDITURE
+                reportType === ReportType.FINANCIAL_REPORT
                   ? modal?.setModalReport(undefined)
                   : openCreateReportModal()
               }

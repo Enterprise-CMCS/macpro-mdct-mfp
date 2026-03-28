@@ -331,7 +331,7 @@ const personnelDynamicRowsTemplate = {
 // Administrative Costs route
 export const administrativeCostsRoute: FormTablesRoute = {
   name: "Administrative Costs",
-  path: "/expenditure/administrative-costs",
+  path: "/financial-report/administrative-costs",
   pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {

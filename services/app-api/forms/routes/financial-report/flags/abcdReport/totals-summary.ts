@@ -24,7 +24,7 @@ const totalsSummaryAllTotalsRow = [
 
 export const totalsSummaryRoute: FormTablesRoute = {
   name: "Totals",
-  path: "/expenditure/totals",
+  path: "/financial-report/totals",
   pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {
