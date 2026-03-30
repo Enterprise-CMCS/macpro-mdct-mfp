@@ -644,6 +644,8 @@ export const mockModalOverlayReportPageJson = {
 
 export const mockModalOverlayEntityStepsReportPageJson = {
   ...mockModalOverlayReportPageJson,
+  name: "mock-route-entitySteps",
+  path: "/mock/mock-route-entitySteps",
   entitySteps: [],
 };
 
