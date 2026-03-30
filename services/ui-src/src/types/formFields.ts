@@ -131,6 +131,7 @@ export interface FormField {
   repeat?: string;
   transformation?: Transformation;
   isRequired?: boolean;
+  forCopyoverOnly?: boolean;
   forTableOnly?: boolean;
 }
 
@@ -153,6 +154,7 @@ export interface FormLayoutElement {
   id: string;
   type: string;
   props?: AnyObject;
+  forCopyoverOnly?: boolean;
   forTableOnly?: boolean;
 }
 

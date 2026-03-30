@@ -59,6 +59,18 @@ export const textCustom = (options: TextOptions) =>
       message: error.INVALID_LENGTH,
     });
 
+export const textCustomOptional = (options: TextOptions) =>
+  string()
+    .typeError(error.INVALID_GENERIC)
+    .test({
+      test: (value) => !isWhitespaceString(value),
+      message: error.REQUIRED_GENERIC,
+    })
+    .test({
+      test: (value) => isWithinMaxLength(value, options?.maxLength),
+      message: error.INVALID_LENGTH,
+    });
+
 // NUMBER - Helpers
 const validNAValues: (string | undefined)[] = ["N/A", "Data not available"];
 // const validNumberRegex = /^\.$|[0-9]/;
@@ -324,6 +336,7 @@ export const schemaMap: any = {
   ratio: ratio(),
   text: text(),
   textCustom: (options: TextOptions) => textCustom(options),
+  textCustomOptional: (options: TextOptions) => textCustomOptional(options),
   textOptional: textOptional(),
   url: url(),
   urlOptional: urlOptional(),

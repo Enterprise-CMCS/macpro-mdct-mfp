@@ -49,6 +49,8 @@ export const text = () => textSchema().required();
 export const textOptional = () => textSchema().notRequired().nullable();
 export const textCustom = (options: TextOptions) =>
   textSchema(options).required();
+export const textCustomOptional = (options: TextOptions) =>
+  textSchema(options).notRequired().nullable();
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];
@@ -282,6 +284,7 @@ export const completionSchemaMap: any = {
   ratio: ratio(),
   text: text(),
   textCustom: (options: TextOptions) => textCustom(options),
+  textCustomOptional: (options: TextOptions) => textCustomOptional(options),
   textOptional: textOptional(),
   radio: radio(),
   radioOptional: radioOptional(),

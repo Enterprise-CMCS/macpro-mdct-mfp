@@ -5,7 +5,6 @@ import { ReportContext, ReportPageWrapper } from "components";
 import {
   mockDrawerReportPageJson,
   mockDynamicModalOverlayReportPageJson,
-  mockLDFlags,
   mockModalDrawerReportPageJson,
   mockModalOverlayReportPageJson,
   mockReportJson,
@@ -34,8 +33,9 @@ const mockLocations = {
   drawer: { pathname: mockReportJson.flatRoutes[1].path },
   modalDrawer: { pathname: mockReportJson.flatRoutes[2].path },
   modalOverlay: { pathname: mockReportJson.flatRoutes[4].path },
-  dynamicModalOverlay: { pathname: mockReportJson.flatRoutes[5].path },
-  reviewSubmit: { pathname: mockReportJson.flatRoutes[6].path },
+  modalOverlayEntitySteps: { pathname: mockReportJson.flatRoutes[5].path },
+  dynamicModalOverlay: { pathname: mockReportJson.flatRoutes[6].path },
+  reviewSubmit: { pathname: mockReportJson.flatRoutes[7].path },
 };
 
 const ReportPageWrapperComponent = (
@@ -74,8 +74,7 @@ describe("<ReportPageWrapper />", () => {
       ).toBeVisible();
     });
 
-    test("ReportPageWrapper loads ModalOverlayReportPageV2 with flag on", async () => {
-      mockLDFlags.set({ wpSarRelease2025: true });
+    test("ReportPageWrapper loads ModalOverlayReportPageV2 for route without entitySteps", async () => {
       mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
       render(ReportPageWrapperComponent);
 
@@ -94,9 +93,8 @@ describe("<ReportPageWrapper />", () => {
       expect(backButton).toBeVisible();
     });
 
-    test("ReportPageWrapper loads ModalOverlayReportPageV1 with flag off", async () => {
-      mockLDFlags.set({ wpSarRelease2025: false });
-      mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
+    test("ReportPageWrapper loads ModalOverlayReportPageV1 for route with entitySteps", async () => {
+      mockUseLocation.mockReturnValue(mockLocations.modalOverlayEntitySteps);
       render(ReportPageWrapperComponent);
 
       const enterDetailsButton = screen.getByRole("button", {
