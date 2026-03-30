@@ -13,6 +13,7 @@ import {
   FieldChoice,
   ReportStatus,
   HeadingLevel,
+  FormTableType,
 } from "types";
 // utils
 import { getReportVerbiage, useStore } from "utils";
@@ -26,6 +27,7 @@ export const ExportedReportFieldTable = ({
   const { report } = useStore();
 
   const { exportVerbiage } = getReportVerbiage(report?.reportType);
+
   const { tableHeaders } = exportVerbiage;
   const pageType = section.pageType || "";
   const formFields =
@@ -48,6 +50,62 @@ export const ExportedReportFieldTable = ({
   const reportType = report?.reportType as ReportType;
   const hideHintText = reportType === ReportType.WP;
   const entityType = section.entityType;
+
+  if (section.name === "Qualified HCBS") {
+    const tablesToRender: ReactElement[] = [];
+    const calculationTables =
+      section.form?.tables?.filter(
+        (table) => table.tableType === FormTableType.CALCULATION
+      ) || [];
+
+    for (const table of calculationTables) {
+      if (table.bodyRows) {
+        const bodyRows = table.bodyRows.map((row: any) => {
+          const label = row[0];
+          const totalComputableField = row[1];
+          const federalShareField = row[2];
+          const stateShareField = row[3];
+
+          if (
+            totalComputableField?.id &&
+            federalShareField?.id &&
+            stateShareField?.id
+          ) {
+            const totalExpenditures =
+              report?.fieldData[totalComputableField.id] || "0";
+            const federalShare = report?.fieldData[federalShareField.id] || "0";
+            const stateShare = report?.fieldData[stateShareField.id] || "0";
+
+            return [label, totalExpenditures, federalShare, stateShare];
+          }
+          return [];
+        });
+
+        tablesToRender.push(
+          <Box key={table.id} sx={{ breakInside: "avoid" }}>
+            <Heading as="h4" sx={sx.subHeading}>
+              {table.verbiage?.title}
+            </Heading>
+            <Table
+              sx={sx.table}
+              content={{
+                headRow: [
+                  "Service",
+                  "Total expenditures",
+                  "Total Federal share",
+                  "Total State / Territory share",
+                ],
+                bodyRows: bodyRows,
+              }}
+              data-testid={`service-table-${table.id}`}
+            />
+          </Box>
+        );
+      }
+    }
+
+    return <>{tablesToRender}</>;
+  }
 
   // SAR "General Information" section layout is a unique case with multiple section headings within the same page
   if (reportType === ReportType.SAR && section.name === "General Information") {
