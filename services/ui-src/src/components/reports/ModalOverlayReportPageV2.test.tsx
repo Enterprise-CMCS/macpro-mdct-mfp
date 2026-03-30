@@ -1,14 +1,13 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
-import { ModalOverlayReportPage } from "components";
+import { ModalOverlayReportPageV2 } from "components";
 // utils
 import {
   RouterWrappedComponent,
   mockModalOverlayReportPageJson,
   mockReportStore,
   mockUseEntityStore,
-  mockVerbiageIntro,
 } from "utils/testing/setupJest";
 import { useBreakpoint, useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
@@ -50,14 +49,14 @@ const modalOverlayReportPageComponent = (
   route = mockModalOverlayReportPageJson
 ) => (
   <RouterWrappedComponent>
-    <ModalOverlayReportPage
+    <ModalOverlayReportPageV2
       route={route}
       setSidebarHidden={mockSetSidebarHidden}
     />
   </RouterWrappedComponent>
 );
 
-describe("<ModalOverlayReportPage />", () => {
+describe("<ModalOverlayReportPageV2 />", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -160,7 +159,7 @@ describe("<ModalOverlayReportPage />", () => {
         name: addEditModalAddTitle,
       });
       await act(() => {
-        expect(closedModal).not.toBeVisible();
+        expect(closedModal).not.toBeInTheDocument();
       });
     });
   });
@@ -190,7 +189,7 @@ describe("<ModalOverlayReportPage />", () => {
         name: addEditModalEditTitle,
       });
       await act(() => {
-        expect(closedModal).not.toBeVisible();
+        expect(closedModal).not.toBeInTheDocument();
       });
     });
   });
@@ -223,22 +222,14 @@ describe("<ModalOverlayReportPage />", () => {
         name: deleteModalTitle,
       });
       await act(() => {
-        expect(closedModal).not.toBeVisible();
+        expect(closedModal).not.toBeInTheDocument();
       });
     });
   });
 
   test("opens and closes overlay", async () => {
     mockedUseStore.mockReturnValue(mockUseEntityStore);
-    const route = {
-      ...mockModalOverlayReportPageJson,
-      dashboard: {
-        verbiage: {
-          intro: mockVerbiageIntro,
-        },
-      },
-    };
-    render(modalOverlayReportPageComponent(route));
+    render(modalOverlayReportPageComponent());
     const enterDetailsButton = screen.getByRole("button", {
       name: enterEntityDetailsButtonText,
     });
@@ -246,20 +237,14 @@ describe("<ModalOverlayReportPage />", () => {
     await act(async () => {
       await userEvent.click(enterDetailsButton);
     });
-    expect(screen.getByRole("heading", { name: "mock section", level: 1 }));
-    expect(
-      screen.getByRole("heading", { name: "mock-initiative-name", level: 2 })
-    );
 
-    const backButton = screen.getAllByRole("button", {
+    const backButton = screen.getByRole("button", {
       name: "Return to all initiatives",
     });
-    expect(backButton).toHaveLength(2);
-
     await act(async () => {
-      await userEvent.click(backButton[0]);
+      await userEvent.click(backButton);
     });
-    expect(backButton[0]).not.toBeInTheDocument();
+    expect(backButton).not.toBeInTheDocument();
   });
 
   testA11yAct(modalOverlayReportPageComponent(), () => {

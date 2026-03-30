@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import { Flex } from "@chakra-ui/react";
 import {
@@ -6,6 +7,7 @@ import {
   DynamicModalOverlayReportPage,
   ModalDrawerReportPage,
   ModalOverlayReportPage,
+  ModalOverlayReportPageV2,
   PageTemplate,
   ReviewSubmitPage,
   Sidebar,
@@ -25,6 +27,8 @@ import {
 import { useStore } from "utils";
 
 export const ReportPageWrapper = () => {
+  const wpSarRelease2025 = useFlags()?.wpSarRelease2025;
+
   const { report } = useStore();
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
@@ -44,6 +48,15 @@ export const ReportPageWrapper = () => {
           <ModalDrawerReportPage route={route as ModalDrawerReportPageShape} />
         );
       case PageTypes.MODAL_OVERLAY:
+        if (wpSarRelease2025) {
+          return (
+            <ModalOverlayReportPageV2
+              route={route as ModalOverlayReportPageShape}
+              setSidebarHidden={setSidebarHidden}
+            />
+          );
+        }
+
         return (
           <ModalOverlayReportPage
             route={route as ModalOverlayReportPageShape}
