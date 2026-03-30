@@ -68,6 +68,7 @@ export const ExportedReportFieldTable = ({
     for (const table of calculationTables) {
       if (table.bodyRows) {
         const bodyRows = renderServiceTableBody(table.bodyRows);
+        const footerRow = renderServiceTableBody(table.footRows);
 
         tablesToRender.push(
           <Box key={table.id}>
@@ -84,6 +85,7 @@ export const ExportedReportFieldTable = ({
                   "Total Federal Share",
                 ],
                 bodyRows: bodyRows,
+                footRow: footerRow,
               }}
               data-testid={`service-table-${table.id}`}
             />
@@ -263,6 +265,7 @@ export const renderFieldTableBody = (
 
 export const renderServiceTableBody = (bodyRows: any) => {
   const { report } = useStore();
+  console.log("bodyRows", bodyRows);
   return bodyRows.map((row: any) => {
     const label = row[0];
     const totalComputableField = row[1];
@@ -274,11 +277,12 @@ export const renderServiceTableBody = (bodyRows: any) => {
       totalStateTerritoryShareField?.id &&
       totalFederalShareField?.id
     ) {
-      const totalComputable = report?.fieldData[totalComputableField.id] || "0";
+      const totalComputable =
+        report?.fieldData[totalComputableField.id] || "Not answered";
       const totalStateTerritoryShare =
-        report?.fieldData[totalStateTerritoryShareField.id] || "0";
+        report?.fieldData[totalStateTerritoryShareField.id] || "$0";
       const totalFederalShare =
-        report?.fieldData[totalFederalShareField.id] || "0";
+        report?.fieldData[totalFederalShareField.id] || "$0";
 
       return [
         label,
