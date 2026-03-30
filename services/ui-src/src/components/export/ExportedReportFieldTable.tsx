@@ -51,7 +51,14 @@ export const ExportedReportFieldTable = ({
   const hideHintText = reportType === ReportType.WP;
   const entityType = section.entityType;
 
-  if (section.name === "Qualified HCBS") {
+  if (
+    section.name === "Qualified HCBS" ||
+    section.name === "Demonstration Services" ||
+    section.name === "Supplemental Services" ||
+    section.name === "Administrative Costs" ||
+    section.name === "Capacity Building" ||
+    section.name === "Sub Recipients"
+  ) {
     const tablesToRender: ReactElement[] = [];
     const calculationTables =
       section.form?.tables?.filter(
@@ -82,7 +89,7 @@ export const ExportedReportFieldTable = ({
         });
 
         tablesToRender.push(
-          <Box key={table.id} sx={{ breakInside: "avoid" }}>
+          <Box key={table.id}>
             <Heading as="h4" sx={sx.subHeading}>
               {table.verbiage?.title}
             </Heading>
