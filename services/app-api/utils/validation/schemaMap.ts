@@ -44,29 +44,19 @@ export const text = () =>
       test: (value) => !isWhitespaceString(value),
       message: error.REQUIRED_GENERIC,
     });
-export const textOptional = () => string().typeError(error.INVALID_GENERIC);
-
+export const textOptional = () =>
+  string().nullable().typeError(error.INVALID_GENERIC);
 export const textCustom = (options: TextOptions) =>
-  string()
-    .typeError(error.INVALID_GENERIC)
-    .required(error.REQUIRED_GENERIC)
-    .test({
-      test: (value) => !isWhitespaceString(value),
-      message: error.REQUIRED_GENERIC,
-    })
-    .test({
-      test: (value) => isWithinMaxLength(value, options?.maxLength),
-      message: error.INVALID_LENGTH,
-    });
-
+  text().test({
+    test: (value) => isWithinMaxLength(value, options?.maxLength),
+    message: error.INVALID_LENGTH,
+  });
 export const textCustomOptional = (options: TextOptions) =>
-  string()
-    .typeError(error.INVALID_GENERIC)
-    .test({
-      test: (value) =>
-        value ? isWithinMaxLength(value, options.maxLength) : true,
-      message: error.INVALID_LENGTH,
-    });
+  textOptional().test({
+    test: (value) =>
+      value ? isWithinMaxLength(value, options.maxLength) : true,
+    message: error.INVALID_LENGTH,
+  });
 
 // NUMBER - Helpers
 const validNAValues: (string | undefined)[] = ["N/A", "Data not available"];
@@ -111,7 +101,7 @@ export const number = () =>
       message: error.REQUIRED_GENERIC,
     });
 
-export const numberOptional = () => numberSchema().notRequired().nullable();
+export const numberOptional = () => numberSchema().nullable();
 export const numberComparison = (options: NumberOptions) =>
   number().test({
     test: (value) => {
@@ -167,15 +157,14 @@ const validIntegerSchema = () =>
 export const validInteger = () =>
   validIntegerSchema().required(error.REQUIRED_GENERIC);
 
-export const validIntegerOptional = () =>
-  validIntegerSchema().notRequired().nullable();
+export const validIntegerOptional = () => validIntegerSchema().nullable();
 
 // Number - Ratio
 export const ratio = () =>
   mixed()
     .test({
       message: error.REQUIRED_GENERIC,
-      test: (val) => val != "",
+      test: (val) => val !== "",
     })
     .required(error.REQUIRED_GENERIC)
     .test({
@@ -187,11 +176,11 @@ export const ratio = () =>
 
 // EMAIL
 export const email = () => text().email(error.INVALID_EMAIL);
-export const emailOptional = () => email().notRequired();
+export const emailOptional = () => textOptional().email(error.INVALID_EMAIL);
 
 // URL
 export const url = () => text().url(error.INVALID_URL);
-export const urlOptional = () => url().notRequired();
+export const urlOptional = () => textOptional().url(error.INVALID_URL);
 
 // DATE
 export const date = () =>
@@ -205,10 +194,11 @@ export const date = () =>
 
 export const dateOptional = () =>
   string()
+    .nullable()
     .typeError(error.INVALID_GENERIC)
     .test({
       message: error.INVALID_DATE,
-      test: (value) => dateFormatRegex.test(value!),
+      test: (value) => (value ? dateFormatRegex.test(value) : true),
     });
 
 export const endDate = (startDateField: string) =>

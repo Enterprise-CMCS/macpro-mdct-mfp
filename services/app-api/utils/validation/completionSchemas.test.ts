@@ -232,6 +232,18 @@ describe("utils/validation/completionSchemas", () => {
     });
   });
 
+  describe("optional schemas", () => {
+    test("Verify optional schemas", () => {
+      testSchema(schemaMap.dateOptional, [""], true);
+      testSchema(schemaMap.emailOptional, [""], true);
+      testSchema(schemaMap.numberOptional, [""], true);
+      testSchema(schemaMap.textCustomOptional({ maxLength: 10 }), [""], true);
+      testSchema(schemaMap.textOptional, [""], true);
+      testSchema(schemaMap.urlOptional, [""], true);
+      testSchema(schemaMap.validIntegerOptional, [""], true);
+    });
+  });
+
   describe("textCustom", () => {
     test("returns true", () => {
       testSchema(schemaMap.textCustom({ maxLength: 10 }), ["0123456789"], true);
@@ -246,7 +258,7 @@ describe("utils/validation/completionSchemas", () => {
     });
   });
 
-  describe("textCustom", () => {
+  describe("textCustomOptional", () => {
     test("returns true", () => {
       testSchema(
         schemaMap.textCustomOptional({ maxLength: 10 }),

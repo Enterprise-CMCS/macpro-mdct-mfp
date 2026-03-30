@@ -1,8 +1,11 @@
-import { array, mixed, object, string, number as yupNumber } from "yup";
-// types
-import { Choice } from "../types";
+import { mixed, string, number as yupNumber } from "yup";
 // utils
-import { schemaMap } from "./schemaMap";
+import {
+  endDate as schamaMapEndDate,
+  isEndDateAfterStartDate as schamaMapIsEndDateAfterStartDate,
+  nested as schamaMapEndDateNested,
+  schemaMap,
+} from "./schemaMap";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -96,7 +99,7 @@ export const ratio = () =>
   mixed()
     .test({
       message: error.REQUIRED_GENERIC,
-      test: (val) => val != "",
+      test: (val) => val !== "",
     })
     .required(error.REQUIRED_GENERIC)
     .test({
@@ -133,74 +136,27 @@ export const ratio = () =>
     });
 
 // DATE
-const dateSchema = () =>
-  string()
-    .matches(dateFormatRegex, error.INVALID_DATE)
-    .test({
-      message: error.REQUIRED_GENERIC,
-      test: (value) => !isWhitespaceString(value),
-    });
-
-export const date = () => dateSchema().required(error.REQUIRED_GENERIC);
-export const dateOptional = () => dateSchema().notRequired().nullable();
-
 export const endDate = (startDateField: string) =>
-  date()
-    .typeError(error.INVALID_DATE)
-    .test({
-      message: error.INVALID_END_DATE,
-      test: (endDateString, context) => {
-        return isEndDateAfterStartDate(
-          context.parent[startDateField],
-          endDateString as string
-        );
-      },
-    });
-
+  schamaMapEndDate(startDateField);
 export const isEndDateAfterStartDate = (
-  startDateString: string,
+  startDateField: string,
   endDateString: string
-) => {
-  const startDate = new Date(startDateString);
-  const endDate = new Date(endDateString!);
-  return endDate >= startDate;
-};
+) => schamaMapIsEndDateAfterStartDate(startDateField, endDateString);
 
 // NESTED
 export const nested = (
   fieldSchema: Function,
   parentFieldName: string,
   parentOptionId: string
-) => {
-  const fieldTypeMap = {
-    array: array(),
-    string: string(),
-    date: dateSchema(),
-    object: object(),
-  };
-  const fieldType: keyof typeof fieldTypeMap = fieldSchema().type;
-  const baseSchema: any = fieldTypeMap[fieldType];
-  return baseSchema.when(
-    parentFieldName,
-    (value: Choice[]) =>
-      // look for parentOptionId in checked choices
-      value?.find((option: Choice) => option.key.endsWith(parentOptionId))
-        ? fieldSchema() // returns standard field schema (required)
-        : baseSchema // returns not-required Yup base schema
-  );
-};
-
-// REGEX
-export const dateFormatRegex =
-  /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})$/;
+) => schamaMapEndDateNested(fieldSchema, parentFieldName, parentOptionId);
 
 // SCHEMA MAP
 export const completionSchemaMap: any = {
   checkbox: schemaMap.checkbox,
   checkboxOptional: schemaMap.checkboxOptional,
   checkboxSingle: schemaMap.checkboxSingle,
-  date: date(),
-  dateOptional: dateOptional(),
+  date: schemaMap.date,
+  dateOptional: schemaMap.dateOptional,
   dropdown: schemaMap.dropdown,
   dynamic: schemaMap.dynamic,
   dynamicOptional: schemaMap.dynamicOptional,

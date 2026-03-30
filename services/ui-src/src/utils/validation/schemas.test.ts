@@ -268,13 +268,13 @@ describe("utils/validation/schemas", () => {
 
   describe("optional schemas", () => {
     test("Verify optional schemas convert empty string to null", () => {
+      testSchema(schemaMap.dateOptional, [""], true);
+      testSchema(schemaMap.emailOptional, [""], true);
+      testSchema(schemaMap.numberOptional, [""], true);
       testSchema(schemaMap.textCustomOptional({ maxLength: 10 }), [""], true);
       testSchema(schemaMap.textOptional, [""], true);
-      testSchema(schemaMap.numberOptional, [""], true);
-      testSchema(schemaMap.validIntegerOptional, [""], true);
-      testSchema(schemaMap.emailOptional, [""], true);
       testSchema(schemaMap.urlOptional, [""], true);
-      testSchema(schemaMap.dateOptional, [""], true);
+      testSchema(schemaMap.validIntegerOptional, [""], true);
     });
   });
 
