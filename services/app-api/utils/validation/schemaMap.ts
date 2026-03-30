@@ -63,11 +63,8 @@ export const textCustomOptional = (options: TextOptions) =>
   string()
     .typeError(error.INVALID_GENERIC)
     .test({
-      test: (value) => !isWhitespaceString(value),
-      message: error.REQUIRED_GENERIC,
-    })
-    .test({
-      test: (value) => isWithinMaxLength(value, options?.maxLength),
+      test: (value) =>
+        value ? isWithinMaxLength(value, options.maxLength) : true,
       message: error.INVALID_LENGTH,
     });
 

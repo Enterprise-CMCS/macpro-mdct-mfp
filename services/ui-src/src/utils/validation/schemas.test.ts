@@ -268,6 +268,7 @@ describe("utils/validation/schemas", () => {
 
   describe("optional schemas", () => {
     test("Verify optional schemas convert empty string to null", () => {
+      testSchema(schemaMap.textCustomOptional({ maxLength: 10 }), [""], true);
       testSchema(schemaMap.textOptional, [""], true);
       testSchema(schemaMap.numberOptional, [""], true);
       testSchema(schemaMap.validIntegerOptional, [""], true);
@@ -296,6 +297,24 @@ describe("utils/validation/schemas", () => {
       testSchema(
         schemaMap.textCustom({ maxLength: 10 }),
         ["textistoolong", ""],
+        false
+      );
+    });
+  });
+
+  describe("textCustomOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        ["0123456789"],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        ["textistoolong"],
         false
       );
     });

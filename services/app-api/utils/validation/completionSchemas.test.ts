@@ -246,6 +246,24 @@ describe("utils/validation/completionSchemas", () => {
     });
   });
 
+  describe("textCustom", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        ["0123456789", ""],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        ["textistoolong"],
+        false
+      );
+    });
+  });
+
   describe("validInteger", () => {
     test("returns true", () => {
       testSchema(schemaMap.validInteger, goodIntegerTestCases, true);
