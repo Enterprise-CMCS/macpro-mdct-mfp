@@ -57,7 +57,7 @@ export const errorMessageWithFmapLink = [
     type: "internalLink",
     content: "add FMAP Percentages",
     props: {
-      to: "/expenditure/fmap-percentages",
+      to: "/financial-report/fmap-percentages",
       style: {
         textDecoration: "underline",
       },

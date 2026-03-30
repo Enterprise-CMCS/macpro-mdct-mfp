@@ -27,27 +27,23 @@ import {
 import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 import { transformFormTemplate } from "../transformations/transformations";
 // routes
-import {
-  wpReportJson,
-  sarReportJson,
-  expenditureReportJson,
-} from "../../forms";
+import { wpReportJson, sarReportJson, financialReportJson } from "../../forms";
 // flagged routes
 import * as wpFlags from "../../forms/routes/wp/flags";
 import * as sarFlags from "../../forms/routes/sar/flags";
-import * as expenditureFlags from "../../forms/routes/expenditure/flags";
+import * as financialReportFlags from "../../forms/routes/financial-report/flags";
 
 export const formTemplateForReportType = async (reportType: ReportType) => {
   const routeMap: Record<ReportType, ReportJsonFile> = {
     [ReportType.WP]: wpReportJson,
     [ReportType.SAR]: sarReportJson,
-    [ReportType.EXPENDITURE]: expenditureReportJson,
+    [ReportType.FINANCIAL_REPORT]: financialReportJson,
   };
   // Get LaunchDarkly flags from folder names in forms/routes/[reportType]/flags
   const flagMap: Record<ReportType, any> = {
     [ReportType.WP]: wpFlags,
     [ReportType.SAR]: sarFlags,
-    [ReportType.EXPENDITURE]: expenditureFlags,
+    [ReportType.FINANCIAL_REPORT]: financialReportFlags,
   };
 
   const flagsByReportType = flagMap[reportType];

@@ -141,8 +141,8 @@ describe("utils/reports", () => {
     test("returns true for WP", () => {
       expect(isArchivable(ReportType.WP)).toEqual(true);
     });
-    test("returns true for Expenditure", () => {
-      expect(isArchivable(ReportType.EXPENDITURE)).toEqual(true);
+    test("returns true for Financial Report", () => {
+      expect(isArchivable(ReportType.FINANCIAL_REPORT)).toEqual(true);
     });
     test("returns false for SAR", () => {
       expect(isArchivable(ReportType.SAR)).toEqual(false);

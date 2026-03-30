@@ -1,11 +1,11 @@
 // types
 import { ReportJsonFile, ReportType } from "../../../utils/types";
 
-export const expenditureReportJson: ReportJsonFile = {
-  type: ReportType.EXPENDITURE,
+export const financialReportJson: ReportJsonFile = {
+  type: ReportType.FINANCIAL_REPORT,
   name: "MFP Financial Reporting Form",
-  basePath: "/expenditure",
-  version: "EXPENDITURE_2025-07-10",
+  basePath: "/financial-report",
+  version: "FINANCIAL-REPORT_2025-07-10",
   entities: {
     "": { required: true },
   },

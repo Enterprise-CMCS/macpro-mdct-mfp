@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { CreateExpenditureModal, DashboardPage } from "components";
+import { CreateFinancialReportingModal, DashboardPage } from "components";
 import { useDisclosure } from "@chakra-ui/react";
 // types
 import { AnyObject, ReportType } from "types";
 // utils
 import { useStore } from "utils";
-import { expenditureReportPeriodsMap } from "./expenditureLogic";
+import { financialReportPeriodsMap } from "./financialReportingLogic";
 
-export const ExpenditureDashboardPage = () => {
+export const FinancialReportingDashboardPage = () => {
   const {
     state: userState,
     userIsReadOnly,
@@ -26,18 +26,18 @@ export const ExpenditureDashboardPage = () => {
 
   // add/edit program modal disclosure
   const {
-    isOpen: createExpenditureModalIsOpen,
-    onOpen: createExpenditureModalOnOpenHandler,
-    onClose: createExpenditureModalOnCloseHandler,
+    isOpen: createFinancialReportingModalIsOpen,
+    onOpen: createFinancialReportingModalOnOpenHandler,
+    onClose: createFinancialReportingModalOnCloseHandler,
   } = useDisclosure();
-  const openCreateModal = () => createExpenditureModalOnOpenHandler();
-  const expenditureModal = (
-    <CreateExpenditureModal
+  const openCreateModal = () => createFinancialReportingModalOnOpenHandler();
+  const financialReportingModal = (
+    <CreateFinancialReportingModal
       activeState={activeState!}
       selectedReport={selectedReport}
       modalDisclosure={{
-        isOpen: createExpenditureModalIsOpen,
-        onClose: createExpenditureModalOnCloseHandler,
+        isOpen: createFinancialReportingModalIsOpen,
+        onClose: createFinancialReportingModalOnCloseHandler,
       }}
       userIsAdmin={userIsAdmin}
     />
@@ -51,8 +51,8 @@ export const ExpenditureDashboardPage = () => {
           reportYear: { label: report.reportYear, value: report.reportYear },
           reportPeriod: {
             label:
-              expenditureReportPeriodsMap[
-                report.reportPeriod as keyof typeof expenditureReportPeriodsMap
+              financialReportPeriodsMap[
+                report.reportPeriod as keyof typeof financialReportPeriodsMap
               ],
             value: report.reportPeriod,
           },
@@ -68,13 +68,13 @@ export const ExpenditureDashboardPage = () => {
   };
 
   const modalBundle: ModalBundle = {
-    modal: expenditureModal,
+    modal: financialReportingModal,
     setModalReport: setModalReport,
   };
 
   return (
     <DashboardPage
-      reportType={ReportType.EXPENDITURE}
+      reportType={ReportType.FINANCIAL_REPORT}
       showFilter={true}
       modal={modalBundle}
     />

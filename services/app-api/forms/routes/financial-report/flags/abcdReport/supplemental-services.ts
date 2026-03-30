@@ -77,7 +77,7 @@ const categoryDynamicRowsTemplate = {
 
 export const supplementalServicesRoute: FormTablesRoute = {
   name: "Supplemental Services",
-  path: "/expenditure/supplemental-services",
+  path: "/financial-report/supplemental-services",
   pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {

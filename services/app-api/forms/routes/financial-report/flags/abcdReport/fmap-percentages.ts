@@ -9,7 +9,7 @@ import {
 
 export const fmapPercentagesRoute: FormRoute = {
   name: "FMAP Percentages",
-  path: "/expenditure/fmap-percentages",
+  path: "/financial-report/fmap-percentages",
   pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {

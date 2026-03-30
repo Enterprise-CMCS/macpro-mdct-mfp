@@ -7,7 +7,7 @@ import {
 
 export const generalInformationRoute: FormRoute = {
   name: "General Information",
-  path: "/expenditure/general-information",
+  path: "/financial-report/general-information",
   pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {

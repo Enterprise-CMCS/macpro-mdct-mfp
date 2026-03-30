@@ -44,7 +44,7 @@ const c1915WaiverServicesFootList = [
 
 export const qualifiedHcbsRoute: FormTablesRoute = {
   name: "Qualified HCBS",
-  path: "/expenditure/qualified-hcbs",
+  path: "/financial-report/qualified-hcbs",
   pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {

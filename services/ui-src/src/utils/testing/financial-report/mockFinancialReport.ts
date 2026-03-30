@@ -17,28 +17,28 @@ import {
 } from "types";
 import { genericErrorContent } from "verbiage/errors";
 
-export const mockExpenditureReportKeys = {
+export const mockFinancialReportKeys = {
   ...mockReportKeys,
-  reportType: ReportType.EXPENDITURE,
+  reportType: ReportType.FINANCIAL_REPORT,
 };
 
-export const mockExpenditureFieldData = {
+export const mockFinancialReportFieldData = {
   text: "text-input",
   "mock-number-field": 0,
 };
 
-export const mockExpenditureNotStartedReport = {
-  ...mockExpenditureReportKeys,
-  id: "mock-expenditure-full-report-id",
-  reportType: ReportType.EXPENDITURE,
-  submissionName: `Expenditure Submission Period: ${mockReportPeriod} Year: ${mockReportYear} Status: ${ReportStatus.NOT_STARTED}`,
+export const mockFinancialReportNotStartedReport = {
+  ...mockFinancialReportKeys,
+  id: "mock-financial-report-full-report-id",
+  reportType: ReportType.FINANCIAL_REPORT,
+  submissionName: `Financial Report Submission Period: ${mockReportPeriod} Year: ${mockReportYear} Status: ${ReportStatus.NOT_STARTED}`,
   status: ReportStatus.NOT_STARTED,
   dueDate: 168515200000,
   createdAt: 162515200000,
   lastAltered: 162515200000,
   lastAlteredBy: "Thelonious States",
   submittedOnDate: Date.now(),
-  fieldData: mockExpenditureFieldData,
+  fieldData: mockFinancialReportFieldData,
   formTemplate: mockReportJson,
   completionStatus: {
     "/mock/mock-route-1": true,
@@ -56,7 +56,7 @@ export const mockExpenditureNotStartedReport = {
   archived: false,
 };
 
-export const mockExpenditureNoReportContext = {
+export const mockFinancialReportNoReportContext = {
   ...mockReportMethods,
   report: null,
   reportsByState: [],
@@ -68,11 +68,11 @@ export const mockExpenditureNoReportContext = {
   lastSavedTime: "",
 };
 
-export const mockExpenditureOneNotStartedReportContext = {
+export const mockFinancialReportOneNotStartedReportContext = {
   ...mockReportMethods,
-  report: mockExpenditureNotStartedReport,
-  reportsByState: [mockExpenditureNotStartedReport],
-  copyEligibleReportsByState: [mockExpenditureNotStartedReport],
+  report: mockFinancialReportNotStartedReport,
+  reportsByState: [mockFinancialReportNotStartedReport],
+  copyEligibleReportsByState: [mockFinancialReportNotStartedReport],
   errorMessage: {
     title: "We've run into a problem",
     description: genericErrorContent,
@@ -80,7 +80,7 @@ export const mockExpenditureOneNotStartedReportContext = {
   lastSavedTime: "2:00 PM",
 };
 
-export const mockNoExpenditureStore: MfpUserState &
+export const mockNoFinancialReportStore: MfpUserState &
   AdminBannerState &
   MfpReportState = {
   report: undefined,
@@ -101,11 +101,11 @@ export const mockNoExpenditureStore: MfpUserState &
   ...mockBannerStore,
 };
 
-export const mockNotStartedExpenditureStore: MfpUserState &
+export const mockNotStartedFinancialReportStore: MfpUserState &
   AdminBannerState &
   MfpReportState = {
-  ...mockNoExpenditureStore,
-  report: mockExpenditureNotStartedReport as ReportShape,
-  reportsByState: [mockExpenditureNotStartedReport],
+  ...mockNoFinancialReportStore,
+  report: mockFinancialReportNotStartedReport as ReportShape,
+  reportsByState: [mockFinancialReportNotStartedReport],
   submittedReportsByState: [],
 };

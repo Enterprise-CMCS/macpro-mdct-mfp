@@ -75,22 +75,22 @@ describe("<AppRoutes />", () => {
     });
   });
 
-  describe("Test Expenditure route behind flag", () => {
-    test("renders /expenditure route when abcdReport flag is true", () => {
+  describe("Test Financial Report route behind flag", () => {
+    test("renders /financial-report route when abcdReport flag is true", () => {
       mockLDFlags.set({ abcdReport: true });
 
-      render(appRoutesComponent("/expenditure"));
+      render(appRoutesComponent("/financial-report"));
 
       const heading = screen.getByRole("heading", { level: 1 });
       expect(heading.textContent).toContain("MFP Financial Reporting Form");
     });
 
-    test("does not render /expenditure route when abcdReport flag is false", () => {
+    test("does not render /financial-report route when abcdReport flag is false", () => {
       mockLDFlags.set({ abcdReport: false });
 
-      render(appRoutesComponent("/expenditure"));
+      render(appRoutesComponent("/financial-report"));
 
-      // Should not find the dashboard for Expenditure report
+      // Should not find the dashboard for Financial report
       const heading = screen.getByRole("heading", { level: 1 });
       expect(heading.textContent).toContain("Page not found");
     });

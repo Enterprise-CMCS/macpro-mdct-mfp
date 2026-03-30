@@ -709,7 +709,7 @@ export const mockRETTableRowPage = {
 
 export const mockFinancialReportingFormTableRowPage = {
   name: "General Information",
-  path: "/expenditure/general-information",
+  path: "/financial-report/general-information",
 };
 
 export const mockChildRowPage = {

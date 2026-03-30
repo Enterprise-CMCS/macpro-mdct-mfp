@@ -2,7 +2,7 @@ import { ReviewSubmitPageVerbiage } from "types";
 
 const submitReviewVerbiage: ReviewSubmitPageVerbiage = {
   print: {
-    printPageUrl: "/expenditure/export",
+    printPageUrl: "/financial-report/export",
     printButtonText: "Review PDF",
     downloadButtonText: "Download PDF",
   },
