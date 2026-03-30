@@ -67,26 +67,7 @@ export const ExportedReportFieldTable = ({
 
     for (const table of calculationTables) {
       if (table.bodyRows) {
-        const bodyRows = table.bodyRows.map((row: any) => {
-          const label = row[0];
-          const totalComputableField = row[1];
-          const federalShareField = row[2];
-          const stateShareField = row[3];
-
-          if (
-            totalComputableField?.id &&
-            federalShareField?.id &&
-            stateShareField?.id
-          ) {
-            const totalExpenditures =
-              report?.fieldData[totalComputableField.id] || "0";
-            const federalShare = report?.fieldData[federalShareField.id] || "0";
-            const stateShare = report?.fieldData[stateShareField.id] || "0";
-
-            return [label, totalExpenditures, federalShare, stateShare];
-          }
-          return [];
-        });
+        const bodyRows = renderServiceTableBody(table.bodyRows);
 
         tablesToRender.push(
           <Box key={table.id}>
@@ -98,9 +79,9 @@ export const ExportedReportFieldTable = ({
               content={{
                 headRow: [
                   "Service",
-                  "Total expenditures",
-                  "Total Federal share",
-                  "Total State / Territory share",
+                  "Total Computable",
+                  "Total State / Territory Share",
+                  "Total Federal Share",
                 ],
                 bodyRows: bodyRows,
               }}
@@ -278,6 +259,36 @@ export const renderFieldTableBody = (
     }
   });
   return tableRows;
+};
+
+export const renderServiceTableBody = (bodyRows: any) => {
+  const { report } = useStore();
+  return bodyRows.map((row: any) => {
+    const label = row[0];
+    const totalComputableField = row[1];
+    const totalStateTerritoryShareField = row[2];
+    const totalFederalShareField = row[3];
+
+    if (
+      totalComputableField?.id &&
+      totalStateTerritoryShareField?.id &&
+      totalFederalShareField?.id
+    ) {
+      const totalComputable = report?.fieldData[totalComputableField.id] || "0";
+      const totalStateTerritoryShare =
+        report?.fieldData[totalStateTerritoryShareField.id] || "0";
+      const totalFederalShare =
+        report?.fieldData[totalFederalShareField.id] || "0";
+
+      return [
+        label,
+        totalComputable,
+        totalStateTerritoryShare,
+        totalFederalShare,
+      ];
+    }
+    return [];
+  });
 };
 
 export interface Props {
