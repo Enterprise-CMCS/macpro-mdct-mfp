@@ -29,7 +29,7 @@ interface CreateApiComponentsProps {
   brokerString: string;
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
-  financialFormBucket: s3.IBucket;
+  financialReportFormBucket: s3.IBucket;
   launchDarklyServer: string;
   launchDarklyLocalFlags?: string;
 }
@@ -46,7 +46,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     brokerString,
     wpFormBucket,
     sarFormBucket,
-    financialFormBucket,
+    financialReportFormBucket,
     launchDarklyServer,
     launchDarklyLocalFlags = '{"local": false, "flags": {}}',
   } = props;
@@ -111,7 +111,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     launchDarklyLocalFlags,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
-    FINANCIAL_FORM_BUCKET: financialFormBucket.bucketName,
+    FINANCIAL_REPORT_FORM_BUCKET: financialReportFormBucket.bucketName,
     ...Object.fromEntries(
       tables.map((table) => [`${table.node.id}Table`, table.table.tableName])
     ),
@@ -122,7 +122,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     api,
     environment,
     tables,
-    buckets: [wpFormBucket, sarFormBucket, financialFormBucket],
+    buckets: [wpFormBucket, sarFormBucket, financialReportFormBucket],
     isDev,
   };
 
@@ -302,7 +302,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     ...bucketLambdaProps,
   });
 
-  financialFormBucket.addEventNotification(
+  financialReportFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
     new s3notifications.LambdaDestination(postFinancialBucketData.lambda),
     {
@@ -310,7 +310,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     }
   );
 
-  financialFormBucket.addEventNotification(
+  financialReportFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
     new s3notifications.LambdaDestination(postFinancialBucketData.lambda),
     {
