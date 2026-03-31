@@ -6,6 +6,7 @@ import {
   Alert,
   DeleteEntityModal,
   EntityRow,
+  Form,
   ReportPageFooter,
   ReportPageIntro,
   Table,
@@ -188,9 +189,17 @@ export const ModalOverlayReportPageV2 = ({
 
   const DetailsOverlay = () => {
     return (
-      <Button variant="unstyled" onClick={closeEntityDetailsOverlay}>
-        Return to all initiatives
-      </Button>
+      <>
+        <Button variant="unstyled" onClick={closeEntityDetailsOverlay}>
+          Return to all initiatives
+        </Button>
+        <Form
+          className="overlay-form"
+          formData={selectedEntity}
+          formJson={route.overlayForm}
+          id={route.overlayForm.id}
+        />
+      </>
     );
   };
 

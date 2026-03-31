@@ -93,7 +93,7 @@ describe("<StatusTable />", () => {
 
     // Name value is the img's alt tag + the text inside the button
     const editButtons = screen.getAllByRole("button");
-    expect(editButtons).toHaveLength(5);
+    expect(editButtons).toHaveLength(6);
   });
 
   test("should be able to navigate to a page on the form by clicking edit on desktop", async () => {
@@ -105,7 +105,7 @@ describe("<StatusTable />", () => {
     render(StatusTableComponent);
     // Name value is the img's alt tag + the text inside the button
     const editButtons = screen.getAllByRole("button");
-    expect(editButtons).toHaveLength(5);
+    expect(editButtons).toHaveLength(6);
 
     await userEvent.click(editButtons[0]);
     const validateOnRenderProp = { state: { validateOnRender: true } };
@@ -139,7 +139,7 @@ describe("<StatusTable />", () => {
     render(StatusTableComponent);
     // Name value is the img's alt tag + the text inside the button
     const editButtons = screen.getAllByRole("button");
-    expect(editButtons).toHaveLength(5);
+    expect(editButtons).toHaveLength(6);
 
     await userEvent.click(editButtons[0]);
     const validateOnRenderProp = { state: { validateOnRender: true } };

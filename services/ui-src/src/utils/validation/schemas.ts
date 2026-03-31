@@ -41,17 +41,16 @@ export const textOptional = () =>
     .transform(transformEmptyStringToNull)
     .typeError(error.INVALID_GENERIC);
 export const textCustom = (options: TextOptions) =>
-  string()
-    .typeError(error.INVALID_GENERIC)
-    .required(error.REQUIRED_GENERIC)
-    .test({
-      test: (value) => !isWhitespaceString(value),
-      message: error.REQUIRED_GENERIC,
-    })
-    .test({
-      test: (value) => isWithinMaxLength(value, options.maxLength),
-      message: error.INVALID_LENGTH,
-    });
+  text().test({
+    test: (value) => isWithinMaxLength(value, options.maxLength),
+    message: error.INVALID_LENGTH,
+  });
+export const textCustomOptional = (options: TextOptions) =>
+  textOptional().test({
+    test: (value) =>
+      value ? isWithinMaxLength(value, options.maxLength) : true,
+    message: error.INVALID_LENGTH,
+  });
 
 // NUMBER - Helpers
 const validNAValues: (string | undefined)[] = ["N/A", "Data not available"];
@@ -97,7 +96,7 @@ export const number = () =>
     });
 
 export const numberOptional = () =>
-  numberSchema().notRequired().nullable().transform(transformEmptyStringToNull);
+  numberSchema().nullable().transform(transformEmptyStringToNull);
 export const numberComparison = (options: NumberOptions) =>
   number().test({
     test: (value) => {
@@ -154,17 +153,14 @@ export const validInteger = () =>
   validIntegerSchema().required(error.REQUIRED_GENERIC);
 
 export const validIntegerOptional = () =>
-  validIntegerSchema()
-    .notRequired()
-    .nullable()
-    .transform(transformEmptyStringToNull);
+  validIntegerSchema().nullable().transform(transformEmptyStringToNull);
 
 // Number - Ratio
 export const ratio = () =>
   mixed()
     .test({
       message: error.REQUIRED_GENERIC,
-      test: (val) => val != "",
+      test: (val) => val !== "",
     })
     .required(error.REQUIRED_GENERIC)
     .test({
@@ -177,12 +173,14 @@ export const ratio = () =>
 // EMAIL
 export const email = () => text().email(error.INVALID_EMAIL);
 export const emailOptional = () =>
-  email().notRequired().nullable().transform(transformEmptyStringToNull);
+  textOptional()
+    .email(error.INVALID_EMAIL)
+    .transform(transformEmptyStringToNull);
 
 // URL
 export const url = () => text().url(error.INVALID_URL);
 export const urlOptional = () =>
-  url().notRequired().nullable().transform(transformEmptyStringToNull);
+  textOptional().url(error.INVALID_URL).transform(transformEmptyStringToNull);
 
 // DATE
 export const date = () =>
@@ -196,17 +194,12 @@ export const date = () =>
 
 export const dateOptional = () =>
   string()
-    .typeError(error.INVALID_GENERIC)
     .nullable()
+    .typeError(error.INVALID_GENERIC)
     .transform(transformEmptyStringToNull)
     .test({
       message: error.INVALID_DATE,
-      test: (value) => {
-        if (value) {
-          return dateFormatRegex.test(value);
-        }
-        return true;
-      },
+      test: (value) => (value ? dateFormatRegex.test(value) : true),
     });
 
 export const endDate = (startDateField: string) =>
@@ -329,6 +322,7 @@ export const schemaMap: any = {
   ratio: ratio(),
   text: text(),
   textCustom: (options: TextOptions) => textCustom(options),
+  textCustomOptional: (options: TextOptions) => textCustomOptional(options),
   textOptional: textOptional(),
   url: url(),
   urlOptional: urlOptional(),

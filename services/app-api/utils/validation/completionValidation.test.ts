@@ -1,5 +1,9 @@
 import { mapValidationTypesToSchema } from "./completionValidation";
-import * as schema from "./completionSchemas";
+import {
+  completionSchemaMap as schemaMap,
+  endDate,
+  nested,
+} from "./completionSchemas";
 
 const mockStandardValidationType = {
   key: "text",
@@ -44,14 +48,14 @@ describe("Test mapValidationTypesToSchema", () => {
   it("Returns standard validation schema if passed standard validation type", () => {
     const result = mapValidationTypesToSchema(mockStandardValidationType);
     expect(JSON.stringify(result)).toEqual(
-      JSON.stringify({ key: schema.text() })
+      JSON.stringify({ key: schemaMap.text })
     );
   });
 
   it("Returns custom validation schema if passed custom validation type", () => {
     const result = mapValidationTypesToSchema(mockCustomValidationType);
     expect(JSON.stringify(result)).toEqual(
-      JSON.stringify({ key: schema.textCustom({}) })
+      JSON.stringify({ key: schemaMap.textCustom({}) })
     );
   });
 
@@ -59,8 +63,8 @@ describe("Test mapValidationTypesToSchema", () => {
     const result = mapValidationTypesToSchema(mockNestedValidationType);
     expect(JSON.stringify(result)).toEqual(
       JSON.stringify({
-        key: schema.nested(
-          () => schema.text(),
+        key: nested(
+          () => schemaMap.text,
           "mock-parent-field-name",
           "mock-parent-option-name"
         ),
@@ -72,7 +76,7 @@ describe("Test mapValidationTypesToSchema", () => {
     const result = mapValidationTypesToSchema(mockDependentValidationType);
     expect(JSON.stringify(result)).toEqual(
       JSON.stringify({
-        key: schema.endDate("mock-dependent-field-name"),
+        key: endDate("mock-dependent-field-name"),
       })
     );
   });
@@ -83,8 +87,8 @@ describe("Test mapValidationTypesToSchema", () => {
     );
     expect(JSON.stringify(result)).toEqual(
       JSON.stringify({
-        key: schema.nested(
-          () => schema.endDate("mock-dependent-field-name"),
+        key: nested(
+          () => endDate("mock-dependent-field-name"),
           "mock-parent-field-name",
           "mock-parent-option-name"
         ),
