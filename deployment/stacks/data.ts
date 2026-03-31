@@ -99,21 +99,25 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     autoDeleteObjects: isDev,
   });
 
-  const financialFormBucket = new s3.Bucket(scope, "FinancialFormBucket", {
-    bucketName: `database-${stage}-financial`,
-    encryption: s3.BucketEncryption.S3_MANAGED,
-    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-    serverAccessLogsBucket: loggingBucket,
-    serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
-    versioned: true,
-    enforceSSL: true,
-    removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
-    autoDeleteObjects: isDev,
-  });
+  const financialReportFormBucket = new s3.Bucket(
+    scope,
+    "FinancialReportFormBucket",
+    {
+      bucketName: `database-${stage}-financial`,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      serverAccessLogsBucket: loggingBucket,
+      serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
+      versioned: true,
+      enforceSSL: true,
+      removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+      autoDeleteObjects: isDev,
+    }
+  );
   return {
     tables,
     sarFormBucket,
     wpFormBucket,
-    financialFormBucket,
+    financialReportFormBucket,
   };
 }
