@@ -20,6 +20,10 @@ describe("utils/validation/schemas", () => {
   ];
   const badNumberTestCases = ["abc", "N", "", "!@#!@%", "-1"];
 
+  const goodNumberOptionalTestCases = [...goodNumberTestCases, ""];
+
+  const badNumberOptionalTestCases = badNumberTestCases.filter((t) => t !== "");
+
   const goodIntegerTestCases = [
     "1",
     "123",
@@ -87,7 +91,7 @@ describe("utils/validation/schemas", () => {
 
   const testSchema = (
     schemaToUse: MixedSchema<any, AnyObject, any>,
-    testCases: Array<string | AnyObject>,
+    testCases: Array<string | AnyObject | null | undefined>,
     expectedReturn: boolean
   ) => {
     for (let testCase of testCases) {
@@ -243,12 +247,17 @@ describe("utils/validation/schemas", () => {
     });
   });
 
-  describe("numberComparison", () => {
-    const numberOptions: NumberOptions = {
-      boundary: 10,
-      comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
-    };
+  describe("numberOptional", () => {
+    test("returns true", () => {
+      testSchema(schemaMap.numberOptional, goodNumberOptionalTestCases, true);
+    });
 
+    test("returns false", () => {
+      testSchema(schemaMap.numberOptional, badNumberOptionalTestCases, false);
+    });
+  });
+
+  describe("numberComparison", () => {
     test("returns true", () => {
       testSchema(
         schemaMap.numberComparison(numberOptions),
@@ -266,15 +275,42 @@ describe("utils/validation/schemas", () => {
     });
   });
 
+  describe("numberComparisonOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.numberComparisonOptional(numberOptions),
+        ["0", "1", "10", "9.99", "N/A", "", undefined, null],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.numberComparisonOptional(numberOptions),
+        ["-1", "11", "10.01"],
+        false
+      );
+    });
+  });
+
   describe("optional schemas", () => {
-    test("Verify optional schemas convert empty string to null", () => {
-      testSchema(schemaMap.dateOptional, [""], true);
-      testSchema(schemaMap.emailOptional, [""], true);
-      testSchema(schemaMap.numberOptional, [""], true);
-      testSchema(schemaMap.textCustomOptional({ maxLength: 10 }), [""], true);
-      testSchema(schemaMap.textOptional, [""], true);
-      testSchema(schemaMap.urlOptional, [""], true);
-      testSchema(schemaMap.validIntegerOptional, [""], true);
+    test("allows null or empty string", () => {
+      testSchema(schemaMap.dateOptional, [null, ""], true);
+      testSchema(schemaMap.emailOptional, [null, ""], true);
+      testSchema(schemaMap.numberOptional, [null, ""], true);
+      testSchema(
+        schemaMap.numberComparisonOptional(numberOptions),
+        [null, ""],
+        true
+      );
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        [null, ""],
+        true
+      );
+      testSchema(schemaMap.textOptional, [null, ""], true);
+      testSchema(schemaMap.urlOptional, [null, ""], true);
+      testSchema(schemaMap.validIntegerOptional, [null, ""], true);
     });
   });
 

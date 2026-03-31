@@ -200,7 +200,12 @@ describe("utils/validation/schemaMap", () => {
             },
           },
         }),
-        [[{ id: "mockId", name: "11" }], [{ id: "mockId", name: "10.01" }]],
+        [
+          [
+            { id: "mockId", name: "11" },
+            { id: "mockId", name: "10.01" },
+          ],
+        ],
         false
       );
     });
@@ -269,11 +274,6 @@ describe("utils/validation/schemaMap", () => {
   });
 
   describe("numberComparisonOptional", () => {
-    const numberOptions: NumberOptions = {
-      boundary: 10,
-      comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
-    };
-
     test("returns true", () => {
       testSchema(
         schemaMap.numberComparisonOptional(numberOptions),
@@ -292,14 +292,23 @@ describe("utils/validation/schemaMap", () => {
   });
 
   describe("optional schemas", () => {
-    test("Verify optional schemas", () => {
-      testSchema(schemaMap.dateOptional, [""], true);
-      testSchema(schemaMap.emailOptional, [""], true);
-      testSchema(schemaMap.numberOptional, [""], true);
-      testSchema(schemaMap.textCustomOptional({ maxLength: 10 }), [""], true);
-      testSchema(schemaMap.textOptional, [""], true);
-      testSchema(schemaMap.urlOptional, [""], true);
-      testSchema(schemaMap.validIntegerOptional, [""], true);
+    test("allows null or empty string", () => {
+      testSchema(schemaMap.dateOptional, [null, ""], true);
+      testSchema(schemaMap.emailOptional, [null, ""], true);
+      testSchema(schemaMap.numberOptional, [null, ""], true);
+      testSchema(
+        schemaMap.numberComparisonOptional(numberOptions),
+        [null, ""],
+        true
+      );
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        [null, ""],
+        true
+      );
+      testSchema(schemaMap.textOptional, [null, ""], true);
+      testSchema(schemaMap.urlOptional, [null, ""], true);
+      testSchema(schemaMap.validIntegerOptional, [null, ""], true);
     });
   });
 
@@ -331,7 +340,7 @@ describe("utils/validation/schemaMap", () => {
     test("returns true", () => {
       testSchema(
         schemaMap.textCustomOptional({ maxLength: 10 }),
-        ["0123456789", ""],
+        ["0123456789"],
         true
       );
     });
