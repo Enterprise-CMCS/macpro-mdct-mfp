@@ -87,7 +87,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
               label: "Expected start date",
               children: [
                 {
-                  id: "defineInitiative_startDate_value",
+                  id: "defineInitiative_expectedStartDate_value",
                   type: ReportFormFieldType.DATE,
                   validation: {
                     type: ValidationType.DATE,
@@ -107,7 +107,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
               label: "Actual start date",
               children: [
                 {
-                  id: "defineInitiative_startDate_value",
+                  id: "defineInitiative_actualStartDate_value",
                   type: ReportFormFieldType.DATE,
                   validation: {
                     type: ValidationType.DATE,
@@ -135,7 +135,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
           hint: "A completed initiative means the initiative has been implemented, tested, and evaluated. ",
         },
       },
-      // Intiative Evaluation
+      // Initiative Evaluation
       {
         id: "defineInitiative_purposeAndGoals",
         type: ReportFormFieldType.TEXTAREA,
