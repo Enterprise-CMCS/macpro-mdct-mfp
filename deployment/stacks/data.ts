@@ -99,18 +99,6 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     autoDeleteObjects: isDev,
   });
 
-  const expenditureFormBucket = new s3.Bucket(scope, "ExpenditureFormBucket", {
-    bucketName: `database-${stage}-expenditure`,
-    encryption: s3.BucketEncryption.S3_MANAGED,
-    blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-    serverAccessLogsBucket: loggingBucket,
-    serverAccessLogsPrefix: `AWSLogs/${Aws.ACCOUNT_ID}/s3/`,
-    versioned: true,
-    enforceSSL: true,
-    removalPolicy: isDev ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
-    autoDeleteObjects: isDev,
-  });
-
   const financialFormBucket = new s3.Bucket(scope, "FinancialFormBucket", {
     bucketName: `database-${stage}-financial`,
     encryption: s3.BucketEncryption.S3_MANAGED,
@@ -126,7 +114,6 @@ export function createDataComponents(props: CreateDataComponentsProps) {
     tables,
     sarFormBucket,
     wpFormBucket,
-    expenditureFormBucket,
     financialFormBucket,
   };
 }
