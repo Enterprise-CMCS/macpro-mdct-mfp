@@ -27,7 +27,6 @@ export const ExportedReportFieldTable = ({
   const { report } = useStore();
 
   const { exportVerbiage } = getReportVerbiage(report?.reportType);
-
   const { tableHeaders } = exportVerbiage;
   const pageType = section.pageType || "";
   const formFields =
@@ -50,8 +49,6 @@ export const ExportedReportFieldTable = ({
   const reportType = report?.reportType as ReportType;
   const hideHintText = reportType === ReportType.WP;
   const entityType = section.entityType;
-
-  console.log("form fields", formFields);
 
   const formId = section.form?.id;
   const fieldData = report?.fieldData || {};
