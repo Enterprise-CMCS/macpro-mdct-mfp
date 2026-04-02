@@ -79,6 +79,7 @@ export interface FormTable {
 
 export enum FormTableType {
   CALCULATION = "Calculation",
+  ENTITY_MODAL = "EntityModal",
   SUMMATION = "Summation",
 }
 

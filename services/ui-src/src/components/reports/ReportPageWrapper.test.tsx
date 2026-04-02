@@ -88,7 +88,7 @@ describe("<ReportPageWrapper />", () => {
       });
 
       const backButton = screen.getByRole("button", {
-        name: "Return to all initiatives",
+        name: "Mock back button text",
       });
       expect(backButton).toBeVisible();
     });

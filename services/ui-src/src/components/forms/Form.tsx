@@ -19,6 +19,7 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import {
   CalculationTable,
   DynamicTableProvider,
+  EntityModalTable,
   SummationTable,
 } from "components";
 // utils
@@ -27,6 +28,7 @@ import {
   formFieldFactory,
   getFieldParts,
   hydrateFormFields,
+  labelTextWithOptional,
   mapValidationTypesToSchema,
   parseCustomHtml,
   sanitizeAndParseHtml,
@@ -183,6 +185,20 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
           </DynamicTableProvider>
         );
 
+      case FormTableType.ENTITY_MODAL:
+        return (
+          <DynamicTableProvider key={id}>
+            <EntityModalTable
+              disabled={fieldInputDisabled}
+              formData={formData}
+              id={id}
+              order={index}
+              report={report}
+              {...props}
+            />
+          </DynamicTableProvider>
+        );
+
       case FormTableType.SUMMATION:
         return (
           <DynamicTableProvider key={id}>
@@ -241,15 +257,21 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
         return renderTable(table, tableIndex++);
       }
 
+      const title = field.props?.title
+        ? translate(field.props.title, {
+            initiativeName: formData?.initiative_name,
+          })
+        : undefined;
+      const titleText =
+        title && field.props?.styleTitleAsOptional
+          ? labelTextWithOptional(title)
+          : title;
+
       return (
         <Fragment key={field.id}>
-          {field.props?.title && (
+          {titleText && (
             <Heading as="h3" className="verbiage-title">
-              {sanitizeAndParseHtml(
-                translate(field.props.title, {
-                  initiativeName: formData?.initiative_name,
-                })
-              )}
+              {titleText}
             </Heading>
           )}
           {field.props?.subtitle && (

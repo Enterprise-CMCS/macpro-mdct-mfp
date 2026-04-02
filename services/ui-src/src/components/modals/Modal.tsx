@@ -148,7 +148,7 @@ const sx = {
     justifyContent: "center",
     flexShrink: "0",
     position: "absolute",
-    top: "spacer4",
+    top: "spacer3",
     right: "spacer4",
   },
   modalClose: {
