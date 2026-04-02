@@ -3,7 +3,7 @@ import uuid from "react-uuid";
 import { useFieldArray, useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-import { Box, Button, Flex, Image } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import { EntityContext, ReportContext } from "components";
 // types
 import {
@@ -16,11 +16,13 @@ import {
 // utils
 import { autosaveFieldData, getAutosaveFields, useStore } from "utils";
 // assets
+import addIcon from "assets/icons/icon_add.png";
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
 export const DynamicField = ({
   disabled,
   dynamicButtonText,
+  dynamicLabel,
   hint,
   hydrate,
   label,
@@ -191,16 +193,37 @@ export const DynamicField = ({
     }
   }, []); // only runs on hydrationValue fetch/update
 
+  const hintId = `${name}__hint`;
+  const ariaProps = hint ? { "aria-describedby": hintId } : {};
+
   return (
-    <Box>
+    <Box as="fieldset" sx={sx.fieldset} {...ariaProps}>
+      <Box
+        as="legend"
+        className="ds-c-label"
+        sx={dynamicLabel ? sx.legendWithDynamicLabel : sx.legend}
+      >
+        {label}
+      </Box>
+      {hint && (
+        <Text className="ds-c-hint" id={hintId}>
+          {hint}
+        </Text>
+      )}
+
       {displayValues.map((field: DynamicFieldShape, index: number) => {
         return (
-          <Flex key={field.id} sx={sx.dynamicField}>
+          <Flex
+            key={field.id}
+            sx={
+              dynamicLabel ? sx.dynamicFieldWithDynamicLabel : sx.dynamicField
+            }
+          >
             <CmsdsTextField
               id={field.id}
               name={`${name}[${index}]`}
-              hint={hint}
-              label={label}
+              hint={undefined}
+              label={dynamicLabel}
               errorMessage={fieldErrorState?.[index]?.name?.message}
               onChange={onChangeHandler}
               onBlur={onBlurHandler}
@@ -222,9 +245,10 @@ export const DynamicField = ({
       })}
       {!disabled && (
         <Button
-          variant="outline"
-          sx={sx.appendButton}
+          leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="" />}
           onClick={appendNewRecord}
+          sx={sx.appendButton}
+          variant="outline"
         >
           {dynamicButtonText || "Add a row"}
         </Button>
@@ -236,6 +260,7 @@ export const DynamicField = ({
 interface Props {
   disabled?: boolean;
   dynamicButtonText?: string;
+  dynamicLabel?: string;
   hint?: string;
   hydrate?: DynamicFieldShape[];
   label: string;
@@ -243,6 +268,15 @@ interface Props {
 }
 
 const sx = {
+  fieldset: {
+    marginTop: "spacer3",
+  },
+  legend: {
+    fontSize: "md",
+  },
+  legendWithDynamicLabel: {
+    fontSize: "xl",
+  },
   removeBox: {
     marginBottom: "0.625rem",
     marginLeft: "0.625rem",
@@ -255,6 +289,9 @@ const sx = {
     width: "12.5rem",
     height: "2.5rem",
     marginTop: "2rem",
+  },
+  buttonIcons: {
+    height: "1rem",
   },
   dynamicField: {
     alignItems: "flex-end",
@@ -269,6 +306,18 @@ const sx = {
     },
     "&:not(:first-of-type)": {
       paddingTop: "2rem",
+    },
+  },
+  dynamicFieldWithDynamicLabel: {
+    alignItems: "flex-end",
+    ".desktop &": {
+      width: "32rem",
+    },
+    ".tablet &": {
+      width: "29rem",
+    },
+    ".ds-u-clearfix": {
+      width: "100%",
     },
   },
 };

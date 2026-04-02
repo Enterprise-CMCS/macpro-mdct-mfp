@@ -83,6 +83,7 @@ export interface ReportFormFieldProps {
   mask?: NumberMask | null;
   maxLength?: number;
   styleAsOptional?: boolean;
+  styleTitleAsOptional?: boolean;
   subType?: ReportFormFieldType;
   subtitle?: string | CustomHtmlElement[];
   title?: string;
@@ -102,11 +103,13 @@ export type FormTableCell = string | ReportFormField;
 export type FormTableRow = FormTableCell[];
 export type FormTableRows = FormTableRow[];
 
+export interface DynamicRowsTemplateVerbiage {
+  buttonText: string;
+  hint: string;
+}
+
 export interface DynamicRowsTemplate extends ReportFormField {
-  verbiage: {
-    buttonText: string;
-    hint: string;
-  };
+  verbiage: DynamicRowsTemplateVerbiage;
 }
 
 export interface FormTable {
@@ -128,6 +131,7 @@ export interface FormTable {
 
 export enum FormTableType {
   CALCULATION = "Calculation",
+  ENTITY_MODAL = "EntityModal",
   SUMMATION = "Summation",
 }
 

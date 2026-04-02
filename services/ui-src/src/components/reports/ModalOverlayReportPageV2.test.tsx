@@ -239,7 +239,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
     });
 
     const backButton = screen.getByRole("button", {
-      name: "Return to all initiatives",
+      name: "Mock back button text",
     });
     await act(async () => {
       await userEvent.click(backButton);

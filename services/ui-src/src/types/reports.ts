@@ -229,6 +229,7 @@ export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   addEditModalHint: string;
   emptyDashboardText?: string;
   accordion?: AnyObject;
+  backButtonText?: string;
 }
 
 export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {

@@ -198,10 +198,23 @@ export const mockTablesForm = {
         title: "Mock summation table title",
       },
     },
+    {
+      id: "mockFormId_mockEntityModalTableId",
+      bodyRows: [
+        ["Mock text", mockTablesField("mockFormId_mockEntityModalTableId")],
+      ],
+      footRows: [["Footer 1", "Footer 2"]],
+      headRows: [["Heading 1", "Heading 2"]],
+      tableType: FormTableType.ENTITY_MODAL,
+      verbiage: {
+        title: "Mock entityModal table title",
+      },
+    },
   ],
   fields: [
     mockTablesField("mockFormId_mockCalculationTableId"),
     mockTablesField("mockFormId_mockSummationTableId"),
+    mockTablesField("mockFormId_mockEntityModalTableId"),
     {
       id: "mockFormId_narrative",
       type: "text",
@@ -545,6 +558,7 @@ export const mockModalOverlayReportPageVerbiage = {
   addEditModalAddTitle: "Mock Add Modal Text",
   addEditModalEditTitle: "Mock Edit Modal Text",
   reportProgressButtonText: "Mock report progress button text",
+  backButtonText: "Mock back button text",
 };
 
 export const mockModalOverlayForm = {

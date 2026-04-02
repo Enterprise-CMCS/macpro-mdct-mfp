@@ -1,10 +1,187 @@
+// types
 import {
   PageTypes,
   ReportFormFieldType,
   ValidationType,
   WPStateOrTerritorySpecificInitiativesV2Route,
   StepEntityType,
+  FormTableType,
 } from "../../../../../../utils/types";
+// utils
+import { tableFieldDynamicRowsTemplateBuilder } from "../../../../../../utils/routes/tables";
+
+// Key Metrics table
+const keyMetricsTableId = "defineInitiative_keyMetrics";
+const keyMetricsHeaders = [
+  "Performance Indicator",
+  "Data Source",
+  "Baseline",
+  "Baseline Period",
+  "Target/Benchmark",
+  "Projected Date to Achieve Benchmark",
+];
+
+// Key Metrics table - dynamic rows
+const keyMetricsDynamicRowId = `${keyMetricsTableId}_performanceIndicators`;
+const keyMetricsDynamicBodyList = [
+  {
+    id: keyMetricsDynamicRowId,
+    label: "Key Metrics",
+    readOnly: true,
+  },
+];
+const keyMetricsDynamicFieldsToReturn = [
+  {
+    id: "name",
+    props: {
+      label: "Performance indicator",
+    },
+  },
+  {
+    id: "dataSource",
+    props: {
+      hint: "Select the data source that will be used to measure the performance indicator.",
+      label: "Data Source",
+      choices: [
+        {
+          id: "n6nXX8AlLL5xvXAOvGWC8P",
+          label: "Surveys",
+        },
+        {
+          id: "yIxTj86VZ2bFY3xLX04G0V",
+          label: "Interviews",
+        },
+        {
+          id: "37Eu05n6ZROrEKN1f5N0M2",
+          label: "Administrative data",
+        },
+        {
+          id: "TpqI3gbVKn7yGpQA1u1xzd",
+          label: "Focus groups",
+        },
+        {
+          id: "Eb38oAo9f0TesXCOxZ38TU",
+          label: "Service records",
+        },
+        {
+          id: "ONdIhf87iXF6Q8T9odghsu",
+          label: "Observations",
+        },
+        {
+          id: "18Wb9b2zMIF13pZwWstdJF",
+          label: "Other, specify",
+          children: [
+            {
+              id: `${keyMetricsDynamicRowId}-otherText`,
+              type: ReportFormFieldType.TEXT,
+              validation: {
+                type: ValidationType.TEXT,
+                nested: true,
+                parentFieldName: `${keyMetricsDynamicRowId}-dataSource`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    options: {
+      type: ReportFormFieldType.RADIO,
+      validation: ValidationType.RADIO,
+    },
+  },
+  {
+    id: "baselineValue",
+    props: {
+      hint: "The baseline value should represent the value calculated or gathered on the start date of this initiative.",
+      label: "Baseline Value",
+    },
+  },
+  {
+    id: "baselineStartDate",
+    props: {
+      label: "Baseline reporting period state date",
+    },
+    options: {
+      type: ReportFormFieldType.DATE,
+      validation: ValidationType.DATE,
+    },
+  },
+  {
+    id: "baselineEndDate",
+    props: {
+      label: "Baseline reporting period end date",
+    },
+    options: {
+      type: ReportFormFieldType.DATE,
+      validation: {
+        type: ValidationType.END_DATE,
+        dependentFieldName: `${keyMetricsDynamicRowId}-baselineStartDate`,
+      },
+    },
+  },
+  {
+    id: "targetBenchmarkValue",
+    props: {
+      hint: "The target/benchmark value should represent the desired value calculated or gathered on the completion date of this initiative. The target/benchmark will be used as an internal benchmark for the state’s or territory’s quality improvement efforts for the initiative. MFP recipients will also use the performance target when developing their Quality Management Strategy and Plan, as detailed in MFP Program Terms and Conditions #31 and in accordance with section 6071(c)(11)(A) of the Deficit Reduction Act (DRA).",
+      label: "Target/Benchmark Value",
+    },
+  },
+  {
+    id: "targetBenchmarkProjectedDate",
+    props: {
+      label: "Projected date to achieve benchmark value",
+    },
+    options: {
+      type: ReportFormFieldType.DATE,
+      validation: ValidationType.DATE,
+    },
+  },
+];
+
+// Key Metrics table - modal
+const keyMetricsModalList = [
+  {
+    id: keyMetricsDynamicRowId,
+    label: "Key Metrics",
+  },
+];
+const keyMetricsModalFieldsToReturn = keyMetricsDynamicFieldsToReturn.map(
+  (field) => {
+    return {
+      ...field,
+      options: {
+        ...field.options,
+        forTableOnly: false,
+      },
+    };
+  }
+);
+
+const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
+  dynamicFieldsBodyList: keyMetricsDynamicBodyList,
+  dynamicFieldsToReturn: keyMetricsDynamicFieldsToReturn,
+  dynamicFieldValidations: {
+    name: ValidationType.TEXT_OPTIONAL,
+    dataSource: ValidationType.RADIO,
+    baseline: ValidationType.TEXT_OPTIONAL,
+    baselineStartDate: ValidationType.DATE_OPTIONAL,
+    baselineEndDate: ValidationType.DATE_OPTIONAL,
+    targetBenchmark: ValidationType.TEXT_OPTIONAL,
+    targetBenchmarkProjectedDate: ValidationType.DATE_OPTIONAL,
+  },
+  dynamicModalList: keyMetricsModalList,
+  dynamicModalFieldsToReturn: keyMetricsModalFieldsToReturn,
+  dynamicModalVerbiage: {
+    add: "Add Key Metric",
+    edit: "Edit Key Metric",
+  },
+  dynamicRowId: keyMetricsDynamicRowId,
+  label: "Key Metrics",
+  verbiage: {
+    buttonText: "Add key metric",
+    hint: "",
+  },
+});
 
 export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
   name: "State or Territory-Specific Initiatives",
@@ -14,7 +191,20 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
   entityInfo: ["initiative_name", "initiative_wpTopic"],
   overlayForm: {
     id: "stsidi",
-    tables: [],
+    tables: [
+      {
+        id: keyMetricsTableId,
+        bodyRows: [],
+        dynamicRowsTemplate: keyMetricsDynamicRowsTemplate,
+        footRows: [],
+        headRows: [keyMetricsHeaders],
+        tableType: FormTableType.ENTITY_MODAL,
+        verbiage: {
+          emptyTableMessage: "No Key Metrics added.",
+          title: "Key Metrics",
+        },
+      },
+    ],
     fields: [
       {
         id: "defineInitiative_describeInitiative",
@@ -27,8 +217,9 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         },
         props: {
           label:
-            "Describe the initiative, including the gap, challenge, or opportunity it will address:",
+            "Describe the initiative, including the gap, challenge, or opportunity it aims to address.",
           maxLength: 1800,
+          title: "Describe Initiative",
         },
       },
       {
@@ -37,7 +228,8 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         validation: ValidationType.DYNAMIC,
         props: {
           dynamicButtonText: "Add key activity",
-          hint: "List the key activities to implement the initiative. This could include activities related to the target population, and activities within the timeframe for starting and completing the initiative.",
+          dynamicLabel: "Key Activity",
+          hint: "List the key activities currently in progress or planned for future implementation that must occur within the timeframe for starting and completing the initiative. Potential activities could include, but are not limited to, data collection and analysis to inform the initiative, coordination with internal divisions/agencies and external partners, any training required for the initiative (ex., training care coordinators), establishment of new contracts required for the initiative, and gathering data (through key metrics, informational interviews, surveys, etc.) to evaluate the success of the initiative. An initiative must have been implemented, tested, and evaluated to be considered completed.",
           label: "Key Activities",
         },
       },
@@ -80,7 +272,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         validation: ValidationType.RADIO,
         props: {
           label: "Enter the expected or actual state date for the initiative.",
-          hint: "Aim for a 1-2 year period for implementation, testing, and evaluation. Explain in the initiative description if it will take longer than 2 years.",
+          hint: "For initiatives that have not yet begun, enter the projected date it will start. The projected start date should allow at least 30 days for Centers for Medicare & Medicaid Services (CMS) review and approval of the Work Plan before implementation. For initiatives in progress, if the exact date is unknown, provide an estimate.",
           choices: [
             {
               id: "wHDw5laJkJIRG1FrHs5VS6",
@@ -132,7 +324,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         props: {
           label:
             "Enter the date for when the initiative was or will be completed.",
-          hint: "A completed initiative means the initiative has been implemented, tested, and evaluated. ",
+          hint: "To be considered completed, an initiative must have been implemented, tested, and evaluated. Aim for a 1-2 year period for implementation, testing, and evaluation. Include an explanation in the initiative description if it will take longer than 2 years.",
         },
       },
       // Initiative Evaluation
@@ -141,18 +333,21 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         type: ReportFormFieldType.TEXTAREA,
         validation: ValidationType.TEXT,
         props: {
-          hint: "Briefly describe the purpose of your evaluation (1-3 sentences)",
+          hint: "Briefly describe the purpose of your evaluation (1-3 sentences):",
           label: "Purpose and Goals",
           subtitle: [
             {
               type: "p",
               content:
-                "An evaluation plan outlines how a specific initiative will be evaluated to assess its feasibility, effectiveness, and/or efficiency. It specifies the evaluation's purpose and goals, evaluation questions, evaluation design and methods, key metrics and indicators, data collection and plans, and timeline and milestones. Ideally, the plan should be developed before the initiative begins and involves all relevant stakeholders. Once an initiative is evaluated, the state or territory should also be able to report on the findings, whether and how the initiative will be sustained, and how the findings will be used.",
+                "In this section, please provide information on a limited set of evaluation elements, including the evaluation’s purpose and goals, key metrics and indicators, qualitative evaluation methods, and anticipated funding sources related to sustainability. You do not need to submit a comprehensive evaluation plan, or address all components described above.",
             },
           ],
           title: "Initiative Evaluation",
         },
       },
+      // Key Metrics table
+      keyMetricsDynamicRowsTemplate,
+
       // Qualitative Methods
       {
         id: "defineInitiative_qualitativeMethods",
@@ -165,7 +360,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         },
         props: {
           label:
-            "Are you employing any qualitative methods, if so, what are they? Please describe.",
+            "If you are employing any qualitative methods for evaluation, please describe them.",
           maxLength: 1800,
           styleAsOptional: true,
           title: "Qualitative Methods",
@@ -178,7 +373,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         validation: ValidationType.CHECKBOX,
         props: {
           label: "Identify funding source(s):",
-          hint: "Provide funding sources for this initiative.",
+          hint: "Select the funding sources used for this initiative. Cooperative Agreement is an alternative assistance instrument used whenever substantial federal involvement with the recipient during performance is anticipated. The difference between grants and cooperative agreements is the degree of federal programmatic involvement rather than the type of administrative requirements imposed. MFP recipients will no longer need to provide projected quarterly expenditures for each initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report (SAR).",
           title: "Funding Sources",
           choices: [
             {
@@ -217,6 +412,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
           hint: "Auto-populates from “I. Define initiative”.",
           label: "Projected end date",
           styleAsOptional: true,
+          styleTitleAsOptional: true,
           title: "Close-out {{initiativeName}}",
         },
       },
@@ -285,6 +481,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         },
       },
     ],
+    verbiage: {},
   },
   modalForm: {
     id: "add_initiative",
@@ -303,7 +500,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         validation: ValidationType.RADIO,
         props: {
           label: "MFP Work Plan topic:",
-          hint: "Note: Initiative topics with <span aria-label='asterisk'>*</span> are required and must be selected at least once across all initiatives.",
+          hint: "Note: Initiative topics with <span aria-label='asterisk'>*</span> are required. Recipients must identify and describe the required initiatives, and they have the option to identify additional initiatives on other topics. MFP recipients with a self-direction option specified in their Operational Protocol should report a self-direction initiative. MFP recipients with a tribal initiative grant should report a tribal initiative.  A single initiative cannot fulfill more than one requirement.",
           choices: [
             {
               id: "VjQ0OFqior9Dxu5RRNiZ5u",
@@ -428,6 +625,9 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
     deleteModalTitle: "Are you sure you want to delete this initiative?",
     deleteModalWarning:
       "Are you sure you want to proceed? You will lose all information entered for this initiative in the MFP Work Plan.",
+
+    // Overlay
+    backButtonText: "Return to all initiatives",
 
     // Table
     editEntityButtonText: "Edit name/topic",
