@@ -42,6 +42,7 @@ mockedUseStore.mockReturnValue({
   selectedEntity: {
     type: mockEntityType,
   },
+  setAutosaveState: jest.fn(),
 });
 
 const mockUpdateReport = jest.fn();
@@ -60,6 +61,7 @@ const MockForm = ({ dynamicLabel, hint, hydrationValue }: any) => {
         <FormProvider {...form}>
           <form id="uniqueId" onSubmit={form.handleSubmit(jest.fn())}>
             <DynamicField
+              autosave={true}
               dynamicLabel={dynamicLabel}
               hint={hint}
               hydrate={hydrationValue}
