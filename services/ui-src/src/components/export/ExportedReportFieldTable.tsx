@@ -16,7 +16,7 @@ import {
   FormTableType,
 } from "types";
 // utils
-import { getReportVerbiage, useStore } from "utils";
+import { getReportVerbiage, useStore, parseCustomHtml } from "utils";
 // assets
 import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
 
@@ -51,32 +51,53 @@ export const ExportedReportFieldTable = ({
   const hideHintText = reportType === ReportType.WP;
   const entityType = section.entityType;
 
-  if (
-    section.name === "Qualified HCBS" ||
-    section.name === "Demonstration Services" ||
-    section.name === "Supplemental Services" ||
-    section.name === "Administrative Costs" ||
-    section.name === "Capacity Building" ||
-    section.name === "Sub Recipients"
-  ) {
-    const tablesToRender: ReactElement[] = [];
-    const calculationTables =
-      section.form?.tables?.filter(
-        (table) => table.tableType === FormTableType.CALCULATION
-      ) || [];
+  console.log("form fields", formFields);
 
-    for (const table of calculationTables) {
+  const formId = section.form?.id;
+  const fieldData = report?.fieldData || {};
+  const percentageField = `fmap_${formId}Percentage`;
+  const formPercentage = fieldData?.[percentageField] || 100;
+
+  const calculationTables =
+    section.form?.tables?.filter(
+      (table) => table.tableType === FormTableType.CALCULATION
+    ) || [];
+
+  const renderCalculationTables = () => {
+    return calculationTables.map((table) => {
       if (table.bodyRows) {
         const bodyRows = renderServiceTableBody(table.bodyRows);
         const footerRow = renderServiceTableBody(table.footRows);
 
-        tablesToRender.push(
+        let percentageValue;
+        if (section.name === "Qualified HCBS") {
+          percentageValue = fieldData?.["fmap_qualifiedHcbsPercentage"] || 100;
+        } else if (section.name === "Demonstration Services") {
+          percentageValue =
+            fieldData?.["fmap_demonstrationServicesPercentage"] || 100;
+        } else {
+          percentageValue = formPercentage;
+        }
+
+        const percentageText =
+          table.verbiage?.percentage || "[auto-populated]%";
+        const displayPercentage = percentageText.replace(
+          "{{percentage}}",
+          `${percentageValue}%`
+        );
+
+        return (
           <Box key={table.id}>
-            <Heading as="h4" sx={sx.subHeading}>
+            <Heading as="h3" sx={sx.subHeading}>
               {table.verbiage?.title}
             </Heading>
+            {table.verbiage?.percentage && (
+              <Box sx={sx.tableSubHeading}>
+                {parseCustomHtml(displayPercentage)}
+              </Box>
+            )}
             <Table
-              sx={sx.table}
+              sx={{ ...sx.table, ...sx.serviceTable }}
               content={{
                 headRow: [
                   "Service",
@@ -92,10 +113,9 @@ export const ExportedReportFieldTable = ({
           </Box>
         );
       }
-    }
-
-    return <>{tablesToRender}</>;
-  }
+      return null;
+    });
+  };
 
   // SAR "General Information" section layout is a unique case with multiple section headings within the same page
   if (reportType === ReportType.SAR && section.name === "General Information") {
@@ -115,6 +135,7 @@ export const ExportedReportFieldTable = ({
 
   return (
     <>
+      {calculationTables.length > 0 && renderCalculationTables()}
       {nonTableFields?.[0]?.props?.title && (
         <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
           {nonTableFields[0].props.title}
@@ -265,7 +286,6 @@ export const renderFieldTableBody = (
 
 export const renderServiceTableBody = (bodyRows: any) => {
   const { report } = useStore();
-  console.log("bodyRows", bodyRows);
   return bodyRows.map((row: any) => {
     const label = row[0];
     const totalComputableField = row[1];
@@ -303,15 +323,45 @@ export interface Props {
 
 const sx = {
   table: sxSharedExportStyles.table,
+  serviceTable: {
+    "& th:not(:first-of-type), & td:not(:first-of-type)": {
+      textAlign: "right",
+    },
+    "& thead tr:first-of-type": {
+      borderBottom: "2px solid",
+      borderColor: "gray.400",
+    },
+    "& tbody tr td:nth-of-type(3), & tbody tr td:nth-of-type(4)": {
+      fontWeight: "bold",
+    },
+    "& tfoot tr td": {
+      fontWeight: "bold",
+      color: "black",
+    },
+    "& tfoot tr:first-of-type": {
+      borderTop: "2px solid",
+      borderColor: "gray.400",
+    },
+    "& tfoot tr:last-of-type": {
+      borderBottom: "2px solid",
+      borderColor: "gray.400",
+    },
+  },
   heading: {
     fontSize: "xl",
     fontWeight: "bold",
     color: "black",
   },
   subHeading: {
-    fontSize: "lg",
+    fontSize: "xl",
     "& + table": {
       marginTop: "spacer2",
     },
+  },
+  tableSubHeading: {
+    fontSize: "md",
+    fontWeight: "bold",
+    color: "gray_dark",
+    marginTop: "spacer2",
   },
 };
