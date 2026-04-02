@@ -13,9 +13,10 @@ import {
   FieldChoice,
   ReportStatus,
   HeadingLevel,
+  FormTableType,
 } from "types";
 // utils
-import { getReportVerbiage, useStore } from "utils";
+import { getReportVerbiage, useStore, parseCustomHtml } from "utils";
 // assets
 import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
 
@@ -49,6 +50,70 @@ export const ExportedReportFieldTable = ({
   const hideHintText = reportType === ReportType.WP;
   const entityType = section.entityType;
 
+  const formId = section.form?.id;
+  const fieldData = report?.fieldData || {};
+  const percentageField = `fmap_${formId}Percentage`;
+  const formPercentage = fieldData?.[percentageField] || 100;
+
+  const calculationTables =
+    section.form?.tables?.filter(
+      (table) => table.tableType === FormTableType.CALCULATION
+    ) || [];
+
+  const renderCalculationTables = () => {
+    return calculationTables.map((table) => {
+      if (table.bodyRows) {
+        const bodyRows = renderServiceTableBody(table.bodyRows);
+        const footerRow = renderServiceTableBody(table.footRows);
+
+        let percentageValue;
+        if (section.name === "Qualified HCBS") {
+          percentageValue = fieldData?.["fmap_qualifiedHcbsPercentage"] || 100;
+        } else if (section.name === "Demonstration Services") {
+          percentageValue =
+            fieldData?.["fmap_demonstrationServicesPercentage"] || 100;
+        } else {
+          percentageValue = formPercentage;
+        }
+
+        const percentageText =
+          table.verbiage?.percentage || "[auto-populated]%";
+        const displayPercentage = percentageText.replace(
+          "{{percentage}}",
+          `${percentageValue}%`
+        );
+
+        return (
+          <Box key={table.id}>
+            <Heading as="h3" sx={sx.subHeading}>
+              {table.verbiage?.title}
+            </Heading>
+            {table.verbiage?.percentage && (
+              <Box sx={sx.tableSubHeading}>
+                {parseCustomHtml(displayPercentage)}
+              </Box>
+            )}
+            <Table
+              sx={{ ...sx.table, ...sx.serviceTable }}
+              content={{
+                headRow: [
+                  "Service",
+                  "Total Computable",
+                  "Total State / Territory Share",
+                  "Total Federal Share",
+                ],
+                bodyRows: bodyRows,
+                footRow: footerRow,
+              }}
+              data-testid={`service-table-${table.id}`}
+            />
+          </Box>
+        );
+      }
+      return null;
+    });
+  };
+
   // SAR "General Information" section layout is a unique case with multiple section headings within the same page
   if (reportType === ReportType.SAR && section.name === "General Information") {
     return renderGeneralInformation(
@@ -67,26 +132,31 @@ export const ExportedReportFieldTable = ({
 
   return (
     <>
-      {nonTableFields?.[0]?.props?.title && (
-        <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
-          {nonTableFields[0].props.title}
-        </Heading>
+      {calculationTables.length > 0 && renderCalculationTables()}
+      {nonTableFields.length > 0 && (
+        <>
+          {nonTableFields?.[0]?.props?.title && (
+            <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
+              {nonTableFields[0].props.title}
+            </Heading>
+          )}
+          <Table
+            sx={sx.table}
+            className={formHasOnlyDynamicFields ? "two-column" : ""}
+            content={{
+              headRow: headRowItems,
+            }}
+            data-testid="exportTable"
+          >
+            {renderFieldTableBody(
+              nonTableFields,
+              pageType,
+              !hideHintText,
+              entityType
+            )}
+          </Table>
+        </>
       )}
-      <Table
-        sx={sx.table}
-        className={formHasOnlyDynamicFields ? "two-column" : ""}
-        content={{
-          headRow: headRowItems,
-        }}
-        data-testid="exportTable"
-      >
-        {renderFieldTableBody(
-          nonTableFields,
-          pageType,
-          !hideHintText,
-          entityType
-        )}
-      </Table>
     </>
   );
 };
@@ -215,6 +285,37 @@ export const renderFieldTableBody = (
   return tableRows;
 };
 
+export const renderServiceTableBody = (bodyRows: any) => {
+  const { report } = useStore();
+  return bodyRows.map((row: any) => {
+    const label = row[0];
+    const totalComputableField = row[1];
+    const totalStateTerritoryShareField = row[2];
+    const totalFederalShareField = row[3];
+
+    if (
+      totalComputableField?.id &&
+      totalStateTerritoryShareField?.id &&
+      totalFederalShareField?.id
+    ) {
+      const totalComputable =
+        report?.fieldData[totalComputableField.id] || "Not answered";
+      const totalStateTerritoryShare =
+        report?.fieldData[totalStateTerritoryShareField.id] || "$0";
+      const totalFederalShare =
+        report?.fieldData[totalFederalShareField.id] || "$0";
+
+      return [
+        label,
+        totalComputable,
+        totalStateTerritoryShare,
+        totalFederalShare,
+      ];
+    }
+    return [];
+  });
+};
+
 export interface Props {
   section: StandardReportPageShape | DrawerReportPageShape;
   showHintText?: boolean;
@@ -223,15 +324,45 @@ export interface Props {
 
 const sx = {
   table: sxSharedExportStyles.table,
+  serviceTable: {
+    "& th:not(:first-of-type), & td:not(:first-of-type)": {
+      textAlign: "right",
+    },
+    "& thead tr:first-of-type": {
+      borderBottom: "2px solid",
+      borderColor: "gray.400",
+    },
+    "& tbody tr td:nth-of-type(3), & tbody tr td:nth-of-type(4)": {
+      fontWeight: "bold",
+    },
+    "& tfoot tr td": {
+      fontWeight: "bold",
+      color: "black",
+    },
+    "& tfoot tr:first-of-type": {
+      borderTop: "2px solid",
+      borderColor: "gray.400",
+    },
+    "& tfoot tr:last-of-type": {
+      borderBottom: "2px solid",
+      borderColor: "gray.400",
+    },
+  },
   heading: {
     fontSize: "xl",
     fontWeight: "bold",
     color: "black",
   },
   subHeading: {
-    fontSize: "lg",
+    fontSize: "xl",
     "& + table": {
       marginTop: "spacer2",
     },
+  },
+  tableSubHeading: {
+    fontSize: "md",
+    fontWeight: "bold",
+    color: "gray_dark",
+    marginTop: "spacer2",
   },
 };
