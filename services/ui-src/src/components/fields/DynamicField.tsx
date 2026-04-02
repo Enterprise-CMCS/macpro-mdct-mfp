@@ -11,6 +11,7 @@ import {
   DynamicFieldShape,
   EntityShape,
   InputChangeEvent,
+  ReportFormFieldType,
   ReportStatus,
 } from "types";
 // utils
@@ -20,6 +21,7 @@ import addIcon from "assets/icons/icon_add.png";
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
 export const DynamicField = ({
+  autosave,
   disabled,
   dynamicButtonText,
   dynamicLabel,
@@ -29,7 +31,7 @@ export const DynamicField = ({
   name,
 }: Props) => {
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
-  const { report, selectedEntity } = useStore();
+  const { report, selectedEntity, setAutosaveState } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
   const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>([]);
@@ -91,35 +93,40 @@ export const DynamicField = ({
   const onBlurHandler = async () => {
     // trigger client-side validation so blank fields get client-side validation warning
     form.trigger(name);
-    // prepare args for autosave
-    const fields = getAutosaveFields({
-      name,
-      type: "dynamic",
-      value: displayValues,
-      defaultValue: undefined,
-      overrideCheck: true,
-      hydrationValue: hydrate,
-    });
 
-    const fieldData = modifyFieldData(displayValues);
+    if (autosave) {
+      setAutosaveState(true);
+      const fields = getAutosaveFields({
+        name,
+        type: ReportFormFieldType.DYNAMIC,
+        value: displayValues,
+        defaultValue: undefined,
+        overrideCheck: true,
+        hydrationValue: hydrate,
+      });
 
-    const reportArgs = {
-      id: report?.id,
-      reportType: report?.reportType,
-      updateReport,
-      fieldData,
-    };
-    const user = { userName: full_name, state };
-    await autosaveFieldData({
-      form,
-      fields,
-      report: reportArgs,
-      user,
-      entityContext: {
-        selectedEntity,
-        prepareEntityPayload,
-      },
-    });
+      const fieldData = modifyFieldData(displayValues);
+
+      const reportArgs = {
+        id: report?.id,
+        reportType: report?.reportType,
+        updateReport,
+        fieldData,
+      };
+      const user = { userName: full_name, state };
+      await autosaveFieldData({
+        form,
+        fields,
+        report: reportArgs,
+        user,
+        entityContext: {
+          selectedEntity,
+          prepareEntityPayload,
+        },
+      }).then(() => {
+        setAutosaveState(false);
+      });
+    }
   };
 
   const appendNewRecord = () => {
@@ -258,6 +265,7 @@ export const DynamicField = ({
 };
 
 interface Props {
+  autosave?: boolean;
   disabled?: boolean;
   dynamicButtonText?: string;
   dynamicLabel?: string;

@@ -320,7 +320,10 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
       {
         id: "defineInitiative_endDate",
         type: ReportFormFieldType.DATE,
-        validation: ValidationType.END_DATE,
+        validation: {
+          type: ValidationType.END_DATE,
+          dependentFieldName: "defineInitiative_expectedStartDate_value",
+        },
         props: {
           label:
             "Enter the date for when the initiative was or will be completed.",

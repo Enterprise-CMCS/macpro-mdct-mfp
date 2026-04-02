@@ -1,4 +1,10 @@
-import { FormJson, NumberMask, PageTypes, Transformation } from "./formFields";
+import {
+  DependentFieldValidation,
+  FormJson,
+  NumberMask,
+  PageTypes,
+  Transformation,
+} from "./formFields";
 import { AnyObject, CustomHtmlElement } from "./other";
 import { ReportType } from "./reports";
 import {
@@ -49,7 +55,7 @@ export interface ReportFormField {
   props?: ReportFormFieldProps;
   transformation?: Transformation;
   type: ReportFormFieldType;
-  validation?: ValidationType | CustomValidation;
+  validation?: ValidationType | CustomValidation | DependentFieldValidation;
 }
 
 export interface ReportFormFieldProps {
