@@ -8,6 +8,7 @@ import {
   Choice,
   FormField,
   ReportRoute,
+  PageTypes,
 } from "../types";
 // utils
 import { validateFieldData } from "./completionValidation";
@@ -183,7 +184,7 @@ export const calculateCompletionStatus = async (
 
         //modal overlay pages should have an array of key stepType in fieldData, automatic false if it doesn't exist or array is empty
         if (
-          stepForm.pageType === "overlayModal" &&
+          stepForm.pageType === PageTypes.OVERLAY_MODAL &&
           (!stepData || stepData.length === 0)
         ) {
           areAllFormsComplete &&= false;
@@ -257,14 +258,14 @@ export const calculateCompletionStatus = async (
     let routeCompletion;
     // Determine which type of page we are calculating status for
     switch (route.pageType) {
-      case "standard":
+      case PageTypes.STANDARD:
         if (!route.form) break;
         // Standard forms use simple validation
         routeCompletion = {
           [route.path]: await calculateFormCompletion(route.form),
         };
         break;
-      case "drawer":
+      case PageTypes.DRAWER:
         if (!route.drawerForm) break;
         routeCompletion = {
           [route.path]: await calculateEntityCompletion(
@@ -273,7 +274,7 @@ export const calculateCompletionStatus = async (
           ),
         };
         break;
-      case "modalDrawer":
+      case PageTypes.MODAL_DRAWER:
         if (!route.drawerForm || !route.modalForm) break;
         routeCompletion = {
           [route.path]: await calculateEntityCompletion(
@@ -282,7 +283,7 @@ export const calculateCompletionStatus = async (
           ),
         };
         break;
-      case "modalOverlay":
+      case PageTypes.MODAL_OVERLAY:
         if (!route.modalForm) break;
         if (route.entitySteps) {
           routeCompletion = {
@@ -300,7 +301,7 @@ export const calculateCompletionStatus = async (
           };
         }
         break;
-      case "dynamicModalOverlay":
+      case PageTypes.DYNAMIC_MODAL_OVERLAY:
         if (!route.initiatives) break;
         routeCompletion = {
           [route.path]: await calculateDynamicModalOverlayCompletion(
@@ -309,7 +310,7 @@ export const calculateCompletionStatus = async (
           ),
         };
         break;
-      case "reviewSubmit":
+      case PageTypes.REVIEW_SUBMIT:
         // Don't evaluate the review and submit page
         break;
       default:

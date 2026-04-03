@@ -1,6 +1,6 @@
 import { copyFieldDataFromSource } from "./copy";
 import { getReportFieldData } from "../../storage/reports";
-import { ReportJson, ReportRoute, FormField } from "../types";
+import { ReportJson, ReportRoute, FormField, PageTypes } from "../types";
 
 jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
@@ -131,7 +131,7 @@ describe("Field data copy", () => {
     const formTemplate = {
       routes: [
         {
-          pageType: "modalDrawer",
+          pageType: PageTypes.MODAL_DRAWER,
           entityType: "mockEntityType",
           drawerForm: {
             fields: [
@@ -180,7 +180,7 @@ describe("Field data copy", () => {
     const formTemplate = {
       routes: [
         {
-          pageType: "modalDrawer",
+          pageType: PageTypes.MODAL_DRAWER,
           entityType: "mockEntityType",
           drawerForm: {
             fields: [
@@ -228,7 +228,7 @@ describe("Field data copy", () => {
     const formTemplate = {
       routes: [
         {
-          pageType: "modalDrawer",
+          pageType: PageTypes.MODAL_DRAWER,
           entityType: "mockEntityType",
           drawerForm: {
             fields: [
@@ -265,7 +265,7 @@ describe("Field data copy", () => {
     const formTemplate = {
       routes: [
         {
-          pageType: "modalDrawer",
+          pageType: PageTypes.MODAL_DRAWER,
           entityType: "mockEntityType",
           drawerForm: {
             fields: [
@@ -303,7 +303,7 @@ describe("Field data copy", () => {
     const formTemplate = {
       routes: [
         {
-          pageType: "modalDrawer",
+          pageType: PageTypes.MODAL_DRAWER,
           entityType: "mockEntityType",
           drawerForm: {
             fields: [

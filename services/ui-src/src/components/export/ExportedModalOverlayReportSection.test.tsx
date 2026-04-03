@@ -14,6 +14,7 @@ import {
   OverlayModalPageShape,
   OverlayModalTypes,
   OverlayModalStepTypes,
+  PageTypes,
 } from "types";
 import {
   ExportedModalOverlayReportSection,
@@ -133,7 +134,7 @@ const wpMockProps = {
 
 const sarMockProps = {
   section: {
-    pageType: "dynamicModalOverlay",
+    pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
     entityType: OverlayModalTypes.INITIATIVE,
     verbiage: {
       intro: {

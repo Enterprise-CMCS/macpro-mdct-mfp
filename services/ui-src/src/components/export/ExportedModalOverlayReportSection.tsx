@@ -22,6 +22,7 @@ import {
   ModalOverlayReportPageShape,
   OverlayModalPageShape,
   OverlayModalStepTypes,
+  PageTypes,
   ReportShape,
   ReportType,
 } from "types";
@@ -30,6 +31,9 @@ import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
 import { assertExhaustive } from "utils/other/typing";
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export const ExportedModalOverlayReportSection = ({
   section,
   headingLevel = "h3",
@@ -121,7 +125,7 @@ export function renderModalOverlayTableBody(
   const isPdf = true;
 
   let dynamicSection: AnyObject[];
-  if (section.pageType === "dynamicModalOverlay") {
+  if (section.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY) {
     dynamicSection = (section as AnyObject).initiatives;
   }
 

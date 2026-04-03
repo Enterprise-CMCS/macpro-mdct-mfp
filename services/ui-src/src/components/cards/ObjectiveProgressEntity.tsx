@@ -55,6 +55,9 @@ const wereTargetsMetForObjectiveProgress = (formattedEntityData: AnyObject) => {
   );
 };
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export const ObjectiveProgressEntity = ({
   formattedEntityData,
   entityCompleted,

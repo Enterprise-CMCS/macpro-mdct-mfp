@@ -21,7 +21,7 @@ import {
   mockUseStore,
   mockWpReportContext,
 } from "utils/testing/setupJest";
-import { ReportType, ReportShape, ReportPageVerbiage } from "types";
+import { ReportType, ReportShape, ReportPageVerbiage, PageTypes } from "types";
 
 import { useStore } from "utils";
 
@@ -35,7 +35,7 @@ const createRoutes = (routes: string[], withChildren: boolean) =>
   routes.map((name, index) => ({
     name,
     path: `/mock/mock-route-${index}`,
-    pageType: "standard",
+    pageType: PageTypes.STANDARD,
     verbiage: {
       intro: {
         exportSectionHeader: name,
@@ -51,7 +51,7 @@ const createRoutes = (routes: string[], withChildren: boolean) =>
       {
         name: `${name} - Child Subsection`,
         path: `/mock/mock-route-${index}/subsection`,
-        pageType: "standard",
+        pageType: PageTypes.STANDARD,
         verbiage: {
           intro: {
             section: "",
@@ -62,7 +62,7 @@ const createRoutes = (routes: string[], withChildren: boolean) =>
       {
         name: `${name} - Not a Subsection`,
         path: `/mock/mock-route-${index}/section`,
-        pageType: "standard",
+        pageType: PageTypes.STANDARD,
         verbiage: {
           intro: {
             section: `${name} - Not a Subsection Intro`,
@@ -130,13 +130,13 @@ describe("<ExportedReportPage />", () => {
       const initiativeRoute = {
         name: "WP",
         path: "/mock/mock-route",
-        pageType: "standard",
+        pageType: PageTypes.STANDARD,
         form: mockForm,
         children: [
           {
             name: WP_SAR_STATE_TERRITORY_INITIATIVES,
             path: "/mock/mock-route/0",
-            pageType: "standard",
+            pageType: PageTypes.STANDARD,
             verbiage: {
               intro: {
                 section: "",
@@ -147,7 +147,7 @@ describe("<ExportedReportPage />", () => {
           {
             name: WP_SAR_STATE_TERRITORY_INITIATIVES_INSTRUCTIONS,
             path: "/mock/mock-route/1",
-            pageType: "standard",
+            pageType: PageTypes.STANDARD,
             verbiage: {
               intro: {
                 section: "",
