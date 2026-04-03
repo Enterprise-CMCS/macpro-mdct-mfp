@@ -41,6 +41,9 @@ import {
   parseCustomHtml,
 } from "utils";
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export const EntityDetailsOverlay = ({
   route,
   closeEntityDetailsOverlay,

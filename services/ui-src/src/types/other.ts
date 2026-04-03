@@ -58,7 +58,9 @@ export enum PageTypes {
   MODAL_DRAWER = "modalDrawer",
   MODAL_OVERLAY = "modalOverlay",
   DYNAMIC_MODAL_OVERLAY = "dynamicModalOverlay",
+  /** @deprecated No longer used as of Report Year 2026, Period 2 */
   ENTITY_OVERLAY = "entityOverlay",
+  /** @deprecated No longer used as of Report Year 2026, Period 2 */
   OVERLAY_MODAL = "overlayModal",
   REVIEW_SUBMIT = "reviewSubmit",
 }

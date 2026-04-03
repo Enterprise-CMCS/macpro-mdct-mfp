@@ -11,7 +11,7 @@ import {
 } from "../../utils/testing/setupJest";
 import { EntityDetailsDashboardOverlay } from "./EntityDetailsDashboardOverlay";
 import { useStore } from "utils";
-import { entityTypes } from "../../types";
+import { entityTypes, PageTypes } from "../../types";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 
@@ -25,7 +25,7 @@ const mockDashboard = {
   id: "mock id",
   fields: [mockFormField],
   name: "mock dashboard",
-  pageType: "entityDetailsDashboardOverlay",
+  pageType: PageTypes.OVERLAY_MODAL,
   verbiage: {
     intro: mockVerbiageIntro,
   },

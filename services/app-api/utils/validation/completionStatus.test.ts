@@ -1,3 +1,4 @@
+import { PageTypes } from "../types";
 import { calculateCompletionStatus, isComplete } from "./completionStatus";
 
 describe("Completion Status Tests", () => {
@@ -38,7 +39,7 @@ describe("Completion Status Tests", () => {
           {
             name: "III: Encounter Data Report",
             path: "/mcpar/plan-level-indicators/encounter-data-report",
-            pageType: "drawer",
+            pageType: PageTypes.DRAWER,
             entityType: "plans",
             verbiage: {
               intro: {
@@ -84,7 +85,7 @@ describe("Completion Status Tests", () => {
               {
                 name: "Point of Contact",
                 path: "/mcpar/program-information/point-of-contact",
-                pageType: "standard",
+                pageType: PageTypes.STANDARD,
                 form: { fields: [] },
               },
             ],
@@ -112,7 +113,7 @@ describe("Completion Status Tests", () => {
               {
                 name: "Point of Contact",
                 path: "/mcpar/program-information/point-of-contact",
-                pageType: "standard",
+                pageType: PageTypes.STANDARD,
                 form: {
                   fields: [
                     {
@@ -197,7 +198,7 @@ describe("Completion Status Tests", () => {
         routes: [
           {
             path: "mock/path",
-            pageType: "standard",
+            pageType: PageTypes.STANDARD,
             form: {
               fields: [
                 {
@@ -268,11 +269,11 @@ describe("Completion Status Tests", () => {
         routes: [
           {
             path: "mock/path",
-            pageType: "modalOverlay",
+            pageType: PageTypes.MODAL_OVERLAY,
             entityType: "mockEntityType",
             entitySteps: [
               {
-                pageType: "overlayModal",
+                pageType: PageTypes.OVERLAY_MODAL,
                 stepType: "mockStepType",
               },
             ],
@@ -303,13 +304,13 @@ describe("Completion Status Tests", () => {
         routes: [
           {
             path: "mock/path",
-            pageType: "dynamicModalOverlay",
+            pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
             entityType: "mockEntityType",
             initiatives: [
               {
                 entitySteps: [
                   {
-                    pageType: "overlayModal",
+                    pageType: PageTypes.OVERLAY_MODAL,
                     stepType: "mockStepType",
                   },
                 ],
@@ -342,11 +343,11 @@ describe("Completion Status Tests", () => {
       routes: [
         {
           path: "mock/path",
-          pageType: "modalOverlay",
+          pageType: PageTypes.MODAL_OVERLAY,
           entityType: "mockEntityType",
           entitySteps: [
             {
-              pageType: "overlayModal",
+              pageType: PageTypes.OVERLAY_MODAL,
               stepType: "mockStepType",
             },
           ],
@@ -383,7 +384,7 @@ describe("Completion Status Tests", () => {
       routes: [
         {
           path: "mock/path",
-          pageType: "modalOverlay",
+          pageType: PageTypes.MODAL_OVERLAY,
           entityType: "mockEntityType",
           entitySteps: [
             // we are in entitySteps aka stepFormTemplates
@@ -437,7 +438,7 @@ describe("Completion Status Tests", () => {
       routes: [
         {
           path: "mock/path",
-          pageType: "modalOverlay",
+          pageType: PageTypes.MODAL_OVERLAY,
           entityType: "mockEntityType",
           entitySteps: [
             // we are in entitySteps aka stepFormTemplates
@@ -579,7 +580,7 @@ describe("Completion Status Tests", () => {
       {
         name: "Transition Benchmarks",
         path: "/wp/transition-benchmarks",
-        pageType: "modalDrawer",
+        pageType: PageTypes.MODAL_DRAWER,
         entityType: "targetPopulations",
         entityInfo: ["transitionBenchmarks_targetPopulationName"],
         verbiage: {
@@ -808,7 +809,7 @@ describe("Completion Status Tests", () => {
       entityType: "initiative",
       modalForm: { fields: [] },
       name: "Mock Initiatives",
-      pageType: "modalOverlay",
+      pageType: PageTypes.MODAL_OVERLAY,
       path: "/mock-initiatives",
     };
 

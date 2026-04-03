@@ -8,6 +8,7 @@ import {
   AnyObject,
   DynamicModalOverlayReportPageShape,
   ModalOverlayReportPageVerbiage,
+  PageTypes,
   ReportJson,
   ReportRoute,
   WorkPlanFieldDataForTransforms,
@@ -336,7 +337,7 @@ describe("transformFormTemplate", () => {
     const formTemplate = {
       routes: [
         {
-          pageType: "dynamicModalOverlay",
+          pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
           entityType: "",
           entityInfo: [""],
           verbiage: {} as ModalOverlayReportPageVerbiage,
@@ -417,7 +418,7 @@ describe("transformFormTemplate", () => {
     const formTemplate = {
       routes: [
         {
-          pageType: "dynamicModalOverlay",
+          pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
           entityType: "",
           entityInfo: [],
           verbiage: {} as ModalOverlayReportPageVerbiage,
@@ -522,7 +523,7 @@ describe("transformFormTemplate", () => {
     const route: DynamicModalOverlayReportPageShape = {
       entityType: "",
       entityInfo: [],
-      pageType: "dynamicModalOverlay",
+      pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
       verbiage: {
         addEntityButtonText: "",
         dashboardTitle: "",
