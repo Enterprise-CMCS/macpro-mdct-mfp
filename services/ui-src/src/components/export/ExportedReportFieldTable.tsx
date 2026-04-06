@@ -81,30 +81,29 @@ export const ExportedReportFieldTable = ({
     <>
       {calculationTables.length > 0 &&
         renderCalculationTables(section, fieldData, formPercentage)}
-      {nonTableFields.length > 0 && (
-        <>
-          {nonTableFields?.[0]?.props?.title && (
-            <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
-              {nonTableFields[0].props.title}
-            </Heading>
+
+      <>
+        {nonTableFields?.[0]?.props?.title && (
+          <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
+            {nonTableFields[0].props.title}
+          </Heading>
+        )}
+        <Table
+          sx={sx.table}
+          className={formHasOnlyDynamicFields ? "two-column" : ""}
+          content={{
+            headRow: headRowItems,
+          }}
+          data-testid="exportTable"
+        >
+          {renderFieldTableBody(
+            nonTableFields,
+            pageType,
+            !hideHintText,
+            entityType
           )}
-          <Table
-            sx={sx.table}
-            className={formHasOnlyDynamicFields ? "two-column" : ""}
-            content={{
-              headRow: headRowItems,
-            }}
-            data-testid="exportTable"
-          >
-            {renderFieldTableBody(
-              nonTableFields,
-              pageType,
-              !hideHintText,
-              entityType
-            )}
-          </Table>
-        </>
-      )}
+        </Table>
+      </>
     </>
   );
 };
