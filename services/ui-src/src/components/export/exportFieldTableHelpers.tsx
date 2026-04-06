@@ -93,106 +93,73 @@ export const renderCalculationTables = (
       (table: any) => table.tableType === FormTableType.CALCULATION
     ) || [];
   return calculationTables.map((table: any) => {
-    if (table.bodyRows) {
-      const tableTitle = table.verbiage?.title;
-      let headRow;
+    const tableTitle = table.verbiage?.title;
+    const headRow = table.headRows[0];
 
-      if (
-        tableTitle === "Administrative Costs" ||
-        tableTitle === "Capacity Building"
-      ) {
-        headRow = [
-          "Budget Category",
-          "Total Computable",
-          "Override %",
-          "Total State/Territory Share",
-          "Total Federal Share",
-        ];
-      } else if (tableTitle === "Sub Recipients") {
-        headRow = [
-          "Sub Recipient",
-          "Describe SOW",
-          "Expenditures",
-          "Override %",
-          "Total State/Territory Share",
-        ];
-      } else if (tableTitle === "Personnel") {
-        headRow = ["Position Title", "# of Budgeted FTEs", "# of Filled FTEs"];
-      } else {
-        headRow = [
-          "Service",
-          "Total Computable",
-          "Total State / Territory Share",
-          "Total Federal Share",
-        ];
-      }
-
-      let bodyRows;
-      if (tableTitle === "Sub Recipients" || tableTitle === "Personnel") {
-        const dynamicData = fieldData[table.dynamicRowsTemplate.id] || [];
-        bodyRows = dynamicData.map((item: any) => {
-          if (tableTitle === "Sub Recipients") {
-            return [
-              item.name,
-              item.description,
-              item.totalComputable,
-              item.percentageOverride,
-              item.totalStateTerritoryShare,
-            ];
-          } else {
-            // Personnel
-            return [
-              item.title,
-              item.budgetedFullTimeEmployees,
-              item.filledFullTimeEmployees,
-            ];
-          }
-        });
-      } else {
-        bodyRows = renderServiceTableBody(table.bodyRows, headRow);
-      }
-
-      const footerRow = renderServiceTableBody(table.footRows, headRow);
-
-      let percentageValue;
-      if (section.name === "Qualified HCBS") {
-        percentageValue = fieldData?.["fmap_qualifiedHcbsPercentage"] || 100;
-      } else if (section.name === "Demonstration Services") {
-        percentageValue =
-          fieldData?.["fmap_demonstrationServicesPercentage"] || 100;
-      } else {
-        percentageValue = formPercentage;
-      }
-
-      const percentageText = table.verbiage?.percentage || "[auto-populated]%";
-      const displayPercentage = percentageText.replace(
-        "{{percentage}}",
-        `${percentageValue}%`
-      );
-
-      return (
-        <Box key={table.id}>
-          <Heading as="h3" sx={sx.subHeading}>
-            {table.verbiage?.title}
-          </Heading>
-          {table.verbiage?.percentage && (
-            <Box sx={sx.tableSubHeading}>
-              {parseCustomHtml(displayPercentage)}
-            </Box>
-          )}
-          <Table
-            sx={{ ...sx.table, ...sx.serviceTable }}
-            content={{
-              headRow: headRow,
-              bodyRows: bodyRows,
-              footRow: footerRow,
-            }}
-            data-testid={`service-table-${table.id}`}
-          />
-        </Box>
-      );
+    let bodyRows;
+    if (tableTitle === "Sub Recipients" || tableTitle === "Personnel") {
+      const dynamicData = fieldData[table.dynamicRowsTemplate.id] || [];
+      bodyRows = dynamicData.map((item: any) => {
+        if (tableTitle === "Sub Recipients") {
+          return [
+            item.name,
+            item.description,
+            item.totalComputable,
+            item.percentageOverride,
+            item.totalStateTerritoryShare,
+          ];
+        } else {
+          // Personnel
+          return [
+            item.title,
+            item.budgetedFullTimeEmployees,
+            item.filledFullTimeEmployees,
+          ];
+        }
+      });
+    } else {
+      bodyRows = renderServiceTableBody(table.bodyRows, headRow);
     }
-    return null;
+
+    const footerRow = renderServiceTableBody(table.footRows, headRow);
+
+    let percentageValue;
+    if (section.name === "Qualified HCBS") {
+      percentageValue = fieldData?.["fmap_qualifiedHcbsPercentage"] || 100;
+    } else if (section.name === "Demonstration Services") {
+      percentageValue =
+        fieldData?.["fmap_demonstrationServicesPercentage"] || 100;
+    } else {
+      percentageValue = formPercentage;
+    }
+
+    const percentageText = table.verbiage?.percentage || "[auto-populated]%";
+    const displayPercentage = percentageText.replace(
+      "{{percentage}}",
+      `${percentageValue}%`
+    );
+
+    return (
+      <Box key={table.id}>
+        <Heading as="h3" sx={sx.subHeading}>
+          {table.verbiage?.title}
+        </Heading>
+        {table.verbiage?.percentage && (
+          <Box sx={sx.tableSubHeading}>
+            {parseCustomHtml(displayPercentage)}
+          </Box>
+        )}
+        <Table
+          sx={{ ...sx.table, ...sx.serviceTable }}
+          content={{
+            headRow: headRow,
+            bodyRows: bodyRows,
+            footRow: footerRow,
+          }}
+          data-testid={`service-table-${table.id}`}
+        />
+      </Box>
+    );
   });
 };
 
