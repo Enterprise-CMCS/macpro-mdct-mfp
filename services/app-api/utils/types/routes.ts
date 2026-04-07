@@ -193,6 +193,7 @@ export interface ModalRoute extends BaseRoute {
 }
 
 // WP routes
+/** @deprecated No longer used as of Report Year 2026, Period 2 */
 export interface WPStateOrTerritorySpecificInitiativesRoute extends ModalRoute {
   dashboard: Dashboard;
   entityInfo: string[];

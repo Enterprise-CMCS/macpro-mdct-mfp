@@ -15,11 +15,14 @@ import {
   FormJson,
   EntityDetailsOverlayShape,
   OverlayModalPageShape,
+  PageTypes,
 } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
-// verbiage
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export const EntityDetailsDashboardOverlay = ({
   closeEntityDetailsOverlay,
   dashboard,
@@ -68,7 +71,7 @@ export const EntityDetailsDashboardOverlay = ({
     const pageType = selectedStep?.pageType;
     return (
       <Box>
-        {pageType === "overlayModal" ? (
+        {pageType === PageTypes.OVERLAY_MODAL ? (
           // This is page 2 and 3, Evaluation Plan and Funding Sources respectively
           <EntityProvider>
             <OverlayModalPage

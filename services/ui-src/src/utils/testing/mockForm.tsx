@@ -5,6 +5,7 @@ import {
   FormTableType,
   NumberMask,
   OverlayModalPageShape,
+  PageTypes,
   ReportFormFieldType,
   ReportPageProgress,
   ValidationType,
@@ -272,7 +273,7 @@ export const mockOverlayModalVerbiageIntro = {
 export const mockStandardReportPageJson = {
   name: "mock-route-1",
   path: "/mock/mock-route-1",
-  pageType: "standard",
+  pageType: PageTypes.STANDARD,
   verbiage: {
     intro: mockVerbiageIntro,
   },
@@ -282,7 +283,7 @@ export const mockStandardReportPageJson = {
 export const mockDrawerReportPageJson = {
   name: "mock-route-2a",
   path: "/mock/mock-route-2a",
-  pageType: "drawer",
+  pageType: PageTypes.DRAWER,
   entityType: "entityType",
   verbiage: {
     intro: mockVerbiageIntro,
@@ -337,7 +338,7 @@ export const mockOverlayModalPageVerbiage = {
 export const mockModalDrawerReportPageJson = {
   name: "mock-route-2b",
   path: "/mock/mock-route-2b",
-  pageType: "modalDrawer",
+  pageType: PageTypes.MODAL_DRAWER,
   entityType: "entityType",
   verbiage: mockModalDrawerReportPageVerbiage,
   modalForm: mockModalForm,
@@ -385,7 +386,7 @@ export const mockTargetPopulationsDrawerFormField = {
 export const mockTargetPopulationsReportPageJson = {
   name: "mock-route-2b",
   path: "/mock/mock-route-2b",
-  pageType: "modalDrawer",
+  pageType: PageTypes.MODAL_DRAWER,
   entityType: "targetPopulations",
   verbiage: mockModalDrawerReportPageVerbiage,
   modalForm: mockTargetPopulationsModalFormField,
@@ -409,7 +410,7 @@ export const mockEntityDetailsOverlayVerbiage = {
 export const mockEntityDetailsOverlayJson = {
   name: "mock-route-entity-overlay",
   path: "/mock/mock-route-entity-overlay",
-  pageType: "entityOverlay",
+  pageType: PageTypes.ENTITY_OVERLAY,
   verbiage: mockEntityDetailsOverlayVerbiage,
   entities: [],
   form: mockForm,
@@ -428,7 +429,7 @@ export const mockEntityDetailsDashboardOverlayJson = {
     {
       name: "mock-route-entity-dashboard-overlay",
       path: "/mock/mock-route-entity-dasboard-overlay",
-      pageType: "entityOverlay",
+      pageType: PageTypes.ENTITY_OVERLAY,
       entityType: "mock entity type",
       stepType: "mock step type",
       stepName: "mock step name",
@@ -555,7 +556,7 @@ export const mockModalOverlayForm = {
 export const mockOverlayModalPageJson2 = {
   name: "mock-route-2d",
   path: "/mock/mock-route-2d",
-  pageType: "overlayModal",
+  pageType: PageTypes.OVERLAY_MODAL,
   entityType: "entityType",
   entitySteps: [
     {
@@ -563,7 +564,7 @@ export const mockOverlayModalPageJson2 = {
       hint: "Provide initiative description, including target populations and timeframe",
       isRequired: true,
       name: "State or Territory-Specific Initiatives: I. Define initiative",
-      pageType: "entityOverlay",
+      pageType: PageTypes.ENTITY_OVERLAY,
       path: "/wp/state-or-territory-specific-initiatives/define-initiative",
       stepInfo: ["stepName", "hint"],
       stepName: "I. Define initiative",
@@ -576,7 +577,7 @@ export const mockOverlayModalPageJson2 = {
       hint: "Provide initiative description, including target populations and timeframe",
       isRequired: true,
       name: "State or Territory-Specific Initiatives: I. Define initiative",
-      pageType: "entityOverlay",
+      pageType: PageTypes.ENTITY_OVERLAY,
       path: "/wp/state-or-territory-specific-initiatives/define-initiative",
       stepInfo: ["stepName", "hint"],
       stepName: "I. Define initiative",
@@ -594,7 +595,7 @@ export const mockOverlayModalPageJson2 = {
 export const mockOverlayModalPageJson = {
   name: "mock-route-2d",
   path: "/mock/mock-route-2d",
-  pageType: "overlayModal",
+  pageType: PageTypes.OVERLAY_MODAL,
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalForm,
@@ -607,7 +608,7 @@ export const mockOverlayModalPageJson = {
 export const mockOverlayModalWithCardsPageJson = {
   name: "mock-route-2d",
   path: "/mock/mock-route-2d",
-  pageType: "overlayModal",
+  pageType: PageTypes.OVERLAY_MODAL,
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   objectiveCards: mockObjectiveCards,
@@ -634,7 +635,7 @@ export const mockUnknownPageJson = {
 export const mockModalOverlayReportPageJson = {
   name: "mock-route-2c",
   path: "/mock/mock-route-2c",
-  pageType: "modalOverlay",
+  pageType: PageTypes.MODAL_OVERLAY,
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalOverlayForm,
@@ -652,7 +653,7 @@ export const mockModalOverlayEntityStepsReportPageJson = {
 export const mockOverlayModalReportPageJson = {
   name: "mock-route-2c",
   path: "/mock/mock-route-2c",
-  pageType: "overlayModal",
+  pageType: PageTypes.OVERLAY_MODAL,
   entityType: "entityType",
   verbiage: mockModalOverlayReportPageVerbiage,
   modalForm: mockModalOverlayForm,
@@ -663,7 +664,7 @@ export const mockOverlayModalReportPageJson = {
 export const mockDynamicModalOverlayReportPageJson = {
   name: "mock-route-2e",
   path: "/mock/mock-route-2e",
-  pageType: "dynamicModalOverlay",
+  pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
   entityType: "entityType",
   entityInfo: [""],
   verbiage: mockModalOverlayReportPageVerbiage,
@@ -699,7 +700,7 @@ export const mockDynamicModalOverlayReportPageJson = {
 export const mockReviewSubmitPageJson = {
   name: "mock-route-3",
   path: "/mock/mock-review-and-submit",
-  pageType: "reviewSubmit",
+  pageType: PageTypes.REVIEW_SUBMIT,
 };
 
 export const mockTableRowPage = {
@@ -729,7 +730,7 @@ export const mockChildRowPage = {
 export const mockInitiativesSpecificDynamicModalOverlayReportPageJson = {
   name: "mock-initiatives-route",
   path: "/wp/state-or-territory-specific-initiatives/initiatives",
-  pageType: "dynamicModalOverlay",
+  pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
   entityType: "entityType",
   entityInfo: [""],
   verbiage: mockModalOverlayReportPageVerbiage,
