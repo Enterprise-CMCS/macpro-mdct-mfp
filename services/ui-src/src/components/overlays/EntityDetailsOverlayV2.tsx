@@ -21,7 +21,7 @@ export const EntityDetailsOverlayV2 = ({
   validateOnRender,
 }: Props) => {
   const getSaveButtonText = () => {
-    return editable && !selectedEntity?.isInitiativeClosed
+    return editable && !disabled && !selectedEntity?.isInitiativeClosed
       ? "Save & return"
       : "Return";
   };

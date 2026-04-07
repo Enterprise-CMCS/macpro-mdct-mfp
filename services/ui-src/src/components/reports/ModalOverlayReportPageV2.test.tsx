@@ -1,17 +1,26 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
-import { ModalOverlayReportPageV2 } from "components";
+import { ModalOverlayReportPageV2, ReportContext } from "components";
 // utils
 import {
   RouterWrappedComponent,
   mockModalOverlayReportPageJson,
+  mockReportFieldData,
   mockReportStore,
   mockUseEntityStore,
+  mockWPFullReport,
+  mockWpReportContext,
 } from "utils/testing/setupJest";
 import { useBreakpoint, useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
-import { ReportType } from "types";
+import {
+  ReportFormFieldType,
+  ReportStatus,
+  ReportType,
+  ValidationType,
+} from "types";
+import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -49,20 +58,24 @@ const modalOverlayReportPageComponent = (
   route = mockModalOverlayReportPageJson
 ) => (
   <RouterWrappedComponent>
-    <ModalOverlayReportPageV2
-      route={route}
-      setSidebarHidden={mockSetSidebarHidden}
-    />
+    <ReportContext.Provider value={mockWpReportContext}>
+      <ModalOverlayReportPageV2
+        route={route}
+        setSidebarHidden={mockSetSidebarHidden}
+      />
+    </ReportContext.Provider>
   </RouterWrappedComponent>
 );
 
 describe("<ModalOverlayReportPageV2 />", () => {
+  beforeEach(() => {
+    mockUseBreakpoint.mockReturnValue({ isMobile: false, isTablet: false });
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   test("renders desktop table", () => {
-    mockUseBreakpoint.mockReturnValue({ isMobile: false, isTablet: false });
     mockedUseStore.mockReturnValue(mockUseEntityStore);
     render(modalOverlayReportPageComponent());
 
@@ -245,6 +258,168 @@ describe("<ModalOverlayReportPageV2 />", () => {
       await userEvent.click(backButton);
     });
     expect(backButton).not.toBeInTheDocument();
+  });
+
+  test("submits overlay form for state user", async () => {
+    mockedUseStore.mockReturnValue({
+      ...mockStateUser,
+      ...mockWpReportContext,
+      editable: true,
+    });
+    render(modalOverlayReportPageComponent());
+    const enterDetailsButton = screen.getByRole("button", {
+      name: enterEntityDetailsButtonText,
+    });
+
+    await act(async () => {
+      await userEvent.click(enterDetailsButton);
+    });
+
+    const button = screen.getByRole("button", {
+      name: "Save & return",
+    });
+    const inputs = screen.getAllByRole("textbox");
+
+    for (const input of inputs) {
+      await act(async () => {
+        await userEvent.type(input, "123");
+      });
+    }
+
+    await act(async () => {
+      await userEvent.click(button);
+    });
+
+    expect(mockWpReportContext.updateReport).toHaveBeenCalledWith(
+      {
+        id: mockWPFullReport.id,
+        reportType: mockWPFullReport.reportType,
+        state: mockStateUser.user?.state,
+      },
+      {
+        fieldData: {
+          entityType: [
+            {
+              ...mockReportFieldData.entityType[0],
+              "mock-number-field": "123",
+              "mock-optional-text-field": "123",
+              "mock-text-field": "123",
+            },
+          ],
+        },
+        metadata: {
+          lastAlteredBy: mockStateUser.user?.full_name,
+          status: ReportStatus.IN_PROGRESS,
+        },
+      }
+    );
+  });
+
+  test("does not submits overlay form for admin user", async () => {
+    mockedUseStore.mockReturnValue({
+      ...mockAdminUser,
+      ...mockWpReportContext,
+      editable: true,
+    });
+    render(modalOverlayReportPageComponent());
+    const enterDetailsButton = screen.getByRole("button", {
+      name: enterEntityDetailsButtonText,
+    });
+
+    await act(async () => {
+      await userEvent.click(enterDetailsButton);
+    });
+
+    const button = screen.getByRole("button", {
+      name: "Return",
+    });
+    await act(async () => {
+      await userEvent.click(button);
+    });
+
+    expect(mockWpReportContext.updateReport).not.toHaveBeenCalled();
+  });
+
+  test("shows forCopyoverOnly fields for copied report", async () => {
+    const route = {
+      ...mockModalOverlayReportPageJson,
+      overlayForm: {
+        ...mockModalOverlayReportPageJson.overlayForm,
+        fields: [
+          ...mockModalOverlayReportPageJson.overlayForm.fields,
+          {
+            forCopyoverOnly: true,
+            id: "mock-copyover-field",
+            type: ReportFormFieldType.TEXT,
+            validation: ValidationType.TEXT,
+            props: {
+              label: "mock copyover field",
+            },
+          },
+        ],
+      },
+    };
+    mockedUseStore.mockReturnValue({
+      ...mockUseEntityStore,
+      report: {
+        ...mockUseEntityStore.report,
+        isCopied: true,
+      },
+    });
+    render(modalOverlayReportPageComponent(route));
+    const enterDetailsButton = screen.getByRole("button", {
+      name: enterEntityDetailsButtonText,
+    });
+
+    await act(async () => {
+      await userEvent.click(enterDetailsButton);
+    });
+
+    const textbox = screen.getByRole("textbox", {
+      name: "mock copyover field",
+    });
+    expect(textbox).toBeVisible();
+  });
+
+  test("hides forCopyoverOnly fields for new report", async () => {
+    const route = {
+      ...mockModalOverlayReportPageJson,
+      overlayForm: {
+        ...mockModalOverlayReportPageJson.overlayForm,
+        fields: [
+          ...mockModalOverlayReportPageJson.overlayForm.fields,
+          {
+            forCopyoverOnly: true,
+            id: "mock-copyover-field",
+            type: ReportFormFieldType.TEXT,
+            validation: ValidationType.TEXT,
+            props: {
+              label: "mock copyover field",
+            },
+          },
+        ],
+      },
+    };
+    mockedUseStore.mockReturnValue({
+      ...mockUseEntityStore,
+      report: {
+        ...mockUseEntityStore.report,
+        isCopied: false,
+      },
+    });
+    render(modalOverlayReportPageComponent(route));
+    const enterDetailsButton = screen.getByRole("button", {
+      name: enterEntityDetailsButtonText,
+    });
+
+    await act(async () => {
+      await userEvent.click(enterDetailsButton);
+    });
+
+    const textbox = screen.queryByRole("textbox", {
+      name: "mock copyover field",
+    });
+    expect(textbox).not.toBeInTheDocument();
   });
 
   testA11yAct(modalOverlayReportPageComponent(), () => {
