@@ -200,7 +200,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         headRows: [keyMetricsHeaders],
         tableType: FormTableType.ENTITY_MODAL,
         verbiage: {
-          emptyTableMessage: "No Key Metrics added.",
+          emptyTableMessage: "No Performance Indicators",
           title: "Key Metrics",
         },
       },

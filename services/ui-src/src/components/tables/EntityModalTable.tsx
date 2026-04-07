@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 // components
 import {
   Box,
@@ -11,9 +11,14 @@ import {
   Text,
   Tfoot,
   Thead,
+  useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import { DynamicTableContext, DynamicTableRows } from "components";
+import {
+  AddEditKeyMetricsModal,
+  DynamicTableContext,
+  DynamicTableRows,
+} from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 // types
@@ -29,10 +34,25 @@ export const EntityModalTable = ({
   formData,
   headRows,
   id: tableId,
+  report,
   verbiage,
 }: Props) => {
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
+  const {
+    isOpen: keyMetricsModalIsOpen,
+    onOpen: keyMetricsModalOnOpenHandler,
+    onClose: keyMetricsModalOnCloseHandler,
+  } = useDisclosure();
+  const openModal = (dynamicFieldId?: string) => {
+    setSelectedId(dynamicFieldId);
+    keyMetricsModalOnOpenHandler();
+  };
+  const closeModal = () => {
+    setSelectedId(undefined);
+    keyMetricsModalOnCloseHandler();
+  };
 
   // Dynamic rows
   const { generateRows } = useContext(DynamicTableContext);
@@ -126,14 +146,25 @@ export const EntityModalTable = ({
           </Text>
           <Button
             leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="" />}
-            onClick={() => {}}
+            onClick={hasDynamicModalForm ? () => openModal() : () => {}}
             sx={sx.dynamicRowsButton}
             variant="outline"
           >
             {dynamicRowsTemplate.verbiage.buttonText}
           </Button>
 
-          {/* TODO: Modal */}
+          <AddEditKeyMetricsModal
+            dynamicTemplateId={dynamicRowsTemplate.id}
+            form={dynamicRowsTemplate.props?.dynamicModalForm}
+            modalDisclosure={{
+              isOpen: keyMetricsModalIsOpen,
+              onClose: closeModal,
+            }}
+            selectedId={selectedId}
+            report={report}
+            tableId={tableId}
+            userIsAdmin={false}
+          />
         </>
       )}
     </Box>
