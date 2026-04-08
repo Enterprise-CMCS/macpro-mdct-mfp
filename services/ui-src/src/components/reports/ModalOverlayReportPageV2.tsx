@@ -55,13 +55,17 @@ export const ModalOverlayReportPageV2 = ({
     undefined
   );
   const [entering, setEntering] = useState<boolean>(false);
-  const [submitting, setSubmitting] = useState<boolean>(false);
   const [form, setForm] = useState<FormJson>({} as FormJson);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   // State management
   const { full_name, state, userIsAdmin, userIsEndUser, userIsReadOnly } =
     useStore().user ?? {};
-  const { editable, report = {} as ReportShape } = useStore();
+  const {
+    editable,
+    report = {} as ReportShape,
+    setSelectedEntity,
+  } = useStore();
   const isDisabled = Boolean(userIsAdmin || userIsReadOnly);
 
   // Display route
@@ -205,7 +209,7 @@ export const ModalOverlayReportPageV2 = ({
     });
   }, [overlayForm, report.isCopied]);
 
-  const TablePage = () => {
+  const tablePage = () => {
     return (
       <Box sx={sx.content}>
         <ReportPageIntro accordion={verbiage.accordion} text={verbiage.intro} />
@@ -275,7 +279,7 @@ export const ModalOverlayReportPageV2 = ({
     );
   };
 
-  const DetailsOverlay = () => {
+  const detailsOverlay = () => {
     return (
       <EntityProvider>
         <EntityDetailsOverlayV2
@@ -287,6 +291,7 @@ export const ModalOverlayReportPageV2 = ({
           onSubmit={onSubmit}
           route={route}
           selectedEntity={currentEntity}
+          setSelectedEntity={setSelectedEntity}
           submitting={submitting}
           setEntering={setEntering}
           validateOnRender={false}
@@ -295,7 +300,7 @@ export const ModalOverlayReportPageV2 = ({
     );
   };
 
-  return isEntityDetailsOpen ? <DetailsOverlay /> : <TablePage />;
+  return isEntityDetailsOpen ? detailsOverlay() : tablePage();
 };
 
 interface Props {

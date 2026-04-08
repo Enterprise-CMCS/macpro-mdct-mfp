@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // components
-import { EntityProvider, Form, ReportPageIntro } from "components";
+import { Form, ReportPageIntro } from "components";
 // types
 import { EntityShape, FormJson, ModalOverlayReportPageShape } from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
+import previousIcon from "assets/icons/icon_previous_blue.png";
 
 export const EntityDetailsOverlayV2 = ({
   backButtonText,
@@ -18,6 +19,7 @@ export const EntityDetailsOverlayV2 = ({
   selectedEntity,
   submitting = false,
   setEntering,
+  setSelectedEntity,
   validateOnRender,
 }: Props) => {
   const getSaveButtonText = () => {
@@ -29,48 +31,64 @@ export const EntityDetailsOverlayV2 = ({
     setEntering(false);
   }, []);
 
+  useEffect(() => {
+    setEntering(false);
+  }, []);
+
+  useEffect(() => {
+    setSelectedEntity(selectedEntity);
+    return () => {
+      setSelectedEntity(undefined);
+    };
+  }, [selectedEntity]);
+
   return (
-    <EntityProvider>
-      <Box>
-        <Button
-          leftIcon={<Image sx={sx.backIcon} src={arrowLeftBlue} alt="" />}
-          sx={sx.backButton}
-          variant="none"
-          onClick={() => closeEntityDetailsOverlay()}
-          aria-label={backButtonText}
-        >
-          {backButtonText}
-        </Button>
-        <ReportPageIntro
-          accordion={form.verbiage?.accordion}
-          initiativeName={selectedEntity?.initiative_name}
-          text={{
-            ...form.verbiage?.intro,
-            section: route.name,
-          }}
+    <Box>
+      <Button
+        leftIcon={<Image sx={sx.backIcon} src={arrowLeftBlue} alt="" />}
+        sx={sx.backButton}
+        variant="none"
+        onClick={() => closeEntityDetailsOverlay()}
+        aria-label={backButtonText}
+      >
+        {backButtonText}
+      </Button>
+      <ReportPageIntro
+        accordion={form.verbiage?.accordion}
+        initiativeName={selectedEntity?.initiative_name}
+        text={{
+          ...form.verbiage?.intro,
+          section: route.name,
+        }}
+      />
+      {form.fields && (
+        <Form
+          autosave={true}
+          className="overlay-form"
+          disabled={disabled}
+          dontReset={true}
+          formData={selectedEntity}
+          formJson={form}
+          id={form.id}
+          onSubmit={onSubmit}
+          validateOnRender={validateOnRender || false}
         />
-        {form.fields && (
-          <Form
-            autosave={false}
-            className="overlay-form"
-            disabled={disabled}
-            dontReset={true}
-            formData={selectedEntity}
-            formJson={form}
-            id={form.id}
-            onSubmit={onSubmit}
-            validateOnRender={validateOnRender || false}
-          />
-        )}
-        <Box sx={sx.footerBox}>
-          <Flex sx={sx.buttonFlex}>
-            <Button type="submit" form={form.id} sx={sx.saveButton}>
-              {submitting ? <Spinner size="md" /> : getSaveButtonText()}
-            </Button>
-          </Flex>
-        </Box>
+      )}
+      <Box sx={sx.footerBox}>
+        <Flex sx={sx.buttonFlex}>
+          <Button
+            leftIcon={<Image sx={sx.backIcon} src={previousIcon} alt="" />}
+            onClick={() => closeEntityDetailsOverlay()}
+            variant="outline"
+          >
+            Previous
+          </Button>
+          <Button type="submit" form={form.id} sx={sx.saveButton}>
+            {submitting ? <Spinner size="md" /> : getSaveButtonText()}
+          </Button>
+        </Flex>
       </Box>
-    </EntityProvider>
+    </Box>
   );
 };
 
@@ -84,6 +102,7 @@ interface Props {
   route: ModalOverlayReportPageShape;
   selectedEntity?: EntityShape;
   setEntering: Function;
+  setSelectedEntity: Function;
   submitting?: boolean;
   validateOnRender?: boolean;
 }
@@ -114,7 +133,7 @@ const sx = {
     borderTop: "1.5px solid var(--mdct-colors-gray_light)",
   },
   buttonFlex: {
-    justifyContent: "end",
+    justifyContent: "space-between",
     marginY: "spacer3",
   },
   saveButton: {

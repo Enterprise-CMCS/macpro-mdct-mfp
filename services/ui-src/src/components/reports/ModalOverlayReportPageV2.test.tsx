@@ -172,7 +172,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
         name: addEditModalAddTitle,
       });
       await act(() => {
-        expect(closedModal).not.toBeInTheDocument();
+        expect(closedModal).not.toBeVisible();
       });
     });
   });
@@ -202,7 +202,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
         name: addEditModalEditTitle,
       });
       await act(() => {
-        expect(closedModal).not.toBeInTheDocument();
+        expect(closedModal).not.toBeVisible();
       });
     });
   });
@@ -235,7 +235,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
         name: deleteModalTitle,
       });
       await act(() => {
-        expect(closedModal).not.toBeInTheDocument();
+        expect(closedModal).not.toBeVisible();
       });
     });
   });
@@ -265,6 +265,8 @@ describe("<ModalOverlayReportPageV2 />", () => {
       ...mockStateUser,
       ...mockWpReportContext,
       editable: true,
+      setAutosaveState: jest.fn(),
+      setSelectedEntity: jest.fn(),
     });
     render(modalOverlayReportPageComponent());
     const enterDetailsButton = screen.getByRole("button", {
@@ -320,6 +322,8 @@ describe("<ModalOverlayReportPageV2 />", () => {
       ...mockAdminUser,
       ...mockWpReportContext,
       editable: true,
+      setAutosaveState: jest.fn(),
+      setSelectedEntity: jest.fn(),
     });
     render(modalOverlayReportPageComponent());
     const enterDetailsButton = screen.getByRole("button", {

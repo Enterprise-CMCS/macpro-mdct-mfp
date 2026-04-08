@@ -8,9 +8,11 @@ import {
   mockModalOverlayForm,
   mockModalOverlayReportPageJson,
   mockStateUserStore,
+  mockWpReportContext,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
+import { ReportContext } from "components";
 
 const mockCloseEntityDetailsOverlay = jest.fn();
 const mockOnSubmit = jest.fn();
@@ -20,23 +22,39 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue({
   ...mockStateUserStore,
   ...mockEntityStore,
+  setAutosaveState: jest.fn(),
 });
+
+jest.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: jest.fn().mockImplementation(() => {
+    return [
+      {
+        name: "mockId",
+        value: "123",
+      },
+    ];
+  }),
+  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
+}));
 
 const entityDetailsOverlayComponent = (editable?: boolean) => (
   <RouterWrappedComponent>
-    <EntityDetailsOverlayV2
-      backButtonText="Mock back button text"
-      closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
-      disabled={false}
-      editable={editable}
-      form={mockModalOverlayForm}
-      onSubmit={mockOnSubmit}
-      route={mockModalOverlayReportPageJson}
-      selectedEntity={mockEntityStore.selectedEntity}
-      submitting={false}
-      setEntering={jest.fn()}
-      validateOnRender={false}
-    />
+    <ReportContext.Provider value={mockWpReportContext}>
+      <EntityDetailsOverlayV2
+        backButtonText="Mock back button text"
+        closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
+        disabled={false}
+        editable={editable}
+        form={mockModalOverlayForm}
+        onSubmit={mockOnSubmit}
+        route={mockModalOverlayReportPageJson}
+        selectedEntity={mockEntityStore.selectedEntity}
+        submitting={false}
+        setEntering={jest.fn()}
+        setSelectedEntity={jest.fn()}
+        validateOnRender={false}
+      />
+    </ReportContext.Provider>
   </RouterWrappedComponent>
 );
 
@@ -111,6 +129,17 @@ describe("<EntityDetailsOverlayV2 />", () => {
     render(entityDetailsOverlayComponent());
     const button = screen.getByRole("button", {
       name: "Mock back button text",
+    });
+    await act(async () => {
+      await userEvent.click(button);
+    });
+    expect(mockCloseEntityDetailsOverlay).toHaveBeenCalled();
+  });
+
+  test("calls close overlay function when clicking previous button", async () => {
+    render(entityDetailsOverlayComponent());
+    const button = screen.getByRole("button", {
+      name: "Previous",
     });
     await act(async () => {
       await userEvent.click(button);
