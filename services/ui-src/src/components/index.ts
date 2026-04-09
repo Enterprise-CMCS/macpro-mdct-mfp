@@ -105,6 +105,7 @@ export { ExportedReportPage } from "./pages/Export/ExportedReportPage";
 // overlays
 export { EntityDetailsDashboardOverlay } from "./overlays/EntityDetailsDashboardOverlay";
 export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
+export { EntityDetailsOverlayV2 } from "./overlays/EntityDetailsOverlayV2";
 // reports
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
@@ -127,6 +128,7 @@ export {
   DynamicTableProvider,
 } from "./tables/DynamicTableProvider";
 export { DynamicTableRows } from "./tables/DynamicTableRows";
+export { EntityModalTable } from "./tables/EntityModalTable";
 export { EntityRow } from "./tables/EntityRow";
 export { EntityStatusIcon } from "./tables/EntityStatusIcon";
 export { SummationTable } from "./tables/SummationTable";

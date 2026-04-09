@@ -194,10 +194,30 @@ const addInitiative = (
 
   if (flags.wpSarRelease2025) {
     flaggedData = {
+      defineInitiative_actualStartDate_value: "",
+      defineInitiative_endDate: dateFormat.format(faker.date.future()),
+      defineInitiative_expectedStartDate_value: dateFormat.format(
+        faker.date.past()
+      ),
+      defineInitiative_fundingSources: [
+        {
+          key: "defineInitiative_fundingSources-awTB7dbwBc8x3fRjbWIRlC",
+          value: "MFP administrative cooperative agreement funding",
+        },
+      ],
       defineInitiative_keyActivities: [
         {
           id: crypto.randomUUID(),
-          name: faker.word.noun(),
+          name: faker.lorem.sentence(),
+        },
+      ],
+      defineInitiative_keyMetrics_performanceIndicators: [],
+      defineInitiative_qualitativeMethods: faker.lorem.sentence(),
+      defineInitiative_purposeAndGoals: faker.lorem.sentence(),
+      defineInitiative_startDate: [
+        {
+          key: "defineInitiative_startDate-wHDw5laJkJIRG1FrHs5VS6",
+          value: "Expected start date",
         },
       ],
     };
