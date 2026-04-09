@@ -24,12 +24,17 @@ export const renderServiceTableBody = (bodyRows: any, headRow: string[]) => {
       if (field?.id) {
         const fieldDataValue =
           report?.fieldData[field.id] ?? field.props.initialValue;
+        const isBold =
+          header === "Total State / Territory Share" ||
+          header === "Total Federal Share";
         if (field.type === ReportFormFieldType.NUMBER) {
-          return fieldDataValue
+          const value = fieldDataValue
             ? maskResponseData(fieldDataValue, field.props.mask)
             : "Not answered";
+          return isBold ? <span>{value}</span> : value;
         }
-        return fieldDataValue ?? "Not answered";
+        const value = fieldDataValue ?? "Not answered";
+        return isBold ? <span>{value}</span> : value;
       }
       return field;
     });
@@ -168,7 +173,7 @@ export const sx = {
       borderBottom: "2px solid",
       borderColor: "gray.400",
     },
-    "& tbody tr td:nth-of-type(3), & tbody tr td:nth-of-type(4)": {
+    "& tbody tr td span": {
       fontWeight: "bold",
     },
     "& tfoot tr th": {

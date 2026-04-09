@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, isValidElement } from "react";
 // components
 import {
   SystemStyleObject,
@@ -71,7 +71,7 @@ export const Table = ({
                   }}
                   aria-label={ariaOverride?.bodyRows?.[index][rowIndex]}
                 >
-                  {sanitizeAndParseHtml(cell)}
+                  {isValidElement(cell) ? cell : sanitizeAndParseHtml(cell)}
                 </Td>
               ))}
             </Tr>
@@ -79,10 +79,10 @@ export const Table = ({
       </Tbody>
       <Tfoot>
         {content.footRow &&
-          content.footRow?.map((row: string[], index: number) => {
+          content.footRow?.map((row: (string | ReactNode)[], index: number) => {
             return (
               <Tr key={`${row[0]}${index}-foot-row`}>
-                {row.map((headerCell: string, rowIndex: number) => {
+                {row.map((headerCell: any, rowIndex: number) => {
                   return (
                     <Th
                       key={`${rowIndex}-foot-cell`}
@@ -90,7 +90,9 @@ export const Table = ({
                       sx={{ ...sx.tableHeader, ...sxOverride }}
                       aria-label={ariaOverride?.footRow?.[index][rowIndex]}
                     >
-                      {sanitizeAndParseHtml(headerCell)}
+                      {isValidElement(headerCell)
+                        ? headerCell
+                        : sanitizeAndParseHtml(headerCell)}
                     </Th>
                   );
                 })}
