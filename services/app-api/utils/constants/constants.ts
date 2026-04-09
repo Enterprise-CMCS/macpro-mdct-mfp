@@ -103,13 +103,13 @@ export enum States {
 export const reportTables: { [key in ReportType]: string } = {
   SAR: process.env.SarReportsTable!,
   WP: process.env.WpReportsTable!,
-  FINANCIAL_REPORT: process.env.ExpenditureReportsTable!,
+  FINANCIAL_REPORT: process.env.FinancialReportsTable!,
 };
 
 export const reportBuckets: { [key in ReportType]: string } = {
   SAR: process.env.SAR_FORM_BUCKET!,
   WP: process.env.WP_FORM_BUCKET!,
-  FINANCIAL_REPORT: process.env.EXPENDITURE_FORM_BUCKET!,
+  FINANCIAL_REPORT: process.env.FINANCIAL_REPORT_FORM_BUCKET!,
 };
 
 export const reportNames: { [key in ReportType]: string } = {

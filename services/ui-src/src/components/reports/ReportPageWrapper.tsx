@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import { Flex } from "@chakra-ui/react";
 import {
@@ -24,11 +23,9 @@ import {
   StandardReportPageShape,
 } from "types";
 // utils
-import { useStore } from "utils";
+import { hasEntitySteps, useStore } from "utils";
 
 export const ReportPageWrapper = () => {
-  const wpSarRelease2025 = useFlags()?.wpSarRelease2025;
-
   const { report } = useStore();
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
@@ -48,7 +45,7 @@ export const ReportPageWrapper = () => {
           <ModalDrawerReportPage route={route as ModalDrawerReportPageShape} />
         );
       case PageTypes.MODAL_OVERLAY:
-        if (wpSarRelease2025) {
+        if (!hasEntitySteps(route)) {
           return (
             <ModalOverlayReportPageV2
               route={route as ModalOverlayReportPageShape}

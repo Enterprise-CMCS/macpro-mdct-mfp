@@ -43,6 +43,7 @@ export enum ReportFormFieldType {
 }
 
 export interface ReportFormField {
+  forCopyoverOnly?: boolean;
   forTableOnly?: boolean;
   id: string;
   props?: ReportFormFieldProps;
@@ -72,6 +73,7 @@ export interface ReportFormFieldProps {
   content?: string;
   decimalPlacesToRoundTo?: number;
   disabled?: boolean;
+  dynamicButtonText?: string;
   dynamicFields?: ReportFormField[];
   dynamicLabel?: string;
   dynamicModalForm?: FormJson;
@@ -82,6 +84,7 @@ export interface ReportFormFieldProps {
   maxLength?: number;
   styleAsOptional?: boolean;
   subType?: ReportFormFieldType;
+  subtitle?: string | CustomHtmlElement[];
   title?: string;
 }
 
@@ -163,7 +166,11 @@ export interface BaseRoute {
 }
 
 export interface ParentRoute extends BaseRoute {
-  children: (FormRoute | WPStateOrTerritorySpecificInitiativesRoute)[];
+  children: (
+    | FormRoute
+    | WPStateOrTerritorySpecificInitiativesRoute
+    | WPStateOrTerritorySpecificInitiativesV2Route
+  )[];
 }
 
 export interface PageRoute extends BaseRoute {
@@ -186,11 +193,18 @@ export interface ModalRoute extends BaseRoute {
 }
 
 // WP routes
+/** @deprecated No longer used as of Report Year 2026, Period 2 */
 export interface WPStateOrTerritorySpecificInitiativesRoute extends ModalRoute {
   dashboard: Dashboard;
   entityInfo: string[];
   entitySteps: WPEntityStep[];
   entityType: StepEntityType;
+}
+
+export interface WPStateOrTerritorySpecificInitiativesV2Route extends ModalRoute {
+  entityInfo: string[];
+  entityType: StepEntityType;
+  overlayForm: ReportFormWithTables;
 }
 
 export interface WPTransitionBenchmarksRoute extends ModalRoute {

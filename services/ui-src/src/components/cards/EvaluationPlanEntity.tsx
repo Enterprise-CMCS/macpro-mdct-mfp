@@ -5,6 +5,9 @@ import { notAnsweredText } from "../../constants";
 import { AnyObject, HeadingLevel, ReportType } from "types";
 import { useStore } from "utils";
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export const EvaluationPlanEntity = ({
   formattedEntityData,
   headingLevel,

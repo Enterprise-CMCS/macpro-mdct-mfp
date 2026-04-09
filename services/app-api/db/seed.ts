@@ -199,7 +199,7 @@ const seed = async (
           reportPeriod = answerInt;
         }
 
-        if (answerInt >= currentYear) {
+        if (answerInt > 2) {
           reportYear = answerInt;
         }
 

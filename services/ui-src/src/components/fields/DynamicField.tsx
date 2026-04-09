@@ -19,11 +19,12 @@ import { autosaveFieldData, getAutosaveFields, useStore } from "utils";
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
 export const DynamicField = ({
-  label,
-  name,
   disabled,
+  dynamicButtonText,
   hint,
   hydrate,
+  label,
+  name,
 }: Props) => {
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
   const { report, selectedEntity } = useStore();
@@ -225,7 +226,7 @@ export const DynamicField = ({
           sx={sx.appendButton}
           onClick={appendNewRecord}
         >
-          Add a row
+          {dynamicButtonText || "Add a row"}
         </Button>
       )}
     </Box>
@@ -233,11 +234,12 @@ export const DynamicField = ({
 };
 
 interface Props {
-  name: string;
-  label: string;
   disabled?: boolean;
+  dynamicButtonText?: string;
   hint?: string;
   hydrate?: DynamicFieldShape[];
+  label: string;
+  name: string;
 }
 
 const sx = {

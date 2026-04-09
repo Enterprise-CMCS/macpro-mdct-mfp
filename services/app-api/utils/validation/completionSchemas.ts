@@ -1,15 +1,11 @@
-import {
-  array,
-  boolean,
-  mixed,
-  object,
-  string,
-  number as yupNumber,
-} from "yup";
-// types
-import { Choice, TextOptions } from "../types";
+import { mixed, string, number as yupNumber } from "yup";
 // utils
-import { schemaMap } from "./schemaMap";
+import {
+  endDate as schamaMapEndDate,
+  isEndDateAfterStartDate as schamaMapIsEndDateAfterStartDate,
+  nested as schamaMapEndDateNested,
+  schemaMap,
+} from "./schemaMap";
 
 export const error = {
   REQUIRED_GENERIC: "A response is required",
@@ -28,34 +24,12 @@ export const error = {
 
 // TEXT - Helpers
 const isWhitespaceString = (value?: string) => value?.trim().length === 0;
-const isWithinMaxLength = (value: string = "", maxLength?: number) => {
-  return maxLength ? value.length <= maxLength : true;
-};
-
-// TEXT
-const textSchema = (options: TextOptions = {}) =>
-  string()
-    .typeError(error.INVALID_GENERIC)
-    .test({
-      test: (value) => !isWhitespaceString(value),
-      message: error.REQUIRED_GENERIC,
-    })
-    .test({
-      test: (value) => isWithinMaxLength(value, options?.maxLength),
-      message: error.INVALID_LENGTH,
-    });
-
-export const text = () => textSchema().required();
-export const textOptional = () => textSchema().notRequired().nullable();
-export const textCustom = (options: TextOptions) =>
-  textSchema(options).required();
 
 // NUMBER - Helpers
 const validNAValues = ["N/A", "Data not available"];
 
 /** This regex must be at least as permissive as the one in ui-src */
 const validNumberRegex = /^\.$|[0-9]/;
-
 const validIntegerRegex = /^[0-9\s,]+$/;
 
 // NUMBER - Number or Valid Strings
@@ -125,7 +99,7 @@ export const ratio = () =>
   mixed()
     .test({
       message: error.REQUIRED_GENERIC,
-      test: (val) => val != "",
+      test: (val) => val !== "",
     })
     .required(error.REQUIRED_GENERIC)
     .test({
@@ -161,132 +135,46 @@ export const ratio = () =>
       },
     });
 
-// EMAIL
-
-export const email = () => textSchema().email(error.INVALID_EMAIL).required();
-export const emailOptional = () =>
-  textSchema().email(error.INVALID_EMAIL).notRequired().nullable();
-
-// URL
-export const url = () => textSchema().url(error.INVALID_URL).required();
-export const urlOptional = () =>
-  textSchema().url(error.INVALID_URL).notRequired().nullable();
-
 // DATE
-const dateSchema = () =>
-  string()
-    .matches(dateFormatRegex, error.INVALID_DATE)
-    .test({
-      message: error.REQUIRED_GENERIC,
-      test: (value) => !isWhitespaceString(value),
-    });
-
-export const date = () => dateSchema().required(error.REQUIRED_GENERIC);
-export const dateOptional = () => dateSchema().notRequired().nullable();
-
 export const endDate = (startDateField: string) =>
-  date()
-    .typeError(error.INVALID_DATE)
-    .test({
-      message: error.INVALID_END_DATE,
-      test: (endDateString, context) => {
-        return isEndDateAfterStartDate(
-          context.parent[startDateField],
-          endDateString as string
-        );
-      },
-    });
-
+  schamaMapEndDate(startDateField);
 export const isEndDateAfterStartDate = (
-  startDateString: string,
+  startDateField: string,
   endDateString: string
-) => {
-  const startDate = new Date(startDateString);
-  const endDate = new Date(endDateString!);
-  return endDate >= startDate;
-};
-
-// DROPDOWN
-export const dropdown = () =>
-  object({ label: textSchema(), value: textSchema() }).required(
-    error.REQUIRED_GENERIC
-  );
-
-// CHECKBOX
-const checkboxSchema = () =>
-  array()
-    .of(object({ key: text(), value: text() }))
-    .required(error.REQUIRED_GENERIC);
-export const checkbox = () =>
-  checkboxSchema()
-    .min(1, error.REQUIRED_GENERIC)
-    .required(error.REQUIRED_GENERIC);
-export const checkboxOptional = () =>
-  checkboxSchema().min(0, error.REQUIRED_GENERIC).notRequired().nullable();
-export const checkboxSingle = () => boolean();
-
-// RADIO
-const radioSchema = () =>
-  array()
-    .of(object({ key: textSchema(), value: textSchema() }))
-    .min(0);
-
-export const radio = () =>
-  radioSchema().min(1, error.REQUIRED_GENERIC).required();
-export const radioOptional = () => radioSchema().notRequired().nullable();
+) => schamaMapIsEndDateAfterStartDate(startDateField, endDateString);
 
 // NESTED
 export const nested = (
   fieldSchema: Function,
   parentFieldName: string,
   parentOptionId: string
-) => {
-  const fieldTypeMap = {
-    array: array(),
-    string: string(),
-    date: dateSchema(),
-    object: object(),
-  };
-  const fieldType: keyof typeof fieldTypeMap = fieldSchema().type;
-  const baseSchema: any = fieldTypeMap[fieldType];
-  return baseSchema.when(
-    parentFieldName,
-    (value: Choice[]) =>
-      // look for parentOptionId in checked choices
-      value?.find((option: Choice) => option.key.endsWith(parentOptionId))
-        ? fieldSchema() // returns standard field schema (required)
-        : baseSchema // returns not-required Yup base schema
-  );
-};
-
-// REGEX
-export const dateFormatRegex =
-  /^((0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2})|((0[1-9]|1[0-2])(0[1-9]|1\d|2\d|3[01])(19|20)\d{2})$/;
+) => schamaMapEndDateNested(fieldSchema, parentFieldName, parentOptionId);
 
 // SCHEMA MAP
 export const completionSchemaMap: any = {
-  checkbox: checkbox(),
-  checkboxOptional: checkboxOptional(),
-  checkboxSingle: checkboxSingle(),
-  date: date(),
-  dateOptional: dateOptional(),
-  dropdown: dropdown(),
+  checkbox: schemaMap.checkbox,
+  checkboxOptional: schemaMap.checkboxOptional,
+  checkboxSingle: schemaMap.checkboxSingle,
+  date: schemaMap.date,
+  dateOptional: schemaMap.dateOptional,
+  dropdown: schemaMap.dropdown,
   dynamic: schemaMap.dynamic,
   dynamicOptional: schemaMap.dynamicOptional,
-  email: email(),
-  emailOptional: emailOptional(),
+  email: schemaMap.email,
+  emailOptional: schemaMap.emailOptional,
   number: number(),
   numberComparison: schemaMap.numberComparison,
   numberComparisonOptional: schemaMap.numberComparisonOptional,
   numberOptional: numberOptional(),
+  radio: schemaMap.radio,
+  radioOptional: schemaMap.radioOptional,
   ratio: ratio(),
-  text: text(),
-  textCustom: (options: TextOptions) => textCustom(options),
-  textOptional: textOptional(),
-  radio: radio(),
-  radioOptional: radioOptional(),
-  url: url(),
-  urlOptional: urlOptional(),
+  text: schemaMap.text,
+  textCustom: schemaMap.textCustom,
+  textCustomOptional: schemaMap.textCustomOptional,
+  textOptional: schemaMap.textOptional,
+  url: schemaMap.url,
+  urlOptional: schemaMap.urlOptional,
   validInteger: validInteger(),
   validIntegerOptional: validIntegerOptional(),
 };

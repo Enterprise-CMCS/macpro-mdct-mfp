@@ -6,6 +6,7 @@ import {
   isFieldElement,
   FieldChoice,
   ReportFormFieldType,
+  PageTypes,
 } from "types";
 import {
   useStore,
@@ -65,7 +66,7 @@ export const renderFieldTableBody = (
       />
     );
     // for drawer pages, render nested child field if any entity has a checked parent choice
-    if (pageType === "drawer") {
+    if (pageType === PageTypes.DRAWER) {
       return;
     }
 

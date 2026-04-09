@@ -29,6 +29,7 @@ import {
   FormLayoutElement,
   ModalOverlayReportPageVerbiage,
   OverlayModalPageShape,
+  PageTypes,
   ReportJson,
   ReportRoute,
   ReportType,
@@ -340,7 +341,7 @@ describe("Test compileValidationJsonFromRoutes", () => {
 
   it("Compiles validation from dynamicModalOverlay pages", () => {
     const dynamicModalOverlayRoute: DynamicModalOverlayReportPageShape = {
-      pageType: "dynamicModalOverlay",
+      pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
       name: "mock name",
       path: "mock/path",
       entityType: "initiative",

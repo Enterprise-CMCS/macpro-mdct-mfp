@@ -73,7 +73,7 @@ export const fillWorkPlan = (
   year: number,
   period: number
 ): SeedFillReportShape => {
-  let data = {
+  const data = {
     metadata: {
       lastAlteredBy: faker.person.fullName(),
       status: ReportStatus.IN_PROGRESS,
@@ -92,28 +92,30 @@ export const fillWorkPlan = (
         },
       ],
       initiative: addInitiative(flags, year, period),
-      strategy_additionalDetails: faker.lorem.sentence(),
-      strategy_explaination: faker.lorem.sentence(),
       targetPopulations: updateTargetPopulations(year, period),
     },
   };
 
-  if (flags.wpSarRelease2025) {
-    // Removed fields
-    // oxlint-disable-next-line no-unused-vars
-    const { strategy_additionalDetails, strategy_explaination, ...rest } =
-      data.fieldData;
+  let flaggedData = {};
 
-    data = {
-      ...data,
-      fieldData: {
-        ...rest,
-        strategy_explanation: faker.lorem.sentence(),
-      } as any,
+  if (flags.wpSarRelease2025) {
+    flaggedData = {
+      strategy_explanation: faker.lorem.sentence(),
+    };
+  } else {
+    flaggedData = {
+      strategy_additionalDetails: faker.lorem.sentence(),
+      strategy_explaination: faker.lorem.sentence(),
     };
   }
 
-  return data;
+  return {
+    ...data,
+    fieldData: {
+      ...data.fieldData,
+      ...flaggedData,
+    },
+  };
 };
 
 const addEvaluationPlan = (
@@ -173,6 +175,21 @@ const addInitiative = (
     },
   ];
 
+  const initativeWorkPlanTopics = [
+    {
+      key: "initiative_wpTopic-VjQ0OFqior9Dxu5RRNiZ5u",
+      value: "Transitions and transition coordination services*",
+    },
+    {
+      key: "initiative_wpTopic-wbUsMMqVP7q1n10szK5h5S",
+      value: "Housing-related supports*",
+    },
+    {
+      key: "initiative_wpTopic-SdaFlF3DJyzKcHCCu3Zylm",
+      value: "Quality measurement and improvement*",
+    },
+  ];
+
   let flaggedData = {};
 
   if (flags.wpSarRelease2025) {
@@ -183,38 +200,18 @@ const addInitiative = (
           name: faker.word.noun(),
         },
       ],
-      defineInitiative_startDateExpectedOrActual: [
+    };
+  } else {
+    flaggedData = {
+      defineInitiative_projectedEndDate_value: "",
+      defineInitiative_projectedEndDate: [
         {
-          key: "defineInitiative_startDateExpectedOrActual_gEZeX7wqIBgNECJWohPPGJ",
-          value: "Actual",
+          key: "defineInitiative_projectedEndDate-TR6HoXF3Unf2QX0zzDg2Kp",
+          value: "No",
         },
       ],
-    };
-  }
-
-  const createInitiative = () => ({
-    id: crypto.randomUUID(),
-    defineInitiative_describeInitiative: faker.lorem.sentence(),
-    defineInitiative_projectedEndDate_value: "",
-    defineInitiative_projectedEndDate: [
-      {
-        key: "defineInitiative_projectedEndDate-TR6HoXF3Unf2QX0zzDg2Kp",
-        value: "No",
-      },
-    ],
-    defineInitiative_targetPopulations: initiativeTargetPopulations,
-    defineInitiative_projectedStartDate: dateFormat.format(faker.date.past()),
-    evaluationPlan: addEvaluationPlan(year, period),
-    initiative_name: faker.music.songName(),
-    initiative_wp_otherTopic: "",
-    isOtherEntity: true,
-    type: "initiative",
-    ...flaggedData,
-  });
-
-  return [
-    {
-      ...createInitiative(),
+      defineInitiative_projectedStartDate: dateFormat.format(faker.date.past()),
+      evaluationPlan: addEvaluationPlan(year, period, 2),
       fundingSources: [
         {
           id: crypto.randomUUID(),
@@ -234,97 +231,24 @@ const addInitiative = (
           ),
         },
       ],
-      initiative_wpTopic: [
-        {
-          key: "initiative_wpTopic-VjQ0OFqior9Dxu5RRNiZ5u",
-          value: "Transitions and transition coordination services*",
-        },
-      ],
-    },
-    {
-      ...createInitiative(),
-      defineInitiative_projectedEndDate: [
-        {
-          key: "defineInitiative_projectedEndDate-WNsSaAHeDvRD2Pjkz6DcOE",
-          value: "Yes",
-        },
-      ],
-      defineInitiative_projectedEndDate_value: dateFormat.format(
-        faker.date.future()
-      ),
-      evaluationPlan: addEvaluationPlan(year, period, 2),
-      fundingSources: [
-        {
-          id: crypto.randomUUID(),
-          fundingSources_wpTopic: [
-            {
-              key: "fundingSources_wpTopic-2VLpZ9A92OivbZhKvY8pE4hB65c",
-              value:
-                "MFP cooperative agreement funds for qualified HCBS and demonstration services",
-            },
-          ],
-          initiative_wp_otherTopic: "",
-          ...quarterlyKeyValueGenerator(
-            year,
-            period,
-            "fundingSources_quarters",
-            "float"
-          ),
-        },
-        {
-          id: crypto.randomUUID(),
-          fundingSources_wpTopic: [
-            {
-              key: "fundingSources_wpTopic-2VLpZCRWieGr1Z49QX5Aqc",
-              value:
-                "State or territory equivalent funds attributable to the MFP-enhanced match",
-            },
-          ],
-          initiative_wp_otherTopic: "",
-          ...quarterlyKeyValueGenerator(
-            year,
-            period,
-            "fundingSources_quarters",
-            "float"
-          ),
-        },
-      ],
-      initiative_wpTopic: [
-        {
-          key: "initiative_wpTopic-wbUsMMqVP7q1n10szK5h5S",
-          value: "Housing-related supports*",
-        },
-      ],
-    },
-    {
-      ...createInitiative(),
-      fundingSources: [
-        {
-          id: crypto.randomUUID(),
-          fundingSources_wpTopic: [
-            {
-              key: "fundingSources_wpTopic-2VLpZDJ9qaKKOk78ztBdiB",
-              value:
-                "MFP cooperative agreement funds for capacity-building initiatives",
-            },
-          ],
-          initiative_wp_otherTopic: "",
-          ...quarterlyKeyValueGenerator(
-            year,
-            period,
-            "fundingSources_quarters",
-            "float"
-          ),
-        },
-      ],
-      initiative_wpTopic: [
-        {
-          key: "initiative_wpTopic-SdaFlF3DJyzKcHCCu3Zylm",
-          value: "Quality measurement and improvement*",
-        },
-      ],
-    },
-  ];
+    };
+  }
+
+  const createInitiative = (index: number) => ({
+    id: crypto.randomUUID(),
+    defineInitiative_describeInitiative: faker.lorem.sentence(),
+    defineInitiative_targetPopulations: initiativeTargetPopulations,
+    initiative_name: faker.music.songName(),
+    initiative_wp_otherTopic: "",
+    isOtherEntity: true,
+    initiative_wpTopic: [initativeWorkPlanTopics[index]],
+    type: "initiative",
+    ...flaggedData,
+  });
+
+  return Array.from({ length: 3 }).map((_, index: number) =>
+    createInitiative(index)
+  );
 };
 
 const updateTargetPopulations = (

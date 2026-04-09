@@ -134,8 +134,9 @@ export const demonstrationServicesRoute: FormTablesRoute = {
         type: ReportFormFieldType.TEXTAREA,
         validation: ValidationType.TEXT_OPTIONAL,
         props: {
-          label: "Additional notes/comments (optional)",
+          label: "Additional notes/comments",
           hint: "If applicable, add any notes or comments to provide additional explanation.",
+          styleAsOptional: true,
           title: "Narrative",
         },
       },

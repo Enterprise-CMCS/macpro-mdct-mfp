@@ -10,6 +10,7 @@ import {
   ReportType,
   ReportStatus,
   HeadingLevel,
+  PageTypes,
 } from "types";
 // utils
 import { getReportVerbiage, useStore } from "utils";
@@ -30,7 +31,7 @@ export const ExportedReportFieldTable = ({
   const { tableHeaders } = exportVerbiage;
   const pageType = section.pageType || "";
   const formFields =
-    (pageType === "drawer"
+    (pageType === PageTypes.DRAWER
       ? section.drawerForm?.fields
       : section.form?.fields) || [];
 
@@ -182,7 +183,6 @@ export const renderGeneralInformation = (
     );
   });
 };
-
 export interface Props {
   section: StandardReportPageShape | DrawerReportPageShape;
   showHintText?: boolean;

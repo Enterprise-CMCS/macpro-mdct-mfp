@@ -11,6 +11,7 @@ import {
   FormLayoutElement,
   FormTemplateVersion,
   OverlayModalPageShape,
+  PageTypes,
   ReportJson,
   ReportJsonFile,
   ReportRoute,
@@ -208,10 +209,10 @@ export const compileValidationJsonFromRoutes = (
   routeArray.forEach((route: ReportRoute) => {
     // check for non-standard needed validation objects
     if (
-      (route.pageType === "modalDrawer" ||
-        route.pageType === "modalOverlay" ||
-        route.pageType === "overlayModal" ||
-        route.pageType === "dynamicModalOverlay") &&
+      (route.pageType === PageTypes.MODAL_DRAWER ||
+        route.pageType === PageTypes.MODAL_OVERLAY ||
+        route.pageType === PageTypes.OVERLAY_MODAL ||
+        route.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY) &&
       route.entityType
     ) {
       Object.assign(validationSchema, { [route.entityType]: "objectArray" });
@@ -224,14 +225,14 @@ export const compileValidationJsonFromRoutes = (
     }
 
     // accumulate entity steps
-    if (route.pageType === "modalOverlay") {
+    if (route.pageType === PageTypes.MODAL_OVERLAY) {
       for (let step of route.entitySteps ?? []) {
         const stepForm = step.form || step.modalForm;
         addValidationToAccumulator(stepForm);
       }
     }
 
-    if (route.pageType === "dynamicModalOverlay") {
+    if (route.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY) {
       for (let initiative of route.initiatives ?? []) {
         for (let step of initiative.entitySteps) {
           const stepForm = step.form || step.modalForm;
