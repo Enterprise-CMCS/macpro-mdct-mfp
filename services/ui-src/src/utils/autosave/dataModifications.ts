@@ -166,6 +166,8 @@ export const updatedNumberFields = (
         fieldId
       );
 
+      //console.log("serviceTables", serviceTables);
+
       const aggregateFields = [
         ["serviceTotals", serviceTables],
         ["allTotals", allTables],

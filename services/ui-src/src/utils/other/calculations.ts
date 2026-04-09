@@ -148,10 +148,8 @@ export const calculateAggregateTotals = (
   }
 
   const serviceTableIds = [
-    "qualifiedHcbs_statePlanServices",
-    "qualifiedHcbs_1915cWaiverServices",
-    "demonstrationServices_statePlanServices",
-    "demonstrationServices_1915cWaiverServices",
+    "qualifiedHcbs_services",
+    "demonstrationServices_services",
     "supplementalServices_category",
   ];
 
@@ -173,16 +171,46 @@ export const calculateAggregateTotals = (
 
     // if the changed field id is not part of the table ids, keep existing values
     const isTableField = tableIds.includes(fieldIdPrefix);
+    console.log("isTableField", isTableField);
+    console.log("tableIds", tableIds);
     for (const key of keys) {
       const suffix = fieldSuffixesToCalculate[key];
       const relevantTableIds = isTableField
         ? tableIds.filter((t) => t !== tableId)
         : tableIds;
-      const totalCents = relevantTableIds.reduce(
-        (sum, id) =>
-          sum + toCents(getNumberValue(fieldData[`${id}-${suffix}`])),
-        0
-      );
+      const totalCents = relevantTableIds.reduce((sum, id) => {
+        let tableTotal = 0;
+        //console.log("hello");
+        if (id === "qualifiedHcbs_services") {
+          tableTotal =
+            toCents(
+              getNumberValue(
+                fieldData[`qualifiedHcbs_statePlanServices-${suffix}`]
+              )
+            ) +
+            toCents(
+              getNumberValue(
+                fieldData[`qualifiedHcbs_1915cWaiverServices-${suffix}`]
+              )
+            );
+          //console.log("qualifiedHcbs_services totalCents", tableTotal);
+        } else if (id === "demonstrationServices_services") {
+          tableTotal =
+            toCents(
+              getNumberValue(
+                fieldData[`demonstrationServices_statePlanServices-${suffix}`]
+              )
+            ) +
+            toCents(
+              getNumberValue(
+                fieldData[`demonstrationServices_1915cWaiverServices-${suffix}`]
+              )
+            );
+        } else {
+          tableTotal = toCents(getNumberValue(fieldData[`${id}-${suffix}`]));
+        }
+        return sum + tableTotal;
+      }, 0);
       const extra = isTableField
         ? toCents(getNumberValue(tableShares[key]))
         : 0;
@@ -232,6 +260,8 @@ export const fieldTableTotals = ({
     tableId,
     tableShares
   );
+
+  console.log("serviceTables", serviceTables);
 
   return {
     field: fieldShares,

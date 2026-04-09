@@ -5,9 +5,14 @@ import {
   FormLayoutElement,
   isFieldElement,
   FieldChoice,
-  FormTableType,
+  ReportFormFieldType,
 } from "types";
-import { useStore, parseCustomHtml } from "utils";
+import {
+  useStore,
+  parseCustomHtml,
+  maskResponseData,
+  getFieldParts,
+} from "utils";
 import { ExportedReportFieldRow, Table } from "components";
 import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
 
@@ -17,19 +22,14 @@ export const renderServiceTableBody = (bodyRows: any, headRow: string[]) => {
     const rowData = headRow.map((header, index) => {
       const field = row[index];
       if (field?.id) {
-        const fieldDataValue = report?.fieldData[field.id];
-        if (header === "Total Computable") {
-          return fieldDataValue ? `$ ${fieldDataValue}` : "Not answered";
-        } else if (header === "Override %") {
-          return fieldDataValue ? `${fieldDataValue} %` : "0 %";
-        } else if (
-          header === "# of Budgeted FTEs" ||
-          header === "# of Filled FTEs"
-        ) {
-          return fieldDataValue ? `${fieldDataValue}` : "0";
-        } else {
-          return fieldDataValue ? `$ ${fieldDataValue}` : "$ 0";
+        const fieldDataValue =
+          report?.fieldData[field.id] ?? field.props.initialValue;
+        if (field.type === ReportFormFieldType.NUMBER) {
+          return fieldDataValue
+            ? maskResponseData(fieldDataValue, field.props.mask)
+            : "Not answered";
         }
+        return fieldDataValue ?? "Not answered";
       }
       return field;
     });
@@ -88,38 +88,30 @@ export const renderCalculationTables = (
   fieldData: any,
   formPercentage: number
 ) => {
-  const calculationTables =
-    section.form?.tables?.filter(
-      (table: any) => table.tableType === FormTableType.CALCULATION
-    ) || [];
+  const calculationTables = section.form?.tables || [];
   return calculationTables.map((table: any) => {
-    const tableTitle = table.verbiage?.title;
     const headRow = table.headRows[0];
 
-    let bodyRows;
-    if (tableTitle === "Sub Recipients" || tableTitle === "Personnel") {
-      const dynamicData = fieldData[table.dynamicRowsTemplate.id] || [];
-      bodyRows = dynamicData.map((item: any) => {
-        if (tableTitle === "Sub Recipients") {
-          return [
-            item.name,
-            item.description,
-            item.totalComputable,
-            item.percentageOverride,
-            item.totalStateTerritoryShare,
-          ];
-        } else {
-          // Personnel
-          return [
-            item.title,
-            item.budgetedFullTimeEmployees,
-            item.filledFullTimeEmployees,
-          ];
+    const dynamicData = fieldData[table.dynamicRowsTemplate?.id] || [];
+    const dynamicBodyRows = dynamicData.map((item: any) => {
+      return table.dynamicRowsTemplate.props.dynamicFields.map((f: any) => {
+        const { fieldType } = getFieldParts(f.id);
+
+        // This puts Misc Costs: or Other: before the value
+        const dynamicLabel = f.props.dynamicLabel;
+        let fieldValue = item[fieldType];
+
+        // Number needs to be masked
+        if (f.type === ReportFormFieldType.NUMBER) {
+          fieldValue = maskResponseData(fieldValue, f.props.mask);
         }
+        return dynamicLabel ? `${dynamicLabel} ${fieldValue}` : fieldValue;
       });
-    } else {
-      bodyRows = renderServiceTableBody(table.bodyRows, headRow);
-    }
+    });
+    const bodyRows = renderServiceTableBody(
+      [...table.bodyRows, ...dynamicBodyRows],
+      headRow
+    );
 
     const footerRow = renderServiceTableBody(table.footRows, headRow);
 

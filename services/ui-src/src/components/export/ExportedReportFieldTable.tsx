@@ -10,7 +10,6 @@ import {
   ReportType,
   ReportStatus,
   HeadingLevel,
-  FormTableType,
 } from "types";
 // utils
 import { getReportVerbiage, useStore } from "utils";
@@ -56,10 +55,7 @@ export const ExportedReportFieldTable = ({
   const percentageField = `fmap_${formId}Percentage`;
   const formPercentage = fieldData?.[percentageField] || 100;
 
-  const calculationTables =
-    section.form?.tables?.filter(
-      (table) => table.tableType === FormTableType.CALCULATION
-    ) || [];
+  const calculationTables = section.form?.tables || [];
 
   // SAR "General Information" section layout is a unique case with multiple section headings within the same page
   if (reportType === ReportType.SAR && section.name === "General Information") {
@@ -81,29 +77,30 @@ export const ExportedReportFieldTable = ({
     <>
       {calculationTables.length > 0 &&
         renderCalculationTables(section, fieldData, formPercentage)}
-
-      <>
-        {nonTableFields?.[0]?.props?.title && (
-          <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
-            {nonTableFields[0].props.title}
-          </Heading>
-        )}
-        <Table
-          sx={sx.table}
-          className={formHasOnlyDynamicFields ? "two-column" : ""}
-          content={{
-            headRow: headRowItems,
-          }}
-          data-testid="exportTable"
-        >
-          {renderFieldTableBody(
-            nonTableFields,
-            pageType,
-            !hideHintText,
-            entityType
+      {nonTableFields.length > 0 && (
+        <>
+          {nonTableFields?.[0]?.props?.title && (
+            <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
+              {nonTableFields[0].props.title}
+            </Heading>
           )}
-        </Table>
-      </>
+          <Table
+            sx={sx.table}
+            className={formHasOnlyDynamicFields ? "two-column" : ""}
+            content={{
+              headRow: headRowItems,
+            }}
+            data-testid="exportTable"
+          >
+            {renderFieldTableBody(
+              nonTableFields,
+              pageType,
+              !hideHintText,
+              entityType
+            )}
+          </Table>
+        </>
+      )}
     </>
   );
 };
