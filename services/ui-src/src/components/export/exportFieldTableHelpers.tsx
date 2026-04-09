@@ -165,6 +165,8 @@ export const sx = {
   table: sxSharedExportStyles.table,
   serviceTable: {
     "& th, & td": {
+      paddingTop: "1rem",
+      paddingBottom: "1rem",
       paddingRight: "0.5rem",
     },
     "& th:not(:first-of-type), & td:not(:first-of-type)": {
