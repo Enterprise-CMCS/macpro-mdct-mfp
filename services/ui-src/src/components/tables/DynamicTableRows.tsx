@@ -42,6 +42,7 @@ export const DynamicTableRows = ({
   // Add rows from fieldData
   useEffect(() => {
     const rows = localFieldData?.[dynamicRowsTemplate.id];
+    console.log("rows", rows);
     if (rows) {
       setLocalDynamicRows((prev: DynamicFieldShape[]) => {
         const diff = rows.length - prev.length;

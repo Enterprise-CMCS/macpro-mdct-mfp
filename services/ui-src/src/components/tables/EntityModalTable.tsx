@@ -40,6 +40,8 @@ export const EntityModalTable = ({
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
+  const currentEntity = formData?.id;
+
   const {
     isOpen: keyMetricsModalIsOpen,
     onOpen: keyMetricsModalOnOpenHandler,
@@ -160,6 +162,7 @@ export const EntityModalTable = ({
               isOpen: keyMetricsModalIsOpen,
               onClose: closeModal,
             }}
+            currentEntity={currentEntity}
             selectedId={selectedId}
             report={report}
             tableId={tableId}

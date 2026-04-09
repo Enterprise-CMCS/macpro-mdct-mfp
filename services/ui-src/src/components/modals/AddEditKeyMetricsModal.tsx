@@ -20,6 +20,7 @@ export const AddEditKeyMetricsModal = ({
   modalDisclosure,
   report,
   selectedId,
+  currentEntity,
   userIsAdmin = false,
 }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -83,19 +84,44 @@ export const AddEditKeyMetricsModal = ({
       templateFieldData.push(updatedField);
     }
 
+    if (report) {
+      const currentInitiativeIndex = report?.fieldData.initiative.findIndex(
+        (init: any) => {
+          return init.id === currentEntity;
+        }
+      );
+
+      var targetInitiative =
+        report?.fieldData.initiative[currentInitiativeIndex];
+
+      // check if this is the first Key Metric being added to Initiative
+      if (!Object.hasOwn(targetInitiative, dynamicTemplateId)) {
+        const keyMetrics = [updatedField];
+        targetInitiative = {
+          ...targetInitiative,
+          [dynamicTemplateId]: keyMetrics,
+        };
+        // if not, push new key metric to existing array
+      } else {
+        targetInitiative[dynamicTemplateId].push(updatedField);
+      }
+
+      report.fieldData.initiative[currentInitiativeIndex] = targetInitiative;
+    }
+
     const reportKeys = {
       reportType: report?.reportType,
       state: report?.state,
       id: report?.id,
     };
+
     const dataToWrite = {
       ...report,
       fieldData: {
         ...report?.fieldData,
-        [dynamicTemplateId]: templateFieldData,
       },
     };
-    // console.log("writing", dataToWrite);
+
     await updateReport(reportKeys, dataToWrite);
 
     setFormData({});
@@ -151,6 +177,7 @@ interface Props {
     isOpen: boolean;
     onClose: any;
   };
+  currentEntity: string;
   report?: ReportShape;
   selectedId?: string;
   tableId: string;
