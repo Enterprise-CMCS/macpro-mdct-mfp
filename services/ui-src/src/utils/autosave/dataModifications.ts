@@ -167,17 +167,6 @@ export const updatedNumberFields = (
         allTables,
       } = calculateAggregateTotals(updatedFieldData, fieldMap, fieldId);
 
-      console.log(
-        "qualified table totals in updated number fields",
-        qualifiedHcbsServicesTotal
-      );
-      console.log(
-        "demonstration table totals in updated number fields",
-        demonstrationServicesTotal
-      );
-      console.log("service tables in updated number fields", serviceTables);
-      console.log("all tables in updated number fields", allTables);
-
       const aggregateFields = [
         ["qualifiedHcbsTotals", qualifiedHcbsServicesTotal],
         ["demonstrationServicesTotals", demonstrationServicesTotal],
@@ -190,9 +179,7 @@ export const updatedNumberFields = (
           value: tableValues[key as keyof typeof tableValues],
         }))
       );
-      console.log("fields to map in updated number fields", fields);
-      console.log("updated fields in updated number fields", updatedFields);
-      console.log("aggregate fields in updated number fields", aggregateFields);
+
       return [...fields, ...updatedFields, ...aggregateFields];
     }
 

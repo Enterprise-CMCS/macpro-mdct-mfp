@@ -186,7 +186,6 @@ export const calculateAggregateTotals = (
   >;
 
   const calculateForTableIds = (tableIds: string[]) => {
-    console.log("table ids for totals calculation", tableIds);
     const result = {} as CalculatedSharesType;
 
     const { tableId: fieldIdPrefix } = getFieldParts(fieldId);
@@ -266,17 +265,6 @@ export const fieldTableTotals = ({
     tableShares
   );
 
-  console.log(
-    "qualified table totals in updated number fields",
-    qualifiedHcbsServicesTotal
-  );
-  console.log(
-    "demonstration table totals in updated number fields",
-    demonstrationServicesTotal
-  );
-  console.log("service tables in updated number fields", serviceTables);
-  console.log("all tables in updated number fields", allTables);
-
   return {
     field: fieldShares,
     table: tableShares,
@@ -338,17 +326,6 @@ export const dynamicFieldTableTotals = ({
     dynamicFieldId,
     tableId
   );
-
-  console.log(
-    "qualified table totals in updated number fields",
-    qualifiedHcbsServicesTotal
-  );
-  console.log(
-    "demonstration table totals in updated number fields",
-    demonstrationServicesTotal
-  );
-  console.log("service tables in updated number fields", serviceTables);
-  console.log("all tables in updated number fields", allTables);
 
   return {
     field: fieldShares,
