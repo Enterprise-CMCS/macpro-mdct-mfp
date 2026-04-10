@@ -324,7 +324,8 @@ export const dynamicFieldTableTotals = ({
     fieldData,
     fieldSuffixesToCalculate,
     dynamicFieldId,
-    tableId
+    tableId,
+    tableShares
   );
 
   return {
