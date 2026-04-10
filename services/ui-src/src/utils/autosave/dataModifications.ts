@@ -160,13 +160,16 @@ export const updatedNumberFields = (
         remainingShare: "totalStateTerritoryShare",
       };
 
-      const { serviceTables, allTables } = calculateAggregateTotals(
-        updatedFieldData,
-        fieldMap,
-        fieldId
-      );
+      const {
+        qualifiedHcbsServicesTotal,
+        demonstrationServicesTotal,
+        serviceTables,
+        allTables,
+      } = calculateAggregateTotals(updatedFieldData, fieldMap, fieldId);
 
       const aggregateFields = [
+        ["qualifiedHcbsTotals", qualifiedHcbsServicesTotal],
+        ["demonstrationServicesTotals", demonstrationServicesTotal],
         ["serviceTotals", serviceTables],
         ["allTotals", allTables],
       ].flatMap(([tableName, tableValues]) =>

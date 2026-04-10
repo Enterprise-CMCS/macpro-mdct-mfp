@@ -75,16 +75,23 @@ export const calculationTableDynamicTotalsOnSave = ({
     percentage = percentageOverride || formPercentage;
   }
 
-  const { field, table, template, serviceTables, allTables } =
-    dynamicFieldTableTotals({
-      dynamicFieldId,
-      dynamicTemplateId,
-      fieldData,
-      fieldSuffixesToCalculate: calculationTableSuffixes,
-      fieldValue,
-      percentage,
-      tableId,
-    });
+  const {
+    field,
+    table,
+    template,
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
+  } = dynamicFieldTableTotals({
+    dynamicFieldId,
+    dynamicTemplateId,
+    fieldData,
+    fieldSuffixesToCalculate: calculationTableSuffixes,
+    fieldValue,
+    percentage,
+    tableId,
+  });
 
   const updatedField = {
     id: dynamicFieldId,
@@ -120,6 +127,16 @@ export const calculationTableDynamicTotalsOnSave = ({
     ...updatedFieldInfo<CalculatedSharesType>(fieldsToMap, table, tableId),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
+      qualifiedHcbsServicesTotal,
+      "totals_totalsSummary_qualifiedHcbsTotals"
+    ),
+    ...updatedFieldInfo<CalculatedSharesType>(
+      fieldsToMap,
+      demonstrationServicesTotal,
+      "totals_totalsSummary_demonstrationServicesTotals"
+    ),
+    ...updatedFieldInfo<CalculatedSharesType>(
+      fieldsToMap,
       serviceTables,
       "totals_totalsSummary_serviceTotals"
     ),
@@ -146,7 +163,14 @@ export const calculationTableTotalsOnSave = ({
     calculationTableSuffixes
   );
 
-  const { field, table, serviceTables, allTables } = fieldTableTotals({
+  const {
+    field,
+    table,
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
+  } = fieldTableTotals({
     fieldData,
     fieldId,
     fieldSuffixesToCalculate: calculationTableSuffixes,
@@ -158,6 +182,16 @@ export const calculationTableTotalsOnSave = ({
   const fieldsToSave = [
     ...updatedFieldInfo<CalculatedSharesType>(fieldsToMap, field, fieldId),
     ...updatedFieldInfo<CalculatedSharesType>(fieldsToMap, table, tableId),
+    ...updatedFieldInfo<CalculatedSharesType>(
+      fieldsToMap,
+      qualifiedHcbsServicesTotal,
+      "totals_totalsSummary_qualifiedHcbsTotals"
+    ),
+    ...updatedFieldInfo<CalculatedSharesType>(
+      fieldsToMap,
+      demonstrationServicesTotal,
+      "totals_totalsSummary_demonstrationServicesTotals"
+    ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
@@ -195,16 +229,23 @@ export const calculationTableDynamicTotalsOnChange = ({
     calculationTableSuffixes
   );
 
-  const { field, table, template, serviceTables, allTables } =
-    dynamicFieldTableTotals({
-      dynamicFieldId,
-      dynamicTemplateId,
-      fieldData,
-      fieldSuffixesToCalculate: calculationTableSuffixes,
-      fieldValue: fieldValue,
-      percentage,
-      tableId,
-    });
+  const {
+    field,
+    table,
+    template,
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
+  } = dynamicFieldTableTotals({
+    dynamicFieldId,
+    dynamicTemplateId,
+    fieldData,
+    fieldSuffixesToCalculate: calculationTableSuffixes,
+    fieldValue: fieldValue,
+    percentage,
+    tableId,
+  });
   const templateFieldData = [...(fieldData?.[dynamicTemplateId] || [])];
   const currentFieldIndex = templateFieldData.findIndex(
     (field: DynamicFieldShape) => field.id === dynamicFieldId
@@ -240,6 +281,16 @@ export const calculationTableDynamicTotalsOnChange = ({
     ...updatedFieldData<CalculatedSharesType>(fieldsToMap, table, tableId),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
+      qualifiedHcbsServicesTotal,
+      "totals_totalsSummary_qualifiedHcbsTotals"
+    ),
+    ...updatedFieldData<CalculatedSharesType>(
+      fieldsToMap,
+      demonstrationServicesTotal,
+      "totals_totalsSummary_demonstrationServicesTotals"
+    ),
+    ...updatedFieldData<CalculatedSharesType>(
+      fieldsToMap,
       serviceTables,
       "totals_totalsSummary_serviceTotals"
     ),
@@ -266,7 +317,14 @@ export const calculationTableTotalsOnChange = ({
     calculationTableSuffixes
   );
 
-  const { field, table, serviceTables, allTables } = fieldTableTotals({
+  const {
+    field,
+    table,
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
+  } = fieldTableTotals({
     fieldData,
     fieldId,
     fieldSuffixesToCalculate: calculationTableSuffixes,
@@ -279,6 +337,16 @@ export const calculationTableTotalsOnChange = ({
     ...fieldData,
     ...updatedFieldData<CalculatedSharesType>(fieldsToMap, field, fieldId),
     ...updatedFieldData<CalculatedSharesType>(fieldsToMap, table, tableId),
+    ...updatedFieldData<CalculatedSharesType>(
+      fieldsToMap,
+      qualifiedHcbsServicesTotal,
+      "totals_totalsSummary_qualifiedHcbsTotals"
+    ),
+    ...updatedFieldData<CalculatedSharesType>(
+      fieldsToMap,
+      demonstrationServicesTotal,
+      "totals_totalsSummary_demonstrationServicesTotals"
+    ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
