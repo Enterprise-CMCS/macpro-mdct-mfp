@@ -59,46 +59,44 @@ export const Table = ({
         {/* if children prop is passed, just render the children */}
         {children}
         {/* if content prop is passed, parse and render rows and cells */}
-        {content.bodyRows &&
-          content.bodyRows!.map((row: string[], index: number) => (
-            <Tr key={`${row[0]}${index}-body-row`}>
-              {row.map((cell: string, rowIndex: number) => (
-                <Td
-                  key={`${cell}${rowIndex}-body-cell`}
-                  sx={{
-                    tableCell: border ? sx.tableCellBorder : sx.tableCell,
-                    color: cell == notAnsweredText ? "error_darker" : "",
-                  }}
-                  aria-label={ariaOverride?.bodyRows?.[index][rowIndex]}
-                >
-                  {isValidElement(cell) ? cell : sanitizeAndParseHtml(cell)}
-                </Td>
-              ))}
-            </Tr>
-          ))}
+        {content.bodyRows?.map((row: string[], index: number) => (
+          <Tr key={`${row[0]}${index}-body-row`}>
+            {row.map((cell: string, rowIndex: number) => (
+              <Td
+                key={`${cell}${rowIndex}-body-cell`}
+                sx={{
+                  tableCell: border ? sx.tableCellBorder : sx.tableCell,
+                  color: cell == notAnsweredText ? "error_darker" : "",
+                }}
+                aria-label={ariaOverride?.bodyRows?.[index][rowIndex]}
+              >
+                {isValidElement(cell) ? cell : sanitizeAndParseHtml(cell)}
+              </Td>
+            ))}
+          </Tr>
+        ))}
       </Tbody>
       <Tfoot>
-        {content.footRow &&
-          content.footRow?.map((row: (string | ReactNode)[], index: number) => {
-            return (
-              <Tr key={`${row[0]}${index}-foot-row`}>
-                {row.map((headerCell: any, rowIndex: number) => {
-                  return (
-                    <Th
-                      key={`${rowIndex}-foot-cell`}
-                      scope="col"
-                      sx={{ ...sx.tableHeader, ...sxOverride }}
-                      aria-label={ariaOverride?.footRow?.[index][rowIndex]}
-                    >
-                      {isValidElement(headerCell)
-                        ? headerCell
-                        : sanitizeAndParseHtml(headerCell)}
-                    </Th>
-                  );
-                })}
-              </Tr>
-            );
-          })}
+        {content.footRow?.map((row: (string | ReactNode)[], index: number) => {
+          return (
+            <Tr key={`${row[0]}${index}-foot-row`}>
+              {row.map((headerCell: any, rowIndex: number) => {
+                return (
+                  <Th
+                    key={`${rowIndex}-foot-cell`}
+                    scope="col"
+                    sx={{ ...sx.tableHeader, ...sxOverride }}
+                    aria-label={ariaOverride?.footRow?.[index][rowIndex]}
+                  >
+                    {isValidElement(headerCell)
+                      ? headerCell
+                      : sanitizeAndParseHtml(headerCell)}
+                  </Th>
+                );
+              })}
+            </Tr>
+          );
+        })}
       </Tfoot>
     </TableRoot>
   );

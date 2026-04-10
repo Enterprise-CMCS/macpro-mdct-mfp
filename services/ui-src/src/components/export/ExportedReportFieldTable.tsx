@@ -73,12 +73,15 @@ export const ExportedReportFieldTable = ({
   const currentLevel = parseInt(headingLevel.charAt(1), 10);
   const nextLevel = currentLevel + 1;
   const nextHeadingLevel = `h${nextLevel}`;
+  const isTableWithNoFormFields =
+    calculationTables.length > 0 && nonTableFields.length === 0;
 
   return (
     <>
       {calculationTables.length > 0 &&
         renderCalculationTables(section, fieldData, formPercentage)}
-      {nonTableFields.length > 0 && (
+
+      {!isTableWithNoFormFields && (
         <>
           {nonTableFields?.[0]?.props?.title && (
             <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
@@ -93,12 +96,13 @@ export const ExportedReportFieldTable = ({
             }}
             data-testid="exportTable"
           >
-            {renderFieldTableBody(
-              nonTableFields,
-              pageType,
-              !hideHintText,
-              entityType
-            )}
+            {nonTableFields.length > 0 &&
+              renderFieldTableBody(
+                nonTableFields,
+                pageType,
+                !hideHintText,
+                entityType
+              )}
           </Table>
         </>
       )}
