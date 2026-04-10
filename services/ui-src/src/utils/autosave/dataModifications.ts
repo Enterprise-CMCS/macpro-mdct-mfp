@@ -160,13 +160,27 @@ export const updatedNumberFields = (
         remainingShare: "totalStateTerritoryShare",
       };
 
-      const { serviceTables, allTables } = calculateAggregateTotals(
-        updatedFieldData,
-        fieldMap,
-        fieldId
+      const {
+        qualifiedHcbsServicesTotal,
+        demonstrationServicesTotal,
+        serviceTables,
+        allTables,
+      } = calculateAggregateTotals(updatedFieldData, fieldMap, fieldId);
+
+      console.log(
+        "qualified table totals in updated number fields",
+        qualifiedHcbsServicesTotal
       );
+      console.log(
+        "demonstration table totals in updated number fields",
+        demonstrationServicesTotal
+      );
+      console.log("service tables in updated number fields", serviceTables);
+      console.log("all tables in updated number fields", allTables);
 
       const aggregateFields = [
+        ["qualifiedHcbs_services", qualifiedHcbsServicesTotal],
+        ["demonstrationServices_services", demonstrationServicesTotal],
         ["serviceTotals", serviceTables],
         ["allTotals", allTables],
       ].flatMap(([tableName, tableValues]) =>
