@@ -459,12 +459,12 @@ export const totalsSummaryHeaders = [
 // Totals summary just displays footer values from other tables using their field IDs
 export const totalsSummary = (prefix: string) => [
   {
-    id: `${prefix}_qualifiedHcbs_services`,
+    id: `${prefix}_qualifiedHcbsTotals`,
     label: "Qualified HCBS (State Plan & Waiver Services)",
     readOnly: true,
   },
   {
-    id: `${prefix}_demonstrationServices_services`,
+    id: `${prefix}_demonstrationServicesTotals`,
     label: "Demonstration Services (State Plan & Waiver Services)",
     readOnly: true,
   },

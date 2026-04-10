@@ -128,12 +128,12 @@ export const calculationTableDynamicTotalsOnSave = ({
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       qualifiedHcbsServicesTotal,
-      "totals_totalsSummary_qualifiedHcbs_services"
+      "totals_totalsSummary_qualifiedHcbsTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       demonstrationServicesTotal,
-      "totals_totalsSummary_demonstrationServices_services"
+      "totals_totalsSummary_demonstrationServicesTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
@@ -185,12 +185,12 @@ export const calculationTableTotalsOnSave = ({
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       qualifiedHcbsServicesTotal,
-      "totals_totalsSummary_qualifiedHcbs_services"
+      "totals_totalsSummary_qualifiedHcbsTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       demonstrationServicesTotal,
-      "totals_totalsSummary_demonstrationServices_services"
+      "totals_totalsSummary_demonstrationServicesTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
@@ -282,12 +282,12 @@ export const calculationTableDynamicTotalsOnChange = ({
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       qualifiedHcbsServicesTotal,
-      "totals_totalsSummary_qualifiedHcbs_services"
+      "totals_totalsSummary_qualifiedHcbsTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       demonstrationServicesTotal,
-      "totals_totalsSummary_demonstrationServices_services"
+      "totals_totalsSummary_demonstrationServicesTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
@@ -340,12 +340,12 @@ export const calculationTableTotalsOnChange = ({
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       qualifiedHcbsServicesTotal,
-      "totals_totalsSummary_qualifiedHcbs_services"
+      "totals_totalsSummary_qualifiedHcbsTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       demonstrationServicesTotal,
-      "totals_totalsSummary_demonstrationServices_services"
+      "totals_totalsSummary_demonstrationServicesTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,

@@ -179,8 +179,8 @@ export const updatedNumberFields = (
       console.log("all tables in updated number fields", allTables);
 
       const aggregateFields = [
-        ["qualifiedHcbs_services", qualifiedHcbsServicesTotal],
-        ["demonstrationServices_services", demonstrationServicesTotal],
+        ["qualifiedHcbsTotals", qualifiedHcbsServicesTotal],
+        ["demonstrationServicesTotals", demonstrationServicesTotal],
         ["serviceTotals", serviceTables],
         ["allTotals", allTables],
       ].flatMap(([tableName, tableValues]) =>
@@ -190,6 +190,9 @@ export const updatedNumberFields = (
           value: tableValues[key as keyof typeof tableValues],
         }))
       );
+      console.log("fields to map in updated number fields", fields);
+      console.log("updated fields in updated number fields", updatedFields);
+      console.log("aggregate fields in updated number fields", aggregateFields);
       return [...fields, ...updatedFields, ...aggregateFields];
     }
 
