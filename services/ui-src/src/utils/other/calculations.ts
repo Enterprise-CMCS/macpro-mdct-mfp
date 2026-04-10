@@ -152,6 +152,7 @@ export const calculateAggregateTotals = (
     "qualifiedHcbs_1915cWaiverServices",
     "demonstrationServices_statePlanServices",
     "demonstrationServices_1915cWaiverServices",
+    "supplementalServices_category",
   ];
 
   const allTableIds = [
