@@ -7,6 +7,7 @@ import {
   AnyObject,
   DynamicFieldShape,
   DynamicRowsTemplate,
+  entityTypes,
   FormField,
 } from "types";
 // assets
@@ -16,6 +17,7 @@ export const DynamicTableRows = ({
   disabled,
   dynamicRowsTemplate,
   emptyTableMessage,
+  entityType,
   formData,
   formPercentage,
   hasDynamicModalForm,
@@ -41,8 +43,11 @@ export const DynamicTableRows = ({
 
   // Add rows from fieldData
   useEffect(() => {
-    const rows = localFieldData?.[dynamicRowsTemplate.id];
-    console.log("rows", rows);
+    // if there is an entity type "Initiatives", handle Key Metrics
+    const rows =
+      entityType === entityTypes[0]
+        ? formData?.[dynamicRowsTemplate.id]
+        : localFieldData?.[dynamicRowsTemplate.id];
     if (rows) {
       setLocalDynamicRows((prev: DynamicFieldShape[]) => {
         const diff = rows.length - prev.length;
@@ -154,6 +159,7 @@ interface Props {
   disabled: boolean;
   dynamicRowsTemplate: DynamicRowsTemplate;
   emptyTableMessage?: string;
+  entityType?: string;
   formData?: AnyObject;
   formPercentage: number;
   hasDynamicModalForm: boolean;

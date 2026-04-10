@@ -20,7 +20,7 @@ export const AddEditKeyMetricsModal = ({
   modalDisclosure,
   report,
   selectedId,
-  currentEntity,
+  currentEntityId,
   userIsAdmin = false,
 }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -87,7 +87,7 @@ export const AddEditKeyMetricsModal = ({
     if (report) {
       const currentInitiativeIndex = report?.fieldData.initiative.findIndex(
         (init: any) => {
-          return init.id === currentEntity;
+          return init.id === currentEntityId;
         }
       );
 
@@ -177,7 +177,7 @@ interface Props {
     isOpen: boolean;
     onClose: any;
   };
-  currentEntity: string;
+  currentEntityId: string;
   report?: ReportShape;
   selectedId?: string;
   tableId: string;

@@ -239,6 +239,10 @@ export const updatedFieldDataOnFieldChange = ({
   const { dynamicFieldId, dynamicTemplateId, fieldId, fieldType, tableId } =
     getFieldParts(name);
 
+  console.log("field data", fieldData);
+  console.log("name", name);
+  console.log("value", value);
+
   switch (true) {
     case isTempDynamicField(name) &&
       isFieldType(fieldType, "percentageOverride"):
