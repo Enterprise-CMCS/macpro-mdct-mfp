@@ -252,7 +252,12 @@ export const mockAccordion = {
       content: "More instructions",
     },
   ],
-  list: [`List Item 1`, "List Item 2", `List Item 3`],
+  list: [
+    "List Item 1",
+    "List Item 2",
+    "List Item 3",
+    ["Nested List Item 1", "Nested List Item 2", "Nested List Item 3"],
+  ],
   text: "Additional Text",
 };
 
@@ -659,8 +664,8 @@ export const mockModalOverlayReportPageJson = {
 
 export const mockModalOverlayEntityStepsReportPageJson = {
   ...mockModalOverlayReportPageJson,
-  name: "mock-route-entitySteps",
-  path: "/mock/mock-route-entitySteps",
+  name: "mock-route-2c-entitySteps",
+  path: "/mock/mock-route-2c-entitySteps",
   entitySteps: [],
 };
 
@@ -687,6 +692,22 @@ export const mockDynamicModalOverlayReportPageJson = {
       initiativeId: "mock-entity-id", // which matches the mock entity
       name: "",
       topic: "",
+    },
+  ],
+};
+
+export const mockDynamicModalOverlayEntityStepsReportPageJson = {
+  name: "mock-route-2e-entitySteps",
+  path: "/mock/mock-route-2e-entitySteps",
+  pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
+  entityType: "entityType",
+  entityInfo: [""],
+  verbiage: mockModalOverlayReportPageVerbiage,
+  initiatives: [
+    {
+      initiativeId: "mock-entity-id", // which matches the mock entity
+      name: "",
+      topic: "",
       dashboard: {
         verbiage: {
           intro: {
@@ -704,8 +725,11 @@ export const mockDynamicModalOverlayReportPageJson = {
       } as unknown as FormJson,
       entitySteps: [
         {
+          entityType: "entityType",
           modalForm: mockModalOverlayForm as FormJson,
-        } as OverlayModalPageShape,
+          stepInfo: ["name", "hint"],
+          verbiage: mockModalOverlayReportPageVerbiage,
+        } as any,
       ],
     },
   ],

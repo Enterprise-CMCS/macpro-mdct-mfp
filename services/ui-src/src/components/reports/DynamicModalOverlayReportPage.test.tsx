@@ -4,7 +4,7 @@ import { DynamicModalOverlayReportPage } from "components";
 // utils
 import {
   RouterWrappedComponent,
-  mockDynamicModalOverlayReportPageJson,
+  mockDynamicModalOverlayEntityStepsReportPageJson,
   mockReportStore,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
@@ -17,7 +17,7 @@ const mockSetSidebarHidden = jest.fn();
 const dynamicModalOverlayReportPageComponent = (
   <RouterWrappedComponent>
     <DynamicModalOverlayReportPage
-      route={mockDynamicModalOverlayReportPageJson}
+      route={mockDynamicModalOverlayEntityStepsReportPageJson}
       setSidebarHidden={mockSetSidebarHidden}
     />
   </RouterWrappedComponent>
