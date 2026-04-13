@@ -23,12 +23,11 @@ export const renderServiceTableBody = (bodyRows: any, headRow: string[]) => {
     const rowData = headRow.map((header, index) => {
       const field = row[index];
       if (field?.id) {
-        const fieldDataValue =
-          report?.fieldData[field.id] ?? field.props.initialValue;
+        const fieldDataValue = report?.fieldData[field.id];
         const isBold =
           header === "Total State / Territory Share" ||
           header === "Total Federal Share";
-        if (field.type === ReportFormFieldType.NUMBER) {
+        if (field.type === ReportFormFieldType.NUMBER && fieldDataValue) {
           const value = fieldDataValue
             ? maskResponseData(fieldDataValue, field.props.mask)
             : "Not answered";

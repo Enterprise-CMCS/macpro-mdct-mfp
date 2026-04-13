@@ -13,13 +13,13 @@ import {
   PageTypes,
 } from "types";
 // utils
-import { getReportVerbiage, useStore } from "utils";
-// helpers
 import {
+  getReportVerbiage,
+  useStore,
   sx,
   renderFieldTableBody,
   renderCalculationTables,
-} from "./exportFieldTableHelpers";
+} from "utils";
 
 export const ExportedReportFieldTable = ({
   section,
