@@ -224,6 +224,7 @@ export interface WPTransitionBenchmarksRoute extends ModalRoute {
 }
 
 // SAR routes
+/** @deprecated No longer used as of Report Year 2026, Period 2 */
 export interface SARStateOrTerritorySpecificInitiativesRoute extends BaseRoute {
   entityInfo: string[];
   entityType: StepEntityType;
