@@ -8,6 +8,7 @@ import {
   EntityShape,
   FieldChoice,
   FormField,
+  PageTypes,
   ReportFormFieldType,
 } from "types";
 // utils
@@ -28,7 +29,7 @@ export const renderDataCell = (
   ].includes(fieldType);
 
   // render drawer data cell (list entities & per-entity responses)
-  if (pageType === "drawer") {
+  if (pageType === PageTypes.DRAWER) {
     const entityResponseData = allResponseData[entityType!];
     return renderDrawerDataCell(
       formField,

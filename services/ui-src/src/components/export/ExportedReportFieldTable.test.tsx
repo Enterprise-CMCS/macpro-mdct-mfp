@@ -9,7 +9,7 @@ import {
 } from "utils/testing/setupJest";
 import { useStore } from "../../utils";
 import { ExportedReportFieldTable } from "./ExportedReportFieldTable";
-import { DrawerReportPageShape } from "types";
+import { DrawerReportPageShape, PageTypes } from "types";
 import { testA11yAct } from "utils/testing/commonTests";
 
 jest.mock("utils/state/useStore");
@@ -57,7 +57,7 @@ const hintJson = {
 const generalInformationJson = {
   name: "General Information",
   path: "/sar/general-information",
-  pageType: "standard",
+  pageType: PageTypes.STANDARD,
   verbiage: {
     intro: {
       section: "",

@@ -21,8 +21,8 @@ import addIcon from "assets/icons/icon_add.png";
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
 export const DynamicField = ({
-  autosave,
-  disabled,
+  autosave = false,
+  disabled = false,
   dynamicButtonText,
   dynamicLabel,
   hint,
@@ -138,7 +138,7 @@ export const DynamicField = ({
 
   // delete selected record from DB
   const deleteRecord = async (selectedRecord: DynamicFieldShape) => {
-    if (userIsEndUser) {
+    if (autosave && userIsEndUser) {
       const reportKeys = {
         reportType: report?.reportType,
         state: state,
@@ -162,8 +162,8 @@ export const DynamicField = ({
       };
 
       await updateReport(reportKeys, dataToWrite);
-      removeRecord(selectedRecord);
     }
+    removeRecord(selectedRecord);
   };
 
   // remove selected record from the UI

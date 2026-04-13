@@ -4,6 +4,9 @@ import { notAnsweredText } from "../../constants";
 // utils
 import { AnyObject, HeadingLevel } from "types";
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export const FundingSourcesEntity = ({
   formattedEntityData,
   headingLevel,

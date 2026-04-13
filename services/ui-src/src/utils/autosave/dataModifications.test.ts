@@ -101,6 +101,36 @@ describe("utils/autosave/dataModifications", () => {
           value: 31.98,
         },
         {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
           name: "totals_totalsSummary_serviceTotals-totalComputable",
           type: ReportFormFieldType.NUMBER,
           value: 0,
@@ -176,6 +206,36 @@ describe("utils/autosave/dataModifications", () => {
           name: `${mockTableId}-totalStateTerritoryShare`,
           type: ReportFormFieldType.NUMBER,
           value: 65.19,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
         },
         {
           name: "totals_totalsSummary_serviceTotals-totalComputable",
@@ -267,6 +327,36 @@ describe("utils/autosave/dataModifications", () => {
           value: 47.97,
         },
         {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
           name: "totals_totalsSummary_serviceTotals-totalComputable",
           type: ReportFormFieldType.NUMBER,
           value: 0,
@@ -346,6 +436,36 @@ describe("utils/autosave/dataModifications", () => {
           value: 77.49,
         },
         {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
           name: "totals_totalsSummary_serviceTotals-totalComputable",
           type: ReportFormFieldType.NUMBER,
           value: 0,
@@ -423,6 +543,36 @@ describe("utils/autosave/dataModifications", () => {
           name: `${mockTableId}-totalStateTerritoryShare`,
           type: ReportFormFieldType.NUMBER,
           value: 31.98,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
         },
         {
           name: "totals_totalsSummary_serviceTotals-totalComputable",
@@ -513,6 +663,36 @@ describe("utils/autosave/dataModifications", () => {
           name: `${mockTableId}-totalStateTerritoryShare`,
           type: ReportFormFieldType.NUMBER,
           value: 93.7,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
         },
         {
           name: "totals_totalsSummary_serviceTotals-totalComputable",
@@ -693,6 +873,36 @@ describe("utils/autosave/dataModifications", () => {
           value: 15.99,
         },
         {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
           name: "totals_totalsSummary_serviceTotals-totalComputable",
           type: ReportFormFieldType.NUMBER,
           value: 0,
@@ -781,6 +991,36 @@ describe("utils/autosave/dataModifications", () => {
           name: `${mockDynamicTemplateId}-totalStateTerritoryShare`,
           type: ReportFormFieldType.NUMBER,
           value: 86.41,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalComputable",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
+        },
+        {
+          name: "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare",
+          type: ReportFormFieldType.NUMBER,
+          value: 0,
         },
         {
           name: "totals_totalsSummary_serviceTotals-totalComputable",
@@ -934,6 +1174,12 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockTableId}-totalFederalShare`]: 319.46,
         [`${mockTableId}-totalStateTerritoryShare`]: 26.99,
 
+        "totals_totalsSummary_qualifiedHcbsTotals-totalComputable": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalComputable": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalComputable": 0,
         "totals_totalsSummary_serviceTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalFederalShare": 0,
@@ -977,6 +1223,12 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockTableId}-totalFederalShare`]: 303.02,
         [`${mockTableId}-totalStateTerritoryShare`]: 42.98,
 
+        "totals_totalsSummary_qualifiedHcbsTotals-totalComputable": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalComputable": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalComputable": 0,
         "totals_totalsSummary_serviceTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalFederalShare": 0,
@@ -1020,6 +1272,12 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockTableId}-totalFederalShare`]: 303.02,
         [`${mockTableId}-totalStateTerritoryShare`]: 42.98,
 
+        "totals_totalsSummary_qualifiedHcbsTotals-totalComputable": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalComputable": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalComputable": 0,
         "totals_totalsSummary_serviceTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalFederalShare": 0,
@@ -1052,6 +1310,12 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockTableId}-totalFederalShare`]: 319.46,
         [`${mockTableId}-totalStateTerritoryShare`]: 26.99,
 
+        "totals_totalsSummary_qualifiedHcbsTotals-totalComputable": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalComputable": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalComputable": 0,
         "totals_totalsSummary_serviceTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalFederalShare": 0,
@@ -1098,6 +1362,12 @@ describe("utils/autosave/dataModifications", () => {
         [`${mockTableId}-totalFederalShare`]: 303.02,
         [`${mockTableId}-totalStateTerritoryShare`]: 42.98,
 
+        "totals_totalsSummary_qualifiedHcbsTotals-totalComputable": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalFederalShare": 0,
+        "totals_totalsSummary_qualifiedHcbsTotals-totalStateTerritoryShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalComputable": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalFederalShare": 0,
+        "totals_totalsSummary_demonstrationServicesTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalComputable": 0,
         "totals_totalsSummary_serviceTotals-totalStateTerritoryShare": 0,
         "totals_totalsSummary_serviceTotals-totalFederalShare": 0,

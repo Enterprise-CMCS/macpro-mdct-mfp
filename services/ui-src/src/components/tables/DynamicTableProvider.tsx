@@ -235,6 +235,7 @@ export const DynamicTableProvider = ({ children }: any) => {
   };
 
   const displayDynamicCell = (props: DisplayDynamicCellOptions) => {
+    // console.log("props", props);
     const { cell, dynamicId, rowId } = props;
 
     if (typeof cell === "string") return cell;

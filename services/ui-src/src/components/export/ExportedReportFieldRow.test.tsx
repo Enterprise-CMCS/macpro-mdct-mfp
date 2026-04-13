@@ -4,6 +4,7 @@ import { mockWpReportContext } from "utils/testing/setupJest";
 import { ReportContext } from "components";
 import { Table } from "@chakra-ui/react";
 import { testA11yAct } from "utils/testing/commonTests";
+import { PageTypes } from "types";
 
 const field = {
   id: "test",
@@ -39,7 +40,10 @@ const dynamicRow = (
   <ReportContext.Provider value={mockWpReportContext}>
     <Table>
       <tbody>
-        <ExportedReportFieldRow formField={fieldWithLabel} pageType="drawer" />
+        <ExportedReportFieldRow
+          formField={fieldWithLabel}
+          pageType={PageTypes.DRAWER}
+        />
       </tbody>
     </Table>
   </ReportContext.Provider>
@@ -51,7 +55,7 @@ const noHintRow = (
       <tbody>
         <ExportedReportFieldRow
           formField={field}
-          pageType="drawer"
+          pageType={PageTypes.DRAWER}
           showHintText={false}
         />
       </tbody>
@@ -65,7 +69,7 @@ const noHintNoLabel = (
       <tbody>
         <ExportedReportFieldRow
           formField={fieldWithNoLabelorHint}
-          pageType="drawer"
+          pageType={PageTypes.DRAWER}
         />
       </tbody>
     </Table>

@@ -1,5 +1,5 @@
 // types
-import { FormField, NumberMask } from "types";
+import { FormField, NumberMask, PageTypes } from "types";
 // utils
 import {
   parseFormFieldInfo,
@@ -39,7 +39,7 @@ describe("utils/export", () => {
           },
         ],
       };
-      const pageType = "drawer";
+      const pageType = PageTypes.DRAWER;
       const entityType = "mockEntityType";
       const parentFieldCheckedChoiceIds = ["mockEntityId"];
 
