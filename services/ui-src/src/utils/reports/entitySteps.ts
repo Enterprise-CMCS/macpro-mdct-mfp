@@ -8,6 +8,8 @@ import { convertToThousandsSeparatedString } from "utils";
 
 export const hasEntitySteps = (route: ReportRoute) =>
   Boolean(route.entitySteps);
+export const hasInitiativesWithEntitySteps = (route: any) =>
+  route.initiatives?.some((r: ReportRoute) => hasEntitySteps(r));
 
 const getRadioValue = (entity: EntityShape | undefined, label: string) => {
   const radioLabelValue = entity?.[label]?.[0].value;

@@ -35,7 +35,10 @@ const mockLocations = {
   modalOverlay: { pathname: mockReportJson.flatRoutes[4].path },
   modalOverlayEntitySteps: { pathname: mockReportJson.flatRoutes[5].path },
   dynamicModalOverlay: { pathname: mockReportJson.flatRoutes[6].path },
-  reviewSubmit: { pathname: mockReportJson.flatRoutes[7].path },
+  dynamicModalOverlayEntitySteps: {
+    pathname: mockReportJson.flatRoutes[7].path,
+  },
+  reviewSubmit: { pathname: mockReportJson.flatRoutes[8].path },
 };
 
 const ReportPageWrapperComponent = (
@@ -120,7 +123,47 @@ describe("<ReportPageWrapper />", () => {
       ).toBeVisible();
     });
 
-    test("ReportPageWrapper DynamicModalOverlayReportPagte view renders", () => {
+    test("ReportPageWrapper loads DynamicModalOverlayReportPageV2 for route without entitySteps", async () => {
+      mockUseLocation.mockReturnValue(mockLocations.dynamicModalOverlay);
+      render(ReportPageWrapperComponent);
+
+      const enterDetailsButton = screen.getByRole("button", {
+        name: mockModalDrawerReportPageJson.verbiage
+          .enterEntityDetailsButtonText,
+      });
+
+      await act(async () => {
+        await userEvent.click(enterDetailsButton);
+      });
+
+      const backButton = screen.getByRole("button", {
+        name: "Return to all initiatives",
+      });
+      expect(backButton).toBeVisible();
+    });
+
+    test("ReportPageWrapper loads DynamicModalOverlayReportPageV1 for route with entitySteps", async () => {
+      mockUseLocation.mockReturnValue(
+        mockLocations.dynamicModalOverlayEntitySteps
+      );
+      render(ReportPageWrapperComponent);
+
+      const enterDetailsButton = screen.getByRole("button", {
+        name: mockModalDrawerReportPageJson.verbiage
+          .enterEntityDetailsButtonText,
+      });
+
+      await act(async () => {
+        await userEvent.click(enterDetailsButton);
+      });
+
+      const dashboard = screen.getByText(
+        `Select "${mockModalDrawerReportPageJson.verbiage.enterEntityDetailsButtonText}" to report data.`
+      );
+      expect(dashboard).toBeVisible();
+    });
+
+    test("ReportPageWrapper DynamicModalOverlayReportPage view renders", () => {
       mockUseLocation.mockReturnValue(mockLocations.dynamicModalOverlay);
       render(ReportPageWrapperComponent);
       expect(
