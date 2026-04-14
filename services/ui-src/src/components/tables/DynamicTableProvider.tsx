@@ -17,6 +17,7 @@ import {
   AnyObject,
   DynamicFieldShape,
   DynamicRowsTemplate,
+  entityTypes,
   FormField,
   FormTableCell,
   FormTableRow,
@@ -142,6 +143,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     cell,
     columnId,
     disabled,
+    entityType,
     formData,
     id,
     percentage: formPercentage,
@@ -203,7 +205,13 @@ export const DynamicTableProvider = ({ children }: any) => {
       const { dynamicFieldId, dynamicTemplateId, fieldType } = getFieldParts(
         hydratedField.id
       );
-      const templateFieldData = localFieldData?.[dynamicTemplateId] || [];
+
+      const templateFieldData =
+        // if there is an entity type "Initiatives", handle Key Metrics
+        entityType === entityTypes[0]
+          ? formData?.[dynamicTemplateId]
+          : localFieldData?.[dynamicTemplateId] || [];
+
       const currentField = templateFieldData.find(
         (field: DynamicFieldShape) => field.id === dynamicFieldId
       );
@@ -499,6 +507,7 @@ interface DisplayCellOptions {
   cell: string | FormField;
   columnId: string;
   disabled: boolean;
+  entityType?: string;
   formData: AnyObject;
   id: string;
   percentage: number;
