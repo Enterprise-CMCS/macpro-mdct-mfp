@@ -1,4 +1,10 @@
-import { FormJson, NumberMask, PageTypes, Transformation } from "./formFields";
+import {
+  DependentFieldValidation,
+  FormJson,
+  NumberMask,
+  PageTypes,
+  Transformation,
+} from "./formFields";
 import { AnyObject, CustomHtmlElement } from "./other";
 import { ReportType } from "./reports";
 import {
@@ -43,12 +49,13 @@ export enum ReportFormFieldType {
 }
 
 export interface ReportFormField {
+  forCopyoverOnly?: boolean;
   forTableOnly?: boolean;
   id: string;
   props?: ReportFormFieldProps;
   transformation?: Transformation;
   type: ReportFormFieldType;
-  validation?: ValidationType | CustomValidation;
+  validation?: ValidationType | CustomValidation | DependentFieldValidation;
 }
 
 export interface ReportFormFieldProps {
@@ -72,6 +79,7 @@ export interface ReportFormFieldProps {
   content?: string;
   decimalPlacesToRoundTo?: number;
   disabled?: boolean;
+  dynamicButtonText?: string;
   dynamicFields?: ReportFormField[];
   dynamicLabel?: string;
   dynamicModalForm?: FormJson;
@@ -81,7 +89,9 @@ export interface ReportFormFieldProps {
   mask?: NumberMask | null;
   maxLength?: number;
   styleAsOptional?: boolean;
+  styleTitleAsOptional?: boolean;
   subType?: ReportFormFieldType;
+  subtitle?: string | CustomHtmlElement[];
   title?: string;
 }
 
@@ -99,11 +109,13 @@ export type FormTableCell = string | ReportFormField;
 export type FormTableRow = FormTableCell[];
 export type FormTableRows = FormTableRow[];
 
+export interface DynamicRowsTemplateVerbiage {
+  buttonText: string;
+  hint: string;
+}
+
 export interface DynamicRowsTemplate extends ReportFormField {
-  verbiage: {
-    buttonText: string;
-    hint: string;
-  };
+  verbiage: DynamicRowsTemplateVerbiage;
 }
 
 export interface FormTable {
@@ -125,6 +137,7 @@ export interface FormTable {
 
 export enum FormTableType {
   CALCULATION = "Calculation",
+  ENTITY_MODAL = "EntityModal",
   SUMMATION = "Summation",
 }
 
@@ -163,7 +176,11 @@ export interface BaseRoute {
 }
 
 export interface ParentRoute extends BaseRoute {
-  children: (FormRoute | WPStateOrTerritorySpecificInitiativesRoute)[];
+  children: (
+    | FormRoute
+    | WPStateOrTerritorySpecificInitiativesRoute
+    | WPStateOrTerritorySpecificInitiativesV2Route
+  )[];
 }
 
 export interface PageRoute extends BaseRoute {
@@ -186,11 +203,18 @@ export interface ModalRoute extends BaseRoute {
 }
 
 // WP routes
+/** @deprecated No longer used as of Report Year 2026, Period 2 */
 export interface WPStateOrTerritorySpecificInitiativesRoute extends ModalRoute {
   dashboard: Dashboard;
   entityInfo: string[];
   entitySteps: WPEntityStep[];
   entityType: StepEntityType;
+}
+
+export interface WPStateOrTerritorySpecificInitiativesV2Route extends ModalRoute {
+  entityInfo: string[];
+  entityType: StepEntityType;
+  overlayForm: ReportFormWithTables;
 }
 
 export interface WPTransitionBenchmarksRoute extends ModalRoute {

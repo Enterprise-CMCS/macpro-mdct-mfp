@@ -4,7 +4,12 @@ import {
   isEndDateAfterStartDate,
   nested,
 } from "./completionSchemas";
-import { AnyObject, ValidationType } from "../types";
+import {
+  AnyObject,
+  NumberOptions,
+  ValidationComparator,
+  ValidationType,
+} from "../types";
 
 describe("utils/validation/completionSchemas", () => {
   /*
@@ -85,9 +90,14 @@ describe("utils/validation/completionSchemas", () => {
     type: "string",
   };
 
+  const numberOptions: NumberOptions = {
+    boundary: 10,
+    comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+  };
+
   const testSchema = (
     schemaToUse: MixedSchema<any, AnyObject, any>,
-    testCases: Array<string | AnyObject>,
+    testCases: Array<string | AnyObject | null | undefined>,
     expectedReturn: boolean
   ) => {
     for (let testCase of testCases) {
@@ -139,41 +149,72 @@ describe("utils/validation/completionSchemas", () => {
   describe("dynamicOptional", () => {
     test("returns true for text validation", () => {
       testSchema(
-        schemaMap.dynamicOptional({
-          validationType: ValidationType.TEXT_OPTIONAL,
-        }),
+        schemaMap.dynamicOptional(),
         [[{ id: "mockId", name: "text" }]],
         true
       );
     });
 
     test("returns true for empty text", () => {
-      testSchema(
-        schemaMap.dynamicOptional({
-          validationType: ValidationType.TEXT_OPTIONAL,
-        }),
-        [],
-        true
-      );
+      testSchema(schemaMap.dynamicOptional(), [], true);
     });
 
     test("returns true for number validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: ValidationType.NUMBER_OPTIONAL,
+          dynamicFieldValidations: {
+            name: ValidationType.NUMBER_OPTIONAL,
+          },
         }),
         [[{ id: "mockId", name: "123" }]],
         true
       );
     });
 
-    test("returns true for empty number", () => {
+    test("returns false for number validation", () => {
       testSchema(
         schemaMap.dynamicOptional({
-          validationType: ValidationType.NUMBER_OPTIONAL,
+          dynamicFieldValidations: {
+            name: ValidationType.NUMBER_OPTIONAL,
+          },
         }),
-        [],
+        [[{ id: "mockId", name: "text" }]],
+        false
+      );
+    });
+
+    test("returns true for number comparison validation", () => {
+      testSchema(
+        schemaMap.dynamicOptional({
+          dynamicFieldValidations: {
+            name: {
+              type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+              options: numberOptions,
+            },
+          },
+        }),
+        [[{ id: "mockId", name: "9" }], [{ id: "mockId", name: "" }]],
         true
+      );
+    });
+
+    test("returns false for number comparison validation", () => {
+      testSchema(
+        schemaMap.dynamicOptional({
+          dynamicFieldValidations: {
+            name: {
+              type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+              options: numberOptions,
+            },
+          },
+        }),
+        [
+          [
+            { id: "mockId", name: "11" },
+            { id: "mockId", name: "10.01" },
+          ],
+        ],
+        false
       );
     });
   });
@@ -222,6 +263,63 @@ describe("utils/validation/completionSchemas", () => {
     });
   });
 
+  describe("numberComparison", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.numberComparison(numberOptions),
+        ["0", "1", "10", "9.99", "N/A"],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.numberComparison(numberOptions),
+        ["-1", "", "11", "10.01"],
+        false
+      );
+    });
+  });
+
+  describe("numberComparisonOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.numberComparisonOptional(numberOptions),
+        ["0", "1", "10", "9.99", "N/A", "", undefined, null],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.numberComparisonOptional(numberOptions),
+        ["-1", "11", "10.01"],
+        false
+      );
+    });
+  });
+
+  describe("optional schemas", () => {
+    test("allows null or empty string", () => {
+      testSchema(schemaMap.dateOptional, [null, ""], true);
+      testSchema(schemaMap.emailOptional, [null, ""], true);
+      testSchema(schemaMap.numberOptional, [null, ""], true);
+      testSchema(
+        schemaMap.numberComparisonOptional(numberOptions),
+        [null, ""],
+        true
+      );
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        [null, ""],
+        true
+      );
+      testSchema(schemaMap.textOptional, [null, ""], true);
+      testSchema(schemaMap.urlOptional, [null, ""], true);
+      testSchema(schemaMap.validIntegerOptional, [null, ""], true);
+    });
+  });
+
   describe("ratio", () => {
     test("returns true", () => {
       testSchema(schemaMap.ratio, goodRatioTestCases, true);
@@ -241,6 +339,24 @@ describe("utils/validation/completionSchemas", () => {
       testSchema(
         schemaMap.textCustom({ maxLength: 10 }),
         ["textistoolong", ""],
+        false
+      );
+    });
+  });
+
+  describe("textCustomOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        ["0123456789"],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        ["textistoolong"],
         false
       );
     });

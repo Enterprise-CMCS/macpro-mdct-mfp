@@ -129,9 +129,11 @@ export interface DropdownChoice {
 export enum PageTypes {
   DRAWER = "drawer",
   DYNAMIC_MODAL_OVERLAY = "dynamicModalOverlay",
+  /** @deprecated No longer used as of Report Year 2026, Period 2 */
   ENTITY_OVERLAY = "entityOverlay",
   MODAL_DRAWER = "modalDrawer",
   MODAL_OVERLAY = "modalOverlay",
+  /** @deprecated No longer used as of Report Year 2026, Period 2 */
   OVERLAY_MODAL = "overlayModal",
   REVIEW_SUBMIT = "reviewSubmit",
   STANDARD = "standard",

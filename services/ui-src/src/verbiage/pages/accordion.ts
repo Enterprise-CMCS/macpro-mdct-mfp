@@ -126,7 +126,7 @@ export default {
       text: "",
     },
   },
-  EXPENDITURE: {
+  FINANCIAL_REPORT: {
     adminDashboard: {
       buttonLabel: "Instructions",
       intro: [

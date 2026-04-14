@@ -48,14 +48,14 @@ export const MobileDashboardTable = ({
           </Box>
         )}
         {/* Report Year */}
-        {reportType === ReportType.EXPENDITURE && (
+        {reportType === ReportType.FINANCIAL_REPORT && (
           <Box sx={sx.labelGroup}>
             <Text sx={sx.label}>Report Year</Text>
             <Text>{report.reportYear}</Text>
           </Box>
         )}
         {/* Report Period */}
-        {reportType === ReportType.EXPENDITURE && (
+        {reportType === ReportType.FINANCIAL_REPORT && (
           <Box sx={sx.labelGroup}>
             <Text sx={sx.label}>Report Period</Text>
             <Text>{report.reportPeriod}</Text>
@@ -162,12 +162,14 @@ interface MobileDashboardTableProps {
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {!!reportType && !isAdmin && reportType !== ReportType.EXPENDITURE && (
-        <Box sx={sx.editDate}>
-          <Text sx={sx.label}>Due date</Text>
-          <Text>{convertDateUtcToEt(report.dueDate)}</Text>
-        </Box>
-      )}
+      {!!reportType &&
+        !isAdmin &&
+        reportType !== ReportType.FINANCIAL_REPORT && (
+          <Box sx={sx.editDate}>
+            <Text sx={sx.label}>Due date</Text>
+            <Text>{convertDateUtcToEt(report.dueDate)}</Text>
+          </Box>
+        )}
       <Box>
         <Text sx={sx.label}>Last edited</Text>
         <Text>{convertDateUtcToEt(report.lastAltered)}</Text>

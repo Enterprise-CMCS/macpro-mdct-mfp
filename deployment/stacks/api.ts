@@ -29,8 +29,9 @@ interface CreateApiComponentsProps {
   brokerString: string;
   wpFormBucket: s3.IBucket;
   sarFormBucket: s3.IBucket;
-  expenditureFormBucket: s3.IBucket;
+  financialReportFormBucket: s3.IBucket;
   launchDarklyServer: string;
+  launchDarklyLocalFlags?: string;
 }
 
 export function createApiComponents(props: CreateApiComponentsProps) {
@@ -45,8 +46,9 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     brokerString,
     wpFormBucket,
     sarFormBucket,
-    expenditureFormBucket,
+    financialReportFormBucket,
     launchDarklyServer,
+    launchDarklyLocalFlags = '{"local": false, "flags": {}}',
   } = props;
 
   const service = "app-api";
@@ -106,9 +108,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     brokerString,
     STAGE: stage,
     launchDarklyServer,
+    launchDarklyLocalFlags,
     WP_FORM_BUCKET: wpFormBucket.bucketName,
     SAR_FORM_BUCKET: sarFormBucket.bucketName,
-    EXPENDITURE_FORM_BUCKET: expenditureFormBucket.bucketName,
+    FINANCIAL_REPORT_FORM_BUCKET: financialReportFormBucket.bucketName,
     ...Object.fromEntries(
       tables.map((table) => [`${table.node.id}Table`, table.table.tableName])
     ),
@@ -119,7 +122,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     api,
     environment,
     tables,
-    buckets: [wpFormBucket, sarFormBucket, expenditureFormBucket],
+    buckets: [wpFormBucket, sarFormBucket, financialReportFormBucket],
     isDev,
   };
 
@@ -293,27 +296,23 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     }
   );
 
-  const postExpenditureBucketData = new Lambda(
-    scope,
-    "postExpenditureBucketData",
-    {
-      entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
-      handler: "handler",
-      ...bucketLambdaProps,
-    }
-  );
+  const postFinancialBucketData = new Lambda(scope, "postFinancialBucketData", {
+    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
+    handler: "handler",
+    ...bucketLambdaProps,
+  });
 
-  expenditureFormBucket.addEventNotification(
+  financialReportFormBucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
-    new s3notifications.LambdaDestination(postExpenditureBucketData.lambda),
+    new s3notifications.LambdaDestination(postFinancialBucketData.lambda),
     {
       suffix: ".json",
     }
   );
 
-  expenditureFormBucket.addEventNotification(
+  financialReportFormBucket.addEventNotification(
     s3.EventType.OBJECT_TAGGING_PUT,
-    new s3notifications.LambdaDestination(postExpenditureBucketData.lambda),
+    new s3notifications.LambdaDestination(postFinancialBucketData.lambda),
     {
       suffix: ".json",
     }

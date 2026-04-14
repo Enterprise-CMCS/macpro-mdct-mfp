@@ -17,6 +17,7 @@ export * from "./autosave/helpers";
 export * from "./forms/forms";
 // reports
 export * from "./reports/entities";
+export * from "./reports/entitySteps";
 export * from "./reports/reports";
 export * from "./reports/routing";
 // statusing

@@ -26,10 +26,10 @@ export const createReportName = (
   const fullStateName = States[state];
 
   switch (reportType) {
-    case ReportType.EXPENDITURE:
+    case ReportType.FINANCIAL_REPORT:
       return `${state}: ${reportYear} - ${
-        expenditureReportPeriodsMap[
-          Number(reportPeriod) as keyof typeof expenditureReportPeriodsMap
+        financialReportPeriodsMap[
+          Number(reportPeriod) as keyof typeof financialReportPeriodsMap
         ]
       }`;
     case ReportType.SAR:
@@ -68,7 +68,7 @@ export const getReportYear = (
   reportType: ReportType,
   isCopyOver: boolean = false
 ): number => {
-  if (isCopyOver && reportType !== ReportType.EXPENDITURE) {
+  if (isCopyOver && reportType !== ReportType.FINANCIAL_REPORT) {
     if (typeof reportData?.copyReport?.reportYear !== "number") {
       throw new TypeError("Invalid value for reportYear");
     }
@@ -89,7 +89,7 @@ export const getReportPeriod = (
   reportType: ReportType,
   isCopyOver: boolean = false
 ): number => {
-  if (isCopyOver && reportType !== ReportType.EXPENDITURE) {
+  if (isCopyOver && reportType !== ReportType.FINANCIAL_REPORT) {
     if (typeof reportData?.copyReport?.reportPeriod !== "number") {
       throw new TypeError("Invalid value for reportPeriod");
     }
@@ -106,7 +106,7 @@ export const getReportPeriod = (
   return reportData?.reportPeriod;
 };
 
-export const expenditureReportPeriodsMap = {
+export const financialReportPeriodsMap = {
   1: "Q1 (Quarter 1): January 1st to March 31st",
   2: "Q2 (Quarter 2): April 1st to June 30th",
   3: "Q3 (Quarter 3): July 1st to September 30th",

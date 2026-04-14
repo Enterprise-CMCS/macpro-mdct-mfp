@@ -200,7 +200,12 @@ describe("utils/validation/schemaMap", () => {
             },
           },
         }),
-        [[{ id: "mockId", name: "11" }], [{ id: "mockId", name: "10.01" }]],
+        [
+          [
+            { id: "mockId", name: "11" },
+            { id: "mockId", name: "10.01" },
+          ],
+        ],
         false
       );
     });
@@ -269,11 +274,6 @@ describe("utils/validation/schemaMap", () => {
   });
 
   describe("numberComparisonOptional", () => {
-    const numberOptions: NumberOptions = {
-      boundary: 10,
-      comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
-    };
-
     test("returns true", () => {
       testSchema(
         schemaMap.numberComparisonOptional(numberOptions),
@@ -288,6 +288,27 @@ describe("utils/validation/schemaMap", () => {
         ["-1", "11", "10.01"],
         false
       );
+    });
+  });
+
+  describe("optional schemas", () => {
+    test("allows null or empty string", () => {
+      testSchema(schemaMap.dateOptional, [null, ""], true);
+      testSchema(schemaMap.emailOptional, [null, ""], true);
+      testSchema(schemaMap.numberOptional, [null, ""], true);
+      testSchema(
+        schemaMap.numberComparisonOptional(numberOptions),
+        [null, ""],
+        true
+      );
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        [null, ""],
+        true
+      );
+      testSchema(schemaMap.textOptional, [null, ""], true);
+      testSchema(schemaMap.urlOptional, [null, ""], true);
+      testSchema(schemaMap.validIntegerOptional, [null, ""], true);
     });
   });
 
@@ -310,6 +331,24 @@ describe("utils/validation/schemaMap", () => {
       testSchema(
         schemaMap.textCustom({ maxLength: 10 }),
         ["textistoolong", ""],
+        false
+      );
+    });
+  });
+
+  describe("textCustomOptional", () => {
+    test("returns true", () => {
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        ["0123456789"],
+        true
+      );
+    });
+
+    test("returns false", () => {
+      testSchema(
+        schemaMap.textCustomOptional({ maxLength: 10 }),
+        ["textistoolong"],
         false
       );
     });

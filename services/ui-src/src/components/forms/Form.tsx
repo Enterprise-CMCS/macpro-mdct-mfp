@@ -19,6 +19,7 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import {
   CalculationTable,
   DynamicTableProvider,
+  EntityModalTable,
   SummationTable,
 } from "components";
 // utils
@@ -27,9 +28,12 @@ import {
   formFieldFactory,
   getFieldParts,
   hydrateFormFields,
+  labelTextWithOptional,
   mapValidationTypesToSchema,
+  parseCustomHtml,
   sanitizeAndParseHtml,
   sortFormErrors,
+  translate,
   updateRenderFields,
   useStore,
 } from "utils";
@@ -47,6 +51,7 @@ import {
 export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   {
     autosave,
+    className,
     children,
     dontReset,
     formData,
@@ -180,6 +185,20 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
           </DynamicTableProvider>
         );
 
+      case FormTableType.ENTITY_MODAL:
+        return (
+          <DynamicTableProvider key={id}>
+            <EntityModalTable
+              disabled={fieldInputDisabled}
+              formData={formData}
+              id={id}
+              order={index}
+              report={report}
+              {...props}
+            />
+          </DynamicTableProvider>
+        );
+
       case FormTableType.SUMMATION:
         return (
           <DynamicTableProvider key={id}>
@@ -238,12 +257,25 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
         return renderTable(table, tableIndex++);
       }
 
+      const title = field.props?.title
+        ? translate(field.props.title, {
+            initiativeName: formData?.initiative_name,
+          })
+        : undefined;
+      const titleText =
+        title && field.props?.styleTitleAsOptional
+          ? labelTextWithOptional(title)
+          : title;
+
       return (
         <Fragment key={field.id}>
-          {field.props?.title && (
+          {titleText && (
             <Heading as="h3" className="verbiage-title">
-              {field.props.title}
+              {titleText}
             </Heading>
+          )}
+          {field.props?.subtitle && (
+            <Box sx={sx.subtitle}>{parseCustomHtml(field.props.subtitle)}</Box>
           )}
           {renderFormFields([field])}
         </Fragment>
@@ -276,14 +308,16 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
         {...props}
       >
         <Box sx={sx}>
-          {displayRetError ? (
-            <Text sx={sx.retAlert}>
-              Your associated MFP Work Plan does not contain any target
-              populations.
-            </Text>
-          ) : (
-            renderFieldOrTable(fields, tables)
-          )}
+          <Box className={className}>
+            {displayRetError ? (
+              <Text sx={sx.retAlert}>
+                Your associated MFP Work Plan does not contain any target
+                populations.
+              </Text>
+            ) : (
+              renderFieldOrTable(fields, tables)
+            )}
+          </Box>
         </Box>
         {children}
       </FormTag>
@@ -294,6 +328,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
 interface Props {
   autosave?: boolean;
   children?: ReactNode;
+  className?: string;
   dontReset: boolean;
   formData?: AnyObject;
   formJson: FormJson;
@@ -390,5 +425,21 @@ const sx = {
   ".verbiage-title": {
     fontSize: "xl",
     paddingBottom: 0,
+  },
+  ".overlay-form .verbiage-title": {
+    fontSize: "1.5rem",
+    marginTop: "spacer4",
+    paddingTop: "spacer3",
+    b: {
+      fontWeight: "normal",
+    },
+  },
+  ".overlay-form div + .verbiage-title": {
+    borderTop: "1px solid",
+    borderColor: "gray_lighter",
+  },
+  subtitle: {
+    color: "gray_dark",
+    marginTop: "spacer4",
   },
 };

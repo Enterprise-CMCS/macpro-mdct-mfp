@@ -42,7 +42,7 @@ export const DashboardTable = ({
         )}
         {/* Report Name */}
         {reportType === ReportType.WP ||
-        reportType === ReportType.EXPENDITURE ? (
+        reportType === ReportType.FINANCIAL_REPORT ? (
           <>
             <Td sx={sxOverride.wpSubmissionNameText}>
               {report.submissionName}
@@ -57,9 +57,11 @@ export const DashboardTable = ({
           <Td>{prettifyChoices(report?.populations)}</Td>
         )}
         {/* Report Year */}
-        {reportType === ReportType.EXPENDITURE && <Td>{report.reportYear}</Td>}
+        {reportType === ReportType.FINANCIAL_REPORT && (
+          <Td>{report.reportYear}</Td>
+        )}
         {/* Report Period */}
-        {reportType === ReportType.EXPENDITURE && (
+        {reportType === ReportType.FINANCIAL_REPORT && (
           <Td>{report.reportPeriod}</Td>
         )}
         {/* Date Fields */}
@@ -244,9 +246,11 @@ export interface ActionButtonProps {
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
   return (
     <>
-      {!!reportType && !isAdmin && reportType !== ReportType.EXPENDITURE && (
-        <Td>{convertDateUtcToEt(report.dueDate)}</Td>
-      )}
+      {!!reportType &&
+        !isAdmin &&
+        reportType !== ReportType.FINANCIAL_REPORT && (
+          <Td>{convertDateUtcToEt(report.dueDate)}</Td>
+        )}
       <Td>{convertDateUtcToEt(report.lastAltered)}</Td>
     </>
   );

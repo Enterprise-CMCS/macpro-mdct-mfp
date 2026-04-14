@@ -208,11 +208,14 @@ export interface ModalDrawerReportPageVerbiage extends DrawerReportPageVerbiage 
 
 export interface ModalOverlayReportPageVerbiage extends EntityOverlayPageVerbiage {
   addEntityButtonText: string;
+  editEntityHint?: string;
   dashboardTitle: string;
   countEntitiesInTitle: boolean;
   tableHeader: string;
   addEditModalHint: string;
-  emptyDashboardText: string;
+  emptyDashboardText?: string;
+  accordion?: AnyObject;
+  backButtonText?: string;
 }
 
 export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
@@ -231,7 +234,7 @@ export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {
 export enum ReportType {
   WP = "WP",
   SAR = "SAR",
-  EXPENDITURE = "EXPENDITURE",
+  FINANCIAL_REPORT = "FINANCIAL_REPORT",
 }
 /**
  * Check if unknown value is a report type

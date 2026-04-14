@@ -134,6 +134,16 @@ export const calculateAggregateTotals = (
   // Return empty result if fieldData is not available
   if (!fieldData) {
     return {
+      qualifiedHcbsServicesTotal: {
+        percentageShare: 0,
+        remainingShare: 0,
+        total: 0,
+      } as CalculatedSharesType,
+      demonstrationServicesTotal: {
+        percentageShare: 0,
+        remainingShare: 0,
+        total: 0,
+      } as CalculatedSharesType,
       serviceTables: {
         percentageShare: 0,
         remainingShare: 0,
@@ -146,6 +156,15 @@ export const calculateAggregateTotals = (
       } as CalculatedSharesType,
     };
   }
+
+  const qualifiedHcbsServicesTotalId = [
+    "qualifiedHcbs_statePlanServices",
+    "qualifiedHcbs_1915cWaiverServices",
+  ];
+  const demonstrationServicesTotalId = [
+    "demonstrationServices_statePlanServices",
+    "demonstrationServices_1915cWaiverServices",
+  ];
 
   const serviceTableIds = [
     "qualifiedHcbs_statePlanServices",
@@ -193,6 +212,12 @@ export const calculateAggregateTotals = (
   };
 
   return {
+    qualifiedHcbsServicesTotal: calculateForTableIds(
+      qualifiedHcbsServicesTotalId
+    ),
+    demonstrationServicesTotal: calculateForTableIds(
+      demonstrationServicesTotalId
+    ),
     serviceTables: calculateForTableIds(serviceTableIds),
     allTables: calculateForTableIds(allTableIds),
   };
@@ -209,6 +234,8 @@ export const fieldTableTotals = ({
 }: FieldTableTotalsType): {
   field: CalculatedSharesType;
   table: CalculatedSharesType;
+  qualifiedHcbsServicesTotal: CalculatedSharesType;
+  demonstrationServicesTotal: CalculatedSharesType;
   serviceTables: CalculatedSharesType;
   allTables: CalculatedSharesType;
 } => {
@@ -225,7 +252,12 @@ export const fieldTableTotals = ({
     sumFields(fieldData, tableId, fieldSuffixesToCalculate[key], exclusions)
   );
 
-  const { serviceTables, allTables } = calculateAggregateTotals(
+  const {
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
+  } = calculateAggregateTotals(
     fieldData,
     fieldSuffixesToCalculate,
     fieldId,
@@ -236,6 +268,8 @@ export const fieldTableTotals = ({
   return {
     field: fieldShares,
     table: tableShares,
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
     serviceTables,
     allTables,
   };
@@ -253,6 +287,8 @@ export const dynamicFieldTableTotals = ({
   field: CalculatedSharesType;
   table: CalculatedSharesType;
   template: CalculatedSharesType;
+  qualifiedHcbsServicesTotal: CalculatedSharesType;
+  demonstrationServicesTotal: CalculatedSharesType;
   serviceTables: CalculatedSharesType;
   allTables: CalculatedSharesType;
 } => {
@@ -279,7 +315,12 @@ export const dynamicFieldTableTotals = ({
     sumFields(fieldData, tableId, fieldSuffixesToCalculate[key], exclusions)
   );
 
-  const { serviceTables, allTables } = calculateAggregateTotals(
+  const {
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
+  } = calculateAggregateTotals(
     fieldData,
     fieldSuffixesToCalculate,
     dynamicFieldId,
@@ -291,6 +332,8 @@ export const dynamicFieldTableTotals = ({
     field: fieldShares,
     table: tableShares,
     template: templateShares,
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
     serviceTables,
     allTables,
   };
