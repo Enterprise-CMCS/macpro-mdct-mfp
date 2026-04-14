@@ -123,7 +123,7 @@ export const EntityModalTable = ({
               formPercentage={0}
               hasDynamicModalForm={hasDynamicModalForm}
               hasStaticRows={bodyRows.length > 0}
-              openModal={() => {}}
+              openModal={() => openModal(selectedId)}
               tableId={tableId}
               updatedFieldsCallback={updatedFieldsCallback}
             />

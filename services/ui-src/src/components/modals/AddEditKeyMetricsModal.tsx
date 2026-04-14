@@ -160,7 +160,7 @@ export const AddEditKeyMetricsModal = ({
       submitting={submitting}
     >
       <Form
-        data-testid="add-key-metrics-form"
+        data-testid="add-edit-key-metrics-form"
         disabled={viewOnly}
         dontReset={false}
         formJson={form}
