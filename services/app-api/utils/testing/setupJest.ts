@@ -10,6 +10,10 @@ process.env.SAR_FORM_BUCKET = "database-local-sar";
 process.env.FormTemplateVersionsTable = "local-form-template-versions";
 process.env.BannerTable = "local-banners";
 
+process.env.brokerString = "broker1,broker2";
+process.env.STAGE = "local";
+process.env.topicNamespace = "";
+
 // GLOBALS
 
 global.structuredClone = (val: any) =>
