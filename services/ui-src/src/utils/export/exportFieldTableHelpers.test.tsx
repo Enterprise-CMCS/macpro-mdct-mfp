@@ -13,25 +13,8 @@ import { useStore } from "utils/state/useStore";
 import { render, screen } from "@testing-library/react";
 import { ReactElement } from "react";
 
-// Mocks
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-
-jest.mock("../../components/tables/Table", () => ({
-  __esModule: true,
-  Table: jest.fn((props) => <div data-testid={props["data-testid"]} />),
-}));
-
-jest.mock("utils/other/parsing", () => ({
-  parseCustomHtml: (html: string) => html,
-}));
-
-jest.mock("utils/other/mask", () => ({
-  maskResponseData: (value: any, mask: any) => {
-    if (mask === "currency") return `$${value}`;
-    return value;
-  },
-}));
 
 // Test data
 const formFields: (FormField | FormLayoutElement)[] = [
@@ -61,12 +44,12 @@ const formFields: (FormField | FormLayoutElement)[] = [
   },
 ];
 
-const section = {
-  name: "Qualified HCBS",
+const section = (id: string, name: string) => ({
+  name: name,
   form: {
     tables: [
       {
-        id: "table1",
+        id: id,
         headRows: [["Column 1", "Column 2"]],
         bodyRows: [],
         footRows: [],
@@ -94,17 +77,17 @@ const section = {
       },
     ],
   },
-};
+});
 
-const fieldData = {
+const fieldData = (id: string, pct: number) => ({
   dynamicRows: [
     {
       dynamicField1: "Item 1",
       dynamicField2: 500,
     },
   ],
-  fmap_qualifiedHcbsPercentage: 50,
-};
+  [`fmap_${id}Percentage`]: pct,
+});
 
 describe("exportFieldTableHelpers", () => {
   afterEach(() => {
@@ -126,7 +109,7 @@ describe("exportFieldTableHelpers", () => {
       } as any);
     });
 
-    it("should render service table body correctly", () => {
+    test("should render service table body correctly", () => {
       const bodyRows = [
         [
           { id: "field1", props: { initialValue: "" } },
@@ -140,11 +123,11 @@ describe("exportFieldTableHelpers", () => {
       ];
       const result = renderServiceTableBody(bodyRows, headRow);
       expect(result).toHaveLength(2);
-      expect(result[0]).toEqual(["Answer 1", "$12345"]);
+      expect(result[0]).toEqual(["Answer 1", "$12,345"]);
       expect(result[1]).toEqual(["Static Field", "Static Value"]);
     });
 
-    it("should handle 'Not answered' for fields without data", () => {
+    test("should handle 'Not answered' for fields without data", () => {
       const bodyRows = [
         [
           { id: "field3", props: { initialValue: "" } },
@@ -155,7 +138,7 @@ describe("exportFieldTableHelpers", () => {
       expect(result[0]).toEqual(["Not answered", "Not answered"]);
     });
 
-    it("should render bold values for specific headers", () => {
+    test("should render bold values for specific headers", () => {
       const boldHeadRow = [
         "Total State / Territory Share",
         "Total Federal Share",
@@ -178,7 +161,7 @@ describe("exportFieldTableHelpers", () => {
   });
 
   describe("renderFieldTableBody()", () => {
-    it("should render field rows and their children", () => {
+    test("should render field rows and their children", () => {
       const tableRows = renderFieldTableBody(
         formFields,
         PageTypes.STANDARD,
@@ -190,7 +173,7 @@ describe("exportFieldTableHelpers", () => {
       expect(tableRows[2].key).toBe("childField1");
     });
 
-    it("should not render nested children for drawer pages", () => {
+    test("should not render nested children for drawer pages", () => {
       const tableRows = renderFieldTableBody(
         formFields,
         PageTypes.DRAWER,
@@ -208,9 +191,34 @@ describe("exportFieldTableHelpers", () => {
         report: { fieldData },
       } as any);
     });
-    it("should render calculation tables", async () => {
-      render(<>{renderCalculationTables(section, fieldData, 0)}</>);
-      expect(screen.getByTestId("service-table-table1")).toBeVisible();
+    test("should render calculation tables", async () => {
+      const tables = [
+        {
+          id: "qualifiedHcbs",
+          name: "Qualified HCBS",
+          pct: 50,
+        },
+        {
+          id: "demonstrationServices",
+          name: "Demonstration Services",
+          pct: 75,
+        },
+        {
+          id: "other",
+          name: "Other",
+          pct: 0,
+        },
+      ];
+
+      tables.forEach(({ id, pct, name }) => {
+        render(
+          <>
+            {renderCalculationTables(section(id, name), fieldData(id, pct), 0)}
+          </>
+        );
+        expect(screen.getByTestId(`service-table-${id}`)).toBeVisible();
+        expect(screen.getByText(`Percentage: ${pct}%`)).toBeVisible();
+      });
     });
   });
 });
