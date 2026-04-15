@@ -225,7 +225,7 @@ export const SuccessMessageGenerator = (
   const reportDisplayNameMap: { [key in ReportType]: string } = {
     WP: "Work Plan",
     SAR: "SAR",
-    EXPENDITURE: "Financial Reporting Form",
+    FINANCIAL_REPORT: "Financial Reporting Form",
   };
   const reportDisplayName = reportDisplayNameMap[reportType];
 
@@ -235,7 +235,11 @@ export const SuccessMessageGenerator = (
     const submittersName = `${submittedBy}`;
 
     const reportTitle =
-      reportType !== ReportType.EXPENDITURE ? <b>{`${name}`}</b> : stateName;
+      reportType !== ReportType.FINANCIAL_REPORT ? (
+        <b>{`${name}`}</b>
+      ) : (
+        stateName
+      );
     const preSubmissionMessage = `MFP ${reportDisplayName} submission for `;
     const postSubmissionMessage = ` ${submittedDate} by ${submittersName}.`;
     return [preSubmissionMessage, reportTitle, postSubmissionMessage];

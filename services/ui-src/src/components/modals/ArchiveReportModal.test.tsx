@@ -53,8 +53,8 @@ describe("<ArchiveReportModal />", () => {
     });
 
     test("the modal opens with correct content", () => {
-      expect(screen.getByText(wpVerbiage.modalArchive.heading)).toBeTruthy();
-      expect(screen.getByText(wpVerbiage.modalArchive.body)).toBeTruthy();
+      expect(screen.getByText(wpVerbiage.modalArchive!.heading)).toBeTruthy();
+      expect(screen.getByText(wpVerbiage.modalArchive!.body)).toBeTruthy();
       expect(screen.getByRole("button", { name: "Cancel" })).toBeTruthy();
       expect(screen.getByRole("button", { name: "Archive" })).toBeTruthy();
     });

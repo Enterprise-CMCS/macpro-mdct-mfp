@@ -20,7 +20,7 @@ const reportChoices = [
     label: "MFP Semi-Annual Progress Report (SAR)",
   },
   {
-    id: "Expenditure",
+    id: "Financial Reporting",
     label: "MFP Financial Reporting Form",
   },
 ];

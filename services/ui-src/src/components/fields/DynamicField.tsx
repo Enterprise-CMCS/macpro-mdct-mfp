@@ -3,7 +3,7 @@ import uuid from "react-uuid";
 import { useFieldArray, useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
-import { Box, Button, Flex, Image } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import { EntityContext, ReportContext } from "components";
 // types
 import {
@@ -11,22 +11,27 @@ import {
   DynamicFieldShape,
   EntityShape,
   InputChangeEvent,
+  ReportFormFieldType,
   ReportStatus,
 } from "types";
 // utils
 import { autosaveFieldData, getAutosaveFields, useStore } from "utils";
 // assets
+import addIcon from "assets/icons/icon_add.png";
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
 export const DynamicField = ({
-  label,
-  name,
-  disabled,
+  autosave = false,
+  disabled = false,
+  dynamicButtonText,
+  dynamicLabel,
   hint,
   hydrate,
+  label,
+  name,
 }: Props) => {
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
-  const { report, selectedEntity } = useStore();
+  const { report, selectedEntity, setAutosaveState } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
   const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>([]);
@@ -88,35 +93,40 @@ export const DynamicField = ({
   const onBlurHandler = async () => {
     // trigger client-side validation so blank fields get client-side validation warning
     form.trigger(name);
-    // prepare args for autosave
-    const fields = getAutosaveFields({
-      name,
-      type: "dynamic",
-      value: displayValues,
-      defaultValue: undefined,
-      overrideCheck: true,
-      hydrationValue: hydrate,
-    });
 
-    const fieldData = modifyFieldData(displayValues);
+    if (autosave) {
+      setAutosaveState(true);
+      const fields = getAutosaveFields({
+        name,
+        type: ReportFormFieldType.DYNAMIC,
+        value: displayValues,
+        defaultValue: undefined,
+        overrideCheck: true,
+        hydrationValue: hydrate,
+      });
 
-    const reportArgs = {
-      id: report?.id,
-      reportType: report?.reportType,
-      updateReport,
-      fieldData,
-    };
-    const user = { userName: full_name, state };
-    await autosaveFieldData({
-      form,
-      fields,
-      report: reportArgs,
-      user,
-      entityContext: {
-        selectedEntity,
-        prepareEntityPayload,
-      },
-    });
+      const fieldData = modifyFieldData(displayValues);
+
+      const reportArgs = {
+        id: report?.id,
+        reportType: report?.reportType,
+        updateReport,
+        fieldData,
+      };
+      const user = { userName: full_name, state };
+      await autosaveFieldData({
+        form,
+        fields,
+        report: reportArgs,
+        user,
+        entityContext: {
+          selectedEntity,
+          prepareEntityPayload,
+        },
+      }).then(() => {
+        setAutosaveState(false);
+      });
+    }
   };
 
   const appendNewRecord = () => {
@@ -128,7 +138,7 @@ export const DynamicField = ({
 
   // delete selected record from DB
   const deleteRecord = async (selectedRecord: DynamicFieldShape) => {
-    if (userIsEndUser) {
+    if (autosave && userIsEndUser) {
       const reportKeys = {
         reportType: report?.reportType,
         state: state,
@@ -152,8 +162,8 @@ export const DynamicField = ({
       };
 
       await updateReport(reportKeys, dataToWrite);
-      removeRecord(selectedRecord);
     }
+    removeRecord(selectedRecord);
   };
 
   // remove selected record from the UI
@@ -190,16 +200,37 @@ export const DynamicField = ({
     }
   }, []); // only runs on hydrationValue fetch/update
 
+  const hintId = `${name}__hint`;
+  const ariaProps = hint ? { "aria-describedby": hintId } : {};
+
   return (
-    <Box>
+    <Box as="fieldset" sx={sx.fieldset} {...ariaProps}>
+      <Box
+        as="legend"
+        className="ds-c-label"
+        sx={dynamicLabel ? sx.legendWithDynamicLabel : sx.legend}
+      >
+        {label}
+      </Box>
+      {hint && (
+        <Text className="ds-c-hint" id={hintId}>
+          {hint}
+        </Text>
+      )}
+
       {displayValues.map((field: DynamicFieldShape, index: number) => {
         return (
-          <Flex key={field.id} sx={sx.dynamicField}>
+          <Flex
+            key={field.id}
+            sx={
+              dynamicLabel ? sx.dynamicFieldWithDynamicLabel : sx.dynamicField
+            }
+          >
             <CmsdsTextField
               id={field.id}
               name={`${name}[${index}]`}
-              hint={hint}
-              label={label}
+              hint={undefined}
+              label={dynamicLabel}
               errorMessage={fieldErrorState?.[index]?.name?.message}
               onChange={onChangeHandler}
               onBlur={onBlurHandler}
@@ -221,11 +252,12 @@ export const DynamicField = ({
       })}
       {!disabled && (
         <Button
-          variant="outline"
-          sx={sx.appendButton}
+          leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="" />}
           onClick={appendNewRecord}
+          sx={sx.appendButton}
+          variant="outline"
         >
-          Add a row
+          {dynamicButtonText || "Add a row"}
         </Button>
       )}
     </Box>
@@ -233,14 +265,26 @@ export const DynamicField = ({
 };
 
 interface Props {
-  name: string;
-  label: string;
+  autosave?: boolean;
   disabled?: boolean;
+  dynamicButtonText?: string;
+  dynamicLabel?: string;
   hint?: string;
   hydrate?: DynamicFieldShape[];
+  label: string;
+  name: string;
 }
 
 const sx = {
+  fieldset: {
+    marginTop: "spacer3",
+  },
+  legend: {
+    fontSize: "md",
+  },
+  legendWithDynamicLabel: {
+    fontSize: "xl",
+  },
   removeBox: {
     marginBottom: "0.625rem",
     marginLeft: "0.625rem",
@@ -253,6 +297,9 @@ const sx = {
     width: "12.5rem",
     height: "2.5rem",
     marginTop: "2rem",
+  },
+  buttonIcons: {
+    height: "1rem",
   },
   dynamicField: {
     alignItems: "flex-end",
@@ -267,6 +314,18 @@ const sx = {
     },
     "&:not(:first-of-type)": {
       paddingTop: "2rem",
+    },
+  },
+  dynamicFieldWithDynamicLabel: {
+    alignItems: "flex-end",
+    ".desktop &": {
+      width: "32rem",
+    },
+    ".tablet &": {
+      width: "29rem",
+    },
+    ".ds-u-clearfix": {
+      width: "100%",
     },
   },
 };

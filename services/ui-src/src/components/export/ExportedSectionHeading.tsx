@@ -30,33 +30,24 @@ export interface Props {
 
 const sx = {
   container: {
+    marginTop: "spacer4",
     "@media print": {
       pageBreakInside: "avoid",
     },
   },
   heading: {
-    marginTop: "spacer4",
+    marginBottom: "spacer3",
     fontSize: "2xl",
     fontWeight: "bold",
     color: "black",
   },
   info: {
-    paddingTop: "spacer3",
     p: {
-      margin: "1.5rem 0",
-    },
-    li: {
-      marginBottom: "spacer3",
+      marginY: "spacer3",
     },
   },
   hintTextBox: {
     color: "#5B616B",
     margin: "1.5rem 0",
-  },
-  spreadsheet: {
-    margin: "1.5rem 0",
-    "@media print": {
-      pageBreakAfter: "avoid",
-    },
   },
 };

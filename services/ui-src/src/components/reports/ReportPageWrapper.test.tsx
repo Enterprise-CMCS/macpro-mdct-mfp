@@ -1,20 +1,21 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 // components
 import { ReportContext, ReportPageWrapper } from "components";
 // utils
 import {
   mockDrawerReportPageJson,
+  mockDynamicModalOverlayReportPageJson,
   mockModalDrawerReportPageJson,
   mockModalOverlayReportPageJson,
   mockReportJson,
   mockStandardReportPageJson,
-  RouterWrappedComponent,
+  mockUseEntityStore,
   mockWpReportContext,
-  mockUseStore,
-  mockDynamicModalOverlayReportPageJson,
+  RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils/state/useStore";
 import { testA11yAct } from "utils/testing/commonTests";
+import userEvent from "@testing-library/user-event";
 
 const mockUseNavigate = jest.fn();
 const mockUseLocation = jest.fn();
@@ -25,15 +26,19 @@ jest.mock("react-router", () => ({
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-mockedUseStore.mockReturnValue(mockUseStore);
+mockedUseStore.mockReturnValue(mockUseEntityStore);
 
 const mockLocations = {
   standard: { pathname: mockReportJson.flatRoutes[0].path },
   drawer: { pathname: mockReportJson.flatRoutes[1].path },
   modalDrawer: { pathname: mockReportJson.flatRoutes[2].path },
   modalOverlay: { pathname: mockReportJson.flatRoutes[4].path },
-  dynamicModalOverlay: { pathname: mockReportJson.flatRoutes[5].path },
-  reviewSubmit: { pathname: mockReportJson.flatRoutes[6].path },
+  modalOverlayEntitySteps: { pathname: mockReportJson.flatRoutes[5].path },
+  dynamicModalOverlay: { pathname: mockReportJson.flatRoutes[6].path },
+  dynamicModalOverlayEntitySteps: {
+    pathname: mockReportJson.flatRoutes[7].path,
+  },
+  reviewSubmit: { pathname: mockReportJson.flatRoutes[8].path },
 };
 
 const ReportPageWrapperComponent = (
@@ -66,10 +71,48 @@ describe("<ReportPageWrapper />", () => {
       mockUseLocation.mockReturnValue(mockLocations.modalDrawer);
       render(ReportPageWrapperComponent);
       expect(
-        screen.getByText(
-          mockModalDrawerReportPageJson.verbiage.addEntityButtonText
-        )
+        screen.getByRole("button", {
+          name: mockModalDrawerReportPageJson.verbiage.addEntityButtonText,
+        })
       ).toBeVisible();
+    });
+
+    test("ReportPageWrapper loads ModalOverlayReportPageV2 for route without entitySteps", async () => {
+      mockUseLocation.mockReturnValue(mockLocations.modalOverlay);
+      render(ReportPageWrapperComponent);
+
+      const enterDetailsButton = screen.getByRole("button", {
+        name: mockModalDrawerReportPageJson.verbiage
+          .enterEntityDetailsButtonText,
+      });
+
+      await act(async () => {
+        await userEvent.click(enterDetailsButton);
+      });
+
+      const backButton = screen.getByRole("button", {
+        name: "Mock back button text",
+      });
+      expect(backButton).toBeVisible();
+    });
+
+    test("ReportPageWrapper loads ModalOverlayReportPageV1 for route with entitySteps", async () => {
+      mockUseLocation.mockReturnValue(mockLocations.modalOverlayEntitySteps);
+      render(ReportPageWrapperComponent);
+
+      const enterDetailsButton = screen.getByRole("button", {
+        name: mockModalDrawerReportPageJson.verbiage
+          .enterEntityDetailsButtonText,
+      });
+
+      await act(async () => {
+        await userEvent.click(enterDetailsButton);
+      });
+
+      const backButton = screen.queryByRole("button", {
+        name: "Return to all initiatives",
+      });
+      expect(backButton).not.toBeInTheDocument();
     });
 
     test("ReportPageWrapper ModalOverlayReportPage view renders", () => {
@@ -80,7 +123,47 @@ describe("<ReportPageWrapper />", () => {
       ).toBeVisible();
     });
 
-    test("ReportPageWrapper DynamicModalOverlayReportPagte view renders", () => {
+    test("ReportPageWrapper loads DynamicModalOverlayReportPageV2 for route without entitySteps", async () => {
+      mockUseLocation.mockReturnValue(mockLocations.dynamicModalOverlay);
+      render(ReportPageWrapperComponent);
+
+      const enterDetailsButton = screen.getByRole("button", {
+        name: mockModalDrawerReportPageJson.verbiage
+          .enterEntityDetailsButtonText,
+      });
+
+      await act(async () => {
+        await userEvent.click(enterDetailsButton);
+      });
+
+      const backButton = screen.getByRole("button", {
+        name: "Return to all initiatives",
+      });
+      expect(backButton).toBeVisible();
+    });
+
+    test("ReportPageWrapper loads DynamicModalOverlayReportPageV1 for route with entitySteps", async () => {
+      mockUseLocation.mockReturnValue(
+        mockLocations.dynamicModalOverlayEntitySteps
+      );
+      render(ReportPageWrapperComponent);
+
+      const enterDetailsButton = screen.getByRole("button", {
+        name: mockModalDrawerReportPageJson.verbiage
+          .enterEntityDetailsButtonText,
+      });
+
+      await act(async () => {
+        await userEvent.click(enterDetailsButton);
+      });
+
+      const dashboard = screen.getByText(
+        `Select "${mockModalDrawerReportPageJson.verbiage.enterEntityDetailsButtonText}" to report data.`
+      );
+      expect(dashboard).toBeVisible();
+    });
+
+    test("ReportPageWrapper DynamicModalOverlayReportPage view renders", () => {
       mockUseLocation.mockReturnValue(mockLocations.dynamicModalOverlay);
       render(ReportPageWrapperComponent);
       expect(

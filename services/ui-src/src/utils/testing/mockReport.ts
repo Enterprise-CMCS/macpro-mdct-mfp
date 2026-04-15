@@ -7,8 +7,10 @@ import {
   mockTargetPopulationsReportPageJson,
   mockReviewSubmitPageJson,
   mockModalOverlayReportPageJson,
+  mockModalOverlayEntityStepsReportPageJson,
   mockDynamicModalOverlayReportPageJson,
   mockInitiativesSpecificDynamicModalOverlayReportPageJson,
+  mockDynamicModalOverlayEntityStepsReportPageJson,
 } from "./mockForm";
 
 export const mockReportPeriod = 1;
@@ -24,6 +26,7 @@ export const mockReportRoutes = [
       mockDrawerReportPageJson,
       mockModalDrawerReportPageJson,
       mockModalOverlayReportPageJson,
+      mockModalOverlayEntityStepsReportPageJson,
       mockDynamicModalOverlayReportPageJson,
     ],
   },
@@ -36,7 +39,9 @@ export const mockFlattenedReportRoutes = [
   mockModalDrawerReportPageJson,
   mockTargetPopulationsReportPageJson,
   mockModalOverlayReportPageJson,
+  mockModalOverlayEntityStepsReportPageJson,
   mockDynamicModalOverlayReportPageJson,
+  mockDynamicModalOverlayEntityStepsReportPageJson,
   mockReviewSubmitPageJson,
 ];
 
@@ -168,6 +173,7 @@ export const mockReportFieldData = {
   ],
   evaluationPlan: mockEvaluationPlan,
   stateName: mockStateName,
+  targetPopulations: [],
 };
 
 export const mockSARReportFieldData = {

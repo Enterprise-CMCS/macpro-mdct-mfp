@@ -148,7 +148,7 @@ export const mockVerbiageIntro = {
 export const mockStandardReportPageJson = {
   name: "mock-route-1",
   path: "/mock/mock-route-1",
-  pageType: "standard",
+  pageType: PageTypes.STANDARD,
   verbiage: {
     intro: mockVerbiageIntro,
   },
@@ -158,7 +158,7 @@ export const mockStandardReportPageJson = {
 export const mockDrawerReportPageJson = {
   name: "mock-route-2a",
   path: "/mock/mock-route-2a",
-  pageType: "drawer",
+  pageType: PageTypes.DRAWER,
   entityType: "plans",
   verbiage: {
     intro: mockVerbiageIntro,
@@ -192,7 +192,7 @@ export const mockModalDrawerReportPageVerbiage = {
 export const mockModalDrawerReportPageJson = {
   name: "mock-route-2b",
   path: "/mock/mock-route-2b",
-  pageType: "modalDrawer",
+  pageType: PageTypes.MODAL_DRAWER,
   entityType: "entityType",
   verbiage: mockModalDrawerReportPageVerbiage,
   modalForm: mockModalForm,
@@ -202,7 +202,7 @@ export const mockModalDrawerReportPageJson = {
 export const mockReviewSubmitPageJson = {
   name: "mock-route-3",
   path: "/mock/mock-review-and-submit",
-  pageType: "reviewSubmit",
+  pageType: PageTypes.REVIEW_SUBMIT,
 };
 
 export const mockEntitySteps = [

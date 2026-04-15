@@ -92,7 +92,7 @@ export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";
 export { CreateSarModal } from "./modals/CreateSarModal";
 export { CreateWorkPlanModal } from "./modals/CreateWorkPlanModal";
-export { CreateExpenditureModal } from "./modals/CreateExpenditureModal";
+export { CreateFinancialReportingModal } from "./modals/CreateFinancialReportingModal";
 export { DeleteEntityModal } from "./modals/DeleteEntityModal";
 // pages
 export { AdminPage } from "./pages/Admin/AdminPage";
@@ -105,6 +105,7 @@ export { ExportedReportPage } from "./pages/Export/ExportedReportPage";
 // overlays
 export { EntityDetailsDashboardOverlay } from "./overlays/EntityDetailsDashboardOverlay";
 export { EntityDetailsOverlay } from "./overlays/EntityDetailsOverlay";
+export { EntityDetailsOverlayV2 } from "./overlays/EntityDetailsOverlayV2";
 // reports
 export { ReportPageIntro } from "./reports/ReportPageIntro";
 export { StandardReportPage } from "./reports/StandardReportPage";
@@ -116,7 +117,9 @@ export { DrawerReportPage } from "./reports/DrawerReportPage";
 export { ModalDrawerReportPage } from "./reports/ModalDrawerReportPage";
 export { OverlayModalPage } from "./reports/OverlayModalPage";
 export { ModalOverlayReportPage } from "./reports/ModalOverlayReportPage";
+export { ModalOverlayReportPageV2 } from "./reports/ModalOverlayReportPageV2";
 export { DynamicModalOverlayReportPage } from "./reports/DynamicModalOverlayReportPage";
+export { DynamicModalOverlayReportPageV2 } from "./reports/DynamicModalOverlayReportPageV2";
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables
@@ -126,6 +129,7 @@ export {
   DynamicTableProvider,
 } from "./tables/DynamicTableProvider";
 export { DynamicTableRows } from "./tables/DynamicTableRows";
+export { EntityModalTable } from "./tables/EntityModalTable";
 export { EntityRow } from "./tables/EntityRow";
 export { EntityStatusIcon } from "./tables/EntityStatusIcon";
 export { SummationTable } from "./tables/SummationTable";
@@ -138,6 +142,6 @@ export { PostLogoutRedirect } from "./PostLogoutRedirect/index";
 export { DashboardPage } from "./pages/Dashboard/DashboardPage";
 export { DashboardTable } from "./pages/Dashboard/DashboardTable";
 export { MobileDashboardTable } from "./pages/Dashboard/MobileDashboardTable";
-export { ExpenditureDashboardPage } from "./pages/Dashboard/Expenditure/ExpenditureDashboardPage";
+export { FinancialReportingDashboardPage } from "./pages/Dashboard/FinancialReporting/FinancialReportingDashboardPage";
 export { DashboardFilter } from "./pages/Dashboard/Filter/DashboardFilter";
-export { handleExpenditureFilter } from "./pages/Dashboard/Filter/dashboardFilterLogic";
+export { handleFinancialReportFilter } from "./pages/Dashboard/Filter/dashboardFilterLogic";

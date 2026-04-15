@@ -10,7 +10,7 @@ import {
 export enum ReportType {
   WP = "WP",
   SAR = "SAR",
-  EXPENDITURE = "EXPENDITURE",
+  FINANCIAL_REPORT = "FINANCIAL_REPORT",
 }
 
 // REPORT STRUCTURE
@@ -50,6 +50,7 @@ export interface StandardReportPageShape extends ReportPageShapeBase {
   modalForm?: never;
   drawerForm?: never;
   entityType?: never;
+  entitySteps?: never;
 }
 
 export interface DrawerReportPageShape extends ReportPageShapeBase {
@@ -59,6 +60,7 @@ export interface DrawerReportPageShape extends ReportPageShapeBase {
   modalForm?: never;
   form?: never;
   dashboard?: never;
+  entitySteps?: never;
 }
 
 export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
@@ -69,6 +71,7 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   drawerForm: FormJson;
   form?: never;
   dashboard?: never;
+  entitySteps?: never;
 }
 
 export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
@@ -80,6 +83,7 @@ export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
   drawerForm?: never;
   form?: never;
   entitySteps?: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
+  overlayForm: FormJson;
 }
 
 export interface DynamicModalOverlayReportPageShape extends ReportPageShapeBase {
@@ -166,6 +170,7 @@ export interface ReportRouteWithoutForm extends ReportRouteBase {
   drawerForm?: never;
   form?: never;
   dashboard?: never;
+  entitySteps?: never;
 }
 
 export interface DrawerReportPageVerbiage extends ReportPageVerbiage {
@@ -224,6 +229,7 @@ export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   addEditModalHint: string;
   emptyDashboardText?: string;
   accordion?: AnyObject;
+  backButtonText?: string;
 }
 
 export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {

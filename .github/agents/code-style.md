@@ -340,7 +340,7 @@ export const useStore = create<CombinedState>()(
 | Interfaces  | PascalCase         | `ReportShape`, `MFPUser`             |
 | Types       | PascalCase         | `ReportPageShape`                    |
 | Enums       | PascalCase         | `ReportType`, `UserRoles`            |
-| Enum values | UPPER_SNAKE_CASE   | `EXPENDITURE`, `STATE_USER`          |
+| Enum values | UPPER_SNAKE_CASE   | `FINANCIAL_REPORTING`, `STATE_USER`  |
 | Constants   | UPPER_SNAKE_CASE   | `DEFAULT_TARGET_POPULATIONS`         |
 | Test files  | `*.test.ts(x)`     | `fetch.test.ts`, `HomePage.test.tsx` |
 | Type files  | `*.ts` in `types/` | `reports.ts`, `users.ts`             |

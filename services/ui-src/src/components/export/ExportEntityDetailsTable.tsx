@@ -202,7 +202,7 @@ export const ExportEntityDetailsTable = ({
   );
 
   return (
-    <Box mt="2rem" data-testid="exportEntityDetailsTable" sx={sx.container}>
+    <Box data-testid="exportEntityDetailsTable" sx={sx.container}>
       <Table content={table} className={section?.stepType}></Table>
     </Box>
   );
@@ -216,6 +216,7 @@ export interface Props {
 
 const sx = {
   container: {
+    marginTop: "spacer4",
     "@media print": {
       pageBreakInside: "avoid",
     },

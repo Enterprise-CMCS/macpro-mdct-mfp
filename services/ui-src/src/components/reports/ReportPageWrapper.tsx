@@ -4,8 +4,10 @@ import { Flex } from "@chakra-ui/react";
 import {
   DrawerReportPage,
   DynamicModalOverlayReportPage,
+  DynamicModalOverlayReportPageV2,
   ModalDrawerReportPage,
   ModalOverlayReportPage,
+  ModalOverlayReportPageV2,
   PageTemplate,
   ReviewSubmitPage,
   Sidebar,
@@ -22,7 +24,8 @@ import {
   StandardReportPageShape,
 } from "types";
 // utils
-import { useStore } from "utils";
+import { hasEntitySteps, hasInitiativesWithEntitySteps, useStore } from "utils";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const ReportPageWrapper = () => {
   const { report } = useStore();
@@ -44,6 +47,15 @@ export const ReportPageWrapper = () => {
           <ModalDrawerReportPage route={route as ModalDrawerReportPageShape} />
         );
       case PageTypes.MODAL_OVERLAY:
+        if (!hasEntitySteps(route)) {
+          return (
+            <ModalOverlayReportPageV2
+              route={route as ModalOverlayReportPageShape}
+              setSidebarHidden={setSidebarHidden}
+            />
+          );
+        }
+
         return (
           <ModalOverlayReportPage
             route={route as ModalOverlayReportPageShape}
@@ -51,6 +63,18 @@ export const ReportPageWrapper = () => {
           />
         );
       case PageTypes.DYNAMIC_MODAL_OVERLAY:
+        if (
+          useFlags()?.wpSarRelease2025 ||
+          !hasInitiativesWithEntitySteps(route)
+        ) {
+          return (
+            <DynamicModalOverlayReportPageV2
+              route={route as DynamicModalOverlayReportPageShape}
+              setSidebarHidden={setSidebarHidden}
+            />
+          );
+        }
+
         return (
           <DynamicModalOverlayReportPage
             route={route as DynamicModalOverlayReportPageShape}

@@ -33,7 +33,7 @@ export const ExportedReportWrapper = ({
         );
       }
       return (
-        <Box data-testid="exportedStandardReportSection" mt="2rem">
+        <Box data-testid="exportedStandardReportSection" sx={sx.container}>
           <ExportedReportFieldTable
             section={section as StandardReportPageShape}
             headingLevel={headingLevel}
@@ -42,7 +42,7 @@ export const ExportedReportWrapper = ({
       );
     case PageTypes.DRAWER:
       return (
-        <Box data-testid="exportedDrawerReportSection" mt="2rem">
+        <Box data-testid="exportedDrawerReportSection" sx={sx.container}>
           <ExportedReportFieldTable
             section={section as DrawerReportPageShape}
             headingLevel={headingLevel}
@@ -84,3 +84,9 @@ export interface Props {
   section: ReportRouteWithForm;
   headingLevel?: HeadingLevel;
 }
+
+const sx = {
+  container: {
+    marginTop: "spacer4",
+  },
+};

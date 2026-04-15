@@ -1,4 +1,6 @@
-export default {
+import { DashboardPageVerbiage } from "types";
+
+const dashboardPageVerbiage: DashboardPageVerbiage = {
   intro: {
     header: "MFP Semi-Annual Progress Report (SAR)",
     body: [],
@@ -33,3 +35,5 @@ export default {
     actionButtonText: "Return to dashboard",
   },
 };
+
+export default dashboardPageVerbiage;

@@ -15,7 +15,7 @@ import { ReportStatus, ReportType } from "types";
 // verbiage
 import WPReviewVerbiage from "verbiage/pages/wp/wp-review-and-submit";
 import SARReviewVerbiage from "verbiage/pages/sar/sar-review-and-submit";
-import FinancialReportingFormReviewVerbiage from "verbiage/pages/expenditure/expenditure-review-and-submit";
+import FinancialReportingFormReviewVerbiage from "verbiage/pages/financial-report/financial-report-review-and-submit";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -159,7 +159,7 @@ describe("<AdminReview />", () => {
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {
-            reportType: ReportType.EXPENDITURE,
+            reportType: ReportType.FINANCIAL_REPORT,
           },
           user: mockAdminUserStore,
         });
@@ -171,7 +171,7 @@ describe("<AdminReview />", () => {
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {
-            reportType: ReportType.EXPENDITURE,
+            reportType: ReportType.FINANCIAL_REPORT,
             status: ReportStatus.IN_PROGRESS,
           },
           user: mockAdminUserStore,
@@ -184,7 +184,7 @@ describe("<AdminReview />", () => {
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {
-            reportType: ReportType.EXPENDITURE,
+            reportType: ReportType.FINANCIAL_REPORT,
             status: ReportStatus.SUBMITTED,
           },
           user: mockAdminUserStore,
@@ -198,7 +198,7 @@ describe("<AdminReview />", () => {
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {
-            reportType: ReportType.EXPENDITURE,
+            reportType: ReportType.FINANCIAL_REPORT,
           },
           user: mockAdminUserStore,
         });

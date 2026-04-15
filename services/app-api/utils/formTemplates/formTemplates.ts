@@ -11,6 +11,7 @@ import {
   FormLayoutElement,
   FormTemplateVersion,
   OverlayModalPageShape,
+  PageTypes,
   ReportJson,
   ReportJsonFile,
   ReportRoute,
@@ -27,27 +28,23 @@ import {
 import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 import { transformFormTemplate } from "../transformations/transformations";
 // routes
-import {
-  wpReportJson,
-  sarReportJson,
-  expenditureReportJson,
-} from "../../forms";
+import { wpReportJson, sarReportJson, financialReportJson } from "../../forms";
 // flagged routes
 import * as wpFlags from "../../forms/routes/wp/flags";
 import * as sarFlags from "../../forms/routes/sar/flags";
-import * as expenditureFlags from "../../forms/routes/expenditure/flags";
+import * as financialReportFlags from "../../forms/routes/financial-report/flags";
 
 export const formTemplateForReportType = async (reportType: ReportType) => {
   const routeMap: Record<ReportType, ReportJsonFile> = {
     [ReportType.WP]: wpReportJson,
     [ReportType.SAR]: sarReportJson,
-    [ReportType.EXPENDITURE]: expenditureReportJson,
+    [ReportType.FINANCIAL_REPORT]: financialReportJson,
   };
   // Get LaunchDarkly flags from folder names in forms/routes/[reportType]/flags
   const flagMap: Record<ReportType, any> = {
     [ReportType.WP]: wpFlags,
     [ReportType.SAR]: sarFlags,
-    [ReportType.EXPENDITURE]: expenditureFlags,
+    [ReportType.FINANCIAL_REPORT]: financialReportFlags,
   };
 
   const flagsByReportType = flagMap[reportType];
@@ -212,10 +209,10 @@ export const compileValidationJsonFromRoutes = (
   routeArray.forEach((route: ReportRoute) => {
     // check for non-standard needed validation objects
     if (
-      (route.pageType === "modalDrawer" ||
-        route.pageType === "modalOverlay" ||
-        route.pageType === "overlayModal" ||
-        route.pageType === "dynamicModalOverlay") &&
+      (route.pageType === PageTypes.MODAL_DRAWER ||
+        route.pageType === PageTypes.MODAL_OVERLAY ||
+        route.pageType === PageTypes.OVERLAY_MODAL ||
+        route.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY) &&
       route.entityType
     ) {
       Object.assign(validationSchema, { [route.entityType]: "objectArray" });
@@ -228,14 +225,14 @@ export const compileValidationJsonFromRoutes = (
     }
 
     // accumulate entity steps
-    if (route.pageType === "modalOverlay") {
+    if (route.pageType === PageTypes.MODAL_OVERLAY) {
       for (let step of route.entitySteps ?? []) {
         const stepForm = step.form || step.modalForm;
         addValidationToAccumulator(stepForm);
       }
     }
 
-    if (route.pageType === "dynamicModalOverlay") {
+    if (route.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY) {
       for (let initiative of route.initiatives ?? []) {
         for (let step of initiative.entitySteps) {
           const stepForm = step.form || step.modalForm;

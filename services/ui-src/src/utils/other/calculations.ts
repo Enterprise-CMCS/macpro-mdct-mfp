@@ -1,4 +1,5 @@
 import { AnyObject, DynamicFieldShape } from "types";
+import { getFieldParts } from "utils";
 
 //summation of a row in a table, adjust the startIndex if you want to skip the first column
 export const sumOfRow = (row: string[], startIndex: number = 0) => {
@@ -123,6 +124,105 @@ const sumSharesBySuffix = (
   }, {} as CalculatedSharesType);
 };
 
+export const calculateAggregateTotals = (
+  fieldData: AnyObject,
+  fieldSuffixesToCalculate: FieldSuffixesToCalculateType,
+  fieldId: string,
+  tableId?: string,
+  tableShares: CalculatedSharesType = {} as CalculatedSharesType
+) => {
+  // Return empty result if fieldData is not available
+  if (!fieldData) {
+    return {
+      qualifiedHcbsServicesTotal: {
+        percentageShare: 0,
+        remainingShare: 0,
+        total: 0,
+      } as CalculatedSharesType,
+      demonstrationServicesTotal: {
+        percentageShare: 0,
+        remainingShare: 0,
+        total: 0,
+      } as CalculatedSharesType,
+      serviceTables: {
+        percentageShare: 0,
+        remainingShare: 0,
+        total: 0,
+      } as CalculatedSharesType,
+      allTables: {
+        percentageShare: 0,
+        remainingShare: 0,
+        total: 0,
+      } as CalculatedSharesType,
+    };
+  }
+
+  const qualifiedHcbsServicesTotalId = [
+    "qualifiedHcbs_statePlanServices",
+    "qualifiedHcbs_1915cWaiverServices",
+  ];
+  const demonstrationServicesTotalId = [
+    "demonstrationServices_statePlanServices",
+    "demonstrationServices_1915cWaiverServices",
+  ];
+
+  const serviceTableIds = [
+    "qualifiedHcbs_statePlanServices",
+    "qualifiedHcbs_1915cWaiverServices",
+    "demonstrationServices_statePlanServices",
+    "demonstrationServices_1915cWaiverServices",
+    "supplementalServices_category",
+  ];
+
+  const allTableIds = [
+    ...serviceTableIds,
+    "administrativeCosts_budgetCategory",
+    "administrativeCosts_capacityBuilding",
+    "administrativeCosts_subRecipients",
+  ];
+
+  const keys = Object.keys(fieldSuffixesToCalculate) as Array<
+    keyof FieldSuffixesToCalculateType
+  >;
+
+  const calculateForTableIds = (tableIds: string[]) => {
+    const result = {} as CalculatedSharesType;
+
+    const { tableId: fieldIdPrefix } = getFieldParts(fieldId);
+
+    // if the changed field id is not part of the table ids, keep existing values
+    const isTableField = tableIds.includes(fieldIdPrefix);
+    for (const key of keys) {
+      const suffix = fieldSuffixesToCalculate[key];
+      const relevantTableIds = isTableField
+        ? tableIds.filter((t) => t !== tableId)
+        : tableIds;
+      const totalCents = relevantTableIds.reduce(
+        (sum, id) =>
+          sum + toCents(getNumberValue(fieldData[`${id}-${suffix}`])),
+        0
+      );
+      const extra = isTableField
+        ? toCents(getNumberValue(tableShares[key]))
+        : 0;
+      result[key] = toDecimal(totalCents + extra);
+    }
+
+    return result;
+  };
+
+  return {
+    qualifiedHcbsServicesTotal: calculateForTableIds(
+      qualifiedHcbsServicesTotalId
+    ),
+    demonstrationServicesTotal: calculateForTableIds(
+      demonstrationServicesTotalId
+    ),
+    serviceTables: calculateForTableIds(serviceTableIds),
+    allTables: calculateForTableIds(allTableIds),
+  };
+};
+
 // Recalculate sums in expenditure table when a field value changes
 export const fieldTableTotals = ({
   fieldData,
@@ -134,6 +234,10 @@ export const fieldTableTotals = ({
 }: FieldTableTotalsType): {
   field: CalculatedSharesType;
   table: CalculatedSharesType;
+  qualifiedHcbsServicesTotal: CalculatedSharesType;
+  demonstrationServicesTotal: CalculatedSharesType;
+  serviceTables: CalculatedSharesType;
+  allTables: CalculatedSharesType;
 } => {
   // Skip current and totals fields
   const exclusions = Object.values(fieldSuffixesToCalculate).flatMap(
@@ -148,9 +252,26 @@ export const fieldTableTotals = ({
     sumFields(fieldData, tableId, fieldSuffixesToCalculate[key], exclusions)
   );
 
+  const {
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
+  } = calculateAggregateTotals(
+    fieldData,
+    fieldSuffixesToCalculate,
+    fieldId,
+    tableId,
+    tableShares
+  );
+
   return {
     field: fieldShares,
     table: tableShares,
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
   };
 };
 
@@ -166,6 +287,10 @@ export const dynamicFieldTableTotals = ({
   field: CalculatedSharesType;
   table: CalculatedSharesType;
   template: CalculatedSharesType;
+  qualifiedHcbsServicesTotal: CalculatedSharesType;
+  demonstrationServicesTotal: CalculatedSharesType;
+  serviceTables: CalculatedSharesType;
+  allTables: CalculatedSharesType;
 } => {
   // Skip current and totals fields
   const exclusions = Object.values(fieldSuffixesToCalculate).flatMap(
@@ -190,10 +315,27 @@ export const dynamicFieldTableTotals = ({
     sumFields(fieldData, tableId, fieldSuffixesToCalculate[key], exclusions)
   );
 
+  const {
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
+  } = calculateAggregateTotals(
+    fieldData,
+    fieldSuffixesToCalculate,
+    dynamicFieldId,
+    tableId,
+    tableShares
+  );
+
   return {
     field: fieldShares,
     table: tableShares,
     template: templateShares,
+    qualifiedHcbsServicesTotal,
+    demonstrationServicesTotal,
+    serviceTables,
+    allTables,
   };
 };
 

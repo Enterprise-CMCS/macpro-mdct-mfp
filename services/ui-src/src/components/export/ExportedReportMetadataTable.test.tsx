@@ -2,7 +2,12 @@ import { render, screen } from "@testing-library/react";
 // components
 import { ReportContext, ExportedReportMetadataTable } from "components";
 // utils
-import { ReportShape, ReportStatus, ReportType } from "types";
+import {
+  ExportPageVerbiage,
+  ReportShape,
+  ReportStatus,
+  ReportType,
+} from "types";
 import wpVerbiage from "verbiage/pages/wp/wp-export";
 import sarVerbiage from "verbiage/pages/sar/sar-export";
 import { bodyRowContent, headerRowLabels } from "./ExportedReportMetadataTable";
@@ -23,7 +28,7 @@ const mockWPContext = {
     lastAlteredBy: "Mock editor",
   },
   reportType: ReportType.WP,
-  verbiage: wpVerbiage.reportPage,
+  verbiage: wpVerbiage,
 };
 
 const mockSARContext = {
@@ -35,7 +40,7 @@ const mockSARContext = {
     lastAlteredBy: "Mock editor",
   },
   reportType: ReportType.SAR,
-  verbiage: sarVerbiage.reportPage,
+  verbiage: sarVerbiage,
 };
 
 const metadataTableWithContext = (context: any) => {
@@ -96,7 +101,9 @@ describe("<ExportedReportMetadataTable />", () => {
   const unknownReportType = "some new report type" as ReportType;
 
   test("Should throw an error when rendering the header for an unknown report type", () => {
-    expect(() => headerRowLabels(unknownReportType, {})).toThrow(Error);
+    expect(() =>
+      headerRowLabels(unknownReportType, {} as ExportPageVerbiage)
+    ).toThrow(Error);
   });
 
   test("Should throw an error when rendering the body for an unknown report type", () => {

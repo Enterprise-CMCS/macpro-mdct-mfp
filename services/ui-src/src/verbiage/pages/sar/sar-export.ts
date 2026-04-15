@@ -1,4 +1,6 @@
-export default {
+import { ExportPageVerbiage } from "types";
+
+const exportPageVerbiage: ExportPageVerbiage = {
   missingEntry: {
     noResponse: "Not answered",
     notApplicable: "Not applicable",
@@ -18,8 +20,8 @@ export default {
       submissionName: "Submission Name",
       dueDate: "Due date",
       lastEdited: "Last edited",
-      editedBy: "Edited by",
       status: "Status",
+      editedBy: "Edited by",
     },
     combinedDataTable: {
       title: "Exclusion of CHIP from SAR",
@@ -49,7 +51,6 @@ export default {
       "CMS Project Officer",
     ],
   },
-  modalOverlayTableHeaders: {},
   tableHeaders: {
     number: "Number",
     indicator: "Indicator",
@@ -64,3 +65,5 @@ export default {
     objectiveProgress: "Objectives total count: ",
   },
 };
+
+export default exportPageVerbiage;
