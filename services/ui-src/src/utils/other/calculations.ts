@@ -188,7 +188,6 @@ export const calculateAggregateTotals = (
     const result = {} as CalculatedSharesType;
 
     // if the changed field id is not part of the table ids, keep existing values
-    console.log("tableId", tableId);
     const isTableField = tableId && tableIds.includes(tableId);
     for (const key of keys) {
       const suffix = fieldSuffixesToCalculate[key];
@@ -262,7 +261,6 @@ export const fieldTableTotals = ({
     tableId,
     tableShares
   );
-  //console.log("allTables 3", allTables);
 
   return {
     field: fieldShares,
