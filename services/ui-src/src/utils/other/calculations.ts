@@ -1,5 +1,4 @@
 import { AnyObject, DynamicFieldShape } from "types";
-import { getFieldParts } from "utils";
 
 //summation of a row in a table, adjust the startIndex if you want to skip the first column
 export const sumOfRow = (row: string[], startIndex: number = 0) => {
@@ -188,10 +187,9 @@ export const calculateAggregateTotals = (
   const calculateForTableIds = (tableIds: string[]) => {
     const result = {} as CalculatedSharesType;
 
-    const { tableId: fieldIdPrefix } = getFieldParts(fieldId);
-
     // if the changed field id is not part of the table ids, keep existing values
-    const isTableField = tableIds.includes(fieldIdPrefix);
+    console.log("tableId", tableId);
+    const isTableField = tableId && tableIds.includes(tableId);
     for (const key of keys) {
       const suffix = fieldSuffixesToCalculate[key];
       const relevantTableIds = isTableField
@@ -264,6 +262,7 @@ export const fieldTableTotals = ({
     tableId,
     tableShares
   );
+  //console.log("allTables 3", allTables);
 
   return {
     field: fieldShares,
