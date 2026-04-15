@@ -62,16 +62,11 @@ export const AddEditKeyMetricsModal = ({
     const displayData = { ...formData, ...enteredData };
     setFormData(displayData);
 
-    let submissionData = keys.reduce((data, key) => {
+    const submissionData = keys.reduce((data, key) => {
       const { fieldType } = getFieldParts(key);
       data[fieldType] = displayData[key];
       return data;
     }, {} as AnyObject);
-
-    submissionData = {
-      ...submissionData,
-      baselinePeriod: `${submissionData.baselineStartDate} - ${submissionData.baselineEndDate}`,
-    };
 
     const dynamicFieldId = selectedId || uuid();
 

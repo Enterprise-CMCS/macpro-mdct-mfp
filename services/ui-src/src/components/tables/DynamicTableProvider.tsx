@@ -217,6 +217,21 @@ export const DynamicTableProvider = ({ children }: any) => {
       );
 
       hydrateValue = currentField?.[fieldType];
+
+      // handle Key Metrics table edge cases
+      if (entityType === entityTypes[0]) {
+        switch (fieldType) {
+          case "dataSource":
+            currentField?.dataSource[0].value === "Other, specify"
+              ? (hydrateValue = currentField?.otherText)
+              : (hydrateValue = currentField?.dataSource[0].value);
+            break;
+          case "baselineStartDate":
+            hydrateValue = `${hydrateValue} - ${currentField?.baselineEndDate}`;
+            break;
+        }
+      }
+
       hydratedProps = {
         ...hydratedField.props,
         hydrate: hydrateValue,

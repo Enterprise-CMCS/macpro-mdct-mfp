@@ -89,6 +89,10 @@ export const DynamicTableRows = ({
         const dynamicId = row.id;
         const name = row.name || dynamicId;
 
+        const dynamicFields = (
+          dynamicRowsTemplate.props?.dynamicFields || []
+        ).filter((f: FormField) => !f.id.includes("baselineEndDate"));
+
         return (
           <Tr
             key={dynamicId}
@@ -97,27 +101,25 @@ export const DynamicTableRows = ({
               rowRefs.current[rowIndex] = el;
             }}
           >
-            {dynamicRowsTemplate.props?.dynamicFields.map(
-              (field: FormField, cellIndex: number) => (
-                <Td
-                  id={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-                  key={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-                >
-                  {displayDynamicCell({
-                    cell: field,
-                    columnId: `${dynamicId}-${rowIndex}-cell-0`,
-                    disabled,
-                    dynamicId,
-                    entityType,
-                    formData,
-                    percentage: formPercentage,
-                    rowId: `thead-row-0-cell-${cellIndex}`,
-                    rowIndex,
-                    tableId,
-                  })}
-                </Td>
-              )
-            )}
+            {dynamicFields.map((field: FormField, cellIndex: number) => (
+              <Td
+                id={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
+                key={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
+              >
+                {displayDynamicCell({
+                  cell: field,
+                  columnId: `${dynamicId}-${rowIndex}-cell-0`,
+                  disabled,
+                  dynamicId,
+                  entityType,
+                  formData,
+                  percentage: formPercentage,
+                  rowId: `thead-row-0-cell-${cellIndex}`,
+                  rowIndex,
+                  tableId,
+                })}
+              </Td>
+            ))}
             <Td>
               <Flex>
                 {!disabled && hasDynamicModalForm && (
