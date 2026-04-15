@@ -91,7 +91,7 @@ describe("<ReportPageWrapper />", () => {
       });
 
       const backButton = screen.getByRole("button", {
-        name: "Mock back button text",
+        name: mockModalOverlayReportPageJson.verbiage.backButtonText,
       });
       expect(backButton).toBeVisible();
     });
@@ -110,7 +110,7 @@ describe("<ReportPageWrapper />", () => {
       });
 
       const backButton = screen.queryByRole("button", {
-        name: "Return to all initiatives",
+        name: mockModalOverlayReportPageJson.verbiage.backButtonText,
       });
       expect(backButton).not.toBeInTheDocument();
     });
@@ -137,7 +137,7 @@ describe("<ReportPageWrapper />", () => {
       });
 
       const backButton = screen.getByRole("button", {
-        name: "Return to all initiatives",
+        name: mockModalOverlayReportPageJson.verbiage.backButtonText,
       });
       expect(backButton).toBeVisible();
     });

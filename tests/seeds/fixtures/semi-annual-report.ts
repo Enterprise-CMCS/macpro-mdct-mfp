@@ -1,5 +1,7 @@
 import { faker } from "@faker-js/faker";
+// types
 import {
+  AnyObject,
   Choice,
   ReportFieldData,
   ReportStatus,
@@ -10,6 +12,8 @@ import {
   SeedNewReportShape,
   SeedReportShape,
 } from "../types";
+// helpers
+import { dateFormat } from "../helpers";
 
 export const newSemiAnnualReport = (
   flags: { [key: string]: true },
@@ -58,8 +62,20 @@ export const fillSemiAnnualReport = (
   flags: { [key: string]: true },
   { fieldData, populations, reportPeriod, reportYear }: SeedReportShape
 ): SeedFillReportShape => {
-  if (Object.keys(flags).length > 0) {
-    // Add data mods by flag
+  let flaggedData = {};
+
+  if (flags.wpSarRelease2025) {
+    flaggedData = {
+      initiative: updateInitiativeV2(fieldData.initiative as ReportFieldData[]),
+    };
+  } else {
+    flaggedData = {
+      initiative: updateInitiativeV1(
+        fieldData.initiative as ReportFieldData[],
+        reportPeriod,
+        reportYear
+      ),
+    };
   }
 
   return {
@@ -94,11 +110,6 @@ export const fillSemiAnnualReport = (
       generalInformation_stateTerritoryMedicaidAgency: faker.company.name(),
       generalInformation_stateTerritoryMedicaidDirector:
         faker.person.fullName(),
-      initiative: updateInitiative(
-        fieldData.initiative as ReportFieldData[],
-        reportPeriod,
-        reportYear
-      ),
       instructions_selfDirectedInitiatives:
         fieldData.instructions_selfDirectedInitiatives,
       instructions_tribalInitiatives: fieldData.instructions_tribalInitiatives,
@@ -141,6 +152,7 @@ export const fillSemiAnnualReport = (
       ],
       targetPopulations: fieldData.targetPopulations,
       ...addPopulationCounts(populations, reportPeriod),
+      ...flaggedData,
     },
   };
 };
@@ -222,7 +234,42 @@ function listPopulations(targetPopulations: ReportFieldData[]) {
     })) as Choice[];
 }
 
-function updateInitiative(
+function updateInitiativeV2(initiatives: ReportFieldData[]) {
+  return initiatives.map((initiative) => {
+    return {
+      ...initiative,
+      defineInitiative_keyMetrics_performanceIndicators: (
+        initiative.defineInitiative_keyMetrics_performanceIndicators as AnyObject[]
+      ).map((keyMetric) => ({
+        ...keyMetric,
+        targetBenchmarkActualDate: dateFormat.format(faker.date.future()),
+      })),
+      initiativeEvaluation_achievedExpectedResults: [
+        {
+          key: "initiativeEvaluation_achievedExpectedResults-2NywCe4me9M7mWNMDb53Av",
+          value: "Yes",
+        },
+      ],
+      initiativeEvaluation_achievedExpectedResults_describeYes:
+        faker.lorem.sentence(),
+      initiativeEvaluation_describeFindings: faker.lorem.sentence(),
+      initiativeEvaluation_describeQualitativeDetail: faker.lorem.sentence(),
+      initiativeEvaluation_sustainBeyondGrantPeriod: [
+        {
+          key: "initiativeEvaluation_sustainBeyondGrantPeriod-a18b25AS9qTaHgs6Nf7bP8",
+          value: "Yes",
+        },
+      ],
+      initiativeEvaluation_sustainBeyondGrantPeriod_describeYes:
+        faker.lorem.sentence(),
+      initiativeProgress_describeIssuesChallenges: faker.lorem.sentence(),
+      initiativeProgress_describeProgress: faker.lorem.sentence(),
+      isCopied: true,
+    };
+  });
+}
+
+function updateInitiativeV1(
   initiatives: ReportFieldData[],
   reportPeriod: number,
   reportYear: number

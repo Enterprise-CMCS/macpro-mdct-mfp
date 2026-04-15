@@ -67,11 +67,13 @@ export interface FormTable {
   footRows: FormTableRows;
   headRows: FormTableRows;
   options?: AnyObject;
+  styleAsOptionalHeadRows?: string[];
   tableType: FormTableType;
   verbiage?: {
     emptyTableMessage?: string;
     errorMessage?: string | CustomHtmlElement[];
     percentage?: string;
+    sectionTitle?: string;
     subtitle?: string | CustomHtmlElement[];
     title: string;
   };

@@ -67,15 +67,17 @@ export function* iterateAllForms(
       yield* iterateAllForms(route.children);
     }
     if (route.initiatives) {
-      for (let initiative of route.initiatives) {
-        yield* iterateAllForms(initiative.entitySteps);
+      for (const initiative of route.initiatives) {
+        // TODO: Update for v2
+        if (initiative.entitySteps)
+          yield* iterateAllForms(initiative.entitySteps);
       }
     }
     if (route.entitySteps) {
       yield* iterateAllForms(route.entitySteps);
     }
     if (route.objectiveCards) {
-      for (let objectiveCard of route.objectiveCards) {
+      for (const objectiveCard of route.objectiveCards) {
         if (objectiveCard.modalForm) yield objectiveCard.modalForm;
       }
     }
@@ -176,7 +178,7 @@ export const transformFormTemplate = (
     workPlanFieldData
   );
 
-  for (let form of iterateAllForms(formTemplate.routes)) {
+  for (const form of iterateAllForms(formTemplate.routes)) {
     form.fields = transformFields(
       form.fields,
       reportPeriod,
@@ -185,7 +187,7 @@ export const transformFormTemplate = (
       form.initiativeId,
       form.objectiveId
     );
-    for (let choiceWithChildren of iterateChoicesWithChildren(form.fields)) {
+    for (const choiceWithChildren of iterateChoicesWithChildren(form.fields)) {
       choiceWithChildren.children = transformFields(
         choiceWithChildren.children,
         reportPeriod,
@@ -494,11 +496,14 @@ export const runSARTransformations = (
       "Not implemented yet - Workplan must have initiatives that the SAR can build from"
     );
 
-  // At this stage, we know that the route will have a template.
-  const template = route.template!;
+  const template = route.template;
+  route.initiatives = [];
+
+  // TODO: Update for v2
+  if (!template?.entitySteps) return route;
+
   delete route.template;
 
-  route.initiatives = [];
   for (let workPlanInitiative of workPlanFieldData.initiative) {
     let templateEntitySteps = structuredClone(template.entitySteps);
     for (let step of templateEntitySteps) {
@@ -573,8 +578,11 @@ export const extractWorkPlanData = (
 ): void => {
   const quarters = reportPeriod === 1 ? [1, 2] : [3, 4];
 
-  for (let initiative of sarFieldData.initiative) {
-    for (let fundingSource of initiative.fundingSources) {
+  for (const initiative of sarFieldData.initiative) {
+    // TODO: Update for v2
+    if (!initiative.fundingSources && !initiative.evaluationPlan) return;
+
+    for (const fundingSource of initiative.fundingSources) {
       for (let quarter of quarters) {
         const wpFieldId = `fundingSources_quarters${reportYear}Q${quarter}`;
         const sarFieldId = `fundingSources_projected_${reportYear}Q${quarter}_${fundingSource.id}`;
@@ -582,7 +590,7 @@ export const extractWorkPlanData = (
       }
     }
 
-    for (let evaluationPlan of initiative.evaluationPlan) {
+    for (const evaluationPlan of initiative.evaluationPlan) {
       // Transferring Blanket Data
       const objectiveProgress: any = {
         id: evaluationPlan["id"],
@@ -598,7 +606,7 @@ export const extractWorkPlanData = (
       };
 
       //Transfering Evaluation Plan Quarters Data
-      for (let quarter of quarters) {
+      for (const quarter of quarters) {
         const wpFieldId = `quarterlyProjections${reportYear}Q${quarter}`;
         const sarFieldId = `objectiveTargets_projections_${reportYear}Q${quarter}`;
         objectiveProgress[sarFieldId] = evaluationPlan[wpFieldId];

@@ -29,6 +29,7 @@ export const EntityModalTable = ({
   formData,
   headRows,
   id: tableId,
+  styleAsOptionalHeadRows,
   verbiage,
 }: Props) => {
   // Modal
@@ -77,6 +78,7 @@ export const EntityModalTable = ({
               row,
               rowIndex,
               section: "thead",
+              styleAsOptionalHeadRows: styleAsOptionalHeadRows,
               ...sharedCellProps,
             })
           )}

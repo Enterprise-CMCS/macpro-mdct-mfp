@@ -60,7 +60,7 @@ export const isUsableForTransforms = (
     if (!populations.every(isTargetPopulation)) return false;
   }
 
-  // As with populations, this is optional only for east of testing.
+  // As with populations, this is optional only for ease of testing.
   if (workPlanFieldData.initiative !== undefined) {
     const initiatives = workPlanFieldData.initiative;
     if (!Array.isArray(initiatives)) return false;
@@ -88,10 +88,14 @@ const isInitiative = (initiative: any): initiative is Initiative => {
   if (typeof initiative.id !== "string") return false;
   if (typeof initiative.initiative_name !== "string") return false;
   if (!isChoiceArray(initiative.initiative_wpTopic)) return false;
-  if (!Array.isArray(initiative.fundingSources)) return false;
-  if (!initiative.fundingSources.every(isFundingSource)) return false;
-  for (let fundingSource of initiative.fundingSources) {
-    if (!isChoiceArray(fundingSource.fundingSources_wpTopic)) return false;
+
+  // TODO: Update for v2
+  if (initiative.fundingSources) {
+    if (!Array.isArray(initiative.fundingSources)) return false;
+    if (!initiative.fundingSources.every(isFundingSource)) return false;
+    for (let fundingSource of initiative.fundingSources) {
+      if (!isChoiceArray(fundingSource.fundingSources_wpTopic)) return false;
+    }
   }
   return true;
 };
