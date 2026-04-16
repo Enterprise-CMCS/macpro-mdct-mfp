@@ -139,6 +139,7 @@ export const DynamicTableRows = ({
                       removeDynamicRow(
                         dynamicRowsTemplate.id,
                         dynamicId,
+                        entityType,
                         updatedFieldsCallback(dynamicId, localFieldData)
                       )
                     }

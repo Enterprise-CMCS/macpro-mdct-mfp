@@ -442,13 +442,19 @@ export const DynamicTableProvider = ({ children }: any) => {
   const removeDynamicRow = async (
     dynamicTemplateId: string,
     dynamicFieldId: string,
+    entityType?: string,
     updatedFields: FieldInfo[] = []
   ) => {
-    const rows = localFieldData?.[dynamicTemplateId] || [];
+    const rows =
+      entityType === entityTypes[0]
+        ? localFieldData?.[entityType][0][dynamicTemplateId]
+        : localFieldData?.[dynamicTemplateId] || [];
+
     // Remove row to be deleted
-    const updatedRows = rows.filter(
-      (row: DynamicFieldShape) => row.id !== dynamicFieldId
-    );
+    const updatedRows = rows.filter((row: DynamicFieldShape) => {
+      return row.id !== dynamicFieldId;
+    });
+
     const fields = updatedFields.map((field) => {
       return field.name === dynamicTemplateId
         ? {
