@@ -215,9 +215,9 @@ const addInitiative = (
       ],
       defineInitiative_keyMetrics_performanceIndicators: [
         {
-          baseline: faker.lorem.sentence(),
           baselineEndDate: dateFormat.format(faker.date.future()),
           baselineStartDate: dateFormat.format(faker.date.past()),
+          baselineValue: faker.lorem.sentence(),
           dataSource: [
             {
               key: "defineInitiative_fundingSources-awTB7dbwBc8x3fRjbWIRlC",
@@ -226,8 +226,8 @@ const addInitiative = (
           ],
           id: crypto.randomUUID(),
           name: faker.lorem.sentence(),
-          targetBenchmark: faker.lorem.sentence(),
           targetBenchmarkProjectedDate: dateFormat.format(faker.date.future()),
+          targetBenchmarkValue: faker.lorem.sentence(),
         },
       ],
       defineInitiative_qualitativeMethods: faker.lorem.sentence(),

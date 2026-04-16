@@ -12,7 +12,7 @@ import {
   SeedNewReportShape,
   SeedReportShape,
 } from "../types";
-// helpers
+// utils
 import { dateFormat } from "../helpers";
 
 export const newSemiAnnualReport = (
