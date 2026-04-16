@@ -94,65 +94,69 @@ export const DynamicTableRows = ({
         ).filter((f: FormField) => !f.id.includes("baselineEndDate"));
 
         return (
-          <Tr
-            key={dynamicId}
-            id={dynamicId}
-            ref={(el) => {
-              rowRefs.current[rowIndex] = el;
-            }}
-          >
-            {dynamicFields.map((field: FormField, cellIndex: number) => (
-              <Td
-                id={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-                key={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-              >
-                {displayDynamicCell({
-                  cell: field,
-                  columnId: `${dynamicId}-${rowIndex}-cell-0`,
-                  disabled,
-                  dynamicId,
-                  entityType,
-                  formData,
-                  percentage: formPercentage,
-                  rowId: `thead-row-0-cell-${cellIndex}`,
-                  rowIndex,
-                  tableId,
-                })}
+          <>
+            <Tr
+              key={dynamicId}
+              id={dynamicId}
+              ref={(el) => {
+                rowRefs.current[rowIndex] = el;
+              }}
+            >
+              {dynamicFields.map((field: FormField, cellIndex: number) => (
+                <Td
+                  id={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
+                  key={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
+                >
+                  {displayDynamicCell({
+                    cell: field,
+                    columnId: `${dynamicId}-${rowIndex}-cell-0`,
+                    disabled,
+                    dynamicId,
+                    entityType,
+                    formData,
+                    percentage: formPercentage,
+                    rowId: `thead-row-0-cell-${cellIndex}`,
+                    rowIndex,
+                    tableId,
+                  })}
+                </Td>
+              ))}
+              <Td>
+                <Flex>
+                  {!disabled && hasDynamicModalForm && (
+                    <Button
+                      aria-label={`Edit ${name}`}
+                      onClick={() => openModal(dynamicId)}
+                      sx={sx.editButton}
+                      type="button"
+                      variant={"unstyled"}
+                    >
+                      Edit
+                    </Button>
+                  )}
+                  {/* TODO: popup to confirm deletion of Key Metric */}
+                  {!disabled && (
+                    <Button
+                      onClick={() =>
+                        removeDynamicRow(
+                          dynamicRowsTemplate.id,
+                          dynamicId,
+                          entityType,
+                          updatedFieldsCallback(dynamicId, localFieldData)
+                        )
+                      }
+                      sx={sx.removeButton}
+                      type="button"
+                      variant={"unstyled"}
+                    >
+                      <Image src={cancelIcon} alt={`Delete ${name}`} />
+                    </Button>
+                  )}
+                </Flex>
               </Td>
-            ))}
-            <Td>
-              <Flex>
-                {!disabled && hasDynamicModalForm && (
-                  <Button
-                    aria-label={`Edit ${name}`}
-                    onClick={() => openModal(dynamicId)}
-                    sx={sx.editButton}
-                    type="button"
-                    variant={"unstyled"}
-                  >
-                    Edit
-                  </Button>
-                )}
-                {!disabled && (
-                  <Button
-                    onClick={() =>
-                      removeDynamicRow(
-                        dynamicRowsTemplate.id,
-                        dynamicId,
-                        entityType,
-                        updatedFieldsCallback(dynamicId, localFieldData)
-                      )
-                    }
-                    sx={sx.removeButton}
-                    type="button"
-                    variant={"unstyled"}
-                  >
-                    <Image src={cancelIcon} alt={`Delete ${name}`} />
-                  </Button>
-                )}
-              </Flex>
-            </Td>
-          </Tr>
+            </Tr>
+            {/* TODO: DeleteEntityModal */}
+          </>
         );
       })}
     </>
