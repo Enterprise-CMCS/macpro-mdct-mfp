@@ -41,7 +41,7 @@ describe("Field data copy", () => {
       "CO",
       "mock-source-id",
       formTemplate,
-      fieldData,
+      fieldData
     );
 
     expect(copiedData).toEqual({
@@ -75,7 +75,7 @@ describe("Field data copy", () => {
       "CO",
       "mock-source-id",
       formTemplate,
-      fieldData,
+      fieldData
     );
 
     expect(copiedData).toEqual({
@@ -96,7 +96,7 @@ describe("Field data copy", () => {
       "CO",
       "mock-source-id",
       formTemplate,
-      fieldData,
+      fieldData
     );
 
     expect(copiedData).toEqual({});
@@ -119,7 +119,7 @@ describe("Field data copy", () => {
       "CO",
       "mock-source-id",
       formTemplate,
-      fieldData,
+      fieldData
     );
 
     expect(copiedData).toEqual({});
@@ -155,7 +155,7 @@ describe("Field data copy", () => {
       "CO",
       "mock-source-id",
       formTemplate,
-      fieldData,
+      fieldData
     );
 
     expect(copiedData).toEqual({
@@ -201,7 +201,7 @@ describe("Field data copy", () => {
       "CO",
       "mock-source-id",
       formTemplate,
-      fieldData,
+      fieldData
     );
 
     expect(copiedData).toEqual({
@@ -252,7 +252,7 @@ describe("Field data copy", () => {
       "CO",
       "mock-source-id",
       formTemplate,
-      fieldData,
+      fieldData
     );
 
     // I think this is a bug actually. Probably it should not copy this entity.
@@ -286,7 +286,7 @@ describe("Field data copy", () => {
       "CO",
       "mock-source-id",
       formTemplate,
-      fieldData,
+      fieldData
     );
 
     expect(copiedData).toEqual({});
@@ -327,7 +327,7 @@ describe("Field data copy", () => {
       "CO",
       "mock-source-id",
       formTemplate,
-      fieldData,
+      fieldData
     );
 
     expect(copiedData).toEqual({
@@ -349,7 +349,7 @@ describe("Field data copy", () => {
     const runFinancialCopyCase = async (
       sourceFieldData: Record<string, any>,
       expected: Record<string, any>,
-      fieldIds: string[],
+      fieldIds: string[]
     ) => {
       (getReportFieldData as jest.Mock).mockResolvedValueOnce(sourceFieldData);
 
@@ -368,7 +368,7 @@ describe("Field data copy", () => {
         "CO",
         "mock-source-id",
         formTemplate,
-        {},
+        {}
       );
 
       expect(copiedData).toEqual(expected);
@@ -385,7 +385,7 @@ describe("Field data copy", () => {
         {
           fmap_qualifiedHcbsPercentage: "75",
         },
-        ["fmap_qualifiedHcbsPercentage"],
+        ["fmap_qualifiedHcbsPercentage"]
       );
     });
 
@@ -427,7 +427,7 @@ describe("Field data copy", () => {
           "administrativeCosts_capacityBuilding_capacityBuilding-percentageOverride",
           "administrativeCosts_budgetCategory_personnel-percentageOverride",
           "supplementalServices_category_otherCategories",
-        ],
+        ]
       );
     });
 
@@ -503,7 +503,7 @@ describe("Field data copy", () => {
       async ({ sourceFieldData, expected }) => {
         const fieldId = Object.keys(sourceFieldData)[0];
         await runFinancialCopyCase(sourceFieldData, expected, [fieldId]);
-      },
+      }
     );
   });
 });

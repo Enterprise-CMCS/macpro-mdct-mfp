@@ -65,7 +65,7 @@ export async function copyFieldDataFromSource(
   state: State,
   copyFieldDataSourceId: string,
   formTemplate: ReportJson,
-  validatedFieldData: ReportFieldData,
+  validatedFieldData: ReportFieldData
 ) {
   const sourceFieldData = await getReportFieldData({
     reportType: formTemplate.type,
@@ -88,7 +88,7 @@ export async function copyFieldDataFromSource(
           key,
           sourceFieldData[key] as ReportFieldData[],
           possibleFields,
-          formTemplate.type,
+          formTemplate.type
         );
       } else if (!possibleFields.includes(key)) {
         delete sourceFieldData[key];
@@ -106,7 +106,7 @@ function pruneEntityData(
   key: string,
   entityData: ReportFieldData[],
   possibleFields: string[],
-  reportType?: ReportType,
+  reportType?: ReportType
 ) {
   //adding fields to be copied over from entries
   const concatEntityFields = [...possibleFields, ...additionalFields];
@@ -125,7 +125,7 @@ function pruneEntityData(
           key,
           entity[entityKey] as ReportFieldData[],
           possibleFields,
-          reportType,
+          reportType
         );
       } else if (shouldExcludeCopiedField(reportType, entityKey, key)) {
         delete entityData[index][entityKey];
@@ -149,7 +149,7 @@ function pruneEntityData(
   //filter out any closeout data
   if (Array.isArray(sourceFieldData[key])) {
     const filteredData = (sourceFieldData[key] as ReportFieldData[]).filter(
-      (field) => !field["isInitiativeClosed"],
+      (field) => !field["isInitiativeClosed"]
     );
     sourceFieldData[key] = filteredData;
   }
@@ -162,7 +162,7 @@ function pruneEntityData(
 const shouldExcludeCopiedField = (
   reportType: ReportType | undefined,
   fieldKey: string,
-  entityType?: string,
+  entityType?: string
 ) => {
   if (reportType !== ReportType.FINANCIAL_REPORT) return false;
   const normalizedFieldName = getFieldKeySuffix(fieldKey);
@@ -180,12 +180,12 @@ const shouldExcludeCopiedField = (
 
 const shouldIncludeCopiedEntityField = (
   reportType: ReportType | undefined,
-  fieldKey: string,
+  fieldKey: string
 ) => {
   if (reportType !== ReportType.FINANCIAL_REPORT) return false;
 
   const normalizedFieldName = getFieldKeySuffix(fieldKey);
   return financialReportEntityIncludedNormalizedFieldNames.includes(
-    normalizedFieldName,
+    normalizedFieldName
   );
 };

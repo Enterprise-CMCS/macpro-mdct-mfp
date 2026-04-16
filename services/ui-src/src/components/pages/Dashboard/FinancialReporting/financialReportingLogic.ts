@@ -23,7 +23,7 @@ export const generateReportYearOptions = () => {
 };
 
 export const generateCopyReportOptions = (
-  reportsByState: ReportMetadataShape[] = [],
+  reportsByState: ReportMetadataShape[] = []
 ) => {
   const noEligibleOption = {
     id: "copyReport-none",
@@ -37,7 +37,7 @@ export const generateCopyReportOptions = (
 
   const eligibleReports = reportsByState.filter(
     (r) =>
-      r.status === ReportStatus.SUBMITTED || r.status === ReportStatus.APPROVED,
+      r.status === ReportStatus.SUBMITTED || r.status === ReportStatus.APPROVED
   );
 
   if (eligibleReports.length === 0) {
@@ -62,7 +62,7 @@ export const generateCopyReportOptions = (
 export const prepareFinancialReportingPayload = (
   activeState: string,
   formData: AnyObject,
-  reportsByState?: ReportMetadataShape[],
+  reportsByState?: ReportMetadataShape[]
 ) => {
   const formattedReportYear = Number(formData.reportYear.value);
   const formattedReportPeriod = Number(formData.reportPeriod.value);
@@ -76,7 +76,7 @@ export const prepareFinancialReportingPayload = (
 
   if (copiedReportsID) {
     copiedReport = reportsByState?.find(
-      (report) => report.id === copiedReportsID,
+      (report) => report.id === copiedReportsID
     );
   }
   const financialReportingPayload: AnyObject = {
