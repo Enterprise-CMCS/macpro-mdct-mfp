@@ -27,14 +27,14 @@ const sarKeyMetricsHeadersOptional = ["Actual"];
 const sarKeyMetricsDynamicFieldsToReturn = [
   ...keyMetricsDynamicFieldsToReturn,
   {
-    id: "targetBenchmarkActualDate",
+    id: "targetBenchmarkActual",
     props: {
-      label: "Actual date to achieve benchmark value",
+      label: "Actual",
       readOnly: false,
     },
     options: {
-      type: ReportFormFieldType.DATE,
-      validation: ValidationType.DATE_OPTIONAL,
+      type: ReportFormFieldType.TEXT,
+      validation: ValidationType.TEXT_OPTIONAL,
     },
   },
 ];

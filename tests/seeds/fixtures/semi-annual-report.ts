@@ -12,8 +12,6 @@ import {
   SeedNewReportShape,
   SeedReportShape,
 } from "../types";
-// utils
-import { dateFormat } from "../helpers";
 
 export const newSemiAnnualReport = (
   flags: { [key: string]: true },
@@ -242,7 +240,7 @@ function updateInitiativeV2(initiatives: ReportFieldData[]) {
         initiative.defineInitiative_keyMetrics_performanceIndicators as AnyObject[]
       ).map((keyMetric) => ({
         ...keyMetric,
-        targetBenchmarkActualDate: dateFormat.format(faker.date.future()),
+        targetBenchmarkActual: faker.lorem.sentence(),
       })),
       initiativeEvaluation_achievedExpectedResults: [
         {
