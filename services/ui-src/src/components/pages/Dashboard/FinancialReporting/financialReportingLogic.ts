@@ -35,20 +35,28 @@ export const generateCopyReportOptions = (
     return [noEligibleOption];
   }
 
-  const reportOptions = reportsByState
-    .filter(
-      (r) =>
-        r.status === ReportStatus.SUBMITTED ||
-        r.status === ReportStatus.APPROVED
-    )
-    .map((r) => ({
-      id: `copyReport-${r.id}`,
-      label: r.submissionName,
-      name: r.submissionName,
-      value: `${r.id}`,
-    }));
+  const eligibleReports = reportsByState.filter(
+    (r) =>
+      r.status === ReportStatus.SUBMITTED || r.status === ReportStatus.APPROVED
+  );
 
-  return reportOptions.length > 0 ? reportOptions : [noEligibleOption];
+  if (eligibleReports.length === 0) {
+    return [noEligibleOption];
+  }
+
+  // Sort by createdAt descending (newest first) and limit to the latest four
+  const latestFourReports = eligibleReports
+    .toSorted((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+    .slice(0, 4);
+
+  const reportOptions = latestFourReports.map((r) => ({
+    id: `copyReport-${r.id}`,
+    label: r.submissionName,
+    name: r.submissionName,
+    value: r.id,
+  }));
+
+  return reportOptions;
 };
 
 export const prepareFinancialReportingPayload = (

@@ -1,6 +1,6 @@
 import { getReportFieldData } from "../../storage/reports";
 import { getPossibleFieldsFromFormTemplate } from "../formTemplates/formTemplates";
-import { ReportFieldData, ReportJson, State } from "../types";
+import { ReportFieldData, ReportJson, ReportType, State } from "../types";
 
 /**
  *
@@ -21,45 +21,95 @@ const additionalFields = [
   "isInitiativeClosed",
 ];
 
-export async function copyFieldDataFromSource(
-  state: State,
-  copyFieldDataSourceId: string,
-  formTemplate: ReportJson,
-  validatedFieldData: ReportFieldData
-) {
-  const sourceFieldData = await getReportFieldData({
-    reportType: formTemplate.type,
-    state,
-    fieldDataId: copyFieldDataSourceId,
-  });
+const financialReportExcludedFieldIds = [
+  "stateName",
+  "stateOrTerritory",
+  "submissionCount",
+];
 
-  if (sourceFieldData) {
-    const possibleFields = getPossibleFieldsFromFormTemplate(formTemplate);
-    Object.keys(sourceFieldData).forEach((key: string) => {
-      // Only iterate through entities, not choice lists
-      if (Array.isArray(sourceFieldData[key])) {
-        pruneEntityData(
-          sourceFieldData,
-          key,
-          sourceFieldData[key] as ReportFieldData[],
-          possibleFields
-        );
-      } else if (!possibleFields.includes(key)) {
-        delete sourceFieldData[key];
-      }
-    });
+const financialReportExcludedNormalizedFieldNames = [
+  "percentageOverride",
+  "totalComputable",
+  "totalStateTerritoryShare",
+  "totalFederalShare",
+];
 
-    Object.assign(validatedFieldData, sourceFieldData);
-  }
+const financialReportEntityExcludedNormalizedFieldNames: Record<
+  string,
+  string[]
+> = {
+  administrativeCosts_budgetCategory_miscellaneousCosts: ["percentageOverride"],
+  administrativeCosts_subRecipients_subRecipients: ["percentageOverride"],
+  administrativeCosts_personnel_positions: [
+    "budgetedFullTimeEmployees",
+    "filledFullTimeEmployees",
+  ],
+};
 
-  return validatedFieldData;
-}
+const financialReportEntityIncludedNormalizedFieldNames = [
+  "category",
+  "description",
+  "title",
+];
+
+const getFieldKeySuffix = (fieldKey: string) => {
+  return fieldKey.split("-").pop() ?? "";
+};
+
+const isFinancialReportCommentField = (fieldKey: string) => {
+  const normalized = fieldKey.toLowerCase();
+  return normalized.includes("narrative");
+};
+
+const isExcludedFinancialReportNormalizedField = (
+  normalizedFieldName: string,
+  entityExcludedFields: string[]
+) => {
+  return (
+    financialReportExcludedNormalizedFieldNames.includes(normalizedFieldName) ||
+    entityExcludedFields.includes(normalizedFieldName)
+  );
+};
+
+const shouldExcludeCopiedField = (
+  reportType: ReportType | undefined,
+  fieldKey: string,
+  entityType?: string
+) => {
+  if (reportType !== ReportType.FINANCIAL_REPORT) return false;
+  const normalizedFieldName = getFieldKeySuffix(fieldKey);
+  const entityExcludedFields = entityType
+    ? (financialReportEntityExcludedNormalizedFieldNames[entityType] ?? [])
+    : [];
+
+  return (
+    financialReportExcludedFieldIds.includes(fieldKey) ||
+    isFinancialReportCommentField(fieldKey) ||
+    isExcludedFinancialReportNormalizedField(
+      normalizedFieldName,
+      entityExcludedFields
+    )
+  );
+};
+
+const shouldExcludeCopiedEntityField = (
+  reportType: ReportType | undefined,
+  fieldKey: string
+) => {
+  if (reportType !== ReportType.FINANCIAL_REPORT) return true;
+
+  const normalizedFieldName = getFieldKeySuffix(fieldKey);
+  return !financialReportEntityIncludedNormalizedFieldNames.includes(
+    normalizedFieldName
+  );
+};
 
 function pruneEntityData(
   sourceFieldData: ReportFieldData,
   key: string,
   entityData: ReportFieldData[],
-  possibleFields: string[]
+  possibleFields: string[],
+  reportType?: ReportType
 ) {
   //adding fields to be copied over from entries
   const concatEntityFields = [...possibleFields, ...additionalFields];
@@ -77,12 +127,15 @@ function pruneEntityData(
           sourceFieldData,
           key,
           entity[entityKey] as ReportFieldData[],
-          possibleFields
+          possibleFields,
+          reportType
         );
       } else if (
-        !concatEntityFields.includes(entityKey) &&
-        !entityKey.includes("name") &&
-        !["key", "value"].includes(entityKey)
+        shouldExcludeCopiedField(reportType, entityKey, key) ||
+        (shouldExcludeCopiedEntityField(reportType, entityKey) &&
+          !entityKey.includes("name") &&
+          !concatEntityFields.includes(entityKey) &&
+          !["key", "value"].includes(entityKey))
       ) {
         delete entityData[index][entityKey];
       }
@@ -106,4 +159,44 @@ function pruneEntityData(
   if (entityData.every((e) => e === null)) {
     delete sourceFieldData[key];
   }
+}
+
+export async function copyFieldDataFromSource(
+  state: State,
+  copyFieldDataSourceId: string,
+  formTemplate: ReportJson,
+  validatedFieldData: ReportFieldData
+) {
+  const sourceFieldData = await getReportFieldData({
+    reportType: formTemplate.type,
+    state,
+    fieldDataId: copyFieldDataSourceId,
+  });
+
+  if (sourceFieldData) {
+    const possibleFields = getPossibleFieldsFromFormTemplate(formTemplate);
+    Object.keys(sourceFieldData).forEach((key: string) => {
+      if (shouldExcludeCopiedField(formTemplate.type, key)) {
+        delete sourceFieldData[key];
+        return;
+      }
+
+      // Only iterate through entities, not choice lists
+      if (Array.isArray(sourceFieldData[key])) {
+        pruneEntityData(
+          sourceFieldData,
+          key,
+          sourceFieldData[key] as ReportFieldData[],
+          possibleFields,
+          formTemplate.type
+        );
+      } else if (!possibleFields.includes(key)) {
+        delete sourceFieldData[key];
+      }
+    });
+
+    Object.assign(validatedFieldData, sourceFieldData);
+  }
+
+  return validatedFieldData;
 }
