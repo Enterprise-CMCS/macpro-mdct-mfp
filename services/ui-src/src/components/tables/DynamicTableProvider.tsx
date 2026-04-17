@@ -28,23 +28,24 @@ import {
 import uuid from "react-uuid";
 import {
   autosaveFieldData,
+  combinedSum,
   createTempDynamicId,
   debounce,
   FieldInfo,
   formFieldFactory,
   getAutosaveFields,
   getFieldParts,
+  getValueToCombine,
   hydrateFormFields,
+  isCombinedCalculationField,
   isTempDynamicField,
+  labelTextWithOptional,
   maskResponseData,
   setPercentageAndValue,
   updateRenderFields,
   UpdatedFieldDataOnChange,
   updatedFieldDataOnFieldChange,
   useStore,
-  isCombinedCalculationField,
-  combinedSum,
-  getValueToCombine,
 } from "utils";
 
 export const DynamicTableContext = createContext<DynamicTableMethods>({
@@ -147,8 +148,11 @@ export const DynamicTableProvider = ({ children }: any) => {
     percentage: formPercentage,
     rowId,
     rowIndex,
+    styleAsOptional = false,
   }: DisplayCellOptions) => {
-    if (typeof cell === "string") return cell;
+    if (typeof cell === "string") {
+      return styleAsOptional ? labelTextWithOptional(cell) : cell;
+    }
 
     const props = cell.props || {};
     const { initialValue, mask, readOnly } = props;
@@ -277,6 +281,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     row,
     rowIndex,
     section,
+    styleAsOptionalHeadRows = [],
     tableId,
   }: GenerateRows) => {
     let firstColumnWidth = dynamicRowsTemplate ? 30 : 36;
@@ -319,6 +324,11 @@ export const DynamicTableProvider = ({ children }: any) => {
       section === "thead" ? <VisuallyHidden>Options</VisuallyHidden> : null;
     const rowId = section === "tbody" ? "thead" : section;
 
+    const isOptional = (cell: FormTableCell) => {
+      if (typeof cell === "object") return false;
+      return styleAsOptionalHeadRows.includes(cell);
+    };
+
     return (
       <Tr
         key={`${section}-row-${rowIndex}`}
@@ -337,6 +347,7 @@ export const DynamicTableProvider = ({ children }: any) => {
               formData,
               rowId: `${rowId}-row-0-cell-${cellIndex}`,
               rowIndex,
+              styleAsOptional: isOptional(cell),
               tableId,
               ...cellPropsCallback(cell),
             })}
@@ -504,6 +515,7 @@ interface DisplayCellOptions {
   percentage: number;
   rowId: string;
   rowIndex: number;
+  styleAsOptional?: boolean;
   tableId: string;
 }
 
@@ -534,6 +546,7 @@ interface GenerateRows {
   row: FormTableRow;
   rowIndex: number;
   section: string;
+  styleAsOptionalHeadRows?: string[];
   tableId?: string;
 }
 

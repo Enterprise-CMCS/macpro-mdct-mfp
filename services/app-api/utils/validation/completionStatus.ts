@@ -241,11 +241,14 @@ export const calculateCompletionStatus = async (
   ) => {
     let areAllFormsComplete = true;
 
-    for (let initiative of initiatives) {
-      const isComplete = await calculateEntityWithStepsCompletion(
-        initiative.entitySteps,
-        entityType
-      );
+    for (const initiative of initiatives) {
+      // TODO: Update for v2
+      const isComplete = initiative.entitySteps
+        ? await calculateEntityWithStepsCompletion(
+            initiative.entitySteps,
+            entityType
+          )
+        : true;
       if (!isComplete) {
         areAllFormsComplete = false;
         break;

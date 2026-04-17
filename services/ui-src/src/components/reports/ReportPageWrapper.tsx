@@ -25,7 +25,6 @@ import {
 } from "types";
 // utils
 import { hasEntitySteps, hasInitiativesWithEntitySteps, useStore } from "utils";
-import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const ReportPageWrapper = () => {
   const { report } = useStore();
@@ -63,10 +62,7 @@ export const ReportPageWrapper = () => {
           />
         );
       case PageTypes.DYNAMIC_MODAL_OVERLAY:
-        if (
-          useFlags()?.wpSarRelease2025 ||
-          !hasInitiativesWithEntitySteps(route)
-        ) {
+        if (!hasInitiativesWithEntitySteps(route)) {
           return (
             <DynamicModalOverlayReportPageV2
               route={route as DynamicModalOverlayReportPageShape}
