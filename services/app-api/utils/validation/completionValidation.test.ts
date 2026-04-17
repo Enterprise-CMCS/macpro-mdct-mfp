@@ -4,14 +4,15 @@ import {
   endDate,
   nested,
 } from "./completionSchemas";
+import { ValidationType } from "../types";
 
 const mockStandardValidationType = {
-  key: "text",
+  key: ValidationType.TEXT,
 };
 
 const mockCustomValidationType = {
   key: {
-    type: "textCustom",
+    type: ValidationType.TEXT_CUSTOM,
     options: {
       maxLength: 10,
     },
@@ -20,7 +21,7 @@ const mockCustomValidationType = {
 
 const mockNestedValidationType = {
   key: {
-    type: "text",
+    type: ValidationType.TEXT,
     nested: true,
     parentFieldName: "mock-parent-field-name",
     parentOptionId: "mock-parent-option-name",
@@ -29,14 +30,14 @@ const mockNestedValidationType = {
 
 const mockDependentValidationType = {
   key: {
-    type: "endDate",
+    type: ValidationType.END_DATE,
     dependentFieldName: "mock-dependent-field-name",
   },
 };
 
 const mockNestedDependentValidationType = {
   key: {
-    type: "endDate",
+    type: ValidationType.END_DATE,
     dependentFieldName: "mock-dependent-field-name",
     nested: true,
     parentFieldName: "mock-parent-field-name",

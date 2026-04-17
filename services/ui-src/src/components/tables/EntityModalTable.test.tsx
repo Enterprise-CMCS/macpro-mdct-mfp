@@ -10,7 +10,6 @@ import { NumberMask, ReportFormFieldType, ValidationType } from "types";
 import { useStore } from "utils";
 import {
   mockDynamicFieldId,
-  mockDynamicRowsTemplate,
   mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
   mockStateUserStore,
@@ -230,7 +229,7 @@ describe("<EntityModalTable />", () => {
     expect(table).toHaveAttribute("id", "mockTable_mockServices");
 
     const tableHeading = screen.getByRole("heading", {
-      level: 2,
+      level: 4,
       name: "Mock table title",
     });
     expect(tableHeading).toBeVisible();
@@ -257,7 +256,7 @@ describe("<EntityModalTable />", () => {
       const updatedProps = {
         ...mockProps,
         report,
-        dynamicRowsTemplate: mockDynamicRowsTemplate,
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
       };
 
       const { container } = render(tableComponent(updatedProps));

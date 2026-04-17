@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
 import { Box, Heading } from "@chakra-ui/react";
 import {
   EntityDetailsOverlayV2,
   EntityProvider,
   EntityRow,
+  ReportContext,
   ReportPageFooter,
   ReportPageIntro,
   Table,
@@ -14,10 +15,21 @@ import {
   AnyObject,
   DynamicModalOverlayReportPageShape,
   EntityShape,
+  FormJson,
+  isFieldElement,
   ReportShape,
+  ReportStatus,
 } from "types";
 // utils
-import { parseCustomHtml, useBreakpoint, useStore } from "utils";
+import {
+  entityWasUpdated,
+  filterFormData,
+  getEntriesToClear,
+  parseCustomHtml,
+  setClearedEntriesToDefaultValue,
+  useBreakpoint,
+  useStore,
+} from "utils";
 
 export const DynamicModalOverlayReportPageV2 = ({
   route,
@@ -28,15 +40,18 @@ export const DynamicModalOverlayReportPageV2 = ({
 
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
+  const { updateReport } = useContext(ReportContext);
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
   const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
     undefined
   );
   const [entering, setEntering] = useState<boolean>(false);
+  const [form, setForm] = useState<FormJson>({} as FormJson);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   // State management
-  const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
+  const { full_name, state, userIsAdmin, userIsEndUser, userIsReadOnly } =
+    useStore().user ?? {};
   const {
     editable,
     report = {} as ReportShape,
@@ -69,12 +84,62 @@ export const DynamicModalOverlayReportPageV2 = ({
     setSidebarHidden(false);
   };
 
-  const onSubmit = async (_enteredData: AnyObject) => {
-    // TODO: Add updateReport settings
-    setSubmitting(false);
+  const onSubmit = async (enteredData: AnyObject) => {
+    console.log(enteredData);
+    if (userIsEndUser) {
+      setSubmitting(true);
+      const reportKeys = {
+        reportType: report.reportType,
+        state,
+        id: report.id,
+      };
+      const currentEntities = [...(report.fieldData[entityType] || [])];
+      const selectedEntityIndex = report.fieldData[entityType].findIndex(
+        (entity: EntityShape) => entity.id === currentEntity?.id
+      );
+      const filteredFormData = filterFormData(
+        enteredData,
+        form.fields.filter(isFieldElement)
+      );
+      const entriesToClear = getEntriesToClear(
+        enteredData,
+        form.fields.filter(isFieldElement)
+      );
+      const newEntity = {
+        ...currentEntity,
+        ...filteredFormData,
+      };
+      let newEntities = currentEntities;
+      newEntities[selectedEntityIndex] = newEntity;
+      newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
+        newEntities[selectedEntityIndex],
+        entriesToClear
+      );
+      const shouldSave = entityWasUpdated(
+        reportFieldDataEntities[selectedEntityIndex],
+        newEntity
+      );
+      if (shouldSave) {
+        const dataToWrite = {
+          metadata: {
+            status: ReportStatus.IN_PROGRESS,
+            lastAlteredBy: full_name,
+          },
+          fieldData: {
+            [entityType]: newEntities,
+          },
+        };
+        await updateReport(reportKeys, dataToWrite);
+      }
+      setSubmitting(false);
+    }
     closeEntityDetailsOverlay();
     setSidebarHidden(false);
   };
+
+  useEffect(() => {
+    if (overlayForm) setForm(overlayForm);
+  }, [overlayForm]);
 
   const tablePage = () => {
     return (
@@ -115,7 +180,7 @@ export const DynamicModalOverlayReportPageV2 = ({
           closeEntityDetailsOverlay={closeEntityDetailsOverlay}
           disabled={isDisabled}
           editable={editable}
-          form={overlayForm}
+          form={form}
           onSubmit={onSubmit}
           route={route}
           selectedEntity={currentEntity}

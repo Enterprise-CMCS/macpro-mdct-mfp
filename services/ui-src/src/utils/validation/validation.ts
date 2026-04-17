@@ -1,5 +1,5 @@
 import { nested, endDate, schemaMap } from "./schemas";
-import { AnyObject } from "types";
+import { AnyObject, ValidationType } from "types";
 
 // map field validation types to validation schema
 export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
@@ -19,7 +19,7 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
         }
       }
       // else if custom validation type with options
-      else if (fieldValidation?.options) {
+      else if (fieldValidation?.options && !fieldValidation?.nested) {
         const correspondingSchema = schemaMap[fieldValidation.type];
         if (correspondingSchema) {
           validationSchema[key] = correspondingSchema(fieldValidation.options);
@@ -30,7 +30,7 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
         validationSchema[key] = makeNestedFieldSchema(fieldValidation);
 
         // else if not nested, make and set other dependent field types
-      } else if (fieldValidation?.type === "endDate") {
+      } else if (fieldValidation?.type === ValidationType.END_DATE) {
         validationSchema[key] = makeEndDateFieldSchema(fieldValidation);
       }
     }
@@ -46,15 +46,21 @@ export const makeEndDateFieldSchema = (fieldValidationObject: AnyObject) => {
 
 // return created nested field schema
 export const makeNestedFieldSchema = (fieldValidationObject: AnyObject) => {
-  const { type, parentFieldName, parentOptionId } = fieldValidationObject;
-  if (type === "endDate") {
+  const { options, parentFieldName, parentOptionId, type } =
+    fieldValidationObject;
+
+  if (type === ValidationType.END_DATE) {
     return nested(
       () => makeEndDateFieldSchema(fieldValidationObject),
       parentFieldName,
       parentOptionId
     );
   } else {
-    const fieldValidationSchema = schemaMap[type];
+    const correspondingSchema = schemaMap[type];
+    const fieldValidationSchema = options
+      ? correspondingSchema(options)
+      : correspondingSchema;
+
     return nested(() => fieldValidationSchema, parentFieldName, parentOptionId);
   }
 };
