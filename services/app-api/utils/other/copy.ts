@@ -63,7 +63,7 @@ const isFinancialReportCommentField = (fieldKey: string) => {
 
 const isExcludedFinancialReportNormalizedField = (
   normalizedFieldName: string,
-  entityExcludedFields: string[],
+  entityExcludedFields: string[]
 ) => {
   return (
     financialReportExcludedNormalizedFieldNames.includes(normalizedFieldName) ||
@@ -74,7 +74,7 @@ const isExcludedFinancialReportNormalizedField = (
 const shouldExcludeCopiedField = (
   reportType: ReportType | undefined,
   fieldKey: string,
-  entityType?: string,
+  entityType?: string
 ) => {
   if (reportType !== ReportType.FINANCIAL_REPORT) return false;
   const normalizedFieldName = getFieldKeySuffix(fieldKey);
@@ -87,20 +87,20 @@ const shouldExcludeCopiedField = (
     isFinancialReportCommentField(fieldKey) ||
     isExcludedFinancialReportNormalizedField(
       normalizedFieldName,
-      entityExcludedFields,
+      entityExcludedFields
     )
   );
 };
 
 const shouldExcludeCopiedEntityField = (
   reportType: ReportType | undefined,
-  fieldKey: string,
+  fieldKey: string
 ) => {
   if (reportType !== ReportType.FINANCIAL_REPORT) return true;
 
   const normalizedFieldName = getFieldKeySuffix(fieldKey);
   return !financialReportEntityIncludedNormalizedFieldNames.includes(
-    normalizedFieldName,
+    normalizedFieldName
   );
 };
 
@@ -109,7 +109,7 @@ function pruneEntityData(
   key: string,
   entityData: ReportFieldData[],
   possibleFields: string[],
-  reportType?: ReportType,
+  reportType?: ReportType
 ) {
   //adding fields to be copied over from entries
   const concatEntityFields = [...possibleFields, ...additionalFields];
@@ -128,7 +128,7 @@ function pruneEntityData(
           key,
           entity[entityKey] as ReportFieldData[],
           possibleFields,
-          reportType,
+          reportType
         );
       } else if (
         shouldExcludeCopiedField(reportType, entityKey, key) ||
@@ -151,7 +151,7 @@ function pruneEntityData(
   //filter out any closeout data
   if (Array.isArray(sourceFieldData[key])) {
     const filteredData = (sourceFieldData[key] as ReportFieldData[]).filter(
-      (field) => !field["isInitiativeClosed"],
+      (field) => !field["isInitiativeClosed"]
     );
     sourceFieldData[key] = filteredData;
   }
@@ -165,7 +165,7 @@ export async function copyFieldDataFromSource(
   state: State,
   copyFieldDataSourceId: string,
   formTemplate: ReportJson,
-  validatedFieldData: ReportFieldData,
+  validatedFieldData: ReportFieldData
 ) {
   const sourceFieldData = await getReportFieldData({
     reportType: formTemplate.type,
@@ -188,7 +188,7 @@ export async function copyFieldDataFromSource(
           key,
           sourceFieldData[key] as ReportFieldData[],
           possibleFields,
-          formTemplate.type,
+          formTemplate.type
         );
       } else if (!possibleFields.includes(key)) {
         delete sourceFieldData[key];
