@@ -111,10 +111,13 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     // Get input with aria-invalid; choice lists don't use aria-invalid
     const fieldToFocus = (document.querySelector(
       `[name^='${firstError}'][aria-invalid="true"]`
-    ) || document.querySelector(`[name^='${firstError}']`)) as HTMLInputElement;
+    ) ||
+      document.querySelector(
+        `[name^='${firstError}']`
+      )) as HTMLInputElement | null;
 
-    fieldToFocus.scrollIntoView({ behavior: "smooth", block: "center" });
-    fieldToFocus.focus({ preventScroll: true });
+    fieldToFocus?.scrollIntoView({ behavior: "smooth", block: "center" });
+    fieldToFocus?.focus({ preventScroll: true });
   };
 
   // hydrate and create form fields using formFieldFactory

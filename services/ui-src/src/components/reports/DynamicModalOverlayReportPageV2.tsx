@@ -85,7 +85,6 @@ export const DynamicModalOverlayReportPageV2 = ({
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
-    console.log(enteredData);
     if (userIsEndUser) {
       setSubmitting(true);
       const reportKeys = {
