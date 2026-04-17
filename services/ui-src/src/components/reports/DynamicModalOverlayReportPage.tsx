@@ -29,6 +29,9 @@ import {
 // verbiage
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export const DynamicModalOverlayReportPage = ({
   route,
   setSidebarHidden,

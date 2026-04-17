@@ -218,7 +218,7 @@ export const compileValidationJsonFromRoutes = (
       Object.assign(validationSchema, { [route.entityType]: "objectArray" });
     }
 
-    for (let formType of ["form", "modalForm", "drawerForm"] as const) {
+    for (const formType of ["form", "modalForm", "drawerForm"] as const) {
       if (route[formType]) {
         addValidationToAccumulator(route[formType]!);
       }
@@ -233,8 +233,8 @@ export const compileValidationJsonFromRoutes = (
     }
 
     if (route.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY) {
-      for (let initiative of route.initiatives ?? []) {
-        for (let step of initiative.entitySteps) {
+      for (const initiative of route.initiatives ?? []) {
+        for (const step of initiative.entitySteps ?? []) {
           const stepForm = step.form || step.modalForm;
           if (stepForm) {
             addValidationToAccumulator(stepForm);
@@ -242,11 +242,9 @@ export const compileValidationJsonFromRoutes = (
             const { objectiveCards } = step as
               | OverlayModalPageShape
               | EntityDetailsOverlayShape;
-            if (objectiveCards) {
-              for (let objectiveCard of objectiveCards) {
-                if (objectiveCard.modalForm) {
-                  addValidationToAccumulator(objectiveCard.modalForm);
-                }
+            for (const objectiveCard of objectiveCards ?? []) {
+              if (objectiveCard.modalForm) {
+                addValidationToAccumulator(objectiveCard.modalForm);
               }
             }
           }
