@@ -77,7 +77,7 @@ const keyMetricsDynamicFieldsToReturn = [
               validation: {
                 type: ValidationType.TEXT,
                 nested: true,
-                parentFieldName: `dataSource`,
+                parentFieldName: `${keyMetricsDynamicRowId}-dataSource`,
                 parentFieldId: "18Wb9b2zMIF13pZwWstdJF",
               },
             },

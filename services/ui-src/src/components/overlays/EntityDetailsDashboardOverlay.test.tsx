@@ -11,7 +11,7 @@ import {
 } from "../../utils/testing/setupJest";
 import { EntityDetailsDashboardOverlay } from "./EntityDetailsDashboardOverlay";
 import { useStore } from "utils";
-import { entityTypes, PageTypes } from "../../types";
+import { EntityType, PageTypes } from "../../types";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 
@@ -39,7 +39,7 @@ export const mockEntitySteps = [
     hint: "mock hint",
     verbiage: mockModalOverlayReportPageVerbiage,
     modalForm: mockModalForm,
-    entityType: entityTypes[0],
+    entityType: EntityType.INITIATIVE,
     name: "mock name",
     path: "/mock/mock-route-entity-dashboard-overlay",
   },

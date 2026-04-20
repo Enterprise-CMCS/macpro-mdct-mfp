@@ -17,7 +17,7 @@ import {
   AnyObject,
   DynamicFieldShape,
   DynamicRowsTemplate,
-  entityTypes,
+  EntityType,
   FormField,
   FormTableCell,
   FormTableRow,
@@ -208,7 +208,7 @@ export const DynamicTableProvider = ({ children }: any) => {
 
       const templateFieldData =
         // if there is an entity type "Initiatives", handle Key Metrics
-        entityType === entityTypes[0]
+        entityType === EntityType.INITIATIVE
           ? formData?.[dynamicTemplateId]
           : localFieldData?.[dynamicTemplateId] || [];
 
@@ -219,10 +219,10 @@ export const DynamicTableProvider = ({ children }: any) => {
       hydrateValue = currentField?.[fieldType];
 
       // handle Key Metrics table edge cases
-      if (entityType === entityTypes[0]) {
+      if (entityType === EntityType.INITIATIVE) {
         switch (fieldType) {
           case "dataSource":
-            currentField?.dataSource[0].value === "Other, specify"
+            currentField?.dataSource[0]?.value === "Other, specify"
               ? (hydrateValue = currentField?.otherText)
               : (hydrateValue = currentField?.dataSource[0].value);
             break;
@@ -446,8 +446,8 @@ export const DynamicTableProvider = ({ children }: any) => {
     updatedFields: FieldInfo[] = []
   ) => {
     const rows =
-      entityType === entityTypes[0]
-        ? localFieldData?.[entityType][0][dynamicTemplateId]
+      entityType === EntityType.INITIATIVE
+        ? localFieldData?.[entityType]?.[0][dynamicTemplateId]
         : localFieldData?.[dynamicTemplateId] || [];
 
     // Remove row to be deleted
@@ -528,7 +528,7 @@ interface DisplayCellOptions {
   cell: string | FormField;
   columnId: string;
   disabled: boolean;
-  entityType?: string;
+  entityType?: EntityType;
   formData: AnyObject;
   id: string;
   percentage: number;

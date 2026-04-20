@@ -82,7 +82,6 @@ export const EntityModalTable = ({
       },
     ];
   };
-
   return (
     <Box sx={sx.box}>
       <Heading as="h2">{verbiage?.title}</Heading>
@@ -171,6 +170,7 @@ export const EntityModalTable = ({
           />
         </>
       )}
+      {/* TODO: popup to confirm deletion of Key Metric */}
     </Box>
   );
 };

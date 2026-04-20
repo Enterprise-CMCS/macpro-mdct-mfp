@@ -7,7 +7,7 @@ import {
   AnyObject,
   DynamicFieldShape,
   DynamicRowsTemplate,
-  entityTypes,
+  EntityType,
   FormField,
 } from "types";
 // assets
@@ -45,7 +45,7 @@ export const DynamicTableRows = ({
   useEffect(() => {
     // if there is an entity type "Initiatives", handle Key Metrics
     const rows =
-      entityType === entityTypes[0]
+      entityType === EntityType.INITIATIVE
         ? formData?.[dynamicRowsTemplate.id]
         : localFieldData?.[dynamicRowsTemplate.id];
     if (rows) {
@@ -134,7 +134,6 @@ export const DynamicTableRows = ({
                       Edit
                     </Button>
                   )}
-                  {/* TODO: popup to confirm deletion of Key Metric */}
                   {!disabled && (
                     <Button
                       onClick={() =>

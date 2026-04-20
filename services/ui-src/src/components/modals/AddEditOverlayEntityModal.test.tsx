@@ -6,9 +6,9 @@ import { AddEditOverlayEntityModal } from "./AddEditOverlayEntityModal";
 // types
 import {
   EntityShape,
+  EntityType,
   MfpReportState,
   MfpUserState,
-  entityTypes,
 } from "../../types";
 // utils
 import { RouterWrappedComponent } from "../../utils/testing/mockRouter";
@@ -44,7 +44,7 @@ const mockOverlayEntity = {
 
 const mockInitiative = {
   id: "mock-id-1",
-  type: entityTypes[0],
+  type: EntityType.INITIATIVE,
   initiative_name: "mock name 1",
   evaluationPlan: [mockOverlayEntity],
 };
@@ -66,7 +66,7 @@ const sarReport = {
 const entityIdLookup = { [entityType]: wpReport.fieldData.initiative[0].id };
 
 const selectedStepEntity: EntityShape = {
-  type: entityTypes[0],
+  type: EntityType.INITIATIVE,
   id: mockOverlayEntity.id,
   objectiveProgress_objectiveName: "mock-title",
 };
@@ -131,7 +131,7 @@ const modalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
       <AddEditOverlayEntityModal
-        entityType={[entityTypes[0], "evaluationPlan"]}
+        entityType={[EntityType.INITIATIVE, "evaluationPlan"]}
         entityName={mockEntityName}
         entityIdLookup={entityIdLookup}
         form={mockModalForm}
@@ -149,7 +149,7 @@ const modalComponentWithSelectedEntity = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
       <AddEditOverlayEntityModal
-        entityType={[entityTypes[0], "evaluationPlan"]}
+        entityType={[EntityType.INITIATIVE, "evaluationPlan"]}
         entityName={mockEntityName}
         selectedEntity={selectedStepEntity}
         entityIdLookup={entityIdLookup}
@@ -168,7 +168,7 @@ const sarModalComponentWithSelectedEntity = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedSarReportContext}>
       <AddEditOverlayEntityModal
-        entityType={[entityTypes[0], "evaluationPlan"]}
+        entityType={[EntityType.INITIATIVE, "evaluationPlan"]}
         entityName={mockEntityName}
         selectedEntity={selectedStepEntity}
         entityIdLookup={entityIdLookup}
@@ -296,7 +296,7 @@ describe("<AddEditOverlayEntityModal />", () => {
       const expectedEvaluationPlanEntity = {
         id: mockOverlayEntity.id,
         "mock-modal-text-field": "mock input 2",
-        type: entityTypes[0],
+        type: EntityType.INITIATIVE,
       };
 
       const expectedUpdateCallPayload = {
@@ -310,7 +310,7 @@ describe("<AddEditOverlayEntityModal />", () => {
       expectedUpdateCallPayload.fieldData.initiative = [
         {
           id: "mock-id-1",
-          type: entityTypes[0],
+          type: EntityType.INITIATIVE,
           initiative_name: "mock name 1",
           evaluationPlan: [expectedEvaluationPlanEntity],
         },

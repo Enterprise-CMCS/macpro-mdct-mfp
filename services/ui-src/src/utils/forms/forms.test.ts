@@ -16,6 +16,7 @@ import {
 } from "./forms";
 // types
 import {
+  EntityType,
   FormField,
   ReportFormFieldType,
   ReportShape,
@@ -319,12 +320,12 @@ describe("utils/forms", () => {
       const entity = [
         {
           id: "field1",
-          type: "targetPopulations" as const,
+          type: EntityType.TARGET_POPULATIONS,
           transitionBenchmarks_targetPopulationName: "Older adults", // a default population
         },
         {
           id: "field2",
-          type: "targetPopulations" as const,
+          type: EntityType.TARGET_POPULATIONS,
           transitionBenchmarks_targetPopulationName: "custom population",
         },
       ];

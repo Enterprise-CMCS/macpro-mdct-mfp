@@ -6,7 +6,7 @@ import {
   mockWpReportContext,
 } from "utils/testing/setupJest";
 import { ReportContext } from "components/reports/ReportProvider";
-import { entityTypes } from "types";
+import { EntityType } from "types";
 import { ExportedEntityDetailsTable } from "./ExportedEntityDetailsTable";
 
 jest.mock("utils/state/useStore");
@@ -16,7 +16,7 @@ mockedUseStore.mockReturnValue(mockEntityStore);
 mockedUseStore.mockReturnValue(mockReportStore);
 
 const entity = {
-  type: entityTypes[0],
+  type: EntityType.INITIATIVE,
   name: "mock-name",
   id: "mock-initative-id",
   isOtherEntity: true,
