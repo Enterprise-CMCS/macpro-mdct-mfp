@@ -888,3 +888,34 @@ export const mockDynamicRowsTemplateWithModalForm = {
     hint: "Mock dynamic row hint",
   },
 };
+
+export const mockDynamicRowsTemplateForKeyMetricsTable = {
+  ...mockDynamicRowsTemplate,
+  props: {
+    ...mockDynamicRowsTemplate.props,
+    dynamicModalForm: {
+      id: "mockDynamicModalFormId",
+      heading: {
+        add: "Add mock heading",
+        edit: "Edit mock heading",
+        subheading: "Add mock subheading",
+        subheadingEdit: "Edit mock subheading",
+      },
+      fields: [
+        {
+          id: `${mockDynamicTemplateId}-name`,
+          type: ReportFormFieldType.TEXT,
+          validation: ValidationType.TEXT,
+          props: {
+            label: "Mock modal key metric name",
+          },
+        },
+      ],
+    },
+  },
+  verbiage: {
+    buttonText: "Mock dynamic row button",
+    emptyTableMessage: "Mock dynamic empty table message",
+    hint: "Mock dynamic row hint",
+  },
+};
