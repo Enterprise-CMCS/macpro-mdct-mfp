@@ -167,7 +167,6 @@ export const EntityModalTable = ({
             currentEntityId={currentEntityId}
             selectedId={selectedId}
             report={report}
-            tableId={tableId}
             userIsAdmin={false}
           />
         </>

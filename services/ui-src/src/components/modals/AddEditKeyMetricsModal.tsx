@@ -15,12 +15,12 @@ import { actionButtonText } from "./modalLogic";
 import { getFieldParts } from "utils";
 
 export const AddEditKeyMetricsModal = ({
+  currentEntityId,
   dynamicTemplateId,
   form,
   modalDisclosure,
   report,
   selectedId,
-  currentEntityId,
   userIsAdmin = false,
 }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -137,7 +137,6 @@ export const AddEditKeyMetricsModal = ({
   };
 
   // TODO: Hydrate modal on edit
-
   return (
     <Modal
       content={{
@@ -173,15 +172,14 @@ export const AddEditKeyMetricsModal = ({
 };
 
 interface Props {
+  currentEntityId: string;
   dynamicTemplateId: string;
   form: FormJson;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
   };
-  currentEntityId: string;
   report?: ReportShape;
   selectedId?: string;
-  tableId: string;
   userIsAdmin?: boolean;
 }
