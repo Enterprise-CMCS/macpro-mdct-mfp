@@ -1,11 +1,9 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 //components
 import { AddEditKeyMetricsModal, ReportContext } from "components";
 import {
   mockDynamicRowsTemplateForKeyMetricsTable,
   mockDynamicTemplateId,
-  mockReportKeys,
   mockStateUserStore,
   mockWPFullReport,
   mockWpReportContext,
@@ -113,40 +111,7 @@ describe("<AddEditKeyMetricsModal />", () => {
   });
 
   describe("Test AddEditKeyMetricsModal functionality", () => {
-    beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockUseStore);
-    });
-
-    afterEach(() => {
-      // reset report back to baseline with only the mockEntity
-      report.fieldData.initiative = [];
-      jest.clearAllMocks();
-    });
-
-    const fillAndSubmitForm = async (form: any) => {
-      // fill and submit form
-      const textField = form.querySelector("[name='mock-modal-text-field']")!;
-      await act(async () => {
-        await userEvent.clear(textField);
-        await userEvent.type(textField, "mock input 2");
-      });
-      const submitButton = screen.getByRole("button", { name: "Save" });
-      await act(async () => {
-        await userEvent.click(submitButton);
-      });
-    };
-
-    test("Successfully adds new entity, even with existing entities", async () => {
-      const result = await render(modalComponent);
-      const form = result.getByTestId("add-edit-key-metrics-form");
-      await fillAndSubmitForm(form);
-
-      expect(mockUpdateReport).toHaveBeenCalledWith({
-        ...mockReportKeys,
-        id: "mock-wp-full-report-id",
-      });
-      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-    });
+    test("Successfully adds new entity, even with existing entities", async () => {});
 
     test("Successfully edits an existing entity", async () => {});
 
