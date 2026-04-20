@@ -257,6 +257,7 @@ const TestComponent = () => {
           removeDynamicRow(
             mockDynamicTemplateId,
             mockDynamicFieldId,
+            "",
             updatedFieldsCallback(mockDynamicFieldId, localFieldData)
           )
         }
