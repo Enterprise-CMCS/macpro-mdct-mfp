@@ -5,7 +5,10 @@ import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
 const handler = (postKafkaData as any).handler;
 
-jest.spyOn(console, "log").mockImplementation(jest.fn());
+jest.spyOn(console, "debug").mockImplementation(jest.fn());
+jest.spyOn(console, "info").mockImplementation(jest.fn());
+jest.spyOn(console, "warn").mockImplementation(jest.fn());
+jest.spyOn(console, "error").mockImplementation(jest.fn());
 
 jest.mock("kafkajs", () => ({
   Kafka: jest.fn().mockReturnValue({
@@ -13,26 +16,18 @@ jest.mock("kafkajs", () => ({
       disconnect: jest.fn().mockResolvedValue(undefined),
       connect: jest.fn().mockResolvedValue(undefined),
       sendBatch: jest.fn().mockResolvedValue(undefined),
+      on: jest.fn(),
     }),
   }),
 }));
 const mockConnect = (Kafka as Function)().producer().connect;
 const mockSendBatch = (Kafka as Function)().producer().sendBatch;
 const mockDisconnect = (Kafka as Function)().producer().disconnect;
+const mockOn = (Kafka as Function)().producer().on;
 
 const mockS3Client = mockClient(S3Client);
 const mockS3Get = jest.fn();
 mockS3Client.on(GetObjectCommand).callsFake(mockS3Get);
-
-// Kafak-source-lib has one-time setup behavior, which we test one time here.
-// Input env vars come from setupTests.ts.
-expect(Kafka).toHaveBeenCalledWith({
-  clientId: "mfp-local",
-  brokers: ["broker1", "broker2"],
-  retry: { initialRetryTime: 300, retries: 8 },
-  ssl: { rejectUnauthorized: false },
-});
-expect(mockConnect).not.toHaveBeenCalled();
 
 const wpFieldDataRecord = {
   eventSourceARN: "aaa/local-wp-reports/bbb",
@@ -86,7 +81,23 @@ describe("Kafka message sending", () => {
 
   it("should convert AWS Dynamo Stream Events to Kafka Messages", async () => {
     const event = { Records: [wpFieldDataRecord] };
+
+    // kafkalib.ts calls producer.connect() only once.
+    // Reload the file to make sure we capture that call in this test.
+    // Otherwise, assertions on producer.connect() would rely on test order.
+    jest.resetModules();
+    expect(mockConnect).not.toHaveBeenCalled();
+
     await handler(event);
+
+    expect(Kafka).toHaveBeenCalledWith({
+      clientId: "mfp-local",
+      brokers: ["broker1", "broker2"],
+      retry: { initialRetryTime: 300, retries: 8 },
+      ssl: { rejectUnauthorized: false },
+    });
+    expect(mockConnect).toHaveBeenCalled();
+
     expect(mockSendBatch).toHaveBeenCalledWith({
       topicMessages: [
         {
@@ -261,7 +272,7 @@ describe("Kafka message sending", () => {
 
   it("should ignore events from buckets with no associated topic", async () => {
     const record = structuredClone(wpFormTemplateRecord);
-    record.s3.bucket.arn = "asdf/unknown-bucket/qwer";
+    record.s3.bucket.name = "unknown-bucket";
     const event = { Records: [record] };
     await handler(event);
     expect(mockS3Get).not.toHaveBeenCalled();
@@ -295,7 +306,7 @@ describe("Kafka message sending", () => {
     const event = {
       Records: expectations.map(({ bucket, folder }) => {
         const record = structuredClone(wpFormTemplateRecord);
-        record.s3.bucket.arn = `foo/${bucket}/bar`;
+        record.s3.bucket.name = bucket;
         record.s3.object.key = `${folder}/obj.json`;
         return record;
       }),
@@ -352,24 +363,77 @@ describe("Kafka message sending", () => {
     expect(mockSendBatch).not.toHaveBeenCalled();
   });
 
-  describe("when in a localstack environment", () => {
-    let originalBrokerString: string | undefined;
+  it("should ignore events from unknown sources", async () => {
+    const nonDynamoNonS3Record = {};
+    await handler({ Records: [nonDynamoNonS3Record] });
+    expect(mockSendBatch).not.toHaveBeenCalled();
+  });
 
-    beforeAll(() => {
-      originalBrokerString = process.env.brokerString;
+  describe("when environment variables are not typical", () => {
+    let originalEnv: any;
+
+    beforeEach(() => {
+      const keys = ["brokerString", "STAGE", "topicNamespace"];
+      originalEnv = Object.fromEntries(keys.map((k) => [k, process.env[k]]));
+      jest.resetModules();
+      jest.clearAllMocks();
+    });
+
+    afterEach(() => {
+      for (let [key, value] of Object.entries(originalEnv)) {
+        process.env[key] = value as string;
+      }
+    });
+
+    it("should ignore all events when running in localstack", async () => {
       process.env.brokerString = "localstack";
-    });
-
-    afterAll(() => {
-      process.env.brokerString = originalBrokerString;
-    });
-
-    it("should not send any messages", async () => {
-      const event = {
-        Records: [wpFieldDataRecord],
-      };
+      const event = { Records: [wpFieldDataRecord] };
       await handler(event);
       expect(mockSendBatch).not.toHaveBeenCalled();
+    });
+
+    it("should error immediately if brokerString is missing", async () => {
+      delete process.env.brokerString;
+      const event = { Records: [wpFieldDataRecord] };
+      await expect(() => handler(event)).rejects.toThrow("Missing config");
+      expect(mockSendBatch).not.toHaveBeenCalled();
+    });
+
+    it("should error immediately if STAGE is missing", async () => {
+      delete process.env.STAGE;
+      const event = { Records: [wpFieldDataRecord] };
+      await expect(() => handler(event)).rejects.toThrow("Missing config");
+      expect(mockSendBatch).not.toHaveBeenCalled();
+    });
+
+    it("should respect topic namespace for dynamo events", async () => {
+      process.env.topicNamespace = "--mfp--my-branch--";
+      const event = { Records: [wpFieldDataRecord] };
+      await handler(event);
+      expect(mockSendBatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          topicMessages: [
+            expect.objectContaining({
+              topic: "--mfp--my-branch--aws.mdct.mfp.wp-reports.v0",
+            }),
+          ],
+        })
+      );
+    });
+
+    it("should respect topic namespace for s3 events", async () => {
+      process.env.topicNamespace = "--mfp--my-branch--";
+      const event = { Records: [wpFormTemplateRecord] };
+      await handler(event);
+      expect(mockSendBatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          topicMessages: [
+            expect.objectContaining({
+              topic: "--mfp--my-branch--aws.mdct.mfp.wp-form-template.v0",
+            }),
+          ],
+        })
+      );
     });
   });
 
@@ -382,5 +446,30 @@ describe("Kafka message sending", () => {
 
     process.emit("beforeExit", 0);
     expect(mockDisconnect).toHaveBeenCalled();
+  });
+
+  it("should reconnect as needed", async () => {
+    const event = { Records: [wpFieldDataRecord] };
+
+    expect(mockOn).not.toHaveBeenCalled();
+    expect(mockConnect).not.toHaveBeenCalled();
+
+    await handler(event);
+    await handler(event);
+
+    // The first event makes the connection; the second event reuses it.
+    expect(mockConnect).toHaveBeenCalledTimes(1);
+    expect(mockOn).toHaveBeenCalledWith(
+      "producer.disconnect",
+      expect.any(Function)
+    );
+    const disconnectListener = mockOn.mock.calls[0][1];
+
+    // The other end disconnects. A Kafka server error, say.
+    await disconnectListener("mock disconnect reason");
+    await handler(event);
+
+    // The third event establishes a new connection.
+    expect(mockConnect).toHaveBeenCalledTimes(2);
   });
 });

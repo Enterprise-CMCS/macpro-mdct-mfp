@@ -12,7 +12,6 @@ process.env.BannerTable = "local-banners";
 
 process.env.brokerString = "broker1,broker2";
 process.env.STAGE = "local";
-process.env.topicNamespace = "";
 
 // GLOBALS
 
