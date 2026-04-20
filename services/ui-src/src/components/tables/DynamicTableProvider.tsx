@@ -173,7 +173,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       id: cellId,
       props: {
         ...props,
-        ariaLabelledby: ariaLabelledby || `${rowId} ${columnId}`,
+        ariaLabelledby: ariaLabelledby || `${cellId} ${rowId} ${columnId}`,
         label: undefined,
         handleOnChange: (event: InputChangeEvent) => {
           const { name, percentage, percentageOverride, value } =
@@ -258,7 +258,7 @@ export const DynamicTableProvider = ({ children }: any) => {
           </Flex>
           {displayCell({
             ...props,
-            ariaLabelledby: `${rowId} ${dynamicLabelId}`,
+            ariaLabelledby: `${cell.id} ${rowId} ${dynamicLabelId}`,
             id: tempDynamicId,
           })}
         </Flex>
