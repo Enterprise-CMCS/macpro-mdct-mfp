@@ -456,8 +456,6 @@ export const DynamicTableProvider = ({ children }: any) => {
     entityType?: string,
     updatedFields: FieldInfo[] = []
   ) => {
-    console.log("type", entityType);
-    console.log("local field data", localFieldData);
     const rows =
       entityType === EntityType.INITIATIVE
         ? localFieldData?.[entityType]?.[0][dynamicTemplateId]
