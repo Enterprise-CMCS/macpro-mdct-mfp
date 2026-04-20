@@ -121,6 +121,7 @@ export { OverlayModalPage } from "./reports/OverlayModalPage";
 export { ModalOverlayReportPage } from "./reports/ModalOverlayReportPage";
 export { ModalOverlayReportPageV2 } from "./reports/ModalOverlayReportPageV2";
 export { DynamicModalOverlayReportPage } from "./reports/DynamicModalOverlayReportPage";
+export { DynamicModalOverlayReportPageV2 } from "./reports/DynamicModalOverlayReportPageV2";
 // statusing
 export { StatusTable } from "./statusing/StatusTable";
 // tables

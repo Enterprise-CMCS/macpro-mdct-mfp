@@ -19,14 +19,16 @@ export const InstructionsAccordion = ({ verbiage, ...props }: Props) => {
   );
 };
 
-export const parseList = (list: any) => {
+export const parseList = (list: any, listIndex: number = 0) => {
   return (
-    <UnorderedList sx={sx.list}>
-      {list?.map((listItem: string | AnyObject, index: number) =>
+    <UnorderedList sx={sx.list} key={`list-${listIndex}`}>
+      {list?.map((listItem: string | AnyObject, listItemIndex: number) =>
         typeof listItem === "string" ? (
-          <ListItem key={index}>{sanitizeAndParseHtml(listItem)}</ListItem>
+          <ListItem key={`listitem-${listItemIndex}`}>
+            {sanitizeAndParseHtml(listItem)}
+          </ListItem>
         ) : (
-          parseList(listItem)
+          parseList(listItem, listIndex + 1)
         )
       )}
     </UnorderedList>

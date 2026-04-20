@@ -35,6 +35,7 @@ export const EntityModalTable = ({
   headRows,
   id: tableId,
   report,
+  styleAsOptionalHeadRows,
   verbiage,
 }: Props) => {
   // Modal
@@ -99,6 +100,7 @@ export const EntityModalTable = ({
               row,
               rowIndex,
               section: "thead",
+              styleAsOptionalHeadRows: styleAsOptionalHeadRows,
               ...sharedCellProps,
             })
           )}

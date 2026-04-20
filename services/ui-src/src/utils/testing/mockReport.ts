@@ -10,6 +10,7 @@ import {
   mockModalOverlayEntityStepsReportPageJson,
   mockDynamicModalOverlayReportPageJson,
   mockInitiativesSpecificDynamicModalOverlayReportPageJson,
+  mockDynamicModalOverlayEntityStepsReportPageJson,
 } from "./mockForm";
 
 export const mockReportPeriod = 1;
@@ -40,6 +41,7 @@ export const mockFlattenedReportRoutes = [
   mockModalOverlayReportPageJson,
   mockModalOverlayEntityStepsReportPageJson,
   mockDynamicModalOverlayReportPageJson,
+  mockDynamicModalOverlayEntityStepsReportPageJson,
   mockReviewSubmitPageJson,
 ];
 

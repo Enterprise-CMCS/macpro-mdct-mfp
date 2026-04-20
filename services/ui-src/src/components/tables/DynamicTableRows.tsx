@@ -43,6 +43,7 @@ export const DynamicTableRows = ({
 
   // Add rows from fieldData
   useEffect(() => {
+    console.log("field data", localFieldData);
     // if there is an entity type "Initiatives", handle Key Metrics
     const rows =
       entityType === EntityType.INITIATIVE

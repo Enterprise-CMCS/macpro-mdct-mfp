@@ -1,12 +1,14 @@
 import crypto from "node:crypto";
 import { faker } from "@faker-js/faker";
+// types
 import {
   ReportFieldData,
   ReportStatus,
   ReportType,
 } from "../../../services/app-api/utils/types";
-import { dateFormat, quarterlyKeyValueGenerator } from "../helpers";
 import { SeedFillReportShape, SeedNewReportShape } from "../types";
+// utils
+import { dateFormat, quarterlyKeyValueGenerator } from "../helpers";
 
 const BASE_TARGET_POPULATIONS: ReportFieldData[] = [
   {
@@ -211,7 +213,23 @@ const addInitiative = (
           name: faker.lorem.sentence(),
         },
       ],
-      defineInitiative_keyMetrics_performanceIndicators: [],
+      defineInitiative_keyMetrics_performanceIndicators: [
+        {
+          baselineEndDate: dateFormat.format(faker.date.future()),
+          baselineStartDate: dateFormat.format(faker.date.past()),
+          baselineValue: faker.lorem.sentence(),
+          dataSource: [
+            {
+              key: "defineInitiative_fundingSources-awTB7dbwBc8x3fRjbWIRlC",
+              value: "MFP administrative cooperative agreement funding",
+            },
+          ],
+          id: crypto.randomUUID(),
+          name: faker.lorem.sentence(),
+          targetBenchmarkProjectedDate: dateFormat.format(faker.date.future()),
+          targetBenchmarkValue: faker.lorem.sentence(),
+        },
+      ],
       defineInitiative_qualitativeMethods: faker.lorem.sentence(),
       defineInitiative_purposeAndGoals: faker.lorem.sentence(),
       defineInitiative_startDate: [

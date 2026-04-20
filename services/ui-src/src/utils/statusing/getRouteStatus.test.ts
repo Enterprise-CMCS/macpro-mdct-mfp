@@ -38,8 +38,8 @@ describe("utils/getRouteStatus", () => {
               status: true,
             },
             {
-              name: "mock-route-entitySteps",
-              path: "/mock/mock-route-entitySteps",
+              name: "mock-route-2c-entitySteps",
+              path: "/mock/mock-route-2c-entitySteps",
               status: undefined,
             },
             {

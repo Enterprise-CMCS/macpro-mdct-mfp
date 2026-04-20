@@ -1,3 +1,2 @@
 // flagged routes
-// oxlint-disable-next-line require-module-specifiers
-export {};
+export { sarReportJson as wpSarRelease2025 } from "./wpSarRelease2025";

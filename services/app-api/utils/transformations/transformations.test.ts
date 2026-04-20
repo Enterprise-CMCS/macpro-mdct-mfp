@@ -410,7 +410,7 @@ describe("transformFormTemplate", () => {
     transformFormTemplate(formTemplate, reportPeriod, reportYear, fieldData);
 
     const fields =
-      formTemplate.routes[0]?.initiatives?.[0].entitySteps[0].form?.fields;
+      formTemplate.routes[0]?.initiatives?.[0].entitySteps?.[0].form?.fields;
     expect(fields).toHaveLength(6);
   });
 
@@ -487,7 +487,7 @@ describe("transformFormTemplate", () => {
     transformFormTemplate(formTemplate, reportPeriod, reportYear, fieldData);
 
     const fields =
-      formTemplate.routes[0]?.initiatives?.[0].entitySteps[0]
+      formTemplate.routes[0]?.initiatives?.[0].entitySteps?.[0]
         .objectiveCards?.[0].modalForm?.fields;
     expect(fields).toHaveLength(6);
   });

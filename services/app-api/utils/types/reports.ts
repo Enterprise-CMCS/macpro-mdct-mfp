@@ -79,39 +79,41 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
 }
 
 export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
-  initiativeId: string | undefined;
-  entityType: string;
-  entityInfo?: string[];
-  verbiage: ModalOverlayReportPageVerbiage;
-  modalForm: FormJson;
-  drawerForm?: never;
-  form?: never;
   dashboard: EntityDetailsDashboardOverlayShape;
+  drawerForm?: never;
+  entityInfo?: string[];
   entitySteps?: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
-  template?: never;
+  entityType: string;
+  form?: never;
+  initiativeId: string | undefined;
   initiatives?: never;
+  modalForm: FormJson;
   objectiveCards?: never;
+  overlayForm: FormJson;
+  template?: never;
+  verbiage: ModalOverlayReportPageVerbiage;
 }
 
 export interface DynamicModalOverlayReportPageShape extends ReportPageShapeBase {
-  entityType: string;
-  entityInfo: string[];
-  verbiage: ModalOverlayReportPageVerbiage;
-  drawerForm?: never;
-  modalForm?: never;
-  form?: never;
-  entitySteps?: never;
   dashboard?: never;
+  drawerForm?: never;
+  entityInfo: string[];
+  entitySteps?: never;
+  entityType: string;
+  form?: never;
+  modalForm?: never;
+  overlayForm?: FormJson;
   initiatives: {
+    dashboard?: FormJson;
+    entitySteps?: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
     initiativeId: string;
     name: string;
     topic: string;
-    dashboard: FormJson;
-    entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[];
   }[];
   objectiveCards?: never;
   /** Only used during form template transformation; will be absent after transformation */
   template?: AnyObject;
+  verbiage: ModalOverlayReportPageVerbiage;
 }
 
 export interface OverlayModalPageShape extends ReportPageShapeBase {

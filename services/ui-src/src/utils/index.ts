@@ -13,6 +13,9 @@ export * from "./autosave/autosave";
 export * from "./autosave/dataModifications";
 export * from "./autosave/fields";
 export * from "./autosave/helpers";
+// export
+export * from "./export/exportFieldTableHelpers";
+export * from "./export/export";
 // forms
 export * from "./forms/forms";
 // reports
@@ -35,7 +38,6 @@ export * from "./verbiage/verbiage";
 export * from "./other/calculations";
 export * from "./other/clean";
 export * from "./other/email";
-export * from "./other/export";
 export * from "./other/mask";
 export * from "./other/parsing";
 export * from "./other/rendering";
