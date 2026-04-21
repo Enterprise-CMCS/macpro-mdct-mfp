@@ -10,7 +10,14 @@ export const kafkaHandler = (callbacks: KafkaCallbacks) => {
 
     console.debug(`Raw event: ${JSON.stringify(event, null, 2)}`);
 
-    const messages = await convertToMessages(event.Records, callbacks);
+    const messages: { topic: string; message: Message }[] = [];
+    for (let record of event.Records ?? []) {
+      const message = await convertToMessage(record, callbacks);
+      if (message) {
+        messages.push(message);
+      }
+    }
+
     const topics = [...new Set(messages.map((m) => m.topic))];
     const topicMessages = topics.map((topic) => ({
       topic,
@@ -35,46 +42,36 @@ export const kafkaHandler = (callbacks: KafkaCallbacks) => {
  * Translate the AWS stream event records into Kafka messages,
  * ignoring any for which a topic cannot be found.
  */
-const convertToMessages = async (
-  records: AwsStreamEvent["Records"],
+const convertToMessage = async (
+  record: NonNullable<AwsStreamEvent["Records"]>[number],
   { getDynamoTopic, getS3Topic, getS3Object }: KafkaCallbacks
 ) => {
-  const messages: { topic: string; message: Message }[] = [];
-  for (let record of records ?? []) {
-    if ("dynamodb" in record) {
-      const topic = getDynamoTopic!(record);
-      if (!topic) {
-        continue;
-      }
-      const { eventID, eventName, dynamodb } = record;
-      const headers = { eventID, eventName };
-      const Keys = unmarshall(dynamodb.Keys);
-      const key = Object.values(Keys).join("#");
-      const OldImage = unmarshall(dynamodb.OldImage ?? {});
-      const NewImage = unmarshall(dynamodb.NewImage);
-      const value = JSON.stringify({ NewImage, OldImage, Keys });
-      messages.push({
-        topic,
-        message: { headers, partition: 0, key, value },
-      });
-    } else if ("s3" in record) {
-      const topic = getS3Topic!(record);
-      if (!topic) {
-        continue;
-      }
-      const { eventTime, eventName, s3 } = record;
-      const headers = { eventName, eventTime };
-      const bucket = s3.bucket.name;
-      const key = s3.object.key;
-      const includeData = record.eventName !== "ObjectRemoved";
-      const value = includeData ? await getS3Object!(bucket, key) : "";
-      messages.push({
-        topic,
-        message: { headers, partition: 0, key, value },
-      });
+  if ("dynamodb" in record) {
+    const topic = getDynamoTopic!(record);
+    if (!topic) {
+      return undefined;
     }
+    const { eventID, eventName, dynamodb } = record;
+    const headers = { eventID, eventName };
+    const Keys = unmarshall(dynamodb.Keys);
+    const key = Object.values(Keys).join("#");
+    const OldImage = unmarshall(dynamodb.OldImage ?? {});
+    const NewImage = unmarshall(dynamodb.NewImage);
+    const value = JSON.stringify({ NewImage, OldImage, Keys });
+    return { topic, message: { headers, partition: 0, key, value } };
+  } else if ("s3" in record) {
+    const topic = getS3Topic!(record);
+    if (!topic) {
+      return undefined;
+    }
+    const { eventTime, eventName, s3 } = record;
+    const headers = { eventName, eventTime };
+    const bucket = s3.bucket.name;
+    const key = s3.object.key;
+    const includeData = record.eventName !== "ObjectRemoved";
+    const value = includeData ? await getS3Object!(bucket, key) : "";
+    return { topic, message: { headers, partition: 0, key, value } };
   }
-  return messages;
 };
 
 /**
