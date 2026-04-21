@@ -206,7 +206,7 @@ export const updatedTextFields = (
       const currentField = templateFieldData[currentFieldIndex] || {};
       const updatedField = {
         id: dynamicFieldId,
-        name: currentField?.name || "",
+        name: currentField?.name || dynamicFieldId,
         ...currentField,
         [fieldType]: value,
       };
