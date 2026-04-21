@@ -80,6 +80,7 @@ const convertToMessage = async (
  */
 const LazyProducer = (() => {
   let producer: Producer | undefined;
+  let connectPromise: Promise<void> | undefined;
   let connected = false;
 
   const connect = async (config: KafkaConfig) => {
@@ -92,8 +93,14 @@ const LazyProducer = (() => {
     producer?.disconnect();
     producer = kafka.producer();
     producer.on("producer.disconnect", disconnect);
-    connected = true;
-    await producer.connect();
+    // If sendBatch is called twice before we can finish connecting once,
+    // both calls will wait for the same connection promise.
+    connectPromise ??= (async () => {
+      producer.connect();
+      connected = true;
+    })();
+    await connectPromise;
+    connectPromise = undefined;
   };
 
   const disconnect = async (...args: any) => {
