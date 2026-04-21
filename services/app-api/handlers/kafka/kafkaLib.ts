@@ -7,7 +7,6 @@ export const kafkaHandler = (callbacks: KafkaCallbacks) => {
     if (config === undefined) {
       return;
     }
-
     console.debug(`Raw event: ${JSON.stringify(event, null, 2)}`);
 
     const messages: { topic: string; message: Message }[] = [];
@@ -33,14 +32,13 @@ export const kafkaHandler = (callbacks: KafkaCallbacks) => {
     console.debug(`Outgoing message batch: ${JSON.stringify(batch, null, 2)}`);
 
     await LazyProducer.sendBatch(config, batch);
-
     console.info(`Processing complete.`);
   };
 };
 
 /**
- * Translate the AWS stream event records into Kafka messages,
- * ignoring any for which a topic cannot be found.
+ * Translate an AWS stream event record into a Kafka message.
+ * @returns `undefined` if a topic cannot be found.
  */
 const convertToMessage = async (
   record: NonNullable<AwsStreamEvent["Records"]>[number],
@@ -68,7 +66,8 @@ const convertToMessage = async (
     const headers = { eventName, eventTime };
     const bucket = s3.bucket.name;
     const key = s3.object.key;
-    const includeData = record.eventName !== "ObjectRemoved";
+    // May be s3:ObjectRemoved:Delete or s3:ObjectRemoved:DeleteMarkerCreated
+    const includeData = !record.eventName.includes("ObjectRemoved");
     const value = includeData ? await getS3Object!(bucket, key) : "";
     return { topic, message: { headers, partition: 0, key, value } };
   }
