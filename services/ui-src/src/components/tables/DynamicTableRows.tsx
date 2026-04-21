@@ -8,7 +8,10 @@ import {
   DynamicFieldShape,
   DynamicRowsTemplate,
   FormField,
+  ReportType,
 } from "types";
+// utils
+import { useStore } from "utils";
 // assets
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
@@ -30,10 +33,15 @@ export const DynamicTableRows = ({
     localFieldData,
     removeDynamicRow,
   } = useContext(DynamicTableContext);
+  const { report } = useStore();
+  const isFinancialReport = report?.reportType === ReportType.FINANCIAL_REPORT;
+  const dynamicLabel = dynamicRowsTemplate.props?.dynamicFields.find(
+    (field: FormField) => field.props?.dynamicLabel,
+  )?.props?.dynamicLabel;
   // Refs to help keep track of rows
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const [localDynamicRows, setLocalDynamicRows] = useState<DynamicFieldShape[]>(
-    []
+    [],
   );
   const [showEmptyRows, setShowEmptyRows] = useState<boolean>(false);
   const emptyRowsColspan =
@@ -81,7 +89,15 @@ export const DynamicTableRows = ({
 
       {localDynamicRows.map((row, rowIndex: number) => {
         const dynamicId = row.id;
-        const name = row.name || dynamicId;
+        const name = row.category || row.title || row.name || dynamicId;
+        const editLabel = `Edit ${name}`;
+        let deleteLabel = `Delete ${name}`;
+
+        if (isFinancialReport && dynamicLabel === "Misc. Costs:") {
+          deleteLabel = `Delete Misc. Costs: ${name}`;
+        } else if (isFinancialReport && dynamicLabel === "Other:") {
+          deleteLabel = `Delete Other: ${name}`;
+        }
 
         return (
           <Tr
@@ -109,13 +125,13 @@ export const DynamicTableRows = ({
                     tableId,
                   })}
                 </Td>
-              )
+              ),
             )}
             <Td>
               <Flex>
                 {!disabled && hasDynamicModalForm && (
                   <Button
-                    aria-label={`Edit ${name}`}
+                    aria-label={editLabel}
                     onClick={() => openModal(dynamicId)}
                     sx={sx.editButton}
                     type="button"
@@ -130,14 +146,14 @@ export const DynamicTableRows = ({
                       removeDynamicRow(
                         dynamicRowsTemplate.id,
                         dynamicId,
-                        updatedFieldsCallback(dynamicId, localFieldData)
+                        updatedFieldsCallback(dynamicId, localFieldData),
                       )
                     }
                     sx={sx.removeButton}
                     type="button"
                     variant={"unstyled"}
                   >
-                    <Image src={cancelIcon} alt={`Delete ${name}`} />
+                    <Image src={cancelIcon} alt={deleteLabel} />
                   </Button>
                 )}
               </Flex>

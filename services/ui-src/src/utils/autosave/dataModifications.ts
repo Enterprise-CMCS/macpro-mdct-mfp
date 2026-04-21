@@ -23,7 +23,7 @@ import {
 // Used with autosave
 export const updatedNumberFields = (
   fields: FieldInfo[],
-  fieldData: AnyObject = {}
+  fieldData: AnyObject = {},
 ) => {
   const field = fields[0];
   const { name, value } = field;
@@ -45,7 +45,7 @@ export const updatedNumberFields = (
       isFieldType(fieldType, "percentageOverride"): {
       const templateFieldData = fieldData?.[dynamicTemplateId];
       const currentField = templateFieldData?.find(
-        (field: DynamicFieldShape) => field.id === dynamicFieldId
+        (field: DynamicFieldShape) => field.id === dynamicFieldId,
       );
       const totalComputable = currentField?.totalComputable;
 
@@ -125,7 +125,7 @@ export const updatedNumberFields = (
        */
       const updatedFields = Object.keys(fieldData)
         .filter(
-          (key) => key.startsWith(formId) && key.endsWith("totalComputable")
+          (key) => key.startsWith(formId) && key.endsWith("totalComputable"),
         )
         .flatMap((key) => {
           const total = getNumberValue(fieldData[key]);
@@ -134,7 +134,7 @@ export const updatedNumberFields = (
 
           const { percentageShare, remainingShare } = calculateShares(
             total,
-            percentage
+            percentage,
           );
 
           updatedFieldData[`${keyFieldId}-totalFederalShare`] = percentageShare;
@@ -177,7 +177,7 @@ export const updatedNumberFields = (
           name: `totals_totalsSummary_${tableName}-${fieldSuffix}`,
           type: ReportFormFieldType.NUMBER,
           value: tableValues[key as keyof typeof tableValues],
-        }))
+        })),
       );
       return [...fields, ...updatedFields, ...aggregateFields];
     }
@@ -191,7 +191,7 @@ export const updatedNumberFields = (
 // Used with autosave
 export const updatedTextFields = (
   fields: FieldInfo[],
-  fieldData: AnyObject = {}
+  fieldData: AnyObject = {},
 ) => {
   const field = fields[0];
   const { name, value } = field;
@@ -201,12 +201,13 @@ export const updatedTextFields = (
     case isTempDynamicField(name): {
       const templateFieldData = fieldData?.[dynamicTemplateId] || [];
       const currentFieldIndex = templateFieldData.findIndex(
-        (field: DynamicFieldShape) => field.id === dynamicFieldId
+        (field: DynamicFieldShape) => field.id === dynamicFieldId,
       );
+      const currentField = templateFieldData[currentFieldIndex] || {};
       const updatedField = {
         id: dynamicFieldId,
-        name: dynamicFieldId,
-        ...templateFieldData[currentFieldIndex],
+        name: currentField?.name || "",
+        ...currentField,
         [fieldType]: value,
       };
 
