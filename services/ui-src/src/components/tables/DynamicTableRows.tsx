@@ -36,12 +36,12 @@ export const DynamicTableRows = ({
   const { report } = useStore();
   const isFinancialReport = report?.reportType === ReportType.FINANCIAL_REPORT;
   const dynamicLabel = dynamicRowsTemplate.props?.dynamicFields.find(
-    (field: FormField) => field.props?.dynamicLabel,
+    (field: FormField) => field.props?.dynamicLabel
   )?.props?.dynamicLabel;
   // Refs to help keep track of rows
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const [localDynamicRows, setLocalDynamicRows] = useState<DynamicFieldShape[]>(
-    [],
+    []
   );
   const [showEmptyRows, setShowEmptyRows] = useState<boolean>(false);
   const emptyRowsColspan =
@@ -125,7 +125,7 @@ export const DynamicTableRows = ({
                     tableId,
                   })}
                 </Td>
-              ),
+              )
             )}
             <Td>
               <Flex>
@@ -146,7 +146,7 @@ export const DynamicTableRows = ({
                       removeDynamicRow(
                         dynamicRowsTemplate.id,
                         dynamicId,
-                        updatedFieldsCallback(dynamicId, localFieldData),
+                        updatedFieldsCallback(dynamicId, localFieldData)
                       )
                     }
                     sx={sx.removeButton}

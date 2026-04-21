@@ -190,7 +190,7 @@ describe("<DynamicTableRows />", () => {
         ...mockProps,
         dynamicRowsTemplate,
         formData,
-      }),
+      })
     );
   };
 
@@ -208,7 +208,7 @@ describe("<DynamicTableRows />", () => {
                   dynamicLabel: "Misc. Costs:",
                 },
               }
-            : field,
+            : field
       ),
     },
   };
@@ -253,10 +253,10 @@ describe("<DynamicTableRows />", () => {
         expect(
           screen.getByRole("button", {
             name: label,
-          }),
+          })
         ).toBeVisible();
       });
-    },
+    }
   );
 
   describe("modal", () => {
@@ -309,7 +309,7 @@ describe("<DynamicTableRows />", () => {
       render(dynamicTableRowsComponent(updatedProps));
 
       expect(
-        screen.getByText("Mock dynamic empty table message"),
+        screen.getByText("Mock dynamic empty table message")
       ).toBeVisible();
     });
   });

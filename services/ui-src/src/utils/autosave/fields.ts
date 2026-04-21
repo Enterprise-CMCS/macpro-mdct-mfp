@@ -21,19 +21,19 @@ const fieldsFromKeys = <T>(obj: Partial<Record<keyof T, string>>) =>
 const updatedFieldData = <T>(
   fieldsToMap: [keyof T, string][],
   totals: T,
-  id?: string,
+  id?: string
 ) =>
   Object.fromEntries(
     fieldsToMap.map(([key, suffix]) => {
       const suffixKey = id ? `${id}-${suffix}` : suffix;
       return [suffixKey, totals[key]];
-    }),
+    })
   );
 
 const updatedFieldInfo = <T>(
   fieldsToMap: [keyof T, string][],
   totals: T,
-  fieldOrTableId: string,
+  fieldOrTableId: string
 ) =>
   fieldsToMap.map(([key, fieldSuffix]) => ({
     name: `${fieldOrTableId}-${fieldSuffix}`,
@@ -58,13 +58,13 @@ export const calculationTableDynamicTotalsOnSave = ({
   tableId,
 }: CalculateDynamicTotalsOnSave) => {
   const fieldsToMap = fieldsFromKeys<CalculatedSharesType>(
-    calculationTableSuffixes,
+    calculationTableSuffixes
   );
   const percentageField = `fmap_${formId}Percentage`;
   const formPercentage = fieldData?.[percentageField] || 100;
   const templateFieldData = fieldData?.[dynamicTemplateId] || [];
   const currentFieldIndex = templateFieldData.findIndex(
-    (field: DynamicFieldShape) => field.id === dynamicFieldId,
+    (field: DynamicFieldShape) => field.id === dynamicFieldId
   );
   const currentField = templateFieldData[currentFieldIndex] || {};
 
@@ -122,28 +122,28 @@ export const calculationTableDynamicTotalsOnSave = ({
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       template,
-      dynamicTemplateId,
+      dynamicTemplateId
     ),
     ...updatedFieldInfo<CalculatedSharesType>(fieldsToMap, table, tableId),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       qualifiedHcbsServicesTotal,
-      "totals_totalsSummary_qualifiedHcbsTotals",
+      "totals_totalsSummary_qualifiedHcbsTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       demonstrationServicesTotal,
-      "totals_totalsSummary_demonstrationServicesTotals",
+      "totals_totalsSummary_demonstrationServicesTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
-      "totals_totalsSummary_serviceTotals",
+      "totals_totalsSummary_serviceTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       allTables,
-      "totals_totalsSummary_allTotals",
+      "totals_totalsSummary_allTotals"
     ),
   ];
 
@@ -160,7 +160,7 @@ export const calculationTableTotalsOnSave = ({
   tableId,
 }: CalculateTotalsOnChange) => {
   const fieldsToMap = fieldsFromKeys<CalculatedSharesType>(
-    calculationTableSuffixes,
+    calculationTableSuffixes
   );
 
   const {
@@ -185,22 +185,22 @@ export const calculationTableTotalsOnSave = ({
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       qualifiedHcbsServicesTotal,
-      "totals_totalsSummary_qualifiedHcbsTotals",
+      "totals_totalsSummary_qualifiedHcbsTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       demonstrationServicesTotal,
-      "totals_totalsSummary_demonstrationServicesTotals",
+      "totals_totalsSummary_demonstrationServicesTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
-      "totals_totalsSummary_serviceTotals",
+      "totals_totalsSummary_serviceTotals"
     ),
     ...updatedFieldInfo<CalculatedSharesType>(
       fieldsToMap,
       allTables,
-      "totals_totalsSummary_allTotals",
+      "totals_totalsSummary_allTotals"
     ),
   ];
 
@@ -226,7 +226,7 @@ export const calculationTableDynamicTotalsOnChange = ({
   tableId,
 }: CalculateDynamicTotalsOnChange) => {
   const fieldsToMap = fieldsFromKeys<CalculatedSharesType>(
-    calculationTableSuffixes,
+    calculationTableSuffixes
   );
 
   const {
@@ -248,7 +248,7 @@ export const calculationTableDynamicTotalsOnChange = ({
   });
   const templateFieldData = [...(fieldData?.[dynamicTemplateId] || [])];
   const currentFieldIndex = templateFieldData.findIndex(
-    (field: DynamicFieldShape) => field.id === dynamicFieldId,
+    (field: DynamicFieldShape) => field.id === dynamicFieldId
   );
   const currentField = templateFieldData[currentFieldIndex] || {};
   const updatedField = {
@@ -276,28 +276,28 @@ export const calculationTableDynamicTotalsOnChange = ({
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       template,
-      dynamicTemplateId,
+      dynamicTemplateId
     ),
     ...updatedFieldData<CalculatedSharesType>(fieldsToMap, table, tableId),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       qualifiedHcbsServicesTotal,
-      "totals_totalsSummary_qualifiedHcbsTotals",
+      "totals_totalsSummary_qualifiedHcbsTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       demonstrationServicesTotal,
-      "totals_totalsSummary_demonstrationServicesTotals",
+      "totals_totalsSummary_demonstrationServicesTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
-      "totals_totalsSummary_serviceTotals",
+      "totals_totalsSummary_serviceTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       allTables,
-      "totals_totalsSummary_allTotals",
+      "totals_totalsSummary_allTotals"
     ),
   };
 
@@ -314,7 +314,7 @@ export const calculationTableTotalsOnChange = ({
   tableId,
 }: CalculateTotalsOnChange) => {
   const fieldsToMap = fieldsFromKeys<CalculatedSharesType>(
-    calculationTableSuffixes,
+    calculationTableSuffixes
   );
 
   const {
@@ -340,22 +340,22 @@ export const calculationTableTotalsOnChange = ({
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       qualifiedHcbsServicesTotal,
-      "totals_totalsSummary_qualifiedHcbsTotals",
+      "totals_totalsSummary_qualifiedHcbsTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       demonstrationServicesTotal,
-      "totals_totalsSummary_demonstrationServicesTotals",
+      "totals_totalsSummary_demonstrationServicesTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       serviceTables,
-      "totals_totalsSummary_serviceTotals",
+      "totals_totalsSummary_serviceTotals"
     ),
     ...updatedFieldData<CalculatedSharesType>(
       fieldsToMap,
       allTables,
-      "totals_totalsSummary_allTotals",
+      "totals_totalsSummary_allTotals"
     ),
   };
 
@@ -382,7 +382,7 @@ export const summationTableDynamicTotalsOnSave = ({
   const fieldsToMap = fieldsFromKeys<AnyObject>(summationTableSuffixes);
   const templateFieldData = fieldData?.[dynamicTemplateId] || [];
   const currentFieldIndex = templateFieldData.findIndex(
-    (field: DynamicFieldShape) => field.id === dynamicFieldId,
+    (field: DynamicFieldShape) => field.id === dynamicFieldId
   );
   const currentField = templateFieldData[currentFieldIndex] || {};
 
@@ -418,7 +418,7 @@ export const summationTableDynamicTotalsOnSave = ({
     fieldsToMap.map(([key, suffix]) => [
       key,
       sumDynamicFields(templateFieldData, suffix),
-    ]),
+    ])
   );
 
   const fieldsToSave = [
@@ -439,15 +439,15 @@ export const summationTableDynamicTotalsOnChange = ({
   tableId,
 }: CalculateDynamicTotalsOnChange) => {
   const fieldsToMap = fieldsFromKeys<typeof summationTableSuffixes>(
-    summationTableSuffixes,
+    summationTableSuffixes
   );
   const templateFieldData = [...(fieldData?.[dynamicTemplateId] || [])];
   const currentField = templateFieldData.find(
-    (field: DynamicFieldShape) => field.id === dynamicFieldId,
+    (field: DynamicFieldShape) => field.id === dynamicFieldId
   );
   // Update just the sums on change, other fields will update on blur
   const fieldsToSum = templateFieldData.filter(
-    (field: DynamicFieldShape) => field.id !== dynamicFieldId,
+    (field: DynamicFieldShape) => field.id !== dynamicFieldId
   );
   fieldsToSum.push({
     id: dynamicFieldId,
@@ -460,7 +460,7 @@ export const summationTableDynamicTotalsOnChange = ({
     fieldsToMap.map(([key, suffix]) => [
       key,
       sumDynamicFields(fieldsToSum, suffix),
-    ]),
+    ])
   );
 
   const fieldDataToUpdate = {
@@ -476,7 +476,7 @@ export const summationTableDynamicTotalsOnChange = ({
 export const setPercentageAndValue = (
   event: InputChangeEvent,
   localFieldData: AnyObject,
-  formPercentage: number,
+  formPercentage: number
 ) => {
   const { name, value: inputValue } = event.target;
   const { dynamicFieldId, dynamicTemplateId, fieldId, fieldType } =
@@ -491,7 +491,7 @@ export const setPercentageAndValue = (
   if (isTempDynamicField(name)) {
     const templateFieldData = localFieldData?.[dynamicTemplateId] || [];
     const currentField = templateFieldData.find(
-      (field: DynamicFieldShape) => field.id === dynamicFieldId,
+      (field: DynamicFieldShape) => field.id === dynamicFieldId
     );
 
     totalComputable = currentField?.totalComputable;
