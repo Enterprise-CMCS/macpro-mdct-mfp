@@ -1,58 +1,16 @@
 import { Kafka, KafkaConfig, Message, Producer, ProducerBatch } from "kafkajs";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
-export const kafkaHandler = (callbacks: {
-  getConfig: GetKafkaConfig;
-  getDynamoTopic?: GetDynamoTopic;
-  getS3Topic?: GetS3Topic;
-  getS3Object?: GetS3Object;
-}) => {
+export const kafkaHandler = (callbacks: KafkaCallbacks) => {
   return async (event: AwsStreamEvent) => {
-    const { getConfig, getDynamoTopic, getS3Topic, getS3Object } = callbacks;
-
-    const config = getConfig();
+    const config = callbacks.getConfig();
     if (config === undefined) {
       return;
     }
 
     console.debug(`Raw event: ${JSON.stringify(event, null, 2)}`);
 
-    const messages: { topic: string; message: Message }[] = [];
-    for (let record of event.Records ?? []) {
-      if ("dynamodb" in record) {
-        const topic = getDynamoTopic!(record);
-        if (!topic) {
-          continue;
-        }
-        const { eventID, eventName, dynamodb } = record;
-        const headers = { eventID, eventName };
-        const Keys = unmarshall(dynamodb.Keys);
-        const key = Object.values(Keys).join("#");
-        const OldImage = unmarshall(dynamodb.OldImage ?? {});
-        const NewImage = unmarshall(dynamodb.NewImage);
-        const value = JSON.stringify({ NewImage, OldImage, Keys });
-        messages.push({
-          topic,
-          message: { headers, partition: 0, key, value },
-        });
-      } else if ("s3" in record) {
-        const topic = getS3Topic!(record);
-        if (!topic) {
-          continue;
-        }
-        const { eventTime, eventName, s3 } = record;
-        const headers = { eventName, eventTime };
-        const bucket = s3.bucket.name;
-        const key = s3.object.key;
-        const includeData = record.eventName !== "ObjectRemoved";
-        const value = includeData ? await getS3Object!(bucket, key) : "";
-        messages.push({
-          topic,
-          message: { headers, partition: 0, key, value },
-        });
-      }
-    }
-
+    const messages = await convertToMessages(event.Records, callbacks);
     const topics = [...new Set(messages.map((m) => m.topic))];
     const topicMessages = topics.map((topic) => ({
       topic,
@@ -71,6 +29,52 @@ export const kafkaHandler = (callbacks: {
 
     console.info(`Processing complete.`);
   };
+};
+
+/**
+ * Translate the AWS stream event records into Kafka messages,
+ * ignoring any for which a topic cannot be found.
+ */
+const convertToMessages = async (
+  records: AwsStreamEvent["Records"],
+  { getDynamoTopic, getS3Topic, getS3Object }: KafkaCallbacks
+) => {
+  const messages: { topic: string; message: Message }[] = [];
+  for (let record of records ?? []) {
+    if ("dynamodb" in record) {
+      const topic = getDynamoTopic!(record);
+      if (!topic) {
+        continue;
+      }
+      const { eventID, eventName, dynamodb } = record;
+      const headers = { eventID, eventName };
+      const Keys = unmarshall(dynamodb.Keys);
+      const key = Object.values(Keys).join("#");
+      const OldImage = unmarshall(dynamodb.OldImage ?? {});
+      const NewImage = unmarshall(dynamodb.NewImage);
+      const value = JSON.stringify({ NewImage, OldImage, Keys });
+      messages.push({
+        topic,
+        message: { headers, partition: 0, key, value },
+      });
+    } else if ("s3" in record) {
+      const topic = getS3Topic!(record);
+      if (!topic) {
+        continue;
+      }
+      const { eventTime, eventName, s3 } = record;
+      const headers = { eventName, eventTime };
+      const bucket = s3.bucket.name;
+      const key = s3.object.key;
+      const includeData = record.eventName !== "ObjectRemoved";
+      const value = includeData ? await getS3Object!(bucket, key) : "";
+      messages.push({
+        topic,
+        message: { headers, partition: 0, key, value },
+      });
+    }
+  }
+  return messages;
 };
 
 /**
@@ -112,6 +116,13 @@ const LazyProducer = (() => {
     },
   };
 })();
+
+export type KafkaCallbacks = {
+  getConfig: GetKafkaConfig;
+  getDynamoTopic?: GetDynamoTopic;
+  getS3Topic?: GetS3Topic;
+  getS3Object?: GetS3Object;
+};
 
 /**
  * Collect environment variables and define settings.
