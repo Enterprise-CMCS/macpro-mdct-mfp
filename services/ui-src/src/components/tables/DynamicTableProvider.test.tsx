@@ -258,6 +258,7 @@ const TestComponent = () => {
             mockDynamicTemplateId,
             mockDynamicFieldId,
             "",
+            "",
             updatedFieldsCallback(mockDynamicFieldId, localFieldData)
           )
         }
