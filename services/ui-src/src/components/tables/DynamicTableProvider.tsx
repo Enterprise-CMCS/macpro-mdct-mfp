@@ -210,13 +210,17 @@ export const DynamicTableProvider = ({ children }: any) => {
         hydratedField.id
       );
 
+      const initiativeData = (localFieldData?.initiative || []).find(
+        (t: DynamicFieldShape) => t.id === formData?.id
+      );
+
       const templateFieldData =
         // if there is an entity type "Initiatives", handle Key Metrics
         entityType === EntityType.INITIATIVE
-          ? formData?.[dynamicTemplateId]
+          ? initiativeData?.[dynamicTemplateId]
           : localFieldData?.[dynamicTemplateId] || [];
 
-      const currentField = templateFieldData.find(
+      const currentField = (templateFieldData || []).find(
         (field: DynamicFieldShape) => field.id === dynamicFieldId
       );
 
@@ -456,13 +460,17 @@ export const DynamicTableProvider = ({ children }: any) => {
     entityType?: string,
     updatedFields: FieldInfo[] = []
   ) => {
+    const initiativeData = (localFieldData?.initiative || []).find(
+      (t: DynamicFieldShape) => t.id === dynamicFieldId
+    );
+
     const rows =
       entityType === EntityType.INITIATIVE
-        ? localFieldData?.[entityType]?.[0][dynamicTemplateId]
-        : localFieldData?.[dynamicTemplateId] || [];
+        ? initiativeData?.[dynamicTemplateId]
+        : localFieldData?.[dynamicTemplateId];
 
     // Remove row to be deleted
-    const updatedRows = rows.filter((row: DynamicFieldShape) => {
+    const updatedRows = (rows || []).filter((row: DynamicFieldShape) => {
       return row.id !== dynamicFieldId;
     });
 
