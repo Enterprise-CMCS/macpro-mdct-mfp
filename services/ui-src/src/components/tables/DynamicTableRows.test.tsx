@@ -96,7 +96,7 @@ describe("<DynamicTableRows />", () => {
     render(dynamicTableRowsComponent());
 
     const row = screen.getByRole("row", {
-      name: `Other: $ % Delete ${mockDynamicFieldId}`,
+      name: `Other: $ % Delete Other: ${mockDynamicFieldId}`,
     });
     expect(row).toBeVisible();
 
@@ -104,7 +104,7 @@ describe("<DynamicTableRows />", () => {
     expect(inputs).toHaveLength(2);
 
     const deleteButton = screen.getByRole("button", {
-      name: `Delete ${mockDynamicFieldId}`,
+      name: `Delete Other: ${mockDynamicFieldId}`,
     });
     expect(deleteButton).toBeVisible();
 

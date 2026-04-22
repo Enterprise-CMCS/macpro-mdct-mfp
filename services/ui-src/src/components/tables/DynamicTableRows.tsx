@@ -8,10 +8,7 @@ import {
   DynamicFieldShape,
   DynamicRowsTemplate,
   FormField,
-  ReportType,
 } from "types";
-// utils
-import { useStore } from "utils";
 // assets
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
@@ -33,8 +30,6 @@ export const DynamicTableRows = ({
     localFieldData,
     removeDynamicRow,
   } = useContext(DynamicTableContext);
-  const { report } = useStore();
-  const isFinancialReport = report?.reportType === ReportType.FINANCIAL_REPORT;
   const dynamicLabel = dynamicRowsTemplate.props?.dynamicFields.find(
     (field: FormField) => field.props?.dynamicLabel
   )?.props?.dynamicLabel;
@@ -91,13 +86,9 @@ export const DynamicTableRows = ({
         const dynamicId = row.id;
         const name = row.category || row.title || row.name || dynamicId;
         const editLabel = `Edit ${name}`;
-        let deleteLabel = `Delete ${name}`;
-
-        if (isFinancialReport && dynamicLabel === "Misc. Costs:") {
-          deleteLabel = `Delete Misc. Costs: ${name}`;
-        } else if (isFinancialReport && dynamicLabel === "Other:") {
-          deleteLabel = `Delete Other: ${name}`;
-        }
+        const deleteLabel = ["Delete", dynamicLabel, name]
+          .filter(Boolean)
+          .join(" ");
 
         return (
           <Tr

@@ -269,7 +269,7 @@ describe("<EntityModalTable />", () => {
       expect(rows).toHaveLength(3);
 
       const deleteButton = screen.getByRole("button", {
-        name: "Delete Mock Dynamic Row Category 1",
+        name: "Delete Other: Mock Dynamic Row Category 1",
       });
       await userEvent.click(deleteButton);
 
