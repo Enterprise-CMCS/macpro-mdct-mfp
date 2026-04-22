@@ -101,7 +101,7 @@ describe("<AddEditKeyMetricsModal />", () => {
             .dynamicModalForm.heading.add
         )
       ).toBeTruthy();
-      expect(screen.getByText("Mock modal key metric name")).toBeTruthy();
+      expect(screen.getByText("Mock modal name")).toBeTruthy();
     });
 
     test("AddEditKeyMetricsModal cancel button closes modal", () => {
