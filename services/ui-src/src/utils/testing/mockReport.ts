@@ -150,7 +150,7 @@ export const mockReportFieldData = {
   ],
   initiative: [
     {
-      id: "mock-initative-id",
+      id: "mock-initiative-id",
       name: "mock-name",
       mockObjectiveProgress: [
         {
@@ -168,7 +168,6 @@ export const mockReportFieldData = {
           objectiveTargets_projections_2024Q1: "8",
         },
       ],
-      "mock-initative-id": [[]],
     },
   ],
   evaluationPlan: mockEvaluationPlan,
@@ -195,7 +194,7 @@ export const mockSARReportFieldData = {
   ],
   initiative: [
     {
-      id: "mock-initative-id",
+      id: "mock-initiative-id",
       name: "mock-name",
       mockObjectiveProgress: [
         {

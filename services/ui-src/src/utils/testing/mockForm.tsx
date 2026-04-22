@@ -493,7 +493,7 @@ export const mockObjectiveCards = [
           },
         },
       ],
-      initiativeId: "mock-initative-id",
+      initiativeId: "mock-initiative-id",
       objectiveId: "mock-objective-1",
     },
   },
@@ -848,6 +848,50 @@ export const mockDynamicRowsTemplate = {
   },
 };
 
+export const mockDynamicRowsTemplateForKeyMetricsTable = {
+  id: mockDynamicTemplateId,
+  type: ReportFormFieldType.DYNAMIC_OBJECT,
+  validation: {
+    type: ValidationType.DYNAMIC_OPTIONAL,
+    options: {
+      dynamicFieldValidations: {
+        baselineEndDate: ValidationType.DATE,
+        baselineStartDate: ValidationType.DATE,
+        baselineValue: ValidationType.TEXT,
+        dataSource: ValidationType.RADIO,
+        name: ValidationType.TEXT,
+        targetBenchmarkProjectedDate: ValidationType.DATE,
+        targetBenchmarkValue: ValidationType.TEXT,
+      },
+    },
+  },
+  props: {
+    dynamicFields: [
+      {
+        id: `${mockDynamicTemplateId}-name`,
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.NUMBER_OPTIONAL,
+        props: {
+          mask: NumberMask.CURRENCY,
+          dynamicLabel: "Other:",
+        },
+      },
+      {
+        id: `${mockDynamicTemplateId}-percentageOverride`,
+        type: ReportFormFieldType.NUMBER,
+        validation: ValidationType.NUMBER_OPTIONAL,
+        props: {
+          mask: NumberMask.PERCENTAGE,
+        },
+      },
+    ],
+  },
+  verbiage: {
+    buttonText: "Mock dynamic row button",
+    hint: "Mock dynamic row hint",
+  },
+};
+
 export const mockDynamicRowsTemplateWithModalForm = {
   ...mockDynamicRowsTemplate,
   props: {
@@ -889,8 +933,8 @@ export const mockDynamicRowsTemplateWithModalForm = {
   },
 };
 
-export const mockDynamicRowsTemplateForKeyMetricsTable = {
-  ...mockDynamicRowsTemplate,
+export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
+  ...mockDynamicRowsTemplateForKeyMetricsTable,
   props: {
     ...mockDynamicRowsTemplate.props,
     dynamicModalForm: {
@@ -907,7 +951,65 @@ export const mockDynamicRowsTemplateForKeyMetricsTable = {
           type: ReportFormFieldType.TEXT,
           validation: ValidationType.TEXT,
           props: {
-            label: "Mock modal key metric name",
+            label: "Mock modal name",
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-dataSource`,
+          type: ReportFormFieldType.RADIO,
+          validation: ValidationType.RADIO,
+          props: {
+            label: "Mock modal data source",
+            choices: [
+              {
+                id: "mock-choice-1",
+                label: "Mock data source 1",
+              },
+              {
+                id: "mock-choice-2",
+                label: "Mock data source 2",
+              },
+            ],
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-baselineValue`,
+          type: ReportFormFieldType.TEXT,
+          validation: ValidationType.TEXT,
+          props: {
+            label: "Mock modal baseline value",
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-baselineStartDate`,
+          type: ReportFormFieldType.DATE,
+          validation: ValidationType.DATE,
+          props: {
+            label: "Mock modal baseline start date",
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-baselineEndDate`,
+          type: ReportFormFieldType.DATE,
+          validation: ValidationType.DATE,
+          props: {
+            label: "Mock modal baseline end date",
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-targetBenchmarkValue`,
+          type: ReportFormFieldType.TEXT,
+          validation: ValidationType.TEXT,
+          props: {
+            label: "Mock modal target benchmark value",
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-targetBenchmarkProjectedDate`,
+          type: ReportFormFieldType.DATE,
+          validation: ValidationType.DATE,
+          props: {
+            label: "Mock modal target benchmark projected date",
           },
         },
       ],
