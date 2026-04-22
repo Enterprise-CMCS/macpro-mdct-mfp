@@ -458,10 +458,11 @@ export const DynamicTableProvider = ({ children }: any) => {
     dynamicTemplateId: string,
     dynamicFieldId: string,
     entityType?: string,
+    entityId?: string,
     updatedFields: FieldInfo[] = []
   ) => {
     const initiativeData = (localFieldData?.initiative || []).find(
-      (t: DynamicFieldShape) => t.id === dynamicFieldId
+      (init: DynamicFieldShape) => init.id === entityId
     );
 
     const rows =

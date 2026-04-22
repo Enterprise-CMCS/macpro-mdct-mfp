@@ -144,6 +144,7 @@ export const DynamicTableRows = ({
                         dynamicRowsTemplate.id,
                         dynamicId,
                         entityType,
+                        formData?.id,
                         updatedFieldsCallback(dynamicId, localFieldData)
                       )
                     }
