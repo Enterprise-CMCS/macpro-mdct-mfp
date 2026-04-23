@@ -40,21 +40,22 @@ export const EntityModalTable = ({
 }: Props) => {
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
-  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
-  const currentEntityId = formData?.id;
-  const currentEntityType = formData?.type;
+  const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
+    undefined
+  );
 
   const {
     isOpen: keyMetricsModalIsOpen,
     onOpen: keyMetricsModalOnOpenHandler,
     onClose: keyMetricsModalOnCloseHandler,
   } = useDisclosure();
-  const openModal = (dynamicFieldId?: string) => {
-    setSelectedId(dynamicFieldId);
+  // entityId is passed in from DynamicTableRows
+  const openModal = (entityId?: string) => {
+    setCurrentEntityId(entityId);
     keyMetricsModalOnOpenHandler();
   };
   const closeModal = () => {
-    setSelectedId(undefined);
+    setCurrentEntityId(undefined);
     keyMetricsModalOnCloseHandler();
   };
 
@@ -119,12 +120,12 @@ export const EntityModalTable = ({
               disabled={disabled}
               dynamicRowsTemplate={dynamicRowsTemplate}
               emptyTableMessage={verbiage?.emptyTableMessage}
-              entityType={currentEntityType}
+              entityType={formData?.type}
               formData={formData}
               formPercentage={0}
               hasDynamicModalForm={hasDynamicModalForm}
               hasStaticRows={bodyRows.length > 0}
-              openModal={() => openModal(selectedId)}
+              openModal={openModal}
               tableId={tableId}
               updatedFieldsCallback={updatedFieldsCallback}
             />
@@ -159,14 +160,15 @@ export const EntityModalTable = ({
           </Button>
 
           <AddEditKeyMetricsModal
+            currentEntityId={currentEntityId}
             dynamicTemplateId={dynamicRowsTemplate.id}
+            entityType={formData?.type}
             form={dynamicRowsTemplate.props?.dynamicModalForm}
             modalDisclosure={{
               isOpen: keyMetricsModalIsOpen,
               onClose: closeModal,
             }}
-            currentEntityId={currentEntityId}
-            selectedId={selectedId}
+            parentEntityId={formData?.id}
             report={report}
             userIsAdmin={false}
           />

@@ -41,17 +41,18 @@ export const DynamicTableRows = ({
   const emptyRowsColspan =
     (dynamicRowsTemplate.props?.dynamicFields.length || 0) + 1;
 
-  const initiativeData = (localFieldData?.initiative || []).find(
-    (t: DynamicFieldShape) => t.id === formData?.id
-  );
-
   // Add rows from fieldData
   useEffect(() => {
+    const entityData = entityType
+      ? localFieldData?.[entityType]?.find(
+          (t: DynamicFieldShape) => t.id === formData?.id
+        )
+      : undefined;
+
     // if there is an entity type "Initiatives", handle Key Metrics
-    const rows =
-      entityType === EntityType.INITIATIVE
-        ? initiativeData?.[dynamicRowsTemplate.id]
-        : localFieldData?.[dynamicRowsTemplate.id];
+    const rows = entityType
+      ? entityData?.[dynamicRowsTemplate.id]
+      : localFieldData?.[dynamicRowsTemplate.id];
     if (rows) {
       setLocalDynamicRows((prev: DynamicFieldShape[]) => {
         const diff = rows.length - prev.length;
@@ -168,7 +169,7 @@ interface Props {
   disabled: boolean;
   dynamicRowsTemplate: DynamicRowsTemplate;
   emptyTableMessage?: string;
-  entityType?: string;
+  entityType?: EntityType;
   formData?: AnyObject;
   formPercentage: number;
   hasDynamicModalForm: boolean;
