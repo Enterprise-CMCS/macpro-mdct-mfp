@@ -8,7 +8,7 @@ import {
 } from "./ExportEntityDetailsTable";
 //utils
 import { mockSARFullReport } from "utils/testing/setupJest";
-import { AnyObject, EntityShape } from "types";
+import { AnyObject, EntityShape, EntityType } from "types";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const expenditureRows = {
@@ -55,7 +55,7 @@ const entity: EntityShape = {
   id: "mock-id",
   "mock-id-1": "4",
   "mock-id-2": "8",
-  type: "targetPopulations",
+  type: EntityType.TARGET_POPULATIONS,
 };
 
 describe("<ExportEntityDetailsTable />", () => {

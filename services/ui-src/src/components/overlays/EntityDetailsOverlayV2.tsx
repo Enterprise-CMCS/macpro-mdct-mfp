@@ -23,7 +23,6 @@ export const EntityDetailsOverlayV2 = ({
   route,
   selectedEntity,
   submitting = false,
-  setEntering,
   setSelectedEntity,
   validateOnRender,
 }: Props) => {
@@ -32,9 +31,6 @@ export const EntityDetailsOverlayV2 = ({
       ? "Save & return"
       : "Return";
   };
-  useEffect(() => {
-    setEntering(false);
-  }, []);
 
   useEffect(() => {
     setSelectedEntity(selectedEntity);

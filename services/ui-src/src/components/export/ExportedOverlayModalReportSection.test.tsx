@@ -13,7 +13,7 @@ import {
 } from "../../utils/testing/mockReport";
 import {
   EntityShape,
-  entityTypes,
+  EntityType,
   NumberMask,
   OverlayModalPageShape,
 } from "types";
@@ -23,13 +23,13 @@ jest.mock("utils/state/useStore");
 
 const mockEntity = {
   id: "mock-id-1",
-  type: entityTypes[0],
+  type: EntityType.INITIATIVE,
   "mock-modal-text-field": "mock input 1",
 };
 
 const mockEntity2 = {
   id: "mock-id-2",
-  type: entityTypes[0],
+  type: EntityType.INITIATIVE,
   "mock-modal-text-field": "mock input 1",
   fundingSources: [
     {

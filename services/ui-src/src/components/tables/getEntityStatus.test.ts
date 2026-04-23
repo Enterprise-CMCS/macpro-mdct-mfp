@@ -2,6 +2,7 @@ import {
   EntityDetailsOverlayShape,
   EntityShape,
   EntityStatuses,
+  EntityType,
   FormField,
   OverlayModalPageShape,
   OverlayModalStepTypes,
@@ -83,7 +84,7 @@ describe("tables/getEntityStatus", () => {
       } as ReportShape;
       const entity = {
         id: "mockEntityId",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         field1: "mock text data",
       };
       const entityType = "mockEntityType";
@@ -119,7 +120,7 @@ describe("tables/getEntityStatus", () => {
       } as ReportShape;
       const entity = {
         id: "mockEntityId",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         field1: "mock text data",
       };
       const entityType = "mockEntityType";
@@ -162,7 +163,7 @@ describe("tables/getEntityStatus", () => {
       } as ReportShape;
       const entity = {
         id: "mockEntityId",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         field1: "mock text data",
       };
       const entityType = "mockEntityType";
@@ -206,7 +207,7 @@ describe("tables/getEntityStatus", () => {
       } as ReportShape;
       const entity = {
         id: "mockEntityId",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         field1: "mock text data",
       };
       const entityType = "mockEntityType";
@@ -520,7 +521,7 @@ describe("tables/getEntityStatus", () => {
       } as EntityDetailsOverlayShape;
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         mockStepType: [
           {
             field1: "mock value",
@@ -548,7 +549,7 @@ describe("tables/getEntityStatus", () => {
       } as EntityDetailsOverlayShape;
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         mockStepType: [
           {
             /* no data */
@@ -576,7 +577,7 @@ describe("tables/getEntityStatus", () => {
       } as OverlayModalPageShape;
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
       };
 
       const result = getInitiativeDashboardStatus(formEntity, entity);
@@ -599,7 +600,7 @@ describe("tables/getEntityStatus", () => {
       } as EntityDetailsOverlayShape;
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         field1: "mock value",
       };
 
@@ -637,7 +638,7 @@ describe("tables/getEntityStatus", () => {
       } as EntityDetailsOverlayShape;
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         field1: "mock value",
         mockObj: {
           key: "choice1Key",
@@ -678,7 +679,7 @@ describe("tables/getEntityStatus", () => {
       } as EntityDetailsOverlayShape;
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         field1: "mock value",
         mockObj: {
           key: "choice1Key",
@@ -706,7 +707,7 @@ describe("tables/getEntityStatus", () => {
       };
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         field1: "mock value",
       };
 
@@ -728,7 +729,7 @@ describe("tables/getEntityStatus", () => {
       };
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
       };
 
       const result = getCloseoutStatus(form, entity);
@@ -756,7 +757,7 @@ describe("tables/getEntityStatus", () => {
       };
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
       };
 
       const result = getCloseoutStatus(form, entity);
@@ -771,7 +772,7 @@ describe("tables/getEntityStatus", () => {
       };
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         closeOutInformation_initiativeStatus: [
           {
             value: "Discontinued initiative",
@@ -798,7 +799,7 @@ describe("tables/getEntityStatus", () => {
       };
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         closeOutInformation_initiativeStatus: [
           {
             value: "Sustaining initiative through a Medicaid authority",

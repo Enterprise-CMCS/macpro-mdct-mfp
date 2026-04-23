@@ -10,7 +10,7 @@ import {
   mockWPFullReport,
   mockWpReportContext,
 } from "utils/testing/setupJest";
-import { MfpReportState, MfpUserState, entityTypes } from "types";
+import { EntityType, MfpReportState, MfpUserState } from "types";
 import { useStore } from "../../utils";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
@@ -24,7 +24,7 @@ const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
 const mockEntity = {
   id: "mock-id-1",
-  type: entityTypes[0],
+  type: EntityType.INITIATIVE,
   "mock-modal-text-field": "mock input 1",
 };
 
@@ -80,7 +80,7 @@ const modalComponentWithSelectedEntity = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
       <DeleteEntityModal
-        entityType={entityTypes[0]}
+        entityType={EntityType.INITIATIVE}
         selectedEntity={mockEntity}
         verbiage={mockModalDrawerReportPageVerbiage}
         modalDisclosure={{
@@ -103,7 +103,7 @@ const mockEntityWithinEntity = {
 
 const mockNestedEntity = {
   id: "mock-id'2",
-  type: entityTypes[0],
+  type: EntityType.INITIATIVE,
   "mock-modal-text-field": "mock input 2",
   evaluationPlan: [mockEntityWithinEntity],
 };
@@ -124,7 +124,7 @@ const modalComponentWithNestedEntity = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockReportContextNestedEntity}>
       <DeleteEntityModal
-        entityType={entityTypes[0]}
+        entityType={EntityType.INITIATIVE}
         selectedEntity={mockNestedEntity}
         verbiage={mockModalDrawerReportPageVerbiage}
         modalDisclosure={{

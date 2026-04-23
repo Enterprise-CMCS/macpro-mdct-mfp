@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 // components
 import {
   Box,
@@ -11,9 +11,14 @@ import {
   Text,
   Tfoot,
   Thead,
+  useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import { DynamicTableContext, DynamicTableRows } from "components";
+import {
+  AddEditKeyMetricsModal,
+  DynamicTableContext,
+  DynamicTableRows,
+} from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 // types
@@ -29,11 +34,30 @@ export const EntityModalTable = ({
   formData,
   headRows,
   id: tableId,
+  report,
   styleAsOptionalHeadRows,
   verbiage,
 }: Props) => {
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
+  const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
+    undefined
+  );
+
+  const {
+    isOpen: keyMetricsModalIsOpen,
+    onOpen: keyMetricsModalOnOpenHandler,
+    onClose: keyMetricsModalOnCloseHandler,
+  } = useDisclosure();
+  // entityId is passed in from DynamicTableRows
+  const openModal = (entityId?: string) => {
+    setCurrentEntityId(entityId);
+    keyMetricsModalOnOpenHandler();
+  };
+  const closeModal = () => {
+    setCurrentEntityId(undefined);
+    keyMetricsModalOnCloseHandler();
+  };
 
   // Dynamic rows
   const { generateRows } = useContext(DynamicTableContext);
@@ -61,7 +85,6 @@ export const EntityModalTable = ({
       },
     ];
   };
-
   return (
     <Box sx={sx.box}>
       {verbiage?.sectionTitle && (
@@ -105,11 +128,12 @@ export const EntityModalTable = ({
               disabled={disabled}
               dynamicRowsTemplate={dynamicRowsTemplate}
               emptyTableMessage={verbiage?.emptyTableMessage}
+              entityType={formData?.type}
               formData={formData}
               formPercentage={0}
               hasDynamicModalForm={hasDynamicModalForm}
               hasStaticRows={bodyRows.length > 0}
-              openModal={() => {}}
+              openModal={openModal}
               showEditColumn={hasDynamicModalForm}
               tableId={tableId}
               updatedFieldsCallback={updatedFieldsCallback}
@@ -137,16 +161,29 @@ export const EntityModalTable = ({
           </Text>
           <Button
             leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="" />}
-            onClick={() => {}}
+            onClick={hasDynamicModalForm ? () => openModal() : () => {}}
             sx={sx.dynamicRowsButton}
             variant="outline"
           >
             {dynamicRowsTemplate.verbiage.buttonText}
           </Button>
 
-          {/* TODO: Modal */}
+          <AddEditKeyMetricsModal
+            currentEntityId={currentEntityId}
+            dynamicTemplateId={dynamicRowsTemplate.id}
+            entityType={formData?.type}
+            form={dynamicRowsTemplate.props?.dynamicModalForm}
+            modalDisclosure={{
+              isOpen: keyMetricsModalIsOpen,
+              onClose: closeModal,
+            }}
+            parentEntityId={formData?.id}
+            report={report}
+            userIsAdmin={false}
+          />
         </>
       )}
+      {/* TODO: popup to confirm deletion of Key Metric */}
     </Box>
   );
 };

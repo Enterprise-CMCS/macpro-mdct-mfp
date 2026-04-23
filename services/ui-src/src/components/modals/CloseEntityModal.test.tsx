@@ -10,6 +10,7 @@ import {
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
+import { EntityType } from "types";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -37,11 +38,11 @@ const modalComponent = (
       entityName={mockEntityName}
       route={{
         ...mockEntityDetailsOverlayJson,
-        entityType: "initiative", // must match selectedEntity for confirm test
+        entityType: EntityType.INITIATIVE, // must match selectedEntity for confirm test
       }}
       selectedEntity={{
         id: "mockEntityId",
-        type: "initiative",
+        type: EntityType.INITIATIVE,
       }}
       modalDisclosure={{
         isOpen: true,
