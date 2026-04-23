@@ -32,6 +32,9 @@ export const DynamicTableRows = ({
     localFieldData,
     removeDynamicRow,
   } = useContext(DynamicTableContext);
+  const dynamicLabel = dynamicRowsTemplate.props?.dynamicFields.find(
+    (field: FormField) => field.props?.dynamicLabel
+  )?.props?.dynamicLabel;
   // Refs to help keep track of rows
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const [localDynamicRows, setLocalDynamicRows] = useState<DynamicFieldShape[]>(
@@ -92,7 +95,11 @@ export const DynamicTableRows = ({
 
       {localDynamicRows.map((row, rowIndex: number) => {
         const dynamicId = row.id;
-        const name = row.name || dynamicId;
+        const name = row.category || row.title || row.name || dynamicId;
+        const editLabel = `Edit ${name}`;
+        const deleteLabel = ["Delete", dynamicLabel, name]
+          .filter(Boolean)
+          .join(" ");
 
         const dynamicFields = (
           dynamicRowsTemplate.props?.dynamicFields || []
@@ -129,7 +136,7 @@ export const DynamicTableRows = ({
               <Flex>
                 {!disabled && hasDynamicModalForm && (
                   <Button
-                    aria-label={`Edit ${name}`}
+                    aria-label={editLabel}
                     onClick={() => openModal(dynamicId)}
                     sx={sx.editButton}
                     type="button"
@@ -153,7 +160,7 @@ export const DynamicTableRows = ({
                     type="button"
                     variant={"unstyled"}
                   >
-                    <Image src={cancelIcon} alt={`Delete ${name}`} />
+                    <Image src={cancelIcon} alt={deleteLabel} />
                   </Button>
                 )}
               </Flex>
