@@ -7,6 +7,7 @@ import {
   AnyObject,
   DynamicFieldShape,
   DynamicRowsTemplate,
+  EntityType,
   FormField,
 } from "types";
 // assets
@@ -16,6 +17,7 @@ export const DynamicTableRows = ({
   disabled,
   dynamicRowsTemplate,
   emptyTableMessage,
+  entityType,
   formData,
   formPercentage,
   hasDynamicModalForm,
@@ -41,7 +43,16 @@ export const DynamicTableRows = ({
 
   // Add rows from fieldData
   useEffect(() => {
-    const rows = localFieldData?.[dynamicRowsTemplate.id];
+    const entityData = entityType
+      ? localFieldData?.[entityType]?.find(
+          (t: DynamicFieldShape) => t.id === formData?.id
+        )
+      : undefined;
+
+    // if there is an entity type "Initiatives", handle Key Metrics
+    const rows = entityType
+      ? entityData?.[dynamicRowsTemplate.id]
+      : localFieldData?.[dynamicRowsTemplate.id];
     if (rows) {
       setLocalDynamicRows((prev: DynamicFieldShape[]) => {
         const diff = rows.length - prev.length;
@@ -83,6 +94,10 @@ export const DynamicTableRows = ({
         const dynamicId = row.id;
         const name = row.name || dynamicId;
 
+        const dynamicFields = (
+          dynamicRowsTemplate.props?.dynamicFields || []
+        ).filter((f: FormField) => !f.id.includes("baselineEndDate"));
+
         return (
           <Tr
             key={dynamicId}
@@ -91,26 +106,25 @@ export const DynamicTableRows = ({
               rowRefs.current[rowIndex] = el;
             }}
           >
-            {dynamicRowsTemplate.props?.dynamicFields.map(
-              (field: FormField, cellIndex: number) => (
-                <Td
-                  id={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-                  key={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-                >
-                  {displayDynamicCell({
-                    cell: field,
-                    columnId: `${dynamicId}-${rowIndex}-cell-0`,
-                    disabled,
-                    dynamicId,
-                    formData,
-                    percentage: formPercentage,
-                    rowId: `thead-row-0-cell-${cellIndex}`,
-                    rowIndex,
-                    tableId,
-                  })}
-                </Td>
-              )
-            )}
+            {dynamicFields.map((field: FormField, cellIndex: number) => (
+              <Td
+                id={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
+                key={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
+              >
+                {displayDynamicCell({
+                  cell: field,
+                  columnId: `${dynamicId}-${rowIndex}-cell-0`,
+                  disabled,
+                  dynamicId,
+                  entityType,
+                  formData,
+                  percentage: formPercentage,
+                  rowId: `thead-row-0-cell-${cellIndex}`,
+                  rowIndex,
+                  tableId,
+                })}
+              </Td>
+            ))}
             <Td>
               <Flex>
                 {!disabled && hasDynamicModalForm && (
@@ -130,6 +144,8 @@ export const DynamicTableRows = ({
                       removeDynamicRow(
                         dynamicRowsTemplate.id,
                         dynamicId,
+                        entityType,
+                        formData?.id,
                         updatedFieldsCallback(dynamicId, localFieldData)
                       )
                     }
@@ -153,6 +169,7 @@ interface Props {
   disabled: boolean;
   dynamicRowsTemplate: DynamicRowsTemplate;
   emptyTableMessage?: string;
+  entityType?: EntityType;
   formData?: AnyObject;
   formPercentage: number;
   hasDynamicModalForm: boolean;

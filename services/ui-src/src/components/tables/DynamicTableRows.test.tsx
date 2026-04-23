@@ -16,6 +16,7 @@ import {
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 import userEvent from "@testing-library/user-event";
+import { EntityType } from "types";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -127,6 +128,51 @@ describe("<DynamicTableRows />", () => {
     });
     mockGetValues(undefined);
     render(dynamicTableRowsComponent());
+
+    const inputs = screen.getAllByRole("textbox", { name: "Other:" });
+    const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
+
+    await act(async () => {
+      await userEvent.clear(inputs[0]);
+      await userEvent.clear(pctInputs[0]);
+      await userEvent.tab();
+    });
+    expect(inputs[0]).toHaveValue("");
+    expect(pctInputs[0]).toHaveValue("");
+
+    await act(async () => {
+      await userEvent.type(inputs[0], "123");
+      await userEvent.type(pctInputs[0], "10.00");
+      await userEvent.tab();
+    });
+    expect(inputs[0]).toHaveValue("123.00");
+    expect(pctInputs[0]).toHaveValue("10");
+  });
+
+  test("edit row - entity", async () => {
+    const mockCurrentEntityId = "mockCurrentEntityId";
+    const formData = {
+      id: mockCurrentEntityId,
+      ...mockProps.formData,
+    };
+    const updatedProps = {
+      ...mockProps,
+      entityType: EntityType.INITIATIVE,
+      formData,
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockStateUserStore,
+      ...mockReportStore,
+      report: {
+        fieldData: {
+          [EntityType.INITIATIVE]: [formData],
+        },
+      },
+    });
+    mockGetValues(undefined);
+
+    render(dynamicTableRowsComponent(updatedProps));
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
     const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
