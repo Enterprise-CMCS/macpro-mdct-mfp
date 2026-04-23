@@ -17,38 +17,52 @@ import { getFieldParts } from "utils";
 export const AddEditKeyMetricsModal = ({
   currentEntityId,
   dynamicTemplateId,
+  entityType,
   form,
   modalDisclosure,
+  parentEntityId,
   report,
-  selectedId,
   userIsAdmin = false,
 }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const { updateReport } = useContext(ReportContext);
 
+  const [currentEntityFieldData, setCurrentEntityFieldData] = useState<
+    AnyObject[]
+  >([]);
+  const [currentEntityIndex, setCurrentEntityIndex] = useState<number>(-1);
+  const [formData, setFormData] = useState<AnyObject>({});
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [formData, setFormData] = useState<AnyObject>({});
 
   const isReportSubmitted = report?.status === ReportStatus.SUBMITTED;
   const viewOnly = userIsAdmin || isReportSubmitted;
 
-  const templateFieldData = report?.fieldData?.[dynamicTemplateId] || [];
-  const currentFieldIndex = templateFieldData.findIndex(
-    (field: DynamicFieldShape) => field.id === selectedId
+  const parentEntityFieldData = report?.fieldData?.[entityType] || [];
+  const parentEntityIndex = parentEntityFieldData.findIndex(
+    (field: DynamicFieldShape) => field.id === parentEntityId
   );
 
   useEffect(() => {
-    const fieldData = templateFieldData[currentFieldIndex] || {};
-    const keys = Object.keys(fieldData);
+    const fieldData =
+      parentEntityFieldData?.[parentEntityIndex]?.[dynamicTemplateId] || [];
+    setCurrentEntityFieldData(fieldData);
+
+    const index = fieldData.findIndex(
+      (t: DynamicFieldShape) => t.id === currentEntityId
+    );
+    setCurrentEntityIndex(index);
+
+    const currentEntity = fieldData[index] || {};
+    const keys = Object.keys(currentEntity);
     const updatedFormData = keys.reduce((data, key) => {
-      data[`${dynamicTemplateId}-${key}`] = fieldData[key];
+      data[`${dynamicTemplateId}-${key}`] = currentEntity[key];
       return data;
     }, {} as AnyObject);
 
     setFormData(updatedFormData);
-    setIsEditing(currentFieldIndex !== -1);
-  }, [currentFieldIndex, dynamicTemplateId]);
+    setIsEditing(!!currentEntityId);
+  }, [currentEntityId, parentEntityIndex, dynamicTemplateId]);
 
   const handleSubmit = async (enteredData: AnyObject) => {
     if (viewOnly) {
@@ -68,45 +82,31 @@ export const AddEditKeyMetricsModal = ({
       return data;
     }, {} as AnyObject);
 
-    const dynamicFieldId = selectedId || uuid();
+    const dynamicFieldId = currentEntityId || uuid();
 
-    const updatedField = {
+    const updatedEntity = {
       id: dynamicFieldId,
       // Saved data
-      ...templateFieldData[currentFieldIndex],
+      ...currentEntityFieldData[currentEntityIndex],
       // Entered data
       ...submissionData,
     };
 
-    if (currentFieldIndex !== -1) {
-      templateFieldData[currentFieldIndex] = updatedField;
+    if (currentEntityIndex !== -1) {
+      currentEntityFieldData[currentEntityIndex] = updatedEntity;
     } else {
-      templateFieldData.push(updatedField);
+      currentEntityFieldData.push(updatedEntity);
     }
 
-    if (report) {
-      const currentInitiativeIndex = report?.fieldData.initiative.findIndex(
-        (init: any) => {
-          return init.id === currentEntityId;
-        }
-      );
+    const updatedParentEntity = {
+      ...parentEntityFieldData[parentEntityIndex],
+      [dynamicTemplateId]: currentEntityFieldData,
+    };
 
-      var targetInitiative =
-        report?.fieldData.initiative[currentInitiativeIndex];
-
-      // check if this is the first Key Metric being added to Initiative
-      if (!Object.hasOwn(targetInitiative, dynamicTemplateId)) {
-        const keyMetrics = [updatedField];
-        targetInitiative = {
-          ...targetInitiative,
-          [dynamicTemplateId]: keyMetrics,
-        };
-        // if not, push new key metric to existing array
-      } else {
-        targetInitiative[dynamicTemplateId].push(updatedField);
-      }
-
-      report.fieldData.initiative[currentInitiativeIndex] = targetInitiative;
+    if (parentEntityIndex !== -1) {
+      parentEntityFieldData[parentEntityIndex] = updatedParentEntity;
+    } else {
+      parentEntityFieldData.push(updatedParentEntity);
     }
 
     const reportKeys = {
@@ -119,6 +119,7 @@ export const AddEditKeyMetricsModal = ({
       ...report,
       fieldData: {
         ...report?.fieldData,
+        [entityType]: parentEntityFieldData,
       },
     };
 
@@ -136,7 +137,6 @@ export const AddEditKeyMetricsModal = ({
     formRef.current?.requestSubmit();
   };
 
-  // TODO: Hydrate modal on edit
   return (
     <Modal
       content={{
@@ -172,14 +172,15 @@ export const AddEditKeyMetricsModal = ({
 };
 
 interface Props {
-  currentEntityId: string;
+  currentEntityId?: string;
   dynamicTemplateId: string;
+  entityType: string;
   form: FormJson;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
   };
   report?: ReportShape;
-  selectedId?: string;
+  parentEntityId?: string;
   userIsAdmin?: boolean;
 }

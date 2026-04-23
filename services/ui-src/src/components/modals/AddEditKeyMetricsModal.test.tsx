@@ -1,194 +1,218 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-//components
-import { AddEditKeyMetricsModal, ReportContext } from "components";
+// components
+import { AddEditKeyMetricsModal } from "./AddEditKeyMetricsModal";
+// utils
 import {
+  mockDynamicFieldId,
   mockDynamicRowsTemplateForKeyMetricsTableWithModalForm,
   mockDynamicTemplateId,
-  mockStateUserStore,
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { useStore } from "utils";
-import { MfpReportState, MfpUserState } from "../../types";
-import { testA11yAct } from "utils/testing/commonTests";
+import { ReportContext } from "components/reports/ReportProvider";
+import { EntityType, ReportShape, ReportStatus } from "types";
 
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
+const mockCurrentEntityId = "mockCurrentEntityId";
 
-jest.mock("react-uuid", () => jest.fn(() => "mock-id-2"));
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-jest.mock("utils/auth/useUser");
-
-const report = {
+const getReport = (
+  submitedReport: boolean = false,
+  emptyFieldData: boolean = false
+) => ({
   ...mockWPFullReport,
-  fieldData: {
-    initiative: [
-      {
-        id: "mock-initiative-id",
-        type: "initiative",
-        initiative_name: "mock-name",
+  status: submitedReport ? ReportStatus.SUBMITTED : ReportStatus.IN_PROGRESS,
+  fieldData: emptyFieldData
+    ? undefined
+    : {
+        [EntityType.INITIATIVE]: [
+          {
+            id: mockDynamicFieldId,
+            [mockDynamicTemplateId]: [
+              {
+                id: mockCurrentEntityId,
+                name: "Mock name",
+                baselineStartDate: "01/01/2026",
+              },
+            ],
+          },
+        ],
       },
-    ],
-  },
-};
+});
 
-const mockUseStore: MfpReportState & MfpUserState = {
-  report: report,
-  reportsByState: [mockWPFullReport],
-  submittedReportsByState: [mockWPFullReport],
-  lastSavedTime: "12:30 PM",
-  workPlanToCopyFrom: undefined,
-  autosaveState: false,
-  editable: true,
-  setReport: () => {},
-  setReportsByState: () => {},
-  clearReportsByState: () => {},
-  setSubmittedReportsByState: () => {},
-  setLastSavedTime: () => {},
-  setWorkPlanToCopyFrom: () => {},
-  setAutosaveState: () => {},
-  setEditable: () => {},
-  // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
-  ...mockStateUserStore,
-};
-
-const mockedReportContext = {
+const mockedReportContext = (
+  submitedReport: boolean = false,
+  emptyFieldData: boolean = false
+) => ({
   ...mockWpReportContext,
   updateReport: mockUpdateReport,
-  report: report,
-};
-
+  report: getReport(submitedReport, emptyFieldData),
+});
 const modalComponent = (
+  userIsAdmin?: boolean,
+  currentEntityId?: string,
+  submittedReport?: boolean,
+  emptyFieldData?: boolean
+) => (
   <RouterWrappedComponent>
-    <ReportContext.Provider value={mockedReportContext}>
+    <ReportContext.Provider
+      value={mockedReportContext(submittedReport, emptyFieldData)}
+    >
       <AddEditKeyMetricsModal
-        currentEntityId={"mock-initiative-id"}
+        currentEntityId={currentEntityId}
         dynamicTemplateId={mockDynamicTemplateId}
+        entityType={EntityType.INITIATIVE}
         form={
           mockDynamicRowsTemplateForKeyMetricsTableWithModalForm.props
             .dynamicModalForm
         }
-        report={mockWPFullReport}
-        modalDisclosure={{
-          isOpen: true,
-          onClose: mockCloseHandler,
-        }}
+        modalDisclosure={{ isOpen: true, onClose: mockCloseHandler }}
+        parentEntityId={mockDynamicFieldId}
+        report={getReport(submittedReport, emptyFieldData) as ReportShape}
+        userIsAdmin={userIsAdmin}
       />
     </ReportContext.Provider>
   </RouterWrappedComponent>
 );
 
-describe("<AddEditKeyMetricsModal />", () => {
-  describe("Test AddEditKeyMetricsModal", () => {
-    beforeEach(async () => {
-      mockedUseStore.mockReturnValue(mockUseStore);
-      await act(async () => {
-        render(modalComponent);
-      });
-    });
-
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
-    test("AddEditKeyMetricsModal shows the contents", () => {
-      expect(
-        screen.getByText(
-          mockDynamicRowsTemplateForKeyMetricsTableWithModalForm.props
-            .dynamicModalForm.heading.add
-        )
-      ).toBeTruthy();
-      expect(screen.getByText("Mock modal name")).toBeTruthy();
-    });
-
-    test("AddEditKeyMetricsModal cancel button closes modal", () => {
-      fireEvent.click(screen.getByText("Cancel"));
-      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-    });
-
-    test("AddEditKeyMetricsModal close button closes modal", () => {
-      fireEvent.click(screen.getByText("Close"));
-      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
-    });
+describe("AddEditKeyMetricsModal", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  describe("Test AddEditKeyMetricsModal functionality", () => {
-    beforeEach(async () => {
-      mockedUseStore.mockReturnValue(mockUseStore);
-      await act(async () => {
-        render(modalComponent);
+  describe("state user - add", () => {
+    test("renders add headings and fields", async () => {
+      render(modalComponent());
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole("heading", { name: "Add mock heading" })
+        ).toBeVisible();
+        expect(screen.getByText("Add mock subheading")).toBeVisible();
+
+        const field1 = screen.getByRole("textbox", {
+          name: "Mock modal name",
+        });
+        expect(field1).toHaveValue("");
+
+        const field2 = screen.getByRole("textbox", {
+          name: "Mock modal baseline start date",
+        });
+        expect(field2).toHaveValue("");
       });
     });
 
-    const fillAndSubmitForm = async (form: any) => {
-      // fill and submit form
-      const name = form.querySelector(
-        "[name='mockFormId_mockTableId_mockDynamicFieldId-name']"
-      )!;
+    test("close button closes modal", async () => {
+      render(modalComponent());
+
+      const closeButton = screen.getByRole("button", { name: "Close" });
       await act(async () => {
-        await userEvent.type(name, "mock name");
+        await userEvent.click(closeButton);
       });
-      const dataSource = form.querySelector(
-        "[name='mockFormId_mockTableId_mockDynamicFieldId-dataSource'"
-      );
-      fireEvent.click(dataSource, {
-        target: { value: "Mock data source 1" },
-      });
-      const baselineValue = form.querySelector(
-        "[name='mockFormId_mockTableId_mockDynamicFieldId-baselineValue']"
-      )!;
-      await act(async () => {
-        await userEvent.type(baselineValue, "mock baseline value");
-      });
-      const baselineStartDate = form.querySelector(
-        "[name='mockFormId_mockTableId_mockDynamicFieldId-baselineStartDate']"
-      )!;
-      await act(async () => {
-        await userEvent.type(baselineStartDate, "01/01/2020");
-      });
-      const baselineEndDate = form.querySelector(
-        "[name='mockFormId_mockTableId_mockDynamicFieldId-baselineEndDate']"
-      )!;
-      await act(async () => {
-        await userEvent.type(baselineEndDate, "01/01/2025");
-      });
-      const targetBenchmarkValue = form.querySelector(
-        "[name='mockFormId_mockTableId_mockDynamicFieldId-targetBenchmarkValue']"
-      )!;
-      await act(async () => {
-        await userEvent.type(
-          targetBenchmarkValue,
-          "mock target benchmark value"
-        );
-      });
-      const targetBenchmarkProjectedDate = form.querySelector(
-        "[name='mockFormId_mockTableId_mockDynamicFieldId-targetBenchmarkProjectedDate']"
-      )!;
-      await act(async () => {
-        await userEvent.type(targetBenchmarkProjectedDate, "01/01/2028");
-      });
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
+
+    test("submit button triggers form submission and closes modal", async () => {
+      render(modalComponent(false, undefined, false, true));
+
       const submitButton = screen.getByRole("button", { name: "Save" });
       await act(async () => {
         await userEvent.click(submitButton);
       });
-    };
+      expect(mockUpdateReport).toHaveBeenCalledTimes(1);
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
+  });
 
-    test("Successfully adds new entity, even with existing entities", async () => {
-      const result = await render(modalComponent);
-      const form = result.getAllByTestId("add-edit-key-metrics-form")[1];
-      await fillAndSubmitForm(form);
+  describe("state user - edit", () => {
+    test("renders edit headings and fields with values", async () => {
+      await act(async () => {
+        render(modalComponent(false, mockCurrentEntityId));
+      });
 
-      expect(mockUpdateReport).toHaveBeenCalled();
+      await waitFor(() => {
+        expect(
+          screen.getByRole("heading", { name: "Edit mock heading" })
+        ).toBeVisible();
+        expect(screen.getByText("Edit mock subheading")).toBeVisible();
+
+        const field1 = screen.getByRole("textbox", {
+          name: "Mock modal name",
+        });
+        expect(field1).toHaveValue("Mock name");
+
+        const field2 = screen.getByRole("textbox", {
+          name: "Mock modal baseline start date",
+        });
+        expect(field2).toHaveValue("01/01/2026");
+      });
+    });
+
+    test("submit button triggers form submission and closes modal", async () => {
+      await act(async () => {
+        render(modalComponent(false, mockCurrentEntityId));
+      });
+
+      const submitButton = screen.getByRole("button", { name: "Save" });
+      await act(async () => {
+        await userEvent.click(submitButton);
+      });
+      expect(mockUpdateReport).toHaveBeenCalledTimes(1);
       expect(mockCloseHandler).toHaveBeenCalledTimes(1);
     });
 
-    test("Successfully edits an existing entity", async () => {});
+    describe("submitted report", () => {
+      test("form fields are disabled", async () => {
+        await act(async () => {
+          render(modalComponent(false, mockCurrentEntityId, true));
+        });
 
-    test("Doesn't edit an existing entity if no update was made", async () => {});
+        const fieldset = screen.getByRole("group");
+        const inputs = within(fieldset).getAllByRole("textbox");
+
+        inputs.forEach((input) => {
+          expect(input).toBeDisabled();
+        });
+      });
+
+      test("submit button closes modal", async () => {
+        await act(async () => {
+          render(modalComponent(false, mockCurrentEntityId, true));
+        });
+
+        const submitButton = screen.getByRole("button", { name: "Return" });
+        await act(async () => {
+          await userEvent.click(submitButton);
+        });
+
+        expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 
-  testA11yAct(modalComponent);
+  describe("admin user", () => {
+    test("form fields are disabled", () => {
+      render(modalComponent(true));
+
+      const fieldset = screen.getByRole("group");
+      const inputs = within(fieldset).getAllByRole("textbox");
+
+      inputs.forEach((input) => {
+        expect(input).toBeDisabled();
+      });
+    });
+
+    test("submit button closes modal", async () => {
+      render(modalComponent(true));
+
+      const submitButton = screen.getByRole("button", { name: "Return" });
+      await act(async () => {
+        await userEvent.click(submitButton);
+      });
+
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+    });
+  });
 });

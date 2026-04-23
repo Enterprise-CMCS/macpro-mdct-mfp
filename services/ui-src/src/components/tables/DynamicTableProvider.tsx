@@ -209,18 +209,18 @@ export const DynamicTableProvider = ({ children }: any) => {
       const { dynamicFieldId, dynamicTemplateId, fieldType } = getFieldParts(
         hydratedField.id
       );
+      const entityData = entityType
+        ? localFieldData?.[entityType]?.find(
+            (t: DynamicFieldShape) => t.id === formData?.id
+          )
+        : undefined;
 
-      const initiativeData = (localFieldData?.initiative || []).find(
-        (t: DynamicFieldShape) => t.id === formData?.id
-      );
+      // if there is an entity type "Initiatives", handle Key Metrics
+      const templateFieldData = entityType
+        ? entityData?.[dynamicTemplateId]
+        : localFieldData?.[dynamicTemplateId];
 
-      const templateFieldData =
-        // if there is an entity type "Initiatives", handle Key Metrics
-        entityType === EntityType.INITIATIVE
-          ? initiativeData?.[dynamicTemplateId]
-          : localFieldData?.[dynamicTemplateId] || [];
-
-      const currentField = (templateFieldData || []).find(
+      const currentField = templateFieldData?.find(
         (field: DynamicFieldShape) => field.id === dynamicFieldId
       );
 
@@ -461,19 +461,20 @@ export const DynamicTableProvider = ({ children }: any) => {
     entityId?: string,
     updatedFields: FieldInfo[] = []
   ) => {
-    const initiativeData = (localFieldData?.initiative || []).find(
-      (init: DynamicFieldShape) => init.id === entityId
-    );
-
-    const rows =
-      entityType === EntityType.INITIATIVE
-        ? initiativeData?.[dynamicTemplateId]
-        : localFieldData?.[dynamicTemplateId];
+    const entityData = entityType
+      ? localFieldData?.[entityType].find(
+          (t: DynamicFieldShape) => t.id === entityId
+        )
+      : undefined;
+    const rows = entityType
+      ? entityData?.[dynamicTemplateId]
+      : localFieldData?.[dynamicTemplateId];
 
     // Remove row to be deleted
-    const updatedRows = (rows || []).filter((row: DynamicFieldShape) => {
-      return row.id !== dynamicFieldId;
-    });
+    const updatedRows =
+      rows?.filter((row: DynamicFieldShape) => {
+        return row.id !== dynamicFieldId;
+      }) || [];
 
     const fields = updatedFields.map((field) => {
       return field.name === dynamicTemplateId
@@ -488,6 +489,21 @@ export const DynamicTableProvider = ({ children }: any) => {
       ...localFieldData,
       ...Object.fromEntries(fields.map(({ name, value }) => [name, value])),
     };
+
+    if (entityType) {
+      fieldData[entityType] = localFieldData?.[entityType].map(
+        (t: DynamicFieldShape) => {
+          if (t.id === entityId) {
+            return {
+              ...entityData,
+              [dynamicTemplateId]: updatedRows,
+            };
+          }
+          return t;
+        }
+      );
+    }
+
     setLocalFieldData(fieldData);
 
     const reportArgs = {

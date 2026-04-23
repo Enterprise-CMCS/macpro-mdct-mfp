@@ -857,11 +857,8 @@ export const mockDynamicRowsTemplateForKeyMetricsTable = {
       dynamicFieldValidations: {
         baselineEndDate: ValidationType.DATE,
         baselineStartDate: ValidationType.DATE,
-        baselineValue: ValidationType.TEXT,
         dataSource: ValidationType.RADIO,
         name: ValidationType.TEXT,
-        targetBenchmarkProjectedDate: ValidationType.DATE,
-        targetBenchmarkValue: ValidationType.TEXT,
       },
     },
   },
@@ -870,18 +867,43 @@ export const mockDynamicRowsTemplateForKeyMetricsTable = {
       {
         id: `${mockDynamicTemplateId}-name`,
         type: ReportFormFieldType.TEXT,
-        validation: ValidationType.NUMBER_OPTIONAL,
+        validation: ValidationType.TEXT,
         props: {
-          mask: NumberMask.CURRENCY,
-          dynamicLabel: "Other:",
+          label: "Mock modal name",
         },
       },
       {
-        id: `${mockDynamicTemplateId}-percentageOverride`,
-        type: ReportFormFieldType.NUMBER,
-        validation: ValidationType.NUMBER_OPTIONAL,
+        id: `${mockDynamicTemplateId}-dataSource`,
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
-          mask: NumberMask.PERCENTAGE,
+          label: "Mock modal data source",
+          choices: [
+            {
+              id: "mock-choice-1",
+              label: "Mock data source 1",
+            },
+            {
+              id: "mock-choice-2",
+              label: "Mock data source 2",
+            },
+          ],
+        },
+      },
+      {
+        id: `${mockDynamicTemplateId}-baselineStartDate`,
+        type: ReportFormFieldType.DATE,
+        validation: ValidationType.DATE,
+        props: {
+          label: "Mock modal baseline start date",
+        },
+      },
+      {
+        id: `${mockDynamicTemplateId}-baselineEndDate`,
+        type: ReportFormFieldType.DATE,
+        validation: ValidationType.DATE,
+        props: {
+          label: "Mock modal baseline end date",
         },
       },
     ],
@@ -973,14 +995,6 @@ export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
           },
         },
         {
-          id: `${mockDynamicTemplateId}-baselineValue`,
-          type: ReportFormFieldType.TEXT,
-          validation: ValidationType.TEXT,
-          props: {
-            label: "Mock modal baseline value",
-          },
-        },
-        {
           id: `${mockDynamicTemplateId}-baselineStartDate`,
           type: ReportFormFieldType.DATE,
           validation: ValidationType.DATE,
@@ -994,22 +1008,6 @@ export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
           validation: ValidationType.DATE,
           props: {
             label: "Mock modal baseline end date",
-          },
-        },
-        {
-          id: `${mockDynamicTemplateId}-targetBenchmarkValue`,
-          type: ReportFormFieldType.TEXT,
-          validation: ValidationType.TEXT,
-          props: {
-            label: "Mock modal target benchmark value",
-          },
-        },
-        {
-          id: `${mockDynamicTemplateId}-targetBenchmarkProjectedDate`,
-          type: ReportFormFieldType.DATE,
-          validation: ValidationType.DATE,
-          props: {
-            label: "Mock modal target benchmark projected date",
           },
         },
       ],

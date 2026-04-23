@@ -158,19 +158,16 @@ export const ModalOverlayReportPageV2 = ({
       const selectedEntityIndex = report.fieldData[entityType].findIndex(
         (entity: EntityShape) => entity.id === currentEntity?.id
       );
-      const filteredFormData = filterFormData(
-        enteredData,
-        form.fields.filter(isFieldElement)
-      );
-      const entriesToClear = getEntriesToClear(
-        enteredData,
-        form.fields.filter(isFieldElement)
-      );
+      const nonTableFields = form.fields
+        .filter(isFieldElement)
+        .filter((f) => !f.forTableOnly);
+      const filteredFormData = filterFormData(enteredData, nonTableFields);
+      const entriesToClear = getEntriesToClear(enteredData, nonTableFields);
       const newEntity = {
-        ...currentEntity,
+        ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
-      let newEntities = currentEntities;
+      const newEntities = [...currentEntities];
       newEntities[selectedEntityIndex] = newEntity;
       newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
         newEntities[selectedEntityIndex],
