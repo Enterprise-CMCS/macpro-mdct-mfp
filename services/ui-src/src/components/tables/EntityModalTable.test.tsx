@@ -1,5 +1,4 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
@@ -269,7 +268,7 @@ describe("<EntityModalTable />", () => {
       expect(rows).toHaveLength(3);
 
       const deleteButton = screen.getByRole("button", {
-        name: `Delete ${mockDynamicFieldId}`,
+        name: "Delete Other: Mock Dynamic Row Category 1",
       });
       await userEvent.click(deleteButton);
 
@@ -301,7 +300,25 @@ describe("<EntityModalTable />", () => {
       const button = screen.getByRole("button", {
         name: "Mock dynamic row button",
       });
-      expect(button).toBeVisible();
+      await userEvent.click(button);
+
+      const modal = screen.getByRole("dialog", { name: "Add mock heading" });
+      await waitFor(() => {
+        expect(modal).toBeVisible();
+      });
+
+      const closeButton = screen.getByRole("button", {
+        name: "Close",
+      });
+      await userEvent.click(closeButton);
+      await waitFor(async () => {
+        const closedModal = screen.queryByRole("dialog", {
+          name: "Add mock heading",
+        });
+        await act(() => {
+          expect(closedModal).not.toBeVisible();
+        });
+      });
     });
   });
 

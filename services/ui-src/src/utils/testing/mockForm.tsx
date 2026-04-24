@@ -493,7 +493,7 @@ export const mockObjectiveCards = [
           },
         },
       ],
-      initiativeId: "mock-initative-id",
+      initiativeId: "mock-initiative-id",
       objectiveId: "mock-objective-1",
     },
   },
@@ -848,6 +848,72 @@ export const mockDynamicRowsTemplate = {
   },
 };
 
+export const mockDynamicRowsTemplateForKeyMetricsTable = {
+  id: mockDynamicTemplateId,
+  type: ReportFormFieldType.DYNAMIC_OBJECT,
+  validation: {
+    type: ValidationType.DYNAMIC_OPTIONAL,
+    options: {
+      dynamicFieldValidations: {
+        baselineEndDate: ValidationType.DATE,
+        baselineStartDate: ValidationType.DATE,
+        dataSource: ValidationType.RADIO,
+        name: ValidationType.TEXT,
+      },
+    },
+  },
+  props: {
+    dynamicFields: [
+      {
+        id: `${mockDynamicTemplateId}-name`,
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
+        props: {
+          label: "Mock modal name",
+        },
+      },
+      {
+        id: `${mockDynamicTemplateId}-dataSource`,
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
+        props: {
+          label: "Mock modal data source",
+          choices: [
+            {
+              id: "mock-choice-1",
+              label: "Mock data source 1",
+            },
+            {
+              id: "mock-choice-2",
+              label: "Mock data source 2",
+            },
+          ],
+        },
+      },
+      {
+        id: `${mockDynamicTemplateId}-baselineStartDate`,
+        type: ReportFormFieldType.DATE,
+        validation: ValidationType.DATE,
+        props: {
+          label: "Mock modal baseline start date",
+        },
+      },
+      {
+        id: `${mockDynamicTemplateId}-baselineEndDate`,
+        type: ReportFormFieldType.DATE,
+        validation: ValidationType.DATE,
+        props: {
+          label: "Mock modal baseline end date",
+        },
+      },
+    ],
+  },
+  verbiage: {
+    buttonText: "Mock dynamic row button",
+    hint: "Mock dynamic row hint",
+  },
+};
+
 export const mockDynamicRowsTemplateWithModalForm = {
   ...mockDynamicRowsTemplate,
   props: {
@@ -877,6 +943,71 @@ export const mockDynamicRowsTemplateWithModalForm = {
           props: {
             label: "Mock modal percentage override",
             mask: NumberMask.PERCENTAGE,
+          },
+        },
+      ],
+    },
+  },
+  verbiage: {
+    buttonText: "Mock dynamic row button",
+    emptyTableMessage: "Mock dynamic empty table message",
+    hint: "Mock dynamic row hint",
+  },
+};
+
+export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
+  ...mockDynamicRowsTemplateForKeyMetricsTable,
+  props: {
+    ...mockDynamicRowsTemplate.props,
+    dynamicModalForm: {
+      id: "mockDynamicModalFormId",
+      heading: {
+        add: "Add mock heading",
+        edit: "Edit mock heading",
+        subheading: "Add mock subheading",
+        subheadingEdit: "Edit mock subheading",
+      },
+      fields: [
+        {
+          id: `${mockDynamicTemplateId}-name`,
+          type: ReportFormFieldType.TEXT,
+          validation: ValidationType.TEXT,
+          props: {
+            label: "Mock modal name",
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-dataSource`,
+          type: ReportFormFieldType.RADIO,
+          validation: ValidationType.RADIO,
+          props: {
+            label: "Mock modal data source",
+            choices: [
+              {
+                id: "mock-choice-1",
+                label: "Mock data source 1",
+              },
+              {
+                id: "mock-choice-2",
+                label: "Mock data source 2",
+              },
+            ],
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-baselineStartDate`,
+          type: ReportFormFieldType.DATE,
+          validation: ValidationType.DATE,
+          props: {
+            label: "Mock modal baseline start date",
+          },
+        },
+        {
+          id: `${mockDynamicTemplateId}-baselineEndDate`,
+          type: ReportFormFieldType.DATE,
+          validation: ValidationType.DATE,
+          props: {
+            label: "Mock modal baseline end date",
           },
         },
       ],

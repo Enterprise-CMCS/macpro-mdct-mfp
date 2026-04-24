@@ -13,7 +13,7 @@ import {
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
-import { MfpReportState, MfpUserState, entityTypes } from "../../types";
+import { EntityType, MfpReportState, MfpUserState } from "../../types";
 import { alertVerbiage } from "./AddEditEntityModal";
 import { testA11yAct } from "utils/testing/commonTests";
 
@@ -30,13 +30,13 @@ const mockEntityName = "mock-name";
 
 const mockEntity = {
   id: "mock-id-1",
-  type: entityTypes[1],
+  type: EntityType.TARGET_POPULATIONS,
   "mock-modal-text-field": "mock input 1",
 };
 
 const mockTransitionBenchmarkEntity = {
   id: "mock-id-1",
-  type: entityTypes[1],
+  type: EntityType.TARGET_POPULATIONS,
   transitionBenchmarks_targetPopulationName: "mock input 1",
 };
 
@@ -90,7 +90,7 @@ const modalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
       <AddEditEntityModal
-        entityType={entityTypes[1]}
+        entityType={EntityType.TARGET_POPULATIONS}
         verbiage={mockModalDrawerReportPageVerbiage}
         entityName={mockEntityName}
         form={mockModalForm}
@@ -108,7 +108,7 @@ const transitionBenchmarkModalComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
       <AddEditEntityModal
-        entityType={entityTypes[1]}
+        entityType={EntityType.TARGET_POPULATIONS}
         verbiage={mockModalDrawerReportPageVerbiage}
         entityName={mockEntityName}
         form={mockTransitionBenchmarkModalForm}
@@ -126,7 +126,7 @@ const modalComponentWithSelectedEntity = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockedReportContext}>
       <AddEditEntityModal
-        entityType={entityTypes[1]}
+        entityType={EntityType.TARGET_POPULATIONS}
         selectedEntity={mockEntity}
         verbiage={mockModalDrawerReportPageVerbiage}
         form={mockModalForm}
@@ -225,7 +225,7 @@ describe("<AddEditEntityModal />", () => {
       expectedUpdateCallPayload.fieldData.targetPopulations.push({
         id: "mock-id-2",
         "mock-modal-text-field": "mock input 2",
-        type: entityTypes[1],
+        type: EntityType.TARGET_POPULATIONS,
       });
 
       expect(mockUpdateReport).toHaveBeenCalledWith(
@@ -252,7 +252,7 @@ describe("<AddEditEntityModal />", () => {
         {
           id: mockEntity.id,
           "mock-modal-text-field": "mock input 2",
-          type: entityTypes[1],
+          type: EntityType.TARGET_POPULATIONS,
         },
       ];
 
@@ -307,7 +307,7 @@ describe("<AddEditEntityModal />", () => {
 
       expectedUpdateCallPayload.fieldData.targetPopulations.push({
         id: "mock-id-2",
-        type: entityTypes[1],
+        type: EntityType.TARGET_POPULATIONS,
         transitionBenchmarks_targetPopulationName: "mock input 2",
       });
 
