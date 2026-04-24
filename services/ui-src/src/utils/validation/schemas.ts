@@ -233,7 +233,8 @@ export const dropdown = () =>
       message: error.REQUIRED_GENERIC,
       test: (val: any) => val?.value && val.value !== "",
     });
-export const dropdownOptional = () => mixed().notRequired();
+export const dropdownOptional = () =>
+  object({ label: textOptional(), value: textOptional() }).notRequired();
 
 // CHECKBOX
 export const checkbox = () =>
