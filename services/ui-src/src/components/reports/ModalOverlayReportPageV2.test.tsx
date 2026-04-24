@@ -2,6 +2,13 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ModalOverlayReportPageV2, ReportContext } from "components";
+// types
+import {
+  ReportFormFieldType,
+  ReportStatus,
+  ReportType,
+  ValidationType,
+} from "types";
 // utils
 import {
   RouterWrappedComponent,
@@ -14,12 +21,6 @@ import {
 } from "utils/testing/setupJest";
 import { useBreakpoint, useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
-import {
-  ReportFormFieldType,
-  ReportStatus,
-  ReportType,
-  ValidationType,
-} from "types";
 import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
 
 jest.mock("utils/state/useStore");

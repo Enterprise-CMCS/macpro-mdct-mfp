@@ -95,7 +95,7 @@ export const DeleteEntityModal = ({
       modalDisclosure={modalDisclosure}
       submitting={deleting}
       content={{
-        heading: verbiage.deleteModalTitle,
+        heading: verbiage.deleteModalTitle || verbiage.delete,
         actionButtonText: verbiage.deleteModalConfirmButtonText,
         closeButtonText: "Cancel",
       }}

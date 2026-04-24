@@ -6,7 +6,7 @@ import {
   mockWpReportContext,
 } from "utils/testing/setupJest";
 import { ReportContext } from "components/reports/ReportProvider";
-import { entityTypes } from "types";
+import { EntityType } from "types";
 import { ExportedEntityDetailsTable } from "./ExportedEntityDetailsTable";
 
 jest.mock("utils/state/useStore");
@@ -16,9 +16,9 @@ mockedUseStore.mockReturnValue(mockEntityStore);
 mockedUseStore.mockReturnValue(mockReportStore);
 
 const entity = {
-  type: entityTypes[0],
+  type: EntityType.INITIATIVE,
   name: "mock-name",
-  id: "mock-initative-id",
+  id: "mock-initiative-id",
   isOtherEntity: true,
   initiative_wp_otherTopic: "",
   initiative_wpTopic: [
@@ -30,9 +30,9 @@ const entity = {
   initiative_name: "fdsfs",
   initiative: [
     {
-      id: "mock-initative-id",
+      id: "mock-initiative-id",
       name: "mock-name",
-      "mock-initative-id": [
+      "mock-initiative-id": [
         {
           id: "mock-objective-1",
           objectiveProgress_objectiveName: "mock-objective-name-1",
@@ -70,13 +70,13 @@ const entity = {
 
 const fields = [
   {
-    id: "mock-initative-id",
+    id: "mock-initiative-id",
     type: "mock type",
     validation: "",
     props: {
       choices: [
         {
-          id: "mock-initative-id_",
+          id: "mock-initiative-id_",
           label: "Yes",
         },
       ],

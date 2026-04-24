@@ -10,6 +10,7 @@ import {
 // types
 import {
   AnyObject,
+  EntityType,
   NumberMask,
   ReportFormFieldType,
   ValidationType,
@@ -21,6 +22,7 @@ import {
   mockDynamicTemplateId,
   mockFieldId,
   mockTableId,
+  mockTempDynamicFieldId,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
@@ -83,12 +85,61 @@ const TestComponent = () => {
     },
   };
 
+  const initiativeDateField = {
+    id: `${mockDynamicTemplateId}-baselineStartDate`,
+    type: ReportFormFieldType.DATE,
+    validation: ValidationType.DATE,
+    props: {
+      label: "Mock initiative date label",
+      readOnly: true,
+    },
+  };
+
+  const initiativeChoiceField = {
+    id: `${mockDynamicTemplateId}-dataSource`,
+    type: ReportFormFieldType.RADIO,
+    validation: ValidationType.RADIO,
+    props: {
+      choices: [
+        {
+          id: "mock-yes",
+          label: "Yes",
+        },
+        {
+          id: "mock-other",
+          label: "Other, specify",
+        },
+      ],
+      label: "Mock initiative choice label",
+      readOnly: true,
+    },
+  };
+
   const dynamicFieldWithDynamicLabel = {
     ...dynamicField,
     props: {
       ...dynamicField.props,
       dynamicLabel: "Other:",
     },
+  };
+
+  const mockCurrentEntityId = "mockCurrentEntityId";
+  const formData = {
+    id: mockCurrentEntityId,
+    [mockDynamicTemplateId]: [
+      {
+        id: mockDynamicFieldId,
+        baselineEndDate: "12/31/2026",
+        baselineStartDate: "01/01/2026",
+        dataSource: [
+          {
+            key: "mock-other",
+            value: "Other, specify",
+          },
+        ],
+        otherText: "Mock other initiative text",
+      },
+    ],
   };
 
   const fieldData = {
@@ -101,6 +152,7 @@ const TestComponent = () => {
         mockPercentageFieldId: "10",
       },
     ],
+    [EntityType.INITIATIVE]: [formData, { id: "mock-incomplete-initiative" }],
   };
 
   const displayCellProps = {
@@ -148,7 +200,7 @@ const TestComponent = () => {
     columnId: "columnId",
     dynamicId: mockDynamicFieldId,
     disabled: false,
-    id: "dynanicCellId",
+    id: `${mockTempDynamicFieldId}-mockNumberFieldId`,
     onBlurHandler: () => {},
     onChangeHandler: () => {},
     percentage: 100,
@@ -177,6 +229,22 @@ const TestComponent = () => {
         readOnly: true,
       },
     },
+  };
+
+  const displayReadOnlyCellInitiativeDateProps = {
+    ...dynamicDisplayCellProps,
+    cell: initiativeDateField,
+    entityType: EntityType.INITIATIVE,
+    id: `${mockTempDynamicFieldId}-baselineStartDate`,
+    formData,
+  };
+
+  const displayReadOnlyCellInitiativeChoiceProps = {
+    ...dynamicDisplayCellProps,
+    cell: initiativeChoiceField,
+    entityType: EntityType.INITIATIVE,
+    id: `${mockTempDynamicFieldId}-dataSource`,
+    formData,
   };
 
   const displayReadOnlyCellProps = {
@@ -257,6 +325,8 @@ const TestComponent = () => {
           removeDynamicRow(
             mockDynamicTemplateId,
             mockDynamicFieldId,
+            "",
+            "",
             updatedFieldsCallback(mockDynamicFieldId, localFieldData)
           )
         }
@@ -265,6 +335,27 @@ const TestComponent = () => {
       </button>
       <h3>
         removeDynamicRow: {localFieldData?.[mockDynamicTemplateId]?.length}
+      </h3>
+
+      <button
+        onClick={() =>
+          removeDynamicRow(
+            mockDynamicTemplateId,
+            mockDynamicFieldId,
+            EntityType.INITIATIVE,
+            mockCurrentEntityId,
+            updatedFieldsCallback(mockDynamicFieldId, localFieldData)
+          )
+        }
+      >
+        removeDynamicRow - entity
+      </button>
+      <h3>
+        removeDynamicRow - entity:{" "}
+        {
+          localFieldData?.[EntityType.INITIATIVE]?.[0]?.[mockDynamicTemplateId]
+            ?.length
+        }
       </h3>
 
       <h3>displayCell string: {displayCell(displayCellStringProps)}</h3>
@@ -290,6 +381,14 @@ const TestComponent = () => {
         {displayReadOnlyCell(
           displayReadOnlyCellAdministrativeCostsBudgetCategoryProps
         )}
+      </h3>
+      <h3>
+        displayCell initiative date:{" "}
+        {displayCell(displayReadOnlyCellInitiativeDateProps)}
+      </h3>
+      <h3>
+        displayCell initiative choice:{" "}
+        {displayCell(displayReadOnlyCellInitiativeChoiceProps)}
       </h3>
       <div id="display-cell-label">displayCell label</div>
       <div id="dynamic-display-cell-label">displayDynamicCell label</div>
@@ -395,6 +494,30 @@ describe("<DynamicTableProvider />", () => {
       });
       expect(cell).toBeVisible();
     });
+
+    test("initiative date field", async () => {
+      const button = screen.getByRole("button", { name: "setLocalFieldData" });
+      await act(async () => {
+        await userEvent.click(button);
+      });
+
+      const cell = screen.getByRole("heading", {
+        name: "displayCell initiative date: 01/01/2026 - 12/31/2026",
+      });
+      expect(cell).toBeVisible();
+    });
+
+    test("initiative choice field", async () => {
+      const button = screen.getByRole("button", { name: "setLocalFieldData" });
+      await act(async () => {
+        await userEvent.click(button);
+      });
+
+      const cell = screen.getByRole("heading", {
+        name: "displayCell initiative choice: Mock other initiative text",
+      });
+      expect(cell).toBeVisible();
+    });
   });
 
   describe("displayReadOnlyCell()", () => {
@@ -466,6 +589,25 @@ describe("<DynamicTableProvider />", () => {
     });
     const button = screen.getByRole("button", { name: "removeDynamicRow" });
     const text = "removeDynamicRow: 0";
+    expect(screen.queryByRole("heading", { name: text })).toBeNull();
+
+    await act(async () => {
+      await userEvent.click(button);
+    });
+    expect(screen.getByRole("heading", { name: text })).toBeVisible();
+  });
+
+  test("removeDynamicRow() - entity", async () => {
+    const setLocalData = screen.getByRole("button", {
+      name: "setLocalFieldData",
+    });
+    await act(async () => {
+      await userEvent.click(setLocalData);
+    });
+    const button = screen.getByRole("button", {
+      name: "removeDynamicRow - entity",
+    });
+    const text = "removeDynamicRow - entity: 0";
     expect(screen.queryByRole("heading", { name: text })).toBeNull();
 
     await act(async () => {

@@ -1,8 +1,11 @@
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
 import { Table, Tbody } from "@chakra-ui/react";
 import { DynamicTableRows, DynamicTableProvider } from "components";
+// types
+import { EntityType, ReportType } from "types";
 // utils
 import { useStore } from "utils";
 import {
@@ -15,7 +18,6 @@ import {
   mockDynamicRowsTemplateWithModalForm,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
-import userEvent from "@testing-library/user-event";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
@@ -95,7 +97,7 @@ describe("<DynamicTableRows />", () => {
     render(dynamicTableRowsComponent());
 
     const row = screen.getByRole("row", {
-      name: `Other: $ % Delete ${mockDynamicFieldId}`,
+      name: `Other: $ % Delete Other: ${mockDynamicFieldId}`,
     });
     expect(row).toBeVisible();
 
@@ -103,7 +105,7 @@ describe("<DynamicTableRows />", () => {
     expect(inputs).toHaveLength(2);
 
     const deleteButton = screen.getByRole("button", {
-      name: `Delete ${mockDynamicFieldId}`,
+      name: `Delete Other: ${mockDynamicFieldId}`,
     });
     expect(deleteButton).toBeVisible();
 
@@ -148,6 +150,51 @@ describe("<DynamicTableRows />", () => {
     expect(pctInputs[0]).toHaveValue("10");
   });
 
+  test("edit row - entity", async () => {
+    const mockCurrentEntityId = "mockCurrentEntityId";
+    const formData = {
+      id: mockCurrentEntityId,
+      ...mockProps.formData,
+    };
+    const updatedProps = {
+      ...mockProps,
+      entityType: EntityType.INITIATIVE,
+      formData,
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockStateUserStore,
+      ...mockReportStore,
+      report: {
+        fieldData: {
+          [EntityType.INITIATIVE]: [formData],
+        },
+      },
+    });
+    mockGetValues(undefined);
+
+    render(dynamicTableRowsComponent(updatedProps));
+
+    const inputs = screen.getAllByRole("textbox", { name: "Other:" });
+    const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
+
+    await act(async () => {
+      await userEvent.clear(inputs[0]);
+      await userEvent.clear(pctInputs[0]);
+      await userEvent.tab();
+    });
+    expect(inputs[0]).toHaveValue("");
+    expect(pctInputs[0]).toHaveValue("");
+
+    await act(async () => {
+      await userEvent.type(inputs[0], "123");
+      await userEvent.type(pctInputs[0], "10.00");
+      await userEvent.tab();
+    });
+    expect(inputs[0]).toHaveValue("123.00");
+    expect(pctInputs[0]).toHaveValue("10");
+  });
+
   test("no dynamic rows", async () => {
     mockedUseStore.mockReturnValue({
       ...mockStateUserStore,
@@ -164,6 +211,99 @@ describe("<DynamicTableRows />", () => {
     const rows = screen.queryAllByRole("row");
     expect(rows).toHaveLength(0);
   });
+
+  //dynamic row aria labels"
+  const renderFinancialDeleteLabel = ({
+    formData,
+    dynamicRowsTemplate = mockDynamicRowsTemplate,
+  }: {
+    formData: typeof mockProps.formData;
+    dynamicRowsTemplate?: typeof mockDynamicRowsTemplate;
+  }) => {
+    mockedUseStore.mockReturnValue({
+      ...mockStateUserStore,
+      ...mockReportStore,
+      report: {
+        ...mockReportStore.report,
+        reportType: ReportType.FINANCIAL_REPORT,
+        fieldData: formData,
+      },
+    });
+    mockGetValues(undefined);
+
+    return render(
+      dynamicTableRowsComponent({
+        ...mockProps,
+        dynamicRowsTemplate,
+        formData,
+      })
+    );
+  };
+
+  const miscCostsTemplate = {
+    ...mockDynamicRowsTemplate,
+    props: {
+      ...mockDynamicRowsTemplate.props,
+      dynamicFields: mockDynamicRowsTemplate.props.dynamicFields.map(
+        (field, index) =>
+          index === 0
+            ? {
+                ...field,
+                props: {
+                  ...field.props,
+                  dynamicLabel: "Misc. Costs:",
+                },
+              }
+            : field
+      ),
+    },
+  };
+
+  test.each([
+    {
+      caseName: "supplemental services other label",
+      expectedLabels: ["Delete Other: Mock Category"],
+      formData: {
+        [mockDynamicTemplateId]: [
+          {
+            id: mockDynamicFieldId,
+            category: "Mock Category",
+            totalComputable: "12.34",
+          },
+        ],
+      },
+    },
+    {
+      caseName: "misc costs label",
+      dynamicRowsTemplate: miscCostsTemplate,
+      expectedLabels: ["Delete Misc. Costs: Printing"],
+      formData: {
+        [mockDynamicTemplateId]: [
+          {
+            id: mockDynamicFieldId,
+            name: "Printing",
+            totalComputable: "12.34",
+          },
+        ],
+      },
+    },
+  ])(
+    "uses the correct financial report delete labels",
+    ({ formData, dynamicRowsTemplate, expectedLabels }) => {
+      renderFinancialDeleteLabel({
+        dynamicRowsTemplate,
+        formData,
+      });
+
+      expectedLabels.forEach((label) => {
+        expect(
+          screen.getByRole("button", {
+            name: label,
+          })
+        ).toBeVisible();
+      });
+    }
+  );
 
   describe("modal", () => {
     const mockOpenModal = jest.fn();

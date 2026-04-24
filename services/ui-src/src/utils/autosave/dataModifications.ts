@@ -203,10 +203,11 @@ export const updatedTextFields = (
       const currentFieldIndex = templateFieldData.findIndex(
         (field: DynamicFieldShape) => field.id === dynamicFieldId
       );
+      const currentField = templateFieldData[currentFieldIndex] || {};
       const updatedField = {
         id: dynamicFieldId,
-        name: dynamicFieldId,
-        ...templateFieldData[currentFieldIndex],
+        name: currentField?.name || dynamicFieldId,
+        ...currentField,
         [fieldType]: value,
       };
 

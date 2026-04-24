@@ -287,7 +287,7 @@ export const calculateCompletionStatus = async (
         };
         break;
       case PageTypes.MODAL_OVERLAY:
-        if (!route.modalForm) break;
+        // deprecated: route.entitySteps removed as of Report Year 2026, Period 2
         if (route.entitySteps) {
           routeCompletion = {
             [route.path]: await calculateEntityWithStepsCompletion(
@@ -296,6 +296,7 @@ export const calculateCompletionStatus = async (
             ),
           };
         } else {
+          if (!route.modalForm) break;
           routeCompletion = {
             [route.path]: await calculateEntityCompletion(
               [route.modalForm],
@@ -305,13 +306,18 @@ export const calculateCompletionStatus = async (
         }
         break;
       case PageTypes.DYNAMIC_MODAL_OVERLAY:
-        if (!route.initiatives) break;
-        routeCompletion = {
-          [route.path]: await calculateDynamicModalOverlayCompletion(
-            route.initiatives as [],
-            route.entityType
-          ),
-        };
+        // deprecated: route.initiatives removed as of Report Year 2026, Period 2
+        if (route.initiatives) {
+          routeCompletion = {
+            [route.path]: await calculateDynamicModalOverlayCompletion(
+              route.initiatives as [],
+              route.entityType
+            ),
+          };
+        } else {
+          // TODO: Update for v2
+          routeCompletion = { [route.path]: true };
+        }
         break;
       case PageTypes.REVIEW_SUBMIT:
         // Don't evaluate the review and submit page
