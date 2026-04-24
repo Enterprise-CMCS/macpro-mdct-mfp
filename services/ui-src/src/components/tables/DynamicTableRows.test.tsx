@@ -3,9 +3,10 @@ import { act, render, screen } from "@testing-library/react";
 import { useFormContext } from "react-hook-form";
 import { Table, Tbody } from "@chakra-ui/react";
 import { DynamicTableRows, DynamicTableProvider } from "components";
+// types
+import { EntityType, ReportType } from "types";
 // utils
 import { useStore } from "utils";
-import { ReportType } from "types";
 import {
   mockDynamicFieldId,
   mockDynamicTemplateId,
@@ -17,7 +18,6 @@ import {
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 import userEvent from "@testing-library/user-event";
-import { EntityType } from "types";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {
