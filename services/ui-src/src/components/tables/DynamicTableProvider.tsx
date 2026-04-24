@@ -258,7 +258,7 @@ export const DynamicTableProvider = ({ children }: any) => {
           </Flex>
           {displayCell({
             ...props,
-            ariaLabelledby: `${cell.id} ${rowId} ${dynamicLabelId}`,
+            ariaLabelledby: `${rowId} ${dynamicLabelId}`,
             id: tempDynamicId,
           })}
         </Flex>
